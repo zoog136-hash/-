@@ -14,6 +14,7 @@ signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal quickslot_edit_requested(action: String, source_index: int, target: int)
+signal original_world_map_image_clicked(payload: Dictionary)
 signal consumable_auto_settings_changed(settings: Dictionary)
 signal consumable_auto_settings_updated(settings: Dictionary)
 
@@ -784,6 +785,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():
+			original_main_ui_controller.close_world_map()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(detail_window) and detail_window.visible:
 			detail_window.hide()
 			get_viewport().set_input_as_handled()
@@ -847,6 +852,7 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
 	navigation_memory.enter(active_section,section)
@@ -2340,6 +2346,11 @@ func _equip_selected_catalog() -> void:
 					catalog_equip_button.disabled=true)
 
 func toggle_map() -> void:
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_world_map_binding():
+		if not original_main_ui_controller.world_map_is_open():_close_workspace()
+		original_main_ui_status["world_map"]=original_main_ui_controller.toggle_world_map()
+		if not original_main_ui_status.world_map.get("ok",false):show_message("원본 지도 데이터를 사용할 수 없습니다.")
+		return
 	if active_section=="map" and workspace.visible:
 		_close_workspace()
 		return
@@ -2663,6 +2674,16 @@ var original_main_ui_status: Dictionary={}
 var _original_main_player_values: Array=[]
 var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
+var _original_world_map_inputs: Dictionary={}
+
+func bind_original_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
+	if image_adapter==null or not context_provider.is_valid() or not input_handler.is_valid():return {"ok":false,"code":"source_world_map_existing_owner_inputs_required"}
+	if not is_instance_valid(original_main_ui_controller):
+		_original_world_map_inputs={"image_adapter":image_adapter,"context_provider":context_provider,"input_handler":input_handler}
+		return {"ok":true,"registered":true,"waiting_for_main_ui":true,"complete_screen_contract":false}
+	var result: Dictionary=original_main_ui_controller.bind_world_map(image_adapter,context_provider,input_handler)
+	if result.get("ok",false):_original_world_map_inputs={"image_adapter":image_adapter,"context_provider":context_provider,"input_handler":input_handler}
+	return result
 
 func _bind_selected_original_main_ui() -> void:
 	var selected: Dictionary=preload("res://scripts/ui/original_ui/source_main_selection.gd").selected_pack()
@@ -2695,8 +2716,12 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		original_main_ui_controller.release(false)
 		original_main_ui_controller.queue_free()
 	original_main_ui_controller=candidate
+	candidate.world_image_clicked.connect(func(payload: Dictionary) -> void: original_world_map_image_clicked.emit(payload))
+	var map_registration: Dictionary={}
+	if not _original_world_map_inputs.is_empty():
+		map_registration=candidate.bind_world_map(_original_world_map_inputs.image_adapter,_original_world_map_inputs.context_provider,_original_world_map_inputs.input_handler)
 	candidate.sync_legacy_visibility()
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):

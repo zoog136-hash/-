@@ -9,6 +9,8 @@ const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.g
 const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
 const MainMap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
 const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.gd")
+const WorldMap=preload("res://scripts/ui/original_ui/source_main_world_map.gd")
+signal world_image_clicked(payload: Dictionary)
 const MAIN="UI/MainScene.csb"
 const MAIN_SHA="80c174a87caf5cfbf910336b64616334ac560ed477f7a663aec58ada70d4285f"
 const EXP_PROJECT=23080
@@ -57,6 +59,7 @@ var _target_result: Dictionary={}
 var _target_model: Dictionary={}
 var _target_mount_attempted: bool=false
 var _combat_owns_pickup: bool=false
+var _world_map: Node
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -114,6 +117,36 @@ func _process(_delta: float) -> void:
 
 func source_map_label_availability() -> bool:
 	return _legacy_map_name_visible
+
+func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
+	var candidate=WorldMap.new()
+	var configured: Dictionary=candidate.configure(_pack,hud,_coordinates,image_adapter,context_provider,input_handler)
+	if not configured.get("ok",false):
+		candidate.free()
+		return configured
+	if is_instance_valid(_world_map):
+		_world_map.close()
+		_world_map.queue_free()
+	_world_map=candidate
+	add_child(candidate)
+	candidate.world_image_clicked.connect(func(payload: Dictionary) -> void: world_image_clicked.emit(payload))
+	return configured
+
+func has_world_map_binding() -> bool:
+	return is_instance_valid(_world_map)
+
+func world_map_is_open() -> bool:
+	return is_instance_valid(_world_map) and _world_map.is_open()
+
+func toggle_world_map() -> Dictionary:
+	if not is_instance_valid(_world_map):return _fail("source_world_map_not_configured")
+	return _world_map.toggle()
+
+func close_world_map() -> Dictionary:
+	if not is_instance_valid(_world_map):return {"ok":true,"closed":true}
+	return _world_map.close()
 
 func update_map_name(map_name: String) -> Dictionary:
 	if not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
@@ -349,6 +382,7 @@ func _exit_tree() -> void:
 func release(restore_legacy: bool=true) -> void:
 	_restore_legacy=restore_legacy
 	set_process(false)
+	if is_instance_valid(_world_map):_world_map.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas!=null and canvas.resized.is_connected(_fit_source_coordinates):canvas.resized.disconnect(_fit_source_coordinates)
 	if is_instance_valid(_coordinates):

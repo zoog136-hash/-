@@ -26,6 +26,8 @@ var _entered_frames: Dictionary={}
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
 var _requested_source_nodes: Array[int]=[]
+var _external_texture_nodes: Array[int]=[]
+var _external_texture_tags: Dictionary={}
 
 func configure_project(pack: RefCounted, parent_member: String, project_offset: int, bindings: Dictionary, source_nodes_scope: Array[int]=[]) -> Dictionary:
 	# Mount an independently supplied original component using its actual
@@ -69,6 +71,9 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_build_error=""
 	inspection_only=inspect_only
 	_bindings=bindings.duplicate()
+	_external_texture_nodes.clear()
+	_external_texture_tags.clear()
+	for offset: Variant in pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[]):_external_texture_nodes.append(int(offset))
 	if _bindings.has("frame_events") and not _bindings.frame_events is Dictionary:return {"ok":false,"error":"source_frame_event_binding_shape"}
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
@@ -92,6 +97,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
+		if timeline.get("property")=="FileData" and _external_texture_tags.has(int(timeline.get("actionTag",0))):problems.append("external_texture_timeline_requires_owner_contract")
 		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint","FrameEvent","ActionValue"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
@@ -153,6 +159,9 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
+	var external: bool=int(node.get("_offset",-1)) in _external_texture_nodes
+	if external and binding.get("role")!="source_asset_slot":problems.append("external_texture_owner_binding_required")
+	if binding.get("role")=="source_asset_slot" and (not external or node.classname!="Sprite" or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
 	if binding.get("role")=="source_asset":
 		if node.classname not in ["Sprite","ImageView"] or not binding.get("asset_ref") is Dictionary:problems.append("source_asset_node_or_reference_missing")
 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
@@ -164,6 +173,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
+	if external:_external_texture_tags[int(widget.get("actionTag",0))]=true
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
 	if not str(widget.get("customProperty","")).is_empty():
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
@@ -404,8 +414,12 @@ func _build(source: Dictionary) -> Node2D:
 	if source.classname in ["ImageView","Sprite"]:
 		bound_texture=_node_texture(source,options.fileNameData)
 		var excluded: bool=bool(_resolved_assets.get(int(source._offset),{}).get("excluded_from_connection",false))
-		if bound_texture==null and not excluded:node.free();return null
+		var pending: bool=_bindings.get(int(source._offset),{}).get("role")=="source_asset_slot"
+		if bound_texture==null and not excluded and not pending:node.free();return null
 		if excluded:node.set_meta("source_asset_excluded",true)
+		if pending:
+			node.set_meta("source_asset_slot",true)
+			node.set_meta("source_asset_pending",true)
 	if source.classname=="ImageView" and bound_texture!=null:
 		var texture: Texture2D=bound_texture
 		var picture: Control
@@ -455,7 +469,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_origin",origin)
 		if texture!=null and _bindings.get(int(source._offset),{}).get("role")=="source_asset":origin.position=Vector2(-float(widget.anchorPoint[0])*texture.get_width(),float(widget.anchorPoint[1])*texture.get_height())
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
-	if _resolved_assets.has(int(source._offset)):node.set_meta("source523_original_asset",_resolved_assets[int(source._offset)].duplicate(true))
+	if _resolved_assets.has(int(source._offset)) and not bool(_resolved_assets[int(source._offset)].get("pending_original_pixels",false)):node.set_meta("source523_original_asset",_resolved_assets[int(source._offset)].duplicate(true))
 	var child_origin: Node=origin
 	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.clipEnabled):
 		# The original transparent Panel clips its children to the source size.
@@ -530,6 +544,9 @@ func _build(source: Dictionary) -> Node2D:
 
 func _node_texture(source: Dictionary, original_reference: Dictionary) -> Texture2D:
 	var binding: Dictionary=_bindings.get(int(source._offset),{})
+	if binding.get("role")=="source_asset_slot":
+		_resolved_assets[int(source._offset)]={"pending_original_pixels":true}
+		return null
 	if binding.get("role")!="source_asset":return source_pack.texture(original_reference,true)
 	var resolved: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").resolve(binding.asset_ref)
 	if not resolved.get("ok",false):
@@ -767,8 +784,43 @@ func set_bound_percent(source_offset: int, value: float) -> Dictionary:
 func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
+	if value and node.get_meta("source_asset_slot",false):
+		var sprite: Sprite2D=node.get_meta("source_sprite",null)
+		if sprite==null or sprite.texture==null or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
 	return {"ok":true}
+
+func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}
+	var sprite: Sprite2D=node.get_meta("source_sprite")
+	var consumed: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").consume_owner_result(owner_result)
+	if not consumed.get("ok",false) or consumed.get("texture")==null:
+		sprite.texture=null
+		node.visible=false
+		node.set_meta("source_asset_pending",true)
+		return consumed
+	var texture: Texture2D=consumed.texture
+	var material: ShaderMaterial=BLEND.material(texture,node.get_meta("source_blend"))
+	if material==null:
+		sprite.texture=null
+		node.visible=false
+		node.set_meta("source_asset_pending",true)
+		return {"ok":false,"error":"original_material_unavailable"}
+	# Sprite content size follows its actual source texture. Preserve the
+	# serialized node position/scale/anchor; no guessed image fit or map ratio.
+	sprite.texture=texture
+	sprite.material=material
+	sprite.position.y=-texture.get_height()
+	var anchor: Array=node.get_meta("source_anchor")
+	var origin: Node2D=node.get_meta("source_origin")
+	origin.position=Vector2(-float(anchor[0])*texture.get_width(),float(anchor[1])*texture.get_height())
+	node.set_meta("source_runtime_texture_size",texture.get_size())
+	node.set_meta("source523_original_asset",consumed.evidence.duplicate(true))
+	node.set_meta("source_asset_pending",false)
+	_resolved_assets[source_offset]=consumed.evidence.duplicate(true)
+	MATERIAL.bind_display(sprite,node.get_meta("source_display_color",Color.WHITE))
+	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"image_info_registration_complete":false}
 
 func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)

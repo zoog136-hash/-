@@ -59,6 +59,7 @@ class Builder:
         self.scenes = {}
         self.layout_sources = {}
         self.node_scopes = {}
+        self.external_texture_nodes = {}
         self.atlases = {}
         self.source_compatibility = []
         self.blockers = []
@@ -242,6 +243,16 @@ class Builder:
         scoped['nodeTree'] = prune(tree['nodeTree'])
         if found != requested:
             raise ValueError('Original node scope offset not present: ' + member)
+        external = set(self.external_texture_nodes.get(member, []))
+        if not external.issubset(requested):
+            raise ValueError('External texture input must be in the explicit node scope: ' + member)
+
+        def external_sprites(node):
+            if node['_offset'] in external and node.get('classname') != 'Sprite':
+                raise ValueError('External texture input requires an original Sprite: ' + member)
+            for child in node.get('children', []):
+                external_sprites(child)
+        external_sprites(scoped['nodeTree'])
         if isinstance(scoped.get('action'), dict):
             scoped['action']['timeLines'] = [t for t in scoped['action'].get('timeLines', [])
                                             if t.get('actionTag') in tags]
@@ -252,6 +263,18 @@ class Builder:
 
         def dependencies(value):
             if isinstance(value, dict):
+                if value.get('classname') == 'Sprite' and value.get('_offset') in external:
+                    # Keep the original node/CSB/reference intact. Only its
+                    # editor preview is not a required runtime dependency:
+                    # an explicit existing image owner supplies these pixels.
+                    for key, item in value.items():
+                        if key == 'options':
+                            for option, payload in item.items():
+                                if option != 'fileNameData':
+                                    dependencies(payload)
+                        else:
+                            dependencies(item)
+                    return
                 if value.get('_type') == 'ResourceData':
                     self.resource(value, member)
                 if value.get('_type') == 'ProjectNodeOptions' and value.get('fileName'):
@@ -271,6 +294,9 @@ class Builder:
             raise ValueError('Use a new private output directory; existing packs are preserved')
         for member in entries:
             self.scene(member)
+        for member, offsets in self.external_texture_nodes.items():
+            if member not in self.node_scopes or not set(offsets).issubset(self.node_scopes[member]):
+                raise ValueError('External texture input requires an explicit partial scene: ' + member)
         blockers = list({json.dumps(b, sort_keys=True): b for b in self.blockers}.values())
         manifest = {'schema': 'twilight-original-ui-v1', 'entries': entries,
                     'scenes': self.scenes, 'atlases': self.atlases,
@@ -280,6 +306,8 @@ class Builder:
             manifest['layout_sources'] = self.layout_sources
         if self.node_scopes:
             manifest['node_scopes'] = self.node_scopes
+        if self.external_texture_nodes:
+            manifest['externally_bound_texture_nodes'] = self.external_texture_nodes
         if self.source_compatibility:
             manifest['source_compatibility'] = list({json.dumps(x, sort_keys=True): x for x in self.source_compatibility}.values())
         output.mkdir(parents=True)
@@ -294,6 +322,10 @@ class Builder:
         if self.node_scopes:
             receipt['partial_node_scopes'] = self.node_scopes
             receipt['whole_scene_completion_claimed'] = False
+        if self.external_texture_nodes:
+            receipt['externally_bound_texture_nodes'] = self.external_texture_nodes
+            receipt['status'] = 'STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER' if not blockers else 'BLOCKED'
+            receipt['external_pixels_received_or_used_claimed'] = False
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
         return receipt
 
@@ -306,12 +338,24 @@ def main():
                         help='Original parent CSB geometry only; not an activated scene closure')
     parser.add_argument('--node-scene', action='append', default=[],
                         help='Explicit partial original scope: UI/path.csb:offset,offset')
+    parser.add_argument('--external-texture-node', action='append', default=[],
+                        help='Exact scoped Sprite receiving existing image-owner pixels at runtime: UI/path.csb:offset')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     if args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
         parser.error('Original UI packs must stay outside the public checkout')
     index = json.loads(args.source_index.read_text())
     builder = Builder(index.get('source_files', index))
+    for spec in args.external_texture_node:
+        member, separator, offset = spec.rpartition(':')
+        if not separator:
+            parser.error('--external-texture-node requires an original member and offset')
+        member = source_path(member)
+        offsets = builder.external_texture_nodes.setdefault(member, [])
+        value = int(offset)
+        if value in offsets:
+            parser.error('Duplicate external texture node')
+        offsets.append(value)
     for member in args.layout_source:
         builder.layout_source(member)
     for spec in args.node_scene:

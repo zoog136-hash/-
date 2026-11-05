@@ -48,6 +48,16 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 			var layout: Variant=value.layout_sources[member]
 			if not layout is Dictionary or not value.files.has(member) or layout.get("_source_sha256")!=value.files[member].sha256:return _fail("layout_source_identity_mismatch")
 			if not layout.get("_decode_blockers") is Array or not layout._decode_blockers.is_empty():return _fail("layout_source_fields")
+	if value.has("externally_bound_texture_nodes"):
+		if not value.externally_bound_texture_nodes is Dictionary:return _fail("external_texture_nodes_shape")
+		for member: String in value.externally_bound_texture_nodes:
+			var offsets: Variant=value.externally_bound_texture_nodes[member]
+			var scope: Variant=value.get("node_scopes",{}).get(member)
+			if not offsets is Array or offsets.is_empty() or not scope is Array:return _fail("external_texture_requires_explicit_node_scope")
+			var unique: Dictionary={}
+			for offset: Variant in offsets:
+				if typeof(offset) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(offset)) or float(offset)!=floor(float(offset)) or offset not in scope or unique.has(int(offset)):return _fail("external_texture_node_scope_mismatch")
+				unique[int(offset)]=true
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256
