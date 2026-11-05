@@ -2,9 +2,10 @@
 
 This work connects exact private source523 images to existing presentation
 paths. It remains incomplete: no 95% actual-game-use claim is made. The latest
-instruction is to continue connection implementation without starting further
-research, comparisons, tests or validation. Changes made after that instruction
-are unverified; the already-running import and prior evidence are preserved.
+instruction is to connect available originals to actual existing game callers
+without starting further tests, runtime/render validation or quality audits.
+Missing data relationships may use relevant references with estimates labelled
+separately. Later changes remain unverified, and prior evidence is preserved.
 
 ## Original inventory and private pack
 
@@ -155,8 +156,10 @@ The item CSB lifecycle connection and `configure_original_ui(document, root,
 manifest_sha256)` handoff are also unexecuted. The latter accepts the existing
 `source_icon_scenes` document (`patch523-original-ui-icon-scenes-v1`) and opens
 the UI owner's pack before replacing scene bindings. No scene/clip bindings are
-generated from the image inventory. The UI player's code and exact scene pack
-must be installed separately; absent inputs remain an explicit missing result.
+generated from the image inventory. The received six-scene subsets use the UI
+owner's published player dependency recorded below. Other scene packs and their
+exact caller bindings remain explicit inputs; absent inputs return an explicit
+missing result.
 The later warehouse/transfer-selection record and presentation hooks are also
 unexecuted and unverified.
 The physical-instance inventory slot/detail hooks are likewise unexecuted.
@@ -256,6 +259,13 @@ records the existing parent and unshared status; no sharing permissions were
 added. Archive transfer does not establish installation or gameplay consumption.
 Private destination and file identities remain outside Git.
 
+An additive private runtime-selection handoff contains the explicit six-scene
+pack selection, producer-local environment example, source playback declarations
+and dependency provenance. It has been transferred to the same existing private
+Drive folder without adding sharing permissions or reuploading the 18 base ZIPs.
+The environment example has not been sourced, and transfer does not establish
+runtime registration, playback or game consumption.
+
 The earlier official Library upload stopped at tools/list HTTP401 before byte
 transfer. That path and the two earlier reference-archive downloads were not
 retried. The independent public format reference resolved the decoder input gap
@@ -313,10 +323,21 @@ inputs are implementation handoff work; no new test or validation was run.
 
 The existing `renewal_map.gd`/`field_minimap.gd` call path consumes the field's
 `overview_texture()`. The supplied all-world contract provides exact
-World-to-ImageInfo-to-AssetView relationships, source ratios and base locations.
-Connecting that contract to the current screen requires its caller-declared
-native World/ImageInfo identity and original map-screen coordinate/input
-contract. The current field overview remains preserved while those are absent.
+`UIMapWorld.LandID`-to-World-to-ImageInfo-to-AssetView relationships, source ratios
+and base locations. `scripts/maps/source523_map_image_adapter.gd` now reads that
+existing private relationship document with its supplied pin, joins an explicitly
+marked mobile field's Land ID, and requires the caller to choose the exact World.
+Its apply API passes the original texture to a caller-supplied existing image
+node through the current asset loader. It creates no node or coordinate rule.
+The API and ownership boundary are recorded in
+[`SOURCE523_MAP_IMAGE_HANDOFF.md`](SOURCE523_MAP_IMAGE_HANDOFF.md).
+
+The relationship document and its source manifest were transferred as an
+additive input ZIP to the existing private Drive folder. The 18 original ZIPs
+and source files remain unchanged. Connecting the current overview still needs
+the actual World selection, original target/rectangle and coordinate/input
+registration; the field overview is preserved while those inputs are absent.
+The new bridge is unexecuted and unverified.
 
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
