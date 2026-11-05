@@ -112,7 +112,7 @@ func _ready() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,44))
+	var detail_close: Button = UI.button("닫기",close_detail,Vector2(52,44))
 	detail_close.set_script(NATIVE_BUTTON)
 	detail_close.name = "InventoryDetailClose"
 	close_row.add_child(detail_close)
@@ -294,6 +294,11 @@ func _native_item_name_context(reference: String) -> Dictionary:
 	if not context is Dictionary or not context.get("ok",false):return {}
 	if not context.get("control") is Control or not is_instance_valid(context.control) or not context.get("scroll") is Control or not is_instance_valid(context.scroll):return {}
 	return context
+
+func close_detail() -> void:
+	# Shared existing close behavior; selection/query/locks and saves stay intact.
+	detail_active=false
+	_reflow()
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return

@@ -6,8 +6,9 @@ const SHA256 = "7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce
 const PARENT_MEMBER = "UI/ToolTipScene.csb"
 const PARENT_SHA256 = "9304dcb5730fba9a155f73a291a6e87f96768156cee972929b003386e3904a1d"
 const PROJECT = 1012
-const SOURCE_OFFSETS: Array[int] = [37228,37860,37284,36120,36708,36176]
-const BUTTONS: Array[int] = [37284,36176]
+const SOURCE_OFFSETS: Array[int] = [37228,37860,37284,36120,36708,36176,44536,44160,956]
+const LOCK_BUTTONS: Array[int] = [37284,36176]
+const BUTTONS: Array[int] = [37284,36176,956]
 var _pack: RefCounted
 var _bag: WeakRef
 var _parent: WeakRef
@@ -19,10 +20,11 @@ var _child: Node2D
 var _buttons: Array = []
 var _controls: Array = []
 var _reference: String=""
+var _header_hidden: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, bag: Control) -> Dictionary:
 	close()
-	if not is_instance_valid(bag) or not bag.has_method("_toggle_lock"): return _fail("source_inventory_lock_existing_bag_required")
+	if not is_instance_valid(bag) or (not bag.has_method("_toggle_lock") or not bag.has_method("close_detail")): return _fail("source_inventory_lock_existing_bag_required")
 	if pack == null or pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","") != SHA256 or pack.manifest.get("files",{}).get(PARENT_MEMBER,{}).get("sha256","") != PARENT_SHA256:
 		return _fail("source_inventory_lock_original_identity_mismatch")
 	var active: Dictionary = pack.scene(MEMBER)
@@ -49,7 +51,9 @@ func refresh(parent: Node) -> Dictionary:
 	var bindings: Dictionary = {
 		37228:{"visible":not model.locked},36120:{"visible":model.locked},
 		37284:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled},
-		36176:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled}
+		36176:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled},
+		44160:{"role":"source_text","text":model.name_text},
+		956:{"role":"button","activate":Callable(self,"_close_detail"),"displaystate":true}
 	}
 	var staged := Scene.new()
 	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}})
@@ -86,6 +90,9 @@ func refresh(parent: Node) -> Dictionary:
 		_close_scene()
 		return _fail("source_inventory_lock_mount_or_owner_changed")
 	model.action.hide()
+	for control: Control in [model.name_label,model.close_button]:
+		_header_hidden.append({"control":weakref(control),"visible":control.visible})
+		control.hide()
 	_replaced = true
 	bag.visibility_changed.connect(_visibility_changed)
 	bag.tree_exiting.connect(_close_scene)
@@ -106,6 +113,10 @@ func _close_scene() -> void:
 	if is_instance_valid(parent) and parent.tree_exiting.is_connected(_close_scene): parent.tree_exiting.disconnect(_close_scene)
 	var action: Object = _action.get_ref() if _action != null else null
 	if _replaced and is_instance_valid(action): action.visible = _action_visible
+	for record: Dictionary in _header_hidden:
+		var control: Object=record.control.get_ref()
+		if is_instance_valid(control):control.visible=record.visible
+	_header_hidden.clear()
 	_replaced = false
 	_action = null
 	_parent = null
@@ -131,7 +142,11 @@ func _apply(model: Dictionary) -> Dictionary:
 		if not result.get("ok",false):
 			_close_scene()
 			return result
-	for offset: int in BUTTONS:
+	var title_result: Dictionary=_child.set_bound_text(44160,model.name_text)
+	if not title_result.get("ok",false):
+		_close_scene()
+		return title_result
+	for offset: int in LOCK_BUTTONS:
 		var result: Dictionary = _child.set_bound_displaystate(offset,not model.disabled)
 		if not result.get("ok",false):
 			_close_scene()
@@ -157,6 +172,16 @@ func _activate() -> Dictionary:
 	result["owner_callback_invoked"] = true
 	return result
 
+func _close_detail() -> Dictionary:
+	var bag: Object=_bag.get_ref() if _bag!=null else null
+	var model: Dictionary=_model(bag)
+	if not model.get("ok",false) or model.reference!=_reference:
+		_close_scene()
+		return _fail("source_inventory_detail_presented_selection_changed")
+	bag.call("close_detail")
+	_close_scene()
+	return {"ok":true,"owner_close_invoked":true,"selection_cleared":false,"game_state_written":false}
+
 func _visibility_changed() -> void:
 	var bag: Object = _bag.get_ref() if _bag != null else null
 	if not is_instance_valid(bag) or not bag.is_visible_in_tree(): _close_scene()
@@ -170,7 +195,10 @@ static func _model(bag: Object) -> Dictionary:
 	var locked: Variant = state["item_locks"].get(reference,false)
 	if not locked is bool: return _fail("source_inventory_lock_actual_boolean_required")
 	if not action is BaseButton or not is_instance_valid(action) or action.is_queued_for_deletion(): return _fail("source_inventory_lock_existing_button_required")
-	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action}
+	var name_label: Variant=bag.get("detail_name")
+	var close_button: Node=bag.find_child("InventoryDetailClose",true,false)
+	if not bag.has_method("close_detail") or not name_label is Label or not is_instance_valid(name_label) or not close_button is BaseButton:return _fail("source_inventory_detail_existing_header_required")
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset") == offset: return node
