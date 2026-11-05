@@ -253,7 +253,18 @@ func _refresh_payout_images() -> void:
 	if reward_step.has_meta("source523_reward_images"): reward_step.remove_meta("source523_reward_images")
 	if not IMAGES.selected() or selected_id < 0: return
 	var selected_image: Dictionary = {}
-	if mode.selected == 3:
+	if mode.selected in [0, 1]:
+		# The selected row already resolved its explicit Market/ItemClass role.
+		# Preserve that same image result, including missing and owner exclusion.
+		var originals: Dictionary = listing.get_meta("source523_images", {})
+		for index: int in listing.item_count:
+			if listing.get_item_metadata(index) != selected_id: continue
+			var evidence: Variant = originals.get(str(selected_id))
+			if evidence is Dictionary:
+				selected_image = evidence.duplicate(true)
+				selected_image["texture"] = listing.get_item_icon(index)
+			break
+	elif mode.selected == 3:
 		var event: Dictionary = catalog.record("CumulativePurchase", selected_id)
 		if event.is_empty(): return
 		var images: Dictionary = {}
@@ -275,7 +286,7 @@ func _refresh_payout_images() -> void:
 	purchase.set_meta("source523_payout_image", true)
 	purchase.set_meta("source523_image", action_evidence)
 	purchase.set_meta("source523_image_provenance", selected_image.get("provenance", {}).duplicate(true))
-	purchase.set_meta("source523_image_status", str(selected_image.get("source_status", selected_image.get("reason", ""))))
+	purchase.set_meta("source523_image_status", str(selected_image.get("source_status", selected_image.get("status", selected_image.get("reason", "")))))
 
 func _item_name(id: int) -> String:
 	var item: Dictionary = catalog.record("ItemClass", id)
@@ -374,6 +385,7 @@ func _apply_quoted_item_image(quote: Dictionary) -> void:
 		var originals: Dictionary=listing.get_meta("source523_images",{}).duplicate(true)
 		originals[str(selected_id)]=evidence
 		listing.set_meta("source523_images",originals)
+		_refresh_payout_images()
 		break
 
 func _act() -> void:
@@ -392,7 +404,7 @@ func _act() -> void:
 		if quote.has("rule_origin"):body+="\n"+str(quote.npc_label)+"\n"+str(quote.rule_origin)
 		if quote.has("use_origin"):body+="\n"+str(quote.use_origin)
 		if quote.has("quota_text"):body+="\n"+str(quote.quota_text)
-	hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
+	var confirmation: Control = hud.confirm_action("원본 상점 · " + action, body, action, func(_unused: int) -> void:
 		var result: Dictionary
 		match current_mode:
 			0: result = runtime.buy(id, count)
@@ -411,6 +423,20 @@ func _act() -> void:
 				search.set_block_signals(false)
 			_build_entries()
 		else: _refresh_action())
+	if confirmation == null: return
+	var confirm_button: Variant = confirmation.get("confirm_button")
+	if not confirm_button is Button: return
+	confirm_button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if confirm_button.has_meta(key): confirm_button.remove_meta(key)
+	if current_mode not in [0, 1] or not IMAGES.selected() or not purchase.has_meta("source523_payout_image"): return
+	# This confirmation performs the same selected action; its icon is not a
+	# representative chosen from the order or product contents.
+	confirm_button.icon = purchase.icon
+	confirm_button.expand_icon = true
+	confirm_button.set_meta("source523_image", purchase.get_meta("source523_image", {}).duplicate(true))
+	confirm_button.set_meta("source523_image_provenance", purchase.get_meta("source523_image_provenance", {}).duplicate(true))
+	confirm_button.set_meta("source523_image_status", purchase.get_meta("source523_image_status", ""))
 
 func _order_detail(id: String) -> Array[String]:
 	if runtime == null: return ["보관함을 확인할 수 없습니다"]

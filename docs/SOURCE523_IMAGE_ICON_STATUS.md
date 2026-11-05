@@ -666,6 +666,26 @@ unsupported assets retain the existing loader result. Region selection, movement
 assessment, costs, coordinate policy, settings and saves keep their existing
 calls. This image hookup is unexecuted and unverified.
 
+The existing skill browser's learn, use and quickslot-registration buttons now
+consume the same selected skill record and canonical SpellClass `IconID` as
+their existing source list/detail image path. Selection changes and an empty
+filtered list clear the previous icons and texture-free image metadata. The
+lookup runs on selection, outside the existing cooldown polling loop. Skill
+learning, casting, registration eligibility, preview and save calls retain
+their existing records and behavior. Book and reagent controls are separate
+item roles and receive no guessed skill or representative-item image. This
+hookup is unexecuted and unverified.
+
+The existing source-shop purchase button and its existing confirmation button
+also retain the selected product/NPC listing's already resolved original icon
+and texture-free image evidence. An owner-quoted NPC exclusion or identity
+result updates the same selection image and action image together. Clearing or
+changing a selection removes the prior presentation; dismissal frees the
+existing confirmation button. Product quantities, quote/transaction arguments,
+IDs and owner exclusions retain their existing behavior. This adds no category
+representative image or second image lookup. These action hookups are
+unexecuted and unverified.
+
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
 independent SpellGroup choice and payment/commit data. Shared item views also

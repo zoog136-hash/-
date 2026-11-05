@@ -345,6 +345,7 @@ func select(index: int) -> void:
 		preview_vfx.clear()
 		preview_container.hide()
 	selected=filtered[index]
+	_bind_skill_action_images(selected)
 	summon_controls.hide()
 	learn_button.disabled=true
 	book_button.disabled=true
@@ -391,6 +392,7 @@ func select(index: int) -> void:
 
 func _clear_selection() -> void:
 	selected={}
+	_bind_skill_action_images({})
 	detail.text="검색 조건에 맞는 스킬이 없습니다."
 	cooldown.text=""
 	for button: Button in [learn_button,book_button,use_button,quick_button,preview_button]:
@@ -403,6 +405,20 @@ func _clear_selection() -> void:
 	preview_vfx.clear()
 	preview_container.hide()
 	selection_sheet.show_skill()
+
+func _bind_skill_action_images(record: Dictionary) -> void:
+	# These existing actions use this selected skill record. Book/reagent
+	# controls retain their separate, not-yet-declared item image identities.
+	for button: Button in [learn_button,use_button,quick_button]:
+		button.icon = null
+		if button.has_meta("source523_skill_image"): button.remove_meta("source523_skill_image")
+	if record.is_empty() or not Source523Images.selected(): return
+	var image: Dictionary = Source523Images.describe_skill(record,"IconID")
+	var evidence: Dictionary = Source523Images.evidence(image)
+	for button: Button in [learn_button,use_button,quick_button]:
+		button.icon = image.get("texture") as Texture2D
+		button.expand_icon = true
+		button.set_meta("source523_skill_image",evidence.duplicate(true))
 
 func original_field_text(value: String, field: Dictionary) -> String:
 	var display := UI.safe(value)
