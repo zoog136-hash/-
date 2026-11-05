@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "parent_public_code": "365c4a0fab5f205fc9bb04b14fa6c62fe8ad9abc",
+  "target_integration_main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+  "target_265_public_reference": "6957f1a5ca3901c416a0cb63629f839e6a7ebe0a",
+  "main_dependency_blob_equality": {
+    "scripts/quests/quest_reward_ownership.gd": "708c5816f59464427a08e085adb569160c18b740",
+    "scripts/quests/quest_service.gd": "b7dd0ea22b16df056480c0522f3edf6b94ef2595",
+    "scripts/quests/quest_held_use238.gd_before_adapter": "8bd5580ce8ac3a34e17d279aa82ea3a2ce7398ab"
+  },
+  "tests": [
+    {
+      "case": "contract-final",
+      "result": {
+        "checks": 735,
+        "failures": [],
+        "scope": "actual quest-produced ownership and shared-ledger contract; batch save is QA ownership layer, not a claimed265 processing effect",
+        "selected_item_class": 313
+      }
+    },
+    {
+      "case": "actual-consumer",
+      "result": {
+        "actual_item_classes": [
+          376,
+          385
+        ],
+        "cadence_policy": "TWILIGHT configurable30s; source interval not verified",
+        "checks": 729,
+        "controlled_class_and_tick_contexts_not_natural_probabilities": true,
+        "failures": [],
+        "knight_some_use_pending_before_actions_without_skillv3": 326,
+        "mode": "normal",
+        "source_completions": 811
+      }
+    },
+    {
+      "case": "uncertain",
+      "result": {
+        "actual_item_classes": [],
+        "cadence_policy": "TWILIGHT configurable30s; source interval not verified",
+        "checks": 6,
+        "controlled_class_and_tick_contexts_not_natural_probabilities": true,
+        "failures": [],
+        "knight_some_use_pending_before_actions_without_skillv3": 326,
+        "mode": "uncertain",
+        "source_completions": 811
+      }
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    {
+      "case": "history",
+      "result": {
+        "checks": 12,
+        "failures": [],
+        "save_unchanged": true,
+        "scope": "actual partial-source historical identity refusals and nonmutating metadata preservation"
+      }
+    },
+    {
+      "case": "zero",
+      "result": {
+        "checks": 710,
+        "failures": [],
+        "scope": "actual quest-produced full-remainder ownership-layer transaction; no265 processing effect claimed"
+      }
+    }
+  ],
+  "focused_checks": 2236,
+  "checks_include_per_unchanged_physical_assertions_not_unique_features": true,
+  "timing": "Additional historical item/blessing checks and ABI availability guards were added after the passing batch run; final history case targets those guards on actual partial-use state. Final real-consumer/uncertain/Core checks cover the shared runtime adapter. No completed full suite is claimed to have been rerun.",
+  "contract": {
+    "script": "scripts/quests/quest_reward_consumption.gd",
+    "available": "available(world:Node)->bool (ABI shape only; stage still verifies source rows/claims)",
+    "stage": "stage(world:Node,requests:Array,consumer_data_sha256:String)->Dictionary",
+    "current": "current(world:Node,candidate:Dictionary)->bool",
+    "matches_payload": "matches_payload(world:Node,candidate:Dictionary,payload:Dictionary)->bool",
+    "request_fields": [
+      "physical_id",
+      "quantity",
+      "expected_quantity",
+      "expected_remaining",
+      "quest_reward_receipt"
+    ],
+    "overrides": [
+      "inventory",
+      "item_instances",
+      "quest_state"
+    ],
+    "use_authorized": false
+  },
+  "first_proof_policy": "pack_sha256 remains the immutable first-consumer data proof; current verified consumer artifact is separately returned as consumer_data_sha256. Caller must record its own rule digest in its transaction log and verify the installed data. No238 identity or installed-pack proof is fabricated for265.",
+  "actor_scope": "Exact current receipt-bearing source_pending_use ownership; no legacy/raw-name conversion. Exact original source row, source SHA/quest/reward/ItemClass/blessing/granted quantity, current remaining and history identity/used count checked.",
+  "payload_guard": "Reject stale/changed selection, overlaid old inventory/quest ledger, changed unselected quest records, wrong selected remaining/full physical state, new fabricated quest receipt, selected erased-ID reuse and inconsistent physical/inventory sum. Other canonical output/effect/cost/RNG validation remains the effect owner responsibility.",
+  "actual_runtime_connection": "Existing238 held-buff candidate now calls stage + matches_payload and saves that debit/effect/quest-state payload once. No UI or source effect-rule changes.",
+  "ownership_only_batch_not_265_effect_completion": true,
+  "existing_bounded_item_class_count": 49,
+  "remaining_classes_unchanged": 97,
+  "new_processing_or_source_effect_completed_classes_claimed": 0,
+  "publishing_scope": "Existing PR262 is closed after266 integration. Only its existing feature branch gets the bounded code checkpoint; no reopening/new PR/title/body/main change.",
+  "no_other_branch_or_main_merge": true,
+  "no_264_honing_original_UI_218_changes": true,
+  "no_full_or_manual_ci": true,
+  "private_references_omitted_from_public_summary": true,
+  "private_runtime_identifiers_omitted": true
+}

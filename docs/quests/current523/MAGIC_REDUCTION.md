@@ -1,0 +1,9 @@
+# Source30213 selected gear and incoming magic
+
+The genuine current quest-issued30213 unit now reaches the existing equipment owner, AC5/MR2 and source magic damage reduction3%. It requires the pinned38ee source catalogue and the existing exact36196-byte private equipment view7b023b445056cfdd79861f4327bbe6ef1a61884956682c46cefe93ac662aba30. Source raw percentage30000 is preserved; it is not an adjustable balance value. The original armour guide corroborates3%: https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C . Current source AC5 takes priority over older web values.
+
+The selected owned unit/immutable input proof, exact normal+0 physical output, equip state and use receipt use the existing single atomic owner save. The common incoming hit path reauthenticates that actual worn UUID before applying the reduction once. Unequipped, missing input, unsupported enhancement/proof or non-magic channels receive no new reduction. The existing source-NPC hit wrapper uses the same hook.
+
+Ordering and integer rounding reuse TWILIGHT's existing pipeline: after critical before element/other defenses, nearest integer and minimum1. These are explicitly host policies; native order/rounding is unverified. Setting the existing preference dictionary entry quest523_source_magic_reduction_enabled=false disables the new hook without changing source data or ownership.
+
+729 focused assertions passed: real old producer receipt -> existing inventory equip button -> original effects -> cancel/save failure -> unchanged other objects -> unequip/re-equip -> save/reconnect. Controlled actual monster-scene hit context measures magic1000->970 and unchanged melee/ranged1000. Natural encounters, hit probabilities and native formula equivalence are not proved. The first bare-monster test failed and is excluded. No UI/art replacement, resource transfer, map rebuild,265 processing or main merge is claimed.

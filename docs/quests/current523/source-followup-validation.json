@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "preserved_LOCAL_ONLY_parent": "19d1fd97cb30660b4ff374a6f9d4275fee33dc7d",
+  "actual_worktree_HEAD": "bb480da497c4851baf811e9d74b04f6dfd8a679c",
+  "public_head": "3b53de35638628c7c76c4c2cdcaf432e1e019deb",
+  "main_not_changed": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+  "new_bounded_ItemClasses": [
+    1186,
+    282793,
+    295524,
+    310
+  ],
+  "reviewed": 58,
+  "remaining": 88,
+  "cure_tests": [
+    {
+      "case": "held",
+      "result": {
+        "checks": 719,
+        "controlled_poison_not_natural_NPC_probability": true,
+        "effect_owner": "existing Player.clear_poison",
+        "existing_transient_load_policy_preserved": true,
+        "failures": [],
+        "item_class_id": 310,
+        "mode": "held",
+        "other_poison_DOT_or_curse_namespaces_not_erased": true,
+        "source_buff_class_id": 27
+      }
+    },
+    {
+      "case": "fresh",
+      "result": {
+        "checks": 425,
+        "controlled_poison_not_natural_NPC_probability": true,
+        "effect_owner": "existing Player.clear_poison",
+        "existing_transient_load_policy_preserved": true,
+        "failures": [],
+        "item_class_id": 310,
+        "mode": "fresh",
+        "other_poison_DOT_or_curse_namespaces_not_erased": true,
+        "source_buff_class_id": 27
+      }
+    },
+    {
+      "case": "uncertain",
+      "result": {
+        "checks": 8,
+        "controlled_poison_not_natural_NPC_probability": true,
+        "effect_owner": "existing Player.clear_poison",
+        "existing_transient_load_policy_preserved": true,
+        "failures": [],
+        "item_class_id": 310,
+        "mode": "uncertain",
+        "other_poison_DOT_or_curse_namespaces_not_erased": true,
+        "source_buff_class_id": 27
+      }
+    },
+    {
+      "case": "legacy-state",
+      "result": {
+        "checks": 4,
+        "failures": [],
+        "input_save_bytes_unchanged": true,
+        "old_reusable_namespace_preserved": true
+      }
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    }
+  ],
+  "cure_focused_assertions": 1200,
+  "prior_source_buff_tests": [
+    {
+      "case": "held",
+      "result": {
+        "checks": 2127,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "held",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "fresh",
+      "result": {
+        "checks": 1266,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "fresh",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "uncertain",
+      "result": {
+        "checks": 9,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "uncertain",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "xp-kill",
+      "result": {
+        "checks": 11,
+        "controlled_actor_kill_callback_not_natural_encounter_or_native_stacking_equivalence": true,
+        "failures": [],
+        "measured": [
+          {
+            "ain_rate": 4.0,
+            "gained": 440,
+            "item_multiplier": 1.0,
+            "name": "늑대인간",
+            "original_actor_exp": 110,
+            "source_monster_id": null
+          },
+          {
+            "ain_rate": 4.0,
+            "gained": 484,
+            "item_multiplier": 1.1,
+            "name": "늑대인간",
+            "original_actor_exp": 110,
+            "source_monster_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    }
+  ],
+  "source_buff_focused_assertions": 3457,
+  "assertions_include_repeated_unchanged_physical_records_not_unique_features": true,
+  "version_scope": "R13 source/food/XP tests precede only310 routing and optional cure persistence namespace. R14 tests and Core validate final cure code. Actual old R12 reusable-state load verifies no counter/unknown-extension conversion. No unperformed full rerun claimed.",
+  "measured_XP_kill": {
+    "same_existing_monster": "늑대인간",
+    "original_exp": 110,
+    "same_Ain_rate": 4,
+    "without_source_potion": 440,
+    "with_source_potion": 484,
+    "natural_encounter_or_native_formula_equivalence": false
+  },
+  "source_numbers": {
+    "XP_raw_percent": 100000,
+    "XP_percent": 10,
+    "duration_seconds": 1800,
+    "food_HP": 2,
+    "food_MP": 3,
+    "item_delay_ms": 500,
+    "cure_BuffClass": 27
+  },
+  "host_policies": {
+    "food_cadence": "existing30s configurable via quest523_food_regen_interval_seconds; <=0/invalid holds item",
+    "native_food_cadence_verified": false,
+    "native_XP_stacking_and_rounding_verified": false,
+    "cure_no_target": "conservative preserve-item policy, visibly labelled",
+    "cure_status_lifetime": "reuse existing valid-load clear_status_effects; failure preserves live poison; no new persisted poison rule",
+    "cure_effect_scope": "existing Player.clear_poison only; unknown source DOT/curse namespaces untouched"
+  },
+  "source_and_primary_evidence": "exact pinned38ee item/buff joins; source ConstantData490/IntervalBonus130/IntervalBonusCategory42 checked; official NC consumables guide confirms instant antidote and food duration/effects, no verified native recovery clock",
+  "primary_link": "https://lineagem.plaync.com/guidebook/view?title=%EC%9D%BC%EB%B0%98+%EC%95%84%EC%9D%B4%ED%85%9C",
+  "prior_19d_snapshot_all16_files_unchanged": true,
+  "both_original811_822_saves_packs50slots_unchanged": true,
+  "guardian147672_dependency": {
+    "mapping": "actual installed guardian source Currency822 -> Unit4 Class147672, not a name-only guess",
+    "rows": [
+      {
+        "ID": 832,
+        "CurrencyID": 822,
+        "UnitID": 4,
+        "ClassID": 147672,
+        "ConsumePriority": 1,
+        "ForGive": false
+      }
+    ],
+    "legacy_spend_exists": "scripts/growth/growth_runtime.gd uses inventory[수호석] for activate/choose/guardian_enchant; no selected quest receipt/native canonical inventory staging contract",
+    "required_boundary": "source-selected debit plus growth result/RNG/guardian_spent/refund lineage in one candidate; legacy balances must stay separate",
+    "implemented_or_counted": false
+  },
+  "publication": {
+    "state": "LOCAL_ONLY, not attempted",
+    "scope_check_required_before_posting": true,
+    "no_denial_claimed": true,
+    "no_new_PR_main_other_branch_or_metadata_write": true
+  },
+  "no_new_source_pack_report_capture_upload_or_download": true,
+  "no_other_owner_honing_or_UI_change": true,
+  "no_full_or_manual_CI": true,
+  "private_references_omitted_from_public_summary": true,
+  "private_runtime_identifiers_omitted": true
+}
