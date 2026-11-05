@@ -93,3 +93,28 @@ difficulty factors, rewards, save state, issued tokens and restore behavior are
 unchanged. The descriptor/cache is not persisted; restore rebuilds it only
 from the exact held original relation. Missing/ambiguous/changed source keeps
 the previous no-input behavior. No test/compile/game/render/CI was run.
+
+## Existing equipment percentage operands
+
+The current native DTO preserves CastSpeedBonus and EinasadSavingPercent as
+unhandled source bonuses, while actual equipment consumers already exist.
+`ItemOptions.additional_original_percent(record,key)` now supplies those
+missing base operands from current ItemClass→ItemBonus→Bonus→BonusType→Unit.
+It requires the exact native DTO/archive/full original row, mapped equipment,
+existing base ID, non-Test/non-dummy and a direct non-possession Percentage
+effect. Conditional/unknown data does not supply an operand. It uses the same
+10,000-raw-per-percentage-point conversion as the existing projections.
+
+The actual calls are World._equipment_inven_sum("castSpeed") (under its existing
+cast-speed consumer policy) and AinOptionRules.reduction_percent(record).
+Explicit typed operands/aliases keep precedence. Already represented source
+bonus IDs are never counted again; a marked existing enhancement overlay can
+retain its value alongside an otherwise missing original base contribution.
+Legacy sourceOptions handling and the existing caps/formulas stay intact.
+
+DTO/source-unhandled markers, registration, equipment/ownership, quantity and
+save fingerprints are not rewritten by this read adapter. Runtime source
+input evidence is separate from adoption/counting. This adds actual original
+numeric inputs to established consumers, not a new effect or save engine.
+It remains uncompiled/unexecuted/unverified and does not complete the item
+or Bonus tables. No source rows/packs/saves or images were published.

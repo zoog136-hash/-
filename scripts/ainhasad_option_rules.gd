@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightAinOptionRules
+const ORIGINAL_INPUT = preload("res://scripts/item_options.gd")
 
 # Generic equipped-card/item blessing-consumption passive.
 # Original numeric sourceOptions are used only when an explicit typed field is
@@ -35,9 +36,11 @@ static func option_percent(raw: String) -> float:
 	return clampf(float(number), 0.0, 100.0)
 
 static func reduction_percent(record: Dictionary) -> float:
+	var original: float = ORIGINAL_INPUT.additional_original_percent(record,"blessing_consumption_reduction_pct")
 	for key: String in TYPED_KEYS:
 		if record.has(key):
-			return clampf(float(record.get(key, 0.0)), 0.0, 100.0)
+			return clampf(float(record.get(key, 0.0))+original, 0.0, 100.0)
+	if original!=0.0: return clampf(original,0.0,100.0)
 	var options_value: Variant = record.get("sourceOptions", [])
 	if not (options_value is Array):
 		return 0.0

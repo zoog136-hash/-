@@ -947,6 +947,7 @@ func _equipment_inven_sum(key: String) -> float:
 		if raw is Dictionary and not (raw as Dictionary).is_empty():
 			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
 			total += float(record.get(key, 0.0))
+			total += ITEM_OPTIONS.additional_original_percent(record,key)
 	for record: Dictionary in _equipment523_bonus_records():
 		total += float(record.get(key, 0.0))
 	return total

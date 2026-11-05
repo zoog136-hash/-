@@ -1,6 +1,48 @@
 extends RefCounted
 class_name TwilightItemOptions
 const CURRENT_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+static var original_percent_input_evidence: Dictionary = {}
+
+static func additional_original_percent(record: Dictionary, key: String) -> float:
+	# Missing base equipment operands only. Existing DTO fields and mapped
+	# bonuses win; enhancement overlays remain separate existing contributions.
+	var names: Dictionary = {"castSpeed":"CastSpeedBonus","blessing_consumption_reduction_pct":"EinasadSavingPercent"}
+	if not names.has(key) or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
+	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
+	var bless: Variant = record.get("source_bless_raw")
+	if typeof(bless) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(bless)) or float(bless)!=floorf(float(bless)) or int(bless) not in [1,2,3]: return 0.0
+	if record.has(key) and not record.get("_patch523_effective_extras",false): return 0.0
+	if key=="blessing_consumption_reduction_pct" and not record.get("_patch523_effective_extras",false):
+		for alias: String in ["ain_consumption_reduction_pct","blessing_spend_reduction_pct"]:
+			if record.has(alias): return 0.0
+	var id: Variant = record.get("source_item_class_id")
+	if typeof(id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(id)) or float(id)!=floorf(float(id)) or float(id)<=0 or float(id)>9007199254740991.0: return 0.0
+	if record.get("sourceId")!="m523:item:"+str(int(id)): return 0.0
+	var identity: Dictionary = CURRENT_DEFINITIONS.identity()
+	if identity.is_empty() or record.get("source_definition_archive")!=identity: return 0.0
+	var raw: Dictionary = CURRENT_DEFINITIONS.row("ItemClass",int(id))
+	if raw.is_empty() or raw!=record.get("source_original_item") or raw.get("TestItem")!=false or not CURRENT_DEFINITIONS.declared_exclusion("ItemClass",raw).is_empty(): return 0.0
+	var applied: Variant = record.get("source_mapped_bonuses")
+	if not applied is Array: return 0.0
+	var total: float = 0.0; var evidence: Array = []
+	for link: Dictionary in CURRENT_DEFINITIONS.related("ItemBonus","ItemClassID",int(id)):
+		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(link.get("BonusID",-1)))
+		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
+		if type.get("Name")!=names[key]: continue
+		if link.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
+		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
+		if unit.get("Name")!="Percentage": return 0.0
+		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
+			if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return 0.0
+		for represented: Variant in applied:
+			if represented is Dictionary and represented.get("bonus_id")==bonus.get("ID"): return 0.0
+		var value: Variant = bonus.get("Value")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
+		total+=float(value)/10000.0
+		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit})
+	if evidence.is_empty() or not is_finite(total): return 0.0
+	original_percent_input_evidence[str(int(id))+":"+key] = {"source":identity,"item_class_id":id,"field":key,"effects":evidence,"raw_per_percent":10000,"value":total}
+	return total
 
 # Item option adapter: typed record fields take precedence over legacy Korean
 # descriptions. This keeps preexisting catalog records and save data unchanged.
