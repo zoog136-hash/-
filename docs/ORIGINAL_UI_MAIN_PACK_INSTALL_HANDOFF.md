@@ -33,7 +33,7 @@ Runtime selection uses both of:
 ```
 
 Equivalent environment keys are `TWILIGHT_SOURCE_UI` and
-`TWILIGHT_SOURCE_UI_SHA256`. SourceMainSelection.selected_pack() opens this
+`TWILIGHT_SOURCE_UI_SHA256`. `source_main_selection.gd` static `selected_pack()` opens this
 selection; `renewal_hud.bind_original_main_ui(pack)` accepts an already opened
 pack. Missing/incorrect supplied inputs are reported; another asset pack is not
 selected as a substitute. No image pack, animation clip or repeat argument is

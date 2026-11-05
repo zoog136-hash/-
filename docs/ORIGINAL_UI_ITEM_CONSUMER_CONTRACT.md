@@ -607,6 +607,13 @@ concrete caller; their mere availability is not game connection completion.
 Two retained current523 parent candidates differ: UI/FloatingUiScene Project
 1572 (alpha0, position1015,345) and UI/FloatingUi/FloatingUiScene Project9776
 (alpha255, position1008,345). Neither is silently substituted for the other.
+Both originals declare Inventory_All_On frames5..17 and animate the original
+inventory ProjectNode's position/color/alpha/inner action. Their raw default
+alpha/position differences must not be treated as proof that either original
+is unusable. `source_main_inventory_bindings.parent_contract(member)` exposes
+both exact identities/offsets and that source clip without default parent or
+loop selection. Original row registration/placement and the application's
+actual parent selection still remain caller inputs.
 
 These additions were not executed or rendered. Historical 524 dependency/317
 inspection counts and the lack of a whole-560 gameplay completion numerator

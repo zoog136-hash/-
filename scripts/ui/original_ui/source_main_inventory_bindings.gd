@@ -7,11 +7,22 @@ const CLOSE=31020
 const TABS={"전체":[41748,40288],"장비":[38868,37448],"소모품":[36028,34608],"기타":[33196,31784]}
 const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
+# Both retained current523 parents declare this same named source clip.
+# Choosing the application's parent/caller remains explicit; alpha0 is not
+# evidence that the top-level source is unusable or should be replaced.
+const PARENTS={
+	"UI/FloatingUiScene.csb":{"sha256":"b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8","project_offset":1572},
+	"UI/FloatingUi/FloatingUiScene.csb":{"sha256":"70e58e33ecce971de43b558c1464620a799dd33ac6f98558a91401cb996bc14d","project_offset":9776}
+}
 signal model_changed(model: Dictionary)
 var _pack: RefCounted
 var _inventory: WeakRef
 var _scene: WeakRef
 var _dismiss_presenter: Callable
+
+static func parent_contract(parent_member: String) -> Dictionary:
+	if not PARENTS.has(parent_member):return _fail("source_main_inventory_explicit_parent_required")
+	return {"ok":true,"member":parent_member,"sha256":PARENTS[parent_member].sha256,"project_offset":PARENTS[parent_member].project_offset,"child_member":MEMBER,"child_sha256":SHA256,"original_clip":{"name":"Inventory_All_On","start_frame":5,"end_frame":17},"loop_declared":false,"original_design_size":[1200,675],"requires_parent_timeline":true,"complete_screen_contract":false}
 
 func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable()) -> Dictionary:
 	if pack==null or pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
