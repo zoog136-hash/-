@@ -798,6 +798,7 @@ func _load_data() -> void:
 	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	patch523_craft_catalog_status=PATCH523_CRAFT_CATALOG.register(catalog_db,PATCH523_CRAFT_CATALOG.available())
+	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(catalog_db)
 	_index_catalog_item_sources()
 	_load_verified_catalog_options()
 	_stash_inven_raw_options()
@@ -843,6 +844,7 @@ func _load_data() -> void:
 
 func _refresh_patch523_drop_catalog() -> void:
 	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
+	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(catalog_db)
 	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
 	_index_catalog_item_sources()
 	_index_item_weights()
@@ -1019,7 +1021,7 @@ func _normalize_option_policies() -> void:
 					entry["sourceOptions"] = normalized_options
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
-	if BASE508.native(source_record):
+	if category in ["변신","마법인형","성물"] and BASE508.native(source_record):
 		var canonical: Dictionary=BASE508.canonical(source_record)
 		if canonical.get("source_snapshot","")=="patch523" and not _patch523_card_available(category,canonical):return {}
 		return canonical

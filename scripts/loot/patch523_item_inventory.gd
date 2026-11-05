@@ -1,5 +1,6 @@
 extends RefCounted
 ## Shared exact-ID supplier contract. Prices/recipes/skills remain with owners.
+const SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const MAX_EXACT_JSON_INTEGER: int = 9007199254740991
 
@@ -14,6 +15,17 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or absf(float(value)) > MAX_EXACT_JSON_INTEGER: return {"ok":false,"error":"원본 지급 수치 형식 확인 실패"}
 		var id: String = str(int(grant.get("item_class_id",-1)))
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(id)).is_empty():return {"ok":false,"error":"원본 더미 선언 아이템은 신규 지급에서 제외 · 기존 소유 보존"}
+		if int(id) in SUPPLY.IDS:
+			var amount_value: Variant=grant.get("amount",0)
+			if float(grant.get("item_class_id",-1))!=int(id) or float(amount_value)!=floorf(float(amount_value)) or int(amount_value)<1 or grant.get("bless_raw")!=1 or grant.get("enchant")!=0:return {"ok":false,"error":"새 원문 각성 공급 수량·일반 축복·강화 조건 불일치"}
+			var current: Dictionary=SUPPLY.record(int(id))
+			if current.is_empty() or not SUPPLY.exact(world._catalog_item_from_source_id(str(current.sourceId)),int(id)):return {"ok":false,"error":"새 원문 각성 공급 정의 미등록 · 기존 소유 보존"}
+			var name_value: String=SUPPLY.key(current);var previous_amount: Variant=inventory.get(name_value,0)
+			if not SUPPLY.integer(previous_amount) or int(previous_amount)>MAX_EXACT_JSON_INTEGER-int(amount_value):return {"ok":false,"error":"원문 공급 수량 범위 초과"}
+			var typed: Dictionary=SUPPLY.stage_grant(current,int(amount_value),instances,origin)
+			if not typed.get("ok",false):return {"ok":false,"error":"새 원문 각성 공급 영수증 생성 실패"}
+			instances=typed.item_instances;inventory[name_value]=int(previous_amount)+int(amount_value)
+			continue
 		var summary: Dictionary = D.data().get("item_definitions",{}).get(id,{})
 		if int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
 			var exact_definition: Dictionary=D.definition_id(id)

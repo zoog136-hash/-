@@ -96,3 +96,34 @@ No main merge, new PR/environment/installer, private data upload, source/pixel
 generation, pack replacement, save conversion or original deletion occurred.
 Sound and the existing user exclusions remain excluded. These code changes do
 not establish a new whole-source gameplay usage percentage.
+
+## Current-source typed supply follow-up
+
+`native_awakening_supply.record/stage_grant/proof` now construct new supplier
+records from the held original ItemClass/category/grade/descriptor instead of a
+sidecar DTO. New schema2 supply receipts retain the original archive, immutable
+granted quantity and actual supplier origin; partial quantity remains a separate
+physical field. No generic native/use/equipment implementation flag is invented.
+Historical schema1 receipts remain distinct and require their exact original
+issuance representation plus full-row agreement with the current source.
+
+`install_current_definitions` changes registered prototypes only for a proven
+same exact source ID and original row; unknown/ambiguous entries are preserved.
+It never rewrites an owned item. Normal World setup rebuilds the existing source
+index afterward. `patch523_item_inventory.stage` uses this registered definition
+for those reviewed supply IDs and stages typed quantity/receipt together. The
+four-field grant API and full-candidate return semantics are unchanged.
+The shared owned-input adapter also reads exact current Class rows and the
+existing chosen class label rather than guessing an integer class mapping.
+
+The source-card canonicalizer and World card-availability guard are scoped away
+from item source IDs; an item cannot be rejected merely because it has no card
+registry entry. No missing card definition is made available by this distinction.
+All these follow-up changes remain unexecuted/unverified.
+
+The later public271 `3c7ea50e121004c30c5ff640000d85487f2d92fb` drop input is retained
+for the next narrow integration. Its `definition_id` explicitly supplies no
+current native DTO. The remaining generic item DTO/effect projection and the
+old schema3 source-item save-marker boundary must be joined without weakening
+save preservation or reactivating historical sidecars as final input. That
+pending reader is not claimed installed or working by this checkpoint.

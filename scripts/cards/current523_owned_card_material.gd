@@ -21,7 +21,16 @@ static func eligibility(world: Node,raw: Dictionary) -> String:
 	for field: String in ["StartDateTimeID","EndDateTimeID","ServerLimitSetID","ServerLimitsetID"]:
 		if raw.has(field) and C.nonnegative(raw[field])!=0:return "원본 기간·서버 사용 조건 연결 필요"
 	if not str(raw.get("ServiceRegionCode","")).is_empty():return "원본 서비스 지역 조건 연결 필요"
-	if not SOURCE.related("ItemClassLimit","ItemClassID",int(raw.ID)).is_empty():return "원본 직업 사용 조건 소비자 연결 필요"
+	var limits: Array[Dictionary]=SOURCE.related("ItemClassLimit","ItemClassID",int(raw.ID))
+	if not limits.is_empty():
+		var matches: Array=[]
+		for entry: Dictionary in preload("res://scripts/lineagem_base508.gd").cards().get("classes",[]):
+			if entry.get("name")==world.get("job_class") and entry.get("source_original") is Dictionary and SOURCE.row("Class",int(entry.source_original.get("ID",0)))==entry.source_original:matches.append(entry.source_original)
+		if matches.size()!=1:return "정확한 현재 원본 직업 정체 연결 필요"
+		var allowed: bool=false
+		for link: Dictionary in limits:
+			if int(link.get("ClassID",0))==int(matches[0].ID) and SOURCE.declared_exclusion("ItemClassLimit",link).is_empty():allowed=true
+		if not allowed:return "원본 직업 사용 조건 불일치"
 	return ""
 
 static func prepare(world: Node,raw: Dictionary,archive: Dictionary,rule: Dictionary,selected: String="") -> Dictionary:
