@@ -36,9 +36,19 @@ TWILIGHT 자체 정책(`TWILIGHT_CURRENT523_TERRITORY_DENSITY_V1`)에서, 리스
 6. 플레이어 주변 40셀 안의 구역만 생성하고(상속된 `OriginalSourcePopulation`),
    먼 개체는 풀로 돌린다. 한 프레임 2마리까지만 만든다.
 
-각 구역은 정확한 원문 키 하나(`lineagem_base508:npc:N:spawn:V:territory:T`)만 요청한다.
-실제 생성 여부와 그림은 기존 명단·입장 검사·시각 담당이 정한다(main: base508 팩,
-PR #269/#272 이후: current523 원본 + Sprite272 은행). 해석 실패 구역은 조용히 건너뛴다.
+각 구역은 정확한 원문 키 하나(`lineagem_base508:npc:N:spawn:V:territory:T`, 기존 키 형식)만
+요청한다. 보스 판정은 현재 원본 NpcClass/Territory 이름의 `[필드보스` 표기만 쓴다.
+
+### 구형 팩 의존 없음
+
+- 이 기능의 코드는 base508 몬스터 팩(PACK.actor/VIEW.configure)과 base508 권위 카탈로그를
+  읽지 않는다.
+- `Current523SourcePopulation`은 `source_m_current523_final == true`이고
+  `source_m_asset_manifest_path`가 빈 레코드만 생성한다. 구형 팩으로 해석된 레코드는
+  `old_pack_record_refused`로 보류하며 대체 입력으로 쓰지 않는다.
+- 현재523 레코드는 PR #269의 명단/생성 관문과 PR #272의 원본 은행이 만든다. 따라서
+  main 단독에서는 구역만 만들어지고 몬스터는 나오지 않는다(안내창에 표시).
+  권장 병합 순서: #272 → #269 → 이 PR.
 
 ## 실행 연결 (`current523_aden_play_controller.gd`)
 

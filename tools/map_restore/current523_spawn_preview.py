@@ -3,14 +3,13 @@
 
 Mirrors the GDScript selection/count rules so the regions a Land would receive
 can be checked without Godot. Reads only the locally installed private pack and
-the public authoritative catalog; writes nothing unless --out is given.
+no old base508 catalog or pack; writes nothing unless --out is given.
 
     python3 tools/map_restore/current523_spawn_preview.py \
       --pack /private/patch523-world-links --land 4
 """
 import argparse
 import collections
-import gzip
 import hashlib
 import json
 import math
@@ -22,15 +21,9 @@ MAX_TERRITORY_CELLS = 200000
 TAGS = ["[QUEST]", "[퀘스트]", "[메인]", "[깃발전]", "[스케줄]", "[이벤트]"]
 NON_HUNT = {"Citizen", "Guard", "Slime", "SiegeNpc", "PartyNpc", "PartyImportantNpc", "LastavardGateKeeper", "Companion"}
 CONDITION_TABLES = ["NpcSpawnPackSchedulePeriod", "DaynightSpawnPack", "WorldBossRaidView"]
-CATALOG = Path(__file__).resolve().parents[2] / "data/lineagem_base508/monster_full/authoritative_catalog.bin"
 
 
-def ui_bosses():
-    data = json.loads(gzip.open(CATALOG).read())
-    return {row["npc_id"] for row in data["rows"] if row.get("source_ui_boss")}
-
-
-def preview(pack: Path, land_id: int, bosses: set) -> dict:
+def preview(pack: Path, land_id: int) -> dict:
     manifest = json.loads((pack / "manifest.json").read_text())
     shard = json.loads((pack / manifest["lands"][str(land_id)]["file"]).read_text())
     categories = {row["ID"]: row for row in json.loads((pack / "conditions.json").read_text())["tables"]["NpcCategory"]}
@@ -42,7 +35,8 @@ def preview(pack: Path, land_id: int, bosses: set) -> dict:
     conditioned = {row["NpcSpawnPackID"] for table in CONDITION_TABLES for row in shard["pack_context"][table]}
 
     def boss(npc_id, territory):
-        return npc_id in bosses or "[필드보스]" in territory["Name"] or "[필드 보스]" in territory["Name"]
+        names = (npcs[npc_id]["Name"], territory["Name"])
+        return any(label in name for name in names for label in ("[필드보스", "[필드 보스"))
 
     def enemy(npc):
         category = categories.get(npc.get("Category"), {})
@@ -98,8 +92,7 @@ def main():
     if digest != PINNED:
         raise SystemExit(f"manifest SHA256 {digest} is not the pinned cumulative523 pack")
     lands = args.land or sorted(int(k) for k in json.loads((args.pack / "manifest.json").read_text())["lands"])
-    bosses = ui_bosses()
-    results = [preview(args.pack, land, bosses) for land in lands]
+    results = [preview(args.pack, land) for land in lands]
     for result in results:
         if result["regions"]:
             print(f"Land{result['land_id']:>6} {result['name'][:28]:<28} regions={result['regions']:>4} slots={result['slots']:>4} kinds={result['kinds']:>3} bosses={result['bosses']:>2}")

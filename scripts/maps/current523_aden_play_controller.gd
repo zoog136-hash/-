@@ -380,6 +380,8 @@ func _spawn_notice_line() -> String:
 	if spawn_summary.is_empty(): return "몬스터: 없음"
 	if not bool(spawn_summary.get("ok",false)):
 		return "몬스터: 출현 정의 팩 없음 (patch523-world-links 설치 필요)"
+	if int(spawn_summary.get("regions",0))>0 and int(spawn_summary.get("registered",0))==0:
+		return "몬스터: 원문 구역 %d곳 · 현재523 원본 몬스터 연결 없음 (구형 팩은 사용하지 않음)" % int(spawn_summary.get("regions",0))
 	return "몬스터: 원문 구역 %d곳 중 %d곳 사용 가능 · 보스 %d · 마리 수는 자체 정책 · 리스폰은 기존 규칙" % [int(spawn_summary.get("regions",0)),int(spawn_summary.get("registered",0)),int(spawn_summary.get("bosses",0))]
 
 func _return_pressed() -> void:

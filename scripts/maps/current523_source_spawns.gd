@@ -11,7 +11,6 @@ extends RefCounted
 ## gate and visual owner still decide whether an actor can be created.
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
-const FULL = preload("res://scripts/monsters/base508_authoritative_catalog.gd")
 const PLACEMENT_POLICY: String = "TWILIGHT_CURRENT523_TERRITORY_DENSITY_V1"
 ## One actor per this many source cells of a territory, per spawn relation.
 const CELLS_PER_ACTOR: int = 800
@@ -81,10 +80,16 @@ static func _enemy(catalog: RefCounted, npc: Dictionary) -> bool:
 	var category: Dictionary = POLICY.row_with_id(catalog.context_rows("NpcCategory"), int(npc.get("Category", -1)))
 	return category.get("IsAttackable") == true and not NON_HUNT_CATEGORIES.has(str(category.get("Name", "")))
 
-static func _boss(npc_id: int, territory: Dictionary) -> bool:
-	if bool(FULL.npc(npc_id).get("source_ui_boss", false)): return true
-	var title: String = str(territory.get("Name", ""))
-	return title.contains("[필드보스]") or title.contains("[필드 보스]")
+## Field bosses from the current original only: the NpcClass or Territory name
+## carries the original "[필드보스" label. No old base508 catalog is consulted.
+static func _boss(npc: Dictionary, territory: Dictionary) -> bool:
+	for title: String in [str(npc.get("Name", "")), str(territory.get("Name", ""))]:
+		if title.contains("[필드보스") or title.contains("[필드 보스"): return true
+	return false
+
+static func context_key(npc_id: int, view_id: int, link_id: int) -> String:
+	# Stable encounter tuple format shared with the roster/admission gate.
+	return "lineagem_base508:npc:%d:spawn:%d:territory:%d" % [npc_id, view_id, link_id]
 
 ## Rebuilds the field's monster regions. Returns a summary for the HUD notice.
 static func apply(field: Object, catalog: RefCounted = null) -> Dictionary:
@@ -133,7 +138,7 @@ static func apply(field: Object, catalog: RefCounted = null) -> Dictionary:
 		var normal: Array = []
 		var counts: Dictionary = {}
 		for view: Dictionary in views:
-			if _boss(int(view.NpcClassID), territory): counts[int(view.ID)] = 1
+			if _boss(catalog.npcs.get(int(view.NpcClassID), {}), territory): counts[int(view.ID)] = 1
 			else: normal.append(view)
 		normal.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.ID) < int(b.ID))
 		for index: int in range(mini(budget, normal.size() * MAX_PER_VIEW)):
@@ -144,10 +149,10 @@ static func apply(field: Object, catalog: RefCounted = null) -> Dictionary:
 			var count: int = int(counts.get(int(view.ID), 0))
 			if count < 1: continue
 			var npc_id: int = int(view.NpcClassID)
-			var key: String = FULL.context_key(npc_id, int(view.ID), int(relation.ID))
+			var key: String = context_key(npc_id, int(view.ID), int(relation.ID))
 			if seen.has(key): continue
 			seen[key] = true
-			var boss: bool = _boss(npc_id, territory)
+			var boss: bool = _boss(catalog.npcs.get(npc_id, {}), territory)
 			var region: Dictionary = {"id": "m523:" + key, "source_m_key": key, "monster_types": [key],
 				"source_rect": box, "source_territory_id": int(territory.ID), "source_spawn_pack_id": pack_id,
 				"source_npc_level": int(view.get("NpcLevel", 0)), "mode": "boss" if boss else "normal",
