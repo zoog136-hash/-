@@ -157,6 +157,7 @@ func bind_area_presented(scene: Node2D, field_map: Object) -> Dictionary:
 	# Caller passes rootScene.project_player([132,31656]).player, not the
 	# native actual_root Node2D stored in source_nodes[ProjectOffset].
 	if not is_instance_valid(scene) or scene.get("source_member")!=AREA or not is_instance_valid(field_map):return _fail("source_main_map_original_area_scene_required")
+	if scene.get("inspection_only")==true:return _fail("source_main_map_inspection_not_game_presenter")
 	var image: Dictionary=_area_target(scene)
 	if not image.get("ok",false):return image
 	_area_scene=weakref(scene)
@@ -167,6 +168,7 @@ func bind_area_presented(scene: Node2D, field_map: Object) -> Dictionary:
 
 func bind_map_presented(scene: Node2D, dismiss_presenter: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member") not in [MAP_SCENE,MAP_ALL]:return _fail("source_main_map_original_root_scene_required")
+	if scene.get("inspection_only")==true:return _fail("source_main_map_inspection_not_game_presenter")
 	_map_scene=weakref(scene)
 	_dismiss_map=dismiss_presenter
 	return {"ok":true}
@@ -223,6 +225,8 @@ func viewport_to_world_image_pixel(viewport_point: Vector2) -> Dictionary:
 	if _selected_world_id<=0 or _displayed_world_id!=_selected_world_id or _displayed_texture==null:return _fail("source_main_map_selected_image_not_displayed")
 	var scene: Object=_area_scene.get_ref() if _area_scene!=null else null
 	if scene==null or not scene.is_inside_tree():return _fail("source_main_map_original_area_not_presented")
+	var scroll_point: Dictionary=_visible_scroll_point(scene,viewport_point)
+	if not scroll_point.get("ok",false):return scroll_point
 	var target: Dictionary=_area_target(scene)
 	if not target.get("ok",false):return target
 	var sprite: Sprite2D=target.sprite
@@ -257,7 +261,23 @@ func viewport_to_world_image_pixel(viewport_point: Vector2) -> Dictionary:
 	# leading edge can equal width/height; no clamping or cell conversion occurs.
 	if sprite.flip_h:raw_pixel.x=texture_size.x-display_pixel.x
 	if sprite.flip_v:raw_pixel.y=texture_size.y-display_pixel.y
-	return {"ok":true,"world_id":_displayed_world_id,"world_namespace":"UIMapWorld.ID","raw_pixel":raw_pixel,"display_pixel":display_pixel,"pixel_space":"intrinsic_texture_top_left_x_right_y_down","pixel_coordinate_convention":"continuous_edges_before_display_flips","display_pixel_space":"displayed_sprite_rect_top_left_x_right_y_down","texture_size":texture_size,"texture_bounds":Rect2(Vector2.ZERO,texture_size),"viewport_point":viewport_point,"sprite_local_point":local_point,"sprite_local_rect":rectangle,"sprite_centered":sprite.centered,"sprite_offset":sprite.offset,"flip_h":sprite.flip_h,"flip_v":sprite.flip_v,"original_ui_source":target.owner.get_meta("original_ui_source",{}).duplicate(true),"source_world":world_record.duplicate(true),"source_image_info":image_info.duplicate(true),"verified_image_metadata":metadata.duplicate(true),"owner_pixel_consumption":sprite.get_meta("source523_map_image_consumption",{}).duplicate(true),"image_info_axes_or_units_assumed":false,"source_cell_projection_applied":false,"map_click_movement_performed":false}
+	return {"ok":true,"world_id":_displayed_world_id,"world_namespace":"UIMapWorld.ID","raw_pixel":raw_pixel,"display_pixel":display_pixel,"pixel_space":"intrinsic_texture_top_left_x_right_y_down","pixel_coordinate_convention":"continuous_edges_before_display_flips","display_pixel_space":"displayed_sprite_rect_top_left_x_right_y_down","texture_size":texture_size,"texture_bounds":Rect2(Vector2.ZERO,texture_size),"viewport_point":viewport_point,"sprite_local_point":local_point,"sprite_local_rect":rectangle,"sprite_centered":sprite.centered,"sprite_offset":sprite.offset,"flip_h":sprite.flip_h,"flip_v":sprite.flip_v,"original_ui_source":target.owner.get_meta("original_ui_source",{}).duplicate(true),"source_world":world_record.duplicate(true),"source_image_info":image_info.duplicate(true),"verified_image_metadata":metadata.duplicate(true),"owner_pixel_consumption":sprite.get_meta("source523_map_image_consumption",{}).duplicate(true),"native_texture_pixel_registration_complete":true,"original_scroll_viewport":scroll_point,"image_info_axes_or_units_assumed":false,"source_cell_projection_applied":false,"map_click_movement_performed":false}
+
+func _visible_scroll_point(area: Object, viewport_point: Vector2) -> Dictionary:
+	var nodes: Dictionary=area.get("source_nodes")
+	var node: Node2D=nodes.get(44388)
+	var scroll: Variant=node.get_meta("source_scroll",null) if node!=null else null
+	var control: Control=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+	if control==null or not control.is_visible_in_tree():return _fail("source_main_map_original_scroll_viewport_missing")
+	var parent: Node=control
+	while parent!=null:
+		if parent is Control and (parent==control or parent.clip_contents):
+			var transform: Transform2D=parent.get_global_transform_with_canvas()
+			if not is_finite(transform.determinant()) or is_zero_approx(transform.determinant()):return _fail("source_main_map_scroll_transform_not_invertible")
+			var local: Vector2=transform.affine_inverse()*viewport_point
+			if not local.is_finite() or not Rect2(Vector2.ZERO,parent.size).has_point(local):return _fail("source_main_map_point_outside_visible_scroll_viewport")
+		parent=parent.get_parent()
+	return {"ok":true,"source_scroll_offset":44388,"input_extent":control.size,"viewport_point":viewport_point}
 
 func submit_world_image_click(viewport_point: Vector2, caller_event_metadata: Dictionary={}) -> Dictionary:
 	# The existing input controller supplies an actual viewport point. This

@@ -132,7 +132,7 @@ func pickup_snapshot() -> Dictionary:
 	return {"selected":selected_valid,"service_available":true,"selected_id":selected if selected_valid else ""}
 
 func refresh_pickup(scene: Node2D) -> Dictionary:
-	if not is_instance_valid(scene) or not scene.source_nodes.has(PICKUP_BUTTON):return {"ok":true,"source_pickup_presented":false}
+	if not is_instance_valid(scene) or not scene.get("source_nodes").has(PICKUP_BUTTON):return {"ok":true,"source_pickup_presented":false}
 	var model: Dictionary=pickup_snapshot()
 	if model==_last_pickup_model:return {"ok":true,"selection":model}
 	var result: Dictionary=scene.set_bound_visible(PICKUP_GROUP,model.selected)

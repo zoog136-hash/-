@@ -83,9 +83,13 @@ same existing image operation after an actual selection.
 `get_global_transform_with_canvas().affine_inverse()` and actual texture rect,
 centered/offset/flip fields. It rejects missing/hidden/stale images, out-of-bounds
 points, regions, animation frames and mismatched textures. `raw_pixel` means
+points outside the actual source scroll viewport/ancestor clips are also
+rejected; inspection scenes cannot bind as this game presenter. `raw_pixel` means
 continuous intrinsic texture-edge coordinates: top-left origin, +X right,
 +Y down, before display flips. A flipped edge can equal width/height; no
-clamping or texel-center convention is guessed.
+clamping or texel-center convention is guessed. Successful raw conversion
+sets `native_texture_pixel_registration_complete:true`; ImageInfo/cell
+registration still remains with the map owner.
 
 Submitting a real click emits `hud.original_world_map_image_clicked(payload)`.
 The payload includes World namespace/ID, raw/display pixel, final texture size,

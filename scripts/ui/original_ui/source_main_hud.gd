@@ -259,7 +259,7 @@ func _mount_core_controls() -> void:
 			_combat_result=_mount_main_project(19912,contract)
 			if _combat_result.get("ok",false):
 				_combat_scene=_combat_result.scene
-				_combat_owns_pickup=_combat_scene.source_nodes.has(Combat.PICKUP_BUTTON)
+				_combat_owns_pickup=_combat_scene.get("source_nodes").has(Combat.PICKUP_BUTTON)
 				_combat_result.erase("scene")
 		else:
 			_combat_result=configured

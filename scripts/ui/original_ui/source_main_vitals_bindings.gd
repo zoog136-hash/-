@@ -96,7 +96,7 @@ static func refresh_char_info(scene: Node2D, values: Dictionary) -> Dictionary:
 	for offset: int in [40620,35464]:
 		var result: Dictionary=scene.set_bound_percent(offset,presented.hp_percent if offset==40620 else presented.mp_percent)
 		if not result.get("ok",false):return result
-	if scene.source_nodes.has(CLASS_PROJECT):
+	if scene.get("source_nodes").has(CLASS_PROJECT):
 		if typeof(values.get("level"))!=TYPE_INT:return _fail("source_main_raw_level_required")
 		var child: Dictionary=scene.project_player([CLASS_PROJECT])
 		if not child.get("ok",false):return child
