@@ -254,6 +254,7 @@ func _refresh_action() -> void:
 			purchase.tooltip_text = availability_label.text
 		1:
 			var quote: Dictionary=runtime.quote_merchant(selected_id,int(quantity.value))
+			_apply_quoted_item_image(quote)
 			purchase.disabled=not quote.ok
 			purchase.text="%d회 구매 · 보관함 지급" % int(quantity.value) if quote.ok else "구매 불가"
 			if quote.ok:
@@ -270,6 +271,30 @@ func _refresh_action() -> void:
 		4:
 			purchase.disabled = false
 			purchase.text = "선택 주문 수령"
+
+func _apply_quoted_item_image(quote: Dictionary) -> void:
+	if not IMAGES.selected(): return
+	var source: Variant=quote.get("source_reference")
+	if not source is Dictionary: return
+	var reference: Variant=source.get("item")
+	if not reference is Dictionary or reference.get("kind")!="twilight.current523.item-data.v1": return
+	var goods: Variant=source.get("goods")
+	var image: Dictionary
+	if not goods is Dictionary or goods.get("ID")!=selected_id or goods.get("ItemClassID")!=reference.get("item_class_id"):
+		image={"status":"source_reference_item_identity_mismatch","texture":null,"provenance":{},"actual_game_consumption_observed":false}
+	else:
+		image=IMAGES.describe_item_reference(reference)
+	# Keep the purchase state with the existing quote. This is only its row icon.
+	for index: int in listing.item_count:
+		if listing.get_item_metadata(index)!=selected_id: continue
+		listing.set_item_icon(index,image.get("texture") as Texture2D)
+		var evidence: Dictionary=image.duplicate(true)
+		evidence.erase("texture")
+		evidence["source_table"]="MerchantGoods"
+		var originals: Dictionary=listing.get_meta("source523_images",{}).duplicate(true)
+		originals[str(selected_id)]=evidence
+		listing.set_meta("source523_images",originals)
+		break
 
 func _act() -> void:
 	if runtime == null or purchase.disabled or selected_id < 0: return

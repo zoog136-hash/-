@@ -65,6 +65,19 @@ Library identities or saves are included in Git.
   instance's full native523 source record for presentation. The existing native
   identity guard remains required; catalog filtering and item actions retain
   their current records. Slot reuse tracks source-record replacement.
+- Data271's read-only item references can supply an image identity without
+  installing a game item. The image hub requires the published contract kind,
+  read-only/activation/ownership flags and exact ItemClass canonical row SHA
+  from the selected image pack. It preserves owner exclusions and consumes
+  the existing IconID loader. Incomplete Bonus/reference joins do not become
+  invented effects or prevent an independently established image identity.
+- Existing crafting result/material pictures use `recipe_definition(...).items`
+  for the already selected recipe when that public owner API is available.
+  NPC shop rows use the existing quote's `source_reference.item` and declared
+  MerchantGoods ItemClassID. Market product pictures retain their own declared
+  AssetID. No recipe, supplier, transaction, effect or ownership is admitted by
+  these image calls. The data contract is the public Data271 checkpoint
+  `6622063ee90806c1c753c695978f586ef7906cc3`.
 - Skill browsing and skill quickslots use exact public host-to-SpellClass
   bindings, then the source IconID. Active buff rows use explicit native
   BuffClass OnIconID. ActivateIconID and OffIconID remain distinct roles;
@@ -122,6 +135,30 @@ must be installed separately; absent inputs remain an explicit missing result.
 The later warehouse/transfer-selection record and presentation hooks are also
 unexecuted and unverified.
 The physical-instance inventory slot/detail hooks are likewise unexecuted.
+The read-only item-reference image path, crafting/NPC image consumers and
+multiple-subset original UI registration are also unexecuted and unverified.
+
+## Received original icon subsets
+
+Two original UI subsets have been received through the official Library
+resolved-reference flow and extracted in the consumer environment. Their
+existing receipts declare three scenes/nine originals and three scenes/eleven
+originals, with dependencies resolved and no rendered/runtime approval. Those
+are UI-owner source subsets, separate from the fixed Image/icon inventory above.
+Library identities, originals and source-relation documents remain private.
+
+The six original named clip/frame/speed declarations are retained in the private
+handoff. The source does not declare repeat behavior. API default `repeat=false`
+and a serialized animation name do not supply the missing caller playback
+policy. Exact ItemClass relations are prepared only where the current source
+declares them; the skill/buff scene retains its separate roles.
+
+`register_original_ui(document, root, manifest_sha256)` can retain independently
+pinned subsets without replacing other icons' declarations. Each icon selects
+the manifest explicitly named by its own source binding. Identity conflicts
+fail explicitly, and replacement does not inherit a previous repeat value.
+The original UI loader/player remains separately owned. No registration,
+render, playback or gameplay run was started for this new handoff.
 
 ## Explicit original dummy-image exclusions
 
@@ -167,11 +204,12 @@ transfer. That path and the two earlier reference-archive downloads were not
 retried. The independent public format reference resolved the decoder input gap
 without retrying them.
 
-UI267 was read at `6c15bd07241ac2b271963815b4b7d49ae3a8394a`; its renderer and
+The UI267 caller contract was read at `d719912b6b9fdf65b145a559bebc3056d40ef8fa`; its renderer and
 original layout remain owned there. Source-map terrain, rest-system transactions,
 definition-data work and Sprite actor motion remain separate owners. Source
-CSB icons have an item-slot caller adapter but still require the existing UI
-player's exact scene closures and explicit clip/repeat bindings. Full
+CSB icons have an item-slot caller adapter and the received six-scene subsets.
+Remaining scenes, the corresponding UI player and explicit caller playback
+policy still require their owner handoff. Full
 mission/NPC/pass/attendance/map-screen/emoticon consumption still needs the
 corresponding existing original UI callers and exact node/selection/timing
 contracts. The adapter API does not establish that those consumers are active.
@@ -203,18 +241,18 @@ presenter, HUD registration and renderer; this lane does not recreate them.
 
 | Target | Required original input before further connection |
 | --- | --- |
-| Item CSB icons | Current private UI pack identity and manifest pin, exact scene SHA, original clip/repeat binding; corresponding UI player code |
+| Item CSB icons | Caller repeat/trigger policy and required node bindings for received subsets; remaining original scenes and corresponding UI player code |
 | Map-screen images and buttons | Caller-declared current field/screen to original World/ImageInfo identity, original content root/SHA, existing mount, exact image/button node offsets and original map/area selection callbacks; terrain placement is a separate owner |
 | Mission and NPC images | Original content root/SHA, exact image node offsets, source-model asset roles and existing action callbacks |
 | Pass and attendance images | Original content root/SHA, exact image node offsets and caller-provided season/day/reward-row bindings and actions |
 | Emoticons | Original selection/display caller, exact node/asset association and original frame order, timing, repeat and start/stop contract |
 | Other source UI images | Exact original root/node declarations and caller-provided typed asset references; a filename category is not a screen contract |
 
-The known UI Library handoff is player code/state, not the private original CSB
-pack. No original pack, node offsets, clip names, loop policies or callbacks are
-inferred from that identity. Existing image-pack and Drive-delivery identities
-remain unchanged while those inputs are pending. Reading this supplied caller
-contract is implementation handoff work; no new test or validation was run.
+The earlier UI code/state handoff remains distinct from the two newly received
+original subsets. Node offsets, loop policies and callbacks still require their
+explicit caller declarations. Existing image-pack and Drive-delivery identities
+remain unchanged. Reading supplied contracts and materializing their original
+inputs are implementation handoff work; no new test or validation was run.
 
 The existing `renewal_map.gd`/`field_minimap.gd` call path consumes the field's
 `overview_texture()`. The supplied all-world contract provides exact

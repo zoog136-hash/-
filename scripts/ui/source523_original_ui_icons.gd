@@ -6,6 +6,7 @@ const PLAYER_PATH = "res://scripts/ui/original_ui/sprite_scene.gd"
 const SCHEMA = "patch523-original-ui-icon-scenes-v1"
 const NODE_NAME = "SourceItemIconScene"
 static var pack: RefCounted
+static var packs_by_manifest: Dictionary = {}
 static var bindings: Dictionary = {}
 static var _bindings_error: String = "source_scene_bindings_not_configured"
 
@@ -19,6 +20,33 @@ static func configure(document: Dictionary) -> void:
 		return
 	bindings = scenes.icons.duplicate(true)
 	_bindings_error = "" if not bindings.is_empty() else "source_scene_bindings_unavailable"
+
+static func registration_contract(document: Dictionary) -> Dictionary:
+	var scenes: Variant = document.get("source_icon_scenes")
+	if not scenes is Dictionary or scenes.get("schema") != SCHEMA or not scenes.get("icons") is Dictionary:
+		return _unavailable("source_scene_bindings_unavailable")
+	for icon: Variant in scenes.icons:
+		var incoming: Variant = scenes.icons[icon]
+		if not incoming is Dictionary:
+			return _unavailable("source_scene_binding_unavailable")
+		if not bindings.has(icon): continue
+		var previous: Variant = bindings[icon]
+		if not previous is Dictionary:
+			return _unavailable("source_scene_binding_conflict")
+		for field: String in ["asset_id","asset_type_id","file_path","member","reviewed_current523_manifest_sha256","current523_scene_sha256"]:
+			if not incoming.has(field) or previous.get(field) != incoming[field]:
+				return _unavailable("source_scene_binding_conflict")
+	return {"ok":true}
+
+static func register(document: Dictionary) -> Dictionary:
+	var contract: Dictionary = registration_contract(document)
+	if not contract.get("ok",false): return contract
+	for icon: Variant in document.source_icon_scenes.icons:
+		# Replace only this caller's explicit entry. Never retain an old loop
+		# value when a newer declaration omits its playback policy.
+		bindings[icon] = document.source_icon_scenes.icons[icon].duplicate(true)
+	_bindings_error = "" if not bindings.is_empty() else "source_scene_bindings_unavailable"
+	return {"ok":true,"rendered":false}
 
 static func _unavailable(reason: String, details: Dictionary = {}) -> Dictionary:
 	var result: Dictionary = {"ok":false,"status":"unavailable","error":reason,"inspection_only":false}
@@ -42,7 +70,11 @@ static func open_pack(root: String, expected_sha256: String) -> Dictionary:
 		var failed: Dictionary = _unavailable(str(opened.get("error", "source_scene_pack_unavailable")), opened)
 		failed["previous_pack_preserved"] = pack != null
 		return failed
+	var actual_pin: Variant = candidate.get("manifest_sha256")
+	if not _sha256(actual_pin) or actual_pin != expected_sha256:
+		return _unavailable("source_scene_pack_contract_unavailable")
 	pack = candidate
+	packs_by_manifest[expected_sha256] = candidate
 	var result: Dictionary = opened.duplicate(true)
 	result["status"] = "source_scene_pack_ready"
 	result["rendered"] = false
@@ -119,12 +151,16 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 		return _unavailable("source_scene_playback_binding_missing")
 	if not _sha256(spec.get("reviewed_current523_manifest_sha256")) or not _sha256(spec.get("current523_scene_sha256")):
 		return _unavailable("source_scene_version_unverified")
-	if pack == null:
+	var selected_pack: RefCounted = packs_by_manifest.get(spec.reviewed_current523_manifest_sha256)
+	# Preserve the original single-pack API for an explicitly supplied pack.
+	if selected_pack == null and pack != null and pack.get("manifest_sha256") == spec.reviewed_current523_manifest_sha256:
+		selected_pack = pack
+	if selected_pack == null:
 		return _unavailable("source_scene_pack_not_open")
-	var manifest_sha256: Variant = pack.get("manifest_sha256")
+	var manifest_sha256: Variant = selected_pack.get("manifest_sha256")
 	if not _sha256(manifest_sha256) or spec.reviewed_current523_manifest_sha256 != manifest_sha256:
 		return _unavailable("source_scene_version_unverified")
-	var source: Variant = pack.scene(member)
+	var source: Variant = selected_pack.scene(member)
 	if not source is Dictionary or source.is_empty() or source.get("_source_sha256") != spec.current523_scene_sha256:
 		return _unavailable("source_scene_version_unverified")
 	if not ResourceLoader.exists(PLAYER_PATH):
@@ -142,7 +178,7 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 		return _unavailable("source_scene_player_contract_unavailable")
 	var configured: Variant
 	if original_ui_bindings.is_empty():
-		configured = scene.configure(pack, member, false)
+		configured = scene.configure(selected_pack, member, false)
 	else:
 		var accepts_bindings: bool = false
 		for method: Dictionary in scene.get_method_list():
@@ -155,7 +191,7 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 		if not accepts_bindings:
 			scene.free()
 			return _unavailable("source_scene_player_contract_unavailable")
-		configured = scene.configure(pack, member, false, original_ui_bindings)
+		configured = scene.configure(selected_pack, member, false, original_ui_bindings)
 	if not configured is Dictionary or not configured.get("ok", false):
 		scene.free()
 		return _unavailable("source_scene_configure_unavailable", configured if configured is Dictionary else {})

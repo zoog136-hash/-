@@ -50,6 +50,14 @@ static func apply(view: TextureRect, record: Dictionary, item_name: String, imag
 		view.add_child(effect)
 	effect.configure(view, record, item_name, images, usage, original_ui_bindings)
 
+static func apply_source_item_reference(view: TextureRect, data_reference: Dictionary, title: String, usage: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
+	var effect: Node = view.get_node_or_null("ItemVisual")
+	if effect == null:
+		effect = new()
+		effect.name = "ItemVisual"
+		view.add_child(effect)
+	effect.configure_source_item_reference(view,data_reference,title,usage,original_ui_bindings)
+
 static func clear(view: TextureRect) -> void:
 	if view == null: return
 	_detach_source_scene(view)
@@ -77,14 +85,20 @@ static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
 	return result
 
 func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary = {}) -> void:
+	_configure_presentation(view,record,item_name,images,usage,original_ui_bindings,RESOLVER.describe(record,item_name,images,usage == "ground"))
+
+func configure_source_item_reference(view: TextureRect, data_reference: Dictionary, title: String, usage: String, original_ui_bindings: Dictionary = {}) -> void:
+	var info: Dictionary = SOURCE523.describe_item_reference(data_reference,title)
+	_configure_presentation(view,{},title,{},usage,original_ui_bindings,info,true)
+
+func _configure_presentation(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary, info: Dictionary, reference_presentation: bool = false) -> void:
 	if is_instance_valid(target) and target != view: _detach_source_scene(target)
 	_detach_source_scene(view)
 	target = view
 	target.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var info: Dictionary = RESOLVER.describe(record,item_name,images,usage == "ground")
-	source_presentation = info.get("route","") == "source523_images"
+	source_presentation = reference_presentation or info.get("route","") == "source523_images"
 	target.texture = info.get("texture") as Texture2D if source_presentation else RESOLVER.texture(record,item_name,images,usage == "ground")
 	var source_scene_requested: bool = source_presentation and info.get("reason","") == "unsupported_csb" and usage != "ground"
 	if source_scene_requested:
@@ -97,8 +111,8 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		else:
 			info["status"] = "original_icon_not_installed"
 			info["reason"] = str(attached.get("error","source_scene_unavailable"))
-	rank = animation_rank(record, item_name)
-	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
+	rank = 0 if reference_presentation else animation_rank(record, item_name)
+	phase_group = 0 if reference_presentation else posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
 	foreground_ready = true
 	# Only turning surfaces need a cutout. Static list/quickslot/drag/ground

@@ -4,6 +4,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser=preload("res://scripts/ui/renewal_browser.gd")
 const CraftRules=preload("res://scripts/crafting/expanded_crafting.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 var hud: Node
 var world: Node
 var listing: ItemList
@@ -273,8 +274,13 @@ func _refresh_quote() -> void:
 	var items: Dictionary=world._patch523_craft_item_index() if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
 	if material_recipe!=current_id:
-		_build_materials(recipe,items)
-		UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
+		var source_images: Dictionary=_source_recipe_image_references()
+		_build_materials(recipe,items,source_images)
+		var source_output: Variant=source_images.get(str(result.get("source_id","")))
+		if source_output is Dictionary and not source_output.is_empty():
+			UI.apply_source_item_reference(product,source_output,output_name,"detail")
+		else:
+			UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
 	probability_summary.visible=recipe.has("outcomes") or recipe.has("craft_conditions")
 	var chances: PackedStringArray=[]
@@ -346,7 +352,24 @@ func _clear_materials() -> void:
 		candidate_box.remove_child(child)
 		child.queue_free()
 
-func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
+func _source_recipe_image_references() -> Dictionary:
+	if not SOURCE_IMAGES.selected() or not current_id.begins_with("patch523:"):
+		return {}
+	var source_id: String=current_id.trim_prefix("patch523:")
+	if not source_id.is_valid_int() or str(int(source_id))!=source_id or int(source_id)<=0:
+		return {}
+	var rules: Object=world.patch523_equipment
+	if rules==null or not rules.has_method("recipe_definition"):
+		return {}
+	# Read the published data contract for this already selected recipe only.
+	# Its can_execute:false never changes the existing quote/execute admission.
+	var definition: Variant=rules.call("recipe_definition",int(source_id))
+	if not definition is Dictionary or definition.get("kind")!="current523_craft_definition" or definition.get("craft_id")!=int(source_id) or definition.get("reference_only")!=true or definition.get("can_execute")!=false:
+		return {}
+	var references: Variant=definition.get("items")
+	return references if references is Dictionary else {}
+
+func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictionary={}) -> void:
 	_clear_materials()
 	material_recipe=current_id
 	material_scroll.scroll_vertical=0
@@ -394,7 +417,11 @@ func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		slot.add_child(icon)
-		UI.apply_item_visual(icon,record,item_name,hud.item_image_index.get("아이템",{}),"slot")
+		var source_item: Variant=source_images.get(str(material.get("source_id","")))
+		if source_item is Dictionary and not source_item.is_empty():
+			UI.apply_source_item_reference(icon,source_item,item_name,"slot")
+		else:
+			UI.apply_item_visual(icon,record,item_name,hud.item_image_index.get("아이템",{}),"slot")
 		var text:=VBoxContainer.new()
 		text.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		text.add_theme_constant_override("separation",2)

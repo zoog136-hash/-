@@ -240,6 +240,9 @@ static func item_icon(record: Dictionary, item_name: String, images: Dictionary)
 static func apply_item_visual(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, context: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
 	preload("res://scripts/ui/item_visual.gd").apply(view,record,item_name,images,context,original_ui_bindings)
 
+static func apply_source_item_reference(view: TextureRect, data_reference: Dictionary, title: String, usage: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
+	preload("res://scripts/ui/item_visual.gd").apply_source_item_reference(view,data_reference,title,usage,original_ui_bindings)
+
 static func clear_item_visual(view: TextureRect) -> void:
 	preload("res://scripts/ui/item_visual.gd").clear(view)
 
