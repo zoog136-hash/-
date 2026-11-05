@@ -56,6 +56,23 @@ schema3 source-item save marker. These are supplier/save contracts owned by269.
 The acquisition descriptors' `schema:1` in this data Draft is a different
 definition-model schema and is not upgraded or presented as a supplier receipt.
 
+Integration269's later `007910fa85967a6e50dd8ea7d6e17a7f11c8c857`
+and `docs/CURRENT523_NATIVE_ITEM_OWNER.md` supersede the earlier generic DTO/
+old-BIN wait below. Its original ItemData→`current523_native_item_projection`
+now feeds native DTO registration and `patch523_craft_catalog.available()`;
+schema4 source markers preserve historical identities/markers. Existing drop,
+floor, typed supplier, supported HP/MP stacks and selected native crafting
+materials use that owner's quantity/receipt/save code. Unsupported effects,
+same-key refunds and typed stack transfers remain unfinished. These are that
+owner's published implementation claims, not observed execution in this Draft.
+
+This Draft changes only the common drop-reader entry's static API selection:
+`_current_item_reference(id)` finds ItemData's published `describe` in the
+loaded Script's own method list before calling `describe(id,false)`. Its raw
+reference return/cache shape and269's DTO/ownership/transaction code remain
+separate. This avoids treating Resource instance method discovery as the
+static input API. Invocation and native adoption remain unexecuted/unverified.
+
 ## Fixed input and evidence
 
 The existing private current523 archive was received through authenticated Drive
@@ -754,14 +771,15 @@ remain the existing supplier/effect owner's contract. The source membership
 does not supply drop probabilities or quantities. Host roll, item/variant
 selection, quantity, ground objects, grants, receipts and saves are unchanged.
 
-The separate retained `patch523_craft_catalog.available()` supplier is not
-changed by that drop-reader conversion. The published269 `b37e5b94` version
-still automatically selects its old full/partial monster-drop bin stores for
-native catalog DTOs. Replacing that supplier with the current full
-`native_record` projection/registration contract remains269's exact integration
-boundary. This Draft neither treats that old supplier as a required install nor
-claims every former sidecar activation path is already replaced. Its original
-files, explicit install/reference code and saved identities remain preserved.
+That earlier drop-reader conversion did not change the separate retained
+`patch523_craft_catalog.available()` supplier;269 `b37e5b94` still selected old
+full/partial bin stores. The later269 `007910fa` now supplies the original
+`native_record` projection, registration and current crafting-catalog input
+described above. Adopt that owner's implementation instead of reproducing its
+DTO, quantity or storage code here. This data-only branch's empty native DTO is
+a handoff boundary, not a claim that the published269 supplier is still missing.
+Original files, explicit install/reference code and saved identities remain
+preserved; old packs are not a required final input.
 
 ### Other retained growth inputs — unverified
 
@@ -1082,6 +1100,16 @@ input delta while preserving its other owner code. This is code connectivity,
 not observed adoption, complete Jade/Grail/trial behavior or table completion.
 Attendance/pass and description work remain lower priority; no new event/quest
 implementation or UI is added.
+
+The existing protection reader's `restore()` now also reuses the common held
+original only when its installation pointer is actually absent. An existing,
+unreadable, directory/link or invalid pointer retains its failure path. The
+input goes through its existing `extract(path)→compile(capsule)` parser and
+returns that same compiled result without retaining an extra raw capsule.
+The existing setup caller consumes the result; installer, runtime registration,
+effect/time policy, ownership, transactions and saves are unchanged. There is
+no pointer write, archive copy, capsule file or new schema. This bounded input
+connection is unexecuted and does not complete its shared source tables.
 
 ## Validation status
 

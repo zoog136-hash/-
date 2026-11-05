@@ -147,8 +147,14 @@ static func _current_item_reference(item_id: int) -> Dictionary:
 	if document.source_item_references.has(id): return document.source_item_references[id]
 	var path: String = "res://scripts/resources/current523_item_data.gd"
 	if not ResourceLoader.exists(path): return {}
-	var reader: Resource = load(path)
-	if reader == null or not reader.has_method("describe"): return {}
+	var reader: Script = load(path) as Script
+	if reader == null: return {}
+	# ItemData.describe is the published static reader API. Match the script's
+	# own methods before calling it; Resource instance methods are not that ABI.
+	var has_describe: bool = false
+	for method: Dictionary in reader.get_script_method_list():
+		if method.get("name") == "describe": has_describe = true; break
+	if not has_describe: return {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
 	document.source_item_references[id] = detail
