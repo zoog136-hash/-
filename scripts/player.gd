@@ -443,12 +443,25 @@ func select_external_spx_actor(id: String) -> bool:
 func set_source_weapon_visual(weapon: String) -> void:
 	source_weapon_type = weapon
 	var native_weapon:int=preload("res://scripts/animation/source_weapon_banks.gd").local_type(weapon)
+	var weapon_context_changed: bool = int(source_visual_context.get("source_weapon_type",0)) != native_weapon
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
 	current523_identity_actor.update_context(source_visual_context)
-	if original_source_preview.installed() and transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
+	var native_transform: bool = transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:"))
+	var source_required: bool = native_transform and original_source_preview.current523_source_required(transform_profile.profile_id)
+	# An unavailable weapon action must not prevent a later available family
+	# from binding. Retry on the existing equipment event, never each frame.
+	var rebind_source: bool = source_required and weapon_context_changed
+	var rebind_installed: bool = native_transform and original_source_preview.installed() and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) != native_weapon
+	if rebind_source or rebind_installed:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
+			if source_required:
+				transform_active = true
+				motion.profile = transform_profile
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
+		elif source_required:
+			transform_active = false
+		if source_required: _refresh_visual_visibility()
 	if spx_sprite == null or spx_actor_id.is_empty(): return
 	var group: String = ""
 	if weapon.is_empty(): group = "unarmed"
