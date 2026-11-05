@@ -101,6 +101,9 @@ var instant_cure_state: Variant={}
 var reusable_state_present: bool=false
 var reusable_state: Variant={}
 
+var source_alchemy_item_uses_present: bool=false
+var source_alchemy_item_uses: Variant={}
+
 var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
 
@@ -113,6 +116,7 @@ func export_state() -> Dictionary:
 		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
 	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
 	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
@@ -120,6 +124,9 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_alchemy_item_uses_present=input is Dictionary and input.has("source_alchemy_item_uses")
+	var alchemy_uses: Variant=input.get("source_alchemy_item_uses",{}) if input is Dictionary else {}
+	source_alchemy_item_uses=alchemy_uses.duplicate(true) if alchemy_uses is Dictionary or alchemy_uses is Array else alchemy_uses
 	instant_cure_present=input is Dictionary and input.has("source_instant_cure_uses")
 	var cure: Variant=input.get("source_instant_cure_uses",{}) if input is Dictionary else {}
 	instant_cure_state=cure.duplicate(true) if cure is Dictionary or cure is Array else cure

@@ -14,6 +14,12 @@ Historical owner reports, runtime identifiers, source delivery references and va
 
 ## Validation and limits
 
+### Subsequent item connection (not executed)
+
+After the verified `ea838f6b` snapshot, the inventory activation path is wired to a selected alchemy non-equipment output adapter. It authenticates the original result row, producer pack, actual physical ID, blessing and original/remaining quantities, then invokes the existing buff/MP/bag consumer in an isolated candidate. The physical remainder, inventory debit, persistent consumption receipt, effects and RNG are supplied to one existing save writer. A later processing-material debit carries the same receipt forward in that transaction. Original records stay in their producer namespace; no native ownership is granted or renamed to authorize use.
+
+This subsequent code has **not been parsed, executed or tested**. The latest user instruction explicitly requested implementation without starting more checks. All results below apply to `ea838f6b`, not to this subsequent delta. No item-class completion count or source-use percentage is increased for the unexecuted adapter. Unsupported effects, equipment, cards/books/selection dialogs, source restrictions, mixed or damaged provenance and prior partial debits without a matching receipt stay blocked.
+
 The composed local runtime parsed and passed actual Main/source-map/save47 checks and actual quest-issued selected quantity/receipt/save/reconnect735 checks. Separate fixtures passed: PR264 domains336, card-selection boundary13, and processing/identity reducers167. Python syntax passed64 changed files;23 focused existing compiler/weapon unit tests passed. These fixture/parser results are not normal acquisition, full source-effect, original UI, pixel delivery or natural-probability evidence. The earlier merged PR2622756-check milestone remains separate and is not added again.
 
 The current58/146 initial item-class measure means at least one bounded path;88 remain, with four learned-spell effects separate. Preserve Test/server/date/excluded holds. Dedicated returns/current-territory predicates, guardian typed spending, non-equipment alchemy physical remainder synchronization, honing target/source authentication and optional native-effect inputs remain explicit follow-ups. Existing owned items and source provenance are not renamed, mass-converted or regranted to lower a count. The authored equipment processing form is not exposed as replacement original UI; backend quote/commit APIs remain.

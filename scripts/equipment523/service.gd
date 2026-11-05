@@ -444,6 +444,14 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 		if not error.is_empty():
 			_busy = false
 			return Common.fail(error)
+	# A selected alchemy output can be partly used by its item owner and then
+	# used as a source-whitelisted processing ingredient. Keep that same
+	# immutable original quantity and receipt in this transaction as well.
+	var alchemy_uses: Dictionary=preload("res://scripts/equipment523/alchemy_held_use.gd").stage_processing_uses(world,q.get("_spend",{}),inventory,physical)
+	if not alchemy_uses.get("ok",false):
+		_busy=false
+		return Common.fail(str(alchemy_uses.get("reason","연금 재료 사용 영수증 확인 필요")))
+	if alchemy_uses.get("changed",false): staged["consumable_state"]=alchemy_uses.state
 	var target_id: String = str(q.get("target_id",""))
 	if not target_id.is_empty():
 		if not physical.has(target_id) or not physical[target_id].get("equipment523",{}) is Dictionary:
@@ -525,6 +533,7 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	world.gold = int(staged.gold)
 	world.next_item_instance_id = next_id
 	world.rng.state = candidate_rng.state
+	if staged.has("consumable_state"): world.consumable_service.import_state(staged.consumable_state)
 	if world.has_method("_invalidate_equipment_static"): world.call("_invalidate_equipment_static")
 	if world.has_method("_refresh_speed_modifiers"): world.call("_refresh_speed_modifiers")
 	_busy = false

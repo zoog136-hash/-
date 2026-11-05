@@ -8,6 +8,7 @@ const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 const EQUIPMENT523_SET_INVOKE = preload("res://scripts/equipment523/set_invoke.gd")
 var equipment523 = EQUIPMENT523_SERVICE.new()
+var alchemy_held_items = preload("res://scripts/equipment523/alchemy_held_use.gd").new()
 
 var patch523_npc_spells = preload("res://scripts/monsters/patch523_npc_combat.gd").new()
 const MONSTERBOOK523_RUNTIME = preload("res://scripts/monsterbook/monsterbook523_runtime.gd")
@@ -4008,6 +4009,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
+	if alchemy_held_items.try_use(self,item_name,str(selected.get("id",""))):return
 	if unconfirmed523.try_use(item_name):return
 	if str(selected.get("id","")).is_empty() and quest_item_provider.equipment_owner.requires_selected(self,item_name):hud.show_message("실제 장비 개체를 선택하세요");return
 	if quest_item_provider.equipment_owner.activate(self,str(selected.get("id",""))):return
@@ -6549,6 +6551,7 @@ func _load_game(quiet: bool) -> void:
 	unconfirmed523.rebuild()
 
 	equipment523.after_load(self,data.get("equipment523_set_effects",{}))
+	alchemy_held_items.after_load()
 	_invalidate_equipment_static()
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())

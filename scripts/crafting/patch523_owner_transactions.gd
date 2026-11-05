@@ -70,6 +70,8 @@ static func nonquest_vital_owner(world: Node,staged: Dictionary) -> String:
 	# This classification never permits progression fields without quest_state.
 	var cards: Variant = world.get("card_selection_saves")
 	if cards is RefCounted and cards.get_script() == preload("res://scripts/cards/card_selection_save.gd") and cards.authorizes(staged): return "card_owner"
+	var alchemy: Variant=world.get("alchemy_held_items")
+	if alchemy is RefCounted and alchemy.get_script()==preload("res://scripts/equipment523/alchemy_held_use.gd") and alchemy.authorizes(staged):return "sealed_alchemy_item_consumer"
 	var provider: Variant=world.get("quest_item_provider")
 	if staged.has("equipped_items"):
 		if provider!=null and provider.equipment_owner.authorizes_save(staged):return "sealed_quest_equipment"
