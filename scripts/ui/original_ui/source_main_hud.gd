@@ -56,6 +56,7 @@ var _target_scene: Node2D
 var _target_result: Dictionary={}
 var _target_model: Dictionary={}
 var _target_mount_attempted: bool=false
+var _combat_owns_pickup: bool=false
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -84,13 +85,17 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER))
+	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
+	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup)
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
+	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
 	if not model.get("ok",false):
 		_target_result=model
@@ -195,6 +200,8 @@ func _capture_existing_controls(hud: Node) -> void:
 		"target":hud.get_node_or_null("Root/V20GameplayHUD/SelectTarget"),
 		"self":hud.get("v20_self_button")
 	}
+	var pickup: Variant=hud.get_parent().get("loot_pickup")
+	if is_instance_valid(pickup):controls["pickup"]=pickup.get("pickup_button")
 	for kind: String in controls:
 		var control: Variant=controls[kind]
 		if control is CanvasItem and is_instance_valid(control):_legacy_combat[kind]=weakref(control)
@@ -219,6 +226,7 @@ func _mount_core_controls() -> void:
 			_combat_result=_mount_main_project(19912,contract)
 			if _combat_result.get("ok",false):
 				_combat_scene=_combat_result.scene
+				_combat_owns_pickup=_combat_scene.source_nodes.has(Combat.PICKUP_BUTTON)
 				_combat_result.erase("scene")
 		else:
 			_combat_result=configured
@@ -325,7 +333,8 @@ func sync_legacy_visibility() -> void:
 	if map_label!=null:map_label.visible=false if is_instance_valid(_map_name_scene) else _legacy_map_name_visible
 	for kind: String in _legacy_combat:
 		var control: Object=_legacy_combat[kind].get_ref()
-		if control!=null:control.visible=false if is_instance_valid(_combat_scene) else bool(_combat_availability.get(kind,false))
+		var owned: bool=is_instance_valid(_combat_scene) and (kind!="pickup" or _combat_owns_pickup)
+		if control!=null:control.visible=false if owned else bool(_combat_availability.get(kind,false))
 	for kind: String in _legacy_shortcuts:
 		var control: Object=_legacy_shortcuts[kind].get_ref()
 		if control!=null:control.visible=not is_instance_valid(_menu_scene)

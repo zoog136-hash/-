@@ -500,9 +500,9 @@ other source selections are not written by this adapter.
 `source_main_combat_bindings.gd` connects exact original attack/auto controls to
 existing HUD signals and World handlers. The actual Hud_AttackPad additionally
 connects native target/self controls; existing auto/self state updates their
-original effects. Pickup remains distinct: the current game requires an exact
-selected ground-drop node and supplies no generic HUD pickup signal, so automatic
-loot is not substituted. `source_main_menu_bindings.gd` maps the original
+original effects. Pickup remains distinct: the existing manual pickup controller
+owns the exact selected ground-drop identity; automatic loot is not substituted.
+`source_main_menu_bindings.gd` maps the original
 inventory/skill/store controls to existing game entry points. These combat/menu
 bindings still require their remaining original controls/data to mount in strict
 mode; no full main HUD completion is claimed.
@@ -567,8 +567,10 @@ Pack replacement preserves prior availability and restores controls no longer
 owned by a replacement component. Failed component assembly remains explicit.
 The normal main shortcuts are a partial node scope: weight/penalty placeholders,
 other modes, paid/post/restart features are not assigned fabricated data.
-Pickup still requires the actual selected ground-drop contract; the adapter
-never substitutes automatic nearest-item selection or auto-loot.
+The native pickup button calls the existing loot_pickup.request_selected only
+for its current valid selected ground drop. The owner retains movement,
+restrictions, reachability, receipt and saving; the UI never substitutes
+automatic nearest-item selection or auto-loot.
 
 The assembled core package has one EXP entry and three explicit partial scopes
 (CharInfo, AttackPad, TopMenu), 16 original files, and retained full parent/source
@@ -618,3 +620,25 @@ actual parent selection still remain caller inputs.
 These additions were not executed or rendered. Historical 524 dependency/317
 inspection counts and the lack of a whole-560 gameplay completion numerator
 remain unchanged. No extra test, audit, verification suite or CI was run.
+
+### Native combat pixels and selected pickup — unexecuted
+
+Hud_AttackPad's input buttons use transparent source textures. The actual
+authored backdrop/icons are sibling nodes. The core consumer now requires
+Img_Bg35124 and auto/target/self icons29664/25816/24008 in its explicit pack
+scope; a smaller scope is rejected for that component before older game
+controls are hidden. No replacement icon is drawn. The attack class portrait,
+rank styles and original click/effect policies remain unresolved; preview
+portraits are not supplied as fallback art.
+
+The optional pickup subtree30152 retains original icon30840 and button30208.
+Its visibility/availability follows the existing loot controller's valid
+selected_id; its callback invokes request_selected without assigning another
+ID or calling run_auto. The corresponding previous pickup button is hidden
+only after this native source subtree is accepted. An older pack without
+pickup keeps that existing button. The loot info/cancel presentation has not
+been replaced or counted as original UI completion.
+
+The controller polls only this existing selection snapshot to refresh native
+visibility; it does not scan drops or implement pickup rules. These changes
+have not been executed or rendered, and no historical completion count changes.

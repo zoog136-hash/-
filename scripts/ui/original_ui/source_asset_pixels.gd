@@ -11,6 +11,14 @@ static func resolve(reference: Dictionary) -> Dictionary:
 	if api==null:return {"ok":false,"error":"source_image_owner_api_unavailable"}
 	var result: Dictionary=api.resolve(reference.duplicate(true))
 	if not result.get("handled",false):return {"ok":false,"error":"source_image_pack_not_selected"}
+	return consume_owner_result(result)
+
+static func consume_owner_result(owner_result: Dictionary) -> Dictionary:
+	# The caller already invoked the existing image owner (for example its
+	# field-world adapter). Reuse that exact result without another asset
+	# join, pack reader or fallback. Only the existing Cocos upload conversion
+	# below is shared with source-asset Sprite rendering.
+	var result: Dictionary=owner_result.duplicate(true)
 	if not result.get("ok",false):
 		if result.get("status")=="source_dummy_excluded" and result.get("excluded_from_connection")==true:
 			var excluded_evidence: Dictionary=result.duplicate(true)
