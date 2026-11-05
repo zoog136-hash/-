@@ -10359,7 +10359,8 @@ func regional_return_status() -> String:
 	if not get_regional_return_enabled(): return "자동 변경 꺼짐 · 원래 귀환 슬롯 사용"
 	var land: int = _regional_return_land()
 	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)): return "현재 지역: 변경 대상 아님"
-	var suffix: String = " · TWILIGHT 대응 지도" if REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
+	var original_m_field: bool=field_map!=null and bool(field_map.get_meta("current523_source_field",false))
+	var suffix: String = " · TWILIGHT 대응 지도" if not original_m_field and REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
 	var key: String = REGIONAL_RETURN.target_key(126424, inventory, _find_catalog_item_record)
 	return "잊혀진 귀환 주문서 적용 · 보유 %d개%s" % [int(inventory.get(key, 0)), suffix]
 

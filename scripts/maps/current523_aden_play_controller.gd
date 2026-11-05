@@ -431,6 +431,7 @@ func _open_source(value: Dictionary) -> bool:
 	world.hud.set_map_name(str(proposed.data.map_name))
 	_build_notice(world)
 	_load_portals()
+	if world.has_method("_refresh_regional_return_slots"):world.call("_refresh_regional_return_slots")
 	if generic:_start_map_time_monitor(world)
 	return true
 
@@ -486,6 +487,8 @@ func _close_source(remember_disabled: bool) -> bool:
 	_renderer = null; _source_physics = null; _source_field = null; _prior = null; _notice = null; _portals = null
 	_prior_world.clear(); _paused_nodes.clear()
 	source_owned = false; active = false
+	if is_instance_valid(world) and world.is_inside_tree() and not world.is_queued_for_deletion() and world.has_method("_refresh_regional_return_slots"):
+		world.call("_refresh_regional_return_slots")
 	return saved
 
 func _source_checkpoint() -> Dictionary:
@@ -774,6 +777,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	_start_map_time_monitor(world)
 	world.portal_cooldown=2.0
 	previous_renderer.queue_free(); previous_physics.queue_free(); previous_field.close()
+	if world.has_method("_refresh_regional_return_slots"):world.call("_refresh_regional_return_slots")
 	return true
 
 func _source_context_shape(context: Dictionary) -> bool:
