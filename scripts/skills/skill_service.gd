@@ -371,18 +371,26 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			if status.apply(skill, target, world):
 				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 				_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "success", target.combat_hit_position())
 				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
-			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			else:
+				vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 			continue
 		var hit := hit_chance(skill, target)
 		if world.rng.randf() >= hit:
 			target.show_miss()
 			vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 			continue
 		deal_damage(skill, target)
 		if not target.dead and skill.has("status"):
-			if status.apply(skill, target, world): vfx.maintain_status(presentation_id(skill), target, str(skill.status))
-			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			if status.apply(skill, target, world):
+				vfx.maintain_status(presentation_id(skill), target, str(skill.status))
+				_emit_verified_source_effect(skill, "success", target.combat_hit_position())
+			else:
+				vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 		if not target.dead: trigger("on_hit", target, skill)
 	if skill.has("self_stacks"):
 		var config: Dictionary = skill.self_stacks
@@ -412,6 +420,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	if not roll_turn_undead(world.rng, chance):
 		target.show_miss()
 		vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+		_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 		world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 저항")
 		return
 	# Use the NPC death signal/drop/XP path, with no weapon lifesteal, critical
@@ -419,6 +428,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	target.take_damage(target.hp, false, "turnUndead")
 	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 	_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
+	_emit_verified_source_effect(skill, "success", target.combat_hit_position())
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
