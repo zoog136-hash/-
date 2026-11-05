@@ -2640,3 +2640,23 @@ func open_protection523() -> void:
 	var view := preload("res://scripts/protection/protection523_panel.gd").new()
 	scroll.add_child(view)
 	view.configure(self)
+
+
+# Original CSB presentation is supplied by the UI owner. These adapters do not
+# create forms, select content from filenames, or implement service operations.
+var original_ui_runtime_presenter: Node
+
+func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
+	if not is_instance_valid(original_ui_runtime_presenter):
+		original_ui_runtime_presenter=preload("res://scripts/ui/original_ui/source_runtime_presenter.gd").new()
+		original_ui_runtime_presenter.name="OriginalUISourceRuntime"
+		add_child(original_ui_runtime_presenter)
+	return original_ui_runtime_presenter.attach(runtime,source_pack)
+
+func register_original_ui_content(section: String, focus_kind: String, member: String, source_sha256: String, mount: Node2D, binding_factory: Callable) -> Dictionary:
+	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":false,"code":"source_runtime_not_bound"}
+	return original_ui_runtime_presenter.register_content(section,focus_kind,member,source_sha256,mount,binding_factory)
+
+func close_original_ui_content() -> Dictionary:
+	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":true,"closed":true}
+	return original_ui_runtime_presenter.close_content()

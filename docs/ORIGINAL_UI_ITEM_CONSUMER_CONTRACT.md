@@ -93,3 +93,64 @@ effects are not evidence that all 123 item CSBs or 560 UI entries are supported.
 The v2 open/configure/play/seek call signatures are unchanged. No completion
 signal was added. All inspection-only acceptance remains unavailable to strict
 item consumers.
+
+## Runtime service bridge (implementation only, not newly tested)
+
+`renewal_hud.gd` now exposes `bind_original_ui_runtime(runtime, source_pack)`,
+`register_original_ui_content(section, focus_kind, member, source_sha256,
+mount: Node2D, binding_factory: Callable)` and `close_original_ui_content()`.
+The runtime is PR264's public ABI at
+`8488ada80cb0d0d647be9aa15986e82b059afb86`. The integration owner can call the
+first method after its existing `unconfirmed523.configure(world)` and register
+only exact original content roots. There is no automatic source-pack install,
+inferred root filename or invented mount transform. The supplied existing game
+mount owns the original screen-coordinate contract. The current main base does
+not contain that runtime, so this branch does not add a duplicate service.
+
+`source_runtime_presenter.gd` registers its callback through
+`runtime.bind_presentation()`. When `request_presentation()` has prepared a
+model, the bridge reads `runtime.source_ui.snapshot()`, selects an explicitly
+registered `(section, focus.kind)` route, and calls
+`binding_factory(model, source_service_session) -> Dictionary`. The returned
+exact-offset bindings configure the original CSB in strict mode. Unsupported
+or unbound content still returns failure to the runtime. The two MainMenu
+components are explicitly rejected as content roots. No substitute screen is
+created if a declaration or source dependency is missing.
+
+The session exposes `action_callback(row_id, action_ref) -> Callable` only for
+one exact opaque reference supplied in that row. Its `begin(action_ref)`,
+`choose(key, option_indices)`, `confirm()`, `cancel()` and `close()` delegate to
+the existing source_ui service. The service retains all choice validation,
+revision/fingerprint, single-save and reward logic. `action_result` forwards
+the returned dictionary for the original result-state adapter. The UI does
+not auto-confirm, retry a failed save, select an option or generate a request.
+Replacing a scene invalidates its old callbacks without closing the newer
+model that the runtime already prepared.
+
+A ProjectNode binding may declare `{"role":"project","bindings":{...}}`.
+Those child bindings use offsets from that exact referenced CSB and recurse
+through the original loader. Strict mode still rejects unconnected child
+controls/content. No generic form is introduced by this path.
+
+These bridge and recursive-binding changes were implemented after the user's
+instruction to stop new checks/tests. They have not been executed or validated,
+and do not increase gameplay-completion or inspection-render counts. Actual
+content-root/node mappings, caller registration and source-coordinate mounts
+must be provided by their existing source contracts before a screen can open.
+
+The source-row `action_callback` is a zero-argument Button callback. Checkbox
+callbacks accept the selected boolean; their original caller must map that
+value to the provided choice key/indices and invoke `choose`. There is no
+implicit checkbox-to-reward or numeric-ID mapping.
+
+Exact node bindings can also supply `{"role":"source_text","text":value}`,
+`{"role":"source_percent","percent":value}`, and an explicit `visible` boolean.
+The existing caller supplies those values from its source model. No balances,
+progress formula or variant choice is calculated by this renderer. Text retains
+its source font/layout and percent retains its original LoadingBar texture,
+crop/clamping and direction. `set_bound_text(offset,value)`,
+`set_bound_percent(offset,value)` and `set_bound_visible(offset,value)` update
+only previously declared bindings. Text updates stage their fields before
+commit so an unsupported font glyph/layout leaves the prior display data.
+These live-binding changes have not been run or tested under the latest user
+instruction; they do not increase any completion or render count.

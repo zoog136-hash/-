@@ -101,6 +101,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
+	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
@@ -128,21 +129,24 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only and not (binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_button")
 		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_button_text_layout_or_blur")
 	if node.classname=="Text":
-		if inspection_only or binding.get("role")!="static_source_text":unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
-		if not inspection_only and binding.get("role")!="static_source_text": problems.append("unconnected_source_text")
+		if inspection_only or binding.get("role") not in ["static_source_text","source_text"]:unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
+		if not inspection_only and binding.get("role") not in ["static_source_text","source_text"]: problems.append("unconnected_source_text")
+		if binding.get("role")=="source_text" and not binding.get("text") is String:problems.append("source_text_value_missing")
 		if int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_shadow_blur")
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="LoadingBar":
-		unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
-		if not inspection_only:problems.append("unconnected_source_percent")
+		var connected: bool=binding.get("role")=="source_percent" and (binding.get("percent") is int or binding.get("percent") is float) and is_finite(float(binding.percent))
+		if not connected:unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
+		if not inspection_only and not connected:problems.append("unconnected_source_percent")
 	if node.classname=="ListView":
 		# Inspection retains supplied authored rows; dynamic gameplay content
 		# still requires the original row/caller contract.
 		unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
 		if not inspection_only: problems.append("unconnected_list_content")
 	if node.classname=="ProjectNode":
-		unresolved_bindings.append(str(widget.name)+":project_scene_binding")
-		if not inspection_only: problems.append("unconnected_project_scene")
+		var connected: bool=binding.get("role")=="project" and binding.get("bindings") is Dictionary
+		if not connected:unresolved_bindings.append(str(widget.name)+":project_scene_binding")
+		if not inspection_only and not connected:problems.append("unconnected_project_scene")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
@@ -162,7 +166,7 @@ func _build(source: Dictionary) -> Node2D:
 		nested._project_ancestry=_project_ancestry.duplicate()
 		nested._project_ancestry.append(source_member)
 		nested._project_root_options=widget.duplicate(true)
-		var result: Dictionary=nested.configure(source_pack,member,inspection_only)
+		var result: Dictionary=nested.configure(source_pack,member,inspection_only,_bindings.get(int(source._offset),{}).get("bindings",{}))
 		if not result.ok:
 			_build_error="project_scene_rejected:"+member+":"+str(result)
 			nested.free();return null
@@ -198,7 +202,7 @@ func _build(source: Dictionary) -> Node2D:
 	var sx: float=float(widget.scale[0])
 	var sy: float=float(widget.scale[1])
 	node.transform=Transform2D(Vector2(cos(ry)*sx,sin(ry)*sx),Vector2(-sin(rx)*sy,cos(rx)*sy),Vector2(widget.position[0],-widget.position[1]))
-	node.visible=bool(widget.visible)
+	node.visible=bool(_bindings.get(int(source._offset),{}).get("visible",widget.visible))
 	node.z_index=int(widget.zOrder)
 	var color: Array=widget.color
 	node.modulate=Color.WHITE
@@ -247,7 +251,10 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_particle",emitter)
 	if source.classname=="LoadingBar":
 		var bar=preload("res://scripts/ui/original_ui/source_loading_bar.gd").new()
-		var configured: Dictionary=bar.configure(source_pack,options)
+		var percent_binding: Dictionary=_bindings.get(int(source._offset),{})
+		var percent_options: Dictionary=options.duplicate(true)
+		if percent_binding.get("role")=="source_percent":percent_options.percent=percent_binding.percent
+		var configured: Dictionary=bar.configure(source_pack,percent_options)
 		if not configured.ok:
 			_build_error=str(configured.error);bar.free();node.free();return null
 		origin.add_child(bar)
@@ -256,14 +263,17 @@ func _build(source: Dictionary) -> Node2D:
 		var font_value: FontFile=source_pack.font(options.fontResource)
 		if font_value==null:
 			_build_error="original_font_unavailable:"+str(widget.name); node.free(); return null
-		var text_value: String=str(options.text)
+		var text_binding: Dictionary=_bindings.get(int(source._offset),{})
+		var text_value: String=str(text_binding.text) if text_binding.get("role")=="source_text" else str(options.text)
 		for index: int in range(text_value.length()):
 			if not text_value[index].strip_edges().is_empty() and not font_value.has_char(text_value.unicode_at(index)):
 				_build_error="original_font_glyph_missing:"+str(widget.name); node.free(); return null
 		var label=preload("res://scripts/ui/original_ui/source_text.gd").new()
 		label.name="OriginalText"
 		node.set_meta("source_text",label)
-		var text_result: Dictionary=label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
+		var text_options: Dictionary=options.duplicate(true)
+		text_options.text=text_value
+		var text_result: Dictionary=label.configure(font_value,text_options,Vector2(widget.size[0],widget.size[1]))
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
 		origin.add_child(label)
@@ -554,3 +564,21 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 		if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
 		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
 	for child: Node in node.get_children():_sync_source_display(child,display)
+
+
+func set_bound_text(source_offset: int, value: String) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_text" or not node.has_meta("source_text"):return {"ok":false,"error":"source_text_binding_missing"}
+	return node.get_meta("source_text").set_source_text(value)
+
+func set_bound_percent(source_offset: int, value: float) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_percent" or not node.has_meta("source_loading_bar") or not is_finite(value):return {"ok":false,"error":"source_percent_binding_missing"}
+	node.get_meta("source_loading_bar").set_source_percent(value)
+	return {"ok":true}
+
+func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
+	node.visible=value
+	return {"ok":true}

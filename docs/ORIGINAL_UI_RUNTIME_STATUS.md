@@ -544,3 +544,26 @@ rendered and twelve remained rejected for original fonts or custom properties.
 The tracked inspection union is 317/560, separate from the 93 component probes.
 
 Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UICheckBox.cpp
+
+### Prepared service-model wiring — not executed
+
+The existing HUD now exposes a nonvisual original-UI runtime bridge for PR264's
+public `8488ada80cb0d0d647be9aa15986e82b059afb86` ABI. Explicit source root/hash,
+existing game mount and exact-offset binding factories connect prepared models
+to strict CSB scenes. Menu components cannot be registered as content roots.
+Nested ProjectNode bindings can carry their own exact child bindings. UI action
+callbacks delegate begin/choose/confirm/cancel/close to the existing service;
+no cost, reward, random choice or save code is duplicated. Replacing a displayed
+scene invalidates old callbacks without closing the newer prepared model.
+
+Original Text/LoadingBar/visibility bindings can consume values supplied by that
+caller, without deriving balances, progress formulas or source-variant choices.
+The integration owner still needs to call the HUD bridge after configuring its
+runtime and supply each original content-root/node/coordinate contract. Missing
+or unsupported content remains unavailable; the UI creates no substitute form.
+
+These edits follow the latest user instruction to implement connections without
+starting further checks, audits or tests. They have not been executed, compiled
+or rendered. The previous inspection count remains 317/560, dependencies remain
+524/560, and no new actual game-consumption or 95% usage claim is made. Sound and
+the separately excluded undeclared 135 links are not activated by this adapter.
