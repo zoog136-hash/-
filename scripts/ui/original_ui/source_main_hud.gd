@@ -187,6 +187,25 @@ func _input(event: InputEvent) -> void:
 	if hud==null or not is_instance_valid(_coordinates):return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
+	if inventory_search_is_open():
+		for property: String in ["detail_window","companion_window","workspace"]:
+			var overlay: Variant=hud.get(property)
+			if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*event.position):
+				_cancel_native_buttons()
+				return
+		var search: Dictionary=_inventory_view.search_presentation()
+		var editor: Variant=search.get("editor")
+		var blocked: bool=not editor is Control or hud.get("class_picker_initial")==true or hud.call("blocks_keyboard_input_except_source_editor",editor)
+		if blocked:
+			_cancel_native_buttons()
+			return
+		var buttons: Array=[]
+		if is_instance_valid(search.get("scene")):_collect_native_buttons(search.scene,buttons)
+		var routed: Dictionary=_native_buttons.route(event,event.position,buttons)
+		if not routed.get("handled",false) and event is InputEventScreenTouch and event.pressed and not event.canceled:_inventory_view.focus_search_at(event.position)
+		# The source popup owns this gesture; it cannot reach a slot/world.
+		get_viewport().set_input_as_handled()
+		return
 	if world_map_is_open() or hud.get("class_picker_initial")==true or (hud.has_method("blocks_keyboard_input") and hud.call("blocks_keyboard_input")):
 		_cancel_native_buttons()
 		return
@@ -486,6 +505,13 @@ func try_open_inventory() -> Dictionary:
 func inventory_is_open() -> bool:
 	return _inventory_view!=null and _inventory_view.is_open()
 
+func inventory_search_is_open() -> bool:
+	return inventory_is_open() and _inventory_view.search_is_open()
+
+func close_inventory_search() -> void:
+	_cancel_native_buttons()
+	if _inventory_view!=null:_inventory_view.close_search()
+
 func close_inventory() -> void:
 	var owned_open: bool=inventory_is_open()
 	_cancel_native_buttons()
@@ -499,10 +525,10 @@ func inventory_name_hint_context(reference: String) -> Dictionary:
 	return _inventory_view.name_hint_context(reference) if inventory_is_open() and _inventory_name_view!=null else {}
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
-	return _inventory_view.hit_at(viewport_point) if inventory_is_open() else {}
+	return _inventory_view.hit_at(viewport_point) if inventory_is_open() and not inventory_search_is_open() else {}
 
 func inventory_blocks_point(viewport_point: Vector2) -> bool:
-	return inventory_is_open() and _inventory_view.blocks_point(viewport_point)
+	return inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point))
 
 func inventory_gesture_bounds() -> Control:
 	return _inventory_view.gesture_bounds() if inventory_is_open() else null

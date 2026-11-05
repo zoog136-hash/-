@@ -5,7 +5,14 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest single combined input is **v16**, documented in
+The latest single combined input is **v17**, documented in
+[Original inventory search input](ORIGINAL_UI_INVENTORY_SEARCH_ABI.md).
+It retains every v16 input and adds the authored extension search entry and
+original input bar, borrowing the same bag query editor/filter. No new editor,
+result row, clear action or sorting rule is created. Private delivery succeeded;
+installation, input behavior and rendering remain unconfirmed.
+
+The retained **v16** input is documented in
 [Original enhancement-start control](ORIGINAL_UI_ENHANCE_ACTION_ABI.md).
 It retains every v15 input and adds only the original enhancement action
 subtree wired to the existing target forge execution/confirmation. Full

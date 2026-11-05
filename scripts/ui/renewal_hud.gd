@@ -348,11 +348,14 @@ func set_character_state(value: Dictionary) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_character_stats()
 
 func blocks_keyboard_input() -> bool:
+	return blocks_keyboard_input_except_source_editor(null)
+
+func blocks_keyboard_input_except_source_editor(editor: Control) -> bool:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return true
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view): return true
 	var focused: Control = get_viewport().gui_get_focus_owner()
-	if focused is LineEdit or focused is TextEdit: return true
+	if (focused is LineEdit or focused is TextEdit) and focused!=editor: return true
 	if pointer_transfer != null and pointer_transfer.pointer != -2: return true
 	for dialog: Node in $Root.get_children():
 		if dialog.name == "TwilightConfirmation" and dialog.visible: return true
@@ -814,6 +817,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_search_is_open():
+			original_main_ui_controller.close_inventory_search()
+			get_viewport().set_input_as_handled()
+			return
 		if original_inventory_is_open():
 			original_main_ui_controller.close_inventory()
 			_close_workspace()
@@ -2818,6 +2825,7 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if not is_instance_valid(original_main_ui_controller):return false
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
+	if original_main_ui_controller.inventory_search_is_open():return true
 	if original_main_ui_controller.character_blocks_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
 

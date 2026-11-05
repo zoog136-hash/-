@@ -13,6 +13,10 @@ shape and the original-definition reader, including explicitly declared
 TestNPC exclusion. It creates no L1J→mobile identity mapping. Integration269's
 authoritative current dialogue context remains pending; no receiver or source
 node placement changes are required by that image consumer.
+The image owner's final `9fc7c6aaedf1c80d09fe084c664bf4c22df04ee9` was
+subsequently merged into main at `b1efe8e2b8297404af2e0a6a2db7ee8503205c25`.
+This UI change does not duplicate that image implementation or resume its
+deferred follow-up work.
 
 ## Registration and authoritative current dialogue
 

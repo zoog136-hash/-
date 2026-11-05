@@ -155,10 +155,11 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView","PageView"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView","PageView","TextField"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
+	if binding.get("role")=="source_text_field" and node.classname!="TextField":problems.append("source_text_field_original_widget_required")
 	var external: bool=int(node.get("_offset",-1)) in _external_texture_nodes
 	if external and binding.get("role")!="source_asset_slot":problems.append("external_texture_owner_binding_required")
 	if binding.get("role")=="source_asset_slot" and (not external or node.classname!="Sprite" or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
@@ -197,8 +198,10 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 			if not inspection_only and not (source_touch or (connected_callback and (declared_type or declared_name))):problems.append("unconnected_source_callback:"+field)
 	if direct_input and not bool(widget.get("touchEnabled",false)):problems.append("source_input_not_declared")
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume"]):unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume"]: problems.append("unconnected_source_input")
+		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]):unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]: problems.append("unconnected_source_input")
+	if node.classname=="TextField":
+		if binding.get("role")!="source_text_field" or not binding.get("editor") is LineEdit:problems.append("source_text_field_existing_editor_binding_required")
 	if node.classname=="CheckBox":
 		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
 		if not inspection_only and not (binding.get("role")=="checkbox" and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)):problems.append("unconnected_source_checkbox")
@@ -379,6 +382,15 @@ func _build(source: Dictionary) -> Node2D:
 			_build_error=str(configured.error);bar.free();node.free();return null
 		origin.add_child(bar)
 		node.set_meta("source_loading_bar",bar)
+	if source.classname=="TextField":
+		var field_binding: Dictionary=_bindings.get(int(source._offset),{})
+		var field_font: FontFile=source_pack.font(options.fontResource)
+		var field=preload("res://scripts/ui/original_ui/source_text_field.gd").new()
+		var prepared: Dictionary=field.configure(field_font,options,Vector2(widget.size[0],widget.size[1]),field_binding.get("editor"))
+		if not prepared.get("ok",false):
+			_build_error=str(prepared.get("error"));field.free();node.free();return null
+		origin.add_child(field)
+		node.set_meta("source_text_field",field)
 	if source.classname=="Text":
 		var font_value: FontFile=source_pack.font(options.fontResource)
 		if font_value==null and str(options.fontResource.get("path","")).is_empty() and source_pack.has_method("declared_system_font"):
@@ -761,6 +773,7 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
 		if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
 		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
+		if node.has_meta("source_text_field"):node.get_meta("source_text_field").modulate=display
 		if node.has_meta("source_bitmap_text"):node.get_meta("source_bitmap_text").set_source_display(display)
 		if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
 		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)

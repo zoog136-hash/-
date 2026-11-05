@@ -5,6 +5,7 @@ extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Chrome=preload("res://scripts/ui/original_ui/source_main_inventory_bindings.gd")
 const Slots=preload("res://scripts/ui/original_ui/source_main_inventory_slots.gd")
+const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
 const PARENT="UI/FloatingUiScene.csb"
 const PROJECT=1572
 const SLOT_SET=56036
@@ -26,6 +27,8 @@ var _inventory_scene: Node2D
 var _hits: Dictionary={}
 var _bounds: Control
 var _refreshing: bool=false
+var _search: RefCounted
+var search_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(hud):return _unsupported("source_inventory_view_hud_unavailable")
@@ -41,7 +44,12 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 	result=_slots.configure(pack,hud,image_owner_provider)
 	if not result.get("ok",false):return _unsupported_result(result)
 	_chrome.model_changed.connect(_on_category_changed)
+	_chrome.search_requested.connect(_open_search)
 	_slots.selection_changed.connect(_on_selection_changed)
+	if pack.manifest.get("scenes",{}).has(Search.MEMBER):
+		var candidate=Search.new()
+		search_result=candidate.configure(pack,bag)
+		if search_result.get("ok",false):_search=candidate
 	return {"ok":true,"handled":false,"configured":true,"native_capacity":4,"supported_native_capacities":[4,8],"parent_contract":Chrome.parent_contract(PARENT),"partial_source_scene":true,"complete_screen_contract":false}
 
 func open(parent: Node) -> Dictionary:
@@ -53,6 +61,7 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion() and _scene.is_inside_tree()
 
 func close() -> void:
+	close_search()
 	var previous: Node2D=_scene
 	_scene=null
 	_inventory_scene=null
@@ -113,13 +122,31 @@ func name_hint_context(reference: String) -> Dictionary:
 	return {"ok":true,"reference":reference,"control":control,"scroll":bounds,"source_native":true}
 
 func presentation() -> Dictionary:
-	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":_native_capacity,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":_native_capacity,"search":search_presentation(),"partial_source_scene":true,"complete_screen_contract":false}
+
+func search_is_open() -> bool:
+	return _search!=null and _search.is_open()
+
+func search_presentation() -> Dictionary:
+	return _search.presentation() if _search!=null else {}
+
+func close_search() -> void:
+	if _search!=null:_search.close()
+
+func focus_search_at(point: Vector2) -> bool:
+	return search_is_open() and _search.focus_input_at(point)
+
+func search_blocks_point(point: Vector2) -> bool:
+	return search_is_open() and _search.blocks_point(point)
+
+func _open_search() -> void:
+	if not is_open() or _native_capacity!=8 or _search==null:return
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	search_result=_search.open(parent) if parent!=null else _unsupported("source_inventory_search_parent_unavailable")
 
 func _eligible_model() -> Dictionary:
 	var bag: Object=_bag.get_ref() if _bag!=null else null
 	if bag==null:return _unsupported("source_inventory_view_existing_bag_unavailable")
-	var search: Variant=bag.get("search_line")
-	if is_instance_valid(search) and search is LineEdit and not search.text.is_empty():return _unsupported("source_inventory_view_search_not_supported")
 	if bag.get("detail_active")==true:return _unsupported("source_inventory_view_detail_not_supported")
 	var branch: Dictionary=_owner_branch(bag)
 	if not branch.get("ok",false):return branch

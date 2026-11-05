@@ -8,6 +8,7 @@ const TABS={"전체":[41748,40288],"장비":[38868,37448],"소모품":[36028,346
 const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
 const EXTENSION_BUTTON=21648
+const SEARCH_BUTTON=44780
 const FRAMES={
  false:{"parent":55184,"background":60672,"offsets":[60672,59888,59516,59136,58756,58376]},
  true:{"parent":43300,"background":54484,"offsets":[54484,53776,53404,53028,52648,52268,51888]}
@@ -20,6 +21,7 @@ const PARENTS={
 	"UI/FloatingUi/FloatingUiScene.csb":{"sha256":"70e58e33ecce971de43b558c1464620a799dd33ac6f98558a91401cb996bc14d","project_offset":9776}
 }
 signal model_changed(model: Dictionary)
+signal search_requested
 var _pack: RefCounted
 var _inventory: WeakRef
 var _scene: WeakRef
@@ -87,6 +89,11 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 	if bag!=null and bag.has_method("_toggle_expanded") and not _node_at(active.get("nodeTree",{}),EXTENSION_BUTTON).is_empty():
 		roots.append(EXTENSION_BUTTON)
 		bindings[EXTENSION_BUTTON]={"role":"button","activate":Callable(self,"toggle_expanded")}
+	# This entry belongs specifically to the authored extension branch.
+	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb") and not _node_at(active.get("nodeTree",{}),SEARCH_BUTTON).is_empty():
+		roots.append(SEARCH_BUTTON)
+		bindings[SEARCH_BUTTON]={"role":"button","activate":Callable(self,"_search_requested")}
+		bindings[46132]={"role":"static_source_text"}
 	for category: String in TABS:
 		var variants: Array=TABS[category]
 		for index: int in range(variants.size()):
@@ -113,6 +120,10 @@ func bind_presented(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
 	_scene=weakref(scene)
 	return {"ok":true}
+
+func _search_requested() -> Dictionary:
+	search_requested.emit()
+	return {"ok":true,"existing_search_requested":true,"game_state_written":false}
 
 func refresh(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
