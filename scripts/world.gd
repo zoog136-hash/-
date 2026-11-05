@@ -9482,14 +9482,14 @@ func _record_stun_resistance(record: Dictionary) -> int:
 func _stun_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0) + int(titles.bonus("HitSpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
-		total += _record_stun_accuracy(record)
+		total += _record_stun_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"stun","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("stun"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0) + int(titles.bonus("SpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
-		total += _record_stun_resistance(record)
+		total += _record_stun_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"stun","resistance"))
 	total += _active_item_buff_total("stun_resistance") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "stun_resistance")
 	total+=int(growth.guardian_combat.status_resistance("stun"))
 	total += int(card_collections.interval_bonus("stun_resistance:percent",hp,_effective_max_hp()))
@@ -9510,13 +9510,13 @@ func _record_silence_resistance(record: Dictionary) -> int:
 func _silence_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_silence_accuracy(record)
+		total += _record_silence_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"silence","accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _silence_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_silence_resistance(record)
+		total += _record_silence_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"silence","resistance"))
 	return int(original_skills.stat("silenceResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_silence_chance(target: TwilightMonster) -> float:
@@ -9544,13 +9544,13 @@ func _record_hold_resistance(record: Dictionary) -> int:
 func _hold_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_hold_accuracy(record)
+		total += _record_hold_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"hold","accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_hold_resistance(record)
+		total += _record_hold_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"hold","resistance"))
 	return int(original_skills.stat("holdResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_hold_chance(target: TwilightMonster) -> float:
@@ -9578,14 +9578,14 @@ func _record_fear_resistance(record: Dictionary) -> int:
 func _fear_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_fear_accuracy(record)
+		total += _record_fear_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("fear"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_fear_resistance(record)
+		total += _record_fear_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","resistance"))
 	total+=int(growth.guardian_combat.status_resistance("fear"))
 	total += int(card_collections.interval_bonus("fear_resistance:percent",hp,_effective_max_hp()))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
@@ -9615,13 +9615,13 @@ func _record_poison_resistance(record: Dictionary) -> int:
 func _poison_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_poison_accuracy(record)
+		total += _record_poison_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"poison","accuracy"))
 	return clampi(total, 0, 100)
 
 func _poison_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_poison_resistance(record)
+		total += _record_poison_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"poison","resistance"))
 	return int(original_skills.stat("poisonResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_poison_chance(target: TwilightMonster) -> float:

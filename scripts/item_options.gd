@@ -38,7 +38,16 @@ static func additional_original_flat(record: Dictionary, key: String) -> int:
 	# evasion Value is an integer rating. Neither existing receiver takes a ratio.
 	return int(_additional_original_operand(record,key,[names[key]],"ValuePercent" if key.ends_with("_crit") else "Value",1.0))
 
-static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float) -> float:
+static func additional_original_status(record: Dictionary, status: String, kind: String) -> float:
+	if status not in ["stun","hold","fear","poison","silence"] or kind not in ["accuracy","resistance"]: return 0.0
+	var accuracy_aliases: Dictionary = {"stun":["stunAccuracy","스턴 적중","스턴 적중률"],"hold":["holdAccuracy","홀드 적중","속박 적중"],"fear":["fearAccuracy","공포 적중","피어 적중"],"poison":["poisonAccuracy","독 적중","중독 적중"],"silence":["silenceAccuracy","침묵 적중","사일런스 적중"]}
+	var resistance_aliases: Dictionary = {"stun":["stunResistance","stun_resist","스턴 내성","스턴 저항"],"hold":["holdResistance","hold_resist","홀드 내성","속박 내성"],"fear":["fearResistance","fear_resist","공포 내성","피어 내성"],"poison":["poisonResistance","poison_resist","독 내성","중독 내성"],"silence":["silenceResistance","silence_resist","침묵 내성","사일런스 내성"]}
+	if not record.get("_patch523_effective_extras",false):
+		for alias: String in (accuracy_aliases if kind=="accuracy" else resistance_aliases)[status]:
+			if record.has(alias): return 0.0
+	return _additional_original_operand(record,status+"_"+kind,["HitSpecialResistance" if kind=="accuracy" else "SpecialResistance"],"Percentage",10000.0,status)
+
+static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "") -> float:
 	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
 	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
 	var bless: Variant = record.get("source_bless_raw")
@@ -61,7 +70,17 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(link.get("BonusID",-1)))
 		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
 		if type.get("Name") not in bonus_names: continue
-		if link.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
+		var application: Dictionary = {}; var target: Dictionary = {}
+		if status.is_empty():
+			if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
+		else:
+			if bonus.get("BonusApplicationTypeID")!=2: continue
+			application = CURRENT_DEFINITIONS.row("BonusApplicationType",2)
+			if application.get("Name")!="SpecialResistanceType": return 0.0
+			target = CURRENT_DEFINITIONS.row("SpecialResistanceType",int(bonus.get("BonusApplicationTargetID",-1)))
+			if str(target.get("Name","")).to_lower()!=status: continue
+			if not CURRENT_DEFINITIONS.declared_exclusion("BonusApplicationType",application).is_empty() or not CURRENT_DEFINITIONS.declared_exclusion("SpecialResistanceType",target).is_empty(): return 0.0
+		if link.get("IsPossession")!=false: return 0.0
 		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
 		if unit.get("Name")!=unit_name: return 0.0
 		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
@@ -72,7 +91,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
 		if divisor==1.0 and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
 		total+=float(value)/divisor
-		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit})
+		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target})
 	if evidence.is_empty() or not is_finite(total): return 0.0
 	if divisor==1.0 and absf(total)>9007199254740991.0: return 0.0
 	original_percent_input_evidence[str(int(id))+":"+key] = {"source":identity,"item_class_id":id,"field":key,"effects":evidence,"source_unit":unit_name,"divisor":divisor,"value":total}

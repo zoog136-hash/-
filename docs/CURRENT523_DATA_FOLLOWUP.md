@@ -192,3 +192,24 @@ contributions, the host cooldown base, clamps, source physical owner and final
 atomic save are unchanged. No MP/other-consumable delay interpretation is
 introduced and the whole original bonus/table is not marked adopted.
 These changes are likewise uncompiled/unexecuted/unverified.
+
+## Existing status hit and resistance inputs
+
+ItemOptions.additional_original_status(record,status,kind) reads the current
+original ItemBonus→Bonus→BonusType→Unit relation for HitSpecialResistance or
+SpecialResistance. In addition to the shared exact-native-row safeguards, it
+requires BonusApplicationType 2 to explicitly declare SpecialResistanceType,
+then resolves the actual BonusApplicationTargetID through that original table.
+Only the declared Stun/Hold/Fear/Poison/Silence names enter their corresponding
+existing status consumers. No target ID, namespace, status name, possession
+effect or immunity is inferred. The source unit must be Percentage and the
+existing enhancement conversion raw/10000 supplies percentage points.
+
+The five existing World status-accuracy sums and five corresponding resistance
+sums now call this reader alongside their existing record operand. Typed and
+legacy aliases retain precedence; existing enhancement overlays and mapped
+bonus IDs remain separate. No bleed mapping or universal resistance is added.
+The current character attributes, caps, active-item and collection modifiers,
+guardian/skill contributions and status-success formulas are unchanged. This
+does not implement additional source status effects or change actor/save
+ownership. These ten caller connections remain uncompiled and unexecuted.
