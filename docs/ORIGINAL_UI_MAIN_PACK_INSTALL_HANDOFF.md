@@ -114,3 +114,28 @@ Area44440 and Common_Slot15012 still require their existing PR270 image owner.
 No old card/monster pack is required. The Drive metadata returned the exact
 filename/size and owner-user permission; no permission was changed. A consumer
 has not yet confirmed materialization. No new test/render/CI was performed.
+
+## Separate expanded8 + quickslot candidate
+
+A later candidate includes the original extension row, optional existing weight
+text and original QuickSlotScene/PageViews/slot template. The earlier normal4
+candidate and canonical v5 are preserved, with no automatic installer switch.
+
+- Drive file ID: `1yJmX2l-4w3FdwcW4CGCZRDveqf9zKBKM`.
+- Filename: `TWILIGHT_current523_main_game_quickslot_inventory_candidate_original_pack_20261105.zip`.
+- ZIP size: **11,972,925 bytes**.
+- ZIP SHA256: `aa0fcb3e5772d9feca8aadf6df6dcda8880c0757ef68d2857c2707a323932182`.
+- `original_ui.json` pin: `dd4785a6764ad5d50e83720e139f8da99279593e85b3a8cccba104a7b1cc69ee`.
+- Scope: 37 original files / 20 scene trees / 19 explicit partial scopes.
+- Relative destination: `source-ui/current523-main-game-quickslot-inventory-candidate`.
+- The same extracted-root structure, CLI/env selection and explicit manifest-pin
+  contract apply. No separate installer or automatic old-pack fallback.
+
+Production returned STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER,
+blockers0. External inputs are map Area44440, inventory Common_Slot15012 and
+quickslot Slot_Skill18488. Actual PR270 original pixels remain mandatory for
+filled inventory/quickslots. Code-only later changes need their actual scopes;
+this producer result does not claim full inventory/HUD/560-root completion.
+Private Drive upload succeeded and metadata returned the exact filename/size
+with owner-user permission. Consumer installation is unconfirmed. No new game
+execution, test, render, quality assessment, audit or CI was performed.

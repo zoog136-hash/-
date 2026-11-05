@@ -12,6 +12,8 @@ const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.g
 const WorldMap=preload("res://scripts/ui/original_ui/source_main_world_map.gd")
 const InventoryView=preload("res://scripts/ui/original_ui/source_main_inventory_view.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
+const QuickslotView=preload("res://scripts/ui/original_ui/source_main_quickslot_view.gd")
+const QuickslotImages=preload("res://scripts/ui/original_ui/source_main_quickslot_images.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -67,6 +69,9 @@ var _world_map: Node
 var _inventory_view: RefCounted
 var _inventory_result: Dictionary={}
 var _inventory_signature: int=0
+var _quickslot_view: RefCounted
+var _quickslot_result: Dictionary={}
+var _legacy_quickslots: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -95,6 +100,10 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
+	if pack.manifest.get("scenes",{}).has(QuickslotView.ROOT):
+		var candidate=QuickslotView.new()
+		_quickslot_result=candidate.configure(pack,hud,Callable(self,"_quickslot_original_image"))
+		if _quickslot_result.get("ok",false):_quickslot_view=candidate
 	if pack.manifest.get("scenes",{}).has(InventoryView.PARENT):
 		var candidate=InventoryView.new()
 		_inventory_result=candidate.configure(pack,hud,Callable(self,"_inventory_original_image"))
@@ -142,6 +151,34 @@ func source_map_label_availability() -> bool:
 func _inventory_original_image(entry: Dictionary, native_context: Dictionary) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	return InventoryImages.resolve_owned(hud,entry,native_context)
+
+func _quickslot_original_image(row: Dictionary, native_context: Dictionary) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	return QuickslotImages.resolve(hud,row,native_context)
+
+func refresh_quickslots() -> Dictionary:
+	if _quickslot_view==null:return {"ok":true,"handled":false,"code":"source_quickslot_pack_scope_unavailable"}
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_coordinates):return _fail("source_quickslot_host_unavailable")
+	var pointer: Variant=hud.get("pointer_transfer")
+	if is_instance_valid(pointer) and pointer.get("pointer")!=-2:return {"ok":true,"handled":_quickslot_view.is_open(),"refresh_pending":true}
+	_quickslot_result=_quickslot_view.refresh() if _quickslot_view.is_open() else _quickslot_view.open(_coordinates)
+	sync_legacy_visibility()
+	return _quickslot_result.duplicate(true)
+
+func quickslot_hit_at(viewport_point: Vector2) -> Dictionary:
+	return _quickslot_view.hit_at(viewport_point) if _quickslot_view!=null else {}
+
+func quickslot_control(visible_index: int) -> Control:
+	return _quickslot_view.control_for(visible_index) if _quickslot_view!=null else null
+
+func quickslots_block_point(viewport_point: Vector2) -> bool:
+	return _quickslot_view!=null and _quickslot_view.blocks_point(viewport_point)
+
+func source_quickslot_availability() -> Array:
+	var values: Array=[]
+	for record: Dictionary in _legacy_quickslots:values.append(record.visible)
+	return values
 
 func try_open_inventory() -> Dictionary:
 	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
@@ -291,6 +328,12 @@ func _refresh_wallet(changed: bool) -> void:
 
 func _capture_existing_controls(hud: Node) -> void:
 	var previous: Variant=hud.get("original_main_ui_controller")
+	var previous_quickslots: Array=previous.source_quickslot_availability() if is_instance_valid(previous) and previous.has_method("source_quickslot_availability") else []
+	var buttons: Variant=hud.get("v20_quickslot_buttons")
+	if buttons is Array:
+		for index: int in range(buttons.size()):
+			var button: Variant=buttons[index]
+			if button is CanvasItem and is_instance_valid(button):_legacy_quickslots.append({"control":weakref(button),"visible":bool(previous_quickslots[index]) if index<previous_quickslots.size() else button.visible})
 	if is_instance_valid(previous) and previous.has_method("source_control_availability"):
 		_combat_availability=previous.source_control_availability()
 	var controls: Dictionary={
@@ -432,6 +475,9 @@ func sync_legacy_visibility() -> void:
 	# only the fields no longer owned by an accepted original component.
 	_set_legacy_exp_visible(not is_instance_valid(_exp_scene))
 	_set_legacy_vitals_visible(not is_instance_valid(_char_scene))
+	for record: Dictionary in _legacy_quickslots:
+		var control: Object=record.control.get_ref()
+		if control!=null:control.visible=false if _quickslot_view!=null and _quickslot_view.is_open() else record.visible
 	var map_label: Object=_legacy_map_name.get_ref() if _legacy_map_name!=null else null
 	if map_label!=null:map_label.visible=false if is_instance_valid(_map_name_scene) else _legacy_map_name_visible
 	for kind: String in _legacy_combat:
@@ -454,6 +500,7 @@ func release(restore_legacy: bool=true) -> void:
 	set_process(false)
 	if is_instance_valid(_world_map):_world_map.close()
 	close_inventory()
+	if _quickslot_view!=null:_quickslot_view.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas!=null and canvas.resized.is_connected(_fit_source_coordinates):canvas.resized.disconnect(_fit_source_coordinates)
 	if is_instance_valid(_coordinates):
@@ -462,6 +509,9 @@ func release(restore_legacy: bool=true) -> void:
 		_coordinates.queue_free()
 	_coordinates=null
 	if restore_legacy:
+		for record: Dictionary in _legacy_quickslots:
+			var control: Object=record.control.get_ref()
+			if control!=null:control.visible=record.visible
 		var map_label: Object=_legacy_map_name.get_ref() if _legacy_map_name!=null else null
 		if map_label!=null:map_label.visible=_legacy_map_name_visible
 		_set_legacy_exp_visible(true)

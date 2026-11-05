@@ -664,6 +664,7 @@ func _process(delta: float) -> void:
 			remain = float(cooldowns.get(str(entry.get("id","")),0))
 		quickslot_cooldown_labels[index].text = "%.1f" % remain if remain>0 else ""
 		if index < cooldown_shades.size(): cooldown_shades[index].visible = remain > 0
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_quickslots()
 	if workspace != null and workspace.visible:
 		workspace.footer.text = "아데나  %s  ·  Lv.%d  ·  %s  ·  Esc로 닫기" % [lineage_inventory_ui._format_number(int(character_state.get("gold",0))),int(character_state.get("level",1)),v20_map_name.text]
 
@@ -773,6 +774,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	if is_instance_valid(quickslot_picker_hint): quickslot_picker_hint.text = "왼쪽 %d페이지 · 오른쪽 %d페이지" % [int(pages[0])+1,int(pages[1])+1]
 	for i: int in range(quick_page_buttons.size()):
 		quick_page_buttons[i].add_theme_stylebox_override("normal",UI.tab_frame(i%5 == int(pages[i/5])))
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_quickslots()
 
 func append_log(value: String) -> void:
 	log_history.append(value)
@@ -2695,6 +2697,15 @@ var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
 var _original_world_map_inputs: Dictionary={}
 
+func original_quickslot_hit_at(viewport_point: Vector2) -> Dictionary:
+	return original_main_ui_controller.quickslot_hit_at(viewport_point) if is_instance_valid(original_main_ui_controller) else {}
+
+func original_quickslot_control(visible_index: int) -> Control:
+	if is_instance_valid(original_main_ui_controller):
+		var native: Control=original_main_ui_controller.quickslot_control(visible_index)
+		if is_instance_valid(native):return native
+	return v20_quickslot_buttons[visible_index] if visible_index>=0 and visible_index<v20_quickslot_buttons.size() else null
+
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
@@ -2781,6 +2792,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	if not _original_world_map_inputs.is_empty():
 		map_registration=candidate.bind_world_map(_original_world_map_inputs.image_adapter,_original_world_map_inputs.context_provider,_original_world_map_inputs.input_handler)
 	candidate.sync_legacy_visibility()
+	candidate.refresh_quickslots()
 	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:

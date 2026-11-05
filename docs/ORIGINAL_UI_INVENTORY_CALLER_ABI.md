@@ -108,3 +108,8 @@ More rows, original detail/search/sort controls and original icon
 effects remain incomplete. The whole560 connection numerator is not established.
 No new test, game execution, render, quality assessment, audit or CI was run.
 These interfaces and the normal-view restoration remain unexecuted/unverified.
+
+The separately delivered expanded8 + quickslot candidate is documented in
+[the installer handoff](ORIGINAL_UI_MAIN_PACK_INSTALL_HANDOFF.md#separate-expanded8--quickslot-candidate).
+It actually contains the extension frame/slot scopes and original expand
+button. This is pack production and code connection, not executed presentation.

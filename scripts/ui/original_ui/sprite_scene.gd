@@ -155,7 +155,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView","PageView"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
@@ -169,7 +169,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if binding.has("selected") and not binding.selected is bool:problems.append("source_selection_value_missing")
 	var direct_input: bool=binding.get("input") is Callable and binding.input.is_valid()
 	if binding.has("input") and not direct_input:problems.append("source_input_callback_missing")
-	if direct_input and node.classname not in ["Panel","ImageView","Text","LoadingBar","ScrollView","ListView"]:problems.append("source_input_widget_missing")
+	if direct_input and node.classname not in ["Panel","ImageView","Text","LoadingBar","ScrollView","ListView","PageView"]:problems.append("source_input_widget_missing")
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
@@ -223,6 +223,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not connected:unresolved_bindings.append(str(widget.name)+":original_scroll_input_binding")
 		if not inspection_only and not connected:problems.append("unconnected_original_scroll_input")
 		if binding.has("position") and not binding.position is Vector2:problems.append("source_scroll_position_invalid")
+	if node.classname=="PageView":
+		# This host supplies actual original Layout renderers explicitly. A
+		# serialized page list needs its own loader contract before activation.
+		if not node.get("children",[]).is_empty():problems.append("source_page_view_serialized_pages_not_connected")
+		if not inspection_only and (binding.get("role")!="source_pages" or not direct_input):problems.append("unconnected_original_page_view")
 	if node.classname=="ListView":
 		# The caller explicitly identifies the authored rows it is consuming.
 		# Merely loading a list or rendering placeholder text is not a live
@@ -252,7 +257,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
-	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.get("backGroundScale9Enabled",false)):
+	if source.classname in ["Panel","ListView","ScrollView","PageView"] and bool(options.get("backGroundScale9Enabled",false)):
 		widget=widget.duplicate(true)
 		widget.size=options.scale9Size.duplicate()
 	if source.classname=="ProjectNode" and not str(options.get("fileName","")).is_empty():
@@ -327,7 +332,7 @@ func _build(source: Dictionary) -> Node2D:
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
 		origin.add_child(input_area)
 	var direct_binding: Dictionary=_bindings.get(int(source._offset),{})
-	if not inspection_only and source.classname!="ScrollView" and direct_binding.get("input") is Callable and direct_binding.input.is_valid():
+	if not inspection_only and source.classname not in ["ScrollView","PageView"] and direct_binding.get("input") is Callable and direct_binding.input.is_valid():
 		var input_area:=Control.new()
 		input_area.name="OriginalSourceInput"
 		input_area.position=Vector2(0,-float(widget.size[1]))
@@ -471,7 +476,7 @@ func _build(source: Dictionary) -> Node2D:
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
 	if _resolved_assets.has(int(source._offset)) and not bool(_resolved_assets[int(source._offset)].get("pending_original_pixels",false)):node.set_meta("source523_original_asset",_resolved_assets[int(source._offset)].duplicate(true))
 	var child_origin: Node=origin
-	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.clipEnabled):
+	if source.classname in ["Panel","ListView","ScrollView","PageView"] and bool(options.clipEnabled):
 		# The original transparent Panel clips its children to the source size.
 		# Control uses top-left coordinates; restore Cocos' bottom-left origin
 		# inside it before adding source children. No replacement pixels.
@@ -487,7 +492,7 @@ func _build(source: Dictionary) -> Node2D:
 		clipped_origin.position.y=float(widget.size[1])
 		clip.add_child(clipped_origin)
 		child_origin=clipped_origin
-	if source.classname in ["Panel","ListView","ScrollView"]:
+	if source.classname in ["Panel","ListView","ScrollView","PageView"]:
 		var background=preload("res://scripts/ui/original_ui/source_panel.gd").new()
 		var configured: Dictionary=background.configure(source_pack,options,Vector2(widget.size[0],widget.size[1]))
 		if not configured.ok:
@@ -505,6 +510,13 @@ func _build(source: Dictionary) -> Node2D:
 			if not positioned.ok:_build_error=str(positioned.error);node.free();return null
 		if not inspection_only and bool(widget.touchEnabled):scroll.bind_input(scroll_binding.input)
 		child_origin=scroll.content
+	if source.classname=="PageView" and not inspection_only:
+		var pages=preload("res://scripts/ui/original_ui/source_page_view.gd").new()
+		var configured: Dictionary=pages.configure(Vector2(widget.size[0],widget.size[1]),direct_binding.input)
+		if not configured.get("ok",false):
+			_build_error=str(configured.get("error","source_page_view_configuration_failed"));pages.free();node.free();return null
+		child_origin.add_child(pages)
+		node.set_meta("source_pages",pages)
 	var list_items: Array[Dictionary]=[]
 	var list_nodes: Array[Node2D]=[]
 	if source.classname=="ListView":

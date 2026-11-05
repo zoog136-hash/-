@@ -54,10 +54,13 @@ func inside(control: Control, point: Vector2) -> bool:
 	if not is_instance_valid(control) or not control.is_visible_in_tree(): return false
 	if not Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point): return false
 	var parent: Node = control.get_parent()
-	while parent is Control:
-		if parent.clip_contents and not Rect2(Vector2.ZERO,parent.size).has_point(parent.get_global_transform_with_canvas().affine_inverse()*point): return false
+	while parent!=null:
+		if parent is Control and parent.clip_contents and not Rect2(Vector2.ZERO,parent.size).has_point(parent.get_global_transform_with_canvas().affine_inverse()*point): return false
 		parent = parent.get_parent()
 	return true
+
+func _quickslot_control(index: int) -> Control:
+	return hud.original_quickslot_control(index) if hud.has_method("original_quickslot_control") else hud.v20_quickslot_buttons[index]
 
 func _source_at(point: Vector2) -> Dictionary:
 	if hud.class_picker_initial: return {}
@@ -67,6 +70,9 @@ func _source_at(point: Vector2) -> Dictionary:
 		var native: Dictionary=hud.original_inventory_hit_at(point)
 		if not native.is_empty():return native
 	if hud.has_method("original_source_pointer_capture_blocked") and hud.original_source_pointer_capture_blocked(point):return {}
+	if hud.has_method("original_quickslot_hit_at") and (not hud.workspace.visible or not inside(hud.workspace,point)):
+		var native: Dictionary=hud.original_quickslot_hit_at(point)
+		if not native.is_empty():return native
 	for i: int in range(hud.v20_quickslot_buttons.size()):
 		if inside(hud.v20_quickslot_buttons[i],point) and (not hud.workspace.visible or not inside(hud.workspace,point)):
 			var slot: int = hud.quickslot_index(i)
@@ -264,8 +270,9 @@ func _show_drag() -> void:
 	remove_target.visible = source.from == "quick" and not source.entry.is_empty()
 	remove_target.position = Vector2(get_viewport().get_visible_rect().size.x*.5-59,get_viewport().get_visible_rect().size.y-165)
 	var valid: bool = not source.entry.is_empty() and (source.from == "quick" or hud.get_parent()._quickslot_registration_error(str(source.entry.kind),str(source.entry.id)).is_empty())
-	for button: Button in hud.v20_quickslot_buttons:
-		button.modulate = Color("c9ebff") if valid else Color("b6a39d")
+	for index: int in range(hud.v20_quickslot_buttons.size()):
+		var control: Control=_quickslot_control(index)
+		if is_instance_valid(control):control.modulate = Color("c9ebff") if valid else Color("b6a39d")
 	if source.from == "inventory":
 		var record: Dictionary = hud.lineage_inventory_ui._find_item_record(str(source.id))
 		var slot: String = hud.get_parent()._equipment_slot_for_record(record)
@@ -279,7 +286,9 @@ func _show_drag() -> void:
 	if source.from == "inventory": hint.text = "장비칸: 장착 · 퀵슬롯: 등록 · 바닥: 1개 내려놓기"
 	if source.from == "warehouse":
 		hint.text = "가방에 놓아 찾기"
-		for button: Button in hud.v20_quickslot_buttons: button.modulate = Color("b6a39d")
+		for index: int in range(hud.v20_quickslot_buttons.size()):
+			var control: Control=_quickslot_control(index)
+			if is_instance_valid(control):control.modulate=Color("b6a39d")
 	hint.position = preview.position+Vector2(-40,-22)
 	hint.show()
 
@@ -308,7 +317,7 @@ func _drop() -> void:
 	# quickslot or drop an item into the world through the original window.
 	if hud.has_method("original_source_pointer_capture_blocked") and hud.original_source_pointer_capture_blocked(position):return
 	for i: int in range(hud.v20_quickslot_buttons.size()):
-		if not inside(hud.v20_quickslot_buttons[i],position): continue
+		if not inside(_quickslot_control(i),position): continue
 		var target: int = hud.quickslot_index(i)
 		if source.from == "quick":
 			if target != int(source.slot): hud.quickslot_edit_requested.emit("swap",int(source.slot),target)
@@ -346,7 +355,9 @@ func _finish_gesture() -> void:
 	if is_instance_valid(hint): hint.hide()
 	if is_instance_valid(remove_target): remove_target.hide()
 	if hud != null:
-		for button: Button in hud.v20_quickslot_buttons: button.modulate = Color.WHITE
+		for index: int in range(hud.v20_quickslot_buttons.size()):
+			var control: Control=_quickslot_control(index)
+			if is_instance_valid(control):control.modulate=Color.WHITE
 		for button: Button in hud.lineage_side_ui.equipment_buttons.values(): button.modulate = Color.WHITE
 
 func _inventory_gesture_frame() -> Control:
