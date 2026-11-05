@@ -165,6 +165,26 @@ func retains_issued_reference(world: Node, item_key: String) -> bool:
 	return false
 
 func try_use_inventory(world: Node, item_key: String) -> bool:
+	# Quick-use carries a raw inventory key, not an implicit native ownership
+	# grant. Select an actual issued physical object and enter the same owned
+	# consumer as manual activation; never fall through to a legacy name debit.
+	var issued_ids: Array[String]=[]
+	for id: String in world.item_instances:
+		var physical: Variant=world.item_instances[id]
+		if physical is Dictionary and physical.get("name")==item_key and physical.has("quest_reward_receipt"):issued_ids.append(id)
+	if not issued_ids.is_empty():
+		issued_ids.sort() # Explicit host selection policy; no native order inferred.
+		for id: String in issued_ids:
+			var owned: Dictionary=OWN.proof(world,id)
+			if not owned.get("ok",false):
+				world.hud.show_message(str(owned.get("reason","원본 소지 영수증 확인 필요")));return true
+		if world._item_locked(item_key):
+			world.hud.show_message("잠긴 원본 보상 보존");return true
+		for id: String in issued_ids:
+			if world._item_locked(item_key,id):continue
+			if try_use_held(world,id):return true
+			world.hud.show_message("원본 소지 효과 소비자 미연결 · 이름 기반 차감 없이 보존");return true
+		world.hud.show_message("모든 원본 소지 개체가 잠겨 있습니다");return true
 	if try_use(world,world._find_catalog_item_record(item_key)):return true
 	for rows: Array in world.quest_service.item_grants.values():
 		for receipt: Dictionary in rows:
