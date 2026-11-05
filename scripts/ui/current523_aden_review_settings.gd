@@ -56,6 +56,7 @@ var _folder_target: String = ""
 var spr_enabled: CheckBox
 var spr_root: LineEdit
 var spr_declaration: LineEdit
+var spr_actions: LineEdit
 var spr_group: SpinBox
 var spr_fps: SpinBox
 var spr_anchor_x: SpinBox
@@ -266,6 +267,11 @@ func _build_static_spr_controls() -> void:
 	var declaration_row:=HBoxContainer.new();add_child(declaration_row)
 	declaration_row.add_child(spr_declaration)
 	declaration_row.add_child(UI.button("선언 폴더",_browse.bind("spr_declarations"),Vector2(100,40)))
+	spr_actions=_path_edit("Current523StaticSPRActions")
+	spr_actions.max_length=32768
+	spr_actions.text=JSON.stringify(saved.action_overrides)
+	spr_actions.placeholder_text='원문 동작 직접 지정 · 예: {"1226":28} · 미지정은3 · 자동 활성 판정 아님'
+	add_child(spr_actions)
 	var values:=GridContainer.new();values.columns=2;add_child(values)
 	spr_group=_spr_number(values,"저장 그룹",0,7,float(saved.group_bit))
 	spr_fps=_spr_number(values,"자체 틱/초 · 0=정지",0,60,float(saved.fps))
@@ -273,7 +279,7 @@ func _build_static_spr_controls() -> void:
 	spr_anchor_y=_spr_number(values,"Y",-48,48,float(saved.anchor_y))
 	spr_layer=_spr_number(values,"자체 레이어",-4095,-1,float(saved.layer))
 	add_child(UI.button("SPR 설정 저장 · 다음 입장에 적용",_save_static_spr,Vector2(0,40)))
-	spr_status=UI.label("S32 원문 ID/좌표 → 같은 ID의 -0.sp2 → 선택 저장 그룹. 기본은 첫 저장 프레임·지형 위/인물 뒤. FPS·앵커·레이어는 자체값이며 통행/포탈/전투에 영향이 없습니다.",12,UI.MUTED)
+	spr_status=UI.label("S32 원문 ID/좌표 → 같은 ID의 -0.sp2 → 원문 동작의 프레임. 선언 없는 항목은 제외합니다. 동작 지정·저장 그룹·틱/초·앵커·레이어는 자체 선택이며 통행/포탈/전투에 영향이 없습니다.",12,UI.MUTED)
 	spr_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(spr_status)
 
 
@@ -284,9 +290,13 @@ func _spr_number(row: Container, label: String, low: float, high: float, value: 
 
 
 func _save_static_spr() -> void:
-	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value)}
+	var action_text: String=spr_actions.text.strip_edges()
+	var actions: Variant={} if action_text.is_empty() else JSON.parse_string(action_text)
+	if not actions is Dictionary:
+		spr_status.text="원문 동작 지정은 SPR ID와 동작 번호의 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
+	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions}
 	var error: Error=STATIC_SPR.save_options(value)
-	spr_status.text="저장됨 · 다음 원문 맵 입장에서 registry/실파일 해시를 확인합니다. 표시 순서·FPS·앵커·레이어는 자체 해석입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
+	spr_status.text="저장됨 · 다음 원문 맵 입장에 적용합니다. 원문에 없는 동작·프레임은 표시하지 않습니다. 동작 선택·틱/초·앵커·레이어는 자체 설정입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
 
 
 func _offset_control(node_name: String) -> SpinBox:

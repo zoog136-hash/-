@@ -86,15 +86,17 @@ func load_directory(directory: String) -> bool:
 	_cache[root]={"definitions":definitions.duplicate(true),"source_files":source_files.duplicate(true),"references":references.duplicate(true),"verified_tokens":verified_tokens}
 	return true
 
-func display_definition(id: int) -> Dictionary:
+func display_definition(id: int, action_id: int=3) -> Dictionary:
 	if not definitions.has(id):return {}
 	var source: Dictionary=definitions[id]
-	var result: Dictionary={"header":"","source_line":source.source_line,"source_file":source.source_file,"source_byte_offset":source.source_byte_offset,"source_end_offset":source.source_end_offset,"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes,"declaration_sha256":source.raw_declaration_sha256,"raw_bytes":source.raw_bytes,"action_id":3,"sequence":[],"attachments_unresolved":[],"references":[],"sequence_origin":"ALL30_SOURCE_ACTION3","unapplied_modifiers":[]}
+	var result: Dictionary={"header":"","source_line":source.source_line,"source_file":source.source_file,"source_byte_offset":source.source_byte_offset,"source_end_offset":source.source_end_offset,"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes,"declaration_sha256":source.raw_declaration_sha256,"raw_bytes":source.raw_bytes,"action_id":action_id,"sequence":[],"attachments_unresolved":[],"references":[],"sequence_origin":"ALL30_SOURCE_ACTION"+str(action_id),"unapplied_modifiers":[]}
 	if source.alias_target_raw!=null:
 		result["unsupported"]="declared_alias_requires_resolution";return result
 	for action: Dictionary in source.actions:
 		if int(action.code)==105:result.attachments_unresolved=str(action.raw_body).split(" ",false)
-		if int(action.code)!=3 or action.tokens.is_empty():continue
+		if int(action.code)!=action_id or action.tokens.is_empty():continue
+		result["action_name_raw"]=action.name
+		result["action_source_byte_offset"]=action.source_byte_offset
 		var header: PackedStringArray=str(action.raw_body).split(",",true,1)
 		var numbers: PackedStringArray=header[0].strip_edges().split(" ",false)
 		if numbers.size()!=2 or not numbers[0].is_valid_int() or not numbers[1].is_valid_int() or int(numbers[1])!=action.tokens.size():

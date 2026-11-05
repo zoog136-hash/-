@@ -7,7 +7,7 @@ const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const SETTINGS = "user://current523_map_static_spr.cfg"
 const POLICY = "TWILIGHT_RAW_S32_STATIC_SPR_V1"
 const DECLARATION_SHA = "03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
-const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095}
+const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095,"action_overrides":{}}
 const MAX_RECORDS = 4096
 const MAX_CACHE_BYTES = 32 * 1024 * 1024
 var problem: String = ""
@@ -32,7 +32,7 @@ var _declaration_identity: String=""
 var _declaration_file_count: int=0
 
 static func validate(value: Dictionary) -> Dictionary:
-	var out: Dictionary = DEFAULTS.duplicate()
+	var out: Dictionary = DEFAULTS.duplicate(true)
 	if not value.get("enabled",false) is bool: return {}
 	out.enabled = value.get("enabled",false)
 	var root: Variant = value.get("source_root","")
@@ -42,6 +42,17 @@ static func validate(value: Dictionary) -> Dictionary:
 	if not declaration is String or declaration.length()>4096 or declaration.to_utf8_buffer().has(0): return {}
 	out.declaration_path=declaration.strip_edges()
 	if out.enabled and out.source_root.is_empty(): return {}
+	# An explicit host selection chooses an existing source action. It never
+	# establishes native activation, direction or a filename-suffix conversion.
+	var selected_actions: Variant=value.get("action_overrides",{})
+	if not selected_actions is Dictionary or selected_actions.size()>1024:return {}
+	for id: Variant in selected_actions:
+		var name: String=str(id)
+		var selected: Variant=selected_actions[id]
+		if not (id is String or id is int) or not name.is_valid_int() or name!=str(int(name)) or int(name)<0 or int(name)>65535:return {}
+		if out.action_overrides.has(name):return {}
+		if not (selected is int or selected is float) or not is_finite(float(selected)) or float(selected)!=floorf(float(selected)) or selected<0 or selected>65535:return {}
+		out.action_overrides[name]=int(selected)
 	for key: String in ["group_bit","fps","anchor_x","anchor_y","layer"]:
 		var v: Variant = value.get(key,DEFAULTS[key])
 		if not (v is int or v is float) or not is_finite(float(v)): return {}
@@ -52,11 +63,11 @@ static func validate(value: Dictionary) -> Dictionary:
 
 static func read_options() -> Dictionary:
 	var cfg := ConfigFile.new()
-	if cfg.load(SETTINGS)!=OK: return DEFAULTS.duplicate()
+	if cfg.load(SETTINGS)!=OK: return DEFAULTS.duplicate(true)
 	var value: Dictionary = {}
 	for key: String in DEFAULTS: value[key]=cfg.get_value("display",key,DEFAULTS[key])
 	var checked: Dictionary = validate(value)
-	return DEFAULTS.duplicate() if checked.is_empty() else checked
+	return DEFAULTS.duplicate(true) if checked.is_empty() else checked
 
 static func save_options(value: Dictionary) -> Error:
 	var checked: Dictionary = validate(value)
@@ -129,7 +140,8 @@ func _load_declarations(path: String) -> bool:
 	if DirAccess.dir_exists_absolute(path):
 		var global=GLOBAL_DECLARATIONS.new()
 		if not global.load_directory(path):problem=global.problem;return false
-		for id: int in global.definitions:_declarations[id]=global.display_definition(id)
+		for id: int in global.definitions:
+			_declarations[id]=global.display_definition(id,int(options.action_overrides.get(str(id),3)))
 		_declaration_identity=GLOBAL_DECLARATIONS.MANIFEST_SHA
 		_declaration_file_count=global.source_files.size()
 		return true
@@ -153,6 +165,9 @@ func _load_declarations(path: String) -> bool:
 		if not _index.has(id): continue
 		var body: String=text.substr(h.get_end(),(headers[i+1].get_start() if i+1<headers.size() else text.length())-h.get_end())
 		var record: Dictionary={"header":h.get_string(),"source_line":text.left(h.get_start()).count("\n")+1,"source_sha256":DECLARATION_SHA,"raw_body":body,"action_id":3,"sequence":[],"attachments_unresolved":[]}
+		if int(options.action_overrides.get(str(id),3))!=3:
+			record["unsupported"]="selected_action_requires_global_original_declarations"
+			_declarations[id]=record;continue
 		var clothes: RegExMatch=attachment.search(body)
 		if clothes!=null: record.attachments_unresolved=clothes.get_string(1).split(" ",false)
 		if not h.get_string(3).is_empty():
@@ -188,7 +203,7 @@ func _source(sprite_id: int) -> Dictionary:
 	if not _declarations.has(sprite_id):return _unresolved(sprite_id,"no_original_spr_declaration")
 	var declaration: Dictionary=_declarations[sprite_id]
 	if declaration.has("unsupported"):return _unresolved(sprite_id,str(declaration.unsupported))
-	if declaration.get("sequence",[]).is_empty():return _unresolved(sprite_id,"no_original_action3_frames")
+	if declaration.get("sequence",[]).is_empty():return _unresolved(sprite_id,"no_selected_original_action_frames")
 	var row: Dictionary = _index[sprite_id]
 	var path: String = options.source_root.path_join(str(row.canonical_package_member))
 	var file := FileAccess.open(path,FileAccess.READ)
@@ -269,7 +284,7 @@ func _update_draws() -> void:
 			if visible_bytes+int(display.cost)>MAX_CACHE_BYTES: missing+=1; continue
 			visible_bytes+=int(display.cost);visible_textures[key]=true
 		var point: Vector2 = coordinates.to_world(Vector2(row.raw_x,row.raw_y),false)+Vector2(options.anchor_x,options.anchor_y)
-		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(_index[int(row.sprite_id)].bytes),"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
+		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(_index[int(row.sprite_id)].bytes),"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
 	_stats.drawn_records=_draws.size()
 	_stats.unresolved_records=missing
 	_stats.empty_frames=empty
@@ -281,6 +296,8 @@ func _update_draws() -> void:
 	_stats.declaration_SHA256=_declaration_identity
 	_stats.declaration_source_file_count=_declaration_file_count
 	_stats.original_declaration_and_frames_required=true
+	_stats.explicit_action_overrides=options.action_overrides.duplicate(true)
+	_stats.native_action_activation_verified=false
 	_stats.unresolved_attachments=unresolved_attachments
 	_stats.zero_tick_policy="OWN_HOLD_SOURCE_FRAME_WITHOUT_SYNTHESIZING_DURATION"
 	queue_redraw()
