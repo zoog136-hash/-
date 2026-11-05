@@ -31,6 +31,8 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 		var source:=FileAccess.open(path,FileAccess.READ)
 		if source==null or source.get_length()!=int(entry.bytes) or FileAccess.get_sha256(path)!=entry.sha256:
 			return _fail("source_hash_or_size:"+member)
+		if member.ends_with(".fnt") and not _font_pages_present(path,member,value.files):
+			return _fail("bitmap_font_page_dependencies:"+member)
 	for member: String in value.scenes:
 		var tree: Variant=value.scenes[member]
 		if not tree is Dictionary or not value.files.has(member) or tree.get("_source_sha256")!=value.files[member].sha256:
@@ -44,6 +46,27 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_fonts.clear()
 	last_error=""
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+static func _font_pages_present(path: String, member: String, files: Dictionary) -> bool:
+	var text: String=FileAccess.get_file_as_string(path)
+	var common:=RegEx.new()
+	common.compile('(?m)^common [^\r\n]*\\bpages=(\\d+)\\b')
+	var common_match: RegExMatch=common.search(text)
+	if common_match==null:return false
+	var expected: int=int(common_match.get_string(1))
+	if expected<1:return false
+	var page_pattern:=RegEx.new()
+	page_pattern.compile('(?m)^page\\s+id=(\\d+)\\s+file="([^"]+)"\\s*$')
+	var pages: Array[RegExMatch]=page_pattern.search_all(text)
+	if pages.size()!=expected:return false
+	var seen: Dictionary={}
+	for page: RegExMatch in pages:
+		var id: int=int(page.get_string(1))
+		if id<0 or id>=expected or seen.has(id):return false
+		seen[id]=true
+		var resource: String=member.get_base_dir().path_join(page.get_string(2))
+		if not _safe_member(resource) or not files.has(resource):return false
+	return true
 
 func scene(member: String) -> Dictionary:
 	return manifest.get("scenes",{}).get(member,{}).duplicate(true)

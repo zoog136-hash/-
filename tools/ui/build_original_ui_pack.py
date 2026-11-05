@@ -93,6 +93,8 @@ class Builder:
         elif ref.get('resourceType', 0) == 0:
             path = source_path(ref['path'])
             raw = self.read(path)
+            if raw is not None and path.endswith('.fnt'):
+                self.bitmap_font_pages(raw, path)
             if raw is not None and path.endswith('.plist'):
                 # Particle PLISTs must retain their texture dependencies too.
                 try:
@@ -107,6 +109,24 @@ class Builder:
                     self.blockers.append({'member': path, 'reason': 'unreadable_particle_plist', 'detail': str(error)})
         else:
             self.blockers.append({'scene': owner, 'reference': ref, 'reason': 'resource_type_without_plist_unverified'})
+
+    def bitmap_font_pages(self, raw, member):
+        # BMFont page images are external dependencies of the source .fnt.
+        # Only the actually observed text format is accepted here.
+        try:
+            text = raw.decode('utf-8-sig')
+            common = next(line for line in text.splitlines() if line.startswith('common '))
+            expected = int(re.search(r'\bpages=(\d+)\b', common).group(1))
+            pages = [re.fullmatch(r'page\s+id=(\d+)\s+file="([^"]+)"\s*', line)
+                     for line in text.splitlines() if line.startswith('page ')]
+            if expected < 1 or len(pages) != expected or any(p is None for p in pages):
+                raise ValueError('Invalid source font page count/record')
+            if {int(p.group(1)) for p in pages} != set(range(expected)):
+                raise ValueError('Invalid source font page identities')
+            for page in pages:
+                self.read(source_path(str(PurePosixPath(member).parent / page.group(2))))
+        except (UnicodeError, StopIteration, AttributeError, ValueError) as error:
+            self.blockers.append({'member': member, 'reason': 'unsupported_bitmap_font_dependencies', 'detail': str(error)})
 
     def atlas(self, member):
         if member in self.atlases:

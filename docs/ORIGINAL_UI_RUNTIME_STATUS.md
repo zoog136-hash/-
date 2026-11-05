@@ -282,3 +282,15 @@ References:
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/external/config.json
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/platform/CCSAXParser.cpp
 - https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin/tree/v3-deps-47/tinyxml2
+
+
+Bitmap-font dependency handling now includes every declared page image in both
+the pack builder and runtime validation. The rebuilt 183-entry snapshot has
+894 original files, including two font pages absent from the earlier temporary
+pack. The older incomplete temporary pack is superseded and rejected by the
+runtime. Four original-pack checks confirm rejection and preservation of the
+previous valid pack; nine decoder/provenance tests pass. The corrected new
+183-entry render run accepted ten additional entries and explicitly rejected
+173; this brings accepted inspection entries across the recorded sets to 96,
+not completed service screens. Attendance's six-scene/33-file closure is now
+complete; its runtime/control/service work remains outstanding.

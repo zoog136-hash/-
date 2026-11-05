@@ -95,5 +95,13 @@ class DecoderTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'dictionary'):
             particle_dictionary(plistlib.dumps(['not', 'particle parameters']))
 
+    def test_bitmap_font_missing_page_is_not_dependency_ready(self):
+        b = Builder({})
+        b.bitmap_font_pages(b'common pages=1\npage id=0 file="glyphs.png"\n', 'UI/Font/source.fnt')
+        self.assertEqual(b.blockers, [{'member': 'UI/Font/glyphs.png', 'reason': 'source_not_received'}])
+        b = Builder({})
+        b.bitmap_font_pages(b'common pages=2\npage id=0 file="glyphs.png"\n', 'UI/Font/source.fnt')
+        self.assertEqual(b.blockers[0]['reason'], 'unsupported_bitmap_font_dependencies')
+
 
 if __name__ == '__main__': unittest.main()
