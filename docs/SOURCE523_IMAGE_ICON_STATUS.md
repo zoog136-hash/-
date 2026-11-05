@@ -801,3 +801,9 @@ This change adds image calls to existing buttons. It does not choose rewards,
 change claim/transaction/save behavior, supply entrance/popup asset identities,
 or construct original UI nodes. It is unexecuted and unverified. No additional
 tests, game runs, renders or CI were started, and no actual-use counts changed.
+
+The existing fishing cast button also displays the currently selected rod's
+original ItemClass image using the rod option's declared ID and existing
+`rules.items` source row. Its image follows the existing selection event; no
+default rod, Fish-to-Item alias, cast cost or confirmation behavior is added.
+This follow-up is also unexecuted and unverified.

@@ -128,9 +128,13 @@ func build_fish() -> void:
 		rods.add_item("%s ×%d" % [runtime.rules.item_name(id), int(runtime.state.items.get(id, 0))], int(id))
 		_bind_item_entry(rods, rods.item_count - 1, id)
 	body.add_child(rods)
-	action("낚싯대 %d개로 시작" % int(runtime.policy.cast_cost), func() -> void:
+	var cast_button: Button = action("낚싯대 %d개로 시작" % int(runtime.policy.cast_cost), func() -> void:
 		var rod: int = rods.get_selected_id()
 		confirm("낚시 시작", "낚싯대 %d개를 소모합니다. 취소·실패·재접속 시 이미 쓴 낚싯대는 돌아오지 않습니다." % int(runtime.policy.cast_cost), func() -> Dictionary: return runtime.cast(rod)))
+	rods.item_selected.connect(func(index: int) -> void:
+		_bind_item_button(cast_button,str(rods.get_item_id(index))))
+	if rods.selected >= 0:
+		_bind_item_button(cast_button,str(rods.get_selected_id()))
 	live_label = UI.label("", 13)
 	live_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_child(live_label)
