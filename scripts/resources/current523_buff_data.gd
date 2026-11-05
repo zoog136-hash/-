@@ -67,6 +67,12 @@ static func describe(buff_id: int) -> Dictionary:
 		result["excluded"] = true
 	else:
 		result.test_declaration["status"] = "declared"
+	var exclusion: Dictionary = SOURCE.declared_exclusion("BuffClass",buff)
+	if not exclusion.is_empty():
+		result["excluded"] = true
+		result["declared_exclusion"] = exclusion
+		blockers.append("source_declared_dummy:BuffClass")
+		return result
 	result.group = _reference(blockers,"BuffGroup",buff.get("BuffGroupID"))
 	for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",buff_id):
 		var bonus_id: Variant = link.get("BonusID")
@@ -96,4 +102,3 @@ static func describe(buff_id: int) -> Dictionary:
 	# DescData/DescID text is not read; its native references stay in buff_class.
 	result.ok = blockers.is_empty()
 	return result
-

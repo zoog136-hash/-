@@ -29,6 +29,8 @@ var _bonus_records: Array[Dictionary] = []
 var _totals: Dictionary = {}
 var _prepared_load_fingerprint: String = ""
 var _prepared_state: Dictionary = {}
+var _world_property_owner: int = 0
+var _world_property_names: Dictionary = {}
 
 func _init() -> void:
 	rng.randomize()
@@ -265,8 +267,13 @@ func native_collection_state() -> Dictionary:
 
 func _world_property(name_value: String,fallback: Variant) -> Variant:
 	if world==null:return fallback
-	for property: Dictionary in world.get_property_list():
-		if property.name==name_value:return world.get(name_value)
+	# get_property_list() on the host builds thousands of entries; this runs on
+	# every stat read, so remember the host's property names per instance.
+	if _world_property_owner!=world.get_instance_id() or _world_property_names.is_empty():
+		_world_property_names.clear()
+		for property: Dictionary in world.get_property_list():_world_property_names[str(property.name)]=true
+		_world_property_owner=world.get_instance_id()
+	if _world_property_names.has(name_value):return world.get(name_value)
 	return fallback
 func subslot_view(include_effects: bool=true) -> Dictionary:
 	if world==null or not core.native_mode:return {"active":false,"identity":""}

@@ -75,6 +75,9 @@ func _add_entry(item_name: String, count: int, instance_id: String = "", descrip
 	var record: Dictionary = world._find_catalog_item_record(item_name)
 	var physical: Dictionary = world.item_instances if mode.selected == 0 else world.warehouse.instances
 	if not instance_id.is_empty() and physical.has(instance_id): record = physical[instance_id].get("record",record)
+	# Carry the same authoritative record into the existing selection picture.
+	# Reconstructing it from the label would lose native source identity.
+	entries[entries.size()-1]["record"] = record.duplicate(true)
 	listing.add_item(label,UI.item_icon(record,item_name,hud.lineage_inventory_ui.item_image_index.get("아이템",{})))
 
 func _refresh() -> void:

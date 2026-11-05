@@ -1,6 +1,7 @@
 extends VBoxContainer
 ## Paginated original quest view; only the world may grant/save rewards.
 signal claim_requested(quest_id: String)
+signal source_category_changed(category: String)
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CATEGORIES = {"main":"메인", "common":"일반", "achievement":"업적", "other":"기타"}
 const PAGE_SIZE = 30
@@ -99,6 +100,7 @@ func _select(category: String) -> void:
 	selected = category
 	page = 0
 	refresh()
+	source_category_changed.emit(category)
 
 func _reward_text(quest: Dictionary) -> String:
 	var parts: PackedStringArray = []

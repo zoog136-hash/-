@@ -1,5 +1,8 @@
 extends CanvasLayer
 ## The same catalog used by live combat supplies the skill inspector.
+const SKILL_BUFF_IMAGES = preload("res://scripts/ui/source523_skill_buff_images.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
+const NpcImages = preload("res://scripts/ui/source523_npc_images.gd")
 var service: RefCounted
 var panel: PanelContainer
 var selector: OptionButton
@@ -198,6 +201,7 @@ func _process(_delta: float) -> void:
 
 func fill_selector() -> void:
 	selector.clear()
+	if selector.has_meta("source523_npc_images"): selector.remove_meta("source523_npc_images")
 	ids = []
 	for source_id: Variant in service.catalog.content.get("boss_npc_ids",[]): ids.append(int(source_id))
 	if environment_mode:
@@ -208,20 +212,35 @@ func fill_selector() -> void:
 		ids.sort()
 	for id: Variant in ids:
 		selector.add_item(str(service.catalog.row("Land" if environment_mode else "NpcClass",int(id)).get("Name",id)))
+		if not environment_mode: _bind_npc_illustration(selector.item_count - 1,int(id))
 	refresh_npc()
+
+func _bind_npc_illustration(index: int, npc_id: int) -> void:
+	if not SourceImages.selected(): return
+	var image: Dictionary = NpcImages.resolve(service.catalog,npc_id)
+	selector.set_item_icon(index,image.get("texture") as Texture2D)
+	selector.expand_icon = true
+	var originals: Dictionary = selector.get_meta("source523_npc_images",{})
+	originals[str(npc_id)] = NpcImages.evidence(image)
+	selector.set_meta("source523_npc_images",originals)
 
 func refresh_npc() -> void:
 	if selector == null or ids.is_empty(): return
 	attacks.clear()
 	if environment_mode:
 		rows = service.catalog.environment_buffs(int(ids[maxi(0,selector.selected)]))
-		for binding: Dictionary in rows: attacks.add_item(str(binding.buff.source.get("Name","NPC 상태")) + " · 범위·적용 조건 확인 필요")
+		for binding: Dictionary in rows:
+			var image: Dictionary = SKILL_BUFF_IMAGES.describe_buff_class_row(binding.buff.source)
+			var index: int = attacks.add_item(str(binding.buff.source.get("Name","NPC 상태")) + " · 범위·적용 조건 확인 필요",image.get("texture") as Texture2D)
+			attacks.set_item_metadata(index,{"source523_buff_image":SKILL_BUFF_IMAGES.evidence(image)})
 		if not rows.is_empty(): attacks.select(0); show_attack(0)
 		return
 	rows = service.catalog.owned("NpcAttack",int(ids[maxi(0,selector.selected)]))
 	for attack: Dictionary in rows:
 		var spell: Dictionary = service.catalog.row("SpellClass",int(attack.get("SpellID",0)))
-		attacks.add_item(str(spell.get("Name","기본 공격")) + " · " + service.support_reason(attack))
+		var image: Dictionary = SKILL_BUFF_IMAGES.describe_spell_class_row(spell)
+		var index: int = attacks.add_item(str(spell.get("Name","기본 공격")) + " · " + service.support_reason(attack),image.get("texture") as Texture2D)
+		attacks.set_item_metadata(index,{"source523_skill_image":SKILL_BUFF_IMAGES.evidence(image)})
 	if not rows.is_empty(): attacks.select(0); show_attack(0)
 
 func append_chain(chain: Dictionary, lines: PackedStringArray, depth: int = 0) -> PackedStringArray:
@@ -301,6 +320,17 @@ func update_extension(property: String, value: Variant) -> bool:
 	if selector != null: refresh_npc()
 	return result == OK
 
+func _remaining_choice_image(choice: OptionButton, index: int, image: Dictionary) -> void:
+	choice.set_item_icon(index, null)
+	var images: Dictionary = choice.get_meta("source523_images", {}).duplicate(true)
+	images.erase(index)
+	if SourceImages.selected() and not image.is_empty():
+		choice.set_item_icon(index, image.get("texture") as Texture2D)
+		images[index] = SKILL_BUFF_IMAGES.evidence(image)
+	if images.is_empty():
+		if choice.has_meta("source523_images"): choice.remove_meta("source523_images")
+	else: choice.set_meta("source523_images", images)
+
 func build_remaining_controls(column: VBoxContainer) -> void:
 	var open := Button.new(); open.name = "BossRemainingOpen"; open.text = "추가 능력치·드랍·전체 해제 자체 정책"; column.add_child(open)
 	var box := VBoxContainer.new(); box.hide(); column.add_child(box)
@@ -318,7 +348,7 @@ func build_remaining_controls(column: VBoxContainer) -> void:
 		var key: String = spec[1]
 		spin.value_changed.connect(func(value: float) -> void:
 			if not update_remaining(key,value): spin.set_value_no_signal(service.extensions.remaining.get(key)))
-	remaining_buff_choice = OptionButton.new(); remaining_buff_choice.name = "BossRemainingBuff"; remaining_buff_choice.fit_to_longest_item = false; remaining_buff_choice.clip_text = true; box.add_child(remaining_buff_choice)
+	remaining_buff_choice = OptionButton.new(); remaining_buff_choice.name = "BossRemainingBuff"; remaining_buff_choice.fit_to_longest_item = false; remaining_buff_choice.clip_text = true; remaining_buff_choice.expand_icon = true; box.add_child(remaining_buff_choice)
 	var environment_ids: Dictionary = {}
 	for source: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values(): environment_ids[int(source.row.Value)] = true
 	for entry: Dictionary in service.catalog.content.tables.get("BuffClass",{}).values():
@@ -328,6 +358,7 @@ func build_remaining_controls(column: VBoxContainer) -> void:
 			if bonus.type.get("Name") == "NpcSingleItemDropProbabilityMultiple": drop_profile = true
 		if not environment_ids.has(int(entry.row.ID)) and not drop_profile: continue
 		remaining_buff_ids.append(int(entry.row.ID)); remaining_buff_choice.add_item("%s %d · %s" % [profile,int(entry.row.ID),str(entry.row.Name)])
+		_remaining_choice_image(remaining_buff_choice, remaining_buff_choice.item_count - 1, SKILL_BUFF_IMAGES.describe_buff_class_row(entry.row))
 	var bind := Button.new(); bind.name = "BossRemainingBind"; bind.text = "이 원문 버프를 현재 필드/내 위치에 자체 연결"; box.add_child(bind)
 	bind.pressed.connect(func() -> void:
 		var p = service.extensions.remaining; var old: Array = [p.own_buff,p.own_map,p.own_center]
@@ -351,11 +382,18 @@ func build_remaining_controls(column: VBoxContainer) -> void:
 			for name: String in value.split(",",false):
 				if not name.strip_edges().is_empty(): names.append(name.strip_edges())
 			if not update_remaining(key,names): input.text = ",".join(service.extensions.remaining.get(key)))
-	var target := OptionButton.new(); target.name = "BossRemainingItemID"; box.add_child(target)
+	var target := OptionButton.new(); target.name = "BossRemainingItemID"; target.expand_icon = true; box.add_child(target)
 	var targets: Array[int] = []
 	for entry: Dictionary in service.catalog.content.tables.get("BuffClass",{}).values():
 		for bonus: Dictionary in service.catalog.buff_details(int(entry.row.ID)).bonuses:
-			if bonus.type.get("Name") == "NpcSingleItemDropProbabilityMultiple" and not targets.has(int(bonus.bonus.BonusApplicationTargetID)): targets.append(int(bonus.bonus.BonusApplicationTargetID)); target.add_item("원문 ItemClass %d" % int(bonus.bonus.BonusApplicationTargetID))
+			if bonus.type.get("Name") == "NpcSingleItemDropProbabilityMultiple" and not targets.has(int(bonus.bonus.BonusApplicationTargetID)):
+				var item_class_id: int = int(bonus.bonus.BonusApplicationTargetID)
+				targets.append(item_class_id); target.add_item("원문 ItemClass %d" % item_class_id)
+				var image: Dictionary = {}
+				if SourceImages.selected():
+					var source_row: Dictionary = service.catalog.row("ItemClass", item_class_id)
+					image = SourceImages.describe_item_class_row(source_row) if not source_row.is_empty() else SourceImages.describe_item_class(item_class_id)
+				_remaining_choice_image(target, target.item_count - 1, image)
 	var item := LineEdit.new(); item.name = "BossRemainingItemName"; item.placeholder_text = "명시 연결할 현재 게임 아이템의 정확한 이름"; box.add_child(item)
 	var map_item := Button.new(); map_item.name = "BossRemainingMapItem"; map_item.text = "선택 원문 아이템과 현재 카탈로그를 자체 연결"; box.add_child(map_item)
 	map_item.pressed.connect(func() -> void:

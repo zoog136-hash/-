@@ -7,7 +7,7 @@ from PIL import Image
 
 
 def verify(root, source_png):
-    pack = json.loads((root / "map.json").read_text())
+    pack = json.loads(next(root/name for name in ("map.json","asset.json","partial-map.json") if (root/name).is_file()).read_text())
     if hashlib.sha256((root / pack["portals_file"]).read_bytes()).hexdigest() != pack["portals_sha256"]:
         raise ValueError("Portal table SHA mismatch")
     if pack.get('npc_occupancy_file') and hashlib.sha256((root/pack['npc_occupancy_file']).read_bytes()).hexdigest() != pack['npc_occupancy_sha256']:
@@ -19,7 +19,7 @@ def verify(root, source_png):
         Image.MAX_IMAGE_PIXELS = 160_000_000
         source = Image.open(source_png)
         source.load()
-    rows = pack["geometry"]+pack["art"]["chunks"]+pack["preserved_navigation"]
+    rows = pack["geometry"]+pack.get("legacy_geometry",[])+pack.get("unplaced_originals",[])+pack["art"]["chunks"]+pack["preserved_navigation"]
     for row in rows:
         relative = Path(row["file"])
         if relative.is_absolute() or ".." in relative.parts:
@@ -36,7 +36,7 @@ def verify(root, source_png):
                 if piece.mode != source.mode or piece.size != (w, h) or piece.tobytes() != source.crop((x, y, x+w, y+h)).tobytes():
                     raise ValueError("Original pixel mismatch: "+str(relative))
     composition = None
-    if pack['art']['status'] == 'S32_TI2_RENDERABLE':
+    if pack['art']['status'] in ('S32_TI2_RENDERABLE','SEG_SOURCE_LAYOUT_REVIEW_ONLY','EMPTY_ORIGINAL_SOURCE_RASTER','PARTIAL_ORIGINAL_REFERENCE_UNRESOLVED'):
         path = root / pack['art']['composition_file']
         if hashlib.sha256(path.read_bytes()).hexdigest() != pack['art']['composition_sha256']:
             raise ValueError('Composition metadata SHA mismatch')
@@ -44,16 +44,13 @@ def verify(root, source_png):
         for row in composition['tile_provenance']:
             if hashlib.sha256((root / row['source']).read_bytes()).hexdigest() != row['sha256']:
                 raise ValueError('Original TI2 source SHA mismatch')
-        canvas = Image.new('RGBA', tuple(pack['art']['size']))
-        for row in pack['art']['chunks']:
-            with Image.open(root / row['file']) as piece:
-                canvas.paste(piece, tuple(row['position']))
-        if hashlib.sha256(canvas.tobytes()).hexdigest() != pack['art']['pixel_sha256']:
+        from base508_raster import pixel_digest
+        if pixel_digest(root,pack['art'],composition.get('maximum_output_texture_edge',1024)) != pack['art']['pixel_sha256']:
             raise ValueError('Composed map pixel SHA mismatch')
     overview = root / pack["art"]["overview"]
     if hashlib.sha256(overview.read_bytes()).hexdigest() != pack["art"]["overview_sha256"]:
         raise ValueError("Overview SHA mismatch")
-    verified = len(rows)+2+int(bool(pack.get('npc_occupancy_file')))+sum(bool(row.get('source_file')) for row in pack['geometry'])
+    verified = len(rows)+2+int(bool(pack.get('npc_occupancy_file')))+sum(bool(row.get('source_file')) for row in pack['geometry']+pack.get('legacy_geometry',[]))
     if composition: verified += 1+len(composition['tile_provenance'])
     return {"verified_files": verified, "original_png_pixels_compared": bool(source), "composed_pixels_reassembled": bool(composition), "art_chunks": len(pack["art"]["chunks"]), "report": pack["report"]}
 

@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SkillImages = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var world: Node
 var category: String
 var identity: String
@@ -62,7 +63,12 @@ func refresh() -> void:
 	line("습득한 쇼크 스턴만 자체 차징합니다. 해제 시 기존 시전 비용을1회 소비하고, 취소·시간초과는 소비하지 않습니다.")
 	charge_label=line("");charge_label.name="HalphasChargeState"
 	var start: Button=UI.button("자체 쇼크 스턴 차징",_charge_start,Vector2(0,42));start.name="HalphasChargeStart";start.disabled=not world.halphas_star.active() or not world.halphas_star.combat.enabled();add_child(start)
+	# The charge service resolves this exact existing skill record before
+	# charging. Its reviewed host binding owns the original IconID relation.
+	_bind_charge_icon(start,world.original_skills.catalog.record_for("쇼크 스턴"))
 	charge_release=UI.button("차징 해제·시전",_charge_release,Vector2(0,42));charge_release.name="HalphasChargeRelease";add_child(charge_release)
+	var charged_skill: Variant=world.halphas_star.combat.charge.get("skill",{})
+	_bind_charge_icon(charge_release,charged_skill if charged_skill is Dictionary else {})
 	var cancel: Button=UI.button("차징 취소",_charge_cancel,Vector2(0,42));cancel.name="HalphasChargeCancel";add_child(cancel)
 	_process(0)
 func _process(_delta: float) -> void:
@@ -70,6 +76,17 @@ func _process(_delta: float) -> void:
 	var info: Dictionary=world.halphas_star.combat.charge_view()
 	charge_label.text="자체 차징 · %s · %d단계 · %.2f / %.2f초" % ["진행" if info.active else "대기",info.stage,info.elapsed,info.total]
 	charge_release.disabled=not info.active or int(info.stage)<1
+	if not info.active and (charge_release.icon!=null or charge_release.has_meta("source523_skill_image")):_bind_charge_icon(charge_release,{})
+
+func _bind_charge_icon(button: Button, record: Dictionary) -> void:
+	button.icon=null
+	if button.has_meta("source523_skill_image"):button.remove_meta("source523_skill_image")
+	if record.is_empty() or not SkillImages.selected():return
+	var image: Dictionary=SkillImages.describe_skill(record,"IconID")
+	button.icon=image.get("texture") as Texture2D
+	button.expand_icon=true
+	button.set_meta("source523_skill_image",SkillImages.evidence(image))
+
 func _charge_start() -> void:
 	var result: Dictionary=world.halphas_star.combat.start_charge()
 	last_message="자체 차징 시작 · 아직 소비 없음" if result.ok else str(result.error)

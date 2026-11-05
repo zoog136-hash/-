@@ -6,12 +6,15 @@ signal ain_auto_changed(enabled: bool)
 
 const LineageSideUI = preload("res://scripts/ui/lineage_side_ui.gd")
 const LineageInventoryUI = preload("res://scripts/ui/lineage_inventory_ui.gd")
+const SourceClassImages = preload("res://scripts/ui/source523_class_images.gd")
 
 # V20 gameplay HUD overlay inspired by classic mobile MMORPG layouts.
 # Keeps the V19 catalog/inventory/map panels and replaces only the always-visible combat HUD.
 
 var v20_layer: Control
 var v20_portrait: TextureRect
+var _source_class_portrait_key: Dictionary = {}
+var _source_class_portrait_ready: bool = false
 var v20_level_badge: Label
 var v20_hp_text: Label
 var v20_mp_text: Label
@@ -908,7 +911,15 @@ func set_character_state(value: Dictionary) -> void:
 	if lineage_inventory_ui != null:
 		lineage_inventory_ui.set_character_state(value)
 	var job_image_path: String = str(value.get("job_image_path", ""))
-	if job_image_path != "" and ResourceLoader.exists(job_image_path):
+	var source_portrait: bool = SourceClassImages.selected()
+	if not source_portrait:
+		_source_class_portrait_key.clear()
+		_source_class_portrait_ready = false
+		if v20_portrait != null and v20_portrait.has_meta("source523_class_image"):
+			v20_portrait.remove_meta("source523_class_image")
+	if source_portrait:
+		_update_source_class_portrait()
+	elif job_image_path != "" and ResourceLoader.exists(job_image_path):
 		var job_texture: Texture2D = load(job_image_path) as Texture2D
 		if job_texture != null and v20_portrait != null:
 			v20_portrait.texture = job_texture
@@ -930,6 +941,12 @@ func set_character_state(value: Dictionary) -> void:
 func _update_v20_portrait(class_index_value: int) -> void:
 	if v20_portrait == null:
 		return
+	if SourceClassImages.selected():
+		v20_portrait.texture = null
+		_source_class_portrait_key.clear()
+		_source_class_portrait_ready = false
+		if v20_portrait.has_meta("source523_class_image"): v20_portrait.remove_meta("source523_class_image")
+		return
 	var path: String = V20_CLASS_SHEETS[clampi(class_index_value, 0, V20_CLASS_SHEETS.size() - 1)]
 	if not ResourceLoader.exists(path):
 		return
@@ -940,6 +957,24 @@ func _update_v20_portrait(class_index_value: int) -> void:
 	atlas.atlas = texture
 	atlas.region = Rect2(0.0, 0.0, 148.0, 116.0)
 	v20_portrait.texture = atlas
+
+func _update_source_class_portrait() -> void:
+	if v20_portrait == null: return
+	var world: Node = get_parent()
+	var context: Dictionary = {}
+	if is_instance_valid(world) and world.has_method("_source_visual_context"):
+		var supplied: Variant = world.call("_source_visual_context")
+		if supplied is Dictionary: context = supplied
+	var reader: RefCounted = SourceClassImages.IMAGES.active()
+	var key: Dictionary = {"class_id":context.get("class_id"),"gender_id":context.get("gender_id"),
+		"pack_instance":reader.get_instance_id() if reader != null else -1,
+		"selection":SourceClassImages.IMAGES.selection_status()}
+	if _source_class_portrait_ready and key == _source_class_portrait_key and v20_portrait.texture != null: return
+	var image: Dictionary = SourceClassImages.resolve(context,"MainHUDPortraitID")
+	v20_portrait.texture = image.get("texture") as Texture2D
+	v20_portrait.set_meta("source523_class_image",SourceClassImages.evidence(image))
+	_source_class_portrait_key = key
+	_source_class_portrait_ready = image.get("status") == "original_linked"
 
 func set_quick_items(inventory: Dictionary) -> void:
 	if v20_potion_count != null:

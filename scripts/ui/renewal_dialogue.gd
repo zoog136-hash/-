@@ -1,4 +1,5 @@
 extends VBoxContainer
+signal source_dialogue_resolved(resolved: Dictionary)
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 var hud: Node
 var world: Node
@@ -6,6 +7,7 @@ var npc_id: String = ""
 var current_node: String = ""
 var message_label: RichTextLabel
 var options: VBoxContainer
+var source_dialogue_model: Dictionary={}
 
 func configure(controller: Node, requested_npc_id: String) -> void:
 	hud = controller
@@ -29,11 +31,13 @@ func _show_node(id: String) -> void:
 	var service: Object = world.get("dialogue_service")
 	var state: Dictionary = world.call("_npc_dialogue_state")
 	var dialogue: Dictionary = service.call("resolve",npc_id,id,state)
+	source_dialogue_model=dialogue.duplicate(true)
 	for child: Node in options.get_children():
 		options.remove_child(child)
 		child.queue_free()
 	if not bool(dialogue.get("ok",false)):
 		message_label.text = UI.safe(dialogue.get("reason","대화를 시작할 수 없습니다"))
+		source_dialogue_resolved.emit(dialogue.duplicate(true))
 		return
 	current_node = str(dialogue.get("node_id",""))
 	message_label.text = "[color=#d8b878][font_size=22]%s[/font_size][/color]\n\n%s" % [
@@ -49,6 +53,7 @@ func _show_node(id: String) -> void:
 		var button: Button = UI.button(str(choice.get("label","계속")),
 			_choice_picked.bind(next_id,action),Vector2(0,40))
 		options.add_child(button)
+	source_dialogue_resolved.emit(dialogue.duplicate(true))
 
 func _choice_picked(next_id: String,action: String) -> void:
 	if not next_id.is_empty():

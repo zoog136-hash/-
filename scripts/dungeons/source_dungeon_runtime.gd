@@ -5,6 +5,7 @@ const PAYLOAD_SHA256 := "4edf50302106978f1779d885866889d646b992e329ccd53bf3dbb28
 const PAYLOAD_BYTES := 6050456
 const DEFAULT_MANIFEST := "user://dungeon523/" + PAYLOAD_SHA256 + "/manifest.json"
 const MAX_MANIFEST_BYTES := 4096
+const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_projection.gd")
 var data: Dictionary = {}
 var last_error: String = ""
 var tower_by_id: Dictionary = {}
@@ -83,6 +84,43 @@ func _read_manifest(path: String) -> Dictionary:
 		if not candidate.get(pair[0]) is Array or candidate[pair[0]].size() != int(pair[1]):
 			return {"ok":false,"reason":"던전 자료의 구성 수가 다릅니다."}
 	return {"ok":true,"data":candidate,"bytes":bytes,"manifest":manifest}
+
+func load_configured() -> Dictionary:
+	var path: String = OS.get_environment("TWILIGHT_DUNGEON523_PACK")
+	var explicit: bool = not path.is_empty()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--dungeon523-pack="):
+			path = argument.trim_prefix("--dungeon523-pack=")
+			explicit = true
+	# Preserve explicit selection failures and every existing/partial installed
+	# input. Bootstrap is only for an absent compiled installation.
+	if explicit: return load_pack(path)
+	var directory: String = DEFAULT_MANIFEST.get_base_dir()
+	if FileAccess.file_exists(DEFAULT_MANIFEST) or FileAccess.file_exists(directory.path_join("dungeons.json")) or FileAccess.file_exists(directory.path_join("orim_execution.json")):
+		return load_pack(DEFAULT_MANIFEST)
+	return _load_original_projection()
+
+func _load_original_projection() -> Dictionary:
+	# UNVERIFIED: never substitute the source archive hash for a model hash.
+	# Only the actual canonical projection bytes matching the established pack
+	# fingerprint may enter the existing runtime and its existing services.
+	var projection = ORIGINAL_PROJECTION.new()
+	var candidate: Dictionary = projection.build()
+	if candidate.is_empty():
+		last_error = projection.problem
+		return {"ok":false,"reason":last_error}
+	var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(candidate)
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(bytes)
+	if bytes.size() != PAYLOAD_BYTES or hash.finish().hex_encode() != PAYLOAD_SHA256:
+		last_error = "보유 원본의 던전 projection 바이트가 기존 팩 정체와 다릅니다 · 기존 자료 보존"
+		return {"ok":false,"reason":last_error}
+	_activate(candidate)
+	# No execution sidecar is manufactured. This existing optional reader only
+	# clears unavailable sidecar definitions for the absent default installation.
+	_load_execution(DEFAULT_MANIFEST.get_base_dir())
+	return {"ok":true,"tower":200,"orim":20,"special":22,"source":"existing_original_in_memory","payload_sha256":PAYLOAD_SHA256,"unverified":true}
 
 func load_pack(path: String = DEFAULT_MANIFEST) -> Dictionary:
 	var checked := _read_manifest(path)

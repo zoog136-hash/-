@@ -1,6 +1,8 @@
 extends RefCounted
 ## Private patch-523 source. No original content is embedded in this script.
 ## Tables and their rows become read-only once loaded. One source per session.
+## Existing reader reused from PR269 f11fcbab (blob7aa63ea8); only the default
+## load_zip input selection changes here. Domain/transaction owners are separate.
 
 const SOURCE_PATH := "user://unconfirmed523/source.zip"
 const SOURCE_BYTES := 25031173
@@ -116,21 +118,39 @@ func install_zip(path: String) -> Dictionary:
 			return _fail("source_install_publish_failed")
 	return load_zip(SOURCE_PATH)
 
-func load_zip(path: String = SOURCE_PATH) -> Dictionary:
+func load_zip(path: Variant = null) -> Dictionary:
+	# UNVERIFIED input delta for the existing owner: its no-argument call runs
+	# before domain.setup(). Explicit strings, including empty ones, remain
+	# authoritative; no failed explicit selection is replaced by another source.
+	var implicit: bool = path == null
+	if not implicit and not path is String:
+		return _fail("source_zip_path_type_invalid")
 	if _loaded:
-		if path == _source_path:
+		if implicit or path == _source_path:
 			return {"ok": true, "already_loaded": true}
 		return _fail("restart_required")
-	var validation: Dictionary = _validate_zip(path)
+	var selected_path: String = SOURCE_PATH if implicit else path
+	if implicit:
+		var default_file: FileAccess = FileAccess.open(SOURCE_PATH, FileAccess.READ)
+		var default_error: Error = FileAccess.get_open_error()
+		if default_file != null:
+			default_file.close()
+		elif default_error == ERR_FILE_NOT_FOUND and not FileAccess.file_exists(SOURCE_PATH):
+			# Reuse the held original path only for actual default-file absence.
+			# This is no installation/copy, model digest or supply receipt.
+			var common_path: String = preload("res://scripts/resources/current523_definition_rows.gd").archive_path()
+			if not common_path.is_empty(): selected_path = common_path
+	# The same pinned archive/index guards own admission for either input.
+	var validation: Dictionary = _validate_zip(selected_path)
 	if not validation.ok:
 		return validation
 	_reader = ZIPReader.new()
-	if _reader.open(path) != OK:
+	if _reader.open(selected_path) != OK:
 		return _fail("source_zip_unreadable")
 	_paths = validation.paths
 	_metadata = validation.metadata
 	_loaded = true
-	_source_path = path
+	_source_path = selected_path
 	last_error = ""
 	return {"ok": true, "table_count": _paths.size(), "sha256": SOURCE_SHA256}
 
@@ -660,3 +680,4 @@ func bonus_stats(bonus_ids: Array, context: Dictionary = {}) -> Dictionary:
 		effect["applied"] = true
 		effects.append(effect)
 	return {"stats":stats,"conditional_stats":conditional_stats,"effects":effects,"unsupported":unsupported}
+

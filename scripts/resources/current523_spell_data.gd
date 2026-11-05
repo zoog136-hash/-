@@ -43,6 +43,12 @@ static func describe(spell_id: int) -> Dictionary:
 	elif test:
 		blockers.append("source_TestSpell_true")
 		result["excluded"] = true
+	var exclusion: Dictionary = SOURCE.declared_exclusion("SpellClass",spell)
+	if not exclusion.is_empty():
+		result["excluded"] = true
+		result["declared_exclusion"] = exclusion
+		blockers.append("source_declared_dummy:SpellClass")
+		return result
 	for link: Dictionary in SOURCE.related("SpellBonus","SpellClassID",spell_id):
 		var detail: Dictionary = BONUSES.describe(int(link.get("BonusID",-1)))
 		for issue: Variant in detail.get("blockers",[]): blockers.append(str(issue))
@@ -72,4 +78,3 @@ static func describe(spell_id: int) -> Dictionary:
 	# DescData/DescID text reads are deferred; all raw IDs remain in spell_class.
 	result.ok = blockers.is_empty()
 	return result
-

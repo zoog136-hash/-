@@ -8,10 +8,11 @@ const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","Npc
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
 const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
-const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
+const SPELL_ATTACK_VIEW_FIELDS = ["ID","NpcClassID","SpellID","MotionType","WeaponType","Range"]
 const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_policy.json"
-const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
+const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
+const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -142,13 +143,49 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 
 func row(table: String, id: int) -> Dictionary:
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return {}
-	return content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
+	var selected: Dictionary = content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
+	return _selected_spell_attack_view(selected) if table=="NpcAttack" else selected
 
 func owned(table: String, id: int) -> Array:
 	# Only the newly admitted original registry owns these sets. Empty sets are
 	# authoritative; neither a legacy cache nor a larger source relation fills them.
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return []
-	return indexes.get(table,{}).get(str(id),[]).duplicate(true)
+	var selected: Array = indexes.get(table,{}).get(str(id),[]).duplicate(true)
+	if table=="NpcAttack":
+		for position: int in range(selected.size()): selected[position] = _selected_spell_attack_view(selected[position])
+	return selected
+
+func _selected_spell_attack_view(attack: Dictionary) -> Dictionary:
+	# This is an input substitution for an already admitted attack, never an
+	# attack/owner discovery path. A view ID alone does not establish a join.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or content.get("source_archive_sha256")!=SOURCE_SHA: return attack
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA or identity!=source_identity: return attack
+	for field: String in SPELL_ATTACK_VIEW_FIELDS:
+		if not source_integer(attack.get(field)): return attack
+	var attack_id := int(attack.ID)
+	var npc_id := int(attack.NpcClassID)
+	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
+	if not source_integer(admitted.get("npc_class_id")) or int(admitted.npc_class_id)!=npc_id or admitted.get("source_archive_sha256")!=SOURCE_SHA: return attack
+	var selected: Dictionary = content.get("tables",{}).get("NpcAttack",{}).get(str(attack_id),{}).get("row",{})
+	var npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
+	if selected.is_empty() or selected!=attack or npc.is_empty() or not source_integer(npc.get("ID")) or int(npc.ID)!=npc_id: return attack
+	for pair: Array in [["sprite","Sprite"],["desc_id","DescId"]]:
+		if not source_integer(admitted.get(pair[0])) or not source_integer(npc.get(pair[1])) or admitted[pair[0]]!=npc[pair[1]]: return attack
+	var original: Dictionary = DEFINITIONS.row("NpcAttack",attack_id)
+	if original.is_empty() or original!=attack: return attack
+	if not DEFINITIONS.declared_exclusion("NpcAttack",original).is_empty() or not DEFINITIONS.declared_exclusion("NpcClass",npc).is_empty(): return attack
+	var matches: Array[Dictionary] = DEFINITIONS.related("ViewNpcSpellAttack","ID",attack_id)
+	if matches.size()!=1: return attack
+	var view: Dictionary = matches[0]
+	if view.size()!=SPELL_ATTACK_VIEW_FIELDS.size() or not DEFINITIONS.declared_exclusion("ViewNpcSpellAttack",view).is_empty(): return attack
+	for field: String in SPELL_ATTACK_VIEW_FIELDS:
+		if not source_integer(view.get(field)) or view[field]!=attack[field]: return attack
+	# Preserve every NpcAttack-only value, key and owner. No view metadata is
+	# inserted into the raw attack identity; units and execution remain unchanged.
+	var result: Dictionary = attack.duplicate(true)
+	for field: String in SPELL_ATTACK_VIEW_FIELDS: result[field] = view[field]
+	return result
 
 func _selected_definition_row(table: String, compiled: Dictionary) -> Dictionary:
 	if table == "NpcAttack": return selected_attack_row(compiled)
@@ -254,70 +291,49 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	result = _project_named_special_resistance_input(result,source)
 	return _project_uniform_attack_range_input(result,source)
 
-func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary) -> Dictionary:
-	# A single existing actor-level receiver is valid only when every already
-	# admitted attack of this owner supplies the same positive original Range.
-	# No unadmitted relation, max/min, attack choice or spell range is consulted.
-	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or content.get("source_archive_sha256")!=SOURCE_SHA: return record
-	var identity: Dictionary = DEFINITIONS.identity()
-	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA or identity!=source_identity: return record
-	if not source_integer(source.get("ID")): return record
-	var npc_id := int(source.ID)
-	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
-	if admitted.get("source_archive_sha256")!=SOURCE_SHA: return record
-	for pair: Array in [["npc_class_id","ID"],["sprite","Sprite"],["desc_id","DescId"]]:
-		if not source_integer(admitted.get(pair[0])) or not source_integer(source.get(pair[1])) or admitted[pair[0]]!=source[pair[1]]: return record
-	var selected_npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
-	if selected_npc!=source or DEFINITIONS.row("NpcClass",npc_id)!=source or not DEFINITIONS.declared_exclusion("NpcClass",source).is_empty(): return record
-	var file := FileAccess.open(NPC_RANGE_INPUT_POLICY_PATH,FileAccess.READ)
+func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
+	# Called only after the same exact actor/source admission above. This is an
+	# explicitly adjustable TWILIGHT input-scale estimate, not recovered native
+	# resistance units or a replacement for the existing damage formula.
+	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
 	if file==null: return record
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	var parser := JSON.new()
 	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
 	var policy: Dictionary = parser.data
-	if policy.get("schema")!="twilight.current523.npc-range-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
-	if not policy.get("enabled") is bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate": return record
-	if policy.get("source_raw_range_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_range_contract")!="existing_record_attack_range_and_current_attack_range_retained": return record
-	var scale: Variant = policy.get("raw_attack_range_to_host_length")
-	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0.0: return record
-	var selected_attacks: Variant = content.get("tables",{}).get("NpcAttack",{})
-	if not selected_attacks is Dictionary: return record
-	var uniform: Variant = null
-	var attack_ids: Array = []
-	for key: Variant in selected_attacks:
-		var entry: Variant = selected_attacks[key]
-		if not entry is Dictionary or not entry.get("row") is Dictionary: return record
-		var attack: Dictionary = entry.row
-		if not source_integer(attack.get("NpcClassID")): return record
-		if int(attack.NpcClassID)!=npc_id: continue
-		if not source_integer(attack.get("ID")) or not source_integer(attack.get("Range")) or float(attack.Range)<=0.0: return record
-		var attack_id := int(attack.ID)
-		if not key is String or key!=str(attack_id) or attack_id in attack_ids: return record
-		var originals: Array[Dictionary] = DEFINITIONS.related("NpcAttack","ID",attack_id)
-		if originals.size()!=1 or originals[0]!=attack or not DEFINITIONS.declared_exclusion("NpcAttack",originals[0]).is_empty(): return record
-		if uniform==null: uniform = attack.Range
-		elif uniform!=attack.Range: return record
-		attack_ids.append(attack_id)
-	if attack_ids.is_empty(): return record
-	var length: float = float(uniform)*float(scale)
-	if not is_finite(length) or length<=0.0: return record
+	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if not policy.get("enabled") is bool or not policy.enabled: return record
+	if policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or policy.get("native_server_damage_formula_recovered")!=false or policy.get("host_formula")!="existing_host_formula_retained": return record
+	var raw_multiplier: Variant = policy.get("raw_resistance_to_host_percent")
+	if typeof(raw_multiplier) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw_multiplier)) or float(raw_multiplier)<0.0: return record
+	var multiplier := float(raw_multiplier)
+	var projected: Dictionary = {}
+	var fields: Dictionary = {}
+	for channel: String in NPC_RESISTANCE_FIELDS:
+		var field: String = NPC_RESISTANCE_FIELDS[channel]
+		if not source_integer(source.get(field)): return record
+		var raw: Variant = source[field]
+		var value: float = float(raw)*multiplier
+		if not is_finite(value): return record
+		projected[channel] = value
+		fields[channel] = {"source_field":field,"raw_value":raw,"host_percent_input":value}
+	# Keep other already supplied channels. Air -> wind is the existing mobile
+	# channel spelling in World.resolve_patch523_npc_hit; no enum is inferred.
+	var prior: Variant = record.get("element_resistance",{})
+	var resistance: Dictionary = prior.duplicate(true) if prior is Dictionary else {}
+	resistance.merge(projected,true)
 	var hashing := HashingContext.new()
 	hashing.start(HashingContext.HASH_SHA256)
 	hashing.update(bytes)
 	var policy_sha: String = hashing.finish().hex_encode()
-	var prior: Variant = record.get("attack_range")
-	record["attack_range"] = length
-	record["source_m_npc_range_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
-		"policy_path":NPC_RANGE_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
-		"source":identity,"npc_class_id":npc_id,"admitted_actor_identity":admitted.duplicate(true),
-		"admitted_registry_payload_sha256":source_model_sha256,"admitted_attack_ids":attack_ids,
-		"source_field":"NpcAttack.Range","uniform_raw_range":uniform,"raw_attack_range_to_host_length":float(scale),
-		"prior_host_attack_range":prior,"host_length_input":length,"source_raw_range_unit_scale":"unconfirmed",
-		"native_grid_scale_recovered":false,"calibration_status":policy.get("calibration_status"),
-		"host_range_contract":"existing_record_attack_range_and_current_attack_range_retained"}
+	record["element_resistance"] = resistance
+	record["source_m_numeric_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"source":source_identity.duplicate(true),"npc_class_id":source.ID,"source_raw_unit_scale":"unconfirmed",
+		"raw_resistance_to_host_percent":multiplier,"fields":fields,
+		"native_server_damage_formula_recovered":false,"host_formula":"existing_host_formula_retained"}
 	return record
-
 
 func _project_named_special_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
 	# Existing admitted actor -> existing Monster.setup resistance operands.
@@ -409,51 +425,69 @@ func _project_named_special_resistance_input(record: Dictionary, source: Diction
 		"host_formula":"existing_host_status_formula_retained"}
 	return record
 
-
-func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
-	# Called only after the same exact actor/source admission above. This is an
-	# explicitly adjustable TWILIGHT input-scale estimate, not recovered native
-	# resistance units or a replacement for the existing damage formula.
-	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
+func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary) -> Dictionary:
+	# A single existing actor-level receiver is valid only when every already
+	# admitted attack of this owner supplies the same positive original Range.
+	# No unadmitted relation, max/min, attack choice or spell range is consulted.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or content.get("source_archive_sha256")!=SOURCE_SHA: return record
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA or identity!=source_identity: return record
+	if not source_integer(source.get("ID")): return record
+	var npc_id := int(source.ID)
+	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
+	if admitted.get("source_archive_sha256")!=SOURCE_SHA: return record
+	for pair: Array in [["npc_class_id","ID"],["sprite","Sprite"],["desc_id","DescId"]]:
+		if not source_integer(admitted.get(pair[0])) or not source_integer(source.get(pair[1])) or admitted[pair[0]]!=source[pair[1]]: return record
+	var selected_npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
+	if selected_npc!=source or DEFINITIONS.row("NpcClass",npc_id)!=source or not DEFINITIONS.declared_exclusion("NpcClass",source).is_empty(): return record
+	var file := FileAccess.open(NPC_RANGE_INPUT_POLICY_PATH,FileAccess.READ)
 	if file==null: return record
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	var parser := JSON.new()
 	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
 	var policy: Dictionary = parser.data
-	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
-	if not policy.get("enabled") is bool or not policy.enabled: return record
-	if policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or policy.get("native_server_damage_formula_recovered")!=false or policy.get("host_formula")!="existing_host_formula_retained": return record
-	var raw_multiplier: Variant = policy.get("raw_resistance_to_host_percent")
-	if typeof(raw_multiplier) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw_multiplier)) or float(raw_multiplier)<0.0: return record
-	var multiplier := float(raw_multiplier)
-	var projected: Dictionary = {}
-	var fields: Dictionary = {}
-	for channel: String in NPC_RESISTANCE_FIELDS:
-		var field: String = NPC_RESISTANCE_FIELDS[channel]
-		if not source_integer(source.get(field)): return record
-		var raw: Variant = source[field]
-		var value: float = float(raw)*multiplier
-		if not is_finite(value): return record
-		projected[channel] = value
-		fields[channel] = {"source_field":field,"raw_value":raw,"host_percent_input":value}
-	# Keep other already supplied channels. Air -> wind is the existing mobile
-	# channel spelling in World.resolve_patch523_npc_hit; no enum is inferred.
-	var prior: Variant = record.get("element_resistance",{})
-	var resistance: Dictionary = prior.duplicate(true) if prior is Dictionary else {}
-	resistance.merge(projected,true)
+	if policy.get("schema")!="twilight.current523.npc-range-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if not policy.get("enabled") is bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate": return record
+	if policy.get("source_raw_range_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_range_contract")!="existing_record_attack_range_and_current_attack_range_retained": return record
+	var scale: Variant = policy.get("raw_attack_range_to_host_length")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0.0: return record
+	var selected_attacks: Variant = content.get("tables",{}).get("NpcAttack",{})
+	if not selected_attacks is Dictionary: return record
+	var uniform: Variant = null
+	var attack_ids: Array = []
+	for key: Variant in selected_attacks:
+		var entry: Variant = selected_attacks[key]
+		if not entry is Dictionary or not entry.get("row") is Dictionary: return record
+		var attack: Dictionary = entry.row
+		if not source_integer(attack.get("NpcClassID")): return record
+		if int(attack.NpcClassID)!=npc_id: continue
+		if not source_integer(attack.get("ID")) or not source_integer(attack.get("Range")) or float(attack.Range)<=0.0: return record
+		var attack_id := int(attack.ID)
+		if not key is String or key!=str(attack_id) or attack_id in attack_ids: return record
+		var originals: Array[Dictionary] = DEFINITIONS.related("NpcAttack","ID",attack_id)
+		if originals.size()!=1 or originals[0]!=attack or not DEFINITIONS.declared_exclusion("NpcAttack",originals[0]).is_empty(): return record
+		if uniform==null: uniform = attack.Range
+		elif uniform!=attack.Range: return record
+		attack_ids.append(attack_id)
+	if attack_ids.is_empty(): return record
+	var length: float = float(uniform)*float(scale)
+	if not is_finite(length) or length<=0.0: return record
 	var hashing := HashingContext.new()
 	hashing.start(HashingContext.HASH_SHA256)
 	hashing.update(bytes)
 	var policy_sha: String = hashing.finish().hex_encode()
-	record["element_resistance"] = resistance
-	record["source_m_numeric_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
-		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
-		"source":source_identity.duplicate(true),"npc_class_id":source.ID,"source_raw_unit_scale":"unconfirmed",
-		"raw_resistance_to_host_percent":multiplier,"fields":fields,
-		"native_server_damage_formula_recovered":false,"host_formula":"existing_host_formula_retained"}
+	var prior: Variant = record.get("attack_range")
+	record["attack_range"] = length
+	record["source_m_npc_range_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":NPC_RANGE_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"source":identity,"npc_class_id":npc_id,"admitted_actor_identity":admitted.duplicate(true),
+		"admitted_registry_payload_sha256":source_model_sha256,"admitted_attack_ids":attack_ids,
+		"source_field":"NpcAttack.Range","uniform_raw_range":uniform,"raw_attack_range_to_host_length":float(scale),
+		"prior_host_attack_range":prior,"host_length_input":length,"source_raw_range_unit_scale":"unconfirmed",
+		"native_grid_scale_recovered":false,"calibration_status":policy.get("calibration_status"),
+		"host_range_contract":"existing_record_attack_range_and_current_attack_range_retained"}
 	return record
-
 
 func attack(npc_id: int, attack_id: int) -> Dictionary:
 	for source: Dictionary in owned("NpcAttack",npc_id):
@@ -544,4 +578,3 @@ func environment_buffs(land_id: int) -> Array:
 		if type.get("Name") != "NpcBuff": continue
 		result.append({"attribute":attribute,"territory":row("Territories",int(attribute.TerritoryID)),"buff":buff_details(int(attribute.Value)),"application":"requires_verified_position_and_environment_lifecycle"})
 	return result
-

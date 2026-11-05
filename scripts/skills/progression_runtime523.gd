@@ -230,6 +230,7 @@ func on_normal_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 	var dice:=RECOVERY.values(effect,"SpellDamageDiceNumber","Value")
 	var sides:=RECOVERY.values(effect,"SpellDamageDiceSpotCount","Value")
 	if base.size()!=1 or dice.size()!=1 or sides.size()!=1:return
+	skill = _apply_reviewed_child_element_input(skill,record,detail,effect)
 	if not service.cost_reason(skill).is_empty() or service.world.rng.randf()>=float(chances[0]):return
 	if not service.spend(skill):return
 	var policy: RefCounted=source().progression_rules

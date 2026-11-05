@@ -15,35 +15,45 @@ func clear() -> void:
 	binding="";status="inactive";hide()
 func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	if record.is_empty() or int(world.hp)<=0:clear();return
-	if record.get("source_snapshot","")=="patch523":clear();status="patch523_original_pack_required";return
-	var source_binding: Dictionary
-	if category=="성물":source_binding=preload("res://scripts/cards/native_relic_subslot.gd").definition(Cards.card_id(record)).get("summon_binding",{})
-	else:source_binding=preload("res://data/cards/base508_option_extensions.json").data.subslot_npc_bindings.get(Cards.card_id(record),{})
-	if not bool(source_binding.get("display_sprite_verified",false)) or int(source_binding.get("sprite_id",0))!=int(record.get("source_display_sprite_id",0)):
-		clear();status="source_npc_binding_unverified";return
 	var path: String="res://scripts/animation/original_source_preview.gd"
 	if not ResourceLoader.exists(path):status="source_engine_unavailable";hide();return
+	if not is_instance_valid(actor):actor=load(path).new();add_child(actor)
+	var source_key: String=("relic:" if category=="성물" else "doll:")+str(record.get("sourceId",""))
+	var source_only: bool=actor.current523_source_required(source_key)
+	if not source_only:
+		if record.get("source_snapshot","")=="patch523":clear();status="patch523_original_pack_required";return
+		var source_binding: Dictionary
+		if category=="성물":source_binding=preload("res://scripts/cards/native_relic_subslot.gd").definition(Cards.card_id(record)).get("summon_binding",{})
+		else:source_binding=preload("res://data/cards/base508_option_extensions.json").data.subslot_npc_bindings.get(Cards.card_id(record),{})
+		if not bool(source_binding.get("display_sprite_verified",false)) or int(source_binding.get("sprite_id",0))!=int(record.get("source_display_sprite_id",0)):
+			clear();status="source_npc_binding_unverified";return
 	var player: Node2D=world.player
 	var manifest: String="";var context: Dictionary={}
 	for property: Dictionary in player.get_property_list():
 		if property.name=="original_source_manifest":manifest=str(player.get(property.name))
 		if property.name=="source_visual_context":context=player.get(property.name)
 	var key: String=Cards.card_id(record)+"|"+manifest+"|"+str(hash(context))
+	if source_only:key+="|current523_only"
 	if key!=binding:
 		if is_instance_valid(source_aura):source_aura.deactivate()
 		aura_signature=""
-		if not is_instance_valid(actor):actor=load(path).new();add_child(actor)
 		actor.clear();binding=key
-		if not actor.configure(("relic:" if category=="성물" else "doll:")+str(record.sourceId),manifest,context):status="source_asset_pending";hide();return
+		if not actor.configure(source_key,manifest,context):status="source_asset_pending";hide();return
 		global_position=player.global_position+follow_offset
 		status="source_native"
+	if source_only and not actor.installed():
+		if is_instance_valid(source_aura):source_aura.deactivate()
+		aura_signature=""
+		actor.hide();status="source_asset_pending";hide();return
 	if status!="source_native":return
 	show()
 	var previous: Vector2=global_position
 	var point: Vector2=player.global_position+follow_offset
 	global_position=point if previous.distance_to(point)>900 else previous.move_toward(point,minf(maxf(300,player.velocity.length()*1.35),previous.distance_to(point)*7)*maxf(0,delta))
 	sync_existing_source_aura(world,record,manifest)
-	actor.advance_source(delta,"walk" if previous.distance_to(global_position)>.1 else "idle",player.motion.facing8,player.motion.sequence,false)
+	var native_state: String="walk" if previous.distance_to(global_position)>.1 else "idle"
+	if native_state=="walk" and player.motion.state=="run" and actor.current523_role_available("run"):native_state="run"
+	actor.advance_source(delta,native_state,player.motion.facing8,player.motion.sequence,false)
 
 func sync_existing_source_aura(world: Node,record: Dictionary,manifest: String) -> void:
 	var path: String="res://scripts/animation/source_awakening_aura.gd"

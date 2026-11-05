@@ -3,7 +3,7 @@ extends SceneTree
 const SOURCE = preload("res://scripts/skills/player_skills523.gd")
 var checks := 0
 var failures: Array[String] = []
-class ReadyPlayer extends RefCounted:
+class ReadyPlayer extends Node2D:
 	var silence_remaining: float = 0.0
 	var source_523_spell_blocked: bool = false
 	var motion: Dictionary = {"dead":false}
@@ -13,8 +13,15 @@ class ReadyPlayer extends RefCounted:
 class Patch523Spells extends RefCounted:
 	var blocked: bool = false
 	func blocks(_kind: String) -> bool: return blocked
+class HalphasCombat extends RefCounted:
+	var charge: Dictionary = {}
+	func frozen(_actor) -> bool: return false
+class HalphasStar extends RefCounted:
+	var combat = HalphasCombat.new()
 class CostHost extends Node:
 	var patch523_npc_spells = Patch523Spells.new()
+	var halphas_star = preload("res://scripts/cards/halphas_star_enchant_runtime.gd").new()
+	var combat_generation: int = 0
 	var hp: int = 99
 	var mp: int = 99
 	var inventory: Dictionary = {}
@@ -26,6 +33,9 @@ class CostHost extends Node:
 	var skill_cooldowns: Dictionary = {}
 	var active_skill_buffs: Dictionary = {}
 	var equipped_items: Dictionary = {}
+	func _init() -> void:
+		add_child(player)
+		halphas_star.configure(self)
 class DashPlayer extends Node2D:
 	var motion: Dictionary = {"direction":Vector2.RIGHT}
 class DashField extends RefCounted:
@@ -163,6 +173,12 @@ func run() -> void:
 	service.catalog.by_id={"synthetic_self":self_buff}
 	service.catalog.learned={"synthetic_self":1}
 	check(service.ready(self_buff),"test host implements current boss-state readiness contract")
+	cost_host.halphas_star.combat.charge = {"synthetic_fixture":true}
+	check(not service.ready(self_buff),"current charge contract blocks an otherwise ready self buff")
+	cost_host.halphas_star.combat.charge.clear()
+	cost_host.halphas_star.combat.states[cost_host.player.get_instance_id()] = {"target":weakref(cost_host.player),"generation":0,"life":-1,"ice":1.0}
+	check(not service.ready(self_buff),"current frozen-player contract blocks an otherwise ready self buff")
+	cost_host.halphas_star.combat.states.clear()
 	cost_host.patch523_npc_spells.blocked = true
 	check(not service.ready(self_buff),"boss CannotCastSkill still blocks test host")
 	cost_host.patch523_npc_spells.blocked = false

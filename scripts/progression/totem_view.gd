@@ -1,12 +1,29 @@
 extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var hud: Node
 var selected_id := 0
 var selected_level := 1
 var content: VBoxContainer
 var combat_status: Label
 var status_clock := 0.0
+
+func _bind_item_icon(button: Button, item_class_id: int, relation: Dictionary) -> void:
+	button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if button.has_meta(key): button.remove_meta(key)
+	if not IMAGES.selected(): return
+	var source_row: Dictionary = hud.get_parent().totems.row("ItemClass", item_class_id)
+	var image_info: Dictionary = IMAGES.describe_item_class_row(source_row) if not source_row.is_empty() else IMAGES.describe_item_class(item_class_id)
+	button.icon = image_info.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_relation"] = relation.duplicate(true)
+	button.set_meta("source523_image", evidence)
+	button.set_meta("source523_image_provenance", image_info.get("provenance", {}).duplicate(true))
+	button.set_meta("source523_image_status", str(image_info.get("source_status", image_info.get("reason", ""))))
 
 func _process(delta: float) -> void:
 	if not is_visible_in_tree() or not is_instance_valid(combat_status):return
@@ -108,6 +125,7 @@ func _refresh() -> void:
 			upgrade.name = "TotemUpgrade_%d_%d" % [id,material_id]
 			upgrade.disabled = not bool(offer.ok)
 			upgrade.tooltip_text = str(offer.get("reason","선택한 강화석만 소모 · 실패 시 레벨·옵션 유지"))
+			_bind_item_icon(upgrade, material_id, {"source_table":"TotemMaterial","source_field":"ItemClassID","source_id":material.get("ID"),"presentation_role":"growth_material"})
 			content.add_child(upgrade)
 	else: content.add_child(UI.label("최고 레벨",14))
 	var reset_id := selected_id
@@ -117,6 +135,9 @@ func _refresh() -> void:
 	reset.name = "TotemReset_%d" % reset_id
 	reset.disabled = not bool(reset_quote.ok)
 	reset.tooltip_text = str(reset_quote.get("reason","다이아 결제는 지원하지 않습니다"))
+	# The existing action provider registers this exact reset scroll from
+	# ItemClass; the Totem ID and reset CurrencyID are separate namespaces.
+	_bind_item_icon(reset, 301694, {"source_table":"ItemClass","presentation_role":"totem_reset_item"})
 	content.add_child(reset)
 	content.add_child(UI.label("TWILIGHT 성장 규칙 · 선택 재료 1종 사용 · 단계별 옵션 보존",12,UI.MUTED))
 	var effect_info: Dictionary = {4:"오시리스 추가 물리 피해 · 시야 차단 2~3초",14:"제브레퀴 독 [자체 처리] · 물약 회복률 -15% · 2~3초",24:"포세이돈 흡수 [자체 용량] · 리덕션 +5 · 5초"}
@@ -147,6 +168,7 @@ func _refresh() -> void:
 			convert.name = "TotemConvert_%d" % recipe_id
 			convert.disabled = not bool(quote.ok)
 			convert.tooltip_text = str(quote.get("reason","일반 강화석 1개 소모"))
+			_bind_item_icon(convert, int(recipe.outputs[0].ItemClassID), {"source_table":"ItemCraftOutputView","source_field":"ItemClassID","source_recipe_id":recipe_id,"presentation_role":"craft_result"})
 			content.add_child(convert)
 		else:
 			for source_id in [3581,65291]:
@@ -156,6 +178,10 @@ func _refresh() -> void:
 				craft.name = "TotemCraft_%d_%d" % [recipe_id,source_id]
 				craft.disabled = not bool(offer.ok)
 				craft.tooltip_text = str(offer.get("reason","파편 25개 · 주문서 3장 · 아데나 100만"))
+				for material_input: Dictionary in recipe.inputs:
+					if int(material_input.ItemClassID) == source_id:
+						_bind_item_icon(craft, source_id, {"source_table":"ItemCraftInput","source_field":"ItemClassID","source_recipe_id":recipe_id,"presentation_role":"craft_material"})
+						break
 				content.add_child(craft)
 
 func _add_local_settings() -> void:

@@ -4,7 +4,22 @@ extends RefCounted
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SOURCE_BYTES: int = 25031173
 const INSTALLED := "user://growth96_definitions/source.zip"
-const EXISTING_ARCHIVES := [INSTALLED,"user://source_rules/death523.zip","user://title523/source.zip"]
+const EXISTING_ARCHIVES := [
+	INSTALLED,"user://source_rules/death523.zip","user://title523/source.zip",
+	# Exact existing original-ZIP receivers, after the original priorities.
+	# tj/source523.gd::CACHE (its SHA is SOURCE_SHA).
+	"user://tj523-source.zip",
+	# cards/relic_spell_levels.gd::INSTALLED (same SHA and SOURCE_BYTES).
+	"user://source_rules/relic-patch523.zip",
+	# unconfirmed523/source523.gd::SOURCE_PATH (same SHA and SOURCE_BYTES).
+	"user://unconfirmed523/source.zip",
+	# skills/spell_group_conversion.gd::DEFAULT_SOURCE (same SOURCE_SHA).
+	"user://sources/lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+	# growth/half_elixir_runtime.gd::ROOT + source_for()'s saved SHA suffix.
+	# Only this exact original identity is a candidate; no save is inspected or
+	# rebound, and no other saved-SHA archive or derived pack is searched.
+	"user://half_elixir523/packs/"+SOURCE_SHA+".zip",
+]
 const EXCLUDED_TABLES := ["BannedWord","BannedWordType","BannedWordData_Korean","PersonalAppellationBannedWordTypeList"]
 static var _archive: ZIPReader
 static var _archive_path := ""
@@ -26,10 +41,26 @@ static func problem() -> String:
 	return _problem
 
 static func _open() -> bool:
+	var explicit: bool = OS.has_environment("TWILIGHT_PATCH523_CONTENT")
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_CONTENT")
-	if path.is_empty():
+	if explicit and path.is_empty():
+		if _archive != null: reset()
+		_problem = "원본523 정의 ZIP 경로를 빈 값으로 명시했습니다. 다른 입력으로 우회하지 않습니다."
+		return false
+	if not explicit:
 		for existing: String in EXISTING_ARCHIVES:
 			if FileAccess.file_exists(existing):
+				path = existing
+				break
+			# file_exists() can also be false for an inaccessible input. Only an
+			# actual missing-file result permits the next original-ZIP receiver.
+			var candidate := FileAccess.open(existing,FileAccess.READ)
+			var candidate_error: Error = FileAccess.get_open_error()
+			if candidate != null:
+				candidate.close()
+				path = existing
+				break
+			if candidate_error != ERR_FILE_NOT_FOUND:
 				path = existing
 				break
 		if path.is_empty(): path = INSTALLED
@@ -37,7 +68,8 @@ static func _open() -> bool:
 	if _archive != null: reset()
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null:
-		_problem = "보유 원본523 정의 ZIP이 연결되지 않았습니다. 기존 정의와 소유 상태는 보존합니다."
+		var open_error: Error = FileAccess.get_open_error()
+		_problem = "보유 원본523 정의 ZIP을 읽을 수 없습니다: "+error_string(open_error)+". 기존 정의와 소유 상태는 보존합니다."
 		return false
 	var size: int = file.get_length()
 	file.close()
@@ -147,4 +179,3 @@ static func row(table: String, id: int) -> Dictionary:
 		elif _tables.has(table): _problem = "원본 ID가 없습니다: "+table+"#"+str(id)
 		return {}
 	return matches[0]
-

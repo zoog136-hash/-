@@ -48,6 +48,25 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 		result["reason"]="소지량·잠금·생존·이동 상태 조건 미충족 · 주문서 보존";return result
 	var problem: String=preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,record)
 	if not problem.is_empty():result["reason"]=problem;return result
+	if world.has_method("current523_aden_source_active") and world.current523_aden_source_active():
+		# Existing exact ownership/debit preparation above remains the owner.
+		# The map adapter supplies only its destination and normal save boundary.
+		var source_overrides: Dictionary=quest_input.get("override",{}).duplicate(true)
+		if not is_quest:
+			var source_inventory: Dictionary=world.inventory.duplicate(true)
+			source_inventory[item_name]=int(source_inventory[item_name])-1
+			if int(source_inventory[item_name])==0:source_inventory.erase(item_name)
+			source_overrides["inventory"]=source_inventory
+		var returned: Dictionary=world.return_current523_source_to_aden(source_overrides)
+		if not returned.get("ok",false):result.merge(returned,true);return result
+		world.inventory=source_overrides.inventory
+		if source_overrides.has("item_instances"):world.item_instances=source_overrides.item_instances
+		if source_overrides.has("quest_state"):world.quest_service.import_state(source_overrides.quest_state)
+		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
+		result.merge(returned,true)
+		result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"source_item_id":239,"message":"아덴으로 귀환했습니다 · 자체 지정 목적지"},true)
+		if is_quest:result["physical_id"]=physical_id;result["ownership_origin"]="quest523_receipt"
+		return result
 	if str(world.active_map_id)!="aden_world" or world.field_map==null:
 		result["reason"]="이 지역의 원자 귀환 목적지 연결이 필요합니다 · 주문서 보존";return result
 	var destination: Vector2=_safe_region_position()
@@ -429,7 +448,7 @@ func _safe_region_position() -> Vector2:
 
 func _use_return(item_name: String) -> void:
 	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active"):
-		_message("원문 필드의 귀환 주문서 연결은 보류 중입니다. 주문서를 보존합니다. 화면의 지도 복귀를 사용해 주세요.")
+		_use_source_aden_return(item_name)
 		return
 	# A current source field cannot inherit a PC destination from its host ID.
 	var current_field: Variant = world.get("field_map")
@@ -461,6 +480,25 @@ func _use_return(item_name: String) -> void:
 		_teleport_player(world.call("_spawn_position"))
 	_consume(item_name)
 	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
+
+func _use_source_aden_return(item_name: String) -> void:
+	var stack: Dictionary=world.regional_return_stack(item_name)
+	var count: int=int(world.inventory.get(item_name,0))
+	if int(stack.get("item_class_id",0))==126424 and not REGIONAL_RETURN.DATA.data.lands.has(str(world._regional_return_land())):
+		_message("잊혀진 귀환 주문서는 원본 지정 지역에서만 사용할 수 있습니다 · 주문서 보존");return
+	if stack.is_empty() or count<1 or _player_busy_for_travel() or world._item_locked(item_name,"") or not world._patch523_item_allowed() or world.patch523_npc_spells.blocks("CannotTeleport"):
+		_message("현재 귀환 주문서의 소지·잠금·이동 조건이 맞지 않아 보존합니다.");return
+	var changes: Dictionary={}
+	if not bool(stack.get("infinite",false)):
+		var inventory: Dictionary=world.inventory.duplicate(true)
+		inventory[item_name]=count-1
+		if int(inventory[item_name])==0:inventory.erase(item_name)
+		changes["inventory"]=inventory
+	var result: Dictionary=world.return_current523_source_to_aden(changes)
+	if result.get("ok",false):
+		if changes.has("inventory"):world.inventory=changes.inventory
+		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
+	_message(str(result.get("reason","아덴 귀환 결과 확인 필요")))
 
 func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")

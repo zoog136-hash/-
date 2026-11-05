@@ -1,5 +1,4 @@
 extends RefCounted
-const SOURCE_IDENTITY = preload("res://scripts/ui/source_item_icon_identity.gd")
 const GROUND_ICONS = preload("res://scripts/ui/ground_item_icons.gd")
 const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
@@ -9,6 +8,7 @@ const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
 const OPTIONAL = preload("res://scripts/ui/optional_item_icon_pack.gd")
+const SOURCE523 = preload("res://scripts/ui/source523_image_assets.gd")
 const MAX_CACHE: int = 256
 const LOCAL_ITEM_ICONS: Dictionary = {
 	"HP 물약":"res://assets/ui/potionRed.png",
@@ -72,18 +72,10 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
-	# Native ItemClass identities (including legacy-save aliases) must not be
-	# canonicalized back to the unrelated web/PC icon namespace. Ground sprites
-	# are a separate source asset; do not reuse an inventory/category picture.
-	if SOURCE_IDENTITY.recognized(record):
-		var source: Dictionary = SOURCE_IDENTITY.describe(record, fallback_name)
-		if ground and source.route == "source_original_pixels":
-			source.erase("texture")
-			source.path = ""
-			source.route = "source_original_unavailable"
-			source.status = "original_icon_not_installed"
-			source.reason = "source_ground_asset_not_installed"
-		return source
+	# Exact native or source-qualified supplier identity precedes legacy
+	# sourceId/name canonicalization; it never grants a native gameplay flag.
+	# Inventory IconID is not a source declaration for a floor sprite.
+	if SOURCE523.handles_item(record,ground): return SOURCE523.describe_item(record,fallback_name)
 	if ground:
 		var original: Dictionary = _describe_original(record, fallback_name, images, true)
 		# Preserve existing dedicated floor pairs and their provenance.
@@ -209,9 +201,9 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 
 static func texture(record: Dictionary, name_value: String = "", images: Dictionary = {}, ground: bool = false) -> Texture2D:
 	var info: Dictionary = describe(record, name_value, images, ground)
+	if info.route == "source523_images": return info.get("texture") as Texture2D
 	var path: String = str(info.path)
 	if info.route=="source_original_unavailable":return null
-	if info.route=="source_original_pixels":return info.texture
 	# Keep the original loader's hash gate and returned ImageTexture. Reloading
 	# its path can fail in optional packs/PCKs even though it decoded correctly.
 	if info.route in ["reviewed_ground", "reviewed_l1j", "a2_candidate"]:

@@ -4,6 +4,7 @@ const Presentation=preload("res://scripts/cards/source_card_operation_presentati
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
 const SourceSkin=preload("res://scripts/ui/source_skill_awakening_skin.gd")
+const SkillImages=preload("res://scripts/ui/source523_skill_buff_images.gd")
 var runtime: RefCounted
 var identity: String
 var level: OptionButton
@@ -44,9 +45,13 @@ func configure(service: RefCounted,target: String) -> void:
 	var body:=HBoxContainer.new();body.size_flags_vertical=Control.SIZE_EXPAND_FILL;add_child(body)
 	candidates=preload("res://scripts/ui/native_touch_list.gd").new();candidates.name="SkillAwakeningCandidates";candidates.size_flags_horizontal=Control.SIZE_EXPAND_FILL;candidates.size_flags_vertical=Control.SIZE_EXPAND_FILL;candidates.custom_minimum_size=Vector2(240,120);candidates.add_theme_font_size_override("font_size",13);candidates.add_theme_constant_override("v_separation",22);body.add_child(candidates)
 	effect=RichTextLabel.new();effect.name="SkillAwakeningSourceEffects";effect.size_flags_horizontal=Control.SIZE_EXPAND_FILL;effect.size_flags_vertical=Control.SIZE_EXPAND_FILL;effect.custom_minimum_size=Vector2(200,120);body.add_child(effect)
+	var source_images: Array=[]
 	for row: Dictionary in snapshot.candidates:
-		var index: int=candidates.add_item(str(row.name)+" · 후보 선택 "+str(float(row.selection_weight)/1000.0)+"%")
+		var visual: Dictionary=SkillImages.describe_spell_class_row(row.source_spell,"IconID")
+		var index: int=candidates.add_item(str(row.name)+" · 후보 선택 "+str(float(row.selection_weight)/1000.0)+"%",visual.get("texture") as Texture2D)
 		candidates.set_item_metadata(index,int(row.spell_id))
+		source_images.append(SkillImages.evidence(visual))
+	candidates.set_meta("source523_skill_images",source_images)
 	candidates.item_selected.connect(_select)
 	var skill_panel: StyleBoxTexture=SourceSkin.panel("Img_Bg","Textuer_Inventory.png")
 	if skill_panel!=null:candidates.add_theme_stylebox_override("panel",skill_panel)

@@ -2,12 +2,15 @@ extends RefCounted
 ## Private original pixels, exact verified atlas keys, one decode per page.
 const INDEX = preload("res://data/ui/base508_card_atlas.json")
 const SOURCE_API = "res://scripts/lineagem_base508.gd"
+# The prior card pack is retained for provenance/ABI, excluded from final art.
+const LEGACY_CARD_PACK_FINAL_USE: bool = false
 static var pages: Dictionary = {}
 static var frames: Dictionary = {}
 static var missing: Dictionary = {}
 static var textures: Dictionary = {}
 
 static func frame(plist: String, key: String) -> Image:
+	if not LEGACY_CARD_PACK_FINAL_USE: return null
 	var identity: String = plist + ":" + key
 	if frames.has(identity): return frames[identity]
 	if missing.has(identity) or not ResourceLoader.exists(SOURCE_API): return null
@@ -24,26 +27,19 @@ static func frame(plist: String, key: String) -> Image:
 		if original==null or original.is_empty(): return null
 		original.convert(Image.FORMAT_RGBA8)
 		pages[path]=original
-	var rect: Array = spec.rect
-	var packed_size := Vector2i(rect[3],rect[2]) if spec.rotated else Vector2i(rect[2],rect[3])
-	var page: Image = pages[path]
-	var region := Rect2i(Vector2i(rect[0],rect[1]),packed_size)
-	if not Rect2i(Vector2i.ZERO,page.get_size()).encloses(region):
-		missing[identity]="frame_out_of_page"; return null
-	var trimmed: Image = page.get_region(region)
-	if spec.rotated: trimmed.rotate_90(COUNTERCLOCKWISE)
-	var source_rect: Array = spec.source_rect
-	if trimmed.get_size()!=Vector2i(source_rect[2],source_rect[3]):
-		missing[identity]="trim_size_mismatch"; return null
-	var result: Image = Image.create(spec.source_size[0],spec.source_size[1],false,Image.FORMAT_RGBA8)
-	result.blit_rect(trimmed,Rect2i(Vector2i.ZERO,trimmed.get_size()),Vector2i(source_rect[0],source_rect[1]))
+	var decoded: Dictionary=preload("res://scripts/ui/original_ui/atlas_pixels.gd").decode(pages[path],spec)
+	if not str(decoded.get("error","")).is_empty():
+		missing[identity]=decoded.error; return null
+	var result: Image=decoded.image
 	frames[identity]=result
 	return result
 
 static func texture(plist: String, key: String) -> Texture2D:
+	if not LEGACY_CARD_PACK_FINAL_USE: return null
 	var identity: String = plist+":"+key
 	if textures.has(identity): return textures[identity]
 	var original: Image = frame(plist,key)
 	if original==null: return null
 	textures[identity]=ImageTexture.create_from_image(original)
 	return textures[identity]
+

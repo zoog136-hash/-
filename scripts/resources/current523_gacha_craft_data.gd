@@ -19,6 +19,26 @@ static func _reference(blockers: Array[String], table: String, value: Variant) -
 static func _typed_reference(table: String, field: String, value: Variant, target: String) -> Dictionary:
 	return {"source_table":table,"source_field":field,"raw_id":value,"target_table":target,"reference_only":true,"can_execute":false}
 
+static func _item_input(value: Variant, blockers: Array[String]) -> Dictionary:
+	# Only the explicit ItemClassID/BoundItemClassID namespaces are joined.
+	# This leaf does not enter ItemData again or expand a crafting-book cycle.
+	var item: Dictionary = _reference(blockers,"ItemClass",value)
+	var result: Dictionary = {"item_class":item,"source":SOURCE.identity(),
+		"reference_only":true,"can_activate":false,"excluded":false}
+	if item.is_empty(): return result
+	var exclusion: Dictionary = SOURCE.declared_exclusion("ItemClass",item)
+	if not exclusion.is_empty():
+		result.excluded = true
+		result["declared_exclusion"] = exclusion
+	var test: Variant = item.get("TestItem")
+	result["test_declaration"] = {"field":"TestItem","present":item.has("TestItem"),"value":test}
+	if typeof(test) == TYPE_BOOL and test:
+		result.excluded = true
+		result["test_exclusion_reason"] = "source_TestItem_true"
+	elif typeof(test) != TYPE_BOOL:
+		blockers.append("source_test_declaration_missing:ItemClass:"+str(value))
+	return result
+
 static func describe(gacha_craft_id: int) -> Dictionary:
 	var identity: Dictionary = SOURCE.identity()
 	var blockers: Array[String] = []
@@ -67,7 +87,8 @@ static func describe(gacha_craft_id: int) -> Dictionary:
 			class_reference["reason"] = "source_target_namespace_unconfirmed"
 			unresolved.append(class_reference)
 			var output_entry: Dictionary = {
-				"output":output,"bound_items":[],
+				"output":output,"bound_items":[],"item_input":{},
+				"bless_code":_reference(blockers,"ItemBlessCode",output.get("ItemBlessCodeID")),
 				"typed_references":[
 					_typed_reference("GachaCraftOutput","ItemClassID",output.get("ItemClassID"),"ItemClass"),
 					_typed_reference("GachaCraftOutput","ItemBlessCodeID",output.get("ItemBlessCodeID"),"ItemBlessCode"),
@@ -78,16 +99,18 @@ static func describe(gacha_craft_id: int) -> Dictionary:
 			if not _id(item_value):
 				blockers.append("invalid_source_reference:GachaCraftOutput.ItemClassID")
 				continue
+			output_entry.item_input = _item_input(item_value,blockers)
 			# Preserve every matching row, including repeated source mappings.
 			# BoundItemProbability, Probability, ItemAmount, ItemEnchant and
 			# ItemBlessCodeID stay unchanged in output; no candidate is selected.
 			for mapping: Dictionary in SOURCE.related("GachaCraftBoundItem","ItemClassID",int(item_value)):
 				output_entry.bound_items.append({
 					"row":mapping,
+					"item_input":_item_input(mapping.get("ItemClassID"),blockers),
+					"bound_item_input":_item_input(mapping.get("BoundItemClassID"),blockers),
 					"typed_references":[
 						_typed_reference("GachaCraftBoundItem","ItemClassID",mapping.get("ItemClassID"),"ItemClass"),
 						_typed_reference("GachaCraftBoundItem","BoundItemClassID",mapping.get("BoundItemClassID"),"ItemClass")
 					]})
 	result.ok = blockers.is_empty()
 	return result
-

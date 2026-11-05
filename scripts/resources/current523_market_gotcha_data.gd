@@ -63,8 +63,21 @@ static func _typed(row: Dictionary, unit: Dictionary) -> Dictionary:
 	return {"unit":unit,"unit_id":row.get("UnitID"),"namespace":unit.get("Name"),
 		"value":row.get("ClassID"),"amount_raw":row.get("Amount"),"reference_only":true,"can_activate":false}
 
+static func _queue_pool(context: Dictionary, id: Variant, owner: Dictionary) -> Variant:
+	if not _integer(id) or int(id) < 0:
+		_issue(context,owner,{"namespace":"GotChaClassID","value":id},"invalid_source_reference")
+		return null
+	var key: String = str(int(id))
+	if not context.pools.has(key) and not context.pool_queued.has(key):
+		context.pool_queued[key] = true
+		context.pool_queue.append(int(id))
+		context.pool_queue_owners[key] = owner
+	# Only this ID is stored on an edge. A repeated or cyclic edge never embeds
+	# the registry Dictionary or changes an original entry's amount/weight.
+	return int(id)
+
 static func _target(context: Dictionary, row: Dictionary, unit: Dictionary, owner: Dictionary, deferred_reason: String, allow_pool: bool = true) -> Dictionary:
-	var result: Dictionary = {"typed_reference":_typed(row,unit.get("row",{})),"target":{},"pool":{},"reference_only":true,"can_activate":false}
+	var result: Dictionary = {"typed_reference":_typed(row,unit.get("row",{})),"target":{},"pool":{},"pool_reference":null,"reference_only":true,"can_activate":false}
 	if unit.get("row",{}).is_empty() or unit.get("excluded",false): return result
 	# These are the exact public commerce/ticket Unit namespaces. Preserve
 	# amount/conditions and read the target; no supplier or payment is executed.
@@ -72,11 +85,13 @@ static func _target(context: Dictionary, row: Dictionary, unit: Dictionary, owne
 	if name_value == "ItemClassID": result.target = _row(context,"ItemClass",row.get("ClassID"),owner)
 	elif name_value == "IntangibleItemClassID": result.target = _row(context,"IntangibleItemClass",row.get("ClassID"),owner)
 	elif name_value == "BuffCardID": result.target = _row(context,"BuffCard",row.get("ClassID"),owner)
-	elif name_value == "GotChaClassID" and allow_pool: result.pool = _pool(context,row.get("ClassID"),owner)
+	elif name_value == "GotChaClassID":
+		if allow_pool:
+			result.pool = _pool(context,row.get("ClassID"),owner)
+			if _integer(row.get("ClassID")) and int(row.ClassID) >= 0: result.pool_reference = int(row.ClassID)
+		else: result.pool_reference = _queue_pool(context,row.get("ClassID"),owner)
 	else:
-		# The public card-pool consumer does not define recursive pool grants.
-		# Retain such a typed edge without creating a cyclic in-memory graph.
-		_issue(context,owner,result.typed_reference,"nested_pool_reference_deferred" if name_value == "GotChaClassID" else deferred_reason,row)
+		_issue(context,owner,result.typed_reference,deferred_reason,row)
 	return result
 
 static func _pool(context: Dictionary, id: Variant, owner: Dictionary) -> Dictionary:
@@ -112,12 +127,13 @@ static func _pool(context: Dictionary, id: Variant, owner: Dictionary) -> Dictio
 		var resolved_entry: Dictionary = _target(context,raw,unit,from,"entity_target_namespace_unresolved",false)
 		entry["target"] = resolved_entry.target
 		entry["pool"] = resolved_entry.pool
+		entry["pool_reference"] = resolved_entry.pool_reference
 		if unit.row.get("Name") == "BuffCardID": entry.card = resolved_entry.target
 	return result
 
 static func _product(context: Dictionary, id: Variant, owner: Dictionary) -> Dictionary:
 	var node: Dictionary = _row(context,"MarketProduct",id,owner)
-	node["unit"] = {}; node["additional"] = []; node["pool"] = {}; node["target"] = {}
+	node["unit"] = {}; node["additional"] = []; node["pool"] = {}; node["pool_reference"] = null; node["target"] = {}
 	if node.row.is_empty() or node.excluded: return node
 	var raw: Dictionary = node.row
 	var from: Dictionary = {"table":"MarketProduct","id":raw.get("ID")}
@@ -134,10 +150,12 @@ static func _product(context: Dictionary, id: Variant, owner: Dictionary) -> Dic
 		addition["typed_reference"] = resolved_addition.typed_reference
 		addition["target"] = resolved_addition.target
 		addition["pool"] = resolved_addition.pool
+		addition["pool_reference"] = resolved_addition.pool_reference
 	if unit.row.is_empty() or unit.excluded: return node
 	var resolved_product: Dictionary = _target(context,raw,unit,from,"product_target_namespace_unresolved")
 	node.target = resolved_product.target
 	node.pool = resolved_product.pool
+	node.pool_reference = resolved_product.pool_reference
 	return node
 
 static func _date(context: Dictionary, value: Variant, owner: Dictionary) -> Dictionary:
@@ -149,7 +167,7 @@ static func _date(context: Dictionary, value: Variant, owner: Dictionary) -> Dic
 
 static func describe(market_id: int, origin_item_bonus: Dictionary = {}) -> Dictionary:
 	var identity: Dictionary = SOURCE.identity()
-	var context: Dictionary = {"unresolved":[],"blockers":[],"source_exclusion_evidence":[],"table_metadata":{},"pools":{}}
+	var context: Dictionary = {"unresolved":[],"blockers":[],"source_exclusion_evidence":[],"table_metadata":{},"pools":{},"pool_queue":[],"pool_queued":{},"pool_queue_owners":{}}
 	var result: Dictionary = {"kind":"twilight.current523.market-gotcha-data.v1","ok":false,
 		"market_purchase_id":market_id,"source":identity,"origin_item_bonus":origin_item_bonus,
 		"purchase":{},"payment":{},"products":[],"bonus_products":[],"restrictions":[],"server_limits":[],
@@ -158,6 +176,7 @@ static func describe(market_id: int, origin_item_bonus: Dictionary = {}) -> Dict
 		"source_table_metadata":context.table_metadata,"reference_only":true,"can_activate":false,
 		"ownership_authorized":false,"join_complete":false,
 		"remaining_contract":["General pool denominator/caps/draw and selection rules require the existing owner",
+			"Nested pool draw/replacement/count/denominator/grants remain unresolved; pool_reference is only a raw ID edge",
 			"OnSale, dates, server and restriction rows are preserved without offer admission",
 			"Unknown target namespaces and condition/payment semantics require the existing owner; no supply or purchase is authorized"]}
 	var root: Dictionary = {"table":"MarketPurchase_Korean","id":market_id}
@@ -194,6 +213,7 @@ static func describe(market_id: int, origin_item_bonus: Dictionary = {}) -> Dict
 		payment["typed_reference"] = resolved_payment.typed_reference
 		payment["target"] = resolved_payment.target
 		payment["pool"] = resolved_payment.pool
+		payment["pool_reference"] = resolved_payment.pool_reference
 	for table: String in ["MarketPurchaseProduct","MarketBonusForPurchase"]:
 		for link: Dictionary in _related(context,table,"MarketPurchaseID",market_id,root):
 			var relation: Dictionary = _node(context,table,link)
@@ -218,7 +238,14 @@ static func describe(market_id: int, origin_item_bonus: Dictionary = {}) -> Dict
 			_issue(context,root,{"table":"ServerLimit","field":"ServerLimitSetID","id":link.ServerLimitSetID},"missing_source_reference",link)
 		for server: Dictionary in servers:
 			limit.servers.append(_node(context,"ServerLimit",server))
+	# Read each newly reached pool through the same original-row reader. _pool
+	# appends source entries verbatim and only queues further pool IDs, so this
+	# work list can close cycles without recursion or cyclic Dictionary objects.
+	var pool_cursor: int = 0
+	while pool_cursor < context.pool_queue.size():
+		var pool_id: int = int(context.pool_queue[pool_cursor])
+		pool_cursor += 1
+		_pool(context,pool_id,context.pool_queue_owners.get(str(pool_id),{}))
 	if result.products.is_empty() and result.bonus_products.is_empty(): _issue(context,root,{"table":"MarketPurchaseProduct","field":"MarketPurchaseID","id":market_id},"source_market_product_relations_empty")
 	result.join_complete = context.unresolved.is_empty() and context.source_exclusion_evidence.is_empty()
 	return result
-

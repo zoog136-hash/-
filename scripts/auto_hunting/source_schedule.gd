@@ -4,11 +4,13 @@ const SOURCE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4ea
 const PACK_SHA256 = "a217eec940a84d8fa67e7ece99d3f8774b9b13b90aeebbd71e4140ff4ba11fef"
 const PACK_BYTES = 136985
 const PACK_NAME = "auto_hunting523.json"
+const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 var loaded: bool = false
 var problem: String = "자동사냥 지역 자료를 설치해 주세요"
 var _entries: Dictionary = {}
 var _order: Array[int] = []
 var _categories: Array = []
+var input_identity: Dictionary = {}
 
 static func configured_directory() -> String:
 	for arg: String in OS.get_cmdline_user_args():
@@ -18,7 +20,75 @@ static func configured_directory() -> String:
 	return configured if not configured.is_empty() else "user://auto_hunting523"
 
 func load_configured() -> bool:
-	return load_pack(configured_directory())
+	var directory: String = configured_directory()
+	# UNVERIFIED: retain the pinned installed projection when present. Only a
+	# missing projection may reuse the already held exact original archive;
+	# an existing damaged or different projection is never bypassed.
+	if FileAccess.file_exists(directory.path_join(PACK_NAME)): return load_pack(directory)
+	return _load_source_definitions()
+
+func _source_failure() -> bool:
+	problem = "자동사냥 원본 지역 참조를 읽을 수 없습니다 · 기존 지역 자료 보존"
+	return false
+
+func _load_source_definitions() -> bool:
+	# Same foreign-key projection as tools/build_auto_hunting523.py:project.
+	# No map, coordinate, eligibility, price, or prerequisite is synthesized.
+	var identity: Dictionary = SOURCE.identity()
+	if identity.get("source_sha256") != SOURCE_SHA256:
+		problem = "자동사냥 지역 자료 또는 기존 원본523 정의 ZIP이 필요합니다"
+		return false
+	var categories: Array[Dictionary] = SOURCE.rows("AutoScheduleCategory")
+	var schedules: Array[Dictionary] = SOURCE.rows("AutoScheduleLandTeleport")
+	var sentinel: Dictionary = SOURCE.row("Territories",0)
+	if categories.is_empty() or schedules.is_empty() or sentinel.get("Name") != "None": return _source_failure()
+	var entries: Dictionary = {}
+	var order: Array[int] = []
+	for schedule: Dictionary in schedules:
+		var schedule_id: int = int(schedule.ID)
+		if entries.has(schedule_id): return _source_failure()
+		var category: Dictionary = SOURCE.row("AutoScheduleCategory",int(schedule.AutoScheduleCategoryID))
+		var teleport: Dictionary = SOURCE.row("LandTeleport",int(schedule.LandTeleportID))
+		if category.is_empty() or teleport.is_empty(): return _source_failure()
+		var currency: Dictionary = SOURCE.row("Currency",int(teleport.CurrencyID))
+		if currency.is_empty(): return _source_failure()
+		var hunting: Variant = null
+		var hunting_land: Variant = null
+		if int(schedule.TerritoryID) != 0:
+			hunting = SOURCE.row("Territories",int(schedule.TerritoryID))
+			if hunting.is_empty(): return _source_failure()
+			hunting_land = SOURCE.row("Land",int(hunting.LandID))
+			if hunting_land.is_empty(): return _source_failure()
+		var destinations: Array[Dictionary] = []
+		for link: Dictionary in SOURCE.related("LandTeleportTerritories","LandTeleportID",int(teleport.ID)):
+			if int(link.TerritoryID) == 0: return _source_failure()
+			var territory: Dictionary = SOURCE.row("Territories",int(link.TerritoryID))
+			if territory.is_empty() or territory.StartX > territory.EndX or territory.StartY > territory.EndY: return _source_failure()
+			var land: Dictionary = SOURCE.row("Land",int(territory.LandID))
+			if land.is_empty(): return _source_failure()
+			destinations.append({"link":link,"territory":territory,"land":land})
+		if destinations.is_empty(): return _source_failure()
+		var prerequisites: Array[Dictionary] = []
+		for link: Dictionary in SOURCE.related("LandTeleportPrerequisite","LandTeleportID",int(teleport.ID)):
+			var definition: Dictionary = SOURCE.row("Prerequisite",int(link.PrerequisiteID))
+			if definition.is_empty(): return _source_failure()
+			var kind: Dictionary = SOURCE.row("PrerequisiteType",int(definition.PrerequisiteTypeID))
+			if kind.is_empty(): return _source_failure()
+			prerequisites.append({"link":link,"definition":definition,"type":kind})
+		entries[schedule_id] = {
+			"schedule":schedule,"category":category,"teleport":teleport,"currency":currency,
+			"hunting_territory":hunting,"hunting_land":hunting_land,
+			"destinations":destinations,"prerequisites":prerequisites,
+		}
+		order.append(schedule_id)
+	# Publish the complete projection only after every original link is joined.
+	_entries = entries
+	_order = order
+	_categories = categories
+	input_identity = {"mode":"original_archive_projection","source_zip_sha256":identity.source_sha256,"source_archive_bytes":identity.source_bytes}
+	loaded = true
+	problem = ""
+	return true
 
 func load_pack(directory: String) -> bool:
 	# Stage replacement completely before publishing; a failed update retains the
@@ -52,6 +122,7 @@ func load_pack(directory: String) -> bool:
 	_entries = entries
 	_order = order
 	_categories = candidate.categories
+	input_identity = {"mode":"compiled_projection","source_zip_sha256":SOURCE_SHA256,"projection_sha256":PACK_SHA256,"projection_bytes":PACK_BYTES}
 	loaded = true
 	problem = ""
 	return true
@@ -75,6 +146,7 @@ func destination(schedule_id: int) -> Dictionary:
 	result["source_land_specified"] = false
 	result["live_activation"] = "UNVERIFIED"
 	result["runtime_enabled"] = false
+	result["source_input"] = input_identity.duplicate(true)
 	return result
 
 func request_definition(schedule_id: int, landing_link_id: int, level: int, wallet: int, gems: int = -1) -> Dictionary:

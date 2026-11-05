@@ -831,9 +831,7 @@ func _load_data() -> void:
 		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
-	var totem_root := OS.get_environment("TWILIGHT_TOTEM_PACK")
-	if totem_root.is_empty(): totem_root = "user://original_resources/totems523"
-	if FileAccess.file_exists(totem_root.path_join("manifest.json")): totems.install(totem_root)
+	totems.configure_input()
 	totem_actions.configure(self)
 	totem_combat.configure(self)
 	fishing523.configure(self)
@@ -5736,6 +5734,10 @@ func _source_hp_potion_committed(amount: int) -> void:
 func _return_to_spawn() -> void:
 	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotTeleport"): return
+	if current523_aden_source_active():
+		var outcome: Dictionary=return_current523_source_to_aden()
+		hud.show_message(str(outcome.get("reason","아덴 귀환 결과 확인 필요")))
+		return
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -10483,15 +10485,7 @@ func set_source_character_gender(gender_id: int) -> bool:
 func get_expedition_catalog() -> RefCounted:
 	if not expedition_pack_checked:
 		expedition_pack_checked = true
-		var path := ""
-		var checksum := ""
-		for argument: String in OS.get_cmdline_user_args():
-			if argument.begins_with("--expedition523-pack="):
-				path = argument.trim_prefix("--expedition523-pack=")
-			elif argument.begins_with("--expedition523-sha256="):
-				checksum = argument.trim_prefix("--expedition523-sha256=")
-		if not path.is_empty() or not checksum.is_empty():
-			expedition_catalog.install(path, checksum)
+		expedition_catalog.configure_arguments()
 	return expedition_catalog
 
 func expedition_owned_cards() -> Array:
@@ -10547,13 +10541,7 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 
 
 func _load_source_dungeon_pack() -> void:
-	var path := OS.get_environment("TWILIGHT_DUNGEON523_PACK")
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--dungeon523-pack="):
-			path = argument.trim_prefix("--dungeon523-pack=")
-	if path.is_empty() and FileAccess.file_exists(SOURCE_DUNGEONS.DEFAULT_MANIFEST):
-		path = SOURCE_DUNGEONS.DEFAULT_MANIFEST
-	if not path.is_empty(): source_dungeons.load_pack(path)
+	source_dungeons.load_configured()
 
 func install_source_dungeon_pack(path: String) -> Dictionary:
 	var result: Dictionary = source_dungeons.install_pack(path)
@@ -10805,7 +10793,8 @@ func regional_return_status() -> String:
 	if not get_regional_return_enabled(): return "자동 변경 꺼짐 · 원래 귀환 슬롯 사용"
 	var land: int = _regional_return_land()
 	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)): return "현재 지역: 변경 대상 아님"
-	var suffix: String = " · TWILIGHT 대응 지도" if REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
+	var original_m_field: bool=field_map!=null and bool(field_map.get_meta("current523_source_field",false))
+	var suffix: String = " · TWILIGHT 대응 지도" if not original_m_field and REGIONAL_RETURN.DATA.data.host_bindings.has(active_map_id) else ""
 	var key: String = REGIONAL_RETURN.target_key(126424, inventory, _find_catalog_item_record)
 	return "잊혀진 귀환 주문서 적용 · 보유 %d개%s" % [int(inventory.get(key, 0)), suffix]
 
@@ -10881,9 +10870,13 @@ func close_current523_aden_play(remember_disabled: bool = true, reason: String =
 	current523_aden_play_active = false
 	current523_aden_play_problem = reason
 	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
-	if not saved: detail += " 자동 시작 해제 설정은 저장하지 못했습니다."
+	if not saved:
+		var close_problem: String = str(controller.get("problem"))
+		if close_problem.is_empty(): close_problem = "종료 상태를 저장하지 못했습니다."
+		current523_aden_play_problem = close_problem if reason.is_empty() else reason + " · " + close_problem
+		detail += " " + close_problem
 	current523_aden_play_changed.emit(false, detail)
-	if is_instance_valid(hud) and not reason.is_empty(): hud.show_message(detail)
+	if is_instance_valid(hud) and (not reason.is_empty() or not saved): hud.show_message(detail)
 
 func apply_current523_aden_play_options(options: Dictionary) -> bool:
 	var controller: RefCounted = _aden_play_controller()
@@ -10892,6 +10885,14 @@ func apply_current523_aden_play_options(options: Dictionary) -> bool:
 	var applied: bool = bool(controller.call("apply_options", value))
 	current523_aden_play_problem = str(controller.get("problem"))
 	current523_aden_play_changed.emit(current523_aden_play_active, "자체 표시 보정을 적용했습니다." if applied else current523_aden_play_problem)
+	return applied
+
+func apply_current523_static_spr_options(value: Dictionary) -> bool:
+	var controller: RefCounted = _aden_play_controller()
+	var applied: bool = bool(controller.call("apply_static_spr_options", value))
+	current523_aden_play_active = bool(controller.get("active"))
+	current523_aden_play_problem = str(controller.get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active, "정적 SPR 설정을 적용했습니다." if applied else current523_aden_play_problem)
 	return applied
 
 func current523_aden_play_metrics() -> Dictionary:
@@ -10989,6 +10990,14 @@ func use_current523_aden_source_portal(id: int) -> bool:
 	var result: bool = _aden_play_controller().call("use_source_portal",id)
 	current523_aden_play_problem = str(_aden_play_controller().get("problem"))
 	current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈로 이동했습니다." if result else current523_aden_play_problem)
+	return result
+
+func return_current523_source_to_aden(save_changes: Dictionary={}) -> Dictionary:
+	var controller: RefCounted=_aden_play_controller()
+	var result: Dictionary=controller.call("return_to_aden",save_changes)
+	current523_aden_play_active=bool(controller.get("active"))
+	current523_aden_play_problem=str(result.get("reason","")) if not result.get("ok",false) else ""
+	current523_aden_play_changed.emit(current523_aden_play_active,str(result.get("reason","아덴 귀환 보류")))
 	return result
 
 func _restore_current523_aden_play() -> void:

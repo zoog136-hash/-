@@ -1,15 +1,17 @@
 extends RefCounted
 ## Optional exact-ID 523 evidence adapter. Original bytes live in a private pack.
-## Distance, CastDelay, proc timing, AC and hit/damage formulae are NOT inferred.
+## An optional labelled numeric distance policy preserves the existing engine.
+## CastDelay, proc timing, AC and hit/damage formulae are not inferred here.
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input_policy.json"
-const SOURCE_ELEMENT_CHANNELS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_BYTES := 16 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
 const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
+const SOURCE_ELEMENT_CHANNELS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
+const RELIC_SOURCE_INPUT = preload("res://scripts/resources/current523_relic_spell_input.gd")
 # Exact ordered node lists from build_player_skills523.py. No composition-node
 # traversal or unreviewed recursive expansion is performed by the reader.
 const REVIEWED_EXECUTION_GRAPHS := {
@@ -34,6 +36,7 @@ var active_sha256: String = ""
 var source_mode: String = ""
 var source_identity: Dictionary = {}
 var source_fallback_status: Dictionary = {}
+var relic_source_input_status: Dictionary = {}
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
 var progression_rules = preload("res://scripts/skills/progression_rules523.gd").new()
@@ -261,6 +264,9 @@ func _load_source_profiles() -> void:
 	source_identity = identity.duplicate(true)
 	revision += 1
 	last_error = ""
+	# Optional PR269 reader only after this original-profile snapshot is adopted.
+	# Its callback status never replaces the active profile/compiled-pack identity.
+	relic_source_input_status = RELIC_SOURCE_INPUT.adopt(source_identity)
 
 func reject(reason: String) -> bool:
 	last_error = reason
@@ -589,7 +595,6 @@ func _apply_original_element_input(record: Dictionary, profile: Dictionary) -> D
 		"scope":"direct_existing_attack_only_no_composition_child_precedence"}
 	return record
 
-
 func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> Dictionary:
 	# Only the successful active apply_to path calls this helper. It cannot
 	# admit a reference-only/new/blocked spell or alter a shape/target contract.
@@ -659,7 +664,6 @@ func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> D
 		"min_cast_range_status":"raw_only_no_existing_recipient"}
 	return record
 
-
 static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
 	if is_instance_valid(target) and target.concealed523: return false
 	if not skill.has("source523"): return true
@@ -724,4 +728,3 @@ static func duration_text(skill: Dictionary) -> String:
 		if bounds.size() == 2: return "%.1f~%.1f초" % [float(bounds[0]), float(bounds[1])]
 	if skill.get("estimated523", {}).get("kind", "") == "damage": return "즉시"
 	return "%.1f초" % float(skill.get("duration", 0))
-

@@ -1,6 +1,7 @@
 extends VBoxContainer
 ## Inspection of exact source branches; spending remains in authoritative Main.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var hud: Node
 var world: Node
 var equipment: OptionButton
@@ -95,6 +96,7 @@ func configure(controller: Node) -> void:
 			continue
 		ids.append(str(id))
 		equipment.add_item("%s +%d · %s · ID %s" % [str(physical.name), int(physical.level), "축복" if book.bless_code(physical) == 2 else "일반", str(id)])
+		_option_source_image(equipment,equipment.item_count-1,int(source_id))
 	for source_id: String in book.data.get("items", {}):
 		var item: Dictionary = book.data.items[source_id]
 		var is_scroll: bool = false
@@ -105,6 +107,7 @@ func configure(controller: Node) -> void:
 			continue
 		scroll_ids.append(source_id)
 		scroll.add_item(str(item.catalog_record.name))
+		_option_source_image(scroll,scroll.item_count-1,int(source_id))
 	equipment.item_selected.connect(func(_i: int) -> void: _refresh())
 	scroll.item_selected.connect(func(_i: int) -> void: _refresh())
 	# Keep source actions inside short windows while the growing installation/
@@ -125,6 +128,18 @@ func configure(controller: Node) -> void:
 	detail.scroll_active=false
 	hud.workspace.register_scroll_drag(viewport,content)
 	_refresh()
+
+func _option_source_image(choice: OptionButton, index: int, item_class_id: int) -> void:
+	if not SOURCE_IMAGES.selected(): return
+	# The equipment book's identity and items keys are explicit ItemClass IDs.
+	# They remain separate from the physical selection IDs and action inputs.
+	var image: Dictionary = SOURCE_IMAGES.describe_item_class(item_class_id)
+	choice.set_item_icon(index,image.get("texture") as Texture2D)
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	var images: Dictionary = choice.get_meta("source523_images",{})
+	images[index] = evidence
+	choice.set_meta("source523_images",images)
 
 func _refresh() -> void:
 	source_action.disabled = true

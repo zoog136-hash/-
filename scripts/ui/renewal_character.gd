@@ -1,10 +1,12 @@
 extends "res://scripts/ui/lineage_side_ui.gd"
 
 signal detailed_stats_requested
+signal original_page_requested(page: String)
 
 signal equipment_requested(item_name: String)
 signal class_selection_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var equipment_stage: Control
 var paperdoll: TextureRect
@@ -16,6 +18,14 @@ var equipment_page_index: int = 0
 var character_tabs: Control
 var empty_slot_art: Dictionary={}
 var item_art_bound: bool=false
+
+func _show_equipment_page() -> void:
+	super._show_equipment_page()
+	original_page_requested.emit("equipment")
+
+func _show_stats_page() -> void:
+	super._show_stats_page()
+	original_page_requested.emit("stats")
 
 func _ready() -> void:
 	super._ready()
@@ -240,6 +250,21 @@ func _layout_equipment() -> void:
 			caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 			caption.visible=button.disabled and icon.texture==null
 
+func _equipped_item_visual_record(record: Dictionary) -> Dictionary:
+	# Preserve a source-qualified view record as supplied. Otherwise only the
+	# equipped physical ID can supply its original presentation identity.
+	if SourceImages.recognized_item(record) or SourceImages.handles_item(record): return record
+	var instance_id: Variant = record.get("instance_id", "")
+	if not instance_id is String or instance_id.is_empty(): return record
+	var instances: Variant = character_state.get("item_instances", {})
+	if not instances is Dictionary: return record
+	var physical: Variant = instances.get(instance_id, {})
+	if not physical is Dictionary: return record
+	var original: Variant = physical.get("record", {})
+	if original is Dictionary and (SourceImages.recognized_item(original) or SourceImages.handles_item(original)):
+		return original
+	return record
+
 func _refresh_character() -> void:
 	super._refresh_character()
 	if equipment_stage == null: return
@@ -273,10 +298,12 @@ func _refresh_character() -> void:
 		filled += 1
 		var grade: String = str(record.get("grade","일반"))
 		var level: int = int(record.get("enhance_level",0))
-		UI.apply_item_visual(icon,record,str(record.get("name","")),{},"equipment")
+		var visual_record: Dictionary = _equipped_item_visual_record(record)
+		UI.apply_item_visual(icon,visual_record,str(record.get("name","")),{},"equipment")
 		icon.modulate = Color.WHITE
 		badge.text = "+%d" % level if level > 0 else ""
 		button.add_theme_stylebox_override("normal",UI.item_frame(grade))
 		button.tooltip_text = "%s · %s · +%d\n클릭: 장비 선택 및 교체" % [_equipped_display_name(record),grade,level]
 	equipment_caption.text = "장착 장비  %d / %d" % [filled,(EQUIPMENT_SLOTS+EXTRA_SLOTS).size()]
 	_layout_equipment()
+
