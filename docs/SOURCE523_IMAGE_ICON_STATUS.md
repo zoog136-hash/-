@@ -92,6 +92,11 @@ Library identities or saves are included in Git.
   been executed or validated.
   Existing NPC listing rows also use this direct pinned ItemClass presentation
   path, retaining the same source exclusions before any optional quote data.
+- The existing reward-choice ItemList consumes its already declared
+  `reward.item_class_id` for the original image. Its claim metadata remains the
+  separate `source_entity_id`; choice validation, quantity and grant/save calls
+  stay with the existing supplier. Missing/excluded/unsupported images remain
+  empty with their original reason. This display hook is unexecuted.
 - Skill browsing and skill quickslots use exact public host-to-SpellClass
   bindings, then the source IconID. Active buff rows use explicit native
   BuffClass OnIconID. ActivateIconID and OffIconID remain distinct roles;
