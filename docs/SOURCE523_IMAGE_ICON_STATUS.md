@@ -185,6 +185,13 @@ Library identities or saves are included in Git.
   missing because those ItemList rows have no original scene target; no
   replacement node is created.
 
+The existing NPC shop's source-qualified consumable/ammunition records also use
+their provider-declared `source523_shop_item_id` in the ItemClass namespace.
+Their normal inventory/shop/quickslot calls reach the same image loader without
+inventing a native flag or rewriting an absent snapshot. The strict native
+predicate remains unchanged; source image lookup does not alter buying, use,
+ammunition effects or ownership.
+
 Selection uses a complete explicit pair:
 
 ```text

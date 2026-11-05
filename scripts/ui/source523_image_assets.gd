@@ -342,8 +342,17 @@ static func _original_quest_item(record: Dictionary) -> bool:
 	if not PACK._integer(id) or int(id) <= 0: return false
 	return record.get("sourceId") == "m523:item:" + str(int(id)) and record.source_original_item.get("ID") == id
 
+static func _shop_item_class_id(record: Dictionary) -> int:
+	# Both existing shop installers explicitly declare this field as ItemClass.ID.
+	# Their host record does not become a native gameplay record for an image.
+	if record.get("source") not in ["twilight-shop523-consumable","twilight-shop523-ammo"]: return -1
+	var id: Variant = record.get("source523_shop_item_id")
+	if not PACK._integer(id) or int(id) <= 0 or not record.get("source523_shop_use_origin") is String or record.source523_shop_use_origin.is_empty(): return -1
+	if record.source == "twilight-shop523-ammo" and record.get("source_item_class_id") != id: return -1
+	return int(id)
+
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record))
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _shop_item_class_id(record) > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -352,6 +361,14 @@ static func _item_presentation_info(id: int, title: String, source_id: String = 
 		"texture":null,"provenance":{},"original_bytes_unchanged":false,"actual_game_consumption_observed":false}
 
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
+	var shop_item_id: int = _shop_item_class_id(record)
+	if not recognized_item(record) and shop_item_id > 0:
+		var shop_image: Dictionary = describe_item_class(shop_item_id,str(record.get("name",fallback_name)))
+		shop_image["source_id"] = str(record.get("sourceId",""))
+		shop_image["source_record_snapshot"] = str(record.get("source_snapshot",""))
+		shop_image["source_record_kind"] = str(record.source)
+		shop_image.provenance["caller_item_identity_field"] = "source523_shop_item_id"
+		return shop_image
 	var quest_record: bool = _original_quest_item(record)
 	if not recognized_item(record) and (_original_reward_item(record) or quest_record):
 		var original_row: Dictionary = record.source_original_item if quest_record else record.source_original
