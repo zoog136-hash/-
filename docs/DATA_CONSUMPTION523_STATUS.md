@@ -1,7 +1,8 @@
 # Current523 definition consumption audit
 
-This Draft adds a private consumption audit tool and one bounded source-data
-connection. It does not complete all original definitions or establish 95% use.
+This Draft retains the earlier private consumption audit tool and connects
+bounded source fields to existing gameplay consumers. It does not complete all
+original definitions or establish 95% use.
 The reviewed baseline is main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
 
 ## Fixed input and evidence
@@ -87,8 +88,50 @@ passing results do not validate these changes.
   an additional Script Error in the existing fixture.
 
 The earlier 1,065-table ledger remains its recorded baseline. These bindings do
-not turn either partial source table into full-table gameplay completion or
+not turn partial source tables into full-table gameplay completion or
 establish a new overall percentage.
+
+## Concrete differences from the recorded main
+
+These examples use the already reviewed main
+`1333851bb2eb193a6ac1fc3e3b852787c08994ff`; no new main-wide survey is implied.
+
+| Existing main consumer | Specific missing source connection | Change in this Draft |
+| --- | --- | --- |
+| Death item-loss policy in `scripts/death/runtime.gd` | The local exemption level was fixed rather than supplied by `ConstantData.NoDeathPenaltyLevel`. | The existing policy consumes that single named constant through `scripts/death/source_rules.gd`. XP loss keeps its separate boundary. |
+| Symbol actions in `scripts/growth/growth_runtime.gd` and `symbol_history.gd` | Actions used a fixed physical stage limit even though the source cache retained `SymbolEnchant` rows. | `symbol_source523.gd` supplies the limit from `Enchant`; Roman display tiers and payment semantics are not inferred from it. |
+| Active totem effects in `scripts/progression/totem_combat.gd` | Three existing paths selected hardcoded totem IDs. | The same paths select the named `TeberathID`, `TikalID` and `AtlantisID` source values. |
+| Growth rewards in `scripts/progression/growth96_runtime.gd` | The latest-available selector used a cap of100; the reader loaded but discarded `GrowthMotivationConstant`. Item rewards used numeric type ID2. | The native `Version` bounds selection and `RewardType.Name == Item` authorizes the ItemClass join, using the existing quest supplier namespace. Historical receipts and local schema remain unchanged. |
+| EXP recovery and the common save boundary | Unchanged progression fields were staged into a boundary that rejected those fields for nonquest owners. Actual level gains also needed the death owner's exact authorization. | Unchanged fields are omitted and a transient full-transaction seal connects actual recovery gains to the existing writer. This is a local ownership contract fix, not another source table completed. |
+
+Thus a source field can be unconnected while its gameplay system already exists.
+Conversely, the already identified `GachaCraft` source has no complete usable
+candidate/confirmation/ownership transaction in this reviewed main. Its missing
+receiver contract is distinct from the unknown type meanings of `SymbolPayment`
+and `CombinationConstants`. The remaining unresolved ledger entries have not
+all been established as unused, absent consumers, or contract blockers.
+
+## Declared exclusions and retained history
+
+The latest instruction excludes entries explicitly declared dummy by the source
+from new connection or activation. A familiar-looking name, absent media or a
+missing receiver is not a dummy declaration. No new dummy count or full-source
+classification is asserted here. The reviewed symbol stages and named totem
+constants do not supply an explicit dummy declaration to apply.
+
+The separate, existing test-content exclusion uses the actual
+`ItemClass.TestItem == true` declaration. Growth records with this flag are not
+newly installed into the active item catalog, granted, or consumed for token
+registration. A mixed point claim is refused as one transaction rather than
+silently granting only its other rewards. Original definitions, existing
+inventory, claims, point-version locks, receipts and saves are retained; test
+fixtures are not deleted or classified as original dummy data. The already
+recorded nineteen flagged book items remain excluded from the unimplemented
+GachaCraft activation path. Unflagged books are not thereby authorized for use.
+
+Exclusions never count as gameplay consumption and do not reduce the fixed
+1,065-table or 457,729,872-byte JSON denominator. The exclusion guards, like the
+other changes after cad2dbff, are unverified.
 
 ## Ownership and unresolved candidates
 
@@ -126,17 +169,19 @@ and checks charging/frozen gates. Production skill behavior is unchanged.
 The controlled Main run exercised the new30/31 item boundary and two fresh Main
 processes using the default installed pack, with17/17 checks in each process.
 The entire death suite **failed**:119 checks,14 failures and one Script Error in
-the later recovery UI/certificate/expiry coverage. The cause is not classified
-as pre-existing or a regression. Logs are retained privately. No further
-investigation or rerun is started under the latest scope instruction.
+the later recovery UI/certificate/expiry coverage. Existing logs and code supplied
+the recovery-boundary and receipt-guard fixes described above. No rerun followed;
+the recorded result remains a failure and is not classified as pre-existing or
+a regression. Logs are retained privately.
 
 The Core continuation retained its original error rules:33 checks passed, two
 failed (`halphas_star_enchant_transaction_test`, `auto_selection_order_test`),
 and three were not run when further dispatch stopped under the latest user
 instruction. The auto-selection check reported a resource still in use at exit;
 the star transaction check reported probability assertions. These remain failures;
-their causes were not investigated further. The original failing policy-host
-attempt and all completed logs are retained. This Draft is not a passing full gate.
+the log-based probability and cleanup fixes described above have not been run.
+The original failing policy-host attempt and all completed logs are retained.
+This Draft is not a passing full gate.
 
 Controlled ownership fixtures are distinct from normal acquisition or gameplay
 coverage. Resource checks verify the existing723 sheets, not complete original

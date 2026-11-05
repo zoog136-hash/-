@@ -28,6 +28,7 @@ func _install_records() -> void:
 	if not source.ready or world == null: return
 	for id: String in source.items:
 		var row: Dictionary = source.item_record(int(id))
+		if row.is_empty(): continue
 		for list: Array in [world.item_db,world.catalog_db.get("아이템",[])]:
 			var found := false
 			for existing: Dictionary in list:
@@ -144,14 +145,20 @@ func quote(action: String, id: String) -> Dictionary:
 		var lines: PackedStringArray = []
 		for rid: String in remaining:
 			var row: Dictionary = source.rewards[rid]
+			var item: Dictionary = source.items[Source.sid(row.RewardClassID)]
+			if item.get("TestItem") is bool and item.TestItem:
+				return fail("원본 시험 선언(TestItem)이 있는 미수령 아이템을 포함하므로 이 지점의 보상 전체를 지급하지 않습니다.")
 			var key := Source.item_key(int(row.RewardClassID))
 			if not integer(world.inventory.get(key,0),0,1000000000-int(row.Amount)): return fail("보상 인벤토리 수량이 유효하지 않습니다.")
-			lines.append("%s ×%d" % [str(source.items[Source.sid(row.RewardClassID)].Name),int(row.Amount)])
+			lines.append("%s ×%d" % [str(item.Name),int(row.Amount)])
 		return {"ok":true,"revision":int(state.revision),"ids":remaining,"message":"달성 보상을 수령합니다. 비용은 없습니다. 카드 상자는 개봉하지 않은 아이템으로 보관합니다.\n" + "\n".join(lines)}
 	if action == "register":
 		if not source.cards.has(id): return fail("알 수 없는 등록 요건입니다.")
 		if int(world.level) < 96: return fail("증표 등록에는 96레벨이 필요합니다.")
 		if state.registrations.has(id): return fail("이미 등록한 요건입니다.")
+		var token: Dictionary = source.items.get(str(Source.TOKEN),{})
+		if token.get("TestItem") is bool and token.TestItem:
+			return fail("원본 시험 선언(TestItem)이 있는 증표는 새 등록에 사용할 수 없습니다.")
 		if world.has_method("_item_locked") and world._item_locked(Source.item_key(Source.TOKEN)): return fail("잠긴 증표는 등록에 사용할 수 없습니다.")
 		var count: Variant = world.inventory.get(Source.item_key(Source.TOKEN),0)
 		if not integer(count) or int(count) < 1: return fail("유일의 증표 I가 부족합니다. 등록마다 실제 아이템 1개를 소비합니다.")

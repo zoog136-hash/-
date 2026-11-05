@@ -168,4 +168,6 @@ func load_source(path: String = "") -> bool:
 func item_record(id: int) -> Dictionary:
 	var raw: Dictionary = items.get(str(id),{})
 	if raw.is_empty(): return {}
+	# Preserve the original row; its explicit test declaration prevents new activation.
+	if raw.get("TestItem") is bool and raw.TestItem: return {}
 	return {"name":item_key(id),"display_name":str(raw.Name),"source":"lineagem_patch523_growth","sourceId":"m523:item:" + str(id),"growth96_item_id":id,"grade":"일반","type":"소모품","weight":int(raw.Weight),"tradeable":bool(raw.IsTradable),"storable":bool(raw.IsStorable),"deletable":bool(raw.IsDeletable),"droppable":bool(raw.IsDroppable),"max_stack_amount":int(raw.MaxStackAmount),"use_level_min":int(raw.LevelLimitMin),"use_level_max":int(raw.LevelLimitMax),"desc":"원본 성장 보상 아이템입니다. 다른 출처의 같은 이름 아이템과 합치지 않습니다.","source_original":raw.duplicate(true)}
