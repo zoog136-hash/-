@@ -288,21 +288,25 @@ func cast(record: Dictionary) -> bool:
 		"cleanse":
 			Status.cleanse(world.player, skill.get("statuses", []))
 			vfx.emit_skill(presentation_id(skill), "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"convert":
 			var before_mp: int = world.mp
 			world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
 			if skill.get("source523", {}).get("applied", []).has("mana"):
 				world.hud.show_message("%s · MP %d 회복" % [str(skill.name), world.mp - before_mp])
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"teleport":
 			world._clear_combat_actions()
 			world.player.global_position = teleport_landing
 			world.player.clear_click_path()
 			world.player.camera.reset_smoothing()
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"taunt":
 			for monster: TwilightMonster in targets(skill, null): monster.aggro_remaining = maxf(monster.aggro_remaining, float(skill.duration))
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"toggle_proc":
 			toggles[id] = not bool(toggles.get(id, false))
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
@@ -366,6 +370,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 		if str(skill.mode) == "status":
 			if status.apply(skill, target, world):
 				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
+				_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
 			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			continue
@@ -413,6 +418,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	# roll or recursive on-hit proc attached to this instant-death effect.
 	target.take_damage(target.hp, false, "turnUndead")
 	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
+	_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
@@ -492,6 +498,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 		shields[str(skill.id)] = {"amount":mini(cap, before + effective - maximum),"remaining":float(skill.get("shield_duration",skill.get("duration", 12)))}
 	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty(): apply_buff(skill)
 	vfx.emit_skill(str(skill.id), "impact", world.player.global_position)
+	_emit_verified_source_effect(skill, "impact", world.player.global_position)
 
 func break_attack_buffs() -> void:
 	for name: String in world.active_skill_buffs.keys():
@@ -501,6 +508,7 @@ func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	var count := mini(limit, int(stacks.get(id, {}).get("count", 0)) + 1)
 	stacks[id] = {"count":count,"stats":stats,"remaining":duration}
 	vfx.emit_skill(id, "impact", world.player.global_position)
+	_emit_verified_source_effect({"id":id}, "impact", world.player.global_position)
 
 func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
 	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
@@ -527,6 +535,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					marks[key] = {"target":weakref(target),"life_id":target.life_id,"count":count,"remaining":10.0}
 					status.set_modifiers(target, "mark:" + id, 10.0, {"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count})
 					vfx.emit_skill(id, "impact", target.combat_hit_position())
+					_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 					if count >= int(skill.get("stacks", 3)):
 						deal_damage(skill, target)
 						var control := skill.duplicate(true)
@@ -555,6 +564,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 				if skill.has("mana"):
 					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
 					vfx.emit_skill(id, "impact", world.player.global_position)
+					_emit_verified_source_effect(skill, "impact", world.player.global_position)
 				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
@@ -651,6 +661,7 @@ func counter(attacker: TwilightMonster, kind: String, amount: int) -> bool:
 		attacker.take_damage(damage, false, "skill_counter")
 		if world.rng.randf() < float(best.get("counter_heal_chance", .2)): heal(best, int(best.get("counter_heal", 0)))
 		vfx.emit_skill(id, "impact", attacker.combat_hit_position(), world.player.global_position)
+		_emit_verified_source_effect(best, "impact", attacker.combat_hit_position())
 	else: counter_counts[id] = count
 	counter_depth -= 1
 	return true
@@ -776,8 +787,41 @@ func import_state(data: Dictionary) -> void:
 	local_runtime.restore(data.get("local_design",{}))
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
-	if not _is_verified_source_skill(skill): return
-	world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest)
+	if _is_verified_source_skill(skill):
+		if world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest): return
+	# Reuse the already admitted skill's pinned current-source profile. This
+	# changes only its existing cast/impact presentation call, not skill identity,
+	# admission, costs, proc timing, damage, progression or saved state.
+	var profile: Dictionary = catalog.source523.profiles.get(str(skill.get("id","")),{})
+	var row: Variant = profile.get("row")
+	if not row is Dictionary or row.is_empty(): return
+	if catalog.source523.active_sha256.is_empty():
+		# The raw-definition owner admits profiles without assigning the compiled
+		# pack fingerprint. Read its optional contract dynamically for older owners.
+		var owner: Object = catalog.source523
+		var source_mode: String = ""
+		var source_identity: Variant = {}
+		var fallback_status: Variant = {}
+		for property: Dictionary in owner.get_property_list():
+			match str(property.name):
+				"source_mode":
+					var value: Variant = owner.get("source_mode")
+					if value is String: source_mode = value
+				"source_identity": source_identity = owner.get("source_identity")
+				"source_fallback_status": fallback_status = owner.get("source_fallback_status")
+		if source_mode != "original_bound_profiles" or not source_identity is Dictionary or not fallback_status is Dictionary: return
+		var source_archive_sha: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+		if source_identity.get("kind") != "twilight.current523.original-definitions.v1" or source_identity.get("source_snapshot") != "patch523" or source_identity.get("source_sha256") != source_archive_sha or source_identity.get("source_bytes") != 25031173: return
+		var id: String = str(skill.get("id",""))
+		var applied: Variant = fallback_status.get("applied")
+		var deferred: Variant = fallback_status.get("deferred")
+		if fallback_status.get("state") != "loaded" or not applied is Array or not applied.has(id) or not deferred is Dictionary or deferred.has(id): return
+		var bindings: Dictionary = catalog.source523.bindings
+		var skills: Variant = bindings.get("skills")
+		if not skills is Dictionary: return
+		var binding: Variant = skills.get(id)
+		if bindings.get("source_zip_sha256") != source_archive_sha or not binding is Dictionary or binding.get("spell_id") != row.get("ID"): return
+	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:
 	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"

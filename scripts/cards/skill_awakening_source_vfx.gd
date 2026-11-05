@@ -15,20 +15,45 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 	var requested: Array[String]=[]
 	for stage: String in FIELDS:
 		if int(spell.get(FIELDS[stage],0))>0:requested.append(stage)
-	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[]}
+	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[],"stage_results":{},"input":"current523_source_bank_only"}
 	var player: Node=property(world,"player")
 	var preview: Node=property(player,"original_source_preview")
-	if not player is Node2D or not target is Node2D or preview==null or not preview.has_method("notify_source_spell_event"):
+	if not player is Node2D or not target is Node2D or preview==null or not preview.has_method("notify_current_source_spell_event"):
+		last_result.reason="current523_typed_spell_stage_api_unavailable";return last_result.duplicate(true)
+	var facing: int=int(property(property(player,"motion"),"facing8",0))
+	var caster_point: Vector2=player.global_position
+	var impact_point: Vector2=target.global_position
+	for stage: String in requested:
+		var point: Vector2=caster_point if stage=="cast" else impact_point
+		var played: bool=preview.notify_current_source_spell_event(spell,stage,point,facing)
+		var current_status: Variant=property(preview,"source_effect_status",{})
+		last_result.stage_results[stage]={"renderer":"current_source","source_status":current_status.duplicate(true) if current_status is Dictionary else {"status":"unavailable"}}
+		last_result["played" if played else "unavailable"].append(stage)
+		last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"status":"native_composition_and_trigger_unverified" if played else "current_source_effect_action_binding_unavailable"})
+	last_result.status="not_requested" if requested.is_empty() else "played" if last_result.played.size()==requested.size() else "partial" if not last_result.played.is_empty() else "unavailable"
+	return last_result.duplicate(true)
+
+func _emit_legacy_reference_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
+	# Preserved reference compositor; final awakening calls use emit_spell above.
+	var requested: Array[String]=[]
+	for stage: String in FIELDS:
+		if int(spell.get(FIELDS[stage],0))>0:requested.append(stage)
+	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[],"stage_results":{}}
+	var player: Node=property(world,"player")
+	var preview: Node=property(player,"original_source_preview")
+	if not player is Node2D or not target is Node2D or preview==null or (not preview.has_method("notify_source_spell_event") and not preview.has_method("notify_current_source_spell_event")):
 		last_result.reason="source_compositor_unavailable";return last_result.duplicate(true)
 	var manifest: String=str(property(player,"original_source_manifest",""))
-	if manifest.is_empty():
+	var source_only: bool=preview.has_method("current523_source_only_presentation") and bool(preview.call("current523_source_only_presentation"))
+	var legacy_manifest_available: bool=not source_only and not manifest.is_empty() and FileAccess.file_exists(manifest)
+	if not legacy_manifest_available and not preview.has_method("notify_current_source_spell_event"):
 		last_result.reason="source_manifest_unavailable";return last_result.duplicate(true)
 	var facing: int=int(property(property(player,"motion"),"facing8",0))
 	# Copy points before damage can kill/recycle the target. No delayed target reference.
 	var caster_point: Vector2=player.global_position
 	var impact_point: Vector2=target.global_position
 	var readiness: Dictionary={}
-	if FileAccess.file_exists(manifest):
+	if legacy_manifest_available:
 		var index: Variant=JSON.parse_string(FileAccess.get_file_as_string(manifest))
 		if index is Dictionary:readiness=index.get("card_skill_effect_readiness",{})
 	# PR217 keeps completed one-shots as freed Object handles until its next emit.
@@ -41,18 +66,39 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 		preview.set("_overlay_nodes",valid)
 	for stage: String in requested:
 		var point: Vector2=caster_point if stage=="cast" else impact_point
-		var played: bool=preview.notify_source_spell_event(int(spell.ID),stage,point,facing,manifest)
-		if not played:
+		var played: bool=false
+		var stage_result: Dictionary={"renderer":"none","legacy":"manifest_unavailable" if not legacy_manifest_available else "method_unavailable","partial":"not_attempted","current_source":{"status":"not_attempted"}}
+		if legacy_manifest_available and preview.has_method("notify_source_spell_event"):
+			played=preview.notify_source_spell_event(int(spell.ID),stage,point,facing,manifest)
+			stage_result.legacy="played" if played else "unavailable"
+			if played:stage_result.renderer="legacy"
+			var delegated_status: Variant=property(preview,"source_effect_status",{})
+			if played and delegated_status is Dictionary and delegated_status.get("ok",false) and delegated_status.get("consumer")=="spell_effect":
+				stage_result.renderer="current_source"
+				stage_result.current_source=delegated_status.duplicate(true)
+				last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"renderer":"current_source","status":"native_composition_and_trigger_unverified"})
+		if not played and legacy_manifest_available:
 			# Partial SP2 direction domains cannot pass the actor compositor's all8
 			# guard. Reuse its source blend/clock policy in a bounded sparse adapter.
 			if not is_instance_valid(partial_effects):
 				partial_effects=preload("res://scripts/cards/skill_awakening_partial_effects.gd").new()
 				partial_effects.name="CardSkillPartialSourceEffects";world.add_child(partial_effects)
 			played=partial_effects.play_source(manifest,int(spell[FIELDS[stage]]),facing,point)
+			stage_result.partial="played" if played else "unavailable"
+			if played:stage_result.renderer="partial"
+		if not played and preview.has_method("notify_current_source_spell_event"):
+			played=preview.notify_current_source_spell_event(spell,stage,point,facing)
+			var current_status: Variant=property(preview,"source_effect_status",{})
+			stage_result.current_source=current_status.duplicate(true) if current_status is Dictionary else {"status":"unavailable"}
+			if played:
+				stage_result.renderer="current_source"
+				last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"renderer":"current_source","status":"native_composition_and_trigger_unverified"})
 		last_result["played" if played else "unavailable"].append(stage)
-		var declaration: Dictionary=readiness.get(str(int(spell[FIELDS[stage]])),{})
-		if not declaration.is_empty() and not bool(declaration.get("source_visual_complete",false)):
-			last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"status":str(declaration.status)})
+		last_result.stage_results[stage]=stage_result
+		if stage_result.renderer in ["legacy","partial"]:
+			var declaration: Dictionary=readiness.get(str(int(spell[FIELDS[stage]])),{})
+			if not declaration.is_empty() and not bool(declaration.get("source_visual_complete",false)):
+				last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"status":str(declaration.status)})
 	last_result.status="played" if last_result.played.size()==requested.size() else "partial" if not last_result.played.is_empty() else "unavailable"
 	last_result.source_visual_complete=last_result.status=="played" and last_result.incomplete_sources.is_empty()
 	return last_result.duplicate(true)

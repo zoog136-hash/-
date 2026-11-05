@@ -51,12 +51,18 @@ def read(paths):
                     rate_source = {'source_file':path.name,'source_line':line_number,'raw_name':name,'raw_body':body}
                     if fps <= 0:
                         raise ValueError(f'{path}:{line_number}: invalid framerate')
-                if (code, name.lower()) in [(101, 'shadow'), (105, 'clothes')]:
+                if (code, name.lower()) in [(101, 'shadow'), (105, 'clothes'), (105, 'clothe')]:
                     ids = list(map(int, re.findall(r'-?\d+', body)))
                     count_valid = code != 105 or bool(ids) and ids[0] == len(ids) - 1
                     if code == 105:
                         ids = ids[1:] if ids else []
-                    current.references.append({'kind':name.lower(), 'targets':ids, 'raw':body, 'count_valid':count_valid})
+                    # list_24.spr uses both spellings for code105. Consumers
+                    # share one reference kind; retain the original spelling.
+                    reference = {'kind':'clothes' if code == 105 else 'shadow',
+                        'targets':ids, 'raw':body, 'count_valid':count_valid}
+                    if code == 105 and name.lower() == 'clothe':
+                        reference['source_name'] = name
+                    current.references.append(reference)
                 tokens = [tuple(map(int, t.groups())) for t in TOKEN.finditer(body)]
                 if not tokens:
                     current.directives.append({'code': code, 'name': name, 'body': body, 'line': line_number})

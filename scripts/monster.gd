@@ -7,8 +7,10 @@ var source_targeting: Dictionary = {}
 var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
+const CURRENT523_SOURCE_M_VIEW = preload("res://scripts/monsters/current523_source_bank_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 var source_m_view: SOURCE_M_VIEW = null
+var _source_only_native_visuals: bool = false
 var mp: int = 0
 var max_mp: int = 0
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
@@ -183,6 +185,8 @@ func retire_for_pool() -> void:
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
 	_clear_source_m_view()
+	_source_only_native_visuals = false
+	if has_meta("current523_source_only_visual"): remove_meta("current523_source_only_visual")
 	loot_source_identity = {}
 	input_pickable = false
 	collision_layer = 0
@@ -226,6 +230,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_targeting.clear()
 	source_option_debuffs.clear()
 	_clear_source_m_view()
+	_source_only_native_visuals = false
+	if has_meta("current523_source_only_visual"): remove_meta("current523_source_only_visual")
 	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
 	if not incoming.ok: return _reject_patch523_spawn(str(incoming.reason))
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
@@ -234,7 +240,35 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		return _reject_patch523_spawn(str(admission.reason))
 	source_record = admission.record
 	remove_meta("patch523_spawn_hold")
-	if source_record.has("source_m_asset_manifest_path"):
+	if has_meta("current523_source_bank_selection"): remove_meta("current523_source_bank_selection")
+	# Canonical definition/projection precedes the visual request. Keep this as
+	# the single project_actor_record call when adopting the data-owner checkpoint.
+	# world_controller is not assigned for this pooled life yet.
+	var current_service: Variant = world_ref.get("patch523_npc_spells") if world_ref != null else null
+	var current_catalog: Variant = current_service.get("catalog") if current_service != null else null
+	var candidate_npc_id: int = int(source_record.get("source_m_npc_id",-1))
+	if candidate_npc_id >= 0:
+		source_record = BASE508.npc_record(candidate_npc_id,source_record)
+		if current_catalog != null and current_catalog.has_method("project_actor_record"):
+			var projected: Variant = current_catalog.project_actor_record(source_record)
+			if projected is Dictionary: source_record = projected
+	# A saved native NPC identity never authorizes an old final media input.
+	_source_only_native_visuals = candidate_npc_id >= 0
+	admission.erase("current523_npc_source_identity")
+	if _source_only_native_visuals:
+		source_record["current523_source_only"] = true
+		# Retained inactive registry data is preservation only, never admission.
+		if current_catalog != null and current_catalog.get("source_available") == true:
+			var registry: Variant = current_catalog.get("admitted_source_identities")
+			if registry is Dictionary:
+				var identity: Variant = registry.get(str(candidate_npc_id),{})
+				if identity is Dictionary: admission["current523_npc_source_identity"] = identity.duplicate(true)
+		# A missing new visual does not reject or replace an already admitted actor.
+		record = source_record
+	elif int(record.get("source_m_npc_id",-1)) >= 0:
+		record = source_record
+	admission.record = source_record
+	if not _source_only_native_visuals and source_record.has("source_m_asset_manifest_path"):
 		var native_view := SOURCE_M_VIEW.new()
 		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
 			record = source_record
@@ -242,13 +276,25 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			add_child(source_m_view)
 		else:
 			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
-			if admission.applied: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
-	elif admission.applied:
-		return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	# The current bank supplies visuals only for the same already-admitted source
+	# encounter. It cannot create a binding, placement, stat update or spawn context.
+	if not is_instance_valid(source_m_view) and (admission.applied or _source_only_native_visuals):
+		var current_view := CURRENT523_SOURCE_M_VIEW.new()
+		if current_view.configure_admitted(source_record,admission):
+			record = source_record
+			source_m_view = current_view
+			add_child(source_m_view)
+			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+		else:
+			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+			current_view.free()
+			if not _source_only_native_visuals: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	if _source_only_native_visuals:
+		var selected_visual: bool = is_instance_valid(source_m_view)
+		set_meta("current523_source_only_visual",{"required":true,"state":"current_source_view_selected" if selected_visual else "source_only_pending","legacy_media_fallback_allowed":false,"selection":get_meta("current523_source_bank_selection",{}).duplicate(true)})
 	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
-	if source_m_npc_id >= 0: record = BASE508.npc_record(source_m_npc_id, record)
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	if source_m_npc_id >= 0:
 		source_targeting = record.get("source_m_targeting", {}).duplicate(true)
@@ -298,7 +344,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	set_physics_process(true)
 	home_position = global_position
 	# Overhead name/HP visibility is decided by distance at the end of setup.
-	if has_node("GroundShadow"): $GroundShadow.show()
+	if has_node("GroundShadow") and not _source_only_native_visuals: $GroundShadow.show()
 	monster_name = str(record.get("name", "몬스터"))
 	monster_type = str(record.get("type", record.get("race", "")))
 	undead = bool(record.get("undead", monster_type == "언데드"))
@@ -381,10 +427,14 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	set_meta("patch523_hp_was_enabled",max_hp != source_523_base_max_hp)
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
-	sprite.show()
-	sprite.texture = texture
+	if _source_only_native_visuals:
+		sprite.texture = null
+		sprite.hide()
+	else:
+		sprite.show()
+		sprite.texture = texture
 	sprite.material = null
-	if texture != null:
+	if texture != null and not _source_only_native_visuals:
 		var size: Vector2 = texture.get_size()
 		var largest: float = maxf(size.x, size.y)
 		if largest > 1.0:
@@ -402,7 +452,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
 	_setup_animation(record)
-	if record.has("visual") or is_boss:
+	if not _source_only_native_visuals and (record.has("visual") or is_boss):
 		if record.has("visual") and motion.frame_source == null:
 			sprite.material = MONSTER_ART.material_for(record.visual,sprite.texture)
 		if not is_instance_valid(species_visual):
@@ -422,6 +472,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		$GroundShadow.hide()
 		if is_instance_valid(species_visual): species_visual.hide()
 		motion.profile.death_duration = maxf(motion.profile.death_duration, source_m_view.duration("death"))
+	_hide_source_only_native_media()
 	return true
 
 func _reject_patch523_spawn(reason: String) -> bool:
@@ -450,6 +501,17 @@ func permits_auto_selection() -> bool:
 func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
+	_hide_source_only_native_media()
+
+func _hide_source_only_native_media() -> void:
+	if not _source_only_native_visuals: return
+	# These are the historical Sprite/species owners, not the current source view.
+	motion.frame_source = null
+	sprite.texture = null
+	sprite.material = null
+	sprite.hide()
+	if is_instance_valid(species_visual): species_visual.hide()
+	if has_node("GroundShadow"): $GroundShadow.hide()
 
 func custom_frozen() -> bool:
 	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
@@ -473,7 +535,9 @@ func _physics_process(delta: float) -> void:
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
 		_advance_source_m_view(delta)
-		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.update_pose()
+		if is_instance_valid(species_visual):
+			species_visual.warning_active = false
+			if not _source_only_native_visuals: species_visual.update_pose()
 		if motion.death_clock >= maxf(1.0, motion.profile.death_duration + .45):
 			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
 			queue_free()
@@ -1057,7 +1121,7 @@ func _setup_animation(record: Dictionary) -> void:
 	motion.profile = ANIMATION_CATALOG.for_record("monster", record)
 	# Sample optional native art onto the existing Sprite2D; no scene/AI/UI changes.
 	motion.frame_source = null
-	if not motion.profile.frames_path.is_empty():
+	if not _source_only_native_visuals and not motion.profile.frames_path.is_empty():
 		var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(motion.profile, "")
 		var first: Texture2D = ANIMATION_CATALOG.first_texture(frames)
 		if first != null:
@@ -1106,8 +1170,9 @@ func _setup_animation(record: Dictionary) -> void:
 		shadow.name = "GroundShadow"
 		shadow.radius = motion.profile.shadow_size
 		add_child(shadow)
-	$GroundShadow.visible = not motion.profile.embedded_shadow
+	$GroundShadow.visible = not _source_only_native_visuals and not motion.profile.embedded_shadow
 	motion.apply(sprite, animation_base_scale)
+	_hide_source_only_native_media()
 
 func current_attack_range() -> float:
 	if configured_attack_range > 0.0 and not is_silenced(): return configured_attack_range
