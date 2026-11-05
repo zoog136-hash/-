@@ -5,6 +5,7 @@ const BOOK=preload("res://scripts/loot/patch523_skill_book.gd")
 const USE=preload("res://scripts/loot/patch523_item_use.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
+const CONSUMPTION=preload("res://scripts/quests/quest_reward_consumption.gd")
 const PACK_SHA="256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a"
 const BINDING_SHA="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346"
 const SOURCE_SHA="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -85,15 +86,15 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  var prepared: Dictionary={}
  var input_proof: Dictionary={}
  var payload: Dictionary={}
+ var source_step: Dictionary={}
  if not physical_id.is_empty():
   prepared=OWN.prepare_debit(world,physical_id,1)
   if not prepared.get("ok",false):return fail(world,str(prepared.get("reason","소지 증명 실패")))
   if int(prepared.ownership.item_class_id)!=int(canonical.source_item_class_id) or int(prepared.ownership.bless_code_id)!=int(canonical.source_bless_raw) or prepared.ownership.source_item!=D.definition_id(str(int(canonical.source_item_class_id))).original_item:return fail(world,"원본 소지 정체 불일치")
   inventory_key=str(prepared.ownership.inventory_key)
-  payload=prepared.override.duplicate(true)
-  var receipt: Dictionary=OWN.use_state(world,prepared,ITEM_PIN)
-  if not receipt.ok:return fail(world,str(receipt.reason))
-  payload["quest_state"]=receipt.state
+  source_step=CONSUMPTION.stage(world,[{"physical_id":physical_id,"quantity":1,"expected_quantity":int(prepared.ownership.quantity),"expected_remaining":int(prepared.ownership.quantity)-1,"quest_reward_receipt":world.item_instances[physical_id].quest_reward_receipt.duplicate(true)}],ITEM_PIN)
+  if not source_step.get("ok",false):return fail(world,str(source_step.get("reason","공동 학습 소비 영수증 불일치")))
+  payload=source_step.overrides.duplicate(true)
   input_proof={"physical_id":physical_id,"original_quantity":int(prepared.ownership.original_quantity),"remaining_before":int(prepared.ownership.quantity),"quest_receipt":world.item_instances[physical_id].quest_reward_receipt.duplicate(true)}
  else:
   if world._item_locked(inventory_key,"") or int(world.inventory.get(inventory_key,0))<1:return fail(world,"소지량·잠금 확인 필요")
@@ -122,11 +123,15 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  payload["original_skill_state"]=learned;payload["consumable_state"]=consumables
  payload["item_use_cooldowns"]=USE.next_cooldowns(world,canonical,spec)
  if not prepared.is_empty() and not OWN.current(world,prepared):return fail(world,"소지 영수증 변경")
+ if not source_step.is_empty() and not CONSUMPTION.matches_payload(world,source_step,payload):return fail(world,"최종 학습·선택 개체·사용 영수증 불일치")
  var prior: String=FileAccess.get_sha256(world.save_path())
  var saved: Error=world._save_game(true,payload)
  if saved!=OK:
+  if not world.patch523_owner_state_problem.is_empty():
+   world.quest_service.save_blocked=true
+   return fail(world,"공동 학습 저장 결과 미확정 · 재사용 중지")
   var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
-  var normalized: Dictionary=JSON.parse_string(JSON.stringify(payload))
+  var normalized: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true))
   var confirmed: bool=durable is Dictionary
   if confirmed:
    for field: String in normalized:
@@ -135,9 +140,11 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
    if FileAccess.get_sha256(world.save_path())!=prior:world.quest_service.save_blocked=true
    return fail(world,"학습 저장 실패·결과 확인 필요")
   if not world.equipment_collections.accept_load(durable):world.quest_service.save_blocked=true;return fail(world,"학습 저장 재확인 필요")
+ if payload.has("quest_state") and world.quest_service.import_state(payload.quest_state)!=true:
+  world.quest_service.save_blocked=true
+  return fail(world,"학습 후보는 저장됐지만 사용 장부 활성화 미확정 · 다시 불러오기 필요")
  world.inventory=payload.inventory
  if payload.has("item_instances"):world.item_instances=payload.item_instances
- if payload.has("quest_state"):world.quest_service.import_state(payload.quest_state)
  world.item_use_cooldowns=payload.item_use_cooldowns
  world.consumable_service.import_state(consumables)
  # Adopt only the staged learning map; unrelated quickslots/archives are not migrated.
