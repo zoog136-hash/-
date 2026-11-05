@@ -230,6 +230,10 @@ static func select_class(context: Dictionary = {}) -> Dictionary:
 		action_rows[role] = action.duplicate(true)
 	var sprite: int = int(native[field])
 	var run: Dictionary = source_run_binding(sprite,int(actions.walk),weapon)
+	var hit: Dictionary = source_hit_binding(weapon)
+	if hit.get("ok",false):
+		run.optional_role_actions["hit"] = int(hit.action.ID)
+		run.optional_role_actor_ids["hit"] = sprite
 	return {"ok":true,"enabled":true,"status":"selected","source_snapshot":"patch523","consumer":"class",
 		"request_key":"class:current523","sprite_id":sprite,"source_weapon_type":weapon,
 		"source_reference":{"table":"Class","row":native.duplicate(true),"field":field,"gender":gender.duplicate(true),"ListSprAction":action_rows,
@@ -237,8 +241,18 @@ static func select_class(context: Dictionary = {}) -> Dictionary:
 		"source_tables_sha256":supplied.source_tables_sha256,"manifest_path":supplied.options.manifest_path,"manifest_sha256":supplied.options.manifest_sha256,
 		"source_bank_context":{"current523_source_bank":supplied.options.duplicate(true)},
 		"role_actions":actions,"loop_policy":{"idle":true,"walk":true,"attack":false},
-		"optional_role_actions":run.optional_role_actions,"optional_role_actor_ids":run.optional_role_actor_ids,"run_status":run.run_status,
+		"optional_role_actions":run.optional_role_actions,"optional_role_actor_ids":run.optional_role_actor_ids,"optional_role_loop_policy":{"run":true,"hit":false},"run_status":run.run_status,"hit_status":hit,
 		"host_policy":"existing_player_primary_roles_loop_and_facing_plus3; native_dispatch_unverified"}
+
+static func source_hit_binding(weapon: int) -> Dictionary:
+	# The existing player motion owner has already admitted the hit state.
+	# Only its exact current primary weapon family supplies a reaction action.
+	var matches: Array[Dictionary] = []
+	for row: Dictionary in _rows.get("ListSprAction",[]):
+		if row.get("MotionType") == 3 and row.get("WeaponType") == weapon and row.get("WeaponAlterType") == 0:
+			matches.append(row)
+	if matches.size() != 1: return {"ok":false,"state":"source_primary_hit_action_not_unique","source_weapon_type":weapon}
+	return {"ok":true,"state":"source_declared_optional_hit_awaiting_bank","table":"ListSprAction","action":matches[0].duplicate(true),"source_weapon_type":weapon,"dispatch_policy":"existing_admitted_player_hit_state_only; native_dispatch_unverified"}
 
 static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var configured: Dictionary = options(context)
@@ -302,4 +316,8 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var optional_actions: Dictionary = run_binding.optional_role_actions
 	var optional_actors: Dictionary = run_binding.optional_role_actor_ids
 	var run_status: Dictionary = run_binding.run_status
-	return {"ok":true,"enabled":true,"status":"selected","sprite_id":identity_actor,"source_snapshot":"patch523","origin":"current523_exact_typed_card_entity_chain","request_key":key,"consumer":consumer,"typed_chains":selected_chains,"native_card_conditions":card_conditions,"native_application_conditions":application_conditions,"native_application_condition":application_conditions[0] if application_conditions.size() == 1 else {},"gameplay_condition":"preserved_uninterpreted; presentation_only","source_tables_sha256":TABLES_SHA,"manifest_path":configured.options.manifest_path,"manifest_sha256":configured.options.manifest_sha256,"role_actions":actions,"optional_role_actions":optional_actions,"optional_role_actor_ids":optional_actors,"run_status":run_status,"loop_policy":{"idle":true,"walk":true,"attack":false} if consumer == "transform" else {"idle":true,"walk":true},"source_weapon_type":weapon,"overlay_whitelist_path":configured.options.get("overlay_whitelist_path",""),"overlay_whitelist_sha256":configured.options.get("overlay_whitelist_sha256",""),"host_policy":"TWILIGHT_existing_primary_roles_loop_and_facing_plus3; native_dispatch_unverified"}
+	var hit: Dictionary = source_hit_binding(weapon) if consumer == "transform" else {}
+	if hit.get("ok",false):
+		optional_actions["hit"] = int(hit.action.ID)
+		optional_actors["hit"] = identity_actor
+	return {"ok":true,"enabled":true,"status":"selected","sprite_id":identity_actor,"source_snapshot":"patch523","origin":"current523_exact_typed_card_entity_chain","request_key":key,"consumer":consumer,"typed_chains":selected_chains,"native_card_conditions":card_conditions,"native_application_conditions":application_conditions,"native_application_condition":application_conditions[0] if application_conditions.size() == 1 else {},"gameplay_condition":"preserved_uninterpreted; presentation_only","source_tables_sha256":TABLES_SHA,"manifest_path":configured.options.manifest_path,"manifest_sha256":configured.options.manifest_sha256,"role_actions":actions,"optional_role_actions":optional_actions,"optional_role_actor_ids":optional_actors,"optional_role_loop_policy":{"run":true,"hit":false},"run_status":run_status,"hit_status":hit,"loop_policy":{"idle":true,"walk":true,"attack":false} if consumer == "transform" else {"idle":true,"walk":true},"source_weapon_type":weapon,"overlay_whitelist_path":configured.options.get("overlay_whitelist_path",""),"overlay_whitelist_sha256":configured.options.get("overlay_whitelist_sha256",""),"host_policy":"TWILIGHT_existing_primary_roles_loop_and_facing_plus3; native_dispatch_unverified"}

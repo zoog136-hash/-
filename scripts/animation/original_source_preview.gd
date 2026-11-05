@@ -134,33 +134,49 @@ func source_bank_request_context() -> Dictionary:
 	return _reference_request_context.duplicate(true)
 
 func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
-	# Selection/admission belongs to the existing card/NPC caller. This shared
-	# installer preserves its required roles when an optional typed RUN is absent.
+	# Selection/admission belongs to the existing card/NPC caller. Each optional
+	# action is admitted independently, so missing HIT cannot remove valid RUN.
 	var actions: Dictionary = selected.role_actions.duplicate()
 	var loops: Dictionary = selected.loop_policy.duplicate()
 	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
-	var required_actors: Dictionary = role_actors.duplicate()
 	var run_status: Dictionary = selected.get("run_status",{}).duplicate(true)
-	var has_optional_run: bool = selected.get("optional_role_actions",{}).has("run")
-	if has_optional_run:
-		actions["run"] = int(selected.optional_role_actions.run)
-		loops["run"] = true
-		role_actors["run"] = int(selected.optional_role_actor_ids.run)
+	var optional_status: Dictionary = {}
+	for role: String in selected.get("optional_role_actions",{}):
+		if actions.has(role): continue
+		var loop: Variant = selected.get("optional_role_loop_policy",{}).get(role,true if role == "run" else null)
+		var actor: Variant = selected.get("optional_role_actor_ids",{}).get(role)
+		if not loop is bool or not REFERENCE_BANK.integer(actor,1):
+			optional_status[role] = {"state":"optional_source_role_contract_missing"}
+			continue
+		var action: int = int(selected.optional_role_actions[role])
+		var probe := REFERENCE_BANK.new()
+		var loaded: Dictionary = probe.load_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),{role:action},{role:loop},str(selected.consumer),{role:int(actor)})
+		if not loaded.ok:
+			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":loaded.get("error","")}
+			continue
+		actions[role] = action
+		loops[role] = loop
+		role_actors[role] = int(actor)
+		optional_status[role] = {"state":"selected_source_declared_optional_action","action_id":action,"source_actor_id":int(actor)}
 	var configured: bool = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
-	if not configured and has_optional_run:
-		run_status["state"] = "source_declared_run_unavailable_existing_walk"
-		run_status["bank_problem"] = str(reference_bank_status.get("error","optional_source_run_unavailable"))
+	if not configured and not optional_status.is_empty():
+		var problem: String = str(reference_bank_status.get("error","optional_source_actions_unavailable"))
+		for role: String in optional_status:
+			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":problem}
 		actions = selected.role_actions.duplicate()
 		loops = selected.loop_policy.duplicate()
-		role_actors = required_actors
+		role_actors = selected.get("role_actor_ids",{}).duplicate()
 		configured = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
-	elif configured and has_optional_run:
-		run_status["state"] = "selected_source_declared_run"
+	if selected.get("optional_role_actions",{}).has("run"):
+		run_status["state"] = "selected_source_declared_run" if configured and actions.has("run") else "source_declared_run_unavailable_existing_walk"
+		if optional_status.get("run",{}).has("bank_problem"): run_status["bank_problem"] = optional_status.run.bank_problem
 	selected["role_actions"] = actions
 	selected["loop_policy"] = loops
 	selected["role_actor_ids"] = role_actors
 	selected["run_status"] = run_status
+	selected["optional_role_status"] = optional_status
 	reference_bank_status["run_status"] = run_status.duplicate(true)
+	reference_bank_status["optional_role_status"] = optional_status.duplicate(true)
 	return configured
 
 func _configure_existing_source(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
@@ -451,7 +467,7 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_attack_completed = false
 		_role = "attack"
 		_clock = 0.0
-	var requested: String = state if state in ["walk", "run"] else "idle"
+	var requested: String = state if state in ["walk", "run", "hit"] else "idle"
 	if _source_attack:
 		requested = "attack"
 	elif gameplay_active and _attack_completed:
