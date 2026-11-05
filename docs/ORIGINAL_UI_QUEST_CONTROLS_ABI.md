@@ -84,7 +84,11 @@ The58 raw originals/38 scene trees/37 partial scopes and producer blockers0 are
 packaging facts, not completed roots or actual game use. Consumer installation,
 button interaction and rendering remain unconfirmed.
 
-Code publication is currently blocked: the same-branch git push failed with
+The initial same-branch git push failed with
 `could not read Username for 'https://github.com': No such device or address`.
-No authentication/URL change or retry was made. v18 must remain an installer
-candidate until its matching local code is published; public b21c3b27 uses v17.
+No authentication/URL change or git-push retry was made. Following the user's
+explicit instruction to finish and merge this work, the existing connected
+GitHub API published the integrated code at
+`0e413bd3e3c6e7c46f0928cc3b9fdc623eca2f71`. The earlier public b21c3b27 used
+v17; current v19 retains this v18 quest scope together with the newer lock
+controls. Pack delivery, installation and verified operation remain distinct.
