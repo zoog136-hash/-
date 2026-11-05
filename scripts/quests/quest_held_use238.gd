@@ -1,6 +1,7 @@
 extends RefCounted
 ## Run the unchanged PR238 consumer against an isolated inventory view. Only a
 ## verified held-stack debit plus the consumer effect is committed to the host.
+const CONSUMPTION=preload("res://scripts/quests/quest_reward_consumption.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const USE = preload("res://scripts/loot/patch523_item_use.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -73,7 +74,10 @@ class View extends Node:
 				added[id]["quest_source_input_receipt"]=host.item_instances[str(prepared.physical_id)].quest_reward_receipt.duplicate(true)
 				added[id]["quest_source_input_physical_id"]=str(prepared.physical_id)
 			if added.size()!=int(choice.amount):return ERR_INVALID_DATA
-		var payload: Dictionary=prepared.override.duplicate(true)
+		var chosen: Dictionary=host.item_instances[str(prepared.physical_id)]
+		var source_step: Dictionary=CONSUMPTION.stage(host,[{"physical_id":str(prepared.physical_id),"quantity":int(prepared.quantity),"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-int(prepared.quantity),"quest_reward_receipt":chosen.quest_reward_receipt.duplicate(true)}],D.DATA_SHA)
+		if not source_step.get("ok",false):return ERR_INVALID_DATA
+		var payload: Dictionary=source_step.overrides.duplicate(true)
 		for id: String in added:payload.item_instances[id]=added[id]
 		var keys: Dictionary={}
 		for key: String in initial_inventory:keys[key]=true
@@ -90,17 +94,16 @@ class View extends Node:
 			payload["hp"]=overrides.hp
 		# Persist the proven binding/use without converting or regranting the
 		# held inventory. Original grant quantity and receipt remain immutable.
-		var receipt: Dictionary=OWN.use_state(host,prepared,D.DATA_SHA)
-		if not receipt.ok:return ERR_INVALID_DATA
-		var state: Dictionary=receipt.state
-		payload["quest_state"]=state
+		if not CONSUMPTION.matches_payload(host,source_step,payload):return ERR_INVALID_DATA
+		var state: Dictionary=payload.quest_state
 		var path: String=host.save_path()
 		var prior: String=FileAccess.get_sha256(path)
 		var error: Error=host._save_game(true,payload)
 		if error!=OK:
+			if host.get("patch523_owner_state_problem") is String and not host.patch523_owner_state_problem.is_empty():host.quest_service.save_blocked=true;uncertain=true;return error
 			var parser:=JSON.new();var parse_error: Error=parser.parse(FileAccess.get_file_as_string(path))
 			var durable: Variant=parser.data if parse_error==OK else null
-			var expected: Dictionary=JSON.parse_string(JSON.stringify(payload))
+			var expected: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true))
 			var confirmed: bool=durable is Dictionary
 			if confirmed:
 				for key: String in expected:

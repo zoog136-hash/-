@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "parent_public_code": "3b53de35638628c7c76c4c2cdcaf432e1e019deb",
+  "actual_result": {
+    "actual_item_class": 30213,
+    "checks": 729,
+    "failures": [],
+    "measured_controlled_hits": {
+      "magic": {
+        "disabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        },
+        "enabled": {
+          "hp_loss": 970,
+          "stage": {
+            "damage_after": 970,
+            "damage_before": 1000,
+            "item_class_id": 30213,
+            "native_order_and_rounding_verified": false,
+            "raw_percent": 30000
+          }
+        }
+      },
+      "melee": {
+        "disabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        },
+        "enabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        }
+      },
+      "ranged": {
+        "disabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        },
+        "enabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        }
+      },
+      "source_spell_entry": {
+        "disabled": {
+          "hp_loss": 1000,
+          "stage": {}
+        },
+        "enabled": {
+          "hp_loss": 970,
+          "stage": {
+            "damage_after": 970,
+            "damage_before": 1000,
+            "item_class_id": 30213,
+            "native_order_and_rounding_verified": false,
+            "raw_percent": 30000
+          }
+        }
+      }
+    },
+    "native_order_rounding_or_natural_encounter_probability_verified": false,
+    "source_magic_damage_reduction_percent": 3
+  },
+  "source_item": 30213,
+  "source_positive_effects": {
+    "AC": 5,
+    "MR": 2,
+    "MagicDamageReductionPercent_raw": 30000,
+    "unit": "Percentage",
+    "source_percent": 3
+  },
+  "source_is_unconditional_normal_item": true,
+  "host_policy": {
+    "stage": "after critical before element and other existing defenses",
+    "rounding": "existing nearest integer with min1",
+    "opt_out_preference": "quest523_source_magic_reduction_enabled=false",
+    "native_order_rounding_probability_verified": false
+  },
+  "primary_corroboration": "https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C",
+  "no_new_UI_art_or_265_processing": true,
+  "publication": "LOCAL_ONLY pending current ownership/publication boundary; no main integration claimed",
+  "private_references_omitted_from_public_summary": true,
+  "private_runtime_identifiers_omitted": true
+}

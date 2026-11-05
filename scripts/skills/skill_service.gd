@@ -431,7 +431,7 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: Str
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
-	var amount := int(skill.get("power", 20)) + world.card_collections.spell_damage_bonus(skill) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var amount: int = int(skill.get("power", 20)) + world.card_collections.spell_damage_bonus(skill) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
 	var source_kind: String=str(skill.get("attack_type","melee"))
 	if world.get("growth")!=null:
 		amount+=int(world.growth.bonus("pve_"+source_kind+"_damage:flat"))
