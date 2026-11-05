@@ -523,3 +523,24 @@ References:
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIListView.cpp
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILayoutManager.cpp
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/ListViewReader/ListViewReader.cpp
+
+### Original checkbox renderers and input
+
+CheckBox now preserves the five supplied renderers, original selection flag,
+normal/pressed/disabled transitions, default zoom and gray-shader rules,
+including partially absent disabled images. No substitute cross or background
+is drawn. All 107 supplied checkbox descriptors use explicit sizes and no flips;
+unverified intrinsic sizes/flips remain rejected.
+
+Ninety-three isolated source components had complete texture dependencies;
+fourteen remain blocked by exact missing atlas references. Those 93 matched
+11,382 compiled upstream-state comparisons and passed 891 OpenGL/input checks
+with 372 state captures. Mouse release toggles the original selection and calls
+the supplied boolean callback once. Duplicate release, hidden cancellation,
+disabled input and a returned service failure were checked with a probe.
+Strict consumption requires an exact-offset checkbox callback binding; no game
+service or save handling was copied. Of fifteen full-root candidates, three
+rendered and twelve remained rejected for original fonts or custom properties.
+The tracked inspection union is 317/560, separate from the 93 component probes.
+
+Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UICheckBox.cpp

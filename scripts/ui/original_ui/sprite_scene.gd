@@ -97,7 +97,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle","CheckBox"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
@@ -114,11 +114,15 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 				if key not in ["soundid","touchsoundid"] or not custom[key] is String:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
-			if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
-			if not inspection_only and not (field=="callBackType" and str(widget[field])=="Click" and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_callback:"+field)
+			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
+			if not inspection_only and not (field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox")) and binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_callback:"+field)
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or binding.get("role") not in ["button","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and binding.get("role") not in ["button","consume"]: problems.append("unconnected_source_input")
+		if inspection_only or binding.get("role") not in ["button","checkbox","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and binding.get("role") not in ["button","checkbox","consume"]: problems.append("unconnected_source_input")
+	if node.classname=="CheckBox":
+		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
+		if not inspection_only and not (binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid()):problems.append("unconnected_source_checkbox")
+		if bool(widget.flipX) or bool(widget.flipY):problems.append("unverified_checkbox_flip")
 	if node.classname=="Button":
 		if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
 		if not inspection_only and not (binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_button")
@@ -132,8 +136,8 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
 		if not inspection_only:problems.append("unconnected_source_percent")
 	if node.classname=="ListView":
-		# Inspection preserves an empty original container, not a working list.
-		# Populating it without source row/caller contracts would invent UI.
+		# Inspection retains supplied authored rows; dynamic gameplay content
+		# still requires the original row/caller contract.
 		unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
 		if not inspection_only: problems.append("unconnected_list_content")
 	if node.classname=="ProjectNode":
@@ -215,6 +219,15 @@ func _build(source: Dictionary) -> Node2D:
 		input_area.size=Vector2(widget.size[0],widget.size[1])
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
 		origin.add_child(input_area)
+	if source.classname=="CheckBox":
+		var checkbox=preload("res://scripts/ui/original_ui/source_checkbox.gd").new()
+		var configured: Dictionary=checkbox.configure(source_pack,options)
+		if not configured.ok:
+			_build_error=str(configured.error);checkbox.free();node.free();return null
+		origin.add_child(checkbox)
+		node.set_meta("source_checkbox",checkbox)
+		var binding: Dictionary=_bindings.get(int(source._offset),{})
+		if not inspection_only and binding.get("role")=="checkbox":checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		var configured: Dictionary=button.configure(source_pack,options)
@@ -538,5 +551,6 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
 		if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
 		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
+		if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
 		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
 	for child: Node in node.get_children():_sync_source_display(child,display)
