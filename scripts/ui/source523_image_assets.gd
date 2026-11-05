@@ -368,6 +368,33 @@ static func describe_item_class(id: int, title: String = "") -> Dictionary:
 	if title.is_empty(): info.name = str(canonical.get("Name",""))
 	return _resolve_item_presentation(info,identity)
 
+static func describe_item_class_row(source_row: Dictionary, title: String = "") -> Dictionary:
+	# Read-only suppliers can present an exact original ItemClass row without
+	# manufacturing a native gameplay record or changing its snapshot marker.
+	var value: Variant = source_row.get("ID")
+	var id: int = int(value) if PACK._integer(value) else -1
+	var info: Dictionary = _item_presentation_info(id,title)
+	info["presentation_only"] = true
+	info["item_class_namespace"] = "ItemClass.ID"
+	if id <= 0:
+		info.reason = "zero_sentinel" if id == 0 else "source_item_class_identity_required"
+		info["source_status"] = info.reason
+		return info
+	var reader: RefCounted = active()
+	var identity: Dictionary = reader.source_consumer_row("ItemClass",id) if reader != null else {}
+	info.provenance = identity.get("provenance",{}).duplicate(true)
+	if not identity.get("ok",false) or not identity.get("row") is Dictionary:
+		info.reason = str(identity.get("status",_error if not _error.is_empty() else "source523_image_pack_not_selected"))
+		info["source_status"] = info.reason
+		return info
+	if identity.row != source_row or info.provenance.get("source_table") != "ItemClass" or info.provenance.get("source_id") != id:
+		info.reason = "source_item_class_row_mismatch"
+		info["source_status"] = info.reason
+		return info
+	info.provenance["identity_basis"] = "complete_canonical_source_item_row"
+	if title.is_empty(): info.name = str(source_row.get("Name",""))
+	return _resolve_item_presentation(info,identity)
+
 static func _reference_source_identity(value: Variant) -> Dictionary:
 	# Keep only scalar identity data; callbacks and nested relationship trees
 	# never become presentation metadata.

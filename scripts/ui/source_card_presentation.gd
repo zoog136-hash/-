@@ -4,6 +4,7 @@ extends RefCounted
 const SOURCE_API = "res://scripts/lineagem_base508.gd"
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
 const IMAGES523 = preload("res://scripts/ui/source523_image_assets.gd")
+const LEGACY_ATLAS = preload("res://scripts/ui/source_ui_atlas.gd")
 const LIMIT: int = 96
 static var textures: Dictionary = {}
 
@@ -22,6 +23,9 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 		if IMAGES523.selected(): return _current_detail(canonical,acquired,detail_view)
 		var declared: Variant = canonical.get("source_ui_assets", {}).get("DisplayBaseAssetID")
 		return {"status":"missing","role":"DisplayBaseAssetID","path":str(declared.get("path", "")) if declared is Dictionary else "","texture":null,"reason":"patch523_original_pack_required","source_asset_id":int(declared.get("asset_id",0)) if declared is Dictionary else 0,"source_id":str(canonical.get("sourceId",""))}
+	if not LEGACY_ATLAS.LEGACY_CARD_PACK_FINAL_USE:
+		return {"status":"legacy_card_pack_excluded","texture":null,"reason":"new_original_pack_required",
+			"source_id":str(canonical.get("sourceId","")),"actual_game_consumption_observed":false}
 	var assets: Dictionary = canonical.get("source_ui_assets", {})
 	# Render inspection: DisplayScreenAssetID can be an additive-only effect
 	# (e.g. black_wizard_A); it must never replace the portrait. Its original
@@ -110,8 +114,9 @@ static func apply(hud: Node) -> void:
 	preview.texture = null if result.get("status","") == "source_dummy_excluded" else result.get("texture")
 	preview.self_modulate = Color.WHITE if acquired or result.get("source523_verified_original",false) else Color(.68,.68,.68,.62)
 	badge.text = "원본 더미 이미지 제외" if result.status == "source_dummy_excluded" else "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
+	if result.status == "legacy_card_pack_excluded": badge.text = "이전 카드 팩 최종 사용 제외 · 새 원본 연결 대기"
 	var frame_status: String = preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
-	if badge.text.is_empty() and frame_status!="original":
+	if badge.text.is_empty() and frame_status not in ["original","legacy_card_pack_excluded"]:
 		badge.text="원본 목록 프레임 미지정" if frame_status=="undeclared" else "원본 목록 프레임 미설치"
 	badge.visible = not badge.text.is_empty()
 	badge.tooltip_text = str(result.get("path", ""))

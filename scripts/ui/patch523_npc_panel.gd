@@ -1,5 +1,6 @@
 extends CanvasLayer
 ## The same catalog used by live combat supplies the skill inspector.
+const SKILL_BUFF_IMAGES = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var service: RefCounted
 var panel: PanelContainer
 var selector: OptionButton
@@ -215,13 +216,18 @@ func refresh_npc() -> void:
 	attacks.clear()
 	if environment_mode:
 		rows = service.catalog.environment_buffs(int(ids[maxi(0,selector.selected)]))
-		for binding: Dictionary in rows: attacks.add_item(str(binding.buff.source.get("Name","NPC 상태")) + " · 범위·적용 조건 확인 필요")
+		for binding: Dictionary in rows:
+			var image: Dictionary = SKILL_BUFF_IMAGES.describe_buff_class_row(binding.buff.source)
+			var index: int = attacks.add_item(str(binding.buff.source.get("Name","NPC 상태")) + " · 범위·적용 조건 확인 필요",image.get("texture") as Texture2D)
+			attacks.set_item_metadata(index,{"source523_buff_image":SKILL_BUFF_IMAGES.evidence(image)})
 		if not rows.is_empty(): attacks.select(0); show_attack(0)
 		return
 	rows = service.catalog.owned("NpcAttack",int(ids[maxi(0,selector.selected)]))
 	for attack: Dictionary in rows:
 		var spell: Dictionary = service.catalog.row("SpellClass",int(attack.get("SpellID",0)))
-		attacks.add_item(str(spell.get("Name","기본 공격")) + " · " + service.support_reason(attack))
+		var image: Dictionary = SKILL_BUFF_IMAGES.describe_spell_class_row(spell)
+		var index: int = attacks.add_item(str(spell.get("Name","기본 공격")) + " · " + service.support_reason(attack),image.get("texture") as Texture2D)
+		attacks.set_item_metadata(index,{"source523_skill_image":SKILL_BUFF_IMAGES.evidence(image)})
 	if not rows.is_empty(): attacks.select(0); show_attack(0)
 
 func append_chain(chain: Dictionary, lines: PackedStringArray, depth: int = 0) -> PackedStringArray:

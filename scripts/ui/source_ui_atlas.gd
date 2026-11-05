@@ -2,12 +2,15 @@ extends RefCounted
 ## Private original pixels, exact verified atlas keys, one decode per page.
 const INDEX = preload("res://data/ui/base508_card_atlas.json")
 const SOURCE_API = "res://scripts/lineagem_base508.gd"
+# The prior card pack is retained for provenance/ABI, excluded from final art.
+const LEGACY_CARD_PACK_FINAL_USE: bool = false
 static var pages: Dictionary = {}
 static var frames: Dictionary = {}
 static var missing: Dictionary = {}
 static var textures: Dictionary = {}
 
 static func frame(plist: String, key: String) -> Image:
+	if not LEGACY_CARD_PACK_FINAL_USE: return null
 	var identity: String = plist + ":" + key
 	if frames.has(identity): return frames[identity]
 	if missing.has(identity) or not ResourceLoader.exists(SOURCE_API): return null
@@ -41,6 +44,7 @@ static func frame(plist: String, key: String) -> Image:
 	return result
 
 static func texture(plist: String, key: String) -> Texture2D:
+	if not LEGACY_CARD_PACK_FINAL_USE: return null
 	var identity: String = plist+":"+key
 	if textures.has(identity): return textures[identity]
 	var original: Image = frame(plist,key)

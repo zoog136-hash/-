@@ -46,6 +46,51 @@ static func _resolved(info: Dictionary, result: Dictionary) -> Dictionary:
 		info.original_bytes_unchanged = true
 	return info
 
+static func describe_spell_class_row(row: Dictionary, role: String = "IconID") -> Dictionary:
+	return _describe_class_row(row,"SpellClass",role)
+
+static func describe_buff_class_row(row: Dictionary, role: String = "OnIconID") -> Dictionary:
+	return _describe_class_row(row,"BuffClass",role)
+
+static func _describe_class_row(row: Dictionary, table: String, role: String) -> Dictionary:
+	var info: Dictionary = _info("skill" if table == "SpellClass" else "buff",role)
+	info["source_table"] = table
+	if not info.handled: return info
+	if table == "SpellClass" and not role in ["IconID","ActivateIconID"]:
+		return _missing(info,"unsupported_skill_icon_role")
+	if table == "BuffClass" and not role in ["OnIconID","OffIconID"]:
+		return _missing(info,"unsupported_buff_icon_role")
+	var value: Variant = row.get("ID")
+	if IMAGES.PACK._integer(value) and int(value) == 0: return _missing(info,"zero_sentinel")
+	var id: int = _positive_id(value)
+	if id < 0: return _missing(info,"source_class_row_identity_required")
+	info["source_class_id"] = id
+	var reader: RefCounted = IMAGES.active()
+	if reader == null: return _resolved(info,IMAGES.resolve_consumer(table,id,role))
+	var identity: Dictionary = reader.source_consumer_row(table,id)
+	info.provenance = identity.get("provenance",{}).duplicate(true)
+	if not identity.get("ok",false):
+		return _missing(info,str(identity.get("status","source_class_row_unavailable")))
+	var canonical: Variant = identity.get("row")
+	var provenance: Dictionary = identity.get("provenance",{})
+	var expected_sha: String = str(provenance.get("source_row_canonical_sha256",""))
+	var supplied_sha: String = IMAGES.PACK._canonical_row_sha(row)
+	if not canonical is Dictionary or _positive_id(canonical.get("ID")) != id or provenance.get("source_table") != table or _positive_id(provenance.get("source_id")) != id:
+		return _missing(info,"source_class_row_namespace_mismatch")
+	if row != canonical or expected_sha.is_empty() or supplied_sha.is_empty() or supplied_sha != expected_sha or IMAGES.PACK._canonical_row_sha(canonical) != expected_sha:
+		return _missing(info,"source_class_row_mismatch")
+	info.provenance["identity_basis"] = "complete_canonical_source_class_row"
+	if table == "SpellClass" and canonical.get("TestSpell",false) == true:
+		return _missing(info,"source_test_spell_excluded")
+	var result: Dictionary = IMAGES.resolve_consumer(table,id,role)
+	var result_provenance: Dictionary = result.get("provenance",{})
+	if result.get("ok",false) and (result_provenance.get("source_table") != table or _positive_id(result_provenance.get("source_id")) != id or result_provenance.get("source_row_canonical_sha256") != expected_sha):
+		return _missing(info,"source_class_row_mismatch")
+	info = _resolved(info,result)
+	info.provenance.merge(provenance,false)
+	info.provenance["identity_basis"] = "complete_canonical_source_class_row"
+	return info
+
 static func describe_skill(record: Dictionary, role: String = "IconID") -> Dictionary:
 	var host_id: String = str(record.get("id",""))
 	var info: Dictionary = _info("skill",role,host_id)

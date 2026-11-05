@@ -29,6 +29,7 @@ static func icon_for(record: Dictionary, acquired: bool) -> Texture2D:
 	var path: String=str(record.get("image_path",""))
 	var source: Texture2D
 	if preload("res://scripts/ui/source_card_presentation.gd").native(record):
+		if not preload("res://scripts/ui/source_ui_atlas.gd").LEGACY_CARD_PACK_FINAL_USE: return null
 		source=preload("res://scripts/ui/source_card_presentation.gd").detail(record,true,false).get("texture")
 		source=preload("res://scripts/ui/source_card_skin.gd").icon(record,source)
 	else:

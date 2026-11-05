@@ -123,6 +123,23 @@ Library identities or saves are included in Git.
   Same-identity mounts are reused without restarting their original clip.
   Buff countdown changes update the existing labels while retaining the icon
   nodes; role changes and removal detach the previous presentation.
+- The existing enhancement list and selected target/scroll pictures retain the
+  selected physical instance's native source record for image calls. Empty
+  targets detach the previous scene. Enhancement references, eligibility,
+  chances, debits and saves retain their existing inputs.
+- The selected-loot pickup button consumes the selected drop's native item
+  record through the image loader. Selection changes and cancel clear its icon
+  and provenance. This is an item UI icon; ground artwork is unchanged and
+  still needs its own source-declared ground asset role.
+- Monster-book reward-use and item-choice buttons consume complete original
+  ItemClass rows matched against the pinned image pack. The owning cumulative523
+  record and snapshot marker are preserved; no native-item flag is invented.
+  RewardType, claim IDs and use actions remain with their existing service.
+- NPC attack/environment-buff ItemList rows consume their already supplied
+  full SpellClass/BuffClass rows after canonical row and namespace checks.
+  TestSpell/dummy exclusions remain applied. Unsupported CSB entries stay
+  missing because those ItemList rows have no original scene target; no
+  replacement node is created.
 
 Selection uses a complete explicit pair:
 
@@ -249,6 +266,25 @@ use. Unique excluded-file/byte totals have not been newly measured. These code
 changes and the supplement have not been executed or newly validated.
 The additive declaration ZIP was delivered to the same existing private Drive
 folder. No base ZIP was reuploaded and no sharing permission was added.
+
+## Final asset selection
+
+The latest user instruction excludes the previous card and monster packs from
+final asset use. This image lane's prior card portrait/atlas entry points now
+return no legacy-pack pixels, including cached atlas textures and old decorative
+card surfaces. Current523 card roles continue through the new image pack. Missing
+current assets do not request the previous pack or promote it to final artwork.
+The existing card loader/ABI, old packs, metadata, code and saves are preserved.
+Actor/monster Sprite selection remains with its existing owner; this image pack
+does not replace or declare completion of that separate input.
+
+The new image pack is independently selected and needs no old card/monster
+graphics pack. Its declared dummy table supplement is required alongside the
+base delivery. Original CSB subset data is a separate conditional dependency
+for those scene icons; a selection-metadata ZIP alone does not contain that
+source data. Optional map relations likewise do not supply map-screen nodes,
+coordinate registration or automatic World selection. New caller and final-use
+policy changes remain unexecuted and unverified.
 
 ## Delivery and remaining connections
 

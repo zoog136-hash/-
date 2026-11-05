@@ -5,6 +5,7 @@ const PICKUP_RADIUS: float = 60.0
 const SCAN_RADIUS: float = 460.0
 const SCAN_INTERVAL: float = 0.25
 const BLOCKED_RETRY: float = 15.0
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var world: Node
 var player: TwilightPlayer
 var manager: TwilightGroundLootManager
@@ -65,6 +66,7 @@ func configure(owner_world: Node, service: TwilightGroundLootManager) -> void:
 	pickup_button.text = "줍기"
 	pickup_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pickup_button.custom_minimum_size.y = 36
+	pickup_button.expand_icon = true
 	row.add_child(pickup_button)
 	pickup_button.pressed.connect(request_selected)
 	pickup_button.gui_input.connect(_touch_button.bind(pickup_button))
@@ -92,7 +94,30 @@ func select(view: Button) -> void:
 	var record: Dictionary = manager.records[id]
 	info.text = "%s · %s ×%d" % [record["item_name"], record["grade"], record["quantity"]]
 	info.add_theme_color_override("font_color", TwilightDropVisual.grade_color(str(record["grade"])))
+	_show_selected_item_image(record)
 	overlay.show()
+
+func _show_selected_item_image(record: Dictionary) -> void:
+	_clear_selected_item_image()
+	# This is the selected item's UI icon on the existing pickup button. The
+	# floor visual still requires its own source-declared ground asset role.
+	var item: Variant = record.get("item_record")
+	if not IMAGES.selected() or not item is Dictionary or not IMAGES.recognized_item(item): return
+	var image_info: Dictionary = IMAGES.describe_item(item, str(record.get("item_name", "")))
+	pickup_button.icon = image_info.get("texture") as Texture2D
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_role"] = "selected_loot_item_icon"
+	evidence["presentation_trigger"] = "existing_loot_selection"
+	pickup_button.set_meta("source523_image", evidence)
+	pickup_button.set_meta("source523_image_provenance", image_info.get("provenance", {}).duplicate(true))
+	pickup_button.set_meta("source523_image_status", str(image_info.get("source_status", image_info.get("reason", ""))))
+
+func _clear_selected_item_image() -> void:
+	if not is_instance_valid(pickup_button): return
+	pickup_button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if pickup_button.has_meta(key): pickup_button.remove_meta(key)
 
 func request_selected() -> void:
 	if not manager.views.has(selected_id): cancel(); return
@@ -115,6 +140,7 @@ func cancel() -> void:
 	target_id = ""
 	mode = "idle"
 	world.set("pending_ground_pickup", null)
+	_clear_selected_item_image()
 	if is_instance_valid(overlay): overlay.hide()
 	scan_time = 0.0
 
