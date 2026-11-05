@@ -338,6 +338,7 @@ func set_character_state(value: Dictionary) -> void:
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_menu_state()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_primary_stats()
 
 func blocks_keyboard_input() -> bool:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return true

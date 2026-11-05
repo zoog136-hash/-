@@ -170,3 +170,9 @@ Captured input is canceled on focus loss, viewport resize or source-map close;
 visible TwilightConfirmation blocks new native source gestures. No test, game
 run, render or CI was executed; this is a code connection, not an Android
 physical-device result.
+
+The later main-HUD native button router uses the same source_button API for
+original HUD and inventory chrome controls, with existing modal/workspace
+precedence. Original item/quickslot button nodes are excluded so PointerTransfer
+keeps their native gestures. World-map-open state stays exclusively with this
+map's row/scroll controller. No touch-emulation setting is enabled.

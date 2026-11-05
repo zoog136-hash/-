@@ -14,6 +14,8 @@ const InventoryView=preload("res://scripts/ui/original_ui/source_main_inventory_
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 const QuickslotView=preload("res://scripts/ui/original_ui/source_main_quickslot_view.gd")
 const QuickslotImages=preload("res://scripts/ui/original_ui/source_main_quickslot_images.gd")
+const PrimaryStats=preload("res://scripts/ui/original_ui/source_main_primary_stats.gd")
+const ButtonRouter=preload("res://scripts/ui/original_ui/source_button_router.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -73,6 +75,11 @@ var _quickslot_view: RefCounted
 var _quickslot_result: Dictionary={}
 var _legacy_quickslots: Array[Dictionary]=[]
 var _icons_refresh_pending: bool=false
+var _primary_stats_scene: Node2D
+var _primary_stats_result: Dictionary={}
+var _primary_stats_model: Dictionary={}
+var _primary_stats_attempted: bool=false
+var _native_buttons: RefCounted
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -101,6 +108,8 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
+	_native_buttons=ButtonRouter.new()
+	if not get_window().focus_exited.is_connected(_cancel_native_buttons):get_window().focus_exited.connect(_cancel_native_buttons)
 	if pack.manifest.get("scenes",{}).has(QuickslotView.ROOT):
 		var candidate=QuickslotView.new()
 		_quickslot_result=candidate.configure(pack,hud,Callable(self,"_quickslot_original_image"))
@@ -117,14 +126,56 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null)
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
+func _input(event: InputEvent) -> void:
+	if _native_buttons==null or (not event is InputEventScreenTouch and not event is InputEventScreenDrag):return
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_coordinates):return
+	# The map has its own original-row/scroll input controller. Existing
+	# modal/keyboard guards and PointerTransfer capture retain precedence.
+	if world_map_is_open() or hud.get("class_picker_initial")==true or (hud.has_method("blocks_keyboard_input") and hud.call("blocks_keyboard_input")):
+		_cancel_native_buttons()
+		return
+	var candidates: Array=[]
+	var point: Vector2=event.position
+	if inventory_is_open() and inventory_blocks_point(point):
+		var inventory: Dictionary=_inventory_view.presentation()
+		if is_instance_valid(inventory.get("scene")):_collect_native_buttons(inventory.scene,candidates)
+	else:
+		var workspace: Variant=hud.get("workspace")
+		if workspace is Control and workspace.is_visible_in_tree() and Rect2(Vector2.ZERO,workspace.size).has_point(workspace.get_global_transform_with_canvas().affine_inverse()*point):
+			_cancel_native_buttons()
+			return
+		_collect_native_buttons(_coordinates,candidates)
+	var routed: Dictionary=_native_buttons.route(event,point,candidates)
+	if routed.get("handled",false):get_viewport().set_input_as_handled()
+
+static func _collect_native_buttons(node: Node, found: Array) -> void:
+	if node is CanvasItem and not node.is_visible_in_tree():return
+	if node.is_queued_for_deletion() or node.has_meta("source_asset_scene"):return
+	var identity: Variant=node.get_meta("original_ui_source",{})
+	if identity is Dictionary and identity.get("scene") in ["UI/CommonUi/Common_Slot.csb","UI/MainFloating/Slot_Skill.csb"]:return
+	# Reverse source child order follows the current native presentation. The
+	# original item/quickslot controls remain exclusively PointerTransfer's.
+	var children: Array[Node]=node.get_children()
+	children.reverse()
+	for child: Node in children:_collect_native_buttons(child,found)
+	var button: Variant=node.get_meta("source_button",null)
+	if is_instance_valid(button):found.append(button)
+
+func _cancel_native_buttons() -> void:
+	if _native_buttons!=null:_native_buttons.cancel()
+
+func _source_input_captured(hud: Node) -> bool:
+	var pointer: Variant=hud.get("pointer_transfer")
+	return (_native_buttons!=null and _native_buttons.is_capturing()) or (is_instance_valid(pointer) and pointer.get("pointer")!=-2)
+
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
 	if _icons_refresh_pending:refresh_quickslots()
 	if inventory_is_open():
-		var pointer: Variant=hud.get("pointer_transfer")
-		if not is_instance_valid(pointer) or pointer.get("pointer")==-2:
+		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
 			if signature!=_inventory_signature:
 				_inventory_result=_inventory_view.refresh()
@@ -170,8 +221,7 @@ func refresh_source_icons() -> Dictionary:
 func refresh_quickslots() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return _fail("source_quickslot_host_unavailable")
-	var pointer: Variant=hud.get("pointer_transfer")
-	if is_instance_valid(pointer) and pointer.get("pointer")!=-2:return {"ok":true,"handled":_quickslot_view!=null and _quickslot_view.is_open(),"refresh_pending":true}
+	if _source_input_captured(hud):return {"ok":true,"handled":_quickslot_view!=null and _quickslot_view.is_open(),"refresh_pending":true}
 	if _icons_refresh_pending:
 		_icons_refresh_pending=false
 		if inventory_is_open():_inventory_result=_inventory_view.refresh()
@@ -262,6 +312,7 @@ func world_map_is_open() -> bool:
 
 func toggle_world_map() -> Dictionary:
 	if not is_instance_valid(_world_map):return _fail("source_world_map_not_configured")
+	_cancel_native_buttons()
 	return _world_map.toggle()
 
 func close_world_map() -> Dictionary:
@@ -308,8 +359,41 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 			if not _char_mount_attempted:_mount_char_info()
 		elif not char_unchanged:_char_result=Vitals.refresh_char_info(_char_scene,_char_values)
 	if not _core_attempted:_mount_core_controls()
+	refresh_primary_stats()
 	_refresh_wallet(gold_changed)
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+
+func refresh_primary_stats() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_primary_stats_host_unavailable")
+	var model: Dictionary=PrimaryStats.snapshot(hud)
+	if not model.get("ok",false):
+		if is_instance_valid(_primary_stats_scene):_primary_stats_scene.hide()
+		_primary_stats_result=model
+		return model
+	if is_instance_valid(_primary_stats_scene):
+		if model!=_primary_stats_model or not _primary_stats_result.get("ok",false):_primary_stats_result=PrimaryStats.refresh(_primary_stats_scene,hud)
+		_primary_stats_model=model
+		_primary_stats_scene.visible=_primary_stats_result.get("ok",false)
+		return _primary_stats_result.duplicate(true)
+	if _primary_stats_attempted:return _primary_stats_result.duplicate(true)
+	_primary_stats_attempted=true
+	var contract: Dictionary=PrimaryStats.build(_pack,hud)
+	if not contract.get("ok",false):
+		_primary_stats_result=contract
+		return contract
+	if _pack.layout_source(HEADER).get("_source_sha256")!=HEADER_SHA:
+		_primary_stats_result=_fail("source_main_header_parent_identity_mismatch")
+		return _primary_stats_result
+	var scene:=Scene.new()
+	_primary_stats_result=scene.configure_project(_pack,HEADER,HEADER_PROJECT,contract.bindings,contract.source_node_offsets)
+	if not _primary_stats_result.get("ok",false):scene.free();return _primary_stats_result
+	_coordinates.add_child(scene)
+	_primary_stats_scene=scene
+	_primary_stats_model=model
+	_primary_stats_result["read_only"]=true
+	_primary_stats_result["unconnected_controls"]=contract.get("unconnected_controls",[])
+	return _primary_stats_result.duplicate(true)
 
 func update_currency_balances(balances: Dictionary) -> Dictionary:
 	var changed: bool=_balances!=balances
@@ -462,6 +546,7 @@ func _mount_char_info() -> Dictionary:
 	return _char_result
 
 func _fit_source_coordinates() -> void:
+	_cancel_native_buttons()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas==null or not is_instance_valid(_coordinates):return
 	var factor: float=minf(canvas.size.x/_design_size.x,canvas.size.y/_design_size.y)
@@ -515,6 +600,8 @@ func _exit_tree() -> void:
 func release(restore_legacy: bool=true) -> void:
 	_restore_legacy=restore_legacy
 	set_process(false)
+	_cancel_native_buttons()
+	if is_inside_tree() and get_window().focus_exited.is_connected(_cancel_native_buttons):get_window().focus_exited.disconnect(_cancel_native_buttons)
 	if is_instance_valid(_world_map):_world_map.close()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()

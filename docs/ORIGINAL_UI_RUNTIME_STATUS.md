@@ -576,3 +576,25 @@ serialized fontName as an exactly matching installed host font, without glyph
 fallback. Missing nonempty original font paths still fail. No font asset is
 created, downloaded or counted as original inventory bytes. These additions
 are unexecuted/unverified and add no completed/rendered entries.
+
+## Main gameplay continuation after8486e6f5 (unexecuted)
+
+The original default-visible Hud_CharInfo MD18556/AC15372 text now reads the
+existing character_state.melee_damage/ac integers. Its existing icon nodes,
+source size/position/default mode and Header Project1800 parent are retained.
+No attack/AC formula, zero fallback, mode sequence or portrait/rank is added.
+The original Attack/Defense parent buttons remain explicitly unavailable;
+read-only values do not claim those actions complete. A later combined scope
+must actually include18508/18556/15324/15372; smaller v6 scopes are preserved.
+
+The native source-button router connects existing HUD/inventory chrome button
+instances while retaining modal/workspace precedence and PointerTransfer's
+exclusive item/quickslot capture. It creates no controls, mouse emulation,
+gesture thresholds or game rules. The world-map controller remains separate.
+
+The native icon ABI now publishes exact UI component hashes, original Sprite
+positions/anchors/sizes/blends and ancestor offsets. Image270 owns its selected
+CSB root/identity/playback; only the root-origin-to-slot-anchor relation and
+unknown original repeat remain pending, rather than either entire contract.
+No new tests, game execution, render, audit or CI were run. Frozen dependency/
+inspection counts and unknown whole560/game-consumption numerators are unchanged.

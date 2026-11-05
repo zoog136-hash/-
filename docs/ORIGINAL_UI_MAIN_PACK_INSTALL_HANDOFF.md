@@ -193,3 +193,34 @@ Combined v6's published code checkpoint is
 consumer contract is code `06600e0a72811b4ea32e056a6861f49e97b1ff0d` and
 [its exact ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md). Those icon scenes remain
 image-owner packs/registrations; no second main-UI selection key is required.
+
+## Combined v7: original default MD/AC values and native main-button input
+
+This next composition retains the complete v6 selection and adds only original
+CharInfo18508/18556/15324/15372 default MD/AC icon/text scopes. The same existing
+integer character-state producer supplies those values. Their original parent
+button actions/mode switches remain explicitly unavailable; no source mode or
+formula is invented. Main HUD/inventory chrome use the original native-touch
+button router; item/quickslot gestures remain PointerTransfer-owned.
+
+- Drive file ID: `1aeQmN-bnYBWlc0Vz4z2B-csMRzSIFOB4`.
+- Filename: `TWILIGHT_current523_main_game_original_UI_combined_v7_20261105.zip`.
+- ZIP size: **11,978,798 bytes**.
+- ZIP SHA256: `adc890b687f9e56c376350b621ec927a9d0596ab55a88279657919ecb380baeb`.
+- Manifest pin: `563bebe2a849bf6359b318500467bd89d1425f1e455485b2cb0e9ae89f69ae0e`.
+- Relative destination: `source-ui/current523-main-game-original-ui-v7`.
+- 37 originals /20 scene trees /19 widened partial scopes; production
+  blockers0, STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER.
+
+Use the same one source-ui root/pin pair for this entire composition. Main,
+world map, inventory and quickslots stay together. V6 and earlier packs are
+preserved; no simultaneous v6 installation, second per-window selector, cfg
+rewrite, save migration or original-file deletion is introduced. Private upload
+and filename/size metadata readback succeeded; consumer installation and game
+execution are unconfirmed. No test, run, render, audit or CI was started.
+
+The actual UI component/hash/node identities of the two native icon targets
+are unchanged. Their selected UI manifest pin is v7's pin when v7 is selected;
+that package pin is not evidence of the unknown CSB-root-to-anchor relation.
+The exact original target positions and narrow pending relation are recorded
+in [the native icon scene ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md).
