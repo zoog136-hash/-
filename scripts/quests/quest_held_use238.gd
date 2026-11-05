@@ -36,7 +36,7 @@ class View extends Node:
 	var hud: RefCounted
 	var effect_stamp: String
 	func current_effect_stamp() -> String:
-		return JSON.stringify([host.gold,host.hp,host.mp,host.active_item_buffs,host.item_use_cooldowns,str(host.rng.seed),str(host.rng.state)],"",true,true).sha256_text()
+		return JSON.stringify([host.gold,host.hp,host.mp,host.job_class,host.level,host.active_item_buffs,host.item_use_cooldowns,str(host.rng.seed),str(host.rng.state),host.ui_preferences.get("patch523_reward_bag_draw_count",1),host.ui_preferences.get("patch523_source_reward_bags_enabled",true)],"",true,true).sha256_text()
 	func _get(key: StringName) -> Variant: return host.get(key) if is_instance_valid(host) else null
 	func is_player_concealed() -> bool:return host.is_player_concealed()
 	func _option_awakening_busy() -> bool:return host._option_awakening_busy()
@@ -51,21 +51,42 @@ class View extends Node:
 	func _update_hud() -> void:host._update_hud()
 	func _find_catalog_item_record(name_value: String) -> Dictionary:return host._find_catalog_item_record(name_value)
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
-	func _expected_gold() -> int:
-		var result: int=host.gold
+	func _expected_bag() -> Dictionary:
 		var spec: Dictionary=canonical.get("source_use_spec",{})
-		if spec.get("kind")!="guaranteed_bag":return result
+		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:return {}
+		var candidate_rng:=RandomNumberGenerator.new()
+		candidate_rng.seed=host.rng.seed;candidate_rng.state=host.rng.state
 		var class_id: int=BASE508.source_class_id(host.job_class)
-		for reward: Dictionary in spec.get("rewards",[]):
+		# Use the existing source selector, full original pool and existing host
+		# draw-count setting. This private candidate never advances live RNG.
+		var chosen: Dictionary=USE.select_rewards(spec,class_id,candidate_rng,clampi(int(host.ui_preferences.get("patch523_reward_bag_draw_count",1)),1,10))
+		if not chosen.get("ok",false):return {"ok":false}
+		var expected: Dictionary=initial_inventory.duplicate(true)
+		var input_key: String=str(canonical.name)
+		var count: int=OWN.positive(expected.get(input_key))
+		if count<1:return {"ok":false}
+		if count==1:expected.erase(input_key)
+		else:expected[input_key]=count-1
+		var gold_after: int=host.gold
+		var outputs: Dictionary={}
+		for reward: Dictionary in chosen.rewards:
 			if not USE.class_matches(reward.get("class_ids",[]),class_id):continue
-			if int(reward.get("entity_type_id",-1))!=1:return -1
 			var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
 			var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
-			if D.currency_identity_name(item)!="아데나":continue
+			if item.is_empty() or definition.get("original_item",{}).get("TestItem",true) or D.equipment(item) or not preload("res://scripts/quests/source_dummy523.gd").item_evidence(definition.get("original_item",{})).is_empty():return {"ok":false}
 			var amount: int=OWN.positive(reward.get("amount"))
-			if amount<1 or result<0 or result>9007199254740991-amount:return -1
-			result+=amount
-		return result
+			if amount<1:return {"ok":false}
+			var wallet: String=D.currency_identity_name(item)
+			if wallet=="아데나":
+				if gold_after<0 or gold_after>9007199254740991-amount:return {"ok":false}
+				gold_after+=amount
+			else:
+				var key: String=wallet if not wallet.is_empty() else str(item.name)
+				var previous: int=int(expected.get(key,0))
+				if previous<0 or previous>9007199254740991-amount:return {"ok":false}
+				expected[key]=previous+amount
+				outputs[key]=int(outputs.get(key,0))+amount
+		return {"ok":true,"inventory":expected,"gold":gold_after,"outputs":outputs,"rng_seed":str(candidate_rng.seed),"rng_state":str(candidate_rng.state)}
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
 		if committed or not OWN.current(host,prepared) or current_effect_stamp()!=effect_stamp:return ERR_INVALID_DATA
 		for key: String in overrides:
@@ -73,8 +94,11 @@ class View extends Node:
 		var proposed: Variant=overrides.get("inventory")
 		if not proposed is Dictionary:return ERR_INVALID_DATA
 		var virtual_key: String=str(canonical.name)
-		if int(proposed.get(virtual_key,0))!=int(owned.quantity)-1 or proposed.get(owned.inventory_key)!=initial_inventory.get(owned.inventory_key):return ERR_INVALID_DATA
-		var expected_gold: int=_expected_gold()
+		var bag: Dictionary=_expected_bag()
+		if not bag.is_empty() and (not bag.get("ok",false) or not CONSUMPTION.same(proposed,bag.inventory) or str(rng.seed)!=bag.rng_seed or str(rng.state)!=bag.rng_state):return ERR_INVALID_DATA
+		var virtual_output: int=int(bag.get("outputs",{}).get(virtual_key,0))
+		if int(proposed.get(virtual_key,0))!=int(owned.quantity)-1+virtual_output or proposed.get(owned.inventory_key)!=initial_inventory.get(owned.inventory_key):return ERR_INVALID_DATA
+		var expected_gold: int=int(bag.get("gold",host.gold))
 		if expected_gold<0 or not (overrides.get("gold",gold) is int) or int(overrides.get("gold",gold))!=expected_gold:return ERR_INVALID_DATA
 		var proposed_instances: Variant=overrides.get("item_instances",initial_instances)
 		if not proposed_instances is Dictionary:return ERR_INVALID_DATA
@@ -116,6 +140,10 @@ class View extends Node:
 			var delta: int=int(proposed.get(key,0))-int(initial_inventory.get(key,0))
 			if delta<0:return ERR_INVALID_DATA
 			if delta>0:payload.inventory[key]=int(payload.inventory.get(key,0))+delta
+		if virtual_output>0:
+			var previous: int=int(payload.inventory.get(virtual_key,0))
+			if previous<0 or previous>9007199254740991-virtual_output:return ERR_INVALID_DATA
+			payload.inventory[virtual_key]=previous+virtual_output
 		for key: String in ["active_item_buffs","item_use_cooldowns"]:
 			if overrides.has(key):payload[key]=overrides[key].duplicate(true)
 		if payload.has("active_item_buffs"):
@@ -162,7 +190,7 @@ class View extends Node:
 
 static func make_view(world: Node, prepared: Dictionary, canonical: Dictionary) -> Node:
 	var view:=View.new()
-	view.host=world;view.prepared=prepared;view.owned=prepared.ownership;view.canonical=canonical
+	view.host=world;view.prepared=prepared;view.owned=prepared.ownership;view.canonical=USE.action_record(world,canonical)
 	view.hud=InventoryHud.new();view.hud.host=world
 	view.inventory=world.inventory.duplicate(true);view.item_instances=world.item_instances.duplicate(true)
 	view.inventory[str(canonical.name)]=int(view.owned.quantity)

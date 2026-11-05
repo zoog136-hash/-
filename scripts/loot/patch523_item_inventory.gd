@@ -13,6 +13,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			var value: Variant = grant.get(field)
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or absf(float(value)) > MAX_EXACT_JSON_INTEGER: return {"ok":false,"error":"원본 지급 수치 형식 확인 실패"}
 		var id: String = str(int(grant.get("item_class_id",-1)))
+		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(id)).is_empty():return {"ok":false,"error":"원본 더미 선언 아이템은 신규 지급에서 제외 · 기존 소유 보존"}
 		var summary: Dictionary = D.data().get("item_definitions",{}).get(id,{})
 		if int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
 			var exact_definition: Dictionary=D.definition_id(id)

@@ -636,6 +636,7 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	if not record is Dictionary or record.is_empty() or record.get("name") != name: return {}
 	if physical.has("sourceId") and str(physical.sourceId) != str(record.get("sourceId","")): return {}
 	var source: int = _source(record)
+	if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(source).is_empty():return {}
 	if source <= 0 or bool(Common.item(store.pack,source).get("raw",{}).get("TestItem",false)): return {}
 	var quantity: int = _quantity(physical)
 	if quantity <= 0 or int(world.inventory.get(name,0)) < quantity: return {}
@@ -805,6 +806,7 @@ func _output_catalog(world: Node, source_ids: Dictionary = {}) -> Dictionary:
 	return result
 
 func _output_record(world: Node, id: int, indexed: Dictionary = {}, bless: int = 1) -> Dictionary:
+	if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(id).is_empty():return {}
 	var candidates: Dictionary = indexed if not indexed.is_empty() else _output_catalog(world)
 	var selected: Dictionary = candidates.get(_variant_key(id,bless),candidates.get("legacy:"+str(id),{}))
 	if not selected.is_empty(): return selected.duplicate(true)

@@ -97,6 +97,7 @@ static func denied(reason: String) -> Dictionary:
 func record(source_id: String, stack_bless: int=1) -> Dictionary:
 	var item: Dictionary = data.get("items",{}).get(source_id,{})
 	var result: Dictionary = (item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else item.get("catalog_record",{})).duplicate(true)
+	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty():return {}
 	var use: Dictionary = item.get("use_conditions",{})
 	if not use.is_empty(): result["patch523_item_use"]=use.duplicate(true)
 	return result

@@ -47,6 +47,7 @@ func configure_arguments()->void:
 func identity(record: Dictionary)->Dictionary:
  if active_sha256!=PACK_SHA or int(record.get("source_item_class_id",0)) not in IDS:return {}
  var result: Dictionary=BOOK.resolve(self,record.get("source_use_spec",{}))
+ if not preload("res://scripts/quests/source_dummy523.gd").evidence("SpellClass",profiles.get(str(result.get("local_skill_id","")),{}).get("row",{})).is_empty():return {}
  if str(result.get("local_skill_id","")).begins_with("lmref_") and not REFERENCE.matches(int(record.get("source_item_class_id",0)),int(record.get("source_use_spec",{}).get("spell_class_id",0)),str(result.local_skill_id),str(record.get("source_use_spec",{}).get("source_spell_row_sha256",""))):return {}
  return result
 func fail(world: Node,reason: String)->Dictionary:

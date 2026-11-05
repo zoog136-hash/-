@@ -32,12 +32,19 @@ func commit_held_save(world: Node,payload: Dictionary) -> Error:
 	return result
 
 func _scalar_bag(spec: Dictionary) -> bool:
-	if spec.get("kind")!="guaranteed_bag" or spec.get("rewards",[]).is_empty():return false
+	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or spec.get("rewards",[]).is_empty():return false
 	for reward: Dictionary in spec.rewards:
+		var kind: int=int(reward.get("entity_type_id",-1))
+		if kind not in [0,1]:return false
+		if kind==0:
+			var weight: Variant=reward.get("probability_raw")
+			if not (weight is int or weight is float) or not is_finite(float(weight)) or float(weight)!=floorf(float(weight)) or weight<0:return false
+			if weight==0:continue # Keep the source row; it has no selectable mass.
 		var id: int=int(reward.get("item_class_id",0))
 		var definition: Dictionary=D.definition_id(str(id))
 		var record: Dictionary=definition.get("native_record",{})
-		if int(reward.get("entity_type_id",-1))!=1 or OWN.positive(reward.get("amount"))==0 or int(reward.get("bless_raw",0)) not in [1,2,3] or record.is_empty() or definition.get("original_item",{}).get("TestItem",true) or D.equipment(record):return false
+		if not preload("res://scripts/quests/source_dummy523.gd").item_evidence(definition.get("original_item",{})).is_empty():return false
+		if OWN.positive(reward.get("amount"))==0 or int(reward.get("bless_raw",0)) not in [1,2,3] or record.is_empty() or definition.get("original_item",{}).get("TestItem",true) or D.equipment(record):return false
 		# These outputs require their physical supply owner. Do not publish a
 		# name-only wallet count and claim the next material consumer is bound.
 		if id in preload("res://scripts/cards/native_awakening_supply.gd").IDS:return false
@@ -87,7 +94,7 @@ func configure(world: Node) -> void:
 			var summary: Dictionary = D.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{})
 			if not summary.get("native_record",{}).is_empty(): _register(world,summary.native_record,int(reward.bless_raw))
 	# Bind only actual original quest rewards whose installed item owner already
-	# provides an unrestricted typed buff or MP-dice effect. This does not grant
+	# provides an unrestricted typed effect or scalar bag. This does not grant
 	# items, enable Test/expired effects or infer a positive bonus from a name.
 	for quest: Dictionary in world.quest_service.index.values():
 		if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
@@ -101,15 +108,17 @@ func configure(world: Node) -> void:
 			if spec.get("activation_status")!="unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):continue
 			definitions[id]=definition
 			_register(world,definition.native_record,1)
-			if spec.get("kind")=="guaranteed_bag":
+			if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:
 				for output: Dictionary in spec.rewards:
+					if int(output.get("entity_type_id",-1))==0 and int(output.get("probability_raw",0))==0:continue
 					var child: Dictionary=D.definition_id(str(int(output.item_class_id)))
-					_register(world,child.native_record,int(output.bless_raw))
+					if not child.get("native_record",{}).is_empty():_register(world,child.native_record,int(output.bless_raw))
 	world._index_catalog_item_sources()
 	world._index_item_weights()
 	ready=not definitions.is_empty()
 
 func _register(world: Node, original: Dictionary, bless: int) -> void:
+	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(original).is_empty():return
 	var record: Dictionary = D.variant_item(original,bless)
 	if not world._catalog_item_from_source_id(str(record.sourceId)).is_empty(): return
 	# Definitions only. Unbound child effects retain the existing use guard;
@@ -197,6 +206,7 @@ func held_binding(world: Node, id: String) -> Dictionary:
 	if not ready: return {}
 	var owned: Dictionary=OWN.proof(world,id)
 	if not owned.ok or owned.source_use_immediately or not definitions.has(int(owned.item_class_id)): return {}
+	if not preload("res://scripts/quests/source_dummy523.gd").item_evidence(owned.source_item).is_empty():return {}
 	if int(owned.item_class_id) not in REVIEWED_IDS and int(owned.bless_code_id)!=1:return {}
 	var definition: Dictionary=definitions[int(owned.item_class_id)]
 	if owned.source_item!=definition.original_item or int(owned.bless_code_id) not in [1,2,3]: return {}

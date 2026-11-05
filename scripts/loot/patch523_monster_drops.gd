@@ -168,6 +168,7 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 		if not native_ids.has(key): native_ids.append(key)
 	for key: String in native_ids:
 		var definition: Dictionary = document.get("item_definitions", {}).get(key, {})
+		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(key)).is_empty() or not preload("res://scripts/quests/source_dummy523.gd").item_evidence(definition.get("original_item",{})).is_empty():continue
 		var original: Dictionary = definition.get("native_record", {})
 		if original.is_empty(): continue
 		var states: Array = [1]
@@ -361,7 +362,7 @@ static func currency_identity_name(item: Dictionary) -> String:
 static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary) -> Dictionary:
 	var id: String = str(int(value.get("source_npc_id", -1)))
 	var npc: Dictionary = document.get("npcs", {}).get(id, {})
-	var report: Dictionary = {"npc_id":id, "missing_item_bindings":0, "quest_rows_blocked":0, "test_item_rows_blocked":0, "unsupported_bless_rows":0, "unsupported_currency_rows":0, "duplicate_rows_ignored":0}
+	var report: Dictionary = {"npc_id":id, "missing_item_bindings":0, "quest_rows_blocked":0, "test_item_rows_blocked":0,"source_dummy_rows_blocked":0, "unsupported_bless_rows":0, "unsupported_currency_rows":0, "duplicate_rows_ignored":0}
 	diagnostics = report
 	if not native(value) or npc.is_empty() or int(npc.get("sprite_id", -1)) != int(value.get("source_sprite_id", -2)) or npc.get("source_name") != value.get("source_name"): return {}
 	if not npc.get("attackable", false) or npc.get("test_npc", true): return {}
@@ -371,6 +372,7 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 		# exact source quest state; never make the requirement unconditional.
 		if int(row.RequiredQuestID) != 0: report.quest_rows_blocked += 1; continue
 		var item_id: String = str(int(row.ItemClassID))
+		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(item_id)).is_empty():report.source_dummy_rows_blocked+=1;continue
 		if document.get("item_definitions", {}).get(item_id, {}).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
 		var link: Dictionary = document.get("bindings", {}).get(item_id, {})
 		var item: Dictionary = catalog.get("patch523_by_name", catalog.get("by_name", {})).get(str(link.get("name", "")), {})
