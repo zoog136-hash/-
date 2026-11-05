@@ -705,6 +705,24 @@ receipts and saves remain unchanged. Current card records already expose the
 same-original `source_original.deck_id`/`grade_id` fields read by TJ redemption;
 this input change does not authorize a new reward or candidate namespace.
 
+`native_halphas_star_enchant.definition()` supplies the existing bounded
+card24504/group/three-stage model from the common pinned original, including
+server/control rows, typed bonus/unit/application references, material grades,
+currencies, maximum level, customizing-option references and the public
+compiler's charge21/spell82 closure. `input_status()` returns `available`,
+`source_mode`, original `source_identity`, actual in-memory `model_sha256` and
+`problem`. A missing/ambiguous/declared-excluded definition returns an empty
+model. The preserved public JSON constant is not an active fallback.
+
+The existing star runtime's configuration, technical conditions, effects,
+pending-effect references and appearance-option lookup now read that API.
+The combat adapter's existing charge-step/effect reads use the same input.
+Saved card namespaces, original disabled-feature/server restrictions,
+unresolved source semantics, explicit local estimation policy, charge/effect
+math, strengthening probabilities, material transactions and saves are
+unchanged. An input model does not establish an authoritative progression
+ledger, enable a disabled original feature or deliver new appearance pixels.
+
 The existing guardian source now obtains matching selected rows during initial
 data adoption and through `rewards()`, `upgrade()`, `constant()` and
 `spell_name()`. Existing `data.spells`/`data.buffs` source/effect fields also feed

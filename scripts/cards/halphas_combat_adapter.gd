@@ -84,7 +84,7 @@ func step_seconds(source_msec: float) -> float:
 	return maxf(.1,source_msec/1000.0/(1.0+maxf(0.0,percent)/100.0))
 func charge_view() -> Dictionary:
 	var elapsed: float=float(charge.get("elapsed",0));var reached: int=0;var total: float=0.0
-	for step: Dictionary in owner.Native.DATA.data.charge.steps:
+	for step: Dictionary in owner.Native.definition().get("charge",{}).get("steps",[]):
 		total+=step_seconds(float(step.Time))
 		if elapsed>=total:reached=int(step.Step)
 	return {"active":not charge.is_empty(),"elapsed":elapsed,"stage":reached,"total":total}
@@ -104,7 +104,7 @@ func release_charge() -> Dictionary:
 	var current: Dictionary=charge.duplicate();var target: Node=current.target.get_ref()
 	if not is_instance_valid(target) or target.dead or target.life_id!=current.life or current.generation!=world().combat_generation or not owner.active():cancel_charge();return owner.fail("target","차징 대상·생명이 변경됐습니다")
 	var skill: Dictionary=current.skill.duplicate(true)
-	for effect: Dictionary in owner.Native.DATA.data.charge.effects:
+	for effect: Dictionary in owner.Native.definition().get("charge",{}).get("effects",[]):
 		if int(effect.step)!=int(info.stage) or effect.type.Name!="SpellRangeBonus":continue
 		skill.range=float(skill.range)+float(effect.bonus.Value)*number("charge_tile_pixels",48.0,1.0,128.0)
 	if world().player.global_position.distance_to(target.global_position)>float(skill.range) or not world()._has_line_of_sight_world(world().player.global_position,target.global_position):cancel_charge();return owner.fail("target","차징 대상이 사거리 밖이거나 가려졌습니다 · 소비 없음")
