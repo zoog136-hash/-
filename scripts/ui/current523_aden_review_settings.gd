@@ -285,7 +285,7 @@ func _build_static_spr_controls() -> void:
 	spr_anchor_y=_spr_number(values,"Y",-48,48,float(saved.anchor_y))
 	spr_layer=_spr_number(values,"자체 레이어",-4095,-1,float(saved.layer))
 	add_child(UI.button("SPR 설정 저장 · 현재 맵에 적용",_save_static_spr,Vector2(0,40)))
-	spr_status=UI.label("S32 원문 ID/좌표 → 같은 ID의 -0.sp2 → 원문 동작의 프레임. 선언 없는 항목은 제외합니다. 동작 지정·저장 그룹·틱/초·앵커·레이어는 자체 선택이며 통행/포탈/전투에 영향이 없습니다.",12,UI.MUTED)
+	spr_status=UI.label("보유 원문 픽셀만 사용합니다. 자식은 원문 참조 순서의 자체 합성·자체 동작 또는 보유 frame0을 사용하며 미해석 표시 속성은 자체 무시합니다. 선언 없는 항목은 제외하고 원작 합성·활성으로 표시하지 않습니다.",12,UI.MUTED)
 	spr_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(spr_status)
 
 
@@ -304,12 +304,13 @@ func _save_static_spr() -> void:
 	var bindings: Variant={} if binding_text.is_empty() else JSON.parse_string(binding_text)
 	if not bindings is Dictionary:
 		spr_status.text="파일/저장 그룹 지정은 SPR ID·원문 선택자별 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
-	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings}
+	var value: Dictionary=STATIC_SPR.read_options()
+	value.merge({"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings},true)
 	var current: Node=_world()
 	if current!=null and current.has_method("apply_current523_static_spr_options"):
 		var applied: bool=current.call("apply_current523_static_spr_options",value)
 		if applied:
-			spr_status.text="저장 · 현재 맵 SPR 소비자에 연결했습니다. 원문에 없는 동작·프레임은 표시하지 않습니다." if bool(current.get("current523_aden_play_active")) else "저장됨 · 다음 원문 맵 입장에 적용합니다."
+			spr_status.text="저장 · 보유 원문 픽셀과 자체 자식 표시 정책을 현재 맵 소비자에 연결했습니다." if bool(current.get("current523_aden_play_active")) else "저장됨 · 다음 원문 맵 입장에 적용합니다."
 		else:spr_status.text=str(current.get("current523_aden_play_problem"))
 		return
 	var error: Error=STATIC_SPR.save_options(value)
@@ -352,14 +353,16 @@ func _load_play_options() -> void:
 		var map_metrics: Dictionary=current.current523_aden_play_metrics() if current.has_method("current523_aden_play_metrics") else {}
 		var spr_metrics: Dictionary=map_metrics.get("static_spr",{})
 		if not spr_metrics.is_empty():
-			spr_status.text="현재 읽은 정적 배치 %d · 연결 대상 %d · 사용자 제외 %d · 미대응 %d. 제외는 원본 사용 완료로 세지 않습니다."%[int(spr_metrics.get("raw_records",0)),int(spr_metrics.get("connection_candidate_records",spr_metrics.get("raw_records",0))),int(spr_metrics.get("user_excluded_records",0)),int(spr_metrics.get("unresolved_records",0))]
+			spr_status.text="원문 배치 %d · 연결 대상 %d · 사용자 제외 %d · 표시 노드 %d(부모%d/자식%d) · 미대응 노드%d. 제외·설정은 실제 사용 완료로 세지 않습니다."%[int(spr_metrics.get("raw_records",0)),int(spr_metrics.get("connection_candidate_records",spr_metrics.get("raw_records",0))),int(spr_metrics.get("user_excluded_records",0)),int(spr_metrics.get("drawn_records",0)),int(spr_metrics.get("drawn_parent_records",0)),int(spr_metrics.get("drawn_child_records",0)),int(spr_metrics.get("unresolved_records",0))]
 	_refresh_source_portals()
 	_refresh_definition_status()
 
 
 func _play_values() -> Dictionary:
 	var saved: Dictionary = PLAY_OPTIONS.read()
-	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "portal_landing_policy":saved.get("portal_landing_policy",PLAY_OPTIONS.EXACT_POINT_ONLY), "map_time_policy":saved.get("map_time_policy",PLAY_OPTIONS.OWN_MAP_TIME), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "portal_landing_policy":saved.get("portal_landing_policy",PLAY_OPTIONS.EXACT_POINT_ONLY), "map_time_policy":saved.get("map_time_policy",PLAY_OPTIONS.OWN_MAP_TIME), "map_open_policy":saved.get("map_open_policy",PLAY_OPTIONS.OWN_ALWAYS_OPEN_V1), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	value["portal_fee_adena"]=saved.get("portal_fee_adena",PLAY_OPTIONS.OWN_MANUAL_PORTAL_FEE_ADENA)
+	value["aden_return_radius"]=saved.get("aden_return_radius",8)
 	if play_profile.selected in [2,3]:
 		value.aden_inferred_placement_enabled=aden_inferred_placement.button_pressed
 		value.path_search_limit=int(source_search_limit.value)

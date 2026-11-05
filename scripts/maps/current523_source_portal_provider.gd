@@ -4,6 +4,7 @@ const OWNER=preload("res://scripts/maps/patch523_world_links.gd")
 const SERVER=preload("res://scripts/cards/source_collection_conditions.gd")
 const WINDOWS=preload("res://scripts/crafting/patch523_craft_conditions.gd")
 const CIVIL=preload("res://scripts/monsterbook/monsterbook523_clock.gd")
+const OPTIONS=preload("res://scripts/maps/current523_aden_play_options.gd")
 const MANIFEST_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const MAX_CACHED_LANDS=4
 var loaded: bool=false
@@ -83,12 +84,13 @@ static func _actor_level_condition(type: Dictionary, row: Dictionary, actor_leve
 	var fulfilled: bool=actor_level>=row.Value if type_id==91 else actor_level<=row.Value
 	return {"fulfilled":fulfilled,"actor_level":int(actor_level),"threshold":int(row.Value),"comparison":"at_least" if type_id==91 else "at_most","type":type.duplicate(true),"row":row.duplicate(true)}
 
-func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i, actor_level: Variant=null) -> Dictionary:
+func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i, actor_level: Variant=null, open_policy: String=OPTIONS.SOURCE_CONDITIONS_V1) -> Dictionary:
 	var types: Dictionary={}
 	for row: Dictionary in definition.context_rows("LandAttributeType"): types[int(row.ID)]=row
 	var result: Array=[]
 	var inactive: Array=[]
 	var actor_conditions: Array=[]
+	var waived: Array=[]
 	for row: Dictionary in definition.context_rows("LandAttribute"):
 		if int(row.get("LandID",-1))!=land_id: continue
 		var territory_id: int=int(row.get("TerritoryID",0))
@@ -99,6 +101,8 @@ func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i
 			if point.x<territory.StartX or point.x>territory.EndX or point.y<territory.StartY or point.y>territory.EndY: continue
 		var type: Dictionary=types.get(int(row.get("LandAttributeTypeID",-1)),{})
 		var name: String=str(type.get("Name","UNKNOWN"))
+		if open_policy==OPTIONS.OWN_ALWAYS_OPEN_V1 and type.get("ID")==144 and name=="CloseTime" and type.get("UnitID")==17:
+			waived.append({"table":"LandAttribute","type":type.duplicate(true),"row":row.duplicate(true),"policy":open_policy});continue
 		# These declarations do not authorize entry or a teleport: this adapter
 		# neither creates bookmarks nor changes depth/manner mechanics.
 		if name in ["NoBookmark","Underground","IgnoreMannerMode"]: continue
@@ -110,7 +114,7 @@ func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i
 		if _declared_inactive_restriction(type,row):
 			inactive.append({"type":type.duplicate(true),"row":row.duplicate(true)}); continue
 		result.append({"reason":"native_attribute_requires_policy","type":type.duplicate(true),"row":row.duplicate(true)})
-	return {"holds":result,"declared_inactive":inactive,"actor_conditions":actor_conditions}
+	return {"holds":result,"declared_inactive":inactive,"actor_conditions":actor_conditions,"waived_time_conditions":waived}
 
 func portal_context_for_land(land_id: int, exact_asset: String, portal_id: int) -> Dictionary:
 	return _portal_context(land_id,exact_asset,portal_id)
@@ -168,8 +172,15 @@ func _date_window(definition: RefCounted, group: Dictionary, actor_state: Dictio
 	result.status="open" if actor_state.now_unix>=window.start_unix and actor_state.now_unix<window.end_unix else "closed"
 	return result
 
+static func _open_policy(actor_state: Dictionary) -> String:
+	var value: Variant=actor_state.get("map_open_policy",OPTIONS.OWN_ALWAYS_OPEN_V1)
+	return value if value is String and value in [OPTIONS.OWN_ALWAYS_OPEN_V1,OPTIONS.SOURCE_CONDITIONS_V1] else ""
+
 func _land_time_conditions(definition: RefCounted, land_id: int, actor_state: Dictionary) -> Dictionary:
-	var result: Dictionary={"holds":[],"evaluations":[]}
+	var result: Dictionary={"holds":[],"evaluations":[],"waived":[]}
+	var open_policy: String=_open_policy(actor_state)
+	if open_policy.is_empty():result.holds.append({"reason":"map_open_policy_invalid"});return result
+	var always_open: bool=open_policy==OPTIONS.OWN_ALWAYS_OPEN_V1
 	for row: Dictionary in definition.context_rows("LandTimeLimit"):
 		if int(row.get("LandID",-1))!=land_id:continue
 		var group: Dictionary={}
@@ -177,9 +188,17 @@ func _land_time_conditions(definition: RefCounted, land_id: int, actor_state: Di
 			if candidate.get("ID")==row.get("LandTimeLimitGroupID"):
 				if not group.is_empty():group={};break
 				group=candidate.duplicate(true)
-		if group.is_empty():result.holds.append({"reason":"land_time_group_unresolved","row":row.duplicate(true)});continue
+		if group.is_empty():
+			if always_open:
+				result.evaluations.append({"land_id":land_id,"row":row.duplicate(true),"calendar":{"status":"group_definition_missing","group":{}},"time_conditions_waived":true,"map_open_policy":open_policy})
+				result.waived.append({"table":"LandTimeLimit","row":row.duplicate(true),"group":{},"policy":open_policy})
+			else:result.holds.append({"reason":"land_time_group_unresolved","row":row.duplicate(true)})
+			continue
 		var calendar: Dictionary=_date_window(definition,group,actor_state)
-		result.evaluations.append({"land_id":land_id,"row":row.duplicate(true),"calendar":calendar})
+		result.evaluations.append({"land_id":land_id,"row":row.duplicate(true),"calendar":calendar,"time_conditions_waived":always_open,"map_open_policy":open_policy})
+		if always_open:
+			result.waived.append({"table":"LandTimeLimit","row":row.duplicate(true),"group":group.duplicate(true),"calendar":calendar.duplicate(true),"policy":open_policy})
+			continue
 		if calendar.status not in ["open","not_declared"]:result.holds.append({"reason":"land_date_window_"+str(calendar.status),"row":row.duplicate(true),"calendar":calendar.duplicate(true)})
 		# A calendar result is never elapsed-time ownership. Existing dungeon
 		# pools cannot grant map entry unless their accounting owns this session.
@@ -191,15 +210,19 @@ func land_entry_context_for_actor_state(land_id: int, exact_asset: String, actor
 	# portal travel. A source cursor is not an admission, calendar or time credit.
 	var definition: RefCounted=_definition(land_id,exact_asset)
 	if definition==null:return {}
-	var attributes: Dictionary=_attribute_evaluation(definition,land_id,source_cell,actor_state.get("level"))
+	var attributes: Dictionary=_attribute_evaluation(definition,land_id,source_cell,actor_state.get("level"),_open_policy(actor_state))
 	var time: Dictionary=_land_time_conditions(definition,land_id,actor_state)
 	var holds: Array=attributes.holds.duplicate(true)
 	holds.append_array(time.holds)
+	var waived: Array=time.waived.duplicate(true)
+	waived.append_array(attributes.waived_time_conditions)
 	for table: String in ["LandWeeklyOpenTime","CompetitionDungeonLand"]:
 		for row: Dictionary in definition.context_rows(table):
 			if int(row.get("LandID",row.get("LandId",-1)))==land_id:
-				holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
-	return {"Land":definition.land.duplicate(true),"source_cell":[source_cell.x,source_cell.y],"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","land_time_conditions":time.evaluations,"actor_level_conditions":attributes.actor_conditions,"declared_inactive_restrictions":attributes.declared_inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_admission_verified":false}
+				if table=="LandWeeklyOpenTime" and _open_policy(actor_state)==OPTIONS.OWN_ALWAYS_OPEN_V1:
+					waived.append({"table":table,"row":row.duplicate(true),"policy":OPTIONS.OWN_ALWAYS_OPEN_V1})
+				else:holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
+	return {"Land":definition.land.duplicate(true),"source_cell":[source_cell.x,source_cell.y],"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","land_time_conditions":time.evaluations,"map_open_policy":_open_policy(actor_state),"waived_time_conditions":waived,"actor_level_conditions":attributes.actor_conditions,"declared_inactive_restrictions":attributes.declared_inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_admission_verified":false}
 
 func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant=null, own_landing: Dictionary={}, actor_state: Dictionary={}) -> Dictionary:
 	var source: RefCounted=_definition(land_id,exact_asset)
@@ -223,7 +246,8 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 			selected_point=cell;arrival_policy="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
 	if selected_point==null:holds.append({"reason":"native_region_arrival_policy_unverified"})
 	var source_point:=Vector2i(int(portal.SourceX),int(portal.SourceY))
-	var source_attributes: Dictionary=_attribute_evaluation(source,land_id,source_point,actor_level)
+	var source_attributes: Dictionary=_attribute_evaluation(source,land_id,source_point,actor_level,_open_policy(actor_state))
+	var waived_attributes: Array=source_attributes.waived_time_conditions.duplicate(true)
 	holds.append_array(source_attributes.holds)
 	var inactive: Array=[]
 	var actor_conditions: Array=[]
@@ -232,24 +256,29 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 	for item: Dictionary in source_attributes.declared_inactive:
 		var evidence: Dictionary=item.duplicate(true); evidence["side"]="source"; inactive.append(evidence)
 	if selected_point is Vector2i:
-		var target_attributes: Dictionary=_attribute_evaluation(target,int(target_land.ID),selected_point,actor_level)
+		var target_attributes: Dictionary=_attribute_evaluation(target,int(target_land.ID),selected_point,actor_level,_open_policy(actor_state))
+		waived_attributes.append_array(target_attributes.waived_time_conditions)
 		holds.append_array(target_attributes.holds)
 		for item: Dictionary in target_attributes.actor_conditions:
 			var evidence: Dictionary=item.duplicate(true);evidence["side"]="target";actor_conditions.append(evidence)
 		for item: Dictionary in target_attributes.declared_inactive:
 			var evidence: Dictionary=item.duplicate(true); evidence["side"]="target"; inactive.append(evidence)
 	var time_conditions: Array=[]
+	var waived_time_conditions: Array=waived_attributes
 	var time_lands: Dictionary={}
 	time_lands[land_id]=source
 	time_lands[int(target_land.ID)]=target
 	for affected_land: int in time_lands:
 		var conditions: Dictionary=_land_time_conditions(time_lands[affected_land],affected_land,actor_state)
-		holds.append_array(conditions.holds);time_conditions.append_array(conditions.evaluations)
+		holds.append_array(conditions.holds);time_conditions.append_array(conditions.evaluations);waived_time_conditions.append_array(conditions.waived)
 	for table: String in ["LandWeeklyOpenTime","CompetitionDungeonLand"]:
 		for row: Dictionary in source.context_rows(table):
 			var id: int=int(row.get("LandID",row.get("LandId",-1)))
-			if id in [land_id,int(target_land.ID)]: holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
-	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"declared_inactive_restrictions":inactive,"actor_condition_level":actor_level,"actor_level_conditions":actor_conditions,"land_time_conditions":time_conditions,"own_arrival_policy":arrival_policy,"own_arrival_source_cell":[selected_point.x,selected_point.y] if selected_point is Vector2i else [],"native_landing_rule_verified":false,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
+			if id in [land_id,int(target_land.ID)]:
+				if table=="LandWeeklyOpenTime" and _open_policy(actor_state)==OPTIONS.OWN_ALWAYS_OPEN_V1:
+					waived_time_conditions.append({"table":table,"row":row.duplicate(true),"policy":OPTIONS.OWN_ALWAYS_OPEN_V1})
+				else:holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
+	return {"Portal":portal.duplicate(true),"SourceLand":source.land.duplicate(true),"TargetTerritory":territory.duplicate(true),"TargetLand":target_land.duplicate(true),"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","native_definition_contract":contract.duplicate(true),"declared_inactive_restrictions":inactive,"actor_condition_level":actor_level,"actor_level_conditions":actor_conditions,"land_time_conditions":time_conditions,"map_open_policy":_open_policy(actor_state),"waived_time_conditions":waived_time_conditions,"own_arrival_policy":arrival_policy,"own_arrival_source_cell":[selected_point.x,selected_point.y] if selected_point is Vector2i else [],"native_landing_rule_verified":false,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_m_rules_verified":false}
 
 func cache_metrics() -> Dictionary:
 	return {"cached_native_lands":_lands.size(),"maximum_native_lands":MAX_CACHED_LANDS,"definition_manifest_sha256":MANIFEST_SHA256 if loaded else ""}

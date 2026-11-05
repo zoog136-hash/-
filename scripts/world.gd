@@ -5421,6 +5421,10 @@ func _source_hp_potion_committed(amount: int) -> void:
 func _return_to_spawn() -> void:
 	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotTeleport"): return
+	if current523_aden_source_active():
+		var outcome: Dictionary=return_current523_source_to_aden()
+		hud.show_message(str(outcome.get("reason","아덴 귀환 결과 확인 필요")))
+		return
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -10540,6 +10544,14 @@ func use_current523_aden_source_portal(id: int) -> bool:
 	var result: bool = _aden_play_controller().call("use_source_portal",id)
 	current523_aden_play_problem = str(_aden_play_controller().get("problem"))
 	current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈로 이동했습니다." if result else current523_aden_play_problem)
+	return result
+
+func return_current523_source_to_aden(save_changes: Dictionary={}) -> Dictionary:
+	var controller: RefCounted=_aden_play_controller()
+	var result: Dictionary=controller.call("return_to_aden",save_changes)
+	current523_aden_play_active=bool(controller.get("active"))
+	current523_aden_play_problem=str(result.get("reason","")) if not result.get("ok",false) else ""
+	current523_aden_play_changed.emit(current523_aden_play_active,str(result.get("reason","아덴 귀환 보류")))
 	return result
 
 func _restore_current523_aden_play() -> void:

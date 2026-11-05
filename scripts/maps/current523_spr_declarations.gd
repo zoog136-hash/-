@@ -156,11 +156,24 @@ func display_definition(id: int, action_id: int=3) -> Dictionary:
 	var source: Dictionary=definitions[id]
 	var result: Dictionary={"header":"","source_line":source.source_line,"source_file":source.source_file,"source_byte_offset":source.source_byte_offset,"source_end_offset":source.source_end_offset,"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes,"declaration_sha256":source.raw_declaration_sha256,"raw_bytes":source.raw_bytes,"action_id":action_id,"sequence":[],"attachments_unresolved":[],"references":[],"sequence_origin":"ALL30_SOURCE_ACTION"+str(action_id),"unapplied_modifiers":[]}
 	result["source_name_raw"]=source.get("source_name_raw","")
+	result["unresolved_modifiers"]=[]
+	for action: Dictionary in source.actions:
+		if action.get("tokens",[]).is_empty() and int(action.get("code",-1)) not in [101,105]:
+			result.unresolved_modifiers.append(action.duplicate(true))
 	# Only an exact original declaration name; not a substring, an absent
 	# file, unknown spelling, type0, or a training-target inference.
 	result["explicit_dummy"]=str(result.source_name_raw).strip_edges().to_lower() in ["dummy","더미"]
 	if source_files.size()==1:result.sequence_origin="LIST29_ACTION"+str(action_id)
+	result["alias_target_raw"]=source.alias_target_raw
 	if source.alias_target_raw!=null:
+		var raw: PackedByteArray=source.raw_bytes
+		var equal: int=raw.find(61)
+		var newline: int=raw.find(10)
+		var literal: String="="+str(int(source.alias_target_raw))
+		var bytes: PackedByteArray=literal.to_ascii_buffer()
+		var alias: Dictionary={"source_sprite_id":id,"target_id":int(source.alias_target_raw),"kind":"header_alias","raw":literal,"source_file":source.source_file,"source_byte_offset":int(source.source_byte_offset)+maxi(0,equal),"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes}
+		if equal>=0 and (newline<0 or equal<newline) and raw.slice(equal,equal+bytes.size())==bytes:alias["source_byte_length"]=bytes.size()
+		result["alias_reference"]=alias
 		result["unsupported"]="declared_alias_requires_resolution";return result
 	for action: Dictionary in source.actions:
 		if int(action.code)==105:result.attachments_unresolved=str(action.raw_body).split(" ",false)
@@ -179,8 +192,26 @@ func display_definition(id: int, action_id: int=3) -> Dictionary:
 			sequence.append({"frame":int(token.raw_frame_index),"duration":int(token.raw_ticks),"selector":int(token.raw_selector),"source_byte_offset":int(token.source_byte_offset),"raw":token.raw,"unapplied_suffix":token.raw_suffix})
 			if not str(token.raw_suffix).is_empty():result.unapplied_modifiers.append(token.duplicate(true))
 		result.sequence=sequence
-	for edge: Dictionary in references:
-		if int(edge.source_sprite_id)==id:result.references.append(edge.duplicate(true))
+	# Both inputs already contain the original action dictionaries. Normalize
+	# only literal M shadow/clothes actions, never alias or other graph edges.
+	for action: Dictionary in source.actions:
+		var body: PackedStringArray=str(action.get("raw_body","")).replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
+		var targets: Array[int]=[]
+		var kind: String=""
+		if int(action.code)==101 and str(action.name).to_lower()=="shadow" and body.size()==1 and body[0].is_valid_int():
+			kind="shadow";targets.append(int(body[0]))
+		elif int(action.code)==105 and str(action.name).to_lower() in ["clothes","clothe"] and not body.is_empty() and body[0].is_valid_int() and int(body[0])==body.size()-1:
+			kind="clothes"
+			for target: String in body.slice(1):
+				if not target.is_valid_int():targets.clear();break
+				targets.append(int(target))
+		for target: int in targets:
+			if target<0 or target>65535:continue
+			var original: Dictionary={"source_sprite_id":id,"target_id":target,"kind":kind,"raw":action.raw,"source_file":source.source_file,"source_byte_offset":int(action.source_byte_offset),"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes}
+			var relative: int=int(original.source_byte_offset)-int(source.source_byte_offset)
+			var literal: PackedByteArray=str(action.raw).to_utf8_buffer()
+			if relative>=0 and (source.raw_bytes as PackedByteArray).slice(relative,relative+literal.size())==literal:original["source_byte_length"]=literal.size()
+			result.references.append(original)
 	return result
 
 static func own_frame_at(sequence: Array, tick: int) -> Dictionary:
