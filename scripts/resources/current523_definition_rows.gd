@@ -10,6 +10,7 @@ static var _archive: ZIPReader
 static var _archive_path := ""
 static var _tables: Dictionary = {}
 static var _relations: Dictionary = {}
+static var _metadata: Dictionary = {}
 static var _problem := ""
 
 static func reset() -> void:
@@ -18,6 +19,7 @@ static func reset() -> void:
 	_archive_path = ""
 	_tables.clear()
 	_relations.clear()
+	_metadata.clear()
 	_problem = ""
 
 static func problem() -> String:
@@ -54,6 +56,24 @@ static func _open() -> bool:
 static func identity() -> Dictionary:
 	if not _open(): return {}
 	return {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":SOURCE_SHA,"source_bytes":SOURCE_BYTES}
+
+static func archive_path() -> String:
+	# Reuse existing whole-archive parsers without copying/installing another
+	# input. Callers must retain their own parsing guards and never save this path.
+	return _archive_path if _open() else ""
+
+static func table_metadata(table: String) -> Dictionary:
+	# Original index provenance for existing derived input formats. These are
+	# input metadata, not a new table-use observation or a generated-pack hash.
+	if table in EXCLUDED_TABLES or not table.is_valid_identifier() or not _open(): return {}
+	if _metadata.is_empty():
+		if not _archive.file_exists("index.json"): return {}
+		var index: Variant = JSON.parse_string(_archive.read_file("index.json").get_string_from_utf8())
+		if not index is Array: return {}
+		for entry: Variant in index:
+			if not entry is Dictionary or not entry.get("path") is String: continue
+			_metadata[entry.path] = entry
+	return _metadata.get("content/"+table+".json",{}).duplicate(true)
 
 static func _raw_rows(table: String) -> Array:
 	# User-excluded game word filters are never loaded through this reader.
