@@ -8,6 +8,7 @@ signal finished
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const BORDER = preload("res://scripts/ui/option_awakening_border.gd")
 const TOUCH_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
+const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const BACKGROUND = preload("res://assets/card_reveal/authored_background.webp")
 const SUCCESS_SOUND = preload("res://assets/card_reveal/upgrade.wav")
 const GOLD = Color("f5cf7b")
@@ -127,9 +128,19 @@ func present(card: Dictionary, committed_result: Dictionary, settings: Dictionar
 	reduced_motion = bool(settings.get("reduced_motion", false))
 	low_detail = str(settings.get("effect_detail", "full")) == "low"
 	intensity = clampf(float(settings.get("impact_intensity", 0.85)), 0.0, 1.0)
-	var path: String = str(record.get("image_path", ""))
-	if not path.is_empty() and ResourceLoader.exists(path):
-		texture = load(path) as Texture2D
+	texture = null
+	if has_meta("original_card_asset"): remove_meta("original_card_asset")
+	if SourceCard.native(record):
+		var original: Dictionary = SourceCard.detail(record,true)
+		texture = original.get("texture") as Texture2D
+		var evidence: Dictionary = original.duplicate(true)
+		evidence.erase("texture")
+		evidence["card_id"] = SourceCard.CARDS.card_id(record)
+		set_meta("original_card_asset",evidence)
+	else:
+		var path: String = str(record.get("image_path", ""))
+		if not path.is_empty() and ResourceLoader.exists(path):
+			texture = load(path) as Texture2D
 	card_label.text = str(record.get("name", "카드"))
 	grade_label.text = str(record.get("grade", ""))
 	grade_label.add_theme_color_override("font_color", UI.grade(grade_label.text))

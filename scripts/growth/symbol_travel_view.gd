@@ -1,4 +1,6 @@
 extends VBoxContainer
+const SourceItems=preload("res://scripts/ui/source523_image_assets.gd")
+const SourceSkills=preload("res://scripts/ui/source523_skill_buff_images.gd")
 var service
 var source: Dictionary={}
 var origin: String=""
@@ -20,6 +22,7 @@ func configure(owner, request: Dictionary) -> void:
 	listing=preload("res://scripts/ui/native_touch_list.gd").new();listing.name="SymbolBookmarks";listing.size_flags_vertical=Control.SIZE_EXPAND_FILL;listing.custom_minimum_size.y=90;listing.item_selected.connect(select);add_child(listing)
 	detail=Label.new();detail.name="SymbolTravelDetail";detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(detail)
 	confirm=button("선택한 기억 장소로 이동","SymbolTravelConfirm",commit)
+	confirm.expand_icon=true
 	var bottom:=HBoxContainer.new();add_child(bottom)
 	button("선택한 장소 삭제","SymbolForget",func() -> void: show_result(service.forget(selected,revision)),bottom)
 	button("닫기 · 소모 없음","SymbolTravelCancel",func() -> void: service.world.hud._close_workspace(),bottom)
@@ -40,6 +43,32 @@ func select(index: int) -> void:
 	selected=index
 	var offer: Dictionary=service.quote(index,source,origin,revision)
 	detail.text=str(offer.message);confirm.disabled=not bool(offer.ok)
+	bind_source_icon()
+
+func bind_source_icon() -> void:
+	confirm.icon=null
+	for key: String in ["source523_image","source523_image_provenance","source523_image_status"]:
+		if confirm.has_meta(key):confirm.remove_meta(key)
+	if selected<0 or selected>=listing.item_count or not SourceItems.selected():return
+	var original: Dictionary={"reason":"source_travel_icon_identity_required","source_status":"source_travel_icon_identity_required","texture":null,"provenance":{},"actual_game_consumption_observed":false}
+	match str(source.get("kind","")):
+		"original":
+			# Reuse the same existing skill record as the travel quote. Its host
+			# binding identifies SpellClass; a display name never identifies art.
+			var record: Dictionary=service.world.original_skills.catalog.record_for(str(source.get("id","")))
+			if not record.is_empty():original=SourceSkills.describe_skill(record,"IconID")
+		"scroll":
+			# The selected inventory key retrieves the consumed record. Only its
+			# declared source ItemClass identity can select an original image.
+			var record: Dictionary=service.world._find_catalog_item_record(str(source.get("name","")))
+			if SourceItems.handles_item(record):original=SourceItems.describe_item(record)
+		_:return
+	confirm.icon=original.get("texture") as Texture2D
+	var evidence: Dictionary=original.duplicate(true);evidence.erase("texture")
+	evidence["travel_source_kind"]=str(source.get("kind",""))
+	confirm.set_meta("source523_image",evidence)
+	confirm.set_meta("source523_image_provenance",original.get("provenance",{}).duplicate(true))
+	confirm.set_meta("source523_image_status",str(original.get("source_status",original.get("reason",""))))
 
 func show_result(outcome: Dictionary) -> void:
 	result.text=str(outcome.message);result.show();refresh()

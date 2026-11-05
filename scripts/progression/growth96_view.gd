@@ -2,6 +2,7 @@ extends VBoxContainer
 ## This screen reads service snapshots. Only the explicit review confirmation
 ## calls the authoritative service; closing or cancelling discards the quote.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const TouchButton = preload("res://scripts/ui/native_touch_button.gd")
 const ScrollButton = preload("res://scripts/growth/growth_touch_button.gd")
 
@@ -184,7 +185,49 @@ func _render_rewards() -> void:
 		_label("%d레벨 · %d%%  —  %s" % [int(point.get("level", 0)), int(point.get("percent", 0)), "수령 완료" if claimed else "수령 가능" if reached else "미도달"], column, 14, UI.GOLD if reached else UI.MUTED)
 		_label(_reward_text(point), column)
 		var claim: Button = _button("수령 완료" if claimed else "보상 선택 · 수령 확인", "Growth96Claim_" + point_id, func() -> void: _prepare("claim", point_id), column)
+		_bind_item_icon(claim, _reward_icon_identity(point))
 		claim.disabled = claimed or not reached
+
+func _reward_icon_identity(point: Dictionary, reward_ids: Array = []) -> Dictionary:
+	# A claim can contain several items. Only an unambiguous ItemClass may
+	# provide the existing button's single icon; never choose a representative.
+	if runtime == null: return {}
+	var item_class_id: int = -1
+	var source_reward_ids: Array[String] = []
+	for reward: Dictionary in point.get("rewards", []):
+		var reward_id: String = str(reward.get("id", ""))
+		if not reward_ids.is_empty() and not reward_ids.has(reward_id): continue
+		var source_reward: Dictionary = runtime.source.rewards.get(reward_id, {})
+		# The source provider resolves item rewards through this exact foreign
+		# key. Reward.ID itself is never an ItemClass identifier.
+		if source_reward.is_empty() or int(source_reward.get("RewardTypeID", 0)) != 2 or str(source_reward.get("point_id", "")) != str(point.get("id", "")): return {}
+		var declared_item_id: int = int(source_reward.get("RewardClassID", 0))
+		if declared_item_id <= 0 or (item_class_id > 0 and item_class_id != declared_item_id): return {}
+		item_class_id = declared_item_id
+		source_reward_ids.append(reward_id)
+	if item_class_id <= 0: return {}
+	return {"item_class_id":item_class_id,"relation":{"source_table":"Reward","source_field":"RewardClassID","source_reward_ids":source_reward_ids,"presentation_role":"growth_reward_item"}}
+
+func _registration_icon_identity(card_id: String) -> Dictionary:
+	if runtime == null: return {}
+	var card: Dictionary = runtime.source.cards.get(card_id, {})
+	var requirement: Dictionary = card.get("item", {})
+	if not requirement.has("ItemClassID"): return {}
+	return {"item_class_id":int(requirement.ItemClassID),"relation":{"source_table":"ItemBookItem","source_id":requirement.get("ID"),"source_field":"ItemClassID","presentation_role":"registration_item_cost"}}
+
+func _bind_item_icon(button: Button, identity: Dictionary) -> void:
+	if identity.is_empty() or not IMAGES.selected(): return
+	var item_class_id: int = int(identity.item_class_id)
+	var source_row: Dictionary = runtime.source.items.get(str(item_class_id), {})
+	var image_info: Dictionary = IMAGES.describe_item_class_row(source_row) if not source_row.is_empty() else IMAGES.describe_item_class(item_class_id)
+	button.icon = image_info.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_relation"] = identity.relation.duplicate(true)
+	button.set_meta("source523_image", evidence)
+	button.set_meta("source523_image_provenance", image_info.get("provenance", {}).duplicate(true))
+	button.set_meta("source523_image_status", str(image_info.get("source_status", image_info.get("reason", ""))))
 
 func _reward_text(point: Dictionary, reward_ids: Array = []) -> String:
 	var lines: Array[String] = []
@@ -233,6 +276,7 @@ func _render_collections() -> void:
 		var registered: bool = bool(card.get("registered", false))
 		var card_name: String = str(card.get("name", "요구 카드 %d" % (index + 1)))
 		var register: Button = _button("%s · %s" % [card_name, "등록 완료" if registered else "%s 1개 소모 · 등록 확인" % _token_name()], "Growth96Register_" + card_id, func() -> void: _prepare("register", card_id), detail)
+		_bind_item_icon(register, _registration_icon_identity(card_id))
 		register.disabled = registered or int(snapshot.get("token_count", 0)) < 1 or int(snapshot.get("level", 0)) < int(chosen.get("level", 0))
 	if int(snapshot.get("token_count", 0)) < 1: _label("등록할 증표가 부족합니다.", detail, 12, UI.MUTED)
 	if int(snapshot.get("level", 0)) < int(chosen.get("level", 0)): _label("이 컬렉션의 요구 레벨에 도달해야 등록할 수 있습니다.", detail, 12, UI.MUTED)
@@ -268,9 +312,11 @@ func _prepare(action: String, id: String) -> void:
 func _render_review() -> void:
 	_label("선택 내용 확인", body, 18, UI.GOLD)
 	var action: String = str(pending.get("action", ""))
+	var item_icon_identity: Dictionary = {}
 	if action == "claim":
 		for point: Dictionary in snapshot.get("points", []):
 			if str(point.get("id", "")) == str(pending.id):
+				item_icon_identity = _reward_icon_identity(point, pending.get("reward_ids", []))
 				_label("%d레벨 · %d%% 보상 수령" % [int(point.get("level", 0)), int(point.get("percent", 0))], body, 15, UI.GOLD)
 				_label("지급 품목\n" + _reward_text(point, pending.get("reward_ids", [])), body)
 				_label("소모 비용 없음 · 수령 기록은 저장됩니다.", body, 12, UI.MUTED)
@@ -280,6 +326,7 @@ func _render_review() -> void:
 			for index: int in range((collection.get("cards", []) as Array).size()):
 				var card: Dictionary = collection.cards[index]
 				if str(card.get("id", "")) != str(pending.id): continue
+				item_icon_identity = _registration_icon_identity(str(card.get("id", "")))
 				_label("%s · %s" % [str(collection.get("name", "컬렉션")), str(card.get("name", "요구 카드 %d" % (index + 1)))], body, 15, UI.GOLD)
 				_label("소모: %s × 1\n보유: %d개\n등록한 증표는 되돌릴 수 없습니다." % [_token_name(), int(snapshot.get("token_count", 0))], body)
 				_render_effects(collection, body)
@@ -294,7 +341,8 @@ func _render_review() -> void:
 		_label("523 정의 ZIP 설치", body, 15, UI.GOLD)
 		_label("선택 파일: %s\n선택한 로컬 ZIP을 검증하고 개인 실행 환경에 설치합니다. 보상 수령이나 증표 등록을 자동으로 실행하지 않습니다." % str(pending.get("path", "")).get_file(), body)
 	_label("이 내용으로 진행하시겠습니까?", body, 14, UI.GOLD)
-	_button("확인 · 선택 내용 실행", "Growth96Confirm", _confirm, body)
+	var confirm: Button = _button("확인 · 선택 내용 실행", "Growth96Confirm", _confirm, body)
+	_bind_item_icon(confirm, item_icon_identity)
 	_button("취소", "Growth96Cancel", func() -> void: cancel_review(), body)
 
 func cancel_review() -> bool:

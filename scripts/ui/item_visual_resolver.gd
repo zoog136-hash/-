@@ -8,6 +8,7 @@ const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
 const OPTIONAL = preload("res://scripts/ui/optional_item_icon_pack.gd")
+const SOURCE523 = preload("res://scripts/ui/source523_image_assets.gd")
 const MAX_CACHE: int = 256
 const LOCAL_ITEM_ICONS: Dictionary = {
 	"HP 물약":"res://assets/ui/potionRed.png",
@@ -71,6 +72,10 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
+	# Exact native or source-qualified supplier identity precedes legacy
+	# sourceId/name canonicalization; it never grants a native gameplay flag.
+	# Inventory IconID is not a source declaration for a floor sprite.
+	if SOURCE523.handles_item(record,ground): return SOURCE523.describe_item(record,fallback_name)
 	if ground:
 		var original: Dictionary = _describe_original(record, fallback_name, images, true)
 		# Preserve existing dedicated floor pairs and their provenance.
@@ -196,6 +201,7 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 
 static func texture(record: Dictionary, name_value: String = "", images: Dictionary = {}, ground: bool = false) -> Texture2D:
 	var info: Dictionary = describe(record, name_value, images, ground)
+	if info.route == "source523_images": return info.get("texture") as Texture2D
 	var path: String = str(info.path)
 	if info.route=="source_original_unavailable":return null
 	# Keep the original loader's hash gate and returned ImageTexture. Reloading

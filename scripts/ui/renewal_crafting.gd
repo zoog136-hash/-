@@ -4,6 +4,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser=preload("res://scripts/ui/renewal_browser.gd")
 const CraftRules=preload("res://scripts/crafting/expanded_crafting.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 var hud: Node
 var world: Node
 var listing: ItemList
@@ -216,6 +217,7 @@ func _rebuild_listing() -> void:
 	var needle: String = name_filter.text.strip_edges().to_lower()
 	var service: Object = world.get("crafting")
 	var registry: Dictionary = service.get("recipes")
+	var source_images: Dictionary = {}
 	for id: String in all_recipe_ids:
 		var recipe: Dictionary = registry.get(id,{})
 		var output: Dictionary = recipe.get("result",{})
@@ -229,10 +231,20 @@ func _rebuild_listing() -> void:
 		if not needle.is_empty() and not match_text.contains(needle):
 			continue
 		recipe_ids.append(id)
-		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
+		var item_class_id: int = _recipe_item_class_id(recipe,output,id)
+		var source_recipe_image: bool = _uses_source_recipe_images(recipe,id)
+		var original: Dictionary = SOURCE_IMAGES.describe_item_class(item_class_id,output_name) if item_class_id>0 else {}
+		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],original.get("texture") as Texture2D if source_recipe_image else UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
+		if source_recipe_image:
+			var evidence: Dictionary=original.duplicate(true)
+			evidence.erase("texture")
+			if item_class_id==0: evidence={"source_status":"zero_sentinel","actual_game_consumption_observed":false}
+			elif item_class_id<0: evidence={"source_status":"source_item_identity_required","actual_game_consumption_observed":false}
+			source_images[id]=evidence
 		listing.set_item_metadata(listing.item_count-1,id)
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(grade))
 		listing.set_item_tooltip(listing.item_count-1,str(recipe.get("name",id)))
+	listing.set_meta("source523_images",source_images)
 	if recipe_ids.is_empty():
 		current_id = ""
 		product.texture=null
@@ -273,8 +285,18 @@ func _refresh_quote() -> void:
 	var items: Dictionary=world._patch523_craft_item_index() if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
 	if material_recipe!=current_id:
-		_build_materials(recipe,items)
-		UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
+		var source_images: Dictionary=_source_recipe_image_references()
+		_build_materials(recipe,items,source_images)
+		var source_output: Variant=source_images.get(str(result.get("source_id","")))
+		if source_output is Dictionary and not source_output.is_empty():
+			UI.apply_source_item_reference(product,source_output,output_name,"detail")
+		elif _recipe_item_class_id(recipe,result,current_id)>0:
+			UI.apply_item_class_icon(product,_recipe_item_class_id(recipe,result,current_id),output_name,"detail")
+		elif _uses_source_recipe_images(recipe,current_id):
+			UI.clear_item_visual(product)
+			product.texture=null
+		else:
+			UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
 	probability_summary.visible=recipe.has("outcomes") or recipe.has("craft_conditions")
 	var chances: PackedStringArray=[]
@@ -346,7 +368,38 @@ func _clear_materials() -> void:
 		candidate_box.remove_child(child)
 		child.queue_free()
 
-func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
+func _uses_source_recipe_images(recipe: Dictionary, recipe_id: String) -> bool:
+	return SOURCE_IMAGES.selected() and recipe.get("source_snapshot")=="patch523" and recipe_id.begins_with("patch523:")
+
+func _recipe_item_class_id(recipe: Dictionary, source_item: Dictionary, recipe_id: String) -> int:
+	if not _uses_source_recipe_images(recipe,recipe_id):
+		return -1
+	# The existing compiled ItemCraft input/output contract declares source_id
+	# in the ItemClass namespace. No name, generic ClassID or ownership is joined.
+	var literal: Variant=source_item.get("source_id")
+	if not literal is String or not literal.is_valid_int(): return -1
+	var item_class_id: int=int(literal)
+	if str(item_class_id)!=literal or item_class_id<0: return -1
+	return item_class_id
+
+func _source_recipe_image_references() -> Dictionary:
+	if not SOURCE_IMAGES.selected() or not current_id.begins_with("patch523:"):
+		return {}
+	var source_id: String=current_id.trim_prefix("patch523:")
+	if not source_id.is_valid_int() or str(int(source_id))!=source_id or int(source_id)<=0:
+		return {}
+	var rules: Object=world.patch523_equipment
+	if rules==null or not rules.has_method("recipe_definition"):
+		return {}
+	# Read the published data contract for this already selected recipe only.
+	# Its can_execute:false never changes the existing quote/execute admission.
+	var definition: Variant=rules.call("recipe_definition",int(source_id))
+	if not definition is Dictionary or definition.get("kind")!="current523_craft_definition" or definition.get("craft_id")!=int(source_id) or definition.get("reference_only")!=true or definition.get("can_execute")!=false:
+		return {}
+	var references: Variant=definition.get("items")
+	return references if references is Dictionary else {}
+
+func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictionary={}) -> void:
 	_clear_materials()
 	material_recipe=current_id
 	material_scroll.scroll_vertical=0
@@ -358,10 +411,29 @@ func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 		var chooser := OptionButton.new()
 		chooser.name = "Patch523Candidate_" + slot_key
 		chooser.custom_minimum_size.y = 40
+		chooser.expand_icon = true
 		chooser.add_item("재료 후보 선택…")
+		var candidate_images: Dictionary = {}
 		for material: Dictionary in candidates:
 			chooser.add_item("아데나 ×%d · 지갑" % int(material.quantity) if bool(material.get("wallet",false)) else "%s +%d · %s ×%d" % [str(material.item),int(material.level),"축복" if int(material.bless_code)==2 else "일반",int(material.quantity)])
+			if _uses_source_recipe_images(recipe,current_id):
+				# This option is one original ItemCraft input candidate, with the
+				# same declared ItemClass source_id used by the material picture.
+				# The row_id below remains the independent transaction identity.
+				var item_class_id: int = _recipe_item_class_id(recipe,material,current_id)
+				var reference: Variant = source_images.get(str(material.get("source_id","")))
+				var original: Dictionary = SOURCE_IMAGES.describe_item_reference(reference,str(material.item)) if reference is Dictionary and not reference.is_empty() else SOURCE_IMAGES.describe_item_class(item_class_id,str(material.item))
+				if original.get("item_class_id") != item_class_id:
+					original = SOURCE_IMAGES.describe_item_class(-1,str(material.item))
+					original["reason"] = "source_material_candidate_identity_mismatch"
+					original["source_status"] = "source_material_candidate_identity_mismatch"
+				chooser.set_item_icon(chooser.item_count-1,original.get("texture") as Texture2D)
+				var evidence: Dictionary = original.duplicate(true)
+				evidence.erase("texture")
+				evidence["source_material_row_id"] = material.row_id
+				candidate_images[chooser.item_count-1] = evidence
 			if int(world.patch523_material_choices.get(current_id, {}).get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
+		chooser.set_meta("source523_item_images",candidate_images)
 		chooser.item_selected.connect(func(index: int) -> void:
 			var chosen: Dictionary = world.patch523_material_choices.get(current_id, {}).duplicate(true)
 			if index == 0: chosen.erase(slot_key)
@@ -394,7 +466,16 @@ func _build_materials(recipe: Dictionary,items: Dictionary) -> void:
 		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		slot.add_child(icon)
-		UI.apply_item_visual(icon,record,item_name,hud.item_image_index.get("아이템",{}),"slot")
+		var source_item: Variant=source_images.get(str(material.get("source_id","")))
+		if source_item is Dictionary and not source_item.is_empty():
+			UI.apply_source_item_reference(icon,source_item,item_name,"slot")
+		elif _recipe_item_class_id(recipe,material,current_id)>0:
+			UI.apply_item_class_icon(icon,_recipe_item_class_id(recipe,material,current_id),item_name,"slot")
+		elif _uses_source_recipe_images(recipe,current_id):
+			UI.clear_item_visual(icon)
+			icon.texture=null
+		else:
+			UI.apply_item_visual(icon,record,item_name,hud.item_image_index.get("아이템",{}),"slot")
 		var text:=VBoxContainer.new()
 		text.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		text.add_theme_constant_override("separation",2)
