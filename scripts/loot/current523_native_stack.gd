@@ -43,6 +43,9 @@ static func profile(record: Dictionary) -> Dictionary:
 	var ammo: Dictionary=load("res://scripts/loot/patch523_ammo.gd").call("current_profile",record)
 	if not ammo.is_empty():return {"kind":"ammo","spec":ammo}
 	if record.get("slot")!="consumable":return {}
+	if record.get("source_item_class_id")==310:
+		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").call("profile",record)
+		if not cure.is_empty():return {"kind":"cure","spec":cure.source_use_spec}
 	if not record.get("heal_spec",{}).is_empty():
 		var metadata: Dictionary=D.hp_use_metadata(record)
 		if record.get("source_item_class_id")==233:metadata=load("res://scripts/loot/quest_hp233_use.gd").call("metadata",record)
@@ -161,6 +164,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
+	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="selection":return selection_pending(world,uid,owned,record,spec)
 	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
@@ -226,7 +230,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String="%s · 원본 버프 %s" % [str(record.source_display_name),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(record.source_display_name),"HP" if effect.kind=="hp" else "MP",after-before]
-	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
+	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
@@ -902,7 +907,8 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state;world.deferred_save.cancel();busy=false
 	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
-	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":rewards,"message":"원본 선택 보상을 지급했습니다" if spec.kind=="source_selectable_reward" else "원본 상자 보상을 지급했습니다"}
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":rewards,"message":"원본 선택 보상을 지급했습니다" if spec.kind=="source_selectable_reward" else "원본 상자 보상을 지급했습니다"}
+	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.commit_owned_rewards")
 
 
 static func native_ammo(record: Dictionary) -> bool:
@@ -1278,3 +1284,12 @@ static func spend_original_skill_materials(world: Node,skill: Dictionary,plan: D
 	var consumed_units: int=0
 	for input: Dictionary in paid.selections:consumed_units+=int(input.quantity)
 	return {"handled":true,"ok":true,"saved":true,"consumed":consumed_units,"physical_input_count":paid.selections.size(),"selected_inputs":paid.selections.duplicate(true),"source_material_receipt_id":id}
+
+
+# A post-confirmation data handoff, never an extra sprite/emission trigger.
+# The existing one call site remains the sole dispatch owner until the visual
+# owner publishes its exact compatible source-item API.
+static func committed_use_context(result: Dictionary,record: Dictionary,sprite: int,dispatch_attempted: bool,dispatch_owner: String) -> Dictionary:
+	if not result.get("ok",false) or not result.get("saved",false) or int(result.get("consumed",0))<1:return result
+	result["source_use_context"]={"original_item":record.get("source_original_item",{}).duplicate(true),"source_definition_archive":SOURCE.identity(),"physical_id":str(result.get("physical_id","")),"remaining_quantity":result.get("remaining_quantity"),"effect_sprite_id":sprite,"commit_key":JSON.stringify([str(result.get("physical_id","")),result.get("remaining_quantity"),str(result.get("source_bag_receipt_id",""))]).sha256_text(),"visual_dispatch_owner":dispatch_owner,"visual_dispatch_attempted":dispatch_attempted,"render_observed":false}
+	return result

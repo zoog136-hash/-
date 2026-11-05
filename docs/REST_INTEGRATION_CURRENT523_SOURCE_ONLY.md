@@ -320,3 +320,21 @@ Numerical32/48/58 scales remain labelled adjustable host estimates. Mixed attack
 ranges, weapon-relative/minimum cast ranges and absent identity/meaning
 contracts stay explicit. No tests/parse/game/render/CI, new original bytes,
 whole-table or95% consumption claim; historical58/146 unchanged.
+
+
+## Current native instant cure and visual-owner handoff (unexecuted)
+
+Exact original310 now reuses the existing instant poison-clear owner with a
+selected native quantity debit or common quest receipt; current original input
+replaces the obsolete BIN prerequisite. Native quantity/use/cooldown and cure
+journal save before the existing Player.clear_poison; historical receipts stay.
+Direct confirmed item-use results retain the full original ItemClass/physical
+selection/effect-ID context and existing dispatch attempt, without a second FX
+emission or importing unpublished Sprite8b5b67e8.
+
+The new read-only ground_loot.source_item_context(ground_id) exposes the actual
+published current floor record's full original ItemClass and physical/drop
+selection to the Sprite owner. No ground pickup/quantity/ownership/receipt/save
+or action/frame/image implementation is changed. Original16007 remains a pixel
+input gap, and189/192 delivery in another Sprite environment is not installation
+or rendering proof here. No new tests/game/parse/render/CI or verified count.

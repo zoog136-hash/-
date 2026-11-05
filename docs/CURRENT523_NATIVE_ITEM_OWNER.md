@@ -670,3 +670,64 @@ MP/HP and primary ammo quote to still match. The transient resolved skill is
 not adopted as a new definition; only its quote digest is retained in the ammo
 outcome journal. This is another runtime transaction guard in source code, not
 an executed verification of the latest implementation.
+
+
+## Current native310 and source visual handoff (unexecuted)
+
+The existing exact Item310→Buff27→Player.clear_poison owner now accepts the
+current full original definition instead of requiring the old final item BIN.
+Its three exact item bonuses, group/priority/instant-kind proof, source-use
+conditions and existing transient poison policy stay. The native quantity
+branch requires the selected real UID/immutable receipt, uses Stock.stage_debit
+once and retains that updated consumable ledger when appending the existing
+cure-use record. Raw quest debit remains the common consumption owner. Existing
+first-use historical pack fingerprints stay; new records cite the actual
+original item archive and never pretend to consume the historical BIN.
+
+The same existing cure owner stages quantity/cooldown/use journal, confirms the
+save and adopts quest state successfully before clearing only Player's existing
+poison. A current typed stack cannot fall back to name-only legacy subtraction.
+Failed or uncertain adoption preserves/restricts retry as before. This enables
+shared native supply/activation for the exact supported310 effect, without
+changing other poison/curse/status namespaces or inventing a duration-zero buff.
+No game/test/parse/render/CI has been run for these edits.
+
+Confirmed direct native HP/MP/buff and bag/selection results now include
+source_use_context: full original_item, source_definition_archive, selected
+physical_id/remaining, original effect_sprite_id, commit_key and existing
+visual_dispatch_owner/visual_dispatch_attempted. The cure owner returns the
+same original row/192/selected-ID context. This is a **post-save data handoff**,
+not a second event to emit. A true dispatch_attempted means the existing call
+site was called; render_observed=false means no render observation is supplied.
+Failures/pending selection have no committed-effect context. Actual pixels and
+which received source bank can display an effect remain the Sprite owner.
+Effect16007 is not synthesized or treated as installed here. Sprite follow-up
+8b5b67e8 is unpublished and was neither imported nor copied. Its later official
+integration must patch the existing one emission call to the agreed full-row
+API, preserving these newer cure prepare/commit changes; it must not overlay
+an older whole cure file or replay a result already dispatched.
+
+## Exact current floor context for Sprite ownership (read-only, unexecuted)
+
+Existing field/API handoff:
+
+- world.ground_loot.records[ground_id] / views[ground_id] are the actually
+  published current-floor selection/view, keyed by record.id and current map.
+- floor record.item_record is the existing source DTO snapshot when present;
+  a player native drop also has physical_item.id and physical_item.data with
+  the actual immutable physical receipt/remaining. Enemy floor selection may
+  not have a carried physical UID until the existing acquisition owner runs.
+- ItemClass is preserved as item_record.source_original_item; Sprite IDs are
+  source data, not IconID. No Sprite/SpriteID field rename or icon substitution
+  is performed by the item owner.
+- world.ground_loot.source_item_context(ground_id) returns that full original
+  row and actual floor/physical selection only if the existing current source
+  definition and complete raw row agree. It includes source_basis and archive,
+  but ownership_authorized=false, sprite_action_selected=false and no render
+  observation. Missing/legacy/unproved source returns an unavailable reason.
+
+The existing stage_spawn/publish_spawn, quantity, pickup, transfer, physical
+receipt, lifetime and save code are unchanged by this floor read-only method.
+It selects no animation/action/frame and supplies no texture or new image. The
+Sprite owner can consume the exact original row and actual floor view through
+its separate actor bank API when published. UI icons remain a separate role.
