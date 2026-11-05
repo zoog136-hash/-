@@ -113,7 +113,19 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	return true
 
 func current523_card_matches(key: String, context: Dictionary) -> bool:
-	return _reference_bank != null and not _reference_card_context.is_empty() and _reference_card_context.get("request_key","") == key and _reference_request_context == context
+	if _reference_bank == null or _reference_card_context.is_empty() or _reference_card_context.get("request_key","") != key or _reference_request_context != context:
+		return false
+	# The private config can receive a newly connected bank while the character
+	# context stays the same. Rebind on the existing owner event when its pin or
+	# location changes; do not keep the old bank merely because class/weapon match.
+	var configured: Dictionary = CURRENT523_BANK.options(context)
+	if not bool(configured.get("ok",false)): return false
+	for field: String in ["manifest_path","manifest_sha256","overlay_whitelist_path","overlay_whitelist_sha256"]:
+		var selected_value: Variant = _reference_card_context.get(field,"")
+		if field.begins_with("overlay_") and _reference_card_context.get("source_bank_context") is Dictionary:
+			selected_value = _reference_card_context.source_bank_context.get("current523_source_bank",{}).get(field,selected_value)
+		if selected_value != configured.options.get(field,""): return false
+	return true
 
 func current523_role_available(role: String) -> bool:
 	return _reference_bank != null and not _reference_card_context.is_empty() and installed() and _playback_tracks.has(role)
