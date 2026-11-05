@@ -807,3 +807,15 @@ original ItemClass image using the rod option's declared ID and existing
 `rules.items` source row. Its image follows the existing selection event; no
 default rod, Fish-to-Item alias, cast cost or confirmation behavior is added.
 This follow-up is also unexecuted and unverified.
+
+### Equipment operation selections
+
+The existing equipment-operation target, single-material and alchemy-material
+lists now consume the service snapshot's preserved item record through the
+shared original-image consumer. Its recognized item identity must match the
+snapshot's explicit source ItemClass ID. Each row retains image provenance
+separately from its physical instance selection metadata; refreshing the
+snapshot clears old image evidence. Host names and local physical IDs never
+select a source asset. Existing lock/equipped filters, quote/commit arguments,
+alchemy result selection and save handling remain with the service. This code
+is unexecuted and unverified; no tests, compile, game, render or CI was started.
