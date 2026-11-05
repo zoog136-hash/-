@@ -242,6 +242,84 @@ These are input connections to existing services, not proof of gameplay or
 completion of every row in their shared source tables. Their current caller and
 transaction guards have not been executed after these edits.
 
+### Existing shop, encyclopedia and maintenance inputs — unverified
+
+The original archive can now supply the existing shop catalog session when no
+explicit pack/SHA input was supplied. `source523_shop_catalog.load_original()`
+uses the same27-table projection, selected label closure and provenance as the
+public compiler. The actual serialized in-memory model bytes determine
+`loaded_sha256`; `model_input_identity.archive` separately identifies the original
+ZIP. Both file and original inputs use the same `_load_payload` staging/schema/
+row/relation guards. Existing `bind_source→market_offer/payment_quote/npc_goods`
+readers consume that staged catalog. A policy or NPC pack with a different
+required model digest still fails its original check; no permissions, purchase,
+debit, receipt or save handler is changed.
+
+The encyclopedia follows the same complete-input approach rather than adding a
+second readiness gate. Its existing runtime configure path can build the public
+compiler's core/current-reward/selection/market/gotcha/card/item/bonus/unit/date
+and selected-label closure from the original archive. The exact memory JSON
+bytes determine `pack_sha`, not the original ZIP hash. The existing16MiB limit,
+schema/table/relationship guards stage it before existing books/levels/row and
+service consumers use it. Explicit input failures and existing loaded models
+retain their original precedence. `model_input_identity` records source mode
+separately. Counting, effects, rewards, economy, saved state, UI and `loaded()`
+semantics are unchanged.
+
+`inventory_source523.load_file(default_path)` now has an original-input path only
+for a genuinely absent default file without an explicit environment override.
+It reconstructs the existing generator's same80-item/84-storage/25-sale
+projection, catalog identities, eleven existing price policies and original
+table/record provenance in memory. Only bytes accepted by the original
+49,818-byte/SHA-pinned `parse()` can become `document`; a mismatch leaves the
+previous state and fingerprint intact. The existing automation configure,
+registration, eligibility and quote readers therefore use the same rule input,
+without a substitute fingerprint, new target, virtual grant or changed
+transaction. No pack file is generated or written.
+
+The selected item/grade/offer/book label references are supporting dependencies
+of these larger functional inputs. Exact existing sidecar texts are reused
+first where their original IDs and rows match; missing required labels follow
+only the compiler's declared DescID/DescId references. General description,
+dialogue, text-substitution and DescID-system work remains lower priority. A
+text table parsed for selected labels is not thereby entirely used in gameplay.
+All these input paths remain unexecuted and unverified, with no new completion
+numerator or use percentage.
+
+`World._load_source_dungeon_pack()` now delegates to the existing runtime's
+`load_configured()`. Only an absent default installation can use the original
+projection builder; explicit selections and every existing/partial manifest,
+payload or execution sidecar retain the file loader and its failures. The new
+projection module mirrors the public dungeon compiler's tower/Orim/special,
+reward, time-pool, recharge, declared-server and provenance joins. Its actual
+canonical UTF8 bytes must match both6,050,456 bytes and the existing payload
+SHA before the existing activation path can receive them. The archive hash is
+not substituted for that fingerprint. No Orim execution sidecar, map, placement,
+movement, reward, authority or save implementation is generated or changed.
+The actual byte match and activation have not been executed under the current
+instruction, so they remain unknown.
+
+`World.get_expedition_catalog()` now delegates its existing lazy input loading
+to the expedition catalog's `configure_arguments()`. With no explicit pack/SHA,
+`load_original()` uses the compiler's twelve core tables, synergy, grade/card,
+selected constants/rewards/completion-box/item/bonus/currency closure and the
+existing `_valid_tables` guard before publishing the registry. Existing event,
+completion, time and eligibility readers consume it. Compiled `pack_sha256` is
+the file hash; the original-input mode records the actual serialized catalogue
+payload hash and separates its archive identity/input kind. No receipt, reward,
+ownership, execution or save implementation is changed. No DescData read is
+needed by this compiler's input projection.
+
+Combination runtime `configure()` now reuses the existing
+`Source.archive_path()→Catalog.from_zip()→accept_catalog()` path only when its
+private cache is absent. A present/invalid cache keeps the original cache path
+and failure. The original parser's archive/index/row guards remain intact.
+Existing acceptance builds source/requirement indexes and invalidates read
+results without writing a cache, selecting a combination, reconciling progress,
+migrating state or committing a save. Existing requirement/effect readers then
+receive that same accepted data through their existing methods. All these
+later connections are unexecuted and unverified.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now

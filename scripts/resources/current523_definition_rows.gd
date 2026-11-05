@@ -57,6 +57,11 @@ static func identity() -> Dictionary:
 	if not _open(): return {}
 	return {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":SOURCE_SHA,"source_bytes":SOURCE_BYTES}
 
+static func archive_path() -> String:
+	# Reuse existing whole-archive parsers without copying/installing another
+	# input. Callers must retain their own parsing guards and never save this path.
+	return _archive_path if _open() else ""
+
 static func table_metadata(table: String) -> Dictionary:
 	# Original index provenance for existing derived input formats. These are
 	# input metadata, not a new table-use observation or a generated-pack hash.

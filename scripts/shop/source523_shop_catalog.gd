@@ -41,17 +41,26 @@ var _tables: Dictionary = {}
 var _indices: Dictionary = {}
 var _links: Dictionary = {}
 var loaded_sha256: String = ""
+var model_input_identity: Dictionary = {}
 var error: String = ""
+
+static func _pack_arguments() -> Dictionary:
+	var result: Dictionary = {"explicit":false,"path":"","sha256":""}
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--source523-shop-pack"):
+			result.explicit = true
+			if argument.begins_with("--source523-shop-pack="): result.path = argument.trim_prefix("--source523-shop-pack=")
+		if argument.begins_with("--source523-shop-sha256"):
+			result.explicit = true
+			if argument.begins_with("--source523-shop-sha256="): result.sha256 = argument.trim_prefix("--source523-shop-sha256=")
+	return result
 
 static func session() -> RefCounted:
 	if _session == null:
 		_session = load("res://scripts/shop/source523_shop_catalog.gd").new()
-		var path: String = ""
-		var expected: String = ""
-		for argument: String in OS.get_cmdline_user_args():
-			if argument.begins_with("--source523-shop-pack="): path = argument.trim_prefix("--source523-shop-pack=")
-			if argument.begins_with("--source523-shop-sha256="): expected = argument.trim_prefix("--source523-shop-sha256=")
-		if not path.is_empty(): _session.load_pack(path, expected)
+		var arguments: Dictionary = _pack_arguments()
+		if arguments.explicit: _session.load_pack(arguments.path,arguments.sha256)
+		else: _session.load_original()
 	return _session
 
 func available() -> bool:
@@ -70,6 +79,59 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	hash_context.update(bytes)
 	var actual: String = hash_context.finish().hex_encode()
 	if actual != expected_sha256.to_lower(): return _fail("원본 상점 팩 해시가 다릅니다")
+	return _load_payload(bytes,actual,{"kind":"twilight.source523.shop-pack-input.v1","payload_sha256":actual,"payload_bytes":bytes.size(),"declared_source_zip_sha256":SOURCE_SHA256})
+
+func load_original() -> bool:
+	# Preserve an installed model and never use the original ZIP to bypass an
+	# explicitly supplied pack/digest, including empty or malformed arguments.
+	if available(): return true
+	if _pack_arguments().explicit: return _fail("명시한 원본 상점 팩 입력을 우회하지 않습니다")
+	var identity: Dictionary = Definitions.identity()
+	if identity.is_empty() or identity.get("source_sha256") != SOURCE_SHA256:
+		return _fail("보유 원본523 상점 입력이 없습니다: "+Definitions.problem())
+	var tables: Dictionary = {}
+	var provenance: Dictionary = {}
+	var label_ids: Dictionary = {"0":true,"1":true}
+	# Same complete-row projection and label closure as build_source523_shop.py.
+	# DescData is the sole selected table; its provenance remains the full member.
+	for table: String in REQUIRED_TABLES:
+		var metadata: Dictionary = Definitions.table_metadata(table)
+		var member: String = "content/"+table+".json"
+		var digest: Variant = metadata.get("sha256")
+		if metadata.get("path") != member or metadata.get("version") != 523 or not _integer(metadata.get("bytes")) or not _integer(metadata.get("row_count")) or not digest is String:
+			return _fail("원본 상점 표 정체 누락: "+table)
+		if int(metadata.bytes)<0 or int(metadata.row_count)<0 or digest.length()!=64 or not digest.is_valid_hex_number(false):
+			return _fail("원본 상점 표 정체 오류: "+table)
+		var source_rows: Array[Dictionary] = Definitions.rows(table)
+		if source_rows.size()!=int(metadata.row_count): return _fail("원본 상점 표 행수 불일치: "+table)
+		provenance[table] = {"member":member,"bytes":metadata.bytes,"sha256":digest,"source_rows":source_rows.size(),"packed_rows":source_rows.size()}
+		if table == "DescData_Korean":
+			var selected: Array[Dictionary] = []
+			for row: Dictionary in source_rows:
+				if not _integer(row.get("ID")): return _fail("원본 상점 라벨 ID 오류")
+				if label_ids.has(str(int(row.ID))): selected.append(row)
+			tables[table] = selected
+			provenance[table].packed_rows = selected.size()
+			continue
+		tables[table] = source_rows
+		for row: Dictionary in source_rows:
+			for key: String in row:
+				if key.ends_with("DescID") or key.ends_with("DescId"):
+					if not _integer(row[key]): return _fail("원본 상점 라벨 참조 오류: "+table+"."+key)
+					label_ids[str(int(row[key]))] = true
+	var model: Dictionary = {"schema":SCHEMA,"patch":523,"source_zip_sha256":SOURCE_SHA256,"delivery":"PRIVATE_LOCAL_ONLY","tables":tables,"provenance":provenance}
+	# This digest identifies these actual JSON bytes, not the raw source archive
+	# or another compiler's serialization. Existing policy/NPC mismatches remain.
+	var bytes: PackedByteArray = JSON.stringify(model,"",false,true).to_utf8_buffer()
+	if bytes.size()>MAX_PACK_BYTES: return _fail("원본 상점 팩을 읽을 수 없습니다")
+	var hash_context := HashingContext.new()
+	hash_context.start(HashingContext.HASH_SHA256)
+	hash_context.update(bytes)
+	var actual: String = hash_context.finish().hex_encode()
+	return _load_payload(bytes,actual,{"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":bytes.size(),"projection":"tools/shop/build_source523_shop.py"})
+
+func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dictionary) -> bool:
+	# Both inputs share the existing JSON/schema/table/row/relationship staging.
 	var parser := JSON.new()
 	if parser.parse(bytes.get_string_from_utf8()) != OK: return _fail("상점 팩 JSON 오류")
 	var pack: Variant = parser.data
@@ -119,6 +181,7 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	_indices = indices
 	_links = links
 	loaded_sha256 = actual
+	model_input_identity = input_identity.duplicate(true)
 	error = ""
 	return true
 

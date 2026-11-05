@@ -5,9 +5,135 @@ const SCHEMA = "twilight.expedition523.v1"
 const SOURCE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const P = "MagicDollExpedition"
 const MAX_BYTES = 8 * 1024 * 1024
+const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const ORIGINAL_CORE_SUFFIXES = ["Spot","SpotAsset","Group","SpotReward","SpotRewardType",
+	"CompleteRewardView","SpotEvent","EventView","Bonus","BonusType","Buff","Monster"]
+const ORIGINAL_SYNERGY = ["BuffCardExpeditionSynergy","BuffCardExpeditionSynergyCards","BuffCardExpeditionSynergyBonus"]
 var _tables: Dictionary = {}
 var pack_sha256: String = ""
 var error: String = "원본 탐험 데이터 팩을 설치하지 않았습니다."
+var source_mode: String = ""
+var source_identity: Dictionary = {}
+var source_status: Dictionary = {}
+
+func configure_arguments() -> bool:
+	var path: String = ""
+	var expected: String = ""
+	var explicit_input := false
+	for argument: String in OS.get_cmdline_user_args():
+		if argument in ["--expedition523-pack","--expedition523-sha256"]: explicit_input = true
+		if argument.begins_with("--expedition523-pack="):
+			explicit_input = true; path = argument.trim_prefix("--expedition523-pack=")
+		elif argument.begins_with("--expedition523-sha256="):
+			explicit_input = true; expected = argument.trim_prefix("--expedition523-sha256=")
+	# Explicit invalid/empty input is rejected by the original installer; it
+	# cannot silently select a different raw source or replace a live catalogue.
+	return install(path,expected) if explicit_input else load_original()
+
+static func _source_selection(rows: Array, field: String, ids: Dictionary) -> Array:
+	var selected: Array = []
+	for row: Dictionary in rows:
+		if ids.has(int(row.get(field,-1))): selected.append(row)
+	return selected
+
+func _original_projection() -> Dictionary:
+	# Same source-order projection as build_expedition523_pack.py. This reads
+	# MagicDoll expedition data; it introduces no pet aliases or new eligibility.
+	var t: Dictionary = {}
+	for suffix: String in ORIGINAL_CORE_SUFFIXES: t[P+suffix] = SOURCE_ROWS.rows(P+suffix)
+	for name: String in ORIGINAL_SYNERGY + ["Grade","BuffCard"]: t[name] = SOURCE_ROWS.rows(name)
+	var constants: Array = []
+	for row: Dictionary in SOURCE_ROWS.rows("ConstantData"):
+		if str(row.Name).contains("Expedition") or row.Name=="PolymorphDispatchLevel": constants.append(row)
+	t["ConstantData"] = constants
+	var reward_ids: Dictionary = {}
+	var completion_reward_ids: Dictionary = {}
+	for row: Dictionary in t[P+"SpotReward"]: reward_ids[int(row.RewardID)] = true
+	for row: Dictionary in t[P+"CompleteRewardView"]:
+		reward_ids[int(row.RewardID)] = true
+		completion_reward_ids[int(row.RewardID)] = true
+	t["Reward"] = _source_selection(SOURCE_ROWS.rows("Reward"),"ID",reward_ids)
+	var item_ids: Dictionary = {}
+	var completion_items: Dictionary = {}
+	for row: Dictionary in t.Reward:
+		if row.RewardTypeID==2: item_ids[int(row.RewardClassID)] = true
+		if completion_reward_ids.has(int(row.ID)): completion_items[int(row.RewardClassID)] = true
+	var all_item_bonus: Array = SOURCE_ROWS.rows("ItemBonus")
+	var all_bonus: Array = SOURCE_ROWS.rows("Bonus")
+	var all_types: Array = SOURCE_ROWS.rows("BonusType")
+	var bonus_index: Dictionary = {}
+	for row: Dictionary in all_bonus:
+		if bonus_index.has(int(row.ID)):
+			error = "원본 탐험 보너스 ID가 중복됩니다."
+			return {}
+		bonus_index[int(row.ID)] = row
+	var bag_types: Dictionary = {}
+	for row: Dictionary in all_types:
+		if row.Name=="LuckyBagClassID" and row.UnitID==29: bag_types[int(row.ID)] = true
+	var item_bonus: Array = _source_selection(all_item_bonus,"ItemClassID",item_ids)
+	var bag_ids: Dictionary = {}
+	for link: Dictionary in item_bonus:
+		if not completion_items.has(int(link.ItemClassID)): continue
+		var bonus: Dictionary = bonus_index.get(int(link.BonusID),{})
+		if bonus.is_empty():
+			error = "원본 탐험 상자 보너스 연결이 없습니다."
+			return {}
+		if not bag_types.has(int(bonus.BonusTypeID)): continue
+		var value: Variant = bonus.get("Value")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or value!=floorf(float(value)) or absf(float(value))>9007199254740991.0:
+			error = "원본 탐험 상자 참조가 정수가 아닙니다."
+			return {}
+		bag_ids[int(value)] = true
+	t["LuckyBagClass"] = _source_selection(SOURCE_ROWS.rows("LuckyBagClass"),"ID",bag_ids)
+	t["LuckyBagEntityView"] = _source_selection(SOURCE_ROWS.rows("LuckyBagEntityView"),"LuckyBagClassID",bag_ids)
+	for row: Dictionary in t.LuckyBagEntityView: item_ids[int(row.ItemClassID)] = true
+	t["ItemClass"] = _source_selection(SOURCE_ROWS.rows("ItemClass"),"ID",item_ids)
+	t["ItemBonus"] = _source_selection(all_item_bonus,"ItemClassID",item_ids)
+	var bonus_ids: Dictionary = {}
+	for row: Dictionary in t.ItemBonus + t.BuffCardExpeditionSynergyBonus: bonus_ids[int(row.BonusID)] = true
+	t["Bonus"] = _source_selection(all_bonus,"ID",bonus_ids)
+	var type_ids: Dictionary = {}
+	for row: Dictionary in t.Bonus: type_ids[int(row.BonusTypeID)] = true
+	t["BonusType"] = _source_selection(all_types,"ID",type_ids)
+	var currency_ids: Dictionary = {}
+	for row: Dictionary in t[P+"Spot"]: currency_ids[int(row.ExpeditionCostCurrencyID)] = true
+	for row: Dictionary in t[P+"Buff"]: currency_ids[int(row.CostCurrencyID)] = true
+	t["Currency"] = _source_selection(SOURCE_ROWS.rows("Currency"),"ID",currency_ids)
+	t["CurrencyUnitClass"] = _source_selection(SOURCE_ROWS.rows("CurrencyUnitClass"),"CurrencyID",currency_ids)
+	return t
+
+func load_original() -> bool:
+	if ready(): return true
+	var identity: Dictionary = SOURCE_ROWS.identity()
+	if identity.is_empty():
+		source_status = {"state":"unavailable","reason":SOURCE_ROWS.problem()}
+		return false
+	if identity.get("source_sha256")!=SOURCE_SHA256:
+		error = "누적523 탐험 원본 정체가 다릅니다."
+		return false
+	var candidate: Dictionary = _original_projection()
+	if candidate.is_empty():
+		source_status = {"state":"rejected","reason":error}
+		return false
+	if not _valid_tables(candidate):
+		error = "탐험 원본 표 또는 참조가 기존 카탈로그 계약과 다릅니다."
+		source_status = {"state":"rejected","reason":error}
+		return false
+	# Fingerprint the actual in-memory catalogue payload, not the source archive
+	# and not an absent compiled file. No file, receipt or cache is generated.
+	var payload: String = JSON.stringify({"schema":SCHEMA,"source_sha256":SOURCE_SHA256,
+		"input_kind":"twilight.expedition523.original-rows.v1","tables":candidate},"",true,true)
+	if payload.to_utf8_buffer().size()>MAX_BYTES:
+		error = "탐험 원본 카탈로그 크기 초과"
+		source_status = {"state":"rejected","reason":error}
+		return false
+	_tables = candidate.duplicate(true)
+	pack_sha256 = payload.sha256_text()
+	source_mode = "original_rows"
+	source_identity = identity.duplicate(true)
+	source_status = {"state":"loaded","model_identity":"actual_in_memory_catalogue_payload"}
+	error = ""
+	return true
 
 func install(path: String, expected_sha256: String) -> bool:
 	# Validate a replacement independently; failure leaves the old catalogue alive.
@@ -35,6 +161,9 @@ func install(path: String, expected_sha256: String) -> bool:
 		return false
 	_tables = candidate.duplicate(true)
 	pack_sha256 = expected_sha256.to_lower()
+	source_mode = "compiled_pack"
+	source_identity = {}
+	source_status = {}
 	error = ""
 	return true
 

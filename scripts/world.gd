@@ -10039,15 +10039,7 @@ func set_source_character_gender(gender_id: int) -> bool:
 func get_expedition_catalog() -> RefCounted:
 	if not expedition_pack_checked:
 		expedition_pack_checked = true
-		var path := ""
-		var checksum := ""
-		for argument: String in OS.get_cmdline_user_args():
-			if argument.begins_with("--expedition523-pack="):
-				path = argument.trim_prefix("--expedition523-pack=")
-			elif argument.begins_with("--expedition523-sha256="):
-				checksum = argument.trim_prefix("--expedition523-sha256=")
-		if not path.is_empty() or not checksum.is_empty():
-			expedition_catalog.install(path, checksum)
+		expedition_catalog.configure_arguments()
 	return expedition_catalog
 
 func expedition_owned_cards() -> Array:
@@ -10103,13 +10095,7 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 
 
 func _load_source_dungeon_pack() -> void:
-	var path := OS.get_environment("TWILIGHT_DUNGEON523_PACK")
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--dungeon523-pack="):
-			path = argument.trim_prefix("--dungeon523-pack=")
-	if path.is_empty() and FileAccess.file_exists(SOURCE_DUNGEONS.DEFAULT_MANIFEST):
-		path = SOURCE_DUNGEONS.DEFAULT_MANIFEST
-	if not path.is_empty(): source_dungeons.load_pack(path)
+	source_dungeons.load_configured()
 
 func install_source_dungeon_pack(path: String) -> Dictionary:
 	var result: Dictionary = source_dungeons.install_pack(path)
