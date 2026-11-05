@@ -180,6 +180,7 @@ func held_binding(world: Node, id: String) -> Dictionary:
 	if not ready: return {}
 	var owned: Dictionary=OWN.proof(world,id)
 	if not owned.ok or owned.source_use_immediately or not definitions.has(int(owned.item_class_id)): return {}
+	if int(owned.item_class_id) not in REVIEWED_IDS and int(owned.bless_code_id)!=1:return {}
 	var definition: Dictionary=definitions[int(owned.item_class_id)]
 	if owned.source_item!=definition.original_item or int(owned.bless_code_id) not in [1,2,3]: return {}
 	if int(owned.item_class_id)==239 and int(owned.bless_code_id)!=1:return {}
