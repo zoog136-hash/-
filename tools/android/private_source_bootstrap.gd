@@ -114,6 +114,26 @@ func _prepare() -> Dictionary:
 		if not _pinned(image_root.path_join("manifest.json"),image.get("manifest_sha256")): return {"ok":false}
 		environment.TWILIGHT_SOURCE523_IMAGES = image_root
 		environment.TWILIGHT_SOURCE523_IMAGES_SHA256 = str(image.manifest_sha256).to_lower()
+	if descriptor.has("main_ui"):
+		if not descriptor.main_ui is Dictionary: return _fail("메인 원본 UI 선택 설정 형식이 다릅니다.")
+		var main_ui: Dictionary = descriptor.main_ui
+		var main_ui_root: String = _absolute(main_ui.get("root"))
+		if main_ui_root.is_empty(): return _fail("메인 원본 UI 팩의 명시적 경로가 없습니다.")
+		var main_ui_manifest: String = main_ui_root.path_join("original_ui.json")
+		if not _pinned(main_ui_manifest,main_ui.get("manifest_sha256")): return {"ok":false}
+		# Match the owning SourcePack limit; this manifest contains native layout
+		# metadata and is not bounded by the small installation descriptor size.
+		read = _json_file(main_ui_manifest,128 * 1024 * 1024)
+		if not read.get("ok",false): return read
+		var main_ui_document: Dictionary = read.value
+		if main_ui_document.get("schema") != "twilight-original-ui-v1" or not main_ui_document.get("scenes") is Dictionary or not main_ui_document.get("files") is Dictionary or not main_ui_document.get("atlases") is Dictionary:
+			return _fail("메인 원본 UI 팩의 공개 계약이 다릅니다.")
+		if not main_ui_document.get("blockers") is Array or not main_ui_document.blockers.is_empty():
+			return _fail("메인 원본 UI 팩에 미해결 입력이 있습니다.")
+		# The existing deferred HUD selection opens the supplied partial pack.
+		# Do not mount other controls or invent a World/coordinate selection here.
+		environment.TWILIGHT_SOURCE_UI = main_ui_root
+		environment.TWILIGHT_SOURCE_UI_SHA256 = str(main_ui.manifest_sha256).to_lower()
 	if descriptor.has("ui_icons"):
 		if not descriptor.ui_icons is Dictionary: return _fail("원본 UI 아이콘 선택 설정 형식이 다릅니다.")
 		var icons: Dictionary = descriptor.ui_icons

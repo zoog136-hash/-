@@ -100,6 +100,7 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 | 맵 전용989 SP2 + 전역30 SPR 선언 | `user://current523_map_static_spr.cfg` `[display]` source_root/declaration_path/enabled |
 | 공통523 원문 ZIP | `TWILIGHT_PATCH523_CONTENT`, growth/death/title/relic의 기존 `user://` 원본 ZIP 위치 |
 | 새 이미지 manifest + dummy 보충 원문 | `TWILIGHT_SOURCE523_IMAGES`, `TWILIGHT_SOURCE523_IMAGES_SHA256` |
+| 별도로 공급된 메인 HUD 원본 부분팩 | `TWILIGHT_SOURCE_UI`, `TWILIGHT_SOURCE_UI_SHA256`; root/original_ui.json |
 | 실제 UI 부분팩과 selection JSON이 모두 있을 때 | `TWILIGHT_SOURCE523_UI_ICONS`, `TWILIGHT_SOURCE523_UI_ICONS_SHA256` |
 | 새 Sprite 은행이 실제 공급됐을 때 | `user://current523_source_bank.json` schema1의 tables_zip/manifest_path/manifest_sha256/overlay_whitelist_* |
 
@@ -107,7 +108,12 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 시작 프로필 선택이며, 카탈로그의 실제 비제외 Land임을 확인해야 한다. 좌표를
 만들지 않고 기존 runtime의 입장 판정에 맡긴다. 같은 맵 pin에서는 나중에 사용자가
 바꾼 활성 여부·지역·navigation profile·커서를 유지한다. 설정 변경 전 이전 바이트를
-고유 백업에 보관한다. UI267의 화면 mount나 binding factory는 추정하지 않는다.
+고유 백업에 보관한다. 메인 HUD는 `main_ui` binding의 원본 팩 root와 manifest
+pin만 전달하고 기존 지연 선택·binding consumer에 맡긴다. 이 입력은 PR270의
+`ui_icons` 선택과 다르다. manifest는 기존 loader와 같은128MiB 제한 및 schema,
+scenes/files/atlases/blockers 계약을 확인한다. UI267의 화면 mount나 binding
+factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadata가 다른 노드
+활성화나 전체560UI 완료를 뜻하지 않으며, 미확정 World·맵 입력·좌표를 지정하지 않는다.
 
 ## 비공개 인계 schema1
 
@@ -124,7 +130,7 @@ data를 거부한다. 토큰과 원본 자산은 포함하지 않는다. 이 입
 install_root를 갖는다. format은 `joined-zip`, `zip`, `file`이다. files는 각각
 공식 file_id/name/bytes/sha256을 갖고 joined-zip은 order와 전체 bytes/sha256도
 필요하다. depends_on은 이미 설치한 새 팩만 참조한다. `bindings`는
-maps/map_definitions/map_static_spr/tables/images/ui_icons/source_bank의 공식 상대 경로와 pin만 사용한다.
+maps/map_definitions/map_static_spr/tables/images/main_ui/ui_icons/source_bank의 공식 상대 경로와 pin만 사용한다.
 include_prefixes는 `/`로 끝나면 폴더 하위 전체, 그 외는 정확한 ZIP member만
 추출한다. PR230 전달 ZIP에서는 world-links만 설치해 동봉된 구형 monsters는
 의존성에 넣지 않는다. SP2/SPR도 소비자에 필요한 원문과 metadata만 추출한다.

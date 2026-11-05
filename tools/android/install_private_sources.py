@@ -98,9 +98,9 @@ def json_write(path, value):
         temporary.unlink(missing_ok=True)
 
 
-def read_json(path):
+def read_json(path, maximum=32 * 1024 * 1024):
     no_links(path)
-    if path.stat().st_size > 32 * 1024 * 1024:
+    if path.stat().st_size > maximum:
         raise ValueError('Oversized installer metadata')
     return json.loads(path.read_text(encoding='utf-8'))
 
@@ -452,6 +452,18 @@ def descriptor(plan, resources):
             if not matches(inside(root, supplement['path']), supplement):
                 raise ValueError('Required original dummy declaration missing/mismatched')
         result['images'] = {'root': str(root), 'manifest_sha256': row['manifest_sha256']}
+    if 'main_ui' in bindings:
+        row = bindings['main_ui']
+        root = inside(resources, row['root'])
+        manifest_path = root / 'original_ui.json'
+        if sha256_file(manifest_path) != pin(row['manifest_sha256']):
+            raise ValueError('Main UI original manifest pin mismatch')
+        manifest = read_json(manifest_path, maximum=128 * 1024 * 1024)
+        if (not isinstance(manifest, dict) or manifest.get('schema') != 'twilight-original-ui-v1'
+                or any(not isinstance(manifest.get(key), dict) for key in ('scenes', 'files', 'atlases'))
+                or not isinstance(manifest.get('blockers'), list) or manifest['blockers']):
+            raise ValueError('Main UI original pack contract is incomplete or has blockers')
+        result['main_ui'] = {'root': str(root), 'manifest_sha256': row['manifest_sha256']}
     if 'map_definitions' in bindings:
         row = bindings['map_definitions']
         directory = inside(resources, row['directory'])
