@@ -3,6 +3,7 @@ extends RefCounted
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const RENDERER = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const STATIC_SPR=preload("res://scripts/maps/current523_static_spr.gd")
 var active: bool = false
 var problem: String = ""
 var settings: Dictionary = {}
@@ -214,12 +215,14 @@ func open(value: Dictionary) -> bool:
 	return true
 
 func close(remember_disabled: bool = true) -> bool:
+	problem=""
 	if source_owned: return _close_source(remember_disabled)
 	var saved: bool = true
 	if remember_disabled:
 		var options: Dictionary = OPTIONS.read()
 		options.enabled = false
 		saved = OPTIONS.write(options) == OK
+		if not saved:problem="자동 시작 해제 설정을 저장하지 못했습니다."
 	var world: Node = _world()
 	if is_instance_valid(world) and is_instance_valid(_prior): world.set("field_renderer", _prior)
 	if is_instance_valid(_renderer):
@@ -260,6 +263,31 @@ func apply_options(value: Dictionary) -> bool:
 		problem = "표시 보정을 저장하지 못했습니다. 이전 보정을 유지합니다."
 		return false
 	settings = options
+	return true
+
+func apply_static_spr_options(value: Dictionary) -> bool:
+	problem=""
+	var checked: Dictionary=STATIC_SPR.validate(value)
+	if checked.is_empty():problem="정적 SPR 설정 형식이 올바르지 않습니다.";return false
+	if _source_travel_busy or saving_prior_snapshot:
+		problem="맵 이동 또는 저장이 끝난 뒤 SPR 설정을 적용해 주세요.";return false
+	if not active:
+		if STATIC_SPR.save_options(checked)!=OK:problem="SPR 설정을 저장하지 못했습니다.";return false
+		return true
+	var world: Node=_world()
+	if not is_instance_valid(world) or not is_instance_valid(_renderer) or world.get("field_renderer")!=_renderer or not _renderer.has_method("prepare_static_spr_options") or not _renderer.has_method("commit_static_spr_options"):
+		problem="현재 지도 표시 소비자가 바뀌어 SPR 설정을 적용하지 않았습니다.";return false
+	_source_travel_busy=true
+	var prepared: Dictionary=_renderer.call("prepare_static_spr_options",checked)
+	if not prepared.get("ok",false):
+		problem=str(prepared.get("problem","SPR 원문 소비자를 연결하지 못했습니다."))
+		_source_travel_busy=false;return false
+	if STATIC_SPR.save_options(checked)!=OK:
+		if is_instance_valid(prepared.get("candidate")):prepared.candidate.free()
+		problem="SPR 설정을 저장하지 못해 기존 표시를 유지합니다."
+		_source_travel_busy=false;return false
+	_renderer.call("commit_static_spr_options",prepared)
+	_source_travel_busy=false
 	return true
 
 func metrics() -> Dictionary:
@@ -419,7 +447,9 @@ func _close_source(remember_disabled: bool) -> bool:
 	if remember_disabled:
 		var options: Dictionary = _source_checkpoint()
 		options.enabled = false
-		saved = (OPTIONS.write(options) == OK) and saved
+		var options_saved: bool=OPTIONS.write(options)==OK
+		if not options_saved:problem+=(" · " if not problem.is_empty() else "")+"자동 시작 해제 설정을 저장하지 못했습니다."
+		saved = options_saved and saved
 	if is_instance_valid(_renderer):
 		_renderer.hide(); _renderer.process_mode = Node.PROCESS_MODE_DISABLED; _renderer.queue_free()
 	if is_instance_valid(_source_physics):

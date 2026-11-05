@@ -49,6 +49,7 @@ var _scope_clipped_records: int = 0
 var _off_floor_decoration_records: int = 0
 var _draw_generation: int=0
 var _usage_generation: int=-1
+var _visible_members: Array[String]=[]
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -220,6 +221,54 @@ func frame_metrics() -> Dictionary:
 	return result
 
 
+func prepare_static_spr_options(value: Dictionary) -> Dictionary:
+	# Runtime input for the existing settings button, not an inspection render.
+	# Leave the current consumer and field untouched until settings are saved.
+	if not _configured or field==null:return {"ok":false,"problem":"현재 지도 표시가 준비되지 않았습니다."}
+	var checked: Dictionary=STATIC_SPR.validate(value)
+	if checked.is_empty():return {"ok":false,"problem":"정적 SPR 설정을 읽을 수 없습니다."}
+	var candidate: Node2D=null
+	if checked.enabled:
+		if not bool(field.get_meta("current523_source_field",false)):
+			return {"ok":false,"problem":"정적 SPR은 원문 이동 필드에서 연결해 주세요."}
+		candidate=STATIC_SPR.new()
+		candidate.name="Current523SourceStaticSPR"
+		if not candidate.configure(checked,field.coordinates):
+			var detail: String=candidate.problem
+			candidate.free()
+			return {"ok":false,"problem":detail}
+		candidate.position=_visual_delta
+		var records: Dictionary=_visible_static_records()
+		candidate.refresh(records.records,int(records.malformed))
+	return {"ok":true,"candidate":candidate,"options":checked,"renderer_id":get_instance_id()}
+
+
+func commit_static_spr_options(prepared: Dictionary) -> void:
+	# Called synchronously by the owning controller after its atomic config save.
+	# No field, movement, collision, portal, camera or map-time state is replaced.
+	var prior: Node2D=_static_spr
+	_static_spr=prepared.candidate
+	if is_instance_valid(prior):
+		prior.hide();prior.set_process(false)
+		remove_child(prior);prior.queue_free()
+	_metrics.erase("static_spr")
+	if is_instance_valid(_static_spr):
+		add_child(_static_spr)
+		_static_spr.position=_visual_delta
+		_static_spr.show();_static_spr.queue_redraw()
+		_metrics["static_spr"]=_static_spr.metrics()
+
+
+func _visible_static_records() -> Dictionary:
+	var records: Array[Dictionary]=[]
+	var malformed: int=0
+	for member: String in _visible_members:
+		var tail: Dictionary=_static_tails.get(member,{})
+		if not tail.get("ok",false):malformed+=1;continue
+		records.append_array(tail.records)
+	return {"records":records,"malformed":malformed}
+
+
 func _scope_problem() -> String:
 	if field == null or not is_instance_valid(player): return "기존 아덴 필드가 없습니다."
 	if bool(field.get_meta("current523_source_field",false)):
@@ -270,14 +319,15 @@ func _read_chunk(member: String) -> Dictionary:
 	var decoded: Dictionary = _raw_sources.read_member(member)
 	if decoded.is_empty(): _fail(_raw_sources.problem); return {}
 	var origin: Vector2i = _member_origins[member]
-	if is_instance_valid(_static_spr):
-		var tail: Dictionary=STATIC_SPR.parse_tail(decoded.sections.tail,int(_raw_sources.source_metadata(member).get("core_end",0)))
-		if tail.ok:
-			for row: Dictionary in tail.records:
-				row["source_member"]=member
-				row["source_sha256"]=decoded.source_sha256
-				row["source_bytes"]=decoded.source_bytes
-		_static_tails[member]=tail
+	# Retain the same currently loaded S32 tail even while SPR display is off.
+	# Enabling the existing consumer does not need another map entry or a source scan.
+	var tail: Dictionary=STATIC_SPR.parse_tail(decoded.sections.tail,int(_raw_sources.source_metadata(member).get("core_end",0)))
+	if tail.ok:
+		for row: Dictionary in tail.records:
+			row["source_member"]=member
+			row["source_sha256"]=decoded.source_sha256
+			row["source_bytes"]=decoded.source_bytes
+	_static_tails[member]=tail
 	var layers: Dictionary = {}
 	var floor_bytes: PackedByteArray = decoded.sections.floor
 	for index: int in range(8192): _append(layers, origin, index & 127, index >> 7, floor_bytes.decode_u32(index * 4), -2)
@@ -373,14 +423,10 @@ func _build_frame() -> bool:
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
+	_visible_members=visible.duplicate()
 	if is_instance_valid(_static_spr):
-		var static_records: Array[Dictionary]=[]
-		var malformed: int=0
-		for member: String in visible:
-			var tail: Dictionary=_static_tails.get(member,{})
-			if not tail.get("ok",false): malformed+=1;continue
-			static_records.append_array(tail.records)
-		_static_spr.refresh(static_records,malformed)
+		var static_records: Dictionary=_visible_static_records()
+		_static_spr.refresh(static_records.records,int(static_records.malformed))
 		_metrics["static_spr"]=_static_spr.metrics()
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()

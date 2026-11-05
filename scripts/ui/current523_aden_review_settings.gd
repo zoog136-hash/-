@@ -284,7 +284,7 @@ func _build_static_spr_controls() -> void:
 	spr_anchor_x=_spr_number(values,"앵커 X",-48,48,float(saved.anchor_x))
 	spr_anchor_y=_spr_number(values,"Y",-48,48,float(saved.anchor_y))
 	spr_layer=_spr_number(values,"자체 레이어",-4095,-1,float(saved.layer))
-	add_child(UI.button("SPR 설정 저장 · 다음 입장에 적용",_save_static_spr,Vector2(0,40)))
+	add_child(UI.button("SPR 설정 저장 · 현재 맵에 적용",_save_static_spr,Vector2(0,40)))
 	spr_status=UI.label("S32 원문 ID/좌표 → 같은 ID의 -0.sp2 → 원문 동작의 프레임. 선언 없는 항목은 제외합니다. 동작 지정·저장 그룹·틱/초·앵커·레이어는 자체 선택이며 통행/포탈/전투에 영향이 없습니다.",12,UI.MUTED)
 	spr_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(spr_status)
 
@@ -305,6 +305,13 @@ func _save_static_spr() -> void:
 	if not bindings is Dictionary:
 		spr_status.text="파일/저장 그룹 지정은 SPR ID·원문 선택자별 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
 	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings}
+	var current: Node=_world()
+	if current!=null and current.has_method("apply_current523_static_spr_options"):
+		var applied: bool=current.call("apply_current523_static_spr_options",value)
+		if applied:
+			spr_status.text="저장 · 현재 맵 SPR 소비자에 연결했습니다. 원문에 없는 동작·프레임은 표시하지 않습니다." if bool(current.get("current523_aden_play_active")) else "저장됨 · 다음 원문 맵 입장에 적용합니다."
+		else:spr_status.text=str(current.get("current523_aden_play_problem"))
+		return
 	var error: Error=STATIC_SPR.save_options(value)
 	spr_status.text="저장됨 · 다음 원문 맵 입장에 적용합니다. 원문에 없는 동작·프레임은 표시하지 않습니다. 동작 선택·틱/초·앵커·레이어는 자체 설정입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
 

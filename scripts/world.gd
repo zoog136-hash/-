@@ -10419,9 +10419,13 @@ func close_current523_aden_play(remember_disabled: bool = true, reason: String =
 	current523_aden_play_active = false
 	current523_aden_play_problem = reason
 	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
-	if not saved: detail += " 자동 시작 해제 설정은 저장하지 못했습니다."
+	if not saved:
+		var close_problem: String = str(controller.get("problem"))
+		if close_problem.is_empty(): close_problem = "종료 상태를 저장하지 못했습니다."
+		current523_aden_play_problem = close_problem if reason.is_empty() else reason + " · " + close_problem
+		detail += " " + close_problem
 	current523_aden_play_changed.emit(false, detail)
-	if is_instance_valid(hud) and not reason.is_empty(): hud.show_message(detail)
+	if is_instance_valid(hud) and (not reason.is_empty() or not saved): hud.show_message(detail)
 
 func apply_current523_aden_play_options(options: Dictionary) -> bool:
 	var controller: RefCounted = _aden_play_controller()
@@ -10430,6 +10434,14 @@ func apply_current523_aden_play_options(options: Dictionary) -> bool:
 	var applied: bool = bool(controller.call("apply_options", value))
 	current523_aden_play_problem = str(controller.get("problem"))
 	current523_aden_play_changed.emit(current523_aden_play_active, "자체 표시 보정을 적용했습니다." if applied else current523_aden_play_problem)
+	return applied
+
+func apply_current523_static_spr_options(value: Dictionary) -> bool:
+	var controller: RefCounted = _aden_play_controller()
+	var applied: bool = bool(controller.call("apply_static_spr_options", value))
+	current523_aden_play_active = bool(controller.get("active"))
+	current523_aden_play_problem = str(controller.get("problem"))
+	current523_aden_play_changed.emit(current523_aden_play_active, "정적 SPR 설정을 적용했습니다." if applied else current523_aden_play_problem)
 	return applied
 
 func current523_aden_play_metrics() -> Dictionary:
