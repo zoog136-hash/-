@@ -349,6 +349,12 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 		world.add_child(candidate); candidate.global_position = point; effects.append(candidate)
 		effect_status[key].state = "M_source_pixels_candidate_raster_timing_blend; native_runtime_not_verified"
 		return true
+	# Keep the existing renderer first. Only presentation construction falls
+	# through; this caller still owns the admitted Spell, stage, point and limits.
+	if _emit_legacy_source_overlay(actor,sprite,requested_action,point,key): return true
+	return _emit_source_bank_visual(actor,spell,field,point,key)
+
+func _emit_legacy_source_overlay(actor: Node, sprite: int, requested_action: int, point: Vector2, key: String) -> bool:
 	if requested_action > 0:
 		effect_status[key].state = "exact_nonzero_action_binding_required"
 		last_event["effect_pending"] = "exact_nonzero_action_binding_required"; return false
@@ -370,4 +376,42 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	preview.set("_overlay_facing",int(actor.motion.facing8))
 	effects.append(preview)
 	effect_status[key].state = "external_overlay_configured; native_523_pixel_timing_equivalence_not_verified"
+	return true
+
+func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, point: Vector2, key: String) -> bool:
+	if effects.size() >= 16: return false
+	var budget: int = remaining_effect_bytes()
+	if budget <= 0: return false
+	var stage: String = ""
+	for name: String in preload("res://scripts/resources/current523_source_effect_selection.gd").STAGES:
+		if preload("res://scripts/resources/current523_source_effect_selection.gd").STAGES[name] == field:
+			stage = name
+			break
+	if stage.is_empty(): return false
+	var pose: Variant = actor.get("motion")
+	var facing: int = int(pose.facing8) if pose != null else 0
+	var factory = preload("res://scripts/animation/original_source_preview.gd").new()
+	var candidate: Node2D = factory.make_current_source_spell_effect(spell,stage,facing,{},budget)
+	var result: Dictionary = factory.source_effect_status.duplicate(true)
+	factory.free()
+	effect_status[key]["source_bank"] = result
+	if candidate == null: return false
+	# Conservatively reserve the available existing budget for this source view.
+	# Its shared texture-cache limit also covers independent source children.
+	candidate.set_meta("patch523_frame_bytes",budget)
+	candidate.set_meta("patch523_owner_id",actor.get_instance_id())
+	actor.add_child(candidate)
+	candidate.global_position = point
+	if not bool(candidate.call("advance_reference_source",0.0,"idle",int(candidate.get("_overlay_facing")))):
+		result["ok"] = false
+		result["status"] = "initial_source_frame_unavailable"
+		result["frame_problem"] = candidate.get("reference_bank_status").duplicate(true)
+		candidate.free()
+		return false
+	effects.append(candidate)
+	result["status"] = "configured_existing_source_effect"
+	var previous_state: String = str(effect_status[key].get("state","pending"))
+	effect_status[key]["previous_renderer_state"] = previous_state
+	effect_status[key].state = "current_source_bank_visual; native_trigger_and_composition_unverified"
+	if str(last_event.get("effect_pending","")) == previous_state: last_event.erase("effect_pending")
 	return true

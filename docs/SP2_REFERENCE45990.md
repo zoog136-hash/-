@@ -187,6 +187,16 @@ The admitted NPC view delegates the same typed presentation API. Its combat
 owner retains event admission, timing, targeting, effect limits and lifetime.
 Data, effect, transaction and save-owner logic is not copied into this bridge.
 
+The existing NPC `emit_effect` rendering branch can also request an unparented
+current-source one-shot when its legacy overlay cannot handle the exact source
+action. A working candidate or legacy renderer remains first. The existing
+caller still supplies the admitted Spell row, field, actor, point, facing and
+effect limit, adopts the returned node and owns its cleanup. Cast, hit, damage,
+proc, costs, target selection and rewards are unchanged. The source view uses
+a shared texture-cache budget across its independent child layers, and the
+caller conservatively reserves its existing available effect-byte budget.
+Original member-byte progress is not mixed with that runtime texture budget.
+
 The subsequent local aura bridge follows the existing World/subslot
 `source_awakening_aura.configure` and process calls. Its activation still comes
 only from the existing ownership/status service. It matches the bounded twelve

@@ -24,6 +24,9 @@ var _reference_child_role: String = ""
 var _reference_overlay_clock: float = -0.000000001
 var _reference_overlay_key: String = ""
 var _reference_frame_status: Dictionary = {}
+var _reference_texture_budget: Dictionary = {}
+var _reference_texture_charges: Dictionary = {}
+var _reference_child_problem: Dictionary = {}
 var reference_bank_status: Dictionary = {}
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
@@ -326,6 +329,7 @@ func clear() -> void:
 	_reference_overlay_parents.clear()
 	_reference_overlay_parent.clear()
 	_reference_attachment_parent.clear()
+	_reference_child_problem.clear()
 	for child: Node2D in _reference_source_children.values():
 		if is_instance_valid(child): child.free()
 	_reference_source_children.clear()
@@ -348,6 +352,8 @@ func clear() -> void:
 	for overlay: Node2D in _overlay_nodes:
 		if is_instance_valid(overlay): overlay.free()
 	_overlay_nodes.clear()
+	_release_reference_texture_charges()
+	_reference_texture_budget = {}
 	_last_token = ""
 	for effect_node: Sprite2D in _effect_nodes.values():
 		var copy: BackBufferCopy = effect_node.get_meta("observed_backbuffer") as BackBufferCopy if effect_node.has_meta("observed_backbuffer") else null
@@ -443,8 +449,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if is_reference:
 			var verified: Dictionary = _reference_bank.render_layer(effect, false)
 			if not verified.ok:
-				clear()
-				reference_bank_status = verified
+				_abort_reference_source(verified)
 				return
 		var node: Sprite2D = _effect_nodes.get(int(effect.layer_id)) as Sprite2D
 		if node == null: continue
@@ -501,7 +506,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_layers[index].texture = texture
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
 	if _reference_bank != null:
-		_advance_reference_children(delta,source_direction)
+		var source_children_ready: bool = _advance_reference_children(delta,source_direction)
+		if not source_children_ready and not _reference_texture_budget.is_empty():
+			var problem: Dictionary = _reference_child_problem.duplicate(true)
+			_abort_reference_source(problem)
+			return
 		var shown: Array = []
 		for index: int in range(selected.layers.size()):
 			if _layers[index].visible: shown.append(_shown_source_provenance(selected.layers[index]))
@@ -529,9 +538,11 @@ func _shown_source_provenance(layer: Dictionary) -> Dictionary:
 		provenance["native_reference_multiplicity_verified"] = false
 	return provenance
 
-func _advance_reference_children(delta: float, stored_direction: int) -> void:
+func _advance_reference_children(delta: float, stored_direction: int) -> bool:
 	var lineage: Dictionary = _reference_card_context if not _reference_card_context.is_empty() else (_reference_attachment_parent if not _reference_attachment_parent.is_empty() else _reference_overlay_parent)
-	if lineage.is_empty(): return
+	if lineage.is_empty(): return true
+	_reference_child_problem.clear()
+	var ready: bool = true
 	if _reference_child_role != _role:
 		for child: Node2D in _reference_source_children.values():
 			if is_instance_valid(child): child.free()
@@ -541,9 +552,14 @@ func _advance_reference_children(delta: float, stored_direction: int) -> void:
 	ancestors.append(int(_record.source_sprite_id))
 	var active_parent_actor: int = int(_playback_tracks[_role].get("source_sprite_id",_record.source_sprite_id))
 	if not active_parent_actor in ancestors: ancestors.append(active_parent_actor)
-	if ancestors.size() >= 16: return
+	if ancestors.size() >= 16:
+		_reference_child_problem = {"ok":false,"error":"Independent source layer ancestry exceeds the bounded source contract."}
+		return false
 	for attachment: Dictionary in _record.get("independent_source_layers",{}).get(_role,[]):
-		if int(attachment.target_sprite_id) in ancestors: continue
+		if int(attachment.target_sprite_id) in ancestors:
+			_reference_child_problem = {"ok":false,"error":"Independent source layer ancestry contains a cycle."}
+			ready = false
+			continue
 		var key: String = "%s:%d:%d:%d:%s" % [str(attachment.kind),int(attachment.from_sprite_id),int(attachment.target_sprite_id),int(attachment.child_action_id),str(attachment.get("source_binding_id",""))]
 		var child: Variant = _reference_source_children.get(key)
 		if child == null:
@@ -551,8 +567,13 @@ func _advance_reference_children(delta: float, stored_direction: int) -> void:
 			child.playback_mode_override = _playback_mode
 			add_child(child)
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
+				_reference_child_problem = child.reference_bank_status.duplicate(true)
+				_reference_child_problem["ok"] = false
+				if str(_reference_child_problem.get("error","")).is_empty(): _reference_child_problem["error"] = "Independent source layer action identity differs."
+				ready = false
 				child.free()
 				continue
+			child._reference_texture_budget = _reference_texture_budget
 			child._reference_attachment_parent = {"request_key":lineage.get("request_key",""),"consumer":lineage.get("consumer",""),"manifest_sha256":lineage.get("manifest_sha256",""),"ancestor_actor_ids":ancestors.duplicate(),"kind":attachment.kind,"source_actor_id":active_parent_actor,"source_action_id":_playback_tracks[_role].source_action_id,"source_declaration":attachment.source_declaration.duplicate(true),"host_policy":attachment.dispatch_policy}
 			if attachment.has("source_binding_id"):
 				child._reference_attachment_parent["source_binding_id"] = attachment.source_binding_id
@@ -563,17 +584,52 @@ func _advance_reference_children(delta: float, stored_direction: int) -> void:
 			_reference_source_children[key] = child
 		# This advances the child's own source tokens/FPS, independently of the
 		# parent's selected token index. Only the explicit host role starts it.
-		child.advance_reference_source(delta,"source_layer",stored_direction)
+		if not child.advance_reference_source(delta,"source_layer",stored_direction):
+			_reference_child_problem = child.reference_bank_status.duplicate(true)
+			_reference_child_problem["ok"] = false
+			if str(_reference_child_problem.get("error","")).is_empty(): _reference_child_problem["error"] = "Independent source layer frame is unavailable."
+			ready = false
+	return ready
+
+func _release_reference_texture_charges() -> void:
+	var released: int = 0
+	for charge: Variant in _reference_texture_charges.values(): released += int(charge)
+	if not _reference_texture_budget.is_empty():
+		_reference_texture_budget["used"] = maxi(0,int(_reference_texture_budget.get("used",0))-released)
+	_reference_texture_charges.clear()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE: _release_reference_texture_charges()
+
+func _abort_reference_source(problem: Dictionary) -> void:
+	var one_shot: bool = _is_overlay
+	clear()
+	reference_bank_status = problem
+	if one_shot and is_inside_tree(): queue_free()
 
 func _source_texture(layer: Dictionary) -> Texture2D:
 	var key: String = str(layer.get("texture_key", layer.get("path", "")))
 	if _reference_bank != null:
 		var result: Dictionary = _reference_bank.render_layer(layer, not _textures.has(key))
 		if not result.ok:
-			clear()
-			reference_bank_status = result
+			_abort_reference_source(result)
 			return null
-		if not _textures.has(key): _textures[key] = ImageTexture.create_from_image(result.image)
+		if not _textures.has(key):
+			var charge: int = int(result.image.get_width())*int(result.image.get_height())*4
+			var used: int = int(_reference_texture_budget.get("used",0))
+			var limit: int = int(_reference_texture_budget.get("limit",0))
+			if limit > 0 and charge > limit-used:
+				var problem: Dictionary = {"ok":false,"reason":"source_texture_budget_exceeded","error":"Source effect texture cache would exceed its shared owner budget.","texture_budget_limit_bytes":limit,"texture_budget_used_bytes":used,"texture_allocation_bytes":charge}
+				_abort_reference_source(problem)
+				return null
+			var texture: ImageTexture = ImageTexture.create_from_image(result.image)
+			if texture == null:
+				_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
+				return null
+			_textures[key] = texture
+			if not _reference_texture_budget.is_empty():
+				_reference_texture_budget["used"] = used+charge
+				_reference_texture_charges[key] = charge
 	elif not _textures.has(key):
 		var image: Image = Image.load_from_file(INSTALL.resolve_file(_root, str(layer.path)))
 		if image != null and not image.is_empty(): _textures[key] = ImageTexture.create_from_image(image)
@@ -657,6 +713,7 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	if not overlay._configure_reference_bank(_manifest_path,str(_reference_card_context.manifest_sha256),int(binding.target_sprite_id),{"idle":int(binding.child_action_id)},{"idle":false},"idle","overlay"):
 		overlay.free()
 		return false
+	overlay._reference_texture_budget = _reference_texture_budget
 	if binding.has("child_source_action_key") and overlay._playback_tracks.idle.get("source_action_key","") != binding.child_source_action_key:
 		overlay.free()
 		return false
@@ -855,30 +912,22 @@ func notify_current_source_spell_event(spell: Dictionary, stage: String, world_p
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: int, context: Dictionary = {}, texture_budget_bytes: int = 0) -> Node2D:
+	# The existing owner adopts/positions/advances the returned node. This factory
+	# does not parent it, render its first frame or create a gameplay trigger.
+	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
+	supplied_context.merge(context,true)
+	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
+	return _make_selected_current_source_effect(selected,facing,texture_budget_bytes)
+
 func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int) -> bool:
-	source_effect_status = selected.duplicate(true)
-	if not bool(selected.get("ok",false)): return false
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect"] or not selected.get("source_reference") is Dictionary: return false
-	var overlay = get_script().new()
-	overlay.playback_mode_override = playback_mode_override
+	var overlay: Variant = _make_selected_current_source_effect(selected,facing)
+	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
-	if not overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay"):
-		source_effect_status["status"] = "selection_pending"
-		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_unavailable"))
-		overlay.free()
-		return false
-	if bool(overlay._playback_tracks.idle.get("static_pending_timing",false)):
-		source_effect_status["status"] = "selection_pending"
-		source_effect_status["reason"] = "strict_source_effect_timing_unresolved"
-		overlay.free()
-		return false
-	overlay._reference_overlay_parent = {"request_key":selected.request_key,"consumer":selected.consumer,"manifest_sha256":selected.manifest_sha256,"source_snapshot":"patch523","request_source_snapshot":selected.get("request_source_snapshot"),"source_reference":selected.source_reference.duplicate(true),"host_policy":selected.host_policy,"ancestor_actor_ids":[]}
-	overlay._is_overlay = true
-	overlay._overlay_facing = posmod(facing+3,8)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
-	overlay.z_index = 2
 	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
+		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_frame_unavailable"))
 		overlay.free()
@@ -887,3 +936,48 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"
 	return true
+
+func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
+	source_effect_status = selected.duplicate(true)
+	if not bool(selected.get("ok",false)): return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if texture_budget_bytes < 0:
+		source_effect_status["ok"] = false
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = "current523_source_effect_texture_budget_invalid"
+		return null
+	var overlay = get_script().new()
+	overlay.playback_mode_override = playback_mode_override
+	if not overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay"):
+		source_effect_status["ok"] = false
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_unavailable"))
+		overlay.free()
+		return null
+	if bool(overlay._playback_tracks.idle.get("static_pending_timing",false)):
+		source_effect_status["ok"] = false
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = "strict_source_effect_timing_unresolved"
+		overlay.free()
+		return null
+	var shared_budget: Dictionary = _reference_texture_budget
+	if shared_budget.is_empty(): shared_budget = {"limit":texture_budget_bytes,"used":0}
+	elif texture_budget_bytes > 0:
+		if int(shared_budget.get("used",0)) > texture_budget_bytes:
+			source_effect_status["ok"] = false
+			source_effect_status["status"] = "selection_pending"
+			source_effect_status["reason"] = "current523_shared_texture_budget_already_in_use"
+			overlay.free()
+			return null
+		var current_limit: int = int(shared_budget.get("limit",0))
+		if current_limit <= 0 or texture_budget_bytes < current_limit: shared_budget["limit"] = texture_budget_bytes
+	overlay._reference_texture_budget = shared_budget
+	overlay._reference_request_context = selected.get("source_bank_context",{}).duplicate(true)
+	overlay._reference_overlay_parent = {"request_key":selected.request_key,"consumer":selected.consumer,"manifest_sha256":selected.manifest_sha256,"source_snapshot":"patch523","request_source_snapshot":selected.get("request_source_snapshot"),"source_reference":selected.source_reference.duplicate(true),"host_policy":selected.host_policy,"ancestor_actor_ids":[]}
+	overlay._is_overlay = true
+	overlay._overlay_facing = posmod(facing+3,8)
+	overlay.source_facing = overlay._overlay_facing
+	overlay.z_index = 2
+	source_effect_status["texture_budget_limit_bytes"] = int(shared_budget.get("limit",0))
+	source_effect_status["status"] = "configured_unparented_source_effect"
+	return overlay
