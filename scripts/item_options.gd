@@ -14,11 +14,15 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 		"melee_damage_reduction_pct":"MeleeDamageReductionPercent",
 		"ranged_damage_reduction_pct":"RangeDamageReductionPercent",
 		"magic_damage_reduction_pct":"MagicDamageReductionPercent",
-		"melee_critical_resistance":"MeleeCriticalResist","ranged_critical_resistance":"RangeCriticalResist"}
+		"melee_critical_resistance":"MeleeCriticalResist","ranged_critical_resistance":"RangeCriticalResist",
+		"pve_damage_reduction_pct":["DamageReductionPercent","PVEDamageReductionPercent"],
+		"damage_amp_pct":["PierceDamageReductionPercent","PVEPierceDamageReductionPercent"],
+		"potionCooldownPct":"PotionConsumeDelayDecreasePercent"}
 	if not names.has(key): return 0.0
 	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct"] else "Percentage"
 	var divisor: float = 100.0 if unit_name=="ValuePercent" else 10000.0
-	return _additional_original_operand(record,key,names[key],unit_name,divisor)
+	var selected: Variant = names[key]
+	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
 
 static func additional_original_flat(record: Dictionary, key: String) -> int:
 	var names: Dictionary = {"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical"}
@@ -32,9 +36,9 @@ static func additional_original_flat(record: Dictionary, key: String) -> int:
 				if record.has(alias): return 0
 	# Critical ValuePercent is already a percentage-point chance operand;
 	# evasion Value is an integer rating. Neither existing receiver takes a ratio.
-	return int(_additional_original_operand(record,key,names[key],"ValuePercent" if key.ends_with("_crit") else "Value",1.0))
+	return int(_additional_original_operand(record,key,[names[key]],"ValuePercent" if key.ends_with("_crit") else "Value",1.0))
 
-static func _additional_original_operand(record: Dictionary, key: String, bonus_name: String, unit_name: String, divisor: float) -> float:
+static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float) -> float:
 	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
 	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
 	var bless: Variant = record.get("source_bless_raw")
@@ -56,7 +60,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 	for link: Dictionary in CURRENT_DEFINITIONS.related("ItemBonus","ItemClassID",int(id)):
 		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(link.get("BonusID",-1)))
 		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
-		if type.get("Name")!=bonus_name: continue
+		if type.get("Name") not in bonus_names: continue
 		if link.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
 		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
 		if unit.get("Name")!=unit_name: return 0.0

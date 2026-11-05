@@ -173,3 +173,22 @@ Native RegenHP/RegenMP/AbsoluteRegenHP/AbsoluteRegenMP and AttackDrainHP/MP
 already have the merged native passive-item consumer. This follow-up reuses
 that owner and does not add another regeneration/drain interpretation.
 All additional evasion/critical calls are uncompiled/unexecuted/unverified.
+
+## Existing general combat and potion inputs
+
+Direct Percentage DamageReductionPercent/PVEDamageReductionPercent feed the
+existing general PvE reduction operand; no PvP-only bonus is included.
+PierceDamageReductionPercent/PVEPierceDamageReductionPercent feed the existing
+cached damage_amp_pct operand. The latter follows the preexisting enhancement
+projection and host damage-amplification ordering/cap; it is not a claim that
+the original tables establish TWILIGHT's combat formula. Both source types in
+each pair retain their actual ItemBonus/Bonus evidence and the shared guards.
+
+PotionConsumeDelayDecreasePercent supplies the existing HP-potion shared
+cooldown input, including _source_hp_potion_parameters() used by the verified
+native dice consumer and the older _use_healing_item calculation. Its unit is
+Percentage with raw/10000 percentage points. Existing growth/enhancement
+contributions, the host cooldown base, clamps, source physical owner and final
+atomic save are unchanged. No MP/other-consumable delay interpretation is
+introduced and the whole original bonus/table is not marked adopted.
+These changes are likewise uncompiled/unexecuted/unverified.

@@ -1110,6 +1110,7 @@ func _refresh_equipment_effects() -> void:
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
+		flags.damage_amp_pct+=ITEM_OPTIONS.additional_original_percent(record,"damage_amp_pct")
 	flags.hp_tick_amount=quest_recovery_hp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))+halphas_star.catalog_bonus("hp_regen")
 	flags.mp_tick_amount=quest_recovery_mp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) else 0)+source_mp_regeneration+_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"mp_recovery")+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	flags.mp_tick_amount+=int(card_collections.bonus("absolute_mp_regeneration:flat"))+halphas_star.catalog_bonus("mp_regen")
@@ -5706,7 +5707,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	next_inventory[item_name] = int(next_inventory.get(item_name, 0)) - 1
 	if is_source and int(next_inventory[item_name]) == 0: next_inventory.erase(item_name)
 	var next_cooldowns: Dictionary = item_use_cooldowns.duplicate(true)
-	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct"),0.0,90.0)/100.0)
+	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct") + _equipment_inven_sum("potionCooldownPct"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
 	var adjusted_heal: int = patch523_npc_spells.extensions.healing(maxi(1, enhanced_heal),true)
@@ -5730,7 +5731,7 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 	# source dice consumer without replacing the NPC healing adjustment/event.
 	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
 	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct"))/100.0))
-	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
+	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent")+_equipment_inven_sum("potionCooldownPct"),0.0,90.0)/100.0)}
 
 func _source_hp_potion_committed(amount: int) -> void:
 	if amount>0:patch523_npc_spells.extensions.on_player_event("healed")
