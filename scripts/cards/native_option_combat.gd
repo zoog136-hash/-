@@ -1,6 +1,6 @@
 extends RefCounted
 ## Contextual source invokes. No passive flattening, persistence or nested attacks.
-const DATA=preload("res://data/cards/base508_option_extensions.json")
+const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 var runtime_ref: WeakRef
@@ -34,8 +34,7 @@ func active() -> Dictionary:
 		if not row.is_empty():out["relic_subslot11:"+str(relic.identity)]={"native_source":{"card":row.card,"effects":row.effects}}
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
-	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
-	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else DATA.data.primary_doll_buffs.get(identity,supplement.primary_doll_buffs.get(identity,{}))
+	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else INPUT.session().primary_doll_buffs.get(identity,{})
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
@@ -60,8 +59,9 @@ func effects(rows: Dictionary) -> Array[Dictionary]:
 			if effect.type.Name!="InvokeOption" or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=10:continue
 			if effect.link.has("Level") and int(effect.link.Level)!=1:continue
 			if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):continue
-			var candidates: Array=DATA.data.invoke_options.duplicate()
+			var candidates: Array=INPUT.session().invoke_options.duplicate()
 			if identity.begins_with("relic_subslot11:"):candidates.append_array(RELIC.relic_combat.invoke_options)
+			candidates=INPUT.union_options(candidates)
 			for option: Dictionary in candidates:
 				if int(option.ID)==int(effect.bonus.BonusApplicationTargetID):result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value)})
 	return result
@@ -119,7 +119,7 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			match str(bonus.type.Name):
 				"SpellDebuffMinDuration":low=int(bonus.bonus.Value)
 				"SpellDebuffMaxDuration":high=int(bonus.bonus.Value)
-				"BuffClassID":buffs=DATA.data.invoke_buffs.get(str(int(bonus.bonus.Value)),[])
+				"BuffClassID":buffs=INPUT.session().invoke_buffs.get(str(int(bonus.bonus.Value)),[])
 		if low<=0 or high!=low or buffs.is_empty():continue
 		if not roll(int(effect.weight)):continue
 		if target.apply_source_option_debuff(str(effect.origin),low,buffs):
@@ -166,14 +166,14 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
 
 func _invoke_spell(identity: int) -> Dictionary:
-	return DATA.data.invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))
+	return INPUT.session().invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))
 
 func _free_spell(spell: Dictionary,target: int) -> bool:
 	if spell.is_empty():return false
 	var raw: Dictionary=spell.source_spell
 	if bool(raw.TestSpell) or int(raw.TargettingTypeID)!=target or int(raw.TargetAreaRadius)!=0 or int(raw.HPCost)!=0 or int(raw.MPCost)!=0 or int(raw.get("VPCost",0))!=0:return false
 	# The source's explicit None material type overrides an unused default amount.
-	for kind: Dictionary in DATA.data.spell_material_types:
+	for kind: Dictionary in INPUT.session().spell_material_types:
 		if int(kind.ID)==int(raw.SpellMaterialTypeID):return kind.Name=="None"
 	return false
 func _spell_values(spell: Dictionary,allowed: Array) -> Dictionary:

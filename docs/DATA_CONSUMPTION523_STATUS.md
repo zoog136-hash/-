@@ -537,11 +537,40 @@ PR269 still needs to adopt that origin at
 guard currently rejects the new definitions. This Draft does not relabel old
 inventory or alter debit/receipt/save code to bypass it.
 
-The former `patch523_slot_data` loader is preserved as reference code but is no
-longer activated by the final/default input. Secondary inputs not yet supplied
-from new originals remain unavailable rather than loading its old private pack.
+`patch523_slot_data._load_pack()` now calls
+`current523_relic_input.build()` for its new memory model. The former file loader
+is preserved as `_load_legacy_pack_for_reference()` and is not the final/default
+input. Relic BuffCard98→primary/secondary buffs and typed effects, original
+slot11 groups, the declared relic unlock item/buff and the already supported
+invoke16572's typed spell closure supply the existing relic consumers. Unknown
+references remain `unavailable_source_definitions`. A declared NPC/Sprite
+reference does not verify delivered pixels: `display_sprite_verified:false`
+keeps that physical summon boundary pending. `input_identity` separates archive
+and actual memory-payload hashes and records
+`new_pack_installation_observed:false`; its legacy data-availability API is not
+a claim that a physical new pack has been installed.
+
+`current523_option_combat_input.session()` supplies original primary/secondary
+doll buffs, NPC-reference metadata, slot groups, named option economy values,
+invoke options/spells/buffs, SpellMaterialType and the declared doll unlock item.
+`native_doll_subslot`, `native_option_combat`, `native_option_economy` and
+`native_doll_unlock_item` read that model rather than the former extension JSON.
+Both saved namespaces obtain slot11 from the new original `group_for()`.
+`union_options()` combines common/relic candidate inputs once per exact ID and
+identical original row; conflicting rows are withheld. Existing effect formulas,
+probabilities, rolls, SCALE, costs, conditions, ownership and saving are retained.
+Missing input supplies empty shapes with problems, without an old-data fallback.
+
+The new doll-unlock record also declares patch523/archive origin separately
+from its saved item namespace. Its existing `exact()` physical-book guard still
+requires base508 origin and therefore rejects the new record; PR269 must adopt
+the actual new provenance at that ownership boundary. The save marker stays its
+existing ABI. Empty definition/install paths fail explicitly; old records are
+not relabeled, aliased, removed or consumed through an invented migration.
+New summon metadata likewise does not claim new pixel evidence.
+
 All card input changes are uncompiled/unexecuted; raw model acceptance, card
-learning/awakening and gameplay use remain unobserved.
+learning/awakening/unlocking and gameplay use remain unobserved.
 
 ### Source-only existing-actor NPC input — unverified
 
