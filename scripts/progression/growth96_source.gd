@@ -55,6 +55,7 @@ func load_source(path: String = "") -> bool:
 	var growth_constants: Array = _rows(zip,"GrowthMotivationConstant")
 	var links := _rows(zip,"GrowthMotivationReward")
 	var all_rewards := indexed(_rows(zip,"Reward"))
+	var reward_types := indexed(_rows(zip,"RewardType"))
 	var all_items := indexed(_rows(zip,"ItemClass"))
 	var item_rows := _rows(zip,"ItemBookItem")
 	var card_links := _rows(zip,"ItemBookCardForItem")
@@ -95,7 +96,10 @@ func load_source(path: String = "") -> bool:
 		var id := sid(link.RewardID); var point := sid(link.GrowthMotivationID)
 		if not points.has(point) or not all_rewards.has(id) or rewards.has(id): problem = "보상 연결 또는 중복 오류"; return false
 		var row: Dictionary = all_rewards[id].duplicate(true)
-		if int(row.RewardTypeID) != 2 or int(row.RewardGetTimeTypeID) != 2 or int(row.CharacterClassID) != 0 or bool(row.UseImmediately) or bool(row.ClanOnly) or int(row.RewardEnhancementTypeID) != 1 or int(row.ItemBlessCodeID) != 1 or int(row.Ranking) != 0 or int(row.Amount) <= 0:
+		# Match the source namespace by its declared kind, as the existing quest
+		# supplier does. A coincident numeric type ID is not an item contract.
+		var reward_type: Dictionary = reward_types.get(sid(row.RewardTypeID),{})
+		if reward_type.get("Name") != "Item" or int(row.RewardGetTimeTypeID) != 2 or int(row.CharacterClassID) != 0 or bool(row.UseImmediately) or bool(row.ClanOnly) or int(row.RewardEnhancementTypeID) != 1 or int(row.ItemBlessCodeID) != 1 or int(row.Ranking) != 0 or int(row.Amount) <= 0:
 			problem = "지원하지 않는 성장 보상 조건: " + id; return false
 		var item_id := sid(row.RewardClassID)
 		if not all_items.has(item_id): problem = "원본 아이템 연결 누락"; return false

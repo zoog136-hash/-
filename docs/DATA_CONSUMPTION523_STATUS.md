@@ -71,6 +71,9 @@ passing results do not validate these changes.
   retained as definitions instead of becoming claimable just because their
   version is numerically the highest present row. The latest-available policy
   still permits current lower-version points such as the level96 Version0 rows.
+  Growth item rewards also consume the declared `RewardType.Name == Item`
+  namespace using the existing quest supplier contract, rather than treating a
+  numeric type ID alone as permission to join an ItemClass and grant it.
 - Ordinary EXP recovery now stages only changed progression fields. A real level
   gain uses the death owner's transient, exact full-transaction authorization at
   the common save boundary. A saved death namespace by itself cannot authorize
