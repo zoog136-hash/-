@@ -397,3 +397,19 @@ M registry/위치 인계에 대응 파일·대체 별칭이 없다. 필요한 �
 716,1523,24376,29176,29476 등은 M 자체 동작 없이 참조되는 자식이므로
 프레임 상속/선택·offset/layer·합성/활성 계약이 필요하다. M attr128/256도
 실행 수식이 없으므로 값만 보존한다. PC 자료나 임의 그림으로 이 입력을 대체하지 않는다.
+
+
+## PR270 지도 이미지 담당에게 전달할 기존 계약
+
+새 조사/검색 없이 이미 게시한 M source-field 계약만 정리한다.
+`current523_source_field` 메타데이터가 true인 공통 모바일 필드에서
+`field_map.definition.source_map_id`는 current523 **Land ID**다. 기존 확인 사례는
+Land4/AssetPath `Aden/`이며 이를 원본 World ID4로 해석하지 않는다. 레거시/호스트
+필드의 같은 이름 속성은 이 M 계약으로 자동 승격하지 않는다.
+
+현재 확정·게시한 맵 API/문서에는 필드→원본 World/ImageInfo ID 대응값과
+World 지도 이미지의 노드·이미지 좌표·선택/입장 계약이 **미보유**다. 원문 셀/월드
+투영 좌표는 필드 렌더/이동 계약이며 World 지도 이미지의 픽셀 좌표 계약이 아니다.
+따라서 overview.png 호출자를 추정 World/ImageInfo ID·임의 노드/좌표로 바꾸지 않는다.
+이 대응 계약을 담은 별도 공식 전달 식별자도 현재 확정된 것에는 없다.
+이것은 원본 World→ImageInfo→AssetView 행 자체가 없다는 주장이 아니다.
