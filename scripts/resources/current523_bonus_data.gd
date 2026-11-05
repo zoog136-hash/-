@@ -39,8 +39,11 @@ static func describe(bonus_id: int) -> Dictionary:
 			# rounding or alternate display selection is applied by this contract.
 			var ui_units: Array[Dictionary] = SOURCE.related("UIUnit","UnitID",int(unit_id))
 			result.ui_units = ui_units
-			if ui_units.is_empty(): blockers.append("missing_source_reference:UIUnit.UnitID:"+str(int(unit_id)))
-			elif ui_units.size()>1: blockers.append("ambiguous_source_reference:UIUnit.UnitID:"+str(int(unit_id)))
+			# UIUnit.UnitID is a reverse, possibly empty/multiple relation, not
+			# BonusType's Unit foreign key. The public item compiler retains its
+			# own single-row/denominator gate only where an effect needs one.
+			# A display relation alone must not reject the original Bonus input
+			# before ItemData reaches that existing typed consumer.
 	result.application_type = _reference(blockers,"BonusApplicationType",bonus.get("BonusApplicationTypeID"))
 	# The target namespace is not inferred from an application-type name.
 	# Its exact ID and all original condition/value fields remain in bonus.

@@ -1,18 +1,98 @@
 extends RefCounted
 ## Supply/learning bridge only. Skill effects and learned IDs stay with the catalog.
-const DATA = preload("res://data/shop/source523_skill_books.json")
+const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
+const PROFILES = preload("res://scripts/skills/player_skills523.gd")
+const BINDINGS_PATH: String = "res://data/skills/player_skills523_bindings.json"
 const ORIGIN: String = "TWILIGHT 기존 스킬 습득 연결 · 원본 각인 스택 보존 · 습득 후 재구매 차단"
+static var source_problem: String = ""
+static var source_identity: Dictionary = {}
+static var _source_books: Dictionary = {}
+static var _source_book_signature: String = ""
 
 static func contract(item_id: int) -> Dictionary:
-	return DATA.data.books.get(str(item_id), {})
+	return _contracts().get(str(item_id), {})
+
+static func _contracts() -> Dictionary:
+	# Port the existing build_source523_books.py joins to the held original.
+	# Public bindings supply reviewed host identities, never native rule values.
+	# The former generated book JSON is preserved on disk but is not a fallback.
+	var identity: Dictionary = SOURCE.identity()
+	if identity.is_empty():
+		source_problem = SOURCE.problem()
+		return {}
+	var binding_text: String = FileAccess.get_file_as_string(BINDINGS_PATH)
+	var signature: String = str(identity.source_sha256)+":"+binding_text.sha256_text()
+	if signature == _source_book_signature:
+		source_problem = ""
+		return _source_books
+	var reviewed: Variant = JSON.parse_string(binding_text)
+	if not reviewed is Dictionary or reviewed.get("schema_version")!=1 or reviewed.get("patch")!=523 or reviewed.get("source_zip_sha256")!=SOURCE.SOURCE_SHA or not reviewed.get("skills") is Dictionary or not reviewed.get("class_ids") is Dictionary:
+		source_problem = "원본 스킬북의 공개 기존 스킬·직업 ID 계약을 읽을 수 없습니다."
+		return {}
+	var reviewed_spells: Dictionary = {}
+	for skill_id: String in reviewed.skills:
+		var binding: Variant = reviewed.skills[skill_id]
+		if not binding is Dictionary or not PROFILES._source_integer(binding.get("spell_id")) or not binding.get("row_sha256") is String:
+			source_problem = "원본 스킬북의 기존 스킬 ID 계약이 잘못되었습니다: "+skill_id
+			return {}
+		var spell_id: int = int(binding.spell_id)
+		var raw: Dictionary = SOURCE.row("SpellClass",spell_id)
+		if raw.is_empty() or PROFILES._source_row_json(raw,str(binding.row_sha256)).is_empty() or reviewed_spells.has(spell_id):
+			source_problem = "원본 스킬북의 기존 스킬 행·지문·단일 ID 계약이 다릅니다: "+skill_id
+			return {}
+		reviewed_spells[spell_id] = skill_id
+	var books: Dictionary = {}
+	for sale: Dictionary in SOURCE.related("MerchantGoods","MerchantsID",10):
+		if int(sale.get("DialogActionTypeID",0))!=1 or not SOURCE.declared_exclusion("MerchantGoods",sale).is_empty():continue
+		var item: Dictionary = SOURCE.row("ItemClass",int(sale.get("ItemClassID",-1)))
+		var card: Dictionary = SOURCE.row("BuffCard",int(sale.get("LimitRepeatedBuyCardID",-1)))
+		if item.is_empty() or item.get("TestItem")!=false or card.is_empty():continue
+		if not SOURCE.declared_exclusion("ItemClass",item).is_empty() or not SOURCE.declared_exclusion("BuffCard",card).is_empty():continue
+		var spell_id: int = int(card.get("SpellClassID",0))
+		if not reviewed_spells.has(spell_id):continue
+		var item_cards: Dictionary = {}
+		var item_card_unavailable: bool = false
+		for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",int(item.ID)):
+			if link.get("IsPossession")!=false:continue
+			var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
+			var type: Dictionary = SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1))) if not bonus.is_empty() else {}
+			if bonus.is_empty() or type.is_empty():item_card_unavailable=true;break
+			if type.get("Name")!="BuffCardID":continue
+			var unit: Dictionary = SOURCE.row("Unit",int(type.get("UnitID",-1)))
+			if unit.get("Name")!="BuffCardID" or not PROFILES._source_integer(bonus.get("Value")) or int(bonus.Value)<=0:item_card_unavailable=true;break
+			if not SOURCE.declared_exclusion("ItemBonus",link).is_empty() or not SOURCE.declared_exclusion("Bonus",bonus).is_empty() or not SOURCE.declared_exclusion("BonusType",type).is_empty() or not SOURCE.declared_exclusion("Unit",unit).is_empty():item_card_unavailable=true;break
+			item_cards[int(bonus.Value)] = true
+		if item_card_unavailable or item_cards.size()!=1 or not item_cards.has(int(card.ID)):continue
+		# This existing reader supplies current native learn-limit rows. Effects
+		# remain reference-only; learning/debit stay with the existing catalog.
+		var detail: Dictionary = SPELLS.describe(spell_id)
+		if detail.get("excluded")==true or detail.get("spell_class",{}).get("TestSpell")!=false:continue
+		var classes: Dictionary = {}
+		for job: String in reviewed.class_ids:
+			var limits: Array = []
+			for entry: Dictionary in detail.get("learn_limits",[]):
+				var limit: Dictionary = entry.get("link",{})
+				if limit.get("ClassID")!=reviewed.class_ids[job] or limit.get("IsTutorialSpell")!=false or not SOURCE.declared_exclusion("SpellLearnLimit",limit).is_empty():continue
+				limits.append({"minimum_level":limit.CharacterMinLevel,"required_card":limit.LimitBuffCardID,"polymorph_grade":limit.CharacterPolymorphGradeID})
+			if not limits.is_empty():classes[job] = limits
+		var label: Dictionary = SOURCE.row("DescData_Korean",int(item.get("DescID",0)))
+		if not label.get("Description") is String or str(label.Description).is_empty():continue
+		books[str(int(item.ID))] = {"name":str(label.Description),"card_id":int(card.ID),"spell_id":spell_id,"skill_id":str(reviewed_spells[spell_id]),"classes":classes,"source_definition_archive":identity.duplicate(true)}
+	_source_books = books
+	_source_book_signature = signature
+	source_identity = identity.duplicate(true)
+	source_problem = ""
+	return _source_books
 
 static func install(world, source) -> Dictionary:
 	var bindings: Dictionary = {}
 	if world.get("original_skills") == null:return bindings
 	var catalog = world.original_skills.catalog
 	var changed: bool = false
-	for id: String in DATA.data.books:
-		var spec: Dictionary = DATA.data.books[id]
+	var books: Dictionary = _contracts()
+	for id: String in books:
+		var spec: Dictionary = books[id]
 		var item: Dictionary = source.record("ItemClass",int(id))
 		var card: Dictionary = source.record("BuffCard",int(spec.card_id))
 		var skill: Dictionary = catalog.record_for(str(spec.skill_id))

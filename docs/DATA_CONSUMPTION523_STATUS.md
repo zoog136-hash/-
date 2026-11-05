@@ -218,6 +218,58 @@ locations. No new install, original publication, source version or save is
 created. Missing or ambiguous definitions remain missing. Original filtering
 tables cannot be read through this adapter.
 
+The shared Bonus input now follows the public item compiler's declared
+cardinality before the existing ItemData→drop/DTO/shop consumers read it.
+`BonusType.UnitID→Unit.ID` remains an exact required foreign key;
+`UIUnit.UnitID` is retained as the full reverse array and is not itself a
+required single-row identity. Empty/multiple display rows no longer reject the
+entire raw Bonus/ItemData input. This does not choose a denominator or authorize
+an effect: the existing typed invoke/experience consumers retain their exact
+single-row/denominator rules. Required Bonus/type/unit/application joins and
+all raw values remain intact. The public compiler basis is
+`tools/monsters/patch523_item_definitions.py`'s base ItemBonus join and separate
+`_invoke_options` gate. This is an unexecuted reader-input change, not proof of
+any count of newly registered items or implemented effects.
+
+The existing ItemData→GachaCraft item/shop read now carries
+`gacha_craft.calling_item_input` from that exact caller: original ItemClass,
+category, complete ItemBonus/Bonus/type/unit rows and already typed ItemClass
+references. It does not substitute `ChangeCost` for a final material/cost or
+infer a currency from a type name. GachaCraftOutput's explicit ItemClassID and
+ItemBlessCodeID, plus both GachaCraftBoundItem ItemClassID fields, now resolve
+to original leaf inputs and explicit Test/dummy evidence. All group/output/
+bound rows, ordering, quantities, blessing and raw weights remain intact;
+excluded leaves are flagged, not removed and reweighted. No recursive ItemData
+expansion is used. Output ClassID's unknown namespace and candidate selection,
+confirmation, effect, ownership and settlement remain unresolved owner work.
+This supplies original reads to existing callers, not an executable book or
+whole GachaCraft/ItemClass table completion; it remains unexecuted.
+
+The same ItemData item/shop path now follows the public item compiler's
+`InvokeOption` application-target join into `typed_references`: raw Bonus
+probability/value stays separate from BonusApplicationTargetID, and the declared
+BonusApplicationType.Name must match before InvokeOption→InvokeOptionType is
+read. Parameter values and their declared Unit rows are retained raw; only
+the public compiler's exact option611/type1/Param1Unit12→SpellClass17564 leaf
+is followed. No other parameter namespace or child effect is inferred.
+Explicit Test/dummy evidence remains excluded. These fields are source inputs,
+not `compiled_invoke_options`; proc rules, effects, physical ownership and saves
+remain269's implementation. This read is unexecuted/unverified.
+
+`current523_reward_data.reward(id)`, already called through ItemData's reward
+references, now follows the existing unconfirmed source resolver's confirmed
+RandomReward and ComplexReward joins as well as Item/SelectReward. Its
+`random_rewards` contains original RandomReward/RandomRewardEntityView rows;
+`complex_groups` contains ComplexRewardGroup→ComplexReward→ComplexRewardEntity
+rows. Every child Reward is read once using the existing ID queue; original
+array order, duplicate edges and cycles remain retained ID relationships.
+CharacterClassID0 is kept as raw0/no class restriction instead of a Class0
+lookup, matching the existing resolver. MaxCount/type/weights stay raw and
+no random/selection/guarantee execution or source-use DTO is created. Other
+reward kinds remain explicit `unfollowed_typed_references`; declared-dummy
+nodes retain evidence without traversal. This does not complete gameplay
+consumption or the whole Reward table and remains unexecuted.
+
 The public data contracts for PR269 are:
 
 | Call | Returned source data and existing reader |
@@ -512,6 +564,55 @@ This bootstrap has not been compiled or executed; successful admission, model
 identity and gameplay consumption remain unobserved.
 
 ### Original inputs to existing NPC merchant conditions — unverified
+
+The existing skill-book shop reader now obtains its `contract(item_id)` and
+`install(world,shop_source)` inputs directly from the same held original.
+`source523_skill_books._contracts()` ports the public
+`tools/shop/build_source523_books.py` MerchantGoods merchant10/action1 selection,
+non-possession ItemBonus→Bonus/type/unit BuffCardID join and exact repeated-buy
+card→SpellClass relation. Existing public reviewed host skill/class IDs and
+SpellClass row pins remain mandatory. `current523_spell_data.describe()`'s
+original non-tutorial SpellLearnLimit rows now supply the actual existing
+`classes[job]` minimum-level/required-card/polymorph-grade contract.
+
+The former generated book JSON remains on disk but is no longer the book
+reader's final input or missing-source fallback. Supporting exact selected
+labels are read for the existing book identity, without completing the deferred
+description tables. Ambiguous/missing/Test/declared-dummy source joins remain
+unbound. Successful source/binding identity may reuse its memory read; missing
+source returns no contract and records `source_problem` instead of old rules.
+`source_identity` records the archive separately. Existing installation's host
+record registration, `registered`, `learn_reason`, `qualification` and
+`try_use→catalog.learn` consume this input; their learning, debit, purchase,
+physical ownership and save engines are unchanged. No additional skill or
+original effect is authorized. Source construction and runtime use remain
+uncompiled/unexecuted/unverified.
+
+The existing ordinary-ammunition reader likewise now takes its11 reviewed
+IDs from the held original. `source523_ammo._items()`/`_item_input(id)` port
+`tools/shop/build_source523_ammo.py`'s exact non-possession/unconditional/
+unique bonus selection into the existing name/family/small/large/material
+shape. `definition→selected/roll` and shop `install` read that shape directly.
+The generated JSON's numeric items are no longer a final input/fallback;
+original item/bonus/type exclusions and unsupported/duplicate conditions hold
+the affected item. `source_identity`, `source_problem` and `input_problems`
+retain source input state. The pre-existing uniform-size-die policy, undead
+material list and explicitly estimated +2 remain host policy constants, not
+newly inferred source rules. Damage calculation, physical ammunition, debit,
+transactions and saves are not rewritten. No ammunition run is claimed.
+
+`source523_restoration._source_items()` also ports its existing public compiler's
+three-item source input (233/237/236). Original non-possession/unconditional/
+unique ItemBonus/Bonus/BonusType rows, the six permitted kinds, 1000ms delay,
+explicit non-Test item and supporting exact label form the existing
+name/base/dice_count/dice_sides spec. Both `install` and `try_use` now obtain
+those values from the held source; missing/incomplete/excluded input returns
+no spec instead of generated JSON numbers. The JSON's existing dice policy
+and origin are retained as host policy only. `source_state/source_problem`,
+`source_input_identity/source_provenance` separate source readiness/identity
+from execution. Existing registration, healing/modifiers, inventory debit,
+RNG/cooldown and save bodies are unchanged, and269's generic HP/MP quantity
+owner is not duplicated. These three inputs are unexecuted/unverified.
 
 The existing `source523_shop_runtime.bind_source()` already calls
 `npc_definitions.configure(catalog)`, but its NPC-definition loader previously

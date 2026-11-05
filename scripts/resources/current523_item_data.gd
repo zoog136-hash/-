@@ -132,10 +132,102 @@ static func _typed_item_target(detail: Dictionary, unit: String, value: Variant,
 	if target.has("declared_exclusion"): reference["declared_exclusion"] = target.declared_exclusion
 	return reference
 
+static func _typed_invoke_target(detail: Dictionary, blockers: Array[String]) -> Dictionary:
+	# Reuse the public item compiler's application-target join. Bonus.Value is
+	# retained verbatim; it is never substituted for an InvokeOption identity.
+	var bonus: Dictionary = detail.get("bonus",{})
+	var target_id: Variant = bonus.get("BonusApplicationTargetID")
+	var unresolved: Array[Dictionary] = []
+	var reference: Dictionary = {"reference_kind":"InvokeOption","unit":detail.get("unit",{}).get("Name",""),
+		"id":target_id,"raw_value":bonus.get("Value"),"raw_application_target_id":target_id,
+		"item_bonus_id":detail.get("link",{}).get("ID"),"item_bonus":detail.get("link",{}),
+		"bonus":bonus,"bonus_type":detail.get("type",{}),"bonus_unit":detail.get("unit",{}),
+		"application_type":{},"invoke_option":{},"invoke_option_type":{},"parameter_units":[],"parameter_references":[],
+		"unresolved":unresolved,"excluded":false,"reference_only":true,"can_activate":false,"can_execute":false,
+		"activation_authorized":false,"ownership_authorized":false,"source":SOURCE.identity()}
+	var source_nodes: Dictionary = {"item_bonus":_target_node("ItemBonus",detail.get("link",{}),blockers),
+		"bonus":_target_node("Bonus",bonus,blockers),"bonus_type":_target_node("BonusType",detail.get("type",{}),blockers),
+		"bonus_unit":_target_node("Unit",detail.get("unit",{}),blockers)}
+	reference["source_nodes"] = source_nodes
+	for key: String in source_nodes:
+		if source_nodes[key].excluded:
+			reference.excluded = true
+			blockers.append("source_declared_exclusion:invoke_"+key)
+	if reference.excluded: return reference
+	var application: Dictionary = _target_row("BonusApplicationType",bonus.get("BonusApplicationTypeID"),blockers,unresolved)
+	reference.application_type = application.row
+	reference["application_type_reference"] = application
+	if application.excluded:
+		reference.excluded = true
+		blockers.append("source_declared_exclusion:BonusApplicationType")
+		return reference
+	if application.row.get("Name")!="InvokeOption":
+		blockers.append("unsupported_invoke_application_type")
+		reference["source_status"] = "application_target_namespace_unconfirmed"
+		return reference
+	var option: Dictionary = _target_row("InvokeOption",target_id,blockers,unresolved)
+	reference.invoke_option = option.row
+	reference["invoke_option_reference"] = option
+	if option.row.is_empty(): return reference
+	if option.excluded:
+		reference.excluded = true
+		blockers.append("source_declared_exclusion:InvokeOption")
+		return reference
+	var kind: Dictionary = _target_row("InvokeOptionType",option.row.get("InvokeOptionTypeID"),blockers,unresolved)
+	reference.invoke_option_type = kind.row
+	reference["invoke_option_type_reference"] = kind
+	if kind.row.is_empty(): return reference
+	if kind.excluded:
+		reference.excluded = true
+		blockers.append("source_declared_exclusion:InvokeOptionType")
+		return reference
+	for number: int in range(1,7):
+		var parameter: String = "Param"+str(number)
+		var unit_field: String = parameter+"Unit"
+		var raw_unit: Variant = kind.row.get(unit_field)
+		var descriptor: Dictionary = {"parameter":parameter,"value":option.row.get(parameter),
+			"value_present":option.row.has(parameter),"unit_field":unit_field,"unit_present":kind.row.has(unit_field),
+			"unit_id":raw_unit,"unit":{},"unit_reference":{},"reference_only":true,"can_execute":false}
+		reference.parameter_units.append(descriptor)
+		# Missing/zero unit declarations remain raw and do not establish a
+		# namespace. Other unit names are visible without parameter inference.
+		if not kind.row.has(unit_field) or raw_unit==0: continue
+		var unit: Dictionary = _target_row("Unit",raw_unit,blockers,unresolved)
+		descriptor.unit = unit.row; descriptor.unit_reference = unit
+		if unit.row.is_empty(): continue
+		if unit.excluded:
+			reference.excluded = true
+			blockers.append("source_declared_exclusion:InvokeOptionType."+unit_field)
+			continue
+		# The public _invoke_options/_source_bleed contract confirms exactly
+		# this Param1 spell leaf. Do not extend its child graph or reinterpret
+		# another parameter merely because a numeric ID happens to match.
+		var confirmed_spell: bool = parameter=="Param1" and kind.row.get("ID")==1 and kind.row.get("Name")=="Attack_Spell" and option.row.get("ID")==611 and option.row.get("Param1")==17564 and raw_unit==12 and unit.row.get("Name")=="SpellClassID"
+		if not confirmed_spell:
+			descriptor["source_status"] = "raw_parameter_namespace_not_projected"
+			continue
+		var leaf: Dictionary = _target_row("SpellClass",option.row.get(parameter),blockers,unresolved)
+		leaf["can_execute"] = false
+		var test: Variant = leaf.row.get("TestSpell")
+		if leaf.row.has("TestSpell"):
+			leaf["test_declaration"] = {"field":"TestSpell","value":test}
+			if typeof(test)==TYPE_BOOL and test:
+				leaf.excluded = true
+				leaf["test_exclusion_reason"] = "source_TestSpell_true"
+				blockers.append("source_TestSpell_true")
+			elif typeof(test)!=TYPE_BOOL: blockers.append("source_test_declaration_invalid:SpellClass.TestSpell")
+		if leaf.excluded:
+			reference.excluded = true
+			if leaf.has("declared_exclusion"): blockers.append("source_declared_exclusion:SpellClass")
+		reference.parameter_references.append({"parameter":parameter,"raw_value":option.row.get(parameter),"unit":unit.row,
+			"target":leaf,"spell":leaf.row,"excluded":leaf.excluded,"reference_only":true,"can_activate":false,"can_execute":false,"ownership_authorized":false})
+	return reference
+
 static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dictionary:
 	var value: Variant = detail.get("bonus",{}).get("Value")
 	var unit: String = str(detail.get("unit",{}).get("Name",""))
 	var type: String = str(detail.get("type",{}).get("Name",""))
+	if type == "InvokeOption": return _typed_invoke_target(detail,blockers)
 	if type != "MarketPurchaseID" and unit in ["ItemClassID","IntangibleItemClassID"]:
 		return _typed_item_target(detail,unit,value,blockers)
 	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<=0 or value>9007199254740991.0: return {}
@@ -208,6 +300,18 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 		if not reference.is_empty():
 			reference["source_item_class_id"] = item_id
 			result.typed_references.append(reference)
+	# The same existing item/shop call must carry the book's actual ItemBonus
+	# context with its GachaCraft graph. A group replacement cost cannot supply
+	# the calling item's material, final-cost or lifetime definition.
+	for reference: Dictionary in result.typed_references:
+		if not reference.get("gacha_craft") is Dictionary: continue
+		var material_refs: Array[Dictionary] = []
+		for target: Dictionary in result.typed_references:
+			if target.get("unit") == "ItemClassID": material_refs.append(target)
+		reference.gacha_craft["calling_item_input"] = {
+			"source":identity,"item_class":item,"category":result.category,
+			"bonuses":result.bonuses,"item_class_references":material_refs,
+			"reference_only":true,"can_execute":false,"ownership_authorized":false}
 	# Preserve the declared description domains instead of looking up a same-ID
 	# item, UI token or translated label in another table.
 	for field: String in ["DescID","IdentifiedDescID","StoryDescID","UseDescID","ProductTitleDescID","ProductDescID"]:
