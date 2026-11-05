@@ -11,6 +11,11 @@ static func build(pack: RefCounted, adapter: Object, remaining: Dictionary) -> D
 	if pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return {"ok":false,"code":"source_alchemy_identity_mismatch"}
 	if not is_instance_valid(adapter) or not adapter.has_method("request_preview_for") or not adapter.has_method("close"):return {"ok":false,"code":"source_equipment_adapter_unavailable"}
 	var bindings: Dictionary=remaining.duplicate(true)
+	# These are references already serialized by this exact source root.
+	# Child strict configuration still requires all of its actual handlers
+	# and live values; an empty dictionary is not an inspection bypass.
+	for offset: int in CHILDREN:
+		if not bindings.has(offset):bindings[offset]={"role":"project","bindings":{}}
 	bindings[CLOSE]={"role":"button","activate":Callable(adapter,"close")}
 	# This enters the existing quote/confirmation protocol. It does not
 	# execute a purchase, choose materials or invent the unknown batch count.

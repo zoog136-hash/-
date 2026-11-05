@@ -292,3 +292,10 @@ The source child ProjectNode paths/offsets are retained in that factory.
 `complete_screen_contract:false` remains explicit: the quantity/help/child/data
 contracts are still required, and strict loading still rejects missing ones.
 This concrete mapping has not been executed or tested.
+
+The Alchemy binding factory now wires all five serialized ProjectNode references
+through the original child loader: Alchemy_Item (3828), Alchemy_Inventory (3564),
+the two Fx_Alchemy_MagicBall instances (3292/3016), and Alchemy_Roulette (2720).
+Caller-provided child bindings are retained; absent ones start as empty strict
+binding maps. Interactive/dynamic child content still fails without its real
+contract. This mounts no source-free replacement and is unexecuted/untested.

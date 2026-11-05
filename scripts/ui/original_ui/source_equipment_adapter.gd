@@ -22,7 +22,7 @@ func bind_source_scene(scene: Node2D) -> Dictionary:
 	var status: Dictionary=scene.call("playback_status")
 	if bool(status.get("inspection_only",true)) or str(status.get("source","")).is_empty():return {"ok":false,"code":"original_equipment_scene_required"}
 	_source_scene=weakref(scene)
-	closed.connect(_close_bound_scene,CONNECT_ONE_SHOT)
+	if not closed.is_connected(_close_bound_scene):closed.connect(_close_bound_scene,CONNECT_ONE_SHOT)
 	return {"ok":true,"transaction_performed":false}
 
 func _close_bound_scene() -> void:
