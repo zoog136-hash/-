@@ -3,6 +3,7 @@ extends RefCounted
 ## sole acquisition ledger. Loading old owned cards is silent and idempotent.
 const Rules=preload("res://scripts/cards/collection_rules.gd")
 const NativeRules=preload("res://scripts/cards/native_collection_rules.gd")
+const NativeInput=preload("res://scripts/cards/current523_collection_input.gd")
 const NATIVE_PATH: String="res://data/cards/patch523_collections.json"
 const ExistingStats=preload("res://scripts/collections/equipment_collection_stats.gd")
 const PATH: String="res://data/cards/normal_collections.json"
@@ -48,6 +49,7 @@ func configure(host: Node) -> bool:
 	var data: Variant=JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 	if not data is Dictionary:
 		problem="일반 카드 컬렉션 데이터 누락/손상";return false
+	if native and data.get("source_snapshot") == "patch523": data=NativeInput.adopt_selected(data)
 	if not core.configure(data,world.catalog_db):problem=core.error;return false
 	problem="";restore_from_owned();return true
 

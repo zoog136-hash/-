@@ -2,7 +2,16 @@ extends RefCounted
 ## Exact source declarations. Card ownership stays in the existing save namespace.
 ## A slot reference alone never unlocks a summon or grants a second awakening.
 const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 static var _cache: Dictionary={}
+
+static func _source_row(table: String, selected: Dictionary) -> Dictionary:
+	# UNVERIFIED: the private slot projection remains the admission set. Read
+	# an original value only when its whole row matches that selected input.
+	var id: Variant=selected.get("ID")
+	if typeof(id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(id)) or float(id)!=floorf(float(id)) or absf(float(id))>9007199254740991.0:return selected
+	var original: Dictionary=SOURCE.row(table,int(id))
+	return original if not original.is_empty() and original==selected else selected
 
 static func _key(identity: String,slot: int) -> String:
 	var parts: PackedStringArray=identity.split(":")
@@ -17,12 +26,13 @@ static func group_for(identity: String,slot: int) -> Dictionary:
 	if not _cache.has(key):
 		var row: Dictionary=DATA.options.groups[key]
 		var effects: Array[Dictionary]=[]
-		for link: Dictionary in row.links:
-			var bonus: Dictionary=DATA.options.bonuses[str(int(link.BonusID))]
-			var type_row: Dictionary=DATA.options.types[str(int(bonus.BonusTypeID))]
+		for compiled_link: Dictionary in row.links:
+			var link: Dictionary=_source_row("BuffCardOptionAwakenLevelBonus",compiled_link)
+			var bonus: Dictionary=_source_row("Bonus",DATA.options.bonuses[str(int(link.BonusID))])
+			var type_row: Dictionary=_source_row("BonusType",DATA.options.types[str(int(bonus.BonusTypeID))])
 			var unit_key: String=str(int(type_row.UnitID))
-			effects.append({"link":link,"bonus":bonus,"type":type_row,"unit":DATA.options.units[unit_key],"ui_unit":DATA.options.ui_units.get(unit_key,{})})
-		_cache[key]={"identity":identity,"source_snapshot":"patch523","card":row.card,"group":row.group,"effects":effects}
+			effects.append({"link":link,"bonus":bonus,"type":type_row,"unit":_source_row("Unit",DATA.options.units[unit_key]),"ui_unit":_source_row("UIUnit",DATA.options.ui_units.get(unit_key,{}))})
+		_cache[key]={"identity":identity,"source_snapshot":"patch523","card":_source_row("BuffCard",row.card),"group":_source_row("BuffCardOptionAwakenGroup",row.group),"effects":effects}
 	return _cache[key].duplicate(true)
 
 static func compatible_primary(identity: String) -> bool:

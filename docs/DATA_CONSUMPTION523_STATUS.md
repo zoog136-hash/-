@@ -409,6 +409,60 @@ created or changed. Exact byte/hash reproduction and runtime adoption have not
 been executed; this is not an additional3,621 gameplay-completed quests or any
 whole-table completion claim.
 
+### Existing card-slot input reads — unverified
+
+`option_slot_definitions.group_for(identity,slot)` now reads the pinned original
+BuffCard, BuffCardOptionAwakenGroup, BuffCardOptionAwakenLevelBonus, Bonus,
+BonusType, Unit and ID-bearing UIUnit rows for its existing selected slot
+projection. An integral exact ID and full-row equality are required; missing or
+different input retains the compiled row. The existing group-key admission,
+primary compatibility/changed-primary lists, slot1/11 selection, cache,
+labels and existing effect consumers remain authoritative. A missing private
+slot pack remains missing: this is no new catalog, draw, awakening, ownership,
+effect, secondary-slot unlock, installation or save. The actual `group_for()`
+caller receives the original row values rather than an unused reference API.
+It has not been compiled or executed and adds no coverage numerator.
+
+`collection_runtime.configure()` calls
+`current523_collection_input.adopt_selected(data)` immediately before
+`NativeRules.configure()` for its existing native patch523 input. The helper
+returns the same collection/member/effect/condition sets, replacing only complete
+matching raw rows from BuffCardCollection, BuffCardForCollection,
+BuffCardCollectionBonus, Bonus/Type/Unit/UIUnit/application targets, Grade, Deck,
+selected ServerLimit and card-date records. Compound relations use the public
+compiler's existing foreign keys and full-row equality; no ID is invented.
+Interval branches separate only the compiler's six supplemental join fields,
+match the complete original IntervalBonus base row, and retain those existing
+joins/derived values. Missing files retain the existing failure. Native rules,
+owned-card derivation, time/server/awakening restrictions, numerical effect
+policy, announcements and saves are unchanged.
+
+The existing guardian source now obtains matching selected rows during initial
+data adoption and through `rewards()`, `upgrade()`, `constant()` and
+`spell_name()`. Existing `data.spells`/`data.buffs` source/effect fields also feed
+the combat reader from the same matched originals. The public guardian
+compiler's explicit table mappings, selected ID membership and full-row equality
+are required; scope references remain only its declared application-type joins.
+Derived effects/values, selected nodes, server restrictions and execution remain
+unchanged. Text is limited to the already selected lazy spell-name read.
+
+The symbol source likewise adopts matching existing definition/cost/normal/
+absolute/bonus/item/interval/invoke rows before its existing apply/action/detail
+readers use them. The four original full-table arrays supplied by its compiler
+(`SymbolConstant`, `SymbolEnchantProbability`, `SymbolPayment`, `SymbolEnchant`)
+are replaced only when the entire original array equals the existing array in
+content, order and length. This also reads ID-less SymbolEnchant without
+reinterpreting Enchant as an ID. Filtered selections remain exact selected-ID
+reads. External crosslinks, recharge/shop/backing/UI data, derived effects,
+local-policy/estimate toggles, numerical meanings, transactions and saves remain
+unchanged. Payment type meanings are still unresolved.
+
+These are actual existing reader inputs, not new collection/guardian/symbol
+features. Their prior compiled-cache consumption remains valid evidence in its
+original bounded scope. Reading the same selected source row directly does not
+turn that row or its entire table into additional gameplay coverage. All later
+card/growth input changes remain uncompiled, unexecuted and unverified.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now
