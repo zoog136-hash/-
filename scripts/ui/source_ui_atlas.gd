@@ -24,19 +24,10 @@ static func frame(plist: String, key: String) -> Image:
 		if original==null or original.is_empty(): return null
 		original.convert(Image.FORMAT_RGBA8)
 		pages[path]=original
-	var rect: Array = spec.rect
-	var packed_size := Vector2i(rect[3],rect[2]) if spec.rotated else Vector2i(rect[2],rect[3])
-	var page: Image = pages[path]
-	var region := Rect2i(Vector2i(rect[0],rect[1]),packed_size)
-	if not Rect2i(Vector2i.ZERO,page.get_size()).encloses(region):
-		missing[identity]="frame_out_of_page"; return null
-	var trimmed: Image = page.get_region(region)
-	if spec.rotated: trimmed.rotate_90(COUNTERCLOCKWISE)
-	var source_rect: Array = spec.source_rect
-	if trimmed.get_size()!=Vector2i(source_rect[2],source_rect[3]):
-		missing[identity]="trim_size_mismatch"; return null
-	var result: Image = Image.create(spec.source_size[0],spec.source_size[1],false,Image.FORMAT_RGBA8)
-	result.blit_rect(trimmed,Rect2i(Vector2i.ZERO,trimmed.get_size()),Vector2i(source_rect[0],source_rect[1]))
+	var decoded: Dictionary=preload("res://scripts/ui/original_ui/atlas_pixels.gd").decode(pages[path],spec)
+	if not str(decoded.get("error","")).is_empty():
+		missing[identity]=decoded.error; return null
+	var result: Image=decoded.image
 	frames[identity]=result
 	return result
 
