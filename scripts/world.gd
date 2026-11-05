@@ -613,6 +613,7 @@ func _ready() -> void:
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
 	_restore_current523_aden_play.call_deferred()
+	_bind_current523_world_map_from_settings.call_deferred()
 
 func _process(delta: float) -> void:
 	if death_recovery.blocked(): return
@@ -10393,7 +10394,25 @@ var current523_aden_play_active: bool = false
 var current523_aden_play_problem: String = ""
 var _current523_aden_play_controller: RefCounted
 var _current523_source_definition_provider: RefCounted
+var _current523_world_map_input: Node
+var current523_world_map_status: Dictionary={}
 signal current523_aden_play_changed(active: bool, detail: String)
+
+func _world_map_input() -> Node:
+	if not is_instance_valid(_current523_world_map_input):
+		_current523_world_map_input=preload("res://scripts/maps/current523_world_map_input.gd").new()
+		_current523_world_map_input.name="Current523WorldMapInput"
+		add_child(_current523_world_map_input)
+	return _current523_world_map_input
+
+func bind_current523_world_map(image_adapter: RefCounted, offered_worlds: Dictionary, options: Dictionary) -> Dictionary:
+	# Reuse UI267's actual original nodes and PR270's opened image owner.
+	# An offer is an explicit UIMapWorld identity, never the first candidate.
+	current523_world_map_status=_world_map_input().call("configure",self,image_adapter,offered_worlds,options)
+	return current523_world_map_status.duplicate(true)
+
+func _bind_current523_world_map_from_settings() -> void:
+	current523_world_map_status=_world_map_input().call("configure_from_settings",self)
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:
