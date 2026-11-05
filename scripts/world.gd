@@ -956,6 +956,7 @@ func _equipped_numeric_sum(key: String) -> float:
 	var total: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		total += float(record.get(key, 0.0))
+		total += ITEM_OPTIONS.additional_original_percent(record,key)
 	return total
 
 
@@ -9897,6 +9898,7 @@ func _effective_max_hp(base_override: int = -1, item_buff_override: Variant = nu
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
+		percent_bonus += ITEM_OPTIONS.additional_original_percent(record,"hpPct")
 	flat_bonus += float(_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "hp"))
 	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))

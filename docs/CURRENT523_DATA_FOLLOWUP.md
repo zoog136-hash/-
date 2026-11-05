@@ -118,3 +118,14 @@ input evidence is separate from adoption/counting. This adds actual original
 numeric inputs to established consumers, not a new effect or save engine.
 It remains uncompiled/unexecuted/unverified and does not complete the item
 or Bonus tables. No source rows/packs/saves or images were published.
+
+The same guarded original reader now also supplies HPPlusPercent and
+MPPlusPercent to the existing maximum-HP and maximum-MP equipment consumers.
+Their source unit must be ValuePercent; raw/100 produces the ratio expected
+by these existing formulas, as in the existing original capacity-skill reader.
+This is distinct from Percentage fixed-point cast/blessing operands. Existing
+explicit fields, mapped bonus IDs and enhancement overlays retain the same
+precedence rules. Maximum-resource calculations change only by the missing
+original equipment operand; no healing, mana granting, ownership, equipment
+transaction, storage or save migration is introduced. Runtime evidence records
+the unit and divisor separately. These additions are likewise unverified.
