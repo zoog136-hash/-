@@ -383,3 +383,18 @@ The targeted 107-entry run accepted 55 and rejected 52 after this change, with
 no script/shader/runtime error lines. CharacterSelect_List_Slot adds one further
 inspection render after easing support. Across disjoint tracked entries, 153
 now have inspection captures; this does not establish their service integration.
+
+### Nested source actions and main integration
+
+The branch now includes verified main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`
+without file conflicts; resource integrity still passes 723 atlases / 41,442
+frames / 233,420,026 bytes. No integrated service was reimplemented.
+
+ProjectNode ActionValue now resolves the source child player and preserves its
+innerActionSpeed, named/all clip ranges, single-frame pause, loop/no-loop mode
+and the parent-duration limit specified by Cocos InnerActionFrame. UpdateScene's
+actual single-frame child action rendered seven captures. The other nine root
+candidates exposed deeper unsupported source elements and remained rejected.
+Loop/no-loop child action execution still needs representative full-source
+render validation; this change does not mark those screens complete. The
+tracked inspection render count is now 154.

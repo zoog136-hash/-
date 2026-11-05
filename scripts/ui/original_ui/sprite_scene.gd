@@ -20,6 +20,7 @@ var _project_ancestry: Array[String]=[]
 var _project_root_options: Dictionary={}
 var _bindings: Dictionary={}
 var excluded_audio_events: Array[Dictionary]=[]
+var _entered_frames: Dictionary={}
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
@@ -41,11 +42,13 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint","FrameEvent"]:
+		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint","FrameEvent","ActionValue"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
 			if value.is_empty(): problems.append("unsupported_frame_union")
+			if timeline.get("property")=="ActionValue":
+				if value.get("_type")!="InnerActionFrame" or int(value.get("innerActionType",-1)) not in [0,1,2]:problems.append("unsupported_inner_action")
 			if timeline.get("property")=="FrameEvent":
 				if value.get("_type")!="EventFrame":problems.append("event_track_type")
 				else:
@@ -79,6 +82,13 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	for timeline: Dictionary in action.get("timeLines",[]):
 		if not _tags.has(int(timeline.actionTag)):
 			root_node.free(); _clear(); return {"ok":false,"error":"timeline_node_missing"}
+		if timeline.property=="ActionValue":
+			var target: Node2D=_tags[int(timeline.actionTag)]
+			if not target.has_meta("source_project_player"):
+				root_node.free();_clear();return {"ok":false,"error":"inner_action_target_missing"}
+			for raw: Dictionary in timeline.frames:
+				if _inner_range(target.get_meta("source_project_player"),_frame_value(raw)).is_empty():
+					root_node.free();_clear();return {"ok":false,"error":"inner_action_clip_missing_or_invalid"}
 		if timeline.property in ["BlendFunc","FileData"] and not _tags[int(timeline.actionTag)].has_meta("source_sprite"):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
@@ -151,6 +161,7 @@ func _build(source: Dictionary) -> Node2D:
 			_build_error="project_scene_rejected:"+member+":"+str(result)
 			nested.free();return null
 		# The original loader initially pauses the inner action at frame zero.
+		nested.set_meta("source_inner_action_speed",float(options.innerActionSpeed))
 		nested.seek_frame(0.0)
 		nested.stop()
 		var actual_root: Node2D=nested.get_child(0)
@@ -159,6 +170,7 @@ func _build(source: Dictionary) -> Node2D:
 		if action_tag!=0:
 			if _tags.has(action_tag):nested.free();return null
 			_tags[action_tag]=actual_root
+		actual_root.set_meta("source_project_player",nested)
 		actual_root.set_meta("original_project_source",{"scene":source_member,"node_offset":int(source._offset),"child_scene":member})
 		for unresolved: String in nested.unresolved_bindings:unresolved_bindings.append(member+":"+unresolved)
 		var child_origin: Node=actual_root.get_node("SourceContentOrigin")
@@ -317,6 +329,10 @@ func playback_status() -> Dictionary:
 	return {"playing":_playing,"frame":_frame,"loop":_loop,"source":source_member,"clip":str(_clip.get("name","")),"inspection_only":inspection_only}
 
 func seek_frame(frame_number: float) -> void:
+	_entered_frames.clear()
+	_seek_frame(frame_number)
+
+func _seek_frame(frame_number: float) -> void:
 	_frame=frame_number
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
@@ -337,7 +353,17 @@ func seek_frame(frame_number: float) -> void:
 		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue
-		if timeline.property=="Position":
+		if timeline.property=="ActionValue":
+			var key: int=int(timeline._offset)
+			if _entered_frames.get(key,-1)!=int(selected._offset):
+				_entered_frames[key]=int(selected._offset)
+				var nested: Node2D=target.get_meta("source_project_player")
+				var span: Dictionary=_inner_range(nested,selected)
+				nested._clip=span
+				nested._loop=int(selected.innerActionType)==0
+				nested.seek_frame(float(span.startIndex))
+				nested._playing=int(selected.innerActionType)!=2
+		elif timeline.property=="Position":
 			var a: Array=selected.postion
 			var b: Array=following.postion
 			target.position=Vector2(lerpf(a[0],b[0],ratio),-lerpf(a[1],b[1],ratio))
@@ -386,14 +412,16 @@ func seek_frame(frame_number: float) -> void:
 func _process(delta: float) -> void:
 	if not _playing or _clip.is_empty(): return
 	# Cocos ActionTimeline uses a 60-frame clock; source speed is preserved.
-	var speed_value: float=float(source_tree.get("action",{}).get("speed",1.0))
+	var speed_value: float=float(get_meta("source_inner_action_speed",source_tree.get("action",{}).get("speed",1.0)))
 	var next: float=_frame+delta*60.0*speed_value
 	# Upstream ActionTimeline::step resets to the start at >= end; it does
 	# not carry a late frame's overshoot into the next loop.
 	if next>=float(_clip.endIndex):
-		if _loop and int(_clip.endIndex)>int(_clip.startIndex): next=float(_clip.startIndex)
+		if _loop and int(_clip.endIndex)>int(_clip.startIndex):
+			next=float(_clip.startIndex)
+			_entered_frames.clear()
 		else: next=float(_clip.endIndex); _playing=false
-	seek_frame(next)
+	_seek_frame(next)
 
 static func _frame_value(raw: Dictionary) -> Dictionary:
 	var result: Dictionary={}
@@ -418,3 +446,20 @@ static func _optional_dictionary(text: String) -> Variant:
 	var parser:=JSON.new()
 	if parser.parse(text)!=OK:return null
 	return parser.data
+
+func _inner_range(nested: Node2D, frame: Dictionary) -> Dictionary:
+	if int(frame.innerActionType)==2:
+		return {"name":"source_single_frame","startIndex":int(frame.singleFrameIndex),"endIndex":int(frame.singleFrameIndex)} if int(frame.singleFrameIndex)>=0 else {}
+	var name_value: String=str(frame.currentAniamtionName)
+	var span: Dictionary={}
+	if name_value=="-- ALL --":
+		span={"name":name_value,"startIndex":0,"endIndex":int(nested.source_tree.action.duration)}
+	else:
+		for clip: Dictionary in nested.source_tree.animationList:
+			if clip.name==name_value:span=clip.duplicate(true);break
+	if span.is_empty():return {}
+	# InnerActionFrame limits the child range by the remaining parent duration.
+	var difference: int=int(source_tree.action.duration)-int(frame.frameIndex)-int(span.endIndex)+int(span.startIndex)
+	if difference<0:span.endIndex+=difference
+	if int(span.endIndex)<int(span.startIndex):return {}
+	return span
