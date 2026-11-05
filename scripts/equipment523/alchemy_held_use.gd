@@ -30,6 +30,12 @@ static func _is_alchemy(physical: Dictionary) -> bool:
 	var proof: Variant=physical.get("equipment523_last_processing")
 	return proof is Dictionary and proof.get("kind")=="alchemy"
 
+static func _equipment_output(physical: Dictionary) -> bool:
+	var record: Variant=physical.get("record")
+	if not record is Dictionary: return false
+	var source_id: int=_whole(record.get("source_item_class_id"))
+	return source_id>0 and D.equipment(D.definition_id(str(source_id)).get("native_record",{}))
+
 func after_load() -> void:
 	_candidate.clear();_busy=false;blocked=false
 
@@ -241,10 +247,13 @@ func try_use(world: Node, item_name: String, physical_id: String) -> bool:
 	var physical: Variant=world.item_instances.get(physical_id)
 	if physical_id.is_empty():
 		for value: Variant in world.item_instances.values():
-			if value is Dictionary and value.get("name")==item_name and _is_alchemy(value):
+			if value is Dictionary and value.get("name")==item_name and _is_alchemy(value) and not _equipment_output(value):
 				world.hud.show_message("연금 결과의 실제 개체를 선택하세요 · 묶음 잔량 보존");return true
 		return false
 	if not physical is Dictionary or not _is_alchemy(physical): return false
+	# Equipment remains with the existing adoption/equipment owner and its
+	# original selected-slot handling; this adapter owns non-equipment uses.
+	if _equipment_output(physical): return false
 	if physical.get("name")!=item_name:
 		world.hud.show_message("선택한 연금 개체와 표시된 소지 키가 다릅니다 · 아이템 보존");return true
 	if _busy or blocked:
