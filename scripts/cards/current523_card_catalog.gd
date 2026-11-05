@@ -209,3 +209,4 @@ static func npc(source_id: int) -> Dictionary:
 	result["content_snapshot"] = "patch523"
 	result["source_definition_archive"] = SOURCE.identity()
 	return result
+

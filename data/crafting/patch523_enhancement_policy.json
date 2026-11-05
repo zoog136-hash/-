@@ -94,5 +94,22 @@
   "source_status_projection_public_basis": [
     "https://lineagem.plaync.com/board/update/view?articleId=674f5c38a429a917f01d0cf6",
     "https://lineagem.plaync.com/guidebook/view?title=군주+마법"
-  ]
+  ],
+  "source_equipment_spell_consumer": "existing_skill_service_source_damage",
+  "source_equipment_spell_formula": "existing_magic_hit_element_flat_target_reduction",
+  "source_equipment_spell_origin": "Source base/dice/flags/range/cooldown/zero costs and target AllButMe are preserved. Existing host magic-hit and element/target-flat-reduction stages, no additional critical/drain/recursive event are labelled TWILIGHT interpretation. FixedMagic+IgnoreMR+IgnoreDR uses only exact source dice and bypasses those stages. Native actor/life/physical identity and source item restrictions are rechecked before any draw.",
+  "source_counter_consumer": "fixed_param3_times_param1",
+  "source_counter_rounding": "nearest",
+  "source_counter_origin": "Exact Type61 chance, Param1/Param2 per-million, Param3 fixed damage, Param4 evade flag. Fixed amount times Param1, post-existing-defence placement and legacy magic=>spell / melee,ranged=>normal context are configurable TWILIGHT interpretation; missing native SpellRange context is not invented. No recursive attack/cast or extra material cost.",
+  "source_item_datetime_offset_minutes": 540,
+  "source_item_datetime_origin": "TWILIGHT timezone UTC+09:00 for source DeleteTime / DateTimes_Korean; source contains no timezone. Expired/unknown contracts remain inactive; equipping never deletes or regrants ownership.",
+  "source_equipment_buff_consumer": "existing_life_scoped_status_service",
+  "source_equipment_buff_probability": "base_minus_mr_coefficient",
+  "source_equipment_buff_mr_coefficient_unit_raw": 100,
+  "source_equipment_buff_level_step_raw": 5000,
+  "source_equipment_buff_origin": "Original raw spell probability base/min/max/multiplier, duration bounds, buff IDs/units/targets/group priority are preserved. Missing native full hit equation uses configurable TWILIGHT baseRaw - targetMR * sourceMultiplier * rawUnit, plus a level delta only when original ByLevel is true. Proc chance and buff-hit chance remain two independent source stages. Equal bounds are exact; variable seconds use existing uniform duration sampling. NPC modifier placement/caps and PvP-to-PvE projection are host rules, not a native equation claim. Unsupported effect/qualifier/lifecycle fields block the whole profile.",
+  "source_buff_reduction_min_pct": -300,
+  "source_buff_reduction_max_pct": 90,
+  "source_buff_attack_speed_factor_min": 0.05,
+  "source_buff_attack_speed_factor_max": 5
 }

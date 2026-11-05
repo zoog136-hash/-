@@ -1,5 +1,6 @@
 extends RefCounted
 ## New source-qualified stacks only. Never reinterpret legacy name-only inventory.
+const NATIVE=preload("res://scripts/monsterbook/monsterbook523_native_rewards.gd")
 var _runtime: WeakRef
 var runtime: RefCounted:
 	get: return _runtime.get_ref() if _runtime != null else null
@@ -10,13 +11,15 @@ func configure(owner_runtime: RefCounted, owner_world: Node) -> void:
 	world = owner_world
 
 func reward_problem(reward: Dictionary) -> String:
-	if int(reward.get("RewardTypeID",0)) == 1: return "" if runtime.economy.experience_amount(reward) > 0 else "경험치 자체 환산 설정 확인 필요"
-	if int(reward.get("RewardTypeID",0)) != 2: return "원본 보상 유형 확인 필요"
+	var kind: String=str(runtime.catalog.row("RewardType",int(reward.get("RewardTypeID",0))).get("Name",""))
+	if int(reward.get("RewardTypeID",0)) == 1 and kind=="Exp": return "" if runtime.economy.experience_amount(reward) > 0 else "경험치 자체 환산 설정 확인 필요"
+	if int(reward.get("RewardTypeID",0)) != 2 or kind!="Item": return "원본 보상 유형 확인 필요"
 	if int(reward.get("CharacterClassID",-1)) != 0 or reward.get("ClanOnly") != false or reward.get("UseImmediately") != false: return "원본 직업·혈맹·즉시 사용 조건 확인 필요"
 	if int(reward.get("ItemBlessCodeID",0)) != 1 or int(reward.get("RewardEnhancementTypeID",0)) != 1: return "원본 축복·강화 조건 확인 필요"
 	var item: Dictionary = runtime.catalog.row("ItemClass",int(reward.RewardClassID))
 	var category: Dictionary = runtime.catalog.row("ItemCategory",int(item.get("CategoryID",-1)))
 	if item.is_empty() or category.is_empty(): return "보상 분류 자료 업데이트 필요"
+	if item.get("TestItem")!=false or not preload("res://scripts/quests/source_dummy523.gd").item_evidence(item).is_empty():return "원본 시험·더미 보상 연결 제외 · 기존 보상 보존"
 	if category.get("IsStackable") != true or int(item.get("Weight",-1)) != 0: return "원본 장비·무게 조건 연결 필요"
 	var expiry := expiry_definition(int(item.ID))
 	if expiry.has("error"): return str(expiry.error)
@@ -51,36 +54,54 @@ func definition(reward: Dictionary) -> Dictionary:
 	if record.has("source_delete_clock"): record.desc += " · 원본 삭제 " + str(record.source_delete_clock)
 	return record
 
+func native_target(reward: Dictionary) -> Dictionary:
+	return NATIVE.target(runtime,world,reward)
+
 func settle(_before: Dictionary, proposed: Dictionary, quote: Dictionary, persist: Callable) -> bool:
 	if quote.action not in ["claim_rewards", "claim"]: return false
-	var inventory: Dictionary = world.inventory.duplicate(true)
 	var records: Dictionary = proposed.get("source_items", {}).duplicate(true)
 	var exp_gain: int = 0
+	var raw_deltas: Dictionary={}
+	var native_rewards: Array=[]
 	for reward: Dictionary in quote.get("rewards", []):
 		if not reward_problem(reward).is_empty(): return false
 		if int(reward.RewardTypeID) == 1:
-			exp_gain += runtime.economy.experience_amount(reward)
+			var amount: int=runtime.economy.experience_amount(reward)
+			if amount<1 or exp_gain>9007199254740991-amount:return false
+			exp_gain += amount
+			continue
+		if not native_target(reward).is_empty():
+			native_rewards.append(reward)
 			continue
 		var item := definition(reward)
 		var name: String = item.name
 		var existing: Dictionary = world._find_catalog_item_record(name)
 		if not existing.is_empty() and existing.get("sourceId") != item.sourceId: return false
 		# A legacy quantity without our source-qualified ownership proof is not merged.
-		if int(inventory.get(name,0)) > 0 and not records.has(name): return false
-		var count: int = int(inventory.get(name,0)) + int(reward.Amount)
+		if int(world.inventory.get(name,0)) > 0 and not records.has(name): return false
+		var count: int = int(world.inventory.get(name,0))+int(raw_deltas.get(name,0)) + int(reward.Amount)
 		if int(reward.Amount) <= 0 or count > int(item.source_original.MaxStackAmount): return false
-		inventory[name] = count
+		raw_deltas[name]=int(raw_deltas.get(name,0))+int(reward.Amount)
 		if not records.has(name) or records[name].get("sourceId") != item.sourceId: return false
-	var overrides: Dictionary = {"inventory":inventory}
+	var native: Dictionary=NATIVE.stage(runtime,world,proposed,quote,native_rewards)
+	if not native.get("ok",false):return false
+	var overrides: Dictionary=native.overrides
+	if not overrides.has("inventory"):overrides["inventory"]=world.inventory.duplicate(true)
+	var inventory: Dictionary=overrides.inventory
+	for name: String in raw_deltas:
+		# Join raw-only deltas onto the supplier's full candidate. Never merge a
+		# second baseline inventory over the native output or old raw ownership.
+		if int(inventory.get(name,0))!=int(world.inventory.get(name,0)):return false
+		inventory[name]=int(inventory.get(name,0))+int(raw_deltas[name])
 	var projected: Dictionary = runtime.economy.experience_state(exp_gain) if exp_gain > 0 else {}
-	var saved_progress := projected.duplicate()
-	if saved_progress.has("attack_power"):
-		saved_progress["attack"] = saved_progress.attack_power
-		saved_progress.erase("attack_power")
-	overrides.merge(saved_progress)
+	overrides.merge(runtime.progression_overrides(exp_gain),false)
 	if persist.call(proposed,overrides) != true: return false
 	world.inventory = inventory
+	if overrides.has("item_instances"):world.item_instances=overrides.item_instances
+	if overrides.has("gold"):world.gold=int(overrides.gold)
+	if overrides.has("consumable_state"):world.consumable_service.import_state(overrides.consumable_state)
 	for key: String in projected: world.set(key,projected[key])
+	world.deferred_save.cancel()
 	install(records)
 	if exp_gain > 0:
 		world.hud.append_log("몬스터 도감 경험치 +%d · TWILIGHT 자체 환산" % exp_gain)

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "policy": {
+    "luckybag_random_mode": "source_weights",
+    "random_reward_weight_mode": "equal_estimate",
+    "attendance_blessing_base": 200,
+    "conditional_percent_mode": "percentage_points_estimate",
+    "undead_damage_mode": "uniform_1_to_max_estimate",
+    "luckybag_final_scope": "source_item",
+    "luckybag_final_completion": "once"
+  },
+  "time_policy": {
+    "attendance_reset_hour": 0
+  },
+  "description": "TWILIGHT local estimates. These are not recovered native server rules. Omitted utc_offset_minutes uses the execution device's local timezone."
+}

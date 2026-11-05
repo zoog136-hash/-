@@ -30,6 +30,10 @@ func run() -> void:
 	check(Slot.identity_key("source:m508:98:20548")=="98:20548" and Slot.identity_key("source:m523:98:20548")=="98:20548","explicit508/523 source identities resolve raw deck/card without rewriting ownership")
 	for identity: String in ["20548","source:m523:2:20548","source:m523:98:020548","fallback:성물"]:check(Slot.identity_key(identity).is_empty(),"untyped or noncanonical identity rejected "+identity)
 	check(Slot.validate({Slot.FIELD:42})!="" and Slot.validate({Slot.FIELD:"source:m523:98:20441"})!="","corrupt choice and unused card without a subslot graph rejected")
+	var timer: Dictionary={"schema":1,"item_class_id":365758,"slot_index":11,"identity":"","expires_utc":0}
+	check(Slot.validate({"native_relic_summon_time":timer}).is_empty(),"new pending timer retains exact source slot11")
+	timer.slot_index=12
+	check(not Slot.validate({"native_relic_summon_time":timer}).is_empty(),"corrupt timer cannot declare a different source summon slot")
 	var runtime=Runtime.new();var chosen: String="source:m508:98:20548";var main: String=""
 	for key: String in DATA.relic.cards:
 		var row: Dictionary=DATA.relic.cards[key]

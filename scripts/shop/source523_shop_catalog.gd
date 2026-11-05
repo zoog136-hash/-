@@ -388,3 +388,4 @@ func activation(purchase_id: int, context: Dictionary = {}) -> Dictionary:
 	if not payment_quote(purchase_id, 1).get("ok", false): reasons.append("결제 경로 미연결")
 	reasons.append("결제·보관함 수령 경로 검증 필요")
 	return {"state":"blocked", "reasons":reasons, "can_purchase":false}
+

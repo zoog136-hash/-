@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "policy_id": "twilight_skill_awakening_growth_v1",
+  "policy_label": "TWILIGHT 자체 성장 환산·수수료",
+  "custom_economy": {
+    "provenance": "user_authorized_local_balance_policy_not_recovered_source_values",
+    "material_quantity": 1,
+    "same_category_and_grade": true,
+    "preserve_permanent_owned_card": true,
+    "experience_formula": "ceil((current_level_CumExp - previous_level_CumExp_or_zero) / cards_per_level)",
+    "grades": {
+      "3": {"cards_per_level": 4, "fee_adena": 10000},
+      "4": {"cards_per_level": 6, "fee_adena": 50000},
+      "5": {"cards_per_level": 8, "fee_adena": 100000},
+      "32": {"cards_per_level": 10, "fee_adena": 200000},
+      "52": {"cards_per_level": 12, "fee_adena": 500000}
+    }
+  },
+  "local_integration": {
+    "experience_storage": "cumulative_canonical_decimal_string",
+    "level_rule": "current level BuffCardSkillAwakenExp.CumExp is the next-level threshold; level20 is the cap, its sentinel is not a further level",
+    "maximum_level": 20,
+    "maximum_experience": "9999999999999",
+    "growth_model": "deterministic_experience_thresholds_no_enhancement_rng",
+    "overflow": "saturate_at_maximum_experience_without_reducing_existing_experience",
+    "material_restrictions": "known native awakening card, same category/grade, owned duplicate, source eligibility; preserve existing IsNoMergeOut consumption restriction",
+    "relic_growth": "duplicate-card feed uses the deck98 source curve with the authorized custom conversion and fee; hunting EXP grants remain disabled until their contract is verified",
+    "reroll": "handled separately by the existing explicit-user level1 experience0 reset policy"
+  },
+  "verified_source": {
+    "snapshot": "patch523",
+    "table": "BuffCardSkillAwakenExp",
+    "table_sha256": "bb2e01688049f0bee830a8777bbedbc77c4baa5811730774573e08b6c8f8ef5c",
+    "content_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_scope": "supplied validated extracted-content ZIP, not the original complete patch archive",
+    "decks": [1, 2, 98],
+    "rows": 60,
+    "runtime_profile": "skill_awakening_service.profile(identity, level).experience_row; source values are not modified by this economy policy"
+  },
+  "official_public_evidence": [
+    {
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%B3%80%EC%8B%A0+%EC%8B%9C%EC%8A%A4%ED%85%9C",
+      "updated": "2026-10-21T06:51:09+09:00",
+      "scope": "transformation: hunting grants the character's earned EXP without deducting character EXP; consume duplicate cards for skill awakening EXP; levels improve skill activation probability"
+    },
+    {
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%9D%B8%ED%98%95+%EC%8B%9C%EC%8A%A4%ED%85%9C",
+      "updated": "2026-09-11T05:09:49+09:00",
+      "scope": "doll: hunting grants the character's earned EXP without deducting character EXP; consume duplicate cards for skill awakening EXP; levels improve skill activation probability"
+    },
+    {
+      "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A9%94%EB%89%B4+%EB%B0%8F+UI+%EC%86%8C%EA%B0%9C",
+      "updated": "2022-02-03T18:16:54+09:00",
+      "scope": "skill EXP synthesis consumes duplicates permanently; option awakening alone describes failure and partial EXP refund; its source reroll-preserves-EXP rule is superseded by the explicit user reset policy"
+    },
+    {
+      "url": "https://lineagem.plaync.com/board/notice/view?articleId=50560523",
+      "scope": "world transfer includes relic skill-awakening EXP; does not establish relic hunting conversion or material economics"
+    }
+  ],
+  "excluded_contracts": [
+    "all test EXP ItemClass items, including 193364..193554",
+    "deck41 BuffCardExperience/LevelUp/LevelUpProbability",
+    "option awakening failure odds and refunded EXP",
+    "skill candidate selection weights and cast activation probabilities"
+  ],
+  "unverified_source_economy": ["per-card EXP conversion", "feed Adena cost"],
+  "separate_enhancement_failure_rng": "not established by inspected source or official public guides; no such operation is introduced"
+}

@@ -236,3 +236,4 @@ func build() -> Dictionary:
 		"execution_boundaries":{"projection":"tools/build_patch523_card_acquisition.py@b37e5b941d189351906a4a60e411ad1d07566aeb",
 			"ownership":"Existing source-currency/physical ticket/craft/open/save owners remain authoritative",
 			"date_policy":"Original calendar rows/null only; existing time_available owns clock/boundary checks"}}
+

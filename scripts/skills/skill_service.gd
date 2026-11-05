@@ -1,6 +1,7 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 
+const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
@@ -22,6 +23,7 @@ var toggles: Dictionary = {}
 var counter_counts: Dictionary = {}
 var combat_elapsed: float = 100
 var recovery_elapsed: float = 0
+var relic_buff_signature: String = ""
 var event_counts: Dictionary = {}
 var last_evaded: bool = false
 var equipment_links: Dictionary = {}
@@ -58,6 +60,7 @@ func clear() -> void:
 	marks.clear()
 	counter_counts.clear()
 	if is_instance_valid(vfx): vfx.clear()
+	relic_buff_signature = ""
 
 func tick(delta: float) -> void:
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")), bool(world.presentation_settings.get("limit_effect_count", false)))
@@ -68,6 +71,7 @@ func tick(delta: float) -> void:
 	progression.tick(delta)
 	combat_elapsed += delta
 	recovery_elapsed += delta
+	refresh_relic_buffs()
 	for id: String in shields.keys():
 		shields[id].remaining -= delta
 		if float(shields[id].remaining) <= 0:
@@ -136,9 +140,28 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 
+func refresh_relic_buffs() -> void:
+	var signature: String = catalog._lineage_signature() + catalog._relic_signature()
+	if signature == relic_buff_signature: return
+	relic_buff_signature = signature
+	for buff: Dictionary in world.active_skill_buffs.values():
+		var base: Dictionary = catalog.record_for(str(buff.get("skill_id", "")))
+		if base.is_empty(): continue
+		var skill: Dictionary = catalog.resolve(base)
+		if not catalog.RELIC_LEVELS.EFFECTS.needs_buff_refresh(base): continue
+		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
+		buff["speed"] = float(buff.skill_stats.get("speed", 1))
+	# Never extend remaining time, cast, spend, heal or write a save on refresh.
+	world.hp = mini(world.hp, world._effective_max_hp())
+	world.mp = mini(world.mp, world._effective_max_mp())
+	world._refresh_speed_modifiers()
+	if world.player != null: world.player.set_skill_speed_multiplier(world._active_skill_speed_multiplier())
+
 func stat(key: String) -> float:
+	refresh_relic_buffs()
 	var result: float = catalog.stat(key) + local_runtime.stat(key)
 	if key=="lfe" and world.get("growth")!=null: result += world.growth.bonus("life:flat")
+	if key=="lfe": result += EQUIPMENT523_COMBAT.lfe(world._all_equipped_records())
 	for buff: Dictionary in world.active_skill_buffs.values():
 		if buff.has("skill_id"): result += float(buff.get("skill_stats", {}).get(key, 0))
 	for entry: Dictionary in stacks.values(): result += float(entry.get("stats", {}).get(key, 0)) * float(entry.get("count", 0))
@@ -154,15 +177,25 @@ func equipment_modifier(skill: Dictionary, key: String) -> float:
 
 func material_plan(skill: Dictionary) -> Dictionary:
 	var spent: Dictionary = {}
+	var physical_ammo: Dictionary={};var physical_materials: Array=[]
+	var original_owner: Script=load("res://scripts/loot/current523_native_stack.gd")
 	for item: String in skill.get("items", {}):
 		var remaining: int = int(skill.items[item])
+		var ammo: Dictionary=original_owner.call("original_skill_ammo",world,item,remaining)
+		if ammo.get("handled",false):
+			if not ammo.get("ok",false) or not physical_ammo.is_empty():return {"reason":str(ammo.get("reason","하나의 스킬에서 서로 다른 실제 탄약 선택은 미지원")),"spent":{}}
+			physical_ammo=ammo;continue
 		for key: String in Catalog.SOURCE523.inventory_keys(skill, item):
 			var available: int = maxi(0,int(world.inventory.get(key,0))-int(spent.get(key,0)))
 			var amount: int = mini(remaining,available)
 			if amount > 0: spent[key] = int(spent.get(key,0)) + amount
 			remaining -= amount
-		if remaining > 0: return {"reason":"%s %d개 필요" % [item,int(skill.items[item])],"spent":{}}
-	return {"reason":"","spent":spent}
+		if remaining > 0:
+			var original: Dictionary=original_owner.call("plan_spell_material",world,skill,item,remaining)
+			if not original.get("handled",false):return {"reason":"%s %d개 필요" % [item,int(skill.items[item])],"spent":{}}
+			if not original.get("ok",false):return {"reason":str(original.get("reason","정확한 원문 스킬 재료 연결 대기")),"spent":{}}
+			physical_materials.append_array(original.requests)
+	return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 
 func cost_reason(skill: Dictionary) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
@@ -179,6 +212,20 @@ func cost_reason(skill: Dictionary) -> String:
 func spend(skill: Dictionary) -> bool:
 	if not cost_reason(skill).is_empty(): return false
 	var plan: Dictionary = material_plan(skill)
+	if not str(plan.get("reason","")).is_empty():return false
+	var physical: Dictionary=plan.get("physical_ammo",{})
+	if not physical.is_empty():
+		var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
+		var current: Dictionary=owner.call("original_skill_ammo",world,str(physical.cost_role),int(physical.quantity))
+		if current!=physical:return false
+		var paid: Dictionary=owner.call("consume_ammo",world,str(physical.inventory_key),int(physical.quantity),int(skill.get("mp",0)),null,false,{"hp_cost":int(skill.get("hp",0)),"legacy_spent":plan.spent.duplicate(true),"skill_id":str(skill.get("id","")),"material_requests":plan.get("physical_materials",[]).duplicate(true),"resolved_skill":skill.duplicate(true)})
+		if not paid.get("ok",false) or not paid.get("saved",false) or paid.get("consumed")!=physical.quantity:
+			world.hud.show_message(str(paid.get("reason","원문 스킬 탄약·비용 저장 연결 대기")));return false
+		world._refresh_ammo_counters();return true
+	if not plan.get("physical_materials",[]).is_empty():
+		var paid: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("spend_original_skill_materials",world,skill,plan)
+		if not paid.get("ok",false) or not paid.get("saved",false):world.hud.show_message(str(paid.get("reason","원문 스킬 재료 저장 연결 대기")));return false
+		return true
 	world.mp -= int(skill.get("mp", 0))
 	world.hp -= int(skill.get("hp", 0))
 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
@@ -432,12 +479,13 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: Str
 	# Normal attacks and physical skills read the same live, life-scoped defense.
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
+	avoidance+=status.modifier(target,"source_ranged_evasion" if attack_kind=="ranged" else "source_melee_evasion")
 	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.guardian_combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
 	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), world.card_collections.avoidance_after_pierce(int(avoidance),attack_kind))*world.halphas_star.combat.hit_factor(world.player)
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF) -> void:
 	if target.dead: return
-	var amount: int = int(skill.get("power", 20)) + world.card_collections.spell_damage_bonus(skill) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
+	var amount: int = int(skill.get("power", 20)) + int(world.card_collections.spell_damage_bonus(skill)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
 	var source_kind: String=str(skill.get("attack_type","melee"))
 	if world.get("growth")!=null:
 		amount+=int(world.growth.bonus("pve_"+source_kind+"_damage:flat"))
@@ -458,6 +506,59 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 		vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), link_from,
 			{"direction":world.player.global_position.direction_to(target.global_position), "critical":critical, "ground_point":target.global_position})
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
+
+var equipment_source_depth: int=0
+func execute_equipment_source_spell(profile: Dictionary,target: TwilightMonster,expected_life: int,context: Dictionary) -> Dictionary:
+	if profile.get("mode")!="source_buff_modifiers":return execute_equipment_source_damage(profile,target,expected_life,context)
+	var source=preload("res://scripts/crafting/patch523_equipment_spells.gd")
+	if equipment_source_depth>0 or not source.eligible(world,profile,target,expected_life,context):return {"ok":false,"error":"원본 장비 버프 실행 조건 확인 필요"}
+	var values: Dictionary=source.buff_values(profile)
+	if values.is_empty() or (values.modifiers.has("source_hold") and target.status_immunities.has("hold")):return {"ok":false,"error":"원본 버프 단위/면역 확인 필요"}
+	equipment_source_depth+=1
+	var raw: Dictionary=profile.source_spell
+	world.skill_cooldowns["equipment523|"+str(context.instance_id)+"|"+str(int(raw.ID))]=float(raw.CastDelay)/1000.0
+	var chance: int=source.buff_chance_raw(world,profile,target)
+	if chance<=0 or (chance<1000000 and world.rng.randi_range(0,999999)>=chance):
+		equipment_source_depth-=1;target.show_miss()
+		return {"ok":true,"hit":false,"applied":false,"damage":0,"spell_class_id":int(raw.ID),"hit_weight":chance}
+	var low: float=float(values.SpellDebuffMinDuration);var high: float=float(values.SpellDebuffMaxDuration)
+	var duration: float=low if low==high else world.rng.randf_range(low,high)
+	var applied: bool=status.set_native_equipment_modifiers(target,profile,duration,values.modifiers,context)
+	if applied and values.modifiers.has("source_hold"):target.apply_hold(duration)
+	if applied and world.option_awakening!=null:world.option_awakening.combat.emit_spell(raw,target)
+	world.hud.append_log("원본 장비 디버프 · %s · %.2f초 · 원본 수치/대상 + TWILIGHT 적중 계산" % [str(raw.Name),duration])
+	equipment_source_depth-=1
+	return {"ok":true,"hit":true,"applied":applied,"damage":0,"spell_class_id":int(raw.ID),"buff_class_id":int(profile.buff.source_buff.ID),"duration":duration,"hit_weight":chance}
+
+func execute_equipment_source_damage(profile: Dictionary,target: TwilightMonster,expected_life: int,context: Dictionary) -> Dictionary:
+	# This is a separate native identity entrypoint on the existing execution
+	# owner. It neither grants/learns a curated skill nor charges its cast cost.
+	var source=preload("res://scripts/crafting/patch523_equipment_spells.gd")
+	if equipment_source_depth>0 or not source.eligible(world,profile,target,expected_life,context):return {"ok":false,"error":"원본 장비 주문의 타깃/소유/실행 조건 확인 필요"}
+	var values: Dictionary=source.values(profile)
+	var raw: Dictionary=profile.source_spell
+	var key: String="equipment523|"+str(context.instance_id)+"|"+str(int(raw.ID))
+	if float(world.skill_cooldowns.get(key,0))>0:return {"ok":false,"error":"원본 장비 주문 재사용 대기"}
+	equipment_source_depth+=1
+	var fixed: bool=profile.mode=="fixed_ignore_mr_dr"
+	if not fixed and world.rng.randf()>=hit_chance({"attack_type":"magic"},target):
+		target.show_miss();equipment_source_depth-=1
+		return {"ok":true,"hit":false,"spell_class_id":int(raw.ID),"damage":0}
+	var amount: int=int(values.get("SpellDamageBase",0))
+	for die: int in range(int(values.get("SpellDamageDiceNumber",0))):amount+=world.rng.randi_range(1,int(values.get("SpellDamageDiceSpotCount",0)))
+	if not fixed:
+		var element: String=str({0:"physical",1:"fire",2:"water",3:"wind",4:"earth"}.get(int(raw.get("ElementalTypeID",0)),""))
+		if element.is_empty():equipment_source_depth-=1;return {"ok":false,"error":"원본 속성 실행 조건 확인 필요"}
+		amount=world._elemental_damage_to_monster(maxi(1,amount),element,target)
+		amount=target_damage(amount,target,"magic")
+	# A native equipment proc is one effect, not another normal/curated attack.
+	# Bypass amplification/critical/drain/on-hit recursion and learned cost APIs.
+	world.skill_cooldowns[key]=float(raw.CastDelay)/1000.0
+	target.take_damage(maxi(0,amount),false,"magic")
+	if world.option_awakening!=null:world.option_awakening.combat.emit_spell(raw,target)
+	world.hud.append_log("원본 장비 주문 · %s · 피해 %d · 원본 주사위/조건 + TWILIGHT 전투 단계" % [str(raw.Name),amount])
+	equipment_source_depth-=1
+	return {"ok":true,"hit":true,"spell_class_id":int(raw.ID),"damage":amount}
 
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	var stats: Dictionary = skill.get("stats", {})
@@ -489,6 +590,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 	if str(skill.get("mode","")) in world.PATCH523_ENHANCE.policy().get("healing_magic_modes",[]):
 		effective=maxi(0,int(round(float(effective)*(1.0+maxf(0.0,world._equipment_inven_sum("healing_magic_pct"))/100.0))))
 	var source_heal_input: int = effective
+	effective = EQUIPMENT523_COMBAT.magical_heal(world._all_equipped_records(),effective)
 	effective = world.patch523_npc_spells.extensions.healing(effective,false)
 	var generation: int = int(world.combat_generation)
 	world.apply_patch523_healing(source_heal_input,false)
@@ -510,7 +612,7 @@ func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	vfx.emit_skill(id, "impact", world.player.global_position)
 	_emit_verified_source_effect({"id":id}, "impact", world.player.global_position)
 
-func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
+func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}, attack: Dictionary = {}) -> void:
 	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
 	# Extra hits, reflected damage, and procs do not recursively proc themselves.
 	if proc_depth > 0: return
@@ -520,10 +622,14 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 		if not catalog.enabled(base) or str(base.mode) not in ["proc","mark","toggle_proc","stack_defense","stack_attack"]: continue
 		var skill := catalog.resolve(base)
 		var expected := str(skill.get("trigger", "on_damaged" if skill.mode == "stack_defense" else "on_hit"))
-		if expected != event: continue
+		var native_delta: float = Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
+		if event == "on_miss":
+			if expected != "on_hit" or native_delta <= 0: continue
+		elif expected != event: continue
 		var id := str(skill.id)
 		if float(world.skill_cooldowns.get(id, 0)) > 0: continue
-		if world.rng.randf() >= float(skill.get("proc_chance", 1)): continue
+		var chance: float = native_delta if event == "on_miss" else float(skill.get("proc_chance", 1)) + native_delta
+		if world.rng.randf() >= clampf(chance, 0, 1): continue
 		match str(skill.mode):
 			"stack_defense": stack(id, {"damageReduction":skill.get("reduction_per_stack", 1)}, int(skill.get("max_stacks", 5)), float(skill.duration))
 			"stack_attack": stack(id, {"atk":skill.get("atk_per_stack", 1),"meleeHit":skill.get("hit_per_stack", 1)}, int(skill.get("max_stacks", 5)), float(skill.duration))
@@ -565,7 +671,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
 					vfx.emit_skill(id, "impact", world.player.global_position)
 					_emit_verified_source_effect(skill, "impact", world.player.global_position)
-				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
+				if skill.has("power") and event in ["on_hit", "on_miss"] and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
 		progression.on_normal_hit(target,source_skill)
@@ -610,22 +716,43 @@ func next_chain_target(previous: TwilightMonster, visited: Array[TwilightMonster
 			distance = d
 	return result
 
-func target_damage(amount: int, target: TwilightMonster) -> int:
+func target_damage(amount: int, target: TwilightMonster,kind: String="") -> int:
 	# One common successful-hit boundary covers normal attacks, skills and
 	# equipment procs. Instant death intentionally bypasses that boundary.
 	var pierce: float = world.totem_reduction_pierce() if world.has_method("totem_reduction_pierce") else 0.0
-	return status.damage_after_reduction(amount, target, pierce)
+	var result: int=status.damage_after_reduction(amount,target,pierce)
+	if kind=="ranged":result=maxi(1,result-int(status.modifier(target,"source_ranged_reduction")))
+	if kind in ["melee","ranged","magic"]:
+		var settings: Dictionary=world.PATCH523_ENHANCE.policy()
+		var percentage: float=clampf(status.modifier(target,"source_"+kind+"_reduction_pct"),float(settings.get("source_buff_reduction_min_pct",-300)),float(settings.get("source_buff_reduction_max_pct",90)))
+		result=maxi(1,int(round(result*(1-percentage/100.0))))
+	return result
 
-func outgoing_damage(amount: int) -> int:
+func attack_context(kind: String, by_spell: bool, hit: bool, main_target: bool = true) -> Dictionary:
+	return {"confirmed":true,"attack_type":kind,"by_spell":by_spell,"hit":hit,"main_target":main_target,"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())}
+
+func trigger_relic_miss(target: TwilightMonster, kind: String) -> void:
+	if proc_depth > 0 or not is_instance_valid(target) or target.dead: return
+	var attack: Dictionary = attack_context(kind, false, false)
+	# No new event/RNG side effects when no active native miss increment exists.
+	for base: Dictionary in catalog.records:
+		if not catalog.enabled(base) or base.mode != "proc": continue
+		if Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(catalog.resolve(base), attack) > 0:
+			trigger("on_miss", target, {}, attack)
+			return
+
+func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 	if proc_depth > 0 or counter_depth > 0: return amount
 	var multiplier := 1.0
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var stats: Dictionary = buff.get("skill_stats", {})
 		if world.rng.randf() < float(stats.get("doubleChance", 0)): multiplier = maxf(multiplier, float(stats.get("doubleMultiplier", 1)))
 	for record: Dictionary in catalog.records:
-		if not catalog.enabled(record):continue
-		var resolved: Dictionary=catalog.resolve(record)
-		if resolved.mode == "amplify" and world.rng.randf() < float(resolved.get("proc_chance", 0)): multiplier = maxf(multiplier, float(resolved.get("multiplier", 1)))
+		if not catalog.enabled(record): continue
+		var skill: Dictionary = catalog.resolve(record)
+		if skill.mode != "amplify": continue
+		var chance: float = float(skill.get("proc_chance", 0)) + Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
+		if world.rng.randf() < clampf(chance, 0, 1): multiplier = maxf(multiplier, float(skill.get("multiplier", 1)))
 	return maxi(0, int(amount * multiplier))
 
 func on_evaded(attacker: TwilightMonster) -> void:
@@ -703,6 +830,9 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 	var multiplier := 1.0
 	for buff: Dictionary in world.active_skill_buffs.values(): multiplier *= float(buff.get("skill_stats", {}).get("receivedMultiplier", 1))
 	var reduction := stat("damageReduction") + stat("receivedReduction")
+	# This entry point receives TwilightMonster attacks, so keep native PvE
+	# reduction separate from general/PvP stats.
+	reduction += stat("pveDamageReduction")
 	if kind != "magic": reduction += stat("physicalReduction")
 	if kind == "ranged": reduction += stat("rangedReduction")
 	var result := maxi(0, int(amount * multiplier) - int(reduction))

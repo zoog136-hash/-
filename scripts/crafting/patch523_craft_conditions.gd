@@ -132,3 +132,4 @@ static func summary(recipe: Dictionary, context: Dictionary) -> String:
 		lines.append((("평생 한도 %d/%d회(TWILIGHT 설정)" if condition.quota.get("mode")=="bounded_lifetime" else "이번 주 %d/%d회") % [int(quote.quota_used),int(quote.quota_limit)]) if quote.get("ok",false) else str(quote.get("reason","횟수 확인 필요")))
 		lines.append(str(condition.quota.clock_origin))
 	return "\n".join(lines)
+

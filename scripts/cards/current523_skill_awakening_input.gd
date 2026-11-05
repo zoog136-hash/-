@@ -154,3 +154,4 @@ static func _problem(data: Dictionary,message: String) -> void:
 	if message.is_empty():message="새 원문 스킬 각성 입력을 읽을 수 없습니다. 기존 저장은 보존합니다."
 	if data.problem.is_empty():data.problem=message
 	if not message in data.input_problems:data.input_problems.append(message)
+

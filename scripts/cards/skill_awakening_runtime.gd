@@ -1,8 +1,12 @@
 extends RefCounted
+const Presentation=preload("res://scripts/cards/source_card_operation_presentation.gd")
 ## Local save namespace; user-policy debit and source-weighted result save together.
 const Core=preload("res://scripts/cards/skill_awakening_service.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const SourceVFX=preload("res://scripts/cards/skill_awakening_source_vfx.gd")
+const Growth=preload("res://scripts/cards/skill_awakening_growth.gd")
+const CurrentMaterial=preload("res://scripts/cards/current523_owned_card_material.gd")
+const Supply=preload("res://scripts/cards/native_awakening_supply.gd")
 const SAVE_KEY: String="card_skill_awakening"
 var core=Core.new()
 var world: Node
@@ -44,6 +48,13 @@ func view(identity: String,preview_level: int=1) -> Dictionary:
 		for record: Dictionary in world.catalog_db.get(category,[]):
 			if Cards.card_id(record)==identity:snapshot.target_record=record.duplicate(true);break
 		snapshot.save_blocked=save_blocked
+		var card_state: Dictionary=world.card_draw_fusion.export_state()
+		snapshot.growth_progress=Growth.view(core,progress,card_state.owned,identity,card_state.spare,int(world.gold),card_state)
+		snapshot.presentation=Presentation.capability(Presentation.AWAKENING)
+		snapshot.growth_progress.presentation=Presentation.capability(Presentation.GROWTH)
+		snapshot.can_awaken=bool(snapshot.can_awaken) and Presentation.available(Presentation.AWAKENING)
+		snapshot.can_feed=bool(snapshot.growth_progress.get("can_feed",false)) and not save_blocked and Presentation.available(Presentation.GROWTH)
+		snapshot.growth_progress.can_feed=bool(snapshot.can_feed)
 	return snapshot
 func _save_staged_state(next: Dictionary,override: Dictionary={}) -> Error:
 	var staged: Dictionary=override.duplicate(true);staged[SAVE_KEY]=next
@@ -54,7 +65,61 @@ func _save_staged_state(next: Dictionary,override: Dictionary={}) -> Error:
 			if staged.has(key):world.set(key,staged[key])
 	return error
 
+func request_experience_feed(identity: String,material_id: String,expected_revision: int=-1) -> Dictionary:
+	if not Presentation.available(Presentation.GROWTH):return Presentation.request(Presentation.GROWTH)
+	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
+	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
+	_context();_reroll_busy=true
+	var revision: int=int(progress.revision) if expected_revision<0 else expected_revision
+	var card_state: Dictionary=world.card_draw_fusion.export_state()
+	var prepared: Dictionary=Growth.prepare_feed(core,progress,card_state,int(world.gold),identity,material_id,revision)
+	if not prepared.ok:_reroll_busy=false;return prepared
+	var state_error: String=core.validate_state(prepared.state)
+	if not state_error.is_empty():_reroll_busy=false;return Core.fail("invalid_state",state_error)
+	# The current card-owner save contract requires the unchanged inventory.
+	# Keep native item receipts and physical reservations in that same snapshot.
+	var override: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"card_draw_fusion":prepared.card_state,"gold":prepared.gold}
+	var error: Error=_save_staged_state(prepared.state,override)
+	if error!=OK:_reroll_busy=false;return Core.fail("save_failed","저장 실패 · 중복 카드·아데나·경험치·레벨 보존")
+	progress=prepared.state.duplicate(true);world.card_draw_fusion.import_state(prepared.card_state);world.gold=int(prepared.gold)
+	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
+	prepared.erase("state");prepared.erase("card_state");prepared.erase("gold");prepared.committed=true
+	if world.has_method("_update_hud"):world.call_deferred("_update_hud")
+	return prepared
+
+
+func on_hunt_experience(amount: int) -> Dictionary:
+	if _reroll_busy or save_blocked or not problem.is_empty():return Core.fail("save_blocked","스킬 각성 성장 보호 중")
+	_context()
+	var prepared: Dictionary=Growth.prepare_hunt(core,progress,world.card_draw_fusion.owned,world.equipped_catalog,amount)
+	if not prepared.ok or not bool(prepared.get("changed",false)):return prepared
+	var error: String=core.validate_state(prepared.state)
+	if not error.is_empty():return Core.fail("invalid_state",error)
+	# Earned hunt EXP shares the player's existing deferred save transaction.
+	progress=prepared.state;_has_cache=false;world.set("equipment_records_dirty",true)
+	return prepared
+
+func _book_debit_error(debit: Dictionary,requirement: Dictionary) -> String:
+	if not debit.get("overrides") is Dictionary or not debit.overrides.get("inventory") is Dictionary or not debit.overrides.get("item_instances") is Dictionary:return "각성서 공급 거래 형식 오류"
+	for key: Variant in debit.overrides:
+		if key not in ["inventory","item_instances","quest_state"]:return "각성서 공급 범위 오류"
+	if not debit.get("consumed") is Array or debit.consumed.is_empty():return "각성서 소비 증명 누락"
+	var total: int=0
+	for value: Variant in debit.consumed:
+		if not value is Dictionary or not Core.integer(value.get("item_class_id")) or int(value.item_class_id)!=int(requirement.item_class_id) or not Core.integer(value.get("quantity")) or int(value.quantity)<1 or int(value.quantity)>Core.BOOK_QUANTITY:return "각성서 1장 소비 증명 불일치"
+		total+=int(value.quantity)
+	if total!=Core.BOOK_QUANTITY:return "각성서 1장 소비 수량 오류"
+	if debit.overrides.has("quest_state"):
+		var service: Variant=world.get("quest_service")
+		if service==null or not service.has_method("import_state"):return "원본 퀘스트 영수증 소유자 미설치"
+		var owner: Script=service.get_script()
+		if owner==null or not owner.has_method("validate_saved_state"):return "원본 퀘스트 영수증 검증 계약 미설치"
+		var error: Variant=owner.call("validate_saved_state",debit.overrides.quest_state)
+		if not error is String or not error.is_empty():return "원본 퀘스트 소비 영수증 검증 실패"
+	return ""
+
 func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
+	if not Presentation.available(Presentation.AWAKENING):return Presentation.request(Presentation.AWAKENING)
 	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
 	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
 	_context()
@@ -63,46 +128,36 @@ func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
 	var requirement: Dictionary=core.book_requirement(identity)
 	if requirement.is_empty() or int(requirement.fee)<=0:return Core.fail("identity","각성 수수료 정책 연결 없음")
 	if int(world.gold)<int(requirement.fee):return Core.fail("insufficient_gold","아데나 부족")
-	var selected: String="";var item_name: String="";var locked_book: bool=false
-	for key: String in world.item_instances:
-		var physical: Variant=world.item_instances[key]
-		if not physical is Dictionary or not physical.get("record") is Dictionary:continue
-		var record: Dictionary=physical.record
-		if not preload("res://scripts/lineagem_base508.gd").native(record) or record.get("source_snapshot","")!="base508":continue
-		if record.get("source_item_class_id",0)!=int(requirement.item_class_id) or record.get("sourceId","")!="m508:item:"+str(int(requirement.item_class_id)):continue
-		if physical.get("name","")!=record.get("name","") or str(physical.get("name","")).is_empty():continue
-		if world.has_method("_item_locked") and (world._item_locked(str(physical.name)) or world._item_locked(str(physical.name),key)):
-			locked_book=true;continue
-		selected=key;item_name=str(physical.name);break
-	if selected.is_empty():return Core.fail("book_locked" if locked_book else "insufficient_book","잠긴 각성서는 사용할 수 없습니다" if locked_book else "해당 등급 원본 각성서 1장 필요")
-	var count: Variant=world.inventory.get(item_name,0)
-	if not Core.integer(count) or int(count)<1:return Core.fail("book_quantity","각성서 보유 수량 오류")
-	var physical_count: int=0
-	for physical: Variant in world.item_instances.values():
-		if physical is Dictionary and physical.get("name","")==item_name:physical_count+=1
-	if physical_count>int(count):return Core.fail("book_quantity","각성서 물리 보유 정보 불일치")
+	var book: Dictionary=core.book_for(identity)
+	var debit: Dictionary=CurrentMaterial.prepare(world,book.get("item_row",{}),requirement.get("source_definition_archive",{}),book,str(materials.get("physical_id","")))
+	if not bool(debit.get("ok",false)):return debit
+	var debit_error: String=_book_debit_error(debit,requirement)
+	if not debit_error.is_empty():return Core.fail("book_supply_contract",debit_error)
 	_reroll_busy=true
 	var staged:=RandomNumberGenerator.new();staged.state=selection_rng.state
 	var prepared: Dictionary=core.prepare_reroll(progress,world.card_draw_fusion.owned,identity,staged.randi_range(0,99999),revision,operation)
 	if not prepared.ok:_reroll_busy=false;return prepared
-	var bag: Dictionary=world.inventory.duplicate(true)
-	var physicals: Dictionary=world.item_instances.duplicate(true)
-	if int(count)==1:bag.erase(item_name)
-	else:bag[item_name]=int(count)-1
-	physicals.erase(selected)
+	var override: Dictionary=debit.overrides.duplicate(true)
 	var remaining: int=int(world.gold)-int(requirement.fee)
+	override.gold=remaining
 	prepared.state.rng_state=str(staged.state)
-	var error: Error=_save_staged_state(prepared.state,{"inventory":bag,"item_instances":physicals,"gold":remaining})
+	if not CurrentMaterial.matches(world,debit,override):_reroll_busy=false;return Core.fail("stale_material","선택한 각성서·영수증 변경 · 아이템 보존")
+	var error: Error=_save_staged_state(prepared.state,override)
 	if error!=OK:
-		_reroll_busy=false
-		return Core.fail("save_failed","저장 실패 · 재화·각성서·스킬·난수 보존")
+		save_blocked=true;_reroll_busy=false
+		return Core.fail("save_failed","저장 결과 확인 필요 · 정상 저장 재접속 전 재시도 차단")
 	progress=prepared.state.duplicate(true);selection_rng.state=staged.state
-	world.inventory=bag;world.item_instances=physicals;world.gold=remaining
+	world.gold=remaining
+	if not CurrentMaterial.publish(world,debit):
+		save_blocked=true;_reroll_busy=false
+		return {"ok":false,"committed":true,"outcome_uncertain":true,"code":"receipt_adoption","error":"저장 후 영수증 채택 확인 필요 · 재접속 전 재시도 차단"}
 	_has_cache=false;world.set("equipment_records_dirty",true);_reroll_busy=false
-	prepared.erase("state");prepared.consumed_quantity=1;prepared.consumed_gold=int(requirement.fee)
+	prepared.erase("state");prepared.consumed_quantity=Core.BOOK_QUANTITY;prepared.consumed_gold=int(requirement.fee)
+	prepared.book_consumption=debit.consumed.duplicate(true)
 	prepared.fee_provenance="explicit_user_policy"
 	if world.has_method("_update_hud"):world.call_deferred("_update_hud")
 	return prepared
+
 func bonus_records() -> Array[Dictionary]:
 	_context()
 	if world==null or save_blocked or not problem.is_empty():return []

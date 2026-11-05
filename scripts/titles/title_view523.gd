@@ -141,7 +141,7 @@ func build_personal() -> void:
 		if personal_open: reveal_personal(),"OpenPersonalTitle")
 	personal_box=VBoxContainer.new(); personal_box.name="PersonalTitleEditor"; column.add_child(personal_box); personal_box.visible=personal_open
 	var note:=Label.new(); note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
-	note.text="원본: 남작I부터 보관5개 ·색상8개는 각각 추가 작위 조건 ·표시 변경2초 대기. 영문·숫자2~16자, 한글·특수1~8자. 혼합은 자체 정책1~8 Unicode 문자, 금칙어는 전체 한국어 목록의 대소문자 무시 부분일치입니다. 계정 공유는 없습니다."
+	note.text="원본: 남작I부터 보관5개 ·색상8개는 각각 추가 작위 조건 ·표시 변경2초 대기. 영문·숫자2~16자, 한글·특수1~8자. 혼합은 자체 정책1~8 Unicode 문자입니다. 계정 공유는 없습니다."
 	personal_box.add_child(note)
 	if not runtime.personal.unlocked(runtime.state):
 		var locked:=Label.new(); locked.text="남작I를 달성하면 편집할 수 있습니다."; personal_box.add_child(locked); return

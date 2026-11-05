@@ -14,10 +14,16 @@ var current_map: String = ""
 var current_batch: String = ""
 var expiry_timer: float = 0.0
 var revision: int = 0
+var _pruning: bool=false
+var _restoring: bool=false
 # Only the active map participates in placement. Spatial buckets keep a burst
 # of boss drops independent of the number of items left in distant maps.
 var occupancy: Dictionary = {}
 var occupancy_probes: int = 0
+
+static func _native_stack_record(record: Dictionary) -> bool:
+	var physical: Variant=record.get("physical_item",{})
+	return physical is Dictionary and physical.get("data") is Dictionary and physical.data.has("source_native_stack_receipt")
 
 func configure(owner_world: Node) -> void:
 	world = owner_world
@@ -76,22 +82,34 @@ func _find_spot(origin: Vector2) -> Vector2:
 	return fallback if bool(world.call("_is_walkable_world", fallback)) and not _occupied(fallback) else Vector2.INF
 
 func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "", metadata: Dictionary = {}) -> Button:
+	var staged: Dictionary=stage_spawn(item_name,origin,quantity,batch,metadata)
+	return publish_spawn(staged) if not staged.is_empty() else null
+
+func stage_spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "", metadata: Dictionary = {}) -> Dictionary:
 	var item: Dictionary = metadata.get("item_record",item_record(item_name))
-	if item.is_empty() or quantity < 1 or not origin.is_finite(): return null
+	if item.is_empty() or quantity < 1 or not origin.is_finite(): return {}
 	var point: Vector2 = _find_spot(origin)
-	if not point.is_finite(): return null
+	if not point.is_finite(): return {}
 	var now: float = Time.get_unix_time_from_system()
 	var record: Dictionary = {"id":new_id(), "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 		"map_id":current_map, "position":[point.x, point.y], "created_at":now, "expires_at":now + LIFETIME, "state":"ground", "hunt_batch":batch}
+	while records.has(str(record.id)):record.id=new_id()
 	# Whitelist transferable payload; never allow callers to override ownership IDs.
 	for key: String in ["physical_item","item_record","player_dropped"]:
 		if metadata.has(key): record[key] = metadata[key]
 	# Snapshot only explicitly identified awakening materials at spawn time.
 	# Old name-only floor saves never acquire provenance during reload.
 	if preload("res://scripts/cards/source_awakening_items.gd").recognized(item):record["item_record"]=item.duplicate(true)
-	records[record["id"]] = record
-	_index_record(record)
-	revision += 1
+	return record
+
+func publish_spawn(staged: Dictionary) -> Button:
+	if staged.is_empty() or not staged.get("id") is String or records.has(staged.id) or staged.get("map_id")!=current_map or staged.get("state")!="ground":return null
+	var point: Variant=staged.get("position")
+	if not point is Array or point.size()!=2:return null
+	var position:=Vector2(float(point[0]),float(point[1]))
+	if not position.is_finite() or not bool(world.call("_is_walkable_world",position)) or _occupied(position):return null
+	var record: Dictionary=staged.duplicate(true)
+	records[record.id]=record;_index_record(record);revision+=1
 	return _create_view(record)
 
 func _create_view(record: Dictionary) -> Button:
@@ -144,13 +162,16 @@ func take(view: Button, from: Vector2, radius: float) -> Dictionary:
 	if from.distance_to(_position(record)) > radius: return {}
 	if Time.get_ticks_msec() - (view as TwilightGroundLoot).visible_since < MIN_VISIBLE_MS: return {}
 	if not bool(world.call("_has_line_of_sight_world", from, _position(record))): return {}
-	record["state"] = "collected"
 	# Remove authoritative ID before issuing the inventory grant. Reentrant or
 	# stale callbacks cannot claim the same item twice.
-	_remove(id)
+	if not _remove(id):return {}
+	record["state"]="collected"
 	return record
 
-func _remove(id: String) -> void:
+func _remove(id: String) -> bool:
+	if _native_stack_record(records.get(id,{})):
+		var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
+		if not owner.call("can_remove_floor",records[id]):return false
 	if records.has(id): _unindex_record(records[id])
 	if views.has(id):
 		var view: Button = views[id]
@@ -160,6 +181,7 @@ func _remove(id: String) -> void:
 		views.erase(id)
 	records.erase(id)
 	revision += 1
+	return true
 
 func clear_map(map_id: String) -> void:
 	for id: String in records.keys():
@@ -172,15 +194,23 @@ func tick(delta: float) -> void:
 		prune()
 
 func prune() -> void:
-	var now: float = Time.get_unix_time_from_system()
+	if _pruning or _restoring:return
+	_pruning=true
+	var now: float=Time.get_unix_time_from_system()
 	for id: String in records.keys():
-		if float(records[id]["expires_at"]) <= now: _remove(id)
+		if float(records[id]["expires_at"])>now:continue
+		if _native_stack_record(records[id]):
+			var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
+			owner.call("expire_floor",world,records[id].duplicate(true))
+		else:_remove(id)
+	_pruning=false
 
 func snapshot() -> Array:
 	prune()
 	return records.values().duplicate(true)
 
 func restore(saved: Variant) -> void:
+	_restoring=true
 	hide_map()
 	records.clear()
 	occupancy.clear()
@@ -205,9 +235,10 @@ func restore(saved: Variant) -> void:
 			if not (point[0] is float or point[0] is int) or not (point[1] is float or point[1] is int): continue
 			if not Vector2(float(point[0]), float(point[1])).is_finite(): continue
 			var map_id: String = str(record.get("map_id", current_map))
-			if not (world.get("maps_by_id") as Dictionary).has(map_id): continue
+			var native_stack: bool=_native_stack_record(record)
+			if not (world.get("maps_by_id") as Dictionary).has(map_id) and not native_stack: continue
 			var expires: float = float(record.get("expires_at", now + LIFETIME))
-			if expires <= now or not is_finite(expires) or str(record.get("state", "ground")) != "ground": continue
+			if (expires <= now and not native_stack) or not is_finite(expires) or str(record.get("state", "ground")) != "ground": continue
 			var id: String = str(record.get("id", new_id()))
 			if id.is_empty() or records.has(id): continue
 			var quantity: int = int(record.get("quantity", 1))
@@ -220,3 +251,19 @@ func restore(saved: Variant) -> void:
 	if source_catalog is Dictionary and gameplay_items is Array:
 		GRADES.synchronize_ground_grades(source_catalog.get("아이템", []), gameplay_items, records.values())
 	activate(current_map)
+	_restoring=false
+
+
+# Source actor-render handoff only. This reads the actually published current
+# floor selection; it does not create/collect/move/save or authenticate a grant.
+func source_item_context(ground_id: String) -> Dictionary:
+	var record: Variant=records.get(ground_id)
+	if not record is Dictionary or record.get("id")!=ground_id or record.get("map_id")!=current_map or record.get("state")!="ground":return {"ok":false,"reason":"actual_current_ground_selection_unavailable"}
+	var item: Variant=record.get("item_record",item_record(str(record.get("item_name",""))))
+	if not item is Dictionary or item.is_empty():return {"ok":false,"reason":"ground_original_item_record_unavailable"}
+	var source: Script=load("res://scripts/resources/current523_definition_rows.gd")
+	var definition: Dictionary=load("res://scripts/loot/patch523_monster_drops.gd").call("current_original_definition",item)
+	var original: Variant=definition.get("original_item")
+	if not original is Dictionary or original.is_empty() or original!=item.get("source_original_item") or original!=source.call("row","ItemClass",int(original.get("ID",0))):return {"ok":false,"reason":"current_ground_full_original_item_identity_required"}
+	var physical: Variant=record.get("physical_item",{})
+	return {"ok":true,"ground_id":ground_id,"ground_record":record.duplicate(true),"map_id":current_map,"quantity":record.get("quantity"),"item_name":str(record.get("item_name","")),"position":record.get("position",[]).duplicate(),"physical_id":str(physical.get("id","")) if physical is Dictionary else "","physical_item":physical.duplicate(true) if physical is Dictionary else {},"original_item":original.duplicate(true),"item_record":item.duplicate(true),"source_definition_archive":source.call("identity"),"source_basis":"existing_current_floor_record_and_exact_current_original_item","ownership_authorized":false,"sprite_action_selected":false,"render_observed":false}

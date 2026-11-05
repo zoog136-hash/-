@@ -84,3 +84,4 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 			result.cards.append(row)
 	result["source_unavailable"]=result.cards.is_empty()
 	return result
+

@@ -84,3 +84,4 @@ static func status_available(runtime: RefCounted,identity: String,status_id: int
 		for effect: Dictionary in group.effects:
 			if effect.type.Name=="StatusEffectID" and int(effect.link.Level)==1 and int(effect.bonus.Value)==status_id and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0:return true
 	return false
+

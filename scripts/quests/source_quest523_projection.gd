@@ -142,3 +142,4 @@ static func _canonical(value: Variant) -> String:
 static func encoded(candidate: Dictionary) -> PackedByteArray:
 	# The quest compiler has no trailing newline (unlike the dungeon pack).
 	return _canonical(candidate).to_utf8_buffer()
+

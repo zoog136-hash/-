@@ -120,6 +120,7 @@ static func _source_evidence(detail: Dictionary) -> Dictionary:
 func _source_profile(spell_id: int, expected_row_sha: String = "") -> Dictionary:
 	var row: Dictionary = SOURCE_ROWS.row("SpellClass",spell_id)
 	if row.is_empty(): return {"reason":"source_spell_unavailable"}
+	if not preload("res://scripts/quests/source_dummy523.gd").evidence("SpellClass",row).is_empty(): return {"reason":"source_explicit_dummy_declaration"}
 	if row.get("TestSpell") is not bool or row.TestSpell: return {"reason":"source_TestSpell_not_false"}
 	var row_json: String = _source_row_json(row,expected_row_sha)
 	if row_json.is_empty(): return {"reason":"canonical_source_row_sha_mismatch"}

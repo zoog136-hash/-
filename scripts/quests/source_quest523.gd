@@ -25,6 +25,7 @@ func load_pack() -> bool:
 	return _load_payload(bytes,path)
 
 func _load_original() -> bool:
+	if not document.is_empty(): return not quests.is_empty() # No replacement of live input.
 	# UNVERIFIED: only called when neither established private file exists.
 	# Reproduce the old payload, never replace its fingerprint with archive SHA.
 	var projection = ORIGINAL_PROJECTION.new()
@@ -118,6 +119,7 @@ static func install_zip(path: String) -> Dictionary:
 	return {"ok":result==OK,"error":"퀘스트 팩 저장 실패 · 기존 파일 보존" if result!=OK else ""}
 
 func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -> String:
+	if not preload("res://scripts/quests/source_dummy523.gd").evidence("QuestView",row.get("definition",{})).is_empty():return "원본 더미 선언 퀘스트 연결 제외"
 	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
 	if not row.blockers.is_empty(): return str(row.blockers[0])
 	if row.starts_at == null or row.ends_at == null: return "원본 운영 기간 해석 보류"
@@ -164,7 +166,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	# QuestRewardEnhancement is an optional paid boost. The original base
 	# Reward rows are granted; automatic completion never spends diamonds.
 	# NC confirmation: 2019-01-30 patch notes, additional diamond consumption.
-	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
+	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"source_dummy_rewards":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
 	for reward: Dictionary in row.source_rewards:
 		var character: int = int(reward.CharacterClassID)
 		if character != 0 and int(context.get("class_id",-1)) < 0: return {"ok":false,"error":"직업별 보상 판별 대기"}
@@ -179,6 +181,10 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 			"Exp": result.exp += amount
 			"Item":
 				var original: Dictionary = reward.get("source_item",{})
+				var excluded: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_evidence(original)
+				if not excluded.is_empty():
+					result.source_dummy_rewards.append({"reward_id":int(reward.ID),"item_class_id":int(reward.RewardClassID),"evidence":excluded})
+					continue # Explicit user exclusion, not a granted/used source item.
 				if _currency_id(int(reward.RewardClassID)) == 1: result.adena += amount
 				else:
 					var coin_name: String = str(original.get("Name","")).trim_prefix("[화폐] ")

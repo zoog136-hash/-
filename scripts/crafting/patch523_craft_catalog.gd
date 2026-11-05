@@ -33,14 +33,15 @@ static func read(path: String) -> Dictionary:
 	return document
 
 static func available() -> Dictionary:
-	var path: String=OS.get_environment("TWILIGHT_PATCH523_CRAFT_CATALOG_BIN")
-	if path.is_empty():
-		for arg: String in OS.get_cmdline_user_args():
-			if arg.begins_with("--patch523-drop-root="): path=arg.trim_prefix("--patch523-drop-root=").path_join("monster_drops.bin")
-	if path.is_empty(): path=FULL_STORE if FileAccess.file_exists(FULL_STORE) else STORE
-	return read(path)
+	var owner: Resource=load("res://scripts/loot/patch523_monster_drops.gd")
+	var document: Dictionary=owner.call("data") if owner!=null else {}
+	problem="current523_original_item_input_unavailable" if document.is_empty() else ""
+	return document
 
 static func register(catalog: Dictionary, document: Dictionary) -> Dictionary:
+	if document.get("input_kind")=="current523_original_reference_rows":
+		var owner: Resource=load("res://scripts/loot/patch523_monster_drops.gd")
+		return owner.call("register_catalog",document,catalog) if owner!=null else {"ok":false,"reason":"current_item_projection_owner_missing"}
 	if document.is_empty(): return {"ok":false,"reason":problem}
 	if document.get("full_item_catalog",false):
 		var candidate: Dictionary=catalog.duplicate(true)

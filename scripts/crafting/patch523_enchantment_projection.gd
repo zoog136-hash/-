@@ -270,3 +270,4 @@ func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> 
 			"category_id":raw.get("CategoryID",0),"grade_id":raw.get("GradeID",0),
 			"material_id":raw.get("MaterialID",0),"unconnected_effect_row_ids":skipped_ids}
 	return result
+

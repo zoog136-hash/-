@@ -1,0 +1,366 @@
+# Current original input and owned-material connections
+
+This follow-up extends PR269 after `cf84141377f7b831e227445819e1e1454130325b`.
+Changes are **unexecuted and unverified** under the user's instruction. No new
+test, game run, render, integrity audit or CI was started. Earlier Main47 and
+receipt735 results belong only to `ea838f6b`; the recorded 58/146 bounded item
+paths and 88 remaining classes are unchanged.
+
+## Adopted public input contracts
+
+The card identity/catalog/skill input is from data271 `3febf333584b14670af5b532077b52b55135cb82`;
+option, doll and relic inputs are from `1b0fffaad2355feec95a80a34ea154b0d514c3a2`.
+Fishing inputs are from `7a17aa0b2ff71797aed998e87401f92700597afd`.
+The existing shared original reader supplies the pinned current523 archive.
+Saved m508/m523 identifiers are retained as save ABI, separate from definition
+origin. Old card and NPC models are not missing-source defaults.
+
+`current523_item_data.describe()` exposes original typed references only. Its
+empty compiled-use fields do not authorize an effect. Historical sidecar files,
+their saved provenance, existing ownership and saves remain preserved.
+
+## Actual owned-input calls
+
+`skill_awakening_runtime.request_operation(identity, materials)` now accepts
+`materials.physical_id` and passes the current original book row, archive and
+pool proof to `current523_owned_card_material.prepare`. It preserves paid fees,
+one-book policy, progression, selection RNG and the existing original UI guard.
+No original awakening scene/node binding was created or declared installed.
+
+`option_awakening_runtime.use_native_unlock_item(item_name, selected_instance)`
+uses the same selected ownership boundary and the original Item346901/Buff91531
+unlock rules. World's real inventory activation forwards the selected ID before
+the raw quest-reward fallback. The existing consumable entry forwards it too.
+The current definition's patch523 origin and m508 saved item ID no longer
+contradict the exact-identity guard.
+
+The shared helper accepts authenticated quest receipts, existing typed awakening
+supplies whose full original row matches, and current-origin individual physical
+objects with exact source row and inventory count. Ambiguous selections, locks,
+equipment, blessing/enchant mismatch, unsupported source class/server/date/region
+conditions and unknown quantity namespaces preserve the input. It never grants a
+temporary item, renames a raw key or converts historical saves.
+
+Quest inputs use the existing five-field consumption ABI: physical ID, quantity,
+expected quantity, expected remainder and immutable quest reward receipt. The
+effect owner stages that debit/journal together with result and other costs and
+commits once. It adopts live state only after save success; a failed save or
+post-save journal adoption blocks retries until a normal reload. Implementation
+is not evidence that failure/reconnect behavior has now been executed.
+
+## NPC creation and visual owner boundary
+
+`base508_monster_context` reads current original rows through the shared loader.
+`base508_source_roster.record/for_spawn` resolve the requested exact NPC/spawn/
+territory tuple without an old `PACK.actor` dependency. Existing source encounter
+IDs, explicit host region requests, population/respawn and host combat values are
+retained. Test/dummy, activation and server restrictions remain effective.
+
+`base508_monster_spawn_port.apply` refreshes an already explicit source encounter
+from current rows and uses the existing map admission followed by Sprite272's
+published `current523_source_bank_selection.select(record, admission)` contract
+at `c43076de27180c01073df7f637092eaa63f4bfd2`. It does not instantiate a duplicate
+renderer or activate an old visual fallback. That separate module and actual new
+bank configuration/bytes must be integrated by their owner; absence remains an
+explicit hold, not observed spawning or pixel delivery.
+
+NPC combat now configures the public original-input registry instead of selecting
+an old NPC/effect manifest as default. Existing admitted actor/attack, host opt-in,
+clock, damage, loot and save owners remain in place. New AI/probability semantics
+are not inferred.
+
+Awakening VFX forwards original SpellClass sprite fields to the existing source
+preview overlay call only when its context identifies the pinned current source
+bank. The old base508 overlay manifest and sparse renderer are reference-only.
+An absent current effect child/action binding is explicitly unavailable. The
+published Sprite272 overlay dispatcher still needs the exact effect-stage/action
+binding to display these calls; successful skill damage is not visual completion.
+
+## Other integrated consumer follow-ups
+
+Fishing reads the public original projection when its explicit/default dedicated
+input is absent. Contest start stores the exact admitted contest/rule/fish/rank/
+reward/item/input contract. Claim rechecks current input failure and admission and
+matches that saved contract before the existing single save. Older contests
+without this proof are preserved and held; they are not deleted, restarted or
+paid against replacement definitions. Existing time/weekly unavailable rows stay
+unavailable.
+
+The five-path map follow-up `d01758db57d46d2b7a57dafbbf6f4880daf8118e` is included:
+three map input/coordinate/walk modules, its documentation, and only the bounded
+World deferred registration/bind methods. Existing item/effect/save changes are
+retained. UI267/PR270 inputs remain external dependencies with explicit waiting;
+no original UI or image was created here. See `SOURCE523_WORLD_MAP_INPUT.md`.
+
+No main merge, new PR/environment/installer, private data upload, source/pixel
+generation, pack replacement, save conversion or original deletion occurred.
+Sound and the existing user exclusions remain excluded. These code changes do
+not establish a new whole-source gameplay usage percentage.
+
+## Current-source typed supply follow-up
+
+`native_awakening_supply.record/stage_grant/proof` now construct new supplier
+records from the held original ItemClass/category/grade/descriptor instead of a
+sidecar DTO. New schema2 supply receipts retain the original archive, immutable
+granted quantity and actual supplier origin; partial quantity remains a separate
+physical field. No generic native/use/equipment implementation flag is invented.
+Historical schema1 receipts remain distinct and require their exact original
+issuance representation plus full-row agreement with the current source.
+
+`install_current_definitions` changes registered prototypes only for a proven
+same exact source ID and original row; unknown/ambiguous entries are preserved.
+It never rewrites an owned item. Normal World setup rebuilds the existing source
+index afterward. `patch523_item_inventory.stage` uses this registered definition
+for those reviewed supply IDs and stages typed quantity/receipt together. The
+four-field grant API and full-candidate return semantics are unchanged.
+The shared owned-input adapter also reads exact current Class rows and the
+existing chosen class label rather than guessing an integer class mapping.
+
+The source-card canonicalizer and World card-availability guard are scoped away
+from item source IDs; an item cannot be rejected merely because it has no card
+registry entry. No missing card definition is made available by this distinction.
+All these follow-up changes remain unexecuted/unverified.
+
+## Current original native-item owner follow-up
+
+The public271 drop/ItemData contracts at `3c7ea50e` and `da81a471` now feed
+`current523_native_item_projection` and the existing supplier, actual kill/floor,
+quest provider, equipment-stat and single-save paths. The old automatic
+full/partial monster BIN selection is removed from final catalog availability.
+The schema4 item marker names the original archive/projection separately from
+historical schema3/BIN proofs; old catalog history and first-transition backup
+are preserved without bulk owned-item conversion. Current ItemEnchantBonus rows
+also supply the existing enhancement-stat consumer through the same published
+compiler mapping, retaining original blessing, level and application limits.
+See `CURRENT523_NATIVE_ITEM_OWNER.md` for the exact partial effect/quantity scope.
+
+The published271 acquisition inputs at `e9508589` are reused by the existing
+`patch523_slot_data -> native_card_acquisition/native_relic_reward_box ->
+option_awakening_runtime` calls. Their actual selected owned-item/quest quantity,
+recipe/time, output/card and single-save owners remain authoritative. Nemesis
+recipe 258482 still requires exact coin3252 x3,000,000 and produces ticket370562
+x1 with its original single 1,000,000 probability. Relic box346921 still returns
+the two ordered IsGiven outputs; Probability0 is not treated as random weight.
+Absent/ambiguous/excluded input holds its branch. No source-quest ancestry,
+free acquisition or original UI scene is fabricated.
+
+All of this follow-up is implementation only, unexecuted/unverified. It does
+not reduce the historical 88 remaining item classes or establish full native
+effect, current gameplay, bank installation or pixel delivery completion.
+
+## Current original HP/MP quantity owner (unexecuted)
+
+Supported source HP/MP potions now have a physical quantity/receipt owner from
+supplier or actual source floor through inventory/quick/healing use. The same
+candidate saves actual remaining quantity, inventory, used ledger, HP/MP,
+cooldowns and private RNG, with the existing writer's transient candidate seal.
+Old name-only stock is not reidentified. Other native stacks/effects remain
+pending; floor splitting and warehouse transfer are explicit ownership holds.
+Source defaults/costs, original restrictions, legacy saves and current sprites
+remain separate. This is unexecuted code, not a new completion/count/pass.
+
+## Current original material consumption (unexecuted)
+
+The existing selected-craft-material API now distinguishes immutable quest
+receipts from current-native physical quantity receipts. Actual raw row/ItemClass/
+blessing/level/quantity allocation selects the owned UUID; quote/execute/join
+then saves its remainder and use ledger with the real input debit and result.
+New supported non-equipment recipe outputs are materialized through the typed
+quantity owner once, on top of the executor's existing inventory candidate.
+Unknown outputs stay held; exact same-key failure returns now retain selected
+original units, as detailed below. No recipe or source rule is
+invented. Normal current materials with an actual ItemCraftInput relation can
+receive exact source quantity ownership, without activating unrelated partial
+bonuses or claiming every material effect completed. All changes are unverified.
+
+## Exact material refunds and warehouse quantities (unexecuted)
+
+A same-key declared crafting failure output retains its exact original selected
+native units and charges only the net lost quantity, preserving gross source
+cost/return evidence. The supplier does not regrant those retained units.
+Whole selected native-stack remainders can move through the existing warehouse
+request with unchanged physical ID/receipt and one carried/stored-count save.
+Partial splitting remains pending. Floor custody is now implemented below. Existing restrictions and
+runtime error guards are preserved; no additional check/run/pass was performed.
+
+## Typed floor custody and explicit host disposal (unexecuted)
+
+Existing one-item drop/real view pickup now move a selected quantity1 native
+physical object under one inventory/physical/floor save; no transient grant or
+new receipt is created. Original restrictions and existing placement/weight/
+visibility rules remain. Ground manager staging separates record preparation
+from view publication. Its normal lifetime records discarded_quantity with an
+explicit host-lifetime reason, independently of used_quantity, before removing
+the floor. Carried/warehouse/floor save/load guards reject duplicate/unexplained
+custody. Partial bundle splitting and other unresolved source effects remain.
+These changes add no execution, rendering, tests or gameplay usage evidence.
+
+## Partial quantity partition (unexecuted)
+
+The explicit native warehouse quantity and existing one-unit floor action now
+stage an owned partition when the selected bundle is larger than the move.
+The parent first-grant receipt remains immutable; transferred allocation is not
+used quantity. A schema2 child partition receipt retains its full parent/root
+lineage, with allocated quantity separate from the original grant. A persistent
+partition journal and global carried/warehouse/floor guards preserve conservation
+and prohibit orphaned or rewritten events. No supplier regrant or legacy/raw
+quest conversion occurs. The existing writer accepts only the exact sealed
+quantity/partition/custody candidate. No tests, run, render or CI were performed.
+
+The source reader can call current523_native_stack.use_owned_original with the
+full original ItemClass row plus the selected physical ID/quantity/expected
+remainder/opaque native receipt. Success requires ok+saved+consumed1. Unknown
+native effects and raw quest ownership remain separate explicit boundaries;
+ItemBook-to-eqc identity is still not inferred. See the native owner ABI.
+
+## Finite original buff effect adoption (unexecuted)
+
+The current DTO now reuses the public compiler's finite flat-buff semantics on
+ItemData's existing original Buff graph. Actual selected native use stages
+source overlap/replacement, active buff, stat/vital clamp, quantity receipt and
+cooldown in one save, then reuses existing timer/death/cancel/stat consumers.
+Exact existing MP-regeneration376/385 and XP1186 reducers now authorize current
+original definitions rather than old BIN final input; cadence remains the
+labelled existing host/user clock. The source-backed three-restoration reader
+and required-Unit/optional-UIUnit Bonus reader are adopted from public271.
+Unknown positive effects, unsupported conditions and infinite cases remain
+explicitly held. New code remains unexecuted/unverified; counts are unchanged.
+
+## Ordinary original bags to real rewards (unexecuted)
+
+The public RewardData/LuckyBag graph now reaches the existing complete-pool
+selector and actual registered supplier through selected native or raw quest
+ownership. Every eligible positive output must be available; unsupported inputs
+hold the whole bag without removing candidates. Existing IsGiven amounts,
+class scope, raw weights, initial enchant/blessing and labelled local draw policy
+remain. Input receipt/physical debit is the supplier baseline, then output
+ownership, source outcome journal, RNG/cooldown and quest state when applicable
+share one save. No name-only outputs, transient native input or duplicate debit.
+The five-field use ABI accepts exactly one native or quest opaque receipt key.
+Other reward kinds, uninstalled variants/suppliers, original selection UI,
+ItemBook mapping and unconfirmed recipe/free-pass meanings remain held.
+All new code remains unexecuted/unverified; previous58/146 is not increased.
+
+
+## Original selected rewards (unexecuted)
+
+Original SelectReward/SelectRewardEntity rows now reach a selected physical
+ownership quote/claim API and the same actual supplier/single-save result owner
+as ordinary bags. Current native/quest activation returns source choices while
+preserving the input; no authored substitute window is constructed. Original
+UI267 must bind its actual nodes and pass the exact SelectRewardEntity.ID plus
+opaque five-field ownership request. Explicit choice leaves gameplay RNG
+unchanged. Unsupported outputs/conditions keep ownership, and missing source
+initial equipment enchant retains null provenance with only the existing
+labelled +0 host policy when enabled. No old selected rune/save conversion.
+New code is unexecuted/unverified; no new pass count, usage rate, installation
+or real original UI observation is asserted. See CURRENT523_NATIVE_ITEM_OWNER.
+
+
+## Native ammunition and original numeric inputs (unexecuted)
+
+Supported exact original ammunition now uses selected physical custody through
+existing equip/normal-shot/skill-cost callers. Quantity/use receipt, MP when
+applicable, exhaustion state and independent explicitly host ammo RNG/outcome
+save together before the existing attack callback; other same-name stacks are
+not substitutes. Shared supply can retain these outputs. Raw quest ammo remains
+under its separate proof contract and is not converted. Old shop input is now
+public271's original-row eleven-ID reader, preserving its distinct saved keys.
+
+Narrow public271664919da weight and four elemental NPC resistance inputs feed
+existing carry/damage consumers. Their3/351 and1.0 coefficients are configurable
+TWILIGHT estimates, never recovered native units/formulas. Source raw rows,
+current admission and all ownership/save/visual identities remain. The dialogue
+text key does not establish a mobile NPC portrait identity. No new test/run/
+parse/render/CI or measured consumption count; see the native owner contract.
+
+
+## Raw quest ammunition receipt bridge (unexecuted)
+
+The previous raw-ammunition boundary is now joined to the existing common quest
+consumption ABI. Original quest physical ID/key/receipt/first-granted amount
+remain unchanged; only a separate current-source effect view reaches existing
+ammo equip/category/shot/skill callers. The real raw remaining quantity and
+item_grants.used_quantity save with MP/selection/outcome through one candidate.
+Invalid selected proofs are handled failures, never name-only fallback. No
+native conversion/regrant, extra ledger, tests, execution, render or CI; the
+historical verified counts are unchanged.
+
+
+## Original spellbook learning ownership (unexecuted)
+
+Existing typed card/deck/spell/ordinary learning-limit input now reaches the
+current DTO and actual native/common-quest selected learning transaction. Exact
+installed original profiles or the existing pinned441-profile input and binding
+must match the full original SpellClass row/SHA and a real catalog skill. Its
+existing class/level/prerequisite/already-learned/runtime rules remain; only the
+four existing explicit reference identities keep learning-only behavior with
+casting blocked. Input remainder/use receipt, staged learned/knowledge map,
+cooldown and quest state save together before live catalog adoption. New inputs
+cite the actual original archive; old receipts are not rewritten or reissued.
+No new spell engine/effect/UI or skill pack, and no tests/execution/CI/counts.
+
+
+## Existing original skill costs and source-input adoption (unexecuted)
+
+Original skill_service now uses exact physical native/raw quest ammo and
+explicitly bound spell materials with existing MP/HP/legacy costs. Quoted actual
+five-field object requests and native/common quest quantity ledgers join only
+selected edits in one save; original cost amounts/effects and existing aliases
+remain. Deterministic physical custody ordering is labelled host policy, not an
+original selection probability or item-ID mapping. Currency wallets and unknown
+material variants/identities remain separate. The actual original skill engine
+is preserved; this is not a new spell subsystem.
+
+Data271e75ddb9a's ordinary learning conditions, successful direct spell distance/
+element, reviewed selected child element, same-NPC uniform admitted attack range
+and LuckyBag declaration exclusions are adopted narrowly. Existing ownership,
+cast/AI/attack choice, source restrictions and saved identities are preserved.
+Numerical32/48/58 scales remain labelled adjustable host estimates. Mixed attack
+ranges, weapon-relative/minimum cast ranges and absent identity/meaning
+contracts stay explicit. No tests/parse/game/render/CI, new original bytes,
+whole-table or95% consumption claim; historical58/146 unchanged.
+
+
+## Current native instant cure and visual-owner handoff (unexecuted)
+
+Exact original310 now reuses the existing instant poison-clear owner with a
+selected native quantity debit or common quest receipt; current original input
+replaces the obsolete BIN prerequisite. Native quantity/use/cooldown and cure
+journal save before the existing Player.clear_poison; historical receipts stay.
+Direct confirmed item-use results retain the full original ItemClass/physical
+selection/effect-ID context and existing dispatch attempt, without a second FX
+emission or importing unpublished Sprite8b5b67e8.
+
+The new read-only ground_loot.source_item_context(ground_id) exposes the actual
+published current floor record's full original ItemClass and physical/drop
+selection to the Sprite owner. No ground pickup/quantity/ownership/receipt/save
+or action/frame/image implementation is changed. Original16007 remains a pixel
+input gap, and189/192 delivery in another Sprite environment is not installation
+or rendering proof here. No new tests/game/parse/render/CI or verified count.
+
+
+## Latest original identifiers and status inputs (unexecuted)
+
+Item DTO visual metadata now reads actual ItemClass.SpriteID/SpriteAnimationID,
+not the NPC-style Sprite field. Full raw original rows and immutable receipts
+remain unchanged; no new Sprite/frame/member is made. The floor read-only
+context includes its exact actual record snapshot for the separate Sprite lane.
+
+Public271559efd1d spell-group input/accepted bound IDs and named NPC Stun/Hold/
+Fear resistance inputs are adopted, preserving existing conversion/status/
+ownership/save engines. Explicit bad claims/inputs, source exclusions and
+ambiguous/unsupported immunity-like numbers stay held; the numeric scale stays
+an explicit adjustable1.0 estimate. Missing dialogue/mobile NPC and dungeon
+PartyDungeonTypeID/CompetitionDungeon identity/role bridges remain unavailable;
+no integer/name substitution or replacement UI/image work. Latest code is
+unexecuted/unverified with no new tests/game/parse/render/CI or observed count.
+
+
+Special entrance input is already present on the actually selected existing
+world.source_dungeon_entries("special",false)[selected_index].row.EntranceAssetID.
+This direct entrance role does not require a Party/Competition FK. Original UI
+target binding remains267's boundary; HelpBoxAssetID is not substituted. The
+missing Party/Competition relations remain specific, not a blanket claim that
+all dungeon entrance inputs are missing. No new display/activation/save code or
+image follow-up lane is created by this clarification.

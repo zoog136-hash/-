@@ -100,3 +100,4 @@ static func awaken(core: RefCounted,state: Dictionary,cards: Dictionary,gold: in
 	if not success:entry.failures=int(entry.failures)+1
 	var next: Dictionary=state.duplicate(true);next.cards[category][identity]=entry;next.revision=int(next.revision)+1
 	return {"ok":true,"state":next,"card_state":cards.duplicate(true),"gold":gold-int(r.attempt_cost),"success":success,"consumed_gold":int(r.attempt_cost),"refunded_experience":int(entry.experience),"source_refunded_experience":int(entry[FIELD]),"source_exp_scale":SCALE}
+

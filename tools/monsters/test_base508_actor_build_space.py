@@ -25,7 +25,7 @@ class ActorBuildSpaceTests(unittest.TestCase):
    catalog=root/'catalog.gz';requests=root/'requests.gz'
    with gzip.open(catalog,'wt') as f:json.dump({'models':models},f)
    with gzip.open(requests,'wt') as f:json.dump({'files':[{'name':'Sprite/1-0.sp2','size':100,'available_library_package':{'file_name':'input.zip'}}]},f)
-   args=SimpleNamespace(catalog=catalog,requests=requests,shards=2,shard=1,packages=root,spr_root=root,space_packet_factor=4)
+   args=SimpleNamespace(catalog=catalog,requests=requests,model_ids=None,shards=2,shard=1,source_capabilities=True,packages=root,spr_root=root,space_packet_factor=4)
    with mock.patch.object(builder.original_spr,'read',return_value={}),mock.patch.object(builder.original_spr,'resolve',return_value=(1,{0:{'tokens':[(0,0,1)]}})),mock.patch.object(builder.original_spr,'resolve_references',return_value={}):
     expected,plan=builder.estimate_build_budget(args)
    self.assertEqual(plan['selected_models'],2);self.assertEqual(plan['unique_original_members'],1)

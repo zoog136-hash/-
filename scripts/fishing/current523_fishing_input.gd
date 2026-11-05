@@ -297,3 +297,4 @@ func build() -> Dictionary:
 		"model_payload_sha256":hash.finish().hex_encode(),"model_payload_sha256_scope":"JSON.stringify(model_without_input_identity).to_utf8_buffer()",
 		"source_table_metadata":_metadata.duplicate(true),"pack_file_created":false}
 	return result
+

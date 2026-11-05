@@ -1,0 +1,15 @@
+# Existing shop transaction and original input
+
+Implementation-only: no new parsing, tests, game runs, rendering or quality checks were executed. No whole-table use or source gameplay percentage is established.
+
+The existing source_shop.configure -> Catalog.session -> bind_source path now reuses the published PR271f1fc0acf0704e1184c51488f0ca027fb4c4cb103 source523_shop_catalog.load_original and original metadata/item/reward/Gacha readers. No loader or shop engine is recreated. The current world already calls configure and existing UI/service callbacks already call quote/buy/claim. No new UI is authored.
+
+Existing installed/partial models and explicit --source523-shop-pack/--source523-shop-sha256 inputs take precedence. A malformed explicit input is not replaced with the common ZIP. If no model/input exists, the data owner's original 27-table projection and selected label closure are parsed through _load_payload. The original d519 archive identity and the generated model's actual payload SHA/bytes are separate. No archive is downloaded, copied, installed, uploaded or repackaged by this code connection.
+
+Successful purchases keep payment, pending goods, counters, actual model hash and optional source_input_identity in the existing single shop save. New source identities are validated by their real model fingerprint and the original input shape; historical orders without this optional field remain unchanged. Claim requires the same actual input identity for newly recorded orders. Its new physical IDs and claimed order status are saved together. A failed/uncertain save response locks shop transactions until normal reload rather than purchasing again from stale live state.
+
+Original dummy declarations and TestItem rows are refused by the shared payment/grant resolution path, including prior pending orders that would newly supply excluded items. No original or old ownership is deleted. Generic scalar shop payment/grant cannot silently mutate an inventory key that has an actual remainder-managed physical owner; those keys remain held pending their exact selected-unit/receipt contract. Existing supported physical equipment output keeps its established owner.
+
+The source reference API additions _source_item_identity/item_references and typed source_reference on successful quotes are reused from the same published data owner; reference_only/can_purchase:false data is not an execution permission. The original server/date/off-sale/class/level/quota/payment/price/NPC gates remain in the transaction owner. An original-derived model has its own hash and therefore may deliberately mismatch an older dedicated NPC pack/policy; that mismatch is preserved. No model hash is rewritten to simulate an installed merchant pack or authorize a new NPC.
+
+Source-only GachaCraft candidates, unknown output namespaces, unavailable item/effect owners, dedicated/infinite returns, source restrictions and all remaining unsupported contracts stay explicit. This connection does not make all192 merchant groups operational. Sound and banned-word loading remain excluded; original input denominators, saves and private packs are preserved.

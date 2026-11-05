@@ -222,3 +222,4 @@ func build() -> Dictionary:
 		"execution_boundaries":{"open_policy":"Existing explicit box consumer rules_valid, exact physical ownership and atomic save remain required; input projection authorizes no action.",
 			"quest_reference_state_semantics":"Owned by the existing SourceQuest provider; do not infer ancestry completion or prior reward claims.",
 			"source_execution":"Static content references only; no supply, claim, opening, effect or transaction is executed."}}
+

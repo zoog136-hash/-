@@ -227,6 +227,7 @@ func _accepted_bound_source_id(record:Dictionary)->int:
  if members.has(id) and (not members[id] is Dictionary or members[id]!=original):return 0
  return id
 
+
 func owns_source(id:int)->bool:
  for record:Dictionary in world.original_skills.catalog.records:
   if source_id(record)==id and world.original_skills.catalog.owned(record):return true
@@ -246,6 +247,7 @@ func candidates()->Array:
   result.append(copy)
  return result
 func quote(group:int,item:int=26)->Dictionary:
+ if excluded_input_items.has(item):return {"ok":false,"reason":"원문 시험·더미 제외 결제 재료는 연결하지 않습니다."}
  if not problem.is_empty():return {'error':problem}
  if save_blocked:return {'error':'손상된 계열 저장을 보호 중입니다.'}
  if policy.payment_mode=='adena_only' and item!=26:return {'error':'현재 TWILIGHT 설정은 아데나 결제만 허용합니다.'}

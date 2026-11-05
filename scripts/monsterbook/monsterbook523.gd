@@ -747,3 +747,4 @@ func current_period(book_id: int, clock: String) -> String:
 
 func table_rows(table: String) -> Array:
 	return _tables.get(table, []).duplicate(true)
+

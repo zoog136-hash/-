@@ -133,6 +133,20 @@ def compile_equipment(tables, bound_items, bonuses):
                     if name == 'InvokeOption' and b['BonusApplicationTypeID']==10:
                         option=invoke_options.get(b['BonusApplicationTargetID'],{})
                         kind=option.get('InvokeOptionTypeID')
+                        # Full native profile is owned by the existing skill executor.
+                        profile=tables.get('EquipmentSpellProfiles',{}).get(str(option.get('Param1')))
+                        common_zero=['MaterialTypeID','MaterialAmount','IsAmmoAttack','WeaponGroupID','ShieldTypeID','SuccessedInvokeOptionID','TargetKind','SiegeTargetKind']
+                        source_weight=types[b['BonusTypeID']]['UnitID']==3 and 0<=b['Value']<=1000000
+                        if (kind==1 and profile and source_weight and option.get('AttackTypeID') in [0,1,2,3]
+                            and all(option.get(k,0)==0 for k in common_zero+['Param2','Param3','Param4','Param5','Param6'])):
+                            live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option_id':option['ID'],'kind':'attack_source_spell'})
+                            continue
+                        if (kind==61 and source_weight and option.get('AttackTypeID') in [0,1,2,3]
+                            and all(option.get(k,0)==0 for k in common_zero+['Param5','Param6'])
+                            and 0<=option.get('Param1',-1)<=1000000 and 0<=option.get('Param2',-1)<=1000000
+                            and 0<=option.get('Param3',-1)<=1000000 and isinstance(option.get('Param4'),bool)):
+                            live_invokes.append({'row_id':row['ID'],'probability':b['Value'],'option_id':option['ID'],'kind':'defence_fixed_counter'})
+                            continue
                         # Fully numeric source contracts only. Spell/formula,
                         # material, weapon/shield and chained hooks stay typed
                         # evidence until their authoritative execution contract.

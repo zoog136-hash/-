@@ -33,6 +33,10 @@ jobs:
           python3 tests/test_ci_core.py
           python3 -m unittest discover -s tests -p test_patch523_world_links.py -v
           python3 tools/map_restore/test_current523_s32.py
+          python3 tests/test_five_smith_smelt.py
+          python3 tests/test_equipment523_alchemy.py
+          python3 tests/test_five_set_invoke.py
+          python3 tests/test_equipment523_effects_builder.py
       - name: Install pinned Godot
         shell: bash
         run: |
