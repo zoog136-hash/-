@@ -25,7 +25,7 @@ entry point. No second CSB engine or inferred filename mapping is needed.
 
 `res://scripts/ui/original_ui/sprite_scene.gd` extends Node2D:
 
-- `configure(pack, member, inspect_only=false) -> Dictionary`: call once before
+- `configure(pack, member, inspect_only=false, bindings={}) -> Dictionary`: call once before
   mounting. Default strict mode is required for item consumers. On success,
   add the scene under the existing item's presentation node. The original
   nodes, transforms, frame references and clips are retained. Caller placement
@@ -37,7 +37,10 @@ entry point. No second CSB engine or inferred filename mapping is needed.
   must obtain clip/loop choice from original mapping, not assume `normal` or
   loop every clip. Supports multiple named source clips.
 - `seek_frame(frame_number: float)`: absolute original frame number.
-- `stop()`: freezes the current frame without replacing/clearing pixels.
+- `stop()`: pauses this player's action timeline at its current frame. It does
+  not pause independent nested actions or particle simulation. To suspend the
+  whole mounted presentation, set its Godot `process_mode` to
+  `Node.PROCESS_MODE_DISABLED`; disposal remains `queue_free()`.
 - `playback_status()`: `playing`, `frame`, `loop`, `source`, `clip`,
   `inspection_only`. Stop/status are added in this follow-up and locally tested
   in this checkpoint; consumers must use the corresponding revision.
@@ -46,20 +49,27 @@ entry point. No second CSB engine or inferred filename mapping is needed.
 - `source_nodes`: original CSB offset → live node. It is for inspected exact
   bindings; a name suffix is not a unique identity.
 
-The previous committed player supports Node/SingleNode/Sprite, limited
-transparent Panel clipping, discrete FileData/VisibleForFrame, numeric Position,
-Scale/RotationSkew/Alpha and Linear/Sine-In easing. Current follow-up adds
-CColor/limited BlendFunc and ImageView (ordinary/nine-slice). These additions
-have a separate local render scope; they do not establish support for every
-item CSB. Supported blend pairs are `770:1`, `770:771`, `1:771`; other pairs
-fail. Invalid/unsupported cap insets fail instead of being silently corrected.
-Text is available for inspection only with the exact source font and supported
-single-line layout; it still requires live data binding. Button state textures
-are inspection-only and have no service callbacks. CheckBox, Particle and
-other widget classes remain unsupported. Nonempty ProjectNodes with Node roots
-are available for recursive inspection only; strict consumers still reject
-unbound nested scenes. Inspect-only list/empty ProjectNode rendering is **not** a usable
-item presentation and must not be enabled to suppress errors.
+The current player supports Node/SingleNode/Sprite, transparent Panel clipping,
+ImageView/nine-slice, original button states, explicit source text lines,
+LoadingBar inspection, and original ParticleReader GROUPED particles using
+supplied plist/PNG resources. CheckBox, Slider, PageView and other unimplemented
+widget classes remain rejected. Unsupported text wrapping/clipping or blur also
+fails explicitly. Particle playback uses original emission/physics parameters;
+the original client's random seed is not known. The supplied embedded RGBA8 PNG is also decoded from its exact original
+plist bytes; unsupported embedded formats remain rejected.
+
+All 15 observed Sprite GL blend pairs and standard Cocos easing IDs 0–30 are
+supported, as are the validated original four-point custom curves (-1).
+Source timelines include texture, visibility, position, scale, rotation/skew,
+color, alpha, anchor, blend and nested ActionValue. Sound-only FrameEvents are
+retained as excluded metadata. Other events require a caller contract.
+
+Bindings use exact source node offsets. Existing button callbacks and declared
+static source text can pass strict validation; live percent/list content and
+unbound nested ProjectNodes still cannot. Nonempty ProjectNodes with Node roots
+are available for recursive inspection. Inspection mode must never be used to
+suppress a consumer failure. The original menu adapter's two source menu buttons
+are separate from the content-screen and save/restart contracts.
 
 ## Data still required from item owner
 
@@ -82,5 +92,4 @@ effects are not evidence that all 123 item CSBs or 560 UI entries are supported.
 
 The v2 open/configure/play/seek call signatures are unchanged. No completion
 signal was added. All inspection-only acceptance remains unavailable to strict
-item consumers. The supported numeric easing IDs are 0–5, 25, 27 and 29, plus source
-four-point custom curves (-1) using the original Cocos evaluation.
+item consumers.

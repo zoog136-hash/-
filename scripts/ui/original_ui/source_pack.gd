@@ -187,3 +187,43 @@ func font(reference: Dictionary) -> FontFile:
 		last_error="source_font_invalid:"+member; return null
 	_fonts[member]=original
 	return original
+
+func particle(reference: Dictionary) -> Dictionary:
+	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"particle_resource_type"}
+	var member: String=_member(str(reference.get("path","")))
+	if not _safe_member(member) or not manifest.get("files",{}).has(member):return {"ok":false,"error":"particle_source_missing"}
+	var path: String=root.path_join("originals").path_join(member)
+	if FileAccess.get_sha256(path)!=manifest.files[member].sha256:return {"ok":false,"error":"particle_source_hash"}
+	var decoded: Dictionary=preload("res://scripts/ui/original_ui/source_particle_data.gd").parse(FileAccess.get_file_as_bytes(path))
+	if not decoded.ok:return decoded
+	var texture_member: String=member.get_base_dir().path_join(str(decoded.values.get("textureFileName","")))
+	var original: Texture2D
+	if _safe_member(texture_member) and manifest.files.has(texture_member):
+		original=texture({"path":texture_member},true)
+	if original==null and not str(decoded.values.get("textureImageData","")).is_empty():
+		original=_embedded_particle_texture(member,str(decoded.values.textureImageData))
+		texture_member=member+"#textureImageData"
+	if original==null:return {"ok":false,"error":"particle_texture_missing_or_unsupported:"+texture_member}
+	return {"ok":true,"values":decoded.values,"texture":original,"member":member,"texture_member":texture_member}
+
+func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
+	var key: String="embedded_particle:"+member
+	if _textures.has(key):return _textures[key]
+	var compressed: PackedByteArray=Marshalls.base64_to_raw(encoded)
+	if compressed.size()<2:return null
+	var mode: int=FileAccess.COMPRESSION_GZIP if compressed[0]==31 and compressed[1]==139 else FileAccess.COMPRESSION_DEFLATE
+	var png: PackedByteArray=compressed.decompress_dynamic(32*1024*1024,mode)
+	# The supplied embedded original is RGBA8 PNG. Other formats stay explicit
+	# until their original Cocos decode semantics have been verified.
+	if png.size()<33 or png.slice(0,8)!=PackedByteArray([137,80,78,71,13,10,26,10]) or png[24]!=8 or png[25]!=6:return null
+	var width: int=(int(png[16])<<24)|(int(png[17])<<16)|(int(png[18])<<8)|int(png[19])
+	var height: int=(int(png[20])<<24)|(int(png[21])<<16)|(int(png[22])<<8)|int(png[23])
+	if width<=0 or height<=0 or width>8192 or height>8192 or width*height>16*1024*1024:return null
+	var original:=Image.new()
+	if original.load_png_from_buffer(png)!=OK:return null
+	original.convert(Image.FORMAT_RGBA8)
+	var result:=ImageTexture.create_from_image(cocos_premultiply(original))
+	result.set_meta("cocos_premultiplied",true)
+	result.set_meta("original_embedded_png_sha256",_sha256(png))
+	_textures[key]=result
+	return result

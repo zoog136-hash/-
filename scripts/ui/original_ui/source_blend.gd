@@ -4,9 +4,9 @@ extends RefCounted
 const PAIRS=["770:1","1:771","1:1","770:771","1:769","1:772","774:1","772:771","772:1","770:772","1:770","0:769","774:772","774:771","772:769"]
 const FACTORS={"0":"vec4(0.0)","1":"vec4(1.0)","769":"(vec4(1.0)-source)","770":"vec4(source.a)","771":"vec4(1.0-source.a)","772":"vec4(destination.a)","774":"destination"}
 static var _cache: Dictionary={}
-static func material(texture: Texture2D, pair: String) -> ShaderMaterial:
+static func material(texture: Texture2D, pair: String, particle_vertex_color: bool=false) -> ShaderMaterial:
 	if pair not in PAIRS:return null
-	var pma: bool=bool(texture.get_meta("cocos_premultiplied",false))
+	var pma: bool=bool(texture.get_meta("cocos_premultiplied",false)) and not particle_vertex_color
 	var key: String=pair+":"+str(pma)
 	if _cache.has(key):return _cache[key]
 	var factors: PackedStringArray=pair.split(":")

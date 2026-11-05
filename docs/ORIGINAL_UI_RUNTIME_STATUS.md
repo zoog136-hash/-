@@ -444,3 +444,44 @@ The 36 unresolved closures reference 25 absent file paths and/or 38 missing
 atlas frame names. A search of every received original atlas found none of those
 38 names, including aliases. Missing references remain explicit; no old or
 similar-looking asset was substituted. This receipt is not full UI completion.
+
+### Original particle simulation and fixed inventory scope
+
+ParticleReader's GROUPED mode now consumes the original plist and PNG through
+an exact-hash-checked pack. Gravity/radius motion, emission timing, particle
+lifetime, color, size, rotation and swap-removal follow the Cocos 3.6 source.
+The shader uses the original blend pair and the original particle vertex-color
+premultiplication rule; node opacity is not substituted for particle color.
+No particle images or effect parameters were authored.
+
+All 168 provided particle dictionaries matched their original values in 673
+checks. Four original configurations matched 23,612 comparisons against the
+unmodified upstream C++ initParticle/update bodies with identical injected test
+randomness. Three original CSB/plist/PNG scenes produced nine OpenGL captures;
+all three displayed pixels during the sampled execution. These are inspection
+results, not proof of the original client RNG seed, device parity or game-service
+integration. The supplied embedded PNG now passes exact source hash, dimensions
+and all 10,000 decoded PMA-pixel comparisons. Three source effects also pass
+strict configuration and whole-presentation suspend/resume checks. Original
+Particle BlendFunc timelines are connected through the source BlendProtocol
+semantics; no service code is duplicated.
+
+The fully received UI inventory is 8,303 members / 1,160,252,897 original member
+bytes. It contains 3,034 CSBs (53,839,932 original bytes), all decoded without
+parser blockers. The historical 560 tracked roots reach 1,400 of those CSBs;
+1,634 other supplied CSBs remain outside that root graph. Thus 560 is not the
+whole-source usage denominator. Container bytes, decoded caches, source receipt,
+inspection and actual game consumption must remain separate. No 95% actual-game
+usage claim is established by these inventories or inspection runs.
+
+References:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/2d/CCParticleSystem.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/2d/CCParticleSystemQuad.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/ParticleReader/ParticleReader.cpp
+
+The 102 particle-bearing tracked candidates produced 46 accepted inspection
+entries and 56 explicit rejections. Original particle BlendFunc support then
+resolved all 10 targeted timeline rejections. The deduplicated tracked inspection
+union is 299/560. Remaining unsupported controls, list layout/data, text layout,
+custom properties, missing dependencies and gameplay bindings are not complete.
+These runs do not establish 299 working game-service screens.

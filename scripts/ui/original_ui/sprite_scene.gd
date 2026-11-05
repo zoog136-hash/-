@@ -90,14 +90,14 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 			for raw: Dictionary in timeline.frames:
 				if _inner_range(target.get_meta("source_project_player"),_frame_value(raw)).is_empty():
 					root_node.free();_clear();return {"ok":false,"error":"inner_action_clip_missing_or_invalid"}
-		if timeline.property in ["BlendFunc","FileData"] and not _tags[int(timeline.actionTag)].has_meta("source_sprite"):
+		if (timeline.property=="FileData" and not _tags[int(timeline.actionTag)].has_meta("source_sprite")) or (timeline.property=="BlendFunc" and not _tags[int(timeline.actionTag)].has_meta("source_sprite") and not _tags[int(timeline.actionTag)].has_meta("source_particle")):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
 	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
@@ -225,6 +225,13 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if not inspection_only and binding.get("role")=="button":button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+	if source.classname=="Particle":
+		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
+		var configured: Dictionary=emitter.configure(source_pack,options)
+		if not configured.ok:
+			_build_error=str(configured.error);emitter.free();node.free();return null
+		origin.add_child(emitter)
+		node.set_meta("source_particle",emitter)
 	if source.classname=="LoadingBar":
 		var bar=preload("res://scripts/ui/original_ui/source_loading_bar.gd").new()
 		var configured: Dictionary=bar.configure(source_pack,options)
@@ -388,6 +395,8 @@ func _seek_frame(frame_number: float) -> void:
 				if str(target.get_meta("source_blend"))!=_blend(selected):
 					sprite.material=BLEND.material(sprite.texture,_blend(selected))
 					target.set_meta("source_blend",_blend(selected))
+			elif target.has_meta("source_particle"):
+				target.get_meta("source_particle").set_source_blend(_blend(selected))
 		elif timeline.property=="AnchorPoint":
 			# CCFrame::AnchorPointFrame::onEnter is discrete, without tweening.
 			var anchor: Array=selected.scale
