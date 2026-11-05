@@ -720,5 +720,29 @@ class SourceRuntimeCountedReceiptTests(unittest.TestCase):
         self.assertEqual(classify_result(name, 0, child + '\n' + self.CASES[name] +
                                          '\nCASE_RESULT {"failures":["hidden problem"]}'), (False, False))
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class PrivateInputContracts(unittest.TestCase):
+    def test_missing_private_inputs_are_named_and_whitespace_counts_as_missing(self):
+        from test_project_support import missing_private_inputs, PRIVATE_INPUT_REQUIREMENTS
+        self.assertEqual(missing_private_inputs('base508_pack_test', {}), ['TWILIGHT_BASE508_PACK'])
+        self.assertEqual(missing_private_inputs('base508_pack_test', {'TWILIGHT_BASE508_PACK': '  '}), ['TWILIGHT_BASE508_PACK'])
+        self.assertEqual(missing_private_inputs('base508_pack_test', {'TWILIGHT_BASE508_PACK': '/p'}), [])
+        self.assertEqual(missing_private_inputs('job_smoke_test', {}), [])
+        for name, keys in PRIVATE_INPUT_REQUIREMENTS.items():
+            with self.subTest(name=name):
+                self.assertTrue((ROOT / 'tests' / (name + '.gd')).is_file(), name)
+                source = (ROOT / 'tests' / (name + '.gd')).read_text(encoding='utf-8')
+                for key in keys:
+                    self.assertIn(key, source, 'requirement must be read by the test itself')
+
+    def test_runner_never_counts_unavailable_private_input_as_pass(self):
+        runner = (ROOT / 'tools/test_project.py').read_text(encoding='utf-8')
+        self.assertIn("private_unavailable[name]=missing", runner)
+        self.assertIn("skipped.append(name)", runner)
+        self.assertIn("'private_input_unavailable':private_unavailable", runner)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

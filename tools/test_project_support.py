@@ -490,6 +490,44 @@ def run_native_fixture_cases(command: Sequence[str], *, name: str, keys: Sequenc
 
 
 # Audits reuse this runner contract, rather than copying its execution loop.
+# Tests whose assertions require a private, user-supplied original pack that
+# GitHub CI never has. Their authors state that absence is not a pass, so the
+# runner records them as PRIVATE_INPUT_UNAVAILABLE (never PASS) with the
+# missing variables, instead of letting each fail or hang until its timeout.
+# Evidence: Integration run 41986133718 on main 4d18a44 (2026-11-05).
+PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
+    "base508_pack_test": ("TWILIGHT_BASE508_PACK",),
+    "base508_game_api_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),
+    "base508_registered_navigation_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),
+    "base508_shared_land_context_test": ("TWILIGHT_BASE508_SHARED_CONTEXT_PACK",),
+    "dungeon_execution_contract_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_execution_main_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_installed_play_pack_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_remaining_play_test": ("TWILIGHT_DUNGEON523_PACK", "TWILIGHT_DUNGEON523_PREVIOUS_PACK"),
+    "fishing523_main_test": ("TWILIGHT_FISHING523_PACK",),
+    "fishing523_source_test": ("TWILIGHT_FISHING523_PACK",),
+    "guardian_media_test": ("GUARDIAN_ORIGINAL_MEDIA_PACK",),
+    "half_elixir_main_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),
+    "half_elixir_source_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),
+    "inventory_registry523_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "inventory_source523_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "inventory_supplier523_contract_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "local_presentation_region_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "mastery523_effects_main_test": ("TWILIGHT_MASTERY523_PACK",),
+    "mastery523_operations_test": ("TWILIGHT_MASTERY523_PACK",),
+    "mastery523_ticket_main_test": ("TWILIGHT_MASTERY523_PACK",),
+    "monsterbook523_test": ("MONSTERBOOK523_PACK", "MONSTERBOOK523_SHA256"),
+}
+
+# Per-test opt-in flags/roots that only assert "this run uses a fresh isolated
+# profile". The runner always allocates one, so it states that explicitly.
+ISOLATION_ROOT_VARIABLES = ("TWILIGHT_GROWTH96_TEST_ROOT", "TWILIGHT_TJ_TEST_ROOT")
+
+
+def missing_private_inputs(name: str, env: Mapping[str, str]) -> list[str]:
+    return [key for key in PRIVATE_INPUT_REQUIREMENTS.get(name, ()) if not env.get(key, "").strip()]
+
+
 PREPARATION = ("import", "bake_navigation", "boot")
 
 
