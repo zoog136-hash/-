@@ -794,14 +794,18 @@ func append_log(value: String) -> void:
 
 func show_message(text: String) -> void:
 	super.show_message(text)
+	_original_system_message_priority=LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE
+	_original_system_message_routing={"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false}
 	if is_instance_valid(original_main_ui_controller):
-		original_main_ui_status["system_message"]=original_main_ui_controller.set_system_message_priority(LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE,{"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false})
+		original_main_ui_status["system_message"]=original_main_ui_controller.set_system_message_priority(_original_system_message_priority,_original_system_message_routing)
 
 func show_source_system_message(text: String, explicit_priority: int) -> Dictionary:
 	if explicit_priority not in [1,2]:return {"ok":false,"code":"source_system_message_explicit_priority_1_or_2_required"}
 	super.show_message(text)
+	_original_system_message_priority=explicit_priority
+	_original_system_message_routing={"kind":"explicit_caller_priority","value":explicit_priority,"original_rule_confirmed":false}
 	if not is_instance_valid(original_main_ui_controller):return {"ok":false,"code":"source_system_message_original_controller_unavailable","existing_message_retained":true}
-	var result: Dictionary=original_main_ui_controller.set_system_message_priority(explicit_priority,{"kind":"explicit_caller_priority","value":explicit_priority,"original_rule_confirmed":false})
+	var result: Dictionary=original_main_ui_controller.set_system_message_priority(_original_system_message_priority,_original_system_message_routing)
 	original_main_ui_status["system_message"]=result
 	return result
 
@@ -2755,6 +2759,8 @@ func open_protection523() -> void:
 var original_ui_runtime_presenter: Node
 var original_main_ui_controller: Node
 var _original_npc_dialogue_owner: WeakRef
+var _original_system_message_priority: int=LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE
+var _original_system_message_routing: Dictionary={"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false}
 var original_main_ui_status: Dictionary={}
 var _original_main_player_values: Array=[]
 var _original_main_map_value: String=""
@@ -2868,7 +2874,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		map_registration=candidate.bind_world_map(_original_world_map_inputs.image_adapter,_original_world_map_inputs.context_provider,_original_world_map_inputs.input_handler)
 	candidate.sync_legacy_visibility()
 	candidate.refresh_quickslots()
-	var system_message: Dictionary=candidate.set_system_message_priority(LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE,{"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false})
+	var system_message: Dictionary=candidate.set_system_message_priority(_original_system_message_priority,_original_system_message_routing)
 	if reopen_character:open_character()
 	if reopen_dialogue:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null

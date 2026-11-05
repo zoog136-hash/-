@@ -757,6 +757,8 @@ func sync_legacy_visibility() -> void:
 		if control!=null:control.visible=false if _quickslot_view!=null and _quickslot_view.is_open() else record.visible
 	var map_label: Object=_legacy_map_name.get_ref() if _legacy_map_name!=null else null
 	if map_label!=null:map_label.visible=false if is_instance_valid(_map_name_scene) else _legacy_map_name_visible
+	var message: Object=_legacy_message.get_ref() if _legacy_message!=null else null
+	if message!=null:message.visible=false if is_instance_valid(_system_message_scene) and _system_message_result.get("ok",false) else _legacy_message_visible
 	for kind: String in _legacy_combat:
 		var control: Object=_legacy_combat[kind].get_ref()
 		var owned: bool=is_instance_valid(_combat_scene) and (kind!="pickup" or _combat_owns_pickup)

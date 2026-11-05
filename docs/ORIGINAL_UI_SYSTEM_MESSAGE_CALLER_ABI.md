@@ -46,6 +46,8 @@ Original parent geometry, colors, font and text extent are unchanged. Source
 No opening/fade animation, queue or preemption rule is invented. Missing scope
 or an unsupported string keeps the existing label visible and hides stale
 original text. Label availability is preserved across replacement and release.
+The current caller's explicit priority/routing is retained across a pack
+replacement; rebinding does not reset a live priority1 message to the estimate.
 
 ## Combined private v12 input
 
