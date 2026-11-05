@@ -801,5 +801,21 @@ class PrivateInputContracts(unittest.TestCase):
         self.assertIn("'private_input_unavailable':private_unavailable", runner)
 
 
+class RetiredLegacyMapContracts(unittest.TestCase):
+    def test_retired_tests_exist_and_are_never_counted_as_passed(self):
+        from test_project_support import RETIRED_LEGACY_MAP_TESTS, PRIVATE_INPUT_REQUIREMENTS
+        for name in RETIRED_LEGACY_MAP_TESTS:
+            with self.subTest(name=name):
+                self.assertTrue((ROOT / 'tests' / (name + '.gd')).is_file())
+                self.assertNotIn(name, PRIVATE_INPUT_REQUIREMENTS)
+        self.assertNotIn('world_regions_test', RETIRED_LEGACY_MAP_TESTS)
+        self.assertNotIn('native_png_teleport_test', RETIRED_LEGACY_MAP_TESTS)
+        runner = (ROOT / 'tools/test_project.py').read_text(encoding='utf-8')
+        self.assertIn("'legacy_map_retired':retired_legacy", runner)
+        source = (ROOT / 'scripts/maps/source_map_runtime.gd').read_text(encoding='utf-8')
+        self.assertIn('mid=="aden_world" or not LEGACY_LAYOUT.active("--legacy-map-layouts")', source,
+                      'retirement relies on aden_world always using the source map runtime')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

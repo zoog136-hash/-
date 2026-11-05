@@ -618,6 +618,22 @@ PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
     "tower_png_normal_runtime_test": ("TWILIGHT_OMAN_PNG_PACK",),
 }
 
+# Tests of the pre-remake authored Aden layout. source_map_runtime.supports()
+# deliberately serves aden_world from the current source map even under
+# --legacy-map-layouts, so these fixtures no longer exist in the game (user's
+# map transition to current523, 2026-11). They are kept in the repository and
+# reported as LEGACY_MAP_RETIRED (never passed). Checks that also cover other
+# maps (e.g. native_png_teleport_test, world_regions_test) stay active.
+RETIRED_LEGACY_MAP_TESTS = frozenset({
+    "aden_building_test", "aden_courtyard_test", "aden_shoreline_test", "aden_terrain_polish_test",
+    "field_world_test", "reference_object_placement_test", "road_surface_render_test",
+    "terrain_surface_render_test", "world_region_portals_test", "world_structure_test",
+    "world_terrain_coverage_test",
+    "aden_batch_review_test", "aden_hut_collision_test", "aden_mobile_occlusion_test",
+    "aden_mobile_streaming_test", "aden_png_scale_migration_test",
+})
+
+
 # Per-test opt-in flags/roots that only assert "this run uses a fresh isolated
 # profile". The runner always allocates one, so it states that explicitly.
 ISOLATION_ROOT_VARIABLES = ("TWILIGHT_GROWTH96_TEST_ROOT", "TWILIGHT_TJ_TEST_ROOT")
