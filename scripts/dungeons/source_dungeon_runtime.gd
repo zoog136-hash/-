@@ -111,6 +111,9 @@ func _original_execution_input() -> Dictionary:
 	# Hold this optional input instead of admitting dummy/test source records.
 	for name: String in tables:
 		for row: Dictionary in tables[name]:
+			# The historical model retains all group rows for its fingerprint;
+			# only groups explicitly referenced by Orim spawns can be consumed.
+			if name=="NpcClassForNpcGroup" and not groups.has(int(row.NpcGroupID)): continue
 			if not ORIGINAL_ROWS.declared_exclusion(name,row).is_empty() or row.get("TestNpc")==true: return {}
 	for id: int in [231162,232352]:
 		var item: Dictionary = ORIGINAL_ROWS.row("ItemClass",id)
