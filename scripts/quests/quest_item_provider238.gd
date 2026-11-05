@@ -74,7 +74,7 @@ func configure(world: Node) -> void:
 		elif id in FIXED.IDS:
 			if FIXED.target(world,D.variant_item(definition.get("native_record",{}),1)).is_empty():continue
 		elif id in SKILL_BOOKS.IDS:
-			var identity: Dictionary=skill_books.identity(D.variant_item(definition.get("native_record",{}),1))
+			var identity: Dictionary=skill_books.identity(D.variant_item(definition.get("native_record",{}),1),world)
 			if identity.is_empty():continue
 			var skill: Dictionary=world.original_skills.catalog.record_for(str(identity.local_skill_id))
 			if skill.get("id")!=identity.local_skill_id:continue
