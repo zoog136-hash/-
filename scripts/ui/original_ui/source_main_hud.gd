@@ -299,6 +299,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()

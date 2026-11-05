@@ -176,7 +176,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if external:_external_texture_tags[int(widget.get("actionTag",0))]=true
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
-	if not str(widget.get("customProperty","")).is_empty():
+	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
@@ -256,6 +256,13 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
 	if node.classname=="Sprite" and _blend(options) not in BLEND.PAIRS: problems.append("unsupported_blend")
 	for child: Dictionary in node.get("children",[]): _validate(child,problems)
+
+func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dictionary) -> bool:
+	# Cocos3.6 NodeReader stores this exact UserData in ObjectExtensionData;
+	# it does not select/render these alternate colors. Preserve raw metadata
+	# and the actual serialized green color; allow no general custom shader.
+	const PALETTE=" Red:#D80900 Sky:#29D6FF gray:#7F7F7F"
+	return source_member=="UI/Main/Hud_CharInfo.csb" and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="9532ebdf565004332c1a566ee9f7fbf839aaa580b2db3600a187633820c7d805" and node.get("_offset")==39796 and node.classname=="LoadingBar" and str(widget.get("customProperty",""))==PALETTE and binding.get("stock_custom_property_metadata")==PALETTE and binding.get("role")=="source_percent"
 
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
