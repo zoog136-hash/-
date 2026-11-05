@@ -217,6 +217,7 @@ func _rebuild_listing() -> void:
 	var needle: String = name_filter.text.strip_edges().to_lower()
 	var service: Object = world.get("crafting")
 	var registry: Dictionary = service.get("recipes")
+	var source_images: Dictionary = {}
 	for id: String in all_recipe_ids:
 		var recipe: Dictionary = registry.get(id,{})
 		var output: Dictionary = recipe.get("result",{})
@@ -230,10 +231,20 @@ func _rebuild_listing() -> void:
 		if not needle.is_empty() and not match_text.contains(needle):
 			continue
 		recipe_ids.append(id)
-		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
+		var item_class_id: int = _recipe_item_class_id(recipe,output,id)
+		var source_recipe_image: bool = _uses_source_recipe_images(recipe,id)
+		var original: Dictionary = SOURCE_IMAGES.describe_item_class(item_class_id,output_name) if item_class_id>0 else {}
+		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],original.get("texture") as Texture2D if source_recipe_image else UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
+		if source_recipe_image:
+			var evidence: Dictionary=original.duplicate(true)
+			evidence.erase("texture")
+			if item_class_id==0: evidence={"source_status":"zero_sentinel","actual_game_consumption_observed":false}
+			elif item_class_id<0: evidence={"source_status":"source_item_identity_required","actual_game_consumption_observed":false}
+			source_images[id]=evidence
 		listing.set_item_metadata(listing.item_count-1,id)
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(grade))
 		listing.set_item_tooltip(listing.item_count-1,str(recipe.get("name",id)))
+	listing.set_meta("source523_images",source_images)
 	if recipe_ids.is_empty():
 		current_id = ""
 		product.texture=null
@@ -279,6 +290,11 @@ func _refresh_quote() -> void:
 		var source_output: Variant=source_images.get(str(result.get("source_id","")))
 		if source_output is Dictionary and not source_output.is_empty():
 			UI.apply_source_item_reference(product,source_output,output_name,"detail")
+		elif _recipe_item_class_id(recipe,result,current_id)>0:
+			UI.apply_item_class_icon(product,_recipe_item_class_id(recipe,result,current_id),output_name,"detail")
+		elif _uses_source_recipe_images(recipe,current_id):
+			UI.clear_item_visual(product)
+			product.texture=null
 		else:
 			UI.apply_item_visual(product,output,output_name,hud.item_image_index.get("아이템",{}),"detail")
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
@@ -352,6 +368,20 @@ func _clear_materials() -> void:
 		candidate_box.remove_child(child)
 		child.queue_free()
 
+func _uses_source_recipe_images(recipe: Dictionary, recipe_id: String) -> bool:
+	return SOURCE_IMAGES.selected() and recipe.get("source_snapshot")=="patch523" and recipe_id.begins_with("patch523:")
+
+func _recipe_item_class_id(recipe: Dictionary, source_item: Dictionary, recipe_id: String) -> int:
+	if not _uses_source_recipe_images(recipe,recipe_id):
+		return -1
+	# The existing compiled ItemCraft input/output contract declares source_id
+	# in the ItemClass namespace. No name, generic ClassID or ownership is joined.
+	var literal: Variant=source_item.get("source_id")
+	if not literal is String or not literal.is_valid_int(): return -1
+	var item_class_id: int=int(literal)
+	if str(item_class_id)!=literal or item_class_id<0: return -1
+	return item_class_id
+
 func _source_recipe_image_references() -> Dictionary:
 	if not SOURCE_IMAGES.selected() or not current_id.begins_with("patch523:"):
 		return {}
@@ -420,6 +450,11 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 		var source_item: Variant=source_images.get(str(material.get("source_id","")))
 		if source_item is Dictionary and not source_item.is_empty():
 			UI.apply_source_item_reference(icon,source_item,item_name,"slot")
+		elif _recipe_item_class_id(recipe,material,current_id)>0:
+			UI.apply_item_class_icon(icon,_recipe_item_class_id(recipe,material,current_id),item_name,"slot")
+		elif _uses_source_recipe_images(recipe,current_id):
+			UI.clear_item_visual(icon)
+			icon.texture=null
 		else:
 			UI.apply_item_visual(icon,record,item_name,hud.item_image_index.get("아이템",{}),"slot")
 		var text:=VBoxContainer.new()

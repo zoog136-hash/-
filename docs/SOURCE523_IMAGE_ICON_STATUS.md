@@ -78,6 +78,15 @@ Library identities or saves are included in Git.
   AssetID. No recipe, supplier, transaction, effect or ownership is admitted by
   these image calls. The data contract is the public Data271 checkpoint
   `6622063ee90806c1c753c695978f586ef7906cc3`.
+- The existing compiled source crafting calls also consume their declared
+  ItemClass `source_id` directly from the already selected image pack. Recipe
+  list icons, the result picture and material pictures use this path while the
+  optional Data271 reader API is unavailable. They require the existing
+  patch523 recipe identity, preserve zero/missing states without substitute
+  images, and use the same original exclusions and presentation loader. Game
+  native-item flags are not created. Available owner read-only references keep
+  priority in result/material pictures. These direct display calls have not
+  been executed or validated.
 - Skill browsing and skill quickslots use exact public host-to-SpellClass
   bindings, then the source IconID. Active buff rows use explicit native
   BuffClass OnIconID. ActivateIconID and OffIconID remain distinct roles;

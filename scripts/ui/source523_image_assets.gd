@@ -144,6 +144,35 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	var identity: Dictionary = reader.source_consumer_row("ItemClass",info.item_class_id) if reader != null else {}
 	return _resolve_item_presentation(info,identity)
 
+static func describe_item_class(id: int, title: String = "") -> Dictionary:
+	# The caller supplies an explicit ItemClass.ID namespace. This is an image
+	# presentation route, never a game record or an ownership/activation grant.
+	var info: Dictionary = _item_presentation_info(id,title)
+	info["presentation_only"] = true
+	info["item_class_namespace"] = "ItemClass.ID"
+	if id <= 0:
+		info.reason = "zero_sentinel" if id == 0 else "source_item_class_identity_required"
+		info["source_status"] = info.reason
+		return info
+	var reader: RefCounted = active()
+	if reader == null:
+		info.reason = _error if not _error.is_empty() else "source523_image_pack_not_selected"
+		info["source_status"] = info.reason
+		return info
+	var identity: Dictionary = reader.source_consumer_row("ItemClass",id)
+	info.provenance = identity.get("provenance",{}).duplicate(true)
+	if not identity.get("ok",false):
+		info.reason = str(identity.get("status","missing_consumer_key"))
+		info["source_status"] = info.reason
+		return info
+	var canonical: Variant = identity.get("row")
+	if not canonical is Dictionary or canonical.get("ID") != id:
+		info.reason = "source_item_class_identity_required"
+		info["source_status"] = info.reason
+		return info
+	if title.is_empty(): info.name = str(canonical.get("Name",""))
+	return _resolve_item_presentation(info,identity)
+
 static func _reference_source_identity(value: Variant) -> Dictionary:
 	# Keep only scalar identity data; callbacks and nested relationship trees
 	# never become presentation metadata.

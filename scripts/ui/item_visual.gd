@@ -58,11 +58,20 @@ static func apply_source_item_reference(view: TextureRect, data_reference: Dicti
 		view.add_child(effect)
 	effect.configure_source_item_reference(view,data_reference,title,usage,original_ui_bindings)
 
+static func apply_item_class_icon(view: TextureRect, item_class_id: int, title: String, usage: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
+	var effect: Node = view.get_node_or_null("ItemVisual")
+	if effect == null:
+		effect = new()
+		effect.name = "ItemVisual"
+		view.add_child(effect)
+	effect.configure_item_class_icon(view,item_class_id,title,usage,original_ui_bindings)
+
 static func clear(view: TextureRect) -> void:
 	if view == null: return
 	_detach_source_scene(view)
 	view.material = null
 	SOURCE523.bind_metadata(view,{})
+	if view.has_meta("item_visual"): view.remove_meta("item_visual")
 	var effect: Node = view.get_node_or_null("ItemVisual")
 	if effect != null: effect.deactivate()
 
@@ -89,6 +98,10 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 
 func configure_source_item_reference(view: TextureRect, data_reference: Dictionary, title: String, usage: String, original_ui_bindings: Dictionary = {}) -> void:
 	var info: Dictionary = SOURCE523.describe_item_reference(data_reference,title)
+	_configure_presentation(view,{},title,{},usage,original_ui_bindings,info,true)
+
+func configure_item_class_icon(view: TextureRect, item_class_id: int, title: String, usage: String, original_ui_bindings: Dictionary = {}) -> void:
+	var info: Dictionary = SOURCE523.describe_item_class(item_class_id,title)
 	_configure_presentation(view,{},title,{},usage,original_ui_bindings,info,true)
 
 func _configure_presentation(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary, info: Dictionary, reference_presentation: bool = false) -> void:
