@@ -118,6 +118,10 @@ func _source_ground_request(item: Dictionary) -> Dictionary:
 	if item.get("source_m_native_item") != true: return {}
 	var original: Dictionary = SOURCE_ITEMS.item_definition(item).get("original_item",{})
 	var configured: Dictionary = source_ground_bindings.get(str(item.get("source_item_class_id",-1)),{})
+	# A source-row reader may supply the current full row for the same already
+	# identified native item when the drop-definition pack is unavailable here.
+	# The selector checked that complete row against the pinned current tables.
+	if original.is_empty(): original = configured.get("original_item",{})
 	var context: Dictionary = {}
 	var player: Variant = world.get("player")
 	if is_instance_valid(player) and player.get("source_visual_context") is Dictionary:
@@ -127,11 +131,11 @@ func _source_ground_request(item: Dictionary) -> Dictionary:
 	return {"required":true,"original_item":original,"source_bank_context":context,
 		"source_binding":configured.get("source_binding",{}) if configured.get("original_item") == original else {}}
 
-func bind_source_ground_visual(original_item: Dictionary, source_binding: Dictionary, context: Dictionary = {}) -> Dictionary:
-	# This visual-only boundary must receive source action/loop/direction evidence;
-	# ItemClass.SpriteID does not imply action0, an idle loop or a stored direction.
+func bind_source_ground_definition(original_item: Dictionary, context: Dictionary = {}, source_binding: Dictionary = {}) -> Dictionary:
+	# Accept a full current row from the image/data source reader for an existing
+	# item view. The unresolved ground renderer relationship remains pending.
 	var selected: Dictionary = GROUND_SOURCE.select(original_item,context,source_binding)
-	if not selected.get("ok",false): return selected
+	if selected.get("reason") != "current523_ground_original_member_and_renderer_role_unresolved": return selected
 	source_ground_bindings[str(original_item.ID)] = {"original_item":original_item.duplicate(true),
 		"source_binding":source_binding.duplicate(true),"source_bank_context":context.duplicate(true)}
 	for id: String in views:
