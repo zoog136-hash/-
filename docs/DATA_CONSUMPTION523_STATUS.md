@@ -339,6 +339,42 @@ parser, NoDeath boundary, recovery seal and all death/economic/save behavior
 are retained. These are original input-selection changes, not new mechanics or
 new gameplay observations.
 
+### Original inputs to the existing normal-crafting service — unverified
+
+`World._load_patch523_equipment()` now calls
+`patch523_rules.load_original(catalog_bytes,binding_catalog_bytes)` only when
+neither equipment environment variable is selected and the existing installation
+index is absent. Either environment variable, including a SHA-only/empty value,
+and every present installation index retain the existing file-input failure.
+The base catalog bytes are the actual `res://data/catalog_v19.json` bytes. The
+binding input contains only the already registered `아이템` records and existing
+`patch523_crafting_catalog_contract`; it does not register an item, invent a
+native identity, or serialize a World/UI object.
+
+`patch523_rules_projection.build(catalog_bytes,binding_catalog_bytes)` ports the
+existing public `build_patch523_rules.py` compiler's ItemCraftInput,
+ItemCraftOutputView, ItemCraftView, ItemCraftRestriction, ItemClass/Bonus and
+enchantment relations and its current public crafting policy. The existing
+recipe admission, raw relation evidence, item identity/state requirements,
+conditional materials, result branches and probabilities remain separate.
+`patch523_enchantment_projection.build(tables,bound_items,bonuses)` supplies the
+same `equipment_runtime` model as the public enhancement compiler. Explicit
+dummy evidence uses the shared PR269 registry SPI; it remains recorded in raw
+evidence/admission and is excluded from new active equipment projection. Selected
+display-name references are supporting identity dependencies, not completion of
+the deferred description tables.
+
+The result enters the same `_load_payload()` schema/catalog/material/outcome/
+condition guards as `load_file()`, and the existing
+`World._apply_loaded_patch523_equipment()` publishes the accepted recipes and
+refreshes derived options. Existing quote, selected-material, execution,
+ownership, RNG, receipt and save implementations are reused. `digest` identifies
+the actual serialized memory payload; `source_archive_sha256`, the base
+`catalog_sha256` and optional actual `binding_catalog_sha256` retain distinct
+input identities. No private compiled file or installation pointer is written.
+This bootstrap has not been compiled or executed; successful admission, model
+identity and gameplay consumption remain unobserved.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now

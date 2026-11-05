@@ -8,6 +8,7 @@ const EXPEDITION_MATERIALS=preload("res://scripts/crafting/patch523_expedition_m
 const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SOURCE_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const SOURCE_ITEMS = preload("res://scripts/resources/current523_item_data.gd")
+const ORIGINAL_PROJECTION = preload("res://scripts/crafting/patch523_rules_projection.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
 const MAX_BATCH: int = 20
@@ -42,8 +43,28 @@ func load_file(path: String, expected_sha256: String) -> bool:
 	if FileAccess.get_sha256(path) != expected_sha256:
 		problem = "원본523 제작 규칙 SHA 불일치"
 		return false
+	return _load_payload(FileAccess.get_file_as_string(path),expected_sha256)
+
+func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> bool:
+	# UNVERIFIED: the original ZIP identifies inputs; the actual normalized
+	# payload bytes identify this rules model. No private file is generated.
+	problem = ""
+	var projection = ORIGINAL_PROJECTION.new()
+	var candidate: Dictionary = projection.build(catalog_bytes,binding_catalog_bytes)
+	if candidate.is_empty():
+		problem = projection.problem
+		return false
+	var payload: PackedByteArray = JSON.stringify(candidate,"",true,true).to_utf8_buffer()
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256); hash.update(payload)
+	return _load_payload(payload.get_string_from_utf8(),hash.finish().hex_encode())
+
+func _load_payload(text: String, expected_sha256: String) -> bool:
+	if text.to_utf8_buffer().size() > MAX_BYTES:
+		problem = "원본523 제작 규칙 파일 크기를 확인하세요"
+		return false
 	var parser := JSON.new()
-	if parser.parse(FileAccess.get_file_as_string(path)) != OK:
+	if parser.parse(text) != OK:
 		problem = "원본523 규칙 JSON 형식 오류"
 		return false
 	var parsed: Variant = parser.data

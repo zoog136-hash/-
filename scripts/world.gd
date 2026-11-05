@@ -4935,13 +4935,26 @@ func _patch523_craft_item_index() -> Dictionary:
 func _load_patch523_equipment() -> void:
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")
 	var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
-	if path.is_empty():
+	# UNVERIFIED: even a SHA-only or explicitly empty environment selection is
+	# authoritative. Neither it nor a damaged install pointer is bypassed.
+	var explicit: bool = OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES") or OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
+	var installed: bool = FileAccess.file_exists(PATCH523_STORE.INDEX)
+	if not explicit and installed:
 		var saved: Dictionary = PATCH523_STORE.active()
 		path = str(saved.get("path", ""))
 		expected = str(saved.get("sha256", ""))
-	if path.is_empty(): return
-	if not _install_patch523_equipment(path, expected):
+	if explicit or installed:
+		if not _install_patch523_equipment(path, expected): push_warning(patch523_equipment.problem)
+		return
+	var catalog_bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://data/catalog_v19.json")
+	# Export exactly the already registered catalog inputs used by the public
+	# compiler, never a world/UI object or newly fabricated native identity.
+	var binding: Dictionary = {"아이템":catalog_db.get("아이템",[]),"patch523_crafting_catalog_contract":catalog_db.get("patch523_crafting_catalog_contract",{})}
+	var binding_bytes: PackedByteArray = JSON.stringify(binding,"",true,true).to_utf8_buffer()
+	if not patch523_equipment.load_original(catalog_bytes,binding_bytes):
 		push_warning(patch523_equipment.problem)
+		return
+	_apply_loaded_patch523_equipment()
 
 func install_patch523_craft_catalog_zip(path: String) -> bool:
 	var installed: Dictionary=PATCH523_CRAFT_CATALOG.install_zip(path)
@@ -4966,6 +4979,10 @@ func install_patch523_equipment_file(path: String, expected: String) -> bool:
 func _install_patch523_equipment(path: String, expected: String) -> bool:
 	if not patch523_equipment.load_file(path, expected):
 		return false
+	_apply_loaded_patch523_equipment()
+	return true
+
+func _apply_loaded_patch523_equipment() -> void:
 	patch523_material_choices.clear()
 	patch523_craft_item_cache={}
 	# Keep existing recipes, IDs and economy unchanged.
@@ -4974,7 +4991,6 @@ func _install_patch523_equipment(path: String, expected: String) -> bool:
 			crafting.recipes.erase(key)
 	crafting.recipes.merge(patch523_equipment.recipes.duplicate(true))
 	_refresh_patch523_equipment_options()
-	return true
 
 func _refresh_patch523_equipment_options() -> void:
 	if patch523_equipment.data.is_empty(): return
