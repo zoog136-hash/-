@@ -67,3 +67,14 @@ python3 tools/map_restore/current523_spawn_preview.py --pack /private/patch523-w
 
 아덴(Land4) 결과: 구역 726, 슬롯 810, 종류 153, 보스 30. 전체 1,065 Land 중 284곳에 구역이 생긴다.
 이 수치는 정의 기준 미리보기이며 Godot 실행·실기기 검증이 아니다.
+
+## 충돌·이동 검사
+
+- 코드 경로(정적 확인): 생성 위치는 `sample_source_spawn`(통행 가능·비안전지대), 이동은 매 프레임
+  `World.constrain_original_motion` → 필드 `line_clear`(S32 자체 통행 규칙)로 막히면 정지,
+  경로는 `field.path`, 배회 목표는 `walkable`/`point_clear`를 통과해야 한다.
+- 칸 단위 검사: `tools/map_restore/current523_spawn_collision_check.py`가 원본 Aden S32로
+  구역별 통행 칸 수, 통행 칸이 0인 구역(생성 불가), 8방향 연결 덩어리와 고립 소구역(24칸 미만)을
+  센다. 판정은 `current523_aden_source_field.gd`와 같은 허용 워드 {0,4,8,12,32}·바닥 센티넬·
+  대각선 양쪽 직교 칸 조건이다. 합성 S32로 벽 분리·고립 소구역 검출을 확인했다.
+  **원본 Aden S32로 실행한 결과는 아직 없다** (작업 환경에 원본 S32 없음).
