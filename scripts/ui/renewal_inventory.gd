@@ -211,7 +211,8 @@ func _select_item(reference: String) -> void:
 	_show_item_name(reference)
 
 func _show_item_name(reference: String) -> void:
-	if item_name_hint == null or not slot_buttons.has(reference):
+	var native: Dictionary=_native_item_name_context(reference)
+	if item_name_hint == null or (not native.get("ok",false) and not slot_buttons.has(reference)):
 		_hide_item_name()
 		return
 	var record: Dictionary = _find_item_record(reference)
@@ -231,7 +232,8 @@ func _hide_item_name() -> void:
 	# Deliberately do not clear selected_item or its highlighted item border.
 
 func _inventory_visibility_changed() -> void:
-	if not is_visible_in_tree() or not inventory_panel.is_visible_in_tree():
+	var native_open: bool=is_instance_valid(controller) and controller.has_method("original_inventory_is_open") and controller.call("original_inventory_is_open")
+	if (not is_visible_in_tree() or not inventory_panel.is_visible_in_tree()) and not native_open:
 		_hide_item_name()
 		detail_active = false
 		detail_panel.hide()
@@ -249,19 +251,28 @@ func _process(_delta: float) -> void:
 
 func _update_item_name() -> void:
 	if item_name_reference.is_empty(): return
-	if Time.get_ticks_msec() >= item_name_until or not inventory_panel.is_visible_in_tree() or selected_item != item_name_reference or not slot_buttons.has(item_name_reference):
+	var native: Dictionary=_native_item_name_context(item_name_reference)
+	var native_active: bool=native.get("ok",false)
+	if Time.get_ticks_msec() >= item_name_until or (not native_active and not inventory_panel.is_visible_in_tree()) or selected_item != item_name_reference or (not native_active and not slot_buttons.has(item_name_reference)):
 		_hide_item_name()
 		return
 	# Resolve the current button by physical reference after sort/equip/redraw.
-	var button: Control = slot_buttons[item_name_reference] as Control
+	var button: Control = native.control if native_active else slot_buttons[item_name_reference] as Control
 	if not is_instance_valid(button) or not button.is_visible_in_tree():
 		_hide_item_name()
 		return
 	var slot_rect: Rect2 = button.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,button.size)
-	var scroll_rect: Rect2 = grid_scroll.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,grid_scroll.size)
+	var scroll: Control=native.scroll if native_active else grid_scroll
+	var scroll_rect: Rect2 = scroll.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,scroll.size)
 	# A scrolled-out/clipped slot must not leave a floating name over another row.
 	if not scroll_rect.grow(1.0).encloses(slot_rect):
 		item_name_hint.hide()
+		return
+	if native_active:
+		# Preserve this same owner's reference, text and deadline while the
+		# source header supplies geometry. The hidden legacy bag's transforms
+		# and slot visibility must not erase a real native source selection.
+		item_name_hint.show()
 		return
 	var inverse: Transform2D = get_global_transform_with_canvas().affine_inverse()
 	var local_slot: Rect2 = inverse*slot_rect
@@ -276,6 +287,13 @@ func _update_item_name() -> void:
 		clampf(local_slot.get_center().x-label_width*0.5,viewport_bounds.position.x+8.0,viewport_bounds.end.x-label_width-8.0),
 		local_slot.position.y-item_name_hint.size.y-ITEM_NAME_GAP)
 	item_name_hint.visible = item_name_hint.position.y >= viewport_bounds.position.y
+
+func _native_item_name_context(reference: String) -> Dictionary:
+	if not is_instance_valid(controller) or not controller.has_method("original_inventory_name_hint_context"):return {}
+	var context: Variant=controller.call("original_inventory_name_hint_context",reference)
+	if not context is Dictionary or not context.get("ok",false):return {}
+	if not context.get("control") is Control or not is_instance_valid(context.control) or not context.get("scroll") is Control or not is_instance_valid(context.scroll):return {}
+	return context
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return
@@ -347,9 +365,21 @@ func _refresh_inventory_grid() -> void:
 	# only the expensive slot controls and item visuals wait for an open bag.
 	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
 		return
+	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
+	prepare_source_inventory_model()
+	visible_first_row = -1
+	_refresh_visible_window()
+	_refresh_weight()
+	_reflow()
+	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
+
+func prepare_source_inventory_model() -> void:
+	# The same owner reference/filter/order producer can serve a native CSB
+	# while these older controls are hidden. Keep its existing UI preference
+	# normalization; do not duplicate filters/order or rebuild another grid.
+	if not inventory_grid_dirty:return
 	inventory_grid_dirty = false
 	inventory_list_rebuilds += 1
-	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
 	sorted_references.clear()
 	var entries: Array[Dictionary] = _inventory_entries()
@@ -363,11 +393,6 @@ func _refresh_inventory_grid() -> void:
 		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
 			sorted_references.append(reference)
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
-	visible_first_row = -1
-	_refresh_visible_window()
-	_refresh_weight()
-	_reflow()
-	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
 
 func _new_reusable_slot() -> Button:
 	var button := Button.new()

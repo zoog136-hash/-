@@ -1,6 +1,7 @@
 extends "res://scripts/ui/lineage_side_ui.gd"
 
 signal detailed_stats_requested
+signal original_page_requested(page: String)
 
 signal equipment_requested(item_name: String)
 signal class_selection_requested
@@ -17,6 +18,14 @@ var equipment_page_index: int = 0
 var character_tabs: Control
 var empty_slot_art: Dictionary={}
 var item_art_bound: bool=false
+
+func _show_equipment_page() -> void:
+	super._show_equipment_page()
+	original_page_requested.emit("equipment")
+
+func _show_stats_page() -> void:
+	super._show_stats_page()
+	original_page_requested.emit("stats")
 
 func _ready() -> void:
 	super._ready()
@@ -297,3 +306,4 @@ func _refresh_character() -> void:
 		button.tooltip_text = "%s · %s · +%d\n클릭: 장비 선택 및 교체" % [_equipped_display_name(record),grade,level]
 	equipment_caption.text = "장착 장비  %d / %d" % [filled,(EQUIPMENT_SLOTS+EXTRA_SLOTS).size()]
 	_layout_equipment()
+
