@@ -1001,6 +1001,13 @@ func notify_current_source_invoke_effect(original_option: Dictionary, field: Str
 	var selected: Dictionary = CURRENT523_EFFECT.select_invoke_effect(original_option,field,supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+func notify_current_source_death_pose(world_point: Vector2, facing: int) -> bool:
+	# Keep this detached from the live player's motion/physics lifecycle. The
+	# existing death event owns when the copied original pose is requested.
+	var request_key: String = str(_reference_card_context.get("request_key",source_selection_status.get("request_key","")))
+	var selected: Dictionary = CURRENT523_EFFECT.select_player_death(request_key,_reference_request_context)
+	return _spawn_current523_source_effect(selected,world_point,facing,true)
+
 func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: int, context: Dictionary = {}, texture_budget_bytes: int = 0) -> Node2D:
 	# The existing owner adopts/positions/advances the returned node. This factory
 	# does not parent it, render its first frame or create a gameplay trigger.
@@ -1009,11 +1016,12 @@ func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: 
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _make_selected_current_source_effect(selected,facing,texture_budget_bytes)
 
-func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int) -> bool:
+func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int, fixed_world_point: bool = false) -> bool:
 	var overlay: Variant = _make_selected_current_source_effect(selected,facing)
 	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
+	if fixed_world_point: overlay.set_as_top_level(true)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
 	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
 		source_effect_status["ok"] = false
@@ -1029,7 +1037,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
