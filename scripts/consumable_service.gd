@@ -95,6 +95,12 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var instant_cure_present: bool=false
+var instant_cure_state: Variant={}
+
+var reusable_state_present: bool=false
+var reusable_state: Variant={}
+
 var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
 
@@ -107,11 +113,19 @@ func export_state() -> Dictionary:
 		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
+	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
 	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=quest_equipment_receipts.duplicate(true) if quest_equipment_receipts is Array or quest_equipment_receipts is Dictionary else quest_equipment_receipts
 	return state
 
 func import_state(input: Variant) -> void:
+	instant_cure_present=input is Dictionary and input.has("source_instant_cure_uses")
+	var cure: Variant=input.get("source_instant_cure_uses",{}) if input is Dictionary else {}
+	instant_cure_state=cure.duplicate(true) if cure is Dictionary or cure is Array else cure
+	reusable_state_present=input is Dictionary and input.has("source_reusable_item_uses")
+	var reusable: Variant=input.get("source_reusable_item_uses",{}) if input is Dictionary else {}
+	reusable_state=reusable.duplicate(true) if reusable is Dictionary or reusable is Array else reusable
 	quest_equipment_receipts_present=input is Dictionary and input.has("source_quest_equipment_receipts")
 	var gear: Variant=input.get("source_quest_equipment_receipts",[]) if input is Dictionary else []
 	quest_equipment_receipts=gear.duplicate(true) if gear is Array or gear is Dictionary else gear

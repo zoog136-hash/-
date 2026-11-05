@@ -3444,6 +3444,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var incoming_damage: int = _critical_damage(contextual_damage) if critical else contextual_damage
 	if titles.bonus("WeaponBlock")>0: incoming_damage=titles.incoming(incoming_damage,normalized_type,rng.randf())
 	var reduced: int = maxi(1, incoming_damage - int(protection523.effects().title_flat)) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
+	reduced = quest_item_provider.equipment_owner.reduce_hit(self,reduced,normalized_type)
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	var ignore_percent: float=card_collections.incoming_ignore(collection_context)

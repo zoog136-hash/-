@@ -1,0 +1,107 @@
+{
+  "parent_LOCAL_ONLY": "19d1fd97cb30660b4ff374a6f9d4275fee33dc7d",
+  "public_parent": "3b53de35638628c7c76c4c2cdcaf432e1e019deb",
+  "new_source_classes": [
+    1186,
+    282793,
+    295524
+  ],
+  "tests": [
+    {
+      "case": "held",
+      "result": {
+        "checks": 2127,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "held",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "fresh",
+      "result": {
+        "checks": 1266,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "fresh",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "uncertain",
+      "result": {
+        "checks": 9,
+        "failures": [],
+        "host_food_interval_seconds": 30,
+        "item_classes": [
+          1186,
+          282793,
+          295524
+        ],
+        "mode": "uncertain",
+        "native_interval_and_XP_stacking_order_verified": false,
+        "original_source_XP_percent": 10,
+        "source_food_regen_HP": 2,
+        "source_food_regen_MP": 3
+      }
+    },
+    {
+      "case": "xp-kill",
+      "result": {
+        "checks": 11,
+        "controlled_actor_kill_callback_not_natural_encounter_or_native_stacking_equivalence": true,
+        "failures": [],
+        "measured": [
+          {
+            "ain_rate": 4.0,
+            "gained": 440,
+            "item_multiplier": 1.0,
+            "name": "늑대인간",
+            "original_actor_exp": 110,
+            "source_monster_id": null
+          },
+          {
+            "ain_rate": 4.0,
+            "gained": 484,
+            "item_multiplier": 1.1,
+            "name": "늑대인간",
+            "original_actor_exp": 110,
+            "source_monster_id": null
+          }
+        ]
+      }
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    }
+  ],
+  "focused_assertions": 3457,
+  "status": "LOCAL_ONLY",
+  "source_food_cadence_not_verified": "Source item/buff joins plus ConstantData490rows/IntervalBonus130rows/IntervalBonusCategory42rows checked; no verified native cadence. NC guide confirms food bonuses/duration, not an exact recovery clock. Existing configurable TWILIGHT30seconds labelled in metadata and HUD; disable with quest523_food_regen_interval_seconds=0.",
+  "native_XP_stacking_order_or_natural_encounters_not_verified": true,
+  "primary_reference": "https://lineagem.plaync.com/guidebook/view?title=%EC%9D%BC%EB%B0%98+%EC%95%84%EC%9D%B4%ED%85%9C",
+  "prior_candidate_preserved": true,
+  "private_references_omitted_from_public_summary": true,
+  "private_runtime_identifiers_omitted": true
+}

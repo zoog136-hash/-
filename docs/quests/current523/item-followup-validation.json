@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "public_parent": "3b53de35638628c7c76c4c2cdcaf432e1e019deb",
+  "integration_main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+  "publication": "LOCAL_ONLY; no new remote posting attempted, no denial claimed",
+  "final_candidate_tests": [
+    {
+      "case": "fresh",
+      "final_candidate": true,
+      "result": {
+        "actual_item_classes": [
+          203422,
+          295504
+        ],
+        "checks": 469,
+        "controlled_MP_capacity_eligibility_not_natural_progression": true,
+        "failures": [],
+        "host_scope_clock": "per_ItemClass_active_play_seconds; native_shared_scope_and_offline_clock_unverified",
+        "mode": "fresh",
+        "quantity_consumed": 0,
+        "some_use_pending_no_skillv3_no_equipment_view": 327,
+        "source_class_interval_seconds": 1800,
+        "source_completions_before_actions": 812,
+        "source_item_delay_ms": 1000,
+        "source_mp": 1000
+      }
+    },
+    {
+      "case": "uncertain",
+      "final_candidate": true,
+      "result": {
+        "actual_item_classes": [
+          203422,
+          295504
+        ],
+        "checks": 9,
+        "controlled_MP_capacity_eligibility_not_natural_progression": true,
+        "failures": [],
+        "host_scope_clock": "per_ItemClass_active_play_seconds; native_shared_scope_and_offline_clock_unverified",
+        "mode": "uncertain",
+        "quantity_consumed": 0,
+        "some_use_pending_no_skillv3_no_equipment_view": 326,
+        "source_class_interval_seconds": 1800,
+        "source_completions_before_actions": 811,
+        "source_item_delay_ms": 1000,
+        "source_mp": 1000
+      }
+    },
+    {
+      "case": "buff-final",
+      "final_candidate": true,
+      "result": {
+        "actual_item_classes": [
+          295544,
+          302461
+        ],
+        "checks": 736,
+        "controlled_eligibility_not_natural_probabilities": true,
+        "failures": [],
+        "mode": "held",
+        "no_quantity_consumption": true
+      }
+    },
+    {
+      "case": "magic-current",
+      "final_candidate": true,
+      "result": {
+        "checks": 5,
+        "failures": [],
+        "new_reusable_and_original_equipment_owner_together": true,
+        "original_save_bytes_unchanged": true,
+        "source_item_class_id": 30213
+      }
+    },
+    {
+      "case": "core",
+      "final_candidate": true,
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    }
+  ],
+  "final_candidate_focused_assertions": 1263,
+  "supplemental_earlier_tests": [
+    {
+      "case": "magic-fixed",
+      "final_candidate": false,
+      "result": {
+        "actual_item_class": 30213,
+        "checks": 729,
+        "failures": [],
+        "measured_controlled_hits": {
+          "magic": {
+            "disabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            },
+            "enabled": {
+              "hp_loss": 970,
+              "stage": {
+                "damage_after": 970,
+                "damage_before": 1000,
+                "item_class_id": 30213,
+                "native_order_and_rounding_verified": false,
+                "raw_percent": 30000
+              }
+            }
+          },
+          "melee": {
+            "disabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            },
+            "enabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            }
+          },
+          "ranged": {
+            "disabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            },
+            "enabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            }
+          },
+          "source_spell_entry": {
+            "disabled": {
+              "hp_loss": 1000,
+              "stage": {}
+            },
+            "enabled": {
+              "hp_loss": 970,
+              "stage": {
+                "damage_after": 970,
+                "damage_before": 1000,
+                "item_class_id": 30213,
+                "native_order_and_rounding_verified": false,
+                "raw_percent": 30000
+              }
+            }
+          }
+        },
+        "native_order_rounding_or_natural_encounter_probability_verified": false,
+        "source_magic_damage_reduction_percent": 3
+      }
+    },
+    {
+      "case": "held",
+      "final_candidate": false,
+      "result": {
+        "actual_item_classes": [
+          203422,
+          295504
+        ],
+        "checks": 734,
+        "controlled_MP_capacity_eligibility_not_natural_progression": true,
+        "failures": [],
+        "host_scope_clock": "per_ItemClass_active_play_seconds; native_shared_scope_and_offline_clock_unverified",
+        "mode": "held",
+        "quantity_consumed": 0,
+        "some_use_pending_no_skillv3_no_equipment_view": 326,
+        "source_class_interval_seconds": 1800,
+        "source_completions_before_actions": 811,
+        "source_item_delay_ms": 1000,
+        "source_mp": 1000
+      }
+    },
+    {
+      "case": "fresh",
+      "final_candidate": false,
+      "result": {
+        "actual_item_classes": [
+          295544,
+          302461
+        ],
+        "checks": 468,
+        "controlled_eligibility_not_natural_probabilities": true,
+        "failures": [],
+        "mode": "fresh",
+        "no_quantity_consumption": true
+      }
+    }
+  ],
+  "supplemental_scope": "Magic729 unchanged gear/world before reusable followup; MP-held734 before only history-extension preservation guard; buff-native468 before MP/generalized save path. These are not falsely described as complete reruns on final candidate. Final candidate fresh469 includes history preservation/refusal, raw buff736, MP uncertain9, combined magic5 and Core44. Assertions include repeated unchanged-object checks, not unique features.",
+  "new_item_classes": [
+    30213,
+    203422,
+    295504,
+    295544,
+    302461
+  ],
+  "reviewed_ItemClasses_with_one_or_more_bounded_paths": 54,
+  "remaining_ItemClasses": 92,
+  "remaining_by_historical_contract": {
+    "contract_2": 21,
+    "contract_1": 44,
+    "contract_5": 27
+  },
+  "old811_and822_save_bytes_unchanged": true,
+  "source_original_quantity_is_not_remaining_or_use_counter": true,
+  "reusable_ledger": "consumable_state.source_reusable_item_uses; preserves existing unknown entry extensions, rejects malformed consumption history, no increment of item_grants.used_quantity for infinite use",
+  "source_profile": {
+    "3621_definitions": true,
+    "old_baseline811_unchanged": true,
+    "current_default_preview811_completed326_some_use_pending": true,
+    "fresh_QA_start_level86_source_XP_to87_812_completions327_pending": true,
+    "natural_probabilities_not_tested": true
+  },
+  "equipment_input_contract": {
+    "view_bytes": 36196,
+    "path_flag": "--quest-equipment-view=<consumer-local-private-view.json>",
+    "sha_flag": "--quest-equipment-view-sha256=7b023b445056cfdd79861f4327bbe6ef1a61884956682c46cefe93ac662aba30",
+    "local_only_not_Drive_delivered": true,
+    "full30398_registration_not_claimed": true
+  },
+  "MP_interval_policy": {
+    "source_seconds": 1800,
+    "source_MP": 1000,
+    "source_short_delay_ms": 1000,
+    "native_shared_scope_offline_clock_not_verified": true,
+    "host_scope": "per_ItemClass_active_play_seconds",
+    "preference": "quest523_source_class_usage_interval_policy",
+    "disable": "any value other than per_item_class_active_play_seconds holds the item",
+    "source_values_not_estimated": true,
+    "policy_visible_in_existing_HUD_message": true
+  },
+  "source_restrictions_and_dependencies": {
+    "Test_fixed_cards": 27,
+    "shared_conditions_effects_or_context_owners": 21,
+    "equipment_material_currency_other_mixed_holds": 44,
+    "source_immediate_equipment929_1129": "requires exact source-immediate award/equip transaction; not a normal manual consume override",
+    "unknown_resistance2802_9091": "source target0 meaning unresolved; stays blocked",
+    "dedicated_returns203402_282783_295494_295514": "exact source TeleportType/current TerritoryClass and destination/movement owner still required; no substitution with239",
+    "possession306431": "source Appellation1881 is possession semantics, not permanent use or PR258 titles",
+    "coin3242_3252": "mapping does not establish an installed spend owner; no conversion/regrant",
+    "currency147672": "no authorized generic currency mapping",
+    "material_processing": "265 owns real processing/effects and has public3b ABI. No duplicate engine or claim that stage is an effect."
+  },
+  "four_learned_spell_effects_and_other_blessings_enhancements_cross_skill_buff_semantics_not_all_completed": true,
+  "no_new_UI_art_audio_source_or_pack_transfer": true,
+  "no_264_honing_original_UI_218_other_branch_or_main_write": true,
+  "no_full_or_manual_CI": true,
+  "private_references_omitted_from_public_summary": true,
+  "private_runtime_identifiers_omitted": true
+}
