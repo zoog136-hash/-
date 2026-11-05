@@ -127,6 +127,9 @@ Library identities or saves are included in Git.
   selected physical instance's native source record for image calls. Empty
   targets detach the previous scene. Enhancement references, eligibility,
   chances, debits and saves retain their existing inputs.
+  The existing original-equipment information selectors also use the equipment
+  book's explicit ItemClass identity for their equipment/scroll row icons,
+  keeping physical selection IDs and action inputs separate.
 - The selected-loot pickup button consumes the selected drop's native item
   record through the image loader. Selection changes and cancel clear its icon
   and provenance. This is an item UI icon; ground artwork is unchanged and
