@@ -902,7 +902,9 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 	source_effect_status.clear()
 	# ConstantData identifies the resource. Local apply-event placement and an
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
-	if _playback_mode != "compatible": return false
+	# A missing body has no resolved playback mode. Let the typed effect load
+	# its own pinned bank policy; the effect factory still enforces strict mode.
+	if _playback_mode != "compatible" and not current523_source_only_presentation(): return false
 	var definition: Dictionary = {}
 	if not current523_source_only_presentation() and not _manifest_path.is_empty() and FileAccess.file_exists(_manifest_path):
 		var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
