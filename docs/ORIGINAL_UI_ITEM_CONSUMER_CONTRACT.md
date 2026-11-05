@@ -274,3 +274,9 @@ mapping of those original quantity controls to that request is supplied here;
 they are not assigned guessed batch behavior or hidden to make a scene pass.
 Source root/node/selection/confirmation mappings remain required before that
 whole screen can be mounted in strict mode. No new run or test was performed.
+
+The equipment endpoint requires `bind_source_scene(scene)` with the strict
+original CSB player before preview or commit. Requests remain unavailable while
+that original scene is unmounted, hidden, queued for disposal, or inspection
+only. This does not create a replacement form when a complete source mapping
+is missing. This gate is implemented but has not been executed/tested.

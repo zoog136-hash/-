@@ -15,6 +15,18 @@ var _quoted_action: Dictionary={}
 var _waiting: bool=false
 var _quoted_ok: bool=false
 var _confirmed: bool=false
+var _source_scene: WeakRef
+
+func bind_source_scene(scene: Node2D) -> Dictionary:
+	if not is_instance_valid(scene) or not scene.has_method("playback_status"):return {"ok":false,"code":"original_equipment_scene_required"}
+	var status: Dictionary=scene.call("playback_status")
+	if bool(status.get("inspection_only",true)) or str(status.get("source","")).is_empty():return {"ok":false,"code":"original_equipment_scene_required"}
+	_source_scene=weakref(scene)
+	return {"ok":true,"transaction_performed":false}
+
+func _source_ready() -> bool:
+	var scene: Node2D=_source_scene.get_ref() if _source_scene!=null else null
+	return is_instance_valid(scene) and scene.is_inside_tree() and scene.is_visible_in_tree() and not scene.is_queued_for_deletion()
 
 func set_snapshot(data: Dictionary) -> void:
 	_snapshot=data.duplicate(true)
@@ -37,6 +49,7 @@ func set_confirmation(value: bool) -> Dictionary:
 	return {"ok":true,"transaction_performed":false}
 
 func request_preview() -> Dictionary:
+	if not _source_ready():return {"ok":false,"code":"presentation_unavailable"}
 	if _waiting or _selection.is_empty():return {"ok":false,"code":"source_selection_unavailable"}
 	_invalidate_quote()
 	_pending_action=_selection.duplicate(true)
@@ -53,6 +66,7 @@ func show_quote(quoted: Dictionary) -> void:
 	quote_received.emit(quoted.duplicate(true))
 
 func request_commit() -> Dictionary:
+	if not _source_ready():return {"ok":false,"code":"presentation_unavailable"}
 	if _waiting or not _confirmed or not _quoted_ok or _quoted_action!=_selection:return {"ok":false,"code":"source_confirmation_required"}
 	var action: Dictionary=_quoted_action.duplicate(true)
 	_invalidate_quote()
