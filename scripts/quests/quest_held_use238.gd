@@ -51,6 +51,21 @@ class View extends Node:
 	func _update_hud() -> void:host._update_hud()
 	func _find_catalog_item_record(name_value: String) -> Dictionary:return host._find_catalog_item_record(name_value)
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
+	func _expected_gold() -> int:
+		var result: int=host.gold
+		var spec: Dictionary=canonical.get("source_use_spec",{})
+		if spec.get("kind")!="guaranteed_bag":return result
+		var class_id: int=BASE508.source_class_id(host.job_class)
+		for reward: Dictionary in spec.get("rewards",[]):
+			if not USE.class_matches(reward.get("class_ids",[]),class_id):continue
+			if int(reward.get("entity_type_id",-1))!=1:return -1
+			var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
+			var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
+			if D.currency_identity_name(item)!="아데나":continue
+			var amount: int=OWN.positive(reward.get("amount"))
+			if amount<1 or result<0 or result>9007199254740991-amount:return -1
+			result+=amount
+		return result
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
 		if committed or not OWN.current(host,prepared) or current_effect_stamp()!=effect_stamp:return ERR_INVALID_DATA
 		for key: String in overrides:
@@ -59,7 +74,8 @@ class View extends Node:
 		if not proposed is Dictionary:return ERR_INVALID_DATA
 		var virtual_key: String=str(canonical.name)
 		if int(proposed.get(virtual_key,0))!=int(owned.quantity)-1 or proposed.get(owned.inventory_key)!=initial_inventory.get(owned.inventory_key):return ERR_INVALID_DATA
-		if int(overrides.get("gold",gold))!=host.gold:return ERR_INVALID_DATA
+		var expected_gold: int=_expected_gold()
+		if expected_gold<0 or not (overrides.get("gold",gold) is int) or int(overrides.get("gold",gold))!=expected_gold:return ERR_INVALID_DATA
 		var proposed_instances: Variant=overrides.get("item_instances",initial_instances)
 		if not proposed_instances is Dictionary:return ERR_INVALID_DATA
 		var added: Dictionary={}
@@ -90,6 +106,7 @@ class View extends Node:
 		var source_step: Dictionary=CONSUMPTION.stage(host,[{"physical_id":str(prepared.physical_id),"quantity":int(prepared.quantity),"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-int(prepared.quantity),"quest_reward_receipt":chosen.quest_reward_receipt.duplicate(true)}],D.DATA_SHA)
 		if not source_step.get("ok",false):return ERR_INVALID_DATA
 		var payload: Dictionary=source_step.overrides.duplicate(true)
+		if overrides.has("gold"):payload["gold"]=expected_gold
 		for id: String in added:payload.item_instances[id]=added[id]
 		var keys: Dictionary={}
 		for key: String in initial_inventory:keys[key]=true
@@ -132,6 +149,7 @@ class View extends Node:
 				return error
 			if not host.equipment_collections.accept_load(durable):host.quest_service.save_blocked=true;uncertain=true;return error
 		host.inventory=payload.inventory;host.item_instances=payload.item_instances
+		if payload.has("gold"):host.gold=int(payload.gold)
 		if payload.has("active_item_buffs"):host.active_item_buffs=payload.active_item_buffs
 		if payload.has("item_use_cooldowns"):host.item_use_cooldowns=payload.item_use_cooldowns
 		if payload.has("hp"):host.hp=int(payload.hp)

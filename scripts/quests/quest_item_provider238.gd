@@ -31,6 +31,19 @@ func commit_held_save(world: Node,payload: Dictionary) -> Error:
 	_held_save_candidate.clear()
 	return result
 
+func _scalar_bag(spec: Dictionary) -> bool:
+	if spec.get("kind")!="guaranteed_bag" or spec.get("rewards",[]).is_empty():return false
+	for reward: Dictionary in spec.rewards:
+		var id: int=int(reward.get("item_class_id",0))
+		var definition: Dictionary=D.definition_id(str(id))
+		var record: Dictionary=definition.get("native_record",{})
+		if int(reward.get("entity_type_id",-1))!=1 or OWN.positive(reward.get("amount"))==0 or int(reward.get("bless_raw",0)) not in [1,2,3] or record.is_empty() or definition.get("original_item",{}).get("TestItem",true) or D.equipment(record):return false
+		# These outputs require their physical supply owner. Do not publish a
+		# name-only wallet count and claim the next material consumer is bound.
+		if id in preload("res://scripts/cards/native_awakening_supply.gd").IDS:return false
+		if reward.get("enchant")!=null and reward.get("enchant")!=0:return false
+	return true
+
 class Candidate extends Node:
 	var inventory: Dictionary = {}
 	var item_instances: Dictionary = {}
@@ -85,9 +98,13 @@ func configure(world: Node) -> void:
 			if definition.get("original_item",{}).is_empty() or definition.original_item!=reward.get("source_item") or definition.original_item.get("TestItem",true):continue
 			var record: Dictionary=USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
 			var spec: Dictionary=record.get("source_use_spec",{})
-			if spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","source_mp_dice"]:continue
+			if spec.get("activation_status")!="unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):continue
 			definitions[id]=definition
 			_register(world,definition.native_record,1)
+			if spec.get("kind")=="guaranteed_bag":
+				for output: Dictionary in spec.rewards:
+					var child: Dictionary=D.definition_id(str(int(output.item_class_id)))
+					_register(world,child.native_record,int(output.bless_raw))
 	world._index_catalog_item_sources()
 	world._index_item_weights()
 	ready=not definitions.is_empty()
