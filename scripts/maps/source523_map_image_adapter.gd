@@ -84,6 +84,9 @@ func open_contract(path: String, expected_sha256: String) -> Dictionary:
 	return {"ok":true,"status":"source_map_contract_open","rendered":false}
 
 static func _field_context(field_map: Object, source_cell: Variant = null) -> Dictionary:
+	# Current mobile fields are RefCounted Object models. Their real metadata
+	# and definition are sufficient; a scene Node wrapper is neither required
+	# nor a substitute for this source identity.
 	if not is_instance_valid(field_map) or not field_map.get_meta("current523_source_field",false) is bool or not field_map.get_meta("current523_source_field",false):
 		return _failure("source_map_mobile_field_required")
 	var definition: Variant = field_map.get("definition")

@@ -343,16 +343,30 @@ static func _original_quest_item(record: Dictionary) -> bool:
 	return record.get("sourceId") == "m523:item:" + str(int(id)) and record.source_original_item.get("ID") == id
 
 static func _shop_item_class_id(record: Dictionary) -> int:
-	# Both existing shop installers explicitly declare this field as ItemClass.ID.
+	# Existing shop installers explicitly declare these fields as ItemClass.ID.
 	# Their host record does not become a native gameplay record for an image.
-	if record.get("source") not in ["twilight-shop523-consumable","twilight-shop523-ammo"]: return -1
+	if record.get("source") == "twilight-shop523-ticket":
+		var ticket_id: Variant = record.get("source_item_class_id")
+		var extension: Variant = record.get("source_ticket_extension_sha")
+		if record.get("source_snapshot") != "patch523" or not PACK._integer(ticket_id) or int(ticket_id) <= 0 or not extension is String or not PACK._sha_valid(extension): return -1
+		return int(ticket_id)
+	if record.get("source") not in ["twilight-shop523-consumable","twilight-shop523-ammo","twilight-shop523-restoration","twilight-shop523-wisdom","twilight-shop523-book"]: return -1
 	var id: Variant = record.get("source523_shop_item_id")
 	if not PACK._integer(id) or int(id) <= 0 or not record.get("source523_shop_use_origin") is String or record.source523_shop_use_origin.is_empty(): return -1
-	if record.source == "twilight-shop523-ammo" and record.get("source_item_class_id") != id: return -1
+	if record.source != "twilight-shop523-consumable" and record.get("source_item_class_id") != id: return -1
 	return int(id)
 
+static func _original_symbol_item(record: Dictionary) -> bool:
+	# symbol_source523.item_record preserves this exact supplier shape. Its
+	# original ItemClass row is required again by describe_item_class_row.
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("type") != "문양 재료": return false
+	var row: Variant = record.get("source_original_item")
+	var id: Variant = record.get("source_item_class_id")
+	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
+	return record.get("sourceId") == "m523:item:" + str(int(id)) and row.get("ID") == id and record.get("source_grade_id") == row.get("GradeID")
+
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _shop_item_class_id(record) > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _shop_item_class_id(record) > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -367,15 +381,16 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		shop_image["source_id"] = str(record.get("sourceId",""))
 		shop_image["source_record_snapshot"] = str(record.get("source_snapshot",""))
 		shop_image["source_record_kind"] = str(record.source)
-		shop_image.provenance["caller_item_identity_field"] = "source523_shop_item_id"
+		shop_image.provenance["caller_item_identity_field"] = "source_item_class_id" if record.source == "twilight-shop523-ticket" else "source523_shop_item_id"
 		return shop_image
 	var quest_record: bool = _original_quest_item(record)
-	if not recognized_item(record) and (_original_reward_item(record) or quest_record):
-		var original_row: Dictionary = record.source_original_item if quest_record else record.source_original
+	var symbol_record: bool = _original_symbol_item(record)
+	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record):
+		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
-		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
+		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
 		return supplied
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
 	if not recognized_item(record): return info

@@ -1941,11 +1941,16 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	var by_id: Dictionary = {}
 	var candidates: Array[Texture2D] = []
 	var candidate_paths: Array[String] = []
+	var source_candidate_records: Array = []
 	for raw: Variant in catalog:
 		if not raw is Dictionary:
 			continue
 		var record: Dictionary = raw as Dictionary
 		by_id[CARD_RULES.card_id(record)] = record
+		if SourceCardPresentation.native(record):
+			# Native reel images resolve from their original record identities.
+			source_candidate_records.append(record)
+			continue
 		var path: String = str(record.get("image_path",""))
 		if not path.is_empty():
 			candidate_paths.append(path)
@@ -1953,6 +1958,9 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	# shared the same order, so "모두 뒤집기" spun identical candidates in sync.
 	# Sample a random subset; each card shuffles its own copy in the stage.
 	candidate_paths.shuffle()
+	source_candidate_records.shuffle()
+	if source_candidate_records.size() > 16:
+		source_candidate_records.resize(16)
 	for path: String in candidate_paths:
 		if candidates.size() >= 16:
 			break
@@ -1972,7 +1980,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	if views.is_empty():
 		return
 	var stage: Control = _new_card_reveal_stage()
-	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
+	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
 func _refresh_card_controls() -> void:
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()

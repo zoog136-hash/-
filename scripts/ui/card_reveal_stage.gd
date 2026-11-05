@@ -6,6 +6,7 @@ signal finished
 const CARD = preload("res://scripts/ui/card_reveal_card.gd")
 const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 const BACKGROUND = preload("res://assets/card_reveal/authored_background.webp")
 const IMPACT = preload("res://assets/card_reveal/impact.wav")
@@ -72,7 +73,7 @@ func _ready() -> void:
 	if showcase_on_ready:
 		present_showcase()
 
-func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], card_category: String, is_fusion: bool = false, succeeded: bool = false) -> void:
+func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], card_category: String, is_fusion: bool = false, succeeded: bool = false, source_candidate_records: Array = []) -> void:
 	results = value.duplicate(true)
 	category = card_category
 	fusion = is_fusion
@@ -100,9 +101,15 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		board.add_child(card)
 		# Each card spins its own order, so revealing all at once never shows
 		# the same candidate sequence on every card.
-		var own_candidates: Array[Texture2D] = candidate_textures.duplicate()
-		own_candidates.shuffle()
-		card.configure(results[i],own_candidates,category)
+		if SourceCardPresentation.native(results[i]):
+			var own_source_candidates: Array = source_candidate_records.duplicate(true)
+			own_source_candidates.shuffle()
+			var no_legacy_candidates: Array[Texture2D] = []
+			card.configure(results[i],no_legacy_candidates,category,own_source_candidates)
+		else:
+			var own_candidates: Array[Texture2D] = candidate_textures.duplicate()
+			own_candidates.shuffle()
+			card.configure(results[i],own_candidates,category)
 		card.reveal_requested.connect(_reveal_card.bind(i))
 		cards.append(card)
 	duration = (6.8 if fusion else 8.0+CARD.DRAW_EXTRA_LIGHTNING_SECONDS)+CARD.CONFIRM_DELAY_SECONDS-CARD.LIGHTNING_EARLY_SECONDS

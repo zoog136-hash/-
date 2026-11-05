@@ -90,6 +90,7 @@ func configure(source_catalog: RefCounted, controller: Node = null) -> void:
 	side.add_child(quantity)
 	reward_step = OptionButton.new()
 	reward_step.name = "SourceShopRewardStep"
+	reward_step.expand_icon = true
 	reward_step.add_item("일일 무료 보상", 0)
 	for step: int in range(1,7): reward_step.add_item("%d단계 보상" % step, step)
 	reward_step.item_selected.connect(func(_value: int) -> void: _refresh_action())
@@ -130,7 +131,7 @@ func _build_entries() -> void:
 	if mode.selected == 4:
 		if runtime != null:
 			for order: Dictionary in runtime.orders():
-				entries.append({"id":int(order.id),"title":"주문 #%s · %s ×%d" % [order.id,str(order.get("display_name", "상품")),int(order.quantity)]})
+				entries.append({"id":int(order.id),"title":"주문 #%s · %s ×%d" % [order.id,str(order.get("display_name", "상품")),int(order.quantity)],"source_table":"source_shop_order","source_order":order})
 		_filter()
 		return
 	var table: String = ["MarketPurchase_Korean", "MerchantGoods", "Currency", "CumulativePurchase"][mode.selected]
@@ -196,7 +197,85 @@ func _entry_image(entry: Dictionary) -> Dictionary:
 			var id: Variant = row.get("ItemClassID")
 			if (id is int or id is float) and is_finite(float(id)) and float(id) == floor(float(id)) and float(id) > 0:
 				return IMAGES.describe_item_class(int(id))
+		"source_shop_order":
+			return _order_item_image(entry.get("source_order", {}), str(entry.id))
 	return {}
+
+func _typed_item_image(value: Variant) -> Dictionary:
+	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floor(float(value)) or float(value) < 0:
+		return IMAGES.describe_item_class(-1)
+	return IMAGES.describe_item_class(int(value))
+
+func _order_item_image(order: Dictionary, order_id: String = "") -> Dictionary:
+	# The order provider resolves unit 4 as ItemClass. A bundle never borrows
+	# one member's icon as its representative image.
+	var goods: Variant = order.get("goods")
+	if not goods is Array or goods.size() != 1 or not goods[0] is Dictionary: return {}
+	var token: Dictionary = goods[0]
+	if token.get("unit_id") != 4: return {}
+	var image: Dictionary = _typed_item_image(token.get("class_id"))
+	image["presentation_relation"] = {"namespace":"source_shop_order.goods","order_id":str(order.get("id", order_id)),"unit_id":4,"field":"class_id"}
+	return image
+
+func _missing_reward_image(reason: String, relation: Dictionary) -> Dictionary:
+	return {"route":"source523_images","status":"original_icon_not_installed","source_status":reason,"reason":reason,"texture":null,"provenance":{},"presentation_relation":relation,"actual_game_consumption_observed":false}
+
+func _cumulative_reward_image(event: Dictionary, step: int) -> Dictionary:
+	var reward_id: int = int(event.get("DailyRewardID", 0)) if step == 0 else 0
+	var relation: Dictionary = {"source_table":"CumulativePurchase","source_id":event.get("ID"),"source_field":"DailyRewardID"}
+	if step > 0:
+		var found: bool = false
+		for row: Dictionary in catalog.rows("CumulativePurchaseStep"):
+			if row.get("CumulativePurchaseID") != selected_id or row.get("Step") != step: continue
+			if found: return _missing_reward_image("ambiguous_cumulative_reward_step", relation)
+			found = true
+			reward_id = int(row.get("RewardID", 0))
+			relation = {"source_table":"CumulativePurchaseStep","source_id":row.get("ID"),"source_field":"RewardID"}
+		if not found: return _missing_reward_image("missing_cumulative_reward_step", relation)
+	relation["reward_id"] = reward_id
+	if reward_id == 0: return _missing_reward_image("zero_sentinel", relation)
+	var reward: Dictionary = catalog.record("Reward", reward_id)
+	if reward.is_empty(): return _missing_reward_image("missing_source_reward", relation)
+	var type: Dictionary = catalog.record("RewardType", int(reward.get("RewardTypeID", 0)))
+	if type.get("Name") != "Item": return _missing_reward_image("unsupported_reward_icon_role", relation)
+	# RewardClassID belongs to ItemClass only after the source RewardType join.
+	var image: Dictionary = _typed_item_image(reward.get("RewardClassID"))
+	relation["reward_field"] = "RewardClassID"
+	image["presentation_relation"] = relation
+	return image
+
+func _refresh_payout_images() -> void:
+	if purchase.has_meta("source523_payout_image"):
+		purchase.icon = null
+		for key: String in ["source523_payout_image", "source523_image", "source523_image_provenance", "source523_image_status"]:
+			if purchase.has_meta(key): purchase.remove_meta(key)
+	for index: int in range(reward_step.item_count): reward_step.set_item_icon(index, null)
+	if reward_step.has_meta("source523_reward_images"): reward_step.remove_meta("source523_reward_images")
+	if not IMAGES.selected() or selected_id < 0: return
+	var selected_image: Dictionary = {}
+	if mode.selected == 3:
+		var event: Dictionary = catalog.record("CumulativePurchase", selected_id)
+		if event.is_empty(): return
+		var images: Dictionary = {}
+		for index: int in range(reward_step.item_count):
+			var image: Dictionary = _cumulative_reward_image(event, reward_step.get_item_id(index))
+			reward_step.set_item_icon(index, image.get("texture") as Texture2D)
+			var step_evidence: Dictionary = image.duplicate(true)
+			step_evidence.erase("texture")
+			images[index] = step_evidence
+			if index == reward_step.selected: selected_image = image
+		reward_step.set_meta("source523_reward_images", images)
+	elif mode.selected == 4 and runtime != null:
+		selected_image = _order_item_image(runtime.state.orders.get(str(selected_id), {}), str(selected_id))
+	if selected_image.is_empty(): return
+	purchase.icon = selected_image.get("texture") as Texture2D
+	purchase.expand_icon = true
+	var action_evidence: Dictionary = selected_image.duplicate(true)
+	action_evidence.erase("texture")
+	purchase.set_meta("source523_payout_image", true)
+	purchase.set_meta("source523_image", action_evidence)
+	purchase.set_meta("source523_image_provenance", selected_image.get("provenance", {}).duplicate(true))
+	purchase.set_meta("source523_image_status", str(selected_image.get("source_status", selected_image.get("reason", ""))))
 
 func _item_name(id: int) -> String:
 	var item: Dictionary = catalog.record("ItemClass", id)
@@ -235,6 +314,7 @@ func _select(index: int) -> void:
 	_refresh_action()
 
 func _refresh_action() -> void:
+	_refresh_payout_images()
 	purchase.disabled = true
 	availability_label.text = ""
 	if runtime == null:

@@ -396,7 +396,7 @@ presenter, HUD registration and renderer; this lane does not recreate them.
 | Target | Required original input before further connection |
 | --- | --- |
 | Item CSB icons | Original caller repeat/trigger policy and required node bindings remain unconfirmed; received clips have a separately tagged host estimate; remaining scenes still need source inputs |
-| Map-screen images and buttons | Caller-declared current field/screen to original World/ImageInfo identity, original content root/SHA, existing mount, exact image/button node offsets and original map/area selection callbacks; terrain placement is a separate owner |
+| Map-screen images and buttons | UI267's published map caller and RefCounted-field correction, map owner's post-merge registration/input consumer, and their explicit private selection; see the map handoff below |
 | Mission and NPC images | Original content root/SHA, exact image node offsets, source-model asset roles and existing action callbacks |
 | Pass and attendance images | Original content root/SHA, exact image node offsets and caller-provided season/day/reward-row bindings and actions |
 | Emoticons | Original selection/display caller, exact node/asset association and original frame order, timing, repeat and start/stop contract |
@@ -421,10 +421,52 @@ The API and ownership boundary are recorded in
 
 The relationship document and its source manifest were transferred as an
 additive input ZIP to the existing private Drive folder. The 18 original ZIPs
-and source files remain unchanged. Connecting the current overview still needs
-the actual World selection, original target/rectangle and coordinate/input
-registration; the field overview is preserved while those inputs are absent.
-The new bridge is unexecuted and unverified.
+and source files remain unchanged. UI267 now publishes the original map target,
+explicit row selection and native image-pixel ABI at
+`44a3f960a8c185d1f2cdc9878dfa4b2e6147aa05`, with the actual RefCounted-field
+boundary corrected at `2c970ee1ea5a7a0009b14623447c7103f6633b0b`.
+The map owner's post-merge consumer at
+`d01758db57d46d2b7a57dafbbf6f4880daf8118e` owns registration, context, input,
+its explicitly labelled OWN coordinate policy and existing movement calls.
+Integration269 includes those five follow-up files at
+`b37e5b941d189351906a4a60e411ad1d07566aeb`. The image adapter accepts the
+actual field Object and returns the existing original image and source relation
+provenance; it adds no second HUD registration or movement implementation.
+Both owner code changes, their original private packs and explicit runtime
+selections must be integrated. This connection remains unexecuted and unverified.
+
+### Additional existing gameplay image calls
+
+Existing card fusion rows/material pictures, reveal candidates/results and
+option-awakening result pictures now use the shared current-source card
+presenter. The existing reveal caller forwards original candidate records through
+the stage to each picture instead of supplying unidentified old image paths.
+Current cards keep their declared portrait/list asset roles and source IDs;
+missing current artwork does not select the previous card pack. Existing result
+order, candidate shuffle/limit, frame timing and award/save behavior are preserved.
+
+The existing shared item presenter additionally accepts the restoration,
+wisdom, skill-book and ticket shop producers' explicit ItemClass declarations.
+The symbol-material producer retains its whole original ItemClass row for the
+same canonical-row presentation check. No native execution flag, missing snapshot
+or gameplay identity is manufactured for these display calls.
+
+Protection use/craft buttons use their actual ItemClass/ItemCraftOutputView
+output. Source-shop reward selectors and claim buttons join the declared
+cumulative reward through RewardType before treating RewardClassID as ItemClass.
+Single-item stored orders use their provider's explicit unit-4/class_id relation;
+bundles and other reward types receive no invented representative image.
+The existing skill-awakening candidate list consumes its complete source_spell
+row through the shared SpellClass IconID reader. A label-only awakening book
+does not gain a fabricated image control or action-button image role.
+Existing recovery/progression skill-setting selectors reuse the shared pinned
+host-skill-to-SpellClass IconID binding. Their numeric inputs and saved policy
+values are unchanged. ItemList and OptionButton hosts retain missing/unsupported
+CSB evidence where no original scene target is supplied.
+
+These are written caller connections, not observations of game consumption.
+No additional tests, execution, rendering, CI, source recount or quality audit
+was performed for these changes.
 
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
