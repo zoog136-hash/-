@@ -121,9 +121,29 @@ from item source IDs; an item cannot be rejected merely because it has no card
 registry entry. No missing card definition is made available by this distinction.
 All these follow-up changes remain unexecuted/unverified.
 
-The later public271 `3c7ea50e121004c30c5ff640000d85487f2d92fb` drop input is retained
-for the next narrow integration. Its `definition_id` explicitly supplies no
-current native DTO. The remaining generic item DTO/effect projection and the
-old schema3 source-item save-marker boundary must be joined without weakening
-save preservation or reactivating historical sidecars as final input. That
-pending reader is not claimed installed or working by this checkpoint.
+## Current original native-item owner follow-up
+
+The public271 drop/ItemData contracts at `3c7ea50e` and `da81a471` now feed
+`current523_native_item_projection` and the existing supplier, actual kill/floor,
+quest provider, equipment-stat and single-save paths. The old automatic
+full/partial monster BIN selection is removed from final catalog availability.
+The schema4 item marker names the original archive/projection separately from
+historical schema3/BIN proofs; old catalog history and first-transition backup
+are preserved without bulk owned-item conversion. Current ItemEnchantBonus rows
+also supply the existing enhancement-stat consumer through the same published
+compiler mapping, retaining original blessing, level and application limits.
+See `CURRENT523_NATIVE_ITEM_OWNER.md` for the exact partial effect/quantity scope.
+
+The published271 acquisition inputs at `e9508589` are reused by the existing
+`patch523_slot_data -> native_card_acquisition/native_relic_reward_box ->
+option_awakening_runtime` calls. Their actual selected owned-item/quest quantity,
+recipe/time, output/card and single-save owners remain authoritative. Nemesis
+recipe 258482 still requires exact coin3252 x3,000,000 and produces ticket370562
+x1 with its original single 1,000,000 probability. Relic box346921 still returns
+the two ordered IsGiven outputs; Probability0 is not treated as random weight.
+Absent/ambiguous/excluded input holds its branch. No source-quest ancestry,
+free acquisition or original UI scene is fabricated.
+
+All of this follow-up is implementation only, unexecuted/unverified. It does
+not reduce the historical 88 remaining item classes or establish full native
+effect, current gameplay, bank installation or pixel delivery completion.

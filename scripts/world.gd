@@ -378,6 +378,7 @@ var source_item_regen_elapsed: float = 0.0
 var source_item_backup_checked_path: String = ""
 var source_deadline_check_elapsed: float = 0.0
 var source_item_save_blocked: bool = false
+var source_item_catalog_history: Array=[]
 var equipment_effects_dirty: bool = true
 var equipment_effects: Dictionary = {}
 var equipment_effect_rebuilds: int = 0
@@ -3194,6 +3195,7 @@ func _update_target_hud() -> void:
 	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	if not monster.loot_source_identity.is_empty():monster.loot_source_identity["source_clock_offset_minutes"]=int(ui_preferences.get("patch523_source_clock_offset_minutes",540))
 	# Pooled actors can signal the same death more than once, but each life owns
 	# one reward transaction. Claim before callbacks/passives can re-enter.
 	if not is_instance_valid(monster) or not monster.dead: return
@@ -5849,7 +5851,12 @@ func _prepare_patch523_item_save_backup() -> Error:
 		var existing: Variant = JSON.parse_string(bytes.get_string_from_utf8())
 		if not existing is Dictionary: return ERR_FILE_CORRUPT
 		var marker: Variant = existing.get("source_item_catalog",{})
-		if not marker is Dictionary or int(marker.get("schema",0)) != 3:
+		var actual_input: Dictionary=LOOT_DROP.PATCH523_DROPS.pack_identity()
+		if actual_input.get("schema")==4 and marker!=actual_input:
+			var fingerprint: String=preload("res://scripts/lineagem_pack_install.gd").sha(bytes)
+			var backup: String=target+".pre-current523-original-input-"+fingerprint
+			if (not FileAccess.file_exists(backup) and DirAccess.copy_absolute(target,backup)!=OK) or FileAccess.get_sha256(backup)!=fingerprint:return ERR_CANT_CREATE
+		if not marker is Dictionary or int(marker.get("schema",0)) not in [3,4]:
 			var fingerprint: String = preload("res://scripts/lineagem_pack_install.gd").sha(bytes)
 			var backup: String = target+".pre-itemclass523-"+fingerprint
 			if (not FileAccess.file_exists(backup) and DirAccess.copy_absolute(target,backup) != OK) or FileAccess.get_sha256(backup) != fingerprint: return ERR_CANT_CREATE
@@ -6005,6 +6012,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"gold": gold,
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
+		"source_item_catalog_history":source_item_catalog_history.duplicate(true),
 		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
 		"quest_state": quest_service.export_state(),
 		"monsterbook523": monsterbook523.export_state(),
@@ -6256,18 +6264,22 @@ func _load_game(quiet: bool) -> void:
 			return
 	var saved_items: Dictionary = data.get("source_item_catalog",{}) if data.get("source_item_catalog",{}) is Dictionary else {}
 	var current_items: Dictionary = LOOT_DROP.PATCH523_DROPS.pack_identity()
-	if int(saved_items.get("schema",0)) == 3 and current_items.is_empty():
-		source_item_save_blocked = true
-		hud.show_message("전체 원본 아이템 팩이 없어 기존 저장을 보존합니다")
+	var old_history: Variant=data.get("source_item_catalog_history",[])
+	if not old_history is Array:
+		source_item_save_blocked=true;hud.show_message("기존 원본 정의 출처 이력 형식 확인 필요 · 저장 보존");return
+	source_item_catalog_history=old_history.duplicate(true)
+	if not saved_items.is_empty() and saved_items!=current_items and not saved_items in source_item_catalog_history:source_item_catalog_history.append(saved_items.duplicate(true))
+	if int(saved_items.get("schema",0)) in [3,4] and current_items.is_empty():
+		source_item_save_blocked=true
+		hud.show_message("새 원본523 아이템 입력이 없어 기존 저장을 보존합니다")
 		return
-	if not current_items.is_empty() and int(saved_items.get("schema",0)) != 3:
-		var backup: String = save_path()+".pre-itemclass523-"+loaded_save_sha
-		if (not FileAccess.file_exists(backup) and DirAccess.copy_absolute(save_path(),backup) != OK) or FileAccess.get_sha256(backup) != loaded_save_sha:
-			source_item_save_blocked = true
-			hud.show_message("원본 아이템 이전 백업 실패 · 기존 저장 보존")
-			return
-	source_item_save_blocked = false
-	if not current_items.is_empty(): source_item_backup_checked_path = save_path()
+	if int(saved_items.get("schema",0))==4 and (saved_items.get("kind")!="current523_original_definition_projection" or saved_items.get("source_definition_archive",{}).get("source_sha256")!=preload("res://scripts/resources/current523_definition_rows.gd").SOURCE_SHA):
+		source_item_save_blocked=true;hud.show_message("기존 새 원문 아이템 출처 확인 필요 · 저장 보존");return
+	if not current_items.is_empty() and _prepare_patch523_item_save_backup()!=OK:
+		source_item_save_blocked=true
+		hud.show_message("원본 아이템 입력 전환 백업 실패 · 기존 저장 보존")
+		return
+	source_item_save_blocked=false
 	var source_shop_error: String = source_shop.check_load(data)
 	if source_shop_error.is_empty(): source_shop_error = source_shop.prepare_load(data, save_path(), loaded_save_sha)
 	if not source_shop_error.is_empty():

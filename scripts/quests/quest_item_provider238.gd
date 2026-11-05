@@ -7,6 +7,7 @@ const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const HELD_USE = preload("res://scripts/quests/quest_held_use238.gd")
 const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
 const CHOICE = preload("res://scripts/quests/quest_choice523.gd")
+const ORIGINAL=preload("res://scripts/resources/current523_definition_rows.gd")
 const PIN = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
 const SKILL_BOOKS=preload("res://scripts/quests/quest_skillbooks523.gd")
 const REGEN=preload("res://scripts/quests/quest_regen523.gd")
@@ -58,12 +59,16 @@ class Candidate extends Node:
 	var lookup: Callable
 	func _catalog_item_from_source_id(id: String) -> Dictionary: return lookup.call(id)
 
+func current_input_available() -> bool:
+	var marker: Dictionary=D.pack_identity()
+	return marker.get("schema")==4 and marker.get("kind")=="current523_original_definition_projection" and marker.get("source_definition_archive")==ORIGINAL.identity() and marker.get("sha256")==ORIGINAL.SOURCE_SHA
+
 func configure(world: Node) -> void:
 	owner=weakref(world)
 	definitions.clear();ready=false
 	skill_books.configure_arguments()
 	equipment_owner.configure(world)
-	if world.quest_service.source.quests.is_empty() or D.pack_identity().get("sha256")!=PIN: return
+	if world.quest_service.source.quests.is_empty() or not current_input_available(): return
 	for id: int in REVIEWED_IDS:
 		var definition: Dictionary = D.definition_id(str(id))
 		var spec: Dictionary = definition.get("native_record",{}).get("source_use_spec",{})
@@ -145,7 +150,7 @@ func resolve(reward: Dictionary) -> Dictionary:
 	if not D.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty(): return {}
 	_register(world,definition.native_record,bless)
 	if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {}
-	return {"record":record,"pack_sha256":PIN}
+	return {"record":record,"pack_sha256":str(D.pack_identity().get("sha256","")),"source_input_marker":D.pack_identity()}
 
 func handles(record: Dictionary) -> bool:
 	return ready and record.get("source_m_native_item",false) and definitions.has(int(record.get("source_item_class_id",0)))
@@ -156,7 +161,7 @@ func retains_issued_reference(world: Node, item_key: String) -> bool:
 	for quest_id: String in world.quest_service.item_grants:
 		if world.quest_service.claimed.get(quest_id)!=true:continue
 		for receipt: Dictionary in world.quest_service.item_grants[quest_id]:
-			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256")==PIN and REVIEWED_IDS.has(int(receipt.item_class_id)):return true
+			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256") in [PIN,ORIGINAL.SOURCE_SHA] and REVIEWED_IDS.has(int(receipt.item_class_id)):return true
 	return false
 
 func try_use_inventory(world: Node, item_key: String) -> bool:
@@ -262,7 +267,7 @@ func try_use_held(world: Node, id: String) -> bool:
 	return bool(result.handled)
 
 func stage(world: Node, base: Dictionary, grants: Array, receipts: Array) -> Dictionary:
-	if not ready or D.pack_identity().get("sha256")!=PIN: return {"ok":false,"error":"검증된 아이템 소비 팩 미설치"}
+	if not ready or not current_input_available(): return {"ok":false,"error":"검증된 아이템 소비 팩 미설치"}
 	var candidate := Candidate.new()
 	candidate.inventory=base.inventory;candidate.item_instances=base.item_instances;candidate.gold=int(base.gold)
 	candidate.lookup=Callable(world,"_catalog_item_from_source_id")

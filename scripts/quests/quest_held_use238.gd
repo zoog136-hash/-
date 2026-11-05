@@ -127,7 +127,7 @@ class View extends Node:
 				added[id]["quest_source_input_physical_id"]=str(prepared.physical_id)
 			if added.size()!=int(choice.amount):return ERR_INVALID_DATA
 		var chosen: Dictionary=host.item_instances[str(prepared.physical_id)]
-		var source_step: Dictionary=CONSUMPTION.stage(host,[{"physical_id":str(prepared.physical_id),"quantity":int(prepared.quantity),"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-int(prepared.quantity),"quest_reward_receipt":chosen.quest_reward_receipt.duplicate(true)}],D.DATA_SHA)
+		var source_step: Dictionary=CONSUMPTION.stage(host,[{"physical_id":str(prepared.physical_id),"quantity":int(prepared.quantity),"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-int(prepared.quantity),"quest_reward_receipt":chosen.quest_reward_receipt.duplicate(true)}],str(D.pack_identity().get("sha256","")))
 		if not source_step.get("ok",false):return ERR_INVALID_DATA
 		var payload: Dictionary=source_step.overrides.duplicate(true)
 		if overrides.has("gold"):payload["gold"]=expected_gold

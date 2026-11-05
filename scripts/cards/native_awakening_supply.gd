@@ -34,7 +34,7 @@ static func _issued_v1_exact(value: Dictionary,id: int) -> bool:
 	# Historical issuance proof only. Current source is mandatory and its full
 	# row must agree; old files never supply final definitions or use effects.
 	var current: Dictionary=definition(id).get("original_item",{})
-	var issued: Dictionary=D.definition_id(str(id))
+	var issued: Dictionary=D.issued_definition_for_reference(str(id))
 	if current.is_empty() or issued.get("original_item")!=current:return false
 	var expected: Dictionary=D.variant_item(issued.get("native_record",{}),1)
 	if expected.is_empty() or value.get("source_m_native_item")!=true:return false
@@ -163,7 +163,8 @@ static func install_current_definitions(catalog: Dictionary) -> Dictionary:
 			var previous: Dictionary=records[int(positions[0])]
 			if exact(previous,id):continue
 			var same_original: bool=previous.get("source_item")==current.source_item and previous.get("source_definition_archive")==ORIGINAL.identity() and previous.get("source_snapshot")=="patch523" and previous.get("source")=="lineagem_patch523"
-			if not same_original and not _issued_v1_exact(previous,id):pending.append({"item_class_id":id,"reason":"unverified_registered_prototype_preserved"});continue
+			var current_projection: bool=previous.get("source_projection")=="current523_original_typed_game_dto_v1" and previous.get("source_original_item")==current.source_item and previous.get("source_definition_archive")==ORIGINAL.identity()
+			if not same_original and not current_projection and not _issued_v1_exact(previous,id):pending.append({"item_class_id":id,"reason":"unverified_registered_prototype_preserved"});continue
 			# Preserve the former definition for provenance only; no owned record,
 			# inventory key, quantity or receipt is rewritten here.
 			if not catalog.has("_preserved_awakening_supply_definitions"):catalog["_preserved_awakening_supply_definitions"]={}

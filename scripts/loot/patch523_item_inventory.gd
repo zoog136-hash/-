@@ -26,10 +26,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if not typed.get("ok",false):return {"ok":false,"error":"새 원문 각성 공급 영수증 생성 실패"}
 			instances=typed.item_instances;inventory[name_value]=int(previous_amount)+int(amount_value)
 			continue
-		var summary: Dictionary = D.data().get("item_definitions",{}).get(id,{})
-		if int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
-			var exact_definition: Dictionary=D.definition_id(id)
-			if not exact_definition.is_empty():summary=exact_definition
+		var summary: Dictionary = D.definition_id(id)
 		if int(id) <= 0 or float(grant.get("item_class_id",-1)) != int(id) or summary.is_empty() or summary.get("original_item",{}).get("TestItem",true): return {"ok":false,"error":"정상 원본 아이템 ID 확인 실패"}
 		var amount: int = int(grant.get("amount",0))
 		var bless: int = int(grant.get("bless_raw",0))
@@ -37,9 +34,11 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 		if amount <= 0 or amount > 9007199254740991 or bless not in [1,2,3] or enchant < 0 or float(grant.get("amount",0)) != amount or float(grant.get("bless_raw",0)) != bless or float(grant.get("enchant",-1)) != enchant: return {"ok":false,"error":"원본 지급 수량·축복·강화 명세 확인 실패"}
 		var base: Dictionary = summary.get("native_record",{})
 		var record: Dictionary = D.variant_item(base,bless)
+		if record.is_empty():return {"ok":false,"error":"새 원문 아이템 DTO 참조 미해결 · 기존 소유 보존"}
 		if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {"ok":false,"error":"원본 공급 카탈로그 미등록"}
 		if enchant > 0 and not D.equipment(record): return {"ok":false,"error":"비장비 원본 강화값 미지원"}
 		var wallet: String = D.currency_identity_name(record)
+		if not D.equipment(record) and wallet!="아데나":return {"ok":false,"error":"새 원문 비장비 물리 수량·소비 소유자 연결 대기 · 입력과 보상 보존"}
 		var key: String = wallet if not wallet.is_empty() else str(record.name)
 		if wallet == "아데나":
 			if gold < 0 or gold > MAX_EXACT_JSON_INTEGER-amount: return {"ok":false,"error":"원본 지급 후 재화 정수 범위 초과 · 기존 보유 보존"}

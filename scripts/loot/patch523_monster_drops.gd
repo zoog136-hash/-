@@ -5,6 +5,8 @@ const DATA_SHA = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d
 const PREVIOUS_FULL_DATA_SHA = "b812b3dc4b8e79dad50fedeb3ee279113a6dcad24d8a51f9fb1868ce98fb3750"
 const PHASE4_DATA_SHA = "45e21a871a09f4ccf2898896adc8cfb1b766890646911d20b5a5b3c12f33fa45"
 const FULL_ITEMS = preload("res://scripts/loot/patch523_item_catalog.gd")
+const CURRENT_DTO=preload("res://scripts/loot/current523_native_item_projection.gd")
+const CURRENT_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const PHASE3_DATA_SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
 const PREVIOUS_DATA_SHA = "1d0756f1adc4de14e003af99fa487789f27d954a98e7c7e6ed7152d147164b6f"
 const LEGACY_DATA_SHA = "4455cbbd2e6dc5392ccb2f142d99124ad2b5966e2dbca6d5fd3bb1f7b0cde0a3"
@@ -19,6 +21,14 @@ static var _root: String = ""
 static var _active_sha: String = ""
 static var _sources: Dictionary = {}
 static var diagnostics: Dictionary = {}
+static var _current_documents: Dictionary = {}
+static var _current_source_identity: Dictionary = {}
+static var _current_drop_positions: Dictionary = {}
+static var _current_reference_data: Dictionary = {}
+static var _current_input_problem: String = ""
+
+static func _source_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and absf(float(value)) <= 9007199254740991.0
 
 static func installed_path(fingerprint: String = DATA_SHA) -> String:
 	return STORE.path_join(fingerprint).path_join(FILE_NAME)
@@ -33,7 +43,9 @@ static func decode(packed: PackedByteArray) -> Dictionary:
 	if int(value.schema) < 3 and raw.size() > 32*1024*1024: return {}
 	return value
 
-static func data() -> Dictionary:
+static func _legacy_data_for_reference() -> Dictionary:
+	# Decoder/installation/reference compatibility only. Final data() and
+	# candidates() never select this former packed numeric input or fall back.
 	if _checked: return _data
 	_checked = true
 	var paths: Array[String] = []
@@ -66,11 +78,387 @@ static func data() -> Dictionary:
 		if index < explicit_count or rank == 0: return _data
 	return _data
 
-static func identity(record: Dictionary) -> Dictionary:
+static func data() -> Dictionary:
+	var source_identity: Dictionary = CURRENT_SOURCE.identity()
+	if source_identity.is_empty():
+		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_source_identity = {}
+		diagnostics = {"status":"current523_drop_input_unavailable","reason":CURRENT_SOURCE.problem()}
+		return {}
+	if source_identity != _current_source_identity:
+		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_source_identity = source_identity.duplicate(true)
+	if _current_reference_data.is_empty():
+		_current_reference_data = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
+			"input_kind":"current523_original_reference_rows","source_input_identity":source_identity,
+			"npcs":{},"drops":{},"bindings":{},"bless_codes":{},"item_definitions":{},
+			"source_item_references":{},"source_tables":{},"native_item_ids":[],"native_reward_item_ids":[],
+			"full_item_catalog":false,"source_exclusion_evidence":[],"unavailable_source_definitions":[],
+			"original_numeric_projection_complete":false,"native_record_status":"missing_current_native_record_projection",
+			"reference_only":true,"can_activate":false,
+			"remaining_contract":"Existing item supplier owns current native_record/effects/ownership; historical sidecars are excluded from final input"}
+		for table: String in ["NpcClass","NpcCategory","NpcItemDropView","ItemClass","ItemBlessCode"]:
+			_current_reference_data.source_tables[table] = CURRENT_SOURCE.table_metadata(table)
+	return _current_reference_data
+
+static func identity(record: Dictionary, admitted_registry: RefCounted = null) -> Dictionary:
 	var original: Dictionary = record.get("source_m_original", {})
 	var id: int = int(record.get("source_m_npc_id", -1))
 	if record.get("source_m_snapshot", "") not in ["base508", "patch523"] or id <= 0 or int(original.get("ID", -2)) != id: return {}
-	return {"kind":KIND, "source_npc_id":id, "source_sprite_id":int(original.get("Sprite", -1)), "source_name":str(original.get("Name", ""))}
+	# Preserve native routing when current input is unavailable, so this source
+	# actor cannot silently acquire a legacy/global loot pool instead.
+	var result: Dictionary = {"kind":KIND,"source_npc_id":id,"source_sprite_id":int(original.get("Sprite",-1)),
+		"source_name":str(original.get("Name","")),"current_source_admitted":false,
+		"input_problem":"current523_admitted_npc_registry_unavailable"}
+	var source_identity: Dictionary = CURRENT_SOURCE.identity()
+	if source_identity.is_empty():
+		result.input_problem = "current523_original_unavailable:"+CURRENT_SOURCE.problem()
+		return result
+	if admitted_registry == null or not admitted_registry.has_method("row"): return result
+	var admitted: Variant = admitted_registry.get("admitted_source_identities")
+	if not admitted is Dictionary or not admitted.get(str(id)) is Dictionary: return result
+	var proof: Dictionary = admitted[str(id)]
+	if admitted_registry.get("source_available") != true or admitted_registry.get("source_identity") != source_identity or proof.get("npc_class_id") != id or proof.get("source_archive_sha256") != source_identity.get("source_sha256"):
+		return result
+	var selected: Variant = admitted_registry.call("row","NpcClass",id)
+	var current: Dictionary = CURRENT_SOURCE.row("NpcClass",id)
+	if not selected is Dictionary or current.is_empty() or selected != current:
+		result.input_problem = "current523_admitted_npc_source_mismatch"
+		return result
+	for field: String in ["ID","Sprite","DescId"]:
+		if not _source_integer(current.get(field)) or not _source_integer(original.get(field)) or current[field] != original[field]:
+			result.input_problem = "current523_actor_identity_mismatch:"+field
+			return result
+	if current.get("Name") != original.get("Name") or record.get("source_m_definition_snapshot") != "patch523" or record.get("source_m_definition_archive_sha256") != source_identity.get("source_sha256"):
+		result.input_problem = "current523_actor_definition_not_admitted"
+		return result
+	result.current_source_admitted = true
+	result.input_problem = ""
+	result["source_desc_id"] = current.DescId
+	result["source_input_identity"] = source_identity
+	result["source_admission"] = proof.duplicate(true)
+	return result
+
+static func _current_item_reference(item_id: int) -> Dictionary:
+	# ItemData retains a legacy helper preload of this module. Defer loading
+	# until this actual read path; a static preload here would form a cycle.
+	var document: Dictionary = data()
+	if document.is_empty(): return {}
+	var id: String = str(item_id)
+	if document.source_item_references.has(id): return document.source_item_references[id]
+	var path: String = "res://scripts/resources/current523_item_data.gd"
+	if not ResourceLoader.exists(path): return {}
+	var reader: Resource = load(path)
+	if reader == null or not reader.has_method("describe"): return {}
+	var detail: Variant = reader.call("describe",item_id,false)
+	if not detail is Dictionary: return {}
+	document.source_item_references[id] = detail
+	document.item_definitions[id] = _current_raw_definition(detail)
+	return detail
+
+static func _current_raw_definition(reference: Dictionary) -> Dictionary:
+	if reference.is_empty() or reference.get("source") != CURRENT_SOURCE.identity(): return {}
+	var original: Dictionary = reference.get("item_class",{})
+	if original.is_empty(): return {}
+	# Same public compiler relationships, without inventing its game/effect DTO.
+	var bonuses: Array = []; var equips: Array = []; var classes: Array = []
+	for effect: Dictionary in reference.get("bonuses",[]):
+		var row: Dictionary = effect.get("link",{}).duplicate(true)
+		row["bonus"] = effect.get("bonus",{})
+		row["bonus_type"] = effect.get("type",{})
+		row["unit"] = effect.get("unit",{})
+		bonuses.append(row)
+	for effect: Dictionary in reference.get("equip_slots",[]):
+		var row: Dictionary = effect.get("link",{}).duplicate(true)
+		row["equip_slot"] = effect.get("slot",{})
+		equips.append(row)
+	for effect: Dictionary in reference.get("class_limits",[]):
+		var row: Dictionary = effect.get("link",{}).duplicate(true)
+		row["class"] = effect.get("class",{})
+		classes.append(row)
+	var definition: Dictionary={"original_item":original,"category":reference.get("category",{}),"grade":reference.get("grade",{}),
+		"item_bonus":bonuses,"equip_rows":equips,"class_rows":classes,"native_record":{},"existing_binding":{},
+		"source_invoke_options":[],"source_reference":reference,"source_typed_references":reference.get("typed_references",[]),
+		"source_input_identity":reference.source,"excluded":reference.get("excluded",false),
+		"declared_exclusion":reference.get("declared_exclusion",{}),"reference_only":true,"can_activate":false,
+		"native_record_status":"missing_current_native_record_projection",
+		"unresolved_source_reference":"missing_current_native_record_projection"}
+
+	var projected: Dictionary=CURRENT_DTO.record(definition)
+	if not projected.is_empty():
+		definition.native_record=projected
+		definition.native_record_status="current_original_typed_game_dto"
+		definition.unresolved_source_reference=""
+	return definition
+
+static func _current_source_positions() -> bool:
+	if not _current_drop_positions.is_empty(): return true
+	var metadata: Dictionary = CURRENT_SOURCE.table_metadata("NpcItemDropView")
+	var rows: Array[Dictionary] = CURRENT_SOURCE.rows("NpcItemDropView")
+	if not _source_integer(metadata.get("row_count")) or int(metadata.row_count) != rows.size():
+		_current_input_problem = "current523_NpcItemDropView_rows_or_provenance_unavailable"
+		return false
+	var positions: Dictionary = {}
+	for index: int in range(rows.size()):
+		var row: Dictionary = rows[index]
+		if not _source_integer(row.get("ID")) or positions.has(str(int(row.ID))):
+			_current_input_problem = "invalid_or_duplicate_original_drop_row_ID"
+			return false
+		positions[str(int(row.ID))] = index+1
+	_current_drop_positions = positions
+	return true
+
+static func _current_source_document(value: Dictionary) -> Dictionary:
+	_current_input_problem = ""
+	var source_identity: Dictionary = CURRENT_SOURCE.identity()
+	if source_identity.is_empty():
+		_current_input_problem = "current523_original_unavailable:"+CURRENT_SOURCE.problem()
+		return {}
+	if value.get("source_input_identity") != source_identity or value.get("current_source_admitted") != true:
+		_current_input_problem = str(value.get("input_problem","current523_admitted_npc_source_unavailable"))
+		if _current_input_problem.is_empty(): _current_input_problem = "current523_admitted_npc_source_mismatch"
+		return {}
+	var reference_document: Dictionary = data()
+	if reference_document.is_empty(): return {}
+	var npc_id: int = int(value.get("source_npc_id",-1))
+	var id: String = str(npc_id)
+	var npc: Dictionary = CURRENT_SOURCE.row("NpcClass",npc_id)
+	if npc.is_empty() or npc.get("Sprite") != value.get("source_sprite_id") or npc.get("DescId") != value.get("source_desc_id") or npc.get("Name") != value.get("source_name"):
+		_current_input_problem = "current523_admitted_npc_identity_mismatch"
+		return {}
+	if not CURRENT_SOURCE.declared_exclusion("NpcClass",npc).is_empty() or npc.get("TestNPC") != false or not _source_integer(npc.get("Category")):
+		_current_input_problem = "current523_npc_excluded_or_category_unavailable"
+		return {}
+	var category: Dictionary = CURRENT_SOURCE.row("NpcCategory",int(npc.Category))
+	if category.get("IsAttackable") != true or not category.get("IsShowDropInfo") is bool:
+		_current_input_problem = "current523_npc_drop_category_unavailable"
+		return {}
+	if _current_documents.has(id): return _current_documents[id]
+	if not _current_source_positions(): return {}
+	var document: Dictionary = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
+		"input_kind":"current523_original_membership_with_exact_host_bindings","source_input_identity":source_identity,
+		"npcs":{},"drops":{},"bindings":{},"item_definitions":{},"bless_codes":{},
+		"source_tables":{},"source_item_references":{},"raw_drop_rows":[],"unavailable_source_definitions":[],
+		"source_exclusion_evidence":[],"unresolved_item_ids":{},"host_binding_problems":{},"binding_provenance":{},"native_item_ids":[],
+		"remaining_contract":"New native_record/game item projection and typed reward activation belong to their existing supplier/effect owner; host DTOs are not full original numeric projections"}
+	var description: Dictionary = CURRENT_SOURCE.row("DescData_Korean",int(npc.DescId))
+	document.npcs[id] = {"sprite_id":npc.Sprite,"source_name":npc.Name,"display_name":str(description.get("Description","")),"test_npc":npc.TestNPC,
+		"category_id":npc.Category,"show_drop_info":category.IsShowDropInfo,"attackable":category.IsAttackable}
+	var active: Array = []
+	for raw: Dictionary in CURRENT_SOURCE.related("NpcItemDropView","NpcClassID",npc_id):
+		document.raw_drop_rows.append(raw)
+		var valid: bool = true
+		for field: String in ["ID","NpcClassID","ItemClassID","Bless","RequiredQuestID"]:
+			if not _source_integer(raw.get(field)) or raw[field] < 0: valid = false
+		if not valid or raw.get("NpcClassID") != npc_id or not _current_drop_positions.has(str(int(raw.get("ID",-1)))):
+			document.unavailable_source_definitions.append({"table":"NpcItemDropView","row":raw,"reason":"invalid_original_drop_reference"})
+			continue
+		var exclusion: Dictionary = CURRENT_SOURCE.declared_exclusion("NpcItemDropView",raw)
+		if not exclusion.is_empty():
+			document.source_exclusion_evidence.append({"table":"NpcItemDropView","row":raw,"evidence":exclusion})
+			continue
+		var item_id: String = str(int(raw.ItemClassID))
+		if not document.source_item_references.has(item_id):
+			var reference: Dictionary = _current_item_reference(int(raw.ItemClassID))
+			document.source_item_references[item_id] = reference
+			document.item_definitions[item_id] = _current_raw_definition(reference)
+		var detail: Dictionary = document.source_item_references[item_id]
+		var item: Dictionary = detail.get("item_class",{})
+		if item.get("ID") != raw.ItemClassID or detail.get("source") != source_identity:
+			document.unresolved_item_ids[item_id] = "current523_item_reference_unavailable"
+			continue
+		if detail.get("excluded",false) or typeof(item.get("TestItem")) != TYPE_BOOL:
+			document.unresolved_item_ids[item_id] = "source_item_excluded_or_test_declaration_unavailable"
+			if detail.has("declared_exclusion"): document.source_exclusion_evidence.append({"table":"ItemClass","row":item,"evidence":detail.declared_exclusion})
+			continue
+		var bless: Dictionary = CURRENT_SOURCE.row("ItemBlessCode",int(raw.Bless))
+		if bless.is_empty() or not bless.get("Name") is String or not CURRENT_SOURCE.declared_exclusion("ItemBlessCode",bless).is_empty():
+			document.unavailable_source_definitions.append({"table":"NpcItemDropView","row":raw,"reason":"original_bless_reference_unavailable"})
+			continue
+		document.bless_codes[str(int(raw.Bless))] = str(bless.Name).to_lower()
+		var row: Dictionary = raw.duplicate(true)
+		row["source_row_1based"] = _current_drop_positions[str(int(raw.ID))]
+		active.append(row)
+	document.drops[id] = active
+	for table: String in ["NpcClass","NpcCategory","NpcItemDropView","ItemClass","ItemBlessCode","DescData_Korean"]:
+		document.source_tables[table] = CURRENT_SOURCE.table_metadata(table)
+	# Only actually admitted NPC memberships enter this read registry. The
+	# existing executor still consumes the separately resolved exact host DTOs.
+	reference_document.npcs[id] = document.npcs[id]
+	reference_document.drops[id] = active.duplicate(true)
+	for bless: String in document.bless_codes: reference_document.bless_codes[bless] = document.bless_codes[bless]
+	reference_document.source_exclusion_evidence.append_array(document.source_exclusion_evidence)
+	reference_document.unavailable_source_definitions.append_array(document.unavailable_source_definitions)
+	_current_documents[id] = document
+	return document
+
+static func _current_missing_reference_evidence(value: Variant, evidence: Array, path: String = "item_data") -> void:
+	# These are diagnostics emitted by the existing raw readers, not inferred
+	# item names or unsupported-effect/dummy classifications.
+	if value is Dictionary:
+		var blockers: Variant = value.get("blockers",[])
+		if blockers is Array:
+			for blocker: Variant in blockers:
+				if not blocker is String: continue
+				if blocker.begins_with("missing_source_reference:") or blocker.begins_with("ambiguous_source_reference:") or blocker.begins_with("invalid_source_reference:") or blocker in ["source_item_unavailable","source_bonus_unavailable","source_spell_unavailable","source_buff_unavailable","source_test_declaration_missing"]:
+					evidence.append({"path":path,"blocker":blocker})
+		var unresolved: Variant = value.get("unresolved",[])
+		if unresolved is Array:
+			for entry: Variant in unresolved:
+				if entry is Dictionary and entry.get("reason") in ["source_row_missing_or_ambiguous","source_reference_is_not_an_integer"]:
+					evidence.append({"path":path,"reference":entry})
+		for key: Variant in value:
+			if value[key] is Dictionary or value[key] is Array:
+				_current_missing_reference_evidence(value[key],evidence,path+"."+str(key))
+	elif value is Array:
+		for index: int in range(value.size()):
+			_current_missing_reference_evidence(value[index],evidence,path+"["+str(index)+"]")
+
+static func _current_declared_child_evidence(value: Variant, evidence: Array, path: String = "item_data") -> void:
+	if value is Dictionary:
+		if value.get("excluded") == true:
+			evidence.append({"path":path,"reason":"source_child_declared_exclusion","reference":value})
+		for key: Variant in value:
+			if value[key] is Dictionary or value[key] is Array:
+				_current_declared_child_evidence(value[key],evidence,path+"."+str(key))
+	elif value is Array:
+		for index: int in range(value.size()):
+			_current_declared_child_evidence(value[index],evidence,path+"["+str(index)+"]")
+
+static func _current_host_condition_admission(detail: Dictionary) -> Dictionary:
+	var evidence: Array = []
+	_current_missing_reference_evidence(detail,evidence)
+	var source: Dictionary = detail.get("item_class",{})
+	if not source.has("ServiceRegionCode") or not source.ServiceRegionCode is String:
+		evidence.append({"table":"ItemClass","field":"ServiceRegionCode","row":source,"reason":"source_field_missing_or_invalid"})
+	if not evidence.is_empty(): return {"reason":"missing_source_reference","evidence":evidence,"item_data_ok":detail.get("ok",false)}
+	_current_declared_child_evidence(detail,evidence)
+	if not str(source.ServiceRegionCode).is_empty():
+		evidence.append({"table":"ItemClass","field":"ServiceRegionCode","value":source.ServiceRegionCode,"row":source,
+			"reason":"source_service_region_context_not_represented_by_exact_host_DTO"})
+	for effect: Dictionary in detail.get("bonuses",[]):
+		if effect.get("type",{}).get("Name") == "DeleteTime":
+			# Do not interpret zero, units, target IDs, dates or current expiry.
+			evidence.append({"table":"ItemBonus","reference":effect,"reason":"source_item_lifetime_not_represented_by_exact_host_DTO"})
+	for reference: Dictionary in detail.get("typed_references",[]):
+		var card: Dictionary = reference.get("card",{})
+		if card.is_empty(): continue
+		# Public fixed-card/book compiler preserves these exact conditions.
+		# The bounded Inven DTO has no corresponding checked use contract.
+		for field: String in ["StartDateTimeID","EndDateTimeID","ServerLimitSetID"]:
+			if not _source_integer(card.get(field)):
+				return {"reason":"missing_source_reference","item_data_ok":detail.get("ok",false),
+					"evidence":[{"table":"BuffCard","field":field,"row":card,"reason":"source_field_missing_or_invalid"}]}
+			if int(card[field]) != 0:
+				evidence.append({"table":"BuffCard","field":field,"value":card[field],"row":card,
+					"item_reference":reference,"reason":"source_card_date_or_server_contract_not_represented_by_exact_host_DTO"})
+	if not evidence.is_empty(): return {"reason":"unsupported_source_item_condition","evidence":evidence,"item_data_ok":detail.get("ok",false)}
+	return {}
+
+static func _current_host_bindings(original: Dictionary, catalog: Dictionary) -> Dictionary:
+	# Same bounded public compiler binding: exact Inven ID/URL, one current
+	# inventory name, and one of the two declared localized descriptors.
+	# A former native sidecar DTO/alias is never accepted as this host source.
+	var document: Dictionary = original.duplicate(true)
+	document["source_condition_evidence"] = {}
+	var unique: Variant = catalog.get("patch523_by_name")
+	if not unique is Dictionary:
+		for id: String in document.source_item_references:
+			if document.unresolved_item_ids.has(id): continue
+			document.unresolved_item_ids[id] = "missing_current_native_record_projection"
+			document.host_binding_problems[id] = "current_unique_catalog_index_missing"
+		return document
+	var by_id: Dictionary = {}
+	for item: Variant in unique.values():
+		if not item is Dictionary or item.get("source") != "inven" or item.get("source_m_native_item",false) or item.get("source_legacy_catalog_alias",false): continue
+		var source_id: String = str(item.get("sourceId",""))
+		if not source_id.is_valid_int() or int(source_id) <= 0 or source_id != str(int(source_id)): continue
+		if not by_id.has(source_id): by_id[source_id] = []
+		by_id[source_id].append(item)
+	for id: String in document.source_item_references:
+		var detail: Dictionary = document.source_item_references[id]
+		var source: Dictionary = detail.get("item_class",{})
+		# Keep explicit Test/dummy exclusion distinct from missing references
+		# and unsupported conditions; no unsupported effect becomes a dummy.
+		if detail.get("excluded",false): continue
+		var admission: Dictionary = _current_host_condition_admission(detail)
+		if not admission.is_empty():
+			document.unresolved_item_ids[id] = admission.reason
+			document.host_binding_problems[id] = admission.reason
+			document.source_condition_evidence[id] = admission
+			document.unavailable_source_definitions.append({"table":"ItemClass","row":source,
+				"reason":admission.reason,"condition_evidence":admission.evidence})
+			continue
+		if document.unresolved_item_ids.has(id): continue
+		var candidates: Array = by_id.get(id,[])
+		var reason: String = "no_unique_exact_native_ID_in_existing_catalog"
+		if candidates.size() == 1:
+			var item: Dictionary = candidates[0]
+			if item.get("sourceUrl") != "https://lineagem.inven.co.kr/db/item/"+id:
+				reason = "exact_host_source_URL_ID_mismatch"
+			else:
+				var labels: Array[String] = []
+				for field: String in ["DescID","IdentifiedDescID"]:
+					if not _source_integer(source.get(field)): continue
+					var text: Dictionary = CURRENT_SOURCE.row("DescData_Korean",int(source[field]))
+					if text.get("Description") is String: labels.append(str(text.Description).strip_edges())
+				var name_value: String = str(item.get("name",""))
+				if not name_value.is_empty() and name_value.strip_edges() in labels and unique.get(name_value,{}) == item:
+					var binding: Dictionary = {}
+					for field: String in ["name","source","sourceId","sourceUrl","slot","type","grade"]: binding[field] = item.get(field,"")
+					document.bindings[id] = binding
+					document.binding_provenance[id] = {"membership":"current523_original_NpcItemDropView",
+						"item_reference":"current523_original_ItemData","game_dto":"existing_public_Inven_host_catalog",
+						"original_numeric_projection_complete":false,"new_native_record_supplied":false,
+						"typed_reward_activation":"existing_owner_required","source_input_identity":document.source_input_identity}
+					continue
+				reason = "exact_host_localized_descriptor_mismatch"
+		document.unresolved_item_ids[id] = "missing_current_native_record_projection"
+		document.host_binding_problems[id] = reason
+	return document
+
+static func _current_native_bindings(document: Dictionary,catalog: Dictionary,context: Dictionary) -> Dictionary:
+	if document.is_empty():return {}
+	var index: Variant=catalog.get("patch523_by_name",{})
+	if not index is Dictionary:return document
+	var by_source: Dictionary={}
+	for value: Variant in index.values():
+		if not value is Dictionary:continue
+		var key: String=str(value.get("sourceId",""))
+		if not by_source.has(key):by_source[key]=[]
+		by_source[key].append(value)
+	var supply: Script=load("res://scripts/cards/native_awakening_supply.gd")
+	for id: String in document.source_item_references:
+		if document.bindings.has(id):continue
+		var detail: Dictionary=document.source_item_references[id]
+		var current: Dictionary=definition_id(id).get("native_record",{})
+		if current.is_empty() or detail.get("excluded",false):continue
+		var condition: Dictionary=_current_host_condition_admission(detail)
+		if not condition.is_empty():
+			var unresolved: bool=false
+			for evidence: Dictionary in condition.get("evidence",[]):
+				if evidence.get("reason")!="source_item_lifetime_not_represented_by_exact_host_DTO":unresolved=true
+			if unresolved:document.unresolved_item_ids[id]=condition.reason;continue
+		var choices: Array=by_source.get("m523:item:"+id,[])
+		if choices.size()!=1:continue
+		var item: Dictionary=choices[0]
+		var typed: bool=supply!=null and supply.call("exact",item,int(id))
+		if not typed and not matches(item,current):continue
+		if not current.get("source_condition_pending",[]).is_empty() or current.get("source_delete_time_unresolved",false):document.unresolved_item_ids[id]="current_native_lifecycle_or_context_pending";continue
+		var dated: bool=current.has("source_start_time_raw") or current.has("source_end_time_raw") or current.has("source_delete_time_raw")
+		if dated:
+			var clock: Variant=context.get("source_clock_offset_minutes")
+			if not _source_integer(clock) or clock < -720 or clock > 840:document.unresolved_item_ids[id]="current_source_drop_clock_context_required";continue
+			if not deadline_problem(current,int(clock)).is_empty():document.unresolved_item_ids[id]="current_source_item_outside_existing_time_policy";continue
+		# Existing physical equipment, exact typed supplies and the actual Adena
+		# wallet have owners. Other new stacks require their quantity/use owner.
+		if not equipment(item) and currency_identity_name(item)!="아데나" and not typed:
+			document.unresolved_item_ids[id]="current_native_stack_consumer_pending";continue
+		var link: Dictionary={}
+		for field: String in ["name","source","sourceId","sourceUrl","slot","type","grade"]:link[field]=item.get(field,"")
+		document.bindings[id]=link;document.unresolved_item_ids.erase(id);document.host_binding_problems.erase(id)
+		document.binding_provenance[id]={"membership":"current523_original_NpcItemDropView","item_reference":"current523_original_ItemData","game_dto":"current523_original_typed_projection","source_input_identity":CURRENT_SOURCE.identity(),"effect_completion":false,"native_quantity_or_rate_inferred":false}
+	return document
 
 static func native(value: Dictionary) -> bool:
 	return value.get("kind") == KIND and int(value.get("source_npc_id", -1)) > 0
@@ -140,6 +528,7 @@ static func expected_variant(original: Dictionary, saved: Dictionary) -> Diction
 	return legacy_stone_variant(original,int(saved.get("source_bless_raw",1))) if saved.get("source_legacy_stack_variant",false) else variant_item(original,int(saved.get("source_bless_raw",1)))
 
 static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dictionary:
+	if document.get("input_kind")=="current523_original_reference_rows":return CURRENT_DTO.register(load("res://scripts/loot/patch523_monster_drops.gd"),catalog,document)
 	if document.get("full_item_catalog",false): return FULL_ITEMS.register(document,catalog)
 	var records: Array = catalog.get("아이템", [])
 	var by_source: Dictionary = {}
@@ -168,7 +557,6 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 		if not native_ids.has(key): native_ids.append(key)
 	for key: String in native_ids:
 		var definition: Dictionary = document.get("item_definitions", {}).get(key, {})
-		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(key)).is_empty() or not preload("res://scripts/quests/source_dummy523.gd").item_evidence(definition.get("original_item",{})).is_empty():continue
 		var original: Dictionary = definition.get("native_record", {})
 		if original.is_empty(): continue
 		var states: Array = [1]
@@ -222,6 +610,7 @@ static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> S
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
 	if not item.get("source_m_native_item", false): return ""
 	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
+	if not item.get("source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
 	var deadline: String = deadline_problem(item,timezone_minutes)
 	if not deadline.is_empty(): return deadline
 	var classes: Array = item.get("source_class_names", [])
@@ -278,27 +667,40 @@ static func hp_use_problem(item: Dictionary, concealed: bool = false, timezone_m
 	return ""
 
 static func definition_id(item_id: String) -> Dictionary:
-	return FULL_ITEMS.definition(data(),_root,item_id)
+	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
+	var document: Dictionary = data()
+	if document.is_empty(): return {}
+	if not document.item_definitions.has(item_id): _current_item_reference(int(item_id))
+	return document.item_definitions.get(item_id,{})
 
 static func pack_identity() -> Dictionary:
-	return {"schema":3,"source_snapshot":"patch523","sha256":_active_sha} if data().get("full_item_catalog",false) else {}
+	var identity: Dictionary=CURRENT_SOURCE.identity()
+	if identity.is_empty():return {}
+	return {"schema":4,"source_snapshot":"patch523","kind":"current523_original_definition_projection","sha256":identity.source_sha256,"source_definition_archive":identity,"projection":"current523_original_typed_game_dto_v1","registered_count":int(data().get("current_native_registered_count",0)),"full_native_effects_complete":false}
+
+static func issued_definition_for_reference(item_id: String) -> Dictionary:
+	var historical: Dictionary=_legacy_data_for_reference()
+	return FULL_ITEMS.definition(historical,_root,item_id) if not historical.is_empty() else {}
+
+static func current_owned_record(saved: Dictionary) -> Dictionary:
+	if saved.get("source_m_native_item")!=true:return saved
+	var id: String=str(int(saved.get("source_item_class_id",0)))
+	var original: Dictionary=definition_id(id).get("native_record",{})
+	if original.is_empty() or saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523":return {}
+	var current: Dictionary=expected_variant(original,saved)
+	if not matches(current,saved):return {}
+	for key: String in ["instance_id","enhance_level","is_engraved","bless_state","source_m_drop_proof","source_m_reward_proof","source_m_item_id"]:
+		if saved.has(key):current[key]=saved[key].duplicate(true) if saved[key] is Dictionary or saved[key] is Array else saved[key]
+	return current
 
 static func native_enchant_stats(item: Dictionary, level: int) -> Dictionary:
-	if not item.get("source_m_native_item",false) or not data().get("full_item_catalog",false): return {}
-	var source: Dictionary = data().get("item_definitions",{}).get(str(int(item.get("source_item_class_id",-1))),{}).get("native_record",{})
-	if source.is_empty() or not matches(item,expected_variant(source,item)): return {}
-	var bless: int = int(item.get("source_bless_raw",1))
-	if item.get("bless_state") in ["blessed","축복"]: bless = 2
-	elif item.get("bless_state") in ["cursed","저주"]: bless = 3
-	var result: Dictionary = {}
-	for group: Variant in source.get("source_enchant_group_ids",[]):
-		for row: Array in data().get("source_enchant_groups",{}).get(str(int(group)),{}).get(str(maxi(0,level)),[]):
-			if int(row[2]) not in [0,bless] or int(row[5]) != 0 or int(row[6]) != 0: continue
-			var kind: Dictionary = data().get("source_enchant_bonus_types",{}).get(str(int(row[3])),{})
-			var key: String = str(kind.get("stat",""))
-			if key.is_empty(): continue
-			result[key] = float(result.get(key,0.0))+float(row[4])/float(kind.get("divisor",1))
-	return result
+	if not item.get("source_m_native_item",false):return {}
+	var source: Dictionary=definition_id(str(int(item.get("source_item_class_id",-1)))).get("native_record",{})
+	if source.is_empty() or not matches(item,expected_variant(source,item)):return {}
+	var bless: int=int(item.get("source_bless_raw",1))
+	if item.get("bless_state") in ["blessed","축복"]:bless=2
+	elif item.get("bless_state") in ["cursed","저주"]:bless=3
+	return CURRENT_DTO.enchant_stats(source,maxi(0,level),bless)
 
 static func migrate_legacy_record(saved: Dictionary) -> Dictionary:
 	if not data().get("full_item_catalog",false) or saved.get("source") != "inven": return {}
@@ -362,20 +764,16 @@ static func currency_identity_name(item: Dictionary) -> String:
 static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary) -> Dictionary:
 	var id: String = str(int(value.get("source_npc_id", -1)))
 	var npc: Dictionary = document.get("npcs", {}).get(id, {})
-	var report: Dictionary = {"npc_id":id, "missing_item_bindings":0, "quest_rows_blocked":0, "test_item_rows_blocked":0,"source_dummy_rows_blocked":0, "unsupported_bless_rows":0, "unsupported_currency_rows":0, "duplicate_rows_ignored":0}
+	var report: Dictionary = {"npc_id":id, "missing_item_bindings":0, "quest_rows_blocked":0, "test_item_rows_blocked":0, "unsupported_bless_rows":0, "unsupported_currency_rows":0, "duplicate_rows_ignored":0}
 	diagnostics = report
 	if not native(value) or npc.is_empty() or int(npc.get("sprite_id", -1)) != int(value.get("source_sprite_id", -2)) or npc.get("source_name") != value.get("source_name"): return {}
 	if not npc.get("attackable", false) or npc.get("test_npc", true): return {}
-	if not preload("res://scripts/quests/source_dummy523.gd").evidence("NpcClass",{"ID":int(id),"Name":npc.get("source_name","")}).is_empty():
-		report["source_dummy_npc_excluded"]=true
-		return {}
 	var groups: Dictionary = {}
 	for row: Dictionary in document.get("drops", {}).get(id, []):
 		# Keep quest-conditioned rows until the separate quest owner supplies
 		# exact source quest state; never make the requirement unconditional.
 		if int(row.RequiredQuestID) != 0: report.quest_rows_blocked += 1; continue
 		var item_id: String = str(int(row.ItemClassID))
-		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(item_id)).is_empty():report.source_dummy_rows_blocked+=1;continue
 		if document.get("item_definitions", {}).get(item_id, {}).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
 		var link: Dictionary = document.get("bindings", {}).get(item_id, {})
 		var item: Dictionary = catalog.get("patch523_by_name", catalog.get("by_name", {})).get(str(link.get("name", "")), {})
@@ -396,11 +794,25 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 	return groups
 
 static func candidates(value: Dictionary, catalog: Dictionary) -> Dictionary:
-	var document: Dictionary = data()
+	# data() and this actual membership read both use current originals. The
+	# preserved legacy decoder/installer is never a final input or fallback.
+	var original: Dictionary = _current_source_document(value)
+	var document: Dictionary = _current_native_bindings(_current_host_bindings(original,catalog),catalog,value) if not original.is_empty() else {}
 	if document.is_empty():
-		diagnostics = {"status":"patch523_drop_pack_missing_or_invalid"}
+		diagnostics = {"status":"current523_drop_input_unavailable","reason":_current_input_problem if not _current_input_problem.is_empty() else "current523_original_membership_unavailable","source_problem":CURRENT_SOURCE.problem()}
 		return {}
-	return resolve(document, value, catalog)
+	var groups: Dictionary = resolve(document,value,catalog)
+	diagnostics["input_kind"] = document.input_kind
+	diagnostics["source_input_identity"] = document.source_input_identity.duplicate(true)
+	diagnostics["binding_provenance"] = document.binding_provenance.duplicate(true)
+	diagnostics["unresolved_item_ids"] = document.unresolved_item_ids.duplicate(true)
+	diagnostics["host_binding_problems"] = document.host_binding_problems.duplicate(true)
+	diagnostics["source_condition_evidence"] = document.source_condition_evidence.duplicate(true)
+	diagnostics["source_item_references"] = document.source_item_references.duplicate(true)
+	diagnostics["unavailable_source_definitions"] = document.unavailable_source_definitions.duplicate(true)
+	diagnostics["source_exclusion_evidence"] = document.source_exclusion_evidence.duplicate(true)
+	diagnostics["original_numeric_projection_complete"] = false
+	return groups
 
 static func pick(groups: Dictionary, kind: String, grade: String, rng: RandomNumberGenerator) -> Dictionary:
 	var choices: Array = []
@@ -591,3 +1003,4 @@ static func install_zip(path: String) -> Dictionary:
 	_data = {}
 	_sources = {}
 	return {"ok":true, "path":target, "sha256":fingerprint}
+

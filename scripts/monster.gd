@@ -244,17 +244,25 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		return _reject_patch523_spawn(str(admission.reason))
 	source_record = admission.record
 	remove_meta("patch523_spawn_hold")
-	if source_record.has("source_m_asset_manifest_path"):
-		var native_view := SOURCE_M_VIEW.new()
-		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
-			record = source_record
-			source_m_view = native_view
-			add_child(source_m_view)
-		else:
-			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
-			if admission.applied: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	if source_record.get("source_m_current523_final")==true:
+		var view_path: String="res://scripts/monsters/current523_source_bank_view.gd"
+		if not ResourceLoader.exists(view_path):return _reject_patch523_spawn("Sprite272 current523_source_bank_view not integrated")
+		var view_script: Script=load(view_path)
+		if not view_script is Script:return _reject_patch523_spawn("current523_source_view_contract_missing")
+		var current_view: Variant=view_script.new()
+		if not current_view is SOURCE_M_VIEW or not current_view.has_method("configure_admitted"):
+			if current_view is Object:current_view.free()
+			return _reject_patch523_spawn("current523_source_view_type_contract_mismatch")
+		if not current_view.configure_admitted(source_record,admission):
+			var detail: Variant=current_view.get("selection_status")
+			set_meta("current523_source_bank_selection",detail.duplicate(true) if detail is Dictionary else {})
+			current_view.free();return _reject_patch523_spawn("current523_original_pixels_or_action_binding_unavailable")
+		record=source_record;source_m_view=current_view;add_child(source_m_view)
+		set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+	elif preload("res://scripts/monsters/patch523_spawn_policy.gd").marked(source_record):
+		return _reject_patch523_spawn("current523_source_roster_required; old_view_is_not_a_final_fallback")
 	elif admission.applied:
-		return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+		return _reject_patch523_spawn("current523_original_pixels_not_ready")
 	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
@@ -277,7 +285,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.BASE508_DROPS.identity(record)
 	if loot_source_identity.is_empty(): loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
-	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record,definition_service.catalog if definition_service!=null else null)
 	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1

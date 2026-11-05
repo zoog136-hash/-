@@ -69,7 +69,11 @@ static func canonical(record: Dictionary) -> Dictionary:
 	# Item identity is owned by its supplier, never the card registry. Retain
 	# these records without relaxing the missing-card-definition hold below.
 	var source_key: String=str(record.get("sourceId",""))
-	if source_key.begins_with("m508:item:") or source_key.begins_with("m523:item:"):return record
+	if source_key.begins_with("m508:item:") or source_key.begins_with("m523:item:"):
+		if record.get("source_m_native_item")==true:
+			var owner: Resource=load("res://scripts/loot/patch523_monster_drops.gd")
+			return owner.call("current_owned_record",record) if owner!=null else {}
+		return record
 	cards()
 	var current: Dictionary = _by_id.get(str(record.get("sourceId", "")),{})
 	if current.is_empty(): current_card_problem = "현재523 원문에서 해당 저장 카드 정체를 읽을 수 없습니다. 기존 저장은 보존합니다."

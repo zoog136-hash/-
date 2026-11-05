@@ -67,7 +67,10 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	if not problem.is_empty():return _fail(problem)
 	if source.item.get("name")!=pending.get("item_name"):return _fail("바닥 원본 소지 키 불일치")
 	var pack: Dictionary=D.pack_identity()
-	if pack.get("source_snapshot")!="patch523" or pack.get("schema")!=3:return _fail("원본 습득 팩 정체 확인 필요")
+	if pack.get("source_snapshot")!="patch523" or pack.get("schema") not in [3,4]:return _fail("원본 습득 입력 정체 확인 필요")
+	if pack.get("schema")==4 and pack.get("source_definition_archive")!=preload("res://scripts/resources/current523_definition_rows.gd").identity():return _fail("새 원문 정의 출처 불일치 · 바닥 보존")
+	var deadline: String=D.deadline_problem(source.item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+	if not deadline.is_empty():return _fail(deadline)
 	var id: String=str(pending.get("id",""))
 	var state: Dictionary=world.consumable_service.export_state()
 	var receipts: Variant=state.get(FIELD,{})
@@ -100,6 +103,8 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var source_rows: Array=[]
 	for row: Dictionary in source.proof.source_rows:source_rows.append(row.get("ID"))
 	var receipt: Dictionary={"schema":1,"source_snapshot":"patch523","source_pack_sha256":str(pack.sha256),"source_npc_id":int(source.proof.source_npc_id),"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key,"physical_ids":added,"source_row_ids":source_rows,"drop_proof_sha256":JSON.stringify(source.proof,"",true,true).sha256_text()}
+	if pack.get("schema")==4:
+		receipt.schema=2;receipt["source_input_marker"]=pack.duplicate(true);receipt["source_pack_sha256_scope"]="current_original_archive_not_legacy_bin"
 	receipts=receipts.duplicate(true);receipts[id]=receipt;state[FIELD]=receipts
 	var floor: Array=world._ground_drops_snapshot()
 	var after: Array=[];var found: bool=false
