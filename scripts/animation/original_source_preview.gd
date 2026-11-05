@@ -57,6 +57,7 @@ var _attack_completed: bool = false
 var last_source_frame: int = -1
 
 func current523_source_required(key: String) -> bool:
+	if key == "class:current523": return true
 	# Saved m508/m523 keys are stable identities, not permission to consume old
 	# media. Final native card presentation requires the new original input.
 	var consumer: String = key.get_slice(":",0)
@@ -79,7 +80,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 		return true
 	# A pending body must not discard the independent spell/item/invoke input.
 	_reference_request_context = context.duplicate(true)
-	var selected: Dictionary = CURRENT523_BANK.select_card(key, context)
+	var selected: Dictionary = CURRENT523_BANK.select_class(context) if key == "class:current523" else CURRENT523_BANK.select_card(key, context)
 	if source_only:
 		selected["source_only"] = true
 		selected["legacy_media_fallback_allowed"] = false
