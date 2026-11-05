@@ -224,3 +224,29 @@ are unchanged. Their selected UI manifest pin is v7's pin when v7 is selected;
 that package pin is not evidence of the unknown CSB-root-to-anchor relation.
 The exact original target positions and narrow pending relation are recorded
 in [the native icon scene ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md).
+
+## Combined v8: dedicated original auto-combat text
+
+This composition preserves all v7 main/map/inventory/quickslot inputs and adds
+only the actual original Hud_AutoMessage Text124 dependency scope. Its source
+text follows existing player.auto_enabled, with no new timer/clip-loop policy.
+
+- Drive file ID: `1OaX2KvnUNZox-O6o2hfU1Mn_WeLhhQJT`.
+- Filename: `TWILIGHT_current523_main_game_original_UI_combined_v8_20261105.zip`.
+- ZIP size: **11,980,497 bytes**.
+- ZIP SHA256: `42fd0af7c72353ca4d6ecd3cf7168a3f50135d11ef3bbf115e3031c01bfb87da`.
+- Manifest pin: `ddd99fe88b49e8ec5d13ceb24a3303d730d2475cfdd785be9f8dd56bd1c6b8d6`.
+- Relative destination: `source-ui/current523-main-game-original-ui-v8`.
+- 38 originals /21 scene trees /20 explicit partial scopes; production
+  blockers0, STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER.
+
+Select this one extracted root plus its pin through the same CLI/env pair.
+No previous version must be installed alongside it; all prior packs/candidates,
+user cfg and saves remain preserved. The native icon component/hash/node stays
+unchanged; its selected package pin is this v8 pin when v8 is selected.
+
+Private upload and filename/size metadata readback succeeded. Consumer receipt,
+installation, actual game use and original AutoMessage animation remain
+unconfirmed. The dedicated component/caller contract is in
+[the auto message ABI](ORIGINAL_UI_MAIN_AUTO_MESSAGE_ABI.md). No test, game run,
+render, audit or CI was started. This is not whole560 completion.

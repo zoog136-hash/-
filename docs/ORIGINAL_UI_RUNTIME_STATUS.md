@@ -598,3 +598,11 @@ CSB root/identity/playback; only the root-origin-to-slot-anchor relation and
 unknown original repeat remain pending, rather than either entire contract.
 No new tests, game execution, render, audit or CI were run. Frozen dependency/
 inspection counts and unknown whole560/game-consumption numerators are unchanged.
+
+The held MainScene14564 -> Hud_AutoMessage root is now connected to the
+existing player's actual auto_enabled boolean. Root76 visibility follows that
+state; Text124 stays the exact original '자동 전투 중' at its original position,
+alpha/color/font. This dedicated auto message is not used as a generic
+show_message/text/2.6-second notification. Fx_Loop5..95 remains original metadata;
+its repeat/autoplay policy is undeclared and no play/seek/loop is inferred.
+This is unexecuted code; no render/game-consumption count advances.

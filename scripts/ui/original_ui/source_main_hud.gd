@@ -16,6 +16,7 @@ const QuickslotView=preload("res://scripts/ui/original_ui/source_main_quickslot_
 const QuickslotImages=preload("res://scripts/ui/original_ui/source_main_quickslot_images.gd")
 const PrimaryStats=preload("res://scripts/ui/original_ui/source_main_primary_stats.gd")
 const ButtonRouter=preload("res://scripts/ui/original_ui/source_button_router.gd")
+const AutoMessage=preload("res://scripts/ui/original_ui/source_main_auto_message_bindings.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -80,6 +81,10 @@ var _primary_stats_result: Dictionary={}
 var _primary_stats_model: Dictionary={}
 var _primary_stats_attempted: bool=false
 var _native_buttons: RefCounted
+var _auto_message: RefCounted
+var _auto_message_scene: Node2D
+var _auto_message_result: Dictionary={}
+var _auto_message_model: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -123,7 +128,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			candidate.closed.connect(func() -> void: inventory_closed.emit())
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null)
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -174,6 +179,7 @@ func _process(_delta: float) -> void:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
 	if _icons_refresh_pending:refresh_quickslots()
+	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
@@ -488,7 +494,9 @@ func _mount_core_controls() -> void:
 func _mount_main_project(offset: int, contract: Dictionary) -> Dictionary:
 	if not contract.get("ok",false):return contract
 	var scene=Scene.new()
-	var configured: Dictionary=scene.configure_project(_pack,MAIN,offset,contract.bindings,contract.source_node_offsets)
+	var scope: Array[int]=[]
+	scope.assign(contract.source_node_offsets)
+	var configured: Dictionary=scene.configure_project(_pack,MAIN,offset,contract.bindings,scope)
 	if not configured.get("ok",false):
 		scene.free()
 		return configured
@@ -496,8 +504,37 @@ func _mount_main_project(offset: int, contract: Dictionary) -> Dictionary:
 	return {"ok":true,"scene":scene,"source":contract.member,"selected_source_offsets":contract.source_node_offsets.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func refresh_combat() -> Dictionary:
+	_refresh_auto_message()
 	if _combat==null or not is_instance_valid(_combat_scene):return {"ok":true,"source_combat_presented":false}
-	return _combat.refresh_presented(_combat_scene)
+	var result: Dictionary=_combat.refresh_presented(_combat_scene)
+	result["auto_message"]=_auto_message_result.duplicate(true)
+	return result
+
+func _refresh_auto_message() -> Dictionary:
+	if not _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):return {"ok":true,"source_auto_message_in_pack":false}
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_auto_message_host_unavailable")
+	if _auto_message==null:
+		var candidate=AutoMessage.new()
+		_auto_message_result=candidate.configure(_pack,hud)
+		if not _auto_message_result.get("ok",false):return _auto_message_result
+		_auto_message=candidate
+	var model: Dictionary=_auto_message.snapshot()
+	if not model.get("ok",false):
+		if is_instance_valid(_auto_message_scene):_auto_message_scene.hide()
+		_auto_message_result=model
+		return model
+	if is_instance_valid(_auto_message_scene):
+		if model!=_auto_message_model or not _auto_message_result.get("ok",false):_auto_message_result=_auto_message.refresh(_auto_message_scene)
+		_auto_message_scene.visible=_auto_message_result.get("ok",false)
+		_auto_message_model=model
+		return _auto_message_result.duplicate(true)
+	_auto_message_result=_mount_main_project(AutoMessage.MAIN_PROJECT,_auto_message.build())
+	if _auto_message_result.get("ok",false):
+		_auto_message_scene=_auto_message_result.scene
+		_auto_message_result.erase("scene")
+		_auto_message_model=model
+	return _auto_message_result.duplicate(true)
 
 func refresh_menu_state() -> Dictionary:
 	if _menu==null or not is_instance_valid(_menu_scene):return {"ok":true,"source_menu_presented":false}
