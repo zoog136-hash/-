@@ -62,6 +62,17 @@ static func archive_path() -> String:
 	# input. Callers must retain their own parsing guards and never save this path.
 	return _archive_path if _open() else ""
 
+static func declared_exclusion(table: String, row: Dictionary, scope: String = "record") -> Dictionary:
+	# PR269 owns the original declarations. Its optional SPI never substitutes
+	# local names, ID lists or heuristics when that owner module is unavailable.
+	var path: String = "res://scripts/quests/source_dummy523.gd"
+	if not ResourceLoader.exists(path): return {}
+	var owner: Resource = load(path)
+	if owner == null or not owner.has_method("evidence"): return {}
+	var evidence: Variant = owner.call("evidence",table,row.duplicate(true),scope)
+	if not evidence is Dictionary or evidence.get("source_sha256") != SOURCE_SHA or evidence.get("excluded_from_connection") != true: return {}
+	return evidence.duplicate(true)
+
 static func table_metadata(table: String) -> Dictionary:
 	# Original index provenance for existing derived input formats. These are
 	# input metadata, not a new table-use observation or a generated-pack hash.

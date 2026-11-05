@@ -401,6 +401,18 @@ Exclusions never count as gameplay consumption and do not reduce the fixed
 1,065-table or 457,729,872-byte JSON denominator. The exclusion guards, like the
 other changes after cad2dbff, are unverified.
 
+The later integration checkpoint269
+`c9864b79182cefdb03199c9c9cdde9d620b2b2d6` supplies the single original-dummy
+declaration registry in `scripts/quests/source_dummy523.gd`. The common reader's
+`declared_exclusion(table,row,scope)` optionally delegates to that module's
+`evidence()` when present and accepts only the matching source SHA and explicit
+`excluded_from_connection` evidence. It does not duplicate its IDs/names.
+ItemData retains the raw ItemClass but returns `excluded`/`declared_exclusion`
+before following additional references. The already existing
+shop quote→item identity→ItemData caller consumes this exclusion and refuses
+the offer. Missing registry support is not replaced with a guessed dummy rule.
+This adapter is unexecuted and does not add an exclusion/use count.
+
 ## Ownership and unresolved candidates
 
 PR269 owns remaining integration, source item ownership/effects and the latest
