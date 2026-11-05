@@ -1,4 +1,5 @@
 extends Node2D
+const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
@@ -13,10 +14,12 @@ var _loop: bool=false
 var _texture_refs: Dictionary={}
 var inspection_only: bool=false
 var unresolved_bindings: Array[String]=[]
+var _build_error: String=""
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()
+	_build_error=""
 	inspection_only=inspect_only
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
@@ -24,16 +27,17 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Di
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha"]:
+		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
 			if value.is_empty(): problems.append("unsupported_frame_union")
-			var expected: String={"Position":"PointFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame"}.get(str(timeline.property),"")
+			var expected: String={"Position":"PointFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
 			if not expected.is_empty():
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
+				if expected=="BlendFrame" and _blend(value) not in ["770:1","770:771","1:771"]: problems.append("unsupported_blend_track")
 				var easing: Dictionary=value.get("easingData",{}) if value.get("easingData") is Dictionary else {}
-				if int(easing.get("type",0)) not in [0,1] or not easing.get("points",[]).is_empty(): problems.append("unsupported_easing")
+				if int(easing.get("type",0)) not in EASING.SUPPORTED or not easing.get("points",[]).is_empty(): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
 			if timeline.get("property")=="VisibleForFrame" and value.get("_type")!="BoolFrame": problems.append("visibility_track_type")
 	if not problems.is_empty(): return {"ok":false,"error":"unsupported_source_scene","details":problems}
@@ -48,15 +52,17 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Di
 				source_tree={}; return {"ok":false,"error":"source_texture_missing"}
 	var root_node: Node2D=_build(tree.nodeTree)
 	if root_node==null:
-		_clear(); return {"ok":false,"error":"source_texture_or_identity_missing"}
+		_clear(); return {"ok":false,"error":_build_error if not _build_error.is_empty() else "source_texture_or_identity_missing"}
 	for timeline: Dictionary in action.get("timeLines",[]):
 		if not _tags.has(int(timeline.actionTag)):
 			root_node.free(); _clear(); return {"ok":false,"error":"timeline_node_missing"}
+		if timeline.property in ["BlendFunc","FileData"] and not _tags[int(timeline.actionTag)].has_meta("source_sprite"):
+			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate()}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var options: Dictionary=node.get("options",{})
@@ -71,6 +77,15 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if bool(widget.get("touchEnabled",false)):
 		unresolved_bindings.append(str(widget.name)+":source_input")
 		if not inspection_only: problems.append("unconnected_source_input")
+	if node.classname=="Button":
+		unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
+		if not inspection_only: problems.append("unconnected_source_button")
+		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_button_text_layout_or_blur")
+	if node.classname=="Text":
+		unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
+		if not inspection_only: problems.append("unconnected_source_text")
+		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_layout_or_blur")
+		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="ListView":
 		# Inspection preserves an empty original container, not a working list.
 		# Populating it without source row/caller contracts would invent UI.
@@ -116,6 +131,51 @@ func _build(source: Dictionary) -> Node2D:
 	origin.name="SourceContentOrigin"
 	origin.position=Vector2(-float(widget.anchorPoint[0])*float(widget.size[0]),float(widget.anchorPoint[1])*float(widget.size[1]))
 	node.add_child(origin)
+	if source.classname=="Button":
+		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
+		var configured: Dictionary=button.configure(source_pack,options)
+		if not configured.ok:
+			_build_error=str(configured.error)+":"+str(widget.name)
+			button.free();node.free();return null
+		origin.add_child(button)
+		node.set_meta("source_button",button)
+	if source.classname=="Text":
+		var font_value: FontFile=source_pack.font(options.fontResource)
+		if font_value==null:
+			_build_error="original_font_unavailable:"+str(widget.name); node.free(); return null
+		var text_value: String=str(options.text)
+		for index: int in range(text_value.length()):
+			if not text_value[index].strip_edges().is_empty() and not font_value.has_char(text_value.unicode_at(index)):
+				_build_error="original_font_glyph_missing:"+str(widget.name); node.free(); return null
+		var label=preload("res://scripts/ui/original_ui/source_text.gd").new()
+		label.name="OriginalText"
+		label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
+		origin.add_child(label)
+	if source.classname=="ImageView":
+		var texture: Texture2D=source_pack.texture(options.fileNameData)
+		if texture==null: node.free(); return null
+		var picture: Control
+		if bool(options.scale9Enabled):
+			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
+			var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
+			if not configured.ok:
+				_build_error=str(configured.error)+":"+str(widget.name)
+				nine.free(); node.free(); return null
+			picture=nine
+		else:
+			var flat:=TextureRect.new()
+			flat.texture=texture
+			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			flat.stretch_mode=TextureRect.STRETCH_SCALE
+			picture=flat
+		picture.name="OriginalImage"
+		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		picture.size=Vector2(widget.size[0],widget.size[1])
+		picture.position=Vector2(0,-float(widget.size[1]))
+		if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
+		if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
+		origin.add_child(picture)
+		node.set_meta("source_image",picture)
 	if source.classname=="Sprite":
 		var texture: Texture2D=source_pack.texture(options.fileNameData)
 		if texture==null: node.free(); return null
@@ -127,7 +187,7 @@ func _build(source: Dictionary) -> Node2D:
 		sprite.flip_h=bool(widget.flipX)
 		sprite.flip_v=bool(widget.flipY)
 		var material_value:=CanvasItemMaterial.new()
-		material_value.blend_mode=CanvasItemMaterial.BLEND_MODE_ADD if _blend(options)=="770:1" else CanvasItemMaterial.BLEND_MODE_MIX
+		material_value.blend_mode=_blend_mode(options)
 		sprite.material=material_value
 		origin.add_child(sprite)
 		node.set_meta("source_sprite",sprite)
@@ -167,6 +227,13 @@ func play(source_clip: String, repeat: bool=false) -> Dictionary:
 			return {"ok":true}
 	return {"ok":false,"error":"source_clip_missing"}
 
+func stop() -> void:
+	# Freeze the current original frame; do not clear or replace its pixels.
+	_playing=false
+
+func playback_status() -> Dictionary:
+	return {"playing":_playing,"frame":_frame,"loop":_loop,"source":source_member,"clip":str(_clip.get("name","")),"inspection_only":inspection_only}
+
 func seek_frame(frame_number: float) -> void:
 	_frame=frame_number
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
@@ -184,7 +251,7 @@ func seek_frame(frame_number: float) -> void:
 		if not following.is_empty() and bool(selected.get("tween",false)):
 			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)
 			var easing: Dictionary=selected.get("easingData",{}) if selected.get("easingData") is Dictionary else {}
-			if int(easing.get("type",0))==1: ratio=1.0-cos(ratio*PI/2.0)
+			ratio=EASING.sample(int(easing.get("type",0)),ratio)
 		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue
@@ -192,6 +259,15 @@ func seek_frame(frame_number: float) -> void:
 			var a: Array=selected.postion
 			var b: Array=following.postion
 			target.position=Vector2(lerpf(a[0],b[0],ratio),-lerpf(a[1],b[1],ratio))
+		elif timeline.property=="CColor":
+			var a: Array=selected.color
+			var b: Array=following.color
+			# Cocos ColorFrame affects RGB; the separate Alpha track owns opacity.
+			target.modulate=Color(float(int(lerpf(a[1],b[1],ratio)))/255.0,float(int(lerpf(a[2],b[2],ratio)))/255.0,float(int(lerpf(a[3],b[3],ratio)))/255.0,target.modulate.a)
+		elif timeline.property=="BlendFunc":
+			if target.has_meta("source_sprite"):
+				var sprite: Sprite2D=target.get_meta("source_sprite")
+				sprite.material.blend_mode=_blend_mode(selected)
 		elif timeline.property=="Alpha":
 			target.modulate.a=float(int(lerpf(float(selected.value),float(following.value),ratio)))/255.0
 		elif timeline.property in ["Scale","RotationSkew"]:
@@ -244,3 +320,9 @@ static func _blend(options: Dictionary) -> String:
 	var value: Variant=options.get("blendFunc")
 	if not value is Array or value.size()!=2: return ""
 	return str(int(value[0]))+":"+str(int(value[1]))
+
+func _blend_mode(value: Dictionary) -> int:
+	match _blend(value):
+		"770:1": return CanvasItemMaterial.BLEND_MODE_ADD
+		"1:771": return CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
+	return CanvasItemMaterial.BLEND_MODE_MIX

@@ -7,6 +7,7 @@ var manifest_sha256: String=""
 var last_error: String=""
 var _pages: Dictionary={}
 var _textures: Dictionary={}
+var _fonts: Dictionary={}
 
 func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	var manifest_path: String=pack_root.path_join("original_ui.json")
@@ -40,6 +41,7 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	manifest_sha256=expected_sha256
 	_pages.clear()
 	_textures.clear()
+	_fonts.clear()
 	last_error=""
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
 
@@ -112,3 +114,19 @@ static func _sha256(raw: PackedByteArray) -> String:
 func _fail(reason: String) -> Dictionary:
 	last_error=reason
 	return {"ok":false,"error":reason}
+
+func font(reference: Dictionary) -> FontFile:
+	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty(): return null
+	var member: String=_member(str(reference.get("path","")))
+	if not _safe_member(member) or not manifest.get("files",{}).has(member): return null
+	if _fonts.has(member): return _fonts[member]
+	var path: String=root.path_join("originals").path_join(member)
+	if FileAccess.get_sha256(path)!=manifest.files[member].sha256:
+		last_error="source_font_hash:"+member; return null
+	var original:=FontFile.new()
+	original.data=FileAccess.get_file_as_bytes(path)
+	original.allow_system_fallback=false
+	if original.get_supported_chars().is_empty():
+		last_error="source_font_invalid:"+member; return null
+	_fonts[member]=original
+	return original

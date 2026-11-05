@@ -34,28 +34,37 @@ func run() -> void:
 		if not result.get("ok",false): scene.free();continue
 		viewport.add_child(scene)
 		scene.position=Vector2(320,240)
-		check(scene.source_nodes.size()==int(args.get("nodes",3)),"source hierarchy changed")
+		if args.has("source-nodes"):
+			check(scene.source_nodes.size()==source_count(scene.source_tree.nodeTree),"source hierarchy changed")
+		else: check(scene.source_nodes.size()==int(args.get("nodes",3)),"source hierarchy changed")
 		check(not scene.play("not_a_source_clip").ok,"invented animation clip")
 		var clip: Dictionary=scene.source_tree.animationList[0]
 		check(scene.play(str(clip.name),true).ok,"original clip missing")
 		scene.set_process(false)
-		for frame: int in [int(clip.startIndex),int(clip.startIndex)+20,int(clip.endIndex)-1,int(clip.endIndex)]:
+		var nonempty_frames: int=0
+		for frame: int in [int(clip.startIndex),int((clip.startIndex+clip.endIndex)/2),int(clip.endIndex)-1,int(clip.endIndex)]:
 			scene.seek_frame(frame)
 			await process_frame
 			await RenderingServer.frame_post_draw
 			var image: Image=viewport.get_texture().get_image()
 			check(image!=null and not image.is_empty(),"no rendered pixels")
 			if image!=null:
-				check(image.get_used_rect().has_area(),"empty original rendered effect")
+				if image.get_used_rect().has_area(): nonempty_frames+=1
+				if not args.has("allow-empty"): check(image.get_used_rect().has_area(),"empty original rendered effect")
 				if args.has("clip-size"):
 					var extent: int=int(args["clip-size"])
 					var bounds:=Rect2i(320-extent/2,240-extent/2,extent,extent)
 					check(bounds.encloses(image.get_used_rect()),"pixels escaped original icon bounds")
 				var path: String=str(args.capture).path_join(member.get_file().get_basename()+"_"+str(frame)+".png")
 				check(image.save_png(path)==OK,"capture failed")
+		check(nonempty_frames>0,"source effect never rendered pixels")
 		scene.seek_frame(float(clip.endIndex)-1.0)
 		scene._process(1.0/60.0)
 		check(is_equal_approx(scene._frame,float(clip.startIndex)),"source loop endpoint changed")
+		scene.stop()
+		var stopped: Dictionary=scene.playback_status()
+		scene._process(1.0)
+		check(not stopped.playing and is_equal_approx(scene.playback_status().frame,stopped.frame),"stop did not freeze the source frame")
 		if args.has("clip-size"):
 			# Runtime clipping probe, separate from unchanged-source captures.
 			# Move the existing child pixels outside the source Panel; they must
@@ -85,3 +94,8 @@ func run() -> void:
 		await process_frame
 	print("ORIGINAL_UI_SPRITE_RENDER_RESULT ",JSON.stringify({"checks":checks,"errors":errors,"entries":pack.manifest.entries,"scope":"original leaf effect scenes; no full UI or gameplay claim"}))
 	quit(0 if errors.is_empty() else 1)
+
+func source_count(node: Dictionary) -> int:
+	var count: int=1
+	for child: Dictionary in node.get("children",[]): count+=source_count(child)
+	return count

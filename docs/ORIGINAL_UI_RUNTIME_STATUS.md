@@ -139,3 +139,74 @@ transparent source containers or unbound animation attachment nodes; this does
 not increase the count of fully connected gameplay screens. Numeric source
 timelines now execute for the two attachment scenes. Interactive/list/ProjectNode
 contracts remain blocked in ordinary runtime mode. No 401 download was retried.
+
+## Source acquisition and renderer follow-up
+
+The received UI551 handoff contains an original public-archive acquisition plan.
+Its independently accessible archive metadata and ZIP central directories give
+path/size candidates for all 154 expected current523 UI containers. This uses
+that original source evidence, not a retry or authentication/URL change for the
+failed Library downloads. New DATs are accepted only after exact expected size,
+SHA1 and inner ZIP CRC checks; originals remain private and unmodified.
+
+With UI38, UI39, UI5 and further priority containers received, the 2026-11-05 traversal
+found 292 closed entries out of 560. This is dependency
+availability, not gameplay completion. The acquisition process and full-corpus
+lookup continue; missing Atlas_Pass and child CSBs remain explicit pending
+references until found. No filename similarity is used to replace them.
+
+Current local renderer additions: RGB and limited blend tracks, original
+ImageView geometry, source cap-inset slicing (including negative center scales
+for small controls), original-font single-line Text inspection, and explicit
+stop/status methods. The scale-nine implementation follows the corner/center
+geometry and drawing order in upstream Cocos 3.6 `UIScale9Sprite.cpp`. Cases
+where both cap dimensions overrun the source and disable upstream clipping
+remain unsupported because outside-source pixels are unproven. Blend pairs
+`772:1` and `1:1` also remain explicit blockers.
+
+Three newly resolved effects passed 46 actual OpenGL/clock/stop checks. Seven
+image-view entries passed their render run after source cap-inset behavior was
+implemented; default-hidden states remain hidden. Original font files are
+hash-checked and system font fallback is disabled. Serialized examples such
+as `888%` are inspection data only; strict runtime mode refuses Text without a
+live-value binding contract. Font shaping and engine-wide Cocos/Godot pixel
+parity have not been independently approved.
+
+See [item consumer contract](ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md) for actual
+API and ownership boundaries. A private, standalone three-icon source pack was
+saved as Library `libfile_14f7b43c4b5081918875b5b52f702815` (356727 bytes, ZIP
+SHA256 `637dff33fcfbb9d00b57ed4d746bc882597bdadb4ac6541f1a7c36ed7df4f407`).
+It contains nine verified original files and the manifest whose SHA256 is
+`566a4a66e894abdb3a761e8c0cca51d95799c52989a097030cab76839d99fb19`.
+Consumer receipt, ItemClass mapping, live slot use and saves remain separate
+checks; the handoff is not a claim of all item icons installed.
+
+
+### Follow-up render checkpoint (not gameplay completion)
+
+The explicitly assembled 288-entry private snapshot produced 75 accepted
+inspection scenes and 213 explicit rejections, with 299 OpenGL capture records.
+55 accepted entries produced visible pixels; 20 were empty/default-hidden
+containers. This is not 75 completed screens or a passing all-UI suite. The
+runner exits nonzero when any source is rejected and records every reason.
+Six accepted entries include original Button state textures. Their normal,
+pressed and disabled states can be inspected; input remains disabled until an
+existing service binding is implemented. No synthetic button press is counted
+as a service operation. Original fonts are required; unavailable fonts and
+unsupported text layout fail instead of receiving substitutes.
+
+The source numeric easing IDs 0–5, 25, 27 and 29 are supported. 9,009 samples
+matched separately compiled Cocos 3.6 functions within 0.000002. Custom curves
+and other easing IDs still fail explicitly. Source `1:771` blend now selects
+premultiplied-alpha mode instead of ordinary mix; unsupported blend targets
+fail before a scene is mounted. The three original item effects passed 82
+checks in the follow-up renderer, including clipping, playback and stopping.
+Decoder/provenance tests: 7 passed. Checkout integrity: 723 atlases / 41,442
+frames / 233,420,026 bytes. No full CI, installation, service save/restart or
+Cocos-versus-Godot full pixel-parity result is implied.
+
+Sources for the renderer behavior:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIScale9Sprite.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/2d/CCTweenFunction.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/ButtonReader/ButtonReader.cpp
+- https://docs.godotengine.org/en/stable/classes/class_canvasitemmaterial.html
