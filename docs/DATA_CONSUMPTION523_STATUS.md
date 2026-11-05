@@ -627,6 +627,42 @@ marker stays its existing ABI. Empty definition/install paths fail explicitly; o
 not relabeled, aliased, removed or consumed through an invented migration.
 New summon metadata likewise does not claim new pixel evidence.
 
+The source model now also supplies the already published269 acquisition-reader
+fields `patch523_slot_data.card_acquisition` and `.relic_acquisition`. They were
+empty when the original-memory relic model omitted these two branches, although
+the existing `native_card_acquisition` and `native_relic_reward_box` consumers
+already read them. Their record/prepare/currency/physical/open/save code is not
+copied or reimplemented here.
+
+- `current523_card_acquisition_input.build()` provides
+  `guaranteed_nemesis` in the existing `{table,row_index_zero,raw}` node ABI:
+  source recipe258482, exact coin3252/Currency1102 material, ticket370562 result,
+  typed Bonus2392192→BuffCard25152, original category/recommendation/server
+  relations and five source calendar node/null sets. The published exact input/
+  output IDs,3,000,000 material, one output and sole1,000,000 probability guards
+  remain specific to this reviewed deterministic recipe. Existing `rules_valid`
+  and `time_available` still own admission, clock and boundary interpretation.
+- `current523_relic_acquisition_input.build()` provides `box` for Item346921→
+  LuckyBag81612→the complete ordered pair365748/365758. Its node-wrapped
+  effects/contents/category/grade/blessing/class-limit inputs match the existing
+  reader. Both original IsGiven rows retain Probability0, amount1, normal
+  blessing and enchant0; they are not converted into random weights. The typed
+  unlock buff and UseDesc row remain source references. The existing SourceQuest
+  loader owns ancestry/eligibility/rewards; no36-quest replacement or inferred
+  completion/claim state is constructed here.
+
+The existing `current523_relic_input.build()` calls both builders before its
+model is published. `source_acquisition_input_status` separates each branch's
+data availability/problem/archive identity; missing, ambiguous or explicitly
+excluded definitions withhold that whole acquisition branch and retain evidence
+in `unavailable_source_definitions`/`source_exclusion_evidence`. Unrelated relic
+inputs remain independent. Model SHA still covers actual memory bytes and is
+separate from the original ZIP identity. No additional input pack or installer
+is introduced. Optional description text remains deferred in `description_refs`
+and `deferred_source_references`; empty description dictionaries do not assert
+missing originals. This is one recipe and one box input, not whole crafting,
+LuckyBag, ItemClass or Bonus table completion or gameplay evidence.
+
 All card input changes are uncompiled/unexecuted; raw model acceptance, card
 learning/awakening/unlocking and gameplay use remain unobserved.
 

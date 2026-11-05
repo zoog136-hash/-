@@ -4,6 +4,8 @@ extends RefCounted
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const IDENTITIES = preload("res://scripts/cards/current523_card_identity.gd")
 const OPTIONS = preload("res://scripts/cards/option_slot_definitions.gd")
+const CARD_ACQUISITION = preload("res://scripts/cards/current523_card_acquisition_input.gd")
+const RELIC_ACQUISITION = preload("res://scripts/cards/current523_relic_acquisition_input.gd")
 const SCHEMA: String = "twilight.card-slots523.v1"
 const ITEM: int = 365748
 const BUFF: int = 95648
@@ -178,6 +180,22 @@ func _combat(cards: Dictionary, groups: Dictionary) -> Dictionary:
 	spells[str(int(spell.ID))] = {"source_spell":spell,"effects":effects,"source_invoke_type":type,"source_param1_unit":unit}
 	return {"relic_subslot_buffs":secondary,"invoke_options":invokes,"invoke_spells":spells}
 
+func _acquisition_input(input, component: String, identity: Dictionary, unavailable: Array, status: Dictionary) -> Dictionary:
+	# Only original definitions enter the existing acquisition readers. Each
+	# owner still checks its recipe/box, actual ownership, time and final save.
+	var value: Dictionary = input.build()
+	_exclusions.append_array(input.exclusions)
+	var issue: String = input.problem
+	if input.source_identity != identity:
+		value = {}
+		issue = "source_acquisition_archive_identity_mismatch"
+	status[component] = {"state":"available" if not value.is_empty() else "unavailable",
+		"problem":issue,"source_identity":input.source_identity.duplicate(true),"data_only":true}
+	if value.is_empty():
+		if issue.is_empty(): issue = "original_acquisition_definition_unavailable"
+		unavailable.append({"component":component,"problem":issue,"source_exclusion_evidence":input.exclusions.duplicate(true)})
+	return value
+
 func build() -> Dictionary:
 	problem = ""; _issue = ""; _exclusions.clear()
 	var identity: Dictionary = SOURCE.identity()
@@ -226,11 +244,15 @@ func build() -> Dictionary:
 		combat = {"relic_subslot_buffs":{},"invoke_options":[],"invoke_spells":{}}
 		for key: String in cards:
 			if cards[key].has("subslot_buff"): combat.relic_subslot_buffs[key] = {"card":cards[key].card,"effects":cards[key].effects}
+	var acquisition_status: Dictionary = {}
+	var card_acquisition: Dictionary = _acquisition_input(CARD_ACQUISITION.new(),"card_acquisition",identity,unavailable,acquisition_status)
+	var relic_acquisition: Dictionary = _acquisition_input(RELIC_ACQUISITION.new(),"relic_acquisition",identity,unavailable,acquisition_status)
 	var payload: Dictionary = {"schema":SCHEMA,"source_snapshot":"patch523",
 		"new_cards":{"catalog":{},"option_definitions":[],"skill_cards":{},"source_server_limits":[],"primary_doll_buffs":{},"subslot_buffs":{},"subslot_npc_bindings":{}},
 		"options":{"groups":{},"reviewed_primary_keys":[],"changed_primary_keys":[],"bonuses":{},"types":{},"units":{},"ui_units":{},"type_labels":{}},
 		"relic":{"cards":cards,"option_groups":groups,"source_server_limits":SOURCE.rows("ServerLimit"),"unlock_item":unlock},
-		"relic_combat":combat,"unavailable_source_definitions":unavailable,"source_exclusion_evidence":_exclusions}
+		"relic_combat":combat,"card_acquisition":card_acquisition,"relic_acquisition":relic_acquisition,
+		"source_acquisition_input_status":acquisition_status,"unavailable_source_definitions":unavailable,"source_exclusion_evidence":_exclusions}
 	var bytes: PackedByteArray = JSON.stringify(payload).to_utf8_buffer()
 	var digest = HashingContext.new()
 	digest.start(HashingContext.HASH_SHA256); digest.update(bytes)
