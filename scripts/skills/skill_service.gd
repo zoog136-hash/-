@@ -475,6 +475,11 @@ func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	var buff: Dictionary = {"remaining":float(skill.duration),"skill_id":str(skill.id),"skill_stats":stats.duplicate(true),"stealth":force_stealth or skill.mode == "stealth","break_on_damage":bool(skill.get("break_on_damage", false)),"break_on_attack":bool(skill.get("break_on_attack",false)),"drain_mp_percent":float(skill.get("drain_mp_percent", 0)),"speed":float(stats.get("speed", 1))}
 	world.active_skill_buffs[str(skill.name)] = buff
 	vfx.maintain(str(skill.id), world.player, float(skill.duration))
+	# Existing self-buff application is the presentation event. No periodic
+	# replay, duration inference or status activation is created by the renderer.
+	if str(skill.get("mode","")) in ["buff","counter","stealth"]:
+		_emit_verified_source_effect(skill, "effect", world.player.global_position)
+		_emit_verified_source_effect(skill, "success", world.player.global_position)
 	world._refresh_skill_stealth_visual()
 	world._refresh_speed_modifiers()
 
