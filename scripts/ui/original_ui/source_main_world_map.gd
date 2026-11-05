@@ -49,7 +49,10 @@ func open() -> Dictionary:
 	var offered: Variant=supplied.get("offered_world_id")
 	var label: Variant=supplied.get("world_label")
 	var role: Variant=supplied.get("role_declaration",{})
-	if not is_instance_valid(field_map) or not field_map is Node or typeof(offered)!=TYPE_INT or not label is String or not role is Dictionary:return _remember(_fail("source_world_map_explicit_offered_context_required"))
+	# Current523's actual field may be RefCounted. Keep that same Object,
+	# source metadata and definition for the existing image/map owners.
+	# A Node wrapper would change the contract and is not required here.
+	if not field_map is Object or not is_instance_valid(field_map) or typeof(offered)!=TYPE_INT or not label is String or not role is Dictionary:return _remember(_fail("source_world_map_explicit_offered_context_required"))
 	var contract: Dictionary=_bindings.build_map_scene(field_map,int(offered),label,role,{"role":"source_scroll","input":Callable(self,"_route_source_input")})
 	if not contract.get("ok",false):return _remember(contract)
 	var mount: Node2D=_mount.get_ref() if _mount!=null else null

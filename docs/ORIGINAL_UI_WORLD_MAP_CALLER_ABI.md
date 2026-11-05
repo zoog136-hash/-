@@ -27,7 +27,7 @@ also closes it. No minimap Size/Point/On/Off button is repurposed as map-open.
 
 ```gdscript
 {
-    "field_map": current_original_field_node,
+    "field_map": current_original_field_object, # actual RefCounted or Node
     "offered_world_id": exact_world_id, # int, UIMapWorld.ID namespace
     "world_label": existing_localized_label,
     "role_declaration": {

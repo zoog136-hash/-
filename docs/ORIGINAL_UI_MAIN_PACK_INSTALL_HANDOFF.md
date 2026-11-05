@@ -16,11 +16,11 @@ The private Library operation succeeded for this exact existing file identity:
 - ZIP SHA256: `0881022f018f52910ec658ca743c97c54e4694a51a21f1ab97344f58e88d26fc`.
 - `original_ui.json` SHA256: `b85f32b8662bb9b79a3cf9200d95efb96369b1d65d974e23fa7ce10d14b0131c`.
 - Corresponding published code: `f399eb1e862becb6187789ae2211fe9ca68816c7`.
-- Private Drive file ID: `1bnYvzl37RvyhlvWI-MdYwyz4-Tuz3tzo`.
-- Observed Drive URL: https://drive.google.com/file/d/1bnYvzl37RvyhlvWI-MdYwyz4-Tuz3tzo/view?usp=drivesdk
-- Drive upload/readback returned the same canonical filename and 9,038,622-byte
-  size, with owner-user permission only. The prior Library identity remains
-  retained; the installer consumer has not yet confirmed its own download.
+- Canonical installer Drive file ID: `1JtVbeBUvq_IZpxAP1lBVOJZrKoT1JUko`.
+- The parent confirmed this official private handoff and its same size/ZIP SHA/
+  manifest pin for installer275. No further upload is performed. The existing
+  Library identity and earlier private copies are preserved; no source or
+  save deletion is authorized by this handoff.
 
 The ZIP has `original_ui.json`, `receipt.json` and `originals/UI/...` at its
 root. An installer may use the relative destination
