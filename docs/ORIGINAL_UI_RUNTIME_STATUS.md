@@ -129,3 +129,13 @@ The required Library search-result download helper failed before transfer with
 source. No bypass or identical retry was attempted. Their contents remain
 unavailable; earlier received bundles remain usable. The requested 560-item
 scope and remaining 535 dependency-blocked entries are unchanged.
+
+## Remaining 19 follow-up
+
+See [per-item contracts and execution evidence](ORIGINAL_UI_REMAINING19.md).
+The 19 remaining dependency-closed entries now instantiate in explicit read-only
+inspection mode and passed 129 OpenGL/execution checks. All outputs are
+transparent source containers or unbound animation attachment nodes; this does
+not increase the count of fully connected gameplay screens. Numeric source
+timelines now execute for the two attachment scenes. Interactive/list/ProjectNode
+contracts remain blocked in ordinary runtime mode. No 401 download was retried.

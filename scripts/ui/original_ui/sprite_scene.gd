@@ -11,20 +11,29 @@ var _frame: float=0.0
 var _playing: bool=false
 var _loop: bool=false
 var _texture_refs: Dictionary={}
+var inspection_only: bool=false
+var unresolved_bindings: Array[String]=[]
 
-func configure(pack: RefCounted, member: String) -> Dictionary:
+func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
+	unresolved_bindings.clear()
+	inspection_only=inspect_only
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
 	var problems: Array[String]=[]
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("property") not in ["FileData","VisibleForFrame"]:
+		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
 			if value.is_empty(): problems.append("unsupported_frame_union")
+			var expected: String={"Position":"PointFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame"}.get(str(timeline.property),"")
+			if not expected.is_empty():
+				if value.get("_type")!=expected: problems.append("numeric_track_type")
+				var easing: Dictionary=value.get("easingData",{}) if value.get("easingData") is Dictionary else {}
+				if int(easing.get("type",0)) not in [0,1] or not easing.get("points",[]).is_empty(): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
 			if timeline.get("property")=="VisibleForFrame" and value.get("_type")!="BoolFrame": problems.append("visibility_track_type")
 	if not problems.is_empty(): return {"ok":false,"error":"unsupported_source_scene","details":problems}
@@ -44,10 +53,10 @@ func configure(pack: RefCounted, member: String) -> Dictionary:
 		if not _tags.has(int(timeline.actionTag)):
 			root_node.free(); _clear(); return {"ok":false,"error":"timeline_node_missing"}
 	add_child(root_node)
-	return {"ok":true,"nodes":source_nodes.size(),"source":member}
+	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate()}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var options: Dictionary=node.get("options",{})
@@ -56,10 +65,22 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
 	if not str(widget.get("customProperty","")).is_empty(): problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
-		if widget.get(field)!=null and not str(widget[field]).is_empty(): problems.append("unconnected_source_callback:"+field)
-	if bool(widget.get("touchEnabled",false)): problems.append("unconnected_source_input")
-	if node.classname=="Panel":
-		if int(options.get("colorType",0))!=0 or not str(options.get("backGroundImageData",{}).get("path","")).is_empty(): problems.append("unsupported_panel_background")
+		if widget.get(field)!=null and not str(widget[field]).is_empty():
+			unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
+			if not inspection_only: problems.append("unconnected_source_callback:"+field)
+	if bool(widget.get("touchEnabled",false)):
+		unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only: problems.append("unconnected_source_input")
+	if node.classname=="ListView":
+		# Inspection preserves an empty original container, not a working list.
+		# Populating it without source row/caller contracts would invent UI.
+		unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
+		if not inspection_only or not node.get("children",[]).is_empty(): problems.append("unconnected_list_content")
+	if node.classname=="ProjectNode":
+		unresolved_bindings.append(str(widget.name)+":project_scene_binding")
+		if not inspection_only or not str(options.get("fileName","")).is_empty(): problems.append("unconnected_project_scene")
+	if node.classname in ["Panel","ListView"]:
+		if (int(options.get("colorType",0))!=0 and int(options.get("bgColorOpacity",0))!=0) or not str(options.get("backGroundImageData",{}).get("path","")).is_empty(): problems.append("unsupported_panel_background")
 		if bool(options.get("backGroundScale9Enabled",false)): problems.append("unsupported_panel_scale9")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
@@ -72,6 +93,8 @@ func _build(source: Dictionary) -> Node2D:
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	var node:=Node2D.new()
 	node.name=str(widget.name)
+	node.set_meta("source_scale",widget.scale.duplicate())
+	node.set_meta("source_rotation",widget.rotationSkew.duplicate())
 	# CCNode::getNodeToParentTransform with the Y axis reflected for Godot.
 	# Preserve the two distinct serialized rotation/skew angles.
 	var rx: float=deg_to_rad(float(widget.rotationSkew[0]))
@@ -112,7 +135,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_origin",origin)
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
 	var child_origin: Node=origin
-	if source.classname=="Panel" and bool(options.clipEnabled):
+	if source.classname in ["Panel","ListView"] and bool(options.clipEnabled):
 		# The original transparent Panel clips its children to the source size.
 		# Control uses top-left coordinates; restore Cocos' bottom-left origin
 		# inside it before adding source children. No replacement pixels.
@@ -153,9 +176,34 @@ func seek_frame(frame_number: float) -> void:
 			var value: Dictionary=_frame_value(raw)
 			if float(value.frameIndex)<=frame_number and (selected.is_empty() or float(value.frameIndex)>=float(selected.frameIndex)): selected=value
 		if selected.is_empty(): continue
+		var following: Dictionary={}
+		for raw: Dictionary in timeline.frames:
+			var value: Dictionary=_frame_value(raw)
+			if float(value.frameIndex)>float(selected.frameIndex) and (following.is_empty() or float(value.frameIndex)<float(following.frameIndex)): following=value
+		var ratio: float=0.0
+		if not following.is_empty() and bool(selected.get("tween",false)):
+			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)
+			var easing: Dictionary=selected.get("easingData",{}) if selected.get("easingData") is Dictionary else {}
+			if int(easing.get("type",0))==1: ratio=1.0-cos(ratio*PI/2.0)
+		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue
-		if timeline.property=="VisibleForFrame": target.visible=bool(selected.value)
+		if timeline.property=="Position":
+			var a: Array=selected.postion
+			var b: Array=following.postion
+			target.position=Vector2(lerpf(a[0],b[0],ratio),-lerpf(a[1],b[1],ratio))
+		elif timeline.property=="Alpha":
+			target.modulate.a=float(int(lerpf(float(selected.value),float(following.value),ratio)))/255.0
+		elif timeline.property in ["Scale","RotationSkew"]:
+			var a: Array=selected.scale
+			var b: Array=following.scale
+			target.set_meta("source_scale" if timeline.property=="Scale" else "source_rotation",[lerpf(a[0],b[0],ratio),lerpf(a[1],b[1],ratio)])
+			var scale_value: Array=target.get_meta("source_scale")
+			var rotation_value: Array=target.get_meta("source_rotation")
+			var rx: float=deg_to_rad(float(rotation_value[0]))
+			var ry: float=deg_to_rad(float(rotation_value[1]))
+			target.transform=Transform2D(Vector2(cos(ry)*scale_value[0],sin(ry)*scale_value[0]),Vector2(-sin(rx)*scale_value[1],cos(rx)*scale_value[1]),target.position)
+		elif timeline.property=="VisibleForFrame": target.visible=bool(selected.value)
 		elif timeline.property=="FileData" and target.has_meta("source_sprite"):
 			var sprite: Sprite2D=target.get_meta("source_sprite")
 			var texture: Texture2D=source_pack.texture(selected.textureFile)
