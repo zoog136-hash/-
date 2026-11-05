@@ -102,6 +102,8 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
+	if binding.has("displaystate") and not binding.displaystate is bool:problems.append("source_displaystate_value_missing")
+	if binding.has("selected") and not binding.selected is bool:problems.append("source_selection_value_missing")
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
@@ -238,6 +240,8 @@ func _build(source: Dictionary) -> Node2D:
 		origin.add_child(checkbox)
 		node.set_meta("source_checkbox",checkbox)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
+		if binding.has("displaystate"):checkbox.set_source_state("normal" if binding.displaystate else "disabled")
+		if binding.has("selected"):checkbox.set_selected(binding.selected)
 		if not inspection_only and binding.get("role")=="checkbox":checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
@@ -248,6 +252,7 @@ func _build(source: Dictionary) -> Node2D:
 		origin.add_child(button)
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
+		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
 		if not inspection_only and binding.get("role")=="button":button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Particle":
 		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
@@ -607,3 +612,17 @@ func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_scroll" or not node.has_meta("source_scroll"):return {"ok":false,"error":"source_scroll_binding_missing"}
 	return node.get_meta("source_scroll").set_source_position(value)
+
+func set_bound_displaystate(source_offset: int, value: bool) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	var binding: Dictionary=_bindings.get(source_offset,{})
+	if node==null or not binding.has("displaystate"):return {"ok":false,"error":"source_displaystate_binding_missing"}
+	if binding.get("role")=="button" and node.has_meta("source_button"):return node.get_meta("source_button").set_source_state("normal" if value else "disabled")
+	if binding.get("role")=="checkbox" and node.has_meta("source_checkbox"):return node.get_meta("source_checkbox").set_source_state("normal" if value else "disabled")
+	return {"ok":false,"error":"source_displaystate_binding_missing"}
+
+func set_bound_selected_state(source_offset: int, value: bool) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	var binding: Dictionary=_bindings.get(source_offset,{})
+	if node==null or binding.get("role")!="checkbox" or not binding.has("selected") or not node.has_meta("source_checkbox"):return {"ok":false,"error":"source_selection_binding_missing"}
+	return node.get_meta("source_checkbox").set_selected(value)

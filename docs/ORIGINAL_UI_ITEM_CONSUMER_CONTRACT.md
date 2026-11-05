@@ -193,3 +193,11 @@ shadow blur is retained as metadata; the pinned Cocos 3.6 Label::enableShadow
 implementation forces the effective blur radius to zero. This implements that
 source behavior rather than drawing a new blur. These changes remain untested
 and do not increase render or gameplay-completion counts.
+
+Button/checkbox node bindings may supply the existing source `displaystate`
+boolean; checkbox bindings may also supply `selected`. These explicit values
+come from the original caller's model/configuration, not UI-owned eligibility
+or reward rules. `set_bound_displaystate(offset,value)` and
+`set_bound_selected_state(offset,value)` update only those declared fields.
+The original state renderers and input guards remain in use. These connectors
+are implemented without a new run/test and do not change completion counts.
