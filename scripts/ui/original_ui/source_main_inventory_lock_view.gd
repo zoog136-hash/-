@@ -21,6 +21,8 @@ var _buttons: Array = []
 var _controls: Array = []
 var _reference: String=""
 var _type_in_scope: bool=false
+var _safe_in_scope: bool=false
+var _class_in_scope: bool=false
 var _header_hidden: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, bag: Control) -> Dictionary:
@@ -33,12 +35,15 @@ func configure(pack: RefCounted, bag: Control) -> Dictionary:
 		if _find(active.get("nodeTree",{}),offset).is_empty(): return _fail("source_inventory_lock_nodes_not_in_active_pack_scope")
 	_pack = pack
 	_type_in_scope=not _find(active.get("nodeTree",{}),42456).is_empty()
+	_safe_in_scope=not _find(active.get("nodeTree",{}),52788).is_empty() and not _find(active.get("nodeTree",{}),53168).is_empty()
+	_class_in_scope=not _find(active.get("nodeTree",{}),40928).is_empty() and not _find(active.get("nodeTree",{}),40580).is_empty()
 	_bag = weakref(bag)
 	return {"ok":true,"configured":true,"member":MEMBER,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func refresh(parent: Node) -> Dictionary:
 	var bag: Object = _bag.get_ref() if _bag != null else null
 	var model: Dictionary = _model(bag)
+	if _class_in_scope and model.get("ok",false):model.class_text=_fitting_class_text(model.class_text)
 	if not model.get("ok",false):
 		_close_scene()
 		return model
@@ -62,6 +67,19 @@ func refresh(parent: Node) -> Dictionary:
 	if _type_in_scope:
 		scope.append(42456)
 		bindings[42456]={"role":"source_text","text":model.type_text,"visible":not model.type_text.is_empty()}
+	if _safe_in_scope:
+		scope.append_array([53168,52788])
+		bindings[52728]={"visible":model.safe.has("value")}
+		bindings[53168]={"role":"static_source_text"}
+		bindings[52788]={"role":"source_text","text":"+%d" % model.safe.value if model.safe.has("value") else ""}
+	if _class_in_scope:
+		scope.append_array([40928,40580])
+		# The single authored20px row fits its269px ListView. This partial
+		# read-only scope consumes touches; no row cloning/selection is added.
+		bindings[39440]={"role":"source_list","row_offsets":[39492],"input":Callable(self,"_consume_class_list_input")}
+		bindings[39492]={"visible":not model.class_text.is_empty()}
+		bindings[40928]={"role":"static_source_text"}
+		bindings[40580]={"role":"source_text","text":model.class_text}
 	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":scope,"bindings":bindings}})
 	if not result.get("ok",false):
 		staged.free()
@@ -140,6 +158,7 @@ func presentation() -> Dictionary:
 	return {"scene":_scene,"renderer":_child,"source_buttons":_buttons.duplicate(),"controls":_controls.duplicate(),"source_node_offsets":SOURCE_OFFSETS.duplicate(),"parent_member":PARENT_MEMBER,"parent_sha256":PARENT_SHA256,"parent_project_offset":PROJECT,"parent_original_position":Vector2(1008,345),"parent_original_visible":false,"parent_activation_basis":"existing bag.detail_active and actual visibility","partial_source_scene":true,"complete_screen_contract":false}
 
 func _apply(model: Dictionary) -> Dictionary:
+	if _class_in_scope:model.class_text=_fitting_class_text(model.class_text)
 	if model.reference!=_reference:
 		_close_scene()
 		return _fail("source_inventory_lock_presented_selection_changed")
@@ -158,7 +177,22 @@ func _apply(model: Dictionary) -> Dictionary:
 		if not type_result.get("ok",false):
 			_close_scene()
 			return type_result
+	if _safe_in_scope:
+		var safe_result: Dictionary=_child.set_bound_text(52788,"+%d" % model.safe.value if model.safe.has("value") else "")
+		if safe_result.get("ok",false):safe_result=_child.set_bound_visible(52728,model.safe.has("value"))
+		if not safe_result.get("ok",false):
+			_close_scene()
+			return safe_result
+	if _class_in_scope:
+		var class_result: Dictionary=_child.set_bound_text(40580,model.class_text)
+		if class_result.get("ok",false):class_result=_child.set_bound_visible(39492,not model.class_text.is_empty())
+		if not class_result.get("ok",false):
+			_close_scene()
+			return class_result
 	for offset: int in LOCK_BUTTONS:
+		# Do not reset a current pressed state on every ordinary refresh.
+		var button: Variant=_child.source_nodes[offset].get_meta("source_button",null)
+		if is_instance_valid(button) and (button.current_state=="disabled")==model.disabled:continue
 		var result: Dictionary = _child.set_bound_displaystate(offset,not model.disabled)
 		if not result.get("ok",false):
 			_close_scene()
@@ -194,6 +228,18 @@ func _close_detail() -> Dictionary:
 	_close_scene()
 	return {"ok":true,"owner_close_invoked":true,"selection_cleared":false,"game_state_written":false}
 
+func _consume_class_list_input(_event: InputEvent) -> void:
+	if is_instance_valid(_scene) and _scene.is_inside_tree():_scene.get_viewport().set_input_as_handled()
+
+func _fitting_class_text(value: String) -> String:
+	var original: Dictionary=_find(_pack.scene(MEMBER).get("nodeTree",{}),40580)
+	var options: Dictionary=original.get("options",{})
+	if options.is_empty():return ""
+	var font: FontFile=_pack.font(options.fontResource)
+	if font==null:return ""
+	# Never show a truncated subset as the complete permitted-class list.
+	return value if font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,int(options.fontSize)).x<=float(options.widgetOptions.size[0]) else ""
+
 func _visibility_changed() -> void:
 	var bag: Object = _bag.get_ref() if _bag != null else null
 	if not is_instance_valid(bag) or not bag.is_visible_in_tree(): _close_scene()
@@ -213,7 +259,12 @@ static func _model(bag: Object) -> Dictionary:
 	var type_value: Variant=bag.get("source_detail_type")
 	var type_text: String=""
 	if type_value is Dictionary and type_value.get("reference")==reference and type_value.get("text") is String:type_text=type_value.text
-	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button,"type_text":type_text}
+	var safe: Variant=bag.get("source_detail_safe_enhancement")
+	if not safe is Dictionary or safe.get("reference")!=reference or typeof(safe.get("value"))!=TYPE_INT or safe.value<0:safe={}
+	var classes: Variant=bag.get("source_detail_classes")
+	var class_text: String=""
+	if classes is Dictionary and classes.get("reference")==reference and classes.get("text") is String:class_text=classes.text
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button,"type_text":type_text,"safe":safe,"class_text":class_text}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset") == offset: return node
