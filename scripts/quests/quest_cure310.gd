@@ -102,5 +102,5 @@ static func commit(world: Node,quote: Dictionary)->Dictionary:
 static func perform(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
 	var quote: Dictionary=prepare(world,record,physical_id);var result: Dictionary=commit(world,quote) if quote.get("ok",false) else quote
 	world.hud.show_message(str(result.get("message",result.get("reason","해독 결과 확인 필요"))))
-	if result.get("saved",false) and is_instance_valid(world.option_awakening):world.option_awakening.combat.emit_sprite(192,world.player)
+	if result.get("saved",false) and is_instance_valid(world.option_awakening):world.option_awakening.combat.emit_sprite(192,world.player,D.definition_id("310").get("original_item",{}))
 	return result
