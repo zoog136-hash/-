@@ -98,10 +98,16 @@ static func plan(context: Dictionary, catalog: RefCounted, source_field: RefCoun
 	if not definition_hold.is_empty(): return _result("definition_conditions_hold: "+definition_hold)
 	if territory.StartX>territory.EndX or territory.StartY>territory.EndY:
 		return _result("target_territory_inverted")
-	if territory.StartX!=territory.EndX or territory.StartY!=territory.EndY:
-		return _result("target_territory_not_point")
 	var source := Vector2i(int(portal.SourceX),int(portal.SourceY))
 	var target := Vector2i(int(territory.StartX),int(territory.StartY))
+	var arrival_policy: String="EXACT_POINT_ONLY"
+	if territory.StartX!=territory.EndX or territory.StartY!=territory.EndY:
+		if context.get("own_arrival_policy")!="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1":return _result("target_territory_not_point")
+		var selected: Variant=context.get("own_arrival_source_cell")
+		if not selected is Array or selected.size()!=2 or not _uint(selected[0],65535) or not _uint(selected[1],65535):return _result("own_arrival_cell_invalid")
+		target=Vector2i(int(selected[0]),int(selected[1]))
+		if target.x<territory.StartX or target.x>territory.EndX or target.y<territory.StartY or target.y>territory.EndY:return _result("own_arrival_outside_declared_territory")
+		arrival_policy="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
 	if actor_source_cell!=source: return _result("actor_not_at_declared_portal")
 	var problem: String = _field_problem(source_field,source_record,catalog,expected_manifest_sha256)
 	if not problem.is_empty(): return _result("source_"+problem)
@@ -116,4 +122,5 @@ static func plan(context: Dictionary, catalog: RefCounted, source_field: RefCoun
 	return {"ok":true,"reason":"","portal_id":int(portal.ID),"source_land_id":int(portal.SourceLandID),
 		"target_land_id":int(territory.LandID),"source_position":source,"target_position":target,
 		"source_info":source_info.duplicate(true),"target_info":target_info.duplicate(true),"context":context.duplicate(true),
+		"landing_selection_policy":arrival_policy,"native_landing_rule_verified":false,
 		"activation_mode":ACTIVATION_MODE,"native_m_rules_verified":false,"native_trigger_rules":"UNKNOWN"}

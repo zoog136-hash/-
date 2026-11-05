@@ -8,6 +8,8 @@ const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
+const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
+const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
@@ -28,6 +30,8 @@ var _raw_sources: RefCounted
 var _tile_pack: RefCounted
 var _visual_delta := Vector2.ZERO
 var _tile_ground: Node2D
+var _static_spr: Node2D
+var _static_tails: Dictionary = {}
 var _configured: bool = false
 var _return_pending: bool = false
 var _member_origins: Dictionary = {}
@@ -43,6 +47,9 @@ var _last_actor_cell := Vector2i(-2147483648, -2147483648)
 var _refresh_clock: float = 0.0
 var _scope_clipped_records: int = 0
 var _off_floor_decoration_records: int = 0
+var _draw_generation: int=0
+var _usage_generation: int=-1
+var _visible_members: Array[String]=[]
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -158,6 +165,17 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if not field.point_clear(player.global_position, 4.0):
 		return _fail("기존 통행 API에서 현재 위치를 확인하지 못했습니다.")
 	_ensure_ground()
+	var spr_options: Dictionary = STATIC_SPR.read_options()
+	if spr_options.enabled:
+		if not source_owned: return _fail("정적 SPR 자체 표시는 원문 통행 필드에서만 지원합니다.")
+		_static_spr=STATIC_SPR.new()
+		_static_spr.name="Current523SourceStaticSPR"
+		if not _static_spr.configure(spr_options,field.coordinates):
+			var detail: String=_static_spr.problem
+			_static_spr.free();_static_spr=null
+			return _fail(detail)
+		add_child(_static_spr)
+		_static_spr.position=_visual_delta
 	if not _build_frame(): return false
 	_configured = true
 	y_sort_enabled = true
@@ -192,12 +210,63 @@ func set_visual_delta(value: Vector2) -> bool:
 	if not valid_delta(value): return false
 	_visual_delta = value
 	if is_instance_valid(_tile_ground): _tile_ground.position = value
+	if is_instance_valid(_static_spr): _static_spr.position = value
 	if _configured: refresh_visible()
 	return _configured
 
 
 func frame_metrics() -> Dictionary:
-	return _metrics.duplicate(true)
+	var result: Dictionary=_metrics.duplicate(true)
+	if is_instance_valid(_static_spr): result["static_spr"]=_static_spr.metrics()
+	return result
+
+
+func prepare_static_spr_options(value: Dictionary) -> Dictionary:
+	# Runtime input for the existing settings button, not an inspection render.
+	# Leave the current consumer and field untouched until settings are saved.
+	if not _configured or field==null:return {"ok":false,"problem":"현재 지도 표시가 준비되지 않았습니다."}
+	var checked: Dictionary=STATIC_SPR.validate(value)
+	if checked.is_empty():return {"ok":false,"problem":"정적 SPR 설정을 읽을 수 없습니다."}
+	var candidate: Node2D=null
+	if checked.enabled:
+		if not bool(field.get_meta("current523_source_field",false)):
+			return {"ok":false,"problem":"정적 SPR은 원문 이동 필드에서 연결해 주세요."}
+		candidate=STATIC_SPR.new()
+		candidate.name="Current523SourceStaticSPR"
+		if not candidate.configure(checked,field.coordinates):
+			var detail: String=candidate.problem
+			candidate.free()
+			return {"ok":false,"problem":detail}
+		candidate.position=_visual_delta
+		var records: Dictionary=_visible_static_records()
+		candidate.refresh(records.records,int(records.malformed))
+	return {"ok":true,"candidate":candidate,"options":checked,"renderer_id":get_instance_id()}
+
+
+func commit_static_spr_options(prepared: Dictionary) -> void:
+	# Called synchronously by the owning controller after its atomic config save.
+	# No field, movement, collision, portal, camera or map-time state is replaced.
+	var prior: Node2D=_static_spr
+	_static_spr=prepared.candidate
+	if is_instance_valid(prior):
+		prior.hide();prior.set_process(false)
+		remove_child(prior);prior.queue_free()
+	_metrics.erase("static_spr")
+	if is_instance_valid(_static_spr):
+		add_child(_static_spr)
+		_static_spr.position=_visual_delta
+		_static_spr.show();_static_spr.queue_redraw()
+		_metrics["static_spr"]=_static_spr.metrics()
+
+
+func _visible_static_records() -> Dictionary:
+	var records: Array[Dictionary]=[]
+	var malformed: int=0
+	for member: String in _visible_members:
+		var tail: Dictionary=_static_tails.get(member,{})
+		if not tail.get("ok",false):malformed+=1;continue
+		records.append_array(tail.records)
+	return {"records":records,"malformed":malformed}
 
 
 func _scope_problem() -> String:
@@ -250,6 +319,15 @@ func _read_chunk(member: String) -> Dictionary:
 	var decoded: Dictionary = _raw_sources.read_member(member)
 	if decoded.is_empty(): _fail(_raw_sources.problem); return {}
 	var origin: Vector2i = _member_origins[member]
+	# Retain the same currently loaded S32 tail even while SPR display is off.
+	# Enabling the existing consumer does not need another map entry or a source scan.
+	var tail: Dictionary=STATIC_SPR.parse_tail(decoded.sections.tail,int(_raw_sources.source_metadata(member).get("core_end",0)))
+	if tail.ok:
+		for row: Dictionary in tail.records:
+			row["source_member"]=member
+			row["source_sha256"]=decoded.source_sha256
+			row["source_bytes"]=decoded.source_bytes
+	_static_tails[member]=tail
 	var layers: Dictionary = {}
 	var floor_bytes: PackedByteArray = decoded.sections.floor
 	for index: int in range(8192): _append(layers, origin, index & 127, index >> 7, floor_bytes.decode_u32(index * 4), -2)
@@ -269,7 +347,9 @@ func _read_chunk(member: String) -> Dictionary:
 	for layer: int in layers: packed[layer] = PackedInt64Array(layers[layer])
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
-	while _raw_recent.size() > RAW_CHUNK_LIMIT: _raw_chunks.erase(_raw_recent.pop_front())
+	while _raw_recent.size() > RAW_CHUNK_LIMIT:
+		var oldest: String=_raw_recent.pop_front()
+		_raw_chunks.erase(oldest);_static_tails.erase(oldest)
 	return packed
 
 
@@ -329,6 +409,7 @@ func _build_frame() -> bool:
 				count += 1
 	if count == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
 	_frame_commands.clear()
+	_draw_generation+=1
 	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
 	_frame_atlases = atlases
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
@@ -342,6 +423,11 @@ func _build_frame() -> bool:
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
+	_visible_members=visible.duplicate()
+	if is_instance_valid(_static_spr):
+		var static_records: Dictionary=_visible_static_records()
+		_static_spr.refresh(static_records.records,int(static_records.malformed))
+		_metrics["static_spr"]=_static_spr.metrics()
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
@@ -378,13 +464,24 @@ func _process(delta: float) -> void:
 
 func _draw_tiles(canvas: Node2D) -> void:
 	if not _configured: return
+	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
+	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
+	var observed_refs: Dictionary={}
 	var layers: Array = _frame_commands.keys()
 	layers.sort()
 	for layer: int in layers:
 		var lane: PackedInt64Array = _frame_commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
-			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]), Vector2(24, 24)), TILES.source_rect(ref & 255))
+			var rect:=Rect2(Vector2(lane[index],lane[index+1]),Vector2(24,24))
+			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8],rect,TILES.source_rect(ref & 255))
+			if observe and not observed_refs.has(ref) and rect.intersects(view):observed_refs[ref]=true
+	if observe:
+		for ref: int in observed_refs:
+			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
+			if not source.is_empty():USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
+		_usage_generation=_draw_generation
+		USAGE.flush()
 
 
 func _draw() -> void:

@@ -5,13 +5,20 @@ const NONE = "NONE"
 const LEGACY = "TWILIGHT_ADEN_NAVIGATION_V1"
 const SOURCE = "CURRENT523_S32_OWN_ALLOWLIST_V1"
 const GENERIC = "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
+const EXACT_POINT_ONLY = "EXACT_POINT_ONLY"
+const OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1 = "OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
+const OWN_MAP_TIME = "OWN_BOUNDED_SOURCE_LIMIT_NO_AUTO_RESET_V1"
+const MAP_TIME_DISABLED = "DISABLED"
+const OWN_ALWAYS_OPEN_V1 = "OWN_ALWAYS_OPEN_V1"
+const SOURCE_CONDITIONS_V1 = "SOURCE_CONDITIONS_V1"
+const OWN_MANUAL_PORTAL_FEE_ADENA = 100000
 const SOURCE_WORDS: Array[int] = [0,4,8,12,32]
 const GRID_SHA256 = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const LAYOUT_REVISION = 2026102904
 const OFFSET_LIMIT = 48
 
 static func defaults() -> Dictionary:
-	return {"enabled":false, "navigation_profile":NONE, "offset_x":0, "offset_y":0, "raw_root":"", "tile_root":""}
+	return {"enabled":false, "navigation_profile":NONE, "portal_landing_policy":EXACT_POINT_ONLY, "map_time_policy":OWN_MAP_TIME, "map_open_policy":OWN_ALWAYS_OPEN_V1, "portal_fee_adena":OWN_MANUAL_PORTAL_FEE_ADENA, "aden_return_radius":8, "offset_x":0, "offset_y":0, "raw_root":"", "tile_root":""}
 
 static func validate(value: Dictionary) -> Dictionary:
 	var result: Dictionary = defaults()
@@ -20,6 +27,20 @@ static func validate(value: Dictionary) -> Dictionary:
 	var profile: Variant = value.get("navigation_profile", NONE)
 	if profile not in [NONE, LEGACY, SOURCE, GENERIC]: return {}
 	result.navigation_profile = profile
+	var landing_policy: Variant = value.get("portal_landing_policy", EXACT_POINT_ONLY)
+	if not landing_policy is String or landing_policy not in [EXACT_POINT_ONLY, OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1]: return {}
+	result.portal_landing_policy = landing_policy
+	var time_policy: Variant=value.get("map_time_policy",OWN_MAP_TIME)
+	if not time_policy is String or time_policy not in [OWN_MAP_TIME,MAP_TIME_DISABLED]:return {}
+	result.map_time_policy=time_policy
+	var open_policy: Variant=value.get("map_open_policy",OWN_ALWAYS_OPEN_V1)
+	if not open_policy is String or open_policy not in [OWN_ALWAYS_OPEN_V1,SOURCE_CONDITIONS_V1]:return {}
+	result.map_open_policy=open_policy
+	for key: String in ["portal_fee_adena","aden_return_radius"]:
+		var number: Variant=value.get(key,result[key])
+		var maximum: int=100000000 if key=="portal_fee_adena" else 32
+		if not (number is int or number is float) or not is_finite(float(number)) or floorf(float(number))!=float(number) or number<0 or number>maximum:return {}
+		result[key]=int(number)
 	for key: String in ["offset_x", "offset_y"]:
 		var number: Variant = value.get(key, 0)
 		if not (number is int or number is float) or not is_finite(float(number)) or floorf(float(number)) != float(number) or absf(float(number)) > OFFSET_LIMIT: return {}
