@@ -70,13 +70,16 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not effect.is_empty():return effect
 	var material: Dictionary=spell_material_profile(record)
 	if not material.is_empty():return material
-	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot") not in ["material","consumable"] or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
-	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
-	# This is a material-owner admission, not individual use/effect activation.
-	# Actual recipe rows/choices/limits are still checked by the craft executor.
-	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return {}
-	return {"kind":"craft_material","standalone_effect_complete":false}
+	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or D.current_original_definition(record).is_empty():return {}
+	if not D.currency_identity_name(record).is_empty():return {} # Wallets retain their distinct existing owners.
+	# Physical acquisition does not assert an effect or a recipe. The existing
+	# supplier already knows the exact source row, blessing and explicit amount;
+	# keep that quantity/receipt rather than require an invented use operation.
+	if record.get("slot")=="material" and not SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():
+		return {"kind":"craft_material","standalone_effect_complete":false}
+	return {"kind":"held_original_item","standalone_effect_complete":false,"use_owner_required":true}
 
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
@@ -146,7 +149,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
-	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
+	if effect.is_empty():return _failure("원본 소지 개체·수량 보존 · 실제 사용 효과 또는 재료 소비자를 연결해야 합니다")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
 	var use_owner: Resource=load("res://scripts/loot/patch523_item_use.gd")
 	var problem: String=str(use_owner.call("eligibility",world,record))
