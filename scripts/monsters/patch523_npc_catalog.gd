@@ -8,6 +8,7 @@ const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","Npc
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
 const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
+const SPELL_ATTACK_VIEW_FIELDS = ["ID","NpcClassID","SpellID","MotionType","WeaponType","Range"]
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -138,13 +139,49 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 
 func row(table: String, id: int) -> Dictionary:
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return {}
-	return content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
+	var selected: Dictionary = content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
+	return _selected_spell_attack_view(selected) if table=="NpcAttack" else selected
 
 func owned(table: String, id: int) -> Array:
 	# Only the newly admitted original registry owns these sets. Empty sets are
 	# authoritative; neither a legacy cache nor a larger source relation fills them.
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return []
-	return indexes.get(table,{}).get(str(id),[]).duplicate(true)
+	var selected: Array = indexes.get(table,{}).get(str(id),[]).duplicate(true)
+	if table=="NpcAttack":
+		for position: int in range(selected.size()): selected[position] = _selected_spell_attack_view(selected[position])
+	return selected
+
+func _selected_spell_attack_view(attack: Dictionary) -> Dictionary:
+	# This is an input substitution for an already admitted attack, never an
+	# attack/owner discovery path. A view ID alone does not establish a join.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or content.get("source_archive_sha256")!=SOURCE_SHA: return attack
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA or identity!=source_identity: return attack
+	for field: String in SPELL_ATTACK_VIEW_FIELDS:
+		if not source_integer(attack.get(field)): return attack
+	var attack_id := int(attack.ID)
+	var npc_id := int(attack.NpcClassID)
+	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
+	if not source_integer(admitted.get("npc_class_id")) or int(admitted.npc_class_id)!=npc_id or admitted.get("source_archive_sha256")!=SOURCE_SHA: return attack
+	var selected: Dictionary = content.get("tables",{}).get("NpcAttack",{}).get(str(attack_id),{}).get("row",{})
+	var npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
+	if selected.is_empty() or selected!=attack or npc.is_empty() or not source_integer(npc.get("ID")) or int(npc.ID)!=npc_id: return attack
+	for pair: Array in [["sprite","Sprite"],["desc_id","DescId"]]:
+		if not source_integer(admitted.get(pair[0])) or not source_integer(npc.get(pair[1])) or admitted[pair[0]]!=npc[pair[1]]: return attack
+	var original: Dictionary = DEFINITIONS.row("NpcAttack",attack_id)
+	if original.is_empty() or original!=attack: return attack
+	if not DEFINITIONS.declared_exclusion("NpcAttack",original).is_empty() or not DEFINITIONS.declared_exclusion("NpcClass",npc).is_empty(): return attack
+	var matches: Array[Dictionary] = DEFINITIONS.related("ViewNpcSpellAttack","ID",attack_id)
+	if matches.size()!=1: return attack
+	var view: Dictionary = matches[0]
+	if view.size()!=SPELL_ATTACK_VIEW_FIELDS.size() or not DEFINITIONS.declared_exclusion("ViewNpcSpellAttack",view).is_empty(): return attack
+	for field: String in SPELL_ATTACK_VIEW_FIELDS:
+		if not source_integer(view.get(field)) or view[field]!=attack[field]: return attack
+	# Preserve every NpcAttack-only value, key and owner. No view metadata is
+	# inserted into the raw attack identity; units and execution remain unchanged.
+	var result: Dictionary = attack.duplicate(true)
+	for field: String in SPELL_ATTACK_VIEW_FIELDS: result[field] = view[field]
+	return result
 
 func _selected_definition_row(table: String, compiled: Dictionary) -> Dictionary:
 	if table == "NpcAttack": return selected_attack_row(compiled)

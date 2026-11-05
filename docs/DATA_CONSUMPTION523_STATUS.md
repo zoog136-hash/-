@@ -270,6 +270,31 @@ reward kinds remain explicit `unfollowed_typed_references`; declared-dummy
 nodes retain evidence without traversal. This does not complete gameplay
 consumption or the whole Reward table and remains unexecuted.
 
+The existing ItemData/shop call now also reads `quest_free_pass_input` through
+the private `_quest_free_pass_input(item_id,blockers)` helper. It follows
+QuestFreePass.ItemClassID→QuestFreePassList.QuestFreePassID→QuestView.ID,
+using the quest compiler's established QuestID namespace. `passes[].entries`
+retains every source row/edge and `quest_views` holds exact unique target nodes;
+missing/ambiguous references and shared declared exclusions remain evidence.
+Original order/duplicates/type fields remain intact. No Test-name/type-ID
+heuristic, full quest projection, description read, quest skip, completion or
+reward permission is added. The original list's1,125,008 JSON bytes/12,572 rows
+are input priorities, not newly used bytes/rows. Future pass use remains with
+the existing owner; source input construction is unexecuted/unverified.
+
+The existing market/GotCha reader now follows nested confirmed GotChaClassID
+relations through its private ID work queue and the existing `_pool()` reader.
+`describe()` drains each queued ID once before returning `pools[str(ID)]`.
+Nested `entries[].pool_reference` is an integer ID/null and `entries[].pool`
+stays empty, so cycles remain source ID edges without cyclic Dictionary objects.
+Existing top-level payment/product/additional pool objects stay compatible and
+also carry their reference ID. Entire original pools, duplicate/order/weight/
+Amount/condition rows and card/exclusion guards remain unchanged. Unknown units
+stay unresolved. This resolves original reads only: nested draw/replacement/
+count/denominator/grant rules stay explicitly unresolved and inactive. The
+original3,013,727-byte GotChaEntityView is not counted wholly consumed or used
+in gameplay. This read extension is unexecuted/unverified.
+
 The public data contracts for PR269 are:
 
 | Call | Returned source data and existing reader |
@@ -850,6 +875,20 @@ requested here. New visual pack/pin and final old saved-record visual fallback
 removal remain with the Sprite/image/spawn owners. These are explicit remaining
 boundaries, not whole-monster completion or new execution evidence.
 
+The actual admitted NPC `row("NpcAttack",id)` and `owned("NpcAttack",npc_id)`
+readers now also call `_selected_spell_attack_view(attack)`. For the same pinned
+original registry, an admitted owner, full original NpcAttack equality and one
+same-ID ViewNpcSpellAttack row must agree on all six fields (ID,NpcClassID,
+SpellID,MotionType,WeaponType,Range). Only then are those matching field values
+read from the original view and returned to existing `attack/attack_roots→combat`
+spell selection. Every NpcAttack-only field, key, owner set and order remains
+unchanged. Missing/different/ambiguous/declared-excluded views retain the already
+admitted attack; no new attack, AI, range unit, chance, timing or effect is
+invented. The original inventory lists this view as3,585,273 JSON bytes and
+23,491 rows; those are fixed input priorities, not newly consumed bytes/rows.
+No adoption or complete-view/gameplay use has been observed. This input delta
+was absent from the compared269 `007910fa` methods and remains unexecuted.
+
 The existing monster-drop reader is also source-only. `data()` now returns a
 current-original reference registry; the former packed-file loader remains
 `_legacy_data_for_reference()` and is not a final/default/fallback input.
@@ -1183,6 +1222,29 @@ effect owner. No name-only legacy balance is reinterpreted as a native supply,
 and these existing local rules are not reported as newly connected source
 effects. This is a specific remaining receiver boundary, not a count of unused
 tables or a claim that every unresolved table shares it.
+
+The later269 `6bda8cbb80e3bc95b85ba61c76b9920f055ffe82` now publishes the
+source-reader native-use receiver in `docs/CURRENT523_NATIVE_ITEM_OWNER.md`:
+`current523_native_stack.use_owned_original(world,full_original_ItemClass,request)`.
+The request has physical_id, quantity1, expected_quantity, expected_remaining
+and the actual opaque source_native_stack_receipt. Its exact selected current
+quantity/receipt must come from that owner; no ID/name reconstruction is allowed.
+Success is `ok && saved && consumed==1`, not `handled` alone. Existing HP/MP
+execution and source supplier/partition receipt handling remain that owner;
+unsupported effects return `source_use_supported:false` with ownership retained.
+Thus an original-plus-physical receiver is no longer generally absent. Its
+supported effect set and actual caller adoption are separate from the local
+name-only Rules interface above and from the still missing ItemBook mapping.
+No native use dispatcher, quantity owner or save engine is duplicated here.
+
+Another exact remaining crafting input boundary is ItemCraftRecommend. The
+current recipe list uses registered order plus category/grade/name filters;
+material selection accepts original row/slot IDs and user choices. Neither
+has a recommendation-type/parameter/unit/context receiver. The existing public
+compiler does not establish how Param1..3 is evaluated or which recommendation
+set Priority orders. No guessed sorting/admission rule or unused lookup field
+is added. This is that specific consumer's missing contract, not a new audit or
+whole-source blocker classification.
 
 PR269 owns remaining integration, source item ownership/effects and the latest
 231/248/265 handoffs. PR264 owns attendance/pass, source reward consumption,

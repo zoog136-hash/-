@@ -262,6 +262,56 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dic
 		return {}
 	return reference
 
+static func _quest_free_pass_input(item_id: int, blockers: Array[String]) -> Dictionary:
+	# Source input only. The existing quest projection establishes QuestID as
+	# QuestView.ID; do not project quest goals/rewards or grant skip eligibility.
+	var unresolved: Array[Dictionary] = []
+	var quests: Dictionary = {}
+	var metadata: Dictionary = {"QuestFreePass":SOURCE.table_metadata("QuestFreePass")}
+	var result: Dictionary = {"kind":"twilight.current523.quest-free-pass-input.v1","source":SOURCE.identity(),
+		"item_class_id":item_id,"passes":[],"quest_views":quests,"unresolved":unresolved,
+		"source_table_metadata":metadata,"reference_only":true,"can_activate":false,"ownership_authorized":false,
+		"quest_completion_authorized":false,"skip_authorized":false,
+		"remaining_contract":"Source relationships only; pass eligibility, use, quest completion and rewards remain with their existing owners"}
+	if metadata.QuestFreePass.is_empty():
+		blockers.append("missing_source_reference:QuestFreePass")
+		unresolved.append({"target":{"table":"QuestFreePass","field":"ItemClassID","id":item_id},
+			"reason":"missing_source_reference","source_problem":SOURCE.problem()})
+		return result
+	var passes: Array[Dictionary] = SOURCE.related("QuestFreePass","ItemClassID",item_id)
+	if passes.is_empty(): return result
+	metadata["QuestFreePassList"] = SOURCE.table_metadata("QuestFreePassList")
+	metadata["QuestView"] = SOURCE.table_metadata("QuestView")
+	for raw: Dictionary in passes:
+		var pass_node: Dictionary = _target_node("QuestFreePass",raw,blockers)
+		pass_node["entries"] = []
+		result.passes.append(pass_node)
+		var pass_id: Variant = raw.get("ID")
+		if not _target_integer(pass_id) or int(pass_id)<0:
+			blockers.append("invalid_source_reference:QuestFreePass.ID")
+			unresolved.append({"from":{"table":"QuestFreePass","row":raw},
+				"target":{"table":"QuestFreePassList","field":"QuestFreePassID","id":pass_id},"reason":"invalid_source_reference"})
+			continue
+		if metadata.QuestFreePassList.is_empty():
+			blockers.append("missing_source_reference:QuestFreePassList")
+			unresolved.append({"target":{"table":"QuestFreePassList","field":"QuestFreePassID","id":pass_id},
+				"reason":"missing_source_reference","source_problem":SOURCE.problem()})
+			continue
+		# Keep every original relationship in source order, including duplicate
+		# rows and excluded declarations. Exclusion is evidence, never a filter.
+		for link: Dictionary in SOURCE.related("QuestFreePassList","QuestFreePassID",int(pass_id)):
+			var edge: Dictionary = _target_node("QuestFreePassList",link,blockers)
+			var quest_id: Variant = link.get("QuestID")
+			edge["quest_ref"] = {"table":"QuestView","id":quest_id,"reference_only":true,"can_activate":false}
+			if _target_integer(quest_id) and int(quest_id)>=0:
+				var key: String = str(int(quest_id))
+				if not quests.has(key): quests[key] = _target_row("QuestView",quest_id,blockers,unresolved)
+				edge["quest"] = quests[key]
+			else:
+				edge["quest"] = _target_row("QuestView",quest_id,blockers,unresolved)
+			pass_node.entries.append(edge)
+	return result
+
 static func describe(item_id: int, include_descriptions: bool = false) -> Dictionary:
 	# UNVERIFIED: final definition input is the newly supplied original ZIP.
 	# Legacy sidecar code/files remain preserved; they are not a prerequisite
@@ -269,7 +319,7 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 	var identity: Dictionary = SOURCE.identity()
 	var item: Dictionary = SOURCE.row("ItemClass",item_id) if item_id>0 and not identity.is_empty() else {}
 	var blockers: Array[String] = []
-	var result: Dictionary = {"kind":"twilight.current523.item-data.v1","ok":false,"reference_only":true,"can_activate":false,"ownership_authorized":false,"item_class_id":item_id,"source":identity,"item_class":item,"category":{},"grade":{},"equip_slots":[],"class_limits":[],"bonuses":[],"typed_references":[],"descriptions":{},"compiled_use_spec":{},"compiled_invoke_options":[],"use_spec_status":"original_definition_only","blockers":blockers}
+	var result: Dictionary = {"kind":"twilight.current523.item-data.v1","ok":false,"reference_only":true,"can_activate":false,"ownership_authorized":false,"item_class_id":item_id,"source":identity,"item_class":item,"category":{},"grade":{},"equip_slots":[],"class_limits":[],"bonuses":[],"typed_references":[],"quest_free_pass_input":{},"descriptions":{},"compiled_use_spec":{},"compiled_invoke_options":[],"use_spec_status":"original_definition_only","blockers":blockers}
 	if item.is_empty():
 		blockers.append("source_item_unavailable")
 		result["problem"] = SOURCE.problem()
@@ -294,6 +344,7 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 		result.equip_slots.append({"link":link,"slot":_missing(blockers,"EquipSlot",int(link.get("EquipSlotID",-1)))})
 	for link: Dictionary in SOURCE.related("ItemClassLimit","ItemClassID",item_id):
 		result.class_limits.append({"link":link,"class":_missing(blockers,"Class",int(link.get("ClassID",-1)))})
+	result.quest_free_pass_input = _quest_free_pass_input(item_id,blockers)
 	result.bonuses = _effects("ItemBonus","ItemClassID",item_id,blockers)
 	for detail: Dictionary in result.bonuses:
 		var reference: Dictionary = _typed_reference(detail,blockers)
