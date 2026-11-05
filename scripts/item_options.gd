@@ -6,7 +6,15 @@ static var original_percent_input_evidence: Dictionary = {}
 static func additional_original_percent(record: Dictionary, key: String) -> float:
 	# Missing base equipment operands only. Existing DTO fields and mapped
 	# bonuses win; enhancement overlays remain separate existing contributions.
-	var names: Dictionary = {"castSpeed":"CastSpeedBonus","blessing_consumption_reduction_pct":"EinasadSavingPercent","hpPct":"HPPlusPercent","mpPct":"MPPlusPercent"}
+	var names: Dictionary = {
+		"castSpeed":"CastSpeedBonus","blessing_consumption_reduction_pct":"EinasadSavingPercent",
+		"hpPct":"HPPlusPercent","mpPct":"MPPlusPercent",
+		"strPercent":"StrengthScale","dexPercent":"DexterityScale","intPercent":"IntelligenceScale",
+		"healing_magic_pct":"HPHealIncreasePercent","dot_damage_reduction_pct":"PoisonDamageReductionPercent",
+		"melee_damage_reduction_pct":"MeleeDamageReductionPercent",
+		"ranged_damage_reduction_pct":"RangeDamageReductionPercent",
+		"magic_damage_reduction_pct":"MagicDamageReductionPercent",
+		"melee_critical_resistance":"MeleeCriticalResist","ranged_critical_resistance":"RangeCriticalResist"}
 	if not names.has(key) or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
 	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
 	var bless: Variant = record.get("source_bless_raw")

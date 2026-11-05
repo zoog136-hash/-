@@ -129,3 +129,26 @@ precedence rules. Maximum-resource calculations change only by the missing
 original equipment operand; no healing, mana granting, ownership, equipment
 transaction, storage or save migration is introduced. Runtime evidence records
 the unit and divisor separately. These additions are likewise unverified.
+
+Existing equipment input calls also read direct Percentage StrengthScale,
+DexterityScale and IntelligenceScale in _effective_attribute(),
+HPHealIncreasePercent in SkillService's existing healing multiplier, and
+PoisonDamageReductionPercent in _source_dot_damage(). These use the same
+original-row and mapped-bonus safeguards and the existing enhancement reader's
+10,000 conversion. Existing attribute basis/rounding and permitted DoT channel
+policies remain authoritative. This supplies missing base-item operands to
+those established calls; it does not add a new status, healing spell, resistance
+namespace or policy. Conditional/possession effects are still not interpreted.
+
+Direct MeleeDamageReductionPercent, RangeDamageReductionPercent and
+MagicDamageReductionPercent also feed the existing attack-style branch of
+World._pve_reduction_percent(). Each original operand stays in its corresponding
+melee/ranged/magic channel with the preexisting caps and ordering. No PvP effect
+is projected into PvE by this addition, and no conditional application target
+is inferred. Existing extra-equipment and status contributions stay separate.
+
+MeleeCriticalResist and RangeCriticalResist likewise supply missing direct
+Percentage operands to _critical_resistance_stat() through its established
+equipment sum. They retain distinct attack styles and do not create a magical
+critical-resistance interpretation. Existing critical rolls and formulas stay
+unchanged. All new percentage operands remain uncompiled and unexecuted.
