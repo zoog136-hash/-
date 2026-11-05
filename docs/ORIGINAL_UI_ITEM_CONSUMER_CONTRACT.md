@@ -545,3 +545,34 @@ The native vitals package contains one EXP entry and a partial CharInfo scope,
 It is dependency-resolved/not-rendered. Pack assembly and delivery metadata do
 not replace a game run. No new test, render, quality assessment or CI was run;
 these code paths and viewport behavior remain unexecuted and unverified.
+
+### Native main combat and shortcuts — unexecuted
+
+When the selected pack supplies their explicit node scopes, source_main_hud now
+mounts the actual Hud_AttackPad at MainScene Project19912 and Hud_TopMenu at
+Project13420. Native attack/auto/target/self controls emit the existing game
+signals; All/Inventory/Skill/Store/Quest use the existing HUD entry points.
+No new combat, AI, cost, shop, inventory, reward or save implementation is added.
+The source controller's acknowledgement does not claim a successful action.
+
+The attack/auto/target/self availability booleans are captured from the current
+game's existing controls before replacing their visuals. Original prefab
+containers receive those explicit host availability values; this is an adapter
+policy and not a claim to reconstruct the original client's mode switches.
+HUD.set_auto and the existing quickslot/self-state update refresh the original
+auto/self feedback. No animation loop or start/stop policy is invented.
+
+Only accepted original components hide their corresponding older controls.
+Pack replacement preserves prior availability and restores controls no longer
+owned by a replacement component. Failed component assembly remains explicit.
+The normal main shortcuts are a partial node scope: weight/penalty placeholders,
+other modes, paid/post/restart features are not assigned fabricated data.
+Pickup still requires the actual selected ground-drop contract; the adapter
+never substitutes automatic nearest-item selection or auto-loot.
+
+The assembled core package has one EXP entry and three explicit partial scopes
+(CharInfo, AttackPad, TopMenu), 16 original files, and retained full parent/source
+metadata. Its receipt remains dependencies-resolved/not-rendered with
+whole_scene_completion_claimed:false. No new tests, game run, rendering,
+verification suite, quality assessment or CI was performed. These interfaces
+and replacement behavior remain unexecuted/unverified.

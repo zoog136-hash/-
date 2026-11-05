@@ -199,6 +199,7 @@ func _build_v20_status() -> void:
 
 func set_auto(enabled: bool) -> void:
 	super.set_auto(enabled)
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_combat()
 	if v20_auto_button != null:
 		v20_auto_button.text = "AUTO\nON" if enabled else "AUTO"
 		v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.88,42,Color("69c49b") if enabled else UI.BRONZE))
@@ -694,6 +695,7 @@ func _refresh_currency_readout() -> void:
 
 func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,self_enabled: bool) -> void:
 	super.set_quickslot_state(entries,inventory,buffs,self_enabled)
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_combat()
 	update_currency_balances(inventory)
 	# Main supplies its inventory here even on a fresh game without a save file.
 	lineage_inventory_ui.set_inventory(inventory)

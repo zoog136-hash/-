@@ -4,6 +4,8 @@ extends Node
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.gd")
+const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
+const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
 const MAIN="UI/MainScene.csb"
 const MAIN_SHA="80c174a87caf5cfbf910336b64616334ac560ed477f7a663aec58ada70d4285f"
 const EXP_PROJECT=23080
@@ -26,6 +28,16 @@ var last_result: Dictionary={}
 var _char_values: Dictionary={}
 var _char_result: Dictionary={}
 var _char_mount_attempted: bool=false
+var _combat: RefCounted
+var _combat_scene: Node2D
+var _menu: RefCounted
+var _menu_scene: Node2D
+var _combat_result: Dictionary={}
+var _menu_result: Dictionary={}
+var _core_attempted: bool=false
+var _combat_availability: Dictionary={}
+var _legacy_combat: Dictionary={}
+var _legacy_shortcuts: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -40,6 +52,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	_pack=pack
 	_hud=weakref(hud)
 	_canvas=weakref(canvas)
+	_capture_existing_controls(hud)
 	_coordinates=Node2D.new()
 	_coordinates.name="OriginalMainSourceCoordinates"
 	_coordinates.z_index=35
@@ -64,7 +77,71 @@ func update_player(_level: int, hp: int, max_hp: int, mp: int, max_mp: int, expe
 		if not is_instance_valid(_char_scene):
 			if not _char_mount_attempted:_mount_char_info()
 		elif not char_unchanged:_char_result=Vitals.refresh_char_info(_char_scene,_char_values)
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	if not _core_attempted:_mount_core_controls()
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+
+func _capture_existing_controls(hud: Node) -> void:
+	var previous: Variant=hud.get("original_main_ui_controller")
+	if is_instance_valid(previous) and previous.has_method("source_control_availability"):
+		_combat_availability=previous.source_control_availability()
+	var controls: Dictionary={
+		"attack":hud.get_node_or_null("Root/RightControls/AttackButton"),
+		"auto":hud.get("v20_auto_button"),
+		"target":hud.get_node_or_null("Root/V20GameplayHUD/SelectTarget"),
+		"self":hud.get("v20_self_button")
+	}
+	for kind: String in controls:
+		var control: Variant=controls[kind]
+		if control is CanvasItem and is_instance_valid(control):_legacy_combat[kind]=weakref(control)
+		if not _combat_availability.has(kind):_combat_availability[kind]=control is CanvasItem and is_instance_valid(control) and control.visible
+	for kind: String in ["inventory","skills","shop","menu"]:
+		var control: Node=hud.get_node("Root").find_child("Shortcut_"+kind,true,false)
+		if control is CanvasItem:_legacy_shortcuts[kind]=weakref(control)
+
+func source_control_availability() -> Dictionary:
+	return _combat_availability.duplicate(true)
+
+func _mount_core_controls() -> void:
+	_core_attempted=true
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return
+	var world: Node=hud.get_parent()
+	if _pack.manifest.get("scenes",{}).has(Combat.PAD):
+		_combat=Combat.new()
+		var configured: Dictionary=_combat.configure(_pack,hud,world)
+		if configured.get("ok",false):
+			var contract: Dictionary=_combat.build_core(_combat_availability)
+			_combat_result=_mount_main_project(19912,contract)
+			if _combat_result.get("ok",false):
+				_combat_scene=_combat_result.scene
+				_combat_result.erase("scene")
+		else:
+			_combat_result=configured
+			if configured.get("code")=="source_main_combat_state_unavailable":_core_attempted=false
+	if _pack.manifest.get("scenes",{}).has(MainMenu.MEMBER) and not is_instance_valid(_menu_scene):
+		_menu=MainMenu.new()
+		var configured: Dictionary=_menu.configure(_pack,hud)
+		if configured.get("ok",false):
+			_menu_result=_mount_main_project(13420,_menu.build_core())
+			if _menu_result.get("ok",false):
+				_menu_scene=_menu_result.scene
+				_menu_result.erase("scene")
+		else:_menu_result=configured
+	sync_legacy_visibility()
+
+func _mount_main_project(offset: int, contract: Dictionary) -> Dictionary:
+	if not contract.get("ok",false):return contract
+	var scene=Scene.new()
+	var configured: Dictionary=scene.configure_project(_pack,MAIN,offset,contract.bindings,contract.source_node_offsets)
+	if not configured.get("ok",false):
+		scene.free()
+		return configured
+	_coordinates.add_child(scene)
+	return {"ok":true,"scene":scene,"source":contract.member,"selected_source_offsets":contract.source_node_offsets.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
+
+func refresh_combat() -> Dictionary:
+	if _combat==null or not is_instance_valid(_combat_scene):return {"ok":true,"source_combat_presented":false}
+	return _combat.refresh_presented(_combat_scene)
 
 func _mount_exp() -> Dictionary:
 	if not _has_player_values:return _fail("source_main_player_values_pending")
@@ -139,6 +216,12 @@ func sync_legacy_visibility() -> void:
 	# only the fields no longer owned by an accepted original component.
 	_set_legacy_exp_visible(not is_instance_valid(_exp_scene))
 	_set_legacy_vitals_visible(not is_instance_valid(_char_scene))
+	for kind: String in _legacy_combat:
+		var control: Object=_legacy_combat[kind].get_ref()
+		if control!=null:control.visible=false if is_instance_valid(_combat_scene) else bool(_combat_availability.get(kind,false))
+	for kind: String in _legacy_shortcuts:
+		var control: Object=_legacy_shortcuts[kind].get_ref()
+		if control!=null:control.visible=not is_instance_valid(_menu_scene)
 
 func _remember(result: Dictionary) -> Dictionary:
 	last_result=result.duplicate(true)
@@ -159,6 +242,12 @@ func release(restore_legacy: bool=true) -> void:
 	if restore_legacy:
 		_set_legacy_exp_visible(true)
 		if is_instance_valid(_char_scene):_set_legacy_vitals_visible(true)
+		for kind: String in _legacy_combat:
+			var control: Object=_legacy_combat[kind].get_ref()
+			if control!=null:control.visible=bool(_combat_availability.get(kind,false))
+		for kind: String in _legacy_shortcuts:
+			var control: Object=_legacy_shortcuts[kind].get_ref()
+			if control!=null:control.visible=true
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
