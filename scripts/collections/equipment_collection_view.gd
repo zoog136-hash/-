@@ -344,10 +344,18 @@ func _choose(cid: String, sid: String) -> void:
 	candidates_list.name = "CollectionCandidates"
 	candidates_list.custom_minimum_size.y = 125
 	detail.add_child(candidates_list)
+	var source_images: Dictionary = {}
 	for item: Dictionary in picked_candidates:
-		var index: int = candidates_list.add_item("+%d %s  · ID %s" % [int(item.enchant),Core.normalize_name(str(item.name)),item.instance_id])
+		var physical: Dictionary = runtime.world.item_instances.get(str(item.instance_id),{})
+		var source: Dictionary = physical.get("record",{})
+		var visual: Dictionary = SourceImages.describe_item(source,str(item.name))
+		var index: int = candidates_list.add_item("+%d %s  · ID %s" % [int(item.enchant),Core.normalize_name(str(item.name)),item.instance_id],visual.get("texture") as Texture2D)
 		candidates_list.set_item_metadata(index,str(item.instance_id))
 		candidates_list.set_item_tooltip(index,Core.normalize_name(str(item.name))+"\n원본 ID: "+str(item.source_id))
+		var evidence: Dictionary = visual.duplicate(true)
+		evidence.erase("texture")
+		source_images[str(item.instance_id)] = evidence
+	candidates_list.set_meta("source523_item_images",source_images)
 	var button := UI.button("선택 장비 등록",func() -> void:
 		if hud.workspace.was_scroll_dragged(detail_scroll): return
 		if candidates_list == null or candidates_list.get_selected_items().is_empty(): hud.show_message("등록할 장비를 먼저 선택하세요"); return

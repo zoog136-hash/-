@@ -5,6 +5,8 @@ const CardFace = preload("res://scripts/growth/growth_card_face.gd")
 const Diagram = preload("res://scripts/growth/growth_diagram.gd")
 const Palette = preload("res://scripts/growth/growth_palette.gd")
 const Surface = preload("res://scripts/growth/growth_surface.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+const CLASS_IMAGES = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var hud
 var runtime
 var mode: String = "emblems"
@@ -120,6 +122,44 @@ func _button(text: String, action: Callable, parent: Node = null) -> Button:
 	parent.add_child(out)
 	return out
 
+func _source_item_image(item_class_id: int) -> Dictionary:
+	var row: Dictionary = runtime.source523.data.get("items", {}).get(str(item_class_id), {})
+	return IMAGES.describe_item_class_row(row) if not row.is_empty() else IMAGES.describe_item_class(item_class_id)
+
+func _action_image(action: String, id: String, offer: Dictionary = {}) -> Dictionary:
+	if not IMAGES.selected() or runtime.development: return {}
+	if action == "recharge":
+		var instance: Dictionary = runtime.world.item_instances.get(id, {})
+		var recharge: Dictionary = runtime.source523.recharge(instance)
+		if not recharge.is_empty(): return _source_item_image(int(recharge.item_id))
+	elif action == "reset":
+		# The quote identifies the exact physical source material it will consume.
+		# A scroll name or a symbol/group ID cannot provide an ItemClass identity.
+		var instance: Dictionary = runtime.world.item_instances.get(str(offer.get("consume_instance", "")), {})
+		if runtime.source523.reset_material(instance):
+			return IMAGES.describe_item_class_row(instance.record.source_original_item)
+	elif action == "guardian_cast" and runtime.guardian_source.has_node(id):
+		# Use the same native spell reward as the existing guardian_cast caller.
+		var rewards: Array = runtime.guardian_rewards(id)
+		if not rewards.is_empty() and rewards[0].get("spell") is Dictionary:
+			return CLASS_IMAGES.describe_spell_class_row(rewards[0].spell, "IconID")
+	return {}
+
+func _bind_action_image(button: Button, action: String, id: String, offer: Dictionary = {}) -> void:
+	button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if button.has_meta(key): button.remove_meta(key)
+	var image_info: Dictionary = _action_image(action, id, offer)
+	if image_info.is_empty(): return
+	button.icon = image_info.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_action"] = action
+	button.set_meta("source523_image", evidence)
+	button.set_meta("source523_image_provenance", image_info.get("provenance", {}).duplicate(true))
+	button.set_meta("source523_image_status", str(image_info.get("source_status", image_info.get("reason", ""))))
+
 func _refresh() -> void:
 	request = {}
 	for child: Node in body.get_children(): body.remove_child(child); child.queue_free()
@@ -160,7 +200,9 @@ func _refresh() -> void:
 				var recharge: Dictionary = runtime.source523.recharge(runtime.world.item_instances[instance_id])
 				if recharge.is_empty(): continue
 				var owned_id: String = instance_id
-				_button("%s 사용 · 축복 포인트 +%d" % [str(recharge.name),int(recharge.amount)],func() -> void: _prepare("recharge",owned_id,1)).name = "GrowthRecharge_"+owned_id
+				var recharge_button: Button = _button("%s 사용 · 축복 포인트 +%d" % [str(recharge.name),int(recharge.amount)],func() -> void: _prepare("recharge",owned_id,1))
+				recharge_button.name = "GrowthRecharge_"+owned_id
+				_bind_action_image(recharge_button, "recharge", owned_id)
 				usable_recharges += 1
 			if usable_recharges == 0: _label("사용 가능한 축복 포인트 충전 재료가 없습니다.")
 		_button("수호석 제작 · 일반 주문서",func() -> void: _prepare("craft_stone","",1))
@@ -257,6 +299,7 @@ func _emblem() -> void:
 		b.name = "GrowthAction_"+action+str(count)
 		b.tooltip_text = str(offer.message)
 		b.disabled = not bool(offer.ok)
+		_bind_action_image(b, action, selected, offer)
 		_label(str(pair[1])+": "+str(offer.message))
 	if not runtime.development:
 		_label(runtime.history.status(selected))
@@ -439,6 +482,7 @@ func _node_detail(row: Dictionary) -> void:
 		var b := _button(title,func() -> void: _prepare(action,id,1))
 		b.name = "GuardianAction_"+action
 		b.disabled = not bool(offer.ok)
+		_bind_action_image(b, action, id, offer)
 		var hint: Label=_label(str(offer.message))
 		guardian_controls.append({"button":weakref(b),"hint":weakref(hint),"action":action,"id":id})
 
@@ -458,7 +502,9 @@ func _prepare(action: String, id: String, count: int) -> void:
 	request = {"action":action,"id":id,"count":count,"revision":int(offer.revision),"day":int(offer.get("day",-1))}
 	for child: Node in confirmation.get_children(): confirmation.remove_child(child); child.queue_free()
 	_label(str(offer.message)+"\n진행하시겠습니까?",confirmation)
-	_button("확인",_confirm,confirmation).name = "GrowthConfirm"
+	var confirm_button: Button = _button("확인",_confirm,confirmation)
+	confirm_button.name = "GrowthConfirm"
+	_bind_action_image(confirm_button, action, id, offer)
 	_button("취소",func() -> void: request={}; _refresh(); result.text="취소됨 · 재료 차감 없음",confirmation).name = "GrowthCancel"
 	# Bring confirmation into view on short landscape Android windows.
 	call_deferred("_scroll_confirmation")

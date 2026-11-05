@@ -1,5 +1,6 @@
 extends ScrollContainer
 const UI=preload("res://scripts/ui/renewal_theme.gd")
+const IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 var runtime
 var hud
 var column: VBoxContainer
@@ -51,12 +52,35 @@ func button(text: String, action: Callable, id: String) -> Button:
 	column.add_child(item)
 	return item
 
+func _bind_donation_icon(control: Button, enabled: bool = true) -> void:
+	control.icon=null
+	for key: String in ["source523_image","source523_image_provenance","source523_image_status"]:
+		if control.has_meta(key): control.remove_meta(key)
+	if not enabled or not IMAGES.selected(): return
+	# The existing donation service consumes this exact source ItemClass
+	# record. SubTitle, quest and Currency IDs do not become item identities.
+	var record: Dictionary=runtime.source.powder_record
+	var source_row: Dictionary=record.get("source_item_row",{})
+	var image_info: Dictionary={}
+	if not source_row.is_empty(): image_info=IMAGES.describe_item_class_row(source_row)
+	elif IMAGES.recognized_item(record): image_info=IMAGES.describe_item_class(IMAGES.item_class_id(record))
+	if image_info.is_empty(): return
+	control.icon=image_info.get("texture") as Texture2D
+	control.expand_icon=true
+	var evidence: Dictionary=image_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_role"]="donation_item_cost"
+	control.set_meta("source523_image",evidence)
+	control.set_meta("source523_image_provenance",image_info.get("provenance",{}).duplicate(true))
+	control.set_meta("source523_image_status",str(image_info.get("source_status",image_info.get("reason",""))))
+
 func build(message: String="") -> void:
 	for child: Node in column.get_children():
 		if child==confirm: continue
 		column.remove_child(child)
 		child.queue_free()
 	confirm.hide()
+	_bind_donation_icon(confirm_ok,false)
 	label("아덴 왕실 · 작위")
 	status=label("")
 	outcome=label(message)
@@ -77,7 +101,8 @@ func build(message: String="") -> void:
 		button("선택 목표 시작",func() -> void: show_result(runtime.start_trial(picker.get_selected_id(),revision)),"StartTitleTrial")
 		button("현재 목표 포기",func() -> void: show_result(runtime.abandon(revision)),"AbandonTitleTrial")
 		button("일반 심사 검토",func() -> void: review("quest"),"ReviewTitleQuest")
-		button("기부 심사 검토",func() -> void: review("donation"),"ReviewTitleDonation")
+		var donation_review: Button=button("기부 심사 검토",func() -> void: review("donation"),"ReviewTitleDonation")
+		_bind_donation_icon(donation_review)
 	if not runtime.state.achieved.is_empty():
 		var revision:=int(runtime.state.revision)
 		button("호칭 표시: "+("켜짐" if runtime.state.display else "꺼짐"),func() -> void: show_result(runtime.toggle_display(revision)),"ToggleTitleDisplay")
@@ -194,6 +219,7 @@ func review(route: String) -> void:
 	var result: Dictionary=runtime.review(route,reviewed_revision)
 	if not result.ok: outcome.text=result.message; scroll_vertical=0; return
 	reviewed_route=route
+	_bind_donation_icon(confirm_ok,route=="donation")
 	confirm_text.text=str(result.message)
 	confirm.show()
 	column.move_child(confirm,0)
@@ -204,12 +230,14 @@ func review(route: String) -> void:
 func _confirmed() -> void:
 	var route:=reviewed_route; var revision:=reviewed_revision
 	reviewed_route=""; reviewed_revision=-1
+	_bind_donation_icon(confirm_ok,false)
 	confirm.hide()
 	if route.is_empty(): return
 	show_result(runtime.attempt(route,revision))
 
 func _cancelled() -> void:
 	reviewed_route=""; reviewed_revision=-1
+	_bind_donation_icon(confirm_ok,false)
 	confirm.hide()
 	for child: Node in column.get_children():
 		if child is Button: child.disabled=false

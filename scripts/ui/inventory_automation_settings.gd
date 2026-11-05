@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const Touch = preload("res://scripts/ui/inventory_settings_touch.gd")
 var hud: Node
 var world: Node
@@ -181,6 +182,7 @@ func _choose_file() -> void:
 
 func _refresh() -> void:
 	list.clear()
+	if list.has_meta("source523_images"): list.remove_meta("source523_images")
 	source_rows.clear()
 	selected = -1
 	var data: Dictionary = service.source_rules.document
@@ -197,8 +199,10 @@ func _refresh() -> void:
 		source_rows.append(row)
 		var definition: Dictionary = service.source_rules.definition(str(int(row.ItemClassID)))
 		list.add_item("#%d %s%s" % [int(row.ItemClassID),str(definition.label)," · 축복ID%d" % int(row.ItemBlessCodeID) if mode == "deposit" else ""])
+		_bind_option_image(list,list.item_count-1,int(row.ItemClassID))
 	if not source_rows.is_empty(): list.select(0); _select(0)
 	else:
+		_clear_register_image()
 		details.text = "원본 규칙을 설치하면 전체 정의와 정확한 ID 연결을 확인할 수 있습니다."
 		register.disabled = true
 		price_action.disabled = true
@@ -225,7 +229,10 @@ func _select(index: int) -> void:
 	held_options = _held_matches(row)
 	held_choice.clear()
 	held_choice.add_item("소지한 정확한 아이템 키를 선택하세요")
-	for record: Dictionary in held_options: held_choice.add_item(str(record.name)+" · "+_registered_key(record))
+	if held_choice.has_meta("source523_images"): held_choice.remove_meta("source523_images")
+	for record: Dictionary in held_options:
+		held_choice.add_item(str(record.name)+" · "+_registered_key(record))
+		_bind_option_image(held_choice,held_choice.item_count-1,int(row.ItemClassID))
 	if held_options.size() == 1: held_choice.select(1)
 	held_choice.visible = not item.virtual
 	var held: Dictionary = _chosen_held()
@@ -243,9 +250,39 @@ func _select(index: int) -> void:
 	fallback.editable = mode == "sell" and item.merchant_auto and not item.virtual and policy.is_empty()
 	price_action.disabled = not fallback.editable
 	register.disabled = held.is_empty()
+	_bind_register_image(held)
 	category_action.visible = mode == "sell" and bool(item.virtual)
 	details.text = "#%s %s\n%s" % [id,str(item.label),"범주 선택자 · 실제 아이템 등록 안 함" if item.virtual else "원본 TestItem · 자동 처리 보류" if item.test_item else ("소지: "+str(held.name) if not held.is_empty() else "일치하는 소지품 없음 · 이름 추정 연결 안 함")]
 	if mode == "sell" and not item.virtual: details.text += "\n매입 %d 아데나 · %s" % [unit,"원본·공개 확인값" if not policy.is_empty() else "자체값(수정 가능)"]
+
+func _source_item_image(item_class_id: int) -> Dictionary:
+	return SOURCE_IMAGES.describe_item_class(item_class_id) if SOURCE_IMAGES.selected() else {}
+
+func _bind_option_image(control: Control, index: int, item_class_id: int) -> void:
+	var image: Dictionary = _source_item_image(item_class_id)
+	control.call("set_item_icon",index,image.get("texture") as Texture2D)
+	if image.is_empty(): return
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	var images: Dictionary = control.get_meta("source523_images",{})
+	images[index] = evidence
+	control.set_meta("source523_images",images)
+
+func _clear_register_image() -> void:
+	register.icon = null
+	if register.has_meta("source523_image"): register.remove_meta("source523_image")
+
+func _bind_register_image(record: Dictionary) -> void:
+	_clear_register_image()
+	if record.is_empty() or not SOURCE_IMAGES.selected(): return
+	var identity: Dictionary = service.source_rules.resolve(record)
+	if identity.is_empty(): return
+	var image: Dictionary = _source_item_image(int(identity.item.id))
+	register.icon = image.get("texture") as Texture2D
+	register.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	register.set_meta("source523_image",evidence)
 
 func _chosen_held() -> Dictionary:
 	return held_options[held_choice.selected-1] if held_choice.selected > 0 and held_choice.selected <= held_options.size() else {}
@@ -256,6 +293,7 @@ func _registered_key(record: Dictionary) -> String:
 func _update_held_selection() -> void:
 	var held: Dictionary = _chosen_held()
 	register.disabled = held.is_empty()
+	_bind_register_image(held)
 	keep.value = 0
 	if held.is_empty(): return
 	for target: Dictionary in service.state.get(mode,[]):

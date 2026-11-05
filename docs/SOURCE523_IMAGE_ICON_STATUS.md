@@ -169,6 +169,16 @@ Library identities or saves are included in Git.
   already established by the recovery service. Currency, Fish, territory and
   tournament identifiers are not promoted to item or image identities. These
   image calls do not change purchase, opening, recovery or persistence.
+- Existing equipment-collection candidate rows use the same physical instance's
+  preserved source record. Automatic inventory rule/held selectors use their
+  declared ItemClass field, and actual equipment-category candidates use the
+  saved record of the selected physical ID. Candidate selection/registration
+  metadata, filters and sale rules are unchanged.
+- Existing emblem/half-elixir recharge/reset controls, guardian skill controls,
+  totem material/reset/craft controls and title donation controls consume the
+  original item or spell role already used by their owning action. Confirmation
+  buttons retain the same identity. Group IDs, card IDs, Bonus IDs, multi-item
+  candidates and name-only costs do not become guessed image identities.
 - NPC attack/environment-buff ItemList rows consume their already supplied
   full SpellClass/BuffClass rows after canonical row and namespace checks.
   TestSpell/dummy exclusions remain applied. Unsupported CSB entries stay
