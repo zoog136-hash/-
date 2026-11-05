@@ -662,3 +662,11 @@ absent authoritative dialogue→mobile NpcClass relation; it is not registered
 with a fabricated positive ID. Actual original UI/image installation and display
 remain separate. All latest paths are unexecuted/unverified, historical58/146
 and88 remaining are unchanged, and no95% use assertion or new checks are made.
+
+
+Before original skill-cost commitment the owner re-reads that actual existing
+service's material plan and requires the exact physical requests, legacy costs,
+MP/HP and primary ammo quote to still match. The transient resolved skill is
+not adopted as a new definition; only its quote digest is retained in the ammo
+outcome journal. This is another runtime transaction guard in source code, not
+an executed verification of the latest implementation.

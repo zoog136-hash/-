@@ -218,7 +218,7 @@ func spend(skill: Dictionary) -> bool:
 		var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
 		var current: Dictionary=owner.call("original_skill_ammo",world,str(physical.cost_role),int(physical.quantity))
 		if current!=physical:return false
-		var paid: Dictionary=owner.call("consume_ammo",world,str(physical.inventory_key),int(physical.quantity),int(skill.get("mp",0)),null,false,{"hp_cost":int(skill.get("hp",0)),"legacy_spent":plan.spent.duplicate(true),"skill_id":str(skill.get("id","")),"material_requests":plan.get("physical_materials",[]).duplicate(true)})
+		var paid: Dictionary=owner.call("consume_ammo",world,str(physical.inventory_key),int(physical.quantity),int(skill.get("mp",0)),null,false,{"hp_cost":int(skill.get("hp",0)),"legacy_spent":plan.spent.duplicate(true),"skill_id":str(skill.get("id","")),"material_requests":plan.get("physical_materials",[]).duplicate(true),"resolved_skill":skill.duplicate(true)})
 		if not paid.get("ok",false) or not paid.get("saved",false) or paid.get("consumed")!=physical.quantity:
 			world.hud.show_message(str(paid.get("reason","원문 스킬 탄약·비용 저장 연결 대기")));return false
 		world._refresh_ammo_counters();return true

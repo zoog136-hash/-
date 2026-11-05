@@ -998,8 +998,13 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty() or world.hp<=0 or not world._patch523_item_allowed():return _failure("원본 탄약 사용·저장 보호 중")
 	var hp_cost: int=0;var legacy_spent: Dictionary={}
 	if not additional_cost.is_empty():
-		if additional_cost.size() not in [3,4] or (additional_cost.size()==4 and not additional_cost.get("material_requests") is Array) or not integer(additional_cost.get("hp_cost")) or not additional_cost.get("legacy_spent") is Dictionary or not additional_cost.get("skill_id") is String or str(additional_cost.skill_id).is_empty() or roll_damage:return _failure("기존 스킬 비용 공동 후보 형식 불일치")
+		if additional_cost.size() not in [3,4,5] or (additional_cost.size()>=4 and not additional_cost.get("material_requests") is Array) or (additional_cost.size()==5 and not additional_cost.get("resolved_skill") is Dictionary) or not integer(additional_cost.get("hp_cost")) or not additional_cost.get("legacy_spent") is Dictionary or not additional_cost.get("skill_id") is String or str(additional_cost.skill_id).is_empty() or roll_damage:return _failure("기존 스킬 비용 공동 후보 형식 불일치")
 		hp_cost=int(additional_cost.hp_cost);legacy_spent=additional_cost.legacy_spent
+		if additional_cost.has("resolved_skill"):
+			var actual: Dictionary=additional_cost.resolved_skill
+			if world.original_skills==null or actual.get("id")!=additional_cost.skill_id or actual.get("mp",0)!=mp_cost or actual.get("hp",0)!=hp_cost:return _failure("실제 기존 스킬 비용 정체 변경")
+			var fresh: Dictionary=world.original_skills.material_plan(actual)
+			if not str(fresh.get("reason","")).is_empty() or fresh.get("spent")!=legacy_spent or fresh.get("physical_materials",[])!=additional_cost.get("material_requests",[]) or fresh.get("physical_ammo",{}).get("inventory_key")!=name_value or fresh.physical_ammo.get("quantity")!=quantity:return _failure("스킬의 현재 실제 재료·탄약 견적 변경 · 비용 보존")
 	if world.hp<=hp_cost:return _failure("스킬 HP 부족 · 탄약과 MP 보존")
 	if quantity<1 or mp_cost<0 or world.mp<mp_cost or not ammo_worn(world,name_value) or world._current_ammo_name()!=name_value:return _failure("선택한 원본 탄약·MP·착용 조건 불일치")
 	var selected: Dictionary=world.consumable_service.export_state()[AMMO_EQUIPPED]
@@ -1048,7 +1053,10 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	if not journal is Dictionary:return _failure("기존 원본 탄약 발사 장부 보존")
 	journal=journal.duplicate(true);var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while journal.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
-	journal[id]={"schema":1,"input":paid.selections.duplicate(true),"source_definition_archive":SOURCE.identity(),"quantity":quantity,"mp_cost":mp_cost,"additional_existing_skill_cost":additional_cost.duplicate(true),"damage_bonus":damage,"damage_origin":"existing_TWILIGHT_ammo_damage_policy" if roll_damage else "skill_does_not_add_new_ammo_damage","damage_policy":policy,"target_size":size_class,"rng_domain":"TWILIGHT_source_native_ammo_independent_v1","rng_before":private_before.duplicate(true),"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
+	var recorded_cost: Dictionary=additional_cost.duplicate(true)
+	if recorded_cost.has("resolved_skill"):
+		recorded_cost["resolved_skill_quote_sha256"]=JSON.stringify(recorded_cost.resolved_skill,"",true,true).sha256_text();recorded_cost.erase("resolved_skill")
+	journal[id]={"schema":1,"input":paid.selections.duplicate(true),"source_definition_archive":SOURCE.identity(),"quantity":quantity,"mp_cost":mp_cost,"additional_existing_skill_cost":recorded_cost,"damage_bonus":damage,"damage_origin":"existing_TWILIGHT_ammo_damage_policy" if roll_damage else "skill_does_not_add_new_ammo_damage","damage_policy":policy,"target_size":size_class,"rng_domain":"TWILIGHT_source_native_ammo_independent_v1","rng_before":private_before.duplicate(true),"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
 	state[AMMO_USES]=journal;payload["mp"]=int(world.mp)-mp_cost
 	if roll_damage:state[AMMO_RNG]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
 	if not paid.quest_step.is_empty() and not QUEST_CONSUME.matches_payload(world,paid.quest_step,payload):return _failure("퀘스트 탄약 잔량·최초 사용 증명·MP 결과 공동 후보 불일치")
@@ -1232,11 +1240,12 @@ static func stage_owned_debits(world: Node,requests: Array) -> Dictionary:
 	selected.append_array(native.get("selections",[]));selected.append_array(quest.get("selections",[]))
 	var result: Dictionary={"inventory":bag,"item_instances":instances,"consumable_state":native.get("overrides",{}).get("consumable_state",world.consumable_service.export_state())}
 	if not quest.is_empty():result["quest_state"]=quest.overrides.quest_state
-	return {"ok":true,"overrides":result,"selections":selected,"quest_step":quest}
+	return {"ok":true,"overrides":result,"selections":selected,"quest_step":quest,"use_authorized":false}
 
 static func spend_original_skill_materials(world: Node,skill: Dictionary,plan: Dictionary) -> Dictionary:
 	var requests: Array=plan.get("physical_materials",[])
 	if requests.is_empty():return {"handled":false}
+	if world.original_skills==null or world.original_skills.material_plan(skill)!=plan:return _failure("현재 실제 스킬 재료 견적·소지 선택 변경")
 	if not plan.get("physical_ammo",{}).is_empty():return _failure("스킬 탄약과 원문 재료 공동 비용은 탄약 소비 소유자로 전달해야 합니다")
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty() or world.hp<=0 or not world._patch523_item_allowed():return _failure("원문 스킬 재료 소비 저장 보호 중")
 	var mp_cost: Variant=skill.get("mp",0);var hp_cost: Variant=skill.get("hp",0)
@@ -1266,4 +1275,6 @@ static func spend_original_skill_materials(world: Node,skill: Dictionary,plan: D
 	if payload.has("quest_state") and not world.quest_service.import_state(payload.quest_state):
 		world.patch523_owner_state_problem="원문 스킬 재료 저장 후 장부 채택 미확정 · 정상 불러오기 전 재시전 중지";return _failure(world.patch523_owner_state_problem)
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.mp=int(payload.mp);world.hp=int(payload.hp);world.consumable_service.import_state(state);world.deferred_save.cancel()
-	return {"handled":true,"ok":true,"saved":true,"consumed":paid.selections.size(),"source_material_receipt_id":id}
+	var consumed_units: int=0
+	for input: Dictionary in paid.selections:consumed_units+=int(input.quantity)
+	return {"handled":true,"ok":true,"saved":true,"consumed":consumed_units,"physical_input_count":paid.selections.size(),"selected_inputs":paid.selections.duplicate(true),"source_material_receipt_id":id}
