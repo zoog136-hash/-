@@ -5,7 +5,14 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest single combined input is **v15**: Drive
+The latest single combined input is **v16**, documented in
+[Original enhancement-start control](ORIGINAL_UI_ENHANCE_ACTION_ABI.md).
+It retains every v15 input and adds only the original enhancement action
+subtree wired to the existing target forge execution/confirmation. Full
+enhancement modes, slots, rates/cost display and result FX remain separate.
+Private delivery succeeded; no install, execution or rendering is claimed.
+
+The retained **v15** input is Drive
 `1zVsaYliOBAl0Ryei7pOAMBTtrX1AUe_N`,13,353,312 bytes, ZIP SHA256
 `74e6266aba52fce9f64553adcbcba900471bdb6150dff7fb9d795e72f8861371`,
 manifest pin `2505fb5e40c5e77954fb978b5ad7e5b486956bc0a2a07ed02d61236ed4380db4`.

@@ -6,6 +6,14 @@ The UI receiver now accepts the image270 owner's source-backed
 not a recovered original-client function signature. No tests, execution,
 rendering or CI were run. Actual dialogue portrait display is unconfirmed.
 
+The matching image consumer is now public at
+[451ea8f35faa82771b02febc893455b1ac2a5472](https://github.com/zoog136-hash/-/blob/451ea8f35faa82771b02febc893455b1ac2a5472/docs/SOURCE523_NPC_PORTRAIT_CONSUMER_CONTRACT.md):
+`NpcImages.bind_dialogue(hud,context_provider)` reuses this exact callback
+shape and the original-definition reader, including explicitly declared
+TestNPC exclusion. It creates no L1J→mobile identity mapping. Integration269's
+authoritative current dialogue context remains pending; no receiver or source
+node placement changes are required by that image consumer.
+
 ## Registration and authoritative current dialogue
 
 Register the existing context producer269 and image consumer270 callbacks:

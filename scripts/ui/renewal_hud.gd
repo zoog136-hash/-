@@ -855,6 +855,7 @@ func _close_workspace() -> void:
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -900,6 +901,7 @@ func _open_window(section: String,title: String,description: String) -> void:
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
@@ -2565,6 +2567,7 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 			and str(enhancement_forge.get("mode")) == "target" and enhancement_scroll_name == scroll_name:
 		enhancement_candidates = candidates.duplicate(true)
 		enhancement_forge.call("refresh_targets", candidates)
+		_bind_original_enhance_action(enhancement_forge)
 		return
 	enhancement_scroll_name = scroll_name
 	enhancement_candidates = candidates.duplicate(true)
@@ -2573,6 +2576,10 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
 	enhancement_forge = forge
+	_bind_original_enhance_action(forge)
+
+func _bind_original_enhance_action(forge: Control) -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_status["enhance_action"]=original_main_ui_controller.bind_enhance_action(forge)
 
 func _add_original_map_controls(regions: VBoxContainer) -> void:
 	var original: Array = get_parent().original_maps
@@ -2896,6 +2903,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	if reopen_dialogue:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
+	if active_section=="enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_visible_in_tree():_bind_original_enhance_action(enhancement_forge)
 	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:

@@ -21,6 +21,7 @@ const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_
 const NpcDialogueView=preload("res://scripts/ui/original_ui/source_main_npc_dialogue_view.gd")
 const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_message_bindings.gd")
 const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
+const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -103,6 +104,10 @@ var _legacy_message: WeakRef
 var _legacy_message_visible: bool=false
 var _inventory_name_view: RefCounted
 var _inventory_name_result: Dictionary={}
+var _enhance_action: RefCounted
+var _enhance_action_result: Dictionary={}
+var _enhance_owner: WeakRef
+var _enhance_listing: WeakRef
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -190,6 +195,7 @@ func _input(event: InputEvent) -> void:
 	for property: String in ["detail_window","companion_window","workspace"]:
 		var overlay: Variant=hud.get(property)
 		if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*point):
+			if property=="workspace" and _route_enhance_action(event,point):return
 			_cancel_native_buttons()
 			return
 	var character_inside: bool=character_blocks_point(point)
@@ -226,6 +232,16 @@ static func _collect_native_buttons(node: Node, found: Array) -> void:
 func _cancel_native_buttons() -> void:
 	if _native_buttons!=null:_native_buttons.cancel()
 
+func _route_enhance_action(event: InputEvent, point: Vector2) -> bool:
+	if _enhance_action==null:return false
+	var shown: Dictionary=_enhance_action.presentation()
+	var button: Variant=shown.get("source_button")
+	var routed: Dictionary=_native_buttons.route(event,point,[button] if is_instance_valid(button) else [])
+	if routed.get("handled",false):
+		get_viewport().set_input_as_handled()
+		return true
+	return false
+
 func _source_input_captured(hud: Node) -> bool:
 	var pointer: Variant=hud.get("pointer_transfer")
 	return (_native_buttons!=null and _native_buttons.is_capturing()) or (is_instance_valid(pointer) and pointer.get("pointer")!=-2)
@@ -246,6 +262,9 @@ func _process(_delta: float) -> void:
 	if _inventory_name_view!=null and not _source_input_captured(hud):
 		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
 		else:_inventory_name_view.close()
+	if _enhance_action!=null:
+		_enhance_action_result=_enhance_action.refresh()
+		if not _enhance_action_result.get("ok",false):_enhance_action=null
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
@@ -320,6 +339,49 @@ func npc_dialogue_is_open() -> bool:
 func bind_npc_dialogue_portrait(context_provider: Callable, image_provider: Callable) -> Dictionary:
 	if _npc_dialogue_view==null:return _fail("source_npc_portrait_dialogue_scope_unavailable")
 	return _npc_dialogue_view.bind_portrait(context_provider,image_provider)
+
+func bind_enhance_action(forge: Control) -> Dictionary:
+	close_enhance_action()
+	if _pack==null:return _fail("source_enhance_action_original_pack_unavailable")
+	if not _pack.manifest.get("scenes",{}).has(EnhanceAction.MEMBER):return {"ok":true,"handled":false,"code":"source_enhance_action_pack_scope_unavailable"}
+	if not is_instance_valid(forge) or not is_instance_valid(_coordinates):return _fail("source_enhance_action_existing_owner_and_mount_required")
+	_enhance_owner=weakref(forge)
+	var listing: Variant=forge.get("listing")
+	if listing is ItemList and is_instance_valid(listing):
+		_enhance_listing=weakref(listing)
+		listing.item_selected.connect(_enhance_selection_changed)
+	return _mount_enhance_action(forge)
+
+func _mount_enhance_action(forge: Control) -> Dictionary:
+	if _enhance_action!=null:_enhance_action.close()
+	_enhance_action=null
+	var candidate=EnhanceAction.new()
+	_enhance_action_result=candidate.configure(_pack,forge,_coordinates)
+	if _enhance_action_result.get("ok",false):
+		_enhance_action=candidate
+		set_process(true)
+		var shown: Dictionary=candidate.presentation()
+		var hud: Object=_hud.get_ref() if _hud!=null else null
+		var workspace: Variant=hud.get("workspace") if hud!=null else null
+		if is_instance_valid(shown.get("scene")) and workspace is CanvasItem:
+			# Host the authored source button above this existing workspace,
+			# while its existing companion/detail/modal windows retain priority.
+			shown.scene.z_as_relative=false
+			shown.scene.z_index=workspace.z_index+1
+	return _enhance_action_result.duplicate(true)
+
+func _enhance_selection_changed(_index: int) -> void:
+	var forge: Object=_enhance_owner.get_ref() if _enhance_owner!=null else null
+	if forge is Control:_mount_enhance_action(forge)
+
+func close_enhance_action() -> void:
+	_cancel_native_buttons()
+	if _enhance_action!=null:_enhance_action.close()
+	_enhance_action=null
+	var listing: Object=_enhance_listing.get_ref() if _enhance_listing!=null else null
+	if is_instance_valid(listing) and listing.item_selected.is_connected(_enhance_selection_changed):listing.item_selected.disconnect(_enhance_selection_changed)
+	_enhance_listing=null
+	_enhance_owner=null
 
 func close_npc_dialogue() -> void:
 	_cancel_native_buttons()
@@ -817,6 +879,7 @@ func release(restore_legacy: bool=true) -> void:
 	if is_instance_valid(_world_map):_world_map.close()
 	close_character()
 	close_npc_dialogue()
+	close_enhance_action()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
