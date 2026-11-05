@@ -81,8 +81,8 @@ binding is selected from a folder and no original is counted again.
 An explicitly empty environment value fails. Only an actual file-not-found
 result permits the next implicit location; inaccessible/present/invalid inputs
 do not select another source. Existing source byte/SHA/ZIP/table guards remain.
-Adding the unconfirmed523 location lets CommonSource reuse its archive; it does
-not replace that domain runtime's separate before-setup source selection.
+CommonSource can reuse unconfirmed523's archive. The domain's own missing-default
+selection before setup is implemented in its existing reader, described below.
 
 The private ledger retains every table, parser/compiler candidates, consumer,
 caller, owner, storage contract and remaining uncertainty. Reviewed code chains
@@ -1054,21 +1054,34 @@ references do not establish normal acquisition. Class change,
 domination stones, symbols, guardian slots and mastery already have partial
 consumers and must not be reported wholly unused.
 
-For the published unconfirmed523 numeric consumers, the existing
-`source523.load_zip(path)` already supplies Jade/Grail's ItemBonus/BuffBonus/
-ItemClass→Bonus and ItemGrace/Prefix/Set reads, and the ordinary trial's
-Challenge/Goal/Reward input. The reviewed `runtime.configure(host)` selects only
-its dedicated default ZIP before domain setup; it does not select the common
-held archive. That runtime/source instance and setup caller are not present in
-this standalone checkout. A data adapter cannot replace it with CommonSource's
-rows: its `resolve_reward`, `region_allowed` and bonus/stat contracts also belong
-to the existing source/domain owner. The narrow integration needed is to select
-the common archive through the existing `source.load_zip(path)` before setup
-when the dedicated implicit input is actually missing, preserving existing/
-explicit input failures and state. No duplicate backend, fake receiver or unused
-standalone join API is added here. Attendance/pass and description work remain
-lower priority. This is that specific receiver boundary, not a claim that all
-unresolved tables lack consumers or inputs.
+The unconfirmed523 setup input is now connected at the existing reader method.
+`scripts/unconfirmed523/source523.gd` reuses the published269 `f11fcbab` reader
+(base blob `7aa63ea8238e6921cae57933420ab159ad3a4ceb`); only its default ZIP
+selection is changed. The existing caller remains
+`runtime.configure(host)→source.load_zip()→source.ready()→domain.setup(source)`.
+Its Jade/Grail ItemBonus/BuffBonus/ItemClass→Bonus and ItemGrace/Prefix/Set reads
+and ordinary-trial Challenge/Goal/Reward input therefore receive the selected
+original through the same source object. No runtime/domain/backend service is
+duplicated and CommonSource rows are not substituted for its source interface.
+
+`load_zip(path:Variant=null)` treats no argument as the implicit default. An
+already loaded source is retained; otherwise the dedicated SOURCE_PATH is read
+first and only actual file-not-found permits the common original. Explicit
+strings, including empty strings, use that path alone; other non-null types are
+rejected. A different explicit path on an already loaded source keeps the
+existing restart-required response. Present/access/size/hash/ZIP/index failures
+do not choose a replacement. The existing25,031,173-byte/source-SHA/1,065-table
+and table integrity parser still stages the accepted reader before ready is
+published. Its original `resolve_reward`, `region_allowed`, bonus/stat,
+installation and test-directory bodies are reused without changes; no supply,
+RNG, save, progression or time/server semantics are implemented here.
+
+The standalone branch does not add Main's unconfirmed runtime wiring. PR269
+already owns that caller and domain setup, so integration takes this reader's
+input delta while preserving its other owner code. This is code connectivity,
+not observed adoption, complete Jade/Grail/trial behavior or table completion.
+Attendance/pass and description work remain lower priority; no new event/quest
+implementation or UI is added.
 
 ## Validation status
 
