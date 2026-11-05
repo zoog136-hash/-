@@ -135,7 +135,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		# Inspection preserves an empty original container, not a working list.
 		# Populating it without source row/caller contracts would invent UI.
 		unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
-		if not inspection_only or not node.get("children",[]).is_empty(): problems.append("unconnected_list_content")
+		if not inspection_only: problems.append("unconnected_list_content")
 	if node.classname=="ProjectNode":
 		unresolved_bindings.append(str(widget.name)+":project_scene_binding")
 		if not inspection_only: problems.append("unconnected_project_scene")
@@ -328,10 +328,34 @@ func _build(source: Dictionary) -> Node2D:
 			_build_error=str(configured.error);background.free();node.free();return null
 		child_origin.add_child(background)
 		node.set_meta("source_panel",background)
+	var list_items: Array[Dictionary]=[]
+	var list_nodes: Array[Node2D]=[]
+	if source.classname=="ListView" and not source.children.is_empty():
+		var inner:=Node2D.new()
+		inner.name="SourceOriginalListRows"
+		child_origin.add_child(inner)
+		child_origin=inner
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
 		child_origin.add_child(built)
+		if source.classname=="ListView":
+			# CSLoader inserts Widget children as custom items. A non-Widget
+			# child requires its exact loader semantics before it can render.
+			if child.classname not in ["Panel","ListView","ImageView","Button","Text","LoadingBar"]:
+				_build_error="unverified_original_list_child:"+str(child.classname);node.free();return null
+			var item_options: Dictionary=child.options.get("widgetOptions",child.options)
+			list_items.append({"size":built.get_meta("source_size"),"anchor":item_options.anchorPoint,"ignore_size":bool(item_options.ignoreSize)})
+			list_nodes.append(built)
+	if not list_items.is_empty():
+		var arranged: Dictionary=preload("res://scripts/ui/original_ui/source_list_layout.gd").arrange(options,Vector2(widget.size[0],widget.size[1]),list_items)
+		if not arranged.ok:
+			_build_error=str(arranged.error);node.free();return null
+		child_origin.position=arranged.inner_position
+		for index: int in range(list_nodes.size()):
+			list_nodes[index].position=arranged.positions[index]
+			list_nodes[index].z_index=index
+		node.set_meta("source_list_layout",arranged)
 	return node
 
 func play(source_clip: String, repeat: bool=false) -> Dictionary:

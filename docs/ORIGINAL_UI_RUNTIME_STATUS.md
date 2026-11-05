@@ -500,3 +500,26 @@ union is 303/560. Existing original attendance/pass menu input still passes
 own representative render coverage; this checkpoint does not claim that test.
 
 Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILayout.cpp
+
+### Original authored list rows
+
+Inspection now mounts the original Widget rows in supplied ListViews, using
+ListViewReader direction/gravity, ListView margins/order and initial inner size,
+and LinearLayoutManager anchor-based placement. No rows or data were invented.
+All 205 nonempty lists from the 918 supplied ListView descriptors matched 1,915
+checks against unmodified compiled upstream functions. Scene mounting/order and
+strict rejection of unbound lists passed 167 further checks. Eleven of fourteen
+targeted roots rendered, bringing the inspection union to 314/560; three still
+fail for custom properties, missing source fonts or text clipping.
+
+This covers initial authored-row layout, not scroll input, live row population,
+selection or game-service completion. AddUpExp inspection visibly retains
+supplied overlapping variant layers before caller visibility/data bindings;
+it is not an approved usable game screen. Source fields were not changed to
+hide those layers. Animated row-layout timing still requires representative
+source/client validation.
+
+References:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIListView.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILayoutManager.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/ListViewReader/ListViewReader.cpp
