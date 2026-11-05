@@ -3,6 +3,7 @@ extends RefCounted
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUANTITY="source_native_stack_quantity"
 const RECEIPT="source_native_stack_receipt"
 const USES="source_native_stack_uses"
@@ -28,9 +29,16 @@ static func profile(record: Dictionary) -> Dictionary:
 	if not record.get("heal_spec",{}).is_empty():
 		var metadata: Dictionary=D.hp_use_metadata(record)
 		if record.get("source_item_class_id")==233:metadata=load("res://scripts/loot/quest_hp233_use.gd").call("metadata",record)
+		elif record.get("source_item_class_id") in [237,236]:metadata=restoration_metadata(record)
 		if metadata.get("ok",false):return {"kind":"hp","metadata":metadata}
 	var spec: Dictionary=record.get("source_use_spec",{})
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
+	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
+	var regen: Script=load("res://scripts/quests/quest_regen523.gd")
+	if not regen.call("contract",record).is_empty():return {"kind":"buff","runtime_regen":true}
+	var original_buff: Script=load("res://scripts/quests/quest_source_buffs523.gd")
+	var expanded: Dictionary=original_buff.call("profile",record)
+	if expanded.get("source_use_spec",{}).get("activation_status")=="unrestricted":return {"kind":"buff","spec":expanded.source_use_spec}
 	return {}
 
 static func supply_profile(record: Dictionary) -> Dictionary:
@@ -117,12 +125,17 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var problem: String=str(use_owner.call("eligibility",world,record))
 	if not problem.is_empty():return _failure(problem)
 	var details: Dictionary=effect.get("metadata",{});var spec: Dictionary=effect.get("spec",{})
+	if effect.get("runtime_regen",false):
+		var regen_owner: Script=load("res://scripts/quests/quest_regen523.gd")
+		var active: Dictionary=regen_owner.call("action",world,record)
+		spec=active.get("source_use_spec",{})
+		if spec.get("activation_status")!="unrestricted":return _failure("기존 MP 재생 주기 설정·원본 조건 확인 필요 · 물약 보존")
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
-	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else world._effective_max_mp()
-	var before: int=int(world.hp if effect.kind=="hp" else world.mp)
-	if before>=maximum:return _failure("HP가 가득 찼습니다" if effect.kind=="hp" else "MP가 가득 찼습니다")
+	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else (world._effective_max_mp() if effect.kind=="mp" else 0)
+	var before: int=int(world.hp if effect.kind=="hp" else (world.mp if effect.kind=="mp" else 0))
+	if effect.kind in ["hp","mp"] and before>=maximum:return _failure("HP가 가득 찼습니다" if effect.kind=="hp" else "MP가 가득 찼습니다")
 	var parameters: Dictionary=world._source_hp_potion_parameters(0) if effect.kind=="hp" else {}
 	if effect.kind=="hp" and float(world.item_use_cooldowns.get(str(parameters.cooldown_key),0.0))>0:return _failure("HP 물약 재사용 대기")
 	var state: Dictionary=world.consumable_service.export_state()
@@ -136,7 +149,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		amount=D.healing_amount(record,candidate_rng,0)
 		parameters=world._source_hp_potion_parameters(amount)
 		amount=world.patch523_npc_spells.extensions.healing(int(parameters.heal_amount),true)
-	else:
+	elif effect.kind=="mp":
 		amount=int(spec.base)
 		for die: int in range(int(spec.dice_number)):amount+=candidate_rng.randi_range(1,int(spec.dice_spot_count))
 	var after: int=mini(maximum,before+amount)
@@ -151,7 +164,20 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if delay>0:cooldowns[cooldown_key]=delay;cooldowns[item_name]=delay
 	if effect.kind=="hp":cooldowns[str(parameters.cooldown_key)]=float(parameters.cooldown_seconds)
 	var payload: Dictionary={"inventory":bag,"item_instances":instances,"consumable_state":state,"item_use_cooldowns":cooldowns,"patch523_transaction_rng":{"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
-	payload["hp" if effect.kind=="hp" else "mp"]=after
+	if effect.kind=="buff":
+		var source: Dictionary=spec.get("source_buff_class",{});var group: Dictionary=spec.get("source_buff_group",{})
+		if source.is_empty() or group.is_empty() or float(spec.get("duration_seconds",0))<=0:return _failure("원본 버프 수치·기간·그룹 연결 필요")
+		var buffs: Dictionary=world.active_item_buffs.duplicate(true)
+		for key: String in buffs.keys():
+			var previous: Dictionary=buffs[key]
+			if not previous.get("source_buff_class") is Dictionary:continue
+			var old: Dictionary=previous.source_buff_class
+			if old.get("ID")==source.get("ID") or (not group.get("IsAllowOverlap",false) and old.get("BuffGroupID")==source.get("BuffGroupID")):buffs.erase(key)
+		var value: Dictionary=spec.typed_effects.duplicate(true)
+		value.merge({"remaining":float(spec.duration_seconds),"duration":float(spec.duration_seconds),"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
+		buffs[item_name]=value;payload["active_item_buffs"]=buffs
+		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
+	else:payload["hp" if effect.kind=="hp" else "mp"]=after
 	busy=true;_candidate=payload.duplicate(true)
 	var saved: Error=world._save_game(true,payload)
 	_candidate.clear()
@@ -161,11 +187,15 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns;world.consumable_service.import_state(state)
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	if effect.kind=="hp":world.hp=after;world._source_hp_potion_committed(amount)
-	else:world.mp=after
+	elif effect.kind=="mp":world.mp=after
+	else:
+		world.active_item_buffs=payload.active_item_buffs;world.hp=int(payload.hp);world.mp=int(payload.mp)
+		world._invalidate_equipment_static();world._refresh_speed_modifiers()
 	world.deferred_save.cancel();busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
-	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":"%s · %s %d 회복" % [str(record.source_display_name),"HP" if effect.kind=="hp" else "MP",after-before]}
+	var message: String="%s · 원본 버프 %s" % [str(record.source_display_name),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(record.source_display_name),"HP" if effect.kind=="hp" else "MP",after-before]
+	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
@@ -584,3 +614,25 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 		result["source_use_supported"]=false;result["source_problem"]="current_original_effect_owner_required"
 		return result
 	return try_use(world,str(owned.record.name),str(request.physical_id))
+
+static func restoration_metadata(record: Dictionary) -> Dictionary:
+	var id: int=int(record.get("source_item_class_id",0))
+	if id not in [237,236] or record.get("source_bless_raw")!=1:return {"ok":false}
+	var values: Dictionary=RESTORATION._source_items()
+	var definition: Dictionary=D.item_definition(record);var raw: Dictionary=definition.get("original_item",{})
+	var held: Dictionary=RESTORATION.source_provenance.get("selected_inputs",{}).get(str(id),{})
+	if values.get(str(id),{}).is_empty() or RESTORATION.source_input_identity!=SOURCE.identity() or held.get("item_class")!=raw or raw.get("TargettingTypeID")!=1 or not str(raw.get("ServiceRegionCode","")).is_empty() or definition.get("category",{}).get("Name")!="Potion" or definition.get("category",{}).get("IsConsumable")!=true:return {"ok":false}
+	var spec: Dictionary=values[str(id)];var heal: Dictionary=record.get("heal_spec",{})
+	if heal.get("HPRestoration",0)!=spec.base or heal.get("HPRestorationDiceNumber",0)!=spec.dice_count or heal.get("HPRestorationDiceSpotCount",0)!=spec.dice_sides:return {"ok":false}
+	var allowed: Dictionary={"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID","AutoUseRegistrable":"TrueFalse"}
+	var seen: Dictionary={};var result: Dictionary={"ok":true,"can_use_when_invisible":raw.get("CanUseWhenInvisible",false),"auto_use_registrable":false,"consume_effect_sprite_id":0}
+	for row: Dictionary in definition.get("item_bonus",[]):
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if not allowed.has(name_value) or seen.has(name_value) or row.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or row.get("unit",{}).get("Name")!=allowed[name_value]:return {"ok":false}
+		seen[name_value]=true
+		if name_value=="AutoUseRegistrable":
+			if bonus.get("Value") not in [0,1]:return {"ok":false}
+			result.auto_use_registrable=bonus.Value==1
+		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
+		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
+	return result if seen.size()==6 and result.get("source_consume_delay_ms")==1000 else {"ok":false}

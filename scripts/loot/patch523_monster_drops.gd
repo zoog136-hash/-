@@ -1012,3 +1012,12 @@ static func install_zip(path: String) -> Dictionary:
 	_sources = {}
 	return {"ok":true, "path":target, "sha256":fingerprint}
 
+
+# Existing exact effect owners use this current-original definition proof;
+# historical BIN fingerprints remain receipt evidence, not final input gates.
+static func current_original_definition(record: Dictionary) -> Dictionary:
+	var marker: Dictionary=pack_identity()
+	if marker.get("schema")!=4 or marker.get("source_definition_archive")!=CURRENT_SOURCE.identity():return {}
+	var definition: Dictionary=item_definition(record)
+	var raw: Dictionary=definition.get("original_item",{})
+	return definition if not raw.is_empty() and definition.get("source_input_identity")==CURRENT_SOURCE.identity() and raw==CURRENT_SOURCE.row("ItemClass",int(raw.get("ID",0))) else {}

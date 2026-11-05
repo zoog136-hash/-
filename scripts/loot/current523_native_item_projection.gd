@@ -31,9 +31,10 @@ static func formula(rows: Array,names: Array) -> Dictionary:
 	var base: int=int(result.get(names[0],0));var count: int=int(result.get(names[1],0));var sides: int=int(result.get(names[2],0))
 	if base<0 or count<0 or count>1000 or sides<0 or sides>1000000 or (count>0)!=(sides>0) or base+count*sides<=0 or base>9007199254740991-count*sides:return {}
 	return result
-static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary) -> Dictionary:
+static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,permitted: Dictionary={}) -> Dictionary:
 	var reasons: Array=[];var grouped: Dictionary={}
 	var units: Dictionary={"MPRestoration":"Value","MPRestorationDiceNumber":"Value","MPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	if not permitted.is_empty():units=permitted.duplicate(true)
 	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
 	if raw.get("TargettingTypeID")!=1:reasons.append("unsupported_targetting_type")
 	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
@@ -159,6 +160,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		spec["activation_status"]="unrestricted" if spec.blocked_reasons.is_empty() else "blocked";out["source_use_spec"]=spec
 		if spec.blocked_reasons.is_empty():
 			for index: int in range(rows.size()):handled[index]=true
+	var timed: Dictionary=timed_buff(definition)
+	if not timed.is_empty():
+		out["source_use_spec"]=timed
+		if timed.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -166,7 +172,7 @@ static func record(definition: Dictionary) -> Dictionary:
 	out["source_mapped_bonuses"]=applied;out["source_unhandled_bonuses"]=unknown;out["source_unhandled_bonus_ids"]=[]
 	for row: Dictionary in unknown:out.source_unhandled_bonus_ids.append(row.bonus_id)
 	out["source_effect_status"]="partial" if not unknown.is_empty() or (slot=="consumable" and not out.has("heal_spec") and not out.has("source_use_spec")) or not unresolved_classes.is_empty() or bad_slot else "represented_source_fields"
-	out["source_effect_scope"]="existing_flat_equipment_and_hp_mp_formula_projection; other_typed_effects_preserved_pending"
+	out["source_effect_scope"]="existing_flat_equipment_hp_mp_and_finite_timed_buff_projection; other_typed_effects_preserved_pending"
 	if slot=="consumable" and not out.has("source_use_spec") and not out.has("heal_spec"):out["source_use_spec"]={"kind":"current_source_effect_pending","activation_status":"blocked","blocked_reasons":["current_typed_effect_owner_required"]}
 	out["source_catalog_eligible"]=true;out["source_acquisition_policy"]="verified_supplier_only_no_fabricated_supply"
 	return out
@@ -224,3 +230,57 @@ static func enchant_stats(item: Dictionary,level: int,bless: int) -> Dictionary:
 			if kind.get("Name")=="HPPotionIncreasePercent" and unit.get("Name")=="Percentage":stat="potion_heal_pct";divisor=10000
 			if not stat.is_empty():result[stat]=float(result.get(stat,0.0))+float(bonus.Value)/divisor
 	return result
+
+# Port of the already-public _timed_buff_spec. The original read graph is
+# supplied by ItemData -> current523_buff_data; no duplicate table loader.
+static func timed_buff(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var references: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffClassID":references.append(row)
+	if references.size()!=1 or references[0].get("unit",{}).get("Name")!="BuffClassID" or not integer(references[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(references[0].bonus.Value);var graphs: Array=[]
+	for reference: Dictionary in definition.get("source_typed_references",[]):
+		if reference.get("item_bonus_id")==references[0].get("ID") and reference.get("id")==id and reference.get("buff_definition") is Dictionary:graphs.append(reference.buff_definition)
+	if graphs.size()!=1:return {}
+	var graph: Dictionary=graphs[0]
+	if graph.get("source")!=SOURCE.identity() or graph.get("ok")!=true or graph.get("excluded",false):return {}
+	var buff: Dictionary=graph.get("buff_class",{});var group: Dictionary=graph.get("group",{})
+	if buff.get("ID")!=id or group.get("ID")!=buff.get("BuffGroupID") or not SOURCE.declared_exclusion("BuffClass",buff).is_empty() or not SOURCE.declared_exclusion("BuffGroup",group).is_empty():return {}
+	var raw: Dictionary=definition.original_item
+	var spec: Dictionary=consume_metadata(rows,raw,definition.category,{"BuffClassID":"BuffClassID","BuffDuration":"Seconds","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"})
+	var reasons: Array=spec.blocked_reasons;var durations: Array=[]
+	for row: Dictionary in rows:
+		if row.bonus_type.Name=="BuffDuration" and direct(row) and row.unit.Name=="Seconds" and integer(row.bonus.get("Value")):durations.append(int(row.bonus.Value))
+	var duration: int=int(durations[0]) if durations.size()==1 else 0
+	if duration<=0:reasons.append("missing_or_ambiguous_positive_duration")
+	var fields: Dictionary={"ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hp_flat","MPPlus":"mp_flat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy"}
+	var linked: Array=[];var typed: Dictionary={}
+	for effect: Dictionary in graph.get("bonuses",[]):
+		var row: Dictionary=effect.get("link",{}).duplicate(true);var bonus: Dictionary=effect.get("bonus",{});var kind: Dictionary=effect.get("type",{});var unit: Dictionary=effect.get("unit",{})
+		row["bonus"]=bonus;row["bonus_type"]=kind;row["unit"]=unit;linked.append(row)
+		if not SOURCE.declared_exclusion("BuffBonus",effect.get("link",{})).is_empty() or not SOURCE.declared_exclusion("Bonus",bonus).is_empty() or not SOURCE.declared_exclusion("BonusType",kind).is_empty():reasons.append("source_declared_buff_effect_exclusion");continue
+		var conditional: bool=bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0
+		for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+			if row.get(key)!=0:conditional=true
+		var name_value: String=str(kind.get("Name",""))
+		if conditional:reasons.append("conditional_buff_effect:"+name_value)
+		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
+		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
+	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
+	if buff.get("IsGood")!=true or buff.get("IsBuffGroup")!=true:reasons.append("unsupported_buff_kind")
+	if buff.get("IsEraseOnTimeEnd")!=true:reasons.append("source_buff_timer_semantics_unresolved")
+	for key: String in ["IsEraseOnAttack","IsEraseOnAttacked","IsEraseOnMove","IsEraseOnSpellCastAndShieldIt","IsEraseOnSkillCastAndShieldIt","IsEraseOnItemUse","IsEraseOnSpellAttacked","IsEraseOnSkillAttacked","IsEraseOnCast","IsEraseOnHealed","IsEraseOnTargetChanged","IsEraseOnAttackedLimitations"]:
+		if buff.get(key,0):reasons.append("unsupported_buff_action_rule:"+key)
+	for key: String in ["MaxHPPercent","EraseOnLevel","MaxStackCount","MPCostPercent","MinMPCost","IsAbsoluteTimeBuff","IsOverlapByPlayer","IsDecreaseStackOnTimeEnd","IsObtainItemBuff"]:
+		if buff.get(key,0):reasons.append("unsupported_buff_state_rule:"+key)
+	if group.get("IsAllowPriority")!=false or group.get("IsEraseBySpellLevel")!=false or buff.get("BuffGroupPriority")!=1:reasons.append("unsupported_buff_priority_or_spell_level_rule")
+	if not group.get("IsAllowOverlap") is bool or not buff.get("IsImmuneToDead") is bool or not buff.get("IsImmuneToCancellation") is bool:reasons.append("missing_buff_lifecycle_flags")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec["kind"]="source_timed_buff";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=int(raw.ID);spec["buff_class_id"]=id;spec["duration_seconds"]=duration;spec["typed_effects"]=typed;spec["source_buff_class"]=buff.duplicate(true);spec["source_buff_group"]=group.duplicate(true);spec["source_buff_bonus"]=linked
+	spec["source_item_bonus_ids"]=[]
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
+	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
+	return spec

@@ -212,3 +212,16 @@ full original ItemClass row plus the selected physical ID/quantity/expected
 remainder/opaque native receipt. Success requires ok+saved+consumed1. Unknown
 native effects and raw quest ownership remain separate explicit boundaries;
 ItemBook-to-eqc identity is still not inferred. See the native owner ABI.
+
+## Finite original buff effect adoption (unexecuted)
+
+The current DTO now reuses the public compiler's finite flat-buff semantics on
+ItemData's existing original Buff graph. Actual selected native use stages
+source overlap/replacement, active buff, stat/vital clamp, quantity receipt and
+cooldown in one save, then reuses existing timer/death/cancel/stat consumers.
+Exact existing MP-regeneration376/385 and XP1186 reducers now authorize current
+original definitions rather than old BIN final input; cadence remains the
+labelled existing host/user clock. The source-backed three-restoration reader
+and required-Unit/optional-UIUnit Bonus reader are adopted from public271.
+Unknown positive effects, unsupported conditions and infinite cases remain
+explicitly held. New code remains unexecuted/unverified; counts are unchanged.

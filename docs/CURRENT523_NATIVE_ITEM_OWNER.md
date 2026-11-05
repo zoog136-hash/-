@@ -287,3 +287,40 @@ owner responsibilities, not a second source reader or a free native conversion.
 The original ItemBookID -> preserved eqc collection/slot mapping and accepted
 collection projection are not established by this native consumable interface.
 No mapping from display identity or an undocumented ClassID is invented here.
+
+## Original finite buff use and three restoration inputs (later, unverified)
+
+ItemData's existing `typed_references[].buff_definition` graph now feeds the
+published compiler's `_timed_buff_spec` mapping in the current native projection.
+No new source loader is written: public271's Bonus reader at57641f76 supplies
+required Unit and optional UIUnit references, while original BuffClass/Group/
+BuffBonus rows arrive through its existing buff reader. The same public
+compiler's flat stat names, positive duration, self-target/category constraints,
+source group priority/overlap/lifecycle and unsupported action/state predicates
+are retained. Unknown/conditional/extra positive effects keep the use blocked.
+No probability or source time rule is inferred.
+
+A supported source_timed_buff now follows the same selected physical debit/use
+ledger as HP/MP. Its actual source-group replacement and typed fields go into
+the existing active_item_buffs/timer/death/cancel/stat consumers. New buffs,
+remaining quantity, cooldown, clamped HP/MP and unchanged private RNG share the
+same sealed save; no live buff is applied before success. Original sprite IDs
+only reach the existing emitter. The original record+opaque receipt use ABI
+remains unchanged and now admits these supported finite effects.
+
+Existing exact MP-regeneration376/385 and experience1186 reducers now require
+`patch523_monster_drops.current_original_definition(record)` and the schema4
+archive proof instead of the historical38ee final-input gate. Their full raw
+ID/effect/value/group/lifecycle constraints remain. MP cadence is still the
+existing configurable TWILIGHT clock (default30seconds), explicitly not a
+verified native interval. The new pure regeneration contract does not assign a
+clock during acquisition; actual use rechecks the real user's setting.
+Unsupported infinite-food/context effects remain held.
+
+The public271 original restoration reader supplies233/237/236 source values;
+its exact selected raw input is compared to the native definition. Additional
+237/236 native use requires the complete six-effect/unit/normal-blessing/1000ms
+contract and matching original HP dice. It joins the existing HP modifiers and
+quantity save, without consuming an old same-name legacy balance or adopting
+JSON numeric fallback. No original table/file/item completion count or new
+runtime pass is established by these unexecuted connections.
