@@ -16,6 +16,7 @@ static var cached: Dictionary={}
 var data: Dictionary={}
 var quotes: Dictionary={}
 var saving_payload: Dictionary={}
+var last_magic_hit: Dictionary={}
 var problem: String="검증된 장비 수치 입력 미설치"
 class SupplyView extends Node:
  var inventory: Dictionary
@@ -57,6 +58,9 @@ func profile(id: int,bless: int)->Dictionary:
   if name in ["RegenHP","RegenMP"]:
    if id not in REGEN_GEAR or row.unit.Name!="Value" or int(row.bonus.Value)<1:return {}
    continue
+  if name=="MagicDamageReductionPercent":
+   if id!=30213 or row.unit.Name!="Percentage" or row.bonus.Value!=30000:return {}
+   continue
   if name=="WeaponErodeProof":
    # Existing TWILIGHT policy has no durability/erosion consuming action.
    # Preserve the exact immunity flag; do not invent repair or make it an
@@ -83,6 +87,7 @@ func effect_record(record: Dictionary)->Dictionary:
  if option!=null:
   result["xp"]=float(option.get("total",0))/100.0 if option is Dictionary else float(record.get("xp",0))+float(option)/100.0
  if int(record.source_item_class_id)==248:result["quest_source_weapon_erosion"]={"original_bonus_id":7213,"original_value":1,"current_host_policy":"durability_and_erosion_disabled","enhancement_destruction_exemption":false}
+ if int(record.source_item_class_id)==30213:result["quest_source_magic_reduction"]={"raw":30000,"scale":1000000,"source_percent":3,"host_stage":"after_critical_before_element_and_other_existing_defenses","host_rounding":"existing_round_nearest_min1","native_order_and_rounding_verified":false}
  var recovery: Dictionary=source_regeneration(record)
  if not recovery.is_empty():result["quest_source_regeneration"]={"amounts":recovery,"cadence":"TWILIGHT_existing_gear_recovery30s","source_interval_verified":false}
  result["quest_equipment_effect_basis"]={"rules_sha256":RULE_SHA,"item_pack_sha256":PIN,"level":0,"scope":"source_unconditional_AC_HP_MP_MR_STR_weapon_bounds_hit_and_rank0_XP_only"}
@@ -286,8 +291,10 @@ func commit(world: Node,quoted: Dictionary)->Dictionary:
  var error: Error=world._save_game(true,payload)
  saving_payload.clear()
  if error!=OK:
+  if world.get("patch523_owner_state_problem") is String and not world.patch523_owner_state_problem.is_empty():
+   world.quest_service.save_blocked=true;return fail("공동 장비 저장 결과 미확정 · 재사용 중지")
   var parser:=JSON.new();var parsed: Error=parser.parse(FileAccess.get_file_as_string(world.save_path()))
-  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=JSON.parse_string(JSON.stringify(payload));var confirmed: bool=disk is Dictionary
+  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true));var confirmed: bool=disk is Dictionary
   if confirmed:
    for key: String in expected:
     if disk.get(key)!=expected[key]:confirmed=false;break
@@ -328,3 +335,18 @@ func recovery_for_worn(world: Node,record: Dictionary)->Dictionary:
  var owned: Dictionary=_state_matches(world,uid)
  if not owned.get("ok",false) or owned.record.get("sourceId")!=record.get("sourceId"):return {}
  return source_regeneration(owned.record)
+
+func reduce_hit(world: Node,damage: int,kind: String)->int:
+ last_magic_hit={}
+ # Exact source30213 normal+0 only. Source percentage is not configurable;
+ # ordering and integer rounding reuse the existing host damage pipeline.
+ if kind!="magic" or not world.ui_preferences.get("quest523_source_magic_reduction_enabled",true) or data.is_empty() or D.pack_identity().get("sha256")!=PIN:return damage
+ var worn: Dictionary=world.equipped_items.get("gaiters",{})
+ if int(worn.get("source_item_class_id",0))!=30213:return damage
+ var id: String=str(worn.get("instance_id",""))
+ if id.is_empty() or not world._is_instance_equipped(id):return damage
+ var verified: Dictionary=_state_matches(world,id)
+ if not verified.get("ok",false) or int(verified.record.get("source_item_class_id",0))!=30213 or verified.record.get("sourceId")!=worn.get("sourceId"):return damage
+ var result: int=maxi(1,int(round(float(damage)*970000.0/1000000.0)))
+ last_magic_hit={"physical_id":id,"item_class_id":30213,"raw_percent":30000,"damage_before":damage,"damage_after":result,"native_order_and_rounding_verified":false}
+ return result

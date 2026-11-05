@@ -18,6 +18,13 @@ static func canonical(record: Dictionary) -> Dictionary:
 
 static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	var record: Dictionary = preload("res://scripts/quests/quest_regen523.gd").action(world,canonical(saved))
+	if int(record.get("source_item_class_id",0)) in [295544,302461,203422,295504,282793,295524]:
+		var reusable: Dictionary=load("res://scripts/quests/quest_reusable523.gd").profile(record)
+		if not reusable.is_empty():record=reusable
+	record=preload("res://scripts/quests/quest_source_buffs523.gd").action(world,record)
+	if int(record.get("source_item_class_id",0))==310:
+		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").profile(record)
+		if not cure.is_empty():record=cure
 	var spec: Dictionary = record.get("source_use_spec",{})
 	if spec.get("activation_status") != "blocked" or not world.ui_preferences.get("patch523_item_presentation_flags_policy",true): return record
 	var presentation: Dictionary = {}
@@ -59,6 +66,12 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	return ""
 
 static func try_use(world: Node, saved: Dictionary) -> bool:
+	if int(saved.get("source_item_class_id",0))==310:
+		load("res://scripts/quests/quest_cure310.gd").perform(world,saved)
+		return true
+	if int(saved.get("source_item_class_id",0)) in [203422,295504,295544,302461,282793,295524]:
+		load("res://scripts/quests/quest_reusable523.gd").perform(world,saved)
+		return true
 	var record: Dictionary = action_record(world,saved)
 	if not saved.get("source_m_native_item", false) and record.is_empty(): return false
 	var problem: String = eligibility(world, record)
