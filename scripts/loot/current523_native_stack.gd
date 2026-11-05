@@ -9,6 +9,8 @@ const USES="source_native_stack_uses"
 static var busy: bool=false
 static var _candidate: Dictionary={}
 static var _candidate_kind: String=""
+static var _floor_record: Dictionary={}
+static var _floor_commit_confirmed: bool=false
 
 static func authorizes(payload: Dictionary) -> bool:
 	return busy and not _candidate.is_empty() and _candidate==payload
@@ -142,8 +144,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
-static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={}) -> String:
-	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary:return "원본 물리 수량 저장 후보 형식 확인 필요"
+static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[]) -> String:
+	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
 	var stored: Variant=warehouse.get("instances",{});var stored_counts: Variant=warehouse.get("stacks",{})
 	if not stored is Dictionary or not stored_counts is Dictionary:return "원본 창고 물리 저장 형식 확인 필요"
 	var all: Dictionary=instances.duplicate()
@@ -151,6 +153,15 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not stored[uid] is Dictionary or not stored[uid].has(RECEIPT):continue
 		if all.has(uid):return "소지·창고 원본 개체 ID 중복 · 저장 보존"
 		all[uid]=stored[uid]
+	var floor_ids: Dictionary={}
+	for entry: Variant in floor:
+		if not entry is Dictionary:return "바닥 소유 기록 형식 확인 필요"
+		var physical: Variant=entry.get("physical_item",{})
+		if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):continue
+		var uid: String=str(physical.get("id",""))
+		var owned: Dictionary=proof_entry(physical.data,uid)
+		if uid.is_empty() or all.has(uid) or owned.is_empty() or entry.get("player_dropped")!=true or entry.get("quantity")!=1 or int(owned.remaining)!=1 or entry.get("item_name")!=physical.data.get("name") or entry.get("item_record")!=physical.data.get("record"):return "바닥 원본 개체·잔량·출처 중복 또는 불일치"
+		all[uid]=physical.data;floor_ids[uid]=true
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return "원본 물리 사용 장부 형식 확인 필요"
 	var totals: Dictionary={};var stored_totals: Dictionary={}
@@ -161,6 +172,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if owned.is_empty():return "원본 물리 개체·최초량·잔량 증명 불일치"
 		if owned.used==0 and ledger.has(uid):return "원본 최초 소유와 소비 장부 불일치"
 		if owned.used>0 and ledger.get(uid)!={"receipt":owned.receipt,"used_quantity":owned.used,"remaining_quantity":owned.remaining}:return "원본 물리 잔량·소비 장부 불일치"
+		if floor_ids.has(uid):continue
 		var name_value: String=str(entry.name)
 		var amounts: Dictionary=stored_totals if stored.has(uid) else totals
 		var previous: int=int(amounts.get(name_value,0))
@@ -175,7 +187,9 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not entry is Dictionary or not entry.get("receipt") is Dictionary or not integer(entry.get("used_quantity")) or not integer(entry.get("remaining_quantity")):return "원본 소비 장부 행 형식 확인 필요"
 		var receipt: Dictionary=entry.receipt
 		if receipt.get("schema")!=1 or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or receipt.get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or receipt.get("bless_raw") not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return "원본 소비 장부 출처 확인 필요"
-		if int(entry.used_quantity)<1 or int(entry.used_quantity)>int(receipt.granted_quantity) or int(entry.remaining_quantity)!=int(receipt.granted_quantity)-int(entry.used_quantity):return "원본 소비 장부 최초량·사용량·잔량 불일치"
+		var disposed: Variant=entry.get("discarded_quantity",0)
+		if not integer(disposed) or int(entry.used_quantity)+int(disposed)<1 or int(entry.used_quantity)>int(receipt.granted_quantity)-int(disposed) or int(entry.remaining_quantity)!=int(receipt.granted_quantity)-int(entry.used_quantity)-int(disposed):return "원본 장부 최초량·사용량·잔량·소멸량 불일치"
+		if int(disposed)>0 and (entry.get("discard_reason")!="TWILIGHT_existing_ground_lifetime" or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
 		if int(entry.remaining_quantity)>0 and not all.has(uid):return "남은 원본 물리 개체가 없습니다 · 소비 장부 보존"
 		if int(entry.remaining_quantity)==0 and all.has(uid):return "소비 완료 원본 개체의 중복 소유 보존 중지"
 	return ""
@@ -185,7 +199,8 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var instances: Variant=overrides.get("item_instances",world.item_instances)
 	var state: Variant=overrides.get("consumable_state",world.consumable_service.export_state())
 	var warehouse: Variant=overrides.get("warehouse",world.warehouse.snapshot())
-	var issue: String=state_error(inventory,instances,state,warehouse)
+	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
+	var issue: String=state_error(inventory,instances,state,warehouse,floor)
 	if not issue.is_empty():return issue
 	var ledger: Dictionary=state.get(USES,{})
 	for uid: String in world.item_instances:
@@ -196,6 +211,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		var next: Variant=instances.get(uid)
 		if next==previous:continue
 		if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
+		if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
 		var remaining: int=0
 		if next!=null:
 			var after: Dictionary=proof_entry(next,uid)
@@ -212,11 +228,24 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if warehouse.get("instances",{}).get(uid)==previous:continue
 		if authorizes(overrides) and _candidate_kind=="warehouse_transfer" and instances.get(uid)==previous:continue
 		return "창고 원본 개체의 정확한 이동 소유자 필요 · 영수증 보존"
+	var old_floor: Dictionary={}
+	for record: Dictionary in world.ground_loot.records.values():
+		var physical: Variant=record.get("physical_item",{})
+		if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):continue
+		var uid: String=str(physical.get("id",""));old_floor[uid]=record
+		if floor_physical(floor,uid)==physical.data:continue
+		if authorizes(overrides) and _candidate_kind=="floor_pickup" and instances.get(uid)==physical.data:continue
+		if authorizes(overrides) and _candidate_kind=="floor_expire" and _floor_record==record:
+			var owned: Dictionary=proof_entry(physical.data,uid)
+			if not owned.is_empty() and ledger.get(uid)=={"receipt":owned.receipt,"used_quantity":owned.used,"remaining_quantity":0,"discarded_quantity":owned.remaining,"discard_reason":"TWILIGHT_existing_ground_lifetime"}:continue
+		return "바닥 원본 물리 개체의 정확한 습득·소멸 소유자 필요"
 	var old_ledger: Variant=world.consumable_service.export_state().get(USES,{})
 	if not old_ledger is Dictionary:return "기존 원본 사용 장부 보존 필요"
 	for uid: String in old_ledger:
 		if ledger.get(uid)==old_ledger[uid]:continue
-		if not world.item_instances.has(uid) or not world.item_instances[uid].has(RECEIPT):return "이미 끝난 원본 사용 영수증 변경 금지"
+		if not world.item_instances.has(uid) or not world.item_instances[uid].has(RECEIPT):
+			if authorizes(overrides) and _candidate_kind=="floor_expire" and old_floor.has(uid):continue
+			return "이미 끝난 원본 사용 영수증 변경 금지"
 	return ""
 
 static func stage_debit(world: Node,requests: Array) -> Dictionary:
@@ -325,3 +354,115 @@ static func transfer_warehouse(world: Node,item_name: String,quantity: int,direc
 	world.inventory=inventory;world.item_instances=instances;world.warehouse.stacks=warehouse.stacks;world.warehouse.instances=warehouse.instances
 	world.deferred_save.cancel();busy=false
 	return {"handled":true,"ok":true,"saved":true,"physical_id":uid,"quantity":quantity,"direction":direction,"message":"원본 개체와 전체 잔량을 그대로 창고 이동했습니다"}
+
+static func floor_physical(floor: Array,uid: String) -> Dictionary:
+	for record: Dictionary in floor:
+		if record.get("physical_item",{}).get("id")==uid:return record.physical_item.get("data",{})
+	return {}
+
+static func can_remove_floor(record: Dictionary) -> bool:
+	if not busy or not _floor_commit_confirmed or _candidate_kind not in ["floor_pickup","floor_expire"] or _floor_record!=record:return false
+	for next: Dictionary in _candidate.get("ground_drops",[]):
+		if next.get("id")==record.get("id"):return false
+	return true
+
+static func _floor_payload(record: Dictionary) -> Dictionary:
+	var physical: Variant=record.get("physical_item")
+	if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):return {}
+	var uid: String=str(physical.get("id",""));var owned: Dictionary=proof_entry(physical.data,uid)
+	if owned.is_empty() or owned.remaining!=1 or record.get("quantity")!=1 or record.get("player_dropped")!=true or record.get("item_name")!=physical.data.get("name") or record.get("item_record")!=physical.data.get("record"):return {}
+	return {"uid":uid,"owned":owned,"physical":physical.data}
+
+static func _clear_floor_candidate() -> void:
+	_candidate.clear();_candidate_kind="";_floor_record.clear();_floor_commit_confirmed=false;busy=false
+
+static func drop(world: Node,reference: String,requested_position: Vector2) -> Dictionary:
+	var selected: Dictionary=world._parse_enhancement_target(reference)
+	var name_value: String=str(selected.get("name",""));var uid: String=str(selected.get("id",""))
+	var claims: bool=false
+	for entry: Variant in world.item_instances.values():
+		if entry is Dictionary and entry.get("name")==name_value and entry.has(RECEIPT):claims=true;break
+	if not claims:return {"handled":false}
+	if busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return _failure("원본 바닥 이동 저장 보호 중")
+	var owned: Dictionary=proof(world,uid)
+	if owned.is_empty() or owned.record.get("name")!=name_value or owned.remaining!=1:return _failure("바닥 이동은 현재 잔량1의 실제 개체를 선택하세요 · 묶음 분할 보존")
+	if world.hp<=0 or world.death_recovery.blocked() or world._item_locked(name_value,uid) or world._item_locked(name_value) or world._is_instance_equipped(uid) or owned.receipt.source_original_item.get("IsDroppable")!=true:return _failure("원본 내려놓기·잠금·장착·생존 조건 미충족")
+	if not requested_position.is_finite():return _failure("유효한 바닥 좌표 필요")
+	var point: Vector2=world.player.global_position+(requested_position-world.player.global_position).limit_length(96.0)
+	if not world._is_walkable_world(point) or not world._has_line_of_sight_world(world.player.global_position,point):point=world.player.global_position
+	var physical: Dictionary=world.item_instances[uid].duplicate(true)
+	var record: Dictionary=world.ground_loot.stage_spawn(name_value,point,1,"",{"player_dropped":true,"item_record":physical.record.duplicate(true),"physical_item":{"id":uid,"data":physical}})
+	if record.is_empty():return _failure("기존 바닥 배치 공간 없음 · 소유 보존")
+	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
+	if not integer(inventory.get(name_value,0)) or int(inventory[name_value])<1:return _failure("원본 소지 수량 불일치")
+	inventory[name_value]=int(inventory[name_value])-1
+	if int(inventory[name_value])==0:inventory.erase(name_value)
+	instances.erase(uid)
+	var floor: Array=world._ground_drops_snapshot();floor.append(record.duplicate(true))
+	var payload: Dictionary={"inventory":inventory,"item_instances":instances,"ground_drops":floor}
+	busy=true;_candidate_kind="floor_drop";_candidate=payload.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 바닥 이동 저장 실패·결과 미확정 · 정상 저장 불러오기 전 재이동 중지";_clear_floor_candidate();return _failure(world.patch523_owner_state_problem)
+	var view: Button=world.ground_loot.publish_spawn(record)
+	if view==null:
+		world.patch523_owner_state_problem="원본 바닥 이동 저장 후 표시 채택 미확정 · 정상 저장 불러오기 필요";_clear_floor_candidate();return _failure(world.patch523_owner_state_problem)
+	world.inventory=inventory;world.item_instances=instances;world.deferred_save.cancel();_clear_floor_candidate()
+	return {"handled":true,"ok":true,"saved":true,"physical_id":uid,"quantity":1,"message":"원본 물리 개체1개를 바닥으로 이동했습니다"}
+
+static func collect_floor(world: Node,view: Button,record: Dictionary) -> Dictionary:
+	var envelope: Variant=record.get("physical_item",{})
+	if not envelope is Dictionary:return {"handled":false}
+	var physical: Variant=envelope.get("data",{})
+	if not physical is Dictionary or not physical.has(RECEIPT):return {"handled":false}
+	if busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return _failure("원본 바닥 습득 저장 보호 중")
+	var source: Dictionary=_floor_payload(record)
+	if source.is_empty() or not world.ground_loot.valid_view(view) or world.item_instances.has(source.uid) or world.warehouse.instances.has(source.uid) or world.hp<=0:return _failure("원본 바닥 개체·소유·생존 조건 불일치")
+	var point: Array=record.get("position",[])
+	if point.size()!=2:return _failure("바닥 좌표 구조 오류")
+	var destination:=Vector2(float(point[0]),float(point[1]))
+	if not destination.is_finite() or world.player.global_position.distance_to(destination)>world.GROUND_PICKUP_RADIUS or Time.get_ticks_msec()-int(view.get("visible_since"))<world.ground_loot.MIN_VISIBLE_MS or not world._has_line_of_sight_world(world.player.global_position,destination):return _failure("기존 바닥 습득 거리·시간·시야 조건 미충족")
+	var name_value: String=str(source.physical.name)
+	if world._inventory_total_weight()+maxi(0,int(world.item_weight_index.get(name_value,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
+	if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))>=9007199254740991:return _failure("원본 습득 수량 범위 초과")
+	inventory[name_value]=int(inventory.get(name_value,0))+1;instances[source.uid]=source.physical.duplicate(true)
+	var floor: Array=[];var found: bool=false
+	for previous: Dictionary in world._ground_drops_snapshot():
+		if previous.get("id")==record.get("id"):
+			if found or previous!=record:return _failure("선택 바닥 상태 변경")
+			found=true
+		else:floor.append(previous)
+	if not found:return _failure("선택 바닥 개체가 없습니다")
+	var payload: Dictionary={"inventory":inventory,"item_instances":instances,"ground_drops":floor}
+	busy=true;_candidate_kind="floor_pickup";_candidate=payload.duplicate(true);_floor_record=record.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 재습득 저장 실패·결과 미확정 · 정상 저장 불러오기 전 재사용 중지";_clear_floor_candidate();return _failure(world.patch523_owner_state_problem)
+	_floor_commit_confirmed=true
+	var taken: Dictionary=world.ground_loot.take(view,world.player.global_position,world.GROUND_PICKUP_RADIUS)
+	if taken.is_empty():
+		world.patch523_owner_state_problem="원본 재습득 저장 후 바닥 채택 미확정 · 정상 저장 불러오기 필요";_clear_floor_candidate();return _failure(world.patch523_owner_state_problem)
+	world.inventory=inventory;world.item_instances=instances;world.deferred_save.cancel();_clear_floor_candidate()
+	return {"handled":true,"ok":true,"saved":true,"record":taken}
+
+static func expire_floor(world: Node,record: Dictionary) -> bool:
+	if busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return false
+	var source: Dictionary=_floor_payload(record)
+	if source.is_empty() or world.ground_loot.records.get(str(record.get("id","")))!=record or not is_finite(float(record.get("expires_at",INF))) or float(record.get("expires_at",INF))>Time.get_unix_time_from_system():return false
+	var state: Dictionary=world.consumable_service.export_state();var ledger: Variant=state.get(USES,{})
+	if not ledger is Dictionary:return false
+	ledger=ledger.duplicate(true);ledger[source.uid]={"receipt":source.owned.receipt.duplicate(true),"used_quantity":source.owned.used,"remaining_quantity":0,"discarded_quantity":1,"discard_reason":"TWILIGHT_existing_ground_lifetime"};state[USES]=ledger
+	var floor: Array=[]
+	for previous: Dictionary in world.ground_loot.records.values():
+		if previous.get("id")!=record.get("id"):floor.append(previous.duplicate(true))
+	var payload: Dictionary={"ground_drops":floor,"consumable_state":state}
+	busy=true;_candidate_kind="floor_expire";_candidate=payload.duplicate(true);_floor_record=record.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 바닥 유효시간 소멸 저장 실패·결과 미확정 · 정상 저장 불러오기 필요";_clear_floor_candidate();return false
+	_floor_commit_confirmed=true
+	if not world.ground_loot._remove(str(record.id)):
+		world.patch523_owner_state_problem="원본 바닥 소멸 저장 후 채택 미확정 · 정상 저장 불러오기 필요";_clear_floor_candidate();return false
+	world.consumable_service.import_state(state);world.deferred_save.cancel();_clear_floor_candidate()
+	return true

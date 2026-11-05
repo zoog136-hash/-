@@ -3329,7 +3329,8 @@ func _collect_ground_drop(drop: Button) -> bool:
 	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
 		hud.show_message("장비 고유 ID 충돌: 바닥 아이템을 보존했습니다")
 		return false
-	var acquired: Dictionary=source_ground_acquisitions.collect(self,drop,pending)
+	var acquired: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").collect_floor(self,drop,pending)
+	if not acquired.get("handled",false):acquired=source_ground_acquisitions.collect(self,drop,pending)
 	var record: Dictionary={}
 	var wallet_item: String=""
 	if acquired.get("handled",false):
@@ -6322,7 +6323,7 @@ func _load_game(quiet: bool) -> void:
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	var owner_error: String=owner_boundary.quest_error(self,data.get("quest_state",{}))
 	if owner_error.is_empty() and data.has("patch523_transaction_rng"):owner_error=owner_boundary.rng_error(data.patch523_transaction_rng)
-	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}),data.get("warehouse",{}))
+	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}),data.get("warehouse",{}),data.get("ground_drops",[]))
 	if owner_error.is_empty() and expedition_local!=null and data.has("expedition523_local"):owner_error=owner_boundary.expedition_error(self,data.expedition523_local)
 	if owner_error.is_empty() and protection523!=null and data.has("protection523"):owner_error=owner_boundary.protection_error(self,data.protection523)
 	if not owner_error.is_empty():

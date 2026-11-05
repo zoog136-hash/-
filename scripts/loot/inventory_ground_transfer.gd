@@ -4,6 +4,11 @@ extends RefCounted
 # between ownership changes. Physical equipment is never recreated by name.
 static func drop(world: Node, reference: String, requested_position: Vector2) -> bool:
 	if reference.is_empty() or not requested_position.is_finite(): return false
+	var native: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").drop(world,reference,requested_position)
+	if native.get("handled",false):
+		world.hud.show_message(str(native.get("message",native.get("reason","원본 바닥 이동 확인 필요"))))
+		if native.get("ok",false):world._update_hud()
+		return native.get("ok",false)
 	var parsed: Dictionary = world._parse_enhancement_target(reference)
 	var item_name: String = str(parsed.name)
 	var id: String = str(parsed.id)

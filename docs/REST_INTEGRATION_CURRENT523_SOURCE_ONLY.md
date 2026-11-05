@@ -180,5 +180,17 @@ native units and charges only the net lost quantity, preserving gross source
 cost/return evidence. The supplier does not regrant those retained units.
 Whole selected native-stack remainders can move through the existing warehouse
 request with unchanged physical ID/receipt and one carried/stored-count save.
-Partial splitting and floor custody remain pending. Existing restrictions and
+Partial splitting remains pending. Floor custody is now implemented below. Existing restrictions and
 runtime error guards are preserved; no additional check/run/pass was performed.
+
+## Typed floor custody and explicit host disposal (unexecuted)
+
+Existing one-item drop/real view pickup now move a selected quantity1 native
+physical object under one inventory/physical/floor save; no transient grant or
+new receipt is created. Original restrictions and existing placement/weight/
+visibility rules remain. Ground manager staging separates record preparation
+from view publication. Its normal lifetime records discarded_quantity with an
+explicit host-lifetime reason, independently of used_quantity, before removing
+the floor. Carried/warehouse/floor save/load guards reject duplicate/unexplained
+custody. Partial bundle splitting and other unresolved source effects remain.
+These changes add no execution, rendering, tests or gameplay usage evidence.

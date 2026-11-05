@@ -32,7 +32,7 @@ static func stackable_book(record: Dictionary) -> bool:
 
 static func storage_allowed(item_name: String,record: Dictionary,instances: Dictionary) -> bool:
 	for physical: Variant in instances.values():
-		if physical is Dictionary and physical.get("name")==item_name and physical.has("source_native_stack_receipt"):return false # Typed stack storage transfer is not implemented; keep all physical provenance.
+		if physical is Dictionary and physical.get("name")==item_name and physical.has("source_native_stack_receipt") and physical.get("source_native_stack_receipt",{}).get("source_original_item",{}).get("IsStorable")!=true:return false # Metadata only; the selected whole-quantity owner still authorizes the actual move.
 	if not _record_storage_allowed(record):return false
 	for entry: Variant in instances.values():
 		if entry is Dictionary and entry.get("name","")==item_name and entry.get("record") is Dictionary and not _record_storage_allowed(entry.record):return false
@@ -40,7 +40,7 @@ static func storage_allowed(item_name: String,record: Dictionary,instances: Dict
 
 static func has_physical_item(item_name: String,instances: Dictionary) -> bool:
 	for entry: Variant in instances.values():
-		if entry is Dictionary and entry.get("name","")==item_name and entry.get("record") is Dictionary and recognized(entry.record):return true
+		if entry is Dictionary and entry.get("name","")==item_name and entry.get("record") is Dictionary and (entry.has("source_native_stack_receipt") or recognized(entry.record)):return true
 	return false
 
 static func _record_storage_allowed(record: Dictionary) -> bool:
