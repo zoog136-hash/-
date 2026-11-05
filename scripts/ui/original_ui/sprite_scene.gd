@@ -93,6 +93,11 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		# transform by wrapping the original root in another transformed node.
 		if tree.nodeTree.classname!="Node":return {"ok":false,"error":"unsupported_project_root_class"}
 		tree.nodeTree.options=_project_root_options.duplicate(true)
+	# Identity-sensitive validation must use this requested source, not the
+	# empty/default identity of an unconfigured renderer. Keep source_tree
+	# uncommitted until validation succeeds; create no nodes on this path.
+	source_pack=pack
+	source_member=member
 	var problems: Array[String]=[]
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
@@ -125,9 +130,10 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 				if not EASING.accepts(easing): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
 			if timeline.get("property")=="VisibleForFrame" and value.get("_type")!="BoolFrame": problems.append("visibility_track_type")
-	if not problems.is_empty(): return {"ok":false,"error":"unsupported_source_scene","details":problems}
-	source_pack=pack
-	source_member=member
+	if not problems.is_empty():
+		source_pack=null
+		source_member=""
+		return {"ok":false,"error":"unsupported_source_scene","details":problems}
 	source_tree=tree
 	# Validate every original timeline frame before creating a visible scene.
 	for timeline: Dictionary in action.get("timeLines",[]):
@@ -176,7 +182,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if external:_external_texture_tags[int(widget.get("actionTag",0))]=true
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
-	if not str(widget.get("customProperty","")).is_empty():
+	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
@@ -256,6 +262,13 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
 	if node.classname=="Sprite" and _blend(options) not in BLEND.PAIRS: problems.append("unsupported_blend")
 	for child: Dictionary in node.get("children",[]): _validate(child,problems)
+
+func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dictionary) -> bool:
+	# Cocos3.6 NodeReader stores this exact UserData in ObjectExtensionData;
+	# it does not select/render these alternate colors. Preserve raw metadata
+	# and the actual serialized green color; allow no general custom shader.
+	const PALETTE=" Red:#D80900 Sky:#29D6FF gray:#7F7F7F"
+	return source_member=="UI/Main/Hud_CharInfo.csb" and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="9532ebdf565004332c1a566ee9f7fbf839aaa580b2db3600a187633820c7d805" and node.get("_offset")==39796 and node.classname=="LoadingBar" and str(widget.get("customProperty",""))==PALETTE and binding.get("stock_custom_property_metadata")==PALETTE and binding.get("role")=="source_percent"
 
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
@@ -407,6 +420,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_text",label)
 		var text_options: Dictionary=options.duplicate(true)
 		text_options.text=text_value
+		text_options["_cocos_wrap"]=text_binding.get("cocos_wrap",false)
 		var text_result: Dictionary=label.configure(font_value,text_options,Vector2(widget.size[0],widget.size[1]))
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
@@ -830,6 +844,31 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
 	return {"ok":true}
+
+func activate_authored_component_opacity() -> Dictionary:
+	# An actual screen owner may open the referenced component in its own
+	# serialized root opacity, instead of the enclosing editor ProjectNode's
+	# preview opacity. Take no caller-supplied alpha or animation policy.
+	if inspection_only or source_pack==null or source_tree.is_empty() or _project_root_options.is_empty():return {"ok":false,"error":"source_project_component_required"}
+	var original: Dictionary=source_pack.layout_source(source_member)
+	if original.is_empty():original=source_pack.scene(source_member)
+	var sha: String=str(source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256",""))
+	if sha.is_empty() or original.get("_source_sha256")!=sha:return {"ok":false,"error":"source_component_identity_required"}
+	var raw: Dictionary=original.get("nodeTree",{})
+	if raw.get("classname")!="Node" or raw.get("_offset")!=source_tree.get("nodeTree",{}).get("_offset"):return {"ok":false,"error":"source_component_original_root_required"}
+	var options: Dictionary=raw.get("options",{})
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	var alpha: Variant=widget.get("alpha")
+	if typeof(alpha)!=TYPE_INT or alpha<0 or alpha>255:return {"ok":false,"error":"source_component_original_opacity_required"}
+	var root: Variant=source_nodes.get(int(raw._offset))
+	if not root is Node2D or root.get_meta("original_ui_source",{}).get("scene")!=source_member:return {"ok":false,"error":"source_component_loaded_root_required"}
+	var rgba: Array=root.get_meta("source_rgba",[])
+	if rgba.size()!=4:return {"ok":false,"error":"source_component_display_state_required"}
+	rgba=rgba.duplicate();rgba[3]=alpha
+	root.set_meta("source_rgba",rgba)
+	root.set_meta("source_component_opacity_activation",{"member":source_member,"sha256":sha,"authored_component_alpha":alpha,"parent_preview_alpha":_project_root_options.get("alpha"),"animation_policy_inferred":false})
+	_sync_source_display(self,_source_parent_display())
+	return {"ok":true,"authored_component_alpha":alpha,"animation_policy_inferred":false,"source_fields_modified":false}
 
 func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)

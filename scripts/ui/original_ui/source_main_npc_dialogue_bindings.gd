@@ -30,7 +30,7 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 	var bindings: Dictionary = {
 		6800:{"role":"consume"},
 		3512:{"role":"source_text","text":resolved["npc_name"]},
-		3940:{"role":"source_text","text":resolved["text"]},
+		3940:{"role":"source_text","text":resolved["text"],"cocos_wrap":true},
 		272:{"role":"button","activate":close},
 		324:{"role":"static_source_text"}
 	}

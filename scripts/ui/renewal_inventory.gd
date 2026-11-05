@@ -19,6 +19,9 @@ var weight_readout: Label
 var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
 var detail_active: bool = false
+var source_detail_type: Dictionary = {}
+var source_detail_safe_enhancement: Dictionary = {}
+var source_detail_classes: Dictionary = {}
 var detail_layout_queued: bool = false
 var category_tabs: Control
 var inventory_left: Control
@@ -112,7 +115,7 @@ func _ready() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,44))
+	var detail_close: Button = UI.button("닫기",close_detail,Vector2(52,44))
 	detail_close.set_script(NATIVE_BUTTON)
 	detail_close.name = "InventoryDetailClose"
 	close_row.add_child(detail_close)
@@ -294,6 +297,11 @@ func _native_item_name_context(reference: String) -> Dictionary:
 	if not context is Dictionary or not context.get("ok",false):return {}
 	if not context.get("control") is Control or not is_instance_valid(context.control) or not context.get("scroll") is Control or not is_instance_valid(context.scroll):return {}
 	return context
+
+func close_detail() -> void:
+	# Shared existing close behavior; selection/query/locks and saves stay intact.
+	detail_active=false
+	_reflow()
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return
@@ -634,6 +642,26 @@ func _refresh_detail(item_reference: String) -> void:
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
+	# Pass through the selected owner's type only; the old mixed detail label
+	# also carries selection/lock/engraving text and is not a source type field.
+	source_detail_type = {"reference":item_reference,"text":item.type} if item.get("type") is String and not item.type.is_empty() else {}
+	source_detail_safe_enhancement={}
+	source_detail_classes={}
+	var source_classes: Variant=item.get("source_class_names")
+	if source_classes is Array and not source_classes.is_empty():
+		var class_names: PackedStringArray=[]
+		for class_name: Variant in source_classes:
+			if not class_name is String or class_name.is_empty():
+				class_names.clear()
+				break
+			class_names.append(class_name)
+		if not class_names.is_empty():source_detail_classes={"reference":item_reference,"text":"/".join(class_names)}
+	var safe_host: Node=controller.get_parent() if is_instance_valid(controller) else null
+	if is_instance_valid(safe_host) and safe_host.has_method("_enhancement_kind_for_record") and safe_host.has_method("_safe_enhancement_level"):
+		var source_enhance_kind: Variant=safe_host.call("_enhancement_kind_for_record",item)
+		if source_enhance_kind is String and not source_enhance_kind.is_empty():
+			var source_safe_value: Variant=safe_host.call("_safe_enhancement_level",source_enhance_kind,item)
+			if typeof(source_safe_value)==TYPE_INT and source_safe_value>=0:source_detail_safe_enhancement={"reference":item_reference,"value":source_safe_value,"basis":"existing world._safe_enhancement_level(kind,selected record)"}
 	UI.apply_item_visual(detail_icon,item,item_name,item_image_index.get("아이템",{}),"detail")
 	var lines := PackedStringArray()
 	for raw: Variant in item.get("sourceOptions",[]):

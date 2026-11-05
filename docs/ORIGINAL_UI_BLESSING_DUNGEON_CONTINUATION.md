@@ -1,0 +1,70 @@
+# Main game blessing and dungeon input continuation
+
+These are additional partial original connections after PR280 `5340c462db7e000e1d32bcb9024636cb479d2b9d`, based on main `5db920332f9298b4fc1f70713dde11740c91a7d2`. No new image, layout, original animation policy, sound or gameplay service is implemented. No tests, compile, game, render or CI were run; the changes are unverified and are not completed560-root/game-use counts.
+
+## Actual blessing owner and original display
+
+The existing world publishes AinhasadService.snapshot to HUD.set_ain_state. `source_main_blessing_bindings.gd` reads that same current `v20_ain_state.blessing` integer without a preview/default200. It mounts through actual HUDScene Project1540 → Hud_PayLayout Project184 → Hud_BlessPoint Project9056 → Hud_EinSlot Text792. Original Sp_Slot3496, font18 Font/font_B.ttf, position/anchor/color and parent transforms are preserved. The current owner's count updates after regeneration, consumption, charging or save restoration without a second UI service.
+
+Original Hud_BlessPoint Button9336 calls the same HUD._toggle_ain_window used by the existing Ainhasad entry. It retains the actual owner's disabled state. Original tooltip title6656, captions6324/5992 and values4560/4232 display the owner's actual exp_rate/adena_rate using the existing integer-percent conversion. Tooltip visibility follows the existing Ainhasad detail panel's open/close state; no second toggle or dismissal policy is introduced. Missing actual rates hide that partial original tooltip; they do not display serialized700%/100% previews.
+
+The existing detail owner and its recharge-item buttons, auto checkbox, reduction/regeneration/orb explanations remain available. The partial source readouts do not claim that whole detail screen has been replaced. The old main HUD leaf/count controls are hidden only after their original count/entry mounts and are restored on source failure, release or selection of a smaller pack. Stage icons0–4, caution, infinity, glow, slider and recharge-threshold semantics remain unbound. No numeric threshold chooses an original icon. This scope shows the actual count and authored frame without inventing that missing icon relationship. Sound metadata is retained under the existing sound exclusion.
+
+| Original | SHA256 | Connected nodes |
+| --- | --- | --- |
+| UI/Main/Hud_PayLayout.csb | 74289dc69d7c3a53d9f48206f16d8ff0b9b30ce13b8b69153165663d844f61bf | Project184 |
+| UI/Main/Hud_BlessPoint.csb | 97c33507483cdb6517a9d6b671ffad92b757a62e79c3269b590316722dafd2a1 | Button9336, Project9056, tooltip8312/7924/6656/6324/5992/4560/4232 |
+| UI/Main/Hud_EinSlot.csb | 8b8e324d39da49f2ff9d2fc23dfd3e7953eccd2dea8b2caec57b18b0be0df168 | Sp_Slot3496, Text792 |
+
+The controller exposes `source_blessing_status()` for this partial connection and preserves original control visibility across replacement controllers. v23 stays usable without these optional source scopes. v25 supplies count/entry; v26 adds the source rate readouts; v27 retains both and adds dungeon close below. v24 is an unshipped local construction intermediate, not an installer input or delivery claim.
+
+## Dungeon original outside-close input
+
+`source_main_dungeon_controls.gd` connects only the actual source MissionScene Project2384 → Mission_Dungeon_All Button5540. The parent SHA is `dd8ecf3272d9ef3484bdd7eea2336abc54923553d3019c6888706872a5b76142`; child SHA is `d95b96227ea95d38e95b4d351977f6b3794cc237f4ef194457959e8626ba2be3`. Parent position600/337.5 and original alpha0, and the authored1600x675 close rectangle, anchor.5/.5, alpha0, original Default button textures are retained. Its invisible editor title is omitted only by the existing proven-alpha0 renderer behavior; no visible close button is fabricated.
+
+The control exists only while the real scripts/dungeons/source_dungeon_view.gd owner is mounted and visible in the actual `source_dungeons` workspace. Release rechecks that same owner before invoking HUD._close_workspace. It does not invoke leave/stop/claim/cancel services or discard a pending save. The original full-screen outside-close control is deliberately absent from the workspace action override list: current workspace rows, entry controls and modal inputs retain their existing precedence. Outside those controls, the existing native button router supplies Android touch and the original Control supplies mouse input. PointerTransfer yields inside this actual source rectangle. No runtime/device success is claimed.
+
+Other original dungeon panels, category/mode selection, entrance/popup target roles and source row/reward assignments remain independent missing contracts. This close input does not repurpose the existing ItemList into an entrance image or infer Party/Competition/Special identity joins.
+
+## Private combined input
+
+Latest v27 file: `TWILIGHT_current523_main_game_original_UI_combined_v27_20261105.zip`,13,531,760B, ZIP SHA256 `04c285a11833ba49057aeb19cd6f617fe46e484776c177ab32f3469b02ecbaae`, manifest pin `dc2baf2fddd082c28fed5578a8dad276c56003cc637f09c6c5388b7139e27b45`. Relative directory `source-ui/current523-main-game-original-ui-v27`. Structure original_ui.json/receipt.json/originals/UI and the single TWILIGHT_SOURCE_UI/TWILIGHT_SOURCE_UI_SHA256 selector remain unchanged. No overlay whitelist or installer-list/config write is added.64 original files/41 scene trees/40 partial scopes are packaging units, not completed screens or observed game consumption. Existing v23, later candidates, originals and saves are preserved.
+
+Official private v27 Drive ID: `1exd0vv8MxMrLkXCXvLCNn-7nFqF7IEvU`. Upload succeeded; metadata readback reports13,531,760B and only the owner's user permission. Consumer installation/operation is unconfirmed. Earlier delivered v25 ID `1PQHC2bPuamogbjv0D_wKltruOPOO0HSr` and v26 ID `1xbmjUMoLxD-VotZXibUEBZkq--dxbSog` remain preserved; v27 is their combined optional successor, not an automatic installed selection change.
+
+The original MapScene/Map_All/Map_Tab_Area/Map_List_Button scopes remain retained. The separate relation-file pin and W_aden.png pixels are still separate contracts. CSB-root registration, quest reward target assignment, authoritative dialogue NPC ID and36 dependency gaps are not resolved by these new connections.
+
+## v23 poison validation initialization order
+
+The installer identified that _known_poison_metadata ran before configure assigned source_pack/source_member. Public fix `11883badc2e6fe596a0cd016fa8660377200e0e0` assigns the requested pack/member before identity-sensitive validation, keeps source_tree uncommitted, and clears the context on rejection. The exact member, SHA, LoadingBar39796, palette string and explicit binding checks are unchanged. Existing v23 requires this code fix (or a descendant); its ZIP, pin, selection and original bytes do not change. No upload was made for this code-only fix. This is a source-path correction without runtime verification.
+
+## Warehouse, production, shop and NPC-store callers
+
+`source_main_workspace_controls.gd` adds four explicitly pinned original close controls, each mounted by its actual parent ProjectNode. It requires the current workspace section, a unique visible owner with the existing renewal script and the same HUD, and the actual shop/npc_mode distinction. It checks the same owner/section again before calling the existing HUD._close_workspace. Stale buttons cannot close a replacement owner. Original mouse controls, native Android routing, existing modal precedence and PointerTransfer guards are reused. These source controls are not forms or replacement transaction implementations.
+
+| Actual section/owner | Original parent/project | Original child/close |
+| --- | --- | --- |
+| warehouse / renewal_warehouse.gd | StorageScene /132 | Storage/Storage_All /47160 |
+| crafting / renewal_crafting.gd | ProductionScene /132 | Production/Production_All /41600 |
+| shop / renewal_shop.gd, npc_mode=false | ShopScene /788 | Shop/Shop_All /324 |
+| npc_shop / renewal_shop.gd, npc_mode=true | StoreScene /148 | Store/Store_All /67396 |
+
+The warehouse's existing mode OptionButton supplies its selected text to original Storage_All Label_Title47920; original Label_Title_Real48640 remains its literal 창고 caption. Mode changes update the original field without changing selection, quantity or invoking a transfer. v28's smaller close-only scopes stay compatible; v29 additionally contains these original title nodes. Existing close controls and complete workspace bodies remain available. Closing does not synthesize a purchase, transfer, crafting confirmation, quote cancellation or save.
+
+The exact parent/child SHA pins are stored in source_main_workspace_controls.SPECS. The package retains those unmodified original CSBs, fonts and textures. Original production categories do not automatically become the existing filter buckets; source 모두 구매/모두 맡기기 are not reinterpreted as one selected-row transaction. Original cart, row placement, batch confirmation and quantity policies require their real caller contracts before those actions can be connected. Unshipped v28 construction output remains private and is not an installer input.
+
+Those parent scenes contain editor ProjectNodes with preview alpha0, while each referenced component's own original root declares alpha255. An actual current workspace owner explicitly opens its referenced component with that component's authored root opacity via activate_authored_component_opacity(); parent position/anchor/scale and every descendant's own alpha remain intact. The method accepts no supplied alpha, checks the original member/SHA/root offset, and records both original opacity values as runtime activation evidence. Raw source and manifest are unchanged. This is this caller's explicit use of the authored component default, not a recovered original-client opening/fade policy; no new timing or animation is inferred. It prevents treating an invisible preview-only close icon as a visible original delivery. Existing v29 already contains the required original root metadata; no additional pack is needed for this code change.
+
+Latest combined v29: `TWILIGHT_current523_main_game_original_UI_combined_v29_20261105.zip`,13,641,824B; ZIP SHA256 `07eac95793d75c627548451d7023ed1c01a52fff015d640838d838ea196e41b2`; manifest pin `ed7f0da2b156643ade0239d491a40fd7803efb00db0bf53979df58e8f043e91a`; relative directory `source-ui/current523-main-game-original-ui-v29`.72 original files/45 scene trees/44 partial scopes remain packaging units. v29 retains v27's blessing/dungeon and v23's earlier main/map/inventory/quickslot scopes. Selector/structure are unchanged; installer configuration, access/sharing, existing packs and saves were not changed. Consumer installation and operation remain unconfirmed. No tests, compile, game, rendering or CI was executed.
+
+Official private v29 Drive ID `1fkwo1rBjUNV58yXQV1EH0OWtF41X5bN8`; upload succeeded and metadata readback reports13,641,824B with only the owner's user permission. No earlier successful upload was repeated or replaced.
+
+## Original production search entry and input bar
+
+Production_All Button964 and its literal Label2252 now open the actual original Project628 → Production_Popup_Keypad input bar. The existing original text-field/editor adapter in source_main_inventory_search.gd is reused through a separately pinned configure_crafting contract; the inventory API retains its previous source/owner behavior. Production_Popup_Keypad SHA is `e4203840af58b4feebc832c4059c1a819f5348085ee3f5b6ecf5a3eb05f82aa8`. Its original TextField1472, Search5072/label5132 and Close2808/label2868, and authored input-bar images/lines are retained. No replacement LineEdit, font, input rectangle, result row or keypad is created.
+
+The borrowed editor is the actual renewal_crafting.name_filter with its existing text_changed→_rebuild_listing connection. Source Search commits that same query through the same current owner; live filtering stays as it already works. Source Close/Escape releases the editor to its saved parent/properties and retains the query. Escape dismisses this input bar before the workspace. Native touch routing/focus, existing death/modal guards and PointerTransfer suppression reuse the inventory input protocol while giving this caller's input bar precedence over its own underlying workspace. Different overlays retain priority. Uneditable/stale/missing owners and unsupported input decline without replacing the query. Closing or switching the workspace releases the editor before tearing down the source scene.
+
+The source result ListView8896 and cancel364 role remain unconnected; no first-result selection, cancellation/clear rule, production category mapping or recipe/material/quantity/transaction algorithm is invented. The original entry caption remains its source literal; the query belongs to the source TextField/current owner. The active component opacity comes from each referenced original component root as described above; no inventory frame17 is applied to the unrelated production parent or popup. This is a partial input-bar connection, not a complete production-screen implementation.
+
+Latest combined v30: `TWILIGHT_current523_main_game_original_UI_combined_v30_20261105.zip`,13,651,773B; ZIP SHA256 `bccd2682a135a2dc8e525930808c69f1c42aa21375f43565320f94514b32128e`; manifest pin `db62defeb1d1170f990689dac2e6be6c1c9015d13a9f4cfa5db710c834fc4ae3`; relative directory `source-ui/current523-main-game-original-ui-v30`. Drive ID `1go7LsP9M4Te2S0TA5bbRkvyTFR8GFC6G`; upload and metadata readback succeeded with the exact byte size and owner-only user permission.73 original files/46 scene trees/45 partial scopes are packaging units, not completed560 roots or game use. v30 retains v29's prior original scopes plus this production input bar. The selector/structure and every previous official input, setting and save remain preserved. Installation/operation and all new code remain unverified; no tests, compile, game, render or CI were run.
