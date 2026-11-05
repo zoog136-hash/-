@@ -3,6 +3,9 @@ extends RefCounted
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
+# Aggregate bank metadata is larger than an individual action JSON. Keep both
+# finite: the pinned cf2677 manifest is 31,361,924 bytes; actor JSON stays 16MiB.
+const MAX_MANIFEST_JSON = 32 * 1024 * 1024
 const SOURCE_DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
 const SOURCE_REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bindings_native_draw_multiplicity_unverified"
 var _root: String = ""
@@ -49,9 +52,10 @@ static func crc32(bytes: PackedByteArray) -> String:
 	for byte: int in bytes: value = _crc_table[(value ^ byte) & 255] ^ (value >> 8)
 	return "%08x" % ((value ^ 0xffffffff) & 0xffffffff)
 
-func _json(path: String, expected: String) -> Dictionary:
+func _json(path: String, expected: String, manifest_json: bool = false) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() <= 0 or file.get_length() > MAX_JSON: return fail("Missing or oversized bank JSON: " + path)
+	var maximum: int = MAX_MANIFEST_JSON if manifest_json else MAX_JSON
+	if file == null or file.get_length() <= 0 or file.get_length() > maximum: return fail("Missing or oversized bank JSON: " + path)
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	if not valid_sha(expected) or digest(bytes) != expected: return fail("Bank JSON SHA256 mismatch: " + path)
@@ -258,7 +262,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
 	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
-	var loaded: Dictionary = _json(manifest_path, expected_sha)
+	var loaded: Dictionary = _json(manifest_path, expected_sha, true)
 	if not loaded.ok: return loaded
 	_manifest = loaded.value
 	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")

@@ -67,6 +67,15 @@ completed source-package searches/downloads.
 
 ## Validation boundary
 
+The cf2677 bank manifest is 31,361,924 bytes. Its aggregate manifest readers
+(reference bank, effect selection and awakening selection) require the finite
+32MiB `MAX_MANIFEST_JSON` allowance. Individual action JSON retains its 16MiB
+`MAX_JSON` limit. Both still require their configured SHA256 before parsing;
+source identity, paths, raw member/decoder limits and cache budgets are unchanged.
+The installer must require all three manifest readers to include this code
+before selecting the cf2677 bank. This changes no bytes in the approved 19-file
+distribution, and does not constitute an installation or runtime test.
+
 At the PR278 source HEAD, the resource check and 47 skill policy checks
 passed. Core run42050340676 failed because the isolated Actions runner lacked
 the private original definition ZIP; this is separate from missing Sprite
