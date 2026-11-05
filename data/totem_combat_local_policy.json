@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "policy": "twilight_totem_combat_v1",
+  "authority": "TWILIGHT_CUSTOM_ESTIMATE_NOT_NATIVE_SERVER",
+  "defaults": {
+    "version": 1,
+    "policy": "twilight_totem_combat_v1",
+    "venom_enabled": true,
+    "venom_interval": 1.0,
+    "shield_enabled": true,
+    "shield_capacity": 100
+  },
+  "provenance": {
+    "source_priority": "523 source definitions > confirmed official information > explicit local estimate",
+    "search_result": "Official Totem guide confirms poison and shield effects, but supplies no poison tick or shield capacity. Existing research identifies the same missing definitions.",
+    "shield_capacity": "Local estimate uses only the existing Guardian host skill's base capacity of 100; its SP scaling is not copied. Capacity is capped at the host player's maximum HP.",
+    "venom_interval": "Local estimate reuses the existing Monster.apply_poison host default of one second. This is not evidence of the native server interval.",
+    "venom_formula": "Local adapter snapshots floor(target maximum HP * source PoisonDamageByMaxHP / 1000000), clamped to source MinPoisonDamage and MaxPoisonDamage, once per tick. First tick follows one full interval; no tick after the source-duration boundary.",
+    "venom_ownership": "One snapshot per totem origin. Reapplication replaces the snapshot. Regular poison remains independent; host poison immunity is respected; host cleanse removes the poison component only.",
+    "shield_lifetime": "Existing local source-duration policy: five seconds; confirmed DR remains until expiry even if absorption is exhausted. Refresh replaces capacity instead of adding stacks.",
+    "shield_order": "After existing host skill shields and the confirmed Totem DR on the triggering hit. Absorbed damage may be zero. No cooldown reset on settings changes.",
+    "settings": "Validated settings are saved atomically with the host save. They apply to subsequent procs; active snapshots keep their existing values. Source tables and source probabilities are never changed."
+  }
+}

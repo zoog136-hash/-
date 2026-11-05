@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "code_commit": "088e46a405e6fdbad0bf361bc38af1e1d51d4cd8",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "AUTO destination UI and immutable definition assessment; zero enabled region transitions",
+  "actual_source_python_tests": {
+    "tests": 7,
+    "failures": 0
+  },
+  "godot": {
+    "catalog.txt": {
+      "sha256": "89f85347f8f6258afc056b6a5d5e5a12c0953dfb5fe5bcd077ed777ddc5765d0",
+      "results": [
+        {
+          "actual523": true,
+          "checks": 231,
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "catalog-missing.txt": {
+      "sha256": "668d6fed2901389b5ace3fdb26604e5bee143a5426e6fe77d1841f1ffb7c764a",
+      "results": [
+        {
+          "actual523": false,
+          "checks": 3,
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "auto_hunting523_main_ui_test-final.txt": {
+      "sha256": "7c2f3f82e882d514158f6dda1fe9f741b07b280c61eaf544f952c351a87049e4",
+      "results": [
+        {
+          "actual523": true,
+          "checks": 262,
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "main-ui-render-final.txt": {
+      "sha256": "385a60038aca7bcf49ce4c7205ea44e1365c5efdae20fc50ab45249bbafd6069",
+      "results": [
+        {
+          "actual523": true,
+          "checks": 263,
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "main-ui-no-pack.txt": {
+      "sha256": "57711f6163e380984d96d831e7013764109497205bdf60e2cdd8c2fcf364a5aa",
+      "results": [
+        {
+          "actual523": false,
+          "checks": 12,
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "core_runtime_save_test-final.txt": {
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+      "results": [
+        {
+          "checks": 32,
+          "failures": [],
+          "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "save_identical_payload_test-final.txt": {
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "results": [
+        {
+          "failures": [],
+          "skips": 1,
+          "writes": 2
+        }
+      ],
+      "script_or_resource_errors": false
+    },
+    "deferred_save_gate_test-final.txt": {
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "results": [
+        {
+          "failures": []
+        }
+      ],
+      "script_or_resource_errors": false
+    }
+  },
+  "render": {
+    "renderer": "Compatibility OpenGL4.5 llvmpipe Mesa25.0.7",
+    "resolution": [
+      1280,
+      720
+    ],
+    "capture_sha256": "c5c9c6ef1aad611060ce69e8a6f3cc9bb23f9604870e2cd97d26e24cb9951a5f",
+    "capture_delivery": "PRIVATE_LOCAL_ONLY; visually inspected; no OS pointer or touch test"
+  },
+  "stage": {
+    "inputs": "7448 production files,1560008771 bytes; no synthetic art",
+    "additional_exact_main_asset": {
+      "path": "assets/monsters/reviewed_source/l1j_tw380_npc_45027/portrait.png",
+      "bytes": 1027,
+      "sha256": "bd3e2b71fd8b98f228a0b9424377210ff6f8abf31b30c4f28cf7bc5feae275d8",
+      "source": "exact main HEAD blob; dynamic initial population portrait absent from core stage graph"
+    },
+    "validation_only_overrides": [
+      "disable Android ETC2_ASTC import",
+      "parallel editor import for four CPUs",
+      "reuse engine imported cache; importer validates source fingerprints"
+    ],
+    "current_map_pack": {
+      "files": 607,
+      "bytes": 725122448
+    }
+  },
+  "failed_attempts": [
+    "source-dir ledger check fails because a1.zip is unavailable; actual523 ZIPs independently CRC/SHA verified",
+    "premature Main execution before import completed: resource-loader errors; discarded",
+    "first completed Main UI pass had deferred original portrait missing from core stage; added exact main blob and reran clean",
+    "render attempt used absent ALSA device; final run uses Dummy audio and has no errors"
+  ],
+  "original_resource_delivery_ledger": "UNCHANGED",
+  "private_pack_library_id": "libfile_d04fb02540e08191aa556eb0bdfe2d3c",
+  "resources_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "passed": true
+  },
+  "remote_ci": "PENDING_AT_HANDOFF; do not infer from local results"
+}

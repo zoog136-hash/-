@@ -35,6 +35,7 @@ var selected_key: String=""
 var number_pattern:=RegEx.new()
 var art_column: VBoxContainer
 var apply_row: HBoxContainer
+var secondary_button: Button
 var footer_actions: HBoxContainer
 var presentation_homes: Array[Dictionary]=[]
 var catalog_style: StyleBox
@@ -146,6 +147,7 @@ func configure(controller: Node) -> void:
 	hud.catalog_body_actions.get_child(0).add_child(footer_actions)
 	for spec: Array in [["컬렉션 보기","카드 컬렉션 서비스 미지원"],["변신 등록","카드 빠른등록 서비스 미지원"]]:
 		var button: Button=UI.button(str(spec[0]),Callable(),Vector2(0,44))
+		if spec[0]!="컬렉션 보기":button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 		button.name="CompanionCollectionView" if spec[0]=="컬렉션 보기" else "CompanionQuickRegister"
 		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.disabled=true;button.tooltip_text=str(spec[1]);UI.primary_button(button)
@@ -153,6 +155,19 @@ func configure(controller: Node) -> void:
 		if spec[0]=="컬렉션 보기":
 			button.disabled=false;button.tooltip_text="선택 카드가 포함된 컬렉션"
 			button.pressed.connect(func() -> void:hud.open_normal_card_collections(category,Cards.card_id(hud.selected_catalog_record)))
+		else:
+			button.pressed.connect(func() -> void:hud.open_card_skill_awakening(category,Cards.card_id(hud.selected_catalog_record)))
+	secondary_button=UI.button("추가 소환",Callable(),Vector2(0,44))
+	secondary_button.name="CompanionSecondarySummon"
+	secondary_button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	footer_actions.add_child(secondary_button)
+	preload("res://scripts/ui/source_card_skin.gd").style(secondary_button,"UI/Change/Change_DetailView.csb","Btn_Change_On")
+	secondary_button.pressed.connect(func() -> void:
+		var world: Node=hud.get_parent()
+		if world==null or not world.has_method("_on_secondary_doll_requested"):return
+		var state: Dictionary=world.option_awakening.subslot_view(false)
+		var chosen: String=Cards.card_id(hud.selected_catalog_record)
+		hud.secondary_doll_requested.emit("" if state.identity==chosen else chosen))
 	footer_actions.hide()
 
 func activate(value: String) -> void:
@@ -181,7 +196,7 @@ func activate(value: String) -> void:
 	var right: Control=hud.catalog_body_actions.get_child(0)
 	right.move_child(footer_actions,1)
 	art_column.show();footer_actions.show()
-	(footer_actions.find_child("CompanionQuickRegister",true,false) as Button).text="변신 등록" if category=="변신" else "인형 등록"
+	(footer_actions.find_child("CompanionQuickRegister",true,false) as Button).text="스킬 각성"
 	detail_visible=hud.catalog_detail.visible
 	collection_visible=hud.equipment_collection_button.visible
 	hud.catalog_detail.hide()
@@ -203,6 +218,9 @@ func activate(value: String) -> void:
 func deactivate() -> void:
 	if not active:return
 	select_tab(0)
+	preload("res://scripts/ui/source_card_skin.gd").restore_surface(hud)
+	preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
+	for button: Button in tabs: preload("res://scripts/ui/source_card_skin.gd").restore(button)
 	active=false
 	art_column.hide();footer_actions.hide()
 	footer_actions.get_parent().move_child(footer_actions,footer_actions.get_parent().get_child_count()-1)
@@ -272,11 +290,19 @@ func fit_layout() -> void:
 		label.add_theme_font_size_override("font_size",12 if compact else 13)
 		if label.name.begins_with("CompanionOptionValue"):label.custom_minimum_size.x=54 if compact else 66
 
+	preload("res://scripts/ui/source_card_metrics.gd").apply(hud)
+	if preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record):
+		preload("res://scripts/ui/source_card_skin.gd").tabs(tabs)
+
 func refresh() -> void:
 	if not active:return
 	var record: Dictionary=hud.selected_catalog_record
+	_refresh_secondary(record)
 	if hud.catalog_results.is_empty():record={}
 	var identity: String=Cards.card_id(record)
+	var skill_button: Button=footer_actions.find_child("CompanionQuickRegister",true,false)
+	skill_button.disabled=not preload("res://scripts/ui/source_card_presentation.gd").native(record)
+	skill_button.tooltip_text="원본 카드 스킬 각성 · 비용 미확정 실행은 차단"
 	var key: String=category+identity+str(hash(record.get("sourceOptions",[])))
 	if key!=selected_key:
 		selected_key=key
@@ -326,7 +352,9 @@ func fill_options(record: Dictionary) -> void:
 	grade_label.add_theme_color_override("font_color",UI.grade(grade))
 	var unsupported: bool=false
 	for raw: Variant in record.get("sourceOptions",[]):
-		var option: String=str(raw).replace("PVP","PVE").replace("PvP","PvE")
+		var option: String=str(raw)
+		if not preload("res://scripts/ui/source_card_presentation.gd").native(record):
+			option=option.replace("PVP","PVE").replace("PvP","PvE")
 		if option.contains("손상") or option.contains("저주"):continue
 		var result: RegExMatch=number_pattern.search(option)
 		var split: int=result.get_start() if result!=null else option.length()
@@ -346,3 +374,18 @@ func fill_options(record: Dictionary) -> void:
 		hud.workspace.register_scroll_drag(sheet,value)
 	note.text="* 미지원 특수효과" if unsupported else ""
 	note.visible=unsupported
+
+func _refresh_secondary(record: Dictionary) -> void:
+	if secondary_button==null:return
+	secondary_button.visible=category=="마법인형" and record.get("source","")=="lineagem_base508"
+	if not secondary_button.visible:return
+	var world: Node=hud.get_parent()
+	if world==null or not world.has_method("_on_secondary_doll_requested"):secondary_button.disabled=true;return
+	var runtime: RefCounted=world.option_awakening
+	var state: Dictionary=runtime.subslot_view(false)
+	var chosen: String=Cards.card_id(record)
+	var release: bool=state.identity==chosen
+	var available: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").eligibility(runtime,"" if release else chosen,int(world.level),world.active_skill_buffs)
+	secondary_button.text="추가 소환 해제" if release else "추가 소환"
+	secondary_button.disabled=not bool(available.ok) or runtime.save_blocked
+	secondary_button.tooltip_text=available.get("error","주 인형과 다른 카드·등급 · 별도 각성 소비 없음")

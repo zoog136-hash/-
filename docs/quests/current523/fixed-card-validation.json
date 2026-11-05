@@ -1,0 +1,246 @@
+{
+  "parent_public_head": "22c7ea4c1fa238adf8655cb0c976a76ac4a6bb69",
+  "previous1088_milestone_preserved": true,
+  "tests": {
+    "held30": {
+      "log_sha256": "2e5859cd7265154fb39a18cad0320f554eb1fb0c5f4ab8195b4ac0656a5a8ce3",
+      "result": {
+        "checks": 151,
+        "existing_swap_action": "absent; equip/selection is not native exchange",
+        "failures": [],
+        "final_save_sha256": "87550f849be32b8e0a91628191e4138346e4acf641d150a0fa82e3ede236cec5",
+        "mode": "real_held_30_original_receipts",
+        "new_source_receipts": 30,
+        "ordinary_rng_pity_unchanged": true,
+        "permanent_cards": 4,
+        "protected_quest_spares": 26,
+        "scope": "actual full eligible four-class quest ownership,UI,source global merge/UI and unsupported option-copy guard,atomic failure/confirmed error/reconnect;27Test cards remain blocked",
+        "seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "some_use_pending": 359,
+        "source_completions": 811,
+        "source_units": {
+          "306611": 5,
+          "306621": 5,
+          "306631": 10,
+          "306641": 10
+        }
+      }
+    },
+    "native30": {
+      "log_sha256": "99983b25fbd2c09e6a564e578e3d555f1403d1716f55c906d9d71ebd328f0d4f",
+      "result": {
+        "checks": 85,
+        "existing_swap_action": "absent; equip/selection is not native exchange",
+        "failures": [],
+        "final_save_sha256": "5445f4b6b1e23e48906d2cd604ae0d536c13d3faed6cb3f67040e3992d35bdf3",
+        "mode": "real_native_30_units",
+        "new_source_receipts": 30,
+        "ordinary_rng_pity_unchanged": true,
+        "permanent_cards": 4,
+        "protected_quest_spares": 26,
+        "scope": "actual full eligible four-class quest ownership,UI,source global merge/UI and unsupported option-copy guard,atomic failure/confirmed error/reconnect;27Test cards remain blocked",
+        "seed_sha256": "",
+        "some_use_pending": 356,
+        "source_completions": 811,
+        "source_units": {
+          "306611": 5,
+          "306621": 5,
+          "306631": 10,
+          "306641": 10
+        }
+      }
+    },
+    "legacy_option": {
+      "log_sha256": "9ace4ddafaa6b4a42faf80aa6a595b8e8e35bdee62e40dc1edc5bc8d7d9cc62d",
+      "result": {
+        "checks": 133,
+        "failures": []
+      }
+    },
+    "native_option": {
+      "log_sha256": "33b4f9968ad9b2ddc02ba196cb97359d61a71ce6d1fd094777e6a562ffe2ce8c",
+      "result": {
+        "available_collections": 1034,
+        "checks": 21,
+        "default_eligible": 206,
+        "errors": [],
+        "native_definitions": 289
+      }
+    },
+    "host_policy": {
+      "log_sha256": "387391b9c460986554ad812bba4b136dce9db927203ab28c882737ff751f44a3",
+      "result": {
+        "checks": 8,
+        "failures": [],
+        "legacy_costs_exp_and_usable_quantities_unchanged": true,
+        "native_no_merge_not_reinterpreted_as_option_feed_rule": true,
+        "source_actual_owned_save_sha256": "5445f4b6b1e23e48906d2cd604ae0d536c13d3faed6cb3f67040e3992d35bdf3"
+      }
+    },
+    "missing": {
+      "log_sha256": "a132de7f02f3b6ce7ae42c7044eaf34141842485627275110a8424dd96db429c",
+      "result": {
+        "checks": 31,
+        "failures": [],
+        "scope": "actual source-granted inventory and receipts survive absent optional provider; no fixtures/grants",
+        "source_save_sha256": "5445f4b6b1e23e48906d2cd604ae0d536c13d3faed6cb3f67040e3992d35bdf3"
+      }
+    },
+    "core": {
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    "historical822": {
+      "log_sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    }
+  },
+  "explicit_checks": 1227,
+  "additional_fusion_ui": "CARD_FUSION_VIEW_OK; numeric assertion count not invented",
+  "runtime": {
+    "source_definitions": 3621,
+    "new_completions": 811,
+    "default10_consumers_some_use_pending_quests": 359,
+    "exact_v3_18_consumers_some_use_pending_quests": 356,
+    "reviewed_distinct_item_classes_with_v3": 18,
+    "remaining_unreviewed_item_classes": 128,
+    "baseline_pending_item_classes": 146,
+    "actual_source_card_units": {
+      "306611": 5,
+      "306621": 5,
+      "306631": 10,
+      "306641": 10
+    },
+    "new_permanent_cards": 4,
+    "new_duplicates": 26,
+    "card_input_receipts": 30,
+    "native_grant_quests_with_v3": 234,
+    "native_original_grant_receipt_rows": 238,
+    "goal104_corrections_preserved": true,
+    "historical822_pending537_preserved": true
+  },
+  "native_card_boundary": {
+    "stable_ids": [
+      "source:m508:1:23801",
+      "source:m508:1:23811",
+      "source:m508:1:23821",
+      "source:m508:1:23831"
+    ],
+    "unchanged701_catalog_blob": "8d377c38868070078994758b131c2cc19110550b",
+    "public243_receive_contract_ref": "957b8853b2986109b8fa747573cf6d18496f46c4",
+    "native_global_no_merge_existing_paths": [
+      "configure source_merge_blocked",
+      "spare_count",
+      "fuse candidates",
+      "fusion_batch_limit/fuse_many",
+      "world request",
+      "UI available/registered materials"
+    ],
+    "consuming_swap_exchange": "absent in current owner/callers; equip/selection not reinterpreted as native exchange",
+    "test27_still_blocked": true,
+    "new701_catalog_art_or_pool": false
+  },
+  "option_feed": {
+    "policy": "TWILIGHT_host_hold_until_option_owner_verified",
+    "quantity_field": "quest_option_feed_hold",
+    "native_NoMerge_is_not_option_feed_prohibition": true,
+    "explicit_new_quest_duplicate_only": true,
+    "prior_free_copy_cost_EXP_rules_unchanged": true,
+    "target_permanent_ownership_and_gold_awaken_not_forbidden": true,
+    "actual_prepare_feed_boundary_guarded": true,
+    "native_and_legacy_material_views_share_available_quantity": true,
+    "UI_snapshot_policy_note_explicit": true,
+    "source_flags_alone_do_not_create_hold": true,
+    "reason": "new producer-to-option-consumer provenance/semantics unresolved; narrow host safety hold until exact owner verified"
+  },
+  "test_scope": {
+    "producer": "both real old811 receipt-selected30 units and fresh unchangedv1 auto-issued30 units; all four eligible classes/all actual units used",
+    "controlled": [
+      "lock/missing downstream metadata set",
+      "overflow restored in isolated QA state",
+      "writer failure and actual write-then-error",
+      "quote-only option target/two prior-free-copy fixture; no live ownership grant"
+    ],
+    "not_claimed": [
+      "natural probability/encounters",
+      "native option feed forbidden by NoMerge",
+      "full3621 quest behavior",
+      "whole original spell/equipment effect or art completion"
+    ],
+    "phase_note": "held151 predates literal host-policy field naming clarification; final explicit field/schema and meaning verified by native85/reconnect and policy8"
+  },
+  "original_saves": {
+    "corrected811": {
+      "sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+      "bytes": 1390877,
+      "unchanged": true
+    },
+    "historical822": {
+      "sha256": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+      "bytes": 1261506,
+      "unchanged": true
+    }
+  },
+  "inputs": {
+    "quest_v1_drive_file": "1qt_ZIoU2xuSHfnhrl2Yas4_BD-8uHWcH",
+    "quest_zip_bytes": 570245,
+    "quest_zip_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+    "item_bin_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+    "skill_v3_bytes": 4415307,
+    "skill_v3_sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+    "skill_v3": "existing LOCAL_ONLY reused; no build/download/upload",
+    "existing_Drive_packs_unchanged": true,
+    "game_Drive_auto_downloader": false
+  },
+  "storage": {
+    "workspace_free_bytes": 0,
+    "workspace_free_inodes": 2030689,
+    "tmp_free_bytes": 7001726976,
+    "local_HEAD": "bb480da497c4851baf811e9d74b04f6dfd8a679c",
+    "candidate": "/tmp/q262-r2/files",
+    "new_source_manifest": "/tmp/q262-r2/source-paths.json",
+    "old_work_index_candidate_manifest_and_unpublished_bytes_preserved": true,
+    "original_packs_maps_saves_unique_evidence_deleted_or_moved": false,
+    "new_environment": false,
+    "preparation_error": "long QA symlink failedErr28 before tests; short inode-resident pointers verified byte-identical; failed preparation not counted as passing tests",
+    "transient_transport": "one evidence-writer process could not be created; same environment reported running/connected; read-only check confirmed no file written before normal continuation"
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "passed": true,
+    "original_all_delivered": false
+  },
+  "remaining": {
+    "test_cards": 27,
+    "reference_books": 4,
+    "shared_source_restricted_uses": 27,
+    "other_classes": 70,
+    "audit_files": [
+      "reference-owner-audit.json",
+      "restricted-use-audit.json",
+      "remaining-owner-audit.json",
+      "pending-consumer-matrix.json"
+    ]
+  },
+  "scope": {
+    "main_otherPR_merge": false,
+    "map232_or_263_branch_changed": false,
+    "whole_manual_CI": false,
+    "new_source_report_capture_pack_transfer": false,
+    "denied262_metadata_retry": false,
+    "denied245v3_upload_retry": false,
+    "denied243_eight_files_used": false
+  }
+}

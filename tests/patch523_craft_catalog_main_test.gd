@@ -1,0 +1,86 @@
+extends SceneTree
+const QA=preload("res://tests/qa_class_selection.gd")
+var checks: int=0
+var failures: Array[String]=[]
+var archive: String=""
+var export_path: String=""
+var full_catalog: bool=false
+
+func check(ok: bool,label: String) -> void:
+	checks+=1
+	if not ok:
+		failures.append(label); printerr("PATCH523_REGISTER_FAIL: ",label)
+
+func _initialize() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--source-catalog-zip="): archive=arg.trim_prefix("--source-catalog-zip=")
+		if arg=="--full-catalog":full_catalog=true
+		if arg.begins_with("--export-registered-catalog="): export_path=arg.trim_prefix("--export-registered-catalog=")
+	call_deferred("run")
+
+func run() -> void:
+	var world: TwilightWorld=(load("res://Main.tscn") as PackedScene).instantiate()
+	print("PATCH523_REGISTER_PHASE instantiate")
+	root.add_child(world); world.set_process(false); world.save_timer=-100000.0
+	check(QA.enter_game(world),"actual Main class selection enters")
+	world.player.set_physics_process(false); world.field_population.set_process(false)
+	check(not archive.is_empty() and FileAccess.file_exists(archive),"actual approved Drive source ZIP is present")
+	check(world._save_game(true)==OK,"baseline actual save written")
+	var sha: String=FileAccess.get_sha256(world.save_path())
+	var inventory: String=JSON.stringify([world.inventory,world.item_instances,world.gold,world.next_item_instance_id])
+	world.hud.open_patch523_equipment_info(); await process_frame
+	var button: Button=world.hud.workspace.find_child("Patch523InstallCraftCatalog",true,false)
+	var dialog: FileDialog=world.hud.workspace.find_child("Patch523CraftCatalogDialog",true,false)
+	check(button!=null and dialog!=null,"existing crafting info exposes actual source catalog installer")
+	print("PATCH523_REGISTER_PHASE install")
+	dialog.file_selected.emit(archive); await process_frame
+	var status: Label=world.hud.workspace.find_child("Patch523CraftCatalogStatus",true,false)
+	check(world.patch523_craft_catalog_status.get("ok",false) and status.text.contains("등록 완료"),"actual selected ZIP installs and registers through existing UI callback")
+	var store_path: String=world.PATCH523_CRAFT_CATALOG.FULL_STORE if full_catalog else world.PATCH523_CRAFT_CATALOG.STORE
+	var fingerprint: String=world.PATCH523_CRAFT_CATALOG.FULL_BIN_SHA if full_catalog else world.PATCH523_CRAFT_CATALOG.BIN_SHA
+	check(FileAccess.get_sha256(store_path)==fingerprint,"shared installed BIN has verified original source fingerprint")
+	var document: Dictionary=world.PATCH523_CRAFT_CATALOG.read(store_path)
+	if document.is_empty():
+		printerr("PATCH523_REGISTER_ABORT: ",world.PATCH523_CRAFT_CATALOG.problem);quit(1);return
+	print("PATCH523_REGISTER_PHASE verify-index")
+	var expected: Dictionary={}
+	for id: Variant in document.native_item_ids+document.native_reward_item_ids: expected[str(id)]=true
+	var total: int=0
+	for id: String in expected:
+		var definition: Dictionary=document.item_definitions[id]
+		if definition.original_item.get("TestItem",false) or definition.native_record.get("source_test_item",false): continue
+		var registered: Dictionary=world._catalog_item_from_source_id("m523:item:"+id)
+		check(not registered.is_empty() and int(registered.get("source_item_class_id",0))==int(id) and registered.get("name")==definition.native_record.name,"actual index registers exact source identity "+id)
+		total+=1
+	check(total==int(world.patch523_craft_catalog_status.get("registered_count",-1)),"registered count comes from actual index rather than source row presence")
+	check(world._catalog_item_from_source_id("m523:item:379").get("name")=="철 · 원본#379","original iron has separate exact ownership namespace")
+	check(JSON.stringify([world.inventory,world.item_instances,world.gold,world.next_item_instance_id])==inventory and FileAccess.get_sha256(world.save_path())==sha,"catalog install grants no inventory and preserves existing save bytes")
+	if full_catalog:
+		check(total==30398,"all normal source IDs actually indexed")
+		check(world._catalog_item_from_source_id("m523:item:137:bless:2").get("source_bless_raw")==2,"actual blessed scroll gets distinct source ownership key")
+		check(not world._catalog_item_from_source_id("m523:item:185094").is_empty(),"previous missing half-elixir really indexed")
+	if full_catalog and world.patch523_equipment.recipes.has("patch523:13"):
+		var preserved: Array=[world.inventory,world.item_instances,world.gold]
+		var recipe: Dictionary=world.patch523_equipment.recipes["patch523:13"]
+		world.inventory={str(recipe.materials[0].item):int(recipe.materials[0].quantity)};world.item_instances={};world.gold=10000
+		check(world._craft_quote("patch523:13",1).get("ok",false),"delivered v12 source recipe remains usable beside full native supplement")
+		world.inventory=preserved[0];world.item_instances=preserved[1];world.gold=preserved[2]
+	var count: int=world.catalog_db["아이템"].size()
+	check(world.install_patch523_craft_catalog_zip(archive) and world.catalog_db["아이템"].size()==count,"same verified data installation does not duplicate registered identities")
+	check(not world.install_patch523_craft_catalog_zip(archive+".missing") and world.catalog_db["아이템"].size()==count,"bad replacement leaves actual registered catalog intact")
+	if not export_path.is_empty():
+		var file:=FileAccess.open(export_path,FileAccess.WRITE)
+		check(file!=null,"actual registered catalog export can be written")
+		if file!=null:
+			file.store_string(JSON.stringify(world.catalog_db));file.flush();check(file.get_error()==OK,"actual registered catalog export flushed");file.close()
+	world.queue_free(); await process_frame
+	if full_catalog:
+		var restored: TwilightWorld=(load("res://Main.tscn") as PackedScene).instantiate()
+		root.add_child(restored);restored.set_process(false);restored.save_timer=-100000
+		check(QA.enter_game(restored),"fresh Main with no catalog path restores installed full catalog")
+		restored.player.set_physics_process(false);restored.field_population.set_process(false)
+		check(restored.patch523_craft_catalog_status.get("registered_count")==30398,"installed full catalog survives fresh Main")
+		check(FileAccess.get_sha256(restored.save_path())==sha,"fresh Main leaves original save bytes unchanged")
+		restored.queue_free();await process_frame
+	print("PATCH523_REGISTER_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"registered":total,"actual_drive_pack":true,"export":export_path}))
+	quit(0 if failures.is_empty() else 1)

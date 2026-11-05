@@ -1,0 +1,2727 @@
+{
+  "schema": 1,
+  "source": "lineagem_base508",
+  "design_size": [
+    1200,
+    675
+  ],
+  "coordinate_system": "Cocos y-up; bounds include ancestor anchors/scales",
+  "evidence": [
+    {
+      "name": "source-ui-first/csb_inspection.json",
+      "sha256": "6d440277d0684ce627ba9cf4453cc88c3bdb37267686b69a93fbeeaa8cd45a9e"
+    },
+    {
+      "name": "source-ui-second/source_inspection.json",
+      "sha256": "d03783ab6c71f079589d833e7595cf2e4f9e2b6578330f0e748edf90978ba358"
+    },
+    {
+      "name": "source-ui-third/source_inspection.json",
+      "sha256": "3e8eef100c449aca1d4d25fdadb999255bc77b1b3aa9d15c423678b58f1f3f53"
+    }
+  ],
+  "screens": {
+    "UI/CommonUi/Common_Slot.csb": [
+      {
+        "table_offset": 220,
+        "parent_table_offset": null,
+        "classname": "Node",
+        "customClassName": "",
+        "name": "Node",
+        "actionTag": 0,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 120,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 15728,
+        "parent_table_offset": 220,
+        "classname": "Button",
+        "customClassName": "",
+        "name": "Btn",
+        "actionTag": 655212362,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 865,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.49939998984336853,
+          0.5
+        ],
+        "size": [
+          68.0,
+          68.0
+        ],
+        "bounds_y_up": [
+          -33.95919930934906,
+          -34.0,
+          68.0,
+          68.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 15316,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_SlotBg",
+        "actionTag": -621606947,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 158,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          76.0,
+          76.0
+        ],
+        "bounds_y_up": [
+          -38.0,
+          -38.0,
+          76.0,
+          76.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Img_Slot.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 15012,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_IconSample",
+        "actionTag": 920772006,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 1700,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          64.0,
+          64.0
+        ],
+        "bounds_y_up": [
+          -32.0,
+          -32.0,
+          64.0,
+          64.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Effect/Common_Effect_texture/Icon_Dummy.png",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        ]
+      },
+      {
+        "table_offset": 14808,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Grace",
+        "actionTag": 380738972,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 136,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 13220,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Properties",
+        "actionTag": -1654659288,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 18,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 14276,
+        "parent_table_offset": 13220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Fire",
+        "actionTag": -1704323317,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 19,
+        "position": [
+          35.0,
+          33.999900817871094
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          21.0,
+          22.0
+        ],
+        "bounds_y_up": [
+          14.0,
+          11.999900817871094,
+          21.0,
+          22.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Fire.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 13944,
+        "parent_table_offset": 13220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Ground",
+        "actionTag": -468100840,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 20,
+        "position": [
+          35.000099182128906,
+          33.999900817871094
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          21.0,
+          22.0
+        ],
+        "bounds_y_up": [
+          14.000099182128906,
+          11.999900817871094,
+          21.0,
+          22.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Ground.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 13612,
+        "parent_table_offset": 13220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Water",
+        "actionTag": -386157357,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 21,
+        "position": [
+          35.000099182128906,
+          34.999900817871094
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          21.0,
+          22.0
+        ],
+        "bounds_y_up": [
+          14.000099182128906,
+          12.999900817871094,
+          21.0,
+          22.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Water.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 13284,
+        "parent_table_offset": 13220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Wind",
+        "actionTag": 790086393,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 22,
+        "position": [
+          34.000099182128906,
+          34.999900817871094
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          21.0,
+          22.0
+        ],
+        "bounds_y_up": [
+          13.000099182128906,
+          12.999900817871094,
+          21.0,
+          22.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Wind.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 11272,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Properties_Smelt",
+        "actionTag": 1525076820,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 8024,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 12676,
+        "parent_table_offset": 11272,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Bg",
+        "actionTag": 665318307,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 204,
+        "tag": 8025,
+        "position": [
+          36.615501403808594,
+          36.454898834228516
+        ],
+        "scale": [
+          0.22499999403953552,
+          0.22499999403953552
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          119.0,
+          120.0
+        ],
+        "bounds_y_up": [
+          9.840502113103867,
+          9.454899549484253,
+          26.774999290704727,
+          26.999999284744263
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Fx_Glow_Square_01.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 12344,
+        "parent_table_offset": 11272,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Fire",
+        "actionTag": -460878145,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 8026,
+        "position": [
+          37.0,
+          37.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          26.0,
+          30.0
+        ],
+        "bounds_y_up": [
+          11.0,
+          7.0,
+          26.0,
+          30.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Smelt_Fire.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 12008,
+        "parent_table_offset": 11272,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Water",
+        "actionTag": -230852344,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 8027,
+        "position": [
+          34.0,
+          33.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          25.0,
+          23.0
+        ],
+        "bounds_y_up": [
+          9.0,
+          10.0,
+          25.0,
+          23.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Smelt_Water.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 11672,
+        "parent_table_offset": 11272,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Earth",
+        "actionTag": 260127990,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 8028,
+        "position": [
+          37.0,
+          37.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          32.0,
+          32.0
+        ],
+        "bounds_y_up": [
+          5.0,
+          5.0,
+          32.0,
+          32.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Smelt_Earth.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 11340,
+        "parent_table_offset": 11272,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Air",
+        "actionTag": -1460786620,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 8029,
+        "position": [
+          34.0,
+          34.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          25.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          9.0,
+          10.0,
+          25.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Smelt_Air.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 10292,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Lock",
+        "actionTag": -1858749985,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 105,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 10796,
+        "parent_table_offset": 10292,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Glow",
+        "actionTag": 1654906616,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 106,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.100000023841858,
+          1.100000023841858
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          84.0,
+          84.0
+        ],
+        "bounds_y_up": [
+          -46.20000100135803,
+          -46.20000100135803,
+          92.40000200271606,
+          92.40000200271606
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Hud_Icn_CustomSlot_Glow.png",
+            "plistFile": "UI_Resource/Atlas_Hud.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 10348,
+        "parent_table_offset": 10292,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "Img_frame",
+        "actionTag": -662408652,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 26,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          0.800000011920929,
+          0.800000011920929
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          103.0,
+          103.0
+        ],
+        "bounds_y_up": [
+          -41.20000061392784,
+          -41.20000061392784,
+          82.40000122785568,
+          82.40000122785568
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Tutorial_FxBox1.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 9340,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Wrong",
+        "actionTag": -1353057815,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 5040,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 9704,
+        "parent_table_offset": 9340,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "bg",
+        "actionTag": -1524909755,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 153,
+        "tag": 5039,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          64.0,
+          64.0
+        ],
+        "bounds_y_up": [
+          -32.0,
+          -32.0,
+          64.0,
+          64.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Img_Bg_Radius0.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 9396,
+        "parent_table_offset": 9340,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Wrong",
+        "actionTag": 360156317,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 4259,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.2000000476837158,
+          1.2000000476837158
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          71.0,
+          69.0
+        ],
+        "bounds_y_up": [
+          -42.60000169277191,
+          -41.400001645088196,
+          85.20000338554382,
+          82.80000329017639
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Hud_MiniCht_B2.png",
+            "plistFile": "UI_Resource/Atlas_Hud.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 9004,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Select",
+        "actionTag": 816240338,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1371,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0700000524520874,
+          1.0700000524520874
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          76.0,
+          76.0
+        ],
+        "bounds_y_up": [
+          -40.66000199317932,
+          -40.66000199317932,
+          81.32000398635864,
+          81.32000398635864
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Img_SlotTouch.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 8664,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Center",
+        "actionTag": 517293365,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 40,
+        "position": [
+          9.999999747378752e-05,
+          0.0
+        ],
+        "scale": [
+          1.0700000524520874,
+          1.0700000524520874
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          76.0,
+          76.0
+        ],
+        "bounds_y_up": [
+          -40.65990199318185,
+          -40.66000199317932,
+          81.32000398635864,
+          81.32000398635864
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Slot_Repair.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 8328,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Left_Top",
+        "actionTag": 1093920091,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 758,
+        "position": [
+          -33.0,
+          21.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.5
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          -33.0,
+          9.0,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Equip.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 7984,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Left_Middle",
+        "actionTag": -2039300140,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 36,
+        "position": [
+          -21.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          -33.0,
+          -12.0,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Slot_Icon_Limited.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 7644,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Right_Top",
+        "actionTag": 1546178987,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1369,
+        "position": [
+          33.0,
+          32.999900817871094
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          9.0,
+          8.999900817871094,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_New.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 7304,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Left_Bottom",
+        "actionTag": 1889126392,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1368,
+        "position": [
+          -33.0,
+          -33.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          -33.0,
+          -33.0,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Icn_Slot_Lock.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 6880,
+        "parent_table_offset": 220,
+        "classname": "Text",
+        "customClassName": "",
+        "name": "Text_Amount",
+        "actionTag": 1067771944,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 341,
+        "position": [
+          31.0,
+          -32.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          0.0
+        ],
+        "size": [
+          62.0,
+          20.0
+        ],
+        "bounds_y_up": [
+          -31.0,
+          -32.0,
+          62.0,
+          20.0
+        ],
+        "resources": [
+          {
+            "field": "fontResource",
+            "path": "Font/font_B.ttf",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        ]
+      },
+      {
+        "table_offset": 6500,
+        "parent_table_offset": 220,
+        "classname": "Text",
+        "customClassName": "",
+        "name": "Label_Center",
+        "actionTag": 471897752,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1370,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          40.0,
+          22.0
+        ],
+        "bounds_y_up": [
+          -20.0,
+          -11.0,
+          40.0,
+          22.0
+        ],
+        "resources": [
+          {
+            "field": "fontResource",
+            "path": "Font/font_B.ttf",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        ]
+      },
+      {
+        "table_offset": 6164,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Random",
+        "actionTag": -1194187065,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1355,
+        "position": [
+          33.0,
+          33.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          9.0,
+          9.0,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Random.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 5828,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Choice",
+        "actionTag": -713780632,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 3868,
+        "position": [
+          33.0,
+          33.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          1.0
+        ],
+        "size": [
+          24.0,
+          24.0
+        ],
+        "bounds_y_up": [
+          9.0,
+          9.0,
+          24.0,
+          24.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Choice.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 5484,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Infinity",
+        "actionTag": -1377443122,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 3131,
+        "position": [
+          33.0,
+          -32.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          1.0,
+          0.0
+        ],
+        "size": [
+          31.0,
+          20.0
+        ],
+        "bounds_y_up": [
+          2.0,
+          -32.0,
+          31.0,
+          20.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Slot_Infinity.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 5144,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Check",
+        "actionTag": 588290060,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 27,
+        "position": [
+          2.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          70.0,
+          64.0
+        ],
+        "bounds_y_up": [
+          -33.0,
+          -32.0,
+          70.0,
+          64.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Slot_Check.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 4760,
+        "parent_table_offset": 220,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "Img_Enchant",
+        "actionTag": 2062834636,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1970,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          69.0,
+          69.0
+        ],
+        "bounds_y_up": [
+          -34.5,
+          -34.5,
+          69.0,
+          69.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Hud_Orim_SkillSlot_Line.png",
+            "plistFile": "UI_Resource/Atlas_Hud.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 4424,
+        "parent_table_offset": 220,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Pause",
+        "actionTag": -809759949,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 50,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          54.0,
+          58.0
+        ],
+        "bounds_y_up": [
+          -27.0,
+          -29.0,
+          54.0,
+          58.0
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Com_Icn_Pause.png",
+            "plistFile": "UI_Resource/Atlas_Common2.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 2808,
+        "parent_table_offset": 220,
+        "classname": "Button",
+        "customClassName": "",
+        "name": "Btn_Probability",
+        "actionTag": -1788262402,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 212,
+        "position": [
+          -34.0,
+          34.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          1.0
+        ],
+        "size": [
+          68.0,
+          68.0
+        ],
+        "bounds_y_up": [
+          -34.0,
+          -34.0,
+          68.0,
+          68.0
+        ],
+        "resources": [
+          {
+            "field": "normalData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          },
+          {
+            "field": "pressedData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          },
+          {
+            "field": "disabledData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 3316,
+        "parent_table_offset": 2808,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Bg",
+        "actionTag": -1167767996,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 253,
+        "tag": 214,
+        "position": [
+          13.926400184631348,
+          54.46799850463867
+        ],
+        "scale": [
+          0.3100000023841858,
+          0.3100000023841858
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          128.0,
+          128.0
+        ],
+        "bounds_y_up": [
+          -39.91359996795654,
+          0.6279983520507812,
+          39.68000030517578,
+          39.68000030517578
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Fx_Glow_01.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 2860,
+        "parent_table_offset": 2808,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "Img_Probability",
+        "actionTag": -310642769,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 213,
+        "position": [
+          15.163999557495117,
+          52.83599853515625
+        ],
+        "scale": [
+          0.75,
+          0.75
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          30.0,
+          30.0
+        ],
+        "bounds_y_up": [
+          -30.086000442504883,
+          7.58599853515625,
+          22.5,
+          22.5
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Shop_Btn_Probability.png",
+            "plistFile": "UI_Resource/Atlas_Shop.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 1328,
+        "parent_table_offset": 220,
+        "classname": "Button",
+        "customClassName": "",
+        "name": "Btn_Detail",
+        "actionTag": 366161678,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 76,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          68.0,
+          68.0
+        ],
+        "bounds_y_up": [
+          -34.0,
+          -34.0,
+          68.0,
+          68.0
+        ],
+        "resources": [
+          {
+            "field": "normalData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          },
+          {
+            "field": "pressedData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          },
+          {
+            "field": "disabledData",
+            "path": "Img_Bg_Alpha.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 1788,
+        "parent_table_offset": 1328,
+        "classname": "Sprite",
+        "customClassName": "",
+        "name": "Sp_Bg",
+        "actionTag": 1340602253,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 253,
+        "tag": 77,
+        "position": [
+          13.926400184631348,
+          54.46799850463867
+        ],
+        "scale": [
+          0.3100000023841858,
+          0.3100000023841858
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          128.0,
+          128.0
+        ],
+        "bounds_y_up": [
+          -39.91359996795654,
+          0.6279983520507812,
+          39.68000030517578,
+          39.68000030517578
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Fx_Glow_01.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 1380,
+        "parent_table_offset": 1328,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "Img_Detail",
+        "actionTag": -1648030240,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 78,
+        "position": [
+          15.163999557495117,
+          52.83599853515625
+        ],
+        "scale": [
+          0.75,
+          0.75
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          30.0,
+          30.0
+        ],
+        "bounds_y_up": [
+          -30.086000442504883,
+          7.58599853515625,
+          22.5,
+          22.5
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Shop_Btn_Detail.png",
+            "plistFile": "UI_Resource/Atlas_Shop.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 364,
+        "parent_table_offset": 220,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Collected",
+        "actionTag": 1960169092,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 32,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 796,
+        "parent_table_offset": 364,
+        "classname": "ImageView",
+        "customClassName": "",
+        "name": "Image",
+        "actionTag": -1408024495,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 153,
+        "tag": 34,
+        "position": [
+          0.0,
+          -32.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.0
+        ],
+        "size": [
+          64.0,
+          18.5
+        ],
+        "bounds_y_up": [
+          -32.0,
+          -32.0,
+          64.0,
+          18.5
+        ],
+        "resources": [
+          {
+            "field": "fileNameData",
+            "path": "Img_Bg_Radius0.png",
+            "plistFile": "UI_Resource/Atlas_Common.plist",
+            "resourceType": 1
+          }
+        ]
+      },
+      {
+        "table_offset": 420,
+        "parent_table_offset": 364,
+        "classname": "Text",
+        "customClassName": "",
+        "name": "Label",
+        "actionTag": 848639801,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 33,
+        "position": [
+          0.0,
+          -23.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.5,
+          0.5
+        ],
+        "size": [
+          65.0,
+          18.0
+        ],
+        "bounds_y_up": [
+          -32.5,
+          -32.0,
+          65.0,
+          18.0
+        ],
+        "resources": [
+          {
+            "field": "fontResource",
+            "path": "Font/font_B.ttf",
+            "plistFile": "",
+            "resourceType": 0
+          }
+        ]
+      }
+    ],
+    "UI/FloatingUi/Inventory_Slot_Set.csb": [
+      {
+        "table_offset": 72,
+        "parent_table_offset": null,
+        "classname": "Node",
+        "customClassName": "",
+        "name": "Node",
+        "actionTag": 0,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 120,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 4308,
+        "parent_table_offset": 72,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Slot",
+        "actionTag": 591161230,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 118,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 5464,
+        "parent_table_offset": 4308,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_1",
+        "actionTag": -1201248216,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 0,
+        "position": [
+          -117.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -117.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 5212,
+        "parent_table_offset": 4308,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_2",
+        "actionTag": 1975621248,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 1,
+        "position": [
+          -41.000099182128906,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -41.000099182128906,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 4972,
+        "parent_table_offset": 4308,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_3",
+        "actionTag": 789165575,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 2,
+        "position": [
+          34.99980163574219,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          34.99980163574219,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 4732,
+        "parent_table_offset": 4308,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_4",
+        "actionTag": -1714515974,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 3,
+        "position": [
+          110.9999008178711,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          110.9999008178711,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 4376,
+        "parent_table_offset": 4308,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Fx_Slot_UnLock",
+        "actionTag": 1457537472,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 957,
+        "position": [
+          -4.0,
+          9.999999747378752e-05
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -4.0,
+          9.999999747378752e-05,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 1856,
+        "parent_table_offset": 72,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Slot_Extension",
+        "actionTag": -731158714,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 119,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 3900,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_1",
+        "actionTag": -295755541,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 581,
+        "position": [
+          -269.9997863769531,
+          9.999999747378752e-05
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -269.9997863769531,
+          9.999999747378752e-05,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 3660,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_2",
+        "actionTag": -1060380074,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 610,
+        "position": [
+          -192.99969482421875,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -192.99969482421875,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 3420,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_3",
+        "actionTag": 700698686,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 639,
+        "position": [
+          -117.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -117.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 3180,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_4",
+        "actionTag": 677586623,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 668,
+        "position": [
+          -41.000099182128906,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -41.000099182128906,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 2940,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_5",
+        "actionTag": 226088238,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 697,
+        "position": [
+          34.99980163574219,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          34.99980163574219,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 2700,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_6",
+        "actionTag": 2018441088,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 726,
+        "position": [
+          110.9999008178711,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          110.9999008178711,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 2460,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_7",
+        "actionTag": -1721890838,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 755,
+        "position": [
+          187.00100708007812,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          187.00100708007812,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 2212,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_8",
+        "actionTag": 820024961,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 784,
+        "position": [
+          263.0000915527344,
+          9.999999747378752e-05
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          263.0000915527344,
+          9.999999747378752e-05,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 1940,
+        "parent_table_offset": 1856,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Fx_Slot_UnLock",
+        "actionTag": 1640138141,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1443,
+        "position": [
+          148.00160217285156,
+          0.0003000000142492354
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          148.00160217285156,
+          0.0003000000142492354,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 128,
+        "parent_table_offset": 72,
+        "classname": "SingleNode",
+        "customClassName": "",
+        "name": "Nd_Slot_Extension_Lock",
+        "actionTag": 1150235739,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 1975,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 1444,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_1",
+        "actionTag": -1663244440,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 1976,
+        "position": [
+          -269.9997863769531,
+          9.999999747378752e-05
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -269.9997863769531,
+          9.999999747378752e-05,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 1204,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_2",
+        "actionTag": 1924952387,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 2005,
+        "position": [
+          -192.99969482421875,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -192.99969482421875,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 964,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_3",
+        "actionTag": -1385675471,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 2034,
+        "position": [
+          -117.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -117.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 724,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_4",
+        "actionTag": 1547919808,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 2063,
+        "position": [
+          -41.000099182128906,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -41.000099182128906,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 472,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Slot_Lock",
+        "actionTag": -2023907700,
+        "zOrder": 0,
+        "visible": true,
+        "alpha": 255,
+        "tag": 2208,
+        "position": [
+          153.03489685058594,
+          1.0648000240325928
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          153.03489685058594,
+          1.0648000240325928,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      },
+      {
+        "table_offset": 200,
+        "parent_table_offset": 128,
+        "classname": "ProjectNode",
+        "customClassName": "",
+        "name": "Fx_Slot_UnLock",
+        "actionTag": -497720213,
+        "zOrder": 0,
+        "visible": false,
+        "alpha": 255,
+        "tag": 564,
+        "position": [
+          -155.04310607910156,
+          0.0003000000142492354
+        ],
+        "scale": [
+          1.0,
+          1.0
+        ],
+        "anchorPoint": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.0,
+          0.0
+        ],
+        "bounds_y_up": [
+          -155.04310607910156,
+          0.0003000000142492354,
+          0.0,
+          0.0
+        ],
+        "resources": []
+      }
+    ]
+  }
+}

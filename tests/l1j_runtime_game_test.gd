@@ -27,7 +27,13 @@ func _run() -> void:
 	world.save_timer = -10000
 	world.field_population.set_process(false)
 	world._clear_monsters()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
+	# The legacy (3550,4300) point is outside the current Aden source grid:
+	# nearest_cell() returns (-1,-1) and every later save/drop/path check then
+	# runs from an invalid off-map point. Keep the real map spawn when valid.
+	var start_cell: Vector2i = world.field_map.nearest_cell(Vector2(3550,4300))
+	if start_cell.x < 0: start_cell = world.field_map.nearest_cell(world.player.global_position)
+	check(start_cell.x >= 0, "active map has a valid gameplay start cell")
+	if start_cell.x >= 0: world.player.global_position = world.field_map.cell_to_world(start_cell)
 	var bindings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ASSETS.PATH))
 	var installed: int = 0
 	for binding: Dictionary in bindings.items:
@@ -181,7 +187,20 @@ func _run() -> void:
 		combat_record["ac"] = 0
 		var actor: TwilightMonster = world.MONSTER_SCENE.instantiate()
 		world.monsters_root.add_child(actor)
-		actor.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(origin+Vector2(220,0)))
+		# Place the target ~220px away on a reachable, distinct cell. A fixed
+		# +X offset can leave the map; never fall back to the (-1,-1) cell.
+		var origin_cell: Vector2i = world.field_map.nearest_cell(origin)
+		var target_cell := Vector2i(-1, -1)
+		for offset: Vector2 in [Vector2(220,0), Vector2(-220,0), Vector2(0,220), Vector2(0,-220),
+				Vector2(156,156), Vector2(-156,156), Vector2(156,-156), Vector2(-156,-156)]:
+			var candidate: Vector2i = world.field_map.nearest_cell(origin + offset)
+			if candidate.x < 0 or candidate == origin_cell: continue
+			if world.find_world_path(origin, world.field_map.cell_to_world(candidate)).is_empty(): continue
+			target_cell = candidate
+			break
+		check(target_cell.x >= 0, "reachable combat target cell near start " + mob_name)
+		if target_cell.x < 0: target_cell = origin_cell
+		actor.global_position = world.field_map.cell_to_world(target_cell)
 		actor.setup(combat_record,world.player,world,world._monster_texture(combat_record))
 		actor.set_physics_process(false)
 		actor.died.connect(world._on_monster_died)

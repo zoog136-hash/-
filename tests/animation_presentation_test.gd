@@ -130,7 +130,7 @@ func _run() -> void:
 	for connection: Dictionary in connection_data.connections:
 		check(not native_connections.has(connection.id), "unique native boss connection " + str(connection.id))
 		native_connections[connection.id] = connection
-	check(native_connections.size() == 6, "six recorded native boss connections")
+	check(native_connections.size() == 19, "nineteen recorded native boss connections")
 	var observed_connections: Dictionary = {}
 	for record: Dictionary in records:
 		var start_errors: int = failures.size()
@@ -146,7 +146,10 @@ func _run() -> void:
 			check(mob.motion.profile.frames_path == connection.frames, "recorded native boss resource selected " + record.name)
 			check(FileAccess.get_sha256(connection.frames) == connection.frames_sha256, "recorded native source phases preserved " + record.name)
 			var frames: SpriteFrames = mob.motion.frame_source
-			check(frames != null and bool(frames.get_meta("twilight_native_locomotion_staging", false)), "native boss cannot fall back to portrait " + record.name)
+			# Reviewed production sets drop the staging tag but stay connected
+			# native art (see actor_motion._has_authored_hit_presentation).
+			check(frames != null and (bool(frames.get_meta("twilight_native_locomotion_staging", false))
+				or bool(frames.get_meta("twilight_production_connected", false))), "native boss cannot fall back to portrait " + record.name)
 			if frames != null:
 				check(frames.get_animation_names().size() == int(connection.required_clips), "all recorded native boss clips " + record.name)
 				var poses: int = 0

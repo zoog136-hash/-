@@ -97,7 +97,11 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		target.add_child(substitute_mark)
 		substitute_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		substitute_mark.offset_left = -12
-	substitute_mark.visible = info.status == "self_authored_substitute"
+	var missing_original: bool=info.status=="original_icon_not_installed"
+	substitute_mark.text="원본 미설치" if missing_original else "◇"
+	substitute_mark.tooltip_text="원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
+	substitute_mark.offset_left=-62 if missing_original else -12
+	substitute_mark.visible = missing_original or info.status == "self_authored_substitute"
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
 	if is_inside_tree(): _register()
 	refresh_visibility()

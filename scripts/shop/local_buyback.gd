@@ -26,7 +26,7 @@ static func quote(item_name: String, quantity: int, instance_id: String, invento
 		return {"ok":false,"reason":"판매가 제한된 아이템입니다"}
 	if int(inventory.get(item_name,0)) < quantity:
 		return {"ok":false,"reason":"판매할 수량이 부족합니다"}
-	var is_equipment: bool = slot != "consumable"
+	var is_equipment: bool = slot not in ["consumable","material"]
 	var enhancement: int = 0
 	if is_equipment:
 		if quantity != 1 or instance_id.is_empty() or not physical.has(instance_id):

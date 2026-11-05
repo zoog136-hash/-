@@ -3,6 +3,7 @@ extends "res://scripts/ui/native_touch_button.gd"
 ## generic gui_input signal from resetting a previous scroll gesture.
 var scroll_host: Node
 var scroll_area: ScrollContainer
+var horizontal_area: ScrollContainer
 signal feedback_changed(active: bool)
 var feedback_active: bool = false
 
@@ -27,6 +28,9 @@ func _input(event: InputEvent) -> void:
 		moved = moved or event.position.distance_to(touch_origin) > 8.0
 		_feedback(not moved)
 		if scroll_host != null: scroll_host._scroll_gesture_motion(event.relative.y)
+		if is_instance_valid(horizontal_area):
+			var scale_x: float = maxf(0.001,horizontal_area.get_global_transform_with_canvas().get_scale().x)
+			horizontal_area.scroll_horizontal -= int(event.relative.x/scale_x)
 		get_viewport().set_input_as_handled()
 		return
 	if finger != -1 and scroll_host != null and event is InputEventScreenTouch and event.index == finger and (not event.pressed or event.canceled):

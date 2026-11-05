@@ -32,7 +32,9 @@ var reusable_empty_slots: Array[Panel] = []
 var visible_first_row: int = -1
 var slot_nodes_created: int = 0
 var slot_visual_updates: int = 0
-const SLOT_PITCH: float = 80.0
+# base508 Common_Slot: Sp_SlotBg 76×76, Sp_IconSample 64×64.
+# Inventory_Slot_Set: adjacent normal slot centers are 76 pixels apart.
+const SLOT_PITCH: float = 76.0
 const WINDOW_OVERSCAN_ROWS: int = 2
 var gesture_index: int = -1
 var gesture_mouse: bool = false
@@ -77,8 +79,8 @@ func _ready() -> void:
 	capacity_label.add_theme_font_size_override("font_size",11)
 	grid_scroll.name = "InventoryGridScroll"
 	grid_scroll.add_theme_stylebox_override("panel",UI.box(Color("15120f"),Color("4b3d2e"),5))
-	item_grid.add_theme_constant_override("h_separation",8)
-	item_grid.add_theme_constant_override("v_separation",8)
+	item_grid.add_theme_constant_override("h_separation",0)
+	item_grid.add_theme_constant_override("v_separation",0)
 	item_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	search_row = HBoxContainer.new()
 	layout.add_child(search_row)
@@ -110,14 +112,14 @@ func _ready() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,30))
+	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,44))
 	detail_close.set_script(NATIVE_BUTTON)
 	detail_close.name = "InventoryDetailClose"
 	close_row.add_child(detail_close)
 	detail_stack.add_child(close_row)
 	detail_stack.move_child(close_row,0)
 	UI.primary_button(detail_action)
-	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,32))
+	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,44))
 	lock_button.name = "InventoryLock"
 	detail_stack.add_child(lock_button)
 	weight_readout = UI.label("",11,UI.MUTED)
@@ -130,22 +132,22 @@ func _ready() -> void:
 	layout.add_child(weight_gauge)
 	var actions := HBoxContainer.new()
 	layout.add_child(actions)
-	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,34)))
+	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,44)))
 	# The bag stacks items in acquisition order and never re-sorts on its own.
 	# This button sorts once (grade, then name) and keeps that as the new order.
-	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,34))
+	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,44))
 	sort_button.name = "InventorySort"
 	sort_button.tooltip_text = "등급·이름순으로 한 번 정렬합니다. 이후 획득한 아이템은 뒤에 쌓입니다."
 	actions.add_child(sort_button)
-	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,34))
+	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,44))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
-	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,34))
+	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,44))
 	UI.primary_button(detail_button)
 	detail_button.set_script(NATIVE_BUTTON)
 	detail_button.name = "InventoryDetail"
 	actions.add_child(detail_button)
-	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,34)))
+	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,44)))
 	compact_tabs = HBoxContainer.new()
 	compact_tabs.hide()
 	layout.add_child(compact_tabs)
@@ -369,7 +371,7 @@ func _refresh_inventory_grid() -> void:
 
 func _new_reusable_slot() -> Button:
 	var button := Button.new()
-	button.custom_minimum_size = Vector2(72,72)
+	button.custom_minimum_size = Vector2(76,76)
 	button.text = ""
 	button.tooltip_text = ""
 	button.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -378,8 +380,8 @@ func _new_reusable_slot() -> Button:
 	icon.name = "Icon"
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.position = Vector2(7,7)
-	icon.size = Vector2(58,58)
+	icon.position = Vector2(6,6)
+	icon.size = Vector2(64,64)
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(icon)
 	var badge := UI.label("",12,UI.GOLD)
@@ -423,6 +425,8 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	slot_visual_updates += 1
 	button.set_meta("reference",reference)
 	button.set_meta("signature",signature)
+	button.tooltip_text = _enhanced_display_name(record,reference) + (" · 장착 중" if equipped else "") + _status_tooltip(record,reference)
+	button.set_meta("tooltip_reference",reference)
 	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
 	for state: String in ["hover","pressed"]:
 		var style: StyleBoxFlat=_slot_style_for_grade(grade,reference==selected_item)
@@ -437,14 +441,15 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	if equipped and item_name in ["화살", "총알"]:
 		# Worn ammo keeps showing how many are left (gold = worn).
 		count.text = "E " + UI.number_text(amount)
-	count.position=Vector2(24 if locked else 4,49)
-	count.size=Vector2(44 if locked else 64,20)
+	count.position=Vector2(27 if locked else 7,50)
+	count.size=Vector2(42 if locked else 62,20)
 	count.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	count.tooltip_text="보유 "+UI.number_text(amount)+"개"
 	count.add_theme_color_override("font_outline_color",Color.BLACK)
 	count.add_theme_constant_override("outline_size",2)
 	count.add_theme_color_override("font_color",UI.GOLD if equipped else UI.TEXT)
 	(button.get_node("InventoryLocked") as TextureRect).visible = locked
+	preload("res://scripts/ui/source_inventory_skin.gd").apply(button,reference==selected_item)
 
 func _refresh_visible_window() -> void:
 	if grid_scroll == null or grid_stack == null or not inventory_panel.is_visible_in_tree():return
@@ -479,11 +484,13 @@ func _refresh_visible_window() -> void:
 		else:
 			if used_empty >= reusable_empty_slots.size():
 				var empty := Panel.new()
-				empty.custom_minimum_size = Vector2(72,72)
+				empty.custom_minimum_size = Vector2(76,76)
 				empty.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				var style: StyleBoxFlat=UI.slot_frame()
 				style.bg_color.a=0
 				empty.add_theme_stylebox_override("panel",style)
+				var original: StyleBoxTexture=preload("res://scripts/ui/source_inventory_skin.gd").style()
+				if original!=null:empty.add_theme_stylebox_override("panel",original)
 				reusable_empty_slots.append(empty)
 			node = reusable_empty_slots[used_empty]
 			used_empty += 1
@@ -598,6 +605,7 @@ func _refresh_weight() -> void:
 
 func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)
+	var verified_source_text: String = detail_text.text
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
@@ -605,7 +613,7 @@ func _refresh_detail(item_reference: String) -> void:
 	var lines := PackedStringArray()
 	for raw: Variant in item.get("sourceOptions",[]):
 		var option: String = str(raw)
-		if option.contains("PVP") or option.contains("PvP") or option.contains("손상") or option.contains("저주"): continue
+		if item.get("source", "") != "lineagem_base508" and (option.contains("PVP") or option.contains("PvP") or option.contains("손상") or option.contains("저주")): continue
 		lines.append(UI.safe(option))
 	if lines.is_empty():
 		for spec: Array in [["atk","공격력"],["def","방어력"],["hit","명중"],["hpFlat","최대 HP"],["mpFlat","최대 MP"],["heal","HP 회복"]]:
@@ -613,8 +621,16 @@ func _refresh_detail(item_reference: String) -> void:
 				lines.append("%s  %s" % [spec[1],str(item[spec[0]])])
 		var description: String = str(item.get("desc",item.get("description","")))
 		if not description.is_empty(): lines.append(UI.safe(description))
+	var source_use: String = preload("res://scripts/crafting/patch523_item_use.gd").summary(controller.get_parent()._patch523_use_record(item_reference) if controller!=null else item)
+	if not source_use.is_empty(): lines.append(UI.safe(source_use))
 	if not selected_id.is_empty(): lines.append("강화  +%d" % _enhance_level(item_reference))
-	detail_text.text = "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	if preload("res://scripts/shop/source523_inventory_tickets.gd").claims(item):
+		lines.append(preload("res://scripts/shop/source523_inventory_tickets.gd").UI_POLICY_TEXT)
+	detail_text.text = verified_source_text if item.get("source_m_native_item",false) else "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	if QUEST_GEAR.REGEN_GEAR.has(int(item.get("source_item_class_id",0))):detail_text.text+="\n\n원본 재생량 / TWILIGHT 장비 회복 주기 30초 (원본 주기 미확인)"
+	if int(item.get("source_item_class_id",0)) in [376,385]:
+		var cadence: float=preload("res://scripts/quests/quest_regen523.gd").interval(controller.get_parent()) if controller!=null else 30.0
+		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / TWILIGHT 회복 주기 %s초 (원본 주기 미확인)" % str(cadence)
 	if controller != null:
 		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)
 		quick_button.disabled = not reason.is_empty()
@@ -630,6 +646,12 @@ func _refresh_detail(item_reference: String) -> void:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
+	if controller!=null and not _is_item_equipped(item_reference):
+		var host: Node=controller.get_parent()
+		var use_reason: String=host.PATCH523_ITEM_USE.reason(host._patch523_use_record(item_reference),int(host.level),host.BASE508.source_class_id(str(host.job_class)))
+		if not use_reason.is_empty():
+			detail_action.disabled=true
+			detail_action.tooltip_text=use_reason
 	if _is_item_equipped(item_reference):
 		detail_action.text = "해제"
 		detail_action.disabled = false
@@ -673,6 +695,7 @@ func _settle_detail_layout() -> void:
 		_reflow()
 
 func _draw_slot_recesses() -> void:
+	if preload("res://scripts/ui/source_inventory_skin.gd").style()!=null:return
 	var style: StyleBoxTexture = UI.slot_recess()
 	for child: Node in item_grid.get_children():
 		if child is Control and child.visible:
@@ -694,4 +717,5 @@ func _refresh_slot_states(references: Array = []) -> void:
 				style.bg_color = style.bg_color.darkened(.08)
 				style.bg_color.a = .22
 			button.add_theme_stylebox_override(state,style)
+		preload("res://scripts/ui/source_inventory_skin.gd").apply(button,selected)
 	item_grid.queue_redraw()

@@ -1,9 +1,6 @@
 name: TWILIGHT Consolidated Specialized Preflight
-on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+# Historical/source-specific audits remain available after integration.
+'on':
   workflow_dispatch:
 
 permissions:
@@ -35,3 +32,4 @@ jobs:
           name: twilight-ci-consolidated-${{ github.sha }}
           path: ci-consolidated-preflight.log
           if-no-files-found: warn
+          retention-days: 7

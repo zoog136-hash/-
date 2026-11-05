@@ -418,7 +418,12 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 		"recovery": roles.append("attack")
 		"run": roles.append("walk")
 		"turn": roles.append("idle")
-		"corpse": roles.append("death")
+		"corpse":
+			# Monsters hold their authored death pose as the corpse. Reused
+			# transform sets also carry corpse_N copies; the death track keeps
+			# the death role and its terminal-frame hold.
+			if profile.profile_id.begins_with("monster:"): roles.push_front("death")
+			else: roles.append("death")
 		"float", "energy", "equip", "unequip", "activate", "summon", "despawn": roles.append("idle")
 	for role: String in roles:
 		var candidates: Array[String] = [str(profile.animation_names.get(role + ":" + str(facing8), "")),

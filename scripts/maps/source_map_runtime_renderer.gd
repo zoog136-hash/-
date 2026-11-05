@@ -12,6 +12,12 @@ var texture_store: Node
 var held_keys: Dictionary={}
 var initial_view: bool=true
 var waiting_for_visible: bool=false
+# Visible chunk index -> store key whose tiles are still being prepared.
+var pending_visible: Dictionary={}
+# Each visible chunk is a Node2D at the chunk origin holding TILE_SIZE tile
+# sprites, so a chunk streams in over several frames instead of one ~19 MB
+# upload. Chunk index -> number of tile sprites attached so far.
+var attached_tiles: Dictionary={}
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field=value;source=value as OriginalPlayableField;player=actor
@@ -38,30 +44,21 @@ func refresh_visible() -> void:
 		failure="Original map view exceeds texture budget";push_error(failure);return
 	for i: Variant in chunks.keys():
 		if not needed.has(i):
-			chunks[i].texture=null
-			remove_child(chunks[i]);chunks[i].queue_free();chunks.erase(i)
+			for tile: Node in chunks[i].get_children():(tile as Sprite2D).texture=null
+			remove_child(chunks[i]);chunks[i].queue_free();chunks.erase(i);attached_tiles.erase(i)
 	var next_keys: Dictionary={}
 	waiting_for_visible=false
+	pending_visible.clear()
 	for i: int in needed:
 		if i>=4096:failure="Map exceeds safe ground draw-order range";push_error(failure);return
 		var row: Dictionary=needed[i]
-		var key: String=texture_store.request(art.root_path,row,self,initial_view)
+		var key: String=texture_store.request(art.root_path,row,self,initial_view,true,true)
 		if key.is_empty():failure="Source chunk missing, changed or unsafe: "+str(row.file);push_error(failure);return
 		next_keys[key]=true
-		if chunks.has(i):continue
-		var texture: Texture2D=texture_store.texture(key)
-		if texture==null:
-			failure=texture_store.problem(key)
+		if not _attach_tiles(i,row,key):
 			if not failure.is_empty():push_error(failure);return
 			waiting_for_visible=true
-			continue
-		var sprite:=Sprite2D.new()
-		sprite.centered=false;sprite.texture=texture;sprite.position=Vector2(row.position[0],row.position[1])
-		sprite.material=pixel_material
-		# Preserve the original chunk painter order, entirely below actor z=0.
-		# Starting at -30 hid the player on maps with high chunk IDs.
-		sprite.z_index=-4096+i
-		add_child(sprite);chunks[i]=sprite
+			pending_visible[i]=key
 	# These ring requests only enqueue preparation. The shared store admits
 	# bounded worker jobs and uploads their completed Images on the scene thread.
 	var prefetched: int=0
@@ -72,7 +69,7 @@ func refresh_visible() -> void:
 		if box.intersects(view) or not box.intersects(view.grow(768)):continue
 		var estimate: int=int(row.size[0])*int(row.size[1])*4
 		if prefetch_bytes+estimate>PREFETCH_BYTES:continue
-		var key: String=texture_store.request(art.root_path,row,self)
+		var key: String=texture_store.request(art.root_path,row,self,false,true,false)
 		if key.is_empty():continue
 		next_keys[key]=true;prefetched+=1;prefetch_bytes+=estimate
 	for key: String in held_keys:
@@ -83,14 +80,51 @@ func refresh_visible() -> void:
 	_refresh_markers()
 	if source is RemakePlayableField and is_instance_valid(source.collision_stream):source.collision_stream.refresh()
 
+## Attach any newly uploaded tiles of chunk i. True once the chunk is complete;
+## on false, `failure` is set if the store reported a problem.
+func _attach_tiles(i: int,row: Dictionary,key: String) -> bool:
+	var problem: String=texture_store.problem(key)
+	if not problem.is_empty():failure=problem;return false
+	var ready: Array=texture_store.tiles(key)
+	if not chunks.has(i):
+		if ready.is_empty():return false
+		var holder:=Node2D.new()
+		holder.position=Vector2(row.position[0],row.position[1])
+		# Preserve the original chunk painter order, entirely below actor z=0.
+		# Starting at -30 hid the player on maps with high chunk IDs.
+		holder.z_index=-4096+i
+		add_child(holder);chunks[i]=holder;attached_tiles[i]=0
+	var holder: Node2D=chunks[i]
+	for index: int in range(int(attached_tiles[i]),ready.size()):
+		var tile: Array=ready[index]
+		var sprite:=Sprite2D.new()
+		sprite.centered=false;sprite.texture=tile[1];sprite.position=Vector2((tile[0] as Rect2i).position)
+		sprite.material=pixel_material
+		holder.add_child(sprite)
+	attached_tiles[i]=ready.size()
+	return texture_store.complete(key)
+
+## Attach tiles uploaded since the last refresh. Only the pending chunks are
+## checked; the full view/marker/collision refresh keeps its 0.25 s cadence
+## instead of running every frame while chunks stream in.
+func _attach_ready_visible() -> void:
+	for i: int in pending_visible.keys():
+		var key: String=pending_visible[i]
+		if _attach_tiles(i,record.chunks[i],key):pending_visible.erase(i)
+		elif not failure.is_empty():push_error(failure);pending_visible.erase(i)
+	waiting_for_visible=not pending_visible.is_empty()
+
 func _process(delta: float) -> void:
 	stream_clock-=delta
-	if stream_clock<=0 or waiting_for_visible:
+	if stream_clock<=0:
 		stream_clock=0.25
 		refresh_visible()
+	elif waiting_for_visible:
+		_attach_ready_visible()
 
 func _exit_tree() -> void:
-	for sprite: Sprite2D in chunks.values():sprite.texture=null
+	for holder: Node in chunks.values():
+		for tile: Node in holder.get_children():(tile as Sprite2D).texture=null
 	if is_instance_valid(texture_store):texture_store.release_owner(self)
 	held_keys.clear()
 

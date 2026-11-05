@@ -1,0 +1,146 @@
+{
+  "base_main": "1d8bd5e0fde9ea0d74bd39b036184b49cab21d12",
+  "branch": "feature/title-review523-local-20261104",
+  "publication": "Approved code/config/tests/brief-docs only; Draft PR remote receipt recorded after publication; no original data/report/resource upload or merge",
+  "godot": "4.7.2 stable official",
+  "source_archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "source_archive_bytes": 25031173,
+  "report_archive_sha256": "7010d9795c265e3cf8404acdd6733528e268c3715c9852e3788623834d5c8f96",
+  "report_archive_bytes": 124411,
+  "full_source_audit": {
+    "complete_tables": 57,
+    "selected_tables": 54,
+    "selected_rows": 2405,
+    "checks": 560,
+    "failures": [],
+    "path": "/workspace/title523-logs/source-audit-personal.json",
+    "complete_additional_tables": 12,
+    "audit_sha256": "5b1ab01937c76f2da62623fd61eabab4942d632e6be2145ee647b1c5767870bb"
+  },
+  "validation": {
+    "rules": {
+      "checks": 1357,
+      "failures": [],
+      "log": "/workspace/title523-logs/unit-final-personal-regression.log",
+      "log_sha256": "caa99aa0b82b505a2f0efc35278ac641e1b6a2be0e25b6a0edff7483ca262d9b",
+      "scope": "actual final code; isolated fixtures only"
+    },
+    "opengl": {
+      "checks": 41,
+      "failures": [],
+      "log": "/workspace/title523-logs/opengl-all-final.log",
+      "log_sha256": "a7d4ddf0cc2e15fe0724fea1bdd7376fe475431bace6c5b9fe186e653ea930ca",
+      "scope": "actual final code; isolated fixtures only"
+    },
+    "reconnect": {
+      "checks": 8,
+      "failures": [],
+      "log": "/workspace/title523-logs/reconnect-final.log",
+      "log_sha256": "cdd5839403c56099f33ea0a1d73f4950ef270dab4579d6ec70f27a3e3d3f582e",
+      "scope": "first local commit525731b highest title/powder/warehouse verification; final personal fresh-process reload verified separately"
+    },
+    "missing_source": {
+      "checks": 5,
+      "failures": [],
+      "log": "/workspace/title523-logs/missing-source.log",
+      "log_sha256": "d6c1bfc743260ac68ec816aa75c4c6989643e3edb8af88818773c34f7f745935",
+      "scope": "first local commit525731b verification; guard retained; new personal save missing-source path not separately rerun"
+    },
+    "core": {
+      "checks": 44,
+      "failures": [],
+      "log": "/workspace/title523-logs/core-personal-final.log",
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "scope": "actual final code; isolated fixtures only"
+    },
+    "personal_rules": {
+      "checks": 619,
+      "failures": [],
+      "log": "/workspace/title523-logs/personal-unit-final.log",
+      "log_sha256": "070876a88eabb822d740441031b94dae62f7d27f51c0986f172c0e37fc3f209a",
+      "scope": "actual final code; isolated fixtures only"
+    },
+    "personal_opengl": {
+      "checks": 24,
+      "failures": [],
+      "log": "/workspace/title523-logs/personal-main-final.log",
+      "log_sha256": "66b8249b6ee071827e49652156e2d2b930d8bd98ad6c50438b91a8f69dad0966",
+      "scope": "actual final code; isolated fixtures only"
+    },
+    "personal_reconnect": {
+      "checks": 6,
+      "failures": [],
+      "log": "/workspace/title523-logs/personal-reconnect-final.log",
+      "log_sha256": "d4c4d99e294ef6c6f6e0097cbd0b728cd7e817e74ef2599ee9cb0c13291be511",
+      "scope": "actual final code; isolated fixtures only"
+    }
+  },
+  "resources": {
+    "atlases": 723,
+    "frames": 41442,
+    "sha_audit": "passed",
+    "new_original_art_files": 0,
+    "legacy_art_source_audit": "a1.zip missing in task input directory; unrelated legacy art completion not claimed"
+  },
+  "files": {
+    "data/titles/local_policy523.json": "bf82c4d420f5a565afc0f636c981dfd761c1c650681de3bd4b7b3a87c26ca7c3",
+    "scripts/titles/title_source523.gd": "6c7b3b3c6e6219c912dcd919306c3a7e852ae884beaa0511853f0a6dac90d8c0",
+    "scripts/titles/title_runtime523.gd": "632a01999a08ff7205b75c0938e6019cce71fa6398cd4cbd8c1bcfd4e3ee2b2f",
+    "scripts/titles/title_view523.gd": "173835aeedd07fa0e0240f7a334c4bbadae1be6448717395bd3954bc5c9661de",
+    "scripts/titles/title_personal523.gd": "df4d0d8de4c5bd5b207428ae833249cd3dd80eb806aa35261437156fe7003582",
+    "scripts/world.gd": "3ac19f1606e9e14295eb4e067b0236d2424f17570d7feaa571e844f6f551b27f",
+    "scripts/ui/renewal_hud.gd": "ddfea5d4da63923c9d0a8214e47b63140a25caf128162eec73d36434119b7ffd",
+    "tests/title523_test.gd": "f4b19f49952f87552e768ed8781247655ccf53af6c0b983b1aa72b6d78155f3d",
+    "tests/title523_main_test.gd": "0511608681d931146272fbe27227a7806e1d005da7730f3828b2453f781877d2",
+    "tests/title523_personal_test.gd": "ba065ef6e440a49ec883fee99cb37abbf330176a5df007acdf614671d445dcbe",
+    "tests/title523_personal_main_test.gd": "989645eb5e6821eacb815f5384723528d5c650993afcdbb6b3e661e302027231",
+    "tools/audit_title523.py": "bd022fd9dca5c73d9f0fe98e2b9071a8af29ade068aa2b14ccd0b669846341b4",
+    "docs/TITLE523.md": "708c1fcd54043fb2565eb47a7a80e1288f02ec18869fd7ef3d5a59352241b23c"
+  },
+  "local_screens": {
+    "title-trial-eligible.png": {
+      "path": "/workspace/title523-logs/screens/title-trial-eligible.png",
+      "sha256": "048545d6e31c3dfd4f29ed0406877a1082a2b726c765affe788918c2f1831920",
+      "bytes": 869255
+    },
+    "title-achieved.png": {
+      "path": "/workspace/title523-logs/screens/title-achieved.png",
+      "sha256": "d96eea83ef7588a34c3e84942642a67f9107375d1f1c235d8afe8df67c1faa0c",
+      "bytes": 863878
+    },
+    "title-small-854.png": {
+      "path": "/workspace/title523-logs/screens/title-small-854.png",
+      "sha256": "b4713b5e78aba4543bb733f858d3dcf44e34fe7ce6d6058149a6a3d9eb315164",
+      "bytes": 232297
+    },
+    "title-personal-small-854.png": {
+      "path": "/workspace/title523-logs/screens/title-personal-small-854.png",
+      "sha256": "fe0e539c6b5f556a4577291399a698c4bc438819b760b635eda2814161d13704",
+      "bytes": 233906
+    }
+  },
+  "remaining": {
+    "natural_placement_and_supply": "33 native trial targets and126 unique powder providers/178 rows lack established current-main placement; fixtures verify actual consumers, not natural supply",
+    "other_powder_providers": "shop/craft/bags/market/rewards retained in original and audited; other domain runtimes not duplicated",
+    "personal_appellation": "name5/color8 editing complete with actual UI/save/reconnect; network account sharing excluded",
+    "native_execution": "donation denominator, general review odds, candidate assignment, reset boundary, main activation timing, weapon component/final-blow formula are explicit adjustable host policy; native TextMatchingType execution and mixed-string counting unavailable: explicit Unicode/substring host policy; offline KR/WorldNo1 mapping and Korean calendar UTC+09/final-minute policy",
+    "platform": "no Windows/Android physical-device/audio/native-art equivalence/remote CI claim"
+  },
+  "native_gates": {
+    "server_limited_trials": 21,
+    "server_limit_set": 762,
+    "complete_korean_filter_rows": 139345,
+    "selected_filter_types": 5,
+    "unique_powder_npcs": 126,
+    "powder_rows": 178
+  },
+  "resource_install": {
+    "pack": "existing common patch523 ZIP; no generated feature duplicate",
+    "runtime_path": "user://title523/source.zip",
+    "bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "checks": "real Main install handler plus fresh-process SHA validation",
+    "new_resource_uploads": 0,
+    "new_original_art_files": 0
+  }
+}

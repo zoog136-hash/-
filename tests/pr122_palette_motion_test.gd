@@ -22,7 +22,7 @@ func run() -> void:
 	for connection: Dictionary in connection_data.connections:
 		check(not native_connections.has(connection.id), "unique reviewed native connection " + str(connection.id))
 		native_connections[connection.id] = connection
-	check(native_connections.size() == 6, "six recorded native boss connections")
+	check(native_connections.size() == 19, "nineteen recorded native boss connections")
 	var sprite := AnimatedSprite2D.new()
 	root.add_child(sprite)
 	check(int(manifest.target_count) == 54, "all requested palette bindings present")

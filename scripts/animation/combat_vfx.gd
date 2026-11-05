@@ -3,6 +3,7 @@ class_name TwilightCombatVFX
 signal source_frame_marker(sprite_id: String, source_frame: int)
 
 ## One drawing node, bounded reusable records. No per-hit nodes, tweens or RNG.
+const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_registration.gd")
 const CAPACITY: int = 160
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
 const SOURCE_SPX = preload("res://scripts/animation/source_spx_player.gd")
@@ -14,6 +15,8 @@ var available: Array[Dictionary] = []
 var high_water: int = 0
 var emitted: int = 0
 var detailed_draws: int = 0
+var impact_visual_limit: int = CAPACITY
+var impact_draws: int = 0
 var font: Font
 var visuals = VISUALS.new()
 var reduced_motion: bool = false
@@ -55,9 +58,10 @@ func number(point: Vector2, value: String, color: Color, critical: bool = false)
 	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
 	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "caption":caption, "width":width, "critical_width":font.get_string_size("Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if critical and font != null else 0.0})
 
-func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "") -> void:
+func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "", registration_base_scale: Vector2 = Vector2.ZERO) -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
 	entry.merge({"texture":texture, "scale":scale_value, "offset":offset})
+	if registration_base_scale.x > 0.0 and registration_base_scale.y > 0.0: entry["registration_base_scale"] = registration_base_scale
 	if frames != null and not animation.is_empty() and frames.has_animation(animation):
 		entry["frames"] = frames
 		entry["animation"] = animation
@@ -74,10 +78,15 @@ func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset
 			# Preserve that displayed canvas when its death uses another sheet.
 			entry["canvas_size"] = texture.get_size() * scale_value
 
+static func _death_draw_geometry(entry: Dictionary, texture: Texture2D) -> Dictionary:
+	if entry.has("frames") and entry.has("registration_base_scale"):
+		var registered: Dictionary = FRAME_REGISTRATION.geometry(entry.frames, str(entry.animation), _death_frame_at_age(entry), entry.registration_base_scale)
+		if not registered.is_empty(): return {"scale":registered.scale,"offset":registered.position,"texture_offset":registered.texture_offset}
+	var scale_value: Vector2 = (entry.canvas_size as Vector2) / texture.get_size() if entry.has("canvas_size") else entry.scale
+	return {"scale":scale_value,"offset":entry.offset,"texture_offset":Vector2.ZERO}
+
 static func _death_draw_scale(entry: Dictionary, texture: Texture2D) -> Vector2:
-	if entry.has("canvas_size"):
-		return (entry.canvas_size as Vector2) / texture.get_size()
-	return entry.scale
+	return _death_draw_geometry(entry, texture).scale
 
 func ring(point: Vector2, radius: float, color: Color) -> void:
 	var entry: Dictionary = _record("ring", point, 0.3)
@@ -95,6 +104,7 @@ func clear() -> void:
 		available.append(entry)
 	active.clear()
 	detailed_draws = 0
+	impact_draws = 0
 	set_process(false)
 	queue_redraw()
 
@@ -164,6 +174,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if font == null: return
 	detailed_draws = 0
+	impact_draws = 0
 	var view: Rect2 = get_viewport_rect().grow(160)
 	var canvas: Transform2D = get_global_transform_with_canvas()
 	# Corpse/rings below impacts, all text above them; pool insertion order must
@@ -182,8 +193,9 @@ func _draw() -> void:
 					var animation: String = entry.animation
 					texture = frames.get_frame_texture(animation, _death_frame_at_age(entry))
 					lean = 0.0
-				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, _death_draw_scale(entry, texture))
-				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
+				var geometry: Dictionary = _death_draw_geometry(entry, texture)
+				draw_set_transform(point + (geometry.offset as Vector2).rotated(lean), lean, geometry.scale)
+				draw_texture(texture, -texture.get_size() * 0.5 + geometry.texture_offset, Color(1.0, 0.7, 0.65, alpha))
 				draw_set_transform(Vector2.ZERO)
 			"ring":
 				var color: Color = entry.color
@@ -197,6 +209,8 @@ func _draw() -> void:
 			if str(entry.kind) != "impact" or bool(entry.critical) != priority: continue
 			var point: Vector2 = to_local(entry.point)
 			if not view.has_point(canvas * point): continue
+			if impact_draws >= impact_visual_limit: continue
+			impact_draws += 1
 			var detailed: bool = detailed_draws < detail_limit
 			if detailed: detailed_draws += 1
 			visuals.draw_impact(self, point, entry, detailed, impact_intensity)

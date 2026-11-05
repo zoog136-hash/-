@@ -1,0 +1,522 @@
+{
+  "schema": 1,
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "branch": "feature/death-recovery523-20261104",
+  "environment": "ccarenv_b64_Y2NhcmVudl8yNTkyZDU1NDhmYzg4MTkxOWMxNTc3M2I5N2U5NWU3MQ",
+  "source": {
+    "zip_bytes": 25031173,
+    "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "crc": "passed",
+    "source_art_added_to_git": 0
+  },
+  "resource_preflight": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "passed"
+  },
+  "checks": {
+    "rules_model": {
+      "checks": 10,
+      "failures": 0
+    },
+    "actual_main_headless": {
+      "checks": 60,
+      "failures": [],
+      "checkpoint": "before native localized-name eligibility strengthening; final OpenGL test exercises superset"
+    },
+    "actual_main_opengl": {
+      "checks": 65,
+      "failures": [],
+      "resolutions": [
+        "1280x720",
+        "854x480"
+      ],
+      "renderer": "Mesa llvmpipe; explicit Dummy audio",
+      "audio_verified": false,
+      "final_original_identity_gate": true
+    },
+    "core_runtime_save": {
+      "checks": 32,
+      "failures": []
+    },
+    "identical_payload": {
+      "writes": 2,
+      "skips": 1,
+      "failures": []
+    },
+    "deferred_save_gate": {
+      "failures": []
+    }
+  },
+  "retained_failed_attempts": {
+    "headless1": "invalid fixture foot and absent staged portrait; rejected, not pass",
+    "headless2": "pointer coordinate fixture did not press retry; rejected",
+    "headless3": "numeric type mismatch across JSON reload; persisted full values independently equal; normalized with core gate convention",
+    "opengl1": "environment ALSA init error; not pass; rerun with explicit Dummy audio"
+  },
+  "open_pr_comparison": [
+    {
+      "number": 251,
+      "title": "Connect523 inventory rules, safe prices and one-shot local maintenance [skip ci]",
+      "head": "feature/auto-storage-sale-20261104",
+      "sha": "34870dff1a5b24cf6a531280f8285a5c42cd9dd3"
+    },
+    {
+      "number": 250,
+      "title": "feat(monsters): 보스 공격 체인·원본 유래 효과·추정 재생 UI 연결",
+      "head": "feature/patch523-boss-runtime-20261104",
+      "sha": "66eb206eb5a9cb1c4725a6d3372fa35f2357f626"
+    },
+    {
+      "number": 249,
+      "title": "feat(cards): 최신523 카드·컬렉션과 조건부 전투 효과 UI 연결",
+      "head": "feature/source-card-collection-523-20261104",
+      "sha": "5452d72a5836053180fda332b201f9ba886719ef"
+    },
+    {
+      "number": 248,
+      "title": "성물 원본 스킬 레벨 보너스 37종·조건부 발동·회복·로컬 PvP UI 연결",
+      "head": "feature/relic-summon-level-bonuses-20261104",
+      "sha": "71ebbeaa4db69e66ba3b1daab6d7ad423deac3a9"
+    },
+    {
+      "number": 247,
+      "title": "feat(shop): 원본 구매·보관함과 세린 NPC 오프라인 거래 연결",
+      "head": "feature/source523-shop-20261104",
+      "sha": "843f735cd9f4d28ea733237c44e40f004bd46b50"
+    },
+    {
+      "number": 246,
+      "title": "feat(수호성): 누적523 기능·UI와 보유 원본 광원·게임 다이아 연결",
+      "head": "feature/guardian-source523-20261104",
+      "sha": "88e622d6978e4f0a195e49c9c7c69132a0aead92"
+    },
+    {
+      "number": 245,
+      "title": "feat(skills): 누적523 규칙·8종 추정 스킬·UI 연결",
+      "head": "feature/player-skills523-20261104",
+      "sha": "b27adedc64984ef0ec42e12794b9302c9bf89e66"
+    },
+    {
+      "number": 244,
+      "title": "feat(monsterbook): 누적523 도감 진행·확인 판정·UI 연결",
+      "head": "feature/monsterbook523-progression-20261104",
+      "sha": "1bb247d45b7330fa233def574749b8867beb99c1"
+    },
+    {
+      "number": 243,
+      "title": "feat(expedition): 4장 파견·시너지·버프와 보상 사용 연결",
+      "head": "feature/patch523-doll-expedition",
+      "sha": "4c22c204bc744335578daaa6fe42ac7b3544f637"
+    },
+    {
+      "number": 242,
+      "title": "feat(growth): 문양523 비용·절대 효과·기억 장소와 실제 UI 연결",
+      "head": "feature/twilight-symbol-523-20261104",
+      "sha": "59cff43d1238abf289fae18f586ac1b9268bf3c0"
+    },
+    {
+      "number": 241,
+      "title": "feat(dungeons): 던전 UI와 시련탑 실행·정산 연결",
+      "head": "feature/source-dungeon523-ui-20261104",
+      "sha": "3d539aa90a24f4acf1f2041f968b0c0b35eb4e6f"
+    },
+    {
+      "number": 240,
+      "title": "feat(cards): 할파스 추정 강화 거래·UI·저장 연결",
+      "head": "feature/patch523-halphas-star-enchant-20261104",
+      "sha": "48c78bfaefac3cc8da94f05d9bb7ff095dfd89c4"
+    },
+    {
+      "number": 239,
+      "title": "feat(equipment): 원본523 제작244·후보 선택·인장 강화 UI 연결",
+      "head": "feature/patch523-crafting-equipment-20261104",
+      "sha": "d186fc0fc67e41cd6033b4948897a284826598ef"
+    },
+    {
+      "number": 238,
+      "title": "feat(loot): 523 전체 드랍 아이템 매핑·등급 제한 제거·UI 연결",
+      "head": "feature/patch523-monster-drops-20261104",
+      "sha": "1301c7f5ba994d29c42365fc598d28fb5a9cc9b4"
+    },
+    {
+      "number": 237,
+      "title": "feat(totems): 523 성장·초기화·제작과 효과를 실제 UI에 연결",
+      "head": "feature/totem-523-growth-20261104",
+      "sha": "d31167fd4d9357be511c503d100a85c379f8aa27"
+    },
+    {
+      "number": 236,
+      "title": "feat(resources): 523 SP2 추정 재생·플레이어 표시와 원본 팩 경로 일치",
+      "head": "feature/native-pack-selection-20261104",
+      "sha": "37f32ceaaf15f8d9fb4028314dbbcbc4bcbcdfa5"
+    },
+    {
+      "number": 235,
+      "title": "feat(auto): 원본523 지역 UI·아덴 이동·Gem 원본 비용 소모 연결",
+      "head": "feature/auto-hunting-movement523-20261104",
+      "sha": "97a18a46a1bddbf564fa90d72cbef4909d284d9c"
+    },
+    {
+      "number": 234,
+      "title": "feat(mastery): 성장·획득·매칭 보너스·잠금·교체 UI 실행",
+      "head": "feature/mastery523-runtime-20261104",
+      "sha": "cfc9ba88f5b66d9e8bb1a96dcac64c303078d92a"
+    },
+    {
+      "number": 233,
+      "title": "feat(settings): 523 원본195구역 설정·간소화 이펙트 선택 UI 연결",
+      "head": "feature/region-presentation-20261104",
+      "sha": "f81e8076092c5336a1740cec2f5687c467a87bdf"
+    },
+    {
+      "number": 232,
+      "title": "feat(maps): 최신523 아덴 원본 설치·표시 및 게임 설정 연결",
+      "head": "feature/aden-native523-runtime-20261104",
+      "sha": "ac18b15ed55256c99512836cd571745df73214f8"
+    },
+    {
+      "number": 231,
+      "title": "feat(cards): 신규 카드·추가 성물 소환과 슬롯별 각성 UI 연결",
+      "head": "feature/source-awakening-slot-contract-20261104",
+      "sha": "4ca5eefc309232265868de5929553b3e54db9b8e"
+    },
+    {
+      "number": 230,
+      "title": "feat(maps): 누적523 생성 검사·지도 이동과 원본 몬스터 복구 연결",
+      "head": "feature/patch523-map-portals-spawns-20261104",
+      "sha": "a1fec5e2281998e7ca35552f2ab4ef9e13ff1cb6"
+    },
+    {
+      "number": 228,
+      "title": "feat: 퀘스트 시스템·획득 즉시 완료·자동 보상·진행 저장",
+      "head": "feature/quest-instant-completion-20261103",
+      "sha": "3a37e018717b48cede8abb868776a461f97e56a9"
+    },
+    {
+      "number": 224,
+      "title": "test(core): verify merged main card UI, option/skill awakening and save migration",
+      "head": "validation/main-merged-cards-20261103",
+      "sha": "608be807d586b64ed25a002966a3b32924e39cd9"
+    },
+    {
+      "number": 222,
+      "title": "Restore base508 map universe with shared tile cache and explicit partial maps",
+      "head": "feature/base508-map-universe-20261102",
+      "sha": "5de681308591a566115c266a69d01585c0f47d28"
+    },
+    {
+      "number": 218,
+      "title": "원본 몬스터 동작·드롭·보스 전투 연결 보완",
+      "head": "feature/base508-monster-followup-20261102",
+      "sha": "804f88f9583f91ec4ab62c6a5e1fe6a65fdd0e53"
+    }
+  ],
+  "remote_ci": "not manually run; skip ci requested; not claimed passing",
+  "remaining": [
+    "Native M geography/coordinates require explicit M Land mapping; no PC ID guessing",
+    "Alignment/PvP kill/refund/rank domains absent from this branch; no merge from other PR/main",
+    "Native server probability/formulas, dated/event certificate variants, card/buff/rank Death-stat owners outside equipped-gear subset",
+    "Protection1032 has no Bonus instances; no new destructive gear loss or invented gaho consumption",
+    "Targeted/network resurrection and original art/engine equivalence not implemented",
+    "Windows/Android devices and audio not verified",
+    "Remote main advanced; final PR mergeability reported separately, no merge or rebase performed"
+  ],
+  "blockers": [],
+  "evidence": "Local-only logs and screenshots, hashes appended before commit",
+  "local_evidence": [
+    {
+      "path": "/workspace/death-final-resource.log",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "/workspace/death-preflight.log",
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    {
+      "path": "/workspace/death-unit-test.log",
+      "bytes": 106,
+      "sha256": "51b04d9adf6854d1fe543ab2dff83c31ea462c113234707f4906e115603d4596"
+    },
+    {
+      "path": "/workspace/death-main4.log",
+      "bytes": 240,
+      "sha256": "8bfae8fcd8149f73aba555393dbf3bf14f0af830200f3d95a665fab946558992"
+    },
+    {
+      "path": "/workspace/death-ui-final.log",
+      "bytes": 535,
+      "sha256": "d8e44a01e2a98df27a913f55a653eed63c9afb7d19cb573597fef72b99bdfa65"
+    },
+    {
+      "path": "/workspace/death-import-final.log",
+      "bytes": 820116,
+      "sha256": "dda3206a5a68f3f9e00787bdc3a465f607a5c5f5fe42249fe56c010b6e98f67b"
+    },
+    {
+      "path": "/workspace/death-reimport.log",
+      "bytes": 2206,
+      "sha256": "5e5922f86644385e8f30fd3612458502ac9af150f8684faf074b1c83bc7445ea"
+    },
+    {
+      "path": "/workspace/death-final-parse.log",
+      "bytes": 73,
+      "sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+    },
+    {
+      "path": "/workspace/death-stage-additions.json",
+      "bytes": 191,
+      "sha256": "156b28a4149bf03d01e90eacfbccc29f3c6fde2601f59e0348480974e835913a"
+    },
+    {
+      "path": "/workspace/death-required-logs/core_runtime_save_test.log",
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    {
+      "path": "/workspace/death-required-logs/deferred_save_gate_test.log",
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    {
+      "path": "/workspace/death-required-logs/save_identical_payload_test.log",
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    }
+  ],
+  "runtime_files": [
+    {
+      "path": "scripts/death/death_ui.gd",
+      "sha256": "98360cd61f3e2321ff8e652dde5842e720a3921b528e643720fb7d6d39f20d15"
+    },
+    {
+      "path": "scripts/death/recovery_ui.gd",
+      "sha256": "8f40c2d2137d68055cdb168bfc55de90cd3eed1dea2c6a8a6dc9cdf1108168e0"
+    },
+    {
+      "path": "scripts/death/runtime.gd",
+      "sha256": "6545c23c8a62203e3e47079ecd576a86a09e0b20057e325ce21ba9fab86e2a6b"
+    },
+    {
+      "path": "scripts/death/source_rules.gd",
+      "sha256": "eca41c8c7864337b588cb19a96a6a02f0613344b8bba7f2127bd59f30f93ccda"
+    },
+    {
+      "path": "scripts/world.gd",
+      "sha256": "13556f97fcd8c4e9a68a1a593a1bdcd2895fa96e8712623de7e4db8a9f102c53"
+    },
+    {
+      "path": "scripts/ui/renewal_hud.gd",
+      "sha256": "f6da5ca206c270d37233310758e56cb3ff7730ef16ca9812b5b6bd821758378f"
+    },
+    {
+      "path": "scripts/collections/equipment_collection_runtime.gd",
+      "sha256": "eaed0a29b3b14febca9366d0ec0a84c563f34e14ae015f8601bfedd754919f0b"
+    },
+    {
+      "path": "data/config/death523_policy.json",
+      "sha256": "7e8894aef8acc1fc3068c39ce999aaa1c2fa4247837f90c1dfd72872f4c69f07"
+    }
+  ],
+  "followup": {
+    "prior_commit": "4e8d7c35b48aaf9eef573397b7b7f894a33427e9",
+    "same_pr": 253,
+    "observed_main": "fd3ef6bad12bd030cb40946bf9b96a5a35bf8d94",
+    "main_or_other_pr_merged": false,
+    "scope": [
+      "Permanent native895/198494 recovery currencies; exact stack identity, locks, free2 exhausted,24h, atomic receipt",
+      "Typed Gem namespaces and native50Gem/one-slot purchase paths; persisted separate capacities; nondeleting overflow",
+      "Owned equipped physical IDs -> ItemBonus/KarmaDeath3103; configurable local loss relief and saved death snapshot",
+      "Exact original cumulative decimal integers above2^53; safe configurable projection for placeholder high-level progression",
+      "Native DropRate0 up to level30 disables item selection; XP boundary remains30"
+    ],
+    "source_report": {
+      "filename": "TWILIGHT_523_death_recovery_resurrection_cost_count_constraints_20261104.zip",
+      "bytes": 193834,
+      "sha256": "56dd78722147c5161268861a6100f915c9aafaf7e94f9a65205fe3a179dc9f5e",
+      "members": 28,
+      "crc": "passed",
+      "read": "REPORT_KO.md; received through official existing private Drive fetch; initial Library401 not retried"
+    },
+    "checks": {
+      "actual_main_headless": {
+        "checks": 114,
+        "failures": [],
+        "checkpoint": "before exposing existing90percent reduction cap as a config key; final OpenGL validates superset"
+      },
+      "identical_payload": {
+        "writes": 2,
+        "skips": 1,
+        "failures": []
+      },
+      "deferred_save_gate": {
+        "failures": []
+      },
+      "actual_main_opengl": {
+        "checks": 115,
+        "failures": [],
+        "resolutions": [
+          "1280x720",
+          "854x480"
+        ],
+        "renderer": "Godot4.7.2 Mesa llvmpipe Compatibility; Dummy audio",
+        "checkpoint": "full consumer/stat/slot UI validation before final additional physical-name guard; focused identity7 validates that guard"
+      },
+      "physical_identity": {
+        "checks": 7,
+        "failures": [],
+        "final_extra_physical_name_guard": true
+      },
+      "core_runtime_save": {
+        "checks": 32,
+        "failures": []
+      }
+    },
+    "native_boundary_audit": {
+      "BlockDeathPenalty_Bonus_instances": 0,
+      "ExpRestoreCostDecProb_Bonus_instances": 0,
+      "ItemRestoreCostDecProb_Bonus_instances": 0,
+      "unconditional_equipment_KarmaDeath_ItemBonus_rows": 61,
+      "gaho_ItemClass_ids_checked": [
+        200723,
+        245718,
+        297828,
+        328254,
+        346911,
+        371108
+      ],
+      "gaho_death_exemption_enabled": false,
+      "gear_destruction_enabled": false,
+      "alignment_state_in_branch_and_observed_main_world": "absent; no new PvP domain created"
+    },
+    "retained_failed_attempts": {
+      "headless1": "launch used unsupported --source-map-pack argument rather than required TWILIGHT_SOURCE_MAP_PACK; production save correctly refused missing map; failed run terminated; no pass claimed"
+    },
+    "local_evidence": [
+      {
+        "path": "/workspace/death-followup-final.log",
+        "bytes": 241,
+        "sha256": "6b688efabb36da18e2c5e8fa24138b7c96e4372c1ba0aa9a33b59162eeae29ed",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-ui.log",
+        "bytes": 536,
+        "sha256": "e3614c1cf318da4e41acb33df21dd4d25716827a5f8630335553536355bd4eec",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-identity.log",
+        "bytes": 197,
+        "sha256": "c9c4ba5530001c65ae5673effa0c484b85356502538ce08d9a6e86997f0e66c6",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-core_runtime_save_test.log",
+        "bytes": 207,
+        "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-save_identical_payload_test.log",
+        "bytes": 140,
+        "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-deferred_save_gate_test.log",
+        "bytes": 115,
+        "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death-followup-resource.log",
+        "bytes": 219,
+        "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-dead-1280.png",
+        "bytes": 1048842,
+        "sha256": "ecf7c0c915e93f05965c97dee65ca46ae93d433cb9ea901cd2c35a938bb14495",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-recovery-1280.png",
+        "bytes": 931800,
+        "sha256": "086d135cd5ec881e49a3ad8292d633a9cecfb9626ed7d0d0b9458975cfddffb4",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-recovery-854.png",
+        "bytes": 299802,
+        "sha256": "00132e107b0b3805eb1863f11168b5b2d816bacd44fdd66d8733b6faf93fbda6",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-certificate-confirm-1280.png",
+        "bytes": 759038,
+        "sha256": "e0de70042b9ff7c2af87e8a7212358ff51de280232d848144abcba8646a6566d",
+        "delivery": "LOCAL_ONLY"
+      },
+      {
+        "path": "/workspace/death523-slot-confirm-1280.png",
+        "bytes": 784035,
+        "sha256": "78afd3ca4f213b34f64b9c21c2bd179ad488e8f6361cba246c47be19b5ec5393",
+        "delivery": "LOCAL_ONLY"
+      }
+    ],
+    "file_hashes": [
+      {
+        "path": "scripts/death/runtime.gd",
+        "sha256": "c77a1873492134b2a19011240f8c6ce22ea8c664955195c317b8ad730f85a973"
+      },
+      {
+        "path": "scripts/death/source_rules.gd",
+        "sha256": "5ec644b6fd41a42b71dd153285ad54796bcc0d5cea8d9dfb80e51bad04af6955"
+      },
+      {
+        "path": "scripts/death/recovery_ui.gd",
+        "sha256": "089b983adeec51a733aca745840d2d9b560a0bd1743ea22130501e8e0e072131"
+      },
+      {
+        "path": "tests/death523_main_test.gd",
+        "sha256": "c3d8302d7fc55401b26e8dd395268712e4eb4d50ea910ad07881ede421b1eca5"
+      },
+      {
+        "path": "tests/death523_identity_test.gd",
+        "sha256": "afb921c1ae40915747433ef77d86a293008e690c7a25e09c9f24438c1bf89e08"
+      },
+      {
+        "path": "data/config/death523_policy.json",
+        "sha256": "16ba78aea297bcc4982b851c9ab3895613a0ed4c100d984108eed0e90b9d888a"
+      },
+      {
+        "path": "docs/DEATH_RECOVERY523.md",
+        "sha256": "5f3ca2441fd14b312052411e2ea3f3c3dde2bd8b2765be71eddaba6059b4b7e2"
+      }
+    ]
+  },
+  "initial_validation_commit": "4e8d7c35b48aaf9eef573397b7b7f894a33427e9",
+  "initial_screenshot_checksums": [
+    {
+      "path": "/workspace/death523-dead-1280.png",
+      "bytes": 1049531,
+      "sha256": "3b5e15e1783fb728bf499ec7e8db12aa83021781b85307c89c10fcc0c46f86d2"
+    },
+    {
+      "path": "/workspace/death523-recovery-1280.png",
+      "bytes": 899577,
+      "sha256": "65a204ec887dad8fe344d3b4887f6e37805456c14bb7e935705816085485eff2"
+    },
+    {
+      "path": "/workspace/death523-recovery-854.png",
+      "bytes": 260327,
+      "sha256": "92345346a6b3b3b74eec73ca36ba7a31393d49f40320e1ae17a3f33720cb52c1"
+    }
+  ],
+  "initial_evidence_note": "Top-level checks and code hashes describe initial4e8d7c35. Initial screenshot hashes are historical; those local output paths were overwritten by follow-up captures. Current screenshot/code hashes and results are in followup."
+}

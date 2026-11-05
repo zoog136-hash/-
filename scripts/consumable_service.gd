@@ -2,14 +2,17 @@ extends Node
 class_name TwilightConsumableService
 
 # An isolated runtime extension; world map/rendering/combat animation are not changed.
+const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
 const RULES = preload("res://scripts/consumable_rules.gd")
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const QUEST_RETURN239 = preload("res://scripts/quests/quest_return239.gd")
 const BLESSING = preload("res://scripts/equipment_blessing.gd")
 const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
 
 var world: Variant = null
+var source_skill_book_receipts: Array = []
 var elemental_enchants: Dictionary = {}
 var elixirs_used: int = 0
 var half_elixirs_used: int = 0
@@ -17,25 +20,111 @@ var permanent_damage_bonuses: Dictionary = {
 	"melee_damage": 0, "ranged_damage": 0, "magic_damage": 0
 }
 
+## Compatible PR247 bc0ce721 result interface. The same movement consumer is
+## shared with the exact quest-receipt input, without a transient native grant.
+func use_owned_native_return(item_name: String) -> Dictionary:
+	return _commit_return239(item_name)
+
+func use_owned_quest_return(physical_id: String) -> Dictionary:
+	var input: Dictionary=QUEST_RETURN239.prepare(world,physical_id)
+	if not input.ok:return {"ok":false,"saved":false,"handled":true,"consumed":0,"reason":str(input.reason),"source_item_id":239}
+	return _commit_return239(str(input.inventory_key),input)
+
+func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Dictionary:
+	var is_quest: bool=not quest_input.is_empty()
+	var record: Dictionary=quest_input.get("record",{}) if is_quest else world._find_catalog_item_record(item_name)
+	var stack: Dictionary=REGIONAL_RETURN.stack_identity(str(record.get("name","")) if is_quest else item_name,record)
+	var result: Dictionary={"ok":false,"saved":false,"handled":is_quest or REGIONAL_RETURN.claims_identity(item_name,record),"consumed":0,"inventory_key":item_name,"source_item_id":239}
+	if world.quest_service.save_blocked:
+		result["reason"]="저장 보호 중 · 정상 저장 불러오기 필요";return result
+	if stack.is_empty() or stack.get("origin")!="patch523_native_normal" or int(stack.get("item_class_id",0))!=239:
+		result["reason"]="정확한 원본239 Normal 소지 키가 필요합니다 · 주문서 보존";return result
+	if is_quest and not QUEST_RETURN239.current(world,quest_input):
+		result["reason"]="원본 퀘스트 소지 영수증 변경 · 주문서 보존";return result
+	if not world._patch523_item_allowed() or world.patch523_npc_spells.blocks("CannotTeleport"):
+		result["reason"]="현재 원본 아이템 사용·이동 제한 · 주문서 보존";return result
+	var physical_id: String=str(quest_input.get("physical_id",""))
+	if int(world.inventory.get(item_name,0))<1 or world._item_locked(item_name,physical_id) or world._item_locked(item_name,"") or int(world.hp)<=0 or _player_busy_for_travel():
+		result["reason"]="소지량·잠금·생존·이동 상태 조건 미충족 · 주문서 보존";return result
+	var problem: String=preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,record)
+	if not problem.is_empty():result["reason"]=problem;return result
+	if str(world.active_map_id)!="aden_world" or world.field_map==null:
+		result["reason"]="이 지역의 원자 귀환 목적지 연결이 필요합니다 · 주문서 보존";return result
+	var destination: Vector2=_safe_region_position()
+	if destination==Vector2.INF:destination=world._spawn_position()
+	if not destination.is_finite() or not world.field_map.walkable(destination) or not world.field_map.point_clear(destination):
+		result["reason"]="검증된 기존 아덴 귀환 위치 없음 · 주문서 보존";return result
+	var overrides: Dictionary=quest_input.get("override",{}).duplicate(true)
+	if not is_quest:
+		var inventory: Dictionary=world.inventory.duplicate(true)
+		inventory[item_name]=int(inventory[item_name])-1
+		if int(inventory[item_name])==0:inventory.erase(item_name)
+		overrides["inventory"]=inventory
+	var old_position: Vector2=world.player.global_position
+	var path: String=world.save_path()
+	var prior_sha: String=FileAccess.get_sha256(path)
+	_teleport_player(destination)
+	var save_error: Error=world._save_game(true,overrides)
+	if save_error!=OK:
+		# Confirm the complete debit/receipt AND movement candidate. An error
+		# after the atomic write must not expose stale ownership for a retry.
+		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
+		var expected: Dictionary=JSON.parse_string(JSON.stringify(overrides))
+		var confirmed: bool=durable is Dictionary
+		if confirmed:
+			for key: String in expected:
+				if durable.get(key)!=expected[key]:confirmed=false;break
+		if confirmed:confirmed=durable.get("map_id")=="aden_world" and durable.get("position")==[destination.x,destination.y]
+		if confirmed:confirmed=world.equipment_collections.accept_load(durable)
+		if not confirmed:
+			_teleport_player(old_position)
+			if FileAccess.get_sha256(path)!=prior_sha:world.quest_service.save_blocked=true;result["uncertain"]=true
+			world._update_hud()
+			result["save_error"]=save_error
+			result["reason"]="저장 결과 미확정 · 재사용 중지, 정상 저장 불러오기 필요" if result.get("uncertain",false) else "귀환 저장 실패 · 위치와 정확한 원본 주문서 보존"
+			return result
+	world.inventory=overrides.inventory
+	if overrides.has("item_instances"):world.item_instances=overrides.item_instances
+	if overrides.has("quest_state"):world.quest_service.import_state(overrides.quest_state)
+	world.deferred_save.cancel()
+	world.hud.refresh_inventory(world.inventory);world._update_hud()
+	result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"map_id":str(world.active_map_id),"position":[destination.x,destination.y],"message":"아덴 마을로 귀환했습니다 · TWILIGHT 기존 목적지"},true)
+	if is_quest:result["physical_id"]=physical_id;result["ownership_origin"]="quest523_receipt"
+	return result
+
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var quest_equipment_receipts_present: bool=false
+var quest_equipment_receipts: Variant=[]
+
 func export_state() -> Dictionary:
-	return {
+	var state: Dictionary={
 		"elemental_enchants": elemental_enchants.duplicate(true),
 		"elixirs_used": elixirs_used,
 		"half_elixirs_used": half_elixirs_used,
-		"permanent_damage_bonuses": permanent_damage_bonuses.duplicate(true)
+		"permanent_damage_bonuses": permanent_damage_bonuses.duplicate(true),
+		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
+	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=quest_equipment_receipts.duplicate(true) if quest_equipment_receipts is Array or quest_equipment_receipts is Dictionary else quest_equipment_receipts
+	return state
+
 func import_state(input: Variant) -> void:
+	quest_equipment_receipts_present=input is Dictionary and input.has("source_quest_equipment_receipts")
+	var gear: Variant=input.get("source_quest_equipment_receipts",[]) if input is Dictionary else []
+	quest_equipment_receipts=gear.duplicate(true) if gear is Array or gear is Dictionary else gear
+	source_skill_book_receipts.clear()
 	elemental_enchants.clear()
 	elixirs_used = 0
 	half_elixirs_used = 0
+	source_skill_book_receipts = []
 	permanent_damage_bonuses = {"melee_damage":0, "ranged_damage":0, "magic_damage":0}
 	if not (input is Dictionary):
 		return
 	var data: Dictionary = input as Dictionary
+	if data.get("source_skill_book_receipts") is Array:source_skill_book_receipts=data.source_skill_book_receipts.duplicate(true)
 	elixirs_used = clampi(int(data.get("elixirs_used", 0)), 0, ELIXIR_LIMIT)
 	half_elixirs_used = clampi(int(data.get("half_elixirs_used", 0)), 0, ELIXIR_LIMIT)
 	var raw_bonuses: Variant = data.get("permanent_damage_bonuses", {})
@@ -130,10 +219,34 @@ func prune_removed() -> void:
 		if RULES.is_removed_item(str(item_key)):
 			buffs.erase(item_key)
 
-func try_use(item_name: String) -> bool:
+func try_use(item_name: String,selected_instance: String="") -> bool:
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_relic_unlock_item.gd").record().get("name","")):
+		var result: Dictionary=world.option_awakening.use_relic_unlock_item(item_name,selected_instance)
+		if bool(result.get("handled",false)):
+			if bool(result.get("ok",false)):
+				world._update_hud();world.hud.refresh_inventory(world.inventory)
+				_message("에바의 계시 습득 · 추가 성물 소환 해금")
+			else:_message(str(result.get("error","성물 해금 아이템 사용 실패")))
+			return true
+	var source_record: Dictionary = world.call("_find_catalog_item_record", item_name)
+	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
+	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
+	if preload("res://scripts/shop/source523_restoration.gd").try_use(world,item_name):return true
+	if try_use_regional_return(item_name): return true
+	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
+		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
+		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
+		if bool(source_result.get("handled",false)):
+			if bool(source_result.get("ok",false)):
+				world._update_hud();world.hud.refresh_inventory(world.inventory)
+				_message("에바의 부름 습득 · 추가 인형 소환 해금")
+			else:_message(str(source_result.get("error","해금 아이템 사용 실패")))
+			return true
 	var spec: Dictionary = RULES.definition(item_name)
+	if spec.is_empty() and REGIONAL_RETURN.supported(item_name): spec = {"kind":"return"}
 	if spec.is_empty():
 		return false
+	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 	var inv: Dictionary = world.get("inventory") as Dictionary
 	if int(inv.get(item_name, 0)) <= 0:
 		_message("아이템이 없습니다: %s" % item_name)
@@ -169,7 +282,8 @@ func _message(value: String) -> void:
 
 func _consume(item_name: String) -> void:
 	var inv: Dictionary = world.get("inventory") as Dictionary
-	inv[item_name] = maxi(0, int(inv.get(item_name, 0)) - 1)
+	var infinite: bool = bool(world.regional_return_stack(item_name).get("infinite", false))
+	inv[item_name] = maxi(0, int(inv.get(item_name, 0)) - (0 if infinite else 1))
 	if int(inv.get(item_name, 0)) == 0:
 		inv.erase(item_name)
 	world.hud.refresh_inventory(inv)
@@ -227,6 +341,17 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
+	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active"):
+		_message("원문 필드의 귀환 주문서 연결은 보류 중입니다. 주문서를 보존합니다. 화면의 지도 복귀를 사용해 주세요.")
+		return
+	# A current source field cannot inherit a PC destination from its host ID.
+	var current_field: Variant = world.get("field_map")
+	if current_field is OriginalPlayableField and bool(current_field.get_meta("source_map84",false)):
+		_message("현재 원본 지도의 검증된 귀환 목적지가 연결되지 않았습니다 · 주문서 보존")
+		return
+	if int(world.regional_return_stack(item_name).get("item_class_id", 0)) == 126424:
+		_use_regional_return(item_name)
+		return
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
@@ -248,7 +373,7 @@ func _use_return(item_name: String) -> void:
 	else:
 		_teleport_player(world.call("_spawn_position"))
 	_consume(item_name)
-	_message("아덴 마을로 귀환했습니다")
+	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
 
 func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")
@@ -282,6 +407,9 @@ func _random_destination() -> Vector2:
 func _use_random_teleport(item_name: String) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 순간이동할 수 없습니다")
+		return
+	if world.growth.travel.enabled():
+		world.growth.travel.open({"kind":"scroll","name":item_name})
 		return
 	var destination: Vector2 = _random_destination()
 	if destination == Vector2.INF:
@@ -371,15 +499,16 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		var record: Dictionary = world.call("_find_catalog_item_record", item_name)
 		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 			record = physical["record"] as Dictionary
+		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		if kind not in ["weapon", "armor"]:
+		if kind not in ["weapon", "armor", "accessory"]:
 			continue
-		if BLESSING.bonus_for(str(record.get("grade", "")), kind).is_empty() or BLESSING.is_blessed(physical, record):
+		if BLESSING.bonus_for(str(record.get("grade", "")), kind, record).is_empty() or BLESSING.is_blessed(physical, record):
 			continue
 		candidates.append(item_name + "@@@" + id)
 	candidates.sort()
 	if candidates.is_empty():
-		_message("축복 부여가 가능한 미축복 무기·방어구가 없습니다")
+		_message("축복 부여가 가능한 미축복 장비가 없습니다")
 		return
 	# Use the game's native touch-friendly equipment chooser, not a floating
 	# ConfirmationDialog which can be unreachable in Android editor/play mode.
@@ -392,15 +521,17 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 			record = physical["record"] as Dictionary
 		var grade: String = str(record.get("grade", "일반"))
+		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
 		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
 			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade),
-			"bonus_text": BLESSING.effect_text(grade, kind), "equipped": false})
+			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
 # The physical instance ID is mandatory: two copies of the same weapon can
 # have different blessings, enchants, pinned catalog variants and equip state.
 func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return false
 	if str(RULES.definition(scroll_name).get("kind", "")) != "equipment_bless":
 		return false
 	var selected: Dictionary = world.call("_parse_enhancement_target", target_reference)
@@ -424,28 +555,55 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var record: Dictionary = world.call("_find_catalog_item_record", item_name)
 	if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
 		record = physical["record"] as Dictionary
+	record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 	var kind: String = str(world.call("_enhancement_kind_for_record", record))
 	var grade: String = str(record.get("grade", ""))
-	var effect: Dictionary = BLESSING.bonus_for(grade, kind)
+	var effect: Dictionary = BLESSING.bonus_for(grade, kind, record)
 	if effect.is_empty():
-		_message("무기와 방어구에만 축복을 부여할 수 있습니다")
+		_message("이 장비에는 확인된 축복 옵션이 없습니다")
 		return false
 	if BLESSING.is_blessed(physical, record):
 		_message("이미 축복받은 장비입니다")
 		return false
+	if bool(world.call("_item_locked",item_name,item_id)):
+		_message("축복하려면 장비 잠금을 해제하세요")
+		return false
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
+	var before: Dictionary={"inventory":inv.duplicate(true),"instances":instances.duplicate(true),"rng":rng.state,
+		"equipped":world.equipped_items.duplicate(true),"hp":world.hp,"mp":world.mp}
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
 	var success: bool = BLESSING.roll_succeeds(grade, roll)
 	if success:
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
+		physical["source_bless_code"]=2
+		record["bless_state"]="blessed"
+		record["blessed"]=true
+		if record.get("source_m_native_item",false): record["source_bless_raw"]=2
+		physical["record"]=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,2)
 		instances[item_id] = physical
+	inv[scroll_name]=int(inv[scroll_name])-1
+	if int(inv[scroll_name])<=0: inv.erase(scroll_name)
+	world.call("_invalidate_equipment_static")
+	world.hp=mini(world.hp,int(world.call("_effective_max_hp")))
+	world.mp=mini(world.mp,int(world.call("_effective_max_mp")))
+	if int(world.call("_save_game",true))!=OK:
+		inv.clear();inv.merge(before.inventory)
+		instances.clear();instances.merge(before.instances)
+		world.equipped_items=before.equipped
+		rng.state=int(before.rng)
+		world.hp=int(before.hp);world.mp=int(before.mp)
+		world.call("_invalidate_equipment_static")
+		world.call("_update_hud")
+		_message("축복 저장 실패 · 주문서·장비·난수 상태를 보존했습니다")
+		return false
 	_message("축복 부여 %s · %s [ID %s] · %s" % [
 		"성공!" if success else "실패(장비 유지)",
-		item_name, item_id, BLESSING.effect_text(grade, kind) if success else "주문서만 소모"
+		item_name, item_id, BLESSING.effect_text(grade, kind, record) if success else "주문서만 소모"
 	])
 	world.hud.append_log("축복 부여 %s · %s [ID %s]" % ["성공" if success else "실패", item_name, item_id])
-	_consume(scroll_name)
+	world.hud.refresh_inventory(inv)
+	world.call("_update_hud")
 	return success
 
 func _use_elemental_scroll(item_name: String, spec: Dictionary) -> void:
@@ -534,10 +692,11 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 				if entry.get("record", {}) is Dictionary and not (entry.get("record", {}) as Dictionary).is_empty():
 					record = entry["record"] as Dictionary
 				var grade: String = str(record.get("grade", "일반"))
+				record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 				var kind: String = str(world.call("_enhancement_kind_for_record", record))
 				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (임시)" % [
 					grade_text, parts[0], instance_id,
-					BLESSING.effect_text(grade, kind), BLESSING.success_chance(grade)
+					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade)
 				]
 			var element_level: int = int(entry.get("element_level", 0))
 			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))
@@ -637,3 +796,56 @@ func apply_element_scroll(scroll_name: String, weapon_reference: String, element
 		"성공" if success else "실패/무기 유지",
 		previous_level + (1 if success else 0), chance
 	])
+
+func _use_regional_return(item_name: String) -> void:
+	if _player_busy_for_travel():
+		_message("현재 상태에서는 귀환할 수 없습니다")
+		return
+	var land: int = world._regional_return_land()
+	if not REGIONAL_RETURN.DATA.data.lands.has(str(land)):
+		_message("잊혀진 귀환 주문서는 잊혀진 섬에서만 사용할 수 있습니다")
+		return
+	var field: Variant = world.field_map
+	var binding: Dictionary = REGIONAL_RETURN.DATA.data.host_bindings.get(world.active_map_id, {})
+	if field == null or binding.is_empty() or int(binding.get("land_id", 0)) != land or str(binding.get("return_mode", "")) != "spawn" or str(binding.get("return_map", "")) != str(world.active_map_id):
+		_message("이 지역의 귀환 목적지가 아직 연결되지 않았습니다 · 주문서 보존")
+		return
+	var destination: Vector2 = world._spawn_position()
+	if not field.walkable(destination) or not field.point_clear(destination):
+		_message("안전한 귀환 위치를 확인할 수 없습니다 · 주문서 보존")
+		return
+	var old_position: Vector2 = world.player.global_position
+	var old_count: int = int(world.inventory.get(item_name, 0))
+	_teleport_player(destination)
+	world.inventory[item_name] = old_count - 1
+	if old_count == 1: world.inventory.erase(item_name)
+	var save_error: Error = world._save_game(true)
+	if save_error != OK:
+		world.inventory[item_name] = old_count
+		_teleport_player(old_position)
+		world._update_hud()
+		_message("귀환 저장 실패 · 위치와 주문서를 보존했습니다")
+		return
+	world.hud.refresh_inventory(world.inventory)
+	world._update_hud()
+	_message("잊혀진 섬 시작 지점으로 귀환 · TWILIGHT 대응 지도")
+
+func try_use_regional_return(item_name: String) -> bool:
+	var record: Dictionary = world._find_catalog_item_record(item_name)
+	if not REGIONAL_RETURN.claims_identity(item_name, record): return false
+	var stack: Dictionary = REGIONAL_RETURN.stack_identity(item_name, record)
+	if stack.is_empty():
+		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
+		return true
+	if stack.origin == "patch523_native_normal" and int(stack.item_class_id) == 239:
+		var outcome: Dictionary=use_owned_native_return(item_name)
+		_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))
+		return true
+	if int(world.inventory.get(item_name, 0)) <= 0:
+		_message("아이템이 없습니다: "+item_name)
+		return true
+	_use_return(item_name)
+	return true
+
+## Result contract for external reward producers. Issuance/receipt is their transaction.
+## Cross-map native travel needs its owner's atomic destination contract; preserve stock.

@@ -45,6 +45,13 @@ static func prepare() -> PlayableField:
 	if mid.is_empty():mid="albino_01"
 	if not candidate.configure_source(pack,argument("--base508-registration="),argument("--base508-legacy-reference="),mid,"--base508-legacy-review-population" in OS.get_cmdline_user_args()):
 		problem="Source pack, registration, or existing reviewed navigation failed validation";return null
+	var links_path: String = argument("--patch523-world-links=")
+	var links_sha: String = argument("--patch523-world-links-sha256=")
+	if not links_path.is_empty() or not links_sha.is_empty():
+		if links_path.is_empty() or links_sha.is_empty() or not candidate.configure_world_links(links_path, links_sha):
+			problem = "Cumulative523 world links failed Land/AssetPath/SHA256 validation"
+			candidate.close()
+			return null
 	prepared=candidate
 	return prepared
 

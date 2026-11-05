@@ -15,7 +15,6 @@ ACTIVE = frozenset({
     "godot-validate.yml",
     "twilight-integration-validate.yml",
     "animation-presentation-validate.yml",
-    "twilight-android-playtest-apk.yml",
     "l1j-runtime-validate.yml",
     "godot-import-cache-contract.yml",
     "main-debug-audit.yml",

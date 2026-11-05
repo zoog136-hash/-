@@ -452,7 +452,7 @@ func refresh_inventory(inventory: Dictionary) -> void:
 				var copy: Dictionary = (item as Dictionary).duplicate(true)
 				copy["instance_id"] = str(key)
 				copies.append(copy)
-		copies.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["instance_id"]) < int(b["instance_id"]))
+		copies.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return preload("res://scripts/ui/lineage_inventory_ui.gd").instance_id_less(str(a.instance_id),str(b.instance_id)))
 		if copies.is_empty():
 			_add_inventory_item_row(name_value, name_value, "  x%d" % int(inventory[name_value]), images, true)
 		else:
@@ -683,6 +683,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 			continue
 		var record: Dictionary = value as Dictionary
 		if catalog_category == "아이템":
+			if record.get("source_preserved_legacy_catalog",false): continue
 			if item_slot_filter != "all" and _item_filter_group(record) != item_slot_filter:
 				continue
 			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
@@ -1330,7 +1331,7 @@ func _item_filter_group(record: Dictionary) -> String:
 		return "weapon"
 	if slot in ["offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "gaiters", "gloves", "boots", "armor"]:
 		return "armor"
-	if slot in ["earring", "ring", "belt", "bracelet", "badge", "seal", "crystal", "catalyst", "rune", "necklace", "accessory"]:
+	if slot in ["earring", "ring", "belt", "bracelet", "badge", "seal", "crystal", "catalyst", "rune", "necklace", "accessory", "domination_stone", "relic_item", "fishing_rod"]:
 		return "accessory"
 	if slot == "consumable":
 		return "consumable"

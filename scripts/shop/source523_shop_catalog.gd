@@ -1,0 +1,237 @@
+extends RefCounted
+## Optional source commerce catalog. It never changes wallets, saves or clocks.
+const SCHEMA: String = "twilight.source523.shop.v1"
+const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+const REQUIRED_TABLES: Array[String] = [
+	"MerchantGoods", "MarketPurchase_Korean", "MarketPayment_Korean", "MarketPurchaseProduct",
+	"MarketProduct", "MarketProductAdditional", "MarketBonusForPurchase", "MarketPurchaseRestriction",
+	"MarketDisplay", "MarketDisplayCategoryType", "MarketPurchaseGroup", "MarketPurchaseServerLimitGroup",
+	"Currency", "CurrencyUnitClass", "CurrencyDiscountRate", "CurrencyCode", "Unit", "ServerLimit",
+	"DateTimes_Korean", "CumulativePurchase", "CumulativePurchaseStep", "ItemClass", "IntangibleItemClass",
+	"Class", "BuffCard", "Reward", "RewardType", "DescData_Korean"]
+const MAX_PACK_BYTES: int = 128 * 1024 * 1024
+const MAX_EXACT_INTEGER: int = 9007199254740991
+const FIELDS: Dictionary = {
+	"MarketPurchase_Korean":["ID", "MarketPaymentID", "DescID", "DescriptionDescID", "EffectiveFromId", "EffectiveToId", "OnSale"],
+	"MarketPayment_Korean":["ID", "UnitID", "ClassID", "Amount", "MarketPaymentTypeID", "ClassChangeDiscount"],
+	"MerchantGoods":["ID", "MerchantsID", "ItemClassID", "Amount", "Enchant", "Percentage", "LimitCount", "LimitCountPerAccount", "LimitServerCount", "LimitCountRefreshTypeID", "LimitMinLevel", "LimitMaxLevel", "ClanLevelMin", "LimitMinClanLevel", "AvailableSiegeTime", "LimitNotInSiegeTime", "DaysAfterClanJoin", "LimitDaysAfterClanJoin", "LimitBuffCardID", "LimitRepeatedBuyCardID", "LimitStartTime", "LimitEndTime", "LimitStartHour", "LimitEndHour"],
+	"MarketProduct":["ID", "UnitID", "ClassID", "Amount"],
+	"MarketProductAdditional":["MarketProductID", "UnitID", "ClassID", "Amount"],
+	"MarketPurchaseProduct":["MarketPurchaseID", "MarketProductID"],
+	"MarketBonusForPurchase":["MarketPurchaseID", "MarketProductID"],
+	"MarketPurchaseRestriction":["MarketPurchaseId", "MarketRestrictionTypeId", "ValueUnitId", "Value", "DurationUnitId", "DurationValue"],
+	"MarketPurchaseServerLimitGroup":["MarketPurchaseID", "ServerLimitSetID"],
+	"MarketDisplay":["ID", "PurchaseID", "DisplayIndex"],
+	"MarketPurchaseGroup":["PurchaseGroupID", "PurchaseID", "Index"],
+	"ServerLimit":["ID", "ServerLimitSetID", "WorldNo", "ServiceRegionCode"],
+	"DateTimes_Korean":["ID", "Year", "Month", "Day", "Hour", "Minute"],
+	"Currency":["ID", "Name", "DescID"],
+	"CurrencyUnitClass":["ID", "CurrencyID", "UnitID", "ClassID", "ForGive", "ConsumePriority"],
+	"CurrencyDiscountRate":["ID", "CurrencyDiscountID", "CurrencyID", "Rate"],
+	"Unit":["ID", "Name"], "DescData_Korean":["ID", "Description"],
+	"ItemClass":["ID", "Name", "DescID", "Cost"], "IntangibleItemClass":["ID", "Name"],
+	"CumulativePurchase":["ID", "Name", "StartTimeID", "EndTimeID", "DailyRewardID", "ServerLimitsetID"],
+	"CumulativePurchaseStep":["ID", "CumulativePurchaseID", "Step", "RewardID"]}
+const BOOLEAN_FIELDS: Array[String] = ["OnSale", "ClassChangeDiscount", "LimitCountPerAccount", "AvailableSiegeTime", "LimitNotInSiegeTime", "ForGive"]
+const STRING_FIELDS: Array[String] = ["Name", "Description", "ServiceRegionCode"]
+static var _session: RefCounted
+var _tables: Dictionary = {}
+var _indices: Dictionary = {}
+var _links: Dictionary = {}
+var loaded_sha256: String = ""
+var error: String = ""
+
+static func session() -> RefCounted:
+	if _session == null:
+		_session = load("res://scripts/shop/source523_shop_catalog.gd").new()
+		var path: String = ""
+		var expected: String = ""
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--source523-shop-pack="): path = argument.trim_prefix("--source523-shop-pack=")
+			if argument.begins_with("--source523-shop-sha256="): expected = argument.trim_prefix("--source523-shop-sha256=")
+		if not path.is_empty(): _session.load_pack(path, expected)
+	return _session
+
+func available() -> bool:
+	return not _tables.is_empty()
+
+func load_pack(path: String, expected_sha256: String) -> bool:
+	# Invalid replacements leave the previous registry intact.
+	if expected_sha256.length() != 64 or not expected_sha256.is_valid_hex_number(false):
+		return _fail("원본 상점 팩 SHA256이 필요합니다")
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if file == null or file.get_length() > MAX_PACK_BYTES:
+		return _fail("원본 상점 팩을 읽을 수 없습니다")
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	var hash_context := HashingContext.new()
+	hash_context.start(HashingContext.HASH_SHA256)
+	hash_context.update(bytes)
+	var actual: String = hash_context.finish().hex_encode()
+	if actual != expected_sha256.to_lower(): return _fail("원본 상점 팩 해시가 다릅니다")
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8()) != OK: return _fail("상점 팩 JSON 오류")
+	var pack: Variant = parser.data
+	if not pack is Dictionary or pack.get("schema") != SCHEMA or pack.get("patch") != 523 or pack.get("source_zip_sha256") != SOURCE_SHA256:
+		return _fail("검증된 523 상점 팩 형식이 아닙니다")
+	var tables: Variant = pack.get("tables")
+	var provenance: Variant = pack.get("provenance")
+	if not tables is Dictionary or not provenance is Dictionary: return _fail("상점 팩 표 누락")
+	var indices: Dictionary = {}
+	for table: String in REQUIRED_TABLES:
+		if not tables.get(table) is Array or not provenance.get(table) is Dictionary:
+			return _fail("상점 팩 표 누락: " + table)
+		if not _integer(provenance[table].get("packed_rows")) or int(provenance[table].get("packed_rows", -1)) != tables[table].size():
+			return _fail("상점 팩 행수 불일치: " + table)
+		var indexed: Dictionary = {}
+		for row: Variant in tables[table]:
+			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
+			for field: String in FIELDS.get(table, ["ID"]):
+				if field in STRING_FIELDS:
+					if not row.get(field) is String: return _fail("상점 팩 문자열 오류: " + table + "." + field)
+				elif field in BOOLEAN_FIELDS:
+					if not row.get(field) is bool: return _fail("상점 팩 조건 오류: " + table + "." + field)
+				elif not _integer(row.get(field)):
+					return _fail("상점 팩 정수 오류: " + table + "." + field)
+			if not row.has("ID"): continue # Relation tables have composite keys.
+			if not _integer(row.ID) or int(row.ID) < 0: return _fail("상점 팩 ID 오류: " + table)
+			# Korean payment ID0 contains several system rows. Never select one by overwrite.
+			if table == "MarketPayment_Korean" and int(row.ID) == 0: continue
+			var key: String = str(int(row.ID))
+			if indexed.has(key): return _fail("상점 팩 중복 ID: " + table)
+			indexed[key] = row
+		indices[table] = indexed
+	var links: Dictionary = {}
+	var joins: Dictionary = {"MarketPurchaseProduct":"MarketPurchaseID", "MarketBonusForPurchase":"MarketPurchaseID",
+		"MarketProductAdditional":"MarketProductID", "MarketPurchaseRestriction":"MarketPurchaseId",
+		"MarketPurchaseServerLimitGroup":"MarketPurchaseID", "MarketDisplay":"PurchaseID",
+		"CurrencyUnitClass":"CurrencyID", "ServerLimit":"ServerLimitSetID", "MarketPurchaseGroup":"PurchaseGroupID"}
+	for table: String in joins:
+		var grouped: Dictionary = {}
+		for row: Dictionary in tables[table]:
+			if not _integer(row.get(joins[table])): return _fail("상점 팩 연결 ID 오류: " + table)
+			var key: String = str(int(row[joins[table]]))
+			if not grouped.has(key): grouped[key] = []
+			grouped[key].append(row)
+		links[table] = grouped
+	_tables = tables
+	_indices = indices
+	_links = links
+	loaded_sha256 = actual
+	error = ""
+	return true
+
+func _fail(message: String) -> bool:
+	error = message
+	return false
+
+static func _integer(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and absf(float(value)) <= MAX_EXACT_INTEGER and float(value) == floorf(float(value))
+
+func rows(table: String) -> Array:
+	return _tables.get(table, []).duplicate(true)
+
+func record(table: String, id: int) -> Dictionary:
+	return _indices.get(table, {}).get(str(id), {}).duplicate(true)
+
+func _related(table: String, id: int) -> Array:
+	return _links.get(table, {}).get(str(id), []).duplicate(true)
+
+func label(id: int) -> String:
+	return str(record("DescData_Korean", id).get("Description", ""))
+
+func unit_name(id: int) -> String:
+	return str(record("Unit", id).get("Name", str(id)))
+
+func currency(id: int) -> Dictionary:
+	var definition: Dictionary = record("Currency", id)
+	if definition.is_empty(): return {}
+	var sources: Array = _related("CurrencyUnitClass", id)
+	var for_give: Array = []
+	for source: Dictionary in sources:
+		if source.get("ForGive") == true: for_give.append(source.duplicate(true))
+	return {"definition":definition, "sources":sources, "for_give":for_give}
+
+func product(id: int) -> Dictionary:
+	return {"definition":record("MarketProduct", id), "additional":_related("MarketProductAdditional", id)}
+
+func market_offer(id: int) -> Dictionary:
+	var purchase: Dictionary = record("MarketPurchase_Korean", id)
+	if purchase.is_empty(): return {}
+	var products: Array = []
+	var bonuses: Array = []
+	for link: Dictionary in _related("MarketPurchaseProduct", id):
+		products.append({"link":link, "product":product(int(link.MarketProductID))})
+	for link: Dictionary in _related("MarketBonusForPurchase", id):
+		bonuses.append({"link":link, "product":product(int(link.MarketProductID))})
+	return {"purchase":purchase, "name":label(int(purchase.get("DescID", 0))),
+		"description":label(int(purchase.get("DescriptionDescID", 0))),
+		"payment":record("MarketPayment_Korean", int(purchase.get("MarketPaymentID", 0))),
+		"products":products, "bonuses":bonuses, "restrictions":_related("MarketPurchaseRestriction", id),
+		"server_limits":_related("MarketPurchaseServerLimitGroup", id), "displays":_related("MarketDisplay", id),
+		"effective_from":record("DateTimes_Korean", int(purchase.get("EffectiveFromId", 0))),
+		"effective_to":record("DateTimes_Korean", int(purchase.get("EffectiveToId", 0)))}
+
+func purchase_group(id: int) -> Array:
+	var result: Array = _related("MarketPurchaseGroup", id)
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.Index) < int(b.Index))
+	return result
+
+func merchant_offer(id: int) -> Dictionary:
+	var goods: Dictionary = record("MerchantGoods", id)
+	if goods.is_empty(): return {}
+	var item: Dictionary = record("ItemClass", int(goods.get("ItemClassID", 0)))
+	var raw_product: Dictionary = _checked_product([item.get("Cost", 0), goods.get("Percentage", 0), goods.get("Amount", 0)])
+	# This is an arithmetic diagnostic, never a buy/sell quote or a probability.
+	return {"goods":goods, "item":item, "raw_price_product":raw_product,
+		"price_status":"UNKNOWN_FORMULA", "can_purchase":false}
+
+static func _checked_product(values: Array) -> Dictionary:
+	var result: int = 1
+	for value: Variant in values:
+		if not _integer(value) or int(value) < 0: return {"ok":false, "reason":"금액 필드 오류"}
+		var integer: int = int(value)
+		if integer > 0 and result > MAX_EXACT_INTEGER / integer:
+			return {"ok":false, "reason":"정확한 금액 범위 초과"}
+		result *= integer
+	return {"ok":true, "value":result}
+
+func payment_quote(purchase_id: int, quantity: int) -> Dictionary:
+	var offer: Dictionary = market_offer(purchase_id)
+	if offer.is_empty() or quantity < 1 or quantity > 1000: return {"ok":false, "reason":"상품 또는 수량 오류"}
+	var payment: Dictionary = offer.payment
+	if payment.is_empty() or int(payment.get("MarketPaymentTypeID", -1)) != 4:
+		return {"ok":false, "reason":"외부 결제·무료·쿠폰 경로는 미연결"}
+	if payment.get("ClassChangeDiscount") == true:
+		return {"ok":false, "reason":"클래스체인지 할인 조건 미확인"}
+	var unit: int = int(payment.get("UnitID", 0))
+	var class_id: int = int(payment.get("ClassID", 0))
+	if unit not in [4, 34, 201]: return {"ok":false, "reason":"미해석 결제 단위"}
+	if (unit == 201 and record("Currency", class_id).is_empty()) or (unit == 4 and record("ItemClass", class_id).is_empty()) or (unit == 34 and record("IntangibleItemClass", class_id).is_empty()):
+		return {"ok":false, "reason":"결제 대상 연결 누락"}
+	var total: Dictionary = _checked_product([payment.get("Amount", -1), quantity])
+	if not total.ok: return total
+	# Only a source payment amount. It confers no authority to purchase/deliver.
+	return {"ok":true, "unit_id":unit, "class_id":class_id, "unit_amount":int(payment.Amount),
+		"quantity":quantity, "total":int(total.value), "can_purchase":false}
+
+func activation(purchase_id: int, context: Dictionary = {}) -> Dictionary:
+	var offer: Dictionary = market_offer(purchase_id)
+	if offer.is_empty(): return {"state":"blocked", "reasons":["상품 없음"]}
+	var reasons: Array[String] = []
+	if offer.purchase.get("OnSale") != true: reasons.append("판매 중 아님")
+	if offer.displays.is_empty(): reasons.append("현재 진열 연결 없음")
+	if offer.effective_from.is_empty() or offer.effective_to.is_empty():
+		reasons.append("상품 기간 연결 미확인")
+	else:
+		# No clock/timezone policy is selected here; the source has no timezone.
+		reasons.append("상품 기간의 시간 기준·경계 미확인")
+	for limit: Dictionary in offer.server_limits:
+		var servers: Array = _related("ServerLimit", int(limit.ServerLimitSetID))
+		var matched: bool = false
+		for server: Dictionary in servers:
+			if context.get("world_no", -1) == int(server.WorldNo) and context.get("region", "") == str(server.ServiceRegionCode): matched = true
+		if not matched: reasons.append("서버 조건 미충족 또는 미확인 · Set %d" % int(limit.ServerLimitSetID))
+	if not offer.restrictions.is_empty(): reasons.append("구매 제한 %d개 · 범위·기간별 판정 미연결" % offer.restrictions.size())
+	if not payment_quote(purchase_id, 1).get("ok", false): reasons.append("결제 경로 미연결")
+	reasons.append("결제·보관함 수령 경로 검증 필요")
+	return {"state":"blocked", "reasons":reasons, "can_purchase":false}

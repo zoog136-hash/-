@@ -97,7 +97,9 @@ def main():
 
     source = (ROOT / "scripts/loot_drop.gd").read_text(encoding="utf-8")
     for invariant in (
-        "NORMAL_EQUIPMENT_RATES = {\"일반\":0.001, \"고급\":0.001, \"희귀\":0.001, \"영웅\":0.00015}",
+        "\"전설\": BOSS_EQUIPMENT_RATES[\"전설\"]",
+        "\"신화\": BOSS_EQUIPMENT_RATES[\"신화\"]",
+        "\"유일\": BOSS_EQUIPMENT_RATES[\"유일\"]",
         "BOSS_EQUIPMENT_RATES = {\"일반\":0.001, \"고급\":0.001, \"희귀\":0.001, \"영웅\":0.01, \"전설\":0.002, \"신화\":0.00025, \"유일\":0.00001}",
         "MAX_BOSS_EQUIPMENT_ROLLS: int = 3",
         "NORMAL_POTION_RATE: float = 0.45",

@@ -225,7 +225,7 @@ func _available(current: String) -> int:
   if not raw is Dictionary:continue
   var record: Dictionary=raw
   var identity: String=Cards.card_id(record)
-  if str(record.get("grade",""))==current and not seen.has(identity):
+  if str(record.get("grade",""))==current and not seen.has(identity) and not bool(record.get("source_merge_out_disabled",false)):
    seen[identity]=true;total+=maxi(0,int(extras.get(identity,0)))
  return total
 
@@ -254,7 +254,7 @@ func _refresh() -> void:
   if current==target:target_exists=true
   if current==grade:
    source_exists=true
-   var used: int=mini(remaining,maxi(0,int(spare.get(identity,0))))
+   var used: int=0 if bool(row.get("source_merge_out_disabled",false)) else mini(remaining,maxi(0,int(spare.get(identity,0))))
    if used>0:registered_materials.append({"id":identity,"record":row,"count":used});remaining-=used
   var copies: int=(1 if owned.has(identity) else 0)+maxi(0,int(spare.get(identity,0)))
   if copies>0 and (filter_grade=="전체" or current==filter_grade):_records.append(row)
@@ -268,7 +268,7 @@ func _refresh() -> void:
   var picture: Texture2D=load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
   var index: int=_cards.add_item(str(duplicates),picture)
   _cards.set_item_metadata(index,{"id":identity,"grade":str(record.grade),"copies":copies,"duplicates":duplicates})
-  _cards.set_item_tooltip(index,"%s · %s · 보유 %d장 / 합성 재료 %d장" % [record.name,record.grade,copies,duplicates])
+  _cards.set_item_tooltip(index,"%s · %s · 보유 %d장 / 합성 재료 %d장%s" % [record.name,record.grade,copies,0 if bool(record.get("source_merge_out_disabled",false)) else duplicates," · 원본 합성 제한" if bool(record.get("source_merge_out_disabled",false)) else ""])
   _cards.set_item_custom_bg_color(index,Color(UI.grade(str(record.grade)),.09))
   _cards.set_item_custom_fg_color(index,Color(1,1,1,0))
  for current: String in _grade_buttons:

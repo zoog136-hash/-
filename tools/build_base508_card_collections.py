@@ -7,7 +7,8 @@ CATEGORIES = {1: '변신', 2: '마법인형', 98: '성물'}
 FLAT = dict(zip(
     ['HPPlus','MPPlus','MeleeDamage','RangeDamage','MagicDamage','MeleeHit','RangeHit','MagicHit','ArmorClass','MagicResist','RangeEvasion','DamageReduction','SpellPower','Strength','Dexterity','Constitution','Intelligence','Wisdom','Charisma','RegenHP','RegenMP','HPPotionIncreaseStatic','PVEDamageReduction','PVEMeleeAdditionDamage','PVERangeAdditionDamage','PVEMagicAdditionDamage','PVEMeleeHit','PVERangeHit','PVEMagicHit','CriticalMeleeDamage','CriticalRangeDamage','CriticalMagicDamage'],
     ['max_hp','max_mp','melee_damage','ranged_damage','magic_damage','melee_hit','ranged_hit','magic_hit','ac','mr','er','damage_reduction','sp','str','dex','con','int','wis','cha','hp_regeneration','mp_regeneration','potion_heal','pve_damage_reduction','pve_melee_damage','pve_ranged_damage','pve_magic_damage','pve_melee_hit','pve_ranged_hit','pve_magic_hit','melee_critical_damage','ranged_critical_damage','magic_critical_damage']))
-PERCENT = {'ExperienceAdditionPercent':'experience_bonus','AttackSpeedBonus':'attack_speed','MoveSpeedBonus':'movement_speed','HPPotionIncreasePercent':'potion_heal','MeleeCritical':'melee_critical_rate','RangeCritical':'ranged_critical_rate'}
+FLAT['MeleeEvasion']='melee_evasion'
+PERCENT = {'MagicCritical':'magic_critical_rate','PVEDamageReductionPercent':'pve_damage_reduction','ExperienceAdditionPercent':'experience_bonus','AttackSpeedBonus':'attack_speed','MoveSpeedBonus':'movement_speed','HPPotionIncreasePercent':'potion_heal','MeleeCritical':'melee_critical_rate','RangeCritical':'ranged_critical_rate'}
 
 def build(source, canonical, evidence):
     assert hashlib.sha256(pathlib.Path(source).read_bytes()).hexdigest() == evidence["source"]["source_zip_sha256"]
@@ -59,8 +60,8 @@ def build(source, canonical, evidence):
             scoped_key = None
             target_name=(target.get('target_row') or {}).get('Name','')
             if bonus['BonusApplicationTypeID']==2:
-                if type_name=='SpecialResistance' and target_name in ['Stun','Hold']:scoped_key={'Stun':'stun_resistance','Hold':'hold_resistance'}[target_name]
-                if type_name=='HitSpecialResistance' and target_name=='Stun':scoped_key='stun_hit'
+                if type_name=='SpecialResistance' and target_name in ['Stun','Hold','Fear']:scoped_key={'Stun':'stun_resistance','Hold':'hold_resistance','Fear':'fear_resistance'}[target_name]
+                if type_name=='HitSpecialResistance' and target_name in ['Stun','Hold','Fear']:scoped_key={'Stun':'stun_hit','Hold':'hold_hit','Fear':'fear_hit'}[target_name]
             supported = bonus['BonusApplicationTypeID']==0 and bonus['BonusApplicationTargetID']==0
             if scoped_key and unit.get('Name')=='Percentage' and ui.get('Denominator',0)>0:
                 supported=True;key,local_unit=scoped_key,'percent';amount=amount/ui['Denominator']

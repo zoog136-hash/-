@@ -1,0 +1,50 @@
+{
+  "source_bytes": 25031173,
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "zip_crc": "passed",
+  "table_sha256": {
+    "ItemClass": "adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165",
+    "ConstantData": "b4edf5085fe342cf2a317f8eac59e2d2c946ee87527ea30396e45e72ac2a0549",
+    "DescData_Korean": "af6a4bb11358bfeb2adeed63f27ec7f353770a07f36474481cec87ce0a2bfb9c",
+    "MerchantAutoSell": "9efc9455b8e8cf12dbd88c93902d054520e3da1a6e6a819fd94183c07fe4c76a"
+  },
+  "selectors": [
+    {
+      "item_class_id": 45011,
+      "label": "일반 장비",
+      "constant": "AutoSaleItemCommonTradable",
+      "virtual": true,
+      "actual_item_grant": false
+    },
+    {
+      "item_class_id": 45021,
+      "label": "일반 장비 (각인)",
+      "constant": "AutoSaleItemCommon",
+      "virtual": true,
+      "actual_item_grant": false
+    },
+    {
+      "item_class_id": 45031,
+      "label": "고급 장비",
+      "constant": "AutoSaleItemRareTradable",
+      "virtual": true,
+      "actual_item_grant": false
+    },
+    {
+      "item_class_id": 45041,
+      "label": "고급 장비 (각인)",
+      "constant": "AutoSaleItemRare",
+      "virtual": true,
+      "actual_item_grant": false
+    }
+  ],
+  "confirmed": "Four labels and ConstantData references, plus native select/cart/confirm help.",
+  "not_confirmed": [
+    "native equipment slot membership",
+    "native enhancement/attribute/identified filters",
+    "native NPC buyback eligibility of each equipment ID"
+  ],
+  "host_policy": "Explicit configurable grade, one slot, marking view and enhancement ceiling, then exact currently held physical IDs. Existing trade/lock/equipment/quest restrictions are never relaxed.",
+  "public_scope_note": "Official2024-09-25 notes mention merchant auto-sale settings, but are not evidence of a complete equipment predicate.",
+  "public_url": "https://lineagem.plaync.com/board/update/view?articleId=66f31338a6acf62e167e4e3c"
+}

@@ -36,6 +36,14 @@ static func stats(kind: String, level: int, record: Dictionary = {}) -> Dictiona
 		var entry_value: Variant = custom.get(str(clampi(rank, 0, 21)), {})
 		if entry_value is Dictionary:
 			return (entry_value as Dictionary).duplicate(true)
+	if record.get("source_m_native_item",false):
+		var source: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").native_enchant_stats(record,rank)
+		var fallback: Dictionary = record.duplicate(true)
+		fallback.erase("source_m_native_item")
+		fallback["name"] = str(record.get("source_display_name",record.get("name","")))
+		var result: Dictionary = stats(kind,rank,fallback)
+		result.merge(source,true)
+		return result
 	var name_value: String = str(record.get("name", ""))
 	match kind:
 		"weapon":
@@ -74,16 +82,43 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"ranged_damage":"원거리 대미지", "melee_accuracy":"근거리 명중",
 		"ranged_accuracy":"원거리 명중", "magic_accuracy":"마법 명중",
 		"potion_heal_flat":"물약 회복량", "potion_heal_pct":"물약 회복률",
-		"mp_recovery":"MP 회복 옵션"}
+		"mp_recovery":"MP 회복 옵션", "xp_pct":"경험치 획득량", "ain_saving_pct":"아인하사드 축복 소모량 감소",
+		"potion_cooldown_pct":"물약 재사용 대기 감소", "stun_resistance":"스턴 내성"}
+	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
+	for key: String in extras:
+		bonus[key]=extras[key]
+	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
+		"strPercent":"STR(%)","dexPercent":"DEX(%)","intPercent":"INT(%)",
+		"source_elemental_flat_fire":"불 속성 추가 피해","source_elemental_flat_water":"물 속성 추가 피해","source_elemental_flat_wind":"바람 속성 추가 피해","source_elemental_flat_earth":"땅 속성 추가 피해",
+		"source_stun_magic_damage":"스턴 조건 마법 피해","source_final_blow_stun_chance_pct":"스턴 조건 결정타(%)","source_final_blow_chance_pct":"결정타(%)","source_final_blow_amp_pct":"결정타 증폭(%)",
+		"source_attack_drain_hp":"공격 HP 흡수 강화량","source_attack_drain_mp":"공격 MP 흡수 강화량","source_undead_damage_max":"언데드 추가 피해 최댓값",
+		"stun_accuracy":"스턴 적중(%)","fear_accuracy":"공포 적중(%)","hold_accuracy":"홀드 적중(%)","poison_accuracy":"독 적중(%)","silence_accuracy":"침묵 적중(%)",
+		"hold_resistance":"홀드 내성(%)","fear_resistance":"공포 내성(%)","poison_resistance":"독 내성(%)","silence_resistance":"침묵 내성(%)",
+		"healing_magic_pct":"회복 마법량(%)","castSpeed":"시전 속도(%)","dot_damage_reduction_pct":"지속 대미지 감소(%)",
+		"melee_critical_resistance":"근거리 치명타 저항(%)","ranged_critical_resistance":"원거리 치명타 저항(%)",
+		"melee_damage_reduction_pct":"근거리 대미지 감소(%)","ranged_damage_reduction_pct":"원거리 대미지 감소(%)","magic_damage_reduction_pct":"마법 대미지 감소(%)",
+		"damage_amp_pct":"대미지 증가(%)","adena_drop_pct":"아데나 드롭량(%)",
+		"mpRecoveryTick":"MP 회복","magicDamage":"마법 대미지","attackSpeed":"공격 속도(%)",
+		"speedBonusPct":"이동 속도(%)","pve_damage_reduction":"PVE 리덕션","pve_damage_reduction_pct":"PVE 리덕션(%)",
+		"source_pvp_flat_reduction_ignore":"PVP 리덕션 무시(싱글플레이어 추가 피해 해석)","source_pvp_status_success_level":"PVP 스킬 성공 레벨(가상 레벨 해석)","source_fear_flat_reduction_ignore":"공포8 조건 리덕션 무시(추가 피해 해석)",
+		"source_melee_flat_reduction_ignore":"근거리 리덕션 무시(게임 추가 피해 해석)","source_ranged_flat_reduction_ignore":"원거리 리덕션 무시(게임 추가 피해 해석)","source_magic_flat_reduction_ignore":"마법 리덕션 무시(게임 추가 피해 해석)",
+		"damage_reduction_ignore":"리덕션 무시","pve_melee_damage":"PVE 근거리 대미지","pve_ranged_damage":"PVE 원거리 대미지",
+		"pve_magic_damage":"PVE 마법 대미지","melee_crit":"근거리 치명타(%)","ranged_crit":"원거리 치명타(%)","magic_crit":"마법 치명타(%)"})
 	var result: PackedStringArray = []
 	for key: Variant in bonus.keys():
-		if int(bonus[key]) == 0:
+		if is_zero_approx(float(bonus[key])):
 			continue
 		var label: String = str(labels.get(key, str(key)))
 		if key == "defense":
 			result.append("AC -%d" % int(bonus[key]))
-		elif key == "potion_heal_pct":
-			result.append("%s +%d%%" % [label, int(bonus[key])])
+		elif key in ["potion_heal_pct", "xp_pct", "ain_saving_pct", "potion_cooldown_pct", "stun_resistance"]:
+			result.append("%s +%.2f%%" % [label, float(bonus[key])])
 		else:
-			result.append("%s +%d" % [label, int(bonus[key])])
-	return " · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
+			result.append("%s %+.2f" % [label, float(bonus[key])])
+	var text: String=" · ".join(result) if not result.is_empty() else "추가 강화 옵션 없음"
+	for key: String in ["healing_magic_pct","castSpeed","dot_damage_reduction_pct","strPercent","dexPercent","intPercent","source_attack_drain_hp","source_attack_drain_mp","source_undead_damage_max","source_elemental_flat_fire","source_elemental_flat_water","source_elemental_flat_wind","source_elemental_flat_earth","source_final_blow_chance_pct","source_final_blow_stun_chance_pct","source_final_blow_amp_pct","source_stun_magic_damage"]:
+		if extras.has(key):text+=" · 회복·시전·흡수·추가 피해·능력치% 처리: TWILIGHT 설정";break
+	if level==21 and record.get("patch523_effect_basis",{}).get("local_level21_extrapolation",false): text+=" · +21 효과: TWILIGHT 추정 설정"
+	var invoke_text: String=preload("res://scripts/crafting/patch523_equipment_combat.gd").summary(record,level)
+	if not invoke_text.is_empty():text+="\n"+invoke_text
+	return text

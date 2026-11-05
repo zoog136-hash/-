@@ -180,6 +180,7 @@ func _refresh_layout() -> void:
 		listing.move_child(hud.relic_reference_view.card_frames,listing.get_child_count()-1)
 
 func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
+	if not active or layout_generation != hud.catalog_icon_generation:return
 	for card: Dictionary in visible_cards:
 		if card.rank!=rank or card.native:continue
 		if aura:
@@ -187,9 +188,13 @@ func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 		else:layer.draw_texture_rect(texture_for(rank),card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
 
 func _draw_card_quantities() -> void:
-	if not active:return
+	# A filter/page change replaces catalog_results synchronously, while this
+	# drawing cache is refreshed on the next deferred layout. Do not render old
+	# indices or quantities against the new page during that intervening frame.
+	if not active or layout_generation != hud.catalog_icon_generation:return
 	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get(hud.catalog_category,{})
 	for card: Dictionary in visible_cards:
+		if int(card.index)<0 or int(card.index)>=hud.catalog_results.size() or int(card.index)>=hud.catalog_list.item_count:continue
 		var record: Dictionary=hud.catalog_results[card.index]
 		var rect: Rect2=card.rect
 		if card.native and hud.catalog_list.get_item_icon(card.index)==null:

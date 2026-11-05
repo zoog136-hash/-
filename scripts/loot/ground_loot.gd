@@ -21,12 +21,19 @@ func configure(record: Dictionary, icon: Texture2D, slot: String) -> void:
 		set_meta(key, record[key])
 	set_meta("world_position", Vector2(float(record["position"][0]), float(record["position"][1])))
 	tooltip_text = "%s · %s ×%d · 선택 후 다시 눌러 줍기" % [record["item_name"], record["grade"], record["quantity"]]
+	var proof: Dictionary = record.get("item_record", {}).get("source_m_drop_proof", {})
+	if proof.get("source_snapshot") == "patch523":
+		tooltip_text += "\n523 드랍원 #%d · %s · TWILIGHT 확률·수량" % [int(proof.get("source_npc_id", 0)), {1:"일반", 2:"축복", 3:"저주"}.get(int(proof.get("bless_raw", 0)), "미지원 상태")]
 	var empty := StyleBoxEmpty.new()
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(state, empty)
 	visual = VISUAL.new()
 	visual.position = Vector2(28, 36)
 	visual.configure(str(record["grade"]), icon, slot)
+	visual.source_missing=icon==null and record.get("item_record") is Dictionary and preload("res://scripts/cards/source_awakening_items.gd").recognized(record.item_record)
+	if visual.source_missing:
+		var missing:=Label.new();missing.text="원본 미설치";missing.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		missing.position=Vector2(-8,10);missing.add_theme_font_size_override("font_size",10);add_child(missing)
 	add_child(visual)
 
 func set_selected(value: bool) -> void:
