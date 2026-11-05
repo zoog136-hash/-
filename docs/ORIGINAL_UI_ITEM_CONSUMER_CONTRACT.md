@@ -655,8 +655,10 @@ retain their existing menu buttons. HUD character/inventory updates call its
 refresh only after the current bag state is published. The canonical v5 and
 local inventory candidate do not yet activate these optional offsets.
 
-The public image-owner guardian API `describe_guardian_skill(existing_record,
-world.growth)` at46921c04dc2842aab17f6a86509db90d33f294c7 remains the authority
+The public guardian image API is
+`Source523SkillImages.describe_guardian_skill(existing_record, world.growth, role="IconID")`
+in `scripts/ui/source523_skill_buff_images.gd` at
+46921c04dc2842aab17f6a86509db90d33f294c7. That module remains the authority
 for guardian skill images. Native quickslot work must reuse that API rather
 than reconstructing its record/spell/image joins. No guardian image parser or
 quickslot input/save rule is added here.
