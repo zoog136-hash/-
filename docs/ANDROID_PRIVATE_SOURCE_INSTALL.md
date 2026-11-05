@@ -32,6 +32,10 @@ pkg install -y curl && twilight_entry="$(mktemp)" && curl --proto '=https' --pro
 불변 SHA를 먼저 확인해 세 파일을 같은 SHA에서 받는다. 미병합 다른 기능 PR을
 자동 병합하지 않는다. main에 설치기 병합 후에는
 `TWILIGHT_INSTALLER_REF=main`을 사용할 수 있다.
+inline 인계는 명령에 포함된 원본 버전 목록이다. 이 명령을 다시 실행하면
+최신 main 코드와 해당 원본을 동기화한다. 이후 새로운 원본 팩 ID가 공급되면
+inline 인수를 갱신해야 한다. 같은 짧은 명령으로 원본 목록의 향후 변경까지
+따르려면 별도로 승인된 비공개 Drive 인계 ID를 `--plan-id`로 사용한다.
 
 완료 후 Godot Android Editor에서 `Download/TWILIGHT_Play/project.godot`을
 처음 한 번 가져온다. 각 맵·타일·이미지 폴더와 해시를 사용자가 고르는 과정은
