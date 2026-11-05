@@ -152,3 +152,24 @@ Percentage operands to _critical_resistance_stat() through its established
 equipment sum. They retain distinct attack styles and do not create a magical
 critical-resistance interpretation. Existing critical rolls and formulas stay
 unchanged. All new percentage operands remain uncompiled and unexecuted.
+
+## Existing equipment evasion and critical operands
+
+The same current-original guard is shared by
+ItemOptions.additional_original_flat(record,key). Direct non-possession
+MeleeEvasion and RangeEvasion with Unit.Value feed _record_dg/_record_er;
+MeleeCritical, RangeCritical and MagicCritical with Unit.ValuePercent feed the
+existing attack-style branch of _record_critical_bonus. These are integer raw
+operands without a fixed-point conversion, matching the existing enhancement
+projection. Evasion takes a rating; critical takes percentage points, unlike
+the hpPct/mpPct ratio consumers of the same ValuePercent source unit.
+Existing typed fields/aliases and mapped bonus IDs
+retain precedence; an existing marked enhancement overlay can add its separate
+value. A generic explicit crit/critical_rate alias also blocks a missing-base
+fallback when it is not an enhancement overlay. No source namespace, critical
+roll, chance cap, evasion formula, physical ownership or save field is added.
+
+Native RegenHP/RegenMP/AbsoluteRegenHP/AbsoluteRegenMP and AttackDrainHP/MP
+already have the merged native passive-item consumer. This follow-up reuses
+that owner and does not add another regeneration/drain interpretation.
+All additional evasion/critical calls are uncompiled/unexecuted/unverified.

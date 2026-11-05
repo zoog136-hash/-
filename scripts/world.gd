@@ -9442,6 +9442,7 @@ func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 			total += int(record.get("magic_crit", record.get("magicCrit", record.get("마법 치명타", 0))))
 		_:
 			total += int(record.get("melee_crit", record.get("meleeCrit", record.get("근거리 치명타", 0))))
+	total += ITEM_OPTIONS.additional_original_flat(record,"ranged_crit" if attack_type=="ranged" else "magic_crit" if attack_type=="magic" else "melee_crit")
 	return total
 
 func _record_critical_resistance(record: Dictionary) -> int:
@@ -9717,22 +9718,24 @@ func _effective_ac() -> int:
 	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus")) + int(titles.bonus("ArmorClass")) - totems.bonus("ArmorClass")
 
 func _record_dg(record: Dictionary) -> int:
+	var original: int = ITEM_OPTIONS.additional_original_flat(record,"dg")
 	if record.has("dg"):
-		return maxi(0, int(record.get("dg", 0)))
+		return maxi(0, int(record.get("dg", 0))+original)
 	if record.has("DG"):
-		return maxi(0, int(record.get("DG", 0)))
+		return maxi(0, int(record.get("DG", 0))+original)
 	if record.has("근거리 회피력"):
-		return maxi(0, int(record.get("근거리 회피력", 0)))
-	return 0
+		return maxi(0, int(record.get("근거리 회피력", 0))+original)
+	return maxi(0,original)
 
 func _record_er(record: Dictionary) -> int:
+	var original: int = ITEM_OPTIONS.additional_original_flat(record,"er")
 	if record.has("er"):
-		return maxi(0, int(record.get("er", 0)))
+		return maxi(0, int(record.get("er", 0))+original)
 	if record.has("ER"):
-		return maxi(0, int(record.get("ER", 0)))
+		return maxi(0, int(record.get("ER", 0))+original)
 	if record.has("원거리 회피력"):
-		return maxi(0, int(record.get("원거리 회피력", 0)))
-	return 0
+		return maxi(0, int(record.get("원거리 회피력", 0))+original)
+	return maxi(0,original)
 
 func _effective_dg() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
