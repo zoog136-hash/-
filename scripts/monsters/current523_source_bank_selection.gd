@@ -115,6 +115,7 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		"npc_source_row":native.duplicate(true),"spawn_admission":admitted.duplicate(true),
 		"source_tables_sha256":supplied.source_tables_sha256,"source_action_rows":action_rows,
 		"manifest_path":supplied.options.manifest_path,"manifest_sha256":supplied.options.manifest_sha256,
+		"source_bank_context":{"current523_source_bank":supplied.options.duplicate(true)},
 		"role_actions":CORE_ACTIONS.duplicate(),"loop_policy":LOOPS.duplicate(),
 		"optional_role_actions":run_binding.optional_role_actions,"optional_role_actor_ids":run_binding.optional_role_actor_ids,"run_status":run_binding.run_status,
 		"overlay_whitelist_path":supplied.options.get("overlay_whitelist_path",""),

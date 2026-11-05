@@ -30,6 +30,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 		candidate.free()
 		return false
 	_preview = candidate
+	_preview._reference_request_context = selected.get("source_bank_context",{}).duplicate(true)
 	_preview._reference_card_context = selected.duplicate(true)
 	_preview.source_selection_status = selected.duplicate(true)
 	_preview.reference_bank_status["purpose"] = "existing_npc_consumer"
