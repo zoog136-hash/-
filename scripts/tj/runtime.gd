@@ -1,10 +1,14 @@
 extends RefCounted
 const Service = preload("res://scripts/tj/coupon_service.gd")
 const Source = preload("res://scripts/tj/source523.gd")
+const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 var core = Service.new()
 var world
 var loading := false
+var source_problem: String = ""
+var source_state: String = "not_loaded"
+var source_input_identity: Dictionary = {}
 class SourceJob extends Node:
 	signal completed(result: Dictionary)
 	var thread := Thread.new()
@@ -44,6 +48,44 @@ func install(path: String) -> bool:
 	var data: Dictionary=Source.install(path)
 	if data.is_empty():return false
 	core.definitions=data
+	return true
+func load_default_source() -> bool:
+	# This read is requested by the existing TJ page, never Main startup. It
+	# neither installs an archive nor changes a source/save binding.
+	if loading:
+		source_problem = "TJ 원본 입력을 이미 읽고 있습니다."
+		return false
+	var path: String = Source.CACHE
+	var input_origin: String = "dedicated_original_archive"
+	var cached: FileAccess = FileAccess.open(path,FileAccess.READ)
+	var cache_error: Error = FileAccess.get_open_error()
+	if cached != null:
+		cached.close()
+	elif cache_error != ERR_FILE_NOT_FOUND or FileAccess.file_exists(path):
+		source_problem = "전용 TJ 원문 ZIP을 열지 못했습니다: "+str(cache_error)
+		source_state = "unavailable"
+		return false
+	else:
+		path = Definitions.archive_path()
+		input_origin = "held_original_archive"
+		if path.is_empty():
+			source_problem = Definitions.problem()
+			if source_problem.is_empty(): source_problem = "보유한 현재523 원문 ZIP 입력이 없습니다."
+			source_state = "unavailable"
+			return false
+	var data: Dictionary = Source.load_zip(path)
+	if data.is_empty():
+		source_problem = Source.problem
+		if source_problem.is_empty(): source_problem = "TJ 원문 입력을 읽지 못했습니다."
+		source_state = "unavailable"
+		return false
+	# Adopt only a complete result from the existing whole-original parser.
+	var identity: Dictionary = data.get("sourceInputIdentity",{}).duplicate(true)
+	identity["input_origin"] = input_origin
+	core.definitions = data
+	source_input_identity = identity
+	source_problem = ""
+	source_state = "ready"
 	return true
 func capture_fusion(result: Dictionary) -> void:
 	var entries: Array=result.get("results",[]) if bool(result.get("batch",false)) else [result]

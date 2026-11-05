@@ -39,12 +39,9 @@ func configure(world: Node) -> void:
 	clock_authority = Callable(local,"source_clock")
 	settlement = Callable(items,"settle")
 	catalog.changed.connect(_catalog_changed)
-	var path: String = ""
-	var digest: String = ""
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--monsterbook523-pack="): path = arg.trim_prefix("--monsterbook523-pack=")
-		if arg.begins_with("--monsterbook523-sha256="): digest = arg.trim_prefix("--monsterbook523-sha256=")
-	if not path.is_empty() and not catalog.load_pack(path, digest):
+	var arguments: Dictionary = Catalog.pack_arguments()
+	var loaded: bool = catalog.load_pack(arguments.path,arguments.sha256) if arguments.explicit else catalog.load_original()
+	if not loaded:
 		push_warning("몬스터 도감 자료 확인 실패: " + catalog.last_error)
 
 func persist(proposed: Dictionary, overrides: Dictionary = {}) -> bool:

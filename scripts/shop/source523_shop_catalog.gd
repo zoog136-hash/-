@@ -1,5 +1,7 @@
 extends RefCounted
 ## Optional source commerce catalog. It never changes wallets, saves or clocks.
+const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
+const ItemData = preload("res://scripts/resources/current523_item_data.gd")
 const SCHEMA: String = "twilight.source523.shop.v1"
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const REQUIRED_TABLES: Array[String] = [
@@ -39,17 +41,26 @@ var _tables: Dictionary = {}
 var _indices: Dictionary = {}
 var _links: Dictionary = {}
 var loaded_sha256: String = ""
+var model_input_identity: Dictionary = {}
 var error: String = ""
+
+static func _pack_arguments() -> Dictionary:
+	var result: Dictionary = {"explicit":false,"path":"","sha256":""}
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--source523-shop-pack"):
+			result.explicit = true
+			if argument.begins_with("--source523-shop-pack="): result.path = argument.trim_prefix("--source523-shop-pack=")
+		if argument.begins_with("--source523-shop-sha256"):
+			result.explicit = true
+			if argument.begins_with("--source523-shop-sha256="): result.sha256 = argument.trim_prefix("--source523-shop-sha256=")
+	return result
 
 static func session() -> RefCounted:
 	if _session == null:
 		_session = load("res://scripts/shop/source523_shop_catalog.gd").new()
-		var path: String = ""
-		var expected: String = ""
-		for argument: String in OS.get_cmdline_user_args():
-			if argument.begins_with("--source523-shop-pack="): path = argument.trim_prefix("--source523-shop-pack=")
-			if argument.begins_with("--source523-shop-sha256="): expected = argument.trim_prefix("--source523-shop-sha256=")
-		if not path.is_empty(): _session.load_pack(path, expected)
+		var arguments: Dictionary = _pack_arguments()
+		if arguments.explicit: _session.load_pack(arguments.path,arguments.sha256)
+		else: _session.load_original()
 	return _session
 
 func available() -> bool:
@@ -68,6 +79,59 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	hash_context.update(bytes)
 	var actual: String = hash_context.finish().hex_encode()
 	if actual != expected_sha256.to_lower(): return _fail("원본 상점 팩 해시가 다릅니다")
+	return _load_payload(bytes,actual,{"kind":"twilight.source523.shop-pack-input.v1","payload_sha256":actual,"payload_bytes":bytes.size(),"declared_source_zip_sha256":SOURCE_SHA256})
+
+func load_original() -> bool:
+	# Preserve an installed model and never use the original ZIP to bypass an
+	# explicitly supplied pack/digest, including empty or malformed arguments.
+	if available(): return true
+	if _pack_arguments().explicit: return _fail("명시한 원본 상점 팩 입력을 우회하지 않습니다")
+	var identity: Dictionary = Definitions.identity()
+	if identity.is_empty() or identity.get("source_sha256") != SOURCE_SHA256:
+		return _fail("보유 원본523 상점 입력이 없습니다: "+Definitions.problem())
+	var tables: Dictionary = {}
+	var provenance: Dictionary = {}
+	var label_ids: Dictionary = {"0":true,"1":true}
+	# Same complete-row projection and label closure as build_source523_shop.py.
+	# DescData is the sole selected table; its provenance remains the full member.
+	for table: String in REQUIRED_TABLES:
+		var metadata: Dictionary = Definitions.table_metadata(table)
+		var member: String = "content/"+table+".json"
+		var digest: Variant = metadata.get("sha256")
+		if metadata.get("path") != member or metadata.get("version") != 523 or not _integer(metadata.get("bytes")) or not _integer(metadata.get("row_count")) or not digest is String:
+			return _fail("원본 상점 표 정체 누락: "+table)
+		if int(metadata.bytes)<0 or int(metadata.row_count)<0 or digest.length()!=64 or not digest.is_valid_hex_number(false):
+			return _fail("원본 상점 표 정체 오류: "+table)
+		var source_rows: Array[Dictionary] = Definitions.rows(table)
+		if source_rows.size()!=int(metadata.row_count): return _fail("원본 상점 표 행수 불일치: "+table)
+		provenance[table] = {"member":member,"bytes":metadata.bytes,"sha256":digest,"source_rows":source_rows.size(),"packed_rows":source_rows.size()}
+		if table == "DescData_Korean":
+			var selected: Array[Dictionary] = []
+			for row: Dictionary in source_rows:
+				if not _integer(row.get("ID")): return _fail("원본 상점 라벨 ID 오류")
+				if label_ids.has(str(int(row.ID))): selected.append(row)
+			tables[table] = selected
+			provenance[table].packed_rows = selected.size()
+			continue
+		tables[table] = source_rows
+		for row: Dictionary in source_rows:
+			for key: String in row:
+				if key.ends_with("DescID") or key.ends_with("DescId"):
+					if not _integer(row[key]): return _fail("원본 상점 라벨 참조 오류: "+table+"."+key)
+					label_ids[str(int(row[key]))] = true
+	var model: Dictionary = {"schema":SCHEMA,"patch":523,"source_zip_sha256":SOURCE_SHA256,"delivery":"PRIVATE_LOCAL_ONLY","tables":tables,"provenance":provenance}
+	# This digest identifies these actual JSON bytes, not the raw source archive
+	# or another compiler's serialization. Existing policy/NPC mismatches remain.
+	var bytes: PackedByteArray = JSON.stringify(model,"",false,true).to_utf8_buffer()
+	if bytes.size()>MAX_PACK_BYTES: return _fail("원본 상점 팩을 읽을 수 없습니다")
+	var hash_context := HashingContext.new()
+	hash_context.start(HashingContext.HASH_SHA256)
+	hash_context.update(bytes)
+	var actual: String = hash_context.finish().hex_encode()
+	return _load_payload(bytes,actual,{"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":bytes.size(),"projection":"tools/shop/build_source523_shop.py"})
+
+func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dictionary) -> bool:
+	# Both inputs share the existing JSON/schema/table/row/relationship staging.
 	var parser := JSON.new()
 	if parser.parse(bytes.get_string_from_utf8()) != OK: return _fail("상점 팩 JSON 오류")
 	var pack: Variant = parser.data
@@ -117,6 +181,7 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	_indices = indices
 	_links = links
 	loaded_sha256 = actual
+	model_input_identity = input_identity.duplicate(true)
 	error = ""
 	return true
 
@@ -135,6 +200,94 @@ func record(table: String, id: int) -> Dictionary:
 
 func _related(table: String, id: int) -> Array:
 	return _links.get(table, {}).get(str(id), []).duplicate(true)
+
+func _definition_record(table: String, id: int) -> Dictionary:
+	return record(table,id) if available() else Definitions.row(table,id)
+
+func _definition_related(table: String, field: String, id: int) -> Array:
+	if not available(): return Definitions.related(table,field,id)
+	var result: Array = []
+	for row: Dictionary in _tables.get(table,[]):
+		if _integer(row.get(field)) and int(row[field]) == id: result.append(row.duplicate(true))
+	return result
+
+func _item_class_unit(unit_id: int) -> bool:
+	# ClassID alone does not identify an item namespace.
+	return _definition_record("Unit",unit_id).get("Name") == "ItemClassID"
+
+func item_identity(item_id: int) -> Dictionary:
+	var original: Dictionary = ItemData.describe(item_id)
+	var raw: Variant = original.get("item_class",{})
+	if raw is Dictionary and not raw.is_empty():
+		original["source_available"] = true
+		return original
+	# A missing optional original input does not replace an installed shop pack.
+	var compiled: Dictionary = record("ItemClass",item_id)
+	original["item_class"] = compiled
+	original["source_available"] = false
+	original["compiled_shop_available"] = not compiled.is_empty()
+	original["reference_only"] = true
+	original["can_activate"] = false
+	if compiled.get("TestItem") is bool and compiled.TestItem:
+		original["ok"] = false
+		original["excluded"] = true
+	return original
+
+func _purchase_reference(id: int) -> Dictionary:
+	var purchase: Dictionary = _definition_record("MarketPurchase_Korean",id)
+	if purchase.is_empty(): return {}
+	var limits: Array = []
+	for link: Dictionary in _definition_related("MarketPurchaseServerLimitGroup","MarketPurchaseID",id):
+		limits.append({"link":link,"servers":_definition_related("ServerLimit","ServerLimitSetID",int(link.ServerLimitSetID))})
+	return {"purchase":purchase,
+		"payment":_definition_record("MarketPayment_Korean",int(purchase.MarketPaymentID)),
+		"products":_definition_related("MarketPurchaseProduct","MarketPurchaseID",id),
+		"bonuses":_definition_related("MarketBonusForPurchase","MarketPurchaseID",id),
+		"restrictions":_definition_related("MarketPurchaseRestriction","MarketPurchaseId",id),
+		"server_limits":limits,"displays":_definition_related("MarketDisplay","PurchaseID",id),
+		"effective_from":_definition_record("DateTimes_Korean",int(purchase.EffectiveFromId)),
+		"effective_to":_definition_record("DateTimes_Korean",int(purchase.EffectiveToId)),
+		"reference_only":true,"can_purchase":false}
+
+func _product_reference(id: int) -> Dictionary:
+	var purchases: Array = []
+	for table: String in ["MarketPurchaseProduct","MarketBonusForPurchase"]:
+		for link: Dictionary in _definition_related(table,"MarketProductID",id):
+			purchases.append({"relation":table,"link":link,"offer":_purchase_reference(int(link.MarketPurchaseID))})
+	return {"product":_definition_record("MarketProduct",id),
+		"additional":_definition_related("MarketProductAdditional","MarketProductID",id),
+		"purchases":purchases,"reference_only":true,"can_purchase":false}
+
+func item_references(item_id: int) -> Dictionary:
+	var identity: Dictionary = item_identity(item_id)
+	var item: Dictionary = identity.get("item_class",{})
+	if item.is_empty():
+		return {"item_id":item_id,"identity":identity,"unavailable":true,"reference_only":true,"can_purchase":false}
+	var merchants: Array = []
+	for goods: Dictionary in _definition_related("MerchantGoods","ItemClassID",item_id):
+		merchants.append({"goods":goods,
+			"required_buff_card":_definition_record("BuffCard",int(goods.get("LimitBuffCardID",0))),
+			"reference_only":true,"can_purchase":false})
+	var products: Array = []
+	for product_row: Dictionary in _definition_related("MarketProduct","ClassID",item_id):
+		if _item_class_unit(int(product_row.UnitID)): products.append(_product_reference(int(product_row.ID)))
+	var additional: Array = []
+	for link: Dictionary in _definition_related("MarketProductAdditional","ClassID",item_id):
+		if _item_class_unit(int(link.UnitID)):
+			additional.append({"link":link,"parent":_product_reference(int(link.MarketProductID))})
+	var payments: Array = []
+	for payment: Dictionary in _definition_related("MarketPayment_Korean","ClassID",item_id):
+		if not _item_class_unit(int(payment.UnitID)): continue
+		var purchases: Array = []
+		for purchase: Dictionary in _definition_related("MarketPurchase_Korean","MarketPaymentID",int(payment.ID)):
+			purchases.append(_purchase_reference(int(purchase.ID)))
+		payments.append({"payment":payment,"purchases":purchases})
+	# These are original references, including unresolved/off-sale conditions.
+	# They never activate a merchant, declare a price, or authorize a transaction.
+	return {"item_id":item_id,"identity":identity,"merchant_goods":merchants,
+		"market_products":products,"market_additional":additional,"market_payments":payments,
+		"shop_pack_sha256":loaded_sha256,"reference_only":true,"can_purchase":false,
+		"excluded":identity.get("excluded",false)}
 
 func label(id: int) -> String:
 	return str(record("DescData_Korean", id).get("Description", ""))

@@ -28,6 +28,7 @@ func _install_records() -> void:
 	if not source.ready or world == null: return
 	for id: String in source.items:
 		var row: Dictionary = source.item_record(int(id))
+		if row.is_empty(): continue
 		for list: Array in [world.item_db,world.catalog_db.get("아이템",[])]:
 			var found := false
 			for existing: Dictionary in list:
@@ -99,7 +100,9 @@ func fail(message: String) -> Dictionary:
 func selected_rewards(point: String) -> Array:
 	var available: Array = source.by_point.get(point,[])
 	var selected := -1
-	var cap := int(str(state.policy).trim_prefix("cap")) if str(state.policy).begins_with("cap") else 100
+	var cap: int = source.current_version
+	if str(state.policy).begins_with("cap"):
+		cap = mini(cap,int(str(state.policy).trim_prefix("cap")))
 	for id: String in available:
 		if int(source.rewards[id].version) <= cap: selected = maxi(selected,int(source.rewards[id].version))
 	# An existing receipt locks the point's version across policy/data changes.
@@ -122,7 +125,7 @@ func quote(action: String, id: String) -> Dictionary:
 	if world == null: return fail("월드 연결이 없습니다.")
 	if save_blocked or not problem.is_empty(): return fail("저장 보호 중입니다. 정상 저장과 원본 정의를 다시 확인해 주세요.")
 	if action == "policy" and id in ["latest_available","hold","cap0","cap1","cap2"]:
-		return {"ok":true,"revision":int(state.revision),"message":"TWILIGHT 보상 버전 정책을 변경합니다. 지점마다 가장 높은 원문 버전을 선택하며, 새 96레벨 Version 0도 유지합니다. 기존 수령은 초기화하지 않습니다."}
+		return {"ok":true,"revision":int(state.revision),"message":"TWILIGHT 보상 버전 정책을 변경합니다. 원본의 현재 버전 이하에서 지점별 최고 버전을 선택하며, 새 96레벨 Version 0도 유지합니다. 기존 수령은 초기화하지 않습니다."}
 	if action == "effects_policy" and id in ["source_only","twilight_estimates"]:
 		return {"ok":true,"revision":int(state.revision),"message":"원문 수치·대상은 보존합니다. TWILIGHT 추정 실행은 비율 무시를 기존 문양 전투 정책으로, 대상14를 현재 기절·침묵·홀드·공포 적중의 5% 배율로 실행합니다. 원작 공식 복원이 아닙니다. 원문 확정만을 고르면 이 추정 부분은 적용하지 않습니다."}
 	if not source.ready: return fail(source.problem)
@@ -142,14 +145,20 @@ func quote(action: String, id: String) -> Dictionary:
 		var lines: PackedStringArray = []
 		for rid: String in remaining:
 			var row: Dictionary = source.rewards[rid]
+			var item: Dictionary = source.items[Source.sid(row.RewardClassID)]
+			if item.get("TestItem") is bool and item.TestItem:
+				return fail("원본 시험 선언(TestItem)이 있는 미수령 아이템을 포함하므로 이 지점의 보상 전체를 지급하지 않습니다.")
 			var key := Source.item_key(int(row.RewardClassID))
 			if not integer(world.inventory.get(key,0),0,1000000000-int(row.Amount)): return fail("보상 인벤토리 수량이 유효하지 않습니다.")
-			lines.append("%s ×%d" % [str(source.items[Source.sid(row.RewardClassID)].Name),int(row.Amount)])
+			lines.append("%s ×%d" % [str(item.Name),int(row.Amount)])
 		return {"ok":true,"revision":int(state.revision),"ids":remaining,"message":"달성 보상을 수령합니다. 비용은 없습니다. 카드 상자는 개봉하지 않은 아이템으로 보관합니다.\n" + "\n".join(lines)}
 	if action == "register":
 		if not source.cards.has(id): return fail("알 수 없는 등록 요건입니다.")
 		if int(world.level) < 96: return fail("증표 등록에는 96레벨이 필요합니다.")
 		if state.registrations.has(id): return fail("이미 등록한 요건입니다.")
+		var token: Dictionary = source.items.get(str(Source.TOKEN),{})
+		if token.get("TestItem") is bool and token.TestItem:
+			return fail("원본 시험 선언(TestItem)이 있는 증표는 새 등록에 사용할 수 없습니다.")
 		if world.has_method("_item_locked") and world._item_locked(Source.item_key(Source.TOKEN)): return fail("잠긴 증표는 등록에 사용할 수 없습니다.")
 		var count: Variant = world.inventory.get(Source.item_key(Source.TOKEN),0)
 		if not integer(count) or int(count) < 1: return fail("유일의 증표 I가 부족합니다. 등록마다 실제 아이템 1개를 소비합니다.")

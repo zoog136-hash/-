@@ -1,5 +1,6 @@
 extends RefCounted
 ## Private source tables stay outside Git. This adapter retains their original rows.
+const COMMON_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ZIP_BYTES := 25031173
 const ZIP_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const INSTALLED := "user://growth96_definitions/source.zip"
@@ -14,6 +15,7 @@ var items: Dictionary = {}
 var collections: Dictionary = {}
 var cards: Dictionary = {}
 var audit: Dictionary = {}
+var current_version: int = -1
 
 static func sid(value: Variant) -> String:
 	return str(int(value))
@@ -36,9 +38,16 @@ static func indexed(rows: Array, key: String = "ID") -> Dictionary:
 
 func load_source(path: String = "") -> bool:
 	ready = false; problem = ""; audit.clear(); tables.clear(); points.clear(); rewards.clear(); by_point.clear(); items.clear(); collections.clear(); cards.clear()
+	current_version = -1
 	if path.is_empty():
 		path = OS.get_environment("TWILIGHT_PATCH523_CONTENT")
-		if path.is_empty(): path = INSTALLED
+		if path.is_empty():
+			path = INSTALLED
+			# Only an absent default permits the common reader's already supplied
+			# archive. Explicit or existing invalid inputs still fail below.
+			if not FileAccess.file_exists(INSTALLED) and not DirAccess.dir_exists_absolute(INSTALLED):
+				var shared_path: String = COMMON_SOURCE.archive_path()
+				if not shared_path.is_empty(): path = shared_path
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null:
 		problem = "검증된 523 원본 정의 ZIP을 선택해 주세요. 보유 아이템을 자동 지급하지 않습니다."
@@ -50,9 +59,10 @@ func load_source(path: String = "") -> bool:
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: problem = "원본 ZIP을 열 수 없습니다."; return false
 	points = indexed(_rows(zip,"GrowthMotivation"))
-	_rows(zip,"GrowthMotivationConstant")
+	var growth_constants: Array = _rows(zip,"GrowthMotivationConstant")
 	var links := _rows(zip,"GrowthMotivationReward")
 	var all_rewards := indexed(_rows(zip,"Reward"))
+	var reward_types := indexed(_rows(zip,"RewardType"))
 	var all_items := indexed(_rows(zip,"ItemClass"))
 	var item_rows := _rows(zip,"ItemBookItem")
 	var card_links := _rows(zip,"ItemBookCardForItem")
@@ -71,6 +81,19 @@ func load_source(path: String = "") -> bool:
 	var descriptions := indexed(_rows(zip,"DescData_Korean"))
 	zip.close()
 	if not problem.is_empty(): return false
+	# This is the native reward-version selector, not the local save schema.
+	# Keep every reward row, but do not promote a future version merely because
+	# it exists in a definition pack.
+	var version_rows: int = 0
+	for constant: Dictionary in growth_constants:
+		if constant.get("Name") != "Version": continue
+		version_rows += 1
+		var value: Variant = constant.get("Value")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<0 or value>100:
+			problem = "원본 성장 보상 버전 값이 유효하지 않습니다."; return false
+		current_version = int(value)
+	if version_rows!=1:
+		problem = "원본 성장 보상 버전이 없거나 중복됩니다."; return false
 	if points.size() != 71 or links.size() != 269:
 		problem = "성장 지점·보상 전수 개수가 다릅니다."; return false
 	var versions: Dictionary = {}
@@ -80,7 +103,10 @@ func load_source(path: String = "") -> bool:
 		var id := sid(link.RewardID); var point := sid(link.GrowthMotivationID)
 		if not points.has(point) or not all_rewards.has(id) or rewards.has(id): problem = "보상 연결 또는 중복 오류"; return false
 		var row: Dictionary = all_rewards[id].duplicate(true)
-		if int(row.RewardTypeID) != 2 or int(row.RewardGetTimeTypeID) != 2 or int(row.CharacterClassID) != 0 or bool(row.UseImmediately) or bool(row.ClanOnly) or int(row.RewardEnhancementTypeID) != 1 or int(row.ItemBlessCodeID) != 1 or int(row.Ranking) != 0 or int(row.Amount) <= 0:
+		# Match the source namespace by its declared kind, as the existing quest
+		# supplier does. A coincident numeric type ID is not an item contract.
+		var reward_type: Dictionary = reward_types.get(sid(row.RewardTypeID),{})
+		if reward_type.get("Name") != "Item" or int(row.RewardGetTimeTypeID) != 2 or int(row.CharacterClassID) != 0 or bool(row.UseImmediately) or bool(row.ClanOnly) or int(row.RewardEnhancementTypeID) != 1 or int(row.ItemBlessCodeID) != 1 or int(row.Ranking) != 0 or int(row.Amount) <= 0:
 			problem = "지원하지 않는 성장 보상 조건: " + id; return false
 		var item_id := sid(row.RewardClassID)
 		if not all_items.has(item_id): problem = "원본 아이템 연결 누락"; return false
@@ -149,4 +175,6 @@ func load_source(path: String = "") -> bool:
 func item_record(id: int) -> Dictionary:
 	var raw: Dictionary = items.get(str(id),{})
 	if raw.is_empty(): return {}
+	# Preserve the original row; its explicit test declaration prevents new activation.
+	if raw.get("TestItem") is bool and raw.TestItem: return {}
 	return {"name":item_key(id),"display_name":str(raw.Name),"source":"lineagem_patch523_growth","sourceId":"m523:item:" + str(id),"growth96_item_id":id,"grade":"일반","type":"소모품","weight":int(raw.Weight),"tradeable":bool(raw.IsTradable),"storable":bool(raw.IsStorable),"deletable":bool(raw.IsDeletable),"droppable":bool(raw.IsDroppable),"max_stack_amount":int(raw.MaxStackAmount),"use_level_min":int(raw.LevelLimitMin),"use_level_max":int(raw.LevelLimitMax),"desc":"원본 성장 보상 아이템입니다. 다른 출처의 같은 이름 아이템과 합치지 않습니다.","source_original":raw.duplicate(true)}

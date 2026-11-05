@@ -25,6 +25,8 @@ static func fingerprint(value: Dictionary) -> String:
 	return JSON.stringify(JSON.parse_string(JSON.stringify(value)),"",true,true)
 
 func validate(state: Dictionary) -> String:
+	var declared_limit: int = runtime.symbol_stage_limit()
+	var stage_limit: int = declared_limit if declared_limit>0 else 30
 	var history: Variant = state.get("symbol_history",{})
 	if not history is Dictionary: return "문양 강화 보관 형식 오류"
 	if not history.is_empty():
@@ -37,7 +39,7 @@ func validate(state: Dictionary) -> String:
 			tickets.append(int(row.ticket))
 			if not runtime.integer(row.get("revision"),0,int(state.revision)) or not row.get("used") is bool: return "문양 복구권 이력 오류"
 			if not runtime.progress_error(id,row.get("progress")).is_empty(): return "문양 보관 진행 오류"
-			if int(row.progress.stage)<=0 or int(row.progress.stage)>=30 or int(row.progress.attempts)<=0: return "보관 가능한 실제 문양 강화 기록 없음"
+			if int(row.progress.stage)<=0 or int(row.progress.stage)>=stage_limit or int(row.progress.attempts)<=0: return "보관 가능한 실제 문양 강화 기록 없음"
 	var daily: Variant = state.get("symbol_daily",{})
 	if not daily is Dictionary: return "문양 일일 이력 형식 오류"
 	if not daily.is_empty():
@@ -70,8 +72,10 @@ func status(id: String) -> String:
 func quote(action: String, id: String) -> Dictionary:
 	if runtime.development or not bool(policy.history_enabled): return runtime.fail("현재 프로필의 문양 기록 보관/복구는 꺼져 있습니다")
 	if runtime.emblem(id).is_empty(): return runtime.fail("알 수 없는 문양")
+	var stage_limit: int = runtime.symbol_stage_limit()
+	if stage_limit<1: return runtime.fail("원본 문양 강화 단계 정의가 유효하지 않습니다 · 보관 기록 유지")
 	var current: Dictionary = runtime.progress(id)
-	if int(current.stage)>=30: return runtime.fail("완성한30단계 문양은 강화 정보 저장/복구 불가")
+	if int(current.stage)>=stage_limit: return runtime.fail("완성한%d단계 문양은 강화 정보 저장/복구 불가" % stage_limit)
 	var consume: bool = action=="restore_emblem" and bool(policy.restore_uses_reset_quota)
 	var d: Dictionary = daily_offer(id,consume)
 	if not d.ok: return d

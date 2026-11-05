@@ -98,19 +98,28 @@ func node(id: String) -> Dictionary:
 func progress(id: String) -> Dictionary:
 	return state.emblems.get(id,{"stage":0,"attempts":0,"spent":0,"guaranteed":false,"absolute":0}).duplicate(true)
 
+func symbol_stage_limit() -> int:
+	# Preserve the reviewed local/development profile when no source table is
+	# installed. A present malformed table blocks transactions instead.
+	if development or source523.data.is_empty() or not source523.data.has("enchant_levels"): return 30
+	return source523.enchant_limit()
+
 static func integer(value: Variant, low: int = 0, high: int = 1000000000) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= low and value <= high
 
 func progress_error(id: String, p: Variant) -> String:
 	if not p is Dictionary: return "문양 저장 구조 오류"
-	if not integer(p.get("stage"),0,30) or not integer(p.get("attempts"),0,20) or not integer(p.get("spent")) or not p.get("guaranteed") is bool: return "문양 진행 값 오류"
-	if not integer(p.get("absolute",0),0,5) or (p.get("absolute",0)>0 and p.stage!=30): return "절대 옵션 단계 오류"
+	var source_limit: int = symbol_stage_limit()
+	# A damaged source registry must not erase an otherwise valid legacy save.
+	var limit: int = source_limit if source_limit>0 else 30
+	if not integer(p.get("stage"),0,limit) or not integer(p.get("attempts"),0,20) or not integer(p.get("spent")) or not p.get("guaranteed") is bool: return "문양 진행 값 오류"
+	if not integer(p.get("absolute",0),0,5) or (p.get("absolute",0)>0 and p.stage!=limit): return "절대 옵션 단계 오류"
 	if not development and p.get("absolute",0)>0: return "미검증 절대 옵션 저장"
 	var grades: Variant = p.get("absolute_grades",[])
 	if not grades is Array: return "절대 옵션 개방 목록 오류"
 	var seen_grades: Array = []
 	for grade: Variant in grades:
-		if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != 30: return "절대 옵션 개방 목록 오류"
+		if not integer(grade,1,5) or seen_grades.has(int(grade)) or p.stage != limit: return "절대 옵션 개방 목록 오류"
 		if source523.absolute(id,int(grade)).is_empty(): return "알 수 없는 절대 옵션"
 		seen_grades.append(int(grade))
 	# The official Symbol guide confirms sequential activation; source
@@ -306,6 +315,8 @@ func fail(message: String) -> Dictionary:
 func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if config.is_empty(): return fail("성장 설정을 읽을 수 없습니다")
 	if world == null: return fail("월드 연결 없음")
+	var stage_limit: int = symbol_stage_limit()
+	if action in ["enhance","reroll","reset","absolute","absolute_chance","save_emblem","restore_emblem"] and stage_limit<1: return fail("원본 문양 강화 단계 정의가 유효하지 않습니다 · 진행 보존")
 	var costs: Dictionary = {}
 	var points: int = 0
 	var gold_cost: int=0
@@ -321,21 +332,21 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 		"enhance":
 			if emblem(id).is_empty() or count not in [1,5]: return fail("잘못된 강화 요청")
 			var p: Dictionary = progress(id)
-			if p.stage >= 30 or p.attempts+count > 20: return fail("30단계 또는 20회 강화 한도")
+			if p.stage >= stage_limit or p.attempts+count > 20: return fail("%d단계 또는 20회 강화 한도" % stage_limit)
 			for i: int in range(int(p.attempts),int(p.attempts)+count):
 				var cost: Variant = cost_for(id,i)
 				if not integer(cost,1): return fail("%d회차 강화 비용 미확인 · 강화 보류" % (i+1))
 				points += int(cost)
-			text = "문양 강화 %d회 · 최대 %d 축복 포인트\n30단계 도달 시 종료, 미사용 비용은 차감하지 않습니다." % [count,points]
+			text = "문양 강화 %d회 · 최대 %d 축복 포인트\n%d단계 도달 시 종료, 미사용 비용은 차감하지 않습니다." % [count,points,stage_limit]
 		"reroll":
-			if emblem(id).is_empty() or progress(id).stage >= 30 or progress(id).attempts >= 20 or progress(id).guaranteed: return fail("확률 변경 불가")
+			if emblem(id).is_empty() or progress(id).stage >= stage_limit or progress(id).attempts >= 20 or progress(id).guaranteed: return fail("확률 변경 불가")
 			if not integer(config.get("reroll_cost"),1): return fail("확률 변경 비용 미확인")
 			if not development and source523.probability_rows(int(progress(id).stage)).is_empty(): return fail("원본 확률 범위 없음")
 			points = int(config.reroll_cost)
 			text = "확률 변경 · 축복 포인트 %d (초기화 환급 제외)" % points
 		"reset":
 			if emblem(id).is_empty() or progress(id).attempts == 0: return fail("초기화할 강화 기록이 없습니다")
-			if progress(id).stage >= 30: return fail("완성한 30단계 문양은 초기화할 수 없습니다")
+			if progress(id).stage >= stage_limit: return fail("완성한 %d단계 문양은 초기화할 수 없습니다" % stage_limit)
 			if not integer(config.get("reset_cost"),1): return fail("초기화 두루마리 필요 수량 미확인 · 초기화 보류")
 			if development: costs["문양 초기화 두루마리"] = int(config.reset_cost)
 			else:
@@ -356,7 +367,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			points = int(config.blessing_key_point_cost)
 			text = "축복의 열쇠 1개 · 1,000 축복 포인트 (상점 지출은 강화 환급 제외)"
 		"absolute", "absolute_chance":
-			if emblem(id).is_empty() or progress(id).stage<30: return fail("30단계 문양이 필요합니다")
+			if emblem(id).is_empty() or progress(id).stage<stage_limit: return fail("%d단계 문양이 필요합니다" % stage_limit)
 			if development:
 				var tier: int = int(progress(id).get("absolute",0))
 				if tier>=5: return fail("절대 옵션 V 달성")
@@ -492,6 +503,7 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
 	var offer: Dictionary = quote(action,id,count)
 	if not offer.ok: return offer
+	var stage_limit: int = symbol_stage_limit()
 	if quote_day>=0 and int(offer.get("day",-1))!=quote_day:return fail("게임 일자가 바뀌었습니다 · 비용과 횟수를 다시 확인하세요")
 	busy = true
 	var next: Dictionary = state.duplicate(true)
@@ -507,14 +519,14 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 			var p: Dictionary = progress(id)
 			var jumps: Array = []
 			for i: int in range(count):
-				if p.stage >= 30: break
+				if p.stage >= stage_limit: break
 				var odds: Array = probabilities(id) if count == 1 else config.probabilities_by_target_stage[mini(29,int(p.stage))].duplicate()
 				if p.guaranteed: odds = [0.0,0.0,100.0]
 				var roll: float = rng.randf()*100.0
 				var jump: int = 1 if roll < float(odds[0]) else 2 if roll < float(odds[0])+float(odds[1]) else 3
 				var cost: int = int(cost_for(id,int(p.attempts)))
 				var previous_stage: int = int(p.stage)
-				p.stage = mini(30,int(p.stage)+jump)
+				p.stage = mini(stage_limit,int(p.stage)+jump)
 				p.attempts += 1
 				p.spent += cost
 				next.points -= cost

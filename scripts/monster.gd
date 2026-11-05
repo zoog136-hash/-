@@ -295,6 +295,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	set_meta("patch523_spawn_admission", record.get("source_m_patch523_admission", {}).duplicate(true))
 	# Only an exact namespaced source ID opts into native stats. No name/Sprite/legacy-ID guessing.
 	source_m_npc_id = int(record.get("source_m_npc_id", -1))
+	# Main projects once before visual selection; reuse that service for the
+	# original drop identity input without applying the projection a second time.
+	var definition_service: Variant = current_service
 	source_m_original = record.get("source_m_original", {}).duplicate(true)
 	if source_m_npc_id >= 0:
 		source_targeting = record.get("source_m_targeting", {}).duplicate(true)
@@ -307,7 +310,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
-	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record,definition_service.catalog if definition_service != null else null)
 	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1

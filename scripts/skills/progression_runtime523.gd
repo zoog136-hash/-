@@ -113,6 +113,56 @@ func ammo_problem(skill: Dictionary) -> String:
 	if not ammo.is_empty() and not service.world._ammo_worn(ammo,true):return ammo+" 미착용"
 	return ""
 
+func _apply_reviewed_child_element_input(skill: Dictionary, record: Dictionary, detail: Dictionary, node: Dictionary) -> Dictionary:
+	# The caller has already selected this reviewed execution effect. Read its
+	# own direct original element; never search another child or traverse a graph.
+	if service==null or not skill.get("source523") is Dictionary: return skill
+	var adapter: RefCounted = source()
+	var profile_type: Script = adapter.get_script()
+	var constants: Dictionary = profile_type.get_script_constant_map()
+	var definitions: Variant = constants.get("SOURCE_ROWS")
+	var channels: Variant = constants.get("SOURCE_ELEMENT_CHANNELS")
+	var pin: Variant = constants.get("SOURCE_SHA")
+	if not definitions is Script or not channels is Dictionary or not pin is String: return skill
+	var id: String = str(record.get("id",""))
+	var profile: Dictionary = adapter.profiles.get(id,{})
+	var binding: Dictionary = adapter.bindings.get("skills",{}).get(id,{})
+	var rule: Dictionary = adapter.progression_rules.rules.get(id,{})
+	if profile.is_empty() or binding.is_empty() or rule.get("kind") not in ["repeat","static"] or detail.get("meta",{}).get("kind")!=rule.kind: return skill
+	if adapter.bindings.get("source_zip_sha256")!=pin or not adapter._profile_problem(id,profile,binding).is_empty(): return skill
+	var graph: Dictionary = adapter.progression_rules.graph_for(id,profile)
+	if graph.is_empty() or graph!=detail.get("graph",{}): return skill
+	var effect_id: Variant = rule.get("effect_id")
+	if not profile_type._source_integer(effect_id): return skill
+	var selected: Dictionary = RULES.node_for(graph,int(effect_id))
+	if selected.is_empty() or selected!=node or not node.get("row") is Dictionary or node.row.get("ID")!=effect_id: return skill
+	var identity: Dictionary = definitions.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=pin: return skill
+	var root: Dictionary = profile.row
+	var roots: Array = definitions.related("SpellClass","ID",int(root.ID))
+	if roots.size()!=1 or roots[0]!=root or root.get("TestSpell") is not bool or root.TestSpell or not definitions.declared_exclusion("SpellClass",root).is_empty(): return skill
+	var children: Array = definitions.related("SpellClass","ID",int(effect_id))
+	if children.size()!=1 or children[0]!=node.row: return skill
+	var child: Dictionary = children[0]
+	if not profile_type._source_integer(child.get("SpellCompositionNode")) or child.SpellCompositionNode!=0 or child.get("TestSpell") is not bool or child.TestSpell or not definitions.declared_exclusion("SpellClass",child).is_empty(): return skill
+	var element_id: Variant = child.get("ElementalTypeID")
+	if not profile_type._source_integer(element_id) or int(element_id)<0: return skill
+	var elements: Array = definitions.related("ElementalType","ID",int(element_id))
+	if elements.size()!=1 or not definitions.declared_exclusion("ElementalType",elements[0]).is_empty(): return skill
+	var element: Dictionary = elements[0]
+	if not channels.has(element.get("Name")) or not channels[element.Name] is String: return skill
+	var applied: Variant = skill.source523.get("applied")
+	if not applied is Array: return skill
+	var prior: Variant = skill.get("element")
+	skill["element"] = channels[element.Name]
+	if not applied.has("element"): applied.append("element")
+	skill.source523["reviewed_child_element_input"] = {"source":identity,"root_spell_id":root.ID,
+		"root_bound_row_sha256":binding.row_sha256,"execution_spell_id":effect_id,"source_child_spell":child.duplicate(true),
+		"source_field":"SpellClass.ElementalTypeID","elemental_type":element.duplicate(true),
+		"prior_host_element":prior,"host_element_input":skill.element,
+		"mapping":"existing_SOURCE_ELEMENT_CHANNELS","scope":"existing_selected_reviewed_execution_effect_only"}
+	return skill
+
 func repeat_skill(record: Dictionary) -> Dictionary:
 	var detail:=spec(record)
 	if detail.is_empty() or str(detail.meta.kind)!="repeat":return {}
@@ -128,7 +178,7 @@ func repeat_skill(record: Dictionary) -> Dictionary:
 	if int(effect.row.SpellMaterialItemAmount)>0:return {}
 	skill.source523.target_kind=effect.target_kind.Name
 	if int(attack[0])==2:skill.items={"화살":int(hits[0])};skill.weapons=["활"]
-	return skill
+	return _apply_reviewed_child_element_input(skill,record,detail,effect)
 
 func try_repeat(target: TwilightMonster) -> bool:
 	if not is_instance_valid(target) or target.dead:return false
@@ -179,6 +229,7 @@ func on_normal_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 	var dice:=RECOVERY.values(effect,"SpellDamageDiceNumber","Value")
 	var sides:=RECOVERY.values(effect,"SpellDamageDiceSpotCount","Value")
 	if base.size()!=1 or dice.size()!=1 or sides.size()!=1:return
+	skill = _apply_reviewed_child_element_input(skill,record,detail,effect)
 	if not service.cost_reason(skill).is_empty() or service.world.rng.randf()>=float(chances[0]):return
 	if not service.spend(skill):return
 	var policy: RefCounted=source().progression_rules

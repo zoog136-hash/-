@@ -8,13 +8,22 @@ var trial_npcs: Dictionary = {}
 var result_messages: Dictionary = {}
 var letters: Array[Dictionary]=[]
 var upgrade_descriptions: Array[Dictionary]=[]
-var personal: Dictionary = {}
+var personal: Dictionary = {}:
+	set(value):
+		personal = value.duplicate(true)
+		# Preserve the consumer shape while ignoring legacy cached word lists.
+		personal["banned_word_filter_enabled"] = false
+		personal["banned_types"] = []
+		personal["selected_banned_types"] = []
+		personal["banned_counts"] = {}
+		personal["banned_words"] = []
 var effects: Dictionary = {}
 var powder_record: Dictionary = {}
 var powder_drop_rows: Array[Dictionary] = []
 var powder_npcs: Dictionary = {}
 var minimum_level: int = 85
 var daily_limit: int = 10
+var input_selected: bool = false
 var problem: String = "작위 원본을 설치해 주세요."
 
 static func rows(zip: ZIPReader, name: String) -> Array:
@@ -48,6 +57,8 @@ static func sequence(definitions: Dictionary, links: Array, previous: String, fo
 	return result if result.size() == definitions.size() else []
 
 func load_zip(path: String) -> String:
+	# Remember an attempted explicit input even when its existing guards reject it.
+	input_selected = true
 	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != SHA: return "작위 원본523 SHA 불일치·누락"
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: return "작위 원본 ZIP 열기 실패"
@@ -63,7 +74,7 @@ func load_zip(path: String) -> String:
 		var entry:=row.duplicate(true); entry.text=str(descriptions[int(row.DescID)].Description); letter_rows.append(entry)
 	for row: Dictionary in rows(zip,"TitleUpgradeDesc"):
 		var entry:=row.duplicate(true); entry.text=str(descriptions[int(row.DescID)].Description); upgrade_rows.append(entry)
-	var personal_data: Dictionary={"title_limit":0,"max_names":0,"activation_delay_raw":0,"colors":[],"banned_types":rows(zip,"BannedWordType"),"selected_banned_types":[],"banned_counts":{},"banned_words":[]}
+	var personal_data: Dictionary={"title_limit":0,"max_names":0,"activation_delay_raw":0,"colors":[]}
 	var color_table:=index(rows(zip,"ColorTable"))
 	var appellations:=index(rows(zip,"Appellation"))
 	var title_displays:=index(rows(zip,"AppellationTitle"))
@@ -72,13 +83,6 @@ func load_zip(path: String) -> String:
 		if int(color.Type)!=1 or str(color.Value).length()!=6 or not Color.html_is_valid("#"+str(color.Value)):
 			zip.close(); return "개인 호칭 색상 원문 오류"
 		personal_data.colors.append({"id":int(row.ID),"color_table_id":int(row.ColorID),"stage":int(row.PrerequisiteSubTitleID),"hex":str(color.Value)})
-	for row: Dictionary in rows(zip,"PersonalAppellationBannedWordTypeList"):
-		personal_data.selected_banned_types.append(int(row.BannedWordTypeID))
-	for row: Dictionary in rows(zip,"BannedWordData_Korean"):
-		var kind:=int(row.BannedWordTypeID)
-		if not personal_data.selected_banned_types.has(kind): continue
-		personal_data.banned_words.append({"type":kind,"text":str(row.ProhibitionName).to_lower()})
-		personal_data.banned_counts[kind]=int(personal_data.banned_counts.get(kind,0))+1
 	var messages: Dictionary={}
 	for row: Dictionary in rows(zip,"TitleResultMessage"):
 		var stage_id:=int(row.SubTitleID)
@@ -174,7 +178,7 @@ func load_zip(path: String) -> String:
 		if constant.Name == "PersonalAppellationTitleLimit": personal_data.title_limit=int(constant.Value)
 		if constant.Name == "PersonalAppellationMaxCount": personal_data.max_names=int(constant.Value)
 		if constant.Name == "PersonalAppellationActivationDelay": personal_data.activation_delay_raw=int(constant.Value)
-	if personal_data.title_limit!=278 or personal_data.max_names!=5 or personal_data.colors.size()!=8 or personal_data.selected_banned_types.size()!=5:
+	if personal_data.title_limit!=278 or personal_data.max_names!=5 or personal_data.colors.size()!=8:
 		zip.close(); return "개인 호칭 조건 원문 오류"
 	zip.close()
 	stages = staged; quests = selected_quests; effects = selected_effects; problem = ""

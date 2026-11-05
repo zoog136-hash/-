@@ -123,16 +123,26 @@ func on_hit(target: Node, kind: String, by_spell: bool) -> void:
 
 func active_status(totem_id: int) -> String:
 	var lines: PackedStringArray = []
-	var origin := "totem:"+str({4:17504,14:17524,24:17514}.get(totem_id,0))
+	# UNVERIFIED: these names replace only the existing totem identity literals.
+	# Effect durations remain owned by their existing spell definitions.
+	var teberath_id: Variant = world.totems.source_constant("TeberathID")
+	var tikal_id: Variant = world.totems.source_constant("TikalID")
+	var atlantis_id: Variant = world.totems.source_constant("AtlantisID")
+	var source_options: Dictionary = {}
+	if teberath_id != null: source_options[int(teberath_id)] = 17504
+	if tikal_id != null: source_options[int(tikal_id)] = 17524
+	if atlantis_id != null: source_options[int(atlantis_id)] = 17514
+	var origin := "totem:"+str(source_options.get(totem_id,0))
+	var is_teberath: bool = teberath_id != null and totem_id == int(teberath_id)
 	for ref: WeakRef in targets:
 		var target: Node = ref.get_ref()
 		if not is_instance_valid(target) or target.dead:continue
 		var entry: Dictionary = target.source_option_debuffs.get(origin,{})
 		if entry.is_empty() or float(entry.remaining) <= 0:continue
-		var line := "%s · %s %.1f초" % [target.monster_name,"시야 차단" if totem_id == 4 else "물약 회복 감소",float(entry.remaining)]
+		var line := "%s · %s %.1f초" % [target.monster_name,"시야 차단" if is_teberath else "물약 회복 감소",float(entry.remaining)]
 		if entry.has("venom"):line += " · 독 %d / %.2f초 [자체 처리]" % [int(entry.venom.damage),float(entry.venom.interval)]
 		if not lines.has(line):lines.append(line)
-	if totem_id == 24 and barrier_remaining > 0:lines.append("리덕션 +%d · %.1f초 · 흡수 잔량 %d [자체 용량]" % [barrier_flat(),barrier_remaining,barrier_capacity])
+	if atlantis_id != null and totem_id == int(atlantis_id) and barrier_remaining > 0:lines.append("리덕션 +%d · %.1f초 · 흡수 잔량 %d [자체 용량]" % [barrier_flat(),barrier_remaining,barrier_capacity])
 	return "현재 발동 효과 없음" if lines.is_empty() else "\n".join(lines)
 
 func barrier_flat() -> int:

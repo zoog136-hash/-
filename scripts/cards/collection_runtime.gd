@@ -3,6 +3,8 @@ extends RefCounted
 ## sole acquisition ledger. Loading old owned cards is silent and idempotent.
 const Rules=preload("res://scripts/cards/collection_rules.gd")
 const NativeRules=preload("res://scripts/cards/native_collection_rules.gd")
+const NativeInput=preload("res://scripts/cards/current523_collection_input.gd")
+const CurrentInput=preload("res://scripts/cards/current523_collection_projection.gd")
 const NATIVE_PATH: String="res://data/cards/patch523_collections.json"
 const ExistingStats=preload("res://scripts/collections/equipment_collection_stats.gd")
 const PATH: String="res://data/cards/normal_collections.json"
@@ -42,12 +44,12 @@ func set_source_server_context(context: Dictionary) -> bool:
 
 func configure(host: Node) -> bool:
 	world=host
-	var native: bool=NativeRules.accepts_catalog(world.catalog_db)
-	core=NativeRules.new() if native else Rules.new()
-	var path: String=NATIVE_PATH if native else PATH
-	var data: Variant=JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
-	if not data is Dictionary:
-		problem="일반 카드 컬렉션 데이터 누락/손상";return false
+	# UNVERIFIED: old collection files remain preserved, but are neither final
+	# inputs nor fallbacks. The current original and current catalog are required.
+	core=NativeRules.new()
+	var projection=CurrentInput.new()
+	var data: Dictionary=projection.build(world.catalog_db)
+	if data.is_empty():problem=projection.problem;return false
 	if not core.configure(data,world.catalog_db):problem=core.error;return false
 	problem="";restore_from_owned();return true
 
