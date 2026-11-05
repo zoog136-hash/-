@@ -380,7 +380,7 @@ func _spawn_notice_line() -> String:
 	if spawn_summary.is_empty(): return "몬스터: 없음"
 	if not bool(spawn_summary.get("ok",false)):
 		return "몬스터: 출현 정의 팩 없음 (patch523-world-links 설치 필요)"
-	return "몬스터: 원문 구역 %d곳 중 %d곳 사용 가능 · 보스 %d · 마리 수/리스폰은 자체 정책" % [int(spawn_summary.get("regions",0)),int(spawn_summary.get("registered",0)),int(spawn_summary.get("bosses",0))]
+	return "몬스터: 원문 구역 %d곳 중 %d곳 사용 가능 · 보스 %d · 마리 수는 자체 정책 · 리스폰은 기존 규칙" % [int(spawn_summary.get("regions",0)),int(spawn_summary.get("registered",0)),int(spawn_summary.get("bosses",0))]
 
 func _return_pressed() -> void:
 	var world: Node = _world()
@@ -512,6 +512,12 @@ func _attach_source_population(world: Node, field: OriginalPlayableField) -> voi
 		world.move_child(_source_monsters, _host_monsters.get_index()+1)
 		_source_population = SOURCE_POPULATION.new()
 		_source_population.name = "Current523SourcePopulation"
+		# Existing boss rule: wall-clock deadlines kept in the save. Share the
+		# saved original-world director; source keys ("current523…:m523:boss:N")
+		# never collide with host boss keys, and the paused host does not tick it.
+		var saved_population: Variant = world.get("original_population")
+		if saved_population is FieldPopulation and saved_population.boss_director != null:
+			_source_population.boss_director = saved_population.boss_director
 		world.add_child(_source_population)
 		world.monsters_root = _source_monsters; world.field_population = _source_population
 	else:

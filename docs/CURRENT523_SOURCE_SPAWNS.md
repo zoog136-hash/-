@@ -1,8 +1,9 @@
 # current523 신규 맵 몬스터 배치
 
-신규(원문 S32) 필드에 몬스터를 배치한다. 구역과 종류는 원작 정의에서, 마리 수와
-리스폰은 TWILIGHT 자체 정책(`TWILIGHT_CURRENT523_TERRITORY_DENSITY_V1`)에서 온다.
-원작 표에는 개체 수·정확한 좌표·리스폰 주기가 없으므로 원작 수치라고 표기하지 않는다.
+신규(원문 S32) 필드에 몬스터를 배치한다. 구역과 종류는 원작 정의에서, 마리 수는
+TWILIGHT 자체 정책(`TWILIGHT_CURRENT523_TERRITORY_DENSITY_V1`)에서, 리스폰은 **게임의 기존
+리스폰 규칙**에서 온다. 원작 표에는 개체 수·정확한 좌표·리스폰 주기가 없으므로 원작 수치라고
+표기하지 않는다.
 
 ## 입력
 
@@ -23,9 +24,16 @@
    Exp 0, 공격 불가 분류와 Citizen/Guard/Slime/Siege/Party/GateKeeper/Companion 분류.
 3. 마리 수: Territory 800셀당 1마리, 행당 1~6마리. 같은 팩의 여러 종류는 ID 순 라운드로빈으로
    나누며 시작 위치를 행 ID로 돌린다. 종류당 최대 4.
-4. 보스(카탈로그 UI 보스 또는 `[필드보스]` 구역): 1마리, 30분 리스폰. 같은 보스의 여러 후보
-   구역은 생명·타이머 하나를 공유한다.
-5. 일반 리스폰 30초. 플레이어 주변 40셀 안의 구역만 생성하고(상속된 `OriginalSourcePopulation`),
+4. 보스(카탈로그 UI 보스 또는 `[필드보스]` 구역): 1마리. 같은 보스의 여러 후보 구역은
+   생명·타이머 하나를 공유한다.
+5. 리스폰 — 기존 규칙을 그대로 사용한다.
+   - 일반: 기본 아덴(`data/monsters/source3_map_spawns.json`)과 같은 60~120초 랜덤,
+     리스폰 위치가 화면에 보이면 미룸(`respawn_on_screen: false`).
+   - 보스: `data/monsters/renewed_map_spawn_rules.json`의 기기 시계 타이머
+     (아덴 Land4 = `aden_world` 28,800초 / 그 밖 = `other_maps` 86,400초). 타이머는 저장되는
+     기존 `original_monster_world` 보스 상태에 함께 기록되어 게임을 다시 켜도 유지된다
+     (키는 `m523_land_N` 또는 `current523_aden` 접두사로 기존 보스와 겹치지 않음).
+6. 플레이어 주변 40셀 안의 구역만 생성하고(상속된 `OriginalSourcePopulation`),
    먼 개체는 풀로 돌린다. 한 프레임 2마리까지만 만든다.
 
 각 구역은 정확한 원문 키 하나(`lineagem_base508:npc:N:spawn:V:territory:T`)만 요청한다.
@@ -38,7 +46,7 @@ PR #269/#272 이후: current523 원본 + Sprite272 은행). 해석 실패 구역
   `Current523SourcePopulation`으로 교체한다. 기존 아덴 루트/개체군은 일시정지 상태로 남아
   복귀와 기존 저장(보스 상태 포함)을 그대로 쓴다.
 - 신규 필드 드랍은 해당 필드의 `map_id`로 기록되어 기존 아덴에 섞이지 않는다.
-- 신규 필드 보스 타이머는 세션 동안만 유지하고 저장하지 않는다.
+- 신규 필드 보스 타이머는 기존 저장의 보스 상태(`original_monster_world`)에 함께 남는다.
 - 안내창에 "원문 구역 N곳 중 M곳 사용 가능 · 보스 K"를 표시한다.
 
 ## 미리보기

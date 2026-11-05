@@ -2,8 +2,11 @@ extends RefCounted
 ## Monster regions for a current523 source field, built from the verified
 ## cumulative523 world-links Land shard (Territories / NpcSpawnPackTerritory /
 ## NpcSpawnPackNpcClassView). Kind and area come from the original definitions.
-## Count, respawn period and the boss timer are an explicit TWILIGHT policy:
-## the original tables do not contain instance counts, positions or periods.
+## Count is an explicit TWILIGHT density policy (the original tables have no
+## instance counts or positions). Respawn follows the game's existing rules:
+## normal lives use the host Aden 60-120 s window with no visible respawn
+## (data/monsters/source3_map_spawns.json), bosses use the device wall-clock
+## timer of data/monsters/renewed_map_spawn_rules.json (Aden 8 h, others 24 h).
 ## Each region requests one exact source key; the existing roster, admission
 ## gate and visual owner still decide whether an actor can be created.
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
@@ -16,8 +19,10 @@ const MIN_PER_RELATION: int = 1
 const MAX_PER_RELATION: int = 6
 const MAX_PER_VIEW: int = 4
 const MAX_TERRITORY_CELLS: int = 200000
-const NORMAL_RESPAWN_SECONDS: float = 30.0
-const BOSS_RESPAWN_SECONDS: float = 1800.0
+## Same window as the host Aden source3 rows; release() picks [min, max-1].
+const NORMAL_RESPAWN_WINDOW: Array = [60.0, 120.0]
+const BOSS_RULES_PATH: String = "res://data/monsters/renewed_map_spawn_rules.json"
+const ADEN_LAND_ID: int = 4
 ## Territory labels whose packs belong to quests, PvP or scheduled content.
 const EXCLUDED_TERRITORY_TAGS: Array[String] = ["[QUEST]", "[퀘스트]", "[메인]", "[깃발전]", "[스케줄]", "[이벤트]"]
 ## Attackable but not field-hunting targets: town people, guards, ambient slimes,
@@ -26,6 +31,13 @@ const NON_HUNT_CATEGORIES: Array[String] = ["Citizen", "Guard", "Slime", "SiegeN
 const CONDITION_TABLES: Array[String] = ["NpcSpawnPackSchedulePeriod", "DaynightSpawnPack", "WorldBossRaidView"]
 
 static var _catalogs: Dictionary = {}
+
+## Existing boss timer rule: "aden_world" for Aden, "other_maps" elsewhere.
+static func boss_respawn_seconds(land_id: int) -> float:
+	var rules: Variant = JSON.parse_string(FileAccess.get_file_as_string(BOSS_RULES_PATH)) if FileAccess.file_exists(BOSS_RULES_PATH) else null
+	var table: Dictionary = rules.get("boss_respawn_seconds", {}) if rules is Dictionary else {}
+	var value: float = float(table.get("aden_world" if land_id == ADEN_LAND_ID else "other_maps", 0))
+	return value if value >= 1.0 else (28800.0 if land_id == ADEN_LAND_ID else 86400.0)
 
 ## Land identity of a current523 source field: native Land.ID + exact AssetPath.
 static func land_identity(field: Object) -> Dictionary:
@@ -84,6 +96,7 @@ static func apply(field: Object, catalog: RefCounted = null) -> Dictionary:
 		summary.reason = "definition_pack_unavailable"
 		field.set_meta("current523_spawn_summary", summary)
 		return summary
+	var boss_seconds: float = boss_respawn_seconds(int(catalog.land.get("ID", -1)))
 	var bounds: Rect2i = field.get("source_bounds") if field.get("source_bounds") is Rect2i else Rect2i()
 	var skipped: Dictionary = {}
 	var regions: Array = []
@@ -139,11 +152,16 @@ static func apply(field: Object, catalog: RefCounted = null) -> Dictionary:
 				"source_rect": box, "source_territory_id": int(territory.ID), "source_spawn_pack_id": pack_id,
 				"source_npc_level": int(view.get("NpcLevel", 0)), "mode": "boss" if boss else "normal",
 				"max_count": 1 if boss else mini(count, MAX_PER_VIEW),
-				"respawn_time": BOSS_RESPAWN_SECONDS if boss else NORMAL_RESPAWN_SECONDS,
+				"respawn_time": boss_seconds if boss else float(NORMAL_RESPAWN_WINDOW[0]),
 				"roaming_radius": 160.0 if boss else 120.0, "min_spacing": 24.0,
 				"placement_policy": PLACEMENT_POLICY}
-			# Candidate territories of one boss class share one life and timer.
-			if boss: region.boss_id = "m523:boss:%d" % npc_id
+			if boss:
+				# Candidate territories of one boss class share one life and timer.
+				region.boss_id = "m523:boss:%d" % npc_id
+				region.respawn_policy = "wall_clock"
+			else:
+				region.source_respawn_seconds = NORMAL_RESPAWN_WINDOW.duplicate()
+				region.respawn_on_screen = false
 			regions.append(region)
 			summary.regions += 1
 			summary.slots += int(region.max_count)
