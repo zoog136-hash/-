@@ -177,6 +177,38 @@ the two existing construction calls. Integration269 retains its execution,
 selection, damage/status, geometry, costs, RNG, ownership and save engine.
 This code is uncompiled/unexecuted/unverified; it is not whole-spell coverage.
 
+The same admitted actor projection now also supplies named original special
+resistance inputs: `Monster.setup()` →
+`project_actor_record()` → private
+`_project_named_special_resistance_input(record,source)` → existing
+`record.stun_resistance/hold_resistance/fear_resistance` → Monster's existing
+integer operands and status-service consumers. It reads only this admitted
+NPC registry's `NpcSpecialResistance` rows, their exact current ID/owner/full
+row and `SpecialResistanceType` FK/full-row declarations. Literal
+Stun/Hold/Fear names supply those existing matching fields; no unknown
+numeric race/status enum or larger original relation is inferred.
+
+The existing `current523_numeric_input_policy.json` keeps its four-element
+settings and adds explicit `special_resistance.enabled` and independently
+adjustable `raw_to_host_percent`, initially1.0. Both root and nested policy
+must be enabled with the current pin/schema and estimate markers. Original
+units and native server status formula remain unconfirmed. A single named
+source row with finite nonnegative raw/derived value below100 can supply the
+input. Duplicate rows, source exclusions, negative/nonfinite numbers or a
+derived value100 or above retain the prior host input. No cap, sum, selected
+duplicate or immunity interpretation is introduced. The existing Monster
+integer conversion is preserved explicitly.
+
+`source_m_special_resistance_input_policy` records the actual policy-byte SHA,
+archive/admission, raw link/type, prior input presence/value, derived value,
+receiver integer and any channel hold reason. Original rows, four-element
+policy, status formulas/rolls, AI, effects and saves are unchanged. The official
+mobile [armor guide](https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C)
+and [published update](https://lineagem.plaync.com/board/update/view?articleId=6509fb9f05e0591cb29c24e7&page=7&size=20&viewMode=list)
+provide displayed-percentage context, not NpcSpecialResistance's raw scale or
+an immunity declaration. This is adjustable TWILIGHT numeric host input,
+uncompiled/unexecuted/unverified, not completed NPC/status table coverage.
+
 NPC attack distance is now supplied at an existing earlier input as well:
 successful `project_actor_record(record)` → private
 `_project_uniform_attack_range_input(record,source)` → `record.attack_range`
