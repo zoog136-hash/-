@@ -9,4 +9,8 @@ static func request(hud: Node, info: Dictionary, context: Dictionary) -> Diction
 	if not provider is Callable or not provider.is_valid():return {"ok":false,"code":"source_native_icon_scene_provider_required","owner_result":info,"slot_contract":slot}
 	var supplied: Variant=provider.call(info.duplicate(true),context.duplicate(true))
 	if not supplied is Dictionary or not supplied.get("ok",false) or not supplied.get("descriptor") is Dictionary:return {"ok":false,"code":"source_native_icon_scene_descriptor_required","provider_result":supplied}
+	var canonical: Variant=info.get("provenance")
+	# Compare the image owner's complete canonical path literally. No prefix
+	# guessing, numeric-ID join or new identity interpreter is added here.
+	if not canonical is Dictionary or canonical.get("asset_type_id")!=101 or not canonical.get("path") is String or supplied.descriptor.get("member")!=canonical.path:return {"ok":false,"code":"source_native_icon_scene_canonical_member_mismatch"}
 	return {"ok":true,"source_scene_descriptor":supplied.descriptor,"owner_result":info,"source_slot_contract":slot}

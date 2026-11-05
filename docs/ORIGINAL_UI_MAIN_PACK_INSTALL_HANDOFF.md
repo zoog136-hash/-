@@ -187,3 +187,9 @@ map context/input owner remain independent required consumers. Native Android
 row/close/scroll support is code981d38e4, requiring no project touch-emulation
 setting change. Private upload succeeded; consumer installation and simultaneous
 actual game execution are unconfirmed. No new test/render/game/CI was run.
+
+Combined v6's published code checkpoint is
+`a8c6ed6a8b2d2d6f3b62fa1c76c7d0d20a29b966`. The subsequent native icon CSB
+consumer contract is code `06600e0a72811b4ea32e056a6861f49e97b1ff0d` and
+[its exact ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md). Those icon scenes remain
+image-owner packs/registrations; no second main-UI selection key is required.
