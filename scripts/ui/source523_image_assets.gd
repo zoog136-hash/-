@@ -228,6 +228,25 @@ static func original_ui_selection_status() -> Dictionary:
 static func original_ui_revision() -> int:
 	return _original_ui_revision
 
+static func bind_native_original_icon_scenes(hud: Node) -> Dictionary:
+	# UI267 owns native nodes, staging, reuse and disposal. Register only this
+	# image owner's provider; no native renderer or secondary host is installed.
+	if not is_instance_valid(hud) or not hud.has_method("bind_original_icon_scene_provider"):
+		return _original_ui_unavailable("source_native_icon_scene_consumer_not_installed")
+	var provider: Callable = native_original_icon_scene
+	var result: Variant = hud.call("bind_original_icon_scene_provider",provider)
+	return result if result is Dictionary else _original_ui_unavailable("source_native_icon_scene_consumer_contract_required")
+
+static func native_original_icon_scene(info: Dictionary, context: Dictionary) -> Dictionary:
+	if info.get("route") != "source523_images" or info.get("source_snapshot") != "patch523" or info.get("reason") != "unsupported_csb":
+		return _original_ui_unavailable("source_scene_identity_mismatch")
+	_ensure_original_ui_selection()
+	if not _original_ui_selection_error.is_empty():
+		return _original_ui_unavailable(_original_ui_selection_error)
+	# The native Sprite contract has no host single-pass policy. Its exact
+	# source registration/playback declarations come from the per-icon binding.
+	return ORIGINAL_UI_ICONS.native_scene_descriptor(info,context)
+
 static func attach_original_icon(view: TextureRect, info: Dictionary, bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if info.get("route") != "source523_images" or info.get("source_snapshot") != "patch523" or info.get("reason") != "unsupported_csb":
 		return _original_ui_unavailable("source_scene_identity_mismatch")

@@ -584,15 +584,52 @@ selection and map consumer remain independent inputs; no second per-window
 main-UI selector or automatic cfg rewrite is added. The earlier candidates and
 v5 remain preserved. This composition is source input, not whole-560 completion.
 
-These native texture callers explicitly leave unsupported CSB icons pending.
-The received item CSB subsets and their existing TextureRect adapter do not
-provide an original Common_Slot15012 or Slot_Skill18488 scene-mount contract.
-That connection still needs the UI owner's exact native target/scene transform,
-clip/lifecycle and input boundary. No replacement node, source geometry or
-animation policy is inferred to satisfy it. Missing/dummy/test assets retain
+The later UI267 native-CSB boundary is published at
+`8486e6f59358d0066baad2163ff428cda6ed6d31` in
+[ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md](https://github.com/zoog136-hash/-/blob/8486e6f59358d0066baad2163ff428cda6ed6d31/docs/ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md).
+The HUD's existing `_ready()` now calls this lane's
+`source523_image_assets.bind_native_original_icon_scenes(self)` once. That
+function registers `native_original_icon_scene(info, context)` through the
+owner's `bind_original_icon_scene_provider` when installed. It adds no native
+UI methods or renderer files; integrating the current UI owner code remains
+required. This single call is the shared HUD-file integration seam.
+
+Both native and existing TextureRect requests now share the same canonical
+consumer, Icon, AssetView, original path and selected CSB-pack resolver. Native
+descriptors contain that opened pack and exact original member/manifest/CSB
+identity. Their target must match all four identity fields of the actual
+`source_slot_contract`. UI267 retains scene preparation, original Sprite
+attachment, source transforms, same-player reuse, teardown and all input.
+
+Per-icon `source_icon_scenes.icons[icon_id].native_registrations` supplies an
+array of explicit declarations with these fields:
+
+- `registration`: `space:authored_sprite_anchor`, actual original
+  `source_basis`, boolean `original_registration_confirmed:true`, and
+  `target` containing the exact `member`, `source_sha256`, `manifest_sha256`
+  and `node_offset` supplied by the actual source slot.
+- Optional `bindings`: the existing strict source-player bindings.
+- Optional `playback`: an exact unique original `clip`, boolean `repeat`,
+  `original_repeat_declared:true` and `original_policy_confirmed:true`.
+
+Exactly one declaration must match the actual target. Registration evidence
+must establish the original client's relationship, rather than merely name
+the slot or restate an identity root. The received scene-selection document
+does not supply those per-icon native registration declarations. They remain
+`source_scene_original_native_registration_pending`; no confirmation flag or
+new source evidence is manufactured. The full native consumer contract is now
+available; this is a narrower missing source-registration input.
+
+Omitting native playback retains the strict player's serialized source state
+stopped, without adding seek/play/loop. Declaring a clip with unknown repeat
+remains pending. The separately labelled TextureRect single-pass estimate is
+never promoted into native original playback. No replacement nodes, source
+geometry or animation policy are inferred. Missing/dummy/test assets retain
 their original state; old samples and previous packs are not source success.
 Candidate receipt and source-node declarations are not executed presentation,
 game consumption, a new source inventory or a 95% usage result.
+The native provider and HUD registration changes are unexecuted and unverified;
+no additional tests, game execution, rendering or CI were started.
 
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the

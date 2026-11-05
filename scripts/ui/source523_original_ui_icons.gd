@@ -258,59 +258,132 @@ static func _reuse(view: TextureRect, key: Dictionary, original_ui_bindings: Dic
 	result["sync_context"] = _host_context(context)
 	return result
 
-static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
-	if not is_instance_valid(view):
-		return _unavailable("source_scene_host_unavailable")
+static func _resolve_scene(info: Dictionary) -> Dictionary:
+	# Both host paths use the same canonical consumer/Icon/Asset/CSB identity.
+	# A native Sprite slot supplies its own registration, never the old host fit.
 	if info.get("route") != "source523_images" or info.get("source_snapshot") != "patch523" or info.get("reason") != "unsupported_csb":
-		return _attach_failure(view,"source_scene_identity_mismatch")
+		return _unavailable("source_scene_identity_mismatch")
 	var canonical: Variant = info.get("provenance")
 	if not canonical is Dictionary:
-		return _attach_failure(view,"source_scene_identity_required")
+		return _unavailable("source_scene_identity_required")
 	var consumer: Dictionary = _consumer_identity(info,canonical)
 	if not consumer.get("ok",false):
-		return _attach_failure(view,str(consumer.error))
+		return consumer
 	for field: String in ["icon_id", "asset_id", "asset_type_id"]:
 		if not _source_id(canonical.get(field)):
-			return _attach_failure(view,"source_scene_identity_required")
+			return _unavailable("source_scene_identity_required")
 	if canonical.asset_type_id != 101 or not canonical.get("path") is String:
-		return _attach_failure(view,"source_scene_identity_mismatch")
+		return _unavailable("source_scene_identity_mismatch")
 	if not _bindings_error.is_empty():
-		return _attach_failure(view,_bindings_error)
+		return _unavailable(_bindings_error)
 	var spec: Variant = bindings.get(str(int(canonical.icon_id)))
 	if not spec is Dictionary:
-		return _attach_failure(view,"source_scene_binding_unavailable")
+		return _unavailable("source_scene_binding_unavailable")
 	for field: String in ["asset_id", "asset_type_id"]:
 		if not _source_id(spec.get(field)) or spec[field] != canonical[field]:
-			return _attach_failure(view,"source_scene_identity_mismatch")
+			return _unavailable("source_scene_identity_mismatch")
 	if not spec.get("file_path") is String or not spec.get("member") is String:
-		return _attach_failure(view,"source_scene_path_binding_missing")
+		return _unavailable("source_scene_path_binding_missing")
 	var literal: String = spec.file_path
 	var member: String = spec.member
 	# The donor namespace is explicit. The current pack's canonical path is
 	# already complete; never strip a prefix or trust an extra file_path field.
 	if not _safe_relative(literal) or not literal.begins_with("icon/") or literal.get_extension() != "csb":
-		return _attach_failure(view,"source_scene_path_invalid")
+		return _unavailable("source_scene_path_invalid")
 	if member != canonical.path or member != "UI/CsbFile/" + literal:
-		return _attach_failure(view,"source_scene_identity_mismatch")
-	if not spec.get("clip") is String or spec.clip.is_empty():
-		return _attach_failure(view,"source_scene_playback_binding_missing")
-	var policy: Dictionary = _playback_policy(spec,context)
-	if not policy.get("ok",false):
-		return _attach_failure(view,str(policy.error))
+		return _unavailable("source_scene_identity_mismatch")
 	if not _sha256(spec.get("reviewed_current523_manifest_sha256")) or not _sha256(spec.get("current523_scene_sha256")):
-		return _attach_failure(view,"source_scene_version_unverified")
+		return _unavailable("source_scene_version_unverified")
 	var selected_pack: RefCounted = packs_by_manifest.get(spec.reviewed_current523_manifest_sha256)
 	# Preserve the original single-pack API for an explicitly supplied pack.
 	if selected_pack == null and pack != null and pack.get("manifest_sha256") == spec.reviewed_current523_manifest_sha256:
 		selected_pack = pack
 	if selected_pack == null:
-		return _attach_failure(view,"source_scene_pack_not_open")
+		return _unavailable("source_scene_pack_not_open")
 	var manifest_sha256: Variant = selected_pack.get("manifest_sha256")
 	if not _sha256(manifest_sha256) or spec.reviewed_current523_manifest_sha256 != manifest_sha256:
-		return _attach_failure(view,"source_scene_version_unverified")
+		return _unavailable("source_scene_version_unverified")
 	var source: Variant = selected_pack.scene(member)
 	if not source is Dictionary or source.is_empty() or source.get("_source_sha256") != spec.current523_scene_sha256:
-		return _attach_failure(view,"source_scene_version_unverified")
+		return _unavailable("source_scene_version_unverified")
+	return {"ok":true,"canonical":canonical,"consumer":consumer.identity,"spec":spec,
+		"pack":selected_pack,"manifest_sha256":manifest_sha256,"source":source}
+
+static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Dictionary:
+	var resolved: Dictionary = _resolve_scene(info)
+	if not resolved.get("ok",false): return resolved
+	var slot: Variant = context.get("source_slot_contract")
+	if not slot is Dictionary or slot.get("ok") != true or slot.get("schema") != "twilight-native-icon-scene-slot-v1" or slot.get("registration_space") != "authored_sprite_anchor":
+		return _unavailable("source_scene_original_native_slot_required")
+	if not slot.get("member") is String or not _safe_relative(slot.member) or not _sha256(slot.get("source_sha256")) or not _sha256(slot.get("manifest_sha256")) or not _source_id(slot.get("node_offset")):
+		return _unavailable("source_scene_original_native_slot_identity_required")
+	var target: Dictionary = {"member":slot.member,"source_sha256":slot.source_sha256,
+		"manifest_sha256":slot.manifest_sha256,"node_offset":int(slot.node_offset)}
+	var spec: Dictionary = resolved.spec
+	var declarations: Variant = spec.get("native_registrations")
+	if not declarations is Array:
+		return _unavailable("source_scene_original_native_registration_pending",{"target":target,
+			"pending_fields":["native_registrations[].registration: exact target and actual original source_basis"],
+			"slot_metadata_is_registration_proof":false})
+	var matches: Array = []
+	for entry: Variant in declarations:
+		if not entry is Dictionary or not entry.get("registration") is Dictionary: continue
+		var entry_registration: Dictionary = entry.registration
+		var declared_target: Variant = entry_registration.get("target")
+		if not declared_target is Dictionary: continue
+		var same_target: bool = true
+		for field: String in target:
+			if declared_target.get(field) != target[field]: same_target = false
+		if same_target: matches.append(entry)
+	if matches.size() != 1:
+		return _unavailable("source_scene_original_native_registration_pending" if matches.is_empty() else "source_scene_original_native_registration_ambiguous",{"target":target})
+	var declaration: Dictionary = matches[0]
+	var registration: Dictionary = declaration.registration
+	# Source root identity and the supplied slot options alone do not establish
+	# the original client's registration. Never manufacture that assertion.
+	if registration.get("space") != "authored_sprite_anchor" or not registration.get("original_registration_confirmed") is bool or not registration.original_registration_confirmed or not registration.get("source_basis") is String or registration.source_basis.strip_edges().is_empty():
+		return _unavailable("source_scene_original_native_registration_pending",{"target":target})
+	var source_bindings: Variant = declaration.get("bindings",{})
+	if not source_bindings is Dictionary:
+		return _unavailable("source_scene_native_bindings_required")
+	var descriptor: Dictionary = {"pack":resolved.pack,"manifest_sha256":resolved.manifest_sha256,
+		"member":spec.member,"source_sha256":spec.current523_scene_sha256,
+		"registration":{"space":"authored_sprite_anchor","original_registration_confirmed":true,
+			"source_basis":registration.source_basis,"target":target},"bindings":source_bindings.duplicate(true),
+		"image_owner_identity":{"consumer":resolved.consumer.duplicate(true),
+			"icon_id":int(resolved.canonical.icon_id),"asset_id":int(resolved.canonical.asset_id),
+			"image_pack_manifest_sha256":resolved.canonical.get("manifest_sha256","")}}
+	if declaration.has("playback"):
+		var playback: Variant = declaration.playback
+		if not playback is Dictionary or not playback.get("clip") is String or playback.clip.is_empty() or not playback.get("repeat") is bool or not playback.get("original_repeat_declared") is bool or not playback.original_repeat_declared or not playback.get("original_policy_confirmed") is bool or not playback.original_policy_confirmed:
+			return _unavailable("source_scene_original_native_playback_pending",{"target":target})
+		var clips: Array = []
+		for clip: Variant in resolved.source.get("animationList",[]):
+			if clip is Dictionary and clip.get("name") == playback.clip: clips.append(clip)
+		if clips.size() != 1:
+			return _unavailable("source_scene_original_native_clip_not_unique")
+		descriptor["playback"] = playback.duplicate(true)
+	# No playback means the UI owner's strict loader keeps serialized source
+	# state stopped. Legacy host single-pass estimates never enter this path.
+	return {"ok":true,"descriptor":descriptor,"rendered":false,"actual_game_consumption_observed":false}
+
+static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
+	if not is_instance_valid(view):
+		return _unavailable("source_scene_host_unavailable")
+	var resolved: Dictionary = _resolve_scene(info)
+	if not resolved.get("ok",false):
+		return _attach_failure(view,str(resolved.get("error","source_scene_identity_required")),resolved.get("details",{}))
+	var canonical: Dictionary = resolved.canonical
+	var consumer: Dictionary = {"identity":resolved.consumer}
+	var spec: Dictionary = resolved.spec
+	var selected_pack: RefCounted = resolved.pack
+	var manifest_sha256: String = resolved.manifest_sha256
+	var member: String = spec.member
+	if not spec.get("clip") is String or spec.clip.is_empty():
+		return _attach_failure(view,"source_scene_playback_binding_missing")
+	var policy: Dictionary = _playback_policy(spec,context)
+	if not policy.get("ok",false):
+		return _attach_failure(view,str(policy.error))
 	if not ResourceLoader.exists(PLAYER_PATH):
 		return _attach_failure(view,"source_scene_player_not_installed")
 	var host_context: Dictionary = _host_context(context)

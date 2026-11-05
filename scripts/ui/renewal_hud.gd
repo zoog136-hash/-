@@ -230,6 +230,7 @@ func clear_target() -> void:
 
 func _ready() -> void:
 	super._ready()
+	preload("res://scripts/ui/source523_image_assets.gd").bind_native_original_icon_scenes(self)
 	if is_instance_valid(target_panel):
 		target_panel.get_parent().remove_child(target_panel)
 		target_panel.queue_free()
