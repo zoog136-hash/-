@@ -251,6 +251,23 @@ The next delta connects the original data beyond the reference-returning APIs:
   path and retain per-binding deferred reasons. Its `active_sha256` remains the
   compiled-pack fingerprint. The fallback status's `applied` keys mean accepted
   reader profiles, not gameplay observations or full-table consumption.
+- After successful original-profile adoption, the same reader calls
+  `current523_relic_spell_input.adopt(archive_identity)` and records
+  `relic_source_input_status`. If269's existing `relic_spell_levels.gd` is
+  present, its published source pin/byte count/path/methods must agree and its
+  load-selection flag must be a readable boolean. Existing selections use only
+  `ensure_loaded()`; present/unreadable dedicated archives retain that owner's
+  path. Only an unchecked default whose dedicated original ZIP is actually
+  missing passes the common archive to the existing `load_source()` parser.
+  The owner keeps its119-profile/59-mapping/13-link/SHA and source semantics
+  guards. No owner engine or dependent effect module is copied into this Draft.
+  An absent module or unsupported selection ABI is held explicitly.
+
+  That flag describes load/ensure selection, not every rejected installation
+  candidate: the published installer preserves its previous selection on
+  rejection. The adapter never calls an installer, writes the flag, copies an
+  archive, changes a saved source binding or assigns an archive SHA to a
+  compiled profile. Level/effect/ownership/server/time rules remain269's code.
 - At the earlier selected-pack checkpoint, NPC catalog's `row("NpcAttack",id)` and `owned("NpcAttack",npc_id)` used
   `selected_attack_row(compiled)`. It reads an original row only for an existing
   compiled NPC/attack identity and requires the same selection/behavior and

@@ -8,6 +8,7 @@ const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.
 const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
+const RELIC_SOURCE_INPUT = preload("res://scripts/resources/current523_relic_spell_input.gd")
 # Exact ordered node lists from build_player_skills523.py. No composition-node
 # traversal or unreviewed recursive expansion is performed by the reader.
 const REVIEWED_EXECUTION_GRAPHS := {
@@ -32,6 +33,7 @@ var active_sha256: String = ""
 var source_mode: String = ""
 var source_identity: Dictionary = {}
 var source_fallback_status: Dictionary = {}
+var relic_source_input_status: Dictionary = {}
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
 var progression_rules = preload("res://scripts/skills/progression_rules523.gd").new()
@@ -258,6 +260,9 @@ func _load_source_profiles() -> void:
 	source_identity = identity.duplicate(true)
 	revision += 1
 	last_error = ""
+	# Optional PR269 reader only after this original-profile snapshot is adopted.
+	# Its callback status never replaces the active profile/compiled-pack identity.
+	relic_source_input_status = RELIC_SOURCE_INPUT.adopt(source_identity)
 
 func reject(reason: String) -> bool:
 	last_error = reason
