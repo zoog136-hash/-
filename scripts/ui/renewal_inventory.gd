@@ -19,6 +19,7 @@ var weight_readout: Label
 var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
 var detail_active: bool = false
+var source_detail_type: Dictionary = {}
 var detail_layout_queued: bool = false
 var category_tabs: Control
 var inventory_left: Control
@@ -639,6 +640,9 @@ func _refresh_detail(item_reference: String) -> void:
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
+	# Pass through the selected owner's type only; the old mixed detail label
+	# also carries selection/lock/engraving text and is not a source type field.
+	source_detail_type = {"reference":item_reference,"text":item.type} if item.get("type") is String and not item.type.is_empty() else {}
 	UI.apply_item_visual(detail_icon,item,item_name,item_image_index.get("아이템",{}),"detail")
 	var lines := PackedStringArray()
 	for raw: Variant in item.get("sourceOptions",[]):

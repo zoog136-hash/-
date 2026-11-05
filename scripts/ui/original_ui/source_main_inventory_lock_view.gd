@@ -20,6 +20,7 @@ var _child: Node2D
 var _buttons: Array = []
 var _controls: Array = []
 var _reference: String=""
+var _type_in_scope: bool=false
 var _header_hidden: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, bag: Control) -> Dictionary:
@@ -31,6 +32,7 @@ func configure(pack: RefCounted, bag: Control) -> Dictionary:
 	for offset: int in SOURCE_OFFSETS:
 		if _find(active.get("nodeTree",{}),offset).is_empty(): return _fail("source_inventory_lock_nodes_not_in_active_pack_scope")
 	_pack = pack
+	_type_in_scope=not _find(active.get("nodeTree",{}),42456).is_empty()
 	_bag = weakref(bag)
 	return {"ok":true,"configured":true,"member":MEMBER,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -56,7 +58,11 @@ func refresh(parent: Node) -> Dictionary:
 		956:{"role":"button","activate":Callable(self,"_close_detail"),"displaystate":true}
 	}
 	var staged := Scene.new()
-	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}})
+	var scope: Array[int]=SOURCE_OFFSETS.duplicate()
+	if _type_in_scope:
+		scope.append(42456)
+		bindings[42456]={"role":"source_text","text":model.type_text,"visible":not model.type_text.is_empty()}
+	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":scope,"bindings":bindings}})
 	if not result.get("ok",false):
 		staged.free()
 		return result
@@ -146,6 +152,12 @@ func _apply(model: Dictionary) -> Dictionary:
 	if not title_result.get("ok",false):
 		_close_scene()
 		return title_result
+	if _type_in_scope:
+		var type_result: Dictionary=_child.set_bound_text(42456,model.type_text)
+		if type_result.get("ok",false):type_result=_child.set_bound_visible(42456,not model.type_text.is_empty())
+		if not type_result.get("ok",false):
+			_close_scene()
+			return type_result
 	for offset: int in LOCK_BUTTONS:
 		var result: Dictionary = _child.set_bound_displaystate(offset,not model.disabled)
 		if not result.get("ok",false):
@@ -198,7 +210,10 @@ static func _model(bag: Object) -> Dictionary:
 	var name_label: Variant=bag.get("detail_name")
 	var close_button: Node=bag.find_child("InventoryDetailClose",true,false)
 	if not bag.has_method("close_detail") or not name_label is Label or not is_instance_valid(name_label) or not close_button is BaseButton:return _fail("source_inventory_detail_existing_header_required")
-	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button}
+	var type_value: Variant=bag.get("source_detail_type")
+	var type_text: String=""
+	if type_value is Dictionary and type_value.get("reference")==reference and type_value.get("text") is String:type_text=type_value.text
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button,"type_text":type_text}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset") == offset: return node
