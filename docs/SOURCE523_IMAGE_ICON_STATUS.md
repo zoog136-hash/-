@@ -163,6 +163,12 @@ Library identities or saves are included in Git.
   records and settlement view. No reward draw or claim is executed by these
   image calls. Missing/excluded/CSB states retain texture-free evidence, while
   clearing a selection removes its previous icon and evidence.
+- Existing fishing rod/equipment lists and purchase/storage/use/transfer
+  buttons now consume their declared ItemClass identity or preserved full row.
+  Death recovery's existing item/certificate buttons use the ItemClass keys
+  already established by the recovery service. Currency, Fish, territory and
+  tournament identifiers are not promoted to item or image identities. These
+  image calls do not change purchase, opening, recovery or persistence.
 - NPC attack/environment-buff ItemList rows consume their already supplied
   full SpellClass/BuffClass rows after canonical row and namespace checks.
   TestSpell/dummy exclusions remain applied. Unsupported CSB entries stay

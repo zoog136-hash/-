@@ -1,4 +1,5 @@
 extends ScrollContainer
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var service
 var column: VBoxContainer
 var result: Label
@@ -31,6 +32,24 @@ func button(text: String, action: Callable, control_name: String) -> Button:
 		action.call())
 	service.world.hud.workspace.register_scroll_drag(self,node)
 	return node
+
+func _bind_item_icon(control: Button, source_id: String, role: String) -> void:
+	control.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if control.has_meta(key): control.remove_meta(key)
+	if source_id.is_empty() or not source_id.is_valid_int() or not IMAGES.selected(): return
+	# The loss receipt and certificate wallet preserve the ItemClass key
+	# chosen by the recovery service. Currency and behavior IDs never enter here.
+	var source_row: Dictionary = service.source.items.get(source_id, {})
+	var source_info: Dictionary = IMAGES.describe_item_class_row(source_row) if not source_row.is_empty() else IMAGES.describe_item_class(int(source_id))
+	control.icon = source_info.get("texture") as Texture2D
+	control.expand_icon = true
+	var evidence: Dictionary = source_info.duplicate(true)
+	evidence.erase("texture")
+	evidence["presentation_role"] = role
+	control.set_meta("source523_image", evidence)
+	control.set_meta("source523_image_provenance", source_info.get("provenance", {}).duplicate(true))
+	control.set_meta("source523_image_status", str(source_info.get("source_status", source_info.get("reason", ""))))
 
 func refresh() -> void:
 	for child: Node in get_children(): remove_child(child); child.queue_free()
@@ -72,6 +91,10 @@ func refresh() -> void:
 				if request.ok: caption += " (%d)" % int(request.cost)
 				else: caption += " · "+str(request.message)
 				var action := button(caption,func() -> void: _confirm(str(entry.id),kind,mode),"Death523_%s_%s_%s" % [entry.id,kind,mode])
+				if kind == "item":
+					_bind_item_icon(action, str(item.get("source_id", "")), "death_recovery_item")
+				elif mode == "certificate":
+					_bind_item_icon(action, str(request.get("certificate", {}).get("source_id", "")), "death_recovery_certificate_cost")
 				action.disabled = not request.ok
 	if count == 0: label("복구 대기 중인 손실이 없습니다.")
 
