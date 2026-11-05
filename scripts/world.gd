@@ -5405,7 +5405,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	hud.show_message("%s 사용" % item_name)
 	if is_source:
 		var source_visual: int = int(LOOT_DROP.PATCH523_DROPS.hp_use_metadata(record).get("consume_effect_sprite_id",0))
-		if source_visual > 0: option_awakening.combat.emit_sprite(source_visual,player)
+		if source_visual > 0: option_awakening.combat.emit_sprite(source_visual,player,LOOT_DROP.PATCH523_DROPS.item_definition(record).get("original_item",{}))
 	_update_hud()
 
 func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
