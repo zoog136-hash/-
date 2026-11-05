@@ -1,6 +1,11 @@
 extends RefCounted
 ## Optional source pack and host-facing integration; no spawn/population mutation.
 const Catalog = preload("res://scripts/monsterbook/monsterbook523.gd")
+const Exact=preload("res://scripts/equipment523/native_catalog.gd")
+const PROGRESSION_KEYS=["level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]
+var _reward_quote: Dictionary={}
+var _save_seal: Dictionary={}
+var _save_base: String=""
 var catalog = Catalog.new()
 var host: Node
 var local = preload("res://scripts/monsterbook/monsterbook523_local.gd").new()
@@ -39,22 +44,70 @@ func configure(world: Node) -> void:
 	clock_authority = Callable(local,"source_clock")
 	settlement = Callable(items,"settle")
 	catalog.changed.connect(_catalog_changed)
-	var path: String = ""
-	var digest: String = ""
-	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--monsterbook523-pack="): path = arg.trim_prefix("--monsterbook523-pack=")
-		if arg.begins_with("--monsterbook523-sha256="): digest = arg.trim_prefix("--monsterbook523-sha256=")
-	if not path.is_empty() and not catalog.load_pack(path, digest):
+	var arguments: Dictionary = Catalog.pack_arguments()
+	var loaded: bool = catalog.load_pack(arguments.path,arguments.sha256) if arguments.explicit else catalog.load_original()
+	if not loaded:
 		push_warning("몬스터 도감 자료 확인 실패: " + catalog.last_error)
 
 func persist(proposed: Dictionary, overrides: Dictionary = {}) -> bool:
 	var staged := overrides.duplicate(true)
 	staged["monsterbook523"] = proposed
-	return host.call("_save_game", true, staged) == OK
+	var has_progression: bool=false
+	for key: String in PROGRESSION_KEYS:
+		if staged.has(key):has_progression=true
+	if has_progression:
+		var expected: Dictionary=_claimed_progression()
+		if expected.is_empty():return false
+		for key: String in PROGRESSION_KEYS:
+			if staged.has(key)!=expected.has(key) or (expected.has(key) and not Exact.same(staged[key],expected[key])):return false
+		_save_seal=staged.duplicate(true)
+		_save_base=_progression_stamp()
+	var result: Error=host.call("_save_game", true, staged)
+	_save_seal={};_save_base=""
+	if result!=OK:
+		var economic: bool=not _reward_quote.is_empty()
+		for key: String in ["inventory","gold","item_instances","consumable_state","growth","card_draw_fusion"]:
+			if overrides.has(key):economic=true
+		if economic or not str(host.get("patch523_owner_state_problem")).is_empty():save_blocked=true
+	return result==OK
+
+func _progression_stamp() -> String:
+	var values: Array=[]
+	for key: String in PROGRESSION_KEYS:values.append(host.get("attack_power" if key=="attack" else key))
+	return JSON.stringify(values,"",false,true).sha256_text()
+
+func progression_overrides(amount: int) -> Dictionary:
+	if amount<=0:return {}
+	var projected: Dictionary=economy.experience_state(amount)
+	var changed: Dictionary={}
+	for key: String in projected:
+		if not Exact.same(projected[key],host.get(key)):changed["attack" if key=="attack_power" else key]=projected[key]
+	return changed
+
+func _claimed_progression() -> Dictionary:
+	if _reward_quote.is_empty() or not catalog._busy or _reward_quote.get("action") not in ["claim","claim_rewards"] or _reward_quote.get("pack_sha256")!=catalog.pack_sha:return {}
+	var amount: int=0
+	for reward: Dictionary in _reward_quote.get("rewards",[]):
+		if not Exact.same(reward,catalog.row("Reward",int(reward.get("ID",0)))):return {}
+		if int(reward.get("RewardTypeID",0))!=1:continue
+		if catalog.row("RewardType",1).get("Name")!="Exp":return {}
+		var gain: int=economy.experience_amount(reward)
+		if gain<1 or amount>9007199254740991-gain:return {}
+		amount+=gain
+	return progression_overrides(amount)
+
+func authorizes_reward_save(staged: Dictionary) -> bool:
+	return not _save_seal.is_empty() and not _reward_quote.is_empty() and catalog._busy and _save_base==_progression_stamp() and Exact.same(staged,_save_seal)
 
 func commit(before: Dictionary, proposed: Dictionary, quote: Dictionary) -> bool:
 	var economic: bool = (quote.action == "register" and int(quote.get("level", {}).get("CurrencyCost", 0)) != 0) or (quote.action in ["claim", "claim_rewards"] and not quote.get("rewards", []).is_empty())
 	if economic:
+		if settlement==Callable(items,"settle") and quote.action in ["claim","claim_rewards"]:
+			if not _reward_quote.is_empty():return false
+			_reward_quote=quote.duplicate(true)
+			var accepted: bool=settlement.call(before,proposed,quote,Callable(self,"persist"))==true
+			_reward_quote={};_save_seal={};_save_base=""
+			return accepted
 		return settlement.is_valid() and settlement.call(before, proposed, quote, Callable(self, "persist")) == true
 	return persist(proposed)
 
@@ -70,6 +123,9 @@ func apply_confirmed(receipt: Dictionary) -> bool:
 			if int(reward.RewardTypeID) != 2:
 				conversions[str(int(reward.ID))] = {"source_amount":int(reward.Amount),"local_exp":economy.experience_amount(reward),"provenance":"twilight_custom_holy_water_ratio_v1","numerator":int(economy.BALANCE.data.exp_numerator),"denominator":int(economy.BALANCE.data.exp_denominator)}
 				continue
+			# A new canonical supplier receipt carries this future grant. Do not
+			# rewrite an older raw record or convert its existing quantity.
+			if not items.native_target(reward).is_empty():continue
 			var record: Dictionary = items.definition(reward)
 			records[record.name] = record
 		checked["source_item_records"] = records
@@ -260,3 +316,4 @@ func incoming_damage(amount: int, kind: String) -> int:
 func outgoing_percent(kind: String) -> float:
 	if economy.settings.get("ignore_percent_policy") != "existing_single_player_amplification": return 0
 	return float(extra_stats().get(kind+"_damage_amp_pct",0))
+

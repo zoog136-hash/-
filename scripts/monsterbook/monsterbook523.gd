@@ -5,6 +5,8 @@ signal changed
 ## belong to the host's reviewed authority adapter, never inferred from enums.
 const SCHEMA := "twilight.monsterbook523.v1"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
+const MAX_PACK_BYTES := 16 * 1024 * 1024
 const TABLES := ["MonsterBook", "MonsterBookLevel", "MonsterBookLevelBonus", "MonsterBookLevelReward", "NpcClassForNpcGroup", "Bonus", "BonusType", "Reward", "RewardType", "Currency", "DateTimes_Korean", "Unit", "ItemClass", "DescData_Korean"]
 const OPTIONAL_TABLES := ["ItemCategory", "Grade", "ItemBonus", "UIUnit", "BonusApplicationType", "SpecialResistanceType", "SelectReward", "SelectRewardEntity", "MarketPurchase_Korean", "MarketPurchaseProduct", "MarketProduct", "MarketProductAdditional", "MarketBonusForPurchase", "GotChaEntityView", "BuffCard", "IntangibleItemClass"]
 var _tables: Dictionary = {}
@@ -13,6 +15,7 @@ var _level_ids: Dictionary = {}
 var _link_ids: Dictionary = {}
 var _state: Dictionary = {"schema": 1, "books": {}}
 var pack_sha: String = ""
+var model_input_identity: Dictionary = {}
 var last_error: String = ""
 var _busy: bool = false
 
@@ -20,13 +23,24 @@ func _fail(reason: String) -> bool:
 	last_error = reason
 	return false
 
+static func pack_arguments() -> Dictionary:
+	var result: Dictionary = {"explicit":false,"path":"","sha256":""}
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--monsterbook523-pack"):
+			result.explicit = true
+			if argument.begins_with("--monsterbook523-pack="): result.path = argument.trim_prefix("--monsterbook523-pack=")
+		if argument.begins_with("--monsterbook523-sha256"):
+			result.explicit = true
+			if argument.begins_with("--monsterbook523-sha256="): result.sha256 = argument.trim_prefix("--monsterbook523-sha256=")
+	return result
+
 func load_pack(path: String, expected_sha: String) -> bool:
 	if _busy:
 		return _fail("transaction_in_progress")
 	if expected_sha.length() != 64 or not FileAccess.file_exists(path):
 		return _fail("missing_pack_or_digest")
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > 16 * 1024 * 1024:
+	if file == null or file.get_length() > MAX_PACK_BYTES:
 		return _fail("pack_size")
 	var data := file.get_buffer(file.get_length())
 	var digest := HashingContext.new()
@@ -34,6 +48,190 @@ func load_pack(path: String, expected_sha: String) -> bool:
 	digest.update(data)
 	if digest.finish().hex_encode() != expected_sha:
 		return _fail("pack_digest")
+	return _load_payload(data,expected_sha,{"kind":"twilight.monsterbook523.pack-input.v1","payload_sha256":expected_sha,"payload_bytes":data.size(),"declared_source_sha256":SOURCE_SHA})
+
+func _source_rows(table: String, cache: Dictionary, evidence: Dictionary, issues: Array[String]) -> Array:
+	if cache.has(table): return cache[table]
+	var metadata: Dictionary = Definitions.table_metadata(table)
+	var sha: Variant = metadata.get("sha256")
+	if metadata.get("path") != "content/"+table+".json" or metadata.get("version") != 523 or not _integer(metadata.get("bytes")) or not _integer(metadata.get("row_count")) or not sha is String:
+		issues.append("source_table_identity:"+table)
+		return []
+	if sha.length()!=64 or not sha.is_valid_hex_number(false):
+		issues.append("source_table_digest:"+table)
+		return []
+	var values: Array = Definitions.rows(table)
+	if values.size()!=int(metadata.row_count):
+		issues.append("source_table_rows:"+table)
+		return []
+	cache[table] = values
+	evidence[table] = {"bytes":metadata.bytes,"sha256":sha,"rows":values.size()}
+	return values
+
+func _source_ids(values: Array, field: String, issues: Array[String], omit_zero: bool = false) -> Dictionary:
+	var result: Dictionary = {}
+	for value: Dictionary in values:
+		if not _integer(value.get(field)):
+			issues.append("source_integer:"+field)
+			continue
+		var id: int = int(value[field])
+		if not omit_zero or id!=0: result[id] = true
+	return result
+
+func _source_filter(values: Array, field: String, ids: Dictionary) -> Array:
+	var result: Array = []
+	for value: Dictionary in values:
+		if _integer(value.get(field)) and ids.has(int(value[field])): result.append(value)
+	return result
+
+func _source_select(table: String, ids: Dictionary, cache: Dictionary, evidence: Dictionary, issues: Array[String]) -> Array:
+	var values: Array = _source_rows(table,cache,evidence,issues)
+	var result: Array = _source_filter(values,"ID",ids)
+	if _source_ids(result,"ID",issues).size()!=ids.size(): issues.append("source_missing_reference:"+table)
+	return result
+
+func _source_index(values: Array, issues: Array[String]) -> Dictionary:
+	var result: Dictionary = {}
+	for value: Dictionary in values:
+		if not _integer(value.get("ID")):
+			issues.append("source_integer:ID")
+			continue
+		result[int(value.ID)] = value
+	return result
+
+func load_original() -> bool:
+	if loaded(): return true
+	if _busy: return _fail("transaction_in_progress")
+	if pack_arguments().explicit: return _fail("explicit_pack_input_required")
+	var identity: Dictionary = Definitions.identity()
+	if identity.is_empty() or identity.get("source_sha256") != SOURCE_SHA:
+		return _fail("original_source_unavailable:"+Definitions.problem())
+	# Exact full projection from tools/monsterbook523/build_pack.py. This builds
+	# the existing model in memory; it does not reinterpret source authority.
+	var cache: Dictionary = {}
+	var evidence: Dictionary = {}
+	var issues: Array[String] = []
+	var tables: Dictionary = {}
+	for table: String in ["MonsterBook","MonsterBookLevel","MonsterBookLevelBonus","MonsterBookLevelReward"]:
+		tables[table] = _source_rows(table,cache,evidence,issues)
+	var books: Array = tables.MonsterBook
+	var groups: Dictionary = _source_ids(books,"NpcGroupID",issues,true)
+	tables.NpcClassForNpcGroup = _source_filter(_source_rows("NpcClassForNpcGroup",cache,evidence,issues),"NpcGroupID",groups)
+	var reward_ids: Dictionary = _source_ids(tables.MonsterBookLevelReward,"RewardID",issues)
+	var reward_rows: Array = _source_rows("Reward",cache,evidence,issues)
+	var rewards: Dictionary = _source_index(reward_rows,issues)
+	var item_ids: Dictionary = {}
+	for reward: Dictionary in reward_rows:
+		if int(reward.RewardTypeID)==2 and reward_ids.has(int(reward.ID)): item_ids[int(reward.RewardClassID)] = true
+	var current_books: Dictionary = _source_ids(_source_filter(books,"NpcGroupID",groups),"ID",issues)
+	var current_levels: Array = _source_filter(tables.MonsterBookLevel,"MonsterBookID",current_books)
+	var current_level_ids: Dictionary = _source_ids(current_levels,"ID",issues)
+	var current_reward_ids: Dictionary = _source_ids(_source_filter(tables.MonsterBookLevelReward,"MonsterBookLevelID",current_level_ids),"RewardID",issues)
+	var action_roots: Dictionary = {}
+	for id: int in current_reward_ids:
+		var reward: Dictionary = rewards.get(id,{})
+		if reward.is_empty(): return _fail("source_missing_reference:Reward")
+		if int(reward.RewardTypeID)==2: action_roots[int(reward.RewardClassID)] = true
+	var bonuses: Dictionary = _source_index(_source_rows("Bonus",cache,evidence,issues),issues)
+	var types: Dictionary = _source_index(_source_rows("BonusType",cache,evidence,issues),issues)
+	var pending: Array = action_roots.keys()
+	var visited: Dictionary = {}
+	var select_ids: Dictionary = {}
+	var market_ids: Dictionary = {}
+	var intangible_ids: Dictionary = {}
+	while not pending.is_empty():
+		var item_id: int = int(pending.pop_back())
+		if visited.has(item_id): continue
+		visited[item_id] = true
+		for link: Dictionary in _source_rows("ItemBonus",cache,evidence,issues):
+			if int(link.ItemClassID)!=item_id: continue
+			var bonus: Dictionary = bonuses.get(int(link.BonusID),{})
+			var type: Dictionary = types.get(int(bonus.get("BonusTypeID",-1)),{})
+			if bonus.is_empty() or type.is_empty(): return _fail("source_missing_reference:ItemBonus")
+			var kind: String = str(type.Name)
+			if kind not in ["MarketPurchaseID","IntangibleItemClassID","SelectRewardClassID"]: continue
+			if not _integer(bonus.get("Value")): return _fail("source_integer:Bonus.Value")
+			var target: int = int(bonus.Value)
+			if kind=="MarketPurchaseID": market_ids[target] = true
+			elif kind=="IntangibleItemClassID": intangible_ids[target] = true
+			else:
+				var parent: Dictionary = rewards.get(target,{})
+				if parent.is_empty() or int(parent.RewardTypeID)!=111: return _fail("source_selection_reward_type")
+				reward_ids[int(parent.ID)] = true
+				select_ids[int(parent.RewardClassID)] = true
+				for entity: Dictionary in _source_rows("SelectRewardEntity",cache,evidence,issues):
+					if int(entity.SelectRewardID)!=int(parent.RewardClassID): continue
+					var child: Dictionary = rewards.get(int(entity.RewardID),{})
+					if child.is_empty(): return _fail("source_missing_reference:Reward")
+					reward_ids[int(child.ID)] = true
+					if int(child.RewardTypeID)==2:
+						item_ids[int(child.RewardClassID)] = true
+						pending.append(int(child.RewardClassID))
+	tables.SelectReward = _source_select("SelectReward",select_ids,cache,evidence,issues)
+	tables.SelectRewardEntity = _source_filter(_source_rows("SelectRewardEntity",cache,evidence,issues),"SelectRewardID",select_ids)
+	tables.MarketPurchase_Korean = _source_select("MarketPurchase_Korean",market_ids,cache,evidence,issues)
+	tables.MarketPurchaseProduct = _source_filter(_source_rows("MarketPurchaseProduct",cache,evidence,issues),"MarketPurchaseID",market_ids)
+	var product_ids: Dictionary = _source_ids(tables.MarketPurchaseProduct,"MarketProductID",issues)
+	tables.MarketProduct = _source_select("MarketProduct",product_ids,cache,evidence,issues)
+	tables.MarketProductAdditional = _source_filter(_source_rows("MarketProductAdditional",cache,evidence,issues),"MarketProductID",product_ids)
+	tables.MarketBonusForPurchase = _source_filter(_source_rows("MarketBonusForPurchase",cache,evidence,issues),"MarketPurchaseID",market_ids)
+	var gotcha_ids: Dictionary = {}
+	for product: Dictionary in tables.MarketProduct:
+		if int(product.UnitID)==35: gotcha_ids[int(product.ClassID)] = true
+	tables.GotChaEntityView = _source_filter(_source_rows("GotChaEntityView",cache,evidence,issues),"GotChaClassID",gotcha_ids)
+	var card_ids: Dictionary = {}
+	for entity: Dictionary in tables.GotChaEntityView:
+		if int(entity.UnitID)==33: card_ids[int(entity.ClassID)] = true
+	tables.BuffCard = _source_select("BuffCard",card_ids,cache,evidence,issues)
+	tables.IntangibleItemClass = _source_select("IntangibleItemClass",intangible_ids,cache,evidence,issues)
+	tables.ItemBonus = _source_filter(_source_rows("ItemBonus",cache,evidence,issues),"ItemClassID",item_ids)
+	var bonus_ids: Dictionary = _source_ids(tables.MonsterBookLevelBonus,"BonusID",issues)
+	bonus_ids.merge(_source_ids(tables.ItemBonus,"BonusID",issues),true)
+	tables.Bonus = _source_select("Bonus",bonus_ids,cache,evidence,issues)
+	tables.BonusType = _source_select("BonusType",_source_ids(tables.Bonus,"BonusTypeID",issues),cache,evidence,issues)
+	tables.BonusApplicationType = _source_select("BonusApplicationType",_source_ids(tables.Bonus,"BonusApplicationTypeID",issues),cache,evidence,issues)
+	var resistance_ids: Dictionary = {}
+	for bonus: Dictionary in tables.Bonus:
+		if int(bonus.BonusApplicationTypeID)==2: resistance_ids[int(bonus.BonusApplicationTargetID)] = true
+	tables.SpecialResistanceType = _source_select("SpecialResistanceType",resistance_ids,cache,evidence,issues)
+	tables.Reward = _source_select("Reward",reward_ids,cache,evidence,issues)
+	tables.RewardType = _source_select("RewardType",_source_ids(tables.Reward,"RewardTypeID",issues),cache,evidence,issues)
+	var unit_ids: Dictionary = _source_ids(tables.BonusType,"UnitID",issues)
+	unit_ids.merge(_source_ids(tables.MarketProduct,"UnitID",issues),true)
+	unit_ids.merge(_source_ids(tables.GotChaEntityView,"UnitID",issues),true)
+	tables.Unit = _source_select("Unit",unit_ids,cache,evidence,issues)
+	tables.UIUnit = _source_filter(_source_rows("UIUnit",cache,evidence,issues),"UnitID",_source_ids(tables.Unit,"ID",issues))
+	tables.ItemClass = _source_select("ItemClass",item_ids,cache,evidence,issues)
+	tables.ItemCategory = _source_select("ItemCategory",_source_ids(tables.ItemClass,"CategoryID",issues),cache,evidence,issues)
+	var grade_ids: Dictionary = _source_ids(tables.ItemClass,"GradeID",issues)
+	grade_ids.merge(_source_ids(tables.BuffCard,"GradeID",issues),true)
+	tables.Grade = _source_select("Grade",grade_ids,cache,evidence,issues)
+	tables.Currency = _source_select("Currency",_source_ids(tables.MonsterBookLevel,"CurrencyID",issues,true),cache,evidence,issues)
+	var date_ids: Dictionary = {}
+	for field: String in ["StartDateTimeID","CountingEndDateTimeID","EndDateTimeID"]:
+		date_ids.merge(_source_ids(books,field,issues,true),true)
+	for bonus: Dictionary in tables.Bonus:
+		if int(bonus.BonusApplicationTypeID)==298 and int(bonus.BonusApplicationTargetID)!=0: date_ids[int(bonus.BonusApplicationTargetID)] = true
+	tables.DateTimes_Korean = _source_select("DateTimes_Korean",date_ids,cache,evidence,issues)
+	var desc_ids: Dictionary = {}
+	for table: String in ["BonusType","RewardType","Currency","ItemClass","ItemCategory","Grade","SpecialResistanceType","IntangibleItemClass","BuffCard"]:
+		for row: Dictionary in tables[table]:
+			if row.get("DescID"):
+				if not _integer(row.DescID): return _fail("source_integer:DescID")
+				desc_ids[int(row.DescID)] = true
+	tables.DescData_Korean = _source_select("DescData_Korean",desc_ids,cache,evidence,issues)
+	if not issues.is_empty(): return _fail(issues[0])
+	if current_levels.size()!=97: return _fail("source_stage_count")
+	var model: Dictionary = {"schema":SCHEMA,"source_sha256":SOURCE_SHA,"source_tables":evidence,"tables":tables}
+	var data: PackedByteArray = JSON.stringify(model,"",false,true).to_utf8_buffer()
+	if data.size()>MAX_PACK_BYTES: return _fail("pack_size")
+	var digest := HashingContext.new()
+	digest.start(HashingContext.HASH_SHA256)
+	digest.update(data)
+	var actual: String = digest.finish().hex_encode()
+	return _load_payload(data,actual,{"kind":"twilight.monsterbook523.original-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":data.size(),"projection":"tools/monsterbook523/build_pack.py"})
+
+func _load_payload(data: PackedByteArray, expected_sha: String, input_identity: Dictionary) -> bool:
 	var parser := JSON.new()
 	if parser.parse(data.get_string_from_utf8()) != OK or not parser.data is Dictionary:
 		return _fail("pack_json")
@@ -73,6 +271,7 @@ func load_pack(path: String, expected_sha: String) -> bool:
 			links[level_id].append(int(link[pair[1]]))
 		_link_ids[pair[0]] = links
 	pack_sha = expected_sha
+	model_input_identity = input_identity.duplicate(true)
 	last_error = ""
 	changed.emit()
 	return true
@@ -548,3 +747,4 @@ func current_period(book_id: int, clock: String) -> String:
 
 func table_rows(table: String) -> Array:
 	return _tables.get(table, []).duplicate(true)
+

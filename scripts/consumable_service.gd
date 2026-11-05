@@ -107,6 +107,8 @@ var source_ground_acquisitions_present: bool=false
 var source_ground_acquisitions: Variant={}
 var source_quest_craft_receipts_present: bool=false
 var source_quest_craft_receipts: Variant={}
+var source_monsterbook_grants_present: bool=false
+var source_monsterbook_grants: Variant={}
 
 var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
@@ -123,6 +125,7 @@ func export_state() -> Dictionary:
 	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
 	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
 	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=source_quest_craft_receipts.duplicate(true) if source_quest_craft_receipts is Dictionary or source_quest_craft_receipts is Array else source_quest_craft_receipts
+	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=source_monsterbook_grants.duplicate(true) if source_monsterbook_grants is Dictionary or source_monsterbook_grants is Array else source_monsterbook_grants
 	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
 	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
@@ -130,6 +133,9 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_monsterbook_grants_present=input is Dictionary and input.has("source_monsterbook_grants")
+	var book_grants: Variant=input.get("source_monsterbook_grants",{}) if input is Dictionary else {}
+	source_monsterbook_grants=book_grants.duplicate(true) if book_grants is Dictionary or book_grants is Array else book_grants
 	source_quest_craft_receipts_present=input is Dictionary and input.has("source_quest_craft_receipts")
 	var craft_receipts: Variant=input.get("source_quest_craft_receipts",{}) if input is Dictionary else {}
 	source_quest_craft_receipts=craft_receipts.duplicate(true) if craft_receipts is Dictionary or craft_receipts is Array else craft_receipts

@@ -6096,6 +6096,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not pending_map_save_record.is_empty():
 		var pointer_result: Error=MAP_SAVE_MIGRATION.activate(base_save_path(),pending_map_save_record)
 		if pointer_result!=OK:
+			patch523_owner_state_problem="전체 저장 후 활성 경로 기록 미확정 · 정상 저장을 다시 불러오기 전 거래 중지"
 			hud.append_log("이전 저장 선택 기록 실패 · 원본과 별도 저장 후보를 보존합니다")
 			return pointer_result
 		pending_map_save_record.clear()
