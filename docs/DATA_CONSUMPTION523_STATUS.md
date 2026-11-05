@@ -609,6 +609,41 @@ requested here. New visual pack/pin and final old saved-record visual fallback
 removal remain with the Sprite/image/spawn owners. These are explicit remaining
 boundaries, not whole-monster completion or new execution evidence.
 
+The existing monster-drop reader is also source-only. `data()` now returns a
+current-original reference registry; the former packed-file loader remains
+`_legacy_data_for_reference()` and is not a final/default/fallback input.
+`definition_id(item_id)` lazily returns original ItemClass/category/grade,
+ItemBonus/Bonus/type/unit, equipment/class links and the ItemData typed
+references. It explicitly returns `native_record:{}` and
+`unresolved_source_reference:missing_current_native_record_projection` rather
+than relabeling an old item-effect DTO. Existing decoding/installation APIs,
+source packs, historical files and saves remain preserved.
+
+`Monster.setup()` passes the existing instance NPC registry into
+`patch523_monster_drops.identity(record,admitted_registry)`. Current archive,
+admitted registry and actual actor ID/Sprite/DescId evidence must agree before
+`candidates()` reads that NPC's original `NpcItemDropView` rows. A native actor
+with unavailable current input keeps native routing with empty candidates; it
+does not inherit the general legacy loot pool. Original row positions,
+table metadata, excluded rows and unresolved item references remain data.
+
+The candidate reader supplies only the public compiler's exact existing Inven
+host-binding subset to the existing `resolve()`: integral exact item ID, exact
+source URL, unique inventory name and an original DescID/IdentifiedDescID label
+must match. `binding_provenance` separates current-original membership/ItemData
+from the existing public host DTO and sets
+`original_numeric_projection_complete:false`. Items without that binding
+remain `missing_current_native_record_projection`; no old monster sidecar DTO
+fills the gap. Missing/ambiguous/invalid original references are withheld as
+`missing_source_reference`. Region/DeleteTime and declared typed card period/
+server conditions that the host DTO cannot represent, and already declared
+child Test/dummy exclusions, remain `unsupported_source_item_condition` with
+`source_condition_evidence`. No calendar/unit/server authority is inferred and
+an unsupported effect is not called dummy. Full original physical-item DTOs and typed reward activation
+remain the existing supplier/effect owner's contract. The source membership
+does not supply drop probabilities or quantities. Host roll, item/variant
+selection, quantity, ground objects, grants, receipts and saves are unchanged.
+
 ### Other retained growth inputs — unverified
 
 `half_elixir_runtime.source_for(saved_state)` now reuses the common archive when

@@ -264,7 +264,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
-	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record)
+	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record,definition_service.catalog if definition_service != null else null)
 	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
