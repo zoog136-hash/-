@@ -2,16 +2,30 @@ extends Node2D
 ## Original state textures only. Inspection has no input or game callbacks.
 var states: Dictionary={}
 var current_state: String=""
+var _pressed_uses_normal: bool=false
+var _extent: Vector2
+var _title: Node2D
 func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 	var widget: Dictionary=options.widgetOptions
 	var extent:=Vector2(widget.size[0],widget.size[1])
+	_extent=extent
+	_pressed_uses_normal=str(options.pressedData.path).is_empty()
 	for state: String in ["normal","pressed","disabled"]:
 		var reference: Dictionary=options[state+"Data"]
 		var grayscale: bool=state=="disabled" and str(reference.path).is_empty()
 		# Cocos Button::onPressStateChangedToDisabled uses the normal sprite
 		# and its original gray shader when disabledData is unspecified.
-		if grayscale:reference=options.normalData
-		if str(reference.path).is_empty():return {"ok":false,"error":"original_button_state_unspecified:"+state}
+		if grayscale or (state=="pressed" and _pressed_uses_normal):reference=options.normalData
+		if str(reference.path).is_empty():
+			# An explicitly empty original state draws no background pixels.
+			var empty:=Control.new()
+			empty.size=extent
+			empty.position=Vector2(0,-extent.y)
+			empty.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			empty.set_meta("original_empty_state",true)
+			add_child(empty)
+			states[state]=empty
+			continue
 		var texture: Texture2D=pack.texture(reference,true)
 		if texture==null:return {"ok":false,"error":"original_button_texture_missing:"+state}
 		var picture: Control
@@ -31,9 +45,20 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 			picture=flat
 		picture.position=Vector2(0,-extent.y)
 		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		if state=="pressed" and _pressed_uses_normal:
+			# UIButton uses normal renderer scale + its original 0.1 zoom.
+			picture.pivot_offset=extent/2.0
+			if bool(options.scale9Enabled):picture.scale=Vector2(1.1,1.1)
+			else:
+				if extent.x<=0 or extent.y<=0:picture.free();return {"ok":false,"error":"original_button_zoom_extent_invalid"}
+				picture.scale=Vector2.ONE+texture.get_size()*0.1/extent
 		picture.name="Original_"+state
-		if bool(widget.flipX):picture.scale.x=-1;picture.position.x=extent.x
-		if bool(widget.flipY):picture.scale.y=-1;picture.position.y=0
+		if bool(widget.flipX):
+			picture.scale.x*=-1
+			if picture.pivot_offset==Vector2.ZERO:picture.position.x=extent.x
+		if bool(widget.flipY):
+			picture.scale.y*=-1
+			if picture.pivot_offset==Vector2.ZERO:picture.position.y=0
 		add_child(picture)
 		states[state]=picture
 	if not str(options.text).is_empty():
@@ -43,6 +68,7 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 		for index: int in range(title.length()):
 			if not title[index].strip_edges().is_empty() and not font.has_char(title.unicode_at(index)):return {"ok":false,"error":"original_button_glyph_missing"}
 		var label=preload("res://scripts/ui/original_ui/source_text.gd").new()
+		_title=label
 		var text_options: Dictionary=options.duplicate(true)
 		text_options.hAlignment=1
 		text_options.vAlignment=1
@@ -55,6 +81,10 @@ func set_source_state(state: String) -> Dictionary:
 	if not states.has(state):return {"ok":false,"error":"unknown_original_button_state"}
 	for key: String in states:states[key].visible=key==state
 	current_state=state
+	if _title!=null:
+		var zoom: float=1.1 if state=="pressed" and _pressed_uses_normal else 1.0
+		_title.scale=Vector2(zoom,zoom)
+		_title.position=Vector2(_extent.x/2.0,-_extent.y/2.0)*(1.0-zoom)
 	if state=="disabled":_armed=false
 	return {"ok":true,"state":state,"inspection_only":not _activation.is_valid()}
 

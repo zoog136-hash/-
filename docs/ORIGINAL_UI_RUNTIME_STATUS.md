@@ -418,3 +418,15 @@ correction with no script/shader/runtime errors. The union of tracked inspection
 entries is now 188; these counts still do not represent completed service UIs.
 
 Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/NodeReader/NodeReader.cpp
+
+### Explicitly empty original button states
+
+An empty source image path now retains an empty visual and its original hit
+extent; it is not treated as a missing nonempty asset and no image is invented.
+When the pressed image alone is unspecified, the original UIButton normal
+renderer and its documented 0.1 scale increment are used, with the original
+center and title behavior. Supplied nonempty paths still require exact assets.
+The 41 affected source candidates rendered 36 entries and rejected five for
+remaining nested source contracts/features. The tracked inspection union is
+224 entries, with original button-state captures; service bindings remain
+separately reported.
