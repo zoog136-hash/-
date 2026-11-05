@@ -318,3 +318,63 @@ in the retained Pass_All source and returns its original descriptor and asset
 roles. A missing/ambiguous node fails. No image role or child filename is guessed,
 and this resolver does not claim the three pass asset roles are fully mapped.
 These source-component connections are implemented without new execution/tests.
+
+## Original child controls and presentation handles (unexecuted)
+
+`source_pass_child_bindings.gd` covers the received Mission_All and Daily/Final/
+Start SlotSet CSBs. `source_attendance_child_bindings.gd` covers Daily/Promotion
+and their original Slot/SlotBonus CSBs. Each factory checks its retained source
+member SHA, preserves ProjectNode binding scopes, and connects only explicitly
+supplied original button offsets to an exact `row_id`/`action_ref` from the
+existing service model. Source labels and list indexes do not assign rewards,
+days, premium tiers or tab behavior. Missing declarations remain explicit and
+all factories retain `complete_screen_contract:false`.
+
+`source_pass_receive_popup_bindings.gd` binds only the supplied Receive_All
+cancel/confirm controls, after the original caller explicitly declares those
+operations and supplies a popup-only dismissal callback. The hidden original
+popup can be configured before an action exists. Its caller invokes
+`bind_pending()` when presenting it; this captures the service's existing opaque
+token and returns its unchanged plan. No action begins and no visibility changes
+as a side effect. Success clears that popup's captured token and calls the
+supplied dismissal callback, leaving the source session open. Teardown uses
+`invalidate()`; it does not cancel another pending action.
+
+Session `pending_plan()` exposes a deep copy of the existing service plan.
+`choose_pending(token,key,option_indices)`, `confirm_pending(token)` and
+`cancel_pending(token)` require that exact current opaque token. Thus an older
+popup or nested choice control cannot operate on a newer action. For an already
+ready plan, the local token is consumed before the synchronous service confirm,
+including save failure; unresolved choices remain delegated to the service.
+The original `choose`, `confirm` and `cancel` entry points remain available.
+The UI adds no choice values, costs, RNG, requests or saves.
+
+The runtime presenter's `attach()` result now includes its `presenter` handle.
+Its `content_presented(scene,session)` signal supplies the strict original scene
+and existing session after mounting, so the caller can attach its original
+controller and service-result handlers. `scene.project_player(offset_path)`
+resolves only the declared sequence of original ProjectNodes; repeated child
+CSBs retain distinct identities. The returned player's existing bound-field
+setters update that child's original text/progress/state without searching by
+labels or creating another tree.
+
+A ListView can consume its existing authored rows in strict mode only with an
+explicit `{role:"source_list",row_offsets:[...],input:existing_callable}` binding.
+`row_offsets` must exactly equal the serialized child order; every child still
+passes its own strict data/action bindings. Input is required only when the
+original list declares touchEnabled. This does not populate an empty list with
+invented rows or supply an unknown original item-template contract. Optional
+Cocos-space `position` and `set_bound_list_position(offset,position)` forward
+only controller-supplied coordinates; drag/bounce/selection remain that original
+controller's responsibility. Inspection behavior is not a gameplay completion.
+
+CSLoader's existing callback-name lookup is also respected: a default callback
+*type* with an empty callback name does not introduce a named handler on a
+passive original node. Actual buttons, touches and nonempty named callbacks
+retain their separate required bindings.
+
+All additions in this section are unexecuted and untested under the user's
+no-new-checks instruction. Existing dependency/inspection counts and actual-game
+consumption claims remain unchanged. Still required are the per-screen caller's
+content-root entry/mount, row-to-node/data mapping, tab/variant visibility,
+original scroll controller and confirmation/tooltip presentation contracts.

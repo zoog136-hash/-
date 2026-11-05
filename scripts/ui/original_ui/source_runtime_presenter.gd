@@ -5,6 +5,7 @@ extends Node
 const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const MENU=preload("res://scripts/ui/original_ui/source_menu_adapter.gd")
 const SESSION=preload("res://scripts/ui/original_ui/source_service_session.gd")
+signal content_presented(scene: Node2D, session: RefCounted)
 var _runtime: WeakRef
 var _pack: RefCounted
 var _routes: Dictionary={}
@@ -22,7 +23,7 @@ func attach(runtime: Object, pack: RefCounted) -> Dictionary:
 	_runtime=weakref(runtime)
 	_pack=pack
 	runtime.call("bind_presentation",Callable(self,"present"))
-	return {"ok":true}
+	return {"ok":true,"presenter":self}
 
 func register_content(section: String, focus_kind: String, member: String, source_sha256: String, mount: Node2D, binding_factory: Callable) -> Dictionary:
 	if _pack==null or not is_instance_valid(mount) or not binding_factory.is_valid():return {"ok":false,"code":"source_content_contract_missing"}
@@ -78,6 +79,7 @@ func present(section: String) -> Dictionary:
 	_session=session
 	session.closed.connect(_on_source_session_closed.bind(session.get_instance_id()))
 	mount.add_child(scene)
+	content_presented.emit(scene,session)
 	return {"ok":true,"source":str(route.member),"transaction_performed":false}
 
 func _on_source_session_closed(session_id: int) -> void:

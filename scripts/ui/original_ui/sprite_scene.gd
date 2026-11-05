@@ -112,7 +112,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if binding.has("selected") and not binding.selected is bool:problems.append("source_selection_value_missing")
 	var direct_input: bool=binding.get("input") is Callable and binding.input.is_valid()
 	if binding.has("input") and not direct_input:problems.append("source_input_callback_missing")
-	if direct_input and node.classname not in ["Panel","ImageView","Text","LoadingBar","ScrollView"]:problems.append("source_input_widget_missing")
+	if direct_input and node.classname not in ["Panel","ImageView","Text","LoadingBar","ScrollView","ListView"]:problems.append("source_input_widget_missing")
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
@@ -126,6 +126,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 				if key not in ["soundid","touchsoundid"] or not custom[key] is String:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
+			# CSLoader locates a handler by callbackName; a serialized default
+			# type (often Click) with no name supplies no callback to locate.
+			# It must not block a passive original image/text node. Actual
+			# buttons, touches and named callbacks retain their own guards.
+			if field=="callBackType" and str(widget.get("callBackName","")).is_empty():continue
 			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
 			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)
 			var declared_type: bool=field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox"))
@@ -134,8 +139,8 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 			if not inspection_only and not (source_touch or (connected_callback and (declared_type or declared_name))):problems.append("unconnected_source_callback:"+field)
 	if direct_input and not bool(widget.get("touchEnabled",false)):problems.append("source_input_not_declared")
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","consume"]):unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
+		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume"]):unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume"]: problems.append("unconnected_source_input")
 	if node.classname=="CheckBox":
 		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
 		if not inspection_only and not (binding.get("role")=="checkbox" and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)):problems.append("unconnected_source_checkbox")
@@ -160,10 +165,16 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only and not connected:problems.append("unconnected_original_scroll_input")
 		if binding.has("position") and not binding.position is Vector2:problems.append("source_scroll_position_invalid")
 	if node.classname=="ListView":
-		# Inspection retains supplied authored rows; dynamic gameplay content
-		# still requires the original row/caller contract.
-		unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
-		if not inspection_only: problems.append("unconnected_list_content")
+		# The caller explicitly identifies the authored rows it is consuming.
+		# Merely loading a list or rendering placeholder text is not a live
+		# row contract. New templates/data/selection are never manufactured.
+		var row_offsets: Array=[]
+		for child: Dictionary in node.get("children",[]):row_offsets.append(int(child._offset))
+		var connected: bool=binding.get("role")=="source_list" and binding.get("row_offsets") is Array and binding.row_offsets==row_offsets
+		if not connected:unresolved_bindings.append(str(widget.name)+":original_item_template_and_data_binding")
+		if not inspection_only and not connected:problems.append("unconnected_list_content")
+		if not inspection_only and bool(widget.touchEnabled) and not direct_input:problems.append("unconnected_original_list_input")
+		if binding.has("position") and not binding.position is Vector2:problems.append("source_list_position_invalid")
 	if node.classname=="ProjectNode":
 		var connected: bool=binding.get("role")=="project" and binding.get("bindings") is Dictionary
 		if not connected:unresolved_bindings.append(str(widget.name)+":project_scene_binding")
@@ -401,11 +412,12 @@ func _build(source: Dictionary) -> Node2D:
 		child_origin=scroll.content
 	var list_items: Array[Dictionary]=[]
 	var list_nodes: Array[Node2D]=[]
-	if source.classname=="ListView" and not source.children.is_empty():
+	if source.classname=="ListView":
 		var inner:=Node2D.new()
 		inner.name="SourceOriginalListRows"
 		child_origin.add_child(inner)
 		child_origin=inner
+		node.set_meta("source_list_content",inner)
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
@@ -427,6 +439,12 @@ func _build(source: Dictionary) -> Node2D:
 			list_nodes[index].position=arranged.positions[index]
 			list_nodes[index].z_index=index
 		node.set_meta("source_list_layout",arranged)
+	if source.classname=="ListView":
+		var list_binding: Dictionary=_bindings.get(int(source._offset),{})
+		if list_binding.has("position"):
+			var position_value: Vector2=list_binding.position
+			if not position_value.is_finite():_build_error="source_list_position_invalid";node.free();return null
+			child_origin.position=Vector2(position_value.x,-position_value.y)
 	return node
 
 func play(source_clip: String, repeat: bool=false) -> Dictionary:
@@ -623,6 +641,19 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 	for child: Node in node.get_children():_sync_source_display(child,display)
 
 
+func project_player(project_offsets: Array[int]) -> Dictionary:
+	# Exact offsets keep repeated child CSBs distinct. Callers can update
+	# their declared live fields/popups without searching by display labels
+	# or creating an alternate node tree. An empty path denotes this root.
+	var player: Variant=self
+	for offset: int in project_offsets:
+		if player._bindings.get(offset,{}).get("role")!="project":return {"ok":false,"error":"source_project_binding_missing","offset":offset}
+		var node: Node2D=player.source_nodes.get(offset)
+		if not is_instance_valid(node) or not node.has_meta("source_project_player"):return {"ok":false,"error":"source_project_player_missing","offset":offset}
+		player=node.get_meta("source_project_player")
+		if not is_instance_valid(player) or player.is_queued_for_deletion():return {"ok":false,"error":"source_project_player_unavailable","offset":offset}
+	return {"ok":true,"player":player,"source":player.source_member,"inspection_only":player.inspection_only}
+
 func set_bound_text(source_offset: int, value: String) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_text" or not node.has_meta("source_text"):return {"ok":false,"error":"source_text_binding_missing"}
@@ -644,6 +675,15 @@ func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_scroll" or not node.has_meta("source_scroll"):return {"ok":false,"error":"source_scroll_binding_missing"}
 	return node.get_meta("source_scroll").set_source_position(value)
+
+func set_bound_list_position(source_offset: int, value: Vector2) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_list" or not node.has_meta("source_list_content") or not value.is_finite():return {"ok":false,"error":"source_list_binding_missing"}
+	# As with ScrollView, coordinates come from the original caller. No
+	# replacement momentum, drag thresholds or row selection are introduced.
+	var content: Node2D=node.get_meta("source_list_content")
+	content.position=Vector2(value.x,-value.y)
+	return {"ok":true}
 
 func set_bound_displaystate(source_offset: int, value: bool) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)

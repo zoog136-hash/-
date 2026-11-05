@@ -6,6 +6,7 @@ signal closed
 var _service: WeakRef
 var _model: Dictionary={}
 var _token: String=""
+var _pending_plan: Dictionary={}
 var _active: bool=false
 
 func bind_prepared(service: Object, model: Dictionary) -> Dictionary:
@@ -49,33 +50,60 @@ func begin(action_ref: String) -> Dictionary:
 	# begin() owns invalidation of an earlier confirmation and all freshness
 	# checks. The UI does not construct a request from labels or numeric IDs.
 	_token=""
+	_pending_plan.clear()
 	var result: Dictionary=service.call("begin",action_ref)
-	if bool(result.get("ok",false)):_token=str(result.get("token",""))
+	if bool(result.get("ok",false)):
+		_token=str(result.get("token",""))
+		_pending_plan=result.duplicate(true)
 	action_result.emit(result.duplicate(true))
 	return result
 
+func pending_plan() -> Dictionary:
+	# Original popup/choice callers capture this opaque service token. An old
+	# popup must never operate on a newer begin() merely because it is visible.
+	return _pending_plan.duplicate(true) if _active and not _token.is_empty() else {}
+
 func choose(key: String, option_indices: Array) -> Dictionary:
+	return choose_pending(_token,key,option_indices)
+
+func choose_pending(token: String, key: String, option_indices: Array) -> Dictionary:
 	var service: Object=_live_service()
 	if service==null:return _unavailable()
-	var result: Dictionary=service.call("choose",_token,key,option_indices.duplicate())
+	if token.is_empty() or token!=_token:return {"ok":false,"code":"source_confirmation_not_current"}
+	var result: Dictionary=service.call("choose",token,key,option_indices.duplicate())
+	if bool(result.get("ok",false)):_pending_plan=result.duplicate(true)
 	action_result.emit(result.duplicate(true))
 	return result
 
 func confirm() -> Dictionary:
+	return confirm_pending(_token)
+
+func confirm_pending(token: String) -> Dictionary:
 	var service: Object=_live_service()
 	if service==null:return _unavailable()
+	if token.is_empty() or token!=_token:return {"ok":false,"code":"source_confirmation_not_current"}
 	# The service consumes its token before runtime.execute's single save.
 	# Return failures verbatim; no UI retry, reward or substitute result.
-	var result: Dictionary=service.call("confirm",_token)
-	if bool(result.get("ok",false)):_token=""
+	# For a ready service plan, clear the local copy before the synchronous
+	# call too. Save failure does not make a consumed confirmation reusable.
+	# Unresolved choices remain the service's responsibility and retain their
+	# token so its existing choice_required response can be handled.
+	if bool(_pending_plan.get("ready",false)):
+		_token=""
+		_pending_plan.clear()
+	var result: Dictionary=service.call("confirm",token)
 	action_result.emit(result.duplicate(true))
 	return result
 
 func cancel() -> Dictionary:
+	return cancel_pending(_token)
+
+func cancel_pending(token: String) -> Dictionary:
 	var service: Object=_live_service()
 	if service==null:return _unavailable()
-	var token: String=_token
+	if token.is_empty() or token!=_token:return {"ok":false,"code":"source_confirmation_not_current"}
 	_token=""
+	_pending_plan.clear()
 	var result: Dictionary=service.call("cancel",token)
 	action_result.emit(result.duplicate(true))
 	return result
@@ -100,6 +128,7 @@ func invalidate() -> void:
 	# runtime has already prepared before calling the presentation adapter.
 	_active=false
 	_token=""
+	_pending_plan.clear()
 	_model.clear()
 	_service=null
 
