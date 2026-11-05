@@ -77,6 +77,12 @@ raw because there is no existing receiver; CastDelay, cooldown, shape, target
 filters, effects, progression, ownership and saves are unchanged. This is
 unexecuted input code, not whole-spell coverage or observed casting.
 
+The distance adapter specifically retains the prior host geometry unless
+`IsAttackRange` is explicitly false and `MinCastRange` is0. Weapon-relative or
+positive/unknown minimum-distance context needs an actual existing owner
+receiver; a numeric scale cannot satisfy that source condition. Their original
+fields stay raw, and those rows are not reported as connected source geometry.
+
 The [official mobile knight-magic guide](https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95)
 describes energy bolt's target within10 cells. This supports distance context;
 it does not establish the internal523 raw unit or a host-length conversion.
@@ -127,6 +133,27 @@ source/binding/element row and prior/selected host channel. This is original
 data input, not a new resistance/damage formula, effect or ownership engine.
 No generic element lookup API, estimate or new spell is added. Code remains
 uncompiled/unexecuted/unverified; published269fc86 lacked this player input.
+
+The existing reviewed progression receiver now reads its selected child
+element too. `progression_runtime523.repeat_skill()` and the existing static
+`on_normal_hit()` construction call private
+`_apply_reviewed_child_element_input(skill,record,detail,node)` before handing
+that same skill to the existing `deal_damage` elemental reader. The helper
+reuses the accepted source523 object's source reader/pin/channel constants,
+public root binding and existing `_profile_problem`/`graph_for` contract.
+Only the already selected rule `effect_id`, exact reviewed graph/node and
+current full root/child rows can supply one declared ElementalType. No new
+child, graph traversal, enum, precedence or effect is selected.
+
+Missing/mismatched/unknown source retains the prior host physical input.
+`source523.reviewed_child_element_input` and its existing applied list retain
+the actual source/root binding/child/element and previous/selected channel.
+The current reviewed children120712/122992/107963 all declare None→physical,
+so the numeric/effect result is unchanged while its input now comes from the
+held original. The runtime-file delta is only this source-input helper and
+the two existing construction calls. Integration269 retains its execution,
+selection, damage/status, geometry, costs, RNG, ownership and save engine.
+This code is uncompiled/unexecuted/unverified; it is not whole-spell coverage.
 
 NPC attack distance is now supplied at an existing earlier input as well:
 successful `project_actor_record(record)` → private

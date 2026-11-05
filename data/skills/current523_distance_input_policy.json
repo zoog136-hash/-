@@ -35,5 +35,5 @@
   },
   "mobile_distance_context_reference": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95",
   "reference_limit": "The official mobile guide describes Energy Bolt's target within 10 cells. It does not define patch523 raw distance units or their conversion into TWILIGHT host lengths.",
-  "note": "The two scales are independent TWILIGHT numeric estimates calibrated to existing host lengths. They do not recover a native grid, targeting geometry or server formula. Zero source distances retain existing host input; MinCastRange remains raw because there is no existing recipient. CastDelay is not used."
+  "note": "The two scales are independent TWILIGHT numeric estimates calibrated to existing host lengths. They do not recover a native grid, targeting geometry or server formula. Zero source distances retain existing host input. IsAttackRange must be explicitly false and MinCastRange must be zero; unsupported weapon-relative or minimum-distance context retains existing host geometry and raw source fields. CastDelay is not used."
 }

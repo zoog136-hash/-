@@ -609,6 +609,9 @@ func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> D
 	var original: Dictionary = SOURCE_ROWS.row("SpellClass",int(row.ID))
 	if original.is_empty() or original!=row or not SOURCE_ROWS.declared_exclusion("SpellClass",original).is_empty(): return record
 	if original.get("TestSpell") is bool and original.TestSpell: return record
+	# The host has no minimum-distance or original weapon-relative range
+	# receiver. Do not turn a numeric scale into those missing context rules.
+	if original.get("IsAttackRange") is not bool or original.IsAttackRange or not _source_integer(original.get("MinCastRange")) or int(original.MinCastRange)!=0: return record
 	var file := FileAccess.open(DISTANCE_INPUT_POLICY_PATH,FileAccess.READ)
 	if file==null: return record
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
