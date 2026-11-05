@@ -6,6 +6,7 @@ with unresolved references is an inspection result; the runtime must refuse it.
 """
 from __future__ import annotations
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -57,6 +58,7 @@ class Builder:
         self.files = {}
         self.scenes = {}
         self.layout_sources = {}
+        self.node_scopes = {}
         self.atlases = {}
         self.source_compatibility = []
         self.blockers = []
@@ -204,6 +206,63 @@ class Builder:
             return
         self.layout_sources[member] = tree
 
+    def node_scene(self, member, offsets):
+        """Package an explicit partial original-node scope, never a full UI.
+
+        Keep the raw original and full read-only metadata separately. Only
+        selected nodes and their ancestors supply this scope's dependencies.
+        """
+        member = source_path(member)
+        if not offsets or len(set(offsets)) != len(offsets):
+            raise ValueError('Node scope requires distinct original offsets')
+        self.layout_source(member)
+        tree = self.layout_sources.get(member)
+        if tree is None:
+            return
+        requested = set(offsets)
+        found = set()
+        tags = set()
+
+        def prune(node):
+            children = [kept for child in node.get('children', [])
+                        if (kept := prune(child)) is not None]
+            offset = node['_offset']
+            if offset not in requested and not children:
+                return None
+            if offset in requested:
+                found.add(offset)
+            kept = copy.deepcopy(node)
+            kept['children'] = children
+            opts = node['options']
+            widget = opts.get('widgetOptions', opts.get('nodeOptions', opts))
+            tags.add(widget.get('actionTag', 0))
+            return kept
+
+        scoped = copy.deepcopy(tree)
+        scoped['nodeTree'] = prune(tree['nodeTree'])
+        if found != requested:
+            raise ValueError('Original node scope offset not present: ' + member)
+        if isinstance(scoped.get('action'), dict):
+            scoped['action']['timeLines'] = [t for t in scoped['action'].get('timeLines', [])
+                                            if t.get('actionTag') in tags]
+        scoped['_selected_source_offsets'] = offsets
+        scoped['_partial_source_scene'] = True
+        self.scenes[member] = scoped
+        self.node_scopes[member] = offsets
+
+        def dependencies(value):
+            if isinstance(value, dict):
+                if value.get('_type') == 'ResourceData':
+                    self.resource(value, member)
+                if value.get('_type') == 'ProjectNodeOptions' and value.get('fileName'):
+                    self.scene(value['fileName'])
+                for child in value.values():
+                    dependencies(child)
+            elif isinstance(value, list):
+                for child in value:
+                    dependencies(child)
+        dependencies(scoped)
+
     def build(self, entries, output):
         output = Path(output)
         if output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
@@ -219,6 +278,8 @@ class Builder:
                     'blockers': blockers, 'runtime_verified': False}
         if self.layout_sources:
             manifest['layout_sources'] = self.layout_sources
+        if self.node_scopes:
+            manifest['node_scopes'] = self.node_scopes
         if self.source_compatibility:
             manifest['source_compatibility'] = list({json.dumps(x, sort_keys=True): x for x in self.source_compatibility}.values())
         output.mkdir(parents=True)
@@ -230,6 +291,9 @@ class Builder:
         (output / 'original_ui.json').write_bytes(raw)
         receipt = {'manifest_sha256': digest(raw), 'scenes': len(self.scenes), 'files': len(self.files),
                    'blockers': len(blockers), 'status': 'DEPENDENCIES_RESOLVED_NOT_RENDERED' if not blockers else 'BLOCKED'}
+        if self.node_scopes:
+            receipt['partial_node_scopes'] = self.node_scopes
+            receipt['whole_scene_completion_claimed'] = False
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
         return receipt
 
@@ -240,6 +304,8 @@ def main():
     parser.add_argument('--scene', action='append', required=True)
     parser.add_argument('--layout-source', action='append', default=[],
                         help='Original parent CSB geometry only; not an activated scene closure')
+    parser.add_argument('--node-scene', action='append', default=[],
+                        help='Explicit partial original scope: UI/path.csb:offset,offset')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     if args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
@@ -248,6 +314,11 @@ def main():
     builder = Builder(index.get('source_files', index))
     for member in args.layout_source:
         builder.layout_source(member)
+    for spec in args.node_scene:
+        member, separator, values = spec.rpartition(':')
+        if not separator:
+            parser.error('--node-scene requires an original member and offsets')
+        builder.node_scene(member, [int(value) for value in values.split(',')])
     print(json.dumps(builder.build(args.scene, args.output)))
 
 

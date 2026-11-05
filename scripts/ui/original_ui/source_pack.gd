@@ -39,6 +39,9 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 		if not tree is Dictionary or not value.files.has(member) or tree.get("_source_sha256")!=value.files[member].sha256:
 			return _fail("scene_source_mismatch")
 		if not tree.get("_decode_blockers") is Array or not tree._decode_blockers.is_empty(): return _fail("unsupported_source_fields")
+		if bool(tree.get("_partial_source_scene",false)):
+			if not tree.get("_selected_source_offsets") is Array or tree._selected_source_offsets.is_empty():return _fail("partial_source_node_scope_missing")
+			if not value.get("node_scopes") is Dictionary or value.node_scopes.get(member)!=tree._selected_source_offsets:return _fail("partial_source_node_scope_mismatch")
 	if value.has("layout_sources"):
 		if not value.layout_sources is Dictionary:return _fail("layout_source_fields")
 		for member: String in value.layout_sources:

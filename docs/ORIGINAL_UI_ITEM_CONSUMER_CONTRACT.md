@@ -513,3 +513,35 @@ Its builder result is dependencies-resolved/not-rendered. This is packaging for
 the game consumer, not a new test or a game-consumption observation. No game
 boot, test, verification suite, render, quality assessment or CI was executed.
 Fixed inventory denominators and prior checkpoint counts remain unchanged.
+
+### Main HP/MP node scope — unexecuted
+
+The existing update_player path also forwards raw hp/max_hp/mp/max_mp into the
+original CharInfo bars/text. Its actual parent is UI/HUDScene.csb, ProjectNode
+1800, using the same serialized 1200 x 675 coordinate basis. Original status
+and inventory hit controls delegate to existing HUD entry points; their returned
+acknowledgement is distinct from transaction success.
+
+This is an explicitly partial source-node scope, not full Hud_CharInfo or
+HUDScene completion. Selected original offsets are 46576 (base background),
+40620/37172 (HP bar/text), 35464/35528 (MP bar/text), and 20552/20060 (status and
+inventory controls). Their unchanged ancestor chain/order/transforms remain.
+Other original nodes remain in the full read-only source metadata and raw CSB.
+In particular, clipping node 37544 contains customProperty clipping=0.5; this
+value is not interpreted as HP progress. Its meaning, HP trail timing, poison,
+weight, lawful and other stat roles remain unresolved rather than fabricated.
+
+The private builder can package an explicit `--node-scene member:offset,offset`
+scope alongside entry scenes. `source_node_scope.gd` selects only those original
+nodes plus ancestors and retains only their original action-tag tracks, with
+unchanged clips/frame values. It authors no geometry, nodes, textures or timing.
+The tree is marked `_partial_source_scene` with exact selected offsets. Ordinary
+whole-scene configure refuses such a scoped pack; configure_nodes or the explicit
+configure_project node-scope argument is required. No scoped member is counted
+as a wholly connected file or its full original bytes as actual gameplay use.
+
+The native vitals package contains one EXP entry and a partial CharInfo scope,
+12 original files and separate MainScene/HUDScene/full CharInfo source metadata.
+It is dependency-resolved/not-rendered. Pack assembly and delivery metadata do
+not replace a game run. No new test, render, quality assessment or CI was run;
+these code paths and viewport behavior remain unexecuted and unverified.

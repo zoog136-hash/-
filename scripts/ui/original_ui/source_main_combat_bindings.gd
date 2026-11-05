@@ -13,6 +13,7 @@ const CLICK_PROJECTS=[9912,9640,9368,9096,8824,8552,8276,8004]
 var _pack: RefCounted
 var _hud: WeakRef
 var _world: WeakRef
+var _core_availability: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, world: Node) -> Dictionary:
 	if not is_instance_valid(hud) or not is_instance_valid(world):return _fail("source_main_combat_host_unavailable")
@@ -60,6 +61,44 @@ func build(member: String, remaining: Dictionary={}) -> Dictionary:
 		]
 	return {"ok":true,"member":member,"sha256":root.sha256,"bindings":bindings,"state":state,"unresolved_fields":unresolved,"complete_screen_contract":false}
 
+func core_source_offsets() -> Dictionary:
+	if _pack==null or _pack.manifest.get("files",{}).get(PAD,{}).get("sha256","")!=ROOTS[PAD].sha256:return _fail("source_main_combat_identity_mismatch")
+	var tree: Dictionary=_pack.call("layout_source",PAD) if _pack.has_method("layout_source") else _pack.scene(PAD)
+	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_combat_original_layout_missing")
+	var roots: Array[int]=[31780,29032,24560,22536,12660,23168]
+	var matches: Dictionary={}
+	var selected: Array[int]=[]
+	_collect_core_offsets(tree.nodeTree,roots,matches,selected,false)
+	for offset: int in roots:
+		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_combat_core_node_not_unique","offset":offset}
+	return {"ok":true,"source_node_offsets":selected,"core_root_offsets":roots,"partial_source_scene":true,"complete_screen_contract":false}
+
+func build_core(availability: Dictionary, remaining: Dictionary={}) -> Dictionary:
+	for key: String in ["attack","auto","target","self"]:
+		if not availability.get(key) is bool:return {"ok":false,"code":"source_main_combat_host_availability_required","field":key}
+	var scope: Dictionary=core_source_offsets()
+	if not scope.get("ok",false):return scope
+	var built: Dictionary=build(PAD,remaining)
+	if not built.get("ok",false):return built
+	var bindings: Dictionary={}
+	# Only bindings within the chosen native subtree roots survive. Ancestor
+	# transforms remain original; caller supplies availability, not client modes.
+	for offset: int in scope.source_node_offsets:
+		if built.bindings.has(offset):bindings[offset]=built.bindings[offset].duplicate(true)
+	for pair: Array in [[31376,"attack"],[28976,"auto"],[24496,"target"],[22476,"self"]]:
+		_set_visible_binding(bindings,int(pair[0]),availability[pair[1]])
+	_set_visible_binding(bindings,12660,built.state.auto_enabled and availability.auto)
+	_set_visible_binding(bindings,23168,built.state.self_mode_enabled and availability.self)
+	_core_availability=availability.duplicate(true)
+	return {"ok":true,"member":PAD,"sha256":ROOTS[PAD].sha256,"source_node_offsets":scope.source_node_offsets,"bindings":bindings,"state":built.state,"host_control_availability":availability.duplicate(true),"availability_basis":"existing_game_host_control_visibility","partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original_client_mode_switch_contracts","pickup_and_special_actions_excluded_from_scope","original_effect_animation_start_stop_contract"]}
+
+static func _collect_core_offsets(node: Dictionary, roots: Array[int], matches: Dictionary, selected: Array[int], inside: bool) -> void:
+	var offset: int=int(node.get("_offset",-1))
+	if offset in roots:matches[offset]=int(matches.get(offset,0))+1
+	var retain: bool=inside or offset in roots
+	if retain and offset not in selected:selected.append(offset)
+	for child: Dictionary in node.get("children",[]):_collect_core_offsets(child,roots,matches,selected,retain)
+
 func main_project_binding(remaining_pad: Dictionary={}) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MAIN,{}).get("sha256","")!=MAIN_SHA:return _fail("source_main_scene_identity_mismatch")
 	var pad: Dictionary=build(PAD,remaining_pad)
@@ -74,10 +113,15 @@ func refresh_presented(scene: Node2D) -> Dictionary:
 	if not ROOTS.has(member):return _fail("source_main_combat_member_unknown")
 	var state: Dictionary=snapshot()
 	if not state.get("ok",false):return state
-	var result: Dictionary=scene.set_bound_visible(int(ROOTS[member].auto_effect),state.auto_enabled)
+	var auto_visible: bool=state.auto_enabled
+	var self_visible: bool=state.self_mode_enabled
+	if member==PAD and not _core_availability.is_empty():
+		auto_visible=auto_visible and bool(_core_availability.auto)
+		self_visible=self_visible and bool(_core_availability.self)
+	var result: Dictionary=scene.set_bound_visible(int(ROOTS[member].auto_effect),auto_visible)
 	if not result.get("ok",false):return result
 	if member==PAD:
-		result=scene.set_bound_visible(23168,state.self_mode_enabled)
+		result=scene.set_bound_visible(23168,self_visible)
 		if not result.get("ok",false):return result
 	return {"ok":true,"state":state}
 

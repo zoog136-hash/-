@@ -2667,19 +2667,22 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	add_child(candidate)
 	var configured: Dictionary=candidate.configure(source_pack,self,$Root)
 	if not configured.get("ok",false):
-		candidate.release(false)
+		candidate.release(true)
 		candidate.queue_free()
+		if is_instance_valid(original_main_ui_controller):original_main_ui_controller.sync_legacy_visibility()
 		return configured
 	if not _original_main_player_values.is_empty():
 		var mounted: Dictionary=candidate.callv("update_player",_original_main_player_values)
 		if not mounted.get("ok",false):
-			candidate.release(false)
+			candidate.release(true)
 			candidate.queue_free()
+			if is_instance_valid(original_main_ui_controller):original_main_ui_controller.sync_legacy_visibility()
 			return mounted
 	if is_instance_valid(original_main_ui_controller):
 		original_main_ui_controller.release(false)
 		original_main_ui_controller.queue_free()
 	original_main_ui_controller=candidate
+	candidate.sync_legacy_visibility()
 	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:

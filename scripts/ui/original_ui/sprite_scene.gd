@@ -2,6 +2,7 @@ extends Node2D
 const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
+const NODE_SCOPE=preload("res://scripts/ui/original_ui/source_node_scope.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
@@ -24,8 +25,9 @@ var excluded_audio_events: Array[Dictionary]=[]
 var _entered_frames: Dictionary={}
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
+var _requested_source_nodes: Array[int]=[]
 
-func configure_project(pack: RefCounted, parent_member: String, project_offset: int, bindings: Dictionary) -> Dictionary:
+func configure_project(pack: RefCounted, parent_member: String, project_offset: int, bindings: Dictionary, source_nodes_scope: Array[int]=[]) -> Dictionary:
 	# Mount an independently supplied original component using its actual
 	# parent ProjectNode properties. Parent geometry alone does not activate
 	# the parent's unrelated scenes or count them as connected.
@@ -41,10 +43,15 @@ func configure_project(pack: RefCounted, parent_member: String, project_offset: 
 	if not member.begins_with("UI/"):member="UI/"+member
 	_project_ancestry=[parent_member]
 	_project_root_options=options.get("widgetOptions",options.get("nodeOptions",options)).duplicate(true)
+	_requested_source_nodes=source_nodes_scope.duplicate()
 	var result: Dictionary=configure(pack,member,false,bindings)
 	if result.get("ok",false):
 		set_meta("original_parent_project",{"member":parent_member,"sha256":parent.get("_source_sha256",""),"offset":project_offset})
 	return result
+
+func configure_nodes(pack: RefCounted, member: String, source_nodes_scope: Array[int], bindings: Dictionary) -> Dictionary:
+	_requested_source_nodes=source_nodes_scope.duplicate()
+	return configure(pack,member,false,bindings)
 
 static func _node_at_offset(node: Dictionary, offset: int) -> Dictionary:
 	if int(node.get("_offset",-1))==offset:return node
@@ -65,6 +72,15 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	if _bindings.has("frame_events") and not _bindings.frame_events is Dictionary:return {"ok":false,"error":"source_frame_event_binding_shape"}
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
+	if bool(tree.get("_partial_source_scene",false)):
+		if _requested_source_nodes.is_empty():return {"ok":false,"error":"partial_source_requires_explicit_node_scope"}
+		var allowed: Array=tree.get("_selected_source_offsets",[])
+		for offset: int in _requested_source_nodes:
+			if offset not in allowed:return {"ok":false,"error":"source_node_outside_pack_scope","offset":offset}
+	if not _requested_source_nodes.is_empty():
+		var scoped: Dictionary=NODE_SCOPE.select(tree,_requested_source_nodes)
+		if not scoped.get("ok",false):return scoped
+		tree=scoped.tree
 	if member in _project_ancestry or _project_ancestry.size()>=32:return {"ok":false,"error":"project_recursion"}
 	if not _project_root_options.is_empty():
 		# CSLoader creates the referenced node, then ProjectNodeReader applies
@@ -130,7 +146,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
 	_sync_source_display(self,_source_parent_display())
-	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
+	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView"]:
