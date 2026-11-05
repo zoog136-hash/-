@@ -43,6 +43,14 @@ The machine-readable baseline remains the existing private
 `content-consumption-audit523.main.json` and `ownership-evidence.json`; this Draft
 does not recalculate their labels after implementation changes.
 
+For the requested stage comparison, receipt of the fixed source is
+1,065/1,065 tables (100% held); the original ZIP and its uncompressed JSON remain
+separate byte units. The recorded122/1,065 partial-path labels are about11.46%
+of inventoried tables, not11.46% of completed tables or gameplay. There is no
+whole-table completion numerator for the later code-writing stage and no
+whole-source gameplay byte extent. Thus the current implementation/gameplay
+percentage is unavailable, rather than estimated from test counts or held data.
+
 The first scope review identifies 50 empty tables and 102 nonempty tables for
 explicitly excluded features or stopped/test content. These remain in the fixed
 denominator. Under this classification the theoretical full-table ceiling is
@@ -201,6 +209,38 @@ in the existing equipment cache reader. Extending effect execution is PR269's
 boundary. Map/spawn/media readers remain with their owners. This is a record of
 the bounded existing evidence used for implementation, not a new survey, a new
 coverage count, or a claim that every remaining table is already connected.
+
+### Existing destination and mastery inputs — unverified
+
+`World.auto_hunting_destinations()` calls the existing schedule's
+`load_configured()`. A present projection keeps its original size/hash parser;
+only an absent projection can now use the pinned held archive. The existing
+compiler's ten-table relation projection follows AutoScheduleCategory and
+AutoScheduleLandTeleport through LandTeleport, Territories, Land, Currency and
+the original prerequisite links/types. Existing destination/list/request readers
+consume these entries. No departure location, coordinate projection, price or
+eligibility is invented; movement, its local policy, payment and saving stay
+unchanged. Destination `runtime_enabled:false` and the existing unverified
+arrival guard remain intact. `source_input`/`input_identity` distinguish original
+archive bytes from a compiled projection's separate fingerprint/byte count.
+
+`World.weapon_mastery.configure()` now calls `core.load_original()` only when no
+explicit mastery pack/SHA argument was supplied. It projects the public
+compiler's twelve core tables and exact Bonus/BonusType/UIUnit and supporting
+class/weapon/currency rows into the existing staged `configure/_configure`.
+Existing compiled/live tables are retained, invalid explicit input is not
+bypassed, and existing growth/stat/planner consumers read the staged data.
+Point purchase, mastery-change and color-reset source rows follow the same
+compiler joins without new values, probabilities or transaction code.
+Reset-ticket identity is built only when a previously installed exact full-item
+sidecar supplies the original matching IdentifiedDescID label; otherwise that
+operation retains `ticket_source_missing`. No new DescData scan or guessed label
+is used for this bootstrap. `source_mode/source_identity/source_status` identify
+the original-table path; `model_pack_sha256` stays a compiled-file fingerprint.
+
+These are input connections to existing services, not proof of gameplay or
+completion of every row in their shared source tables. Their current caller and
+transaction guards have not been executed after these edits.
 
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
