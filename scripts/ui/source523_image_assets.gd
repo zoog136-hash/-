@@ -1,6 +1,7 @@
 extends RefCounted
 ## Explicit, read-only image selection. Separate from actor/card pack settings.
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
+const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
 static var _pack: RefCounted
 static var _selected: bool = false
 static var _selection_checked: bool = false
@@ -23,6 +24,17 @@ static func clear_selection() -> void:
 	_selected = false
 	_selection_checked = true
 	_error = ""
+
+static func configure_original_ui(document: Dictionary, root: String, manifest_sha256: String) -> Dictionary:
+	# The UI owner supplies the original scene closure and explicit clip/loop
+	# bindings. Image selection alone does not authorize inferred playback.
+	var scenes: Variant = document.get("source_icon_scenes")
+	if not scenes is Dictionary or scenes.get("schema") != "patch523-original-ui-icon-scenes-v1" or not scenes.get("icons") is Dictionary:
+		return {"ok":false,"error":"source_scene_bindings_required"}
+	var result: Dictionary = ORIGINAL_UI_ICONS.open_pack(root,manifest_sha256)
+	if bool(result.get("ok",false)):
+		ORIGINAL_UI_ICONS.configure(document)
+	return result
 
 static func selection(arguments: PackedStringArray, environment_root: String = "", environment_sha256: String = "") -> Dictionary:
 	var root: String = ""

@@ -52,10 +52,18 @@ static func apply(view: TextureRect, record: Dictionary, item_name: String, imag
 
 static func clear(view: TextureRect) -> void:
 	if view == null: return
+	_detach_source_scene(view)
 	view.material = null
 	SOURCE523.bind_metadata(view,{})
 	var effect: Node = view.get_node_or_null("ItemVisual")
 	if effect != null: effect.deactivate()
+
+static func _detach_source_scene(view: TextureRect, immediate: bool = true) -> void:
+	SOURCE523.ORIGINAL_UI_ICONS.detach(view,immediate)
+	var previous: Variant = view.get_meta("item_visual",{})
+	if previous is Dictionary and previous.get("route","") == "source523_images" and previous.has("scene_result"):
+		view.remove_meta("item_visual")
+		SOURCE523.bind_metadata(view,{})
 
 static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
 	var key: String = "%d:%d" % [grade_rank,group]
@@ -69,6 +77,8 @@ static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
 	return result
 
 func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String) -> void:
+	if is_instance_valid(target) and target != view: _detach_source_scene(target)
+	_detach_source_scene(view)
 	target = view
 	target.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -76,6 +86,17 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 	var info: Dictionary = RESOLVER.describe(record,item_name,images,usage == "ground")
 	source_presentation = info.get("route","") == "source523_images"
 	target.texture = info.get("texture") as Texture2D if source_presentation else RESOLVER.texture(record,item_name,images,usage == "ground")
+	var source_scene_requested: bool = source_presentation and info.get("reason","") == "unsupported_csb" and usage != "ground"
+	if source_scene_requested:
+		var attached: Dictionary = SOURCE523.ORIGINAL_UI_ICONS.attach(view,info)
+		info["scene_result"] = attached
+		info["source_status"] = str(attached.get("status","unavailable"))
+		if attached.get("ok",false):
+			info["status"] = "verified_source_scene"
+			info["reason"] = ""
+		else:
+			info["status"] = "original_icon_not_installed"
+			info["reason"] = str(attached.get("error","source_scene_unavailable"))
 	rank = animation_rank(record, item_name)
 	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
@@ -103,7 +124,7 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		substitute_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		substitute_mark.offset_left = -12
 	var missing_original: bool=info.status=="original_icon_not_installed"
-	substitute_mark.text=SOURCE523.missing_label(info) if missing_original and source_presentation else "원본 미설치" if missing_original else "◇"
+	substitute_mark.text="효과 미연결" if missing_original and source_scene_requested else SOURCE523.missing_label(info) if missing_original and source_presentation else "원본 미설치" if missing_original else "◇"
 	substitute_mark.tooltip_text=str(info.get("reason","원본 아이콘 미설치")) if missing_original and source_presentation else "원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
 	substitute_mark.offset_left=-62 if missing_original else -12
 	substitute_mark.visible = missing_original or info.status == "self_authored_substitute"
@@ -145,6 +166,7 @@ func refresh_visibility() -> bool:
 	return animate
 
 func deactivate() -> void:
+	if is_instance_valid(target): _detach_source_scene(target)
 	rank = 0
 	source_presentation = false
 	foreground_ready = true
@@ -153,4 +175,5 @@ func deactivate() -> void:
 	if is_instance_valid(scheduler): scheduler.unregister(self)
 
 func _exit_tree() -> void:
+	if is_instance_valid(target): _detach_source_scene(target,false)
 	if is_instance_valid(scheduler): scheduler.unregister(self)

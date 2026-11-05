@@ -69,6 +69,11 @@ Library identities or saves are included in Git.
   to an existing TextureRect/Sprite2D/NinePatchRect. It leaves source hierarchy,
   position, clipping, color/blend tracks, input and service callbacks to the UI
   owner. It creates no widgets, layout, clock or animation engine.
+- `source523_original_ui_icons.gd` connects the existing item-slot lifecycle to
+  the separately owned original UI pack/player. Scene identity must match the
+  current ItemClass/Icon/AssetView path and the supplied scene binding. Original
+  pack and scene hashes, clip name and repeat policy remain explicit inputs.
+  Slot reuse, clearing and disposal detach the old source scene.
 
 Selection uses a complete explicit pair:
 
@@ -98,18 +103,32 @@ validation is started under the latest instruction. Required CI is unrun, not
 passed. Commits use [skip ci]; no workflow/protection changes, merge, auto-merge
 or deployment are performed.
 
+The item CSB lifecycle connection and `configure_original_ui(document, root,
+manifest_sha256)` handoff are also unexecuted. The latter accepts the existing
+`source_icon_scenes` document (`patch523-original-ui-icon-scenes-v1`) and opens
+the UI owner's pack before replacing scene bindings. No scene/clip bindings are
+generated from the image inventory. The UI player's code and exact scene pack
+must be installed separately; absent inputs remain an explicit missing result.
+
 ## Delivery and remaining connections
 
 The exact private runtime pack and 18 ZIP delivery parts are preserved locally.
-The official Library upload stopped at tools/list HTTP401 before byte transfer;
-durable pack delivery is not complete. Two earlier reference-archive downloads
-also stopped at that discovery stage and were not retried. The independent
-public format reference resolved the decoder input gap without retrying them.
+All 18 parts (773,979,412 archive bytes) and the delivery manifest were transferred
+to the user's existing private Google Drive delivery folder. Transfer metadata
+records the existing parent and unshared status; no sharing permissions were
+added. Archive transfer does not establish installation or gameplay consumption.
+Private destination and file identities remain outside Git.
+
+The earlier official Library upload stopped at tools/list HTTP401 before byte
+transfer. That path and the two earlier reference-archive downloads were not
+retried. The independent public format reference resolved the decoder input gap
+without retrying them.
 
 UI267 was read at `6c15bd07241ac2b271963815b4b7d49ae3a8394a`; its renderer and
 original layout remain owned there. Source-map terrain, rest-system transactions,
 definition-data work and Sprite actor motion remain separate owners. Source
-CSB icons still require the existing UI player's exact scene closures. Full
+CSB icons have an item-slot caller adapter but still require the existing UI
+player's exact scene closures and explicit clip/repeat bindings. Full
 mission/NPC/pass/attendance/map-screen/emoticon consumption still needs the
 corresponding existing original UI callers and exact node/selection/timing
 contracts. The adapter API does not establish that those consumers are active.
