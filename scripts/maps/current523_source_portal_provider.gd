@@ -54,7 +54,13 @@ func portal_evidence_for_land(land_id: int, exact_asset: String) -> Array:
 static func _declared_inactive_restriction(type: Dictionary, row: Dictionary) -> bool:
 	# Current523 Unit20=TrueFalse. Exact known negative restrictions only;
 	# zero on an unknown type, another unit or a parameterized row is not permission.
-	var expected_name: String={8:"NoTeleport",13:"NoTeleportCome"}.get(int(type.get("ID",-1)),"")
+	var expected_name: String={
+		1:"NoCreateMonster",3:"NoDropItem",4:"NoLoseExperience",5:"NoUsePosition",
+		6:"NoPolymorph",7:"NoMassattack",8:"NoTeleport",13:"NoTeleportCome",
+		191:"BlockLoginEnter",234:"NeverTeleport",301:"NoParty",592:"CannotEscape",
+		602:"NoQuestTeleport",612:"NoExperience",694:"NoPickupSelector",758:"NoChat",
+		782:"NoBuff",1012:"NoReviveOnInterServer",1061:"NoPurplePushOnDie"
+	}.get(int(type.get("ID",-1)),"")
 	if expected_name.is_empty() or type.get("Name")!=expected_name or type.get("UnitID")!=20: return false
 	for key: String in ["Value","Param1","Param2","Param3"]:
 		if not (row.get(key) is int or row.get(key) is float) or row[key]!=0: return false

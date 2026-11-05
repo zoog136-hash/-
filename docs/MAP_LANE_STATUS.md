@@ -693,3 +693,22 @@ S32 원시 속성이나 PC 안전 비트를 빌려 neutral/is_safe 반환을 바
 이번 호출 연결도 **추가 테스트·실행·렌더 검증·품질 평가를 하지 않은 미검증 코드**다.
 슬롯 표시/귀환 동작 성공 수나 원본 소비율을 추가하지 않으며 기존 수치와 제외를
 유지한다. 새 자료 탐색·이미지·Sprite·UI 제작은 하지 않았다.
+
+## 원문 비활성 제한 → 기존 입장·포탈 소비 경로 — 미검증 구현
+
+기존 입장/포탈 provider에서 NoTeleport/NoTeleportCome만 원문 False로 소비하던
+경로에 보유 M 원문 타입의 NoCreateMonster·NoDropItem·NoLoseExperience·
+NoUsePosition·NoPolymorph·NoMassattack·BlockLoginEnter·NeverTeleport·NoParty·
+CannotEscape·NoQuestTeleport·NoExperience·NoPickupSelector·NoChat·NoBuff·
+NoReviveOnInterServer·NoPurplePushOnDie의 정확한 ID/이름 대응을 연결한다.
+원문의 Unit20=TrueFalse이며 Value/Param1/2/3가 모두0인 행만 비활성으로 소비한다.
+같은 함수는 실제 per-Land 입장/재열기·수동 포탈의 조건 반환에 사용되며 단독 조회
+API나 별도 목록으로 끝내지 않는다.
+
+이는 제한이 원문에서 꺼져 있다는 판정이다. 몬스터·아이템·변신·파티 등의 새 기능을
+켜거나 원문 보상/기본 동작을 만드는 것이 아니다. 다른 Unit의0,이름/ID 불일치,
+비영 Param,활성 제한/미해석 타입과 다른 입장·기간·서버·충돌 조건은 계속 보류한다.
+비활성 선언을 원작 자동 포탈/무료 입장 허가로 사용하지 않는다.
+
+원본 파일이나 팩은 변경하지 않았고 새 조사·테스트·실행·렌더 검증·품질 평가도
+하지 않았다. 이번 조건 소비 변경은 미검증이며 새 플레이/표시 수치를 추가하지 않는다.
