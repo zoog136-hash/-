@@ -280,3 +280,15 @@ original CSB player before preview or commit. Requests remain unavailable while
 that original scene is unmounted, hidden, queued for disposal, or inspection
 only. This does not create a replacement form when a complete source mapping
 is missing. This gate is implemented but has not been executed/tested.
+
+The concrete `source_alchemy_bindings.gd` factory binds source Alchemy_All's
+exact Btn_Close offset 19568 to the equipment endpoint's close method and
+Btn_Alchemy offset 4084 to `request_preview_for("alchemy")`. It checks the
+retained source member SHA and preserves caller-supplied bindings for the rest
+of the original hierarchy. The endpoint requires a canonical selected alchemy
+action and a mounted strict source scene. Closing disables/removes that bound
+original scene. No quantity, recipe or material selection is inferred.
+The source child ProjectNode paths/offsets are retained in that factory.
+`complete_screen_contract:false` remains explicit: the quantity/help/child/data
+contracts are still required, and strict loading still rejects missing ones.
+This concrete mapping has not been executed or tested.

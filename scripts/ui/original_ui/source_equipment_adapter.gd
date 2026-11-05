@@ -22,7 +22,16 @@ func bind_source_scene(scene: Node2D) -> Dictionary:
 	var status: Dictionary=scene.call("playback_status")
 	if bool(status.get("inspection_only",true)) or str(status.get("source","")).is_empty():return {"ok":false,"code":"original_equipment_scene_required"}
 	_source_scene=weakref(scene)
+	closed.connect(_close_bound_scene,CONNECT_ONE_SHOT)
 	return {"ok":true,"transaction_performed":false}
+
+func _close_bound_scene() -> void:
+	var scene: Node2D=_source_scene.get_ref() if _source_scene!=null else null
+	if is_instance_valid(scene):
+		scene.visible=false
+		scene.process_mode=Node.PROCESS_MODE_DISABLED
+		scene.queue_free()
+	_source_scene=null
 
 func _source_ready() -> bool:
 	var scene: Node2D=_source_scene.get_ref() if _source_scene!=null else null
@@ -47,6 +56,10 @@ func select_action(action: Dictionary) -> Dictionary:
 func set_confirmation(value: bool) -> Dictionary:
 	_confirmed=value
 	return {"ok":true,"transaction_performed":false}
+
+func request_preview_for(kind: String) -> Dictionary:
+	if str(_selection.get("kind",""))!=kind:return {"ok":false,"code":"source_operation_mismatch"}
+	return request_preview()
 
 func request_preview() -> Dictionary:
 	if not _source_ready():return {"ok":false,"code":"presentation_unavailable"}
