@@ -9,18 +9,18 @@ Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
 The private Library operation succeeded for this exact existing file identity:
 
-- Library ID: `libfile_22ce42630a508191a9e63e18c3712cf0`, returned version **2**.
-- File ID: `file_000000009c248206a5eacc4842d7b70f`.
-- Canonical filename: `TWILIGHT_current523_main_game_core_original_pack_20261105.zip`.
-- ZIP size: **7,395,106 bytes**.
-- ZIP SHA256: `b7e88221b31e94dc9eb7cf9dbd7ffe25fca57f0d096ecbde1bd2ce38ff10eacd`.
-- `original_ui.json` SHA256: `d8347b80ea906748a675ea2adbb81986ee7caf63d5cd5c7892b580fdd089cb0a`.
-- Corresponding published code: `be42c8fc347319e3768a375b9994e6244082f587`.
+- Library ID: `libfile_22ce42630a508191a9e63e18c3712cf0`, returned version **3**.
+- File ID: `file_00000000426c8209a8f9b721e843431b`.
+- Canonical filename: `TWILIGHT_current523_main_game_fields_original_pack_20261105.zip`.
+- ZIP size: **7,480,911 bytes**.
+- ZIP SHA256: `795af1d16bcd78ef9ae2ba4280e2a83ac2351dc4b260d570c4ab1c4fe2065e6f`.
+- `original_ui.json` SHA256: `7d85f521d0d30460b1a15758f0af85e899104b4ce88af4fb1a34152376b9493c`.
+- Corresponding published code: `a515446da50f0aa3c8897d66d33ef04d161675c6`.
 - Drive file ID: **not provided**; do not synthesize one from the Library ID.
 
 The ZIP has `original_ui.json`, `receipt.json` and `originals/UI/...` at its
 root. An installer may use the relative destination
-`source-ui/current523-main-game-core`; no absolute install location is embedded
+`source-ui/current523-main-game-fields`; no absolute install location is embedded
 in the pack or loader. The loader root is the extracted directory containing
 `original_ui.json`, not its `originals` subdirectory. The caller must supply
 the manifest pin above separately from the ZIP hash.
@@ -29,7 +29,7 @@ Runtime selection uses both of:
 
 ```text
 --source-ui=<extracted-root>
---source-ui-sha256=d8347b80ea906748a675ea2adbb81986ee7caf63d5cd5c7892b580fdd089cb0a
+--source-ui-sha256=7d85f521d0d30460b1a15758f0af85e899104b4ce88af4fb1a34152376b9493c
 ```
 
 Equivalent environment keys are `TWILIGHT_SOURCE_UI` and
@@ -42,17 +42,20 @@ remains the separate PR270 consumer contract.
 
 ## Actual packaged scope
 
-There are 16 original files, one EXP entry, three explicit partial node scopes
-(CharInfo HP/MP/status/inventory, AttackPad attack/auto/target/self, TopMenu
-All/Inventory/Skill/Store/Quest), and read-only original MainScene/HUDScene
-parent metadata. Full parent metadata does not activate their other children.
+There are 20 original files, one EXP entry and seven explicit partial node
+scopes: CharInfo HP/MP/status/inventory, its normal-branch level child, PayLayout
+gold/diamond icons/text, minimap name, selected-target name/backdrop, AttackPad
+attack/auto/target/self and TopMenu All/Inventory/Skill/Store/Quest. Full original
+MainScene/HUDScene parent metadata is retained separately. Full parent metadata does not activate their other children.
 The exact partial scope lists remain in `receipt.json`/`original_ui.json`.
 
 The builder receipt is dependency-resolved/not-rendered and explicitly sets
 `whole_scene_completion_claimed:false`. This package is not all 560 UI roots,
 full main UI completion or evidence of actual game consumption. Later optional
 node bindings in code need a later pack that actually includes their inputs;
-the smaller checkpoint remains independently usable.
+the smaller checkpoints remain independently usable. The prior EXP, vitals and
+core archives are preserved locally; this update replaces the same Library
+identity instead of creating a competing final asset selection.
 
 ## Map contract still missing
 
