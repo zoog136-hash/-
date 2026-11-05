@@ -505,7 +505,14 @@ func update_map_name(map_name: String) -> Dictionary:
 	if not configured.get("ok",false):
 		_map_name_result=configured
 		return configured
-	_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name))
+	var name_contract: Dictionary=_map_bindings.build_name(map_name)
+	_map_name_result=_mount_main_project(21588,name_contract)
+	if not _map_name_result.get("ok",false) and name_contract.get("source_node_offsets",[]).has(MainMap.ZONE_TEXT):
+		# Optional source zone text must not remove the existing complete
+		# owner map-name string when its source font/scope is unavailable.
+		var with_zone: Dictionary=_map_name_result.duplicate(true)
+		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false))
+		_map_name_result["optional_safe_label_result"]=with_zone
 	if _map_name_result.get("ok",false):
 		_map_name_scene=_map_name_result.scene
 		_map_name_result.erase("scene")

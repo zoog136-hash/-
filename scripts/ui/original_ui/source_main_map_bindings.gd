@@ -4,6 +4,9 @@ extends RefCounted
 ## Map image selection and original UI target role remain explicit inputs.
 const MINIMAP_MEMBER="UI/Main/Set_R_Top_MiniMapLayout.csb"
 const MINIMAP_SHA256="df599c77516838bfd1b22e021b1e761343c8d1e6d649f38ef15bb0ffb5cb351f"
+const MAP_NAME_TEXT=14376
+const ZONE_TEXT=13992
+const EXISTING_SAFE_SUFFIX=" · 안전 지역"
 const MAP_SCENE="UI/MapScene.csb"
 const MAP_SCENE_SHA="52334e683d2691c1f4e623933c26e6ea5f94add6485b636ad47b92e02816eafb"
 const MAP_ALL="UI/Map/Map_All.csb"
@@ -39,15 +42,39 @@ func configure(pack: RefCounted, hud: Node, image_adapter: RefCounted=null) -> D
 	_image_adapter=image_adapter
 	return {"ok":true,"requirements":requirements(),"complete_screen_contract":false}
 
-func build_name(map_name: String) -> Dictionary:
+func build_name(map_name: String, include_safe_label: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MINIMAP_MEMBER,{}).get("sha256","")!=MINIMAP_SHA256:return _fail("source_main_map_minimap_identity_mismatch")
-	# The existing game's set_map_name value is only a text binding. It does
-	# not imply a selected UIMapWorld.ID, zone, image or coordinate mapping.
-	return {"ok":true,"member":MINIMAP_MEMBER,"sha256":MINIMAP_SHA256,"source_node_offsets":[14376],"bindings":{14376:{"role":"source_text","text":map_name}},"partial_source_scene":true,"complete_screen_contract":false,"world_image_connected":false,"unresolved_fields":requirements()}
+	var has_zone: bool=include_safe_label and not _node_at(_pack.scene(MINIMAP_MEMBER).get("nodeTree",{}),ZONE_TEXT).is_empty()
+	var model: Dictionary=_existing_name_model(map_name,has_zone)
+	var scope: Array[int]=[MAP_NAME_TEXT]
+	var bindings: Dictionary={MAP_NAME_TEXT:{"role":"source_text","text":model.name}}
+	if has_zone:
+		scope.append(ZONE_TEXT)
+		bindings[ZONE_TEXT]={"role":"source_text","text":model.zone,"visible":not str(model.zone).is_empty()}
+	# This is the existing owner's formatted safety suffix only, never a
+	# region.type/Normal/PvP classification or UIMapWorld/image selection.
+	return {"ok":true,"member":MINIMAP_MEMBER,"sha256":MINIMAP_SHA256,"source_node_offsets":scope,"bindings":bindings,"name_model":model,"safe_label_connected":has_zone,"zone_enum_mapping_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"world_image_connected":false,"unresolved_fields":requirements()}
 
 func refresh_name(scene: Node2D, map_name: String) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=MINIMAP_MEMBER:return _fail("source_main_map_minimap_scene_mismatch")
-	return scene.set_bound_text(14376,map_name)
+	var has_zone: bool=scene.get("source_nodes").has(ZONE_TEXT)
+	var model: Dictionary=_existing_name_model(map_name,has_zone)
+	var result: Dictionary=scene.set_bound_text(MAP_NAME_TEXT,model.name)
+	if not result.get("ok",false):return result
+	if has_zone:
+		result=scene.set_bound_text(ZONE_TEXT,model.zone)
+		if not result.get("ok",false):
+			scene.set_bound_visible(ZONE_TEXT,false)
+			var restored: Dictionary=scene.set_bound_text(MAP_NAME_TEXT,map_name)
+			return {"ok":restored.get("ok",false),"safe_label_connected":false,"zone_text_result":result,"full_owner_name_retained":restored.get("ok",false),"game_state_written":false}
+		result=scene.set_bound_visible(ZONE_TEXT,not str(model.zone).is_empty())
+		if not result.get("ok",false):return result
+	return {"ok":true,"name_model":model,"safe_label_connected":has_zone,"zone_enum_mapping_inferred":false,"game_state_written":false}
+
+static func _existing_name_model(map_name: String, separate_zone: bool) -> Dictionary:
+	if separate_zone and map_name.ends_with(EXISTING_SAFE_SUFFIX):
+		return {"name":map_name.trim_suffix(EXISTING_SAFE_SUFFIX),"zone":map_name.get_slice(" · ",map_name.get_slice_count(" · ")-1),"basis":"existing World._update_field_triggers set_map_name safety suffix"}
+	return {"name":map_name,"zone":"","basis":"existing set_map_name string; no normal/combat/PvP label inferred"}
 
 func world_candidates(field_map: Variant) -> Variant:
 	if _image_adapter==null:return _fail("source_main_map_existing_image_adapter_required")

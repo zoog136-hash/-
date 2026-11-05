@@ -5,7 +5,24 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest single combined input is **v14**, in
+The latest single combined input is **v15**: Drive
+`1zVsaYliOBAl0Ryei7pOAMBTtrX1AUe_N`,13,353,312 bytes, ZIP SHA256
+`74e6266aba52fce9f64553adcbcba900471bdb6150dff7fb9d795e72f8861371`,
+manifest pin `2505fb5e40c5e77954fb978b5ad7e5b486956bc0a2a07ed02d61236ed4380db4`.
+Filename is `TWILIGHT_current523_main_game_original_UI_combined_v15_20261105.zip`;
+relative destination `source-ui/current523-main-game-original-ui-v15`.
+Private upload succeeded with matching size/owner-user metadata. It retains
+every v14 input and adds original minimap Text13992. World already produces
+` · 안전 지역` in `set_map_name` for its actual safety branch; the UI separates
+that exact existing suffix into Text13992 and keeps the name in14376. It does
+not classify regions, map `combat` to Normal/PvP, invent a zone string, or add
+coordinates. Unavailable optional text/font keeps the complete owner name.
+Older pack scopes continue to render the unsplit name. Raw source geometry,
+map image selection/click registration, costs and saves stay with their owners.
+The53 files/33 scene trees/32 partial scopes are packaging counts; no new test,
+execution, render or whole560/game-use completion is claimed.
+
+The retained **v14** input is documented in
 [NPC portrait receiver](ORIGINAL_UI_NPC_PORTRAIT_ABI.md). Private delivery
 succeeded. It retains v12 and adds the original timed inventory name header
 and explicitly declared NPC Sprite4912 target for authoritative typed providers.
