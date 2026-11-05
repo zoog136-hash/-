@@ -11,7 +11,10 @@ static func missing_variant(registered: Dictionary,source_id: String,registratio
 	if parts.size()!=5 or parts[0]!="m523" or parts[1]!="item" or parts[3]!="bless" or parts[4] not in ["2","3"] or not parts[2].is_valid_int():return {}
 	var item_id: int=int(parts[2]);var bless: int=int(parts[4])
 	if item_id<=0 or str(item_id)!=parts[2]:return {}
-	if registration.get("mode")!="current_original_native_projection" or registration.get("source_definition_archive")!=SOURCE.identity() or not registration.get("registered_definition_ids",[]).has(str(item_id)) or registration.get("pending",{}).has(str(item_id)):return {}
+	var admitted: Variant=registration.get("registered_definition_ids")
+	var pending: Variant=registration.get("pending")
+	if not admitted is Array or not pending is Dictionary:return {}
+	if registration.get("mode")!="current_original_native_projection" or registration.get("source_definition_archive")!=SOURCE.identity() or not admitted.has(str(item_id)) or pending.has(str(item_id)):return {}
 	var base_id: String="m523:item:"+parts[2]
 	var value: Variant=registered.get(base_id)
 	if not value is Dictionary:return {}

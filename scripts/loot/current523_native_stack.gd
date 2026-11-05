@@ -481,7 +481,7 @@ static func transfer_warehouse(world: Node,item_name: String,quantity: int,direc
 	if quantity<1 or quantity>99 or quantity>int(owned.remaining):return _failure("선택한 원본 묶음의 실제 잔량 안에서 수량을 지정하세요")
 	if world._item_locked(item_name,uid) or world._item_locked(item_name):return _failure("잠긴 원본 개체는 이동할 수 없습니다")
 	if direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
-	if direction=="withdraw" and world._inventory_total_weight()+quantity*maxi(0,int(world.item_weight_index.get(item_name,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	if direction=="withdraw" and world._inventory_total_weight()+quantity*world._indexed_item_weight(item_name,owned.record)>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	var warehouse: Dictionary=world.warehouse.snapshot()
 	var from_counts: Dictionary=inventory if direction=="deposit" else warehouse.stacks
@@ -590,7 +590,7 @@ static func collect_floor(world: Node,view: Button,record: Dictionary) -> Dictio
 	var destination:=Vector2(float(point[0]),float(point[1]))
 	if not destination.is_finite() or world.player.global_position.distance_to(destination)>world.GROUND_PICKUP_RADIUS or Time.get_ticks_msec()-int(view.get("visible_since"))<world.ground_loot.MIN_VISIBLE_MS or not world._has_line_of_sight_world(world.player.global_position,destination):return _failure("기존 바닥 습득 거리·시간·시야 조건 미충족")
 	var name_value: String=str(source.physical.name)
-	if world._inventory_total_weight()+maxi(0,int(world.item_weight_index.get(name_value,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	if world._inventory_total_weight()+world._indexed_item_weight(name_value,source.physical.record)>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))>=9007199254740991:return _failure("원본 습득 수량 범위 초과")
 	inventory[name_value]=int(inventory.get(name_value,0))+1;instances[source.uid]=source.physical.duplicate(true)
@@ -907,7 +907,7 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	var weight: int=world._inventory_total_weight();var keys: Dictionary={}
 	for key: String in world.inventory:keys[key]=true
 	for key: String in payload.inventory:keys[key]=true
-	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
+	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*world._indexed_item_weight(key,{},payload.item_instances)
 	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
 	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
 	var journal: Variant=state.get(BAG_USES,{})

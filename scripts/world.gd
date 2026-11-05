@@ -1337,13 +1337,28 @@ func _index_item_weights() -> void:
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
 
+func _indexed_item_weight(item_name: String, record: Dictionary={}, candidates: Dictionary={}) -> int:
+	if item_weight_index.has(item_name):return maxi(0,int(item_weight_index[item_name]))
+	var current: Dictionary=record
+	if current.is_empty():
+		for value: Variant in candidates.values():
+			if value is Dictionary and value.get("name")==item_name and value.get("record") is Dictionary:
+				current=value.record;break
+	if current.is_empty():current=_find_catalog_item_record(item_name)
+	if current.get("name")==item_name:
+		var derived: Dictionary=preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,str(current.get("sourceId","")),catalog_db.get("patch523_crafting_catalog_contract",{}))
+		if not derived.is_empty() and current.get("source_projection")==derived.get("source_projection") and current.get("source_definition_archive")==derived.get("source_definition_archive") and current.get("source_original_item")==derived.get("source_original_item"):
+			var base: Dictionary=catalog_item_by_source_id.get("m523:item:"+str(int(derived.source_item_class_id)),{})
+			if item_weight_index.has(str(base.get("name",""))):return maxi(0,int(item_weight_index[str(base.name)]))
+	return 0 if item_name=="아데나" else 3 # Existing legacy fallback, never a new source scale.
+
 func _inventory_total_weight() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
 		# Held source rewards are provenance stacks until their item adapter is
 		# available; legacy default weight must not turn them into carried gear.
 		if str(name_value).begins_with("[원본 보상] "): continue
-		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0 if str(name_value) == "아데나" else 3)))
+		total += maxi(0, int(inventory.get(name_value, 0))) * _indexed_item_weight(str(name_value))
 	return total
 
 func _carrying_capacity() -> int:
@@ -5143,9 +5158,12 @@ func _patch523_craft_item_index() -> Dictionary:
 			for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
 				var variant: Dictionary=patch523_equipment.record(source_id,int(state))
 				var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
-				if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
+				var count: int=int(catalog_item_variant_count.get(str(variant.get("name","")),0))
+				var derived: Dictionary=preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,str(variant.get("sourceId","")),catalog_db.get("patch523_crafting_catalog_contract",{})) if count==0 else {}
+				var unique: bool=count==1 or (count==0 and not derived.is_empty() and derived==current_variant)
+				if unique and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
 					var weighted_variant: Dictionary=current_variant.duplicate(true)
-					weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
+					weighted_variant["weight"]=_indexed_item_weight(str(variant.name),current_variant)
 					result[str(variant.name)]=weighted_variant
 			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
 			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
