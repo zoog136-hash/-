@@ -134,6 +134,42 @@ corresponding existing original UI callers and exact node/selection/timing
 contracts. The adapter API does not establish that those consumers are active.
 No new UI layout, image, Sprite frame, fallback or animation timing is invented.
 
+### Current caller contract and required handoffs
+
+The current UI267 caller contract was read from
+[`docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md`](https://github.com/zoog136-hash/-/blob/feature/original-ui-all-20261104/docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md),
+Git blob `c61f00f2a555cb7fac7ec06a1ee522c3d8c4f23b`. Its strict player accepts
+`configure(pack, member, false, bindings)`, followed by the caller's exact
+`play(clip, repeat)`. It has no completion signal. `source_nodes` is keyed by
+exact original CSB offsets; names or suffixes do not establish node identity.
+
+The UI-owned runtime presenter additionally accepts explicit content routes,
+an existing original-coordinate mount and a caller binding factory. That API
+does not supply a screen-to-data mapping. UI267 retains ownership of that
+presenter, HUD registration and renderer; this lane does not recreate them.
+
+| Target | Required original input before further connection |
+| --- | --- |
+| Item CSB icons | Current private UI pack identity and manifest pin, exact scene SHA, original clip/repeat binding; corresponding UI player code |
+| Map-screen images and buttons | Caller-declared current field/screen to original World/ImageInfo identity, original content root/SHA, existing mount, exact image/button node offsets and original map/area selection callbacks; terrain placement is a separate owner |
+| Mission and NPC images | Original content root/SHA, exact image node offsets, source-model asset roles and existing action callbacks |
+| Pass and attendance images | Original content root/SHA, exact image node offsets and caller-provided season/day/reward-row bindings and actions |
+| Emoticons | Original selection/display caller, exact node/asset association and original frame order, timing, repeat and start/stop contract |
+| Other source UI images | Exact original root/node declarations and caller-provided typed asset references; a filename category is not a screen contract |
+
+The known UI Library handoff is player code/state, not the private original CSB
+pack. No original pack, node offsets, clip names, loop policies or callbacks are
+inferred from that identity. Existing image-pack and Drive-delivery identities
+remain unchanged while those inputs are pending. Reading this supplied caller
+contract is implementation handoff work; no new test or validation was run.
+
+The existing `renewal_map.gd`/`field_minimap.gd` call path consumes the field's
+`overview_texture()`. The supplied all-world contract provides exact
+World-to-ImageInfo-to-AssetView relationships, source ratios and base locations.
+Connecting that contract to the current screen requires its caller-declared
+native World/ImageInfo identity and original map-screen coordinate/input
+contract. The current field overview remains preserved while those are absent.
+
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
 loads, component renders and delivery bytes do not count as that completion.
