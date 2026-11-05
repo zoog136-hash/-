@@ -14,8 +14,11 @@ static func adopt(accepted_archive_identity: Dictionary) -> Dictionary:
 	var owner: Resource=load(OWNER_PATH)
 	var owner_script: Script=owner as Script
 	if owner_script==null:return _status("held","owner_script_unavailable")
+	var methods: Dictionary={}
+	for method: Dictionary in owner_script.get_script_method_list():
+		methods[str(method.get("name",""))]=true
 	for method: String in ["load_source","ensure_loaded"]:
-		if not owner.has_method(method):return _status("held","owner_method_unavailable:"+method)
+		if not methods.has(method):return _status("held","owner_method_unavailable:"+method)
 	var constants: Dictionary=owner_script.get_script_constant_map()
 	if constants.get("SOURCE_SHA256")!=CommonSource.SOURCE_SHA or constants.get("SOURCE_BYTES")!=CommonSource.SOURCE_BYTES or constants.get("INSTALLED")!=INSTALLED:
 		return _status("held","owner_source_contract_mismatch")
