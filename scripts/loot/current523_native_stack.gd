@@ -711,6 +711,15 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 	record=executor.call("action_record",world,record)
 	var issue: String=str(executor.call("eligibility",world,record))
 	if not issue.is_empty():return _failure(issue)
+	# The five-field original-use API already authenticated this exact quest
+	# object, immutable receipt and expected remainder above. Reuse the actual
+	# instant-cure owner, which rechecks poison, source310/Buff27, locks, cooldown
+	# and the selected debit before its single save and post-save visual event.
+	# Its zero-duration cure must not enter the ordinary timed-buff/bag gate.
+	if int(owned.item_class_id)==310:
+		var cure_owner: Script=load("res://scripts/quests/quest_cure310.gd")
+		if cure_owner.call("profile",record).is_empty():return _failure("원본310 해독 효과 계약 불일치 · 소유 보존")
+		return cure_owner.call("perform",world,record,uid)
 	var spec: Dictionary=record.get("source_use_spec",{})
 	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
