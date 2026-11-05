@@ -661,6 +661,7 @@ func counter(attacker: TwilightMonster, kind: String, amount: int) -> bool:
 		attacker.take_damage(damage, false, "skill_counter")
 		if world.rng.randf() < float(best.get("counter_heal_chance", .2)): heal(best, int(best.get("counter_heal", 0)))
 		vfx.emit_skill(id, "impact", attacker.combat_hit_position(), world.player.global_position)
+		_emit_verified_source_effect(best, "impact", attacker.combat_hit_position())
 	else: counter_counts[id] = count
 	counter_depth -= 1
 	return true

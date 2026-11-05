@@ -202,6 +202,9 @@ sites to the same source helper: cleanse, mana conversion, teleport, taunt,
 successful status and turn-undead results, healing, stacks, marks and mana
 procs. Each call uses the existing event point and the service's already loaded
 source profile. It adds no success/failure mapping or new gameplay event.
+The successful counter's existing impact callback uses the same delegation.
+Current spell reads and provenance use the original ZIP member
+`content/SpellClass.json` and its `SpellClass` table key.
 
 The subsequent local aura bridge follows the existing World/subslot
 `source_awakening_aura.configure` and process calls. Its activation still comes

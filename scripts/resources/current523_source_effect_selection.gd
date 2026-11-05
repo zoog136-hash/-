@@ -71,7 +71,7 @@ static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: 
 	if source_snapshot not in ["base508","patch523"] or not STAGES.has(stage) or not BANK.integer(spell.get("ID"),1): return fail("current523_effect_explicit_spell_and_stage_required")
 	var supplied: Dictionary = SOURCE.source_tables(context)
 	if not supplied.ok: return supplied
-	var native: Dictionary = supplied.by_id.get("Spell",{}).get(int(spell.ID),{})
+	var native: Dictionary = supplied.by_id.get("SpellClass",{}).get(int(spell.ID),{})
 	# Full source-row agreement protects legacy callers from numeric snapshot
 	# substitution. Current-row callers supply their actual admitted Spell row.
 	if native.is_empty() or native != spell: return fail("current523_effect_complete_spell_definition_differs")
@@ -85,7 +85,7 @@ static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: 
 		if explicit_action < 0: return fail("current523_effect_explicit_source_action_required")
 	var action: Dictionary = _action(supplied.options,sprite,explicit_action)
 	if not action.ok: return action
-	var reference: Dictionary = {"table":"Spell","row":native.duplicate(true),"field":field,"stage":stage,
+	var reference: Dictionary = {"table":"SpellClass","row":native.duplicate(true),"field":field,"stage":stage,
 		"action_field":"EffectSpriteActionNo" if field == "EffectSpriteID" else "sole_original_SPR_action_host_policy",
 		"gameplay_admission":"existing_caller_only; no_spell_or_bonus_activation_by_visual_loader"}
 	return _selected(supplied,sprite,action,"spell_effect","lineagem_%s:spell:%d:%s" % [source_snapshot,int(native.ID),stage],reference,source_snapshot)
