@@ -21,6 +21,7 @@ class HalphasStar extends RefCounted:
 class CostHost extends Node:
 	var patch523_npc_spells = Patch523Spells.new()
 	var halphas_star = preload("res://scripts/cards/halphas_star_enchant_runtime.gd").new()
+	var original_skills: RefCounted = null
 	var combat_generation: int = 0
 	var hp: int = 99
 	var mp: int = 99
@@ -33,6 +34,7 @@ class CostHost extends Node:
 	var skill_cooldowns: Dictionary = {}
 	var active_skill_buffs: Dictionary = {}
 	var equipped_items: Dictionary = {}
+	var equipped_catalog: Dictionary = {}
 	func _init() -> void:
 		add_child(player)
 		halphas_star.configure(self)
