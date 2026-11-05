@@ -9,6 +9,7 @@ const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.g
 const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
 const Blessing=preload("res://scripts/ui/original_ui/source_main_blessing_bindings.gd")
 const DungeonControls=preload("res://scripts/ui/original_ui/source_main_dungeon_controls.gd")
+const WorkspaceControls=preload("res://scripts/ui/original_ui/source_main_workspace_controls.gd")
 const MainMap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
 const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.gd")
 const WorldMap=preload("res://scripts/ui/original_ui/source_main_world_map.gd")
@@ -71,6 +72,7 @@ var _blessing_mount_attempted: bool=false
 var _blessing_info_in_scope: bool=false
 var _legacy_blessing: Array[Dictionary]=[]
 var _dungeon_controls: RefCounted
+var _workspace_controls: RefCounted
 var _gold: int=0
 var _balances: Dictionary={}
 var _map_bindings: RefCounted
@@ -158,6 +160,11 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
 	_native_buttons=ButtonRouter.new()
+	for spec: Dictionary in WorkspaceControls.SPECS.values():
+		if pack.manifest.get("scenes",{}).has(spec.member):
+			_workspace_controls=WorkspaceControls.new()
+			_workspace_controls.configure(pack,hud)
+			break
 	if pack.manifest.get("scenes",{}).has(DungeonControls.MEMBER):
 		_dungeon_controls=DungeonControls.new()
 		_dungeon_controls.configure(pack,hud)
@@ -200,7 +207,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -287,6 +294,9 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if _workspace_controls!=null:
+		var shown: Dictionary=_workspace_controls.presentation()
+		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
 	if _enhance_action!=null:
 		var shown: Dictionary=_enhance_action.presentation()
 		var button: Variant=shown.get("source_button")
@@ -313,6 +323,7 @@ func _process(_delta: float) -> void:
 	if hud==null:return
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
+	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
@@ -583,6 +594,9 @@ func source_blessing_status() -> Dictionary:
 
 func dungeon_blocks_point(point: Vector2) -> bool:
 	return _dungeon_controls!=null and _dungeon_controls.blocks_point(point)
+
+func workspace_controls_block_point(point: Vector2) -> bool:
+	return _workspace_controls!=null and _workspace_controls.blocks_point(point)
 
 func try_open_inventory() -> Dictionary:
 	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
@@ -1050,6 +1064,7 @@ func release(restore_legacy: bool=true) -> void:
 	close_character()
 	close_npc_dialogue()
 	if _dungeon_controls!=null:_dungeon_controls.close()
+	if _workspace_controls!=null:_workspace_controls.close()
 	close_enhance_action()
 	close_quest_controls()
 	if _inventory_lock_view!=null:_inventory_lock_view.close()

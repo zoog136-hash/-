@@ -2923,6 +2923,7 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if original_main_ui_controller.inventory_lock_blocks_point(viewport_point):return true
 	if original_main_ui_controller.character_blocks_point(viewport_point):return true
 	if original_main_ui_controller.dungeon_blocks_point(viewport_point):return true
+	if original_main_ui_controller.workspace_controls_block_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
 
 func original_inventory_gesture_bounds() -> Control:

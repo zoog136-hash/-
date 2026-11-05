@@ -33,3 +33,26 @@ Latest v27 file: `TWILIGHT_current523_main_game_original_UI_combined_v27_2026110
 Official private v27 Drive ID: `1exd0vv8MxMrLkXCXvLCNn-7nFqF7IEvU`. Upload succeeded; metadata readback reports13,531,760B and only the owner's user permission. Consumer installation/operation is unconfirmed. Earlier delivered v25 ID `1PQHC2bPuamogbjv0D_wKltruOPOO0HSr` and v26 ID `1xbmjUMoLxD-VotZXibUEBZkq--dxbSog` remain preserved; v27 is their combined optional successor, not an automatic installed selection change.
 
 The original MapScene/Map_All/Map_Tab_Area/Map_List_Button scopes remain retained. The separate relation-file pin and W_aden.png pixels are still separate contracts. CSB-root registration, quest reward target assignment, authoritative dialogue NPC ID and36 dependency gaps are not resolved by these new connections.
+
+## v23 poison validation initialization order
+
+The installer identified that _known_poison_metadata ran before configure assigned source_pack/source_member. Public fix `11883badc2e6fe596a0cd016fa8660377200e0e0` assigns the requested pack/member before identity-sensitive validation, keeps source_tree uncommitted, and clears the context on rejection. The exact member, SHA, LoadingBar39796, palette string and explicit binding checks are unchanged. Existing v23 requires this code fix (or a descendant); its ZIP, pin, selection and original bytes do not change. No upload was made for this code-only fix. This is a source-path correction without runtime verification.
+
+## Warehouse, production, shop and NPC-store callers
+
+`source_main_workspace_controls.gd` adds four explicitly pinned original close controls, each mounted by its actual parent ProjectNode. It requires the current workspace section, a unique visible owner with the existing renewal script and the same HUD, and the actual shop/npc_mode distinction. It checks the same owner/section again before calling the existing HUD._close_workspace. Stale buttons cannot close a replacement owner. Original mouse controls, native Android routing, existing modal precedence and PointerTransfer guards are reused. These source controls are not forms or replacement transaction implementations.
+
+| Actual section/owner | Original parent/project | Original child/close |
+| --- | --- | --- |
+| warehouse / renewal_warehouse.gd | StorageScene /132 | Storage/Storage_All /47160 |
+| crafting / renewal_crafting.gd | ProductionScene /132 | Production/Production_All /41600 |
+| shop / renewal_shop.gd, npc_mode=false | ShopScene /788 | Shop/Shop_All /324 |
+| npc_shop / renewal_shop.gd, npc_mode=true | StoreScene /148 | Store/Store_All /67396 |
+
+The warehouse's existing mode OptionButton supplies its selected text to original Storage_All Label_Title47920; original Label_Title_Real48640 remains its literal 창고 caption. Mode changes update the original field without changing selection, quantity or invoking a transfer. v28's smaller close-only scopes stay compatible; v29 additionally contains these original title nodes. Existing close controls and complete workspace bodies remain available. Closing does not synthesize a purchase, transfer, crafting confirmation, quote cancellation or save.
+
+The exact parent/child SHA pins are stored in source_main_workspace_controls.SPECS. The package retains those unmodified original CSBs, fonts and textures. Original production categories do not automatically become the existing filter buckets; source 모두 구매/모두 맡기기 are not reinterpreted as one selected-row transaction. Original cart, row placement, batch confirmation and quantity policies require their real caller contracts before those actions can be connected. Unshipped v28 construction output remains private and is not an installer input.
+
+Latest combined v29: `TWILIGHT_current523_main_game_original_UI_combined_v29_20261105.zip`,13,641,824B; ZIP SHA256 `07eac95793d75c627548451d7023ed1c01a52fff015d640838d838ea196e41b2`; manifest pin `ed7f0da2b156643ade0239d491a40fd7803efb00db0bf53979df58e8f043e91a`; relative directory `source-ui/current523-main-game-original-ui-v29`.72 original files/45 scene trees/44 partial scopes remain packaging units. v29 retains v27's blessing/dungeon and v23's earlier main/map/inventory/quickslot scopes. Selector/structure are unchanged; installer configuration, access/sharing, existing packs and saves were not changed. Consumer installation and operation remain unconfirmed. No tests, compile, game, rendering or CI was executed.
+
+Official private v29 Drive ID `1fkwo1rBjUNV58yXQV1EH0OWtF41X5bN8`; upload succeeded and metadata readback reports13,641,824B with only the owner's user permission. No earlier successful upload was repeated or replaced.
