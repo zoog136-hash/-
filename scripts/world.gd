@@ -1295,15 +1295,18 @@ func _effective_max_mp(item_buff_override: Variant = null) -> int:
 
 func _index_item_weights() -> void:
 	patch523_craft_item_cache={}
-	item_weight_index.clear()
+	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
+	var source_weight_policy: Dictionary = {}
 	var path: String = "res://data/item_weight_rules.json"
 	if FileAccess.file_exists(path):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		if parsed is Dictionary:
 			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
 			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
@@ -1314,13 +1317,25 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
+			var source_weight: Dictionary = ITEM_OPTIONS.current_source_weight_input(record,source_weight_policy)
+			if source_weight.get("applicable",false):
+				if not source_weight.get("ok",false):
+					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+					return
+				# Exact source zero remains zero; host positive-default bounds below
+				# still belong only to the pre-existing legacy input path.
+				next_weight_index[name_value] = int(source_weight.weight)
+				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
 			if record.has("growth96_item_id"):
-				item_weight_index[name_value] = maxi(0,int(record.weight))
+				next_weight_index[name_value] = maxi(0,int(record.weight))
 				continue
 			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			item_weight_index[name_value] = maxi(0, raw_weight)
+			next_weight_index[name_value] = maxi(0, raw_weight)
+	# Keep existing dictionary aliases while publishing a complete input index.
+	item_weight_index.clear()
+	item_weight_index.merge(next_weight_index)
 
 func _inventory_total_weight() -> int:
 	var total: int = 0
@@ -2834,15 +2849,21 @@ func _attack(automatic_acquisition: bool = false) -> void:
 		selected_monster=target
 		return
 	var source_ammo: Dictionary=SOURCE_AMMO.selected(self,_weapon_ammo_family())
-	if not _consume_weapon_ammo():
+	var native_ammo_bonus: int=-1
+	var native_ammo: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("consume_ammo",self,_current_ammo_name(),1,0,target,true)
+	if native_ammo.get("handled",false):
+		if not native_ammo.get("ok",false) or not native_ammo.get("saved",false) or native_ammo.get("consumed")!=1:
+			hud.show_message(str(native_ammo.get("reason","원본 탄약 발사 연결 대기")));auto_attack_timer=1.0;return
+		native_ammo_bonus=int(native_ammo.damage_bonus);_refresh_ammo_counters()
+	elif not _consume_weapon_ammo():
 		auto_attack_timer = 1.0
 		return
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, _mastery_actual_weapon_type(), source_ammo), auto_attack_timer, true)
+	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, _mastery_actual_weapon_type(), source_ammo,native_ammo_bonus), auto_attack_timer, true)
 
-func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1, source_ammo: Dictionary = {}) -> void:
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1, source_ammo: Dictionary = {}, native_ammo_bonus: int=-1) -> void:
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
@@ -2863,7 +2884,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
 	var weapon_roll: int=_roll_weapon_damage(target, true)
 	weapon_roll=PATCH523_EQUIPMENT_COMBAT.weapon_scale(self,weapon_roll,attack_kind,target)
-	var damage: int = maxi(1,damage_stat+weapon_roll+_roll_source_ammo_damage(target)+SOURCE_AMMO.roll(source_ammo,target,rng))
+	var damage: int = maxi(1,damage_stat+weapon_roll+(native_ammo_bonus if native_ammo_bonus>=0 else _roll_source_ammo_damage(target))+SOURCE_AMMO.roll(source_ammo,target,rng))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -4127,7 +4148,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
 		return
 	if _is_ammo_record(record):
-		_toggle_ammo_equipped(item_name)
+		_toggle_ammo_equipped(item_name,requested_id)
 		return
 	var equip_slot: String = _equipment_slot_base(record)
 	if equip_slot != "":
@@ -7700,6 +7721,12 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	var ammo_key: String = _skill_ammo_name()
 	var source_record: Dictionary = _find_catalog_item_record(ammo_key)
 	var source_ammo: bool = source_record.get("source")=="twilight-shop523-ammo"
+	if required_ammo>0:
+		var native: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("consume_ammo",self,ammo_key,required_ammo,mp_cost)
+		if native.get("handled",false):
+			if not native.get("ok",false) or not native.get("saved",false) or native.get("consumed")!=required_ammo:
+				hud.show_message(str(native.get("reason","원본 스킬 탄약·MP 연결 대기")));return false
+			_refresh_ammo_counters();return true
 	var old_mp: int = mp
 	var old_ammo: int = int(inventory.get(ammo_key,0))
 	if required_ammo>0 and source_ammo and (SOURCE_AMMO.definition(source_record).is_empty() or old_ammo<required_ammo or not _ammo_worn(ammo_key,true)):
@@ -9155,6 +9182,11 @@ func _ensure_inventory_ammo_defaults() -> void:
 
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()
+	var native: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("consume_ammo",self,ammo_name,1)
+	if native.get("handled",false):
+		if not native.get("ok",false) or not native.get("saved",false) or native.get("consumed")!=1:
+			hud.show_message(str(native.get("reason","원본 탄약 소비 연결 대기")));return false
+		_refresh_ammo_counters();return true
 	if ammo_name == "": return true
 	var source_record: Dictionary=_find_catalog_item_record(ammo_name)
 	var is_source: bool=source_record.get("source")=="twilight-shop523-ammo"
@@ -9209,6 +9241,9 @@ func _roll_source_ammo_damage(target: TwilightMonster) -> int:
 ## the ammo the current weapon needs is worn automatically (old saves, new
 ## characters, and bow <-> gun swaps; there is one arrow and one bullet type).
 func _ammo_worn(ammo_name: String, allow_auto: bool = false) -> bool:
+	var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
+	if owner.call("native_ammo",_find_catalog_item_record(ammo_name)):return owner.call("ammo_worn",self,ammo_name)
+	if not consumable_service.export_state().get("source_native_ammo_equipped",{}).is_empty():return false
 	if equipped_ammo == ammo_name:
 		return true
 	if allow_auto and not ammo_unequipped and int(inventory.get(ammo_name, 0)) > 0:
@@ -9219,7 +9254,12 @@ func _ammo_worn(ammo_name: String, allow_auto: bool = false) -> bool:
 		return true
 	return false
 
-func _toggle_ammo_equipped(ammo_name: String) -> void:
+func _toggle_ammo_equipped(ammo_name: String,physical_id: String="") -> void:
+	var native: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("equip_ammo",self,ammo_name,physical_id)
+	if native.get("handled",false):
+		hud.show_message(str(native.get("message",native.get("reason","원본 탄약 착용 연결 대기"))))
+		if native.get("ok",false) and native.get("saved",false):_update_hud();hud.refresh_inventory(inventory)
+		return
 	var next_ammo: String = "" if equipped_ammo == ammo_name else ammo_name
 	if not next_ammo.is_empty() and int(inventory.get(next_ammo,0)) <= 0:
 		hud.show_message("탄약이 없습니다");return

@@ -431,3 +431,73 @@ selection screen wiring, unsupported reward/effect owners, ItemBook/eqc and
 polymorph-entity admission remain separate boundaries. The existing current DTO
 already exposes source_weapon_type_id/name from the gameplay WeaponType row;
 Sprite action enums must not be used as gameplay weapon identity.
+
+
+## Actual native ammunition custody and combat cost (unexecuted)
+
+The already-existing patch523_ammo consumer's exact original Arrow/Bullet/Sting
+small/large damage and sprite fields now admit native quantity-owned supply.
+Current-source admission checks the complete current DTO/raw row and every
+unconditional typed bonus/unit; unknown effects/conditions keep the reward held.
+This feeds the shared supplier/drop/craft/bag output owner; it does not generate
+ammunition or convert earlier same-name shop/legacy/raw quest stacks.
+
+Existing inventory activation passes its selected physical ID to equip_ammo.
+With multiple actual stacks an unspecified ID cannot select an arbitrary one.
+The equipped name and immutable physical ID/receipt are saved together in
+source_native_ammo_equipped. There is no automatic substitution of another
+native stack or name-only legacy balance. A worn whole object cannot silently
+move to the warehouse/floor; a partial partition keeps the selected parent's
+original receipt. An exact spent last-unit pointer is inactive during pure
+staging; the confirmed ammo transaction clears it and preserves the use ledger.
+
+Existing normal attack launch calls consume_ammo with the real target and its
+existing cost of one. Existing skill spending passes its established
+ammo_per_hit × hits and MP cost. Selected actual quantity, used/remainder
+receipt, optional MP cost, equipment clear on exhaustion and immutable
+source_native_ammo_uses journal share one save. Saving failure leaves live
+quantity/MP/equipment untouched and locks uncertain retries until load. The
+result requires ok && saved && consumed==requested quantity. Unsupported raw
+quest-ammunition ownership is still separate; it is not relabelled native.
+
+The prior configurable uniform/maximum/disabled ammo damage interpretation is
+retained as host policy, not recovered native odds. A new quantity-owned
+ammunition stream is explicitly isolated as
+TWILIGHT_source_native_ammo_independent_v1: its initial seed derives from the
+existing world seed and a fixed domain string; its saved state/outcome joins
+the ammo transaction. Ordinary combat/draw RNG is not advanced by that debit.
+The queued existing attack receives the committed ammo bonus so the final shot
+cannot lose its profile after the stack is exhausted. Hit resolution/target
+life remains with the existing combat callback; this is not a claim that all
+combat state is one persisted transaction. Skills receive no invented extra
+ammunition damage formula. Existing projectiles/visual actors remain unchanged.
+
+Public271's57641f76 source523_ammo reader also replaces the old shop numeric
+JSON input: eleven reviewed IDs retain the existing shop source/name namespace
+and host material/undead policy while values come from the common original.
+It is distinct from native physical ownership; no old shop balance is silently
+converted into a new native UID.
+
+## Adopted large-source numeric inputs (unexecuted)
+
+The public271664919da input adapters are joined narrowly, preserving this
+branch's world/item/NPC ownership work. The current source ItemClass.Weight
+reaches the existing item_weight_index and carry/transaction checks. Original
+raw units stay untouched; ceil(raw ×3/351) is an explicitly configurable
+TWILIGHT estimate calibrated to the existing item233 host weight, not an
+original unit fact. Source zero stays zero; legacy weight policy stays separate.
+A bad applicable estimate retains the previous complete index.
+
+Exact already-admitted NpcClass Fire/Water/Earth/AirResistance reaches the
+existing elemental-resistance/damage reducer. Its1.0 scale is explicitly a
+configurable estimate with the original numbers and source/policy proof retained.
+Other channels, spawn, ID/Sprite/DescId, original actor rows and source eligibility
+are preserved; no AI, target identity or probability is invented. Neither input
+adapter supplies a dialogue-to-mobile-NpcClass relationship. The current dialogue
+service's textual npc_id is not interchangeable with an admitted actor's
+source_m_npc_id; no name/Sprite/legacy-ID portrait mapping is introduced.
+
+All later code remains unexecuted/unverified. No new tests, parsing, game run,
+render or CI, percentage, natural encounter rate or original-image/UI completion
+is asserted. Unsupported ItemBook/eqc, GachaCraft output namespace, recipe
+recommendation semantics and current polymorph-entity admission remain explicit.

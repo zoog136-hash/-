@@ -255,3 +255,21 @@ initial equipment enchant retains null provenance with only the existing
 labelled +0 host policy when enabled. No old selected rune/save conversion.
 New code is unexecuted/unverified; no new pass count, usage rate, installation
 or real original UI observation is asserted. See CURRENT523_NATIVE_ITEM_OWNER.
+
+
+## Native ammunition and original numeric inputs (unexecuted)
+
+Supported exact original ammunition now uses selected physical custody through
+existing equip/normal-shot/skill-cost callers. Quantity/use receipt, MP when
+applicable, exhaustion state and independent explicitly host ammo RNG/outcome
+save together before the existing attack callback; other same-name stacks are
+not substitutes. Shared supply can retain these outputs. Raw quest ammo remains
+under its separate proof contract and is not converted. Old shop input is now
+public271's original-row eleven-ID reader, preserving its distinct saved keys.
+
+Narrow public271664919da weight and four elemental NPC resistance inputs feed
+existing carry/damage consumers. Their3/351 and1.0 coefficients are configurable
+TWILIGHT estimates, never recovered native units/formulas. Source raw rows,
+current admission and all ownership/save/visual identities remain. The dialogue
+text key does not establish a mobile NPC portrait identity. No new test/run/
+parse/render/CI or measured consumption count; see the native owner contract.

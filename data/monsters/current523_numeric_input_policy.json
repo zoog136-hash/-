@@ -1,0 +1,18 @@
+{
+  "schema": "twilight.current523.numeric-input-policy.v1",
+  "source_snapshot": "patch523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "enabled": true,
+  "raw_resistance_to_host_percent": 1.0,
+  "origin": "twilight_adjustable_numeric_estimate",
+  "scope": "admitted_actor_NpcClass_Fire_Water_Earth_AirResistance_only",
+  "source_raw_unit_scale": "unconfirmed",
+  "native_server_damage_formula_recovered": false,
+  "host_formula": "existing_host_formula_retained",
+  "note": "TWILIGHT-only adjustable numeric host-input scale. This multiplier does not establish NpcClass native percentages or a source-server damage formula.",
+  "mobile_percentage_context_references": [
+    "https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C",
+    "https://lineagem.plaync.com/guidebook/view?title=%EC%95%85%EC%84%B8%EC%84%9C%EB%A6%AC+%EC%95%84%EC%9D%B4%ED%85%9C"
+  ],
+  "reference_limit": "The mobile armor/accessory context does not establish NpcClass raw resistance scaling."
+}

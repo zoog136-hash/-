@@ -137,5 +137,20 @@
     "다마스커스 검 (각인)": "https://lineagem.inven.co.kr/dataninfo/item/detail.php?code=248",
     "도펠겡어 보스의 오른쪽 반지": "https://lineagem.inven.co.kr/db/item/665?vtype=pc"
   },
-  "resolution": "Explicit TWILIGHT numeric point weights cover all 40 original Inven types plus 5 runtime-generated types; original numeric weights are absent in source catalog. Verified item names override type defaults."
+  "resolution": "Explicit TWILIGHT numeric point weights cover all 40 original Inven types plus 5 runtime-generated types; original numeric weights are absent in source catalog. Verified item names override type defaults.",
+  "current523_source_weight": {
+    "mode": "twilight_estimate",
+    "source_archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "points_numerator": 3,
+    "source_units_denominator": 351,
+    "rounding": "ceil",
+    "basis": "조절 가능한 TWILIGHT 자체 추정입니다. 최초 비율은 Item233 원문 Weight351과 기존 회복제 host 무게3point를 기준으로 정했으며 원문 상대무게를 보존합니다. 분자와 분모는 host 정책으로 조절할 수 있고, 원본 단위가 복구되었다는 의미가 아닙니다.",
+    "initial_calibration": {
+      "item_class_id": 233,
+      "source_weight_raw": 351,
+      "existing_host_points": 3
+    },
+    "official_mobile_reference": "https://rc-wstatic.plaync.co.kr/lineagem/guidebook/game_item_item_general.html",
+    "official_conversion_status": "공식 모바일 가이드는 농축 회복제가 더 가볍다는 상대 설명만 제공합니다. 원문 내부 정수에서 host point로의 비율은 미확정이며 이 정책은 자체 추정입니다."
+  }
 }
