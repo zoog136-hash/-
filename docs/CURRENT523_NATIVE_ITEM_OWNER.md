@@ -546,3 +546,47 @@ register; the required context remains unavailable for that exact relationship.
 UI/image implementations are not copied or fed a legacy/name/Sprite guess.
 Source portrait pixels, v14 installation and actual display remain their owners'
 separate boundaries. This information does not block the actual item consumers.
+
+
+## Current original books to the existing learning owner (unexecuted)
+
+Original ItemData BuffCardID→deck41 Spell→SpellClass/SpellLearnLimit now projects
+the public _source_skill_book_spec subset into the current native DTO. Exact
+self-use/category/deck, one card reference, quantities/flags, ordinary class/
+level/zero unresolved prerequisite rows, Test/dummy and server/date holds remain.
+No new learning prerequisite or cast formula is inferred. The existing public
+player_skills523 canonical row formatter and actual public binding digest select
+the original row JSON/SHA, rather than introducing another raw spell reader.
+
+Actual selected native use now joins one quantity debit with catalog.export_state
+learning and source_skill_book_receipts through the existing save owner. Raw
+quest books use the same five-field use_owned_original entrypoint and common
+QUEST_CONSUME.stage/matches_payload; source_reward_quantity, original grant and
+item_grants.used_quantity stay with their original owner. The held quest item
+caller routes these exact source definitions before its older reviewed subset.
+No transient native input, book-name alias, old grant conversion or regrant.
+
+Learning requires the actual installed player_skills523 adapter: either the
+existing original_bound_profiles mode with full source identity or the exact
+already reviewed441-profile skill input256f0ba0, plus the fixed public binding
+497a594e and one exact SpellClass/row JSON/SHA match to a real registered skill.
+A read-only source reference by itself cannot learn or enable a missing spell.
+The existing catalog handles class/level/prerequisite/already-learned/runtime
+restrictions. The four explicitly reviewed reference-book identities may reuse
+the existing learning-only record; their casting/AUTO/quickslot block remains.
+New source-native learning cites its actual item_definition_archive and never
+pretends that the old item BIN was the current input. Historical receipts and
+legacy namespace fields remain untouched. Missing spell-group/cast ownership
+is retained as an execution dependency, not newly labelled a SpellLearnLimit.
+
+The complete candidate contains original_skill_state, selected real instance/
+inventory remainder, used receipt, cooldown and consumable learning receipt,
+plus quest_state when applicable. Only after confirmed save does the existing
+catalog adopt its staged learned/knowledge map and refresh its own passive/buff
+consumers. Save/adoption uncertainty blocks retries until normal reload. Actual
+learning is separate from whether an existing spell engine can execute it;
+unsupported references, group/card/polymorph/date/server conditions remain held.
+
+This is implementation-only: no new books/skills were counted as verified, no
+441-skill completion assertion, no test/game/parse/render/CI or pack rebuild.
+The existing source reader and skill engine are reused, not copied/replaced.

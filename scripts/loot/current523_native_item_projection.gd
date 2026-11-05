@@ -170,6 +170,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var skill_book: Dictionary=source_skill_book(definition)
+	if not skill_book.is_empty():
+		out["source_use_spec"]=skill_book
+		if skill_book.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	var selection: Dictionary=selectable_reward(definition)
 	if not selection.is_empty():
 		out["source_use_spec"]=selection
@@ -182,7 +187,7 @@ static func record(definition: Dictionary) -> Dictionary:
 	out["source_mapped_bonuses"]=applied;out["source_unhandled_bonuses"]=unknown;out["source_unhandled_bonus_ids"]=[]
 	for row: Dictionary in unknown:out.source_unhandled_bonus_ids.append(row.bonus_id)
 	out["source_effect_status"]="partial" if not unknown.is_empty() or (slot=="consumable" and not out.has("heal_spec") and not out.has("source_use_spec")) or not unresolved_classes.is_empty() or bad_slot else "represented_source_fields"
-	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_original_bag_and_selection_projection; other_typed_effects_preserved_pending"
+	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_original_bag_selection_and_book_learning_projection; other_typed_effects_preserved_pending"
 	if slot=="consumable" and not out.has("source_use_spec") and not out.has("heal_spec"):out["source_use_spec"]={"kind":"current_source_effect_pending","activation_status":"blocked","blocked_reasons":["current_typed_effect_owner_required"]}
 	out["source_catalog_eligible"]=true;out["source_acquisition_policy"]="verified_supplier_only_no_fabricated_supply"
 	return out
@@ -453,4 +458,74 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
 	if initial_rule:spec["local_rule_required"]="select_reward_initial_enchant";spec["source_initial_enchant"]=null;spec["initial_enchant_configuration_key"]="patch523_select_reward_initial_enchant"
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
+	return spec
+
+
+# Public _source_skill_book_spec semantics using the existing typed ItemData
+# card/deck/spell graph. No new source reader or spell runtime is introduced.
+static func source_skill_book(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffCardID":refs.append(row)
+	if refs.size()!=1 or not integer(refs[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(refs[0].bonus.Value);var joins: Array=[]
+	for ref: Dictionary in definition.get("source_typed_references",[]):
+		if ref.get("item_bonus_id")==refs[0].ID and ref.get("unit")=="BuffCardID" and ref.get("id")==id:joins.append(ref)
+	if joins.size()!=1:return {}
+	var card: Dictionary=joins[0].get("card",{});var deck: Dictionary=joins[0].get("deck",{})
+	if card.get("ID")!=id or deck.get("ID")!=41 or deck.get("Name")!="Spell":return {}
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"BuffCardID":"BuffCardID","ItemConsumeEffectSpriteID":"SpriteID","BuffCardCannotSwap":"TrueFalse","CannotStackCard":"TrueFalse"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons
+	if definition.category.get("Name")!="BuffCardDrawer" or deck.get("CharacterBased")!=true:reasons.append("unsupported_source_skill_card_category_or_deck")
+	if card.get("BuffClassID")!=0:reasons.append("source_skill_card_has_additional_buff")
+	var graph: Dictionary=joins[0].get("spell",{});var spell: Dictionary=graph.get("spell_class",{})
+	var spell_id: Variant=card.get("SpellClassID")
+	if not integer(spell_id) or int(spell_id)<=0 or spell.get("ID")!=spell_id or graph.get("source")!=SOURCE.identity() or spell!=SOURCE.row("SpellClass",int(spell_id)):reasons.append("invalid_source_skill_card_spell_id")
+	if spell.get("TestSpell")!=false or not SOURCE.declared_exclusion("SpellClass",spell).is_empty():reasons.append("source_test_or_excluded_spell")
+	if not SOURCE.declared_exclusion("BuffCard",card).is_empty() or not SOURCE.declared_exclusion("BuffCardDeck",deck).is_empty():reasons.append("source_excluded_skill_card")
+	var flags: Dictionary={}
+	for kind: String in ["BuffCardCannotSwap","CannotStackCard"]:
+		var values: Array=[]
+		for row: Dictionary in rows:
+			if row.get("bonus_type",{}).get("Name")==kind:values.append(row.get("bonus",{}).get("Value"))
+		if values.size()>1:reasons.append("ambiguous_skill_card_flag:"+kind)
+		for value: Variant in values:
+			if not integer(value) or value not in [0,1]:reasons.append("invalid_skill_card_flag:"+kind)
+		flags["buff_card_cannot_swap" if kind=="BuffCardCannotSwap" else "cannot_stack_card"]=values==[1]
+	var server: Variant=card.get("ServerLimitSetID",0);var server_rows: Array=[]
+	if not integer(server):reasons.append("invalid_skill_card_server_limit")
+	elif int(server)!=0:
+		server_rows=SOURCE.related("ServerLimit","ServerLimitSetID",int(server));reasons.append("server_context_required" if not server_rows.is_empty() else "server_definition_missing")
+	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_skill_card_date_context_required")
+	var limits: Array=[];var tutorials: Array=[]
+	for edge: Dictionary in graph.get("learn_limits",[]):
+		var row: Dictionary=edge.get("link",{}).duplicate(true)
+		row["class"]=edge.get("class",{}).duplicate(true)
+		if edge.get("limit_buff_card",{})!={}:row["limit_buff_card"]=edge.limit_buff_card.duplicate(true)
+		if row.get("IsTutorialSpell")==true:tutorials.append(row);continue
+		limits.append(row)
+		if row.get("IsTutorialSpell")!=false:reasons.append("unsupported_skill_tutorial_rule")
+		if not integer(row.get("CharacterMinLevel")) or int(row.CharacterMinLevel)<0:reasons.append("unsupported_skill_min_level")
+		if not integer(row.get("ClassID")) or int(row.ClassID)<=0 or row.get("class",{}).get("CanCreateClient")!=true:reasons.append("unsupported_skill_learn_class")
+		if row.get("CharacterPolymorphGradeID")!=0:reasons.append("source_skill_polymorph_grade_requirement_unresolved")
+		if row.get("LimitBuffCardID")!=0:reasons.append("source_skill_limit_card_requirement_unresolved")
+		if not SOURCE.declared_exclusion("SpellLearnLimit",edge.get("link",{})).is_empty():reasons.append("source_excluded_skill_learn_limit")
+	if limits.is_empty():reasons.append("missing_non_tutorial_source_skill_learn_limit")
+	# Reuse the exact existing source-profile serializer. Its SHA is confirmed
+	# against the actually loaded owner/binding again at learning, not assumed.
+	var binding_document: Variant=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json"))
+	var row_digests: Array=[]
+	if binding_document is Dictionary and binding_document.get("skills") is Dictionary:
+		for bound: Variant in binding_document.skills.values():
+			if bound is Dictionary and bound.get("spell_id")==spell_id and bound.get("row_sha256") is String and bound.row_sha256 not in row_digests:row_digests.append(bound.row_sha256)
+	var expected_row_sha: String=str(row_digests[0]) if row_digests.size()==1 else ""
+	var row_json: String=preload("res://scripts/skills/player_skills523.gd")._source_row_json(spell,expected_row_sha)
+	if row_json.is_empty():reasons.append("source_spell_row_serialization_unavailable")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec.merge(flags)
+	spec.merge({"kind":"source_skill_book","source_snapshot":"patch523","source_item_class_id":definition.original_item.ID,"card_id":id,"deck_id":deck.ID,"original_card":card.duplicate(true),"original_deck":deck.duplicate(true),"spell_class_id":spell_id,"source_spell_class":spell.duplicate(true),"source_spell_row_json":row_json,"source_spell_row_sha256":row_json.sha256_text(),"source_spell_group_mastery_required":spell.get("IsRequireSpellGroupMastery"),"source_learn_limits":limits,"source_tutorial_learn_limits":tutorials,"server_limit_set_id":server,"server_limits":server_rows,"start_datetime_id":card.get("StartDateTimeID",0),"end_datetime_id":card.get("EndDateTimeID",0),"runtime_dependency":"source523_skill_catalog","host_binding_policy":"exact_SpellClassID_and_canonical_source_row_SHA256","runtime_binding_required":true,"source_item_bonus_ids":[],"item_requirements":{"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique})
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec

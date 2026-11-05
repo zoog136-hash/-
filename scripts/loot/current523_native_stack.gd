@@ -48,6 +48,7 @@ static func profile(record: Dictionary) -> Dictionary:
 		elif record.get("source_item_class_id") in [237,236]:metadata=restoration_metadata(record)
 		if metadata.get("ok",false):return {"kind":"hp","metadata":metadata}
 	var spec: Dictionary=record.get("source_use_spec",{})
+	if spec.get("kind")=="source_skill_book" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"skill_book","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -157,6 +158,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
+	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="selection":return selection_pending(world,uid,owned,record,spec)
 	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
 	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else (world._effective_max_mp() if effect.kind=="mp" else 0)
@@ -695,10 +697,11 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 	var issue: String=str(executor.call("eligibility",world,record))
 	if not issue.is_empty():return _failure(issue)
 	var spec: Dictionary=record.get("source_use_spec",{})
-	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 상자의 현재 보상 효과 소유자 연결 대기")
+	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	if float(world.item_use_cooldowns.get("m523:item:"+str(int(owned.item_class_id)),0.0))>0:return _failure("원본 상자 재사용 대기")
 	var selected_owned: Dictionary={"record":record,"remaining":int(owned.quantity),"receipt":request.quest_reward_receipt,"ownership_kind":"quest"}
+	if spec.kind=="source_skill_book":return learn_skill_book(world,uid,selected_owned,record,spec)
 	if spec.kind=="source_selectable_reward":return selection_pending(world,uid,selected_owned,record,spec)
 	return use_bag(world,uid,selected_owned,record,spec)
 
@@ -1034,3 +1037,78 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	if payload.has("equipped_ammo"):world.equipped_ammo=payload.equipped_ammo;world.ammo_unequipped=payload.ammo_unequipped
 	world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
 	return {"handled":true,"ok":true,"saved":true,"consumed":quantity,"physical_id":uid,"remaining_quantity":int(owned.remaining)-quantity,"source_ammo_receipt_id":id,"damage_bonus":damage,"message":"원본 물리 탄약·MP·발사 기록 저장"}
+
+
+static func learn_skill_book(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	# Existing skill catalog/engine owns execution. Only exact known current
+	# learning can be joined with this quantity owner's selected physical debit.
+	if spec.get("kind")!="source_skill_book" or spec.get("activation_status")!="unrestricted" or world.original_skills==null:return _failure("현재 원문 스킬서·학습 소유자 연결 필요")
+	if current_class(world)<=0:return _failure("원문 스킬서의 실제 현재 직업 정체 연결 필요")
+	var book: Script=load("res://scripts/loot/patch523_skill_book.gd")
+	var issue: String=book.call("source_limit_problem",world,spec)
+	if not issue.is_empty():return _failure(issue+" · 현재 학습/실행 의존 미충족")
+	var catalog: Object=world.original_skills.catalog;var adapter: Object=book.call("_adapter",catalog)
+	if adapter==null or adapter.get_script()!=preload("res://scripts/skills/player_skills523.gd"):return _failure("현재 원문 스킬 프로필 소유자 미설치")
+	var evidence: Dictionary={}
+	if adapter.get("source_mode")=="original_bound_profiles":
+		var original: Variant=adapter.get("source_identity")
+		if not original is Dictionary or original.get("source_snapshot")!="patch523" or original.get("source_sha256")!=SOURCE.identity().get("source_sha256") or original.get("source_bytes")!=25031173:return _failure("실제 원문 스킬 프로필 출처 불일치")
+		evidence={"kind":"original_bound_profiles","source_sha256":SOURCE.identity().source_sha256,"source_identity":original.duplicate(true)}
+	else:
+		# No old card/monster input is used; this is the already reviewed new
+		# original441-profile skill input, kept distinct from an archive reader.
+		if adapter.get("source_mode")!="compiled_pack" or adapter.get("active_sha256")!="256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a":return _failure("정확한 새 원문 스킬 프로필 입력 필요")
+		evidence={"kind":"compiled_pack","source_sha256":SOURCE.identity().source_sha256,"skill_pack_sha256":str(adapter.get("active_sha256"))}
+	var bindings_sha: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json").sha256_text()
+	if bindings_sha!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346":return _failure("기존 공개 스킬 바인딩 정체 변경 · 스킬서 보존")
+	evidence["binding_sha256"]=bindings_sha;evidence["item_definition_archive"]=SOURCE.identity()
+	var identity: Dictionary=book.call("resolve",adapter,spec)
+	if identity.is_empty() or identity.get("profile",{}).get("row")!=SOURCE.row("SpellClass",int(spec.spell_class_id)):return _failure("정확한 SpellClass ID·원문 행 SHA·기존 학습 ID 연결 필요")
+	var key: String=str(identity.local_skill_id);var skill: Dictionary=catalog.record_for(key)
+	if skill.get("id")!=key:return _failure("기존 등록 스킬 정체 불일치")
+	var reference: Script=load("res://scripts/quests/quest_reference_learning.gd")
+	var learning_only: bool=reference.call("matches",int(record.source_item_class_id),int(spec.spell_class_id),key,str(spec.source_spell_row_sha256))
+	if learning_only:
+		if catalog.learned.has(key) and catalog.learned[key]!=0:return _failure("이미 학습 기록이 있습니다")
+		if not catalog.permitted(skill) or world.level<catalog.minimum_level_for(skill):return _failure("기존 스킬 직업·학습 레벨 조건 미충족")
+		for required: String in catalog.relations.get(key,{}).get("requires_skill",[]):
+			if int(catalog.learned.get(required,0))<int(catalog.relations[key].get("requires_skill_level",{}).get(required,1)):return _failure("기존 선행 스킬 조건 미충족")
+	else:
+		if skill.get("runtime_blocked",false):return _failure("현재 주문 실행 소유자 미지원 · 스킬서 보존")
+		issue=catalog.reason(skill,true)
+		if not issue.is_empty():return _failure(issue)
+	var is_quest: bool=owned.get("ownership_kind")=="quest"
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1}
+	request["quest_reward_receipt" if is_quest else RECEIPT]=owned.receipt.duplicate(true)
+	var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256)) if is_quest else stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason","선택 원문 스킬서 차감 후보 연결 대기")))
+	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
+	var receipts: Variant=state.get("source_skill_book_receipts",[])
+	if not receipts is Array:return _failure("기존 스킬서 학습 영수증 보존 필요")
+	var learned: Dictionary=catalog.export_state();learned.learned[key]=1
+	var learning_record: Dictionary={}
+	if learning_only:
+		learning_record=reference.call("make_record",world,int(record.source_item_class_id),evidence)
+		if not learned.has("source_quest_knowledge"):learned["source_quest_knowledge"]={}
+		learned.source_quest_knowledge[key]=learning_record.duplicate(true)
+	receipts=receipts.duplicate(true)
+	var input_proof: Dictionary={"physical_id":uid,"remaining_before":owned.remaining,"ownership_kind":"quest" if is_quest else "native"}
+	input_proof["quest_reward_receipt" if is_quest else RECEIPT]=owned.receipt.duplicate(true)
+	var receipt: Dictionary={"source_snapshot":"patch523","source_sha256":SOURCE.identity().source_sha256,"item_definition_archive":SOURCE.identity(),"item_class_id":int(record.source_item_class_id),"bless_raw":int(record.source_bless_raw),"card_id":int(spec.card_id),"spell_class_id":int(spec.spell_class_id),"spell_row_sha256":str(spec.source_spell_row_sha256),"local_skill_id":key,"skill_source_evidence":evidence,"cannot_swap":bool(spec.get("buff_card_cannot_swap",false)),"cannot_stack_card":bool(spec.get("cannot_stack_card",false)),"input":input_proof}
+	if learning_only:receipt["source_learning_record"]=learning_record.duplicate(true)
+	receipts.append(receipt);state["source_skill_book_receipts"]=receipts
+	var payload: Dictionary=paid.overrides;payload["consumable_state"]=state;payload["original_skill_state"]=learned;payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	# Learning/profiles were only quoted above. The shared existing skill
+	# catalog state is changed after the exact physical/debit save succeeds.
+	if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("퀘스트 스킬서의 실제 잔량·학습·사용 장부 후보 불일치")
+	busy=true;_candidate_kind="skill_book_use";_candidate=payload.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	_candidate.clear();_candidate_kind="";busy=false
+	if saved!=OK:
+		world.patch523_owner_state_problem="원문 스킬서 저장 결과 미확정 · 정상 불러오기 전 재학습 중지";return _failure(world.patch523_owner_state_problem)
+	if is_quest and not world.quest_service.import_state(payload.quest_state):
+		world.patch523_owner_state_problem="퀘스트 스킬서 저장 후 장부 채택 미확정 · 정상 불러오기 전 재학습 중지";return _failure(world.patch523_owner_state_problem)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(state)
+	catalog.source_quest_knowledge=learned.get("source_quest_knowledge",{}).duplicate(true);catalog.learned=learned.learned.duplicate(true);catalog.revision+=1
+	world.original_skills.refresh_buffs_after_learning(key);world._refresh_speed_modifiers();world.deferred_save.cancel()
+	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"local_skill_id":key,"learning_only":learning_only,"execution_allowed":not learning_only,"message":str(skill.get("name",key))+" 원문 학습 완료 · 실행 대기" if learning_only else str(skill.get("name",key))+" 습득"}

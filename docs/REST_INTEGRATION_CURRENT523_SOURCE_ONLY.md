@@ -285,3 +285,17 @@ item_grants.used_quantity save with MP/selection/outcome through one candidate.
 Invalid selected proofs are handled failures, never name-only fallback. No
 native conversion/regrant, extra ledger, tests, execution, render or CI; the
 historical verified counts are unchanged.
+
+
+## Original spellbook learning ownership (unexecuted)
+
+Existing typed card/deck/spell/ordinary learning-limit input now reaches the
+current DTO and actual native/common-quest selected learning transaction. Exact
+installed original profiles or the existing pinned441-profile input and binding
+must match the full original SpellClass row/SHA and a real catalog skill. Its
+existing class/level/prerequisite/already-learned/runtime rules remain; only the
+four existing explicit reference identities keep learning-only behavior with
+casting blocked. Input remainder/use receipt, staged learned/knowledge map,
+cooldown and quest state save together before live catalog adoption. New inputs
+cite the actual original archive; old receipts are not rewritten or reissued.
+No new spell engine/effect/UI or skill pack, and no tests/execution/CI/counts.
