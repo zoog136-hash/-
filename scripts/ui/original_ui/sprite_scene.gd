@@ -97,7 +97,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle","CheckBox"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar","Particle","CheckBox","ScrollView"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
@@ -118,8 +118,8 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
 			if not inspection_only and not (field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox")) and binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_callback:"+field)
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or binding.get("role") not in ["button","checkbox","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and binding.get("role") not in ["button","checkbox","consume"]: problems.append("unconnected_source_input")
+		if inspection_only or binding.get("role") not in ["button","checkbox","source_scroll","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
 	if node.classname=="CheckBox":
 		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
 		if not inspection_only and not (binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid()):problems.append("unconnected_source_checkbox")
@@ -139,6 +139,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if binding.get("role")=="source_percent" and not connected:problems.append("source_percent_value_missing")
 		if not connected:unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
 		if not inspection_only and not connected:problems.append("unconnected_source_percent")
+	if node.classname=="ScrollView":
+		var connected: bool=binding.get("role")=="source_scroll" and binding.get("input") is Callable and binding.input.is_valid()
+		if not connected:unresolved_bindings.append(str(widget.name)+":original_scroll_input_binding")
+		if not inspection_only and not connected:problems.append("unconnected_original_scroll_input")
+		if binding.has("position") and not binding.position is Vector2:problems.append("source_scroll_position_invalid")
 	if node.classname=="ListView":
 		# Inspection retains supplied authored rows; dynamic gameplay content
 		# still requires the original row/caller contract.
@@ -157,7 +162,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
-	if source.classname in ["Panel","ListView"] and bool(options.get("backGroundScale9Enabled",false)):
+	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.get("backGroundScale9Enabled",false)):
 		widget=widget.duplicate(true)
 		widget.size=options.scale9Size.duplicate()
 	if source.classname=="ProjectNode" and not str(options.get("fileName","")).is_empty():
@@ -264,6 +269,8 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_loading_bar",bar)
 	if source.classname=="Text":
 		var font_value: FontFile=source_pack.font(options.fontResource)
+		if font_value==null and str(options.fontResource.get("path","")).is_empty() and source_pack.has_method("declared_system_font"):
+			font_value=source_pack.declared_system_font(str(options.get("fontName","")))
 		if font_value==null:
 			_build_error="original_font_unavailable:"+str(widget.name); node.free(); return null
 		var text_binding: Dictionary=_bindings.get(int(source._offset),{})
@@ -331,7 +338,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_origin",origin)
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
 	var child_origin: Node=origin
-	if source.classname in ["Panel","ListView"] and bool(options.clipEnabled):
+	if source.classname in ["Panel","ListView","ScrollView"] and bool(options.clipEnabled):
 		# The original transparent Panel clips its children to the source size.
 		# Control uses top-left coordinates; restore Cocos' bottom-left origin
 		# inside it before adding source children. No replacement pixels.
@@ -347,13 +354,24 @@ func _build(source: Dictionary) -> Node2D:
 		clipped_origin.position.y=float(widget.size[1])
 		clip.add_child(clipped_origin)
 		child_origin=clipped_origin
-	if source.classname in ["Panel","ListView"]:
+	if source.classname in ["Panel","ListView","ScrollView"]:
 		var background=preload("res://scripts/ui/original_ui/source_panel.gd").new()
 		var configured: Dictionary=background.configure(source_pack,options,Vector2(widget.size[0],widget.size[1]))
 		if not configured.ok:
 			_build_error=str(configured.error);background.free();node.free();return null
 		child_origin.add_child(background)
 		node.set_meta("source_panel",background)
+	if source.classname=="ScrollView":
+		var scroll=preload("res://scripts/ui/original_ui/source_scroll.gd").new()
+		scroll.configure(options,Vector2(widget.size[0],widget.size[1]))
+		child_origin.add_child(scroll)
+		node.set_meta("source_scroll",scroll)
+		var scroll_binding: Dictionary=_bindings.get(int(source._offset),{})
+		if scroll_binding.has("position"):
+			var positioned: Dictionary=scroll.set_source_position(scroll_binding.position)
+			if not positioned.ok:_build_error=str(positioned.error);node.free();return null
+		if not inspection_only:scroll.bind_input(scroll_binding.input)
+		child_origin=scroll.content
 	var list_items: Array[Dictionary]=[]
 	var list_nodes: Array[Node2D]=[]
 	if source.classname=="ListView" and not source.children.is_empty():
@@ -585,3 +603,8 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
 	node.visible=value
 	return {"ok":true}
+
+func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_scroll" or not node.has_meta("source_scroll"):return {"ok":false,"error":"source_scroll_binding_missing"}
+	return node.get_meta("source_scroll").set_source_position(value)

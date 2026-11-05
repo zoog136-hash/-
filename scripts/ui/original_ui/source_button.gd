@@ -63,6 +63,8 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 		states[state]=picture
 	if not str(options.text).is_empty():
 		var font: FontFile=pack.font(options.fontResource)
+		if font==null and str(options.fontResource.get("path","")).is_empty() and pack.has_method("declared_system_font"):
+			font=pack.declared_system_font(str(options.get("fontName","")))
 		if font==null:return {"ok":false,"error":"original_button_font_unavailable"}
 		var title: String=str(options.text)
 		for index: int in range(title.length()):

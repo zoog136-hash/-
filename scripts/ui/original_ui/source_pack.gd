@@ -227,3 +227,27 @@ func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
 	result.set_meta("original_embedded_png_sha256",_sha256(png))
 	_textures[key]=result
 	return result
+
+
+func declared_system_font(family: String) -> FontFile:
+	# Cocos uses the serialized fontName when no fontResource was declared.
+	# Resolve only that exact installed family; never choose a replacement.
+	if family.is_empty() or not OS.get_system_fonts().has(family):
+		last_error="declared_system_font_unavailable:"+family
+		return null
+	var key: String="declared_system_font:"+family
+	if _fonts.has(key):return _fonts[key]
+	var path: String=OS.get_system_font_path(family)
+	if path.is_empty() or not FileAccess.file_exists(path):
+		last_error="declared_system_font_unavailable:"+family
+		return null
+	var original:=FontFile.new()
+	original.data=FileAccess.get_file_as_bytes(path)
+	original.allow_system_fallback=false
+	if original.get_font_name()!=family or original.get_supported_chars().is_empty():
+		last_error="declared_system_font_identity_mismatch:"+family
+		return null
+	original.set_meta("source_font_kind","declared_host_system_font")
+	original.set_meta("original_declared_system_font",family)
+	_fonts[key]=original
+	return original

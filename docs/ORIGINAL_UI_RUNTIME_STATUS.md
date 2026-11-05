@@ -567,3 +567,12 @@ starting further checks, audits or tests. They have not been executed, compiled
 or rendered. The previous inspection count remains 317/560, dependencies remain
 524/560, and no new actual game-consumption or 95% usage claim is made. Sound and
 the separately excluded undeclared 135 links are not activated by this adapter.
+
+Source ScrollView inner-container fields and explicit original-controller input
+forwarding were added to the same bridge. Original drag/bounce/inertia remains
+the declared caller's responsibility; strict presentation rejects a missing
+controller. Text/Button nodes with no fontResource can resolve only their
+serialized fontName as an exactly matching installed host font, without glyph
+fallback. Missing nonempty original font paths still fail. No font asset is
+created, downloaded or counted as original inventory bytes. These additions
+are unexecuted/unverified and add no completed/rendered entries.

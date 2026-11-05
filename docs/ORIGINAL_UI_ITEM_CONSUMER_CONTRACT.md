@@ -163,3 +163,23 @@ The caller supplies its existing original-coordinate mount. Unsupported menu
 IDs still fail. This implementation path uses the existing menu adapter and
 contains no generic menu or new pixels. It is also unexecuted/unverified under
 the latest instruction.
+
+ScrollView now retains its serialized inner size and original initial top-left
+position within the source clipping/background hierarchy. A strict
+`{"role":"source_scroll","input":Callable,"position":Vector2}` binding forwards
+Control-local input events to the existing original scroll controller. The
+position is optional and uses original Cocos coordinates. The caller owns
+original direction, drag, bounce/inertia and child-event arbitration; no Godot
+scrolling behavior or estimated motion is substituted. Without that input
+controller, strict presentation is unavailable. The caller can use
+`set_bound_scroll_position(offset, cocos_position)` for its original motion.
+This addition is implementation only and has not been run or checked.
+
+For source Text/Button nodes with an explicitly empty `fontResource`, the
+renderer can resolve the serialized `fontName` through
+`source_pack.declared_system_font(family)`. It accepts only an exactly named
+installed family and its matching FontFile, with glyph fallback disabled. A
+nonempty missing original font path still fails. No font is downloaded,
+generated or substituted. Host-system font bytes are not original UI inventory
+member bytes and must not be counted toward source usage. This path has not
+been executed under the current no-new-checks instruction.
