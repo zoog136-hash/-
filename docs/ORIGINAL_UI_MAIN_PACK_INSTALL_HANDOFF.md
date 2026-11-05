@@ -5,6 +5,13 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
+The latest character-stats extension is the single combined **v10** input in
+[Original character caller ABI](ORIGINAL_UI_CHARACTER_CALLER_ABI.md). Its
+private Drive delivery succeeded; it retains the v8 main/map/inventory/
+quickslot/auto-message scopes and adds actual character stats tab/close/detail
+callers. This does not change user selection/config or prove game consumption.
+The earlier delivered inputs below remain preserved.
+
 ## Retained current checkpoint
 
 The private Library operation succeeded for this exact existing file identity:

@@ -99,7 +99,11 @@ func _original_page(renderer: Node2D, panel_offset: int) -> Dictionary:
 			matches+=1
 	if matches!=1 or raw_panel.get("classname")!="Panel":return _fail("source_page_view_direct_original_panel_required")
 	var widget: Dictionary=_widget(raw_panel)
-	if not _identity_widget(widget):return _fail("source_page_view_panel_anchor_scale_rotation_unsupported")
+	# Cocos PageView.addPage keeps the Layout's anchor. Its layout pass
+	# changes position and size only; an authored .5 anchor is not anchor0.
+	if not _unrotated_widget(widget):return _fail("source_page_view_panel_scale_rotation_unsupported")
+	var anchor: Variant=widget.get("anchorPoint")
+	if not anchor is Array or anchor.size()!=2 or not Vector2(float(anchor[0]),float(anchor[1])).is_finite():return _fail("source_page_view_original_panel_anchor_missing")
 	if not _vector(widget.get("size"),_extent):return _fail("source_page_view_original_page_size_differs")
 	var panel: Variant=nodes.get(panel_offset)
 	if not panel is Node2D or not _vector(panel.get_meta("source_size",null),_extent):return _fail("source_page_view_actual_panel_size_differs")
@@ -111,6 +115,9 @@ func _original_page(renderer: Node2D, panel_offset: int) -> Dictionary:
 	if not source_position is Array or source_position.size()!=2:return _fail("source_page_view_original_panel_position_missing")
 	var native_position:=Vector2(float(source_position[0]),-float(source_position[1]))
 	if not panel.transform.x.is_equal_approx(Vector2.RIGHT) or not panel.transform.y.is_equal_approx(Vector2.DOWN) or not panel.position.is_equal_approx(native_position):return _fail("source_page_view_actual_panel_transform_changed")
+	var panel_origin: Node=panel.get_node_or_null("SourceContentOrigin")
+	var authored_origin:=Vector2(-float(anchor[0])*_extent.x,float(anchor[1])*_extent.y)
+	if not panel_origin is Node2D or not panel_origin.transform.is_equal_approx(Transform2D(0.0,authored_origin)):return _fail("source_page_view_original_panel_anchor_changed")
 	return {"ok":true,"panel":panel,"source_member":member,"original_source_position":Vector2(float(source_position[0]),float(source_position[1]))}
 
 func _live_pages() -> Dictionary:
@@ -135,7 +142,10 @@ static func _widget(node: Dictionary) -> Dictionary:
 	return options.get("widgetOptions",options.get("nodeOptions",options))
 
 static func _identity_widget(widget: Dictionary) -> bool:
-	return _vector(widget.get("anchorPoint"),Vector2.ZERO) and _vector(widget.get("scale"),Vector2.ONE) and _vector(widget.get("rotationSkew"),Vector2.ZERO) and not bool(widget.get("flipX",false)) and not bool(widget.get("flipY",false))
+	return _vector(widget.get("anchorPoint"),Vector2.ZERO) and _unrotated_widget(widget)
+
+static func _unrotated_widget(widget: Dictionary) -> bool:
+	return _vector(widget.get("scale"),Vector2.ONE) and _vector(widget.get("rotationSkew"),Vector2.ZERO) and not bool(widget.get("flipX",false)) and not bool(widget.get("flipY",false))
 
 static func _vector(value: Variant, expected: Vector2) -> bool:
 	return value is Array and value.size()==2 and Vector2(float(value[0]),float(value[1])).is_equal_approx(expected)

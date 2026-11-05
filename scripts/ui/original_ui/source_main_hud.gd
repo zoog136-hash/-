@@ -17,6 +17,7 @@ const QuickslotImages=preload("res://scripts/ui/original_ui/source_main_quickslo
 const PrimaryStats=preload("res://scripts/ui/original_ui/source_main_primary_stats.gd")
 const ButtonRouter=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const AutoMessage=preload("res://scripts/ui/original_ui/source_main_auto_message_bindings.gd")
+const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -85,6 +86,8 @@ var _auto_message: RefCounted
 var _auto_message_scene: Node2D
 var _auto_message_result: Dictionary={}
 var _auto_message_model: Dictionary={}
+var _character_view: RefCounted
+var _character_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -126,6 +129,17 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			_inventory_view=candidate
 			candidate.return_to_current_requested.connect(func(reason: Dictionary) -> void: inventory_return_to_current_requested.emit(reason))
 			candidate.closed.connect(func() -> void: inventory_closed.emit())
+	if pack.manifest.get("scenes",{}).has(CharacterView.ALL):
+		var candidate=CharacterView.new()
+		_character_result=candidate.configure(pack,hud)
+		if _character_result.get("ok",false):
+			_character_view=candidate
+			candidate.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			candidate.return_to_equipment_requested.connect(func() -> void:
+				var side: Variant=hud.get("lineage_side_ui")
+				if is_instance_valid(side):side.call("_show_equipment_page")
+				hud.call("open_character"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER))
@@ -142,17 +156,22 @@ func _input(event: InputEvent) -> void:
 		return
 	var candidates: Array=[]
 	var point: Vector2=event.position
-	if inventory_is_open() and inventory_blocks_point(point):
+	for property: String in ["detail_window","companion_window","workspace"]:
+		var overlay: Variant=hud.get(property)
+		if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*point):
+			_cancel_native_buttons()
+			return
+	var character_inside: bool=character_blocks_point(point)
+	if character_inside:
+		var character: Dictionary=_character_view.presentation()
+		if is_instance_valid(character.get("scene")):_collect_native_buttons(character.scene,candidates)
+	elif inventory_is_open() and inventory_blocks_point(point):
 		var inventory: Dictionary=_inventory_view.presentation()
 		if is_instance_valid(inventory.get("scene")):_collect_native_buttons(inventory.scene,candidates)
 	else:
-		var workspace: Variant=hud.get("workspace")
-		if workspace is Control and workspace.is_visible_in_tree() and Rect2(Vector2.ZERO,workspace.size).has_point(workspace.get_global_transform_with_canvas().affine_inverse()*point):
-			_cancel_native_buttons()
-			return
 		_collect_native_buttons(_coordinates,candidates)
 	var routed: Dictionary=_native_buttons.route(event,point,candidates)
-	if routed.get("handled",false):get_viewport().set_input_as_handled()
+	if routed.get("handled",false) or character_inside:get_viewport().set_input_as_handled()
 
 static func _collect_native_buttons(node: Node, found: Array) -> void:
 	if node is CanvasItem and not node.is_visible_in_tree():return
@@ -223,6 +242,30 @@ func _native_icon_context(context: Dictionary) -> Dictionary:
 func refresh_source_icons() -> Dictionary:
 	_icons_refresh_pending=true
 	return refresh_quickslots()
+
+func try_open_character_stats() -> Dictionary:
+	if _character_view==null or not is_instance_valid(_coordinates):return _fail("source_character_original_view_not_available")
+	_cancel_native_buttons()
+	_character_result=_character_view.open_stats(_coordinates)
+	return _character_result.duplicate(true)
+
+func character_is_open() -> bool:
+	return _character_view!=null and _character_view.is_open()
+
+func character_blocks_point(point: Vector2) -> bool:
+	return character_is_open() and _character_view.blocks_point(point)
+
+func close_character() -> void:
+	_cancel_native_buttons()
+	if _character_view!=null:_character_view.close()
+
+func refresh_character_stats() -> Dictionary:
+	if not character_is_open():return {"ok":true,"handled":false}
+	_character_result=_character_view.refresh()
+	if not _character_result.get("ok",false):
+		var hud: Object=_hud.get_ref() if _hud!=null else null
+		if hud!=null:hud.call("open_character")
+	return _character_result.duplicate(true)
 
 func refresh_quickslots() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -640,6 +683,7 @@ func release(restore_legacy: bool=true) -> void:
 	_cancel_native_buttons()
 	if is_inside_tree() and get_window().focus_exited.is_connected(_cancel_native_buttons):get_window().focus_exited.disconnect(_cancel_native_buttons)
 	if is_instance_valid(_world_map):_world_map.close()
+	close_character()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
