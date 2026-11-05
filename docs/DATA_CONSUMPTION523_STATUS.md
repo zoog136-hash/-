@@ -194,6 +194,18 @@ The public data contracts for PR269 are:
 | NPC catalog's `project_actor_record(record)` | Existing Monster.setup reads exact current523 HP/MP/AC/MR/Exp and native attributes only for an existing source actor with matching integral ID/Sprite/DescId and an eligible declared category. The saved encounter identity, spawn-context level, sprites and loot remain unchanged. |
 | NPC catalog's `npc_definition(npc_id)` / `attack_definition(npc_id,attack_id)` | Raw attributes/races/resistances/attacks and referenced spell data remain reference-only; missing attribute/AI/probability/timing meanings are not invented. Final runtime reads use the new admitted-current-actor registry described below, without an old compiled-pack prerequisite or fallback. |
 
+The ItemBonus reader also follows exact original `Unit.Name == ItemClassID`
+and `IntangibleItemClassID` references through the existing `describe()` call.
+`typed_references[].target` retains the raw target, source identity and explicit
+Test/dummy evidence. Item targets additionally carry the same confirmed
+category/grade/ItemEquipSlot/EquipSlot/ItemClassLimit/Class leaf relationships
+already used for the root item; intangible targets remain raw. Missing and
+duplicate IDs remain distinguished with their original matches. The adapter
+does not recursively describe the referenced item, infer quantities from the
+ID bonus, normalize BlessPoint or activate a material/payment/effect.
+Existing item/shop readers receive these branches with no new supplier,
+transaction or save implementation.
+
 Reference contracts explicitly retain `reference_only` and `can_activate:false`
 or `can_execute:false`. An `ok`/`join_complete` data result is not ownership,
 learning, execution, service authorization or a successful save. Existing

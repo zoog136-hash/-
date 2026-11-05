@@ -35,12 +35,111 @@ static func _effects(table: String, owner_field: String, id: int, blockers: Arra
 		effects.append({"link":link,"bonus":detail.get("bonus",{}),"type":detail.get("type",{}),"unit":detail.get("unit",{}),"definition":detail})
 	return effects
 
+static func _target_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
+
+static func _target_node(table: String, row: Dictionary, blockers: Array[String]) -> Dictionary:
+	var node: Dictionary = {"table":table,"row":row,"source":SOURCE.identity(),"excluded":false,
+		"reference_only":true,"can_activate":false,"ownership_authorized":false}
+	if row.is_empty(): return node
+	var exclusion: Dictionary = SOURCE.declared_exclusion(table,row)
+	if not exclusion.is_empty():
+		node.excluded = true
+		node["declared_exclusion"] = exclusion
+	if table == "ItemClass":
+		var test: Variant = row.get("TestItem")
+		node["test_declaration"] = {"field":"TestItem","present":row.has("TestItem"),"value":test}
+		if typeof(test) == TYPE_BOOL and test:
+			node.excluded = true
+			node["test_exclusion_reason"] = "source_TestItem_true"
+		elif typeof(test) != TYPE_BOOL:
+			blockers.append("source_test_declaration_missing")
+	return node
+
+static func _target_row(table: String, id: Variant, blockers: Array[String], unresolved: Array[Dictionary]) -> Dictionary:
+	var node: Dictionary = _target_node(table,{},blockers)
+	node["id"] = id
+	node["source_table_metadata"] = SOURCE.table_metadata(table)
+	if not _target_integer(id) or int(id)<0:
+		blockers.append("invalid_source_reference:"+table)
+		unresolved.append({"target":{"table":table,"id":id},"reason":"invalid_source_reference"})
+		return node
+	if node.source_table_metadata.is_empty():
+		blockers.append("missing_source_reference:"+table+":"+str(int(id)))
+		unresolved.append({"target":{"table":table,"id":id},"reason":"missing_source_reference","source_problem":SOURCE.problem()})
+		return node
+	var matches: Array[Dictionary] = SOURCE.related(table,"ID",int(id))
+	if matches.size()!=1:
+		var reason: String = "missing_source_reference" if matches.is_empty() else "ambiguous_source_reference"
+		blockers.append(reason+":"+table+":"+str(int(id)))
+		unresolved.append({"target":{"table":table,"id":id},"reason":reason,"matches":matches,"source_problem":SOURCE.problem()})
+		return node
+	var selected: Dictionary = _target_node(table,matches[0],blockers)
+	selected["id"] = id
+	selected["source_table_metadata"] = node.source_table_metadata
+	return selected
+
+static func _item_target_leaves(id: Variant, blockers: Array[String]) -> Dictionary:
+	# Forward leaves only. Never call describe() or follow the target's own
+	# ItemBonus graph: self-references and cycles remain original raw values.
+	var unresolved: Array[Dictionary] = []
+	var target: Dictionary = _target_row("ItemClass",id,blockers,unresolved)
+	target["category"] = {}; target["grade"] = {}
+	target["equip_slots"] = []; target["class_limits"] = []
+	target["unresolved"] = unresolved
+	if target.row.is_empty() or target.excluded: return target
+	var raw: Dictionary = target.row
+	var category: Dictionary = _target_row("ItemCategory",raw.get("CategoryID"),blockers,unresolved)
+	var grade: Dictionary = _target_row("Grade",raw.get("GradeID"),blockers,unresolved)
+	target.category = category.row; target.grade = grade.row
+	target["category_reference"] = category; target["grade_reference"] = grade
+	for table: String in ["ItemEquipSlot","ItemClassLimit"]:
+		if SOURCE.table_metadata(table).is_empty():
+			blockers.append("missing_source_reference:"+table)
+			unresolved.append({"target":{"table":table,"field":"ItemClassID","id":raw.ID},"reason":"missing_source_reference","source_problem":SOURCE.problem()})
+			continue
+		for link: Dictionary in SOURCE.related(table,"ItemClassID",int(raw.ID)):
+			var source_link: Dictionary = _target_node(table,link,blockers)
+			if table == "ItemEquipSlot":
+				var equip: Dictionary = {"link":link,"source_link":source_link,"slot":{},"slot_reference":{},"reference_only":true,"can_activate":false}
+				target.equip_slots.append(equip)
+				if source_link.excluded: equip["excluded"] = true; continue
+				var slot: Dictionary = _target_row("EquipSlot",link.get("EquipSlotID"),blockers,unresolved)
+				equip.slot = slot.row; equip.slot_reference = slot
+			else:
+				var limit: Dictionary = {"link":link,"source_link":source_link,"class":{},"class_reference":{},"reference_only":true,"can_activate":false}
+				target.class_limits.append(limit)
+				if source_link.excluded: limit["excluded"] = true; continue
+				var character_class: Dictionary = _target_row("Class",link.get("ClassID"),blockers,unresolved)
+				limit["class"] = character_class.row; limit.class_reference = character_class
+	return target
+
+static func _typed_item_target(detail: Dictionary, unit: String, value: Variant, blockers: Array[String]) -> Dictionary:
+	var target: Dictionary = {}
+	if unit == "ItemClassID":
+		target = _item_target_leaves(value,blockers)
+	else:
+		# This namespace establishes IntangibleItemClass only. Similar field
+		# names do not establish item category/equip/class joins for that table.
+		var unresolved: Array[Dictionary] = []
+		target = _target_row("IntangibleItemClass",value,blockers,unresolved)
+		target["unresolved"] = unresolved
+	var reference: Dictionary = {"unit":unit,"id":value,"raw_value":value,
+		"item_bonus_id":detail.get("link",{}).get("ID"),"target":target,
+		"excluded":target.get("excluded",false),"reference_only":true,"can_activate":false,"ownership_authorized":false}
+	if unit == "ItemClassID": reference["item_class"] = target.row
+	else: reference["intangible_item_class"] = target.row
+	if target.has("declared_exclusion"): reference["declared_exclusion"] = target.declared_exclusion
+	return reference
+
 static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dictionary:
 	var value: Variant = detail.get("bonus",{}).get("Value")
-	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<=0 or value>9007199254740991.0: return {}
-	var id: int = int(value)
 	var unit: String = str(detail.get("unit",{}).get("Name",""))
 	var type: String = str(detail.get("type",{}).get("Name",""))
+	if type != "MarketPurchaseID" and unit in ["ItemClassID","IntangibleItemClassID"]:
+		return _typed_item_target(detail,unit,value,blockers)
+	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<=0 or value>9007199254740991.0: return {}
+	var id: int = int(value)
 	var reference: Dictionary = {"unit":unit,"id":id,"item_bonus_id":detail.get("link",{}).get("ID"),"reference_only":true,"can_activate":false}
 	if type == "MarketPurchaseID":
 		# Existing public ticket/monsterbook joins define this type namespace.
