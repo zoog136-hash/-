@@ -56,7 +56,9 @@ fail. Invalid/unsupported cap insets fail instead of being silently corrected.
 Text is available for inspection only with the exact source font and supported
 single-line layout; it still requires live data binding. Button state textures
 are inspection-only and have no service callbacks. CheckBox, Particle and
-nonempty nested ProjectNode are not yet supported. Inspect-only list/empty ProjectNode rendering is **not** a usable
+other widget classes remain unsupported. Nonempty ProjectNodes with Node roots
+are available for recursive inspection only; strict consumers still reject
+unbound nested scenes. Inspect-only list/empty ProjectNode rendering is **not** a usable
 item presentation and must not be enabled to suppress errors.
 
 ## Data still required from item owner

@@ -15,6 +15,8 @@ var _texture_refs: Dictionary={}
 var inspection_only: bool=false
 var unresolved_bindings: Array[String]=[]
 var _build_error: String=""
+var _project_ancestry: Array[String]=[]
+var _project_root_options: Dictionary={}
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
@@ -23,6 +25,13 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Di
 	inspection_only=inspect_only
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
+	if member in _project_ancestry or _project_ancestry.size()>=32:return {"ok":false,"error":"project_recursion"}
+	if not _project_root_options.is_empty():
+		# CSLoader creates the referenced node, then ProjectNodeReader applies
+		# the outer NodeReader properties to that same root. Do not double the
+		# transform by wrapping the original root in another transformed node.
+		if tree.nodeTree.classname!="Node":return {"ok":false,"error":"unsupported_project_root_class"}
+		tree.nodeTree.options=_project_root_options.duplicate(true)
 	var problems: Array[String]=[]
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
@@ -93,7 +102,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only or not node.get("children",[]).is_empty(): problems.append("unconnected_list_content")
 	if node.classname=="ProjectNode":
 		unresolved_bindings.append(str(widget.name)+":project_scene_binding")
-		if not inspection_only or not str(options.get("fileName","")).is_empty(): problems.append("unconnected_project_scene")
+		if not inspection_only: problems.append("unconnected_project_scene")
 	if node.classname in ["Panel","ListView"]:
 		if (int(options.get("colorType",0))!=0 and int(options.get("bgColorOpacity",0))!=0) or not str(options.get("backGroundImageData",{}).get("path","")).is_empty(): problems.append("unsupported_panel_background")
 		if bool(options.get("backGroundScale9Enabled",false)): problems.append("unsupported_panel_scale9")
@@ -106,6 +115,34 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	if source.classname=="ProjectNode" and not str(options.get("fileName","")).is_empty():
+		var member: String=str(options.fileName)
+		if not member.begins_with("UI/"):member="UI/"+member
+		var nested=get_script().new()
+		nested._project_ancestry=_project_ancestry.duplicate()
+		nested._project_ancestry.append(source_member)
+		nested._project_root_options=widget.duplicate(true)
+		var result: Dictionary=nested.configure(source_pack,member,inspection_only)
+		if not result.ok:
+			_build_error="project_scene_rejected:"+member+":"+str(result)
+			nested.free();return null
+		# The original loader initially pauses the inner action at frame zero.
+		nested.seek_frame(0.0)
+		nested.stop()
+		var actual_root: Node2D=nested.get_child(0)
+		source_nodes[int(source._offset)]=actual_root
+		var action_tag: int=int(widget.actionTag)
+		if action_tag!=0:
+			if _tags.has(action_tag):nested.free();return null
+			_tags[action_tag]=actual_root
+		actual_root.set_meta("original_project_source",{"scene":source_member,"node_offset":int(source._offset),"child_scene":member})
+		for unresolved: String in nested.unresolved_bindings:unresolved_bindings.append(member+":"+unresolved)
+		var child_origin: Node=actual_root.get_node("SourceContentOrigin")
+		for child: Dictionary in source.get("children",[]):
+			var built: Node2D=_build(child)
+			if built==null:nested.free();return null
+			child_origin.add_child(built)
+		return nested
 	var node:=Node2D.new()
 	node.name=str(widget.name)
 	node.set_meta("source_scale",widget.scale.duplicate())

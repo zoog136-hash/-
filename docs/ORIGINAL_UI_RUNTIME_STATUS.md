@@ -240,3 +240,17 @@ trailing malformed XML. Original bytes are not rewritten to make it parse.
 The ABI's MainMenu component paths have not yet been received in this source
 index and are not substituted with content-root CSBs. No PR264 service code was
 copied or independently reimplemented.
+
+
+The follow-up ProjectNode inspector resolves the exact referenced CSB and
+applies the outer source Node properties to its root, matching CSLoader's
+create-then-apply behavior. It initially pauses the inner timeline at frame 0;
+it does not invent autoplay. Recursion, missing children, non-Node referenced
+roots, unsupported nested controls and ActionValue tracks remain explicit
+failures. Strict consumer mode still rejects unbound ProjectNodes. The original
+288-entry snapshot now accepts 81 inspection entries with no regressions from
+the earlier 75; four are newly resolved nested scenes and two are the previously
+recorded custom-easing scenes. Together with the disjoint five later entries,
+86 entries have inspection renders, not completed service screens.
+
+Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/ActionTimeline/CSLoader.cpp
