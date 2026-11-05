@@ -226,3 +226,12 @@ the renderer. The input must have been declared by the original widget; this
 path cannot activate an undeclared touch area. Source buttons/checkboxes keep
 their separate activation paths, avoiding duplicate action dispatch. This
 input-to-caller wiring is unexecuted and untested under the current instruction.
+
+Session `close()` also emits `closed`; the runtime presenter removes only that
+current session's original scene. Thus a source close button can bind the
+session close callback without leaving its old pixels/input on screen. On HUD
+teardown, `abandon()` cancels only that session's exact pending token before
+invalidating local callbacks, and does not close a newer prepared page. Frame
+event handlers dispatch only for mounted presentations; loader-initialization
+seeks do not invoke game handlers before the original scene has entered the
+game tree. These lifecycle connections have not been run/tested.

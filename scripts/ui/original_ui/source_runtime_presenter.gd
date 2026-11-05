@@ -76,8 +76,12 @@ func present(section: String) -> Dictionary:
 		scene.free();session.invalidate();return configured
 	_scene=scene
 	_session=session
+	session.closed.connect(_on_source_session_closed.bind(session.get_instance_id()))
 	mount.add_child(scene)
 	return {"ok":true,"source":str(route.member),"transaction_performed":false}
+
+func _on_source_session_closed(session_id: int) -> void:
+	if _session!=null and _session.get_instance_id()==session_id:_release_local()
 
 func close_content() -> Dictionary:
 	var result: Dictionary=_session.close() if _session!=null else {"ok":true,"closed":true}
@@ -104,5 +108,6 @@ func _release_menus() -> void:
 func _exit_tree() -> void:
 	# A freed Callable becomes unavailable to the runtime. Do not overwrite a
 	# replacement presenter's binding or alter gameplay state during teardown.
+	if _session!=null:_session.abandon()
 	_release_local()
 	_release_menus()

@@ -477,7 +477,7 @@ func _seek_frame(frame_number: float) -> void:
 				_entered_frames[key]=int(selected._offset)
 				var event_callback: Variant=_bindings.get("frame_events",{}).get(int(selected._offset))
 				var in_clip: bool=int(selected.frameIndex)>=int(_clip.get("startIndex",0)) and int(selected.frameIndex)<=int(_clip.get("endIndex",action.get("duration",0)))
-				if not inspection_only and in_clip and not _audio_frame_offsets.has(int(selected._offset)) and event_callback is Callable and event_callback.is_valid():
+				if not inspection_only and is_inside_tree() and in_clip and not _audio_frame_offsets.has(int(selected._offset)) and event_callback is Callable and event_callback.is_valid():
 					event_callback.call(str(selected.value))
 					if is_queued_for_deletion():return
 		elif timeline.property=="ActionValue":

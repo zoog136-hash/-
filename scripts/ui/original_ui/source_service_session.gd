@@ -2,6 +2,7 @@ extends RefCounted
 ## UI callbacks for the existing PR264 source_ui_service ABI. No transactions,
 ## reward choices, costs, save state or RNG are implemented here.
 signal action_result(result: Dictionary)
+signal closed
 var _service: WeakRef
 var _model: Dictionary={}
 var _token: String=""
@@ -69,9 +70,17 @@ func cancel() -> Dictionary:
 func close() -> Dictionary:
 	var service: Object=_live_service()
 	invalidate()
-	if service==null:return _unavailable()
-	service.call("close")
-	return {"ok":true,"closed":true}
+	if service!=null:service.call("close")
+	closed.emit()
+	return {"ok":true,"closed":true} if service!=null else _unavailable()
+
+func abandon() -> void:
+	# Teardown may follow a replacement presenter. Cancel only this exact
+	# pending token; never close a newer model owned by another presentation.
+	var service: Object=_live_service()
+	var token: String=_token
+	invalidate()
+	if service!=null and not token.is_empty():service.call("cancel",token)
 
 func invalidate() -> void:
 	# Replacing a displayed scene must not close the newer model that the
