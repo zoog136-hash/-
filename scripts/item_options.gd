@@ -30,9 +30,12 @@ static func additional_original_flat(record: Dictionary, key: String) -> int:
 	var names: Dictionary = {
 		"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical","weightBonus":"CarryPlus",
 		"equipment523_lfe":"KarmaLife","equipment523_dth":"KarmaDeath",
-		"equipment523_critical_reduction":"CriticalDamageReduction","equipment523_element_reduction":"ElementalDamageReduction"}
+		"equipment523_critical_reduction":"CriticalDamageReduction","equipment523_element_reduction":"ElementalDamageReduction",
+		"damage_reduction_ignore":"PierceDamageReduction",
+		"melee_critical_damage":"CriticalMeleeDamage","ranged_critical_damage":"CriticalRangeDamage","magic_critical_damage":"CriticalMagicDamage"}
 	if not names.has(key): return 0
 	var aliases: Dictionary = {"dg":["DG","근거리 회피력"],"er":["ER","원거리 회피력"],"melee_crit":["meleeCrit","근거리 치명타"],"ranged_crit":["rangedCrit","원거리 치명타"],"magic_crit":["magicCrit","마법 치명타"]}
+	aliases["damage_reduction_ignore"]=["damageReductionIgnore"]
 	if not record.get("_patch523_effective_extras",false):
 		for alias: String in aliases.get(key,[]):
 			if record.has(alias): return 0

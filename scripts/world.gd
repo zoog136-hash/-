@@ -960,6 +960,7 @@ func _equipped_numeric_sum(key: String) -> float:
 	for record: Dictionary in _all_equipped_records():
 		total += float(record.get(key, 0.0))
 		total += ITEM_OPTIONS.additional_original_percent(record,key)
+		total += ITEM_OPTIONS.additional_original_flat(record,key)
 	return total
 
 
@@ -1449,6 +1450,7 @@ func _equipment_additional_damage(kind: String) -> int:
 			var item: Dictionary = _source_catalog_record("아이템", entry as Dictionary)
 			result += ITEM_OPTIONS.additional_damage(item, kind)
 			var typed_ignore: int = int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
+			typed_ignore += ITEM_OPTIONS.additional_original_flat(item,"damage_reduction_ignore")
 			result += typed_ignore
 			if typed_ignore == 0:
 				for fragment: String in str(item.get("desc", "")).split("·"):

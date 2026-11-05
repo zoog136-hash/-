@@ -267,3 +267,20 @@ regeneration/drain again, duplicate HPHealIncreasePercent through a second
 healing engine, or duplicate style critical resistance through a second alias.
 Explicit fields and mapped source BonusIDs retain precedence. All additions
 are uncompiled/unexecuted/unverified and do not change physical or save owners.
+
+Direct PierceDamageReduction Unit.Value now supplies the existing generic
+damage_reduction_ignore item operand in _equipment_additional_damage(). This
+retains that host's existing flat-damage projection rather than claiming a new
+original armor/reduction formula. Explicit canonical/camelCase fields, source
+mapped bonus IDs and existing enhancement overlays retain precedence. The
+legacy description fallback runs only when the resulting typed operand is
+zero, as before. Style/PvP/conditional ignore inputs and their existing owners
+are not reconstructed here. This caller connection remains unverified.
+
+The existing _player_critical_damage() path also receives direct
+CriticalMeleeDamage/CriticalRangeDamage/CriticalMagicDamage Unit.Value inputs
+through _equipped_numeric_sum(). These remain per-style flat additions after
+the existing player critical multiplier. Monster critical damage, the host
+multiplier itself and critical weapon-multiplier/ignore-reduction semantics
+are unchanged. Explicit fields/overlays and mapped source bonus IDs keep the
+same precedence. These connections are uncompiled/unexecuted/unverified.
