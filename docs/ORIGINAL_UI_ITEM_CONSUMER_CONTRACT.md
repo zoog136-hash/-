@@ -80,4 +80,5 @@ effects are not evidence that all 123 item CSBs or 560 UI entries are supported.
 
 The v2 open/configure/play/seek call signatures are unchanged. No completion
 signal was added. All inspection-only acceptance remains unavailable to strict
-item consumers. The supported numeric easing IDs are 0–5, 25, 27 and 29.
+item consumers. The supported numeric easing IDs are 0–5, 25, 27 and 29, plus source
+four-point custom curves (-1) using the original Cocos evaluation.

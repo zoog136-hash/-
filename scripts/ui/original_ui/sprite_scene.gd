@@ -37,7 +37,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Di
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
 				if expected=="BlendFrame" and _blend(value) not in ["770:1","770:771","1:771"]: problems.append("unsupported_blend_track")
 				var easing: Dictionary=value.get("easingData",{}) if value.get("easingData") is Dictionary else {}
-				if int(easing.get("type",0)) not in EASING.SUPPORTED or not easing.get("points",[]).is_empty(): problems.append("unsupported_easing")
+				if not EASING.accepts(easing): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
 			if timeline.get("property")=="VisibleForFrame" and value.get("_type")!="BoolFrame": problems.append("visibility_track_type")
 	if not problems.is_empty(): return {"ok":false,"error":"unsupported_source_scene","details":problems}
@@ -251,7 +251,7 @@ func seek_frame(frame_number: float) -> void:
 		if not following.is_empty() and bool(selected.get("tween",false)):
 			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)
 			var easing: Dictionary=selected.get("easingData",{}) if selected.get("easingData") is Dictionary else {}
-			ratio=EASING.sample(int(easing.get("type",0)),ratio)
+			ratio=EASING.sample(int(easing.get("type",0)),ratio,easing.get("points",[]))
 		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue

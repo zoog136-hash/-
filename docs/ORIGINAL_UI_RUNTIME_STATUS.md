@@ -210,3 +210,33 @@ Sources for the renderer behavior:
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/2d/CCTweenFunction.cpp
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/ButtonReader/ButtonReader.cpp
 - https://docs.godotengine.org/en/stable/classes/class_canvasitemmaterial.html
+
+
+### Post-draft continuation
+
+UI-only draft PR #267 preserves the work at the same branch/workspace. A later
+307/560 dependency snapshot added 19 inspectable candidates; five rendered
+(three exact Alice weapon-icon effects and two original dash effects), while
+14 retained explicit runtime blockers. The three icon effects also passed 46
+strict OpenGL/playback checks. Their separate private pack has manifest SHA256
+`ebf14ad21218b6ac7d5a9e9e68ef3c81f366b78e0e725df04e2ec69f2a5894f0`.
+
+Six four-point custom easing curves are now evaluated with the original Cocos
+customEase Y-ordinate formula, not CSS bezier inversion. Standard plus custom
+reference validation passed 15,024 checks; malformed curves remain rejected.
+This allowed two additional original party-dungeon cutscenes to render (eight
+captures). A third custom-curve entry still fails custom-property/nested-scene
+checks. Across these disjoint/previously-rejected sets, 82 entries have accepted
+inspection renders; this remains zero claimed completed service screens.
+
+PR264's public source UI ABI at `8488ada80cb0d0d647be9aa15986e82b059afb86`
+was compared with actual attendance/pass trees. Attendance has 58 nodes and
+repeated button names: names alone cannot identify bindings. Its current exact
+missing references include `Attendance_Tab_Promotion.csb`,
+`Fx_Glow_Loop_07.plist`, `Hud_Icon_Sample_001.png`, and
+`Font_Damage_Kill_Set.fnt`. Pass has 98 nodes; Atlas_Pass, StepUp and receive-all
+popup references remain pending, and its original fire particle plist contains
+trailing malformed XML. Original bytes are not rewritten to make it parse.
+The ABI's MainMenu component paths have not yet been received in this source
+index and are not substituted with content-root CSBs. No PR264 service code was
+copied or independently reimplemented.

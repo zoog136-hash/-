@@ -19,8 +19,23 @@
 extends RefCounted
 # Original numeric TweenType IDs from cocos2d-x-3.6/cocos/2d/CCTweenFunction.
 const SUPPORTED=[0,1,2,3,4,5,25,27,29]
-static func sample(kind: int, t: float) -> float:
+static func accepts(data: Dictionary) -> bool:
+	var kind: int=int(data.get("type",0))
+	var points: Array=data.get("points",[])
+	if kind!=-1:return kind in SUPPORTED and points.is_empty()
+	if points.size()!=4:return false
+	for point: Variant in points:
+		if not point is Array or point.size()!=2:return false
+		for value: Variant in point:
+			if not (value is float or value is int) or not is_finite(float(value)):return false
+	return true
+static func sample(kind: int, t: float, points: Array=[]) -> float:
 	match kind:
+		-1:
+			# Cocos customEase evaluates the four Y ordinates directly. It does
+			# not invert the X coordinates like a CSS cubic-bezier curve.
+			var u: float=1.0-t
+			return points[0][1]*u*u*u+3.0*points[1][1]*t*u*u+3.0*points[2][1]*t*t*u+points[3][1]*t*t*t
 		1: return 1.0-cos(t*PI/2.0)
 		2: return sin(t*PI/2.0)
 		3: return (1.0-cos(PI*t))/2.0
