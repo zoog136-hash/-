@@ -15,8 +15,21 @@ func _initialize() -> void:
 	var initial: Dictionary = OPTIONS.read()
 	check(not initial.enabled and initial.navigation_profile == OPTIONS.NONE, "experimental navigation defaults off")
 	check(OPTIONS.validate({"enabled":true,"navigation_profile":OPTIONS.NONE}).is_empty(), "active mode requires explicit local profile")
-	var valid: Dictionary = {"enabled":true,"navigation_profile":OPTIONS.LEGACY,"offset_x":0,"offset_y":12,"raw_root":"/private/raw","tile_root":"/private/tiles"}
+	var older: Dictionary = {"enabled":true,"navigation_profile":OPTIONS.LEGACY,"offset_x":0,"offset_y":12,"raw_root":"/private/raw","tile_root":"/private/tiles"}
+	# Preferences written before the landing/time/open/fee/return policies existed
+	# receive the explicit own defaults instead of being rejected.
+	var policy_defaults: Dictionary = {}
+	for key: String in ["portal_landing_policy","map_time_policy","map_open_policy","portal_fee_adena","aden_return_radius"]:
+		policy_defaults[key] = OPTIONS.defaults()[key]
+	check(policy_defaults.map_open_policy == OPTIONS.OWN_ALWAYS_OPEN_V1 and policy_defaults.portal_fee_adena == OPTIONS.OWN_MANUAL_PORTAL_FEE_ADENA, "own map policies are the explicit defaults")
+	var valid: Dictionary = older.merged(policy_defaults)
+	check(OPTIONS.validate(older) == valid, "older preferences gain the explicit own policy defaults")
 	check(OPTIONS.validate(valid) == valid, "explicit local profile and visual correction accept")
+	for changes: Dictionary in [{"map_open_policy":"OPEN"},{"map_open_policy":1},{"portal_fee_adena":-1},{"portal_fee_adena":100000001},{"portal_fee_adena":1.5},{"aden_return_radius":33},{"aden_return_radius":true}]:
+		var bad: Dictionary = valid.merged(changes, true)
+		check(OPTIONS.validate(bad).is_empty(), "invalid map open policy, fee or return radius rejects: " + str(changes))
+	var conditions: Dictionary = valid.merged({"map_open_policy":OPTIONS.SOURCE_CONDITIONS_V1,"portal_fee_adena":0,"aden_return_radius":32}, true)
+	check(OPTIONS.validate(conditions) == conditions, "source-condition policy and bounded fee/radius accept")
 	for key: String in ["offset_x", "offset_y"]:
 		for number: Variant in [-49, 49, 0.5, INF, NAN, true, "12"]:
 			var bad: Dictionary = valid.duplicate()
