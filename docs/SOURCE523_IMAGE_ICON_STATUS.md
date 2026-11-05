@@ -61,6 +61,9 @@ Library identities or saves are included in Git.
   identity, exclusion metadata and the original-CSB caller when available.
   Empty/reused selections clear the previous presentation. Transfer/sale
   transactions, quantities, ownership and physical IDs remain unchanged.
+  The existing sale list likewise retains the selected native physical record
+  for its original icon and the shared transfer-selection picture; price,
+  quantity, eligibility and sale/save calls keep their existing inputs.
 - Existing inventory slots and the detail icon retain the selected physical
   instance's full native523 source record for presentation. The existing native
   identity guard remains required; catalog filtering and item actions retain
