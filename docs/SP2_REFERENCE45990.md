@@ -205,6 +205,10 @@ source profile. It adds no success/failure mapping or new gameplay event.
 The successful counter's existing impact callback uses the same delegation.
 Current spell reads and provenance use the original ZIP member
 `content/SpellClass.json` and its `SpellClass` table key.
+The existing native-option spell presenter also delegates its already selected
+full spell row and existing effect/success events after the legacy renderer.
+Current source selection must match that whole row; the generic Sprite-only
+fallback and invoke activation, probabilities and combat logic are unchanged.
 
 The subsequent local aura bridge follows the existing World/subslot
 `source_awakening_aura.configure` and process calls. Its activation still comes

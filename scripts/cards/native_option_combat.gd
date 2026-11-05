@@ -142,12 +142,13 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 		var sprite: int=int(spell.get(field,0))
 		if sprite<=0 or seen.has(sprite):continue
 		seen[sprite]=true
-		if preview!=null and preview.has_method("notify_source_spell_event") and not manifest.is_empty():
+		if preview!=null and (preview.has_method("notify_current_source_spell_event") or (preview.has_method("notify_source_spell_event") and not manifest.is_empty())):
 			var live: Array[Node2D]=[]
 			for node: Variant in preview._overlay_nodes:
 				if is_instance_valid(node):live.append(node)
 			preview._overlay_nodes=live
-			if preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
+			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
+			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
 func emit_sprite(sprite: int,target: Node2D) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
