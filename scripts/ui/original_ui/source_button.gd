@@ -7,19 +7,23 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 	var extent:=Vector2(widget.size[0],widget.size[1])
 	for state: String in ["normal","pressed","disabled"]:
 		var reference: Dictionary=options[state+"Data"]
+		var grayscale: bool=state=="disabled" and str(reference.path).is_empty()
+		# Cocos Button::onPressStateChangedToDisabled uses the normal sprite
+		# and its original gray shader when disabledData is unspecified.
+		if grayscale:reference=options.normalData
 		if str(reference.path).is_empty():return {"ok":false,"error":"original_button_state_unspecified:"+state}
 		var texture: Texture2D=pack.texture(reference,true)
 		if texture==null:return {"ok":false,"error":"original_button_texture_missing:"+state}
 		var picture: Control
 		if bool(options.scale9Enabled):
 			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
-			var result: Dictionary=nine.configure(texture,extent,options.capInsets)
+			var result: Dictionary=nine.configure(texture,extent,options.capInsets,grayscale)
 			if not result.ok:nine.free();return result
 			picture=nine
 		else:
 			var flat:=TextureRect.new()
 			flat.texture=texture
-			flat.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture)
+			flat.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture,grayscale)
 			if flat.material==null:flat.free();return {"ok":false,"error":"original_material_unavailable"}
 			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			flat.stretch_mode=TextureRect.STRETCH_SCALE
@@ -50,4 +54,43 @@ func set_source_state(state: String) -> Dictionary:
 	if not states.has(state):return {"ok":false,"error":"unknown_original_button_state"}
 	for key: String in states:states[key].visible=key==state
 	current_state=state
-	return {"ok":true,"state":state,"inspection_only":true}
+	if state=="disabled":_armed=false
+	return {"ok":true,"state":state,"inspection_only":not _activation.is_valid()}
+
+# Invisible event rectangle uses the exact original extent; it adds no pixels.
+signal activation_result(result: Dictionary)
+var _activation: Callable
+var _input_area: Control
+var _armed: bool=false
+func bind_activation(callback: Callable, extent: Vector2, source_touch: bool) -> void:
+	_activation=callback
+	_input_area=Control.new()
+	_input_area.position=Vector2(0,-extent.y)
+	_input_area.size=extent
+	_input_area.mouse_filter=Control.MOUSE_FILTER_STOP if source_touch else Control.MOUSE_FILTER_IGNORE
+	_input_area.gui_input.connect(_source_input)
+	_input_area.mouse_exited.connect(_source_exit)
+	add_child(_input_area)
+func _source_exit() -> void:
+	if _armed:
+		_armed=false
+		set_source_state("normal")
+func _source_input(event: InputEvent) -> void:
+	if current_state=="disabled" or not _activation.is_valid():return
+	if not event is InputEventMouseButton or event.button_index!=MOUSE_BUTTON_LEFT:return
+	if event.pressed:
+		_armed=true
+		set_source_state("pressed")
+	else:
+		var activate: bool=_armed and Rect2(Vector2.ZERO,_input_area.size).has_point(event.position)
+		_armed=false
+		set_source_state("normal")
+		if activate:
+			var result: Variant=_activation.call()
+			activation_result.emit(result if result is Dictionary else {"ok":false,"error":"invalid_service_response"})
+	_input_area.accept_event()
+
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree() and _armed:
+		_armed=false
+		set_source_state("normal")

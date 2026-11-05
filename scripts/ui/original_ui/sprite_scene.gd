@@ -18,12 +18,14 @@ var unresolved_bindings: Array[String]=[]
 var _build_error: String=""
 var _project_ancestry: Array[String]=[]
 var _project_root_options: Dictionary={}
+var _bindings: Dictionary={}
 
-func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Dictionary:
+func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()
 	_build_error=""
 	inspection_only=inspect_only
+	_bindings=bindings.duplicate()
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
 	if member in _project_ancestry or _project_ancestry.size()>=32:return {"ok":false,"error":"project_recursion"}
@@ -75,25 +77,32 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
+	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
-	if not str(widget.get("customProperty","")).is_empty(): problems.append("custom_property")
+	if not str(widget.get("customProperty","")).is_empty():
+		var custom: Variant=JSON.parse_string(str(widget.customProperty))
+		# Sound is excluded by the current user scope; retain exact metadata.
+		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
+		else:
+			for key: Variant in custom:
+				if key not in ["soundid","touchsoundid"] or not custom[key] is String:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
-			unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
-			if not inspection_only: problems.append("unconnected_source_callback:"+field)
+			if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
+			if not inspection_only and not (field=="callBackType" and str(widget[field])=="Click" and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_callback:"+field)
 	if bool(widget.get("touchEnabled",false)):
-		unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only: problems.append("unconnected_source_input")
+		if inspection_only or binding.get("role") not in ["button","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and binding.get("role") not in ["button","consume"]: problems.append("unconnected_source_input")
 	if node.classname=="Button":
-		unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
-		if not inspection_only: problems.append("unconnected_source_button")
+		if inspection_only or binding.get("role")!="button":unresolved_bindings.append(str(widget.name)+":original_button_service_binding")
+		if not inspection_only and not (binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_button")
 		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_button_text_layout_or_blur")
 	if node.classname=="Text":
-		unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
-		if not inspection_only: problems.append("unconnected_source_text")
+		if inspection_only or binding.get("role")!="static_source_text":unresolved_bindings.append(str(widget.name)+":source_text_requires_live_binding")
+		if not inspection_only and binding.get("role")!="static_source_text": problems.append("unconnected_source_text")
 		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_layout_or_blur")
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="ListView":
@@ -146,6 +155,7 @@ func _build(source: Dictionary) -> Node2D:
 		return nested
 	var node:=Node2D.new()
 	node.name=str(widget.name)
+	node.set_meta("original_custom_property",str(widget.get("customProperty","")))
 	node.set_meta("source_scale",widget.scale.duplicate())
 	node.set_meta("source_rotation",widget.rotationSkew.duplicate())
 	# CCNode::getNodeToParentTransform with the Y axis reflected for Godot.
@@ -169,6 +179,12 @@ func _build(source: Dictionary) -> Node2D:
 	origin.name="SourceContentOrigin"
 	origin.position=Vector2(-float(widget.anchorPoint[0])*float(widget.size[0]),float(widget.anchorPoint[1])*float(widget.size[1]))
 	node.add_child(origin)
+	if not inspection_only and _bindings.get(int(source._offset),{}).get("role")=="consume":
+		var input_area:=Control.new()
+		input_area.position=Vector2(0,-float(widget.size[1]))
+		input_area.size=Vector2(widget.size[0],widget.size[1])
+		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
+		origin.add_child(input_area)
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		var configured: Dictionary=button.configure(source_pack,options)
@@ -177,6 +193,8 @@ func _build(source: Dictionary) -> Node2D:
 			button.free();node.free();return null
 		origin.add_child(button)
 		node.set_meta("source_button",button)
+		var binding: Dictionary=_bindings.get(int(source._offset),{})
+		if not inspection_only and binding.get("role")=="button":button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Text":
 		var font_value: FontFile=source_pack.font(options.fontResource)
 		if font_value==null:

@@ -1,7 +1,7 @@
 extends Control
 ## Source cap-inset geometry, including negative center scales in small controls.
 ## Cocos 3.6 Scale9Sprite uses source corners, not a minimum control size.
-func configure(texture: Texture2D, target: Vector2, source_cap: Array) -> Dictionary:
+func configure(texture: Texture2D, target: Vector2, source_cap: Array, grayscale: bool=false) -> Dictionary:
 	var extent: Vector2=texture.get_size()
 	var cap:=Rect2(float(source_cap[0]),float(source_cap[1]),float(source_cap[2]),float(source_cap[3]))
 	if cap==Rect2():cap=Rect2(extent/3.0,extent/3.0)
@@ -25,7 +25,7 @@ func configure(texture: Texture2D, target: Vector2, source_cap: Array) -> Dictio
 		var part:=Sprite2D.new()
 		part.name="SourceSlice_%d_%d"%[x,y]
 		part.texture=texture
-		part.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture)
+		part.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture,grayscale)
 		if part.material==null:part.free();return {"ok":false,"error":"original_material_unavailable"}
 		part.centered=false
 		part.region_enabled=true

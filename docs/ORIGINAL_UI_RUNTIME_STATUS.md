@@ -317,3 +317,36 @@ UI155 originals. Their exact Button offsets are 1856 and 1488 respectively.
 The public PR264 `source_ui.request_menu(106/116)` delegates to the existing
 runtime presentation adapter; opening a menu is not a claim or save operation.
 Control binding remains in progress; no service implementation was copied.
+
+### Verified original menu controls (partial integration)
+
+`source_menu_adapter.create(pack, button_id, source_ui)` accepts only original
+menu IDs 106/116 and verifies the exact CSB SHA256 before binding node offsets.
+It returns `{ok, scene, menu_button_id, content_presented:false}`; failures return
+`{ok:false,error}`. The caller adds/frees the returned scene and supplies its
+existing PR264-compatible `source_ui` service. The adapter calls only
+`source_ui.request_menu(id)` and does not implement rewards, transactions or saves.
+The original content root still requires the host's presentation adapter.
+
+The exact original two-scene/seven-file private closure rendered eight captures
+(normal, pressed, disabled and initial states). Viewport mouse-input dispatch
+passed 22 checks for original press/release visuals, exact menu IDs, unchanged
+service failure, hidden cancellation, disabled state and original disabled-overlay
+blocking. These tests use a service probe; real host integration, touch/device
+input and reward/save/restart behavior are still outstanding. These two menu
+components are not automatically added to the 560-scene progress denominator.
+
+Cocos `UIButton::onPressStateChangedToDisabled` uses its normal texture with
+`ccShader_UI_Gray.frag` when the disabled path is empty. The renderer now follows
+that explicit source behavior rather than requiring a nonexistent image. Its
+luminance coefficients and intentional omission of vertex color passed three
+additional original-pixel GL checks (33 total). Godot's complete-zero inherited
+alpha culling remains a known difference for this gray shader; the verified menu
+components have nonzero source alpha. No broad pixel-parity claim is made.
+Source custom properties containing only string `soundid`/`touchsoundid` are
+preserved as metadata but not played because sound is excluded from the current
+scope. Other custom behavior remains rejected.
+
+References:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIButton.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/renderer/ccShader_UI_Gray.frag
