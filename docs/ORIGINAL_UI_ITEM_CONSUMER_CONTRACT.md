@@ -461,3 +461,55 @@ These are code connections only, not newly observed game actions or pixels.
 No new test, render, audit, quality run or CI was executed. The previous
 524/560 dependency and 317/560 inspection checkpoints remain unchanged; there
 is no updated full-screen completion numerator or 95% actual-use claim.
+
+## Main gameplay priority (unexecuted)
+
+Attendance and season pass work is preserved and deferred by the latest user
+instruction. Main gameplay is now the active priority.
+
+`renewal_hud.update_player(...)` forwards the existing World HP/MP/level/EXP/
+threshold/gold snapshot to `source_main_hud.gd`. The first concrete mounted
+component is the original `UI/Main/Hud_ExpBar.csb`. Its bar and percent text use
+the same existing HUD presentation formula; no experience progression, reward
+or save logic changes. Repeated HP-only updates do not rebuild unchanged EXP
+text. Original hidden milestone reward controls remain unavailable because no
+matching current-game action is supplied; they are not assigned another action.
+
+MainScene's original root design extent is 1200 x 675. Its exact ProjectNode
+23080 supplies EXP's placement/properties. `configure_project()` reads that
+parent reference instead of applying renewal layout coordinates. One outer
+viewport fit preserves source coordinates and letterboxes a different aspect
+ratio. This adapter policy has not been validated as the original client's
+window-resize policy. It does not rearrange individual source nodes.
+
+The private pack builder's optional `--layout-source UI/MainScene.csb` retains
+that original file and read-only parent geometry separately from activated
+entry scenes. It does not claim the parent's other referenced scenes have
+resolved dependencies or have been used. The runtime accepts this geometry only
+with its original file identity; it remains separate from scene registration.
+
+The existing HUD now reads an explicit original UI selection on game startup:
+`--source-ui=<private-pack-directory>` together with
+`--source-ui-sha256=<manifest-sha256>`, or `TWILIGHT_SOURCE_UI` and
+`TWILIGHT_SOURCE_UI_SHA256`. `hud.bind_original_main_ui(pack)` is the direct
+existing-game entry for an already opened pack. An accepted original EXP
+presentation replaces only the prior EXP gauge/readout; a rejected replacement
+preserves the previous accepted presentation. Source packs, images, saves and
+other source selections are not written by this adapter.
+
+`source_main_combat_bindings.gd` connects exact original attack/auto controls to
+existing HUD signals and World handlers. The actual Hud_AttackPad additionally
+connects native target/self controls; existing auto/self state updates their
+original effects. Pickup remains distinct: the current game requires an exact
+selected ground-drop node and supplies no generic HUD pickup signal, so automatic
+loot is not substituted. `source_main_menu_bindings.gd` maps the original
+inventory/skill/store controls to existing game entry points. These combat/menu
+bindings still require their remaining original controls/data to mount in strict
+mode; no full main HUD completion is claimed.
+
+The main EXP runtime pack was assembled from already held originals with one
+entry scene and eight original files, including MainScene as geometry only.
+Its builder result is dependencies-resolved/not-rendered. This is packaging for
+the game consumer, not a new test or a game-consumption observation. No game
+boot, test, verification suite, render, quality assessment or CI was executed.
+Fixed inventory denominators and prior checkpoint counts remain unchanged.

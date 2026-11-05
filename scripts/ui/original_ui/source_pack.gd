@@ -39,6 +39,12 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 		if not tree is Dictionary or not value.files.has(member) or tree.get("_source_sha256")!=value.files[member].sha256:
 			return _fail("scene_source_mismatch")
 		if not tree.get("_decode_blockers") is Array or not tree._decode_blockers.is_empty(): return _fail("unsupported_source_fields")
+	if value.has("layout_sources"):
+		if not value.layout_sources is Dictionary:return _fail("layout_source_fields")
+		for member: String in value.layout_sources:
+			var layout: Variant=value.layout_sources[member]
+			if not layout is Dictionary or not value.files.has(member) or layout.get("_source_sha256")!=value.files[member].sha256:return _fail("layout_source_identity_mismatch")
+			if not layout.get("_decode_blockers") is Array or not layout._decode_blockers.is_empty():return _fail("layout_source_fields")
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256
@@ -72,6 +78,11 @@ static func _font_pages_present(path: String, member: String, files: Dictionary)
 
 func scene(member: String) -> Dictionary:
 	return manifest.get("scenes",{}).get(member,{}).duplicate(true)
+
+func layout_source(member: String) -> Dictionary:
+	# Parent reference geometry is not an entry scene or gameplay use. Its
+	# optional siblings are neither loaded nor marked dependency-complete.
+	return manifest.get("layout_sources",{}).get(member,{}).duplicate(true)
 
 func nodes_named(member: String, source_name: String) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]

@@ -227,6 +227,7 @@ func clear_target() -> void:
 
 func _ready() -> void:
 	super._ready()
+	call_deferred("_bind_selected_original_main_ui")
 	if is_instance_valid(target_panel):
 		target_panel.get_parent().remove_child(target_panel)
 		target_panel.queue_free()
@@ -659,6 +660,7 @@ func _process(delta: float) -> void:
 
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
+	_original_main_player_values=[level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold]
 	# Preserve latest main's HP-only combat refresh (PR #43).
 	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level,"gold":gold}
 	character_state.merge(vitals, true)
@@ -672,6 +674,8 @@ func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience
 	if exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
 	_refresh_currency_readout()
+	if is_instance_valid(original_main_ui_controller):
+		original_main_ui_status=original_main_ui_controller.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
 
 func update_currency_balances(items: Dictionary) -> void:
 	for currency_name: String in ["다이아", "명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
@@ -2645,6 +2649,38 @@ func open_protection523() -> void:
 # Original CSB presentation is supplied by the UI owner. These adapters do not
 # create forms, select content from filenames, or implement service operations.
 var original_ui_runtime_presenter: Node
+var original_main_ui_controller: Node
+var original_main_ui_status: Dictionary={}
+var _original_main_player_values: Array=[]
+
+func _bind_selected_original_main_ui() -> void:
+	var selected: Dictionary=preload("res://scripts/ui/original_ui/source_main_selection.gd").selected_pack()
+	if not selected.get("selected",false):return
+	if not selected.get("ok",false):
+		original_main_ui_status=selected
+		return
+	original_main_ui_status=bind_original_main_ui(selected.pack)
+
+func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
+	var candidate=preload("res://scripts/ui/original_ui/source_main_hud.gd").new()
+	candidate.name="OriginalMainGameHUD"
+	add_child(candidate)
+	var configured: Dictionary=candidate.configure(source_pack,self,$Root)
+	if not configured.get("ok",false):
+		candidate.release(false)
+		candidate.queue_free()
+		return configured
+	if not _original_main_player_values.is_empty():
+		var mounted: Dictionary=candidate.callv("update_player",_original_main_player_values)
+		if not mounted.get("ok",false):
+			candidate.release(false)
+			candidate.queue_free()
+			return mounted
+	if is_instance_valid(original_main_ui_controller):
+		original_main_ui_controller.release(false)
+		original_main_ui_controller.queue_free()
+	original_main_ui_controller=candidate
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):

@@ -25,6 +25,34 @@ var _entered_frames: Dictionary={}
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
 
+func configure_project(pack: RefCounted, parent_member: String, project_offset: int, bindings: Dictionary) -> Dictionary:
+	# Mount an independently supplied original component using its actual
+	# parent ProjectNode properties. Parent geometry alone does not activate
+	# the parent's unrelated scenes or count them as connected.
+	if not source_tree.is_empty():return {"ok":false,"error":"already_configured"}
+	var parent: Dictionary=pack.scene(parent_member)
+	if parent.is_empty() and pack.has_method("layout_source"):parent=pack.layout_source(parent_member)
+	if parent.is_empty():return {"ok":false,"error":"source_parent_layout_missing"}
+	var project: Dictionary=_node_at_offset(parent.get("nodeTree",{}),project_offset)
+	if project.get("classname")!="ProjectNode":return {"ok":false,"error":"source_parent_project_missing"}
+	var options: Dictionary=project.options
+	var member: String=str(options.get("fileName",""))
+	if member.is_empty():return {"ok":false,"error":"source_parent_project_file_missing"}
+	if not member.begins_with("UI/"):member="UI/"+member
+	_project_ancestry=[parent_member]
+	_project_root_options=options.get("widgetOptions",options.get("nodeOptions",options)).duplicate(true)
+	var result: Dictionary=configure(pack,member,false,bindings)
+	if result.get("ok",false):
+		set_meta("original_parent_project",{"member":parent_member,"sha256":parent.get("_source_sha256",""),"offset":project_offset})
+	return result
+
+static func _node_at_offset(node: Dictionary, offset: int) -> Dictionary:
+	if int(node.get("_offset",-1))==offset:return node
+	for child: Dictionary in node.get("children",[]):
+		var found: Dictionary=_node_at_offset(child,offset)
+		if not found.is_empty():return found
+	return {}
+
 func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()

@@ -56,6 +56,7 @@ class Builder:
         self.index = source_index
         self.files = {}
         self.scenes = {}
+        self.layout_sources = {}
         self.atlases = {}
         self.source_compatibility = []
         self.blockers = []
@@ -187,6 +188,22 @@ class Builder:
         walk(tree)
         self.active.remove(member)
 
+    def layout_source(self, member):
+        """Keep original parent geometry without activating its other screens.
+
+        This is not an entry scene or a resolved child closure. Consumers use
+        it only to place the independently packaged original components.
+        """
+        member = source_path(member)
+        raw = self.read(member)
+        if raw is None:
+            return
+        tree = Reader(raw).parse()
+        if tree['_decode_blockers']:
+            self.blockers.append({'member': member, 'reason': 'layout_source_fields_unsupported'})
+            return
+        self.layout_sources[member] = tree
+
     def build(self, entries, output):
         output = Path(output)
         if output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
@@ -200,6 +217,8 @@ class Builder:
                     'scenes': self.scenes, 'atlases': self.atlases,
                     'files': {k: {n: v for n, v in item.items() if n != 'raw'} for k, item in self.files.items()},
                     'blockers': blockers, 'runtime_verified': False}
+        if self.layout_sources:
+            manifest['layout_sources'] = self.layout_sources
         if self.source_compatibility:
             manifest['source_compatibility'] = list({json.dumps(x, sort_keys=True): x for x in self.source_compatibility}.values())
         output.mkdir(parents=True)
@@ -219,12 +238,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-index', type=Path, required=True)
     parser.add_argument('--scene', action='append', required=True)
+    parser.add_argument('--layout-source', action='append', default=[],
+                        help='Original parent CSB geometry only; not an activated scene closure')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     if args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
         parser.error('Original UI packs must stay outside the public checkout')
     index = json.loads(args.source_index.read_text())
-    print(json.dumps(Builder(index.get('source_files', index)).build(args.scene, args.output)))
+    builder = Builder(index.get('source_files', index))
+    for member in args.layout_source:
+        builder.layout_source(member)
+    print(json.dumps(builder.build(args.scene, args.output)))
 
 
 if __name__ == '__main__':
