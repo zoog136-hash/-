@@ -1,0 +1,357 @@
+extends Node
+## Install-time selection bridge. Register this as the first autoload.
+## It runs before Main is instantiated and before lazy source readers cache input.
+## Original pixels, source manifests and game saves are never changed here.
+const POINTER = "res://twilight_private_install.json"
+const MAP_SETTINGS = "user://current523_aden_play.cfg"
+const MAP_STATIC_SETTINGS = "user://current523_map_static_spr.cfg"
+const MAP_DEFINITIONS_SETTINGS = "user://current523_source_definitions.cfg"
+const MAP_SP2_REGISTRY = "results/all989_actual_current_M_SP2_registry.json"
+const MAP_SP2_REGISTRY_SHA = "8e22a6b5a2a9cc32a5f5cced0c6d0fb090127c7d7bdb1ba49acfb06615685247"
+const SPR_MANIFEST = "results/all_current_global_declarations.json"
+const SPR_MANIFEST_SHA = "91bbf7d8e63a8407ad5489a0dbb228f9da50a5e1183e7b6960e9916db8ccd5ea"
+const SPR_TEXT_SHA = "4426a6a7ec09c61152d04575b829b84846b342275c35ddad4ce9498759de285a"
+const SPR_GRAPH_SHA = "8e54942a4c51f5f166c8fc9861f2ec7c1a2bf5f07db315600bd0d291cba1d487"
+const MAP_DEFINITIONS_SHA = "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
+const BANK_SETTINGS = "user://current523_source_bank.json"
+const GENERIC_MAP = "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
+const TABLES_BYTES: int = 25031173
+const TABLES_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+const TABLE_INSTALL_PATHS = ["user://growth96_definitions/source.zip","user://source_rules/death523.zip","user://title523/source.zip","user://source_rules/relic-patch523.zip"]
+const MAX_DESCRIPTOR_BYTES: int = 2 * 1024 * 1024
+var _problem: String = ""
+var _base: String = ""
+
+func _init() -> void:
+	if not FileAccess.file_exists(POINTER): return
+	var result: Dictionary = _prepare()
+	if not result.get("ok",false):
+		push_error("비공개 원본 자동 연결을 적용하지 못했습니다: " + _problem)
+		return
+	if not _commit_writes(result.writes):
+		push_error("비공개 원본 설정을 적용하지 못했습니다: " + _problem)
+		return
+	for key: String in result.environment:
+		OS.set_environment(key,str(result.environment[key]))
+	print("비공개 원본 경로 설정 준비 완료. 실제 게임 사용과 Android 동작은 별도 확인이 필요합니다.")
+
+func _fail(reason: String) -> Dictionary:
+	_problem = reason
+	return {"ok":false}
+
+func _sha(value: Variant) -> bool:
+	if not value is String or value.length() != 64: return false
+	for offset: int in value.length():
+		if not "0123456789abcdefABCDEF".contains(value.substr(offset,1)): return false
+	return true
+
+func _integer(value: Variant, maximum: int = 2147483647) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value)) and value >= 0 and value <= maximum
+
+func _absolute(value: Variant) -> String:
+	if not value is String or value.is_empty() or value.length() > 4096 or value.to_utf8_buffer().has(0): return ""
+	var path: String = value
+	if path.begins_with("res://") or path.begins_with("user://"):
+		path = ProjectSettings.globalize_path(path)
+	elif not path.is_absolute_path():
+		path = _base.path_join(path)
+	path = path.simplify_path()
+	return path if path.is_absolute_path() else ""
+
+func _json_file(path: String, maximum: int = MAX_DESCRIPTOR_BYTES) -> Dictionary:
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file == null or file.get_length() < 2 or file.get_length() > maximum:
+		return _fail("필요한 원본 설정 또는 manifest를 읽을 수 없습니다.")
+	var value: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not value is Dictionary: return _fail("원본 설정 또는 manifest의 JSON 형식이 다릅니다.")
+	return {"ok":true,"value":value}
+
+func _pinned(path: String, pin: Variant) -> bool:
+	if path.is_empty() or not _sha(pin) or not FileAccess.file_exists(path):
+		_problem = "필요한 원본 manifest 경로와 SHA256이 준비되지 않았습니다."
+		return false
+	if FileAccess.get_sha256(path) != str(pin).to_lower():
+		_problem = "원본 manifest가 공식 인계 SHA256과 다릅니다."
+		return false
+	return true
+
+func _prepare() -> Dictionary:
+	_base = ProjectSettings.globalize_path("res://")
+	var read: Dictionary = _json_file(POINTER)
+	if not read.get("ok",false): return read
+	var descriptor: Dictionary = read.value
+	if descriptor.get("schema") != 1: return _fail("자동 설치 설정 schema가 다릅니다.")
+	if descriptor.has("descriptor_path") or descriptor.has("descriptor_sha256"):
+		var target: String = _absolute(descriptor.get("descriptor_path"))
+		if not _pinned(target,descriptor.get("descriptor_sha256")): return {"ok":false}
+		read = _json_file(target)
+		if not read.get("ok",false): return read
+		descriptor = read.value
+		_base = target.get_base_dir()
+		if descriptor.get("schema") != 1: return _fail("비공개 인계 설정 schema가 다릅니다.")
+	var environment: Dictionary = {}
+	var writes: Array[Dictionary] = []
+	if descriptor.has("tables_zip"):
+		var tables: String = _absolute(descriptor.tables_zip)
+		if not _pinned(tables,TABLES_SHA): return {"ok":false}
+		var table_file := FileAccess.open(tables,FileAccess.READ)
+		if table_file == null or table_file.get_length() != TABLES_BYTES:
+			return _fail("공식 원본523 정의 ZIP의 바이트 크기가 다릅니다.")
+		table_file.close()
+		environment.TWILIGHT_PATCH523_CONTENT = tables
+		# Existing death/title/relic readers have fixed installed paths and do not
+		# all read the common source environment. Copy only the same pinned ZIP;
+		# never compile an older pack or alter source bytes for those consumers.
+		for installed: String in TABLE_INSTALL_PATHS:
+			if FileAccess.file_exists(installed) and FileAccess.get_sha256(installed) == TABLES_SHA: continue
+			writes.append({"path":installed,"source":tables,"source_sha256":TABLES_SHA})
+	if descriptor.has("images"):
+		if not descriptor.images is Dictionary: return _fail("이미지 선택 설정 형식이 다릅니다.")
+		var image: Dictionary = descriptor.images
+		var image_root: String = _absolute(image.get("root"))
+		if image_root.is_empty(): return _fail("원본 이미지 팩의 명시적 경로가 없습니다.")
+		if not _pinned(image_root.path_join("manifest.json"),image.get("manifest_sha256")): return {"ok":false}
+		environment.TWILIGHT_SOURCE523_IMAGES = image_root
+		environment.TWILIGHT_SOURCE523_IMAGES_SHA256 = str(image.manifest_sha256).to_lower()
+	if descriptor.has("ui_icons"):
+		if not descriptor.ui_icons is Dictionary: return _fail("원본 UI 아이콘 선택 설정 형식이 다릅니다.")
+		var icons: Dictionary = descriptor.ui_icons
+		var selection: String = _absolute(icons.get("path"))
+		if not _pinned(selection,icons.get("sha256")): return {"ok":false}
+		read = _json_file(selection)
+		if not read.get("ok",false): return read
+		var selected: Dictionary = read.value
+		if selected.get("schema") != "source523-original-ui-icon-selection-v1" or not selected.get("packs") is Array or selected.packs.is_empty():
+			return _fail("공식 원본 UI 아이콘 선택 계약이 다릅니다.")
+		for request: Variant in selected.packs:
+			if not request is Dictionary or not request.get("root") is String or request.root.is_empty():
+				return _fail("원본 UI 부분 팩의 명시적 경로가 없습니다.")
+			var pack_root: String = str(request.root)
+			if pack_root.begins_with("res://") or pack_root.begins_with("user://"):
+				pack_root = ProjectSettings.globalize_path(pack_root)
+			elif not pack_root.is_absolute_path():
+				pack_root = selection.get_base_dir().path_join(pack_root)
+			if not _pinned(pack_root.simplify_path().path_join("original_ui.json"),request.get("manifest_sha256")): return {"ok":false}
+		environment.TWILIGHT_SOURCE523_UI_ICONS = selection
+		environment.TWILIGHT_SOURCE523_UI_ICONS_SHA256 = str(icons.sha256).to_lower()
+	if descriptor.has("maps"):
+		if not descriptor.maps is Dictionary: return _fail("원본 맵 설정 형식이 다릅니다.")
+		var map_write: Dictionary = _prepare_maps(descriptor.maps)
+		if not map_write.get("ok",false): return map_write
+		if map_write.has("write"): writes.append(map_write.write)
+	if descriptor.has("map_static_spr"):
+		if not descriptor.map_static_spr is Dictionary: return _fail("맵 배치 SPR 설정 형식이 다릅니다.")
+		var static_write: Dictionary = _prepare_map_static_spr(descriptor.map_static_spr)
+		if not static_write.get("ok",false): return static_write
+		if static_write.has("write"): writes.append(static_write.write)
+	if descriptor.has("map_definitions"):
+		if not descriptor.map_definitions is Dictionary: return _fail("원본 맵 정의 설정 형식이 다릅니다.")
+		var definitions_write: Dictionary = _prepare_map_definitions(descriptor.map_definitions)
+		if not definitions_write.get("ok",false): return definitions_write
+		if definitions_write.has("write"): writes.append(definitions_write.write)
+	if descriptor.has("source_bank"):
+		if not descriptor.source_bank is Dictionary: return _fail("원본 Sprite 은행 설정 형식이 다릅니다.")
+		var bank_write: Dictionary = _prepare_bank(descriptor.source_bank)
+		if not bank_write.get("ok",false): return bank_write
+		if bank_write.has("write"): writes.append(bank_write.write)
+	# A desktop user's explicit existing selection retains precedence. A paired
+	# mismatch fails before any setting file or process environment is changed.
+	for key: String in environment:
+		var existing: String = OS.get_environment(key)
+		if not existing.is_empty() and existing != str(environment[key]):
+			return _fail("이미 명시적으로 선택한 원본 경로와 자동 설치 설정이 충돌합니다: " + key)
+	return {"ok":true,"writes":writes,"environment":environment}
+
+func _land_available(document: Dictionary, land_id: int) -> bool:
+	if not document.get("logical_lands") is Array: return false
+	for entry: Variant in document.logical_lands:
+		if not entry is Dictionary or not entry.get("declaration") is Dictionary: continue
+		if entry.declaration.get("ID") != land_id: continue
+		# Existing runtime applies the full original/content admission policy.
+		# The bridge cannot auto-enable a source-declared excluded destination.
+		return entry.get("excluded_content") is Array and entry.excluded_content.is_empty()
+	return false
+
+func _prepare_maps(value: Dictionary) -> Dictionary:
+	var raw_root: String = _absolute(value.get("raw_root"))
+	var tile_root: String = _absolute(value.get("tile_root"))
+	if raw_root.is_empty() or tile_root.is_empty(): return _fail("원본 맵과 타일 경로가 없습니다.")
+	if not _pinned(raw_root.path_join("source523.json"),value.get("source_manifest_sha256")): return {"ok":false}
+	if not _pinned(tile_root.path_join("tilepack523.json"),value.get("tile_manifest_sha256")): return {"ok":false}
+	var read: Dictionary = _json_file(raw_root.path_join("source523.json"),24 * 1024 * 1024)
+	if not read.get("ok",false): return read
+	var source: Dictionary = read.value
+	if source.get("schema") != 1 or source.get("kind") != "current523_s32_source_pack" or source.get("edition") != "LineageM" or source.get("cumulative_version") != 523:
+		return _fail("전체 current523 원본 맵 카탈로그가 아닙니다.")
+	var config := ConfigFile.new()
+	var error: Error = config.load(MAP_SETTINGS)
+	if error != OK and error != ERR_FILE_NOT_FOUND: return _fail("기존 원본 맵 설정을 읽을 수 없어 보존했습니다.")
+	var old: Dictionary = {}
+	if config.has_section("play"):
+		for key: String in config.get_section_keys("play"):
+			old[key] = config.get_value("play",key)
+	var same_source: bool = old.get("source_manifest_sha256") == str(value.source_manifest_sha256).to_lower() and old.get("tile_manifest_sha256") == str(value.tile_manifest_sha256).to_lower()
+	var land: int = -1
+	if same_source and _integer(old.get("native_land_id")) and _land_available(source,int(old.native_land_id)):
+		land = int(old.native_land_id)
+	elif value.has("native_land_id"):
+		if not _integer(value.native_land_id) or not _land_available(source,int(value.native_land_id)):
+			return _fail("지정된 원본 Land가 카탈로그에 없거나 제외 대상입니다.")
+		land = int(value.native_land_id)
+	# Root/pin preparation does not authorize guessing a destination or cursor.
+	if land < 0: return _fail("원본 맵의 초기 native_land_id가 공식 설치 설정에 없습니다.")
+	var next: Dictionary = {"raw_root":raw_root,"tile_root":tile_root,"source_manifest_sha256":str(value.source_manifest_sha256).to_lower(),"tile_manifest_sha256":str(value.tile_manifest_sha256).to_lower(),"native_land_id":land}
+	if not same_source:
+		next.enabled = true
+		next.navigation_profile = GENERIC_MAP
+		# No source_position is created. Existing source runtime owns entry choice.
+		# A saved cursor from a different source identity must not be adopted.
+		next.source_position = []
+	var changed: bool = false
+	for key: String in next:
+		if not old.has(key) or old[key] != next[key]: changed = true
+		config.set_value("play",key,next[key])
+	if not changed: return {"ok":true}
+	return {"ok":true,"write":{"path":MAP_SETTINGS,"bytes":config.encode_to_text().to_utf8_buffer()}}
+
+func _declaration_root(path: String) -> String:
+	if DirAccess.dir_exists_absolute(path.path_join("SPR_reference_closure")):
+		return path.path_join("SPR_reference_closure")
+	return path
+
+func _prepare_map_static_spr(value: Dictionary) -> Dictionary:
+	var root: String = _absolute(value.get("source_root"))
+	var declared: String = _absolute(value.get("declaration_path"))
+	if root.is_empty() or declared.is_empty(): return _fail("989 맵 SPR와 원문 선언의 경로가 없습니다.")
+	if not _sha(value.get("registry_sha256")) or str(value.registry_sha256).to_lower() != MAP_SP2_REGISTRY_SHA:
+		return _fail("989 맵 SPR registry의 공식 고정 SHA256이 다릅니다.")
+	if not _sha(value.get("declaration_manifest_sha256")) or str(value.declaration_manifest_sha256).to_lower() != SPR_MANIFEST_SHA:
+		return _fail("30개 원문 SPR 선언의 공식 고정 SHA256이 다릅니다.")
+	var registry: String = root.path_join(MAP_SP2_REGISTRY)
+	if value.has("registry_path") and _absolute(value.registry_path) != registry:
+		return _fail("989 맵 SPR registry의 고정 상대 경로가 다릅니다.")
+	declared = _declaration_root(declared)
+	if not _pinned(registry,MAP_SP2_REGISTRY_SHA): return {"ok":false}
+	if not _pinned(declared.path_join(SPR_MANIFEST),SPR_MANIFEST_SHA): return {"ok":false}
+	if not _pinned(declared.path_join("results/all_current_text_integrity.json"),SPR_TEXT_SHA): return {"ok":false}
+	if not _pinned(declared.path_join("results/complete_source_reference_graph.json"),SPR_GRAPH_SHA): return {"ok":false}
+	return _prepare_selection_config(MAP_STATIC_SETTINGS,"display",{"source_root":root,"declaration_path":declared},["source_root","declaration_path"])
+
+func _prepare_map_definitions(value: Dictionary) -> Dictionary:
+	var directory: String = _absolute(value.get("directory"))
+	if directory.is_empty(): return _fail("원본 world-links 정의 폴더가 없습니다.")
+	if not _sha(value.get("manifest_sha256")) or str(value.manifest_sha256).to_lower() != MAP_DEFINITIONS_SHA:
+		return _fail("world-links 원본 정의의 공식 고정 SHA256이 다릅니다.")
+	if not _pinned(directory.path_join("manifest.json"),MAP_DEFINITIONS_SHA): return {"ok":false}
+	return _prepare_selection_config(MAP_DEFINITIONS_SETTINGS,"definitions",{"directory":directory,"manifest_sha256":MAP_DEFINITIONS_SHA},["manifest_sha256"],16384)
+
+func _prepare_selection_config(path: String, section: String, next: Dictionary, identity_keys: Array, maximum: int = 0) -> Dictionary:
+	if maximum > 0 and FileAccess.file_exists(path):
+		var previous := FileAccess.open(path,FileAccess.READ)
+		if previous == null or previous.get_length() < 1 or previous.get_length() > maximum:
+			return _fail("기존 원본 연결 설정 크기가 공개 계약과 달라 보존했습니다.")
+		previous.close()
+	var config := ConfigFile.new()
+	var error: Error = config.load(path)
+	if error != OK and error != ERR_FILE_NOT_FOUND: return _fail("기존 원본 연결 설정을 읽을 수 없어 보존했습니다.")
+	var same_identity: bool = error == OK
+	for key: String in identity_keys:
+		if config.get_value(section,key,null) != next[key]: same_identity = false
+	var enabled: Variant = config.get_value(section,"enabled",true)
+	if not enabled is bool: return _fail("기존 원본 연결의 활성 상태가 잘못되어 보존했습니다.")
+	next.enabled = enabled if same_identity else true
+	var changed: bool = false
+	for key: String in next:
+		if config.get_value(section,key,null) != next[key]: changed = true
+		config.set_value(section,key,next[key])
+	if not changed: return {"ok":true}
+	var bytes: PackedByteArray = config.encode_to_text().to_utf8_buffer()
+	if maximum > 0 and bytes.size() > maximum: return _fail("새 원본 연결 설정이 공개 크기 한도를 넘었습니다.")
+	return {"ok":true,"write":{"path":path,"bytes":bytes}}
+
+func _prepare_bank(value: Dictionary) -> Dictionary:
+	if value.get("schema") != 1 or value.get("enabled") != true or value.get("source_snapshot") != "patch523":
+		return _fail("원본 Sprite 은행의 공개 설정 계약이 다릅니다.")
+	var result: Dictionary = value.duplicate(true)
+	for key: String in ["tables_zip","manifest_path"]:
+		result[key] = _absolute(value.get(key))
+		if str(result[key]).is_empty(): return _fail("원본 Sprite 은행의 경로가 없습니다.")
+	if not _pinned(result.tables_zip,TABLES_SHA): return {"ok":false}
+	if not _pinned(result.manifest_path,value.get("manifest_sha256")): return {"ok":false}
+	result.manifest_sha256 = str(value.manifest_sha256).to_lower()
+	if value.has("overlay_whitelist_path") or value.has("overlay_whitelist_sha256"):
+		result.overlay_whitelist_path = _absolute(value.get("overlay_whitelist_path"))
+		if not _pinned(result.overlay_whitelist_path,value.get("overlay_whitelist_sha256")): return {"ok":false}
+		result.overlay_whitelist_sha256 = str(value.overlay_whitelist_sha256).to_lower()
+	if FileAccess.file_exists(BANK_SETTINGS):
+		var previous: Dictionary = _json_file(BANK_SETTINGS)
+		if not previous.get("ok",false): return _fail("기존 Sprite 은행 설정을 읽을 수 없어 보존했습니다.")
+		# Keep a user's later disable choice for an otherwise unchanged bank.
+		var same_bank: bool = previous.value.get("schema") == 1 and previous.value.get("source_snapshot") == "patch523"
+		for key: String in ["tables_zip","manifest_path","manifest_sha256","overlay_whitelist_path","overlay_whitelist_sha256"]:
+			if previous.value.get(key,"") != result.get(key,""): same_bank = false
+		if same_bank and previous.value.get("enabled") is bool: result.enabled = previous.value.enabled
+		if previous.value == result: return {"ok":true}
+	return {"ok":true,"write":{"path":BANK_SETTINGS,"bytes":(JSON.stringify(result,"\t",true)+"\n").to_utf8_buffer()}}
+
+func _cleanup_pending(staged: Array[Dictionary]) -> void:
+	for item: Dictionary in staged:
+		if FileAccess.file_exists(item.temporary): DirAccess.remove_absolute(item.temporary)
+
+func _commit_writes(writes: Array) -> bool:
+	var staged: Array[Dictionary] = []
+	# Stage and preserve every old configuration before publishing any replacement.
+	for write: Dictionary in writes:
+		var path: String = ProjectSettings.globalize_path(str(write.path))
+		var suffix: String = str(OS.get_process_id()) + "-" + str(Time.get_ticks_usec())
+		var item: Dictionary = {"path":path,"temporary":path+".private-source-pending-"+suffix,"backup":"","existed":FileAccess.file_exists(path)}
+		if DirAccess.dir_exists_absolute(path):
+			_problem = "설정 파일 위치에 기존 폴더가 있어 보존했습니다."
+			_cleanup_pending(staged)
+			return false
+		var parent_error: Error = DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+		if parent_error != OK:
+			_problem = "원본 설정 폴더를 준비할 수 없습니다."
+			_cleanup_pending(staged)
+			return false
+		staged.append(item)
+		var write_error: Error = OK
+		if write.has("source"):
+			write_error = DirAccess.copy_absolute(str(write.source),item.temporary)
+			if write_error == OK and FileAccess.get_sha256(item.temporary) != str(write.source_sha256): write_error = ERR_FILE_CORRUPT
+		else:
+			var file := FileAccess.open(item.temporary,FileAccess.WRITE)
+			if file == null:
+				write_error = FileAccess.get_open_error()
+			else:
+				file.store_buffer(write.bytes)
+				file.flush()
+				write_error = file.get_error()
+				file.close()
+		if write_error != OK:
+			_problem = "새 원본 설정의 임시 저장이 실패했습니다."
+			_cleanup_pending(staged)
+			return false
+		if item.existed:
+			item.backup = path + ".before-private-source-" + suffix
+			if FileAccess.file_exists(item.backup) or DirAccess.copy_absolute(path,item.backup) != OK:
+				_problem = "기존 원본 설정의 백업을 만들 수 없어 변경하지 않았습니다."
+				_cleanup_pending(staged)
+				return false
+	var committed: Array[Dictionary] = []
+	for item: Dictionary in staged:
+		if DirAccess.rename_absolute(item.temporary,item.path) == OK:
+			committed.append(item)
+			continue
+		_problem = "원본 설정 활성화가 실패했습니다."
+		for previous: Dictionary in committed:
+			if previous.existed:
+				var restore: String = previous.path + ".private-source-restore-" + str(Time.get_ticks_usec())
+				if DirAccess.copy_absolute(previous.backup,restore) != OK or DirAccess.rename_absolute(restore,previous.path) != OK:
+					_problem += " 이전 설정 자동 복구도 실패했습니다. before-private-source 백업을 보존했습니다."
+			elif DirAccess.remove_absolute(previous.path) != OK:
+				_problem += " 새 설정 일부가 남았습니다."
+		_cleanup_pending(staged)
+		return false
+	return true
