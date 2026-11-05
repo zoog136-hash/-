@@ -4,6 +4,7 @@ const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const PACK = preload("res://scripts/resources/current523_pack.gd")
 const GLOBAL_DECLARATIONS=preload("res://scripts/maps/current523_spr_declarations.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
+const EXCLUSIONS=preload("res://scripts/maps/current523_static_spr_exclusions.gd")
 const SETTINGS = "user://current523_map_static_spr.cfg"
 const POLICY = "TWILIGHT_RAW_S32_STATIC_SPR_V1"
 const DECLARATION_SHA = "03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
@@ -22,6 +23,7 @@ var _textures: Dictionary = {}
 var _texture_recent: Array[String] = []
 var _texture_bytes: int = 0
 var _records: Array[Dictionary] = []
+var _candidate_indices: Array[int] = []
 var _draws: Array[Dictionary] = []
 var _clock: float = 0.0
 var _frame: int = -1
@@ -176,6 +178,24 @@ func _load_declarations(path: String) -> bool:
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	_records=records
 	_stats={"policy":POLICY,"enabled":true,"native_M_placement_action_timing_verified":false,"raw_records":records.size(),"malformed_tails":malformed,"literal_member_suffix":0,"stored_group_bit":options.group_bit,"own_fps":options.fps,"own_anchor":[options.anchor_x,options.anchor_y],"own_layer":options.layer,"projection":"OWN_ABSOLUTE_RAW_U16_CURRENT_FIELD_BASIS_NO_CELL_CENTER","alpha_policy":"opaque_samples","rgb_policy":"bit_replication"}
+	_candidate_indices.clear()
+	var excluded: Array[Dictionary]=[]
+	var reason_counts: Dictionary={}
+	for index: int in _records.size():
+		var row: Dictionary=_records[index]
+		var reasons: Array[String]=EXCLUSIONS.reasons(row,_declarations.get(int(row.sprite_id),{}))
+		if reasons.is_empty():_candidate_indices.append(index)
+		else:
+			excluded.append({"member":row.get("source_member",""),"sha256":row.get("source_sha256",""),"source_byte_offset":row.source_byte_offset,"sprite_id":row.sprite_id,"reasons":reasons})
+			for reason: String in reasons:reason_counts[reason]=int(reason_counts.get(reason,0))+1
+	_stats.user_excluded_records=excluded.size()
+	_stats.user_excluded_record_identities=excluded
+	_stats.user_exclusion_scope_total=EXCLUSIONS.TOTAL
+	_stats.user_exclusion_reason=EXCLUSIONS.REASON
+	_stats.user_exclusion_reason_counts=reason_counts
+	_stats.exclusion_reason_counts_may_overlap=true
+	_stats.connection_candidate_records=_candidate_indices.size()
+	_stats.exclusions_are_original_usage=false
 	_frame=-1
 	_update_draws()
 
@@ -189,11 +209,14 @@ func _binding(sprite_id: int, selector: int) -> Dictionary:
 	return {"row":_index[sprite_id],"group_bit":int(options.group_bit),"dispatch":"OWN_LITERAL_ZERO_MEMBER"}
 
 func _source(sprite_id: int, selector: int=0) -> Dictionary:
+	var excluded: String=EXCLUSIONS.sprite_reason(sprite_id)
+	if not excluded.is_empty():return _unresolved(sprite_id,excluded)
 	if _failed.has(sprite_id): return {}
 	# Original pixels alone do not declare which frames should be played.
 	# Never fill a missing declaration/action with guessed stored-frame order.
 	if not _declarations.has(sprite_id):return _unresolved(sprite_id,"no_original_spr_declaration")
 	var declaration: Dictionary=_declarations[sprite_id]
+	if bool(declaration.get("explicit_dummy",false)):return _unresolved(sprite_id,EXCLUSIONS.DUMMY_REASON)
 	if declaration.has("unsupported"):return _unresolved(sprite_id,str(declaration.unsupported))
 	if declaration.get("sequence",[]).is_empty():return _unresolved(sprite_id,"no_selected_original_action_frames")
 	# No selector is translated into a filename suffix or a group bit. Every
@@ -246,13 +269,13 @@ func _update_draws() -> void:
 	_draws.clear()
 	var missing: int = 0
 	var empty: int = 0
-	var clipped: int = maxi(0,_records.size()-MAX_RECORDS)
+	var clipped: int = maxi(0,_candidate_indices.size()-MAX_RECORDS)
 	var visible_textures: Dictionary = {}
 	var visible_bytes: int = 0
 	var declared: int=0
 	var unresolved_attachments: Dictionary={}
-	for i: int in mini(_records.size(),MAX_RECORDS):
-		var row: Dictionary = _records[i]
+	for i: int in mini(_candidate_indices.size(),MAX_RECORDS):
+		var row: Dictionary = _records[_candidate_indices[i]]
 		var definition: Dictionary=_declarations.get(int(row.sprite_id),{})
 		var sequence: Array=definition.get("sequence",[])
 		var selected_token: Dictionary=GLOBAL_DECLARATIONS.own_frame_at(sequence,tick)

@@ -57,6 +57,9 @@ func load_single_list29(path: String) -> bool:
 		var actions: Array=[]
 		var body_begin: int=h.get_end()-h.get_start()
 		var body: String=block.substr(body_begin)
+		var first_line: String=body.get_slice("\n",0).strip_edges()
+		var first_inline_action: RegExMatch=action_pattern.search(first_line)
+		var source_name: String=first_line.left(first_inline_action.get_start()).strip_edges() if first_inline_action!=null else first_line
 		for a: RegExMatch in action_pattern.search_all(body):
 			var action_body: String=a.get_string(3)
 			var action_body_offset: int=body_begin+a.get_start(3)
@@ -81,7 +84,7 @@ func load_single_list29(path: String) -> bool:
 			for target: int in targets:
 				if target<0 or target>65535:return _fail("M 원문 SPR 참조 ID가 범위를 벗어납니다.")
 				references.append({"source_sprite_id":id,"target_id":target,"kind":kind,"raw":action.raw,"source_file":member,"source_byte_offset":action.source_byte_offset})
-		definitions[id]={"sprite_id":id,"source_file":member,"source_line":source_line,"source_byte_offset":byte_cursor,"source_end_offset":byte_cursor+block_bytes.size(),"source_file_identity":source_files[member].duplicate(),"raw_declaration_sha256":PACK.digest(block_bytes),"raw_bytes":block_bytes,"alias_target_raw":null if h.get_string(3).is_empty() else int(h.get_string(3)),"actions":actions}
+		definitions[id]={"sprite_id":id,"source_name_raw":source_name,"source_file":member,"source_line":source_line,"source_byte_offset":byte_cursor,"source_end_offset":byte_cursor+block_bytes.size(),"source_file_identity":source_files[member].duplicate(),"raw_declaration_sha256":PACK.digest(block_bytes),"raw_bytes":block_bytes,"alias_target_raw":null if h.get_string(3).is_empty() else int(h.get_string(3)),"actions":actions}
 		byte_cursor+=block_bytes.size()
 		source_line+=block.count("\n")
 	return true
@@ -152,6 +155,10 @@ func display_definition(id: int, action_id: int=3) -> Dictionary:
 	if not definitions.has(id):return {}
 	var source: Dictionary=definitions[id]
 	var result: Dictionary={"header":"","source_line":source.source_line,"source_file":source.source_file,"source_byte_offset":source.source_byte_offset,"source_end_offset":source.source_end_offset,"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes,"declaration_sha256":source.raw_declaration_sha256,"raw_bytes":source.raw_bytes,"action_id":action_id,"sequence":[],"attachments_unresolved":[],"references":[],"sequence_origin":"ALL30_SOURCE_ACTION"+str(action_id),"unapplied_modifiers":[]}
+	result["source_name_raw"]=source.get("source_name_raw","")
+	# Only an exact original declaration name; not a substring, an absent
+	# file, unknown spelling, type0, or a training-target inference.
+	result["explicit_dummy"]=str(result.source_name_raw).strip_edges().to_lower() in ["dummy","더미"]
 	if source_files.size()==1:result.sequence_origin="LIST29_ACTION"+str(action_id)
 	if source.alias_target_raw!=null:
 		result["unsupported"]="declared_alias_requires_resolution";return result

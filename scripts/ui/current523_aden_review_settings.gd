@@ -342,6 +342,10 @@ func _load_play_options() -> void:
 		raw_path_edit.text = options.raw_root
 		tile_path_edit.text = options.tile_root
 		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC] else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+		var map_metrics: Dictionary=current.current523_aden_play_metrics() if current.has_method("current523_aden_play_metrics") else {}
+		var spr_metrics: Dictionary=map_metrics.get("static_spr",{})
+		if not spr_metrics.is_empty():
+			spr_status.text="현재 읽은 정적 배치 %d · 연결 대상 %d · 사용자 제외 %d · 미대응 %d. 제외는 원본 사용 완료로 세지 않습니다."%[int(spr_metrics.get("raw_records",0)),int(spr_metrics.get("connection_candidate_records",spr_metrics.get("raw_records",0))),int(spr_metrics.get("user_excluded_records",0)),int(spr_metrics.get("unresolved_records",0))]
 	_refresh_source_portals()
 	_refresh_definition_status()
 
