@@ -39,3 +39,29 @@ or save owner. Original actor identities and pixels remain separate existing
 contracts. A future runtime hash rejection or unavailable input is a hold,
 not successful adoption. No whole table, source-byte or gameplay-use completion
 count is asserted by this code.
+
+## Original preparation-buff speed inputs
+
+The existing `dungeon_play_service.modifier(stat)` now calls
+`rules.original_orim_speed_input(buff_id,stat)` for its already supported three
+preparation buffs. The helper reads exact current OrimsTrailBuff→BuffClass→
+BuffBonus→Bonus/BonusType/Unit relations through the existing original readers.
+Only a unique unconditional MoveSpeedBonus or AttackSpeedBonus in Percentage
+units is accepted. It reuses the existing 10,000-raw-per-percentage-point
+conversion. Unavailable/ambiguous/conditional data preserves the prior host
+input; explicit source exclusions produce no contribution.
+
+The original values feed the existing operand only while the corresponding
+host setting has its existing default. Custom speed/pearl settings stay
+unchanged and remain host overrides. The source/input evidence cache is tied
+to the actual archive identity and is not saved. Existing purchase, owned-buff
+state, duration, stacking/addition, reroll, status, animation, quantity and save
+logic is unchanged. In particular the source RunSpritePoint branches are not
+reinterpreted or activated, and this is not complete native buff behavior.
+
+The first source-read command failed before execution with an exec-server
+transport disconnection. After the environment provider reported current
+connected/running state, that read was retried once and succeeded. No source,
+save or existing local change was deleted. No validation/execution suite was
+started. Model/reasoning configuration is not exposed by the available tools;
+Sol6.1 medium therefore remains requested, not independently confirmed here.

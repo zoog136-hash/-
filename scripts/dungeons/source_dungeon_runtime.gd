@@ -7,6 +7,7 @@ const DEFAULT_MANIFEST := "user://dungeon523/" + PAYLOAD_SHA256 + "/manifest.jso
 const MAX_MANIFEST_BYTES := 4096
 const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_projection.gd")
 const ORIGINAL_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const ORIGINAL_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
 var data: Dictionary = {}
 var last_error: String = ""
 var tower_by_id: Dictionary = {}
@@ -22,6 +23,47 @@ var orim_groups: Dictionary = {}
 var orim_item_effects: Dictionary = {}
 var orim_actor_defs: Dictionary = {}
 var execution_input_identity: Dictionary = {}
+var orim_speed_input_provenance: Dictionary = {}
+var _speed_input_identity: Dictionary = {}
+
+func original_orim_speed_input(buff_id: int, stat: String) -> Dictionary:
+	# Only the existing three preparation buffs and two actual speed operands.
+	if buff_id not in [71672,71682,71692] or stat not in ["move_speed","attack_speed"]: return {}
+	var identity: Dictionary = ORIGINAL_ROWS.identity()
+	if identity.get("source_sha256")!=SOURCE_SHA256 or data.get("source_sha256")!=SOURCE_SHA256: return {}
+	if identity!=_speed_input_identity:
+		orim_speed_input_provenance.clear()
+		_speed_input_identity = identity.duplicate(true)
+	var key: String = str(buff_id)+":"+stat
+	if orim_speed_input_provenance.has(key): return orim_speed_input_provenance[key].duplicate(true)
+	var declarations: Array[Dictionary] = ORIGINAL_ROWS.related("OrimsTrailBuff","BuffClassID",buff_id)
+	if declarations.size()!=1 or declarations[0] not in data.get("declarations",{}).get("OrimsTrailBuff",[]): return {}
+	var graph: Dictionary = ORIGINAL_BUFFS.describe(buff_id)
+	if graph.get("source")!=identity: return {}
+	if graph.get("excluded",false) or not ORIGINAL_ROWS.declared_exclusion("BuffGroup",graph.get("group",{})).is_empty() or not ORIGINAL_ROWS.declared_exclusion("OrimsTrailBuff",declarations[0]).is_empty():
+		return {"ok":true,"value":0.0,"excluded":true}
+	if not graph.get("ok",false): return {}
+	var name_value: String = "MoveSpeedBonus" if stat=="move_speed" else "AttackSpeedBonus"
+	var matched: Array = []
+	for effect: Dictionary in graph.get("bonuses",[]):
+		if effect.get("type",{}).get("Name")==name_value: matched.append(effect)
+	if matched.size()!=1: return {}
+	var effect: Dictionary = matched[0]
+	var link: Dictionary = effect.get("link",{}); var bonus: Dictionary = effect.get("bonus",{})
+	if effect.get("unit",{}).get("Name")!="Percentage" or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return {}
+	for field: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+		if link.get(field)!=0: return {}
+	for pair: Array in [["BuffBonus",link],["Bonus",bonus],["BonusType",effect.get("type",{})],["Unit",effect.get("unit",{})]]:
+		if not ORIGINAL_ROWS.declared_exclusion(pair[0],pair[1]).is_empty(): return {"ok":true,"value":0.0,"excluded":true}
+	var raw: Variant = bonus.get("Value")
+	if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)<0.0: return {}
+	# Existing Percentage conversion used by the skill/equipment projections:
+	# 10,000 raw units per host percentage point, not a new status formula.
+	var result: Dictionary = {"ok":true,"value":float(raw)/10000.0,"source":identity,
+		"declaration":declarations[0],"buff_class_id":buff_id,"stat":stat,
+		"link":link,"bonus":bonus,"type":effect.type,"unit":effect.unit,"raw_per_percent":10000}
+	orim_speed_input_provenance[key] = result.duplicate(true)
+	return result
 
 func _original_execution_input() -> Dictionary:
 	# Same selection as build_orim523_execution.py; no builder, file or new

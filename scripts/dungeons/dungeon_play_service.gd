@@ -526,8 +526,15 @@ func modifier(stat: String) -> float:
 	var result:=0.0
 	if stat in ["move_speed","attack_speed"]:
 		for key: String in state.active.buffs:
-			if key in ["71672","71682"]:result+=float(state.settings.speed_percent)
-			if key=="71692":result+=float(state.settings.pearl_percent)
+			if key not in ["71672","71682","71692"]:continue
+			var setting: String="pearl_percent" if key=="71692" else "speed_percent"
+			var amount: float=float(state.settings[setting])
+			var original: Dictionary=rules.original_orim_speed_input(int(key),stat)
+			# Existing custom settings remain explicit host overrides. Source
+			# defaults feed the same operand; no purchase/state/stack rule changes.
+			if original.get("excluded",false):continue
+			if amount==float(defaults()[setting]) and original.get("ok",false):amount=float(original.value)
+			result+=amount
 	if state.active.get("reroll_stat","")==stat:result+=float(state.settings.reroll_percent)
 	return result
 
