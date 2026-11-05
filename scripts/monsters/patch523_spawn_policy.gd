@@ -7,6 +7,12 @@ const ORIGINAL = preload("res://scripts/monsters/base508_monster_context.gd")
 static var catalogs: Dictionary = {}
 static var catalog_errors: Dictionary = {}
 
+## The deterministic build of the pinned cumulative523 source zip.
+const PINNED_PACK_SHA256: String = "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
+## Installed locations checked when no launch argument is given (Android editor
+## runs have no user arguments). Only the pinned manifest hash is accepted here.
+const INSTALLED_ROOTS: Array[String] = ["user://patch523-world-links", "res://private_packs/patch523-world-links"]
+
 static func settings() -> Dictionary:
 	var result: Dictionary = {"enabled": false, "root": "", "sha": ""}
 	for arg: String in OS.get_cmdline_user_args():
@@ -14,6 +20,11 @@ static func settings() -> Dictionary:
 			result.enabled = true; result.root = arg.trim_prefix("--patch523-world-links=")
 		if arg.begins_with("--patch523-world-links-sha256="):
 			result.enabled = true; result.sha = arg.trim_prefix("--patch523-world-links-sha256=")
+	if result.enabled: return result
+	for candidate: String in INSTALLED_ROOTS:
+		var manifest: String = candidate.path_join("manifest.json")
+		if FileAccess.file_exists(manifest) and FileAccess.get_sha256(manifest) == PINNED_PACK_SHA256:
+			return {"enabled": true, "root": candidate, "sha": PINNED_PACK_SHA256, "installed": true}
 	return result
 
 static func marked(record: Dictionary) -> bool:
