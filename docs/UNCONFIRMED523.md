@@ -8,6 +8,8 @@
 
 ## 원본 UI 연결 계약
 
+원본 메뉴 ID·시련 UI 키·아이템 ID에서 데이터와 액션·중첩 선택·확인·저장으로 이어지는 비시각 호출자를 추가했습니다. [호출자 ABI와 실제 확보 범위](UNCONFIRMED523_SOURCE_UI_ABI.md)를 따릅니다. CSB 로더·렌더러·대체 화면은 추가하지 않았습니다.
+
 World의 `unconfirmed523` 실행기가 제공하는 `page(section)`은 표시용 데이터이며, `execute(section, request, revision, fingerprint)`는 확인한 거래를 기존 원자 저장기로 실행합니다. 영역은 `events`, `jade_grail`, `challenge`입니다. 화면은 표시 시 읽은 `state.revision`과 `fingerprint()`를 확인 시 다시 전달해야 합니다. 취소는 실행기를 호출하지 않습니다. 선택 보상과 개체 ID를 화면 쪽에서 임의로 대체하지 않습니다.
 
 원본 UI는 `bind_presentation(callable)`로 영역 문자열 하나를 받는 콜백을 등록할 수 있습니다. `request_presentation(section)`은 해당 콜백의 Dictionary 응답을 반환합니다. 화면이 열렸다는 응답은 거래·저장 성공 증명이 아니며 청구에는 별도 `execute()` 결과가 필요합니다. `bind_presentation(Callable())`로 해제하며 이 연결은 세이브에 들어가지 않습니다. 기본 상태에는 등록된 콜백이 없고 `presentation_unavailable` 오류를 반환합니다. 자체 폼으로 우회하지 않습니다.

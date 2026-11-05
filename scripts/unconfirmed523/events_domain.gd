@@ -17,6 +17,13 @@ var _quest_rewards: Dictionary = {}
 var _quest_prerequisites: Dictionary = {}
 var _npc_groups: Dictionary = {}
 
+class FixtureChoicePlanner extends "res://scripts/unconfirmed523/source523.gd":
+	# Tiny table-only test doubles reuse the production read-only planner.
+	# Production Source already exposes reward_choices and never uses this path.
+	var backing: Object
+	func rows(table: String) -> Array: return backing.call("rows",table)
+	func row(table: String, id: int) -> Dictionary: return backing.call("row",table,id)
+
 func setup(source: Object) -> void:
 	_source = source
 	_servers.clear()
@@ -247,7 +254,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		var detail := "보유 %d · 원본 상자 1개 소비" % owned
 		var reason := _item_reason(item_id, context, state)
 		if reason.is_empty() and not contract.is_empty():
-			var action := {"label": "열기", "request": request}
+			var action := {"label": "열기", "request": request, "costs":[{"kind":"item","id":item_id,"amount":1}]}
 			if int(contract.type) == 110:
 				var reward_reason := _luckybag_reward_reason(int(contract.target), context)
 				if not reward_reason.is_empty():
@@ -279,9 +286,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 						action["disabled"] = true
 						detail += " · " + str(rule.get("error", "완료 보상 규칙 확인 필요"))
 			else:
-				var choices := _reward_choices(int(contract.target), context)
-				if not choices.is_empty():
-					action["required_choices"] = choices
+				action["reward_root_ids"] = [int(contract.target)]
 			if (int(contract.type) == 110 and _has_final_reward(int(contract.target))) or _has_life_bonus(item_id):
 				var units := _owned_units(item_id, context)
 				if units.size() == 1:
@@ -291,11 +296,12 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 					for index in range(units.size()):
 						instance_options.append({"label": "보유 상자 %d · 수량 %d" % [index + 1, int(units[index].quantity_before)], "value": str(units[index].instance_id)})
 					var requirements: Array = action.get("required_choices", [])
-					requirements.append({"key": "instance_id", "label": "사용할 보유 상자", "options": instance_options, "count": 1})
+					requirements.append({"key": "instance_id", "label": "사용할 보유 상자", "options": instance_options, "count": 1, "min_count":1, "max_count":1, "value_shape":"scalar"})
 					action["required_choices"] = requirements
 				else:
 					action["disabled"] = true
 					detail += " · 사용 가능한 실제 개체 확인 필요"
+			_attach_choice_metadata(action,context)
 			actions.append(action)
 		else:
 			detail += " · " + reason
@@ -981,25 +987,63 @@ func _reward_summary(reward_id: int, context: Dictionary = {}) -> String:
 	return "보상: %s" % str(type.get("Name", "정보 확인 필요"))
 
 func _reward_action(label: String, request: Dictionary, reward_id: int, context: Dictionary = {}) -> Dictionary:
-	var action := {"label": label, "request": request}
-	var choices := _reward_choices(reward_id, context)
-	if not choices.is_empty():
-		action["required_choices"] = choices
+	var action := {"label": label, "request": request, "reward_root_ids":[reward_id]}
+	_attach_choice_metadata(action,context)
 	return action
 
-func _reward_choices(reward_id: int, context: Dictionary = {}) -> Array:
-	if _source.has_method("reward_choices"):
-		var planned: Dictionary = _source.call("reward_choices", reward_id, context)
-		var choices: Array = []
-		if not bool(planned.get("ok", false)):
-			return choices
-		for requirement in planned.get("choices", []):
+func _attach_choice_metadata(action: Dictionary, context: Dictionary) -> void:
+	var planned: Dictionary = presentation_choices(action,context)
+	action["choice_plan"] = planned.duplicate(true)
+	action["deferred_random"] = planned.get("deferred_random",[]).duplicate(true)
+	if not bool(planned.get("ok",false)):
+		action["disabled"] = true
+		action["choice_error"] = str(planned.get("error","보상 선택 정보 확인 필요"))
+		return
+	if not planned.choices.is_empty(): action["required_choices"] = planned.choices.duplicate(true)
+
+func presentation_choices(action: Dictionary, context: Dictionary, selection: Dictionary = {}) -> Dictionary:
+	# This DTO contains unanswered choices only. The source planner follows the
+	# explicitly chosen branch and defers random branches without resolving RNG.
+	var roots: Variant = action.get("reward_root_ids",[])
+	if not roots is Array: return _failure("invalid_reward_root_ids")
+	var result: Dictionary = {"ok":true,"error":"","choices":[],"deferred_random":[],"reward_root_ids":roots.duplicate(true)}
+	for requirement: Variant in action.get("required_choices",[]):
+		if not requirement is Dictionary: return _failure("invalid_presentation_choice")
+		if not str(requirement.get("key","")).begins_with("selection."):
+			var retained: Dictionary = requirement.duplicate(true)
+			retained["value_shape"] = "scalar" if str(retained.get("key","")) == "instance_id" else "array"
+			result.choices.append(retained)
+	var planner: Object = _source
+	if not roots.is_empty() and (_source == null or not _source.has_method("reward_choices")):
+		if _source == null or not _source.has_method("rows") or not _source.has_method("row"): return _failure("reward_choice_planner_unavailable")
+		var fixture := FixtureChoicePlanner.new()
+		fixture.backing = _source
+		planner = fixture
+	var seen: Dictionary = {}
+	for raw_id: Variant in roots:
+		if not _whole(raw_id,1) or seen.has(int(raw_id)): return _failure("invalid_reward_root_ids")
+		var reward_id: int = int(raw_id)
+		seen[reward_id] = true
+		var planned: Variant = planner.call("reward_choices",reward_id,context,selection)
+		if not planned is Dictionary or not planned.get("choices",[]) is Array or not planned.get("deferred_random",[]) is Array: return _failure("invalid_reward_choice_plan")
+		if not bool(planned.get("ok",false)):
+			return {"ok":false,"error":str(planned.get("error","reward_choice_planner_failed")),"choices":[],"deferred_random":planned.get("deferred_random",[]).duplicate(true),"reward_root_ids":roots.duplicate(true)}
+		for requirement: Variant in planned.get("choices",[]):
+			if not requirement is Dictionary or not requirement.get("options",[]) is Array: return _failure("invalid_reward_choice_plan")
 			var choice: Dictionary = requirement.duplicate(true)
-			for option in choice.get("options", []):
-				option["label"] = _reward_summary(int(option.get("reward_id", 0)), context)
-			choices.append(choice)
-		return choices
-	return _fixture_reward_choices(reward_id)
+			choice["value_shape"] = "array"
+			for option: Variant in choice.get("options",[]):
+				if not option is Dictionary: return _failure("invalid_reward_choice_plan")
+				option["label"] = _reward_summary(int(option.get("reward_id",0)),context)
+			result.choices.append(choice)
+		result.deferred_random.append_array(planned.get("deferred_random",[]).duplicate(true))
+	return result
+
+func _reward_choices(reward_id: int, context: Dictionary = {}) -> Array:
+	# Compatibility for existing read-only audit callers. Actions retain errors
+	# through choice_plan/choice_error rather than treating an error as no choice.
+	var planned: Dictionary = presentation_choices({"reward_root_ids":[reward_id]},context)
+	return planned.get("choices",[])
 
 func _fixture_reward_choices(reward_id: int, depth: int = 0) -> Array:
 	# Minimal source doubles used by focused tests need no production planner.

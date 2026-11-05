@@ -750,5 +750,118 @@
       "main_is_ancestor": true,
       "HUD_exact_main_bytes": true
     }
+  },
+  "source_ui_callers_20261105": {
+    "baseline_public_head": "57e780845f180504f31877f6e0a8eadf62424f38",
+    "checked_main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+    "status": "nonvisual caller/data and actual Main/save/restart validation complete; original template/pixel/node-event binding blocked by unavailable UI input/owner renderer contract",
+    "renderer_or_CSB_loader_added": false,
+    "custom_widgets_added": false,
+    "original_UI_render_verified": false,
+    "native_metadata_routes": {
+      "MainMenuUIButtons106": {
+        "MainMenuTypeID": 86,
+        "AssetID": 372566,
+        "focus": "attendance"
+      },
+      "MainMenuUIButtons116": {
+        "MainMenuTypeID": 96,
+        "AssetID": 372696,
+        "focus": "pass"
+      },
+      "UIDungeonCategory14": {
+        "DungeonCategoryID": 21,
+        "RootUITableKey": "ALL_DUNGEON_TRYING_PAGE_ROOT"
+      }
+    },
+    "source_reference_limit": "Menu component AssetView paths and PassImageNode strings are declarations; no content-root CSB/event/pixel availability claim",
+    "services": [
+      "runtime.source_ui.open_section/snapshot",
+      "native menu/category request routes",
+      "opaque offered action begin/choose/cancel/confirm",
+      "existing domain progress without saved RNG",
+      "exact item UID scalar and source reward branch arrays",
+      "runtime inventory focus / bind / unbind / restore invalidation"
+    ],
+    "proposal_regression": {
+      "carriers": 3369,
+      "explicit_choice_paths": 5886,
+      "allowed": 445,
+      "rejected": 2924,
+      "newly_allowed": 0,
+      "newly_rejected": 0,
+      "scope": "explicit owned-source fixtures; not natural acquisition"
+    },
+    "tests": {
+      "nonvisual_caller": 33,
+      "source_UI_metadata": 357,
+      "nested_choice_DTO": 26,
+      "source_events_regression": 6004,
+      "jade_grail_regression": 1610,
+      "Host_genuine_ownership_and_UI_boundary": 153,
+      "Core_actual_Main_current_map_save": 47,
+      "Main_actual_native_data_costs_choices_effects_save": 142,
+      "cold_restart": 62
+    },
+    "logs_sha256": {
+      "ui-caller-unit-final.log": "150c09de895613aef57014c7b06ae16a36c0ceac0a775ca3c45535932e632542",
+      "ui-caller-data-final.log": "40d1745ca7e4f418000f13be5ddfaf5a9d66ef6b415118e95e49356d5c574537",
+      "ui-caller-choices-final.log": "35932cb4f084f2aa7422ad37836954e02ff6094bd1215d8c7d73a5195be2ff8e",
+      "ui-caller-events-final.log": "7ca5ea2133a7ed8d85bc5c30ce7e33ea1b762bc51667472792f498684aab5e03",
+      "ui-caller-jade-final.log": "3720783ef94a55d5ae87058a6f500d77e313534e6763cabedefd20771dd6540b",
+      "ui-caller-host-final.log": "6ceffc9f436d0c22a822ed17a1db97d57c099abb0250511b3ecbc9dfbcc5c726",
+      "ui-caller-core.log": "5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b",
+      "ui-caller-main-verified.log": "3a9981f223296feac3f4ef09e5e2fce46c9a0bc23510b78a9c85711ca3006445",
+      "ui-caller-main-reload-verified.log": "43bcc3db515e5b6bd7ed55258705f8395b234000dbf743a019b2af1f6511a283"
+    },
+    "unchanged_from_baseline": [
+      "scripts/world.gd",
+      "scripts/quests/quest_reward_consumption.gd",
+      "scripts/unconfirmed523/source523.gd",
+      "scripts/unconfirmed523/challenge_domain.gd",
+      "data/unconfirmed523/twilight_policy.json",
+      "scripts/ui/renewal_hud.gd"
+    ],
+    "blocked_original_UI_read": {
+      "action": "current supported Library bundled helper materialization",
+      "target": "existing UI catalog/parser and partial implementation ZIPs",
+      "outcome": "failed before bytes transfer: hosted apps tools/list HTTP401",
+      "repeat_or_bypass": false,
+      "exact_template_node_event_or_pixel_validation": "not performed"
+    },
+    "remaining": [
+      "original UI owner renderer/template/node-event binding",
+      "actual original UI pixels and visual execution",
+      "source deferred-random continuation UI contract where needed",
+      "previous native Test/expiry and external map/natural-supply/owner limits"
+    ],
+    "remote_CI_requested": false,
+    "Ready_or_merge_attempted": false,
+    "test_exit_codes": {
+      "ui-caller-unit-final.log": 0,
+      "ui-caller-data-final.log": 0,
+      "ui-caller-choices-final.log": 0,
+      "ui-caller-events-final.log": 0,
+      "ui-caller-jade-final.log": 0,
+      "ui-caller-host-final.log": 0,
+      "ui-caller-core.log": 0,
+      "ui-caller-main-verified.log": 0,
+      "ui-caller-main-reload-verified.log": 0
+    },
+    "code_sha256": {
+      "scripts/unconfirmed523/runtime.gd": "deda18798bdacd3401d3de1ff44c1bc149671e2527e77bfb7e68dfb2341588c7",
+      "scripts/unconfirmed523/events_domain.gd": "ba8aa0e208bb3fb2e687c2df320af050a04ac42313503aa839393547e89b88b9",
+      "scripts/unconfirmed523/jade_grail_domain.gd": "c22dde122e4249f7dde03e3c05b04cd1bdb720e4bf0eb2c5d7fa6fbf3f1bd8f3",
+      "scripts/unconfirmed523/source_ui_data.gd": "530be36e25266d2f955b7ce184df4316d36c43973c5ad9e5f024c3b47fc9e0b8",
+      "scripts/unconfirmed523/source_ui_service.gd": "5daeb95907e534f5f5e42253f0e934647fa3bc832580005f9732fd17e92b517b",
+      "tests/unconfirmed523_host_test.gd": "093b9ce6ca5772cf2e06d0a14e75dbcb3d88fea23d7173d210080ac4d11c9cc4",
+      "tests/unconfirmed523_main_test.gd": "0d0679e8806f779a1f25db71ce22d3ad1a60537ed624ac49c57f9f086fb10c26",
+      "tests/unconfirmed523_ui_choices_test.gd": "c7d7013afbd7f1cf5b67d4e65a0b67507fa15d36ef66437c5c9af9bd8d21a8de",
+      "tests/unconfirmed523_ui_data_test.gd": "3a5a3818cb279e4442f7ceddb72dbe7733065c939f75deeaacdde1764463bb21",
+      "tests/unconfirmed523_ui_service_test.gd": "b4d58a4dfd79d98ef2a75b2eb4a28cfe1251ec7e7b320a6b6b04ec5da5ba6b43"
+    },
+    "all_originals_or_natural_supply_complete": false,
+    "original_UI_ownership": "Existing separate560CSB loader/renderer owner; no copy or replacement implementation here",
+    "saved_schema_or_original_rule_values_changed": false
   }
 }

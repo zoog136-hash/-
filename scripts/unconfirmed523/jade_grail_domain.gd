@@ -141,7 +141,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 			reason = "jade_reuse_requires_final_24_hours"
 		var actions: Array = []
 		if reason.is_empty():
-			actions.append({"label": "용옥 사용", "request": {"op": "jade_use", "item_id": int(item_id)}})
+			actions.append({"label": "용옥 사용", "request": {"op": "jade_use", "item_id": int(item_id)}, "costs":[{"kind":"item","id":int(item_id),"amount":1}]})
 		rows.append({"id": "jade:%d" % int(item_id), "label": str(item.get("Name", item_id)), "detail": "원본 지속 %d초 · 보유 %d%s" % [int(definition.duration), _count(context.get("owned", {}), int(item_id)), " · " + reason if not reason.is_empty() else ""], "actions": actions})
 	var owned_grails: Dictionary = _owned_grails(effective_context)
 	for instance_id: Variant in owned_grails:
@@ -152,7 +152,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		var detail: String = "소지 효과 · 은총 없음" if saved.is_empty() else "소지 효과 · %s %s" % [_prefix_name(int(saved.absolute_prefix_id)), _prefix_name(int(saved.base_prefix_id))]
 		var cost: Dictionary = _grace_cost(grace_id)
 		detail += " · 주문서 %d / 아데나 %d" % [int(cost.get("ScrollConsumeAmount", 0)), int(cost.get("AdenaCost", 0))]
-		rows.append({"id": "grail:" + str(instance_id), "label": str(_row("ItemClass", item_id).get("Name", item_id)) + " #" + str(instance_id), "detail": detail, "actions": [{"label": "은총 부여 / 교체", "request": {"op": "grail_roll", "instance_id": str(instance_id)}}]})
+		rows.append({"id": "grail:" + str(instance_id), "label": str(_row("ItemClass", item_id).get("Name", item_id)) + " #" + str(instance_id), "detail": detail, "actions": [{"label": "은총 부여 / 교체", "request": {"op": "grail_roll", "instance_id": str(instance_id)},"costs":[{"kind":"item","id":_scroll_id,"amount":int(cost.get("ScrollConsumeAmount",0))},{"kind":"currency","id":ADENA_CURRENCY,"amount":int(cost.get("AdenaCost",0))}]}]})
 	return {"title": "용옥 · 성배 은총", "notes": ["용옥 재사용은 남은 24시간 이내, 새 사용 시점부터 원본 지속시간으로 교체됩니다.", "성배 소지 효과 · 기본 은총 확정 · 절대 은총 40% · 재부여 시 교체", "서버 구독→보호 연결 및 2/4세트 누적은 조정 가능한 TWILIGHT 규칙입니다."], "rows": rows}
 
 func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dictionary:

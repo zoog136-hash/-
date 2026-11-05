@@ -87,6 +87,39 @@ func recognized_item_without_presentation() -> void:
 func ownership() -> Array:
 	return [world.gold,world.inventory.duplicate(true),world.item_instances.duplicate(true),world.next_item_instance_id,rt.state.duplicate(true),world.ain_service.export_state()]
 
+func source_ui_begin(section: String, request: Dictionary) -> Dictionary:
+	var opened: Dictionary = rt.source_ui.open_section(section)
+	if not check(opened.get("ok",false),"nonvisual original UI caller receives live source model"): return opened
+	var refs: Array = []
+	for row: Dictionary in opened.model.content.rows:
+		for action: Dictionary in row.action_refs:
+			if same(action.data.get("request",{}),request): refs.append(str(action.action_ref))
+	if not check(refs.size() == 1,"original UI caller identifies one exact offered source request"): return {"ok":false}
+	return rt.source_ui.begin(str(refs[0]))
+
+func source_menu_contracts() -> void:
+	var received: Array = []
+	rt.bind_presentation(func(section: String) -> Dictionary:
+		received.append({"section":section,"model":rt.source_ui.snapshot()})
+		return {"ok":true,"opened":true,"scope":"nonvisual_test_receiver"})
+	for button_id: int in [106,116]:
+		var before: Array = ownership()
+		var response: Dictionary = rt.source_ui.request_menu(button_id)
+		check(response.get("ok",false),"native source menu ID routes to data caller %d" % button_id)
+		if not response.get("ok",false): continue
+		var model: Dictionary = received[-1].model
+		var focus: String = "attendance" if button_id == 106 else "pass"
+		check(model.focus.kind == focus and model.focus.native_route.metadata_only,"source menu route preserves native focus and metadata-only boundary")
+		var family_matches: bool = true
+		for row: Dictionary in model.content.rows:
+			family_matches = family_matches and (str(row.id).begins_with("attendance:") if focus == "attendance" else str(row.id).begins_with("pass:") or str(row.id).begins_with("pass-quest:"))
+		check(family_matches,"native menu model keeps its own source row family")
+		check(same(before,ownership()),"native menu model lookup never claims or rolls")
+	var category: Dictionary = rt.source_ui.request_category("ALL_DUNGEON_TRYING_PAGE_ROOT")
+	check(category.get("ok",false) and received[-1].section == "challenge","native general Challenge UI key routes independently of TrialTower")
+	rt.bind_presentation(Callable())
+	check(not has_custom_form(world.hud),"source menu calls do not construct any substitute screen")
+
 func reload_ownership_matches(before: Array) -> bool:
 	var after: Array = ownership()
 	var labels: Array = ["gold","inventory","instances","next_native_id","domain_state_and_rng","ain"]
@@ -298,6 +331,7 @@ func run() -> void:
 	var initial_xp: float = world._experience_multiplier()
 	if not fixture_items(): await finish(); return
 	recognized_item_without_presentation()
+	source_menu_contracts()
 	check(world._effective_max_hp() == initial_hp + 50,"owned blessed source grail adds actual Main max HP50")
 	check(is_equal_approx(world._experience_multiplier(),initial_xp+0.01),"owned source grail adds actual Main experience1percent")
 	check(rt.context().owned.get("355334",0) == 6 and ids_for(338438).size() == 1,"native ownership IDs and exact stack quantity visible to domain")
@@ -341,12 +375,20 @@ func run() -> void:
 			check(discarded_selection != choice_action.request and same(choice_action,original_action),"preparing detached backend choice leaves the source action contract unchanged")
 		check(same(before,ownership()),"discarded source choice request preserves container resources and domain RNG")
 	check(FileAccess.get_sha256(world.save_path()) == preview_hash,"unsubmitted backend requests preserve exact durable save bytes")
+	var ui_choice: Dictionary = source_ui_begin("events",{"action":"consume_item","item_id":164683})
+	if check(ui_choice.get("ok",false) and ui_choice.get("choices",[]).size() == 1,"actual owned source container exposes its choice through the source UI caller"):
+		var choice_key: String = str(ui_choice.choices[0].key)
+		var selected_choice: Dictionary = rt.source_ui.choose(ui_choice.token,choice_key,[0])
+		check(selected_choice.get("ok",false) and selected_choice.get("ready",false),"actual source choice entity selection reaches a ready nonvisual confirmation")
+		check(rt.source_ui.cancel(ui_choice.token).get("cancelled",false) and same(before,ownership()) and FileAccess.get_sha256(world.save_path()) == preview_hash,"cancelling actual source selected reward preserves exact owned container and save")
 	var wallet: int = world.gold
-	var purchase: Dictionary = rt.execute("events",{"action":"pass_purchase","pass_id":724,"premium":false})
+	var ui_purchase: Dictionary = source_ui_begin("events",{"action":"pass_purchase","pass_id":724,"premium":false})
+	var purchase: Dictionary = rt.source_ui.confirm(str(ui_purchase.get("token","")))
 	check(purchase.get("ok",false) and world.gold == wallet-3000000,"source pass724 purchase atomically debits3million")
 	check(not rt.execute("events",{"action":"pass_purchase","pass_id":724,"premium":false}).get("ok",false),"duplicate pass purchase rejected")
 	var bless_before: int = world.ain_service.blessing
-	var daily: Dictionary = rt.execute("events",{"action":"attendance_claim","version_id":8,"index":1})
+	var ui_daily: Dictionary = source_ui_begin("events",{"action":"attendance_claim","version_id":8,"index":1})
+	var daily: Dictionary = rt.source_ui.confirm(str(ui_daily.get("token","")))
 	check(daily.get("ok",false) and world.ain_service.blessing == bless_before+1000,"current actual attendance claims source-rule blessing through Ain consumer")
 	var daily_disk: String = FileAccess.get_sha256(world.save_path())
 	check(not rt.execute("events",{"action":"attendance_claim","version_id":8,"index":1}).get("ok",false) and FileAccess.get_sha256(world.save_path()) == daily_disk,"duplicate attendance cannot change durable save")
@@ -354,7 +396,8 @@ func run() -> void:
 	next.domains.events.passes["724"].experience = 300
 	if not persist_state(next): await finish(); return
 	var pre_pass_xp: float = world._experience_multiplier()
-	var claim: Dictionary = rt.execute("events",{"action":"pass_claim","pass_id":724,"level_id":17384,"premium":false})
+	var ui_claim: Dictionary = source_ui_begin("events",{"action":"pass_claim","pass_id":724,"level_id":17384,"premium":false})
+	var claim: Dictionary = rt.source_ui.confirm(str(ui_claim.get("token","")))
 	check(claim.get("ok",false) and rt.state.bonus_rewards.size() == 1,"actual source Bonus184 pass tier persists one receipt")
 	check(is_equal_approx(world._experience_multiplier(),pre_pass_xp+0.03),"claimed source Bonus184 contributes actual Main experience3percent")
 	check(not rt.execute("events",{"action":"pass_claim","pass_id":724,"level_id":17384,"premium":false}).get("ok",false),"pass bonus tier cannot be claimed twice")
@@ -369,20 +412,21 @@ func run() -> void:
 	before = ownership()
 	var disk: String = FileAccess.get_sha256(world.save_path())
 	world.equipment_collections.test_save_writer = func(_path: String,_payload: Dictionary) -> Error: return ERR_CANT_CREATE
-	var rejected: Dictionary = rt.execute("jade_grail",request)
+	var ui_rejected: Dictionary = source_ui_begin("jade_grail",request)
+	var rejected: Dictionary = rt.source_ui.confirm(str(ui_rejected.get("token","")))
 	check(not rejected.get("ok",false) and same(before,ownership()),"writer error preserves exact live funds, items, domain progress and RNG")
 	check(FileAccess.get_sha256(world.save_path()) == disk,"writer error preserves exact durable save bytes")
 	check(rt.save_blocked and world._save_game(true) != OK,"uncertain write blocks further actions and overwriting until deliberate reload")
 	world.equipment_collections.test_save_writer = Callable()
 	world._load_game(true); freeze()
 	check(not rt.save_blocked and reload_ownership_matches(before),"deliberate Main reload preserves committed funds, native IDs, domain RNG and Ain amounts")
-	var confirmed_revision: int = int(rt.state.revision)
-	var confirmed_fingerprint: String = rt.fingerprint()
 	var scrolls_before: int = int(rt.context().owned.get("355334",0))
 	wallet = world.gold
-	var confirmed: Dictionary = rt.execute("jade_grail",request,confirmed_revision,confirmed_fingerprint)
+	var ui_confirmed: Dictionary = source_ui_begin("jade_grail",request)
+	check(ui_confirmed.get("action",{}).get("costs",[]) == [{"kind":"item","id":355334,"amount":2},{"kind":"currency","id":1,"amount":10000}],"native grace caller receives exact source scroll and Adena costs as data")
+	var confirmed: Dictionary = rt.source_ui.confirm(str(ui_confirmed.get("token","")))
 	var confirmed_hash: String = FileAccess.get_sha256(world.save_path())
-	var duplicate: Dictionary = rt.execute("jade_grail",request,confirmed_revision,confirmed_fingerprint)
+	var duplicate: Dictionary = rt.source_ui.confirm(str(ui_confirmed.get("token","")))
 	check(confirmed.get("ok",false) and not duplicate.get("ok",false),"backend accepts confirmed revision once and rejects the repeated token")
 	check(world.gold == wallet-10000 and int(rt.context().owned.get("355334",0)) == scrolls_before-2,"repeated backend confirmation debits exactly two source scrolls and10000once")
 	check(FileAccess.get_sha256(world.save_path()) == confirmed_hash,"repeated backend confirmation preserves exact once-committed save bytes")
@@ -396,7 +440,8 @@ func run() -> void:
 	world.gold -= 1
 	var rng_before: String = str(rt.state.domains.events.rng_state)
 	var bag_count: int = int(rt.context().owned.get("166594",0))
-	var opened: Dictionary = rt.execute("events",{"action":"consume_item","item_id":166594})
+	var ui_bag: Dictionary = source_ui_begin("events",{"action":"consume_item","item_id":166594})
+	var opened: Dictionary = rt.source_ui.confirm(str(ui_bag.get("token","")))
 	check(opened.get("ok",false) and int(rt.context().owned.get("166594",0)) == bag_count-1,"owned actualLuckyBag37864 consumes only its source item166594")
 	check(opened.get("ok",false) and str(rt.state.domains.events.rng_state) != rng_before,"committed actual bag advances durable domain RNG")
 	check(not opened.get("rewards",[]).is_empty(),"real bag reward resolves and is staged into same world save")
@@ -447,6 +492,7 @@ func run() -> void:
 	await finish()
 
 func reload_phase() -> void:
+	source_menu_contracts()
 	var marker: Variant = JSON.parse_string(FileAccess.get_file_as_string(MARKER))
 	if not check(marker is Dictionary,"separate-process initial evidence present"): return
 	rt.test_now=int(marker.get("clock",NOW))
@@ -461,6 +507,9 @@ func reload_phase() -> void:
 	check(same(rt.state,marker.namespaces.unconfirmed523),"new process restores source domain state and durable RNG")
 	check(same(world.inventory,marker.namespaces.inventory) and same(world.item_instances,marker.namespaces.item_instances),"new process restores exact native inventory identities")
 	check(same(rt.state.domains.jade_grail.grails[str(marker.grail_id)],marker.prefixes),"new process preserves exact physical grail prefixes")
+	var model: Dictionary = rt.source_ui.open_section("jade_grail")
+	check(model.get("ok",false) and same(model.model.progress.grails[str(marker.grail_id)],marker.prefixes) and not model.model.progress.has("rng_state"),"cold original UI data caller restores physical grail progress without exposing saved RNG")
+	rt.source_ui.close()
 	check(is_equal_approx(rt.bonus("max_hp:flat"),float(marker.hp_bonus)) and is_equal_approx(rt.bonus("experience_bonus:percent"),float(marker.xp_bonus)),"new process rebuilds actual source stat contributions")
 	check(not rt.save_blocked and not world.source_save_blocked,"new process preserves valid source save gate")
 	check(ids_for(8951).size()==8 and rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"cold restart preserves all blocked native cube units without invented final history")

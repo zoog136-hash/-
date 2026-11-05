@@ -157,6 +157,7 @@ class FinalDomain extends Domain:
 		result.final_progress = {}
 		return result
 class Jade extends RefCounted:
+	func view(_ctx: Dictionary,_state: Dictionary) -> Dictionary: return {"title":"fixture","notes":[],"rows":[]}
 	var stack_set_thresholds: bool = true
 	var protection_dispatch: Dictionary = {1:54252,14:66574}
 	var percent_ignore: bool = false

@@ -4,6 +4,7 @@ const Source = preload("res://scripts/unconfirmed523/source523.gd")
 const StatAdapter = preload("res://scripts/collections/equipment_collection_stats.gd")
 const QuestOwnership = preload("res://scripts/quests/quest_reward_ownership.gd")
 const QuestConsumption = preload("res://scripts/quests/quest_reward_consumption.gd")
+const SourceUICaller = preload("res://scripts/unconfirmed523/source_ui_service.gd")
 const SAVE_KEY = "unconfirmed523"
 const DOMAIN_PATHS = {"events":"events_domain", "jade_grail":"jade_grail_domain", "challenge":"challenge_domain"}
 var source = Source.new()
@@ -27,12 +28,14 @@ var time_policy: Dictionary = {}
 var _source_configured: bool = false
 var policy_problem: String = ""
 var _presentation_adapter: Callable
+var source_ui = SourceUICaller.new()
 const POLICY_PATH: String = "res://data/unconfirmed523/twilight_policy.json"
 var test_now: int = 0
 var policy: Dictionary = {"luckybag_random_mode":"source_weights", "random_reward_weight_mode":"equal_estimate", "attendance_blessing_base":200,"conditional_percent_mode":"percentage_points_estimate","undead_damage_mode":"uniform_1_to_max_estimate","luckybag_final_scope":"source_item","luckybag_final_completion":"once"}
 
 func configure(host: Node) -> void:
 	world = host
+	source_ui.configure(self)
 	source.load_zip()
 	_source_configured = source.ready()
 	for key: String in DOMAIN_PATHS:
@@ -76,6 +79,7 @@ func check_load(data: Dictionary) -> String:
 	return validate(data.get(SAVE_KEY,fresh()))
 
 func restore(data: Dictionary) -> void:
+	source_ui.close()
 	_prepared_rewards.clear()
 	_committing_plan = ""
 	var next: Variant = data.get(SAVE_KEY,fresh())
@@ -214,13 +218,22 @@ func bind_presentation(adapter: Callable) -> void:
 	# Original UI owns presentation/confirmation. Never persist a UI binding or
 	# install a substitute when that owner's source interface is unavailable.
 	_presentation_adapter = adapter
+	source_ui.configure(self)
+	source_ui.close()
 
-func request_presentation(section: String = "events") -> Dictionary:
+func request_presentation(section: String = "events", focus: Dictionary = {}) -> Dictionary:
 	if not DOMAIN_PATHS.has(section): return _fail("콘텐츠 영역 오류")
 	if not _presentation_adapter.is_valid():
+		source_ui.close()
 		return {"ok":false,"code":"presentation_unavailable","error":"원본 UI 연결이 필요합니다"}
+	source_ui.configure(self)
+	var model: Dictionary = source_ui.open_section(section,focus)
+	if not model.get("ok",false): return model
 	var response: Variant = _presentation_adapter.call(section)
-	if not response is Dictionary: return _fail("UI 연결 응답 오류")
+	if not response is Dictionary:
+		source_ui.close()
+		return _fail("UI 연결 응답 오류")
+	if not response.get("ok",false): source_ui.close()
 	# Opening a source UI is not a successful purchase/claim/use transaction.
 	# That UI must submit its confirmed action separately through execute().
 	return response.duplicate(true)
@@ -806,7 +819,7 @@ func try_use(item_name: String) -> bool:
 		if not matches: continue
 		var category: int = int(source.row("ItemClass",id).get("CategoryID",0))
 		if category not in [10291,10622,78,10381,10394]: return false
-		request_presentation("jade_grail" if category in [10291,10622] else "events")
+		request_presentation("jade_grail" if category in [10291,10622] else "events",{"item_id":id})
 		# The item belongs to this consumer even while the original UI is absent.
 		# Falling through could consume it through an unrelated item handler.
 		return true
