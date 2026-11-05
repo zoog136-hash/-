@@ -232,6 +232,18 @@ func supported_held(world: Node) -> Dictionary:
 
 func try_use_held(world: Node, id: String) -> bool:
 	if equipment_owner.activate(world,id):return true
+	# Ordinary original bags use the same real output supplier as new native
+	# ownership, while the exact raw quest debit remains with the common ABI.
+	var original_owned: Dictionary=OWN.proof(world,id)
+	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
+		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
+		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:
+			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
+			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
+			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
+				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)
+			return used.get("handled",false)
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false
 	if not world._patch523_item_allowed():return true

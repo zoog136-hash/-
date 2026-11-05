@@ -4,10 +4,13 @@ extends RefCounted
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
+const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
+const QUEST_CONSUME=preload("res://scripts/quests/quest_reward_consumption.gd")
 const QUANTITY="source_native_stack_quantity"
 const RECEIPT="source_native_stack_receipt"
 const USES="source_native_stack_uses"
 const PARTITIONS="source_native_stack_partitions"
+const BAG_USES="source_native_bag_uses"
 const TRANSFERRED="source_native_stack_transferred_quantity"
 static var busy: bool=false
 static var _candidate: Dictionary={}
@@ -15,6 +18,13 @@ static var _candidate_kind: String=""
 static var _floor_record: Dictionary={}
 static var _floor_commit_confirmed: bool=false
 static var _partition_parent: String=""
+
+class SupplierView extends Node:
+	var host: Node
+	var inventory: Dictionary
+	var item_instances: Dictionary
+	var gold: int
+	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
 
 static func authorizes(payload: Dictionary) -> bool:
 	return busy and not _candidate.is_empty() and _candidate==payload
@@ -34,6 +44,8 @@ static func profile(record: Dictionary) -> Dictionary:
 	var spec: Dictionary=record.get("source_use_spec",{})
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
+	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
+	if spec.get("kind")=="source_timed_buff" and presentation_only(record,spec):return {"kind":"buff","spec":spec,"runtime_presentation":true}
 	var regen: Script=load("res://scripts/quests/quest_regen523.gd")
 	if not regen.call("contract",record).is_empty():return {"kind":"buff","runtime_regen":true}
 	var original_buff: Script=load("res://scripts/quests/quest_source_buffs523.gd")
@@ -130,9 +142,14 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		var active: Dictionary=regen_owner.call("action",world,record)
 		spec=active.get("source_use_spec",{})
 		if spec.get("activation_status")!="unrestricted":return _failure("기존 MP 재생 주기 설정·원본 조건 확인 필요 · 물약 보존")
+	if effect.get("runtime_presentation",false):
+		var active: Dictionary=use_owner.call("action_record",world,record)
+		spec=active.get("source_use_spec",{})
+		if spec.get("activation_status")!="unrestricted":return _failure("기존 표시 메타데이터·기간 정책에서 사용을 보류합니다 · 아이템 보존")
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
+	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
 	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else (world._effective_max_mp() if effect.kind=="mp" else 0)
 	var before: int=int(world.hp if effect.kind=="hp" else (world.mp if effect.kind=="mp" else 0))
 	if effect.kind in ["hp","mp"] and before>=maximum:return _failure("HP가 가득 찼습니다" if effect.kind=="hp" else "MP가 가득 찼습니다")
@@ -296,6 +313,13 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 			var owned: Dictionary=proof_entry(physical.data,uid)
 			if not owned.is_empty() and ledger.get(uid)==ledger_row(owned,int(owned.used),0,int(owned.remaining)):continue
 		return "바닥 원본 물리 개체의 정확한 습득·소멸 소유자 필요"
+	var previous_bags: Variant=world.consumable_service.export_state().get(BAG_USES,{})
+	var next_bags: Variant=state.get(BAG_USES,{})
+	if not previous_bags is Dictionary or not next_bags is Dictionary:return "기존 원본 상자 사용 장부 형식 보존"
+	for id: String in previous_bags:
+		if next_bags.get(id)!=previous_bags[id]:return "이전 원본 상자 결과·난수 영수증 변경 금지"
+	for id: String in next_bags:
+		if not previous_bags.has(id) and not (authorizes(overrides) and _candidate_kind=="bag_use"):return "새 상자 결과 영수증은 정확한 지급·소비 소유자가 필요합니다"
 	var previous_partitions: Variant=world.consumable_service.export_state().get(PARTITIONS,{})
 	var next_partitions: Variant=state.get(PARTITIONS,{})
 	if not previous_partitions is Dictionary or not next_partitions is Dictionary:return "기존 물리 분할 장부 형식 보존"
@@ -604,9 +628,12 @@ static func prepare_partition(world: Node,parent: Dictionary,uid: String,quantit
 # ItemClass and opaque immutable ownership proof stay separate arguments.
 static func use_owned_original(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
 	if request.size()!=5:return _failure("원문 소모품 선택 소유 요청5필드 필요")
-	for key: String in ["physical_id","quantity","expected_quantity","expected_remaining","source_native_stack_receipt"]:
+	var quest: bool=request.has("quest_reward_receipt")
+	var field: String="quest_reward_receipt" if quest else "source_native_stack_receipt"
+	for key: String in ["physical_id","quantity","expected_quantity","expected_remaining",field]:
 		if not request.has(key):return _failure("원문 소모품 소유 증명 필드 누락")
 	if not request.physical_id is String or request.physical_id.is_empty() or not integer(request.quantity) or int(request.quantity)!=1 or not integer(request.expected_quantity) or not integer(request.expected_remaining):return _failure("원문 소모품은 실제 선택 개체의1단위와 정확한 정수 잔량을 지정하세요")
+	if quest:return use_quest_original_bag(world,original_item,request)
 	var owned: Dictionary=proof(world,request.physical_id)
 	if owned.is_empty() or original_item!=owned.receipt.source_original_item or original_item!=SOURCE.row("ItemClass",int(owned.receipt.item_class_id)) or request.source_native_stack_receipt!=owned.receipt or request.expected_quantity!=owned.remaining or request.expected_remaining!=int(owned.remaining)-1:return _failure("원문 행·선택 개체·최초량·현재 잔량 증명 불일치")
 	if profile(owned.record).is_empty():
@@ -614,6 +641,23 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 		result["source_use_supported"]=false;result["source_problem"]="current_original_effect_owner_required"
 		return result
 	return try_use(world,str(owned.record.name),str(request.physical_id))
+
+static func use_quest_original_bag(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
+	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 상자 저장 보호 중")
+	var uid: String=str(request.physical_id);var owned: Dictionary=QUEST_OWN.proof(world,uid)
+	if not owned.get("ok",false) or owned.get("source_use_immediately",true) or original_item!=owned.get("source_item") or original_item!=SOURCE.row("ItemClass",int(owned.get("item_class_id",0))) or world.item_instances.get(uid,{}).get("quest_reward_receipt")!=request.quest_reward_receipt or request.expected_quantity!=owned.quantity or request.expected_remaining!=int(owned.quantity)-1:return _failure("원본 퀘스트 상자 지급·물리 잔량 증명 불일치")
+	if world.hp<=0 or not world._patch523_item_allowed() or world._option_awakening_busy() or world._item_locked(str(owned.inventory_key),uid) or world._item_locked(str(owned.inventory_key)):return _failure("원본 상자 생존·사용·잠금 조건 미충족")
+	var definition: Dictionary=D.definition_id(str(int(owned.item_class_id)))
+	var record: Dictionary=D.variant_item(definition.get("native_record",{}),int(owned.bless_code_id))
+	var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
+	record=executor.call("action_record",world,record)
+	var issue: String=str(executor.call("eligibility",world,record))
+	if not issue.is_empty():return _failure(issue)
+	var spec: Dictionary=record.get("source_use_spec",{})
+	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 상자의 현재 보상 효과 소유자 연결 대기")
+	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
+	if float(world.item_use_cooldowns.get("m523:item:"+str(int(owned.item_class_id)),0.0))>0:return _failure("원본 상자 재사용 대기")
+	return use_bag(world,uid,{"record":record,"remaining":int(owned.quantity),"receipt":request.quest_reward_receipt,"ownership_kind":"quest"},record,spec)
 
 static func restoration_metadata(record: Dictionary) -> Dictionary:
 	var id: int=int(record.get("source_item_class_id",0))
@@ -636,3 +680,98 @@ static func restoration_metadata(record: Dictionary) -> Dictionary:
 		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
 		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
 	return result if seen.size()==6 and result.get("source_consume_delay_ms")==1000 else {"ok":false}
+
+static func presentation_only(record: Dictionary,spec: Dictionary) -> bool:
+	if spec.get("activation_status")!="blocked" or spec.get("blocked_reasons",[]).is_empty():return false
+	var flags: Dictionary={"UIShowFilter":"Value","NoAnnounce":"TrueFalse"};var recognized: Dictionary={}
+	for row: Dictionary in D.item_definition(record).get("item_bonus",[]):
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		if not flags.has(name_value):continue
+		if row.get("IsPossession")!=false or row.get("bonus",{}).get("BonusApplicationTypeID")!=0 or row.bonus.get("BonusApplicationTargetID")!=0 or row.get("unit",{}).get("Name")!=flags[name_value] or row.bonus.get("Value") not in [0,1]:return false
+		recognized["unsupported_item_bonus:"+name_value]=true
+	if recognized.is_empty():return false
+	for reason: String in spec.blocked_reasons:
+		if recognized.has(reason):continue
+		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and record.has("source_delete_time_raw") and not record.get("source_delete_time_unresolved",false):continue
+		return false
+	return true
+
+static func current_class(world: Node) -> int:
+	var matches: Array=[]
+	for entry: Dictionary in preload("res://scripts/lineagem_base508.gd").cards().get("classes",[]):
+		var raw: Variant=entry.get("source_original")
+		if entry.get("name")==world.job_class and raw is Dictionary and integer(raw.get("ID")) and raw.get("CanCreateClient")==true and SOURCE.row("Class",int(raw.ID))==raw:matches.append(int(raw.ID))
+	return int(matches[0]) if matches.size()==1 else 0
+
+static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:return _failure("원본 상자 실행 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 상자 사용 대상·서비스 조건 미지원")
+	if spec.kind!="guaranteed_bag" and not world.ui_preferences.get("patch523_source_reward_bags_enabled",true):return _failure("기존 원본 확률상자 선택 정책이 꺼져 있습니다 · 상자 보존")
+	var class_id: int=current_class(world);var needs_class: bool=spec.kind!="guaranteed_bag"
+	for reward: Dictionary in spec.get("rewards",[]):
+		if not reward.get("class_ids",[]).is_empty():needs_class=true
+	if needs_class and class_id<=0:return _failure("정확한 현재 원본 직업 정체 연결 필요 · 클래스 풀을 합치지 않습니다")
+	var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
+	var supplier: Script=load("res://scripts/loot/patch523_item_inventory.gd")
+	var view:=SupplierView.new();view.host=world;view.inventory=world.inventory;view.item_instances=world.item_instances;view.gold=world.gold
+	# Every eligible positive candidate must have a real registered supplier.
+	# Missing candidates never disappear or renormalize a random pool.
+	for reward: Dictionary in spec.get("rewards",[]):
+		if not executor.call("class_matches",reward.get("class_ids",[]),class_id):continue
+		if reward.get("entity_type_id")==0 and int(reward.get("probability_raw",0))<=0:continue
+		var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
+		var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
+		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not item.get("source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
+		var deadline: String=D.deadline_problem(item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+		if not deadline.is_empty():view.free();return _failure(deadline)
+		var ready: Dictionary=supplier.call("stage",view,[{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)}],{"kind":"source_native_bag_candidate_quote","input_physical_id":uid,"entity_id":reward.source_entity_id})
+		if not ready.get("ok",false):view.free();return _failure(str(ready.get("error","전체 원본 보상 공급자 연결 대기")))
+	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
+	var selected: Dictionary=executor.call("select_rewards",spec,class_id,candidate_rng,clampi(int(world.ui_preferences.get("patch523_reward_bag_draw_count",1)),1,10))
+	if not selected.get("ok",false):view.free();return _failure("원본 전체 보상 풀·선택 계약 불일치")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var is_quest: bool=owned.get("ownership_kind")=="quest"
+	var paid: Dictionary={}
+	if is_quest:
+		request.erase("source_native_stack_receipt");request["quest_reward_receipt"]=owned.receipt.duplicate(true)
+		paid=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256))
+	else:paid=stage_debit(world,[request])
+	if not paid.get("ok",false):view.free();return _failure(str(paid.get("reason",paid.get("error","원본 상자 입력 차감 소유자 연결 필요"))))
+	view.inventory=paid.overrides.inventory;view.item_instances=paid.overrides.item_instances
+	var grants: Array=[]
+	for reward: Dictionary in selected.rewards:grants.append({"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)})
+	var origin: Dictionary={"kind":"current_original_native_bag","source_definition_archive":SOURCE.identity(),"lucky_bag_class_id":spec.lucky_bag_class_id,"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true),"input_ownership_kind":"quest" if is_quest else "native","source_rewards":selected.rewards.duplicate(true),"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven")}
+	var awarded: Dictionary=supplier.call("stage",view,grants,origin)
+	view.free()
+	if not awarded.get("ok",false):return _failure(str(awarded.get("error","원본 상자 결과 지급 후보 연결 실패")))
+	var payload: Dictionary=awarded.overrides
+	var weight: int=world._inventory_total_weight();var keys: Dictionary={}
+	for key: String in world.inventory:keys[key]=true
+	for key: String in payload.inventory:keys[key]=true
+	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
+	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
+	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
+	var journal: Variant=state.get(BAG_USES,{})
+	if not journal is Dictionary:return _failure("기존 원본 상자 사용 장부 형식 보존")
+	journal=journal.duplicate(true);var receipt_id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+	while journal.has(receipt_id):receipt_id=Crypto.new().generate_random_bytes(16).hex_encode()
+	journal[receipt_id]={"schema":1,"input":paid.selections.duplicate(true),"source_definition_archive":SOURCE.identity(),"original_lucky_bag_class":spec.original_lucky_bag_class.duplicate(true),"class_id":class_id,"selected_rewards":selected.rewards.duplicate(true),"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven"),"rng_before":{"seed":str(world.rng.seed),"state":str(world.rng.state)},"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
+	state[BAG_USES]=journal;payload["consumable_state"]=state
+	payload["item_use_cooldowns"]=executor.call("next_cooldowns",world,record,spec)
+	payload["patch523_transaction_rng"]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
+	if is_quest:
+		payload["quest_state"]=paid.overrides.quest_state
+		if not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("원본 상자의 실제 지급 후보와 선택 사용 영수증 불일치")
+	busy=true;_candidate_kind="bag_use";_candidate=payload.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	_candidate.clear();_candidate_kind=""
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 상자 저장 실패·결과 미확정 · 정상 저장 불러오기 전 재개봉 중지";busy=false;return _failure(world.patch523_owner_state_problem)
+	if is_quest and not world.quest_service.import_state(payload.quest_state):
+		world.patch523_owner_state_problem="원본 상자 저장 후 퀘스트 영수증 채택 미확정 · 정상 저장 불러오기 필요";busy=false;return _failure(world.patch523_owner_state_problem)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.gold=int(payload.gold);world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(state)
+	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state;world.deferred_save.cancel();busy=false
+	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
+	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
+	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":selected.rewards,"message":"원본 상자 보상을 지급했습니다"}

@@ -31,7 +31,7 @@ static func formula(rows: Array,names: Array) -> Dictionary:
 	var base: int=int(result.get(names[0],0));var count: int=int(result.get(names[1],0));var sides: int=int(result.get(names[2],0))
 	if base<0 or count<0 or count>1000 or sides<0 or sides>1000000 or (count>0)!=(sides>0) or base+count*sides<=0 or base>9007199254740991-count*sides:return {}
 	return result
-static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,permitted: Dictionary={}) -> Dictionary:
+static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,permitted: Dictionary={},require_delay: bool=true) -> Dictionary:
 	var reasons: Array=[];var grouped: Dictionary={}
 	var units: Dictionary={"MPRestoration":"Value","MPRestorationDiceNumber":"Value","MPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
 	if not permitted.is_empty():units=permitted.duplicate(true)
@@ -45,8 +45,8 @@ static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,pe
 		if row.get("unit",{}).get("Name")!=units[name_value] or not integer(row.get("bonus",{}).get("Value")):reasons.append("unsupported_item_bonus_unit_or_value:"+name_value);continue
 		if not grouped.has(name_value):grouped[name_value]=[]
 		grouped[name_value].append(int(row.bonus.Value))
-	if grouped.get("ItemConsumeDelay",[]).size()!=1:reasons.append("missing_or_ambiguous_consume_delay")
-	elif int(grouped.ItemConsumeDelay[0])<0:reasons.append("invalid_consume_delay")
+	if grouped.get("ItemConsumeDelay",[]).size()>1 or (require_delay and grouped.get("ItemConsumeDelay",[]).is_empty()):reasons.append("missing_or_ambiguous_consume_delay")
+	elif not grouped.get("ItemConsumeDelay",[]).is_empty() and int(grouped.ItemConsumeDelay[0])<0:reasons.append("invalid_consume_delay")
 	if grouped.get("ItemConsumeEffectSpriteID",[]).size()>1:reasons.append("ambiguous_consume_sprite")
 	return {"targetting_type_id":raw.get("TargettingTypeID"),"can_use_when_invisible":raw.get("CanUseWhenInvisible"),"consume_delay_ms":grouped.get("ItemConsumeDelay",[null])[0],"consume_effect_sprite_id":grouped.get("ItemConsumeEffectSpriteID",[0])[0],"blocked_reasons":reasons}
 
@@ -165,6 +165,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=timed
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var bag: Dictionary=reward_bag(definition)
+	if not bag.is_empty():
+		out["source_use_spec"]=bag
+		if bag.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -172,7 +177,7 @@ static func record(definition: Dictionary) -> Dictionary:
 	out["source_mapped_bonuses"]=applied;out["source_unhandled_bonuses"]=unknown;out["source_unhandled_bonus_ids"]=[]
 	for row: Dictionary in unknown:out.source_unhandled_bonus_ids.append(row.bonus_id)
 	out["source_effect_status"]="partial" if not unknown.is_empty() or (slot=="consumable" and not out.has("heal_spec") and not out.has("source_use_spec")) or not unresolved_classes.is_empty() or bad_slot else "represented_source_fields"
-	out["source_effect_scope"]="existing_flat_equipment_hp_mp_and_finite_timed_buff_projection; other_typed_effects_preserved_pending"
+	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_and_original_bag_projection; other_typed_effects_preserved_pending"
 	if slot=="consumable" and not out.has("source_use_spec") and not out.has("heal_spec"):out["source_use_spec"]={"kind":"current_source_effect_pending","activation_status":"blocked","blocked_reasons":["current_typed_effect_owner_required"]}
 	out["source_catalog_eligible"]=true;out["source_acquisition_policy"]="verified_supplier_only_no_fabricated_supply"
 	return out
@@ -283,4 +288,86 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
+	return spec
+
+# Same public compiler _source_reward_bag_spec contract, supplied by the
+# existing ItemData -> RewardData graph. This does not grant any reward.
+static func reward_bag(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="LuckyBagClassID":refs.append(row)
+	if refs.size()!=1 or refs[0].get("unit",{}).get("Name")!="LuckyBagClassID" or not integer(refs[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(refs[0].bonus.Value);var graphs: Array=[]
+	for reference: Dictionary in definition.get("source_typed_references",[]):
+		if reference.get("item_bonus_id")==refs[0].ID and reference.get("id")==id and reference.get("bag") is Dictionary:graphs.append(reference.bag)
+	if graphs.size()!=1:return {}
+	var graph: Dictionary=graphs[0];var bag: Dictionary=graph.get("lucky_bag_class",{})
+	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true or bag.get("ID")!=id or graph.get("entities",[]).is_empty() or not SOURCE.declared_exclusion("LuckyBagClass",bag).is_empty():return {}
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"LuckyBagClassID":"LuckyBagClassID"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons;var distribution: Array=[];var active: Dictionary={};var domain: Array=[]
+	for row: Dictionary in SOURCE.rows("Class"):
+		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	for row: Dictionary in definition.get("class_rows",[]):
+		if not integer(row.get("ClassID")):distribution.append("unsupported_lucky_bag_root_class");continue
+		if int(row.ClassID) not in domain:domain.append(int(row.ClassID))
+	if domain.is_empty():domain=active.keys()
+	domain.sort()
+	for class_id: int in domain:
+		if not active.has(class_id):distribution.append("unsupported_lucky_bag_root_class")
+	var rewards: Array=[];var linked: Array=[];var types: Dictionary={};var weighted: Array=[]
+	for entity: Dictionary in graph.entities:
+		var row: Dictionary=entity.get("row",{});var type: Dictionary=entity.get("entity_type",{});var item: Dictionary=entity.get("item_class",{})
+		if not integer(row.get("LuckyBagEntityTypeID")) or int(row.LuckyBagEntityTypeID) not in [0,1]:return {}
+		var kind: int=int(row.LuckyBagEntityTypeID);types[kind]=true
+		if type.get("ID")!=kind or type.get("Name")!=({0:"Probability",1:"IsGiven"}[kind]):distribution.append("unsupported_lucky_bag_entity_type")
+		if not SOURCE.declared_exclusion("LuckyBagEntityView",row).is_empty() or not SOURCE.declared_exclusion("LuckyBagEntityType",type).is_empty():reasons.append("source_declared_bag_entity_exclusion")
+		var classes: Array=[];var limits: Array=[]
+		for limit: Dictionary in entity.get("class_limits",[]):
+			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
+			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):distribution.append("unsupported_lucky_bag_entity_class");continue
+			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
+		if (row.get("LimitClass")==10000 and not classes.is_empty()) or (row.get("LimitClass")!=10000 and row.get("LimitClass") not in classes):distribution.append("unresolved_lucky_bag_class_limit")
+		for class_id: int in classes:
+			if not active.has(class_id):distribution.append("unsupported_lucky_bag_entity_class")
+		var eligible: bool=classes.is_empty()
+		for class_id: int in classes:
+			if class_id in domain:eligible=true
+		var positive: bool=kind==1 or (integer(row.get("Probability")) and int(row.Probability)>0)
+		if eligible and positive and (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
+		if level_ok and int(enchant)>0:
+			var slots: Dictionary={};var equip_rows: Array=SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0)))
+			if equip_rows.is_empty():level_ok=false
+			for equip: Dictionary in equip_rows:
+				var slot: Dictionary=SOURCE.row("EquipSlot",int(equip.get("EquipSlotID",-1)));var name_value: String=str(slot.get("Name",""));slots[equip.get("EquipSlotID")]=true
+				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and equip.get("EquipSlotID")!=293):level_ok=false
+			if slots.size()!=1:level_ok=false
+		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or row.get("ItemBlessCodeID") not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
+		var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
+		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
+		rewards.append(reward)
+		if kind==0:weighted.append(reward)
+	var totals: Dictionary={}
+	if not weighted.is_empty():
+		if domain.is_empty():distribution.append("unresolved_lucky_bag_source_class_scope")
+		for reward: Dictionary in weighted:
+			if not integer(reward.probability_raw) or int(reward.probability_raw)<0:distribution.append("invalid_lucky_bag_probability")
+		for class_id: int in domain:
+			var total: int=0
+			for reward: Dictionary in weighted:
+				if (reward.class_ids.is_empty() or class_id in reward.class_ids) and integer(reward.probability_raw) and int(reward.probability_raw)>=0:total+=int(reward.probability_raw)
+			totals[str(class_id)]=total
+			if total!=10000000:distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
+	var unique: Array=[]
+	for reason: String in reasons+distribution:
+		if reason not in unique:unique.append(reason)
+	spec["kind"]="guaranteed_bag" if weighted.is_empty() else ("source_weighted_bag" if types.size()==1 else "mixed_rewards_bag")
+	spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["lucky_bag_class_id"]=id;spec["original_lucky_bag_class"]=bag.duplicate(true);spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_item_bonus_ids"]=[]
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
+	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
+	if not weighted.is_empty():
+		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
+		if distribution.is_empty():spec["source_probability_denominator"]=10000000
 	return spec

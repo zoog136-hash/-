@@ -225,3 +225,18 @@ labelled existing host/user clock. The source-backed three-restoration reader
 and required-Unit/optional-UIUnit Bonus reader are adopted from public271.
 Unknown positive effects, unsupported conditions and infinite cases remain
 explicitly held. New code remains unexecuted/unverified; counts are unchanged.
+
+## Ordinary original bags to real rewards (unexecuted)
+
+The public RewardData/LuckyBag graph now reaches the existing complete-pool
+selector and actual registered supplier through selected native or raw quest
+ownership. Every eligible positive output must be available; unsupported inputs
+hold the whole bag without removing candidates. Existing IsGiven amounts,
+class scope, raw weights, initial enchant/blessing and labelled local draw policy
+remain. Input receipt/physical debit is the supplier baseline, then output
+ownership, source outcome journal, RNG/cooldown and quest state when applicable
+share one save. No name-only outputs, transient native input or duplicate debit.
+The five-field use ABI accepts exactly one native or quest opaque receipt key.
+Other reward kinds, uninstalled variants/suppliers, original selection UI,
+ItemBook mapping and unconfirmed recipe/free-pass meanings remain held.
+All new code remains unexecuted/unverified; previous58/146 is not increased.

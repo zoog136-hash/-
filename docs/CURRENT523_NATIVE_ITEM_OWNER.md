@@ -324,3 +324,52 @@ contract and matching original HP dice. It joins the existing HP modifiers and
 quantity save, without consuming an old same-name legacy balance or adopting
 JSON numeric fallback. No original table/file/item completion count or new
 runtime pass is established by these unexecuted connections.
+
+## Original ordinary-bag outputs and actual ownership (later, unverified)
+
+The existing public271 RewardData reader at57641f76 supplies LuckyBagClass,
+whole ordered LuckyBagEntityView/type/class-limit/raw-item relationships. The
+native projection ports the published `_source_reward_bag_spec` contract. It
+retains all source IsGiven/probability rows and mapped initial equipment levels,
+root/entity class scope, Test/dummy holds and original quantities/blessings.
+A weighted pool must retain the existing complete10,000,000 total for each
+admitted original class. No missing positive candidate is dropped or normalized.
+FinalReward/Selectable and other unknown entity semantics are not activated.
+The existing1..10 local draw setting remains explicitly host policy, not a
+newly asserted native count. This is unrelated to the separate shop1,000,000
+GotCha/ticket namespace.
+
+Actual native bag use preflights every eligible positive reward against the
+real registered source supplier, then uses the existing selector on a private
+RNG candidate. Unsupported/unregistered/expired/conditional child supply holds
+the whole bag before a live RNG change or input debit. Exact current class
+identity uses the existing saved class binding only when its full source Class
+row matches the held current original. No source reader or probability engine
+is duplicated, and nested child bags are granted, never automatically opened.
+
+Selected input debit and immutable used/remainder receipt reach the shared
+supplier as its **baseline state**. The supplier's full inventory/physical/gold
+candidate therefore preserves that debit; it is not blindly merged over it.
+Actual reward ownership, floor-independent bag acquisition, input/use journal,
+source entity outcomes, RNG and cooldown save once under the exact transient
+owner seal. Live ownership and RNG change only after success. The immutable
+source_native_bag_uses journal preserves previous result/RNG receipts; failures
+block retry until load when durable outcome may be uncertain.
+
+For existing raw quest-held bags, the same use_owned_original interface now
+accepts the same five-field request with `quest_reward_receipt` **instead of**
+source_native_stack_receipt. It requires the exact common quest ownership/full
+original ItemClass/remaining proof and source_use_immediately=false. The common
+quest consumption ABI owns its debit/first-use fingerprint and quest_state;
+actual native outputs use the same supplier transaction. No transient native
+input, raw-key rename, old reward conversion, duplicate debit or name-only child
+grant occurs. Quest item activation routes ordinary bags to this result API
+before older scalar-only consumers. Other raw quest effects retain their
+existing separate owners. Success still requires ok && saved && consumed==1.
+
+Known display-only flags can use only the existing configurable presentation
+policy at actual use; owning a supported definition is not permission to ignore
+a disabled policy. Missing original selection UI and unsupported reward kinds,
+child suppliers, variants or other effects remain explicit holds. No original
+UI is created, no GachaCraft/ItemCraftRecommend/QuestFreePass meaning is inferred,
+and no new run/test/render/CI or source-use percentage is established.
