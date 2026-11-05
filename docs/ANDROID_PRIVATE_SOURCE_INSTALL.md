@@ -104,6 +104,25 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 | 실제 UI 부분팩과 selection JSON이 모두 있을 때 | `TWILIGHT_SOURCE523_UI_ICONS`, `TWILIGHT_SOURCE523_UI_ICONS_SHA256` |
 | 새 Sprite 은행이 실제 공급됐을 때 | `user://current523_source_bank.json` schema1의 tables_zip/manifest_path/manifest_sha256/overlay_whitelist_* |
 
+공통523은 `index.json`과 `content/<Table>.json`을 담은 정의 ZIP이다.
+`TWILIGHT_PATCH523_CONTENT`에는 압축을 푼 폴더가 아니라 ZIP 파일 경로를 전달한다.
+PR269 실행 소비자의 `--patch523-drop-root`는 이와 별개인 아이템 데이터 BIN 계약이며,
+monster_drops.bin과 manifest가 지정하는136개 items/NNNN.bin을 요구한다.
+3,050,707B와 SHA256 `38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27`은
+monster_drops.bin 한 파일의 값이며 전체 팩 크기가 아니다. 각 shard의 실제
+경로·크기·해시·개수는 압축을 해제한 BIN의 item_shards에 있다. 독립
+manifest/header의 고정 SHA는 제공되지 않았으므로 추측하지 않는다.
+새 번들에 이 데이터 ABI가 들어 있는지는 미확정이므로 설치 완료로 세거나
+공통 ZIP을 해당 BIN 루트로 대신 지정하지 않는다. 구 카드·몬스터 그래픽 팩을
+데이터 획득용 의존성으로 추가하지 않는다. 제작 규칙·퀘스트 payload·스킬v3의
+기존 명시 입력은 그대로 두고, 입력 부재 시 공통 원문을 사용하는 판단은 기존
+소비자가 맡는다. 파생 모델을 설치 중에 새로 생성하거나 바이트 재현을 주장하지 않는다.
+전체 drop/item reader의 환경 변수·cfg 선택 계약은 없다. 기존 실행 인수와
+`user://lineagem_patch523_drops/<monster_drops.bin SHA>/`의 고정 데이터 저장소를
+유지한다. 제작 전용 `TWILIGHT_PATCH523_CRAFT_CATALOG_BIN`을 전체 reader의
+선택으로 확대하지 않는다. 실제 신규 payload·shard 목록이 없는 현재 인계에서는
+BIN 저장소 복사나 선택을 자동 활성화하지 않는다.
+
 원본 manifest·선택 JSON은 재작성하지 않는다. 초기 Land4는 공식 인계의 자체
 시작 프로필 선택이며, 카탈로그의 실제 비제외 Land임을 확인해야 한다. 좌표를
 만들지 않고 기존 runtime의 입장 판정에 맡긴다. 같은 맵 pin에서는 나중에 사용자가
