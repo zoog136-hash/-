@@ -149,6 +149,11 @@ func _stage(parent: Node) -> Dictionary:
 	for visible: int in hits:
 		var old: Dictionary=_hits.get(visible,{})
 		if old.is_empty() or old.get("slot")!=hits[visible].slot or not is_instance_valid(old.get("native_slot_scene")):continue
+		var old_entry: Dictionary=old.entry.duplicate(true)
+		var new_entry: Dictionary=hits[visible].entry.duplicate(true)
+		old_entry.erase("auto")
+		new_entry.erase("auto")
+		if old_entry!=new_entry:continue
 		hits[visible].native_slot_scene.reuse_bound_source_scene_from(ICON,old.native_slot_scene,ICON)
 	parent.add_child(next)
 	_scene=next

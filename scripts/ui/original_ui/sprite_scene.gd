@@ -871,6 +871,7 @@ func set_bound_source_scene_result(source_offset: int, descriptor: Dictionary) -
 	sprite.texture=null
 	node.add_child(player)
 	node.set_meta("source_asset_scene",player)
+	node.set_meta("source_asset_scene_bindings",descriptor.get("bindings",{}).duplicate(true))
 	node.set_meta("source_asset_pending",false)
 	var evidence: Dictionary=prepared.duplicate(true)
 	evidence.erase("player")
@@ -907,17 +908,21 @@ func reuse_bound_source_scene_from(source_offset: int, previous_renderer: Node2D
 	var old_node: Node2D=previous_renderer.get("source_nodes").get(previous_offset)
 	var player: Node2D=previous.player
 	if node==null or old_node==null or player.get_parent()!=old_node or not player.transform.is_equal_approx(Transform2D.IDENTITY):return {"ok":false,"reused":false}
+	var bindings: Dictionary=node.get_meta("source_asset_scene_bindings",{})
+	if bindings!=old_node.get_meta("source_asset_scene_bindings",{}):return {"ok":false,"reused":false,"reason":"source_scene_bindings_changed"}
 	_detach_source_scene(node)
 	old_node.remove_meta("source_asset_scene")
 	old_node.remove_meta("source_asset_scene_evidence")
+	if old_node.has_meta("source_asset_scene_bindings"):old_node.remove_meta("source_asset_scene_bindings")
 	old_node.set_meta("source_asset_pending",true)
 	old_node.remove_child(player)
 	node.add_child(player)
 	node.set_meta("source_asset_scene",player)
+	node.set_meta("source_asset_scene_bindings",bindings)
 	node.set_meta("source_asset_scene_evidence",previous.evidence.duplicate(true))
 	node.set_meta("source_asset_pending",false)
 	_sync_source_display(player,node.get_meta("source_display_color",Color.WHITE))
-	return {"ok":true,"reused":true,"player":player,"play_restarted":false,"original_simulation_state_retained":true}
+	return {"ok":true,"reused":true,"player":player,"play_restarted":false,"same_player_instance":true,"runtime_preservation_verified":false}
 
 static func _detach_source_scene(node: Node2D) -> void:
 	var player: Variant=node.get_meta("source_asset_scene",null)
@@ -928,6 +933,7 @@ static func _detach_source_scene(node: Node2D) -> void:
 		player.queue_free()
 	if node.has_meta("source_asset_scene"):node.remove_meta("source_asset_scene")
 	if node.has_meta("source_asset_scene_evidence"):node.remove_meta("source_asset_scene_evidence")
+	if node.has_meta("source_asset_scene_bindings"):node.remove_meta("source_asset_scene_bindings")
 
 func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
