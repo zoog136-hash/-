@@ -498,7 +498,9 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var current_output: Dictionary = result_record if wallet_output else items.get(str(output.item), {})
 	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id),1 if output.physical else int(output.bless_code)):
 		return denied("현재 게임에서 원본 결과 아이템을 사용할 수 없습니다")
-	if not output.physical and not wallet_output and _stack_has_owned_entities(output,physical,ownership_key(output)):return denied("결과 아이템의 기존 개체/영수증 소유자 확인 필요 · 재료 보존")
+	if not output.physical and not wallet_output and _stack_has_owned_entities(output,physical,ownership_key(output)):
+		var native_stacks: Script=load("res://scripts/loot/current523_native_stack.gd")
+		if not native_stacks.call("can_supply",current_output,inventory,physical):return denied("결과 아이템의 기존 개체/영수증 소유자 확인 필요 · 재료 보존")
 	var costs: Dictionary = {}
 	var selections: Array[String] = []
 	var provenance: Dictionary={}
@@ -741,11 +743,6 @@ func refresh_derived_options(physical: Dictionary) -> bool:
 	pinned["patch523_effect_basis"] = {"sha256":digest,"bless_code":2,"selection":"exact_level_only"}
 	return true
 
-func recipe_evidence(craft_id: int) -> Dictionary:
-	var result: Dictionary = {}
-	for key: String in ["inputs", "outputs", "views", "restrictions"]:
-		result[key] = data.get("raw_recipes", {}).get(key, {}).get(str(craft_id), []).duplicate(true)
-	return result
 
 func effect_evidence(item_id: int, level: int, raw_bless_code: int) -> Array:
 	var result: Array = []

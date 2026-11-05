@@ -5278,6 +5278,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
+	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
 	if not bool(transaction.get("ok", false)):
 		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))

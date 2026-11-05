@@ -136,3 +136,38 @@ a typed transfer owner; no whole stack is moved while inventory decrements one.
 This is a host ownership safety hold, not a claim that the source item forbids
 storage or dropping. Other native materials/bags/books/effects remain outside
 this narrow quantity/use connection. No new run, test, save or pass is claimed.
+
+## Current source physical crafting materials (subsequent unverified connection)
+
+The same quantity owner now admits normal current original `material` DTOs that
+have actual ItemCraftInput relations, preserving unresolved effects as partial.
+Acquisition is not standalone use/effect completion. The original supplier/floor
+path creates physical quantity receipts; no balance is backfilled into ownership.
+
+The existing selected-material API accepts its six-field shape with either the
+original `quest_reward_receipt` or `source_native_stack_receipt`, never both.
+Original material-row selection remains distinct from physical ID selection.
+Each request supplies physical_id, quantity, expected_quantity,
+expected_remaining, its immutable receipt, and material_allocations; every
+allocation retains material_row_id and quantity. The existing recipe's actual
+raw ItemClass, blessing, enhancement, selected row/cost, restrictions, locks and
+current date must agree. The canonical key is allowed only for the exact native
+receipt, and its selected pool remains row-bounded; same-name older objects are
+not silently consumed instead.
+
+The existing quote/execute/quest-material join now stages native physical
+remainder and used ledger alongside actual recipe inventory debit, quest uses
+when present, output, fee, usage, log and existing RNG/save. Only selected IDs
+are replaced; whole source candidates are not blindly merged. Failure policy
+that retains all materials also retains these units. A same-key material return
+still needs a separate precise refund-owner contract and is explicitly held.
+
+Current non-equipment crafting outputs require their actual typed supplier or
+supported native physical-quantity owner before the final save. This stages
+ownership once on the executor's already credited output without adding the
+inventory result twice. Unsupported outputs hold the transaction instead of
+creating name-only stock. Existing physical equipment/wallet outputs keep their
+owners. No additional recipe, amount, probability, source UI or free reward is
+created. Existing duplicate cached-only recipe_evidence implementation was
+removed in favor of the already integrated cache-preserving original-reader
+method; no test or parse run was performed.

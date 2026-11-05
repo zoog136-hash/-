@@ -158,3 +158,16 @@ Old name-only stock is not reidentified. Other native stacks/effects remain
 pending; floor splitting and warehouse transfer are explicit ownership holds.
 Source defaults/costs, original restrictions, legacy saves and current sprites
 remain separate. This is unexecuted code, not a new completion/count/pass.
+
+## Current original material consumption (unexecuted)
+
+The existing selected-craft-material API now distinguishes immutable quest
+receipts from current-native physical quantity receipts. Actual raw row/ItemClass/
+blessing/level/quantity allocation selects the owned UUID; quote/execute/join
+then saves its remainder and use ledger with the real input debit and result.
+New supported non-equipment recipe outputs are materialized through the typed
+quantity owner once, on top of the executor's existing inventory candidate.
+Unknown outputs and same-key refunds stay held; no recipe or source rule is
+invented. Normal current materials with an actual ItemCraftInput relation can
+receive exact source quantity ownership, without activating unrelated partial
+bonuses or claiming every material effect completed. All changes are unverified.

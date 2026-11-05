@@ -453,7 +453,7 @@ static func _current_native_bindings(document: Dictionary,catalog: Dictionary,co
 		# Existing physical equipment, exact typed supplies and the actual Adena
 		# wallet have owners. Other new stacks require their quantity/use owner.
 		var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
-		var stack_supported: bool=stock!=null and not stock.call("profile",item).is_empty()
+		var stack_supported: bool=stock!=null and not stock.call("supply_profile",item).is_empty()
 		if not equipment(item) and currency_identity_name(item)!="아데나" and not typed and not stack_supported:
 			document.unresolved_item_ids[id]="current_native_stack_consumer_pending";continue
 		var link: Dictionary={}

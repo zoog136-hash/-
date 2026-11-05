@@ -39,7 +39,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 		if enchant > 0 and not D.equipment(record): return {"ok":false,"error":"비장비 원본 강화값 미지원"}
 		var wallet: String = D.currency_identity_name(record)
 		var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
-		var stack_supported: bool=not stock.call("profile",record).is_empty()
+		var stack_supported: bool=not stock.call("supply_profile",record).is_empty()
 		if not D.equipment(record) and wallet!="아데나" and not stack_supported:return {"ok":false,"error":"새 원문 비장비 물리 수량·소비 소유자 연결 대기 · 입력과 보상 보존"}
 		var key: String = wallet if not wallet.is_empty() else str(record.name)
 		if wallet == "아데나":
@@ -57,7 +57,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			instances=typed.item_instances
 		if stack_supported:
 			var staged: Dictionary=stock.call("stage_grant",record,amount,instances,origin)
-			if not staged.get("ok",false):return {"ok":false,"error":"원본 HP/MP 물리 공급 영수증 생성 실패"}
+			if not staged.get("ok",false):return {"ok":false,"error":"원본 물리 공급 영수증 생성 실패"}
 			instances=staged.item_instances
 		if D.equipment(record):
 			if amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
