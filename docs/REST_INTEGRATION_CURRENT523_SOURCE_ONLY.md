@@ -167,7 +167,18 @@ blessing/level/quantity allocation selects the owned UUID; quote/execute/join
 then saves its remainder and use ledger with the real input debit and result.
 New supported non-equipment recipe outputs are materialized through the typed
 quantity owner once, on top of the executor's existing inventory candidate.
-Unknown outputs and same-key refunds stay held; no recipe or source rule is
+Unknown outputs stay held; exact same-key failure returns now retain selected
+original units, as detailed below. No recipe or source rule is
 invented. Normal current materials with an actual ItemCraftInput relation can
 receive exact source quantity ownership, without activating unrelated partial
 bonuses or claiming every material effect completed. All changes are unverified.
+
+## Exact material refunds and warehouse quantities (unexecuted)
+
+A same-key declared crafting failure output retains its exact original selected
+native units and charges only the net lost quantity, preserving gross source
+cost/return evidence. The supplier does not regrant those retained units.
+Whole selected native-stack remainders can move through the existing warehouse
+request with unchanged physical ID/receipt and one carried/stored-count save.
+Partial splitting and floor custody remain pending. Existing restrictions and
+runtime error guards are preserved; no additional check/run/pass was performed.

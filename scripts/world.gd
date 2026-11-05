@@ -5565,6 +5565,11 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		return
 	var source_restriction:String=expedition_local.transfer_restriction(item_name,direction)
 	if not source_restriction.is_empty() or _item_locked(item_name,instance_id):hud.show_message(source_restriction if not source_restriction.is_empty() else "잠긴 아이템은 이동할 수 없습니다");return
+	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").transfer_warehouse(self,item_name,quantity,direction,instance_id)
+	if native_stack.get("handled",false):
+		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 창고 개체 확인 필요"))))
+		if native_stack.get("ok",false):_update_hud();hud.refresh_inventory(inventory)
+		return
 	if direction=="deposit" and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,record,item_instances):
 		hud.show_message("창고 보관이 불가능한 원본 아이템입니다")
 		return
@@ -6317,7 +6322,7 @@ func _load_game(quiet: bool) -> void:
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	var owner_error: String=owner_boundary.quest_error(self,data.get("quest_state",{}))
 	if owner_error.is_empty() and data.has("patch523_transaction_rng"):owner_error=owner_boundary.rng_error(data.patch523_transaction_rng)
-	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}))
+	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}),data.get("warehouse",{}))
 	if owner_error.is_empty() and expedition_local!=null and data.has("expedition523_local"):owner_error=owner_boundary.expedition_error(self,data.expedition523_local)
 	if owner_error.is_empty() and protection523!=null and data.has("protection523"):owner_error=owner_boundary.protection_error(self,data.protection523)
 	if not owner_error.is_empty():

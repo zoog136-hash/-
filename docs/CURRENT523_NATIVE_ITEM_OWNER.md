@@ -131,8 +131,9 @@ an error can follow an uncertain durable write. Live adoption occurs only after
 confirmed success. Source effect sprite IDs go to the existing emitter only.
 
 The normal physical synchronizer does not manufacture or prune these stacks.
-Their floor-splitting and warehouse transactions remain explicitly held pending
-a typed transfer owner; no whole stack is moved while inventory decrements one.
+Their floor splitting and partial warehouse transfer remain explicitly held.
+Whole selected warehouse bundles now use the typed transfer described below;
+no whole stack is moved while inventory decrements one.
 This is a host ownership safety hold, not a claim that the source item forbids
 storage or dropping. Other native materials/bags/books/effects remain outside
 this narrow quantity/use connection. No new run, test, save or pass is claimed.
@@ -159,8 +160,8 @@ The existing quote/execute/quest-material join now stages native physical
 remainder and used ledger alongside actual recipe inventory debit, quest uses
 when present, output, fee, usage, log and existing RNG/save. Only selected IDs
 are replaced; whole source candidates are not blindly merged. Failure policy
-that retains all materials also retains these units. A same-key material return
-still needs a separate precise refund-owner contract and is explicitly held.
+that retains all materials also retains these units. A same-key declared failure return now follows the exact retained-unit
+transaction described below.
 
 Current non-equipment crafting outputs require their actual typed supplier or
 supported native physical-quantity owner before the final save. This stages
@@ -171,3 +172,31 @@ owners. No additional recipe, amount, probability, source UI or free reward is
 created. Existing duplicate cached-only recipe_evidence implementation was
 removed in favor of the already integrated cache-preserving original-reader
 method; no test or parse run was performed.
+
+## Exact failure refund and whole warehouse custody (later, unverified)
+
+For an already selected original failure output of the same ItemClass, blessing,
+zero enhancement and exact inventory key, the craft join retains the returned
+quantity on the actual selected physical IDs in request order. Only the net
+lost units reach physical debit/used_quantity. Gross source costs, allocations,
+original output and retained-unit receipt proofs remain in the craft journal.
+The output supplier subtracts this already-retained quantity before staging any
+additional output, so returned old units do not acquire a new supplier origin.
+The first-grant receipt/quantity/ID is unchanged, including a fully returned
+selection. Fees, failure policy, usage, output probability and RNG stay with the
+existing executor. Other output identities continue through their own suppliers.
+
+`current523_native_stack.transfer_warehouse(world,name,quantity,direction,id)`
+is called by the existing World warehouse request after its existing source/
+expedition/lock restrictions. It supports an explicitly selected **whole current
+remainder**, with the existing UI limit of 1..99 and warehouse save limit. The
+same unmodified physical ID/receipt/used count moves between carried and stored
+instances; both count dictionaries and warehouse snapshot are saved together.
+Source IsStorable, equipped state, locks and withdraw weight remain effective.
+The save/load quantity guard now follows active and warehouse custody and
+rejects duplicate IDs, unexplained removal or missing remaining units. Only the
+exact transient warehouse candidate authorizes that custody move. A save error
+blocks retry until load; no memory adoption occurs before confirmed save.
+Partial bundle splitting and floor custody remain incomplete, explicitly held;
+this is an ownership hold, not a native no-drop/no-storage rule. No new tests,
+parsing, game execution, rendering or CI were run.

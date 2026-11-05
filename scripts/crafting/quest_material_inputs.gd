@@ -123,15 +123,38 @@ static func join(world: Node,book: RefCounted,transaction: Dictionary,context: D
 	if not checked.get("requests",[]).is_empty():
 		step=Consume.stage(world,checked.requests,book.digest)
 		if not step.get("ok",false):return step
-	var native: Dictionary=Stock.stage_debit(world,checked.get("native_requests",[]))
+	# A declared failure return can retain the exact selected native units.
+	# It never creates a new origin or rewrites an immutable grant receipt.
+	var output: Dictionary=transaction.get("selected_output",{})
+	var native_requests: Array=[];var native_refunds: Array=[];var gross_by_key: Dictionary={}
+	var refund_left: int=int(transaction.get("result_quantity",0)) if str(output.get("label",""))=="실패" and not output.get("physical",false) and int(output.get("level",-1))==0 else 0
+	for request: Dictionary in checked.get("native_requests",[]):
+		var owned: Dictionary=Stock.proof(world,str(request.physical_id))
+		if owned.is_empty():return fail("선택 원본 재료가 변경됐습니다")
+		var key: String=str(owned.record.name)
+		gross_by_key[key]=int(gross_by_key.get(key,0))+int(request.quantity)
+		if not Same.same(transaction.item_instances.get(str(request.physical_id)),world.item_instances.get(str(request.physical_id))):return fail("실행기가 원본 물리 재료를 별도로 변경했습니다")
+		var returned: int=0
+		if refund_left>0 and str(owned.record.source_item_class_id)==str(output.get("source_id")) and int(owned.record.source_bless_raw)==int(output.get("bless_code",0)) and key==str(transaction.get("result_name","")):
+			returned=mini(refund_left,int(request.quantity));refund_left-=returned
+		if returned>0:native_refunds.append({"physical_id":str(request.physical_id),"quantity":returned,"source_native_stack_receipt":owned.receipt.duplicate(true),"source_id":str(output.source_id),"bless_code":int(output.bless_code),"level":0})
+		var net: int=int(request.quantity)-returned
+		if net>0:
+			var adjusted: Dictionary=request.duplicate(true);adjusted.quantity=net;adjusted.expected_remaining=int(request.expected_quantity)-net
+			native_requests.append(adjusted)
+	var native: Dictionary=Stock.stage_debit(world,native_requests)
 	if not native.get("ok",false):return fail(str(native.get("reason","원본 물리 재료 차감 확인 필요")))
 	var all_inputs: Array=step.selections.duplicate(true);all_inputs.append_array(native.selections)
-	var by_key: Dictionary={}
-	for row: Dictionary in all_inputs:
+	for row: Dictionary in step.selections:
 		var key: String=str(world.item_instances[str(row.physical_id)].name)
-		by_key[key]=int(by_key.get(key,0))+int(row.quantity)
-	for key: String in by_key:
-		if int(transaction.get("materials",{}).get(key,0))!=int(by_key[key]) or int(transaction.inventory.get(key,0))!=int(world.inventory.get(key,0))-int(by_key[key]):return fail("실행기의 실제 재료 차감과 선택 영수증 수량 불일치 · 같은 품목 반환은 별도 소유 계약 필요")
+		gross_by_key[key]=int(gross_by_key.get(key,0))+int(row.quantity)
+	for key: String in gross_by_key:
+		var output_credit: int=int(transaction.get("result_quantity",0)) if key==str(transaction.get("result_name","")) and not output.get("physical",false) and not output.get("wallet_currency",false) else 0
+		if int(transaction.get("materials",{}).get(key,0))!=int(gross_by_key[key]) or int(transaction.inventory.get(key,0))!=int(world.inventory.get(key,0))-int(gross_by_key[key])+output_credit:return fail("실행기의 실제 재료 차감·반환과 선택 수량 불일치")
+	var retained: int=0
+	for row: Dictionary in native_refunds:retained+=int(row.quantity)
+	transaction["source_native_material_refunds"]=native_refunds
+	transaction["source_native_retained_output_quantity"]=retained
 	for row: Dictionary in all_inputs:
 		var id: String=row.physical_id
 		if not Same.same(transaction.item_instances.get(id),world.item_instances.get(id)):return fail("실행기가 선택 원본 개체를 별도로 변경했습니다 · 중복 차감 금지")
@@ -147,7 +170,6 @@ static func join(world: Node,book: RefCounted,transaction: Dictionary,context: D
 	if not receipts is Dictionary:return fail("기존 원본 제작 소비 영수증 형식 보존")
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while receipts.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
-	var output: Dictionary=transaction.get("selected_output",{})
 	if output.is_empty():return fail("실행기가 선택한 원본 제작 결과 정체 누락")
 	var output_ids: Array=[]
 	for id: String in transaction.item_instances:
@@ -157,7 +179,7 @@ static func join(world: Node,book: RefCounted,transaction: Dictionary,context: D
 		if physical.get("record",{}).get("source_m_native_item")==true:
 			if physical.has("source_m_reward_proof"):return fail("신규 제작 결과에 별도 공급 증명이 이미 있습니다")
 			physical["source_m_reward_proof"]={"source_snapshot":"patch523","item_class_id":int(output.source_id),"source_item_class_id":int(output.source_id),"bless":int(output.bless_code),"enchant":int(output.level),"supplier":{"kind":"source523_compiled_craft","recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"quest_craft_receipt_id":uid}}
-	var receipt: Dictionary={"schema":1,"recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"inputs":all_inputs.duplicate(true),"material_allocations":checked.allocations.duplicate(true),"selected_output":output.duplicate(true),"output_name":str(transaction.result_name),"output_quantity":int(transaction.result_quantity),"output_physical_ids":output_ids,"outcome":str(transaction.get("outcome_label","완료"))}
+	var receipt: Dictionary={"schema":1,"recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"inputs":all_inputs.duplicate(true),"gross_native_requests":checked.get("native_requests",[]).duplicate(true),"retained_native_refunds":native_refunds.duplicate(true),"material_allocations":checked.allocations.duplicate(true),"selected_output":output.duplicate(true),"output_name":str(transaction.result_name),"output_quantity":int(transaction.result_quantity),"output_physical_ids":output_ids,"outcome":str(transaction.get("outcome_label","완료"))}
 	receipts=receipts.duplicate(true);receipts[uid]=receipt;state[FIELD]=receipts
 	transaction["consumable_state"]=state
 	if not checked.get("requests",[]).is_empty():transaction["quest_step"]=step
