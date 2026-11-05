@@ -1,0 +1,11 @@
+# Original NPC commerce input and existing transactions
+
+Unexecuted implementation. No new parser/test/game/render/quality runs, source build, denominator recount, input download or external data upload were started.
+
+Reuses public PR2716d14e881553ecc7d1f2154ae53eefb3228d4b706 source523_npc_definitions and source523_npc_input_projection. The existing source_shop.bind_source -> npc_definitions.configure -> source catalog/context/quote_merchant -> buy_merchant -> _purchase/_commit -> claim path receives the original input. No additional reader or commerce engine is authored.
+
+Only a missing default NPC input with no explicit pack/SHA selection can use the held common archive. Explicit empty/bare/malformed arguments are not bypassed. Original merchant/object/currency/sell action/spawn/attribute joins pass the same existing payload/context guards. The current shop model SHA is part of the new NPC model input; its actual serialized byte hash remains distinct from the original source archive. Existing zero-hour/date, remote-list, minimum-level, price, normal-equipment, reset/quota, server/manual-spawn and supported-attribute policies remain unchanged and labelled by their current owner.
+
+New merchant quotes carry source_npc_input_identity only when the actual configured input has that proof. Purchase saves it with the merchant ID, existing NPC/rule/shop hashes, payment, pending goods and counters. Claim of these new orders checks the same actual NPC input identity before the existing grant/claim save. An older order is preserved without a fabricated new proof or rewritten hash; its existing checks remain. Missing/incompatible policy, source item/effect, duplicate currency mapping, original restrictions and model mismatch stay explicit holds. No source registry or a reference-only data result alone authorizes a purchase.
+
+This is a definition/transaction connection, not new NPC pixels, placement, a new UI or successful operation of all192 merchant groups. The separate new-resource installer owns Drive reception and path setup; old card/monster pixel packs are not required by this input path. Existing source archives, older packs, code and saves remain preserved on the server. No new local source model was generated or loaded here under the current no-execution instruction.

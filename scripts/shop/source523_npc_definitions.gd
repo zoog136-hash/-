@@ -1,27 +1,60 @@
 extends RefCounted
 ## Source facts and explicitly local availability stay separate from paid orders.
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
+const OriginalInput = preload("res://scripts/shop/source523_npc_input_projection.gd")
 const RULES_PATH: String="res://data/shop/source523_npc_local_rules.json"
+const MAX_INPUT_BYTES: int=8*1024*1024
 var records: Dictionary={}
 var loaded_sha256: String=""
 var problem: String=""
 var source_semantics: Dictionary={}
+var input_identity: Dictionary={}
+var current_shop_sha256: String=""
 var rules: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(RULES_PATH))
 
-func configure(source) -> void:
-	var path: String=""
-	var expected: String=""
+static func _pack_arguments() -> Dictionary:
+	var result: Dictionary={"explicit":false,"path":"","sha256":""}
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--source523-npc-pack="):path=arg.trim_prefix("--source523-npc-pack=")
-		if arg.begins_with("--source523-npc-sha256="):expected=arg.trim_prefix("--source523-npc-sha256=")
-	if not path.is_empty():load_pack(path,expected,source.loaded_sha256)
+		if arg.begins_with("--source523-npc-pack"):
+			result.explicit=true;result.path=""
+			if arg.begins_with("--source523-npc-pack="):result.path=arg.trim_prefix("--source523-npc-pack=")
+		if arg.begins_with("--source523-npc-sha256"):
+			result.explicit=true;result.sha256=""
+			if arg.begins_with("--source523-npc-sha256="):result.sha256=arg.trim_prefix("--source523-npc-sha256=")
+	return result
+
+func configure(source) -> void:
+	var arguments: Dictionary=_pack_arguments()
+	if arguments.explicit:
+		load_pack(arguments.path,arguments.sha256,source.loaded_sha256)
+		return
+	load_original(source)
 
 func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
 	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _fail("NPC 원본 팩 해시 확인 실패")
 	var file:=FileAccess.open(path,FileAccess.READ)
-	if file==null or file.get_length()>8*1024*1024:return _fail("NPC 원본 팩 접근·크기 오류")
+	if file==null or file.get_length()>MAX_INPUT_BYTES:return _fail("NPC 원본 팩 접근·크기 오류")
+	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
+	return _load_payload(bytes,expected,shop_sha256,{"kind":"twilight.source523.npc-pack-input.v1","npc_model_sha256":expected.to_lower(),"npc_model_bytes":bytes.size(),"shop_model_sha256":shop_sha256,"declared_source_archive_sha256":Catalog.SOURCE_SHA256})
+
+func load_original(source) -> bool:
+	# UNVERIFIED: no original fallback may bypass any explicit NPC selection.
+	if _pack_arguments().explicit:return _fail("명시한 NPC 원본 팩 입력을 우회하지 않습니다")
+	var shop_sha256: String=str(source.loaded_sha256)
+	if shop_sha256.length()!=64 or not shop_sha256.is_valid_hex_number(false):return _fail("현재 상점 모델의 실제 SHA256이 필요합니다")
+	if not loaded_sha256.is_empty() and problem.is_empty() and current_shop_sha256==shop_sha256:return true
+	var projection=OriginalInput.new()
+	var pack: Dictionary=projection.build(shop_sha256)
+	if pack.is_empty():return _fail(projection.problem)
+	var bytes: PackedByteArray=JSON.stringify(pack,"",true,true).to_utf8_buffer()
+	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA256);hash.update(bytes)
+	var actual: String=hash.finish().hex_encode()
+	return _load_payload(bytes,actual,shop_sha256,{"kind":"twilight.source523.npc-original-input.v1","npc_model_sha256":actual,"npc_model_bytes":bytes.size(),"shop_model_sha256":shop_sha256,"source_archive_sha256":Catalog.SOURCE_SHA256})
+
+func _load_payload(bytes: PackedByteArray, expected: String, shop_sha256: String, identity: Dictionary) -> bool:
+	if bytes.size()>MAX_INPUT_BYTES:return _fail("NPC 원본 팩 접근·크기 오류")
 	var parser:=JSON.new()
-	if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary:return _fail("NPC 원본 팩 JSON 오류")
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary:return _fail("NPC 원본 팩 JSON 오류")
 	var pack: Dictionary=parser.data
 	if pack.get("schema")!="twilight.source523.npc-definitions.v1" or pack.get("patch")!=523 or pack.get("source_zip_sha256")!=Catalog.SOURCE_SHA256 or pack.get("shop_pack_sha256")!=shop_sha256 or not pack.get("merchants") is Array:return _fail("NPC 팩과 기존 상점 팩의 원본 불일치")
 	var next: Dictionary={}
@@ -47,6 +80,10 @@ func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
 	records=next
 	source_semantics=semantics.duplicate(true)
 	loaded_sha256=expected.to_lower()
+	current_shop_sha256=str(pack.shop_pack_sha256)
+	input_identity=identity.duplicate(true)
+	# This input may have a new NPC model SHA. Never rewrite cached orders or
+	# receipts to it; their existing NPC/shop hash settlement remains PR269's.
 	problem=""
 	return true
 
@@ -117,3 +154,4 @@ func _attributes_supported(attributes: Array, rule: Dictionary) -> bool:
 	for attribute: Dictionary in attributes:
 		if not rule.get("allow_range_attribute",false) or int(attribute.get("id",0))!=15 or attribute.get("name")!="Range" or not Catalog._integer(attribute.get("value")) or int(attribute.value)<1 or int(attribute.value)>20:return false
 	return true
+
