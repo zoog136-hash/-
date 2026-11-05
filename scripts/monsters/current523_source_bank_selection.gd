@@ -57,6 +57,7 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		if action.is_empty() or action.get("MotionType") != CORE_MOTIONS[role] or action.get("WeaponType") != 0 or action.get("WeaponAlterType") != 0:
 			return fail("current523_existing_npc_core_action_family_differs:" + role)
 		action_rows[role] = action.duplicate(true)
+	var run_binding: Dictionary = SOURCE.source_run_binding(sprite_id,int(CORE_ACTIONS.walk),0)
 	return {"ok":true,"enabled":true,"status":"selected","consumer":"npc","request_key":request_key,
 		"source_snapshot":"patch523","npc_id":npc_id,"sprite_id":sprite_id,
 		"spawn_view_id":view_id,"territory_link_id":territory_link_id,
@@ -64,6 +65,7 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		"source_tables_sha256":supplied.source_tables_sha256,"source_action_rows":action_rows,
 		"manifest_path":supplied.options.manifest_path,"manifest_sha256":supplied.options.manifest_sha256,
 		"role_actions":CORE_ACTIONS.duplicate(),"loop_policy":LOOPS.duplicate(),
+		"optional_role_actions":run_binding.optional_role_actions,"optional_role_actor_ids":run_binding.optional_role_actor_ids,"run_status":run_binding.run_status,
 		"overlay_whitelist_path":supplied.options.get("overlay_whitelist_path",""),
 		"overlay_whitelist_sha256":supplied.options.get("overlay_whitelist_sha256",""),
 		"stats_contract":"existing_base508_fields_unchanged_by_patch523_spawn_policy",

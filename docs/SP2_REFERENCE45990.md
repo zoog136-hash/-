@@ -153,6 +153,40 @@ member SHA retain null and their supplied exact source domain, archive/member,
 bytes/CRC and receipt identity. Their received status is not relabelled as
 additional verification. Ordinary runtime integrity guards remain in the loader.
 
+The later local connection delta also carries the complete original action
+domain for every registered actor. An effect with one compiled action is not
+assumed to have only one original action. Identical repeated literal layer
+references retain their original ordered instance IDs and declaration origins,
+while sharing one canonical frame/resource binding. They do not create extra
+poses, clocks, drawing passes or a claim about native draw multiplicity.
+
+Exact `SpriteRun.WalkSpriteID → RunSpriteID` relationships can supply an
+optional RUN actor. Its frames, source clock and attributes come from that
+actual actor and the existing primary weapon WALK-action policy. Missing RUN
+input leaves the established WALK policy and an explicit status; it is not
+reported as an original RUN animation. Cards, followers, relics, subslots and
+admitted NPCs request this role only on their existing RUN state.
+
+Existing spell and global presentation requests can fall through to the same
+bank using `current523_source_effect_selection`. Legacy Spell rows must match
+the complete current source definition. Current callers pass their actual
+current Spell row to `notify_current_source_spell_event`; it selects the exact
+SPR field and `EffectSpriteActionNo`, or requires the sole original action for
+fields with no action selector. The global polymorph path uses the exact
+`ConstantData.Name = PolymorphEffectSpriteID` relation and the existing apply
+event. These methods do not admit spells, apply damage, change slots, add
+gameplay triggers or interpret server conditions.
+
+The existing skill service's cast/impact visual callback also passes its already
+loaded, pinned `source523.profiles[skill.id].row` to this current-row entry.
+Legacy source-ID calls keep their existing route. This is a presentation
+delegation at the established event boundary; learning, cooldowns, costs,
+damage and saved skill identities remain with their existing owners.
+
+The admitted NPC view delegates the same typed presentation API. Its combat
+owner retains event admission, timing, targeting, effect limits and lifetime.
+Data, effect, transaction and save-owner logic is not copied into this bridge.
+
 Literal `]SpriteID` calls use the project's existing host overlay compatibility
 contract. `build_reference_sp2_overlay_calls.py` connects only supplied normal
 visual parent/action/token relationships to a single source child action.
@@ -163,6 +197,33 @@ not become draw commands. Native M dispatch and compositor equivalence are not
 claimed.
 
 ## Current inputs and execution boundary
+
+The subsequent local checkpoint is
+`sp2-bank-reference-instance-connections/summary.json`. Existing source receipts
+now record 21,546 priority inputs / 3,213,387,753 original bytes. Its active
+priority raw registry contains 18,744 unique files / 2,939,773,032 original
+bytes. Across all registered scopes the bank has 18,831 raw members /
+2,957,866,666 bytes and 24,438 actor/action records. The separately admitted
+follow-up input scope has 91 received files, with 81 connected in the bank.
+Those are bank-output figures; actual service selection and whole-file or
+whole-frame gameplay use are not inferred from them.
+
+This delta includes current checkpoints 01–03 from the already approved Drive
+source manifest: 2,477 normal priority originals / 151,681,392 bytes, 64
+separate follow-up originals / 16,860,019 bytes and 22 explicit dependencies /
+1,550,102 bytes. They remain `received_not_additionally_validated`. Raw parts,
+DATs, ZIPs and prior checkpoints are preserved. No additional input, pixel,
+direction, timing, regression or CI checks were run for this delta.
+
+The original dummy exclusion checkpoint below records 476 source paths. The
+current constructor also corrects a source-owner context variable collision:
+its saved path-exclusion counter is 550 priority files / 13,088,719 bytes,
+including those 476. The two shared normal files remain preserved. This is an
+implementation correction using the same literal source declarations, not a
+classification based on missing pixels or unfamiliar names. Per-file outcome
+states and path counters remain distinct and must not be added together.
+
+The figures below describe the preceding checkpoint, before that local delta.
 
 The original 82 monster ZIPs supplied 17,719 priority SP2 members /
 2,949,427,158 original bytes. They were received and checked before the user's
@@ -230,3 +291,14 @@ The map placement exclusion also retains the explicitly excluded SPR IDs 1850,
 1886, 1887, 3977–3980 and 3996–3999 (the map lane's 229 placements). It does
 not remove originals or blacklist matching numeric IDs in other namespaces or
 normal non-map consumers. This action bank does not own placement activation.
+
+## Local publication boundary
+
+PR272 was created at `c43076de27180c01073df7f637092eaa63f4bfd2`.
+The later source-instance, RUN and current-spell changes are local. A push to
+this open PR triggers the repository's
+`cancel-superseded-pr-ci.yml` `pull_request_target: synchronize` workflow, which
+is not suppressed by the ordinary skip-CI commit token. With additional CI
+forbidden, this work does not push that update, close/reopen the PR to avoid
+the event, or change workflow/security settings. Local source and private
+outputs remain preserved for the existing publication contract to be resolved.

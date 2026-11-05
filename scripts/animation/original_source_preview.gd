@@ -11,6 +11,8 @@ var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const REFERENCE_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const CURRENT523_BANK = preload("res://scripts/resources/current523_source_bank.gd")
+const CURRENT523_EFFECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
+var source_effect_status: Dictionary = {}
 var _reference_bank: RefCounted
 var _reference_card_context: Dictionary = {}
 var _reference_request_context: Dictionary = {}
@@ -53,13 +55,17 @@ var last_source_frame: int = -1
 func configure(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
 	# Preserve successful existing player/doll/relic consumers. The independent
 	# current source contract is admitted only for the same real card request.
-	if _configure_existing_source(key, manifest_path, context): return true
+	if _configure_existing_source(key, manifest_path, context):
+		# Keep an explicitly supplied source-bank configuration available to
+		# later effect requests without replacing this working actor.
+		_reference_request_context = context.duplicate(true)
+		return true
 	var selected: Dictionary = CURRENT523_BANK.select_card(key, context)
 	if not bool(selected.get("enabled",false)): return false
 	if not selected.ok:
 		source_selection_status = selected
 		return false
-	if not _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle",str(selected.consumer)):
+	if not _configure_selected_roles(selected,"idle"):
 		source_selection_status = selected.duplicate(true)
 		source_selection_status["status"] = "selection_pending"
 		source_selection_status["reason"] = str(reference_bank_status.get("error","current523_source_action_unavailable"))
@@ -70,6 +76,7 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	_reference_request_context = context.duplicate(true)
 	source_selection_status = selected.duplicate(true)
 	source_weapon_status = {"requested_weapon_type":selected.source_weapon_type,"state":"current523_explicit_host_primary_source_actions","source_actions":selected.role_actions.duplicate(),"M_client_equivalence_verified":false}
+	source_weapon_status["run_status"] = selected.get("run_status",{}).duplicate(true)
 	reference_bank_status["purpose"] = "existing_card_consumer"
 	reference_bank_status["request_key"] = key
 	reference_bank_status["host_policy"] = selected.host_policy
@@ -78,6 +85,39 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 
 func current523_card_matches(key: String, context: Dictionary) -> bool:
 	return _reference_bank != null and not _reference_card_context.is_empty() and _reference_card_context.get("request_key","") == key and _reference_request_context == context
+
+func current523_role_available(role: String) -> bool:
+	return _reference_bank != null and not _reference_card_context.is_empty() and installed() and _playback_tracks.has(role)
+
+func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
+	# Selection/admission belongs to the existing card/NPC caller. This shared
+	# installer preserves its required roles when an optional typed RUN is absent.
+	var actions: Dictionary = selected.role_actions.duplicate()
+	var loops: Dictionary = selected.loop_policy.duplicate()
+	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
+	var required_actors: Dictionary = role_actors.duplicate()
+	var run_status: Dictionary = selected.get("run_status",{}).duplicate(true)
+	var has_optional_run: bool = selected.get("optional_role_actions",{}).has("run")
+	if has_optional_run:
+		actions["run"] = int(selected.optional_role_actions.run)
+		loops["run"] = true
+		role_actors["run"] = int(selected.optional_role_actor_ids.run)
+	var configured: bool = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
+	if not configured and has_optional_run:
+		run_status["state"] = "source_declared_run_unavailable_existing_walk"
+		run_status["bank_problem"] = str(reference_bank_status.get("error","optional_source_run_unavailable"))
+		actions = selected.role_actions.duplicate()
+		loops = selected.loop_policy.duplicate()
+		role_actors = required_actors
+		configured = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
+	elif configured and has_optional_run:
+		run_status["state"] = "selected_source_declared_run"
+	selected["role_actions"] = actions
+	selected["loop_policy"] = loops
+	selected["role_actor_ids"] = role_actors
+	selected["run_status"] = run_status
+	reference_bank_status["run_status"] = run_status.duplicate(true)
+	return configured
 
 func _configure_existing_source(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
 	var source_request_key: String = key
@@ -152,13 +192,13 @@ func _configure_existing_source(key: String, manifest_path: String, context: Dic
 func configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String) -> bool:
 	return _configure_reference_bank(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,"")
 
-func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String) -> bool:
+func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
 	clear()
 	if not explicit_role_action_bindings.has(initial_role):
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
 		return false
 	var bank := REFERENCE_BANK.new()
-	var loaded: Dictionary = bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer)
+	var loaded: Dictionary = bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids)
 	reference_bank_status = {"ok":loaded.ok,"error":loaded.get("error", ""),"purpose":"diagnostic_reference_preview","source_actor_id":source_actor_id,"manifest_sha256":expected_manifest_sha}
 	reference_bank_status["source_dummy_exclusion_policy"] = loaded.get("source_dummy_exclusion_policy")
 	reference_bank_status["map_consumer_contract_dependency"] = loaded.get("map_consumer_contract_dependency")
@@ -277,6 +317,7 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 
 func clear() -> void:
 	_reference_bank = null
+	source_effect_status.clear()
 	_reference_card_context.clear()
 	_reference_request_context.clear()
 	_reference_overlay_parents.clear()
@@ -409,7 +450,16 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		node.set_meta("source_frame", selected.source_frame)
 		# Explicit host compatibility, with original attr and strict-mode behavior retained.
 		var style: Dictionary = node.get_meta("compatibility_style", {})
+		if is_reference:
+			style = POLICY.effect(effect.get("source_attributes",[]),_playback_mode)
+			if bool(effect.get("source_attributes_unresolved",false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
 		if bool(style.get("enabled", false)):
+			if is_reference:
+				var material: CanvasItemMaterial = node.material as CanvasItemMaterial
+				if material == null: material = CanvasItemMaterial.new()
+				material.blend_mode = int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX))
+				node.material = material
+				node.modulate.a = float(style.get("alpha",1.0))
 			var texture: Texture2D = _source_texture(effect)
 			if texture == null and is_reference: return
 			if texture != null:
@@ -428,9 +478,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
 		var layer: Dictionary = selected.layers[index]
-		var is_body: bool = int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
-		_layers[index].material = _source_body_material if is_body else null
-		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and _source_body_material != null else 1.0
+		var is_body: bool = layer.get("kind") == "body" if is_reference else int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
+		_layers[index].material = _source_body_material if is_body and not is_reference else null
+		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and not is_reference and _source_body_material != null else 1.0
+		_layers[index].set_meta("source_layer_kind",layer.get("kind","body" if is_body else ""))
+		_layers[index].set_meta("source_role_actor_id",track.get("source_sprite_id",_record.get("source_sprite_id",-1)))
 		if is_reference and (not layer.get("source_attributes", []).is_empty() or bool(layer.get("source_attributes_unresolved", false))):
 			var style: Dictionary = POLICY.effect(layer.get("source_attributes", []), _playback_mode)
 			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)):
@@ -449,19 +501,29 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_advance_reference_children(delta,source_direction)
 		var shown: Array = []
 		for index: int in range(selected.layers.size()):
-			if _layers[index].visible: shown.append(selected.layers[index].frame_provenance.duplicate(true))
+			if _layers[index].visible: shown.append(_shown_source_provenance(selected.layers[index]))
 		for layer: Dictionary in selected.get("effect_layers", []):
 			var node: Sprite2D = _effect_nodes.get(int(layer.layer_id)) as Sprite2D
-			if node != null and node.visible: shown.append(layer.frame_provenance.duplicate(true))
+			if node != null and node.visible: shown.append(_shown_source_provenance(layer))
 		var card_consumer: bool = not _reference_card_context.is_empty() or not _reference_overlay_parent.is_empty() or not _reference_attachment_parent.is_empty()
 		var consumer: String = str(_reference_card_context.get("consumer",_reference_overlay_parent.get("consumer",_reference_attachment_parent.get("consumer",""))))
 		var purpose: String = "existing_npc_consumer" if consumer == "npc" else "existing_card_consumer"
 		if not _reference_attachment_parent.is_empty(): purpose = "existing_npc_independent_source_layer" if consumer == "npc" else "existing_card_independent_source_layer"
 		elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
 		elif not card_consumer: purpose = "diagnostic_reference_preview"
+		if consumer in ["spell_effect","global_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
 		var scene: Node = get_tree().current_scene if is_inside_tree() else null
 		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
-		_reference_frame_status = {"purpose":purpose,"consumer":consumer,"request_key":_reference_card_context.get("request_key",_reference_overlay_parent.get("request_key",_reference_attachment_parent.get("request_key",""))),"overlay_parent":_reference_overlay_parent.duplicate(true),"attachment_parent":_reference_attachment_parent.duplicate(true),"role":_role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":_record.source_sprite_id,"stored_direction":source_direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":in_main and not shown.is_empty(),"M_visual_equivalence_verified":false}
+		_reference_frame_status = {"purpose":purpose,"consumer":consumer,"request_key":_reference_card_context.get("request_key",_reference_overlay_parent.get("request_key",_reference_attachment_parent.get("request_key",""))),"overlay_parent":_reference_overlay_parent.duplicate(true),"attachment_parent":_reference_attachment_parent.duplicate(true),"role":_role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",_record.source_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":_record.source_sprite_id,"stored_direction":source_direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":in_main and not shown.is_empty(),"M_visual_equivalence_verified":false}
+
+func _shown_source_provenance(layer: Dictionary) -> Dictionary:
+	var provenance: Dictionary = layer.frame_provenance.duplicate(true)
+	if _reference_attachment_parent.has("source_binding_id"):
+		provenance["parent_source_binding_id"] = _reference_attachment_parent.source_binding_id
+		provenance["parent_reference_instance_ids"] = _reference_attachment_parent.get("reference_instance_ids",[]).duplicate()
+		provenance["parent_source_reference_instances"] = _reference_attachment_parent.get("source_reference_instances",[]).duplicate(true)
+		provenance["native_reference_multiplicity_verified"] = false
+	return provenance
 
 func _advance_reference_children(delta: float, stored_direction: int) -> void:
 	var lineage: Dictionary = _reference_card_context if not _reference_card_context.is_empty() else (_reference_attachment_parent if not _reference_attachment_parent.is_empty() else _reference_overlay_parent)
@@ -473,10 +535,12 @@ func _advance_reference_children(delta: float, stored_direction: int) -> void:
 		_reference_child_role = _role
 	var ancestors: Array = lineage.get("ancestor_actor_ids",[]).duplicate()
 	ancestors.append(int(_record.source_sprite_id))
+	var active_parent_actor: int = int(_playback_tracks[_role].get("source_sprite_id",_record.source_sprite_id))
+	if not active_parent_actor in ancestors: ancestors.append(active_parent_actor)
 	if ancestors.size() >= 16: return
 	for attachment: Dictionary in _record.get("independent_source_layers",{}).get(_role,[]):
 		if int(attachment.target_sprite_id) in ancestors: continue
-		var key: String = "%d:%d:%d" % [int(attachment.from_sprite_id),int(attachment.target_sprite_id),int(attachment.child_action_id)]
+		var key: String = "%s:%d:%d:%d:%s" % [str(attachment.kind),int(attachment.from_sprite_id),int(attachment.target_sprite_id),int(attachment.child_action_id),str(attachment.get("source_binding_id",""))]
 		var child: Variant = _reference_source_children.get(key)
 		if child == null:
 			child = get_script().new()
@@ -485,7 +549,12 @@ func _advance_reference_children(delta: float, stored_direction: int) -> void:
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
 				child.free()
 				continue
-			child._reference_attachment_parent = {"request_key":lineage.get("request_key",""),"consumer":lineage.get("consumer",""),"manifest_sha256":lineage.get("manifest_sha256",""),"ancestor_actor_ids":ancestors.duplicate(),"kind":attachment.kind,"source_actor_id":_record.source_sprite_id,"source_action_id":_playback_tracks[_role].source_action_id,"source_declaration":attachment.source_declaration.duplicate(true),"host_policy":attachment.dispatch_policy}
+			child._reference_attachment_parent = {"request_key":lineage.get("request_key",""),"consumer":lineage.get("consumer",""),"manifest_sha256":lineage.get("manifest_sha256",""),"ancestor_actor_ids":ancestors.duplicate(),"kind":attachment.kind,"source_actor_id":active_parent_actor,"source_action_id":_playback_tracks[_role].source_action_id,"source_declaration":attachment.source_declaration.duplicate(true),"host_policy":attachment.dispatch_policy}
+			if attachment.has("source_binding_id"):
+				child._reference_attachment_parent["source_binding_id"] = attachment.source_binding_id
+				child._reference_attachment_parent["reference_instance_ids"] = attachment.get("reference_instance_ids",[]).duplicate()
+				child._reference_attachment_parent["source_reference_instances"] = attachment.get("source_reference_instances",[]).duplicate(true)
+				child._reference_attachment_parent["native_reference_multiplicity_verified"] = false
 			child.z_index = -1 if attachment.kind == "shadow" else 1
 			_reference_source_children[key] = child
 		# This advances the child's own source tokens/FPS, independently of the
@@ -544,7 +613,7 @@ func _load_reference_overlay_bindings(selection: Dictionary) -> void:
 
 func _dispatch_reference_overlays(frames: Array, track: Dictionary, total: float, direction: int) -> void:
 	if _playback_mode != "compatible" or _reference_overlay_parents.is_empty() or _is_overlay: return
-	var parent_key: String = "%d:%d" % [int(_record.source_sprite_id),int(track.source_action_id)]
+	var parent_key: String = "%d:%d" % [int(track.get("source_sprite_id",_record.source_sprite_id)),int(track.source_action_id)]
 	var allowed: Variant = _reference_overlay_parents.get(parent_key,{})
 	if not allowed is Dictionary or allowed.is_empty(): return
 	var clock_key: String = _role + (":" + str(_sequence) if _role == "attack" else "")
@@ -587,7 +656,10 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	if binding.has("child_source_action_key") and overlay._playback_tracks.idle.get("source_action_key","") != binding.child_source_action_key:
 		overlay.free()
 		return false
-	overlay._reference_overlay_parent = {"request_key":_reference_card_context.request_key,"consumer":_reference_card_context.get("consumer",""),"manifest_sha256":_reference_card_context.manifest_sha256,"ancestor_actor_ids":[int(_record.source_sprite_id)],"source_actor_id":_record.source_sprite_id,"source_action_id":parent_track.source_action_id,"source_action_key":parent_track.source_action_key,"source_token_index":token_index,"host_policy":"existing_bracket_sprite_single_action_visual_only"}
+	var source_parent_actor: int = int(parent_track.get("source_sprite_id",_record.source_sprite_id))
+	var ancestors: Array = [int(_record.source_sprite_id)]
+	if not source_parent_actor in ancestors: ancestors.append(source_parent_actor)
+	overlay._reference_overlay_parent = {"request_key":_reference_card_context.request_key,"consumer":_reference_card_context.get("consumer",""),"manifest_sha256":_reference_card_context.manifest_sha256,"ancestor_actor_ids":ancestors,"source_actor_id":source_parent_actor,"source_action_id":parent_track.source_action_id,"source_action_key":parent_track.source_action_key,"source_token_index":token_index,"host_policy":"existing_bracket_sprite_single_action_visual_only"}
 	overlay._is_overlay = true
 	overlay._overlay_facing = stored_direction
 	overlay.global_position = global_position
@@ -729,12 +801,17 @@ func _overlay_files_available(sprite_id: int, original_id: int = -1) -> bool:
 func notify_source_global_event(event_name: String, facing: int) -> bool:
 	# ConstantData identifies the resource. Local apply-event placement and an
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
-	if _playback_mode != "compatible" or _manifest_path.is_empty(): return false
-	var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
-	if not INSTALL.card_manifest_problem(index).is_empty(): return false
-	var definition: Dictionary = index.get("source_global_effects", {}).get(event_name, {})
-	if definition.get("source_table", "") != "ConstantData": return false
-	return spawn_source_overlay(int(definition.get("sprite_id", 0)), facing)
+	if _playback_mode != "compatible": return false
+	var definition: Dictionary = {}
+	if not _manifest_path.is_empty() and FileAccess.file_exists(_manifest_path):
+		var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
+		if INSTALL.card_manifest_problem(index).is_empty():
+			definition = index.get("source_global_effects", {}).get(event_name, {})
+			if definition.get("source_table", "") == "ConstantData" and spawn_source_overlay(int(definition.get("sprite_id", 0)), facing): return true
+	var context: Dictionary = _reference_request_context.duplicate(true)
+	context["current523_card_context"] = _reference_card_context.duplicate(true)
+	var selected: Dictionary = CURRENT523_EFFECT.select_global(event_name,definition,context)
+	return _spawn_current523_source_effect(selected,Vector2.INF,facing)
 
 func notify_source_spell_event(source_spell_id: int, stage: String, world_point: Vector2, facing: int, manifest_path: String = "") -> bool:
 	# Only an explicit base508 spell identity reaches this adapter; no old-ID/name match.
@@ -748,8 +825,61 @@ func notify_source_spell_event(source_spell_id: int, stage: String, world_point:
 	if not fields.has(stage): return false
 	var sprite: int = int(row.get(fields[stage], 0))
 	if sprite <= 0: return false
+	# An effect request must not replace an installed card's bank, root or clock.
+	var previous_path: String = _manifest_path
+	var previous_records: Dictionary = _manifest_records
+	var previous_root: String = _root
+	var previous_mode: String = _playback_mode
 	_manifest_path = path
 	_manifest_records = index.get("records", {})
 	_root = path.get_base_dir()
 	_playback_mode = POLICY.mode(_root, playback_mode_override)
-	return spawn_source_overlay(sprite, facing, world_point)
+	var shown: bool = spawn_source_overlay(sprite, facing, world_point)
+	_manifest_path = previous_path
+	_manifest_records = previous_records
+	_root = previous_root
+	_playback_mode = previous_mode
+	if shown: return true
+	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(row,stage,"base508",_reference_request_context)
+	return _spawn_current523_source_effect(selected,world_point,facing)
+
+func notify_current_source_spell_event(spell: Dictionary, stage: String, world_point: Vector2, facing: int, context: Dictionary = {}) -> bool:
+	# The existing spell owner supplies its actual current source row. This API
+	# creates presentation only and never admits/casts a spell or applies damage.
+	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
+	supplied_context.merge(context,true)
+	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
+	return _spawn_current523_source_effect(selected,world_point,facing)
+
+func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int) -> bool:
+	source_effect_status = selected.duplicate(true)
+	if not bool(selected.get("ok",false)): return false
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect"] or not selected.get("source_reference") is Dictionary: return false
+	var overlay = get_script().new()
+	overlay.playback_mode_override = playback_mode_override
+	var parent: Node = get_parent() if get_parent() != null else self
+	parent.add_child(overlay)
+	if not overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay"):
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_unavailable"))
+		overlay.free()
+		return false
+	if bool(overlay._playback_tracks.idle.get("static_pending_timing",false)):
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = "strict_source_effect_timing_unresolved"
+		overlay.free()
+		return false
+	overlay._reference_overlay_parent = {"request_key":selected.request_key,"consumer":selected.consumer,"manifest_sha256":selected.manifest_sha256,"source_snapshot":"patch523","request_source_snapshot":selected.get("request_source_snapshot"),"source_reference":selected.source_reference.duplicate(true),"host_policy":selected.host_policy,"ancestor_actor_ids":[]}
+	overlay._is_overlay = true
+	overlay._overlay_facing = posmod(facing+3,8)
+	overlay.global_position = global_position if not world_point.is_finite() else world_point
+	overlay.z_index = 2
+	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
+		source_effect_status["status"] = "selection_pending"
+		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_frame_unavailable"))
+		overlay.free()
+		return false
+	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_overlay_nodes.append(overlay)
+	source_effect_status["status"] = "configured_existing_source_effect"
+	return true

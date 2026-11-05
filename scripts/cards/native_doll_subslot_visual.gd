@@ -43,7 +43,9 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	var point: Vector2=player.global_position+follow_offset
 	global_position=point if previous.distance_to(point)>900 else previous.move_toward(point,minf(maxf(300,player.velocity.length()*1.35),previous.distance_to(point)*7)*maxf(0,delta))
 	sync_existing_source_aura(world,record,manifest)
-	actor.advance_source(delta,"walk" if previous.distance_to(global_position)>.1 else "idle",player.motion.facing8,player.motion.sequence,false)
+	var native_state: String="walk" if previous.distance_to(global_position)>.1 else "idle"
+	if native_state=="walk" and player.motion.state=="run" and actor.current523_role_available("run"):native_state="run"
+	actor.advance_source(delta,native_state,player.motion.facing8,player.motion.sequence,false)
 
 func sync_existing_source_aura(world: Node,record: Dictionary,manifest: String) -> void:
 	var path: String="res://scripts/animation/source_awakening_aura.gd"

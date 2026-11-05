@@ -77,7 +77,9 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 		var old: Vector2 = anchor.global_position
 		var target: Vector2 = player.global_position + follow_offset
 		anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
-		native_actor.advance_source(delta, "walk" if old.distance_to(anchor.global_position)>0.1 else "idle", player.motion.facing8, player.motion.sequence, false)
+		var native_state: String = "walk" if old.distance_to(anchor.global_position)>0.1 else "idle"
+		if native_state == "walk" and player.motion.state == "run" and native_actor.current523_role_available("run"): native_state = "run"
+		native_actor.advance_source(delta, native_state, player.motion.facing8, player.motion.sequence, false)
 		return
 	if not sprite.visible and not enabled: return
 	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * (appear_speed if enabled else disappear_speed))

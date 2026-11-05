@@ -4,6 +4,7 @@ const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
 const SOURCE_DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
+const SOURCE_REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bindings_native_draw_multiplicity_unverified"
 var _root: String = ""
 var _manifest_path: String = ""
 var _manifest_sha: String = ""
@@ -106,6 +107,40 @@ func _source_graph_admission(proof: Dictionary) -> Dictionary:
 			if not admitted.ok: return admitted
 	return {"ok":true}
 
+func _source_reference_instances(source: Dictionary) -> Dictionary:
+	if not source.has("source_reference_instances") and not source.has("source_reference_instance_policy"): return {"ok":true,"by_id":{}}
+	var instances: Variant = source.get("source_reference_instances")
+	if source.get("source_reference_instance_policy") != SOURCE_REFERENCE_INSTANCE_POLICY or not instances is Array: return fail("Unsupported literal source reference instance contract.")
+	var by_id: Dictionary = {}
+	var first_by_binding: Dictionary = {}
+	for item: Variant in instances:
+		if not item is Dictionary or not item.get("instance_id") is String or str(item.instance_id).is_empty() or by_id.has(item.instance_id) or not item.get("binding_id") is String or str(item.binding_id).is_empty() or item.get("kind") not in ["shadow","clothes"] or not integer(item.get("from_sprite_id")) or not integer(item.get("target_sprite_id")) or not item.get("source_reference") is String or not item.get("source_edge_path") is Array or not integer(item.get("target_index")) or item.get("connection_stage") != "ordered_literal_instance_shared_source_binding" or item.get("native_reference_multiplicity_verified") != false: return fail("Invalid literal source reference instance.")
+		var declaration: Variant = item.get("source_declaration")
+		if not declaration is Dictionary or not integer(declaration.get("sprite_id")) or not declaration.get("source_file") is String or not integer(declaration.get("source_line"),1) or not valid_sha(declaration.get("source_sha256")) or declaration.get("code") != (101 if item.kind == "shadow" else 105) or declaration.get("body") != item.source_reference or not integer(declaration.get("source_directive_index")) or not integer(declaration.get("source_reference_index")): return fail("Missing exact source reference instance declaration.")
+		if not first_by_binding.has(item.binding_id): first_by_binding[item.binding_id] = item.instance_id
+		if item.get("canonical_instance_id") != first_by_binding[item.binding_id]: return fail("Literal source binding has no ordered canonical instance.")
+		var canonical: Dictionary = item if item.instance_id == item.canonical_instance_id else by_id.get(item.canonical_instance_id,{})
+		if canonical.is_empty() or canonical.get("from_sprite_id") != item.from_sprite_id or canonical.get("target_sprite_id") != item.target_sprite_id or canonical.get("kind") != item.kind or canonical.get("source_reference") != item.source_reference: return fail("Nonidentical source reference instances cannot share a frame binding.")
+		by_id[item.instance_id] = item.duplicate(true)
+	return {"ok":true,"by_id":by_id}
+
+func _reference_binding(source: Dictionary, instances: Dictionary, layer: Dictionary, compact: Dictionary) -> Dictionary:
+	if not layer.has("source_binding_id") and not layer.has("reference_instance_ids") and not compact.has("source_binding_id") and not compact.has("reference_instance_ids"): return {"ok":true,"instances":[]}
+	var binding: Variant = layer.get("source_binding_id")
+	var ids: Variant = layer.get("reference_instance_ids")
+	if not binding is String or binding.is_empty() or binding != compact.get("source_binding_id") or not ids is Array or ids.is_empty() or ids != compact.get("reference_instance_ids"): return fail("Literal source reference binding differs from its compact declaration.")
+	var targets: Dictionary = {}
+	for evidence: Dictionary in source.get("source_layer_declarations",[]):
+		if evidence.get("kind") == layer.get("kind") and evidence.get("source_sprite_id") == layer.get("source_sprite_id"):
+			for declaration: Dictionary in evidence.get("declaration_path",[]): targets[int(declaration.get("sprite_id",-1))] = true
+	var ordered: Array = []
+	for id: Variant in ids:
+		if not id is String or not instances.has(id): return fail("Literal source reference instance ID is absent.")
+		var instance: Dictionary = instances[id]
+		if instance.binding_id != binding or instance.kind != layer.get("kind") or not targets.has(int(instance.target_sprite_id)): return fail("Literal reference instance does not bind this exact source layer.")
+		ordered.append(instance.duplicate(true))
+	return {"ok":true,"instances":ordered}
+
 func _member(member: String) -> Dictionary:
 	var spec: Variant = _manifest.get("members", {}).get(member)
 	if not spec is Dictionary or spec.get("member") != member or spec.get("path") != "raw/" + member or not INSTALL.safe_relative(str(spec.get("path", ""))): return fail("Invalid exact raw member path: " + member)
@@ -162,6 +197,11 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	var result: Dictionary = DECODER.render(parsed, group_index, frame_index) if pixels else {"ok":true,"offset":frame.bounds.position,"empty":frame.empty}
 	if result.ok:
 		result["provenance"] = {"member":layer.member,"raw_sha256":source.sha256,"raw_crc32":source.crc32,"source_stage":source.stage,"source_receipt_id":source.source_receipt_id,"source_identity":source.source_identity,"stored_bit":int(layer.group_bit),"frame_index":frame_index,"layer_id":int(layer.source_sprite_id),"kind":layer.kind,"empty":bool(frame.empty)}
+		if layer.has("source_binding_id"):
+			result.provenance["source_binding_id"] = layer.source_binding_id
+			result.provenance["reference_instance_ids"] = layer.get("reference_instance_ids",[]).duplicate()
+			result.provenance["source_reference_instances"] = layer.get("source_reference_instances",[]).duplicate(true)
+			result.provenance["native_reference_multiplicity_verified"] = false
 	return result
 
 func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
@@ -200,7 +240,7 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	if path.size() > 1 and not attributes.is_empty(): unresolved = true
 	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
 
-func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "") -> Dictionary:
+func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "", role_actor_ids: Dictionary = {}) -> Dictionary:
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
@@ -214,6 +254,8 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	if not contract is Dictionary or contract.get("format") != "current523_identity_roles_v1" or contract.get("native_dispatch_verified") != false or contract.get("selection") != "explicit_source_actor_id_and_source_action_id" or contract.get("loop") != "unknown_requires_explicit_caller_policy" or contract.get("timing") not in ["source_explicit_fps_and_duration_ticks_only","source_explicit_or_existing_host_policy"]: return fail("Unsupported source bank consumer contract.")
 	if contract.get("timing") == "source_explicit_or_existing_host_policy" and (contract.get("host_timing_opt_in") != true or contract.get("source_fps_policy") != "preserve_literal_value_including_null"): return fail("Host timing requires the explicit literal-FPS preservation contract.")
 	if source_actor_id < 0 or bindings.is_empty() or bindings.size() > 16 or bindings.size() != loop_policy.size(): return fail("Explicit source action bindings and loop policy are required for each role.")
+	for role: Variant in role_actor_ids:
+		if not bindings.has(role) or not integer(role_actor_ids[role],1): return fail("Each alternate role actor requires an exact existing caller role.")
 	if not _manifest.get("actors") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing source bank registry.")
 	var exclusions: Dictionary = _install_source_exclusions()
 	if not exclusions.ok: return exclusions
@@ -227,21 +269,30 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	record["map_consumer_contract_dependency"] = "Map placement requires its separate source consumer contract; actor admission does not grant map placement."
 	var independent_by_role: Dictionary = {}
 	record["independent_source_layers"] = independent_by_role
+	record["role_actor_ids"] = {}
+	record["role_body_ids"] = {}
 	for role: Variant in bindings:
 		if not role is String or role.is_empty() or not integer(bindings[role]) or not loop_policy.has(role) or not loop_policy[role] is bool: return fail("Each caller role needs an exact action ID and explicit boolean loop policy.")
 		var action_id: int = int(bindings[role])
-		var entry: Variant = entries.get(str(action_id))
-		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [source_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
+		var role_actor_id: int = int(role_actor_ids.get(role,source_actor_id))
+		admitted = source_actor_admission(role_actor_id)
+		if not admitted.ok: return admitted
+		var role_entries: Variant = _manifest.actors.get("sprite:" + str(role_actor_id))
+		if not role_entries is Dictionary: return fail("Exact source role actor ID is absent.")
+		var entry: Variant = role_entries.get(str(action_id))
+		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [role_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
 		var actor_path: String = _root.path_join(entry.path)
 		loaded = _json(actor_path, entry.sha256)
 		if not loaded.ok: return loaded
 		_actor_pins[actor_path] = entry.sha256
 		var source: Dictionary = loaded.value
 		if source.get("schema") != 1 or source.get("source_snapshot") != "patch523" or source.get("consumer_contract") != contract: return fail("Source action snapshot/contract mismatch.")
+		var reference_instances: Dictionary = _source_reference_instances(source)
+		if not reference_instances.ok: return reference_instances
 		var actor: Variant = source.get("actor")
 		var proof: Variant = source.get("source_proof")
 		var source_role: String = "source_action:" + str(action_id)
-		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != source_actor_id or proof.get("root_sprite_id") != source_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
+		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != role_actor_id or proof.get("root_sprite_id") != role_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
 		admitted = _source_graph_admission(proof)
 		if not admitted.ok: return admitted
 		var track: Variant = actor.roles.get(source_role)
@@ -252,7 +303,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 		var source_fps: Variant = track.get("fps")
 		var explicit_timing: bool = integer(source_fps, 1, 10000)
 		var pending_timing: bool = source_fps == null and contract.get("timing") == "source_explicit_or_existing_host_policy"
-		if track.get("source_action_id") != action_id or compact.get("source_action_id") != action_id or compact.get("source_sprite_id") != source_actor_id or action.get("code") != action_id or (not explicit_timing and not pending_timing) or source_fps != action.get("fps") or source_fps != compact.get("fps") or track.get("loop") != null or compact.get("loop") != null or not valid_sha(action.get("source_sha256")): return fail("Invalid preserved source timing/action identity.")
+		if track.get("source_action_id") != action_id or compact.get("source_action_id") != action_id or compact.get("source_sprite_id") != role_actor_id or action.get("code") != action_id or (not explicit_timing and not pending_timing) or source_fps != action.get("fps") or source_fps != compact.get("fps") or track.get("loop") != null or compact.get("loop") != null or not valid_sha(action.get("source_sha256")): return fail("Invalid preserved source timing/action identity.")
 		var key_pattern := RegEx.new()
 		var source_name_pattern := RegEx.new()
 		source_name_pattern.compile("^list_[0-9]+\\.spr$")
@@ -293,6 +344,8 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 					var layer: Variant = frame.layers[layer_index]
 					var spec: Variant = layer_specs[layer_index]
 					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
+					var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
+					if not reference_binding.ok: return reference_binding
 					var address: int = int(token[0]) + (direction if int(compact.declared_flag) == 1 else 0)
 					var member: String = "Sprite/%d-%d.sp2" % [int(layer.source_sprite_id),address & ~7]
 					if layer.get("member") != member or layer.get("group_bit") != (address & 7) or layer.get("frame_index") != token[1]: return fail("Literal source address differs from identity contract.")
@@ -303,11 +356,16 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 					if layer.kind == "body" and bool(picture.empty): return fail("Exact source action has an empty body frame.")
 					var converted_layer: Dictionary = layer.duplicate(true)
 					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
+					if not reference_binding.instances.is_empty():
+						converted_layer["source_reference_instances"] = reference_binding.instances
+						converted_layer.frame_provenance["source_reference_instances"] = reference_binding.instances.duplicate(true)
 					if layer.kind == "clothes": shown.effect_layers.append(converted_layer)
 					else: shown.layers.append(converted_layer)
 				converted.append(shown)
 			expanded.append(converted)
-		tracks[role] = {"source_action_id":action_id,"source_action_key":source.action_key,"source_sprite_id":source_actor_id,"source_annotations":annotations.duplicate(true),"fps":source_fps,"effective_fps":source_fps if explicit_timing else 0.0,"loop":loop_policy[role],"directions":expanded,"static_pending_timing":not explicit_timing,"timing_origin":"SPR_explicit_section" if explicit_timing else "strict_unresolved"}
+		tracks[role] = {"source_action_id":action_id,"source_action_key":source.action_key,"source_sprite_id":role_actor_id,"source_body_id":proof.body_sprite_id,"source_annotations":annotations.duplicate(true),"fps":source_fps,"effective_fps":source_fps if explicit_timing else 0.0,"loop":loop_policy[role],"directions":expanded,"static_pending_timing":not explicit_timing,"timing_origin":"SPR_explicit_section" if explicit_timing else "strict_unresolved"}
+		record.role_actor_ids[role] = role_actor_id
+		record.role_body_ids[role] = int(proof.body_sprite_id)
 		var independent: Variant = source.get("independent_source_layers",[])
 		if not independent is Array: return fail("Invalid independent source layer declarations.")
 		independent_by_role[role] = []
@@ -351,6 +409,18 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 						if not admitted.ok: return admitted
 					owner_proven = true
 			if not owner_proven: return fail("Independent layer declaration owner is absent from source proof.")
-			independent_by_role[role].append(attachment.duplicate(true))
+			var attachment_record: Dictionary = attachment.duplicate(true)
+			if attachment.has("source_binding_id") or attachment.has("reference_instance_ids"):
+				var binding_id: Variant = attachment.get("source_binding_id")
+				var instance_ids: Variant = attachment.get("reference_instance_ids")
+				if not binding_id is String or binding_id.is_empty() or not instance_ids is Array or instance_ids.is_empty(): return fail("Independent source reference binding is incomplete.")
+				var ordered_instances: Array = []
+				for instance_id: Variant in instance_ids:
+					if not instance_id is String or not reference_instances.by_id.has(instance_id): return fail("Independent source reference instance is absent.")
+					var instance: Dictionary = reference_instances.by_id[instance_id]
+					if instance.binding_id != binding_id or instance.kind != attachment.kind or instance.target_sprite_id != attachment.target_sprite_id or instance.from_sprite_id != attachment.from_sprite_id: return fail("Independent source reference instance has another binding.")
+					ordered_instances.append(instance.duplicate(true))
+				attachment_record["source_reference_instances"] = ordered_instances
+			independent_by_role[role].append(attachment_record)
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
 	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"consumer_scope":consumer_scope,"source_dummy_exclusion_policy":record.source_dummy_exclusion_policy,"map_consumer_contract_dependency":record.map_consumer_contract_dependency,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}

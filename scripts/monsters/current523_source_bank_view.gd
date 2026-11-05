@@ -11,7 +11,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	if not selection_status.get("ok",false): return false
 	var selected: Dictionary = selection_status
 	var candidate := PREVIEW.new()
-	if not candidate._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","npc"):
+	if not candidate._configure_selected_roles(selected,"idle"):
 		selection_status = selected.duplicate(true)
 		selection_status["ok"] = false
 		selection_status["status"] = "selection_pending"
@@ -60,7 +60,8 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 		_role = "attack"
 		_clock = 0.0
 		_preview.restart_reference_source("attack",sequence)
-	var role: String = "death" if dead else ("attack" if _source_attack or attacking else ("hit" if state == "hit" else ("walk" if state in ["walk","run","patrol","chase"] else "idle")))
+	var movement_role: String = "run" if state == "run" and _tracks.has("run") else ("walk" if state in ["walk","run","patrol","chase"] else "idle")
+	var role: String = "death" if dead else ("attack" if _source_attack or attacking else ("hit" if state == "hit" else movement_role))
 	if role != _role:
 		_role = role
 		_clock = 0.0
@@ -76,3 +77,12 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 
 func source_frame_status() -> Dictionary:
 	return _preview.reference_source_frame_status() if is_instance_valid(_preview) else {}
+
+func notify_current_source_spell_event(spell: Dictionary, stage: String, point: Vector2, facing: int, context: Dictionary = {}) -> bool:
+	# The combat owner keeps admission, hit timing, target and effect budgets.
+	# This admitted actor exposes only the shared original-pixel presentation API.
+	if not bool(selection_status.get("ok",false)) or not is_instance_valid(_preview) or not _preview.installed(): return false
+	return _preview.notify_current_source_spell_event(spell,stage,point,facing,context)
+
+func source_effect_status() -> Dictionary:
+	return _preview.source_effect_status.duplicate(true) if is_instance_valid(_preview) else {}

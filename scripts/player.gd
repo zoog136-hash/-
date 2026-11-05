@@ -345,7 +345,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 		class_sprite.hide()
 		transform_sprite.hide()
 		if not unchanged_native: original_source_preview.advance_source(0.0, motion.state, motion.facing8, motion.sequence, motion.active)
-		if transform_profile.profile_id.begins_with("transform:m508:") and (previous_native_key != transform_profile.profile_id or previous_native_sprite != int(original_source_preview._record.get("source_sprite_id", -1))):
+		if (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and (previous_native_key != transform_profile.profile_id or previous_native_sprite != int(original_source_preview._record.get("source_sprite_id", -1))):
 			original_source_preview.notify_source_global_event("polymorph", motion.facing8)
 		return
 	# A verified identity with missing pixels/variant context never borrows legacy artwork.

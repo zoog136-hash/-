@@ -5,7 +5,7 @@ const BASE = preload("res://scripts/lineagem_base508.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const TABLES_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SETTINGS = "user://current523_source_bank.json"
-const TABLES = ["BuffCard", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType"]
+const TABLES = ["BuffCard", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType", "SpriteRun", "SpriteSeparatedWalk", "Spell", "ConstantData"]
 const DECKS = {"transform":1, "doll":2, "relic":3}
 # Existing TWILIGHT primary-family choice. This is explicit host presentation
 # policy; it does not infer native alternate, shield, special or type74 intent.
@@ -162,6 +162,31 @@ static func _walk_buff(buff_id: int, path: Array, seen: Array, output: Array, pr
 			if not _add_npc_summon(bonus,kind,extended,output,preserved_rule): return false
 	return true
 
+static func source_run_binding(identity_actor: int, source_walk_action: int, source_weapon_type: int = 0) -> Dictionary:
+	var run_rows: Array = []
+	for row: Dictionary in _rows.get("SpriteRun",[]):
+		if int(row.get("WalkSpriteID",-1)) == identity_actor: run_rows.append(row.duplicate(true))
+	var separate_rows: Array = []
+	for row: Dictionary in _rows.get("SpriteSeparatedWalk",[]):
+		if int(row.get("SpriteId",-1)) == identity_actor: separate_rows.append(row.duplicate(true))
+	var optional_actions: Dictionary = {}
+	var optional_actors: Dictionary = {}
+	var status: Dictionary = {"state":"no_unique_source_run_declared","source_SpriteRun_rows":run_rows,"source_SpriteSeparatedWalk_rows":separate_rows,"separate_walk_action_hint":"preserved_uninterpreted; no inferred action-ID conversion","fallback":"existing_native_walk_is_not_a_run_track"}
+	var action: Dictionary = _by_id.get("ListSprAction",{}).get(source_walk_action,{})
+	if action.get("MotionType") != 1 or action.get("WeaponType") != source_weapon_type or action.get("WeaponAlterType") != 0:
+		status["state"] = "source_run_walk_action_family_unresolved"
+	elif run_rows.size() == 1 and BANK.integer(run_rows[0].get("RunSpriteID"),1):
+		# Existing accepted model: run uses the matching explicit WALK action in
+		# the current table's RunSprite, with that actor's own source FPS/tokens.
+		optional_actions["run"] = source_walk_action
+		optional_actors["run"] = int(run_rows[0].RunSpriteID)
+		status["state"] = "source_declared_optional_run_awaiting_bank"
+		status["source_run_actor_id"] = int(run_rows[0].RunSpriteID)
+		status["source_run_action_id"] = source_walk_action
+		status["source_ListSprAction_row"] = action.duplicate(true)
+		status["dispatch_policy"] = "existing_typed_SpriteRun_matching_primary_walk_action; native_dispatch_unverified"
+	return {"optional_role_actions":optional_actions,"optional_role_actor_ids":optional_actors,"run_status":status}
+
 static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var configured: Dictionary = options(context)
 	if not configured.ok: return configured
@@ -215,4 +240,9 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 		var action: Dictionary = _by_id.ListSprAction.get(int(actions[role]),{})
 		if action.is_empty() or int(action.get("WeaponType",-1)) != weapon or int(action.get("MotionType",-1)) != {"idle":4,"walk":1,"attack":2}[role]: return fail("current523_primary_action_source_row_differs")
 		if int(action.get("WeaponAlterType",-1)) != (1 if weapon in [3,10] and role == "attack" else 0): return fail("current523_primary_action_alter_policy_differs")
-	return {"ok":true,"enabled":true,"status":"selected","sprite_id":int(matches.keys()[0]),"source_snapshot":"patch523","origin":"current523_exact_typed_card_entity_chain","request_key":key,"consumer":consumer,"typed_chains":selected_chains,"native_card_conditions":card_conditions,"native_application_conditions":application_conditions,"native_application_condition":application_conditions[0] if application_conditions.size() == 1 else {},"gameplay_condition":"preserved_uninterpreted; presentation_only","source_tables_sha256":TABLES_SHA,"manifest_path":configured.options.manifest_path,"manifest_sha256":configured.options.manifest_sha256,"role_actions":actions,"loop_policy":{"idle":true,"walk":true,"attack":false} if consumer == "transform" else {"idle":true,"walk":true},"source_weapon_type":weapon,"overlay_whitelist_path":configured.options.get("overlay_whitelist_path",""),"overlay_whitelist_sha256":configured.options.get("overlay_whitelist_sha256",""),"host_policy":"TWILIGHT_existing_primary_roles_loop_and_facing_plus3; native_dispatch_unverified"}
+	var identity_actor: int = int(matches.keys()[0])
+	var run_binding: Dictionary = source_run_binding(identity_actor,int(actions.walk),weapon)
+	var optional_actions: Dictionary = run_binding.optional_role_actions
+	var optional_actors: Dictionary = run_binding.optional_role_actor_ids
+	var run_status: Dictionary = run_binding.run_status
+	return {"ok":true,"enabled":true,"status":"selected","sprite_id":identity_actor,"source_snapshot":"patch523","origin":"current523_exact_typed_card_entity_chain","request_key":key,"consumer":consumer,"typed_chains":selected_chains,"native_card_conditions":card_conditions,"native_application_conditions":application_conditions,"native_application_condition":application_conditions[0] if application_conditions.size() == 1 else {},"gameplay_condition":"preserved_uninterpreted; presentation_only","source_tables_sha256":TABLES_SHA,"manifest_path":configured.options.manifest_path,"manifest_sha256":configured.options.manifest_sha256,"role_actions":actions,"optional_role_actions":optional_actions,"optional_role_actor_ids":optional_actors,"run_status":run_status,"loop_policy":{"idle":true,"walk":true,"attack":false} if consumer == "transform" else {"idle":true,"walk":true},"source_weapon_type":weapon,"overlay_whitelist_path":configured.options.get("overlay_whitelist_path",""),"overlay_whitelist_sha256":configured.options.get("overlay_whitelist_sha256",""),"host_policy":"TWILIGHT_existing_primary_roles_loop_and_facing_plus3; native_dispatch_unverified"}

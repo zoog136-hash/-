@@ -37,6 +37,7 @@ SHA = re.compile(r"[0-9a-f]{64}\Z")
 CRC = re.compile(r"[0-9a-f]{8}\Z")
 DUMMY_LITERAL = re.compile(r"(?<![A-Za-z])dummy(?![A-Za-z])|더미", re.IGNORECASE)
 DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
+REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bindings_native_draw_multiplicity_unverified"
 CONTRACT = {
     "format": "current523_identity_roles_v1",
     "selection": "explicit_source_actor_id_and_source_action_id",
@@ -526,10 +527,11 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
     separately and must compile the child under its own exact source clock.
     """
     projected = dict(declarations)
-    independent, excluded_edges, visited = [], [], set()
+    independent, excluded_edges, visited = [], [], {}
+    reference_instances, bindings = [], {}
     excluded_dummy = excluded_dummy or {}
 
-    def origin(sprite_id, kind, raw, seen=()):
+    def origin(sprite_id, kind, raw, reference_index=0, seen=()):
         require(sprite_id not in seen, f"SPR reference alias cycle {seen + (sprite_id,)}")
         matches = declarations.get(sprite_id, [])
         require(len(matches) == 1, f"{sprite_id}: ambiguous source reference declaration")
@@ -537,14 +539,18 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
         own = [ref for ref in declaration.references if ref["kind"] == kind]
         if own:
             code = {"shadow": 101, "clothes": 105}[kind]
-            directives = [item for item in declaration.directives if item["code"] == code and item["body"] == raw]
-            require(bool(directives), f"{sprite_id}: literal source reference directive unavailable")
-            directive = directives[0]
+            names = ("shadow",) if kind == "shadow" else ("clothes", "clothe")
+            directives = [(index,item) for index,item in enumerate(declaration.directives)
+                          if item["code"] == code and item["name"].lower() in names]
+            require(reference_index < len(directives), f"{sprite_id}: literal source reference directive unavailable")
+            directive_index,directive = directives[reference_index]
+            require(directive["body"] == raw, f"{sprite_id}: source reference order differs from declaration")
             return {"sprite_id": sprite_id, "source_file": declaration.source_file,
                     "source_line": directive["line"], "source_sha256": spr_proofs[declaration.source_file]["sha256"],
-                    "code": code, "name": directive["name"], "body": raw}
+                    "code": code, "name": directive["name"], "body": raw,
+                    "source_directive_index":directive_index,"source_reference_index":reference_index}
         require(declaration.alias_target is not None, f"{sprite_id}: source reference origin unavailable")
-        return origin(declaration.alias_target, kind, raw, seen + (sprite_id,))
+        return origin(declaration.alias_target, kind, raw, reference_index, seen + (sprite_id,))
 
     def attach(sprite_id, parent_action, edge_path, seen=()):
         require(sprite_id not in seen, f"SPR source layer cycle {seen + (sprite_id,)}")
@@ -552,21 +558,47 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
         projected_refs, separated = [], False
         for kind, refs in references.items():
             require(kind in ("shadow", "clothes"), f"unknown SPR layer kind {kind}")
-            for reference in refs:
+            for reference_index,reference in enumerate(refs):
                 require(reference["count_valid"], f"invalid layer target count {sprite_id}")
                 retained = []
-                for target in reference["targets"]:
+                for target_index,target in enumerate(reference["targets"]):
                     dummy_path = source_dummy_alias_path(target, declarations, excluded_dummy)
                     if dummy_path is not None:
                         separated = True
                         edge = {"from_sprite_id":sprite_id,"target_sprite_id":target,"kind":kind,"source_reference":reference["raw"]}
                         excluded_edges.append({**edge,"reason":"source_literal_dummy","source_edge_path":edge_path+[edge],
-                            "source_declaration":origin(sprite_id,kind,reference["raw"]),"excluded_alias_path":dummy_path,
+                            "source_declaration":origin(sprite_id,kind,reference["raw"],reference_index),"excluded_alias_path":dummy_path,
                             "originals_preserved":True,"normal_parent_connection_preserved":True})
                         continue
                     edge_key = (sprite_id, kind, target)
-                    require(edge_key not in visited, f"duplicate SPR layer edge {edge_key}")
-                    visited.add(edge_key)
+                    context = tuple((edge["from_sprite_id"],edge["kind"],edge["target_sprite_id"]) for edge in edge_path)
+                    declaration = origin(sprite_id,kind,reference["raw"],reference_index)
+                    instance_id = (f"ref:{root_id}:{sprite_id}:{kind}:{declaration['source_file']}:"
+                                   f"L{declaration['source_line']}:D{declaration['source_directive_index']}:T{target_index}")
+                    prior = visited.get(edge_key)
+                    if prior is not None:
+                        require(prior["context"] == context and prior["source_reference"] == reference["raw"],
+                                f"nonidentical or converging SPR reference context remains unresolved: {edge_key}")
+                        binding = prior
+                        separated = True
+                    else:
+                        binding = {"binding_id":f"binding:{root_id}:{sprite_id}:{kind}:{target}:A{action_id}",
+                            "context":context,"source_reference":reference["raw"],"reference_instance_ids":[],
+                            "kind":kind,"target_sprite_id":target,
+                            "physical_source_sprite_id":original_spr.resolve(declarations,target)[0]}
+                        visited[edge_key] = binding
+                        bindings[binding["binding_id"]] = binding
+                    binding["reference_instance_ids"].append(instance_id)
+                    reference_instances.append({"instance_id":instance_id,"binding_id":binding["binding_id"],
+                        "from_sprite_id":sprite_id,"target_sprite_id":target,"kind":kind,
+                        "source_reference":reference["raw"],"source_declaration":declaration,"target_index":target_index,
+                        "source_edge_path":edge_path+[{"from_sprite_id":sprite_id,"target_sprite_id":target,
+                            "kind":kind,"source_reference":reference["raw"]}],
+                        "canonical_instance_id":binding["reference_instance_ids"][0],
+                        "connection_stage":"ordered_literal_instance_shared_source_binding",
+                        "native_reference_multiplicity_verified":False})
+                    if prior is not None:
+                        continue  # Preserve the occurrence, not an invented second image/compositing call.
                     _, target_actions = original_spr.resolve(declarations, target)
                     own = target_actions.get(action_id)
                     edge = {"from_sprite_id": sprite_id, "target_sprite_id": target,
@@ -579,7 +611,8 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
                     if differs:
                         separated = True
                         independent.append({**edge, "source_edge_path": edge_path + [edge],
-                            "source_declaration": origin(sprite_id, kind, reference["raw"]),
+                            "source_declaration": declaration,"source_binding_id":binding["binding_id"],
+                            "reference_instance_ids":binding["reference_instance_ids"],
                             "parent_action_id": action_id, "child_action_id": action_id,
                             "child_action_source": {key: own[key] for key in ("source_file", "source_line", "raw_body", "fps")},
                             "dispatch_policy": "host_parent_role_starts_child_own_source_action_native_dispatch_unverified",
@@ -595,7 +628,9 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
     _, actions = original_spr.resolve(declarations, root_id)
     require(action_id in actions and not actions[action_id]["errors"], f"absent/invalid source action {root_id}/{action_id}")
     attach(root_id, actions[action_id], [])
-    return projected, independent, excluded_edges
+    reference_instances.sort(key=lambda item:(str(item["source_edge_path"][:-1]),item["source_declaration"]["source_file"],
+        item["source_declaration"]["source_directive_index"],item["target_index"]))
+    return projected, independent, excluded_edges, reference_instances, list(bindings.values())
 
 
 def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_key_for,
@@ -605,13 +640,23 @@ def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_
     excluded_dummy = excluded_dummy or {}
     require(source_dummy_alias_path(root_id,declarations,excluded_dummy) is None,
             "source_literal_dummy: explicit source declaration/alias path excluded by user")
-    projected, edges, dummy_edges = project_independent_source_layers(root_id, action_id, declarations, spr_proofs, excluded_dummy)
+    projected, edges, dummy_edges, reference_instances, bindings = project_independent_source_layers(root_id, action_id, declarations, spr_proofs, excluded_dummy)
     role = "source_action:" + str(action_id)
     actor, required, proof = identity.build_actor(root_id, projected, spr_proofs, ((role, action_id),))
     fps = actor["roles"][role]["fps"]
     require(type(fps) is int and fps > 0 or allow_host_timing and fps is None,
             "no positive explicit source FPS; timing cannot be invented")
     actor["roles"][role]["loop"] = None
+    bound_layers = defaultdict(list)
+    for binding in bindings:
+        bound_layers[(binding["kind"],binding["physical_source_sprite_id"])].append(binding)
+    for frames in actor["roles"][role]["directions"]:
+        for frame in frames:
+            for layer in frame["layers"]:
+                matches = bound_layers.get((layer["kind"],layer["source_sprite_id"]),[])
+                if len(matches) == 1:
+                    layer.update(source_binding_id=matches[0]["binding_id"],
+                                 reference_instance_ids=list(matches[0]["reference_instance_ids"]))
     members, records, independent = set(required), {}, []
     for edge in edges:
         child_id = edge["target_sprite_id"]
@@ -626,8 +671,13 @@ def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_
     contract = consumer_contract(allow_host_timing)
     proof["source_reference_projection"] = "synchronized_edges_in_frame_layers;independent_edges_retained_as_explicit_child_records"
     dummy_projection_applied = bool(dummy_edges) or any(item.get("user_dummy_exclusions_applied") for item in records.values())
+    compact = identity.compact_roles(actor, proof)
+    for item,layer in zip(compact[role]["layers"],actor["roles"][role]["directions"][0][0]["layers"]):
+        if "source_binding_id" in layer:
+            item.update(source_binding_id=layer["source_binding_id"],reference_instance_ids=layer["reference_instance_ids"])
     record = {"schema": 1, "source_snapshot": "patch523", "consumer_contract": contract,
-              "actor": actor, "compact_roles": identity.compact_roles(actor, proof), "source_proof": proof,
+              "actor": actor, "compact_roles": compact, "source_proof": proof,
+              "source_reference_instances":reference_instances,"source_reference_instance_policy":REFERENCE_INSTANCE_POLICY,
               "source_layer_declarations": source_layer_declarations(proof, declarations),
               "independent_source_layers": independent,
               "excluded_dummy_source_edges": dummy_edges,
@@ -854,6 +904,8 @@ def main(argv=None):
     parser.add_argument("--map-placement-exclusion-sprite", type=int, action="append", default=[])
     parser.add_argument("--normal-visual-context", type=Path, action="append", default=[])
     parser.add_argument("--resume-bank", type=Path)
+    parser.add_argument("--reconnect-source-contract", action="append", default=[],
+                        help="Construct only matching caught source contracts plus closures completed by newly received inputs.")
     parser.add_argument("--source-receipt", type=Path,
                         help="Previously completed whole-SPR receipt retained as provenance; not rechecked in receipt mode.")
     args = parser.parse_args(argv)

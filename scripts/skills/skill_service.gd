@@ -776,8 +776,16 @@ func import_state(data: Dictionary) -> void:
 	local_runtime.restore(data.get("local_design",{}))
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
-	if not _is_verified_source_skill(skill): return
-	world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest)
+	if _is_verified_source_skill(skill):
+		world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest)
+		return
+	# Reuse the already admitted skill's pinned current-source profile. This
+	# changes only its existing cast/impact presentation call, not skill identity,
+	# admission, costs, proc timing, damage, progression or saved state.
+	var profile: Dictionary = catalog.source523.profiles.get(str(skill.get("id","")),{})
+	var row: Variant = profile.get("row")
+	if not row is Dictionary or catalog.source523.active_sha256.is_empty(): return
+	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:
 	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"

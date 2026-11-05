@@ -114,7 +114,7 @@ def connect(args):
             identities[member] = row
     declarations = bank.original_spr.read([args.spr_root / name for name in sources])
     dummy = bank.source_dummy_declarations([args.spr_root / name for name in sources], sources)
-    contexts = {row["source_owner_key"]:row for row in bank.records(args.metadata / "current523_sp2_actor_dependency_context.jsonl.gz")}
+    actor_contexts = {row["source_owner_key"]:row for row in bank.records(args.metadata / "current523_sp2_actor_dependency_context.jsonl.gz")}
     followup_scope = ({row["member"]:row for row in bank.records(args.followup_scope)}
                       if args.followup_scope else dict(followup))
     # The supplied SPR declarations define this bank's source namespace, even
@@ -140,7 +140,7 @@ def connect(args):
         return False
 
     def file_dummy_path(member):
-        owner = contexts.get(inventory.get(member,{}).get("source_owner_context_key"),{}).get("source_declaration_sprite_id")
+        owner = actor_contexts.get(inventory.get(member,{}).get("source_owner_context_key"),{}).get("source_declaration_sprite_id")
         return dummy_path(owner) if isinstance(owner,int) else None
     action_keys = {}
     for row in bank.records(args.metadata / bank.ACTIONS):
@@ -159,6 +159,13 @@ def connect(args):
                      "Resume bank timing contract differs; select its explicit host-timing mode or a matching strict bank.")
         registry = previous["actors"]
         raw = previous["members"]
+        for actor_key,info in previous.get("preserved_actor_records",{}).items():
+            kept = {}
+            for action_id,entry in info["records"].items():
+                path = "preserved_records/history/"+entry["path"]
+                link_or_copy(resume_root / entry["path"],output / path)
+                kept[action_id] = {**entry,"path":path,"previous_record_path":entry["path"]}
+            preserved_records[actor_key] = {**info,"records":kept}
         for entry in raw.values(): link_or_copy(resume_root / entry["path"], output / entry["path"])
         for entries in registry.values():
             for entry in entries.values(): link_or_copy(resume_root / entry["path"], output / entry["path"])
@@ -268,9 +275,16 @@ def connect(args):
                 old_members = request.get("actual_emitted_members") or request.get("required_members")
                 is_independent = "independent layer timing unsupported" in reason
                 missing = sorted(set(old_members or ()) - receipts.keys())
+                filters = getattr(args,"reconnect_source_contract",[]) or []
+                newly_available_closure = bool(request.get("missing_original_members")) and not (
+                    set(request["missing_original_members"])-receipts.keys())
+                newly_supplied_identity = bool(request.get("missing_current523_identities")) and not (
+                    set(request["missing_current523_identities"])-identities.keys())
+                matching_contract = not filters or any(text in reason or text in str(request.get("previous_source_blocker","")) for text in filters)
                 eligible = pair in projection_required or graph_has_dummy(pair[0]) or is_independent or "dependency identity unavailable" in reason or request.get("status") in (
                     "blocked_original_sp2_not_received", "planned_requires_original_source_and_sp2_validation", "blocked_saved_direction_or_frame",
-                    "blocked_requested_member_not_emitted_by_source_graph") or reason == "no positive explicit source FPS; timing cannot be invented" or "requested target is not emitted" in reason
+                    "blocked_requested_member_not_emitted_by_source_graph") or reason == "no positive explicit source FPS; timing cannot be invented" or "requested target is not emitted" in reason or matching_contract and bool(filters) or newly_supplied_identity
+                eligible = eligible and (matching_contract or newly_available_closure or newly_supplied_identity or pair in projection_required)
                 if eligible and not (missing and not is_independent):
                     counts["source_graph_construction_attempts"] += 1
                     if result.get("reason"): result["previous_source_blocker"] = result.pop("reason")
@@ -324,6 +338,8 @@ def connect(args):
         gate = row.get("followup_consumer_gate", {})
         metadata = gate.get("metadata", {})
         actor_id = metadata.get("sprite_id")
+        if actor_id is None and row.get("source_request",{}).get("consumer_gates"):
+            actor_id = actor_contexts.get(inventory.get(member,{}).get("source_owner_context_key"),{}).get("source_declaration_sprite_id")
         if isinstance(actor_id,int): followup_roots[actor_id].add(member)
     for path in args.normal_visual_context or []:
         for row in bank.records(path):
@@ -394,13 +410,16 @@ def connect(args):
     def file_rows():
         for previous in bank.records(plan / "file-outcomes.jsonl.gz"):
             member,links = previous["member"],{}
+            retained_paths = {bank.json_bytes(item):item for item in previous.get("dummy_excluded_connection_paths",[])}
+            retained_paths.update({bank.json_bytes(item):item for item in dummy_touched.get(member,[])})
+            member_dummy_paths = list(retained_paths.values())
             for old in previous["requests"]:
                 pair = old["actor_id"],old["action_id"]
                 links[pair] = {**old,**outcomes.get(pair,{})}
             for pair,new in emitted.get(member,{}).items(): links[pair] = {**links.get(pair,{}),**new}
             ready = bool(emitted.get(member))
             exclusion = file_dummy_path(member)
-            touched = bool(dummy_touched.get(member)) or exclusion is not None
+            touched = bool(member_dummy_paths) or exclusion is not None
             if previous.get("compiled"):
                 counts["previous_priority_compiled_files"] += 1
                 counts["previous_priority_compiled_original_bytes"] += inventory[member]["bytes"]
@@ -424,7 +443,7 @@ def connect(args):
                 "source_context_from_saved_plan":str(plan),
                 "packed_output":{"present":member in raw,"path":raw.get(member,{}).get("path"),"additional_validation_performed":False},
                 "registry":{"emitted":ready,"connection_count":len(emitted.get(member,{}))},"consumer_event_selection":None,
-                "source_dummy_exclusion":exclusion,"dummy_excluded_connection_paths":dummy_touched.get(member,[]),
+                "source_dummy_exclusion":exclusion,"dummy_excluded_connection_paths":member_dummy_paths,
                 "eligible_connection_excluded":touched and not ready,"shared_normal_path_preserved":touched and ready,
                 "raw_bank_identity":raw.get(member),"additional_validation_performed":False,"installed_this_run":False,"played_this_run":False,
                 "actual_main_game_feature_use":False,"actual_observed_original_bytes":None,"whole_file_use":False,"active_installation":None,"playback_evidence":None}
@@ -444,10 +463,27 @@ def connect(args):
     writer.records("excluded-source-dummy-declarations.jsonl.gz",({"source_actor_id":sprite_id,"dummy_declarations":rows}
                    for sprite_id,rows in sorted(dummy.items())))
     writer.records("dummy-excluded-action-outcomes.jsonl.gz",dummy_actions)
+    domains, domain_proofs = {}, []
+    for actor_key in registry:
+        sprite_id = int(actor_key.removeprefix("sprite:"))
+        body_id,source_actions = bank.original_spr.resolve(declarations,sprite_id)
+        domains[actor_key] = {"source_snapshot":"patch523","source_actor_id":sprite_id,
+            "resolved_body_sprite_id":body_id,"action_ids":sorted(source_actions),
+            "action_domain_basis":"all_effective_original_SPR_actions_not_only_compiled_entries","source_proof_key":actor_key}
+        domain_proofs.append({"source_proof_key":actor_key,"source_actor_id":sprite_id,
+            "declaration_path":bank.identity.declaration_path(declarations,sprite_id,sources),
+            "source_actions":[{"action_id":action_id,"source_action_key":key_for(sprite_id,action_id),
+                "source_file":action["source_file"],"source_line":action["source_line"],
+                "source_sha256":sources[action["source_file"]]["sha256"],"literal_fps":action["fps"],
+                "literal_source_errors":action["errors"]} for action_id,action in sorted(source_actions.items())]})
+    writer.records("source-action-domain-proofs.jsonl.gz",domain_proofs)
     manifest = {"schema":1,"kind":"current523_reference_sp2_action_bank","source_snapshot":"patch523",
         "consumer_contract":contract,"actors":registry,"members":active_raw,"normal_visual_overlay_bindings":overlay_bindings,
         "source_dummy_exclusion_policy":bank.DUMMY_EXCLUSION_POLICY,"excluded_source_actors":excluded_registry,
         "source_dummy_exclusion_scope":"source_actor_paths_in_this_pinned_reference_bank",
+        "source_action_domains":domains,"source_action_domain_proofs":{"path":"source-action-domain-proofs.jsonl.gz",
+            "source_proof_key_field":"source_proof_key","sha256":writer.receipts["source-action-domain-proofs.jsonl.gz"]["sha256_at_write"]},
+        "source_reference_instance_policy":bank.REFERENCE_INSTANCE_POLICY,
         "preserved_actor_records":preserved_records,"preserved_raw_members":preserved_raw,
         "map_placement_exclusions":{"sprite_ids":sorted(set(args.map_placement_exclusion_sprite)),
             "scope":"map_placement_only","placement_owner":"map_lane","originals_preserved":True},
