@@ -48,6 +48,7 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 		text_options.vAlignment=1
 		label.configure(font,text_options,extent)
 		label.modulate=label.source_color(options.textColor)
+		label.set_meta("source_title_base_color",label.modulate)
 		add_child(label)
 	return set_source_state("normal" if bool(options.displaystate) else "disabled")
 func set_source_state(state: String) -> Dictionary:
@@ -94,3 +95,8 @@ func _notification(what: int) -> void:
 	if what==NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree() and _armed:
 		_armed=false
 		set_source_state("normal")
+
+func set_source_display(color: Color) -> void:
+	preload("res://scripts/ui/original_ui/source_material.gd").bind_tree_display(self,color)
+	for child: Node in get_children():
+		if child.has_meta("source_title_base_color"):child.modulate=color*child.get_meta("source_title_base_color")

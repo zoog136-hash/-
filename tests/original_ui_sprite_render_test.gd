@@ -17,7 +17,11 @@ func run() -> void:
 	if not args.has("pack") or not args.has("capture"):
 		push_error("Explicit original sprite-scene pack and private capture directory required");quit(2);return
 	var pack=PACK.new()
-	var receipt: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(str(args.pack).path_join("receipt.json")))
+	var receipt_path: String=str(args.pack).path_join("receipt.json")
+	if not FileAccess.file_exists(receipt_path):push_error("Explicit pack receipt missing");quit(2);return
+	var receipt_value: Variant=JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+	if not receipt_value is Dictionary:quit(2);return
+	var receipt: Dictionary=receipt_value
 	var opened: Dictionary=pack.open(args.pack,receipt.manifest_sha256)
 	check(opened.get("ok",false),"source pack did not open")
 	if not opened.get("ok",false): print(opened);quit(1);return

@@ -1,4 +1,5 @@
 extends Node2D
+const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
@@ -61,7 +62,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 			var expected: String={"Position":"PointFrame","AnchorPoint":"ScaleFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
 			if not expected.is_empty():
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
-				if expected=="BlendFrame" and _blend(value) not in ["770:1","770:771","1:771"]: problems.append("unsupported_blend_track")
+				if expected=="BlendFrame" and _blend(value) not in BLEND.PAIRS: problems.append("unsupported_blend_track")
 				var easing: Dictionary=value.get("easingData",{}) if value.get("easingData") is Dictionary else {}
 				if not EASING.accepts(easing): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
@@ -92,6 +93,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		if timeline.property in ["BlendFunc","FileData"] and not _tags[int(timeline.actionTag)].has_meta("source_sprite"):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
+	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
@@ -143,7 +145,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
-	if node.classname=="Sprite" and _blend(options) not in ["770:1","770:771","1:771"]: problems.append("unsupported_blend")
+	if node.classname=="Sprite" and _blend(options) not in BLEND.PAIRS: problems.append("unsupported_blend")
 	for child: Dictionary in node.get("children",[]): _validate(child,problems)
 
 func _build(source: Dictionary) -> Node2D:
@@ -195,7 +197,8 @@ func _build(source: Dictionary) -> Node2D:
 	node.visible=bool(widget.visible)
 	node.z_index=int(widget.zOrder)
 	var color: Array=widget.color
-	node.modulate=Color(float(color[1])/255.0,float(color[2])/255.0,float(color[3])/255.0,float(widget.alpha)/255.0)
+	node.modulate=Color.WHITE
+	node.set_meta("source_rgba",[int(color[1]),int(color[2]),int(color[3]),int(widget.alpha)])
 	node.set_meta("original_ui_source",{"scene":source_member,"node_offset":int(source._offset),"manifest_sha256":source_pack.manifest_sha256})
 	source_nodes[int(source._offset)]=node
 	var tag: int=int(widget.actionTag)
@@ -239,6 +242,7 @@ func _build(source: Dictionary) -> Node2D:
 				_build_error="original_font_glyph_missing:"+str(widget.name); node.free(); return null
 		var label=preload("res://scripts/ui/original_ui/source_text.gd").new()
 		label.name="OriginalText"
+		node.set_meta("source_text",label)
 		label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
 		origin.add_child(label)
 	if source.classname=="ImageView":
@@ -279,10 +283,13 @@ func _build(source: Dictionary) -> Node2D:
 		sprite.position.y=-texture.get_height()
 		sprite.flip_h=bool(widget.flipX)
 		sprite.flip_v=bool(widget.flipY)
-		sprite.material=MATERIAL.for_blend(texture,_blend(options))
+		sprite.material=BLEND.material(texture,_blend(options))
 		if sprite.material==null:
 			_build_error="original_material_unavailable";sprite.free();node.free();return null
 		node.set_meta("source_blend",_blend(options))
+		var destination:=BackBufferCopy.new()
+		destination.copy_mode=BackBufferCopy.COPY_MODE_VIEWPORT
+		origin.add_child(destination)
 		origin.add_child(sprite)
 		node.set_meta("source_sprite",sprite)
 		node.set_meta("source_anchor",widget.anchorPoint)
@@ -371,12 +378,14 @@ func _seek_frame(frame_number: float) -> void:
 			var a: Array=selected.color
 			var b: Array=following.color
 			# Cocos ColorFrame affects RGB; the separate Alpha track owns opacity.
-			target.modulate=Color(float(int(lerpf(a[1],b[1],ratio)))/255.0,float(int(lerpf(a[2],b[2],ratio)))/255.0,float(int(lerpf(a[3],b[3],ratio)))/255.0,target.modulate.a)
+			var rgba: Array=target.get_meta("source_rgba")
+			target.set_meta("source_rgba",[int(lerpf(a[1],b[1],ratio)),int(lerpf(a[2],b[2],ratio)),int(lerpf(a[3],b[3],ratio)),rgba[3]])
 		elif timeline.property=="BlendFunc":
 			if target.has_meta("source_sprite"):
 				var sprite: Sprite2D=target.get_meta("source_sprite")
-				sprite.material=MATERIAL.for_blend(sprite.texture,_blend(selected))
-				target.set_meta("source_blend",_blend(selected))
+				if str(target.get_meta("source_blend"))!=_blend(selected):
+					sprite.material=BLEND.material(sprite.texture,_blend(selected))
+					target.set_meta("source_blend",_blend(selected))
 		elif timeline.property=="AnchorPoint":
 			# CCFrame::AnchorPointFrame::onEnter is discrete, without tweening.
 			var anchor: Array=selected.scale
@@ -387,7 +396,9 @@ func _seek_frame(frame_number: float) -> void:
 			target.set_meta("source_anchor",anchor.duplicate())
 			target.get_node("SourceContentOrigin").position=Vector2(-float(anchor[0])*float(extent[0]),float(anchor[1])*float(extent[1]))
 		elif timeline.property=="Alpha":
-			target.modulate.a=float(int(lerpf(float(selected.value),float(following.value),ratio)))/255.0
+			var rgba: Array=target.get_meta("source_rgba")
+			rgba[3]=int(lerpf(float(selected.value),float(following.value),ratio))
+			target.set_meta("source_rgba",rgba)
 		elif timeline.property in ["Scale","RotationSkew"]:
 			var a: Array=selected.scale
 			var b: Array=following.scale
@@ -402,12 +413,15 @@ func _seek_frame(frame_number: float) -> void:
 			var sprite: Sprite2D=target.get_meta("source_sprite")
 			var texture: Texture2D=source_pack.texture(selected.textureFile,true)
 			if texture==null: _playing=false; return
-			sprite.texture=texture
-			sprite.material=MATERIAL.for_blend(texture,str(target.get_meta("source_blend")))
+			if sprite.texture!=texture:
+				sprite.texture=texture
+				sprite.material=BLEND.material(texture,str(target.get_meta("source_blend")))
 			sprite.position.y=-texture.get_height()
 			var anchor: Array=target.get_meta("source_anchor")
 			var origin: Node2D=target.get_meta("source_origin")
 			origin.position=Vector2(-float(anchor[0])*texture.get_width(),float(anchor[1])*texture.get_height())
+
+	_sync_source_display(self,_source_parent_display())
 
 func _process(delta: float) -> void:
 	if not _playing or _clip.is_empty(): return
@@ -463,3 +477,23 @@ func _inner_range(nested: Node2D, frame: Dictionary) -> Dictionary:
 	if difference<0:span.endIndex+=difference
 	if int(span.endIndex)<int(span.startIndex):return {}
 	return span
+
+func _source_parent_display() -> Color:
+	var ancestor: Node=get_parent()
+	while ancestor!=null:
+		if ancestor.has_meta("source_display_color"):return ancestor.get_meta("source_display_color")
+		ancestor=ancestor.get_parent()
+	return Color.WHITE
+func _sync_source_display(node: Node, inherited: Color) -> void:
+	var display: Color=inherited
+	if node.has_meta("source_rgba"):
+		var rgba: Array=node.get_meta("source_rgba")
+		# NodeReader enables both cascades. CCNode truncates each 8-bit level.
+		display=Color(float(int(rgba[0]*inherited.r8/255.0))/255.0,float(int(rgba[1]*inherited.g8/255.0))/255.0,float(int(rgba[2]*inherited.b8/255.0))/255.0,float(int(rgba[3]*inherited.a8/255.0))/255.0)
+		node.set_meta("source_display_color",display)
+		if node.has_meta("source_sprite"):MATERIAL.bind_display(node.get_meta("source_sprite"),display)
+		if node.has_meta("source_image"):MATERIAL.bind_tree_display(node.get_meta("source_image"),display)
+		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
+		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
+		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
+	for child: Node in node.get_children():_sync_source_display(child,display)

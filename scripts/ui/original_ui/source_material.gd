@@ -11,10 +11,13 @@ static func for_blend(texture: Texture2D, blend: String, grayscale: bool=false) 
 	shader.code="""shader_type canvas_item;
 render_mode unshaded, %s;
 uniform bool source_pma;
+uniform bool source_display_bound = false;
+uniform vec4 source_display_color = vec4(1.0);
 uniform bool source_gray;
 varying vec4 original_modulation;
 void vertex() {
     original_modulation = COLOR;
+    if (source_display_bound) original_modulation *= source_display_color;
     if (source_pma) {
         original_modulation.rgb = floor(original_modulation.rgb * original_modulation.a * 255.0 + 0.00001) / 255.0;
     }
@@ -42,3 +45,16 @@ void fragment() {
 	return material
 static func original_default(texture: Texture2D, grayscale: bool=false) -> ShaderMaterial:
 	return for_blend(texture,"1:771" if bool(texture.get_meta("cocos_premultiplied",false)) else "770:771",grayscale)
+
+static func bind_display(item: CanvasItem, color: Color) -> void:
+	if not item.material is ShaderMaterial:return
+	var current: ShaderMaterial=item.material
+	if not bool(current.get_meta("source_private_display",false)):
+		current=current.duplicate()
+		current.set_meta("source_private_display",true)
+		item.material=current
+	current.set_shader_parameter("source_display_bound",true)
+	current.set_shader_parameter("source_display_color",color)
+static func bind_tree_display(node: Node, color: Color) -> void:
+	if node is CanvasItem:bind_display(node,color)
+	for child: Node in node.get_children():bind_tree_display(child,color)

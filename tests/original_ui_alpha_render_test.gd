@@ -71,7 +71,8 @@ func run() -> void:
 				if blend!="1:771":expected*=source.a*opacity
 				if absf(actual[channel]-expected)>2.0/255.0:errors.append("source alpha composite differs: "+blend+":"+str(alpha_byte))
 	sprite.material=MATERIAL.for_blend(pixel_texture,"1:771",true)
-	sprite.modulate=Color(0.2,0.7,0.4,0.4)
+	sprite.modulate=Color.WHITE
+	MATERIAL.bind_display(sprite,Color(0.2,0.7,0.4,0.0))
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var gray: Color=viewport.get_texture().get_image().get_pixel(0,0)

@@ -340,9 +340,9 @@ Cocos `UIButton::onPressStateChangedToDisabled` uses its normal texture with
 `ccShader_UI_Gray.frag` when the disabled path is empty. The renderer now follows
 that explicit source behavior rather than requiring a nonexistent image. Its
 luminance coefficients and intentional omission of vertex color passed three
-additional original-pixel GL checks (33 total). Godot's complete-zero inherited
-alpha culling remains a known difference for this gray shader; the verified menu
-components have nonzero source alpha. No broad pixel-parity claim is made.
+additional original-pixel GL checks (33 total). The initial complete-zero inherited-alpha culling difference is resolved by
+the source-display binding described below. No broad device pixel-parity claim
+is made.
 Source custom properties containing only string `soundid`/`touchsoundid` are
 preserved as metadata but not played because sound is excluded from the current
 scope. Other custom behavior remains rejected.
@@ -398,3 +398,23 @@ candidates exposed deeper unsupported source elements and remained rejected.
 Loop/no-loop child action execution still needs representative full-source
 render validation; this change does not mark those screens complete. The
 tracked inspection render count is now 154.
+
+
+### Original framebuffer blend and cascaded source display
+
+The renderer now evaluates all 15 observed GL blend-factor pairs against the
+actual copied destination framebuffer, including destination alpha/color. Each
+source Sprite retains draw order and its original texture. Source NodeReader's
+color/opacity cascades are computed with 8-bit truncation at each level and
+bound to the visual shader, avoiding Godot's early culling at zero/tiny alpha.
+This also resolves the earlier disabled-button gray shader's zero-alpha case.
+
+720 GPU/CPU RGBA comparisons passed across all 15 pairs, three destination
+alpha values, and source opacity 255/128/1/0. The gray/alpha test passed 33,
+original icon playback/clipping 82, and original menu input 22 checks. Of 74
+previously blend-blocked candidates, 34 rendered and 40 remained rejected for
+other original features. All 34 were rendered again after the source-display
+correction with no script/shader/runtime errors. The union of tracked inspection
+entries is now 188; these counts still do not represent completed service UIs.
+
+Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/WidgetReader/NodeReader/NodeReader.cpp
