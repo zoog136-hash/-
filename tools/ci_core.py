@@ -59,6 +59,7 @@ CHECKS = [
     ('expedition523_main_ui_test', []),
     ('patch523_equipment_test', []),
     ('patch523_equipment_main_test', []),
+    ('source_spawn_admission_cache_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -349,7 +350,8 @@ def main():
                       'expedition523_estimate_model_test':'EXPEDITION523_ESTIMATE_MODEL_RESULT',
                       'expedition523_main_ui_test':'EXPEDITION523_MAIN_UI_RESULT',
                       'patch523_equipment_test':'PATCH523_EQUIPMENT_RESULT',
-                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT'}[name]
+                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT',
+                      'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT'}[name]
 
 
 
