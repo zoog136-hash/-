@@ -355,3 +355,12 @@ an explicit adjustable1.0 estimate. Missing dialogue/mobile NPC and dungeon
 PartyDungeonTypeID/CompetitionDungeon identity/role bridges remain unavailable;
 no integer/name substitution or replacement UI/image work. Latest code is
 unexecuted/unverified with no new tests/game/parse/render/CI or observed count.
+
+
+Special entrance input is already present on the actually selected existing
+world.source_dungeon_entries("special",false)[selected_index].row.EntranceAssetID.
+This direct entrance role does not require a Party/Competition FK. Original UI
+target binding remains267's boundary; HelpBoxAssetID is not substituted. The
+missing Party/Competition relations remain specific, not a blanket claim that
+all dungeon entrance inputs are missing. No new display/activation/save code or
+image follow-up lane is created by this clarification.

@@ -783,3 +783,20 @@ external input/role boundaries do not stop the actual item consumers above.
 
 All these later edits remain unexecuted/unverified. No new test, parse, game,
 render, source-byte audit, CI, pack generation/upload or measured-use count.
+
+
+### Existing special entrance input clarification
+
+The absent Party/Competition bridge above is specific to those two source
+relations. It does not mean every dungeon entrance image lacks a current
+selection. Data27177b7e4ec identifies the already exposed actual special entry:
+world.source_dungeon_entries("special",false)[selected_index].row.EntranceAssetID.
+That exact existing selected row supplies the direct entrance asset role; it
+needs no invented PartyDungeon/CompetitionDungeon foreign key. HelpBoxAssetID
+remains another role. UI267 still supplies the authoritative original entrance
+target, and the already published/merged270 resolver supplies that actual asset.
+No duplicate wrapper/reader, new UI/image lane, first-entry selection, special
+entry activation or ownership/save change is added merely to forward this
+already exposed field. Existing tower/orim/recharger IDs do not become mobile
+Party/Competition identities. These display/input boundaries remain distinct
+from the existing dungeon execution and saved entitlement owner.
