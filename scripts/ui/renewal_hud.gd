@@ -1,10 +1,12 @@
 extends "res://scripts/hud_v20.gd"
 
 # Debug-build tools. Requests are also checked by the authoritative world.
+signal weapon_mastery_requested
 signal card_pack_draw_requested(category: String)
 signal card_fusion_requested(category: String, grade: String, count: int)
 signal blessing_target_requested(scroll_name: String, target_reference: String)
 signal secondary_doll_requested(identity: String)
+signal secondary_relic_requested(identity: String)
 signal option_awakening_open_requested(category: String, target_id: String)
 signal option_awakening_feed_requested(category: String, target_id: String, materials: Dictionary)
 signal option_awakening_attempt_requested(category: String, target_id: String)
@@ -20,6 +22,8 @@ signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantit
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
+signal totem_conversion_requested(recipe_id: int)
+signal totem_action_requested(action: String, totem_id: int, material_id: int, revision: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
 signal quest_complete_requested(quest_id: String)
@@ -57,6 +61,8 @@ var option_awakening_state: Dictionary = {}
 var option_awakening_snapshot: Dictionary = {}
 var option_awakening_view: Control
 var option_awakening_button: Button
+var halphas_star_enchant_button: Button
+const HalphasStarEnchant = preload("res://scripts/cards/native_halphas_star_enchant.gd")
 var option_awakening_catalog_status: Label
 var option_awakening_catalog_border: Control
 var option_awakening_reveal: Control
@@ -74,11 +80,16 @@ const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const AutoHuntingDestinationsUI = preload("res://scripts/ui/auto_hunting_destinations.gd")
+const Fishing523UI = preload("res://scripts/fishing/fishing_view.gd")
 const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
+const Patch523EquipmentInfo = preload("res://scripts/ui/patch523_equipment_info.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
+const Growth96UI = preload("res://scripts/progression/growth96_view.gd")
+var growth96_view: Control
 var equipment_collection_button: Button
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const EnhancementReveal = preload("res://scripts/ui/enhancement_reveal.gd")
@@ -94,6 +105,7 @@ var menu_scroll_view: ScrollContainer
 var menu_category_filter: OptionButton
 var menu_tiles: Array[Control] = []
 var active_section: String = ""
+var totem_view: Control
 var buff_row: HBoxContainer
 var exp_readout: Label
 var currency_readout: Label
@@ -309,10 +321,16 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
+	if is_instance_valid(lineage_inventory_ui): lineage_inventory_ui.set_character_state(value)
+	if is_instance_valid(lineage_side_ui):
+		if lineage_side_ui.character_panel.is_visible_in_tree(): lineage_side_ui.set_character_state(value)
+		else: lineage_side_ui.character_state = value
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
+	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 
 func blocks_keyboard_input() -> bool:
+	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return true
 	if is_enhancement_presenting() or is_option_awakening_busy(): return true
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view): return true
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -749,6 +767,7 @@ func append_log(value: String) -> void:
 		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -853,6 +872,8 @@ func _go_back() -> void:
 		return
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():
 		return
+	if active_section == "growth96" and is_instance_valid(growth96_view) and growth96_view.cancel_review():
+		return
 	var restore_card_details: bool = active_section == "option_awakening" and option_awakening_source_detail
 	if active_section == "inventory" and lineage_inventory_ui.detail_active:
 		lineage_inventory_ui.detail_active = false
@@ -912,21 +933,37 @@ func _navigate(section: String) -> void:
 		"option_awakening":
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
+		"weapon_mastery": weapon_mastery_requested.emit()
+		"protection523": open_protection523()
 		"equipment_collections": open_equipment_collections()
+		"growth96": open_growth96()
+		"combinations": open_combinations()
+		"totems": open_totems()
 		"card_collections": open_normal_card_collections(normal_card_collection_category,normal_card_collection_focus)
+		"monsterbook523": open_monsterbook523()
 		"emblems", "guardians": open_growth(section)
+		"half_elixir": open_half_elixir()
+		"titles": open_titles523()
+		"expedition": open_expedition()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
 		"skills": open_skills()
+		"spell_groups":
+			_open_window("spell_groups","스킬 계열 전환", "")
+			var view=load("res://scripts/ui/spell_group_conversion_view.gd").new()
+			view.configure(get_parent());workspace.mount(view)
+		"tj_coupons": open_tj_coupons()
 		"quests": open_quests()
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
 		"unconfirmed523": open_unconfirmed523()
+		"fishing523": open_fishing523()
 		"map": toggle_map()
 		"menu": toggle_menu()
+		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
 		"log": open_combat_log()
@@ -946,6 +983,10 @@ func confirm_action(title: String, body: String, action: String, callback: Calla
 	return dialog
 
 func _on_lineage_side_action(action_id: String) -> void:
+	if action_id == "tj_coupons":
+		if is_instance_valid(lineage_side_ui):lineage_side_ui.hide_all()
+		open_tj_coupons()
+		return
 	if action_id == "quests":
 		if is_instance_valid(lineage_side_ui):
 			lineage_side_ui.hide_all()
@@ -954,8 +995,14 @@ func _on_lineage_side_action(action_id: String) -> void:
 	super._on_lineage_side_action(action_id)
 
 
+func open_tj_coupons() -> void:
+	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	var view = preload("res://scripts/tj/view.gd").new()
+	workspace.mount(view)
+	view.configure(get_parent())
+
 func open_quests() -> void:
-	_open_window("quests", "퀘스트", "메인 · 일일 · 업적 · 즉시 완료")
+	_open_window("quests", "퀘스트 · 자동 완료", "메인 · 일반 · 업적 · 기타")
 	var view := QuestUI.new()
 	workspace.mount(view)
 	view.configure(get_parent())
@@ -1020,8 +1067,15 @@ func open_npc_teleport() -> void:
 	screen.configure(self)
 
 func open_crafting() -> void:
-	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
+	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
+	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
 	var screen := CraftUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_patch523_equipment_info() -> void:
+	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
+	var screen := Patch523EquipmentInfo.new()
 	workspace.mount(screen)
 	screen.configure(self)
 
@@ -1122,6 +1176,9 @@ func open_macro_info() -> void:
 	toggle.name = "AutoSettingToggle"
 	col.add_child(toggle)
 	workspace.register_scroll_drag(scroll,toggle)
+	var destinations := AutoHuntingDestinationsUI.new()
+	col.add_child(destinations)
+	destinations.configure(get_parent())
 	for pair: Array in [["목표 탐색","주변 몬스터 탐색 및 이동"],["전투","현재 장비와 스킬 · 등록된 자동 사용"],["습득","바닥 드랍을 통한 자동 아이템 습득"]]:
 		col.add_child(HSeparator.new())
 		col.add_child(UI.section(str(pair[0]),14))
@@ -1189,7 +1246,7 @@ func toggle_menu() -> void:
 		_close_workspace()
 		return
 	_open_window("menu","전체 메뉴","")
-	# Build the 20 menu tiles once and re-mount them; _park_shared_panels moves the
+	# Build the menu tiles once and re-mount them; _park_shared_panels moves the
 	# page out of the workspace before it is cleared, so it is never freed.
 	if not is_instance_valid(menu_page): _build_menu_page()
 	workspace.mount(menu_page)
@@ -1233,22 +1290,22 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["emblems","문양"],["guardians","수호성"],["map","월드맵"],["quests","퀘스트"],["source_dungeons","던전"],["unconfirmed523","출석·패스·생활"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["unconfirmed523","출석·패스·생활"],["fishing523","낚시·교환"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
-		if section_id in ["emblems","guardians"]:
+		if section_id in ["emblems","guardians","growth96","combinations","titles","totems","monsterbook523"]:
 			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians"] else ("사냥·모험" if section_id in ["inventory","skills","map","quests","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","growth96","combinations","half_elixir","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("map" if section_id == "source_dungeons" else ("quest" if section_id == "quests" else ("inventory" if section_id == "equipment_collections" else section_id)))
+		artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id in ["quests","monsterbook523"] else ("inventory" if section_id in ["equipment_collections","totems"] else section_id)))))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(26,8)
@@ -1260,6 +1317,11 @@ func _build_menu_page() -> void:
 		caption.offset_left=2;caption.offset_right=-2
 		caption.offset_top=58;caption.offset_bottom=78
 		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		if section_id == "growth96":
+			caption.add_theme_font_size_override("font_size",11)
+			caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			caption.offset_top=50;caption.offset_bottom=86
 		button.add_child(caption)
 		grid.add_child(button)
 		tiles.append(button)
@@ -1535,6 +1597,10 @@ func _build_catalog_panel() -> void:
 	option_awakening_button.custom_minimum_size.y = 48
 	option_awakening_button.pressed.connect(_request_option_awakening_open)
 	right.add_child(option_awakening_button)
+	halphas_star_enchant_button = UI.button("성급 강화", _request_halphas_star_enchant, Vector2(0, 48))
+	halphas_star_enchant_button.name = "OpenHalphasStarEnchant"
+	halphas_star_enchant_button.hide()
+	right.add_child(halphas_star_enchant_button)
 	# Card ownership is a new sidecar state; existing catalog/equip behavior is
 	# preserved to avoid invalidating old playtest saves. No paid/free packs
 	# exist yet: only debug builds can generate 11-card top-tier samples.
@@ -1729,6 +1795,8 @@ func _refresh_option_awakening_markers() -> void:
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
 
 func _refresh_option_awakening_entry() -> void:
+	if is_instance_valid(halphas_star_enchant_button):
+		halphas_star_enchant_button.visible = HalphasStarEnchant.is_target(catalog_category, selected_catalog_record)
 	if not is_instance_valid(option_awakening_button):
 		return
 	var category_valid: bool = CARD_RULES.CATEGORIES.has(catalog_category)
@@ -2068,6 +2136,7 @@ func _filter_catalog_results(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
+		if catalog_category=="아이템" and record.get("source_preserved_legacy_catalog",false): continue
 		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
 		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
@@ -2202,6 +2271,9 @@ func _on_catalog_item_selected(index: int) -> void:
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
 		catalog_detail.text+="\n보유 수량: %d" % owned
+		var native_details: String = preload("res://scripts/loot/patch523_monster_drops.gd").item_details(selected_catalog_record)
+		if not native_details.is_empty(): catalog_detail.text += "\n\n" + UI.safe(native_details)
+		catalog_detail.text += "\n\n" + UI.safe(preload("res://scripts/loot/patch523_monster_drops.gd").source_text(selected_catalog_record))
 		match str(selected_catalog_record.get("grade_evidence","")):
 			"inven_item_quality":
 				catalog_detail.text+="\n등급 판정: 원본 아이템 DB 등급 확인"
@@ -2256,8 +2328,10 @@ func _equip_selected_catalog() -> void:
 		confirm_action({"변신":"변신 확인","마법인형":"소환 확인","성물":"성물 적용"}.get(category,"적용 확인"),str(record.get("name",""))+"을(를) 적용하시겠습니까?","적용",func(_count: int) -> void:
 			catalog_equip_requested.emit(category,record)
 			if catalog_category == category and selected_catalog_record == record:
-				catalog_equip_button.text="현재 적용 중"
-				catalog_equip_button.disabled=true)
+				if SourceCardPresentation.native(record):SourceCardPresentation.apply(self)
+				else:
+					catalog_equip_button.text="현재 적용 중"
+					catalog_equip_button.disabled=true)
 
 func toggle_map() -> void:
 	if active_section=="map" and workspace.visible:
@@ -2266,6 +2340,8 @@ func toggle_map() -> void:
 	_open_window("map","월드맵","지역을 선택하면 기존 이동 기능으로 해당 지역에 진입합니다.")
 	var col: VBoxContainer=workspace.column()
 	col.add_child(UI.label("WORLD OF ADEN",20,UI.GOLD))
+	col.add_child(UI.button("포탈·출현 정보", func() -> void: preload("res://scripts/ui/patch523_world_panel.gd").open(self), Vector2(180,36)))
+	col.get_child(col.get_child_count()-1).name = "OpenWorldLinks"
 	var row := HBoxContainer.new()
 	row.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	col.add_child(row)
@@ -2373,6 +2449,7 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
+	enhancement_forge=forge
 
 var enhancement_forge: Control
 
@@ -2456,6 +2533,19 @@ func open_growth(section: String) -> void:
 	workspace.mount(screen)
 	screen.configure(self,section)
 
+func open_growth96() -> void:
+	_open_window("growth96","96레벨 보상·증표","")
+	growth96_view = Growth96UI.new()
+	workspace.mount(growth96_view)
+	growth96_view.configure(self,get_parent().growth96)
+
+func open_expedition() -> void:
+	var world: Node = get_parent()
+	_open_window("expedition", "인형 탐험·변신 파견·성령 수집", "원본 조건·비용·시간 · 이벤트·정산 대기")
+	var screen := preload("res://scripts/expedition/source_view.gd").new()
+	workspace.mount(screen)
+	screen.configure(world.get_expedition_catalog(), world.expedition_owned_cards(), world.expedition_local, self)
+
 func open_card_skill_awakening(category: String, identity: String) -> void:
 	var runtime: Variant=get_parent().get("skill_awakening")
 	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
@@ -2488,3 +2578,72 @@ func _refresh_source_dungeon_progress_deferred() -> void:
 	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
+
+func _request_halphas_star_enchant() -> void:
+	open_halphas_star_enchant(catalog_category, CARD_RULES.card_id(selected_catalog_record))
+
+func open_halphas_star_enchant(category: String, identity: String) -> void:
+	var snapshot: Dictionary = HalphasStarEnchant.from_world(get_parent(), category, identity)
+	if not snapshot.ok:
+		show_message(str(snapshot.get("error", "성급 강화 대상이 아닙니다")))
+		return
+	_open_window("halphas_star_enchant", "해방된 할파스 성급 강화", "")
+	var scroll := ScrollContainer.new()
+	scroll.name = "HalphasStarEnchantScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/ui/halphas_star_enchant_view.gd").new()
+	scroll.add_child(view)
+	view.configure(get_parent(), category, identity)
+	workspace.register_scroll_drag(scroll, view)
+
+func open_combinations() -> void:
+	_open_window("combinations","변신·인형·장비 조합","")
+	var scroll:=ScrollContainer.new();scroll.name="CombinationScroll"
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view: Control=preload("res://scripts/combinations/view.gd").new();scroll.add_child(view);view.configure(self)
+	workspace.register_scroll_drag(scroll,view)
+
+func open_half_elixir(item_name: String = "") -> void:
+	_open_window("half_elixir", "하프 엘릭서", "사용 포인트 충전과 능력치 투자·확장·초기화를 구분합니다.")
+	var view = preload("res://scripts/growth/half_elixir_view.gd").new()
+	workspace.mount(view)
+	view.configure(self)
+	if not item_name.is_empty(): view.offer_item(item_name)
+
+
+func open_titles523() -> void:
+	_open_window("titles","작위 심사","")
+	var screen := preload("res://scripts/titles/title_view523.gd").new()
+	workspace.mount(screen)
+	screen.configure(self)
+func open_totems() -> void:
+	_open_window("totems","토템","활성화 진행도 · 성장 정보 · 공명")
+	totem_view = preload("res://scripts/progression/totem_view.gd").new()
+	workspace.mount(totem_view)
+	totem_view.configure(self)
+
+func refresh_totems() -> void:
+	if active_section == "totems" and is_instance_valid(totem_view) and not totem_view.is_queued_for_deletion() and totem_view.content != null:
+		totem_view._refresh()
+func open_monsterbook523() -> void:
+	_open_window("monsterbook523", "몬스터 도감", "처치 누적 · 단계 등록 · 옵션 · 보상 기록")
+	var screen := preload("res://scripts/monsterbook/monsterbook523_panel.gd").new()
+	workspace.mount(screen)
+	screen.configure(get_parent())
+func open_fishing523() -> void:
+	_open_window("fishing523", "낚시·대회·장비 교환", "원본 523 규칙과 명시적인 TWILIGHT 자체 공간")
+	var screen := Fishing523UI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_protection523() -> void:
+	_open_window("protection523","불멸·파멸의 가호","보유 · 명예 코인 사용 · 제작과 영구 호칭")
+	var scroll := ScrollContainer.new()
+	scroll.name = "ProtectionFullScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/protection/protection523_panel.gd").new()
+	scroll.add_child(view)
+	view.configure(self)

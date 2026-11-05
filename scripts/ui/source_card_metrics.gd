@@ -7,7 +7,7 @@ const PREFAB = "UI/Change/Change_Card_A_Common.csb"
 static func apply(hud: Node) -> void:
 	if hud.catalog_category not in ["변신", "마법인형", "성물"]: return
 	var records: Array = hud.catalog_data.get(hud.catalog_category, [])
-	if records.is_empty() or records[0].get("source", "") != "lineagem_base508": return
+	if records.is_empty() or not preload("res://scripts/lineagem_base508.gd").native(records[0]): return
 	var slot := Vector2.ZERO
 	var portrait := Vector2.ZERO
 	for node: Dictionary in PROFILE.data.screens[PREFAB]:

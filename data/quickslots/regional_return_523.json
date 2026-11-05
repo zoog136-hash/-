@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "format": "compiled-selection-policy.v1",
+  "source_snapshot": "patch523",
+  "source_archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "source_item_ids": [
+    239,
+    282783,
+    295514
+  ],
+  "target_item_id": 126424,
+  "items": {
+    "239": {
+      "name": "귀환 주문서 (각인)",
+      "grade": "일반",
+      "aliases": [
+        "귀환 주문서"
+      ],
+      "infinite": false
+    },
+    "282783": {
+      "name": "유일한 귀환 주문서 (각인)",
+      "grade": "유일",
+      "aliases": [],
+      "infinite": true
+    },
+    "295514": {
+      "name": "무한한 귀환 주문서 (각인)",
+      "grade": "신화",
+      "aliases": [],
+      "infinite": true
+    },
+    "126424": {
+      "name": "잊혀진 귀환 주문서 (각인)",
+      "grade": "일반",
+      "aliases": [],
+      "infinite": false
+    }
+  },
+  "lands": {
+    "44544": true,
+    "44614": true,
+    "47722": true
+  },
+  "host_bindings": {
+    "source_70": {
+      "land_id": 44544,
+      "return_map": "source_70",
+      "return_mode": "spawn",
+      "estimated": true,
+      "basis": "TWILIGHT existing Forgotten Island; separate PC layout, no M coordinate equivalence"
+    }
+  }
+}

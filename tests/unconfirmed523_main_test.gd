@@ -143,7 +143,7 @@ func prepare(domain: String, request: Dictionary) -> void:
 		await frames()
 
 func fixture_items() -> bool:
-	var staged: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":10000000,"next_item_instance_id":int(world.next_item_instance_id),"level":89,"experience":0,"exp_need":EXP.table_requirement(89),"stat_points":int(world.stat_points)}
+	var staged: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":10000000,"next_item_instance_id":int(world.next_item_instance_id),"level":89,"experience":0,"exp_need":EXP.table_requirement(89),"stat_points":int(world.stat_points),"quest_state":world.quest_service.export_state()}
 	for pair: Array in [[338438,1,2],[355334,6,1],[166594,2,1],[164683,1,1]]:
 		var error: String = rt.stage_item(staged,int(pair[0]),int(pair[1]),0,int(pair[2]))
 		if not check(error.is_empty(),"stage real source ownership %d: %s" % [int(pair[0]),error]): return false
@@ -226,6 +226,33 @@ func final_cube_fixtures() -> void:
 	check(not rejected.get("ok",false) and same(before,ownership()),"actual8951 graph TestItem8961 blocks before consuming ownership counter rewards or RNG")
 	check(FileAccess.get_sha256(world.save_path())==disk,"source TestItem leaf rejection preserves exact durable bytes")
 	check(rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"blocked native final bag creates no fictitious seventh completion history")
+
+func craft_progress_fixtures() -> void:
+	# Existing TWILIGHT recipe, real Main writer and explicit ingredient fixture.
+	# This verifies the pass event boundary, not source crafting/natural supply.
+	var original_text: String=FileAccess.get_file_as_string(world.save_path())
+	var ingredients: Dictionary=world.inventory.duplicate(true)
+	ingredients["HP 물약"]=int(ingredients.get("HP 물약",0))+3
+	ingredients["약초"]=int(ingredients.get("약초",0))+2
+	if not check(world._save_game(true,{"inventory":ingredients})==OK,"craft ingredients fixture saves through existing owner boundary"):return
+	world.inventory=ingredients
+	world._sync_item_instances()
+	var before: Array=ownership()
+	var disk: String=FileAccess.get_sha256(world.save_path())
+	var count: int=int(rt.state.event_counters.get("craft",0))
+	world.equipment_collections.test_save_writer=func(_path: String,_payload: Dictionary)->Error:return ERR_CANT_CREATE
+	world._craft_requested("healing_plus",1)
+	check(same(before,ownership()) and FileAccess.get_sha256(world.save_path())==disk,"failed actual craft preserves ingredients products and pass event state together")
+	world.equipment_collections.test_save_writer=Callable()
+	world._craft_requested("healing_plus",1)
+	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+	check(int(rt.state.event_counters.get("craft",0))==count+1,"successful actual craft records one pass event")
+	check(int(saved.get("unconfirmed523",{}).get("event_counters",{}).get("craft",0))==count+1,"actual craft result and pass event share the same durable save")
+	world._load_game(true);freeze()
+	check(int(rt.state.event_counters.get("craft",0))==count+1,"immediate Main reload retains committed crafting progress")
+	check(WRITER.write_text(world.save_path(),original_text)==OK,"restore exact pre-fixture profile through atomic writer")
+	world._load_game(true);freeze()
+	check(FileAccess.get_file_as_string(world.save_path())==original_text,"craft integration fixture preserves original profile bytes after verification")
 
 func finish() -> void:
 	print("UNCONFIRMED523_MAIN_RESULT " + JSON.stringify({"phase":phase,"checks":checks,"failures":failures,"raw_resource_paths":loader.read_paths.size(),"scope":"ACTUAL_MAIN_PRIVATE_SOURCE_ATOMIC_SAVE_UI; EXPLICIT_OWNERSHIP_AND_PASS_XP_FIXTURES"}))
@@ -462,3 +489,4 @@ func reload_phase() -> void:
 	check(is_equal_approx(rt.bonus("max_hp:flat"),float(marker.hp_bonus)) and is_equal_approx(rt.bonus("experience_bonus:percent"),float(marker.xp_bonus)),"new process rebuilds actual source stat contributions")
 	check(not rt.save_blocked and not world.source_save_blocked,"new process preserves valid source save gate")
 	check(ids_for(8951).size()==8 and rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"cold restart preserves all blocked native cube units without invented final history")
+	await craft_progress_fixtures()

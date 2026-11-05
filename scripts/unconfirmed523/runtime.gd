@@ -2,6 +2,7 @@ extends RefCounted
 ## One existing World save owns costs, rewards, event progress and durable RNG.
 const Source = preload("res://scripts/unconfirmed523/source523.gd")
 const StatAdapter = preload("res://scripts/collections/equipment_collection_stats.gd")
+const QuestOwnership = preload("res://scripts/quests/quest_reward_ownership.gd")
 const SAVE_KEY = "unconfirmed523"
 const DOMAIN_PATHS = {"events":"events_domain", "jade_grail":"jade_grail_domain", "challenge":"challenge_domain"}
 var source = Source.new()
@@ -16,6 +17,7 @@ var effect_details: Dictionary = {}
 var conditional_totals: Dictionary = {"undead":{},"pvp":{}}
 var _prepared_rewards: Dictionary = {}
 var _committing_plan: String = ""
+var _held_debits: Dictionary = {}
 var _expiry_signature: String = ""
 var _event_nonce: String = Crypto.new().generate_random_bytes(12).hex_encode()
 var _last_survival_tick: String = ""
@@ -149,7 +151,7 @@ func context() -> Dictionary:
 			if record.has("source_item_class_id") or str(record.get("sourceId","")).begins_with("m523:item:") or str(record.get("sourceId","")).begins_with("m508:item:"): ctx["ownership_error"] = "원본 개체 ID 충돌"
 			continue
 		if quantity < 1 or quantity > 1000000000: ctx["ownership_error"] = "원본 아이템 수량 오류"; continue
-		var receipt_error: String = _grant_receipt_error(raw,sid,quantity)
+		var receipt_error: String = _grant_receipt_error(raw,sid,quantity,uid)
 		if not receipt_error.is_empty(): ctx["ownership_error"] = receipt_error; continue
 		if int(assigned[item_name]) > int(world.inventory.get(item_name,0)): ctx["ownership_error"] = "원본 아이템 개체와 가방 수량 불일치"; continue
 		if _physical_expired(raw,maxi(now(),int(state.domains.get("jade_grail",{}).get("latest_at",0)))): continue
@@ -216,7 +218,9 @@ func page(key: String) -> Dictionary:
 	return content
 
 func fingerprint() -> String:
-	return JSON.stringify([world.inventory,world.item_instances,world.gold,world.level,world.experience,world.exp_need,world.stat_points,world.equipped_items,world.ui_preferences.get("item_locks",{}),world.ain_service.export_state(),state.revision]).sha256_text()
+	var service: Variant = world.get("quest_service")
+	var quest_state: Dictionary = service.export_state() if service != null and service.has_method("export_state") else {}
+	return JSON.stringify([world.inventory,world.item_instances,world.gold,world.level,world.experience,world.exp_need,world.stat_points,world.equipped_items,world.ui_preferences.get("item_locks",{}),world.ain_service.export_state(),quest_state,state.revision]).sha256_text()
 
 func execute(key: String, request: Dictionary, revision: int = -1, expected: String = "") -> Dictionary:
 	if busy: return _fail("거래 처리 중")
@@ -232,7 +236,8 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	var next: Dictionary = state.duplicate(true)
 	next.domains[key] = proposal.get("state",state.domains[key]).duplicate(true)
 	next.revision = int(next.revision)+1
-	var staged: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold),"ainhasad_state":proposal.get("ain",world.ain_service.export_state()).duplicate(true),"experience":int(world.experience),"level":int(world.level),"exp_need":int(world.exp_need),"stat_points":int(world.stat_points),"next_item_instance_id":int(world.next_item_instance_id)}
+	var staged: Dictionary = _stage_world()
+	staged.ainhasad_state = proposal.get("ain",world.ain_service.export_state()).duplicate(true)
 	var failure: String = ""
 	for cost: Dictionary in proposal.get("costs",[]):
 		failure = _cost(cost,staged,ctx)
@@ -252,6 +257,10 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	return _publish(staged,proposal.get("rewards",[]),proposal.get("assumptions",[]))
 
 func _publish(staged: Dictionary, rewards: Array = [], assumptions: Array = []) -> Dictionary:
+	for prepared: Dictionary in _held_debits.values():
+		if not QuestOwnership.current(world,prepared):
+			busy = false
+			return _fail("원본 보상 사용 후보가 변경되었습니다")
 	var result: Error = world._save_game(true,staged)
 	if result != OK:
 		busy = false
@@ -266,8 +275,10 @@ func _publish(staged: Dictionary, rewards: Array = [], assumptions: Array = []) 
 	world.ain_service.import_state(staged.ainhasad_state)
 	world.experience = staged.experience; world.level = staged.level; world.exp_need = staged.exp_need; world.stat_points = staged.stat_points
 	world.next_item_instance_id = staged.next_item_instance_id
+	if staged.has("quest_state"): world.quest_service.import_state(staged.quest_state)
 	state = staged[SAVE_KEY].duplicate(true)
 	busy = false
+	_held_debits.clear()
 	_prepared_rewards.clear()
 	rebuild()
 	world._update_hud()
@@ -357,7 +368,11 @@ func cancel_prepared(plan_id: String) -> bool:
 	return _prepared_rewards.erase(plan_id)
 
 func _stage_world() -> Dictionary:
-	return {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold),"ainhasad_state":world.ain_service.export_state().duplicate(true),"experience":int(world.experience),"level":int(world.level),"exp_need":int(world.exp_need),"stat_points":int(world.stat_points),"next_item_instance_id":int(world.next_item_instance_id)}
+	_held_debits.clear()
+	var staged: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold),"ainhasad_state":world.ain_service.export_state().duplicate(true),"experience":int(world.experience),"level":int(world.level),"exp_need":int(world.exp_need),"stat_points":int(world.stat_points),"next_item_instance_id":int(world.next_item_instance_id)}
+	var service: Variant = world.get("quest_service")
+	if service != null and service.has_method("export_state"): staged["quest_state"] = service.export_state().duplicate(true)
+	return staged
 
 func _apply_prepared_state(staged: Dictionary) -> void:
 	# Direct Reward172 changes only this namespace. The upstream owner applies
@@ -383,13 +398,15 @@ func _pass_reward_available(pass_id: int, ctx: Dictionary) -> String:
 		if field == "SeasonEndDateTimeID" and effective_now() >= stamp: return "원본 시즌 패스 종료"
 	return ""
 
-func _grant_receipt_error(physical: Dictionary, item_id: int, remaining: int) -> String:
+func _grant_receipt_error(physical: Dictionary, item_id: int, remaining: int, physical_id: String = "") -> String:
 	if not physical.has("quest_reward_receipt"): return ""
 	# PR262's issued quantity is immutable proof. The physical remaining stack
 	# is a separate field and may decrease after an exact-instance consumption.
 	var proof: Variant = physical.quest_reward_receipt
 	if not proof is Dictionary or proof.get("schema") != 1 or str(proof.get("source_sha256","")) != Source.SOURCE_SHA256: return "원본 퀘스트 지급 증명 오류"
-	for field: String in ["quest_id","reward_id","item_class_id","bless_code_id","quantity"]:
+	var quest_id: int = _canonical_quest_number(proof.get("quest_id"))
+	if quest_id <= 0: return "원본 퀘스트 지급 ID 오류"
+	for field: String in ["reward_id","item_class_id","bless_code_id","quantity"]:
 		if not _integer(proof.get(field),1): return "원본 퀘스트 지급 증명 값 오류"
 	if int(proof.item_class_id) != item_id or remaining > int(proof.quantity): return "원본 퀘스트 발행·잔여 수량 불일치"
 	var record: Dictionary = physical.get("record",{})
@@ -397,9 +414,54 @@ func _grant_receipt_error(physical: Dictionary, item_id: int, remaining: int) ->
 	if int(proof.bless_code_id) not in [1,2,3] or bless != int(proof.bless_code_id): return "원본 퀘스트 축복 증명 불일치"
 	var reward: Dictionary = source.row("Reward",int(proof.reward_id))
 	if int(reward.get("RewardTypeID",0)) != 2 or int(reward.get("RewardClassID",0)) != item_id or int(reward.get("ItemBlessCodeID",1)) != int(proof.bless_code_id) or int(proof.quantity) > int(reward.get("Amount",0)): return "원본 퀘스트 지급 보상 연결 오류"
+	var linked: bool = false
 	for link: Dictionary in source.rows("QuestReward"):
-		if int(link.get("QuestID",0)) == int(proof.quest_id) and int(link.get("RewardID",0)) == int(proof.reward_id): return ""
-	return "원본 퀘스트 지급 출처 연결 오류"
+		if int(link.get("QuestID",0)) == quest_id and int(link.get("RewardID",0)) == int(proof.reward_id): linked = true; break
+	if not linked: return "원본 퀘스트 지급 출처 연결 오류"
+	if physical_id.is_empty(): return "원본 퀘스트 지급 개체 확인 필요"
+	var owned: Dictionary = QuestOwnership.proof(world,physical_id)
+	if not owned.get("ok",false): return str(owned.get("reason","원본 퀘스트 소유권 확인 필요"))
+	if int(owned.item_class_id) != item_id or int(owned.quantity) != remaining: return "원본 퀘스트 소유 수량 불일치"
+	return ""
+
+static func _canonical_quest_number(value: Variant) -> int:
+	if not value is String or not value.begins_with("m523:quest:"): return 0
+	var suffix: String = value.trim_prefix("m523:quest:")
+	if not suffix.is_valid_int() or int(suffix) <= 0 or str(int(suffix)) != suffix: return 0
+	return int(suffix)
+
+func _stage_owned_debit(uid: String, take: int, staged: Dictionary) -> String:
+	# The quest owner produces both the physical debit and its use receipt. Only
+	# compose those verified outputs; the issued receipt is never rewritten.
+	var current: Dictionary = staged.item_instances.get(uid,{})
+	var live: Dictionary = world.item_instances.get(uid,{})
+	var total: int = _quantity(live)-_quantity(current)+take
+	var prepared: Dictionary = QuestOwnership.prepare_debit(world,uid,total)
+	if not prepared.get("ok",false): return str(prepared.get("reason","원본 보상 소비 준비 실패"))
+	var used: Dictionary = QuestOwnership.use_state(world,prepared,Source.SOURCE_SHA256)
+	if not used.get("ok",false): return str(used.get("reason","원본 보상 사용 영수증 확인 필요"))
+	var owned: Dictionary = prepared.ownership
+	var candidate: Dictionary = staged.quest_state.duplicate(true)
+	if not candidate.has("item_grants"): candidate["item_grants"] = {}
+	var rows: Array = candidate.item_grants.get(owned.quest_id,[]).duplicate(true)
+	var produced: Dictionary = {}
+	for receipt: Dictionary in used.state.item_grants.get(owned.quest_id,[]):
+		if int(receipt.reward_id) == int(owned.reward_id): produced = receipt.duplicate(true)
+	if produced.is_empty(): return "원본 소유자 사용 영수증 누락"
+	var replaced: bool = false
+	for index: int in range(rows.size()):
+		if int(rows[index].reward_id) == int(owned.reward_id): rows[index] = produced; replaced = true; break
+	if not replaced: rows.append(produced)
+	candidate.item_grants[owned.quest_id] = rows
+	if not world.quest_service.validate_saved_state(candidate).is_empty(): return "원본 보상 합성 사용 영수증 형식 오류"
+	var name_value: String = str(owned.inventory_key)
+	staged.inventory[name_value] = int(staged.inventory[name_value])-take
+	if int(staged.inventory[name_value]) == 0: staged.inventory.erase(name_value)
+	if prepared.override.item_instances.has(uid): staged.item_instances[uid] = prepared.override.item_instances[uid].duplicate(true)
+	else: staged.item_instances.erase(uid)
+	staged.quest_state = candidate
+	_held_debits[uid] = prepared
+	return ""
 
 func _cost(cost: Dictionary, staged: Dictionary, ctx: Dictionary) -> String:
 	var amount: int = int(cost.get("amount",0)); var id: int = int(cost.get("id",0))
@@ -448,6 +510,12 @@ func _debit_item(id: int, amount: int, staged: Dictionary, ctx: Dictionary, inst
 		var take: int = mini(pending,quantity)
 		var name_value: String = str(item.get("name",""))
 		if int(staged.inventory.get(name_value,0)) < take: return "개체·가방 수량 불일치"
+		if item.has("quest_reward_receipt"):
+			var owner_error: String = _stage_owned_debit(uid,take,staged)
+			if not owner_error.is_empty(): return owner_error
+			pending -= take
+			if pending == 0: return ""
+			continue
 		staged.inventory[name_value] = int(staged.inventory[name_value])-take
 		if int(staged.inventory[name_value]) == 0: staged.inventory.erase(name_value)
 		if take == quantity: staged.item_instances.erase(uid)

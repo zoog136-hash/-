@@ -1,0 +1,38 @@
+{
+  "schema": "twilight.source523.npc-local-rules.v1",
+  "enabled": true,
+  "zero_hours_are_open": true,
+  "zero_dates_are_open": true,
+  "remote_catalog": true,
+  "merchants": [
+    {
+      "merchant_id": 13,
+      "earth_object_id": 27,
+      "spawn_id": 4,
+      "label": "세린 · 말하는 섬"
+    },
+    {
+      "merchant_id": 40,
+      "earth_object_id": 31,
+      "spawn_id": 160,
+      "label": "글렌 · 은기사 마을",
+      "equipment_mode": "normal_zero_only"
+    },
+    {
+      "merchant_id": 514,
+      "earth_object_id": 2554,
+      "spawn_id": 24964,
+      "label": "아이즈 · 잊혀진 섬",
+      "access_note": "TWILIGHT 원격 잡화 목록 · 지역 입장/이동 미제공 · 80레벨 이상",
+      "minimum_level": 80
+    },
+    {
+      "merchant_id": 10,
+      "earth_object_id": 111,
+      "spawn_id": 53,
+      "label": "마법상인 · 말하는 섬",
+      "access_note": "TWILIGHT 원격 스킬북 목록 · 직업/레벨/선행조건과 습득 후 중복 구매 차단",
+      "allow_range_attribute": true
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "predecessor_public_quest_head": "76a721f0c6d2dba3aa2a9ab02ddb1567650d5777",
+  "public_return_owner": "bc0ce7215b53ef970a58f13ddbeecf7e6641330c",
+  "same_owner_interface": "world.consumable_service.use_owned_native_return(item_key:String)->Dictionary",
+  "quest_receipt_interface": "world.consumable_service.use_owned_quest_return(physical_id:String)->Dictionary",
+  "required_success": "ok && saved && consumed==1",
+  "exact_shared_public_files": {
+    "scripts/quickslots/regional_return.gd": "789e3c1551f541dfbfc70bde3543e959232144d65ed37b3a28f2eaeac99fcfc5",
+    "data/quickslots/regional_return_523.json": "8f3a9658976fb3a617b4c980c21fa37deb14e9d11ff702fd80450e8fd05d58aa"
+  },
+  "bounded_changes": "One shared return transaction; published same-aden geometry helpers; compatible result interface, exact receipt-selected debit and current NPC use/teleport restrictions; no whole PR/return subsystem copy",
+  "production_file_sha256": {
+    "scripts/world.gd": "03483c37d69b6cf6abe39fd6596e8c1a947d2f6e5b619b938e026800dfc92399",
+    "scripts/consumable_service.gd": "23b197f1566b70e8edc6bf93e44e053c42ac4462eaf17c54ecb19aa2dedc3aff",
+    "scripts/quests/quest_held_use238.gd": "9a1c0f971dfe5c693dc991b27d4cb5e82045bbbe7c9449a986cf5a24aefb75ce",
+    "scripts/quests/quest_item_provider238.gd": "a9dd1085fb3a6ec5d89653f0c14def53d11344076d864aa74d4ef1ef3bb690ec",
+    "scripts/quests/quest_reward_ownership.gd": "ec71a777463ff80dd7413375d3c9977cd41dced0a058ba42436a6d59457d9e67",
+    "scripts/quests/quest_return239.gd": "1172c9616d89d0dec1ac323ded416483aa12b1309d513cfdd74695092bb6195c",
+    "scripts/quickslots/regional_return.gd": "789e3c1551f541dfbfc70bde3543e959232144d65ed37b3a28f2eaeac99fcfc5",
+    "data/quickslots/regional_return_523.json": "8f3a9658976fb3a617b4c980c21fa37deb14e9d11ff702fd80450e8fd05d58aa"
+  },
+  "actual_tests": {
+    "held-final": {
+      "sha256": "0c577014f68e82f7d4f7e4232e1f2c25f7d63977480bb789966b8383f8e2795f",
+      "local_log": "/workspace/scratch/quest-return239-held-final.log",
+      "result": {
+        "checks": 34,
+        "completed": 811,
+        "controlled_qa_conditions": [
+          "safe-field starting position",
+          "lock",
+          "stun",
+          "dead",
+          "wrong-map flag only"
+        ],
+        "failures": [],
+        "final_save_sha256": "cea62cb5ca4ac093eab70e53b47362b33affea25665d72cf3f5d76d3d7ee760f",
+        "input_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "mode": "actual_held_receipt_selected",
+        "pending_use_completed": 429,
+        "scope": "same verified aden_world; real original reward ownership; no transient grant/rename/cross-map engine",
+        "source_item_id": 239
+      }
+    },
+    "native-final": {
+      "sha256": "c8f05a20096a9b8d7f7c40eb1a656fee872c04f5ae4a4c6822912ba95a9a5482",
+      "local_log": "/workspace/scratch/quest-return239-native-final.log",
+      "result": {
+        "checks": 24,
+        "completed": 811,
+        "controlled_qa_conditions": [
+          "safe-field starting position",
+          "lock",
+          "stun",
+          "dead",
+          "wrong-map flag only"
+        ],
+        "failures": [],
+        "final_save_sha256": "1e64f069dd77fec0782fab49bd4999ae339d29327a0d3895f93bbb3a8729f318",
+        "input_save_sha256": "",
+        "mode": "fresh_native_source_grants",
+        "pending_use_completed": 429,
+        "scope": "same verified aden_world; real original reward ownership; no transient grant/rename/cross-map engine",
+        "source_item_id": 239
+      }
+    },
+    "uncertain": {
+      "sha256": "33cf6c87b2c54773648565b213fed33d86f91e3244f0c5c0cd0783aea8dc515f",
+      "local_log": "/workspace/scratch/quest-return239-uncertain.log",
+      "result": {
+        "checks": 8,
+        "controlled_uncertain_save_sha256": "078145b2e01d9728c92d0ba58bc1d840e733768883631bbfb89727c6a2efe1dd",
+        "failures": [],
+        "injected_fault": "writer stored a different position and returned error",
+        "original_seed_sha256": "1e64f069dd77fec0782fab49bd4999ae339d29327a0d3895f93bbb3a8729f318",
+        "scope": "isolated fault profile only; normal validated source saves unchanged"
+      }
+    },
+    "regression-held": {
+      "sha256": "09d6a8e6a5d7e13ed620ef4d6db77da0375aea63e993190760ceadba603b7984",
+      "local_log": "/workspace/scratch/quest-return239-regression-held.log",
+      "result": {
+        "checks": 36,
+        "failures": [],
+        "final_save_sha256": "cb546e383a9a01dd8bb96ccaab86957f08239083751e6006f04e6a24da83949d",
+        "item_ids": [
+          859,
+          1281
+        ],
+        "scope": "real old811 receipt-selected partial use; no mass conversion/regrant; old822 without receipts blocked",
+        "source_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92"
+      }
+    },
+    "regression-native": {
+      "sha256": "ceca3dd71992d44406c2a4d897bf57cbf1a71f5ebd4ae3805d39732aa59d6dc8",
+      "local_log": "/workspace/scratch/quest-return239-regression-native.log",
+      "result": {
+        "checks": 31,
+        "completed": 811,
+        "failures": [],
+        "final_save_sha256": "59d008671681cbead79850c640299a9461775db43083d6eda0be7891b8088814",
+        "item_class_ids": [
+          859,
+          1281
+        ],
+        "native_receipt_quests": 120,
+        "pack_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+        "pending_use_completed": 429,
+        "pre_postwrite_save_sha256": "c222c1f230b15972aab952b4a62d6fc421a7f96ac0933c6de45d9f4a26748d6e",
+        "same_batch_held_instances": 14,
+        "scope": "Actual source acquisition to shared supplier,inventory use,buff/box effects,atomic save,failure recovery and reload; no old-save conversion",
+        "source_quantities": {
+          "239": 212,
+          "859": 66,
+          "1281": 23
+        }
+      }
+    },
+    "regression-historical": {
+      "sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "local_log": "/workspace/scratch/quest-return239-regression-historical.log",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    },
+    "regression-missing": {
+      "sha256": "beedac6b34fa3accab159ef1798c23ff7682a6db636568e460f60dfa41ccf249",
+      "local_log": "/workspace/scratch/quest-return239-regression-missing.log",
+      "result": {
+        "checks": 15,
+        "failures": [],
+        "scope": "actual source-granted inventory and receipts survive absent optional provider; no fixtures/grants",
+        "source_save_sha256": "1e64f069dd77fec0782fab49bd4999ae339d29327a0d3895f93bbb3a8729f318"
+      }
+    },
+    "regression-core": {
+      "sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "local_log": "/workspace/scratch/quest-return239-regression-core.log",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    }
+  },
+  "runtime": {
+    "whole_source_quest_definitions": 3621,
+    "new_source_completions": 811,
+    "pending_use_quests_after_859_1281": 480,
+    "pending_use_quests_after_239": 429,
+    "additional_resolved_quests": 51,
+    "source239_reward_stacks": 57,
+    "source239_granted_quantity": 212,
+    "native_grant_receipt_quests_all_three_classes": 120,
+    "fresh_held_distinct_item_classes": 143,
+    "fresh_physical_instances": 575,
+    "historical822_without_receipts_pending": 537,
+    "new_final_level": 86,
+    "original_level_goals_preserved": 104,
+    "excluded": 160,
+    "locked_expired_content_reset_operating": 2650
+  },
+  "preserved_immutable_profile_sha256": {
+    "quest-current-main-data": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+    "quest-level-data": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92"
+  },
+  "uncertain_fault_is_isolated_and_not_a_normal_save": true,
+  "earlier_raw_adapter_failure": "Missing Normal variant identity projection was rejected safely; fixed with D.variant_item(...,1), not by waiving ownership; failed logs excluded from passes",
+  "new_pack_upload_or_data_download": false,
+  "quest_v1_unchanged": true,
+  "normal_item_pack_unchanged_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+  "game_drive_auto_download": false,
+  "map_work_or_full_manual_ci_or_merge": false,
+  "pr_metadata_update": "previously denied; not retried",
+  "not_complete": [
+    "all pending effect/equipment/card/skill consumers",
+    "native M destinations/other maps",
+    "all classes/natural probabilities",
+    "original full art/engine/APK"
+  ],
+  "next_existing_scope": "ItemClass233 source20+2d6 metadata and current host HP/cooldown/NPC-healing contract reviewed; separate helper exists only as unreferenced local WIP until wired/tested"
+}

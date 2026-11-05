@@ -1,14 +1,16 @@
 extends RefCounted
 const DATA = preload("res://data/cards/base508_option_awakening.json")
 const Native = preload("res://scripts/cards/native_collection_rules.gd")
+const Slots=preload("res://scripts/cards/option_slot_definitions.gd")
 static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	if not Native.accepts_catalog(catalog): return legacy
 	var result: Dictionary=legacy.duplicate(true)
 	result.native_mode=true
 	result.native_server_limits=DATA.data.source_server_limits
+	result.patch523_server_limits=preload("res://scripts/cards/patch523_slot_data.gd").new_cards.source_server_limits
 	var source_aura_component: bool=ResourceLoader.exists("res://scripts/animation/source_awakening_aura.gd")
-	for original: Dictionary in DATA.data.definitions:
-		var row: Dictionary=original.duplicate(true)
+	for original: Dictionary in DATA.data.definitions+preload("res://scripts/cards/patch523_slot_data.gd").new_cards.option_definitions:
+		var row: Dictionary=Slots.apply_reviewed_primary(original.duplicate(true))
 		for text: String in row.pending_options.duplicate():
 			if text.begins_with("원본 추가 옵션 슬롯 "):
 				row.pending_options.erase(text)
@@ -17,7 +19,7 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 				if index>=0:row.bonus_options[index]=replacement
 				row.applied_options.append(replacement)
 		for effect: Dictionary in row.native_source.effects:
-			if source_aura_component and effect.type.Name=="StatusEffectID" and preload("res://scripts/cards/native_awakening_status.gd").binding(row).ok:
+			if source_aura_component and not str(row.id).begins_with("source:m523:") and effect.type.Name=="StatusEffectID" and preload("res://scripts/cards/native_awakening_status.gd").binding(row).ok:
 				effect.runtime_supported=true;effect.runtime_consumer="PR217_source_awakening_aura"
 				var previous: String="StatusEffectID "+str(int(effect.bonus.Value))
 				var message: String="원본 각성 시각 효과 · 원본 팩 필요"

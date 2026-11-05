@@ -1,6 +1,7 @@
 extends RefCounted
 ## Contextual source invokes. No passive flattening, persistence or nested attacks.
 const DATA=preload("res://data/cards/base508_option_extensions.json")
+const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 var runtime_ref: WeakRef
 var runtime: RefCounted:
@@ -18,18 +19,23 @@ func active() -> Dictionary:
 	runtime._sync_native_context()
 	for category: String in Cards.CATEGORIES:
 		var record: Dictionary=runtime.world.equipped_catalog.get(category,{})
-		if record.get("source","")!="lineagem_base508":continue
+		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if runtime.is_awakened(category,identity):out[identity]=runtime.core.definition(category,identity)
 	var main: Dictionary=runtime.world.equipped_catalog.get("마법인형",{})
-	if main.get("source","")=="lineagem_base508":
+	if preload("res://scripts/lineagem_base508.gd").native(main):
 		var identity: String=Cards.card_id(main)
 		if runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",identity) and runtime.core.native_material_available(main):_add_doll_invokes(out,identity,false)
 	var secondary: Dictionary=runtime.subslot_view(false)
 	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
+	var relic: Dictionary=runtime.relic_subslot_view(false)
+	if relic.active:
+		var row: Dictionary=RELIC.relic_combat.relic_subslot_buffs.get(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)),{})
+		if not row.is_empty():out["relic_subslot11:"+str(relic.identity)]={"native_source":{"card":row.card,"effects":row.effects}}
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
-	var row: Dictionary=DATA.data.subslot_buffs.get(identity,{}) if secondary else DATA.data.primary_doll_buffs.get(identity,{})
+	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
+	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else DATA.data.primary_doll_buffs.get(identity,supplement.primary_doll_buffs.get(identity,{}))
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
@@ -54,7 +60,9 @@ func effects(rows: Dictionary) -> Array[Dictionary]:
 			if effect.type.Name!="InvokeOption" or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=10:continue
 			if effect.link.has("Level") and int(effect.link.Level)!=1:continue
 			if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):continue
-			for option: Dictionary in DATA.data.invoke_options:
+			var candidates: Array=DATA.data.invoke_options.duplicate()
+			if identity.begins_with("relic_subslot11:"):candidates.append_array(RELIC.relic_combat.invoke_options)
+			for option: Dictionary in candidates:
 				if int(option.ID)==int(effect.bonus.BonusApplicationTargetID):result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value)})
 	return result
 func roll(weight: int) -> bool:
@@ -75,7 +83,7 @@ func incoming(attacker: Node,kind: String,amount: int) -> Dictionary:
 			if bool(option.BySpellAttack)!=(kind=="magic") or amount<int(option.Param2) or int(option.Param3)!=0 or int(option.MaterialAmount)!=0:continue
 			var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
 			if float(cooldowns.get(key,0))>0:continue
-			var spell: Dictionary=DATA.data.invoke_spells.get(str(int(option.Param1)),{})
+			var spell: Dictionary=_invoke_spell(int(option.Param1))
 			var healing: Dictionary=_spell_values(spell,["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount"])
 			if not _free_spell(spell,1) or not healing.has("HPRestoration"):continue
 			if int(healing.get("HPRestorationDiceNumber",0))>0 and int(healing.get("HPRestorationDiceSpotCount",0))<=0:continue
@@ -96,7 +104,7 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if bool(option.Param4) and not main_target:continue
 		var key: String="native_option|"+str(effect.origin)+"|"+str(int(option.Param1))
 		if float(cooldowns.get(key,0))>0:continue
-		var spell: Dictionary=DATA.data.invoke_spells.get(str(int(option.Param1)),{})
+		var spell: Dictionary=_invoke_spell(int(option.Param1))
 		if spell.is_empty():continue
 		var fixed: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount","FixedMagicDamage","IgnoreMagicResistance","IgnoreDamageReductionCalculation"])
 		if _free_spell(spell,2) and fixed.size()==6 and int(fixed.FixedMagicDamage)==1 and int(fixed.IgnoreMagicResistance)==1 and int(fixed.IgnoreDamageReductionCalculation)==1:
@@ -156,6 +164,9 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 			if is_instance_valid(node):live.append(node)
 		preview._overlay_nodes=live
 		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
+
+func _invoke_spell(identity: int) -> Dictionary:
+	return DATA.data.invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))
 
 func _free_spell(spell: Dictionary,target: int) -> bool:
 	if spell.is_empty():return false

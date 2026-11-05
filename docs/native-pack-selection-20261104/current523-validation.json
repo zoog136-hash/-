@@ -1,0 +1,219 @@
+{
+  "checked_at_utc": "2026-11-04T09:00:59.255929+00:00",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "previous_pr_head": "d417dfe2b385041ae0985d0ed162874d792ea4ad",
+  "pr": "https://github.com/zoog136-hash/-/pull/236",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "delivery_scope": "CODE_AND_VERIFIED_STANDARD_PNG_UI; RAW_SP2_STORAGE; NOT_FULL523_RUNTIME",
+  "source_intake": {
+    "official_authenticated_drive": true,
+    "archives": [
+      {
+        "name": "TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip",
+        "bytes": 190728359,
+        "sha256": "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae",
+        "zip_crc": "passed",
+        "manifest_rows_verified": 38,
+        "original_DATs": 18
+      },
+      {
+        "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip",
+        "bytes": 189340512,
+        "sha256": "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c",
+        "zip_crc": "passed",
+        "manifest_rows_verified": 36,
+        "original_DATs": 17
+      },
+      {
+        "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip",
+        "bytes": 190535985,
+        "sha256": "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71",
+        "zip_crc": "passed",
+        "manifest_rows_verified": 36,
+        "original_DATs": 17
+      },
+      {
+        "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip",
+        "bytes": 185164962,
+        "sha256": "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770",
+        "zip_crc": "passed",
+        "manifest_rows_verified": 36,
+        "original_DATs": 17
+      }
+    ],
+    "distinct_current_M_sprite_DATs": 69,
+    "interpretation": "raw bytes only; no frame, direction, alpha or gameplay meaning asserted",
+    "handoff_manifest": {
+      "bytes": 10420,
+      "sha256": "b3de71e193185bf848bd59004bccef3c9661b13a516760ec33e2bae52c41a8a3"
+    },
+    "sp2_and_png_bundle": {
+      "bytes": 76907660,
+      "sha256": "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182",
+      "zip_crc": "passed",
+      "package_manifest_rows_verified": 1012,
+      "raw_SP2_files": 989,
+      "raw_SP2_bytes": 75664378,
+      "confirmed_standard_PNGs": 2
+    },
+    "pixel_boundary_correction": {
+      "bytes": 3518,
+      "sha256": "7e957580c404247b8b959306f74bceb96d4731fe3421af35e4ed1dd9de45df15",
+      "zip_crc": "passed",
+      "restriction": "PC-reference candidate decoding is not M-only pixel/alpha/direction/timing truth"
+    },
+    "authentication": {
+      "drive": "official authenticated fetch succeeded for newly provided owner copies",
+      "library": "fresh official helper still fails before file transfer: hosted apps tools/list HTTP status 401; stopped; not fixed"
+    }
+  },
+  "standard_pngs": {
+    "forge_map_icon": {
+      "member": "validated_PNGs/Map_Icon_Forge.png",
+      "bytes": 3817,
+      "sha256": "2bd7f18187b289e5781b84ffb843ba23c48842ee02323daaefd3f700b3d8d121",
+      "dimensions": [
+        60,
+        60
+      ],
+      "format": "RGBA"
+    },
+    "normal_cloud": {
+      "member": "validated_PNGs/normal_cloud.png",
+      "bytes": 179853,
+      "sha256": "ba51b07c3b4ea71e3cdc640fd09dc5fc2c3201f578b2f4559951f6c76ae8ccf7",
+      "dimensions": [
+        768,
+        768
+      ],
+      "format": "RGB"
+    }
+  },
+  "private_install": {
+    "source_zip_preserved": true,
+    "completed_files": 992,
+    "bytes_before_generated_receipt": 76553023,
+    "raw_SP2_files": 989,
+    "sprite_playback": false,
+    "scope": "isolated Work test profiles, user://lineagem_current523_versions; user-owned inputs remain in private Drive",
+    "staging": "atomic completed version activation; failed/cancelled staging unselected and preserved",
+    "release_artifact": "no new executable, APK, or full original-resource distribution pack delivered"
+  },
+  "direct_tests": {
+    "actual_zip_install_cancel_wrong_hash_previous_version": {
+      "status": "passed",
+      "sha256": "3e84ee99a81fb1c70c1e912cfdfbd9806d169cc27273407a287f0de34806643b",
+      "summaries": [
+        "CURRENT523_INSTALL_RESULT {\"checks\":1006,\"failures\":[],\"raw_sp2\":989,\"read_only\":false,\"sprite_playback\":false,\"standard_pngs\":2}"
+      ]
+    },
+    "new_engine_restart_existing_install": {
+      "status": "passed",
+      "sha256": "40cfea86b2e15562f6295c5ccb3ddbaabe3fc69c0c826f7d21a53244751d748c",
+      "summaries": [
+        "CURRENT523_INSTALL_RESULT {\"checks\":997,\"failures\":[],\"raw_sp2\":989,\"read_only\":true,\"sprite_playback\":false,\"standard_pngs\":2}"
+      ]
+    },
+    "actual_Main_settings_install_OpenGL": {
+      "status": "passed",
+      "sha256": "0691f7b8f544e63c83237b38fc22d1c158fe0da804b2ff8fbf630302a000ec75",
+      "summaries": [
+        "CURRENT523_MAIN_RESULT {\"checks\":14,\"failures\":[],\"scope\":\"REAL_STANDARD_PNGS_AND_RAW_STORAGE; NOT_SP2_PLAYBACK\"}"
+      ]
+    }
+  },
+  "core_tests": {
+    "core_runtime_save_test": {
+      "status": "passed",
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+      "summaries": [
+        "CORE_RUNTIME_SAVE_RESULT {\"checks\":32,\"failures\":[],\"scope\":\"ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED\"}"
+      ]
+    },
+    "deferred_save_gate_test": {
+      "status": "passed",
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "summaries": [
+        "DEFERRED_SAVE_GATE_RESULT {\"failures\":[]}"
+      ]
+    },
+    "lineagem_pack_resolution_test": {
+      "status": "passed",
+      "sha256": "dc698f8787bd1511622c5c2df9d2c6bbe53d0f92b3e8fcf47d9a2e2c7d184187",
+      "summaries": [
+        "LINEAGEM_PACK_RESOLUTION_RESULT {\"checks\":10,\"failures\":[]}"
+      ]
+    },
+    "lineagem_pack_settings_main_test": {
+      "status": "passed",
+      "sha256": "e871bb63be4b0b3588ef8814cb2078c000c4cdc19029b782eec7429b86931cba",
+      "summaries": [
+        "LINEAGEM_PACK_SETTINGS_RESULT {\"checks\":13,\"failures\":[]}"
+      ]
+    },
+    "save_identical_payload_test": {
+      "status": "passed",
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "summaries": [
+        "SAVE_IDENTICAL_PAYLOAD_RESULT {\"failures\":[],\"skips\":1,\"writes\":2}"
+      ]
+    }
+  },
+  "stage": {
+    "basis": "prior exact real-resource stage reused; all 4142 source art/resource payload hashes rechecked against its receipt; Godot-generated .import sidecars excluded from byte identity",
+    "runtime_script_source_SHA_verified": [
+      {
+        "path": "scripts/resources/current523_pack.gd",
+        "sha256": "bb72ac5b267ebf34ea94d5d2094965d07602c722b1f1bb6ab1583a7b3bc5d079",
+        "bytes": 8622
+      },
+      {
+        "path": "scripts/ui/current523_pack_settings.gd",
+        "sha256": "790169a0f77bc44a5600f7d3af9bb50a426750a3183330ed9b49de8c2d3bd19a",
+        "bytes": 3065
+      },
+      {
+        "path": "scripts/ui/lineagem_pack_settings.gd",
+        "sha256": "54ed5cbaeee2e2c44e74de1e1d5308ea510e473c59cde4142b3a7d6c3d5a9af0",
+        "bytes": 2370
+      },
+      {
+        "path": "tests/current523_pack_main_local.gd",
+        "sha256": "bedcdbf485d700d7bd9271af7122feebfa0a7852577e9d1f2f071567278dfbfe",
+        "bytes": 3266
+      }
+    ],
+    "cold_reimport": "not repeated; no original assets modified or newly synthesized"
+  },
+  "render": {
+    "renderer": "OpenGL 4.5 Compatibility Mesa llvmpipe",
+    "size": [
+      1280,
+      720
+    ],
+    "audio": "Dummy; not audio verification",
+    "actual_main_settings_screenshot_sha256": "7e5c65ed58698d86250bdcfc6c693e4037b081de12e8151fa40f358aae9d6515",
+    "inspected": true,
+    "private_original_pixels_committed_or_uploaded": false
+  },
+  "resource_integrity": {
+    "checkout": "passed",
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "historical_source_ledger": "FAILED: SOURCE ZIP NOT ACCESSIBLE IN THIS ENVIRONMENT: /workspace/current523-drive-inputs/a1.zip",
+    "full_original_release_check": "not run; no new full original-resource release pack produced"
+  },
+  "not_verified": [
+    "full523 character/monster/effect decoding or gameplay playback",
+    "M-only frame/subimage/pixel/alpha/direction/timing interpretation",
+    "original M visual equivalence",
+    "Android hardware",
+    "full historical manual visual/gameplay suites"
+  ],
+  "publication": {
+    "scope": "text code/tests/docs only; originals, captures, credentials and private URLs excluded",
+    "remote_CI": "[skip ci]; no manual CI execution or rerun",
+    "main_merge": "not performed"
+  }
+}

@@ -80,7 +80,7 @@ func valid(entry: Dictionary) -> bool:
 	if str(entry.get("map","")) != str(world.active_map_id): return false
 	if entry.kind == "monster":
 		var actor: Node = entry.actor.get_ref()
-		return is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.get_parent() == world.monsters_root and not actor.dead and int(actor.life_id) == int(entry.life)
+		return is_instance_valid(actor) and not actor.is_queued_for_deletion() and actor.get_parent() == world.monsters_root and not actor.dead and not actor.concealed523 and int(actor.life_id) == int(entry.life)
 	if world.field_map == null: return false
 	var records: Array = world.field_map.data.get("npc_spawn",[])
 	var index: int = int(entry.index)
@@ -166,7 +166,7 @@ func _refresh() -> void:
 func _all_targets() -> Array[Dictionary]:
 	var targets: Array[Dictionary] = []
 	for actor: Node in world.monsters_root.get_children():
-		if actor is TwilightMonster and not actor.dead and actor.is_visible_in_tree() and not actor.is_queued_for_deletion(): targets.append(monster_entry(actor))
+		if actor is TwilightMonster and not actor.dead and not actor.concealed523 and actor.is_visible_in_tree() and not actor.is_queued_for_deletion(): targets.append(monster_entry(actor))
 	targets.append_array(npc_entries())
 	return targets
 
@@ -182,7 +182,7 @@ func _target_at(point: Vector2) -> Dictionary:
 	for node: Node in world.monsters_root.get_children():
 		if not node is TwilightMonster: continue
 		var monster: TwilightMonster = node
-		if monster.dead or not monster.is_visible_in_tree() or monster.is_queued_for_deletion(): continue
+		if monster.dead or monster.concealed523 or not monster.is_visible_in_tree() or monster.is_queued_for_deletion(): continue
 		var center: Vector2 = COORD.world_to_screen(get_viewport(), monster.global_position + Vector2(0, -28))
 		var radius: float = clampf(float(monster.visual_height) * 0.45, 44.0, 76.0)
 		var fraction: float = center.distance_squared_to(point) / (radius * radius)

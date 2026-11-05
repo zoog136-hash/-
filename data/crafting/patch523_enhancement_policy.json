@@ -1,0 +1,98 @@
+{
+  "basis": "TWILIGHT runtime interpretation; raw523 numbers take precedence",
+  "cost_currency": "adena",
+  "zero_consume_scrolls": 1,
+  "default_zero_target_selector": true,
+  "side_effect_level_loss": 1,
+  "official_blessing_options": "https://probability.plaync.com/lineagem/view?probCategoryId=6656e1b796b3cf5ad823b7bb",
+  "notes": "Cost currency, ConsumeAmount=0 minimum single scroll, TargetItemBlessCode=0 default selector and SideEffect level loss are configurable game interpretations. Raw probabilities/cost/count and confirmed qualifiers are preserved. No material-name safe level rule.",
+  "blessing_success_pct": {
+    "일반": 60,
+    "고급": 45,
+    "희귀": 25,
+    "영웅": 12,
+    "전설": 6,
+    "신화": 2,
+    "유일": 1
+  },
+  "blessing_probability_basis": "TWILIGHT existing balance; no verified numeric blessing-success table found; failure preserves item",
+  "missing_level21_effect": "continue_last_delta",
+  "missing_level21_basis": "TWILIGHT approximation only for missing +21 numeric effects; source +0..+20 always win",
+  "leap_disabled_bonus_presence": true,
+  "leap_disabled_basis": "TWILIGHT interpretation of BonusType8402 Value0 marker, not a source boolean assertion",
+  "missing_level21_invoke": "keep_level20",
+  "duplicate_invoke_policy": "strongest_probability_per_option",
+  "invoke_order": "after_existing_damage_resolution",
+  "defence_invoke_spell_scope": "attack_type_only",
+  "invoke_basis": "Exact source fixed amount and probability. Duplicate option stacking, post-resolution ordering and defence BySpellAttack interaction are TWILIGHT interpretations; raw AttackType0=All retained.",
+  "cast_speed_consumer": "existing_skill_cooldown_factor",
+  "healing_magic_modes": [
+    "heal",
+    "local_heal"
+  ],
+  "source_dot_channels": [
+    "poison",
+    "bleed"
+  ],
+  "typed_numeric_basis": "Source amounts and status/attack targets are exact. Existing cooldown factor, healing after LFE, additive typed/general reduction capped90 and supported poison/bleed DOT channels are configurable TWILIGHT interpretation; no original full formula claim.",
+  "public_scalar_basis": [
+    "https://lineagem.plaync.com/guidebook/view?title=마법사+마법",
+    "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf"
+  ],
+  "attribute_percent_basis": "base_plus_flat",
+  "attribute_percent_rounding": "floor",
+  "attribute_percent_origin": "Exact source Catalyst STR/DEX/INT percentages; base+flat multiplication and rounding are configurable TWILIGHT rules; no verified original complete stat formula.",
+  "attribute_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=6671e038a12ede529779bffc",
+  "source_drain_scope": "normal_only",
+  "source_undead_scope": "normal_only",
+  "source_undead_damage_min": 1,
+  "source_attack_numeric_basis": "Exact source HP/MP drain increments and undead maximum. Normal-hit scope, existing always-on drain convention and uniform integer1..maximum after amplification are configurable TWILIGHT interpretation. MP transfer is bounded by target pool and player missingMP. Existing legacy HP drain behavior preserved.",
+  "source_attack_public_basis": [
+    "https://lineagem.plaync.com/board/notice/view?articleId=65b94e3899ffa12d379cc903",
+    "https://lineagem.plaync.com/board/update/view?articleId=63bdbcb88737e56595bc769b"
+  ],
+  "source_absorption_base_annotation": "refresh_exact_mp_flag_even_if_preindexed; subtract_source_zero_total_once",
+  "source_elemental_target_channels": {
+    "1": "fire",
+    "2": "water",
+    "3": "wind",
+    "4": "earth"
+  },
+  "source_elemental_scope": "normal_only",
+  "source_elemental_resistance_min": -80,
+  "source_elemental_resistance_max": 85,
+  "source_elemental_rounding": "nearest",
+  "source_elemental_basis": "Source ElementalDamage Unit1 and target1/2/3/4 values are exact. Channel mapping follows source earring identities and official Paa/Eva/Saiha/Maphr element names; no missing ElementalResistanceType foreign table is invented. Normal-hit scope, separate flat components after existing amplification, existing NPC elemental resistance range and rounding are configurable TWILIGHT rules.",
+  "source_elemental_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=63865db9bd89877d499055cf",
+  "source_final_blow_scope": "normal_only",
+  "source_final_blow_rounding": "nearest",
+  "source_final_blow_origin": "Exact Unit3 source chance and amplification; integer1M draw, normal-hit scope, independent roll after existing amplification/critical and before separate elemental/undead/drain additions are explicit TWILIGHT estimates. Confirmed source values are not changed. No extra hit or recursive on-hit event.",
+  "source_final_blow_public_basis": [
+    "https://lineagem.plaync.com/board/notice/view?articleId=629fa738e6e3de0617cdc8ed",
+    "https://lineagem.plaync.com/guidebook/view?title=악세서리+아이템"
+  ],
+  "source_cursed_scroll_enabled": true,
+  "source_cursed_level_loss": 1,
+  "source_cursed_min_level": 0,
+  "source_cursed_origin": "Official2021-04-07 patch indexed description confirms cursed engraved weapon/armor scroll -1. Applying the same decrease to exact non-engraved137/138, normal group cost/quantity and minimum0 are explicit configurable TWILIGHT compatibility policy; normal success/destruction probabilities are not reused.",
+  "source_cursed_public_basis": "https://lineagem.plaync.com/board/update/view?articleId=606c9a065d8fed00017777ad",
+  "source_conditional_magic_scope": "spell_hits_only",
+  "source_conditional_effect_origin": "Exact SpecialResistanceType6 Stun and MagicDamage Unit1 +5 / FinalBlow Unit3 conditional values are preserved. Affected subject (target_status/self_status/disabled) and spell-only placement follow configurable TWILIGHT interpretation: the source SpecialResistanceType reference alone does not prove actor direction. FixedDesc references remain display evidence beside94 spell-scoped Defence_DebuffTimeDecrease contracts; no unconditional stun-duration reduction is applied.",
+  "source_stun_condition_subject": "target_status",
+  "source_weapon_scale_scope": "normal_weapon_roll_only",
+  "source_weapon_scale_stack": "strongest_success_multiplier",
+  "source_weapon_scale_rounding": "nearest",
+  "source_weapon_scale_origin": "Exact InvokeOptionType6/Param1 per million and source probability; only rolled size-specific weapon base is scaled. Normal successful hit placement before critical/element, strongest successful multiplier, rounding are TWILIGHT policy. No scale of stats, spells, drains or recursive procs.",
+  "source_typed_flat_ignore_consumer": "existing_typed_flat_damage_projection",
+  "source_typed_flat_ignore_origin": "Exact Unit1 melee/range/magic PierceDamageReduction source amounts. Reuse existing TWILIGHT typed reduction-ignore-as-flat-damage interpretation. NPC AC is not asserted to be damage reduction; no original NPC DR formula is claimed. Set consumer=disabled to retain source values without this projection.",
+  "source_pvp_flat_ignore_consumer": "existing_singleplayer_flat_damage_projection",
+  "source_pvp_status_level_consumer": "existing_singleplayer_status_virtual_level",
+  "source_fear_flat_ignore_consumer": "existing_flat_damage_projection",
+  "source_fear_condition_subject": "target_status",
+  "source_fear_flat_ignore_scope": "all_successful_hits",
+  "source_status_projection_origin": "Exact source Unit1 PvP flat-ignore, PvP skill-success-level and Fear8 conditional flat-ignore values. Existing TWILIGHT single-player PvP-to-PvE projection, six legacy status-chance virtual caster levels, flat-ignore-as-added-damage and ambiguous Fear affected subject/hit placement are configurable TWILIGHT interpretations. No actual player level, XP gates, native spell probability formula or NPC DR is changed. Disabled/unknown policy leaves values as source evidence only.",
+  "source_status_projection_public_basis": [
+    "https://lineagem.plaync.com/board/update/view?articleId=674f5c38a429a917f01d0cf6",
+    "https://lineagem.plaync.com/guidebook/view?title=군주+마법"
+  ]
+}

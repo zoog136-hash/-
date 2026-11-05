@@ -38,15 +38,20 @@ func _run() -> void:
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["전설"]) - 0.002) < 0.000000001, "boss Legendary rate must be 0.2%")
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["신화"]) - 0.00025) < 0.000000001, "boss Mythic rate must be 0.025%")
 	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["유일"]) - 0.00001) < 0.000000001, "boss Unique rate must be 0.001%")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("전설"), "normal monsters cannot roll Legendary")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("신화"), "normal monsters cannot roll Mythic")
-	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("유일"), "normal monsters cannot roll Unique")
+	for grade: String in ["전설", "신화", "유일"]:
+		_check(float(LOOT.NORMAL_EQUIPMENT_RATES.get(grade, 0.0)) == float(LOOT.BOSS_EQUIPMENT_RATES[grade]), "field high grade uses existing positive game rate: "+grade)
 	_check(absf(LOOT.NORMAL_POTION_RATE - 0.45) < 0.000001, "normal potion rate must remain 45%")
 	_check(absf(LOOT.BOSS_POTION_RATE - 0.90) < 0.000001, "boss potion rate must remain 90%")
 	var equipment_pools: Dictionary = catalog["equipment_by_grade"]
 	_check(not (equipment_pools.get("유일", []) as Array).is_empty(), "Unique equipment pool must be available")
 	var special_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	special_rng.seed = 714
+	var unique_potions: int = 0
+	for potion_name: String in catalog.get("potions", []):
+		if str(by_name[potion_name].get("grade", "")) == "유일":
+			unique_potions += 1
+			_check(LOOT._pick_potion([potion_name], false, catalog, special_rng) == potion_name, "configured Unique potion has no field-monster grade ban")
+	_check(unique_potions > 0, "real Unique potion candidates exercise removed grade cap")
 	var unique_item: String = LOOT._pick_equipment("유일", ["기르타스의 단검"], catalog, special_rng)
 	_check(unique_item == "기르타스의 단검", "boss configured Unique gear should be prioritized")
 	# A configured monster must never inherit an unrelated item or grade.
@@ -151,7 +156,6 @@ func _run() -> void:
 					if by_name.has(potion_name):
 						var potion_record: Dictionary = by_name[potion_name] as Dictionary
 						_check(LOOT._is_potion(potion_record), "balance potion must heal: " + potion_name)
-						_check(boss or str(potion_record.get("grade", "")) != "유일", "Unique potion must be boss-only")
 						registered_potions[potion_name] = true
 	# Crafting scrolls share one existing equipment-grade roll and are only
 	# reachable through their explicit per-monster ingredient sources.
@@ -222,14 +226,14 @@ func _run() -> void:
 				elif LOOT._is_potion(item):
 					potion_count += 1
 					potions_in_kill += 1
-					_check(grade != "유일" or is_boss, "Unique consumables must be boss-only")
+					_check(grade in LOOT.EQUIPMENT_GRADES, "potion grade remains recognized without a separate eligibility cap")
 				else:
 					gear_count += 1
 					gear_in_kill += 1
 					_check(LOOT._is_equipment(item), "drops must be equipment or potions")
 					_check(grade in LOOT.EQUIPMENT_GRADES, "equipment grade unrecognized")
 					if not is_boss:
-						_check(grade in ["일반", "고급", "희귀", "영웅"], "normal monster exceeded Hero cap: " + item_name)
+						_check(LOOT.NORMAL_EQUIPMENT_RATES.has(grade), "field equipment follows unchanged rarity weights: " + item_name)
 			_check(resources_in_kill <= 1, "at most one independent material per kill")
 			_check(potions_in_kill <= 1, "at most one potion per kill")
 			_check(gear_in_kill <= max_gear, "equipment drop count exceeded cap")

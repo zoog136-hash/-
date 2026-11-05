@@ -605,6 +605,7 @@ func _refresh_weight() -> void:
 
 func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)
+	var verified_source_text: String = detail_text.text
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
@@ -620,8 +621,16 @@ func _refresh_detail(item_reference: String) -> void:
 				lines.append("%s  %s" % [spec[1],str(item[spec[0]])])
 		var description: String = str(item.get("desc",item.get("description","")))
 		if not description.is_empty(): lines.append(UI.safe(description))
+	var source_use: String = preload("res://scripts/crafting/patch523_item_use.gd").summary(controller.get_parent()._patch523_use_record(item_reference) if controller!=null else item)
+	if not source_use.is_empty(): lines.append(UI.safe(source_use))
 	if not selected_id.is_empty(): lines.append("강화  +%d" % _enhance_level(item_reference))
-	detail_text.text = "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	if preload("res://scripts/shop/source523_inventory_tickets.gd").claims(item):
+		lines.append(preload("res://scripts/shop/source523_inventory_tickets.gd").UI_POLICY_TEXT)
+	detail_text.text = verified_source_text if item.get("source_m_native_item",false) else "\n".join(lines) if not lines.is_empty() else "표시할 추가 효과가 없습니다."
+	if QUEST_GEAR.REGEN_GEAR.has(int(item.get("source_item_class_id",0))):detail_text.text+="\n\n원본 재생량 / TWILIGHT 장비 회복 주기 30초 (원본 주기 미확인)"
+	if int(item.get("source_item_class_id",0)) in [376,385]:
+		var cadence: float=preload("res://scripts/quests/quest_regen523.gd").interval(controller.get_parent()) if controller!=null else 30.0
+		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / TWILIGHT 회복 주기 %s초 (원본 주기 미확인)" % str(cadence)
 	if controller != null:
 		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)
 		quick_button.disabled = not reason.is_empty()
@@ -637,6 +646,12 @@ func _refresh_detail(item_reference: String) -> void:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
+	if controller!=null and not _is_item_equipped(item_reference):
+		var host: Node=controller.get_parent()
+		var use_reason: String=host.PATCH523_ITEM_USE.reason(host._patch523_use_record(item_reference),int(host.level),host.BASE508.source_class_id(str(host.job_class)))
+		if not use_reason.is_empty():
+			detail_action.disabled=true
+			detail_action.tooltip_text=use_reason
 	if _is_item_equipped(item_reference):
 		detail_action.text = "해제"
 		detail_action.disabled = false

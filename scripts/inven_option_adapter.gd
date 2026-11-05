@@ -170,6 +170,14 @@ static func annotate(source_record: Dictionary) -> Dictionary:
 	if str(source_record.get("source", "")) != "inven":
 		return source_record
 	if bool(source_record.get("inven_indexed", false)):
+		# Older indexed catalog exports predate the MP flag consumer. Refresh
+		# this exact literal only; never reparse/add every old numeric option.
+		if not source_record.has("mpAbsorption") and source_record.get("sourceOptions",[]) is Array and (source_record.get("sourceOptions",[]) as Array).has("MP 흡수"):
+			var updated: Dictionary=source_record.duplicate(true)
+			updated["mpAbsorption"]=true
+			if updated.get("inven_unimplemented_options") is Array:
+				(updated.inven_unimplemented_options as Array).erase("MP 흡수")
+			return updated
 		return source_record
 	var record: Dictionary = source_record.duplicate(true)
 	var applied: Dictionary = {}
@@ -185,6 +193,9 @@ static func annotate(source_record: Dictionary) -> Dictionary:
 			continue
 		if raw == "HP 흡수":
 			record["hpAbsorption"] = true
+			continue
+		if raw == "MP 흡수":
+			record["mpAbsorption"] = true
 			continue
 		var parsed: Dictionary = _parse_one(raw)
 		if parsed.is_empty():

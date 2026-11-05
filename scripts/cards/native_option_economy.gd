@@ -20,7 +20,7 @@ static func rule(row: Dictionary) -> Dictionary:
 	if required==null or cost==null or minimum==null or maximum==null:return {}
 	return {"deck":deck,"required":int(required),"attempt_cost":int(cost),"min_grade":int(minimum),"max_grade":int(maximum),"decrease":raw(deck,grade,"EnchantFailDecreaseExp")}
 static func material(record: Dictionary,r: Dictionary) -> Dictionary:
-	if record.get("source","")!="lineagem_base508" or int(record.get("source_deck_id",-1))!=int(r.deck):return {}
+	if not preload("res://scripts/lineagem_base508.gd").native(record) or int(record.get("source_deck_id",-1))!=int(r.deck):return {}
 	var grade: int=int(record.get("source_grade_id",-1))
 	if grade<int(r.min_grade) or grade>int(r.max_grade):return {}
 	var exp: Variant=raw(int(r.deck),grade,"EnchantExp");var fee: Variant=raw(int(r.deck),grade,"EnchantCost")
@@ -53,7 +53,7 @@ static func view(core: RefCounted,state: Dictionary,cards: Dictionary,gold: int,
 		var record: Dictionary=core.catalog[category][material_id];var spec: Dictionary=material(record,r)
 		if spec.is_empty():continue
 		per_grade[str(record.grade)]=int(spec.experience)
-		var spare: int=int(cards.get("spare",{}).get(category,{}).get(material_id,0))
+		var spare: int=core.available_material_spare(cards,category,material_id)
 		if spare>0 and core.owned(cards,category,material_id) and core.native_material_available(record):materials.append({"id":material_id,"record":record.duplicate(true),"spare":spare,"experience_per_card":int(spec.experience),"cost_per_card":int(spec.cost)})
 	var refund: int=(int(r.required)-int(r.decrease))*SCALE if r.decrease!=null else 0
 	return {"ok":true,"category":category,"target_id":identity,"target_record":core.catalog[category][identity].duplicate(true),"revision":int(state.revision),"owned":owned,"awakened":bool(entry.awakened),"experience":amount,"required_experience":required,"source_exp_scale":SCALE,"materials":materials,"material_experience":per_grade,"success_chance_pct":float(core.probabilities[category][row.grade])/100.0,"attempt_cost":int(r.attempt_cost),"gold":gold,"failure_refund_experience":refund,"blocked_reason":availability.get("error",""),"can_feed":bool(availability.ok) and owned and not bool(entry.awakened) and amount<required and not materials.is_empty(),"can_awaken":bool(availability.ok) and owned and not bool(entry.awakened) and amount==required and gold>=int(r.attempt_cost),"bonus_options":row.bonus_options.duplicate(),"applied_options":row.applied_options.duplicate(),"pending_options":row.pending_options.duplicate(),"policy_note":"원본 OptionAwakenValueType 이름 기준 비용·재료 등급·EXP·실패 감소량 · 스킬 각성과 별도","attempts":int(entry.attempts),"failures":int(entry.failures),"pity_enabled":false,"collections":core.collection_views(state,cards)}

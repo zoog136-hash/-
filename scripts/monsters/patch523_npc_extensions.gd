@@ -109,6 +109,7 @@ func release(actor: Node, spell: Dictionary, already_paid: bool = false) -> bool
 		if bool(source.get("IsImmuneToCancellation",false)): continue
 		if (not groups.is_empty() and groups.has(source.get("BuffGroupID"))) or (groups.is_empty() and bool(source.get("IsGood",false))): service.player_buffs.erase(buff_id); removed += 1
 	removed += remaining.cancel_host(groups)
+	removed += cancel_quest_regen(groups)
 	var duration: Vector2 = service.catalog.duration(id)
 	if duration.x > 0:
 		for value: Variant in service.catalog.values("SpellBonus",id,"BuffClassID","BuffClassID"):
@@ -116,6 +117,9 @@ func release(actor: Node, spell: Dictionary, already_paid: bool = false) -> bool
 	service.sync_restrictions()
 	last_event = {"kind":"cancel","spell":id,"removed":removed,"scope":"source-managed buffs only; source group/immunity respected"}
 	return true
+
+func cancel_quest_regen(groups: Array)->int:
+	return preload("res://scripts/quests/quest_regen523.gd").cancel(service.world,groups)
 
 func can_pay(actor: Node, spell: Dictionary) -> bool:
 	var cost: int = int(spell.get("MPCost",0))

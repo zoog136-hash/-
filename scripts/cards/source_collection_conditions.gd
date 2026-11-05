@@ -10,7 +10,7 @@ func configure(rows: Array) -> void:
 		if not profiles.has(identity):profiles[identity]=[]
 		profiles[identity].append(row.duplicate(true))
 static func valid_context(context: Dictionary) -> bool:
-	if context.get("source_snapshot","")!="base508" or not context.get("ServiceRegionCode") is String:return false
+	if context.get("source_snapshot","") not in ["base508","patch523"] or not context.get("ServiceRegionCode") is String:return false
 	var number: Variant=context.get("WorldNo")
 	return not str(context.ServiceRegionCode).is_empty() and (number is int or number is float) and is_finite(float(number)) and float(number)==floorf(float(number)) and int(number)>0
 func evaluate(limit_id: int,context: Dictionary) -> Dictionary:

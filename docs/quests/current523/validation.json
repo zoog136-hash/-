@@ -1,0 +1,207 @@
+{
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "base_main": "f4cc0138613a6c98898c57d479b5247a849b96ab",
+  "production_file_sha256": {
+    "scripts/world.gd": "d13a797d1d20d49f51db480c9b95c003376db09e08d72427e5db1f9932997e1e",
+    "scripts/quests/quest_service.gd": "dab789ca7674fd2e6685677741c6202bf952dd7c2562d786ca9d6f0b77b4ceb2",
+    "scripts/quests/source_quest523.gd": "aba454aecca3b293376ed48030578292299f0c644a2f749374558b303127a506",
+    "scripts/quests/quest_auto_runner.gd": "1e05d559499323631448a691d8e1c68b4871afd30848be1b6c523646ec22483f",
+    "scripts/ui/renewal_quests.gd": "e6e8942df7b85d402091b115ee6bbf0950051487db6dfecdef5c83bd5509669b",
+    "scripts/ui/lineage_inventory_ui.gd": "7a2d32b929a0ccfe06054e3b7079383be7e6a2dc55dc31f227a8e1cdbfaa60d8",
+    "scripts/ui/renewal_hud.gd": "d78a06f684f01834be2f8c48e17d157866b60a5e7b71f7c1e603a7737d511b58",
+    "scripts/ui/renewal_window.gd": "c315118c082c7af117f6674c3226d5c57ce70d7148ee853176a913a961ecb7eb",
+    "scripts/quests/quest_item_bindings.gd": "95ed154b8b6eddc9bd30f5faa84f42269e177d52b6525b6448495ba3fc0f9356"
+  },
+  "source_all_definitions": {
+    "checks": 10346,
+    "failures": [],
+    "gate_reasons_with_all_predecessors": {
+      "": 1186,
+      "기간 종료": 1334,
+      "선행 조건 미연결: NpcTalk": 1,
+      "연계 콘텐츠의 획득 조건 확인 필요": 679,
+      "원본 반복/초기화 규칙 확인 필요": 117,
+      "원본 운영 시간 조건 확인 필요": 128,
+      "제외 시스템 목표: ArenaWin": 31,
+      "제외 시스템 목표: ClanDonate": 128,
+      "제외 시스템 목표: ClanEnter": 1,
+      "직업 조건 미충족": 16
+    },
+    "original_level_goals": {
+      "blocked_by_other_original_conditions": 46,
+      "currently_open_underlevel_checks": 58,
+      "total": 104
+    },
+    "quests_with_items_held_for_use_link": 2016,
+    "reward_storage_supported": 2675,
+    "source_quests": 3621,
+    "unsupported_reward_reasons": {
+      "보상 미연결: Buff": 3,
+      "보상 미연결: Einasad": 38,
+      "보상 미연결: PassSystemSeasonPassExp": 894,
+      "보상 미연결: Teleport": 3,
+      "원본 보상 수량의 개체 저장 연결 필요": 2,
+      "혈맹 전용 보상 제외": 6
+    }
+  },
+  "actual_main_received_pack": {
+    "batches": 26,
+    "checks": 3010,
+    "counts": {
+      "completed": 811,
+      "excluded": 160,
+      "locked_or_deferred": 2650,
+      "pending_use_completed": 526
+    },
+    "failures": [],
+    "final_level": 86,
+    "initial_level": 35,
+    "physical_items": 697,
+    "reward_capabilities_current_game": {
+      "reward_storage_supported": 2677,
+      "unsupported_reasons": {
+        "보상 미연결: Buff": 3,
+        "보상 미연결: Einasad": 38,
+        "보상 미연결: PassSystemSeasonPassExp": 894,
+        "보상 미연결: Teleport": 3,
+        "혈맹 전용 보상 제외": 6
+      },
+      "with_items_pending_use": 1940
+    },
+    "source_quests": 3621,
+    "remaining_reasons_grouped": {
+      "기간 종료": 1334,
+      "레벨 미달": 2,
+      "선행 조건 미연결: NpcTalk": 1,
+      "선행 퀘스트 미완료": 379,
+      "연계 콘텐츠의 획득 조건 확인 필요": 679,
+      "원본 반복/초기화 규칙 확인 필요": 117,
+      "원본 운영 시간 조건 확인 필요": 128,
+      "제외 시스템 목표: ArenaWin": 31,
+      "제외 시스템 목표: ClanDonate": 128,
+      "제외 시스템 목표: ClanEnter": 1,
+      "직업 조건 미충족": 10
+    },
+    "completed_type_counts": {
+      "1": 635,
+      "4": 95,
+      "121": 75,
+      "3": 6
+    },
+    "received_pack_consumer_profile": "/workspace/quest-level-data",
+    "claimed_above_current_level": [],
+    "quest_reward_receipts": "All new physical rewards match a committed quest/source/quantity; old records remain unchanged; runner is released on restart",
+    "core_current_save_checks": 44
+  },
+  "actual_opengl_ui": {
+    "checks": 752,
+    "failures": [],
+    "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+    "inventory_source_stacks": 732,
+    "source_quests": 3621,
+    "profile": "/workspace/quest-current-main-data",
+    "save_unchanged": true,
+    "scope": "Current code reads and browses the historical 822-claim save without modifying bytes; old rewards are not converted or regranted"
+  },
+  "existing_core_runtime_save": {
+    "checks": 44,
+    "failures": [],
+    "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+  },
+  "legacy_history_regression": "INSTANT_QUEST_PASS",
+  "committed_resource_integrity": "723 atlases / 41442 frames / 233420026 bytes; exact SHA verified",
+  "reproducible_pack_sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+  "ui_capture_local_only": "/workspace/quest-current-main-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/quest523-ui",
+  "scope": "Full source projection; actual reachable fixed point for Knight; source-item use and unsupported content remain incomplete; no full CI/Android device claim",
+  "resolved_diagnostics": [
+    "Typed JSON comparison after a committed write originally caused false rollback; fixed and recovery retested.",
+    "Small-screen card area originally collapsed; corrected and a retained >=100px layout assertion passes.",
+    "Host has no audio device; final graphics check uses Dummy audio and actual OpenGL.",
+    "PR262 rebase preserves latest main inventory/quick-item guards and unions inventory-automation and quest transaction save keys.",
+    "Post-rebase UI first used a blank isolated profile: two saved-history/item-stack checks failed. UI rerun consumes the actual Main-verified save, not a fixture or a fabricated inventory.",
+    "104 original Level goals were previously skipped as performance objectives. Preserve them as level eligibility: 58 currently open goals reject under-level characters; 46 retain their other original blockers. Fresh Knight completes811, pending use526; historical822/537 saves are not revoked or regranted."
+  ],
+  "post_rebase_log_paths": {
+    "source": "/workspace/scratch/quest-current-source.log",
+    "actual_main": "/workspace/scratch/quest-current-main.log",
+    "core": "/workspace/scratch/quest-current-core.log",
+    "ui": "/workspace/scratch/quest-current-ui-verified.log",
+    "legacy": "/workspace/scratch/quest-current-legacy.log"
+  },
+  "source_item_binding": {
+    "checks": 18,
+    "failures": [],
+    "real_source_item_id": 117304,
+    "actual_consumer": "symbol_source523.material/recharge",
+    "external_pr_consumers_installed": false,
+    "log": "/workspace/scratch/quest-binding-final.log",
+    "scope": "18 focused positive/adversarial checks using the actual production consumer callable and exact original quest reward; no foreign-PR item-use execution claim"
+  },
+  "latest_binding_log_paths": {
+    "main": "/workspace/scratch/quest-level-main.log",
+    "source": "/workspace/scratch/quest-level-source-final.log",
+    "binding": "/workspace/scratch/quest-binding-final.log",
+    "core": "/workspace/scratch/quest-level-core.log",
+    "ui": "/workspace/scratch/quest-level-ui.log",
+    "old_save_preservation": "/workspace/scratch/quest-binding-old-save.json"
+  },
+  "historical_5d122cfc": {
+    "code": "5d122cfcf30101af4d85764e6cb7bcb0ed647bd2",
+    "actual_main_received_pack": {
+      "batches": 26,
+      "checks": 3012,
+      "counts": {
+        "completed": 822,
+        "excluded": 160,
+        "locked_or_deferred": 2639,
+        "pending_use_completed": 537
+      },
+      "failures": [],
+      "final_level": 86,
+      "initial_level": 35,
+      "physical_items": 736,
+      "reward_capabilities_current_game": {
+        "reward_storage_supported": 2677,
+        "unsupported_reasons": {
+          "보상 미연결: Buff": 3,
+          "보상 미연결: Einasad": 38,
+          "보상 미연결: PassSystemSeasonPassExp": 894,
+          "보상 미연결: Teleport": 3,
+          "혈맹 전용 보상 제외": 6
+        },
+        "with_items_pending_use": 1940
+      },
+      "source_quests": 3621,
+      "remaining_reasons_grouped": {
+        "기간 종료": 1334,
+        "레벨 미달": 1,
+        "선행 조건 미연결: NpcTalk": 1,
+        "선행 퀘스트 미완료": 369,
+        "연계 콘텐츠의 획득 조건 확인 필요": 679,
+        "원본 반복/초기화 규칙 확인 필요": 117,
+        "원본 운영 시간 조건 확인 필요": 128,
+        "제외 시스템 목표: ArenaWin": 31,
+        "제외 시스템 목표: ClanDonate": 128,
+        "제외 시스템 목표: ClanEnter": 1,
+        "직업 조건 미충족": 10
+      },
+      "received_pack_consumer_profile": "/workspace/quest-current-main-data",
+      "merged_inventory_guards": "Use, quick-item, auto-deposit and auto-sell preserve source-held rewards and saved bytes"
+    },
+    "issue": "Level goals were skipped with ordinary objectives: level86 completed eleven level87..97 achievements. Historical saves/rewards remain preserved; corrected fresh counts follow."
+  },
+  "historical_save_preservation": {
+    "save_sha256_before": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+    "profile": "/workspace/quest-current-main-data",
+    "source_claims": 822,
+    "physical_items": 736,
+    "existing_physical_receipts": 0,
+    "new_code_will_not_backfill_or_regrant": true,
+    "save_sha256_after": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+    "byte_identical": true,
+    "source_claims_after": 822,
+    "physical_receipts_after": 0
+  },
+  "recorded_code_scope": "ee4856dd baseline before reviewed PR238 consumer extension; original results/hashes retained",
+  "latest_consumer_validation": "consumer-validation.json"
+}

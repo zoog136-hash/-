@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "reviewed_code_sha": "298fe99818d2b7ab78d5483efd9a22d760f0f079",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "map_pr": {
+    "number": 232,
+    "reviewed_head": "1be258b6dd90b41934c100a013dee927e3c03942",
+    "github_blob_sha": {
+      "scripts/maps/current523_aden_review.gd": "d2f5fe7cb8fb3524ceb94675cf89fcf8bf476499",
+      "scripts/maps/current523_tile_review_pack.gd": "540e95b58bf04711f141df65bcd06dc2efc05ae9",
+      "scripts/maps/current523_aden_pack.gd": "b8485528178a02198916bbe069a38d536d2c22d3",
+      "docs/CURRENT523_ADEN_SOURCE_RUNTIME.md": "183b918af4b3722cc51e0c4063e19b0be01773a3"
+    },
+    "declared_runtime_movement": false,
+    "declared_M_projection_verified": false,
+    "declared_semantics": {
+      "coordinates": "UNKNOWN",
+      "projection": "UNKNOWN",
+      "movement": "UNKNOWN",
+      "collision": "UNKNOWN"
+    },
+    "raw_attributes_bytes_per_s32": 16384
+  },
+  "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "private_pack_sha256": "a217eec940a84d8fa67e7ece99d3f8774b9b13b90aeebbd71e4140ff4ba11fef",
+  "additional_actual_table_sha256": {
+    "ConstantData": "b4edf5085fe342cf2a317f8eac59e2d2c946ee87527ea30396e45e72ac2a0549",
+    "LandAttribute": "11ef7a4c67d0a624d4809324ee7ea2cb49b04b35553291fc841991b43ae53666",
+    "LandAttributeType": "c92dd875ac92a6dcca718fa8a8bd93990ef9c04e91553570ce55d488d868ff18"
+  },
+  "source_counts": {
+    "menus": 80,
+    "landings": 87,
+    "lands": 22,
+    "aden_menus": 55,
+    "aden_landings": 55,
+    "other_landings": 32,
+    "exact_point_landings": 0,
+    "unit_extent_rectangles": 54,
+    "all_nonzero_territories": 25464,
+    "all_nonzero_point_territories": 8870
+  },
+  "complete_source_field_inventory": {
+    "LandTeleport": [
+      "AllowInterTeleport",
+      "AllowMapTeleport",
+      "CurrencyID",
+      "ID",
+      "NoTicketSpend",
+      "TeleportCost"
+    ],
+    "LandTeleportTerritories": [
+      "ID",
+      "LandTeleportID",
+      "TerritoryID"
+    ],
+    "Territories": [
+      "CanMoveToEarthObject",
+      "DescID",
+      "EndX",
+      "EndY",
+      "ID",
+      "IsVillage",
+      "LandID",
+      "Name",
+      "ShowInSourceList",
+      "StartX",
+      "StartY"
+    ]
+  },
+  "observed_constants": [
+    {
+      "ID": 52404,
+      "Name": "AutoScheduleSlotSize",
+      "Value": "10",
+      "Type": 1
+    },
+    {
+      "ID": 53004,
+      "Name": "ServerAutoScheduleLimitLevel",
+      "Value": "55",
+      "Type": 1
+    },
+    {
+      "ID": 55844,
+      "Name": "ScheduleTeleportRetryCount",
+      "Value": "20",
+      "Type": 1
+    }
+  ],
+  "interpretation_of_constants": "RAW_VALUES_ONLY; retry20 does not prove candidate generation; level55/range5 not promoted to unrelated gates",
+  "multiple_landing_menu_counts": {
+    "604": 5,
+    "614": 4
+  },
+  "land_attribute_context": {
+    "NoTeleport": {
+      "rows": 6,
+      "territory_zero_rows": 6
+    },
+    "NoTeleportCome": {
+      "rows": 32,
+      "territory_zero_rows": 0
+    }
+  },
+  "land_attribute_scope": "RAW_DESTINATION_LAND_CONTEXT; not all rows necessarily apply to any selected landing; precedence unresolved",
+  "current_84_map_numeric_id_candidates_only": [
+    4,
+    35,
+    280,
+    283
+  ],
+  "numeric_id_matches_are_not_geographic_certificates": true,
+  "existing_local_movement_execution": {
+    "after_position": [
+      43440.0,
+      -3708.0
+    ],
+    "before_position": [
+      41256.0,
+      -2184.0
+    ],
+    "clear_matching_revision_targets": 35,
+    "current_layout_revision": 2026102904,
+    "current_map": "aden_world",
+    "current_point_clear": true,
+    "different_map_to_aden_npc_quote": {
+      "map_id": "aden_world",
+      "min_level": 1,
+      "ok": true,
+      "price": 0
+    },
+    "executed_existing_portal": true,
+    "executed_existing_portal_id": "aden_hunting_entry",
+    "failures": [],
+    "same_map_local_portals": 35,
+    "same_map_npc_quote": {
+      "ok": false,
+      "reason": "이미 이 지역에 있습니다"
+    },
+    "scope": "EXISTING_LOCAL_PORTALS_ONLY; NO_523_LAND_MAPPING_OR_ARRIVAL_CERTIFICATION",
+    "source_commit": "943aa6f6dc6468410bd03c71934407a1361427da"
+  },
+  "qualified_current523_arrival_contracts": 0,
+  "activated_current523_transitions": 0,
+  "required_contracts": [
+    "source523 Land+AssetPath+hash to playable field/coordinate/actor foot",
+    "verified current523 movement/occupancy/body predicate",
+    "rectangle endpoint and region/cell selection/retry20 semantics",
+    "explicit offline application of admission/currency rules"
+  ],
+  "user_save_mutation": false,
+  "production_movement_changes_this_followup": false,
+  "manual_remote_ci_runs": 0
+}

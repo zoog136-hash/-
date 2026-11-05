@@ -20,7 +20,7 @@ func _run() -> void:
 		return
 	var service := SERVICE.new()
 	check(service.configure(db.get("아이템", []), db.get("몬스터", [])), "quest schema and current game IDs validate: " + service.problem)
-	var at: int = 1793670000
+	var at: int = int(Time.get_unix_time_from_system()) # use the active high-water day
 	var original_count: int = service.entries(1, {}, at).size()
 	check(original_count >= 10, "main, daily and achievement quest definitions loaded")
 	check(not bool(service.complete_instantly("invalid:quest:id", 1, at).get("ok", false)), "unknown quest never pays")
@@ -38,7 +38,7 @@ func _run() -> void:
 	check(bool(restored.complete_instantly("twilight:daily:001", 1, at).get("ok", false)), "daily mission may be instantly completed")
 	check(not bool(restored.complete_instantly("twilight:daily:001", 1, at).get("ok", false)), "daily cannot be claimed twice on same day")
 	var day_after: int = at + 86400
-	check(bool(restored.complete_instantly("twilight:daily:001", 1, day_after).get("ok", false)), "daily KST 05:00 rollover allows another claim")
+	check(not bool(restored.complete_instantly("twilight:daily:001", 1, day_after).get("ok", false)), "retired daily receipt survives rollover without reopening sample rewards")
 	check(not bool(restored.complete_instantly("twilight:main:001", 1, day_after).get("ok", false)), "daily reset cannot wipe main completion")
 	var prior_day: int = at - 86400
 	check(not bool(restored.complete_instantly("twilight:daily:001", 1, prior_day).get("ok", false)), "clock rollback cannot farm another daily reward")

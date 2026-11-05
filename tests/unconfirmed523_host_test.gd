@@ -12,8 +12,6 @@ class Ain extends RefCounted:
 	func import_state(value: Dictionary) -> void:
 		saved = value.duplicate(true)
 		dragon_orb_expires_at = int(saved.dragon_orb_expires_at)
-class Quest extends RefCounted:
-	func export_state() -> Dictionary: return {"claimed":{}}
 class Hud extends RefCounted:
 	var callback: Callable
 	var opened: String = ""
@@ -38,7 +36,7 @@ class Host extends Node:
 	var equipped_items: Dictionary = {}
 	var ui_preferences: Dictionary = {"item_locks":{}}
 	var ain_service = Ain.new()
-	var quest_service = Quest.new()
+	var quest_service = preload("res://scripts/quests/quest_service.gd").new()
 	var hud = Hud.new()
 	var next_item_instance_id: int = 100
 	var runtime_service
@@ -52,10 +50,13 @@ class Host extends Node:
 		for item: Dictionary in equipped_items.values():
 			if item.get("instance_id") == uid: return true
 		return false
+	func _item_locked(label: String, uid: String = "") -> bool:
+		return bool(ui_preferences.item_locks.get(label,false)) or bool(ui_preferences.item_locks.get(uid,false)) or bool(item_instances.get(uid,{}).get("locked",false))
 	func _save_game(_quiet: bool, staged: Dictionary) -> Error:
 		if runtime_service != null: runtime_service.snapshot()
 		save_calls += 1
 		last_staged = staged.duplicate(true)
+		if staged.has("level") and (not staged.has("quest_state") or not quest_service.validate_saved_state(staged.quest_state).is_empty()): return ERR_INVALID_DATA
 		if save_result == OK: disk = staged.duplicate(true)
 		return save_result
 	func _update_hud() -> void: pass
@@ -71,7 +72,7 @@ class Source extends RefCounted:
 	func ready() -> bool: return available
 	func rows(table: String) -> Array:
 		if table == "CurrencyUnitClass": return [{"ID":1,"CurrencyID":9,"UnitID":4,"ClassID":100,"ForGive":false,"ConsumePriority":0},{"ID":2,"CurrencyID":9,"UnitID":4,"ClassID":101,"ForGive":true,"ConsumePriority":0}]
-		if table == "QuestReward": return [{"QuestID":77,"RewardID":500},{"QuestID":77,"RewardID":1000}]
+		if table == "QuestReward": return [{"QuestID":77,"RewardID":500},{"QuestID":77,"RewardID":1000},{"QuestID":77,"RewardID":1001}]
 		if table == "ItemBonus": return [{"ItemClassID":400,"BonusID":4000},{"ItemClassID":401,"BonusID":4001}]
 		return []
 	func row(table: String,id: int) -> Dictionary:
@@ -82,6 +83,7 @@ class Source extends RefCounted:
 		if table == "BonusType" and id == 422: return {"ID":422,"Name":"Life","UnitID":17}
 		if table == "Reward" and id == 500: return {"ID":500,"RewardTypeID":172,"RewardClassID":724,"Amount":60}
 		if table == "Reward" and id == 1000: return {"ID":1000,"RewardTypeID":2,"RewardClassID":100,"Amount":4,"ItemBlessCodeID":1}
+		if table == "Reward" and id == 1001: return {"ID":1001,"RewardTypeID":2,"RewardClassID":101,"Amount":3,"ItemBlessCodeID":2}
 		if table == "PassSystem" and id == 724: return {"ID":724,"PassSystemTypeID":12,"IsActive":pass_active,"ServerLimitSetID":1,"SeasonEndDateTimeID":1 if pass_end > 0 else 0}
 		return {}
 	func region_allowed(_id: int,_ctx: Dictionary) -> bool: return server_allowed
@@ -98,6 +100,7 @@ class Domain extends RefCounted:
 	func view(_ctx: Dictionary,_state: Dictionary) -> Dictionary: return {"title":"fixture","notes":[],"rows":[]}
 	var reward_values: Array = [{"kind":"item","id":200,"amount":2},{"kind":"experience","id":1,"amount":600}]
 	var received_events: Array = []
+	var cost_values: Array = [{"kind":"item","id":100,"amount":2},{"kind":"currency","id":1,"amount":10}]
 	func initial_state() -> Dictionary: return {"rng":1,"claims":{},"passes":{}}
 	func validate_state(value: Variant) -> String: return "" if value is Dictionary and value.has("rng") else "bad mock state"
 	func propose(_request: Dictionary,_context: Dictionary, state: Dictionary) -> Dictionary:
@@ -105,7 +108,7 @@ class Domain extends RefCounted:
 		var next: Dictionary = state.duplicate(true)
 		next.rng += 1
 		next.claims.claim = true
-		return {"ok":true,"state":next,"costs":[{"kind":"item","id":100,"amount":2},{"kind":"currency","id":1,"amount":10}],"rewards":reward_values.duplicate(true)}
+		return {"ok":true,"state":next,"costs":cost_values.duplicate(true),"rewards":reward_values.duplicate(true)}
 	func event(value: Dictionary,_context: Dictionary,state: Dictionary) -> Dictionary:
 		received_events.append(value.duplicate(true))
 		return {"ok":true,"state":state.duplicate(true)}
@@ -160,6 +163,25 @@ func fixture() -> Dictionary:
 	runtime.state = runtime.fresh()
 	runtime.test_now = 1793780000
 	return {"world":world,"runtime":runtime}
+
+func held_fixture(world: Host, runtime, second: bool = false) -> void:
+	var quest_id: String = "m523:quest:77"
+	var rewards: Array = []
+	world.inventory.clear()
+	world.item_instances.clear()
+	for id: int in ([100,101] if second else [100]):
+		var reward_id: int = 1000 if id == 100 else 1001
+		var quantity: int = 4 if id == 100 else 3
+		var bless: int = 1 if id == 100 else 2
+		var original: Dictionary = runtime.source.row("ItemClass",id)
+		var label: String = "[원본 보상] "+str(original.Name)
+		var reward: Dictionary = {"ID":reward_id,"type_name":"Item","RewardClassID":id,"Amount":quantity,"ItemBlessCodeID":bless,"RewardEnhancementTypeID":1,"ClanOnly":false,"UseImmediately":false,"source_item":original.duplicate(true)}
+		rewards.append(reward)
+		var record: Dictionary = {"name":label,"source":"lineagem_patch523","source_snapshot":"patch523","source_pending_use":true,"source_item_class_id":id,"sourceId":"m523:item:"+str(id),"source_original_item":original.duplicate(true),"source_bless_code_id":bless,"source_reward_id":reward_id,"source_use_immediately":false}
+		world.inventory[label] = quantity
+		world.item_instances["proof_stack" if id == 100 else "proof_second"] = {"name":label,"level":0,"source_reward_quantity":quantity,"record":record,"quest_reward_receipt":{"schema":1,"quest_id":quest_id,"reward_id":reward_id,"item_class_id":id,"bless_code_id":bless,"source_sha256":Runtime.Source.SOURCE_SHA256,"quantity":quantity}}
+	world.quest_service.index[quest_id] = {"blockers":[],"excluded_reasons":[],"source_rewards":rewards}
+	world.quest_service.claimed[quest_id] = true
 func _run() -> void:
 	var f: Dictionary = fixture()
 	var runtime = f.runtime
@@ -373,11 +395,12 @@ func _followup_ports() -> void:
 	world.free()
 
 	f = fixture(); runtime = f.runtime; world = f.world
-	world.item_instances = {"proof_stack":{"name":"native stack","source_reward_quantity":4,"record":{"source_item_class_id":100,"sourceId":"m523:item:100","source_reward_quantity":4,"source_bless_code_id":1},"quest_reward_receipt":{"schema":1,"quest_id":77,"reward_id":1000,"item_class_id":100,"bless_code_id":1,"source_sha256":Runtime.Source.SOURCE_SHA256,"quantity":4}}}
+	held_fixture(world,runtime)
 	var proof_before: Dictionary = world.item_instances.proof_stack.quest_reward_receipt.duplicate(true)
 	var staged: Dictionary = runtime._stage_world()
 	var error: String = runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack","expected_quantity":4},staged,runtime.context())
 	check(error.is_empty() and staged.item_instances.proof_stack.source_reward_quantity == 3 and staged.item_instances.proof_stack.quest_reward_receipt == proof_before and world.item_instances.proof_stack.source_reward_quantity == 4,"exact owned consumption stages remaining stack and preserves immutable issued proof and live state")
+	check(staged.quest_state.item_grants["m523:quest:77"][0].used_quantity == 1 and world.quest_service.item_grants.is_empty(),"actual quest owner stages held-use ledger without applying it before save")
 	check(not runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack","expected_quantity":4},staged,runtime.context()).is_empty(),"same physical unit snapshot cannot be debited twice")
 	check(not runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"missing"},runtime._stage_world(),runtime.context()).is_empty(),"instance-bound debit cannot fall through to another stack")
 	world.item_instances.proof_stack.locked = true
@@ -389,6 +412,7 @@ func _followup_ports() -> void:
 	world.item_instances.proof_stack.quest_reward_receipt.bless_code_id = 2
 	check(runtime.context().has("ownership_error"),"receipt blessing is matched to actual source physical record")
 	world.free()
+	_owned_quest_transactions()
 
 	f = fixture(); runtime = f.runtime; world = f.world
 	var proof: Dictionary = {"schema":1,"quest_id":77,"reward_id":500,"source_sha256":Runtime.Source.SOURCE_SHA256,"claim_id":"upstream:77:local-day:once"}
@@ -517,4 +541,63 @@ func _followup_ports() -> void:
 	legacy = legacy_copy.duplicate(true); legacy.domains.events.erase("claims")
 	runtime.restore({"unconfirmed523":legacy})
 	check(runtime.save_blocked,"optional empty final-progress normalization cannot mask other missing saved fields")
+	world.free()
+
+func _owned_quest_transactions() -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world: Host = f.world
+	held_fixture(world,runtime,true)
+	var original_state: Dictionary = world.quest_service.export_state()
+	var issued: Dictionary = world.item_instances.proof_stack.quest_reward_receipt.duplicate(true)
+	runtime.domains.events.cost_values = [{"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"},{"kind":"item","id":101,"amount":1,"instance_id":"proof_second"},{"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"}]
+	runtime.domains.events.reward_values = [{"kind":"pass_exp","id":724,"amount":60}]
+	var result: Dictionary = runtime.execute("events",{})
+	var receipts: Array = world.quest_service.item_grants.get("m523:quest:77",[])
+	check(result.ok and world.save_calls == 1 and world.item_instances.proof_stack.source_reward_quantity == 2 and world.item_instances.proof_second.source_reward_quantity == 2,"multiple exact owned costs and repeated same-unit debit compose in one save")
+	check(receipts.size() == 2 and int(receipts[0].used_quantity) == 2 and int(receipts[1].used_quantity) == 1 and world.disk.quest_state == world.quest_service.export_state(),"owner-produced use receipts compose without overwriting another reward ledger")
+	check(world.item_instances.proof_stack.quest_reward_receipt == issued and world.quest_service.claimed == original_state.claimed and world.disk.quest_state.item_grants["m523:quest:77"][0].pack_sha256 == Runtime.Source.SOURCE_SHA256,"issued proof and claims remain immutable while verified consumer identity is persisted")
+	var saved: Dictionary = world.disk.duplicate(true)
+	world.quest_service.import_state(saved.quest_state)
+	runtime.restore(saved)
+	check(not runtime.context().has("ownership_error") and Runtime.QuestOwnership.proof(world,"proof_stack").ok,"current main owner accepts the remaining source stack after saved-state reload")
+	var continuation: Dictionary = Runtime.QuestOwnership.prepare_debit(world,"proof_stack",1)
+	var continued: Dictionary = Runtime.QuestOwnership.use_state(world,continuation,Runtime.Source.SOURCE_SHA256)
+	check(continued.ok and int(continued.state.item_grants["m523:quest:77"][0].used_quantity) == 3,"same verified consumer can continue a saved partial use through the existing owner")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	held_fixture(world,runtime)
+	runtime.domains.events.cost_values = [{"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"}]
+	runtime.domains.events.reward_values = [{"kind":"pass_exp","id":724,"amount":60}]
+	world.save_result = ERR_CANT_CREATE
+	original_state = world.quest_service.export_state()
+	issued = world.item_instances.proof_stack.duplicate(true)
+	result = runtime.execute("events",{})
+	check(not result.ok and world.quest_service.export_state() == original_state and world.item_instances.proof_stack == issued and world.disk.is_empty() and runtime.save_blocked,"failed shared writer applies neither owner ledger debit nor pass reward and blocks uncertain retry")
+	world.free()
+
+	f = fixture(); runtime = f.runtime; world = f.world
+	held_fixture(world,runtime)
+	# Recreate a prior consumer's durable use through its owner, not a hand-made ledger.
+	var prepared: Dictionary = Runtime.QuestOwnership.prepare_debit(world,"proof_stack",1)
+	var used: Dictionary = Runtime.QuestOwnership.use_state(world,prepared,"a".repeat(64))
+	world.inventory = prepared.override.inventory; world.item_instances = prepared.override.item_instances
+	world.quest_service.import_state(used.state)
+	runtime.domains.events.cost_values = [{"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"}]
+	original_state = world.quest_service.export_state()
+	check(not runtime.execute("events",{}).ok and world.save_calls == 0 and world.quest_service.export_state() == original_state and world.item_instances.proof_stack.source_reward_quantity == 3,"different prior consumer pack identity fails closed without rewriting its use ledger")
+	world.item_instances.proof_stack.quest_reward_receipt.quest_id = 77
+	check(runtime.context().has("ownership_error"),"integer fixture quest IDs cannot impersonate current main canonical receipt identity")
+	world.item_instances.proof_stack.quest_reward_receipt.quest_id = "m523:quest:77"
+	world.quest_service.claimed.clear()
+	check(runtime.context().has("ownership_error"),"raw reward edge without actual source owner's completed claim cannot authorize held consumption")
+	world.free()
+	f = fixture(); runtime = f.runtime; world = f.world
+	held_fixture(world,runtime)
+	var staged: Dictionary = runtime._stage_world()
+	var error: String = runtime._cost({"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"},staged,runtime.context())
+	staged.unconfirmed523 = runtime.state.duplicate(true)
+	world.ui_preferences.item_locks.proof_stack = true
+	check(error.is_empty() and not runtime._publish(staged).ok and world.save_calls == 0 and world.quest_service.item_grants.is_empty() and world.item_instances.proof_stack.source_reward_quantity == 4,"owner quote is revalidated immediately before shared writer and stale lock applies no debit or receipt")
 	world.free()
