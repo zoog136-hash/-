@@ -1,5 +1,6 @@
 extends VBoxContainer
-## Existing game window, ordinary selection controls and the shared confirmation.
+## Historical PR264 custom Godot form, retained only for presentation audits.
+## This is not original Lineage UI and must not be mounted by production code.
 var runtime
 var section: String = "events"
 var page_index: int = 0

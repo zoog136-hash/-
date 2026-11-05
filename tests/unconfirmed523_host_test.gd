@@ -1,6 +1,7 @@
 extends SceneTree
 const Runtime = preload("res://scripts/unconfirmed523/runtime.gd")
-const View = preload("res://scripts/unconfirmed523/view.gd")
+## Backend/owner contracts only. Historical custom-form widget assertions remain
+## in tests/audits/unconfirmed523_custom_form_host_test.gd and are not imported.
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -13,11 +14,7 @@ class Ain extends RefCounted:
 		saved = value.duplicate(true)
 		dragon_orb_expires_at = int(saved.dragon_orb_expires_at)
 class Hud extends RefCounted:
-	var callback: Callable
-	var opened: String = ""
 	func refresh_inventory(_value: Dictionary) -> void: pass
-	func open_unconfirmed523(key: String) -> void: opened = key
-	func confirm_action(_title: String,_description: String,_accept: String,then: Callable) -> void: callback = then
 	func show_message(_value: String) -> void: pass
 	func append_log(_value: String) -> void: pass
 class HeldMaterialHost extends RefCounted:
@@ -350,7 +347,11 @@ func _run() -> void:
 	cold.world.free()
 	world.catalog.unrelated = {"source_item_class_id":101,"sourceId":"m523:item:101"}; world.inventory.unrelated = 1
 	check(not runtime.try_use("unrelated"),"unrelated native item remains with ordinary item flow")
-	check(runtime.try_use("native stack") and world.hud.opened == "events","known source adapter category opens correct UI")
+	var unbound_before: Array = [world.inventory.duplicate(true),world.item_instances.duplicate(true),world.gold,runtime.state.duplicate(true),world.ain_service.export_state(),world.disk.duplicate(true),world.save_calls]
+	var absent: Dictionary = runtime.request_presentation("events")
+	check(not absent.get("ok",false) and absent.get("code") == "presentation_unavailable","missing original UI adapter reports explicit unavailable result")
+	check(runtime.try_use("native stack"),"recognized source item is handled without original UI so ordinary item flow cannot consume it")
+	check([world.inventory,world.item_instances,world.gold,runtime.state,world.ain_service.export_state(),world.disk,world.save_calls] == unbound_before,"unbound recognized-item request preserves owned items wallet progression RNG Ain disk and write count")
 	world.free()
 
 	f = fixture(); runtime = f.runtime; world = f.world
@@ -373,37 +374,7 @@ func _run() -> void:
 	check(is_equal_approx(runtime.bonus("ignore_melee_damage_reduction:percent"),1.0) and int(runtime.effect_details.effects[0].raw_value) == 10000 and runtime.effect_details.combat_policy.percent == "percentage_points_estimate","target consumer retains raw percent ignore and labels local formula estimate")
 	world.free()
 
-	f = fixture(); runtime = f.runtime; world = f.world
-	var view = View.new()
-	root.add_child(view)
-	view.runtime = runtime
-	view.section = "events"
-	view._confirm({"detail":"fixture"},{"label":"confirm"},{},"events")
-	view.section = "jade_grail"
-	check(world.hud.callback.is_valid(),"confirmation callback captured")
-	world.hud.callback.call(1)
-	check(world.save_calls == 1 and int(runtime.state.domains.events.rng) == 2,"actual HUD count argument and tab switch keep displayed transaction domain")
-	view.free(); world.free()
-
-	f = fixture(); runtime = f.runtime; world = f.world
-	view = View.new(); root.add_child(view); view.configure(runtime)
-	var refresh_found: bool = false
-	for control: Node in view.get_child(0).get_children():
-		if control is Button and control.text == "새로고침": refresh_found = true
-	check(refresh_found,"manual refresh toolbar action available")
-	view._choose({"detail":"choice"},{"request":{},"required_choices":[{"count":1,"options":[{"label":"a","value":1},{"label":"b","value":2}]}]},"events")
-	var list: ItemList
-	for control: Node in view.choice_panel.get_children():
-		if control is ItemList: list = control
-	list.select(1)
-	view.refresh(true)
-	check(is_instance_valid(list) and list.get_selected_items() == PackedInt32Array([1]),"explicit goal refresh preserves active reward selection")
-	view.free(); world.free()
-
-	var presentation: Array = [{"id":"inactive","actions":[]},{"id":"disabled","actions":[{"disabled":true}]},{"id":"active_a","actions":[{"label":"use"}]},{"id":"active_b","actions":[{"disabled":false}]}]
-	var ordered: Array = View.usable_first(presentation)
-	check(ordered.map(func(row: Dictionary): return row.id) == ["active_a","active_b","inactive","disabled"],"enabled-action rows display first with stable order in both groups")
-	check(ordered.size() == presentation.size() and presentation[0].id == "inactive","display priority retains every row and leaves source rows untouched")
+	_presentation_boundary()
 	_followup_ports()
 	_staged_owner_events()
 	if failures.is_empty(): print("UNCONFIRMED523_HOST_OK: %d assertions" % checks); quit(0)
@@ -746,4 +717,33 @@ func _genuine_source_ownership(original, quest_pack: String) -> void:
 	var use: Dictionary = world.quest_service.item_grants[issued.quest_id][0]
 	check(use.used_quantity == 1 and use.quantity == issued.quantity and use.pack_sha256 == Runtime.Source.SOURCE_SHA256,"actual source-issued selected consumption retains original quantity and verified current consumer proof")
 	print("HOST_GENUINE_QUEST_CONSUMPTION_OK: ownership-layer QA only; Item313 quest79604; no processing/effect completion claim")
+	world.free()
+
+func _presentation_boundary() -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world: Host = f.world
+	var sections: Array[String] = []
+	var adapter_response: Dictionary = {"ok":true,"opened":true,"details":{"owner":"test_adapter"}}
+	var before: Array = [world.inventory.duplicate(true),world.item_instances.duplicate(true),world.gold,runtime.state.duplicate(true),world.save_calls]
+	runtime.bind_presentation(func(section: String) -> Dictionary:
+		sections.append(section)
+		return adapter_response)
+	var response: Dictionary = runtime.request_presentation("challenge")
+	check(response.get("ok",false) and response.get("opened",false) and sections == ["challenge"],"bound presentation adapter receives the exact requested backend domain")
+	response.details.owner = "caller_mutation"
+	check(adapter_response.details.owner == "test_adapter","presentation response copy cannot mutate the bound owner's response")
+	check(not runtime.request_presentation("unknown").get("ok",false) and sections == ["challenge"],"unknown presentation domain is rejected before invoking the adapter")
+	check(runtime.try_use("native stack") and sections == ["challenge","events"],"recognized container routes to bound events adapter")
+	world.catalog["native jade"] = {"source_item_class_id":300,"sourceId":"m523:item:300"}
+	world.inventory["native jade"] = 1
+	check(runtime.try_use("native jade") and sections == ["challenge","events","jade_grail"],"recognized jade category routes to bound jade_grail adapter")
+	world.inventory.erase("native jade"); world.catalog.erase("native jade")
+	check([world.inventory,world.item_instances,world.gold,runtime.state,world.save_calls] == before,"opening presentation adapter commits no backend transaction or source RNG")
+	runtime.bind_presentation(func(_section: String): return true)
+	check(not runtime.request_presentation("events").get("ok",false),"invalid adapter response cannot masquerade as a successful open")
+	runtime.bind_presentation(Callable())
+	check(runtime.request_presentation("events").get("code") == "presentation_unavailable" and runtime.try_use("native stack"),"explicit unbind restores unavailable boundary while retaining recognized-item ownership")
+	check(not runtime.snapshot().has("presentation_adapter"),"presentation callable is not persisted in the source save namespace")
+	check(world.save_calls == 0 and world.disk.is_empty(),"presentation binding requests and unbinding never write the shared save")
 	world.free()

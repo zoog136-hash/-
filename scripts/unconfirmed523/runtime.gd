@@ -26,6 +26,7 @@ var _last_survival_tick: String = ""
 var time_policy: Dictionary = {}
 var _source_configured: bool = false
 var policy_problem: String = ""
+var _presentation_adapter: Callable
 const POLICY_PATH: String = "res://data/unconfirmed523/twilight_policy.json"
 var test_now: int = 0
 var policy: Dictionary = {"luckybag_random_mode":"source_weights", "random_reward_weight_mode":"equal_estimate", "attendance_blessing_base":200,"conditional_percent_mode":"percentage_points_estimate","undead_damage_mode":"uniform_1_to_max_estimate","luckybag_final_scope":"source_item","luckybag_final_completion":"once"}
@@ -208,6 +209,21 @@ static func _quantity(physical: Dictionary) -> int:
 	var record: Dictionary = physical.get("record",{})
 	var amount: Variant = physical.get("source_reward_quantity",record.get("source_reward_quantity",1))
 	return int(amount) if _integer(amount,1) and int(amount) <= 1000000000 else 0
+
+func bind_presentation(adapter: Callable) -> void:
+	# Original UI owns presentation/confirmation. Never persist a UI binding or
+	# install a substitute when that owner's source interface is unavailable.
+	_presentation_adapter = adapter
+
+func request_presentation(section: String = "events") -> Dictionary:
+	if not DOMAIN_PATHS.has(section): return _fail("콘텐츠 영역 오류")
+	if not _presentation_adapter.is_valid():
+		return {"ok":false,"code":"presentation_unavailable","error":"원본 UI 연결이 필요합니다"}
+	var response: Variant = _presentation_adapter.call(section)
+	if not response is Dictionary: return _fail("UI 연결 응답 오류")
+	# Opening a source UI is not a successful purchase/claim/use transaction.
+	# That UI must submit its confirmed action separately through execute().
+	return response.duplicate(true)
 
 func page(key: String) -> Dictionary:
 	if not source.ready() or not _source_configured: return {"title":"원본523 콘텐츠","notes":["기존 비공개 공통523 ZIP을 설치하면 사용할 수 있습니다.",source.last_error],"rows":[]}
@@ -790,7 +806,9 @@ func try_use(item_name: String) -> bool:
 		if not matches: continue
 		var category: int = int(source.row("ItemClass",id).get("CategoryID",0))
 		if category not in [10291,10622,78,10381,10394]: return false
-		world.hud.open_unconfirmed523("jade_grail" if category in [10291,10622] else "events")
+		request_presentation("jade_grail" if category in [10291,10622] else "events")
+		# The item belongs to this consumer even while the original UI is absent.
+		# Falling through could consume it through an unrelated item handler.
 		return true
 	return false
 

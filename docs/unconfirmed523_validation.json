@@ -652,5 +652,103 @@
       "tests/unconfirmed523_host_test.gd": "39599dd43f848ed49b1f2ef0d871ec56b6738c779606a001bfb851aa32e86886",
       "tests/unconfirmed523_main_test.gd": "60a2daf0dcb63f44d7f77833eacf6aa59eda2e300637f9fd8175bc89c31f0837"
     }
+  },
+  "ui_separation_20261105": {
+    "baseline_public_head": "65f559cf987359dcc5433c9d5aa17d099127fff1",
+    "checked_main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+    "status": "implemented and focused backend validation passed; original UI binding incomplete; local followup awaiting publication coordination",
+    "production_custom_form": false,
+    "original_UI_applied": false,
+    "presentation_binding": "runtime.bind_presentation(callable) / request_presentation(section); transient, default unbound, no transaction-success inference",
+    "preserved_backend": [
+      "page and execute APIs",
+      "domains and source rules",
+      "World progression/combat/ownership hooks",
+      "saved namespaces and RNG",
+      "shared Quest consumption ABI and prepared reward contract"
+    ],
+    "recognized_item_without_UI": "handled without consumption or falling through to another item owner",
+    "historical_custom_forms": {
+      "path": "tests/audits/",
+      "export_excluded_by_existing_filter": "tests/*",
+      "historical_only": true,
+      "previous_captures_are_not_original_UI_evidence": true
+    },
+    "tests": [
+      {
+        "name": "actual Main without custom form; exact owned source items, effects, stale/duplicate confirmation, rollback",
+        "checks": 114,
+        "status": "passed",
+        "mode": "headless Godot4.7.2"
+      },
+      {
+        "name": "unchanged Core actual Main/current-map/save/resources",
+        "checks": 47,
+        "status": "passed"
+      },
+      {
+        "name": "shared ownership ABI, actual source joins, genuine quest issuer, presentation boundary",
+        "checks": 153,
+        "status": "passed"
+      },
+      {
+        "name": "separate-process Main restore, exact ownership/namespaces/RNG/effects and craft save rollback",
+        "checks": 51,
+        "status": "passed",
+        "mode": "headless Godot4.7.2"
+      }
+    ],
+    "not_run": [
+      "remote/manual/full CI",
+      "authentic original UI application or visual equivalence",
+      "Android"
+    ],
+    "remaining": [
+      "original source UI installation/selection/confirmation/claim/start bindings",
+      "existing native Test/expiry restrictions and external map/supply/owner dependencies remain"
+    ],
+    "remote_state": "Draft; not merged; UI hold retained; no ready/merge transition in this followup",
+    "test_harness_diagnostic": "Initial run passed114 assertions but directly constructed an orphan menu and emitted shutdown leak errors. Replaced it with ordinary HUD toggle_menu plus close; final initial114 run exits0 without errors. Original diagnostic log retained privately.",
+    "unchanged_files_from_public_baseline": [
+      "scripts/world.gd",
+      "scripts/quests/quest_reward_consumption.gd",
+      "scripts/unconfirmed523/source523.gd",
+      "scripts/unconfirmed523/events_domain.gd",
+      "scripts/unconfirmed523/jade_grail_domain.gd",
+      "scripts/unconfirmed523/challenge_domain.gd",
+      "data/unconfirmed523/twilight_policy.json"
+    ],
+    "hud_matches_checked_main": true,
+    "log_sha256": {
+      "ui-separated-core.log": "5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b",
+      "ui-separated-host.log": "6ceffc9f436d0c22a822ed17a1db97d57c099abb0250511b3ecbc9dfbcc5c726",
+      "ui-separated-main-final.log": "b47bf3a0eadacd12362cbacf60d79240a815a5d484993e7d1dfc3a48b6b8020c",
+      "ui-separated-main-reload-final.log": "00b4ba146049df8910200f46e232855e6315325606bb33b7759ae9439389acf3"
+    },
+    "final_run_exit_codes": {
+      "ui-separated-core.log": 0,
+      "ui-separated-host.log": 0,
+      "ui-separated-main-final.log": 0,
+      "ui-separated-main-reload-final.log": 0
+    },
+    "code_sha256": {
+      "scripts/ui/renewal_hud.gd": "60bf606ce6971d14f51404b5fd274c5a166464f9702077618e87e9ed040ed27c",
+      "scripts/unconfirmed523/runtime.gd": "c8780964982a40b20bf378f06ed8fb089ae0240396c6d4cc0de697355ef1843e",
+      "tests/unconfirmed523_core_wrapper.gd": "fa566212d48dc7a2b0c530370d5228a141743dc68515affa4facfb40b05425c9",
+      "tests/unconfirmed523_host_test.gd": "da6f21f4eb3aa3b939a88158cfb64fb06ff606e7d028dd4c5957e2ae528b102e",
+      "tests/unconfirmed523_main_test.gd": "9fa84052b58cee5a2d2b25fee082faf486535a1fe396998e349350dbc5f2e719",
+      "tests/native_resource_loader.gd": "985ab539f1c6ede4be7de83c5d392efaa2962f2b8d7ee68b48add419d9475dd5",
+      "tests/audits/unconfirmed523_custom_form.gd": "b3c297f8bc37105eb42a4dcd366c04403c0b90a13abf5472a89bc53201aeb3b4",
+      "tests/audits/unconfirmed523_custom_form_host_test.gd": "eb1b909ee72dd1cb8dc6d700ebd1f2369818259cc2d1dbd8bb68f4520205a383",
+      "tests/audits/unconfirmed523_custom_form_main_test.gd": "1f48e78e11dd2595f9945493127e272c6cd2d4b89009ef36830c61ad3b6375d4"
+    },
+    "latest_remote_check": {
+      "main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+      "public_PR_head": "65f559cf987359dcc5433c9d5aa17d099127fff1",
+      "PR_draft": true,
+      "PR_merged": false,
+      "main_is_ancestor": true,
+      "HUD_exact_main_bytes": true
+    }
   }
 }

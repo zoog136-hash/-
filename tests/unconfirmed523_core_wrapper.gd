@@ -1,11 +1,11 @@
 extends SceneTree
 ## Unchanged required Core assertions, with real source bytes available while
 ## this clean checkout's editor import remains incomplete.
-const MainHarness = preload("res://tests/unconfirmed523_main_test.gd")
+const NativeImageLoader = preload("res://tests/native_resource_loader.gd")
 var real_resource_loader: ResourceFormatLoader
 
 func _initialize() -> void:
-	real_resource_loader = MainHarness.NativeImageLoader.new()
+	real_resource_loader = NativeImageLoader.new()
 	ResourceLoader.add_resource_format_loader(real_resource_loader,true)
 	call_deferred("start_original_suite")
 

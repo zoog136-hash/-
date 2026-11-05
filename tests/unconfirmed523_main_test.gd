@@ -1,6 +1,8 @@
 extends SceneTree
-## Real Main, real private content and production save writer. Ownership and
-## pass-XP fixtures are explicit test setup, not ordinary acquisition claims.
+## Real Main, backend domain APIs and production save writer, without a custom
+## content form. Ownership/pass-XP fixtures are explicit setup, not acquisition.
+## Widget/confirmation/capture assertions remain in the historical custom-form
+## audits under tests/audits; this suite does not claim original-UI execution.
 const QA = preload("res://tests/qa_class_selection.gd")
 const SOURCE = preload("res://scripts/unconfirmed523/source523.gd")
 const WRITER = preload("res://scripts/skills/save_writer.gd")
@@ -8,38 +10,7 @@ const EXP = preload("res://scripts/experience_progression.gd")
 const NOW: int = 1793800800 # 2026-11-04 14:00 UTC.
 const MARKER: String = "user://unconfirmed523-main-evidence.json"
 
-class NativeImageLoader extends ResourceFormatLoader:
-	var read_paths: Dictionary = {}
-	func _get_recognized_extensions() -> PackedStringArray:
-		return PackedStringArray(["png","webp","jpg","jpeg","svg","ttf","otf","wav","ogg"])
-	func _handles_type(type: StringName) -> bool:
-		return type in [&"Texture2D",&"ImageTexture",&"Texture",&"Font",&"FontFile",&"AudioStream",&"AudioStreamWAV",&"AudioStreamOggVorbis"]
-	func _get_resource_type(path: String) -> String:
-		match path.get_extension().to_lower():
-			"ttf","otf": return "FontFile"
-			"wav": return "AudioStreamWAV"
-			"ogg": return "AudioStreamOggVorbis"
-		return "Texture2D" if path.get_extension().to_lower() in _get_recognized_extensions() else ""
-	func _exists(path: String) -> bool:
-		return FileAccess.file_exists(path)
-	func _load(path: String, _original: String, _threads: bool, _cache: int) -> Variant:
-		read_paths[path] = true
-		match path.get_extension().to_lower():
-			"wav": return AudioStreamWAV.load_from_file(path)
-			"ogg": return AudioStreamOggVorbis.load_from_file(path)
-			"ttf","otf":
-				var font := FontFile.new()
-				font.data = FileAccess.get_file_as_bytes(path)
-				return font
-		var image := Image.new()
-		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
-		var error: Error = ERR_FILE_UNRECOGNIZED
-		match path.get_extension().to_lower():
-			"png": error = image.load_png_from_buffer(bytes)
-			"webp": error = image.load_webp_from_buffer(bytes)
-			"jpg","jpeg": error = image.load_jpg_from_buffer(bytes)
-			"svg": error = image.load_svg_from_buffer(bytes)
-		return ERR_FILE_CORRUPT if error != OK or image.is_empty() else ImageTexture.create_from_image(image)
+const NativeImageLoader = preload("res://tests/native_resource_loader.gd")
 
 var loader: NativeImageLoader
 var world
@@ -47,14 +18,12 @@ var rt
 var checks: int = 0
 var failures: Array[String] = []
 var phase: String = "initial"
-var capture_dir: String = ""
 
 func _initialize() -> void:
 	loader = NativeImageLoader.new()
 	ResourceLoader.add_resource_format_loader(loader,true)
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--phase="): phase = arg.trim_prefix("--phase=")
-		if arg.begins_with("--capture-dir="): capture_dir = arg.trim_prefix("--capture-dir=")
 	call_deferred("run")
 
 func check(value: bool, label: String) -> bool:
@@ -80,34 +49,40 @@ func freeze() -> void:
 	if world.field_population != null: world.field_population.set_process(false)
 	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
 
-func dialog():
-	return world.hud.get_node("Root").get_node_or_null("TwilightConfirmation")
-
-func screen():
-	for child: Node in world.hud.workspace.get_children():
-		var found: Node = _find_screen(child)
-		if found != null: return found
-	return null
-
-func _find_screen(node: Node):
-	if node.get_script() == load("res://scripts/unconfirmed523/view.gd"): return node
+func has_custom_form(node: Node) -> bool:
+	var script: Script = node.get_script()
+	if script != null and script.resource_path in ["res://scripts/unconfirmed523/view.gd","res://tests/audits/unconfirmed523_custom_form.gd"]: return true
 	for child: Node in node.get_children():
-		var found: Node = _find_screen(child)
-		if found != null: return found
-	return null
-
-func _button(node: Node, text_value: String):
-	if node is Button and node.text == text_value: return node
-	for child: Node in node.get_children():
-		var found: Node = _button(child,text_value)
-		if found != null: return found
-	return null
-
-func _has_label(node: Node, text_value: String) -> bool:
-	if node is Label and text_value in node.text: return true
-	for child: Node in node.get_children():
-		if _has_label(child,text_value): return true
+		if has_custom_form(child): return true
 	return false
+
+func presentation_separation() -> void:
+	check(not world.hud.has_method("open_unconfirmed523"),"actual HUD exposes no custom content-form mount method")
+	var hud_source: String = FileAccess.get_file_as_string(world.hud.get_script().resource_path)
+	check(not "unconfirmed523/view.gd" in hud_source and not "audits/unconfirmed523_custom_form.gd" in hud_source,"production HUD imports neither former nor archived custom form")
+	world.hud.toggle_menu()
+	check(world.hud.menu_page.find_child("MenuTile_unconfirmed523",true,false) == null,"actual HUD menu contains no custom content-form entry")
+	check(not has_custom_form(world.hud),"actual Main HUD tree has no mounted custom content form")
+	world.hud._close_workspace()
+	var before: Array = ownership()
+	var disk: String = FileAccess.get_sha256(world.save_path())
+	var unavailable: Dictionary = rt.request_presentation("events")
+	check(not unavailable.get("ok",false) and unavailable.get("code") == "presentation_unavailable","Main backend reports missing original UI adapter explicitly")
+	check(same(before,ownership()) and FileAccess.get_sha256(world.save_path()) == disk,"missing UI adapter preserves live ownership domain RNG and exact save bytes")
+
+func recognized_item_without_presentation() -> void:
+	var grails: Array = ids_for(338438)
+	if not check(not grails.is_empty(),"recognized-item probe uses a genuinely owned source grail"): return
+	var item_name: String = str(world.item_instances[str(grails[0])].name)
+	var before: Array = ownership()
+	var disk: String = FileAccess.get_sha256(world.save_path())
+	check(rt.try_use(item_name),"recognized owned source item remains handled while original UI adapter is absent")
+	world._on_inventory_item_activated(item_name)
+	check(same(before,ownership()) and FileAccess.get_sha256(world.save_path()) == disk,"ordinary Main inventory activation cannot fall through to another item owner while UI is absent")
+	world._use_quick_item(item_name)
+	check(same(before,ownership()) and FileAccess.get_sha256(world.save_path()) == disk,"ordinary Main quick-item activation preserves recognized item while UI is absent")
+	check(same(before,ownership()) and FileAccess.get_sha256(world.save_path()) == disk,"recognized item cannot consume activate reward or save through absent UI")
+	check(not has_custom_form(world.hud),"recognized-item request never mounts the archived custom form")
 
 func ownership() -> Array:
 	return [world.gold,world.inventory.duplicate(true),world.item_instances.duplicate(true),world.next_item_instance_id,rt.state.duplicate(true),world.ain_service.export_state()]
@@ -133,14 +108,6 @@ func ids_for(source_id: int) -> Array:
 	for uid: String in world.item_instances:
 		if rt.native_id(world.item_instances[uid].get("record",{})) == source_id: result.append(uid)
 	return result
-
-func prepare(domain: String, request: Dictionary) -> void:
-	world.hud.open_unconfirmed523(domain)
-	await frames()
-	var view = screen()
-	if check(view != null,"native content view mounted in existing HUD"):
-		view._choose({"label":"integration action","detail":"explicit real-source transaction"},{"label":"원본 거래 확인","request":request},domain)
-		await frames()
 
 func fixture_items() -> bool:
 	var staged: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":10000000,"next_item_instance_id":int(world.next_item_instance_id),"level":89,"experience":0,"exp_need":EXP.table_requirement(89),"stat_points":int(world.stat_points),"quest_state":world.quest_service.export_state()}
@@ -226,6 +193,11 @@ func final_cube_fixtures() -> void:
 	check(not rejected.get("ok",false) and same(before,ownership()),"actual8951 graph TestItem8961 blocks before consuming ownership counter rewards or RNG")
 	check(FileAccess.get_sha256(world.save_path())==disk,"source TestItem leaf rejection preserves exact durable bytes")
 	check(rt.state.domains.events.final_progress.get("8951",{}).is_empty(),"blocked native final bag creates no fictitious seventh completion history")
+	var row: Dictionary = {}
+	for value: Dictionary in rt.page("events").rows:
+		if str(value.id) == "container:8951": row = value; break
+	check(not row.is_empty() and not row.get("actions",[]).is_empty() and row.actions[0].get("disabled",false),"backend owned8951 action preserves source TestItem leaf rejection")
+	check("시험용 보상 포함" in str(row.get("detail","")),"backend owned8951 detail explains the preserved source restriction")
 
 func craft_progress_fixtures() -> void:
 	# Existing TWILIGHT recipe, real Main writer and explicit ingredient fixture.
@@ -256,7 +228,7 @@ func craft_progress_fixtures() -> void:
 
 func finish() -> void:
 	write_resource_usage()
-	print("UNCONFIRMED523_MAIN_RESULT " + JSON.stringify({"phase":phase,"checks":checks,"failures":failures,"raw_resource_paths":loader.read_paths.size(),"scope":"ACTUAL_MAIN_PRIVATE_SOURCE_ATOMIC_SAVE_UI; EXPLICIT_OWNERSHIP_AND_PASS_XP_FIXTURES"}))
+	print("UNCONFIRMED523_MAIN_RESULT " + JSON.stringify({"phase":phase,"checks":checks,"failures":failures,"raw_resource_paths":loader.read_paths.size(),"scope":"ACTUAL_MAIN_BACKEND_PRIVATE_SOURCE_ATOMIC_SAVE; NO_CUSTOM_FORM; EXPLICIT_OWNERSHIP_AND_PASS_XP_FIXTURES"}))
 	if is_instance_valid(world): world.queue_free()
 	await process_frame
 	ResourceLoader.remove_resource_format_loader(loader)
@@ -284,32 +256,6 @@ func write_resource_usage() -> void:
 	var report: Dictionary={"schema":1,"phase":phase,"profile_path":world.save_path(),"profile_sha256":FileAccess.get_sha256(world.save_path()),"integration_main_sha":OS.get_environment("TWILIGHT_264_MAIN_SHA"),"world_sha256":FileAccess.get_sha256("res://scripts/world.gd"),"runtime_sha256":FileAccess.get_sha256("res://scripts/unconfirmed523/runtime.gd"),"active_map":world.active_map_id,"active_field_script":world.field_map.get_script().resource_path if world.field_map!=null else "","active_map_manifest_path":pack+"/index.json","active_map_manifest_sha256":FileAccess.get_sha256(pack+"/index.json"),"content_archive":rt.source.status(),"content_archive_sha256":SOURCE.SOURCE_SHA256,"native_loader_reads":native,"parsed_source_entries":tables,"map_store_verified_reads":textures,"coverage_limit":"Scoped native ResourceLoader, parsed source entries and map-store SHA reads only; not a complete OS file-open trace or whole-game installation."}
 	var output: FileAccess=FileAccess.open("user://unconfirmed523-resource-usage-"+phase+".json",FileAccess.WRITE)
 	if output!=null:output.store_string(JSON.stringify(report,"\t"));output.close()
-
-func captures() -> void:
-	if capture_dir.is_empty() or DisplayServer.get_name() == "headless": return
-	DirAccess.make_dir_recursive_absolute(capture_dir)
-	for dimensions: Vector2i in [Vector2i(1280,720),Vector2i(854,480)]:
-		root.size = dimensions
-		DisplayServer.window_set_size(dimensions)
-		for tab: String in ["events","jade_grail","challenge"]:
-			world.hud.open_unconfirmed523(tab)
-			await frames()
-			if tab == "events":
-				screen().search_text="container:8951"
-				screen().refresh()
-				await frames()
-				var blocked_button = _button(screen().body,"열기")
-				check(blocked_button != null and blocked_button.disabled,"native owned8951 button reflects source TestItem leaf rejection")
-				check(_has_label(screen().body,"시험용 보상 포함"),"native owned8951 view explains the preserved source restriction")
-			if tab == "challenge":
-				var has_start: bool = false
-				for card: Node in screen().body.get_children():
-					for child: Node in card.get_children():
-						if child is Button and "현재 맵 실전 시작" in child.text and not child.disabled: has_start = true
-				check(has_start,"current source challenge action appears on the first visible page")
-			await RenderingServer.frame_post_draw
-			var path: String = capture_dir.path_join("unconfirmed523-%s-%dx%d.png" % [tab,dimensions.x,dimensions.y])
-			check(root.get_texture().get_image().save_png(path) == OK,"actual Main content capture " + tab + " " + str(dimensions))
 
 func run() -> void:
 	if not check(OS.get_environment("TWILIGHT_523_MAIN_TEST") == "1","explicit isolated integration-test opt-in"):
@@ -343,13 +289,15 @@ func run() -> void:
 	check(is_instance_valid(world.field_renderer) and world.field_renderer.get_script().resource_path == "res://scripts/maps/source_map_runtime_renderer.gd","actual Main uses current source renderer class")
 	if not check(rt.source.ready() and rt.domains.size() == 3,"live host loads verified source and three authorized domains"):
 		await finish(); return
+	presentation_separation()
 	check(loader.read_paths.size() > 0,"test loader reads existing real image/font/audio bytes")
 	print("UNCONFIRMED523_MAIN_STAGE: current map and shared source ready")
 	if phase == "reload":
-		await reload_phase(); await captures(); await finish(); return
+		await reload_phase(); await finish(); return
 	var initial_hp: int = world._effective_max_hp()
 	var initial_xp: float = world._experience_multiplier()
 	if not fixture_items(): await finish(); return
+	recognized_item_without_presentation()
 	check(world._effective_max_hp() == initial_hp + 50,"owned blessed source grail adds actual Main max HP50")
 	check(is_equal_approx(world._experience_multiplier(),initial_xp+0.01),"owned source grail adds actual Main experience1percent")
 	check(rt.context().owned.get("355334",0) == 6 and ids_for(338438).size() == 1,"native ownership IDs and exact stack quantity visible to domain")
@@ -368,29 +316,31 @@ func run() -> void:
 	var visible: Dictionary = {}
 	for row: Dictionary in page.rows: visible[str(row.id)] = row
 	check(visible.has("pass:692") and visible.has("pass:724"),"both actual simultaneous pass seasons visible in live page")
-	check(same(state_before,rt.state),"view does not mutate domain state or RNG")
+	check(same(state_before,rt.state),"backend page does not mutate domain state or RNG")
 	var before: Array = ownership()
-	await prepare("events",{"action":"pass_purchase","pass_id":724,"premium":false})
-	if check(dialog() != null,"actual action opens shared confirmation"):
-		dialog().cancel_button.pressed.emit(); await frames()
-	check(same(before,ownership()),"native cancel preserves every resource and domain RNG")
+	var preview_hash: String = FileAccess.get_sha256(world.save_path())
+	var purchase_preview: Dictionary = {}
+	for action: Dictionary in visible.get("pass:724",{}).get("actions",[]):
+		if action.get("request",{}).get("premium") == false: purchase_preview = action; break
+	check(purchase_preview.get("request",{}) == {"action":"pass_purchase","pass_id":724,"premium":false},"backend pass724 preview retains the exact source purchase request")
+	check(purchase_preview.get("costs",[]) == [{"kind":"currency","id":1,"amount":3000000}],"backend pass724 preview exposes the exact three-million source cost")
+	check(same(before,ownership()),"reading backend purchase preview preserves ownership and RNG before submission")
 	var choice_row: Dictionary = visible.get("container:164683",{})
-	check(not choice_row.is_empty(),"actual source selection container visible among owned actions")
+	check(not choice_row.is_empty(),"actual source selection container visible in backend owned actions")
 	if not choice_row.is_empty():
 		var choice_action: Dictionary = choice_row.actions[0]
-		screen()._choose(choice_row,choice_action,"events")
-		await frames()
-		var panel = screen().choice_panel
-		if check(is_instance_valid(panel),"actual source choices render native selection controls"):
-			var lists: Array = []
-			for child: Node in panel.get_children():
-				if child is ItemList: lists.append(child)
-			check(lists.size() == 1 and lists[0].item_count == 4,"native selection uses all four source options")
-			if not lists.is_empty(): lists[0].select(0)
-			_button(panel,"선택 확인").pressed.emit(); await frames()
-			if check(dialog() != null,"selected source reward opens ordinary confirmation"):
-				dialog().cancel_button.pressed.emit(); await frames()
-		check(same(before,ownership()),"selection then cancellation preserves source container and resources")
+		var original_action: Dictionary = choice_action.duplicate(true)
+		var requirements: Array = choice_action.get("required_choices",[])
+		if check(requirements.size() == 1 and requirements[0].get("options",[]).size() == 4,"backend selection contract retains all four source options"):
+			var discarded_selection: Dictionary = choice_action.request.duplicate(true)
+			var key: String = str(requirements[0].get("key","selection"))
+			var values: Array = [requirements[0].options[0].value]
+			if key.begins_with("selection."):
+				discarded_selection.selection = {key.trim_prefix("selection."):values}
+			else: discarded_selection[key] = values
+			check(discarded_selection != choice_action.request and same(choice_action,original_action),"preparing detached backend choice leaves the source action contract unchanged")
+		check(same(before,ownership()),"discarded source choice request preserves container resources and domain RNG")
+	check(FileAccess.get_sha256(world.save_path()) == preview_hash,"unsubmitted backend requests preserve exact durable save bytes")
 	var wallet: int = world.gold
 	var purchase: Dictionary = rt.execute("events",{"action":"pass_purchase","pass_id":724,"premium":false})
 	check(purchase.get("ok",false) and world.gold == wallet-3000000,"source pass724 purchase atomically debits3million")
@@ -413,7 +363,7 @@ func run() -> void:
 	if check(pass_plan.get("ok",false),"actual source Quest101864 Reward434674 Pass724 prepares future host port"):
 		check(int(pass_plan.staged.unconfirmed523.domains.events.passes["724"].experience)==int(before_port.domains.events.passes["724"].experience)+60,"prepared pass patch preserves exact source60XP target")
 		check(rt.cancel_prepared(pass_plan.plan_id) and same(rt.state,before_port),"cancelled source pass port never claims quest or mutates production progression")
-	print("UNCONFIRMED523_MAIN_STAGE: UI cancellation, attendance and pass claims checked")
+	print("UNCONFIRMED523_MAIN_STAGE: detached backend previews, attendance and pass claims checked")
 	var grail_id: String = str(ids_for(338438)[0])
 	var request: Dictionary = {"op":"grail_roll","instance_id":grail_id}
 	before = ownership()
@@ -426,15 +376,16 @@ func run() -> void:
 	world.equipment_collections.test_save_writer = Callable()
 	world._load_game(true); freeze()
 	check(not rt.save_blocked and reload_ownership_matches(before),"deliberate Main reload preserves committed funds, native IDs, domain RNG and Ain amounts")
-	await prepare("jade_grail",request)
-	var old_dialog = dialog()
+	var confirmed_revision: int = int(rt.state.revision)
+	var confirmed_fingerprint: String = rt.fingerprint()
 	var scrolls_before: int = int(rt.context().owned.get("355334",0))
 	wallet = world.gold
-	if check(old_dialog != null,"grail roll uses actual native confirmation"):
-		old_dialog.confirm_button.pressed.emit()
-		old_dialog.confirm_button.pressed.emit()
-		await frames()
-	check(world.gold == wallet-10000 and int(rt.context().owned.get("355334",0)) == scrolls_before-2,"double confirm debits exactly two source scrolls and10000once")
+	var confirmed: Dictionary = rt.execute("jade_grail",request,confirmed_revision,confirmed_fingerprint)
+	var confirmed_hash: String = FileAccess.get_sha256(world.save_path())
+	var duplicate: Dictionary = rt.execute("jade_grail",request,confirmed_revision,confirmed_fingerprint)
+	check(confirmed.get("ok",false) and not duplicate.get("ok",false),"backend accepts confirmed revision once and rejects the repeated token")
+	check(world.gold == wallet-10000 and int(rt.context().owned.get("355334",0)) == scrolls_before-2,"repeated backend confirmation debits exactly two source scrolls and10000once")
+	check(FileAccess.get_sha256(world.save_path()) == confirmed_hash,"repeated backend confirmation preserves exact once-committed save bytes")
 	check(rt.state.domains.jade_grail.grails.has(grail_id),"actual physical grail stores rolled prefixes under exact instanceID")
 	var revision: int = int(rt.state.revision)
 	before = ownership()
@@ -492,7 +443,7 @@ func run() -> void:
 	var output: FileAccess = FileAccess.open(MARKER,FileAccess.WRITE)
 	output.store_string(JSON.stringify(marker)); output.close()
 	check(not FileAccess.file_exists(world.save_path()+".tmp"),"atomic writer leaves no unfinished temporary save")
-	await captures()
+	check(not has_custom_form(world.hud),"all active backend flows leave custom form unmounted")
 	await finish()
 
 func reload_phase() -> void:
