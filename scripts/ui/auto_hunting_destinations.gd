@@ -1,6 +1,8 @@
 extends VBoxContainer
 ## Destination selection is separate from the existing combat AUTO toggle.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
+const SourceSchedule = preload("res://scripts/auto_hunting/source_schedule.gd")
 var world: Node
 var entries: Array = []
 var regions: OptionButton
@@ -133,9 +135,11 @@ func _select_region(index: int) -> void:
 	_select_landing(0)
 
 func _select_landing(index: int) -> void:
+	_clear_currency_image()
 	if selected_id < 0: return
 	var entry: Dictionary = entries[selected_id]
 	if index < 0 or index >= entry.destinations.size(): return
+	_bind_currency_image(entry, entry.destinations[index])
 	var assessment: Dictionary = world.call("auto_hunting_movement_assessment", int(entry.schedule.ID), int(entry.destinations[index].link.ID))
 	details.text = detail_summary
 	if int(entry.currency.ID) == 4 and world.has_method("auto_hunting_gem_wallet"):
@@ -143,6 +147,29 @@ func _select_landing(index: int) -> void:
 		details.text += "\n보유 다이아 %d" % int(wallet.balance) if bool(wallet.ok) else "\n" + str(wallet.reason)
 	status.text = str(assessment.get("reason", "이동 조건 확인 중"))
 	move_button.disabled = not bool(assessment.get("ok", false))
+
+func _clear_currency_image() -> void:
+	if not is_instance_valid(move_button): return
+	move_button.icon = null
+	for key: String in ["source523_image", "source523_image_provenance", "source523_image_status"]:
+		if move_button.has_meta(key): move_button.remove_meta(key)
+
+func _bind_currency_image(entry: Dictionary, landing: Dictionary) -> void:
+	if not SourceImages.selected(): return
+	# request_definition uses this same original Currency.AssetID. Currency.ID
+	# remains the payment identity and is never an image or ItemClass key.
+	var image: Dictionary = SourceImages.resolve_asset_value(entry.currency.get("AssetID"))
+	move_button.icon = image.get("texture") as Texture2D
+	move_button.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	evidence["payment_source"] = {"source_field":"Currency.AssetID",
+		"schedule":entry.schedule.duplicate(true),"currency":entry.currency.duplicate(true),"teleport":entry.teleport.duplicate(true),
+		"landing_link_id":landing.link.get("ID"),"provider":"scripts/auto_hunting/source_schedule.gd",
+		"pack_sha256":SourceSchedule.PACK_SHA256,"source_zip_sha256":SourceSchedule.SOURCE_SHA256}
+	move_button.set_meta("source523_image", evidence)
+	move_button.set_meta("source523_image_provenance", image.get("provenance", {}).duplicate(true))
+	move_button.set_meta("source523_image_status", str(image.get("status", image.get("error", "source_image_unavailable"))))
 
 func _sync_settings() -> void:
 	var value: Dictionary = world.call("auto_hunting_local_settings")

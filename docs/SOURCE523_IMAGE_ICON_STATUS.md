@@ -631,6 +631,16 @@ game consumption, a new source inventory or a 95% usage result.
 The native provider and HUD registration changes are unexecuted and unverified;
 no additional tests, game execution, rendering or CI were started.
 
+The existing auto-hunting destination move button also consumes the selected
+entry's original `Currency.AssetID`, the same field the pinned schedule provider
+returns as `currency_asset_id` for that move request. The existing landing
+selection clears the prior icon and retains the schedule/currency/teleport
+source context, landing-link identity and provider/source pins without a texture
+in its metadata. Currency IDs remain payment IDs. Missing, zero, excluded and
+unsupported assets retain the existing loader result. Region selection, movement
+assessment, costs, coordinate policy, settings and saves keep their existing
+calls. This image hookup is unexecuted and unverified.
+
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
 independent SpellGroup choice and payment/commit data. Shared item views also
