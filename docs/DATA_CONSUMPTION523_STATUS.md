@@ -162,6 +162,43 @@ whole-table gameplay use, complete all rows, or raise the earlier122 count.
 Additional effect/ownership adoption of these data contracts belongs to PR269;
 unresolved type/AI/server/UI contracts remain unresolved.
 
+### Direct inputs to existing skill and attack readers — unverified
+
+The next delta connects the original data beyond the reference-returning APIs:
+
+- `skill_catalog.configure()` already calls
+  `player_skills523.configure_arguments()`. With no explicit skill-pack or SHA
+  argument, this now reads the held original archive into compiler-shaped
+  profiles for the existing public bound skills. An exact canonical row SHA must
+  match the public binding before publication. Original material identities,
+  spell/buff bonuses, costs, learning limits, cast groups and target definitions
+  feed the existing `apply_to()` reader. Existing profiles remain preferred and a
+  supplied invalid/empty explicit pack is not bypassed. Reviewed execution-graph
+  roots stay deferred to their compiled pack; no partial graph is promoted into
+  an effect implementation. Learning, progression/effect execution and save code
+  are unchanged.
+- `player_skills523.source_mode`, `source_identity` and
+  `source_fallback_status` distinguish raw-source input from the compiled-pack
+  path and retain per-binding deferred reasons. Its `active_sha256` remains the
+  compiled-pack fingerprint. The fallback status's `applied` keys mean accepted
+  reader profiles, not gameplay observations or full-table consumption.
+- NPC catalog's `row("NpcAttack",id)` and `owned("NpcAttack",npc_id)` now use
+  `selected_attack_row(compiled)`. It reads an original row only for an existing
+  compiled NPC/attack identity and requires the same selection/behavior and
+  numerical attack fields, including NextAttack, MotionType, SpellID, probability,
+  fixed delay and dice fields. Missing/different original input retains the
+  compiled row. Existing attack/root/chain readers therefore receive original
+  definitions without admitting an additional attack or changing AI, timing,
+  probability interpretation, effects or saved ownership.
+
+The already recorded next large candidates have existing input readers:
+MerchantGoods in the shop catalog, GachaCraftOutput in the item-linked craft data
+adapter, ItemBookItem/ItemBookCardForItem in growth96_source, and ItemEnchantBonus
+in the existing equipment cache reader. Extending effect execution is PR269's
+boundary. Map/spawn/media readers remain with their owners. This is a record of
+the bounded existing evidence used for implementation, not a new survey, a new
+coverage count, or a claim that every remaining table is already connected.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now

@@ -6,6 +6,7 @@ const MAX_BYTES = 16 * 1024 * 1024
 const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
 const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
+const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -57,7 +58,8 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 
 func row(table: String, id: int) -> Dictionary:
 	var compiled: Dictionary = content.get("tables", {}).get(table, {}).get(str(id), {}).get("row", {})
-	if not compiled.is_empty(): return compiled
+	if not compiled.is_empty():
+		return selected_attack_row(compiled) if table == "NpcAttack" else compiled
 	# Attack execution remains restricted to the previously compiled identities.
 	# Full attack definitions have a separate reference-only contract below.
 	if table == "NpcAttack" or not DEFINITION_TABLES.has(table): return {}
@@ -70,12 +72,35 @@ func row(table: String, id: int) -> Dictionary:
 func owned(table: String, id: int) -> Array:
 	# A compiled table owns its complete selected closure, including owners
 	# with no selected rows. The original archive cannot widen that execution set.
-	if content.get("tables",{}).has(table):
-		return indexes.get(table,{}).get(str(id),[])
+	if content.get("tables",{}).has(table) or table == "NpcAttack":
+		var selected: Array = indexes.get(table,{}).get(str(id),[])
+		if table != "NpcAttack": return selected
+		var result: Array = []
+		for compiled: Dictionary in selected: result.append(selected_attack_row(compiled))
+		return result
 	if DEFINITION_OWNERS.has(table):
 		var original: Array[Dictionary] = DEFINITIONS.related(table,str(DEFINITION_OWNERS[table]),id)
 		if not original.is_empty(): return original
 	return indexes.get(table, {}).get(str(id), [])
+
+func selected_attack_row(compiled: Dictionary) -> Dictionary:
+	if not source_integer(compiled.get("ID")) or not source_integer(compiled.get("NpcClassID")): return compiled
+	var selected: Dictionary = content.get("tables",{}).get("NpcAttack",{}).get(str(int(compiled.ID)),{}).get("row",{})
+	var npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(int(compiled.NpcClassID)),{}).get("row",{})
+	if selected.is_empty() or npc.is_empty() or not source_integer(npc.get("ID")) or int(npc.ID) != int(compiled.NpcClassID): return compiled
+	# The compiled graph remains the admission contract. Only an already
+	# selected NPC/attack may obtain its values from the pinned original table.
+	var original: Dictionary = DEFINITIONS.row("NpcAttack",int(compiled.ID))
+	if original.is_empty(): return compiled
+	for field: String in ATTACK_STRUCTURE_FIELDS:
+		if not source_integer(compiled.get(field)) or not source_integer(selected.get(field)) or not source_integer(original.get(field)): return compiled
+		if compiled[field] != selected[field] or compiled[field] != original[field]: return compiled
+	for field: String in ["IsSpell","IsAbsoluteAtk"]:
+		if typeof(compiled.get(field)) != TYPE_BOOL or typeof(selected.get(field)) != TYPE_BOOL or typeof(original.get(field)) != TYPE_BOOL: return compiled
+		if compiled[field] != selected[field] or compiled[field] != original[field]: return compiled
+	# Prob and delay are compared above, never interpreted or used to schedule
+	# a new action. Missing or changed structure always retains the compiled row.
+	return original
 
 static func source_integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and absf(float(value)) <= 9007199254740991.0

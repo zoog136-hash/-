@@ -4,6 +4,14 @@ extends RefCounted
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_BYTES := 16 * 1024 * 1024
+const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
+const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
+const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
+# These are the existing compiler's reviewed graph roots, not inferred nodes.
+# The raw fallback leaves their supported compiled execution graphs intact.
+const COMPILED_GRAPH_ROOTS := [2,2312,332,29142,17324,98871,350,29092,69581]
+const SOURCE_RECOVERY_ROOTS := [54703,35443,69601,95662]
 # Explicitly reviewed self conversions. Host learned=1 means ownership, never
 # native SpellLevel=1; only the unconditional MinSpellLevel=0 value is applied.
 const BASE_MP_CONVERSIONS := [349, 18304]
@@ -18,6 +26,9 @@ var bindings: Dictionary = {}
 var revision: int = 0
 var last_error: String = ""
 var active_sha256: String = ""
+var source_mode: String = ""
+var source_identity: Dictionary = {}
+var source_fallback_status: Dictionary = {}
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
 var progression_rules = preload("res://scripts/skills/progression_rules523.gd").new()
@@ -59,11 +70,155 @@ func prepare_estimate(record: Dictionary) -> void:
 func configure_arguments() -> void:
 	var path := ""
 	var expected := ""
+	var explicit_input := false
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--player-skills523-pack="): path = arg.get_slice("=", 1)
-		elif arg.begins_with("--player-skills523-sha256="): expected = arg.get_slice("=", 1)
-	if path.is_empty() and expected.is_empty(): return
+		if arg.begins_with("--player-skills523-pack="):
+			explicit_input = true; path = arg.get_slice("=", 1)
+		elif arg.begins_with("--player-skills523-sha256="):
+			explicit_input = true; expected = arg.get_slice("=", 1)
+	if not explicit_input:
+		_load_source_profiles()
+		return
 	if not load_pack(path, expected): push_warning("Player skills523 pack rejected: " + last_error)
+
+static func _source_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
+
+static func _canonical_numbers(value: Variant) -> Variant:
+	# JSON parsing represents source integers as floats. Normalize only exact
+	# integers for serialization; the retained source dictionaries stay untouched.
+	if typeof(value)==TYPE_FLOAT and _source_integer(value): return int(value)
+	if value is Dictionary:
+		var result: Dictionary = {}
+		for key: Variant in value: result[key] = _canonical_numbers(value[key])
+		return result
+	if value is Array:
+		var result: Array = []
+		for entry: Variant in value: result.append(_canonical_numbers(entry))
+		return result
+	return value
+
+static func _source_row_json(row: Dictionary, expected: String = "") -> String:
+	var normalized: Variant = _canonical_numbers(row)
+	var candidates: Array[String] = [JSON.stringify(normalized,"",true,true),JSON.stringify(normalized,"",true,false),JSON.stringify(row,"",true,true),JSON.stringify(row,"",true,false)]
+	for candidate: String in candidates:
+		if expected.is_empty() or candidate.sha256_text()==expected: return candidate
+	return ""
+
+static func _source_evidence(detail: Dictionary) -> Dictionary:
+	var result: Dictionary = {"link":detail.get("link",{}),"bonus":detail.get("bonus",{}),"type":detail.get("type",{}),"unit":detail.get("unit",{})}
+	return result if valid_bonus(result) else {}
+
+func _source_profile(spell_id: int, expected_row_sha: String = "") -> Dictionary:
+	var row: Dictionary = SOURCE_ROWS.row("SpellClass",spell_id)
+	if row.is_empty(): return {"reason":"source_spell_unavailable"}
+	if row.get("TestSpell") is not bool or row.TestSpell: return {"reason":"source_TestSpell_not_false"}
+	var row_json: String = _source_row_json(row,expected_row_sha)
+	if row_json.is_empty(): return {"reason":"canonical_source_row_sha_mismatch"}
+	var detail: Dictionary = SOURCE_SPELLS.describe(spell_id)
+	if detail.get("excluded")==true: return {"reason":"source_TestSpell_true"}
+	var bonuses: Array = []
+	var buff_ids: Array[int] = []
+	for entry: Dictionary in detail.get("bonuses",[]):
+		var evidence: Dictionary = _source_evidence(entry)
+		if evidence.is_empty(): return {"reason":"incomplete_spell_bonus"}
+		bonuses.append(evidence)
+		# Match the existing compiler's two declared buff edges exactly.
+		if str(evidence.type.Name) in ["BuffClassID","SideEffectBuffClassID"]:
+			if not _source_integer(evidence.bonus.Value) or int(evidence.bonus.Value)<0: return {"reason":"invalid_buff_reference"}
+			var buff_id: int = int(evidence.bonus.Value)
+			if buff_id not in buff_ids: buff_ids.append(buff_id)
+	buff_ids.sort()
+	var buffs: Array = []
+	for buff_id: int in buff_ids:
+		var buff: Dictionary = SOURCE_BUFFS.describe(buff_id)
+		if buff.get("buff_class",{}).is_empty() or buff.get("excluded")==true: return {"reason":"source_buff_unavailable_or_excluded"}
+		var buff_bonuses: Array = []
+		for entry: Dictionary in buff.get("bonuses",[]):
+			var evidence: Dictionary = _source_evidence(entry)
+			if evidence.is_empty(): return {"reason":"incomplete_buff_bonus"}
+			buff_bonuses.append(evidence)
+		buffs.append({"row":buff.buff_class,"bonuses":buff_bonuses})
+	return {"profile":{"row":row,"row_json":row_json,
+		"learn_limits":SOURCE_ROWS.related("SpellLearnLimit","SpellClassID",spell_id),
+		"bonuses":bonuses,"buffs":buffs,
+		"costs":SOURCE_ROWS.related("SpellCost","SpellClassID",spell_id),
+		"cast_groups":SOURCE_ROWS.related("SpellChangeCastGroup","SpellClassID",spell_id),
+		"target_kind":detail.get("references",{}).get("TargetKindID",{}).get("row",{}),
+		"targeting_type":detail.get("references",{}).get("TargettingTypeID",{}).get("row",{})}}
+
+func _source_materials(local: Dictionary) -> bool:
+	for material: String in local.material_inventory_keys:
+		var bridge: Variant = local.material_inventory_keys[material]
+		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return false
+		var item: Dictionary = SOURCE_ROWS.row("ItemClass",int(bridge.native_item_id))
+		if item.is_empty() or item.get("TestItem")==true: return false
+		var found := false
+		for link: Dictionary in SOURCE_ROWS.related("ItemBonus","ItemClassID",int(item.ID)):
+			var detail: Dictionary = SOURCE_BONUSES.describe(int(link.get("BonusID",-1)))
+			var bonus: Dictionary = detail.get("bonus",{})
+			# Same native material identity proof as build_player_skills523.py.
+			if bonus.get("BonusTypeID")==89 and _source_integer(bonus.get("Value")) and str(int(bonus.Value))==material: found = true
+		if not found: return false
+	return true
+
+func _load_source_profiles() -> void:
+	# Re-entry never replaces a supported compiled or already installed snapshot.
+	if not profiles.is_empty(): return
+	var identity: Dictionary = SOURCE_ROWS.identity()
+	if identity.is_empty():
+		source_fallback_status = {"state":"unavailable","reason":SOURCE_ROWS.problem()}
+		return
+	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string(BINDINGS_PATH))
+	if not local is Dictionary or local.get("schema_version")!=1 or local.get("patch")!=523 or local.get("source_zip_sha256")!=SOURCE_SHA or not local.get("skills") is Dictionary or not local.get("material_inventory_keys") is Dictionary:
+		source_fallback_status = {"state":"deferred","reason":"unsupported_public_bindings"}
+		return
+	if not _source_materials(local):
+		source_fallback_status = {"state":"deferred","reason":"native_material_binding_unconfirmed"}
+		return
+	var candidate: Dictionary = {}
+	var deferred: Dictionary = {}
+	for id: String in local.skills:
+		var binding: Dictionary = local.skills[id]
+		if not _source_integer(binding.get("spell_id")) or not binding.get("row_sha256") is String:
+			deferred[id] = "invalid_public_binding"; continue
+		var spell_id: int = int(binding.spell_id)
+		if spell_id in COMPILED_GRAPH_ROOTS:
+			deferred[id] = "reviewed_execution_graph_requires_compiled_pack"; continue
+		var built: Dictionary = _source_profile(spell_id,str(binding.row_sha256))
+		var profile: Dictionary = built.get("profile",{})
+		if profile.is_empty(): deferred[id] = built.get("reason","source_profile_unavailable"); continue
+		if profile.learn_limits.is_empty() or not profile.learn_limits.any(func(limit: Dictionary) -> bool: return limit.get("IsTutorialSpell") == false):
+			deferred[id] = "missing_ordinary_source_learn_limit"; continue
+		if spell_id in SOURCE_RECOVERY_ROOTS:
+			var components: Array = []
+			var seen: Dictionary = {}
+			for child: Variant in scalar_values(profile,"SpellClassID","SpellClassID"):
+				if not _source_integer(child) or int(child)<1:
+					deferred[id] = "invalid_recovery_component"; break
+				if seen.has(int(child)): continue
+				seen[int(child)] = true
+				var component: Dictionary = _source_profile(int(child)).get("profile",{})
+				if component.is_empty(): deferred[id] = "recovery_component_unavailable"; break
+				components.append(component)
+			if deferred.has(id): continue
+			profile["components"] = components
+		var issue: String = _profile_problem(id,profile,binding)
+		if not issue.is_empty(): deferred[id] = issue; continue
+		candidate[id] = profile
+	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred}
+	if candidate.is_empty(): return
+	var metadata: Dictionary = {"classes":SOURCE_ROWS.rows("Class"),"ui_units":SOURCE_ROWS.rows("UIUnit"),
+		"buff_groups":SOURCE_ROWS.rows("BuffGroup"),"bonus_application_types":SOURCE_ROWS.rows("BonusApplicationType"),
+		"special_resistance_types":SOURCE_ROWS.rows("SpecialResistanceType")}
+	profiles = candidate.duplicate(true)
+	bindings = local.duplicate(true)
+	recovery_rules.configure_pack(metadata)
+	# active_sha256 remains the compiled-pack fingerprint, never the archive SHA.
+	source_mode = "original_bound_profiles"
+	source_identity = identity.duplicate(true)
+	revision += 1
+	last_error = ""
 
 func reject(reason: String) -> bool:
 	last_error = reason
@@ -92,37 +247,8 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	var candidate: Dictionary = pack.profiles
 	if candidate.size() != local.skills.size(): return reject("incomplete profile set")
 	for id: String in local.skills:
-		var profile: Variant = candidate.get(id)
-		if not profile is Dictionary: return reject("missing profile " + id)
-		if not profile.get("row_json") is String or str(profile.row_json).sha256_text() != str(local.skills[id].row_sha256):
-			return reject("unreviewed source row " + id)
-		var row: Variant = JSON.parse_string(profile.row_json)
-		if not row is Dictionary or row != profile.get("row") or int(row.get("ID", -1)) != int(local.skills[id].spell_id):
-			return reject("source identity mismatch " + id)
-		for key: String in ["learn_limits", "bonuses", "buffs", "costs", "cast_groups"]:
-			if not profile.get(key) is Array: return reject("invalid " + key)
-		for entry: Variant in profile.bonuses:
-			if not valid_bonus(entry): return reject("invalid spell bonus")
-		for buff: Variant in profile.buffs:
-			if not buff is Dictionary or not buff.get("row") is Dictionary or not buff.get("bonuses") is Array: return reject("invalid buff")
-			for entry: Variant in buff.bonuses:
-				if not valid_bonus(entry): return reject("invalid buff bonus")
-		if profile.has("components"):
-			if not profile.components is Array: return reject("invalid components")
-			var child_ids: Dictionary={}
-			for child: Variant in scalar_values(profile,"SpellClassID","SpellClassID"):child_ids[int(child)]=true
-			var seen: Dictionary={}
-			if child_ids.size()!=profile.components.size():return reject("incomplete component graph")
-			for component: Variant in profile.components:
-				if not valid_component(component):return reject("invalid component profile")
-				var child_id:=int(component.row.ID)
-				if not child_ids.has(child_id) or seen.has(child_id):return reject("unexpected component identity")
-				seen[child_id]=true
-		if profile.has("execution_graph") and not valid_execution(id,profile):return reject("invalid reviewed execution graph")
-		if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
-			return reject("target kind mismatch")
-		if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
-			return reject("targeting type mismatch")
+		var issue: String = _profile_problem(id,candidate.get(id),local.skills[id])
+		if not issue.is_empty(): return reject(issue)
 	for key: String in ["ui_units","buff_groups","bonus_application_types","special_resistance_types"]:
 		if pack.has(key):
 			if not pack[key] is Array:return reject("invalid recovery metadata")
@@ -132,9 +258,46 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	bindings = local.duplicate(true)
 	recovery_rules.configure_pack(pack)
 	active_sha256 = expected_sha256
+	source_mode = "compiled_pack"
+	source_identity = {"source_snapshot":"patch523","source_sha256":SOURCE_SHA}
+	source_fallback_status = {}
 	revision += 1
 	last_error = ""
 	return true
+
+func _profile_problem(id: String, profile: Variant, binding: Dictionary) -> String:
+	# Both input paths retain the original compiled profile validation contract.
+	if not profile is Dictionary: return "missing profile " + id
+	if not profile.get("row_json") is String or str(profile.row_json).sha256_text() != str(binding.row_sha256):
+		return "unreviewed source row " + id
+	var row: Variant = JSON.parse_string(profile.row_json)
+	if not row is Dictionary or row != profile.get("row") or int(row.get("ID", -1)) != int(binding.spell_id):
+		return "source identity mismatch " + id
+	for key: String in ["learn_limits", "bonuses", "buffs", "costs", "cast_groups"]:
+		if not profile.get(key) is Array: return "invalid " + key
+	for entry: Variant in profile.bonuses:
+		if not valid_bonus(entry): return "invalid spell bonus"
+	for buff: Variant in profile.buffs:
+		if not buff is Dictionary or not buff.get("row") is Dictionary or not buff.get("bonuses") is Array: return "invalid buff"
+		for entry: Variant in buff.bonuses:
+			if not valid_bonus(entry): return "invalid buff bonus"
+	if profile.has("components"):
+		if not profile.components is Array: return "invalid components"
+		var child_ids: Dictionary = {}
+		for child: Variant in scalar_values(profile,"SpellClassID","SpellClassID"): child_ids[int(child)] = true
+		var seen: Dictionary = {}
+		if child_ids.size()!=profile.components.size(): return "incomplete component graph"
+		for component: Variant in profile.components:
+			if not valid_component(component): return "invalid component profile"
+			var child_id: int = int(component.row.ID)
+			if not child_ids.has(child_id) or seen.has(child_id): return "unexpected component identity"
+			seen[child_id] = true
+	if profile.has("execution_graph") and not valid_execution(id,profile): return "invalid reviewed execution graph"
+	if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
+		return "target kind mismatch"
+	if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
+		return "targeting type mismatch"
+	return ""
 
 func valid_execution(id: String, profile: Dictionary) -> bool:
 	var graph: Variant=profile.get("execution_graph")
