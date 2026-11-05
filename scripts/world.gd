@@ -974,8 +974,10 @@ func _index_catalog_item_sources() -> void:
 			catalog_item_variant_count[item_name] = int(catalog_item_variant_count.get(item_name, 0)) + 1
 
 func _catalog_item_from_source_id(source_id: String) -> Dictionary:
-	var source: Variant = catalog_item_by_source_id.get(source_id, {})
-	return source as Dictionary if source is Dictionary else {}
+	if catalog_item_by_source_id.has(source_id):
+		var source: Variant = catalog_item_by_source_id[source_id]
+		return source as Dictionary if source is Dictionary else {}
+	return preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,source_id)
 
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
