@@ -436,9 +436,19 @@ def _stop_tree(process: subprocess.Popen) -> None:
             process.kill()
 
 
+# A GDScript runtime error aborts the current function; tests that never reach
+# quit() then idle until the timeout (69 of 75 timeouts in run 42023183132).
+# Any SCRIPT ERROR already fails classification, so after a short grace period
+# the runner stops the process instead of waiting. The verdict is unchanged.
+SCRIPT_ERROR_GRACE_SECONDS = 20.0
+STOPPED_AFTER_SCRIPT_ERROR = 'STOPPED_AFTER_SCRIPT_ERROR'
+
+
 def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: float,
-                 cwd: str | None = None) -> subprocess.CompletedProcess:
+                 cwd: str | None = None,
+                 script_error_grace: float | None = SCRIPT_ERROR_GRACE_SECONDS) -> subprocess.CompletedProcess:
     """Capture logs loss-tolerantly and clean up descendant processes on timeout."""
+    import threading
     kwargs = {'start_new_session': True} if os.name == 'posix' else {
         'creationflags': subprocess.CREATE_NEW_PROCESS_GROUP,
     }
@@ -446,22 +456,52 @@ def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: flo
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         text=True, encoding='utf-8', errors='replace', env=env, cwd=cwd, **kwargs,
     ) as process:
+        chunks: dict[str, list[str]] = {'out': [], 'err': []}
+        first_error: list[float] = []
+
+        def pump(stream, key: str) -> None:
+            for line in iter(stream.readline, ''):
+                chunks[key].append(line)
+                if not first_error and 'SCRIPT ERROR:' in line:
+                    first_error.append(time.monotonic())
+            stream.close()
+
+        readers = [threading.Thread(target=pump, args=(process.stdout, 'out'), daemon=True),
+                   threading.Thread(target=pump, args=(process.stderr, 'err'), daemon=True)]
+        for reader in readers:
+            reader.start()
+        began = time.monotonic()
+        stopped_early = False
         try:
-            stdout, stderr = process.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired as original:
-            _stop_tree(process)
-            try:
-                stdout, stderr = process.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                # An escaped descendant may retain a pipe. Never hang on it.
-                process.stdout.close()
-                process.stderr.close()
-                stdout, stderr = original.stdout, original.stderr
-            raise subprocess.TimeoutExpired(command, timeout, output=stdout, stderr=stderr) from None
+            while process.poll() is None:
+                now = time.monotonic()
+                if now - began >= timeout:
+                    _stop_tree(process)
+                    for reader in readers:
+                        reader.join(5)
+                    raise subprocess.TimeoutExpired(command, timeout, output=''.join(chunks['out']),
+                                                    stderr=''.join(chunks['err']))
+                if (script_error_grace is not None and first_error
+                        and now - first_error[0] >= script_error_grace):
+                    _stop_tree(process)
+                    stopped_early = True
+                    break
+                time.sleep(0.2)
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            raise
         except BaseException:
             _stop_tree(process)
             raise
-    return subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
+        for reader in readers:
+            reader.join(5)
+    stdout = ''.join(chunks['out'])
+    stderr = ''.join(chunks['err'])
+    returncode = process.returncode
+    if stopped_early:
+        stderr += f'\n{STOPPED_AFTER_SCRIPT_ERROR} after {script_error_grace:.0f}s grace; SCRIPT ERROR already fails this check\n'
+        returncode = returncode if returncode not in (0, None) else 1
+    return subprocess.CompletedProcess(command, returncode, stdout, stderr)
 
 
 def run_native_fixture_cases(command: Sequence[str], *, name: str, keys: Sequence[str],

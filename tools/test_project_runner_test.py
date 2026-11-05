@@ -745,6 +745,38 @@ class ZeroFailureSummaryContracts(unittest.TestCase):
                 self.assertEqual(classify_result('generic_summary_test', 0, output + '\nSCRIPT ERROR: x'), (False, False))
 
 
+class ScriptErrorFailFast(unittest.TestCase):
+    def run_child(self, code, **kw):
+        from test_project_support import run_isolated
+        return run_isolated([sys.executable, '-c', code], env=dict(os.environ), **kw)
+
+    def test_hang_after_script_error_stops_after_grace_and_still_fails(self):
+        import time as _t
+        began = _t.monotonic()
+        result = self.run_child("import sys,time;print('SCRIPT ERROR: x',flush=True);time.sleep(60)",
+                                timeout=30, script_error_grace=0.5)
+        self.assertLess(_t.monotonic() - began, 15)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+        self.assertEqual(classify_result('any_test', result.returncode, result.stdout + result.stderr), (False, False))
+
+    def test_clean_exit_is_unchanged(self):
+        result = self.run_child("print('X_OK')", timeout=30, script_error_grace=0.5)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stdout.strip(), 'X_OK')
+        self.assertNotIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+
+    def test_error_then_prompt_exit_keeps_real_return_code(self):
+        result = self.run_child("import sys;print('SCRIPT ERROR: y',flush=True);sys.exit(3)",
+                                timeout=30, script_error_grace=5)
+        self.assertEqual(result.returncode, 3)
+        self.assertNotIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+
+    def test_plain_hang_still_times_out(self):
+        with self.assertRaises(subprocess.TimeoutExpired):
+            self.run_child("import time;time.sleep(60)", timeout=1, script_error_grace=0.5)
+
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
