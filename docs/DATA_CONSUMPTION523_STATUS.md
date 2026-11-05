@@ -532,10 +532,12 @@ slot-pack input are not loaded. Original pool100000 and invoke10000 contracts
 remain guarded; Test/dummy and missing/ambiguous typed references are not
 activated. The existing save schema's base508 namespace remains ABI, while new
 book definitions/requirements label their actual patch523/archive origin.
-PR269 still needs to adopt that origin at
-`skill_awakening_runtime.request_operation()`: its base508-only physical-book
-guard currently rejects the new definitions. This Draft does not relabel old
-inventory or alter debit/receipt/save code to bypass it.
+PR269 already has a new typed awakening supplier path. The base508-only
+physical-book guard in this Draft's older
+`skill_awakening_runtime.request_operation()` is a legacy entrypoint boundary,
+not a claim that all awakening remains base508-only. New definitions should reach
+the typed owner path; this Draft does not relabel old inventory or modify
+debit/receipt/save code to bypass the older guard.
 
 `patch523_slot_data._load_pack()` now calls
 `current523_relic_input.build()` for its new memory model. The former file loader
@@ -602,6 +604,66 @@ removal remain with the Sprite/image/spawn owners. These are explicit remaining
 boundaries, not whole-monster completion or new execution evidence.
 
 ### Other retained growth inputs — unverified
+
+`half_elixir_runtime.source_for(saved_state)` now reuses the common archive when
+the dedicated saved-SHA ZIP is actually absent and the saved SHA equals the
+pinned original SHA. Existing cached sources and present dedicated files keep
+their existing precedence; an unreadable/mismatched/invalid dedicated file is
+not bypassed. The same `Source.load_zip()` parser supplies its31-table/profile/
+cost/bonus/item/context readers and must return that same saved SHA before
+adoption. Blank or different saved origins remain inactive; no implicit install,
+new source binding, context selection, state migration or save is performed.
+`source_problem` records the unavailable input. After reading the complete
+ItemBonus group, both charge/reset definitions carry actual TestItem,
+DeleteTime-condition and shared explicit-dummy evidence into the existing
+`blocked` gate. Source rows, quantities, units and transaction code remain intact.
+
+`World` now calls `totems.configure_input()`. Explicit environment selections,
+including empty ones, and any existing manifest/partial payload retain the old
+file-input failure. Otherwise `load_original()` uses
+`current523_totem_input.build()` to provide the complete seven core source
+tables and their required material/reset/currency/Bonus/Type/Unit/application/
+Spell/Buff closure. Both inputs enter the same numeric/core/count/pool/state
+acceptance code. The new memory model's `pack_sha` is separate from
+`source_identity` of the ZIP; no old research row count or selection attestation
+is fabricated. The public group's exact NPC→spawn-pack→territory→Land chain
+supplies the existing region reader, with the existing2/2/3 closure constraint.
+No map, alias, position, actor or visual is created. Invoke spell references
+require the already supported type1/2 branch and an original Unit declaration
+for SpellClassID. Generic/timer constants without receivers remain unresolved.
+
+Totem crafting's original rows remain in `source_recipe_references` and
+`recipe_definition(craft_id)`. The new model keeps its execution recipe arrays
+empty because the old Totem quote lacks the required selection/period/server
+condition receiver and the former research selection is not held here. The
+general crafting reader/admission remains available under the existing owner;
+this data lane does not create a competing grant/save path. Core totem progress,
+levels, bonuses, materials, reset and region reads continue independently.
+
+`fishing_runtime.configure()` now uses `fishing_rules.load_original()` only for
+an absent default file with no explicit environment selection. Existing file,
+empty explicit selection and parse/read failures retain the file path. The
+new `current523_fishing_input.build()` ports the public fishing compiler's
+twenty-five tables, rod/effect/merchant/territory/reward/item/card/currency closure
+and selected descriptions into the existing model, staged before adoption.
+Raw tables/rods/effects remain preserved separately from active selections.
+Archive identity and actual model-payload identity remain distinct.
+
+Fishing TimeLimit is not labeled an expiry date from its name. Unresolved
+duration/time and weekly-schedule contracts remain explicit unavailable inputs.
+Test/dummy/unresolved DeleteTime references are withheld; a mixed fish pool is
+withheld as a whole without renormalizing its remaining weights. If withholding
+would remove a supported exchange's required output, the raw model is not
+activated: the existing exchange executor can otherwise debit an item after an
+empty reward result. Existing cast/minigame/exchange policies, RNG, grants and
+saving are unchanged. PR269 still owns the exact saved-contest boundary:
+`claim_contest()` does not re-evaluate retained unavailable/time metadata or
+`rules.failure` before settling an old contest. Existing saved contests are
+preserved, not erased or granted from a substituted definition.
+
+These later inputs have not been compiled, loaded or executed. Existing parser
+counters/declared table sizes are input metadata, not new audit measurements,
+completed functions or gameplay coverage.
 
 The existing guardian source now obtains matching selected rows during initial
 data adoption and through `rewards()`, `upgrade()`, `constant()` and

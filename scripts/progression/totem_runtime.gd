@@ -1,7 +1,9 @@
 extends RefCounted
 class_name TwilightTotemRuntime
 
-# Original tables live in a separately installed private pack. No synthesized odds.
+# Existing file packs and the already held original archive share this parser.
+# Neither input synthesizes odds or writes an installation/save.
+const ORIGINAL_INPUT = preload("res://scripts/progression/current523_totem_input.gd")
 const CORE_COUNTS = {"Totem":3,"TotemLevel":33,"TotemMaterial":60,"TotemBonus":94,"TotemResonance":4,"TotemResetCost":2,"TotemConstant":8}
 var tables: Dictionary = {}
 var state: Dictionary = {}
@@ -10,6 +12,10 @@ var last_error: String = ""
 var save_blocked: bool = false
 var revision: int = 0
 var map_contexts: Dictionary = {}
+var source_mode: String = ""
+var source_identity: Dictionary = {}
+var source_status: Dictionary = {}
+var source_recipe_references: Array = []
 const LOCAL_POLICY = "twilight_totem_v1"
 
 func _json(path: String) -> Variant:
@@ -17,6 +23,38 @@ func _json(path: String) -> Variant:
 	var parser := JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(path)) != OK: return null
 	return parser.data
+
+func configure_input() -> bool:
+	# An explicit setting, including an empty value, retains file-loader failure
+	# priority. Partial existing packs are not bypassed with another input.
+	if OS.has_environment("TWILIGHT_TOTEM_PACK"):
+		return install(OS.get_environment("TWILIGHT_TOTEM_PACK"))
+	var root := "user://original_resources/totems523"
+	for name: String in ["manifest.json","totem_data.json"]:
+		var path := root.path_join(name)
+		if FileAccess.file_exists(path) or DirAccess.dir_exists_absolute(path): return install(root)
+	if available(): return true
+	return load_original()
+
+func load_original() -> bool:
+	var input = ORIGINAL_INPUT.new()
+	var body: Dictionary = input.build()
+	if body.is_empty():
+		last_error = input.problem
+		source_status = {"attempt":"current523_original","problem":last_error,"deferred":input.deferred.duplicate(true)}
+		return false
+	var counts: Dictionary = {}
+	for table: String in body.tables: counts[table] = body.tables[table].size()
+	# This fingerprint identifies the actual in-memory parser payload. The ZIP
+	# identity is a separate field and is never substituted for a model/file SHA.
+	var payload_sha: String = JSON.stringify(body,"",true,true).sha256_text()
+	if not _accept_input(body,counts,payload_sha): return false
+	source_mode = "current523_original"
+	source_identity = input.source_identity.duplicate(true)
+	source_recipe_references = input.recipe_references.duplicate(true)
+	source_status = {"mode":source_mode,"problem":"","deferred":input.deferred.duplicate(true),
+		"recipe_execution":"selection_and_condition_owner_pending","text":"source_text_not_loaded"}
+	return true
 
 func install(root: String) -> bool:
 	var manifest: Variant = _json(root.path_join("manifest.json"))
@@ -28,6 +66,14 @@ func install(root: String) -> bool:
 		last_error = "토템 팩 SHA 불일치"
 		return false
 	var body: Variant = _json(body_path)
+	if not _accept_input(body,manifest.table_counts,str(manifest.sha256)): return false
+	source_mode = "file_pack"
+	source_identity = {}
+	source_recipe_references = []
+	source_status = {"mode":source_mode,"problem":""}
+	return true
+
+func _accept_input(body: Variant, table_counts: Dictionary, payload_sha: String) -> bool:
 	if not body is Dictionary or int(body.get("schema",0)) != 1 or int(body.get("source_version",0)) != 523 or not body.get("tables") is Dictionary:
 		last_error = "토템 팩 형식 오류"
 		return false
@@ -49,7 +95,7 @@ func install(root: String) -> bool:
 			last_error = "토템 핵심 표 누락: " + table
 			return false
 	for table: String in candidate:
-		if not candidate[table] is Array or candidate[table].size() != int(manifest.get("table_counts",{}).get(table,-1)):
+		if not candidate[table] is Array or candidate[table].size() != int(table_counts.get(table,-1)):
 			last_error = "토템 표 개수 불일치"
 			return false
 		for value: Variant in candidate[table]:
@@ -89,10 +135,19 @@ func install(root: String) -> bool:
 		tables = old_tables
 		last_error = "토템 정의 또는 기존 진행도와 호환되지 않습니다"
 		return false
-	pack_sha = str(manifest.sha256)
+	pack_sha = payload_sha
 	map_contexts = contexts.duplicate(true)
 	last_error = ""
 	return true
+
+func recipe_definition(craft_id: int) -> Dictionary:
+	# Read-only handoff for the transaction/condition owner. These original
+	# definitions have not been admitted to the existing Totem craft executor.
+	var definitions: Array = []
+	for reference: Dictionary in source_recipe_references:
+		if reference.get("view",{}).get("ItemCraftID")==craft_id: definitions.append(reference.duplicate(true))
+	return {"reference_only":true,"can_execute":false,"definitions":definitions,
+		"blocker":"totem_recipe_selection_and_condition_owner_pending"}
 
 func available() -> bool:
 	return not tables.is_empty()

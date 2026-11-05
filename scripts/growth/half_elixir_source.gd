@@ -1,5 +1,6 @@
 extends RefCounted
 ## Reads an owner-supplied plaintext content ZIP. No source rows ship with this code.
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const TABLES = ["HalfElixirBonus", "HalfElixirBonusExtend", "HalfElixirExtendCost", "Bonus", "BonusType", "BonusApplicationType", "SpecialResistanceType", "UIUnit", "ServerLimit", "ConstantData", "ConstantDataByServer", "ContentsControl", "ItemClass", "ItemCategory", "ItemBonus", "Currency", "CurrencyUnitClass", "DescData_Korean", "BuffClass", "BuffGroup", "ElixirCraft", "ElixirExtendCost", "ElixirStatExtend", "Grade", "ItemCraftInput", "ItemCraftOutputView", "ItemCraftView", "UIStaticTextData_Korean", "UITextData_Korean", "Unit", "UseDesc"]
 const DIRECT = {"HPPlus":"hpFlat", "CarryPlus":"weightBonus", "MeleeDamage":"melee_damage", "RangeDamage":"ranged_damage", "MagicDamage":"magic_damage", "MeleeHit":"melee_accuracy", "RangeHit":"ranged_accuracy", "ArmorClass":"def", "MagicResist":"mr", "DamageReduction":"damage_reduction", "PierceMeleeEvasion":"melee_evasion_ignore", "PierceRangeEvasion":"ranged_evasion_ignore", "MagicHit":"magic_accuracy", "SpellPower":"sp", "PVEMeleeAdditionDamage":"pve_melee_damage", "PVERangeAdditionDamage":"pve_ranged_damage", "PVEMagicAdditionDamage":"pve_magic_damage", "PVEMeleeHit":"pve_melee_accuracy", "PVERangeHit":"pve_ranged_accuracy", "PVEMagicHit":"pve_magic_accuracy"}
 const CONDITIONAL = ["PVPDamageReduction", "PVEDamageReduction", "PierceMagicShieldPercent", "MeleeDamageReductionPercent", "RangeDamageReductionPercent", "MagicDamageReductionPercent", "PVPDamageReductionPercent", "ElementalCriticalResistance", "PoisonDamageReductionPercent", "ElementalDamageReduction", "PVPMeleeEvasion", "PVPRangeEvasion", "PVPPierceMeleeEvasion", "PVPPierceRangeEvasion", "SpecialResistance", "HitSpecialResistance"]
@@ -133,7 +134,22 @@ func configure(t: Dictionary) -> bool:
 				charges[str(int(item.ID))] = {"raw":item, "amount":int(b.Value)}; needed_desc[int(item.DescID)] = true
 	for id: String in items:
 		var item: Dictionary = items[id]
-		if str(categories.get(str(int(item.CategoryID)), {}).get("Name", "")) == "HalfElixirInitializer": resets[id] = {"raw":item, "blocked":bool(item.get("TestItem", false)) or expired.has(id)}; needed_desc[int(item.DescID)] = true
+		if str(categories.get(str(int(item.CategoryID)), {}).get("Name", "")) == "HalfElixirInitializer": resets[id] = {"raw":item}; needed_desc[int(item.DescID)] = true
+	# Admission is resolved after every ItemBonus row, so a later DeleteTime
+	# link protects chargers as well as initializers through the existing gate.
+	for group: Dictionary in [charges,resets]:
+		for id: String in group:
+			var entry: Dictionary = group[id]
+			var reasons: Array[String] = []
+			var test: Variant = entry.raw.get("TestItem")
+			if typeof(test) == TYPE_BOOL and test: reasons.append("source_TestItem_true")
+			if expired.has(id): reasons.append("source_DeleteTime_declared")
+			var declaration: Dictionary = DEFINITIONS.declared_exclusion("ItemClass",entry.raw) if sha == DEFINITIONS.SOURCE_SHA else {}
+			if not declaration.is_empty():
+				reasons.append("source_declared_exclusion")
+				entry["source_exclusion"] = declaration
+			entry["blocked"] = not reasons.is_empty()
+			entry["blocked_reasons"] = reasons
 	var currency_rows := by_id(t.Currency)
 	for row: Dictionary in t.CurrencyUnitClass:
 		var key: int = int(row.CurrencyID)

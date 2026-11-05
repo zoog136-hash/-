@@ -804,9 +804,7 @@ func _load_data() -> void:
 		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
-	var totem_root := OS.get_environment("TWILIGHT_TOTEM_PACK")
-	if totem_root.is_empty(): totem_root = "user://original_resources/totems523"
-	if FileAccess.file_exists(totem_root.path_join("manifest.json")): totems.install(totem_root)
+	totems.configure_input()
 	totem_actions.configure(self)
 	totem_combat.configure(self)
 	fishing523.configure(self)
