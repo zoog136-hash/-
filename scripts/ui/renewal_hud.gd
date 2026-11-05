@@ -892,6 +892,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.crafting_search_is_open():
+			original_main_ui_controller.close_crafting_search()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_search_is_open():
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
@@ -2920,6 +2924,7 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
 	if original_main_ui_controller.inventory_search_is_open():return true
+	if original_main_ui_controller.crafting_search_is_open():return true
 	if original_main_ui_controller.inventory_lock_blocks_point(viewport_point):return true
 	if original_main_ui_controller.character_blocks_point(viewport_point):return true
 	if original_main_ui_controller.dungeon_blocks_point(viewport_point):return true

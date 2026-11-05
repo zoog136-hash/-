@@ -216,13 +216,15 @@ func _input(event: InputEvent) -> void:
 	if hud==null or not is_instance_valid(_coordinates):return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
-	if inventory_search_is_open():
+	var crafting_search: bool=crafting_search_is_open()
+	if inventory_search_is_open() or crafting_search:
 		for property: String in ["detail_window","companion_window","workspace"]:
+			if crafting_search and property=="workspace":continue
 			var overlay: Variant=hud.get(property)
 			if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*event.position):
 				_cancel_native_buttons()
 				return
-		var search: Dictionary=_inventory_view.search_presentation()
+		var search: Dictionary=_workspace_controls.search_presentation() if crafting_search else _inventory_view.search_presentation()
 		var editor: Variant=search.get("editor")
 		var blocked: bool=not editor is Control or hud.get("class_picker_initial")==true or hud.call("blocks_keyboard_input_except_source_editor",editor)
 		if blocked:
@@ -231,7 +233,9 @@ func _input(event: InputEvent) -> void:
 		var buttons: Array=[]
 		if is_instance_valid(search.get("scene")):_collect_native_buttons(search.scene,buttons)
 		var routed: Dictionary=_native_buttons.route(event,event.position,buttons)
-		if not routed.get("handled",false) and event is InputEventScreenTouch and event.pressed and not event.canceled:_inventory_view.focus_search_at(event.position)
+		if not routed.get("handled",false) and event is InputEventScreenTouch and event.pressed and not event.canceled:
+			if crafting_search:_workspace_controls.focus_search_at(event.position)
+			else:_inventory_view.focus_search_at(event.position)
 		# The source popup owns this gesture; it cannot reach a slot/world.
 		get_viewport().set_input_as_handled()
 		return
@@ -597,6 +601,13 @@ func dungeon_blocks_point(point: Vector2) -> bool:
 
 func workspace_controls_block_point(point: Vector2) -> bool:
 	return _workspace_controls!=null and _workspace_controls.blocks_point(point)
+
+func crafting_search_is_open() -> bool:
+	return _workspace_controls!=null and _workspace_controls.search_is_open()
+
+func close_crafting_search() -> void:
+	_cancel_native_buttons()
+	if _workspace_controls!=null:_workspace_controls.close_search()
 
 func try_open_inventory() -> Dictionary:
 	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}

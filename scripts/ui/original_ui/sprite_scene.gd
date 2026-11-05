@@ -845,6 +845,31 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	node.visible=value
 	return {"ok":true}
 
+func activate_authored_component_opacity() -> Dictionary:
+	# An actual screen owner may open the referenced component in its own
+	# serialized root opacity, instead of the enclosing editor ProjectNode's
+	# preview opacity. Take no caller-supplied alpha or animation policy.
+	if inspection_only or source_pack==null or source_tree.is_empty() or _project_root_options.is_empty():return {"ok":false,"error":"source_project_component_required"}
+	var original: Dictionary=source_pack.layout_source(source_member)
+	if original.is_empty():original=source_pack.scene(source_member)
+	var sha: String=str(source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256",""))
+	if sha.is_empty() or original.get("_source_sha256")!=sha:return {"ok":false,"error":"source_component_identity_required"}
+	var raw: Dictionary=original.get("nodeTree",{})
+	if raw.get("classname")!="Node" or raw.get("_offset")!=source_tree.get("nodeTree",{}).get("_offset"):return {"ok":false,"error":"source_component_original_root_required"}
+	var options: Dictionary=raw.get("options",{})
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	var alpha: Variant=widget.get("alpha")
+	if typeof(alpha)!=TYPE_INT or alpha<0 or alpha>255:return {"ok":false,"error":"source_component_original_opacity_required"}
+	var root: Variant=source_nodes.get(int(raw._offset))
+	if not root is Node2D or root.get_meta("original_ui_source",{}).get("scene")!=source_member:return {"ok":false,"error":"source_component_loaded_root_required"}
+	var rgba: Array=root.get_meta("source_rgba",[])
+	if rgba.size()!=4:return {"ok":false,"error":"source_component_display_state_required"}
+	rgba=rgba.duplicate();rgba[3]=alpha
+	root.set_meta("source_rgba",rgba)
+	root.set_meta("source_component_opacity_activation",{"member":source_member,"sha256":sha,"authored_component_alpha":alpha,"parent_preview_alpha":_project_root_options.get("alpha"),"animation_policy_inferred":false})
+	_sync_source_display(self,_source_parent_display())
+	return {"ok":true,"authored_component_alpha":alpha,"animation_policy_inferred":false,"source_fields_modified":false}
+
 func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}

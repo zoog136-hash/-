@@ -2,7 +2,7 @@ extends RefCounted
 ## Original dungeon outside-close input only. Existing content and service
 ## own selection, entry, rewards, pending saves and every dungeon rule.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
-const Owner=preload("res://scripts/dungeons/source_dungeon_view.gd")
+const OWNER_SCRIPT="res://scripts/dungeons/source_dungeon_view.gd"
 const PARENT="UI/MissionScene.csb"
 const PARENT_SHA="dd8ecf3272d9ef3484bdd7eea2336abc54923553d3019c6888706872a5b76142"
 const MEMBER="UI/Mission/Mission_Dungeon_All.csb"
@@ -75,7 +75,9 @@ static func _current_owner(hud: Object) -> Control:
 	var workspace: Variant=hud.get("workspace")
 	if not workspace is Control or not is_instance_valid(workspace) or not workspace.is_visible_in_tree():return null
 	var owner: Node=workspace.find_child("SourceDungeonView",true,false)
-	if not is_instance_valid(owner) or owner.is_queued_for_deletion() or owner.get_script()!=Owner or not owner is Control or not owner.is_visible_in_tree():return null
+	if not is_instance_valid(owner) or owner.is_queued_for_deletion() or not owner is Control or not owner.is_visible_in_tree():return null
+	var script: Script=owner.get_script()
+	if script==null or script.resource_path!=OWNER_SCRIPT:return null
 	return owner as Control
 
 func _fail(code: String) -> Dictionary:
