@@ -255,11 +255,35 @@ func craft_progress_fixtures() -> void:
 	check(FileAccess.get_file_as_string(world.save_path())==original_text,"craft integration fixture preserves original profile bytes after verification")
 
 func finish() -> void:
+	write_resource_usage()
 	print("UNCONFIRMED523_MAIN_RESULT " + JSON.stringify({"phase":phase,"checks":checks,"failures":failures,"raw_resource_paths":loader.read_paths.size(),"scope":"ACTUAL_MAIN_PRIVATE_SOURCE_ATOMIC_SAVE_UI; EXPLICIT_OWNERSHIP_AND_PASS_XP_FIXTURES"}))
 	if is_instance_valid(world): world.queue_free()
 	await process_frame
 	ResourceLoader.remove_resource_format_loader(loader)
 	quit(0 if failures.is_empty() else 1)
+
+func write_resource_usage() -> void:
+	if not is_instance_valid(world) or not is_instance_valid(rt): return
+	var native: Array=[]
+	for path: String in loader.read_paths:
+		var file: FileAccess=FileAccess.open(path,FileAccess.READ)
+		if file!=null:native.append({"path":path,"bytes":file.get_length()})
+	var tables: Array=[]
+	for table: String in rt.source._tables:
+		if rt.source._metadata.has(table):
+			var meta: Dictionary=rt.source._metadata[table]
+			tables.append({"path":str(rt.source.status().path)+"!"+str(meta.path),"decoded_bytes":int(meta.bytes),"sha256":str(meta.sha256)})
+	var textures: Array=[]
+	var store_script=load("res://scripts/maps/source_map_texture_store.gd")
+	var store: Node=store_script.shared_ref.get_ref() if store_script.shared_ref!=null else null
+	if is_instance_valid(store):
+		for path: String in store.verified_files:
+			var stamp: Array=store.verified_files[path]
+			textures.append({"path":path,"bytes":int(stamp[1]),"sha256":str(stamp[0])})
+	var pack: String=OS.get_environment("TWILIGHT_SOURCE_MAP_PACK")
+	var report: Dictionary={"schema":1,"phase":phase,"profile_path":world.save_path(),"profile_sha256":FileAccess.get_sha256(world.save_path()),"integration_main_sha":OS.get_environment("TWILIGHT_264_MAIN_SHA"),"world_sha256":FileAccess.get_sha256("res://scripts/world.gd"),"runtime_sha256":FileAccess.get_sha256("res://scripts/unconfirmed523/runtime.gd"),"active_map":world.active_map_id,"active_field_script":world.field_map.get_script().resource_path if world.field_map!=null else "","active_map_manifest_path":pack+"/index.json","active_map_manifest_sha256":FileAccess.get_sha256(pack+"/index.json"),"content_archive":rt.source.status(),"content_archive_sha256":SOURCE.SOURCE_SHA256,"native_loader_reads":native,"parsed_source_entries":tables,"map_store_verified_reads":textures,"coverage_limit":"Scoped native ResourceLoader, parsed source entries and map-store SHA reads only; not a complete OS file-open trace or whole-game installation."}
+	var output: FileAccess=FileAccess.open("user://unconfirmed523-resource-usage-"+phase+".json",FileAccess.WRITE)
+	if output!=null:output.store_string(JSON.stringify(report,"\t"));output.close()
 
 func captures() -> void:
 	if capture_dir.is_empty() or DisplayServer.get_name() == "headless": return

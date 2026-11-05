@@ -514,5 +514,143 @@
       "followup-main-ui-reviewed.log": "af0d930282a1b971e48fcbfec23a3b94cb6961ddf2ad9b73b05892d2114bfd1e",
       "followup-resource-integrity.log": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
     }
+  },
+  "closeout_20261105": {
+    "integration_main": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+    "preserved_local_followup": "e416679053baa012d4fe06e3a3cd475775e81821",
+    "user_principle": "originalsource first; officialsearch ifmissing; explicitlylabelledestimate ifstillunknown; no new/replacementoriginalUI",
+    "remote_CI": "not run per explicit user instruction; not represented as passing",
+    "fast_mode": "no supported setter/config found; not verified or claimed enabled",
+    "scope": "same feature branch/PR264, private original source and saves excluded; maps and items priority; no audio feature work",
+    "ownership_ABI": {
+      "published_commit": "3b53de35638628c7c76c4c2cdcaf432e1e019deb",
+      "module": "scripts/quests/quest_reward_consumption.gd",
+      "exact_blob": "b7cb2f8ed3837838d5a09ff6a7f90e8f42a16cf9",
+      "existing_OWN_blob": "708c5816f59464427a08e085adb569160c18b740",
+      "only_published_new_dependency_reused": true,
+      "genuine_item313_QA": "actual verified projection + real autoissuer + immutable receipt/partial9/onewrite; ownership-layer QA, not completed processing/effect",
+      "existing_owner_files_replaced": false
+    },
+    "tests": [
+      {
+        "name": "actual Main native interactions and atomic save",
+        "checks": 99,
+        "status": "passed"
+      },
+      {
+        "name": "unchanged latestmain Core Main/save/resourcepath suite",
+        "checks": 47,
+        "status": "passed"
+      },
+      {
+        "name": "new-process Main/save/craft rollback/currentnativeUI and measuredresources",
+        "checks": 57,
+        "status": "passed"
+      },
+      {
+        "name": "runtime shared ABI + actualsource events + genuineissuer",
+        "checks": 147,
+        "status": "passed"
+      },
+      {
+        "name": "inherited PR266 installer allocation checks",
+        "checks": 14,
+        "status": "passed"
+      },
+      {
+        "name": "inherited PR266 SP2 bounded decoding",
+        "checks": 7,
+        "status": "passed; pinned Brotli1.2.0 test dependency"
+      }
+    ],
+    "log_sha256": {
+      "closeout-main-final.log": "c4d36caf4e2ee8f513c73ef083a92d82c1c062dc2a290da48db6aea93818b901",
+      "closeout-core-final.log": "5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b",
+      "closeout-main-measured.log": "98ff5c4fa2c4fcd07751b52cd5b421e9ad3e91b3d0ff232c55c45524556f2576",
+      "closeout-host-genuine-final.log": "40d4088450e5e4d5de6d5c7af3371dcbb7fe2f308a32d8e96d90003a89ccfef6",
+      "closeout-resource-integrity.log": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+      "closeout-inherited-installer-tests-final.log": "ea81f81542831c3152a522420d86c868c0d6a8c3630a48b66c408924a7460b2b",
+      "closeout-inherited-sp2-bounded.log": "d24762a962687845ee7880c945c84829223c6ff3fe4f3a2063f4bfd3d9c17af8"
+    },
+    "integration_fixes": [
+      "all World/HUD main services/validators and movement_override preserved",
+      "exact canonicalQuestreceipt and common selected-consumption ABI; immutable first/currentconsumer digests",
+      "quest growth overrides retain existing queststate in same transaction",
+      "sourcecraft/enchant/cardcompose and actual Challenge blessing costs join pass progress before write with rollback",
+      "sourcefishing pendingclear + exact Fish itemincrement proves catch incl NoMemory; stage source progress and adoptonlyafterconfirmed save",
+      "main skill damage local type inference corrected with explicitint, no formulachange",
+      "same source84v3 Git tree restored privately after sparse-checkout removed working materialization, no original/geometrychanged"
+    ],
+    "diagnostics": [
+      "initial sparse cache absence led to2 Core sourcefield assertions and1Mainmap gate; restored607sameGitobjects725122448B, errors resolved withsourceprotectionintact",
+      "initialmain parserfailed because excludedshader absent andmain variantamount inference; exactshaderrestoredandintdeclarationfixed, actualMain passed",
+      "defaultPython hadnoBrotli; systemBrotli lackedboundedAPI; localpinned1.2.0 supportedall7unmodifiedtests; no helpercode weakened"
+    ],
+    "source_event_coverage": {
+      "all_pass_exp_edges": 894,
+      "season": 545,
+      "daily": 349,
+      "date_active_passes": 5,
+      "date_active_quests": 80,
+      "KR_world1_passes": [
+        692,
+        724
+      ],
+      "KR_world1_quests": 32,
+      "no_ItemUse_goals": true,
+      "retained_external_or_excluded": [
+        "ClanDonate excluded",
+        "PartyDungeon owner/geometry unavailable",
+        "Adena card Unit35 purchase resolver missing; tickets do not substitute",
+        "historical dissolution/EarthObject owner missing; destruction/sale/ordinaryportal not substitutes"
+      ]
+    },
+    "asset_usage": {
+      "main_sha": "00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2",
+      "local_head_at_measurement": "d89a498abf227b2d50557a206ea0fc665477e107",
+      "world_sha256": "afe8dbe69add23e55386664ca6825758c81a4c50c39f91de1c8701c3fbcb6b85",
+      "runtime_sha256": "7f8992c550a9c62e0137e30c563bef6eb6ace7757052dffba150cd14f13eec38",
+      "profile_sha256": "e6509673a36bdac68874e37cbe4460bcdcd654e3829c4087b7112c7c6a0479c4",
+      "active_map_manifest": {
+        "path": "/workspace/private-inputs/closeout-current-aden/index.json",
+        "sha256": "16f3d61b97cfe4ce6b21e1f0eab738e06f17f5bfee30dd48a32b6369269a4474",
+        "installed_files": 607,
+        "installed_bytes": 725122448,
+        "partial_installation": true,
+        "scope": "current Aden only, committed source-derived inputs"
+      },
+      "native_loader": {
+        "distinct_paths": 394,
+        "bytes": 44693329
+      },
+      "map_sha_verified": {
+        "distinct_paths": 6,
+        "bytes": 10689974
+      },
+      "parsed_content_entries": {
+        "distinct_virtual_paths": 57,
+        "decoded_bytes": 215241845
+      },
+      "original_common_zip": {
+        "path": "user://unconfirmed523/source.zip",
+        "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+        "bytes": 25031173,
+        "scope": "common content data only, not whole-game media"
+      },
+      "coverage_limit": "Scoped native ResourceLoader, parsed source entries and map-store SHA reads only; not a complete OS file-open trace or whole-game installation.",
+      "whole_game_installed": false,
+      "save_modified_by_measurement": false
+    },
+    "whole_game_installation": false,
+    "publication_status": "verified candidate; publication result recorded in final private receipt and PR metadata",
+    "candidate_code_sha256": {
+      "scripts/world.gd": "afe8dbe69add23e55386664ca6825758c81a4c50c39f91de1c8701c3fbcb6b85",
+      "scripts/skills/skill_service.gd": "8a02a6d0f2af2809928282a1f56d75e27b1dcf7d0b6e291039513a1d9f295b55",
+      "scripts/ui/renewal_hud.gd": "adf49a96d7144b15697cd9fda75e5f4703f8254614dd3330c71099a3fbce6495",
+      "scripts/unconfirmed523/runtime.gd": "7f8992c550a9c62e0137e30c563bef6eb6ace7757052dffba150cd14f13eec38",
+      "scripts/quests/quest_reward_consumption.gd": "a3043db1af182db8a80bf88fb5de6d9cc78980f14f19ca06cdf5e1443c4472b3",
+      "tests/unconfirmed523_host_test.gd": "39599dd43f848ed49b1f2ef0d871ec56b6738c779606a001bfb851aa32e86886",
+      "tests/unconfirmed523_main_test.gd": "60a2daf0dcb63f44d7f77833eacf6aa59eda2e300637f9fd8175bc89c31f0837"
+    }
   }
 }

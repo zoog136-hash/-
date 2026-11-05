@@ -19,10 +19,25 @@ class Hud extends RefCounted:
 	func open_unconfirmed523(key: String) -> void: opened = key
 	func confirm_action(_title: String,_description: String,_accept: String,then: Callable) -> void: callback = then
 	func show_message(_value: String) -> void: pass
+	func append_log(_value: String) -> void: pass
+class HeldMaterialHost extends RefCounted:
+	func material(_value: Dictionary) -> bool: return false
+class Growth extends RefCounted:
+	var source523 = HeldMaterialHost.new()
+class Provider extends RefCounted:
+	func resolve(_value: Dictionary) -> Dictionary: return {}
+	func supported_held(_world: Node) -> Dictionary: return {}
+class Deferred extends RefCounted:
+	func cancel() -> void: pass
 class Host extends Node:
 	const BASE508 = preload("res://scripts/lineagem_base508.gd")
 	const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 	var hp: int = 100
+	var max_hp: int = 100
+	var mp: int = 100
+	var max_mp: int = 100
+	var attack_power: int = 10
+	var defense: int = 0
 	var cache_invalidations: int = 0
 	var level: int = 85
 	var experience: int = 0
@@ -37,6 +52,14 @@ class Host extends Node:
 	var ui_preferences: Dictionary = {"item_locks":{}}
 	var ain_service = Ain.new()
 	var quest_service = preload("res://scripts/quests/quest_service.gd").new()
+	var fishing523 = preload("res://scripts/fishing/fishing_runtime.gd").new()
+	var quest_auto = preload("res://scripts/quests/quest_auto_runner.gd").new()
+	var item_db: Array = []
+	var catalog_db: Dictionary = {}
+	var loot_catalog: Dictionary = {"by_name":{}}
+	var growth = Growth.new()
+	var quest_item_provider = Provider.new()
+	var deferred_save = Deferred.new()
 	var hud = Hud.new()
 	var next_item_instance_id: int = 100
 	var runtime_service
@@ -60,6 +83,12 @@ class Host extends Node:
 		if save_result == OK: disk = staged.duplicate(true)
 		return save_result
 	func _update_hud() -> void: pass
+	func _refresh_inventory_hud() -> void: pass
+	func _refresh_combat_hud() -> void: pass
+	func save_path() -> String: return "user://host-source-issued-quest.json"
+	func _check_level_up(_quiet: bool) -> void:
+		# This bounded producer chain gives nine EXP, below the unchanged curve.
+		assert(experience < exp_need)
 	func _invalidate_equipment_static() -> void: cache_invalidations += 1
 class Source extends RefCounted:
 	var available: bool = true
@@ -76,6 +105,7 @@ class Source extends RefCounted:
 		if table == "ItemBonus": return [{"ItemClassID":400,"BonusID":4000},{"ItemClassID":401,"BonusID":4001}]
 		return []
 	func row(table: String,id: int) -> Dictionary:
+		if table == "Fish" and id in [111,211]: return {"ID":id,"ItemClassID":303451 if id == 111 else 304021,"NoMemory":id == 211}
 		if table == "ItemClass" and id in [100,101,200,300]: return {"ID":id,"Name":"fixture " + str(id),"CategoryID":78 if id == 100 else 10291 if id == 300 else 10,"MaxStackAmount":1 if id == 200 else 999999,"GradeID":3}
 		if table == "ItemClass" and id in [400,401]: return {"ID":id,"Name":"Life fixture","MaxStackAmount":1 if id == 400 else 3,"GradeID":3}
 		if table == "Bonus" and id in [4000,4001]: return {"ID":id,"BonusTypeID":422,"Value":86400 if id == 4000 else 259200}
@@ -375,6 +405,7 @@ func _run() -> void:
 	check(ordered.map(func(row: Dictionary): return row.id) == ["active_a","active_b","inactive","disabled"],"enabled-action rows display first with stable order in both groups")
 	check(ordered.size() == presentation.size() and presentation[0].id == "inactive","display priority retains every row and leaves source rows untouched")
 	_followup_ports()
+	_staged_owner_events()
 	if failures.is_empty(): print("UNCONFIRMED523_HOST_OK: %d assertions" % checks); quit(0)
 	else: printerr("UNCONFIRMED523_HOST_FAILED: " + ", ".join(failures)); quit(1)
 
@@ -586,13 +617,15 @@ func _owned_quest_transactions() -> void:
 	world.quest_service.import_state(used.state)
 	runtime.domains.events.cost_values = [{"kind":"item","id":100,"amount":1,"instance_id":"proof_stack"}]
 	original_state = world.quest_service.export_state()
-	check(not runtime.execute("events",{}).ok and world.save_calls == 0 and world.quest_service.export_state() == original_state and world.item_instances.proof_stack.source_reward_quantity == 3,"different prior consumer pack identity fails closed without rewriting its use ledger")
+	var crossed: Dictionary = runtime.execute("events",{})
+	check(crossed.ok and world.save_calls == 1 and world.item_instances.proof_stack.source_reward_quantity == 2 and world.quest_service.item_grants["m523:quest:77"][0].pack_sha256 == "a".repeat(64) and runtime._held_consumption.is_empty(),"published shared ABI preserves the first consumer pack identity across a verified later owner")
 	world.item_instances.proof_stack.quest_reward_receipt.quest_id = 77
 	check(runtime.context().has("ownership_error"),"integer fixture quest IDs cannot impersonate current main canonical receipt identity")
 	world.item_instances.proof_stack.quest_reward_receipt.quest_id = "m523:quest:77"
 	world.quest_service.claimed.clear()
 	check(runtime.context().has("ownership_error"),"raw reward edge without actual source owner's completed claim cannot authorize held consumption")
 	world.free()
+
 	f = fixture(); runtime = f.runtime; world = f.world
 	held_fixture(world,runtime)
 	var staged: Dictionary = runtime._stage_world()
@@ -600,4 +633,117 @@ func _owned_quest_transactions() -> void:
 	staged.unconfirmed523 = runtime.state.duplicate(true)
 	world.ui_preferences.item_locks.proof_stack = true
 	check(error.is_empty() and not runtime._publish(staged).ok and world.save_calls == 0 and world.quest_service.item_grants.is_empty() and world.item_instances.proof_stack.source_reward_quantity == 4,"owner quote is revalidated immediately before shared writer and stale lock applies no debit or receipt")
+	world.free()
+
+func _staged_owner_events() -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world: Host = f.world
+	var pending: Dictionary = {"id":"native-cast-id","fish":211,"rod":1,"territory":1}
+	world.fishing523.state.pending = pending.duplicate(true)
+	world.fishing523.state.items = {"304021":2}
+	var proposed: Dictionary = world.fishing523.state.duplicate(true)
+	proposed.pending = {}; proposed.items["304021"] = 3
+	var overrides: Dictionary = {"fishing523":proposed}
+	runtime.snapshot()
+	var before: Dictionary = runtime.state.duplicate(true)
+	var owner_before: Dictionary = world.fishing523.state.duplicate(true)
+	var inputs_before: Dictionary = overrides.duplicate(true)
+	var observed: Dictionary = runtime.observe_staged_owner(overrides)
+	check(observed.ok and observed.has("state") and int(observed.state.event_counters.fishing_success) == 1 and int(observed.state.event_counters["fishing_success:211"]) == 1,"native NoMemory catch stages exactly one fishing occurrence using source item delta")
+	check(runtime.state == before and world.fishing523.state == owner_before and overrides == inputs_before and world.save_calls == 0 and world.disk.is_empty(),"staged fishing observer leaves live namespace owner inputs and disk untouched")
+	check(runtime.observe_staged_owner(overrides).state == observed.state,"same uncommitted pending cast produces the same isolated candidate")
+	var payload: Dictionary = {"fishing523":proposed,"unconfirmed523":observed.state}
+	world.save_result = ERR_CANT_CREATE
+	check(world._save_game(true,payload) != OK and runtime.state == before and world.fishing523.state == owner_before and world.disk.is_empty(),"failed native owner save applies no fishing or pass progress")
+	world.save_result = OK
+	check(world._save_game(true,payload) == OK,"owner can save native catch and pass occurrence in one payload")
+	runtime.restore(world.disk)
+	check(not runtime.observe_staged_owner(overrides).has("state") and int(runtime.state.event_counters.fishing_success) == 1,"persisted pending identity deduplicates a repeated owner observation")
+	world.fishing523.state.pending.id = "failed-cast-id"
+	var failed: Dictionary = world.fishing523.state.duplicate(true); failed.pending = {}
+	check(not runtime.observe_staged_owner({"fishing523":failed}).has("state"),"failed finish removing pending without a caught source item earns no fishing credit")
+	failed.items["304021"] = 4
+	check(not runtime.observe_staged_owner({"fishing523":failed}).has("state"),"larger inventory change cannot masquerade as a single native fishing finish")
+	runtime.source.available = false
+	check(not runtime.observe_staged_owner(overrides).has("state"),"missing common source pack leaves native fishing owner available without synthesized pass progress")
+	runtime.source.available = true
+	world.fishing523 = null
+	check(not runtime.observe_staged_owner(overrides).has("state"),"missing native fishing owner never infers success from caller inventory")
+	world.free()
+	var directory: String = OS.get_environment("TWILIGHT_523_SOURCE_DIR")
+	if directory.is_empty(): print("HOST_SOURCE_EVENT_JOINS_NOT_RUN: set TWILIGHT_523_SOURCE_DIR and TWILIGHT_523_ALLOW_TEST_SOURCE=1")
+	else: _actual_source_event_joins(directory)
+
+func _goal_progress(runtime, candidate: Dictionary, type_id: int) -> int:
+	var total: int = 0
+	for progress: Dictionary in candidate.domains.events.get("quest_progress",{}).values():
+		for goal_id: String in progress:
+			if int(runtime.source.row("Goal",int(goal_id)).get("GoalTypeID",0)) == type_id: total += int(progress[goal_id])
+	return total
+
+func _actual_source_event_joins(directory: String) -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world: Host = f.world
+	var original = Runtime.Source.new()
+	check(original.configure_directory(directory).ok,"actual common523 source opens under explicit test gate for event joins")
+	runtime.source = original
+	runtime.domains = {"events":preload("res://scripts/unconfirmed523/events_domain.gd").new(),"challenge":preload("res://scripts/unconfirmed523/challenge_domain.gd").new()}
+	for domain in runtime.domains.values(): domain.setup(original)
+	runtime.state = runtime.fresh()
+	world.ain_service.saved.blessing = 100
+	var challenge_id: int = 0
+	for raw: Dictionary in original.rows("Challenge"):
+		if int(raw.get("EinhasadCost",0)) == 20 and runtime.domains.challenge.eligibility(int(raw.ID),runtime.context()).is_empty(): challenge_id = int(raw.ID); break
+	check(challenge_id > 0,"actual active eligible Challenge retains source twenty blessing entry cost")
+	var result: Dictionary = runtime.execute("challenge",{"op":"challenge_start","challenge_id":challenge_id,"local_policy":true})
+	check(result.ok and world.ain_service.saved.blessing == 80 and world.disk.ainhasad_state.blessing == 80 and int(world.disk.unconfirmed523.event_counters.blessing_use) == 20 and _goal_progress(runtime,world.disk.unconfirmed523,10) > 0,"actual source Challenge blessing debit and goal10 progress commit in the same writer")
+	check(int(runtime.state.revision) == 1 and world.save_calls == 1 and runtime.state.event_receipts.has("source_grant:unconfirmed523:blessing_use:1"),"blessing join neither saves twice nor synthesizes a World kill occurrence")
+	var fish: Dictionary = original.row("Fish",211)
+	check(fish.get("NoMemory") == true and int(fish.ItemClassID) == 304021,"actual Fish211 is a source NoMemory caught item")
+	world.fishing523.state.pending = {"id":"source-NoMemory-cast","fish":211,"rod":1,"territory":1}
+	var next: Dictionary = world.fishing523.state.duplicate(true); next.pending = {}; next.items["304021"] = 1
+	var unchanged: Dictionary = runtime.state.duplicate(true)
+	var observed: Dictionary = runtime.observe_staged_owner({"fishing523":next})
+	check(observed.ok and observed.has("state") and _goal_progress(runtime,observed.state,851) > 0 and runtime.state == unchanged and next.journal.is_empty(),"actual source NoMemory item delta stages goal851 progress without journal inference or live mutation")
+	world.free()
+	var quest_pack: String = OS.get_environment("TWILIGHT_QUEST523_PACK")
+	if quest_pack.is_empty(): print("HOST_GENUINE_QUEST_CONSUMPTION_NOT_RUN: set TWILIGHT_QUEST523_PACK to the verified existing projection ZIP")
+	else: _genuine_source_ownership(original,quest_pack)
+
+func _genuine_source_ownership(original, quest_pack: String) -> void:
+	var f: Dictionary = fixture()
+	var runtime = f.runtime
+	var world: Host = f.world
+	var source_quest = world.quest_service.source
+	check(source_quest.install_zip(quest_pack).ok and source_quest.load_pack() and source_quest.document.source_sha256 == Runtime.Source.SOURCE_SHA256,"fixed-SHA public quest projection installs and loads the actual private source graph")
+	for row: Dictionary in source_quest.quests:
+		world.quest_service.quests.append(row)
+		world.quest_service.index[str(row.id)] = row
+	world.job_class = "사신"
+	world.inventory.clear(); world.item_instances.clear()
+	var completed: bool = world.quest_auto.complete(world,["m523:quest:79584","m523:quest:79594","m523:quest:79604"])
+	check(completed and world.quest_service.claimed.get("m523:quest:79604",false) and world.experience == 9,"unchanged public Quest_auto_runner genuinely issues the source class94 prerequisite chain and its nine EXP")
+	var physical_id: String = ""
+	for id: String in world.item_instances:
+		if int(world.item_instances[id].record.get("source_item_class_id",0)) == 313 and Runtime.QuestOwnership.proof(world,id).get("ok",false): physical_id = id; break
+	check(not physical_id.is_empty(),"actual auto-issued ItemClass313 has the canonical source owner's grant proof")
+	if physical_id.is_empty(): world.free(); return
+	runtime.source = original
+	var issued: Dictionary = world.item_instances[physical_id].quest_reward_receipt.duplicate(true)
+	var original_claims: Dictionary = world.quest_service.claimed.duplicate(true)
+	var before: int = int(world.item_instances[physical_id].source_reward_quantity)
+	var staged: Dictionary = runtime._stage_world()
+	var error: String = runtime._cost({"kind":"item","id":313,"amount":1,"instance_id":physical_id,"expected_quantity":before},staged,runtime.context())
+	check(error.is_empty() and not runtime._held_consumption.get("use_authorized",true) and Runtime.QuestConsumption.matches_payload(world,runtime._held_consumption,staged),"runtime delegates a genuinely issued selected debit to the published ABI without effect authorization")
+	var overwritten: Dictionary = staged.duplicate(true); overwritten.quest_state = world.quest_service.export_state()
+	check(not Runtime.QuestConsumption.matches_payload(world,runtime._held_consumption,overwritten),"final old-ledger overwrite of a genuinely issued selected consumption is rejected")
+	staged.unconfirmed523 = runtime.state.duplicate(true)
+	runtime.busy = true
+	var result: Dictionary = runtime._publish(staged)
+	check(result.ok and world.item_instances[physical_id].source_reward_quantity == before-1 and world.item_instances[physical_id].quest_reward_receipt == issued and world.quest_service.claimed == original_claims,"one owner-layer QA write adopts physical remainder and source use ledger without regranting or changing claims")
+	var use: Dictionary = world.quest_service.item_grants[issued.quest_id][0]
+	check(use.used_quantity == 1 and use.quantity == issued.quantity and use.pack_sha256 == Runtime.Source.SOURCE_SHA256,"actual source-issued selected consumption retains original quantity and verified current consumer proof")
+	print("HOST_GENUINE_QUEST_CONSUMPTION_OK: ownership-layer QA only; Item313 quest79604; no processing/effect completion claim")
 	world.free()

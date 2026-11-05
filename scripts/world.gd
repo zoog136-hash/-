@@ -5883,6 +5883,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		data.ui_preferences["totem_combat_settings"] = staged_overrides.totem_combat_settings
 		staged_overrides.erase("totem_combat_settings")
 	data.merge(staged_overrides, true)
+	var observed_content: Dictionary = unconfirmed523.observe_staged_owner(collection_override)
+	if not bool(observed_content.get("ok",false)): return ERR_INVALID_DATA
+	if observed_content.has("state"):
+		data["unconfirmed523"] = observed_content.state
 	var save_started_usec: int = Time.get_ticks_usec()
 	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
 	var result: Error = equipment_collections.write_save(save_path(), data)
@@ -5905,6 +5909,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 			hud.append_log("이전 저장 선택 기록 실패 · 원본과 별도 저장 후보를 보존합니다")
 			return pointer_result
 		pending_map_save_record.clear()
+	if observed_content.has("state"):
+		unconfirmed523.state = observed_content.state.duplicate(true)
 	# This save already holds every earlier change, so a queued one is redundant.
 	# A failed deferred write is not re-queued here; the 60 s general autosave in
 	# _process keeps retrying, and pause/quit still attempt a final save.
@@ -7975,8 +7981,15 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 		var pity_card: Dictionary = result.get("pity_reward", {}) as Dictionary
 		if not pity_card.is_empty():
 			message += " · 누적 실패 보상: %s" % str(pity_card.get("name", ""))
+	var before_content: Dictionary = unconfirmed523.state.duplicate(true)
+	# Original BuffCardDeck IDs: Polymorph1, MagicDoll2, HolyStuff98.
+	var source_deck: int = int({"변신":1,"마법인형":2,"성물":98}.get(category,0))
+	var attempts: int = int(result.get("attempts",0)) if batch else 1
+	if source_deck > 0 and attempts > 0:
+		unconfirmed523.record_event("card_compose",{"source_id":source_deck,"amount":attempts,"event_id":"compose:%d:%d"%[source_deck,Time.get_ticks_usec()]})
 	tj_coupons.capture_fusion(result)
 	if _save_game(true) != OK:
+		unconfirmed523.state = before_content
 		tj_coupons.core.state=tj_before.duplicate(true)
 		card_draw_fusion.import_state(cards_before)
 		card_draw_fusion.rng.state = roll_before
