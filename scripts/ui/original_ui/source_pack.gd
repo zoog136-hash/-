@@ -83,27 +83,33 @@ func _find(node: Dictionary, source_name: String, result: Array[Dictionary]) -> 
 	if widget.get("name")==source_name: result.append(node)
 	for child: Dictionary in node.get("children",[]): _find(child,source_name,result)
 
-func texture(reference: Dictionary) -> Texture2D:
+func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if manifest.is_empty() or str(reference.get("path","")).is_empty(): return null
 	var plist: String=str(reference.get("plistFile",""))
-	var key: String=plist+":"+str(reference.path)
+	var key: String=plist+":"+str(reference.path)+":"+str(cocos_pixels)
 	if _textures.has(key): return _textures[key]
 	var original: Image
+	var premultiplied: bool=false
 	if plist.is_empty():
 		if int(reference.get("resourceType",0))!=0: return null
 		original=_page(_member(str(reference.path)))
+		if original!=null:premultiplied=bool(original.get_meta("cocos_png_pma",false))
 	else:
 		var atlas: Dictionary=manifest.atlases.get(_member(plist),{})
 		var frame: Dictionary=atlas.get("frames",{}).get(str(reference.path),{})
 		if frame.is_empty(): return null
 		var page: Image=_page(str(atlas.get("page","")))
 		if page==null: return null
+		premultiplied=bool(page.get_meta("cocos_png_pma",false))
 		var decoded: Dictionary=PIXELS.decode(page,frame)
 		if not str(decoded.get("error","")).is_empty():
 			last_error=str(decoded.error); return null
 		original=decoded.image
 	if original==null: return null
+	if cocos_pixels and premultiplied:
+		original=cocos_premultiply(original)
 	var result:=ImageTexture.create_from_image(original)
+	result.set_meta("cocos_premultiplied",cocos_pixels and premultiplied)
 	_textures[key]=result
 	return result
 
@@ -116,8 +122,36 @@ func _page(member: String) -> Image:
 	var original: Image=Image.load_from_file(path)
 	if original==null or original.is_empty(): return null
 	original.convert(Image.FORMAT_RGBA8)
+	original.set_meta("cocos_png_pma",_png_premultiplies(path))
 	_pages[member]=original
 	return original
+
+static func cocos_premultiply(original: Image) -> Image:
+	var pixels: PackedByteArray=original.get_data()
+	for at: int in range(0,pixels.size(),4):
+		var alpha_plus_one: int=int(pixels[at+3])+1
+		for channel: int in range(3):pixels[at+channel]=(int(pixels[at+channel])*alpha_plus_one)>>8
+	return Image.create_from_data(original.get_width(),original.get_height(),false,Image.FORMAT_RGBA8,pixels)
+
+static func _png_premultiplies(path: String) -> bool:
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()<33:return false
+	var head: PackedByteArray=file.get_buffer(26)
+	if head.slice(0,8)!=PackedByteArray([137,80,78,71,13,10,26,10]):return false
+	var color_type: int=head[25]
+	if color_type==6:return true
+	if color_type not in [2,3]:return false
+	# Cocos expands palette/RGB tRNS to RGBA before premultiplication.
+	file.big_endian=true
+	file.seek(8)
+	while file.get_position()+12<=file.get_length():
+		var length: int=file.get_32()
+		var kind: String=file.get_buffer(4).get_string_from_ascii()
+		if kind=="tRNS":return true
+		if kind in ["IDAT","IEND"]:return false
+		if length>file.get_length()-file.get_position()-4:return false
+		file.seek(file.get_position()+length+4)
+	return false
 
 static func _member(path: String) -> String:
 	return path if path.begins_with("UI/") else "UI/"+path

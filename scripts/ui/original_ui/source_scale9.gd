@@ -25,6 +25,8 @@ func configure(texture: Texture2D, target: Vector2, source_cap: Array) -> Dictio
 		var part:=Sprite2D.new()
 		part.name="SourceSlice_%d_%d"%[x,y]
 		part.texture=texture
+		part.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture)
+		if part.material==null:part.free();return {"ok":false,"error":"original_material_unavailable"}
 		part.centered=false
 		part.region_enabled=true
 		part.region_rect=clipped

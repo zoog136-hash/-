@@ -1,4 +1,5 @@
 extends Node2D
+const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
@@ -57,7 +58,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false) -> Di
 	for timeline: Dictionary in action.get("timeLines",[]):
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
-			if value.get("_type")=="TextureFrame" and source_pack.texture(value.textureFile)==null:
+			if value.get("_type")=="TextureFrame" and source_pack.texture(value.textureFile,true)==null:
 				source_tree={}; return {"ok":false,"error":"source_texture_missing"}
 	var root_node: Node2D=_build(tree.nodeTree)
 	if root_node==null:
@@ -189,7 +190,7 @@ func _build(source: Dictionary) -> Node2D:
 		label.configure(font_value,options,Vector2(widget.size[0],widget.size[1]))
 		origin.add_child(label)
 	if source.classname=="ImageView":
-		var texture: Texture2D=source_pack.texture(options.fileNameData)
+		var texture: Texture2D=source_pack.texture(options.fileNameData,true)
 		if texture==null: node.free(); return null
 		var picture: Control
 		if bool(options.scale9Enabled):
@@ -202,6 +203,9 @@ func _build(source: Dictionary) -> Node2D:
 		else:
 			var flat:=TextureRect.new()
 			flat.texture=texture
+			flat.material=MATERIAL.original_default(texture)
+			if flat.material==null:
+				_build_error="original_material_unavailable";flat.free();node.free();return null
 			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			flat.stretch_mode=TextureRect.STRETCH_SCALE
 			picture=flat
@@ -214,7 +218,7 @@ func _build(source: Dictionary) -> Node2D:
 		origin.add_child(picture)
 		node.set_meta("source_image",picture)
 	if source.classname=="Sprite":
-		var texture: Texture2D=source_pack.texture(options.fileNameData)
+		var texture: Texture2D=source_pack.texture(options.fileNameData,true)
 		if texture==null: node.free(); return null
 		var sprite:=Sprite2D.new()
 		sprite.name="OriginalPixels"
@@ -223,9 +227,10 @@ func _build(source: Dictionary) -> Node2D:
 		sprite.position.y=-texture.get_height()
 		sprite.flip_h=bool(widget.flipX)
 		sprite.flip_v=bool(widget.flipY)
-		var material_value:=CanvasItemMaterial.new()
-		material_value.blend_mode=_blend_mode(options)
-		sprite.material=material_value
+		sprite.material=MATERIAL.for_blend(texture,_blend(options))
+		if sprite.material==null:
+			_build_error="original_material_unavailable";sprite.free();node.free();return null
+		node.set_meta("source_blend",_blend(options))
 		origin.add_child(sprite)
 		node.set_meta("source_sprite",sprite)
 		node.set_meta("source_anchor",widget.anchorPoint)
@@ -304,7 +309,8 @@ func seek_frame(frame_number: float) -> void:
 		elif timeline.property=="BlendFunc":
 			if target.has_meta("source_sprite"):
 				var sprite: Sprite2D=target.get_meta("source_sprite")
-				sprite.material.blend_mode=_blend_mode(selected)
+				sprite.material=MATERIAL.for_blend(sprite.texture,_blend(selected))
+				target.set_meta("source_blend",_blend(selected))
 		elif timeline.property=="Alpha":
 			target.modulate.a=float(int(lerpf(float(selected.value),float(following.value),ratio)))/255.0
 		elif timeline.property in ["Scale","RotationSkew"]:
@@ -319,9 +325,10 @@ func seek_frame(frame_number: float) -> void:
 		elif timeline.property=="VisibleForFrame": target.visible=bool(selected.value)
 		elif timeline.property=="FileData" and target.has_meta("source_sprite"):
 			var sprite: Sprite2D=target.get_meta("source_sprite")
-			var texture: Texture2D=source_pack.texture(selected.textureFile)
+			var texture: Texture2D=source_pack.texture(selected.textureFile,true)
 			if texture==null: _playing=false; return
 			sprite.texture=texture
+			sprite.material=MATERIAL.for_blend(texture,str(target.get_meta("source_blend")))
 			sprite.position.y=-texture.get_height()
 			var anchor: Array=target.get_meta("source_anchor")
 			var origin: Node2D=target.get_meta("source_origin")
@@ -357,9 +364,3 @@ static func _blend(options: Dictionary) -> String:
 	var value: Variant=options.get("blendFunc")
 	if not value is Array or value.size()!=2: return ""
 	return str(int(value[0]))+":"+str(int(value[1]))
-
-func _blend_mode(value: Dictionary) -> int:
-	match _blend(value):
-		"770:1": return CanvasItemMaterial.BLEND_MODE_ADD
-		"1:771": return CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
-	return CanvasItemMaterial.BLEND_MODE_MIX

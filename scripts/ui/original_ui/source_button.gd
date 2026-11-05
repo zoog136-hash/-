@@ -8,7 +8,7 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 	for state: String in ["normal","pressed","disabled"]:
 		var reference: Dictionary=options[state+"Data"]
 		if str(reference.path).is_empty():return {"ok":false,"error":"original_button_state_unspecified:"+state}
-		var texture: Texture2D=pack.texture(reference)
+		var texture: Texture2D=pack.texture(reference,true)
 		if texture==null:return {"ok":false,"error":"original_button_texture_missing:"+state}
 		var picture: Control
 		if bool(options.scale9Enabled):
@@ -19,6 +19,8 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 		else:
 			var flat:=TextureRect.new()
 			flat.texture=texture
+			flat.material=preload("res://scripts/ui/original_ui/source_material.gd").original_default(texture)
+			if flat.material==null:flat.free();return {"ok":false,"error":"original_material_unavailable"}
 			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			flat.stretch_mode=TextureRect.STRETCH_SCALE
 			flat.size=extent

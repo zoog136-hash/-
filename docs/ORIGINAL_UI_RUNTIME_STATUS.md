@@ -294,3 +294,26 @@ previous valid pack; nine decoder/provenance tests pass. The corrected new
 173; this brings accepted inspection entries across the recorded sets to 96,
 not completed service screens. Attendance's six-scene/33-file closure is now
 complete; its runtime/control/service work remains outstanding.
+
+
+### Original PNG alpha and sprite modulation
+
+The renderer now follows Cocos PNG premultiplication and Sprite
+`opacityModifyRGB` together, including the integer `(channel*(alpha+1))>>8`
+conversion. Original files remain unchanged. The existing one-argument
+`pack.texture(reference)` still returns the raw texture; the renderer opts into
+Cocos pixels with its second argument. Materials explicitly support the three
+previously accepted blend pairs and reject shader compilation failure.
+
+Thirty original-pixel checks passed for source opacity and those three blend
+pairs over opaque black in isolated Mesa OpenGL. The three original icon
+scenes passed 82 playback checks, and seven original ImageView entries rendered
+without errors after this change. These are regressions of already recorded
+entries, not additional completed screens. This does not establish transparent
+framebuffer alpha parity, device parity, or service integration.
+
+The actual MainMenu Attendance and Pass components are now present in verified
+UI155 originals. Their exact Button offsets are 1856 and 1488 respectively.
+The public PR264 `source_ui.request_menu(106/116)` delegates to the existing
+runtime presentation adapter; opening a menu is not a claim or save operation.
+Control binding remains in progress; no service implementation was copied.
