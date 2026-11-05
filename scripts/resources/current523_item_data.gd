@@ -67,12 +67,13 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dic
 	return reference
 
 static func describe(item_id: int, include_descriptions: bool = false) -> Dictionary:
-	var compiled: Dictionary = _compiled(item_id) if item_id>0 else {}
-	var identity: Dictionary = {"kind":"twilight.current523.compiled-item-data.v1","source_snapshot":"patch523","source_archive_expected":SOURCE.SOURCE_SHA,"pack":COMPILED_ITEMS.pack_identity()} if not compiled.is_empty() else SOURCE.identity()
-	var item: Dictionary = compiled.get("original_item",{}).duplicate(true)
-	if item.is_empty() and item_id>0 and not identity.is_empty(): item = SOURCE.row("ItemClass",item_id)
+	# UNVERIFIED: final definition input is the newly supplied original ZIP.
+	# Legacy sidecar code/files remain preserved; they are not a prerequisite
+	# or a fallback when the new original is unavailable.
+	var identity: Dictionary = SOURCE.identity()
+	var item: Dictionary = SOURCE.row("ItemClass",item_id) if item_id>0 and not identity.is_empty() else {}
 	var blockers: Array[String] = []
-	var result: Dictionary = {"kind":"twilight.current523.item-data.v1","ok":false,"reference_only":true,"can_activate":false,"ownership_authorized":false,"item_class_id":item_id,"source":identity,"item_class":item,"category":{},"grade":{},"equip_slots":[],"class_limits":[],"bonuses":[],"typed_references":[],"descriptions":{},"blockers":blockers}
+	var result: Dictionary = {"kind":"twilight.current523.item-data.v1","ok":false,"reference_only":true,"can_activate":false,"ownership_authorized":false,"item_class_id":item_id,"source":identity,"item_class":item,"category":{},"grade":{},"equip_slots":[],"class_limits":[],"bonuses":[],"typed_references":[],"descriptions":{},"compiled_use_spec":{},"compiled_invoke_options":[],"use_spec_status":"original_definition_only","blockers":blockers}
 	if item.is_empty():
 		blockers.append("source_item_unavailable")
 		result["problem"] = SOURCE.problem()
@@ -91,25 +92,13 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 		result["declared_exclusion"] = exclusion
 		blockers.append("source_declared_dummy")
 		return result
-	if not compiled.is_empty():
-		result.category = compiled.get("category",{}).duplicate(true)
-		result.grade = compiled.get("grade",{}).duplicate(true)
-		result["compiled_use_spec"] = compiled.get("native_record",{}).get("source_use_spec",{}).duplicate(true)
-		result["compiled_invoke_options"] = compiled.get("source_invoke_options",[]).duplicate(true)
-		for joined: Dictionary in compiled.get("equip_rows",[]):
-			result.equip_slots.append({"link":_link(joined,["equip_slot"]),"slot":joined.get("equip_slot",{}).duplicate(true)})
-		for joined: Dictionary in compiled.get("class_rows",[]):
-			result.class_limits.append({"link":_link(joined,["class"]),"class":joined.get("class",{}).duplicate(true)})
-		for joined: Dictionary in compiled.get("item_bonus",[]):
-			result.bonuses.append({"link":_link(joined,["bonus","bonus_type","unit","weapon_type"]),"bonus":joined.get("bonus",{}).duplicate(true),"type":joined.get("bonus_type",{}).duplicate(true),"unit":joined.get("unit",{}).duplicate(true),"definition":BONUSES.describe(int(joined.get("BonusID",-1)))})
-	else:
-		result.category = _missing(blockers,"ItemCategory",int(item.get("CategoryID",-1)))
-		result.grade = _missing(blockers,"Grade",int(item.get("GradeID",-1)))
-		for link: Dictionary in SOURCE.related("ItemEquipSlot","ItemClassID",item_id):
-			result.equip_slots.append({"link":link,"slot":_missing(blockers,"EquipSlot",int(link.get("EquipSlotID",-1)))})
-		for link: Dictionary in SOURCE.related("ItemClassLimit","ItemClassID",item_id):
-			result.class_limits.append({"link":link,"class":_missing(blockers,"Class",int(link.get("ClassID",-1)))})
-		result.bonuses = _effects("ItemBonus","ItemClassID",item_id,blockers)
+	result.category = _missing(blockers,"ItemCategory",int(item.get("CategoryID",-1)))
+	result.grade = _missing(blockers,"Grade",int(item.get("GradeID",-1)))
+	for link: Dictionary in SOURCE.related("ItemEquipSlot","ItemClassID",item_id):
+		result.equip_slots.append({"link":link,"slot":_missing(blockers,"EquipSlot",int(link.get("EquipSlotID",-1)))})
+	for link: Dictionary in SOURCE.related("ItemClassLimit","ItemClassID",item_id):
+		result.class_limits.append({"link":link,"class":_missing(blockers,"Class",int(link.get("ClassID",-1)))})
+	result.bonuses = _effects("ItemBonus","ItemClassID",item_id,blockers)
 	for detail: Dictionary in result.bonuses:
 		var reference: Dictionary = _typed_reference(detail,blockers)
 		if not reference.is_empty():

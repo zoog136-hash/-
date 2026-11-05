@@ -10,6 +10,13 @@ static var relic: Dictionary=pack.get("relic",{"cards":{},"option_groups":{},"so
 static var relic_combat: Dictionary=pack.get("relic_combat",{"relic_subslot_buffs":{},"invoke_options":[],"invoke_spells":{}})
 
 static func _load_pack() -> Dictionary:
+	# UNVERIFIED: legacy files/code remain available as retained references.
+	# Final source readers must use the new original input, never this pack as
+	# a missing-input fallback. Unported secondary inputs remain unavailable.
+	problem="구 카드 슬롯 팩은 최종 입력에서 제외됨 · 새 원문 보조 슬롯 입력 대기"
+	return {}
+
+static func _load_legacy_pack_for_reference() -> Dictionary:
 	var path: String=OS.get_environment("TWILIGHT_CARD523_SLOT_PACK")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--card523-slot-pack="):path=arg.trim_prefix("--card523-slot-pack=")

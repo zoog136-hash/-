@@ -25,7 +25,7 @@ static func stat_record_additions(totals: Dictionary) -> Dictionary:
 		if totals.has(code):result[NATIVE_RECORD_FIELDS[code]]=totals[code]
 	return result
 
-const NativeOptionData=preload("res://data/cards/base508_option_awakening.json")
+const SourceSlots=preload("res://scripts/cards/option_slot_definitions.gd")
 var native_option_bindings: Dictionary={}
 
 const TIME_POLICY: String = "permanent_user_requested_time_override"
@@ -42,8 +42,14 @@ static func accepts_catalog(catalog: Dictionary) -> bool:
 func configure(data: Dictionary, catalog: Dictionary) -> bool:
 	definitions.clear(); availability.clear(); error = ""
 	native_option_bindings.clear()
-	for entry: Dictionary in NativeOptionData.data.definitions:
-		native_option_bindings[entry.id]={"group_id":int(entry.native_source.group.ID),"card_id":int(entry.native_source.card.ID),"limits":entry.native_source.limits}
+	# UNVERIFIED: saved m508/m523 IDs remain the caller ABI. Original slot
+	# declarations supply the current binding without requiring an old card pack.
+	for category: String in Cards.CATEGORIES:
+		for record: Dictionary in catalog.get(category,[]):
+			var identity: String=Cards.card_id(record)
+			var slot: Dictionary=SourceSlots.group_for(identity,1)
+			if slot.is_empty():continue
+			native_option_bindings[identity]={"group_id":int(slot.group.ID),"card_id":int(slot.card.ID),"limits":[slot.card.ServerLimitSetID,slot.group.ServerLimitsetID]}
 	conditions.configure(data.get("source_server_limits",[]))
 	var snapshot: String = str(data.get("source_snapshot", ""))
 	if snapshot not in ["base508", "patch523"] or not accepts_catalog(catalog):

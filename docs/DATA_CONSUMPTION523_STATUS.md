@@ -5,6 +5,28 @@ bounded source fields to existing gameplay consumers. It does not complete all
 original definitions or establish 95% use.
 The reviewed baseline is main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
 
+## Latest final-input boundary — unverified
+
+The latest user instruction excludes the former card/monster packs from final
+resource use. Their files, code and saves remain preserved; they must not be
+installed as a prerequisite or silently used when the new original input is
+missing. Existing code and stable saved `m508`/`m523` identities remain reusable
+ABI. A saved namespace is not the origin of newly read definition bytes.
+
+The new definition input is the held SHA-pinned current523 ZIP described below.
+It is selected by `TWILIGHT_PATCH523_CONTENT` or the existing common installed
+archive location `user://growth96_definitions/source.zip`; the existing death/
+title locations are alternatives, not three required copies. Its ZIP members
+are `index.json` and `content/<Table>.json`. No installer, source/pixel pack or
+new image is created by this Draft. The data lane holds no new card/monster
+pixel pack, manifest pin or Drive ID to invent; the separate original-resource
+owners provide those inputs. Private delivery references are not published.
+
+The source-only card/monster changes described below supersede their earlier
+compiled-pack preference/selected-cache adapters. Those earlier checkpoints
+remain history, not a final fallback or new gameplay evidence. Missing new
+original input stays unavailable. All implementations remain unexecuted.
+
 ## Fixed input and evidence
 
 The existing private current523 archive was received through authenticated Drive
@@ -123,7 +145,9 @@ SpellClass22,596,753, LuckyBagEntityView17,073,327, Reward13,234,439,
 ItemCraftOutputView11,140,223 and ItemCraftInput10,217,120 bytes. These figures
 describe input priorities, not additional consumed bytes.
 
-Existing pinned private item sidecars and feature caches are reused first.
+The final item-data reader uses the pinned original archive. Legacy sidecar
+code/files remain preserved but are not an input prerequisite or a missing-source
+fallback. Other existing feature parsers and their policy code remain reusable.
 `current523_definition_rows.gd` provides lazy read-only `row(table,id)`,
 `related(table,foreign_key,id)` and `rows(table)` access to the existing pinned
 archive when a needed definition is absent from those caches. It uses the
@@ -136,7 +160,7 @@ The public data contracts for PR269 are:
 
 | Call | Returned source data and existing reader |
 | --- | --- |
-| `current523_item_data.describe(item_id)` | Original ItemClass/category/grade, equipment/class links, ItemBonus→Bonus→BonusType→Unit and typed card/spell/bag/reward/buff references. Existing full-item sidecars supply already compiled rows/use specs; original rows supply missing joins. Shop market/NPC quotes now call this reader for item identity and explicit exclusions. Descriptions retain their IDs and are deferred by default. |
+| `current523_item_data.describe(item_id)` | Original ItemClass/category/grade, equipment/class links, ItemBonus→Bonus→BonusType→Unit and typed card/spell/bag/reward/buff references, directly from the new pinned original. Shop market/NPC quotes call this reader for item identity and explicit exclusions. `use_spec_status:original_definition_only` and empty `compiled_use_spec`/`compiled_invoke_options` do not reuse the old monster-pack sidecars as an active effect model; effect adoption remains PR269's contract. Descriptions retain their IDs and are deferred by default. |
 | `current523_spell_data.describe(spell_id)` | Raw SpellClass costs/ranges/conditions, SpellBonus typed effects, learning/class/card prerequisites and declared target/category/material references. Item book/card references call this adapter; it never learns or executes a spell. |
 | `current523_bonus_data.describe(bonus_id)` | Shared Bonus→BonusType→Unit, declared BonusApplicationType and all UIUnit rows for that UnitID. Item, spell and buff data readers retain the raw value and application target. Neither the application name nor a UI denominator becomes a new target join or combat formula. |
 | `current523_buff_data.describe(buff_id)` | Original BuffClass/group, typed BuffBonus rows, declared status attributes and InvokeOption/type references. Item and spell data readers follow explicit BuffClassID units to this contract. Lifetimes and conditions stay raw; no new status is applied. A TestBuff field absent from the source is recorded as not declared, not invented as a required flag or dummy exclusion. |
@@ -146,7 +170,7 @@ The public data contracts for PR269 are:
 | `patch523_rules.recipe_evidence(craft_id)` | Cached original inputs/outputs/views/restrictions, with original-archive fallback only when a cached relation group is absent. Existing `material_selection→quote/execute` reads the exact source row/slot/item/quantity/enchant/blessing, result branches/probabilities and view/restriction conditions. It does not admit new recipes or change the established missing-failure policy. |
 | `patch523_rules.recipe_definition(craft_id)` | Original input/output/view/restriction relations and an `items` map of ItemClass data contracts, including source recipes absent from the compiled executable set. Returns `source_identity`, `available_in_compiled_recipes`, `reference_only:true`, `can_execute:false` and a source problem when unavailable. ItemClass0 remains a source failure sentinel without an item record. Existing quote/execute admission is unchanged. |
 | NPC catalog's `project_actor_record(record)` | Existing Monster.setup reads exact current523 HP/MP/AC/MR/Exp and native attributes only for an existing source actor with matching integral ID/Sprite/DescId and an eligible declared category. The saved encounter identity, spawn-context level, sprites and loot remain unchanged. |
-| NPC catalog's `npc_definition(npc_id)` / `attack_definition(npc_id,attack_id)` | Raw attributes/races/resistances/attacks and referenced spell data. These remain reference-only; missing NPC attribute semantics and AI/probability/timing are not invented. Actual attack choices remain the existing compiled closure; cached selected effect relations remain preferred. |
+| NPC catalog's `npc_definition(npc_id)` / `attack_definition(npc_id,attack_id)` | Raw attributes/races/resistances/attacks and referenced spell data remain reference-only; missing attribute/AI/probability/timing meanings are not invented. Final runtime reads use the new admitted-current-actor registry described below, without an old compiled-pack prerequisite or fallback. |
 
 Reference contracts explicitly retain `reference_only` and `can_activate:false`
 or `can_execute:false`. An `ok`/`join_complete` data result is not ownership,
@@ -193,7 +217,7 @@ The next delta connects the original data beyond the reference-returning APIs:
   path and retain per-binding deferred reasons. Its `active_sha256` remains the
   compiled-pack fingerprint. The fallback status's `applied` keys mean accepted
   reader profiles, not gameplay observations or full-table consumption.
-- NPC catalog's `row("NpcAttack",id)` and `owned("NpcAttack",npc_id)` now use
+- At the earlier selected-pack checkpoint, NPC catalog's `row("NpcAttack",id)` and `owned("NpcAttack",npc_id)` used
   `selected_attack_row(compiled)`. It reads an original row only for an existing
   compiled NPC/attack identity and requires the same selection/behavior and
   numerical attack fields, including NextAttack, MotionType, SpellID, probability,
@@ -201,7 +225,7 @@ The next delta connects the original data beyond the reference-returning APIs:
   compiled row. Existing attack/root/chain readers therefore receive original
   definitions without admitting an additional attack or changing AI, timing,
   probability interpretation, effects or saved ownership.
-- The catalog's existing `row()` and `owned()` calls also route selected
+- That earlier catalog's `row()` and `owned()` calls also routed selected
   ID-bearing definition rows through `_selected_definition_row(table,compiled)`.
   An integral exact ID, membership in the already compiled table and full-row
   equality with the pinned original are required before the original row is
@@ -210,6 +234,11 @@ The next delta connects the original data beyond the reference-returning APIs:
   bonus/spell/buff/status readers receive matching original rows without gaining
   another definition or execution branch. NpcAttack retains its separate stricter
   structure/ownership adapter. This data-read delta is unexecuted.
+
+Those NPC selected-pack adapters are retained checkpoint history. The latest
+final-input instruction replaces their prerequisite/fallback behavior with the
+source-only admitted-actor registry documented below. No later gameplay-use
+percentage is inferred from either implementation.
 
 The already recorded next large candidates have existing input readers:
 MerchantGoods in the shop catalog, GachaCraftOutput in the item-linked craft data
@@ -450,33 +479,100 @@ created or changed. Exact byte/hash reproduction and runtime adoption have not
 been executed; this is not an additional3,621 gameplay-completed quests or any
 whole-table completion claim.
 
-### Existing card-slot input reads — unverified
+### Source-only card definition inputs — unverified
 
-`option_slot_definitions.group_for(identity,slot)` now reads the pinned original
-BuffCard, BuffCardOptionAwakenGroup, BuffCardOptionAwakenLevelBonus, Bonus,
-BonusType, Unit and ID-bearing UIUnit rows for its existing selected slot
-projection. An integral exact ID and full-row equality are required; missing or
-different input retains the compiled row. The existing group-key admission,
-primary compatibility/changed-primary lists, slot1/11 selection, cache,
-labels and existing effect consumers remain authoritative. A missing private
-slot pack remains missing: this is no new catalog, draw, awakening, ownership,
-effect, secondary-slot unlock, installation or save. The actual `group_for()`
-caller receives the original row values rather than an unused reference API.
-It has not been compiled or executed and adds no coverage numerator.
+`lineagem_base508.cards()` now calls the new
+`current523_card_catalog.build()` input rather than loading the old cards,
+current-card JSON or slot-supplement pack. The result supplies the three catalog
+arrays, original Class records/selected names, source-table hashes and
+`source_definition_archive`. The public card compiler's original typed
+BuffCard/Grade/BuffBonus/Bonus/Type/Unit/class-variant and asset-reference joins
+and existing numeric mapping are reused. No pixels, sprite frames or substituted
+art are supplied. Every new record labels its definition/content snapshot
+patch523. The separate `current523_card_identity.source_id(deck,id)` table
+preserves only existing saved namespace strings; it does not copy old card
+statistics, image paths or metadata into the new definition.
 
-`collection_runtime.configure()` calls
-`current523_collection_input.adopt_selected(data)` immediately before
-`NativeRules.configure()` for its existing native patch523 input. The helper
-returns the same collection/member/effect/condition sets, replacing only complete
-matching raw rows from BuffCardCollection, BuffCardForCollection,
-BuffCardCollectionBonus, Bonus/Type/Unit/UIUnit/application targets, Grade, Deck,
-selected ServerLimit and card-date records. Compound relations use the public
-compiler's existing foreign keys and full-row equality; no ID is invented.
-Interval branches separate only the compiler's six supplemental join fields,
-match the complete original IntervalBonus base row, and retain those existing
-joins/derived values. Missing files retain the existing failure. Native rules,
-owned-card derivation, time/server/awakening restrictions, numerical effect
-policy, announcements and saves are unchanged.
+Missing originals return an unavailable input. `apply_catalog()` retains the
+former registry under its existing legacy data field but leaves final active
+card categories empty; `canonical()` does not substitute an old native saved
+record for a missing new definition. Saves are not erased or relabeled. The
+existing icon/visual readers are owned by the image/Sprite lanes. New card
+records use patch523's existing pending/null path until their new original
+visual input is supplied; old saved-record visual fallbacks remain an explicit
+handoff to those owners, not a completed resource claim.
+
+`collection_runtime.configure()` calls the new
+`current523_collection_projection.build(world.catalog_db)` and passes that
+original model to the existing `NativeRules.configure()`. Old normal/current
+collection JSON and slot packs are not final inputs or missing-source fallbacks.
+The original BuffCardCollection/member/reward/Bonus/Type/Unit/Grade/Deck/server/
+date relations and the public compiler's existing numeric adapter policies are
+used. Supplied catalog IDs/decks/stable namespaced keys and full raw BuffCard
+identity must match; no same-name joins, registrations or grants are created.
+Only already declared target namespaces are joined. Unresolved targets remain
+unsupported. Explicit dummy collections and their raw relations are retained
+separately from active definitions. Native rules, owned-card derivation,
+time/server/awakening restrictions, announcements and saves are unchanged.
+
+`option_slot_definitions.group_for(identity,slot)` reads strict saved
+m508/m523/deck/card/slot keys against the current original BuffCard and the unique
+BuffCardOptionAwakenGroup→level bonus→Bonus/Type/Unit/UIUnit chain. It no longer
+requires a prior slot-pack admission list. Missing/ambiguous source returns an
+unavailable result, not an old row. `native_option_awakening.adapt()` enumerates
+the actual supplied catalog and supplies these original groups to its existing
+MAP/contextual/AC/aura adapters. Collection awakening bindings likewise read
+these original slot groups. Existing execution/owned-state/transactions remain
+their single owner's implementation.
+
+`current523_skill_awakening_input.build(catalog)` supplies current cards, level
+tables, server conditions, typed book→group→weighted-pool and SpellClass/effect
+input to the existing skill-awakening service. The old skill JSON and supplemental
+slot-pack input are not loaded. Original pool100000 and invoke10000 contracts
+remain guarded; Test/dummy and missing/ambiguous typed references are not
+activated. The existing save schema's base508 namespace remains ABI, while new
+book definitions/requirements label their actual patch523/archive origin.
+PR269 still needs to adopt that origin at
+`skill_awakening_runtime.request_operation()`: its base508-only physical-book
+guard currently rejects the new definitions. This Draft does not relabel old
+inventory or alter debit/receipt/save code to bypass it.
+
+The former `patch523_slot_data` loader is preserved as reference code but is no
+longer activated by the final/default input. Secondary inputs not yet supplied
+from new originals remain unavailable rather than loading its old private pack.
+All card input changes are uncompiled/unexecuted; raw model acceptance, card
+learning/awakening and gameplay use remain unobserved.
+
+### Source-only existing-actor NPC input — unverified
+
+The final `patch523_npc_combat.configure()` selects the pinned original source,
+not an old NPC manifest or default effect-frame pack. The old loader code/files
+and visual settings remain preserved. `configure_original()` records source
+availability even without an actor. Existing
+`Monster.setup()→catalog.project_actor_record(record)` admits only a real existing
+actor whose integral ID/Sprite/DescId matches an eligible non-Test/non-dummy
+current original. No actor, encounter, pixel or spawn is created.
+
+The new `current523_npc_input_projection` ports the public host-NPC compiler's
+owned attacks/attributes/resistances and explicitly typed Spell/Buff/Bonus/
+application/Invoke-success/status closure. It does not invent Invoke Param spell
+edges, AI selection, timing, probability, summon-set or target geometry semantics.
+The actual `row()`/`owned()` readers use only this admitted registry; missing
+input does not return old compiled rows or unselected raw definitions. Identical
+valid source reconfiguration preserves actors admitted before configure. Missing/
+different input blocks reads while retaining the last registry as data. Source
+ZIP identity, admitted actor identities and actual model payload SHA remain
+separate. Host opt-in, attack clock, effects, loot and saving remain unchanged.
+
+`lineagem_base508.npc(id)` also reads the current original instead of the old NPC
+JSON. Its existing caller's `npc_record()` still preserves a passed local context
+when the original is unavailable; final spawn/encounter activation must honor
+the new-source availability boundary in its owning lane. No old image pack is
+requested here. New visual pack/pin and final old saved-record visual fallback
+removal remain with the Sprite/image/spawn owners. These are explicit remaining
+boundaries, not whole-monster completion or new execution evidence.
+
+### Other retained growth inputs — unverified
 
 The existing guardian source now obtains matching selected rows during initial
 data adoption and through `rewards()`, `upgrade()`, `constant()` and

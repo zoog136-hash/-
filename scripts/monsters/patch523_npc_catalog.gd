@@ -2,6 +2,7 @@ extends RefCounted
 ## Private 523 source evidence. No legacy-name joins or inferred server formulas.
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const ORIGINAL_INPUT = preload("res://scripts/monsters/current523_npc_input_projection.gd")
 const MAX_BYTES = 16 * 1024 * 1024
 const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
@@ -10,8 +11,87 @@ const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","Motio
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
+var source_mode: String = "current523_original"
+var source_available: bool = false
+var source_identity: Dictionary = {}
+var source_model_sha256: String = ""
+var admitted_source_identities: Dictionary = {}
+var deferred_npc_inputs: Dictionary = {}
+var source_status: Dictionary = {}
+var _original_input = ORIGINAL_INPUT.new()
+
+func configure_original() -> bool:
+	source_mode = "current523_original"
+	var identity: Dictionary = DEFINITIONS.identity()
+	if content.get("input_kind")!="twilight.current523.npc-input.v1":
+		content = {"kind":"patch523_npc_spell_catalog","schema":1,"source_snapshot":"patch523",
+			"input_kind":"twilight.current523.npc-input.v1","source_archive_sha256":SOURCE_SHA,
+			"tables":{},"boss_npc_ids":[],"host_extension_npc_ids":[]}
+		indexes = {}
+		admitted_source_identities = {}
+		source_model_sha256 = ""
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA:
+		source_available = false
+		error = "current523_original_unavailable:"+DEFINITIONS.problem()
+		source_status = {"state":"unavailable","reason":error}
+		return false
+	if not source_identity.is_empty() and source_identity!=identity:
+		source_available = false
+		error = "current523_original_identity_changed"
+		source_status = {"state":"unavailable","reason":error}
+		return false
+	source_identity = identity.duplicate(true)
+	if source_model_sha256.is_empty():
+		var initial: Dictionary = _original_input.build([])
+		if initial.is_empty():
+			source_available = false
+			error = _original_input.problem
+			source_status = {"state":"unavailable","reason":error}
+			return false
+		_publish_original(initial)
+	source_available = true
+	error = ""
+	source_status = {"state":"available","mode":source_mode,"visual":"independent_current_visual_pin_required"}
+	return true
+
+func _publish_original(candidate: Dictionary) -> void:
+	content = candidate
+	indexes = {}
+	for pair: Array in [["NpcAttack","NpcClassID"],["NpcAttribute","NpcClassID"],["NpcSpecialResistance","NpcClassID"],["NpcRace","NpcClassID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"],["LandAttribute","LandID"]]:
+		var index: Dictionary = {}
+		for entry: Dictionary in content.tables.get(pair[0],{}).values():
+			if not source_integer(entry.row.get(pair[1])): continue
+			var owner: String = str(int(entry.row[pair[1]]))
+			if not index.has(owner): index[owner] = []
+			index[owner].append(entry.row)
+		indexes[pair[0]] = index
+	# This is the actual in-memory registry payload, never a legacy manifest or
+	# source-archive fingerprint. No model/pack/receipt is written to disk.
+	source_model_sha256 = JSON.stringify(content,"",true,true).sha256_text()
+
+func _admit_original_actor(source: Dictionary) -> bool:
+	if not configure_original(): return false
+	var id: String = str(int(source.ID))
+	if admitted_source_identities.has(id): return true
+	var ids: Array = []
+	for admitted: String in admitted_source_identities: ids.append(int(admitted))
+	ids.append(int(source.ID))
+	var candidate: Dictionary = _original_input.build(ids)
+	if candidate.is_empty():
+		error = _original_input.problem
+		deferred_npc_inputs[id] = error
+		return false
+	_publish_original(candidate)
+	admitted_source_identities[id] = {"npc_class_id":source.ID,"sprite":source.Sprite,"desc_id":source.DescId,
+		"source_snapshot":"patch523","source_archive_sha256":SOURCE_SHA}
+	deferred_npc_inputs.erase(id)
+	error = ""
+	return true
 
 func load_pack(manifest_path: String, expected_sha: String) -> bool:
+	# Kept for historical compatibility; the final input mode cannot activate
+	# an old manifest or use its selection as an admission prerequisite.
+	if source_mode=="current523_original": error = "legacy_npc_pack_excluded_from_final_input"; return false
 	content = {}; indexes = {}; error = ""
 	if expected_sha.length() != 64 or not FileAccess.file_exists(manifest_path):
 		error = "manifest_sha_mismatch"; return false
@@ -57,30 +137,14 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 	return true
 
 func row(table: String, id: int) -> Dictionary:
-	var compiled: Dictionary = content.get("tables", {}).get(table, {}).get(str(id), {}).get("row", {})
-	if not compiled.is_empty():
-		return _selected_definition_row(table,compiled)
-	# Attack execution remains restricted to the previously compiled identities.
-	# Full attack definitions have a separate reference-only contract below.
-	if table == "NpcAttack" or not DEFINITION_TABLES.has(table): return {}
-	var original: Dictionary = DEFINITIONS.row(table,id)
-	if table == "NpcClass" and not definition_eligible(original): return {}
-	if table == "SpellClass" and bool(original.get("TestSpell",false)): return {}
-	if table == "BuffClass" and bool(original.get("TestBuff",false)): return {}
-	return original
+	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return {}
+	return content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
 
 func owned(table: String, id: int) -> Array:
-	# A compiled table owns its complete selected closure, including owners
-	# with no selected rows. The original archive cannot widen that execution set.
-	if content.get("tables",{}).has(table) or table == "NpcAttack":
-		var selected: Array = indexes.get(table,{}).get(str(id),[])
-		var result: Array = []
-		for compiled: Dictionary in selected: result.append(_selected_definition_row(table,compiled))
-		return result
-	if DEFINITION_OWNERS.has(table):
-		var original: Array[Dictionary] = DEFINITIONS.related(table,str(DEFINITION_OWNERS[table]),id)
-		if not original.is_empty(): return original
-	return indexes.get(table, {}).get(str(id), [])
+	# Only the newly admitted original registry owns these sets. Empty sets are
+	# authoritative; neither a legacy cache nor a larger source relation fills them.
+	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return []
+	return indexes.get(table,{}).get(str(id),[]).duplicate(true)
 
 func _selected_definition_row(table: String, compiled: Dictionary) -> Dictionary:
 	if table == "NpcAttack": return selected_attack_row(compiled)
@@ -118,6 +182,7 @@ static func source_integer(value: Variant) -> bool:
 
 static func definition_eligible(source: Dictionary) -> bool:
 	if source.is_empty() or not source.get("TestNPC") is bool or bool(source.TestNPC): return false
+	if not DEFINITIONS.declared_exclusion("NpcClass",source).is_empty(): return false
 	if not source_integer(source.get("Category")): return false
 	var category: Dictionary = DEFINITIONS.row("NpcCategory",int(source.Category))
 	if not category.get("IsAttackable") is bool or not bool(category.IsAttackable): return false
@@ -168,6 +233,9 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	for key: String in ["HP","MP","AC","MR","Exp","Str","Dex","Con","Wis","Cha","Int"]:
 		if not source_integer(source.get(key)): return record
 	if int(source.HP) <= 0 or int(source.MP) < 0 or int(source.MR) < 0 or int(source.Exp) < 0: return record
+	# Monster.setup already proves this is an existing actor. The exact prior
+	# ID/Sprite/DescId checks above gate admission; no actor/spawn is constructed.
+	if not _admit_original_actor(source): return record
 	var result: Dictionary = record.duplicate(true)
 	var original: Dictionary = prior.duplicate(true)
 	original.merge(source,true)
