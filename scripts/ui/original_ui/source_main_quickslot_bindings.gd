@@ -77,7 +77,7 @@ func build_group(group: int) -> Dictionary:
 			owners[project]=supplied
 		var slot_bindings: Dictionary={
 			# Empty clicks remain the existing HUD action, never disabled here.
-			BUTTON:{"role":"button","activate":Callable(self,"activate").bind(visible)},
+			BUTTON:{"role":"button","activate":Callable(self,"activate_presented").bind(visible,_presented_identity(row))},
 			ICON:{"role":"source_asset_slot","visible":false},
 			AMOUNT:{"role":"source_text","text":row.amount_text,"visible":row.filled and not str(row.amount_text).is_empty()},
 			COOLDOWN:{"role":"source_text","text":row.cooldown_text,"visible":row.filled and not str(row.cooldown_text).is_empty()},
@@ -99,6 +99,16 @@ func activate(visible: int) -> Dictionary:
 	# game index. A void dispatch is not a claim that a use/action succeeded.
 	hud.call("_emit_quickslot",visible)
 	return {"ok":true,"dispatched":true,"method":"_emit_quickslot","visible_index":visible,"absolute_index":model.rows[visible].absolute_index,"action_result_known":false}
+
+func activate_presented(visible: int, presented: Dictionary) -> Dictionary:
+	if visible<0 or visible>=10:return _fail("source_quickslot_visible_index_unknown")
+	var current: Dictionary=snapshot()
+	if not current.get("ok",false):return current
+	# A release from an old source node must not use a new item/skill that
+	# occupies the same visible position after page/edit changes. Amount,
+	# cooldown and AUTO refreshes do not change the registered entry identity.
+	if presented!=_presented_identity(current.rows[visible]):return {"ok":false,"code":"source_quickslot_presented_entry_changed","rebuild_required":true,"dispatched":false}
+	return activate(visible)
 
 func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 	var identity: Dictionary=_identities()
@@ -134,6 +144,9 @@ static func _entry_identity(entry: Dictionary) -> Dictionary:
 	# AUTO is a separately supplied live marker, not a different item/skill.
 	identity.erase("auto")
 	return identity
+
+static func _presented_identity(row: Dictionary) -> Dictionary:
+	return {"visible_index":row.visible_index,"absolute_index":row.absolute_index,"page_index":row.page_index,"entry":_entry_identity(row.entry)}
 
 func _live_hud() -> Object:
 	return _hud.get_ref() if _hud!=null else null
