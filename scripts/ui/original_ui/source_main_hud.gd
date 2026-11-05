@@ -19,6 +19,7 @@ const ButtonRouter=preload("res://scripts/ui/original_ui/source_button_router.gd
 const AutoMessage=preload("res://scripts/ui/original_ui/source_main_auto_message_bindings.gd")
 const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_view.gd")
 const NpcDialogueView=preload("res://scripts/ui/original_ui/source_main_npc_dialogue_view.gd")
+const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_message_bindings.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -91,6 +92,14 @@ var _character_view: RefCounted
 var _character_result: Dictionary={}
 var _npc_dialogue_view: RefCounted
 var _npc_dialogue_result: Dictionary={}
+var _system_message_priority: int=0
+var _system_message_rendered_priority: int=0
+var _system_message_routing: Dictionary={}
+var _system_message_scene: Node2D
+var _system_message_result: Dictionary={}
+var _system_message_model: Dictionary={}
+var _legacy_message: WeakRef
+var _legacy_message_visible: bool=false
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -106,6 +115,11 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	_hud=weakref(hud)
 	_canvas=weakref(canvas)
 	_capture_existing_controls(hud)
+	var message: Variant=hud.get("message_label")
+	if message is Label and is_instance_valid(message):
+		_legacy_message=weakref(message)
+		var previous: Variant=hud.get("original_main_ui_controller")
+		_legacy_message_visible=previous.source_message_label_availability() if is_instance_valid(previous) and previous.has_method("source_message_label_availability") else message.visible
 	var map_label: Variant=hud.get("v20_map_name")
 	if map_label is CanvasItem and is_instance_valid(map_label):
 		var label_parent: Node=map_label.get_parent()
@@ -150,7 +164,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER))
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -210,6 +224,7 @@ func _process(_delta: float) -> void:
 	if hud==null:return
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
+	if _system_message_priority!=0:refresh_system_message()
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
@@ -290,6 +305,62 @@ func npc_dialogue_is_open() -> bool:
 func close_npc_dialogue() -> void:
 	_cancel_native_buttons()
 	if _npc_dialogue_view!=null:_npc_dialogue_view.close()
+
+func source_message_label_availability() -> bool:
+	return _legacy_message_visible
+
+func set_system_message_priority(priority: int, routing_basis: Dictionary) -> Dictionary:
+	if priority not in [1,2]:return _fail("source_system_message_explicit_priority_1_or_2_required")
+	if routing_basis.is_empty():return _fail("source_system_message_explicit_routing_basis_required")
+	if _system_message_priority!=priority:_system_message_model.clear()
+	_system_message_priority=priority
+	_system_message_routing=routing_basis.duplicate(true)
+	return refresh_system_message()
+
+func refresh_system_message() -> Dictionary:
+	if _system_message_priority==0:return {"ok":true,"handled":false}
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_coordinates):return _fail("source_system_message_existing_host_unavailable")
+	var current: Dictionary=SystemMessage.snapshot(hud)
+	if not current.get("ok",false):return _system_message_failed(current)
+	var model: Dictionary={"priority":_system_message_priority,"text":current.text}
+	if model==_system_message_model:
+		_system_message_result["priority_routing"]=_system_message_routing.duplicate(true)
+		return _system_message_result.duplicate(true)
+	_system_message_model=model
+	var result: Dictionary
+	if is_instance_valid(_system_message_scene) and _system_message_rendered_priority==_system_message_priority:
+		result=SystemMessage.refresh(_system_message_scene,hud)
+	else:
+		var contract: Dictionary=SystemMessage.build(_pack,hud,_system_message_priority)
+		if not contract.get("ok",false):return _system_message_failed(contract)
+		var scope: Array[int]=[]
+		scope.assign(contract.source_node_offsets)
+		var next:=Scene.new()
+		result=next.configure_project(_pack,contract.parent_member,contract.parent_project_offset,contract.bindings,scope)
+		if not result.get("ok",false):next.free();return _system_message_failed(result)
+		var previous: Node2D=_system_message_scene
+		_coordinates.add_child(next)
+		_system_message_scene=next
+		_system_message_rendered_priority=_system_message_priority
+		if is_instance_valid(previous) and not previous.is_queued_for_deletion():
+			previous.hide()
+			previous.queue_free()
+	if not result.get("ok",false):return _system_message_failed(result)
+	_system_message_scene.show()
+	var label: Object=_legacy_message.get_ref() if _legacy_message!=null else null
+	if label!=null:label.visible=false
+	_system_message_result={"ok":true,"handled":true,"priority":_system_message_priority,"priority_routing":_system_message_routing.duplicate(true),"text":current.text,"existing_timer_retained":true,"off_animation_played":false,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+	return _system_message_result.duplicate(true)
+
+func _system_message_failed(reason: Dictionary) -> Dictionary:
+	if is_instance_valid(_system_message_scene):_system_message_scene.hide()
+	var label: Object=_legacy_message.get_ref() if _legacy_message!=null else null
+	if label!=null:label.visible=_legacy_message_visible
+	_system_message_result=reason.duplicate(true)
+	_system_message_result["handled"]=false
+	_system_message_result["priority_routing"]=_system_message_routing.duplicate(true)
+	return _system_message_result.duplicate(true)
 
 func refresh_quickslots() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -719,6 +790,8 @@ func release(restore_legacy: bool=true) -> void:
 		_coordinates.queue_free()
 	_coordinates=null
 	if restore_legacy:
+		var message: Object=_legacy_message.get_ref() if _legacy_message!=null else null
+		if message!=null:message.visible=_legacy_message_visible
 		for record: Dictionary in _legacy_quickslots:
 			var control: Object=record.control.get_ref()
 			if control!=null:control.visible=record.visible

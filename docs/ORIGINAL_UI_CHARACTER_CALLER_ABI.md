@@ -93,6 +93,20 @@ The Common_Slot original and icon target use the existing native icon ABI;
 these coordinates still do not establish the missing CSB-root-to-Sprite
 registration relationship. Quest/NPC/emoticon target/role inputs are unchanged.
 
+The separate detailed-status parent is FloatingUiScene Project964, referencing
+`UI/FloatingUi/CharacterInfo_StatInfo_Detail.csb`
+(`bef3c2ea4e65e8fae600649bc4c8567ad88ce981fb9b59e56bb6b4fb5ffe4889`).
+Its left7140/right6400 lists have authored extent374×472 and margin6, but no
+children. Held row templates do exist: `CharacterInfo_StatInfo_Detail_List.csb`
+(`e8467fb893eb6558711975aea0783ee57fa741100974b19d33efc759f5417154`)
+has group title3760, nested List3224 and favorite controls;
+`CharacterInfo_StatInfo_Detail_Text.csb`
+(`59f0bb484d98539de2c457e7d72e6a180e09d25bfd4c306adbb44ca3e43f9927`)
+has stat label3456, value3044 and favorite controls. The remaining missing input
+is the original stat/group/left-right row assignment, dynamic group sizing and
+favorite action contract. Template possession is not that assignment. The
+existing owner grouping is not promoted to original-client layout evidence.
+
 ## One combined private installation input
 
 The separately delivered v10 includes v8 plus these original character scopes;

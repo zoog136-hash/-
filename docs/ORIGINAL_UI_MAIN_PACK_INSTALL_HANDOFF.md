@@ -5,7 +5,13 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest NPC dialogue extension is the single combined **v11** input in
+The latest system-message extension is the single combined **v12** input in
+[Original system-message caller ABI](ORIGINAL_UI_SYSTEM_MESSAGE_CALLER_ABI.md).
+It retains every v11 scope and its private delivery succeeded. Current owner
+messages/timing feed the original text; the local priority2 connection is an
+explicit TWILIGHT numeric estimate, not a confirmed original routing rule.
+
+The retained NPC dialogue extension is the combined **v11** input in
 [Original NPC dialogue caller ABI](ORIGINAL_UI_NPC_DIALOGUE_CALLER_ABI.md).
 Its private delivery succeeded and retains every v10 scope. Original name/body,
 close and unambiguous next-only conversation callers are connected; portraits,

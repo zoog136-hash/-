@@ -1,5 +1,10 @@
 extends "res://scripts/hud_v20.gd"
 
+# Source gives priority1/2 positions but no routing for this local show_message
+# API. Source/official lookup did not establish a rule. This numeric connection
+# policy is a TWILIGHT estimate under the user's source/search/estimate order.
+const LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE=2
+
 # Debug-build tools. Requests are also checked by the authoritative world.
 signal weapon_mastery_requested
 signal card_pack_draw_requested(category: String)
@@ -786,6 +791,19 @@ func append_log(value: String) -> void:
 	super.append_log(value)
 	if active_section == "log" and is_instance_valid(combat_log_view) and not combat_log_view.is_queued_for_deletion():
 		combat_log_view.text = "\n".join(log_history)
+
+func show_message(text: String) -> void:
+	super.show_message(text)
+	if is_instance_valid(original_main_ui_controller):
+		original_main_ui_status["system_message"]=original_main_ui_controller.set_system_message_priority(LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE,{"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false})
+
+func show_source_system_message(text: String, explicit_priority: int) -> Dictionary:
+	if explicit_priority not in [1,2]:return {"ok":false,"code":"source_system_message_explicit_priority_1_or_2_required"}
+	super.show_message(text)
+	if not is_instance_valid(original_main_ui_controller):return {"ok":false,"code":"source_system_message_original_controller_unavailable","existing_message_retained":true}
+	var result: Dictionary=original_main_ui_controller.set_system_message_priority(explicit_priority,{"kind":"explicit_caller_priority","value":explicit_priority,"original_rule_confirmed":false})
+	original_main_ui_status["system_message"]=result
+	return result
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
@@ -2850,11 +2868,12 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		map_registration=candidate.bind_world_map(_original_world_map_inputs.image_adapter,_original_world_map_inputs.context_provider,_original_world_map_inputs.input_handler)
 	candidate.sync_legacy_visibility()
 	candidate.refresh_quickslots()
+	var system_message: Dictionary=candidate.set_system_message_priority(LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE,{"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false})
 	if reopen_character:open_character()
 	if reopen_dialogue:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):
