@@ -2,6 +2,7 @@ extends VBoxContainer
 ## Existing HUD workspace screen. Creates no test items and owns no inventory.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Art = preload("res://scripts/ui/item_icon_art.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
 const Core = preload("res://scripts/collections/equipment_collection_service.gd")
 const NativeList = preload("res://scripts/ui/native_touch_list.gd")
 const Rows=preload("res://scripts/collections/collection_rows.gd")
@@ -282,7 +283,10 @@ func _render_detail() -> void:
 	art.name="CollectionSelectedItemArt";art.custom_minimum_size=Vector2(64,70)
 	art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var source: Dictionary=runtime.icon_record(str(selected.name))
-	art.texture=Art.item_icon(source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}))
+	if SourceImages.handles_item(source):
+		UI.apply_item_visual(art,source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}),"list")
+	else:
+		art.texture=Art.item_icon(source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}))
 	hero.add_child(art)
 	var title: Label=UI.label("%s %s" % ["+%d" % int(selected.enchant) if selected.enchant!=null else "",selected.name],14,UI.TEXT)
 	title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;title.size_flags_horizontal=Control.SIZE_EXPAND_FILL;hero.add_child(title)

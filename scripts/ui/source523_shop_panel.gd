@@ -3,6 +3,7 @@ extends VBoxContainer
 signal back_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var catalog: RefCounted
 var hud: Node
 var runtime
@@ -148,7 +149,7 @@ func _build_entries() -> void:
 		elif mode.selected == 2:
 			var translated: String = catalog.label(int(row.get("DescID", 0)))
 			if not translated.is_empty(): title = translated
-		entries.append({"id":id, "title":title})
+		entries.append({"id":id, "title":title,"source_table":table,"source_row":row})
 	_filter()
 
 func _filter() -> void:
@@ -161,11 +162,19 @@ func _filter() -> void:
 
 func _render_page() -> void:
 	listing.clear()
+	var original_images: Dictionary = {}
 	var start: int = page * PAGE_SIZE
 	for index: int in range(start, mini(start + PAGE_SIZE, filtered.size())):
 		var entry: Dictionary = filtered[index]
-		listing.add_item("%s  · #%d" % [entry.title, int(entry.id)])
+		var original: Dictionary = _entry_image(entry) if IMAGES.selected() else {}
+		listing.add_item("%s  · #%d" % [entry.title, int(entry.id)],original.get("texture") as Texture2D)
 		listing.set_item_metadata(listing.item_count - 1, int(entry.id))
+		if not original.is_empty():
+			var evidence: Dictionary = original.duplicate(true)
+			evidence.erase("texture")
+			evidence["source_table"] = str(entry.get("source_table",""))
+			original_images[str(entry.id)] = evidence
+	listing.set_meta("source523_images",original_images)
 	listing.force_update_list_size()
 	previous.disabled = page <= 0
 	next.disabled = start + PAGE_SIZE >= filtered.size()
@@ -177,6 +186,17 @@ func _render_page() -> void:
 		detail.text = "검색 조건에 맞는 항목이 없습니다."
 		selected_id = -1
 		_refresh_action()
+
+func _entry_image(entry: Dictionary) -> Dictionary:
+	var row: Dictionary = entry.get("source_row",{})
+	match str(entry.get("source_table","")):
+		"MarketPurchase_Korean", "Currency":
+			return IMAGES.resolve_asset_value(row.get("AssetID"))
+		"MerchantGoods":
+			var id: Variant = row.get("ItemClassID")
+			if (id is int or id is float) and is_finite(float(id)) and float(id) == floor(float(id)) and float(id) > 0:
+				return IMAGES.resolve_consumer("ItemClass",int(id),"IconID")
+	return {}
 
 func _item_name(id: int) -> String:
 	var item: Dictionary = catalog.record("ItemClass", id)

@@ -5,6 +5,7 @@ const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
 const FOREGROUND = preload("res://scripts/ui/item_icon_foreground.gd")
 const SCHEDULER = preload("res://scripts/ui/item_visual_scheduler.gd")
 const SHADER = preload("res://scripts/ui/item_rarity.gdshader")
+const SOURCE523 = preload("res://scripts/ui/source523_image_assets.gd")
 const GRADES: Array[String] = ["일반","고급","희귀","영웅","전설","신화","유일"]
 const COLORS: Array[Color] = [Color("ddd6c5"),Color("79bf83"),Color("73b4ee"),Color("e97772"),Color("bc89e3"),Color("e5be60"),Color("66dfc2")]
 static var materials: Dictionary = {}
@@ -17,6 +18,7 @@ var context: String = "slot"
 var scheduler: Node
 var substitute_mark: Label
 var foreground_ready: bool = true
+var source_presentation: bool = false
 
 static func set_reduced_motion(enabled: bool) -> void:
 	reduced_motion = enabled
@@ -51,6 +53,7 @@ static func apply(view: TextureRect, record: Dictionary, item_name: String, imag
 static func clear(view: TextureRect) -> void:
 	if view == null: return
 	view.material = null
+	SOURCE523.bind_metadata(view,{})
 	var effect: Node = view.get_node_or_null("ItemVisual")
 	if effect != null: effect.deactivate()
 
@@ -70,15 +73,16 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 	target.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	target.texture = RESOLVER.texture(record,item_name,images)
+	var info: Dictionary = RESOLVER.describe(record,item_name,images,usage == "ground")
+	source_presentation = info.get("route","") == "source523_images"
+	target.texture = info.get("texture") as Texture2D if source_presentation else RESOLVER.texture(record,item_name,images,usage == "ground")
 	rank = animation_rank(record, item_name)
 	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
-	var info: Dictionary = RESOLVER.describe(record,item_name,images)
 	foreground_ready = true
 	# Only turning surfaces need a cutout. Static list/quickslot/drag/ground
 	# art and every hero/legend source image remain exactly as they were.
-	if rank >= 5 and context not in ["quickslot","list","drag","ground"]:
+	if not source_presentation and rank >= 5 and context not in ["quickslot","list","drag","ground"]:
 		var foreground: Dictionary = FOREGROUND.prepare(target.texture)
 		target.texture = foreground.texture
 		foreground_ready = bool(foreground.ready)
@@ -86,6 +90,7 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		info["foreground_reason"] = foreground.reason
 		info["foreground_removed_pixels"] = foreground.removed_pixels
 	target.set_meta("item_visual",info)
+	SOURCE523.bind_metadata(target,info)
 	if substitute_mark == null:
 		substitute_mark = Label.new()
 		substitute_mark.name = "SubstituteIconMark"
@@ -98,8 +103,8 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		substitute_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		substitute_mark.offset_left = -12
 	var missing_original: bool=info.status=="original_icon_not_installed"
-	substitute_mark.text="원본 미설치" if missing_original else "◇"
-	substitute_mark.tooltip_text="원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
+	substitute_mark.text=SOURCE523.missing_label(info) if missing_original and source_presentation else "원본 미설치" if missing_original else "◇"
+	substitute_mark.tooltip_text=str(info.get("reason","원본 아이콘 미설치")) if missing_original and source_presentation else "원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
 	substitute_mark.offset_left=-62 if missing_original else -12
 	substitute_mark.visible = missing_original or info.status == "self_authored_substitute"
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
@@ -111,6 +116,9 @@ func _ready() -> void:
 	if target != null: _register()
 
 func _register() -> void:
+	if source_presentation:
+		if is_instance_valid(scheduler): scheduler.unregister(self)
+		return
 	if scheduler == null:
 		scheduler = scheduler_ref.get_ref() if scheduler_ref != null else null
 		if scheduler == null:
@@ -126,6 +134,9 @@ func _register() -> void:
 
 func refresh_visibility() -> bool:
 	if target == null or not is_instance_valid(target): return false
+	if source_presentation:
+		target.material = null
+		return false
 	var animate: bool = not reduced_motion and rank >= 3 and context not in ["quickslot","list","drag","ground"] and target.is_inside_tree() and SCHEDULER.visible_area(target)
 	# An unsupported opaque frame may retain a non-rotating sheen, but must
 	# never be fed to rank 5/6's UV turn. Shared material count remains <= 32.
@@ -135,6 +146,7 @@ func refresh_visibility() -> bool:
 
 func deactivate() -> void:
 	rank = 0
+	source_presentation = false
 	foreground_ready = true
 	if target != null: target.material = null
 	if substitute_mark != null: substitute_mark.hide()

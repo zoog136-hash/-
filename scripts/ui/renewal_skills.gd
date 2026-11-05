@@ -8,6 +8,7 @@ const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
+const Source523Images = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var hud: Node
 var records: Array = []
 var filtered: Array = []
@@ -270,21 +271,27 @@ func refresh() -> void:
 		var ga: int=UI.GRADES.keys().find(str(a.get("grade","일반")))
 		var gb: int=UI.GRADES.keys().find(str(b.get("grade","일반")))
 		return str(a.get("name",""))<str(b.get("name","")) if ga==gb else ga<gb)
+	var original_images: Dictionary = {}
+	cards.add_theme_font_size_override("font_size",11 if Source523Images.selected() else 1)
 	for index: int in range(filtered.size()):
 		var record: Dictionary=filtered[index]
 		var passive := RULES.is_passive(hud.get_parent().original_skills.catalog.resolve(record))
 		var source_known: bool=not hud.get_parent().original_skills.catalog.source_learning_status(record).is_empty()
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record) or source_known
-		var icon: Texture2D = _icon_for_skill(record,learned)
+		var source_image: Dictionary = Source523Images.describe_skill(record)
+		var icon: Texture2D = source_image.get("texture") if source_image.handled else _icon_for_skill(record,learned)
 		var effective: Dictionary = hud.get_parent().original_skills.catalog.resolve(record)
 		var subtitle: String = CURRENT.mode_label(record) if bool(record.get("runtime_blocked", false)) else "패시브" if passive else "MP %d" % int(effective.get("mp",0))
-		cards.add_item(" ",icon)
+		cards.add_item(Source523Images.missing_label(source_image) if source_image.handled and icon == null else " ",icon)
 		cards.set_item_metadata(index,str(record.get("id",record.get("name",""))))
+		if source_image.handled:
+			original_images[str(record.get("id",""))] = Source523Images.evidence(source_image)
 		cards.set_item_tooltip(index,("원본 학습 · 실행 대기 · " if source_known else "미구현 · " if bool(record.get("runtime_blocked",false)) else "습득 · " if learned else "미습득 · ")+str(record.get("name",""))+" · "+subtitle)
 		var color: Color=UI.grade(str(record.get("grade","일반"))) if learned else Color("aaa7a1")
-		cards.set_item_icon_modulate(index,Color.WHITE if learned else Color(.68,.68,.68,.62))
+		cards.set_item_icon_modulate(index,Color.WHITE if source_image.handled or learned else Color(.68,.68,.68,.62))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
+	cards.set_meta("source523_images",original_images)
 	if filtered.is_empty():
 		_clear_selection()
 	else:
@@ -296,6 +303,8 @@ func refresh() -> void:
 		cards.get_v_scroll_bar().set_deferred("value",scroll_position)
 
 func _icon_for_skill(record: Dictionary, learned: bool) -> Texture2D:
+	var original: Dictionary = Source523Images.describe_skill(record)
+	if original.handled: return original.get("texture") as Texture2D
 	var path: String = str(record.get("icon",""))
 	if not learned and not path.is_empty() and unlearned_icons.has(path):
 		return unlearned_icons[path] as Texture2D

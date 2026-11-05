@@ -104,7 +104,7 @@ func _add_card(grid: GridContainer,requirement: Dictionary) -> void:
 	var rank: int=maxi(0,Chrome.GRADES.find(str(requirement.get("grade","일반"))))
 	var art:=TextureRect.new();art.name="CollectionCardArt";art.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired else Ownership.UNOWNED_ICON_TINT
+	art.texture=Ownership.icon_for(record,acquired);art.modulate=Color.WHITE if acquired or Ownership.original_current(record) else Ownership.UNOWNED_ICON_TINT
 	card.add_child(art);art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var native: bool=preload("res://scripts/ui/source_card_presentation.gd").native(record)
 	if acquired and not native:

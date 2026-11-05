@@ -74,6 +74,7 @@ const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
+const Source523SkillImages = preload("res://scripts/ui/source523_skill_buff_images.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quests.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
@@ -694,9 +695,16 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	# Main supplies its inventory here even on a fresh game without a save file.
 	lineage_inventory_ui.set_inventory(inventory)
 	var presentation: Dictionary={}
+	var source_images_selected: bool = Source523SkillImages.selected()
+	if source_images_selected:
+		var image_pack: RefCounted = preload("res://scripts/ui/source523_image_assets.gd").active()
+		presentation["__source523_pack"] = image_pack.get_instance_id() if image_pack != null else -1
 	for key: Variant in buffs:
 		var effect: Variant=buffs[key]
 		presentation[key]=int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
+		if source_images_selected and effect is Dictionary:
+			var native_buff: Variant = effect.get("source_buff_class")
+			presentation[key] = [presentation[key],effect.get("skill_id",""),effect.get("source_snapshot",""),native_buff.get("ID",-1) if native_buff is Dictionary else -1]
 	if active_buffs_view == presentation:
 		return
 	active_buffs_view = presentation
@@ -708,7 +716,11 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
 		var b := UI.button("",open_character,Vector2(36,42))
 		var icon := TextureRect.new()
-		icon.texture = _load_texture("res://assets/ui/rune.png")
+		var source_image: Dictionary = _source523_buff_image(effect if effect is Dictionary else {})
+		icon.texture = source_image.get("texture") if source_image.handled else _load_texture("res://assets/ui/rune.png")
+		if source_image.handled:
+			icon.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
+			b.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.position = Vector2(5,2)
@@ -722,13 +734,28 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		b.add_child(remaining)
 		b.add_theme_font_size_override("font_size",10)
 		b.tooltip_text = str(key)+" · %d초" % time
+		if source_image.handled and icon.texture == null:
+			b.tooltip_text += " · 원본 아이콘 " + Source523SkillImages.missing_label(source_image)
 		buff_row.add_child(b)
+
+func _source523_buff_image(effect: Dictionary) -> Dictionary:
+	var service: RefCounted = get_parent().get("original_skills")
+	var source: RefCounted
+	var record: Dictionary = {}
+	if service != null and service.get("catalog") != null:
+		var catalog: RefCounted = service.get("catalog")
+		source = catalog.get("source523")
+		if get_parent().has_method("_skill_record"):
+			record = get_parent()._skill_record(str(effect.get("skill_id","")))
+	return Source523SkillImages.describe_buff(effect,"OnIconID",source,record)
 
 func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
 		UI.clear_item_visual(quickslot_icons[index])
+		if quickslot_icons[index].has_meta("source523_skill_image"):
+			quickslot_icons[index].remove_meta("source523_skill_image")
 		quickslot_icons[index].texture = null
 		quickslot_captions[index].text = ""
 		quickslot_auto_badges[index].text = ""
@@ -748,7 +775,14 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		else:
 			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
 			var path: String = str(skill.get("icon",""))
-			quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
+			var source_image: Dictionary = Source523SkillImages.describe_skill(skill)
+			if source_image.handled:
+				quickslot_icons[index].texture = source_image.get("texture")
+				quickslot_icons[index].set_meta("source523_skill_image",Source523SkillImages.evidence(source_image))
+				if quickslot_icons[index].texture == null:
+					quickslot_captions[index].text = Source523SkillImages.missing_label(source_image)
+			else:
+				quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
 			quickslot_icons[index].modulate = Color.WHITE
 		if bool(entry.get("auto",false)):
 			quickslot_auto_badges[index].text = "AUTO"
@@ -1775,7 +1809,7 @@ func _refresh_option_awakening_markers() -> void:
 		var acquired: bool=owned.has(identity)
 		catalog_list.set_item_metadata(index,identity)
 		catalog_list.set_item_icon(index,CardOwnership.icon_for(record,acquired))
-		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired else CardOwnership.UNOWNED_ICON_TINT)
+		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired or CardOwnership.original_current(record) else CardOwnership.UNOWNED_ICON_TINT)
 		catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),background_alpha) if acquired else Color(.2,.2,.2,.04))
 		var duplicates: int = maxi(0, int(spare.get(identity, 0)))
 		var copies: int = (1 if owned.has(identity) else 0) + duplicates

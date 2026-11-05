@@ -3,6 +3,7 @@ extends RefCounted
 ## Never infer an asset from a name, grade, or numeric ID.
 const SOURCE_API = "res://scripts/lineagem_base508.gd"
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
+const IMAGES523 = preload("res://scripts/ui/source523_image_assets.gd")
 const LIMIT: int = 96
 static var textures: Dictionary = {}
 
@@ -18,6 +19,7 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 	if api == null: return {"status":"runtime_missing", "texture":null}
 	var canonical: Dictionary = api.canonical(record)
 	if canonical.get("source_snapshot", "") == "patch523":
+		if IMAGES523.selected(): return _current_detail(canonical,acquired,detail_view)
 		var declared: Variant = canonical.get("source_ui_assets", {}).get("DisplayBaseAssetID")
 		return {"status":"missing","role":"DisplayBaseAssetID","path":str(declared.get("path", "")) if declared is Dictionary else "","texture":null,"reason":"patch523_original_pack_required","source_asset_id":int(declared.get("asset_id",0)) if declared is Dictionary else 0,"source_id":str(canonical.get("sourceId",""))}
 	var assets: Dictionary = canonical.get("source_ui_assets", {})
@@ -48,6 +50,29 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 		return {"status":"original", "role":role, "path":source_path, "texture":textures[key]}
 	return {"status":"undeclared", "texture":null}
 
+static func _current_detail(record: Dictionary, acquired: bool, detail_view: bool) -> Dictionary:
+	var assets: Dictionary = record.get("source_ui_assets",{})
+	var roles: Array[String] = ["IllustrationAssetID" if acquired else "HidedIllustrationAssetID","DisplayBaseAssetID"]
+	if not detail_view: roles = ["DisplayBaseAssetID"]
+	for role: String in roles:
+		var asset: Variant = assets.get(role)
+		if not asset is Dictionary or str(asset.get("path","")).is_empty(): continue
+		var id: Variant = asset.get("asset_id")
+		var result: Dictionary = {"status":"missing","texture":null,"role":role,"path":str(asset.path),
+			"source_id":str(record.get("sourceId","")),"source_asset_id":0,"reason":"source_asset_identity_required",
+			"actual_game_consumption_observed":false}
+		if not (id is int or id is float) or not is_finite(float(id)) or float(id) != floor(float(id)) or float(id) <= 0: return result
+		result.source_asset_id = int(id)
+		var original: Dictionary = IMAGES523.resolve_asset(int(id),-1,str(asset.path))
+		result.reason = str(original.get("status","source523_image_unavailable"))
+		result["provenance"] = original.get("provenance",{}).duplicate(true)
+		if bool(original.get("ok",false)) and original.get("texture") is Texture2D:
+			result.status = "original"
+			result.texture = original.texture
+			result["source523_verified_original"] = true
+		return result
+	return {"status":"undeclared","texture":null,"actual_game_consumption_observed":false}
+
 static func apply(hud: Node) -> void:
 	var preview: TextureRect = hud.catalog_preview
 	var badge: Label = preview.get_node_or_null("OriginalCardAssetStatus")
@@ -75,7 +100,7 @@ static func apply(hud: Node) -> void:
 	var acquired: bool = owned.get(identity, false) == true
 	var result: Dictionary = detail(record, acquired)
 	preview.texture = result.get("texture")
-	preview.self_modulate = Color.WHITE if acquired else Color(.68,.68,.68,.62)
+	preview.self_modulate = Color.WHITE if acquired or result.get("source523_verified_original",false) else Color(.68,.68,.68,.62)
 	badge.text = "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
 	var frame_status: String = preload("res://scripts/ui/source_card_skin.gd").frame_status(record)
 	if badge.text.is_empty() and frame_status!="original":
@@ -83,7 +108,7 @@ static func apply(hud: Node) -> void:
 	badge.visible = not badge.text.is_empty()
 	badge.tooltip_text = str(result.get("path", ""))
 	if canonical_record_snapshot(record)=="patch523":
-		badge.tooltip_text="523 원본 카드 %s · AssetView %d\n%s\n원본 초상화·선언된 CSB/아틀라스가 필요합니다. 다른 카드 이미지는 대신 사용하지 않습니다." % [str(result.get("source_id","")),int(result.get("source_asset_id",0)),str(result.get("path",""))]
+		badge.tooltip_text = "검증된 원본 초상화" if result.get("source523_verified_original",false) else "원본 초상화 또는 선언된 화면 리소스 연결 대기"
 	preview.set_meta("original_card_asset", result)
 	var equipped: Dictionary = hud.character_state.get("equipped", {}).get(hud.catalog_category, {})
 	var applied: bool = identity == CARDS.card_id(equipped)

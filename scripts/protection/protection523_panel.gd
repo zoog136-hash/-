@@ -1,6 +1,8 @@
 extends VBoxContainer
 const Source = preload("res://scripts/protection/protection523_source.gd")
 const ItemArt = preload("res://scripts/ui/item_icon_art.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
+const ItemVisual = preload("res://scripts/ui/item_visual.gd")
 var hud: Node
 var runtime: RefCounted
 var rows: Dictionary = {}
@@ -36,16 +38,18 @@ func item_heading(item_id: int, title: String, parent: Node, font_size: int) -> 
 	parent.add_child(heading)
 	var records: Array = runtime.records_for(item_id)
 	if records.size() == 1:
-		# Reuse the existing source-ID catalog image, without synthesizing missing
-		# art or claiming equivalence with the separate native523 archive.
-		var texture: Texture2D = ItemArt.render(str(records[0].get("image_path","")))
-		if texture != null:
+		# Explicit native image selection uses the shared verified resolver;
+		# other records retain their existing catalog image route.
+		var source_image: bool = SourceImages.handles_item(records[0])
+		var texture: Texture2D = null if source_image else ItemArt.render(str(records[0].get("image_path","")))
+		if texture != null or source_image:
 			var icon := TextureRect.new()
 			icon.name = "ProtectionIcon_%d" % item_id
 			icon.texture = texture
 			icon.custom_minimum_size = Vector2(64,64)
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			if source_image: ItemVisual.apply(icon,records[0],str(records[0].get("name",title)),{},"list")
 			heading.add_child(icon)
 	label_text(title,heading).add_theme_font_size_override("font_size",font_size)
 
