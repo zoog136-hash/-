@@ -353,6 +353,9 @@ static func clear_on_death(world: Node) -> void:
 		if buff.has("source_buff_class") and not buff.source_buff_class.get("IsImmuneToDead", false): world.active_item_buffs.erase(key)
 
 static func _open_selection(world: Node, record: Dictionary) -> void:
+	if record.get("source_projection")=="current523_original_typed_game_dto_v1":
+		world.hud.show_message("원본 UI와 선택한 물리 개체의 보상 요청 연결 필요 · 아이템 보존")
+		return
 	var existing: Variant = world.hud.get_meta("patch523_reward_choice") if world.hud.has_meta("patch523_reward_choice") else null
 	if is_instance_valid(existing):
 		world.hud.show_message("열려 있는 원본 선택 보상을 먼저 확인하세요")
@@ -362,7 +365,15 @@ static func _open_selection(world: Node, record: Dictionary) -> void:
 	world.hud.set_meta("patch523_reward_choice", dialog)
 	world.hud.add_child(dialog)
 
-static func claim_selection(world: Node, saved: Dictionary, entity_id: int) -> bool:
+static func claim_selection(world: Node, saved: Dictionary, entity_id: int, ownership: Dictionary={}) -> bool:
+	var current: Dictionary=canonical(saved)
+	if current.get("source_projection")=="current523_original_typed_game_dto_v1":
+		if ownership.is_empty():
+			world.hud.show_message("선택한 원본 물리 개체·수량·영수증 요청 필요 · 아이템 보존")
+			return false
+		var result: Dictionary=world.consumable_service.claim_owned_original_selection(current.get("source_original_item",{}),ownership,entity_id)
+		world.hud.show_message(str(result.get("message",result.get("reason","원본 선택 보상 연결 대기"))))
+		return result.get("ok",false) and result.get("saved",false) and result.get("consumed")==1
 	# Re-read the pinned pack and ownership at confirmation, never trust the UI row.
 	var record: Dictionary = action_record(world,saved)
 	var problem: String = eligibility(world, record)

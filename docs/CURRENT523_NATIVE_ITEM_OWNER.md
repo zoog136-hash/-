@@ -373,3 +373,61 @@ a disabled policy. Missing original selection UI and unsupported reward kinds,
 child suppliers, variants or other effects remain explicit holds. No original
 UI is created, no GachaCraft/ItemCraftRecommend/QuestFreePass meaning is inferred,
 and no new run/test/render/CI or source-use percentage is established.
+
+
+## Exact original selection and the same result owner (unexecuted)
+
+The existing public compiler's simple SelectReward contract is now projected
+from271's original Reward graph, without a second raw-table reader. It accepts
+only exact root Reward111/SelectReward, one SelectMaxCount, eligible original
+Class rows, and child Item rewards with known positive amount/blessing and
+simple receipt/lifecycle flags. RewardEnhancementTypeID is not an initial
+weapon enchant number. Other/nested/attribute reward semantics remain held.
+
+Native supply can retain these unopened boxes as actual quantity-owned items.
+The actual consumable and quest-held activation paths return a read-only
+requires_original_selection proposal; they neither choose the first row nor
+construct the previous authored replacement dialog for a current DTO. Actual
+original UI nodes/pixels/event binding remain267's responsibility. A pending
+proposal, cancellation or unavailable original UI does not debit any quantity.
+
+The callable UI boundary is:
+
+- consumable_service.quote_owned_original_selection(original_item, ownership)
+- consumable_service.claim_owned_original_selection(original_item, ownership,
+  entity_id)
+
+original_item is the complete current ItemClass row. ownership has exactly
+physical_id, quantity=1, expected_quantity, expected_remaining and exactly one
+source_native_stack_receipt or quest_reward_receipt, as in use_owned_original.
+entity_id is SelectRewardEntity.ID, never the output ItemClass ID or row index.
+The proposal includes original source entity rows and eligible choices, opaque
+ownership request and source selection ID; it is not an authorization token.
+Claim re-reads the current original graph, full source/ownership/remaining,
+class/level/service/time/life/lock/use/cooldown conditions and exactly one chosen
+source entity. An unrelated item's quote cannot execute a different effect.
+The old claim_selection result wrapper accepts this same ownership argument
+for a current DTO; it refuses a name-only current-source request.
+
+Only the actual selected source output goes through the existing registered
+supplier. Unsupported positive output/variant/owner holds the input. The
+supplier baseline already includes the actual selected debit; full candidates
+are never blindly merged across independent states. The shared bag/selection
+result owner stages output physical identity, input remaining/used receipt,
+source selection/outcome journal, cooldown and quest state in one sealed save.
+The private RNG is unchanged for an explicit choice. Save failure or uncertain
+post-save adoption blocks retries until normal reload. Success requires
+ok && saved && consumed==1, not handled or a quoted candidate.
+
+If an equipment Reward has no source initial-enchant field, the original value
+remains null in its supplier lineage/journal. The previously existing
+patch523_select_reward_initial_zero_enabled option must authorize the labelled
+TWILIGHT +0 default; it is never presented as original Reward data. Original
+input receipt, selection ID/entity and output identity are separate provenance;
+no historical selected rune/quest record is renamed, erased or regranted.
+
+All these changes are code-only, unexecuted and unverified. Actual original
+selection screen wiring, unsupported reward/effect owners, ItemBook/eqc and
+polymorph-entity admission remain separate boundaries. The existing current DTO
+already exposes source_weapon_type_id/name from the gameplay WeaponType row;
+Sprite action enums must not be used as gameplay weapon identity.

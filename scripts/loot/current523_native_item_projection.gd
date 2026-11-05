@@ -170,6 +170,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var selection: Dictionary=selectable_reward(definition)
+	if not selection.is_empty():
+		out["source_use_spec"]=selection
+		if selection.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -177,7 +182,7 @@ static func record(definition: Dictionary) -> Dictionary:
 	out["source_mapped_bonuses"]=applied;out["source_unhandled_bonuses"]=unknown;out["source_unhandled_bonus_ids"]=[]
 	for row: Dictionary in unknown:out.source_unhandled_bonus_ids.append(row.bonus_id)
 	out["source_effect_status"]="partial" if not unknown.is_empty() or (slot=="consumable" and not out.has("heal_spec") and not out.has("source_use_spec")) or not unresolved_classes.is_empty() or bad_slot else "represented_source_fields"
-	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_and_original_bag_projection; other_typed_effects_preserved_pending"
+	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_original_bag_and_selection_projection; other_typed_effects_preserved_pending"
 	if slot=="consumable" and not out.has("source_use_spec") and not out.has("heal_spec"):out["source_use_spec"]={"kind":"current_source_effect_pending","activation_status":"blocked","blocked_reasons":["current_typed_effect_owner_required"]}
 	out["source_catalog_eligible"]=true;out["source_acquisition_policy"]="verified_supplier_only_no_fabricated_supply"
 	return out
@@ -370,4 +375,82 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	if not weighted.is_empty():
 		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
 		if distribution.is_empty():spec["source_probability_denominator"]=10000000
+	return spec
+
+static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array) -> void:
+	var row: Dictionary=node.get("row",{})
+	for pair: Array in [["RewardGetTimeTypeID",1],["RewardEnhancementTypeID",1],["Ranking",0]]:
+		if not integer(row.get(pair[0])) or int(row[pair[0]])!=pair[1]:reasons.append("unsupported_select_reward_rule:"+pair[0])
+	for key: String in ["UseImmediately","ClanOnly"]:
+		if not row.get(key) is bool or row[key]!=false:reasons.append("unsupported_select_reward_rule:"+key)
+	if not node.get("attributes",[]).is_empty():reasons.append("unsupported_select_reward_attributes")
+	var id: Variant=row.get("CharacterClassID")
+	if not integer(id) or (int(id)!=0 and not active.has(int(id))):reasons.append("unsupported_select_reward_class")
+	if node.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty():reasons.append("source_excluded_select_reward")
+
+static func selectable_reward(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="SelectRewardClassID":refs.append(row)
+	if refs.size()!=1 or not integer(refs[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(refs[0].bonus.Value);var graphs: Array=[]
+	for reference: Dictionary in definition.get("source_typed_references",[]):
+		if reference.get("item_bonus_id")==refs[0].ID and reference.get("id")==id and reference.get("reward") is Dictionary:graphs.append(reference.reward)
+	if graphs.size()!=1:return {}
+	var graph: Dictionary=graphs[0]
+	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true:return {}
+	var root_node: Dictionary=graph.get("rewards",{}).get(str(id),{});var root: Dictionary=root_node.get("row",{})
+	if root.get("ID")!=id:return {}
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons;var active: Dictionary={};var domain: Array=[]
+	for row: Dictionary in SOURCE.rows("Class"):
+		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	for row: Dictionary in definition.get("class_rows",[]):
+		if integer(row.get("ClassID")) and int(row.ClassID) not in domain:domain.append(int(row.ClassID))
+	if domain.is_empty():domain=active.keys()
+	domain.sort()
+	if domain.is_empty():reasons.append("unsupported_select_reward_root_class")
+	for class_id: int in domain:
+		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
+	selectable_rule(root_node,active,reasons)
+	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false
+	if root_node.get("reward_type",{}).get("ID")!=111 or root_node.get("reward_type",{}).get("Name")!="SelectReward":reasons.append("unsupported_select_reward_root_type")
+	else:
+		var selected_node: Dictionary=graph.get("selections",{}).get(str(int(root.get("RewardClassID",0))),{})
+		selection=selected_node.get("row",{})
+		if selected_node.get("excluded",false) or not SOURCE.declared_exclusion("SelectReward",selection).is_empty():reasons.append("source_excluded_select_reward_group")
+		if not integer(selection.get("SelectMaxCount")) or int(selection.SelectMaxCount)!=1:reasons.append("unsupported_select_reward_max_count")
+		if selected_node.get("entities",[]).is_empty():reasons.append("empty_select_reward")
+		for edge: Dictionary in selected_node.get("entities",[]):
+			var entity: Dictionary=edge.get("row",{});var child: Dictionary=graph.get("rewards",{}).get(str(int(entity.get("RewardID",0))),{});var row: Dictionary=child.get("row",{})
+			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty():reasons.append("source_excluded_select_reward_entity")
+			selectable_rule(child,active,reasons)
+			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
+			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
+			var item: Dictionary=child.get("item_class",{});var class_ids: Array=[]
+			if integer(row.get("CharacterClassID")) and int(row.CharacterClassID)!=0:class_ids.append(int(row.CharacterClassID))
+			var eligible: bool=false
+			for class_id: int in domain:
+				if (class_ids.is_empty() or class_id in class_ids) and (root.get("CharacterClassID")==0 or root.get("CharacterClassID")==class_id):eligible=true
+			if eligible and (item.get("TestItem")!=false or child.get("excluded",false) or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+			if not integer(row.get("Amount")) or int(row.Amount)<1 or row.get("ItemBlessCodeID") not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
+			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0))).is_empty();initial_rule=initial_rule or needs
+			rewards.append({"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs})
+	var counts: Dictionary={}
+	for class_id: int in domain:
+		var count: int=0
+		if root.get("CharacterClassID") in [0,class_id]:
+			for reward: Dictionary in rewards:
+				if reward.class_ids.is_empty() or class_id in reward.class_ids:count+=1
+		counts[str(class_id)]=count
+		if count==0:reasons.append("no_eligible_select_reward_for_source_class")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec["kind"]="source_selectable_reward";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["reward_id"]=id;spec["original_reward"]=root_node.duplicate(true);spec["select_reward_id"]=selection.get("ID");spec["original_select_reward"]=selection;spec["select_max_count"]=selection.get("SelectMaxCount");spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
+	if initial_rule:spec["local_rule_required"]="select_reward_initial_enchant";spec["source_initial_enchant"]=null;spec["initial_enchant_configuration_key"]="patch523_select_reward_initial_enchant"
+	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec

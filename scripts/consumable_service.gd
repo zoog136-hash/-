@@ -978,3 +978,14 @@ func try_use_regional_return(item_name: String) -> bool:
 
 ## Result contract for external reward producers. Issuance/receipt is their transaction.
 ## Cross-map native travel needs its owner's atomic destination contract; preserve stock.
+
+# Original UI supplies its own source nodes and exact source entity choice.
+# Backend proposals are read-only; no replacement window is constructed here.
+func quote_owned_original_selection(original_item: Dictionary,ownership: Dictionary) -> Dictionary:
+	return preload("res://scripts/loot/current523_native_stack.gd").quote_original_selection(world,original_item,ownership)
+
+func claim_owned_original_selection(original_item: Dictionary,ownership: Dictionary,entity_id: int) -> Dictionary:
+	var result: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").claim_original_selection(world,original_item,ownership,entity_id)
+	if result.get("ok",false) and result.get("saved",false) and result.get("consumed")==1:
+		world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
+	return result

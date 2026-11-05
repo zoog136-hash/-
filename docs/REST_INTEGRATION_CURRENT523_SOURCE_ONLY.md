@@ -240,3 +240,18 @@ The five-field use ABI accepts exactly one native or quest opaque receipt key.
 Other reward kinds, uninstalled variants/suppliers, original selection UI,
 ItemBook mapping and unconfirmed recipe/free-pass meanings remain held.
 All new code remains unexecuted/unverified; previous58/146 is not increased.
+
+
+## Original selected rewards (unexecuted)
+
+Original SelectReward/SelectRewardEntity rows now reach a selected physical
+ownership quote/claim API and the same actual supplier/single-save result owner
+as ordinary bags. Current native/quest activation returns source choices while
+preserving the input; no authored substitute window is constructed. Original
+UI267 must bind its actual nodes and pass the exact SelectRewardEntity.ID plus
+opaque five-field ownership request. Explicit choice leaves gameplay RNG
+unchanged. Unsupported outputs/conditions keep ownership, and missing source
+initial equipment enchant retains null provenance with only the existing
+labelled +0 host policy when enabled. No old selected rune/save conversion.
+New code is unexecuted/unverified; no new pass count, usage rate, installation
+or real original UI observation is asserted. See CURRENT523_NATIVE_ITEM_OWNER.

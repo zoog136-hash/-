@@ -237,7 +237,7 @@ func try_use_held(world: Node, id: String) -> bool:
 	var original_owned: Dictionary=OWN.proof(world,id)
 	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
 		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
-		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:
+		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
 			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
