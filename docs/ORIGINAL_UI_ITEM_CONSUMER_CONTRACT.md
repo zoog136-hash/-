@@ -576,3 +576,38 @@ metadata. Its receipt remains dependencies-resolved/not-rendered with
 whole_scene_completion_claimed:false. No new tests, game run, rendering,
 verification suite, quality assessment or CI was performed. These interfaces
 and replacement behavior remain unexecuted/unverified.
+
+### More main-game fields — unexecuted
+
+The current World level now reaches the original normal-branch level label
+7528 in Hud_CharInfo_Class through CharInfo Project34940. The explicit child
+scope retains its authored level backdrop and ancestor transforms; it excludes
+unmapped class portraits/rank modes. Nested ProjectNode bindings may supply
+`source_node_offsets`; their original parent root properties still apply.
+
+The original Hud_PayLayout text/icons receive existing gold and diamond
+balances through update_player/update_currency_balances. Its parent is
+HUDScene Project1540. No balances are awarded or saved; Info/AutoSlot/
+BlessPoint and other currency roles remain outside this partial scope. The
+existing broader currency readout is retained while those roles are incomplete.
+
+The actual set_map_name callback forwards its value to the original minimap
+Text_MapName14376 at MainScene Project21588. This replaces only the prior map
+name presentation. It neither chooses a UIMapWorld nor supplies a zone/image/
+coordinate contract. The original target-name text8876/backdrop12300 at
+MainScene Project15688 read World's existing selected_monster and hide on
+no/dead selection. No targeting, damage, HP bar or social/PK mode is invented.
+Preview-hidden target containers receive explicit current host visibility;
+original-client mode/animation equivalence is not claimed.
+
+Native inventory chrome/slot adapters retain exact owned references and call
+the existing bag methods. Slot assignment, source scroll input, image-owner
+bindings and an actual selected original parent/open lifecycle still need a
+concrete caller; their mere availability is not game connection completion.
+Two retained current523 parent candidates differ: UI/FloatingUiScene Project
+1572 (alpha0, position1015,345) and UI/FloatingUi/FloatingUiScene Project9776
+(alpha255, position1008,345). Neither is silently substituted for the other.
+
+These additions were not executed or rendered. Historical 524 dependency/317
+inspection counts and the lack of a whole-560 gameplay completion numerator
+remain unchanged. No extra test, audit, verification suite or CI was run.

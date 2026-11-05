@@ -8,15 +8,25 @@ var _pack: RefCounted
 var _hud: WeakRef
 var _image_adapter: RefCounted
 
-func configure(pack: RefCounted, hud: Node, image_adapter: RefCounted) -> Dictionary:
+func configure(pack: RefCounted, hud: Node, image_adapter: RefCounted=null) -> Dictionary:
 	if not is_instance_valid(hud) or not hud.has_signal("map_pressed"):return _fail("source_main_map_existing_hud_entry_missing")
-	if image_adapter==null:return _fail("source_main_map_existing_image_adapter_required")
-	for method: String in ["world_candidates","apply_field_world"]:
-		if not image_adapter.has_method(method):return {"ok":false,"code":"source_main_map_existing_image_adapter_api_missing","method":method}
+	if image_adapter!=null:
+		for method: String in ["world_candidates","apply_field_world"]:
+			if not image_adapter.has_method(method):return {"ok":false,"code":"source_main_map_existing_image_adapter_api_missing","method":method}
 	_pack=pack
 	_hud=weakref(hud)
 	_image_adapter=image_adapter
 	return {"ok":true,"requirements":requirements(),"complete_screen_contract":false}
+
+func build_name(map_name: String) -> Dictionary:
+	if _pack==null or _pack.manifest.get("files",{}).get(MINIMAP_MEMBER,{}).get("sha256","")!=MINIMAP_SHA256:return _fail("source_main_map_minimap_identity_mismatch")
+	# The existing game's set_map_name value is only a text binding. It does
+	# not imply a selected UIMapWorld.ID, zone, image or coordinate mapping.
+	return {"ok":true,"member":MINIMAP_MEMBER,"sha256":MINIMAP_SHA256,"source_node_offsets":[14376],"bindings":{14376:{"role":"source_text","text":map_name}},"partial_source_scene":true,"complete_screen_contract":false,"world_image_connected":false,"unresolved_fields":requirements()}
+
+func refresh_name(scene: Node2D, map_name: String) -> Dictionary:
+	if not is_instance_valid(scene) or scene.get("source_member")!=MINIMAP_MEMBER:return _fail("source_main_map_minimap_scene_mismatch")
+	return scene.set_bound_text(14376,map_name)
 
 func world_candidates(field_map: Variant) -> Variant:
 	if _image_adapter==null:return _fail("source_main_map_existing_image_adapter_required")

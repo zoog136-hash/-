@@ -7,6 +7,8 @@ const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.g
 const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
 const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
 const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
+const MainMap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
+const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.gd")
 const MAIN="UI/MainScene.csb"
 const MAIN_SHA="80c174a87caf5cfbf910336b64616334ac560ed477f7a663aec58ada70d4285f"
 const EXP_PROJECT=23080
@@ -44,6 +46,16 @@ var _wallet_result: Dictionary={}
 var _wallet_mount_attempted: bool=false
 var _gold: int=0
 var _balances: Dictionary={}
+var _map_bindings: RefCounted
+var _map_name_scene: Node2D
+var _map_name_result: Dictionary={}
+var _map_name_mount_attempted: bool=false
+var _legacy_map_name: WeakRef
+var _legacy_map_name_visible: bool=false
+var _target_scene: Node2D
+var _target_result: Dictionary={}
+var _target_model: Dictionary={}
+var _target_mount_attempted: bool=false
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -59,13 +71,65 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	_hud=weakref(hud)
 	_canvas=weakref(canvas)
 	_capture_existing_controls(hud)
+	var map_label: Variant=hud.get("v20_map_name")
+	if map_label is CanvasItem and is_instance_valid(map_label):
+		var label_parent: Node=map_label.get_parent()
+		if label_parent is CanvasItem:
+			_legacy_map_name=weakref(label_parent)
+			var previous: Variant=hud.get("original_main_ui_controller")
+			_legacy_map_name_visible=previous.source_map_label_availability() if is_instance_valid(previous) and previous.has_method("source_map_label_availability") else label_parent.visible
 	_coordinates=Node2D.new()
 	_coordinates.name="OriginalMainSourceCoordinates"
 	_coordinates.z_index=35
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
+
+func _process(_delta: float) -> void:
+	if not is_instance_valid(_coordinates):return
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return
+	var model: Dictionary=Target.selected_name(hud.get_parent())
+	if not model.get("ok",false):
+		_target_result=model
+		return
+	if model==_target_model:return
+	_target_model=model.duplicate(true)
+	if is_instance_valid(_target_scene):
+		_target_result=Target.refresh(_target_scene,model)
+		return
+	if _target_mount_attempted:return
+	_target_mount_attempted=true
+	_target_result=_mount_main_project(15688,Target.build(_pack,model))
+	if _target_result.get("ok",false):
+		_target_scene=_target_result.scene
+		_target_result.erase("scene")
+
+func source_map_label_availability() -> bool:
+	return _legacy_map_name_visible
+
+func update_map_name(map_name: String) -> Dictionary:
+	if not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
+	if is_instance_valid(_map_name_scene):
+		_map_name_result=_map_bindings.refresh_name(_map_name_scene,map_name)
+		return _map_name_result.duplicate(true)
+	if _map_name_mount_attempted:return _map_name_result.duplicate(true)
+	if not _pack.manifest.get("scenes",{}).has(MainMap.MINIMAP_MEMBER):return {"ok":true,"source_map_name_presented":false}
+	_map_name_mount_attempted=true
+	_map_bindings=MainMap.new()
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var configured: Dictionary=_map_bindings.configure(_pack,hud)
+	if not configured.get("ok",false):
+		_map_name_result=configured
+		return configured
+	_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name))
+	if _map_name_result.get("ok",false):
+		_map_name_scene=_map_name_result.scene
+		_map_name_result.erase("scene")
+	sync_legacy_visibility()
+	return _map_name_result.duplicate(true)
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> Dictionary:
 	var unchanged: bool=_has_player_values and _exp_value==experience_value and _exp_need==exp_need
@@ -87,7 +151,7 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 		elif not char_unchanged:_char_result=Vitals.refresh_char_info(_char_scene,_char_values)
 	if not _core_attempted:_mount_core_controls()
 	_refresh_wallet(gold_changed)
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
 
 func update_currency_balances(balances: Dictionary) -> Dictionary:
 	var changed: bool=_balances!=balances
@@ -257,6 +321,8 @@ func sync_legacy_visibility() -> void:
 	# only the fields no longer owned by an accepted original component.
 	_set_legacy_exp_visible(not is_instance_valid(_exp_scene))
 	_set_legacy_vitals_visible(not is_instance_valid(_char_scene))
+	var map_label: Object=_legacy_map_name.get_ref() if _legacy_map_name!=null else null
+	if map_label!=null:map_label.visible=false if is_instance_valid(_map_name_scene) else _legacy_map_name_visible
 	for kind: String in _legacy_combat:
 		var control: Object=_legacy_combat[kind].get_ref()
 		if control!=null:control.visible=false if is_instance_valid(_combat_scene) else bool(_combat_availability.get(kind,false))
@@ -273,6 +339,7 @@ func _exit_tree() -> void:
 
 func release(restore_legacy: bool=true) -> void:
 	_restore_legacy=restore_legacy
+	set_process(false)
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas!=null and canvas.resized.is_connected(_fit_source_coordinates):canvas.resized.disconnect(_fit_source_coordinates)
 	if is_instance_valid(_coordinates):
@@ -281,6 +348,8 @@ func release(restore_legacy: bool=true) -> void:
 		_coordinates.queue_free()
 	_coordinates=null
 	if restore_legacy:
+		var map_label: Object=_legacy_map_name.get_ref() if _legacy_map_name!=null else null
+		if map_label!=null:map_label.visible=_legacy_map_name_visible
 		_set_legacy_exp_visible(true)
 		if is_instance_valid(_char_scene):_set_legacy_vitals_visible(true)
 		for kind: String in _legacy_combat:

@@ -226,6 +226,12 @@ func show_target(_monster_name: String, _hp: int, _max_hp: int) -> void:
 func clear_target() -> void:
 	if is_instance_valid(target_panel): target_panel.hide()
 
+func set_map_name(value: String) -> void:
+	super.set_map_name(value)
+	_original_main_map_value=value
+	_original_main_has_map_name=true
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_map_name(value)
+
 func _ready() -> void:
 	super._ready()
 	call_deferred("_bind_selected_original_main_ui")
@@ -2655,6 +2661,8 @@ var original_ui_runtime_presenter: Node
 var original_main_ui_controller: Node
 var original_main_ui_status: Dictionary={}
 var _original_main_player_values: Array=[]
+var _original_main_map_value: String=""
+var _original_main_has_map_name: bool=false
 
 func _bind_selected_original_main_ui() -> void:
 	var selected: Dictionary=preload("res://scripts/ui/original_ui/source_main_selection.gd").selected_pack()
@@ -2675,6 +2683,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		if is_instance_valid(original_main_ui_controller):original_main_ui_controller.sync_legacy_visibility()
 		return configured
 	candidate.update_currency_balances(currency_balances)
+	if _original_main_has_map_name:candidate.update_map_name(_original_main_map_value)
 	if not _original_main_player_values.is_empty():
 		var mounted: Dictionary=candidate.callv("update_player",_original_main_player_values)
 		if not mounted.get("ok",false):
