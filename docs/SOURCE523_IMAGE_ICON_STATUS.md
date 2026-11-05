@@ -494,6 +494,11 @@ separate from ownership and consumer admission. The selected image pack still
 requires full canonical ItemClass equality and its original exclusion rules.
 The equipment window also preserves the source record from the same equipped
 physical instance ID when its presentation snapshot omits that identity.
+The existing skill-awakening book producer's preserved base508 ItemClass row
+uses that same complete-current-row equality route in inventory and shared
+item views. A changed or incomplete row remains unavailable. Its `m508:item`
+identity and gameplay snapshot are retained; image bytes come only from the
+selected current source pack, with no old card graphics dependency.
 
 Existing expedition card supplements retain a complete original BuffCard row
 without the catalog's structured source_ui_assets. The current card presenter

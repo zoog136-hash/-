@@ -380,8 +380,18 @@ static func _original_expedition_item(record: Dictionary) -> bool:
 		if not part.is_valid_int() or str(int(part)) != part or int(part) < 0: return false
 	return parts[0] == str(int(id)) and record.get("sourceId") == "m523:expedition:" + key
 
+static func _original_card_skill_material(record: Dictionary) -> bool:
+	# The existing skill-awakening book producer preserves its original ItemClass
+	# row and m508 item identity. Only complete equality with the selected current
+	# pack admits its image; its gameplay snapshot and material state stay intact.
+	if record.get("source") != "lineagem_base508" or record.get("source_snapshot") != "base508" or record.get("slot") != "material" or record.get("type") != "재료": return false
+	var row: Variant = record.get("source_item")
+	var id: Variant = record.get("source_item_class_id")
+	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
+	return row.get("ID") == id and record.get("sourceId") == "m508:item:" + str(int(id))
+
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _shop_item_class_id(record) > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _shop_item_class_id(record) > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -401,12 +411,13 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	var quest_record: bool = _original_quest_item(record)
 	var symbol_record: bool = _original_symbol_item(record)
 	var expedition_record: bool = _original_expedition_item(record)
-	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record):
-		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record else record.source_item if expedition_record else record.source_original
+	var card_skill_material: bool = _original_card_skill_material(record)
+	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material):
+		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record else record.source_item if expedition_record or card_skill_material else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
-		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "expedition_issued_item" if expedition_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
+		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "expedition_issued_item" if expedition_record else "card_skill_material" if card_skill_material else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
 		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
 		return supplied
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
