@@ -270,11 +270,17 @@ Existing compiled/live tables are retained, invalid explicit input is not
 bypassed, and existing growth/stat/planner consumers read the staged data.
 Point purchase, mastery-change and color-reset source rows follow the same
 compiler joins without new values, probabilities or transaction code.
-Reset-ticket identity is built only when a previously installed exact full-item
-sidecar supplies the original matching IdentifiedDescID label; otherwise that
-operation retains `ticket_source_missing`. No new DescData scan or guessed label
-is used for this bootstrap. `source_mode/source_identity/source_status` identify
-the original-table path; `model_pack_sha256` stays a compiled-file fingerprint.
+Reset-ticket identity now reads the exact ItemClass IdentifiedDescID's original
+label directly, without requiring the former monster-pack full-item sidecar.
+The same ticket definition schema, canonical fingerprint algorithm and existing
+`RESET_TICKET.configure()` acceptance guard remain mandatory. Missing or excluded
+source retains `ticket_source_missing`; host/display names are not substituted.
+This single supporting label is not a general deferred-text implementation.
+The operation records its source identity separately from the existing definition
+fingerprint; old physical records are not relabeled or migrated. Fingerprint
+values/adoption have not been observed. `source_mode/source_identity/source_status`
+identify the original-table path; `model_pack_sha256` stays a compiled-file
+fingerprint.
 
 These are input connections to existing services, not proof of gameplay or
 completion of every row in their shared source tables. Their current caller and
@@ -664,6 +670,18 @@ preserved, not erased or granted from a substituted definition.
 These later inputs have not been compiled, loaded or executed. Existing parser
 counters/declared table sizes are input metadata, not new audit measurements,
 completed functions or gameplay coverage.
+
+The existing `spell_group_conversion.configure()` also reads the held common
+archive when its dedicated default ZIP is actually absent and no environment/
+CLI source was selected. Empty/bare explicit choices, access/SHA/ZIP/parse errors
+remain failures. Original settings/costs/replacements/groups/selected labels/
+SpellClass members/materials stage before the existing16/1200/193/4 acceptance
+guard publishes the registry. `source_input_identity` and source-row metadata
+are definition input provenance, separate from saved class selections/counters.
+Declared Test/dummy materials remain raw in `excluded_input_items` and are not
+active payment definitions. Existing policies, group eligibility, quotes,
+physical allocations, learned skills, costs and final saves are unchanged. No
+new class/skill identity or inferred conversion namespace is created.
 
 The existing guardian source now obtains matching selected rows during initial
 data adoption and through `rewards()`, `upgrade()`, `constant()` and

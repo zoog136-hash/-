@@ -4,7 +4,6 @@ extends RefCounted
 const SAVE_KEY := "weapon_mastery523"
 const MAX_POINT_TEXT := "9223372036854775807"
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
-const FULL_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const RESET_TICKET = preload("res://scripts/mastery/mastery_reset_ticket.gd")
 const ORIGINAL_CORE_TABLES := ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView",
 	"MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment",
@@ -94,20 +93,22 @@ func _original_reset_ticket(projected: Dictionary, constants: Array) -> Dictiona
 	var link: Dictionary = _first_original(projected.CurrencyUnitClass,"CurrencyID",currency.get("ID",-1))
 	var item: Dictionary = SOURCE.row("ItemClass",int(link.get("ClassID",-1)))
 	if currency.get("ID")!=1814 or link.get("UnitID")!=4 or item.get("ID")!=184652 or item.get("TestItem")!=false: return {}
-	# Reuse an already installed, exact full-item sidecar. Never pull the large
-	# DescData table or substitute a host/display name for the original label.
-	if FULL_ITEMS.pack_identity().is_empty(): return {}
-	var full: Dictionary = FULL_ITEMS.definition_id("184652")
-	if full.get("original_item",{}) != item: return {}
-	var label: Dictionary = full.get("source_descriptions",{}).get("IdentifiedDescID",{})
-	if label.get("id")!=item.get("IdentifiedDescID") or not label.get("text") is String or str(label.text).is_empty(): return {}
+	if not SOURCE.declared_exclusion("ItemClass",item).is_empty(): return {}
+	# UNVERIFIED: this single original label is required by the existing ticket
+	# fingerprint. Do not require an old monster-pack sidecar or use a same-name
+	# host record when the new original definition is unavailable.
+	var description_id: Variant = item.get("IdentifiedDescID")
+	if typeof(description_id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(description_id)) or float(description_id)!=floorf(float(description_id)) or absf(float(description_id))>9007199254740991.0: return {}
+	var description: Dictionary = SOURCE.row("DescData_Korean",int(description_id))
+	if description.get("ID")!=description_id or not description.get("Description") is String or str(description.Description).is_empty(): return {}
 	var definition: Dictionary = {"constant":constant,"currency":currency,"currency_link":link,
 		"item":item,"category":SOURCE.row("ItemCategory",int(item.CategoryID)),
 		"grade":SOURCE.row("Grade",int(item.GradeID)),
 		"bonuses":SOURCE.related("ItemBonus","ItemClassID",184652),
-		"bless_codes":SOURCE.rows("ItemBlessCode"),"label":label.text}
+		"bless_codes":SOURCE.rows("ItemBlessCode"),"label":description.Description}
 	var operation: Dictionary = {"definition":definition,
-		"definition_sha256":JSON.stringify(RESET_TICKET.canonical(definition),"",true).sha256_text()}
+		"definition_sha256":JSON.stringify(RESET_TICKET.canonical(definition),"",true).sha256_text(),
+		"source_input_identity":SOURCE.identity()}
 	var reader = RESET_TICKET.new()
 	return operation if reader.configure(operation) else {}
 
@@ -139,7 +140,7 @@ func _original_operations(projected: Dictionary, deferred: Dictionary) -> Dictio
 	result["reset_color_draws"] = color_text
 	if color_text.is_empty(): deferred["reset_color_draws"] = "source_reset_color_help_missing"
 	var ticket: Dictionary = _original_reset_ticket(projected,constants)
-	if ticket.is_empty(): deferred["reset_ticket"] = "ticket_source_missing:exact_full_item_label_or_definition_unavailable"
+	if ticket.is_empty(): deferred["reset_ticket"] = "ticket_source_missing:original_label_or_definition_unavailable"
 	else: result["reset_ticket"] = ticket
 	return result
 
