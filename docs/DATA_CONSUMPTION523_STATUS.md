@@ -614,6 +614,19 @@ from execution. Existing registration, healing/modifiers, inventory debit,
 RNG/cooldown and save bodies are unchanged, and269's generic HP/MP quantity
 owner is not duplicated. These three inputs are unexecuted/unverified.
 
+The remaining existing wisdom-buff reader now obtains its original
+ItemClass376→ItemBonus→BuffClass39→BuffBonus values through `_spec()` and
+`_values(table,field,id)`, following the public wisdom compiler's exact effect
+set and lifecycle predicates. Existing `install`/`try_use` receive source name,
+group, duration, SP/MP-regeneration and raw consume-delay input. Missing,
+conditional, duplicate, Test or declared-dummy input is held without generated
+numeric JSON fallback. Original files are preserved. The0.5-second cooldown,
+30-second regeneration interval and labelled origin remain existing host policy;
+buff application/overwrite, clocks, quantity and saving are not rewritten.
+`source_identity/source_problem` retain input provenance/readiness only. This
+source read is uncompiled/unexecuted/unverified and does not complete the shared
+ItemClass/Bonus/Buff tables.
+
 The existing `source523_shop_runtime.bind_source()` already calls
 `npc_definitions.configure(catalog)`, but its NPC-definition loader previously
 required a separate explicit NPC pack even when the shop catalog had obtained
@@ -1141,6 +1154,35 @@ declares the row dummy. This does not create a second registry or authorize an
 effect; adoption and execution remain the integration owner's responsibility.
 
 ## Ownership and unresolved candidates
+
+The known general equipment-collection input has a separate hard identity
+boundary. The actual caller is `World→equipment_collections.configure(self)→
+equipment_collection_runtime`'s PATH JSON→`Core.configure(definitions,catalog,
+Stats.SUPPORTED)`. Its existing aliases map guide IDs to saved `eqc_*` collection
+and `eqc_*:slot:N` identities. They do not map the original ItemBookItem/
+ItemBookCardForItem graph to those collection/slot identities. Current source
+requirements are names/enchant/quantity/effects rather than original item IDs.
+
+Connecting that original graph requires an authoritative original-to-saved
+collection/slot identity mapping and an owner projection of material alternatives,
+conditions and effects into the existing input shape. Adding guessed aliases
+from equal names/IDs would not establish the exact receipt/slot contract. No
+such mapping or collection ownership/save change is created here; Growth96's
+already connected63 token requirements remain separate. This is one exact
+known consumer boundary, not a claim that all remaining712 baseline unresolved
+tables are input-blocked. The original tables and older definitions/saves remain
+preserved and their fixed denominator is unchanged.
+
+For other NPC consumables, the retained registration adapter calls
+`Rules.definition(name)` with a normalized name and existing local food/regen/
+return policy. That interface does not accept an original ItemClass/Bonus/Buff
+input or a selected physical-source context. Attaching another raw dictionary
+to a record would not make this existing consumer use it. A source-aware use
+projection/dispatch and its physical debit belong to269's remaining native
+effect owner. No name-only legacy balance is reinterpreted as a native supply,
+and these existing local rules are not reported as newly connected source
+effects. This is a specific remaining receiver boundary, not a count of unused
+tables or a claim that every unresolved table shares it.
 
 PR269 owns remaining integration, source item ownership/effects and the latest
 231/248/265 handoffs. PR264 owns attendance/pass, source reward consumption,
