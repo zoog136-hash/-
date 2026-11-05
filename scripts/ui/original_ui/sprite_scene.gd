@@ -93,6 +93,11 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		# transform by wrapping the original root in another transformed node.
 		if tree.nodeTree.classname!="Node":return {"ok":false,"error":"unsupported_project_root_class"}
 		tree.nodeTree.options=_project_root_options.duplicate(true)
+	# Identity-sensitive validation must use this requested source, not the
+	# empty/default identity of an unconfigured renderer. Keep source_tree
+	# uncommitted until validation succeeds; create no nodes on this path.
+	source_pack=pack
+	source_member=member
 	var problems: Array[String]=[]
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
@@ -125,9 +130,10 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 				if not EASING.accepts(easing): problems.append("unsupported_easing")
 			if timeline.get("property")=="FileData" and value.get("_type")!="TextureFrame": problems.append("texture_track_type")
 			if timeline.get("property")=="VisibleForFrame" and value.get("_type")!="BoolFrame": problems.append("visibility_track_type")
-	if not problems.is_empty(): return {"ok":false,"error":"unsupported_source_scene","details":problems}
-	source_pack=pack
-	source_member=member
+	if not problems.is_empty():
+		source_pack=null
+		source_member=""
+		return {"ok":false,"error":"unsupported_source_scene","details":problems}
 	source_tree=tree
 	# Validate every original timeline frame before creating a visible scene.
 	for timeline: Dictionary in action.get("timeLines",[]):
