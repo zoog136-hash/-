@@ -130,9 +130,13 @@ The public data contracts for PR269 are:
 | --- | --- |
 | `current523_item_data.describe(item_id)` | Original ItemClass/category/grade, equipment/class links, ItemBonus→Bonus→BonusType→Unit and typed card/spell/bag/reward/buff references. Existing full-item sidecars supply already compiled rows/use specs; original rows supply missing joins. Shop market/NPC quotes now call this reader for item identity and explicit exclusions. Descriptions retain their IDs and are deferred by default. |
 | `current523_spell_data.describe(spell_id)` | Raw SpellClass costs/ranges/conditions, SpellBonus typed effects, learning/class/card prerequisites and declared target/category/material references. Item book/card references call this adapter; it never learns or executes a spell. |
+| `current523_bonus_data.describe(bonus_id)` | Shared Bonus→BonusType→Unit, declared BonusApplicationType and all UIUnit rows for that UnitID. Item, spell and buff data readers retain the raw value and application target. Neither the application name nor a UI denominator becomes a new target join or combat formula. |
+| `current523_buff_data.describe(buff_id)` | Original BuffClass/group, typed BuffBonus rows, declared status attributes and InvokeOption/type references. Item and spell data readers follow explicit BuffClassID units to this contract. Lifetimes and conditions stay raw; no new status is applied. A TestBuff field absent from the source is recorded as not declared, not invented as a required flag or dummy exclusion. |
 | `current523_reward_data.bag(bag_id)` / `reward(reward_id)` | Full declared bag entities/type/item/class-limit rows and Item/SelectReward ID graphs respectively. Quantities, blessing, initial enchant where declared, raw weights and conditions remain unmodified. Cycles stay explicit ID edges. Item bonus references call these adapters; no draw, choice or grant is added. |
+| `current523_gacha_craft_data.describe(gacha_craft_id)` | Original GachaCraft config, group probabilities, groups, outputs and bound-item references. The declared GachaCraftID unit in an item's bonuses connects this read to existing item/shop queries. Book materials/final cost/delete time stay in the outer item/bonus contract; ChangeCost is not substituted for them. Unknown output ClassID namespaces remain unresolved raw references. Candidate generation/confirmation and ownership settlement are still not authorized. |
 | `source523_shop_catalog.item_references(item_id)` / shop runtime's same method | MerchantGoods plus typed item MarketProduct/additional/payment references and purchase/server/date/restriction rows. Existing successful quote results carry `source_reference`; buy/debit/save code and ownership tokens stay with their existing owner. Reverse references do not activate off-sale or restricted offers. |
 | `patch523_rules.recipe_evidence(craft_id)` | Cached original inputs/outputs/views/restrictions, with original-archive fallback only when a cached relation group is absent. Existing `material_selection→quote/execute` reads the exact source row/slot/item/quantity/enchant/blessing, result branches/probabilities and view/restriction conditions. It does not admit new recipes or change the established missing-failure policy. |
+| `patch523_rules.recipe_definition(craft_id)` | Original input/output/view/restriction relations and an `items` map of ItemClass data contracts, including source recipes absent from the compiled executable set. Returns `source_identity`, `available_in_compiled_recipes`, `reference_only:true`, `can_execute:false` and a source problem when unavailable. ItemClass0 remains a source failure sentinel without an item record. Existing quote/execute admission is unchanged. |
 | NPC catalog's `project_actor_record(record)` | Existing Monster.setup reads exact current523 HP/MP/AC/MR/Exp and native attributes only for an existing source actor with matching integral ID/Sprite/DescId and an eligible declared category. The saved encounter identity, spawn-context level, sprites and loot remain unchanged. |
 | NPC catalog's `npc_definition(npc_id)` / `attack_definition(npc_id,attack_id)` | Raw attributes/races/resistances/attacks and referenced spell data. These remain reference-only; missing NPC attribute semantics and AI/probability/timing are not invented. Actual attack choices remain the existing compiled closure; cached selected effect relations remain preferred. |
 
@@ -157,6 +161,13 @@ These changes have not been parsed, executed or tested. They do not establish
 whole-table gameplay use, complete all rows, or raise the earlier122 count.
 Additional effect/ownership adoption of these data contracts belongs to PR269;
 unresolved type/AI/server/UI contracts remain unresolved.
+
+The continuing read-only closures also include BuffClass7,297,860,
+BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
+recorded sizes of the input tables, not an assertion that all their rows are now
+used. The published first reader checkpoint is
+`5c73efa4de1dd2d78dcaecc87f7797d78493239e`; subsequent contracts are likewise
+unverified and do not inherit earlier execution results.
 
 ## Game word-filter removal — unverified
 

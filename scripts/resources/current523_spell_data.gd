@@ -1,6 +1,8 @@
 extends RefCounted
 ## Original spell facts for existing item/book suppliers. No learning or effects.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
+const BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
 const REFERENCES: Dictionary = {
 	"TargettingTypeID":"TargettingType",
 	"TargetKindID":"TargetKind",
@@ -29,7 +31,7 @@ static func describe(spell_id: int) -> Dictionary:
 		"kind":"twilight.current523.spell-data.v1","ok":false,
 		"reference_only":true,"can_execute":false,"learning_authorized":false,"ownership_authorized":false,
 		"spell_class_id":spell_id,"source":identity,"spell_class":spell,
-		"bonuses":[],"learn_limits":[],"references":{},"costs":{},"range":{},"conditions":{},"blockers":blockers}
+		"bonuses":[],"typed_references":[],"learn_limits":[],"references":{},"costs":{},"range":{},"conditions":{},"blockers":blockers}
 	if spell.is_empty():
 		blockers.append("source_spell_unavailable")
 		result["problem"] = SOURCE.problem()
@@ -42,10 +44,16 @@ static func describe(spell_id: int) -> Dictionary:
 		blockers.append("source_TestSpell_true")
 		result["excluded"] = true
 	for link: Dictionary in SOURCE.related("SpellBonus","SpellClassID",spell_id):
-		var bonus: Dictionary = _reference(blockers,"Bonus",link.get("BonusID"))
-		var type: Dictionary = _reference(blockers,"BonusType",bonus.get("BonusTypeID")) if not bonus.is_empty() else {}
-		var unit: Dictionary = _reference(blockers,"Unit",type.get("UnitID")) if not type.is_empty() else {}
-		result.bonuses.append({"link":link,"min_spell_level":link.get("MinSpellLevel"),"bonus":bonus,"type":type,"unit":unit})
+		var detail: Dictionary = BONUSES.describe(int(link.get("BonusID",-1)))
+		for issue: Variant in detail.get("blockers",[]): blockers.append(str(issue))
+		result.bonuses.append({"link":link,"min_spell_level":link.get("MinSpellLevel"),"bonus":detail.get("bonus",{}),"type":detail.get("type",{}),"unit":detail.get("unit",{}),"definition":detail})
+		var value: Variant = detail.get("rawValue")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<=0 or value>9007199254740991.0: continue
+		var unit: String = str(detail.get("unit",{}).get("Name",""))
+		if unit == "BuffClassID":
+			result.typed_references.append({"spell_bonus":link,"unit":unit,"id":int(value),"buff":BUFFS.describe(int(value)),"reference_only":true,"can_execute":false})
+		elif unit == "StatusEffectID" and detail.get("type",{}).get("Name") == "StatusEffectID":
+			result.typed_references.append({"spell_bonus":link,"unit":unit,"id":int(value),"attributes":SOURCE.related("StatusEffectAttr","StatusEffectID",int(value)),"reference_only":true,"can_execute":false})
 	for link: Dictionary in SOURCE.related("SpellLearnLimit","SpellClassID",spell_id):
 		var class_row: Dictionary = _reference(blockers,"Class",link.get("ClassID"))
 		var limit_card: Dictionary = {}

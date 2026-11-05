@@ -113,5 +113,6 @@ static func row(table: String, id: int) -> Dictionary:
 	var matches: Array[Dictionary] = related(table,"ID",id)
 	if matches.size()!=1:
 		if matches.size()>1: _problem = "원본 ID가 중복됩니다: "+table+"#"+str(id)
+		elif _tables.has(table): _problem = "원본 ID가 없습니다: "+table+"#"+str(id)
 		return {}
 	return matches[0]

@@ -654,6 +654,39 @@ func refresh_derived_options(physical: Dictionary) -> bool:
 	pinned["patch523_effect_basis"] = {"sha256":digest,"bless_code":2,"selection":"exact_level_only"}
 	return true
 
+func recipe_definition(craft_id: int) -> Dictionary:
+	# UNVERIFIED: complete original-definition lookup for the integration owner.
+	# Reading an unadmitted craft never inserts it into the executable registry.
+	var result: Dictionary = {
+		"kind":"current523_craft_definition","craft_id":craft_id,
+		"inputs":[],"outputs":[],"views":[],"restrictions":[],"items":{},
+		"available_in_compiled_recipes":recipes.has("patch523:"+str(craft_id)),
+		"reference_only":true,"can_execute":false,"source_identity":{},"problem":"",
+	}
+	if craft_id <= 0:
+		result.problem = "제작 원본 ID가 유효하지 않습니다"
+		return result
+	result.source_identity = SOURCE_DEFINITIONS.identity()
+	if result.source_identity.is_empty():
+		result.problem = SOURCE_DEFINITIONS.problem()
+		return result
+	var tables: Dictionary = {"inputs":"ItemCraftInput","outputs":"ItemCraftOutputView","views":"ItemCraftView","restrictions":"ItemCraftRestriction"}
+	for key: String in tables:
+		result[key] = SOURCE_DEFINITIONS.related(tables[key],"ItemCraftID",craft_id)
+	var item_ids: Dictionary = {}
+	for original: Dictionary in result.inputs + result.outputs:
+		var item_id: Variant = original.get("ItemClassID")
+		if not CONDITIONS.integer(item_id,0,2147483647): continue
+		# Original ItemClassID=0 remains only on its original output row.
+		# It is the declared failure sentinel, never a generated item record.
+		if int(item_id) != 0: item_ids[str(int(item_id))] = true
+	for item_id: String in item_ids:
+		# The shared read contract retains explicit TestItem exclusions and raw
+		# source values. It supplies no ownership, quantity, or grant operation.
+		result.items[item_id] = SOURCE_ITEMS.describe(int(item_id))
+	result.problem = SOURCE_DEFINITIONS.problem()
+	return result
+
 func recipe_evidence(craft_id: int) -> Dictionary:
 	var result: Dictionary = {}
 	var tables: Dictionary = {"inputs":"ItemCraftInput","outputs":"ItemCraftOutputView","views":"ItemCraftView","restrictions":"ItemCraftRestriction"}

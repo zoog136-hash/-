@@ -5,6 +5,9 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const COMPILED_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const REWARDS = preload("res://scripts/resources/current523_reward_data.gd")
+const BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
+const BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
+const GACHA_CRAFT = preload("res://scripts/resources/current523_gacha_craft_data.gd")
 
 static func _missing(blockers: Array[String], table: String, id: int) -> Dictionary:
 	var value: Dictionary = SOURCE.row(table,id)
@@ -26,10 +29,9 @@ static func _link(joined: Dictionary, nested: Array[String]) -> Dictionary:
 static func _effects(table: String, owner_field: String, id: int, blockers: Array[String]) -> Array[Dictionary]:
 	var effects: Array[Dictionary] = []
 	for link: Dictionary in SOURCE.related(table,owner_field,id):
-		var bonus: Dictionary = _missing(blockers,"Bonus",int(link.get("BonusID",-1)))
-		var type: Dictionary = _missing(blockers,"BonusType",int(bonus.get("BonusTypeID",-1))) if not bonus.is_empty() else {}
-		var unit: Dictionary = _missing(blockers,"Unit",int(type.get("UnitID",-1))) if not type.is_empty() else {}
-		effects.append({"link":link,"bonus":bonus,"type":type,"unit":unit})
+		var detail: Dictionary = BONUSES.describe(int(link.get("BonusID",-1)))
+		for issue: Variant in detail.get("blockers",[]): blockers.append(str(issue))
+		effects.append({"link":link,"bonus":detail.get("bonus",{}),"type":detail.get("type",{}),"unit":detail.get("unit",{}),"definition":detail})
 	return effects
 
 static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dictionary:
@@ -51,9 +53,15 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dic
 		reference["bag"] = REWARDS.bag(id)
 	elif type == "SelectRewardClassID" and unit == "RewardID":
 		reference["reward"] = REWARDS.reward(id)
+	elif unit == "GachaCraftID":
+		# A crafting-book definition is not a directly activatable consumable.
+		# Costs/materials/lifetime remain in the calling item's original bonuses.
+		reference["gacha_craft"] = GACHA_CRAFT.describe(id)
 	elif unit == "BuffClassID":
-		reference["buff"] = _missing(blockers,"BuffClass",id)
-		reference["bonuses"] = _effects("BuffBonus","BuffClassID",id,blockers)
+		var buff: Dictionary = BUFFS.describe(id)
+		reference["buff_definition"] = buff
+		reference["buff"] = buff.get("buff_class",{})
+		reference["bonuses"] = buff.get("bonuses",[])
 	else:
 		return {}
 	return reference
@@ -87,7 +95,7 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 		for joined: Dictionary in compiled.get("class_rows",[]):
 			result.class_limits.append({"link":_link(joined,["class"]),"class":joined.get("class",{}).duplicate(true)})
 		for joined: Dictionary in compiled.get("item_bonus",[]):
-			result.bonuses.append({"link":_link(joined,["bonus","bonus_type","unit","weapon_type"]),"bonus":joined.get("bonus",{}).duplicate(true),"type":joined.get("bonus_type",{}).duplicate(true),"unit":joined.get("unit",{}).duplicate(true)})
+			result.bonuses.append({"link":_link(joined,["bonus","bonus_type","unit","weapon_type"]),"bonus":joined.get("bonus",{}).duplicate(true),"type":joined.get("bonus_type",{}).duplicate(true),"unit":joined.get("unit",{}).duplicate(true),"definition":BONUSES.describe(int(joined.get("BonusID",-1)))})
 	else:
 		result.category = _missing(blockers,"ItemCategory",int(item.get("CategoryID",-1)))
 		result.grade = _missing(blockers,"Grade",int(item.get("GradeID",-1)))
@@ -98,7 +106,9 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 		result.bonuses = _effects("ItemBonus","ItemClassID",item_id,blockers)
 	for detail: Dictionary in result.bonuses:
 		var reference: Dictionary = _typed_reference(detail,blockers)
-		if not reference.is_empty(): result.typed_references.append(reference)
+		if not reference.is_empty():
+			reference["source_item_class_id"] = item_id
+			result.typed_references.append(reference)
 	# Preserve the declared description domains instead of looking up a same-ID
 	# item, UI token or translated label in another table.
 	for field: String in ["DescID","IdentifiedDescID","StoryDescID","UseDescID","ProductTitleDescID","ProductDescID"]:
