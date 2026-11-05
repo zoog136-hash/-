@@ -835,6 +835,45 @@ def native_icon_scene_code_contract(code_root):
     return evidence
 
 
+def additional_ui_code_contracts(code_root, specifications):
+    """Read bounded owner API evidence, independently of static map readiness.
+
+    The private handoff supplies public script/function markers. They are data,
+    never expressions to evaluate, registration callbacks or runtime inputs.
+    """
+    if not isinstance(specifications, dict) or not 1 <= len(specifications) <= 16:
+        raise ValueError('Additional UI evidence requires bounded named contracts')
+    result = {}
+    for component, sources in specifications.items():
+        if (not isinstance(component, str) or not re.fullmatch(r'[a-z][a-z0-9_]{0,47}', component)
+                or not isinstance(sources, dict) or not 1 <= len(sources) <= 32):
+            raise ValueError('Invalid additional UI owner contract')
+        requirements = {}
+        for path, functions in sources.items():
+            relative(path)
+            if (not path.startswith('scripts/') or not path.endswith('.gd')
+                    or not isinstance(functions, list) or not 1 <= len(functions) <= 32):
+                raise ValueError('UI evidence can read only declared project script boundaries')
+            requests = []
+            for request in functions:
+                if not isinstance(request, list) or len(request) != 2:
+                    raise ValueError('Invalid UI function evidence declaration')
+                function, markers = request
+                if (function is not None and (not isinstance(function, str)
+                        or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,127}', function))):
+                    raise ValueError('Invalid UI evidence function name')
+                if (not isinstance(markers, list) or len(markers) > 32
+                        or any(not isinstance(marker, str) or not 1 <= len(marker) <= 512 for marker in markers)):
+                    raise ValueError('Invalid UI evidence marker list')
+                requests.append((function, [re.sub(r'\s+', '', marker) for marker in markers]))
+            requirements[path] = requests
+        evidence, _ = source_contract_evidence(code_root, requirements)
+        evidence.update(scope='Owner script boundaries only; independent of main/world activation',
+                        owner_inputs_verified=False, runtime_verified=False)
+        result[component] = evidence
+    return result
+
+
 def source_bank_code_contract(code_root):
     requirements = {
         'scripts/resources/current523_source_bank.gd': [('options',
@@ -1085,6 +1124,13 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             if code_root is not None:
                 for blocker in result['main_ui']['owner_code_contract']['blockers']:
                     log('COMBINED UI CODE PENDING: ' + blocker)
+        if 'feature_code_requirements' in row:
+            features = additional_ui_code_contracts(code_root, row['feature_code_requirements'])
+            result['main_ui']['feature_code_contracts'] = features
+            if code_root is not None:
+                for component, evidence in features.items():
+                    for blocker in evidence['blockers']:
+                        log('UI FEATURE CODE PENDING [' + component + ']: ' + blocker)
         main_ui_document = manifest
     if 'world_map' in bindings:
         row = bindings['world_map']

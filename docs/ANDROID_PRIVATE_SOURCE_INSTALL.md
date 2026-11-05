@@ -163,6 +163,25 @@ Text124 소비 경계를 더하며, 새 renderer·일반 메시지·타이머·c
 않는다. 명시 선택 보존과 실제 설치 코드의 정적 조건은 유지한다. 이 추가 입력도
 알려지지 않은 CSB-root 등록 관계나 실제 표시·애니메이션 실행을 입증하지 않는다.
 
+공식 v14도 같은 단일 선택 계약으로 공급된다.53원본/33장면/32부분범위가
+그 팩 안에 있으며 이전 버전을 설치 의존성으로 추가하지 않는다. 이전 원본과 명시
+선택·cfg·세이브는 보존한다. v14의 실제 extends 값도 추정하지 않고 정확한 manifest
+전체 pin으로 원문 metadata를 보존한다. 새 payload와 기존에 반영된 v8 설치 목록은
+서로 다른 승인 대상이며, 이전 파일 교체 승인을 새 payload로 확대하지 않는다.
+
+main_ui.feature_code_requirements는 추가 UI owner의 공개 scripts/*.gd 함수·문자열
+경계를 제한된 데이터 목록으로 전달한다. 설치기는 그 코드를 실행하거나 표현식을
+평가하지 않고 실제 stage의 파일 SHA와 API 존재 근거만 기록한다. 이 근거는 기존
+main/world 활성 조건에 합치지 않는다. 캐릭터·대화·시스템 메시지·이름 헤더와
+선택적 NPC 초상화의 코드 준비 여부 및 실제 입력·표시는 별도 상태로 남긴다.
+
+NPC 초상화는 기존 bind_original_npc_dialogue_portrait의 실제 context/image 콜백을
+요구한다. 설치기는 L1J 대화 ID·이름·Sprite·DescID에서 모바일 NpcClass.ID를 만들거나
+콜백을 등록하지 않는다. 실제 관계와 원본 static Texture2D/provenance를 owner들이
+공급해야 하며, 미공급은 초상화만 보류한다. 텍스트·닫기·허용된 단일 다음 선택은
+기존 소비자 정책을 따른다. CSB-root 등록·AnimatedTexture·새 반복 정책·편집기 샘플
+대체 그림은 추가하지 않는다. 입력 전달과 실제 설치·게임 사용을 같은 완료로 세지 않는다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의
