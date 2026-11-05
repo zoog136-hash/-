@@ -113,3 +113,21 @@ The separately delivered expanded8 + quickslot candidate is documented in
 [the installer handoff](ORIGINAL_UI_MAIN_PACK_INSTALL_HANDOFF.md#separate-expanded8--quickslot-candidate).
 It actually contains the extension frame/slot scopes and original expand
 button. This is pack production and code connection, not executed presentation.
+
+## Original equipped/locked markers
+
+`source_main_inventory_markers.gd` adds only original Common_Slot8328
+Sp_Left_Top / Icn_Slot_Equip.png and7304 Sp_Left_Bottom / Icn_Slot_Lock.png.
+The existing bag._is_item_equipped(reference) and the existing reusable-slot
+character_state.item_locks[reference] producer supply their visibility. Their
+original positions and pixels are retained. Native refresh observes the same
+equipped_items/equipped_ammo/item_locks state; it implements no equip, lock,
+consumption or save operation. An absent supplied lock map leaves that marker
+unconnected. A smaller selected source scope leaves these optional nodes out.
+
+The original slot-lock effect Nd_Lock is a separate role. The original center
+label says Test, and Img_Enchant names an Orim skill-slot line; neither supplies
+an original enhancement-number text role. No enhancement number/position is
+invented. The menu's lock-mode workflow and its sorting options also remain
+separate from these read-only item markers; no source button is silently
+converted into a different host operation.

@@ -1,4 +1,5 @@
 extends RefCounted
+const Markers=preload("res://scripts/ui/original_ui/source_main_inventory_markers.gd")
 ## Only authored slot instances. Host declares exact owned references for those
 ## positions; no row repetition, pagination, sorting, asset lookup or use gesture.
 const PARENT="UI/FloatingUi/Inventory_All.csb"
@@ -111,6 +112,12 @@ func refresh_slot(slot_scene: Node2D, reference: String) -> Dictionary:
 	if not result.get("ok",false):return result
 	result=slot_scene.set_bound_visible(SELECTED,_live_bag().get("selected_item")==reference)
 	if not result.get("ok",false):return result
+	var markers: Dictionary=Markers.build(_live_bag(),owned.entry)
+	if not markers.get("ok",false):return markers
+	for offset: int in markers.source_node_offsets:
+		if not slot_scene.get("source_nodes").has(offset):continue
+		result=slot_scene.set_bound_visible(offset,bool(markers.bindings[offset].visible))
+		if not result.get("ok",false):return result
 	return {"ok":true,"reference":reference,"partial_source_scene":true,"game_state_written":false}
 
 func select_reference(reference: String) -> Dictionary:
@@ -141,6 +148,16 @@ func _slot_binding(offset: int, reference: String) -> Dictionary:
 		if not owned.get("ok",false):return owned
 		var entry: Dictionary=owned.entry
 		if typeof(entry.get("amount"))!=TYPE_INT:return _fail("source_inventory_slots_existing_amount_required")
+		var markers: Dictionary=Markers.build(_live_bag(),entry)
+		if not markers.get("ok",false):return markers
+		var allowed: Variant=_pack.manifest.get("node_scopes",{}).get(SLOT_MEMBER)
+		for offset: int in markers.source_node_offsets:
+			if allowed is Array and not allowed.has(offset):
+				unresolved.append({"field":"original_item_marker_outside_selected_pack_scope","offset":offset})
+				continue
+			scope.append(offset)
+			bindings[offset]=markers.bindings[offset].duplicate(true)
+		unresolved.append_array(markers.unresolved_markers)
 		bindings[BUTTON]={"role":"button","activate":Callable(self,"select_reference").bind(reference)}
 		bindings[SELECTED]={"visible":_live_bag().get("selected_item")==reference}
 		scope.append(AMOUNT)

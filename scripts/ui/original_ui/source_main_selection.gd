@@ -16,4 +16,7 @@ static func selected_pack() -> Dictionary:
 	if not opened.get("ok",false):
 		opened["selected"]=true
 		return opened
-	return {"ok":true,"selected":true,"pack":pack}
+	# One selection is the whole composed main UI domain. A newer combined
+	# pack contains the retained main/map inputs and its inventory/quickslot
+	# scopes together; this is not a competing per-window selector.
+	return {"ok":true,"selected":true,"pack":pack,"selection_mode":"single_combined_original_ui_pack","selection_contract":pack.manifest.get("selection_contract",{}).duplicate(true)}

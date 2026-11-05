@@ -16,6 +16,7 @@ static func resolve(hud: Node, row: Dictionary, _context: Dictionary={}) -> Dict
 		var record: Variant=bag.call("_find_item_record",id)
 		if not record is Dictionary or record.is_empty():return _fail("source_quickslot_existing_item_record_required")
 		var api: Script=load(ITEM_API)
+		if not _has_api(api,"describe_item"):return _fail("source_quickslot_item_image_owner_version_required")
 		info=api.describe_item(record,id)
 	elif entry.get("kind")=="skill":
 		if not world.has_method("_skill_record") or not ResourceLoader.exists(SKILL_API):return _fail("source_quickslot_skill_image_owner_required")
@@ -25,8 +26,11 @@ static func resolve(hud: Node, row: Dictionary, _context: Dictionary={}) -> Dict
 		# Public 46921c04: the existing producer owns guardian identity and the
 		# single current-level spell relation. Never pass it through host lm_*.
 		if record.get("origin")=="TWILIGHT_GUARDIAN523":
+			if not _has_api(api,"describe_guardian_skill"):return _fail("source_quickslot_guardian_image_owner_version_required")
 			info=api.describe_guardian_skill(record,world.get("growth"),"IconID")
-		else:info=api.describe_skill(record,"IconID")
+		else:
+			if not _has_api(api,"describe_skill"):return _fail("source_quickslot_skill_image_owner_version_required")
+			info=api.describe_skill(record,"IconID")
 	else:return _fail("source_quickslot_entry_kind_not_connected")
 	if info.get("route")!="source523_images" or info.get("status")!="original_linked" or info.get("original_bytes_unchanged")!=true or not info.get("texture") is Texture2D:
 		return {"ok":false,"code":"source_quickslot_original_image_unavailable","owner_result":info,"visible_index":row.get("visible_index")}
@@ -37,3 +41,9 @@ static func resolve(hud: Node, row: Dictionary, _context: Dictionary={}) -> Dict
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+static func _has_api(api: Script, method: String) -> bool:
+	if api==null:return false
+	for entry: Dictionary in api.get_script_method_list():
+		if str(entry.get("name",""))==method:return true
+	return false

@@ -139,3 +139,51 @@ this producer result does not claim full inventory/HUD/560-root completion.
 Private Drive upload succeeded and metadata returned the exact filename/size
 with owner-user permission. Consumer installation is unconfirmed. No new game
 execution, test, render, quality assessment, audit or CI was performed.
+
+## Combined v6: one complete selection for simultaneous main UI components
+
+The source-ui selector selects an entire main-UI composition, not a separate
+per-window pack. Combined v6 includes the retained v5 main HUD and world-map
+scope together with normal4/expanded8 inventory, original quickslots and
+original equipped/locked markers. Installing/selecting this one extracted root
+provides those components together. Installing v5 alongside it or inventing a
+second inventory/quickslot selection key is unnecessary.
+
+- Drive file ID: `1pGrQ_iktV8w4Bjsw1R6i8gmtY-b7OJqv`.
+- Filename: `TWILIGHT_current523_main_game_original_UI_combined_v6_20261105.zip`.
+- ZIP size: **11,977,144 bytes**.
+- ZIP SHA256: `110920439176d0ac3a74d86acf6596bdc4f896ef478dba632a5f0ae07d67d27e`.
+- Manifest pin: `3e775a796e2d1d1e14775313e587f870d7d0773b03da9a18803a78c4afe63304`.
+- Relative destination: `source-ui/current523-main-game-original-ui-v6`.
+- 37 original files /20 scene trees /19 partial scopes; production blockers0,
+  STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER.
+
+The manifest's `selection_contract` schema is
+`twilight-main-original-ui-composition-v1`, mode
+`single_combined_original_ui_pack`. Its extends_manifest_sha256 records v5's
+pin and retained_base_files records that base's original member sizes/hashes;
+retained_base_node_scopes preserves its explicit scopes. The new composition
+adds scopes without creating/repainting/changing original CSB/atlas bytes.
+All original members are included in this ZIP. Earlier v5/candidate files are
+preserved, and this handoff does not delete them or alter their pins.
+
+Use both arguments for the one combined root:
+
+```text
+--source-ui=<extracted-combined-v6-root>
+--source-ui-sha256=3e775a796e2d1d1e14775313e587f870d7d0773b03da9a18803a78c4afe63304
+```
+
+The same environment pair TWILIGHT_SOURCE_UI / TWILIGHT_SOURCE_UI_SHA256 applies.
+The loader returns `selection_mode` and the composition metadata; its existing
+main controller mounts main/map/inventory/quickslots from that same pack.
+`bind_original_world_map(...)` retains the existing map/image owner registration.
+No second world registrar, cfg rewrite, save migration or old card/monster pack
+is added. Installers must preserve user cfg and explicit user selections; this
+contract is the complete input for a new installation or explicit update.
+
+PR270 image inputs, exact CSB-icon registration/playback inputs and the existing
+map context/input owner remain independent required consumers. Native Android
+row/close/scroll support is code981d38e4, requiring no project touch-emulation
+setting change. Private upload succeeded; consumer installation and simultaneous
+actual game execution are unconfirmed. No new test/render/game/CI was run.
