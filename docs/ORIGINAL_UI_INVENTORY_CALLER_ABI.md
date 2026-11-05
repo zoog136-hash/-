@@ -137,3 +137,9 @@ Native CSB icons now have an implemented owner callback/scene slot path in
 registration evidence and any declared clip/repeat policy remain mandatory;
 no implicit center/fit/loop is inferred. A missing provider/registration still
 preserves the current complete bag. This interface has not been executed.
+
+Original Inventory_All12476 is Nd_Number/Text_Number with source preview120/120.
+It consumes only the existing capacity formatter's final count/capacity text.
+Renewal's weight-percent prefix is not copied into this number widget; TopMenu's
+separate original weight text keeps its existing formatter contract. No count,
+capacity, weight rule or extra label is calculated by the native UI.

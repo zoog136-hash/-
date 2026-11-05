@@ -56,7 +56,13 @@ func snapshot() -> Dictionary:
 	if state is Dictionary and typeof(state.get("gold"))==TYPE_INT and inventory_ui.has_method("_format_number"):
 		model["gold_text"]=inventory_ui.call("_format_number",int(state.gold))
 	var capacity: Variant=inventory_ui.get("capacity_label")
-	if is_instance_valid(capacity) and capacity is Label:model["capacity_text"]=capacity.text
+	if is_instance_valid(capacity) and capacity is Label:
+		# Original Nd_Number/Text_Number is the 120/120 count, not a weight
+		# label. Renewal's existing formatter prefixes its label with weight
+		# percentage; keep only that same owner's final count/capacity part.
+		var count: String=capacity.text.get_slice(" · ",capacity.text.get_slice_count(" · ")-1)
+		var fields: PackedStringArray=count.split("/")
+		if fields.size()==2 and fields[0].strip_edges().is_valid_int() and fields[1].strip_edges().is_valid_int():model["capacity_text"]=count
 	return model
 
 func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
