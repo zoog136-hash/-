@@ -59,7 +59,7 @@ func run() -> void:
 		check(not draw.source_sp2_sha256.is_empty() and draw.point.is_finite(),"draw retains verified SP2 identity and finite source projection")
 		if draw.record.sprite_id==29175:
 			saw_declaration=true
-			check(draw.frame==14 and draw.sequence_source=="LIST29_ACTION3","original list29 first frame14 overrides guessed storage order")
+			check(draw.frame==14 and draw.sequence_source in ["LIST29_ACTION3","ALL30_SOURCE_ACTION3"],"original source first frame14 overrides guessed storage order")
 	check(saw_declaration,"real source29175 is displayed from original declared sequence")
 	display._process(4.1/12.0)
 	for draw: Dictionary in display.displayed_records():
@@ -68,5 +68,6 @@ func run() -> void:
 	check(not display.configure(options,field.coordinates),"active renderer cannot be rebound to another source")
 	var missing=SPR.new();check(not missing.configure({"enabled":true,"source_root":"/absent-source"},field.coordinates),"missing source registry rejects");missing.free()
 	check(SPR.validate({"enabled":true,"source_root":args["sp2-root"],"fps":NAN}).is_empty(),"nonfinite own clock rejects")
+	check(SPR.USAGE.status().partial_member_identities==0,"headless original parsing/inspection never becomes actual game-use coverage")
 	print("CURRENT523_STATIC_SPR_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"raw_Aden_records":matched,"source_members":by_member.size(),"new_map_binding":true,"native_M_placement_action_clock_or_blend_equivalence":false}))
 	display.queue_free();field.close();await process_frame;quit(0 if failures.is_empty() else 1)

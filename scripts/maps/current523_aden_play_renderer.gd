@@ -9,6 +9,7 @@ const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
+const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
@@ -46,6 +47,8 @@ var _last_actor_cell := Vector2i(-2147483648, -2147483648)
 var _refresh_clock: float = 0.0
 var _scope_clipped_records: int = 0
 var _off_floor_decoration_records: int = 0
+var _draw_generation: int=0
+var _usage_generation: int=-1
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -273,6 +276,7 @@ func _read_chunk(member: String) -> Dictionary:
 			for row: Dictionary in tail.records:
 				row["source_member"]=member
 				row["source_sha256"]=decoded.source_sha256
+				row["source_bytes"]=decoded.source_bytes
 		_static_tails[member]=tail
 	var layers: Dictionary = {}
 	var floor_bytes: PackedByteArray = decoded.sections.floor
@@ -355,6 +359,7 @@ func _build_frame() -> bool:
 				count += 1
 	if count == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
 	_frame_commands.clear()
+	_draw_generation+=1
 	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
 	_frame_atlases = atlases
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
@@ -413,13 +418,24 @@ func _process(delta: float) -> void:
 
 func _draw_tiles(canvas: Node2D) -> void:
 	if not _configured: return
+	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
+	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
+	var observed_refs: Dictionary={}
 	var layers: Array = _frame_commands.keys()
 	layers.sort()
 	for layer: int in layers:
 		var lane: PackedInt64Array = _frame_commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
-			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]), Vector2(24, 24)), TILES.source_rect(ref & 255))
+			var rect:=Rect2(Vector2(lane[index],lane[index+1]),Vector2(24,24))
+			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8],rect,TILES.source_rect(ref & 255))
+			if observe and not observed_refs.has(ref) and rect.intersects(view):observed_refs[ref]=true
+	if observe:
+		for ref: int in observed_refs:
+			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
+			if not source.is_empty():USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
+		_usage_generation=_draw_generation
+		USAGE.flush()
 
 
 func _draw() -> void:

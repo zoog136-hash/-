@@ -2,6 +2,8 @@ extends Node2D
 ## M S32 raw tail -> exact held SP2 bytes. Presentation policy, not client semantics.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const PACK = preload("res://scripts/resources/current523_pack.gd")
+const GLOBAL_DECLARATIONS=preload("res://scripts/maps/current523_spr_declarations.gd")
+const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const SETTINGS = "user://current523_map_static_spr.cfg"
 const POLICY = "TWILIGHT_RAW_S32_STATIC_SPR_V1"
 const DECLARATION_SHA = "03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
@@ -26,6 +28,8 @@ var _stats: Dictionary = {}
 var _failed: Dictionary = {}
 var _configured: bool = false
 var _declarations: Dictionary = {}
+var _declaration_identity: String=""
+var _declaration_file_count: int=0
 
 static func validate(value: Dictionary) -> Dictionary:
 	var out: Dictionary = DEFAULTS.duplicate()
@@ -111,8 +115,9 @@ func configure(value: Dictionary, mapping: RefCounted) -> bool:
 		if not member.ends_with("-0.sp2"): continue
 		var number: String = member.trim_prefix("Sprite/").trim_suffix("-0.sp2")
 		if number.is_valid_int(): _index[int(number)]=row
-	if not options.declaration_path.is_empty():
-		if not _load_declarations(options.declaration_path): return false
+	if options.declaration_path.is_empty():
+		problem="정적 SPR은 원문 선언 폴더 또는 list_29.spr가 필요합니다.";return false
+	if not _load_declarations(options.declaration_path):return false
 	coordinates=mapping
 	z_index=int(options.layer)
 	texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
@@ -121,12 +126,21 @@ func configure(value: Dictionary, mapping: RefCounted) -> bool:
 	return true
 
 func _load_declarations(path: String) -> bool:
+	if DirAccess.dir_exists_absolute(path):
+		var global=GLOBAL_DECLARATIONS.new()
+		if not global.load_directory(path):problem=global.problem;return false
+		for id: int in global.definitions:_declarations[id]=global.display_definition(id)
+		_declaration_identity=GLOBAL_DECLARATIONS.MANIFEST_SHA
+		_declaration_file_count=global.source_files.size()
+		return true
 	var file:=FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()!=1210871:
 		problem="승인된 list_29.spr 원문 크기가 다릅니다.";return false
 	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
 	if PACK.digest(bytes)!=DECLARATION_SHA:
 		problem="승인된 list_29.spr 원문 SHA256이 다릅니다.";return false
+	_declaration_identity=DECLARATION_SHA
+	_declaration_file_count=1
 	var text: String=bytes.get_string_from_utf8()
 	var header:=RegEx.new();header.compile("(?m)^#([0-9]+)[ \\t]+([0-9]+)(?:=([0-9]+))?([^\\r\\n]*)")
 	var action:=RegEx.new();action.compile("(?m)^[ \\t]*3\\.[^()\\r\\n]+\\(0[ \\t]+([0-9]+),([^()]*)\\)")
@@ -169,6 +183,12 @@ func _source(sprite_id: int) -> Dictionary:
 		return _parsed[sprite_id]
 	if _failed.has(sprite_id): return {}
 	if not _index.has(sprite_id): return _unresolved(sprite_id,"no_literal_0_member")
+	# Original pixels alone do not declare which frames should be played.
+	# Never fill a missing declaration/action with guessed stored-frame order.
+	if not _declarations.has(sprite_id):return _unresolved(sprite_id,"no_original_spr_declaration")
+	var declaration: Dictionary=_declarations[sprite_id]
+	if declaration.has("unsupported"):return _unresolved(sprite_id,str(declaration.unsupported))
+	if declaration.get("sequence",[]).is_empty():return _unresolved(sprite_id,"no_original_action3_frames")
 	var row: Dictionary = _index[sprite_id]
 	var path: String = options.source_root.path_join(str(row.canonical_package_member))
 	var file := FileAccess.open(path,FileAccess.READ)
@@ -184,8 +204,6 @@ func _source(sprite_id: int) -> Dictionary:
 	for i: int in decoded.groups.size():
 		if decoded.groups[i].bit==int(options.group_bit): group=i
 	if group<0 or decoded.groups[group].frames.is_empty(): return _unresolved(sprite_id,"unavailable_stored_group")
-	var declaration: Dictionary=_declarations.get(sprite_id,{})
-	if declaration.has("unsupported"): return _unresolved(sprite_id,str(declaration.unsupported))
 	for frame: Dictionary in declaration.get("sequence",[]):
 		if frame.frame>=decoded.groups[group].frames.size(): return _unresolved(sprite_id,"declared_frame_outside_stored_group")
 	var cost: int = decoded.body.size()+raw.size()
@@ -222,17 +240,13 @@ func _update_draws() -> void:
 		if source_info.is_empty(): missing+=1; continue
 		var parsed: Dictionary = source_info.parsed
 		var group: int = int(source_info.group)
-		var frame: int = posmod(tick,parsed.groups[group].frames.size())
+		var frame: int = 0
 		var declaration: Dictionary=source_info.declaration
 		var sequence: Array=declaration.get("sequence",[])
+		var selected_token: Dictionary={}
 		if not sequence.is_empty():
-			var duration: int=0
-			for entry: Dictionary in sequence: duration+=int(entry.duration)
-			var phase: int=posmod(tick,duration)
-			for entry: Dictionary in sequence:
-				frame=int(entry.frame)
-				if phase<int(entry.duration): break
-				phase-=int(entry.duration)
+			selected_token=GLOBAL_DECLARATIONS.own_frame_at(sequence,tick)
+			frame=int(selected_token.frame)
 			declared+=1
 		if not declaration.get("attachments_unresolved",[]).is_empty(): unresolved_attachments[int(row.sprite_id)]=declaration.attachments_unresolved
 		var key: String = str(row.sprite_id)+":"+str(frame)
@@ -255,7 +269,7 @@ func _update_draws() -> void:
 			if visible_bytes+int(display.cost)>MAX_CACHE_BYTES: missing+=1; continue
 			visible_bytes+=int(display.cost);visible_textures[key]=true
 		var point: Vector2 = coordinates.to_world(Vector2(row.raw_x,row.raw_y),false)+Vector2(options.anchor_x,options.anchor_y)
-		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"frame":frame,"sequence_source":"LIST29_ACTION3" if not sequence.is_empty() else "OWN_STORED_ORDER","declaration_line":declaration.get("source_line",0)})
+		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(_index[int(row.sprite_id)].bytes),"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
 	_stats.drawn_records=_draws.size()
 	_stats.unresolved_records=missing
 	_stats.empty_frames=empty
@@ -264,17 +278,37 @@ func _update_draws() -> void:
 	_stats.cached_frames=_textures.size()
 	_stats.unresolved_source_ids=_failed.duplicate()
 	_stats.declared_sequence_records=declared
-	_stats.declaration_SHA256=DECLARATION_SHA if not options.declaration_path.is_empty() else ""
+	_stats.declaration_SHA256=_declaration_identity
+	_stats.declaration_source_file_count=_declaration_file_count
+	_stats.original_declaration_and_frames_required=true
 	_stats.unresolved_attachments=unresolved_attachments
+	_stats.zero_tick_policy="OWN_HOLD_SOURCE_FRAME_WITHOUT_SYNTHESIZING_DURATION"
 	queue_redraw()
 
 func _draw() -> void:
-	for draw: Dictionary in _draws: draw_texture(draw.texture,draw.point)
+	var renderer: Node=get_parent()
+	var observe: bool=USAGE.actual_main(renderer)
+	var view: Rect2=(renderer.call("_view_rect") as Rect2).grow(-64.0) if observe else Rect2()
+	for draw: Dictionary in _draws:
+		draw_texture(draw.texture,draw.point)
+		if not observe or not Rect2(draw.point,(draw.texture as Texture2D).get_size()).intersects(view):continue
+		var row: Dictionary=draw.record
+		USAGE.observe(renderer,str(draw.member),int(draw.source_sp2_bytes),str(draw.source_sp2_sha256),"stored-bit:%d/frame:%d"%[int(options.group_bit),int(draw.frame)])
+		if row.has("source_member") and row.has("source_bytes"):
+			USAGE.observe(renderer,str(row.source_member),int(row.source_bytes),str(row.source_sha256),"static-record:"+str(row.source_byte_offset),int(row.source_byte_offset),(row.raw_bytes as PackedByteArray).size())
+		var token: Dictionary=draw.source_token
+		if token.has("source_byte_offset") and draw.declaration_bytes>0:
+			var base: String=str(token.get("raw","")).trim_suffix(str(token.get("unapplied_suffix","")))
+			USAGE.observe(renderer,str(draw.declaration_source),int(draw.declaration_bytes),str(draw.declaration_sha256),"frame-token:"+str(token.source_byte_offset),int(token.source_byte_offset),base.length())
+	if observe:USAGE.flush()
 
 func _process(delta: float) -> void:
 	_clock+=maxf(delta,0)
 	_update_draws()
 
-func metrics() -> Dictionary: return _stats.duplicate(true)
+func metrics() -> Dictionary:
+	var result: Dictionary=_stats.duplicate(true);result["consumption_observation"]=USAGE.status();return result
+
+func _exit_tree() -> void:USAGE.flush(true)
 
 func displayed_records() -> Array[Dictionary]: return _draws.duplicate(true)

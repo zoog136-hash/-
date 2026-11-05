@@ -45,7 +45,8 @@ func run() -> void:
 			check(protected_state()==expected.state,"reconnect preserves items currency collections and bosses")
 			check(FileAccess.get_sha256(world.save_path())==expected.save_sha,"reconnect does not rewrite durable save")
 			var metrics: Dictionary=world.current523_aden_play_metrics().get("static_spr",{})
-			check(metrics.get("drawn_records",0)>0 and metrics.get("declaration_SHA256","")==SPR.DECLARATION_SHA,"fresh process restores verified source image binding and exact declaration")
+			var declaration_identity: String=SPR.GLOBAL_DECLARATIONS.MANIFEST_SHA if DirAccess.dir_exists_absolute(args.declaration) else SPR.DECLARATION_SHA
+			check(metrics.get("drawn_records",0)>0 and metrics.get("declaration_SHA256","")==declaration_identity,"fresh process restores verified source image binding and exact declaration")
 			capture("static-spr-source-reconnect")
 		await finish("static-spr-reconnect");return
 	world.gold=523992
@@ -118,4 +119,15 @@ func run() -> void:
 	await frames();check(world._save_game(true)==OK,"reentered source session saves for fresh-process proof")
 	var output:=FileAccess.open(EXPECTED_STATIC,FileAccess.WRITE);output.store_string(JSON.stringify({"state":protected_state(),"save_sha":FileAccess.get_sha256(world.save_path())},"",true,true));output.close()
 	capture("static-spr-source-walk-and-reentry")
+	SPR.USAGE.flush(true)
+	var usage_text: String=FileAccess.get_file_as_string(SPR.USAGE.PATH)
+	var usage: Variant=null if usage_text.is_empty() else JSON.parse_string(usage_text)
+	check(usage is Dictionary and usage.get("usage95_verified",true)==false,"actual drawing produces a separate ledger without a fabricated95% claim")
+	if usage is Dictionary:
+		check(int(usage.fixed_Map_Tile_denominator.Map.files)==8311 and int(usage.fixed_Map_Tile_denominator.Tile.files)==8514,"fixed original Map/Tile denominators include unsupported/excluded originals")
+		var categories: Dictionary={};var correctly_partial: bool=true
+		for row: Dictionary in usage.members.values():
+			categories[str(row.member).get_slice("/",0)]=true
+			if row.whole_file_used or row.original_member_bytes_fully_used_proven!=0 or not row.origins.has("AUTOMATED_ACTUAL_MAIN") or row.origins.has("USER_MAIN"):correctly_partial=false
+		check(correctly_partial and categories.has("Map") and categories.has("Tile") and categories.has("Sprite"),"real Main draw units are partial observations, separate from user play and decoded bytes")
 	await finish("static-spr-entry")

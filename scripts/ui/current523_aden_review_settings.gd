@@ -262,8 +262,10 @@ func _build_static_spr_controls() -> void:
 	spr_root.placeholder_text="989 원문 폴더 · results/와 selected_originals/가 있는 위치"
 	row.add_child(spr_root);row.add_child(UI.button("폴더 선택",_browse.bind("static_spr"),Vector2(100,40)))
 	spr_declaration=_path_edit("Current523StaticSPRDeclaration");spr_declaration.text=saved.declaration_path
-	spr_declaration.placeholder_text="선택: 승인된 list_29.spr 파일 경로 · 있으면 원문 action3 순서/지속값 우선"
-	add_child(spr_declaration)
+	spr_declaration.placeholder_text="필수: SPR_reference_closure 폴더 또는 list_29.spr · 선언 없는 항목 제외"
+	var declaration_row:=HBoxContainer.new();add_child(declaration_row)
+	declaration_row.add_child(spr_declaration)
+	declaration_row.add_child(UI.button("선언 폴더",_browse.bind("spr_declarations"),Vector2(100,40)))
 	var values:=GridContainer.new();values.columns=2;add_child(values)
 	spr_group=_spr_number(values,"저장 그룹",0,7,float(saved.group_bit))
 	spr_fps=_spr_number(values,"자체 틱/초 · 0=정지",0,60,float(saved.fps))
@@ -566,8 +568,8 @@ func _rollback() -> void:
 
 func _browse(target: String) -> void:
 	_folder_target = target
-	folder_dialog.title = "정적 SPR 원문 폴더 선택" if target=="static_spr" else ("원문 포탈 정의 폴더 선택" if target=="definitions" else ("아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택"))
-	var path: String = spr_root.text if target=="static_spr" else (definition_path_edit.text if target=="definitions" else (raw_path_edit.text if target == "raw" else tile_path_edit.text))
+	folder_dialog.title = "전역 SPR 선언 폴더 선택" if target=="spr_declarations" else ("정적 SPR 원문 폴더 선택" if target=="static_spr" else ("원문 포탈 정의 폴더 선택" if target=="definitions" else ("아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택")))
+	var path: String = spr_declaration.text if target=="spr_declarations" else (spr_root.text if target=="static_spr" else (definition_path_edit.text if target=="definitions" else (raw_path_edit.text if target == "raw" else tile_path_edit.text)))
 	path = ProjectSettings.globalize_path(path.strip_edges())
 	if not path.is_empty() and DirAccess.dir_exists_absolute(path):
 		folder_dialog.current_dir = path
@@ -583,6 +585,8 @@ func _folder_selected(path: String) -> void:
 		definition_path_edit.text=path
 	elif _folder_target == "static_spr":
 		spr_root.text=path
+	elif _folder_target == "spr_declarations":
+		spr_declaration.text=path
 	_folder_target = ""
 	_update_open_button()
 	_refresh_path_status()
