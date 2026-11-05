@@ -104,7 +104,7 @@ func display_definition(id: int, action_id: int=3) -> Dictionary:
 		result["directional_raw"]=int(numbers[0])
 		var sequence: Array[Dictionary]=[]
 		for token: Dictionary in action.tokens:
-			if int(token.raw_selector)!=0 or int(token.raw_ticks)<0:
+			if int(token.raw_selector)<0 or int(token.raw_ticks)<0:
 				result["unsupported"]="original_selector_or_tick_not_supported";sequence.clear();break
 			sequence.append({"frame":int(token.raw_frame_index),"duration":int(token.raw_ticks),"selector":int(token.raw_selector),"source_byte_offset":int(token.source_byte_offset),"raw":token.raw,"unapplied_suffix":token.raw_suffix})
 			if not str(token.raw_suffix).is_empty():result.unapplied_modifiers.append(token.duplicate(true))

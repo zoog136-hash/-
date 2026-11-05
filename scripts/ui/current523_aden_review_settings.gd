@@ -57,6 +57,7 @@ var spr_enabled: CheckBox
 var spr_root: LineEdit
 var spr_declaration: LineEdit
 var spr_actions: LineEdit
+var spr_frame_bindings: LineEdit
 var spr_group: SpinBox
 var spr_fps: SpinBox
 var spr_anchor_x: SpinBox
@@ -270,8 +271,13 @@ func _build_static_spr_controls() -> void:
 	spr_actions=_path_edit("Current523StaticSPRActions")
 	spr_actions.max_length=32768
 	spr_actions.text=JSON.stringify(saved.action_overrides)
-	spr_actions.placeholder_text='원문 동작 직접 지정 · 예: {"1226":28} · 미지정은3 · 자동 활성 판정 아님'
+	spr_actions.placeholder_text='원문 동작 직접 지정 · 예: {"24590":9} · 미지정은3 · 자동 활성 판정 아님'
 	add_child(spr_actions)
+	spr_frame_bindings=_path_edit("Current523StaticSPRFrameBindings")
+	spr_frame_bindings.max_length=131072
+	spr_frame_bindings.text=JSON.stringify(saved.frame_bindings)
+	spr_frame_bindings.placeholder_text='선택자별 파일/저장 그룹 직접 지정 · {"24590":{"8":{"member":"Sprite/24590-8.sp2","group_bit":0}}}'
+	add_child(spr_frame_bindings)
 	var values:=GridContainer.new();values.columns=2;add_child(values)
 	spr_group=_spr_number(values,"저장 그룹",0,7,float(saved.group_bit))
 	spr_fps=_spr_number(values,"자체 틱/초 · 0=정지",0,60,float(saved.fps))
@@ -294,7 +300,11 @@ func _save_static_spr() -> void:
 	var actions: Variant={} if action_text.is_empty() else JSON.parse_string(action_text)
 	if not actions is Dictionary:
 		spr_status.text="원문 동작 지정은 SPR ID와 동작 번호의 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
-	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions}
+	var binding_text: String=spr_frame_bindings.text.strip_edges()
+	var bindings: Variant={} if binding_text.is_empty() else JSON.parse_string(binding_text)
+	if not bindings is Dictionary:
+		spr_status.text="파일/저장 그룹 지정은 SPR ID·원문 선택자별 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
+	var value: Dictionary={"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings}
 	var error: Error=STATIC_SPR.save_options(value)
 	spr_status.text="저장됨 · 다음 원문 맵 입장에 적용합니다. 원문에 없는 동작·프레임은 표시하지 않습니다. 동작 선택·틱/초·앵커·레이어는 자체 설정입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
 

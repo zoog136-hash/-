@@ -7,15 +7,16 @@ const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const SETTINGS = "user://current523_map_static_spr.cfg"
 const POLICY = "TWILIGHT_RAW_S32_STATIC_SPR_V1"
 const DECLARATION_SHA = "03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
-const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095,"action_overrides":{}}
+const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095,"action_overrides":{},"frame_bindings":{}}
 const MAX_RECORDS = 4096
 const MAX_CACHE_BYTES = 32 * 1024 * 1024
 var problem: String = ""
 var options: Dictionary = {}
 var coordinates: RefCounted
 var _index: Dictionary = {}
+var _members: Dictionary = {}
 var _parsed: Dictionary = {}
-var _parsed_recent: Array[int] = []
+var _parsed_recent: Array[String] = []
 var _parsed_bytes: int = 0
 var _textures: Dictionary = {}
 var _texture_recent: Array[String] = []
@@ -53,6 +54,30 @@ static func validate(value: Dictionary) -> Dictionary:
 		if out.action_overrides.has(name):return {}
 		if not (selected is int or selected is float) or not is_finite(float(selected)) or float(selected)!=floorf(float(selected)) or selected<0 or selected>65535:return {}
 		out.action_overrides[name]=int(selected)
+	var bindings: Variant=value.get("frame_bindings",{})
+	if not bindings is Dictionary or bindings.size()>1024:return {}
+	var binding_count: int=0
+	for id: Variant in bindings:
+		var name: String=str(id)
+		if not (id is String or id is int) or not name.is_valid_int() or name!=str(int(name)) or int(name)<0 or int(name)>65535 or out.frame_bindings.has(name):return {}
+		var selectors: Variant=bindings[id]
+		if not selectors is Dictionary or selectors.is_empty() or selectors.size()>64:return {}
+		var selected: Dictionary={}
+		for selector: Variant in selectors:
+			binding_count+=1
+			var selector_name: String=str(selector)
+			if binding_count>4096 or not (selector is String or selector is int) or not selector_name.is_valid_int() or selector_name!=str(int(selector_name)) or int(selector_name)<0 or int(selector_name)>65535 or selected.has(selector_name):return {}
+			var binding: Variant=selectors[selector]
+			if not binding is Dictionary or binding.size()!=2 or not binding.get("member") is String:return {}
+			var member: String=binding.member
+			var prefix: String="Sprite/"+name+"-"
+			if not member.begins_with(prefix) or not member.ends_with(".sp2"):return {}
+			var suffix: String=member.trim_prefix(prefix).trim_suffix(".sp2")
+			if not suffix.is_valid_int() or suffix!=str(int(suffix)) or int(suffix)<0:return {}
+			var bit: Variant=binding.get("group_bit")
+			if not (bit is int or bit is float) or not is_finite(float(bit)) or float(bit)!=floorf(float(bit)) or bit<0 or bit>7:return {}
+			selected[selector_name]={"member":member,"group_bit":int(bit)}
+		out.frame_bindings[name]=selected
 	for key: String in ["group_bit","fps","anchor_x","anchor_y","layer"]:
 		var v: Variant = value.get(key,DEFAULTS[key])
 		if not (v is int or v is float) or not is_finite(float(v)): return {}
@@ -123,6 +148,7 @@ func configure(value: Dictionary, mapping: RefCounted) -> bool:
 	for row: Dictionary in rows:
 		# Literal -0 selection is our declared policy, never a native direction.
 		var member: String = str(row.member)
+		_members[member]=row
 		if not member.ends_with("-0.sp2"): continue
 		var number: String = member.trim_prefix("Sprite/").trim_suffix("-0.sp2")
 		if number.is_valid_int(): _index[int(number)]=row
@@ -192,19 +218,34 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	_frame=-1
 	_update_draws()
 
-func _source(sprite_id: int) -> Dictionary:
-	if _parsed.has(sprite_id):
-		_parsed_recent.erase(sprite_id); _parsed_recent.append(sprite_id)
-		return _parsed[sprite_id]
+func _binding(sprite_id: int, selector: int) -> Dictionary:
+	var selectors: Dictionary=options.frame_bindings.get(str(sprite_id),{})
+	if selectors.has(str(selector)):
+		var selected: Dictionary=selectors[str(selector)]
+		if not _members.has(selected.member):return {}
+		return {"row":_members[selected.member],"group_bit":int(selected.group_bit),"dispatch":"EXPLICIT_HOST_REGISTRY_BINDING"}
+	if selector!=0 or not _index.has(sprite_id):return {}
+	return {"row":_index[sprite_id],"group_bit":int(options.group_bit),"dispatch":"OWN_LITERAL_ZERO_MEMBER"}
+
+func _source(sprite_id: int, selector: int=0) -> Dictionary:
 	if _failed.has(sprite_id): return {}
-	if not _index.has(sprite_id): return _unresolved(sprite_id,"no_literal_0_member")
 	# Original pixels alone do not declare which frames should be played.
 	# Never fill a missing declaration/action with guessed stored-frame order.
 	if not _declarations.has(sprite_id):return _unresolved(sprite_id,"no_original_spr_declaration")
 	var declaration: Dictionary=_declarations[sprite_id]
 	if declaration.has("unsupported"):return _unresolved(sprite_id,str(declaration.unsupported))
 	if declaration.get("sequence",[]).is_empty():return _unresolved(sprite_id,"no_selected_original_action_frames")
-	var row: Dictionary = _index[sprite_id]
+	# No selector is translated into a filename suffix or a group bit. Every
+	# nonzero selector requires an explicit exact-member binding before playback.
+	for token: Dictionary in declaration.sequence:
+		if _binding(sprite_id,int(token.get("selector",0))).is_empty():return _unresolved(sprite_id,"original_selector_requires_held_member_binding")
+	var binding: Dictionary=_binding(sprite_id,selector)
+	if binding.is_empty():return _unresolved(sprite_id,"original_selector_requires_held_member_binding")
+	var row: Dictionary=binding.row
+	var cache_key: String="%d:%d:%s:%d"%[sprite_id,selector,row.member,int(binding.group_bit)]
+	if _parsed.has(cache_key):
+		_parsed_recent.erase(cache_key);_parsed_recent.append(cache_key)
+		return _parsed[cache_key]
 	var path: String = options.source_root.path_join(str(row.canonical_package_member))
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file==null: return _unresolved(sprite_id,"source_unreadable")
@@ -217,20 +258,20 @@ func _source(sprite_id: int) -> Dictionary:
 	if not decoded.ok: return _unresolved(sprite_id,"source_parse")
 	var group: int = -1
 	for i: int in decoded.groups.size():
-		if decoded.groups[i].bit==int(options.group_bit): group=i
+		if decoded.groups[i].bit==int(binding.group_bit): group=i
 	if group<0 or decoded.groups[group].frames.is_empty(): return _unresolved(sprite_id,"unavailable_stored_group")
 	for frame: Dictionary in declaration.get("sequence",[]):
-		if frame.frame>=decoded.groups[group].frames.size(): return _unresolved(sprite_id,"declared_frame_outside_stored_group")
+		if int(frame.get("selector",0))==selector and frame.frame>=decoded.groups[group].frames.size(): return _unresolved(sprite_id,"declared_frame_outside_stored_group")
 	var cost: int = decoded.body.size()+raw.size()
 	if cost>MAX_CACHE_BYTES: return {}
 	while not _parsed_recent.is_empty() and (_parsed_bytes+cost>MAX_CACHE_BYTES or _parsed.size()>=32):
-		var oldest: int = _parsed_recent.pop_front()
+		var oldest: String = _parsed_recent.pop_front()
 		_parsed_bytes-=int(_parsed[oldest].cost)
 		_parsed.erase(oldest)
 	_parsed_bytes+=cost
-	var result: Dictionary = {"parsed":decoded,"group":group,"member":row.member,"sha256":row.sha256,"cost":cost,"declaration":declaration}
-	_parsed[sprite_id]=result
-	_parsed_recent.append(sprite_id)
+	var result: Dictionary = {"parsed":decoded,"group":group,"stored_group_bit":int(binding.group_bit),"dispatch":binding.dispatch,"member":row.member,"source_bytes":int(row.bytes),"sha256":row.sha256,"cost":cost,"declaration":declaration}
+	_parsed[cache_key]=result
+	_parsed_recent.append(cache_key)
 	return result
 
 func _unresolved(sprite_id: int, reason: String) -> Dictionary:
@@ -251,20 +292,19 @@ func _update_draws() -> void:
 	var unresolved_attachments: Dictionary={}
 	for i: int in mini(_records.size(),MAX_RECORDS):
 		var row: Dictionary = _records[i]
-		var source_info: Dictionary = _source(int(row.sprite_id))
+		var definition: Dictionary=_declarations.get(int(row.sprite_id),{})
+		var sequence: Array=definition.get("sequence",[])
+		var selected_token: Dictionary=GLOBAL_DECLARATIONS.own_frame_at(sequence,tick)
+		var selector: int=int(selected_token.get("selector",0))
+		var source_info: Dictionary = _source(int(row.sprite_id),selector)
 		if source_info.is_empty(): missing+=1; continue
 		var parsed: Dictionary = source_info.parsed
 		var group: int = int(source_info.group)
-		var frame: int = 0
+		var frame: int = int(selected_token.frame)
 		var declaration: Dictionary=source_info.declaration
-		var sequence: Array=declaration.get("sequence",[])
-		var selected_token: Dictionary={}
-		if not sequence.is_empty():
-			selected_token=GLOBAL_DECLARATIONS.own_frame_at(sequence,tick)
-			frame=int(selected_token.frame)
-			declared+=1
+		declared+=1
 		if not declaration.get("attachments_unresolved",[]).is_empty(): unresolved_attachments[int(row.sprite_id)]=declaration.attachments_unresolved
-		var key: String = str(row.sprite_id)+":"+str(frame)
+		var key: String = "%s:%d:%d"%[source_info.member,int(source_info.stored_group_bit),frame]
 		if not _textures.has(key):
 			var rendered: Dictionary = DECODER.render(parsed,group,frame,{"alpha_policy":"opaque_samples","rgb_policy":"bit_replication"})
 			if not rendered.ok: missing+=1; continue
@@ -284,7 +324,7 @@ func _update_draws() -> void:
 			if visible_bytes+int(display.cost)>MAX_CACHE_BYTES: missing+=1; continue
 			visible_bytes+=int(display.cost);visible_textures[key]=true
 		var point: Vector2 = coordinates.to_world(Vector2(row.raw_x,row.raw_y),false)+Vector2(options.anchor_x,options.anchor_y)
-		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(_index[int(row.sprite_id)].bytes),"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
+		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(source_info.source_bytes),"stored_group_bit":int(source_info.stored_group_bit),"source_selector":selector,"selector_dispatch":source_info.dispatch,"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
 	_stats.drawn_records=_draws.size()
 	_stats.unresolved_records=missing
 	_stats.empty_frames=empty
@@ -297,6 +337,8 @@ func _update_draws() -> void:
 	_stats.declaration_source_file_count=_declaration_file_count
 	_stats.original_declaration_and_frames_required=true
 	_stats.explicit_action_overrides=options.action_overrides.duplicate(true)
+	_stats.explicit_frame_bindings=options.frame_bindings.duplicate(true)
+	_stats.native_selector_dispatch_verified=false
 	_stats.native_action_activation_verified=false
 	_stats.unresolved_attachments=unresolved_attachments
 	_stats.zero_tick_policy="OWN_HOLD_SOURCE_FRAME_WITHOUT_SYNTHESIZING_DURATION"
@@ -310,7 +352,7 @@ func _draw() -> void:
 		draw_texture(draw.texture,draw.point)
 		if not observe or not Rect2(draw.point,(draw.texture as Texture2D).get_size()).intersects(view):continue
 		var row: Dictionary=draw.record
-		USAGE.observe(renderer,str(draw.member),int(draw.source_sp2_bytes),str(draw.source_sp2_sha256),"stored-bit:%d/frame:%d"%[int(options.group_bit),int(draw.frame)])
+		USAGE.observe(renderer,str(draw.member),int(draw.source_sp2_bytes),str(draw.source_sp2_sha256),"stored-bit:%d/frame:%d"%[int(draw.stored_group_bit),int(draw.frame)])
 		if row.has("source_member") and row.has("source_bytes"):
 			USAGE.observe(renderer,str(row.source_member),int(row.source_bytes),str(row.source_sha256),"static-record:"+str(row.source_byte_offset),int(row.source_byte_offset),(row.raw_bytes as PackedByteArray).size())
 		var token: Dictionary=draw.source_token
