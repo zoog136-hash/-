@@ -100,6 +100,16 @@ func available() -> bool:
 func rows(table: String) -> Array:
 	return tables.get(table,[])
 
+func source_constant(name: String) -> Variant:
+	# UNVERIFIED: use the installed 523 cache without substituting host values or
+	# changing source units. Missing or ambiguous names have no usable value.
+	var result: Variant = null
+	for value: Dictionary in rows("TotemConstant"):
+		if value.get("Name") != name: continue
+		if result != null or not _integer(value.get("Value"),-2147483647,2147483647): return null
+		result = int(value.Value)
+	return result
+
 func row(table: String, id: int) -> Dictionary:
 	for value: Dictionary in rows(table):
 		if int(value.get("ID",-1)) == id: return value.duplicate(true)

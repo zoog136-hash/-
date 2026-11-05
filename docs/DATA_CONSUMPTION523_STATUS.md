@@ -50,6 +50,37 @@ is applied to the existing local item policy; it does not certify the original
 server's global interpretation. Only one of ConstantData's 490 rows is newly
 connected; its entire 57,677-byte table is not counted as used.
 
+## Additional source wiring — unverified after cad2dbff
+
+These implementations were made under the latest instruction to connect source
+references without starting new tests, compilation, audits or validation. Earlier
+passing results do not validate these changes.
+
+- `SymbolEnchant.Enchant` now supplies the physical stage limit used by symbol
+  enhancement, completion, reset, absolute unlock and history actions. The
+  contiguous source stage set and existing effect arrays are consumed; the Roman
+  tier in `EnchantLevel` is not substituted for the physical stage. No UI nodes
+  or artwork are added. `UIText` and `EnchantLevel` remain outside this binding.
+- Three named `TotemConstant` identities now select the existing active-status
+  paths instead of fixed totem IDs. The other five constants remain unconnected:
+  the generic buff is different from the existing barrier, a generic effect
+  timer has no caller, and the two Spine fields belong to the excluded media lane.
+- Ordinary EXP recovery now stages only changed progression fields. A real level
+  gain uses the death owner's transient, exact full-transaction authorization at
+  the common save boundary. A saved death namespace by itself cannot authorize
+  arbitrary level/stat changes; the seal is not serialized and is cleared after
+  the synchronous save returns. Existing debits and recovery receipts remain in
+  the same one-save transaction.
+- Existing retained failure logs also motivated preserving an already-over-one
+  skill probability when additions are applied and freeing the detached test
+  player's owned identity node. These fixes are unverified, not new passing
+  results. Missing recovery receipts remain failed assertions instead of causing
+  an additional Script Error in the existing fixture.
+
+The earlier 1,065-table ledger remains its recorded baseline. These bindings do
+not turn either partial source table into full-table gameplay completion or
+establish a new overall percentage.
+
 ## Ownership and unresolved candidates
 
 PR269 owns remaining integration, source item ownership/effects and the latest

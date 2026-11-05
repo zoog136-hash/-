@@ -107,11 +107,14 @@ func chance(skill: Dictionary, target: TwilightMonster, world: Node) -> float:
 	var base: float=float(skill.get("status_chance",.6))
 	if accuracy_bonus>0.0:base=maxf(base,minf(1.0,base+accuracy_bonus))
 	var result: float=base*(1.0-clampf(resistance/100.0,0,1))
+	var result_ceiling: float=maxf(1.0,result)
 	var growth: Variant=world.get("growth")
 	var guardian: Variant=growth.get("guardian_combat") if growth!=null else null
 	if guardian!=null:result+=float(guardian.status_hit(kind))/100.0
 	if kind=="bleed":result+=world.card_collections.spell_hit_bonus(skill)/100.0
-	result=clampf(result,0,1)
+	# Added bonuses retain their cap without lowering an existing over-one
+	# probability supplied by the original skill or an explicit local policy.
+	result=clampf(result,0,result_ceiling)
 	if target.is_boss:result*=float(rules.get("boss_chance_factor",.35))
 	return result
 

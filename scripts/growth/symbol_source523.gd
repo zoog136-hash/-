@@ -47,6 +47,32 @@ func special_rate(stage: int, jump: int) -> float:
 		if int(row.DeltaEnchant) == jump: return float(row.SpecialRouteProbability)/1000000.0
 	return 0.0
 
+func enchant_limit() -> int:
+	# Enchant is the physical enhancement stage. EnchantLevel and UIText are
+	# presentation metadata and must not replace it with the Roman tier (0..10).
+	var rows: Variant = data.get("enchant_levels")
+	if not rows is Array or rows.is_empty() or rows.size()>1000: return -1
+	var stages: Dictionary = {}
+	var maximum: int = -1
+	for raw: Variant in rows:
+		if not raw is Dictionary: return -1
+		var value: Variant = raw.get("Enchant")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<0 or value>=rows.size(): return -1
+		var stage: int = int(value)
+		if stages.has(stage): return -1
+		stages[stage] = true
+		maximum = maxi(maximum,stage)
+	if maximum<1 or maximum+1!=stages.size(): return -1
+	for stage: int in range(maximum+1):
+		if not stages.has(stage): return -1
+	# Existing per-symbol effect arrays must cover the source stages before a
+	# transaction can reach them. Do not unlock an unsupported new stage.
+	var symbols: Variant = data.get("emblems")
+	if not symbols is Dictionary or symbols.is_empty(): return -1
+	for native: Variant in symbols.values():
+		if not native is Dictionary or not native.get("effects") is Array or native.effects.size()<=maximum: return -1
+	return maximum
+
 func absolute(id: String, grade: int) -> Dictionary:
 	return data.get("emblems",{}).get(id,{}).get("absolute",{}).get(str(grade),{})
 

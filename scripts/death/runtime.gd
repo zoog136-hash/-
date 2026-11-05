@@ -9,6 +9,8 @@ var policy: Dictionary = {}
 var pending: Dictionary = {}
 var save_blocked: bool = false
 var busy: bool = false
+# Synchronous save capability for this recovery only; never exported or saved.
+var _saving_recovery_fields: Dictionary = {}
 var clock_floor: int = 0
 var view: Control
 var death_overlay: Control
@@ -331,6 +333,10 @@ func quote(id: String, kind: String, mode: String) -> Dictionary:
 		if world._inventory_total_weight()+weight > world._carrying_capacity(): return fail("소지품 무게가 초과됩니다")
 	return {"ok":true,"id":id,"kind":kind,"mode":mode,"cost":cost,"revision":state.revision,"age":age,"certificate":certificate,"message":""}
 
+func authorizes_recovery_save(staged: Dictionary) -> bool:
+	if not busy or _saving_recovery_fields.is_empty() or not staged.get(KEY) is Dictionary: return false
+	return staged == _saving_recovery_fields and int(staged[KEY].get("revision",-1)) == int(state.revision)+1
+
 func recover(request: Dictionary) -> Dictionary:
 	var current: Dictionary = quote(str(request.get("id","")),str(request.get("kind","")),str(request.get("mode","")))
 	if not current.ok: return current
@@ -355,7 +361,9 @@ func recover(request: Dictionary) -> Dictionary:
 	entry[str(current.kind)+"_receipt"] = {"at":now(),"mode":current.mode,"cost":current.cost}
 	if current.mode == "certificate": entry[str(current.kind)+"_receipt"]["certificate"] = current.certificate.duplicate(true)
 	next.revision = int(next.revision)+1; fields[KEY] = next
+	_saving_recovery_fields = fields.duplicate(true)
 	var result: Error = world._save_game(true,fields)
+	_saving_recovery_fields.clear()
 	if result != OK: busy = false; return fail("저장 실패 · 재화·무료 횟수·복구 대상을 보존했습니다")
 	state = next; fields.erase(KEY); _publish(fields); busy = false
 	world._update_hud()
@@ -371,6 +379,12 @@ func _exp_gain(amount: int) -> Dictionary:
 		out.hp = world._effective_max_hp(int(out.max_hp))
 		out.mp = out.max_mp; out.attack = int(out.attack)+2; out.defense = int(out.defense)+1
 		out.stat_points = int(out.stat_points)+world._stat_points_for_level_up(int(out.level))
+	# A recovery that stays in the current level owns only the restored EXP.
+	# Unchanged growth fields must not impersonate a quest growth transaction at
+	# the shared save boundary. Keep every actual level-up change in the stage.
+	for key: String in out.keys():
+		var property: String = {"attack":"attack_power"}.get(key,key)
+		if out[key] == world.get(property): out.erase(key)
 	return out
 
 func resurrect() -> Dictionary:

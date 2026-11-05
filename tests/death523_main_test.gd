@@ -277,7 +277,9 @@ func test_consumers(world, service, id: String) -> String:
 	await tap(service.view.find_child("Death523_%s_exp_certificate" % id,true,false))
 	await tap(world.hud.get_node("Root").find_child("ConfirmTransaction",true,false))
 	check(int(world.inventory[certificate]) == 1 and world.experience == xp+lost and world.gold == gold and int(world.inventory["다이아"]) == gems and service.free_remaining() == 0,"actual certificate UI consumes one exact stack and restores100percent once")
-	check(not service.recover(q).ok and service._entry(id).exp_receipt.certificate.source_id == "198494","certificate duplicate rejected and typed receipt retained")
+	var receipt: Variant = service._entry(id).get("exp_receipt")
+	var receipt_certificate: Variant = receipt.get("certificate") if receipt is Dictionary else null
+	check(not service.recover(q).ok and receipt_certificate is Dictionary and receipt_certificate.get("source_id") == "198494","certificate duplicate rejected and typed receipt retained")
 	world._load_game(true)
 	await process_frame
 	check(int(world.inventory[certificate]) == 1 and service._entry(id).exp_claimed and service.free_remaining() == 0,"certificate receipt stack and fixed quota survive actual reconnect")
