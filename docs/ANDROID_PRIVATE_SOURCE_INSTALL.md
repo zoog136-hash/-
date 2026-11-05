@@ -215,6 +215,26 @@ _toggle_lock만 호출한다. 퀘스트도 기존 _select(category)와 workspace
 UI owner의 최종 입력/병합 인계는 전체 설치 목록 확정과 별개다. Sprite 후속 입력과
 통합 코드 준비가 남으면 누적 목록은 계속 보류하고, 중간 업로드·승인 요청을 하지 않는다.
 
+PR269의 main 병합 `44eb4f581603610ec0644dcb6a0f7d86e5720572`와 PR278의
+main 병합 `5db920332f9298b4fc1f70713dde11740c91a7d2`는 코드 통합 기록이다.
+기존 은행 소비자 계약과 현재 원문 item reader 경계는 유지되지만, 병합만으로 최신
+은행의 비공개 배포 ID·크기·ZIP SHA·manifest pin·실제 추출 경로가 생기지는 않는다.
+PR279의 문서 한 개도 새 원본 수신·등록·호출 또는 새 배포 증거로 취급하지 않는다.
+
+PR278 Core는 분리된 CI 환경의 정확한 원문 정의 ZIP 미공급으로 실패한 기록을
+유지한다. 다른 검사나 병합을 Core 통과로 바꾸지 않는다. Termux 설치 목록에는
+기존 공식 원문 ZIP을 한 번 수신해 첫 reader 전에 환경 경로로 공급하는 계약이 있다.
+이는 승인된 private Actions 공급 경로가 있다는 뜻이 아니며, 설치기가 CI 자격증명을
+만들거나 원본을 공개하거나 검증 조건을 낮추지 않는다. 고정 user 경로 복사는 이전
+소비자 호환용이며 현재 reader는 공통 ZIP 하나를 사용한다.
+
+기존 은행 cfg의 tables_zip이 이전 리소스 버전을 계속 가리킬 수 있으므로 원문 ZIP의
+그 경로도 정리에서 보존한다. 새 receipt는 명시 table 경로를 보존 목록에 기록하고,
+구 receipt에도 정확한 고정 원문 바이트/해시를 사용하는 ZIP 보존을 적용한다.
+cfg를 새 경로로 고쳐 쓰지 않는다. source_bank.caller_code_requirements의 추가
+근거는 병합된 피격·Death receiver·성공한 소비 이벤트·보류 지면 호출 경계만 기록한다.
+최신 은행 공급·admission·저장 성공·실제 재생과 독립된 상태이며, 실행 검증은 하지 않는다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의

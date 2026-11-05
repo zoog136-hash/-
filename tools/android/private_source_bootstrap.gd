@@ -101,9 +101,9 @@ func _prepare() -> Dictionary:
 			return _fail("공식 원본523 정의 ZIP의 바이트 크기가 다릅니다.")
 		table_file.close()
 		environment.TWILIGHT_PATCH523_CONTENT = tables
-		# Existing death/title/relic readers have fixed installed paths and do not
-		# all read the common source environment. Copy only the same pinned ZIP;
-		# never compile an older pack or alter source bytes for those consumers.
+		# Current readers share this original archive environment. Retain these
+		# same-byte copies for older fixed-path consumers; current source readers
+		# need only the one ZIP above, never a generated or substituted pack.
 		for installed: String in TABLE_INSTALL_PATHS:
 			if FileAccess.file_exists(installed) and FileAccess.get_sha256(installed) == TABLES_SHA: continue
 			writes.append({"path":installed,"source":tables,"source_sha256":TABLES_SHA})

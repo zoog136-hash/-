@@ -29,6 +29,8 @@ from private_drive_transport import DriveTransport, DownloadError, sha256_file, 
 REPO = 'https://github.com/zoog136-hash/-.git'
 STATE = '.twilight_private_install_state.json'
 RESOURCE_STATE = '.twilight_resource_state.json'
+TABLES_SOURCE_BYTES = 25031173
+TABLES_SOURCE_SHA256 = 'd5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
 GENERATED = ('twilight_private_install.json', 'scripts/install/private_source_bootstrap.gd')
 RUNTIME_ROOTS = {'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts'}
 RUNTIME_FILES = {'project.godot', 'Main.tscn', 'external_map_packs/.gdignore'}
@@ -633,6 +635,10 @@ def prepare_resources(plan, downloaded, resources, cache):
         if 'world_map' in plan['bindings']:
             retained.append(plan['bindings']['world_map']['contract_path'])
             retained.extend(x['path'] for x in plan['bindings']['world_map'].get('source_manifests', []))
+        if 'tables' in plan['bindings']:
+            # A preserved bank cfg may still reference this version's original
+            # table ZIP. Keep that exact path alongside the retained bank.
+            retained.append(plan['bindings']['tables']['path'])
         # UI roots remain usable by an explicit existing source-ui selection.
         # New formal defaults never authorize retiring those original paths.
         retained.extend(name for name in inventory if name.startswith(('source-ui/', 'ui/')))
@@ -835,43 +841,48 @@ def native_icon_scene_code_contract(code_root):
     return evidence
 
 
-def additional_ui_code_contracts(code_root, specifications):
-    """Read bounded owner API evidence, independently of static map readiness.
+def additional_source_code_contracts(code_root, specifications, scope):
+    """Read bounded owner API evidence, independently of activation readiness.
 
     The private handoff supplies public script/function markers. They are data,
     never expressions to evaluate, registration callbacks or runtime inputs.
     """
     if not isinstance(specifications, dict) or not 1 <= len(specifications) <= 16:
-        raise ValueError('Additional UI evidence requires bounded named contracts')
+        raise ValueError('Additional source evidence requires bounded named contracts')
     result = {}
     for component, sources in specifications.items():
         if (not isinstance(component, str) or not re.fullmatch(r'[a-z][a-z0-9_]{0,47}', component)
                 or not isinstance(sources, dict) or not 1 <= len(sources) <= 32):
-            raise ValueError('Invalid additional UI owner contract')
+            raise ValueError('Invalid additional source owner contract')
         requirements = {}
         for path, functions in sources.items():
             relative(path)
             if (not path.startswith('scripts/') or not path.endswith('.gd')
                     or not isinstance(functions, list) or not 1 <= len(functions) <= 32):
-                raise ValueError('UI evidence can read only declared project script boundaries')
+                raise ValueError('Source evidence can read only declared project script boundaries')
             requests = []
             for request in functions:
                 if not isinstance(request, list) or len(request) != 2:
-                    raise ValueError('Invalid UI function evidence declaration')
+                    raise ValueError('Invalid source function evidence declaration')
                 function, markers = request
                 if (function is not None and (not isinstance(function, str)
                         or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,127}', function))):
-                    raise ValueError('Invalid UI evidence function name')
+                    raise ValueError('Invalid source evidence function name')
                 if (not isinstance(markers, list) or len(markers) > 32
                         or any(not isinstance(marker, str) or not 1 <= len(marker) <= 512 for marker in markers)):
-                    raise ValueError('Invalid UI evidence marker list')
+                    raise ValueError('Invalid source evidence marker list')
                 requests.append((function, [re.sub(r'\s+', '', marker) for marker in markers]))
             requirements[path] = requests
         evidence, _ = source_contract_evidence(code_root, requirements)
-        evidence.update(scope='Owner script boundaries only; independent of main/world activation',
+        evidence.update(scope=scope,
                         owner_inputs_verified=False, runtime_verified=False)
         result[component] = evidence
     return result
+
+
+def additional_ui_code_contracts(code_root, specifications):
+    return additional_source_code_contracts(code_root, specifications,
+        'Owner script boundaries only; independent of main/world activation')
 
 
 def source_bank_code_contract(code_root):
@@ -921,6 +932,9 @@ def native_item_code_contract(code_root):
             ('register', ['current_original_native_projection'])],
         'scripts/loot/patch523_monster_drops.gd': [('data',
             ['CURRENT_SOURCE.identity()', 'current523_original_reference_rows']),
+            ('_current_item_reference', ['reader.get_script_method_list()',
+             'method.get("name")=="describe"', 'reader.call("describe",item_id,false)']),
+            ('_current_raw_definition', ['CURRENT_DTO.record(definition)']),
             ('register_catalog', ['CURRENT_DTO.register']), ('pack_identity',
             ['schema', '4', 'current523_original_definition_projection',
              'source_definition_archive', 'current523_original_typed_game_dto_v1', 'full_native_effects_complete'])],
@@ -1268,6 +1282,14 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                 raise ValueError('Source bank overlay pin mismatch')
             result['source_bank'].update(overlay_whitelist_path=str(overlay),
                                         overlay_whitelist_sha256=row['overlay_whitelist_sha256'])
+        if 'caller_code_requirements' in row:
+            callers = additional_source_code_contracts(code_root, row['caller_code_requirements'],
+                'Merged Sprite caller boundaries only; no bank distribution, admission or playback proof')
+            result['source_bank']['caller_code_contracts'] = callers
+            if code_root is not None:
+                for component, evidence in callers.items():
+                    for blocker in evidence['blockers']:
+                        log('SOURCE BANK CALLER CODE PENDING [' + component + ']: ' + blocker)
         if code_root is not None:
             for blocker in code['blockers']:
                 log('SOURCE BANK CODE PENDING: ' + blocker)
@@ -1309,6 +1331,7 @@ def clean_owned(root, state, filename):
         # new stable copy, including receipts written by older installers.
         if filename == RESOURCE_STATE and (name in state.get('retained_files', [])
                 or name.startswith(('source-ui/', 'ui/'))
+                or record.get('bytes') == TABLES_SOURCE_BYTES and record.get('sha256') == TABLES_SOURCE_SHA256
                 or PurePosixPath(name).name == 'all331_current_file_identity_and_pixel_anchor_contracts523.json'):
             continue
         path = inside(root, name)
