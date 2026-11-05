@@ -5,13 +5,15 @@ const NONE = "NONE"
 const LEGACY = "TWILIGHT_ADEN_NAVIGATION_V1"
 const SOURCE = "CURRENT523_S32_OWN_ALLOWLIST_V1"
 const GENERIC = "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
+const EXACT_POINT_ONLY = "EXACT_POINT_ONLY"
+const OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1 = "OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
 const SOURCE_WORDS: Array[int] = [0,4,8,12,32]
 const GRID_SHA256 = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const LAYOUT_REVISION = 2026102904
 const OFFSET_LIMIT = 48
 
 static func defaults() -> Dictionary:
-	return {"enabled":false, "navigation_profile":NONE, "offset_x":0, "offset_y":0, "raw_root":"", "tile_root":""}
+	return {"enabled":false, "navigation_profile":NONE, "portal_landing_policy":EXACT_POINT_ONLY, "offset_x":0, "offset_y":0, "raw_root":"", "tile_root":""}
 
 static func validate(value: Dictionary) -> Dictionary:
 	var result: Dictionary = defaults()
@@ -20,6 +22,9 @@ static func validate(value: Dictionary) -> Dictionary:
 	var profile: Variant = value.get("navigation_profile", NONE)
 	if profile not in [NONE, LEGACY, SOURCE, GENERIC]: return {}
 	result.navigation_profile = profile
+	var landing_policy: Variant = value.get("portal_landing_policy", EXACT_POINT_ONLY)
+	if not landing_policy is String or landing_policy not in [EXACT_POINT_ONLY, OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1]: return {}
+	result.portal_landing_policy = landing_policy
 	for key: String in ["offset_x", "offset_y"]:
 		var number: Variant = value.get(key, 0)
 		if not (number is int or number is float) or not is_finite(float(number)) or floorf(float(number)) != float(number) or absf(float(number)) > OFFSET_LIMIT: return {}

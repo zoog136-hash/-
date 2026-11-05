@@ -366,14 +366,22 @@ func portal_evidence() -> Array:
 			for item: Dictionary in context.get("declared_inactive_restrictions",[]):
 				var label: String=str(item.type.Name)+"=false"
 				if not inactive_names.has(label): inactive_names.append(label)
-			result.append({"declared_inactive_restrictions":inactive_names,"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
+			var level_notes: Array[String]=[]
+			for condition: Dictionary in context.get("actor_level_conditions",[]):
+				level_notes.append("%s %s=%d · 현재%d · %s"%[str(condition.get("side","")),str(condition.type.Name),int(condition.threshold),int(condition.actor_level),"충족" if bool(condition.fulfilled) else "미충족"])
+			result.append({"declared_inactive_restrictions":inactive_names,"actor_level_notes":level_notes,"configured_arrival_policy":settings.get("portal_landing_policy","EXACT_POINT_ONLY"),"target_declared_bounds":[territory.StartX,territory.StartY,territory.EndX,territory.EndY],"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
 		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
 
 func portal_context(id: int) -> Dictionary:
 	if source_owned and settings.navigation_profile==OPTIONS.GENERIC:
 		if _source_portal_provider==null: return {}
-		var context: Variant=_source_portal_provider.call("portal_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),id)
+		var context: Variant
+		var world: Node=_world()
+		if _source_portal_provider.has_method("portal_context_for_actor") and is_instance_valid(world):
+			# Authoritative current game state, never a level supplied by the UI.
+			context=_source_portal_provider.call("portal_context_for_actor",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"))
+		else:context=_source_portal_provider.call("portal_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),id)
 		return context.duplicate(true) if context is Dictionary and _source_context_shape(context) else {}
 	return _portals.call("portal_context",id) if source_owned and _portals != null else {}
 
@@ -427,7 +435,7 @@ func _navigation_ticket_for_context(id: int, context: Dictionary) -> Dictionary:
 	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or _source_field==null or _source_portal_provider==null or not is_instance_valid(world): return {}
 	if world.field_map!=_source_field or world.field_renderer!=_renderer or world.field_physics!=_source_physics: return {}
 	if not _source_context_shape(context) or context.Portal.ID!=id or context.SourceLand!=_source_field.get("native_land") or context.Portal.SourceLandID!=context.SourceLand.ID: return {}
-	return {"field_instance":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"portal":context.Portal.duplicate(true),"source_manifest_sha256":settings.source_manifest_sha256,"actor_position":world.player.global_position}
+	return {"field_instance":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"portal":context.Portal.duplicate(true),"source_manifest_sha256":settings.source_manifest_sha256,"actor_position":world.player.global_position,"actor_condition_level":context.get("actor_condition_level",null)}
 
 func walk_to_source_portal(id: int, ticket: Dictionary) -> bool:
 	problem=""
@@ -475,6 +483,21 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	if catalog==null: proposed.close(); return false
 	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}):
 		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
+	var territory: Dictionary=context.TargetTerritory
+	if (territory.StartX!=territory.EndX or territory.StartY!=territory.EndY) and options.get("portal_landing_policy","EXACT_POINT_ONLY")=="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1":
+		if not _source_portal_provider.has_method("portal_context_for_actor_at_landing"):
+			problem="면적 도착 셀의 원문 조건을 연결할 정의 제공자가 없습니다.";proposed.close();return false
+		var bounds: Array=[territory.StartX,territory.StartY,territory.EndX,territory.EndY]
+		var landing: Dictionary=proposed.choose_source_landing(bounds,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
+		if not landing.get("ok",false):
+			problem="선언 영역 안의 자체 안전 착지 보류: "+str(landing.get("reason","unknown"));proposed.close();return false
+		var selected_context: Variant=_source_portal_provider.call("portal_context_for_actor_at_landing",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"),landing.source_cell,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1")
+		if not selected_context is Dictionary or not _source_context_shape(selected_context):
+			problem="선택한 도착 셀의 원문 조건을 읽지 못했습니다.";proposed.close();return false
+		for key: String in ["Portal","SourceLand","TargetTerritory","TargetLand"]:
+			if selected_context[key]!=context[key]:
+				problem="착지 준비 중 원문 포탈 선언이 바뀌었습니다.";proposed.close();return false
+		context=selected_context
 	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
 	var plan: Dictionary=SOURCE_TRAVEL.plan(context,_source_field.get("_raw"),_source_field,proposed,source_cell,str(options.source_manifest_sha256))
 	if not plan.get("ok",false):
