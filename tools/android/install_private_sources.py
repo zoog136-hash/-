@@ -268,10 +268,107 @@ def copy_file(source, destination):
     shutil.copy2(source, destination)
 
 
-def safe_extract(archive, root, include_prefixes=None):
-    """Pinned archive + ZIP CRC, no traversal/links/case aliases, bounded space."""
+class ArchiveStage:
+    """Ownership of files created during one new, unpublished extraction.
+
+    Metadata members are explicit stage-relative JSON/JSONL.GZ paths supplied by the
+    private handoff. Original/raw namespaces can never be metadata replacements.
+    This object cannot adopt a populated or already published resource version.
+    """
+    def __init__(self, root, *, metadata_members=()):
+        no_links(root)
+        self.root = Path(os.path.abspath(root))
+        if not self.root.is_dir() or any(self.root.iterdir()):
+            raise ValueError('Archive ownership requires an empty NEW staging directory')
+        self._files = {}
+        self._metadata = set()
+        cases = set()
+        for name in metadata_members:
+            self._metadata_name(name)
+            if name.casefold() in cases:
+                raise ValueError('Duplicate/case-aliased staging metadata declaration')
+            cases.add(name.casefold())
+            self._metadata.add(name)
+
+    @staticmethod
+    def _metadata_name(name):
+        member = relative(name)
+        if (not (name.casefold().endswith('.json') or name.casefold().endswith('.jsonl.gz'))
+                or any(part.casefold() in ('original', 'originals', 'raw',
+                                           'raw_originals', 'selected_originals',
+                                           'source', 'sources', 'actor', 'actors')
+                       for part in member.parts[:-1])):
+            raise ValueError('Only explicitly declared non-original JSON/JSONL.GZ metadata can be replaced')
+
+    def _key(self, target, *, allow_root=False):
+        no_links(target)
+        if (self.root / RESOURCE_STATE).exists():
+            raise ValueError('An extraction overlay cannot modify a published resource version')
+        try:
+            name = Path(os.path.abspath(target)).relative_to(self.root).as_posix()
+        except ValueError:
+            raise ValueError('Archive overlay target lies outside its NEW staging directory') from None
+        if allow_root and name == '.':
+            return ''
+        relative(name)
+        return name
+
+    def authorize_metadata(self, expected):
+        """Classify exact owned path -> SHA256 pairs after a pinned checkpoint.
+
+        The caller derives these paths and pins from the exact owner manifest;
+        naming a JSON file alone never adopts an unknown existing file.
+        """
+        if not isinstance(expected, dict) or not expected:
+            raise ValueError('Metadata authorization needs exact staged member pins')
+        names = []
+        for name, digest in expected.items():
+            self._metadata_name(name)
+            target = inside(self.root, name)
+            key = self._key(target)
+            previous = self._files.get(key)
+            if (not previous or previous['sha256'] != pin(digest)
+                    or not matches(target, previous)):
+                raise ValueError('Metadata authorization lacks matching staged ownership: ' + name)
+            if any(old.casefold() == key.casefold() and old != key for old in self._metadata):
+                raise ValueError('Case-aliased staging metadata authorization')
+            names.append(key)
+        self._metadata.update(names)
+
+    def _metadata_before(self, target, expected_sha256):
+        name = self._key(target)
+        if name not in self._metadata:
+            raise ValueError('Archive replacement is not declared staging metadata: ' + name)
+        previous = self._files.get(name)
+        if (not previous or previous['sha256'] != pin(expected_sha256)
+                or not matches(target, previous)):
+            raise ValueError('Archive replacement does not match its staged ownership/checkpoint: ' + name)
+
+    def _created(self, target, record):
+        self._files[self._key(target)] = dict(record)
+
+    def checkpoint(self, expected):
+        """Verify an explicit stage-relative metadata path -> SHA256 mapping."""
+        if not isinstance(expected, dict) or not expected:
+            raise ValueError('A metadata checkpoint needs explicit member pins')
+        for name, digest in expected.items():
+            self._metadata_before(inside(self.root, name), digest)
+
+
+def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_members=None):
+    """Extract verified ZIPs; only pinned, owned staging metadata can change.
+
+    ``replace_members`` is an explicit private-plan list of dictionaries with
+    ``path`` (archive-relative), ``expected_old_sha256``, and optional
+    ``expected_new_sha256``. Both the old hash and ArchiveStage ownership must
+    match. With no replacement list, overlaps still require identical bytes.
+    """
     inventory = {}
     case_names = {}
+    if staged is not None:
+        if not isinstance(staged, ArchiveStage):
+            raise ValueError('Invalid new extraction ownership object')
+        staged._key(root, allow_root=True)
     existing_cases = {path.relative_to(root).as_posix().casefold(): path.relative_to(root).as_posix()
                       for path in root.rglob('*')}
     if include_prefixes is not None:
@@ -283,6 +380,22 @@ def safe_extract(archive, root, include_prefixes=None):
         return include_prefixes is None or any(
             name.startswith(prefix) if prefix.endswith('/') else name == prefix
             for prefix in include_prefixes)
+    replacements = {}
+    if replace_members is not None:
+        if not isinstance(replace_members, list) or staged is None:
+            raise ValueError('Archive replacements need an explicit list and NEW staging ownership')
+        for item in replace_members:
+            if (not isinstance(item, dict)
+                    or set(item) - {'path', 'expected_old_sha256', 'expected_new_sha256'}):
+                raise ValueError('Invalid archive metadata replacement declaration')
+            name = str(relative(item.get('path')))
+            if name in replacements or not selected(name):
+                raise ValueError('Duplicate or filtered-out archive replacement member')
+            old_pin = pin(item.get('expected_old_sha256'))
+            new_pin = pin(item['expected_new_sha256']) if 'expected_new_sha256' in item else None
+            staged._metadata_before(inside(root, name), old_pin)
+            replacements[name] = {'old': old_pin, 'new': new_pin}
+    replaced = set()
     with zipfile.ZipFile(archive) as zf:
         entries = zf.infolist()
         if len(entries) > 250000:
@@ -309,11 +422,13 @@ def safe_extract(archive, root, include_prefixes=None):
             existing_cases[key] = name
             target = inside(root, name)
             if info.is_dir():
+                if name in replacements:
+                    raise ValueError('An archive metadata replacement must be a file')
                 target.mkdir(parents=True, exist_ok=True)
                 continue
             target.parent.mkdir(parents=True, exist_ok=True)
-            # Archive overlaps are allowed only for identical bytes. The
-            # complete ZIP pin still binds every original compressed payload.
+            # The complete ZIP pin still binds every compressed payload. A
+            # listed replacement additionally binds the old staged source.
             fd, temp_name = tempfile.mkstemp(prefix='.extract-', dir=target.parent)
             os.close(fd)
             temporary = Path(temp_name)
@@ -323,14 +438,28 @@ def safe_extract(archive, root, include_prefixes=None):
                 if temporary.stat().st_size != info.file_size:
                     raise ValueError('Truncated ZIP entry: ' + name)
                 record = file_record(temporary)
-                if target.exists():
+                if name in replacements:
+                    request = replacements[name]
+                    if request['new'] is not None and record['sha256'] != request['new']:
+                        raise ValueError('Archive metadata replacement has the wrong new SHA256: ' + name)
+                    # Recheck ownership and actual old bytes after extraction,
+                    # immediately before the one-file atomic publication.
+                    staged._metadata_before(target, request['old'])
+                    os.replace(temporary, target)
+                    staged._created(target, record)
+                    replaced.add(name)
+                elif target.exists():
                     if not matches(target, record):
                         raise ValueError('Conflicting archive member: ' + name)
                 else:
                     os.replace(temporary, target)
+                    if staged is not None:
+                        staged._created(target, record)
                 inventory[name] = record
             finally:
                 temporary.unlink(missing_ok=True)
+    if replaced != set(replacements):
+        raise ValueError('A declared archive metadata replacement was absent from the selected ZIP')
     return inventory
 
 
@@ -365,6 +494,79 @@ def assembled(pack, downloaded, cache):
         temporary.unlink(missing_ok=True)
 
 
+def needed_transport_files(packs, cache):
+    rows = []
+    for pack in packs:
+        if pack['format'] == 'joined-zip':
+            complete = cache / (pin(pack['sha256']) + '.zip')
+            no_links(complete)
+            if complete.exists():
+                if not matches(complete, pack):
+                    raise ValueError('Existing assembled source archive changed; preserved without reuse')
+                log('Reusing complete verified archive; transport chunks are not requested again.')
+                continue
+        rows.extend(pack['files'])
+    return rows
+
+
+def pinned_member(root, name, digest):
+    """Resolve the owner's exact member by identity, never a guessed ZIP prefix."""
+    if len(relative(name).parts) != 1:
+        raise ValueError('A member search requires one explicit basename')
+    found = [path for path in root.rglob(name)
+             if path.is_file() and sha256_file(path) == pin(digest)]
+    if len(found) != 1:
+        raise ValueError('The declared member pin must resolve to exactly one staged file')
+    no_links(found[0])
+    return found[0]
+
+
+def bank_checkpoint(root, request, staged, previous=None):
+    manifest = pinned_member(root, request['manifest_name'], request['manifest_sha256'])
+    document = read_json(manifest, maximum=16 * 1024 * 1024)
+    proof = document.get('source_action_domain_proofs')
+    if (not isinstance(proof, dict) or proof.get('source_proof_key_field') != 'source_proof_key'):
+        raise ValueError('The pinned source bank lacks its declared domain metadata contract')
+    proof_path = inside(manifest.parent, proof['path'])
+    metadata = {manifest.relative_to(staged.root).as_posix(): request['manifest_sha256'],
+                proof_path.relative_to(staged.root).as_posix(): pin(proof['sha256'])}
+    template_name = request.get('template_name')
+    if template_name:
+        if len(relative(template_name).parts) != 1:
+            raise ValueError('A bank template requires its declared basename')
+        # A producer may update the template only in its last delta. Retain
+        # the exact earlier owned template authorization until that update;
+        # final descriptor preparation still requires the final manifest pin.
+        for name, digest in (previous or {}).get('metadata', {}).items():
+            if PurePosixPath(name).name == template_name:
+                metadata[name] = digest
+        for path in root.rglob(template_name):
+            template = read_json(path, maximum=2 * 1024 * 1024)
+            if (template.get('schema') == 1 and template.get('source_snapshot') == 'patch523'
+                    and template.get('manifest_sha256') == request['manifest_sha256']):
+                metadata[path.relative_to(staged.root).as_posix()] = sha256_file(path)
+    staged.authorize_metadata(metadata)
+    staged.checkpoint(metadata)
+    return {'pin': request['manifest_sha256'], 'metadata': metadata}
+
+
+def metadata_replacements(archive, root, checkpoint, staged):
+    # The full archive is already pinned. Only names derived from a prior
+    # pinned manifest (or its exact settings template) may change in this stage.
+    with zipfile.ZipFile(archive) as source:
+        names = set(source.namelist())
+    replacements = []
+    for name, digest in checkpoint['metadata'].items():
+        path = inside(staged.root, name)
+        try:
+            member = path.relative_to(root).as_posix()
+        except ValueError:
+            continue
+        if member in names:
+            replacements.append({'path': member, 'expected_old_sha256': digest})
+    return replacements
+
+
 def prepare_resources(plan, downloaded, resources, cache):
     identity = hashlib.sha256(json.dumps({'packs': plan['packs'], 'bindings': plan['bindings']},
                                        sort_keys=True).encode()).hexdigest()
@@ -382,6 +584,8 @@ def prepare_resources(plan, downloaded, resources, cache):
     # An interrupted extraction keeps verified archives. Rebuilding in a new
     # owned directory never modifies the current resources or input archives.
     stage = Path(tempfile.mkdtemp(prefix='unpack-', dir=resources))
+    staged_archives = ArchiveStage(stage)
+    checkpoint = None
     inventory = {}
     try:
         selected = set()
@@ -406,12 +610,25 @@ def prepare_resources(plan, downloaded, resources, cache):
                 payload = {row['name']: file_record(target)}
             elif pack['format'] in ('zip', 'joined-zip'):
                 payload = {}
+                if pack.get('overlay_from_checkpoint'):
+                    if not checkpoint or checkpoint['pin'] != pin(pack['overlay_from_checkpoint']):
+                        raise ValueError('An ordered delta requires its exact prior bank checkpoint')
                 for archive in archives:
-                    payload.update(safe_extract(archive, root, pack.get('include_prefixes')))
+                    replacements = (metadata_replacements(archive, root, checkpoint, staged_archives)
+                                    if pack.get('overlay_from_checkpoint') else None)
+                    extracted = safe_extract(archive, root, pack.get('include_prefixes'),
+                                             staged=staged_archives, replace_members=replacements)
+                    payload.update(extracted)
+                    if replacements:
+                        for member in replacements:
+                            name = pack['install_root'] + '/' + member['path']
+                            checkpoint['metadata'][name] = extracted[member['path']]['sha256']
             else:
                 raise ValueError('Unsupported pack format')
             for name, record in payload.items():
                 inventory[pack['install_root'] + '/' + name] = record
+            if pack.get('bank_checkpoint'):
+                checkpoint = bank_checkpoint(root, pack['bank_checkpoint'], staged_archives, checkpoint)
         retained = []
         if 'world_map' in plan['bindings']:
             retained.append(plan['bindings']['world_map']['contract_path'])
@@ -419,6 +636,9 @@ def prepare_resources(plan, downloaded, resources, cache):
         # UI roots remain usable by an explicit existing source-ui selection.
         # New formal defaults never authorize retiring those original paths.
         retained.extend(name for name in inventory if name.startswith(('source-ui/', 'ui/')))
+        for pack in plan['packs']:
+            if pack.get('retain_extracted') is True:
+                retained.extend(name for name in inventory if name.startswith(pack['install_root'] + '/'))
         state = {'schema': 1, 'identity': identity, 'files': inventory,
                  'directories': managed_directories(inventory), 'retained_files': retained}
         json_write(stage / RESOURCE_STATE, state)
@@ -573,6 +793,72 @@ def native_icon_scene_code_contract(code_root):
     return evidence
 
 
+def source_bank_code_contract(code_root):
+    requirements = {
+        'scripts/resources/current523_source_bank.gd': [('options',
+            ['--current523-source-bank-config=', 'FileAccess.file_exists(SETTINGS)',
+             'value.get("source_snapshot")!="patch523"']),
+            ('source_tables', ['options(context)', '_load_tables']),
+            ('select_card', ['options(context)', '_load_tables'])],
+        'scripts/resources/reference_sp2_bank.gd': [('load_bank',
+            ['_root=manifest_path.get_base_dir()', '_json(manifest_path,expected_sha)',
+             'current523_reference_sp2_action_bank', 'source_dummy_exclusion_policy',
+             '_install_source_exclusions()', 'source_actor_admission']),
+            ('_source_reference_instances', ['SOURCE_REFERENCE_INSTANCE_POLICY'])],
+        'scripts/animation/original_source_preview.gd': [('configure',
+            ['CURRENT523_BANK.select_card(key,context)', '_configure_selected_roles(selected,"idle")']),
+            ('_configure_selected_roles', ['_configure_reference_bank']),
+            ('_configure_reference_bank', ['REFERENCE_BANK.new()', 'bank.load_bank', '_configure_source_nodes'])],
+        'scripts/player.gd': [('set_transform_visual', ['original_source_preview.configure']),
+            ('_update_visual', ['original_source_preview.advance_source'])],
+        'scripts/monster.gd': [('setup', ['current_view.configure_admitted(source_record,admission)'])],
+        'scripts/monsters/current523_source_bank_view.gd': [('configure_admitted',
+            ['SELECTION.select', 'current523_active_actor_registry_required_for_view',
+             '_configure_selected_roles'])],
+        'scripts/resources/current523_source_effect_selection.gd': [('_bank',
+            ['source_action_domains', 'current523_effect_original_action_domain_required']),
+            ('_action', ['all_effective_original_SPR_actions_not_only_compiled_entries'])],
+        'scripts/monsters/current523_source_bank_selection.gd': [('source_only_request',
+            ['source_m_current523_final']), ('select', ['definition_selection_only',
+            'runtime_actor_registry_required', 'current523_complete_original_npc_definition_differs'])],
+    }
+    evidence, _ = source_contract_evidence(code_root, requirements)
+    evidence['scope'] = 'Published source-bank consumer boundaries; runtime admission/restoration remain unverified'
+    return evidence
+
+
+def native_item_code_contract(code_root):
+    requirements = {
+        'scripts/resources/current523_definition_rows.gd': [('_open', ['TWILIGHT_PATCH523_CONTENT']),
+            ('identity', ['twilight.current523.original-definitions.v1']),
+            (None, ['SOURCE_BYTES', '25031173',
+                    'd5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'])],
+        'scripts/resources/current523_item_data.gd': [('describe',
+            ['SOURCE.identity()', 'SOURCE.row("ItemClass",item_id)', 'twilight.current523.item-data.v1'])],
+        'scripts/loot/current523_native_item_projection.gd': [('record',
+            ['source_definition_archive', 'current523_original_typed_game_dto_v1']),
+            ('register', ['current_original_native_projection'])],
+        'scripts/loot/patch523_monster_drops.gd': [('data',
+            ['CURRENT_SOURCE.identity()', 'current523_original_reference_rows']),
+            ('register_catalog', ['CURRENT_DTO.register']), ('pack_identity',
+            ['schema', '4', 'current523_original_definition_projection',
+             'source_definition_archive', 'current523_original_typed_game_dto_v1', 'full_native_effects_complete'])],
+        'scripts/crafting/patch523_craft_catalog.gd': [('available', ['owner.call("data")']),
+            ('register', ['owner.call("register_catalog",document,catalog)'])],
+        'scripts/equipment523/native_catalog.gd': [('validate_identity',
+            ['current523_original_definition_projection', 'source_definition_archive',
+             'current523_original_typed_game_dto_v1'])],
+        'scripts/world.gd': [('_load_data',
+            ['LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(),catalog_db)',
+             'PATCH523_CRAFT_CATALOG.register(catalog_db,PATCH523_CRAFT_CATALOG.available())']),
+            ('_prepare_patch523_item_save_backup', []), ('_load_game', [])],
+    }
+    evidence, _ = source_contract_evidence(code_root, requirements)
+    evidence['scope'] = 'Current original definition ZIP and schema4 projection code only; runtime registration/effects unverified'
+    evidence['legacy_bin_required_when_ready'] = False
+    return evidence
+
+
 def world_map_code_contract(code_root):
     # These are existing owner interfaces/call boundaries, not PR-number or
     # filename-only assertions. Changed code is read from the actual Git stage.
@@ -712,6 +998,13 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                           'native_land_id': row['native_land_id']}
     if 'tables' in bindings:
         result['tables_zip'] = str(inside(resources, bindings['tables']['path']))
+        if bindings['tables'].get('native_item_input'):
+            code = native_item_code_contract(code_root)
+            result['native_item_input'] = {'tables_zip': result['tables_zip'], 'code_contract': code,
+                                           'runtime_registration_verified': False}
+            if code_root is not None:
+                for blocker in code['blockers']:
+                    log('NATIVE ITEM CODE PENDING: ' + blocker)
     if 'images' in bindings:
         row = bindings['images']
         root = inside(resources, row['root'])
@@ -845,18 +1138,50 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                 log('NATIVE ICON SCENE CODE PENDING: ' + blocker)
     if 'source_bank' in bindings:
         row = bindings['source_bank']
-        manifest = inside(resources, row['manifest_path'])
+        search = inside(resources, row['search_root']) if 'search_root' in row else None
+        manifest = (pinned_member(search, row['manifest_name'], row['manifest_sha256'])
+                    if search is not None else inside(resources, row['manifest_path']))
         if sha256_file(manifest) != pin(row['manifest_sha256']):
             raise ValueError('Source bank manifest pin mismatch')
-        result['source_bank'] = {'schema': 1, 'enabled': True, 'source_snapshot': 'patch523',
+        inputs = {'manifest': {'path': str(manifest), 'sha256': row['manifest_sha256']}}
+        if search is not None:
+            templates = []
+            if len(relative(row['template_name']).parts) != 1:
+                raise ValueError('A bank template requires its declared basename')
+            for path in search.rglob(row['template_name']):
+                document = read_json(path, maximum=2 * 1024 * 1024)
+                if (document.get('schema') == 1 and document.get('source_snapshot') == 'patch523'
+                        and document.get('manifest_sha256') == row['manifest_sha256']
+                        and isinstance(document.get('enabled'), bool)
+                        and all(isinstance(document.get(key), str) and document[key]
+                                for key in ('tables_zip', 'manifest_path'))):
+                    templates.append(path)
+            if len(templates) != 1:
+                raise ValueError('The final bank needs exactly one original settings template for its pin')
+            inputs['template'] = {'path': str(templates[0]), 'sha256': sha256_file(templates[0])}
+            document = read_json(manifest, maximum=16 * 1024 * 1024)
+            proof = document.get('source_action_domain_proofs', {})
+            if proof.get('source_proof_key_field') != 'source_proof_key':
+                raise ValueError('The final bank lacks its exact original domain metadata')
+            proof_path = inside(manifest.parent, proof['path'])
+            if sha256_file(proof_path) != pin(proof['sha256']):
+                raise ValueError('The final bank domain metadata pin does not match')
+            inputs['domain_metadata'] = {'path': str(proof_path), 'sha256': proof['sha256']}
+        code = source_bank_code_contract(code_root)
+        enabled = row.get('enabled') is True
+        result['source_bank'] = {'schema': 1, 'enabled': enabled, 'source_snapshot': 'patch523',
                                  'tables_zip': result['tables_zip'], 'manifest_path': str(manifest),
-                                 'manifest_sha256': row['manifest_sha256']}
+                                 'manifest_sha256': row['manifest_sha256'], 'code_contract': code,
+                                 'input_files': inputs, 'ready_for_fresh_install': enabled and code['ready']}
         if 'overlay_whitelist_path' in row:
             overlay = inside(resources, row['overlay_whitelist_path'])
             if sha256_file(overlay) != pin(row['overlay_whitelist_sha256']):
                 raise ValueError('Source bank overlay pin mismatch')
             result['source_bank'].update(overlay_whitelist_path=str(overlay),
                                         overlay_whitelist_sha256=row['overlay_whitelist_sha256'])
+        if code_root is not None:
+            for blocker in code['blockers']:
+                log('SOURCE BANK CODE PENDING: ' + blocker)
     return result
 
 
@@ -1038,7 +1363,7 @@ def install(args):
                                    remote=None if args.token_file else args.remote,
                                    workers=args.workers, progress=log)
         # Bulk ZIPs only: future unknown inputs are never substituted with old packs.
-        downloaded = transport.download_many([row for pack in plan['packs'] for row in pack['files']])
+        downloaded = transport.download_many(needed_transport_files(plan['packs'], work))
         resource_root, resource_state = prepare_resources(plan, downloaded, resources, work)
         code_root, commit, code_inventory = packed_code(work)
         stage = Path(tempfile.mkdtemp(prefix='.' + root.name + '.next-', dir=root.parent))
@@ -1088,7 +1413,7 @@ def install(args):
         log('Godot Android Editor project: ' + str(root / 'project.godot'))
         log('Paths are prepared by the startup bridge; no per-resource folder selection is required.')
         if plan.get('blockers') or not plan.get('complete', False):
-            log('PARTIAL INPUTS: pending UI/sprite/feature-code handoffs above remain unavailable.')
+            log('PARTIAL READINESS: source-consumer or feature-code handoffs above remain pending; received inputs are not gameplay evidence.')
         log('UNVERIFIED: no game run, render, tests or CI were executed by this installer.')
 
 

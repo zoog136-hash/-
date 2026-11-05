@@ -107,22 +107,20 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 
 공통523은 `index.json`과 `content/<Table>.json`을 담은 정의 ZIP이다.
 `TWILIGHT_PATCH523_CONTENT`에는 압축을 푼 폴더가 아니라 ZIP 파일 경로를 전달한다.
-PR269 실행 소비자의 `--patch523-drop-root`는 이와 별개인 아이템 데이터 BIN 계약이며,
-monster_drops.bin과 manifest가 지정하는136개 items/NNNN.bin을 요구한다.
-3,050,707B와 SHA256 `38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27`은
-monster_drops.bin 한 파일의 값이며 전체 팩 크기가 아니다. 각 shard의 실제
-경로·크기·해시·개수는 압축을 해제한 BIN의 item_shards에 있다. 독립
-manifest/header의 고정 SHA는 제공되지 않았으므로 추측하지 않는다.
-새 번들에 이 데이터 ABI가 들어 있는지는 미확정이므로 설치 완료로 세거나
-공통 ZIP을 해당 BIN 루트로 대신 지정하지 않는다. 구 카드·몬스터 그래픽 팩을
-데이터 획득용 의존성으로 추가하지 않는다. 제작 규칙·퀘스트 payload·스킬v3의
-기존 명시 입력은 그대로 두고, 입력 부재 시 공통 원문을 사용하는 판단은 기존
-소비자가 맡는다. 파생 모델을 설치 중에 새로 생성하거나 바이트 재현을 주장하지 않는다.
-전체 drop/item reader의 환경 변수·cfg 선택 계약은 없다. 기존 실행 인수와
-`user://lineagem_patch523_drops/<monster_drops.bin SHA>/`의 고정 데이터 저장소를
-유지한다. 제작 전용 `TWILIGHT_PATCH523_CRAFT_CATALOG_BIN`을 전체 reader의
-선택으로 확대하지 않는다. 실제 신규 payload·shard 목록이 없는 현재 인계에서는
-BIN 저장소 복사나 선택을 자동 활성화하지 않는다.
+PR269의 공개 `007910fa85967a6e50dd8ea7d6e17a7f11c8c857` 이후 현재 원문
+reader·DTO·drop/craft 등록·schema4 catalog 소비 코드가 실제 설치 대상에 있으면
+이 ZIP을 새 설치의 정식 아이템 입력으로 사용한다. 기존 table 바인딩과 첫 autoload의
+환경 변수·동일 ZIP 경로 준비를 재사용한다. 설치 중 파생 모델·BIN을 만들지 않는다.
+schema4는 실제 원문 출처와 projection을 보존하며 예전 BIN의 식별자나 수량을 만들지 않는다.
+원문 바이트 준비와 설치 대상 코드 조건은 별도 evidence로 기록한다. 이것이 실제
+catalog 등록·아이템 효과·세이브 전환을 검증하지는 않는다.
+
+이전 `--patch523-drop-root`의 monster_drops.bin과136개 items/NNNN.bin은
+이 새 소비 경로의 필수 최종 입력이 아니다. 역사적 BIN·조각·설정·세이브는 보존하고,
+이전 reader의 참조 경로를 현재 원문 ZIP으로 위장하지 않는다. 호환 코드가 아직 없으면
+그 코드 통합을 대기로 기록하며 구 카드·몬스터 그래픽 팩을 의존성으로 추가하지 않는다.
+제작 규칙·퀘스트 payload·스킬v3의 기존 명시 입력도 그대로 둔다. 제작 전용
+`TWILIGHT_PATCH523_CRAFT_CATALOG_BIN`을 전체 reader의 선택으로 확대하지 않는다.
 
 원본 manifest·선택 JSON은 재작성하지 않는다. 초기 Land4는 공식 인계의 자체
 시작 프로필 선택이며, 카탈로그의 실제 비제외 Land임을 확인해야 한다. 좌표를
@@ -222,7 +220,24 @@ include_prefixes는 `/`로 끝나면 폴더 하위 전체, 그 외는 정확한 
 확인된 현 인계는 전체 맵·포탈/입장 정의·맵989 SP2·30 SPR 선언·공통523·이미지18ZIP·dummy 보충팩까지다. UI 아이콘
 선택 metadata만으로 실제 두 CSB 부분팩이 존재한다고 간주하지 않는다. 설치기는
 두 원본 부분팩의 실제 Drive ID·크기·SHA와 manifest pin이 인계에 모두 있을 때만
-선택 설정을 활성화한다. PR272 새 Sprite 은행의 배포 ID/크기/해시/배치 경로는 아직 대기다.
+선택 설정을 활성화한다. PR272 은행의 공식 비공개 전달 목록이 공급되면 그 목록의
+기존 ZIP·전송 조각·델타 순서를 사용한다. 목록·은행 경로·내용·pin은 공개 저장소에
+넣지 않는다. 실제 ZIP 접두사는 추측하지 않고 선언된 manifest pin에 맞는 유일한
+추출 파일을 찾는다. 기존 로더가 그 파일의 부모를 은행 루트로 사용한다.
+
+은행은 새 비공개 staging에만 조립한다. 기반·중간·최종 checkpoint마다 pinned
+manifest와 원문이 선언한 domain metadata를 확인한다. 델타에서 원자 교체할 수 있는
+것은 이전 checkpoint의 소유가 확인된 manifest·선언된 domain metadata·같은 pin의
+정식 설정 template뿐이다. 원본 raw/actor 파일의 충돌은 거부하고, 원본 ZIP·receipt·
+제외 선언은 보존한다. 추출된 과거 은행도 기존 설정에서 계속 선택할 수 있도록 보존한다.
+별도 공급된 보존·후속 구성 입력은 비활성 자료로 유지하며 전달만으로 등록하지 않는다.
+
+기존 Sprite cfg나 CLI 선택은 읽거나 고쳐 쓰지 않는다. 새 설치에서는 기존 schema1,
+source_snapshot, tables_zip, manifest_path, manifest_sha256 계약을 사용한다.
+정식 template·최종 은행 입력·실제 설치된 owner 코드와 명시 활성 선택이 모두
+준비됐을 때에만 새 cfg를 만든다. 준비가 부족하면 cfg를 만들지 않아 이후 호환
+업데이트가 이어갈 수 있게 한다. 전달 완료·복원 준비·코드 통합·실제 배우 admission과
+게임 표시는 별도 상태이며, 이 설치 작업은 후자의 실행을 하지 않는다.
 별도 인벤토리 원본 후보는 기존 `main_ui` 선택과 교체 가능한 후보로만 기록한다.
 현재 공개 계약은 같은 `TWILIGHT_SOURCE_UI`/`TWILIGHT_SOURCE_UI_SHA256` 또는
 `--source-ui`/`--source-ui-sha256` 쌍을 사용하며 별도 인벤토리 선택기가 아니다.

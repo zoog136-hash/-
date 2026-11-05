@@ -416,9 +416,27 @@ func _prepare_world_map(value: Dictionary) -> Dictionary:
 	return {"ok":true,"write":{"path":settings,"bytes":config.encode_to_text().to_utf8_buffer(),"create_only":true}}
 
 func _prepare_bank(value: Dictionary) -> Dictionary:
+	# Settings and explicit CLI selections belong to the user even when disabled
+	# or malformed. Never relocate/replace them while adopting a new bank.
+	if _settings_path_exists(BANK_SETTINGS): return {"ok":true}
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--current523-source-bank-config="): return {"ok":true}
+	var code: Variant = value.get("code_contract")
+	if value.get("ready_for_fresh_install") != true or not code is Dictionary or code.get("ready") != true or not code.get("files") is Dictionary or code.files.is_empty():
+		print("Sprite 은행 자동 연결 대기: 원본 준비와 설치 대상 소비 코드 통합은 별도입니다. 기존 설정은 보존합니다.")
+		return {"ok":true}
+	for name: String in code.files:
+		if not name.begins_with("scripts/") or name.contains(":") or name.contains("\\") or name.split("/").has(".."):
+			return _fail("Sprite 은행 소비 코드의 경로 계약이 다릅니다.")
+		if not _pinned(ProjectSettings.globalize_path("res://"+name),code.files[name]): return {"ok":false}
 	if value.get("schema") != 1 or value.get("enabled") != true or value.get("source_snapshot") != "patch523":
 		return _fail("원본 Sprite 은행의 공개 설정 계약이 다릅니다.")
-	var result: Dictionary = value.duplicate(true)
+	var inputs: Variant = value.get("input_files")
+	if not inputs is Dictionary or not inputs.has("manifest"): return _fail("Sprite 은행의 원본 입력 근거가 없습니다.")
+	for name: String in inputs:
+		var entry: Variant = inputs[name]
+		if not entry is Dictionary or not _pinned(_absolute(entry.get("path")),entry.get("sha256")): return {"ok":false}
+	var result: Dictionary = {"schema":1,"enabled":true,"source_snapshot":"patch523"}
 	for key: String in ["tables_zip","manifest_path"]:
 		result[key] = _absolute(value.get(key))
 		if str(result[key]).is_empty(): return _fail("원본 Sprite 은행의 경로가 없습니다.")
@@ -429,16 +447,7 @@ func _prepare_bank(value: Dictionary) -> Dictionary:
 		result.overlay_whitelist_path = _absolute(value.get("overlay_whitelist_path"))
 		if not _pinned(result.overlay_whitelist_path,value.get("overlay_whitelist_sha256")): return {"ok":false}
 		result.overlay_whitelist_sha256 = str(value.overlay_whitelist_sha256).to_lower()
-	if FileAccess.file_exists(BANK_SETTINGS):
-		var previous: Dictionary = _json_file(BANK_SETTINGS)
-		if not previous.get("ok",false): return _fail("기존 Sprite 은행 설정을 읽을 수 없어 보존했습니다.")
-		# Keep a user's later disable choice for an otherwise unchanged bank.
-		var same_bank: bool = previous.value.get("schema") == 1 and previous.value.get("source_snapshot") == "patch523"
-		for key: String in ["tables_zip","manifest_path","manifest_sha256","overlay_whitelist_path","overlay_whitelist_sha256"]:
-			if previous.value.get(key,"") != result.get(key,""): same_bank = false
-		if same_bank and previous.value.get("enabled") is bool: result.enabled = previous.value.enabled
-		if previous.value == result: return {"ok":true}
-	return {"ok":true,"write":{"path":BANK_SETTINGS,"bytes":(JSON.stringify(result,"\t",true)+"\n").to_utf8_buffer()}}
+	return {"ok":true,"write":{"path":BANK_SETTINGS,"bytes":(JSON.stringify(result,"\t",true)+"\n").to_utf8_buffer(),"create_only":true}}
 
 func _cleanup_pending(staged: Array[Dictionary]) -> void:
 	for item: Dictionary in staged:
