@@ -284,3 +284,10 @@ the existing player critical multiplier. Monster critical damage, the host
 multiplier itself and critical weapon-multiplier/ignore-reduction semantics
 are unchanged. Explicit fields/overlays and mapped source bonus IDs keep the
 same precedence. These connections are uncompiled/unexecuted/unverified.
+
+Direct PVEMeleeHit/PVERangeHit/PVEMagicHit Unit.Value inputs now feed the
+corresponding existing _equipment_accuracy_bonus() branch through the equipment
+sum. General melee/ranged/magic hit operands and existing collection/card/
+guardian accuracy contributions stay separate; no PvP hit effect is activated.
+The existing chance formulas and evasion-ignore callers are unchanged. This
+additional PvE item-accuracy connection remains unverified.

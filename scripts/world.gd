@@ -1417,6 +1417,7 @@ func _effective_attribute(stat: String) -> int:
 
 func _equipment_accuracy_bonus(kind: String) -> int:
 	var result: int = (_equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0) + _source_enchantment_extra(ACCESSORY_EQUIPMENT_SLOTS,kind+"_accuracy") + (_source_enchantment_extra(["weapon"],"accuracy") if kind in ["melee","ranged"] else 0)
+	if kind in ["melee","ranged","magic"]: result += int(_equipment_inven_sum("pve_"+kind+"_hit"))
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
