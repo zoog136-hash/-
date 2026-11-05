@@ -87,6 +87,8 @@ Library identities or saves are included in Git.
   native-item flags are not created. Available owner read-only references keep
   priority in result/material pictures. These direct display calls have not
   been executed or validated.
+  Existing NPC listing rows also use this direct pinned ItemClass presentation
+  path, retaining the same source exclusions before any optional quote data.
 - Skill browsing and skill quickslots use exact public host-to-SpellClass
   bindings, then the source IconID. Active buff rows use explicit native
   BuffClass OnIconID. ActivateIconID and OffIconID remain distinct roles;

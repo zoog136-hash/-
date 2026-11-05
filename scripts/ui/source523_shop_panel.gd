@@ -195,7 +195,7 @@ func _entry_image(entry: Dictionary) -> Dictionary:
 		"MerchantGoods":
 			var id: Variant = row.get("ItemClassID")
 			if (id is int or id is float) and is_finite(float(id)) and float(id) == floor(float(id)) and float(id) > 0:
-				return IMAGES.resolve_consumer("ItemClass",int(id),"IconID")
+				return IMAGES.describe_item_class(int(id))
 	return {}
 
 func _item_name(id: int) -> String:
