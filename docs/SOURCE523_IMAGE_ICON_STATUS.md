@@ -594,6 +594,15 @@ their original state; old samples and previous packs are not source success.
 Candidate receipt and source-node declarations are not executed presentation,
 game consumption, a new source inventory or a 95% usage result.
 
+Existing spell-group review and confirmation buttons additionally consume the
+quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
+independent SpellGroup choice and payment/commit data. Shared item views also
+accept a preserved current source_original_item when its explicit m523:item
+identity and ItemClass key agree and the complete row equals the selected
+pack's canonical row. This covers material consumers without granting a native
+execution flag or rewriting their record. Incomplete/changed source rows and
+source exclusions remain unavailable.
+
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
 loads, component renders and delivery bytes do not count as that completion.

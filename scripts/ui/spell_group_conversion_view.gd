@@ -44,18 +44,36 @@ func _refresh_payment_images()->void:
   evidence['payment_index']=index
   images[index]=evidence
  payment.set_meta('source523_payment_item_images',images)
+func _bind_payment_action(button:Button,plan:Dictionary)->void:
+ button.icon=null
+ if button.has_meta('source523_payment_item_image'):button.remove_meta('source523_payment_item_image')
+ if not IMAGES.selected() or not str(plan.get('error','')).is_empty():return
+ # quote.item is GameClassSpellGroupCostView.ItemClassID, independent of
+ # the selected SpellGroupID. Do not choose a group or effect Sprite image.
+ var value:Variant=plan.get('item')
+ if not IMAGES.PACK._integer(value) or int(value)<=0:return
+ var image:Dictionary=IMAGES.describe_item_class(int(value))
+ button.icon=image.get('texture') as Texture2D
+ button.expand_icon=true
+ var evidence:Dictionary=image.duplicate(true);evidence.erase('texture')
+ evidence['presentation_role']='quoted_spell_group_payment'
+ button.set_meta('source523_payment_item_image',evidence)
 func refresh_quote()->void:
  _refresh_payment_images()
  pending.clear()
+ _bind_payment_action(confirm,{})
+ _bind_payment_action(dialog.get_ok_button(),{})
  if choices.item_count==0:
   message.text=world.spell_group_conversion.problem if not world.spell_group_conversion.problem.is_empty() else '현재 직업에는 원본 계열 전환 설정이 없습니다.';confirm.disabled=true;return
  var plan:Dictionary=world.spell_group_conversion.quote(choices.get_selected_id(),[26,1122,32801][payment.selected])
+ _bind_payment_action(confirm,plan)
  confirm.disabled=not plan.get('error','').is_empty()
  message.text=str(plan.error) if confirm.disabled else '%d회 전환 · 재료 ID %d × %d · 아데나 보유 %d' % [plan.count,plan.item,plan.amount,world.gold]
 func show_confirmation()->void:
  if choices.item_count==0:return
  pending=world.spell_group_conversion.quote(choices.get_selected_id(),[26,1122,32801][payment.selected])
  if not pending.get('error','').is_empty():message.text=pending.error;return
+ _bind_payment_action(dialog.get_ok_button(),pending)
  dialog.dialog_text='%s → %s\n재료 ID %d × %d를 지불합니다. 저장 성공 시에만 적용합니다.\n기존 학습·퀵슬롯·자동사용 지정은 보존합니다.' % [world.job_class,choices.get_item_text(choices.selected),pending.item,pending.amount]
  dialog.popup_centered(Vector2i(520,230))
 func apply()->void:
