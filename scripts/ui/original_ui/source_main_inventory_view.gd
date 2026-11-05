@@ -190,8 +190,8 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not slot_player.get("ok",false):return _reject_staged(next,slot_player)
 		var native_slot: Node2D=slot_player.player
 		var owner_result: Dictionary=slot_contract.owner_results[offset]
-		var accepted: Dictionary=native_slot.set_bound_source_asset_result(Slots.ICON,owner_result)
-		if not accepted.get("ok",false) or not accepted.get("texture_assigned",false) or not accepted.get("texture") is Texture2D:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":assignments[offset],"owner_result":owner_result,"source_asset_result":accepted})
+		var accepted: Dictionary=native_slot.set_bound_source_visual_result(Slots.ICON,owner_result)
+		if not accepted.get("ok",false) or (not accepted.get("texture_assigned",false) and not accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":assignments[offset],"owner_result":owner_result,"source_asset_result":accepted})
 		result=native_slot.set_bound_visible(Slots.ICON,true)
 		if not result.get("ok",false):return _reject_staged(next,result)
 		var button_node: Variant=native_slot.get("source_nodes").get(Slots.BUTTON)
@@ -200,7 +200,7 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
 		var raw: Dictionary=entries_by_reference[reference]
-		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.texture,"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false}
+		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false}
 	var bounds: Control=_source_consume_control(inventory_scene,int(chrome.background_offset))
 	if bounds==null:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_gesture_bounds_missing"})
 	var previous: Node2D=_scene

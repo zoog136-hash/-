@@ -169,7 +169,7 @@ func _slot_binding(offset: int, reference: String) -> Dictionary:
 		# for a second lookup. Native renderer handles its existing upload API.
 		var supplied: Variant=_icon_binding_provider.call(entry.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":offset,"reference":reference})
 		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
-		if not supplied.get("ok",false) or not supplied.get("texture") is Texture2D:return {"ok":false,"handled":false,"code":"source_inventory_slots_owned_icon_unavailable","reference":reference,"slot_project_offset":offset,"owner_result":supplied}
+		if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):return {"ok":false,"handled":false,"code":"source_inventory_slots_owned_icon_unavailable","reference":reference,"slot_project_offset":offset,"owner_result":supplied}
 		scope.append(ICON)
 		bindings[ICON]={"role":"source_asset_slot","visible":false}
 		return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"owner_result":supplied,"unresolved_fields":unresolved}

@@ -72,6 +72,7 @@ var _inventory_signature: int=0
 var _quickslot_view: RefCounted
 var _quickslot_result: Dictionary={}
 var _legacy_quickslots: Array[Dictionary]=[]
+var _icons_refresh_pending: bool=false
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -120,6 +121,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if _icons_refresh_pending:refresh_quickslots()
 	if inventory_is_open():
 		var pointer: Variant=hud.get("pointer_transfer")
 		if not is_instance_valid(pointer) or pointer.get("pointer")==-2:
@@ -150,18 +152,33 @@ func source_map_label_availability() -> bool:
 
 func _inventory_original_image(entry: Dictionary, native_context: Dictionary) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
-	return InventoryImages.resolve_owned(hud,entry,native_context)
+	return InventoryImages.resolve_owned(hud,entry,_native_icon_context(native_context))
 
 func _quickslot_original_image(row: Dictionary, native_context: Dictionary) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
-	return QuickslotImages.resolve(hud,row,native_context)
+	return QuickslotImages.resolve(hud,row,_native_icon_context(native_context))
+
+func _native_icon_context(context: Dictionary) -> Dictionary:
+	var result: Dictionary=context.duplicate(true)
+	result["source_slot_contract"]=Scene.external_scene_slot_contract(_pack,str(context.get("member","")),int(context.get("node_offset",-1)))
+	return result
+
+func refresh_source_icons() -> Dictionary:
+	_icons_refresh_pending=true
+	return refresh_quickslots()
 
 func refresh_quickslots() -> Dictionary:
-	if _quickslot_view==null:return {"ok":true,"handled":false,"code":"source_quickslot_pack_scope_unavailable"}
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return _fail("source_quickslot_host_unavailable")
 	var pointer: Variant=hud.get("pointer_transfer")
-	if is_instance_valid(pointer) and pointer.get("pointer")!=-2:return {"ok":true,"handled":_quickslot_view.is_open(),"refresh_pending":true}
+	if is_instance_valid(pointer) and pointer.get("pointer")!=-2:return {"ok":true,"handled":_quickslot_view!=null and _quickslot_view.is_open(),"refresh_pending":true}
+	if _icons_refresh_pending:
+		_icons_refresh_pending=false
+		if inventory_is_open():_inventory_result=_inventory_view.refresh()
+		# Re-registration can replace an icon descriptor without changing its
+		# entry/page. It waits for the existing active gesture to finish.
+		if _quickslot_view!=null:_quickslot_view.close()
+	if _quickslot_view==null:return {"ok":true,"handled":false,"code":"source_quickslot_pack_scope_unavailable"}
 	_quickslot_result=_quickslot_view.refresh() if _quickslot_view.is_open() else _quickslot_view.open(_coordinates)
 	sync_legacy_visibility()
 	return _quickslot_result.duplicate(true)

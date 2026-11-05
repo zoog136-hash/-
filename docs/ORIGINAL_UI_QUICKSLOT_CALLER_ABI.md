@@ -74,3 +74,8 @@ quickslot entries, ownership, effects or saves.
 The separate37-original candidate and exact Drive/ZIP/manifest pins are in
 [the installer handoff](ORIGINAL_UI_MAIN_PACK_INSTALL_HANDOFF.md).
 It has static source dependencies, not consumer-installation or game-use proof.
+
+The later [native icon scene ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md) extends
+this Texture2D path with owner-provided CSB descriptors at Slot_Skill18488.
+Original registration/repeat inputs remain pending with PR270; adding the
+consumer API does not establish actual CSB execution or game consumption.

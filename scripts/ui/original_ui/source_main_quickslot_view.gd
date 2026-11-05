@@ -133,9 +133,9 @@ func _stage(parent: Node) -> Dictionary:
 			if not slot.get("ok",false):return _reject(next,slot)
 			var texture: Texture2D
 			if not row.entry.is_empty():
-				var uploaded: Dictionary=slot.player.set_bound_source_asset_result(ICON,contract.owner_results[offset])
-				if not uploaded.get("ok",false) or not uploaded.get("texture_assigned",false) or not uploaded.get("texture") is Texture2D:return _reject(next,uploaded)
-				texture=uploaded.texture
+				var uploaded: Dictionary=slot.player.set_bound_source_visual_result(ICON,contract.owner_results[offset])
+				if not uploaded.get("ok",false) or (not uploaded.get("texture_assigned",false) and not uploaded.get("source_scene_assigned",false)):return _reject(next,uploaded)
+				texture=uploaded.get("texture")
 				result=slot.player.set_bound_visible(ICON,true)
 				if not result.get("ok",false):return _reject(next,result)
 			var button_node: Variant=slot.player.get("source_nodes").get(BUTTON)

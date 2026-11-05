@@ -798,7 +798,9 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
 	if value and node.get_meta("source_asset_slot",false):
 		var sprite: Sprite2D=node.get_meta("source_sprite",null)
-		if sprite==null or sprite.texture==null or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
+		var scene: Variant=node.get_meta("source_asset_scene",null)
+		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
+		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
 	return {"ok":true}
 
@@ -806,6 +808,7 @@ func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary)
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}
 	var sprite: Sprite2D=node.get_meta("source_sprite")
+	_detach_source_scene(node)
 	var consumed: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").consume_owner_result(owner_result)
 	if not consumed.get("ok",false) or consumed.get("texture")==null:
 		sprite.texture=null
@@ -833,6 +836,72 @@ func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary)
 	_resolved_assets[source_offset]=consumed.evidence.duplicate(true)
 	MATERIAL.bind_display(sprite,node.get_meta("source_display_color",Color.WHITE))
 	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"image_info_registration_complete":false}
+
+static func external_scene_slot_contract(pack: RefCounted, member: String, source_offset: int) -> Dictionary:
+	if pack==null or source_offset not in pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[]):return {"ok":false,"error":"source_asset_slot_declaration_required"}
+	var tree: Dictionary=pack.layout_source(member)
+	if tree.is_empty():tree=pack.scene(member)
+	var raw: Dictionary=_node_at_offset(tree.get("nodeTree",{}),source_offset)
+	if raw.get("classname")!="Sprite":return {"ok":false,"error":"source_asset_slot_original_sprite_required"}
+	var options: Dictionary=raw.options
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	return {"ok":true,"schema":"twilight-native-icon-scene-slot-v1","member":member,"source_sha256":tree.get("_source_sha256"),"manifest_sha256":pack.manifest_sha256,"node_offset":source_offset,"registration_space":"authored_sprite_anchor","original_widget_options":widget.duplicate(true),"original_blend_func":options.get("blendFunc").duplicate(),"fit_or_offset_inferred":false,"original_client_registration_confirmed":false}
+
+func set_bound_source_visual_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
+	if owner_result.get("source_scene_descriptor") is Dictionary:return set_bound_source_scene_result(source_offset,owner_result.source_scene_descriptor)
+	return set_bound_source_asset_result(source_offset,owner_result)
+
+func set_bound_source_scene_result(source_offset: int, descriptor: Dictionary) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}
+	var registration: Variant=descriptor.get("registration")
+	if not registration is Dictionary:return {"ok":false,"error":"source_scene_original_target_registration_required"}
+	var target: Variant=registration.get("target")
+	var contract: Dictionary=external_scene_slot_contract(source_pack,source_member,source_offset)
+	if not contract.get("ok",false):return contract
+	if not target is Dictionary or target.get("member")!=source_member or target.get("source_sha256")!=contract.source_sha256 or target.get("manifest_sha256")!=source_pack.manifest_sha256 or target.get("node_offset")!=source_offset:return {"ok":false,"error":"source_scene_original_target_registration_required","slot_contract":contract}
+	var prepared: Dictionary=preload("res://scripts/ui/original_ui/source_asset_scene.gd").prepare(descriptor)
+	if not prepared.get("ok",false):return prepared
+	var player: Node2D=prepared.player
+	# This is the exact authored Sprite anchor node, not its preview texture's
+	# bottom-left origin. The owner must prove this registration explicitly.
+	# Both the target transform and the identity original CSB root are retained.
+	_detach_source_scene(node)
+	var sprite: Sprite2D=node.get_meta("source_sprite")
+	sprite.texture=null
+	node.add_child(player)
+	node.set_meta("source_asset_scene",player)
+	node.set_meta("source_asset_pending",false)
+	var evidence: Dictionary=prepared.duplicate(true)
+	evidence.erase("player")
+	evidence["target"]=contract
+	node.set_meta("source_asset_scene_evidence",evidence)
+	_sync_source_display(player,node.get_meta("source_display_color",Color.WHITE))
+	return {"ok":true,"source_scene_assigned":true,"player":player,"texture":null,"evidence":evidence,"original_node_transform_retained":true,"runtime_rendering_verified":false}
+
+func bound_source_scene(source_offset: int) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	var player: Variant=node.get_meta("source_asset_scene",null) if node!=null else null
+	if not is_instance_valid(player) or player.is_queued_for_deletion():return {"ok":false,"error":"source_asset_scene_not_attached"}
+	return {"ok":true,"player":player,"evidence":node.get_meta("source_asset_scene_evidence",{}).duplicate(true)}
+
+func clear_bound_source_scene(source_offset: int) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null:return {"ok":false,"error":"source_asset_slot_binding_missing"}
+	_detach_source_scene(node)
+	node.set_meta("source_asset_pending",true)
+	node.visible=false
+	return {"ok":true,"detached":true,"game_state_written":false}
+
+static func _detach_source_scene(node: Node2D) -> void:
+	var player: Variant=node.get_meta("source_asset_scene",null)
+	if is_instance_valid(player):
+		player.stop()
+		player.process_mode=Node.PROCESS_MODE_DISABLED
+		if player.get_parent()==node:node.remove_child(player)
+		player.queue_free()
+	if node.has_meta("source_asset_scene"):node.remove_meta("source_asset_scene")
+	if node.has_meta("source_asset_scene_evidence"):node.remove_meta("source_asset_scene_evidence")
 
 func set_bound_scroll_position(source_offset: int, value: Vector2) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)

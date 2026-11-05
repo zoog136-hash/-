@@ -3,7 +3,7 @@ extends RefCounted
 const ITEM_API="res://scripts/ui/source523_image_assets.gd"
 const SKILL_API="res://scripts/ui/source523_skill_buff_images.gd"
 
-static func resolve(hud: Node, row: Dictionary, _context: Dictionary={}) -> Dictionary:
+static func resolve(hud: Node, row: Dictionary, context: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(hud):return _fail("source_quickslot_image_hud_unavailable")
 	var world: Node=hud.get_parent()
 	var entry: Variant=row.get("entry")
@@ -32,6 +32,7 @@ static func resolve(hud: Node, row: Dictionary, _context: Dictionary={}) -> Dict
 			if not _has_api(api,"describe_skill"):return _fail("source_quickslot_skill_image_owner_version_required")
 			info=api.describe_skill(record,"IconID")
 	else:return _fail("source_quickslot_entry_kind_not_connected")
+	if info.get("reason")=="unsupported_csb":return preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").request(hud,info,context)
 	if info.get("route")!="source523_images" or info.get("status")!="original_linked" or info.get("original_bytes_unchanged")!=true or not info.get("texture") is Texture2D:
 		return {"ok":false,"code":"source_quickslot_original_image_unavailable","owner_result":info,"visible_index":row.get("visible_index")}
 	var result: Dictionary=info.duplicate(true)

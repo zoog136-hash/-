@@ -131,3 +131,9 @@ an original enhancement-number text role. No enhancement number/position is
 invented. The menu's lock-mode workflow and its sorting options also remain
 separate from these read-only item markers; no source button is silently
 converted into a different host operation.
+
+Native CSB icons now have an implemented owner callback/scene slot path in
+[the native icon scene ABI](ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md). Original anchor
+registration evidence and any declared clip/repeat policy remain mandatory;
+no implicit center/fit/loop is inferred. A missing provider/registration still
+preserves the current complete bag. This interface has not been executed.

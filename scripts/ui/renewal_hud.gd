@@ -2696,6 +2696,13 @@ var _original_main_player_values: Array=[]
 var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
 var _original_world_map_inputs: Dictionary={}
+var _original_icon_scene_provider: Callable
+
+func bind_original_icon_scene_provider(provider: Callable) -> Dictionary:
+	if not provider.is_valid():return {"ok":false,"code":"source_native_icon_scene_provider_required"}
+	_original_icon_scene_provider=provider
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_source_icons()
+	return {"ok":true,"registered":true,"original_scene_registration_and_playback_required":true,"game_state_written":false}
 
 func original_quickslot_hit_at(viewport_point: Vector2) -> Dictionary:
 	return original_main_ui_controller.quickslot_hit_at(viewport_point) if is_instance_valid(original_main_ui_controller) else {}

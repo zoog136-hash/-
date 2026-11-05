@@ -3,7 +3,7 @@ extends RefCounted
 ## No ItemClass/Icon/Asset joins, exclusions, artwork or ownership rules here.
 const OWNER_API="res://scripts/ui/source523_image_assets.gd"
 
-static func resolve_owned(hud: Node, entry: Dictionary, _native_context: Dictionary={}) -> Dictionary:
+static func resolve_owned(hud: Node, entry: Dictionary, native_context: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(hud):return _fail("source_inventory_image_hud_unavailable")
 	var bag: Variant=hud.get("lineage_inventory_ui")
 	if not is_instance_valid(bag) or not bag.has_method("_item_visual_record") or not bag.has_method("_find_item_record"):return _fail("source_inventory_existing_visual_record_api_required")
@@ -20,6 +20,7 @@ static func resolve_owned(hud: Node, entry: Dictionary, _native_context: Diction
 	var api: Script=load(OWNER_API)
 	if api==null:return _fail("source_inventory_existing_image_owner_unavailable")
 	var info: Dictionary=api.describe_item(record,str(entry.get("name","")))
+	if info.get("reason")=="unsupported_csb":return preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").request(hud,info,native_context)
 	# This is only normalization of the owner's successful descriptor for the
 	# shared original Sprite upload path. No old image path or sample fallback.
 	if info.get("route")!="source523_images" or info.get("status")!="original_linked" or info.get("original_bytes_unchanged")!=true or not info.get("texture") is Texture2D:

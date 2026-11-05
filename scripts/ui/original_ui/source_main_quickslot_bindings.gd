@@ -73,7 +73,7 @@ func build_group(group: int) -> Dictionary:
 			if not _image_provider.is_valid():return {"ok":false,"code":"source_quickslot_existing_image_provider_required","visible_index":visible,"absolute_index":row.absolute_index}
 			var supplied: Variant=_image_provider.call(row.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":project,"visible_index":visible,"absolute_index":row.absolute_index,"group":group,"page_index":row.page_index})
 			if not supplied is Dictionary:return _fail("source_quickslot_existing_owner_result_invalid")
-			if not supplied.get("ok",false) or not supplied.get("texture") is Texture2D:return {"ok":false,"code":"source_quickslot_actual_owner_texture_unavailable","visible_index":visible,"absolute_index":row.absolute_index,"owner_result":supplied}
+			if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):return {"ok":false,"code":"source_quickslot_actual_owner_visual_unavailable","visible_index":visible,"absolute_index":row.absolute_index,"owner_result":supplied}
 			owners[project]=supplied
 		var slot_bindings: Dictionary={
 			# Empty clicks remain the existing HUD action, never disabled here.
