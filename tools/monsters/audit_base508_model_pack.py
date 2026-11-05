@@ -12,11 +12,11 @@ def main(a):
   assert verified[path]==sha,(path,'SHA mismatch')
  for sid,ref in pack['models'].items():
   verify(ref['tracks_ref'],ref['tracks_sha256']);m=json.loads((a.root/ref['tracks_ref']).read_text());assert m['source_sprite_id']==int(sid)
-  assert all(role in m['tracks']for role in('idle','walk','attack','hit','death'))
+  assert m['tracks']if m.get('source_capability_contract')==1 else all(role in m['tracks']for role in('idle','walk','attack','hit','death'))
   for role,track in m['tracks'].items():
    assert len(track['directions'])==8,(sid,role);actions+=1
    for frames in track['directions']:
-    assert frames and sum(f['source_ticks']for f in frames)>0
+    assert frames and (sum(f['source_ticks']for f in frames)>0 or track.get('source_static_zero_duration')and len(frames)==1)
     for f in frames:
      assert f['layers'] and f['source_ticks']>=0
      for layer in f['layers']:

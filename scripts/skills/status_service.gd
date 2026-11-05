@@ -60,6 +60,23 @@ func set_modifiers(target: Node, source: String, duration: float, values: Dictio
 	debuffs[key] = entry
 	refresh_entry(key)
 
+func set_native_equipment_modifiers(target: Node,profile: Dictionary,duration: float,values: Dictionary,context: Dictionary) -> bool:
+	if not is_instance_valid(target) or target.dead:return false
+	var raw: Dictionary=profile.buff.source_buff
+	var key: String="equipment523-buff-group|"+str(int(raw.BuffGroupID))
+	var entry: Dictionary=debuffs.get(target.get_instance_id(),{})
+	if same_life(entry,target):
+		var previous: Dictionary=entry.sources.get(key,{})
+		if float(previous.get("remaining",0))>0 and int(previous.get("native_priority",-1))>int(raw.BuffGroupPriority):return false
+	set_modifiers(target,key,duration,values)
+	entry=debuffs.get(target.get_instance_id(),{})
+	if not same_life(entry,target) or not entry.sources.has(key):return false
+	entry.sources[key]["native_priority"]=int(raw.BuffGroupPriority)
+	entry.sources[key]["native_buff_id"]=int(raw.ID)
+	entry.sources[key]["native_spell_id"]=int(profile.source_spell.ID)
+	entry.sources[key]["equipment_source"]=context.duplicate(true)
+	return true
+
 func remove_modifiers(target: Node, source: String) -> void:
 	if not is_instance_valid(target): return
 	var key := target.get_instance_id()
@@ -86,19 +103,28 @@ func damage_after_reduction(amount: int, target: Node, pierce_fraction: float = 
 	var effective := float(reduction)*(1.0-clampf(pierce_fraction,0,1)) if reduction > 0 else float(reduction)
 	return maxi(1,int(round(float(amount)-effective)))
 
+func effective_resistance(target: TwilightMonster, kind: String) -> float:
+	if not is_instance_valid(target) or target.dead: return 100.0
+	var resistance: float = 0.0
+	if kind in ["stun","hold","fear","silence","poison","bleed","dark","ice"]:
+		resistance = float(target.get(kind + "_resistance"))
+	# Preserve existing host mappings. The source stun debuff uses axis 6;
+	# a host control name does not establish a new source resistance mapping.
+	if kind=="stun":resistance+=modifier(target,"source_stun_resistance")
+	resistance += modifier(target,"status_resistance_"+str(6 if kind=="stun" else 8 if kind=="fear" else -1))
+	# Each existing chance formula keeps its own clamping policy.
+	return resistance
+
 func can_affect(skill: Dictionary, target: TwilightMonster) -> bool:
 	if not is_instance_valid(target) or target.dead: return false
 	var kind := str(skill.get("status", ""))
 	if kind not in ["stun", "hold", "fear", "silence", "slow", "poison", "bleed", "dark", "ice"] or target.status_immunities.has(kind): return false
-	if kind != "slow" and float(target.get(kind + "_resistance")) >= 100: return false
+	if kind != "slow" and effective_resistance(target,kind) >= 100: return false
 	return float(skill.get("status_chance", .6)) > 0
 
 func chance(skill: Dictionary, target: TwilightMonster, world: Node) -> float:
 	var kind: String=str(skill.get("status",""))
-	var resistance: float=0.0
-	if kind in ["stun","hold","fear","silence","poison","bleed","dark","ice"]:
-		resistance=float(target.get(kind+"_resistance"))
-	resistance+=modifier(target,"status_resistance_"+str(6 if kind=="stun" else 8 if kind=="fear" else -1))
+	var resistance: float=effective_resistance(target,kind)
 	var accuracy_bonus: float=0.0
 	var halphas: Variant=world.get("halphas_star")
 	if halphas!=null:accuracy_bonus=float(halphas.status_hit_bonus(kind))/100.0
@@ -140,6 +166,6 @@ func apply(skill: Dictionary, target: TwilightMonster, world: Node) -> bool:
 
 static func cleanse(player: TwilightPlayer, kinds: Array) -> void:
 	for kind: String in kinds:
-		if kind in ["stun","hold","fear","silence","poison","bleed"]:
+		if kind in ["stun","hold","fear","silence","poison","bleed","dark","ice"]:
 			player.set(kind + "_remaining", 0.0)
 

@@ -140,6 +140,23 @@ func damage_spec(attack: Dictionary, spell: Dictionary = {}) -> Dictionary:
 	if base < 0 or count < 0 or count > 1000 or spots < 0 or spots > 1000000 or (count > 0 and spots <= 0) or (base == 0 and count == 0): return {}
 	return {"base":base,"count":count,"spots":spots}
 
+func guard_attack_kind(spell: Dictionary, fallback: String = "magic") -> String:
+	# SpellAttackType is a typed guard context, not a replacement damage formula.
+	var id: int = int(spell.get("ID",0))
+	if id <= 0 or catalog.row("SpellClass",id).is_empty(): return fallback
+	var found: Array = []
+	for detail: Dictionary in catalog.bonuses("SpellBonus",id):
+		if detail.type.get("Name","") != "SpellAttackType": continue
+		if int(detail.type.get("UnitID",-1)) != 10431 or int(detail.unit.get("ID",-1)) != 10431 or detail.unit.get("Name","") != "AttackTypeID": return fallback
+		if int(detail.link.get("MinSpellLevel",0)) != 0 or int(detail.bonus.get("BonusApplicationTypeID",-1)) != 0 or int(detail.bonus.get("BonusApplicationTargetID",-1)) != 0: return fallback
+		var value: Variant = detail.bonus.get("Value")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value) != floorf(float(value)): return fallback
+		var attack: int = int(value)
+		var expected: String = str({1:"Melee",2:"Range",3:"Magic"}.get(attack,""))
+		if expected.is_empty() or catalog.row("AttackType",attack).get("Name","") != expected: return fallback
+		found.append({1:"melee",2:"ranged",3:"magic"}[attack])
+	return str(found[0]) if found.size() == 1 else fallback
+
 func support_reason(attack: Dictionary) -> String:
 	if not bool(attack.get("IsSpell",false)): return "사용 가능 · 기본 공격" if not damage_spec(attack).is_empty() else "기본 피해 정의 확인 필요"
 	var id: int = int(attack.get("SpellID",0))

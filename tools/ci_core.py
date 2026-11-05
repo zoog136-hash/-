@@ -59,6 +59,20 @@ CHECKS = [
     ('expedition523_main_ui_test', []),
     ('patch523_equipment_test', []),
     ('patch523_equipment_main_test', []),
+    ('equipment523_smith_smelt_test', []),
+    ('equipment523_set_invoke_test', []),
+    ('equipment523_alchemy_test', []),
+    ('equipment523_service_test', []),
+    ('equipment523_combat_test', []),
+    ('equipment523_element_loss_test', []),
+    ('equipment523_effect_store_test', []),
+    ('equipment523_invoke_debuff_test', []),
+    ('equipment523_set_effects_test', []),
+    ('equipment523_set_lifecycle_test', []),
+    ('equipment523_runtime_bridges_test', []),
+    ('equipment523_spell_visuals_test', []),
+    ('equipment523_native_catalog_test', []),
+    ('equipment523_alchemy_pending_migration_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -349,10 +363,22 @@ def main():
                       'expedition523_estimate_model_test':'EXPEDITION523_ESTIMATE_MODEL_RESULT',
                       'expedition523_main_ui_test':'EXPEDITION523_MAIN_UI_RESULT',
                       'patch523_equipment_test':'PATCH523_EQUIPMENT_RESULT',
-                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT'}[name]
-
-
-
+                      'patch523_equipment_main_test':'PATCH523_MAIN_RESULT',
+                      'equipment523_smith_smelt_test':'EQUIPMENT523_SMITH_SMELT_RESULT',
+                      'equipment523_set_invoke_test':'EQUIPMENT523_SET_INVOKE_RESULT',
+                      'equipment523_alchemy_test':'EQUIPMENT523_ALCHEMY_RESULT',
+                      'equipment523_service_test':'EQUIPMENT523_SERVICE_RESULT',
+                      'equipment523_combat_test':'EQUIPMENT523_COMBAT_RESULT',
+                      'equipment523_element_loss_test':'EQUIPMENT523_ELEMENT_LOSS_RESULT',
+                      'equipment523_effect_store_test':'EQUIPMENT523_EFFECT_STORE_RESULT',
+                      'equipment523_invoke_debuff_test':'EQUIPMENT523_INVOKE_DEBUFF_RESULT',
+                      'equipment523_set_effects_test':'EQUIPMENT523_SET_EFFECTS_RESULT',
+                      'equipment523_set_lifecycle_test':'EQUIPMENT523_SET_LIFECYCLE_RESULT',
+                      'equipment523_runtime_bridges_test':'EQUIPMENT523_RUNTIME_BRIDGES_RESULT',
+                      'equipment523_spell_visuals_test':'EQUIPMENT523_SPELL_VISUALS_RESULT',
+                      'equipment523_native_catalog_test':'EQUIPMENT523_NATIVE_CATALOG_RESULT',
+                      'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
+                      }[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

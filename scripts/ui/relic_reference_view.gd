@@ -477,6 +477,10 @@ func _refresh_secondary(record: Dictionary) -> void:
 			secondary_effects.text="추가 슬롯 적용: "+(" · ".join(labels) if not labels.is_empty() else "적용 수치 없음")
 			if not state.effects.pending.is_empty():secondary_effects.text+="\n조건·특수 효과 %d개는 원본 해석 대기" % state.effects.pending.size()
 		else:secondary_effects.text=str(state.eligibility.get("error","추가 슬롯 조건 확인 필요"))
+		if runtime.progress.has("native_relic_summon_time"):
+			var timer: Dictionary=runtime.progress.native_relic_summon_time
+			var remaining: int=maxi(0,int(timer.expires_utc)-int(Time.get_unix_time_from_system()))
+			secondary_effects.text+="\n특별한 소환 주문서: "+(str(remaining)+"초 남음 · 주문서 무제한" if remaining>0 else "시간 만료 · 주문서를 다시 사용하세요")
 		secondary_effects.show()
 
 func _fill_options(record: Dictionary) -> void:

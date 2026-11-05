@@ -163,6 +163,9 @@ func _refresh() -> void:
 	text+="\n스턴 조건 주체: %s · 원본 상태6/단위/수치 보존, 주체와 계산 범위는 TWILIGHT 설정\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_stun_condition_subject","disabled")))
 	text+="\nPVP 수치의 싱글플레이어 투영: %s / 스킬 성공 가상 레벨: %s\n실제 캐릭터 레벨·경험치 불변 · 여섯 기존 상태 성공 계산만 사용(TWILIGHT 설정)\n공포8 조건: 주체 %s · 범위 %s · 처리 %s\n" % [UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_pvp_flat_ignore_consumer","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_pvp_status_level_consumer","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_condition_subject","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_scope","disabled"))),UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_fear_flat_ignore_consumer","disabled")))]
 	text+="\n유형별 리덕션 무시 처리: %s\n원본 수치 보존 · NPC AC/리덕션 공식 복원이 아닌 TWILIGHT 기존 추가 피해 해석\n" % UI.safe(str(world.PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer","disabled")))
+	if book.data.get("equipment_spell_item_constraints",{}).has(str(source_id)):
+		var source_spell_reason: String=preload("res://scripts/crafting/patch523_equipment_spells.gd").item_reason(world,record,str(source_id))
+		text+="\n장비 발동 실행 자격: %s\n원본 주문 수치·확률·기간 보존 / MR·속성·리덕션 단계와 반격 순서는 TWILIGHT 설정\n" % UI.safe("현재 소유/직업/기간 조건 충족" if source_spell_reason.is_empty() else source_spell_reason)
 	var effect_text: String = ""
 	var effects: Array = book.effect_evidence(source_id, level_value, 2 if blessing == 2 else 0)
 	if not effects.is_empty():

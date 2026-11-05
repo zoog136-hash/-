@@ -1,4 +1,5 @@
 extends RefCounted
+const SOURCE_IDENTITY = preload("res://scripts/ui/source_item_icon_identity.gd")
 const GROUND_ICONS = preload("res://scripts/ui/ground_item_icons.gd")
 const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
@@ -71,6 +72,18 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
+	# Native ItemClass identities (including legacy-save aliases) must not be
+	# canonicalized back to the unrelated web/PC icon namespace. Ground sprites
+	# are a separate source asset; do not reuse an inventory/category picture.
+	if SOURCE_IDENTITY.recognized(record):
+		var source: Dictionary = SOURCE_IDENTITY.describe(record, fallback_name)
+		if ground and source.route == "source_original_pixels":
+			source.erase("texture")
+			source.path = ""
+			source.route = "source_original_unavailable"
+			source.status = "original_icon_not_installed"
+			source.reason = "source_ground_asset_not_installed"
+		return source
 	if ground:
 		var original: Dictionary = _describe_original(record, fallback_name, images, true)
 		# Preserve existing dedicated floor pairs and their provenance.
@@ -198,6 +211,7 @@ static func texture(record: Dictionary, name_value: String = "", images: Diction
 	var info: Dictionary = describe(record, name_value, images, ground)
 	var path: String = str(info.path)
 	if info.route=="source_original_unavailable":return null
+	if info.route=="source_original_pixels":return info.texture
 	# Keep the original loader's hash gate and returned ImageTexture. Reloading
 	# its path can fail in optional packs/PCKs even though it decoded correctly.
 	if info.route in ["reviewed_ground", "reviewed_l1j", "a2_candidate"]:

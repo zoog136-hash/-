@@ -41,7 +41,10 @@ func run() -> void:
 	host.save_error=ERR_FILE_CANT_WRITE;before=hash(service.progress)
 	check(service.select_relic_subslot(chosen).code=="save_failed" and hash(service.progress)==before,"failed slot save preserves choice")
 	host.save_error=OK
-	check(service.select_relic_subslot(chosen).ok and service.relic_subslot_view().active,"owned unlocked additional relic works with empty main")
+	check(service.select_relic_subslot(chosen).ok and not service.relic_subslot_view().active,"new v2 selection without a proven scroll stays inactive")
+	check(service.bonus_records().all(func(row: Dictionary) -> bool:return not str(row.origin).begins_with("relic_subslot11:")),"pending summon grants no secondary stats")
+	service.progress.erase(Runtime.RELIC_SUMMON_TIME)
+	check(service.relic_subslot_view().active,"pre-existing untimed selected saves retain their established effects")
 	var records: Array=service.bonus_records().filter(func(row: Dictionary) -> bool:return row.origin=="relic_subslot11:"+chosen)
 	check(records.size()==1 and records[0].meleeHit==1 and is_equal_approx(float(records[0].hpPct),0.01),"actual bonus records receive one-percent secondary HP in consumer fraction units")
 	check(service.bonus_records()==service.bonus_records(),"repeated refresh does not stack")

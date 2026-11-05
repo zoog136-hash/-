@@ -14,6 +14,9 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or absf(float(value)) > MAX_EXACT_JSON_INTEGER: return {"ok":false,"error":"원본 지급 수치 형식 확인 실패"}
 		var id: String = str(int(grant.get("item_class_id",-1)))
 		var summary: Dictionary = D.data().get("item_definitions",{}).get(id,{})
+		if int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
+			var exact_definition: Dictionary=D.definition_id(id)
+			if not exact_definition.is_empty():summary=exact_definition
 		if int(id) <= 0 or float(grant.get("item_class_id",-1)) != int(id) or summary.is_empty() or summary.get("original_item",{}).get("TestItem",true): return {"ok":false,"error":"정상 원본 아이템 ID 확인 실패"}
 		var amount: int = int(grant.get("amount",0))
 		var bless: int = int(grant.get("bless_raw",0))
@@ -32,6 +35,10 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			var previous: int = int(inventory.get(key,0))
 			if previous < 0 or previous > MAX_EXACT_JSON_INTEGER-amount: return {"ok":false,"error":"원본 지급 후 수량 정수 범위 초과 · 기존 보유 보존"}
 			inventory[key] = previous+amount
+		if bless==1 and int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
+			var typed: Dictionary=preload("res://scripts/cards/native_awakening_supply.gd").stage_grant(record,amount,instances,origin)
+			if not typed.get("ok",false):return {"ok":false,"error":"각성 물품 원본 지급 증명 실패"}
+			instances=typed.item_instances
 		if D.equipment(record):
 			if amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
 			var state: String = {1:"normal",2:"blessed",3:"cursed"}[bless]

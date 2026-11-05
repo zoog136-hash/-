@@ -66,15 +66,25 @@ static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
 	return result
 
 func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String) -> void:
+	RESOLVER.SOURCE_IDENTITY.SCENES.detach(view)
 	target = view
 	target.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	target.texture = RESOLVER.texture(record,item_name,images)
-	rank = animation_rank(record, item_name)
+	# Source pixels retain their alpha and shape; authored rarity shaders and
+	# foreground extraction are not part of the source icon or CSB scene.
+	rank = 0 if RESOLVER.SOURCE_IDENTITY.recognized(record) else animation_rank(record, item_name)
 	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
 	var info: Dictionary = RESOLVER.describe(record,item_name,images)
+	if info.get("reason") == "source_scene_player_required" and usage != "ground":
+		var attached: Dictionary = RESOLVER.SOURCE_IDENTITY.SCENES.attach(view, info.source_icon_identity)
+		info["scene_result"] = attached
+		if attached.get("ok", false):
+			info.route = "source_original_scene"
+			info.status = "verified_source_scene"
+			info.reason = ""
 	foreground_ready = true
 	# Only turning surfaces need a cutout. Static list/quickslot/drag/ground
 	# art and every hero/legend source image remain exactly as they were.
@@ -98,8 +108,8 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 		substitute_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		substitute_mark.offset_left = -12
 	var missing_original: bool=info.status=="original_icon_not_installed"
-	substitute_mark.text="원본 미설치" if missing_original else "◇"
-	substitute_mark.tooltip_text="원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
+	substitute_mark.text=RESOLVER.SOURCE_IDENTITY.missing_label(info) if missing_original else "◇"
+	substitute_mark.tooltip_text=substitute_mark.text if missing_original else "TWILIGHT 자체 대체 아이콘"
 	substitute_mark.offset_left=-62 if missing_original else -12
 	substitute_mark.visible = missing_original or info.status == "self_authored_substitute"
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
@@ -134,6 +144,7 @@ func refresh_visibility() -> bool:
 	return animate
 
 func deactivate() -> void:
+	if is_instance_valid(target): RESOLVER.SOURCE_IDENTITY.SCENES.detach(target)
 	rank = 0
 	foreground_ready = true
 	if target != null: target.material = null
@@ -141,4 +152,5 @@ func deactivate() -> void:
 	if is_instance_valid(scheduler): scheduler.unregister(self)
 
 func _exit_tree() -> void:
+	if is_instance_valid(target): RESOLVER.SOURCE_IDENTITY.SCENES.detach(target, false)
 	if is_instance_valid(scheduler): scheduler.unregister(self)

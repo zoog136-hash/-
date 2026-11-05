@@ -1,27 +1,27 @@
-# Remaining-system integration
+# Remaining-system consolidation
 
-Base: main after the verified PR262 closeout in #268. This Draft consolidates the non-UI/map/Sprite work; sound is excluded. It is not authorized as a bulk main merge.
+This is the single Draft for non-UI/map/Sprite work after PR262's verified closeout merged through #268. Sound is excluded. This Draft is not an additional bulk main merge.
 
-## Included in the initial checkpoint
+## Code included in this snapshot
 
-The exact public PR264 backend from checkpoint8488ada8: seven unconfirmed523 source/domain/runtime/UI-service modules, the labelled host policy, and five focused tests. This is13 existing code/data/test paths. Five isolated fixture suites passed336 checks. The original-source portions of those suites were not run in this initial checkpoint. Main activation and original UI node/pixel wiring are still pending; module presence is not completed gameplay.
+The latest received code from PR231 (including its unpublished UI-boundary follow-up), PR248 (including form removal and save-owner changes), PR264, PR265 (including native equipment output adoption), the remaining PR218 public code, and the honing, icon, weapon and native-equipment-effect handoffs is composed on the current main. The local inclusion audit accounts for258 regular code/data/test paths. Earlier code-only handoff trees were reproduced before integration.
 
-## Inclusion still pending
+Shared conflicts retain the current Main/card/title/guardian/totem/equipment owners. PR231's wider immutable inventory/item/option selection snapshot and PR248's compact selection use one sealed writer. Monster lifecycle, source523 priority and base508 source-action/drop provenance coexist. Newer Main installer/preview/identity protections supersede five older local reversions from218; the six original local records remain preserved. The private source-derived NPC-region input stays with the map owner and is not republished. Existing legacy compiler changes are preservation work, not new full-SP2 implementation.
 
-- PR231: latest unpublished UI-boundary changes and shared card/slot/inventory/atomic-save hooks.
-- PR248: latest unpublished form removal, card-selection save ownership and conditional effects.
-- PR264: shared Main, skill and blessing hooks plus remaining integration tests.
-- PR265: latest unpublished processing, native equipment result adoption, inventory/physical quantity synchronization and source constraints.
-- PR218: remaining public monster code and six local-file comparison decisions. Newer Main protections must survive; private map-region source input stays private and with the map owner.
-- PR228: per-file supersession audit for the six explicitly labelled host examples and older quest service; no overwrite of original523 quests.
-- Honing, item-icon adapter, weapon helper and native-equipment effect handoffs: latest received code is preserved, but inclusion and combined execution are not yet complete.
+PR228's five old paths are superseded: its six labelled host examples are not original523 content and are not reactivated. Current source quest eligibility, automatic atomic reward/save handling and tests replace the old event-only service. The old same-event predecessor/child exclusion is intentionally superseded: original eligible chains may complete in one atomic batch under the acquisition-immediate user policy. Unknown old root quest data remains opaque in the existing extra-save preservation; no migration or regrant of those unmerged examples is claimed. All original branches remain.
 
-The combined local candidate has undergone conflict resolution and parsing; that is not a claim that every candidate path is included in this public Draft. Further commits must identify actual included paths and validation. Original PRs remain open until their latest unique changes are accounted for.
+Historical owner reports, runtime identifiers, source delivery references and validation dumps are retained privately rather than republished. This consolidated status replaces their production-completion claims. A historical identifier-bound quest test also remains private.
 
-## Boundaries and remaining work
+## Validation and limits
 
-PR267 owns original UI, PR222 owns maps, and the new dedicated Sprite task owns full SP2 connection. This Draft preserves their existing calling contracts and does not copy their renderers or implement Sprite completion. It creates no substitute UI or artwork.
+The composed local runtime parsed and passed actual Main/source-map/save47 checks and actual quest-issued selected quantity/receipt/save/reconnect735 checks. Separate fixtures passed: PR264 domains336, card-selection boundary13, and processing/identity reducers167. Python syntax passed64 changed files;23 focused existing compiler/weapon unit tests passed. These fixture/parser results are not normal acquisition, full source-effect, original UI, pixel delivery or natural-probability evidence. The earlier merged PR2622756-check milestone remains separate and is not added again.
 
-The merged quest milestone has3621 definitions and58 of146 initial ItemClasses with at least one bounded path.88 ItemClasses and four learned-spell effect boundaries remain; they are not erased by PR262 closeout. Connect actual item ownership to use/equip, partial quantity, effects and one confirmed receipt/save transaction. Keep Test/server/date restrictions and explicit unknown source semantics.
+The current58/146 initial item-class measure means at least one bounded path;88 remain, with four learned-spell effects separate. Preserve Test/server/date/excluded holds. Dedicated returns/current-territory predicates, guardian typed spending, non-equipment alchemy physical remainder synchronization, honing target/source authentication and optional native-effect inputs remain explicit follow-ups. Existing owned items and source provenance are not renamed, mass-converted or regranted to lower a count. The authored equipment processing form is not exposed as replacement original UI; backend quote/commit APIs remain.
 
-Original archives, packs, pixels, saves, private delivery references and runtime identifiers are excluded from public changes. Received private handoffs and original working states remain preserved. CI is not run; commits use [skip ci].
+## Ownership and evidence
+
+PR267 owns original UI/pixels; PR222 owns maps; full SP2 connection has a separate dedicated owner. The item integration owns identity, events, service/effect and atomic-save contracts. No new imagery, sprite frames, imagined layouts or animation sequences are created here.
+
+The source-use target is at least95% by both fixed original file inventory and original member bytes. The known global inventory is still a lower bound. Holding, parsing, definition registration, code binding, installation and observed service consumption are separate states. Partly used files are not full-use evidence; equal hashes do not remove original paths. Generated JSON/image/cache bytes are not original bytes. No overall usage percentage is established by these checks, and source holds are not disabled to inflate it.
+
+Original data, packs, saves and unique producer artifacts remain preserved. Workspace archival still requires private-input restoration/preservation verification; code inclusion alone is insufficient. No original PR or workspace is deleted by this commit. No CI was run; commits use [skip ci].

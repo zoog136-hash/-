@@ -19,6 +19,9 @@ static func definition(identity: String) -> Dictionary:
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=Unlock.validate(value)
 	if not unlock_error.is_empty():return unlock_error
+	if value.has("native_relic_summon_time"):
+		var timer: Variant=value.native_relic_summon_time
+		if not timer is Dictionary or timer.get("schema")!=1 or timer.get("item_class_id")!=365758 or timer.get("slot_index")!=11 or not timer.get("identity") is String or not preload("res://scripts/cards/native_awakening_supply.gd").integer(timer.get("expires_utc")):return "추가 성물 소환 시간 저장 형식 오류"
 	if not value.has(FIELD):return ""
 	var identity: Variant=value[FIELD]
 	if not identity is String:return "추가 성물 저장 ID 형식 오류"

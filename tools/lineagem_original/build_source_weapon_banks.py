@@ -1,9 +1,10 @@
 """Compile declared source weapon families without editing source art or combat timing."""
 import sys,json,pathlib,collections,gzip,zlib,hashlib,time,argparse
 import original_spr,original_sp2
+from weapon_action_selection import select_family
 cli=argparse.ArgumentParser()
 for name in ['inputs','base-pack','output']:cli.add_argument('--'+name,type=pathlib.Path,required=True)
-cli.add_argument('--actors',default='28439,28514,28519,28524');cli.add_argument('--weapon-types',default='1,2,7,84')
+cli.add_argument('--actors',default='28439,28514,28519,28524');cli.add_argument('--weapon-types',default='1,2,3,7,10,84')
 args=cli.parse_args();inputs=args.inputs;stage=args.output;out=stage/'weapon_banks';(out/'actors').mkdir(parents=True,exist_ok=True);(out/'pixels').mkdir(exist_ok=True)
 basepath=args.base_pack;ds=original_spr.read((inputs/'lineagem-category-source-metadata/original-spr').glob('*.spr'))
 rows=json.load(open(inputs/'base508_all_content_validated/content/ListSprAction.json',encoding='utf-8-sig'))['rows'];groups=collections.defaultdict(dict)
@@ -25,7 +26,9 @@ def frame(layer,chunk,bit,f):
   parsed[name]=original_sp2.parse(raw);sources[name]={'sha256':hashlib.sha256(raw).hexdigest(),'crc32':f'{zlib.crc32(raw)&0xffffffff:08x}','bytes':len(raw)}
  pal,mask,dirs,_=parsed[name];bits=[b for b in range(8) if mask&(1<<b)]
  if bit not in bits:raise ValueError('stored direction absent '+name)
- fs,blocks=dirs[bits.index(bit)];im,offset=original_sp2.render(pal,fs,blocks,f)
+ fs,blocks=dirs[bits.index(bit)]
+ if not 0<=f<len(fs):raise ValueError(f'source frame absent {name}: direction={bit} frame={f} stored_frames={len(fs)}')
+ im,offset=original_sp2.render(pal,fs,blocks,f)
  rel=f'weapon_banks/pixels/{layer}-{chunk}-{bit}-{f}.png';
  if not (stage/rel).exists():im.save(stage/rel)
  value={'path':rel,'offset':list(offset),'layer_id':layer,'source_bounds':list(fs[f][0]),'pixel_size':list(im.size),'source_direction_mask':mask};images[key]=value;return value
@@ -34,6 +37,7 @@ for sid in map(int,args.actors.split(',')):
  for weapon,roles in groups.items():
   if weapon==0 or weapon not in {int(x) for x in args.weapon_types.split(',')}:continue
   try:
+   roles=select_family(rows,sid,weapon,roles)
    chosen={role:(sid,body,actions[int(row['ID'])]) for role,row in roles.items()}
    if set(chosen)!=set(['idle','walk','attack']):raise ValueError('incomplete source action family')
    if run:

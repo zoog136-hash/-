@@ -95,7 +95,8 @@ func _refresh() -> void:
 			continue
 		var source_record: Dictionary = world._find_catalog_item_record(item_name)
 		if is_deposit and source_record.has("growth96_item_id") and not bool(source_record.get("storable",false)): continue
-		if not _is_equipment(item_name):
+		if is_deposit and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,world._find_catalog_item_record(item_name),physical):continue
+		if not _is_equipment(item_name) and not preload("res://scripts/cards/source_awakening_items.gd").has_physical_item(item_name,physical):
 			_add_entry(item_name, count)
 			continue
 		var ids: Array[String] = []

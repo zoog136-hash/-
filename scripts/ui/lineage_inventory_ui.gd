@@ -360,7 +360,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":int((instances[id] as Dictionary).get("source_reward_quantity",1))})
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(instances[id].get("source_reward_quantity",instances[id].get("source_awakening_quantity",instances[id].get("source_card_currency_quantity",1)))))})
 	return entries
 
 func _refresh_inventory_grid() -> void:
@@ -604,7 +604,11 @@ func _select_item(item_name: String) -> void:
 	_refresh_detail(item_name)
 
 func _find_item_record(item_name: String) -> Dictionary:
+	var selected_id: String=_ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
+	if not selected_id.is_empty():
+		var selected: Variant=character_state.get("item_instances",{}).get(selected_id)
+		if selected is Dictionary and selected.get("name")==item_name and selected.get("record") is Dictionary and (selected.record.get("source_pending_use",false) or preload("res://scripts/cards/source_awakening_items.gd").recognized(selected.record)):return selected.record
 	var records: Array = catalog_data.get("아이템", []) as Array
 	# Same first match as the old linear scan; the bag redraw and grade sort call
 	# this per entry/comparison, which made sorting a large bag take seconds.
@@ -629,7 +633,8 @@ func _refresh_detail(item_name: String) -> void:
 	var selected_id: String = _ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
 	var record := _find_item_record(selected_reference)
-	var amount: int = int((character_state.get("item_instances",{}).get(selected_id,{}) as Dictionary).get("source_reward_quantity",1)) if selected_id != "" else int(inventory.get(item_name, 0))
+	var selected_physical: Dictionary=character_state.get("item_instances",{}).get(selected_id,{})
+	var amount: int = int(selected_physical.get("source_reward_quantity",selected_physical.get("source_awakening_quantity",selected_physical.get("source_card_currency_quantity",1)))) if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))

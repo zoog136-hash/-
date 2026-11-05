@@ -16,6 +16,9 @@ var last_regen_at: int = 0
 var dragon_orb_expires_at: int = 0
 var auto_recharge: bool = false
 var last_orb_purchase_month: String = ""
+# Derived from the installed source523 subscription adapter; the existing
+# expiry is the only timer. -1 retains the established monthly-shop behavior.
+var source_jade_level_override: int = -1
 
 static func charge_multiplier(player_level: int) -> int:
 	if player_level >= 89:
@@ -53,19 +56,19 @@ func orb_active(now: int = 0) -> bool:
 func experience_rate() -> float:
 	if blessing >= 201:
 		return 7.0
-	if blessing > 0 or orb_active():
+	if blessing > 0 or (orb_active() and source_jade_level_override != 0):
 		return 4.0
 	return 1.0
 
 func adena_rate() -> float:
 	if blessing >= 201:
 		return 2.0
-	if blessing > 0 or orb_active():
+	if blessing > 0 or (orb_active() and source_jade_level_override != 0):
 		return 1.5
 	return 1.0
 
 func protected_drops() -> bool:
-	return blessing > 0 or orb_active()
+	return blessing > 0 or (orb_active() and source_jade_level_override != 0)
 
 func consume_for_kill(base_exp: int, reduction_percent: float = 0.0) -> int:
 	if blessing <= 0:

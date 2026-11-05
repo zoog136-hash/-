@@ -18,17 +18,19 @@ import zlib
 try:
     from .build_patch523_monster_drops import TABLES, compile_pack as compile_drops
     from .patch523_item_definitions import compile_items
+    from .patch523_item_icons import compile_icon_links, attach_icon_links, compact_icon_index
 except ImportError:
     from build_patch523_monster_drops import TABLES, compile_pack as compile_drops
     from patch523_item_definitions import compile_items
+    from patch523_item_icons import compile_icon_links, attach_icon_links, compact_icon_index
 
 ACQUISITION_TABLES = ('MerchantGoods', 'ItemCraftInput', 'ItemCraftOutputView')
-EXTRA_TABLES = (*ACQUISITION_TABLES, 'DateTimes_Korean', 'ItemEnchantBonus')
+EXTRA_TABLES = (*ACQUISITION_TABLES, 'DateTimes_Korean', 'ItemEnchantBonus', 'Icon', 'AssetView')
 KIND = 'patch523_monster_drop_membership'
 IDENTITY = ('name', 'source', 'sourceId', 'sourceUrl', 'slot', 'type', 'grade')
 OMIT = {'source_mapped_bonuses', 'source_unhandled_bonuses',
         'source_unhandled_bonus_ids', 'source_effect_scope', 'source_use_spec',
-        'source_acquisition_policy', 'source_weight_unit', 'desc'}
+        'source_acquisition_policy', 'source_weight_unit', 'desc', 'source_icon_identity'}
 
 def encoded(value):
     return (json.dumps(value, ensure_ascii=False, separators=(',', ':'))+'\n').encode()
@@ -100,6 +102,9 @@ def compile_full(source: Path, catalog: Path):
         stamp = datetime(row['Year'], row['Month'], row['Day'], row['Hour'], row['Minute'])
         return int(stamp.strftime('%Y%m%d%H%M'))
     definitions = compile_items(tables, descriptions, set(item_rows), {}, preserve_unresolved=True)
+    icon_links = compile_icon_links(tables)
+    attach_icon_links(definitions, icon_links)
+    document["source_icon_index"] = compact_icon_index(icon_links)
     references = collections.defaultdict(collections.Counter)
     for name in ('NpcItemDropView', *ACQUISITION_TABLES):
         for row in tables[name]:
