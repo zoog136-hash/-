@@ -7,6 +7,11 @@ const CLOSE=31020
 const TABS={"전체":[41748,40288],"장비":[38868,37448],"소모품":[36028,34608],"기타":[33196,31784]}
 const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
+const EXTENSION_BUTTON=21648
+const FRAMES={
+ false:{"parent":55184,"background":60672,"offsets":[60672,59888,59516,59136,58756,58376]},
+ true:{"parent":43300,"background":54484,"offsets":[54484,53776,53404,53028,52648,52268,51888]}
+}
 # Both retained current523 parents declare this same named source clip.
 # Choosing the application's parent/caller remains explicit; alpha0 is not
 # evidence that the top-level source is unusable or should be replaced.
@@ -54,7 +59,7 @@ func snapshot() -> Dictionary:
 	if is_instance_valid(capacity) and capacity is Label:model["capacity_text"]=capacity.text
 	return model
 
-func build(remaining: Dictionary={}) -> Dictionary:
+func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
 	var model: Dictionary=snapshot()
 	if not model.get("ok",false):return model
@@ -63,8 +68,19 @@ func build(remaining: Dictionary={}) -> Dictionary:
 	# Received tab/close subtrees contain only their original Sprite icons
 	# and title textures; they serialize no Text/TextBMFont literal children.
 	# Do not manufacture text labels or bind nearby dynamic preview strings.
-	var roots: Array[int]=[CLOSE,60672,59888,59516,59136,58756,58376]
-	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"close")},60672:{"role":"consume"}}
+	var frame: Dictionary=FRAMES[expanded]
+	var roots: Array[int]=[CLOSE]
+	roots.append_array(frame.offsets)
+	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"close")}}
+	bindings[int(frame.background)]={"role":"consume"}
+	bindings[int(frame.parent)]={"visible":true}
+	var bag: Object=_live_inventory()
+	var active: Dictionary=_pack.scene(MEMBER)
+	# Old normal-only packs keep working. Extension controls are included
+	# only when the permitted source scope actually contains their original.
+	if bag!=null and bag.has_method("_toggle_expanded") and not _node_at(active.get("nodeTree",{}),EXTENSION_BUTTON).is_empty():
+		roots.append(EXTENSION_BUTTON)
+		bindings[EXTENSION_BUTTON]={"role":"button","activate":Callable(self,"toggle_expanded")}
 	for category: String in TABS:
 		var variants: Array=TABS[category]
 		for index: int in range(variants.size()):
@@ -85,7 +101,7 @@ func build(remaining: Dictionary={}) -> Dictionary:
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_inventory_core_node_not_unique","offset":offset}
 	for offset: int in selected:
 		if not bindings.has(offset) and remaining.has(offset):bindings[offset]=remaining[offset].duplicate(true)
-	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},{"field":"existing_sort_action_contract","offsets":[19772,8004,4764,2864]},"original_search_extension_lock_delete_move_dissolve_and_keypad_contracts"]}
+	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"expanded":expanded,"background_offset":frame.background,"branch_parent_offset":frame.parent,"original_variant_clip":{"name":"Fx_Extension_On","start_frame":40,"end_frame":70} if expanded else {},"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},{"field":"existing_sort_action_contract","offsets":[19772,8004,4764,2864]},"original_search_lock_delete_move_dissolve_and_keypad_contracts"]}
 
 func bind_presented(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
@@ -117,6 +133,27 @@ func select_category(category: String) -> Dictionary:
 	var model: Dictionary=refresh(scene) if is_instance_valid(scene) else snapshot()
 	if model.get("ok",false):model_changed.emit(model.duplicate(true))
 	return model
+
+func toggle_expanded() -> Dictionary:
+	var bag: Object=_live_inventory()
+	if bag==null or not bag.has_method("_toggle_expanded"):return _fail("source_main_inventory_existing_expand_api_missing")
+	# Same exact host-window relationship used by renewal_inventory. No
+	# native width, capacity cost, slot purchase or resize rule is recreated.
+	var window: Node=bag.get_parent()
+	for index: int in range(2):
+		window=window.get_parent() if window!=null else null
+	if window==null or not window.has_method("fit_viewport"):return _fail("source_main_inventory_existing_expand_window_unavailable")
+	bag.call("_toggle_expanded")
+	var model: Dictionary=snapshot()
+	if model.get("ok",false):model_changed.emit(model.duplicate(true))
+	return model
+
+static func _node_at(node: Dictionary, offset: int) -> Dictionary:
+	if node.get("_offset")==offset:return node
+	for child: Dictionary in node.get("children",[]):
+		var found: Dictionary=_node_at(child,offset)
+		if not found.is_empty():return found
+	return {}
 
 func close() -> Dictionary:
 	var inventory_ui: Object=_live_inventory()

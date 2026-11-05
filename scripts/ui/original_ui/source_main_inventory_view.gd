@@ -1,6 +1,6 @@
 extends RefCounted
-## Bounded native inventory presentation: one original row of four authored
-## slots only, containing the entire current ordered filtered owner model.
+## Bounded native inventory presentation: one original normal four-slot or
+## extension eight-slot row containing the entire current filtered owner model.
 ## Unsupported states request the existing complete bag; no grid is synthesized.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Chrome=preload("res://scripts/ui/original_ui/source_main_inventory_bindings.gd")
@@ -9,6 +9,8 @@ const PARENT="UI/FloatingUiScene.csb"
 const PROJECT=1572
 const SLOT_SET=56036
 const SLOT_OFFSETS: Array[int]=[5464,5212,4972,4732]
+const EXTENSION_SLOT_OFFSETS: Array[int]=[3900,3660,3420,3180,2940,2700,2460,2212]
+var _native_capacity: int=4
 signal return_to_current_requested(reason: Dictionary)
 signal native_scene_changed(presentation: Dictionary)
 signal closed
@@ -40,7 +42,7 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 	if not result.get("ok",false):return _unsupported_result(result)
 	_chrome.model_changed.connect(_on_category_changed)
 	_slots.selection_changed.connect(_on_selection_changed)
-	return {"ok":true,"handled":false,"configured":true,"native_capacity":4,"parent_contract":Chrome.parent_contract(PARENT),"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"handled":false,"configured":true,"native_capacity":4,"supported_native_capacities":[4,8],"parent_contract":Chrome.parent_contract(PARENT),"partial_source_scene":true,"complete_screen_contract":false}
 
 func open(parent: Node) -> Dictionary:
 	if not is_instance_valid(parent):return _unsupported("source_inventory_view_existing_canvas_required")
@@ -100,7 +102,7 @@ func gesture_bounds() -> Control:
 	return _bounds if is_open() else null
 
 func presentation() -> Dictionary:
-	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":4,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":_native_capacity,"partial_source_scene":true,"complete_screen_contract":false}
 
 func _eligible_model() -> Dictionary:
 	var bag: Object=_bag.get_ref() if _bag!=null else null
@@ -108,12 +110,38 @@ func _eligible_model() -> Dictionary:
 	var search: Variant=bag.get("search_line")
 	if is_instance_valid(search) and search is LineEdit and not search.text.is_empty():return _unsupported("source_inventory_view_search_not_supported")
 	if bag.get("detail_active")==true:return _unsupported("source_inventory_view_detail_not_supported")
-	var grid: Variant=bag.get("item_grid")
-	if is_instance_valid(grid) and grid is GridContainer and grid.columns!=4:return _unsupported("source_inventory_view_normal_four_columns_required")
+	var branch: Dictionary=_owner_branch(bag)
+	if not branch.get("ok",false):return branch
 	var model: Dictionary=_slots.entries()
 	if not model.get("ok",false):return _unsupported_result(model)
-	if model.current_display_rows.size()>4:return _unsupported("source_inventory_view_more_than_four_filtered_rows")
+	if model.current_display_rows.size()>int(branch.capacity):
+		var reason: Dictionary=_unsupported("source_inventory_view_more_than_authored_capacity")
+		reason["native_capacity"]=branch.capacity
+		reason["filtered_row_count"]=model.current_display_rows.size()
+		return reason
+	model["native_capacity"]=branch.capacity
+	model["expanded"]=branch.expanded
+	model["slot_project_offset"]=44156 if branch.expanded else SLOT_SET
+	model["authored_slot_offsets"]=EXTENSION_SLOT_OFFSETS.duplicate() if branch.expanded else SLOT_OFFSETS.duplicate()
+	model["authored_variant"]="Nd_Slot_Extension" if branch.expanded else "Nd_Slot"
 	return model
+
+func _owner_branch(bag: Object) -> Dictionary:
+	var capacity: int=0
+	var grid: Variant=bag.get("item_grid")
+	if is_instance_valid(grid) and grid is GridContainer:
+		if grid.columns not in [4,8]:return _unsupported("source_inventory_view_owner_columns_not_authored")
+		capacity=grid.columns
+	var window: Node=bag.get_parent()
+	for index: int in range(2):window=window.get_parent() if window!=null else null
+	if window!=null and window.has_meta("expanded"):
+		var expanded: Variant=window.get_meta("expanded")
+		if not expanded is bool:return _unsupported("source_inventory_view_owner_expand_state_invalid")
+		var declared_capacity: int=8 if expanded else 4
+		if capacity!=0 and capacity!=declared_capacity:return _unsupported("source_inventory_view_owner_expand_state_not_synchronized")
+		capacity=declared_capacity
+	if capacity==0:return _unsupported("source_inventory_view_owner_expand_state_required")
+	return {"ok":true,"capacity":capacity,"expanded":capacity==8,"basis":"existing owner grid.columns/window expanded metadata"}
 
 func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	_refreshing=true
@@ -121,6 +149,9 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	if not model.get("ok",false):
 		_refreshing=false
 		return _fallback(model) if is_open() else model
+	var slot_offsets: Array[int]=[]
+	slot_offsets.assign(model.authored_slot_offsets)
+	var slot_set: int=model.slot_project_offset
 	var assignments: Dictionary={}
 	var entries_by_reference: Dictionary={}
 	for index: int in range(model.current_display_rows.size()):
@@ -129,13 +160,13 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not reference is String or reference.is_empty():
 			_refreshing=false
 			return _stage_failed(_unsupported("source_inventory_view_owner_reference_missing"))
-		assignments[SLOT_OFFSETS[index]]=reference
+		assignments[slot_offsets[index]]=reference
 		entries_by_reference[reference]=row.duplicate(true)
-	var slot_contract: Dictionary=_slots.build(SLOT_SET,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},"Nd_Slot")
+	var slot_contract: Dictionary=_slots.build(slot_set,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant)
 	if not slot_contract.get("ok",false):
 		_refreshing=false
 		return _stage_failed(_unsupported_result(slot_contract))
-	var chrome: Dictionary=_chrome.build()
+	var chrome: Dictionary=_chrome.build({},model.expanded)
 	if not chrome.get("ok",false):
 		_refreshing=false
 		return _stage_failed(_unsupported_result(chrome))
@@ -153,9 +184,9 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	if not child.get("ok",false):return _reject_staged(next,child)
 	var inventory_scene: Node2D=child.player
 	var hits: Dictionary={}
-	for offset: int in SLOT_OFFSETS:
+	for offset: int in slot_offsets:
 		if not assignments.has(offset):continue
-		var slot_player: Dictionary=next.project_player([PROJECT,SLOT_SET,offset])
+		var slot_player: Dictionary=next.project_player([PROJECT,slot_set,offset])
 		if not slot_player.get("ok",false):return _reject_staged(next,slot_player)
 		var native_slot: Node2D=slot_player.player
 		var owner_result: Dictionary=slot_contract.owner_results[offset]
@@ -169,8 +200,8 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
 		var raw: Dictionary=entries_by_reference[reference]
-		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.texture,"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false}
-	var bounds: Control=_source_consume_control(inventory_scene,60672)
+		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.texture,"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false}
+	var bounds: Control=_source_consume_control(inventory_scene,int(chrome.background_offset))
 	if bounds==null:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_gesture_bounds_missing"})
 	var previous: Node2D=_scene
 	var playback: Dictionary=previous.playback_status() if is_instance_valid(previous) else {}
@@ -179,6 +210,12 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not result.get("ok",false):return _reject_staged(next,result)
 		if not initial_open:next.seek_frame(float(playback.get("frame",0)))
 	else:next.seek_frame(float(playback.get("frame",17)))
+	if model.expanded:
+		# Apply the existing source extension clip's exact end state. No new
+		# geometry is authored and no source loop/autoplay policy is inferred.
+		inventory_scene.seek_frame(70.0)
+		var refreshed: Dictionary=_chrome.refresh(inventory_scene)
+		if not refreshed.get("ok",false):return _reject_staged(next,refreshed)
 	# Commit only after every owned row has its original slot, hit control and
 	# existing owner texture. The complete current bag remains caller-owned.
 	parent.add_child(next)
@@ -186,6 +223,7 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	_inventory_scene=inventory_scene
 	_hits=hits
 	_bounds=bounds
+	_native_capacity=int(model.native_capacity)
 	_chrome.bind_presented(inventory_scene)
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
@@ -195,6 +233,9 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	shown["ok"]=true
 	shown["handled"]=true
 	shown["assignments"]=assignments
+	shown["expanded"]=model.expanded
+	shown["authored_slot_set_project"]=slot_set
+	shown["authored_variant"]=model.authored_variant
 	shown["parent_contract"]=Chrome.parent_contract(PARENT)
 	shown["logical_open_clip_consumption"]="one_shot_Inventory_All_On_5_17"
 	native_scene_changed.emit(shown.duplicate(true))
@@ -241,7 +282,7 @@ static func _source_consume_control(scene: Node2D, offset: int) -> Control:
 	return null
 
 static func _unsupported(code: String) -> Dictionary:
-	return {"ok":false,"handled":false,"code":code,"native_capacity":4,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":false,"handled":false,"code":code,"supported_native_capacities":[4,8],"partial_source_scene":true,"complete_screen_contract":false}
 
 static func _unsupported_result(result: Dictionary) -> Dictionary:
 	var reason: Dictionary=result.duplicate(true)

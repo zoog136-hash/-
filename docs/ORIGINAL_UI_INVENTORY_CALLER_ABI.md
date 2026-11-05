@@ -9,11 +9,21 @@ claim final original UI completion.
 
 ## Authored scope and owner model
 
-Only the original four normal slot projects5464/5212/4972/4732 are instantiated,
-at their authored positions in Inventory_Slot_Set. There is no invented row,
-row pitch, page, capacity or sort rule. The entire current filtered ordered
-model must fit these four positions. Search, expanded/detail modes and more
-than four filtered rows are not silently reduced to a partial item list.
+The existing owner's grid.columns / window expanded state selects either the
+original four normal slot projects5464/5212/4972/4732 or the original eight
+extension projects3900/3660/3420/3180/2940/2700/2460/2212. The entire current
+filtered ordered model must fit that authored row. Search/detail modes or
+additional rows are not silently reduced. No row pitch, repeated slot, capacity
+purchase, page or sort rule is created. If both owner state fields are present
+they must agree before presentation replaces the current bag.
+
+The expanded branch uses Inventory_All original Project44156/Scroll43832,
+background54484 under Nd_BG_Extension43300, and Inventory_Slot_Set's original
+Nd_Slot_Extension1856. Its current state consumes Fx_Extension_On end frame70
+(source clip40..70). Normal geometry and original child coordinates are retained.
+Original Expand21648, when actually included in the selected pack, calls the
+existing bag._toggle_expanded() and refreshes through the same owner window.
+The extension-lock row is not interpreted as capacity or purchase rules.
 
 `renewal_inventory.prepare_source_inventory_model()` reuses the same reference,
 filter and acquisition-order producer used by its current grid. The native
@@ -81,7 +91,7 @@ presentation acceptance; it is not actual render or whole-screen proof.
 
 ## Pack and remaining scope
 
-The local combined producer output adds four explicit inventory scopes to the
+The separately delivered normal4 candidate adds four explicit inventory scopes to the
 prior main/map subset: 33 originals, scene trees16, partial scopes15, blockers0,
 manifest `4f5bffdd6ad96917ac8795f3313e4da0ace4a59821f9439783a410509931e4c1`.
 Its status is STATIC_DEPENDENCIES_RESOLVED_REQUIRES_IMAGE_OWNER, and its external
@@ -89,7 +99,12 @@ inputs are Area44440 and Common_Slot15012. The existing installer's canonical
 v5 Drive file/pin remains unchanged; a producer output is not installer receipt
 or external pixel delivery.
 
-More rows, original expanded/detail/search/sort controls and original icon
+The normal4 candidate is on private Drive as `1RIdxVtVA3q9cWsrr3FWq8Kea6_ceNeTV`,
+ZIP SHA `40abf0125a370a12e1ebe24638c504e98b683711cec051c5184174711fef99fb`,
+11,935,660 bytes. The later expanded8 code requires a later pack whose scopes
+actually contain the extension nodes; this normal4 candidate is preserved.
+
+More rows, original detail/search/sort controls and original icon
 effects remain incomplete. The whole560 connection numerator is not established.
 No new test, game execution, render, quality assessment, audit or CI was run.
 These interfaces and the normal-view restoration remain unexecuted/unverified.

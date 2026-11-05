@@ -89,3 +89,28 @@ The UI pack alone is sufficient for these static HUD/source map controls, but
 it is not proof that the separate image-owner pack, source relation document,
 caller registration or cell conversion are installed. These inputs remain
 explicit; missing originals are not replaced or claimed as game consumption.
+
+## Separate normal4 inventory candidate (private delivery succeeded)
+
+This new candidate is separate from the canonical v5 selection above. Its
+successful private Drive upload and metadata readback do not change the
+installer's selected v5 input or prove consumer installation/game execution.
+
+- Drive file ID: `1RIdxVtVA3q9cWsrr3FWq8Kea6_ceNeTV`.
+- Filename: `TWILIGHT_current523_main_game_inventory_candidate_original_pack_20261105.zip`.
+- ZIP size: **11,935,660 bytes**.
+- ZIP SHA256: `40abf0125a370a12e1ebe24638c504e98b683711cec051c5184174711fef99fb`.
+- `original_ui.json` pin: `4f5bffdd6ad96917ac8795f3313e4da0ace4a59821f9439783a410509931e4c1`.
+- Corresponding code: `e091ef68bc95644e0941598fff5d88b3b1ad8e42`.
+- Scope: 33 originals / 16 scene trees / 15 partial scopes; normal four-slot
+  inventory plus the retained main/map subset. Later expanded8/weight/quickslot
+  code is not activated by this candidate's smaller source scopes.
+
+Root entries remain `original_ui.json`, `receipt.json`, `originals/UI/...`.
+The separate relative destination is
+`source-ui/current523-main-game-inventory-candidate`; select the extracted
+root and this candidate's manifest pin through the same CLI/environment keys.
+Area44440 and Common_Slot15012 still require their existing PR270 image owner.
+No old card/monster pack is required. The Drive metadata returned the exact
+filename/size and owner-user permission; no permission was changed. A consumer
+has not yet confirmed materialization. No new test/render/CI was performed.
