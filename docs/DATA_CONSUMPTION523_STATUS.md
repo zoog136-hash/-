@@ -134,6 +134,25 @@ implemented here. Learning labels can call the existing minimum-level method;
 no new display API is added. This reader change remains unexecuted/unverified;
 the old local-only reader was also present in published269fc86.
 
+The later269 `8a525f7c1ca0879954c3907ca27826cc42ba6433` already publishes
+the actual native generic spell-material receiver. Its `material_plan(skill)`
+calls `current523_native_stack.plan_spell_material(world,skill,cost_key,quantity)`
+for a remaining original-bound material role. It checks the exact public
+binding-file SHA/accepted binding and existing `_source_materials(public)`
+proof before joining that cost key to one native ItemClass ID. Its
+`spell_material_profile` uses the current original definition and ItemBonus89
+material declaration, supported normal/source/date conditions and actual
+physical quantity/receipt context. The existing
+`spend_original_skill_materials` or native `consume_ammo(material_requests)`
+owner joins the material debit with MP/HP and the existing save candidate.
+
+Our current `apply_to()` output already supplies those exact existing role
+keys and quantities. No extra requirements DTO, new key, name replacement,
+quantity owner or save hook is added by this lane. Its local older SkillService
+is not substituted for that owner's newer execution implementation. This is
+an already published consumer contract, not a remaining whole-material
+blocker, newly observed casting or a pass for these unexecuted inputs.
+
 Direct player-spell elemental input is also connected:
 the successful `apply_to` tail calls private
 `_apply_original_element_input(record,profile)` and supplies `record.element`
@@ -322,6 +341,36 @@ remain that owner's explicit holds, not source reader completion or game-use
 evidence.
 
 ## Latest final-input boundary — unverified
+
+Image270's [dungeon-role handoff](https://github.com/zoog136-hash/-/blob/9fc7c6aaedf1c80d09fe084c664bf4c22df04ee9/docs/SOURCE523_DUNGEON_IMAGE_CALLER_HANDOFF.md)
+declares exact independent relations:
+`PartyDungeon.PartyDungeonTypeID → PartyDungeonAsset.DungeonType` and
+`CompetitionDungeon.ID → CompetitionDungeonAsset.CompetitionDungeonId`,
+followed by that selected asset row's explicit `EntranceAssetId` or
+`PopupAssetId`. Existing `current523_definition_rows` and270's
+`source523_image_assets.resolve_asset_value` are the readers; no second
+asset resolver, first-row selection or numeric dungeon-type guess is added.
+
+The actual current `world.source_dungeon_entries(kind,hard)` →
+`source_dungeon_runtime.entries()` → view path supplies tower/orim/special/
+rechargers. Their full current TrialTowerStage/OrimsTrailStage/SpecialDungeon/
+LandTimeLimitGroup source inputs declare no PartyDungeon/CompetitionDungeon
+FK. Stage, item, time-group, land and difficulty integers are not aliases for
+those two namespaces. An original PartyDungeon or CompetitionDungeon selection
+and exact asset-row/role context from269 are required before that new relation
+can serve this caller. UI267 supplies its existing authored entrance/popup
+target; the current ItemList/buttons do not establish one.
+
+There is an already available direct special-dungeon role:
+`world.source_dungeon_entries("special",false)[selected_index].row.EntranceAssetID`.
+`source_dungeon_projection._special()` retains the complete original
+SpecialDungeon row and the runtime returns a deep copy without renaming that
+field.269/267 can therefore use the actual selected row's own ID for an
+explicit entrance role; no Party/Competition bridge or new data API is needed.
+Its separate `row.HelpBoxAssetID` remains HelpBox, not PopupAssetId or a static
+fallback. This is the existing public data field, not a new image call or a
+claim that UI targets, files or rendering are connected. Source/deferred/
+exclusion/ownership boundaries remain intact; no tests/execution/render/CI.
 
 The current dialogue reader does not supply a mobile `NpcClassID` for UI267's
 original portrait input. Its actual path is
