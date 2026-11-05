@@ -3,6 +3,8 @@ class_name TwilightGroundLootManager
 
 const LOOT = preload("res://scripts/loot/ground_loot.gd")
 const GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const GROUND_SOURCE = preload("res://scripts/resources/current523_source_ground_selection.gd")
+const SOURCE_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
 const OCCUPANCY_CELL: float = 64.0
@@ -18,6 +20,9 @@ var revision: int = 0
 # of boss drops independent of the number of items left in distant maps.
 var occupancy: Dictionary = {}
 var occupancy_probes: int = 0
+# Transient visual bindings supplied by the source consumer owner. Never added
+# to ground ownership records, item receipts or saved drop quantities.
+var source_ground_bindings: Dictionary = {}
 
 func configure(owner_world: Node) -> void:
 	world = owner_world
@@ -98,13 +103,45 @@ func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
 	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
-	var images: Dictionary = world.catalog_image_index.get("아이템",{})
-	var icon: Texture2D = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
-	view.configure(record, icon, visual_slot)
+	var ground_request: Dictionary = _source_ground_request(item_data)
+	var icon: Texture2D = null
+	if ground_request.is_empty():
+		var images: Dictionary = world.catalog_image_index.get("아이템",{})
+		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
+	view.configure(record, icon, visual_slot, ground_request)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view
 	return view
+
+func _source_ground_request(item: Dictionary) -> Dictionary:
+	if item.get("source_m_native_item") != true: return {}
+	var original: Dictionary = SOURCE_ITEMS.item_definition(item).get("original_item",{})
+	var configured: Dictionary = source_ground_bindings.get(str(item.get("source_item_class_id",-1)),{})
+	var context: Dictionary = {}
+	var player: Variant = world.get("player")
+	if is_instance_valid(player) and player.get("source_visual_context") is Dictionary:
+		context = player.get("source_visual_context").duplicate(true)
+	if configured.get("original_item") == original:
+		context.merge(configured.get("source_bank_context",{}),true)
+	return {"required":true,"original_item":original,"source_bank_context":context,
+		"source_binding":configured.get("source_binding",{}) if configured.get("original_item") == original else {}}
+
+func bind_source_ground_visual(original_item: Dictionary, source_binding: Dictionary, context: Dictionary = {}) -> Dictionary:
+	# This visual-only boundary must receive source action/loop/direction evidence;
+	# ItemClass.SpriteID does not imply action0, an idle loop or a stored direction.
+	var selected: Dictionary = GROUND_SOURCE.select(original_item,context,source_binding)
+	if not selected.get("ok",false): return selected
+	source_ground_bindings[str(original_item.ID)] = {"original_item":original_item.duplicate(true),
+		"source_binding":source_binding.duplicate(true),"source_bank_context":context.duplicate(true)}
+	for id: String in views:
+		var view: Button = views[id]
+		if not is_instance_valid(view) or not records.has(id): continue
+		var record: Dictionary = records[id]
+		var item: Dictionary = record.get("item_record",item_record(str(record.item_name)))
+		if item.get("source_item_class_id") == original_item.ID:
+			view.call("configure_source_ground",_source_ground_request(item))
+	return selected
 
 func hide_map() -> void:
 	for view: Button in views.values():
