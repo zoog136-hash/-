@@ -35,6 +35,10 @@ class CostHost extends Node:
 	var active_skill_buffs: Dictionary = {}
 	var equipped_items: Dictionary = {}
 	var equipped_catalog: Dictionary = {}
+	# Catalog resolution always includes the actual relic ownership/context key,
+	# even when this synthetic host has no equipped or acquired cards.
+	var card_draw_fusion = preload("res://scripts/card_draw_fusion.gd").new()
+	var card_collections = preload("res://scripts/cards/collection_runtime.gd").new()
 	func _init() -> void:
 		add_child(player)
 		halphas_star.configure(self)
