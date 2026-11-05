@@ -203,6 +203,18 @@ NPC 초상화는 기존 bind_original_npc_dialogue_portrait의 실제 context/im
 승인을 요청하지 않고, 최종 공식 UI·Sprite 입력을 통합할 때 정확한 최종 payload와
 한 번의 기존 Drive 목록 교체 승인을 묶는다. 그 전에는 현재 hosted 목록을 유지한다.
 
+UI 최종 전달 입력 v19는 v18 퀘스트 탭/닫기와 실제 선택 아이템의 원본 잠금 제어를
+포함한 단일 팩이다.60원본/38장면/37부분범위는 전체560 또는 실기 완료 수치가 아니다.
+잠금은 기존 boolean 상태·선택 참조·동일 버튼/disabled를 다시 확인하고 기존
+_toggle_lock만 호출한다. 퀘스트도 기존 _select(category)와 workspace 닫기만 사용한다.
+저장 성공·보상·다른 아이템 행동은 설치기가 추정하지 않는다. alpha0 제목 생략은
+원본 alpha/timeline의 엄격한 근거가 있을 때만 허용하며 새 폰트나 불투명 제목을 만들지
+않는 기존 renderer 계약을 기록한다. 공유 workspace 입력 경계는 이전 강화 전용
+함수 대신 _route_workspace_source_actions를 사용한다.
+
+UI owner의 최종 입력/병합 인계는 전체 설치 목록 확정과 별개다. Sprite 후속 입력과
+통합 코드 준비가 남으면 누적 목록은 계속 보류하고, 중간 업로드·승인 요청을 하지 않는다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의
