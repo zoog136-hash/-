@@ -6,6 +6,7 @@ extends Control
 signal fuse_requested(category: String, grade: String)
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const SourceCard=preload("res://scripts/ui/source_card_presentation.gd")
 const Chrome=preload("res://scripts/ui/catalog_card_chrome.gd")
 const RosterChrome=preload("res://scripts/ui/fusion_card_chrome.gd")
 const SourceButton=preload("res://scripts/ui/native_touch_button.gd")
@@ -264,10 +265,20 @@ func _refresh() -> void:
   var identity: String=Cards.card_id(record)
   var duplicates: int=maxi(0,int(spare.get(identity,0)))
   var copies: int=(1 if owned.has(identity) else 0)+duplicates
-  var path: String=str(record.get("image_path",""))
-  var picture: Texture2D=load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+  var source_asset: Dictionary={}
+  var picture: Texture2D
+  if SourceCard.native(record):
+   source_asset=SourceCard.detail(record,true,false)
+   picture=source_asset.get("texture") as Texture2D
+  else:
+   var path: String=str(record.get("image_path",""))
+   picture=load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
   var index: int=_cards.add_item(str(duplicates),picture)
-  _cards.set_item_metadata(index,{"id":identity,"grade":str(record.grade),"copies":copies,"duplicates":duplicates})
+  var metadata: Dictionary={"id":identity,"grade":str(record.grade),"copies":copies,"duplicates":duplicates}
+  if not source_asset.is_empty():
+   var evidence: Dictionary=source_asset.duplicate(true);evidence.erase("texture")
+   metadata["original_card_asset"]=evidence
+  _cards.set_item_metadata(index,metadata)
   _cards.set_item_tooltip(index,"%s · %s · 보유 %d장 / 합성 재료 %d장%s" % [record.name,record.grade,copies,0 if bool(record.get("source_merge_out_disabled",false)) else duplicates," · 원본 합성 제한" if bool(record.get("source_merge_out_disabled",false)) else ""])
   _cards.set_item_custom_bg_color(index,Color(UI.grade(str(record.grade)),.09))
   _cards.set_item_custom_fg_color(index,Color(1,1,1,0))
@@ -297,8 +308,14 @@ func _refresh_previews() -> void:
   var record: Dictionary=entry.record
   var art:=Control.new();art.custom_minimum_size=Vector2(0,142);cell.add_child(art)
   var portrait:=TextureRect.new();portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-  var path: String=str(record.get("image_path",""))
-  if not path.is_empty() and ResourceLoader.exists(path):portrait.texture=load(path)
+  if SourceCard.native(record):
+   var source_asset: Dictionary=SourceCard.detail(record,true,false)
+   portrait.texture=source_asset.get("texture") as Texture2D
+   var evidence: Dictionary=source_asset.duplicate(true);evidence.erase("texture")
+   portrait.set_meta("original_card_asset",evidence)
+  else:
+   var path: String=str(record.get("image_path",""))
+   if not path.is_empty() and ResourceLoader.exists(path):portrait.texture=load(path)
   art.add_child(portrait);portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   var aura:=Control.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
   aura.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),true,true)

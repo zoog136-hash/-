@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI=preload("res://scripts/ui/renewal_theme.gd")
+const SourceImages=preload("res://scripts/ui/source523_skill_buff_images.gd")
 const LABELS={"light_radius":"조명 표시 반경(px)","radius":"호스트 반경(px)","interval":"호스트 발동/갱신 간격(초)","power":"추정 기본 위력","range":"호스트 사거리(px)","cooldown":"호스트 재사용(초)","cast_time":"호스트 시전 시간(초)","hits":"추정 연사 수","average_dice":"주사위 평균값 사용(0/1)"}
 var source: RefCounted
 var selector: OptionButton
@@ -14,8 +15,17 @@ func configure(hud: Node) -> void:
 	add_child(UI.label("기존 스킬 전환 · 원본 + TWILIGHT 설정",18,UI.GOLD))
 	add_child(UI.section("원본 패시브/ON·OFF/발사 비용을 우선합니다. 아래는 조명 환산·발사 위력/시간 등 호스트 정책이며 다음 실행부터 적용됩니다. 진행 저장과 분리됩니다.",12))
 	selector=OptionButton.new();selector.name="Progression523Skill"
+	selector.expand_icon=true
+	var original_images: Dictionary={}
 	for id: String in source.progression_rules.rules:
 		ids.append(id);selector.add_item(str(source.progression_rules.rules[id].name))
+		# These rule keys are the existing host skill IDs used by the pinned
+		# SpellClass binding. They are not native spell or icon numbers.
+		var original: Dictionary=SourceImages.describe_skill({"id":id},"IconID")
+		if original.get("handled",false):
+			selector.set_item_icon(selector.item_count-1,original.get("texture") as Texture2D)
+			original_images[id]=SourceImages.evidence(original)
+	selector.set_meta("source523_images",original_images)
 	add_child(selector)
 	info=UI.label("",12);info.name="Progression523Origin";info.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(info)
 	inputs=VBoxContainer.new();add_child(inputs)

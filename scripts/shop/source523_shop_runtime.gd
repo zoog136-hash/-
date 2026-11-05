@@ -147,6 +147,18 @@ func bind_source(source) -> void:
 		var loaded: Dictionary = load_policy(arg.trim_prefix("--source523-shop-policy="), expected)
 		if not loaded.ok: problem = str(loaded.reason)
 
+func item_references(item_id: int) -> Dictionary:
+	var source = catalog if catalog != null else Catalog.session()
+	if not source.has_method("item_references"):
+		return {"item_id":item_id,"unavailable":true,"reference_only":true,"can_purchase":false}
+	return source.item_references(item_id)
+
+func _source_item_identity(item_id: int) -> Dictionary:
+	if catalog.has_method("item_identity"): return catalog.item_identity(item_id)
+	# Preserve the existing contract for an older supplied catalog adapter.
+	return {"item_class":catalog.record("ItemClass",item_id),"source_available":false,
+		"reference_only":true,"can_activate":false}
+
 func load_policy(path: String, expected_sha: String) -> Dictionary:
 	if expected_sha.length()!=64 or not expected_sha.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected_sha.to_lower(): return fail("상점 정책 파일의 해시 확인 실패")
 	var file := FileAccess.open(path,FileAccess.READ)
@@ -324,6 +336,7 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 
 func _products(offer: Dictionary, quantity: int) -> Dictionary:
 	var goods: Array = []
+	var source_items: Dictionary = {}
 	for link: Dictionary in offer.products + offer.bonuses:
 		var product: Dictionary = link.product.definition
 		if product.is_empty() or not link.product.additional.is_empty() or product.get("ClassChangeDiscount", false): return fail("지급 상품의 추가 조건 미해석")
@@ -331,6 +344,9 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 		if not multiplied.ok or int(multiplied.value) < 1: return fail("상품 지급 수량 오류")
 		var token: Dictionary = _token(int(product.UnitID),int(product.ClassID),int(multiplied.value))
 		if int(token.unit_id) == 4:
+			var identity: Dictionary = _source_item_identity(int(token.class_id))
+			if identity.get("excluded") == true: return fail("원본 아이템 선언으로 제외된 상품입니다")
+			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
 			if item.get("TestItem", false) or original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"):
@@ -340,7 +356,7 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 		if resolved.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
 		goods.append(token)
 	if goods.is_empty(): return fail("지급 상품이 없습니다")
-	return {"ok":true,"goods":goods}
+	return {"ok":true,"goods":goods,"source_items":source_items}
 
 func quote(id: int, quantity: int = 1) -> Dictionary:
 	return _quote(id, quantity, false)
@@ -372,7 +388,8 @@ func _quote(id: int, quantity: int, internal: bool) -> Dictionary:
 		if world._item_locked(str(binding.name), ""): return fail("잠긴 결제 재료입니다")
 	var goods: Dictionary = _products(offer, quantity)
 	if not goods.ok: return goods
-	return {"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":offer.name,"payment":payment,"payment_binding":binding,"goods":goods.goods}
+	return {"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":offer.name,"payment":payment,"payment_binding":binding,"goods":goods.goods,
+		"source_reference":{"items":goods.source_items,"purchase":offer.purchase,"restrictions":offer.restrictions,"server_limits":offer.server_limits,"reference_only":true,"can_purchase":false}}
 
 func _start() -> Dictionary:
 	var ready: Dictionary = _ready_for_action()
@@ -536,7 +553,10 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		if local_context.is_empty() or not npc_definitions.supports_normal_equipment(int(row.MerchantsID),int(row.get("ItemBlessCodeID",0))) or record.get("blessed",false) or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"] or str(record.get("name","")).begins_with("축복받은 "):return fail("NPC 장비 축복·강화 지급 조건 미확정")
 	var original_name: String=str(offer.item.get("Name",""))
 	if offer.item.get("TestItem",false) or original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"):return fail("NPC 기간제·테스트 상품 조건 미확정")
+	var identity: Dictionary=_source_item_identity(int(row.ItemClassID))
+	if identity.get("excluded")==true:return fail("원본 아이템 선언으로 제외된 NPC 상품입니다")
 	var quoted: Dictionary={"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
+	quoted["source_reference"]={"item":identity,"goods":row,"reference_only":true,"can_purchase":false}
 	if target.binding.get("record",{}).has("source523_shop_use_origin") and npc_definitions.source_semantics.get("item_bless_codes",{}).get(str(int(row.get("ItemBlessCodeID",0))))!="Normal":return fail("NPC 소모품 축복·저주 스택은 별도 연결 필요")
 	if target.binding.get("record",{}).has("source523_shop_use_origin"):quoted["use_origin"]=str(target.binding.record.source523_shop_use_origin)
 	if not quota.is_empty():quoted.merge({"quota_text":quota.quota_text,"remaining":quota.remaining,"next_reset_at":quota.next_reset_at,"npc_reset_identity":quota.reset_identity})

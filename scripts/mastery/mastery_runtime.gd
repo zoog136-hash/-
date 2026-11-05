@@ -52,12 +52,20 @@ func configure(host: Node) -> void:
 	world = host
 	var path: String = ""
 	var sha: String = ""
+	var explicit_input := false
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--mastery523-pack="): path = arg.trim_prefix("--mastery523-pack=")
-		if arg.begins_with("--mastery523-sha="): sha = arg.trim_prefix("--mastery523-sha=")
-	if not path.is_empty():
+		if arg in ["--mastery523-pack","--mastery523-sha"]: explicit_input = true
+		if arg.begins_with("--mastery523-pack="):
+			explicit_input = true; path = arg.trim_prefix("--mastery523-pack=")
+		if arg.begins_with("--mastery523-sha="):
+			explicit_input = true; sha = arg.trim_prefix("--mastery523-sha=")
+	if explicit_input:
 		enabled = core.load_pack(path,sha)
 		problem = "" if enabled else core.problem
+	else:
+		enabled = core.load_original()
+		if enabled: problem = ""
+		elif not core.problem.is_empty(): problem = core.problem
 	if enabled: install_reset_ticket()
 
 func install_reset_ticket() -> Dictionary:

@@ -2,11 +2,106 @@ extends RefCounted
 ## Source definitions and explicit TWILIGHT adapters; not a server emulator.
 const PATH = "res://data/growth/symbol_source523.json"
 const Combat = preload("res://scripts/growth/symbol_combat.gd")
+const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
 var data: Dictionary = {}
 
 func _init() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
-	if parsed is Dictionary and parsed.get("source_snapshot") == "patch523": data = parsed
+	if parsed is Dictionary and parsed.get("source_snapshot") == "patch523":
+		data = parsed
+		_adopt_original_rows()
+
+func _original_row(table: String, cached: Dictionary) -> Dictionary:
+	var value: Variant = cached.get("ID")
+	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0: return cached
+	var original: Dictionary = CommonSource.row(table,int(value))
+	# Adopt only the same complete selected row. Missing/different originals
+	# never expand the cache, alter its derived effects or replace its policies.
+	return original if original.get("ID") == value and original == cached else cached
+
+func _original_field(owner: Dictionary, field: String, table: String) -> void:
+	var value: Variant = owner.get(field)
+	if value is Dictionary: owner[field] = _original_row(table,value)
+
+func _original_list(owner: Dictionary, field: String, table: String) -> void:
+	var values: Variant = owner.get(field)
+	if not values is Array: return
+	for index: int in range(values.size()):
+		if values[index] is Dictionary: values[index] = _original_row(table,values[index])
+
+func _original_full_list(owner: Dictionary, field: String, table: String) -> void:
+	var cached: Variant = owner.get(field)
+	if not cached is Array: return
+	var metadata: Dictionary = CommonSource.table_metadata(table)
+	if metadata.get("path") != "content/"+table+".json": return
+	var original: Array[Dictionary] = CommonSource.rows(table)
+	if metadata.get("row_count") != original.size(): return
+	# Only compiler-declared whole-table arrays use this path. Equality retains
+	# every original row, its position and the existing empty-array meaning.
+	if original == cached: owner[field] = original
+
+func _original_detail(detail: Dictionary, table: String) -> void:
+	# These are the exact raw-row fields produced by import_symbol523.detail.
+	_original_field(detail,"row",table)
+	_original_field(detail,"bonus","Bonus")
+	_original_field(detail,"bonus_type","BonusType")
+	_original_field(detail,"unit","Unit")
+	if detail.get("bonus",{}).get("BonusApplicationTypeID") == 2:
+		_original_field(detail,"application_target","SpecialResistanceType")
+	var intervals: Variant = detail.get("nested_intervals")
+	if not intervals is Array: return
+	for interval: Variant in intervals:
+		if not interval is Dictionary: continue
+		_original_field(interval,"row","IntervalBonus")
+		_original_field(interval,"bonus","Bonus")
+		_original_field(interval,"bonus_type","BonusType")
+		_original_field(interval,"category","IntervalBonusCategory")
+
+func _adopt_original_rows() -> void:
+	var identity: Dictionary = CommonSource.identity()
+	if identity.is_empty() or identity.get("source_sha256") != CommonSource.SOURCE_SHA or identity.get("source_snapshot") != data.get("source_snapshot"): return
+	var emblems: Variant = data.get("emblems")
+	if emblems is Dictionary:
+		for native: Variant in emblems.values():
+			if not native is Dictionary: continue
+			_original_field(native,"definition","SymbolType")
+			_original_list(native,"costs","SymbolEnchantCost")
+			var normal: Variant = native.get("normal")
+			if normal is Array:
+				for detail: Variant in normal:
+					if detail is Dictionary: _original_detail(detail,"SymbolBonus")
+			var absolutes: Variant = native.get("absolute")
+			if absolutes is Dictionary:
+				for grade: Variant in absolutes.values():
+					if not grade is Dictionary: continue
+					_original_field(grade,"payment","SymbolAbsoluteBonusView")
+					var options: Variant = grade.get("options")
+					if options is Array:
+						for detail: Variant in options:
+							if detail is Dictionary: _original_detail(detail,"SymbolAbsoluteBonusView")
+	for pair: Array in [["constants","SymbolConstant"],["probabilities","SymbolEnchantProbability"],["payments","SymbolPayment"],["enchant_levels","SymbolEnchant"]]:
+		_original_full_list(data,pair[0],pair[1])
+	_original_list(data,"dates","DateTimes_Korean")
+	var items: Variant = data.get("items")
+	if items is Dictionary:
+		for key: Variant in items:
+			if items[key] is Dictionary: items[key] = _original_row("ItemClass",items[key])
+	var grades: Variant = data.get("item_grades")
+	if grades is Dictionary:
+		for grade: Variant in grades.values():
+			if grade is Dictionary: _original_field(grade,"row","Grade")
+	var item_bonuses: Variant = data.get("item_bonuses")
+	if item_bonuses is Array:
+		for detail: Variant in item_bonuses:
+			if not detail is Dictionary: continue
+			_original_field(detail,"row","ItemBonus")
+			_original_field(detail,"bonus","Bonus")
+			_original_field(detail,"type","BonusType")
+	_original_field(data,"delete_time_application","BonusApplicationType")
+	var invoke: Variant = data.get("veil_invoke")
+	if invoke is Dictionary:
+		_original_field(invoke,"option","InvokeOption")
+		_original_field(invoke,"type","InvokeOptionType")
 
 func apply(config: Dictionary) -> void:
 	if data.is_empty(): return
@@ -46,6 +141,32 @@ func special_rate(stage: int, jump: int) -> float:
 	for row: Dictionary in probability_rows(stage):
 		if int(row.DeltaEnchant) == jump: return float(row.SpecialRouteProbability)/1000000.0
 	return 0.0
+
+func enchant_limit() -> int:
+	# Enchant is the physical enhancement stage. EnchantLevel and UIText are
+	# presentation metadata and must not replace it with the Roman tier (0..10).
+	var rows: Variant = data.get("enchant_levels")
+	if not rows is Array or rows.is_empty() or rows.size()>1000: return -1
+	var stages: Dictionary = {}
+	var maximum: int = -1
+	for raw: Variant in rows:
+		if not raw is Dictionary: return -1
+		var value: Variant = raw.get("Enchant")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<0 or value>=rows.size(): return -1
+		var stage: int = int(value)
+		if stages.has(stage): return -1
+		stages[stage] = true
+		maximum = maxi(maximum,stage)
+	if maximum<1 or maximum+1!=stages.size(): return -1
+	for stage: int in range(maximum+1):
+		if not stages.has(stage): return -1
+	# Existing per-symbol effect arrays must cover the source stages before a
+	# transaction can reach them. Do not unlock an unsupported new stage.
+	var symbols: Variant = data.get("emblems")
+	if not symbols is Dictionary or symbols.is_empty(): return -1
+	for native: Variant in symbols.values():
+		if not native is Dictionary or not native.get("effects") is Array or native.effects.size()<=maximum: return -1
+	return maximum
 
 func absolute(id: String, grade: int) -> Dictionary:
 	return data.get("emblems",{}).get(id,{}).get("absolute",{}).get(str(grade),{})

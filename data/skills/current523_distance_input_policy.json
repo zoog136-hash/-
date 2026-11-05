@@ -1,0 +1,39 @@
+{
+  "schema": "twilight.current523.distance-input-policy.v1",
+  "source_snapshot": "patch523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "enabled": true,
+  "origin": "twilight_adjustable_numeric_estimate",
+  "source_raw_distance_unit_scale": "unconfirmed",
+  "native_grid_scale_recovered": false,
+  "host_geometry": "existing_host_distance_engine_retained",
+  "cast_range_to_host_length": 32.0,
+  "area_radius_to_host_length": 48.0,
+  "scope": "existing_permitted_bound_active_attack_status_turn_undead_profiles_only",
+  "calibration": {
+    "cast_range": {
+      "record_id": "lm_0f78dd70d9994d34",
+      "spell_class_id": 1,
+      "bound_row_sha256": "e8a885f030514fc834d8761003fc52b5c5d2bef28a19c13911b5931443631a9f",
+      "source_field": "CastRange",
+      "source_value": 10,
+      "existing_host_range": 320,
+      "host_basis": "data/skills/balance.json CUSTOM_BALANCE",
+      "estimate": "320 / 10 = 32 adjustable host-length units per raw CastRange"
+    },
+    "area_radius": {
+      "record_id": "lm_4e78c9f1a828730a",
+      "spell_class_id": 47,
+      "bound_row_sha256": "4fcc7421499e2afd22b34bc026a3e21643bb2cfdeea5a3d06e7256edec13d524",
+      "source_field": "TargetAreaRadius",
+      "source_value": 3,
+      "existing_host_radius": 144,
+      "existing_shape": "self_circle",
+      "host_basis": "data/skills/balance.json CUSTOM_BALANCE",
+      "estimate": "144 / 3 = 48 adjustable host-length units per raw TargetAreaRadius"
+    }
+  },
+  "mobile_distance_context_reference": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95",
+  "reference_limit": "The official mobile guide describes Energy Bolt's target within 10 cells. It does not define patch523 raw distance units or their conversion into TWILIGHT host lengths.",
+  "note": "The two scales are independent TWILIGHT numeric estimates calibrated to existing host lengths. They do not recover a native grid, targeting geometry or server formula. Zero source distances retain existing host input. IsAttackRange must be explicitly false and MinCastRange must be zero; unsupported weapon-relative or minimum-distance context retains existing host geometry and raw source fields. CastDelay is not used."
+}

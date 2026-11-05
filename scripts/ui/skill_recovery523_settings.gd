@@ -1,6 +1,7 @@
 extends VBoxContainer
 ## Editable host fallbacks; native HP percentages/costs/durations stay read-only.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
+const SourceImages=preload("res://scripts/ui/source523_skill_buff_images.gd")
 var source: RefCounted
 var selector: OptionButton
 var origin: Label
@@ -19,8 +20,17 @@ func configure(hud: Node) -> void:
 	add_child(UI.label("복합 회복 스킬 · 원본 + TWILIGHT 설정",18,UI.GOLD))
 	add_child(UI.section("확인된 회복 비율·비용·지속은 원본을 사용합니다. 정의가 없는 회복량과 게임 재사용/보호막 상한만 조절합니다. 다음 시전부터 적용되며 진행 저장과 분리됩니다.",12))
 	selector=OptionButton.new();selector.name="Recovery523Skill"
+	selector.expand_icon=true
+	var original_images: Dictionary={}
 	for id: String in source.recovery_rules.rules:
 		ids.append(id);selector.add_item(str(source.recovery_rules.rules[id].name))
+		# Use the same reviewed host-ID to SpellClass binding as the existing
+		# skill browser; the recovery rule's name does not identify an image.
+		var original: Dictionary=SourceImages.describe_skill({"id":id},"IconID")
+		if original.get("handled",false):
+			selector.set_item_icon(selector.item_count-1,original.get("texture") as Texture2D)
+			original_images[id]=SourceImages.evidence(original)
+	selector.set_meta("source523_images",original_images)
 	add_child(selector)
 	origin=UI.label("",12,UI.TEXT);origin.name="Recovery523Origin";origin.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(origin)
 	cooldown=spin("추정 재사용 (초)",.1,3600,.1,"Recovery523Cooldown").get_child(1)

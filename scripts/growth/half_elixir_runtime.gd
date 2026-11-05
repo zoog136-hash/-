@@ -1,6 +1,7 @@
 extends RefCounted
 ## Staged transactions use the production save writer before live wallets change.
 const Source = preload("res://scripts/growth/half_elixir_source.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const KEY := "half_elixir523"
 const ROOT := "user://half_elixir523/packs/"
 var world
@@ -8,6 +9,7 @@ var state: Dictionary = fresh()
 var policy: Dictionary = {}
 var source
 var sources: Dictionary = {}
+var source_problem: String = ""
 var busy: bool = false
 var save_blocked: bool = false
 var serial: int = 0
@@ -27,13 +29,40 @@ static func integer(value: Variant, minimum: int = 0, maximum: int = 1000000000)
 
 func source_for(value: Dictionary):
 	var sha: String = str(value.get("source_sha256", ""))
-	if sha.is_empty(): return null
-	if sources.has(sha): return sources[sha]
+	if sha.is_empty():
+		source_problem = "저장된 하프 엘릭서 원본 정체가 없습니다. 기존 명시적 설치·연결이 필요합니다."
+		return null
+	if sources.has(sha):
+		source_problem = ""
+		return sources[sha]
 	var path: String = ROOT + sha + ".zip"
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != sha: return null
+	var dedicated := FileAccess.open(path,FileAccess.READ)
+	var open_error: Error = FileAccess.get_open_error()
+	if dedicated != null:
+		dedicated.close()
+		if FileAccess.get_sha256(path) != sha:
+			source_problem = "전용 하프 엘릭서 ZIP의 SHA가 저장 정체와 다릅니다. 공통 원문으로 우회하지 않습니다."
+			return null
+	elif FileAccess.file_exists(path) or open_error != ERR_FILE_NOT_FOUND:
+		source_problem = "전용 하프 엘릭서 ZIP을 읽을 수 없습니다. 기존 진행을 비활성으로 보존합니다."
+		return null
+	else:
+		if sha != DEFINITIONS.SOURCE_SHA:
+			source_problem = "저장된 원본과 동일한 전용 ZIP이 없습니다. 다른 원문으로 재연결하지 않습니다."
+			return null
+		path = DEFINITIONS.archive_path()
+		if path.is_empty():
+			source_problem = DEFINITIONS.problem()
+			return null
 	var candidate = Source.new()
-	if not candidate.load_zip(path): return null
+	if not candidate.load_zip(path):
+		source_problem = candidate.problem
+		return null
+	if candidate.sha != sha:
+		source_problem = "읽은 하프 엘릭서 원문이 기존 저장 SHA와 다릅니다. 진행과 소유품을 보존합니다."
+		return null
 	sources[sha] = candidate
+	source_problem = ""
 	return candidate
 
 func validate(value: Variant) -> String:

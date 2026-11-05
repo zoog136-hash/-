@@ -3,11 +3,14 @@ extends RefCounted
 const IDS:Array[int]=[166744,254088,342064,342074,352054,352064]
 const UI_POLICY_TEXT:String="TWILIGHT 소지 티켓1개 소비 정책 · 원본 무작위 풀/지급량 · 추가 구매 비용 없음 · 미연결 대상은 소지품 보존"
 const CardEngine=preload("res://scripts/card_draw_fusion.gd")
+const OriginalInput=preload("res://scripts/shop/current523_ticket_input.gd")
 var owner_ref:WeakRef
 var runtime:
 	get:return owner_ref.get_ref() if owner_ref!=null else null
 var document:Dictionary={}
 var loaded_sha:String=""
+var model_input_identity:Dictionary={}
+var last_input_attempt:Dictionary={}
 var problem:String=""
 var random:=RandomNumberGenerator.new()
 
@@ -16,11 +19,38 @@ func _init() -> void:
 
 func configure(owner) -> void:
 	owner_ref=weakref(owner)
-	var path:String="";var expected:String=""
+	var arguments:Dictionary=_input_arguments()
+	if arguments.explicit:load_pack(arguments.path,arguments.sha256)
+	else:load_original()
+
+func _input_arguments() -> Dictionary:
+	var result:Dictionary={"explicit":false,"path":"","sha256":""}
 	for arg:String in OS.get_cmdline_user_args():
-		if arg.begins_with("--source523-ticket-pack="):path=arg.trim_prefix("--source523-ticket-pack=")
-		if arg.begins_with("--source523-ticket-sha256="):expected=arg.trim_prefix("--source523-ticket-sha256=")
-	if not path.is_empty():load_pack(path,expected)
+		if arg.begins_with("--source523-ticket-pack"):
+			result.explicit=true
+			if arg.begins_with("--source523-ticket-pack="):result.path=arg.trim_prefix("--source523-ticket-pack=")
+		if arg.begins_with("--source523-ticket-sha256"):
+			result.explicit=true
+			if arg.begins_with("--source523-ticket-sha256="):result.sha256=arg.trim_prefix("--source523-ticket-sha256=")
+	return result
+
+func load_original() -> bool:
+	if _input_arguments().explicit:return _reject("명시한 티켓 확장팩 입력을 우회하지 않습니다")
+	if not document.is_empty() and not loaded_sha.is_empty() and problem.is_empty():return true
+	var input=OriginalInput.new()
+	var payload:Dictionary=input.build()
+	if payload.is_empty():
+		last_input_attempt={"mode":"current523_original","problem":input.problem,"blocked_pools":input.blocked_pools.duplicate(true)}
+		return _reject(input.problem)
+	var bytes:PackedByteArray=JSON.stringify(payload,"",false,true).to_utf8_buffer()
+	if bytes.size()>2*1024*1024:return _reject("티켓 확장팩 크기·접근 오류")
+	var hashing:=HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(bytes)
+	var actual:String=hashing.finish().hex_encode()
+	# The receipt/policy fingerprint remains the actual model payload digest.
+	# It is neither the source ZIP hash nor an old extension pack's fingerprint.
+	return _accept_input(payload,actual,{"kind":"twilight.source523.original-ticket-input.v1","archive":input.source_identity.duplicate(true),"payload_sha256":actual,"payload_bytes":bytes.size(),"projection":"tools/shop/build_source523_tickets.py"})
 
 func load_pack(path:String,expected:String) -> bool:
 	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _reject("티켓 확장팩 해시 확인 실패")
@@ -29,6 +59,9 @@ func load_pack(path:String,expected:String) -> bool:
 	var json:=JSON.new()
 	if json.parse(file.get_as_text())!=OK or not json.data is Dictionary:return _reject("티켓 확장팩 JSON 오류")
 	var data:Dictionary=json.data
+	return _accept_input(data,expected.to_lower(),{"kind":"twilight.source523.ticket-pack-input.v1","payload_sha256":expected.to_lower(),"declared_source_zip_sha256":runtime.Catalog.SOURCE_SHA256})
+
+func _accept_input(data:Dictionary,actual_sha:String,input_identity:Dictionary) -> bool:
 	if data.get("schema")!="twilight.source523.inventory-ticket-extension.v1" or data.get("source_sha256")!=runtime.Catalog.SOURCE_SHA256 or not data.get("tickets") is Dictionary or data.tickets.size()!=6 or not data.get("pools") is Dictionary or data.get("owned_use_policy")!="twilight_one_owned_ticket_for_linked_products" or not data.get("redeem_owned_when_market_not_on_sale") is bool:return _reject("티켓 확장팩 원본·정책 불일치")
 	for id:int in IDS:
 		var ticket:Variant=data.tickets.get(str(id))
@@ -53,7 +86,7 @@ func load_pack(path:String,expected:String) -> bool:
 			if not row is Dictionary or not runtime.integer(row.get("card_id")) or not runtime.integer(row.get("weight")) or not runtime.integer(row.get("grade_id")) or int(row.card_id)<1 or seen.has(int(row.card_id)):return _reject("티켓 풀 정수·중복 오류")
 			seen[int(row.card_id)]=true;total+=int(row.weight)
 		if total!=1000000:return _reject("티켓 원본 확률 총합 오류 · 재정규화 없음")
-	document=data;loaded_sha=expected.to_lower();problem=""
+	document=data;loaded_sha=actual_sha;model_input_identity=input_identity.duplicate(true);last_input_attempt={};problem=""
 	return true
 
 func _reject(message:String) -> bool:

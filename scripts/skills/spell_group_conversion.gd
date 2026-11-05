@@ -1,6 +1,8 @@
 extends RefCounted
 ## Source facts remain private. Counter/payment execution is explicit TWILIGHT policy.
 const SOURCE_SHA='d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
+const CommonSource=preload('res://scripts/resources/current523_definition_rows.gd')
+const DEFAULT_SOURCE='user://sources/lineagem_patch523_all_content_validated_and_508_520_deltas.zip'
 const CLASS_IDS={'요정':2,'마법사':3,'투사':5,'총사':34}
 const ELEMENTS={'Elemental_Fire':'fire','Elemental_Earth':'earth','Elemental_Water':'water','Elemental_Wind':'wind'}
 var world:Node
@@ -11,6 +13,12 @@ var groups:Dictionary={}
 var labels:Dictionary={}
 var members:Dictionary={}
 var items:Dictionary={}
+# Input provenance is separate from the character/class save in state.
+var source_input_identity:Dictionary={}
+var source_row_metadata:Dictionary={}
+var excluded_input_items:Dictionary={}
+var excluded_input_item_reasons:Dictionary={}
+var _input_read_problem:String=''
 var state:Dictionary={'schema':1,'source_snapshot':'patch523','classes':{}}
 var problem:String=''
 var save_blocked:bool=false
@@ -20,23 +28,16 @@ var busy:bool=false
 var policy:Dictionary={'payment_mode':'alternatives','max_defined_count':50,'allow_test_materials':false}
 func configure(owner:Node)->void:
  world=owner
- var path:String=OS.get_environment('TWILIGHT_SPELL_GROUP_SOURCE')
- for arg:String in OS.get_cmdline_user_args():
-  if arg.begins_with('--spell-group-source='):path=arg.trim_prefix('--spell-group-source=')
- if path.is_empty():path='user://sources/lineagem_patch523_all_content_validated_and_508_520_deltas.zip'
- if FileAccess.get_sha256(path)!=SOURCE_SHA:problem='검증된 523 원본 팩을 설치해야 합니다.';return
+ problem=''
+ _input_read_problem=''
+ var input:Dictionary=_source_input()
+ if input.is_empty():return
+ var path:String=str(input.path)
+ if FileAccess.get_sha256(path)!=SOURCE_SHA:problem='계열 변환 원본 ZIP SHA가 고정된 523 원문과 다릅니다. 입력 선택: '+str(input.selection);return
  var zip:=ZIPReader.new()
- if zip.open(path)!=OK:problem='523 원본 팩을 열 수 없습니다.';return
- settings=rows(zip,'GameClassSpellGroup');costs=rows(zip,'GameClassSpellGroupCostView');replacements=rows(zip,'GameClassSpellGroupChangeSpell')
- for row:Dictionary in rows(zip,'SpellGroup'):groups[int(row.ID)]=row
- var wanted:Dictionary={}
- for setting:Dictionary in settings:wanted[int(groups[int(setting.SpellGroupID)].DescID)]=int(setting.SpellGroupID)
- for row:Dictionary in rows(zip,'DescData_Korean'):
-  if wanted.has(int(row.ID)):labels[wanted[int(row.ID)]]=str(row.Description)
- for row:Dictionary in rows(zip,'SpellClass'):
-  if settings.any(func(s:Dictionary)->bool:return int(s.SpellGroupID)==int(row.SpellGroupID)):members[int(row.ID)]=row
- for row:Dictionary in rows(zip,'ItemClass'):
-  if int(row.ID) in [26,1122,32801]:items[int(row.ID)]=row
+ if zip.open(path)!=OK:problem='계열 변환 523 원본 ZIP을 열 수 없습니다. 입력 선택: '+str(input.selection);return
+ var parsed:Dictionary=_parse_source_input(zip)
+ if parsed.is_empty():zip.close();return
  var config_path:String=''
  for arg:String in OS.get_cmdline_user_args():
   if arg.begins_with('--spell-group-policy='):config_path=arg.trim_prefix('--spell-group-policy=')
@@ -52,11 +53,92 @@ func configure(owner:Node)->void:
     policy.allow_test_materials=config.get('allow_test_materials',false)
     policy.payment_mode=config.get('payment_mode','alternatives')
  zip.close()
- if settings.size()!=16 or costs.size()!=1200 or members.size()!=193 or replacements.size()!=4:problem='523 계열 표 검증에 실패했습니다.'
+ if not problem.is_empty():return
+ # Publish only a complete source read. A failed reconfiguration leaves the
+ # previous registries and saved class state intact, with problem blocking quote.
+ settings=parsed.settings;costs=parsed.costs;replacements=parsed.replacements
+ groups=parsed.groups;labels=parsed.labels;members=parsed.members;items=parsed.items
+ excluded_input_items=parsed.excluded_input_items
+ excluded_input_item_reasons=parsed.excluded_input_item_reasons
+ source_row_metadata=parsed.row_metadata
+ source_input_identity={'kind':'twilight.spell-group.current523.input.v1','source_snapshot':'patch523','archive_sha256':SOURCE_SHA,'source_sha256':SOURCE_SHA,'selection':str(input.selection)}
+
+func _source_input()->Dictionary:
+ var explicit:bool=OS.has_environment('TWILIGHT_SPELL_GROUP_SOURCE')
+ var path:String=OS.get_environment('TWILIGHT_SPELL_GROUP_SOURCE') if explicit else DEFAULT_SOURCE
+ var selection:String='explicit_environment' if explicit else 'default_archive'
+ for arg:String in OS.get_cmdline_user_args():
+  if arg=='--spell-group-source' or arg.begins_with('--spell-group-source='):
+   explicit=true
+   selection='explicit_argument'
+   path='' if arg=='--spell-group-source' else arg.trim_prefix('--spell-group-source=')
+ if explicit and path.is_empty():
+  problem='계열 변환 원본 경로를 빈 값으로 명시했습니다. 입력 선택: '+selection
+  return {}
+ var file:=FileAccess.open(path,FileAccess.READ)
+ if file==null:
+  var open_error:Error=FileAccess.get_open_error()
+  if explicit or open_error!=ERR_FILE_NOT_FOUND:
+   problem='계열 변환 원본 경로를 읽을 수 없습니다. 입력 선택: '+selection+' · '+error_string(open_error)
+   return {}
+  # Only the absent, unoverridden default may use the already supplied archive.
+  # An explicit path, permission error, bad SHA or parse error is authoritative.
+  path=CommonSource.archive_path()
+  if path.is_empty():
+   problem='계열 변환 기본 ZIP이 없고 보유 원본523 입력도 연결되지 않았습니다. '+CommonSource.problem()
+   return {}
+  selection='held_current523_archive'
+ else:file.close()
+ return {'path':path,'selection':selection}
+
+func _parse_source_input(zip:ZIPReader)->Dictionary:
+ var next_settings:Array=rows(zip,'GameClassSpellGroup')
+ var next_costs:Array=rows(zip,'GameClassSpellGroupCostView')
+ var next_replacements:Array=rows(zip,'GameClassSpellGroupChangeSpell')
+ var next_groups:Dictionary={}
+ var next_labels:Dictionary={}
+ var next_members:Dictionary={}
+ var selected_items:Dictionary={}
+ var next_items:Dictionary={}
+ var excluded:Dictionary={}
+ var excluded_reasons:Dictionary={}
+ for row:Dictionary in rows(zip,'SpellGroup'):next_groups[int(row.ID)]=row
+ if not _input_read_problem.is_empty():problem=_input_read_problem;return {}
+ var wanted:Dictionary={}
+ for setting:Dictionary in next_settings:
+  if not next_groups.has(int(setting.SpellGroupID)):
+   problem='원본 계열의 SpellGroup 참조가 없습니다: '+str(setting.SpellGroupID)
+   return {}
+  wanted[int(next_groups[int(setting.SpellGroupID)].DescID)]=int(setting.SpellGroupID)
+ for row:Dictionary in rows(zip,'DescData_Korean'):
+  if wanted.has(int(row.ID)):next_labels[wanted[int(row.ID)]]=str(row.Description)
+ # These are original membership facts, not skill registration or acquisition.
+ for row:Dictionary in rows(zip,'SpellClass'):
+  if next_settings.any(func(s:Dictionary)->bool:return int(s.SpellGroupID)==int(row.SpellGroupID)):next_members[int(row.ID)]=row
+ for row:Dictionary in rows(zip,'ItemClass'):
+  var id:int=int(row.ID)
+  if id not in [26,1122,32801]:continue
+  selected_items[id]=row
+  var evidence:Dictionary=CommonSource.declared_exclusion('ItemClass',row)
+  if row.get('TestItem')==true or not evidence.is_empty():
+   excluded[id]=row
+   excluded_reasons[id]={'test_item':row.get('TestItem')==true,'declared_exclusion':evidence}
+  else:next_items[id]=row
+ if not _input_read_problem.is_empty():problem=_input_read_problem;return {}
+ if next_settings.size()!=16 or next_costs.size()!=1200 or next_members.size()!=193 or next_replacements.size()!=4:
+  problem='523 계열 원문 행 수가 기존 입력 계약과 다릅니다: settings=%d, costs=%d, members=%d, replacements=%d' % [next_settings.size(),next_costs.size(),next_members.size(),next_replacements.size()]
+  return {}
+ return {'settings':next_settings,'costs':next_costs,'replacements':next_replacements,'groups':next_groups,'labels':next_labels,'members':next_members,'items':next_items,'excluded_input_items':excluded,'excluded_input_item_reasons':excluded_reasons,'row_metadata':{'GameClassSpellGroup':{'row_count':next_settings.size()},'GameClassSpellGroupCostView':{'row_count':next_costs.size()},'GameClassSpellGroupChangeSpell':{'row_count':next_replacements.size()},'SpellClass':{'selected_row_count':next_members.size(),'role':'group_membership_read_only'},'ItemClass':{'selected_row_count':selected_items.size()}}}
+
 func rows(zip:ZIPReader,name:String)->Array:
+ var member:String='content/'+name+'.json'
+ if not zip.file_exists(member):_input_read_problem='계열 변환 원문 표가 없습니다: '+name;return []
  var parser:=JSON.new()
- if parser.parse(zip.read_file('content/'+name+'.json').get_string_from_utf8().trim_prefix('\ufeff'))!=OK:return []
- return parser.data.get('rows',[]) if parser.data is Dictionary else []
+ if parser.parse(zip.read_file(member).get_string_from_utf8().trim_prefix('\ufeff'))!=OK:_input_read_problem='계열 변환 원문 JSON을 읽을 수 없습니다: '+name;return []
+ if not parser.data is Dictionary or not parser.data.get('rows') is Array:_input_read_problem='계열 변환 원문 행 구조가 다릅니다: '+name;return []
+ for row:Variant in parser.data.rows:
+  if not row is Dictionary:_input_read_problem='계열 변환 원문 행이 객체가 아닙니다: '+name;return []
+ return parser.data.rows
 func export_state()->Dictionary:return state.duplicate(true)
 func validate(value:Variant)->String:
  if not value is Dictionary or not (value.get('schema') is int or value.get('schema') is float) or value.get('schema')!=1 or value.get('source_snapshot')!='patch523' or not value.get('classes') is Dictionary:return '계열 전환 저장 형식이 손상되었습니다.'
@@ -85,11 +167,65 @@ func current_group()->int:
  return 0
 func source_id(record:Dictionary)->int:
  # Exact adapter only. Hashed historical IDs and names never become source IDs.
- var value:Variant=record.get('source_spell_class_id',record.get('spell_class_id'))
- if value==null:
-  var identity:Dictionary=record.get('fields',{}).get('basic',{}).get('original_skill_id',{})
-  if identity.get('status')=='VERIFIED' and identity.get('domain')=='SpellClass.ID':value=identity.get('value')
+ var explicit:Dictionary=_explicit_source_claim(record)
+ if explicit.present:return _source_id_value(explicit.value)
+ return _accepted_bound_source_id(record)
+
+static func _source_id_value(value:Variant)->int:
  return int(value) if (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>0 and float(value)<=1000000000 else 0
+
+static func _explicit_source_claim(record:Dictionary)->Dictionary:
+ # Keep the original two-step resolution: a null direct value may still use
+ # the existing valid VERIFIED legacy claim. Presence only blocks the NEW
+ # bound fallback; it must not erase an old successful legacy resolution.
+ var value:Variant=record.get('source_spell_class_id',record.get('spell_class_id'))
+ var identity:Dictionary={}
+ var fields:Variant=record.get('fields',{})
+ if fields is Dictionary:
+  var basic:Variant=fields.get('basic',{})
+  if basic is Dictionary:
+   var claim:Variant=basic.get('original_skill_id',{})
+   if claim is Dictionary:identity=claim
+ var verified:bool=identity.get('status')=='VERIFIED'
+ if value==null and verified and identity.get('domain')=='SpellClass.ID':value=identity.get('value')
+ return {'present':record.has('source_spell_class_id') or record.has('spell_class_id') or verified,'value':value}
+
+func _accepted_bound_source_id(record:Dictionary)->int:
+ # This is the already accepted public canonical binding, not name matching,
+ # hash decoding, skill registration, ownership or a new group choice.
+ if not is_instance_valid(world):return 0
+ var service:Variant=world.get('original_skills')
+ if not service is Object or not is_instance_valid(service):return 0
+ var catalog:Variant=service.get('catalog')
+ if not catalog is Object or not is_instance_valid(catalog):return 0
+ var canonical_id:Variant=record.get('id')
+ var canonical_rows:Variant=catalog.get('by_id')
+ if not canonical_id is String or canonical_id.is_empty() or not canonical_rows is Dictionary:return 0
+ var canonical:Variant=canonical_rows.get(canonical_id)
+ if not canonical is Dictionary or canonical.get('id')!=canonical_id or _explicit_source_claim(canonical).present:return 0
+ var adapter:Variant=catalog.get('source523')
+ if not adapter is Object or not is_instance_valid(adapter) or not adapter.has_method('_profile_problem'):return 0
+ var profile_type:Script=adapter.get_script()
+ if profile_type==null:return 0
+ var constants:Dictionary=profile_type.get_script_constant_map()
+ if constants.get('BINDINGS_PATH')!='res://data/skills/player_skills523_bindings.json' or constants.get('SOURCE_SHA')!=SOURCE_SHA:return 0
+ var bindings:Variant=adapter.get('bindings')
+ var profiles:Variant=adapter.get('profiles')
+ if not bindings is Dictionary or not profiles is Dictionary or bindings.get('source_zip_sha256')!=SOURCE_SHA or not bindings.get('skills') is Dictionary:return 0
+ var binding:Variant=bindings.skills.get(canonical_id)
+ var profile:Variant=profiles.get(canonical_id)
+ if not binding is Dictionary or not profile is Dictionary or not profile.get('row') is Dictionary:return 0
+ var bound_sha:Variant=binding.get('row_sha256')
+ if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false):return 0
+ var id:int=_source_id_value(binding.get('spell_id'))
+ if id==0 or _source_id_value(profile.row.get('ID'))!=id or not adapter._profile_problem(canonical_id,profile,binding).is_empty():return 0
+ if source_input_identity.get('kind')!='twilight.spell-group.current523.input.v1' or source_input_identity.get('source_snapshot')!='patch523' or source_input_identity.get('archive_sha256')!=SOURCE_SHA or source_input_identity.get('source_sha256')!=SOURCE_SHA:return 0
+ var identity:Dictionary=CommonSource.identity()
+ if identity.is_empty() or identity.get('source_sha256')!=SOURCE_SHA:return 0
+ var original:Dictionary=CommonSource.row('SpellClass',id)
+ if original.is_empty() or original!=profile.row or original.get('TestSpell') is not bool or original.TestSpell or not CommonSource.declared_exclusion('SpellClass',original).is_empty():return 0
+ if members.has(id) and (not members[id] is Dictionary or members[id]!=original):return 0
+ return id
 
 func owns_source(id:int)->bool:
  for record:Dictionary in world.original_skills.catalog.records:

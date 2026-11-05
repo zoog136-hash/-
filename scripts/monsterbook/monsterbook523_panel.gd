@@ -1,6 +1,8 @@
 extends VBoxContainer
 ## Dedicated progress UI, separate from the existing monster catalog/browser.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+const SOURCE_ITEMS = preload("res://scripts/monsterbook/monsterbook523_items.gd")
 var world: Node
 var book_service
 var selected_id: int = 0
@@ -185,6 +187,12 @@ func show_selected() -> void:
 			button.scroll_host = scroll_host
 			button.scroll_area = stage_scroll
 			button.name = "MonsterBook_%s_%d" % [action, level_id]
+			if action == "claim" and stage.rewards.size() == 1:
+				var only_reward: Dictionary = stage.rewards[0]
+				var reward_type: Dictionary = book_service.row("RewardType", int(only_reward.get("RewardTypeID", 0)))
+				if reward_type.get("Name") == "Item":
+					var reward_item_id: int = int(only_reward.get("RewardClassID", 0))
+					_button_item_image(button, book_service.row("ItemClass", reward_item_id), _description("ItemClass", reward_item_id))
 			var reason: String = world.call("monsterbook_action_status", action, selected_id, level_id)
 			button.disabled = not reason.is_empty()
 			button.tooltip_text = reason
@@ -210,6 +218,15 @@ func _owned_button(text: String, callback: Callable) -> Button:
 	detail.add_child(button)
 	return button
 
+func _button_item_image(button: Button, source_row: Dictionary, title: String) -> void:
+	if not SOURCE_IMAGES.selected(): return
+	var image: Dictionary = SOURCE_IMAGES.describe_item_class_row(source_row,title)
+	button.icon = image.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	button.set_meta("source523_item_image",evidence)
+
 func _owned_items(live: RefCounted) -> void:
 	var saved: Dictionary = book_service.export_state()
 	for name: String in saved.get("source_items",{}):
@@ -229,12 +246,16 @@ func _owned_items(live: RefCounted) -> void:
 		var callback: Callable = _choose_owned.bind(name) if action.kind == "select" else _use_owned.bind(name,0)
 		var button := _owned_button(label,callback)
 		button.name = "MonsterBookUse_%d" % int(record.source_item_class_id)
+		if SOURCE_ITEMS.valid_record(name,record):
+			_button_item_image(button,record.source_original,name)
 		owned_controls[name] = button
 		if choice_item == name and action.kind == "select":
 			for reward: Dictionary in action.choices:
 				var title: String = _description("ItemClass",int(reward.RewardClassID))
 				var choice := _owned_button("%s ×%d 선택" % [title,int(reward.Amount)],_use_owned.bind(name,int(reward.ID)))
 				choice.name = "MonsterBookChoice_%d" % int(reward.ID)
+				if int(reward.get("RewardTypeID",0)) == 2:
+					_button_item_image(choice,book_service.row("ItemClass",int(reward.RewardClassID)),title)
 	var latest: Array = saved.get("item_actions",{}).get("last_results",[])
 	if not latest.is_empty():
 		_text("최근 아이템 사용 결과 · " + str(saved.item_actions.get("last_policy","")),UI.GOLD)

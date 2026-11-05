@@ -105,6 +105,7 @@ func run() -> void:
 	check(excluded.permits_auto_selection(),"legacy actor without source category preserves automatic eligibility")
 	interactions.free();world.world_interactions=null
 	world.player.original_source_preview.free()
+	world.player.current523_identity_actor.free()
 	world.player.free();world.monsters_root.free();world.free()
 	print("AUTO_SELECTION_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"before_paths":24,"after_paths":1}))
 	if failures.is_empty(): print("AUTO_SELECTION_OK")

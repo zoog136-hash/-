@@ -6,6 +6,7 @@ const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f
 const PAYLOAD_SHA = "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a"
 const MAX_BYTES = 16 * 1024 * 1024
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
+const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projection.gd")
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
@@ -15,12 +16,28 @@ var loaded_path: String = ""
 
 func load_pack() -> bool:
 	var path: String = USER_PATH if FileAccess.file_exists(USER_PATH) else DEV_PATH
-	if not FileAccess.file_exists(path): return false
+	if not FileAccess.file_exists(path): return _load_original()
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null or file.get_length() > MAX_BYTES:
 		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
 		return false
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	return _load_payload(bytes,path)
+
+func _load_original() -> bool:
+	# UNVERIFIED: only called when neither established private file exists.
+	# Reproduce the old payload, never replace its fingerprint with archive SHA.
+	var projection = ORIGINAL_PROJECTION.new()
+	var value: Dictionary = projection.build()
+	if value.is_empty():
+		problem = projection.problem
+		return false
+	return _load_payload(ORIGINAL_PROJECTION.encoded(value),"")
+
+func _load_payload(bytes: PackedByteArray, path: String) -> bool:
+	if bytes.size() > MAX_BYTES:
+		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
+		return false
 	if bytes.get_string_from_utf8().sha256_text() != PAYLOAD_SHA:
 		problem = "퀘스트 팩 SHA-256 불일치"
 		return false

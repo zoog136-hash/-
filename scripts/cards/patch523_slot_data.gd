@@ -8,8 +8,19 @@ static var new_cards: Dictionary=pack.get("new_cards",{"catalog":{},"option_defi
 static var options: Dictionary=pack.get("options",{"groups":{},"reviewed_primary_keys":[],"changed_primary_keys":[],"bonuses":{},"types":{},"units":{},"ui_units":{},"type_labels":{}})
 static var relic: Dictionary=pack.get("relic",{"cards":{},"option_groups":{},"source_server_limits":[],"unlock_item":{}})
 static var relic_combat: Dictionary=pack.get("relic_combat",{"relic_subslot_buffs":{},"invoke_options":[],"invoke_spells":{}})
+static var card_acquisition: Dictionary=pack.get("card_acquisition",{})
+static var relic_acquisition: Dictionary=pack.get("relic_acquisition",{})
 
 static func _load_pack() -> Dictionary:
+	# UNVERIFIED: installed() is the existing definition-availability ABI, not
+	# a claim that a new art/runtime pack has been installed. Legacy inputs are
+	# retained below and are never used as a final-input or missing-input fallback.
+	var input=preload("res://scripts/cards/current523_relic_input.gd").new()
+	var candidate: Dictionary=input.build()
+	problem=input.problem
+	return candidate
+
+static func _load_legacy_pack_for_reference() -> Dictionary:
 	var path: String=OS.get_environment("TWILIGHT_CARD523_SLOT_PACK")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--card523-slot-pack="):path=arg.trim_prefix("--card523-slot-pack=")

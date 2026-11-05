@@ -804,9 +804,7 @@ func _load_data() -> void:
 		catalog_image_index[source_category] = {}
 	_build_job_classes()
 	equipment_collections.configure(self)
-	var totem_root := OS.get_environment("TWILIGHT_TOTEM_PACK")
-	if totem_root.is_empty(): totem_root = "user://original_resources/totems523"
-	if FileAccess.file_exists(totem_root.path_join("manifest.json")): totems.install(totem_root)
+	totems.configure_input()
 	totem_actions.configure(self)
 	totem_combat.configure(self)
 	fishing523.configure(self)
@@ -1242,15 +1240,18 @@ func _effective_max_mp() -> int:
 
 func _index_item_weights() -> void:
 	patch523_craft_item_cache={}
-	item_weight_index.clear()
+	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
+	var source_weight_policy: Dictionary = {}
 	var path: String = "res://data/item_weight_rules.json"
 	if FileAccess.file_exists(path):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		if parsed is Dictionary:
 			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
 			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
@@ -1261,13 +1262,25 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
+			var source_weight: Dictionary = ITEM_OPTIONS.current_source_weight_input(record,source_weight_policy)
+			if source_weight.get("applicable",false):
+				if not source_weight.get("ok",false):
+					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+					return
+				# Exact source zero remains zero; host positive-default bounds below
+				# still belong only to the pre-existing legacy input path.
+				next_weight_index[name_value] = int(source_weight.weight)
+				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
 			if record.has("growth96_item_id"):
-				item_weight_index[name_value] = maxi(0,int(record.weight))
+				next_weight_index[name_value] = maxi(0,int(record.weight))
 				continue
 			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			item_weight_index[name_value] = maxi(0, raw_weight)
+			next_weight_index[name_value] = maxi(0, raw_weight)
+	# Keep existing dictionary aliases while publishing a complete input index.
+	item_weight_index.clear()
+	item_weight_index.merge(next_weight_index)
 
 func _inventory_total_weight() -> int:
 	var total: int = 0
@@ -4937,13 +4950,26 @@ func _patch523_craft_item_index() -> Dictionary:
 func _load_patch523_equipment() -> void:
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")
 	var expected: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
-	if path.is_empty():
+	# UNVERIFIED: even a SHA-only or explicitly empty environment selection is
+	# authoritative. Neither it nor a damaged install pointer is bypassed.
+	var explicit: bool = OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES") or OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256")
+	var installed: bool = FileAccess.file_exists(PATCH523_STORE.INDEX)
+	if not explicit and installed:
 		var saved: Dictionary = PATCH523_STORE.active()
 		path = str(saved.get("path", ""))
 		expected = str(saved.get("sha256", ""))
-	if path.is_empty(): return
-	if not _install_patch523_equipment(path, expected):
+	if explicit or installed:
+		if not _install_patch523_equipment(path, expected): push_warning(patch523_equipment.problem)
+		return
+	var catalog_bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://data/catalog_v19.json")
+	# Export exactly the already registered catalog inputs used by the public
+	# compiler, never a world/UI object or newly fabricated native identity.
+	var binding: Dictionary = {"아이템":catalog_db.get("아이템",[]),"patch523_crafting_catalog_contract":catalog_db.get("patch523_crafting_catalog_contract",{})}
+	var binding_bytes: PackedByteArray = JSON.stringify(binding,"",true,true).to_utf8_buffer()
+	if not patch523_equipment.load_original(catalog_bytes,binding_bytes):
 		push_warning(patch523_equipment.problem)
+		return
+	_apply_loaded_patch523_equipment()
 
 func install_patch523_craft_catalog_zip(path: String) -> bool:
 	var installed: Dictionary=PATCH523_CRAFT_CATALOG.install_zip(path)
@@ -4968,6 +4994,10 @@ func install_patch523_equipment_file(path: String, expected: String) -> bool:
 func _install_patch523_equipment(path: String, expected: String) -> bool:
 	if not patch523_equipment.load_file(path, expected):
 		return false
+	_apply_loaded_patch523_equipment()
+	return true
+
+func _apply_loaded_patch523_equipment() -> void:
 	patch523_material_choices.clear()
 	patch523_craft_item_cache={}
 	# Keep existing recipes, IDs and economy unchanged.
@@ -4976,7 +5006,6 @@ func _install_patch523_equipment(path: String, expected: String) -> bool:
 			crafting.recipes.erase(key)
 	crafting.recipes.merge(patch523_equipment.recipes.duplicate(true))
 	_refresh_patch523_equipment_options()
-	return true
 
 func _refresh_patch523_equipment_options() -> void:
 	if patch523_equipment.data.is_empty(): return
@@ -10045,15 +10074,7 @@ func set_source_character_gender(gender_id: int) -> bool:
 func get_expedition_catalog() -> RefCounted:
 	if not expedition_pack_checked:
 		expedition_pack_checked = true
-		var path := ""
-		var checksum := ""
-		for argument: String in OS.get_cmdline_user_args():
-			if argument.begins_with("--expedition523-pack="):
-				path = argument.trim_prefix("--expedition523-pack=")
-			elif argument.begins_with("--expedition523-sha256="):
-				checksum = argument.trim_prefix("--expedition523-sha256=")
-		if not path.is_empty() or not checksum.is_empty():
-			expedition_catalog.install(path, checksum)
+		expedition_catalog.configure_arguments()
 	return expedition_catalog
 
 func expedition_owned_cards() -> Array:
@@ -10109,13 +10130,7 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 
 
 func _load_source_dungeon_pack() -> void:
-	var path := OS.get_environment("TWILIGHT_DUNGEON523_PACK")
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--dungeon523-pack="):
-			path = argument.trim_prefix("--dungeon523-pack=")
-	if path.is_empty() and FileAccess.file_exists(SOURCE_DUNGEONS.DEFAULT_MANIFEST):
-		path = SOURCE_DUNGEONS.DEFAULT_MANIFEST
-	if not path.is_empty(): source_dungeons.load_pack(path)
+	source_dungeons.load_configured()
 
 func install_source_dungeon_pack(path: String) -> Dictionary:
 	var result: Dictionary = source_dungeons.install_pack(path)

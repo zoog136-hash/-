@@ -1,8 +1,62 @@
 extends RefCounted
-const DATA=preload("res://data/shop/source523_wisdom.json")
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+# Existing host timing policy, separate from native ItemConsumeDelay.
+const HOST_COOLDOWN_SECONDS: float=0.5
+const HOST_REGEN_INTERVAL: float=30.0
+const ORIGIN: String="원본 SP+2·MP회복+2·300초 · TWILIGHT 기존 30초 회복 틱/0.5초 사용 대기"
+static var source_identity: Dictionary={}
+static var source_problem: String=""
+static var _source_spec: Dictionary={}
+
+static func _spec() -> Dictionary:
+	var identity: Dictionary=SOURCE.identity()
+	if identity.is_empty():source_problem=SOURCE.problem();return {}
+	if not _source_spec.is_empty():source_problem="";return _source_spec
+	var item: Dictionary=SOURCE.row("ItemClass",376)
+	var buff: Dictionary=SOURCE.row("BuffClass",39)
+	if item.is_empty() or buff.is_empty():source_problem="원본 지혜 물약의 ItemClass/BuffClass 입력이 없습니다.";return {}
+	if item.get("TestItem")!=false or item.get("GradeID")!=1 or not SOURCE.declared_exclusion("ItemClass",item).is_empty() or not SOURCE.declared_exclusion("BuffClass",buff).is_empty():source_problem="원본 지혜 물약이 제외되었거나 기존 일반 물약 계약과 다릅니다.";return {}
+	var item_input: Dictionary=_values("ItemBonus","ItemClassID",376)
+	var buff_input: Dictionary=_values("BuffBonus","BuffClassID",39)
+	if item_input.has("error") or buff_input.has("error"):source_problem=str(item_input.get("error",buff_input.get("error","")));return {}
+	var values: Dictionary=item_input.get("values",{})
+	var buff_values: Dictionary=buff_input.get("values",{})
+	if values.size()!=4 or buff_values.size()!=2:source_problem="원본 지혜 물약의 지원 효과 집합이 다릅니다.";return {}
+	for kind: String in ["BuffClassID","BuffDuration","ItemConsumeDelay","ItemConsumeEffectSpriteID"]:
+		if not values.has(kind):source_problem="원본 지혜 물약 효과가 없습니다: "+kind;return {}
+	if values.BuffClassID!=39 or not buff_values.has("SpellPower") or not buff_values.has("RegenMP"):source_problem="원본 지혜 물약 버프 참조·수치 계약이 다릅니다.";return {}
+	for field: String in ["IsEraseOnAttack","IsEraseOnAttacked","IsEraseOnMove","IsEraseOnSpellCastAndShieldIt","IsEraseOnSkillCastAndShieldIt","IsEraseOnItemUse","IsEraseOnSpellAttacked","IsEraseOnSkillAttacked","IsEraseOnCast","IsEraseOnHealed","IsAbsoluteTimeBuff","IsImmuneToDead"]:
+		if buff.get(field)!=false:source_problem="원본 지혜 물약 버프의 미지원 유지 조건: "+field;return {}
+	if buff.get("IsEraseOnTimeEnd")!=true or not _integer(buff.get("BuffGroupID")):source_problem="원본 지혜 물약의 만료·버프 그룹 계약이 다릅니다.";return {}
+	var label: Dictionary=SOURCE.row("DescData_Korean",int(item.get("DescID",0)))
+	if not label.get("Description") is String or str(label.Description).is_empty():source_problem="원본 지혜 물약 이름 입력이 없습니다.";return {}
+	_source_spec={"schema":"twilight.source523.wisdom.v1","item_id":376,"name":str(label.Description),"buff_id":39,"group":buff.BuffGroupID,"duration":values.BuffDuration,"sp":buff_values.SpellPower,"mp_regen":buff_values.RegenMP,"source_consume_delay_raw":values.ItemConsumeDelay,"host_cooldown_seconds":HOST_COOLDOWN_SECONDS,"host_regen_interval":HOST_REGEN_INTERVAL,"origin":ORIGIN}
+	# Archive provenance is not a generated model hash or a gameplay observation.
+	source_identity=identity.duplicate(true)
+	source_problem=""
+	return _source_spec
+
+static func _values(table: String,field: String,id: int) -> Dictionary:
+	var values: Dictionary={}
+	for link: Dictionary in SOURCE.related(table,field,id):
+		var bonus: Dictionary=SOURCE.row("Bonus",int(link.get("BonusID",-1)))
+		var type: Dictionary=SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1))) if not bonus.is_empty() else {}
+		if bonus.is_empty() or type.is_empty():return {"error":"원본 지혜 물약 Bonus/BonusType 참조 없음: "+table}
+		var kind: String=str(type.get("Name",""))
+		if kind.is_empty() or values.has(kind) or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or link.get("IsPossession",false)!=false:return {"error":"원본 지혜 물약의 조건부·중복 효과: "+table}
+		for condition: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+			if link.get(condition,0)!=0:return {"error":"원본 지혜 물약의 미지원 조건: "+table+"."+condition}
+		if not SOURCE.declared_exclusion(table,link).is_empty() or not SOURCE.declared_exclusion("Bonus",bonus).is_empty() or not SOURCE.declared_exclusion("BonusType",type).is_empty():return {"error":"원본 지혜 물약의 제외된 효과: "+table}
+		if not _integer(bonus.get("Value")):return {"error":"원본 지혜 물약 효과 수치 입력 없음: "+table}
+		values[kind]=bonus.Value
+	return {"values":values}
+
+static func _integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
 
 static func install(world,catalog) -> Dictionary:
-	var spec: Dictionary=DATA.data
+	var spec: Dictionary=_spec()
+	if spec.is_empty():return {}
 	var item: Dictionary=catalog.record("ItemClass",int(spec.item_id))
 	if item.is_empty() or item.get("TestItem",true) or catalog.label(int(item.get("DescID",0)))!=spec.name or int(item.get("GradeID",0))!=1:return {}
 	var record: Dictionary=world._find_catalog_item_record(str(spec.name))
@@ -15,7 +69,8 @@ static func install(world,catalog) -> Dictionary:
 static func try_use(world,name: String) -> bool:
 	var record: Dictionary=world._find_catalog_item_record(name)
 	if record.get("source")!="twilight-shop523-wisdom":return false
-	var spec: Dictionary=DATA.data
+	var spec: Dictionary=_spec()
+	if spec.is_empty():world.hud.show_message("지혜 물약 원문 입력 보류 · "+source_problem);return true
 	if record.get("name")!=spec.name or int(record.get("source_item_class_id",0))!=int(spec.item_id) or record.get("source_bless_raw")!=1:
 		world.hud.show_message("지혜 물약 원본 정체 불일치 · 보존");return true
 	var count:int=int(world.inventory.get(name,0))

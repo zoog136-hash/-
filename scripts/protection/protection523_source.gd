@@ -1,5 +1,6 @@
 extends RefCounted
 
+const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SOURCE_BYTES := 25031173
 const IDS := [200723,245718,297828,328254,346911,371108]
@@ -218,7 +219,20 @@ static func install(path: String) -> Dictionary:
 	return result
 
 static func restore() -> Dictionary:
-	if not FileAccess.file_exists(POINTER): return denied("원본523 ZIP을 설치해 주세요")
+	var selected := FileAccess.open(POINTER,FileAccess.READ)
+	if selected == null:
+		# Only actual absence permits the held original input. Existing but
+		# unreadable/invalid selections must retain their own failure priority.
+		var open_error := FileAccess.get_open_error()
+		if open_error != ERR_FILE_NOT_FOUND or FileAccess.file_exists(POINTER) or DirAccess.dir_exists_absolute(POINTER): return denied("가호 설치 선택 파일 접근 실패")
+		var parent := DirAccess.open(POINTER.get_base_dir())
+		if parent != null and parent.is_link(POINTER.get_file()): return denied("가호 설치 선택 파일 접근 실패")
+		var source_path: String = CommonSource.archive_path()
+		if source_path.is_empty(): return denied("원본523 ZIP을 설치해 주세요")
+		var original := extract(source_path)
+		original.erase("capsule")
+		return original
+	selected.close()
 	var parser := JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(POINTER)) != OK or not parser.data is Dictionary: return denied("가호 설치 선택 파일 손상")
 	var pointer: Dictionary = parser.data
