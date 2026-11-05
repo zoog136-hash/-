@@ -296,7 +296,7 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 	if try_use_regional_return(item_name): return true
 	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
 		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
-		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
+		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name,selected_instance)
 		if bool(source_result.get("handled",false)):
 			if bool(source_result.get("ok",false)):
 				world._update_hud();world.hud.refresh_inventory(world.inventory)

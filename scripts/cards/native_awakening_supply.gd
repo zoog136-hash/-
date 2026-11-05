@@ -4,24 +4,19 @@ const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SLOT_DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const CONSUMPTION=preload("res://scripts/quests/quest_reward_consumption.gd")
+const ORIGINAL=preload("res://scripts/resources/current523_definition_rows.gd")
 const IDS=[3252,370562,346921,365748,365758,75184,75194,95624,118992,243043]
 const QUANTITY="source_awakening_quantity"
 static func integer(value: Variant) -> bool:return (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>=0 and float(value)<=9007199254740991
 static func definition(id: int) -> Dictionary:
-	if id not in IDS:return {}
-	var full: Dictionary=D.definition_id(str(id))
-	if not full.is_empty():return full
-	var raw: Dictionary={}
-	var recipe: Dictionary=SLOT_DATA.card_acquisition.get("guaranteed_nemesis",{})
-	for entry: Dictionary in recipe.get("inputs",[])+recipe.get("outputs",[]):
-		var item: Dictionary=entry.get("item_definition",{}).get("item",{}).get("raw",{})
-		if int(item.get("ID",0))==id:raw=item
-	var box: Dictionary=SLOT_DATA.relic_acquisition.get("box",{})
-	if int(box.get("item",{}).get("raw",{}).get("ID",0))==id:raw=box.item.raw
-	for entry: Dictionary in box.get("contents",[]):
-		var item: Dictionary=entry.get("item_definition",{}).get("item",{}).get("raw",{})
-		if int(item.get("ID",0))==id:raw=item
-	return {"original_item":raw,"native_record":{}} if not raw.is_empty() else {}
+	if id not in IDS or ORIGINAL.identity().is_empty():return {}
+	var raw: Dictionary=ORIGINAL.row("ItemClass",id)
+	if raw.get("TestItem")!=false or not ORIGINAL.declared_exclusion("ItemClass",raw).is_empty():return {}
+	# Preserve an issued native representation only if its entire original row
+	# matches the new source. It supplies ownership shape, never use semantics.
+	var issued: Dictionary=D.definition_id(str(id))
+	var native_record: Dictionary=issued.get("native_record",{}) if issued.get("original_item")==raw else {}
+	return {"original_item":raw,"native_record":native_record,"source_definition_archive":ORIGINAL.identity()}
 static func record(id: int) -> Dictionary:
 	var row: Dictionary=definition(id)
 	return D.variant_item(row.get("native_record",{}),1) if not row.get("original_item",{}).get("TestItem",true) else {}

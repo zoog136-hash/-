@@ -1,7 +1,8 @@
 extends RefCounted
 ## Native card skill awakening, independent of option awakening and aura.
 ## Book quantity and fees are explicit user game policy, separate from source pools.
-const DATA=preload("res://data/cards/base508_skill_awakening.json")
+const CurrentInput=preload("res://scripts/cards/current523_skill_awakening_input.gd")
+const Native=preload("res://scripts/lineagem_base508.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
 const MAX_EXPERIENCE: int=9999999999999
@@ -18,21 +19,22 @@ var pools: Dictionary={}
 var stats: Dictionary={}
 var invokes: Dictionary={}
 var experiences: Dictionary={}
+var data: Dictionary={}
 var problem: String=""
 
 func _init() -> void:
-	cards=DATA.data.cards.duplicate(true)
-	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
-	cards.merge(supplement.skill_cards.duplicate(true),false)
-	conditions.configure(DATA.data.source_server_limits)
-	patch523_conditions.configure(supplement.source_server_limits)
-	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenStatPerLevel:
+	data=CurrentInput.build(Native.cards().get("catalog",{}))
+	problem=str(data.get("problem","")) if data.get("source_definition_archive",{}).is_empty() or data.get("cards",{}).is_empty() else ""
+	cards=data.cards.duplicate(true)
+	conditions.configure(data.source_server_limits)
+	patch523_conditions.configure(data.source_server_limits)
+	for row: Dictionary in data.tables.get("BuffCardSkillAwakenStatPerLevel",[]):
 		stats[str(int(row.MagicDollAwakenStatID))+":"+str(int(row.Level))]=row
-	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenSkillInvokeProb:
+	for row: Dictionary in data.tables.get("BuffCardSkillAwakenSkillInvokeProb",[]):
 		invokes[_invoke_key(int(row.BuffCardDeckID),int(row.GradeID),int(row.Level))]=row
-	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenExp:
+	for row: Dictionary in data.tables.get("BuffCardSkillAwakenExp",[]):
 		experiences[str(int(row.BuffCardDeckID))+":"+str(int(row.Level))]=row
-	for book: Dictionary in DATA.data.books:
+	for book: Dictionary in data.books:
 		var key: String=str(int(book.target_deck_from_named_bonus_type))+":"+str(int(book.group_row.GradeID))
 		if pools.has(key) or int(book.group_row.ID)==0 or int(book.pool_weight_sum)!=100000:
 			problem="원본 스킬 각성 pool 연결 오류";continue
@@ -73,7 +75,7 @@ func eligibility(identity: String) -> Dictionary:
 func spell_allowed(identity: String,spell_id: int) -> bool:
 	if spell_id==0:return false
 	var book: Dictionary=book_for(identity)
-	if book.is_empty() or not DATA.data.spells.has(str(spell_id)):return false
+	if book.is_empty() or not data.spells.has(str(spell_id)):return false
 	for row: Dictionary in book.pool_rows:
 		if int(row.SpellClassID)==spell_id:return true
 	return false
@@ -97,14 +99,14 @@ func validate_state(value: Variant) -> String:
 		if not xp is String or not xp.is_valid_int() or str(int(xp))!=xp or int(xp)<0 or int(xp)>MAX_EXPERIENCE:return "스킬 각성 경험치 저장 오류"
 		if int(entry.spell_id)>0 and int(entry.level)<1:return "스킬 각성 레벨 누락"
 		# Preserve unknown future source IDs as inert same-version records.
-		if cards.has(key) and int(entry.spell_id)>0:
+		if cards.has(key) and int(entry.spell_id)>0 and not book_for(key).is_empty():
 			if not spell_allowed(key,int(entry.spell_id)) or profile(key,int(entry.level)).is_empty():return "스킬 각성 카드·스킬·레벨 조인 오류"
 	return ""
 
 func candidates(identity: String) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
 	for row: Dictionary in book_for(identity).get("pool_rows",[]):
-		var spell: Dictionary=DATA.data.spells.get(str(int(row.SpellClassID)),{})
+		var spell: Dictionary=data.spells.get(str(int(row.SpellClassID)),{})
 		if spell.is_empty():continue
 		result.append({"spell_id":int(row.SpellClassID),"name":spell.name,"selection_weight":int(row.Prob),"selection_total":100000,"source_spell":spell.source_spell.duplicate(true),"effects":spell.effects.duplicate(true)})
 	return result
@@ -114,7 +116,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("runtime_transaction_required","실제 인벤토리·재화 거래는 스킬 각성 런타임에서 처리합니다")
@@ -122,7 +124,7 @@ func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_
 func book_requirement(identity: String) -> Dictionary:
 	var book: Dictionary=book_for(identity)
 	if book.is_empty():return {}
-	return {"source_snapshot":"base508","item_class_id":int(book.item_row.ID),"quantity":BOOK_QUANTITY,"quantity_provenance":"explicit_user_policy","fee_verified":false,"fee":int(FEES.get(int(cards[identity].source_card.GradeID),0)),"fee_provenance":"explicit_user_policy"}
+	return {"source_snapshot":"patch523","source_definition_archive":book.source_definition_archive.duplicate(true),"saved_identity_namespace":str(book.saved_identity_namespace),"saved_item_source_id":str(book.saved_item_source_id),"item_class_id":int(book.item_row.ID),"quantity":BOOK_QUANTITY,"quantity_provenance":"explicit_user_policy","fee_verified":false,"fee":int(FEES.get(int(cards[identity].source_card.GradeID),0)),"fee_provenance":"explicit_user_policy"}
 
 func prepare_book_debit(identity: String,source_book_counts: Dictionary) -> Dictionary:
 	# Pure source-ID boundary. The caller must supply an explicitly verified
@@ -140,7 +142,7 @@ func prepare_book_debit(identity: String,source_book_counts: Dictionary) -> Dict
 	return {"ok":true,"source_book_counts":next,"consumed_book":requirement,"committed":false,"fee_verified":false}
 
 func fixed_damage_profile(spell_id: int) -> Dictionary:
-	var spell: Dictionary=DATA.data.spells.get(str(spell_id),{})
+	var spell: Dictionary=data.spells.get(str(spell_id),{})
 	if spell.is_empty() or bool(spell.source_spell.TestSpell):return {}
 	var values: Dictionary={}
 	for effect: Dictionary in spell.effects:
@@ -161,7 +163,7 @@ func invoke(identity: String,entry: Dictionary,roll: int) -> Dictionary:
 	var spell_id: int=int(entry.spell_id)
 	var damage: Dictionary=fixed_damage_profile(spell_id)
 	if damage.is_empty():return fail("effect","원본 스킬 효과 런타임 미지원")
-	return {"ok":true,"invoked":roll<int(level.invoke.CastSuccessProb),"profile":level,"spell":DATA.data.spells[str(spell_id)].duplicate(true),"damage":damage}
+	return {"ok":true,"invoked":roll<int(level.invoke.CastSuccessProb),"profile":level,"spell":data.spells[str(spell_id)].duplicate(true),"damage":damage}
 
 
 func select_candidate(identity: String,roll: int) -> Dictionary:
@@ -217,7 +219,8 @@ func request_experience_feed(_state: Dictionary,_owned: Dictionary,_identity: St
 static func install_book_definitions(catalog: Dictionary) -> void:
 	if not catalog.has("아이템"):catalog["아이템"]=[]
 	var seen: Dictionary={}
-	for book: Dictionary in DATA.data.books:
+	var input: Dictionary=CurrentInput.build(Native.cards().get("catalog",{}))
+	for book: Dictionary in input.books:
 		var item: Dictionary=book.item_row
 		var id: int=int(item.ID)
 		if seen.has(id):continue
@@ -226,4 +229,5 @@ static func install_book_definitions(catalog: Dictionary) -> void:
 		for record: Dictionary in catalog["아이템"]:
 			if record.get("name","")==str(book.name):exists=true;break
 		if exists:continue # Never assign source ownership to a legacy name alias.
-		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_base508","source_snapshot":"base508","source_item_class_id":id,"sourceId":"m508:item:"+str(id),"type":"재료","slot":"material","grade":str(GRADE_NAMES.get(int(book.group_row.GradeID),"미확인")),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})
+		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_content_snapshot":"patch523","source_definition_archive":book.source_definition_archive.duplicate(true),"saved_identity_namespace":str(book.saved_identity_namespace),"source_item_class_id":id,"sourceId":str(book.saved_item_source_id),"type":"재료","slot":"material","grade":str(GRADE_NAMES.get(int(book.group_row.GradeID),"미확인")),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})
+

@@ -20,6 +20,7 @@ var generation: int = -1
 var effects: Array[Node2D] = []
 var effect_manifest: String = ""
 var effect_manifest_sha: String = ""
+var input_status: Dictionary = {}
 
 func configure(scene: Node) -> bool:
 	world = scene
@@ -30,16 +31,12 @@ func configure(scene: Node) -> bool:
 		if arg == "--patch523-host-combat": host_enabled = true
 		if arg.begins_with("--patch523-effect-manifest="): effect_manifest = arg.trim_prefix("--patch523-effect-manifest=")
 		if arg.begins_with("--patch523-effect-manifest-sha256="): effect_manifest_sha = arg.trim_prefix("--patch523-effect-manifest-sha256=")
-	if path.is_empty():
-		path = "user://source_npc523/manifest.json"
-		digest = DEFAULT_MANIFEST_SHA
 	source_effects.load_settings()
-	if effect_manifest.is_empty():
-		effect_manifest = "user://source_npc523_effects/manifest.json"
-		effect_manifest_sha = DEFAULT_EFFECT_SHA
-		if FileAccess.file_exists(effect_manifest) and FileAccess.get_sha256(effect_manifest) == PREVIOUS_EFFECT_SHA: effect_manifest_sha = PREVIOUS_EFFECT_SHA
-	source_effects.load_pack(effect_manifest,effect_manifest_sha)
-	var loaded: bool = FileAccess.file_exists(path) and catalog.load_pack(path, digest)
+	# The old NPC/model/effect files remain preserved, never final defaults.
+	source_effects.records.clear();source_effects.root_path=""
+	source_effects.error="current523_visual_pin_pending"
+	var loaded: bool=catalog.configure_original()
+	input_status={"mode":"current523_original","legacy_catalog_input_ignored":not path.is_empty() or not digest.is_empty(),"legacy_effect_input_deferred":not effect_manifest.is_empty() or not effect_manifest_sha.is_empty(),"visual":"independent_current_visual_pin_required"}
 	compatibility.configure(self)
 	extensions.configure(self)
 	return loaded

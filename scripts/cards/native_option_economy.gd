@@ -1,6 +1,6 @@
 extends RefCounted
 ## Named base508 option rules only. Never reuse these for skill awakening.
-const DATA=preload("res://data/cards/base508_option_extensions.json")
+const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const SCALE: int=100 # exact migration of prior TWILIGHT integer-percent progress
 const FIELD: String="base508_option_exp_hundredths"
 
@@ -9,7 +9,7 @@ static func format_units(value: int) -> String:
 	var whole: int=int(value/SCALE);var fraction: int=value%SCALE
 	return str(whole)+(".%02d" % fraction if fraction!=0 else "")
 static func raw(deck: int,grade: int,name_value: String) -> Variant:
-	return DATA.data.economy.get(str(deck)+":"+str(grade),{}).get(name_value,{}).get("Value")
+	return INPUT.session().economy.get(str(deck)+":"+str(grade),{}).get(name_value,{}).get("Value")
 static func rule(row: Dictionary) -> Dictionary:
 	var card: Dictionary=row.get("native_source",{}).get("card",{})
 	if card.is_empty():return {}
@@ -100,3 +100,4 @@ static func awaken(core: RefCounted,state: Dictionary,cards: Dictionary,gold: in
 	if not success:entry.failures=int(entry.failures)+1
 	var next: Dictionary=state.duplicate(true);next.cards[category][identity]=entry;next.revision=int(next.revision)+1
 	return {"ok":true,"state":next,"card_state":cards.duplicate(true),"gold":gold-int(r.attempt_cost),"success":success,"consumed_gold":int(r.attempt_cost),"refunded_experience":int(entry.experience),"source_refunded_experience":int(entry[FIELD]),"source_exp_scale":SCALE}
+

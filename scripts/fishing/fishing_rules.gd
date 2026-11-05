@@ -1,30 +1,137 @@
 extends RefCounted
-## Source values are loaded from an owner-installed private 523 pack.
+## Source values come from a selected private pack or held original definitions.
 ## Execution choices absent from the client tables remain explicit host policy.
+const ORIGINAL = preload("res://scripts/fishing/current523_fishing_input.gd")
 var tables: Dictionary = {}
 var rods: Dictionary = {}
 var item_effects: Dictionary = {}
 var items: Dictionary = {}
+var raw_tables: Dictionary = {}
+var raw_rods: Dictionary = {}
+var raw_item_effects: Dictionary = {}
+var source_effect_rows: Dictionary = {}
+var model_input_identity: Dictionary = {}
+var loaded_sha256: String = ""
+var unavailable_source_definitions: Array = []
+var source_exclusion_evidence: Array = []
+var input_problem: String = ""
 var exchange_denominator: int = 10000000
 var independent_extras: bool = true
 var failure: String = "원본 523 낚시 팩이 필요합니다."
 
 func load_pack(path: String) -> bool:
-	var parser := JSON.new()
-	if not FileAccess.file_exists(path) or parser.parse(FileAccess.get_file_as_string(path)) != OK:
+	if path.is_empty():
+		failure = "선택한 낚시 523 파일 경로가 비어 있습니다."
+		input_problem = "explicit_fishing_pack_path_empty"
 		return false
-	return configure(parser.data)
+	var file = FileAccess.open(path,FileAccess.READ)
+	if file == null:
+		failure = "선택한 낚시 523 파일을 읽을 수 없습니다."
+		input_problem = "fishing_pack_unreadable:"+str(FileAccess.get_open_error())
+		return false
+	var length: int = file.get_length()
+	var bytes: PackedByteArray = file.get_buffer(length)
+	file.close()
+	if bytes.size() != length:
+		failure = "선택한 낚시 523 파일을 끝까지 읽지 못했습니다."
+		input_problem = "fishing_pack_read_incomplete"
+		return false
+	var hash = HashingContext.new()
+	if hash.start(HashingContext.HASH_SHA256) != OK or hash.update(bytes) != OK:
+		failure = "선택한 낚시 523 파일의 정체를 계산하지 못했습니다."
+		input_problem = "fishing_pack_sha256_unavailable"
+		return false
+	var digest: String = hash.finish().hex_encode()
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8()) != OK:
+		failure = "선택한 낚시 523 파일의 JSON을 읽을 수 없습니다."
+		input_problem = "fishing_pack_json_invalid:"+parser.get_error_message()
+		return false
+	if not configure(parser.data): return false
+	loaded_sha256 = digest
+	model_input_identity = {"kind":"fishing_pack_file","file_payload_sha256":digest,
+		"model_payload_sha256":model_input_identity.get("model_payload_sha256",""),"archive":{}}
+	return true
+
+func load_original() -> bool:
+	var source = ORIGINAL.new()
+	var data: Dictionary = source.build()
+	if data.is_empty():
+		failure = "보유 원본523 낚시 입력을 연결할 수 없습니다: "+source.problem
+		input_problem = source.problem
+		unavailable_source_definitions = source.unavailable_source_definitions.duplicate(true)
+		source_exclusion_evidence = source.source_exclusion_evidence.duplicate(true)
+		return false
+	if not configure(data): return false
+	model_input_identity = data.input_identity.duplicate(true)
+	loaded_sha256 = str(model_input_identity.model_payload_sha256)
+	return true
 
 func configure(data: Variant) -> bool:
-	if not data is Dictionary or int(data.get("version", 0)) != 523 or not data.get("tables") is Dictionary:
+	if not data is Dictionary or not ORIGINAL._integer(data.get("version")) or int(data.version) != 523 or not data.get("tables") is Dictionary:
+		failure = "낚시 523 입력 형식이 다릅니다."
+		input_problem = "fishing_model_schema_invalid"
 		return false
 	for key: String in ["Fish", "FishDistribution", "FishPoolProbability", "FishTerritory", "FishMiniGameDifficulty", "ExchangeSystemRule", "ExchangeSystemInput", "ExchangeSystemOutput", "ItemClass"]:
-		if not data.tables.get(key) is Array: return false
-	tables = data.tables.duplicate(true)
-	rods = data.get("rods", {}).duplicate(true)
-	item_effects = data.get("item_effects", {}).duplicate(true)
-	items.clear()
-	for row: Dictionary in tables.ItemClass: items[str(int(row.ID))] = row
+		if not data.tables.get(key) is Array:
+			failure = "낚시 523 필수 표가 없습니다: "+key
+			input_problem = "fishing_model_table_missing:"+key
+			return false
+	if not data.get("rods",{}) is Dictionary or not data.get("item_effects",{}) is Dictionary:
+		failure = "낚시 523 낚싯대·아이템 입력 형식이 다릅니다."
+		input_problem = "fishing_model_effect_shape_invalid"
+		return false
+	var staged_tables: Dictionary = data.tables.duplicate(true)
+	for key: Variant in staged_tables:
+		if not key is String or not staged_tables[key] is Array:
+			failure = "낚시 523 표 배열 형식이 다릅니다."
+			input_problem = "fishing_model_table_shape_invalid"
+			return false
+		for row: Variant in staged_tables[key]:
+			if not row is Dictionary:
+				failure = "낚시 523 원문 행 형식이 다릅니다."
+				input_problem = "fishing_model_row_shape_invalid:"+str(key)
+				return false
+	var staged_items: Dictionary = {}
+	for row: Dictionary in staged_tables.ItemClass:
+		if not ORIGINAL._integer(row.get("ID")) or staged_items.has(str(int(row.ID))):
+			failure = "낚시 523 아이템 정체가 없거나 중복됩니다."
+			input_problem = "fishing_model_item_identity_invalid"
+			return false
+		staged_items[str(int(row.ID))] = row
+	for key: String in ["raw_tables","raw_rods","raw_item_effects","source_effect_rows"]:
+		if not data.get(key,{}) is Dictionary:
+			failure = "낚시 523 원문 참조 형식이 다릅니다."
+			input_problem = "fishing_model_raw_reference_invalid:"+key
+			return false
+	for key: String in ["unavailable_source_definitions","source_exclusion_evidence"]:
+		if not data.get(key,[]) is Array:
+			failure = "낚시 523 제외 근거 형식이 다릅니다."
+			input_problem = "fishing_model_exclusion_shape_invalid:"+key
+			return false
+	var payload: Dictionary = data.duplicate(true)
+	payload.erase("input_identity")
+	var hash = HashingContext.new()
+	if hash.start(HashingContext.HASH_SHA256) != OK or hash.update(JSON.stringify(payload).to_utf8_buffer()) != OK:
+		failure = "낚시 523 모델 정체를 계산하지 못했습니다."
+		input_problem = "fishing_model_payload_hash_unavailable"
+		return false
+	var digest: String = hash.finish().hex_encode()
+	# Commit the complete candidate together; failures retain the prior registry.
+	tables = staged_tables
+	rods = data.get("rods",{}).duplicate(true)
+	item_effects = data.get("item_effects",{}).duplicate(true)
+	items = staged_items
+	raw_tables = data.get("raw_tables",data.tables).duplicate(true)
+	raw_rods = data.get("raw_rods",data.get("rods",{})).duplicate(true)
+	raw_item_effects = data.get("raw_item_effects",data.get("item_effects",{})).duplicate(true)
+	source_effect_rows = data.get("source_effect_rows",{}).duplicate(true)
+	unavailable_source_definitions = data.get("unavailable_source_definitions",[]).duplicate(true)
+	source_exclusion_evidence = data.get("source_exclusion_evidence",[]).duplicate(true)
+	model_input_identity = {"kind":"direct_fishing_model","model_payload_sha256":digest,"archive":{},
+		"model_payload_sha256_scope":"JSON.stringify(model_without_input_identity).to_utf8_buffer()"}
+	loaded_sha256 = digest
+	input_problem = ""
 	failure = ""
 	return true
 
@@ -103,3 +210,4 @@ func constant(name_value: String, fallback: int) -> int:
 	for entry: Dictionary in rows("FishConstant"):
 		if str(entry.Name) == name_value: return int(entry.Value)
 	return fallback
+

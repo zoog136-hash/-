@@ -22,9 +22,11 @@ static func fresh_state() -> Dictionary:
 
 func configure(host: Node) -> void:
 	world = host
-	var path: String = OS.get_environment("TWILIGHT_FISHING523_PACK")
-	if path.is_empty(): path = "user://private_content/fishing523.json"
-	rules.load_pack(path)
+	var default_path: String="user://private_content/fishing523.json"
+	if OS.has_environment("TWILIGHT_FISHING523_PACK"):
+		rules.load_pack(OS.get_environment("TWILIGHT_FISHING523_PACK"))
+	elif FileAccess.file_exists(default_path):rules.load_pack(default_path)
+	else:rules.load_original()
 	policy.length_min_coefficient = rules.constant("FishMinLengthCoefficient", 900)
 	policy.length_max_coefficient = rules.constant("FishMaxLengthCoefficient", 1100)
 	var policy_path: String = "user://private_content/fishing_policy.json"
@@ -306,7 +308,31 @@ func use_card(item: String, token: String, revision: int) -> Dictionary:
 	next.receipts[token] = {"kind":"card", "item":item, "card":str(CARD_ITEMS[item])}
 	return commit(next, {"card_draw_fusion":cards})
 
+func _contest_contract(contest_id: int,rule_id: int) -> Dictionary:
+	if not rules.failure.is_empty():return fail(rules.failure)
+	var contest: Dictionary=rules.row("FishContest",contest_id)
+	var rule: Dictionary=rules.row("FishContestRule",rule_id)
+	if contest.is_empty() or rule.is_empty():return fail("현재 원문에서 승인된 대회·규칙이 없습니다 · 이전 대회 보존")
+	if not contest.get("TimeLimit") is bool or contest.TimeLimit or not integer(contest.get("WeeklyOpenTimeGroupID")) or int(contest.WeeklyOpenTimeGroupID)!=0:return fail("원본 대회 시간·주간 조건 소비자 연결 필요 · 정산 보존")
+	if int(rule.get("FishContestID",0))!=contest_id or int(rule.get("RuleTypeID",0))!=11 or not integer(rule.get("Probability"),1) or not integer(rule.get("Range"),1):return fail("대회 원문 규칙·확률·수량 조건 확인 필요")
+	var fish: Dictionary=rules.row("Fish",int(rule.get("FishID",0)))
+	if fish.is_empty():return fail("대회 대상 물고기의 현재 원문 승인 없음")
+	var ranks: Array=[];var links: Array=[];var rewards: Dictionary={};var items: Dictionary={}
+	for rank: Dictionary in rules.rows("FishContestRank"):
+		if int(rank.get("FishContestID",0))!=contest_id:continue
+		ranks.append(rank.duplicate(true))
+		for link: Dictionary in rules.rows("FishContestRankReward"):
+			if int(link.get("FishContestRankID",0))!=int(rank.get("ID",0)):continue
+			var reward: Dictionary=rules.row("Reward",int(link.get("RewardID",0)))
+			if reward.is_empty() or reward.get("UseImmediately")!=false or reward.get("ClanOnly")!=false or int(reward.get("RewardTypeID",0))!=2 or int(reward.get("CharacterClassID",0))!=0 or not integer(reward.get("Amount"),1):return fail("현재 원문 대회 보상 승인 조건 확인 필요 · 정산 보존")
+			var item: Dictionary=rules.items.get(str(int(reward.get("RewardClassID",0))),{})
+			if item.is_empty() or item.get("TestItem")!=false:return fail("제외·미확인 대회 결과 아이템 · 정산 보존")
+			links.append(link.duplicate(true));rewards[str(int(reward.ID))]=reward.duplicate(true);items[str(int(item.ID))]=item.duplicate(true)
+	if ranks.is_empty() or links.is_empty():return fail("현재 원문 대회 순위·보상 관계 없음 · 정산 보존")
+	return {"ok":true,"contract":{"schema":1,"input_identity":rules.model_input_identity.duplicate(true),"contest":contest.duplicate(true),"rule":rule.duplicate(true),"fish":fish.duplicate(true),"ranks":ranks,"reward_links":links,"rewards":rewards,"items":items}}
+
 func start_contest(contest_id: int) -> Dictionary:
+	if not rules.failure.is_empty():return fail(rules.failure)
 	if active_territory == 0: return fail("자체 낚시 공간에 입장해 주세요.")
 	if not state.contest.is_empty() and not bool(state.contest.get("claimed", false)): return fail("이전 대회를 먼저 정산해 주세요.")
 	var contest: Dictionary = rules.row("FishContest", contest_id)
@@ -330,8 +356,11 @@ func start_contest(contest_id: int) -> Dictionary:
 		if roll < 0:
 			chosen = entry
 			break
+	var source_contract: Dictionary=_contest_contract(contest_id,int(chosen.get("ID",0)))
+	if not source_contract.get("ok",false):return source_contract
 	var next: Dictionary = state.duplicate(true)
 	next.contest = {"contest_id":contest_id, "rule_id":int(chosen.ID), "fish_id":int(chosen.FishID), "range":int(chosen.Range), "best_lengths":[], "score":0, "ends_at":int(Time.get_unix_time_from_system()) + int(policy.contest_seconds), "claimed":false, "mode":"twilight_solo"}
+	next.contest["source_contract"]=source_contract.contract
 	next.contest.opponent_lengths = []
 	if bool(policy.simulate_opponents):
 		var target_fish: Dictionary = rules.row("Fish", int(chosen.FishID))
@@ -349,7 +378,14 @@ func contest_rank(contest: Dictionary) -> int:
 	return rank
 
 func claim_contest() -> Dictionary:
+	if not rules.failure.is_empty():return fail(rules.failure)
 	if state.contest.is_empty() or bool(state.contest.get("claimed", false)): return fail("정산할 대회가 없습니다.")
+	var source_contract: Dictionary=_contest_contract(int(state.contest.contest_id),int(state.contest.rule_id))
+	if not source_contract.get("ok",false):return source_contract
+	# Earlier contests never recorded their full original definition. Preserve
+	# them rather than award against a newly substituted model of the same ID.
+	if not state.contest.get("source_contract") is Dictionary or not preload("res://scripts/quests/quest_reward_consumption.gd").same(state.contest.source_contract,source_contract.contract):return fail("저장된 대회의 원문 승인 증명 필요 · 이전 대회·보상 정산 보존")
+	if int(state.contest.fish_id)!=int(source_contract.contract.rule.FishID) or int(state.contest.range)!=int(source_contract.contract.rule.Range):return fail("저장된 대회 대상·수량 불일치 · 정산 보존")
 	if int(Time.get_unix_time_from_system()) < int(state.contest.ends_at): return fail("대회가 아직 진행 중입니다.")
 	var next: Dictionary = state.duplicate(true)
 	next.contest.claimed = true

@@ -1,5 +1,6 @@
 extends RefCounted
 ## New source identities use class + exact view/territory, never a legacy ID/name.
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const FULL = preload("res://scripts/monsters/base508_authoritative_catalog.gd")
 const PATH = "res://data/lineagem_base508/monster_batch02/runtime_registry.json"
 const CONTEXT = preload("res://scripts/monsters/base508_monster_context.gd")
@@ -16,52 +17,41 @@ static func data() -> Dictionary:
 			_data = value
 			for row: Dictionary in value.get("source_id_records", []): _by_npc[int(row.npc_id)] = row
 	return _data
-static func record(source_key: String, manifest_path: String = "", compatibility: Dictionary = {}) -> Dictionary:
-	data()
-	var context: Dictionary = _data.get("contexts", {}).get(source_key, {})
-	if context.is_empty(): return _full_record(source_key, manifest_path, compatibility)
-	var row: Dictionary = _by_npc.get(int(context.npc_id), {})
-	if row.is_empty(): return {}
-	var path: String = manifest_path if not manifest_path.is_empty() else BINDINGS.pack_manifest()
-	var actor: Dictionary = PACK.actor(path, int(context.npc_id))
-	if actor.is_empty() or int(actor.get("sprite_id", -1)) != int(context.sprite_id): return {}
-	var available: bool = false
-	for permitted: Dictionary in actor.get("source_contexts", [actor]):
-		if int(permitted.get("spawn_view_id", -1)) == int(context.spawn_view_id) and int(permitted.get("territory_link_id", -1)) == int(context.territory_link_id): available = true
-	if not available: return {}
-	var host: Dictionary = {"atk":8,"speed":70.0,"attack_interval":1.25,"attack_range":58.0,"collision_radius":19.0,"grade":"일반","is_boss":bool(row.get("source_ui_boss",false))}
-	host.merge(compatibility, true)
-	var result: Dictionary = CONTEXT.record(int(context.npc_id), int(context.spawn_view_id), int(context.territory_link_id), host)
-	if result.is_empty(): return {}
-	result["sourceId"] = source_key
-	result["source_m_catalog_key"] = source_key
-	result["source_m_asset_manifest_path"] = path
-	result["source_m_pixel_status"] = "private_source_model_registered; hash_checked_before_spawn"
-	result["source_m_source_ui_boss"] = bool(row.get("source_ui_boss", false))
-	result["source_m_host_placement"] = row.host_placement_contract
+static func _current_record(source_key: String,host: Dictionary) -> Dictionary:
+	var ids: Dictionary=FULL.parse_key(source_key)
+	if ids.is_empty() or SOURCE.identity().is_empty():return {}
+	var raw: Dictionary=SOURCE.row("NpcClass",int(ids.npc_id))
+	if raw.get("TestNPC")!=false or not SOURCE.declared_exclusion("NpcClass",raw).is_empty():return {}
+	var category: Dictionary=SOURCE.row("NpcCategory",int(raw.get("Category",-1)))
+	if category.get("IsAttackable")!=true or category.get("Name")=="Citizen":return {}
+	var result: Dictionary=CONTEXT.record(int(ids.npc_id),int(ids.view_id),int(ids.link_id),host)
+	if result.is_empty():return {}
+	result["sourceId"]=source_key;result["source_m_catalog_key"]=source_key
+	# Empty old visual path is deliberate: it cannot select the old actor pack.
+	result["source_m_asset_manifest_path"]=""
+	result["source_m_host_placement"]="Existing explicit host region; current original source tuple"
+	result["source_m_current523_final"]=true
 	return result
-static func for_spawn(source_key: String, host_map_id: String, manifest_path: String = "", allow_contextual: bool = false) -> Dictionary:
-	data()
-	var context: Dictionary = _data.get("contexts", {}).get(source_key, {})
-	if context.is_empty():
-		var full_record: Dictionary = _full_record(source_key, manifest_path, {"source_m_allow_contextual":allow_contextual})
-		if not full_record.is_empty():
-			full_record["catalog_only"] = false
-			full_record["source_m_runtime_host_map"] = host_map_id
-		return full_record
-	var row: Dictionary = _by_npc.get(int(context.npc_id), {})
-	if not row.get("host_maps", []).has(host_map_id): return {}
-	var result: Dictionary = record(source_key, manifest_path)
-	if not result.is_empty():
-		result["catalog_only"] = false
-		result["source_m_runtime_host_map"] = host_map_id
+
+static func record(source_key: String, _manifest_path: String="",compatibility: Dictionary={}) -> Dictionary:
+	var host: Dictionary={"atk":8,"speed":70.0,"attack_interval":1.25,"attack_range":58.0,"collision_radius":19.0,"grade":"일반"}
+	host.merge(compatibility,true)
+	return _current_record(source_key,host)
+
+static func for_spawn(source_key: String,host_map_id: String,_manifest_path: String="",allow_contextual: bool=false) -> Dictionary:
+	if host_map_id.is_empty():return {}
+	# A host region requests this exact key; this never chooses a location,
+	# population, respawn period, source attack or a different visual identity.
+	var result: Dictionary=record(source_key,"",{"source_m_allow_contextual":allow_contextual})
+	if result.is_empty():return {}
+	result["catalog_only"]=false;result["source_m_runtime_host_map"]=host_map_id
 	return result
 static func primary_keys() -> Array:
 	var result: Array = []
 	for row: Dictionary in data().get("source_id_records", []): result.append(str(row.key))
 	return result
 
-static func _full_record(source_key: String, manifest_path: String, compatibility: Dictionary) -> Dictionary:
+static func _legacy_full_record_for_reference(source_key: String, manifest_path: String, compatibility: Dictionary) -> Dictionary:
 	var ids: Dictionary = FULL.parse_key(source_key)
 	if ids.is_empty() or not FULL.enemy_eligible(int(ids.npc_id), bool(compatibility.get("source_m_allow_contextual", false))): return {}
 	var path: String = manifest_path if not manifest_path.is_empty() else BINDINGS.pack_manifest()
@@ -98,7 +88,7 @@ static func _full_record(source_key: String, manifest_path: String, compatibilit
 	result["source_m_host_placement"] = "Explicit host region source-key port; native geography unverified"
 	return result
 
-static func visual_record(source_key: String, manifest_path: String, allow_contextual: bool=false) -> Dictionary:
+static func _legacy_visual_record_for_reference(source_key: String, manifest_path: String, allow_contextual: bool=false) -> Dictionary:
 	var ids: Dictionary=FULL.parse_key(source_key)
 	if ids.is_empty(): return {}
 	var row: Dictionary=FULL.npc(int(ids.npc_id))
@@ -116,4 +106,15 @@ static func visual_record(source_key: String, manifest_path: String, allow_conte
 		var slots: Array=actor.get("source_actor_profile",{}).get("source_common_direction_slots",[])
 		if slots.size()==1:
 			result["source_m_fixed_source_slot"]=int(slots[0])
+	return result
+
+static func visual_record(source_key: String,_manifest_path: String,allow_contextual: bool=false) -> Dictionary:
+	var ids: Dictionary=FULL.parse_key(source_key)
+	if ids.is_empty() or SOURCE.identity().is_empty():return {}
+	var raw: Dictionary=SOURCE.row("NpcClass",int(ids.npc_id))
+	if raw.get("TestNPC")!=false or not SOURCE.declared_exclusion("NpcClass",raw).is_empty():return {}
+	var result: Dictionary=CONTEXT.record(int(ids.npc_id),int(ids.view_id),int(ids.link_id),{"atk":0,"speed":0.0,"source_m_visual_only":true,"source_m_host_combat_ready":false,"source_m_allow_contextual":allow_contextual})
+	if result.is_empty():return {}
+	result["source_m_asset_manifest_path"]=""
+	result["source_m_current523_final"]=true
 	return result

@@ -2,6 +2,7 @@ extends RefCounted
 const Presentation=preload("res://scripts/cards/source_card_operation_presentation.gd")
 ## Whole-save transaction adapter for the offline game. Consumables and RNG
 ## become live only after World's existing atomic save writer returns OK.
+const CurrentMaterial=preload("res://scripts/cards/current523_owned_card_material.gd")
 const UnlockItem=preload("res://scripts/cards/native_doll_unlock_item.gd")
 const Subslot=preload("res://scripts/cards/native_doll_subslot.gd")
 const RelicSubslot=preload("res://scripts/cards/native_relic_subslot.gd")
@@ -290,22 +291,35 @@ func select_subslot(identity: String) -> Dictionary:
 	_busy=false
 	return {"ok":true,"snapshot":subslot_view()}
 
-func use_native_unlock_item(item_name: String) -> Dictionary:
-	if item_name!=str(UnlockItem.record().name):return {"handled":false}
+func use_native_unlock_item(item_name: String,selected_instance: String="") -> Dictionary:
+	var expected: Dictionary=UnlockItem.record()
+	var selected_record: Dictionary=world.item_instances.get(selected_instance,{}).get("record",{})
+	var raw: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("ItemClass",UnlockItem.ITEM)
+	if int(selected_record.get("source_item_class_id",0))!=UnlockItem.ITEM and item_name!=str(expected.get("name","")) and (raw.is_empty() or item_name!="[원본 보상] "+str(raw.get("Name",""))):return {"handled":false}
 	if _busy:return {"handled":true,"ok":false,"code":"busy","error":"이전 아이템 사용 처리 중"}
 	if save_blocked or not problem.is_empty() or not core.native_mode:return {"handled":true,"ok":false,"code":"save_blocked","error":"해금 저장 보호 중"}
+	if not UnlockItem.source_rules_valid():return {"handled":true,"ok":false,"error":"새 원문 해금 규칙 연결 필요 · 아이템 보존"}
+	if UnlockItem.unlocked(progress):return {"handled":true,"ok":false,"error":"이미 추가 인형 해금됨 · 아이템 보존"}
+	if int(_world_property("level",0))<95:return {"handled":true,"ok":false,"error":"추가 인형 해금은 95레벨부터 가능합니다"}
 	_busy=true
-	var result: Dictionary=UnlockItem.prepare(export_state(),world.inventory,world.item_instances,int(_world_property("level",0)))
-	result.handled=true
-	if not result.ok:_busy=false;return result
-	var error: String=core.validate_state(result.state,{"owned":world.card_draw_fusion.owned})
+	var source: Dictionary=preload("res://scripts/cards/current523_option_combat_input.gd").session().subslot_unlock_item
+	var paid: Dictionary=CurrentMaterial.prepare(world,raw,source.get("source_input_identity",{}),source,selected_instance)
+	if not paid.get("ok",false):_busy=false;paid.handled=true;return paid
+	var next: Dictionary=export_state();next[UnlockItem.FIELD]=UnlockItem.marker();next.revision=int(next.revision)+1
+	var error: String=core.validate_state(next,{"owned":world.card_draw_fusion.owned})
 	if not error.is_empty():_busy=false;return {"handled":true,"ok":false,"code":"invalid_state","error":error}
-	var saved: Error=world._save_game(true,{SAVE_KEY:result.state,"inventory":result.inventory,"item_instances":result.item_instances})
-	if saved!=OK:_busy=false;return {"handled":true,"ok":false,"code":"save_failed","error":"저장 실패 · 해금 아이템·기존 해금 상태 보존"}
-	world.inventory=result.inventory;world.item_instances=result.item_instances;progress=result.state
+	var staged: Dictionary=paid.overrides.duplicate(true);staged[SAVE_KEY]=next
+	if not CurrentMaterial.matches(world,paid,staged):_busy=false;return {"handled":true,"ok":false,"error":"선택 개체·사용 영수증 변경 · 아이템 보존"}
+	var saved: Error=world._save_game(true,staged)
+	if saved!=OK:
+		save_blocked=true;_busy=false
+		return {"handled":true,"ok":false,"code":"save_failed","error":"저장 결과 확인 필요 · 정상 저장 재접속 전 재시도 차단"}
+	progress=next
+	if not CurrentMaterial.publish(world,paid):
+		save_blocked=true;_busy=false
+		return {"handled":true,"ok":false,"committed":true,"outcome_uncertain":true,"error":"저장 후 영수증 채택 확인 필요 · 재접속 전 재시도 차단"}
 	_bonus_signature="";world.set("equipment_records_dirty",true);_busy=false
-	result.erase("state");result.erase("inventory");result.erase("item_instances")
-	return result
+	return {"handled":true,"ok":true,"consumed_item_class_id":UnlockItem.ITEM,"consumed_quantity":1,"consumed":paid.consumed,"message":"추가 인형 해금 완료"}
 
 func active_source_status_references() -> Dictionary:
 	var result: Dictionary={}

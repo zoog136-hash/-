@@ -30,6 +30,13 @@ static func default_path() -> String:
 	return PATH_V2 if FileAccess.file_exists(PATH_V2) else PATH_V1
 
 static func _load_pack() -> Dictionary:
+	var input=preload("res://scripts/cards/current523_relic_input.gd").new()
+	var candidate: Dictionary=input.build()
+	problem=input.problem
+	loaded_schema=str(candidate.get("schema",""));loaded_path="current523_original_memory"
+	return candidate
+
+static func _load_legacy_pack_for_reference() -> Dictionary:
 	var path: String=OS.get_environment("TWILIGHT_CARD523_SLOT_PACK")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--card523-slot-pack="):path=arg.trim_prefix("--card523-slot-pack=")
