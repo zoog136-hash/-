@@ -464,6 +464,30 @@ host-skill-to-SpellClass IconID binding. Their numeric inputs and saved policy
 values are unchanged. ItemList and OptionButton hosts retain missing/unsupported
 CSB evidence where no original scene target is supplied.
 
+The existing ItemCraft material-candidate OptionButton now displays each
+candidate's declared ItemClass icon, retaining the separate material row ID used
+for selection. The selected reward's existing confirmation button reuses that
+row's source image and evidence; source entity IDs remain transaction metadata.
+The NPC policy's existing BuffClass and explicitly typed drop-item selectors
+likewise use canonical source icons without changing their selected targets.
+
+The actual native card-catalog page now calls the current card presenter directly
+for its declared list role. Missing or excluded current art clears that row's
+picture and keeps its source status instead of loading the old image_path.
+
+Existing remembered-location confirmation buttons show the selected source
+scroll or original skill's icon. The travel quote remains the authority for
+costs and movement; job-only or unqualified records supply no original image.
+Guardian skill-browser cast/registration buttons use a single current-level
+source spell reward. The existing live quickslot image call additionally uses
+`Source523SkillImages.describe_guardian_skill(existing_record, world.growth)`.
+This reader requires the existing `TWILIGHT_GUARDIAN523` record and its exact
+`guardian:<node>` producer identity, one current-level spell reward, and the
+shared complete-canonical-SpellClass check. It does not reinterpret that ID as
+an `lm_*` binding. UI267 may reuse this read-only image API on its existing
+quickslot targets; image playback remains with its shared player. Existing
+registration IDs, cooldowns, costs, actions and saves are preserved.
+
 These are written caller connections, not observations of game consumption.
 No additional tests, execution, rendering, CI, source recount or quality audit
 was performed for these changes.

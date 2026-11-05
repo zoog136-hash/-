@@ -815,7 +815,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		else:
 			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
 			var path: String = str(skill.get("icon",""))
-			var source_image: Dictionary = Source523SkillImages.describe_skill(skill)
+			var source_image: Dictionary = Source523SkillImages.describe_guardian_skill(skill,get_parent().get("growth")) if skill.get("origin") == "TWILIGHT_GUARDIAN523" else Source523SkillImages.describe_skill(skill)
 			if source_image.handled:
 				source_image=Source523SkillImages.apply(quickslot_icons[index],source_image,"skill_quickslot")
 				if quickslot_icons[index].texture == null and not source_image.get("scene_result",{}).get("ok",false):
@@ -2242,6 +2242,8 @@ func _apply_catalog_page() -> void:
 	super._apply_catalog_page()
 	# A fresh relic page starts at its first row; open_catalog restores saved views afterwards.
 	if catalog_category=="성물":catalog_list.get_v_scroll_bar().value=0
+	var source_card_images: Dictionary = {}
+	var owned_cards: Dictionary = card_collection_state.get("owned",{}).get(catalog_category,{})
 	for index: int in range(catalog_results.size()):
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
@@ -2253,13 +2255,19 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		if catalog_category != "아이템":
-			var path := str(record.get("image_path", ""))
-			var source_icon: Texture2D = preload("res://scripts/lineagem_base508.gd").icon(record)
-			if source_icon != null:
-				catalog_list.set_item_icon(index, source_icon)
-			elif path != "" and ResourceLoader.exists(path):
-				catalog_list.set_item_icon(index, load(path) as Texture2D)
+			if SourceCardPresentation.native(record):
+				var acquired: bool = owned_cards.get(CARD_RULES.card_id(record),false) == true
+				var original: Dictionary = SourceCardPresentation.detail(record,acquired,false)
+				catalog_list.set_item_icon(index,original.get("texture") as Texture2D)
+				var evidence: Dictionary = original.duplicate(true)
+				evidence.erase("texture")
+				source_card_images[index] = evidence
+			else:
+				var path := str(record.get("image_path", ""))
+				if path != "" and ResourceLoader.exists(path):
+					catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
+	catalog_list.set_meta("source523_card_images",source_card_images)
 	_refresh_option_awakening_markers()
 	_refresh_option_awakening_entry()
 	if catalog_results.is_empty():

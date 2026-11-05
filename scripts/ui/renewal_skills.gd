@@ -606,6 +606,17 @@ func _show_guardian_special() -> void:
 		guardian_cast_buttons[id]=button;guardian_special.add_child(button)
 		var quick: Button=_guardian_special_button(str(rt.node(id).name)+" · 퀵슬롯 등록",func() -> void:hud._open_quickslot_picker("skill","guardian:"+id,str(rt.node(id).name)),Vector2(220,44))
 		quick.name="GuardianQuick_"+id;guardian_special.add_child(quick)
+		var image: Dictionary = {}
+		var rewards: Array = rt.guardian_rewards(id)
+		if Source523Images.selected() and rewards.size() == 1 and rewards[0] is Dictionary and rewards[0].get("spell") is Dictionary:
+			image = Source523Images.describe_spell_class_row(rewards[0].spell, "IconID")
+		for action_button: Button in [button, quick]:
+			action_button.icon = null
+			if action_button.has_meta("source523_skill_image"): action_button.remove_meta("source523_skill_image")
+			if not image.is_empty():
+				action_button.icon = image.get("texture") as Texture2D
+				action_button.expand_icon = true
+				action_button.set_meta("source523_skill_image", Source523Images.evidence(image))
 	if guardian_cast_buttons.is_empty():guardian_special.add_child(UI.label("질리언의 사용 스킬을 개방하면 여기에 표시됩니다.",14))
 	guardian_special.add_child(_guardian_special_button("명예 코인 10개 구입 · TWILIGHT 재료 상점",func() -> void:
 		var response: Dictionary=rt.execute("guardian_buy_coins","",1,int(rt.state.revision));guardian_result.text=str(response.message),Vector2(220,48)))

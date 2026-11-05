@@ -116,6 +116,29 @@ static func describe_skill(record: Dictionary, role: String = "IconID") -> Dicti
 	info.provenance["host_skill_id"] = host_id
 	return info
 
+static func describe_guardian_skill(record: Dictionary, runtime: Object, role: String = "IconID") -> Dictionary:
+	var host_id: String = str(record.get("id",""))
+	var info: Dictionary = _info("skill",role,host_id)
+	if not info.handled: return info
+	if not role in ["IconID","ActivateIconID"]: return _missing(info,"unsupported_skill_icon_role")
+	if record.get("origin") != "TWILIGHT_GUARDIAN523" or not host_id.begins_with("guardian:") or host_id == "guardian:":
+		return _missing(info,"guardian_source_skill_identity_required")
+	if not is_instance_valid(runtime) or not runtime.has_method("guardian_rewards") or not runtime.has_method("guardian_skill_record"):
+		return _missing(info,"guardian_source_skill_provider_required")
+	# The existing producer defines guardian:<node> separately from host lm_*
+	# bindings. Only its one current-level spell reward can supply this image.
+	var rewards: Variant = runtime.call("guardian_rewards",host_id.trim_prefix("guardian:"))
+	if not rewards is Array or rewards.size() != 1 or not rewards[0] is Dictionary or not rewards[0].get("spell") is Dictionary:
+		return _missing(info,"guardian_single_source_spell_required")
+	var canonical: Variant = runtime.call("guardian_skill_record",host_id)
+	if not canonical is Dictionary or canonical.is_empty() or canonical != record:
+		return _missing(info,"guardian_source_skill_record_mismatch")
+	var result: Dictionary = describe_spell_class_row(rewards[0].spell,role)
+	result["host_skill_id"] = host_id
+	result.provenance["host_skill_id"] = host_id
+	result.provenance["caller_identity_basis"] = "existing_guardian_skill_record_and_single_current_level_spell"
+	return result
+
 static func _skill_buff_identity(effect: Dictionary, source: RefCounted, record: Dictionary) -> Dictionary:
 	var host_id: String = str(effect.get("skill_id",""))
 	var binding: Dictionary = _binding(host_id)

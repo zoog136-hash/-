@@ -73,10 +73,24 @@ func _ready() -> void:
 	confirm = Button.new()
 	confirm.name = "ClaimSourceReward"
 	confirm.text = "선택 보상 받기"
+	confirm.expand_icon = true
 	confirm.disabled = true
 	confirm.pressed.connect(_claim)
 	buttons.add_child(confirm)
-	choices.item_selected.connect(func(_index: int) -> void: confirm.disabled = committing)
+	choices.item_selected.connect(func(index: int) -> void:
+		confirm.disabled = committing
+		_sync_confirm_icon(index))
+
+func _sync_confirm_icon(index: int) -> void:
+	confirm.icon = null
+	if confirm.has_meta("source523_reward_item_image"): confirm.remove_meta("source523_reward_item_image")
+	if not IMAGES.selected() or index < 0 or index >= choices.item_count: return
+	var source_images: Dictionary = choices.get_meta("source523_reward_item_images",{})
+	if not source_images.has(index): return
+	confirm.icon = choices.get_item_icon(index)
+	var evidence: Dictionary = source_images[index].duplicate(true)
+	evidence.erase("texture")
+	confirm.set_meta("source523_reward_item_image",evidence)
 
 func _claim() -> void:
 	if committing or choices.get_selected_items().size() != 1: return

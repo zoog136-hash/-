@@ -411,10 +411,29 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 		var chooser := OptionButton.new()
 		chooser.name = "Patch523Candidate_" + slot_key
 		chooser.custom_minimum_size.y = 40
+		chooser.expand_icon = true
 		chooser.add_item("재료 후보 선택…")
+		var candidate_images: Dictionary = {}
 		for material: Dictionary in candidates:
 			chooser.add_item("아데나 ×%d · 지갑" % int(material.quantity) if bool(material.get("wallet",false)) else "%s +%d · %s ×%d" % [str(material.item),int(material.level),"축복" if int(material.bless_code)==2 else "일반",int(material.quantity)])
+			if _uses_source_recipe_images(recipe,current_id):
+				# This option is one original ItemCraft input candidate, with the
+				# same declared ItemClass source_id used by the material picture.
+				# The row_id below remains the independent transaction identity.
+				var item_class_id: int = _recipe_item_class_id(recipe,material,current_id)
+				var reference: Variant = source_images.get(str(material.get("source_id","")))
+				var original: Dictionary = SOURCE_IMAGES.describe_item_reference(reference,str(material.item)) if reference is Dictionary and not reference.is_empty() else SOURCE_IMAGES.describe_item_class(item_class_id,str(material.item))
+				if original.get("item_class_id") != item_class_id:
+					original = SOURCE_IMAGES.describe_item_class(-1,str(material.item))
+					original["reason"] = "source_material_candidate_identity_mismatch"
+					original["source_status"] = "source_material_candidate_identity_mismatch"
+				chooser.set_item_icon(chooser.item_count-1,original.get("texture") as Texture2D)
+				var evidence: Dictionary = original.duplicate(true)
+				evidence.erase("texture")
+				evidence["source_material_row_id"] = material.row_id
+				candidate_images[chooser.item_count-1] = evidence
 			if int(world.patch523_material_choices.get(current_id, {}).get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
+		chooser.set_meta("source523_item_images",candidate_images)
 		chooser.item_selected.connect(func(index: int) -> void:
 			var chosen: Dictionary = world.patch523_material_choices.get(current_id, {}).duplicate(true)
 			if index == 0: chosen.erase(slot_key)
