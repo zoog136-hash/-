@@ -218,6 +218,11 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not refreshed.get("ok",false):return _reject_staged(next,refreshed)
 	# Commit only after every owned row has its original slot, hit control and
 	# existing owner texture. The complete current bag remains caller-owned.
+	for reference: String in hits:
+		var old: Dictionary=_hits.get(reference,{})
+		if old.is_empty() or not is_instance_valid(old.get("native_slot_scene")):continue
+		var reused: Dictionary=hits[reference].native_slot_scene.reuse_bound_source_scene_from(Slots.ICON,old.native_slot_scene,Slots.ICON)
+		if reused.get("reused",false):hits[reference]["native_icon_scene"]=reused.player
 	parent.add_child(next)
 	_scene=next
 	_inventory_scene=inventory_scene

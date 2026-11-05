@@ -146,6 +146,10 @@ func _stage(parent: Node) -> Dictionary:
 	# Nothing is hidden until both complete current groups and every filled
 	# icon have been accepted. Only the current game page is materialized.
 	var previous: Node2D=_scene
+	for visible: int in hits:
+		var old: Dictionary=_hits.get(visible,{})
+		if old.is_empty() or old.get("slot")!=hits[visible].slot or not is_instance_valid(old.get("native_slot_scene")):continue
+		hits[visible].native_slot_scene.reuse_bound_source_scene_from(ICON,old.native_slot_scene,ICON)
 	parent.add_child(next)
 	_scene=next
 	_hits=hits

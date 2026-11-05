@@ -893,6 +893,32 @@ func clear_bound_source_scene(source_offset: int) -> Dictionary:
 	node.visible=false
 	return {"ok":true,"detached":true,"game_state_written":false}
 
+func reuse_bound_source_scene_from(source_offset: int, previous_renderer: Node2D, previous_offset: int) -> Dictionary:
+	# Called only at the final presenter commit for the same existing owned
+	# reference/game slot. Keep the actual timeline and particle state rather
+	# than inventing a restart or reconstructing it from a copied frame number.
+	if not is_instance_valid(previous_renderer) or previous_renderer==self or not previous_renderer.has_method("bound_source_scene"):return {"ok":false,"reused":false}
+	var current: Dictionary=bound_source_scene(source_offset)
+	var previous: Dictionary=previous_renderer.bound_source_scene(previous_offset)
+	if not current.get("ok",false) or not previous.get("ok",false):return {"ok":false,"reused":false}
+	for field: String in ["member","manifest_sha256","source_sha256","registration","playback"]:
+		if current.evidence.get(field)!=previous.evidence.get(field):return {"ok":false,"reused":false,"reason":"source_scene_descriptor_changed"}
+	var node: Node2D=source_nodes.get(source_offset)
+	var old_node: Node2D=previous_renderer.get("source_nodes").get(previous_offset)
+	var player: Node2D=previous.player
+	if node==null or old_node==null or player.get_parent()!=old_node or not player.transform.is_equal_approx(Transform2D.IDENTITY):return {"ok":false,"reused":false}
+	_detach_source_scene(node)
+	old_node.remove_meta("source_asset_scene")
+	old_node.remove_meta("source_asset_scene_evidence")
+	old_node.set_meta("source_asset_pending",true)
+	old_node.remove_child(player)
+	node.add_child(player)
+	node.set_meta("source_asset_scene",player)
+	node.set_meta("source_asset_scene_evidence",previous.evidence.duplicate(true))
+	node.set_meta("source_asset_pending",false)
+	_sync_source_display(player,node.get_meta("source_display_color",Color.WHITE))
+	return {"ok":true,"reused":true,"player":player,"play_restarted":false,"original_simulation_state_retained":true}
+
 static func _detach_source_scene(node: Node2D) -> void:
 	var player: Variant=node.get_meta("source_asset_scene",null)
 	if is_instance_valid(player):

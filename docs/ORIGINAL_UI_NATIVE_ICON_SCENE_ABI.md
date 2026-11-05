@@ -99,3 +99,15 @@ This publishes an implemented consumer contract, not proof that PR270 has
 provided its per-icon original registration/repeat inputs or that a CSB icon
 has executed in the game. Unknown source registration/repeat remains explicitly
 pending. No new test, game run, render, audit or CI was performed.
+
+## Rebuilding an unchanged native row
+
+`reuse_bound_source_scene_from(offset, previous_renderer, previous_offset)` is
+called only at the final native presenter commit for the same owned reference
+or unchanged absolute quickslot. Identical source member/manifest/CSB hashes,
+registration and declared playback retain the actual existing player instance.
+The temporary staged player is stopped/freed and the original instance moves
+to the new original anchor node with its timeline/particle state intact. No
+new start/loop policy or frame-only reconstruction is inferred. A changed
+source descriptor receives its newly prepared instance instead. This handoff
+has not been executed or tested.
