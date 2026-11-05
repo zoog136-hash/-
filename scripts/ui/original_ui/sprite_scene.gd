@@ -110,6 +110,9 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
 	if binding.has("displaystate") and not binding.displaystate is bool:problems.append("source_displaystate_value_missing")
 	if binding.has("selected") and not binding.selected is bool:problems.append("source_selection_value_missing")
+	var direct_input: bool=binding.get("input") is Callable and binding.input.is_valid()
+	if binding.has("input") and not direct_input:problems.append("source_input_callback_missing")
+	if direct_input and node.classname not in ["Panel","ImageView","Text","LoadingBar","ScrollView"]:problems.append("source_input_widget_missing")
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
@@ -127,10 +130,12 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()
 			var declared_type: bool=field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox"))
 			var declared_name: bool=field=="callBackName" and str(binding.get("callback_name",""))==str(widget[field]) and str(widget.get("callBackType","")) in ["Click","Event"]
-			if not inspection_only and not (connected_callback and (declared_type or declared_name)):problems.append("unconnected_source_callback:"+field)
+			var source_touch: bool=direct_input and ((field=="callBackType" and str(widget[field])=="Touch") or (field=="callBackName" and str(widget.get("callBackType",""))=="Touch" and str(binding.get("callback_name",""))==str(widget[field])))
+			if not inspection_only and not (source_touch or (connected_callback and (declared_type or declared_name))):problems.append("unconnected_source_callback:"+field)
+	if direct_input and not bool(widget.get("touchEnabled",false)):problems.append("source_input_not_declared")
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or binding.get("role") not in ["button","checkbox","source_scroll","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
+		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","consume"]):unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
 	if node.classname=="CheckBox":
 		if inspection_only or binding.get("role")!="checkbox":unresolved_bindings.append(str(widget.name)+":original_checkbox_service_binding")
 		if not inspection_only and not (binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid()):problems.append("unconnected_source_checkbox")
@@ -240,6 +245,15 @@ func _build(source: Dictionary) -> Node2D:
 		input_area.position=Vector2(0,-float(widget.size[1]))
 		input_area.size=Vector2(widget.size[0],widget.size[1])
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
+		origin.add_child(input_area)
+	var direct_binding: Dictionary=_bindings.get(int(source._offset),{})
+	if not inspection_only and source.classname!="ScrollView" and direct_binding.get("input") is Callable and direct_binding.input.is_valid():
+		var input_area:=Control.new()
+		input_area.name="OriginalSourceInput"
+		input_area.position=Vector2(0,-float(widget.size[1]))
+		input_area.size=Vector2(widget.size[0],widget.size[1])
+		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
+		input_area.gui_input.connect(direct_binding.input)
 		origin.add_child(input_area)
 	if source.classname=="CheckBox":
 		var checkbox=preload("res://scripts/ui/original_ui/source_checkbox.gd").new()

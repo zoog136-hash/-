@@ -216,3 +216,13 @@ mode does not dispatch events; an unbound event still blocks strict use. The
 caller provides the original handler and remains responsible for its semantic
 contract; the renderer does not auto-confirm or guess an event's effect.
 These callback additions are also unexecuted under the no-new-checks instruction.
+
+A source Panel/ImageView/Text/LoadingBar that already declares touchEnabled may
+bind `input: Callable` to its existing game input handler. The handler receives
+the untouched Control-local InputEvent through an invisible source-sized hit
+area. Named Touch callbacks additionally require the exact serialized
+callback_name. No click/drag, item choice or source touch phase is inferred by
+the renderer. The input must have been declared by the original widget; this
+path cannot activate an undeclared touch area. Source buttons/checkboxes keep
+their separate activation paths, avoiding duplicate action dispatch. This
+input-to-caller wiring is unexecuted and untested under the current instruction.
