@@ -17,7 +17,9 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 		"melee_critical_resistance":"MeleeCriticalResist","ranged_critical_resistance":"RangeCriticalResist",
 		"pve_damage_reduction_pct":["DamageReductionPercent","PVEDamageReductionPercent"],
 		"damage_amp_pct":["PierceDamageReductionPercent","PVEPierceDamageReductionPercent"],
-		"potionCooldownPct":"PotionConsumeDelayDecreasePercent"}
+		"potionCooldownPct":"PotionConsumeDelayDecreasePercent",
+		"equipment523_element_crit_pct":"ElementalCriticalProbability",
+		"equipment523_element_crit_resist_pct":"ElementalCriticalResistance"}
 	if not names.has(key): return 0.0
 	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct"] else "Percentage"
 	var divisor: float = 100.0 if unit_name=="ValuePercent" else 10000.0
@@ -25,7 +27,10 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
 
 static func additional_original_flat(record: Dictionary, key: String) -> int:
-	var names: Dictionary = {"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical","weightBonus":"CarryPlus"}
+	var names: Dictionary = {
+		"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical","weightBonus":"CarryPlus",
+		"equipment523_lfe":"KarmaLife","equipment523_dth":"KarmaDeath",
+		"equipment523_critical_reduction":"CriticalDamageReduction","equipment523_element_reduction":"ElementalDamageReduction"}
 	if not names.has(key): return 0
 	var aliases: Dictionary = {"dg":["DG","근거리 회피력"],"er":["ER","원거리 회피력"],"melee_crit":["meleeCrit","근거리 치명타"],"ranged_crit":["rangedCrit","원거리 치명타"],"magic_crit":["magicCrit","마법 치명타"]}
 	if not record.get("_patch523_effective_extras",false):
@@ -119,7 +124,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		total+=float(value)/divisor
 		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target,"consumer_elemental_input":elemental_input})
 	if evidence.is_empty() or not is_finite(total): return 0.0
-	if divisor==1.0 and absf(total)>9007199254740991.0: return 0.0
+	if (divisor==1.0 or unit_name=="Weight") and absf(total)>9007199254740991.0: return 0.0
 	original_percent_input_evidence[str(int(id))+":"+key] = {"source":identity,"item_class_id":id,"field":key,"effects":evidence,"source_unit":unit_name,"divisor":divisor,"value":total}
 	return total
 

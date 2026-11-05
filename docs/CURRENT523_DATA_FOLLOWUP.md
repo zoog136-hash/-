@@ -243,3 +243,27 @@ the existing capacity boundary. It does not redefine source item weight, the
 explicit local weight estimate, encumbrance thresholds, recovery permissions,
 inventory quantity or saved ownership. Already mapped base operands and
 existing explicit fields still win. This connection remains unverified.
+
+## Existing equipment523 scalar consumers
+
+The shared equipment523 combat sum now also reads guarded direct native base
+operands for KarmaLife→equipment523_lfe, KarmaDeath→equipment523_dth,
+CriticalDamageReduction and ElementalDamageReduction, all with original
+Unit.Value and no scale conversion. These feed the already existing LFE skill
+stat, configured death contribution and actual critical/elemental incoming
+reduction calls. The host's configurable death coefficient and healing scaling
+remain unchanged; neither is claimed as a recovered original formula.
+
+ElementalCriticalProbability/ElementalCriticalResistance with Percentage
+raw/10000 also feed that sum's existing elemental critical callers. Probability
+remains scoped to the existing equipment523 flat-element path; this does not
+introduce a critical roll for the separate ordinary source-element component.
+The two paths are not declared equivalent or fully adopted.
+
+Equipment523.records() supplies existing processing/set-state effects rather
+than a second generic ItemBonus base projection. The new reader therefore only
+adds missing current native base operands. It deliberately does not add native
+regeneration/drain again, duplicate HPHealIncreasePercent through a second
+healing engine, or duplicate style critical resistance through a second alias.
+Explicit fields and mapped source BonusIDs retain precedence. All additions
+are uncompiled/unexecuted/unverified and do not change physical or save owners.
