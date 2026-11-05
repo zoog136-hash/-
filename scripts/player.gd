@@ -448,7 +448,7 @@ func set_source_weapon_visual(weapon: String) -> void:
 	source_visual_context["local_weapon_type"]=weapon
 	current523_identity_actor.update_context(source_visual_context)
 	var native_transform: bool = transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:"))
-	var source_required: bool = native_transform and original_source_preview.current523_source_required(transform_profile.profile_id)
+	var source_required: bool = native_transform and not _source_only_transform_key.is_empty() and _source_only_transform_key == transform_profile.profile_id and original_source_preview.current523_source_required(transform_profile.profile_id)
 	# An unavailable weapon action must not prevent a later available family
 	# from binding. Retry on the existing equipment event, never each frame.
 	var rebind_source: bool = source_required and weapon_context_changed
