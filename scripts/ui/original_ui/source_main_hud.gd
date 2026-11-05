@@ -22,6 +22,8 @@ const NpcDialogueView=preload("res://scripts/ui/original_ui/source_main_npc_dial
 const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_message_bindings.gd")
 const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
 const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
+const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
+const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -108,6 +110,11 @@ var _enhance_action: RefCounted
 var _enhance_action_result: Dictionary={}
 var _enhance_owner: WeakRef
 var _enhance_listing: WeakRef
+var _quest_controls: RefCounted
+var _quest_controls_result: Dictionary={}
+var _quest_owner: WeakRef
+var _inventory_lock_view: RefCounted
+var _inventory_lock_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -160,6 +167,9 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			var candidate=InventoryNameView.new()
 			_inventory_name_result=candidate.configure(pack,bag)
 			if _inventory_name_result.get("ok",false):_inventory_name_view=candidate
+			var lock_view=InventoryLockView.new()
+			_inventory_lock_result=lock_view.configure(pack,bag)
+			if _inventory_lock_result.get("ok",false):_inventory_lock_view=lock_view
 	if pack.manifest.get("scenes",{}).has(CharacterView.ALL):
 		var candidate=CharacterView.new()
 		_character_result=candidate.configure(pack,hud)
@@ -206,6 +216,18 @@ func _input(event: InputEvent) -> void:
 		# The source popup owns this gesture; it cannot reach a slot/world.
 		get_viewport().set_input_as_handled()
 		return
+	# A current workspace filter may keep keyboard focus while its source
+	# buttons are touched. Ignore that focus alone, retaining every real
+	# death/result/modal/PointerTransfer guard, and route only these controls.
+	var focused: Control=get_viewport().gui_get_focus_owner()
+	if (focused is LineEdit or focused is TextEdit) and not world_map_is_open() and hud.get("class_picker_initial")!=true:
+		var workspace: Variant=hud.get("workspace")
+		if workspace is Control and workspace.is_visible_in_tree() and workspace.is_ancestor_of(focused) and not hud.call("blocks_keyboard_input_except_source_editor",focused):
+			var obscured: bool=false
+			for property: String in ["detail_window","companion_window"]:
+				var overlay: Variant=hud.get(property)
+				if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*event.position):obscured=true
+			if not obscured and _route_workspace_source_actions(event,event.position):return
 	if world_map_is_open() or hud.get("class_picker_initial")==true or (hud.has_method("blocks_keyboard_input") and hud.call("blocks_keyboard_input")):
 		_cancel_native_buttons()
 		return
@@ -214,7 +236,7 @@ func _input(event: InputEvent) -> void:
 	for property: String in ["detail_window","companion_window","workspace"]:
 		var overlay: Variant=hud.get(property)
 		if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*point):
-			if property=="workspace" and _route_enhance_action(event,point):return
+			if property=="workspace" and _route_workspace_source_actions(event,point):return
 			_cancel_native_buttons()
 			return
 	var character_inside: bool=character_blocks_point(point)
@@ -251,11 +273,19 @@ static func _collect_native_buttons(node: Node, found: Array) -> void:
 func _cancel_native_buttons() -> void:
 	if _native_buttons!=null:_native_buttons.cancel()
 
-func _route_enhance_action(event: InputEvent, point: Vector2) -> bool:
-	if _enhance_action==null:return false
-	var shown: Dictionary=_enhance_action.presentation()
-	var button: Variant=shown.get("source_button")
-	var routed: Dictionary=_native_buttons.route(event,point,[button] if is_instance_valid(button) else [])
+func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
+	var buttons: Array=[]
+	if _enhance_action!=null:
+		var shown: Dictionary=_enhance_action.presentation()
+		var button: Variant=shown.get("source_button")
+		if is_instance_valid(button):buttons.append(button)
+	if _quest_controls!=null:
+		var shown: Dictionary=_quest_controls.presentation()
+		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+	if _inventory_lock_view!=null:
+		var shown: Dictionary=_inventory_lock_view.presentation()
+		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+	var routed: Dictionary=_native_buttons.route(event,point,buttons)
 	if routed.get("handled",false):
 		get_viewport().set_input_as_handled()
 		return true
@@ -281,6 +311,14 @@ func _process(_delta: float) -> void:
 	if _inventory_name_view!=null and not _source_input_captured(hud):
 		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
 		else:_inventory_name_view.close()
+	if _inventory_lock_view!=null and not _source_input_captured(hud):
+		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
+		var shown: Dictionary=_inventory_lock_view.presentation()
+		var workspace: Variant=hud.get("workspace")
+		var bag: Variant=hud.get("lineage_inventory_ui")
+		if is_instance_valid(shown.get("scene")) and workspace is CanvasItem and bag is CanvasItem:
+			shown.scene.z_as_relative=false
+			shown.scene.z_index=workspace.z_index+bag.z_index+1
 	if _enhance_action!=null:
 		_enhance_action_result=_enhance_action.refresh()
 		if not _enhance_action_result.get("ok",false):_enhance_action=null
@@ -370,6 +408,35 @@ func bind_enhance_action(forge: Control) -> Dictionary:
 		_enhance_listing=weakref(listing)
 		listing.item_selected.connect(_enhance_selection_changed)
 	return _mount_enhance_action(forge)
+
+func bind_quest_controls(owner: Control) -> Dictionary:
+	close_quest_controls()
+	if _pack==null or not _pack.manifest.get("scenes",{}).has(QuestControls.MEMBER):return {"ok":true,"handled":false,"code":"source_quest_controls_pack_scope_unavailable"}
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_coordinates):return _fail("source_quest_controls_actual_host_required")
+	var candidate=QuestControls.new()
+	_quest_controls_result=candidate.configure(_pack,hud,owner,_coordinates)
+	if _quest_controls_result.get("ok",false):
+		_quest_controls=candidate
+		_quest_owner=weakref(owner)
+		if owner.has_signal("source_category_changed"):owner.connect("source_category_changed",_quest_category_changed)
+		var shown: Dictionary=candidate.presentation()
+		var workspace: Variant=hud.get("workspace")
+		if is_instance_valid(shown.get("scene")) and workspace is CanvasItem:
+			shown.scene.z_as_relative=false
+			shown.scene.z_index=workspace.z_index+1
+	return _quest_controls_result.duplicate(true)
+
+func _quest_category_changed(_category: String) -> void:
+	if _quest_controls!=null:_quest_controls_result=_quest_controls.refresh()
+
+func close_quest_controls() -> void:
+	_cancel_native_buttons()
+	var owner: Object=_quest_owner.get_ref() if _quest_owner!=null else null
+	if is_instance_valid(owner) and owner.has_signal("source_category_changed") and owner.is_connected("source_category_changed",_quest_category_changed):owner.disconnect("source_category_changed",_quest_category_changed)
+	_quest_owner=null
+	if _quest_controls!=null:_quest_controls.close()
+	_quest_controls=null
 
 func _mount_enhance_action(forge: Control) -> Dictionary:
 	if _enhance_action!=null:_enhance_action.close()
@@ -529,6 +596,13 @@ func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 
 func inventory_blocks_point(viewport_point: Vector2) -> bool:
 	return inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point))
+
+func inventory_lock_blocks_point(viewport_point: Vector2) -> bool:
+	if _inventory_lock_view==null:return false
+	var shown: Dictionary=_inventory_lock_view.presentation()
+	for control: Variant in shown.get("controls",[]):
+		if control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*viewport_point):return true
+	return false
 
 func inventory_gesture_bounds() -> Control:
 	return _inventory_view.gesture_bounds() if inventory_is_open() else null
@@ -906,6 +980,8 @@ func release(restore_legacy: bool=true) -> void:
 	close_character()
 	close_npc_dialogue()
 	close_enhance_action()
+	close_quest_controls()
+	if _inventory_lock_view!=null:_inventory_lock_view.close()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null

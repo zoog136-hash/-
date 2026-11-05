@@ -6,17 +6,21 @@ reported per job; one failure never hides remaining map jobs. No network access.
 import argparse,base64,json,os,subprocess,sys,zlib
 from pathlib import Path
 from base508 import read_s32,write_s32
+from base508_variants import split_variants
 
-def jobs(manifest,requirements):
+def jobs(manifest,requirements,include_unreferenced=False,exact=True):
  members=requirements['all_member_locations'];result=[]
  for group in manifest['asset_groups']:
-  prefix='Map/'+group['asset_path'];specs=[s for member,s in members.items() if member.startswith(prefix)]
+  prefix='Map/'+group['asset_path'];all_specs=[s for member,s in members.items() if member.startswith(prefix)];specs,variants=split_variants(all_specs)
   reasons=[]
-  if not group['land_ids']:reasons.append('UNREFERENCED_RAW_PRESERVE; no fabricated LandID or playable registration')
-  if any(not s['member'].endswith('.s32') for s in specs):reasons.append('SEG_RENDERER_NOT_IMPLEMENTED')
+  if not group['land_ids'] and not include_unreferenced:reasons.append('UNREFERENCED_RAW_PRESERVE; no fabricated LandID or playable registration')
+  if any(not s['member'].endswith('.s32') for s in specs):reasons.append('SEG_ORIGINAL_SAMPLE_VALIDATION_AND_HOST_CONTRACT_PENDING')
   if any(s['local']['state']!='LOCAL_CRC_VERIFIED' for s in specs):reasons.append('MISSING_GEOMETRY')
+  known_ids=group.get('core_tile_ids',[])
+  missing_known=[tid for tid in known_ids if members.get('Tile/'+str(tid)+'.ti2',{}).get('local',{}).get('state')!='LOCAL_CRC_VERIFIED']
+  if not reasons and missing_known:reasons.append('UNRESOLVED_ORIGINAL_PACKED_REF_0xFFFFFFFF; NO_MATCH_IN_COMPLETE_TILE_INVENTORY' if set(missing_known)=={16777215} else 'MISSING_KNOWN_CORE_TI2')
   tile_ids=set()
-  if not reasons:
+  if not reasons and exact:
    for spec in specs:
     data=Path(spec['local']['valid_paths'][0]).read_bytes()
     if len(data)!=spec['bytes'] or f'{zlib.crc32(data):08x}'!=spec['crc32']:raise ValueError('Source changed after manifest: '+spec['member'])
@@ -26,7 +30,7 @@ def jobs(manifest,requirements):
    for tid in tile_ids:
     s=members.get('Tile/'+str(tid)+'.ti2')
     if not s or s['local']['state']!='LOCAL_CRC_VERIFIED':reasons.append('MISSING_EXACT_TI2');break
-  result.append({'asset_path':group['asset_path'],'shared_art_key':group['shared_art_key'],'land_ids':group['land_ids'],'representative_land':group['land_ids'][0] if group['land_ids'] else None,'ready':not reasons,'blockers':reasons,'exact_tile_ids':sorted(tile_ids),'visual_status':group['visual']['status'],'visual_checkpoint':group['visual'],'runtime_collision':'UNKNOWN_UNLESS_SEPARATE_REGISTERED_LEGACY_ADAPTER'})
+  result.append({'asset_path':group['asset_path'],'shared_art_key':group['shared_art_key'],'land_ids':group['land_ids'],'legacy_variant_members':[s['member'] for s in variants],'legacy_variant_policy':'PRESERVE_SEPARATELY; NEVER_OVERLAY_ON_S32','representative_land':group['land_ids'][0] if group['land_ids'] else None,'ready':not reasons,'blockers':reasons,'exact_tile_ids':sorted(tile_ids),'tile_requirements_exact':bool(tile_ids) and exact,'missing_known_core_tile_ids':missing_known,'source_bytes_estimate':sum(s['bytes'] for s in specs),'visual_status':group['visual']['status'],'visual_checkpoint':group['visual'],'runtime_collision':'UNKNOWN_UNLESS_SEPARATE_REGISTERED_LEGACY_ADAPTER'})
  return result
 
 if __name__=='__main__':
@@ -52,7 +56,7 @@ if __name__=='__main__':
     target.parent.mkdir(parents=True,exist_ok=True);target.symlink_to(Path(job['visual_checkpoint']['pack_root']).resolve(),target_is_directory=True);job['execution']='REUSED_RENDERED_ART_CHECKPOINT; NO_DUPLICATE_COMPOSITION';continue
    if count>=a.max_maps:break
    count+=1
-   command=[sys.executable,str(Path(__file__).with_name('build_base508_pack.py')),'--analysis',str(a.analysis),'--structure',str(a.structure),'--tables',str(a.tables),'--source',str(source),'--land',str(job['representative_land']),'--out',str(target),'--compose-tiles','--tile-cache',str(a.out/'shared-tile-cache.sqlite')]
+   command=[sys.executable,str(Path(__file__).with_name('build_base508_pack.py')),'--analysis',str(a.analysis),'--structure',str(a.structure),'--tables',str(a.tables),'--source',str(source),'--land',str(job['representative_land']),'--out',str(target),'--compose-tiles','--stream-tiles','--tile-cache',str(a.out/'shared-tile-cache.sqlite')]
    target.parent.mkdir(parents=True,exist_ok=True)
    with (a.out/(job['shared_art_key']+'.log')).open('w') as log:status=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT).returncode
    job['execution']='BUILT_NOT_GPU_VERIFIED' if status==0 else 'FAILED_OUTPUT_PRESERVED_FOR_REVIEW'

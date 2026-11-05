@@ -356,7 +356,7 @@ func _build(source: Dictionary) -> Node2D:
 		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
-		var configured: Dictionary=button.configure(source_pack,options)
+		var configured: Dictionary=button.configure(source_pack,options,_original_button_title_stays_invisible(widget))
 		if not configured.ok:
 			_build_error=str(configured.error)+":"+str(widget.name)
 			button.free();node.free();return null
@@ -712,6 +712,20 @@ func _process(delta: float) -> void:
 			_entered_frames.clear()
 		else: next=float(_clip.endIndex); _playing=false
 	_seek_frame(next)
+
+func _original_button_title_stays_invisible(widget: Dictionary) -> bool:
+	if typeof(widget.get("alpha"))!=TYPE_INT or widget.alpha!=0 or typeof(widget.get("actionTag"))!=TYPE_INT or widget.actionTag==0:return false
+	var action: Variant=source_tree.get("action",{})
+	if action==null:return true
+	if not action is Dictionary:return false
+	for timeline: Dictionary in action.get("timeLines",[]):
+		if timeline.get("actionTag")!=widget.actionTag or timeline.get("property")!="Alpha":continue
+		var frames: Variant=timeline.get("frames")
+		if not frames is Array or frames.is_empty():return false
+		for frame: Dictionary in frames:
+			var value: Dictionary=_frame_value(frame)
+			if value.get("_type")!="IntFrame" or typeof(value.get("value"))!=TYPE_INT or value.value!=0:return false
+	return true
 
 static func _frame_value(raw: Dictionary) -> Dictionary:
 	var result: Dictionary={}

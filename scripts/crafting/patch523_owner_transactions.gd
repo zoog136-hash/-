@@ -52,9 +52,17 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 		if world.quest_auto==null:return "퀘스트 공급자 거래 미설치"
 		var error: String=quest_error(world,staged.quest_state)
 		if not error.is_empty():return error
+	# A recovered EXP receipt may really cross a level boundary. Only the
+	# death owner currently committing this exact complete transaction can
+	# authorize its growth fields; a saved death ledger alone cannot do so.
+	var death_growth_owned: bool=false
+	if not staged.has("quest_state") and staged.has("death_recovery523"):
+		var death_owner: Variant=world.get("death_recovery")
+		if death_owner!=null and death_owner.has_method("authorizes_recovery_save"):
+			death_growth_owned=death_owner.call("authorizes_recovery_save",staged)==true
 	for key: String in QUEST_GROWTH_KEYS:
 		if not staged.has(key):continue
-		if not staged.has("quest_state"):
+		if not staged.has("quest_state") and not death_growth_owned:
 			var owner: String=nonquest_vital_owner(world,staged)
 			if key not in ["hp","mp","experience"] or owner.is_empty() or (key=="experience" and owner not in ["source_dungeon523","source_dungeon_play","death_recovery523"]):return "퀘스트 성장 거래와 완료 장부가 함께 필요합니다"
 		var value: Variant=staged[key]
@@ -67,7 +75,7 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 
 static func nonquest_vital_owner(world: Node,staged: Dictionary) -> String:
 	# Each namespace retains its own validator at the shared writer boundary.
-	# This classification never permits progression fields without quest_state.
+	# Progression needs quest_state or the separate exact death recovery seal.
 	var provider: Variant=world.get("quest_item_provider")
 	if staged.has("equipped_items"):
 		if provider!=null and provider.equipment_owner.authorizes_save(staged):return "sealed_quest_equipment"

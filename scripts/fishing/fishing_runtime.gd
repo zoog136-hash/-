@@ -22,9 +22,13 @@ static func fresh_state() -> Dictionary:
 
 func configure(host: Node) -> void:
 	world = host
-	var path: String = OS.get_environment("TWILIGHT_FISHING523_PACK")
-	if path.is_empty(): path = "user://private_content/fishing523.json"
-	rules.load_pack(path)
+	var default_path: String = "user://private_content/fishing523.json"
+	if OS.has_environment("TWILIGHT_FISHING523_PACK"):
+		rules.load_pack(OS.get_environment("TWILIGHT_FISHING523_PACK"))
+	elif FileAccess.file_exists(default_path):
+		rules.load_pack(default_path)
+	else:
+		rules.load_original()
 	policy.length_min_coefficient = rules.constant("FishMinLengthCoefficient", 900)
 	policy.length_max_coefficient = rules.constant("FishMaxLengthCoefficient", 1100)
 	var policy_path: String = "user://private_content/fishing_policy.json"

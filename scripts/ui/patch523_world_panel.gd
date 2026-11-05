@@ -206,7 +206,11 @@ func show_entry(index: int) -> void:
 		lines.append("원본 도착 영역: (%d, %d) ~ (%d, %d)" % [int(target.StartX), int(target.StartY), int(target.EndX), int(target.EndY)])
 		lines.append_array(PORTAL_SOURCE.display_lines(portal_source.for_portal(int(data.portal.ID))))
 		var state: Dictionary = SOURCE_RUNTIME.inspect(world, links, int(data.portal.ID))
-		if state.request_enabled: lines.append("소스 필드 자체 통행에서 명시 사용 요청이 가능합니다. 원작의 자동 트리거·활성 규칙을 확정한 것은 아닙니다.")
+		var request_ticket: Dictionary=state.get("receipt",{}).get("navigation_ticket",{})
+		var fee: Variant=request_ticket.get("own_portal_fee_adena",state.get("receipt",{}).get("own_portal_fee_adena"))
+		if fee!=null:lines.append("수동 포탈 자체 비용: %d 아데나 · 원작 포탈 요금 아님"%int(fee))
+		if state.get("code","")=="generic_explicit_runtime_request_ready": lines.append("수동 사용 요청이 가능합니다. 도착 지형·조건은 실제 사용 시 런타임에서 준비하며, 원작 자동 활성은 미확정입니다.")
+		elif state.request_enabled: lines.append("소스 필드 자체 통행에서 명시 사용 요청이 가능합니다. 원작의 자동 트리거·활성 규칙을 확정한 것은 아닙니다.")
 		elif data.arrival_selection == "EXACT_POINT": lines.append("원본 도착점은 확인됐지만 현재 실행 조건을 확인하지 못해 사용을 보류합니다.")
 		else: lines.append("도착 영역의 선택 규칙과 포탈의 트리거·활성 조건이 미확인이라 이동을 보류합니다.")
 		lines.append("기존 게임의 이동석과 같은 경로라고 추정하지 않습니다.")
@@ -214,7 +218,7 @@ func show_entry(index: int) -> void:
 		inspect_arrival.show()
 		source_selection = state.receipt
 		action.disabled = not state.request_enabled
-		action.text = "원문 포탈 사용" if state.request_enabled else "원문 포탈 사용 보류"
+		action.text = "수동 사용 요청" if state.get("code","")=="generic_explicit_runtime_request_ready" else ("원문 포탈 사용" if state.request_enabled else "원문 포탈 사용 보류")
 		action.tooltip_text = str(state.reason)
 	detail.text = "\n".join(lines)
 

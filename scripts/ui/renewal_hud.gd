@@ -80,6 +80,9 @@ const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
+const Source523SkillImages = preload("res://scripts/ui/source523_skill_buff_images.gd")
+var _source523_buff_signature: Dictionary = {}
+var _source523_buff_views: Dictionary = {}
 const QuestUI = preload("res://scripts/ui/renewal_quests.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
@@ -240,6 +243,7 @@ func set_map_name(value: String) -> void:
 
 func _ready() -> void:
 	super._ready()
+	preload("res://scripts/ui/source523_image_assets.gd").bind_native_original_icon_scenes(self)
 	call_deferred("_bind_selected_original_main_ui")
 	if is_instance_valid(target_panel):
 		target_panel.get_parent().remove_child(target_panel)
@@ -722,21 +726,62 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	lineage_inventory_ui.set_inventory(inventory)
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_menu_state()
 	var presentation: Dictionary={}
+	var source_images_selected: bool = Source523SkillImages.selected()
+	if source_images_selected:
+		var image_pack: RefCounted = preload("res://scripts/ui/source523_image_assets.gd").active()
+		presentation["__source523_pack"] = image_pack.get_instance_id() if image_pack != null else -1
 	for key: Variant in buffs:
 		var effect: Variant=buffs[key]
 		presentation[key]=int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
+		if source_images_selected and effect is Dictionary:
+			var native_buff: Variant = effect.get("source_buff_class")
+			presentation[key] = [presentation[key],effect.get("skill_id",""),effect.get("source_snapshot",""),native_buff.get("ID",-1) if native_buff is Dictionary else -1]
 	if active_buffs_view == presentation:
 		return
 	active_buffs_view = presentation
+	var visible_keys: Array=buffs.keys().slice(0,8)
+	var source_signature: Dictionary={}
+	if source_images_selected:
+		var identities: Dictionary={}
+		for key: Variant in buffs:
+			var effect: Variant=buffs[key]
+			if effect is Dictionary:
+				var identity: Dictionary=effect.duplicate(true)
+				identity.erase("remaining")
+				identities[key]=identity
+		var images=preload("res://scripts/ui/source523_image_assets.gd")
+		source_signature={"pack":presentation.get("__source523_pack",-1),"ui_revision":images.original_ui_revision(),"keys":visible_keys,"effects":identities}
+		if source_signature==_source523_buff_signature:
+			var reusable: bool=true
+			for key: Variant in visible_keys:
+				var row: Dictionary=_source523_buff_views.get(key,{})
+				if not is_instance_valid(row.get("button")) or not is_instance_valid(row.get("remaining")):
+					reusable=false
+					break
+			if reusable:
+				for key: Variant in visible_keys:
+					var effect: Variant=buffs[key]
+					var time: int=int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
+					var row: Dictionary=_source523_buff_views[key]
+					(row.remaining as Label).text="%ds" % time
+					(row.button as Button).tooltip_text=str(key)+" · %d초" % time+str(row.get("missing_hint",""))
+				return
+	_source523_buff_views.clear()
+	_source523_buff_signature=source_signature
 	_clear_children(buff_row)
 	if buffs.is_empty():
 		buff_row.add_child(UI.label("활성 효과 없음",11,UI.MUTED))
-	for key: Variant in buffs.keys().slice(0,8):
+	for key: Variant in visible_keys:
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
 		var b := UI.button("",open_character,Vector2(36,42))
 		var icon := TextureRect.new()
-		icon.texture = _load_texture("res://assets/ui/rune.png")
+		var source_image: Dictionary = _source523_buff_image(effect if effect is Dictionary else {})
+		if source_image.handled:
+			source_image=Source523SkillImages.apply(icon,source_image,"active_buff_row")
+			b.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
+		else:
+			icon.texture=_load_texture("res://assets/ui/rune.png")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.position = Vector2(5,2)
@@ -750,13 +795,36 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		b.add_child(remaining)
 		b.add_theme_font_size_override("font_size",10)
 		b.tooltip_text = str(key)+" · %d초" % time
+		var missing_hint: String=""
+		if source_image.handled and icon.texture == null and not source_image.get("scene_result",{}).get("ok",false):
+			missing_hint=" · 원본 아이콘 " + Source523SkillImages.missing_label(source_image)
+			b.tooltip_text += missing_hint
 		buff_row.add_child(b)
+		if source_images_selected: _source523_buff_views[key]={"button":b,"remaining":remaining,"missing_hint":missing_hint}
+	if source_images_selected:
+		_source523_buff_signature["ui_revision"]=preload("res://scripts/ui/source523_image_assets.gd").original_ui_revision()
+
+func _source523_buff_image(effect: Dictionary) -> Dictionary:
+	var service: RefCounted = get_parent().get("original_skills")
+	var source: RefCounted
+	var record: Dictionary = {}
+	if service != null and service.get("catalog") != null:
+		var catalog: RefCounted = service.get("catalog")
+		source = catalog.get("source523")
+		if get_parent().has_method("_skill_record"):
+			record = get_parent()._skill_record(str(effect.get("skill_id","")))
+	return Source523SkillImages.describe_buff(effect,"OnIconID",source,record)
 
 func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
-		UI.clear_item_visual(quickslot_icons[index])
+		var valid_entry: bool=absolute<quickslot_entries.size() and quickslot_entries[absolute] is Dictionary and not quickslot_entries[absolute].is_empty()
+		var visual_kind: String=("item" if quickslot_entries[absolute].get("kind","")=="item" else "skill") if valid_entry else "empty"
+		if visual_kind=="empty" or quickslot_icons[index].get_meta("source523_quickslot_kind","")!=visual_kind:
+			UI.clear_item_visual(quickslot_icons[index])
+			Source523SkillImages.clear(quickslot_icons[index])
+		quickslot_icons[index].set_meta("source523_quickslot_kind",visual_kind)
 		quickslot_icons[index].texture = null
 		quickslot_captions[index].text = ""
 		quickslot_auto_badges[index].text = ""
@@ -776,7 +844,14 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		else:
 			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
 			var path: String = str(skill.get("icon",""))
-			quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
+			var source_image: Dictionary = Source523SkillImages.describe_guardian_skill(skill,get_parent().get("growth")) if skill.get("origin") == "TWILIGHT_GUARDIAN523" else Source523SkillImages.describe_skill(skill)
+			if source_image.handled:
+				source_image=Source523SkillImages.apply(quickslot_icons[index],source_image,"skill_quickslot")
+				if quickslot_icons[index].texture == null and not source_image.get("scene_result",{}).get("ok",false):
+					quickslot_captions[index].text = Source523SkillImages.missing_label(source_image)
+			else:
+				Source523SkillImages.clear(quickslot_icons[index])
+				quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
 			quickslot_icons[index].modulate = Color.WHITE
 		if bool(entry.get("auto",false)):
 			quickslot_auto_badges[index].text = "AUTO"
@@ -863,6 +938,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -909,6 +985,7 @@ func _open_window(section: String,title: String,description: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
@@ -1084,6 +1161,7 @@ func open_quests() -> void:
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
+	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
 	# Cheap on kills/pickups. Rebuild only the currently open quest page,
@@ -1891,7 +1969,7 @@ func _refresh_option_awakening_markers() -> void:
 		var acquired: bool=owned.has(identity)
 		catalog_list.set_item_metadata(index,identity)
 		catalog_list.set_item_icon(index,CardOwnership.icon_for(record,acquired))
-		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired else CardOwnership.UNOWNED_ICON_TINT)
+		catalog_list.set_item_icon_modulate(index,Color.WHITE if acquired or CardOwnership.original_current(record) else CardOwnership.UNOWNED_ICON_TINT)
 		catalog_list.set_item_custom_bg_color(index,Color(UI.grade(str(record.get("grade","일반"))),background_alpha) if acquired else Color(.2,.2,.2,.04))
 		var duplicates: int = maxi(0, int(spare.get(identity, 0)))
 		var copies: int = (1 if owned.has(identity) else 0) + duplicates
@@ -1983,11 +2061,16 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	var by_id: Dictionary = {}
 	var candidates: Array[Texture2D] = []
 	var candidate_paths: Array[String] = []
+	var source_candidate_records: Array = []
 	for raw: Variant in catalog:
 		if not raw is Dictionary:
 			continue
 		var record: Dictionary = raw as Dictionary
 		by_id[CARD_RULES.card_id(record)] = record
+		if SourceCardPresentation.native(record):
+			# Native reel images resolve from their original record identities.
+			source_candidate_records.append(record)
+			continue
 		var path: String = str(record.get("image_path",""))
 		if not path.is_empty():
 			candidate_paths.append(path)
@@ -1995,6 +2078,9 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	# shared the same order, so "모두 뒤집기" spun identical candidates in sync.
 	# Sample a random subset; each card shuffles its own copy in the stage.
 	candidate_paths.shuffle()
+	source_candidate_records.shuffle()
+	if source_candidate_records.size() > 16:
+		source_candidate_records.resize(16)
 	for path: String in candidate_paths:
 		if candidates.size() >= 16:
 			break
@@ -2014,7 +2100,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	if views.is_empty():
 		return
 	var stage: Control = _new_card_reveal_stage()
-	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)))
+	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
 func _refresh_card_controls() -> void:
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
@@ -2276,6 +2362,8 @@ func _apply_catalog_page() -> void:
 	super._apply_catalog_page()
 	# A fresh relic page starts at its first row; open_catalog restores saved views afterwards.
 	if catalog_category=="성물":catalog_list.get_v_scroll_bar().value=0
+	var source_card_images: Dictionary = {}
+	var owned_cards: Dictionary = card_collection_state.get("owned",{}).get(catalog_category,{})
 	for index: int in range(catalog_results.size()):
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
@@ -2287,13 +2375,19 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		if catalog_category != "아이템":
-			var path := str(record.get("image_path", ""))
-			var source_icon: Texture2D = preload("res://scripts/lineagem_base508.gd").icon(record)
-			if source_icon != null:
-				catalog_list.set_item_icon(index, source_icon)
-			elif path != "" and ResourceLoader.exists(path):
-				catalog_list.set_item_icon(index, load(path) as Texture2D)
+			if SourceCardPresentation.native(record):
+				var acquired: bool = owned_cards.get(CARD_RULES.card_id(record),false) == true
+				var original: Dictionary = SourceCardPresentation.detail(record,acquired,false)
+				catalog_list.set_item_icon(index,original.get("texture") as Texture2D)
+				var evidence: Dictionary = original.duplicate(true)
+				evidence.erase("texture")
+				source_card_images[index] = evidence
+			else:
+				var path := str(record.get("image_path", ""))
+				if path != "" and ResourceLoader.exists(path):
+					catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
+	catalog_list.set_meta("source523_card_images",source_card_images)
 	_refresh_option_awakening_markers()
 	_refresh_option_awakening_entry()
 	if catalog_results.is_empty():
@@ -2826,6 +2920,7 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
 	if original_main_ui_controller.inventory_search_is_open():return true
+	if original_main_ui_controller.inventory_lock_blocks_point(viewport_point):return true
 	if original_main_ui_controller.character_blocks_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
 
@@ -2912,6 +3007,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
 	if active_section=="enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_visible_in_tree():_bind_original_enhance_action(enhancement_forge)
+	if active_section=="quests" and is_instance_valid(quest_view) and quest_view.is_visible_in_tree():original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(quest_view)
 	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:

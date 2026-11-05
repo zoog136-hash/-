@@ -5,7 +5,21 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest single combined input is **v17**, documented in
+The latest single combined input is **v19**, documented in
+[Original item-detail lock controls](ORIGINAL_UI_INVENTORY_LOCK_ABI.md).
+It retains every v18 input and adds the actual original lock/unlock icons and
+transparent hit controls, wired only to the selected bag owner's lock action.
+No new font, alpha promotion, ownership/save policy or full detail pane is
+created. Private delivery succeeded; installation and operation are unconfirmed.
+
+The retained **v18** input is documented in
+[Original quest category/close controls](ORIGINAL_UI_QUEST_CONTROLS_ABI.md).
+It retains every v17 input and adds the exact Main/Achievement tab states and
+screen close wired to the actual current quest owner. Original content rows,
+reward-slot assignment and selected quest ID remain separate. Private delivery
+succeeded; installation, button behavior and rendering remain unconfirmed.
+
+The retained **v17** input is documented in
 [Original inventory search input](ORIGINAL_UI_INVENTORY_SEARCH_ABI.md).
 It retains every v16 input and adds the authored extension search entry and
 original input bar, borrowing the same bag query editor/filter. No new editor,

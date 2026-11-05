@@ -1,5 +1,6 @@
 extends PanelContainer
 ## Original field placement confirmed by the official guide; native art stays private.
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
 var runtime
 var body: VBoxContainer
 var selected_weapon: int = 0
@@ -8,6 +9,68 @@ var prefix_level: int = 0
 var progress_label: Label
 var displayed_level: int = -1
 var reset_payment: String = ""
+
+func _payment_missing(reason: String, source: Dictionary) -> Dictionary:
+	return {"status":"source_missing","source_status":reason,"reason":reason,"texture":null,"provenance":{},"payment_source":source}
+
+func _ticket_image() -> Dictionary:
+	if not SourceImages.selected(): return {}
+	var definition: Dictionary = runtime.reset_ticket.definition
+	var source: Dictionary = {"source_table":"Currency","source_id":1814,"source_field":"ID","related_table":"CurrencyUnitClass","related_field":"ClassID"}
+	if definition.is_empty() or definition.get("currency", {}).get("ID") != 1814:
+		return _payment_missing("source_mastery_ticket_definition_missing", source)
+	var item: Dictionary = definition.get("item", {})
+	var image: Dictionary = SourceImages.describe_item_class_row(item)
+	image["payment_source"] = {"source_table":"ItemClass","source_id":item.get("ID"),"source_field":"IconID","currency_id":definition.currency.ID,"currency_link_id":definition.get("currency_link", {}).get("ID"),"currency_link_field":"ClassID","definition_sha256":runtime.reset_ticket.fingerprint}
+	return image
+
+func _charge_image(charge: Dictionary) -> Dictionary:
+	if not SourceImages.selected(): return {}
+	var value: Variant = charge.get("CurrencyID")
+	var source: Dictionary = {"source_table":"Currency","source_id":value,"source_field":"AssetID"}
+	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floor(float(value)) or float(value) < 0:
+		return _payment_missing("source_currency_identity_required", source)
+	var currency_id: int = int(value)
+	if currency_id == 1814: return _ticket_image()
+	if currency_id == 1682:
+		# _wallet uses this exact source material, not CurrencyID as ItemClass.ID.
+		var material: Dictionary = runtime.core.operations.get("point_purchase", {}).get("material", {})
+		var material_image: Dictionary = SourceImages.describe_item_class_row(material)
+		material_image["payment_source"] = {"source_table":"ItemClass","source_id":material.get("ID"),"source_field":"IconID","currency_id":currency_id,"supplier":"core.operations.point_purchase.material"}
+		return material_image
+	if currency_id == 0: return _payment_missing("zero_sentinel", source)
+	var row: Dictionary = runtime.core.find_row("Currency", currency_id)
+	if row.is_empty(): return _payment_missing("source_currency_row_missing", source)
+	if not row.has("AssetID"): return _payment_missing("source_currency_asset_field_missing", source)
+	var currency_image: Dictionary = SourceImages.resolve_asset_value(row.AssetID)
+	currency_image["payment_source"] = source
+	return currency_image
+
+func _payment_evidence(image: Dictionary) -> Dictionary:
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	return evidence
+
+func _bind_payment_button(button: Button, image: Dictionary) -> void:
+	button.icon = null
+	for key: String in ["source523_image", "source523_image_status"]:
+		if button.has_meta(key): button.remove_meta(key)
+	if not SourceImages.selected() or image.is_empty(): return
+	button.icon = image.get("texture") as Texture2D
+	button.expand_icon = true
+	button.set_meta("source523_image", _payment_evidence(image))
+	button.set_meta("source523_image_status", str(image.get("source_status", image.get("status", image.get("reason", "")))))
+
+func _bind_payment_option(choice: OptionButton, index: int, image: Dictionary) -> void:
+	choice.set_item_icon(index, null)
+	var images: Dictionary = choice.get_meta("source523_images", {}).duplicate(true)
+	images.erase(index)
+	if SourceImages.selected() and not image.is_empty():
+		choice.set_item_icon(index, image.get("texture") as Texture2D)
+		images[index] = _payment_evidence(image)
+	if images.is_empty():
+		if choice.has_meta("source523_images"): choice.remove_meta("source523_images")
+	else: choice.set_meta("source523_images", images)
 
 func update_progress() -> void:
 	if not is_instance_valid(progress_label) or not runtime.core.levels.has(selected_weapon): return
@@ -59,6 +122,8 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 		line(button.tooltip_text)
 	else:
 		var charge: Dictionary = quote.charge
+		var payment_image: Dictionary = _charge_image(charge)
+		_bind_payment_button(button, payment_image)
 		var price: String = "%s %d" % [runtime.currency_name(int(charge.CurrencyID)),int(charge.Cost)]
 		line("비용: %s · 보유 %d" % [price,runtime.balance(int(charge.CurrencyID))])
 		if action == "change": line("기본 %d + 옵션 추가 %d" % [int(charge.BaseCost),int(charge.AdditionalCost)])
@@ -73,9 +138,11 @@ func operation_button(id: String, title: String, action: String, weapon: int, ta
 			if action == "change" and prefix == 0:
 				warning = "\n출발 숙련치와 옵션을 초기화하고 누적 숙련치를 합산합니다. 옵션 추가 비용은 없습니다. 이전 저장은 별도로 보존합니다.\n"+point_only_policy_text()
 			if action == "reset" and not quote.frozen_levels.is_empty(): warning += "\n자체 범위: 부분 보유 레벨 %s는 재추첨하지 않습니다. 변경 대상의 잠금 수로 원본 비용을 계산합니다." % str(quote.frozen_levels)
-			runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
+			var dialog = runtime.world.hud.confirm_action(title,price+warning,"실행",func(_count: int) -> void:
 				var result: Dictionary = runtime.execute(action,weapon,target,prefix,quote.before,payment)
-				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패"))))))
+				runtime.world.hud.show_message(title+" 완료" if result.ok else runtime.reason_text(str(result.get("reason","실패")))))
+			var confirm_button: Variant = dialog.get("confirm_button") if is_instance_valid(dialog) else null
+			if confirm_button is Button: _bind_payment_button(confirm_button, payment_image))
 	body.add_child(button)
 
 func point_only_policy_text() -> String:
@@ -154,8 +221,12 @@ func refresh() -> void:
 		if reset_payment.is_empty(): reset_payment = str(runtime.balance_config.reset_payment_default)
 		var payment := OptionButton.new()
 		payment.name = "MasteryResetPayment"
+		payment.expand_icon = true
 		payment.add_item("재화로 지불 · 원본 아데나/다이아",0)
 		payment.add_item("숙련 옵션 변경 티켓으로 지불",1)
+		var currency_charge: Variant = quote.get("charge")
+		_bind_payment_option(payment, 0, _charge_image(currency_charge) if currency_charge is Dictionary and currency_charge.has("CurrencyID") else {})
+		_bind_payment_option(payment, 1, _ticket_image() if not runtime.reset_ticket.definition.is_empty() else {})
 		payment.select(1 if reset_payment == "ticket" else 0)
 		payment.item_selected.connect(func(index: int) -> void: reset_payment = "ticket" if index == 1 else "currency"; refresh())
 		body.add_child(payment)

@@ -1,0 +1,183 @@
+extends RefCounted
+## Original lock controls only; the bag owns physical selection and lock writes.
+const Scene = preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const MEMBER = "UI/ToolTip/ToolTip_HudType_Right.csb"
+const SHA256 = "7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce"
+const PARENT_MEMBER = "UI/ToolTipScene.csb"
+const PARENT_SHA256 = "9304dcb5730fba9a155f73a291a6e87f96768156cee972929b003386e3904a1d"
+const PROJECT = 1012
+const SOURCE_OFFSETS: Array[int] = [37228,37860,37284,36120,36708,36176]
+const BUTTONS: Array[int] = [37284,36176]
+var _pack: RefCounted
+var _bag: WeakRef
+var _parent: WeakRef
+var _action: WeakRef
+var _action_visible: bool
+var _replaced: bool = false
+var _scene: Node2D
+var _child: Node2D
+var _buttons: Array = []
+var _controls: Array = []
+var _reference: String=""
+
+func configure(pack: RefCounted, bag: Control) -> Dictionary:
+	close()
+	if not is_instance_valid(bag) or not bag.has_method("_toggle_lock"): return _fail("source_inventory_lock_existing_bag_required")
+	if pack == null or pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","") != SHA256 or pack.manifest.get("files",{}).get(PARENT_MEMBER,{}).get("sha256","") != PARENT_SHA256:
+		return _fail("source_inventory_lock_original_identity_mismatch")
+	var active: Dictionary = pack.scene(MEMBER)
+	for offset: int in SOURCE_OFFSETS:
+		if _find(active.get("nodeTree",{}),offset).is_empty(): return _fail("source_inventory_lock_nodes_not_in_active_pack_scope")
+	_pack = pack
+	_bag = weakref(bag)
+	return {"ok":true,"configured":true,"member":MEMBER,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
+
+func refresh(parent: Node) -> Dictionary:
+	var bag: Object = _bag.get_ref() if _bag != null else null
+	var model: Dictionary = _model(bag)
+	if not model.get("ok",false):
+		_close_scene()
+		return model
+	if not is_instance_valid(parent) or parent.is_queued_for_deletion():
+		_close_scene()
+		return _fail("source_inventory_lock_actual_parent_required")
+	if is_instance_valid(_scene) and not _scene.is_queued_for_deletion():
+		if _parent == null or _parent.get_ref() != parent or _action == null or _action.get_ref() != model.action:
+			_close_scene()
+		else:
+			return _apply(model)
+	var bindings: Dictionary = {
+		37228:{"visible":not model.locked},36120:{"visible":model.locked},
+		37284:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled},
+		36176:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled}
+	}
+	var staged := Scene.new()
+	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}})
+	if not result.get("ok",false):
+		staged.free()
+		return result
+	var nested: Dictionary = staged.project_player([PROJECT])
+	if not nested.get("ok",false):
+		staged.free()
+		return nested
+	var child: Node2D = nested.player
+	var buttons: Array = []
+	var controls: Array = []
+	for offset: int in BUTTONS:
+		var raw: Variant = child.source_nodes.get(offset)
+		var button: Variant = raw.get_meta("source_button",null) if is_instance_valid(raw) else null
+		var control: Variant = button.get("_input_area") if is_instance_valid(button) else null
+		if not control is Control:
+			staged.free()
+			return _fail("source_inventory_lock_original_control_required")
+		buttons.append(button)
+		controls.append(control)
+	_scene = staged
+	_child = child
+	_buttons = buttons
+	_controls = controls
+	_parent = weakref(parent)
+	_action = weakref(model.action)
+	_action_visible = model.action.visible
+	_reference=model.reference
+	parent.add_child(staged)
+	var fresh: Dictionary = _model(bag)
+	if not staged.is_inside_tree() or not fresh.get("ok",false) or fresh.action != model.action:
+		_close_scene()
+		return _fail("source_inventory_lock_mount_or_owner_changed")
+	model.action.hide()
+	_replaced = true
+	bag.visibility_changed.connect(_visibility_changed)
+	bag.tree_exiting.connect(_close_scene)
+	parent.tree_exiting.connect(_close_scene)
+	return _apply(fresh)
+
+func close() -> void:
+	_close_scene()
+	_pack = null
+	_bag = null
+
+func _close_scene() -> void:
+	var bag: Object = _bag.get_ref() if _bag != null else null
+	var parent: Object = _parent.get_ref() if _parent != null else null
+	if is_instance_valid(bag):
+		if bag.visibility_changed.is_connected(_visibility_changed): bag.visibility_changed.disconnect(_visibility_changed)
+		if bag.tree_exiting.is_connected(_close_scene): bag.tree_exiting.disconnect(_close_scene)
+	if is_instance_valid(parent) and parent.tree_exiting.is_connected(_close_scene): parent.tree_exiting.disconnect(_close_scene)
+	var action: Object = _action.get_ref() if _action != null else null
+	if _replaced and is_instance_valid(action): action.visible = _action_visible
+	_replaced = false
+	_action = null
+	_parent = null
+	_child = null
+	_buttons.clear()
+	_controls.clear()
+	_reference=""
+	var previous: Node2D = _scene
+	_scene = null
+	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
+		previous.hide()
+		previous.queue_free()
+
+func presentation() -> Dictionary:
+	return {"scene":_scene,"renderer":_child,"source_buttons":_buttons.duplicate(),"controls":_controls.duplicate(),"source_node_offsets":SOURCE_OFFSETS.duplicate(),"parent_member":PARENT_MEMBER,"parent_sha256":PARENT_SHA256,"parent_project_offset":PROJECT,"parent_original_position":Vector2(1008,345),"parent_original_visible":false,"parent_activation_basis":"existing bag.detail_active and actual visibility","partial_source_scene":true,"complete_screen_contract":false}
+
+func _apply(model: Dictionary) -> Dictionary:
+	if model.reference!=_reference:
+		_close_scene()
+		return _fail("source_inventory_lock_presented_selection_changed")
+	for pair: Array in [[37228,not model.locked],[36120,model.locked]]:
+		var result: Dictionary = _child.set_bound_visible(pair[0],pair[1])
+		if not result.get("ok",false):
+			_close_scene()
+			return result
+	for offset: int in BUTTONS:
+		var result: Dictionary = _child.set_bound_displaystate(offset,not model.disabled)
+		if not result.get("ok",false):
+			_close_scene()
+			return result
+	return {"ok":true,"handled":true,"reference":model.reference,"locked":model.locked,"member":MEMBER,"sha256":SHA256,"partial_source_scene":true,"complete_screen_contract":false}
+
+func _activate() -> Dictionary:
+	var bag: Object = _bag.get_ref() if _bag != null else null
+	var model: Dictionary = _model(bag)
+	if not model.get("ok",false):
+		_close_scene()
+		return model
+	if model.disabled or _action == null or _action.get_ref() != model.action: return _fail("source_inventory_lock_owner_action_unavailable")
+	if model.reference!=_reference:
+		_close_scene()
+		return _fail("source_inventory_lock_presented_selection_changed")
+	bag.call("_toggle_lock")
+	var fresh: Dictionary = _model(bag)
+	if not fresh.get("ok",false):
+		_close_scene()
+		return fresh
+	var result: Dictionary = _apply(fresh)
+	result["owner_callback_invoked"] = true
+	return result
+
+func _visibility_changed() -> void:
+	var bag: Object = _bag.get_ref() if _bag != null else null
+	if not is_instance_valid(bag) or not bag.is_visible_in_tree(): _close_scene()
+
+static func _model(bag: Object) -> Dictionary:
+	if not is_instance_valid(bag) or not bag is Control or bag.is_queued_for_deletion() or not bag.is_inside_tree() or not bag.is_visible_in_tree() or bag.get("detail_active") != true or not bag.has_method("_toggle_lock"): return _fail("source_inventory_lock_actual_visible_detail_required")
+	var reference: Variant = bag.get("selected_item")
+	var state: Variant = bag.get("character_state")
+	var action: Variant = bag.get("lock_button")
+	if not reference is String or reference.is_empty() or not state is Dictionary or not state.get("item_locks") is Dictionary: return _fail("source_inventory_lock_actual_selection_and_lock_state_required")
+	var locked: Variant = state["item_locks"].get(reference,false)
+	if not locked is bool: return _fail("source_inventory_lock_actual_boolean_required")
+	if not action is BaseButton or not is_instance_valid(action) or action.is_queued_for_deletion(): return _fail("source_inventory_lock_existing_button_required")
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action}
+
+static func _find(node: Dictionary, offset: int) -> Dictionary:
+	if node.get("_offset") == offset: return node
+	for child: Dictionary in node.get("children",[]):
+		var found: Dictionary = _find(child,offset)
+		if not found.is_empty(): return found
+	return {}
+
+static func _fail(code: String) -> Dictionary:
+	return {"ok":false,"handled":false,"code":code}

@@ -2,6 +2,7 @@ extends VBoxContainer
 ## Existing HUD workspace screen. Creates no test items and owns no inventory.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Art = preload("res://scripts/ui/item_icon_art.gd")
+const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
 const Core = preload("res://scripts/collections/equipment_collection_service.gd")
 const NativeList = preload("res://scripts/ui/native_touch_list.gd")
 const Rows=preload("res://scripts/collections/collection_rows.gd")
@@ -282,7 +283,10 @@ func _render_detail() -> void:
 	art.name="CollectionSelectedItemArt";art.custom_minimum_size=Vector2(64,70)
 	art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var source: Dictionary=runtime.icon_record(str(selected.name))
-	art.texture=Art.item_icon(source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}))
+	if SourceImages.handles_item(source):
+		UI.apply_item_visual(art,source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}),"list")
+	else:
+		art.texture=Art.item_icon(source,str(source.get("name",selected.name)),hud.item_image_index.get("아이템",{}))
 	hero.add_child(art)
 	var title: Label=UI.label("%s %s" % ["+%d" % int(selected.enchant) if selected.enchant!=null else "",selected.name],14,UI.TEXT)
 	title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;title.size_flags_horizontal=Control.SIZE_EXPAND_FILL;hero.add_child(title)
@@ -340,10 +344,18 @@ func _choose(cid: String, sid: String) -> void:
 	candidates_list.name = "CollectionCandidates"
 	candidates_list.custom_minimum_size.y = 125
 	detail.add_child(candidates_list)
+	var source_images: Dictionary = {}
 	for item: Dictionary in picked_candidates:
-		var index: int = candidates_list.add_item("+%d %s  · ID %s" % [int(item.enchant),Core.normalize_name(str(item.name)),item.instance_id])
+		var physical: Dictionary = runtime.world.item_instances.get(str(item.instance_id),{})
+		var source: Dictionary = physical.get("record",{})
+		var visual: Dictionary = SourceImages.describe_item(source,str(item.name))
+		var index: int = candidates_list.add_item("+%d %s  · ID %s" % [int(item.enchant),Core.normalize_name(str(item.name)),item.instance_id],visual.get("texture") as Texture2D)
 		candidates_list.set_item_metadata(index,str(item.instance_id))
 		candidates_list.set_item_tooltip(index,Core.normalize_name(str(item.name))+"\n원본 ID: "+str(item.source_id))
+		var evidence: Dictionary = visual.duplicate(true)
+		evidence.erase("texture")
+		source_images[str(item.instance_id)] = evidence
+	candidates_list.set_meta("source523_item_images",source_images)
 	var button := UI.button("선택 장비 등록",func() -> void:
 		if hud.workspace.was_scroll_dragged(detail_scroll): return
 		if candidates_list == null or candidates_list.get_selected_items().is_empty(): hud.show_message("등록할 장비를 먼저 선택하세요"); return

@@ -4,6 +4,7 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 
 var hud: Node
 var mode: String = "scroll"
@@ -168,7 +169,7 @@ func _build() -> void:
 	for entry: Dictionary in values:
 		var reference: String=str(entry.get("target_id",entry.get("name","")))
 		var info: Dictionary=hud.lineage_inventory_ui._find_item_record(reference)
-		listing.add_item(("%s  ×%d" % [entry.get("name",""),int(entry.get("count",0))]) if mode=="scroll" else ("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""]),UI.item_icon(info,str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
+		listing.add_item(("%s  ×%d" % [entry.get("name",""),int(entry.get("count",0))]) if mode=="scroll" else ("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""]),UI.item_icon(_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
 		listing.set_item_metadata(listing.item_count-1,reference)
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(str(info.get("grade","일반"))))
 		listing.set_item_custom_bg_color(listing.item_count-1,Color(UI.grade(str(info.get("grade","일반"))),.08))
@@ -207,7 +208,7 @@ func refresh_targets(candidates: Array) -> void:
 	for entry: Dictionary in values:
 		var reference: String=str(entry.get("target_id",entry.get("name","")))
 		var info: Dictionary=hud.lineage_inventory_ui._find_item_record(reference)
-		listing.add_item("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""],UI.item_icon(info,str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
+		listing.add_item("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""],UI.item_icon(_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
 		listing.set_item_metadata(listing.item_count-1,reference)
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(str(info.get("grade","일반"))))
 		listing.set_item_custom_bg_color(listing.item_count-1,Color(UI.grade(str(info.get("grade","일반"))),.08))
@@ -218,6 +219,8 @@ func refresh_targets(candidates: Array) -> void:
 		wallet.text="아데나  "+UI.number_text(int(hud.character_state.get("gold",0)))
 	if reselect < 0:
 		selected_index = -1
+		UI.clear_item_visual(preview)
+		preview.texture = null
 		selected_name.text="선택 가능한 아이템 없음"
 		detail.text="이 주문서로 강화 가능한 장비가 없습니다."
 		action.disabled=true
@@ -232,7 +235,7 @@ func _select(index: int) -> void:
 	var entry: Dictionary=values[index]
 	var reference: String=str(entry.get("target_id",entry.get("name","")))
 	if mode=="scroll":
-		UI.apply_item_visual(scroll_icon,hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
+		UI.apply_item_visual(scroll_icon,_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
 		UI.clear_item_visual(preview);preview.texture=null
 		selected_name.text=str(entry.get("name",""))
 		selected_state.text="보유 "+UI.number_text(int(entry.get("count",0)))+"장"
@@ -240,7 +243,7 @@ func _select(index: int) -> void:
 		detail.text="장비 목록에서 강화 대상을 선택하세요. 대상의 현재 강화 수치와 확률을 확인한 뒤 진행합니다."
 		action.text="장비 선택하기"
 	else:
-		UI.apply_item_visual(preview,hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
+		UI.apply_item_visual(preview,_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
 		UI.apply_item_visual(scroll_icon,hud.lineage_inventory_ui._find_item_record(scroll_name),scroll_name,hud.item_image_index.get("아이템",{}),"detail")
 		selected_name.text=str(entry.get("name",""))+"  +"+str(int(entry.get("level",0)))
 		selected_state.text=("장착 중" if bool(entry.get("equipped",false)) else "인벤토리 보관")+" · 안전 강화 +"+str(int(entry.get("safe_level",0)))
@@ -260,6 +263,21 @@ func _select(index: int) -> void:
 	if selection_built and browser.size.x<660:
 		browser.detail_active=true
 		browser.reflow()
+
+func _image_record(entry: Dictionary) -> Dictionary:
+	# Keep the exact selected physical source record for image presentation;
+	# enhancement admission and transactions retain their existing references.
+	var reference: String = str(entry.get("target_id",entry.get("name","")))
+	var fallback: Dictionary = hud.lineage_inventory_ui._find_item_record(reference)
+	if not SOURCE_IMAGES.selected(): return fallback
+	var instance_id: String = str(entry.get("instance_id",""))
+	var instances: Variant = hud.get_parent().get("item_instances")
+	if not instance_id.is_empty() and instances is Dictionary:
+		var physical: Variant = instances.get(instance_id)
+		if physical is Dictionary:
+			var original: Variant = physical.get("record")
+			if original is Dictionary and SOURCE_IMAGES.handles_item(original): return original
+	return hud.lineage_inventory_ui._item_visual_record(reference,fallback)
 
 func _execute() -> void:
 	if selected_index < 0 or selected_index >= values.size(): return

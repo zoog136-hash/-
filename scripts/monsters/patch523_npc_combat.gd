@@ -20,6 +20,7 @@ var generation: int = -1
 var effects: Array[Node2D] = []
 var effect_manifest: String = ""
 var effect_manifest_sha: String = ""
+var input_status: Dictionary = {}
 
 func configure(scene: Node) -> bool:
 	world = scene
@@ -30,16 +31,16 @@ func configure(scene: Node) -> bool:
 		if arg == "--patch523-host-combat": host_enabled = true
 		if arg.begins_with("--patch523-effect-manifest="): effect_manifest = arg.trim_prefix("--patch523-effect-manifest=")
 		if arg.begins_with("--patch523-effect-manifest-sha256="): effect_manifest_sha = arg.trim_prefix("--patch523-effect-manifest-sha256=")
-	if path.is_empty():
-		path = "user://source_npc523/manifest.json"
-		digest = DEFAULT_MANIFEST_SHA
 	source_effects.load_settings()
-	if effect_manifest.is_empty():
-		effect_manifest = "user://source_npc523_effects/manifest.json"
-		effect_manifest_sha = DEFAULT_EFFECT_SHA
-		if FileAccess.file_exists(effect_manifest) and FileAccess.get_sha256(effect_manifest) == PREVIOUS_EFFECT_SHA: effect_manifest_sha = PREVIOUS_EFFECT_SHA
-	source_effects.load_pack(effect_manifest,effect_manifest_sha)
-	var loaded: bool = FileAccess.file_exists(path) and catalog.load_pack(path, digest)
+	# Original data and visual delivery are independent. No old manifest is
+	# selected as a default/fallback, and no unowned new visual pin is fabricated.
+	source_effects.records.clear()
+	source_effects.root_path = ""
+	source_effects.error = "current523_visual_pin_pending"
+	var loaded: bool = catalog.configure_original()
+	input_status = {"mode":"current523_original","legacy_catalog_input_ignored":not path.is_empty() or not digest.is_empty(),
+		"legacy_effect_input_deferred":not effect_manifest.is_empty() or not effect_manifest_sha.is_empty(),
+		"visual":"independent_current_visual_pin_required"}
 	compatibility.configure(self)
 	extensions.configure(self)
 	return loaded
@@ -339,6 +340,11 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	var key: String = "%d:%s" % [int(spell.get("ID",0)),field]
 	effect_status[key] = {"sprite_id":sprite,"state":"pending"}
 	var requested_action: int = int(spell.get("EffectSpriteActionNo",0)) if field == "EffectSpriteID" else -1
+	var visual_policy: Variant = actor.get_meta("current523_source_only_visual",{})
+	if visual_policy is Dictionary and visual_policy.get("required") == true:
+		# The admitted actor's final source policy excludes both former candidate
+		# effect packs and old card-manifest overlays. The event owner is unchanged.
+		return _emit_source_bank_visual(actor,spell,field,point,key)
 	if source_effects.records.has(str(sprite)):
 		if effects.size() >= 16: return false
 		var pose: Variant = actor.get("motion")
@@ -349,6 +355,12 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 		world.add_child(candidate); candidate.global_position = point; effects.append(candidate)
 		effect_status[key].state = "M_source_pixels_candidate_raster_timing_blend; native_runtime_not_verified"
 		return true
+	# Keep the existing renderer first. Only presentation construction falls
+	# through; this caller still owns the admitted Spell, stage, point and limits.
+	if _emit_legacy_source_overlay(actor,sprite,requested_action,point,key): return true
+	return _emit_source_bank_visual(actor,spell,field,point,key)
+
+func _emit_legacy_source_overlay(actor: Node, sprite: int, requested_action: int, point: Vector2, key: String) -> bool:
 	if requested_action > 0:
 		effect_status[key].state = "exact_nonzero_action_binding_required"
 		last_event["effect_pending"] = "exact_nonzero_action_binding_required"; return false
@@ -370,4 +382,42 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	preview.set("_overlay_facing",int(actor.motion.facing8))
 	effects.append(preview)
 	effect_status[key].state = "external_overlay_configured; native_523_pixel_timing_equivalence_not_verified"
+	return true
+
+func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, point: Vector2, key: String) -> bool:
+	if effects.size() >= 16: return false
+	var budget: int = remaining_effect_bytes()
+	if budget <= 0: return false
+	var stage: String = ""
+	for name: String in preload("res://scripts/resources/current523_source_effect_selection.gd").STAGES:
+		if preload("res://scripts/resources/current523_source_effect_selection.gd").STAGES[name] == field:
+			stage = name
+			break
+	if stage.is_empty(): return false
+	var pose: Variant = actor.get("motion")
+	var facing: int = int(pose.facing8) if pose != null else 0
+	var factory = preload("res://scripts/animation/original_source_preview.gd").new()
+	var candidate: Node2D = factory.make_current_source_spell_effect(spell,stage,facing,{},budget)
+	var result: Dictionary = factory.source_effect_status.duplicate(true)
+	factory.free()
+	effect_status[key]["source_bank"] = result
+	if candidate == null: return false
+	# Conservatively reserve the available existing budget for this source view.
+	# Its shared texture-cache limit also covers independent source children.
+	candidate.set_meta("patch523_frame_bytes",budget)
+	candidate.set_meta("patch523_owner_id",actor.get_instance_id())
+	actor.add_child(candidate)
+	candidate.global_position = point
+	if not bool(candidate.call("advance_reference_source",0.0,"idle",int(candidate.get("_overlay_facing")))):
+		result["ok"] = false
+		result["status"] = "initial_source_frame_unavailable"
+		result["frame_problem"] = candidate.get("reference_bank_status").duplicate(true)
+		candidate.free()
+		return false
+	effects.append(candidate)
+	result["status"] = "configured_existing_source_effect"
+	var previous_state: String = str(effect_status[key].get("state","pending"))
+	effect_status[key]["previous_renderer_state"] = previous_state
+	effect_status[key].state = "current_source_bank_visual; native_trigger_and_composition_unverified"
+	if str(last_event.get("effect_pending","")) == previous_state: last_event.erase("effect_pending")
 	return true

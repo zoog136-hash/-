@@ -1,32 +1,32 @@
 extends RefCounted
 ## Verified client snapshot definitions. Source IDs are namespaced; never match old IDs by integer/name.
+# Historical path identifiers remain for compatibility; cards()/npc() do not
+# load these files as current numeric input or as fallback data.
 const CARD_PATH = "res://data/lineagem_base508/cards.json"
 const CURRENT_CARD_PATH = "res://data/lineagem_base508/cards_patch523.json"
 const NPC_PATH = "res://data/lineagem_base508/npc_classes.json"
+const CURRENT_CARD_CATALOG = preload("res://scripts/cards/current523_card_catalog.gd")
+const CURRENT_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 static var _cards: Dictionary = {}
 static var _by_id: Dictionary = {}
 static var _npcs: Dictionary = {}
+static var current_card_problem: String = ""
+static var current_npc_problem: String = ""
 static func cards() -> Dictionary:
+	if CURRENT_DEFINITIONS.identity().is_empty():
+		_cards = {}; _by_id.clear()
+		current_card_problem = CURRENT_DEFINITIONS.problem()
+		return {}
 	if _cards.is_empty():
-		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CARD_PATH))
-		if value is Dictionary and value.get("source_snapshot", "") == "base508":
-			# m508 is the persisted identity namespace. Updating definition bytes
-			# must not rename owned cards or reinterpret legacy numeric save keys.
-			var current: Variant = JSON.parse_string(FileAccess.get_file_as_string(CURRENT_CARD_PATH))
-			if current is Dictionary and current.get("source_snapshot", "") == "patch523" and current.get("existing_identity_namespace", "") == "m508" and current.get("new_identity_namespace", "") == "m523":
-				value["catalog"] = current.catalog
-				value["content_snapshot"] = "patch523"
-				value["current_source_table_sha256"] = current.source_table_sha256
-				# Supplements enrich an existing stable identity, never append cards.
-				var support: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
-				for category: String in support.catalog:
-					for supplement: Dictionary in support.catalog[category]:
-						for index: int in range(value.catalog[category].size()):
-							if value.catalog[category][index].sourceId==supplement.sourceId:
-								value.catalog[category][index]=merge_metadata(value.catalog[category][index],supplement)
-								break
-			_cards = value
-			_index_cards(value)
+		var value: Dictionary = CURRENT_CARD_CATALOG.build()
+		current_card_problem = str(value.get("problem",""))
+		if not value.get("ready",false):
+			_by_id.clear()
+			return {}
+		value["current_source_table_sha256"] = value.get("source_table_sha256",{}).duplicate(true)
+		_cards = value
+		_index_cards(value)
+	current_card_problem = str(_cards.get("problem",""))
 	return _cards
 static func _index_cards(value: Dictionary) -> void:
 	# Independent native supplements can repeat an identity. Keep its position
@@ -67,16 +67,21 @@ static func native(record: Dictionary) -> bool:
 static func canonical(record: Dictionary) -> Dictionary:
 	if not native(record): return record
 	cards()
-	return _by_id.get(str(record.get("sourceId", "")), record)
+	var current: Dictionary = _by_id.get(str(record.get("sourceId", "")),{})
+	if current.is_empty(): current_card_problem = "현재523 원문에서 해당 저장 카드 정체를 읽을 수 없습니다. 기존 저장은 보존합니다."
+	return current
 static func apply_catalog(existing: Dictionary) -> Dictionary:
 	var data: Dictionary = cards()
-	if data.is_empty(): return existing
 	var result: Dictionary = existing.duplicate(true)
-	# Keep the former complete registry as data; do not delete or silently migrate owned identities.
-	result["_legacy_collectibles_before_base508"] = {}
-	for category: String in data.catalog:
-		result._legacy_collectibles_before_base508[category] = existing.get(category, []).duplicate(true)
-		result[category] = data.catalog[category].duplicate(true)
+	# Keep prior registries for preservation only. Missing current source input
+	# cannot make a former card pack the active numeric catalog again.
+	var preserved: Variant = existing.get("_legacy_collectibles_before_base508",{})
+	var legacy: Dictionary = preserved.duplicate(true) if preserved is Dictionary else {}
+	for category: String in ["변신","마법인형","성물"]:
+		if not legacy.has(category): legacy[category] = existing.get(category,[]).duplicate(true)
+		result[category] = data.get("catalog",{}).get(category,[]).duplicate(true)
+	result["_legacy_collectibles_before_base508"] = legacy
+	result["_current523_card_input"] = {"available":not data.is_empty(),"problem":current_card_problem,"source_definition_archive":data.get("source_definition_archive",{})}
 	return result
 static func flat_bonus(record: Dictionary, type_name: String) -> int:
 	var total: int = 0
@@ -85,10 +90,16 @@ static func flat_bonus(record: Dictionary, type_name: String) -> int:
 			total += int(detail.bonus.Value)
 	return total
 static func npc(source_id: int) -> Dictionary:
-	if _npcs.is_empty():
-		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(NPC_PATH))
-		if data is Dictionary and data.get("source_snapshot", "") == "base508":
-			for row: Dictionary in data.get("rows", []): _npcs[int(row.ID)] = row
+	if CURRENT_DEFINITIONS.identity().is_empty():
+		_npcs = {}
+		current_npc_problem = CURRENT_DEFINITIONS.problem()
+		return {}
+	current_npc_problem = ""
+	if not _npcs.has(source_id):
+		var current: Dictionary = CURRENT_CARD_CATALOG.npc(source_id)
+		current_npc_problem = CURRENT_CARD_CATALOG.npc_problem
+		if current.is_empty(): return {}
+		_npcs[source_id] = current
 	return _npcs.get(source_id, {})
 static func npc_record(source_id: int, local_context: Dictionary) -> Dictionary:
 	var row: Dictionary = npc(source_id)

@@ -9,6 +9,7 @@ const PREFERENCES = preload("res://scripts/maps/current523_aden_preferences.gd")
 const DEFINITIONS=preload("res://scripts/maps/current523_source_definition_preferences.gd")
 const INSTALL_STAGES = {"archive_sha256":"원본 확인", "manifest_validation":"팩 정보 확인", "inventory":"설치 파일 확인", "extract":"파일 저장", "verify":"저장 결과 확인", "reuse_verify":"기존 설치 확인", "cleanup":"임시 파일 정리"}
 const PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
+const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 
 var raw_path_edit: LineEdit
 var tile_path_edit: LineEdit
@@ -52,6 +53,17 @@ var _built: bool = false
 var _native_catalog: RefCounted
 var _native_catalog_loads: int = 0
 var _folder_target: String = ""
+var spr_enabled: CheckBox
+var spr_root: LineEdit
+var spr_declaration: LineEdit
+var spr_actions: LineEdit
+var spr_frame_bindings: LineEdit
+var spr_group: SpinBox
+var spr_fps: SpinBox
+var spr_anchor_x: SpinBox
+var spr_anchor_y: SpinBox
+var spr_layer: SpinBox
+var spr_status: Label
 
 
 func configure(world: Node) -> void:
@@ -238,6 +250,71 @@ func _build_play_options() -> void:
 	play_status.name = "AdenPlayStatus"
 	play_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(play_status)
+	_build_static_spr_controls()
+
+
+func _build_static_spr_controls() -> void:
+	var saved: Dictionary=STATIC_SPR.read_options()
+	spr_enabled=CheckBox.new();spr_enabled.name="Current523StaticSPREnabled"
+	spr_enabled.text="정적 SPR 표시 · 자체 해석"
+	spr_enabled.tooltip_text="원문 ID/좌표와 SP2 픽셀을 연결합니다. 원작 배치/액션 동등성은 미확정입니다."
+	spr_enabled.button_pressed=saved.enabled;add_child(spr_enabled)
+	var row:=HBoxContainer.new();add_child(row)
+	spr_root=_path_edit("Current523StaticSPRRoot");spr_root.text=saved.source_root
+	spr_root.placeholder_text="989 원문 폴더 · results/와 selected_originals/가 있는 위치"
+	row.add_child(spr_root);row.add_child(UI.button("폴더 선택",_browse.bind("static_spr"),Vector2(100,40)))
+	spr_declaration=_path_edit("Current523StaticSPRDeclaration");spr_declaration.text=saved.declaration_path
+	spr_declaration.placeholder_text="필수: SPR_reference_closure 폴더 또는 list_29.spr · 선언 없는 항목 제외"
+	var declaration_row:=HBoxContainer.new();add_child(declaration_row)
+	declaration_row.add_child(spr_declaration)
+	declaration_row.add_child(UI.button("선언 폴더",_browse.bind("spr_declarations"),Vector2(100,40)))
+	spr_actions=_path_edit("Current523StaticSPRActions")
+	spr_actions.max_length=32768
+	spr_actions.text=JSON.stringify(saved.action_overrides)
+	spr_actions.placeholder_text='원문 동작 직접 지정 · 예: {"24590":9} · 미지정은3 · 자동 활성 판정 아님'
+	add_child(spr_actions)
+	spr_frame_bindings=_path_edit("Current523StaticSPRFrameBindings")
+	spr_frame_bindings.max_length=131072
+	spr_frame_bindings.text=JSON.stringify(saved.frame_bindings)
+	spr_frame_bindings.placeholder_text='선택자별 파일/저장 그룹 직접 지정 · {"24590":{"8":{"member":"Sprite/24590-8.sp2","group_bit":0}}}'
+	add_child(spr_frame_bindings)
+	var values:=GridContainer.new();values.columns=2;add_child(values)
+	spr_group=_spr_number(values,"저장 그룹",0,7,float(saved.group_bit))
+	spr_fps=_spr_number(values,"자체 틱/초 · 0=정지",0,60,float(saved.fps))
+	spr_anchor_x=_spr_number(values,"앵커 X",-48,48,float(saved.anchor_x))
+	spr_anchor_y=_spr_number(values,"Y",-48,48,float(saved.anchor_y))
+	spr_layer=_spr_number(values,"자체 레이어",-4095,-1,float(saved.layer))
+	add_child(UI.button("SPR 설정 저장 · 현재 맵에 적용",_save_static_spr,Vector2(0,40)))
+	spr_status=UI.label("보유 원문 픽셀만 사용합니다. 자식은 원문 참조 순서의 자체 합성·자체 동작 또는 보유 frame0을 사용하며 미해석 표시 속성은 자체 무시합니다. 선언 없는 항목은 제외하고 원작 합성·활성으로 표시하지 않습니다.",12,UI.MUTED)
+	spr_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(spr_status)
+
+
+func _spr_number(row: Container, label: String, low: float, high: float, value: float) -> SpinBox:
+	row.add_child(UI.label(label,12))
+	var number:=SpinBox.new();number.min_value=low;number.max_value=high;number.step=1;number.value=value
+	number.custom_minimum_size=Vector2(78,36);row.add_child(number);return number
+
+
+func _save_static_spr() -> void:
+	var action_text: String=spr_actions.text.strip_edges()
+	var actions: Variant={} if action_text.is_empty() else JSON.parse_string(action_text)
+	if not actions is Dictionary:
+		spr_status.text="원문 동작 지정은 SPR ID와 동작 번호의 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
+	var binding_text: String=spr_frame_bindings.text.strip_edges()
+	var bindings: Variant={} if binding_text.is_empty() else JSON.parse_string(binding_text)
+	if not bindings is Dictionary:
+		spr_status.text="파일/저장 그룹 지정은 SPR ID·원문 선택자별 JSON 객체여야 합니다. 이전 설정을 유지합니다.";return
+	var value: Dictionary=STATIC_SPR.read_options()
+	value.merge({"enabled":spr_enabled.button_pressed,"source_root":spr_root.text,"declaration_path":spr_declaration.text,"group_bit":int(spr_group.value),"fps":spr_fps.value,"anchor_x":int(spr_anchor_x.value),"anchor_y":int(spr_anchor_y.value),"layer":int(spr_layer.value),"action_overrides":actions,"frame_bindings":bindings},true)
+	var current: Node=_world()
+	if current!=null and current.has_method("apply_current523_static_spr_options"):
+		var applied: bool=current.call("apply_current523_static_spr_options",value)
+		if applied:
+			spr_status.text="저장 · 보유 원문 픽셀과 자체 자식 표시 정책을 현재 맵 소비자에 연결했습니다." if bool(current.get("current523_aden_play_active")) else "저장됨 · 다음 원문 맵 입장에 적용합니다."
+		else:spr_status.text=str(current.get("current523_aden_play_problem"))
+		return
+	var error: Error=STATIC_SPR.save_options(value)
+	spr_status.text="저장됨 · 다음 원문 맵 입장에 적용합니다. 원문에 없는 동작·프레임은 표시하지 않습니다. 동작 선택·틱/초·앵커·레이어는 자체 설정입니다." if error==OK else "설정을 저장하지 못했습니다. 이전 설정과 현재 맵을 유지합니다: "+error_string(error)
 
 
 func _offset_control(node_name: String) -> SpinBox:
@@ -273,12 +350,19 @@ func _load_play_options() -> void:
 		raw_path_edit.text = options.raw_root
 		tile_path_edit.text = options.tile_root
 		play_status.text = "원문 S32 자체 통행 중 · M 원작 판정 미확정" if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC] else "실험 플레이 중 · 이동과 충돌은 기존 TWILIGHT 자체 설정입니다."
+		var map_metrics: Dictionary=current.current523_aden_play_metrics() if current.has_method("current523_aden_play_metrics") else {}
+		var spr_metrics: Dictionary=map_metrics.get("static_spr",{})
+		if not spr_metrics.is_empty():
+			spr_status.text="원문 배치 %d · 연결 대상 %d · 사용자 제외 %d · 표시 노드 %d(부모%d/자식%d) · 미대응 노드%d. 제외·설정은 실제 사용 완료로 세지 않습니다."%[int(spr_metrics.get("raw_records",0)),int(spr_metrics.get("connection_candidate_records",spr_metrics.get("raw_records",0))),int(spr_metrics.get("user_excluded_records",0)),int(spr_metrics.get("drawn_records",0)),int(spr_metrics.get("drawn_parent_records",0)),int(spr_metrics.get("drawn_child_records",0)),int(spr_metrics.get("unresolved_records",0))]
 	_refresh_source_portals()
 	_refresh_definition_status()
 
 
 func _play_values() -> Dictionary:
-	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	var saved: Dictionary = PLAY_OPTIONS.read()
+	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "portal_landing_policy":saved.get("portal_landing_policy",PLAY_OPTIONS.EXACT_POINT_ONLY), "map_time_policy":saved.get("map_time_policy",PLAY_OPTIONS.OWN_MAP_TIME), "map_open_policy":saved.get("map_open_policy",PLAY_OPTIONS.OWN_ALWAYS_OPEN_V1), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	value["portal_fee_adena"]=saved.get("portal_fee_adena",PLAY_OPTIONS.OWN_MANUAL_PORTAL_FEE_ADENA)
+	value["aden_return_radius"]=saved.get("aden_return_radius",8)
 	if play_profile.selected in [2,3]:
 		value.aden_inferred_placement_enabled=aden_inferred_placement.button_pressed
 		value.path_search_limit=int(source_search_limit.value)
@@ -287,7 +371,6 @@ func _play_values() -> Dictionary:
 			if not part.strip_edges().is_valid_int(): value.allowed_raw_words = []; break
 			value.allowed_raw_words.append(int(part.strip_edges()))
 		value.portal_contract = source_portal_path.text.strip_edges()
-		var saved: Dictionary = PLAY_OPTIONS.read()
 		var same_identity: bool=saved.navigation_profile==value.navigation_profile
 		if play_profile.selected==3:
 			value.source_manifest_sha256=source_manifest.text.strip_edges()
@@ -332,6 +415,12 @@ func _refresh_source_portals() -> void:
 		var note: String = ("원문 조건 보류" if not str(row.get("definition_hold","")).is_empty() else "자체 수동 · 사용 시 양끝 검사") if play_profile.selected==3 else ("원문 양끝 대조" if row.get("activation_candidate",false) else "보류")
 		var inactive: Array=row.get("declared_inactive_restrictions",[])
 		if not inactive.is_empty(): note+=" · 원문 "+", ".join(inactive)
+		var level_notes: Array=row.get("actor_level_notes",[])
+		if not level_notes.is_empty():note+=" · "+" / ".join(level_notes)
+		var calendar_notes: Array=row.get("calendar_notes",[])
+		if not calendar_notes.is_empty():note+=" · "+" / ".join(calendar_notes)
+		if row.get("landing_position")==null and row.get("configured_arrival_policy")==PLAY_OPTIONS.OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1:
+			note+=" · 자체 영역 착지 선택 후 조건 판정"
 		source_portal_choice.add_item("%d · %s → %s · %s" % [int(row.id),str(row.source_position),("Land%d · " % int(row.target_land_id) if row.has("target_land_id") else "")+str(row.get("landing_position")),note],int(row.id))
 		source_portal_choice.set_item_tooltip(source_portal_choice.item_count-1,source_portal_choice.get_item_text(source_portal_choice.item_count-1))
 		source_portal_choice.set_item_metadata(source_portal_choice.item_count-1,row.get("navigation_ticket",{}))
@@ -519,8 +608,8 @@ func _rollback() -> void:
 
 func _browse(target: String) -> void:
 	_folder_target = target
-	folder_dialog.title = "원문 포탈 정의 폴더 선택" if target=="definitions" else ("아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택")
-	var path: String = definition_path_edit.text if target=="definitions" else (raw_path_edit.text if target == "raw" else tile_path_edit.text)
+	folder_dialog.title = "전역 SPR 선언 폴더 선택" if target=="spr_declarations" else ("정적 SPR 원문 폴더 선택" if target=="static_spr" else ("원문 포탈 정의 폴더 선택" if target=="definitions" else ("아덴 원문 팩 폴더 선택" if target == "raw" else "타일 검토 팩 폴더 선택")))
+	var path: String = spr_declaration.text if target=="spr_declarations" else (spr_root.text if target=="static_spr" else (definition_path_edit.text if target=="definitions" else (raw_path_edit.text if target == "raw" else tile_path_edit.text)))
 	path = ProjectSettings.globalize_path(path.strip_edges())
 	if not path.is_empty() and DirAccess.dir_exists_absolute(path):
 		folder_dialog.current_dir = path
@@ -534,6 +623,10 @@ func _folder_selected(path: String) -> void:
 		tile_path_edit.text = path
 	elif _folder_target == "definitions":
 		definition_path_edit.text=path
+	elif _folder_target == "static_spr":
+		spr_root.text=path
+	elif _folder_target == "spr_declarations":
+		spr_declaration.text=path
 	_folder_target = ""
 	_update_open_button()
 	_refresh_path_status()

@@ -6,6 +6,7 @@ extends RefCounted
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
+const SOURCE523=preload("res://scripts/ui/source523_image_assets.gd")
 var view: Node
 var warehouse: bool=false
 var picture: TextureRect
@@ -103,15 +104,24 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 			view.listing.set_item_text(i,badge)
 			view.listing.set_item_tooltip(i,str(entry.name)+" · "+badge)
 	if index<0 or index>=view.entries.size():
+		UI.clear_item_visual(picture)
 		picture.texture=null;title.text="선택한 아이템 없음";count_label.text=""
 		if not warehouse:view.details.text="조건에 맞는 판매 아이템이 없습니다."
 		return
 	var entry: Dictionary=view.entries[index]
-	picture.texture=view.listing.get_item_icon(index)
 	title.text=str(entry.name)
 	var id: String=str(entry.get("instance_id",""))
 	var physical: Dictionary=view.world.item_instances
 	if warehouse and view.mode.selected==1:physical=view.world.warehouse.instances
+	var record: Dictionary=entry.get("record",{})
+	if not id.is_empty() and physical.has(id):
+		var source_record: Variant=physical[id].get("record")
+		if source_record is Dictionary and not source_record.is_empty(): record=source_record
+	if SOURCE523.handles_item(record):
+		UI.apply_item_visual(picture,record,str(entry.name),{},"detail")
+	else:
+		UI.clear_item_visual(picture)
+		picture.texture=view.listing.get_item_icon(index)
 	if not id.is_empty() and physical.has(id):title.text="+%d %s" % [int(physical[id].get("level",0)),entry.name]
 	count_label.text="보유 %s개 · 선택 %s개" % [UI.number_text(int(entry.count)),UI.number_text(int(view.quantity.value))]
 	if not warehouse and not report.is_empty():

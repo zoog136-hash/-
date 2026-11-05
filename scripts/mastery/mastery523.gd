@@ -3,6 +3,15 @@ extends RefCounted
 ## Official guide: option1 name/value, option2 name/value are four lockable fields.
 const SAVE_KEY := "weapon_mastery523"
 const MAX_POINT_TEXT := "9223372036854775807"
+const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const RESET_TICKET = preload("res://scripts/mastery/mastery_reset_ticket.gd")
+const ORIGINAL_CORE_TABLES := ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView",
+	"MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment",
+	"MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost",
+	"ClassChangeMasteryWeaponType","MasteryChangeLevelCost"]
+const RESET_COLOR_TEXT_KEYS := [
+	"MASTERY_POPUP_HELP\\ND_MASTERY_HELP01\\ND_STEP_3\\ND_TEXT\\TEXT_HELP",
+	"MASTERY_POPUP_HELP\\ND_MASTERY_HELP02\\ND_STEP_7\\ND_TEXT\\TEXT_HELP"]
 var tables: Dictionary = {}
 var levels: Dictionary = {}
 var options: Dictionary = {}
@@ -10,6 +19,10 @@ var bonuses: Dictionary = {}
 var types: Dictionary = {}
 var problem: String = ""
 var operations: Dictionary = {}
+var source_mode: String = ""
+var source_identity: Dictionary = {}
+var source_status: Dictionary = {}
+var model_pack_sha256: String = ""
 
 static func fresh() -> Dictionary:
 	return {"version":1,"weapons":{},"receipts":{}}
@@ -46,7 +59,123 @@ func load_pack(path: String, sha256: String) -> bool:
 	if parser.parse(bytes.get_string_from_utf8()) != OK or not parser.data is Dictionary:
 		problem = "숙련 팩 형식 오류"
 		return false
-	return configure(parser.data)
+	if not configure(parser.data): return false
+	source_mode = "compiled_pack"
+	model_pack_sha256 = sha256
+	source_identity = {}
+	source_status = {}
+	return true
+
+static func _first_original(rows: Array, field: String, value: Variant) -> Dictionary:
+	for row: Dictionary in rows:
+		if row.get(field) == value: return row
+	return {}
+
+static func _one_original(rows: Array) -> Dictionary:
+	return rows[0] if rows.size()==1 else {}
+
+static func _constant_id(row: Dictionary) -> int:
+	var value: Variant = row.get("Value")
+	if not value is String or not value.is_valid_int(): return -1
+	var id: int = int(value)
+	return id if str(id)==value else -1
+
+static func _project_original(table: String, field: String, ids: Dictionary) -> Array:
+	var result: Array = []
+	# Preserve the compiler's original table order and complete projected rows.
+	for row: Dictionary in SOURCE.rows(table):
+		if ids.has(int(row.get(field,-1))): result.append(row)
+	return result
+
+func _original_reset_ticket(projected: Dictionary, constants: Array) -> Dictionary:
+	var constant: Dictionary = _first_original(constants,"Name","MasteryResetTicketCurrencyID")
+	var currency: Dictionary = _first_original(projected.Currency,"ID",_constant_id(constant))
+	var link: Dictionary = _first_original(projected.CurrencyUnitClass,"CurrencyID",currency.get("ID",-1))
+	var item: Dictionary = SOURCE.row("ItemClass",int(link.get("ClassID",-1)))
+	if currency.get("ID")!=1814 or link.get("UnitID")!=4 or item.get("ID")!=184652 or item.get("TestItem")!=false: return {}
+	if not SOURCE.declared_exclusion("ItemClass",item).is_empty(): return {}
+	# UNVERIFIED: this single original label is required by the existing ticket
+	# fingerprint. Do not require an old monster-pack sidecar or use a same-name
+	# host record when the new original definition is unavailable.
+	var description_id: Variant = item.get("IdentifiedDescID")
+	if typeof(description_id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(description_id)) or float(description_id)!=floorf(float(description_id)) or absf(float(description_id))>9007199254740991.0: return {}
+	var description: Dictionary = SOURCE.row("DescData_Korean",int(description_id))
+	if description.get("ID")!=description_id or not description.get("Description") is String or str(description.Description).is_empty(): return {}
+	var definition: Dictionary = {"constant":constant,"currency":currency,"currency_link":link,
+		"item":item,"category":SOURCE.row("ItemCategory",int(item.CategoryID)),
+		"grade":SOURCE.row("Grade",int(item.GradeID)),
+		"bonuses":SOURCE.related("ItemBonus","ItemClassID",184652),
+		"bless_codes":SOURCE.rows("ItemBlessCode"),"label":description.Description}
+	var operation: Dictionary = {"definition":definition,
+		"definition_sha256":JSON.stringify(RESET_TICKET.canonical(definition),"",true).sha256_text(),
+		"source_input_identity":SOURCE.identity()}
+	var reader = RESET_TICKET.new()
+	return operation if reader.configure(operation) else {}
+
+func _original_operations(projected: Dictionary, deferred: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var constants: Array = SOURCE.rows("ConstantData")
+	var reset: Dictionary = _first_original(constants,"Name","MasteryPointPurchaseResetScheduleType")
+	var schedule: Dictionary = SOURCE.row("ContentsResetScheduleType",_constant_id(reset))
+	var powder_link: Dictionary = _first_original(projected.CurrencyUnitClass,"CurrencyID",1682)
+	var powder: Dictionary = SOURCE.row("ItemClass",int(powder_link.get("ClassID",-1)))
+	if powder_link.get("UnitID")==4 and powder.get("ID")==117544 and powder.get("TestItem")!=true and not schedule.is_empty():
+		result["point_purchase"] = {"material":powder,"currency_link":powder_link,
+			"schedule_constant":reset,"schedule":schedule,"automatic_period_reset_verified":false}
+	else: deferred["point_purchase"] = "source_material_or_reset_schedule_missing"
+	var purchase: Dictionary = SOURCE.row("MarketPurchase_Korean",95441)
+	var payment: Dictionary = SOURCE.row("MarketPayment_Korean",int(purchase.get("MarketPaymentID",-1)))
+	var product_link: Dictionary = _one_original(SOURCE.related("MarketPurchaseProduct","MarketPurchaseID",95441))
+	var product: Dictionary = SOURCE.row("MarketProduct",int(product_link.get("MarketProductID",-1)))
+	var start: Dictionary = SOURCE.row("DateTimes_Korean",int(purchase.get("EffectiveFromId",-1)))
+	var end: Dictionary = SOURCE.row("DateTimes_Korean",int(purchase.get("EffectiveToId",-1)))
+	if payment.get("UnitID")==201 and payment.get("ClassID")==4 and purchase.get("AdditionalCurrencyID")==4 and product.get("UnitID")==281 and product.get("ClassID")==101 and product.get("Amount")==1 and not start.is_empty() and not end.is_empty():
+		result["mastery_change"] = {"purchase":purchase,"payment":payment,"product_link":product_link,"product":product,
+			"from":start,"to":end,"restrictions":SOURCE.related("MarketPurchaseRestriction","MarketPurchaseId",95441),
+			"repeat_restriction_verified":false}
+	else: deferred["mastery_change"] = "source_service_payment_or_product_missing"
+	var color_text: Array = []
+	for row: Dictionary in SOURCE.rows("UIStaticTextData_Korean"):
+		if row.get("TextDesc","") in RESET_COLOR_TEXT_KEYS: color_text.append(row)
+	result["reset_color_draws"] = color_text
+	if color_text.is_empty(): deferred["reset_color_draws"] = "source_reset_color_help_missing"
+	var ticket: Dictionary = _original_reset_ticket(projected,constants)
+	if ticket.is_empty(): deferred["reset_ticket"] = "ticket_source_missing:original_label_or_definition_unavailable"
+	else: result["reset_ticket"] = ticket
+	return result
+
+func load_original() -> bool:
+	# A supported compiled/live snapshot is never overwritten by a raw bootstrap.
+	if not tables.is_empty(): return true
+	var identity: Dictionary = SOURCE.identity()
+	if identity.is_empty():
+		source_status = {"state":"unavailable","reason":SOURCE.problem()}
+		return false
+	var projected: Dictionary = {}
+	for table: String in ORIGINAL_CORE_TABLES: projected[table] = SOURCE.rows(table)
+	var bonus_ids: Dictionary = {}
+	for table: String in ["MasteryBonusView","MasteryGradeMatchingBonus"]:
+		for row: Dictionary in projected[table]: bonus_ids[int(row.BonusID)] = true
+	projected["Bonus"] = _project_original("Bonus","ID",bonus_ids)
+	var type_ids: Dictionary = {}
+	for row: Dictionary in projected.Bonus: type_ids[int(row.BonusTypeID)] = true
+	projected["BonusType"] = _project_original("BonusType","ID",type_ids)
+	var unit_ids: Dictionary = {}
+	for row: Dictionary in projected.BonusType: unit_ids[int(row.UnitID)] = true
+	projected["UIUnit"] = _project_original("UIUnit","UnitID",unit_ids)
+	for table: String in ["Class","WeaponType","Currency","CurrencyUnitClass"]: projected[table] = SOURCE.rows(table)
+	var deferred: Dictionary = {}
+	var original_operations: Dictionary = _original_operations(projected,deferred)
+	var pack: Dictionary = {"schema":"twilight.mastery523.v1","source_sha256":identity.get("source_sha256"),
+		"private_original_data":true,"tables":projected,"operations":original_operations}
+	if not configure(pack):
+		source_status = {"state":"rejected","reason":problem,"operations_deferred":deferred}
+		return false
+	source_mode = "original_tables"
+	source_identity = identity.duplicate(true)
+	source_status = {"state":"loaded","operations_deferred":deferred}
+	# model_pack_sha256 remains a separate compiled-file fingerprint.
+	return true
 
 func configure(pack: Dictionary) -> bool:
 	# Build in a separate instance so a rejected replacement cannot damage live data.

@@ -69,6 +69,11 @@ func load_pack(directory: String) -> bool:
 func has_tile(tile_id: int) -> bool:
 	return loaded and _tiles.has(tile_id)
 
+func source_usage_identity(tile_id: int) -> Dictionary:
+	if not has_tile(tile_id):return {}
+	var row: Dictionary=_tiles[tile_id]
+	return {"member":row.member,"bytes":int(row.source_bytes),"sha256":row.source_sha256}
+
 func texture_for(tile_id: int) -> Texture2D:
 	problem = ""
 	if not has_tile(tile_id):

@@ -51,6 +51,34 @@ static func valid_usage(value: Variant) -> bool:
 		if not entry is Dictionary or not integer(entry.get("bucket"),-1000000,1000000) or not integer(entry.get("used"),0,1000000) or not entry.get("schedule") is String: return false
 	return true
 
+static func source_recipe(recipe: Dictionary, views: Array, restrictions: Array) -> Dictionary:
+	# UNVERIFIED: join the existing projected qualification to its original
+	# ItemCraftView/ItemCraftRestriction rows. No new clock or server eligibility.
+	if views.is_empty(): return {"ok":false,"reason":"원본 제작 자격 행이 없습니다 · 재료 보존"}
+	var condition: Dictionary = recipe.get("craft_conditions",{})
+	if not condition.is_empty() and not valid(condition): return {"ok":false,"reason":"제작 자격 구조를 확인하세요 · 재료 보존"}
+	var fields: Array[String] = ["ServerLimitSetID","IsCoalitionItem","NoRepeat","IsBelowLevelLimit","LevelLimitValue","CraftTimeTypeID","EffectiveFrom","EffectiveTo","PopupText","AlwaysSuccess"]
+	var first: Dictionary = views[0]
+	for view: Variant in views:
+		if not view is Dictionary: return {"ok":false,"reason":"원본 제작 자격 형식이 다릅니다"}
+		for key: String in fields:
+			if not view.has(key) or view[key] != first.get(key): return {"ok":false,"reason":"제작 결과별 원본 자격이 다릅니다 · 재료 보존"}
+	if first.get("ServerLimitSetID") != 0 or first.get("IsCoalitionItem") != false or first.get("NoRepeat") != false or first.get("IsBelowLevelLimit") != false or first.get("CraftTimeTypeID") != 1 or not integer(first.get("LevelLimitValue"),0,1000):
+		return {"ok":false,"reason":"원본 제작의 별도 서버·자격 소유자 확인이 필요합니다 · 재료 보존"}
+	if int(condition.get("min_level",0)) != int(first.LevelLimitValue) or int(condition.get("max_level",0)) != 0 or int(recipe.get("popup_text_id",-1)) != int(first.PopupText):
+		return {"ok":false,"reason":"제작 레벨·재료 손실 안내의 원본 관계가 다릅니다 · 재료 보존"}
+	var permanent: bool = first.get("EffectiveFrom") == 1 and first.get("EffectiveTo") == 3
+	if permanent and condition.has("active_window"): return {"ok":false,"reason":"제작 원본 기간 관계가 다릅니다 · 재료 보존"}
+	if not permanent:
+		var window: Dictionary = condition.get("active_window",{})
+		if window.is_empty() or window.get("source_start",{}).get("ID") != first.get("EffectiveFrom") or window.get("source_end",{}).get("ID") != first.get("EffectiveTo"):
+			return {"ok":false,"reason":"제작 기간의 원본 DateTimes 참조가 필요합니다 · 재료 보존"}
+	if restrictions.is_empty():
+		return {"ok":not condition.has("quota"),"reason":"제작 횟수 제한의 원본 관계가 다릅니다 · 재료 보존" if condition.has("quota") else ""}
+	if restrictions.size() != 1 or not condition.has("quota") or condition.quota.get("source_restriction") != restrictions[0]:
+		return {"ok":false,"reason":"제작 횟수 제한의 원본 행 관계가 다릅니다 · 재료 보존"}
+	return {"ok":true}
+
 static func stage(recipe: Dictionary, count: int, context: Dictionary) -> Dictionary:
 	if not recipe.has("craft_conditions"): return {"ok":true}
 	var condition: Variant=recipe.craft_conditions

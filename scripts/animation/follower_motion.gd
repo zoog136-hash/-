@@ -5,6 +5,7 @@ const ORIGINAL = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE = preload("res://scripts/lineagem_base508.gd")
 var native_actor = ORIGINAL.new()
 var native_enabled: bool = false
+var source_only: bool = false
 var presentation_hidden: bool = false
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
@@ -22,13 +23,22 @@ var disappear_speed: float = 5.0
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	native_actor.clear()
 	native_enabled = false
-	if SOURCE.native(record):
+	var source_key: String = "doll:" + str(record.get("sourceId",""))
+	source_only = native_actor.current523_source_required(source_key)
+	if SOURCE.native(record) or source_only:
 		if native_actor.get_parent() == null: anchor.add_child(native_actor)
-		native_enabled = native_actor.configure("doll:" + str(record.sourceId), player.original_source_manifest, player.source_visual_context)
+		if source_only:
+			sprite.stop()
+			sprite.sprite_frames = null
+		native_enabled = native_actor.configure(source_key, player.original_source_manifest, player.source_visual_context)
 		enabled = native_enabled
 		sprite.hide()
 		anchor.global_position = player.global_position + follow_offset
 		native_actor.advance_source(0.0, "idle", player.motion.facing8, player.motion.sequence, false)
+		if source_only and not native_actor.installed():
+			native_enabled = false
+			enabled = false
+			native_actor.hide()
 		state = "source_native" if native_enabled else "source_asset_pending"
 		return
 	if not record.is_empty():
@@ -73,11 +83,21 @@ func set_presentation_hidden(hidden: bool, anchor: Node2D, sprite: AnimatedSprit
 
 func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	if presentation_hidden: return
+	if source_only and (not native_enabled or not native_actor.installed()):
+		native_enabled = false
+		enabled = false
+		state = "source_asset_pending"
+		sprite.hide()
+		sprite.sprite_frames = null
+		native_actor.hide()
+		return
 	if native_enabled:
 		var old: Vector2 = anchor.global_position
 		var target: Vector2 = player.global_position + follow_offset
 		anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
-		native_actor.advance_source(delta, "walk" if old.distance_to(anchor.global_position)>0.1 else "idle", player.motion.facing8, player.motion.sequence, false)
+		var native_state: String = "walk" if old.distance_to(anchor.global_position)>0.1 else "idle"
+		if native_state == "walk" and player.motion.state == "run" and native_actor.current523_role_available("run"): native_state = "run"
+		native_actor.advance_source(delta, native_state, player.motion.facing8, player.motion.sequence, false)
 		return
 	if not sprite.visible and not enabled: return
 	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * (appear_speed if enabled else disappear_speed))

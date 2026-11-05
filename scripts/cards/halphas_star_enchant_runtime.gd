@@ -20,12 +20,16 @@ var busy: bool = false
 var settings: Dictionary = POLICY.data.duplicate(true)
 var _effect_stage: int = -1
 var _effects: Dictionary = {}
+var source_input: Dictionary = {}
 
 static func fresh() -> Dictionary:
 	return {"schema":1, "policy_id":"twilight-halphas-estimated-v1", "level":0, "revision":0, "attempts":0, "successes":0, "spent_gold":0, "spent_cards":0, "attempts_by_stage":[0,0,0], "consumed_by_stage":[0,0,0], "rng_state":"", "last_operation":"", "last_result":{}}
 
 func _init() -> void: rng.randomize()
-func configure(host: Node) -> void: world = host;combat.configure(self)
+func configure(host: Node) -> void:
+	world = host
+	source_input = Native.input_status()
+	combat.configure(self)
 static func integer(v: Variant, low: int, high: int) -> bool:
 	return (v is int or v is float) and is_finite(float(v)) and float(v) == floor(float(v)) and float(v) >= low and float(v) <= high
 static func validate(value: Variant) -> String:
@@ -108,11 +112,13 @@ func view(identity: String) -> Dictionary:
 	if not technical.is_empty():out.can_attempt=false;out.blocked_reason=technical
 	return out
 func technical_problem(native_view: Dictionary = {}) -> String:
+	var definition: Dictionary = Native.definition()
+	if definition.is_empty(): return "보유 원본523 할파스 강화 입력이 필요합니다"
 	for flag: String in ["offline_enable_despite_native_flag","offline_server_override","failure_consumes_material_and_gold"]:
 		if not settings.get(flag) is bool:return "추정 강화 정책 설정 오류"
 	if settings.get("target_card_id")!=24504:return "추정 강화 대상 설정 오류"
 	if not integer(settings.get("probability_scale"),1000000,1000000000) or settings.get("failure_keeps_stage_and_target")!=true or settings.get("consume_duplicates_only")!=true or settings.get("material_deck_id")!=1 or settings.get("policy_id")!=POLICY.data.policy_id or settings.get("bonus_aggregation")!="latest_value_per_supported_unconditional_type_at_or_below_stage" or settings.get("appearance_unlock")!="option_StarEnchant_at_or_below_earned_stage":return "추정 강화 정책 설정 오류"
-	if Native.DATA.data.content_control.Enable!=true and not bool(settings.offline_enable_despite_native_flag):return "원본 기능 비활성 · 경제 추정 설정만 준비됨"
+	if definition.content_control.Enable!=true and not bool(settings.offline_enable_despite_native_flag):return "원본 기능 비활성 · 경제 추정 설정만 준비됨"
 	if not bool(settings.offline_server_override):
 		var native: Dictionary=native_view
 		if native.is_empty():native=Native.snapshot(CATEGORY,_record(IDENTITY),world.card_draw_fusion.export_state(),int(world.gold),world.card_collections.source_server_context())
@@ -175,11 +181,13 @@ static func conditional_key(row: Dictionary) -> String:
 		"SpecialResistance":return str(STATUS_TARGETS[target])+"_resistance"
 	return ""
 func effects(level: int) -> Dictionary:
+	var definition: Dictionary = Native.definition()
+	if definition.is_empty(): return {}
 	if _effect_stage==level:return _effects
 	_effect_stage=level;_effects={}
 	for stage: int in range(1,level+1):
 		var scoped: Dictionary={}
-		for row: Dictionary in Native.DATA.data.effects:
+		for row: Dictionary in definition.effects:
 			if int(row.link.Enchant)!=stage:continue
 			var key: String=conditional_key(row)
 			if not key.is_empty():
@@ -199,7 +207,7 @@ func status_hit_bonus(kind: String) -> int:
 	return catalog_bonus(kind+"_accuracy")
 static func pending_effects() -> Array[Dictionary]:
 	var pending: Array[Dictionary]=[]
-	for row: Dictionary in Native.DATA.data.effects:
+	for row: Dictionary in Native.definition().get("effects",[]):
 		var unconditional: bool=int(row.bonus.BonusApplicationTypeID)==0 and int(row.bonus.BonusApplicationTargetID)==0
 		if (unconditional and (FLAT.has(row.type.Name) or PERCENT.has(row.type.Name) or row.type.Name=="DecreaseChargeStepTime")) or not conditional_key(row).is_empty():continue
 		pending.append(row.duplicate(true))
@@ -220,7 +228,7 @@ func apply_appearance(identity: String, expected_revision: int) -> Dictionary:
 	if identity!=IDENTITY or _record(identity).is_empty() or expected_revision!=int(progress.revision) or int(progress.level)<1:return fail("stage","획득한 할파스 강화 단계가 없습니다")
 	if world.card_draw_fusion.owned.get(CATEGORY,{}).get(identity,false)!=true:return fail("ownership","할파스 카드를 보유해야 합니다")
 	var option_id: int = 0
-	for option: Dictionary in Native.DATA.data.sprite_options:
+	for option: Dictionary in Native.definition().get("sprite_options",[]):
 		if int(option.StarEnchant)==int(progress.level):option_id=int(option.ID)
 	if option_id==0:return fail("appearance","이 단계의 원본 외형이 없습니다")
 	var options: Dictionary = world.source_card_visual_options.duplicate(true);options["m508:1:24504"]=option_id

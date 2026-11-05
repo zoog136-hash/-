@@ -91,13 +91,32 @@ func _line_can_step(c: Vector2i, heading: int) -> bool:
 	return source_can_step(c,heading)
 
 func is_safe(p: Vector2) -> bool:
+	return is_safe_among(p, reservations)
+
+## is_safe() against a subset of reservations. Bulk callers pass
+## reservations_near(area) when every tested point lies inside area.
+func is_safe_among(p: Vector2, candidates: Array) -> bool:
 	if super.is_safe(p): return true
-	for reservation: Dictionary in reservations:
+	for reservation: Dictionary in candidates:
 		var center := Vector2(reservation.center[0],reservation.center[1])
 		if p.distance_squared_to(center) < pow(float(reservation.radius),2): return true
 	return false
 
+## Reservations that can contain any point of area (conservative superset).
+func reservations_near(area: Rect2) -> Array:
+	var near: Array = []
+	for reservation: Dictionary in reservations:
+		var radius: float = float(reservation.radius)
+		if area.grow(radius+1.0).has_point(Vector2(reservation.center[0],reservation.center[1])): near.append(reservation)
+	return near
+
 func point_clear(p: Vector2, padding: float = 4.0) -> bool:
+	return point_clear_memo(p, padding, null)
+
+## Same result as point_clear(). Bulk callers that test many neighbouring
+## points against unchanged doors/grid (spawn admission) pass a Dictionary so
+## each cell's blocked headings are computed once instead of per neighbour.
+func point_clear_memo(p: Vector2, padding: float, blocked_memo: Variant) -> bool:
 	if not walkable(p): return false
 	# The feet use a small circle in this 48x24 source grid; character art and
 	# animation anchors are unchanged. Match the exact physical radius.
@@ -107,12 +126,23 @@ func point_clear(p: Vector2, padding: float = 4.0) -> bool:
 	for dy: int in range(-1,2):
 		for dx: int in range(-1,2):
 			var c: Vector2i = cell+Vector2i(dx,dy)
-			if value_at(c,true)==0: continue
-			for heading: int in [0,2,4,6]:
-				if source_can_step(c,heading): continue
+			var blocked: PackedInt32Array
+			if blocked_memo != null and blocked_memo.has(c):
+				blocked = blocked_memo[c]
+			else:
+				blocked = _blocked_headings(c)
+				if blocked_memo != null: blocked_memo[c] = blocked
+			for heading: int in blocked:
 				var edge: PackedVector2Array = coordinates.edge_points(c,heading)
 				if Geometry2D.get_closest_point_to_segment(p,edge[0],edge[1]).distance_to(p) < radius: return false
 	return true
+
+func _blocked_headings(c: Vector2i) -> PackedInt32Array:
+	var blocked := PackedInt32Array()
+	if value_at(c,true)==0: return blocked
+	for heading: int in [0,2,4,6]:
+		if not source_can_step(c,heading): blocked.append(heading)
+	return blocked
 
 func build_physics(parent: Node2D) -> StaticBody2D:
 	var body := preload("res://scripts/maps/remake_collision_stream.gd").new()

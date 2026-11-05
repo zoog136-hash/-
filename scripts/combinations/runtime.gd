@@ -1,5 +1,6 @@
 extends RefCounted
 const Catalog=preload("res://scripts/combinations/source_catalog.gd")
+const Source=preload("res://scripts/resources/current523_definition_rows.gd")
 const Requirements=preload("res://scripts/combinations/requirements.gd")
 const Effects=preload("res://scripts/combinations/effects.gd")
 const Policy=preload("res://scripts/combinations/policy.gd")
@@ -34,7 +35,20 @@ func configure(host: Node) -> void:
 	if FileAccess.file_exists(PRIVATE_PATH):
 		var value: Variant=JSON.parse_string(FileAccess.get_file_as_string(PRIVATE_PATH))
 		if not value is Dictionary or not accept_catalog(value):problem="조합 원본 캐시 손상 · 다시 설치하세요"
-	else:problem="최신523 조합 원본 자료를 설치하세요"
+	else:
+		# UNVERIFIED: reuse the existing parser only when no private cache
+		# exists. A damaged cache or invalid explicit source is not bypassed.
+		var path: String=Source.archive_path()
+		if path.is_empty():
+			problem=Source.problem() if not Source.problem().is_empty() else "최신523 조합 원본 자료를 설치하세요"
+			return
+		var imported: Dictionary=Catalog.from_zip(path)
+		if not imported.get("ok",false):
+			problem=str(imported.get("error","조합 원본 자료를 읽을 수 없습니다"))
+			return
+		# accept_catalog publishes definitions and invalidates the existing
+		# read cache only. No selection, reconcile, migration, or save here.
+		if not accept_catalog(imported.catalog):problem="조합 전체 원본 계약을 읽을 수 없습니다 · 기존 상태 보존"
 func accept_catalog(value: Dictionary) -> bool:
 	if value.get("schema",0)!=1 or value.get("source_version",0)!=523 or not value.get("combinations") is Array or value.combinations.size()!=62 or not value.get("tables") is Dictionary:return false
 	for key: String in Catalog.COUNTS:

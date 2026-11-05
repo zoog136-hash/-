@@ -5,8 +5,9 @@ var current_state: String=""
 var _pressed_uses_normal: bool=false
 var _extent: Vector2
 var _title: Node2D
-func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
+func configure(pack: RefCounted, options: Dictionary, omit_invisible_title: bool=false) -> Dictionary:
 	var widget: Dictionary=options.widgetOptions
+	if omit_invisible_title and (typeof(widget.get("alpha"))!=TYPE_INT or widget.alpha!=0):return {"ok":false,"error":"source_title_omission_requires_original_zero_alpha"}
 	var extent:=Vector2(widget.size[0],widget.size[1])
 	_extent=extent
 	_pressed_uses_normal=str(options.pressedData.path).is_empty()
@@ -61,7 +62,9 @@ func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
 			if picture.pivot_offset==Vector2.ZERO:picture.position.y=0
 		add_child(picture)
 		states[state]=picture
-	if not str(options.text).is_empty():
+	# Only the renderer may supply this after proving original alpha stays zero.
+	set_meta("source_title_omitted_for_original_zero_alpha",omit_invisible_title)
+	if not omit_invisible_title and not str(options.text).is_empty():
 		var font: FontFile=pack.font(options.fontResource)
 		if font==null and str(options.fontResource.get("path","")).is_empty() and pack.has_method("declared_system_font"):
 			font=pack.declared_system_font(str(options.get("fontName","")))

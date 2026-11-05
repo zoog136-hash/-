@@ -2,6 +2,7 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Touch = preload("res://scripts/ui/inventory_settings_touch.gd")
 const CATEGORY = preload("res://scripts/warehouse/equipment_category_selection.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var hud: Node
 var world: Node
 var service
@@ -156,6 +157,7 @@ func _refresh() -> void:
 		control.tooltip_text = control.text+"\n"+entry.price_basis
 		control.disabled = not entry.ok
 		control.set_pressed_no_signal(selected_targets.has(entry.id))
+		_bind_candidate_image(control,str(entry.id))
 		control.toggled.connect(func(checked: bool) -> void:
 			if checked: selected_targets[entry.id] = {"name":entry.name,"id":entry.id,"identity":entry.identity}
 			else: selected_targets.erase(entry.id)
@@ -172,6 +174,22 @@ func _refresh() -> void:
 		var remove: Button = button("소지/조건 불일치 ID "+id+" · 선택에서 제외",func() -> void: selected_targets.erase(id); _refresh())
 		candidates_box.add_child(remove)
 	_status()
+
+func _bind_candidate_image(control: CheckBox, instance_id: String) -> void:
+	if not SOURCE_IMAGES.selected(): return
+	# Candidate IDs are physical instance keys. Only the same saved item's
+	# preserved record can supply an original ItemClass presentation.
+	var physical: Variant = world.item_instances.get(instance_id)
+	if not physical is Dictionary or not physical.get("record") is Dictionary: return
+	var record: Dictionary = physical.record
+	if not SOURCE_IMAGES.handles_item(record): return
+	var image: Dictionary = SOURCE_IMAGES.describe_item(record)
+	control.icon = image.get("texture") as Texture2D
+	control.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	evidence["physical_instance_id"] = instance_id
+	control.set_meta("source523_image",evidence)
 
 func _status() -> void:
 	status.text = "현재 조건 %d개 · 직접 선택 %d개\n기존 자동 판매 대상도 최종 카트에 함께 표시됩니다. 전체 내역·수량·가격을 확인해주세요." % [candidates.size(),selected_targets.size()]

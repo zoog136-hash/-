@@ -9,6 +9,8 @@ var policy: Dictionary = {}
 var pending: Dictionary = {}
 var save_blocked: bool = false
 var busy: bool = false
+# Synchronous save capability for this recovery only; never exported or saved.
+var _saving_recovery_fields: Dictionary = {}
 var clock_floor: int = 0
 var view: Control
 var death_overlay: Control
@@ -29,11 +31,20 @@ func configure(host) -> void:
 		if not integer(policy.get(key),1) or float(policy.get(key,0)) > 1000: save_blocked = true
 	for key: String in ["death_stat_exp_reduction_percent_per_point","death_stat_item_reduction_percent_per_point","death_stat_custom_cap","death_stat_maximum_reduction_percent"]:
 		if not (policy.get(key) is int or policy.get(key) is float) or not is_finite(float(policy.get(key))) or float(policy.get(key)) < 0 or float(policy.get(key)) > 100: save_blocked = true
+	var explicit_source: bool = false
 	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--death523-source="): source.load_pack(argument.trim_prefix("--death523-source="))
+		if argument == "--death523-source":
+			explicit_source = true
+			source.problem = "명시한 사망 원본 경로가 없습니다 · 기존 자료 보존"
+		elif argument.begins_with("--death523-source="):
+			explicit_source = true
+			if not source.load_pack(argument.trim_prefix("--death523-source=")):
+				source.problem = "명시한 사망 원본을 읽을 수 없습니다 · 기존 자료 보존"
 	source.fallback_loss_percent = clampf(float(policy.get("fallback_exp_loss_percent",5.0)),0.0,100.0)
 	source.fallback_cost_factor = clampi(int(policy.get("fallback_adena_level_squared",12)),0,1000000)
-	if not source.ready: source.load_pack()
+	# UNVERIFIED: empty/bare/invalid explicit choices never trigger a second
+	# default or common-source load. Failed imports retain already-ready data.
+	if not explicit_source and not source.ready: source.load_default_source()
 
 func now() -> int:
 	var wall: int = int(test_clock.call()) if test_clock.is_valid() else int(Time.get_unix_time_from_system())
@@ -194,7 +205,7 @@ func begin_death(cause: String) -> void:
 		var lost: int = 0 if p.exempt or p.no_exp else source.exp_loss(world.level,world.experience,world.exp_need)
 		var stats: Dictionary = death_stats()
 		lost = int(floor(lost*(1.0-float(stats.exp_reduction)/100.0)))
-		var item_exempt: bool = world.level <= 30 or (source.ready and int(source.row(world.level).get("DropRate",0)) <= 0)
+		var item_exempt: bool = world.level <= source.item_exemption_level() or (source.ready and int(source.row(world.level).get("DropRate",0)) <= 0)
 		var item: Dictionary = {} if p.exempt or p.no_item or item_exempt else _select_loss(float(stats.item_reduction))
 		var id: String = str(int(next.next_id))
 		var entry: Dictionary = {"id":id,"at":now(),"map":world.active_map_id,"cause":cause,"level":world.level,"exp":lost,"cost":source.cost(world.level),"exp_claimed":lost == 0,"item":item,"item_claimed":item.is_empty(),"revived":false,"full_revive":bool(p.full_revive),"source_rules":source.ready,"exempt":p.exempt}
@@ -331,6 +342,10 @@ func quote(id: String, kind: String, mode: String) -> Dictionary:
 		if world._inventory_total_weight()+weight > world._carrying_capacity(): return fail("소지품 무게가 초과됩니다")
 	return {"ok":true,"id":id,"kind":kind,"mode":mode,"cost":cost,"revision":state.revision,"age":age,"certificate":certificate,"message":""}
 
+func authorizes_recovery_save(staged: Dictionary) -> bool:
+	if not busy or _saving_recovery_fields.is_empty() or not staged.get(KEY) is Dictionary: return false
+	return staged == _saving_recovery_fields and int(staged[KEY].get("revision",-1)) == int(state.revision)+1
+
 func recover(request: Dictionary) -> Dictionary:
 	var current: Dictionary = quote(str(request.get("id","")),str(request.get("kind","")),str(request.get("mode","")))
 	if not current.ok: return current
@@ -355,7 +370,9 @@ func recover(request: Dictionary) -> Dictionary:
 	entry[str(current.kind)+"_receipt"] = {"at":now(),"mode":current.mode,"cost":current.cost}
 	if current.mode == "certificate": entry[str(current.kind)+"_receipt"]["certificate"] = current.certificate.duplicate(true)
 	next.revision = int(next.revision)+1; fields[KEY] = next
+	_saving_recovery_fields = fields.duplicate(true)
 	var result: Error = world._save_game(true,fields)
+	_saving_recovery_fields.clear()
 	if result != OK: busy = false; return fail("저장 실패 · 재화·무료 횟수·복구 대상을 보존했습니다")
 	state = next; fields.erase(KEY); _publish(fields); busy = false
 	world._update_hud()
@@ -371,6 +388,12 @@ func _exp_gain(amount: int) -> Dictionary:
 		out.hp = world._effective_max_hp(int(out.max_hp))
 		out.mp = out.max_mp; out.attack = int(out.attack)+2; out.defense = int(out.defense)+1
 		out.stat_points = int(out.stat_points)+world._stat_points_for_level_up(int(out.level))
+	# A recovery that stays in the current level owns only the restored EXP.
+	# Unchanged growth fields must not impersonate a quest growth transaction at
+	# the shared save boundary. Keep every actual level-up change in the stage.
+	for key: String in out.keys():
+		var property: String = {"attack":"attack_power"}.get(key,key)
+		if out[key] == world.get(property): out.erase(key)
 	return out
 
 func resurrect() -> Dictionary:

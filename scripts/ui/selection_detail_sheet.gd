@@ -8,6 +8,8 @@ extends VBoxContainer
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE523=preload("res://scripts/skills/player_skills523.gd")
+const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
+const SKILL_IMAGES=preload("res://scripts/ui/source523_skill_buff_images.gd")
 var owner_view: Node
 var picture: TextureRect
 var title: Label
@@ -90,7 +92,11 @@ func _table(rows: Array) -> String:
 	return text+"[/table]"
 
 func show_shop(item_name: String,record: Dictionary,quantity: int,price: int,owned: int,wallet: int) -> void:
-	picture.texture=UI.item_icon(record,item_name,owner_view.hud.item_image_index.get("아이템",{}))
+	if SOURCE_IMAGES.handles_item(record):
+		UI.apply_item_visual(picture,record,item_name,owner_view.hud.item_image_index.get("아이템",{}),"detail")
+	else:
+		UI.clear_item_visual(picture)
+		picture.texture=UI.item_icon(record,item_name,owner_view.hud.item_image_index.get("아이템",{}))
 	title.text=item_name
 	title.add_theme_color_override("font_color",UI.grade(str(record.get("grade","일반"))))
 	category.text=str(owner_view.selected[2])+" · 보유 "+UI.number_text(owned)+"개"
@@ -101,6 +107,7 @@ func show_shop(item_name: String,record: Dictionary,quantity: int,price: int,own
 	total.text=UI.number_text(price*quantity)+" 아데나" if price>0 else "구매 불가"
 
 func clear_shop() -> void:
+	UI.clear_item_visual(picture)
 	picture.texture=null;title.text="상품을 선택하세요";category.text=""
 	total.text="—"
 	scroll.scroll_vertical=0
@@ -157,17 +164,23 @@ func _fit_skill_chrome() -> void:
 func show_skill() -> void:
 	var selected: Dictionary=owner_view.selected
 	if selected.is_empty():
+		SKILL_IMAGES.clear(picture)
 		picture.texture=null;title.text="선택한 스킬 없음";category.text=""
 		info_text=source.text;raw_skill_text=source.text
 		_show_skill_tab();return
 	raw_skill_text=source.text
 	var identity: String=str(selected.get("id",selected.get("name","")))
 	picture.texture=null
-	for index: int in range(owner_view.filtered.size()):
-		var record: Dictionary=owner_view.filtered[index]
-		if str(record.get("id",record.get("name","")))==identity:
-			picture.texture=owner_view.cards.get_item_icon(index)
-			break
+	var source_image: Dictionary=SKILL_IMAGES.describe_skill(selected)
+	if source_image.handled:
+		SKILL_IMAGES.apply(picture,source_image,"skill_detail")
+	else:
+		SKILL_IMAGES.clear(picture)
+		for index: int in range(owner_view.filtered.size()):
+			var record: Dictionary=owner_view.filtered[index]
+			if str(record.get("id",record.get("name","")))==identity:
+				picture.texture=owner_view.cards.get_item_icon(index)
+				break
 	title.text=str(selected.get("name",""))
 	title.add_theme_color_override("font_color",UI.grade(str(selected.get("grade","일반"))))
 	category.text=str(selected.get("class",""))+" · "+str(selected.get("grade","일반"))+" · "+("패시브" if owner_view.RULES.is_passive(selected) else "액티브")

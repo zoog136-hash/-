@@ -1,6 +1,6 @@
 extends RefCounted
 ## Exact source item-to-buff use. Display names never establish ownership.
-const DATA=preload("res://data/cards/base508_option_extensions.json")
+const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const FIELD: String="native_doll_unlock"
 const ITEM: int=346901
 const BUFF: int=91531
@@ -16,12 +16,14 @@ static func validate(state: Dictionary) -> String:
 	return ""
 static func unlocked(state: Dictionary) -> bool:return state.has(FIELD) and validate(state).is_empty()
 static func record() -> Dictionary:
-	var source: Dictionary=DATA.data.subslot_unlock_item
-	return {"name":str(source.name),"source":"lineagem_base508","source_snapshot":"base508","source_item_class_id":ITEM,"sourceId":"m508:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"source_item":source.item.duplicate(true),"desc":"추가 마법인형 소환 해금 · 95레벨 필요 · 원본 아이템 사용","source_image_status":"original_icon_not_installed"}
+	var source: Dictionary=INPUT.session().subslot_unlock_item
+	if source.is_empty():return {}
+	return {"name":str(source.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_input_identity":source.source_input_identity.duplicate(true),"source_identity_namespace":"m508:item","source_identity_scope":"saved_identity_ABI_only; definition_origin_is_current523","source_item_class_id":ITEM,"sourceId":"m508:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"source_item":source.item.duplicate(true),"desc":"추가 마법인형 소환 해금 · 95레벨 필요 · 원본 아이템 사용","source_image_status":"original_icon_not_installed"}
 static func exact(value: Dictionary) -> bool:
 	return value.get("source","")=="lineagem_base508" and value.get("source_snapshot","")=="base508" and value.get("sourceId","")=="m508:item:"+str(ITEM) and value.get("source_item_class_id",0)==ITEM
 static func install(catalog: Dictionary) -> Dictionary:
 	var target: Dictionary=record()
+	if target.is_empty():return {"ok":false,"reason":"source_input_missing","problem":INPUT.problem}
 	if not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"item_catalog"}
 	for entry: Dictionary in catalog.get("아이템",[]):
 		if exact(entry):return {"ok":true,"existing":true}
@@ -30,7 +32,8 @@ static func install(catalog: Dictionary) -> Dictionary:
 	catalog["아이템"].append(target)
 	return {"ok":true}
 static func source_rules_valid() -> bool:
-	var source: Dictionary=DATA.data.subslot_unlock_item
+	var source: Dictionary=INPUT.session().subslot_unlock_item
+	if source.is_empty():return false
 	if int(source.item.ID)!=ITEM or not bool(source.category.IsConsumable) or int(source.item.MaxStackAmount)!=1:return false
 	var link: bool=false;var unlock: bool=false;var permanent: bool=false
 	for effect: Dictionary in source.effects:
