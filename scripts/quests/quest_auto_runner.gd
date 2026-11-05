@@ -123,6 +123,9 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		adena += int(plan.adena)
 		experience += int(plan.exp)
 		staged_state.claimed[id] = true
+		if not plan.get("source_dummy_rewards",[]).is_empty():
+			if not staged_state.has("source_dummy_rewards"):staged_state["source_dummy_rewards"]={}
+			staged_state.source_dummy_rewards[id]=plan.source_dummy_rewards.duplicate(true)
 		for unlocked: int in plan.quests: staged_state.unlocked["m523:quest:"+str(unlocked)] = true
 		if not plan.ui_requests.is_empty(): staged_state.ui_requests[id]=plan.ui_requests.duplicate(true)
 		completed.append(id)

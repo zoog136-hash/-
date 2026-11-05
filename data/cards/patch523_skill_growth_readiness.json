@@ -1,0 +1,2310 @@
+{
+  "schema": 1,
+  "source_snapshot": "patch523",
+  "diagnostic_only": true,
+  "source_zip": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+  "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "source_zip_bytes": 25031173,
+  "source_index_sha256": "4aed19b7ae945d5858a7edf8697d27f45a55f7b025774e49dd22d71e1b38671d",
+  "source_table_sha256": {
+    "Bonus": {
+      "sha256": "1189d53da7897c13ca83d559fef06410695404e1157cc2bbf8a9e48ce7f45d59",
+      "bytes": 34575811,
+      "rows": 217916
+    },
+    "BonusType": {
+      "sha256": "00cedfba3cd259dfd26fbd1471dd0fb5305023da8f85ca0b262af8f9fd0c1cf1",
+      "bytes": 317249,
+      "rows": 1282
+    },
+    "Unit": {
+      "sha256": "5b212633235459928eb03f836ac3964d988a9851f2e7f786a04f5edbba7cba22",
+      "bytes": 11310,
+      "rows": 169
+    },
+    "ItemClass": {
+      "sha256": "adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165",
+      "bytes": 44095017,
+      "rows": 34743
+    },
+    "ItemBonus": {
+      "sha256": "2bdc0f98cd68c1b6f10c572cbba5f1ab22b6f20588e54a279133beecf9dfc815",
+      "bytes": 10881472,
+      "rows": 89702
+    },
+    "BuffCard": {
+      "sha256": "6799b9a870c65253bc9f998cb9ff964e05dda4f67511668077c4ccc24a921f96",
+      "bytes": 948924,
+      "rows": 1271
+    },
+    "BuffCardDeck": {
+      "sha256": "cdedfd5c431b9682c8e8a40d69e10e6c9c92662304bec20e5901896dbba70cca",
+      "bytes": 2148,
+      "rows": 12
+    },
+    "BuffCardExperience": {
+      "sha256": "4aa7994fa20cc2752339e75acd228a8f8067946f7cf5bcaa432b3f8681405e61",
+      "bytes": 362,
+      "rows": 4
+    },
+    "BuffCardExperienceGrade": {
+      "sha256": "ef2ed36dc8cff2e460cebbe4a5d3cbc97264984d6d6e4b471573df3c747f6277",
+      "bytes": 400,
+      "rows": 4
+    },
+    "BuffCardExperienceMapping": {
+      "sha256": "4f3f666caec4bc9b845424b2cd90af95af88ad137b975772a82da5f1e6ee4c64",
+      "bytes": 46388,
+      "rows": 484
+    },
+    "BuffCardLevelUp": {
+      "sha256": "7458a362d8b5fbd998cfd7e0b3c29885c2780abcc0554b7b36c468afe6629b95",
+      "bytes": 2183,
+      "rows": 12
+    },
+    "BuffCardLevelUpMapping": {
+      "sha256": "0f3d0d1ad708bd076ffdc5396b2bcf13faa8c2eb53d2974f2b09fb660ca788f8",
+      "bytes": 43500,
+      "rows": 468
+    },
+    "BuffCardLevelUpProbability": {
+      "sha256": "c2ff89bd1fc0f4a213766ff93f0c676dd306f0bc61176c68f5c5dfabd315371d",
+      "bytes": 1148,
+      "rows": 12
+    },
+    "BuffCardSkillAwakenExp": {
+      "sha256": "bb2e01688049f0bee830a8777bbedbc77c4baa5811730774573e08b6c8f8ef5c",
+      "bytes": 6626,
+      "rows": 60
+    },
+    "BuffCardSkillAwakenValue": {
+      "sha256": "ca6128e2ca3abd752834cc52cae1117862cda0318555d43df96b6c76b4c6b573",
+      "bytes": 21579,
+      "rows": 143
+    },
+    "BuffCardSkillAwakenSkillEnchantProb": {
+      "sha256": "bbdadecda8d264f3904a8ad79c7cf9b4c31a027e9ec4c651339212689cdf89da",
+      "bytes": 10295,
+      "rows": 77
+    },
+    "BuffCardSkillAwakenSkillEnchantProbGroup": {
+      "sha256": "a2a1f1439efa87e7ceea769bca94078c447056f9b9b94c2c38bce719c6523add",
+      "bytes": 1619,
+      "rows": 16
+    },
+    "BuffCardSkillAwakenSkillInvokeProb": {
+      "sha256": "789c7fd2f4e05c3cb543d5525258dcd5e29c1f8841c7cff15521695be4b874eb",
+      "bytes": 57954,
+      "rows": 300
+    },
+    "BuffCardOptionAwakenValueType": {
+      "sha256": "21a7fedcf359b11c45aae48c3f2370b32583f119da47ad9d89d9b7ff2ef8d476",
+      "bytes": 555,
+      "rows": 8
+    },
+    "ItemCraftInput": {
+      "sha256": "69fc628bd295d87c0e6e0355f1b96b4ea5f2e6fc1a2c05106ab8c14209a77243",
+      "bytes": 10217120,
+      "rows": 46254
+    },
+    "ItemCraftOutputView": {
+      "sha256": "675a6eb871fe56735eafc21e25d62dea8dc95c197b84a0235d57e3099e6132ae",
+      "bytes": 11140223,
+      "rows": 30384
+    },
+    "ItemCraftView": {
+      "sha256": "a78987ec6313fbf616e400f12e4f66699cd25107ace7a3c6e59a1d9bb888d0f5",
+      "bytes": 1186288,
+      "rows": 1653
+    },
+    "ItemCraftRestriction": {
+      "sha256": "0f66c774ce374a353793de3407cc5663d5fabb8a226c88c38d08faa546ed57c2",
+      "bytes": 2802492,
+      "rows": 16462
+    },
+    "MarketPurchaseProduct": {
+      "sha256": "77be17cc18817c801937d4a78585e163e11ea1696b7e556e11b106be1faa2a8c",
+      "bytes": 735896,
+      "rows": 7231
+    },
+    "Reward": {
+      "sha256": "f3b313d9e03dd815d36af50f362b89f23b142849abe8f76cb555319a2d93bdfc",
+      "bytes": 13234439,
+      "rows": 36038
+    },
+    "LuckyBagEntityView": {
+      "sha256": "fb054980ed017431b66194d4e36cf5f6565b1e533651039e1fe5f14616d51cad",
+      "bytes": 17073327,
+      "rows": 41625
+    },
+    "GotChaEntityView": {
+      "sha256": "dd01dc3e1075351957c4bb4be7a27015a55ac7ea62d0695f005e1cf5759ffa94",
+      "bytes": 3013727,
+      "rows": 14447
+    },
+    "NpcItemDropView": {
+      "sha256": "54d33c0db3ce14813a617758a424ba96d21ccdb921532c903150bbbb3c1f23c1",
+      "bytes": 6569399,
+      "rows": 46854
+    }
+  },
+  "original_patch_archive": {
+    "name": "20261028_523.zip",
+    "sha256": null,
+    "status": "whole_original_archive_checksum_not_available_in_supplied_content_bundle"
+  },
+  "target_deck_ids": [
+    1,
+    2,
+    98
+  ],
+  "approved_material_item_class_ids": [],
+  "material_status": "source_material_contract_unresolved",
+  "probability_status": "source_enhancement_probability_unresolved",
+  "blocked_reason": "경험치 재료의 획득량·소모 규칙과 강화 성공·실패 확률 미확인",
+  "reasons": [
+    {
+      "code": "source_exp_cards_test_only",
+      "detail": "스킬 경험치 카드 10종은 모두 원본 테스트 아이템이며 ItemBonus 연결이 없습니다."
+    },
+    {
+      "code": "material_exp_conversion_unresolved",
+      "detail": "실사용 재료 ID별 경험치 획득량·소모·레벨 적용 계약이 확인되지 않았습니다."
+    },
+    {
+      "code": "spell_deck_growth_is_separate",
+      "detail": "명시된 EXP·레벨업 표는 캐릭터 스킬 덱 41 전용입니다."
+    },
+    {
+      "code": "skill_value_type_definition_missing",
+      "detail": "스킬 각성 ValueType 정의표가 없어 수치에 EXP·비용·확률 의미를 부여할 수 없습니다."
+    },
+    {
+      "code": "enhancement_probability_unresolved",
+      "detail": "강화 성공·실패 확률과 분모가 확인되지 않았습니다. 발동 확률·스킬 선택 가중치를 전용하지 않습니다."
+    },
+    {
+      "code": "failure_and_transaction_contract_unresolved",
+      "detail": "실패 시 재료·EXP 처리와 서버 거래 계약이 확인되지 않았습니다."
+    }
+  ],
+  "evidence_counts": {
+    "source_inventory_tables": 1065,
+    "verified_tables": 28,
+    "skill_exp_card_items": 10,
+    "option_exp_card_items": 10,
+    "test_exp_card_items": 20,
+    "exp_card_item_bonus_rows": 0,
+    "approved_material_items": 0,
+    "dummy_skill_deck_card_rows": 0,
+    "spell_deck_experience_mapping_rows": 484,
+    "spell_deck_level_up_mapping_rows": 468,
+    "awakening_deck_growth_mapping_rows": 0,
+    "skill_awaken_value_rows": 143,
+    "skill_awaken_value_type_tables": 0,
+    "cast_proc_rows": 300,
+    "selection_rows": 77,
+    "placeholder_selection_rows": 5,
+    "live_book_pool_bonus_links": 15
+  },
+  "rejected_exp_card_items": [
+    {
+      "item_class_id": 193364,
+      "system": "skill",
+      "source_item": {
+        "ID": 193364,
+        "Name": "[변신스킬각성] 희귀 변신 스킬 경험치 카드 (각인)",
+        "DescID": 1175724,
+        "IdentifiedDescID": 1175734,
+        "IconID": 71404,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 3,
+        "StoryDescID": 1175744,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193374,
+      "system": "skill",
+      "source_item": {
+        "ID": 193374,
+        "Name": "[변신스킬각성] 영웅 변신 스킬 경험치 카드 (각인)",
+        "DescID": 1175754,
+        "IdentifiedDescID": 1175764,
+        "IconID": 71414,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 4,
+        "StoryDescID": 1175774,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193384,
+      "system": "skill",
+      "source_item": {
+        "ID": 193384,
+        "Name": "[변신스킬각성] 전설 변신 스킬 경험치 카드 (각인)",
+        "DescID": 1175784,
+        "IdentifiedDescID": 1175794,
+        "IconID": 71424,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 5,
+        "StoryDescID": 1175804,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193394,
+      "system": "skill",
+      "source_item": {
+        "ID": 193394,
+        "Name": "[변신스킬각성] 신화 변신 스킬 경험치 카드 (각인)",
+        "DescID": 1175814,
+        "IdentifiedDescID": 1175824,
+        "IconID": 71434,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 32,
+        "StoryDescID": 1175834,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193404,
+      "system": "skill",
+      "source_item": {
+        "ID": 193404,
+        "Name": "[변신스킬각성] 유일 변신 스킬 경험치 카드 (각인)",
+        "DescID": 1175844,
+        "IdentifiedDescID": 1175854,
+        "IconID": 71444,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 52,
+        "StoryDescID": 1175864,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193414,
+      "system": "skill",
+      "source_item": {
+        "ID": 193414,
+        "Name": "[마법인형스킬각성] 희귀 마법인형 스킬 경험치 카드 (각인)",
+        "DescID": 1175874,
+        "IdentifiedDescID": 1175884,
+        "IconID": 71244,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 3,
+        "StoryDescID": 1175894,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193424,
+      "system": "skill",
+      "source_item": {
+        "ID": 193424,
+        "Name": "[마법인형스킬각성] 영웅 마법인형 스킬 경험치 카드 (각인)",
+        "DescID": 1175904,
+        "IdentifiedDescID": 1175914,
+        "IconID": 71254,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 4,
+        "StoryDescID": 1175924,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193434,
+      "system": "skill",
+      "source_item": {
+        "ID": 193434,
+        "Name": "[마법인형스킬각성] 전설 마법인형 스킬 경험치 카드 (각인)",
+        "DescID": 1175934,
+        "IdentifiedDescID": 1175944,
+        "IconID": 71264,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 5,
+        "StoryDescID": 1175954,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193444,
+      "system": "skill",
+      "source_item": {
+        "ID": 193444,
+        "Name": "[마법인형스킬각성] 신화 마법인형 스킬 경험치 카드 (각인)",
+        "DescID": 1175964,
+        "IdentifiedDescID": 1175974,
+        "IconID": 71274,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 32,
+        "StoryDescID": 1175984,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193454,
+      "system": "skill",
+      "source_item": {
+        "ID": 193454,
+        "Name": "[마법인형스킬각성] 유일 마법인형 스킬 경험치 카드 (각인)",
+        "DescID": 1175994,
+        "IdentifiedDescID": 1176004,
+        "IconID": 71284,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 52,
+        "StoryDescID": 1176014,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193464,
+      "system": "option",
+      "source_item": {
+        "ID": 193464,
+        "Name": "[변신옵션각성] 희귀 변신 옵션 경험치 카드 (각인)",
+        "DescID": 1176024,
+        "IdentifiedDescID": 1176034,
+        "IconID": 71294,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 3,
+        "StoryDescID": 1176044,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193474,
+      "system": "option",
+      "source_item": {
+        "ID": 193474,
+        "Name": "[변신옵션각성] 영웅 변신 옵션 경험치 카드 (각인)",
+        "DescID": 1176054,
+        "IdentifiedDescID": 1176064,
+        "IconID": 71304,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 4,
+        "StoryDescID": 1176074,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193484,
+      "system": "option",
+      "source_item": {
+        "ID": 193484,
+        "Name": "[변신옵션각성] 전설 변신 옵션 경험치 카드 (각인)",
+        "DescID": 1176084,
+        "IdentifiedDescID": 1176094,
+        "IconID": 71334,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 5,
+        "StoryDescID": 1176104,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193494,
+      "system": "option",
+      "source_item": {
+        "ID": 193494,
+        "Name": "[변신옵션각성] 신화 변신 옵션 경험치 카드 (각인)",
+        "DescID": 1176114,
+        "IdentifiedDescID": 1176124,
+        "IconID": 71314,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 32,
+        "StoryDescID": 1176134,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193504,
+      "system": "option",
+      "source_item": {
+        "ID": 193504,
+        "Name": "[변신옵션각성] 유일 변신 옵션 경험치 카드 (각인)",
+        "DescID": 1176144,
+        "IdentifiedDescID": 1176154,
+        "IconID": 71324,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 52,
+        "StoryDescID": 1176164,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193514,
+      "system": "option",
+      "source_item": {
+        "ID": 193514,
+        "Name": "[마법인형옵션각성] 희귀 마법인형 옵션 경험치 카드 (각인)",
+        "DescID": 1176174,
+        "IdentifiedDescID": 1176184,
+        "IconID": 71184,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 3,
+        "StoryDescID": 1176194,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193524,
+      "system": "option",
+      "source_item": {
+        "ID": 193524,
+        "Name": "[마법인형옵션각성] 영웅 마법인형 옵션 경험치 카드 (각인)",
+        "DescID": 1176204,
+        "IdentifiedDescID": 1176214,
+        "IconID": 71194,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 4,
+        "StoryDescID": 1176224,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193534,
+      "system": "option",
+      "source_item": {
+        "ID": 193534,
+        "Name": "[마법인형옵션각성] 전설 마법인형 옵션 경험치 카드 (각인)",
+        "DescID": 1176234,
+        "IdentifiedDescID": 1176244,
+        "IconID": 71204,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 5,
+        "StoryDescID": 1176254,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193544,
+      "system": "option",
+      "source_item": {
+        "ID": 193544,
+        "Name": "[마법인형옵션각성] 신화 마법인형 옵션 경험치 카드 (각인)",
+        "DescID": 1176264,
+        "IdentifiedDescID": 1176274,
+        "IconID": 71214,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 32,
+        "StoryDescID": 1176284,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    },
+    {
+      "item_class_id": 193554,
+      "system": "option",
+      "source_item": {
+        "ID": 193554,
+        "Name": "[마법인형옵션각성] 유일 마법인형 옵션 경험치 카드 (각인)",
+        "DescID": 1176294,
+        "IdentifiedDescID": 1176304,
+        "IconID": 71224,
+        "SpriteID": 22,
+        "CategoryID": 83,
+        "MaterialID": 5,
+        "Weight": 0,
+        "IsTradable": false,
+        "IsStorable": true,
+        "IsDeletable": true,
+        "IsDroppable": true,
+        "LevelLimitMin": 0,
+        "LevelLimitMax": 0,
+        "IsShowProbability": false,
+        "TargettingTypeID": 1,
+        "Cost": 0,
+        "GradeID": 52,
+        "StoryDescID": 1176314,
+        "MaxStackAmount": 10000,
+        "IsTrash": false,
+        "IsSoluble": false,
+        "UseDescID": 1,
+        "ProductTitleDescID": 0,
+        "ProductDescID": 0,
+        "EinasadLevel": 0,
+        "DecreaseLogInterval": 1,
+        "TestItem": true,
+        "IsShownEnchantProb": false,
+        "IsCraftable": false,
+        "GettablePlaceID": 0,
+        "SpriteAnimationID": 1,
+        "CanUseWhenInvisible": true,
+        "QualityLevel": 0,
+        "MaxLevelLimitMin": 0,
+        "MaxLevelLimitMax": 0,
+        "GradeTierID": 0,
+        "IsPersonalTradable": false,
+        "IsEventProbability": false,
+        "ServiceRegionCode": "",
+        "LinkSeasonShopType": 0
+      },
+      "item_bonus_rows": 0,
+      "approved": false,
+      "reasons": [
+        "source_test_item",
+        "item_bonus_chain_missing"
+      ]
+    }
+  ],
+  "exp_card_acquisition_reference_scan": {
+    "ItemCraftInput": {
+      "matched_item_columns": [
+        "ItemClassID"
+      ],
+      "rows": 0
+    },
+    "ItemCraftOutputView": {
+      "matched_item_columns": [
+        "ItemClassID"
+      ],
+      "rows": 0
+    },
+    "MarketPurchaseProduct": {
+      "matched_item_columns": [],
+      "rows": 0
+    },
+    "Reward": {
+      "matched_item_columns": [],
+      "rows": 0
+    },
+    "LuckyBagEntityView": {
+      "matched_item_columns": [
+        "ItemClassID"
+      ],
+      "rows": 0
+    },
+    "GotChaEntityView": {
+      "matched_item_columns": [
+        "ClassID"
+      ],
+      "rows": 0
+    },
+    "NpcItemDropView": {
+      "matched_item_columns": [
+        "ItemClassID"
+      ],
+      "rows": 0
+    }
+  },
+  "excluded_spell_deck_growth": {
+    "deck": {
+      "ID": 41,
+      "Name": "Spell",
+      "CancellationBuffGroupID": 5,
+      "CollectionBuffClassID": 0,
+      "CharacterBased": true
+    },
+    "mappings": {
+      "BuffCardExperienceMapping": {
+        "rows": 484,
+        "deck_counts": {
+          "41": 484
+        },
+        "awakening_deck_matches": 0,
+        "mapping_sample": {
+          "ID": 42,
+          "BuffCardID": 14351,
+          "BuffCardExperienceID": 12
+        },
+        "card_sample": {
+          "ID": 14351,
+          "Name": "[총사] 래피드 샷",
+          "DescID": 365014,
+          "BuffCardDeckID": 41,
+          "BuffClassID": 0,
+          "GradeID": 1,
+          "DisplaySpriteID": 0,
+          "DisplayBaseAssetID": 0,
+          "DisplayScreenAssetID": 0,
+          "IsNoMergeOut": false,
+          "DisplayDecoAssetID": 0,
+          "IsNoSwapOut": false,
+          "MagicDollAwakenStatID": 0,
+          "ClassifiedByClass": false,
+          "HasHistory": false,
+          "HistoryDescID": 1316061,
+          "IllustrationAssetID": 0,
+          "HidedIllustrationAssetID": 0,
+          "ServerLimitSetID": 0,
+          "SpellClassID": 17324,
+          "AttackTypeID": 0,
+          "GradeTierID": 172,
+          "StartDateTimeID": 0,
+          "EndDateTimeID": 0
+        },
+        "referenced_rule_field": "BuffCardExperienceID"
+      },
+      "BuffCardLevelUpMapping": {
+        "rows": 468,
+        "deck_counts": {
+          "41": 468
+        },
+        "awakening_deck_matches": 0,
+        "mapping_sample": {
+          "ID": 102,
+          "BuffCardID": 15551,
+          "BuffCardLevelUpID": 12
+        },
+        "card_sample": {
+          "ID": 15551,
+          "Name": "[기사] 데몰리션",
+          "DescID": 643111,
+          "BuffCardDeckID": 41,
+          "BuffClassID": 0,
+          "GradeID": 1,
+          "DisplaySpriteID": 0,
+          "DisplayBaseAssetID": 0,
+          "DisplayScreenAssetID": 0,
+          "IsNoMergeOut": false,
+          "DisplayDecoAssetID": 0,
+          "IsNoSwapOut": false,
+          "MagicDollAwakenStatID": 0,
+          "ClassifiedByClass": false,
+          "HasHistory": false,
+          "HistoryDescID": 1056842,
+          "IllustrationAssetID": 0,
+          "HidedIllustrationAssetID": 0,
+          "ServerLimitSetID": 0,
+          "SpellClassID": 37831,
+          "AttackTypeID": 0,
+          "GradeTierID": 172,
+          "StartDateTimeID": 0,
+          "EndDateTimeID": 0
+        },
+        "referenced_rule_field": "BuffCardLevelUpID"
+      }
+    },
+    "experience_rules": [
+      {
+        "ID": 12,
+        "Cost": 100000,
+        "Experience": 25000
+      },
+      {
+        "ID": 22,
+        "Cost": 300000,
+        "Experience": 1000000
+      },
+      {
+        "ID": 32,
+        "Cost": 500000,
+        "Experience": 8000000
+      },
+      {
+        "ID": 42,
+        "Cost": 5000000,
+        "Experience": 72000000
+      }
+    ],
+    "experience_grade_rules": [
+      {
+        "ID": 12,
+        "TargetCardGradeID": 1,
+        "SourceCardGradeID": 1
+      },
+      {
+        "ID": 22,
+        "TargetCardGradeID": 4,
+        "SourceCardGradeID": 4
+      },
+      {
+        "ID": 32,
+        "TargetCardGradeID": 5,
+        "SourceCardGradeID": 5
+      },
+      {
+        "ID": 48,
+        "TargetCardGradeID": 32,
+        "SourceCardGradeID": 32
+      }
+    ],
+    "level_up_rules": [
+      {
+        "ID": 12,
+        "Level": 0,
+        "Cost": 100000,
+        "RequiredExperience": 200000,
+        "FailureExperience": 200000,
+        "GlobalAnnounce": false
+      },
+      {
+        "ID": 22,
+        "Level": 1,
+        "Cost": 100000,
+        "RequiredExperience": 200000,
+        "FailureExperience": 200000,
+        "GlobalAnnounce": false
+      },
+      {
+        "ID": 32,
+        "Level": 2,
+        "Cost": 100000,
+        "RequiredExperience": 200000,
+        "FailureExperience": 200000,
+        "GlobalAnnounce": false
+      },
+      {
+        "ID": 42,
+        "Level": 0,
+        "Cost": 300000,
+        "RequiredExperience": 1000000,
+        "FailureExperience": 1000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 52,
+        "Level": 1,
+        "Cost": 300000,
+        "RequiredExperience": 1000000,
+        "FailureExperience": 1000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 62,
+        "Level": 2,
+        "Cost": 300000,
+        "RequiredExperience": 1000000,
+        "FailureExperience": 1000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 72,
+        "Level": 0,
+        "Cost": 500000,
+        "RequiredExperience": 8000000,
+        "FailureExperience": 8000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 82,
+        "Level": 1,
+        "Cost": 500000,
+        "RequiredExperience": 8000000,
+        "FailureExperience": 8000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 92,
+        "Level": 2,
+        "Cost": 500000,
+        "RequiredExperience": 8000000,
+        "FailureExperience": 8000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 108,
+        "Level": 0,
+        "Cost": 5000000,
+        "RequiredExperience": 72000000,
+        "FailureExperience": 72000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 118,
+        "Level": 1,
+        "Cost": 5000000,
+        "RequiredExperience": 72000000,
+        "FailureExperience": 72000000,
+        "GlobalAnnounce": true
+      },
+      {
+        "ID": 128,
+        "Level": 2,
+        "Cost": 5000000,
+        "RequiredExperience": 72000000,
+        "FailureExperience": 72000000,
+        "GlobalAnnounce": true
+      }
+    ],
+    "level_up_probability_rows": [
+      {
+        "ID": 12,
+        "BuffCardLevelUpID": 92,
+        "Probability": 167000
+      },
+      {
+        "ID": 22,
+        "BuffCardLevelUpID": 12,
+        "Probability": 667000
+      },
+      {
+        "ID": 32,
+        "BuffCardLevelUpID": 22,
+        "Probability": 333000
+      },
+      {
+        "ID": 42,
+        "BuffCardLevelUpID": 32,
+        "Probability": 167000
+      },
+      {
+        "ID": 52,
+        "BuffCardLevelUpID": 42,
+        "Probability": 667000
+      },
+      {
+        "ID": 62,
+        "BuffCardLevelUpID": 52,
+        "Probability": 333000
+      },
+      {
+        "ID": 72,
+        "BuffCardLevelUpID": 62,
+        "Probability": 167000
+      },
+      {
+        "ID": 82,
+        "BuffCardLevelUpID": 72,
+        "Probability": 667000
+      },
+      {
+        "ID": 92,
+        "BuffCardLevelUpID": 82,
+        "Probability": 333000
+      },
+      {
+        "ID": 108,
+        "BuffCardLevelUpID": 108,
+        "Probability": 667000
+      },
+      {
+        "ID": 118,
+        "BuffCardLevelUpID": 118,
+        "Probability": 333000
+      },
+      {
+        "ID": 128,
+        "BuffCardLevelUpID": 128,
+        "Probability": 167000
+      }
+    ]
+  },
+  "probability_boundaries": {
+    "enhancement_probability": null,
+    "enhancement_total_probability": null,
+    "missing_enum_table": "BuffCardSkillAwakenValueType",
+    "untyped_value_type_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      16,
+      32,
+      42
+    ],
+    "selection_table": "BuffCardSkillAwakenSkillEnchantProb",
+    "selection_use": "candidate_selection_only",
+    "cast_table": "BuffCardSkillAwakenSkillInvokeProb",
+    "cast_use": "skill_activation_only",
+    "cast_total_probability": 10000,
+    "placeholder_rows": [
+      {
+        "ID": 518,
+        "BuffCardDeckID": 98,
+        "GroupID": 0,
+        "SpellClassID": 0,
+        "Prob": 66000
+      },
+      {
+        "ID": 528,
+        "BuffCardDeckID": 98,
+        "GroupID": 0,
+        "SpellClassID": 0,
+        "Prob": 32000
+      },
+      {
+        "ID": 538,
+        "BuffCardDeckID": 98,
+        "GroupID": 0,
+        "SpellClassID": 0,
+        "Prob": 1000
+      },
+      {
+        "ID": 548,
+        "BuffCardDeckID": 98,
+        "GroupID": 0,
+        "SpellClassID": 0,
+        "Prob": 500
+      },
+      {
+        "ID": 558,
+        "BuffCardDeckID": 98,
+        "GroupID": 0,
+        "SpellClassID": 0,
+        "Prob": 500
+      }
+    ],
+    "option_value_types_not_applicable": [
+      {
+        "ID": 24,
+        "Name": "AwakenAdenaCost"
+      },
+      {
+        "ID": 64,
+        "Name": "EnchantMaxExp"
+      },
+      {
+        "ID": 74,
+        "Name": "EnchantCost"
+      },
+      {
+        "ID": 84,
+        "Name": "EnchantExp"
+      },
+      {
+        "ID": 94,
+        "Name": "EnchantFailDecreaseExp"
+      },
+      {
+        "ID": 104,
+        "Name": "RevocationCurrencyClassID"
+      },
+      {
+        "ID": 114,
+        "Name": "EnchantMinGrade"
+      },
+      {
+        "ID": 124,
+        "Name": "EnchantMaxGrade"
+      }
+    ]
+  },
+  "live_book_pool_bonus_chains": [
+    {
+      "item_class_id": 75184,
+      "link": {
+        "ID": 97714,
+        "ItemClassID": 75184,
+        "BonusID": 341174,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 341174,
+        "BonusTypeID": 2232,
+        "Value": 4,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "MagicDollAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 75184,
+      "link": {
+        "ID": 357988,
+        "ItemClassID": 75184,
+        "BonusID": 1153338,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1153338,
+        "BonusTypeID": 7014,
+        "Value": 54,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "PolymorphAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 75184,
+      "link": {
+        "ID": 539102,
+        "ItemClassID": 75184,
+        "BonusID": 1628062,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1628062,
+        "BonusTypeID": 8708,
+        "Value": 98,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "HolyStuffAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 75194,
+      "link": {
+        "ID": 97724,
+        "ItemClassID": 75194,
+        "BonusID": 341184,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 341184,
+        "BonusTypeID": 2232,
+        "Value": 14,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "MagicDollAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 75194,
+      "link": {
+        "ID": 357998,
+        "ItemClassID": 75194,
+        "BonusID": 1153348,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1153348,
+        "BonusTypeID": 7014,
+        "Value": 64,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "PolymorphAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 75194,
+      "link": {
+        "ID": 539112,
+        "ItemClassID": 75194,
+        "BonusID": 1628072,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1628072,
+        "BonusTypeID": 8708,
+        "Value": 108,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "HolyStuffAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 95624,
+      "link": {
+        "ID": 101264,
+        "ItemClassID": 95624,
+        "BonusID": 387194,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 387194,
+        "BonusTypeID": 2232,
+        "Value": 24,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "MagicDollAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 95624,
+      "link": {
+        "ID": 358008,
+        "ItemClassID": 95624,
+        "BonusID": 1153358,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1153358,
+        "BonusTypeID": 7014,
+        "Value": 74,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "PolymorphAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 95624,
+      "link": {
+        "ID": 539092,
+        "ItemClassID": 95624,
+        "BonusID": 1628052,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1628052,
+        "BonusTypeID": 8708,
+        "Value": 118,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "HolyStuffAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 118992,
+      "link": {
+        "ID": 154952,
+        "ItemClassID": 118992,
+        "BonusID": 514172,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 514172,
+        "BonusTypeID": 2232,
+        "Value": 34,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "MagicDollAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 118992,
+      "link": {
+        "ID": 358018,
+        "ItemClassID": 118992,
+        "BonusID": 1153368,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1153368,
+        "BonusTypeID": 7014,
+        "Value": 84,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "PolymorphAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 118992,
+      "link": {
+        "ID": 539272,
+        "ItemClassID": 118992,
+        "BonusID": 1628622,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1628622,
+        "BonusTypeID": 8708,
+        "Value": 128,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "HolyStuffAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 243043,
+      "link": {
+        "ID": 474053,
+        "ItemClassID": 243043,
+        "BonusID": 1469493,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1469493,
+        "BonusTypeID": 7014,
+        "Value": 103,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "PolymorphAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 243043,
+      "link": {
+        "ID": 569083,
+        "ItemClassID": 243043,
+        "BonusID": 1699783,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1699783,
+        "BonusTypeID": 2232,
+        "Value": 143,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "MagicDollAwakenSkillEnchantProbGroupID"
+    },
+    {
+      "item_class_id": 243043,
+      "link": {
+        "ID": 620631,
+        "ItemClassID": 243043,
+        "BonusID": 1834991,
+        "IsPossession": false
+      },
+      "bonus": {
+        "ID": 1834991,
+        "BonusTypeID": 8708,
+        "Value": 161,
+        "BonusApplicationTypeID": 0,
+        "BonusApplicationTargetID": 0
+      },
+      "bonus_type": "HolyStuffAwakenSkillEnchantProbGroupID"
+    }
+  ],
+  "book_acquisition_raw_summary": {
+    "scope": "book_acquisition_only_not_growth_material_conversion_or_book_consumption",
+    "shared_slot_semantics": "not_inferred",
+    "recipes": [
+      {
+        "item_craft_id": 38334,
+        "view_rows": [
+          {
+            "ItemCraftID": 38334,
+            "ItemClassID": 75184,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemCategoryID": 10474,
+            "WeaponType": 0,
+            "EquipSlot": 0,
+            "AlwaysSuccess": 1,
+            "EffectiveFrom": 1,
+            "EffectiveTo": 3,
+            "CraftTimeTypeID": 1,
+            "MainCategoryID": 21,
+            "SubCategoryID": 514,
+            "Sub2CategoryID": 0,
+            "CraftDashBoardTypeID": 14,
+            "ServerLimitSetID": 0,
+            "CraftGroupTypeID": 0,
+            "IsShowProbability": false,
+            "IsCoalitionItem": false,
+            "IsBelowLevelLimit": false,
+            "LevelLimitValue": 0,
+            "PopupText": 0,
+            "IsPopup": false,
+            "NoRepeat": false
+          }
+        ],
+        "input_rows": [
+          {
+            "ID": 71104,
+            "ItemCraftID": 38334,
+            "SlotIndex": 1,
+            "ItemClassID": 98454,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          }
+        ],
+        "output_rows": [
+          {
+            "ID": 40594,
+            "ItemCraftID": 38334,
+            "ItemCraftOutputTypeID": 1,
+            "ItemClassID": 75184,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ClanItemClassID": 0,
+            "ClanAmount": 0,
+            "ClanEnchant": 0,
+            "ClanItemBlessCodeID": 0,
+            "DescID": 973922,
+            "Probability": 1000000
+          }
+        ],
+        "restriction_rows": []
+      },
+      {
+        "item_craft_id": 38344,
+        "view_rows": [
+          {
+            "ItemCraftID": 38344,
+            "ItemClassID": 75194,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemCategoryID": 10474,
+            "WeaponType": 0,
+            "EquipSlot": 0,
+            "AlwaysSuccess": 1,
+            "EffectiveFrom": 1,
+            "EffectiveTo": 3,
+            "CraftTimeTypeID": 1,
+            "MainCategoryID": 21,
+            "SubCategoryID": 514,
+            "Sub2CategoryID": 0,
+            "CraftDashBoardTypeID": 14,
+            "ServerLimitSetID": 0,
+            "CraftGroupTypeID": 0,
+            "IsShowProbability": false,
+            "IsCoalitionItem": false,
+            "IsBelowLevelLimit": false,
+            "LevelLimitValue": 0,
+            "PopupText": 0,
+            "IsPopup": false,
+            "NoRepeat": false
+          }
+        ],
+        "input_rows": [
+          {
+            "ID": 71114,
+            "ItemCraftID": 38344,
+            "SlotIndex": 1,
+            "ItemClassID": 98454,
+            "Amount": 6,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          },
+          {
+            "ID": 447621,
+            "ItemCraftID": 38344,
+            "SlotIndex": 1,
+            "ItemClassID": 75184,
+            "Amount": 6,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          }
+        ],
+        "output_rows": [
+          {
+            "ID": 40604,
+            "ItemCraftID": 38344,
+            "ItemCraftOutputTypeID": 1,
+            "ItemClassID": 75194,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ClanItemClassID": 0,
+            "ClanAmount": 0,
+            "ClanEnchant": 0,
+            "ClanItemBlessCodeID": 0,
+            "DescID": 973922,
+            "Probability": 1000000
+          }
+        ],
+        "restriction_rows": []
+      },
+      {
+        "item_craft_id": 38354,
+        "view_rows": [
+          {
+            "ItemCraftID": 38354,
+            "ItemClassID": 95624,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemCategoryID": 10474,
+            "WeaponType": 0,
+            "EquipSlot": 0,
+            "AlwaysSuccess": 1,
+            "EffectiveFrom": 1,
+            "EffectiveTo": 3,
+            "CraftTimeTypeID": 1,
+            "MainCategoryID": 21,
+            "SubCategoryID": 514,
+            "Sub2CategoryID": 0,
+            "CraftDashBoardTypeID": 14,
+            "ServerLimitSetID": 0,
+            "CraftGroupTypeID": 0,
+            "IsShowProbability": false,
+            "IsCoalitionItem": false,
+            "IsBelowLevelLimit": false,
+            "LevelLimitValue": 0,
+            "PopupText": 0,
+            "IsPopup": false,
+            "NoRepeat": false
+          }
+        ],
+        "input_rows": [
+          {
+            "ID": 71124,
+            "ItemCraftID": 38354,
+            "SlotIndex": 1,
+            "ItemClassID": 98454,
+            "Amount": 30,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          },
+          {
+            "ID": 447631,
+            "ItemCraftID": 38354,
+            "SlotIndex": 1,
+            "ItemClassID": 75194,
+            "Amount": 5,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          }
+        ],
+        "output_rows": [
+          {
+            "ID": 40614,
+            "ItemCraftID": 38354,
+            "ItemCraftOutputTypeID": 1,
+            "ItemClassID": 95624,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ClanItemClassID": 0,
+            "ClanAmount": 0,
+            "ClanEnchant": 0,
+            "ClanItemBlessCodeID": 0,
+            "DescID": 973922,
+            "Probability": 1000000
+          }
+        ],
+        "restriction_rows": []
+      },
+      {
+        "item_craft_id": 43282,
+        "view_rows": [
+          {
+            "ItemCraftID": 43282,
+            "ItemClassID": 118992,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemCategoryID": 10474,
+            "WeaponType": 0,
+            "EquipSlot": 0,
+            "AlwaysSuccess": 1,
+            "EffectiveFrom": 1,
+            "EffectiveTo": 3,
+            "CraftTimeTypeID": 1,
+            "MainCategoryID": 21,
+            "SubCategoryID": 514,
+            "Sub2CategoryID": 0,
+            "CraftDashBoardTypeID": 14,
+            "ServerLimitSetID": 0,
+            "CraftGroupTypeID": 0,
+            "IsShowProbability": false,
+            "IsCoalitionItem": false,
+            "IsBelowLevelLimit": false,
+            "LevelLimitValue": 0,
+            "PopupText": 0,
+            "IsPopup": false,
+            "NoRepeat": false
+          }
+        ],
+        "input_rows": [
+          {
+            "ID": 87152,
+            "ItemCraftID": 43282,
+            "SlotIndex": 1,
+            "ItemClassID": 98454,
+            "Amount": 100,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          }
+        ],
+        "output_rows": [
+          {
+            "ID": 47062,
+            "ItemCraftID": 43282,
+            "ItemCraftOutputTypeID": 1,
+            "ItemClassID": 118992,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ClanItemClassID": 0,
+            "ClanAmount": 0,
+            "ClanEnchant": 0,
+            "ClanItemBlessCodeID": 0,
+            "DescID": 973922,
+            "Probability": 1000000
+          }
+        ],
+        "restriction_rows": []
+      },
+      {
+        "item_craft_id": 160543,
+        "view_rows": [
+          {
+            "ItemCraftID": 160543,
+            "ItemClassID": 243043,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemCategoryID": 10474,
+            "WeaponType": 0,
+            "EquipSlot": 0,
+            "AlwaysSuccess": 1,
+            "EffectiveFrom": 1,
+            "EffectiveTo": 3,
+            "CraftTimeTypeID": 1,
+            "MainCategoryID": 21,
+            "SubCategoryID": 514,
+            "Sub2CategoryID": 0,
+            "CraftDashBoardTypeID": 14,
+            "ServerLimitSetID": 772,
+            "CraftGroupTypeID": 0,
+            "IsShowProbability": false,
+            "IsCoalitionItem": false,
+            "IsBelowLevelLimit": false,
+            "LevelLimitValue": 0,
+            "PopupText": 0,
+            "IsPopup": false,
+            "NoRepeat": false
+          }
+        ],
+        "input_rows": [
+          {
+            "ID": 363603,
+            "ItemCraftID": 160543,
+            "SlotIndex": 1,
+            "ItemClassID": 98454,
+            "Amount": 300,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ItemHoningEpithetID": 0
+          }
+        ],
+        "output_rows": [
+          {
+            "ID": 230313,
+            "ItemCraftID": 160543,
+            "ItemCraftOutputTypeID": 1,
+            "ItemClassID": 243043,
+            "Amount": 1,
+            "Enchant": 0,
+            "ItemBlessCodeID": 1,
+            "ClanItemClassID": 0,
+            "ClanAmount": 0,
+            "ClanEnchant": 0,
+            "ClanItemBlessCodeID": 0,
+            "DescID": 973922,
+            "Probability": 1000000
+          }
+        ],
+        "restriction_rows": []
+      }
+    ]
+  }
+}

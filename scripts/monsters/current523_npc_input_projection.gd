@@ -150,3 +150,4 @@ func build(host_npc_ids: Array) -> Dictionary:
 		"excluded_source_rows":exclusions,
 		"execution_contract":"source typed graph; host attack clock/selection/hit/formula; unresolved semantics stay pending",
 		"limits":["no summon-set members","no TargetClass geometry","no native AI clock/probability","no final reflection formula","no original sprite payload"]}
+

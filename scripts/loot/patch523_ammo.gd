@@ -51,6 +51,24 @@ static func weapon_category(record: Dictionary) -> int:
 		found = category
 	return found
 
+# The gameplay consumer receives exact current item identity, not visual enums.
+static func current_profile(record: Dictionary) -> Dictionary:
+	if D.equipment(record):return {} # Physical equipment is not also a quantity-ammunition grant.
+	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or D.current_original_definition(record).is_empty() or record.get("source_test_item")!=false or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	var fields: Dictionary={"WeaponSmallDamage":"Value","WeaponLargeDamage":"Value","AmmoEffectSpriteID":"SpriteID","AmmoExplosionSpriteID":"SpriteID"}
+	var seen: Dictionary={}
+	for row: Dictionary in D.item_definition(record).get("item_bonus",[]):
+		var kind: String=str(row.get("bonus_type",{}).get("Name",""))
+		var value: Variant=row.get("bonus",{}).get("Value")
+		if row.get("IsPossession")!=false or row.get("bonus",{}).get("BonusApplicationTypeID")!=0 or row.get("bonus",{}).get("BonusApplicationTargetID")!=0:return {}
+		if not fields.has(kind) or seen.has(kind) or row.get("unit",{}).get("Name")!=fields[kind] or typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<0 or value>9007199254740991.0:return {}
+		seen[kind]=int(value)
+	var result: Dictionary=profile(record)
+	var keys: Dictionary={"WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","AmmoEffectSpriteID":"AmmoEffectSpriteID","AmmoExplosionSpriteID":"AmmoExplosionSpriteID"}
+	for kind: String in seen:
+		if result.get(keys[kind])!=seen[kind]:return {}
+	return result
+
 static func details(record: Dictionary) -> String:
 	var data: Dictionary = profile(record)
 	if data.is_empty(): return ""

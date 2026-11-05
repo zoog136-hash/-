@@ -1,5 +1,6 @@
 extends RefCounted
 ## Full private ItemClass sidecars. Two cached shards; no source code execution.
+const ICON_IDENTITY = preload("res://scripts/ui/source_item_icon_identity.gd")
 const PACK = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_SHARD = 8*1024*1024
 const MAX_RAW = 16*1024*1024
@@ -77,6 +78,7 @@ static func write_blob(target: String, packed: PackedByteArray, fingerprint: Str
 	return ""
 
 static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
+	ICON_IDENTITY.configure(document)
 	var records: Array = catalog.get("아이템",[])
 	var positions: Dictionary = {}
 	for index: int in range(records.size()):
@@ -93,6 +95,7 @@ static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
 				if int(state) in [2,3]: states.append(int(state))
 		for state: int in states:
 			var record: Dictionary = source.duplicate(true)
+			ICON_IDENTITY.bind(record, document)
 			record["source_bless_raw"] = state
 			if state != 1:
 				record["name"] = str(record.name)+(" · 축복" if state == 2 else " · 저주")
@@ -113,6 +116,7 @@ static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
 		var old: Dictionary = records[int(positions[key])]
 		if old.get("name") != alias.original_identity.name: continue
 		var record: Dictionary = document.item_definitions[id].native_record.duplicate(true)
+		ICON_IDENTITY.bind(record, document)
 		record.merge(alias.identity,true)
 		record["source_legacy_catalog_alias"] = true
 		record["source_preserved_legacy_catalog"] = true
@@ -128,6 +132,7 @@ static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
 	if stone.get("slot") == "domination_stone":
 		for state: int in [2,3]:
 			var record: Dictionary = stone.duplicate(true)
+			ICON_IDENTITY.bind(record, document)
 			record["name"] = str(stone.name)+(" · 축복" if state == 2 else " · 저주")
 			record["sourceId"] = str(stone.sourceId)+":bless:"+str(state)
 			record["source_bless_raw"] = state

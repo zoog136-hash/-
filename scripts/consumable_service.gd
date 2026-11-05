@@ -114,11 +114,29 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var source_native_bag_uses_present: bool=false
+var source_native_bag_uses: Variant={}
+
+var source_native_stack_partitions_present: bool=false
+var source_native_stack_partitions: Variant={}
+
+var source_native_stack_uses_present: bool=false
+var source_native_stack_uses: Variant={}
+
 var instant_cure_present: bool=false
 var instant_cure_state: Variant={}
 
 var reusable_state_present: bool=false
 var reusable_state: Variant={}
+
+var source_alchemy_item_uses_present: bool=false
+var source_alchemy_item_uses: Variant={}
+var source_ground_acquisitions_present: bool=false
+var source_ground_acquisitions: Variant={}
+var source_quest_craft_receipts_present: bool=false
+var source_quest_craft_receipts: Variant={}
+var source_monsterbook_grants_present: bool=false
+var source_monsterbook_grants: Variant={}
 
 var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
@@ -132,6 +150,13 @@ func export_state() -> Dictionary:
 		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if source_native_bag_uses_present:state["source_native_bag_uses"]=source_native_bag_uses.duplicate(true) if source_native_bag_uses is Dictionary or source_native_bag_uses is Array else source_native_bag_uses
+	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=source_native_stack_partitions.duplicate(true) if source_native_stack_partitions is Dictionary or source_native_stack_partitions is Array else source_native_stack_partitions
+	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
+	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
+	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
+	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=source_quest_craft_receipts.duplicate(true) if source_quest_craft_receipts is Dictionary or source_quest_craft_receipts is Array else source_quest_craft_receipts
+	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=source_monsterbook_grants.duplicate(true) if source_monsterbook_grants is Dictionary or source_monsterbook_grants is Array else source_monsterbook_grants
 	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
 	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
@@ -139,6 +164,27 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_native_bag_uses_present=input is Dictionary and input.has("source_native_bag_uses")
+	var bag_uses: Variant=input.get("source_native_bag_uses",{}) if input is Dictionary else {}
+	source_native_bag_uses=bag_uses.duplicate(true) if bag_uses is Dictionary or bag_uses is Array else bag_uses
+	source_native_stack_partitions_present=input is Dictionary and input.has("source_native_stack_partitions")
+	var partitions: Variant=input.get("source_native_stack_partitions",{}) if input is Dictionary else {}
+	source_native_stack_partitions=partitions.duplicate(true) if partitions is Dictionary or partitions is Array else partitions
+	source_native_stack_uses_present=input is Dictionary and input.has("source_native_stack_uses")
+	var stack_uses: Variant=input.get("source_native_stack_uses",{}) if input is Dictionary else {}
+	source_native_stack_uses=stack_uses.duplicate(true) if stack_uses is Dictionary or stack_uses is Array else stack_uses
+	source_monsterbook_grants_present=input is Dictionary and input.has("source_monsterbook_grants")
+	var book_grants: Variant=input.get("source_monsterbook_grants",{}) if input is Dictionary else {}
+	source_monsterbook_grants=book_grants.duplicate(true) if book_grants is Dictionary or book_grants is Array else book_grants
+	source_quest_craft_receipts_present=input is Dictionary and input.has("source_quest_craft_receipts")
+	var craft_receipts: Variant=input.get("source_quest_craft_receipts",{}) if input is Dictionary else {}
+	source_quest_craft_receipts=craft_receipts.duplicate(true) if craft_receipts is Dictionary or craft_receipts is Array else craft_receipts
+	source_ground_acquisitions_present=input is Dictionary and input.has("source_ground_acquisitions")
+	var ground_receipts: Variant=input.get("source_ground_acquisitions",{}) if input is Dictionary else {}
+	source_ground_acquisitions=ground_receipts.duplicate(true) if ground_receipts is Dictionary or ground_receipts is Array else ground_receipts
+	source_alchemy_item_uses_present=input is Dictionary and input.has("source_alchemy_item_uses")
+	var alchemy_uses: Variant=input.get("source_alchemy_item_uses",{}) if input is Dictionary else {}
+	source_alchemy_item_uses=alchemy_uses.duplicate(true) if alchemy_uses is Dictionary or alchemy_uses is Array else alchemy_uses
 	instant_cure_present=input is Dictionary and input.has("source_instant_cure_uses")
 	var cure: Variant=input.get("source_instant_cure_uses",{}) if input is Dictionary else {}
 	instant_cure_state=cure.duplicate(true) if cure is Dictionary or cure is Array else cure
@@ -253,6 +299,33 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
+	if stack.get("handled",false):
+		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
+		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
+		return true
+	var native: Dictionary=world.option_awakening.use_source_awakening_item(item_name,selected_instance)
+	if native.get("handled",false):
+		if native.get("ok",false):world._update_hud();world.hud.refresh_inventory(world.inventory)
+		_message(str(native.get("message",native.get("error","원본 각성 물품 확인 필요"))))
+		return true
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_card_acquisition.gd").record().get("name","")):
+		var received: Dictionary=world.option_awakening.use_nemesis_ticket(item_name,selected_instance)
+		if bool(received.get("ok",false)):
+			world._update_hud();world.hud.refresh_inventory(world.inventory)
+			_message("네메시스 마법인형 획득" if bool(received.get("new",false)) else "네메시스 중복 카드 1장 획득")
+		else:_message(str(received.get("error","카드권 사용 실패")))
+		return true
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_relic_reward_box.gd").record().get("name","")):
+		var opened: Dictionary=world.option_awakening.use_relic_reward_box(item_name,selected_instance)
+		if bool(opened.get("ok",false)):
+			world._update_hud();world.hud.refresh_inventory(world.inventory)
+			_message("상자 개봉 · 에바의 계시와 특별한 성물 소환 주문서 각 1개 획득")
+		else:_message(str(opened.get("error","상자 개봉 실패")))
+		return true
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_relic_reward_box.gd").record(365758).get("name","")):
+		_message("추가 성물 소환 주문서의 적용·기간 규칙 확인 필요 · 아이템 보존")
+		return true
 	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_relic_unlock_item.gd").record().get("name","")):
 		var result: Dictionary=world.option_awakening.use_relic_unlock_item(item_name,selected_instance)
 		if bool(result.get("handled",false)):
@@ -266,9 +339,9 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
 	if preload("res://scripts/shop/source523_restoration.gd").try_use(world,item_name):return true
 	if try_use_regional_return(item_name): return true
-	if item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").DATA.data.subslot_unlock_item.name):
+	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").record().get("name","")):
 		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
-		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name)
+		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name,selected_instance)
 		if bool(source_result.get("handled",false)):
 			if bool(source_result.get("ok",false)):
 				world._update_hud();world.hud.refresh_inventory(world.inventory)
@@ -711,6 +784,9 @@ func apply_element_management(scroll_name: String, weapon_reference: String, new
 	var item: Dictionary = instances[item_id] as Dictionary
 	if str(item.get("name", "")) != item_name or int(item.get("element_level", 0)) <= 0:
 		return
+	if item.get("equipment523", {}) is Dictionary and item.get("equipment523", {}).has("elemental_smith"):
+		_apply_processed_element_management(scroll_name,item_id,item_name,new_element,kind)
+		return
 	if kind == "element_change":
 		if not RULES.ELEMENT_NAMES.has(new_element) or new_element == str(item.get("element", "")):
 			_message("기존 속성과 다른 속성을 선택하세요")
@@ -723,12 +799,51 @@ func apply_element_management(scroll_name: String, weapon_reference: String, new
 	_consume(scroll_name)
 	_message("%s [%s] 속성 %s" % [item_name, item_id, "변경 완료" if kind == "element_change" else "초기화 완료"])
 
+func _apply_processed_element_management(scroll_name: String, item_id: String, item_name: String, new_element: String, kind: String) -> void:
+	if not world.item_instances[item_id].equipment523.elemental_smith is Dictionary:
+		_message("기존 속성 세공 기록을 해석할 수 없어 장비와 주문서를 보존합니다")
+		return
+	if kind == "element_change" and (not RULES.ELEMENT_NAMES.has(new_element) or new_element == str(world.item_instances[item_id].get("element", ""))):
+		_message("기존 속성과 다른 속성을 선택하세요")
+		return
+	if world.has_method("_item_locked") and (world.call("_item_locked",item_name,item_id) or world.call("_item_locked",scroll_name,"")):
+		_message("잠긴 장비와 주문서는 사용할 수 없습니다")
+		return
+	# This legacy chooser selects a named stack, not a physical source reward.
+	# Refuse ambiguous physical scrolls rather than lose their remaining quantity.
+	for physical: Dictionary in world.item_instances.values():
+		if str(physical.get("name", "")) == scroll_name:
+			_message("물리 개체로 보관한 주문서는 정확한 개체 선택 경로가 필요합니다")
+			return
+	var staged_items: Dictionary = world.item_instances.duplicate(true)
+	var staged_inventory: Dictionary = world.inventory.duplicate(true)
+	var changed: Dictionary = staged_items[item_id]
+	changed["equipment523_retired_elemental_smith"] = changed.equipment523.elemental_smith.duplicate(true)
+	changed.equipment523.erase("elemental_smith")
+	changed["element"] = new_element if kind == "element_change" else ""
+	if kind == "element_reset": changed["element_level"] = 0
+	staged_inventory[scroll_name] = int(staged_inventory[scroll_name]) - 1
+	if int(staged_inventory[scroll_name]) == 0: staged_inventory.erase(scroll_name)
+	var saved: Error = world.call("_save_game",true,{"inventory":staged_inventory,"item_instances":staged_items})
+	if saved != OK:
+		if world.has_method("_equipment523_commit") and world.equipment523._saved_candidate(world,{"inventory":staged_inventory,"item_instances":staged_items}):
+			world.equipment523.save_blocked = true
+			world.equipment523.problem = "속성 변경 저장 후보의 활성화가 불확실합니다. 정상 저장을 다시 불러오세요."
+		_message("속성 변경 저장 실패 · 주문서와 세공 효과를 보존했습니다")
+		return
+	world.item_instances = staged_items
+	world.inventory = staged_inventory
+	world.call("_update_hud")
+	_message("%s [%s] 속성 %s · 기존 속성 세공 효과 소실" % [item_name,item_id,"변경 완료" if kind == "element_change" else "초기화 완료"])
+
 func _select_option(item_name: String, candidates: Array[String], purpose: String, choose_element: bool) -> void:
 	if candidates.is_empty():
 		return
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "%s 선택" % item_name
 	dialog.dialog_text = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
+	if purpose in ["element_change", "element_reset"]:
+		dialog.dialog_text += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
 	var selector: OptionButton = OptionButton.new()
 	selector.custom_minimum_size = Vector2(330, 42)
 	for candidate: String in candidates:
@@ -901,3 +1016,14 @@ func try_use_regional_return(item_name: String) -> bool:
 
 ## Result contract for external reward producers. Issuance/receipt is their transaction.
 ## Cross-map native travel needs its owner's atomic destination contract; preserve stock.
+
+# Original UI supplies its own source nodes and exact source entity choice.
+# Backend proposals are read-only; no replacement window is constructed here.
+func quote_owned_original_selection(original_item: Dictionary,ownership: Dictionary) -> Dictionary:
+	return preload("res://scripts/loot/current523_native_stack.gd").quote_original_selection(world,original_item,ownership)
+
+func claim_owned_original_selection(original_item: Dictionary,ownership: Dictionary,entity_id: int) -> Dictionary:
+	var result: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").claim_original_selection(world,original_item,ownership,entity_id)
+	if result.get("ok",false) and result.get("saved",false) and result.get("consumed")==1:
+		world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
+	return result

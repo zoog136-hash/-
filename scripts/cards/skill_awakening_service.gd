@@ -24,7 +24,7 @@ var problem: String=""
 
 func _init() -> void:
 	data=CurrentInput.build(Native.cards().get("catalog",{}))
-	problem=str(data.get("problem",""))
+	problem=str(data.get("problem","")) if data.get("source_definition_archive",{}).is_empty() or data.get("cards",{}).is_empty() else ""
 	cards=data.cards.duplicate(true)
 	conditions.configure(data.source_server_limits)
 	patch523_conditions.configure(data.source_server_limits)
@@ -99,7 +99,7 @@ func validate_state(value: Variant) -> String:
 		if not xp is String or not xp.is_valid_int() or str(int(xp))!=xp or int(xp)<0 or int(xp)>MAX_EXPERIENCE:return "스킬 각성 경험치 저장 오류"
 		if int(entry.spell_id)>0 and int(entry.level)<1:return "스킬 각성 레벨 누락"
 		# Preserve unknown future source IDs as inert same-version records.
-		if cards.has(key) and int(entry.spell_id)>0:
+		if cards.has(key) and int(entry.spell_id)>0 and not book_for(key).is_empty():
 			if not spell_allowed(key,int(entry.spell_id)) or profile(key,int(entry.level)).is_empty():return "스킬 각성 카드·스킬·레벨 조인 오류"
 	return ""
 
@@ -230,3 +230,4 @@ static func install_book_definitions(catalog: Dictionary) -> void:
 			if record.get("name","")==str(book.name):exists=true;break
 		if exists:continue # Never assign source ownership to a legacy name alias.
 		catalog["아이템"].append({"name":str(book.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_content_snapshot":"patch523","source_definition_archive":book.source_definition_archive.duplicate(true),"saved_identity_namespace":str(book.saved_identity_namespace),"source_item_class_id":id,"sourceId":str(book.saved_item_source_id),"type":"재료","slot":"material","grade":str(GRADE_NAMES.get(int(book.group_row.GradeID),"미확인")),"stackable":true,"source_item":item.duplicate(true),"source_image_status":"original_icon_not_installed","desc":"카드 스킬 각성 재료 · 거래당 1장"})
+

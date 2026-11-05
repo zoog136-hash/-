@@ -11,9 +11,17 @@ static func key_row(key: String)->Dictionary:
  for row: Dictionary in MAP.values():
   if row.key==key:return row
  return {}
-static func make_record(world: Node,item: int)->Dictionary:
+static func make_record(world: Node,item: int,evidence: Dictionary={})->Dictionary:
  var row: Dictionary=MAP[item]
- return {"schema":1,"kind":"quest523.source-learning.execution-pending","source_sha256":SOURCE_SHA,"item_pack_sha256":ITEM_PIN,"skill_pack_sha256":SKILL_PIN,"item_class_id":item,"spell_class_id":int(row.spell),"local_skill_id":str(row.key),"spell_row_sha256":str(row.sha),"learned_class_id":world.BASE508.source_class_id(world.job_class),"execution_status":"blocked_until_verified_owner","reason":str(row.reason)}
+ var record: Dictionary={"schema":1,"kind":"quest523.source-learning.execution-pending","source_sha256":SOURCE_SHA,"item_pack_sha256":ITEM_PIN,"item_class_id":item,"spell_class_id":int(row.spell),"local_skill_id":str(row.key),"spell_row_sha256":str(row.sha),"learned_class_id":world.BASE508.source_class_id(world.job_class),"execution_status":"blocked_until_verified_owner","reason":str(row.reason)}
+ if evidence.get("kind")=="original_bound_profiles":record["skill_source_evidence"]=evidence.duplicate(true)
+ else:record["skill_pack_sha256"]=SKILL_PIN
+ # New native quantity ownership cites its actual original definition, not a
+ # historical BIN which was not consumed. Existing records remain unchanged.
+ var archive: Variant=evidence.get("item_definition_archive")
+ if archive is Dictionary and archive==preload("res://scripts/resources/current523_definition_rows.gd").identity():
+  record.erase("item_pack_sha256");record["item_definition_archive"]=archive.duplicate(true)
+ return record
 static func status(knowledge: Dictionary,learned: Dictionary,key: String)->Dictionary:
  var row: Dictionary=key_row(key)
  if row.is_empty() or not knowledge.has(key) or int(learned.get(key,0))<=0:return {}

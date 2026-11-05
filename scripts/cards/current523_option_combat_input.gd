@@ -368,3 +368,4 @@ static func union_options(candidates: Array) -> Array:
 	for candidate: Dictionary in result:
 		if not conflicts.has(int(candidate.ID)): unique.append(candidate)
 	return unique
+

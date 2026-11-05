@@ -13,6 +13,7 @@ var source_context: Dictionary = {}
 var unlocked: Dictionary = {}
 var ui_requests: Dictionary = {}
 var item_grants: Dictionary = {} # Receipts for shared native supplier transactions.
+var source_dummy_rewards: Dictionary = {} # Explicit source exclusions, never issued items.
 var save_blocked: bool = false
 const OBJECTIVES = ["kill", "collect", "level"]
 const MAX_REWARD_ITEM: int = 10000
@@ -40,6 +41,7 @@ func configure(items: Array, monsters: Array) -> bool:
 	unlocked.clear()
 	ui_requests.clear()
 	item_grants.clear()
+	source_dummy_rewards.clear()
 	source = SOURCE.new()
 	var item_names: Dictionary = {}
 	var monster_names: Dictionary = {}
@@ -256,6 +258,20 @@ static func validate_saved_state(saved: Variant) -> String:
 				var used: Variant=receipt.get("used_quantity")
 				if not (used is int or used is float) or not is_finite(float(used)) or float(used)!=floorf(float(used)) or used<1 or used>receipt.quantity:return "원본 보관 사용 수량 오류"
 			seen[int(receipt.reward_id)]=true
+	var dummy_rewards: Variant=saved.get("source_dummy_rewards",{})
+	if not dummy_rewards is Dictionary or dummy_rewards.size()>20000:return "원본 더미 보상 제외 기록 형식 오류"
+	for id: Variant in dummy_rewards:
+		if not id is String or not id.begins_with("m523:quest:") or saved.get("claimed",{}).get(id)!=true or not dummy_rewards[id] is Array or dummy_rewards[id].size()>128:return "원본 더미 보상 제외 관계 오류"
+		var excluded_ids: Dictionary={}
+		for entry: Variant in dummy_rewards[id]:
+			if not entry is Dictionary:return "원본 더미 제외 보상 형식 오류"
+			for field: String in ["reward_id","item_class_id"]:
+				var value: Variant=entry.get(field)
+				if not (value is int or value is float) or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<1 or value>9007199254740991:return "원본 더미 제외 보상 ID 오류"
+			if excluded_ids.has(int(entry.reward_id)):return "원본 더미 제외 보상 중복 오류"
+			excluded_ids[int(entry.reward_id)]=true
+			var expected: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(entry.get("item_class_id",0)))
+			if expected.is_empty() or JSON.parse_string(JSON.stringify(expected))!=JSON.parse_string(JSON.stringify(entry.get("evidence"))):return "원본 더미 선언 근거 불일치 · 제외 기록 보존"
 	var requests: Variant = saved.get("ui_requests",{})
 	if not requests is Dictionary or requests.size()>20000: return "퀘스트 UI 기록 오류"
 	for id: Variant in requests:
@@ -271,6 +287,7 @@ func export_state() -> Dictionary:
 	_advance_day(int(Time.get_unix_time_from_system()))
 	var result: Dictionary = {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true),"ui_requests":ui_requests.duplicate(true)}
 	if not item_grants.is_empty(): result["item_grants"]=item_grants.duplicate(true)
+	if not source_dummy_rewards.is_empty():result["source_dummy_rewards"]=source_dummy_rewards.duplicate(true)
 	return result
 
 func import_state(saved: Variant, now: int = -1) -> bool:
@@ -284,6 +301,7 @@ func import_state(saved: Variant, now: int = -1) -> bool:
 	unlocked.clear()
 	ui_requests = saved.get("ui_requests",{}).duplicate(true)
 	item_grants = saved.get("item_grants",{}).duplicate(true)
+	source_dummy_rewards=saved.get("source_dummy_rewards",{}).duplicate(true)
 	save_blocked = false
 	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
 	day_key = korean_daily_key(at)

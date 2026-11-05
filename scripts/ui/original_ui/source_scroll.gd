@@ -35,3 +35,8 @@ func bind_input(callback: Callable) -> void:
 func _forward_input(event: InputEvent) -> void:
 	if _input_callback.is_valid():_input_callback.call(event)
 	_input_area.accept_event()
+
+func input_control() -> Control:
+	# Existing caller may register its actual GUI event in viewport space.
+	# Exposing this original extent adds no pan physics or click policy.
+	return _input_area

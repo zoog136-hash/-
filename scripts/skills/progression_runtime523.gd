@@ -163,6 +163,7 @@ func _apply_reviewed_child_element_input(skill: Dictionary, record: Dictionary, 
 		"mapping":"existing_SOURCE_ELEMENT_CHANNELS","scope":"existing_selected_reviewed_execution_effect_only"}
 	return skill
 
+
 func repeat_skill(record: Dictionary) -> Dictionary:
 	var detail:=spec(record)
 	if detail.is_empty() or str(detail.meta.kind)!="repeat":return {}
@@ -237,6 +238,7 @@ func on_normal_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 	for _die: int in range(clampi(int(dice[0]),0,100)):
 		skill.power+=int((int(sides[0])+1)/2.0) if policy.value(id,"average_dice")>=.5 else service.world.rng.randi_range(1,int(sides[0]))
 	clocks[id]=maxf(.1,policy.value(id,"interval"))
+	skill = _apply_reviewed_child_element_input(skill,record,detail,effect)
 	for victim: TwilightMonster in service.targets(skill,null):service.deal_damage(skill,victim)
 	fired[id]=int(fired.get(id,0))+1
 	service.world.hud.show_message("스태틱 필드 발동 · 번개석 "+str(int(option.MaterialAmount))+"개")

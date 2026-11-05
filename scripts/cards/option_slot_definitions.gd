@@ -150,3 +150,4 @@ static func view(identity: String) -> Array[Dictionary]:
 		row.labels=labels(row)
 		result.append(row)
 	return result
+

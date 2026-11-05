@@ -4,6 +4,7 @@ const OPTIONS=preload("res://scripts/inven_option_adapter.gd")
 const POLICY="res://data/crafting/patch523_enhancement_policy.json"
 static var _settings: Dictionary={}
 static var _policy_digest: String=""
+static var _invoke_tables: Dictionary={}
 
 static func policy() -> Dictionary:
 	if not _settings.is_empty(): return _settings
@@ -61,6 +62,19 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 	if runtime.get("invokes") is Dictionary:
 		var invokes: Dictionary=runtime.invokes.get(str(blessing),{}).duplicate(true)
 		if settings.get("missing_level21_invoke","")=="keep_level20" and invokes.get("21",[]).is_empty() and not invokes.get("20",[]).is_empty():invokes["21"]=invokes["20"].duplicate(true)
+		# New rows store a source option reference once in the private table.
+		# Hydrate only this physical item's rows; old delivered inline rows work.
+		if not _invoke_tables.has(book.digest):
+			var lookup: Dictionary={}
+			for option: Dictionary in book.data.get("enchantment",{}).get("InvokeOption",[]):lookup[str(int(option.ID))]=option
+			_invoke_tables[book.digest]=lookup
+		for rows: Array in invokes.values():
+			for effect: Dictionary in rows:
+				if not effect.has("option") and effect.has("option_id"):
+					var option: Dictionary=_invoke_tables[book.digest].get(str(int(effect.option_id)),{})
+					if not option.is_empty():effect["option"]=option.duplicate(true)
+				if effect.get("kind")=="attack_source_spell" and effect.get("option") is Dictionary:
+					effect["spell_name"]=str(book.data.get("equipment_spell_profiles",{}).get(str(int(effect.option.Param1)),{}).get("source_spell",{}).get("Name",""))
 		var has_invokes: bool=false
 		for rows: Array in invokes.values():
 			if not rows.is_empty():has_invokes=true;break

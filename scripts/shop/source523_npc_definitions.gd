@@ -154,3 +154,4 @@ func _attributes_supported(attributes: Array, rule: Dictionary) -> bool:
 	for attribute: Dictionary in attributes:
 		if not rule.get("allow_range_attribute",false) or int(attribute.get("id",0))!=15 or attribute.get("name")!="Range" or not Catalog._integer(attribute.get("value")) or int(attribute.value)<1 or int(attribute.value)>20:return false
 	return true
+

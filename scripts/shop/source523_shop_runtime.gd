@@ -7,6 +7,8 @@ const NpcConsumables = preload("res://scripts/shop/source523_npc_consumables.gd"
 const InventoryTickets = preload("res://scripts/shop/source523_inventory_tickets.gd")
 const SkillBooks = preload("res://scripts/shop/source523_skill_books.gd")
 const NpcResets = preload("res://scripts/shop/source523_npc_resets.gd")
+const Exact=preload("res://scripts/equipment523/native_catalog.gd")
+const Dummy=preload("res://scripts/quests/source_dummy523.gd")
 const SAVE_KEY: String = "source_shop"
 const LIMIT: int = 9007199254740991
 const ITEM_BINDINGS: Dictionary = {549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
@@ -38,6 +40,21 @@ static func fresh_state() -> Dictionary:
 
 static func integer(value: Variant) -> bool:
 	return Catalog._integer(value) and int(value) >= 0
+
+static func input_identity_problem(value: Variant,model_sha256: String) -> String:
+	if not value is Dictionary or value.get("payload_sha256")!=model_sha256 or not integer(value.get("payload_bytes")) or int(value.payload_bytes)<1:return "상점 주문의 실제 모델 입력 증명 불일치"
+	if value.get("kind")=="twilight.source523.shop-pack-input.v1":
+		return "" if value.get("declared_source_zip_sha256")==Catalog.SOURCE_SHA256 else "상점 주문의 원본 선언 불일치"
+	if value.get("kind")!="twilight.source523.original-shop-input.v1":return "상점 입력 증명 종류 미지원"
+	var archive: Variant=value.get("archive")
+	if not archive is Dictionary or archive.get("kind")!="twilight.current523.original-definitions.v1" or archive.get("source_snapshot")!="patch523" or archive.get("source_sha256")!=Catalog.SOURCE_SHA256 or archive.get("source_bytes")!=25031173:return "상점 원본 ZIP 정체 불일치"
+	return "" if value.get("projection")=="tools/shop/build_source523_shop.py" else "상점 원본 투영 계약 불일치"
+
+static func npc_input_identity_problem(value: Variant,npc_sha256: String,shop_sha256: String) -> String:
+	if not value is Dictionary or value.get("npc_model_sha256")!=npc_sha256 or value.get("shop_model_sha256")!=shop_sha256 or not integer(value.get("npc_model_bytes")) or int(value.npc_model_bytes)<1 or int(value.npc_model_bytes)>8*1024*1024:return "NPC 주문과 실제 NPC/상점 모델 입력 정체 불일치"
+	if value.get("kind")=="twilight.source523.npc-original-input.v1":return "" if value.get("source_archive_sha256")==Catalog.SOURCE_SHA256 else "NPC 원본 입력 출처 불일치"
+	if value.get("kind")=="twilight.source523.npc-pack-input.v1":return "" if value.get("declared_source_archive_sha256")==Catalog.SOURCE_SHA256 else "NPC 팩 입력 출처 불일치"
+	return "NPC 입력 증명 종류 미지원"
 
 static func validate(value: Variant) -> String:
 	if not value is Dictionary or value.get("version") != 1: return "상점 저장 버전 오류"
@@ -72,6 +89,19 @@ static func validate(value: Variant) -> String:
 		for key: String in ["npc_rules_sha256","npc_pack_sha256","npc_reset_identity"]:
 			if order.has(key) and (not order[key] is String or order[key].length()!=64 or not order[key].is_valid_hex_number(false)):return "NPC 주문 출처 해시 오류"
 		if not order.get("pack_sha256") is String or order.pack_sha256.length() != 64 or not order.pack_sha256.is_valid_hex_number(false): return "상점 주문 원본 해시 오류"
+		if order.has("source_input_identity"):
+			var input_error: String=input_identity_problem(order.source_input_identity,str(order.pack_sha256))
+			if not input_error.is_empty():return input_error
+		if order.has("source_npc_input_identity"):
+			if order.get("kind")!="merchant" or not integer(order.get("npc_merchant_id")) or int(order.npc_merchant_id)<1:return "NPC 주문의 상인 정체 누락"
+			var npc_input_error: String=npc_input_identity_problem(order.source_npc_input_identity,str(order.get("npc_pack_sha256","")),str(order.pack_sha256))
+			if not npc_input_error.is_empty():return npc_input_error
+		if order.has("received_physical_ids"):
+			if not order.received_physical_ids is Array:return "상점 수령 개체 목록 형식 오류"
+			var seen: Dictionary={}
+			for physical_id: Variant in order.received_physical_ids:
+				if not physical_id is String or physical_id.is_empty() or seen.has(physical_id):return "상점 수령 개체 식별 오류"
+				seen[physical_id]=true
 		if not order.get("goods") is Array or order.goods.is_empty() or not order.get("payment") is Dictionary: return "상점 주문 지급·결제 오류"
 		for grant: Variant in order.goods + [order.payment]:
 			if not grant is Dictionary: return "상점 주문 재화 오류"
@@ -235,6 +265,7 @@ static func fail(message: String) -> Dictionary:
 
 func _ready_for_action(internal: bool = false) -> Dictionary:
 	if _busy and not internal: return fail("이전 상점 거래 처리 중입니다")
+	if not str(world.get("patch523_owner_state_problem")).is_empty():return fail("공동 저장 결과 확인 필요 · 정상 저장을 다시 불러오세요")
 	if not integer(world.gold): return fail("현재 재화 저장 수치가 유효하지 않습니다")
 	for amount: Variant in world.inventory.values():
 		if not integer(amount): return fail("현재 인벤토리 저장 수치가 유효하지 않습니다")
@@ -310,8 +341,17 @@ func _token(unit: int, id: int, amount: int) -> Dictionary:
 	return {"unit_id":unit,"class_id":id,"amount":amount}
 
 func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int) -> Dictionary:
+	if int(token.unit_id)==4:
+		var original: Dictionary=catalog.record("ItemClass",int(token.class_id))
+		if original.is_empty() or original.get("TestItem",false) or not Dummy.item_evidence(original).is_empty():return fail("미확인·시험·원본 더미 품목은 상점 지급·차감 연결에서 제외")
 	if int(token.unit_id) != 201:
 		var binding: Dictionary = _bindings.get("%d:%d" % [int(token.unit_id),int(token.class_id)], {})
+		if not binding.is_empty() and not binding.get("gold",false):
+			var name: String=str(binding.get("name",""))
+			var physical_output: bool=giving and not world._enhancement_kind_for_record(binding.get("record",{})).is_empty()
+			if not physical_output:
+				for value: Variant in world.item_instances.values():
+					if value is Dictionary and value.get("name")==name:return fail("같은 보유 키의 물리 개체·소비 영수증 소유자 연결 필요 · 상점 잔량 보존")
 		return {"ok":true,"binding":binding} if not binding.is_empty() else fail("아이템·재화의 실제 인벤토리 연결 미확인")
 	var currency: Dictionary = catalog.currency(int(token.class_id))
 	if currency.is_empty(): return fail("재화 정의 누락")
@@ -417,8 +457,11 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	overrides.merge(extra,false)
 	var result: Error = world._save_game(true, overrides)
 	if result != OK:
+		# A response error may follow an atomic disk commit or map-pointer
+		# write. Do not issue another purchase from stale live order balances.
+		save_blocked=true
 		_busy = false
-		return fail("저장 실패 · 재화·보관함·인벤토리를 변경하지 않았습니다")
+		return fail("상점 저장 응답 확인 필요 · 라이브 재화 보존, 정상 저장을 다시 불러온 뒤 거래하세요")
 	state = next
 	world.inventory = inventory
 	world.gold = gold
@@ -452,12 +495,22 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String) -> Dicti
 	var order_id: String = str(int(next.next_order))
 	next.next_order = int(next.next_order) + 1
 	next.orders[order_id] = {"kind":kind,"display_name":str(prepared.name),"offer_id":id,"quantity":quantity,"status":"pending","paid_at":_now(),"claimed_at":0,"payment":prepared.payment.duplicate(true),"goods":prepared.goods.duplicate(true),"pack_sha256":catalog.loaded_sha256}
+	var input: Variant=catalog.get("model_input_identity")
+	if input is Dictionary and not input.is_empty():
+		var input_error: String=input_identity_problem(input,str(catalog.loaded_sha256))
+		if not input_error.is_empty():_busy=false;return fail(input_error)
+		next.orders[order_id]["source_input_identity"]=input.duplicate(true)
 	if prepared.has("npc_rules_sha256"):
 		if not next.has("npc_rule_hashes"):next["npc_rule_hashes"]={}
 		next.npc_rule_hashes[str(int(prepared.npc_merchant_id))]=str(prepared.npc_rules_sha256)
 		next.orders[order_id]["npc_rules_sha256"]=str(prepared.npc_rules_sha256)
 		next.orders[order_id]["npc_pack_sha256"]=str(prepared.npc_pack_sha256)
 		next.orders[order_id]["rule_origin"]=str(prepared.rule_origin)
+		if prepared.has("source_npc_input_identity"):
+			var npc_input_error: String=npc_input_identity_problem(prepared.source_npc_input_identity,str(prepared.npc_pack_sha256),str(catalog.loaded_sha256))
+			if not npc_input_error.is_empty():_busy=false;return fail(npc_input_error)
+			next.orders[order_id]["npc_merchant_id"]=int(prepared.npc_merchant_id)
+			next.orders[order_id]["source_npc_input_identity"]=prepared.source_npc_input_identity.duplicate(true)
 	if prepared.has("npc_reset_identity"):
 		if not next.has("npc_reset_rule_hashes"):next["npc_reset_rule_hashes"]={}
 		next.npc_reset_rule_hashes[counter_key]=str(prepared.npc_reset_identity)
@@ -561,6 +614,10 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if target.binding.get("record",{}).has("source523_shop_use_origin"):quoted["use_origin"]=str(target.binding.record.source523_shop_use_origin)
 	if not quota.is_empty():quoted.merge({"quota_text":quota.quota_text,"remaining":quota.remaining,"next_reset_at":quota.next_reset_at,"npc_reset_identity":quota.reset_identity})
 	if not local_context.is_empty():quoted.merge({"npc_label":local_context.label,"rule_origin":local_context.origin,"npc_merchant_id":int(row.MerchantsID),"npc_rules_sha256":local_context.rules_sha256,"npc_pack_sha256":local_context.npc_pack_sha256})
+	if not local_context.is_empty() and not npc_definitions.input_identity.is_empty():
+		var npc_input_error: String=npc_input_identity_problem(npc_definitions.input_identity,str(local_context.npc_pack_sha256),str(catalog.loaded_sha256))
+		if not npc_input_error.is_empty():return fail(npc_input_error)
+		quoted["source_npc_input_identity"]=npc_definitions.input_identity.duplicate(true)
 	return quoted
 
 func buy_merchant(id: int, quantity: int = 1) -> Dictionary:
@@ -621,11 +678,21 @@ func claim(order_id: String) -> Dictionary:
 	var order: Dictionary = state.orders.get(order_id, {})
 	if order.is_empty() or order.get("status") != "pending": _busy = false; return fail("미수령 주문이 아닙니다")
 	if order.pack_sha256 != catalog.loaded_sha256: _busy = false; return fail("구매 당시 원본 팩을 확인할 수 없습니다 · 주문 보존")
+	if order.has("source_input_identity") and not Exact.same(order.source_input_identity,catalog.get("model_input_identity")):
+		_busy=false
+		return fail("구매 당시 실제 원본/팩 입력 정체가 다릅니다 · 미수령 주문 보존")
+	if order.has("source_npc_input_identity") and not Exact.same(order.source_npc_input_identity,npc_definitions.input_identity):
+		_busy=false
+		return fail("구매 당시 NPC 입력 정체가 다릅니다 · 주문과 지불 이력 보존")
 	var granted: Dictionary = _grant(order.goods, world.inventory.duplicate(true), int(world.gold), world.item_instances.duplicate(true), int(world.next_item_instance_id))
 	if not granted.ok: _busy = false; return granted
 	var next: Dictionary = export_state()
 	next.orders[order_id].status = "claimed"
 	next.orders[order_id].claimed_at = _now()
+	var received: Array=[]
+	for id: String in granted.instances:
+		if not world.item_instances.has(id):received.append(id)
+	next.orders[order_id]["received_physical_ids"]=received
 	if order.kind=="market":_activate_cumulative(next, int(order.offer_id))
 	var result: Dictionary = _commit(next, granted.inventory, int(granted.gold), granted.instances, int(granted.next_id))
 	if result.ok: result["reason"] = "보관함 수령 완료"
@@ -713,3 +780,4 @@ func try_use_inventory_ticket(item_key: String) -> bool:
 	var result: Dictionary=use_inventory_ticket(item_key)
 	world.hud.show_message(str(result.get("message",result.get("reason","티켓 처리 결과 확인 필요"))))
 	return true
+

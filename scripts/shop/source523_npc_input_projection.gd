@@ -135,3 +135,4 @@ func build(shop_sha256: String) -> Dictionary:
 		"source_zip_sha256":SOURCE.SOURCE_SHA,"shop_pack_sha256":shop_sha256,"delivery":"PRIVATE_LOCAL_ONLY","evidence":evidence,
 		"source_semantics":{"item_bless_codes":_names(tables.ItemBlessCode),"reset_schedule_types":_names(tables.ContentsResetScheduleType),"refresh_constants":constants},
 		"merchants":merchants}
+

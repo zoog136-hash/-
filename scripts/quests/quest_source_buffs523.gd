@@ -12,7 +12,7 @@ static func interval(world: Node)->float:
 	return float(value)
 static func profile(saved: Dictionary)->Dictionary:
 	var id: int=int(saved.get("source_item_class_id",0))
-	if id not in IDS or D.pack_identity().get("sha256")!=PIN:return {}
+	if id not in IDS or D.current_original_definition(saved).is_empty():return {}
 	var definition: Dictionary=D.definition_id(str(id));var record: Dictionary=D.expected_variant(definition.get("native_record",{}),saved)
 	if record.is_empty() or not D.matches(record,saved) or record.get("source_test_item",true):return {}
 	var spec: Dictionary=record.get("source_use_spec",{});var food: bool=id in FOOD

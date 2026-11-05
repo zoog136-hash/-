@@ -3,6 +3,7 @@ extends RefCounted
 # Field monsters: 1 equipment roll. Bosses: 3 equipment rolls.
 # Positive field weights and boss weights remain. Previously absent field grades
 # reuse the existing game-wide boss grade rates instead of becoming a zero cap.
+# Base508 source eligibility and exact drop provenance are separate from host weights.
 # Each roll yields at most one equipment item; rolls may yield duplicate items.
 
 const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
@@ -21,6 +22,7 @@ const L1J_REGISTRY_PATH = "res://data/monsters/l1j_drop_overrides.json"
 const CRAFTING_DROPS_PATH: String = "res://data/monsters/twilight_crafting_drops.json"
 const MATERIAL_DROP_RATE: float = 0.28
 const BOSS_MATERIAL_DROP_RATE: float = 0.65
+const BASE508_DROPS=preload("res://scripts/loot/base508_monster_drops.gd")
 const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
 const CURRENCY_DROPS = preload("res://scripts/loot/currency_drops.gd")
 const PATCH523_DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -339,10 +341,30 @@ static func _pick_material(monster_name: String, is_boss: bool, catalog: Diction
 	return ""
 
 
-static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: String = "", source_weights: Dictionary = {}) -> Array[Dictionary]:
+static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "", monster_identity: Dictionary = {}, map_id: Variant = "", source_weights: Dictionary = {}, quest_eligibility: Dictionary = {}) -> Array[Dictionary]:
+	# Preserve the prior base508 seventh-argument API and current map/weights API.
+	if map_id is Dictionary:
+		if not quest_eligibility.is_empty():return []
+		quest_eligibility=map_id;map_id=""
+	elif not map_id is String:return []
 	if PATCH523_DROPS.native(monster_identity):
 		return roll_patch523(PATCH523_DROPS.candidates(monster_identity, catalog), is_boss, rng)
 	var earned: Array[Dictionary] = []
+	if BASE508_DROPS.native(monster_identity):
+		var source: Dictionary=BASE508_DROPS.candidates(monster_identity,catalog,quest_eligibility)
+		var potion_rate_native: float=BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
+		if rng.randf()<potion_rate_native:
+			var selected: Dictionary=BASE508_DROPS.pick(source,"potion","",rng)
+			if not selected.is_empty(): earned.append(selected)
+		for attempt: int in range(MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1):
+			var grade: String=_roll_equipment_grade(is_boss,rng)
+			if grade.is_empty(): continue
+			var selected: Dictionary=BASE508_DROPS.pick(source,"equipment",grade,rng)
+			if not selected.is_empty(): earned.append(selected)
+		if rng.randf()<(BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+			var selected: Dictionary=BASE508_DROPS.pick(source,"material","",rng)
+			if not selected.is_empty(): earned.append(selected)
+		return earned
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
 		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng, monster_name)

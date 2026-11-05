@@ -215,3 +215,4 @@ func _spell_values(spell: Dictionary,allowed: Array) -> Dictionary:
 		if effect.type.Name not in allowed or (effect.unit.Name!="Value" and not (effect.type.Name in ["FixedMagicDamage","IgnoreMagicResistance"] and effect.unit.Name=="TrueFalse")) or int(effect.link.MinSpellLevel)!=0 or int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0 or values.has(effect.type.Name):return {}
 		values[effect.type.Name]=int(effect.bonus.Value)
 	return values
+

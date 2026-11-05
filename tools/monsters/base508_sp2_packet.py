@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'lineagem_original'))
 import brotli
 import original_sp2
+import base508_sp2_geometry
 
 def source_body(raw,max_decoded_bytes=256*1024**2):
     """Cap FE input and accumulated Brotli output before normalization.
@@ -42,9 +43,9 @@ def source_body(raw,max_decoded_bytes=256*1024**2):
     if not body or body[0]!=254:raise ValueError('Decoded source is not FE SP2')
     return body
 
-def normalize(raw):
+def normalize(raw,geometry_only=False):
     body=source_body(raw)
-    parsed=original_sp2.parse(body)
+    parsed=base508_sp2_geometry.parse(body)if geometry_only else original_sp2.parse(body)
     normalized=b'LMSP1'+struct.pack('<H',len(parsed[0]))+body
     out=io.BytesIO()
     with gzip.GzipFile(fileobj=out,mode='wb',filename='',mtime=0,compresslevel=6) as z:z.write(normalized)
@@ -58,9 +59,10 @@ def geometry(parsed,bit,frame,cache=None):
     if frame>=len(frames):raise ValueError(('Source frame absent',frame,len(frames)))
     minimum=None;maximum=None
     for a,b,t,index in frames[frame][1]:
-        bx,by,values,rows=blocks[index]
+        block=blocks[index];bx,by=block[:2]
+        rows=block[3]
         x0=24*(b+a-a//2)+bx;y0=12*(b-a//2)+by
-        box=cache.get((bit,index)) if cache is not None else None
+        box=block[4]if len(block)>4 else(cache.get((bit,index)) if cache is not None else None)
         if box is None:
             occupied=[(y,row) for y,row in enumerate(rows) if row]
             box=(min(x for _,row in occupied for x,c in row),min(y for y,row in occupied),max(x for _,row in occupied for x,c in row),max(y for y,row in occupied)) if occupied else ()

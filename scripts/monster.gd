@@ -2,6 +2,7 @@ extends CharacterBody2D
 class_name TwilightMonster
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
+const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 var source_m_original: Dictionary = {}
 var source_targeting: Dictionary = {}
 var collection_combat_context: Dictionary={}
@@ -10,6 +11,10 @@ const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const CURRENT523_SOURCE_M_VIEW = preload("res://scripts/monsters/current523_source_bank_view.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 var source_m_view: SOURCE_M_VIEW = null
+const SOURCE_BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
+var source_boss_combat = SOURCE_BOSS_COMBAT.new()
+var source_action_contract_required: bool = false
+var source_host_stationary: bool = false
 var _source_only_native_visuals: bool = false
 var mp: int = 0
 var max_mp: int = 0
@@ -181,6 +186,10 @@ func retire_for_pool() -> void:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
 	source_targeting.clear()
+	source_boss_combat.clear()
+	source_action_contract_required = false
+	source_host_stationary = false
+	loot_source_identity.clear()
 	# Death presentation is complete before this is called. Release all visual
 	# owners while keeping the lightweight body for the next life/region.
 	set_physics_process(false)
@@ -229,6 +238,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	if source523 != null: source523.forget(self)
 	source_targeting.clear()
 	source_option_debuffs.clear()
+	source_boss_combat.clear()
 	_clear_source_m_view()
 	_source_only_native_visuals = false
 	if has_meta("current523_source_only_visual"): remove_meta("current523_source_only_visual")
@@ -308,6 +318,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 				if category.get(flag) is bool: source_targeting[flag] = category[flag]
 	var context: Variant=record.get("collection_combat_context",{})
 	collection_combat_context=context.duplicate(true) if context is Dictionary else {}
+	source_action_contract_required = not record.get("source_m_host_action_contract", {}).is_empty()
+	source_host_stationary = source_action_contract_required and bool(record.get("source_m_host_stationary",false)) and bool(record.get("source_m_host_action_contract",{}).get("host_stationary",false))
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record,definition_service.catalog if definition_service != null else null)
@@ -428,6 +440,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	world_controller = world_ref
 	hp = max_hp # Initial life starts at its effective cap; boundary entry never heals.
 	set_meta("patch523_hp_was_enabled",max_hp != source_523_base_max_hp)
+	source_boss_combat.configure(self,world_controller,record)
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
 	if _source_only_native_visuals:
@@ -530,6 +543,7 @@ func _physics_process(delta: float) -> void:
 	tick_reveal523(delta)
 	advance_source_option_debuffs(delta)
 	preload("res://scripts/loot/patch523_weapon_bleed.gd").tick(self,delta)
+	source_boss_combat.tick(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
@@ -585,6 +599,12 @@ func _tick_ai(delta: float) -> void:
 	_tick_stun(delta); _tick_silence(delta); _tick_hold(delta); _tick_fear(delta)
 	_tick_poison(delta); _tick_bleed(delta); _tick_slow(delta)
 	if dead: velocity = Vector2.ZERO; return
+	if source_action_contract_required and (not source_boss_combat.active() or not is_instance_valid(source_m_view)):
+		# An explicit native action actor must never fall back to a host basic
+		# attack if its private combat table/view is absent or rejected.
+		velocity = Vector2.ZERO
+		motion.cancel_attack()
+		return
 	attack_cooldown = maxf(0.,attack_cooldown-delta)
 	repath_cooldown = maxf(0.,repath_cooldown-delta)
 	aggro_remaining = maxf(0.,aggro_remaining-delta)
@@ -671,6 +691,15 @@ func _tick_ai(delta: float) -> void:
 		if distance > attack_range and not is_held(): _move_toward(target_player.global_position,delta)
 		else: velocity = Vector2.ZERO
 		return
+	if source_boss_combat.try_begin(sight): return
+	if source_action_contract_required:
+		# All strikes for this adoption belong to the native action controller.
+		# Preserve the existing host pursuit/hold range, without a second
+		# legacy special/basic-attack path during its cooldown or rejection.
+		velocity = Vector2.ZERO
+		if not source_host_stationary and not is_held() and distance > attack_range and distance <= float(ai.get("aggro_radius",760.))*1.7:
+			_move_toward(target_player.global_position,delta)
+		return
 	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
 		_begin_special()
 		return
@@ -690,9 +719,11 @@ func _tick_ai(delta: float) -> void:
 	if distance<=attack_range and sight:
 		velocity = Vector2.ZERO
 		if attack_cooldown<=0.:
-			attack_cooldown = AI_POLICY.attack_interval(attack_interval, enraged)
+			var source_settings: Dictionary=world_controller.PATCH523_ENHANCE.policy()
+			var source_speed: float=clampf(1.0+source_equipment_modifier("source_attack_speed_pct")/100.0,float(source_settings.get("source_buff_attack_speed_factor_min",.05)),float(source_settings.get("source_buff_attack_speed_factor_max",5)))
+			attack_cooldown = AI_POLICY.attack_interval(attack_interval, enraged)/source_speed
 			var style: String = motion.profile.motion_style if kind=="melee" else ("magic" if kind=="magic" else "bow")
-			motion.begin_attack(minf(.68,attack_interval*.75),target_player.global_position-global_position,style,motion.profile.marker_for(style))
+			motion.begin_attack(minf(.68,attack_interval*.75)/source_speed,target_player.global_position-global_position,style,motion.profile.marker_for(style))
 			committed_attack_type = kind
 		return
 	if is_held():
@@ -711,10 +742,23 @@ func _refresh_overhead_ui(distance: float = -1.0) -> void:
 	if distance < 0.0:
 		distance = global_position.distance_to(target_player.global_position) if is_instance_valid(target_player) else INF
 	var near: bool = distance <= OVERHEAD_UI_DISTANCE
+	if is_instance_valid(world_controller):
+		var source_hidden: bool = has_meta("source_invisible") or has_meta("source_camouflaged")
+		if world_controller.has_method("equipment523_actor_invisible"): source_hidden = source_hidden or world_controller.equipment523_actor_invisible(self)
+		if source_hidden and world_controller.has_method("equipment523_can_detect"):
+			near = near and world_controller.equipment523_can_detect(self)
+		if has_meta("source_doppel_name") and world_controller.has_method("equipment523_target_name"):
+			var caption: String = world_controller.equipment523_target_name(self)
+			if name_label.text.begins_with("Lv."): caption = "Lv.%d %s" % [monster_level,caption]
+			if name_label.text != caption: name_label.text = caption
 	if name_label.visible != near: name_label.visible = near
 	if hp_bar.visible != near: hp_bar.visible = near
 
 func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
+	if source_host_stationary:
+		velocity = Vector2.ZERO
+		path = PackedVector2Array(); path_index = 0
+		return
 	if is_held(): velocity = Vector2.ZERO; return
 	if repath_cooldown<=0.:
 		repath_cooldown = .65+float(get_instance_id()%7)*.015
@@ -779,7 +823,7 @@ func _resolve_special() -> void:
 	var relative: Vector2 = target_player.global_position-center
 	var radius: float = float(skill.get("radius",200))
 	var hit: bool = BOSS_GEOMETRY.contains(kind, radius, relative, aim)
-	if kind=="charge":
+	if kind=="charge" and not is_held():
 		var goal: Vector2 = center+aim*minf(radius*2.,relative.length())
 		if world_controller.field_map!=null and _patrol_allows(goal) and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and world_controller.field_map.line_clear(center,goal):
 			global_position = goal
@@ -942,7 +986,7 @@ func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
 
 func is_held() -> bool:
-	return hold_remaining > 0.0
+	return hold_remaining > 0.0 or EQUIPMENT523_INVOKE_DEBUFF.control_active(self,"hold")
 
 func apply_hold(duration: float) -> void:
 	if dead:
@@ -976,10 +1020,20 @@ func _tick_stun(delta: float) -> void:
 	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
-	return stun_remaining > 0.0
+	return stun_remaining > 0.0 or EQUIPMENT523_INVOKE_DEBUFF.control_active(self,"stun")
+
+func on_equipment523_control(kind: String) -> void:
+	# The equipment layer owns its timer. Preserve timers from every other
+	# skill so its expiry or clear cannot erase an unrelated stun or hold.
+	if dead or kind not in ["stun","hold"]: return
+	if kind == "stun": motion.cancel_attack()
+	velocity = Vector2.ZERO
+	path = PackedVector2Array()
+	path_index = 0
+	show_status_text("STUN" if kind == "stun" else "HOLD")
 
 func apply_stun(duration: float) -> void:
-	if dead:
+	if dead or status_immunities.has("stun"):
 		return
 	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))
 	if is_stunned(): motion.cancel_attack()
@@ -1188,6 +1242,7 @@ func combat_hit_position() -> Vector2:
 func _cancel_attack(id: int) -> void:
 	var source523 = _patch523_service()
 	if source523 != null: source523.cancel(self,id)
+	source_boss_combat.cancel(id)
 	if id != special_sequence: return
 	special_attack.clear()
 	special_sequence = -1
@@ -1200,6 +1255,8 @@ func _release_attack(id: int) -> void:
 	released_sequence = id
 	var source523 = _patch523_service()
 	if source523 != null and source523.release(self,id): return
+	if source_boss_combat.release(id): return
+	if source_action_contract_required: return
 	if not _target_attackable(): return
 	if is_stunned() or is_feared() or custom_frozen(): return
 	if id==special_sequence:
@@ -1248,6 +1305,9 @@ func _emit_symbol_hit(amount: int, kind: String, context: Dictionary) -> void:
 	symbol_hit_context=previous
 
 func _move_on_map() -> void:
+	if source_host_stationary:
+		velocity = Vector2.ZERO
+		return
 	var controller: Node = world_controller
 	if not _patrol_allows(global_position+velocity*get_physics_process_delta_time()): velocity = Vector2.ZERO
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
@@ -1301,8 +1361,12 @@ func prune_source_option_debuffs(enabled: Dictionary, origin_prefix: String = ""
 		if origin_prefix.is_empty() and origin.begins_with("totem:"): continue
 		if not origin_prefix.is_empty() and not origin.begins_with(origin_prefix): continue
 		if dead or not enabled.has(origin):source_option_debuffs.erase(origin)
+func source_equipment_modifier(key: String) -> float:
+	if not is_instance_valid(world_controller) or world_controller.original_skills==null:return 0
+	return world_controller.original_skills.status.modifier(self,key)
+
 func source_option_healing(amount: int,potion: bool=false) -> int:
-	var maximum: int=0
+	var maximum: int=maxi(EQUIPMENT523_INVOKE_DEBUFF.healing_weight(self,potion),maxi(0,int(source_equipment_modifier("source_potion_heal_decrease_raw" if potion else "source_hp_heal_decrease_raw"))))
 	for entry: Dictionary in source_option_debuffs.values():
 		for effect: Dictionary in entry.effects:
 			if effect.type.Name==("HPPotionDecreasePercent" if potion else "HPHealDecreasePercent"):maximum=maxi(maximum,int(effect.bonus.Value))

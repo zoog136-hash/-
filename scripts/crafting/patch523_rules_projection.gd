@@ -133,7 +133,7 @@ func _bind_catalog(catalog: Array, wallet_records: Array) -> bool:
 		if record.get("source_test_item") != native.TestItem or record.get("source_is_stackable") != _categories[str(int(native.CategoryID))].IsStackable or record.get("source_level_limit_min") != native.LevelLimitMin or record.get("source_level_limit_max") != native.LevelLimitMax: continue
 		if _sorted_ids(record.get("source_class_ids",[])) != _ids(_limits.get(key,[]),"ClassID",true) or _sorted_ids(record.get("source_equip_slot_ids",[])) != _ids(_equip_links.get(key,[]),"EquipSlotID"): continue
 		var previous: Array = _by_id.get(key,[])
-		if not _full_native and previous.size() == 1 and _by_name[previous[0].name].size() == 1: continue
+		if not _full_native and previous.size() == 1 and _by_name[previous[0].name].size() == 1 and not (record.get("source_projection")=="current523_original_typed_game_dto_v1" and record.get("source_definition_archive")==SOURCE.identity() and record.get("source_original_item")==native): continue
 		if _by_name[record.name].size() == 1: _by_id[key] = [record]
 	for entry: Dictionary in catalog:
 		var raw_id: Variant = entry.get("source_item_class_id",0)
@@ -494,3 +494,4 @@ func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArra
 	if not str(equipment.problem).is_empty(): problem = str(equipment.problem); return {}
 	for table: String in ["ItemBlessBonus","Material","Unit","UIUnit","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","SpecialResistanceType"]: result.enchantment[table] = _tables[table]
 	return result
+

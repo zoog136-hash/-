@@ -16,12 +16,12 @@ static func _source_row(table: String, cached: Variant, foreign_key: String = ""
 	# Compound membership/server/UI-unit rows have no invented primary ID.
 	# Use only the compiler's declared FK, then compare the entire source row.
 	if foreign_key.is_empty() or not _integer(cached.get(foreign_key)): return null
-	var match: Variant = null
+	var matched_row: Variant = null
 	for original: Dictionary in SOURCE.related(table,foreign_key,int(cached[foreign_key])):
 		if original != cached: continue
-		if match != null: return null
-		match = original
-	return match
+		if matched_row != null: return null
+		matched_row = original
+	return matched_row
 
 static func _field(container: Dictionary, key: String, table: String, foreign_key: String = "") -> Variant:
 	var original: Variant = _source_row(table,container.get(key),foreign_key)

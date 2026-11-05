@@ -43,6 +43,8 @@ def verify(path: Path, source: Path):
             assert edge['status'] == ('source_rows_joined' if rows else 'source_target_not_defined')
         else:
             assert 'rows' not in edge
+    source_icons = {r['ID']: r for r in tables['Icon']}
+    source_assets = {r['AssetId']: r for r in tables['AssetView']}
     seen = set()
     source_enchant = {r['ID']:r for r in tables['ItemEnchantBonus']}
     bonuses = {r['ID']:r for r in tables['Bonus']}
@@ -54,6 +56,10 @@ def verify(path: Path, source: Path):
         document = json.loads(gzip.decompress(packed))
         assert document['source_tables'] == provenance
         assert document['item_shards'] == header['item_shards']
+        icon_index = document['source_icon_index']
+        assert icon_index['schema'] == 'patch523-item-icon-index-v1'
+        assert set(icon_index['items']) == {k for k, v in originals.items() if not v['TestItem']}
+        assert set(icon_index['icons']) == {str(v) for v in icon_index['items'].values()}
         for name, info in document['item_shards'].items():
             blob = archive.read('payload/'+name)
             assert len(blob) == info['bytes'] and sha(blob) == info['sha256']
@@ -70,6 +76,22 @@ def verify(path: Path, source: Path):
                 record = definition['native_record']
                 assert int(record['source_item_class_id']) == int(key)
                 assert record['source_test_item'] == originals[key]['TestItem']
+                if not originals[key]['TestItem']:
+                    icon_id = originals[key]['IconID']
+                    asset_id = source_icons[icon_id]['AssetID']
+                    asset = source_assets[asset_id]
+                    identity = record['source_icon_identity']
+                    assert identity['item_class_id'] == int(key)
+                    assert identity['icon_id'] == icon_id
+                    assert identity['asset_id'] == asset_id
+                    assert identity['file_path'] == asset['FilePath']
+                    assert identity['asset_type_id'] == asset['AssetTypeId']
+                    assert identity['pixel_verification'] == 'not_performed'
+                    assert icon_index['items'][key] == icon_id
+                    assert icon_index['icons'][str(icon_id)] == {
+                        'asset_id': asset_id, 'asset_type_id': asset['AssetTypeId'],
+                        'file_path': asset['FilePath']}
+
                 assert record['source_is_trash'] == originals[key]['IsTrash']
                 assert summary['native_record']['source_catalog_eligible'] == (int(key) != 0 and not originals[key]['TestItem'])
                 item_bonuses = {row['ID']: row for row in definition.get('item_bonus', [])}

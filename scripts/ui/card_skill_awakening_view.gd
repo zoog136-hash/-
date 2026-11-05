@@ -1,5 +1,6 @@
 extends VBoxContainer
 ## Source candidates and explicit user-policy atomic awakening transaction.
+const Presentation=preload("res://scripts/cards/source_card_operation_presentation.gd")
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
 const SourceSkin=preload("res://scripts/ui/source_skill_awakening_skin.gd")
@@ -16,6 +17,7 @@ var growth: Label
 var snapshot: Dictionary={}
 func configure(service: RefCounted,target: String) -> void:
 	runtime=service;identity=target
+	if not Presentation.available(Presentation.AWAKENING):return
 	size_flags_horizontal=Control.SIZE_EXPAND_FILL;size_flags_vertical=Control.SIZE_EXPAND_FILL
 	add_theme_constant_override("separation",8)
 	name="CardSkillAwakeningView"
@@ -32,8 +34,7 @@ func configure(service: RefCounted,target: String) -> void:
 	current.text="현재 각성 스킬 없음" if selected_id==0 else str(runtime.core.DATA.data.spells.get(str(selected_id),{}).get("name","미지원 스킬"))+" · Lv."+str(int(snapshot.entry.level))
 	if not snapshot.owned:current.text+=" · 미보유 · 조회 전용"
 	growth=UI.label("저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터",12,UI.MUTED)
-	growth.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
-	info.add_child(growth)
+	growth.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(growth)
 	if bool(snapshot.get("save_blocked",false)):info.add_child(UI.label("저장 보호 중 · 정상 저장 불러오기 필요",12,UI.GOLD))
 	var book: Label=UI.label("필요 각성서: "+str(snapshot.book.get("name","원본 연결 없음"))+" · 1장 소모",12,UI.MUTED);book.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;info.add_child(book)
 	level=OptionButton.new();level.name="SkillAwakeningPreviewLevel";level.custom_minimum_size.y=44
@@ -70,7 +71,7 @@ func _preview(index: int) -> void:
 	var data: Dictionary=runtime.view(identity,index+1)
 	var p: Dictionary=data.get("preview_profile",{})
 	stats.text="원본 레벨 프로필 없음" if p.is_empty() else "미리보기 HP +%d · 발동 %s%% · 지연 보정 -%s초 · 원본 누적 경험치 기준 %s" % [int(p.hp),str(float(p.invoke.CastSuccessProb)/100.0),str(float(p.invoke.CastDelayBonus)/1000.0),str(int(p.experience_row.CumExp))]
-	stats.tooltip_text="미리보기는 저장 레벨·보유·능력치를 변경하지 않습니다. CumExp를 임의의 레벨업/실패 공식으로 사용하지 않습니다."
+	stats.tooltip_text="미리보기는 저장 상태를 변경하지 않습니다. 원본 레벨 수치와 게임의 성장 환산·수수료 설정을 구분합니다."
 func _select(index: int) -> void:
 	if index<0 or index>=snapshot.candidates.size():return
 	var row: Dictionary=snapshot.candidates[index]
@@ -85,6 +86,7 @@ func _select(index: int) -> void:
 	effect.text="\n".join(lines)
 
 func _execute() -> void:
+	if not Presentation.available(Presentation.AWAKENING):return
 	action.disabled=true
 	var result: Dictionary=runtime.request_operation(identity,{"expected_revision":int(runtime.progress.revision)})
 	if result.ok:
@@ -93,3 +95,16 @@ func _execute() -> void:
 		growth.text="저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"
 	else:current.text=str(result.error)
 	action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false))
+	refresh_growth()
+
+func refresh_growth(_force: bool=false) -> void:
+	if not Presentation.available(Presentation.AWAKENING):return
+	# Existing read-only saved EXP text; no material picker or synthesis form.
+	snapshot=runtime.view(identity)
+	if not snapshot.ok:return
+	var entry: Dictionary=snapshot.entry
+	current.text="현재 각성 스킬 없음" if int(entry.spell_id)==0 else str(runtime.core.DATA.data.spells[str(int(entry.spell_id))].name)+" · Lv."+str(int(entry.level))
+	growth.text="저장 경험치 "+str(entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"
+
+func _feed_experience() -> Dictionary:
+	return Presentation.request(Presentation.GROWTH)

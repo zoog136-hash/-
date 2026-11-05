@@ -79,7 +79,9 @@ static func prepare(state: Dictionary,inventory: Dictionary,instances: Dictionar
 	for entry: Variant in instances.values():
 		if entry is Dictionary and entry.get("name","")==name_value:physical_count+=1
 	if physical_count>int(count):return {"ok":false,"code":"source_ownership_count","error":"아이템 보유 정보가 일치하지 않습니다 · 아이템 보존"}
-	var next: Dictionary=state.duplicate(true);next[FIELD]=marker();next.revision=int(next.get("revision",0))+1
+	var next: Dictionary=state.duplicate(true);next[FIELD]=marker()
+	if DATA.loaded_schema=="twilight.card-slots523.v2":next["native_relic_summon_time"]={"schema":1,"item_class_id":365758,"identity":"","slot_index":11,"expires_utc":0}
+	next.revision=int(next.get("revision",0))+1
 	var bag: Dictionary=inventory.duplicate(true);var physical: Dictionary=instances.duplicate(true)
 	if int(count)==1:bag.erase(name_value)
 	else:bag[name_value]=int(count)-1

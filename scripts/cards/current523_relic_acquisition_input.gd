@@ -70,7 +70,7 @@ func _node(table: String, raw: Dictionary) -> Dictionary:
 		return {}
 	return node
 
-func _get(table: String, id: Variant) -> Dictionary:
+func _source_row(table: String, id: Variant) -> Dictionary:
 	if not _integer(id) or int(id)<0: _fail("relic_acquisition_invalid_reference:"+table); return {}
 	var matches: Array[Dictionary] = SOURCE.related(table,"ID",int(id))
 	if matches.size()!=1: _fail("relic_acquisition_reference_missing_or_ambiguous:"+table+":"+str(int(id))); return {}
@@ -99,11 +99,11 @@ func _description_refs(raw: Dictionary) -> Dictionary:
 
 func _effect(table: String, raw: Dictionary) -> Dictionary:
 	var link: Dictionary = _node(table,raw)
-	var bonus: Dictionary = _get("Bonus",raw.get("BonusID"))
+	var bonus: Dictionary = _source_row("Bonus",raw.get("BonusID"))
 	if link.is_empty() or bonus.is_empty(): return {}
-	var type: Dictionary = _get("BonusType",bonus.raw.get("BonusTypeID"))
+	var type: Dictionary = _source_row("BonusType",bonus.raw.get("BonusTypeID"))
 	if type.is_empty(): return {}
-	var unit: Dictionary = _get("Unit",type.raw.get("UnitID"))
+	var unit: Dictionary = _source_row("Unit",type.raw.get("UnitID"))
 	if unit.is_empty(): return {}
 	var effect := {"link":link,"bonus":bonus,"type":type,"unit":unit}
 	# The reviewed compiler selects the first original UIUnit owner row.
@@ -125,10 +125,10 @@ func _effects(table: String, field: String, id: int) -> Array:
 	return result
 
 func _item(id: int) -> Dictionary:
-	var item: Dictionary = _get("ItemClass",id)
+	var item: Dictionary = _source_row("ItemClass",id)
 	if item.is_empty(): return {}
-	var category: Dictionary = _get("ItemCategory",item.raw.get("CategoryID"))
-	var grade: Dictionary = _get("Grade",item.raw.get("GradeID"))
+	var category: Dictionary = _source_row("ItemCategory",item.raw.get("CategoryID"))
+	var grade: Dictionary = _source_row("Grade",item.raw.get("GradeID"))
 	if category.is_empty() or grade.is_empty(): return {}
 	var limits: Array = _owned("ItemClassLimit","ItemClassID",id)
 	var description_refs: Dictionary = _description_refs(item.raw)
@@ -142,9 +142,9 @@ func _unlock(definition: Dictionary) -> bool:
 		if effect.bonus.raw.get("ID")==UNLOCK_BONUS and effect.type.raw.get("Name")=="BuffClassID" and effect.unit.raw.get("Name")=="BuffClassID" and effect.type.raw.get("UnitID")==16 and effect.bonus.raw.get("Value")==BUFF:
 			typed_link = true
 	if not typed_link: _fail("relic_acquisition_unlock_typed_buff_reference_unavailable"); return false
-	var buff: Dictionary = _get("BuffClass",BUFF)
+	var buff: Dictionary = _source_row("BuffClass",BUFF)
 	var effects: Array = _effects("BuffBonus","BuffClassID",BUFF)
-	var use_desc: Dictionary = _get("UseDesc",definition.item.raw.get("UseDescID"))
+	var use_desc: Dictionary = _source_row("UseDesc",definition.item.raw.get("UseDescID"))
 	if buff.is_empty() or use_desc.is_empty() or not problem.is_empty(): return false
 	var description_ref := {"table":"DescData_Korean","field":"DescID","id":use_desc.raw.get("DescID"),"source_table":"UseDesc","source_id":use_desc.raw.get("ID"),"deferred":true,"reason":"user_deferred_description_text"}
 	definition["buff"] = buff
@@ -182,16 +182,16 @@ func build() -> Dictionary:
 	for effect: Dictionary in box.effects:
 		if effect.type.raw.get("Name")=="LuckyBagClassID" and effect.unit.raw.get("Name")=="LuckyBagClassID" and effect.bonus.raw.get("Value")==BAG: bag_links+=1
 	if box.effects.size()!=1 or bag_links!=1: _fail("relic_acquisition_box_typed_LuckyBagClassID_unavailable"); return {}
-	var bag: Dictionary = _get("LuckyBagClass",BAG)
+	var bag: Dictionary = _source_row("LuckyBagClass",BAG)
 	if bag.is_empty(): return {}
 	var contents: Array = []
 	var type_counts: Dictionary = {}
 	for raw: Dictionary in entities:
 		var entity: Dictionary = _node("LuckyBagEntityView",raw)
-		var type: Dictionary = _get("LuckyBagEntityType",raw.LuckyBagEntityTypeID)
-		var grade: Dictionary = _get("Grade",raw.get("GradeID"))
-		var category: Dictionary = _get("ItemCategory",raw.get("CategoryID"))
-		var bless: Dictionary = _get("ItemBlessCode",raw.ItemBlessCodeID)
+		var type: Dictionary = _source_row("LuckyBagEntityType",raw.LuckyBagEntityTypeID)
+		var grade: Dictionary = _source_row("Grade",raw.get("GradeID"))
+		var category: Dictionary = _source_row("ItemCategory",raw.get("CategoryID"))
+		var bless: Dictionary = _source_row("ItemBlessCode",raw.ItemBlessCodeID)
 		if entity.is_empty() or type.is_empty() or grade.is_empty() or category.is_empty() or bless.is_empty(): return {}
 		if type.raw.get("Name")!="IsGiven": _fail("relic_acquisition_entity_type_not_IsGiven"); return {}
 		var limits: Array = _owned("LuckyBagEntityClassLimit","LuckyBagEntityID",int(raw.ID))
@@ -222,3 +222,4 @@ func build() -> Dictionary:
 		"execution_boundaries":{"open_policy":"Existing explicit box consumer rules_valid, exact physical ownership and atomic save remain required; input projection authorizes no action.",
 			"quest_reference_state_semantics":"Owned by the existing SourceQuest provider; do not infer ancestry completion or prior reward claims.",
 			"source_execution":"Static content references only; no supply, claim, opening, effect or transaction is executed."}}
+

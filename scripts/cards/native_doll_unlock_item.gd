@@ -20,7 +20,11 @@ static func record() -> Dictionary:
 	if source.is_empty():return {}
 	return {"name":str(source.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_input_identity":source.source_input_identity.duplicate(true),"source_identity_namespace":"m508:item","source_identity_scope":"saved_identity_ABI_only; definition_origin_is_current523","source_item_class_id":ITEM,"sourceId":"m508:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"source_item":source.item.duplicate(true),"desc":"추가 마법인형 소환 해금 · 95레벨 필요 · 원본 아이템 사용","source_image_status":"original_icon_not_installed"}
 static func exact(value: Dictionary) -> bool:
-	return value.get("source","")=="lineagem_base508" and value.get("source_snapshot","")=="base508" and value.get("sourceId","")=="m508:item:"+str(ITEM) and value.get("source_item_class_id",0)==ITEM
+	var expected: Dictionary=record()
+	if expected.is_empty():return false
+	for field: String in ["source","source_snapshot","source_input_identity","source_identity_namespace","source_identity_scope","source_item_class_id","sourceId","source_item"]:
+		if value.get(field)!=expected.get(field):return false
+	return value.get("source_bless_raw",1)==1 and not value.get("source_pending_use",false)
 static func install(catalog: Dictionary) -> Dictionary:
 	var target: Dictionary=record()
 	if target.is_empty():return {"ok":false,"reason":"source_input_missing","problem":INPUT.problem}
@@ -65,3 +69,4 @@ static func prepare(state: Dictionary,inventory: Dictionary,instances: Dictionar
 	else:bag[name_value]=int(count)-1
 	physical.erase(selected)
 	return {"ok":true,"state":next,"inventory":bag,"item_instances":physical,"consumed_item_class_id":ITEM,"consumed_quantity":1,"consumed_instance_id":selected}
+

@@ -210,3 +210,4 @@ func constant(name_value: String, fallback: int) -> int:
 	for entry: Dictionary in rows("FishConstant"):
 		if str(entry.Name) == name_value: return int(entry.Value)
 	return fallback
+

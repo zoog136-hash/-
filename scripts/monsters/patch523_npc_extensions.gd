@@ -108,6 +108,8 @@ func release(actor: Node, spell: Dictionary, already_paid: bool = false) -> bool
 		var source: Dictionary = service.catalog.row("BuffClass",buff_id)
 		if bool(source.get("IsImmuneToCancellation",false)): continue
 		if (not groups.is_empty() and groups.has(source.get("BuffGroupID"))) or (groups.is_empty() and bool(source.get("IsGood",false))): service.player_buffs.erase(buff_id); removed += 1
+	# Equipment source buffs retain their own exact group/immunity checks.
+	removed += service.world.equipment523.cancel(service.world,groups)
 	removed += remaining.cancel_host(groups)
 	removed += cancel_quest_regen(groups)
 	var duration: Vector2 = service.catalog.duration(id)
@@ -173,6 +175,30 @@ func bind_current(attribute_id: int) -> bool:
 	if not found: return false
 	own_attribute = attribute_id; own_map = str(service.world.active_map_id); own_center = service.world.player.global_position
 	return true
+
+func actor_invisible(actor: Node) -> bool:
+	if service == null or not enabled or not service.host_enabled or not is_instance_valid(actor): return false
+	# Only an already applied, live self-spell buff is authoritative here.
+	# Environment/NpcAttribute activation and other invisibility variants keep
+	# their separate unresolved contracts; no state is produced by this query.
+	for value: Variant in actor_buffs.get(actor.get_instance_id(),[]):
+		if not value is Dictionary: continue
+		var entry: Dictionary = value
+		if not entry.get("actor") is WeakRef or entry.actor.get_ref() != actor: continue
+		if bool(actor.get("dead")) or int(entry.get("life",-1)) != int(actor.get("life_id")) or int(entry.get("generation",-1)) != int(service.world.combat_generation): continue
+		var duration: Variant = entry.get("remaining",0)
+		if typeof(duration) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(duration)) or float(duration) <= 0: continue
+		var id: int = int(entry.get("id",0))
+		var source: Dictionary = service.catalog.row("BuffClass",id)
+		if source.is_empty() or entry.get("source") != source: continue
+		for detail: Dictionary in service.catalog.bonuses("BuffBonus",id):
+			if detail.type.get("Name","") != "Invisible": continue
+			if int(detail.type.get("UnitID",-1)) != 20 or int(detail.unit.get("ID",-1)) != 20 or detail.unit.get("Name","") != "TrueFalse": continue
+			if int(detail.bonus.get("BonusApplicationTypeID",-1)) != 0 or int(detail.bonus.get("BonusApplicationTargetID",-1)) != 0: continue
+			if int(detail.link.get("CharacterLevel",0)) != 0 or int(detail.link.get("CharacterClass",0)) != 0 or int(detail.link.get("MinSpellLevel",0)) != 0: continue
+			var flag: Variant = detail.bonus.get("Value")
+			if typeof(flag) in [TYPE_INT,TYPE_FLOAT] and float(flag) == 1.0: return true
+	return false
 
 func bindings(actor: Node) -> Array:
 	var result: Array = []

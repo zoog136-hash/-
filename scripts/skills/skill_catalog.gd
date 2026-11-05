@@ -28,6 +28,7 @@ var static_stat_totals: Dictionary = {}
 var weighted_stat_entries: Dictionary = {}
 var static_speed: float = 1.0
 var stat_rebuild_count: int = 0
+const RELIC_LEVELS = preload("res://scripts/cards/relic_spell_levels.gd")
 
 func configure(owner: Node) -> void:
 	world = owner
@@ -126,13 +127,16 @@ func minimum_level_for(record: Dictionary) -> int:
 	if native.has("minimum_level"):return int(native.minimum_level)
 	return _host_minimum_level_for(record)
 
+
 func _host_minimum_level_for(record: Dictionary) -> int:
 	return int(record.get("class_learning_levels",{}).get(str(world.job_class),record.get("minimum_level",0)))
+
 
 func level_locked(record: Dictionary) -> bool:
 	# The new source learning threshold is for learning/UI only. Historical
 	# owned spell execution retains its existing host level policy.
 	return (bool(record.get("local_design",false)) or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<_host_minimum_level_for(record)
+
 
 func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
@@ -232,14 +236,19 @@ func _lineage_signature() -> String:
 
 func _resolved_reference(record: Dictionary) -> Dictionary:
 	var signature: String=_lineage_signature()
+	signature += _relic_signature()
 	if signature!=resolved_signature:
 		resolved_signature=signature
 		resolved_cache.clear()
 	var id: String=str(record.get("id",""))
-	# UI/quickslots carry exact deep copies. Canonical equality is safe to cache;
-	# altered actions keep their own resolution and cannot poison that cache.
-	if not id.is_empty() and by_id.has(id) and (is_same(by_id[id],record) or by_id[id]==record):
-		if not resolved_cache.has(id):resolved_cache[id]=_resolve_uncached(by_id[id])
+	# World quickslots and the skill browser keep deep copies of this catalog.
+	# Accept exact copies, then resolve the canonical row; altered records do
+	# not acquire native effects merely by carrying a known ID.
+	if not id.is_empty() and by_id.has(id) and (is_same(by_id[id],record) or by_id[id] == record):
+		if not resolved_cache.has(id):
+			var result: Dictionary = _resolve_uncached(by_id[id])
+			var identity: Dictionary = by_id.get(str(result.get("relic_resolved_id", id)), {})
+			resolved_cache[id] = RELIC_LEVELS.project(world, result, identity, enabled(record))
 		return resolved_cache[id]
 	return _resolve_uncached(record)
 
@@ -247,8 +256,12 @@ func resolve(record: Dictionary) -> Dictionary:
 	# Callers may alter a resolved action; never hand out the cached source.
 	return _resolved_reference(record).duplicate(true)
 
+func _relic_signature() -> String:
+	return "|relic:%d|%d|%d|%d" % [RELIC_LEVELS.state_key(world), int(world.level), hash(world.equipped_items.get("weapon", {})), hash(schools)]
+
 func _resolve_uncached(record: Dictionary) -> Dictionary:
 	var result: Dictionary = record.duplicate(true)
+	result["relic_resolved_id"] = str(record.id)
 	var family: Dictionary = {str(record.id):true}
 	# Apply each augment once, in ancestry order. A stronger tier's values
 	# replace weaker values rather than adding both passive stat packages.
@@ -262,6 +275,7 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result.merge(rel.get("patch", {}), true)
 			family[id] = true
 			result["resolved_grade"] = augment.grade
+			result["relic_resolved_id"] = id
 			changed = true
 		if not changed: break
 	var job: String=str(world.job_class)
@@ -282,7 +296,7 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 
 func _current_stat_signature() -> String:
 	var equipped: Variant=world.equipped_items.get("weapon",{})
-	return "%s|%s|%d|%d|%d" % [_lineage_signature(),str(schools.get("요정","water")),
+	return "%s|%s|%d|%d|%d" % [_lineage_signature() + _relic_signature(),str(schools.get("요정","water")),
 		hash(equipped),int(world.level),records.size()]
 
 func _ensure_stat_index() -> void:
@@ -380,6 +394,7 @@ func _source_learning_input(record: Dictionary)->Dictionary:
 	# This threshold selects that same OR boundary, without mixing conditional rows.
 	return {"minimum_level":ordinary_levels.min()}
 
+
 func source_learning_status(record: Dictionary, new_learning: bool=false)->Dictionary:
 	var key: String=str(record.get("id",""))
 	if source_quest_knowledge.has(key):
@@ -389,6 +404,7 @@ func source_learning_status(record: Dictionary, new_learning: bool=false)->Dicti
 		var native: Dictionary=_source_learning_input(record)
 		if native.has("message"):return native
 	return {}
+
 
 func export_state() -> Dictionary:
 	var state: Dictionary={"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}

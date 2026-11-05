@@ -204,3 +204,4 @@ static func interval_effects(effect: Dictionary, hp: int, maximum: int, round_up
 static func local_damp_supported(effect: Dictionary) -> bool:
 	var raw: Dictionary=effect.get("source_original",{})
 	return effect.get("runtime_policy","")=="twilight_target13_stacked_reduction_v1" and raw.get("bonus_type",{}).get("Name","")=="DamageDampOption" and raw.get("application_type",{}).get("Name","")=="DamageDampOption" and int(raw.get("bonus",{}).get("BonusApplicationTargetID",0))==13 and raw.get("unit",{}).get("Name","")=="Percentage"
+

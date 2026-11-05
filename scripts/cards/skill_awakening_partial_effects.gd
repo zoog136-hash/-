@@ -11,7 +11,19 @@ var emitted: int=0
 var retired: int=0
 
 func _ready() -> void:set_process(false)
-func play_source(manifest: String,sprite_id: int,facing: int,point: Vector2) -> bool:
+func play_source(_manifest: String,_sprite_id: int,_facing: int,_point: Vector2) -> bool:
+	# A legacy base508 overlay index is not a current source-bank input.
+	return false
+
+func play_current_source(preview: Node,sprite_id: int,facing: int,point: Vector2) -> bool:
+	if preview==null or not preview.has_method("spawn_source_overlay"):return false
+	var context: Variant=preview.get("_reference_card_context")
+	if not context is Dictionary or context.get("source_snapshot")!="patch523" or context.get("source_tables_sha256")!="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832":return false
+	# The Sprite owner resolves its own exact current child/action declaration.
+	# No old overlay record, fabricated source action or sparse frame is supplied.
+	return preview.spawn_source_overlay(sprite_id,facing,point)
+
+func _play_legacy_source_for_reference(manifest: String,sprite_id: int,facing: int,point: Vector2) -> bool:
 	if active.size()>=MAX_ACTIVE or not ResourceLoader.exists(POLICY_PATH) or not FileAccess.file_exists(manifest):return false
 	var policy: Script=load(POLICY_PATH)
 	if policy.mode(manifest.get_base_dir())!="compatible":return false

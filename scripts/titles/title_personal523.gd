@@ -1,5 +1,5 @@
 extends RefCounted
-## Source thresholds/colors/word lists; explicit host Unicode and match policy.
+## Source thresholds/colors; existing Unicode shape and length rules remain.
 var runtime_ref: WeakRef
 var runtime:
 	get: return runtime_ref.get_ref() if runtime_ref!=null else null
@@ -27,7 +27,6 @@ func colors(value: Dictionary) -> Array:
 	return result
 
 func name_error(text: String) -> String:
-	if name_cache.has(text): return str(name_cache[text])
 	var result: String=""
 	if text.is_empty() or text!=text.strip_edges(): result="앞뒤 공백 없이 호칭을 입력해 주세요."
 	var ascii_only:=true
@@ -39,17 +38,6 @@ func name_error(text: String) -> String:
 	if ascii_only:
 		if text.length()<2 or text.length()>16: result="영문·숫자는 2~16자로 입력해 주세요."
 	elif text.length()<1 or text.length()>int(runtime.policy.get("personal_mixed_max_codepoints",8)): result="한글·특수·혼합 문자는 자체 정책 범위로 입력해 주세요."
-	if result.is_empty():
-		var lowered:=text.to_lower()
-		# TextMatchingTypeID is preserved in source metadata. Its enum/execution
-		# was not supplied: conservative case-insensitive substring is host policy.
-		for word: Dictionary in runtime.source.personal.get("banned_words",[]):
-			var term: String=word.text
-			if not term.is_empty() and term.length()<=lowered.length() and lowered.contains(term):
-				result="원본 금칙어 목록과 자체 부분일치 정책으로 사용할 수 없는 호칭입니다."
-				break
-	if name_cache.size()>=512: name_cache.clear()
-	name_cache[text]=result
 	return result
 
 func validate(value: Dictionary) -> String:

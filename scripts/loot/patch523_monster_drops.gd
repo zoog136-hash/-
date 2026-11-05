@@ -5,6 +5,7 @@ const DATA_SHA = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d
 const PREVIOUS_FULL_DATA_SHA = "b812b3dc4b8e79dad50fedeb3ee279113a6dcad24d8a51f9fb1868ce98fb3750"
 const PHASE4_DATA_SHA = "45e21a871a09f4ccf2898896adc8cfb1b766890646911d20b5a5b3c12f33fa45"
 const FULL_ITEMS = preload("res://scripts/loot/patch523_item_catalog.gd")
+const CURRENT_DTO=preload("res://scripts/loot/current523_native_item_projection.gd")
 const CURRENT_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const PHASE3_DATA_SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
 const PREVIOUS_DATA_SHA = "1d0756f1adc4de14e003af99fa487789f27d954a98e7c7e6ed7152d147164b6f"
@@ -181,13 +182,20 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 		var row: Dictionary = effect.get("link",{}).duplicate(true)
 		row["class"] = effect.get("class",{})
 		classes.append(row)
-	return {"original_item":original,"category":reference.get("category",{}),"grade":reference.get("grade",{}),
+	var definition: Dictionary={"original_item":original,"category":reference.get("category",{}),"grade":reference.get("grade",{}),
 		"item_bonus":bonuses,"equip_rows":equips,"class_rows":classes,"native_record":{},"existing_binding":{},
 		"source_invoke_options":[],"source_reference":reference,"source_typed_references":reference.get("typed_references",[]),
 		"source_input_identity":reference.source,"excluded":reference.get("excluded",false),
 		"declared_exclusion":reference.get("declared_exclusion",{}),"reference_only":true,"can_activate":false,
 		"native_record_status":"missing_current_native_record_projection",
 		"unresolved_source_reference":"missing_current_native_record_projection"}
+
+	var projected: Dictionary=CURRENT_DTO.record(definition)
+	if not projected.is_empty():
+		definition.native_record=projected
+		definition.native_record_status="current_original_typed_game_dto"
+		definition.unresolved_source_reference=""
+	return definition
 
 static func _current_source_positions() -> bool:
 	if not _current_drop_positions.is_empty(): return true
@@ -415,6 +423,51 @@ static func _current_host_bindings(original: Dictionary, catalog: Dictionary) ->
 		document.host_binding_problems[id] = reason
 	return document
 
+static func _current_native_bindings(document: Dictionary,catalog: Dictionary,context: Dictionary) -> Dictionary:
+	if document.is_empty():return {}
+	var index: Variant=catalog.get("patch523_by_name",{})
+	if not index is Dictionary:return document
+	var by_source: Dictionary={}
+	for value: Variant in index.values():
+		if not value is Dictionary:continue
+		var key: String=str(value.get("sourceId",""))
+		if not by_source.has(key):by_source[key]=[]
+		by_source[key].append(value)
+	var supply: Script=load("res://scripts/cards/native_awakening_supply.gd")
+	for id: String in document.source_item_references:
+		if document.bindings.has(id):continue
+		var detail: Dictionary=document.source_item_references[id]
+		var current: Dictionary=definition_id(id).get("native_record",{})
+		if current.is_empty() or detail.get("excluded",false):continue
+		var condition: Dictionary=_current_host_condition_admission(detail)
+		if not condition.is_empty():
+			var unresolved: bool=false
+			for evidence: Dictionary in condition.get("evidence",[]):
+				if evidence.get("reason")!="source_item_lifetime_not_represented_by_exact_host_DTO":unresolved=true
+			if unresolved:document.unresolved_item_ids[id]=condition.reason;continue
+		var choices: Array=by_source.get("m523:item:"+id,[])
+		if choices.size()!=1:continue
+		var item: Dictionary=choices[0]
+		var typed: bool=supply!=null and supply.call("exact",item,int(id))
+		if not typed and not matches(item,current):continue
+		if not current.get("source_condition_pending",[]).is_empty() or current.get("source_delete_time_unresolved",false):document.unresolved_item_ids[id]="current_native_lifecycle_or_context_pending";continue
+		var dated: bool=current.has("source_start_time_raw") or current.has("source_end_time_raw") or current.has("source_delete_time_raw")
+		if dated:
+			var clock: Variant=context.get("source_clock_offset_minutes")
+			if not _source_integer(clock) or clock < -720 or clock > 840:document.unresolved_item_ids[id]="current_source_drop_clock_context_required";continue
+			if not deadline_problem(current,int(clock)).is_empty():document.unresolved_item_ids[id]="current_source_item_outside_existing_time_policy";continue
+		# Existing physical equipment, exact typed supplies and the actual Adena
+		# wallet have owners. Other new stacks require their quantity/use owner.
+		var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+		var stack_supported: bool=stock!=null and not stock.call("supply_profile",item).is_empty()
+		if not equipment(item) and currency_identity_name(item)!="아데나" and not typed and not stack_supported:
+			document.unresolved_item_ids[id]="current_native_stack_consumer_pending";continue
+		var link: Dictionary={}
+		for field: String in ["name","source","sourceId","sourceUrl","slot","type","grade"]:link[field]=item.get(field,"")
+		document.bindings[id]=link;document.unresolved_item_ids.erase(id);document.host_binding_problems.erase(id)
+		document.binding_provenance[id]={"membership":"current523_original_NpcItemDropView","item_reference":"current523_original_ItemData","game_dto":"current523_original_typed_projection","source_input_identity":CURRENT_SOURCE.identity(),"effect_completion":false,"native_quantity_or_rate_inferred":false}
+	return document
+
 static func native(value: Dictionary) -> bool:
 	return value.get("kind") == KIND and int(value.get("source_npc_id", -1)) > 0
 
@@ -483,6 +536,7 @@ static func expected_variant(original: Dictionary, saved: Dictionary) -> Diction
 	return legacy_stone_variant(original,int(saved.get("source_bless_raw",1))) if saved.get("source_legacy_stack_variant",false) else variant_item(original,int(saved.get("source_bless_raw",1)))
 
 static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dictionary:
+	if document.get("input_kind")=="current523_original_reference_rows":return CURRENT_DTO.register(load("res://scripts/loot/patch523_monster_drops.gd"),catalog,document)
 	if document.get("full_item_catalog",false): return FULL_ITEMS.register(document,catalog)
 	var records: Array = catalog.get("아이템", [])
 	var by_source: Dictionary = {}
@@ -564,6 +618,7 @@ static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> S
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
 	if not item.get("source_m_native_item", false): return ""
 	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
+	if not item.get("source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
 	var deadline: String = deadline_problem(item,timezone_minutes)
 	if not deadline.is_empty(): return deadline
 	var classes: Array = item.get("source_class_names", [])
@@ -627,24 +682,33 @@ static func definition_id(item_id: String) -> Dictionary:
 	return document.item_definitions.get(item_id,{})
 
 static func pack_identity() -> Dictionary:
-	return {"schema":3,"source_snapshot":"patch523","sha256":_active_sha} if data().get("full_item_catalog",false) else {}
+	var identity: Dictionary=CURRENT_SOURCE.identity()
+	if identity.is_empty():return {}
+	return {"schema":4,"source_snapshot":"patch523","kind":"current523_original_definition_projection","sha256":identity.source_sha256,"source_definition_archive":identity,"projection":"current523_original_typed_game_dto_v1","registered_count":int(data().get("current_native_registered_count",0)),"full_native_effects_complete":false}
+
+static func issued_definition_for_reference(item_id: String) -> Dictionary:
+	var historical: Dictionary=_legacy_data_for_reference()
+	return FULL_ITEMS.definition(historical,_root,item_id) if not historical.is_empty() else {}
+
+static func current_owned_record(saved: Dictionary) -> Dictionary:
+	if saved.get("source_m_native_item")!=true:return saved
+	var id: String=str(int(saved.get("source_item_class_id",0)))
+	var original: Dictionary=definition_id(id).get("native_record",{})
+	if original.is_empty() or saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523":return {}
+	var current: Dictionary=expected_variant(original,saved)
+	if not matches(current,saved):return {}
+	for key: String in ["instance_id","enhance_level","is_engraved","bless_state","source_m_drop_proof","source_m_reward_proof","source_m_item_id"]:
+		if saved.has(key):current[key]=saved[key].duplicate(true) if saved[key] is Dictionary or saved[key] is Array else saved[key]
+	return current
 
 static func native_enchant_stats(item: Dictionary, level: int) -> Dictionary:
-	if not item.get("source_m_native_item",false) or not data().get("full_item_catalog",false): return {}
-	var source: Dictionary = data().get("item_definitions",{}).get(str(int(item.get("source_item_class_id",-1))),{}).get("native_record",{})
-	if source.is_empty() or not matches(item,expected_variant(source,item)): return {}
-	var bless: int = int(item.get("source_bless_raw",1))
-	if item.get("bless_state") in ["blessed","축복"]: bless = 2
-	elif item.get("bless_state") in ["cursed","저주"]: bless = 3
-	var result: Dictionary = {}
-	for group: Variant in source.get("source_enchant_group_ids",[]):
-		for row: Array in data().get("source_enchant_groups",{}).get(str(int(group)),{}).get(str(maxi(0,level)),[]):
-			if int(row[2]) not in [0,bless] or int(row[5]) != 0 or int(row[6]) != 0: continue
-			var kind: Dictionary = data().get("source_enchant_bonus_types",{}).get(str(int(row[3])),{})
-			var key: String = str(kind.get("stat",""))
-			if key.is_empty(): continue
-			result[key] = float(result.get(key,0.0))+float(row[4])/float(kind.get("divisor",1))
-	return result
+	if not item.get("source_m_native_item",false):return {}
+	var source: Dictionary=definition_id(str(int(item.get("source_item_class_id",-1)))).get("native_record",{})
+	if source.is_empty() or not matches(item,expected_variant(source,item)):return {}
+	var bless: int=int(item.get("source_bless_raw",1))
+	if item.get("bless_state") in ["blessed","축복"]:bless=2
+	elif item.get("bless_state") in ["cursed","저주"]:bless=3
+	return CURRENT_DTO.enchant_stats(source,maxi(0,level),bless)
 
 static func migrate_legacy_record(saved: Dictionary) -> Dictionary:
 	if not data().get("full_item_catalog",false) or saved.get("source") != "inven": return {}
@@ -741,7 +805,7 @@ static func candidates(value: Dictionary, catalog: Dictionary) -> Dictionary:
 	# data() and this actual membership read both use current originals. The
 	# preserved legacy decoder/installer is never a final input or fallback.
 	var original: Dictionary = _current_source_document(value)
-	var document: Dictionary = _current_host_bindings(original,catalog) if not original.is_empty() else {}
+	var document: Dictionary = _current_native_bindings(_current_host_bindings(original,catalog),catalog,value) if not original.is_empty() else {}
 	if document.is_empty():
 		diagnostics = {"status":"current523_drop_input_unavailable","reason":_current_input_problem if not _current_input_problem.is_empty() else "current523_original_membership_unavailable","source_problem":CURRENT_SOURCE.problem()}
 		return {}
@@ -947,3 +1011,13 @@ static func install_zip(path: String) -> Dictionary:
 	_data = {}
 	_sources = {}
 	return {"ok":true, "path":target, "sha256":fingerprint}
+
+
+# Existing exact effect owners use this current-original definition proof;
+# historical BIN fingerprints remain receipt evidence, not final input gates.
+static func current_original_definition(record: Dictionary) -> Dictionary:
+	var marker: Dictionary=pack_identity()
+	if marker.get("schema")!=4 or marker.get("source_definition_archive")!=CURRENT_SOURCE.identity():return {}
+	var definition: Dictionary=item_definition(record)
+	var raw: Dictionary=definition.get("original_item",{})
+	return definition if not raw.is_empty() and definition.get("source_input_identity")==CURRENT_SOURCE.identity() and raw==CURRENT_SOURCE.row("ItemClass",int(raw.get("ID",0))) else {}
