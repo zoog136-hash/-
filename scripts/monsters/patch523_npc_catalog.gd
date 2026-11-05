@@ -59,7 +59,7 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 func row(table: String, id: int) -> Dictionary:
 	var compiled: Dictionary = content.get("tables", {}).get(table, {}).get(str(id), {}).get("row", {})
 	if not compiled.is_empty():
-		return selected_attack_row(compiled) if table == "NpcAttack" else compiled
+		return _selected_definition_row(table,compiled)
 	# Attack execution remains restricted to the previously compiled identities.
 	# Full attack definitions have a separate reference-only contract below.
 	if table == "NpcAttack" or not DEFINITION_TABLES.has(table): return {}
@@ -74,14 +74,25 @@ func owned(table: String, id: int) -> Array:
 	# with no selected rows. The original archive cannot widen that execution set.
 	if content.get("tables",{}).has(table) or table == "NpcAttack":
 		var selected: Array = indexes.get(table,{}).get(str(id),[])
-		if table != "NpcAttack": return selected
 		var result: Array = []
-		for compiled: Dictionary in selected: result.append(selected_attack_row(compiled))
+		for compiled: Dictionary in selected: result.append(_selected_definition_row(table,compiled))
 		return result
 	if DEFINITION_OWNERS.has(table):
 		var original: Array[Dictionary] = DEFINITIONS.related(table,str(DEFINITION_OWNERS[table]),id)
 		if not original.is_empty(): return original
 	return indexes.get(table, {}).get(str(id), [])
+
+func _selected_definition_row(table: String, compiled: Dictionary) -> Dictionary:
+	if table == "NpcAttack": return selected_attack_row(compiled)
+	if not DEFINITION_TABLES.has(table) or not source_integer(compiled.get("ID")): return compiled
+	var id: int = int(compiled.ID)
+	var selected: Dictionary = content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{})
+	if selected.is_empty() or selected != compiled: return compiled
+	# Read only an existing compiled identity. Full-row equality retains every
+	# condition and foreign owner; it never imports a larger original relation.
+	var original: Dictionary = DEFINITIONS.row(table,id)
+	if original.is_empty() or not source_integer(original.get("ID")) or int(original.ID)!=id or original != compiled: return compiled
+	return original
 
 func selected_attack_row(compiled: Dictionary) -> Dictionary:
 	if not source_integer(compiled.get("ID")) or not source_integer(compiled.get("NpcClassID")): return compiled

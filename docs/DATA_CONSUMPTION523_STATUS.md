@@ -201,6 +201,15 @@ The next delta connects the original data beyond the reference-returning APIs:
   compiled row. Existing attack/root/chain readers therefore receive original
   definitions without admitting an additional attack or changing AI, timing,
   probability interpretation, effects or saved ownership.
+- The catalog's existing `row()` and `owned()` calls also route selected
+  ID-bearing definition rows through `_selected_definition_row(table,compiled)`.
+  An integral exact ID, membership in the already compiled table and full-row
+  equality with the pinned original are required before the original row is
+  returned. Missing/different rows retain the compiled input. The authoritative
+  selected owner set, order and empty sets are preserved, so existing
+  bonus/spell/buff/status readers receive matching original rows without gaining
+  another definition or execution branch. NpcAttack retains its separate stricter
+  structure/ownership adapter. This data-read delta is unexecuted.
 
 The already recorded next large candidates have existing input readers:
 MerchantGoods in the shop catalog, GachaCraftOutput in the item-linked craft data
@@ -458,6 +467,15 @@ owns original UI, PR222 maps, and existing Sprite/image work remains separate.
 Sound, clan/siege, pets, arena/ziggurat, stopped content and cancelled work stay
 excluded. Shared Item/Bonus/Spell/Reward tables cannot be assigned wholly to one
 completed feature.
+
+The later supplied PR269 checkpoint
+`bfb4ae7e02ec529f32e18c8b9f3cdb5aefbf675c` records the selected quest-held
+craft-material ABI in `docs/QUEST_CRAFT_SELECTED_MATERIAL_ABI.md` and
+`docs/REST_INTEGRATION.md`: exact physical material/source-row/quantity/receipt
+allocation reaches the existing final save. Its skill execution/learning, shop
+purchase/receipt/save and existing NPC construction adoption are integration
+work, not additional implementations or gameplay observations in this Draft.
+The original crafting-input projection above retains those execution boundaries.
 
 Consumer gaps found in reviewed modules include `CombinationConstants`,
 `SymbolPayment`, `SymbolEnchant` and `TotemConstant`. A compiler output alone is
