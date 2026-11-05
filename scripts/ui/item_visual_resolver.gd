@@ -72,7 +72,8 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
-	# Exact native identity precedes legacy sourceId/name canonicalization.
+	# Exact native or source-qualified supplier identity precedes legacy
+	# sourceId/name canonicalization; it never grants a native gameplay flag.
 	# Inventory IconID is not a source declaration for a floor sprite.
 	if SOURCE523.handles_item(record,ground): return SOURCE523.describe_item(record,fallback_name)
 	if ground:

@@ -2,6 +2,7 @@ extends RefCounted
 ## Explicit, read-only image selection. Separate from actor/card pack settings.
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
+const MONSTERBOOK_ITEMS = preload("res://scripts/monsterbook/monsterbook523_items.gd")
 const ORIGINAL_UI_SELECTION_SCHEMA = "source523-original-ui-icon-selection-v1"
 const ORIGINAL_UI_SELECTION_MAX_BYTES: int = 2 * 1024 * 1024
 static var _pack: RefCounted
@@ -320,8 +321,29 @@ static func item_class_id(record: Dictionary) -> int:
 static func recognized_item(record: Dictionary) -> bool:
 	return record.get("source_snapshot","") == "patch523" and record.get("source_m_native_item") is bool and record.source_m_native_item and item_class_id(record) > 0
 
+static func _original_reward_item(record: Dictionary) -> bool:
+	# Keep each supplier's existing record contract for display only. The full
+	# original row must still equal the selected pack's canonical ItemClass row.
+	if MONSTERBOOK_ITEMS.valid_record(str(record.get("name","")),record): return true
+	# growth96_source.item_record declares this exact source, ItemClass key and
+	# preserved raw row. Neither the record nor its absent snapshot is rewritten.
+	if record.get("source") != "lineagem_patch523_growth" or not record.get("source_original") is Dictionary: return false
+	var id: Variant = record.get("growth96_item_id")
+	if not PACK._integer(id) or int(id) <= 0: return false
+	return record.get("sourceId") == "m523:item:" + str(int(id)) and record.source_original.get("ID") == id
+
+static func _original_quest_item(record: Dictionary) -> bool:
+	# source_quest523 preserves an original pending-use item without granting
+	# native execution. This predicate admits only its existing display shape.
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523": return false
+	if not record.get("source_pending_use") is bool or not record.source_pending_use or not record.get("quest_item") is bool or not record.quest_item: return false
+	if not record.get("source_original_item") is Dictionary: return false
+	var id: Variant = record.get("source_item_class_id")
+	if not PACK._integer(id) or int(id) <= 0: return false
+	return record.get("sourceId") == "m523:item:" + str(int(id)) and record.source_original_item.get("ID") == id
+
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and recognized_item(record) and selected()
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record))
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -330,6 +352,14 @@ static func _item_presentation_info(id: int, title: String, source_id: String = 
 		"texture":null,"provenance":{},"original_bytes_unchanged":false,"actual_game_consumption_observed":false}
 
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
+	var quest_record: bool = _original_quest_item(record)
+	if not recognized_item(record) and (_original_reward_item(record) or quest_record):
+		var original_row: Dictionary = record.source_original_item if quest_record else record.source_original
+		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
+		supplied["source_id"] = str(record.get("sourceId",""))
+		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
+		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
+		return supplied
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
 	if not recognized_item(record): return info
 	if record.get("source_test_item",false) == true:

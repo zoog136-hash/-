@@ -276,7 +276,7 @@ func _image_record(entry: Dictionary) -> Dictionary:
 		var physical: Variant = instances.get(instance_id)
 		if physical is Dictionary:
 			var original: Variant = physical.get("record")
-			if original is Dictionary and SOURCE_IMAGES.recognized_item(original): return original
+			if original is Dictionary and SOURCE_IMAGES.handles_item(original): return original
 	return hud.lineage_inventory_ui._item_visual_record(reference,fallback)
 
 func _execute() -> void:

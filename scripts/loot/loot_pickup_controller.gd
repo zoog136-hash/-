@@ -102,7 +102,7 @@ func _show_selected_item_image(record: Dictionary) -> void:
 	# This is the selected item's UI icon on the existing pickup button. The
 	# floor visual still requires its own source-declared ground asset role.
 	var item: Variant = record.get("item_record")
-	if not IMAGES.selected() or not item is Dictionary or not IMAGES.recognized_item(item): return
+	if not item is Dictionary or not IMAGES.handles_item(item): return
 	var image_info: Dictionary = IMAGES.describe_item(item, str(record.get("item_name", "")))
 	pickup_button.icon = image_info.get("texture") as Texture2D
 	var evidence: Dictionary = image_info.duplicate(true)

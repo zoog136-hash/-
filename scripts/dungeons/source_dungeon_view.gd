@@ -1,5 +1,6 @@
 extends VBoxContainer
 ## Game menu view for verified dungeon declarations; actions expose actual readiness.
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var world: Node
 var family: OptionButton
 var listing: ItemList
@@ -192,6 +193,7 @@ func _refresh() -> void:
 	selected = -1
 	local_toggle.get_parent().visible=_kind()=="tower"
 	listing.clear()
+	_set_recharger_icons({})
 	details.text = ""
 	rows = world.source_dungeon_entries(_kind(),bool(FAMILIES[family.selected][1]))
 	reward_mode.visible = _kind() == "tower"
@@ -209,11 +211,31 @@ func _refresh() -> void:
 			for destination: Dictionary in entry.destinations: names.append(str(destination.place.name))
 			listing.add_item(" / ".join(names) if not names.is_empty() else "목적지 확인 필요")
 		elif _kind() == "rechargers":
-			listing.add_item(str(entry.item.name))
+			var visual: Dictionary = IMAGES.describe_item_class_row(entry.item.row,str(entry.item.name))
+			var icon: Texture2D = visual.get("texture") as Texture2D
+			var index: int = listing.add_item(str(entry.item.name),icon)
+			if IMAGES.selected():
+				var evidence: Dictionary = visual.duplicate(true)
+				evidence.erase("texture")
+				listing.set_item_metadata(index,{"source523_image":evidence})
 		else:
 			listing.add_item("%d%s · %s" % [int(entry.stage.StageIndex),"층" if _kind() == "tower" else "단계",str(entry.place.name)])
 	listing.select(0)
 	_select(0)
+
+func _set_recharger_icons(item_row: Dictionary, title: String = "") -> void:
+	var visual: Dictionary = IMAGES.describe_item_class_row(item_row,title) if not item_row.is_empty() and IMAGES.selected() else {}
+	var icon: Texture2D = visual.get("texture") as Texture2D
+	for action: String in ["recharge","buy_charge"]:
+		var button: Button = play_buttons[action]
+		button.icon = icon
+		button.expand_icon = true
+		if not visual.is_empty():
+			var evidence: Dictionary = visual.duplicate(true)
+			evidence.erase("texture")
+			button.set_meta("source523_image",evidence)
+		elif button.has_meta("source523_image"):
+			button.remove_meta("source523_image")
 
 func _reward_lines(rewards: Array) -> Array[String]:
 	var result: Array[String] = []
@@ -240,6 +262,7 @@ func _select(index: int) -> void:
 	var lines: Array[String] = []
 	if _kind() == "rechargers":
 		var preview: Dictionary = world.source_dungeon_recharge_preview(int(entry.item.row.ID))
+		_set_recharger_icons(preview.item.row,str(preview.item.name))
 		lines.append(str(preview.item.name))
 		lines.append("대상: %s · 사용 시 1시간 충전" % str(preview.group.name))
 		lines.append("필요 레벨: %d" % int(preview.item.row.LevelLimitMin))

@@ -2,6 +2,7 @@ extends VBoxContainer
 ## Shared cart controls embedded in the actual warehouse / buyback windows.
 const TouchButton = preload("res://scripts/ui/native_touch_button.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var host: Control
 var world: Node
 var hud: Node
@@ -82,6 +83,7 @@ func refresh() -> void:
 			if str(rule.name)+"@@@"+str(rule.get("id","")) == reference: keep.value = int(rule.get("keep",0))
 	select_button.disabled = target.is_empty()
 	remove_button.disabled = target.is_empty()
+	_refresh_target_image()
 	keep.editable = not target.is_empty() and str(target.get("instance_id","")) == ""
 	if not keep.editable: keep.value = 0
 	if not target.is_empty():
@@ -96,6 +98,20 @@ func refresh() -> void:
 	# Keep long saved lists inspectable without pushing controls off small screens.
 	summary.max_lines_visible = 3
 	summary.tooltip_text = summary.text
+
+func _refresh_target_image() -> void:
+	# The existing warehouse/sale row carries the same authoritative record
+	# already used by its icon. Do not reconstruct an identity from its caption.
+	select_button.icon = null
+	if select_button.has_meta("source523_image"): select_button.remove_meta("source523_image")
+	var record: Variant = target.get("record")
+	if not record is Dictionary or not SOURCE_IMAGES.handles_item(record): return
+	var image: Dictionary = SOURCE_IMAGES.describe_item(record,str(target.get("name","")))
+	select_button.icon = image.get("texture") as Texture2D
+	select_button.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	select_button.set_meta("source523_image",evidence)
 
 func _report(result: Dictionary) -> void:
 	if not result.get("ok",false): hud.show_message(str(result.get("reason","설정할 수 없습니다")))

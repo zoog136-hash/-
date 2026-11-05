@@ -1,5 +1,6 @@
 extends VBoxContainer
 const UI=preload('res://scripts/ui/renewal_theme.gd')
+const IMAGES=preload('res://scripts/ui/source523_image_assets.gd')
 var world:Node
 var choices:OptionButton
 var payment:OptionButton
@@ -25,7 +26,26 @@ func configure(owner:Node)->void:
   choices.add_item(str(row.name)+(' · 비용 정의 없음' if not row.source_has_costs else ''),int(row.SpellGroupID))
   choices.set_item_tooltip(choices.item_count-1,'원본 구성 %d개 · 대체 정의 %d개 · 효과 Sprite %d' % [row.source_member_count,row.replacement_definitions.size(),row.EffectSpriteID])
  refresh_quote()
+func _refresh_payment_images()->void:
+ if not IMAGES.selected():
+  if payment.has_meta('source523_payment_item_images'):
+   for index:int in range(payment.item_count):payment.set_item_icon(index,null)
+   payment.remove_meta('source523_payment_item_images')
+  return
+ var images:Dictionary={}
+ # quote() compares these existing payment values with
+ # GameClassSpellGroupCostView.ItemClassID, not SpellGroupID.
+ var item_class_ids:Array[int]=[26,1122,32801]
+ for index:int in range(payment.item_count):
+  var resolved:Dictionary=IMAGES.describe_item_class(item_class_ids[index],payment.get_item_text(index))
+  payment.set_item_icon(index,resolved.get('texture') as Texture2D)
+  var evidence:Dictionary=resolved.duplicate(true);evidence.erase('texture')
+  evidence['presentation_role']='spell_group_conversion_payment'
+  evidence['payment_index']=index
+  images[index]=evidence
+ payment.set_meta('source523_payment_item_images',images)
 func refresh_quote()->void:
+ _refresh_payment_images()
  pending.clear()
  if choices.item_count==0:
   message.text=world.spell_group_conversion.problem if not world.spell_group_conversion.problem.is_empty() else '현재 직업에는 원본 계열 전환 설정이 없습니다.';confirm.disabled=true;return

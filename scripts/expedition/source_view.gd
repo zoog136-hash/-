@@ -1,5 +1,7 @@
 extends HBoxContainer
 
+const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+
 var catalogue: RefCounted
 var owned_cards: Array = []
 var spot_picker: OptionButton
@@ -252,6 +254,11 @@ func _refresh_jobs() -> void:
 	claim_button.disabled = selected_record.get("status") != "completed"
 	revive_button.disabled = selected_record.get("status") != "dead" or int(selected_record.get("sim", {}).get("resurrections", 3)) >= 3
 	abort_button.disabled = selected_record.is_empty() or selected_record.get("status") == "completed"
+	var completion_item: Dictionary = {}
+	if not selected_record.is_empty():
+		var completion: Dictionary = runtime.settlement_view(int(selected_record.id))
+		if completion.get("ok",false): completion_item = completion.item
+	_apply_item_icon(claim_button,completion_item)
 	_refresh_storage()
 
 func _refresh_storage() -> void:
@@ -261,17 +268,42 @@ func _refresh_storage() -> void:
 	storage_rows = runtime.storage_view()
 	storage_title.text = "탐험 보상 보관함 · %d/75칸" % storage_rows.size()
 	storage_picker.clear()
+	var icons: Dictionary = {}
 	for row: Dictionary in storage_rows:
 		var index := storage_picker.item_count
 		storage_picker.add_item("%s ×%d" % [row.item.get("Name", row.key), int(row.amount)])
+		var info: Dictionary = IMAGES.describe_item_class_row(row.item)
+		var texture: Texture2D = info.get("texture") as Texture2D
+		storage_picker.set_item_icon(index,texture)
+		if IMAGES.selected():
+			var evidence: Dictionary = info.duplicate(true)
+			evidence.erase("texture")
+			icons[str(row.key)] = evidence
 		storage_picker.set_item_metadata(index, str(row.key))
 		if row.key == selected: storage_picker.select(index)
+	if icons.is_empty():
+		if storage_picker.has_meta("source523_item_icons"): storage_picker.remove_meta("source523_item_icons")
+	else: storage_picker.set_meta("source523_item_icons",icons)
 	_refresh_storage_buttons()
 
 func _refresh_storage_buttons() -> void:
 	var has_item := storage_picker.selected >= 0 and storage_picker.selected < storage_rows.size()
 	withdraw_button.disabled = not has_item
 	open_button.disabled = not bool(storage_rows[storage_picker.selected].box) if has_item else true
+	var item: Dictionary = storage_rows[storage_picker.selected].item if has_item else {}
+	_apply_item_icon(withdraw_button,item)
+	_apply_item_icon(open_button,item if has_item and storage_rows[storage_picker.selected].box else {})
+
+func _apply_item_icon(button: Button, item: Dictionary) -> void:
+	button.icon = null
+	if button.has_meta("source523_item_icon"): button.remove_meta("source523_item_icon")
+	if item.is_empty() or not IMAGES.selected(): return
+	var info: Dictionary = IMAGES.describe_item_class_row(item)
+	button.icon = info.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = info.duplicate(true)
+	evidence.erase("texture")
+	button.set_meta("source523_item_icon",evidence)
 
 func _storage_action(open: bool) -> void:
 	if runtime == null or hud == null or storage_picker.selected < 0: return

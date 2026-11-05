@@ -624,7 +624,7 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 	var physical: Variant = instances.get(instance_id,{})
 	if not physical is Dictionary: return fallback
 	var original: Variant = physical.get("record",{})
-	if original is Dictionary and preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original):
+	if original is Dictionary and (preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original) or preload("res://scripts/ui/source523_image_assets.gd").handles_item(original)):
 		return original
 	return fallback
 

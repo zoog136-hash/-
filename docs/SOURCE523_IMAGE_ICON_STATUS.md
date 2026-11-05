@@ -138,6 +138,31 @@ Library identities or saves are included in Git.
   ItemClass rows matched against the pinned image pack. The owning cumulative523
   record and snapshot marker are preserved; no native-item flag is invented.
   RewardType, claim IDs and use actions remain with their existing service.
+  The same supplier-qualified record now reaches the existing shared item
+  resolver and selected-loot icon path. Its original supplier receipt must pass
+  the existing contract, and its full ItemClass row must match the selected
+  image pack. The strict native-item identity check is unchanged. Image metadata
+  retains the caller's cumulative snapshot separately from the current image
+  table identity; name aliases and gameplay flags are not created.
+  Growth reward records and pending-use quest reward records likewise retain
+  their producer's original shape and raw ItemClass row. The shared display
+  route requires the exact producer identity plus full canonical row equality.
+  The inventory physical-record image helper forwards these selected-pack
+  presentations without changing catalog filtering, input, use or ownership.
+- The existing warehouse/sale automatic-target registration button consumes
+  the already selected row's preserved source record. Clearing the selection
+  clears its image metadata without changing automatic inventory rules.
+- Existing level-growth registration and unambiguous item-reward buttons,
+  including their existing confirmation buttons, use their declared source
+  ItemClass relation. Multi-item claims do not choose a representative image.
+  The existing spell-group payment selector uses the same declared ItemClass
+  payment IDs as its quote provider; SpellGroup IDs remain separate.
+- Dungeon recharge-stone rows and their existing recharge/purchase buttons use
+  the provider's original ItemClass row. Expedition storage rows, withdrawal,
+  box-opening and exact completion-reward buttons use their existing ItemClass
+  records and settlement view. No reward draw or claim is executed by these
+  image calls. Missing/excluded/CSB states retain texture-free evidence, while
+  clearing a selection removes its previous icon and evidence.
 - NPC attack/environment-buff ItemList rows consume their already supplied
   full SpellClass/BuffClass rows after canonical row and namespace checks.
   TestSpell/dummy exclusions remain applied. Unsupported CSB entries stay
