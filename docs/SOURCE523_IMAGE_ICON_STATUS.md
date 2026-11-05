@@ -529,6 +529,48 @@ These are written caller connections, not observations of game consumption.
 No additional tests, execution, rendering, CI, source recount or quality audit
 was performed for these changes.
 
+### Original inventory and quickslot caller handoff
+
+UI267's published caller at `87eaa3e809ce02d9a63179630aaff37cb23e09d8`
+uses this lane's existing image APIs on its actual original target nodes:
+
+- Inventory Common_Slot15012: the bag's existing `_item_visual_record(reference,
+  fallback)` preserves the selected physical record, followed by
+  `source523_image_assets.describe_item(record, title)`.
+- Quickslot Slot_Skill18488: item records use `describe_item`; existing skill
+  records use `describe_skill`; guardian records use
+  `describe_guardian_skill(record, world.growth, "IconID")`.
+
+The exact public contracts are the owner's
+[inventory ABI](https://github.com/zoog136-hash/-/blob/87eaa3e809ce02d9a63179630aaff37cb23e09d8/docs/ORIGINAL_UI_INVENTORY_CALLER_ABI.md)
+and
+[quickslot ABI](https://github.com/zoog136-hash/-/blob/87eaa3e809ce02d9a63179630aaff37cb23e09d8/docs/ORIGINAL_UI_QUICKSLOT_CALLER_ABI.md).
+The owner requires an actual Texture2D, `route:source523_images`,
+`status:original_linked`, `original_bytes_unchanged:true` and the existing
+format/provenance before its source Sprite upload. This lane's existing
+supplier-qualified item, skill and guardian descriptors supply that contract;
+no second source-slot renderer or identity join is added.
+
+The normal-four candidate and the later expanded-eight/quickslot candidate are
+separate original pack inputs, preserved alongside canonical v5. Their source
+roots and manifest selections remain explicit installer inputs; neither changes
+the user's selected pack automatically. The original row/page/gesture/state
+implementation remains UI267's. Additional inventory rows and full-screen
+acceptance are not established by image availability alone.
+The native inventory/quickslot controllers require that owner's current code;
+this lane's earlier icon-player dependency snapshot is not the complete main-UI
+consumer. Its renderer files remain unchanged by this handoff.
+
+These native texture callers explicitly leave unsupported CSB icons pending.
+The received item CSB subsets and their existing TextureRect adapter do not
+provide an original Common_Slot15012 or Slot_Skill18488 scene-mount contract.
+That connection still needs the UI owner's exact native target/scene transform,
+clip/lifecycle and input boundary. No replacement node, source geometry or
+animation policy is inferred to satisfy it. Missing/dummy/test assets retain
+their original state; old samples and previous packs are not source success.
+Candidate receipt and source-node declarations are not executed presentation,
+game consumption, a new source inventory or a 95% usage result.
+
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
 loads, component renders and delivery bytes do not count as that completion.
