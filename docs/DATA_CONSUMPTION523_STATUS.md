@@ -187,6 +187,7 @@ The public data contracts for PR269 are:
 | `current523_buff_data.describe(buff_id)` | Original BuffClass/group, typed BuffBonus rows, declared status attributes and InvokeOption/type references. Item and spell data readers follow explicit BuffClassID units to this contract. Lifetimes and conditions stay raw; no new status is applied. A TestBuff field absent from the source is recorded as not declared, not invented as a required flag or dummy exclusion. |
 | `current523_reward_data.bag(bag_id)` / `reward(reward_id)` | Full declared bag entities/type/item/class-limit rows and Item/SelectReward ID graphs respectively. Quantities, blessing, initial enchant where declared, raw weights and conditions remain unmodified. Cycles stay explicit ID edges. Item bonus references call these adapters; no draw, choice or grant is added. |
 | `current523_gacha_craft_data.describe(gacha_craft_id)` | Original GachaCraft config, group probabilities, groups, outputs and bound-item references. The declared GachaCraftID unit in an item's bonuses connects this read to existing item/shop queries. Book materials/final cost/delete time stay in the outer item/bonus contract; ChangeCost is not substituted for them. Unknown output ClassID namespaces remain unresolved raw references. Candidate generation/confirmation and ownership settlement are still not authorized. |
+| `current523_market_gotcha_data.describe(market_id,origin_item_bonus={})` | Existing ItemData's `MarketPurchaseID` BonusType branch now calls this forward reader and returns `typed_references[].market_gotcha` to its item/shop callers. Original purchase/payment/product/bonus/additional, date/server/restriction and GotChaEntityView rows remain intact. Confirmed Unit namespaces resolve raw ItemClass/IntangibleItemClass/BuffCard targets or a pool; BuffCard entities require exact ClassID/BuffCardID identity. Payment/product/additional results retain `unit`, `typed_reference` and `target`/`pool`; root `pools`, `unresolved`, `source_exclusion_evidence` and source-table metadata stay separate. General odds denominators, draws, restriction interpretation, ownership and purchasing are not inferred. |
 | `source523_shop_catalog.item_references(item_id)` / shop runtime's same method | MerchantGoods plus typed item MarketProduct/additional/payment references and purchase/server/date/restriction rows. Existing successful quote results carry `source_reference`; buy/debit/save code and ownership tokens stay with their existing owner. Reverse references do not activate off-sale or restricted offers. |
 | `patch523_rules.recipe_evidence(craft_id)` | Cached original inputs/outputs/views/restrictions, with original-archive fallback only when a cached relation group is absent. Existing `material_selection→quote/execute` reads the exact source row/slot/item/quantity/enchant/blessing, result branches/probabilities and view/restriction conditions. It does not admit new recipes or change the established missing-failure policy. |
 | `patch523_rules.recipe_definition(craft_id)` | Original input/output/view/restriction relations and an `items` map of ItemClass data contracts, including source recipes absent from the compiled executable set. Returns `source_identity`, `available_in_compiled_recipes`, `reference_only:true`, `can_execute:false` and a source problem when unavailable. ItemClass0 remains a source failure sentinel without an item record. Existing quote/execute admission is unchanged. |
@@ -664,6 +665,15 @@ remain the existing supplier/effect owner's contract. The source membership
 does not supply drop probabilities or quantities. Host roll, item/variant
 selection, quantity, ground objects, grants, receipts and saves are unchanged.
 
+The separate retained `patch523_craft_catalog.available()` supplier is not
+changed by that drop-reader conversion. The published269 `b37e5b94` version
+still automatically selects its old full/partial monster-drop bin stores for
+native catalog DTOs. Replacing that supplier with the current full
+`native_record` projection/registration contract remains269's exact integration
+boundary. This Draft neither treats that old supplier as a required install nor
+claims every former sidecar activation path is already replaced. Its original
+files, explicit install/reference code and saved identities remain preserved.
+
 ### Other retained growth inputs — unverified
 
 `half_elixir_runtime.source_for(saved_state)` now reuses the common archive when
@@ -749,6 +759,20 @@ blocked; a newly constructed model is not labeled with a former file digest.
 Quote, owned-ticket identity, item-definition installation, original card/server/
 time admission, RNG, costs, issuance, receipts and final saving are unchanged.
 Those execution/ownership contracts remain269's implementation.
+
+The general market/GotCha forward reader is separate from those six ticket
+execution inputs. It follows the already published ticket/monsterbook
+`MarketPurchaseID` type join and exact original Unit namespaces, not numeric
+ClassID coincidences. It preserves ordinary/additional/bonus product rows,
+original per-entry Probability, card identity, source test/dummy evidence,
+OnSale, payment and time/server/restriction inputs. Missing or duplicate IDs
+retain missing/ambiguous evidence (including all duplicate matches) rather
+than an arbitrary selected row. Unsupported namespaces and nested-pool or
+restriction semantics remain deferred. No general sum, denominator, draw cap,
+count conversion, probability normalization, offer admission, issuance or save
+is introduced. Raw targets always remain `reference_only`/`can_activate:false`.
+This extends an existing item/shop read call, not a new standalone unused API;
+it does not claim all GotCha rows or products were consumed by the game.
 
 The existing `spell_group_conversion.configure()` also reads the held common
 archive when its dedicated default ZIP is actually absent and no environment/

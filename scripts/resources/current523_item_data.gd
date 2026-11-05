@@ -8,6 +8,7 @@ const REWARDS = preload("res://scripts/resources/current523_reward_data.gd")
 const BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
 const GACHA_CRAFT = preload("res://scripts/resources/current523_gacha_craft_data.gd")
+const MARKET_GOTCHA = preload("res://scripts/resources/current523_market_gotcha_data.gd")
 
 static func _missing(blockers: Array[String], table: String, id: int) -> Dictionary:
 	var value: Dictionary = SOURCE.row(table,id)
@@ -41,7 +42,11 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dic
 	var unit: String = str(detail.get("unit",{}).get("Name",""))
 	var type: String = str(detail.get("type",{}).get("Name",""))
 	var reference: Dictionary = {"unit":unit,"id":id,"item_bonus_id":detail.get("link",{}).get("ID"),"reference_only":true,"can_activate":false}
-	if unit == "BuffCardID":
+	if type == "MarketPurchaseID":
+		# Existing public ticket/monsterbook joins define this type namespace.
+		# This forward graph retains offers/odds/conditions without authorizing use.
+		reference["market_gotcha"] = MARKET_GOTCHA.describe(id,detail)
+	elif unit == "BuffCardID":
 		var card: Dictionary = _missing(blockers,"BuffCard",id)
 		reference["card"] = card
 		if not card.is_empty():
