@@ -289,7 +289,7 @@ func _render_snapshot() -> void:
 func _bind_source_item_image(list, index: int, info: Dictionary) -> void:
 	if not SOURCE_IMAGES.selected(): return
 	var record: Variant = info.get("record")
-	if not record is Dictionary or not SOURCE_IMAGES.recognized_item(record): return
+	if not record is Dictionary: return
 	var source_id: Variant = info.get("source_id")
 	if not SOURCE_IMAGES.PACK._integer(source_id) or int(source_id) <= 0 or SOURCE_IMAGES.item_class_id(record) != int(source_id): return
 	var image: Dictionary = SOURCE_IMAGES.describe_item(record,str(info.get("name","")))
@@ -427,6 +427,17 @@ func _invalidate_quote() -> void:
 
 func _update_buttons() -> void:
 	var action: Dictionary = _action()
+	for button: Button in [_preview, _commit]:
+		button.icon = null
+		if button.has_meta("source523_image"): button.remove_meta("source523_image")
+	if _current_kind() not in ["alchemy", "sets"] and SOURCE_IMAGES.selected() and _target.selected >= 0:
+		var images: Dictionary = _target.get_meta("source523_images",{})
+		var evidence: Dictionary = images.get(_target.selected,{})
+		if not evidence.is_empty() and evidence.get("equipment_instance_id") == action.target_id:
+			for button: Button in [_preview, _commit]:
+				button.icon = _target.get_item_icon(_target.selected)
+				button.expand_icon = true
+				button.set_meta("source523_image",evidence.duplicate(true))
 	var ready: bool = bool(_snapshot.get("pack_ready", false)) and not _waiting
 	var valid: bool = not str(action.target_id).is_empty() and action.material_ids.size() == 1
 	if _current_kind() == "alchemy":

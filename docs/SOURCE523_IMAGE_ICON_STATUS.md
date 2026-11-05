@@ -819,3 +819,21 @@ snapshot clears old image evidence. Host names and local physical IDs never
 select a source asset. Existing lock/equipped filters, quote/commit arguments,
 alchemy result selection and save handling remain with the service. This code
 is unexecuted and unverified; no tests, compile, game, render or CI was started.
+
+The existing equipment preview and commit buttons now reuse the selected target
+row's image and provenance only when its physical instance ID still matches the
+action. Alchemy and set operations receive no representative target image.
+Preserved records with existing supported display contracts also pass through
+the common image consumer without requiring a native gameplay flag.
+
+Card skill awakening's existing execution button uses the service's exact
+`book.item_row` only when it matches `book_requirement.item_class_id`; its source
+Bonus/ItemBonus book selection stays with the service. Candidate skills do not
+choose a displayed result for this paid random action. Option awakening's
+existing attempt and confirmation buttons use the actual target card. Its feed
+and feed-confirmation buttons display a material card only for one explicitly
+selected material identity, using the same current original card consumer as the
+existing portrait/list. Multi-material selections clear the action icon, and
+review cancellation or snapshot refresh removes the stale confirmation image.
+No source asset, ownership, cost, roll, effect, or transaction semantics are
+invented or changed. These additions remain unexecuted and unverified.

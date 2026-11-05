@@ -10,6 +10,8 @@ const TouchButton = preload("res://scripts/ui/native_touch_button.gd")
 const TouchList = preload("res://scripts/ui/native_touch_list.gd")
 const AwakeningBorder = preload("res://scripts/ui/option_awakening_border.gd")
 const CollectionPanel=preload("res://scripts/ui/awakening_collection_panel.gd")
+const SourceCard=preload("res://scripts/ui/source_card_presentation.gd")
+const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 var collection_catalog: Dictionary={}
 var collection_ownership: Dictionary={}
 var collection_scroll_host: Node
@@ -390,6 +392,13 @@ func _render_collections() -> void:
 	_collections.set_rows(snapshot.get("collections",[]),collection_catalog,collection_ownership,_settings)
 
 func _render_controls() -> void:
+	var target: Dictionary=snapshot.get("target_record",{})
+	_bind_original_card_action(_attempt,target,bool(snapshot.get("owned",false)))
+	_bind_original_card_action(_feed,_single_material_record(selected_materials),true)
+	var review_record: Dictionary={}
+	if _review_action=="attempt":review_record=target
+	elif _review_action=="feed":review_record=_single_material_record(_review_materials)
+	_bind_original_card_action(_review_confirm,review_record,bool(snapshot.get("owned",false)) if _review_action=="attempt" else true)
 	var locked: bool = pending_request or is_review_open()
 	var entry: Dictionary = _material_rows.get(_highlighted_id, {}) as Dictionary
 	var selected: int = int(selected_materials.get(_highlighted_id, 0))
@@ -422,6 +431,23 @@ func _render_controls() -> void:
 		var record: Dictionary = entry.get("record", {}) as Dictionary
 		_quantity_caption.text = "%s · 선택 %d / 중복 %d장 · 1장당 +%s XP" % [str(record.get("name", "")), selected, spare, _xp(int(entry.get("experience_per_card", 0)))]
 	_refresh_material_rows()
+
+func _single_material_record(selection: Dictionary) -> Dictionary:
+	if selection.size()!=1:return {}
+	var id: String=str(selection.keys()[0])
+	if int(selection[id])<=0:return {}
+	return _material_rows.get(id,{}).get("record",{})
+
+func _bind_original_card_action(button: Button,record: Dictionary,acquired: bool) -> void:
+	button.icon=null
+	if button.has_meta("source523_card_image"):button.remove_meta("source523_card_image")
+	if not SourceImages.selected() or not SourceCard.native(record):return
+	var image: Dictionary=SourceCard.detail(record,acquired,false)
+	button.icon=image.get("texture") as Texture2D
+	button.expand_icon=true
+	var evidence: Dictionary=image.duplicate(true)
+	evidence.erase("texture")
+	button.set_meta("source523_card_image",evidence)
 
 func _refresh_material_rows() -> void:
 	for index: int in range(_materials_list.item_count):
@@ -568,6 +594,7 @@ func _cancel_review() -> void:
 	_review_revision = -1
 	_review_materials.clear()
 	if _built:
+		_bind_original_card_action(_review_confirm,{},false)
 		_review.hide()
 		_content_scroll.show()
 		_footer.show()
