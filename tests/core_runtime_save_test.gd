@@ -5,6 +5,7 @@ const FIELD = preload("res://scripts/maps/source_map_runtime_field.gd")
 const RENDERER = preload("res://scripts/maps/source_map_runtime_renderer.gd")
 const WRITER = preload("res://scripts/skills/save_writer.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -33,10 +34,22 @@ func run() -> void:
 	world.save_timer = -100000.0
 	check(QA.enter_game(world), "actual class confirmation and Main startup")
 	# Regression guard for PR219 (cards), PR220 (option awakening), and PR221 (skill awakening).
-	check(world.card_collections != null and world.card_collections.problem.is_empty(), "merged source card collections configure")
 	check(world.option_awakening != null and world.option_awakening.problem.is_empty(), "merged option awakening configure")
-	check(world.skill_awakening != null and world.skill_awakening.problem.is_empty(), "merged skill awakening configure")
-	check(world.skill_awakening.core.cards.size() > 0, "source card skill awakening definitions loaded")
+	if DEFINITIONS.not_installed():
+		# CI never has the user's owned current523 definition ZIP. Verify the
+		# absent-install path instead: features report it, substitute nothing,
+		# refuse their own actions, and do not block the rest of the save.
+		print("VALIDATION_SCOPE current523 definitions not installed: card/skill-awakening definition checks verify the absent-install path")
+		check(world.card_collections != null and not world.card_collections.problem.is_empty(), "absent definitions are reported by card collections")
+		check(world.skill_awakening != null and world.skill_awakening.definitions_not_installed(), "absent definitions are reported by skill awakening")
+		check(world.skill_awakening.core.cards.is_empty(), "no substitute skill awakening definitions are invented")
+		check(not world.skill_awakening.blocks_save(), "untouched awakening state does not block saving")
+		check(not bool(world.skill_awakening.request_operation("missing").get("ok", true)), "awakening actions stay refused")
+		check(world.skill_awakening.bonus_records().is_empty(), "no awakening bonuses apply without definitions")
+	else:
+		check(world.card_collections != null and world.card_collections.problem.is_empty(), "merged source card collections configure")
+		check(world.skill_awakening != null and world.skill_awakening.problem.is_empty(), "merged skill awakening configure")
+		check(world.skill_awakening.core.cards.size() > 0, "source card skill awakening definitions loaded")
 	check(world.hud != null and world.hud.has_method("open_card_skill_awakening"), "skill awakening UI entry available")
 	world.player.set_physics_process(false)
 	var frames: SpriteFrames = world.player.class_sprite.sprite_frames
