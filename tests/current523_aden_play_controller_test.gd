@@ -31,7 +31,9 @@ func _initialize() -> void:
 		push_error("Controller guard requires an empty isolated user profile")
 		quit(1)
 		return
-	var options: Dictionary = {"enabled":true,"navigation_profile":OPTIONS.LEGACY,"offset_x":0,"offset_y":0,"raw_root":"/fixture/raw","tile_root":"/fixture/tiles"}
+	# Normalized form, including the explicit own map policy defaults.
+	var options: Dictionary = OPTIONS.validate({"enabled":true,"navigation_profile":OPTIONS.LEGACY,"offset_x":0,"offset_y":0,"raw_root":"/fixture/raw","tile_root":"/fixture/tiles"})
+	check(not options.is_empty(), "fixture profile is a valid explicit local profile")
 	check(OPTIONS.write(options) == OK, "explicit local profile baseline saved")
 	var before: String = FileAccess.get_sha256(OPTIONS.PATH)
 	var display := DisplayProbe.new()
@@ -59,22 +61,30 @@ func _initialize() -> void:
 	check(generic.portal_evidence().is_empty() and generic.portal_context(1101).is_empty(),"generic portals remain unavailable without native definition provider")
 	check(not generic.use_source_portal(1101),"missing source portal provider preserves runtime")
 	var provider=ProviderProbe.new()
+	# 38f8993: a live generic source session must end before its definition
+	# provider changes, so binding is exercised with the session inactive.
+	check(not generic.bind_source_portal_provider(provider,CONTROLLER.DEFINITION_PACK_SHA256) and generic.get("_source_portal_provider")==null,"active source session refuses a provider change")
+	generic.active=false
 	check(not generic.bind_source_portal_provider(provider,"0".repeat(64)),"unverified definition manifest pin rejects provider")
 	check(not generic.bind_source_portal_provider(RefCounted.new(),CONTROLLER.DEFINITION_PACK_SHA256),"missing provider methods rejects before activation")
 	check(generic.bind_source_portal_provider(provider,CONTROLLER.DEFINITION_PACK_SHA256),"explicit verified caller can bind definition provider contract")
+	generic.active=true
 	var script: Script=load("res://scripts/maps/current523_source_field.gd")
 	var source=script.new(); source.source_asset="1/"
 	generic.set("_source_field",source)
 	var context: Dictionary=generic.portal_context(1101)
-	context.Portal.SourceLandID=4
-	check(generic.portal_context(1101).Portal.SourceLandID==1,"returned portal context cannot mutate provider rows")
-	check(generic.portal_evidence().size()==1 and not generic.portal_evidence()[0].activation_candidate,"native row presence does not assert manual endpoint admission or original trigger")
+	check(context.get("Portal") is Dictionary,"bound provider yields a portal context")
+	if context.get("Portal") is Dictionary:context.Portal.SourceLandID=4
+	check(generic.portal_context(1101).get("Portal",{}).get("SourceLandID")==1,"returned portal context cannot mutate provider rows")
+	check(generic.portal_evidence().size()==1 and not generic.portal_evidence()[0].activation_candidate if generic.portal_evidence().size()==1 else false,"native row presence does not assert manual endpoint admission or original trigger")
 	var original_context: Dictionary=provider.context.duplicate(true)
 	for malformed: Dictionary in [{"Portal":[]},{"Portal":{"ID":NAN}},{"TargetTerritory":{}},{"TargetLand":{"ID":0.5,"AssetPath":"0/"}}]:
 		provider.context=original_context.duplicate(true); provider.context.merge(malformed,true)
 		check(generic.portal_context(1101).is_empty() and generic.portal_evidence().is_empty(),"malformed provider context safely rejects before projection/conversion")
 	provider.context=original_context
 	check(not generic.use_source_portal(1101),"provider binding without a live world cannot move actors")
+	check(not generic.bind_source_portal_provider(null,""),"active source session refuses provider detach")
+	generic.active=false
 	check(generic.bind_source_portal_provider(null,"") and generic.portal_evidence().is_empty(),"provider can detach without changing source field")
 	source.close()
 	print("CURRENT523_ADEN_PLAY_CONTROLLER_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"fixture_only":true}))

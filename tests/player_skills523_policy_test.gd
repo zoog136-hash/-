@@ -13,14 +13,14 @@ class ReadyPlayer extends RefCounted:
 class Patch523Spells extends RefCounted:
 	var blocked: bool = false
 	func blocks(_kind: String) -> bool: return blocked
-class ReadyHalphasCombat extends RefCounted:
+class HalphasCombat extends RefCounted:
 	var charge: Dictionary = {}
-	func frozen(_actor: RefCounted) -> bool: return false
-class ReadyHalphasStar extends RefCounted:
-	var combat = ReadyHalphasCombat.new()
+	func frozen(_actor) -> bool: return false
+class HalphasStar extends RefCounted:
+	var combat = HalphasCombat.new()
 class CostHost extends Node:
 	var patch523_npc_spells = Patch523Spells.new()
-	var halphas_star = ReadyHalphasStar.new()
+	var halphas_star = HalphasStar.new()
 	var hp: int = 99
 	var mp: int = 99
 	var inventory: Dictionary = {}

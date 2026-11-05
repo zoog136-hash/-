@@ -97,6 +97,11 @@ func matches_manifest(directory: String, expected_sha256: String) -> bool:
 func has_tile(tile_id: int) -> bool:
 	return loaded and _tiles.has(tile_id)
 
+func source_usage_identity(tile_id: int) -> Dictionary:
+	if not has_tile(tile_id):return {}
+	var row: Dictionary=_tiles[tile_id]
+	return {"member":row.member,"bytes":int(row.source_bytes),"sha256":row.source_sha256}
+
 func has_subimage(tile_id: int, frame8bit: int) -> bool:
 	return has_tile(tile_id) and frame8bit>=0 and frame8bit<int(_tiles[tile_id].blocks)
 

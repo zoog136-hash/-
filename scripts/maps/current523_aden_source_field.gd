@@ -59,8 +59,8 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 	astar = AStarGrid2D.new()
 	astar.region = Rect2i(0, 0, 1, 1)
 	astar.update()
-	definition = {"map_id":str(policy.get("map_id", "current523_aden")), "source_map_id":4, "source_sha256":RAW.INVENTORY_SHA256, "origin":[minimum.x,minimum.y], "dimensions":[width,height], "layout_revision":OWN_LAYOUT_REVISION, "navigation":{"profile":OWN_PROFILE}, "native_m_rules_verified":false}
-	data = {"map_id":str(policy.get("map_id", "current523_aden")), "map_name":"아덴 523 · 원본 S32 / 자체 통행", "short_name":"M 원본 · 자체 통행 해석",
+	definition = {"map_id":str(policy.get("map_id", "current523_aden")), "source_map_id":4, "source_land_id":4, "source_sha256":RAW.INVENTORY_SHA256, "origin":[minimum.x,minimum.y], "dimensions":[width,height], "layout_revision":OWN_LAYOUT_REVISION, "navigation":{"profile":OWN_PROFILE}, "native_m_rules_verified":false}
+	data = {"map_id":str(policy.get("map_id", "current523_aden")), "source_land_id":4, "map_name":"아덴 523 · 원본 S32 / 자체 통행", "short_name":"M 원본 · 자체 통행 해석",
 		"layout_revision":OWN_LAYOUT_REVISION, "navigation_profile":OWN_PROFILE, "spawn_position":[], "bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
 		"collision":[], "regions":[], "water":[], "roads":[], "surfaces":[], "npc_spawn":[], "monster_spawn":[], "portal":[],
 		"navigation":{"profile":OWN_PROFILE}, "camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},
