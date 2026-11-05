@@ -55,6 +55,16 @@ Library identities or saves are included in Git.
   the shared item resolver. Collection and protection views use that resolver
   for source523 records. Selected original icons bypass authored rarity motion,
   foreground extraction and fallback artwork. Ground art stays a separate path.
+- Warehouse entries retain the same authoritative item record used by their
+  list icon. The existing transfer-selection picture consumes that record or
+  the exact physical instance record through ItemVisual, preserving source
+  identity, exclusion metadata and the original-CSB caller when available.
+  Empty/reused selections clear the previous presentation. Transfer/sale
+  transactions, quantities, ownership and physical IDs remain unchanged.
+- Existing inventory slots and the detail icon retain the selected physical
+  instance's full native523 source record for presentation. The existing native
+  identity guard remains required; catalog filtering and item actions retain
+  their current records. Slot reuse tracks source-record replacement.
 - Skill browsing and skill quickslots use exact public host-to-SpellClass
   bindings, then the source IconID. Active buff rows use explicit native
   BuffClass OnIconID. ActivateIconID and OffIconID remain distinct roles;
@@ -109,6 +119,9 @@ manifest_sha256)` handoff are also unexecuted. The latter accepts the existing
 the UI owner's pack before replacing scene bindings. No scene/clip bindings are
 generated from the image inventory. The UI player's code and exact scene pack
 must be installed separately; absent inputs remain an explicit missing result.
+The later warehouse/transfer-selection record and presentation hooks are also
+unexecuted and unverified.
+The physical-instance inventory slot/detail hooks are likewise unexecuted.
 
 ## Explicit original dummy-image exclusions
 

@@ -420,12 +420,13 @@ func _new_legacy_slot() -> Button:
 func _bind_legacy_slot(button: Button, entry: Dictionary) -> void:
 	var reference: String=str(entry.reference)
 	var record: Dictionary=entry.record
+	var visual_record: Dictionary=_item_visual_record(reference,record)
 	var grade: String=str(record.get("grade","일반"))
 	var equipped: bool=_is_item_equipped(reference)
 	var level: int=_enhance_level(reference)
 	var badges: String=_status_badges(record,reference)
 	var locked: bool=bool(character_state.get("item_locks",{}).get(reference,false))
-	var signature: int=hash([reference,record,int(entry.amount),level,equipped,badges,locked,reference==selected_item])
+	var signature: int=hash([reference,record,visual_record,int(entry.amount),level,equipped,badges,locked,reference==selected_item])
 	if int(button.get_meta("signature",-1))==signature:return
 	button.set_meta("reference",reference)
 	button.set_meta("signature",signature)
@@ -435,7 +436,7 @@ func _bind_legacy_slot(button: Button, entry: Dictionary) -> void:
 	button.add_theme_stylebox_override("normal",_slot_style_for_grade(grade,reference==selected_item))
 	button.add_theme_stylebox_override("hover",_slot_hover_style(grade))
 	button.add_theme_stylebox_override("pressed",_slot_pressed_style(grade))
-	button.icon=preload("res://scripts/ui/item_visual_resolver.gd").texture(record,str(entry.name),item_image_index.get("아이템",{}) as Dictionary)
+	button.icon=preload("res://scripts/ui/item_visual_resolver.gd").texture(visual_record,str(entry.name),item_image_index.get("아이템",{}) as Dictionary)
 
 func _refresh_legacy_visible_window() -> void:
 	if legacy_stack==null or legacy_window_refreshing:return
@@ -613,6 +614,20 @@ func _find_item_record(item_name: String) -> Dictionary:
 		return record
 	return {"name":item_name, "grade":"일반", "type":"기타", "slot":"other"}
 
+func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
+	# Presentation keeps the selected physical instance's existing native source
+	# record; catalog lookup and every gameplay/ownership decision stay separate.
+	var instance_id: String = _ref_instance_id(reference)
+	if instance_id.is_empty(): return fallback
+	var instances: Variant = character_state.get("item_instances",{})
+	if not instances is Dictionary: return fallback
+	var physical: Variant = instances.get(instance_id,{})
+	if not physical is Dictionary: return fallback
+	var original: Variant = physical.get("record",{})
+	if original is Dictionary and preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original):
+		return original
+	return fallback
+
 func _matches_category(record: Dictionary, item_name: String) -> bool:
 	if category_filter == "전체":
 		return true
@@ -644,7 +659,8 @@ func _refresh_detail(item_name: String) -> void:
 	detail_type.text = "%s%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else "", " · ID:"+selected_id if selected_id != "" else ""]
 
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
-	preload("res://scripts/ui/item_visual.gd").apply(detail_icon,record,item_name,images,"detail")
+	var visual_record: Dictionary = _item_visual_record(selected_reference,record)
+	preload("res://scripts/ui/item_visual.gd").apply(detail_icon,visual_record,item_name,images,"detail")
 
 	var lines := PackedStringArray()
 	if selected_id != "":
