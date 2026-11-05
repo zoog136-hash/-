@@ -139,9 +139,6 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.classname=="ProjectNode":
 		unresolved_bindings.append(str(widget.name)+":project_scene_binding")
 		if not inspection_only: problems.append("unconnected_project_scene")
-	if node.classname in ["Panel","ListView"]:
-		if (int(options.get("colorType",0))!=0 and int(options.get("bgColorOpacity",0))!=0) or not str(options.get("backGroundImageData",{}).get("path","")).is_empty(): problems.append("unsupported_panel_background")
-		if bool(options.get("backGroundScale9Enabled",false)): problems.append("unsupported_panel_scale9")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
@@ -151,6 +148,9 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	if source.classname in ["Panel","ListView"] and bool(options.get("backGroundScale9Enabled",false)):
+		widget=widget.duplicate(true)
+		widget.size=options.scale9Size.duplicate()
 	if source.classname=="ProjectNode" and not str(options.get("fileName","")).is_empty():
 		var member: String=str(options.fileName)
 		if not member.begins_with("UI/"):member="UI/"+member
@@ -321,6 +321,13 @@ func _build(source: Dictionary) -> Node2D:
 		clipped_origin.position.y=float(widget.size[1])
 		clip.add_child(clipped_origin)
 		child_origin=clipped_origin
+	if source.classname in ["Panel","ListView"]:
+		var background=preload("res://scripts/ui/original_ui/source_panel.gd").new()
+		var configured: Dictionary=background.configure(source_pack,options,Vector2(widget.size[0],widget.size[1]))
+		if not configured.ok:
+			_build_error=str(configured.error);background.free();node.free();return null
+		child_origin.add_child(background)
+		node.set_meta("source_panel",background)
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
@@ -505,6 +512,7 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 		if node.has_meta("source_sprite"):MATERIAL.bind_display(node.get_meta("source_sprite"),display)
 		if node.has_meta("source_image"):MATERIAL.bind_tree_display(node.get_meta("source_image"),display)
 		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
+		if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
 		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
 		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
 	for child: Node in node.get_children():_sync_source_display(child,display)

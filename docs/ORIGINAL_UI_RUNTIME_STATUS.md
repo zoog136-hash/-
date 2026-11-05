@@ -485,3 +485,18 @@ resolved all 10 targeted timeline rejections. The deduplicated tracked inspectio
 union is 299/560. Remaining unsupported controls, list layout/data, text layout,
 custom properties, missing dependencies and gameplay bindings are not complete.
 These runs do not establish 299 working game-service screens.
+
+### Supplied panel backgrounds
+
+Panel/inspection ListView backgrounds now read the original solid-color and
+image fields, native-image centering, nine-slice size/cap insets and clipping.
+Only source color types 0/1 are enabled: all 2,883 supplied Panel descriptors
+contained those types, with no gradient descriptors. No background artwork or
+colors were authored. Three original solid backgrounds passed 39 OpenGL
+geometry/RGBA checks. Of ten previously panel-blocked roots, four rendered and
+six exposed missing original fonts or unbound lists. The tracked inspection
+union is 303/560. Existing original attendance/pass menu input still passes
+22 checks after this change. The six image-bearing original Panels need their
+own representative render coverage; this checkpoint does not claim that test.
+
+Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILayout.cpp
