@@ -151,12 +151,12 @@ func _slot_binding(offset: int, reference: String) -> Dictionary:
 		var markers: Dictionary=Markers.build(_live_bag(),entry)
 		if not markers.get("ok",false):return markers
 		var allowed: Variant=_pack.manifest.get("node_scopes",{}).get(SLOT_MEMBER)
-		for offset: int in markers.source_node_offsets:
-			if allowed is Array and not allowed.has(offset):
-				unresolved.append({"field":"original_item_marker_outside_selected_pack_scope","offset":offset})
+		for marker_offset: int in markers.source_node_offsets:
+			if allowed is Array and not allowed.has(marker_offset):
+				unresolved.append({"field":"original_item_marker_outside_selected_pack_scope","offset":marker_offset})
 				continue
-			scope.append(offset)
-			bindings[offset]=markers.bindings[offset].duplicate(true)
+			scope.append(marker_offset)
+			bindings[marker_offset]=markers.bindings[marker_offset].duplicate(true)
 		unresolved.append_array(markers.unresolved_markers)
 		bindings[BUTTON]={"role":"button","activate":Callable(self,"select_reference").bind(reference)}
 		bindings[SELECTED]={"visible":_live_bag().get("selected_item")==reference}

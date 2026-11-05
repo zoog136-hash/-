@@ -112,6 +112,28 @@ static func select_invoke_effect(original_option: Dictionary, field: String, con
 	if not action.ok: return action
 	return _selected(supplied,sprite,action,"invoke_effect","current523:invoke:%d:%s" % [int(native.ID),field],reference,"patch523")
 
+static func select_player_death(request_key: String, context: Dictionary = {}) -> Dictionary:
+	# The existing death owner has already requested the visual. A separate
+	# source one-shot must not set ActorMotion.dead or change revival/save state.
+	if request_key != "class:current523" and not request_key.begins_with("transform:m508:") and not request_key.begins_with("transform:m523:"):
+		return fail("current523_death_existing_player_source_identity_required")
+	var identity: Dictionary = SOURCE.select_class(context) if request_key == "class:current523" else SOURCE.select_card(request_key,context)
+	if not identity.get("ok",false): return identity
+	var supplied: Dictionary = SOURCE.source_tables(context)
+	if not supplied.get("ok",false): return supplied
+	var matches: Array[Dictionary] = []
+	for row: Dictionary in supplied.rows.get("ListSprAction",[]):
+		# Death is a distinct source motion, not an inferred weapon attack or
+		# a fabricated corpse frame. Require its unique canonical declaration.
+		if row.get("MotionType") == 5 and row.get("WeaponType") == 0 and row.get("WeaponAlterType") == 0:
+			matches.append(row)
+	if matches.size() != 1: return fail("current523_death_source_action_not_unique")
+	var action: Dictionary = _action(supplied.options,int(identity.sprite_id),int(matches[0].ID))
+	if not action.get("ok",false): return action
+	return _selected(supplied,int(identity.sprite_id),action,"death_pose",request_key + ":death",
+		{"table":"ListSprAction","row":matches[0].duplicate(true),"player_identity":identity.duplicate(true),
+		"gameplay_admission":"existing_death_visual_event_only; no_motion_dead_revive_save_or_loss_changes"},"patch523")
+
 static func select_item_consume(original_item: Dictionary, requested_sprite: int, context: Dictionary = {}) -> Dictionary:
 	# The item owner has already admitted and completed its use. This selects
 	# only that existing caller's requested display; it applies no item bonus.

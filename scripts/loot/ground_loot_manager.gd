@@ -3,6 +3,8 @@ class_name TwilightGroundLootManager
 
 const LOOT = preload("res://scripts/loot/ground_loot.gd")
 const GRADES = preload("res://scripts/catalog_grade_policy.gd")
+const GROUND_SOURCE = preload("res://scripts/resources/current523_source_ground_selection.gd")
+const SOURCE_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
 const OCCUPANCY_CELL: float = 64.0
@@ -20,6 +22,9 @@ var _restoring: bool=false
 # of boss drops independent of the number of items left in distant maps.
 var occupancy: Dictionary = {}
 var occupancy_probes: int = 0
+# Transient visual bindings supplied by the source consumer owner. Never added
+# to ground ownership records, item receipts or saved drop quantities.
+var source_ground_bindings: Dictionary = {}
 
 static func _native_stack_record(record: Dictionary) -> bool:
 	var physical: Variant=record.get("physical_item",{})
@@ -116,13 +121,63 @@ func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
 	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
-	var images: Dictionary = world.catalog_image_index.get("아이템",{})
-	var icon: Texture2D = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
-	view.configure(record, icon, visual_slot)
+	var ground_request: Dictionary = _source_ground_request(item_data,str(record["id"]))
+	var icon: Texture2D = null
+	if ground_request.is_empty():
+		var images: Dictionary = world.catalog_image_index.get("아이템",{})
+		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
+	view.configure(record, icon, visual_slot, ground_request)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view
 	return view
+
+func _source_ground_request(item: Dictionary, ground_id: String = "") -> Dictionary:
+	if item.get("source_m_native_item") != true: return {}
+	var owner_context: Dictionary = {}
+	var has_owner_context: bool = not ground_id.is_empty() and has_method("source_item_context")
+	var original: Dictionary = {}
+	if has_owner_context:
+		# Integration269 reads the actual current floor/physical selection. Keep
+		# its complete provenance and explicit non-authorization flags intact.
+		var supplied: Variant = call("source_item_context",ground_id)
+		if supplied is Dictionary: owner_context = supplied.duplicate(true)
+		else: owner_context = {"ok":false,"reason":"current_ground_owner_context_invalid"}
+		if owner_context.get("ok") == true and owner_context.get("ground_id") == ground_id and owner_context.get("original_item") is Dictionary:
+			original = owner_context.original_item.duplicate(true)
+	else:
+		# Compatibility with the earlier local checkpoint does not fabricate the
+		# later owner's floor proof. Its missing renderer relationship stays held.
+		original = SOURCE_ITEMS.item_definition(item).get("original_item",{})
+	var configured: Dictionary = source_ground_bindings.get(str(item.get("source_item_class_id",-1)),{})
+	# A source-row reader may supply the current full row for the same already
+	# identified native item when the drop-definition pack is unavailable here.
+	# The selector checked that complete row against the pinned current tables.
+	if original.is_empty() and not has_owner_context: original = configured.get("original_item",{})
+	var context: Dictionary = {}
+	var player: Variant = world.get("player")
+	if is_instance_valid(player) and player.get("source_visual_context") is Dictionary:
+		context = player.get("source_visual_context").duplicate(true)
+	if configured.get("original_item") == original:
+		context.merge(configured.get("source_bank_context",{}),true)
+	return {"required":true,"original_item":original,"source_bank_context":context,"source_owner_context":owner_context,
+		"source_binding":configured.get("source_binding",{}) if configured.get("original_item") == original else {}}
+
+func bind_source_ground_definition(original_item: Dictionary, context: Dictionary = {}, source_binding: Dictionary = {}) -> Dictionary:
+	# Accept a full current row from the image/data source reader for an existing
+	# item view. The unresolved ground renderer relationship remains pending.
+	var selected: Dictionary = GROUND_SOURCE.select(original_item,context,source_binding)
+	if selected.get("reason") != "current523_ground_original_member_and_renderer_role_unresolved": return selected
+	source_ground_bindings[str(original_item.ID)] = {"original_item":original_item.duplicate(true),
+		"source_binding":source_binding.duplicate(true),"source_bank_context":context.duplicate(true)}
+	for id: String in views:
+		var view: Button = views[id]
+		if not is_instance_valid(view) or not records.has(id): continue
+		var record: Dictionary = records[id]
+		var item: Dictionary = record.get("item_record",item_record(str(record.item_name)))
+		if item.get("source_item_class_id") == original_item.ID:
+			view.call("configure_source_ground",_source_ground_request(item,id))
+	return selected
 
 func hide_map() -> void:
 	for view: Button in views.values():

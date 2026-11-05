@@ -64,5 +64,5 @@ static func use(world: Node, saved: Dictionary) -> bool:
 	world.hud.refresh_inventory(world.inventory);world._update_hud()
 	world.hud.show_message("%s 사용 · HP %d 회복" % [str(record.source_display_name),hp-old_hp])
 	var sprite: int=int(details.get("consume_effect_sprite_id",0))
-	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
+	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player,D.item_definition(record).get("original_item",{}))
 	return true

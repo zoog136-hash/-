@@ -25,7 +25,8 @@ var _background_scale:=Vector2.ONE
 var _source_display:=Color.WHITE
 var _selection_callback: Callable
 
-func configure(pack: RefCounted, options: Dictionary) -> Dictionary:
+func configure(pack: RefCounted, options: Dictionary, _omit_invisible_title: bool=false) -> Dictionary:
+	# Keep the Button configure signature; a CheckBox has no title renderer.
 	_source_options=options.duplicate(true)
 	var widget: Dictionary=options.widgetOptions
 	if bool(widget.ignoreSize):return {"ok":false,"error":"unverified_intrinsic_checkbox_size"}

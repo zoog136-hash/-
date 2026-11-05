@@ -414,7 +414,17 @@ func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, poi
 	var pose: Variant = actor.get("motion")
 	var facing: int = int(pose.facing8) if pose != null else 0
 	var factory = preload("res://scripts/animation/original_source_preview.gd").new()
-	var candidate: Node2D = factory.make_current_source_spell_effect(spell,stage,facing,{},budget)
+	# Keep this effect on the bank selected for its admitted NPC, including
+	# an explicit private config. The factory still checks the complete Spell row.
+	var source_context: Dictionary = {}
+	var selected_visual: Variant = actor.get_meta("current523_source_bank_selection",{})
+	# Core body actions can be pending after a successful source selection.
+	# Its retained bank context is still the input for this separately admitted
+	# Spell event; effect selection performs its own complete-row/pin checks.
+	if selected_visual is Dictionary and selected_visual.get("consumer") == "npc" and selected_visual.get("source_snapshot") == "patch523":
+		var selected_context: Variant = selected_visual.get("source_bank_context",{})
+		if selected_context is Dictionary: source_context = selected_context.duplicate(true)
+	var candidate: Node2D = factory.make_current_source_spell_effect(spell,stage,facing,source_context,budget)
 	var result: Dictionary = factory.source_effect_status.duplicate(true)
 	factory.free()
 	effect_status[key]["source_bank"] = result

@@ -122,6 +122,6 @@ static func perform(world: Node,record: Dictionary,physical_id: String="")->Dict
 	var quote: Dictionary=prepare(world,record,physical_id);var result: Dictionary=commit(world,quote) if quote.get("ok",false) else quote
 	world.hud.show_message(str(result.get("message",result.get("reason","해독 결과 확인 필요"))))
 	if result.get("ok",false) and result.get("saved",false) and result.get("consumed")==1 and is_instance_valid(world.option_awakening):
-		world.option_awakening.combat.emit_sprite(192,world.player)
+		world.option_awakening.combat.emit_sprite(192,world.player,result.get("source_use_context",{}).get("original_item",{}))
 		if result.get("source_use_context") is Dictionary:result.source_use_context.visual_dispatch_attempted=true
 	return result

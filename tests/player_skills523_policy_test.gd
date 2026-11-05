@@ -21,6 +21,7 @@ class HalphasStar extends RefCounted:
 class CostHost extends Node:
 	var patch523_npc_spells = Patch523Spells.new()
 	var halphas_star = preload("res://scripts/cards/halphas_star_enchant_runtime.gd").new()
+	var original_skills: RefCounted = null
 	var combat_generation: int = 0
 	var hp: int = 99
 	var mp: int = 99
@@ -33,6 +34,11 @@ class CostHost extends Node:
 	var skill_cooldowns: Dictionary = {}
 	var active_skill_buffs: Dictionary = {}
 	var equipped_items: Dictionary = {}
+	var equipped_catalog: Dictionary = {}
+	# Catalog resolution always includes the actual relic ownership/context key,
+	# even when this synthetic host has no equipped or acquired cards.
+	var card_draw_fusion = preload("res://scripts/card_draw_fusion.gd").new()
+	var card_collections = preload("res://scripts/cards/collection_runtime.gd").new()
 	func _init() -> void:
 		add_child(player)
 		halphas_star.configure(self)

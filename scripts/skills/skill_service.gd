@@ -42,6 +42,7 @@ func configure(owner: Node) -> void:
 	vfx = VFX.new()
 	vfx.name = "OriginalSkillVFX"
 	vfx.z_index = 12
+	vfx.source_only_policy = _source_only_skill_presentation
 	owner.add_child(vfx)
 	summons.configure(self)
 	local_runtime.configure(self)
@@ -418,18 +419,26 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			if status.apply(skill, target, world):
 				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 				_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "success", target.combat_hit_position())
 				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
-			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			else:
+				vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 			continue
 		var hit := hit_chance(skill, target)
 		if world.rng.randf() >= hit:
 			target.show_miss()
 			vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 			continue
 		deal_damage(skill, target)
 		if not target.dead and skill.has("status"):
-			if status.apply(skill, target, world): vfx.maintain_status(presentation_id(skill), target, str(skill.status))
-			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+			if status.apply(skill, target, world):
+				vfx.maintain_status(presentation_id(skill), target, str(skill.status))
+				_emit_verified_source_effect(skill, "success", target.combat_hit_position())
+			else:
+				vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+				_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 		if not target.dead: trigger("on_hit", target, skill)
 	if skill.has("self_stacks"):
 		var config: Dictionary = skill.self_stacks
@@ -459,6 +468,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	if not roll_turn_undead(world.rng, chance):
 		target.show_miss()
 		vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+		_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 		world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 저항")
 		return
 	# Use the NPC death signal/drop/XP path, with no weapon lifesteal, critical
@@ -466,6 +476,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	target.take_damage(target.hp, false, "turnUndead")
 	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 	_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
+	_emit_verified_source_effect(skill, "success", target.combat_hit_position())
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
@@ -565,6 +576,11 @@ func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	var buff: Dictionary = {"remaining":float(skill.duration),"skill_id":str(skill.id),"skill_stats":stats.duplicate(true),"stealth":force_stealth or skill.mode == "stealth","break_on_damage":bool(skill.get("break_on_damage", false)),"break_on_attack":bool(skill.get("break_on_attack",false)),"drain_mp_percent":float(skill.get("drain_mp_percent", 0)),"speed":float(stats.get("speed", 1))}
 	world.active_skill_buffs[str(skill.name)] = buff
 	vfx.maintain(str(skill.id), world.player, float(skill.duration))
+	# Existing self-buff application is the presentation event. No periodic
+	# replay, duration inference or status activation is created by the renderer.
+	if str(skill.get("mode","")) in ["buff","counter","stealth"]:
+		_emit_verified_source_effect(skill, "effect", world.player.global_position)
+		_emit_verified_source_effect(skill, "success", world.player.global_position)
 	world._refresh_skill_stealth_visual()
 	world._refresh_speed_modifiers()
 
@@ -915,6 +931,9 @@ func import_state(data: Dictionary) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))
+
+func _source_only_skill_presentation() -> bool:
+	return is_instance_valid(world) and is_instance_valid(world.player) and world.player.original_source_preview.current523_source_only_presentation()
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
 	if _is_verified_source_skill(skill):

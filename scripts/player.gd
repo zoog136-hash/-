@@ -12,6 +12,7 @@ var original_source_preview = ORIGINAL_SOURCE.new()
 var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
 var source_visual_context: Dictionary = {}
+var _source_only_class: bool = false
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
@@ -228,10 +229,10 @@ func _update_facing(motion_vector: Vector2) -> void:
 	facing = motion.facing4
 
 func _update_visual(delta: float) -> void:
-	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
+	var show_spx: bool = not _source_only_class and not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
-	var show_original: bool = transform_active and original_source_preview.installed()
-	var source_only_pending: bool = not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key) and not show_original
+	var show_original: bool = (transform_active or _source_only_class) and original_source_preview.installed()
+	var source_only_pending: bool = (_source_only_class or (not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key))) and not show_original
 	_refresh_visual_visibility()
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
@@ -251,13 +252,13 @@ func _update_visual(delta: float) -> void:
 
 func _refresh_visual_visibility() -> void:
 	# Derive current presentation instead of restoring a snapshot of an old form.
-	var show_spx: bool = not transform_active and is_instance_valid(spx_sprite) and not spx_actor_id.is_empty()
-	var show_original: bool = transform_active and is_instance_valid(original_source_preview) and original_source_preview.installed()
-	var source_only_pending: bool = not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key) and not show_original
+	var show_spx: bool = not _source_only_class and not transform_active and is_instance_valid(spx_sprite) and not spx_actor_id.is_empty()
+	var show_original: bool = (transform_active or _source_only_class) and is_instance_valid(original_source_preview) and original_source_preview.installed()
+	var source_only_pending: bool = (_source_only_class or (not _source_only_transform_key.is_empty() and original_source_preview.current523_source_required(_source_only_transform_key))) and not show_original
 	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
 	var estimated: bool = sample != null and sample.is_player_override_active()
 	estimated = estimated or (is_instance_valid(current523_identity_actor) and current523_identity_actor.is_player_override_active())
-	if is_instance_valid(class_sprite): class_sprite.visible = not source_only_pending and not transform_active and not show_spx and not estimated
+	if is_instance_valid(class_sprite): class_sprite.visible = not source_only_pending and not show_original and not transform_active and not show_spx and not estimated
 	if is_instance_valid(transform_sprite): transform_sprite.visible = not source_only_pending and transform_active and not show_original and not estimated
 	if is_instance_valid(spx_sprite): spx_sprite.visible = not source_only_pending and show_spx and not estimated
 	if is_instance_valid(spx_effect_sprite): spx_effect_sprite.visible = not source_only_pending and show_spx and spx_effect_sprite.sprite_frames != null and not estimated
@@ -302,9 +303,29 @@ func set_class_index(value: int) -> void:
 		class_profile.dedicated_attack = true
 		class_profile.sprite_offset = Vector2(0, -46)
 	motion.profile = transform_profile if transform_active else class_profile
+	if not transform_active and _source_only_transform_key.is_empty():
+		_configure_current_source_class()
+		if _source_only_class: return
 	_build_class_frames(CLASS_SHEETS[class_index])
 	if not transform_active:
 		class_sprite.visible = true
+
+func _configure_current_source_class() -> void:
+	# Class selection is presentation-only. The current character context comes
+	# from the world owner, not the unrelated four-sheet class_index selector.
+	var was_source_class: bool = _source_only_class
+	var options: Dictionary = preload("res://scripts/resources/current523_source_bank.gd").options(source_visual_context)
+	_source_only_class = bool(options.get("enabled",false))
+	if not _source_only_class:
+		if was_source_class:
+			original_source_preview.clear()
+			_build_class_frames(CLASS_SHEETS[class_index])
+		return
+	class_sprite.stop()
+	class_sprite.sprite_frames = null
+	if not original_source_preview.current523_card_matches("class:current523",source_visual_context):
+		original_source_preview.configure("class:current523",original_source_manifest,source_visual_context)
+	_refresh_visual_visibility()
 
 func _build_class_frames(path: String) -> void:
 	var source: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(class_profile, path)
@@ -341,6 +362,7 @@ func _usable_authored_class_frames(source: SpriteFrames, expected_path: String) 
 	return found
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
+	_source_only_class = false
 	var previous_native_sprite: int = int(original_source_preview._record.get("source_sprite_id", -1))
 	var previous_native_key: String = transform_profile.profile_id if transform_profile != null else ""
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
@@ -454,9 +476,23 @@ func set_source_weapon_visual(weapon: String) -> void:
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
 	current523_identity_actor.update_context(source_visual_context)
-	if original_source_preview.installed() and transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:")) and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
+	var native_transform: bool = transform_profile != null and (transform_profile.profile_id.begins_with("transform:m508:") or transform_profile.profile_id.begins_with("transform:m523:"))
+	var source_required: bool = native_transform and not _source_only_transform_key.is_empty() and _source_only_transform_key == transform_profile.profile_id and original_source_preview.current523_source_required(transform_profile.profile_id)
+	# The existing equipment/speed event also admits a newly connected private
+	# bank or changed source context while the weapon family stays the same.
+	# Keep the current pose when the selected key, context and bank still match.
+	var rebind_source: bool = source_required and not original_source_preview.current523_card_matches(transform_profile.profile_id,source_visual_context)
+	var rebind_installed: bool = native_transform and transform_active and original_source_preview.installed() and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) != native_weapon
+	if rebind_source or rebind_installed:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
+			if source_required:
+				transform_active = true
+				motion.profile = transform_profile
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
+		elif source_required:
+			transform_active = false
+		if source_required: _refresh_visual_visibility()
+	if not transform_active and _source_only_transform_key.is_empty(): _configure_current_source_class()
 	if spx_sprite == null or spx_actor_id.is_empty(): return
 	var group: String = ""
 	if weapon.is_empty(): group = "unarmed"
@@ -497,6 +533,7 @@ func clear_transform_visual() -> void:
 	transform_sprite.stop()
 	transform_sprite.visible = false
 	class_sprite.visible = true
+	_configure_current_source_class()
 	_refresh_visual_visibility()
 
 func set_equipment_speed_multipliers(move_multiplier: float, attack_multiplier: float) -> void:

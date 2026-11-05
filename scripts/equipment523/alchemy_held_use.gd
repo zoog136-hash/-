@@ -154,10 +154,10 @@ class HudView extends RefCounted:
 	func is_card_reveal_busy() -> bool: return host.hud.has_method("is_card_reveal_busy") and host.hud.is_card_reveal_busy()
 
 class View extends HELD.View:
-	var owner: RefCounted
+	var use_owner: RefCounted
 	var basis: Dictionary
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
-		return owner.commit_view(self,overrides)
+		return use_owner.commit_view(self,overrides)
 
 func commit_view(view: Node, overrides: Dictionary) -> Error:
 	var world: Node=view.host
@@ -266,7 +266,7 @@ func try_use(world: Node, item_name: String, physical_id: String) -> bool:
 	if not basis.get("ok",false): world.hud.show_message(str(basis.reason));return true
 	_busy=true
 	var view: View=View.new()
-	view.owner=self;view.basis=basis;view.host=world;view.canonical=basis.record
+	view.use_owner=self;view.basis=basis;view.host=world;view.canonical=basis.record
 	view.hud=HudView.new();view.hud.host=world
 	view.inventory=world.inventory.duplicate(true);view.inventory[str(view.canonical.name)]=int(basis.quantity)
 	view.item_instances=world.item_instances.duplicate(true)

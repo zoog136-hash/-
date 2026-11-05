@@ -57,6 +57,7 @@ var _attack_completed: bool = false
 var last_source_frame: int = -1
 
 func current523_source_required(key: String) -> bool:
+	if key == "class:current523": return true
 	# Saved m508/m523 keys are stable identities, not permission to consume old
 	# media. Final native card presentation requires the new original input.
 	var consumer: String = key.get_slice(":",0)
@@ -72,13 +73,14 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	_current523_source_only = source_only
 	if source_only:
 		clear()
-		_reference_request_context = context.duplicate(true)
 	elif _configure_existing_source(key, manifest_path, context):
 		# Keep an explicitly supplied source-bank configuration available to
 		# later effect requests without replacing this working actor.
 		_reference_request_context = context.duplicate(true)
 		return true
-	var selected: Dictionary = CURRENT523_BANK.select_card(key, context)
+	# A pending body must not discard the independent spell/item/invoke input.
+	_reference_request_context = context.duplicate(true)
+	var selected: Dictionary = CURRENT523_BANK.select_class(context) if key == "class:current523" else CURRENT523_BANK.select_card(key, context)
 	if source_only:
 		selected["source_only"] = true
 		selected["legacy_media_fallback_allowed"] = false
@@ -89,7 +91,11 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	if not selected.ok:
 		source_selection_status = selected
 		return false
-	if not _configure_selected_roles(selected,"idle"):
+	var configured: bool = _configure_selected_roles(selected,"idle")
+	# Role installation clears the preview, including its request context.
+	# Restore the caller's context on both success and missing-body outcomes.
+	_reference_request_context = context.duplicate(true)
+	if not configured:
 		source_selection_status = selected.duplicate(true)
 		source_selection_status["status"] = "selection_pending"
 		source_selection_status["reason"] = str(reference_bank_status.get("error","current523_source_action_unavailable"))
@@ -97,7 +103,6 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 			source_selection_status["source_exclusion"] = reference_bank_status.source_exclusion.duplicate(true)
 		return false
 	_reference_card_context = selected.duplicate(true)
-	_reference_request_context = context.duplicate(true)
 	source_selection_status = selected.duplicate(true)
 	source_weapon_status = {"requested_weapon_type":selected.source_weapon_type,"state":"current523_explicit_host_primary_source_actions","source_actions":selected.role_actions.duplicate(),"M_client_equivalence_verified":false}
 	source_weapon_status["run_status"] = selected.get("run_status",{}).duplicate(true)
@@ -108,7 +113,19 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 	return true
 
 func current523_card_matches(key: String, context: Dictionary) -> bool:
-	return _reference_bank != null and not _reference_card_context.is_empty() and _reference_card_context.get("request_key","") == key and _reference_request_context == context
+	if _reference_bank == null or _reference_card_context.is_empty() or _reference_card_context.get("request_key","") != key or _reference_request_context != context:
+		return false
+	# The private config can receive a newly connected bank while the character
+	# context stays the same. Rebind on the existing owner event when its pin or
+	# location changes; do not keep the old bank merely because class/weapon match.
+	var configured: Dictionary = CURRENT523_BANK.options(context)
+	if not bool(configured.get("ok",false)): return false
+	for field: String in ["manifest_path","manifest_sha256","overlay_whitelist_path","overlay_whitelist_sha256"]:
+		var selected_value: Variant = _reference_card_context.get(field,"")
+		if field.begins_with("overlay_") and _reference_card_context.get("source_bank_context") is Dictionary:
+			selected_value = _reference_card_context.source_bank_context.get("current523_source_bank",{}).get(field,selected_value)
+		if selected_value != configured.options.get(field,""): return false
+	return true
 
 func current523_role_available(role: String) -> bool:
 	return _reference_bank != null and not _reference_card_context.is_empty() and installed() and _playback_tracks.has(role)
@@ -117,33 +134,49 @@ func source_bank_request_context() -> Dictionary:
 	return _reference_request_context.duplicate(true)
 
 func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
-	# Selection/admission belongs to the existing card/NPC caller. This shared
-	# installer preserves its required roles when an optional typed RUN is absent.
+	# Selection/admission belongs to the existing card/NPC caller. Each optional
+	# action is admitted independently, so missing HIT cannot remove valid RUN.
 	var actions: Dictionary = selected.role_actions.duplicate()
 	var loops: Dictionary = selected.loop_policy.duplicate()
 	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
-	var required_actors: Dictionary = role_actors.duplicate()
 	var run_status: Dictionary = selected.get("run_status",{}).duplicate(true)
-	var has_optional_run: bool = selected.get("optional_role_actions",{}).has("run")
-	if has_optional_run:
-		actions["run"] = int(selected.optional_role_actions.run)
-		loops["run"] = true
-		role_actors["run"] = int(selected.optional_role_actor_ids.run)
+	var optional_status: Dictionary = {}
+	for role: String in selected.get("optional_role_actions",{}):
+		if actions.has(role): continue
+		var loop: Variant = selected.get("optional_role_loop_policy",{}).get(role,true if role == "run" else null)
+		var actor: Variant = selected.get("optional_role_actor_ids",{}).get(role)
+		if not loop is bool or not REFERENCE_BANK.integer(actor,1):
+			optional_status[role] = {"state":"optional_source_role_contract_missing"}
+			continue
+		var action: int = int(selected.optional_role_actions[role])
+		var probe := REFERENCE_BANK.new()
+		var loaded: Dictionary = probe.load_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),{role:action},{role:loop},str(selected.consumer),{role:int(actor)})
+		if not loaded.ok:
+			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":loaded.get("error","")}
+			continue
+		actions[role] = action
+		loops[role] = loop
+		role_actors[role] = int(actor)
+		optional_status[role] = {"state":"selected_source_declared_optional_action","action_id":action,"source_actor_id":int(actor)}
 	var configured: bool = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
-	if not configured and has_optional_run:
-		run_status["state"] = "source_declared_run_unavailable_existing_walk"
-		run_status["bank_problem"] = str(reference_bank_status.get("error","optional_source_run_unavailable"))
+	if not configured and not optional_status.is_empty():
+		var problem: String = str(reference_bank_status.get("error","optional_source_actions_unavailable"))
+		for role: String in optional_status:
+			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":problem}
 		actions = selected.role_actions.duplicate()
 		loops = selected.loop_policy.duplicate()
-		role_actors = required_actors
+		role_actors = selected.get("role_actor_ids",{}).duplicate()
 		configured = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
-	elif configured and has_optional_run:
-		run_status["state"] = "selected_source_declared_run"
+	if selected.get("optional_role_actions",{}).has("run"):
+		run_status["state"] = "selected_source_declared_run" if configured and actions.has("run") else "source_declared_run_unavailable_existing_walk"
+		if optional_status.get("run",{}).has("bank_problem"): run_status["bank_problem"] = optional_status.run.bank_problem
 	selected["role_actions"] = actions
 	selected["loop_policy"] = loops
 	selected["role_actor_ids"] = role_actors
 	selected["run_status"] = run_status
+	selected["optional_role_status"] = optional_status
 	reference_bank_status["run_status"] = run_status.duplicate(true)
+	reference_bank_status["optional_role_status"] = optional_status.duplicate(true)
 	return configured
 
 func _configure_existing_source(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
@@ -343,6 +376,15 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	visible = true
 	return true
 
+func _prune_source_overlays() -> void:
+	# Completed one-shots remain as freed handles until their next owner call.
+	# Check validity before converting a handle to the typed Node2D array.
+	var live: Array[Node2D] = []
+	for overlay: Variant in _overlay_nodes:
+		if is_instance_valid(overlay) and overlay is Node2D and not overlay.is_queued_for_deletion():
+			live.append(overlay)
+	_overlay_nodes = live
+
 func clear() -> void:
 	_reference_bank = null
 	source_effect_status.clear()
@@ -371,7 +413,7 @@ func clear() -> void:
 	_annotation_clock = -0.000000001
 	_annotation_track_key = ""
 	_is_overlay = false
-	for overlay: Node2D in _overlay_nodes:
+	for overlay: Variant in _overlay_nodes:
 		if is_instance_valid(overlay): overlay.free()
 	_overlay_nodes.clear()
 	_release_reference_texture_charges()
@@ -425,7 +467,7 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_attack_completed = false
 		_role = "attack"
 		_clock = 0.0
-	var requested: String = state if state in ["walk", "run"] else "idle"
+	var requested: String = state if state in ["walk", "run", "hit"] else "idle"
 	if _source_attack:
 		requested = "attack"
 	elif gameplay_active and _attack_completed:
@@ -747,7 +789,7 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	overlay._overlay_facing = stored_direction
 	overlay.global_position = global_position
 	overlay.z_index = 2
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	overlay.advance_reference_source(0.0,"idle",stored_direction)
 	return true
@@ -830,7 +872,7 @@ func _spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = V
 	overlay.set_meta("selected_source_effect",selected_id)
 	overlay._overlay_facing = facing
 	overlay.z_index = 2
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	overlay.advance_source(0.0, "idle", facing, 0, false)
 	return true
@@ -888,7 +930,9 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 	source_effect_status.clear()
 	# ConstantData identifies the resource. Local apply-event placement and an
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
-	if _playback_mode != "compatible": return false
+	# A missing body has no resolved playback mode. Let the typed effect load
+	# its own pinned bank policy; the effect factory still enforces strict mode.
+	if _playback_mode != "compatible" and not current523_source_only_presentation(): return false
 	var definition: Dictionary = {}
 	if not current523_source_only_presentation() and not _manifest_path.is_empty() and FileAccess.file_exists(_manifest_path):
 		var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
@@ -957,6 +1001,13 @@ func notify_current_source_invoke_effect(original_option: Dictionary, field: Str
 	var selected: Dictionary = CURRENT523_EFFECT.select_invoke_effect(original_option,field,supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+func notify_current_source_death_pose(world_point: Vector2, facing: int) -> bool:
+	# Keep this detached from the live player's motion/physics lifecycle. The
+	# existing death event owns when the copied original pose is requested.
+	var request_key: String = str(_reference_card_context.get("request_key",source_selection_status.get("request_key","")))
+	var selected: Dictionary = CURRENT523_EFFECT.select_player_death(request_key,_reference_request_context)
+	return _spawn_current523_source_effect(selected,world_point,facing,true)
+
 func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: int, context: Dictionary = {}, texture_budget_bytes: int = 0) -> Node2D:
 	# The existing owner adopts/positions/advances the returned node. This factory
 	# does not parent it, render its first frame or create a gameplay trigger.
@@ -965,11 +1016,12 @@ func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: 
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _make_selected_current_source_effect(selected,facing,texture_budget_bytes)
 
-func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int) -> bool:
+func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int, fixed_world_point: bool = false) -> bool:
 	var overlay: Variant = _make_selected_current_source_effect(selected,facing)
 	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
+	if fixed_world_point: overlay.set_as_top_level(true)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
 	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
 		source_effect_status["ok"] = false
@@ -977,7 +1029,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_frame_unavailable"))
 		overlay.free()
 		return false
-	_overlay_nodes = _overlay_nodes.filter(func(node: Node2D) -> bool: return is_instance_valid(node))
+	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"
 	return true
@@ -985,7 +1037,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"

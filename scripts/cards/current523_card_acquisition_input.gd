@@ -73,7 +73,7 @@ func _selected(table: String, field: String, value: Variant) -> Array:
 		result.append(node)
 	return result
 
-func _get(table: String, id: Variant, required: bool = true) -> Dictionary:
+func _source_row(table: String, id: Variant, required: bool = true) -> Dictionary:
 	var selected: Array = _selected(table,"ID",id)
 	if not problem.is_empty(): return {}
 	if selected.size()>1:
@@ -97,11 +97,11 @@ func _description_refs(node: Dictionary, fields: Array) -> Dictionary:
 	return result
 
 func _effect(link: Dictionary) -> Dictionary:
-	var bonus: Dictionary = _get("Bonus",link.raw.get("BonusID"))
+	var bonus: Dictionary = _source_row("Bonus",link.raw.get("BonusID"))
 	if bonus.is_empty(): return {}
-	var type: Dictionary = _get("BonusType",bonus.raw.get("BonusTypeID"))
+	var type: Dictionary = _source_row("BonusType",bonus.raw.get("BonusTypeID"))
 	if type.is_empty(): return {}
-	var unit: Dictionary = _get("Unit",type.raw.get("UnitID"))
+	var unit: Dictionary = _source_row("Unit",type.raw.get("UnitID"))
 	if unit.is_empty(): return {}
 	var result: Dictionary = {"link":link,"bonus":bonus,"type":type,"unit":unit}
 	var display: Array = _selected("UIUnit","UnitID",type.raw.get("UnitID"))
@@ -110,10 +110,10 @@ func _effect(link: Dictionary) -> Dictionary:
 	return result
 
 func _item(id: Variant) -> Dictionary:
-	var item: Dictionary = _get("ItemClass",id)
+	var item: Dictionary = _source_row("ItemClass",id)
 	if item.is_empty(): return {}
-	var category: Dictionary = _get("ItemCategory",item.raw.get("CategoryID"))
-	var grade: Dictionary = _get("Grade",item.raw.get("GradeID"))
+	var category: Dictionary = _source_row("ItemCategory",item.raw.get("CategoryID"))
+	var grade: Dictionary = _source_row("Grade",item.raw.get("GradeID"))
 	if category.is_empty() or grade.is_empty(): return {}
 	# record() already consumes these exact fields; retain source values and
 	# reject absent shapes rather than supply a fabricated physical DTO.
@@ -132,7 +132,7 @@ func _item(id: Variant) -> Dictionary:
 
 func _payload(table: String, link: Dictionary) -> Dictionary:
 	if link.get("table") != table: return _fail("source_payload_table_mismatch",link)
-	var bless: Dictionary = _get("ItemBlessCode",link.raw.get("ItemBlessCodeID"))
+	var bless: Dictionary = _source_row("ItemBlessCode",link.raw.get("ItemBlessCodeID"))
 	if bless.is_empty(): return {}
 	var result: Dictionary = {"link":link,"bless_code":bless}
 	if not _integer(link.raw.get("ItemClassID")): return _fail("invalid_source_payload_ItemClassID",link)
@@ -189,13 +189,13 @@ func build() -> Dictionary:
 			var payload: Dictionary = _payload(pair[0],link)
 			if payload.is_empty(): return {}
 			model[pair[1]].append(payload)
-	model["card"] = _get("BuffCard",CARD)
+	model["card"] = _source_row("BuffCard",CARD)
 	if model.card.is_empty(): return {}
-	model["deck"] = _get("BuffCardDeck",model.card.raw.get("BuffCardDeckID"))
-	model["source_flags"] = _get("BuffCardSourceView",CARD)
+	model["deck"] = _source_row("BuffCardDeck",model.card.raw.get("BuffCardDeckID"))
+	model["source_flags"] = _source_row("BuffCardSourceView",CARD)
 	model["source_craft_links"] = _selected("BuffCardSourceCraftView","ID",CARD)
-	model["coin_currency"] = _get("Currency",CURRENCY)
-	model["currency_item_unit"] = _get("Unit",4)
+	model["coin_currency"] = _source_row("Currency",CURRENCY)
+	model["currency_item_unit"] = _source_row("Unit",4)
 	model["coin_currency_bindings"] = []
 	for binding: Dictionary in _selected("CurrencyUnitClass","CurrencyID",CURRENCY):
 		if _exact(binding.raw.get("UnitID"),4) and _exact(binding.raw.get("ClassID"),COIN): model.coin_currency_bindings.append(binding)
@@ -208,7 +208,7 @@ func build() -> Dictionary:
 	for calendar: String in CALENDARS:
 		var bounds: Dictionary = {"EffectiveFrom":null,"EffectiveTo":null}
 		for field: String in ["EffectiveFrom","EffectiveTo"]:
-			var node: Dictionary = _get(calendar,view.raw.get(field),false)
+			var node: Dictionary = _source_row(calendar,view.raw.get(field),false)
 			if not node.is_empty():
 				for part: String in ["Year","Month","Day","Hour","Minute"]:
 					if not _integer(node.raw.get(part)): return _fail("missing_original_calendar_field:"+part,node)
@@ -219,7 +219,7 @@ func build() -> Dictionary:
 	if not problem.is_empty(): return {}
 	if not has_calendar: return _fail("missing_complete_original_Nemesis_calendar",{"view":view,"dates":model.dates})
 	for pair: Array in [["MainCategoryID","ItemCraftMainCategory"],["SubCategoryID","ItemCraftSubCategory"],["Sub2CategoryID","ItemCraftSub2Category"],["CraftGroupTypeID","ItemCraftGroupType"]]:
-		var category: Dictionary = _get(pair[1],view.raw.get(pair[0]),false)
+		var category: Dictionary = _source_row(pair[1],view.raw.get(pair[0]),false)
 		if not category.is_empty(): model.categories[pair[0]] = {"row":category,"descriptions":{},"description_refs":_description_refs(category,["DescID"])}
 	if not problem.is_empty(): return {}
 	# Sole output probability is preserved directly, never generalized as a

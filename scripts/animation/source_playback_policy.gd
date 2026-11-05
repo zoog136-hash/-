@@ -51,7 +51,7 @@ static func tracks(record: Dictionary, consumer_kind: String, selected_mode: Str
 				var shared: Dictionary = data().get("doll_shared_compatibility", {}).get("ticks_per_second_by_role", {})
 				fps = float(shared.get(role, shared.get("default", 24)))
 				if fps > 0.0: origin = "compat_user_approved_doll_shared_24_not_verified_M_default"
-			elif consumer_kind == "transform":
+			elif consumer_kind in ["transform","class"]:
 				var row: Dictionary = data().get("m_player_actions", {}).get(str(int(track.get("source_action_id", -1))), {})
 				fps = float(row.get("PlayerFrameRate", 0.0))
 				if fps > 0.0: origin = "compat_M_ListSprAction_player_rate_scope_unverified"

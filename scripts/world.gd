@@ -3531,7 +3531,9 @@ func _respawn_player(message_text: String) -> void:
 	var death_scale: Vector2 = death_sprite.scale
 	var death_offset: Vector2 = death_sprite.position
 	death_recovery.begin_death(message_text)
-	if combat_vfx != null and death_texture != null:
+	if player.original_source_preview.current523_source_only_presentation():
+		player.original_source_preview.notify_current_source_death_pose(death_position,player.motion.facing8)
+	elif combat_vfx != null and death_texture != null:
 		var death_animation: String = ""
 		# S-only refined sets author one death_2 that every facing reuses, the
 		# same policy ActorMotion applies to monsters; without it the corpse
@@ -5718,7 +5720,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	hud.show_message("%s 사용" % item_name)
 	if is_source:
 		var source_visual: int = int(LOOT_DROP.PATCH523_DROPS.hp_use_metadata(record).get("consume_effect_sprite_id",0))
-		if source_visual > 0: option_awakening.combat.emit_sprite(source_visual,player)
+		if source_visual > 0: option_awakening.combat.emit_sprite(source_visual,player,LOOT_DROP.PATCH523_DROPS.item_definition(record).get("original_item",{}))
 	_update_hud()
 
 func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
