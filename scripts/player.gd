@@ -9,6 +9,7 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
 var original_source_preview = ORIGINAL_SOURCE.new()
+var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
 var source_visual_context: Dictionary = {}
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
@@ -55,6 +56,14 @@ var path_index: int = 0
 var auto_enabled: bool = false
 var manual_navigation: bool = false
 var movement_locked: bool = false
+var source_523_movement_blocked: bool = false
+var source_523_spell_blocked: bool = false
+var source_523_stunned: bool = false
+var source_523_attack_blocked: bool = false
+
+func set_source_523_restrictions(flags: Dictionary) -> void:
+	source_523_spell_blocked = bool(flags.get("spell",false)); source_523_stunned = bool(flags.get("stunned",false)); source_523_attack_blocked = bool(flags.get("attack",false))
+	if motion.active and (source_523_stunned or (source_523_spell_blocked and motion.attack_style == "magic") or source_523_attack_blocked): cancel_attack()
 var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
@@ -82,14 +91,13 @@ var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
-	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_root().path_join("manifest.json")
+	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_manifest()
 	if FileAccess.file_exists(installed_manifest):
 		original_source_manifest = installed_manifest
 	original_source_preview.name = "OriginalSourceInspection"
 	add_child(original_source_preview)
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--lineagem-original-preview="):
-			original_source_manifest = argument.trim_prefix("--lineagem-original-preview=")
+	add_child(preload("res://scripts/resources/current523_world_preview.gd").new())
+	add_child(current523_identity_actor)
 	base_move_speed = move_speed
 	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
 	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))
@@ -133,6 +141,9 @@ func _physics_process(delta: float) -> void:
 	_tick_fear(delta)
 	_tick_poison(delta)
 	_tick_bleed(delta)
+	var host: Node=get_parent()
+	if host!=null and host.get("halphas_star")!=null and (host.halphas_star.combat.frozen(self) or not host.halphas_star.combat.charge.is_empty()):
+		cancel_attack();velocity=Vector2.ZERO;touch_vector=Vector2.ZERO;clear_click_path();_update_visual(delta);return
 	if is_stunned():
 		cancel_attack()
 		velocity = Vector2.ZERO
@@ -147,7 +158,7 @@ func _physics_process(delta: float) -> void:
 	if not ui_blocks and Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
 
-	if is_held():
+	if is_held() or source_523_movement_blocked:
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()
@@ -211,16 +222,10 @@ func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	var show_original: bool = transform_active and original_source_preview.installed()
-	$GroundShadow.visible = not show_original and not motion.profile.embedded_shadow
-	$PlayerActionFX.visible = not show_original
+	_refresh_visual_visibility()
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
-	class_sprite.visible = not transform_active and not show_spx
-	transform_sprite.visible = transform_active and not show_original
-	if spx_sprite != null: spx_sprite.visible = show_spx
-	if spx_effect_sprite != null:
-		spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	if show_original:
 		original_source_preview.advance_source(delta, motion.state, motion.facing8, motion.sequence, motion.active)
@@ -233,6 +238,23 @@ func _update_visual(delta: float) -> void:
 			spx_effect_sprite.transform = spx_sprite.transform
 			spx_effect_sprite.flip_h = spx_sprite.flip_h
 			spx_effect_sprite.modulate = spx_sprite.modulate
+
+func _refresh_visual_visibility() -> void:
+	# Derive current presentation instead of restoring a snapshot of an old form.
+	var show_spx: bool = not transform_active and is_instance_valid(spx_sprite) and not spx_actor_id.is_empty()
+	var show_original: bool = transform_active and is_instance_valid(original_source_preview) and original_source_preview.installed()
+	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
+	var estimated: bool = sample != null and sample.is_player_override_active()
+	estimated = estimated or (is_instance_valid(current523_identity_actor) and current523_identity_actor.is_player_override_active())
+	if is_instance_valid(class_sprite): class_sprite.visible = not transform_active and not show_spx and not estimated
+	if is_instance_valid(transform_sprite): transform_sprite.visible = transform_active and not show_original and not estimated
+	if is_instance_valid(spx_sprite): spx_sprite.visible = show_spx and not estimated
+	if is_instance_valid(spx_effect_sprite): spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null and not estimated
+	if is_instance_valid(original_source_preview): original_source_preview.visible = show_original and not estimated
+	var shadow: CanvasItem = get_node_or_null("GroundShadow") as CanvasItem
+	if shadow != null: shadow.visible = not show_original and not motion.profile.embedded_shadow and not estimated
+	var effects: CanvasItem = get_node_or_null("PlayerActionFX") as CanvasItem
+	if effects != null: effects.visible = not show_original and not estimated and (motion.active or motion.move_ratio > .10)
 
 func face_target(position_value: Vector2) -> void:
 	motion.face(position_value - global_position)
@@ -312,6 +334,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	var previous_native_key: String = transform_profile.profile_id if transform_profile != null else ""
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
+	current523_identity_actor.configure(transform_profile.profile_id, source_visual_context)
 	# Reapplying the same native identity must not reset its pose/event timeline.
 	var selected: Dictionary = preload("res://scripts/lineagem_base508.gd").select_visual_key(transform_profile.profile_id, source_visual_context) if transform_profile.profile_id.begins_with("transform:m508:") else {}
 	var unchanged_native: bool = previous_native_key == transform_profile.profile_id and selected.get("status", "") == "selected" and int(selected.get("sprite_id", -2)) == previous_native_sprite and original_source_preview._manifest_path == original_source_manifest and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0)) == int(source_visual_context.get("source_weapon_type",0))
@@ -413,6 +436,7 @@ func set_source_weapon_visual(weapon: String) -> void:
 	var native_weapon:int=preload("res://scripts/animation/source_weapon_banks.gd").local_type(weapon)
 	source_visual_context["source_weapon_type"]=native_weapon
 	source_visual_context["local_weapon_type"]=weapon
+	current523_identity_actor.update_context(source_visual_context)
 	if original_source_preview.installed() and transform_profile != null and transform_profile.profile_id.begins_with("transform:m508:") and int(original_source_preview.source_weapon_status.get("requested_weapon_type",0))!=native_weapon:
 		if original_source_preview.configure(transform_profile.profile_id,original_source_manifest,source_visual_context):
 			original_source_preview.advance_source(0.0,motion.state,motion.facing8,motion.sequence,motion.active)
@@ -447,6 +471,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func clear_transform_visual() -> void:
+	current523_identity_actor.clear()
 	original_source_preview.clear()
 	transform_active = false
 	motion.profile = class_profile
@@ -454,6 +479,7 @@ func clear_transform_visual() -> void:
 	transform_sprite.stop()
 	transform_sprite.visible = false
 	class_sprite.visible = true
+	_refresh_visual_visibility()
 
 func set_equipment_speed_multipliers(move_multiplier: float, attack_multiplier: float) -> void:
 	equipment_move_speed_multiplier = clampf(move_multiplier, 0.5, 2.5)
@@ -481,8 +507,9 @@ func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
 func show_received_damage(amount: int, critical: bool = false, kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
-	motion.react(critical, source.direction_to(combat_hit_position()))
 	var world: Node = get_parent()
+	if not world is TwilightWorld or world.original_skills==null or world.original_skills.stat("ignoreDamageMotion")<=0:
+		motion.react(critical, source.direction_to(combat_hit_position()))
 	if world is TwilightWorld and world.combat_vfx != null:
 		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)
@@ -620,7 +647,7 @@ func _tick_silence(delta: float) -> void:
 	silence_remaining = maxf(0.0, silence_remaining - delta)
 
 func is_silenced() -> bool:
-	return silence_remaining > 0.0
+	return silence_remaining > 0.0 or source_523_spell_blocked
 
 func apply_silence(duration: float) -> void:
 	silence_remaining = maxf(silence_remaining, maxf(0.0, duration))
@@ -631,7 +658,7 @@ func _tick_stun(delta: float) -> void:
 	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
-	return stun_remaining > 0.0
+	return stun_remaining > 0.0 or source_523_stunned
 
 func apply_stun(duration: float) -> void:
 	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))
@@ -679,3 +706,5 @@ func has_manual_movement() -> bool:
 	if manual_navigation and path_index < click_path.size(): return true
 	var ui_blocks: bool = get_parent().get("hud") != null and get_parent().hud.has_method("blocks_keyboard_input") and get_parent().hud.blocks_keyboard_input()
 	return not ui_blocks and (touch_vector.length_squared() > 0.01 or Input.get_vector("move_left", "move_right", "move_up", "move_down").length_squared() > 0.01)
+
+

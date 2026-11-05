@@ -9,8 +9,9 @@ const MAX_REVISION: int=9007199254740000
 const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
 const GRADE_NAMES: Dictionary={3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}
 const FEES: Dictionary={3:100000,4:500000,5:1000000,32:2000000,52:5000000}
-const REROLL_POLICY: String="source_weighted_reroll_preserve_growth"
+const REROLL_POLICY: String="source_weighted_reroll_reset_growth"
 var conditions=Conditions.new()
+var patch523_conditions=Conditions.new()
 var source_server_context: Dictionary={}
 var cards: Dictionary={}
 var pools: Dictionary={}
@@ -20,8 +21,11 @@ var experiences: Dictionary={}
 var problem: String=""
 
 func _init() -> void:
-	cards=DATA.data.cards
+	cards=DATA.data.cards.duplicate(true)
+	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
+	cards.merge(supplement.skill_cards.duplicate(true),false)
 	conditions.configure(DATA.data.source_server_limits)
+	patch523_conditions.configure(supplement.source_server_limits)
 	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenStatPerLevel:
 		stats[str(int(row.MagicDollAwakenStatID))+":"+str(int(row.Level))]=row
 	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenSkillInvokeProb:
@@ -61,7 +65,8 @@ func eligibility(identity: String) -> Dictionary:
 	if profile(identity,1).is_empty():return fail("profile","원본 스킬 각성 레벨 프로필 없음")
 	var raw: Dictionary=card.source_card
 	if int(raw.StartDateTimeID)!=0 or int(raw.EndDateTimeID)!=0:return fail("time_condition","원본 카드 기간 조건 확인 필요")
-	var server: Dictionary=conditions.evaluate(int(raw.ServerLimitSetID),source_server_context)
+	var evaluator: RefCounted=patch523_conditions if card.get("source_snapshot","")=="patch523" else conditions
+	var server: Dictionary=evaluator.evaluate(int(raw.ServerLimitSetID),source_server_context)
 	if server.status not in ["unrestricted","eligible"]:return fail("server_condition","원본 서버 조건 확인 필요 · "+str(server.status))
 	return {"ok":true}
 
@@ -80,7 +85,7 @@ func validate_state(value: Variant) -> String:
 	if not rng_text is String or (not rng_text.is_empty() and (not rng_text.is_valid_int() or str(int(rng_text))!=rng_text)):return "스킬 각성 난수 저장 오류"
 	if not value.get("last_operation_id","") is String:return "스킬 각성 거래 ID 오류"
 	for key: Variant in value.cards:
-		if not key is String or not key.begins_with("source:m508:"):return "스킬 각성 sourceID 오류"
+		if not key is String or not (key.begins_with("source:m508:") or key.begins_with("source:m523:")):return "스킬 각성 sourceID 오류"
 		var parts: PackedStringArray=key.split(":")
 		if parts.size()!=4 or not parts[2].is_valid_int() or not parts[3].is_valid_int() or str(int(parts[2]))!=parts[2] or str(int(parts[3]))!=parts[3] or int(parts[2])<1 or int(parts[3])<1:return "스킬 각성 sourceID 정규형 오류"
 		var entry: Variant=value.cards[key]
@@ -109,7 +114,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 성장 유지","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("runtime_transaction_required","실제 인벤토리·재화 거래는 스킬 각성 런타임에서 처리합니다")
@@ -194,10 +199,11 @@ func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: i
 	var next: Dictionary=normalized_state(state)
 	var entry: Dictionary=next.cards.get(identity,{"spell_id":0,"level":1,"experience":"0"}).duplicate(true)
 	var previous: int=int(entry.spell_id)
-	# Actual source policy selected by the user: change the skill only. Preserve
-	# growth even if an old record temporarily has no assigned spell.
+	# Explicit user policy: paid reawakening resets to Lv1 / zero EXP.
+	# Existing saved growth remains unchanged until the transaction succeeds.
 	entry.spell_id=int(chosen.candidate.spell_id)
-	entry.level=maxi(1,int(entry.get("level",1)))
+	entry.level=1
+	entry.experience="0"
 	next.cards[identity]=entry
 	next.revision=int(next.revision)+1
 	next.last_operation_id=operation_id

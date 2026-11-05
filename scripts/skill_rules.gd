@@ -57,7 +57,9 @@ static func can_auto_cast(skill: Dictionary) -> bool:
 	if bool(skill.get("runtime_blocked",false)): return false
 	if is_passive(skill):
 		return false
-	if bool(skill.get("local_design",false)): return skill.get("mode", "") in ["local_heal","local_buff","summon"]
+	if bool(skill.get("local_design",false)):
+		if skill.has("estimated523"): return skill.get("mode", "") in ["attack","status","heal","buff","detect"]
+		return skill.get("mode", "") in ["local_heal","local_buff","summon"]
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]: return skill.get("mode", "") in ["attack", "status", "turn_undead", "heal", "buff", "counter", "cleanse", "convert", "summon"]
 	return effect_kind(skill) in ["damage", "turnUndead", "charge", "heal", "stun", "silence", "poison", "bleed", "hold", "fear"]
 

@@ -3,6 +3,7 @@ extends RefCounted
 const IDS: Array[int]=[75184,75194,95624,118992,243043,346901]
 static func recognized(record: Dictionary) -> bool:
 	var id: Variant=record.get("source_item_class_id",0)
+	if preload("res://scripts/cards/native_relic_unlock_item.gd").exact(record):return not str(record.get("name","")).is_empty()
 	return (id is int or id is float) and is_finite(float(id)) and float(id)==floorf(float(id)) and int(id) in IDS and record.get("source","")=="lineagem_base508" and record.get("source_snapshot","")=="base508" and record.get("sourceId","")=="m508:item:"+str(int(id)) and not str(record.get("name","")).is_empty()
 static func prepare_pickup(drop: Dictionary,instances: Dictionary,next_id: int) -> Dictionary:
 	var result: Dictionary={"item_instances":instances,"next_item_instance_id":next_id,"created":0}
@@ -20,7 +21,7 @@ static func prepare_pickup(drop: Dictionary,instances: Dictionary,next_id: int) 
 	return {"item_instances":physicals,"next_item_instance_id":candidate,"created":int(count)}
 
 static func stackable_book(record: Dictionary) -> bool:
-	return recognized(record) and int(record.source_item_class_id)!=346901
+	return recognized(record) and int(record.source_item_class_id) not in [346901,365748]
 
 static func install_drop_definitions(catalog: Dictionary,loot: Dictionary) -> void:
 	# Add identity definitions only: no loot rate, floor spawn or ownership grant.

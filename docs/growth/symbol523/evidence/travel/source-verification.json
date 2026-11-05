@@ -1,0 +1,130 @@
+{
+  "source_archives": [
+    {
+      "name": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+    },
+    {
+      "name": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+      "bytes": 149581,
+      "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f"
+    }
+  ],
+  "table_hashes_verified": 20,
+  "eva_III": {
+    "row": {
+      "ID": 24,
+      "SymbolTypeID": 14,
+      "Grade": 3,
+      "OpenCost": 12100,
+      "BonusID": 505854,
+      "BonusTypeID": 154,
+      "Value": 1,
+      "BonusApplicationTypeID": 0,
+      "BonusApplicationTargetID": 0,
+      "UIPriority": 0,
+      "OpenProbability": 100000,
+      "ForceOpenCost": 132
+    },
+    "bonus": {
+      "ID": 505854,
+      "BonusTypeID": 154,
+      "Value": 1,
+      "BonusApplicationTypeID": 0,
+      "BonusApplicationTargetID": 0
+    },
+    "bonus_type": {
+      "ID": 154,
+      "Name": "TeleportControl",
+      "UnitID": 20,
+      "DescID": 6458,
+      "DescPriority": 0,
+      "IsShowOnToolTip": true,
+      "ValuePrefixDescID": 0,
+      "IsShowOnSkillToolTip": false
+    },
+    "unit": {
+      "ID": 20,
+      "Name": "TrueFalse"
+    },
+    "description": {
+      "ID": 6458,
+      "Description": "순간이동 조종 가능"
+    },
+    "effects": {
+      "teleport_control:flag": 1
+    },
+    "status": "applied",
+    "display_name": "순간이동 조종 가능",
+    "nested_intervals": [],
+    "application_target": {}
+  },
+  "projection_sha256": "3482967f0d3685abaf1031a8fd1af931b46f3d9f4d6ff09af3cb72794da0190a",
+  "effect_groups_supported": {
+    "eva": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sayha": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "maphr": [
+      1,
+      3,
+      4
+    ],
+    "paagrio": [
+      3
+    ],
+    "grankain": [
+      1
+    ],
+    "einhasad": [
+      1,
+      3,
+      4,
+      5
+    ],
+    "shilen": [
+      3
+    ]
+  },
+  "fresh_sequentially_acquirable": {
+    "eva": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sayha": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "maphr": [
+      1
+    ],
+    "paagrio": [],
+    "grankain": [
+      1
+    ],
+    "einhasad": [
+      1
+    ],
+    "shilen": []
+  },
+  "official_semantics_reference": "https://lounge.plaync.com/feed/80914?country=KR&locale=ko-KR",
+  "source_priority": "raw523 bonus and costs first; no ring-only MP exemption or NPC discount transferred",
+  "local_scope": "current map only; configured16 marks,40 name characters; preserved existing spell costs"
+}

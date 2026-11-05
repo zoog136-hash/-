@@ -41,7 +41,7 @@ func _initialize() -> void:
 		check(EFFECTS.needs_buff_refresh(records[id]) == bool(active.relic_spell_effect.buff_level_changes), "pack-independent buff recovery flag matches native curves " + id)
 		for field: String in ["mp", "hp", "items", "cooldown", "cast_time", "trigger", "weapons", "id", "name"]:
 			check(active.get(field) == original.get(field), "source delta preserves " + field + " " + id)
-		if not active.relic_spell_effect.applied.is_empty(): connected += 1
+		if not active.relic_spell_effect.applied.is_empty() and int(profile.binding.spell_id) not in [33162,69711]: connected += 1
 		if not active.relic_spell_effect.pending.is_empty(): pending += 1
 	check(delta("lm_e8236ca60328dd0a", "power") == 5, "Ice Spike native40 to45 adds exactly5")
 	check(delta("lm_a67dae07b4f0608a", "power") == 6, "Hell Scythe70 to76 adds6")
@@ -56,7 +56,7 @@ func _initialize() -> void:
 	check(delta("lm_bb653bb8ca9e587d", "def") == 1 and delta("lm_cb0375ba9c238726", "def") == 1, "native AC improvement maps to host positive defense")
 	check(delta("lm_a3f1da232ab333b5", "pveDamageReduction") == 1, "PvE reduction remains separate")
 	for id: String in ["lm_b9e5decfe11eb2aa", "lm_236e004c8ab51043"]:
-		check(delta(id,"pvpDamageReduction") == 1 and projected(id).relic_spell_effect.training_available, "PvP source increment isolated for explicit local training " + id)
+		check(delta(id,"pvpDamageReduction") == 1 and projected(id).relic_spell_effect.pending.has("PVPDamageReduction(PvP 소비자)"), "PvP source increment retained with explicit missing consumer " + id)
 	for id: String in ["lm_a67097404fc5663e", "lm_1fb2fb45ca7bb6e5"]:
 		var result: Dictionary = projected(id)
 		check(is_equal_approx(float(result.get("heal_percent",0)), .05) and bool(result.relic_spell_effect.native_definition_pending), "missing Restoration uses explicit five-percent estimate " + id)

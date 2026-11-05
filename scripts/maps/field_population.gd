@@ -143,6 +143,15 @@ func _spawn_slot(slot: Dictionary) -> void:
 	var region: Dictionary = slot.region
 	var boss: bool = str(region.get("mode","normal")) == "boss"
 	if boss:
+		var early_hold: String = _patch523_boss_hold(region)
+		if not early_hold.is_empty():
+			slot.patch523_spawn_hold = early_hold
+			slot.remaining = INF
+			return
+	var boss_key: String = boss_director.key(str(field.data.map_id), region) if boss else ""
+	var prior_boss: Dictionary = boss_director.states.get(boss_key, {}).duplicate(true) if boss else {}
+	var had_boss: bool = boss and boss_director.states.has(boss_key)
+	if boss:
 		var identity: String = boss_director.key(str(field.data.map_id),region)
 		for other: Dictionary in slots:
 			if str(other.region.get("mode","normal")) != "boss": continue
@@ -167,10 +176,34 @@ func _spawn_slot(slot: Dictionary) -> void:
 		for i: int in range(names.size()):
 			choice -= maxf(0.,float(weights[i]))
 			if choice <= 0.: name_value = str(names[i]); break
-	var record: Dictionary = SOURCE_M_PORT.apply(records.get(name_value,{}), str(field.data.map_id))
+	var resolved: Dictionary = _patch523_resolved_admission(records.get(name_value,{}))
+	if not resolved.ok:
+		if boss:
+			if had_boss: boss_director.states[boss_key] = prior_boss
+			else: boss_director.states.erase(boss_key)
+		slot.patch523_spawn_hold = resolved.reason
+		slot.remaining = INF
+		return
+	var record: Dictionary = SOURCE_M_PORT.apply(resolved.record, str(field.data.map_id))
 	if record.is_empty():
+		if resolved.applied:
+			if boss:
+				if had_boss: boss_director.states[boss_key] = prior_boss
+				else: boss_director.states.erase(boss_key)
+			slot.patch523_spawn_hold = "patch523_original_pixels_not_ready"
+			slot.remaining = INF
+			return
 		push_error("Unknown field monster: "+name_value)
 		return
+	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(field.data.map_id))
+	if not admission.ok:
+		if boss:
+			if had_boss: boss_director.states[boss_key] = prior_boss
+			else: boss_director.states.erase(boss_key)
+		slot.patch523_spawn_hold = admission.reason
+		slot.remaining = INF # Immutable session pack: hold, without inventing a respawn period.
+		return
+	record = admission.record
 	if region.has("source_game_id"):
 		record=record.duplicate(true)
 		record["ai"]={"aggressive":str(record.get("source_raw_fields",{}).get("agro","0"))=="1"}
@@ -214,7 +247,13 @@ func _spawn_slot(slot: Dictionary) -> void:
 	# A pooled actor may carry the last map's source override. Restore that
 	# before setup writes this life/record's normal animation collision shape.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,false)
-	monster.setup(record,world.player,world,null if SOURCE_M_PORT.native(record) else world._monster_texture(record))
+	if not monster.setup(record,world.player,world,null if SOURCE_M_PORT.native(record) else world._monster_texture(record)):
+		if boss:
+			if had_boss: boss_director.states[boss_key] = prior_boss
+			else: boss_director.states.erase(boss_key)
+		slot.patch523_spawn_hold = monster.get_meta("patch523_spawn_hold", "source_setup_rejected")
+		slot.remaining = INF
+		return
 	# setup/_setup_animation writes collision_radius and collision_offset.
 	# Apply the source foot LAST so monsters and the player really use 4px.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField or field is NativePngField)
@@ -241,7 +280,6 @@ func _spawn_slot(slot: Dictionary) -> void:
 	slot.remaining = 0.
 	if boss:
 		var state: Dictionary = boss_director.state_for(str(field.data.map_id),region)
-		if int(state.hp)>0: monster.hp = mini(monster.max_hp,int(state.hp)); monster.hp_bar.value = monster.hp
 		var position: Array = state.position
 		var home: Array = state.get("home",[])
 		if home.size()==2:
@@ -253,11 +291,33 @@ func _spawn_slot(slot: Dictionary) -> void:
 			var saved := Vector2(float(position[0]),float(position[1]))
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
+		restore_boss_hp(monster,state)
 		boss_director.capture(str(field.data.map_id),region,monster)
 	_update_activity(monster)
 	# Spread the first AI decision across the existing 30 Hz cadence.
 	if field is NativePngField and str(field.data.map_id)=="escaros_world":
 		monster.decision_elapsed=float(int(slot.slot_id)%2)*.016
+
+func _patch523_resolved_admission(record: Dictionary) -> Dictionary:
+	var policy = preload("res://scripts/monsters/patch523_spawn_policy.gd")
+	var incoming: Dictionary = policy.admit(record, str(field.data.map_id))
+	if not incoming.ok or not policy.settings().enabled: return incoming
+	return policy.admit(SOURCE_M_PORT.BINDINGS.apply(record, str(field.data.map_id)), str(field.data.map_id))
+
+func _patch523_boss_hold(region: Dictionary) -> String:
+	# A wholly held encounter must not initialize/migrate its boss clock, even
+	# when delayed or no floor point exists. With mixed permitted variants the
+	# existing region clock remains legitimate; later rejected choices roll back.
+	var policy = preload("res://scripts/monsters/patch523_spawn_policy.gd")
+	if not policy.settings().enabled: return ""
+	var reason: String = ""
+	for name_value: Variant in region.get("monster_types", []):
+		var decision: Dictionary = _patch523_resolved_admission(records.get(str(name_value), {}))
+		if not decision.ok: reason = str(decision.reason); continue
+		if not decision.applied: return ""
+		if SOURCE_M_PORT.native(SOURCE_M_PORT.apply(decision.record, str(field.data.map_id))): return ""
+		reason = "patch523_original_pixels_not_ready"
+	return reason
 
 func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
@@ -347,16 +407,23 @@ func alert_social(source: TwilightMonster) -> void:
 		ally.aggro_remaining = maxf(ally.aggro_remaining,8.0)
 		ally.repath_cooldown = 0.0
 
-func summon_for(owner: TwilightMonster) -> void:
+func restore_boss_hp(monster: TwilightMonster, state: Dictionary) -> void:
+	# Resolve regional maximum at the final validated restored position.
+	if int(state.get("hp",-1)) > 0:
+		monster.hp = mini(monster.max_hp,int(state.hp))
+		monster.hp_bar.max_value = monster.max_hp; monster.hp_bar.value = monster.hp
+
+func summon_for(owner: TwilightMonster, requested: int = 2) -> Array[TwilightMonster]:
+	var spawned: Array[TwilightMonster] = []
 	var owned: int = 0
 	for value: Dictionary in summons:
 		if int(value.owner)==owner.get_instance_id() and is_instance_valid(value.monster): owned += 1
-	if owned>=4: return
+	if owned>=4: return spawned
 	var region: Dictionary = {}
 	for slot: Dictionary in slots:
 		if str(slot.region.get("mode","normal"))=="normal": region = slot.region; break
-	if region.is_empty(): return
-	for i: int in range(mini(2,4-owned)):
+	if region.is_empty() or field == null: return spawned
+	for i: int in range(mini(clampi(requested,1,4),4-owned)):
 		var p: Vector2 = owner.global_position+Vector2.from_angle(float(i)*PI)*100.
 		if not field.walkable(p) or not field.point_clear(p) or field.is_safe(p): continue
 		var record: Dictionary = (records[str(region.monster_types[i%region.monster_types.size()])] as Dictionary).duplicate(true)
@@ -365,7 +432,7 @@ func summon_for(owner: TwilightMonster) -> void:
 		monster.position = world.monsters_root.to_local(p)
 		world.monsters_root.add_child(monster)
 		monster.global_position = p
-		monster.setup(record,world.player,world,world._monster_texture(record))
+		if not monster.setup(record,world.player,world,world._monster_texture(record)): continue
 		monster.home_position = owner.home_position
 		monster.collision_mask = 4
 		monster.aggro_remaining = 20.
@@ -374,6 +441,13 @@ func summon_for(owner: TwilightMonster) -> void:
 		monster.player_hit.connect(world._on_player_hit)
 		monster.selected.connect(world._select_monster)
 		summons.append({"owner":owner.get_instance_id(),"monster":monster})
+		spawned.append(monster)
+	return spawned
+
+func retire_summoned(monster: TwilightMonster) -> void:
+	for entry: Dictionary in summons.duplicate():
+		if entry.monster == monster: summons.erase(entry)
+	if is_instance_valid(monster): monster.queue_free()
 
 func _clear_summons(owner: int = -1) -> void:
 	for i: int in range(summons.size()-1,-1,-1):
@@ -424,6 +498,7 @@ func _process(delta: float) -> void:
 				var search_started: int = Time.get_ticks_usec()
 				_spawn_slot(slot)
 				if not boss_slot:search_spent += Time.get_ticks_usec()-search_started
+				if slot.has("patch523_spawn_hold"): continue
 				# Full/blocked regions can fail all 64–160 candidate probes. Do not
 				# repeat that costly search at every 0.4s wake until a later retry.
 				# Successful spawns and boss cooldown semantics remain unchanged.
@@ -459,7 +534,7 @@ func _drain_initial_spawns() -> void:
 		pending_spawn_ids.erase(int(pending.slot_id))
 		if _zone_active(pending.region):
 			_spawn_slot(pending)
-			if not is_instance_valid(pending.monster):pending.remaining=maxf(_spawn_retry_delay(pending),float(pending.remaining))
+			if not is_instance_valid(pending.monster) and not pending.has("patch523_spawn_hold"):pending.remaining=maxf(_spawn_retry_delay(pending),float(pending.remaining))
 			else:pending.spawn_failures=0
 		initial_count+=1
 

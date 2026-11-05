@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "SOURCE_FIRST_REVIEWED_EXISTING_SKILLS",
+  "records": {
+    "lm_d44e85981c877135": {
+      "spell_id": 2,
+      "name": "라이트",
+      "kind": "light",
+      "nodes": [],
+      "defaults": {
+        "light_radius": 160
+      }
+    },
+    "lm_9f340db69e8b2702": {
+      "spell_id": 2312,
+      "name": "브레이브 멘탈",
+      "kind": "amplify",
+      "nodes": [],
+      "defaults": {}
+    },
+    "lm_d23194d0b63ee4e1": {
+      "spell_id": 332,
+      "name": "어드밴스 스피릿",
+      "kind": "capacity",
+      "nodes": [],
+      "defaults": {}
+    },
+    "lm_7d4f31d336a3441f": {
+      "spell_id": 29142,
+      "name": "블러드 러스트",
+      "kind": "speed",
+      "nodes": [],
+      "defaults": {}
+    },
+    "lm_310e7f51a839530f": {
+      "spell_id": 98871,
+      "name": "타운트",
+      "kind": "aura",
+      "nodes": [
+        99181,
+        99231
+      ],
+      "on_id": 99181,
+      "effect_id": 99231,
+      "defaults": {
+        "radius": 160,
+        "interval": 8
+      }
+    },
+    "lm_b9f1605d690c64f7": {
+      "spell_id": 350,
+      "name": "트리플 애로우",
+      "kind": "repeat",
+      "nodes": [
+        119642,
+        120712
+      ],
+      "on_id": 119642,
+      "effect_id": 120712,
+      "defaults": {
+        "power": 32,
+        "range": 430,
+        "cooldown": 2,
+        "cast_time": 0.42
+      }
+    },
+    "lm_45d35daedfc527c9": {
+      "spell_id": 29092,
+      "name": "포우 슬레이어",
+      "kind": "repeat",
+      "nodes": [
+        122982,
+        122992
+      ],
+      "on_id": 122982,
+      "effect_id": 122992,
+      "defaults": {
+        "power": 34,
+        "range": 96,
+        "cooldown": 2,
+        "cast_time": 0.42
+      }
+    },
+    "lm_b08f206fe97abc83": {
+      "spell_id": 69581,
+      "name": "스태틱 필드",
+      "kind": "static",
+      "nodes": [
+        70961,
+        107343,
+        107963,
+        71001
+      ],
+      "on_id": 70961,
+      "effect_id": 107963,
+      "defaults": {
+        "radius": 128,
+        "interval": 1,
+        "average_dice": 0
+      }
+    },
+    "lm_795059827558bc19": {
+      "spell_id": 17324,
+      "name": "래피드 샷",
+      "kind": "rapid",
+      "nodes": [],
+      "defaults": {
+        "power": 38,
+        "hits": 2,
+        "range": 430,
+        "cooldown": 2,
+        "cast_time": 0.42
+      }
+    }
+  }
+}

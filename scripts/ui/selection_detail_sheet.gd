@@ -7,6 +7,7 @@ extends VBoxContainer
 # selected ID, quantity limit, readiness decision and effect implementation.
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SOURCE523=preload("res://scripts/skills/player_skills523.gd")
 var owner_view: Node
 var picture: TextureRect
 var title: Label
@@ -19,8 +20,6 @@ var info_text: String=""
 var info_tab: Button
 var source_tab: Button
 var source_active: bool=false
-var relic_training_button: Button
-const RELIC_TRAINING=preload("res://scripts/cards/relic_pvp_training.gd")
 
 func _hero() -> HBoxContainer:
 	var surface:=PanelContainer.new()
@@ -140,10 +139,6 @@ func bind_skill(view: Node,old_scroll: ScrollContainer,side: VBoxContainer) -> C
 	var actions: Control=view.learn_button.get_parent()
 	actions.reparent(self)
 	view.summon_controls.reparent(self)
-	relic_training_button = UI.button("로컬 PvP 훈련 · 자체 규칙",_open_relic_training,Vector2(0,34))
-	relic_training_button.name = "RelicPvpTraining"
-	relic_training_button.visible = false
-	add_child(relic_training_button)
 	visibility_changed.connect(_fit_skill_chrome)
 	resized.connect(_fit_skill_chrome)
 	call_deferred("_fit_skill_chrome")
@@ -183,16 +178,37 @@ func show_skill() -> void:
 	if original and not blocked:
 		var world: Node=owner_view.hud.get_parent()
 		var skill: Dictionary=world.original_skills.catalog.resolve(selected)
+		category.text=str(selected.get("class",""))+" · "+str(selected.get("grade","일반"))+" · "+("패시브" if str(skill.get("activation","active"))=="passive" else "ON/OFF" if str(skill.get("mode",""))=="source_toggle" else "액티브")
 		learned=world.original_skills.catalog.owned(selected)
 		category.text+=" · "+("습득 완료" if learned else "미습득")
 		var rows: Array=[]
-		if not owner_view.RULES.is_passive(selected):
-			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간","%.1f초" % float(skill.get("duration",0))]]
+		if not owner_view.RULES.is_passive(skill):
+			rows=[["소모 MP / HP","%d / %d" % [int(skill.get("mp",0)),int(skill.get("hp",0))]],["재사용","%.1f초" % (float(skill.get("cooldown",0))*world._skill_cooldown_factor())],["지속시간",SOURCE523.duration_text(skill)]]
+			if str(skill.get("progression523",{}).get("kind",""))=="repeat":
+				var firing: Dictionary=world.original_skills.progression.repeat_skill(selected)
+				if not firing.is_empty():
+					rows=[["반복 발사 MP / HP","%d / %d" % [int(firing.mp),int(firing.hp)]],["발사 재료",SOURCE523.material_text(firing)],["발사 수 / 간격","%d회 / %.2f초(TWILIGHT)" % [int(firing.hits),float(firing.cooldown)*world._skill_cooldown_factor()]],["ON/OFF 전환 소모","0 / 0"]]
+			if not str(skill.get("source523_block_reason", "")).is_empty():
+				rows[0] = ["523 원문 MP / HP","%d / %d" % [int(skill.source523.mp_cost_raw),int(skill.source523.hp_cost_raw)]]
 		rows.append(["사용 무기","제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)])
-		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(selected.get("desc",""))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
-		if bool(selected.get("local_design",false)):info_text=raw_skill_text
+		if skill.has("source523"):
+			rows.append(["523 대상",SOURCE523.target_text(skill.source523)])
+			if not skill.source523.applied.is_empty(): rows.append(["시전 재료",SOURCE523.material_text(skill)])
+			if skill.source523.applied.has("mana"): rows.append(["MP 회복","%d · 기본 단계" % int(skill.mana)])
+		info_text=_table(rows)+"\n\n[b]효과[/b]\n"+UI.safe(skill.get("runtime_desc",selected.get("desc","")))+"\n\n"+("습득 완료" if learned else UI.safe(world.original_skills.catalog.reason(selected)))
+		if skill.has("recovery523"):category.text="원본 + TWILIGHT 설정 · "+category.text
+		if skill.has("progression523"):category.text="원본 실행 + TWILIGHT 설정 · "+category.text
+		owner_view.quick_button.text="퀵슬롯 · 수동 전환" if str(skill.get("mode",""))=="source_toggle" else "퀵슬롯 · 자동"
+		if bool(selected.get("local_design",false)) and not selected.has("estimated523"):info_text=raw_skill_text
+		else: info_text+=SOURCE523.detail_text(skill)
+		if not str(skill.get("source523_block_reason", "")).is_empty():
+			category.text+=" · 523 사용 보류"
+			info_text="[color=#dfb168]"+UI.safe(skill.source523_block_reason)+"[/color]\n\n"+info_text
+	if selected.has("estimated523"): category.text="TWILIGHT 추정 · "+category.text
 	if blocked:category.text+=" · 실행 보류"
-	elif not bool(selected.get("local_design",false)):owner_view.use_button.text="패시브" if owner_view.RULES.is_passive(selected) else "스킬 사용"
+	elif not bool(selected.get("local_design",false)):
+		var runtime: Dictionary=owner_view.hud.get_parent().original_skills.catalog.resolve(selected)
+		owner_view.use_button.text="패시브 · 자동 적용" if owner_view.RULES.is_passive(runtime) else ("OFF · 비활성화" if owner_view.hud.get_parent().original_skills.progression.is_on(selected) else "ON · 활성화") if str(runtime.get("mode",""))=="source_toggle" else "스킬 사용"
 	owner_view.learn_button.visible=original and not learned and not blocked
 	owner_view.book_button.visible=original and not learned and not blocked
 	owner_view.use_button.visible=blocked or not original or learned
@@ -205,7 +221,6 @@ func _switch_skill_tab(show_source: bool) -> void:
 	_show_skill_tab()
 
 func _show_skill_tab() -> void:
-	if relic_training_button != null: relic_training_button.hide()
 	source_tab.set_pressed_no_signal(source_active)
 	source_tab.text="사용 정보" if source_active else "습득 · 출처"
 	source.text=raw_skill_text if source_active else info_text
@@ -214,21 +229,7 @@ func _show_skill_tab() -> void:
 		var resolved: Dictionary = catalog.resolve(owner_view.selected)
 		var meta: Dictionary = resolved.get("relic_spell_effect", {})
 		if bool(meta.get("estimate_declared", false)) and not category.text.contains("TWILIGHT 추정"): category.text += " · TWILIGHT 추정"
-		if relic_training_button != null: relic_training_button.visible = bool(meta.get("training_available", false))
 		var relic_text: String = catalog.RELIC_LEVELS.EFFECTS.detail_text(resolved, source_active)
 		if not relic_text.is_empty(): source.text += "\n\n" + UI.safe(relic_text)
 	scroll.scroll_vertical=0
 
-func _open_relic_training() -> void:
-	var hud: Node = owner_view.hud
-	var world: Node = hud.get_parent()
-	var config: Dictionary = RELIC_TRAINING.settings()
-	var maximum: int = clampi(int(config.get("maximum_raw_damage",1000)),1,10000)
-	var initial: int = clampi(int(config.get("default_raw_damage",100)),1,maximum)
-	var dialog: Control = hud.confirm_action("로컬 PvP 훈련 · 자체 규칙", RELIC_TRAINING.description(world,initial), "훈련 피해 적용·저장",func(count: int) -> void:
-		var result: Dictionary = RELIC_TRAINING.apply(world,count)
-		hud.show_message("자체 훈련 HP -%d · PvP 증가분 감소 %d" % [int(result.damage),int(result.reduction)] if result.ok else str(result.error)),maximum)
-	# The existing quantity confirmation owns the once-only commit guard.
-	var body: Label = dialog.panel.get_child(0).get_child(2) as Label
-	dialog.quantity.value_changed.connect(func(value: float) -> void: body.text = RELIC_TRAINING.description(world,int(value)))
-	dialog.quantity.value = initial

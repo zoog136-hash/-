@@ -7,7 +7,7 @@ const LIMIT: int = 96
 static var textures: Dictionary = {}
 
 static func native(record: Dictionary) -> bool:
-	return record.get("source", "") == "lineagem_base508"
+	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 
 static func detail(record: Dictionary, acquired: bool, detail_view: bool = true) -> Dictionary:
 	if not native(record):
@@ -17,6 +17,9 @@ static func detail(record: Dictionary, acquired: bool, detail_view: bool = true)
 	var api: Script = load(SOURCE_API)
 	if api == null: return {"status":"runtime_missing", "texture":null}
 	var canonical: Dictionary = api.canonical(record)
+	if canonical.get("source_snapshot", "") == "patch523":
+		var declared: Variant = canonical.get("source_ui_assets", {}).get("DisplayBaseAssetID")
+		return {"status":"missing","role":"DisplayBaseAssetID","path":str(declared.get("path", "")) if declared is Dictionary else "","texture":null,"reason":"patch523_original_pack_required","source_asset_id":int(declared.get("asset_id",0)) if declared is Dictionary else 0,"source_id":str(canonical.get("sourceId",""))}
 	var assets: Dictionary = canonical.get("source_ui_assets", {})
 	# Render inspection: DisplayScreenAssetID can be an additive-only effect
 	# (e.g. black_wizard_A); it must never replace the portrait. Its original
@@ -79,8 +82,21 @@ static func apply(hud: Node) -> void:
 		badge.text="원본 목록 프레임 미지정" if frame_status=="undeclared" else "원본 목록 프레임 미설치"
 	badge.visible = not badge.text.is_empty()
 	badge.tooltip_text = str(result.get("path", ""))
+	if canonical_record_snapshot(record)=="patch523":
+		badge.tooltip_text="523 원본 카드 %s · AssetView %d\n%s\n원본 초상화·선언된 CSB/아틀라스가 필요합니다. 다른 카드 이미지는 대신 사용하지 않습니다." % [str(result.get("source_id","")),int(result.get("source_asset_id",0)),str(result.get("path",""))]
 	preview.set_meta("original_card_asset", result)
 	var equipped: Dictionary = hud.character_state.get("equipped", {}).get(hud.catalog_category, {})
 	var applied: bool = identity == CARDS.card_id(equipped)
 	hud.catalog_equip_button.disabled = not acquired or applied
 	hud.catalog_equip_button.text = "미보유 · 조회 전용" if not acquired else "현재 적용 중" if applied else {"변신":"변신", "마법인형":"소환", "성물":"성물 적용"}.get(hud.catalog_category, "적용")
+	hud.catalog_equip_button.tooltip_text=""
+	if canonical_record_snapshot(record)=="patch523" and acquired and not applied:
+		var world: Node=hud.get_parent()
+		if world!=null and world.has_method("_patch523_card_available") and not world._patch523_card_available(hud.catalog_category,record):
+			hud.catalog_equip_button.disabled=true
+			hud.catalog_equip_button.text="원본 조건 확인 필요"
+			hud.catalog_equip_button.tooltip_text="카드의 서버·기간 조건을 확인해야 적용할 수 있습니다"
+
+static func canonical_record_snapshot(record: Dictionary) -> String:
+	var original: Variant=record.get("source_original",{})
+	return str(record.get("source_snapshot",original.get("source_snapshot","") if original is Dictionary else ""))

@@ -105,7 +105,7 @@ static func _blockers(profile: Dictionary, spell_links: Dictionary) -> Array:
 		var ids: Array = []
 		for row: Dictionary in profile.buff:
 			if row.name_value == "PVPDamageReduction" and row.spell_level == 1: ids.append(int(row.link_id))
-		return [{"code":"local_pvp_training","root_spell_id":source_id,"source_link_ids":ids,"native_network_pvp_pending":true,"needed_api":"native opponent-player battle engine remains separate; local training consumes exact extra stat","message":"PvP 전용 증가분 · 자체 로컬 훈련에서 적용합니다. 일반 몬스터 피해에는 섞지 않습니다."}]
+		return [{"code":"pvp_consumer_missing","root_spell_id":source_id,"source_link_ids":ids,"native_network_pvp_pending":true,"needed_api":"opponent-player identity and a PvP-specific damage consumer","message":"PvP 전용 증가분 · 상대 플레이어 피해 소비자 미연결. 일반 몬스터 피해에는 섞지 않습니다."}]
 	var child_id: int = 69631 if source_id == 69601 else 95692 if source_id == 95662 else 0
 	if child_id == 0: return []
 	var rows: Array = spell_links.get(child_id, [])
@@ -231,7 +231,7 @@ static func project(record: Dictionary, profile: Dictionary, level: Dictionary, 
 				record["heal_percent"] = float(record.get("heal_percent", 0)) + delta
 				meta.applied.append({"field":"heal_percent","delta":delta,"source_type":"HPRestorationPercent","source_link_id":after.effect.link_id,"source_bonus_id":after.effect.bonus_id,"base_link_id":before.effect.link_id,"child_spell_id":heal.child_spell_id,"root_link_id":heal.root_link_id,"projection":"SOURCE_LEVEL_DELTA"})
 	ESTIMATES.project(record, meta, _policy_document)
-	meta["training_available"] = int(meta.spell_id) in [33162,69711] and bool(_policy_document.get("pvp_training", {}).get("enabled", false))
+	if int(meta.spell_id) in [33162,69711]: meta.pending.append("PVPDamageReduction(PvP 소비자)")
 	return record
 
 static func detail_text(skill: Dictionary, source_detail: bool = false) -> String:
@@ -243,7 +243,7 @@ static func detail_text(skill: Dictionary, source_detail: bool = false) -> Strin
 		elif effect.field == "invoke_probability": lines.append("발동률 %+.2f%%p · 게임 적용 설정(원본 증가분)\n%s\n기존 피해·발동 동작 유지" % [float(effect.delta) * 100.0, str(meta.get("invoke_scope", ""))])
 		elif effect.field == "heal_percent": lines.append("HP 회복: 최대 HP의 %+.2f%%p · 원본 자식 주문 %d" % [float(effect.delta) * 100.0, int(effect.child_spell_id)])
 		elif effect.field == "estimated_heal_percent": lines.append("TWILIGHT 추정 회복 증가: 최대 HP의 %+.2f%%p\n설정 가능 · 기존 회복·보호막·비용 유지" % (float(effect.delta) * 100.0))
-		elif effect.field == "pvpDamageReduction": lines.append("PvP 피해 감소 증가분 %+.0f · 로컬 훈련에서 사용" % float(effect.delta))
+		elif effect.field == "pvpDamageReduction": lines.append("PvP 피해 감소 증가분 %+.0f · PvP 소비자 연결 대기" % float(effect.delta))
 		else: lines.append("%s %+.2f" % [str(LABELS.get(effect.field, effect.field)), float(effect.delta)])
 	if meta.applied.is_empty(): lines.append("현재 적용 증가분 없음" if not meta.active else "이 스킬의 확인된 직접 증가분 없음")
 	if not meta.pending.is_empty(): lines.append("조건·공식 연결 대기: " + ", ".join(meta.pending))

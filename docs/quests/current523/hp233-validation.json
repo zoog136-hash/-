@@ -1,0 +1,219 @@
+{
+  "predecessor_public_head": "bb480da497c4851baf811e9d74b04f6dfd8a679c",
+  "source_archive_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "unchanged_shared_pr238_head": "f078a4651d53a2e0681e339ee4c4e81151e34e55",
+  "item_id": 233,
+  "exact_source_hp_dice": {
+    "base": 20,
+    "number": 2,
+    "sides": 6
+  },
+  "source_bonus_joins": {
+    "HPRestoration": "Value20",
+    "HPRestorationDiceNumber": "Value2",
+    "HPRestorationDiceSpotCount": "Value6",
+    "ItemConsumeDelay": "MilliSeconds1000",
+    "ItemConsumeEffectSpriteID": "SpriteID16007",
+    "AutoUseRegistrable": "TrueFalse1"
+  },
+  "unknown_bonus_or_condition_waived": false,
+  "producer_and_effect_scope": "Full original auto-acquisition→exact source ownership→real inventory/quickslot use→HP/native dice/current NPC modifier/shared cooldown→atomic qty/receipt/save/failure/reconnect",
+  "runtime": {
+    "source_definitions": 3621,
+    "completed": 811,
+    "with_some_item_use_pending_before_233": 429,
+    "with_some_item_use_pending_after_233": 369,
+    "additional_quests_resolved": 60,
+    "reviewed_item_classes": [
+      859,
+      1281,
+      239,
+      233
+    ],
+    "original_hp_reward_stacks": 72,
+    "original_hp_quantity": 6940,
+    "native_receipt_quests_all_four_classes": 192,
+    "fresh_remaining_held_item_classes": 142,
+    "physical_instances": 503,
+    "native_hp_remaining_after_two_real_uses": 6938,
+    "historical_original_822_stays537_pending": true,
+    "mass_conversion_or_regrant": false,
+    "final_level": 86,
+    "preserved_original_level_goals": 104,
+    "excluded": 160,
+    "other_locked_expired_content_reset_operating": 2650
+  },
+  "production_and_test_text_sha256": {
+    "scripts/world.gd": "2091143f727b02a619a3cfc09c530968f646818265d6102b5f3b6a52691d5c77",
+    "scripts/quests/quest_item_provider238.gd": "e8e0d85c32f11c4c32e52796f1803e7cd4b7b37935e0f559a3a3ad7318bbe032",
+    "scripts/quests/quest_held_use238.gd": "a819e0313704806125ee6fea0afa8b410a6c8503a0815631d0626b242d20e177",
+    "scripts/loot/quest_hp233_use.gd": "427e544e1f3502237b7d70ba293312b110aa40b475d5035ce81e2a6305d697e2",
+    "tests/quest_hp233_flow_test.gd": "0a1b0ddccdec7ff093c2c2309453a9271d74ef620527b9b30cdece2477e067ad",
+    "tests/quest_provider238_missing_test.gd": "6dbe56acee5aa842471b8bb5353b9ffab6ded92e4b9c7850a53350ce6ff4410a"
+  },
+  "tests": {
+    "held_original32": {
+      "local_log": "/tmp/quest-hp233-held-normalized.log",
+      "log_sha256": "3961b411e88a80386622891cbe9120a012baece6e44d51d6d5a65e495447431a",
+      "result": {
+        "checks": 32,
+        "completed": 811,
+        "controlled_half_heal": 13,
+        "controlled_qa": [
+          "missing200HP",
+          "NPC restriction/reduction fixture",
+          "specific quickslot49 in fresh profile",
+          "injected writer failures"
+        ],
+        "controlled_roll": 27,
+        "failures": [],
+        "final_save_sha256": "b51c0d3a696f616c97c962307ba70d8b753bb5fdf099ffec827b40dc0fbb951e",
+        "input_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "mode": "actual_held100_partial",
+        "pending_use_completed": 369,
+        "scope": "actual source ownership to original dice/HP/cooldown/atomic receipt/quantity/reconnect; no whole probability or natural encounter claim",
+        "source_hp_dice": {
+          "base": 20,
+          "number": 2,
+          "sides": 6
+        }
+      }
+    },
+    "native_fresh25": {
+      "local_log": "/tmp/quest-hp233-native-fixed.log",
+      "log_sha256": "b3f01552f466e781b4ee6473e30d456c8be16d28fdf42bad372986327a8a4ff9",
+      "result": {
+        "checks": 25,
+        "completed": 811,
+        "controlled_half_heal": 13,
+        "controlled_qa": [
+          "missing200HP",
+          "NPC restriction/reduction fixture",
+          "specific quickslot49 in fresh profile",
+          "injected writer failures"
+        ],
+        "controlled_roll": 27,
+        "failures": [],
+        "final_save_sha256": "34d80e0a1c97c029698a87d2d9c332c0faf81809a37a3a50cfa9cbb89cf2a6d0",
+        "input_save_sha256": "",
+        "mode": "actual_fresh_native6940",
+        "pending_use_completed": 369,
+        "scope": "actual source ownership to original dice/HP/cooldown/atomic receipt/quantity/reconnect; no whole probability or natural encounter claim",
+        "source_hp_dice": {
+          "base": 20,
+          "number": 2,
+          "sides": 6
+        }
+      }
+    },
+    "regression_missing": {
+      "local_log": "/tmp/quest-hp233-regression-missing.log",
+      "log_sha256": "256578515bae21608ced4acde8e14b767e8b238884841e199f8592ee19482899",
+      "result": {
+        "checks": 17,
+        "failures": [],
+        "scope": "actual source-granted inventory and receipts survive absent optional provider; no fixtures/grants",
+        "source_save_sha256": "34d80e0a1c97c029698a87d2d9c332c0faf81809a37a3a50cfa9cbb89cf2a6d0"
+      }
+    },
+    "regression_core": {
+      "local_log": "/tmp/quest-hp233-regression-core.log",
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    "regression_native-old-consumers": {
+      "local_log": "/tmp/quest-hp233-regression-native-old-consumers.log",
+      "log_sha256": "355331fafae69345987a39e6586b8258396a0fd7ee03199cc17e60887e640655",
+      "result": {
+        "checks": 31,
+        "completed": 811,
+        "failures": [],
+        "final_save_sha256": "30b69fa035b06d5f942eb24b3c6c3ca7f0bc59923552bac5ec6f98d98b67d7ad",
+        "item_class_ids": [
+          859,
+          1281
+        ],
+        "native_receipt_quests": 192,
+        "pack_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+        "pending_use_completed": 369,
+        "pre_postwrite_save_sha256": "2c25204699b3a7f662846e89b39a9651eda6a4f440d37b8d863563550d4fe1e2",
+        "same_batch_held_instances": 12,
+        "scope": "Actual source acquisition to shared supplier,inventory use,buff/box effects,atomic save,failure recovery and reload; no old-save conversion",
+        "source_quantities": {
+          "233": 6940,
+          "239": 212,
+          "859": 66,
+          "1281": 23
+        }
+      }
+    },
+    "regression_historical": {
+      "local_log": "/tmp/quest-hp233-regression-historical.log",
+      "log_sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    }
+  },
+  "preserved_original_save_sha256": {
+    "quest-current-main-data": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+    "quest-level-data": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92"
+  },
+  "resource_integrity": [
+    "RESOURCE_SOURCE_CHECKOUT_OK {\"atlases\": 723, \"frames\": 41442, \"bytes\": 233420026, \"categories\": {\"transform\": 413, \"doll\": 166, \"relic\": 144}}",
+    "RESOURCE_ORIGINALS_NOT_IN_PUBLIC_REPO: session upload != distributed assets"
+  ],
+  "storage_workaround": {
+    "workspace_available_bytes": 0,
+    "qa_profiles_and_logs": "same environment /tmp; current project remains /workspace/quest-core-current",
+    "code_text_backups": "/tmp/q262src/source-paths.json",
+    "temporary_source_path_links_are_not_public_code_artifacts": true,
+    "publish_file_mode": "100644 regular text, never temporary symlinks",
+    "no_original_save_pack_map_data_moved_or_deleted": true,
+    "qa_caches_moved_byte_verified_and_original_paths_restored": true,
+    "unexpected_git_promisor_fetch": {
+      "operation": "first temporary write-tree object existence check",
+      "outcome": "Stopped its own fetch/index-pack process tree before any commit/ref publication; subsequent write-tree uses missing-ok and GIT_NO_LAZY_FETCH=1 against parent-backed remote paths",
+      "active_private_pack_download_or_install": false
+    }
+  },
+  "earlier_failed_runs_excluded": [
+    "Original five-effect HP helper rejects the sixth explicit AutoUseRegistrable relation",
+    "Array membership treated JSON1.0 differently from int1; fixed by exact numeric integer validation",
+    "Fresh automatic unowned skill seeds sanitize on reload; switched to explicit50-slot edit fixture while actual old saves tested unchanged",
+    "Errno28 creating workspace QA profile; input-missing run was stopped before world test and not counted"
+  ],
+  "not_run": [
+    "full/manual CI",
+    "all classes/natural probabilities/native NPC encounters",
+    "other maps/full original art/engine/APK"
+  ],
+  "delivery": {
+    "quest_v1_changed": false,
+    "normal_item_pack_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+    "drive_auto_download": false,
+    "new_private_pack_download_or_upload": false
+  },
+  "remaining_contracts": {
+    "fixed_card_classes": 31,
+    "source_cannot_swap_true": 4,
+    "source_cannot_swap_false": 27,
+    "latest_public249_head_checked": "e0d88bc74fb84092f55f1a340686b38bc92fe334",
+    "fixed_card_gap": "Current engine and latest checked249 expose no receive_source_card; exact source card catalog/NoSwap/provenance and staged ownership+duplicate+receipt contract required; no blanket card grant",
+    "skill_book_classes": 12,
+    "latest_public245_head_checked": "655355575705f42036c6169341047dd288247819",
+    "skill_book_gap": "PR238 skill_book.resolve requires catalog.source523 profiles+bindings.skills with exact spell_id/row_sha256/row_json, plus catalog.record_for/reason/export_state and atomic original_skill_state+consumable_state; current base has no installed exact source adapter. Public245 v3 data is LOCAL_ONLY, not magically installed by normal item pack. No skill subsystem copied.",
+    "protection_intersection": 0,
+    "remaining_native_semantic_blockers_preserved": true
+  },
+  "pr_metadata_denied_not_retried": true,
+  "main_or_other_whole_pr_merge": false
+}

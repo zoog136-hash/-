@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-04",
+  "previous_head": "534d5f2abd31694e4204f3b310c17bd59a30e1bc",
+  "branch": "feature/auto-storage-sale-20261104",
+  "pr": 251,
+  "engine": "Godot4.7.2 official ed1daf0bf",
+  "original_full_related_table_audit": {
+    "source_zip_bytes": 25031173,
+    "source_zip_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+    "zip_crc_verified": true,
+    "table_row_counts": {
+      "StorageAutoStore": 84,
+      "MerchantAutoSell": 25,
+      "ItemClass": 34743,
+      "ItemCategory": 78,
+      "ItemEquipSlot": 3523,
+      "DescData_Korean": 298319,
+      "Grade": 10,
+      "ItemBlessCode": 5,
+      "ConstantData": 490
+    },
+    "all_target_definitions": 80,
+    "storage_rows": 84,
+    "sale_rows": 25,
+    "compiled_items_rows_and_all_source_table_hashes_match_installed_rule_pack": true,
+    "four_definitions_exist_in_original": [
+      235,
+      237,
+      313,
+      385
+    ],
+    "audit_details_storage": "LOCAL_ONLY"
+  },
+  "read_only_upstream_contracts": [
+    {
+      "pr": 247,
+      "ref": "9b2cb076e4c1ce1ab19fef040784138b89779e0d",
+      "path": "scripts/shop/source523_npc_consumables.gd",
+      "blob": "c4567c192fdb6584f200eddacea3c7b7a4d37c1e",
+      "consumer_stack_ids": [
+        313,
+        385
+      ]
+    },
+    {
+      "pr": 238,
+      "ref": "6634d3acf3eb75e513125f3fa535170e83ab70dd",
+      "path": "scripts/loot/patch523_monster_drops.gd",
+      "blob": "8014981cdc492c147c151b89fc2b1d1291ca0cfd",
+      "native_id_bless_contract_supported": true
+    }
+  ],
+  "coverage": {
+    "actual_current_production_with_existing_pack": {
+      "deposit": 80,
+      "deposit_allowed": 79,
+      "deposit_total": 84,
+      "sale": 19,
+      "sale_allowed": 19,
+      "sale_total": 25
+    },
+    "explicit_pr247_supplier_record_fixture_in_actual_main": {
+      "deposit": 82,
+      "sale": 20,
+      "production_supply_complete": false
+    },
+    "current_missing_provider_registration_not_missing_source": [
+      235,
+      237,
+      313,
+      385
+    ],
+    "virtual_selectors_not_registered_as_items": [
+      45011,
+      45021,
+      45031,
+      45041
+    ],
+    "test_item_protected": 8271
+  },
+  "consumer": {
+    "accepts_live_unique_catalog_record_only": true,
+    "saved_detached_supplier_metadata_rejected": true,
+    "does_not_generate_records_ownership_aliases_or_effects": true,
+    "provider_runtime_not_merged_or_installed": true,
+    "source_prices_and_original_rules_unchanged": true,
+    "native_npc_schedule": "NOT_EXECUTED: original exact NPC coordinates and activation contract not supplied"
+  },
+  "validation": [
+    {
+      "log": "/tmp/supplier523-validation/contract.log",
+      "checks": 72,
+      "failures": 0,
+      "sha256": "c9011dabb669d0a1ceceb5a21ce6a7268fe9509af0305d79de3fd05321e1ce74"
+    },
+    {
+      "log": "/tmp/supplier523-validation/main-final.log",
+      "checks": 20,
+      "failures": 0,
+      "sha256": "5e1d52a2f382b51a2994b5977515f4f78437561ae74b0d4dce6ec658d82cbc39"
+    },
+    {
+      "log": "/tmp/supplier523-validation/inventory_source523_test.log",
+      "checks": 652,
+      "failures": 0,
+      "sha256": "8b74d82fe6721af542affad42b9762402266712c7382020a9b850cfadf474770"
+    },
+    {
+      "log": "/tmp/supplier523-validation/inventory_registry523_test.log",
+      "checks": 40,
+      "failures": 0,
+      "sha256": "83c6bc20ac58256601b3946697db0530ef77223e3b5f38e168d6d15757fbb2b8"
+    },
+    {
+      "log": "/tmp/supplier523-validation/inventory_automatic_execution_test.log",
+      "checks": 32,
+      "failures": 0,
+      "sha256": "9ee8a36ec4d664efd01ca349b63067a823a325d0f639c7545c34f346bc81a0fe"
+    },
+    {
+      "log": "/tmp/supplier523-validation/core.log",
+      "checks": 32,
+      "failures": 0,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    }
+  ],
+  "total_checks": 848,
+  "code_files": {
+    "scripts/warehouse/inventory_source523.gd": {
+      "sha256": "a4bcf86c69b84c9f22389c423731ab97aeb137707007142b345065e1b25f76e7",
+      "bytes": 12057,
+      "tested_stage_identical": true
+    },
+    "scripts/ui/inventory_automation_settings.gd": {
+      "sha256": "af1596268287979e8af217e928e4467d59e48d66f07743222e506ba1e1b77ca1",
+      "bytes": 17654,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_supplier523_contract_test.gd": {
+      "sha256": "e0f7bc0b33e5344b04de667c7b43f8bb38f7da4829d74014e5515214f945f75e",
+      "bytes": 6390,
+      "tested_stage_identical": true
+    },
+    "tests/inventory_supplier523_main_test.gd": {
+      "sha256": "ad8089e5cd1b2d2046a0112a973c323b334ade5ec02f1141fcbae299648f1f8c",
+      "bytes": 5953,
+      "tested_stage_identical": true
+    }
+  },
+  "capture": {
+    "path": "/tmp/supplier523-evidence/supplier-contract-fixture-1280x720.png",
+    "bytes": 880570,
+    "sha256": "3b83dd769657278e6bf233d8e29a251c93bd7b4a33131c3f16cd12759e16d5a1",
+    "storage": "LOCAL_ONLY",
+    "visually_inspected": true,
+    "scope": "Actual Main UI with explicit supplier-record fixture"
+  },
+  "resource_preflight": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "result": "PASS"
+  },
+  "new_external_uploads": 0,
+  "new_pack_generated": false,
+  "library_401_retries": 0,
+  "new_manual_full_remote_ci": 0,
+  "other_pr_or_main_merges": 0,
+  "limits": [
+    "Supplier fixture compatibility is not ordinary gameplay supply or a merged PR247/PR238 validation",
+    "same existing stage/import-cache constraints as registry validation",
+    "old 897-check receipt is evidence at534d5f2a",
+    "no full original-game equivalence, real-device/audio or remote CI claim"
+  ]
+}

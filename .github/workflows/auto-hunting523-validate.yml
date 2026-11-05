@@ -1,0 +1,47 @@
+name: Auto Hunting523 Definition Guards
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/auto_hunting/**'
+      - 'scripts/ui/auto_hunting_destinations.gd'
+      - 'tests/*auto_hunting523*'
+      - 'tools/build_auto_hunting523.py'
+      - '.github/workflows/auto-hunting523-validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/build_auto_hunting523.py
+            /scripts/auto_hunting/
+            /tests/auto_hunting523_test.gd
+            /tests/test_auto_hunting523.py
+      - name: Rejection guards (private source tests explicitly skipped without input)
+        run: python3 tests/test_auto_hunting523.py
+      - name: Install pinned Godot and run absent-pack guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 2 -o "$RUNNER_TEMP/godot.zip" https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP"
+          printf 'config_version=5\n' > project.godot
+          "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/auto_hunting523_test.gd | tee guard-result.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          text = Path('guard-result.txt').read_text()
+          assert 'SCRIPT ERROR:' not in text and 'ERROR:' not in text
+          result = json.loads(next(x.split(' ', 1)[1] for x in text.splitlines() if x.startswith('AUTO_HUNT523_RESULT ')))
+          assert not result['failures'] and result['checks'] >= 3
+          PY

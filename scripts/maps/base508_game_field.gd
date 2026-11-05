@@ -3,6 +3,29 @@ extends "res://scripts/maps/native_png_field.gd"
 const SOURCE_NAV=preload("res://scripts/maps/base508_registered_navigation.gd")
 var source_navigation: RefCounted
 var source_pack: RefCounted
+var world_links: RefCounted
+
+func configure_world_links(path: String, manifest_sha256: String) -> bool:
+	if source_pack == null or not source_pack.loaded: return false
+	var links = preload("res://scripts/maps/patch523_world_links.gd").new()
+	if not links.load_land(path, int(source_pack.manifest.land.ID), str(source_pack.manifest.land.AssetPath), manifest_sha256): return false
+	world_links = links
+	data.source_definition_snapshot = "patch523"
+	data.source_definition_manifest_sha256 = manifest_sha256
+	data.source_definition_scope = "TERRITORY_AND_CONDITIONS_ONLY; NOT_CONFIRMED_INSTANCES"
+	return true
+
+func spawn_evidence(pack_id: int = -1) -> Array:
+	return world_links.spawn_evidence(pack_id) if world_links != null else []
+
+func spawn_conditions(pack_id: int) -> Dictionary:
+	return world_links.pack_conditions(pack_id) if world_links != null else {}
+
+func portal_context(portal_id: int) -> Dictionary:
+	return world_links.portal_context(portal_id) if world_links != null else {}
+
+func portal_contract(portal_id: int) -> Dictionary:
+	return world_links.portal_contract(portal_id) if world_links != null else {}
 
 func configure_source(pack: RefCounted, certificate: String, legacy_root: String, legacy_map: String, review_population: bool=false) -> bool:
 	var candidate=SOURCE_NAV.new()
@@ -10,6 +33,7 @@ func configure_source(pack: RefCounted, certificate: String, legacy_root: String
 	var registry=preload("res://scripts/maps/native_png_registry.gd")
 	var plan:Dictionary=registry.merge_review(registry.base_plan(),registry.read_json(registry.REVIEW_PATH),candidate.proof.plan_sha256)
 	var manifest:Dictionary=registry.read_json(legacy_root+"/"+legacy_map+"/manifest.json")
+	world_links = null # Reusing this field for another source must not retain old-Land links.
 	configure_png(legacy_map,plan,manifest,legacy_root+"/"+legacy_map)
 	source_navigation=candidate
 	source_pack=pack
@@ -72,6 +96,7 @@ func overview_texture() -> Texture2D:
 	return null # Existing minimap draws this field's exact legacy navigation geometry.
 
 func portal_evidence() -> Array:
+	if world_links != null: return world_links.portal_evidence()
 	var result:Array=[]
 	for portal:Dictionary in source_pack.portals:
 		result.append({"portal":portal.duplicate(true),"runtime_enabled":false,"reason":"Destination is a source region; trigger and arrival selection unverified"})

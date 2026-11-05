@@ -38,6 +38,7 @@ static func apply(records: Array) -> int:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
+		if record.get("source_m_native_item",false): continue
 		var original: String = str(record.get("grade", ""))
 		if not record.has("sourceQuality") and original not in ["일반", "고급", "희귀"]:
 			continue

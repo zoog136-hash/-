@@ -17,14 +17,13 @@ func _run() -> void:
 	# Equipment and grade effects do not cumulatively include lower grades.
 	_check(int(BLESSING.bonus_for("일반", "weapon").get("hp", 0)) == 50, "normal weapon HP")
 	_check(int(BLESSING.bonus_for("희귀", "weapon").get("accuracy", 0)) == 1, "rare weapon hit")
-	for high_grade: String in ["신화", "유일"]:
-		_check(BLESSING.bonus_for(high_grade, "weapon") == BLESSING.bonus_for("전설", "weapon"), high_grade + " weapon must match legendary")
-		_check(BLESSING.bonus_for(high_grade, "armor") == BLESSING.bonus_for("전설", "armor"), high_grade + " armor must match legendary")
-		_check(BLESSING.effect_text(high_grade, "weapon") == "추가 대미지 +1", high_grade + " weapon blessing label")
-		_check(BLESSING.effect_text(high_grade, "armor") == "AC -1", high_grade + " armor blessing label")
+	_check(BLESSING.bonus_for("신화", "weapon") == {"damage":3}, "523 mythic weapon damage3")
+	_check(BLESSING.bonus_for("유일", "weapon") == {"damage":6}, "523 unique weapon damage6")
+	_check(BLESSING.bonus_for("신화", "armor") == {"defense":3}, "523 mythic armor AC3")
+	_check(BLESSING.bonus_for("유일", "armor").is_empty(), "test-only unique armor excluded")
 	_check(int(BLESSING.bonus_for("영웅", "armor").get("defense", 0)) == 1, "hero armor AC")
 	_check(int(BLESSING.bonus_for("고급", "armor").get("hp", 0)) == 30, "advanced armor HP")
-	_check(BLESSING.bonus_for("희귀", "accessory").is_empty(), "accessory cannot use basic scroll")
+	_check(BLESSING.bonus_for("희귀", "accessory") == {"hp":20}, "523 rare accessory blessing HP20")
 	_check(not BLESSING.roll_succeeds("일반", 99.99) and BLESSING.roll_succeeds("일반", 0.0), "deterministic success/failure edges")
 
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene

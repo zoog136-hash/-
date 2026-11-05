@@ -5,6 +5,7 @@ const ORIGINAL = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE = preload("res://scripts/lineagem_base508.gd")
 var native_actor = ORIGINAL.new()
 var native_enabled: bool = false
+var presentation_hidden: bool = false
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 var motion: TwilightActorMotion = MOTION.new()
@@ -57,7 +58,21 @@ func configure(record: Dictionary, path: String, anchor: Node2D, sprite: Animate
 	state = "summon"
 	previous_sequence = player.motion.sequence
 
+func set_presentation_hidden(hidden: bool, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
+	var changed: bool = presentation_hidden != hidden
+	presentation_hidden = hidden
+	# The common parent also hides source actors and awakening attachments.
+	anchor.visible = not hidden
+	if hidden: return
+	if changed:
+		anchor.global_position = player.global_position + follow_offset
+		previous_sequence = player.motion.sequence
+		combat_reaction = 0.0
+		opacity = 0.0
+		if not enabled: sprite.hide()
+
 func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
+	if presentation_hidden: return
 	if native_enabled:
 		var old: Vector2 = anchor.global_position
 		var target: Vector2 = player.global_position + follow_offset

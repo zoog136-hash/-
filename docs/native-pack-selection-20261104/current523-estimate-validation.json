@@ -1,0 +1,221 @@
+{
+  "checked_at_utc": "2026-11-04T10:24:06.771991+00:00",
+  "base_main": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "previous_pr_head": "5648fcc4dfa4490197748ea2e214c45a2f3654bf",
+  "pr": "https://github.com/zoog136-hash/-/pull/236",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "mode": "estimated_SP2_not_native_M",
+  "source_snapshot": "patch523",
+  "source_input": {
+    "bytes": 76907660,
+    "sha256": "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182",
+    "source_member_registry_sha256": "8e22a6b5a2a9cc32a5f5cced0c6d0fb090127c7d7bdb1ba49acfb06615685247",
+    "source_bytes_preserved": true,
+    "raw_SP2s": 989,
+    "standard_confirmed_PNGs": 2
+  },
+  "actual_source_decoder_audit": {
+    "checks": 36246,
+    "estimated": true,
+    "failures": [],
+    "godot": "4.7.2-stable (official)",
+    "private_source_required_by_ci": false,
+    "render_all": true,
+    "source": {
+      "empty": 61,
+      "files": 989,
+      "index0_samples": 12224853,
+      "masks": {
+        "1": 981,
+        "255": 6,
+        "3": 2
+      },
+      "nonempty": 17054,
+      "records": 17115,
+      "rendered": 17115,
+      "samples": 150790654
+    },
+    "report_sha256": "62a82c1603f3c9f24a3f69054abcb6d8afe6fd9678df0b94618b9e3eca86aaff",
+    "native_M_visual_verification": false
+  },
+  "main_tests": {
+    "initial_install_OpenGL": {
+      "status": "passed",
+      "sha256": "5385bd78242844573349b0230a3b25ee07babb59c5e9d89c795a417ae4e87c5e",
+      "summaries": [
+        "CURRENT523_ESTIMATE_MAIN_RESULT {\"checks\":43,\"failures\":[],\"scope\":\"ACTUAL_MAIN_UI_AND_FIELD_ESTIMATED_PLAYBACK; NOT_NATIVE_M_VISUAL_EQUIVALENCE\"}"
+      ]
+    },
+    "new_process_settings_restore_headless": {
+      "status": "passed",
+      "sha256": "9a23db9168b9c2dc61f472a158e63ca31421e40dff58ce84884df7936fe88872",
+      "summaries": [
+        "CURRENT523_ESTIMATE_MAIN_RESULT {\"checks\":37,\"failures\":[],\"scope\":\"ACTUAL_MAIN_UI_AND_FIELD_ESTIMATED_PLAYBACK; NOT_NATIVE_M_VISUAL_EQUIVALENCE\"}"
+      ]
+    },
+    "final_annotation_and_player_OpenGL_restart": {
+      "status": "passed",
+      "sha256": "2db08989c9481799e0aa9e45e514c78e690524d551bea671d67ff2fe42bdef91",
+      "summaries": [
+        "CURRENT523_ESTIMATE_MAIN_RESULT {\"checks\":40,\"failures\":[],\"scope\":\"ACTUAL_MAIN_UI_AND_FIELD_ESTIMATED_PLAYBACK; NOT_NATIVE_M_VISUAL_EQUIVALENCE\"}"
+      ]
+    }
+  },
+  "core_tests": {
+    "core_runtime_save_test": {
+      "status": "passed",
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd",
+      "summaries": [
+        "CORE_RUNTIME_SAVE_RESULT {\"checks\":32,\"failures\":[],\"scope\":\"ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED\"}"
+      ]
+    },
+    "deferred_save_gate_test": {
+      "status": "passed",
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9",
+      "summaries": [
+        "DEFERRED_SAVE_GATE_RESULT {\"failures\":[]}"
+      ]
+    },
+    "lineagem_pack_resolution_test": {
+      "status": "passed",
+      "sha256": "dc698f8787bd1511622c5c2df9d2c6bbe53d0f92b3e8fcf47d9a2e2c7d184187",
+      "summaries": [
+        "LINEAGEM_PACK_RESOLUTION_RESULT {\"checks\":10,\"failures\":[]}"
+      ]
+    },
+    "lineagem_pack_settings_main_test": {
+      "status": "passed",
+      "sha256": "e871bb63be4b0b3588ef8814cb2078c000c4cdc19029b782eec7429b86931cba",
+      "summaries": [
+        "LINEAGEM_PACK_SETTINGS_RESULT {\"checks\":13,\"failures\":[]}"
+      ]
+    },
+    "save_identical_payload_test": {
+      "status": "passed",
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b",
+      "summaries": [
+        "SAVE_IDENTICAL_PAYLOAD_RESULT {\"failures\":[],\"skips\":1,\"writes\":2}"
+      ]
+    }
+  },
+  "new_Drive_application_copy": {
+    "intake": {
+      "file": "/workspace/current523-active-drive-copy/TWILIGHT_PR236_current523_SP2_estimated_runtime_input_v1.zip",
+      "bytes": 76907660,
+      "sha256": "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182",
+      "ZIP_CRC": "passed",
+      "manifest_entries": 1012,
+      "official_Drive_new_apply_copy_download": "passed"
+    },
+    "fresh_project_profile_install": {
+      "status": "passed",
+      "sha256": "3e84ee99a81fb1c70c1e912cfdfbd9806d169cc27273407a287f0de34806643b",
+      "summaries": [
+        "CURRENT523_INSTALL_RESULT {\"checks\":1006,\"failures\":[],\"raw_sp2\":989,\"read_only\":false,\"sprite_playback\":false,\"standard_pngs\":2}"
+      ]
+    },
+    "separate_process_project_runtime_load": {
+      "status": "passed",
+      "sha256": "2c06ebd17b10642fed3a6f71be37453a00669fc560946d778f373900c4e90aa6",
+      "summaries": [
+        "CURRENT523_DRIVE_CONSUMER_LOAD {\"estimated_SP2_texture_loaded\":true,\"failures\":[],\"global_estimate_enabled\":false,\"registry\":989,\"root\":\"/workspace/current523-drive-consumer-user/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/lineagem_current523_versions/pack-1793787657742016-722411\",\"standard_PNGs_loaded\":2}"
+      ]
+    },
+    "Main_UI_test_relationship": "same verified input SHA256; actual Main/OpenGL tests above used a separate isolated profile; fresh Drive-copy consumer was tested through production installer and runtime loaders, not a second full Main run",
+    "private_URLs": "kept outside public repository in owner handoff",
+    "drive_sharing": "application and backup folders/files verified not_shared; no permissions broadened",
+    "new_external_report_or_capture_upload": false
+  },
+  "stage": {
+    "production_source_receipts": [
+      {
+        "path": "scripts/player.gd",
+        "bytes": 31180,
+        "sha256": "9f9bf8e764d01859a9c07b6b403abc47210fbbc0fc50b26eb939d2113d631ff4"
+      },
+      {
+        "path": "scripts/ui/current523_pack_settings.gd",
+        "bytes": 3136,
+        "sha256": "a3af67d4557809ad6398f9e1a4f0af588a7db33e4c6ed78437aaee5028746ead"
+      },
+      {
+        "path": "scripts/ui/current523_sp2_viewer.gd",
+        "bytes": 21508,
+        "sha256": "d50f3815d483af239df88c87fe8aa89c2d20c63ae8d434defc583c9963f3f9f0"
+      },
+      {
+        "path": "scripts/resources/current523_playback.gd",
+        "bytes": 7516,
+        "sha256": "603377a7cf266fdffc1870961ba43e2fa18512e504337ef9b505c653d94529eb"
+      },
+      {
+        "path": "scripts/resources/current523_world_preview.gd",
+        "bytes": 4621,
+        "sha256": "374efc194b6680342877e21bd888456955cda13b7c78f1fcfbd15d897daa8fb8"
+      },
+      {
+        "path": "scripts/resources/current523_sp2_decoder.gd",
+        "bytes": 13099,
+        "sha256": "ab105e0c54e5c45658513631443f3a356e6e14d849d97daccffc6ad25df49cbe"
+      },
+      {
+        "path": "tests/current523_estimate_main_local.gd",
+        "bytes": 10435,
+        "sha256": "31b86c0a1665d5d7d9a3837f58e81a23cb7cc3c47e9e4f4bcde826e69fe2e784"
+      }
+    ],
+    "real_asset_payloads_verified": 4142,
+    "Godot_generated_import_sidecars_excluded_from_byte_comparison": true,
+    "source_map": "previous exact committed Aden source pack; not modified",
+    "full_cold_import": "not repeated; same real asset/import cache reused"
+  },
+  "render": {
+    "backend": "OpenGL 4.5 Compatibility Mesa llvmpipe",
+    "resolution": [
+      1280,
+      720
+    ],
+    "audio": "Dummy; audio verification not claimed",
+    "captures_private_not_uploaded": {
+      "actual_settings": "dba9f2d5d369f07f464a7f24552ccb3dc441f3a91bfbee9831ad8c11414580c3",
+      "actual_estimated_player": "5a6d9924e7d2bc90f56897726740603cf9d987d520720cd7eeba3c8544987a7e"
+    },
+    "manually_inspected": true,
+    "estimated_field_annotation_foreground_fix": "label above world foreground; final Main screen origin (640,416), size (255,39)"
+  },
+  "review_fixes": [
+    "world source offset scaled around same origin as pixels",
+    "current player presentation derived on disable/reload/failure/exit; no stale visibility snapshot",
+    "estimated display applies after movement/attack FX; idle FX predicate preserved",
+    "malformed/nonfinite settings rejected; atomic save failure keeps active state"
+  ],
+  "game_preservation": {
+    "save_bytes": true,
+    "source_ZIP_and_SP2_bytes": true,
+    "collision_layers_and_masks": true,
+    "movement_and_attack_speed": true,
+    "class_identity_stats_items_currency_unchanged": true,
+    "source_form_visibility_test": "synthetic presentation-state fixture inside actual Main; no native pixels or native playback claimed"
+  },
+  "resource_integrity": {
+    "status": "passed",
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "legacy_a1_ledger": "unavailable historical source; separate from verified current523 ZIP; not reported as passing",
+    "full_original_release_pack": "not produced; this is selected989SP2+2PNG input, not complete523 distribution"
+  },
+  "not_verified_or_not_implemented": [
+    "native M pixel/alpha/composition equivalence",
+    "native SPR action/direction/timing dispatch",
+    "automatic identity-specific full523 character/monster/effect integration",
+    "Android hardware or new APK/executable delivery",
+    "full historical manual visual/gameplay suites"
+  ],
+  "publication": {
+    "scope": "code/tests/docs only; no original resources or captures",
+    "CI": "[skip ci]; no manual remote CI or workflow/protection changes",
+    "main_or_other_PR_merge": false,
+    "M_engine_APK_XAPK_work": "cancelled by user; not required by estimated runtime"
+  }
+}

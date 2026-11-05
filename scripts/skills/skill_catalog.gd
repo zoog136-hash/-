@@ -5,6 +5,10 @@ class_name TwilightOriginalSkillCatalog
 ## The old game DB remains untouched, but its synthesized skills are not active.
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 var current_official = CURRENT.new()
+const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
+var source523 = SOURCE523.new()
+const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
+var source_quest_knowledge: Dictionary={}
 const ROOT_PATH := "res://data/skills/"
 var records: Array = []
 var by_id: Dictionary = {}
@@ -71,6 +75,10 @@ func configure(owner: Node) -> void:
 		if str(fact.hp_display).is_valid_int(): row.class_costs[job]["hp"]=int(fact.hp_display)
 		row.class_references[job]=fact.duplicate(true)
 	relations.merge(current_official.local_design.get("relations",{}))
+	source523.configure_arguments()
+	for record: Dictionary in records:
+		source523.prepare_estimate(record)
+		record["effect"] = effect_for(record)
 	seed_starters()
 
 
@@ -99,7 +107,7 @@ static func effect_for(record: Dictionary) -> String:
 		"turn_undead": return "turnUndead"
 		"status": return str(record.get("status", "stun"))
 		"heal", "convert", "cleanse", "local_heal": return "heal"
-		"buff", "counter", "local_buff": return "defBuff"
+		"buff", "counter", "local_buff", "detect": return "defBuff"
 		"teleport": return "teleport"
 		"stealth": return "invisibility"
 		"taunt", "toggle_proc", "summon": return "utility"
@@ -123,10 +131,12 @@ func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
 
 func owned(record: Dictionary) -> bool:
+	if not source_learning_status(record).is_empty():return false
 	if bool(record.get("runtime_blocked", false)): return false
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
 func enabled(record: Dictionary) -> bool:
+	if world.get("spell_group_conversion")!=null and not world.spell_group_conversion.allows(record):return false
 	if bool(record.get("runtime_blocked", false)): return false
 	if not owned(record): return false
 	if level_locked(record):return false
@@ -135,7 +145,9 @@ func enabled(record: Dictionary) -> bool:
 	var required: Array = record.get("weapons", [])
 	return required.is_empty() or required.has(world._current_weapon_type())
 
-func reason(record: Dictionary, buying: bool = false) -> String:
+func reason(record: Dictionary, buying: bool = false, supplied_book: String = "") -> String:
+	var source_status: Dictionary=source_learning_status(record)
+	if not source_status.is_empty():return str(source_status.message)
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
 	if bool(record.get("runtime_blocked", false)):
@@ -147,7 +159,7 @@ func reason(record: Dictionary, buying: bool = false) -> String:
 	for required: String in rel.get("requires_skill", []):
 		if int(learned.get(required, 0)) < int(rel.get("requires_skill_level", {}).get(required, 1)):
 			return "선행 스킬 필요: " + str(record_for(required).get("name", required))
-	if not buying and int(world.inventory.get(str(record.book_name), 0)) < 1: return "스킬북 필요"
+	if not buying and int(world.inventory.get(supplied_book if not supplied_book.is_empty() else str(record.book_name), 0)) < 1: return "스킬북 필요"
 	return ""
 
 func buy_book(key: String) -> bool:
@@ -166,30 +178,50 @@ func buy_book(key: String) -> bool:
 	world._save_game(true)
 	return true
 
-func learn(key: String) -> bool:
+func learn(key: String, supplied_book: String = "") -> bool:
 	var record := record_for(key)
-	var blocked := reason(record)
+	if not supplied_book.is_empty() and not preload("res://scripts/shop/source523_skill_books.gd").registered(world,supplied_book,key):
+		world.hud.show_message("스킬북 원본 정체 불일치 · 보존")
+		return false
+	if not supplied_book.is_empty():
+		var definition: Dictionary = world._find_catalog_item_record(supplied_book)
+		var native_reason: String = preload("res://scripts/shop/source523_skill_books.gd").learn_reason(world,preload("res://scripts/shop/source523_skill_books.gd").contract(int(definition.source_item_class_id)))
+		if not native_reason.is_empty():world.hud.show_message(native_reason);return false
+	var blocked := reason(record,false,supplied_book)
 	if not blocked.is_empty():
 		world.hud.show_message(blocked)
 		return false
 	# Validate every prerequisite before consuming the book. An UNKNOWN original
 	# prerequisite is displayed as unknown; it is not invented by this service.
-	world.inventory[str(record.book_name)] -= 1
+	var book: String = supplied_book if not supplied_book.is_empty() else str(record.book_name)
+	var before_count: int = int(world.inventory.get(book,0))
+	var before_revision: int = revision
+	var before_learned: Dictionary = learned.duplicate(true)
+	var before_buffs: Dictionary = world.active_skill_buffs.duplicate(true)
+	world.inventory[book] = before_count - 1
 	learned[str(record.id)] = 1
 	revision += 1
 	world.original_skills.refresh_buffs_after_learning(str(record.id))
+	if not supplied_book.is_empty() and world._save_game(true) != OK:
+		world.inventory[book] = before_count
+		learned = before_learned
+		world.active_skill_buffs = before_buffs
+		revision = before_revision
+		world._update_hud()
+		world.hud.show_message("습득 저장 실패 · 스킬북과 습득 상태 보존")
+		return false
 	if str(record.activation) == "passive":
 		world.original_skills.vfx.emit_skill(str(record.id), "learn", world.player.global_position)
 	world._refresh_speed_modifiers()
 	world._update_hud()
-	world._save_game(true)
+	if supplied_book.is_empty():world._save_game(true)
 	world.hud.show_message(str(record.name) + " 습득")
 	return true
 
 func _lineage_signature() -> String:
 	# Tests and migration adapters may edit learned directly; hash catches those
 	# alongside the normal learn/import revision without touching old save data.
-	return "%d|%s|%d|%d" % [revision,str(world.job_class),hash(learned),records.size()]
+	return "%d|%s|%d|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision,hash(world.equipped_items.get("weapon",{}))]
 
 func _resolved_reference(record: Dictionary) -> Dictionary:
 	var signature: String=_lineage_signature()
@@ -248,7 +280,8 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result.official["source_url"]=record.class_references[job].source_url
 			result.official["learning_level"]=result.minimum_level
 			result.official["mp_cost"]=result.mp
-	return result
+	if result.has("bow_range") and world._current_weapon_type() == "활": result["range"] = float(result.bow_range)
+	return source523.apply_to(result,job,family.size() > 1)
 
 func _current_stat_signature() -> String:
 	var equipped: Variant=world.equipped_items.get("weapon",{})
@@ -266,8 +299,9 @@ func _ensure_stat_index() -> void:
 		if not enabled(record):continue
 		if bool(record.get("local_design",false)):
 			static_speed=maxf(static_speed,float(record.get("passive_speed",1)))
-		if str(record.mode)!="stats":continue
 		var resolved: Dictionary=_resolved_reference(record)
+		if not str(resolved.get("source523_block_reason","")).is_empty():continue
+		if str(resolved.mode)!="stats":continue
 		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
 		var stats: Dictionary=resolved.get("stats",{})
 		var conditions: Dictionary=resolved.get("stat_conditions",{})
@@ -293,13 +327,21 @@ func speed() -> float:
 	_ensure_stat_index()
 	return static_speed
 
+func source_learning_status(record: Dictionary)->Dictionary:
+	var key: String=str(record.get("id",""))
+	if not source_quest_knowledge.has(key):return {}
+	return SOURCE_LEARNING.status(source_quest_knowledge,learned,key)
+
 func export_state() -> Dictionary:
-	return {"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
+	var state: Dictionary={"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
+	if not source_quest_knowledge.is_empty():state["source_quest_knowledge"]=source_quest_knowledge.duplicate(true)
+	return state
 
 func import_state(data: Dictionary) -> void:
 	learned.clear()
 	# Keep unknown future IDs without activating them; round trips are lossless.
 	var state: Dictionary = data.get("original_skill_state", {})
+	source_quest_knowledge=SOURCE_LEARNING.restore(state,data)
 	learned = state.get("learned", {}).duplicate(true)
 	archived = state.get("archived", {}).duplicate(true)
 	class_slots = state.get("class_slots", {}).duplicate(true)
