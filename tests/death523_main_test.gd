@@ -47,6 +47,8 @@ func run() -> void:
 	var service = world.death_recovery
 	check(service.source.ready,"real pinned523 source archive")
 	check(service.source.experience.size() == 160,"all original experience rows")
+	check(service.source.item_exemption_level() == 30 and service.source.item_exemption_origin() == "SOURCE_CONSTANT_APPLIED_TO_LOCAL_ITEM_POLICY","original NoDeathPenaltyLevel feeds existing local item policy only")
+	check(service.source.exp_loss(30,50000,100000) == 4999,"native level30 XP loss is independent of item exemption")
 	check(service.source.row(159).CumulativeExperience == "20556137784927015" and service.source.row(160).CumulativeExperience == "20556137784927016","native cumulative integers above2pow53 stay exact decimal strings")
 	check(service.source.exp_loss(97,50000,100000) == 5000,"placeholder high-level native curve uses configurable custom projection without overflow")
 	var original_pack: String = service.source.PATH
@@ -106,6 +108,7 @@ func run() -> void:
 	check(danger.is_finite(),"real current source-map unsafe clear foot")
 	if not danger.is_finite(): world.queue_free(); quit(1); return
 	world.player.global_position = danger
+	await test_item_exemption_boundaries(world,service,name_value,danger)
 	world.hp = 1
 	check(world._save_game(true) == OK,"pre-lethal fixture save")
 	var experience_before: int = world.experience
@@ -374,3 +377,74 @@ func test_equipped_death_stat(world, service) -> void:
 	else: world.inventory[item_name] = count
 	world._invalidate_equipment_static()
 	world._update_hud()
+
+
+func test_item_exemption_boundaries(world, service, item_name: String, danger: Vector2) -> void:
+	# Reuse this test's explicitly seeded owned physical equipment. These are
+	# real Main poison/death/save/reentry paths, not normal acquisition evidence.
+	check(world._save_game(true) == OK,"item boundary baseline production save")
+	var path: String = world.save_path()
+	var baseline: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	for boundary: int in [30,31]:
+		world.level = boundary
+		world.exp_need = world.EXP_PROGRESSION.table_requirement(boundary)
+		world.experience = int(world.exp_need/2)
+		world.player.global_position = danger
+		world.hp = 1
+		check(world._save_game(true) == OK,"item boundary pre-lethal production save")
+		var confirmed_writes: Array[int] = [0]
+		world.equipment_collections.test_save_writer = func(destination: String,data: Dictionary) -> Error:
+			confirmed_writes[0] += 1
+			return Writer.write(destination,data)
+		world._on_player_poison_tick(2)
+		check(confirmed_writes[0] == 1,"boundary death uses exactly one real production writer call")
+		check(service.pending.is_empty() and service.state.records.size() == 1,"item boundary produces one confirmed death receipt")
+		if service.state.records.size() == 1:
+			var entry: Dictionary = service.state.records[0]
+			check(int(entry.exp) > 0,"level30 and31 retain native XP loss")
+			check(entry.item.is_empty() if boundary == 30 else str(entry.item.get("id","")) == "900001","only level31 enters owned item escrow")
+		var duplicate_sha: String = FileAccess.get_sha256(path)
+		world._respawn_player("item boundary duplicate callback")
+		check(service.state.records.size() == 1 and FileAccess.get_sha256(path) == duplicate_sha,"duplicate boundary death neither saves nor consumes again")
+		check(confirmed_writes[0] == 1,"duplicate boundary callback does not call the writer")
+		world._load_game(true)
+		await process_frame
+		check(service.blocked() and world.hp == 0 and FileAccess.get_sha256(path) == duplicate_sha,"boundary death reentry preserves confirmed bytes without replay")
+		check(confirmed_writes[0] == 1,"boundary reentry does not call the writer")
+		check(world.item_instances.has("900001") == (boundary == 30) and int(world.inventory.get(item_name,0)) == (1 if boundary == 30 else 0),"boundary reentry keeps exactly one ownership location")
+		world.equipment_collections.test_save_writer = Callable()
+		await test_fresh_item_exemption_process(boundary,item_name,path,duplicate_sha)
+		check(FileAccess.get_sha256(path) == duplicate_sha,"fresh process leaves the parent confirmed save unchanged")
+		check(Writer.write(path,baseline) == OK,"restore isolated test baseline through production writer")
+		world._load_game(true)
+		await process_frame
+		if is_instance_valid(service.death_overlay):
+			service.death_overlay.queue_free()
+			service.death_overlay = null
+		check(not service.blocked() and world.item_instances.has("900001") and int(world.inventory.get(item_name,0)) == 1,"isolated boundary fixture restores original owned item")
+
+func test_fresh_item_exemption_process(boundary: int, item_name: String, path: String, fingerprint: String) -> void:
+	var result_path: String = ProjectSettings.globalize_path("user://death523-item-exemption-probe.json")
+	if FileAccess.file_exists(result_path): DirAccess.remove_absolute(result_path)
+	var arguments := PackedStringArray(["--headless","--path",ProjectSettings.globalize_path("res://"),"--script","res://tests/death523_item_exemption_reentry_probe.gd","--"])
+	for argument: String in OS.get_cmdline_user_args():
+		# The new process must discover the installed default source, independently
+		# of the source archive provided to the parent test's installer.
+		if not argument.begins_with("--death523-source=") and not argument.begins_with("--death523-probe-"):
+			arguments.append(argument)
+	arguments.append("--death523-probe-level="+str(boundary))
+	arguments.append("--death523-probe-item="+item_name)
+	arguments.append("--death523-probe-save="+ProjectSettings.globalize_path(path))
+	arguments.append("--death523-probe-hash="+fingerprint)
+	var process: int = OS.create_process(OS.get_executable_path(),arguments)
+	check(process > 0,"fresh Main reentry process starts")
+	if process <= 0: return
+	var started: int = Time.get_ticks_msec()
+	while OS.is_process_running(process) and Time.get_ticks_msec()-started < 60000:
+		await process_frame
+	if OS.is_process_running(process):
+		OS.kill(process)
+		check(false,"fresh Main reentry process exceeded60second bound")
+		return
+	var result: Variant = JSON.parse_string(FileAccess.get_file_as_string(result_path)) if FileAccess.file_exists(result_path) else null
+	check(result is Dictionary and result.get("ok",false) == true and result.get("level",-1) == boundary,"fresh Main process confirms default source and immutable death ownership")

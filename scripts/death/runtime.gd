@@ -194,7 +194,7 @@ func begin_death(cause: String) -> void:
 		var lost: int = 0 if p.exempt or p.no_exp else source.exp_loss(world.level,world.experience,world.exp_need)
 		var stats: Dictionary = death_stats()
 		lost = int(floor(lost*(1.0-float(stats.exp_reduction)/100.0)))
-		var item_exempt: bool = world.level <= 30 or (source.ready and int(source.row(world.level).get("DropRate",0)) <= 0)
+		var item_exempt: bool = world.level <= source.item_exemption_level() or (source.ready and int(source.row(world.level).get("DropRate",0)) <= 0)
 		var item: Dictionary = {} if p.exempt or p.no_item or item_exempt else _select_loss(float(stats.item_reduction))
 		var id: String = str(int(next.next_id))
 		var entry: Dictionary = {"id":id,"at":now(),"map":world.active_map_id,"cause":cause,"level":world.level,"exp":lost,"cost":source.cost(world.level),"exp_claimed":lost == 0,"item":item,"item_claimed":item.is_empty(),"revived":false,"full_revive":bool(p.full_revive),"source_rules":source.ready,"exempt":p.exempt}

@@ -2,6 +2,10 @@ extends RefCounted
 ## Reads the pinned, private original archive. No original rows are vendored.
 const SHA: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const PATH: String = "user://source_rules/death523.zip"
+const REVIEWED_ITEM_EXEMPTION_LEVEL: int = 30
+# Applied only to the pre-existing local item-loss exemption. Experience has
+# its own source-table boundary and must not use this scalar as a global gate.
+var source_item_exemption_level: int = -1
 var fallback_loss_percent: float = 5.0
 var fallback_cost_factor: int = 12
 var experience: Dictionary = {}
@@ -20,7 +24,7 @@ func load_pack(path: String = PATH) -> bool:
 	var archive := ZIPReader.new()
 	if archive.open(path) != OK: return false
 	var tables: Dictionary = {}
-	for table: String in ["Experience","ItemClass","LandAttribute","Territories","DescData_Korean","UIMarketPurchase","MarketPurchase_Korean","MarketPayment_Korean","MarketPurchaseProduct","MarketProduct","Unit","IntangibleItemClass","Currency","ItemBonus","Bonus"]:
+	for table: String in ["Experience","ItemClass","LandAttribute","Territories","DescData_Korean","UIMarketPurchase","MarketPurchase_Korean","MarketPayment_Korean","MarketPurchaseProduct","MarketProduct","Unit","IntangibleItemClass","Currency","ItemBonus","Bonus","ConstantData"]:
 		var parser := JSON.new()
 		var text: String = archive.read_file("content/"+table+".json").get_string_from_utf8()
 		if table == "Experience":
@@ -36,6 +40,8 @@ func load_pack(path: String = PATH) -> bool:
 	if tables.Experience.size() != 160 or tables.ItemClass.size() != 34743: return false
 	var next_exp: Dictionary = {}
 	for row: Dictionary in tables.Experience: next_exp[int(row.Level)] = row
+	var next_item_exemption: int = read_item_exemption_level(tables.ConstantData,next_exp.size())
+	if next_item_exemption < 0: return false
 	var descriptions: Dictionary = {}
 	for row: Dictionary in tables.DescData_Korean: descriptions[int(row.ID)] = str(row.Description)
 	var next_items: Dictionary = {}
@@ -85,6 +91,7 @@ func load_pack(path: String = PATH) -> bool:
 	experience = next_exp; items = next_items; item_names = next_names; territories = next_territories
 	certificates = next_certificates; slot_offers = next_offers
 	item_death_stats = next_death_stats
+	source_item_exemption_level = next_item_exemption
 	attributes = tables.LandAttribute
 	ready = true; problem = "최신523 원본 규칙 · 로컬 투영/추정 정책 별도"
 	return true
@@ -98,6 +105,28 @@ func install(path: String) -> String:
 	if DirAccess.rename_absolute(temporary,PATH) != OK: return "규칙 설치 실패 · 이전 팩 보존"
 	if not load_pack(): return "규칙 재확인 실패"
 	return ""
+
+static func read_item_exemption_level(rows: Array, maximum_level: int) -> int:
+	var matches: int = 0
+	var result: int = -1
+	for raw: Variant in rows:
+		if not raw is Dictionary: return -1
+		if raw.get("Name") != "NoDeathPenaltyLevel": continue
+		matches += 1
+		if typeof(raw.get("ID")) not in [TYPE_INT,TYPE_FLOAT] or raw.ID != 11071: return -1
+		if typeof(raw.get("Type")) not in [TYPE_INT,TYPE_FLOAT] or raw.Type != 1: return -1
+		if not raw.get("Value") is String: return -1
+		var value: String = raw.Value
+		if not value.is_valid_int(): return -1
+		result = int(value)
+		if value != str(result) or result < 0 or result > maximum_level: return -1
+	return result if matches == 1 else -1
+
+func item_exemption_level() -> int:
+	return source_item_exemption_level if ready and source_item_exemption_level >= 0 else REVIEWED_ITEM_EXEMPTION_LEVEL
+
+func item_exemption_origin() -> String:
+	return "SOURCE_CONSTANT_APPLIED_TO_LOCAL_ITEM_POLICY" if ready and source_item_exemption_level >= 0 else "TWILIGHT_REVIEWED_DEFAULT"
 
 func matches_item(record: Dictionary, id: String) -> bool:
 	# Inven/community and native IDs are never joined by number alone. Keep
