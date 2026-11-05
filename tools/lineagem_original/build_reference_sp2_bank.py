@@ -35,6 +35,8 @@ HANDOFF = "current523_sp2_metadata_handoff_manifest.json"
 MEMBER = re.compile(r"Sprite/[0-9]+-[0-9]+\.sp2\Z")
 SHA = re.compile(r"[0-9a-f]{64}\Z")
 CRC = re.compile(r"[0-9a-f]{8}\Z")
+DUMMY_LITERAL = re.compile(r"(?<![A-Za-z])dummy(?![A-Za-z])|더미", re.IGNORECASE)
+DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
 CONTRACT = {
     "format": "current523_identity_roles_v1",
     "selection": "explicit_source_actor_id_and_source_action_id",
@@ -53,6 +55,71 @@ def consumer_contract(allow_host_timing=False):
         contract.update(timing="source_explicit_or_existing_host_policy", host_timing_opt_in=True,
                         source_fps_policy="preserve_literal_value_including_null")
     return contract
+
+
+def literal_dummy_declaration(line, source_file, source_line, source_sha256):
+    scan = line.lstrip()
+    header = original_spr.HEADER.match(scan)
+    if header is None:
+        return None
+    name = scan[header.end():].strip()
+    inline = original_spr.ACTION.search(name)
+    if inline is not None:
+        name = name[:inline.start()].strip()  # An action named dummy is not an actor dummy label.
+    literal = DUMMY_LITERAL.search(name)
+    if literal is None:
+        return None
+    return {"sprite_id": int(header[1]), "literal_name": name, "literal_declaration": line,
+            "matched_literal": literal[0], "source_file": source_name(source_file),
+            "source_line": source_line, "source_sha256": source_sha256}
+
+
+def source_dummy_declarations(paths, spr_proofs):
+    """Read literal declaration names only; do not infer from files or pixels."""
+    result = defaultdict(list)
+    for path in paths:
+        for number, line in enumerate(Path(path).read_bytes().decode("cp949").splitlines(), 1):
+            row = literal_dummy_declaration(line, Path(path).name, number, spr_proofs[Path(path).name]["sha256"])
+            if row is not None:
+                result[row["sprite_id"]].append(row)
+    return dict(result)
+
+
+def metadata_dummy_declarations(metadata):
+    result = defaultdict(list)
+    for declaration in metadata["declarations"]:
+        text = declaration.get("raw_declaration_text", "")
+        if not text:
+            continue
+        row = literal_dummy_declaration(text.splitlines()[0], declaration["source_file"],
+                                        declaration["source_line"], declaration["source_file_sha256"])
+        if row is not None:
+            result[row["sprite_id"]].append(row)
+    return dict(result)
+
+
+def source_dummy_alias_path(sprite_id, declarations, dummy):
+    path, hits, seen = [], [], set()
+    current = sprite_id
+    while current not in seen:
+        seen.add(current)
+        matches = declarations.get(current, [])
+        if len(matches) != 1:
+            break  # Keep unrelated declaration ambiguity as its existing blocker.
+        path.append(current)
+        hits.extend(dummy.get(current, []))
+        target = matches[0].alias_target
+        if target is None:
+            break
+        current = target
+    return {"sprite_ids":path,"dummy_declarations":hits,"resolved_source_endpoint":path[-1] if path else None,
+            "normal_endpoint_globally_excluded":False} if hits else None
+
+
+def source_dummy_registry(dummy):
+    return {"sprite:"+str(sprite_id):{"source_snapshot":"patch523","reason":"source_literal_dummy",
+        "dummy_declarations":rows,"source_graph_paths":[{"kind":"source_declared_root","sprite_ids":[sprite_id]}],
+        "originals_preserved":True,"raw_member_namespace_excluded":False} for sprite_id,rows in sorted(dummy.items())}
 
 
 def require(value, detail):
@@ -379,6 +446,9 @@ def expanded_requests(seeds, declarations, metadata, failures, statistics):
 
 
 def plan_action(request, declarations, metadata, prepared=None, allow_host_timing=False):
+    dummy = metadata.get("dummy_declarations", {})
+    require(source_dummy_alias_path(request["actor_id"], declarations, dummy) is None,
+            "source_literal_dummy: explicit source declaration/alias path excluded by user")
     source = metadata["actions"].get(request["action_key"])
     require(source is not None, "unknown exact source action key")
     require(source["action_id"] == request["action_id"], "request source action ID mismatch")
@@ -391,6 +461,9 @@ def plan_action(request, declarations, metadata, prepared=None, allow_host_timin
     role = "source_action:" + str(request["action_id"])
     actor, members, proof = prepared if prepared is not None else identity.build_actor(
         request["actor_id"], declarations, metadata["sources"], ((role, request["action_id"]),))
+    for layer in proof["declarations"]:
+        require(not any(item["sprite_id"] in dummy for item in layer["declaration_path"]),
+                "source_literal_dummy: explicit required source layer excluded by user")
     # build_actor's default loop policy belongs to named TWILIGHT roles. A raw
     # action number carries no loop/one-shot or gameplay event meaning.
     actor["roles"][role]["loop"] = None
@@ -445,7 +518,7 @@ def source_layer_declarations(proof, declarations):
     return result
 
 
-def project_independent_source_layers(root_id, action_id, declarations, spr_proofs):
+def project_independent_source_layers(root_id, action_id, declarations, spr_proofs, excluded_dummy=None):
     """Separate explicit child-owned actions; retain literal references as evidence.
 
     The projection is only an input to the existing address compiler. Source
@@ -453,7 +526,8 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
     separately and must compile the child under its own exact source clock.
     """
     projected = dict(declarations)
-    independent, visited = [], set()
+    independent, excluded_edges, visited = [], [], set()
+    excluded_dummy = excluded_dummy or {}
 
     def origin(sprite_id, kind, raw, seen=()):
         require(sprite_id not in seen, f"SPR reference alias cycle {seen + (sprite_id,)}")
@@ -482,6 +556,14 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
                 require(reference["count_valid"], f"invalid layer target count {sprite_id}")
                 retained = []
                 for target in reference["targets"]:
+                    dummy_path = source_dummy_alias_path(target, declarations, excluded_dummy)
+                    if dummy_path is not None:
+                        separated = True
+                        edge = {"from_sprite_id":sprite_id,"target_sprite_id":target,"kind":kind,"source_reference":reference["raw"]}
+                        excluded_edges.append({**edge,"reason":"source_literal_dummy","source_edge_path":edge_path+[edge],
+                            "source_declaration":origin(sprite_id,kind,reference["raw"]),"excluded_alias_path":dummy_path,
+                            "originals_preserved":True,"normal_parent_connection_preserved":True})
+                        continue
                     edge_key = (sprite_id, kind, target)
                     require(edge_key not in visited, f"duplicate SPR layer edge {edge_key}")
                     visited.add(edge_key)
@@ -513,14 +595,17 @@ def project_independent_source_layers(root_id, action_id, declarations, spr_proo
     _, actions = original_spr.resolve(declarations, root_id)
     require(action_id in actions and not actions[action_id]["errors"], f"absent/invalid source action {root_id}/{action_id}")
     attach(root_id, actions[action_id], [])
-    return projected, independent
+    return projected, independent, excluded_edges
 
 
 def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_key_for,
-                           allow_host_timing=False, ancestors=()):
+                           allow_host_timing=False, ancestors=(), excluded_dummy=None):
     """Compile explicit source nodes with child-owned clocks, without raw validation."""
     require(root_id not in ancestors, f"independent SPR source graph cycle {ancestors + (root_id,)}")
-    projected, edges = project_independent_source_layers(root_id, action_id, declarations, spr_proofs)
+    excluded_dummy = excluded_dummy or {}
+    require(source_dummy_alias_path(root_id,declarations,excluded_dummy) is None,
+            "source_literal_dummy: explicit source declaration/alias path excluded by user")
+    projected, edges, dummy_edges = project_independent_source_layers(root_id, action_id, declarations, spr_proofs, excluded_dummy)
     role = "source_action:" + str(action_id)
     actor, required, proof = identity.build_actor(root_id, projected, spr_proofs, ((role, action_id),))
     fps = actor["roles"][role]["fps"]
@@ -531,7 +616,7 @@ def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_
     for edge in edges:
         child_id = edge["target_sprite_id"]
         child = construct_source_graph(child_id, action_id, declarations, spr_proofs, action_key_for,
-                                       allow_host_timing, ancestors + (root_id,))
+                                       allow_host_timing, ancestors + (root_id,), excluded_dummy)
         members.update(child["members"])
         records.update(child["records"])
         independent.append({**edge, "child_actor_key": "sprite:" + str(child_id),
@@ -540,10 +625,14 @@ def construct_source_graph(root_id, action_id, declarations, spr_proofs, action_
                             "source_origin_policy": "original_source_origin_no_inferred_attachment_offset"})
     contract = consumer_contract(allow_host_timing)
     proof["source_reference_projection"] = "synchronized_edges_in_frame_layers;independent_edges_retained_as_explicit_child_records"
+    dummy_projection_applied = bool(dummy_edges) or any(item.get("user_dummy_exclusions_applied") for item in records.values())
     record = {"schema": 1, "source_snapshot": "patch523", "consumer_contract": contract,
               "actor": actor, "compact_roles": identity.compact_roles(actor, proof), "source_proof": proof,
               "source_layer_declarations": source_layer_declarations(proof, declarations),
               "independent_source_layers": independent,
+              "excluded_dummy_source_edges": dummy_edges,
+              "source_layer_graph_complete_before_user_exclusions": not dummy_projection_applied,
+              "user_dummy_exclusions_applied": dummy_projection_applied,
               "independent_source_layers_opt_in": True,
               "independent_layer_policy": "explicit_source_relation_same_action_id_child_own_clock_host_dispatch_unverified",
               "action_key": action_key_for(root_id, action_id),
@@ -598,6 +687,7 @@ def build(args):
     repository = Path(__file__).resolve().parents[2]
     require(not output.is_relative_to(repository), "private bank output must be outside the repository")
     metadata = load_metadata(args.metadata, args.dependency_index)
+    metadata["dummy_declarations"] = metadata_dummy_declarations(metadata)
     request_bytes = args.requests.read_bytes()
     request_sha256 = sha(request_bytes)
     seed_requests = requests_from(args.requests, metadata["targets"], request_bytes)
@@ -725,6 +815,8 @@ def build(args):
         "requests_sha256": request_sha256, "source_problem": source_problem,
         "seed_requests_sha256": request_sha256,
         "effective_requests_sha256": sha((output / "effective-requests.jsonl.gz").read_bytes()),
+        "source_dummy_exclusion_policy": DUMMY_EXCLUSION_POLICY,
+        "excluded_source_actors": source_dummy_registry(metadata["dummy_declarations"]),
         "complete_source_family_expansion": dict(expansion_statistics),
         "source_spr_hashes": metadata["sources"], "original_spr_inputs": source_inputs,
         "actual_original_spr_files_verified": original is not None and not source_inputs["missing"],
@@ -734,6 +826,8 @@ def build(args):
     if compiled_count:
         manifest = {"schema": 1, "kind": summary["kind"], "source_snapshot": "patch523",
                     "consumer_contract": contract, "actors": compiled, "members": written_members}
+        manifest.update(source_dummy_exclusion_policy=DUMMY_EXCLUSION_POLICY,
+                        excluded_source_actors=summary["excluded_source_actors"])
         write_file(output, "manifest.json", json_bytes(manifest))
     print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
     return summary
@@ -755,6 +849,9 @@ def main(argv=None):
     parser.add_argument("--saved-plan", type=Path)
     parser.add_argument("--input-receipt", type=Path, action="append", default=[])
     parser.add_argument("--followup-receipt", type=Path, action="append", default=[])
+    parser.add_argument("--followup-scope", type=Path,
+                        help="Supplied full follow-up denominator, preserved while applying literal source dummy exclusions.")
+    parser.add_argument("--map-placement-exclusion-sprite", type=int, action="append", default=[])
     parser.add_argument("--normal-visual-context", type=Path, action="append", default=[])
     parser.add_argument("--resume-bank", type=Path)
     parser.add_argument("--source-receipt", type=Path,

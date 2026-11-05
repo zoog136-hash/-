@@ -63,6 +63,8 @@ func configure(key: String, manifest_path: String, context: Dictionary = {}) -> 
 		source_selection_status = selected.duplicate(true)
 		source_selection_status["status"] = "selection_pending"
 		source_selection_status["reason"] = str(reference_bank_status.get("error","current523_source_action_unavailable"))
+		if reference_bank_status.has("source_exclusion"):
+			source_selection_status["source_exclusion"] = reference_bank_status.source_exclusion.duplicate(true)
 		return false
 	_reference_card_context = selected.duplicate(true)
 	_reference_request_context = context.duplicate(true)
@@ -156,8 +158,13 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
 		return false
 	var bank := REFERENCE_BANK.new()
-	var loaded: Dictionary = bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy)
+	var loaded: Dictionary = bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer)
 	reference_bank_status = {"ok":loaded.ok,"error":loaded.get("error", ""),"purpose":"diagnostic_reference_preview","source_actor_id":source_actor_id,"manifest_sha256":expected_manifest_sha}
+	reference_bank_status["source_dummy_exclusion_policy"] = loaded.get("source_dummy_exclusion_policy")
+	reference_bank_status["map_consumer_contract_dependency"] = loaded.get("map_consumer_contract_dependency")
+	if loaded.has("source_exclusion"):
+		reference_bank_status["source_exclusion"] = loaded.source_exclusion.duplicate(true)
+		reference_bank_status["excluded_source_actor_id"] = loaded.excluded_source_actor_id
 	if not loaded.ok: return false
 	_reference_bank = bank
 	_root = manifest_path.get_base_dir()

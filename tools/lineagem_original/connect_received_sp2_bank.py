@@ -113,6 +113,35 @@ def connect(args):
         if member not in identities and (row.get("current523_relation") or row.get("supplied_source_current523_manifest_match")):
             identities[member] = row
     declarations = bank.original_spr.read([args.spr_root / name for name in sources])
+    dummy = bank.source_dummy_declarations([args.spr_root / name for name in sources], sources)
+    contexts = {row["source_owner_key"]:row for row in bank.records(args.metadata / "current523_sp2_actor_dependency_context.jsonl.gz")}
+    followup_scope = ({row["member"]:row for row in bank.records(args.followup_scope)}
+                      if args.followup_scope else dict(followup))
+    # The supplied SPR declarations define this bank's source namespace, even
+    # for a dummy with no action or physical member (such as a pure placeholder).
+    # The registry governs actor paths in this pinned bank, never raw filenames.
+    excluded_registry = bank.source_dummy_registry(dummy)
+    dummy_path_cache, dummy_graph_cache = {}, {}
+
+    def dummy_path(sprite_id):
+        if sprite_id not in dummy_path_cache:
+            dummy_path_cache[sprite_id] = bank.source_dummy_alias_path(sprite_id,declarations,dummy)
+        return dummy_path_cache[sprite_id]
+
+    def graph_has_dummy(sprite_id,seen=()):
+        if sprite_id in dummy_graph_cache: return dummy_graph_cache[sprite_id]
+        if sprite_id in seen: return False
+        if dummy_path(sprite_id) is not None: return True
+        for declaration in declarations.get(sprite_id,[]):
+            if declaration.alias_target is not None and graph_has_dummy(declaration.alias_target,seen+(sprite_id,)): return True
+            for reference in declaration.references:
+                if any(graph_has_dummy(target,seen+(sprite_id,)) for target in reference["targets"]): return True
+        dummy_graph_cache[sprite_id] = False
+        return False
+
+    def file_dummy_path(member):
+        owner = contexts.get(inventory.get(member,{}).get("source_owner_context_key"),{}).get("source_declaration_sprite_id")
+        return dummy_path(owner) if isinstance(owner,int) else None
     action_keys = {}
     for row in bank.records(args.metadata / bank.ACTIONS):
         action_keys[(bank.source_name(row["source_file"]), row["source_line"], row["action_id"])] = row["action_key"]
@@ -123,6 +152,7 @@ def connect(args):
         return action_keys[(action["source_file"], action["source_line"], action_id)]
 
     registry, raw, resume_root = {}, {}, args.resume_bank
+    preserved_records, projection_required = {}, set()
     if resume_root is not None:
         previous = json.loads((resume_root / "manifest.json").read_text(encoding="utf-8"))
         bank.require(previous.get("consumer_contract") == contract,
@@ -132,9 +162,44 @@ def connect(args):
         for entry in raw.values(): link_or_copy(resume_root / entry["path"], output / entry["path"])
         for entries in registry.values():
             for entry in entries.values(): link_or_copy(resume_root / entry["path"], output / entry["path"])
+        for actor_key in list(registry):
+            sprite_id = int(actor_key.removeprefix("sprite:"))
+            excluded = dummy_path(sprite_id)
+            if excluded is not None:
+                preserved_records[actor_key] = {"reason":"source_literal_dummy","source_graph_path":excluded,
+                    "records":registry.pop(actor_key),"active":False,"originals_preserved":True}
+            elif graph_has_dummy(sprite_id):
+                entries = registry.pop(actor_key)
+                kept = {}
+                for action_id,entry in entries.items():
+                    preserved_path = "preserved_records/"+entry["path"]
+                    destination = output / preserved_path
+                    destination.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
+                    (output / entry["path"]).rename(destination)
+                    kept[action_id] = {**entry,"path":preserved_path}
+                    projection_required.add((sprite_id,int(action_id)))
+                preserved_records[actor_key] = {"reason":"user_requested_dummy_layer_projection","records":kept,
+                    "active":False,"originals_preserved":True}
     outcomes, emitted = {}, defaultdict(dict)
+    active_records, active_members = set(), set()
     counts, statuses, source_blocks, followup_results, overlay_bindings = Counter(), Counter(), Counter(), [], {}
     dependency_requirements = []
+    dummy_touched, dummy_actions = defaultdict(list), []
+
+    def activate(pair):
+        if pair in active_records: return
+        entry = registry.get("sprite:"+str(pair[0]),{}).get(str(pair[1]))
+        if entry is None: return
+        active_records.add(pair)
+        # Existing actor metadata is read only to assemble active connections;
+        # no pixel/hash/frame-quality validation is performed.
+        record = json.loads((output / entry["path"]).read_text(encoding="utf-8"))
+        for track in record["actor"]["roles"].values():
+            for frames in track["directions"]:
+                for frame in frames:
+                    active_members.update(layer["member"] for layer in frame["layers"])
+        for child in record.get("independent_source_layers",[]):
+            activate((child["target_sprite_id"],child["child_action_id"]))
 
     def register(records, members):
         for member in sorted(members):
@@ -153,7 +218,8 @@ def connect(args):
 
     def construct(request, scope):
         actor_id, action_id = request["actor_id"], request["action_id"]
-        graph = bank.construct_source_graph(actor_id, action_id, declarations, sources, key_for, args.allow_host_timing)
+        graph = bank.construct_source_graph(actor_id, action_id, declarations, sources, key_for,
+                                             args.allow_host_timing, excluded_dummy=dummy)
         members = graph["members"]
         missing_identity = sorted(members - identities.keys())
         if missing_identity:
@@ -177,6 +243,7 @@ def connect(args):
         register(graph["records"], members)
         return {"compiled":True,"status":"compiled_source_graph_without_additional_validation", "actual_emitted_members":sorted(members),
                 "unemitted_requested_members":unmatched,
+                "excluded_dummy_source_edges":graph["record"].get("excluded_dummy_source_edges",[]),
                 "independent_source_layers":graph["record"].get("independent_source_layers",[]),
                 "compiled_source_nodes":len(graph["records"]),"literal_source_fps":graph["record"]["actor"]["roles"]["source_action:"+str(action_id)]["fps"]}
 
@@ -188,13 +255,20 @@ def connect(args):
                       "actual_main_game_feature_use":False,"active_installation":None,"playback_evidence":None}
             reason = str(request.get("reason", ""))
             existing = str(pair[1]) in registry.get("sprite:"+str(pair[0]), {})
-            if request.get("compiled") and existing:
+            excluded = dummy_path(pair[0])
+            if excluded is not None:
+                result.update(compiled=False,status="excluded_source_literal_dummy",reason="Explicit source dummy declaration/alias path excluded by user.",
+                    dummy_exclusion=excluded,originals_preserved=True,actual_emitted_members=[])
+                dummy_actions.append({"actor_id":pair[0],"action_id":pair[1],"action_key":request["action_key"],"dummy_exclusion":excluded})
+                for member in set(request.get("actual_emitted_members") or request.get("required_members") or request.get("target_members",[])):
+                    dummy_touched[member].append({"actor_id":pair[0],"action_id":pair[1],"dummy_exclusion":excluded})
+            elif request.get("compiled") and existing:
                 result.update(status="compiled_source_graph_without_additional_validation",compiled=True,reused_previously_generated_record=True)
             else:
                 old_members = request.get("actual_emitted_members") or request.get("required_members")
                 is_independent = "independent layer timing unsupported" in reason
                 missing = sorted(set(old_members or ()) - receipts.keys())
-                eligible = is_independent or "dependency identity unavailable" in reason or request.get("status") in (
+                eligible = pair in projection_required or graph_has_dummy(pair[0]) or is_independent or "dependency identity unavailable" in reason or request.get("status") in (
                     "blocked_original_sp2_not_received", "planned_requires_original_source_and_sp2_validation", "blocked_saved_direction_or_frame",
                     "blocked_requested_member_not_emitted_by_source_graph") or reason == "no positive explicit source FPS; timing cannot be invented" or "requested target is not emitted" in reason
                 if eligible and not (missing and not is_independent):
@@ -211,9 +285,14 @@ def connect(args):
                 if result.get("reason"):
                     result["previous_source_blocker"] = result.pop("reason")
                 counts["compiled_effective_requests"] += 1
+                activate(pair)
                 for member in set(result.get("actual_emitted_members", [])) & targets:
                     emitted[member][pair] = {"actor_id":pair[0],"action_id":pair[1],"action_key":request["action_key"],
                         "status":result["status"],"compiled_emitted":True,"directly_requested":member in request["target_members"]}
+                for edge in result.get("excluded_dummy_source_edges",[]):
+                    counts["dummy_source_edges_disabled_while_normal_parent_preserved"] += 1
+                    for member in set(request.get("actual_emitted_members",[]))-set(result.get("actual_emitted_members",[])):
+                        dummy_touched[member].append({"actor_id":pair[0],"action_id":pair[1],"excluded_source_edge":edge})
             outcomes[pair] = {key:result.get(key) for key in ("status","compiled","reason","previous_source_blocker","missing_original_members","missing_current523_identities","known_saved_frame_findings")}
             statuses[result["status"]] += 1
             if not result.get("compiled"):
@@ -282,6 +361,7 @@ def connect(args):
                         "source_action_key":request["action_key"],"child_action_path":f"actors/{actor_id}/action-{action_id}.json",
                         "dispatch_policy":"existing_host_compatible_overlay_native_dispatch_unverified",
                         "parent_action_contexts":contexts[actor_id],"native_dispatch_verified":False}
+                if result["compiled"]: activate((actor_id,action_id))
         except (ValueError,KeyError,RuntimeError) as error:
             followup_results.append({"actor_id":actor_id,"status":"blocked_source_graph_construction","reason":str(error),"compiled":False})
     for request in followup_parents.values():
@@ -289,16 +369,26 @@ def connect(args):
         except (ValueError,KeyError,OSError,RuntimeError) as error:
             result = {"compiled":False,"status":"blocked_source_graph_construction","reason":str(error)}
         followup_results.append({**request,**result,"scope":"approved_followup_explicit_parent_context","additional_validation_performed":False})
+        if result["compiled"]: activate((request["actor_id"],request["action_id"]))
         for member in set(result.get("actual_emitted_members",[])) & set(followup):
             followup_emitted[member].append({"actor_id":request["actor_id"],"action_id":request["action_id"],
                 "compiled":result["compiled"],"status":result["status"],"provided_parent_context":True})
     writer.records("followup-action-outcomes.jsonl.gz",followup_results)
-    writer.records("followup-file-outcomes.jsonl.gz",({"member":member,"scope":"approved_followup_separate_scope",
-        "source_receipt":row,"connections":followup_emitted[member],"compiled":any(r["compiled"] for r in followup_emitted[member]),
-        "current_input_stage":row.get("stage"),"packed_output":{"present":member in raw,"path":raw.get(member,{}).get("path")},
+    def followup_file_rows():
+        for member,scope_row in followup_scope.items():
+            row = followup.get(member,{})
+            exclusion = file_dummy_path(member)
+            connected = any(r["compiled"] for r in followup_emitted[member])
+            if exclusion is not None and not connected:
+                counts["followup_dummy_connection_excluded_files"] += 1
+                counts["followup_dummy_connection_excluded_original_bytes"] += inventory.get(member,scope_row).get("bytes",0)
+            yield {"member":member,"scope":"approved_followup_separate_scope","source_scope_metadata":scope_row,
+        "source_receipt":row or None,"connections":followup_emitted[member],"compiled":connected,
+        "source_dummy_exclusion":exclusion,"eligible_connection_excluded":exclusion is not None and not connected,
+        "current_input_stage":row.get("stage","not_received"),"packed_output":{"present":member in raw,"path":raw.get(member,{}).get("path")},
         "registry":{"emitted":any(r["compiled"] for r in followup_emitted[member])},"consumer_event_selection":None,
         "additional_validation_performed":False,"actual_main_game_feature_use":False,"active_installation":None,"playback_evidence":None}
-        for member,row in followup.items()))
+    writer.records("followup-file-outcomes.jsonl.gz",followup_file_rows())
 
     file_statuses = Counter()
     def file_rows():
@@ -309,7 +399,24 @@ def connect(args):
                 links[pair] = {**old,**outcomes.get(pair,{})}
             for pair,new in emitted.get(member,{}).items(): links[pair] = {**links.get(pair,{}),**new}
             ready = bool(emitted.get(member))
-            status = "compiled_source_graph_without_additional_validation" if ready else previous["status"]
+            exclusion = file_dummy_path(member)
+            touched = bool(dummy_touched.get(member)) or exclusion is not None
+            if previous.get("compiled"):
+                counts["previous_priority_compiled_files"] += 1
+                counts["previous_priority_compiled_original_bytes"] += inventory[member]["bytes"]
+            if ready:
+                counts["active_priority_compiled_original_bytes"] += inventory[member]["bytes"]
+            if touched:
+                counts["priority_dummy_paths_touch_files_nonadditive"] += 1
+                counts["priority_dummy_paths_touch_original_bytes_nonadditive"] += inventory[member]["bytes"]
+                if ready:
+                    counts["priority_shared_normal_path_preserved_files_nonadditive"] += 1
+                    counts["priority_shared_normal_path_preserved_original_bytes_nonadditive"] += inventory[member]["bytes"]
+                else:
+                    counts["priority_dummy_connection_excluded_files"] += 1
+                    counts["priority_dummy_connection_excluded_original_bytes"] += inventory[member]["bytes"]
+            status = ("compiled_source_graph_without_additional_validation" if ready else
+                      "excluded_source_literal_dummy" if touched else previous["status"])
             file_statuses[status] += 1
             yield {**previous,"status":status,"requests":list(links.values()),"compiled":ready,"input_received":member in receipts,
                 "current_input_stage":receipts.get(member,{}).get("stage","not_received"),
@@ -317,23 +424,48 @@ def connect(args):
                 "source_context_from_saved_plan":str(plan),
                 "packed_output":{"present":member in raw,"path":raw.get(member,{}).get("path"),"additional_validation_performed":False},
                 "registry":{"emitted":ready,"connection_count":len(emitted.get(member,{}))},"consumer_event_selection":None,
+                "source_dummy_exclusion":exclusion,"dummy_excluded_connection_paths":dummy_touched.get(member,[]),
+                "eligible_connection_excluded":touched and not ready,"shared_normal_path_preserved":touched and ready,
                 "raw_bank_identity":raw.get(member),"additional_validation_performed":False,"installed_this_run":False,"played_this_run":False,
                 "actual_main_game_feature_use":False,"actual_observed_original_bytes":None,"whole_file_use":False,"active_installation":None,"playback_evidence":None}
     writer.records("file-outcomes.jsonl.gz",file_rows())
     writer.records("source-receipts.jsonl.gz",({"source_receipt_id":member,**row,"used_in_registry":member in raw} for member,row in receipts.items()))
     writer.records("required-source-dependencies.jsonl.gz",dependency_requirements)
+    for actor_key in list(registry):
+        sprite_id = int(actor_key.removeprefix("sprite:"))
+        for action_id in list(registry[actor_key]):
+            if (sprite_id,int(action_id)) not in active_records:
+                entry = registry[actor_key].pop(action_id)
+                preserved_records.setdefault(actor_key,{"reason":"inactive_after_user_dummy_connection_exclusion",
+                    "records":{},"active":False,"originals_preserved":True})["records"][action_id] = entry
+        if not registry[actor_key]: registry.pop(actor_key)
+    preserved_raw = {member:entry for member,entry in raw.items() if member not in active_members}
+    active_raw = {member:entry for member,entry in raw.items() if member in active_members}
+    writer.records("excluded-source-dummy-declarations.jsonl.gz",({"source_actor_id":sprite_id,"dummy_declarations":rows}
+                   for sprite_id,rows in sorted(dummy.items())))
+    writer.records("dummy-excluded-action-outcomes.jsonl.gz",dummy_actions)
     manifest = {"schema":1,"kind":"current523_reference_sp2_action_bank","source_snapshot":"patch523",
-        "consumer_contract":contract,"actors":registry,"members":raw,"normal_visual_overlay_bindings":overlay_bindings,
+        "consumer_contract":contract,"actors":registry,"members":active_raw,"normal_visual_overlay_bindings":overlay_bindings,
+        "source_dummy_exclusion_policy":bank.DUMMY_EXCLUSION_POLICY,"excluded_source_actors":excluded_registry,
+        "source_dummy_exclusion_scope":"source_actor_paths_in_this_pinned_reference_bank",
+        "preserved_actor_records":preserved_records,"preserved_raw_members":preserved_raw,
+        "map_placement_exclusions":{"sprite_ids":sorted(set(args.map_placement_exclusion_sprite)),
+            "scope":"map_placement_only","placement_owner":"map_lane","originals_preserved":True},
         "independent_source_layers_opt_in":True,"independent_layer_policy":"explicit_source_relation_same_action_id_child_own_clock_host_dispatch_unverified",
         "compilation_validation":"not_repeated_per_user_instruction","installed_this_run":False,"played_this_run":False}
     pin = writer.json("manifest.json",manifest)
     result = {"stage":"actual_source_graph_connections_written_without_additional_validation","counts":{**counts,
         "registered_actor_action_records":sum(len(r) for r in registry.values()),"registered_actors":len(registry),
         "raw_members_linked_or_copied":len(raw),"raw_original_bytes_from_existing_receipts":sum(r["bytes"] for r in raw.values()),
+        "active_registry_raw_members":len(active_raw),"active_registry_original_bytes":sum(r["bytes"] for r in active_raw.values()),
+        "preserved_raw_members_not_active":len(preserved_raw),"preserved_actor_action_records_not_active":sum(len(r["records"]) for r in preserved_records.values()),
         "priority_target_files_connected":len(emitted),"priority_target_file_outcomes":sum(file_statuses.values()),
         "followup_input_files":len(followup),"followup_files_connected":sum(any(r["compiled"] for r in x) for x in followup_emitted.values()),
         "normal_visual_overlay_bindings":len(overlay_bindings)},"action_statuses":dict(statuses),"file_statuses":dict(file_statuses),
         "remaining_source_contract_outcomes_from_generation":dict(source_blocks),
+        "source_dummy_exclusion_policy":bank.DUMMY_EXCLUSION_POLICY,"excluded_source_actor_ids":sorted(dummy),
+        "original_priority_denominator_files":len(targets),"original_priority_denominator_bytes":sum(inventory[m]["bytes"] for m in targets),
+        "followup_denominator_files":len(followup_scope),
         "unconnected_followup_from_generation":[{"member":member,"current_input_stage":followup[member].get("stage"),
             "connections":followup_emitted[member],"reason":"No complete available source-owned action or supplied supported parent closure was constructed."}
             for member in followup if not any(row["compiled"] for row in followup_emitted[member])],

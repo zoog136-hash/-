@@ -3,10 +3,12 @@ extends RefCounted
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
+const SOURCE_DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
 var _root: String = ""
 var _manifest_path: String = ""
 var _manifest_sha: String = ""
 var _manifest: Dictionary = {}
+var _excluded_source_actors: Dictionary = {}
 var _actor_pins: Dictionary = {}
 var _parsed: Dictionary = {}
 var _parse_order: Array[String] = []
@@ -61,6 +63,49 @@ func _pins_valid() -> bool:
 		if FileAccess.get_sha256(path) != _actor_pins[path]: return false
 	return true
 
+func source_actor_admission(source_actor_id: int) -> Dictionary:
+	# This registry is pinned current523 source evidence. Actor/graph identities
+	# are scoped here; shared raw filenames never become a global exclusion.
+	var key: String = "sprite:" + str(source_actor_id)
+	if not _excluded_source_actors.has(key): return {"ok":true}
+	return {"ok":false,"error":"Source-declared dummy actor connection is excluded: " + key,"source_snapshot":"patch523","excluded_source_actor_id":source_actor_id,"source_exclusion":_excluded_source_actors[key].duplicate(true)}
+
+func _install_source_exclusions() -> Dictionary:
+	var registry: Variant = _manifest.get("excluded_source_actors",{})
+	if not registry is Dictionary: return fail("Invalid source actor exclusion registry.")
+	var source_file_pattern := RegEx.new()
+	source_file_pattern.compile("^list_[0-9]+\\.spr$")
+	for key: Variant in registry:
+		if not key is String or not key.begins_with("sprite:") or not key.trim_prefix("sprite:").is_valid_int(): return fail("Invalid source dummy actor registry key.")
+		var sprite_id: int = int(key.trim_prefix("sprite:"))
+		if sprite_id < 0 or key != "sprite:" + str(sprite_id): return fail("Invalid exact source dummy actor namespace.")
+		var exclusion: Variant = registry[key]
+		if not exclusion is Dictionary or exclusion.get("source_snapshot") != "patch523" or exclusion.get("reason") != "source_literal_dummy" or exclusion.get("originals_preserved") != true or exclusion.get("raw_member_namespace_excluded") != false: return fail("Unsupported source dummy exclusion evidence.")
+		var declarations: Variant = exclusion.get("dummy_declarations")
+		if not declarations is Array or declarations.is_empty(): return fail("Missing literal source dummy declarations.")
+		for declaration: Variant in declarations:
+			if not declaration is Dictionary or declaration.get("sprite_id") != sprite_id or not declaration.get("literal_name") is String or not declaration.get("literal_declaration") is String or not declaration.get("matched_literal") is String or not declaration.get("source_file") is String or source_file_pattern.search(declaration.source_file) == null or not integer(declaration.get("source_line"),1) or not valid_sha(declaration.get("source_sha256")): return fail("Invalid literal source dummy declaration.")
+			var marker: String = str(declaration.matched_literal).to_lower()
+			if marker not in ["dummy","더미"] or str(declaration.literal_name).findn(marker) < 0 or str(declaration.literal_declaration).findn(str(declaration.literal_name)) < 0: return fail("Source dummy declaration lacks its explicit literal marker.")
+		var paths: Variant = exclusion.get("source_graph_paths")
+		if not paths is Array or paths.is_empty(): return fail("Missing exact source dummy declaration path.")
+		for path: Variant in paths:
+			if not path is Dictionary or path.get("kind") != "source_declared_root" or not path.get("sprite_ids") is Array or path.sprite_ids.size() != 1 or path.sprite_ids[0] != sprite_id: return fail("Source dummy registry must name only the actual literal declaration.")
+	_excluded_source_actors = registry.duplicate(true)
+	return {"ok":true}
+
+func _source_graph_admission(proof: Dictionary) -> Dictionary:
+	for item: Variant in proof.get("declarations",[]):
+		if not item is Dictionary or not item.get("declaration_path") is Array: return fail("Invalid source graph declaration path.")
+		# Inactive dummy-child evidence may be retained for provenance. Active
+		# layer alias paths are admitted separately when their frames are bound.
+		if item.get("kind") != "body": continue
+		for declaration: Variant in item.declaration_path:
+			if not declaration is Dictionary or not integer(declaration.get("sprite_id")): return fail("Invalid source graph actor identity.")
+			var admitted: Dictionary = source_actor_admission(int(declaration.sprite_id))
+			if not admitted.ok: return admitted
+	return {"ok":true}
+
 func _member(member: String) -> Dictionary:
 	var spec: Variant = _manifest.get("members", {}).get(member)
 	if not spec is Dictionary or spec.get("member") != member or spec.get("path") != "raw/" + member or not INSTALL.safe_relative(str(spec.get("path", ""))): return fail("Invalid exact raw member path: " + member)
@@ -100,6 +145,9 @@ func _member(member: String) -> Dictionary:
 
 func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
+	if not integer(layer.get("source_sprite_id")): return fail("Missing declared source layer actor identity.")
+	var admitted: Dictionary = source_actor_admission(int(layer.source_sprite_id))
+	if not admitted.ok: return admitted
 	var source: Dictionary = _member(str(layer.get("member", "")))
 	if not source.ok: return source
 	var parsed: Dictionary = source.parsed
@@ -141,6 +189,8 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 		var base: Dictionary = declaration.duplicate(true)
 		base.erase("literal_attribute_directives")
 		if base != expected[index] or not valid_sha(base.get("source_sha256")): return fail("Layer declaration source identity differs.")
+		var admitted: Dictionary = source_actor_admission(int(base.get("sprite_id",-1)))
+		if not admitted.ok: return admitted
 		var directives: Variant = declaration.get("literal_attribute_directives")
 		if not directives is Array: return fail("Missing literal attribute directives.")
 		for directive: Variant in directives:
@@ -150,24 +200,31 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	if path.size() > 1 and not attributes.is_empty(): unresolved = true
 	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
 
-func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary) -> Dictionary:
+func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "") -> Dictionary:
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
 	var loaded: Dictionary = _json(manifest_path, expected_sha)
 	if not loaded.ok: return loaded
 	_manifest = loaded.value
 	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
+	if not consumer_scope.is_empty() and (_manifest.get("source_dummy_exclusion_policy") != SOURCE_DUMMY_EXCLUSION_POLICY or not _manifest.has("excluded_source_actors")): return fail("Production source consumers require the explicit source-declared dummy exclusion contract.")
 	var contract: Variant = _manifest.get("consumer_contract")
 	if not contract is Dictionary or contract.get("format") != "current523_identity_roles_v1" or contract.get("native_dispatch_verified") != false or contract.get("selection") != "explicit_source_actor_id_and_source_action_id" or contract.get("loop") != "unknown_requires_explicit_caller_policy" or contract.get("timing") not in ["source_explicit_fps_and_duration_ticks_only","source_explicit_or_existing_host_policy"]: return fail("Unsupported source bank consumer contract.")
 	if contract.get("timing") == "source_explicit_or_existing_host_policy" and (contract.get("host_timing_opt_in") != true or contract.get("source_fps_policy") != "preserve_literal_value_including_null"): return fail("Host timing requires the explicit literal-FPS preservation contract.")
 	if source_actor_id < 0 or bindings.is_empty() or bindings.size() > 16 or bindings.size() != loop_policy.size(): return fail("Explicit source action bindings and loop policy are required for each role.")
 	if not _manifest.get("actors") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing source bank registry.")
+	var exclusions: Dictionary = _install_source_exclusions()
+	if not exclusions.ok: return exclusions
+	var admitted: Dictionary = source_actor_admission(source_actor_id)
+	if not admitted.ok: return admitted
 	var entries: Variant = _manifest.actors.get("sprite:" + str(source_actor_id))
 	if not entries is Dictionary: return fail("Exact source actor ID is absent.")
 	var tracks: Dictionary = {}
 	var record: Dictionary = {"source_sprite_id":source_actor_id,"tracks":tracks,"source_snapshot":"patch523"}
+	record["source_dummy_exclusion_policy"] = _manifest.get("source_dummy_exclusion_policy")
+	record["map_consumer_contract_dependency"] = "Map placement requires its separate source consumer contract; actor admission does not grant map placement."
 	var independent_by_role: Dictionary = {}
 	record["independent_source_layers"] = independent_by_role
 	for role: Variant in bindings:
@@ -185,6 +242,8 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 		var proof: Variant = source.get("source_proof")
 		var source_role: String = "source_action:" + str(action_id)
 		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != source_actor_id or proof.get("root_sprite_id") != source_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
+		admitted = _source_graph_admission(proof)
+		if not admitted.ok: return admitted
 		var track: Variant = actor.roles.get(source_role)
 		if not source.get("compact_roles") is Dictionary or not proof.get("roles") is Dictionary: return fail("Missing exact compact action/source roles.")
 		var compact: Variant = source.compact_roles.get(source_role)
@@ -255,6 +314,10 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 		for attachment: Variant in independent:
 			if not attachment is Dictionary or attachment.get("kind") not in ["clothes","shadow"] or not integer(attachment.get("from_sprite_id")) or not integer(attachment.get("target_sprite_id"),1) or attachment.get("parent_action_id") != action_id or attachment.get("child_action_id") != action_id or attachment.get("dispatch_policy") != "host_parent_role_starts_child_own_source_action_native_dispatch_unverified": return fail("Invalid independent source layer action dispatch.")
 			var target_id: int = int(attachment.target_sprite_id)
+			admitted = source_actor_admission(target_id)
+			if not admitted.ok: return admitted
+			admitted = source_actor_admission(int(attachment.from_sprite_id))
+			if not admitted.ok: return admitted
 			var child_key: String = "sprite:" + str(target_id)
 			var child_path: String = "actors/%d/action-%d.json" % [target_id,action_id]
 			var child_registry: Variant = _manifest.actors.get(child_key,{})
@@ -264,6 +327,8 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 			var declaration: Variant = attachment.get("source_declaration")
 			var source_code: int = 101 if attachment.kind == "shadow" else 105
 			if not declaration is Dictionary or declaration.get("code") != source_code or not integer(declaration.get("sprite_id")) or not declaration.get("body") is String or declaration.get("body") != attachment.get("source_reference") or not valid_sha(declaration.get("source_sha256")) or not integer(declaration.get("source_line"),1) or not declaration.get("source_file") is String or source_name_pattern.search(declaration.source_file) == null: return fail("Independent layer literal source declaration is unavailable.")
+			admitted = source_actor_admission(int(declaration.sprite_id))
+			if not admitted.ok: return admitted
 			var values: PackedStringArray = str(declaration.body).replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
 			if values.is_empty(): return fail("Independent literal layer target is missing.")
 			if source_code == 105 and (values.size() < 2 or not values[0].is_valid_int() or int(values[0]) != values.size()-1): return fail("Invalid independent literal 105 count.")
@@ -280,8 +345,12 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 				for owner_path: Dictionary in owner.get("declaration_path",[]):
 					if owner_path.get("sprite_id") == attachment.from_sprite_id: effective_owner = true
 					if owner_path.get("sprite_id") == declaration.sprite_id and owner_path.get("source_file") == declaration.source_file and owner_path.get("source_sha256") == declaration.source_sha256: literal_owner = true
-				if effective_owner and literal_owner: owner_proven = true
+				if effective_owner and literal_owner:
+					for active_owner_path: Dictionary in owner.get("declaration_path",[]):
+						admitted = source_actor_admission(int(active_owner_path.get("sprite_id",-1)))
+						if not admitted.ok: return admitted
+					owner_proven = true
 			if not owner_proven: return fail("Independent layer declaration owner is absent from source proof.")
 			independent_by_role[role].append(attachment.duplicate(true))
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
-	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}
+	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"consumer_scope":consumer_scope,"source_dummy_exclusion_policy":record.source_dummy_exclusion_policy,"map_consumer_contract_dependency":record.map_consumer_contract_dependency,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}

@@ -27,12 +27,20 @@ The 135 and 549 exclusions are disjoint and outside the priority 45,990. Their
 original files and historical inventory are preserved. Source-family categories
 overlap; adding category counts would double count files.
 
-The parent's eligible global lower bound, after sound and these approved
-exclusions, is 119,409 files / 10,677,195,898 original bytes. Its 95% thresholds
+The parent's recorded eligible global lower bound, after sound and these 684
+approved exclusions and before the later dummy instruction, is 119,409 files /
+10,677,195,898 original bytes. Its recorded 95% thresholds
 are 113,439 files and 10,143,336,104 bytes. Image44/47/48 and icon53 internal
 inventories are still missing from that denominator. None of these scope
 figures is an actual game-use rate. Original member bytes remain separate from
 compressed ZIP bytes, expanded JSON, decoded images and caches.
+
+Later source-declared dummy exclusions preserve the fixed original inventory
+and bytes. Only explicit original declaration evidence can classify a dummy;
+an unfamiliar name, missing input or failed lookup cannot. The connection
+registry records these exclusions separately, including their source locations,
+and never counts an exclusion as resource use. Raw files and previous outputs
+remain intact.
 
 Receipt, compilation, registry connection, selection, installation and observed
 playback are recorded separately. A registered file or an inspected frame does
@@ -166,15 +174,26 @@ magic-doll sources subsequently supplied 1,350 more priority members /
 lack local original input in this snapshot. The full missing container/member
 list remains private. Existing raw ZIPs, parts and saves are preserved.
 
-The receipt-based writer has produced 21,049 actor/action records for 2,585
-source actor definitions. Its raw registry contains 16,978 files /
+The receipt-based writer has produced 21,048 active actor/action records for
+2,584 source actor definitions after the dummy exclusion. Its raw registry contains 16,978 files /
 2,821,826,819 original bytes: 16,952 priority files, 23 separately admitted
 follow-up files and three dependency files outside the difference inventory.
+The priority members account for 2,818,161,303 original bytes. The prior
+21,049-record snapshot and its inactive record remain preserved separately.
 The 16 separately supplied dependency inputs do not add to either target
 denominator. Four received follow-up files still need their parent
 dependency closure. These are output-construction figures, not played resources
 or a quality guarantee. The complete priority file outcomes retain input,
 output, selection, installation and playback as separate stages.
+
+The bank-scoped registry retains proof for all 1,243 literal dummy declaration
+IDs in the held complete SPR snapshot, including `list_17.spr:8334`:
+`#17560 1 dummy 102.type(0)`. The priority scope records 476 excluded dummy
+connection paths / 9,241,415 original bytes and preserves two shared normal
+files / 60,517 bytes. These counts are not additive resource use. Production
+consumers require the source-dummy policy marker, reject excluded active
+actor/alias/layer endpoints and preserve inactive edge proofs separately from
+the normal active projection. Shared physical files are not globally banned.
 
 Remaining source-construction outcomes identify repeated layer edges, literal
 counts not resolved by this reader, ambiguous/missing declarations, cycles and
@@ -206,3 +225,8 @@ geometry and map-event activation remain with the map lane; UI screens remain
 with the UI lane. Sound, arena, Ziggurat, clan, siege, pets and LineageM
 engine/APK work remain excluded. Shared original references do not authorize
 activating these features.
+
+The map placement exclusion also retains the explicitly excluded SPR IDs 1850,
+1886, 1887, 3977–3980 and 3996–3999 (the map lane's 229 placements). It does
+not remove originals or blacklist matching numeric IDs in other namespaces or
+normal non-map consumers. This action bank does not own placement activation.
