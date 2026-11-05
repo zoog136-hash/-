@@ -1,6 +1,6 @@
 extends RefCounted
 ## One independent relic summon. Only its exact523 secondary buff contributes.
-const DATA=preload("res://data/cards/patch523_relic_subslot.json")
+const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 const Unlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const MAP=preload("res://scripts/cards/native_doll_subslot.gd").MAP
@@ -14,14 +14,18 @@ static func identity_key(identity: String) -> String:
 	return "98:"+parts[3]
 
 static func definition(identity: String) -> Dictionary:
-	return DATA.data.cards.get(identity_key(identity),{})
+	return DATA.relic.cards.get(identity_key(identity),{})
 
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=Unlock.validate(value)
 	if not unlock_error.is_empty():return unlock_error
+	if value.has("native_relic_summon_time"):
+		var timer: Variant=value.native_relic_summon_time
+		if not timer is Dictionary or timer.get("schema")!=1 or timer.get("item_class_id")!=365758 or not timer.get("identity") is String or not preload("res://scripts/cards/native_awakening_supply.gd").integer(timer.get("expires_utc")):return "추가 성물 소환 시간 저장 형식 오류"
 	if not value.has(FIELD):return ""
 	var identity: Variant=value[FIELD]
 	if not identity is String:return "추가 성물 저장 ID 형식 오류"
+	if not identity.is_empty() and not DATA.installed():return DATA.problem+" · 기존 추가 성물 저장 보존"
 	if not identity.is_empty() and not definition(identity).has("subslot_buff"):return "원본 추가 성물 연결 없음"
 	return ""
 
@@ -42,19 +46,20 @@ static func scope_available(limit: int,context: Dictionary) -> bool:
 	if context.get("source_snapshot","") not in ["base508","patch523"] or not context.get("ServiceRegionCode") is String:return false
 	var number: Variant=context.get("WorldNo")
 	if not (number is int or number is float) or not is_finite(float(number)) or float(number)!=floorf(float(number)) or int(number)<=0:return false
-	for row: Dictionary in DATA.data.source_server_limits:
+	for row: Dictionary in DATA.relic.source_server_limits:
 		if int(row.ServerLimitSetID)==limit and row.ServiceRegionCode==context.ServiceRegionCode and int(row.WorldNo)==int(number):return true
 	return false
 
 static func exact_record(record: Dictionary,identity: String) -> bool:
 	var key: String=identity_key(identity)
-	if key.is_empty() or not DATA.data.cards.has(key) or Cards.card_id(record)!=identity:return false
-	var raw: Dictionary=DATA.data.cards[key].card
+	if key.is_empty() or not DATA.relic.cards.has(key) or Cards.card_id(record)!=identity:return false
+	var raw: Dictionary=DATA.relic.cards[key].card
 	var expected: String="lineagem_base508" if identity.begins_with("source:m508:") else "lineagem_patch523"
 	return record.get("source","")==expected and int(record.get("source_deck_id",0))==98 and int(record.get("source_card_id",0))==int(raw.ID) and int(record.get("source_grade_id",-1))==int(raw.GradeID)
 
 static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: Dictionary) -> Dictionary:
 	if identity.is_empty():return {"ok":true}
+	if not DATA.installed():return {"ok":false,"code":"slot_pack_missing","error":DATA.problem}
 	if not unlocked(level,buffs,runtime.progress):return {"ok":false,"code":"relic_subslot_locked","error":"에바의 계시 습득이 필요합니다"}
 	var row: Dictionary=definition(identity)
 	if not row.has("subslot_buff"):return {"ok":false,"code":"source_identity","error":"원본 추가 성물 ID 연결 없음"}
@@ -78,7 +83,7 @@ static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: D
 
 static func secondary_groups(identity: String) -> Array:
 	var key: String=identity_key(identity)
-	var group: Dictionary=DATA.data.option_groups.get(key+":11",{})
+	var group: Dictionary=DATA.relic.option_groups.get(key+":11",{})
 	return [] if group.is_empty() else [group]
 
 static func effects(runtime: RefCounted,identity: String) -> Dictionary:

@@ -1,13 +1,14 @@
 extends RefCounted
 ## Explicit deterministic box opening, independent of unresolved quest claims.
-const DATA=preload("res://data/cards/patch523_relic_acquisition.json")
+const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 const Unlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
 const ITEM: int=346921
 const SCROLL: int=365758
 
 static func definition(item_id: int) -> Dictionary:
-	if item_id==ITEM:return DATA.data.box
-	for entry: Dictionary in DATA.data.box.contents:
+	if DATA.relic_acquisition.is_empty():return {}
+	if item_id==ITEM:return DATA.relic_acquisition.box
+	for entry: Dictionary in DATA.relic_acquisition.get("box",{}).get("contents",[]):
 		if int(entry.entity.raw.ItemClassID)==item_id:return entry.item_definition
 	return {}
 
@@ -27,6 +28,7 @@ static func recognized(value: Dictionary) -> bool:
 static func install(catalog: Dictionary) -> void:
 	if not catalog.get("아이템") is Array:return
 	for item_id: int in [ITEM,SCROLL]:
+		if record(item_id).is_empty():continue
 		var exists: bool=false
 		for entry: Dictionary in catalog["아이템"]:
 			if exact(entry,item_id):exists=true;break
@@ -34,7 +36,8 @@ static func install(catalog: Dictionary) -> void:
 		if not exists:catalog["아이템"].append(record(item_id))
 
 static func rules_valid() -> bool:
-	var box: Dictionary=DATA.data.box
+	var box: Dictionary=DATA.relic_acquisition.get("box",{})
+	if box.is_empty():return false
 	if int(box.item.raw.ID)!=ITEM or bool(box.item.raw.TestItem) or box.category.raw.Name!="LuckyBag" or not bool(box.category.raw.IsConsumable) or not box.class_limits.is_empty():return false
 	for key: String in ["LevelLimitMin","LevelLimitMax","MaxLevelLimitMin","MaxLevelLimitMax"]:
 		if int(box.item.raw[key])!=0:return false
@@ -79,7 +82,7 @@ static func prepare(inventory: Dictionary,instances: Dictionary,next_id: int,sel
 	for id: String in instances:
 		if id.is_valid_int():candidate=maxi(candidate,int(id)+1)
 	var rewards: Array[Dictionary]=[]
-	for content: Dictionary in DATA.data.box.contents:
+	for content: Dictionary in DATA.relic_acquisition.get("box",{}).get("contents",[]):
 		var item_id: int=int(content.entity.raw.ItemClassID)
 		var reward: Dictionary=record(item_id)
 		var current: Variant=bag.get(str(reward.name),0)

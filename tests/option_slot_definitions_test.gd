@@ -15,11 +15,12 @@ func multiset(effects: Array) -> Dictionary:
 	return result
 func _initialize() -> void:
 	var pairs: Dictionary={2:0,98:0}
-	for key: String in Slots.DATA.data.groups:
-		var raw: Dictionary=Slots.DATA.data.groups[key]
+	for key: String in Slots.DATA.options.groups:
+		var raw: Dictionary=Slots.DATA.options.groups[key]
 		if int(raw.group.SlotIndex)!=11:continue
 		var deck: int=int(raw.card.BuffCardDeckID)
-		var identity: String="source:m508:"+str(deck)+":"+str(int(raw.card.ID))
+		var stable: String=str(deck)+":"+str(int(raw.card.ID))
+		var identity: String="source:"+("m523:" if Slots.DATA.new_cards.skill_cards.has("source:m523:"+stable) else "m508:")+stable
 		var main: Dictionary=Slots.group_for(identity,1)
 		var extra: Dictionary=Slots.group_for(identity,11)
 		check(int(main.group.ID)!=int(extra.group.ID) and extra.source_snapshot=="patch523","separate source groups "+key)

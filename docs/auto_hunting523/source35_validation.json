@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "scope": "explicit same-active-map Land35 binding and actor clearance",
+  "binding": {
+    "source_land_id": 35,
+    "game_map_id": "source_35",
+    "source_menu": 474,
+    "source_landing_link": 1412,
+    "source_currency_id": 4,
+    "source_fee": 10
+  },
+  "entry_area_opt_in_default": false,
+  "cross_map_auto_travel": false,
+  "collision_and_existing_save_guards_preserved": true,
+  "checks": {
+    "source35_main_opengl": 28,
+    "latest_aden_main": 185,
+    "latest_aden_gem_main": 79,
+    "policy_geometry_and_actor_unit": 29,
+    "gem_unit": 108,
+    "ui_unit": 10
+  },
+  "actual_destinations": {
+    "adena_in_aden": 20,
+    "gem_in_aden": 3,
+    "gem_in_source35": 1
+  },
+  "verified_cases": [
+    "default entry exclusion",
+    "explicit entry opt-in",
+    "NPC and portal exclusion with opt-in",
+    "source coordinate save",
+    "atomic failure preservation",
+    "duplicate rejection",
+    "reload",
+    "visible production UI"
+  ],
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "status": "passed"
+  },
+  "native_M_coordinate_collision_equivalence_verified": false,
+  "remaining_scope": [
+    "other Land bindings",
+    "cross-map automatic entry",
+    "native M equivalence"
+  ]
+}

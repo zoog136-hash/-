@@ -1,10 +1,11 @@
 extends SceneTree
 const Registry=preload("res://scripts/lineagem_base508.gd")
-const Patch=preload("res://data/cards/patch523_new_cards.json")
+const Patch=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Options=preload("res://scripts/cards/option_awakening_runtime.gd")
 const Skills=preload("res://scripts/cards/skill_awakening_runtime.gd")
 const Fixture=preload("res://tests/native_option_awakening_test.gd")
+const Readiness=preload("res://scripts/cards/skill_growth_readiness.gd")
 const Slots=preload("res://scripts/cards/option_slot_definitions.gd")
 class Host extends Fixture.Host:
 	var inventory: Dictionary={}
@@ -29,18 +30,19 @@ func run() -> void:
 	var eligible: String="";var limited: String=""
 	for category: String in Cards.CATEGORIES:
 		total+=catalog[category].size()
-		check(catalog[category].size()==baseline.catalog[category].size()+Patch.data.catalog[category].size(),"append only source records "+category)
-		for record: Dictionary in Patch.data.catalog[category]:
+		check(catalog[category].size()=={"변신":402,"마법인형":171,"성물":147}[category],"current source registry with supplemental fields "+category)
+		for record: Dictionary in Patch.new_cards.catalog[category]:
 			additions+=1;var identity: String=Cards.card_id(record)
-			check(identity.begins_with("source:m523:") and Registry.canonical(record)==record and Registry.native(record),"independent exact523 namespace "+identity)
+			var canonical: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":record.sourceId})
+			check(identity.begins_with("source:m523:") and Cards.card_id(canonical)==identity and Registry.native(canonical),"independent exact523 namespace "+identity)
 			check(not upgraded.owned[category].has(identity) and not upgraded.spare[category].has(identity),"new catalog row grants no ownership or duplicates "+identity)
 			check(upgraded.pools[category].values().all(func(pool: Array) -> bool:return pool.all(func(entry: Dictionary) -> bool:return entry.id!=identity)),"source gacha pool not guessed "+identity)
 			check(options.core.definitions[category].has(identity) and Slots.view(identity).size()==(1 if category=="변신" else 2),"source option slots connected "+identity)
 			check(skills.core.cards.has(identity) and not skills.core.profile(identity,1).is_empty() and skills.core.candidates(identity).all(func(row: Dictionary) -> bool:return int(row.spell_id)>0),"actual skill profile/pool joins "+identity)
-			check(Registry.select_visual(record).reason=="patch523_original_pack_required","no cross-snapshot pixel assumption "+identity)
+			check(Registry.select_visual(canonical).reason=="patch523_original_pack_required","no cross-snapshot pixel assumption "+identity)
 			if int(record.source_original.server_limit_set_id)==274:limited=identity
 			if eligible.is_empty() and skills.core.eligibility(identity).ok:eligible=identity
-	check(total==717 and additions==16,"701 prior plus16 exact new awakening cards")
+	check(total==720 and additions==16,"720 registry preserves16 supplemental awakening identities without appending")
 	var nemesis: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:2:25152"})
 	check(nemesis.get("meleeCrit",0)==2 and nemesis.get("rangedCrit",0)==2 and nemesis.get("magicCrit",0)==2,"Nemesis exact ValuePercent critical bonuses reach all three typed channels")
 	var spear: Dictionary=Registry.canonical({"source":"lineagem_patch523","sourceId":"m523:1:25344"})
@@ -62,6 +64,6 @@ func run() -> void:
 	check(result.ok and skills.progress.cards[eligible].level==1 and skills.progress.cards[eligible].experience=="0" and host.inventory.is_empty(),"new card executes real atomic one-book skill awakening")
 	var roundtrip: Dictionary=JSON.parse_string(JSON.stringify(skills.export_state()))
 	check(skills.accept_load({Skills.SAVE_KEY:roundtrip}) and skills.core.validate_state(skills.export_state()).is_empty(),"523 skill identity safely roundtrips existing save schema")
-	check(skills.core.Growth.view().can_feed==false and skills.core.Growth.view().can_enhance==false,"unverified growth contracts stay disabled on new cards")
+	check(Readiness.view().can_feed==false and Readiness.view().can_enhance==false,"diagnostics still reject unverified test EXP items and separate enhancement RNG")
 	host.queue_free();await process_frame
 	print("PATCH523_NEW_CARDS ",JSON.stringify({"checks":checks,"errors":errors,"cards":total,"new_cards":additions}));quit(0 if errors.is_empty() else 1)

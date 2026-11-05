@@ -46,6 +46,7 @@ var number_pattern: RegEx=RegEx.new()
 var card_frames: Control
 var hero: HBoxContainer
 var secondary_button: Button
+var secondary_effects: Label
 
 func configure(controller: Node) -> void:
 	hud=controller
@@ -113,6 +114,7 @@ func configure(controller: Node) -> void:
 	right_pane=VBoxContainer.new()
 	right_pane.name="RelicDetailsPane"
 	right_pane.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	right_pane.add_theme_constant_override("separation",4)
 	main_body.add_child(right_pane)
 	right_scroll=ScrollContainer.new()
 	right_scroll.name="RelicDetailsScroll"
@@ -191,9 +193,15 @@ func configure(controller: Node) -> void:
 	summon_row.add_child(scroll)
 	status=UI.label("",11,UI.MUTED)
 	status.name="RelicAppliedStatus"
+	status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	right.add_child(status)
+	secondary_effects=UI.label("",11,UI.MUTED)
+	secondary_effects.name="RelicSecondaryEffects"
+	secondary_effects.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	right.add_child(secondary_effects)
 	var footer:=HBoxContainer.new()
 	footer.name="RelicFooterActions"
+	footer.add_theme_constant_override("separation",4)
 	right_pane.add_child(footer)
 	secondary_button=UI.button("추가 소환",_request_secondary,Vector2(0,44))
 	secondary_button.set_script(preload("res://scripts/ui/native_touch_button.gd"))
@@ -413,7 +421,7 @@ func refresh_state(force_cards: bool=false) -> void:
 	var skill_button: Button=find_child("RelicRegister",true,false)
 	if skill_button!=null:
 		skill_button.disabled=not preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record)
-		skill_button.tooltip_text="각성서 1장과 표시된 아데나 소모 · 재각성 시 Lv.1·경험치 0부터"
+		skill_button.tooltip_text="각성서 1장과 표시 아데나 · 재각성 Lv.1·경험치 0부터"
 	var owned: Dictionary=hud.card_collection_state.get("owned",{}).get("성물",{})
 	var spare: Dictionary=hud.card_collection_state.get("spare",{}).get("성물",{})
 	var signature: String=str(hud.catalog_icon_generation)+":"+str(hash(owned))+":"+str(hash(spare))
@@ -445,12 +453,13 @@ func _request_secondary() -> void:
 	hud.secondary_relic_requested.emit("" if state.identity==chosen else chosen)
 
 func _refresh_secondary(record: Dictionary) -> void:
+	secondary_effects.text="";secondary_effects.hide()
 	secondary_button.visible=preload("res://scripts/ui/source_card_presentation.gd").native(record)
 	if not secondary_button.visible:return
 	var world: Node=hud.get_parent()
 	if world==null or not world.has_method("_on_secondary_relic_requested"):secondary_button.disabled=true;return
 	var runtime: RefCounted=world.option_awakening
-	var state: Dictionary=runtime.relic_subslot_view(false)
+	var state: Dictionary=runtime.relic_subslot_view()
 	var chosen: String=CardRules.card_id(record)
 	var release: bool=state.identity==chosen and not chosen.is_empty()
 	var available: Dictionary=preload("res://scripts/cards/native_relic_subslot.gd").eligibility(runtime,"" if release else chosen,int(world.level),world.active_skill_buffs)
@@ -460,6 +469,19 @@ func _refresh_secondary(record: Dictionary) -> void:
 	if not state.identity.is_empty():
 		var selected: Dictionary=runtime.core.catalog["성물"].get(state.identity,{})
 		status.text+=" · 추가: "+str(selected.get("name","미확인"))+("" if state.active else " (조건 확인 필요)")
+		var labels: Array[String]=[]
+		if state.active:
+			var names: Dictionary={"hpPct":"최대 HP","hpFlat":"최대 HP","mpFlat":"최대 MP","meleeHit":"근거리 명중","rangedHit":"원거리 명중","magicHit":"마법 명중","def":"AC","mr":"마법 방어","damageReduction":"피해 감소","pve_damage_reduction":"PVE 피해 감소","meleeDamage":"근거리 피해","rangedDamage":"원거리 피해","magicDamage":"마법 피해","strFlat":"STR","dexFlat":"DEX","intFlat":"INT","conFlat":"CON","sp":"SP","weightBonus":"소지 무게","potionHealFlat":"물약 회복량","potionHealPct":"물약 회복률","meleeCrit":"근거리 치명타","rangedCrit":"원거리 치명타","er":"원거리 회피","dg":"근거리 회피","damage_reduction_ignore":"피해 감소 무시"}
+			for key: String in state.effects.stats:
+				labels.append(str(names.get(key,key))+" "+("-" if key=="def" else "+")+str(state.effects.stats[key]).trim_suffix(".0")+("%" if key.ends_with("Pct") else ""))
+			secondary_effects.text="추가 슬롯 적용: "+(" · ".join(labels) if not labels.is_empty() else "적용 수치 없음")
+			if not state.effects.pending.is_empty():secondary_effects.text+="\n조건·특수 효과 %d개는 원본 해석 대기" % state.effects.pending.size()
+		else:secondary_effects.text=str(state.eligibility.get("error","추가 슬롯 조건 확인 필요"))
+		if runtime.progress.has("native_relic_summon_time"):
+			var timer: Dictionary=runtime.progress.native_relic_summon_time
+			var remaining: int=maxi(0,int(timer.expires_utc)-int(Time.get_unix_time_from_system()))
+			secondary_effects.text+="\n특별한 소환 주문서: "+(str(remaining)+"초 남음 · 주문서 무제한" if remaining>0 else "시간 만료 · 주문서를 다시 사용하세요")
+		secondary_effects.show()
 
 func _fill_options(record: Dictionary) -> void:
 	for child: Node in option_rows.get_children():option_rows.remove_child(child);child.queue_free()

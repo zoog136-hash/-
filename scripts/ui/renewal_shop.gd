@@ -7,6 +7,9 @@ const SelectionSheet=preload("res://scripts/ui/selection_detail_sheet.gd")
 var selection_sheet: Control
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
+const SOURCE523 = preload("res://scripts/shop/source523_shop_catalog.gd")
+const SOURCE523_PANEL = preload("res://scripts/ui/source523_shop_panel.gd")
+var source523_panel
 static var selected_vendor_id: String = ""
 var hud: Node
 var npc_mode: bool = false
@@ -66,6 +69,13 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 		vendor_filter.select(0)
 	wallet = UI.label("",15,UI.GOLD)
 	wallet_row.add_child(wallet)
+	var source_catalog: RefCounted = SOURCE523.session()
+	if source_catalog.available() or not source_catalog.error.is_empty():
+		var source_button: Button = UI.button("원본 상점", _open_source523, Vector2(116, 34))
+		source_button.name = "Source523Shop"
+		source_button.disabled = not source_catalog.available()
+		source_button.tooltip_text = source_catalog.error
+		wallet_row.add_child(source_button)
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	search_field = LineEdit.new()
@@ -146,6 +156,24 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	selection_sheet.bind_shop(self,side)
 	row.configure(listing,side,315)
 	_refresh()
+
+func _open_source523() -> void:
+	if is_instance_valid(source523_panel) or not SOURCE523.session().available(): return
+	_cancel_listing_touch()
+	var prior_visibility: Dictionary = {}
+	for child: Node in get_children():
+		if child is Control:
+			prior_visibility[child] = child.visible
+			child.hide()
+	source523_panel = SOURCE523_PANEL.new()
+	add_child(source523_panel)
+	source523_panel.configure(SOURCE523.session(), hud)
+	source523_panel.back_requested.connect(func() -> void:
+		source523_panel.hide()
+		source523_panel.queue_free()
+		source523_panel = null
+		for child: Control in prior_visibility:
+			if is_instance_valid(child): child.visible = prior_visibility[child])
 
 func _refresh() -> void:
 	_cancel_listing_touch()
@@ -228,6 +256,9 @@ func _raw_touch_local(point: Vector2) -> Vector2:
 	return listing.get_global_transform_with_canvas().affine_inverse() * point
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(source523_panel):
+		_cancel_listing_touch()
+		return
 	if listing == null or not is_visible_in_tree() or not listing.visible or _selection_blocked():
 		_cancel_listing_touch()
 		return

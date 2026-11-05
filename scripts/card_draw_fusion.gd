@@ -25,6 +25,7 @@ const PACK_SIZE: int = 11
 
 var preserved_unmapped_collection: Dictionary = {}
 var source_merge_blocked: Dictionary = {}
+var source_card_receipts: Array = [] # Exact fixed-item grants and no-swap provenance.
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var pools: Dictionary = {} # category -> grade -> [{id, record}, ...]
 var known_ids: Dictionary = {} # category -> id -> grade
@@ -46,6 +47,7 @@ static func card_id(record: Dictionary) -> String:
 	return "fallback:" + str(record.get("grade", "")) + ":" + name_value + ":" + str(record.get("type", ""))
 
 func configure(catalog: Dictionary) -> void:
+	source_card_receipts.clear()
 	preserved_unmapped_collection.clear()
 	source_merge_blocked.clear()
 	pools.clear()
@@ -140,6 +142,16 @@ func _receive(category: String, entry: Dictionary) -> Dictionary:
 		"grade": str(record.get("grade", "")), "new": is_new
 	}
 
+func receive_source_card(category:String,record:Dictionary,receipt:Dictionary)->Dictionary:
+	var identity:String=card_id(record)
+	if not CATEGORIES.has(category) or record.get("source") not in ["lineagem_base508","lineagem_patch523"] or int(receipt.get("card_id",-1))!=int(record.get("source_card_id",-2)) or str(known_ids.get(category,{}).get(identity,""))!=str(record.get("grade","")):
+		return {"ok":false,"error":"지급할 원본 카드 ID가 등록되지 않았습니다"}
+	if int(spare.get(category,{}).get(identity,0))>=1000000:return {"ok":false,"error":"중복 카드 저장 한도"}
+	var result:Dictionary=_receive(category,{"id":identity,"record":record})
+	var proof:Dictionary=receipt.duplicate(true);proof.category=category;proof.identity=identity
+	source_card_receipts.append(proof)
+	return {"ok":true,"category":category,"results":[result]}
+
 func draw_pack(category: String) -> Dictionary:
 	return draw_cards(category, PACK_SIZE)
 
@@ -222,6 +234,10 @@ func fuse(category: String, grade: String) -> Dictionary:
 			extras.erase(identity)
 		else:
 			extras[identity] = remaining
+	var tj_event: Dictionary = {}
+	if not success:
+		var raw_grade: int = int(selected.record.get("source_original", {}).get("grade_id", 0))
+		tj_event = {"adapter":"fusion","history_type":{"변신":1,"마법인형":11,"성물":21}.get(category,0),"deck":{"변신":1,"마법인형":2,"성물":98}.get(category,0),"grade":raw_grade,"success_candidates":_tj_candidate_ids(category,target_grade),"fail_candidates":_tj_candidate_ids(category,grade)}
 	var awarded: Dictionary = _receive(category, selected)
 	var bonus: Dictionary = {}
 	var counter: Dictionary = pity[category] as Dictionary
@@ -237,7 +253,7 @@ func fuse(category: String, grade: String) -> Dictionary:
 	return {
 		"ok": true, "category": category, "from_grade": grade,
 		"to_grade": outcome_grade, "success": success, "consumed": required,
-		"result": awarded, "pity_reward": bonus,
+		"result": awarded, "pity_reward": bonus, "tj_event":tj_event,
 		"pity_progress": int(counter.get(grade, 0))
 	}
 
@@ -274,6 +290,7 @@ func fuse_many(category: String, grade: String, times: int) -> Dictionary:
 			successes += 1
 		var awarded: Dictionary = (single.get("result", {}) as Dictionary).duplicate(true)
 		awarded["fusion_success"] = succeeded
+		awarded["tj_event"] = single.get("tj_event",{})
 		results.append(awarded)
 		var bonus: Dictionary = single.get("pity_reward", {}) as Dictionary
 		if not bonus.is_empty():
@@ -291,15 +308,20 @@ func fuse_many(category: String, grade: String, times: int) -> Dictionary:
 	}
 
 func export_state() -> Dictionary:
-	return {
+	var result: Dictionary={
 		"version": 1,
+		"source_card_receipts":source_card_receipts.duplicate(true),
 		"owned": owned.duplicate(true),
 		"spare": spare.duplicate(true),
 		"pity": pity.duplicate(true),
 		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
 	}
 
+	if not source_card_receipts.is_empty():result["source_card_receipts"]=source_card_receipts.duplicate(true)
+	return result
+
 func import_state(input: Variant) -> void:
+	source_card_receipts.clear()
 	for category: String in CATEGORIES:
 		owned[category] = {}
 		spare[category] = {}
@@ -307,6 +329,12 @@ func import_state(input: Variant) -> void:
 	if not (input is Dictionary):
 		return
 	var state: Dictionary = input as Dictionary
+	if state.get("source_card_receipts",[]) is Array:
+		source_card_receipts=state.get("source_card_receipts",[]).duplicate(true)
+		for receipt:Variant in source_card_receipts:
+			if not receipt is Dictionary:continue
+			for field:String in ["item_class_id","card_id","bless","enchant"]:
+				if receipt.has(field):receipt[field]=int(receipt[field])
 	preserved_unmapped_collection = state.get("preserved_unmapped_collection", {}).duplicate(true)
 	var raw_owned: Variant = state.get("owned", {})
 	var raw_spare: Variant = state.get("spare", {})
@@ -336,7 +364,43 @@ func import_state(input: Variant) -> void:
 				var count: int = clampi(int((saved_spare as Dictionary).get(identity, 0)), 0, 1000000)
 				if count > 0:
 					extras[identity] = count
+		# Restore explicitly preserved new IDs when their optional source pack returns.
+		for identity:String in known:
+			if not identity.begins_with("source:m523:") or not preserved.owned.get(identity,false):continue
+			if not saved_owned is Dictionary or not saved_owned.has(identity):unlocked[identity]=true;extras[identity]=clampi(int(preserved.spare.get(identity,0)),0,1000000)
+			preserved.owned.erase(identity);preserved.spare.erase(identity)
+		if preserved.owned.is_empty() and preserved.spare.is_empty():preserved_unmapped_collection.erase(category)
 		if saved_pity is Dictionary:
 			var counter: Dictionary = pity[category] as Dictionary
 			for grade: String in PITY_GRADES:
 				counter[grade] = clampi(int((saved_pity as Dictionary).get(grade, 0)), 0, PITY_LIMIT - 1)
+
+func _tj_candidate_ids(category: String, grade: String) -> Array:
+	var ids: Array=[]
+	for entry: Dictionary in pools.get(category,{}).get(grade,[]):
+		var id: int=int(entry.record.get("source_card_id",0))
+		if id>0:ids.append(str(id))
+	return ids
+
+## Preserve only newly quest-issued restricted spare copies against outgoing
+## material actions whose source permission is unverified. Prior spares remain
+## usable. Native global NoMerge continues to be enforced by existing fusion.
+static func quest_reserved_spare(state: Dictionary,category: String,identity: String)->int:
+	var total: int=0;var seen: Dictionary={}
+	var receipts: Variant=state.get("source_card_receipts",[])
+	if not receipts is Array:return 1000000
+	for value: Variant in receipts:
+		if not value is Dictionary:continue
+		var row: Dictionary=value
+		if row.get("origin")!="quest_current523" or row.get("category")!=category or row.get("identity")!=identity or row.get("source_sha256")!="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832" or row.get("item_pack_sha256")!="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27":continue
+		var token: String=str(row.get("quest_use_token",""))
+		if token.length()!=64 or seen.has(token) or row.get("quest_option_feed_hold")!=1:continue
+		if row.get("quest_option_feed_policy")!="TWILIGHT_host_hold_until_option_owner_verified":continue
+		seen[token]=true;total+=1
+	return total
+static func outgoing_material_spare(state: Dictionary,category: String,identity: String)->int:
+	var categories: Variant=state.get("spare",{})
+	if not categories is Dictionary:return 0
+	var counts: Variant=categories.get(category,{})
+	if not counts is Dictionary:return 0
+	return maxi(0,int(counts.get(identity,0))-quest_reserved_spare(state,category,identity))

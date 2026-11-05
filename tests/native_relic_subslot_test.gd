@@ -1,7 +1,7 @@
 extends SceneTree
 const Slot=preload("res://scripts/cards/native_relic_subslot.gd")
 const Unlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
-const DATA=preload("res://data/cards/patch523_relic_subslot.json")
+const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 class Ledger extends RefCounted:
 	var owned: Dictionary={"성물":{}}
 class World extends RefCounted:
@@ -26,13 +26,13 @@ func card(identity: String) -> Dictionary:
 	var row: Dictionary=Slot.definition(identity)
 	return {"name":str(row.card.Name),"sourceId":identity.trim_prefix("source:"),"source":"lineagem_base508" if identity.begins_with("source:m508:") else "lineagem_patch523","source_deck_id":98,"source_card_id":int(row.card.ID),"source_grade_id":int(row.card.GradeID)}
 func run() -> void:
-	check(DATA.data.counts.cards==147 and DATA.data.counts.subslot_links==145 and DATA.data.counts.option_groups==58,"complete523 relic definitions, subslot graph and contextual option groups")
+	check(DATA.relic.counts.cards==147 and DATA.relic.counts.subslot_links==145 and DATA.relic.counts.option_groups==58,"complete523 relic definitions, subslot graph and contextual option groups")
 	check(Slot.identity_key("source:m508:98:20548")=="98:20548" and Slot.identity_key("source:m523:98:20548")=="98:20548","explicit508/523 source identities resolve raw deck/card without rewriting ownership")
 	for identity: String in ["20548","source:m523:2:20548","source:m523:98:020548","fallback:성물"]:check(Slot.identity_key(identity).is_empty(),"untyped or noncanonical identity rejected "+identity)
 	check(Slot.validate({Slot.FIELD:42})!="" and Slot.validate({Slot.FIELD:"source:m523:98:20441"})!="","corrupt choice and unused card without a subslot graph rejected")
 	var runtime=Runtime.new();var chosen: String="source:m508:98:20548";var main: String=""
-	for key: String in DATA.data.cards:
-		var row: Dictionary=DATA.data.cards[key]
+	for key: String in DATA.relic.cards:
+		var row: Dictionary=DATA.relic.cards[key]
 		if row.has("subslot_buff") and int(row.card.GradeID)!=1 and int(row.card.ServerLimitSetID)==0 and int(row.card.StartDateTimeID)==0 and int(row.card.EndDateTimeID)==0:main="source:m523:"+key;break
 	check(not main.is_empty(),"actual source different-grade main exists")
 	runtime.core.catalog["성물"][chosen]=card(chosen);runtime.core.catalog["성물"][main]=card(main)
@@ -62,8 +62,8 @@ func run() -> void:
 	check(plain.stats.meleeHit==1 and plain.stats.hpPct==1 and plain.summon_binding.npc_class_id==83758,"exact secondary buff rows and typed slot11 NPC binding")
 	check(not plain.stats.has("xp") and not plain.stats.has("skill_cooldown_reduction_pct"),"no main-only economics or cooldown copied")
 	var hero: String=""
-	for key: String in DATA.data.option_groups:
-		var group: Dictionary=DATA.data.option_groups[key]
+	for key: String in DATA.relic.option_groups:
+		var group: Dictionary=DATA.relic.option_groups[key]
 		if int(group.card.ServerLimitSetID)==0 and int(group.card.StartDateTimeID)==0 and int(group.card.EndDateTimeID)==0 and int(group.group.ServerLimitsetID)==0:hero="source:m523:98:"+str(int(group.card.ID));break
 	check(not hero.is_empty(),"actual unrestricted option group exists")
 	var before: Dictionary=Slot.effects(runtime,hero)
@@ -75,11 +75,11 @@ func run() -> void:
 	check(Slot.effects(runtime,hero)==after,"repeated effect reads are deterministic and do not stack")
 	check(Slot.eligibility(runtime,"",0,{}).ok,"release remains possible without unlock")
 	var limited: Dictionary={}
-	for row: Dictionary in DATA.data.cards.values():
+	for row: Dictionary in DATA.relic.cards.values():
 		if int(row.card.ServerLimitSetID)==274:limited=row;break
 	check(not Slot.source_available(limited.card,{"source_snapshot":"patch523","ServiceRegionCode":"KR","WorldNo":1}),"missing source server definition and time conditions remain unavailable")
 	check(not Slot.scope_available(772,{}),"server scope requires explicit source region/world")
-	for row: Dictionary in DATA.data.source_server_limits:
+	for row: Dictionary in DATA.relic.source_server_limits:
 		if int(row.ServerLimitSetID)==772:
 			check(Slot.scope_available(772,{"source_snapshot":"patch523","ServiceRegionCode":str(row.ServiceRegionCode),"WorldNo":int(row.WorldNo)}),"exact523 server tuple recognized");break
 	print("NATIVE_RELIC_SUBSLOT ",JSON.stringify({"checks":checks,"errors":errors}));quit(0 if errors.is_empty() else 1)

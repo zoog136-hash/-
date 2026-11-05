@@ -3,12 +3,15 @@ extends RefCounted
 const IDS: Array[int]=[75184,75194,95624,118992,243043,346901]
 static func recognized(record: Dictionary) -> bool:
 	var id: Variant=record.get("source_item_class_id",0)
+	if preload("res://scripts/cards/native_awakening_supply.gd").exact(record,int(id)):return true
 	if preload("res://scripts/cards/native_relic_unlock_item.gd").exact(record):return not str(record.get("name","")).is_empty()
 	if preload("res://scripts/cards/native_relic_reward_box.gd").recognized(record):return true
 	if preload("res://scripts/cards/native_card_acquisition.gd").recognized(record):return true
 	return (id is int or id is float) and is_finite(float(id)) and float(id)==floorf(float(id)) and int(id) in IDS and record.get("source","")=="lineagem_base508" and record.get("source_snapshot","")=="base508" and record.get("sourceId","")=="m508:item:"+str(int(id)) and not str(record.get("name","")).is_empty()
 static func prepare_pickup(drop: Dictionary,instances: Dictionary,next_id: int) -> Dictionary:
 	var result: Dictionary={"item_instances":instances,"next_item_instance_id":next_id,"created":0}
+	var typed: Dictionary=preload("res://scripts/cards/native_awakening_supply.gd").prepare_pickup(drop,instances,next_id)
+	if int(typed.created)>0:return typed
 	if drop.has("physical_item") or not drop.get("item_record") is Dictionary:return result
 	var record: Dictionary=drop.item_record
 	if not recognized(record) or record.name!=drop.get("item_name",""):return result

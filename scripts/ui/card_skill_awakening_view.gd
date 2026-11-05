@@ -8,10 +8,10 @@ var identity: String
 var level: OptionButton
 var stats: Label
 var current: Label
-var growth: Label
 var candidates: ItemList
 var effect: RichTextLabel
 var action: Button
+var growth: Label
 var snapshot: Dictionary={}
 var growth_note: Label
 var growth_material: OptionButton
@@ -62,9 +62,9 @@ func configure(service: RefCounted,target: String) -> void:
 	var reason: Label=UI.label(str(snapshot.blocked_reason),13,UI.MUTED);reason.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(reason)
 	if not snapshot.eligibility.ok:
 		var eligibility: Label=UI.label(str(snapshot.eligibility.error),13,UI.GOLD);add_child(eligibility)
-	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44));action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason)
+	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44))
 	action.set_script(preload("res://scripts/ui/native_touch_button.gd"))
-	add_child(action)
+	action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason);add_child(action)
 	var growth_header: Label=UI.section("스킬 각성 경험치 합성",16);add_child(growth_header)
 	growth_policy=UI.label("",12,UI.MUTED);growth_policy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(growth_policy)
 	growth_material=OptionButton.new();growth_material.name="SkillGrowthMaterial";growth_material.custom_minimum_size.y=44;add_child(growth_material)
@@ -100,7 +100,6 @@ func _execute() -> void:
 		snapshot=runtime.view(identity)
 		current.text=str(runtime.core.DATA.data.spells[str(int(snapshot.entry.spell_id))].name)+" · Lv."+str(int(snapshot.entry.level))
 		growth.text="저장 경험치 "+str(snapshot.entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"
-		action.text="재각성"
 	else:current.text=str(result.error)
 	action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false))
 	refresh_growth(true)

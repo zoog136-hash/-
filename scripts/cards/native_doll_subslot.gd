@@ -2,8 +2,9 @@ extends RefCounted
 ## Extra summon slot, never another awakening purchase/level or a main-slot sum.
 const DATA=preload("res://data/cards/base508_option_extensions.json")
 const Slots=preload("res://scripts/cards/option_slot_definitions.gd")
-const NEW=preload("res://data/cards/patch523_new_cards.json")
+const NEW=preload("res://scripts/cards/patch523_slot_data.gd")
 const FIELD: String="native_subslot_identity"
+static var _secondary_groups: Dictionary={}
 const MAP={"HPPlus":"hpFlat","HPPlusPercent":"hpPct","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","CarryPlus":"weightBonus","ArmorClass":"def","ArmorClassBonus":"def","AttackSpeedBonus":"attackSpeed","MoveSpeedBonus":"moveSpeedPct","PierceDamageReduction":"damage_reduction_ignore","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","SpellPower":"sp","Constitution":"conFlat","MPPlus":"mpFlat","DamageReduction":"damageReduction","MagicResist":"mr","MeleeEvasion":"dg","RangeEvasion":"er","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeCritical":"meleeCrit","RangeCritical":"rangedCrit","HPPotionIncreaseStatic":"potionHealFlat","HPPotionIncreasePercent":"potionHealPct","PVEDamageReduction":"pve_damage_reduction","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage"}
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=preload("res://scripts/cards/native_doll_unlock_item.gd").validate(value)
@@ -11,7 +12,7 @@ static func validate(value: Dictionary) -> String:
 	if not value.has(FIELD):return ""
 	var id: Variant=value[FIELD]
 	if not id is String:return "추가 인형 저장 ID 형식 오류"
-	if not id.is_empty() and not DATA.data.subslot_buffs.has(id) and not NEW.data.subslot_buffs.has(id):return "원본 추가 인형 연결 없음"
+	if not id.is_empty() and not DATA.data.subslot_buffs.has(id) and not NEW.new_cards.subslot_buffs.has(id):return "원본 추가 인형 연결 없음"
 	return ""
 static func unlocked(level: int,buffs: Dictionary,progress: Dictionary={}) -> bool:
 	if level<95:return false
@@ -55,7 +56,7 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 		if name_value in ["ExperienceAdditionPercent","EinasadSavingPercent"] and int(effect.bonus.Value)==0 and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0:
 			out.source_zero_effects.append(effect.duplicate(true));continue
 		if name_value=="BuffCardSummonNPCClassID":
-			var binding: Dictionary=DATA.data.subslot_npc_bindings.get(identity,NEW.data.subslot_npc_bindings.get(identity,{}))
+			var binding: Dictionary=DATA.data.subslot_npc_bindings.get(identity,NEW.new_cards.subslot_npc_bindings.get(identity,{}))
 			if int(effect.bonus.BonusApplicationTypeID)==461 and int(effect.bonus.BonusApplicationTargetID)==11 and int(binding.get("npc_class_id",0))==int(effect.bonus.Value) and bool(binding.get("display_sprite_verified",false)):
 				out.summon_binding=binding.duplicate(true);continue
 		if name_value=="InvokeOption" and int(effect.bonus.BonusApplicationTypeID)==10 and int(effect.bonus.BonusApplicationTargetID) in [10661,3323]:
@@ -73,12 +74,17 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 	return out
 
 static func secondary_groups(identity: String) -> Array:
-	var group: Dictionary=Slots.group_for(identity,11)
-	# This consumer is specifically the existing additional doll slot.
-	if group.is_empty() or int(group.card.BuffCardDeckID)!=2:return []
-	return [group]
+	if identity.begins_with("source:m523:"):
+		var group: Dictionary=Slots.group_for(identity,11)
+		return [group] if not group.is_empty() and int(group.card.BuffCardDeckID)==2 else []
+	if _secondary_groups.is_empty():
+		for group: Dictionary in DATA.data.option_groups:
+			if int(group.group.SlotIndex)!=11:continue
+			if not _secondary_groups.has(group.identity):_secondary_groups[group.identity]=[]
+			_secondary_groups[group.identity].append(group)
+	return _secondary_groups.get(identity,[])
 static func subslot_row(identity: String) -> Dictionary:
-	return DATA.data.subslot_buffs.get(identity,NEW.data.subslot_buffs.get(identity,{}))
+	return DATA.data.subslot_buffs.get(identity,NEW.new_cards.subslot_buffs.get(identity,{}))
 static func status_available(runtime: RefCounted,identity: String,status_id: int) -> bool:
 	for group: Dictionary in secondary_groups(identity):
 		var evaluator: RefCounted=runtime.core.patch523_conditions if identity.begins_with("source:m523:") else runtime.core.native_conditions

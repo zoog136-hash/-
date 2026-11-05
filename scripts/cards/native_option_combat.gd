@@ -1,7 +1,7 @@
 extends RefCounted
 ## Contextual source invokes. No passive flattening, persistence or nested attacks.
 const DATA=preload("res://data/cards/base508_option_extensions.json")
-const RELIC=preload("res://data/cards/patch523_relic_combat.json")
+const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 var runtime_ref: WeakRef
 var runtime: RefCounted:
@@ -30,11 +30,11 @@ func active() -> Dictionary:
 	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
 	var relic: Dictionary=runtime.relic_subslot_view(false)
 	if relic.active:
-		var row: Dictionary=RELIC.data.relic_subslot_buffs.get(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)),{})
+		var row: Dictionary=RELIC.relic_combat.relic_subslot_buffs.get(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)),{})
 		if not row.is_empty():out["relic_subslot11:"+str(relic.identity)]={"native_source":{"card":row.card,"effects":row.effects}}
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
-	var supplement: Dictionary=preload("res://data/cards/patch523_new_cards.json").data
+	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
 	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else DATA.data.primary_doll_buffs.get(identity,supplement.primary_doll_buffs.get(identity,{}))
 	if row.is_empty():return
 	var rows: Array=[]
@@ -61,7 +61,7 @@ func effects(rows: Dictionary) -> Array[Dictionary]:
 			if effect.link.has("Level") and int(effect.link.Level)!=1:continue
 			if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):continue
 			var candidates: Array=DATA.data.invoke_options.duplicate()
-			if identity.begins_with("relic_subslot11:"):candidates.append_array(RELIC.data.invoke_options)
+			if identity.begins_with("relic_subslot11:"):candidates.append_array(RELIC.relic_combat.invoke_options)
 			for option: Dictionary in candidates:
 				if int(option.ID)==int(effect.bonus.BonusApplicationTargetID):result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value)})
 	return result
@@ -166,7 +166,7 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
 
 func _invoke_spell(identity: int) -> Dictionary:
-	return DATA.data.invoke_spells.get(str(identity),RELIC.data.invoke_spells.get(str(identity),{}))
+	return DATA.data.invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))
 
 func _free_spell(spell: Dictionary,target: int) -> bool:
 	if spell.is_empty():return false

@@ -8,7 +8,7 @@ static func drop(world: Node, reference: String, requested_position: Vector2) ->
 	var item_name: String = str(parsed.name)
 	var id: String = str(parsed.id)
 	if int(world.inventory.get(item_name,0)) < 1: return false
-	if world._item_locked(item_name,id):
+	if world._item_locked(item_name,id) or world._item_locked(item_name):
 		world.hud.show_message("잠긴 아이템은 내려놓을 수 없습니다")
 		return false
 	var physical: Dictionary = {}
@@ -50,7 +50,14 @@ static func drop(world: Node, reference: String, requested_position: Vector2) ->
 	var payload: Dictionary = {"player_dropped":true,"item_record":item.duplicate(true)}
 	var source_stack_remainder: Dictionary={}
 	var split_id: int=0
-	if physical.has("source_card_currency_quantity"):
+	if physical.has("source_awakening_quantity"):
+		var amount: Variant=physical.source_awakening_quantity
+		if not preload("res://scripts/cards/native_awakening_supply.gd").integer(amount) or int(amount)<1 or int(amount)>int(world.inventory.get(item_name,0)):return false
+		if int(amount)>1:
+			source_stack_remainder=physical.duplicate(true);source_stack_remainder.source_awakening_quantity=int(amount)-1
+			physical.source_awakening_quantity=1
+			split_id=preload("res://scripts/cards/native_card_acquisition.gd").next_safe_id(world.item_instances,int(world.next_item_instance_id))
+	elif physical.has("source_card_currency_quantity"):
 		var source=preload("res://scripts/cards/native_card_acquisition.gd")
 		var amount: Variant=physical.source_card_currency_quantity
 		if not source.exact(item,source.COIN) or not source.integer(amount) or int(amount)<1 or int(amount)>int(world.inventory.get(item_name,0)):return false

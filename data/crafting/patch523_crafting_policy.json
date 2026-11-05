@@ -1,0 +1,267 @@
+{
+  "schema": "patch523-crafting-policy-v1",
+  "official_url": "https://probability.plaync.com/lineagem/view?probCategoryId=6656e08396b3cf5ad823b793",
+  "official_version": "20261103210002",
+  "verified_source_craft_ids": [
+    2001,
+    12842,
+    12852,
+    12862,
+    12872,
+    12882,
+    12892,
+    14321,
+    14331,
+    14341,
+    14351,
+    14361,
+    14371,
+    26741,
+    26751,
+    39893,
+    39903,
+    46564,
+    46574,
+    47473,
+    47483,
+    47493,
+    47503,
+    47513,
+    47523,
+    47533,
+    47543,
+    51261,
+    51271,
+    63461,
+    63471,
+    63481,
+    77742,
+    77752,
+    77762,
+    116331,
+    116611,
+    129754,
+    129764,
+    132512,
+    138972,
+    138982,
+    138992,
+    139002,
+    139762,
+    147674,
+    147684,
+    149412,
+    173341,
+    189818,
+    194284,
+    194294,
+    221973,
+    221983,
+    221993
+  ],
+  "output_type_labels": {
+    "1": "성공",
+    "2": "대성공",
+    "0": "실패"
+  },
+  "host_material_bindings": {
+    "549": {
+      "item": "드래곤의 다이아몬드",
+      "kind": "ain_charge",
+      "amount": 100,
+      "origin": "TWILIGHT 호환 설정: 원본549 재료를 기존 동명 소모품 스택에 연결; 기존 충전량100/상점가 보존"
+    }
+  },
+  "preserve_matching_refund_instance": true,
+  "refund_identity_origin": "TWILIGHT 설정: 원본 실패 보상과 ID·강화·축복이 같은 소비 장비의 개체 ID와 기록 보존",
+  "verified_craft_constraints": {
+    "142364": {
+      "source_restriction": {
+        "ID": 79134,
+        "ItemCraftID": 142364,
+        "ServiceTypeID": 13,
+        "Value": 10,
+        "RefreshUnitID": 71,
+        "isMultiCount": true
+      },
+      "origin": "원본 제한 및 NC 2022-08-31 안내: 캐릭터당 매주10회 · 정기점검 초기화",
+      "official_url": "https://lineagem.plaync.com/board/update/view?articleId=630e6538b1db6b2aa56ca1ff&size=18&viewMode=compact",
+      "quota": {
+        "limit": 10,
+        "period_seconds": 604800,
+        "anchor_unix": 504000,
+        "clock_origin": "TWILIGHT 일정 설정: 서버 정기점검 대신 매주 수요일05:00 KST를 로컬 캐릭터 세이브에 적용. 원본 점검 실제 시각 복원이 아님"
+      }
+    },
+    "232728": {
+      "source_restriction": {
+        "ID": 143608,
+        "ItemCraftID": 232728,
+        "ServiceTypeID": 13,
+        "Value": 4,
+        "RefreshUnitID": 111,
+        "isMultiCount": false
+      },
+      "quota": {
+        "mode": "bounded_lifetime",
+        "limit": 4,
+        "period_seconds": 0,
+        "anchor_unix": 0,
+        "clock_origin": "원본 횟수4·Service13·Refresh111·isMultiCount=false는 보존합니다. 정확한 리셋 의미 미확정: TWILIGHT 평생4회(실패 포함) 보수적 한도이며 주기 리셋/추가 자격을 만들지 않습니다."
+      },
+      "origin": "원본 제작 제한4 보존 · 미해석 주기는 TWILIGHT 평생4회로 제한(설정)"
+    },
+    "232738": {
+      "source_restriction": {
+        "ID": 143618,
+        "ItemCraftID": 232738,
+        "ServiceTypeID": 13,
+        "Value": 4,
+        "RefreshUnitID": 111,
+        "isMultiCount": false
+      },
+      "quota": {
+        "mode": "bounded_lifetime",
+        "limit": 4,
+        "period_seconds": 0,
+        "anchor_unix": 0,
+        "clock_origin": "원본 횟수4·Service13·Refresh111·isMultiCount=false는 보존합니다. 정확한 리셋 의미 미확정: TWILIGHT 평생4회(실패 포함) 보수적 한도이며 주기 리셋/추가 자격을 만들지 않습니다."
+      },
+      "origin": "원본 제작 제한4 보존 · 미해석 주기는 TWILIGHT 평생4회로 제한(설정)"
+    },
+    "232748": {
+      "source_restriction": {
+        "ID": 143628,
+        "ItemCraftID": 232748,
+        "ServiceTypeID": 13,
+        "Value": 4,
+        "RefreshUnitID": 111,
+        "isMultiCount": false
+      },
+      "quota": {
+        "mode": "bounded_lifetime",
+        "limit": 4,
+        "period_seconds": 0,
+        "anchor_unix": 0,
+        "clock_origin": "원본 횟수4·Service13·Refresh111·isMultiCount=false는 보존합니다. 정확한 리셋 의미 미확정: TWILIGHT 평생4회(실패 포함) 보수적 한도이며 주기 리셋/추가 자격을 만들지 않습니다."
+      },
+      "origin": "원본 제작 제한4 보존 · 미해석 주기는 TWILIGHT 평생4회로 제한(설정)"
+    }
+  },
+  "source_currency_bindings": {
+    "3242": {
+      "source_names": [
+        "변신 코인",
+        "변신 제작 코인"
+      ],
+      "inventory_key": "변신 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "3252": {
+      "source_names": [
+        "마법인형 코인",
+        "마법인형 제작 코인"
+      ],
+      "inventory_key": "마법인형 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "3631": {
+      "source_names": [
+        "명예 코인"
+      ],
+      "inventory_key": "명예 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    },
+    "246058": {
+      "source_names": [
+        "성물 제작 코인"
+      ],
+      "inventory_key": "성물 제작 코인",
+      "origin": "확인된 원본 Currency ID를 기존 TWILIGHT 재화 키로1:1 정산; 수량/가격 변경 없음"
+    }
+  },
+  "allow_complete_source_outcome_contracts": true,
+  "complete_source_outcome_origin": "원본0/1/2 결과가 모두 있고 양수 확률 합계가1,000,000인 경우만 허용; 조건/정체/기간 검사는 유지; 원문 확률/수량 수정 없음",
+  "nonactivating_material_class_references": {
+    "188384": {
+      "class_ids": [
+        0
+      ],
+      "scope": "source_input_only",
+      "basis": "ItemClassLimit ClassID0 remains unresolved for item activation. Exact non-activatable StackableItem with no ItemBonus is only consumed as input; ItemCraft122344 has no class/server/quota restriction. This does not permit activating or equipping the material."
+    }
+  },
+  "source_calendar_clock": {
+    "utc_offset_minutes": 540,
+    "boundary": "start_inclusive_end_exclusive",
+    "origin": "원본 DateTimes_Korean의 연/월/일/시/분은 보존합니다. 시간대 필드는 없으므로 UTC+09:00과 시작 포함/종료 제외는 기존 퀘스트/주간 시계에 맞춘 TWILIGHT 설정입니다."
+  },
+  "native_non_equipment_holding": {
+    "enabled": true,
+    "source_contract": "PR238 f078a4651d53a2e0681e339ee4c4e81151e34e55 patch523_item_inventory.stage: normal zero-enchant non-equipment uses exact registered inventory key, without equipment instance",
+    "require_empty_equip_slot_refs": true,
+    "supported_bless_raw": 1,
+    "supported_enchant": 0
+  },
+  "delegated_protection_recipe_ids": [
+    37044,
+    47273,
+    132033,
+    162988,
+    205288,
+    223294,
+    239231,
+    258788
+  ],
+  "missing_failure_contracts": {
+    "38494": {
+      "source_success_weight": 600000,
+      "enabled": true,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률·수량은 원본 그대로입니다. 원문과 기존 보고서/공개 검색에서 누락 실패의 반환 규칙을 확정하지 못해, 나머지 확률은 지급 없음·재료/비용 소모로 처리하는 조정 가능한 TWILIGHT 설정입니다."
+    },
+    "139103": {
+      "source_success_weight": 300000,
+      "enabled": true,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률·수량은 원본 그대로입니다. 원문과 기존 보고서/공개 검색에서 누락 실패의 반환 규칙을 확정하지 못해, 나머지 확률은 지급 없음·재료/비용 소모로 처리하는 조정 가능한 TWILIGHT 설정입니다."
+    },
+    "153224": {
+      "source_success_weight": 110000,
+      "enabled": true,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률·수량은 원본 그대로입니다. 원문과 기존 보고서/공개 검색에서 누락 실패의 반환 규칙을 확정하지 못해, 나머지 확률은 지급 없음·재료/비용 소모로 처리하는 조정 가능한 TWILIGHT 설정입니다."
+    },
+    "216232": {
+      "source_success_weight": 150000,
+      "enabled": true,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률·수량은 원본 그대로입니다. 원문과 기존 보고서/공개 검색에서 누락 실패의 반환 규칙을 확정하지 못해, 나머지 확률은 지급 없음·재료/비용 소모로 처리하는 조정 가능한 TWILIGHT 설정입니다."
+    },
+    "232728": {
+      "enabled": true,
+      "source_success_weight": 400000,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률은 원본 그대로입니다. 누락 실패는 지급 없음·원본 재료/비용 소모의 조정 가능한 TWILIGHT 설정입니다. 원본 횟수4를 보존하고 미해석 리셋111은 실패 포함 평생4회라는 보수적 게임 한도로 제한합니다."
+    },
+    "232738": {
+      "enabled": true,
+      "source_success_weight": 200000,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률은 원본 그대로입니다. 누락 실패는 지급 없음·원본 재료/비용 소모의 조정 가능한 TWILIGHT 설정입니다. 원본 횟수4를 보존하고 미해석 리셋111은 실패 포함 평생4회라는 보수적 게임 한도로 제한합니다."
+    },
+    "232748": {
+      "enabled": true,
+      "source_success_weight": 100000,
+      "consume_materials_on_failure": true,
+      "consume_fee_on_failure": true,
+      "origin": "성공 확률은 원본 그대로입니다. 누락 실패는 지급 없음·원본 재료/비용 소모의 조정 가능한 TWILIGHT 설정입니다. 원본 횟수4를 보존하고 미해석 리셋111은 실패 포함 평생4회라는 보수적 게임 한도로 제한합니다."
+    }
+  }
+}

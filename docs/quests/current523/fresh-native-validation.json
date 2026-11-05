@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "parent_public_code": "2f778b877b3dabbee5d9aa696ba8ec16f7bf378e",
+  "tests": [
+    {
+      "case": "fresh",
+      "result": {
+        "actual_item_classes": [
+          376,
+          385
+        ],
+        "checks": 18,
+        "controlled_level86_not_natural_xp_or_encounter_probability": true,
+        "failures": [],
+        "final_save_sha256": "ad4fa2a179f7aac577b82c3f03ddfc2bc107f17145c486e8cd80229ffd597ac8",
+        "issued_native_quantities": {
+          "376": 40,
+          "385": 144
+        },
+        "source_completions_in_controlled_new_Mage_profile": 812
+      },
+      "log_sha256": "88d7bded2db7eaf089adb5fb8f26d9d78e27e128ec4671a972763b14c2323c6f"
+    },
+    {
+      "case": "weapon",
+      "result": {
+        "actual_additional_item_classes": [
+          248
+        ],
+        "checks": 728,
+        "controlled_target_sizes_not_natural_probabilities": true,
+        "enhancement_break_immunity_not_inferred": true,
+        "failures": [],
+        "host_uniform1_to_source_bound_preserved": true,
+        "original_WeaponErodeProof1_preserved_under_existing_no_erosion_policy": true,
+        "save_sha256": "86c3198a0048ad736fa744d78b8cdee58dbff5e86b116c3885caa98331efd9b5",
+        "scope": "existing host size-bound weapon/hit consumers; no native combat equivalence or erosion/other flags waived"
+      },
+      "log_sha256": "e17f43b338e9e4f8a8bb8c4f816f19e124bb1889e9e88f28065ca9e83878c7d4"
+    },
+    {
+      "case": "core",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      },
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5"
+    }
+  ],
+  "focused_assertions": 790,
+  "code_sha256": {
+    "scripts/quests/quest_equipment523.gd": "d17e14e47d356db617951a7a3e25f4347b7ecec7ed69bd369d216a3738ad87f9",
+    "tests/quest_weapon248_test.gd": "b69947e8a6950e5aeda844c73fe414e9f8d17303d1591822557d13d262e19ea7",
+    "tests/quest_regen523_fresh_test.gd": "ce6620b94a00579f1a55b9cf29f77299a821ad60664e96a07f3ea93f2827ef9d"
+  },
+  "current_matrix": {
+    "with_one_or_more_bounded_paths": 49,
+    "remaining_without_verified_path": 97,
+    "remaining_partition": {
+      "source_Test_fixed_cards": 27,
+      "shared_source_conditions_or_effect_adapters": 25,
+      "other_gear_material_consumable_currency": 45
+    }
+  },
+  "original_gear_producer_save": {
+    "materialized_units": 27,
+    "distinct_original_normal_plus0_classes": 25,
+    "raw_stacks_preserved": 6
+  },
+  "new_native_producer_validation": "Empty isolated QA Mage selected using actual UI; controlled level86, source auto-runner against full3621 definitions, real native supplier/immutable receipt/UI debit/buff/save/reconnect. Mage812 completions is not the original Knight811 baseline or natural progression probability.",
+  "new_native_issued_quantities": {
+    "376": 40,
+    "385": 144
+  },
+  "source_weapon248": {
+    "source_bonus_id": 7213,
+    "bonus_type": "WeaponErodeProof",
+    "unit": "TrueFalse",
+    "value": 1,
+    "small_damage": 10,
+    "large_damage": 11,
+    "source_type": 1,
+    "current_policy": "Existing single-player runtime has durability/erosion disabled; no erosion-consuming action found in active GD scripts. Flag retained, no repair/erosion system introduced, no enhancement-destruction immunity inferred.",
+    "ordinary_host_combat_and_source_ownership_only": true
+  },
+  "source_target_boundary_audit": {
+    "BonusApplicationType3": "ElementalResistanceType",
+    "BonusApplicationType2": "SpecialResistanceType",
+    "ElementalResistanceType_table": "absent from held1065 content tables",
+    "SpecialResistanceType_target0": "not a defined row; cannot assume All",
+    "ElementalType0": "None",
+    "ElementalType5": "All; this distinct table is not proof that ElementalResistanceType target0 means All",
+    "blocked_item_ids": [
+      2802,
+      9091
+    ],
+    "30213": "Exact magic-damage typed transaction/effect owner still missing in this branch; do not count mere output ownership as use."
+  },
+  "existing_source_completions": 811,
+  "existing_Knight_preview_without_skillv3": 326,
+  "all48_prior_consumer_paths_preserved_not_retested_wholesale": true,
+  "new_native_failure_guard": "A test-only stop-on-backoff guard was added after the successful fresh run; it removes retry_at clearing and received a final Godot parser check. Successful real producer/native-use behavior is the recorded18-check run.",
+  "protected_saves_and_inputs": "Original811/822 and existing source/questv1/item38ee/skillv3/rules5e/view7b02 bytes unchanged; no new transfer/build/download.",
+  "private_view_delivery": "LOCAL_ONLY36196B/SHA7b023b445056cfdd79861f4327bbe6ef1a61884956682c46cefe93ac662aba30; exact old install contract unchanged.",
+  "no_new_erosion_swap_repair_pvp_engine": true,
+  "full_or_manual_ci": false
+}

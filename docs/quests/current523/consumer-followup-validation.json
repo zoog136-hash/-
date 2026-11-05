@@ -1,0 +1,342 @@
+{
+  "predecessor_public_head": "050525ff711b07e81169e53af0bb806adb9c9785",
+  "input_definitions": 3621,
+  "quest_goal_level_corrections_preserved": 104,
+  "runtime_counts": {
+    "source_completions": 811,
+    "basic_six_consumers_some_use_pending_quests": 369,
+    "exact_private245v3_plus_eight_books_some_use_pending_quests": 366,
+    "native_receipt_quests_with_v3": 204,
+    "native_original_grant_receipts_with_v3": 208,
+    "reviewed_distinct_item_classes_optional_input_installed": 14,
+    "baseline_pending_distinct_item_classes": 146,
+    "remaining_unreviewed_distinct_item_classes": 132,
+    "historical822_some_use_pending_quests": 537,
+    "counts_not_all_original_function_completion": true
+  },
+  "tests": {
+    "event_box_held": {
+      "log_sha256": "285a0e66fb727da5c3836e87ae9ed5d56318c9e50dd1d9635bfeba6ad869091f",
+      "result": {
+        "actual_class_id": 1,
+        "checks": 26,
+        "completed": 811,
+        "controlled_qa": [
+          "lock",
+          "unmapped class flag",
+          "injected save failures"
+        ],
+        "failures": [],
+        "final_save_sha256": "a0b1766772bb2be091edda3ea9596d3b636ec1a2318f593573f2d0071da948ae",
+        "input_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "item_class_id": 368202,
+        "mode": "real_held_receipt_boxes",
+        "outputs": {
+          "스킬 카드 뽑기팩 (기사)(이벤트) · 원본#368182": 1
+        },
+        "pending_use_completed": 369,
+        "scope": "box opened to exact class-owned output; child skill ticket consumption is separate and not claimed"
+      }
+    },
+    "event_box_native": {
+      "log_sha256": "d7b63f46b11f5e838ba6db2e8e4045c8c4e846b8ca5c9650cf2d817362a7197e",
+      "result": {
+        "actual_class_id": 1,
+        "checks": 20,
+        "completed": 811,
+        "controlled_qa": [
+          "lock",
+          "unmapped class flag",
+          "injected save failures"
+        ],
+        "failures": [],
+        "final_save_sha256": "c65896852a8d63555505d9cab7ca40b1b89ffda404b0a069ee8a109e2abfacf2",
+        "input_seed_sha256": "",
+        "item_class_id": 368202,
+        "mode": "real_native_five_boxes",
+        "outputs": {
+          "스킬 카드 뽑기팩 (기사)(이벤트) · 원본#368182": 1
+        },
+        "pending_use_completed": 369,
+        "scope": "box opened to exact class-owned output; child skill ticket consumption is separate and not claimed"
+      }
+    },
+    "rune_choice_held": {
+      "log_sha256": "df35b08eab0424b9276a9b0ab72040efcc905f9b8e0eaa407b0ea38d9949741e",
+      "result": {
+        "checks": 24,
+        "chosen_entity_id": 59062,
+        "completed": 811,
+        "failures": [],
+        "final_save_sha256": "6b3d2270a6c7a3ba46489eaff07cfe753388895db8ee3e2f65c1bbb8b23f21ad",
+        "input_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "mode": "real_held_choice_receipt",
+        "output_item_id": 226318,
+        "pending_use_completed": 369,
+        "scope": "real source box/UI/physical output/atomic proof/failure/reconnect; rune wear/effect remains equipment-owner scope",
+        "source_item_id": 369002
+      }
+    },
+    "rune_choice_native": {
+      "log_sha256": "73475fcaecad61f645551f91a5247ebad0f1691f2abf54812ad40551390ac101",
+      "result": {
+        "checks": 21,
+        "chosen_entity_id": 59062,
+        "completed": 811,
+        "failures": [],
+        "final_save_sha256": "95f4a6fb58606b03c32530ec0793e9d5dd23c8068a762ee97988d573f73f24ae",
+        "input_seed_sha256": "",
+        "mode": "real_native_choice",
+        "output_item_id": 226318,
+        "pending_use_completed": 369,
+        "scope": "real source box/UI/physical output/atomic proof/failure/reconnect; rune wear/effect remains equipment-owner scope",
+        "source_item_id": 369002
+      }
+    },
+    "book_native": {
+      "log_sha256": "be98ceae472638b066032221bcafa6108f2b31aa56c61e615f60087534b68245",
+      "result": {
+        "checks": 39,
+        "failures": [],
+        "final_save_sha256": "c18bd6e549793743bb8c3cf6918abd47ed2ad916df0d4e47d6a42b95f65e3568",
+        "initial_pending_use_completed": 366,
+        "initial_source_completions": 811,
+        "learned_source_spell_ids": [
+          74,
+          73,
+          1113,
+          81
+        ],
+        "mode": "real_native_quest_books",
+        "original_seed_sha256": "",
+        "reference_targets_preserved": [
+          347,
+          358,
+          1133,
+          70
+        ],
+        "scope": "genuine quest issue/ownership to existing skill learning, one atomic save and reconnect; no new spell/cast execution/reference activation",
+        "skill_pack_sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+        "starter_already_known_preserved": [
+          2,
+          65,
+          1,
+          80
+        ]
+      }
+    },
+    "book_held_actual_ui": {
+      "log_sha256": "077afaccdea61c6a9bb54cee65f2bff9bde9dac23b7cfc64e542f6caf9a0c83b",
+      "result": {
+        "checks": 54,
+        "failures": [],
+        "final_save_sha256": "c9c017d946cf7b2997da3180ef0e1ac988cd0f6a33cab306f261b724ce3eeb90",
+        "initial_pending_use_completed": 366,
+        "initial_source_completions": 811,
+        "learned_source_spell_ids": [
+          74,
+          73,
+          1113,
+          81
+        ],
+        "mode": "real_held_quest_books",
+        "original_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "reference_targets_preserved": [
+          347,
+          358,
+          1133,
+          70
+        ],
+        "scope": "genuine quest issue/ownership to existing skill learning, one atomic save and reconnect; no new spell/cast execution/reference activation",
+        "skill_pack_sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+        "starter_already_known_preserved": [
+          2,
+          65,
+          1,
+          80
+        ]
+      }
+    },
+    "book_final_identity_guards": {
+      "log_sha256": "5c963f0efe0d44f3a1f407b580af6ce60dd3d6f895f64720abbd724b11476b94",
+      "result": {
+        "actual_inventory_button": true,
+        "checks": 11,
+        "failures": [],
+        "final_save_sha256": "1b5987f203c474f3713e9efdfe3c9a28846e7e85460617bbc0b1b638f12ac77b",
+        "input_bless": 1,
+        "rejected_bless": 2,
+        "source_item_id": 177252
+      }
+    },
+    "missing_all_providers": {
+      "log_sha256": "bf91c2c359758006b2f9dfd7363f65394fee783b12420780c825e2b223430e4d",
+      "result": {
+        "checks": 27,
+        "failures": [],
+        "scope": "actual source-granted inventory and receipts survive absent optional provider; no fixtures/grants",
+        "source_save_sha256": "c18bd6e549793743bb8c3cf6918abd47ed2ad916df0d4e47d6a42b95f65e3568"
+      }
+    },
+    "existing_buff_box": {
+      "log_sha256": "e3d3da067d742e6f9e1c2c3a248115a41d115c64a40e095937d89f62152ceb46",
+      "result": {
+        "checks": 36,
+        "failures": [],
+        "final_save_sha256": "6594c8f49b4ccf179891b4ee11e725aa07c9d9880083b4ceb266ac4002bfae5f",
+        "item_ids": [
+          859,
+          1281
+        ],
+        "scope": "real old811 receipt-selected partial use; no mass conversion/regrant; old822 without receipts blocked",
+        "source_seed_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92"
+      }
+    },
+    "existing_hp233": {
+      "log_sha256": "8e574fe9611e617b17334387263984066c82e64c03ab594a6a0e322e2e88827f",
+      "result": {
+        "checks": 32,
+        "completed": 811,
+        "controlled_half_heal": 13,
+        "controlled_qa": [
+          "missing200HP",
+          "NPC restriction/reduction fixture",
+          "specific quickslot49 in fresh profile",
+          "injected writer failures"
+        ],
+        "controlled_roll": 27,
+        "failures": [],
+        "final_save_sha256": "3ff4688b9b4669f027345f61cb123ea086ff2235fdb2ea16b91c6170426eb283",
+        "input_save_sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+        "mode": "actual_held100_partial",
+        "pending_use_completed": 369,
+        "scope": "actual source ownership to original dice/HP/cooldown/atomic receipt/quantity/reconnect; no whole probability or natural encounter claim",
+        "source_hp_dice": {
+          "base": 20,
+          "number": 2,
+          "sides": 6
+        }
+      }
+    },
+    "actual_main_core": {
+      "log_sha256": "6b63cbef06d3da2bfc56337c974aa72136d8f2b15ca33a626e5aff21d42ccee5",
+      "result": {
+        "checks": 44,
+        "failures": [],
+        "scope": "ACTUAL_MAIN_CURRENT_SOURCE_MAP_AND_SAVE; VISUAL_EQUIVALENCE_NOT_TESTED"
+      }
+    },
+    "historical822_actual_ui": {
+      "log_sha256": "4e17f6bee776067c2a55f4ac226bd7633dec52d1e4be34e44f22b67efac2e410",
+      "result": {
+        "checks": 754,
+        "failures": [],
+        "installed_sha256": "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a",
+        "inventory_source_stacks": 732,
+        "source_quests": 3621
+      }
+    }
+  },
+  "total_checks": 1088,
+  "test_scope": "Actual unchanged original quest installer/producer to real issued ownership, selected inventory/choice UI, exact output or existing skill learning, atomic save/error/reconnect. Controlled QA restriction/save-writer fixtures are distinguished from native source conditions. Not all native skill/spell/equipment effects.",
+  "qa_failures_corrected": [
+    {
+      "case": "initial native books",
+      "reason": "fresh Mage default skill slots gain stable IDs on normal import; stale fixture compared plain references",
+      "correction": "only fresh QA profile uses valid explicit50-slot edited state after normal class picker; original held-save user slots unchanged; full assertions retained",
+      "final": "book_native39 checks and book_held_actual_ui54 checks pass"
+    },
+    {
+      "case": "final book source proof negative case",
+      "reason": "shared canonicalizer read correct authoritative spec from same item identity, so stale/tampered passed spec did not reject before ownership consumption",
+      "correction": "bounded quest adapter explicitly rejects record.source_use_spec unequal to canonical spec, checks selected physical blessing, and stores blessing proof; shared PR238 modules unchanged",
+      "final": "book_final_identity_guards11 checks pass including wrong blessing/spec, writer failure, actual UI and exact normal source learning receipt"
+    }
+  ],
+  "private_inputs": {
+    "source_archive": {
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "reused_existing_authorized_bytes": true,
+      "crc_and_index_table_hashes_verified_by_exact_public245_builder": true
+    },
+    "quest_v1": {
+      "drive_file_id": "1qt_ZIoU2xuSHfnhrl2Yas4_BD-8uHWcH",
+      "bytes": 570245,
+      "sha256": "77866c180d4224eff6d7e578759ec0820d6e50515e5c6bd8a67dc92421c20063",
+      "status": "existing private Drive artifact unchanged; historical official receive+CRC/install verified; not newly uploaded"
+    },
+    "item238": {
+      "drive_file_id": "1yhPldWHmsnf758yFfwrJO7v9ZrB91oNa",
+      "bin_sha256": "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27",
+      "status": "existing pinned installed normal pack reused; no duplicate transfer"
+    },
+    "skill245v3": {
+      "bytes": 4415307,
+      "sha256": "256f0ba0944e05b86134b40ed3aea97c71e1073b3947ea6e46cb018b6179926a",
+      "profiles": 441,
+      "status": "LOCAL_ONLY; generated outside repository; no upload; not441 implemented skills"
+    }
+  },
+  "source_saves": {
+    "historical822": {
+      "bytes": 1261506,
+      "sha256": "13e6d609f5fabf8cc7f1fd4a49c9432c379ad2e94b966978f547206b15a39ade",
+      "original_file_unchanged": true
+    },
+    "corrected811": {
+      "bytes": 1390877,
+      "sha256": "975b900968005f768b0154f2a2a9fe396954a1f098791d704b5d6d5930cdba92",
+      "original_file_unchanged": true
+    }
+  },
+  "resource_integrity": {
+    "atlases": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "source_checkout_pass": true,
+    "log_sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57",
+    "original_resources_all_delivered": false
+  },
+  "remaining_constraints": {
+    "fixed_card_classes": 31,
+    "fixed_card_original_test_items": 27,
+    "fixed_card_non_test_native_no_swap_no_merge_enforcement_needed": 4,
+    "skill_book_reference_targets_blocked": [
+      347,
+      358,
+      1133,
+      70
+    ],
+    "blocked_shared_source_use_kinds": 27,
+    "other_equipment_material_currency_consumable_classes": 70,
+    "details": [
+      "fixed-card-source-restrictions.json",
+      "skillbook-source-audit.json",
+      "remaining-owner-audit.json",
+      "pending-consumer-matrix.json"
+    ],
+    "child_skill_ticket_acquisition_or_rune_wear_effect_completed": false
+  },
+  "delivery_and_scope": {
+    "new_game_drive_downloader": false,
+    "install": "manual existing quest ZIP/native item pack and optional exact private skill pack CLI",
+    "new_environment_branch_PR": false,
+    "other_branch_or_main_merged": false,
+    "new_pack_source_report_capture_external_upload": false,
+    "maps232_or_integration263_modified": false,
+    "full_or_manual_ci_started": false,
+    "source_card_engine_replaced_or_701_rebuilt": false,
+    "denied_PR262_title_body_update_retried": false,
+    "denied_PR245v3_upload_retried": false,
+    "unpublished_PR243_eight_files_used": false
+  },
+  "workspace": {
+    "storage_full": true,
+    "actual_local_git_HEAD": "bb480da497c4851baf811e9d74b04f6dfd8a679c",
+    "temporary_regular_candidate_root": "/tmp/q262next/files",
+    "temporary_symlink_sources_not_to_be_published": true,
+    "public_files_must_be_mode": "100644",
+    "originals_packs_saves_not_deleted_or_moved": true
+  }
+}

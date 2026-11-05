@@ -5,7 +5,7 @@ root=Path(sys.argv[1]); root.mkdir(parents=True,exist_ok=True)
 enc=lambda x:json.dumps(x,separators=(',',':')).encode()
 sha=lambda x:hashlib.sha256(x).hexdigest()
 for kind in ['valid','corrupt','traversal','missing','duplicate']:
- manifest={'schema':1,'source_snapshot':'base508','records':{'sprite:'+str(i):{'manifest':'actors/test.json'} for i in range(743)}}
+ manifest={'schema':1,'source_snapshot':'base508','mode':'literal_body_shadow_inspection_only','records':{'sprite:'+str(i):{'manifest':'actors/test.json'} for i in range(743)}}
  manifest['card_bindings']={str(i):{} for i in range(701)}
  files={'zero-byte-source.dat':b'', 'manifest.json':enc(manifest),'actors/test.json':enc({'fixture':True}), 'source_effect_bindings.json':b'{}','registered_effect_layers.json':b'{}'}
  if kind=='missing':files.pop('registered_effect_layers.json')
@@ -22,7 +22,7 @@ for kind in ['valid','corrupt','traversal','missing','duplicate']:
 
 # Addons keep existing base files, replacing only verified small resources.
 # Reconstruct the valid baseline definition exactly as the valid fixture above.
-base_definition={'schema':1,'source_snapshot':'base508','records':{'sprite:'+str(i):{'manifest':'actors/test.json'} for i in range(743)},'card_bindings':{str(i):{} for i in range(701)}}
+base_definition={'schema':1,'source_snapshot':'base508','mode':'literal_body_shadow_inspection_only','records':{'sprite:'+str(i):{'manifest':'actors/test.json'} for i in range(743)},'card_bindings':{str(i):{} for i in range(701)}}
 for kind in ['addon','addon_wrong_base']:
  definition=json.loads(json.dumps(base_definition));definition['records']['overlay:1']={'manifest':'overlays/new.json'}
  entries={'manifest.json':enc(definition),'source_effect_bindings.json':b'{}','registered_effect_layers.json':b'{}','overlays/new.json':b'{"new":true}'}

@@ -7,9 +7,9 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 	var result: Dictionary=legacy.duplicate(true)
 	result.native_mode=true
 	result.native_server_limits=DATA.data.source_server_limits
-	result.patch523_server_limits=preload("res://data/cards/patch523_new_cards.json").data.source_server_limits
+	result.patch523_server_limits=preload("res://scripts/cards/patch523_slot_data.gd").new_cards.source_server_limits
 	var source_aura_component: bool=ResourceLoader.exists("res://scripts/animation/source_awakening_aura.gd")
-	for original: Dictionary in DATA.data.definitions+preload("res://data/cards/patch523_new_cards.json").data.option_definitions:
+	for original: Dictionary in DATA.data.definitions+preload("res://scripts/cards/patch523_slot_data.gd").new_cards.option_definitions:
 		var row: Dictionary=Slots.apply_reviewed_primary(original.duplicate(true))
 		for text: String in row.pending_options.duplicate():
 			if text.begins_with("원본 추가 옵션 슬롯 "):

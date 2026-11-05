@@ -4,7 +4,6 @@ extends RefCounted
 const DATA=preload("res://data/cards/base508_skill_awakening.json")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Conditions=preload("res://scripts/cards/source_collection_conditions.gd")
-const Growth=preload("res://scripts/cards/skill_growth_readiness.gd")
 const MAX_EXPERIENCE: int=9999999999999
 const MAX_REVISION: int=9007199254740000
 const BOOK_QUANTITY: int=1 # user policy, not recovered source consumption evidence
@@ -23,8 +22,8 @@ var problem: String=""
 
 func _init() -> void:
 	cards=DATA.data.cards.duplicate(true)
-	var supplement: Dictionary=preload("res://data/cards/patch523_new_cards.json").data
-	cards.merge(supplement.skill_cards.duplicate(true))
+	var supplement: Dictionary=preload("res://scripts/cards/patch523_slot_data.gd").new_cards
+	cards.merge(supplement.skill_cards.duplicate(true),false)
 	conditions.configure(DATA.data.source_server_limits)
 	patch523_conditions.configure(supplement.source_server_limits)
 	for row: Dictionary in DATA.data.tables.BuffCardSkillAwakenStatPerLevel:
@@ -115,7 +114,7 @@ func view(state: Dictionary,owned: Dictionary,identity: String,preview_level: in
 	if card.is_empty():return fail("identity","원본 카드 ID 연결 없음")
 	var entry: Dictionary=state.cards.get(identity,{"spell_id":0,"level":0,"experience":"0"})
 	var available: Dictionary=eligibility(identity)
-	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"growth_readiness":Growth.view(),"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":DATA.data.unknown_rules}
+	return {"ok":true,"card":card.duplicate(true),"target_id":identity,"owned":owned.get(card.category,{}).get(identity,false)==true,"entry":entry.duplicate(true),"saved_profile":profile(identity,int(entry.level)) if int(entry.spell_id)>0 else {},"preview_profile":profile(identity,preview_level),"eligibility":available,"candidates":candidates(identity),"book":book_for(identity).duplicate(true),"book_requirement":book_requirement(identity),"can_awaken":available.ok and owned.get(card.category,{}).get(identity,false)==true,"can_feed":false,"blocked_reason":"각성서 1장 + "+str(book_requirement(identity).get("fee",0))+" 아데나 · 재각성 시 Lv.1 · 경험치 0부터","unknown_rules":DATA.data.unknown_rules}
 
 func request_operation(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
 	return fail("runtime_transaction_required","실제 인벤토리·재화 거래는 스킬 각성 런타임에서 처리합니다")
@@ -200,8 +199,8 @@ func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: i
 	var next: Dictionary=normalized_state(state)
 	var entry: Dictionary=next.cards.get(identity,{"spell_id":0,"level":1,"experience":"0"}).duplicate(true)
 	var previous: int=int(entry.spell_id)
-	# Explicit user policy: reawakening starts again at level1 / zero EXP.
-	# Existing saves retain growth until a new paid transaction commits.
+	# Explicit user policy: paid reawakening resets to Lv1 / zero EXP.
+	# Existing saved growth remains unchanged until the transaction succeeds.
 	entry.spell_id=int(chosen.candidate.spell_id)
 	entry.level=1
 	entry.experience="0"
@@ -209,13 +208,11 @@ func prepare_reroll(state: Dictionary,owned: Dictionary,identity: String,roll: i
 	next.revision=int(next.revision)+1
 	next.last_operation_id=operation_id
 	next.reroll_policy=REROLL_POLICY
-	return {"ok":true,"state":next,"target_id":identity,"previous_spell_id":previous,"spell_id":int(entry.spell_id),"policy":REROLL_POLICY,"growth_reset":true}
+	return {"ok":true,"state":next,"target_id":identity,"previous_spell_id":previous,"spell_id":int(entry.spell_id),"policy":REROLL_POLICY}
 
 
 func request_experience_feed(_state: Dictionary,_owned: Dictionary,_identity: String,_materials: Dictionary) -> Dictionary:
-	var result: Dictionary=fail("source_exp_rules_unresolved",str(Growth.view().blocked_reason)+" · 카드 차감 없음")
-	result.growth_readiness=Growth.view()
-	return result
+	return fail("source_exp_rules_unresolved","경험치 재료별 획득량·소모·강화 처리 규칙 확인 필요 · 카드 차감 없음")
 
 static func install_book_definitions(catalog: Dictionary) -> void:
 	if not catalog.has("아이템"):catalog["아이템"]=[]

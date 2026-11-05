@@ -1,0 +1,107 @@
+{
+  "scope": "Standard ZIP/Brotli and source identity only; no SP2 frame, pixel, alpha, direction or timing interpretation.",
+  "archive_identities": [
+    {
+      "name": "TWILIGHT_current523_M_map_integration_989actual_SP2_validated_PNGs_risks_20261104.zip",
+      "bytes": 76907660,
+      "sha256": "b6f665d03e84e7cd01b3dd15b60d94091b3ff762cdc58fcfd820c724aa622182",
+      "members": 1013,
+      "crc_bad": null,
+      "manifest_entries": 1012,
+      "manifest_failures": []
+    },
+    {
+      "name": "TWILIGHT_current523_M_only_currentSprite_originals18_checkpoint01_20261104.zip",
+      "bytes": 190728359,
+      "sha256": "7dfd47a9cb0f1073437933febee72a26a27159c868220b51b476226d4e9632ae",
+      "members": 39,
+      "crc_bad": null,
+      "manifest_entries": 38,
+      "manifest_failures": []
+    },
+    {
+      "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint02_20261104.zip",
+      "bytes": 189340512,
+      "sha256": "2280a66e69fca0f4853a6b460a9a2c315f3ebc86d46efaf83582297d6fa1091c",
+      "members": 37,
+      "crc_bad": null,
+      "manifest_entries": 36,
+      "manifest_failures": []
+    },
+    {
+      "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint03_20261104.zip",
+      "bytes": 190535985,
+      "sha256": "3e47d38afadc8b8c55d7528acaba5148ec4c101151fa16bc7202f66e1b23da71",
+      "members": 37,
+      "crc_bad": null,
+      "manifest_entries": 36,
+      "manifest_failures": []
+    },
+    {
+      "name": "TWILIGHT_current523_M_only_originalSprite69_checkpoint04_20261104.zip",
+      "bytes": 185164962,
+      "sha256": "4d6045fc087a8b2e1794776635ac84a6729423e1182a7627fe6bff17ae5a7770",
+      "members": 37,
+      "crc_bad": null,
+      "manifest_entries": 36,
+      "manifest_failures": []
+    },
+    {
+      "name": "TWILIGHT_current523_M_source_evidence_PC_reference_pixel_boundary_correction_20261104.zip",
+      "bytes": 3518,
+      "sha256": "7e957580c404247b8b959306f74bceb96d4731fe3421af35e4ed1dd9de45df15",
+      "members": 3,
+      "crc_bad": null,
+      "manifest_entries": 2,
+      "manifest_failures": []
+    }
+  ],
+  "verified_original_DAT_files": 69,
+  "verified_original_DAT_bytes": 756348371,
+  "verified_inner_members": 10338,
+  "verified_inner_extensions": {
+    ".sp2": 10338
+  },
+  "all_inner_zip_method0_unencrypted": true,
+  "selected_members_from_69_DATs": 561,
+  "raw_registry_members": 989,
+  "raw_registry_standard_Brotli_EOF": 989,
+  "standard_Brotli_decoded_bytes": 198552018,
+  "decoded_prefix_FE_members": 989,
+  "recorded_candidate_body_hash_matches": 989,
+  "new_confirmed_M_sprite_playback_cases": 0,
+  "errors": [],
+  "original_or_repository_mutations": false,
+  "network_calls": false,
+  "embedded_package_scripts_executed": false,
+  "existing_runtime_head": "8268d6a07e8eecb57678a3975b8bb22881b3305f",
+  "audit_kind": "read-only source-container and standard-codec validation; no new sprite runtime enabled",
+  "per_file_private_report_sha256": "5f1b595028d078f4ba75da98e901d6f0457c7d5ac2363211b1777d8623c57437",
+  "standard_codec_audit_script_sha256": "756dd81b54983c7e020c936feb272bc5faa309c72c15876b73a2fc6ea11bcd1e",
+  "historical_a1_ledger": "Separate unavailable historical input; does not negate the current523 source checks above",
+  "fresh_candidate_model_audit": {
+    "scope": "independent direct-byte candidate grammar; not native display verification",
+    "exact_EOF_members": 989,
+    "candidate_frame_records": 17115,
+    "nonempty_exact_halfopen_records": 17054,
+    "empty_records": 61,
+    "marker1_one_palette_members": [
+      "3442-0.sp2",
+      "3443-0.sp2",
+      "3444-0.sp2",
+      "3445-0.sp2",
+      "3446-0.sp2",
+      "29306-0.sp2"
+    ],
+    "marker1_three_palette_members": [
+      "21554-0.sp2"
+    ],
+    "mask3_two_group_members": [
+      "10557-0.sp2",
+      "7232-0.sp2"
+    ],
+    "members_with_stored_index0": 989,
+    "stored_index0_samples": 12224853,
+    "private_research_note_sha256": "15ad182e1ee25e4a827201c030c4a9a06b8e636f8f92be5ea77edd26adf30cb8"
+  }
+}

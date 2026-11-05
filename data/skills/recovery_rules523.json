@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "status": "SOURCE_FIRST_WITH_CONFIGURABLE_HOST_FALLBACKS",
+  "records": {
+    "lm_62bee07ed64c92aa": {
+      "spell_id": 54703,
+      "name": "클리어",
+      "components": [
+        66431,
+        66391,
+        66692
+      ],
+      "heal_component": 66692,
+      "clear_component": 66431,
+      "buff_component": 66391,
+      "defaults": {
+        "cooldown": 25
+      }
+    },
+    "lm_517ca31126a31b45": {
+      "spell_id": 35443,
+      "name": "드래곤 포스",
+      "components": [
+        69163,
+        69173,
+        87588
+      ],
+      "heal_component": 69163,
+      "clear_component": 87588,
+      "buff_component": 69173,
+      "defaults": {
+        "cooldown": 2
+      }
+    },
+    "lm_a67097404fc5663e": {
+      "spell_id": 69601,
+      "name": "플라즈마 다이브",
+      "components": [
+        69621,
+        69611,
+        69631,
+        69641
+      ],
+      "heal_component": 69631,
+      "clear_component": 69621,
+      "buff_component": 69611,
+      "defaults": {
+        "cooldown": 2,
+        "heal": 120
+      }
+    },
+    "lm_1fb2fb45ca7bb6e5": {
+      "spell_id": 95662,
+      "name": "라이프 스트림",
+      "components": [
+        95682,
+        95692,
+        95712,
+        96992,
+        97282
+      ],
+      "heal_component": 95692,
+      "clear_component": 96992,
+      "buff_component": 95692,
+      "defaults": {
+        "cooldown": 2,
+        "heal": 180,
+        "shield_cap_percent": 100
+      }
+    },
+    "lm_81c8985fec94cf55": {
+      "spell_id": 47412,
+      "name": "풀 힐",
+      "direct_self": true,
+      "components": [],
+      "heal_component": 47412,
+      "clear_component": 47412,
+      "buff_component": 47412,
+      "defaults": {
+        "cooldown": 2,
+        "average_dice": 0
+      }
+    },
+    "lm_2b058c083f711c56": {
+      "spell_id": 73,
+      "name": "큐어 포이즌",
+      "direct_self": true,
+      "components": [],
+      "heal_component": 73,
+      "clear_component": 73,
+      "buff_component": 73,
+      "defaults": {
+        "cooldown": 2
+      }
+    },
+    "lm_b1922663d36bc890": {
+      "spell_id": 333,
+      "name": "이뮨 투 함",
+      "direct_self": true,
+      "components": [],
+      "heal_component": 333,
+      "clear_component": 333,
+      "buff_component": 333,
+      "defaults": {
+        "cooldown": 2
+      }
+    }
+  }
+}

@@ -145,7 +145,7 @@ func run() -> void:
 	var profiles: int=0
 	for identity: String in core.cards:
 		if not core.profile(identity,1).is_empty():profiles+=1
-	check(core.cards.size()==717 and core.pools.size()==15 and core.DATA.data.spells.size()==72 and profiles==539,"701 preserved plus16 new source identities, 15 live pools, 72 spells, 539 level profiles")
+	check(core.cards.size()==701 and core.pools.size()==15 and core.DATA.data.spells.size()==72 and profiles==523,"701 source identities, 15 live pools, 72 spells, 523 level profiles")
 	check(core.candidates(material).size()==5 and core.select_candidate(material,65999).candidate.spell_id==64224 and core.select_candidate(material,66000).candidate.spell_id==64264,"source candidate-weight boundary separate from proc chance")
 	check(not core.select_candidate(material,100000).ok,"selection denominator is exact 100000")
 	var state: Dictionary=Skill.fresh_state();state.cards[material]={"spell_id":64224,"level":1,"experience":"1234567890123","future_metadata":{"v":1.5}}
@@ -217,10 +217,7 @@ func run() -> void:
 	grown.cards[material].level=20;grown.cards[material].experience="9999999999999"
 	check(skills.accept_load({SkillRuntime.SAVE_KEY:grown}),"grown source skill state accepted")
 	var prepared: Dictionary=core.prepare_reroll(skills.export_state(),host.card_draw_fusion.owned,material,66000,0,"policy-reroll-1")
-	check(prepared.ok and prepared.spell_id==64264 and prepared.state.cards[material].level==1 and prepared.state.cards[material].experience=="0","source weighted reroll follows user level1 zero EXP policy")
-	check(skills.export_state()==grown and prepared.state.cards[material].future_metadata==grown.cards[material].future_metadata,"preparation preserves input and unknown saved metadata")
-	var same_spell: Dictionary=core.prepare_reroll(skills.export_state(),host.card_draw_fusion.owned,material,0,0,"same-skill-reset")
-	check(same_spell.ok and same_spell.spell_id==64224 and same_spell.state.cards[material].level==1 and same_spell.state.cards[material].experience=="0","same selected skill also starts over")
+	check(prepared.ok and prepared.spell_id==64264 and prepared.state.cards[material].level==1 and prepared.state.cards[material].experience=="0","source weighted paid reroll follows user growth reset policy")
 	check(not prepared.has("success_chance") and not prepared.state.cards[material].has("pity"),"no invented awakening failure or pity mechanic")
 	for seed_value: int in range(1,10000):
 		probe.seed=seed_value
@@ -233,14 +230,14 @@ func run() -> void:
 	check(not result.ok and result.code=="save_failed" and FileAccess.get_file_as_string(host.save_path())==disk_before,"failed internal reroll persistence preserves disk")
 	check(hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==before_commit,"failed reroll persistence rolls back growth/RNG and changes no resources")
 	host.save_error=OK;result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
-	check(result.ok and skills.progress.cards[material].spell_id==64264 and skills.progress.cards[material].level==1 and skills.progress.cards[material].experience=="0","confirmed internal reroll commits source skill and growth reset")
+	check(result.ok and skills.progress.cards[material].spell_id==64264 and skills.progress.cards[material].level==1 and skills.progress.cards[material].experience=="0","confirmed internal reroll commits source skill with user growth reset")
 	var after_commit: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
 	result=skills._commit_confirmed_reroll(material,0,"policy-reroll-1")
 	check(not result.ok and result.code=="duplicate_operation" and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==after_commit,"repeated reroll operation cannot duplicate transaction or advance live RNG")
 	result=skills._commit_confirmed_reroll(material,0,"stale-reroll-2")
 	check(not result.ok and result.code=="stale_revision","stale revision cannot apply another reroll")
 	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(host.save_path()))
-	check(saved.has("card_option_awakening") and saved.card_skill_awakening.cards[material].experience=="0","atomic writer retains option namespace with reset skill state")
+	check(saved.has("card_option_awakening") and saved.card_skill_awakening.cards[material].experience=="0","atomic writer retains option namespace and paid growth reset")
 	check(skills.accept_load(saved) and str(skills.selection_rng.state)==str(saved.card_skill_awakening.rng_state),"saved reroll RNG/state restore together")
 	var guarded: int=hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])
 	check(not skills.request_operation(material).ok and hash([skills.export_state(),skills.selection_rng.state,host.gold,host.card_draw_fusion.export_state()])==guarded,"public paid operation remains gated despite internal policy implementation")

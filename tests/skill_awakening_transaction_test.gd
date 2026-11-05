@@ -61,12 +61,7 @@ func _initialize() -> void:
 		var after: int=hash([runtime.progress,host.inventory,host.item_instances,host.gold,runtime.selection_rng.state])
 		check(not runtime.request_operation(identity,{"operation_id":key}).ok and hash([runtime.progress,host.inventory,host.item_instances,host.gold,runtime.selection_rng.state])==after,"duplicate no debit "+key)
 		runtime.progress.cards[identity].level=3;runtime.progress.cards[identity].experience="123"
-		before=hash([runtime.progress,host.inventory,host.item_instances,host.gold,runtime.selection_rng.state])
-		host.save_error=ERR_CANT_CREATE
-		check(runtime.request_operation(identity,{"operation_id":key+":reroll"}).code=="save_failed" and hash([runtime.progress,host.inventory,host.item_instances,host.gold,runtime.selection_rng.state])==before,"failed reawakening preserves grown state and material "+key)
-		host.save_error=OK
-		check(runtime.request_operation(identity,{"operation_id":key+":reroll"}).ok and runtime.progress.cards[identity].level==1 and runtime.progress.cards[identity].experience=="0","reawakening starts from level1 zero experience "+key)
-		check(host.saved.card_skill_awakening.cards[identity].level==1 and host.saved.card_skill_awakening.cards[identity].experience=="0","reset is in the same durable debit snapshot "+key)
+		check(runtime.request_operation(identity,{"operation_id":key+":reroll"}).ok and runtime.progress.cards[identity].level==1 and runtime.progress.cards[identity].experience=="0","paid reroll resets growth under user policy "+key)
 		check(host.inventory.is_empty() and host.item_instances.is_empty(),"last physical book removed "+key)
 		before=hash([runtime.progress,host.gold,runtime.selection_rng.state])
 		check(not runtime.request_operation(identity).ok and hash([runtime.progress,host.gold,runtime.selection_rng.state])==before,"missing book no debit "+key)

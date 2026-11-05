@@ -3,6 +3,21 @@ class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
+const QUEST_GEAR=preload("res://scripts/quests/quest_equipment523.gd")
+const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
+
+static func instance_id_less(a: String,b: String) -> bool:
+	# IDs are opaque ownership keys. Compare decimal legacy IDs without an
+	# integer cast, then opaque IDs lexically; UUIDs and long digits stay intact.
+	var numeric_a: bool = a.is_valid_int() and not a.begins_with("-") and not a.begins_with("+")
+	var numeric_b: bool = b.is_valid_int() and not b.begins_with("-") and not b.begins_with("+")
+	if numeric_a != numeric_b: return numeric_a
+	if numeric_a:
+		var digits_a: String = a.lstrip("0")
+		var digits_b: String = b.lstrip("0")
+		if digits_a.length() != digits_b.length(): return digits_a.length() < digits_b.length()
+		if digits_a != digits_b: return digits_a < digits_b
+	return a < b
 
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
@@ -338,14 +353,14 @@ func _inventory_entries() -> Array[Dictionary]:
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
 		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
-		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
+		instance_ids.sort_custom(instance_id_less)
 		# Verified book instances keep provenance for transactions, while the
 		# inventory still presents their source 10,000-capacity stack as one row.
 		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(instances[id].get("source_card_currency_quantity",1)))})
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(instances[id].get("source_reward_quantity",instances[id].get("source_awakening_quantity",instances[id].get("source_card_currency_quantity",1)))))})
 	return entries
 
 func _refresh_inventory_grid() -> void:
@@ -496,6 +511,7 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 	return "◆" if _is_engraved(record, item_name) else ""
 
 func _display_item_name(record: Dictionary, item_reference: String) -> String:
+	if record.has("growth96_item_id"): return str(record.get("display_name",record.get("name",item_reference)))
 	var base: String = _base_item_name(item_reference)
 	if _bless_state(record, item_reference) == "blessed" and not base.begins_with("축복받은 "):
 		return "축복받은 " + base
@@ -588,7 +604,11 @@ func _select_item(item_name: String) -> void:
 	_refresh_detail(item_name)
 
 func _find_item_record(item_name: String) -> Dictionary:
+	var selected_id: String=_ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
+	if not selected_id.is_empty():
+		var selected: Variant=character_state.get("item_instances",{}).get(selected_id)
+		if selected is Dictionary and selected.get("name")==item_name and selected.get("record") is Dictionary and (selected.record.get("source_pending_use",false) or preload("res://scripts/cards/source_awakening_items.gd").recognized(selected.record)):return selected.record
 	var records: Array = catalog_data.get("아이템", []) as Array
 	# Same first match as the old linear scan; the bag redraw and grade sort call
 	# this per entry/comparison, which made sorting a large bag take seconds.
@@ -603,17 +623,18 @@ func _matches_category(record: Dictionary, item_name: String) -> bool:
 	var slot := str(record.get("slot", "")).to_lower()
 	var item_type := str(record.get("type", ""))
 	if category_filter == "장비":
-		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","necklace","armor"]
+		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
 	if category_filter == "소모품":
 		return slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","necklace","armor","consumable"])
+	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor","consumable"])
 
 func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name
 	var selected_id: String = _ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
 	var record := _find_item_record(selected_reference)
-	var amount := 1 if selected_id != "" else int(inventory.get(item_name, 0))
+	var selected_physical: Dictionary=character_state.get("item_instances",{}).get(selected_id,{})
+	var amount: int = int(selected_physical.get("source_reward_quantity",selected_physical.get("source_awakening_quantity",selected_physical.get("source_card_currency_quantity",1)))) if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
@@ -670,14 +691,23 @@ func _refresh_detail(item_name: String) -> void:
 	if record.has("weight"):
 		lines.append("")
 		lines.append("무게    %d" % int(record.get("weight", 0)))
+	var source_details: String = preload("res://scripts/loot/patch523_monster_drops.gd").item_details(record)
+	if not source_details.is_empty():
+		lines.append("")
+		lines.append(source_details)
 	if lines.is_empty():
 		lines.append("등록된 상세 옵션이 없습니다.")
+	var is_source_ticket: bool = preload("res://scripts/shop/source523_inventory_tickets.gd").claims(record)
+	if is_source_ticket:
+		lines.append(preload("res://scripts/shop/source523_inventory_tickets.gd").UI_POLICY_TEXT)
 	detail_text.text = "\n".join(lines)
 
 	var is_consumable := slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	var is_ammo: bool = item_name in ["화살", "총알"]
+	var is_ammo: bool = item_name in ["화살", "총알"] or not preload("res://scripts/loot/patch523_ammo.gd").profile(record).is_empty() or not preload("res://scripts/shop/source523_ammo.gd").definition(record).is_empty()
 	if is_ammo:
 		detail_action.text = "해제" if equipped else "착용"
+	elif is_source_ticket:
+		detail_action.text = "사용"
 	elif is_consumable:
 		detail_action.text = "사용"
 	elif equipped:
@@ -687,7 +717,23 @@ func _refresh_detail(item_name: String) -> void:
 	detail_action.disabled = amount <= 0 or (equipped and not is_consumable)
 	if is_ammo:
 		detail_action.disabled = amount <= 0 and not equipped
-	quick_button.disabled = amount <= 0 or not is_consumable
+	quick_button.disabled = is_source_ticket or amount <= 0 or not is_consumable
+	var source_record: Dictionary=record
+	if selected_id!="":source_record=character_state.get("item_instances",{}).get(selected_id,{}).get("record",record)
+	if int(source_record.get("source_item_class_id",0)) in [376,385]:
+		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / 회복 주기: TWILIGHT 설정(기본 30초)"
+		detail_action.tooltip_text="원본 직업·사용 조건 유지. 회복 주기는 게임 설정이며 원작 확정값이 아닙니다."
+	if SOURCE_LEARNING.MAP.has(int(source_record.get("source_item_class_id",0))):
+		detail_action.text="학습 기록"
+		detail_action.tooltip_text="책을 사용해 원본 학습을 기록합니다. 시전 조건·효과 연결 전까지 실행은 보류됩니다."
+		quick_button.disabled=true
+		detail_text.text+="\n\n원본 학습 기록용 · 실행 연결 대기"
+	elif QUEST_GEAR.IDS.has(int(source_record.get("source_item_class_id",0))) or selected_id!="" and character_state.get("item_instances",{}).get(selected_id,{}).has("quest_source_input_receipt"):
+		if QUEST_GEAR.REGEN_GEAR.has(int(source_record.get("source_item_class_id",0))):detail_text.text+="\n\n원본 재생량 / TWILIGHT 장비 회복 주기 30초 (원본 주기 미확인)"
+		detail_action.text="선택 개체 장착"
+		detail_action.tooltip_text="선택한 실제 보상 한 개의 검증된 +0 능력·경험치를 연결합니다. 미지원 효과는 보존합니다."
+		quick_button.disabled=true
+	else:detail_action.tooltip_text=""
 
 func _activate_selected() -> void:
 	if selected_item == "":

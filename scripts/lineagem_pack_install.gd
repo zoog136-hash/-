@@ -11,6 +11,10 @@ const MAX_BYTES = 6 * 1024 * 1024 * 1024
 const MAX_ENTRY = 64 * 1024 * 1024
 const REQUIRED = ["manifest.json", "source_effect_bindings.json", "registered_effect_layers.json"]
 static var _session_root: String = ""
+static var _session_manifest: String = ""
+static var _session_explicit: bool = false
+static var _session_manifest_checked: bool = false
+static var _session_manifest_problem: String = ""
 static var _monster_session_root: String = ""
 static var _base_roots: Dictionary = {}
 var cancelled: bool = false
@@ -24,8 +28,42 @@ static func safe_relative(path: String) -> bool:
 
 static func active_root() -> String:
 	# Freeze each component separately: installing must not mix live asset versions.
-	if _session_root.is_empty(): _session_root = _latest_root(STORE, LEGACY, false)
+	if _session_root.is_empty():
+		var selection: Dictionary = preview_selection(OS.get_cmdline_user_args())
+		_session_explicit = selection.specified
+		_session_manifest = selection.path
+		_session_manifest_checked = false
+		_session_root = _session_manifest.get_base_dir() if _session_explicit else _latest_root(STORE, LEGACY, false)
 	return _session_root
+
+static func preview_selection(arguments: PackedStringArray) -> Dictionary:
+	var result: Dictionary = {"specified":false, "path":""}
+	for argument: String in arguments:
+		if argument.begins_with("--lineagem-original-preview="):
+			result = {"specified":true, "path":argument.trim_prefix("--lineagem-original-preview=")}
+	return result
+
+static func active_manifest() -> String:
+	var selected: String = active_root()
+	return _session_manifest if _session_explicit else selected.path_join("manifest.json")
+
+static func card_manifest_problem(value: Variant) -> String:
+	if not value is Dictionary or value.get("schema") != 1 or not value.get("records") is Dictionary:
+		return "원본 팩 선언이 손상됐거나 지원되지 않습니다."
+	# Current IDs/consumers belong to base508. Another snapshot needs its own
+	# registry/decoder; equal numeric sprite IDs never establish compatibility.
+	if value.get("source_snapshot", "") != "base508":
+		return "이 실행 경로는 base508 팩만 지원합니다. 다른 버전의 리소스를 섞지 않습니다."
+	if value.get("mode", "") != "literal_body_shadow_inspection_only":
+		return "지원되는 원본 캐릭터 팩이 아닙니다."
+	return ""
+
+static func active_manifest_problem() -> String:
+	var path: String = active_manifest()
+	if not _session_manifest_checked:
+		_session_manifest_problem = "선택한 원본 팩이 없습니다." if path.is_empty() or not FileAccess.file_exists(path) else card_manifest_problem(JSON.parse_string(FileAccess.get_file_as_string(path)))
+		_session_manifest_checked = true
+	return _session_manifest_problem
 
 static func monster_root() -> String:
 	if _monster_session_root.is_empty(): _monster_session_root = _latest_root(MONSTER_STORE, MONSTER_LEGACY, true)
@@ -64,7 +102,7 @@ static func base_root(root: String) -> String:
 	return base
 
 static func resolve_file(root: String, relative: String, depth: int = 0) -> String:
-	if not safe_relative(relative) or depth > 4: return ""
+	if root.is_empty() or not safe_relative(relative) or depth > 4: return ""
 	var candidate: String = root.path_join(relative)
 	if FileAccess.file_exists(candidate): return candidate
 	var base: String = base_root(root)

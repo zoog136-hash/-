@@ -10,9 +10,12 @@ const NATIVE_RECORD_FIELDS: Dictionary = {
 	"fear_resistance:percent":"fear_resistance",
 	"hold_hit:percent":"hold_accuracy"
 }
-const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent"}
+const NATIVE_CATALOG_FIELDS: Dictionary={"pve_damage_reduction_pct":"pve_damage_reduction:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","melee_reduction_ignore":"melee_reduction_ignore:flat","ranged_reduction_ignore":"ranged_reduction_ignore:flat","magic_reduction_ignore":"magic_reduction_ignore:flat"}
+const RUNTIME_EFFECT_CODES: Array[String]=["melee_evasion_ignore:flat","ranged_evasion_ignore:flat","damage_reduction_ignore:percent","melee_reduction_ignore:percent","ranged_reduction_ignore:percent","magic_reduction_ignore:percent","pve_damage_amplification:percent","melee_critical_resistance:percent","ranged_critical_resistance:percent","magic_critical_resistance:percent","elemental_critical_resistance:percent","magic_heal:percent","weapon_block:percent","absolute_mp_regeneration:flat","blessing_charge:percent","final_blow_damage:flat","final_blow_probability:percent","final_blow_amplification:percent","while_stun_damage_reduction:flat","while_fear_damage_reduction:flat","stacked_damage_reduction:percent"]
+const LOCAL_POLICY_CODES: Array[String]=["life:flat","death:flat","magic_penetration:percent","reduction_efficiency:percent","physical_magic_defense:percent","final_blow_resistance:percent","ranged_burst_reduction:flat","spell_63_damage:flat","spell_37921_damage:flat","spell_77761_damage:flat","spell_120712_damage:flat","spell_17564_hit:percent"]
+const TYPED_DAMAGE_CODES: Array[String]=["melee_damage_reduction:flat","ranged_damage_reduction:flat","magic_damage_reduction:flat","melee_damage_reduction:percent","ranged_damage_reduction:percent","magic_damage_reduction:percent","critical_damage_reduction:flat","poison_damage_reduction:flat","poison_damage_reduction:percent"]
 static func supports_extra_code(code: String) -> bool:
-	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code)
+	return NATIVE_RECORD_FIELDS.has(code) or NATIVE_CATALOG_FIELDS.values().has(code) or TYPED_DAMAGE_CODES.has(code) or RUNTIME_EFFECT_CODES.has(code) or LOCAL_POLICY_CODES.has(code)
 
 # Existing World readers consume these exact record fields. They are kept
 # separate from equipment-collection policy and never flattened across scopes.
@@ -42,7 +45,8 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 	for entry: Dictionary in NativeOptionData.data.definitions:
 		native_option_bindings[entry.id]={"group_id":int(entry.native_source.group.ID),"card_id":int(entry.native_source.card.ID),"limits":entry.native_source.limits}
 	conditions.configure(data.get("source_server_limits",[]))
-	if data.get("source_snapshot", "") != "base508" or not accepts_catalog(catalog):
+	var snapshot: String = str(data.get("source_snapshot", ""))
+	if snapshot not in ["base508", "patch523"] or not accepts_catalog(catalog):
 		return _fail("원본 카드 컬렉션과 카드 정체성이 일치하지 않습니다")
 	var known: Dictionary = {}
 	for category: String in Cards.CATEGORIES:
@@ -56,7 +60,7 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		var category: String = str(row.get("category", ""))
 		if not identity.begins_with("base508:collection:") or seen.has(identity) or not known.has(category): return _fail("원본 컬렉션 ID/분류 오류")
 		seen[identity] = true
-		if row.get("source", {}).get("snapshot", "") != "base508" or not row.get("source_original") is Dictionary: return _fail("원본 컬렉션 출처 누락")
+		if row.get("source", {}).get("snapshot", "") != snapshot or not row.get("source_original") is Dictionary: return _fail("원본 컬렉션 출처 누락")
 		if not row.get("requirements") is Array or row.requirements.is_empty() or not row.get("effects") is Array: return _fail("원본 컬렉션 조건/보상 누락")
 		# User explicitly removed time limits. Preserve every original date row
 		# and retain server/awakening restrictions; no save mutation is involved.
@@ -68,8 +72,14 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		for requirement: Dictionary in row.requirements:
 			var key: String = str(requirement.get("id", ""))
 			var member: Dictionary = requirement.get("source_original", {})
-			if str(requirement.get("category", "")) != category or not known[category].has(key): return _fail("원본 컬렉션 구성 카드 정체성 누락")
-			var record: Dictionary = known[category][key]
+			# Collection deck and member card deck are distinct source identities.
+			# Current523 has32 members from another deck; join the member's own ID.
+			var member_category: String = str(requirement.get("category", ""))
+			if not known.has(member_category) or not known[member_category].has(key): return _fail("원본 컬렉션 구성 카드 정체성 누락")
+			var record: Dictionary = known[member_category][key]
+			var expected_deck: int = {"변신":1,"마법인형":2,"성물":98}[member_category]
+			if int(record.get("source_deck_id", expected_deck)) != expected_deck:
+				return _fail("원본 구성 카드 덱 불일치")
 			if int(record.get("source_card_id", -1)) != int(member.get("BuffCardID", -2)): return _fail("원본 BuffCardID 조인 불일치")
 			if int(member.get("BuffCardCollectionID", -1)) != int(row.source_original.get("ID", -2)) or members.has(key): return _fail("원본 컬렉션 구성 중복/세트 불일치")
 			members[key] = true
@@ -78,7 +88,8 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 		if row.effects.is_empty(): problems.append("native_reward_missing")
 		for effect: Dictionary in row.effects:
 			var code: String = effect_code(effect)
-			if not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code)):
+			if code=="stacked_damage_reduction:percent" and not local_damp_supported(effect):problems.append("native_source_target_missing:DamageDampOption:unapproved_local_policy")
+			if not interval_supported(effect) and (not bool(effect.get("native_supported", false)) or (not ExistingStats.SUPPORTED.has(code) and not EXTRA_EFFECTS.has(code) and not supports_extra_code(code))):
 				var native: Dictionary = effect.get("source_original",{})
 				var target: Dictionary = native.get("application_target",{})
 				if target.get("resolved",true)==false:
@@ -144,6 +155,46 @@ func derive(card_state: Dictionary) -> Dictionary:
 		if not row.completed:continue
 		result.completed[str(row.id)]=true
 		for effect: Dictionary in row.effects:
+			if interval_supported(effect):continue
 			var code: String=effect_code(effect)
 			result.totals[code]=float(result.totals.get(code,0))+float(effect.value)
 	return result
+
+# TWILIGHT compatibility policy, not a recovered client formula: ceil the
+# clamped living HP percentage, inclusive integer source bounds, no dead bonus.
+# Each eligible collection contributes one matching branch; gaps stay zero.
+const HP_POLICY: String = "twilight_ceil_living_hp_percent_inclusive_v1"
+static func interval_supported(effect: Dictionary) -> bool:
+	var raw: Dictionary=effect.get("source_original",{})
+	if raw.get("bonus_type",{}).get("Name","")!="HPIntervalBonus" or raw.get("unit",{}).get("Name","")!="IntervalBonusCategoryID":return false
+	var branches: Array=raw.get("nested_intervals",[])
+	if branches.is_empty():return false
+	var occupied: Dictionary={}
+	for branch: Dictionary in branches:
+		var low: int=int(branch.get("Low",-1));var high: int=int(branch.get("High",101))
+		if low<0 or high>100 or low>high or int(branch.get("IntervalBonusCategory",-1))!=int(raw.bonus.Value):return false
+		if branch.get("bonus_type",{}).get("Name","")!="SpecialResistance" or branch.get("application_type",{}).get("Name","")!="SpecialResistanceType":return false
+		if branch.get("application_target",{}).get("Name","") not in ["Stun","Fear"] or branch.get("unit",{}).get("Name","")!="Percentage":return false
+		var target: Dictionary=branch.application_target
+		if int(branch.bonus.BonusApplicationTypeID)!=int(branch.application_type.ID) or int(branch.bonus.BonusApplicationTargetID)!=int(target.ID) or int(branch.bonus.BonusTypeID)!=int(branch.bonus_type.ID) or int(branch.bonus_type.UnitID)!=int(branch.unit.ID):return false
+		if float(branch.get("ui_unit",{}).get("Denominator",0))<=0 or not is_finite(float(branch.bonus.get("Value",NAN))):return false
+		for percent: int in range(low,high+1):
+			if occupied.has(percent):return false
+			occupied[percent]=true
+	return true
+
+static func interval_effects(effect: Dictionary, hp: int, maximum: int, round_up: bool=true) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	if not interval_supported(effect) or maximum<=0 or hp<=0:return result
+	var ratio: float=100.0*clampi(hp,0,maximum)/maximum
+	var percent: int=int(ceil(ratio) if round_up else floor(ratio))
+	for branch: Dictionary in effect.source_original.nested_intervals:
+		if percent<int(branch.Low) or percent>int(branch.High):continue
+		var key: String=str(branch.application_target.Name).to_lower()+"_resistance"
+		var amount: float=float(branch.bonus.Value)/float(branch.ui_unit.Denominator)
+		result.append({"key":key,"unit":"percent","value":amount,"label":"HP 구간 · "+("스턴" if key=="stun_resistance" else "공포")+" 내성 +"+str(amount)+"%","source_interval_id":int(branch.ID),"hp_policy":HP_POLICY if round_up else HP_POLICY.replace("ceil","floor")})
+	return result
+
+static func local_damp_supported(effect: Dictionary) -> bool:
+	var raw: Dictionary=effect.get("source_original",{})
+	return effect.get("runtime_policy","")=="twilight_target13_stacked_reduction_v1" and raw.get("bonus_type",{}).get("Name","")=="DamageDampOption" and raw.get("application_type",{}).get("Name","")=="DamageDampOption" and int(raw.get("bonus",{}).get("BonusApplicationTargetID",0))==13 and raw.get("unit",{}).get("Name","")=="Percentage"

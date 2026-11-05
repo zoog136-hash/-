@@ -1,0 +1,167 @@
+{
+  "base_sha": "7d550a78a8fd1a95a50ebb18b38c3134380c3fa6",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility OpenGL llvmpipe",
+  "source_inputs": [
+    {
+      "file": "TWILIGHT_UI551_binding_animation_evidence_20261104.zip",
+      "bytes": 25261734,
+      "sha256": "6e5c636cabe48ab8d4aa4a5d6d26122c3300ca65789568668335b71fdb386d91",
+      "library_file_id": "libfile_0ba507ea27888191b60532f6aa6b6ff0",
+      "crc": "passed at initial materialization"
+    },
+    {
+      "file": "TWILIGHT_523_symbol_guardian_crosslinks_20261104.zip",
+      "bytes": 149581,
+      "sha256": "60fa306d6310cddd4b5eb042bbf59720e6dc732d92b3438cf54044815f76811f",
+      "library_file_id": "libfile_3acd63a50c148191b10d669d77efd5e3",
+      "crc": "passed at initial materialization"
+    },
+    {
+      "file": "lineagem_patch523_all_content_validated_and_508_520_deltas.zip",
+      "bytes": 25031173,
+      "sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "library_file_id": "libfile_f3e9e5b322cc8191ae441565bbd24c27",
+      "crc": "passed at initial materialization"
+    }
+  ],
+  "source_scope": {
+    "categories": 6,
+    "nodes": 172,
+    "non_sentinel_rewards": 274,
+    "enchant_rows": 27,
+    "mapped_stat_rewards": 140,
+    "ordinary_available_nodes": 112,
+    "ordinary_applied_stat_rewards": 91,
+    "server_guarded_nodes": 60,
+    "deferred_stat_rewards": 66,
+    "deferred_invoke_rewards": 62,
+    "deferred_active_spell_rewards": 6
+  },
+  "tests": {
+    "guardian_transactions": 39,
+    "growth_and_ui": 111,
+    "development_profile": 37,
+    "presentation_state": 5,
+    "rendered_ui": 35,
+    "core_actual_main": 32,
+    "other_core_checks": [
+      "save_identical_payload_test",
+      "deferred_save_gate_test"
+    ],
+    "resource_atlases": 723,
+    "failures": []
+  },
+  "ci": "No remote run requested; commit uses [skip ci] per user instruction",
+  "code_sha256": {
+    "scripts/growth/growth_runtime.gd": "08ad0061f9b39a34039167e7dac54661e50a5bf4bf252de6c6c7cce95886b404",
+    "scripts/growth/guardian_source.gd": "d5b5bda4b59ce99e0501e42a88ce39ce012b55cb0483a5b08b1c3eb9d27163d0",
+    "scripts/growth/growth_view.gd": "dcbc236c80a76b7ac3b059f7b144aa050edd517af7c1404ba78337093dbae8fc",
+    "scripts/growth/growth_constellation.gd": "38217f82e66b5481d764cd776aac16a52baa1c9a9875cd98c2eff8244e392f35",
+    "scripts/growth/growth_touch_button.gd": "1534ca83dfe01aad51e6c2f4ac4f3d348c809eb71e097fc15cde95f79bb47611",
+    "scripts/world.gd": "ae2997c6d79583e4af85a05a9e991cab3224a3376610c7e4b120116c8de89407",
+    "tools/build_guardian_source523.py": "040a278f4344d9ab8031e19eb2f1d9ca8ee5576c5a031387db0ec59d43477374",
+    "data/growth/guardian_source523.json": "098e90f960daf934dc11d8146becba5ce45df91e24f07304028a1f3976491cd1",
+    "tests/guardian_source523_test.gd": "c72925ad2d2c4d3d06b205355fc605f96571b77c372bf5e78a4a3844e4ebb28a",
+    "tests/growth_progression_test.gd": "3fe49b0e1f1bfd9895fff216416a35a23c4ba6b70ca2284054e0e367344b875b",
+    "tests/capture_guardian_source523.gd": "8a19742d9a9cb3b2bb9cb72c03d021526342adced805fe8d41bccd36a5496520"
+  },
+  "artifacts": {
+    "guardian-523-card-failed.png": {
+      "bytes": 1050283,
+      "sha256": "f6bcd53e6cefc5dee91759a0b4312a94fb1794006d1b52909dca9ac8cf2e2800"
+    },
+    "growth_lab_check.first-attempt.txt": {
+      "bytes": 202,
+      "sha256": "05ad1bd9fe0eaa637a23992c1fc070fc12ea431a7924732b43ad7d9e656c52ea"
+    },
+    "capture_guardian_source523.first-attempt.txt": {
+      "bytes": 996,
+      "sha256": "fc902c072c28f559838e1c106d1f6fa38d1f76c08bb4fc549f124878ec136fad"
+    },
+    "guardian-523-server-condition.png": {
+      "bytes": 236768,
+      "sha256": "0899b430e607b5cb8277ada4e7a56dcaed90332bdf8e9ca204bd6a25807bb5e2"
+    },
+    "growth_progression_test.first-attempt.txt": {
+      "bytes": 32545,
+      "sha256": "1e1cf61b9a5fe024189ffaebc96362c184ef80a50bca8f38d95eb1487dba3643"
+    },
+    "capture_guardian_source523.txt": {
+      "bytes": 438,
+      "sha256": "d1dca519b2668f3a13e630e0ee35d3bd2894e2c59d2bbcda8a02a68fdeb600e3"
+    },
+    "guardian-523-board-854x480.png": {
+      "bytes": 235881,
+      "sha256": "cbcd05f2aa8538fef094b232eb10db1a855cd02d8301b1590ddeecac5c0831cd"
+    },
+    "guardian-523-card-success.png": {
+      "bytes": 1096180,
+      "sha256": "05da828ecd3dbf52274f4b951ed387b80ff41505ce21ee01baccddf5244f6016"
+    },
+    "growth_progression_test.txt": {
+      "bytes": 411,
+      "sha256": "c46599f0d58a74dcc2190605e456e317606b56ec4aac47c732fe5264f8b600a0"
+    },
+    "guardian-523-enchant-result.png": {
+      "bytes": 673635,
+      "sha256": "6f8fe4309a854fc49550a100f9074711688984200f857913b44130e008d05ae9"
+    },
+    "guardian-523-enchant-preview.png": {
+      "bytes": 560136,
+      "sha256": "a05ab141c5172cee01052ff7833dc41e455653aa40e391a31b01a89a77bb39ab"
+    },
+    "deferred_save_gate_test.txt": {
+      "bytes": 115,
+      "sha256": "c9d060c94cdc7be5057eb4d1e8bd0a2a41db1c2bec5ccda4497e27c2076519a9"
+    },
+    "growth_presentation_test.txt": {
+      "bytes": 127,
+      "sha256": "b1f7477bd03157485f7f1e42514c9e243ea5abb73d8f97eac7651752bb950347"
+    },
+    "import.txt": {
+      "bytes": 380435,
+      "sha256": "61286f1f3b7c70618820211dd2829128d0939e5f9b084a6822d00646fe84945a"
+    },
+    "core_runtime_save_test.txt": {
+      "bytes": 207,
+      "sha256": "94f972d8406f7072080306e79a8c161a7e6900402b605688e98eb47f0d79f2cd"
+    },
+    "growth_lab_check.txt": {
+      "bytes": 119,
+      "sha256": "29dcf5b5afa16a358d50ade02bc88d84972650f63afbf93a0f73fdc8219a6459"
+    },
+    "core-final.txt": {
+      "bytes": 117,
+      "sha256": "4e1b04ea185c3c6be7cbd82173f8b16f22cd5acd40284798c261e913f6e32a15"
+    },
+    "resource-integrity.txt": {
+      "bytes": 219,
+      "sha256": "60e8631cf43fc0c101fda822e1c44f9b330354594c8a2fb954c08cdd9f54eb57"
+    },
+    "guardian-523-detail.png": {
+      "bytes": 426791,
+      "sha256": "8823bbdc1724c0c9edf4566d78b32f0beb7fa0809263010532a1aa886f144917"
+    },
+    "guardian-source523.txt": {
+      "bytes": 120,
+      "sha256": "e6b1750b48f47fb30f8305611069c0c2ef563443cb8d079ec373e59f158ed390"
+    },
+    "guardian-523-board-1280x720.png": {
+      "bytes": 353912,
+      "sha256": "8bb59eeb6a97a5435baa3fc0f11913b904fea1693b7bb8cf5866561e3bdfb18d"
+    },
+    "guardian-523-card-waiting.png": {
+      "bytes": 1108795,
+      "sha256": "5492c04baca8ace195860f327464943932ccf3f8717e934d3e8e355831e3ca76"
+    },
+    "save_identical_payload_test.txt": {
+      "bytes": 140,
+      "sha256": "6186fec3e9e79c3863ddc3ede6a746284b11080f627f6bf12ef2617cd8e8209b"
+    },
+    "ui-stage-additions.json": {
+      "bytes": 24174,
+      "sha256": "c1e44ef21fd4b87497ab66615a796d0fad95bd241a8c3b444dcbe7593ba17f8c"
+    }
+  }
+}

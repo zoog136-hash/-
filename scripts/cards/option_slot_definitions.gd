@@ -1,7 +1,7 @@
 extends RefCounted
 ## Exact source declarations. Card ownership stays in the existing save namespace.
 ## A slot reference alone never unlocks a summon or grants a second awakening.
-const DATA=preload("res://data/cards/patch523_option_slots.json")
+const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 static var _cache: Dictionary={}
 
 static func _key(identity: String,slot: int) -> String:
@@ -13,27 +13,27 @@ static func _key(identity: String,slot: int) -> String:
 
 static func group_for(identity: String,slot: int) -> Dictionary:
 	var key: String=_key(identity,slot)
-	if not DATA.data.groups.has(key):return {}
+	if not DATA.options.groups.has(key):return {}
 	if not _cache.has(key):
-		var row: Dictionary=DATA.data.groups[key]
+		var row: Dictionary=DATA.options.groups[key]
 		var effects: Array[Dictionary]=[]
 		for link: Dictionary in row.links:
-			var bonus: Dictionary=DATA.data.bonuses[str(int(link.BonusID))]
-			var type_row: Dictionary=DATA.data.types[str(int(bonus.BonusTypeID))]
+			var bonus: Dictionary=DATA.options.bonuses[str(int(link.BonusID))]
+			var type_row: Dictionary=DATA.options.types[str(int(bonus.BonusTypeID))]
 			var unit_key: String=str(int(type_row.UnitID))
-			effects.append({"link":link,"bonus":bonus,"type":type_row,"unit":DATA.data.units[unit_key],"ui_unit":DATA.data.ui_units.get(unit_key,{})})
+			effects.append({"link":link,"bonus":bonus,"type":type_row,"unit":DATA.options.units[unit_key],"ui_unit":DATA.options.ui_units.get(unit_key,{})})
 		_cache[key]={"identity":identity,"source_snapshot":"patch523","card":row.card,"group":row.group,"effects":effects}
 	return _cache[key].duplicate(true)
 
 static func compatible_primary(identity: String) -> bool:
 	if identity.begins_with("source:m523:"):
-		return preload("res://data/cards/patch523_new_cards.json").data.skill_cards.has(identity)
-	return _key(identity,1) in DATA.data.reviewed_primary_keys
+		return preload("res://scripts/cards/patch523_slot_data.gd").new_cards.skill_cards.has(identity)
+	return _key(identity,1) in DATA.options.reviewed_primary_keys
 
 static func apply_reviewed_primary(row: Dictionary) -> Dictionary:
 	# Existing source card IDs, ownership and saved awakening flags survive.
-	# Only the explicitly reviewed Mariela Level0 -> Level1 delta is activated.
-	if not _key(str(row.id),1) in DATA.data.changed_primary_keys:return row
+	# This narrow runtime pack leaves existing primary deltas unchanged.
+	if not _key(str(row.id),1) in DATA.options.changed_primary_keys:return row
 	var latest: Dictionary=group_for(str(row.id),1)
 	var result: Dictionary=row.duplicate(true)
 	result.native_source.card=latest.card
@@ -59,7 +59,7 @@ static func apply_reviewed_primary(row: Dictionary) -> Dictionary:
 	return result
 
 static func source_label(effect: Dictionary) -> String:
-	var text: String=str(DATA.data.type_labels.get(str(int(effect.type.ID)),effect.type.Name))
+	var text: String=str(DATA.options.type_labels.get(str(int(effect.type.ID)),effect.type.Name))
 	var amount: float=float(effect.bonus.Value)
 	var unit_name: String=str(effect.unit.Name)
 	var denominator: float=float(effect.ui_unit.get("Denominator",0))
