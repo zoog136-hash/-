@@ -716,6 +716,8 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 	# instant-cure owner, which rechecks poison, source310/Buff27, locks, cooldown
 	# and the selected debit before its single save and post-save visual event.
 	# Its zero-duration cure must not enter the ordinary timed-buff/bag gate.
+	if int(owned.item_class_id)==239:
+		return world.consumable_service.use_owned_quest_return(uid)
 	if int(owned.item_class_id)==310:
 		var cure_owner: Script=load("res://scripts/quests/quest_cure310.gd")
 		if cure_owner.call("profile",record).is_empty():return _failure("원본310 해독 효과 계약 불일치 · 소유 보존")
