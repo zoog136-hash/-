@@ -706,7 +706,7 @@ canonical NpcClass-table check. The inspector's IDs, attack selection, combat,
 effects, spawning, input and saves retain their existing behavior.
 
 This establishes a source-backed illustration role and an existing selector
-consumer, not every NPC portrait or actual game-use counts. The current dialogue
+consumer, not every NPC portrait or actual game-use counts. The installed
 source-NPC dialogue records use L1J identities; the current resolved model does
 not supply an authoritative current523 `NpcClassID` relation. The original
 `NpcDialogue_All` Sprite4912 is also outside
