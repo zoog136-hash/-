@@ -150,6 +150,19 @@ factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadat
 동시 소비·원본 장착/잠금·native touch의 실제 설치 코드 선행 조건도 별도로
 확인하며, 이미지와 실시간 상태의 준비·표시 전환은 기존 원자적 component 소비자에 맡긴다.
 
+UI267의 후속 공개 체크포인트
+`8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
+사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의
+`bind_original_icon_scene_provider`, `source_asset_scene.prepare`,
+`sprite_scene.set_bound_source_visual_result` 및
+`reuse_bound_source_scene_from` 계약에 맡긴다. 설치기는 별도 provider를 등록하거나
+새 장면 부착기를 만들지 않는다. 이 코드의 존재 여부는 아이콘 선택 metadata에
+별도로 기록하며 정적 HUD/월드맵의 활성 조건에 섞지 않는다.
+두 원본 CSB 부분팩이 내려받아졌다는 사실만으로 아이콘별 원본 등록 위치·근거나
+재생 정책이 공급됐다고 보지 않는다. 명시된 원본 재생 선언이 없으면 seek/play/loop를
+추가하지 않는 기존 소비자 정책을 유지하며, 추정한1회 재생을 원본 선언으로 바꾸지 않는다.
+같은 장면 인스턴스의 실제 상태 보존과 동시 게임 표시는 미실행이다.
+
 월드맵의 등록·문맥·입력·이동은 기존 map owner의
 `configure_from_settings(world)`가 처리한다. 설치기는 등록기를 만들거나 호출하지
 않고 기존 cfg의7개 키만 준비한다: enabled, contract_path, contract_sha256,
