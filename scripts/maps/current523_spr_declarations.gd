@@ -4,6 +4,7 @@ const PACK=preload("res://scripts/resources/current523_pack.gd")
 const MANIFEST_SHA="91bbf7d8e63a8407ad5489a0dbb228f9da50a5e1183e7b6960e9916db8ccd5ea"
 const TEXT_IDENTITY_SHA="4426a6a7ec09c61152d04575b829b84846b342275c35ddad4ce9498759de285a"
 const GRAPH_SHA="8e54942a4c51f5f166c8fc9861f2ec7c1a2bf5f07db315600bd0d291cba1d487"
+const LIST29_SHA="03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
 var problem: String=""
 var source_root: String=""
 var definitions: Dictionary={}
@@ -23,6 +24,67 @@ func _verified_bytes(path: String, digest: String, limit: int) -> PackedByteArra
 	if PACK.digest(raw)!=digest:
 		_fail("SPR 원문/목록 SHA256이 다릅니다.");return PackedByteArray()
 	return raw
+
+func load_single_list29(path: String) -> bool:
+	# Same held M original as the global input. Inline actions, selectors and
+	# modifiers are parsed as data; no inherited frame or activation is invented.
+	if not definitions.is_empty():return _fail("SPR 선언은 새 소비자에서만 연결할 수 있습니다.")
+	var raw: PackedByteArray=_verified_bytes(path,LIST29_SHA,1210871)
+	if raw.size()!=1210871:return _fail("승인된 list_29.spr 원문 크기가 다릅니다.")
+	var member: String="Client/Text/list_29.spr"
+	source_files[member]={"member":member,"bytes":raw.size(),"sha256":LIST29_SHA}
+	var bom: int=3 if raw.slice(0,3)==PackedByteArray([239,187,191]) else 0
+	var text: String=raw.slice(bom).get_string_from_utf8()
+	var header:=RegEx.new()
+	header.compile("(?m)^[[:blank:]]*#([0-9]+)[[:blank:]]+([0-9]+)(?:=([0-9]+))?")
+	var action_pattern:=RegEx.new()
+	action_pattern.compile("(?<![[:alnum:]_.])([0-9]+)[.]([^()\\r\\n]+)[(]([^()]*)[)]")
+	var token_pattern:=RegEx.new()
+	token_pattern.compile("([0-9]+)[.]([0-9]+):([0-9]+)([^[:space:],()]*)")
+	var headers: Array[RegExMatch]=header.search_all(text)
+	if headers.is_empty():return _fail("M 원문 SPR 헤더가 없습니다.")
+	var prefix: String=text.left(headers[0].get_start())
+	var byte_cursor: int=bom+prefix.to_utf8_buffer().size()
+	var source_line: int=1+prefix.count("\n")
+	for i: int in headers.size():
+		var h: RegExMatch=headers[i]
+		var end: int=headers[i+1].get_start() if i+1<headers.size() else text.length()
+		var block: String=text.substr(h.get_start(),end-h.get_start())
+		var block_bytes: PackedByteArray=block.to_utf8_buffer()
+		var id: int=int(h.get_string(1))
+		if id<0 or id>65535 or definitions.has(id):return _fail("M 원문 SPR ID가 모호합니다.")
+		if raw.slice(byte_cursor,byte_cursor+block_bytes.size())!=block_bytes:return _fail("M 원문 SPR 바이트 경계가 다릅니다.")
+		var actions: Array=[]
+		var body_begin: int=h.get_end()-h.get_start()
+		var body: String=block.substr(body_begin)
+		for a: RegExMatch in action_pattern.search_all(body):
+			var action_body: String=a.get_string(3)
+			var action_body_offset: int=body_begin+a.get_start(3)
+			var tokens: Array=[]
+			for token: RegExMatch in token_pattern.search_all(action_body):
+				var offset: int=byte_cursor+block.left(action_body_offset+token.get_start()).to_utf8_buffer().size()
+				tokens.append({"raw":token.get_string(),"raw_selector":int(token.get_string(1)),"raw_frame_index":int(token.get_string(2)),"raw_ticks":int(token.get_string(3)),"raw_suffix":token.get_string(4),"source_byte_offset":offset})
+				verified_tokens+=1
+			var action: Dictionary={"code":int(a.get_string(1)),"name":a.get_string(2).strip_edges(),"raw":a.get_string(),"raw_body":action_body,"tokens":tokens,"source_byte_offset":byte_cursor+block.left(body_begin+a.get_start()).to_utf8_buffer().size()}
+			actions.append(action)
+			# Retain exact M links without turning them into draw/activation rules.
+			var numbers: PackedStringArray=action_body.replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
+			var targets: Array[int]=[]
+			var kind: String=""
+			if action.code==101 and action.name.to_lower()=="shadow" and numbers.size()==1 and numbers[0].is_valid_int():
+				kind="shadow";targets.append(int(numbers[0]))
+			elif action.code==105 and action.name.to_lower() in ["clothes","clothe"] and not numbers.is_empty() and numbers[0].is_valid_int() and int(numbers[0])==numbers.size()-1:
+				kind="clothes"
+				for target: String in numbers.slice(1):
+					if not target.is_valid_int():targets.clear();break
+					targets.append(int(target))
+			for target: int in targets:
+				if target<0 or target>65535:return _fail("M 원문 SPR 참조 ID가 범위를 벗어납니다.")
+				references.append({"source_sprite_id":id,"target_id":target,"kind":kind,"raw":action.raw,"source_file":member,"source_byte_offset":action.source_byte_offset})
+		definitions[id]={"sprite_id":id,"source_file":member,"source_line":source_line,"source_byte_offset":byte_cursor,"source_end_offset":byte_cursor+block_bytes.size(),"source_file_identity":source_files[member].duplicate(),"raw_declaration_sha256":PACK.digest(block_bytes),"raw_bytes":block_bytes,"alias_target_raw":null if h.get_string(3).is_empty() else int(h.get_string(3)),"actions":actions}
+		byte_cursor+=block_bytes.size()
+		source_line+=block.count("\n")
+	return true
 
 func load_directory(directory: String) -> bool:
 	if not definitions.is_empty():return _fail("SPR 선언은 새 소비자에서만 연결할 수 있습니다.")
@@ -90,6 +152,7 @@ func display_definition(id: int, action_id: int=3) -> Dictionary:
 	if not definitions.has(id):return {}
 	var source: Dictionary=definitions[id]
 	var result: Dictionary={"header":"","source_line":source.source_line,"source_file":source.source_file,"source_byte_offset":source.source_byte_offset,"source_end_offset":source.source_end_offset,"source_sha256":source.source_file_identity.sha256,"source_file_bytes":source.source_file_identity.bytes,"declaration_sha256":source.raw_declaration_sha256,"raw_bytes":source.raw_bytes,"action_id":action_id,"sequence":[],"attachments_unresolved":[],"references":[],"sequence_origin":"ALL30_SOURCE_ACTION"+str(action_id),"unapplied_modifiers":[]}
+	if source_files.size()==1:result.sequence_origin="LIST29_ACTION"+str(action_id)
 	if source.alias_target_raw!=null:
 		result["unsupported"]="declared_alias_requires_resolution";return result
 	for action: Dictionary in source.actions:

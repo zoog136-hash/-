@@ -163,53 +163,14 @@ func configure(value: Dictionary, mapping: RefCounted) -> bool:
 	return true
 
 func _load_declarations(path: String) -> bool:
-	if DirAccess.dir_exists_absolute(path):
-		var global=GLOBAL_DECLARATIONS.new()
-		if not global.load_directory(path):problem=global.problem;return false
-		for id: int in global.definitions:
-			_declarations[id]=global.display_definition(id,int(options.action_overrides.get(str(id),3)))
-		_declaration_identity=GLOBAL_DECLARATIONS.MANIFEST_SHA
-		_declaration_file_count=global.source_files.size()
-		return true
-	var file:=FileAccess.open(path,FileAccess.READ)
-	if file==null or file.get_length()!=1210871:
-		problem="승인된 list_29.spr 원문 크기가 다릅니다.";return false
-	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
-	if PACK.digest(bytes)!=DECLARATION_SHA:
-		problem="승인된 list_29.spr 원문 SHA256이 다릅니다.";return false
-	_declaration_identity=DECLARATION_SHA
-	_declaration_file_count=1
-	var text: String=bytes.get_string_from_utf8()
-	var header:=RegEx.new();header.compile("(?m)^#([0-9]+)[ \\t]+([0-9]+)(?:=([0-9]+))?([^\\r\\n]*)")
-	var action:=RegEx.new();action.compile("(?m)^[ \\t]*3\\.[^()\\r\\n]+\\(0[ \\t]+([0-9]+),([^()]*)\\)")
-	var token:=RegEx.new();token.compile("^([0-9]+)\\.([0-9]+):([0-9]+)$")
-	var attachment:=RegEx.new();attachment.compile("105\\.[^()]+\\(([^()]*)\\)")
-	var headers: Array[RegExMatch]=header.search_all(text)
-	for i: int in headers.size():
-		var h: RegExMatch=headers[i]
-		var id: int=int(h.get_string(1))
-		if not _index.has(id): continue
-		var body: String=text.substr(h.get_end(),(headers[i+1].get_start() if i+1<headers.size() else text.length())-h.get_end())
-		var record: Dictionary={"header":h.get_string(),"source_line":text.left(h.get_start()).count("\n")+1,"source_sha256":DECLARATION_SHA,"raw_body":body,"action_id":3,"sequence":[],"attachments_unresolved":[]}
-		if int(options.action_overrides.get(str(id),3))!=3:
-			record["unsupported"]="selected_action_requires_global_original_declarations"
-			_declarations[id]=record;continue
-		var clothes: RegExMatch=attachment.search(body)
-		if clothes!=null: record.attachments_unresolved=clothes.get_string(1).split(" ",false)
-		if not h.get_string(3).is_empty():
-			record["unsupported"]="declared_alias_requires_resolution"
-		else:
-			var found: RegExMatch=action.search(body)
-			if found!=null:
-				var sequence: Array[Dictionary]=[]
-				for frame: String in found.get_string(2).split(" ",false):
-					var parsed: RegExMatch=token.search(frame.strip_edges())
-					if parsed==null or int(parsed.get_string(1))!=0 or int(parsed.get_string(3))<=0:
-						sequence.clear();break
-					sequence.append({"frame":int(parsed.get_string(2)),"duration":int(parsed.get_string(3))})
-				if sequence.size()==int(found.get_string(1)): record.sequence=sequence
-				else: record["unsupported"]="declared_frame_mapping_or_modifiers"
-		_declarations[id]=record
+	var source=GLOBAL_DECLARATIONS.new()
+	var all30: bool=DirAccess.dir_exists_absolute(path)
+	var loaded: bool=source.load_directory(path) if all30 else source.load_single_list29(path)
+	if not loaded:problem=source.problem;return false
+	for id: int in source.definitions:
+		_declarations[id]=source.display_definition(id,int(options.action_overrides.get(str(id),3)))
+	_declaration_identity=GLOBAL_DECLARATIONS.MANIFEST_SHA if all30 else DECLARATION_SHA
+	_declaration_file_count=source.source_files.size()
 	return true
 
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
