@@ -5,7 +5,14 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest character-stats extension is the single combined **v10** input in
+The latest NPC dialogue extension is the single combined **v11** input in
+[Original NPC dialogue caller ABI](ORIGINAL_UI_NPC_DIALOGUE_CALLER_ABI.md).
+Its private delivery succeeded and retains every v10 scope. Original name/body,
+close and unambiguous next-only conversation callers are connected; portraits,
+multiple/action choices and loop policy remain explicit gaps. Game consumption
+has not been executed or claimed.
+
+The retained character-stats extension is the combined **v10** input in
 [Original character caller ABI](ORIGINAL_UI_CHARACTER_CALLER_ABI.md). Its
 private Drive delivery succeeded; it retains the v8 main/map/inventory/
 quickslot/auto-message scopes and adds actual character stats tab/close/detail

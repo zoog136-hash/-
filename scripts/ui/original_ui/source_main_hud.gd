@@ -18,6 +18,7 @@ const PrimaryStats=preload("res://scripts/ui/original_ui/source_main_primary_sta
 const ButtonRouter=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const AutoMessage=preload("res://scripts/ui/original_ui/source_main_auto_message_bindings.gd")
 const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_view.gd")
+const NpcDialogueView=preload("res://scripts/ui/original_ui/source_main_npc_dialogue_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -88,6 +89,8 @@ var _auto_message_result: Dictionary={}
 var _auto_message_model: Dictionary={}
 var _character_view: RefCounted
 var _character_result: Dictionary={}
+var _npc_dialogue_view: RefCounted
+var _npc_dialogue_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -140,6 +143,11 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 				var side: Variant=hud.get("lineage_side_ui")
 				if is_instance_valid(side):side.call("_show_equipment_page")
 				hud.call("open_character"))
+	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
+		_npc_dialogue_view=NpcDialogueView.new()
+		_npc_dialogue_view.configure(pack)
+		_npc_dialogue_view.closed.connect(func() -> void:
+			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER))
@@ -162,7 +170,10 @@ func _input(event: InputEvent) -> void:
 			_cancel_native_buttons()
 			return
 	var character_inside: bool=character_blocks_point(point)
-	if character_inside:
+	if npc_dialogue_is_open():
+		var dialogue: Dictionary=_npc_dialogue_view.presentation()
+		if is_instance_valid(dialogue.get("scene")):_collect_native_buttons(dialogue.scene,candidates)
+	elif character_inside:
 		var character: Dictionary=_character_view.presentation()
 		if is_instance_valid(character.get("scene")):_collect_native_buttons(character.scene,candidates)
 	elif inventory_is_open() and inventory_blocks_point(point):
@@ -171,7 +182,7 @@ func _input(event: InputEvent) -> void:
 	else:
 		_collect_native_buttons(_coordinates,candidates)
 	var routed: Dictionary=_native_buttons.route(event,point,candidates)
-	if routed.get("handled",false) or character_inside:get_viewport().set_input_as_handled()
+	if routed.get("handled",false) or character_inside or npc_dialogue_is_open():get_viewport().set_input_as_handled()
 
 static func _collect_native_buttons(node: Node, found: Array) -> void:
 	if node is CanvasItem and not node.is_visible_in_tree():return
@@ -266,6 +277,19 @@ func refresh_character_stats() -> Dictionary:
 		var hud: Object=_hud.get_ref() if _hud!=null else null
 		if hud!=null:hud.call("open_character")
 	return _character_result.duplicate(true)
+
+func try_open_npc_dialogue(owner: Control, resolved: Dictionary) -> Dictionary:
+	if _npc_dialogue_view==null or not is_instance_valid(_coordinates):return _fail("source_npc_dialogue_original_view_not_available")
+	_cancel_native_buttons()
+	_npc_dialogue_result=_npc_dialogue_view.open(_coordinates,owner,resolved)
+	return _npc_dialogue_result.duplicate(true)
+
+func npc_dialogue_is_open() -> bool:
+	return _npc_dialogue_view!=null and _npc_dialogue_view.is_open()
+
+func close_npc_dialogue() -> void:
+	_cancel_native_buttons()
+	if _npc_dialogue_view!=null:_npc_dialogue_view.close()
 
 func refresh_quickslots() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -684,6 +708,7 @@ func release(restore_legacy: bool=true) -> void:
 	if is_inside_tree() and get_window().focus_exited.is_connected(_cancel_native_buttons):get_window().focus_exited.disconnect(_cancel_native_buttons)
 	if is_instance_valid(_world_map):_world_map.close()
 	close_character()
+	close_npc_dialogue()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null

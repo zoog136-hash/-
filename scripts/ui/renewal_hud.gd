@@ -809,6 +809,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.npc_dialogue_is_open():
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
 		if lineage_inventory_ui.detail_active and lineage_inventory_ui.is_visible_in_tree():
 			lineage_inventory_ui.detail_active = false
 			lineage_inventory_ui._reflow()
@@ -828,6 +832,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _close_workspace() -> void:
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -872,6 +877,7 @@ func _park_shared_panels() -> void:
 func _open_window(section: String,title: String,description: String) -> void:
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
@@ -1165,7 +1171,21 @@ func open_npc_dialogue(npc_id: String) -> void:
 	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
 	var screen := DialogueUI.new()
 	workspace.mount(screen)
+	screen.source_dialogue_resolved.connect(_on_source_npc_dialogue_resolved.bind(screen))
 	screen.configure(self,npc_id)
+
+func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> void:
+	if active_section!="dialogue" or not is_instance_valid(owner) or owner.is_queued_for_deletion() or not workspace.content.is_ancestor_of(owner):return
+	_original_npc_dialogue_owner=weakref(owner)
+	if not is_instance_valid(original_main_ui_controller):return
+	var native: Dictionary=original_main_ui_controller.try_open_npc_dialogue(owner,resolved)
+	original_main_ui_status["npc_dialogue"]=native
+	if native.get("handled",false):
+		if pointer_transfer!=null:pointer_transfer.cancel()
+		workspace.hide()
+	else:
+		workspace.show()
+	_sync_screen_focus()
 
 func open_settings_info() -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
@@ -2716,6 +2736,7 @@ func open_protection523() -> void:
 # create forms, select content from filenames, or implement service operations.
 var original_ui_runtime_presenter: Node
 var original_main_ui_controller: Node
+var _original_npc_dialogue_owner: WeakRef
 var original_main_ui_status: Dictionary={}
 var _original_main_player_values: Array=[]
 var _original_main_map_value: String=""
@@ -2750,6 +2771,7 @@ func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if not is_instance_valid(original_main_ui_controller):return false
 	if original_main_ui_controller.world_map_is_open():return true
+	if original_main_ui_controller.npc_dialogue_is_open():return true
 	if original_main_ui_controller.character_blocks_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
 
@@ -2797,6 +2819,7 @@ func _bind_selected_original_main_ui() -> void:
 
 func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	var reopen_character: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.character_is_open()
+	var reopen_dialogue: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.npc_dialogue_is_open()
 	var candidate=preload("res://scripts/ui/original_ui/source_main_hud.gd").new()
 	candidate.name="OriginalMainGameHUD"
 	add_child(candidate)
@@ -2828,6 +2851,9 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	candidate.sync_legacy_visibility()
 	candidate.refresh_quickslots()
 	if reopen_character:open_character()
+	if reopen_dialogue:
+		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
+		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
 	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
