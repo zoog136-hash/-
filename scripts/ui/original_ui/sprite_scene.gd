@@ -22,14 +22,17 @@ var _project_root_options: Dictionary={}
 var _bindings: Dictionary={}
 var excluded_audio_events: Array[Dictionary]=[]
 var _entered_frames: Dictionary={}
+var _audio_frame_offsets: Dictionary={}
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()
 	excluded_audio_events.clear()
+	_audio_frame_offsets.clear()
 	_build_error=""
 	inspection_only=inspect_only
 	_bindings=bindings.duplicate()
+	if _bindings.has("frame_events") and not _bindings.frame_events is Dictionary:return {"ok":false,"error":"source_frame_event_binding_shape"}
 	var tree: Dictionary=pack.scene(member)
 	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
 	if member in _project_ancestry or _project_ancestry.size()>=32:return {"ok":false,"error":"project_recursion"}
@@ -56,9 +59,12 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 					var event: Variant=_optional_dictionary(str(value.value))
 					if event is Dictionary and event.size()==1 and event.get("EventSound") is String:
 						excluded_audio_events.append({"frame":value.frameIndex,"value":value.value,"action_tag":timeline.actionTag})
+						_audio_frame_offsets[int(value._offset)]=true
 					else:
-						unresolved_bindings.append("source_frame_event:"+str(value.value))
-						if not inspection_only:problems.append("unconnected_source_frame_event")
+						var event_callback: Variant=_bindings.get("frame_events",{}).get(int(value._offset))
+						if not event_callback is Callable or not event_callback.is_valid():
+							unresolved_bindings.append("source_frame_event:"+str(value.value))
+							if not inspection_only:problems.append("unconnected_source_frame_event")
 			var expected: String={"Position":"PointFrame","AnchorPoint":"ScaleFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
 			if not expected.is_empty():
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
@@ -118,7 +124,10 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
 			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
-			if not inspection_only and not (field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox")) and binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()): problems.append("unconnected_source_callback:"+field)
+			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and binding.get("activate") is Callable and binding.activate.is_valid()
+			var declared_type: bool=field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox"))
+			var declared_name: bool=field=="callBackName" and str(binding.get("callback_name",""))==str(widget[field]) and str(widget.get("callBackType","")) in ["Click","Event"]
+			if not inspection_only and not (connected_callback and (declared_type or declared_name)):problems.append("unconnected_source_callback:"+field)
 	if bool(widget.get("touchEnabled",false)):
 		if inspection_only or binding.get("role") not in ["button","checkbox","source_scroll","consume"]:unresolved_bindings.append(str(widget.name)+":source_input")
 		if not inspection_only and binding.get("role") not in ["button","checkbox","source_scroll","consume"]: problems.append("unconnected_source_input")
@@ -448,7 +457,16 @@ func _seek_frame(frame_number: float) -> void:
 		else: following=selected
 		var target: Node2D=_tags.get(int(timeline.actionTag))
 		if target==null: continue
-		if timeline.property=="ActionValue":
+		if timeline.property=="FrameEvent":
+			var key: int=int(timeline._offset)
+			if _entered_frames.get(key,-1)!=int(selected._offset):
+				_entered_frames[key]=int(selected._offset)
+				var event_callback: Variant=_bindings.get("frame_events",{}).get(int(selected._offset))
+				var in_clip: bool=int(selected.frameIndex)>=int(_clip.get("startIndex",0)) and int(selected.frameIndex)<=int(_clip.get("endIndex",action.get("duration",0)))
+				if not inspection_only and in_clip and not _audio_frame_offsets.has(int(selected._offset)) and event_callback is Callable and event_callback.is_valid():
+					event_callback.call(str(selected.value))
+					if is_queued_for_deletion():return
+		elif timeline.property=="ActionValue":
 			var key: int=int(timeline._offset)
 			if _entered_frames.get(key,-1)!=int(selected._offset):
 				_entered_frames[key]=int(selected._offset)

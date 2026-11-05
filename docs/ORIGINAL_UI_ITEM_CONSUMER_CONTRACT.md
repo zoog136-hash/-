@@ -201,3 +201,18 @@ or reward rules. `set_bound_displaystate(offset,value)` and
 `set_bound_selected_state(offset,value)` update only those declared fields.
 The original state renderers and input guards remain in use. These connectors
 are implemented without a new run/test and do not change completion counts.
+
+Named source button callbacks require an exact `callback_name` declaration in
+addition to the existing node's button/checkbox activation callback. It must
+match the serialized callBackName and Click/Event type; names are not looked up
+or inferred as game functions.
+
+A binding dictionary may include `frame_events`, keyed by the exact EventFrame
+source offset with a Callable receiving the untouched event string. Event entry
+uses the existing clip start/end and selected source frame, following the
+already referenced EventFrame::onEnter guard. No new frame/event is authored.
+Sound-only events remain excluded even if a callback is supplied. Inspection
+mode does not dispatch events; an unbound event still blocks strict use. The
+caller provides the original handler and remains responsible for its semantic
+contract; the renderer does not auto-confirm or guess an event's effect.
+These callback additions are also unexecuted under the no-new-checks instruction.
