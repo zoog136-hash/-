@@ -9,6 +9,21 @@ func protected_state() -> Dictionary:
 	# Keep every boss phase/HP/deadline and all player progress in the comparison.
 	result.bosses.erase("game_seconds")
 	return result
+
+func returned_progress_preserved(before: Dictionary, after: Dictionary) -> bool:
+	for key: String in before:
+		if key!="bosses" and before[key]!=after.get(key): return false
+	var old_bosses: Dictionary=before.bosses.bosses
+	var current: Dictionary=after.bosses.bosses
+	if old_bosses.keys()!=current.keys(): return false
+	for key: String in old_bosses:
+		var old: Dictionary=old_bosses[key];var live: Dictionary=current[key]
+		if old==live: continue
+		# Returning resumes the real host population. A due, unspawned boss may
+		# enter alive state; that is not discarded progression or a rewritten clock.
+		if old.phase!="ready" or live.phase!="alive" or old.hp!=-1 or live.hp<=0: return false
+		if old.ready_at!=live.ready_at or old.layout_revision!=live.layout_revision or float(old.ready_at)>Time.get_unix_time_from_system(): return false
+	return true
 func run() -> void:
 	var args: Dictionary={}
 	for arg: String in OS.get_cmdline_user_args():
@@ -98,7 +113,7 @@ func run() -> void:
 		if baseline[key]!=returned.get(key):changed_keys.append(key)
 	measurements.append({"return_map_identity_matches":world.field_map.definition==host_identity,"return_position":[world.player.global_position.x,world.player.global_position.y],"expected_host_position":[host_position.x,host_position.y],"changed_progress_keys":changed_keys})
 	check(world.field_map.definition==host_identity and world.player.global_position==host_position,"normal return after reload restores host source identity/position, independent of rebuilt node instance")
-	check(protected_state()==baseline,"return preserves gameplay state")
+	check(returned_progress_preserved(baseline,returned),"return preserves player progress and boss state/deadlines while allowing a due ready boss to spawn")
 	check(world.open_current523_aden_play(raw_root,tile_root,OPTIONS.read()),"normal production API reenters held source cursor with image preferences")
 	await frames();check(world._save_game(true)==OK,"reentered source session saves for fresh-process proof")
 	var output:=FileAccess.open(EXPECTED_STATIC,FileAccess.WRITE);output.store_string(JSON.stringify({"state":protected_state(),"save_sha":FileAccess.get_sha256(world.save_path())},"",true,true));output.close()

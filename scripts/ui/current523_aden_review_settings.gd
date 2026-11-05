@@ -254,7 +254,8 @@ func _build_play_options() -> void:
 func _build_static_spr_controls() -> void:
 	var saved: Dictionary=STATIC_SPR.read_options()
 	spr_enabled=CheckBox.new();spr_enabled.name="Current523StaticSPREnabled"
-	spr_enabled.text="원문 정적 SPR 참조 표시 · 자체 해석 (원작 배치/액션 동등성 미확정)"
+	spr_enabled.text="정적 SPR 표시 · 자체 해석"
+	spr_enabled.tooltip_text="원문 ID/좌표와 SP2 픽셀을 연결합니다. 원작 배치/액션 동등성은 미확정입니다."
 	spr_enabled.button_pressed=saved.enabled;add_child(spr_enabled)
 	var row:=HBoxContainer.new();add_child(row)
 	spr_root=_path_edit("Current523StaticSPRRoot");spr_root.text=saved.source_root
@@ -269,7 +270,7 @@ func _build_static_spr_controls() -> void:
 	spr_anchor_x=_spr_number(values,"앵커 X",-48,48,float(saved.anchor_x))
 	spr_anchor_y=_spr_number(values,"Y",-48,48,float(saved.anchor_y))
 	spr_layer=_spr_number(values,"자체 레이어",-4095,-1,float(saved.layer))
-	add_child(UI.button("정적 SPR 표시 설정 저장 · 다음 원문 맵 입장 시 적용",_save_static_spr,Vector2(0,40)))
+	add_child(UI.button("SPR 설정 저장 · 다음 입장에 적용",_save_static_spr,Vector2(0,40)))
 	spr_status=UI.label("S32 원문 ID/좌표 → 같은 ID의 -0.sp2 → 선택 저장 그룹. 기본은 첫 저장 프레임·지형 위/인물 뒤. FPS·앵커·레이어는 자체값이며 통행/포탈/전투에 영향이 없습니다.",12,UI.MUTED)
 	spr_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(spr_status)
 

@@ -10,6 +10,9 @@ UI / 맵 / 나머지 통합의 세 작업 단위를 유지하라는 사용자 �
 - 기존 base: PR217의 `feature/original-spr-runtime-20261101`,
   `c2e4dbd539431cde52cd7b636b5a74da7c004435`.
 - 대조한 main: `00b84cfe19c05e01d30208384bf7fbcc4ae6bbf2`.
+- 후속 통합 기준: `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
+  동일 맵 브랜치에 충돌 없이 반영했다. 승인됐던 한 줄 타입 수정도 이 main의
+  blob과 동일하므로 최신 main 대비 중복 수정이 없다. main 자체에는 쓰지 않는다.
 - 기존 base는 main의 조상이다. 기존 변경44파일 중35파일은 main에 없고,
   9파일은 다르며, 동일한 파일은0개다. 이를 버리거나 중복 완료로 처리하지 않는다.
 - 같은 맵 브랜치에서 main을 충돌 없이 병합했다. main 대비 원래44파일의
@@ -114,7 +117,7 @@ SHA1/CRC32도 인계값과 일치한다.793개 선언 중 아덴273건/6종
 프레임 modifier는 임의 처리하지 않는다.105.clothes 참조는 보존하고 미연결로
 표시한다. 이 단일 원문 수신은30개 선언/전역 인계 완료가 아니다.
 
-원본 설정 화면의 맵 설정에서 정적 SPR 원문 폴더와 선택적인 `list_29.spr`
+기존 게임 설정 화면의 맵 설정에서 정적 SPR 원문 폴더와 선택적인 `list_29.spr`
 경로를 지정하고 표시를 켠 뒤 저장한다. 다음 원문 맵 입장에 적용되며 기본은
 꺼짐이다. registry가 있는 정상 보유 폴더를 읽을 수 있어 ZIP 재생성이나 자동
 Drive 다운로드가 필요하지 않다. 잘못된 registry/선언은 맵 입장 전 거부한다.
@@ -139,6 +142,23 @@ Drive 다운로드가 필요하지 않다. 잘못된 registry/선언은 맵 입�
 보존·복귀/재입장은27항목 통과했다. 재로드가 재생성하는 노드의 identity와
 재개되는 host simulation clock을 원본 저장/보스 상태 손실과 혼동하지 않는다.
 원래 오류가 있던 중간 실행은 실패로 남겼고 필수 원본의 생성 캐시만 복구했다.
+최신 main 반영 뒤 같은27항목이 다시 실패0·로그 오류0으로 통과했다. 이어서
+새 OS 프로세스 재접속8항목도 오류0으로 통과해 Land4·원본 선언 연결·실제
+SPR 표시·기존 저장 해시·아이템/재화·컬렉션/보스 상태 복원을 확인했다.
+재접속 기대 장부도 JSON full precision으로 써서 보스 deadline을 반올림하지 않는다.
+복귀 시 기한이 지난 ready 보스의 정상 alive 전환은 허용하되 기존 deadline,
+layout revision과 플레이어 진행도는 보존하는 것으로 검사한다.
+
+최신 Main 입장/GL 로그 SHA256:
+`3c8faabe2ea0166ef7d7d5262ef5e4bda042f45cbaf05da504fc3e23eb8bfca0`.
+새 프로세스 재접속 로그 SHA256:
+`ce92e07ee28d93c91054ed265401dc7167f5ba4da1761f6e516f952c0cbe9586`.
+마지막으로 최신 main과 맵 변경 위의 필수 Main/current source-map·세이브
+47항목도 실패0·로그 오류0으로 통과했다. 이 로그 SHA256은 앞서 기록한
+`5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b`와
+같지만 실제로 별도 새 프로세스/프로필에서 재실행한 결과다. 중간에 발견한
+기존 호스트 몬스터의 누락 캐시는 기존 PNG에서 재생성했고 전체 cold import나
+전체/수동 CI를 실행한 것은 아니다.723 atlas/41,442frame 무결성도 통과했다.
 
 독립 원문 구조와 비교한 공개 파서는
 [PakViewer S32Reader](https://github.com/tony1223/PakViewer/blob/fbad69239e3e3c12ec18dfc7722bed284be093cc/src/Lin.Helper.Core/Map/S32Reader.cs#L215),
