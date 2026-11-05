@@ -6,6 +6,7 @@ const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const TABLES_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SETTINGS = "user://current523_source_bank.json"
 const TABLES = ["BuffCard", "BuffCardDeck", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType", "SpriteRun", "SpriteSeparatedWalk", "SpellClass", "ConstantData", "BuffCardAwakenEffect", "StatusEffectAttr"]
+const OPTIONAL_TABLES = ["ItemClass", "ItemBonus"]
 # Exact current BuffCardDeck rows. Relics use native deck98 (HolyStuffCardDeck).
 const DECKS = {"transform":1, "doll":2, "relic":98}
 const DECK_NAMES = {"transform":"PolymorphCardDeck", "doll":"MagicDollCardDeck", "relic":"HolyStuffCardDeck"}
@@ -22,6 +23,7 @@ const PRIMARY_ACTIONS = {
 	84:{"idle":151,"walk":147,"attack":148}, 102:{"idle":156,"walk":152,"attack":153}
 }
 static var _table_path: String = ""
+static var _table_sha: String = ""
 static var _rows: Dictionary = {}
 static var _by_id: Dictionary = {}
 
@@ -50,15 +52,28 @@ static func options(context: Dictionary = {}) -> Dictionary:
 	if not BANK.valid_sha(value.get("manifest_sha256")): return fail("current523_bank_manifest_pin_required")
 	return {"ok":true,"enabled":true,"options":value.duplicate(true)}
 
-static func _load_tables(path: String) -> Dictionary:
+static func _load_tables(path: String, additional_tables: Array[String] = []) -> Dictionary:
+	var required: Array = TABLES.duplicate()
+	for table: String in additional_tables:
+		if not OPTIONAL_TABLES.has(table): return fail("current523_additional_source_table_not_supported:" + table)
+		if not required.has(table): required.append(table)
 	# Normal production integrity guard, independent of the optional old identity pack.
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != TABLES_SHA: return fail("current523_exact_source_tables_missing_or_changed")
-	if path == _table_path and not _rows.is_empty(): return {"ok":true}
+	var current_sha: String = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+	if path != _table_path or current_sha != _table_sha:
+		_rows.clear()
+		_by_id.clear()
+		_table_path = path
+		_table_sha = current_sha
+	if current_sha != TABLES_SHA: return fail("current523_exact_source_tables_missing_or_changed")
+	var missing: Array[String] = []
+	for table: String in required:
+		if not _rows.has(table): missing.append(table)
+	if missing.is_empty(): return {"ok":true}
 	var archive := ZIPReader.new()
 	if archive.open(path) != OK: return fail("current523_source_tables_unreadable")
-	var rows: Dictionary = {}
-	var by_id: Dictionary = {}
-	for table: String in TABLES:
+	var rows: Dictionary = _rows.duplicate()
+	var by_id: Dictionary = _by_id.duplicate()
+	for table: String in missing:
 		var member: String = "content/" + table + ".json"
 		if not archive.file_exists(member):
 			archive.close()
@@ -84,11 +99,11 @@ static func _load_tables(path: String) -> Dictionary:
 	_table_path = path
 	return {"ok":true}
 
-static func source_tables(context: Dictionary = {}) -> Dictionary:
+static func source_tables(context: Dictionary = {}, additional_tables: Array[String] = []) -> Dictionary:
 	# Shared, read-only source tables for existing admitted NPC consumers.
 	var configured: Dictionary = options(context)
 	if not configured.ok: return configured
-	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip))
+	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip), additional_tables)
 	if not loaded.ok: return loaded
 	return {"ok":true,"rows":_rows,"by_id":_by_id,"options":configured.options,"source_tables_sha256":TABLES_SHA}
 

@@ -150,7 +150,7 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
 			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
-func emit_sprite(sprite: int,target: Node2D) -> void:
+func emit_sprite(sprite: int,target: Node2D,current_item: Dictionary={}) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return
 	visual_results[str(sprite)]="original_binding_unavailable"
@@ -158,13 +158,17 @@ func emit_sprite(sprite: int,target: Node2D) -> void:
 	var preview: Variant=null
 	for property: Dictionary in player.get_property_list():
 		if property.name=="original_source_preview":preview=player.get(property.name);break
-	if preview!=null and preview.has_method("spawn_source_overlay"):
+	if preview!=null and (preview.has_method("spawn_source_overlay") or (not current_item.is_empty() and preview.has_method("notify_current_source_item_consume"))):
 		# Shared compositor cleanup must accept freed handles before its typed filter.
 		var live: Array[Node2D]=[]
 		for node: Variant in preview._overlay_nodes:
 			if is_instance_valid(node):live.append(node)
 		preview._overlay_nodes=live
-		if preview.spawn_source_overlay(sprite,5,target.global_position):visual_results[str(sprite)]="played_original"
+		if preview.has_method("spawn_source_overlay") and preview.spawn_source_overlay(sprite,5,target.global_position):
+			visual_results[str(sprite)]="played_original"
+			return
+		if not current_item.is_empty() and preview.has_method("notify_current_source_item_consume") and preview.notify_current_source_item_consume(current_item,sprite,target.global_position,5):
+			visual_results[str(sprite)]="played_current_item_source"
 
 func _invoke_spell(identity: int) -> Dictionary:
 	return DATA.data.invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))

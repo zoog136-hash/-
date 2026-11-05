@@ -5,6 +5,7 @@ const ORIGINAL = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE = preload("res://scripts/lineagem_base508.gd")
 var native_actor = ORIGINAL.new()
 var native_enabled: bool = false
+var source_only: bool = false
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const GLOW = preload("res://assets/effects/relic_glow.gdshader")
@@ -25,13 +26,22 @@ var disappear_speed: float = 4.0
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
 	native_actor.clear()
 	native_enabled = false
-	if SOURCE.native(record):
+	var source_key: String = "relic:" + str(record.get("sourceId",""))
+	source_only = native_actor.current523_source_required(source_key)
+	if SOURCE.native(record) or source_only:
 		if native_actor.get_parent() == null: sprite.get_parent().add_child(native_actor)
-		native_enabled = native_actor.configure("relic:" + str(record.sourceId), player.original_source_manifest, player.source_visual_context)
+		if source_only:
+			sprite.texture = null
+			sprite.material = null
+		native_enabled = native_actor.configure(source_key, player.original_source_manifest, player.source_visual_context)
 		enabled = native_enabled
 		sprite.hide()
 		native_actor.global_position = player.global_position + follow_offset
 		native_actor.advance_source(0.0, "idle", player.motion.facing8, player.motion.sequence, false)
+		if source_only and not native_actor.installed():
+			native_enabled = false
+			enabled = false
+			native_actor.hide()
 		state = "source_native" if native_enabled else "source_asset_pending"
 		return
 	var path: String = str(record.get("image_path", ""))
@@ -71,6 +81,15 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 	update(0.0, sprite, player)
 
 func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
+	if source_only and (not native_enabled or not native_actor.installed()):
+		native_enabled = false
+		enabled = false
+		state = "source_asset_pending"
+		sprite.hide()
+		sprite.texture = null
+		sprite.material = null
+		native_actor.hide()
+		return
 	if native_enabled:
 		var old: Vector2 = native_actor.global_position
 		var target: Vector2 = player.global_position + follow_offset

@@ -158,7 +158,7 @@ static func _fixed_card(world: Node, record: Dictionary, spec: Dictionary) -> vo
 	var message: String = "원본 지정 카드 지급 · %s (%s)" % [str(candidates[0].name), category]
 	world.hud.show_message(message)
 	world.hud.append_log(message)
-	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player)
+	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
 	world.hud.set_card_draw_fusion_result(category, message)
 	world.hud.present_card_reveal(category, outcome, false)
 
@@ -192,7 +192,7 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	var message: String = "%s · 원본 버프 %s" % [str(record.source_display_name),world._format_seconds_short(duration)]
 	world.hud.show_message(message)
 	world.hud.append_log(message)
-	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player)
+	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
 
 static func next_cooldowns(world: Node, record: Dictionary, spec: Dictionary) -> Dictionary:
 	var result: Dictionary = world.item_use_cooldowns.duplicate(true)
@@ -226,7 +226,7 @@ static func _mp_potion(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
 	world.hud.show_message("%s · MP %d 회복" % [str(record.source_display_name),amount])
-	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player)
+	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
 
 static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -> void:
 	var class_id: int = world.BASE508.source_class_id(world.job_class)

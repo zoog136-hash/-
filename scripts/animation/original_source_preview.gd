@@ -55,16 +55,31 @@ var _source_attack: bool = false
 var _attack_completed: bool = false
 var last_source_frame: int = -1
 
+func current523_source_required(key: String) -> bool:
+	# Saved m508/m523 keys are stable identities, not permission to consume old
+	# media. Final native card presentation requires the new original input.
+	var consumer: String = key.get_slice(":",0)
+	var identity: String = key.substr(key.find(":")+1)
+	return CURRENT523_BANK.DECKS.has(consumer) and (identity.begins_with("m508:") or identity.begins_with("m523:"))
+
 func configure(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
-	# Preserve successful existing player/doll/relic consumers. The independent
-	# current source contract is admitted only for the same real card request.
-	if _configure_existing_source(key, manifest_path, context):
+	var source_only: bool = current523_source_required(key)
+	if source_only:
+		clear()
+		_reference_request_context = context.duplicate(true)
+	elif _configure_existing_source(key, manifest_path, context):
 		# Keep an explicitly supplied source-bank configuration available to
 		# later effect requests without replacing this working actor.
 		_reference_request_context = context.duplicate(true)
 		return true
 	var selected: Dictionary = CURRENT523_BANK.select_card(key, context)
-	if not bool(selected.get("enabled",false)): return false
+	if source_only:
+		selected["source_only"] = true
+		selected["legacy_media_fallback_allowed"] = false
+		if not selected.get("ok",false): selected["status"] = "source_only_pending"
+	if not bool(selected.get("enabled",false)):
+		source_selection_status = selected
+		return false
 	if not selected.ok:
 		source_selection_status = selected
 		return false
@@ -523,7 +538,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if not _reference_attachment_parent.is_empty(): purpose = "existing_npc_independent_source_layer" if consumer == "npc" else "existing_card_independent_source_layer"
 		elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
 		elif not card_consumer: purpose = "diagnostic_reference_preview"
-		if consumer in ["spell_effect","global_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
+		if consumer in ["spell_effect","global_effect","item_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
 		if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
 		var scene: Node = get_tree().current_scene if is_inside_tree() else null
 		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
@@ -860,6 +875,7 @@ func _overlay_files_available(sprite_id: int, original_id: int = -1) -> bool:
 	return true
 
 func notify_source_global_event(event_name: String, facing: int) -> bool:
+	source_effect_status.clear()
 	# ConstantData identifies the resource. Local apply-event placement and an
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
 	if _playback_mode != "compatible": return false
@@ -875,6 +891,7 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 	return _spawn_current523_source_effect(selected,Vector2.INF,facing)
 
 func notify_source_spell_event(source_spell_id: int, stage: String, world_point: Vector2, facing: int, manifest_path: String = "") -> bool:
+	source_effect_status.clear()
 	# Only an explicit base508 spell identity reaches this adapter; no old-ID/name match.
 	var path: String = _manifest_path if manifest_path.is_empty() else manifest_path
 	if path.is_empty() or not FileAccess.file_exists(path): return false
@@ -912,6 +929,15 @@ func notify_current_source_spell_event(spell: Dictionary, stage: String, world_p
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+func notify_current_source_item_consume(original_item: Dictionary, requested_sprite: int, world_point: Vector2, facing: int, context: Dictionary = {}) -> bool:
+	# Called only by the existing item's successful use presentation. Resolve the
+	# whole original ItemClass row and its typed consume Bonus, never a Sprite ID
+	# coincidence or an instruction to use/consume the item.
+	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
+	supplied_context.merge(context,true)
+	var selected: Dictionary = CURRENT523_EFFECT.select_item_consume(original_item,requested_sprite,supplied_context)
+	return _spawn_current523_source_effect(selected,world_point,facing)
+
 func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: int, context: Dictionary = {}, texture_budget_bytes: int = 0) -> Node2D:
 	# The existing owner adopts/positions/advances the returned node. This factory
 	# does not parent it, render its first frame or create a gameplay trigger.
@@ -940,7 +966,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"

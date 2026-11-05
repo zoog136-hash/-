@@ -90,6 +90,49 @@ static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: 
 		"gameplay_admission":"existing_caller_only; no_spell_or_bonus_activation_by_visual_loader"}
 	return _selected(supplied,sprite,action,"spell_effect","lineagem_%s:spell:%d:%s" % [source_snapshot,int(native.ID),stage],reference,source_snapshot)
 
+static func select_item_consume(original_item: Dictionary, requested_sprite: int, context: Dictionary = {}) -> Dictionary:
+	# The item owner has already admitted and completed its use. This selects
+	# only that existing caller's requested display; it applies no item bonus.
+	if not BANK.integer(original_item.get("ID"),1) or requested_sprite <= 0: return fail("current523_item_consume_complete_source_item_required")
+	var supplied: Dictionary = SOURCE.source_tables(context,["ItemClass","ItemBonus"])
+	if not supplied.ok: return supplied
+	var native: Dictionary = supplied.by_id.get("ItemClass",{}).get(int(original_item.ID),{})
+	if native.is_empty() or native != original_item: return fail("current523_item_consume_complete_item_definition_differs")
+	if not native.get("TestItem") is bool or native.TestItem != false: return fail("current523_test_item_consume_effect_not_admitted")
+	var matches: Dictionary = {}
+	var chains: Array = []
+	for link: Dictionary in supplied.rows.get("ItemBonus",[]):
+		if not BANK.integer(link.get("ItemClassID")) or int(link.ItemClassID) != int(native.ID): continue
+		if not BANK.integer(link.get("BonusID"),1): return fail("current523_item_consume_typed_bonus_link_missing")
+		var bonus: Dictionary = supplied.by_id.get("Bonus",{}).get(int(link.BonusID),{})
+		if bonus.is_empty() or not BANK.integer(bonus.get("BonusTypeID")): return fail("current523_item_consume_typed_bonus_chain_incomplete")
+		var kind: Dictionary = supplied.by_id.get("BonusType",{}).get(int(bonus.get("BonusTypeID",-1)),{})
+		if bonus.is_empty() or kind.is_empty(): return fail("current523_item_consume_typed_bonus_chain_incomplete")
+		if kind.get("Name") != "ItemConsumeEffectSpriteID": continue
+		var chain: Dictionary = {"ItemClass":native.duplicate(true),"ItemBonus":link.duplicate(true),
+			"Bonus":bonus.duplicate(true),"BonusType":kind.duplicate(true)}
+		if not link.get("IsPossession") is bool or link.IsPossession != false: return fail("current523_item_consume_possession_condition_unresolved",chain)
+		if not BANK.integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID) != 0 or not BANK.integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID) != 0: return fail("current523_item_consume_bonus_condition_unresolved",chain)
+		if not BANK.integer(kind.get("UnitID"),1): return fail("current523_item_consume_typed_sprite_unit_missing",chain)
+		var unit: Dictionary = supplied.by_id.get("Unit",{}).get(int(kind.UnitID),{})
+		if unit.get("Name") != "SpriteID": return fail("current523_item_consume_bonus_unit_not_sprite_id",chain)
+		chain["Unit"] = unit.duplicate(true)
+		var sprite: int = _source_integer(bonus.get("Value"))
+		if sprite <= 0: return fail("current523_item_consume_source_sprite_missing",chain)
+		matches[sprite] = true
+		chains.append(chain)
+	if matches.size() != 1: return fail("current523_item_consume_source_sprite_not_unique",{"ItemClass":native.duplicate(true),"typed_chains":chains})
+	var selected_sprite: int = int(matches.keys()[0])
+	if selected_sprite != requested_sprite: return fail("current523_item_consume_requested_sprite_differs",{"ItemClass":native.duplicate(true),"typed_chains":chains,"requested_sprite":requested_sprite})
+	var action: Dictionary = _action(supplied.options,selected_sprite)
+	if not action.ok: return action
+	var reference: Dictionary = {"table":"Bonus","field":"Value","bonus_type_name":"ItemConsumeEffectSpriteID",
+		"owner":{"table":"ItemClass","row":native.duplicate(true)},
+		"typed_chains":chains,"unit_semantic":"SpriteID","requested_sprite":requested_sprite,
+		"action_field":"sole_original_SPR_action_host_policy",
+		"gameplay_admission":"existing_successful_item_use_only; no_item_admission_cost_effect_or_bonus_activation_by_visual_loader"}
+	return _selected(supplied,selected_sprite,action,"item_effect","current523:item:%d:consume" % int(native.ID),reference,"patch523")
+
 static func select_global(event_name: String, legacy_definition: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if not GLOBALS.has(event_name): return fail("current523_existing_global_event_required")
 	var supplied: Dictionary = SOURCE.source_tables(context)
