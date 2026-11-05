@@ -7,7 +7,7 @@ The reviewed baseline is main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
 
 ## Current original numeric inputs — unverified
 
-Two existing gameplay readers now receive additional original numeric fields.
+Existing gameplay readers now receive additional original numeric fields.
 The missing raw-to-host scales are explicit adjustable **TWILIGHT estimates**;
 neither the scale nor the host formula is reported as a recovered source rule.
 This code has not been compiled or executed. These paths do not complete their
@@ -17,6 +17,36 @@ whole tables or establish an observed game-consumption count.
 | --- | --- | --- |
 | `World._index_item_weights()` → `TwilightItemOptions.current_source_weight_input(record, estimate)` → `item_weight_index` → `_inventory_total_weight()` | Exact current native DTO `source_weight` and its complete `ItemClass` row; checked integer `ceil(raw × points_numerator / source_units_denominator)`. `data/item_weight_rules.json.current523_source_weight` initially uses `3/351`, calibrated to item233's raw351 and the existing host3 points. | No DTO field, physical quantity, receipt, saved ID or carrying formula is rewritten. Source0 remains host0. Legacy type/record/override policy remains on its existing path. Missing or invalid applicable estimate prevents publishing a replacement weight index. |
 | `Monster.setup()` → NPC catalog `project_actor_record(record)` → `record.element_resistance` → `Monster.elemental_resistance_percent()` → `World._elemental_damage()` | Admitted current `NpcClass.FireResistance/WaterResistance/EarthResistance/AirResistance` supply fire/water/earth/wind. `data/monsters/current523_numeric_input_policy.json` has explicit enabled state and adjustable `raw_resistance_to_host_percent`, initially1.0. | Existing actor ID/Sprite/DescId and source/Test/dummy admission stay. Four raw fields are accepted together; other resistance channels and full original row remain. Missing, disabled or invalid policy retains the earlier input. Existing damage/clamp formula, source admission, spawn, visual, attack, ownership and save code stay. |
+
+The existing permitted player-skill path also now accepts original distance
+inputs. `player_skills523.apply_to(record,job,upgraded)` calls private
+`_apply_numeric_distance_input(record,profile)` only after its existing
+successful active/class/target/shape/material gates. The existing
+`skill_service.cast()` target selection and attack request read `skill.range`;
+the existing target list's distance check reads `skill.radius`. No distance
+engine or target checker is added.
+
+`data/skills/current523_distance_input_policy.json` independently configures
+`cast_range_to_host_length`32 and `area_radius_to_host_length`48, explicitly as
+adjustable TWILIGHT estimates. Initial calibration uses the already bound
+energy-bolt profile/SpellClass1's CastRange10 and existing host range320, and
+firestorm profile/SpellClass47's TargetAreaRadius3 and existing self-circle
+radius144. These do not establish a shared native grid or server geometry.
+
+Only existing active attack/status/turn-undead profiles with their exact public
+binding SHA, current archive and complete original SpellClass row can receive
+these lengths. Existing matching single/circle/target-circle selection uses a
+positive CastRange; matching self-circle/circle/target-circle uses a positive
+TargetAreaRadius. Raw0 retains its existing host input. The explicit enabled
+policy, schema, archive, estimate labels, both finite positive scales and
+selected derived values must be accepted before publishing any numeric input;
+otherwise the old host inputs stay. Reference-only or blocked spells are not
+admitted. `source523.applied` lists the numeric fields and
+`source523.distance_numeric_input` preserves raw/previous/derived values,
+source identity, exact binding and actual policy-byte SHA. MinCastRange remains
+raw because there is no existing receiver; CastDelay, cooldown, shape, target
+filters, effects, progression, ownership and saves are unchanged. This is
+unexecuted input code, not whole-spell coverage or observed casting.
 
 The weight adapter requires the current archive identity, original typed native
 projection marker, matching source item identity, explicit non-Test provenance
@@ -50,12 +80,65 @@ conversion. The official mobile
 [armor](https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C)
 and [accessory](https://lineagem.plaync.com/guidebook/view?title=%EC%95%85%EC%84%B8%EC%84%9C%EB%A6%AC+%EC%95%84%EC%9D%B4%ED%85%9C)
 guides provide percentage-resistance context; they do not establish NpcClass's
-internal raw scale or its server damage formula. The two configuration files
+internal raw scale or its server damage formula. The weight and NPC configuration files
 therefore label their coefficients as adjustable estimates, preserving the
 original numbers separately. Disabling the NPC numeric policy does not disable
 the existing actor or change its registry, ownership or stored identity.
 
+## Existing LuckyBag input exclusions — unverified
+
+The existing `ItemData.describe()` → `RewardData.bag(id)` input now carries
+the same explicit source-exclusion policy as `RewardData.reward(id)`.
+It reads declarations for `LuckyBagClass`, `LuckyBagEntityView`,
+`LuckyBagEntityType`, the target `ItemClass`, `LuckyBagEntityClassLimit`
+and the related `Class`. A declared excluded bag marks the existing root and
+all its entities excluded. Entity/type/target/class-limit declarations mark
+that entity excluded. Exact target `TestItem=true` stays separately reported.
+
+`source_exclusion_evidence` retains each declaration; `entities[].excluded`
+and `exclusion_reason` expose it at the existing input boundary. The existing
+`join_complete` result cannot be true with declared exclusion evidence.
+Every original entity/limit row, source order, duplicate, probability, amount,
+blessing, initial enchant and class-limit value remains present and unchanged.
+No pool is filtered or reweighted, and a name or missing image is never used
+to infer a dummy. This is source input for the existing ordinary-box/reward
+owner in269; it does not implement an open/draw/grant/quantity/save transaction
+or report a whole bag table as used. This change is unexecuted/unverified.
+
+Integration269 subsequently published
+`fc86ab2033ff1bb62366f4ea8eb6572585294817` and the later sections of
+`docs/CURRENT523_NATIVE_ITEM_OWNER.md`: current finite buff use, the exact
+three-restoration inputs and ordinary IsGiven/Probability bag output ownership
+are now implemented there, still unexecuted. The ordinary bag consumer uses
+this existing graph and the public compiler's whole-pool/class/draw policy;
+actual registered suppliers, native or raw-quest receipt, input debit, private
+RNG candidate, immutable outcome and single save remain its code. Its
+five-field `use_owned_original` request can carry the actual
+`quest_reward_receipt` instead of the native receipt for a selected raw-held
+bag, never both or a reconstructed proof. No duplicate bag engine is added
+here. Unsupported reward kinds, selection UI, variants and effect contracts
+remain that owner's explicit holds, not source reader completion or game-use
+evidence.
+
 ## Latest final-input boundary — unverified
+
+The current dialogue reader does not supply a mobile `NpcClassID` for UI267's
+original portrait input. Its actual path is
+`World._set_click_destination()` → `source_catalog_id` →
+`dialogue_service.resolve(npc_id,node_id,state)`. The source registry uses
+`l1j_tw380_npc_<id>`; `source_npc_catalog.record(id).source_npc_id` is that
+historical source identity, not a mobile NPC ID. The catalog explicitly retains
+`same_numeric_source_id_is_not_cross_version_identity`. The local TWILIGHT
+registry likewise returns `npc_id`, `npc_name`, `node_id`, `text` and `choices`,
+without a mobile NPC identity. Its names, roles and numeric substrings cannot
+establish a new cross-source join. The combat actor's `source_m_npc_id` belongs
+to a different selected actor context and is not a dialogue mapping.
+
+Accordingly this reader adds no inferred portrait ID. The image owner's exact
+`NpcClass.IllustAssetID` → `AssetView` resolver remains with270; UI267 needs an
+authoritative current-dialogue → mobile NPC identity from the dialogue/spawn
+owner before passing it to that resolver. Neither an unused mapping API nor
+another image resolver is added here, and old source NPC files are preserved.
 
 The latest user instruction excludes the former card/monster packs from final
 resource use. Their files, code and saves remain preserved; they must not be

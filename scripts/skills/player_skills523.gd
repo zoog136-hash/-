@@ -1,7 +1,9 @@
 extends RefCounted
 ## Optional exact-ID 523 evidence adapter. Original bytes live in a private pack.
-## Distance, CastDelay, proc timing, AC and hit/damage formulae are NOT inferred.
+## An optional labelled numeric distance policy preserves the existing engine.
+## CastDelay, proc timing, AC and hit/damage formulae are not inferred here.
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
+const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input_policy.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_BYTES := 16 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
@@ -556,6 +558,72 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		if str(entry.type.Name) == "NextSpellClassID":
 			record.source523["pending_chain"] = true
 			break
+	return _apply_numeric_distance_input(record,profile)
+
+func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> Dictionary:
+	# Only the successful active apply_to path calls this helper. It cannot
+	# admit a reference-only/new/blocked spell or alter a shape/target contract.
+	if str(record.get("activation",""))!="active" or bool(record.get("runtime_blocked",false)) or not str(record.get("source523_block_reason","")).is_empty(): return record
+	if str(record.get("mode","")) not in ["attack","status","turn_undead"] or not record.get("source523",{}).get("applied",[]).has("target_filter"): return record
+	var row: Dictionary = profile.get("row",{})
+	var binding: Dictionary = bindings.get("skills",{}).get(str(record.get("id","")),{})
+	if binding.is_empty() or not _source_integer(row.get("ID")) or row.ID!=binding.get("spell_id"): return record
+	var bound_sha: Variant = binding.get("row_sha256")
+	if not bound_sha is String or bound_sha.length()!=64 or _source_row_json(row,bound_sha).is_empty(): return record
+	var identity: Dictionary = SOURCE_ROWS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA: return record
+	var original: Dictionary = SOURCE_ROWS.row("SpellClass",int(row.ID))
+	if original.is_empty() or original!=row or not SOURCE_ROWS.declared_exclusion("SpellClass",original).is_empty(): return record
+	if original.get("TestSpell") is bool and original.TestSpell: return record
+	var file := FileAccess.open(DISTANCE_INPUT_POLICY_PATH,FileAccess.READ)
+	if file==null: return record
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
+	var policy: Dictionary = parser.data
+	if policy.get("schema")!="twilight.current523.distance-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if not policy.get("enabled") is bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate": return record
+	if policy.get("source_raw_distance_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_geometry")!="existing_host_distance_engine_retained": return record
+	var scales: Dictionary = {}
+	for field: String in ["cast_range_to_host_length","area_radius_to_host_length"]:
+		var scale: Variant = policy.get(field)
+		if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0.0: return record
+		scales[field] = float(scale)
+	# Validate both original scalars and stage all selected values before
+	# replacing any host input. Zero/negative sentinels never become geometry.
+	for field: String in ["CastRange","TargetAreaRadius"]:
+		var value: Variant = row.get(field)
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)<0.0: return record
+	var targeting: int = int(row.TargettingTypeID)
+	var shape: String = str(record.get("shape",""))
+	var projected: Dictionary = {}
+	var provenance: Dictionary = {}
+	if targeting==2 and shape in ["single","circle","target_circle"] and float(row.CastRange)>0.0:
+		var length: float = float(row.CastRange)*scales.cast_range_to_host_length
+		if not is_finite(length) or length<=0.0: return record
+		projected["range"] = length
+		provenance["range"] = {"source_field":"CastRange","raw_value":row.CastRange,"multiplier":scales.cast_range_to_host_length,"prior_host_value":record.get("range"),"host_length_input":length}
+	var matching_area: bool = (targeting==1 and shape=="self_circle") or (targeting==2 and shape in ["circle","target_circle"])
+	if matching_area and float(row.TargetAreaRadius)>0.0:
+		var length: float = float(row.TargetAreaRadius)*scales.area_radius_to_host_length
+		if not is_finite(length) or length<=0.0: return record
+		projected["radius"] = length
+		provenance["radius"] = {"source_field":"TargetAreaRadius","raw_value":row.TargetAreaRadius,"multiplier":scales.area_radius_to_host_length,"prior_host_value":record.get("radius"),"host_length_input":length}
+	if projected.is_empty(): return record
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(bytes)
+	var policy_sha: String = hashing.finish().hex_encode()
+	for field: String in projected:
+		record[field] = projected[field]
+		record.source523.applied.append(field)
+	record.source523["distance_policy"] = "TWILIGHT_NUMERIC_INPUT_ESTIMATE"
+	record.source523["distance_numeric_input"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":DISTANCE_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"source":identity,"spell_id":row.ID,"bound_row_sha256":bound_sha,"source_raw_distance_unit_scale":"unconfirmed",
+		"native_grid_scale_recovered":false,"host_geometry":"existing_host_distance_engine_retained","fields":provenance,
+		"min_cast_range_status":"raw_only_no_existing_recipient"}
 	return record
 
 static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
