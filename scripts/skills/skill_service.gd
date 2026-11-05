@@ -177,15 +177,25 @@ func equipment_modifier(skill: Dictionary, key: String) -> float:
 
 func material_plan(skill: Dictionary) -> Dictionary:
 	var spent: Dictionary = {}
+	var physical_ammo: Dictionary={};var physical_materials: Array=[]
+	var original_owner: Script=load("res://scripts/loot/current523_native_stack.gd")
 	for item: String in skill.get("items", {}):
 		var remaining: int = int(skill.items[item])
+		var ammo: Dictionary=original_owner.call("original_skill_ammo",world,item,remaining)
+		if ammo.get("handled",false):
+			if not ammo.get("ok",false) or not physical_ammo.is_empty():return {"reason":str(ammo.get("reason","하나의 스킬에서 서로 다른 실제 탄약 선택은 미지원")),"spent":{}}
+			physical_ammo=ammo;continue
 		for key: String in Catalog.SOURCE523.inventory_keys(skill, item):
 			var available: int = maxi(0,int(world.inventory.get(key,0))-int(spent.get(key,0)))
 			var amount: int = mini(remaining,available)
 			if amount > 0: spent[key] = int(spent.get(key,0)) + amount
 			remaining -= amount
-		if remaining > 0: return {"reason":"%s %d개 필요" % [item,int(skill.items[item])],"spent":{}}
-	return {"reason":"","spent":spent}
+		if remaining > 0:
+			var original: Dictionary=original_owner.call("plan_spell_material",world,skill,item,remaining)
+			if not original.get("handled",false):return {"reason":"%s %d개 필요" % [item,int(skill.items[item])],"spent":{}}
+			if not original.get("ok",false):return {"reason":str(original.get("reason","정확한 원문 스킬 재료 연결 대기")),"spent":{}}
+			physical_materials.append_array(original.requests)
+	return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 
 func cost_reason(skill: Dictionary) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
@@ -202,6 +212,20 @@ func cost_reason(skill: Dictionary) -> String:
 func spend(skill: Dictionary) -> bool:
 	if not cost_reason(skill).is_empty(): return false
 	var plan: Dictionary = material_plan(skill)
+	if not str(plan.get("reason","")).is_empty():return false
+	var physical: Dictionary=plan.get("physical_ammo",{})
+	if not physical.is_empty():
+		var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
+		var current: Dictionary=owner.call("original_skill_ammo",world,str(physical.cost_role),int(physical.quantity))
+		if current!=physical:return false
+		var paid: Dictionary=owner.call("consume_ammo",world,str(physical.inventory_key),int(physical.quantity),int(skill.get("mp",0)),null,false,{"hp_cost":int(skill.get("hp",0)),"legacy_spent":plan.spent.duplicate(true),"skill_id":str(skill.get("id","")),"material_requests":plan.get("physical_materials",[]).duplicate(true)})
+		if not paid.get("ok",false) or not paid.get("saved",false) or paid.get("consumed")!=physical.quantity:
+			world.hud.show_message(str(paid.get("reason","원문 스킬 탄약·비용 저장 연결 대기")));return false
+		world._refresh_ammo_counters();return true
+	if not plan.get("physical_materials",[]).is_empty():
+		var paid: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("spend_original_skill_materials",world,skill,plan)
+		if not paid.get("ok",false) or not paid.get("saved",false):world.hud.show_message(str(paid.get("reason","원문 스킬 재료 저장 연결 대기")));return false
+		return true
 	world.mp -= int(skill.get("mp", 0))
 	world.hp -= int(skill.get("hp", 0))
 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])

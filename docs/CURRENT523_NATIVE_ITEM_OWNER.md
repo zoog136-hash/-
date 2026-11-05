@@ -590,3 +590,75 @@ unsupported references, group/card/polymorph/date/server conditions remain held.
 This is implementation-only: no new books/skills were counted as verified, no
 441-skill completion assertion, no test/game/parse/render/CI or pack rebuild.
 The existing source reader and skill engine are reused, not copied/replaced.
+
+
+## Original skill-service costs and latest source inputs (unexecuted)
+
+The actual original skill_service.material_plan/spend path now receives the
+same physical ammunition owner, separately from the earlier World synthetic
+skill-cost path. Its existing arrow/bullet cost keys identify host cost roles,
+not replacement ItemClass identities. The selected original gameplay category,
+real physical ID/receipt/current remaining and equipped proof must match.
+Existing MP, HP and additional legacy-material costs join the already-paid ammo
+candidate before the single save. They are never merged from an unrelated full
+inventory, and a protected physical material cannot fall through to name-only
+legacy subtraction. A refused/uncertain spend prevents the existing effect/
+queued progression action; no cast engine or cost/probability is introduced.
+
+The existing public skill bindings' explicit SpellMaterialType→native_item_id
+and inventory_key contract also reaches actual native or raw quest-held
+materials. spell_material_profile preserves original89/type identity, exact
+public binding SHA, current whole item/archive, normal blessing and source
+conditions. This is custody/material-consumption support, not a claim that its
+other positive item effects execute. Currency wallets remain with their
+separate owner; they are not renamed into quantity stacks.
+
+plan_spell_material(world,skill,cost_key,quantity) uses only the already accepted
+source523 binding and its existing _source_materials proof. Existing usable
+legacy aliases retain their original priority. A missing remainder may quote
+only exact normal-blessing native/quest physical objects of the explicitly
+bound ItemClass, with eligibility/locks and immutable receipt. Selection uses
+labelled TWILIGHT deterministic physical-ID order solely for these custody
+units, not native odds/amount or an ID alias. Every chosen object and expected
+remaining is recorded as a five-field request; commitment consumes those exact
+objects, without substituting a different legacy object or miscrediting a
+quest receipt. Other explicit crafting/equipment material selections retain
+their own original contracts and are not replaced by this ordering.
+
+stage_owned_debits(world,requests) stages native and common-quest debits, joins
+only their selected physical edits and arithmetic decrements against one base,
+and retains native ledger plus quest_state. Two full candidates are never
+blindly merged. spend_original_skill_materials saves that selected quantity,
+MP/HP/remaining, common item_grants.used_quantity, first receipt fingerprint
+and immutable source_native_skill_material_uses together. With ammo, the same
+material requests are included by consume_ammo in its single transaction.
+Current quest payload proof is checked before save and quest state adoption
+waits for confirmed success. Save/adoption uncertainty blocks retries. No
+transient live item, raw-key rename, native regrant, new material spelling or
+full replacement of the skill/loot/crafting engine occurs.
+
+Narrow Data271e75ddb9a inputs are now adopted rather than duplicating readers:
+new-learning class/level/ordinary-condition checks keep historical owned/cast
+levels on the old host path; direct permitted spell distance/element fields
+reach existing targeting/damage consumers; the already selected reviewed child
+spells keep their current physical result while reading their original element.
+Uniform positive Range across every already admitted attack of the exact same
+NPC reaches existing actor attack_range/current_attack_range. Mixed/unknown
+ranges remain held for a consistent selected-attack planning receiver; no max/
+min, new AI or attack choice is inferred. LuckyBag's declared exclusions now
+come from the latest shared reader, without removing/renormalizing a pool.
+Distance32/48 and uniform-NPC range58 are independent labelled adjustable
+TWILIGHT estimates, not recovered source grid/geometry or calibration facts.
+Original weapon-relative and positive minimum-cast-range context stays raw.
+
+Remaining exact input/owner boundaries include ItemBook→eqc identity and accepted
+slot projection; current original polymorph entity paired with the existing
+source_weapon_type_id gameplay property; ItemCraftRecommend comparison/history/
+custody/Priority; GachaCraft output ClassID/candidate admission; QuestFreePass
+and nested/FinalReward/other unconfirmed reward execution. Display/acquisition
+flags never grant ownership or override source NoMerge/Test/date restrictions.
+UI267/image270's NpcImages.bind_dialogue(hud,context_provider) requires the still
+absent authoritative dialogue→mobile NpcClass relation; it is not registered
+with a fabricated positive ID. Actual original UI/image installation and display
+remain separate. All latest paths are unexecuted/unverified, historical58/146
+and88 remaining are unchanged, and no95% use assertion or new checks are made.

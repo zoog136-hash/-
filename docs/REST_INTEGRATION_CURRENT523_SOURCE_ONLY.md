@@ -299,3 +299,24 @@ casting blocked. Input remainder/use receipt, staged learned/knowledge map,
 cooldown and quest state save together before live catalog adoption. New inputs
 cite the actual original archive; old receipts are not rewritten or reissued.
 No new spell engine/effect/UI or skill pack, and no tests/execution/CI/counts.
+
+
+## Existing original skill costs and source-input adoption (unexecuted)
+
+Original skill_service now uses exact physical native/raw quest ammo and
+explicitly bound spell materials with existing MP/HP/legacy costs. Quoted actual
+five-field object requests and native/common quest quantity ledgers join only
+selected edits in one save; original cost amounts/effects and existing aliases
+remain. Deterministic physical custody ordering is labelled host policy, not an
+original selection probability or item-ID mapping. Currency wallets and unknown
+material variants/identities remain separate. The actual original skill engine
+is preserved; this is not a new spell subsystem.
+
+Data271e75ddb9a's ordinary learning conditions, successful direct spell distance/
+element, reviewed selected child element, same-NPC uniform admitted attack range
+and LuckyBag declaration exclusions are adopted narrowly. Existing ownership,
+cast/AI/attack choice, source restrictions and saved identities are preserved.
+Numerical32/48/58 scales remain labelled adjustable host estimates. Mixed attack
+ranges, weapon-relative/minimum cast ranges and absent identity/meaning
+contracts stay explicit. No tests/parse/game/render/CI, new original bytes,
+whole-table or95% consumption claim; historical58/146 unchanged.

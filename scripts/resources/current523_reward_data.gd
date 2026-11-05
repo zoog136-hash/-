@@ -52,32 +52,54 @@ static func bag(id: int) -> Dictionary:
 	var original: Dictionary = _lookup("LuckyBagClass",id,result.root,unresolved)
 	var entities: Array[Dictionary] = []
 	var excluded_items: Array[Dictionary] = []
+	var exclusions: Array[Dictionary] = []
+	var bag_exclusion: Dictionary = _source_exclusion("LuckyBagClass",original,exclusions)
 	if not original.is_empty():
 		# Exact existing compiler joins: LuckyBagEntityView.LuckyBagClassID,
 		# then LuckyBagEntityClassLimit.LuckyBagEntityID -> Class.ID.
 		for source_entity: Dictionary in SOURCE.related("LuckyBagEntityView","LuckyBagClassID",id):
 			var entity_ref: Dictionary = _reference("LuckyBagEntityView",source_entity.get("ID"))
+			var entity_exclusions: Array[Dictionary] = []
+			_source_exclusion("LuckyBagEntityView",source_entity,entity_exclusions)
 			var kind: Dictionary = _lookup("LuckyBagEntityType",source_entity.get("LuckyBagEntityTypeID"),entity_ref,unresolved)
+			_source_exclusion("LuckyBagEntityType",kind,entity_exclusions)
 			var item: Dictionary = _lookup("ItemClass",source_entity.get("ItemClassID"),entity_ref,unresolved)
+			var item_exclusion: Dictionary = _source_exclusion("ItemClass",item,entity_exclusions)
 			var limits: Array[Dictionary] = []
 			if _integer(source_entity.get("ID")):
 				for limit: Dictionary in SOURCE.related("LuckyBagEntityClassLimit","LuckyBagEntityID",int(source_entity.ID)):
+					var limit_exclusions: Array[Dictionary] = []
+					_source_exclusion("LuckyBagEntityClassLimit",limit,limit_exclusions)
 					var character_class: Dictionary = _lookup("Class",limit.get("ClassID"),entity_ref,unresolved)
-					limits.append({"row":limit,"character_class":character_class})
+					_source_exclusion("Class",character_class,limit_exclusions)
+					entity_exclusions.append_array(limit_exclusions)
+					limits.append({"row":limit,"character_class":character_class,
+						"excluded":not limit_exclusions.is_empty(),"exclusion_reason":"source_declared_exclusion" if not limit_exclusions.is_empty() else "",
+						"source_exclusion_evidence":limit_exclusions})
 			else:
 				unresolved.append({"from":result.root,"target":entity_ref,"reason":"source_entity_id_is_not_an_integer"})
-			var excluded: bool = item.get("TestItem") == true
-			if excluded: excluded_items.append(_reference("ItemClass",item.get("ID")))
+			# Admission flags never remove or rewrite original rows. Even an
+			# excluded root keeps its complete ordered entity and limit joins.
+			exclusions.append_array(entity_exclusions)
+			var test: Variant = item.get("TestItem")
+			var test_item: bool = typeof(test)==TYPE_BOOL and test
+			var declared: bool = not bag_exclusion.is_empty() or not entity_exclusions.is_empty()
+			var excluded: bool = test_item or declared
+			if test_item or not item_exclusion.is_empty(): excluded_items.append(_reference("ItemClass",item.get("ID")))
 			entities.append({
 				"row":source_entity,"entity_type":kind,"item_class":item,"class_limits":limits,
 				"probability_raw":source_entity.get("Probability"),"amount_raw":source_entity.get("ItemAmount"),
 				"bless_raw":source_entity.get("ItemBlessCodeID"),"initial_enchant_raw":source_entity.get("ItemEnchant"),
 				"limit_class_raw":source_entity.get("LimitClass"),
-				"excluded":excluded,"exclusion_reason":"source_test_item" if excluded else "",
+				"excluded":excluded,"exclusion_reason":"source_declared_exclusion" if declared else ("source_test_item" if test_item else ""),
+				"test_declaration":{"field":"TestItem","present":item.has("TestItem"),"value":test},
+				"source_exclusion_evidence":entity_exclusions,"root_excluded":not bag_exclusion.is_empty(),"declared_root_exclusion":bag_exclusion,
 				"reference_only":true,"can_activate":false,
 			})
 	result.merge({"ok":not original.is_empty(),"lucky_bag_class":original,"entities":entities,
-		"unresolved":unresolved,"excluded_item_refs":excluded_items,"join_complete":not original.is_empty() and unresolved.is_empty()})
+		"excluded":not bag_exclusion.is_empty(),"exclusion_reason":"source_declared_exclusion" if not bag_exclusion.is_empty() else "","declared_exclusion":bag_exclusion,
+		"source_exclusion_evidence":exclusions,"unresolved":unresolved,"excluded_item_refs":excluded_items,
+		"join_complete":not original.is_empty() and unresolved.is_empty() and exclusions.is_empty()})
 	return result
 
 static func reward(id: int) -> Dictionary:
