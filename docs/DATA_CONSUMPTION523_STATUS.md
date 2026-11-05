@@ -384,6 +384,47 @@ input identities. No private compiled file or installation pointer is written.
 This bootstrap has not been compiled or executed; successful admission, model
 identity and gameplay consumption remain unobserved.
 
+### Original inputs to existing NPC merchant conditions — unverified
+
+The existing `source523_shop_runtime.bind_source()` already calls
+`npc_definitions.configure(catalog)`, but its NPC-definition loader previously
+required a separate explicit NPC pack even when the shop catalog had obtained
+its original inputs. The new no-explicit-input path supplies an original-memory
+NPC model to that existing reader. Explicit NPC pack/SHA selections, including
+empty/bare/SHA-only selections, retain the file loader and its failures.
+The exact input chain is
+`bind_source(catalog)→npc_definitions.configure(catalog)→load_original(catalog)`;
+the helper instance's `build(shop_sha256:String)→Dictionary` returns the existing
+NPC model or `{}` with `problem`. No new purchase API is introduced.
+
+`source523_npc_input_projection` ports only the existing NPC compiler's merchant
+facts: MerchantGoods→Unit25/MerchantsID→EarthObjectUnit/Class, declared SellList
+actions, Unit201/CurrencyID links, original spawn flags/attributes, blessing
+codes, reset-type names and refresh constants. Original blockers and
+`activation_authorized:false` remain metadata. Supporting table evidence uses
+the existing original index; no new audit/report/summary is executed. No
+UIMapEarthObjectInfo row order/count is treated as a spawn foreign key.
+
+The memory model references the current actual shop-model SHA and enters the
+same existing8MB/schema/source/merchant/object/spawn/semantics parser as a file
+input. The NPC model's actual serialized payload has its own SHA, separately
+recorded from the original ZIP and the shop model. A prior NPC registry can be
+reused only for that same shop-model identity. Failed replacements preserve its
+records and report the problem rather than authorizing a different model.
+`current_shop_sha256` retains the accepted model binding, `input_identity`
+distinguishes archive/shop/NPC payload input identities, and `loaded_sha256`
+remains the actual NPC payload SHA. A successfully accepted empty registry also
+retains that binding and is not repeatedly rebuilt as a failed input.
+
+Existing `context()`/`currency_for()` and local rule/hash methods consume these
+accepted definitions without new access rules. Local hours/dates, server and
+clan conditions, shared stock, prices, counters, buying/claiming, ownership and
+the final save stay with their existing owners. Existing orders/receipts retain
+their original fingerprints: this loader does not migrate or relabel them.
+No NPC is spawned or drawn and no original/compiled pack is written. Runtime
+payload construction, acceptance, matching current-model identity and actual
+merchant purchases remain unexecuted and unverified.
+
 ### Original inputs to the existing quest service — unverified
 
 `source_quest523.load_pack()` now uses
