@@ -9,6 +9,8 @@ const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"N
 const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
 const SPELL_ATTACK_VIEW_FIELDS = ["ID","NpcClassID","SpellID","MotionType","WeaponType","Range"]
+const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_policy.json"
+const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -283,7 +285,51 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	result["source_m_definition_archive_sha256"] = SOURCE_SHA
 	for field_name: String in NPC_STAT_FIELDS:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
-	return result
+	return _project_numeric_resistance_input(result,source)
+
+func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
+	# Called only after the same exact actor/source admission above. This is an
+	# explicitly adjustable TWILIGHT input-scale estimate, not recovered native
+	# resistance units or a replacement for the existing damage formula.
+	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
+	if file==null: return record
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
+	var policy: Dictionary = parser.data
+	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if not policy.get("enabled") is bool or not policy.enabled: return record
+	if policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or policy.get("native_server_damage_formula_recovered")!=false or policy.get("host_formula")!="existing_host_formula_retained": return record
+	var raw_multiplier: Variant = policy.get("raw_resistance_to_host_percent")
+	if typeof(raw_multiplier) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw_multiplier)) or float(raw_multiplier)<0.0: return record
+	var multiplier := float(raw_multiplier)
+	var projected: Dictionary = {}
+	var fields: Dictionary = {}
+	for channel: String in NPC_RESISTANCE_FIELDS:
+		var field: String = NPC_RESISTANCE_FIELDS[channel]
+		if not source_integer(source.get(field)): return record
+		var raw: Variant = source[field]
+		var value: float = float(raw)*multiplier
+		if not is_finite(value): return record
+		projected[channel] = value
+		fields[channel] = {"source_field":field,"raw_value":raw,"host_percent_input":value}
+	# Keep other already supplied channels. Air -> wind is the existing mobile
+	# channel spelling in World.resolve_patch523_npc_hit; no enum is inferred.
+	var prior: Variant = record.get("element_resistance",{})
+	var resistance: Dictionary = prior.duplicate(true) if prior is Dictionary else {}
+	resistance.merge(projected,true)
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(bytes)
+	var policy_sha: String = hashing.finish().hex_encode()
+	record["element_resistance"] = resistance
+	record["source_m_numeric_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"source":source_identity.duplicate(true),"npc_class_id":source.ID,"source_raw_unit_scale":"unconfirmed",
+		"raw_resistance_to_host_percent":multiplier,"fields":fields,
+		"native_server_damage_formula_recovered":false,"host_formula":"existing_host_formula_retained"}
+	return record
 
 func attack(npc_id: int, attack_id: int) -> Dictionary:
 	for source: Dictionary in owned("NpcAttack",npc_id):

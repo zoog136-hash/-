@@ -1240,15 +1240,18 @@ func _effective_max_mp() -> int:
 
 func _index_item_weights() -> void:
 	patch523_craft_item_cache={}
-	item_weight_index.clear()
+	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
+	var source_weight_policy: Dictionary = {}
 	var path: String = "res://data/item_weight_rules.json"
 	if FileAccess.file_exists(path):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		if parsed is Dictionary:
 			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
 			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
@@ -1259,13 +1262,25 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
+			var source_weight: Dictionary = ITEM_OPTIONS.current_source_weight_input(record,source_weight_policy)
+			if source_weight.get("applicable",false):
+				if not source_weight.get("ok",false):
+					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+					return
+				# Exact source zero remains zero; host positive-default bounds below
+				# still belong only to the pre-existing legacy input path.
+				next_weight_index[name_value] = int(source_weight.weight)
+				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
 			if record.has("growth96_item_id"):
-				item_weight_index[name_value] = maxi(0,int(record.weight))
+				next_weight_index[name_value] = maxi(0,int(record.weight))
 				continue
 			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
 				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			item_weight_index[name_value] = maxi(0, raw_weight)
+			next_weight_index[name_value] = maxi(0, raw_weight)
+	# Keep existing dictionary aliases while publishing a complete input index.
+	item_weight_index.clear()
+	item_weight_index.merge(next_weight_index)
 
 func _inventory_total_weight() -> int:
 	var total: int = 0

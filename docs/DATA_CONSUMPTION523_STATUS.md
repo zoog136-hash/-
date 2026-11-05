@@ -5,6 +5,56 @@ bounded source fields to existing gameplay consumers. It does not complete all
 original definitions or establish 95% use.
 The reviewed baseline is main `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
 
+## Current original numeric inputs — unverified
+
+Two existing gameplay readers now receive additional original numeric fields.
+The missing raw-to-host scales are explicit adjustable **TWILIGHT estimates**;
+neither the scale nor the host formula is reported as a recovered source rule.
+This code has not been compiled or executed. These paths do not complete their
+whole tables or establish an observed game-consumption count.
+
+| Existing caller and input | Original data and adjustable scale | Retained boundary |
+| --- | --- | --- |
+| `World._index_item_weights()` → `TwilightItemOptions.current_source_weight_input(record, estimate)` → `item_weight_index` → `_inventory_total_weight()` | Exact current native DTO `source_weight` and its complete `ItemClass` row; checked integer `ceil(raw × points_numerator / source_units_denominator)`. `data/item_weight_rules.json.current523_source_weight` initially uses `3/351`, calibrated to item233's raw351 and the existing host3 points. | No DTO field, physical quantity, receipt, saved ID or carrying formula is rewritten. Source0 remains host0. Legacy type/record/override policy remains on its existing path. Missing or invalid applicable estimate prevents publishing a replacement weight index. |
+| `Monster.setup()` → NPC catalog `project_actor_record(record)` → `record.element_resistance` → `Monster.elemental_resistance_percent()` → `World._elemental_damage()` | Admitted current `NpcClass.FireResistance/WaterResistance/EarthResistance/AirResistance` supply fire/water/earth/wind. `data/monsters/current523_numeric_input_policy.json` has explicit enabled state and adjustable `raw_resistance_to_host_percent`, initially1.0. | Existing actor ID/Sprite/DescId and source/Test/dummy admission stay. Four raw fields are accepted together; other resistance channels and full original row remain. Missing, disabled or invalid policy retains the earlier input. Existing damage/clamp formula, source admission, spawn, visual, attack, ownership and save code stay. |
+
+The weight adapter requires the current archive identity, original typed native
+projection marker, matching source item identity, explicit non-Test provenance
+and complete original-row equality. Old packs, a name alone or a stale sidecar
+cannot enter this numeric path. Its result is `{applicable:false}` for a record
+outside that provenance, `{applicable:true,ok:false,problem}` for an unusable
+applicable policy, or `{applicable:true,ok:true,weight}` for the derived input.
+Integration269 takes only this reader/index delta while retaining its own
+catalog registration, native DTO, variants, physical stacks and save owner.
+
+The precise269 `6bda8cbb80e3bc95b85ba61c76b9920f055ffe82` native
+`record()/variant_item()/equipment()` namespace is reused: original
+`source_bless_raw`1/2/3 remains separate from host weight. Equipment uses its
+base `m523:item:<id>`; admitted non-equipment states2/3 use exactly that base
+plus `:bless:2/3`. The original blessing and exact stable ID must agree.
+Legacy stack/catalog aliases, unknown states and reconstructed names do not
+receive the estimate. No variant is created or granted by this reader.
+
+The NPC adapter runs only at the successful end of the existing actor
+projection. Air→wind already names the host channel in
+`World.resolve_patch523_npc_hit`; no numeric enum correspondence is added.
+`source_m_numeric_input_policy` records the actual policy-byte SHA, source
+identity, raw values, derived inputs and explicit estimate status on that
+runtime actor record. `source_m_original` stays raw. The existing
+`ELEMENT_RULES.damage_after_resistance` clamp/formula remains host policy.
+Npc Size, race/undead, AI and attack-element meanings are not inferred here.
+
+The [official mobile item guide](https://rc-wstatic.plaync.co.kr/lineagem/guidebook/game_item_item_general.html)
+provides relative potion weight context, not an internal-raw to host-point
+conversion. The official mobile
+[armor](https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C)
+and [accessory](https://lineagem.plaync.com/guidebook/view?title=%EC%95%85%EC%84%B8%EC%84%9C%EB%A6%AC+%EC%95%84%EC%9D%B4%ED%85%9C)
+guides provide percentage-resistance context; they do not establish NpcClass's
+internal raw scale or its server damage formula. The two configuration files
+therefore label their coefficients as adjustable estimates, preserving the
+original numbers separately. Disabling the NPC numeric policy does not disable
+the existing actor or change its registry, ownership or stored identity.
+
 ## Latest final-input boundary — unverified
 
 The latest user instruction excludes the former card/monster packs from final
