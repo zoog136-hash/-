@@ -631,6 +631,31 @@ game consumption, a new source inventory or a 95% usage result.
 The native provider and HUD registration changes are unexecuted and unverified;
 no additional tests, game execution, rendering or CI were started.
 
+UI267 subsequently published the exact original component/hash/node, authored
+anchor/position/size, ancestor transforms and attachment frame at
+`dca051179a94e2b2150575904278fd9addb63604` in the same
+[native icon ABI](https://github.com/zoog136-hash/-/blob/dca051179a94e2b2150575904278fd9addb63604/docs/ORIGINAL_UI_NATIVE_ICON_SCENE_ABI.md).
+Its additional `stable_component_target` and `ui_attachment_frame` accompany
+the existing four target identity fields; the current provider uses that exact
+runtime target. The selected UI composition's manifest pin remains separate
+from its stable component/hash/node identity. The existing source and target
+transforms are not applied again by the image provider.
+Both halves of the handoff are now present: the selected six CSB identities,
+original roots and clips, and the actual original UI slot values. The missing
+relation is specifically that CSB root origin's registration at that authored
+Sprite anchor. Neither a known slot position nor an identity source root
+confirms it. The private handoff preserves both endpoints without altering the
+selected pack or setting a fabricated confirmation flag.
+
+The existing Halphas charging start/release buttons now display the exact
+executing skill's original `IconID`. Start reads the same existing
+`record_for` result as `combat.start_charge`; release uses the preserved
+`combat.charge.skill` record. Rebuilding/updating these existing buttons clears
+their previous image metadata, and cancellation clears the inactive release
+image. This is a skill-display role, with no ActivateIconID effect, new node,
+playback, cost, charge-state or cast change. This hookup is unexecuted and
+unverified.
+
 The existing auto-hunting destination move button also consumes the selected
 entry's original `Currency.AssetID`, the same field the pinned schedule provider
 returns as `currency_asset_id` for that move request. The existing landing
