@@ -76,9 +76,22 @@ consumers and must not be reported wholly unused.
 
 ## Validation status
 
-Validation results are recorded with the final reviewed commit. Synthetic audit
-tests and controlled Main ownership fixtures are distinct from normal acquisition
-or gameplay coverage. Required resource checks verify the existing 723 sheets,
-not complete original art delivery. No remote or manual CI is requested; commits
-use `[skip ci]`. No main merge, workflow change, new art or source pack publication
-is part of this Draft.
+Completed before the latest instruction to stop starting new validation work:
+Python audit21, existing Core staging10, world links5, codec18 (one separate
+skip), pinned-source scalar21, and the committed723-sheet integrity check.
+The production-resource import completed. Its first policy check exposed an
+outdated test host; the fixture now uses the current real star-combat service
+and checks charging/frozen gates. Production skill behavior is unchanged.
+
+The controlled Main run exercised the new30/31 item boundary and two fresh Main
+processes using the default installed pack, with17/17 checks in each process.
+The entire death suite **failed**:119 checks,14 failures and one Script Error in
+the later recovery UI/certificate/expiry coverage. The cause is not classified
+as pre-existing or a regression. Logs are retained privately. No further
+investigation or rerun is started under the latest scope instruction.
+
+The already-running Core continuation retains its original check set and error
+rules; pending checks are not passes. Controlled ownership fixtures are distinct
+from normal acquisition or gameplay coverage. Resource checks verify the existing
+723 sheets, not complete original art delivery. No remote/manual CI, main merge,
+workflow change, new art or source pack publication is part of this Draft.

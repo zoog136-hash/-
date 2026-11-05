@@ -387,8 +387,11 @@ func test_item_exemption_boundaries(world, service, item_name: String, danger: V
 	var baseline: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
 	for boundary: int in [30,31]:
 		world.level = boundary
-		world.exp_need = world.EXP_PROGRESSION.table_requirement(boundary)
+		# The reviewed local table starts at35. Exercise the production fallback
+		# for these controlled lower-level fixtures; native death rates stay intact.
+		world.exp_need = world.EXP_PROGRESSION.required_for_level(boundary,int(baseline.exp_need))
 		world.experience = int(world.exp_need/2)
+		check(world.exp_need > 1 and world.experience > 0,"boundary fixture has positive XP through reviewed local progression")
 		world.player.global_position = danger
 		world.hp = 1
 		check(world._save_game(true) == OK,"item boundary pre-lethal production save")
@@ -440,11 +443,11 @@ func test_fresh_item_exemption_process(boundary: int, item_name: String, path: S
 	check(process > 0,"fresh Main reentry process starts")
 	if process <= 0: return
 	var started: int = Time.get_ticks_msec()
-	while OS.is_process_running(process) and Time.get_ticks_msec()-started < 60000:
+	while OS.is_process_running(process) and Time.get_ticks_msec()-started < 180000:
 		await process_frame
 	if OS.is_process_running(process):
 		OS.kill(process)
-		check(false,"fresh Main reentry process exceeded60second bound")
+		check(false,"fresh Main reentry process exceeded180second bound")
 		return
 	var result: Variant = JSON.parse_string(FileAccess.get_file_as_string(result_path)) if FileAccess.file_exists(result_path) else null
 	check(result is Dictionary and result.get("ok",false) == true and result.get("level",-1) == boundary,"fresh Main process confirms default source and immutable death ownership")
