@@ -232,3 +232,58 @@ uncertain save. The existing manager defers nested pruning during this write.
 The physical ID/first grant/receipt/used count stay unchanged through supported
 relocations. Actual original UI/image input and runtime observation remain
 separate; all new code is unexecuted/unverified, with no new CI or pass count.
+
+## Explicit partial partition ownership (subsequent implementation, unverified)
+
+Partial warehouse requests (within the existing 1..99 request limit) and the
+existing one-unit floor action can now partition an actually selected native
+bundle. The original parent's immutable schema1 receipt and first grant quantity
+are unchanged. Its transferred quantity is separate from used/discarded/remaining
+quantity. No source supplier stage_grant is called to manufacture the child.
+
+A child gets a new physical ID and a `source_native_stack_receipt` **schema2
+partition** receipt. Its granted_quantity is the allocated branch quantity,
+not a new original grant. `origin.kind=owned_quantity_partition` retains the
+exact parent ID and complete immutable parent receipt plus partition ID.
+`proof_entry` exposes allocated_quantity separately and first_grant_receipt
+returns the original root receipt unchanged. This namespace is distinct from
+native_awakening_supply's own schema2 supplier record and schema4 catalog input.
+The child's record/source/ItemClass/blessing/enhancement is copied unchanged.
+
+The saved source_native_stack_partitions journal ties each parent/child receipt,
+quantity and before/after remainder/transfer counters together. Parent transfer
+chains, child existence or completed receipts, initial grant budgets and unique
+custody are checked at the existing save/load boundary. Original partition rows
+cannot be replaced; a new row is accepted only in that exact transient selected
+warehouse/drop transaction. Partitioned units are not counted as used, discarded
+or free new rewards. Subsequent use/refund/disposal retains their branch history.
+
+Parent remainder, child target custody, both balance dictionaries and complete
+partition/use state share one existing save. On failure no live partition is
+adopted and uncertain writes block retry. Whole-remainder movement retains the
+existing ID without a partition. No old name-only inventory, legacy quest reward
+or prior source receipt is mass converted. These are implementation contracts,
+not new source rules, source-file use counts, runtime evidence or verified passes.
+
+## Source-reader native-use ABI
+
+`current523_native_stack.use_owned_original(world, original_item:Dictionary,
+request:Dictionary) -> Dictionary` accepts the **entire original ItemClass row**
+separately from exactly five selected-ownership fields: physical_id, quantity=1,
+expected_quantity, expected_remaining, source_native_stack_receipt. Pass the
+actual opaque receipt from that physical object; do not reconstruct it from an
+ID/name. The original row must equal the held current original and immutable
+receipt row; expected remainder must be the actual selected current quantity
+minus one. The receipt may be this owner's supplier schema1 or partition schema2.
+
+This delegates to the existing typed quantity/effect/single-save transaction.
+Success requires `ok && saved && consumed==1`; handled is recognition only.
+Unknown effect owners return source_use_supported=false and preserve ownership.
+It does not treat a raw quest-pending record as native ownership: the existing
+quest_reward_ownership/quest_item_provider.try_use_held boundary remains separate,
+and its handled boolean is not a successful-save result. These are existing
+owner responsibilities, not a second source reader or a free native conversion.
+
+The original ItemBookID -> preserved eqc collection/slot mapping and accepted
+collection projection are not established by this native consumable interface.
+No mapping from display identity or an undocumented ClassID is invented here.

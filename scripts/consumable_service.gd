@@ -95,6 +95,9 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var source_native_stack_partitions_present: bool=false
+var source_native_stack_partitions: Variant={}
+
 var source_native_stack_uses_present: bool=false
 var source_native_stack_uses: Variant={}
 
@@ -125,6 +128,7 @@ func export_state() -> Dictionary:
 		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=source_native_stack_partitions.duplicate(true) if source_native_stack_partitions is Dictionary or source_native_stack_partitions is Array else source_native_stack_partitions
 	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
 	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
 	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
@@ -137,6 +141,9 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_native_stack_partitions_present=input is Dictionary and input.has("source_native_stack_partitions")
+	var partitions: Variant=input.get("source_native_stack_partitions",{}) if input is Dictionary else {}
+	source_native_stack_partitions=partitions.duplicate(true) if partitions is Dictionary or partitions is Array else partitions
 	source_native_stack_uses_present=input is Dictionary and input.has("source_native_stack_uses")
 	var stack_uses: Variant=input.get("source_native_stack_uses",{}) if input is Dictionary else {}
 	source_native_stack_uses=stack_uses.duplicate(true) if stack_uses is Dictionary or stack_uses is Array else stack_uses

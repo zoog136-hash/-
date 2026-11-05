@@ -194,3 +194,21 @@ explicit host-lifetime reason, independently of used_quantity, before removing
 the floor. Carried/warehouse/floor save/load guards reject duplicate/unexplained
 custody. Partial bundle splitting and other unresolved source effects remain.
 These changes add no execution, rendering, tests or gameplay usage evidence.
+
+## Partial quantity partition (unexecuted)
+
+The explicit native warehouse quantity and existing one-unit floor action now
+stage an owned partition when the selected bundle is larger than the move.
+The parent first-grant receipt remains immutable; transferred allocation is not
+used quantity. A schema2 child partition receipt retains its full parent/root
+lineage, with allocated quantity separate from the original grant. A persistent
+partition journal and global carried/warehouse/floor guards preserve conservation
+and prohibit orphaned or rewritten events. No supplier regrant or legacy/raw
+quest conversion occurs. The existing writer accepts only the exact sealed
+quantity/partition/custody candidate. No tests, run, render or CI were performed.
+
+The source reader can call current523_native_stack.use_owned_original with the
+full original ItemClass row plus the selected physical ID/quantity/expected
+remainder/opaque native receipt. Success requires ok+saved+consumed1. Unknown
+native effects and raw quest ownership remain separate explicit boundaries;
+ItemBook-to-eqc identity is still not inferred. See the native owner ABI.
