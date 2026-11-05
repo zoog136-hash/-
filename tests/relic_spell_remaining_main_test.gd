@@ -134,6 +134,9 @@ func run() -> void:
 	before_hp = dummy.hp; world.rng.seed = seed_value
 	world._deal_successful_player_hit(dummy,10,false,"melee")
 	check(improved_damage > before_hp-dummy.hp,"secondary hit keeps main ordinary-attack flag and receives no unconfirmed native increment")
+	before_hp = dummy.hp; world.rng.seed = seed_value
+	world._deal_successful_player_hit(dummy,10,false,"melee",true,false,{},false,ordinary)
+	check(before_hp-dummy.hp == improved_damage,"confirmed weapon-extra context keeps native increment independently of main ordinary-attack classification")
 	relic(0); before_hp = dummy.hp; world.rng.seed = seed_value
 	world._deal_successful_player_hit(dummy,10,false,"melee",true,false,{},true)
 	check(improved_damage > before_hp - dummy.hp, "actual damage boundary consumes Rune source increment")
@@ -258,5 +261,13 @@ func run() -> void:
 	check(world.hp == int(durable.hp) and world.mp == int(durable.mp),"re-entry preserves exact current HP/MP (%d/%d -> %d/%d)" % [int(durable.hp),int(durable.mp),world.hp,world.mp])
 	check(world.option_awakening.relic_subslot_view().active and service.stat("pvpDamageReduction") == 1 and int(RULES.level_for(world,4,0).bonus) == before_level,"re-entry recomputes source effects once alongside native slot")
 	check(FileAccess.get_sha256(world.save_path()) == durable_hash,"re-entry never rewrites progression save")
+	# Existing save vitals use 64-bit integers; a quote must not narrow them
+	# to a coordinate vector even when the writer refuses the transaction.
+	var normal_vitals: Array=[world.max_hp,world.max_mp,world.hp,world.mp]
+	world.max_hp=3000000000;world.max_mp=4000000000;world.hp=2999999999;world.mp=3999999999
+	world.equipment_collections.save_blocked=true;world._equip_catalog("성물",{})
+	check(world.hp==2999999999 and world.mp==3999999999,"failed preview preserves existing 64-bit resource values")
+	world.equipment_collections.save_blocked=false
+	world.max_hp=int(normal_vitals[0]);world.max_mp=int(normal_vitals[1]);world.hp=int(normal_vitals[2]);world.mp=int(normal_vitals[3])
 	print("RELIC_SPELL_REMAINING_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"renderer":DisplayServer.get_name()}))
 	world.queue_free(); await frames(3); quit(0 if failures.is_empty() else 1)

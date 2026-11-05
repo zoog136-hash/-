@@ -1094,14 +1094,14 @@ func _invalidate_equipment_static() -> void:
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 
-func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}, ordinary_attack: bool=false) -> void:
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}, ordinary_attack: bool=false, relic_attack_context: Dictionary={}) -> void:
 	if current523_aden_source_active(): return
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	normal_damage+=card_collections.death_damage_bonus()
 	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
 	normal_damage+=PATCH523_EQUIPMENT_COMBAT.fear_flat_ignore(self,target,by_spell)
-	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage, original_skills.attack_context(attack_kind, by_spell, true, main_target) if ordinary_attack else {})
+	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage, original_skills.attack_context(attack_kind, by_spell, true, main_target) if ordinary_attack else relic_attack_context)
 	if target.get_meta("dungeon_play_role","")=="Boss":normal_damage=int(round(normal_damage*(1.0+dungeon_play.modifier("boss_damage")/100.0)))
 	var stolen: int = 0
 	var drain: int = (1 if _has_hp_absorption() else 0)+int(growth.bonus("hp_drain:flat"))
@@ -7459,7 +7459,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	_deal_successful_player_hit(target, damage, false, attack_kind)
+	_deal_successful_player_hit(target, damage, false, attack_kind, true, false, {}, false, original_skills.attack_context(attack_kind,false,true) if original_skills != null else {})
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -7992,14 +7992,14 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		# Evaluate both primary/secondary effects together, then persist caps and
 		# the selection before publishing any UI, visuals or live-state changes.
 		var previous: Dictionary=equipped_catalog
-		var previous_vitals := Vector2i(hp,mp)
+		var previous_vitals: Dictionary={"hp":hp,"mp":mp}
 		var previous_buffs: Dictionary=active_skill_buffs.duplicate(true)
 		var next: Dictionary=previous.duplicate(true);next[category]=record.duplicate(true)
 		equipped_catalog=next;_invalidate_equipment_static()
 		var next_max_hp: int=_effective_max_hp()
 		var next_max_mp: int=_effective_max_mp()
-		var staged_hp: int=mini(previous_vitals.x+maxi(0,next_max_hp-old_max_hp),next_max_hp)
-		var staged_mp: int=mini(previous_vitals.y,next_max_mp)
+		var staged_hp: int=mini(int(previous_vitals.hp)+maxi(0,next_max_hp-old_max_hp),next_max_hp)
+		var staged_mp: int=mini(int(previous_vitals.mp),next_max_mp)
 		equipped_catalog=previous;_invalidate_equipment_static()
 		_restore_card_selection_preview(previous_vitals,previous_buffs)
 		if _save_card_selection(true,{"equipped_catalog":next,"hp":staged_hp,"mp":staged_mp})!=OK:
@@ -10022,19 +10022,19 @@ func _skill_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
 
 func _option_awakening_vitals_for_state(next: Dictionary) -> Dictionary:
 	var previous: Dictionary=option_awakening.progress
-	var previous_vitals := Vector2i(hp,mp)
+	var previous_vitals: Dictionary={"hp":hp,"mp":mp}
 	var previous_buffs: Dictionary=active_skill_buffs.duplicate(true)
 	option_awakening.progress=next;_invalidate_equipment_static()
-	var result: Dictionary={"hp":mini(previous_vitals.x,_effective_max_hp()),"mp":mini(previous_vitals.y,_effective_max_mp())}
+	var result: Dictionary={"hp":mini(int(previous_vitals.hp),_effective_max_hp()),"mp":mini(int(previous_vitals.mp),_effective_max_mp())}
 	option_awakening.progress=previous;_invalidate_equipment_static()
 	_restore_card_selection_preview(previous_vitals,previous_buffs)
 	return result
 
-func _restore_card_selection_preview(vitals: Vector2i, buffs: Dictionary) -> void:
+func _restore_card_selection_preview(vitals: Dictionary, buffs: Dictionary) -> void:
 	# Resolving temporary source levels may refresh derived buffs and clamp
 	# live vitals. A quote must restore those before the atomic writer runs.
 	active_skill_buffs=buffs
-	hp=vitals.x;mp=vitals.y
+	hp=int(vitals.hp);mp=int(vitals.mp)
 	if original_skills != null:
 		original_skills.relic_buff_signature=""
 		original_skills.refresh_relic_buffs()
