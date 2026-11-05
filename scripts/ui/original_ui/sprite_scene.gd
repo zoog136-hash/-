@@ -39,12 +39,12 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc"]:
+		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
 			if value.is_empty(): problems.append("unsupported_frame_union")
-			var expected: String={"Position":"PointFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
+			var expected: String={"Position":"PointFrame","AnchorPoint":"ScaleFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
 			if not expected.is_empty():
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
 				if expected=="BlendFrame" and _blend(value) not in ["770:1","770:771","1:771"]: problems.append("unsupported_blend_track")
@@ -74,7 +74,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate()}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var binding: Dictionary=_bindings.get(int(node.get("_offset",-1)),{})
@@ -105,6 +105,9 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only and binding.get("role")!="static_source_text": problems.append("unconnected_source_text")
 		if str(options.get("text","")).contains("\n") or int(options.get("shadowBlurRadius",0))!=0: problems.append("unsupported_text_layout_or_blur")
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
+	if node.classname=="LoadingBar":
+		unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
+		if not inspection_only:problems.append("unconnected_source_percent")
 	if node.classname=="ListView":
 		# Inspection preserves an empty original container, not a working list.
 		# Populating it without source row/caller contracts would invent UI.
@@ -155,6 +158,7 @@ func _build(source: Dictionary) -> Node2D:
 		return nested
 	var node:=Node2D.new()
 	node.name=str(widget.name)
+	node.set_meta("source_size",widget.size.duplicate())
 	node.set_meta("original_custom_property",str(widget.get("customProperty","")))
 	node.set_meta("source_scale",widget.scale.duplicate())
 	node.set_meta("source_rotation",widget.rotationSkew.duplicate())
@@ -195,6 +199,13 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if not inspection_only and binding.get("role")=="button":button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+	if source.classname=="LoadingBar":
+		var bar=preload("res://scripts/ui/original_ui/source_loading_bar.gd").new()
+		var configured: Dictionary=bar.configure(source_pack,options)
+		if not configured.ok:
+			_build_error=str(configured.error);bar.free();node.free();return null
+		origin.add_child(bar)
+		node.set_meta("source_loading_bar",bar)
 	if source.classname=="Text":
 		var font_value: FontFile=source_pack.font(options.fontResource)
 		if font_value==null:
@@ -329,6 +340,15 @@ func seek_frame(frame_number: float) -> void:
 				var sprite: Sprite2D=target.get_meta("source_sprite")
 				sprite.material=MATERIAL.for_blend(sprite.texture,_blend(selected))
 				target.set_meta("source_blend",_blend(selected))
+		elif timeline.property=="AnchorPoint":
+			# CCFrame::AnchorPointFrame::onEnter is discrete, without tweening.
+			var anchor: Array=selected.scale
+			var extent: Array=target.get_meta("source_size")
+			if target.has_meta("source_sprite"):
+				var texture: Texture2D=target.get_meta("source_sprite").texture
+				extent=[texture.get_width(),texture.get_height()]
+			target.set_meta("source_anchor",anchor.duplicate())
+			target.get_node("SourceContentOrigin").position=Vector2(-float(anchor[0])*float(extent[0]),float(anchor[1])*float(extent[1]))
 		elif timeline.property=="Alpha":
 			target.modulate.a=float(int(lerpf(float(selected.value),float(following.value),ratio)))/255.0
 		elif timeline.property in ["Scale","RotationSkew"]:

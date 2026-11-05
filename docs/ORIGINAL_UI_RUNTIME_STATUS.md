@@ -350,3 +350,20 @@ scope. Other custom behavior remains rejected.
 References:
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIButton.cpp
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/renderer/ccShader_UI_Gray.frag
+
+### LoadingBar and discrete anchor tracks
+
+The original non-scale9 LoadingBar now crops its supplied texture using the
+serialized percent/direction and preserves source geometry. AnchorPoint tracks
+use their actual ScaleFrame payload and Cocos's discrete on-enter semantics.
+Recovery_ProgressBar now renders its original frames 0, 5, 97 and 190. Six GL
+checks cover original percent crops/clamps and strict rejection without a live
+percent binding. This adds one accepted tracked inspection entry (97 total),
+not an implemented recovery service. The separate original menu components are
+not included in that count. The latest dependency snapshot is 504/560; all 14
+newly dependency-complete entries were explicitly rejected for remaining source
+features rather than rendered as incomplete screens.
+
+References:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILoadingBar.cpp
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/ActionTimeline/CCFrame.cpp
