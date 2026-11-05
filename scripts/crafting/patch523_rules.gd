@@ -6,6 +6,8 @@ const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
 const EXPEDITION_MATERIALS=preload("res://scripts/crafting/patch523_expedition_materials.gd")
 const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
+const SOURCE_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const SOURCE_ITEMS = preload("res://scripts/resources/current523_item_data.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
 const MAX_BATCH: int = 20
@@ -278,10 +280,109 @@ static func recipe_cost(recipe: Dictionary, count: int) -> int:
 		if bool(material.get("wallet",false)) and str(material.source_id)=="26": cost+=int(material.quantity)*count
 	return cost
 
+func _source_item_allowed(source_id: int) -> bool:
+	var original: Dictionary = data.get("items",{}).get(str(source_id),{}).get("item_class",{})
+	if original.is_empty(): original = SOURCE_ITEMS.describe(source_id).get("item_class",{})
+	# UNVERIFIED: read the supplied item's explicit flag; retain excluded rows
+	# in the source and private pack instead of turning them into active stock.
+	return not original.is_empty() and original.get("ID") == source_id and original.get("TestItem") == false
+
+static func _source_item_tuple(projected: Dictionary, original: Dictionary) -> bool:
+	for pair: Array in [["source_id","ItemClassID"],["quantity","Amount"],["level","Enchant"],["bless_code","ItemBlessCodeID"]]:
+		var value: Variant = original.get(pair[1])
+		if not CONDITIONS.integer(value,0,2147483647): return false
+		if pair[0] == "source_id":
+			if projected.get(pair[0]) != str(int(value)): return false
+		elif not CONDITIONS.integer(projected.get(pair[0]),0,2147483647) or int(projected[pair[0]]) != int(value): return false
+	return true
+
+func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
+	# UNVERIFIED: exact cached source joins are consumed by material_selection,
+	# which quote/execute already call. This does not admit additional recipes.
+	var craft_id: Variant = recipe.get("source_craft_id")
+	if not CONDITIONS.integer(craft_id,1,2147483647) or recipe.get("id") != "patch523:"+str(int(craft_id)):
+		return denied("제작 원본 ID 관계가 필요합니다 · 재료 보존")
+	var source: Dictionary = recipe_evidence(int(craft_id))
+	for key: String in ["inputs","outputs","views","restrictions"]:
+		if not source.get(key) is Array: return denied("제작 원본 관계가 없습니다 · 재료 보존")
+		if key != "restrictions" and source[key].is_empty(): return denied("제작 원본 관계가 없습니다 · 재료 보존")
+		for value: Variant in source[key]:
+			if not value is Dictionary or value.get("ItemCraftID") != int(craft_id): return denied("제작 원본 참조가 다릅니다 · 재료 보존")
+	for original: Dictionary in source.inputs + source.outputs:
+		if not CONDITIONS.integer(original.get("ItemClassID"),0,2147483647): return denied("제작 원본 품목 참조가 필요합니다")
+		if int(original.ItemClassID) != 0 and not _source_item_allowed(int(original.ItemClassID)):
+			return denied("제작 원본 품목이 미확정 또는 명시적 시험용입니다 · 재료 보존")
+		if int(original.get("ItemHoningEpithetID",0)) != 0 or int(original.get("ClanItemClassID",0)) != 0 or int(original.get("ClanAmount",0)) != 0:
+			return denied("별도 소유자 제작 조건입니다 · 재료 보존")
+	var conditions: Dictionary = CONDITIONS.source_recipe(recipe,source.views,source.restrictions)
+	if not conditions.get("ok",false): return conditions
+	var primary_found: bool = false
+	var view_found: bool = false
+	for original: Dictionary in source.outputs:
+		if original.get("ItemCraftOutputTypeID") == 1 and _source_item_tuple(recipe.result,original): primary_found = true
+	for original: Dictionary in source.views:
+		if _source_item_tuple(recipe.result,original): view_found = true
+	if not primary_found or not view_found: return denied("제작 결과와 원본 표시·결과 관계가 다릅니다 · 재료 보존")
+	if not recipe.has("outcomes"):
+		if source.outputs.size() != 1 or source.outputs[0].get("Probability") != 1000000:
+			return denied("원본 제작 결과 분기를 확인해야 합니다 · 재료 보존")
+		for view: Dictionary in source.views:
+			if view.get("AlwaysSuccess") != 1: return denied("원본 제작 성공 조건이 다릅니다 · 재료 보존")
+	else:
+		var remaining: Array = source.outputs.duplicate()
+		for outcome: Dictionary in recipe.outcomes:
+			if outcome.get("twilight_missing_failure",false):
+				# Keep the existing explicit missing-failure policy separate from
+				# source rows. It must never stand in for an omitted real branch.
+				if source.outputs.size() != 1 or source.outputs[0].get("ItemCraftOutputTypeID") != 1 or source.views.size() != 1 or source.views[0].get("AlwaysSuccess") != 0 or not outcome.get("empty_result",false) or outcome.get("probability") != 1000000-int(source.outputs[0].get("Probability",0)):
+					return denied("원본과 자체 누락 실패 경계가 다릅니다 · 재료 보존")
+				continue
+			var found: int = -1
+			for index: int in range(remaining.size()):
+				var original: Dictionary = remaining[index]
+				if _source_item_tuple(outcome,original) and outcome.get("probability") == original.get("Probability") and outcome.get("label") == {0:"실패",1:"성공",2:"대성공"}.get(int(original.get("ItemCraftOutputTypeID",-1)),""):
+					found = index
+					break
+			if found < 0: return denied("제작 결과의 원본 행·확률 관계가 다릅니다 · 재료 보존")
+			remaining.remove_at(found)
+		if not remaining.is_empty(): return denied("원본 제작 결과가 빠져 있습니다 · 재료 보존")
+	return {"ok":true,"source":source}
+
+static func _source_material_contract(recipe: Dictionary, source: Dictionary) -> Dictionary:
+	var slots: Dictionary = {}
+	var ids: Dictionary = {}
+	for original: Dictionary in source.inputs:
+		if not CONDITIONS.integer(original.get("ID"),1,2147483647) or not CONDITIONS.integer(original.get("SlotIndex"),0,2147483647) or ids.has(int(original.ID)):
+			return denied("제작 재료 원본 행·슬롯이 모호합니다 · 재료 보존")
+		ids[int(original.ID)] = original
+		var slot: int = int(original.SlotIndex)
+		if not slots.has(slot): slots[slot] = []
+		slots[slot].append(original)
+	var fee: int = 0
+	var selected_slots: Dictionary = {}
+	for slot: int in slots:
+		var candidates: Array = slots[slot]
+		if candidates.size() == 1 and candidates[0].get("ItemClassID") == 26:
+			if candidates[0].get("Enchant") != 0 or candidates[0].get("ItemBlessCodeID") != 1 or not CONDITIONS.integer(candidates[0].get("Amount"),1,1000000000):
+				return denied("원본 아데나 재료 상태가 다릅니다 · 재료 보존")
+			fee += int(candidates[0].Amount)
+			selected_slots[slot] = true
+	if int(recipe.get("adena",-1)) != fee: return denied("원본 아데나 재료 합계가 다릅니다 · 재료 보존")
+	for material: Dictionary in recipe.materials:
+		var original: Dictionary = ids.get(int(material.get("row_id",0)),{})
+		if original.is_empty() or material.get("slot_index") != original.SlotIndex or selected_slots.has(int(original.SlotIndex)) or not _source_item_tuple(material,original):
+			return denied("선택 재료의 원본 행·슬롯·수량·강화·축복이 다릅니다 · 재료 보존")
+		selected_slots[int(original.SlotIndex)] = true
+	return {"ok":true} if selected_slots.size() == slots.size() else denied("원본 재료 슬롯의 선택이 필요합니다 · 재료 보존")
+
 func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictionary:
 	if not recipes.has(recipe_id): return denied("원본 제작법이 없습니다")
 	var recipe: Dictionary = recipes[recipe_id].duplicate(true)
-	if not recipe.has("material_slots"): return {"ok":true,"recipe":recipe}
+	var contract: Dictionary = _source_recipe_contract(recipe)
+	if not contract.get("ok",false): return contract
+	if not recipe.has("material_slots"):
+		var material_contract: Dictionary = _source_material_contract(recipe,contract.source)
+		return {"ok":true,"recipe":recipe} if material_contract.get("ok",false) else material_contract
 	var selected: Array = []
 	var missing: bool = false
 	for slot: Dictionary in recipe.material_slots:
@@ -298,6 +399,9 @@ func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictiona
 			continue
 		selected.append(chosen)
 	recipe["materials"] = selected
+	if not missing:
+		var material_contract: Dictionary = _source_material_contract(recipe,contract.source)
+		if not material_contract.get("ok",false): return material_contract
 	return {"ok":not missing,"recipe":recipe,"reason":"각 재료 슬롯의 후보를 직접 선택하세요" if missing else ""}
 
 func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary = {}, choices: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
@@ -552,8 +656,15 @@ func refresh_derived_options(physical: Dictionary) -> bool:
 
 func recipe_evidence(craft_id: int) -> Dictionary:
 	var result: Dictionary = {}
-	for key: String in ["inputs", "outputs", "views", "restrictions"]:
-		result[key] = data.get("raw_recipes", {}).get(key, {}).get(str(craft_id), []).duplicate(true)
+	var tables: Dictionary = {"inputs":"ItemCraftInput","outputs":"ItemCraftOutputView","views":"ItemCraftView","restrictions":"ItemCraftRestriction"}
+	var cached_groups: Dictionary = data.get("raw_recipes",{})
+	for key: String in tables:
+		var cached: Variant = cached_groups.get(key)
+		if cached is Dictionary:
+			var values: Variant = cached.get(str(craft_id),[])
+			result[key] = values.duplicate(true) if values is Array else []
+		else:
+			result[key] = SOURCE_DEFINITIONS.related(tables[key],"ItemCraftID",craft_id)
 	return result
 
 func effect_evidence(item_id: int, level: int, raw_bless_code: int) -> Array:

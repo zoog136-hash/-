@@ -1,5 +1,7 @@
 extends RefCounted
 ## Optional source commerce catalog. It never changes wallets, saves or clocks.
+const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
+const ItemData = preload("res://scripts/resources/current523_item_data.gd")
 const SCHEMA: String = "twilight.source523.shop.v1"
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const REQUIRED_TABLES: Array[String] = [
@@ -135,6 +137,94 @@ func record(table: String, id: int) -> Dictionary:
 
 func _related(table: String, id: int) -> Array:
 	return _links.get(table, {}).get(str(id), []).duplicate(true)
+
+func _definition_record(table: String, id: int) -> Dictionary:
+	return record(table,id) if available() else Definitions.row(table,id)
+
+func _definition_related(table: String, field: String, id: int) -> Array:
+	if not available(): return Definitions.related(table,field,id)
+	var result: Array = []
+	for row: Dictionary in _tables.get(table,[]):
+		if _integer(row.get(field)) and int(row[field]) == id: result.append(row.duplicate(true))
+	return result
+
+func _item_class_unit(unit_id: int) -> bool:
+	# ClassID alone does not identify an item namespace.
+	return _definition_record("Unit",unit_id).get("Name") == "ItemClassID"
+
+func item_identity(item_id: int) -> Dictionary:
+	var original: Dictionary = ItemData.describe(item_id)
+	var raw: Variant = original.get("item_class",{})
+	if raw is Dictionary and not raw.is_empty():
+		original["source_available"] = true
+		return original
+	# A missing optional original input does not replace an installed shop pack.
+	var compiled: Dictionary = record("ItemClass",item_id)
+	original["item_class"] = compiled
+	original["source_available"] = false
+	original["compiled_shop_available"] = not compiled.is_empty()
+	original["reference_only"] = true
+	original["can_activate"] = false
+	if compiled.get("TestItem") is bool and compiled.TestItem:
+		original["ok"] = false
+		original["excluded"] = true
+	return original
+
+func _purchase_reference(id: int) -> Dictionary:
+	var purchase: Dictionary = _definition_record("MarketPurchase_Korean",id)
+	if purchase.is_empty(): return {}
+	var limits: Array = []
+	for link: Dictionary in _definition_related("MarketPurchaseServerLimitGroup","MarketPurchaseID",id):
+		limits.append({"link":link,"servers":_definition_related("ServerLimit","ServerLimitSetID",int(link.ServerLimitSetID))})
+	return {"purchase":purchase,
+		"payment":_definition_record("MarketPayment_Korean",int(purchase.MarketPaymentID)),
+		"products":_definition_related("MarketPurchaseProduct","MarketPurchaseID",id),
+		"bonuses":_definition_related("MarketBonusForPurchase","MarketPurchaseID",id),
+		"restrictions":_definition_related("MarketPurchaseRestriction","MarketPurchaseId",id),
+		"server_limits":limits,"displays":_definition_related("MarketDisplay","PurchaseID",id),
+		"effective_from":_definition_record("DateTimes_Korean",int(purchase.EffectiveFromId)),
+		"effective_to":_definition_record("DateTimes_Korean",int(purchase.EffectiveToId)),
+		"reference_only":true,"can_purchase":false}
+
+func _product_reference(id: int) -> Dictionary:
+	var purchases: Array = []
+	for table: String in ["MarketPurchaseProduct","MarketBonusForPurchase"]:
+		for link: Dictionary in _definition_related(table,"MarketProductID",id):
+			purchases.append({"relation":table,"link":link,"offer":_purchase_reference(int(link.MarketPurchaseID))})
+	return {"product":_definition_record("MarketProduct",id),
+		"additional":_definition_related("MarketProductAdditional","MarketProductID",id),
+		"purchases":purchases,"reference_only":true,"can_purchase":false}
+
+func item_references(item_id: int) -> Dictionary:
+	var identity: Dictionary = item_identity(item_id)
+	var item: Dictionary = identity.get("item_class",{})
+	if item.is_empty():
+		return {"item_id":item_id,"identity":identity,"unavailable":true,"reference_only":true,"can_purchase":false}
+	var merchants: Array = []
+	for goods: Dictionary in _definition_related("MerchantGoods","ItemClassID",item_id):
+		merchants.append({"goods":goods,
+			"required_buff_card":_definition_record("BuffCard",int(goods.get("LimitBuffCardID",0))),
+			"reference_only":true,"can_purchase":false})
+	var products: Array = []
+	for product_row: Dictionary in _definition_related("MarketProduct","ClassID",item_id):
+		if _item_class_unit(int(product_row.UnitID)): products.append(_product_reference(int(product_row.ID)))
+	var additional: Array = []
+	for link: Dictionary in _definition_related("MarketProductAdditional","ClassID",item_id):
+		if _item_class_unit(int(link.UnitID)):
+			additional.append({"link":link,"parent":_product_reference(int(link.MarketProductID))})
+	var payments: Array = []
+	for payment: Dictionary in _definition_related("MarketPayment_Korean","ClassID",item_id):
+		if not _item_class_unit(int(payment.UnitID)): continue
+		var purchases: Array = []
+		for purchase: Dictionary in _definition_related("MarketPurchase_Korean","MarketPaymentID",int(payment.ID)):
+			purchases.append(_purchase_reference(int(purchase.ID)))
+		payments.append({"payment":payment,"purchases":purchases})
+	# These are original references, including unresolved/off-sale conditions.
+	# They never activate a merchant, declare a price, or authorize a transaction.
+	return {"item_id":item_id,"identity":identity,"merchant_goods":merchants,
+		"market_products":products,"market_additional":additional,"market_payments":payments,
+		"shop_pack_sha256":loaded_sha256,"reference_only":true,"can_purchase":false,
+		"excluded":identity.get("excluded",false)}
 
 func label(id: int) -> String:
 	return str(record("DescData_Korean", id).get("Description", ""))

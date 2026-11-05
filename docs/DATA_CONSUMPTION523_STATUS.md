@@ -30,6 +30,19 @@ gameplay coverage. A full-table claim requires a retained runtime artifact,
 source/table SHA, original row indices, consumed fields and reviewed caller.
 Partial tables never add their entire JSON size to the full-use numerator.
 
+The recorded mutually exclusive report labels are partial122, other_owner79,
+unresolved712, empty50 and excluded102. They are not a gameplay-use percentage.
+The122 label requires a reviewed, bounded static source-to-parser/cache-to-runtime
+path with a real caller/storage boundary in the recorded main. Unmerged owner
+evidence is recorded separately and does not become main use. The79 label records
+another owner's work without establishing the same main partial-path evidence;
+the712 entries are uncertain/unreviewed, not proven unused. ItemClass is among
+the122 because selected death, combination, title, symbol, monsterbook and totem
+paths consume its rows. Its34,743 rows/44,095,017 bytes are not wholly consumed.
+The machine-readable baseline remains the existing private
+`content-consumption-audit523.main.json` and `ownership-evidence.json`; this Draft
+does not recalculate their labels after implementation changes.
+
 The first scope review identifies 50 empty tables and 102 nonempty tables for
 explicitly excluded features or stopped/test content. These remain in the fixed
 denominator. Under this classification the theoretical full-table ceiling is
@@ -90,6 +103,73 @@ passing results do not validate these changes.
 The earlier 1,065-table ledger remains its recorded baseline. These bindings do
 not turn partial source tables into full-table gameplay completion or
 establish a new overall percentage.
+
+## Larger data readers and existing service calls — unverified
+
+The current priority follows the existing inventory's original uncompressed JSON
+bytes, not ZIP size or generated-cache size. DescData_Korean55,498,936 bytes and
+DescID34,955,795 bytes are explicitly deferred, not deleted or completed. Game
+word filters are excluded from loading, not subtracted from the denominator.
+Among the remaining large inputs are ItemClass44,095,017, Bonus34,575,811,
+SpellClass22,596,753, LuckyBagEntityView17,073,327, Reward13,234,439,
+ItemCraftOutputView11,140,223 and ItemCraftInput10,217,120 bytes. These figures
+describe input priorities, not additional consumed bytes.
+
+Existing pinned private item sidecars and feature caches are reused first.
+`current523_definition_rows.gd` provides lazy read-only `row(table,id)`,
+`related(table,foreign_key,id)` and `rows(table)` access to the existing pinned
+archive when a needed definition is absent from those caches. It uses the
+existing content environment path or existing growth/death/title archive
+locations. No new install, original publication, source version or save is
+created. Missing or ambiguous definitions remain missing. Original filtering
+tables cannot be read through this adapter.
+
+The public data contracts for PR269 are:
+
+| Call | Returned source data and existing reader |
+| --- | --- |
+| `current523_item_data.describe(item_id)` | Original ItemClass/category/grade, equipment/class links, ItemBonus→Bonus→BonusType→Unit and typed card/spell/bag/reward/buff references. Existing full-item sidecars supply already compiled rows/use specs; original rows supply missing joins. Shop market/NPC quotes now call this reader for item identity and explicit exclusions. Descriptions retain their IDs and are deferred by default. |
+| `current523_spell_data.describe(spell_id)` | Raw SpellClass costs/ranges/conditions, SpellBonus typed effects, learning/class/card prerequisites and declared target/category/material references. Item book/card references call this adapter; it never learns or executes a spell. |
+| `current523_reward_data.bag(bag_id)` / `reward(reward_id)` | Full declared bag entities/type/item/class-limit rows and Item/SelectReward ID graphs respectively. Quantities, blessing, initial enchant where declared, raw weights and conditions remain unmodified. Cycles stay explicit ID edges. Item bonus references call these adapters; no draw, choice or grant is added. |
+| `source523_shop_catalog.item_references(item_id)` / shop runtime's same method | MerchantGoods plus typed item MarketProduct/additional/payment references and purchase/server/date/restriction rows. Existing successful quote results carry `source_reference`; buy/debit/save code and ownership tokens stay with their existing owner. Reverse references do not activate off-sale or restricted offers. |
+| `patch523_rules.recipe_evidence(craft_id)` | Cached original inputs/outputs/views/restrictions, with original-archive fallback only when a cached relation group is absent. Existing `material_selection→quote/execute` reads the exact source row/slot/item/quantity/enchant/blessing, result branches/probabilities and view/restriction conditions. It does not admit new recipes or change the established missing-failure policy. |
+| NPC catalog's `project_actor_record(record)` | Existing Monster.setup reads exact current523 HP/MP/AC/MR/Exp and native attributes only for an existing source actor with matching integral ID/Sprite/DescId and an eligible declared category. The saved encounter identity, spawn-context level, sprites and loot remain unchanged. |
+| NPC catalog's `npc_definition(npc_id)` / `attack_definition(npc_id,attack_id)` | Raw attributes/races/resistances/attacks and referenced spell data. These remain reference-only; missing NPC attribute semantics and AI/probability/timing are not invented. Actual attack choices remain the existing compiled closure; cached selected effect relations remain preferred. |
+
+Reference contracts explicitly retain `reference_only` and `can_activate:false`
+or `can_execute:false`. An `ok`/`join_complete` data result is not ownership,
+learning, execution, service authorization or a successful save. Existing
+`TestItem`/`TestSpell`/`TestNPC` declarations stay excluded from new activation;
+unsupported definitions are not silently turned into working effects.
+
+The overlap comparison used the already published checkpoints: integration269
+`b3b2b0f89e9ba7adc93e46cb4e72d04cdc9ffeb2`, UI267
+`5dfd55e9ab20f495f16482782e43376af1f3d329`, map222
+`c799528207a45dbb96c2ab3cdc58a242ae3be4d9`, and image270
+`cf5657bbd0daa7c4725e0ac4ed77f46b20051994`. PR269 already owns typed item effects,
+book learning, card/bag receipts and transactions. This Draft supplies source
+reads and data-call additions; it does not recreate those engines, the shared
+writer, UI, maps or the separate Sprite lane. Its Monster.setup insertion is a
+data projection immediately after the existing base508 NPC record, outside the
+integration's action/loot/save changes.
+
+These changes have not been parsed, executed or tested. They do not establish
+whole-table gameplay use, complete all rows, or raise the earlier122 count.
+Additional effect/ownership adoption of these data contracts belongs to PR269;
+unresolved type/AI/server/UI contracts remain unresolved.
+
+## Game word-filter removal — unverified
+
+The title source reader no longer loads BannedWordType,
+PersonalAppellationBannedWordTypeList or BannedWordData_Korean, nor requires their
+previous selected-type count. Assigning legacy personal data clears only its
+filter fields and sets `banned_word_filter_enabled=false`, so retained cache word
+lists are not reused. The common definition adapter also refuses those three
+tables and BannedWord before reading a member. The original archive and handoff
+packs are preserved byte-for-byte; no pack is regenerated and no denominator is
+reduced. Removal of the input filter loop/name cache itself remains the single
+PR269 integration owner's change. Other title requirements, costs and saved
+names are retained.
 
 ## Concrete differences from the recorded main
 

@@ -1,7 +1,11 @@
 extends RefCounted
 ## Private 523 source evidence. No legacy-name joins or inferred server formulas.
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const MAX_BYTES = 16 * 1024 * 1024
+const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
+const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
+const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -42,7 +46,7 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 			if entry.row.has("ID") and str(int(entry.row.ID)) != key:
 				error = "source_id_mismatch"; return false
 	content = value
-	for pair: Array in [["NpcAttack", "NpcClassID"], ["SpellBonus", "SpellClassID"], ["BuffBonus", "BuffClassID"], ["StatusEffectAttr", "StatusEffectID"], ["LandAttribute", "LandID"]]:
+	for pair: Array in [["NpcAttack", "NpcClassID"], ["NpcAttribute", "NpcClassID"], ["NpcSpecialResistance", "NpcClassID"], ["NpcRace", "NpcClassID"], ["SpellBonus", "SpellClassID"], ["BuffBonus", "BuffClassID"], ["StatusEffectAttr", "StatusEffectID"], ["LandAttribute", "LandID"]]:
 		var index: Dictionary = {}
 		for entry: Dictionary in content.tables.get(pair[0], {}).values():
 			var owner: String = str(int(entry.row.get(pair[1], -1)))
@@ -52,10 +56,93 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 	return true
 
 func row(table: String, id: int) -> Dictionary:
-	return content.get("tables", {}).get(table, {}).get(str(id), {}).get("row", {})
+	var compiled: Dictionary = content.get("tables", {}).get(table, {}).get(str(id), {}).get("row", {})
+	if not compiled.is_empty(): return compiled
+	# Attack execution remains restricted to the previously compiled identities.
+	# Full attack definitions have a separate reference-only contract below.
+	if table == "NpcAttack" or not DEFINITION_TABLES.has(table): return {}
+	var original: Dictionary = DEFINITIONS.row(table,id)
+	if table == "NpcClass" and not definition_eligible(original): return {}
+	if table == "SpellClass" and bool(original.get("TestSpell",false)): return {}
+	if table == "BuffClass" and bool(original.get("TestBuff",false)): return {}
+	return original
 
 func owned(table: String, id: int) -> Array:
+	# A compiled table owns its complete selected closure, including owners
+	# with no selected rows. The original archive cannot widen that execution set.
+	if content.get("tables",{}).has(table):
+		return indexes.get(table,{}).get(str(id),[])
+	if DEFINITION_OWNERS.has(table):
+		var original: Array[Dictionary] = DEFINITIONS.related(table,str(DEFINITION_OWNERS[table]),id)
+		if not original.is_empty(): return original
 	return indexes.get(table, {}).get(str(id), [])
+
+static func source_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and absf(float(value)) <= 9007199254740991.0
+
+static func definition_eligible(source: Dictionary) -> bool:
+	if source.is_empty() or not source.get("TestNPC") is bool or bool(source.TestNPC): return false
+	if not source_integer(source.get("Category")): return false
+	var category: Dictionary = DEFINITIONS.row("NpcCategory",int(source.Category))
+	if not category.get("IsAttackable") is bool or not bool(category.IsAttackable): return false
+	var category_name: String = str(category.get("Name",""))
+	if category_name in ["SiegeNpc","SiegeTurret","BattleArenaSkillCoin","BattleArenaConchShell","Test"]: return false
+	# Only the already supplied, attackable category declarations are projected.
+	# Unknown categories retain their prior data; names never imply eligibility.
+	return category_name in ["Npc","Orc","Elf","Kobolds","Slime","Wolf","Guard","Citizen","PartyNpc","PartyImportantNpc","LastavardGateKeeper","Companion"]
+
+func npc_definition(npc_id: int) -> Dictionary:
+	var source: Dictionary = DEFINITIONS.row("NpcClass",npc_id)
+	if not definition_eligible(source): return {}
+	var attacks: Array[Dictionary] = DEFINITIONS.related("NpcAttack","NpcClassID",npc_id)
+	var special: Array[Dictionary] = []
+	for link: Dictionary in DEFINITIONS.related("NpcSpecialResistance","NpcClassID",npc_id):
+		if not source_integer(link.get("SpecialResistanceTypeID")): continue
+		special.append({"link":link,"type":DEFINITIONS.row("SpecialResistanceType",int(link.SpecialResistanceTypeID)),"can_execute":false,"reference_only":true})
+	return {"npc":source,"category":DEFINITIONS.row("NpcCategory",int(source.Category)),
+		"attributes":DEFINITIONS.related("NpcAttribute","NpcClassID",npc_id),
+		"special_resistances":special,"races":DEFINITIONS.related("NpcRace","NpcClassID",npc_id),
+		"attacks":attacks,"can_execute":false,"reference_only":true,
+		"source_snapshot":"patch523","source_archive_sha256":SOURCE_SHA,
+		"remaining_contract":"NpcAttributeType/AI/probability/timing and additional attack activation require their existing owner; raw resistance values are not a new status formula"}
+
+func attack_definition(npc_id: int, attack_id: int) -> Dictionary:
+	var npc: Dictionary = DEFINITIONS.row("NpcClass",npc_id)
+	var source: Dictionary = DEFINITIONS.row("NpcAttack",attack_id)
+	if not definition_eligible(npc) or source.is_empty() or not source_integer(source.get("NpcClassID")) or int(source.NpcClassID) != npc_id: return {}
+	var spell: Dictionary = {}
+	if source.get("IsSpell") is bool and bool(source.IsSpell) and source_integer(source.get("SpellID")):
+		spell = DEFINITIONS.row("SpellClass",int(source.SpellID))
+	return {"source":source,"npc":npc,"spell":spell,"can_execute":false,"reference_only":true,
+		"compiled_attack_available":not attack(npc_id,attack_id).is_empty(),
+		"source_snapshot":"patch523","source_archive_sha256":SOURCE_SHA,
+		"remaining_contract":"existing compiled attack choices only; no new MotionType, probability, target or clock interpretation"}
+
+func project_actor_record(record: Dictionary) -> Dictionary:
+	# This adapter changes data on an existing source actor only. It never
+	# creates an encounter, replaces its pixels, changes a spawn level or grants loot.
+	var prior: Variant = record.get("source_m_original")
+	if not prior is Dictionary or not source_integer(record.get("source_m_npc_id")): return record
+	var npc_id: int = int(record.source_m_npc_id)
+	if not source_integer(prior.get("ID")) or int(prior.ID) != npc_id: return record
+	var source: Dictionary = DEFINITIONS.row("NpcClass",npc_id)
+	if not definition_eligible(source): return record
+	for key: String in ["ID","Sprite","DescId"]:
+		if not source_integer(source.get(key)) or not source_integer(prior.get(key)) or source[key] != prior[key]: return record
+	for key: String in ["HP","MP","AC","MR","Exp","Str","Dex","Con","Wis","Cha","Int"]:
+		if not source_integer(source.get(key)): return record
+	if int(source.HP) <= 0 or int(source.MP) < 0 or int(source.MR) < 0 or int(source.Exp) < 0: return record
+	var result: Dictionary = record.duplicate(true)
+	var original: Dictionary = prior.duplicate(true)
+	original.merge(source,true)
+	# The persisted m508 encounter identity and explicit spawn-context level stay
+	# intact; content version describes the values, not a new identity namespace.
+	result["source_m_original"] = original
+	result["source_m_definition_snapshot"] = "patch523"
+	result["source_m_definition_archive_sha256"] = SOURCE_SHA
+	for field_name: String in NPC_STAT_FIELDS:
+		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
+	return result
 
 func attack(npc_id: int, attack_id: int) -> Dictionary:
 	for source: Dictionary in owned("NpcAttack",npc_id):
