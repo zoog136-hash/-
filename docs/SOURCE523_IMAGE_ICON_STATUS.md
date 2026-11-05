@@ -525,6 +525,14 @@ metadata retains both the source catalog's selected pack pin and the image
 loader's provenance. A loaded source image removes the old missing-image suffix
 from that row's text without rewriting its source definition-only marker.
 
+Existing mastery operation/confirmation buttons and the reset-payment selector
+now display the actual quoted payment image. Ordinary Currency rows supply only
+their declared AssetID. The existing ticket definition and point-purchase
+material supplier instead supply their complete ItemClass rows to the current
+canonical item reader. Currency IDs and weapon/group IDs are not ItemClass
+aliases. Missing fields remain unavailable; costs, payment choice, quotes,
+execution and saves are unchanged.
+
 These are written caller connections, not observations of game consumption.
 No additional tests, execution, rendering, CI, source recount or quality audit
 was performed for these changes.
