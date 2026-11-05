@@ -709,16 +709,37 @@ This establishes a source-backed illustration role and an existing selector
 consumer, not every NPC portrait or actual game-use counts. The installed
 source-NPC dialogue records use L1J identities; the current resolved model does
 not supply an authoritative current523 `NpcClassID` relation. The original
-`NpcDialogue_All` Sprite4912 is also outside
-the published dialogue text/button scope. A real dialogue portrait still needs
-that typed caller identity and the UI owner's scope/binding for the authored
-target. The source editor preview is not substituted. NpcInteraction arguments
+`NpcDialogue_All` Sprite4912 was outside the earlier published dialogue
+text/button scope. The later UI267 receiver/v14 contract below now supplies
+that original target; the typed caller identity remains an input. The source
+editor preview is not substituted. NpcInteraction arguments
 are not interpreted without their missing type contract; a DescId or text/name
 match is not a dialogue/portrait relation.
 
 This NPC selector connection is unexecuted and unverified. No additional tests,
 game execution, rendering, CI, source-byte audit or original pixel creation was
 performed.
+
+The later UI267 NPC portrait receiver at
+`3b9821b10096667449eb34b4aa1fe015095b6c67` supplies the original Sprite4912
+boundary and v14 external-pixel scope. `source523_npc_images.gd` now owns the
+shared pinned-NPC-row/IllustAssetID resolver used by the existing NPC selector
+and its new `dialogue_image(context,target,catalog=null)` callback. It returns the
+receiver's exact static-original descriptor with the existing source status and
+provenance. `bind_dialogue(hud,context_provider,catalog=null)` registers it through
+the owner's published HUD API when integration269 provides the real current
+dialogue/mobile-NPC context. No default or name-based context provider is added.
+The default dialogue callback reuses Data271's existing full original-definition
+reader and exact archive/unique-row identity for town NPCs, without applying a
+combat category filter. An explicitly passed NPC catalog retains its narrower
+extent. Missing readers/archives/rows remain unavailable rather than silently
+changing suppliers. Original `TestNPC:true` rows are excluded from image
+connection. No new source table pack, source importer, inferred row proof or
+extra archive selection is added.
+See [the consumer contract](SOURCE523_NPC_PORTRAIT_CONSUMER_CONTRACT.md) for the
+exact arguments, return fields, source-provider scope and remaining input.
+This written connection is unexecuted and unverified; registration, delivery of
+the v14 selection and actual portrait display are separate stages.
 
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
