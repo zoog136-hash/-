@@ -96,6 +96,11 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var symbols: Dictionary=world.growth.source523.prepare_pickup(pending,acquired.item_instances,int(acquired.next_item_instance_id))
 	var instances: Dictionary=symbols.item_instances
 	var next_id: int=int(symbols.next_item_instance_id)
+	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+	if not stock.call("profile",source.item).is_empty():
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor","floor_id":id,"drop":source.proof.duplicate(true)})
+		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
+		instances=granted.item_instances
 	physical.free()
 	var added: Array=[]
 	for uid: String in instances:

@@ -4048,6 +4048,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
+	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
+	if native_stack.get("handled",false):
+		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
+		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		return
 	if quest_item_provider.try_use_inventory(self,item_name): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
 		hud.show_message("원본 사용 효과 미연결 · 보관/판매 가능 · 아이템 보존")
@@ -4368,6 +4373,10 @@ func _sync_item_instances() -> void:
 	for raw_name: Variant in inventory.keys():
 		var name_value: String = str(raw_name)
 		var record: Dictionary = _find_catalog_item_record(name_value)
+		var has_native_stack: bool=false
+		for typed_id: String in ids_by_name.get(name_value,[]):
+			if item_instances[typed_id].has("source_native_stack_receipt"):has_native_stack=true;break
+		if has_native_stack:continue # No name-derived creation/pruning of quantity-managed ownership.
 		if not _needs_physical_item(record):
 			continue
 		var desired: int = maxi(0, int(inventory.get(name_value, 0)))
@@ -4403,6 +4412,9 @@ func _sync_item_instances() -> void:
 	for raw_id: Variant in item_instances.keys():
 		var instance_id: String = str(raw_id)
 		var name_value: String = str((item_instances[raw_id] as Dictionary).get("name", ""))
+		if item_instances[raw_id].has("source_native_stack_receipt"):
+			if int(inventory.get(name_value,0))<=0:patch523_owner_state_problem="원본 물리 묶음과 소지 수량 불일치 · 개체 보존, 정상 저장 불러오기 필요"
+			continue
 		if int(inventory.get(name_value, 0)) <= 0 and not _is_instance_equipped(instance_id):
 			item_instances.erase(raw_id)
 			continue
@@ -5628,6 +5640,11 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name)
+	if native_stack.get("handled",false):
+		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
+		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		return
 	var native: Dictionary=_find_catalog_item_record(item_name)
 	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==233:
 		preload("res://scripts/loot/quest_hp233_use.gd").use(self,native)
@@ -5902,6 +5919,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if expedition_local!=null and expedition_local.get("save_blocked")==true:return ERR_UNAVAILABLE
 	if quest_auto!=null and quest_service.get("save_blocked")==true:return ERR_UNAVAILABLE
 	var owner_error: String=owner_boundary.override_error(self,collection_override)
+	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").override_error(self,collection_override)
 	if not owner_error.is_empty():
 		if not quiet:hud.show_message(owner_error)
 		return ERR_INVALID_DATA
@@ -5956,7 +5974,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
 	for key: String in collection_override:
 		if key=="patch523_transaction_rng":
-			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
+			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
 		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","fishing523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
@@ -6298,6 +6316,7 @@ func _load_game(quiet: bool) -> void:
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	var owner_error: String=owner_boundary.quest_error(self,data.get("quest_state",{}))
 	if owner_error.is_empty() and data.has("patch523_transaction_rng"):owner_error=owner_boundary.rng_error(data.patch523_transaction_rng)
+	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}))
 	if owner_error.is_empty() and expedition_local!=null and data.has("expedition523_local"):owner_error=owner_boundary.expedition_error(self,data.expedition523_local)
 	if owner_error.is_empty() and protection523!=null and data.has("protection523"):owner_error=owner_boundary.protection_error(self,data.protection523)
 	if not owner_error.is_empty():

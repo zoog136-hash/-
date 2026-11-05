@@ -155,6 +155,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		var spec: Dictionary=consume_metadata(rows,raw,category)
 		spec.merge(mp);spec["kind"]="source_mp_dice";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=item_id;spec["base"]=int(mp.get("MPRestoration",0));spec["dice_number"]=int(mp.get("MPRestorationDiceNumber",0));spec["dice_spot_count"]=int(mp.get("MPRestorationDiceSpotCount",0));spec["source_item_bonus_ids"]=[]
 		for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+		spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
 		spec["activation_status"]="unrestricted" if spec.blocked_reasons.is_empty() else "blocked";out["source_use_spec"]=spec
 		if spec.blocked_reasons.is_empty():
 			for index: int in range(rows.size()):handled[index]=true

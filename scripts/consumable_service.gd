@@ -95,6 +95,9 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 func setup(world_node: Node) -> void:
 	world = world_node
 
+var source_native_stack_uses_present: bool=false
+var source_native_stack_uses: Variant={}
+
 var instant_cure_present: bool=false
 var instant_cure_state: Variant={}
 
@@ -122,6 +125,7 @@ func export_state() -> Dictionary:
 		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
 	}
 
+	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
 	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
 	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
 	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=source_quest_craft_receipts.duplicate(true) if source_quest_craft_receipts is Dictionary or source_quest_craft_receipts is Array else source_quest_craft_receipts
@@ -133,6 +137,9 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_native_stack_uses_present=input is Dictionary and input.has("source_native_stack_uses")
+	var stack_uses: Variant=input.get("source_native_stack_uses",{}) if input is Dictionary else {}
+	source_native_stack_uses=stack_uses.duplicate(true) if stack_uses is Dictionary or stack_uses is Array else stack_uses
 	source_monsterbook_grants_present=input is Dictionary and input.has("source_monsterbook_grants")
 	var book_grants: Variant=input.get("source_monsterbook_grants",{}) if input is Dictionary else {}
 	source_monsterbook_grants=book_grants.duplicate(true) if book_grants is Dictionary or book_grants is Array else book_grants
@@ -259,6 +266,11 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
+	if stack.get("handled",false):
+		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
+		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
+		return true
 	var native: Dictionary=world.option_awakening.use_source_awakening_item(item_name,selected_instance)
 	if native.get("handled",false):
 		if native.get("ok",false):world._update_hud();world.hud.refresh_inventory(world.inventory)

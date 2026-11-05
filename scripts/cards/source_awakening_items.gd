@@ -31,6 +31,8 @@ static func stackable_book(record: Dictionary) -> bool:
 	return recognized(record) and int(record.source_item_class_id) not in [346901,365748,346921,365758,3252,370562]
 
 static func storage_allowed(item_name: String,record: Dictionary,instances: Dictionary) -> bool:
+	for physical: Variant in instances.values():
+		if physical is Dictionary and physical.get("name")==item_name and physical.has("source_native_stack_receipt"):return false # Typed stack storage transfer is not implemented; keep all physical provenance.
 	if not _record_storage_allowed(record):return false
 	for entry: Variant in instances.values():
 		if entry is Dictionary and entry.get("name","")==item_name and entry.get("record") is Dictionary and not _record_storage_allowed(entry.record):return false

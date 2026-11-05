@@ -147,3 +147,14 @@ free acquisition or original UI scene is fabricated.
 All of this follow-up is implementation only, unexecuted/unverified. It does
 not reduce the historical 88 remaining item classes or establish full native
 effect, current gameplay, bank installation or pixel delivery completion.
+
+## Current original HP/MP quantity owner (unexecuted)
+
+Supported source HP/MP potions now have a physical quantity/receipt owner from
+supplier or actual source floor through inventory/quick/healing use. The same
+candidate saves actual remaining quantity, inventory, used ledger, HP/MP,
+cooldowns and private RNG, with the existing writer's transient candidate seal.
+Old name-only stock is not reidentified. Other native stacks/effects remain
+pending; floor splitting and warehouse transfer are explicit ownership holds.
+Source defaults/costs, original restrictions, legacy saves and current sprites
+remain separate. This is unexecuted code, not a new completion/count/pass.

@@ -38,19 +38,27 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 		if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {"ok":false,"error":"원본 공급 카탈로그 미등록"}
 		if enchant > 0 and not D.equipment(record): return {"ok":false,"error":"비장비 원본 강화값 미지원"}
 		var wallet: String = D.currency_identity_name(record)
-		if not D.equipment(record) and wallet!="아데나":return {"ok":false,"error":"새 원문 비장비 물리 수량·소비 소유자 연결 대기 · 입력과 보상 보존"}
+		var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+		var stack_supported: bool=not stock.call("profile",record).is_empty()
+		if not D.equipment(record) and wallet!="아데나" and not stack_supported:return {"ok":false,"error":"새 원문 비장비 물리 수량·소비 소유자 연결 대기 · 입력과 보상 보존"}
 		var key: String = wallet if not wallet.is_empty() else str(record.name)
 		if wallet == "아데나":
 			if gold < 0 or gold > MAX_EXACT_JSON_INTEGER-amount: return {"ok":false,"error":"원본 지급 후 재화 정수 범위 초과 · 기존 보유 보존"}
 			gold += amount
 		else:
-			var previous: int = int(inventory.get(key,0))
+			var previous_value: Variant=inventory.get(key,0)
+			if not D._source_integer(previous_value):return {"ok":false,"error":"기존 소지 수량 정수 형식 보존"}
+			var previous: int=int(previous_value)
 			if previous < 0 or previous > MAX_EXACT_JSON_INTEGER-amount: return {"ok":false,"error":"원본 지급 후 수량 정수 범위 초과 · 기존 보유 보존"}
 			inventory[key] = previous+amount
 		if bless==1 and int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
 			var typed: Dictionary=preload("res://scripts/cards/native_awakening_supply.gd").stage_grant(record,amount,instances,origin)
 			if not typed.get("ok",false):return {"ok":false,"error":"각성 물품 원본 지급 증명 실패"}
 			instances=typed.item_instances
+		if stack_supported:
+			var staged: Dictionary=stock.call("stage_grant",record,amount,instances,origin)
+			if not staged.get("ok",false):return {"ok":false,"error":"원본 HP/MP 물리 공급 영수증 생성 실패"}
+			instances=staged.item_instances
 		if D.equipment(record):
 			if amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
 			var state: String = {1:"normal",2:"blessed",3:"cursed"}[bless]

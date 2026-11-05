@@ -72,6 +72,8 @@ static func nonquest_vital_owner(world: Node,staged: Dictionary) -> String:
 	if cards is RefCounted and cards.get_script() == preload("res://scripts/cards/card_selection_save.gd") and cards.authorizes(staged): return "card_owner"
 	var book: Variant=world.get("monsterbook523_runtime")
 	if book is RefCounted and book.get_script()==preload("res://scripts/monsterbook/monsterbook523_runtime.gd") and book.authorizes_reward_save(staged):return "sealed_monsterbook_reward"
+	var native_stack: Script=load("res://scripts/loot/current523_native_stack.gd")
+	if native_stack!=null and native_stack.call("authorizes",staged):return "sealed_current_native_stack_consumer"
 	var alchemy: Variant=world.get("alchemy_held_items")
 	if alchemy is RefCounted and alchemy.get_script()==preload("res://scripts/equipment523/alchemy_held_use.gd") and alchemy.authorizes(staged):return "sealed_alchemy_item_consumer"
 	var provider: Variant=world.get("quest_item_provider")

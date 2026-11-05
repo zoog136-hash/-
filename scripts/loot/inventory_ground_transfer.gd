@@ -11,6 +11,10 @@ static func drop(world: Node, reference: String, requested_position: Vector2) ->
 	if world._item_locked(item_name,id) or world._item_locked(item_name):
 		world.hud.show_message("잠긴 아이템은 내려놓을 수 없습니다")
 		return false
+	for existing: Variant in world.item_instances.values():
+		if existing is Dictionary and existing.get("name")==item_name and existing.has("source_native_stack_receipt"):
+			world.hud.show_message("원본 물리 묶음의 선택 수량 이동 연결 대기 · 보유 보존")
+			return false
 	var physical: Dictionary = {}
 	var item: Dictionary = world._find_catalog_item_record(item_name)
 	if id.is_empty() and preload("res://scripts/cards/source_awakening_items.gd").stackable_book(item):
@@ -42,6 +46,11 @@ static func drop(world: Node, reference: String, requested_position: Vector2) ->
 	if item.is_empty(): return false
 	if not bool(item.get("droppable",item.get("drop_allowed",true))) or bool(item.get("quest_item",false)):
 		world.hud.show_message("내려놓을 수 없는 아이템입니다")
+		return false
+	if physical.has("source_native_stack_receipt"):
+		# This source quantity owner currently supports use, not floor splitting.
+		# Never remove a whole physical stack while decrementing inventory by one.
+		world.hud.show_message("원본 물리 묶음의 선택 수량 이동 연결 대기 · 보유 보존")
 		return false
 	var player_position: Vector2 = world.player.global_position
 	var offset: Vector2 = (requested_position-player_position).limit_length(96.0)

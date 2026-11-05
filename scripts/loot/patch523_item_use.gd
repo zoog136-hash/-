@@ -52,6 +52,7 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	if record.is_empty(): return "원본 아이템 자료를 확인할 수 없습니다"
 	var dummy: String=preload("res://scripts/quests/source_dummy523.gd").reason(record)
 	if not dummy.is_empty():return dummy
+	if not record.get("source_condition_pending",[]).is_empty():return "원본 서비스·서버·기간 조건 연결 필요 · 아이템 보존"
 	if record.get("source_test_item", false): return "원본 테스트 아이템은 사용할 수 없습니다"
 	var deadline: String = DROPS.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty(): return deadline

@@ -52,9 +52,10 @@ equipment effects or a successful save.
 argument and full inventory/item_instances/gold candidate output. Current native
 equipment uses the existing physical UUID/blessing/enchant/supplier proof path;
 Adena uses the existing bounded gold wallet. Reviewed awakening supplies use
-their current schema2 quantity owner. Other new non-equipment native stacks are
-explicitly held until their quantity/use owner is connected; they are not
-published as name-only balances or treated as completed effects.
+their current schema2 quantity owner. Supported original HP/MP potions now use the quantity owner described below.
+Other new non-equipment native stacks remain held until their quantity/use
+owner is connected; they are not published as name-only balances or treated
+as completed effects.
 
 ## Real NPC, floor and save calls
 
@@ -100,6 +101,38 @@ not a final definition/effect fallback or an installation prerequisite for new
 schema2 supplies. Originals, prior packs and the immutable 811/822 saves remain
 preserved.
 
-The generic non-equipment quantity/use bridge, the other native effects and
-actual new UI/image/Sprite/bank installation remain incomplete. The prior Main47
+Other non-equipment quantity/use bridges, native effects and actual new
+UI/image/Sprite/bank installation remain incomplete. The prior Main47
 and receipt735 checks belong solely to ea838f6b and do not validate this code.
+
+## Supported HP/MP physical stacks (later implementation, unverified)
+
+`current523_native_stack` adds quantity ownership only where the existing exact
+HP metadata or unrestricted MP dice owner represents the full use conditions.
+The generic supplier and real source floor acquisition stage an actual random
+physical ID, original archive/full ItemClass/blessing/supplier receipt and an
+immutable granted quantity. The remaining and used quantities stay separate.
+No historical name-only stock or quest receipt is converted into this schema.
+
+Actual inventory selection, consumable quick-use and direct healing dispatch
+join this owner before older name-based consumers. Selection/locks/current
+source class/level/date/service/invisibility/life/cooldown conditions are
+rechecked; missing proof preserves same-name legacy stock. The private RNG
+candidate uses original HP/MP dice and existing host healing modifiers, NPC
+healing and cooldown hooks. It does not advance live RNG before saving.
+
+A single sealed save candidate contains physical remainder/removal, inventory
+debit, immutable source receipt plus used/remaining ledger, HP/MP, cooldowns and
+RNG state. The existing shared vital/RNG writer recognizes only that exact
+in-memory candidate. Source quantity state/transition guards participate in the
+existing save/load boundary; unrelated or completed receipt changes are held.
+Save error retains live state and blocks another write/use until load, since
+an error can follow an uncertain durable write. Live adoption occurs only after
+confirmed success. Source effect sprite IDs go to the existing emitter only.
+
+The normal physical synchronizer does not manufacture or prune these stacks.
+Their floor-splitting and warehouse transactions remain explicitly held pending
+a typed transfer owner; no whole stack is moved while inventory decrements one.
+This is a host ownership safety hold, not a claim that the source item forbids
+storage or dropping. Other native materials/bags/books/effects remain outside
+this narrow quantity/use connection. No new run, test, save or pass is claimed.
