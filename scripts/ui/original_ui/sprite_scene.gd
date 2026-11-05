@@ -155,7 +155,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not connected:unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
 		if not inspection_only and not connected:problems.append("unconnected_source_percent")
 	if node.classname=="ScrollView":
-		var connected: bool=binding.get("role")=="source_scroll" and binding.get("input") is Callable and binding.input.is_valid()
+		var connected: bool=not bool(widget.touchEnabled) or (binding.get("role")=="source_scroll" and binding.get("input") is Callable and binding.input.is_valid())
 		if not connected:unresolved_bindings.append(str(widget.name)+":original_scroll_input_binding")
 		if not inspection_only and not connected:problems.append("unconnected_original_scroll_input")
 		if binding.has("position") and not binding.position is Vector2:problems.append("source_scroll_position_invalid")
@@ -397,7 +397,7 @@ func _build(source: Dictionary) -> Node2D:
 		if scroll_binding.has("position"):
 			var positioned: Dictionary=scroll.set_source_position(scroll_binding.position)
 			if not positioned.ok:_build_error=str(positioned.error);node.free();return null
-		if not inspection_only:scroll.bind_input(scroll_binding.input)
+		if not inspection_only and bool(widget.touchEnabled):scroll.bind_input(scroll_binding.input)
 		child_origin=scroll.content
 	var list_items: Array[Dictionary]=[]
 	var list_nodes: Array[Node2D]=[]
