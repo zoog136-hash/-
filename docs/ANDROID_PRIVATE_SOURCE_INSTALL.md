@@ -235,6 +235,18 @@ cfg를 새 경로로 고쳐 쓰지 않는다. source_bank.caller_code_requiremen
 근거는 병합된 피격·Death receiver·성공한 소비 이벤트·보류 지면 호출 경계만 기록한다.
 최신 은행 공급·admission·저장 성공·실제 재생과 독립된 상태이며, 실행 검증은 하지 않는다.
 
+공식 추가 델타는 pinned_delta의 별도 멤버 목록 pin과 함께 적용할 수 있다.
+새 staging에 정확한 기반을 조립한 뒤 독립 ZIP 순서·모든 멤버 크기/SHA·metadata
+교체 소유권·raw/actor 새 경로를 확인하고, 마지막 manifest만 최종 단계에서 반영한다.
+기존 활성 은행이나 하드링크를 덮지 않는다. 설정 template 대신 공급된 원본 설정
+계약 pin을 사용할 수 있으며, 실제 소비자의 MAX_JSON보다 큰 manifest는 cfg 활성
+준비로 표시하지 않는다. 설치기 metadata 읽기 한도와 게임 로더 한도는 별개다.
+
+v23의 새 소비 기능은 PR280 코드와 별도 호환 조건을 요구한다. 이전 scope 소비를
+새 기능 전체 완료로 표시하지 않는다. 알려진 필수 소스 문제가 있는 후보는
+mandatory_source_blockers로 다운로드·설치 전에 중단한다. 해당 조건이 해소된 공식
+코드와 정확한 최종 목록을 확인한 뒤에만 한 번의 게시/목록 교체 대상으로 확정한다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의

@@ -357,13 +357,184 @@ class ArchiveStage:
             self._metadata_before(inside(self.root, name), digest)
 
 
-def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_members=None):
+class PinnedArchiveDelta:
+    """An exact member inventory over an owned, unpublished base extraction.
+
+    Existing members still use ArchiveStage's metadata-only replacement rules.
+    Actor/original/raw members may be added only at absent paths. The final
+    independent ZIP contains just the target manifest, after all other members.
+    """
+    def __init__(self, staged, root, inventory_path, *, inventory_sha256,
+                 inventory_bytes, base_manifest_sha256, target_manifest_sha256,
+                 manifest_path, part_count, member_count):
+        if not isinstance(staged, ArchiveStage):
+            raise ValueError('A delta needs NEW staging ownership')
+        staged._key(root, allow_root=True)
+        self.staged = staged
+        self.root = Path(os.path.abspath(root))
+        self.manifest_path = str(relative(manifest_path))
+        self.base_pin = pin(base_manifest_sha256)
+        self.target_pin = pin(target_manifest_sha256)
+        if (type(inventory_bytes) is not int or not 0 < inventory_bytes <= 64 * 1024 * 1024
+                or type(part_count) is not int or not 1 <= part_count <= 128
+                or type(member_count) is not int or not 1 <= member_count <= 250000):
+            raise ValueError('Invalid bounded delta inventory/part/member declaration')
+        no_links(inventory_path)
+        if not matches(inventory_path, {'bytes': inventory_bytes,
+                                        'sha256': pin(inventory_sha256)}):
+            raise ValueError('Delta member inventory size/SHA256 mismatch')
+        document = read_json(inventory_path, maximum=64 * 1024 * 1024)
+        if (not isinstance(document, dict) or document.get('schema') != 1
+                or document.get('base_manifest_sha256') != self.base_pin
+                or document.get('target_manifest_sha256') != self.target_pin
+                or not isinstance(document.get('entries'), list)
+                or len(document['entries']) != member_count):
+            raise ValueError('Delta inventory does not bind the declared base and target')
+        base_target = inside(self.root, self.manifest_path)
+        base_record = staged._files.get(staged._key(base_target))
+        if (not base_record or base_record['sha256'] != self.base_pin
+                or not matches(base_target, base_record)):
+            raise ValueError('Delta base manifest is not the exact owned staged checkpoint')
+        self.members = {}
+        self.old_records = {}
+        cases = set()
+        parent = relative(self.manifest_path).parent
+        for row in document['entries']:
+            if (not isinstance(row, dict)
+                    or set(row) != {'relative_path', 'bytes', 'sha256', 'replaces_base_path'}
+                    or type(row.get('bytes')) is not int or row['bytes'] < 0
+                    or type(row.get('replaces_base_path')) is not bool):
+                raise ValueError('Invalid delta member proof')
+            name = str(relative(row['relative_path']))
+            if parent != PurePosixPath('.') and parent not in relative(name).parents:
+                raise ValueError('Delta member lies outside its declared manifest root')
+            if name.casefold() in cases:
+                raise ValueError('Duplicate/case-aliased delta member proof')
+            cases.add(name.casefold())
+            record = {'bytes': row['bytes'], 'sha256': pin(row['sha256'])}
+            target = inside(self.root, name)
+            key = staged._key(target)
+            if row['replaces_base_path']:
+                previous = staged._files.get(key)
+                if not previous:
+                    raise ValueError('Delta replacement has no exact owned base member: ' + name)
+                staged._metadata_before(target, previous['sha256'])
+                self.old_records[name] = dict(previous)
+            elif target.exists() or key in staged._files:
+                raise ValueError('Delta addition collides with a retained base member: ' + name)
+            self.members[name] = record
+        manifest = self.members.get(self.manifest_path)
+        if (not manifest or manifest['sha256'] != self.target_pin
+                or self.manifest_path not in self.old_records):
+            raise ValueError('Delta inventory lacks its exact replacing target manifest')
+        self.part_count = part_count
+        self.completed = set()
+        self.sequence = 0
+        self.pending = None
+        self.finished = False
+
+    def _before_member(self, name, target):
+        key = self.staged._key(target)
+        if name in self.old_records:
+            previous = self.old_records[name]
+            self.staged._metadata_before(target, previous['sha256'])
+            if self.staged._files.get(key) != previous or target.stat().st_nlink != 1:
+                raise ValueError('Delta base metadata ownership changed or is hardlinked: ' + name)
+        elif target.exists() or key in self.staged._files:
+            raise ValueError('Delta addition is no longer an absent NEW staged path: ' + name)
+
+    def extract_kwargs(self, archive, sequence):
+        """Prepare one independently pinned ZIP, in declared one-based order."""
+        if (self.finished or self.pending is not None or type(sequence) is not int
+                or sequence != self.sequence + 1 or sequence > self.part_count):
+            raise ValueError('Delta ZIP order is invalid or its previous extraction is incomplete')
+        names = set()
+        cases = set()
+        directories = set()
+        with zipfile.ZipFile(archive) as zf:
+            entries = zf.infolist()
+            if len(entries) > 250000:
+                raise ValueError('Delta ZIP member limit exceeded')
+            for info in entries:
+                name = str(relative(info.filename.rstrip('/')))
+                if name.casefold() in cases:
+                    raise ValueError('Duplicate/case-aliased delta ZIP member')
+                cases.add(name.casefold())
+                if info.is_dir():
+                    directories.add(name)
+                    continue
+                if name not in self.members or name in self.completed:
+                    raise ValueError('Unlisted or repeated delta ZIP member: ' + name)
+                if info.file_size != self.members[name]['bytes']:
+                    raise ValueError('Delta ZIP central-directory size differs from its member proof')
+                names.add(name)
+        if not names:
+            raise ValueError('An independent delta ZIP cannot be empty')
+        ancestors = {parent.as_posix() for name in names for parent in relative(name).parents
+                     if parent != PurePosixPath('.')}
+        if not directories.issubset(ancestors):
+            raise ValueError('Delta ZIP has an unrelated directory entry')
+        if sequence == self.part_count:
+            if (names != {self.manifest_path}
+                    or self.completed != set(self.members) - {self.manifest_path}):
+                raise ValueError('The final delta ZIP must commit only its manifest after every payload')
+        elif self.manifest_path in names:
+            raise ValueError('Delta target manifest arrived before its final commit ZIP')
+        replacements = []
+        for name in sorted(names):
+            self._before_member(name, inside(self.root, name))
+            if name in self.old_records:
+                replacements.append({'path': name,
+                                     'expected_old_sha256': self.old_records[name]['sha256'],
+                                     'expected_new_sha256': self.members[name]['sha256']})
+        proofs = {name: dict(self.members[name]) for name in names}
+        self.pending = {'archive': Path(os.path.abspath(archive)), 'names': names,
+                        'proofs': proofs, 'replacements': replacements, 'sequence': sequence}
+        return {'member_proofs': proofs, 'replace_members': replacements, 'delta_stage': self}
+
+    def _begin(self, archive, root, staged, proofs, replacements):
+        request = self.pending
+        if (request is None or staged is not self.staged
+                or Path(os.path.abspath(root)) != self.root
+                or Path(os.path.abspath(archive)) != request['archive']
+                or proofs != request['proofs'] or replacements != request['replacements']):
+            raise ValueError('Delta extraction does not match its pending exact-member request')
+
+    def _completed(self, inventory):
+        if self.pending is None or set(inventory) != self.pending['names']:
+            raise ValueError('Delta extraction omitted or added a proved member')
+        for name, record in inventory.items():
+            target = inside(self.root, name)
+            if (record != self.members[name]
+                    or self.staged._files.get(self.staged._key(target)) != record):
+                raise ValueError('Delta extraction did not establish its exact staged member ownership')
+        self.completed.update(inventory)
+        self.sequence = self.pending['sequence']
+        self.pending = None
+
+    def finish(self):
+        """Require every proved member and the final target manifest commit."""
+        if (self.finished or self.pending is not None or self.sequence != self.part_count
+                or self.completed != set(self.members)):
+            raise ValueError('Delta is incomplete; prior bank and source archives remain intact')
+        target = inside(self.root, self.manifest_path)
+        self.staged._metadata_before(target, self.target_pin)
+        if not matches(target, self.members[self.manifest_path]):
+            raise ValueError('Delta target manifest changed before checkpoint acceptance')
+        self.finished = True
+        return {'member_count': len(self.completed), 'manifest_sha256': self.target_pin}
+
+
+def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_members=None,
+                 member_proofs=None, delta_stage=None):
     """Extract verified ZIPs; only pinned, owned staging metadata can change.
 
     ``replace_members`` is an explicit private-plan list of dictionaries with
     ``path`` (archive-relative), ``expected_old_sha256``, and optional
     ``expected_new_sha256``. Both the old hash and ArchiveStage ownership must
     match. With no replacement list, overlaps still require identical bytes.
+    ``member_proofs`` additionally requires an exact archive-relative file set
+    and each member's SHA256/bytes. It never relaxes metadata replacement rules.
     """
     inventory = {}
     case_names = {}
@@ -382,6 +553,19 @@ def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_m
         return include_prefixes is None or any(
             name.startswith(prefix) if prefix.endswith('/') else name == prefix
             for prefix in include_prefixes)
+    proofs = None
+    if member_proofs is not None:
+        if (not isinstance(member_proofs, dict) or not member_proofs
+                or len(member_proofs) > 250000 or staged is None):
+            raise ValueError('Member proofs need an exact bounded file map and NEW staging ownership')
+        proofs = {}
+        for name, record in member_proofs.items():
+            relative(name)
+            if (not selected(name) or not isinstance(record, dict)
+                    or set(record) != {'bytes', 'sha256'}
+                    or type(record.get('bytes')) is not int or record['bytes'] < 0):
+                raise ValueError('Invalid or filtered-out archive member proof')
+            proofs[name] = {'bytes': record['bytes'], 'sha256': pin(record['sha256'])}
     replacements = {}
     if replace_members is not None:
         if not isinstance(replace_members, list) or staged is None:
@@ -397,11 +581,19 @@ def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_m
             new_pin = pin(item['expected_new_sha256']) if 'expected_new_sha256' in item else None
             staged._metadata_before(inside(root, name), old_pin)
             replacements[name] = {'old': old_pin, 'new': new_pin}
+    if delta_stage is not None:
+        if not isinstance(delta_stage, PinnedArchiveDelta) or proofs is None:
+            raise ValueError('Invalid exact-member delta ownership token')
+        delta_stage._begin(archive, root, staged, proofs, replace_members)
     replaced = set()
     with zipfile.ZipFile(archive) as zf:
         entries = zf.infolist()
         if len(entries) > 250000:
             raise ValueError('ZIP member limit exceeded')
+        if proofs is not None:
+            files = [info.filename for info in entries if not info.is_dir() and selected(info.filename)]
+            if len(files) != len(set(files)) or set(files) != set(proofs):
+                raise ValueError('ZIP file set does not match its exact member proofs')
         total = sum(x.file_size for x in entries if selected(x.filename))
         if total > shutil.disk_usage(root).free:
             raise ValueError('Not enough space to extract the private ZIP; prior install retained')
@@ -440,6 +632,10 @@ def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_m
                 if temporary.stat().st_size != info.file_size:
                     raise ValueError('Truncated ZIP entry: ' + name)
                 record = file_record(temporary)
+                if proofs is not None and record != proofs[name]:
+                    raise ValueError('Archive member differs from its exact size/SHA256 proof: ' + name)
+                if delta_stage is not None:
+                    delta_stage._before_member(name, target)
                 if name in replacements:
                     request = replacements[name]
                     if request['new'] is not None and record['sha256'] != request['new']:
@@ -462,6 +658,8 @@ def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_m
                 temporary.unlink(missing_ok=True)
     if replaced != set(replacements):
         raise ValueError('A declared archive metadata replacement was absent from the selected ZIP')
+    if delta_stage is not None:
+        delta_stage._completed(inventory)
     return inventory
 
 
@@ -525,7 +723,7 @@ def pinned_member(root, name, digest):
 
 def bank_checkpoint(root, request, staged, previous=None):
     manifest = pinned_member(root, request['manifest_name'], request['manifest_sha256'])
-    document = read_json(manifest, maximum=16 * 1024 * 1024)
+    document = read_json(manifest, maximum=64 * 1024 * 1024)
     proof = document.get('source_action_domain_proofs')
     if (not isinstance(proof, dict) or proof.get('source_proof_key_field') != 'source_proof_key'):
         raise ValueError('The pinned source bank lacks its declared domain metadata contract')
@@ -612,19 +810,31 @@ def prepare_resources(plan, downloaded, resources, cache):
                 payload = {row['name']: file_record(target)}
             elif pack['format'] in ('zip', 'joined-zip'):
                 payload = {}
+                delta = None
+                if pack.get('pinned_delta'):
+                    spec = pack['pinned_delta']
+                    if not checkpoint or checkpoint['pin'] != pin(spec['base_manifest_sha256']):
+                        raise ValueError('Pinned delta base checkpoint is absent')
+                    delta = PinnedArchiveDelta(staged_archives, root, inside(stage, spec['inventory_path']),
+                        inventory_sha256=spec['inventory_sha256'], inventory_bytes=spec['inventory_bytes'],
+                        base_manifest_sha256=spec['base_manifest_sha256'], target_manifest_sha256=spec['target_manifest_sha256'],
+                        manifest_path=spec['manifest_path'], part_count=spec['part_count'], member_count=spec['member_count'])
                 if pack.get('overlay_from_checkpoint'):
                     if not checkpoint or checkpoint['pin'] != pin(pack['overlay_from_checkpoint']):
                         raise ValueError('An ordered delta requires its exact prior bank checkpoint')
-                for archive in archives:
+                for sequence, archive in enumerate(archives, 1):
                     replacements = (metadata_replacements(archive, root, checkpoint, staged_archives)
                                     if pack.get('overlay_from_checkpoint') else None)
+                    kwargs = delta.extract_kwargs(archive, sequence) if delta else {'replace_members': replacements}
                     extracted = safe_extract(archive, root, pack.get('include_prefixes'),
-                                             staged=staged_archives, replace_members=replacements)
+                                             staged=staged_archives, **kwargs)
                     payload.update(extracted)
                     if replacements:
                         for member in replacements:
                             name = pack['install_root'] + '/' + member['path']
                             checkpoint['metadata'][name] = extracted[member['path']]['sha256']
+                if delta:
+                    delta.finish()
             else:
                 raise ValueError('Unsupported pack format')
             for name, record in payload.items():
@@ -885,7 +1095,7 @@ def additional_ui_code_contracts(code_root, specifications):
         'Owner script boundaries only; independent of main/world activation')
 
 
-def source_bank_code_contract(code_root):
+def source_bank_code_contract(code_root, manifest_bytes=None):
     requirements = {
         'scripts/resources/current523_source_bank.gd': [('options',
             ['--current523-source-bank-config=', 'FileAccess.file_exists(SETTINGS)',
@@ -915,6 +1125,16 @@ def source_bank_code_contract(code_root):
             'runtime_actor_registry_required', 'current523_complete_original_npc_definition_differs'])],
     }
     evidence, _ = source_contract_evidence(code_root, requirements)
+    if manifest_bytes is not None:
+        evidence['manifest_bytes'] = manifest_bytes
+        loader = inside(code_root, 'scripts/resources/reference_sp2_bank.gd') if code_root else None
+        source = loader.read_text(encoding='utf-8') if loader and loader.is_file() else ''
+        limit = re.search(r'(?m)^const\s+MAX_JSON\s*=\s*(\d+)\s*\*\s*1024\s*\*\s*1024\s*$', source)
+        capacity = int(limit.group(1)) * 1024 * 1024 if limit else None
+        evidence['loader_json_capacity'] = capacity
+        if capacity is None or manifest_bytes > capacity:
+            evidence['blockers'].append('Pinned manifest exceeds actual loader MAX_JSON or its capacity is undeclared')
+        evidence['ready'] = not evidence['blockers']
     evidence['scope'] = 'Published source-bank consumer boundaries; runtime admission/restoration remain unverified'
     return evidence
 
@@ -1065,6 +1285,18 @@ def world_map_input_contract(result, resources, bindings, main_ui):
         images = bindings['world_map'].get('required_world_images', [])
         covered = set()
         for image in images:
+            if image.get('from_verified_extraction') is True:
+                # No guessed raw/decoded SHA: bind the actual original member
+                # recorded while extracting the fully pinned official ZIPs.
+                member = inside(root, image['path'])
+                state = owned_state(resources, RESOURCE_STATE)
+                record = state.get('files', {}).get(member.relative_to(resources).as_posix())
+                if not record or not matches(member, record):
+                    evidence['blockers'].append('Offered World original is not in verified extraction: ' + str(image['world_id']))
+                else:
+                    require('world_image:' + str(image['world_id']), member, record['sha256'], record['bytes'])
+                covered.add((str(image['land_id']), image['world_id']))
+                continue
             require('world_image:' + str(image['world_id']), inside(root, image['path']),
                     image['sha256'], image['bytes'])
             covered.add((str(image['land_id']), image['world_id']))
@@ -1247,7 +1479,7 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
         if sha256_file(manifest) != pin(row['manifest_sha256']):
             raise ValueError('Source bank manifest pin mismatch')
         inputs = {'manifest': {'path': str(manifest), 'sha256': row['manifest_sha256']}}
-        if search is not None:
+        if search is not None and not row.get('configuration_contract'):
             templates = []
             if len(relative(row['template_name']).parts) != 1:
                 raise ValueError('A bank template requires its declared basename')
@@ -1262,7 +1494,7 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             if len(templates) != 1:
                 raise ValueError('The final bank needs exactly one original settings template for its pin')
             inputs['template'] = {'path': str(templates[0]), 'sha256': sha256_file(templates[0])}
-            document = read_json(manifest, maximum=16 * 1024 * 1024)
+            document = read_json(manifest, maximum=64 * 1024 * 1024)
             proof = document.get('source_action_domain_proofs', {})
             if proof.get('source_proof_key_field') != 'source_proof_key':
                 raise ValueError('The final bank lacks its exact original domain metadata')
@@ -1270,7 +1502,18 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             if sha256_file(proof_path) != pin(proof['sha256']):
                 raise ValueError('The final bank domain metadata pin does not match')
             inputs['domain_metadata'] = {'path': str(proof_path), 'sha256': proof['sha256']}
-        code = source_bank_code_contract(code_root)
+        if row.get('configuration_contract'):
+            supplied = row['configuration_contract']
+            path = inside(resources, supplied['path'])
+            if sha256_file(path) != pin(supplied['sha256']):
+                raise ValueError('Source bank configuration contract pin mismatch')
+            contract = read_json(path)
+            if (contract.get('target_manifest_sha256') != row['manifest_sha256']
+                    or contract.get('tables', {}).get('sha256') != TABLES_SOURCE_SHA256
+                    or contract.get('configuration', {}).get('loader_settings') != 'user://current523_source_bank.json'):
+                raise ValueError('Source bank settings differ from supplied official contract')
+            inputs['configuration_contract'] = {'path': str(path), 'sha256': supplied['sha256']}
+        code = source_bank_code_contract(code_root, manifest.stat().st_size)
         enabled = row.get('enabled') is True
         result['source_bank'] = {'schema': 1, 'enabled': enabled, 'source_snapshot': 'patch523',
                                  'tables_zip': result['tables_zip'], 'manifest_path': str(manifest),
@@ -1465,6 +1708,8 @@ def install(args):
         plan, plan_digest = fetch_plan(args, work)
         if plan.get('schema') != 1 or not isinstance(plan.get('packs'), list) or not plan['packs']:
             raise ValueError('Unknown/empty private handoff schema')
+        if plan.get('mandatory_source_blockers'):
+            raise ValueError('Required source compatibility is unresolved: ' + '; '.join(plan['mandatory_source_blockers']))
         if any(p.get('activate') is False for p in plan['packs']):
             raise ValueError('Pending packs cannot be active dependencies')
         for message in plan.get('blockers', []):
