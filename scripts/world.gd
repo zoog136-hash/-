@@ -1269,8 +1269,8 @@ func _skill_cooldown_factor() -> float:
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
 	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
-func _effective_max_mp() -> int:
-	var added: int = _catalog_stat_sum("mpFlat") + _active_item_buff_total("mp_flat")
+func _effective_max_mp(item_buff_override: Variant = null) -> int:
+	var added: int = _catalog_stat_sum("mpFlat") + _active_item_buff_total("mp_flat",item_buff_override)
 	for record: Dictionary in _all_equipped_records():
 		if str(record.get("slot", "")) != "" or bool(record.get("equipment523_synthetic", false)):
 			var typed_mp: int = int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
@@ -4193,9 +4193,10 @@ func _timed_item_buff_from_record(record: Dictionary) -> Dictionary:
 func _is_timed_buff_item(record: Dictionary) -> bool:
 	return not _timed_item_buff_from_record(record).is_empty()
 
-func _active_item_buff_total(key: String) -> int:
+func _active_item_buff_total(key: String, item_buff_override: Variant = null) -> int:
 	var total: int = 0
-	for value: Variant in active_item_buffs.values():
+	var selected: Dictionary = item_buff_override if item_buff_override is Dictionary else active_item_buffs
+	for value: Variant in selected.values():
 		if value is Dictionary:
 			total += int((value as Dictionary).get(key, 0))
 	return total
@@ -5874,6 +5875,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if collection_override.has("ammo_unequipped") and not collection_override.ammo_unequipped is bool: return ERR_INVALID_PARAMETER
 	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
 	for key: String in collection_override:
+		if key=="patch523_transaction_rng":
+			if not alchemy_held_items.authorizes(collection_override) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
+			continue
 		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","fishing523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
@@ -9730,7 +9734,7 @@ func _effective_defense() -> int:
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense") + _source_enchantment_extra(ARMOR_EQUIPMENT_SLOTS+ACCESSORY_EQUIPMENT_SLOTS,"defense")
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _active_item_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
-func _effective_max_hp(base_override: int = -1) -> int:
+func _effective_max_hp(base_override: int = -1, item_buff_override: Variant = null) -> int:
 	var flat_bonus: float = float(weapon_mastery.catalog_bonus("hpFlat", _mastery_actual_weapon_type()))
 	var percent_bonus: float = original_skills.stat("hpPct") if original_skills!=null else 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -9740,7 +9744,7 @@ func _effective_max_hp(base_override: int = -1) -> int:
 	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
-	flat_bonus += float(_active_item_buff_total("hp_flat"))
+	flat_bonus += float(_active_item_buff_total("hp_flat",item_buff_override))
 	flat_bonus += float(_equipped_bless_bonus("hp"))
 	return maxi(1, int(round(((max_hp if base_override < 0 else base_override) + flat_bonus) * (1.0 + percent_bonus))))
 

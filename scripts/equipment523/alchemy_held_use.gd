@@ -215,13 +215,18 @@ func commit_view(view: Node, overrides: Dictionary) -> Error:
 		if overrides.has(field):
 			if not overrides[field] is Dictionary: return ERR_INVALID_DATA
 			payload[field]=overrides[field].duplicate(true)
+	if payload.has("active_item_buffs"):
+		# Evaluate the existing cap formulas against the candidate buff map.
+		# Never install a live buff temporarily just to evaluate its vitals.
+		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,payload.active_item_buffs))
+		payload["mp"]=mini(world.mp,world._effective_max_mp(payload.active_item_buffs))
 	if overrides.has("gold"):
 		var gold: int=_whole(overrides.gold,0)
 		if gold<world.gold: return ERR_INVALID_DATA
 		payload["gold"]=gold
 	if overrides.has("mp"):
 		var mp: int=_whole(overrides.mp,0)
-		if mp<world.mp or mp>world._effective_max_mp(): return ERR_INVALID_DATA
+		if mp<world.mp or mp>world._effective_max_mp(payload.get("active_item_buffs")): return ERR_INVALID_DATA
 		payload["mp"]=mp
 	_candidate=payload.duplicate(true)
 	var path: String=world.save_path();var before_sha: String=FileAccess.get_sha256(path)
@@ -236,6 +241,7 @@ func commit_view(view: Node, overrides: Dictionary) -> Error:
 	world.inventory=inventory;world.item_instances=instances
 	world.consumable_service.import_state(state)
 	if payload.has("gold"): world.gold=int(payload.gold)
+	if payload.has("hp"): world.hp=int(payload.hp)
 	if payload.has("mp"): world.mp=int(payload.mp)
 	if payload.has("active_item_buffs"): world.active_item_buffs=payload.active_item_buffs
 	if payload.has("item_use_cooldowns"): world.item_use_cooldowns=payload.item_use_cooldowns
