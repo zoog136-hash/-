@@ -4,6 +4,7 @@ class_name TwilightMonster
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 var source_m_original: Dictionary = {}
+var _original_attribute_values: Dictionary = {}
 var source_targeting: Dictionary = {}
 var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
@@ -236,6 +237,10 @@ func retire_for_pool() -> void:
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
+	_original_attribute_values.clear()
+	# A numeric local-adapter input does not assert a native spawn/Sprite ID.
+	if record.get("source")=="twilight_dungeon_visual_adapter" and record.get("original_attribute_input") is Dictionary:
+		_original_attribute_values = preload("res://scripts/resources/current523_actor_attribute_input.gd").values(record.original_attribute_input)
 	source_targeting.clear()
 	source_option_debuffs.clear()
 	source_boss_combat.clear()
@@ -492,6 +497,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	return true
 
 func _reject_patch523_spawn(reason: String) -> bool:
+	_original_attribute_values.clear()
 	source_targeting.clear()
 	retire_for_pool()
 	dead = true
@@ -1405,6 +1411,10 @@ func source_523_speed_factor() -> float:
 
 func effective_source_attribute(attribute: String) -> float:
 	if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return float(world_controller.growth.guardian_combat.attribute(self,attribute).after)
-	return float(source_m_original.get(attribute.capitalize(),0))
+	var original: Dictionary = source_m_original if not source_m_original.is_empty() else _original_attribute_values
+	return float(original.get(attribute.capitalize(),0))
+
+func original_attribute_input() -> Dictionary:
+	return _original_attribute_values.duplicate(true)
 
 

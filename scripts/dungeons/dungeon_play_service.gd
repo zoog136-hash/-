@@ -389,6 +389,8 @@ func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 	for visual_key: String in ["sourceId","visual","visual_height","animation_profile"]:
 		if template.has(visual_key):record[visual_key]=template[visual_key]
 	record["ai"]={"aggressive":role in ["Monster","MiddleBoss","Boss"]}
+	var attribute_input: Dictionary=preload("res://scripts/resources/current523_actor_attribute_input.gd").orim(source_id,int(state.active.stage_id),row)
+	if not attribute_input.is_empty():record["original_attribute_input"]=attribute_input
 	monster.setup(record,world.player,world,world._monster_texture(record));monster.set_meta("summoned",true)
 	var factor: int=int(state.settings.hard_multiplier) if bool(rules.stage("orim",int(state.active.stage_id)).stage.IsHard) else 1
 	var definition: Dictionary=rules.orim_actor_defs.get(source_id,{})

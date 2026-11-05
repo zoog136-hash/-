@@ -65,3 +65,31 @@ connected/running state, that read was retried once and succeeded. No source,
 save or existing local change was deleted. No validation/execution suite was
 started. Model/reasoning configuration is not exposed by the available tools;
 Sol6.1 medium therefore remains requested, not independently confirmed here.
+
+## Local actor original attribute operands
+
+The existing Orim actor path supplied HP/MP/AC/MR and attack dice but did not
+provide the six source base attributes used by the existing guardian/status
+reducers. It now constructs `current523_actor_attribute_input.orim()` from the
+actual selected source NPC, stage and full spawn row before `Monster.setup()`.
+The descriptor requires the same pinned archive, unique current stage/spawn/
+NpcClass rows, direct NpcClassID or one exact NpcClassForNpcGroup membership,
+source exclusions/TestNPC and all six nonnegative integer source attributes.
+No NPC is discovered/selected, no name/Sprite/numeric namespace is inferred.
+
+Monster independently reconstructs and compares that descriptor before keeping
+its six scalar operands for this life. The new operand has no source_m_* or
+native admission marker. Native source_m_original data keeps precedence; only
+an otherwise local actor's existing attribute getter uses this verified local
+numeric input. Guardian's existing STR/DEX/CON/WIS/CHA/INT reducer then reads
+the same data for attribute changes and its existing accuracy/damage/maxHP/MR/
+AC deltas. Its formulas and status modifiers are unchanged. A pooled setup
+clears the input after retiring old effects; rejected spawns clear it as well.
+
+This does not claim an original Orim encounter, map, placement, actor identity
+or original pixels. The existing local visual adapter remains a separate
+unresolved admission/presentation boundary. HP/MP/AC/MR/attack-dice assignment,
+difficulty factors, rewards, save state, issued tokens and restore behavior are
+unchanged. The descriptor/cache is not persisted; restore rebuilds it only
+from the exact held original relation. Missing/ambiguous/changed source keeps
+the previous no-input behavior. No test/compile/game/render/CI was run.

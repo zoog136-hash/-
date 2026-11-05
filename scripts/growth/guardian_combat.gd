@@ -211,6 +211,8 @@ func final_blow_chance() -> float:
 
 func attribute(target: Node,name: String) -> Dictionary:
 	var source: Dictionary=target.get("source_m_original")
+	if source.is_empty() and target.has_method("original_attribute_input"):
+		source=target.original_attribute_input()
 	var original: String=name.capitalize()
 	if world==null or not source.has(original) or world.original_skills==null:return {"known":false,"before":0,"after":0}
 	var before: float=float(source[original])
