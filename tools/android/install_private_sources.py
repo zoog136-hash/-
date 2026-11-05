@@ -715,7 +715,7 @@ def source_contract_evidence(code_root, requirements):
     return evidence, sources
 
 
-def combined_ui_code_contract(code_root):
+def combined_ui_code_contract(code_root, required_components=()):
     requirements = {
         'scripts/ui/original_ui/source_main_selection.gd': [('selected_pack', ['selection_contract'])],
         'scripts/ui/original_ui/source_main_hud.gd': [('configure', ['InventoryView.PARENT',
@@ -742,7 +742,49 @@ def combined_ui_code_contract(code_root):
             ('_forward_native_scroll', ['_route_source_input(local)']),
             ('_cancel_native_input', ['cancel_native_touch'])],
     }
+    supported = {'default_primary_stats', 'native_main_buttons', 'auto_message'}
+    if (not isinstance(required_components, (list, tuple))
+            or any(not isinstance(component, str) or component not in supported
+                   for component in required_components)):
+        raise ValueError('Unknown combined UI owner component contract')
+    if 'default_primary_stats' in required_components:
+        requirements['scripts/ui/original_ui/source_main_primary_stats.gd'] = [
+            ('snapshot', ['hud.get("character_state")', 'TYPE_INT', 'melee_damage', 'ac']),
+            ('build', ['_active_source(pack)', 'snapshot(hud)', '"button_actions_connected":false']),
+            ('_active_source', ['pack.scene(MEMBER)', 'SOURCE_OFFSETS',
+                                'source_primary_stats_nodes_not_in_active_pack_scope']),
+            ('refresh', ['set_bound_text(MD_TEXT', 'set_bound_text(AC_TEXT'])]
+        requirements['scripts/ui/original_ui/source_main_hud.gd'].extend([
+            ('update_player', ['refresh_primary_stats()']), ('refresh_primary_stats',
+             ['PrimaryStats.snapshot', 'PrimaryStats.refresh', 'PrimaryStats.build', 'scene.configure_project'])])
+    if 'native_main_buttons' in required_components:
+        requirements['scripts/ui/original_ui/source_main_hud.gd'].extend([
+            ('configure', ['ButtonRouter.new()']), ('_input', ['_native_buttons.route(event,point,candidates)',
+             'InputEventScreenTouch', 'InputEventScreenDrag', 'set_input_as_handled']),
+            ('_collect_native_buttons', ['source_asset_scene', 'original_ui_source',
+             'UI/CommonUi/Common_Slot.csb', 'UI/MainFloating/Slot_Skill.csb']),
+            ('_source_input_captured', ['hud.get("pointer_transfer")', 'pointer.get("pointer")!=-2'])])
+        requirements['scripts/ui/original_ui/source_button_router.gd'] = [
+            ('route', ['handle_native_touch', 'event.index']), ('cancel', ['cancel_native_touch'])]
+    if 'auto_message' in required_components:
+        requirements['scripts/ui/original_ui/source_main_auto_message_bindings.gd'] = [
+            (None, ['UI/Main/Hud_AutoMessage.csb', '14564', '76', '124']),
+            ('configure', ['manifest.get("files",{}).get(MEMBER', 'weakref(hud)', 'returnsnapshot()']),
+            ('snapshot', ['hud.get_parent()', 'world.get("player")', 'player.get("auto_enabled")',
+             'notenabledisbool', 'source_auto_message_actual_auto_boolean_required']),
+            ('build', ['ROOT:{"visible":state.auto_enabled}', 'TEXT:{"role":"static_source_text"}',
+             '"playback_policy_declared":false', '"playback_requested":false', '"general_message_connected":false']),
+            ('refresh', ['scene.set_bound_visible(ROOT,state.auto_enabled)'])]
+        requirements['scripts/ui/original_ui/source_main_hud.gd'].extend([
+            ('configure', ['has(AutoMessage.MEMBER)']), ('_process', ['_refresh_auto_message()']),
+            ('refresh_combat', ['_refresh_auto_message()']), ('_refresh_auto_message',
+             ['AutoMessage.new()', 'candidate.configure(_pack,hud)', '_auto_message.snapshot()',
+              '_auto_message.refresh(_auto_message_scene)',
+              '_mount_main_project(AutoMessage.MAIN_PROJECT,_auto_message.build())']),
+            ('_mount_main_project', ['scope.assign(contract.source_node_offsets)',
+             'scene.configure_project(_pack,MAIN,offset,contract.bindings,scope)'])])
     evidence, _ = source_contract_evidence(code_root, requirements)
+    evidence['required_components'] = list(required_components)
     return evidence
 
 
@@ -1038,7 +1080,8 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             # Retention fields stay opaque and unchanged; their exact bytes
             # are covered by the supplied manifest pin, not a guessed schema.
             result['main_ui']['expected_composition'] = expected
-            result['main_ui']['owner_code_contract'] = combined_ui_code_contract(code_root)
+        if row.get('expected_composition') or row.get('code_components'):
+            result['main_ui']['owner_code_contract'] = combined_ui_code_contract(code_root, row.get('code_components', []))
             if code_root is not None:
                 for blocker in result['main_ui']['owner_code_contract']['blockers']:
                     log('COMBINED UI CODE PENDING: ' + blocker)

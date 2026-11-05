@@ -148,6 +148,21 @@ factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadat
 동시 소비·원본 장착/잠금·native touch의 실제 설치 코드 선행 조건도 별도로
 확인하며, 이미지와 실시간 상태의 준비·표시 전환은 기존 원자적 component 소비자에 맡긴다.
 
+공식 v8은 기존 단일 선택 계약으로 v7/v6 입력과 원본 AutoMessage Text124를
+함께 공급한다. 새 설치 목록은 이 결합 root와 정확한 ZIP/manifest pin을 사용할 수
+있으며 이전 팩이나 사용자의 명시 선택을 대체하지 않는다. v8의38원본/21장면/
+20부분범위도 전체560 완료를 뜻하지 않는다. 원문 parent-retention metadata는
+변경하지 않는다. v8의 실제 extends_manifest_sha256 값은 공개 인계에 없으므로
+이전 버전 pin을 추측해 채우지 않고, 공급된 manifest 전체 pin으로 원문을 보존한다.
+정확한 확장 선언이 별도로 공급된 버전만 expected_composition으로 추가 비교한다.
+
+인계의 main_ui.code_components는 해당 팩이 요구하는 기존 owner 코드 조건을
+기록한다. v8은 default_primary_stats/native_main_buttons/auto_message를 요구한다.
+기존 v6 조건에 실제 MD/AC 정수 상태·원본 버튼 touch·전용 auto_enabled bool과
+Text124 소비 경계를 더하며, 새 renderer·일반 메시지·타이머·clip 재생 정책을 만들지
+않는다. 명시 선택 보존과 실제 설치 코드의 정적 조건은 유지한다. 이 추가 입력도
+알려지지 않은 CSB-root 등록 관계나 실제 표시·애니메이션 실행을 입증하지 않는다.
+
 UI267의 후속 공개 체크포인트
 `8486e6f59358d0066baad2163ff428cda6ed6d31`도 같은 v6 ZIP과 manifest pin을
 사용한다. CSB 아이콘의 부착·해제·동일 장면 재사용은 기존 UI/image owner의
