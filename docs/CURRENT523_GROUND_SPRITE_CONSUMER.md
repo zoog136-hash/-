@@ -42,3 +42,13 @@ The existing saved structure records describe one frame and stored direction bit
 The held common SpriteAnimation row1 has Delay0 and no SpriteAnimationAsset links. This does not supply the missing ItemClass/type9 static-ground member/frame/renderer relationship or an animation clock. The remaining input must establish that exact mobile ground relationship. Consume effects189/192 and PC sources are separate and cannot resolve it.
 
 No game, render, test or CI run was performed. The bank remains unchanged by this pending ground boundary.
+
+## Published Integration269 floor/use context
+
+At owner checkpoint `df86d4c07a651a4b3d992beb2f777b4ce7ef4044`, `world.ground_loot.source_item_context(ground_id)` reads the actual current floor selection and returns the full `original_item`, `item_record.source_original_item`, physical selection, `source_basis` and `source_definition_archive`. It explicitly supplies `ownership_authorized=false`, `sprite_action_selected=false` and `render_observed=false`.
+
+The Sprite manager consumes this API when that public owner implementation is present. `_create_view` passes its real record.id, preserves the entire returned context, and forwards it into the existing GroundLoot status. A failed owner result cannot fall back to the earlier item definition or a separately supplied row. A changed ground_id or original row remains pending. These values establish neither an SPR action nor the still missing type9 member/frame/renderer relationship. They do not change stage_spawn/publish_spawn, custody, quantity or pickup.
+
+This older Sprite checkout does not copy the newer ownership implementation or its dependencies. Without the method, its earlier full-definition path remains explicitly distinct from an actual current-floor proof; source rendering is still pending. Normal integration with the public269 manager supplies the new context producer.
+
+`source_use_context` is post-save data from an existing use event, not a second event. `visual_dispatch_attempted=true` means the existing emitter was called; no result observer is allowed to re-emit it, and this consumer adds no result replay. The exact public cure310 follow-up is a one-line patch at its current perform emission: pass `result.source_use_context.original_item` to the existing `emit_sprite` call while preserving the following attempted flag and all newer prepare/commit logic. Original16007 remains unavailable.

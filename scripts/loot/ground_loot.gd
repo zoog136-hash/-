@@ -55,7 +55,7 @@ func configure_source_ground(request: Dictionary) -> void:
 	source_ground_view = GROUND_SOURCE_VIEW.new()
 	source_ground_view.connect("source_status_changed",_on_source_ground_status)
 	visual.add_child(source_ground_view)
-	var configured: bool = source_ground_view.call("configure_ground_source",request.get("original_item",{}),request.get("source_bank_context",{}),request.get("source_binding",{}))
+	var configured: bool = source_ground_view.call("configure_ground_source",request.get("original_item",{}),request.get("source_bank_context",{}),request.get("source_binding",{}),request.get("source_owner_context",{}),loot_id)
 	source_ground_status = source_ground_view.get("selection_status").duplicate(true)
 	if not is_instance_valid(source_ground_label):
 		source_ground_label = Label.new()
