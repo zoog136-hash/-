@@ -75,6 +75,8 @@ const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const Source523SkillImages = preload("res://scripts/ui/source523_skill_buff_images.gd")
+var _source523_buff_signature: Dictionary = {}
+var _source523_buff_views: Dictionary = {}
 const QuestUI = preload("res://scripts/ui/renewal_quests.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
@@ -708,19 +710,49 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	if active_buffs_view == presentation:
 		return
 	active_buffs_view = presentation
+	var visible_keys: Array=buffs.keys().slice(0,8)
+	var source_signature: Dictionary={}
+	if source_images_selected:
+		var identities: Dictionary={}
+		for key: Variant in buffs:
+			var effect: Variant=buffs[key]
+			if effect is Dictionary:
+				var identity: Dictionary=effect.duplicate(true)
+				identity.erase("remaining")
+				identities[key]=identity
+		var images=preload("res://scripts/ui/source523_image_assets.gd")
+		source_signature={"pack":presentation.get("__source523_pack",-1),"ui_revision":images.original_ui_revision(),"keys":visible_keys,"effects":identities}
+		if source_signature==_source523_buff_signature:
+			var reusable: bool=true
+			for key: Variant in visible_keys:
+				var row: Dictionary=_source523_buff_views.get(key,{})
+				if not is_instance_valid(row.get("button")) or not is_instance_valid(row.get("remaining")):
+					reusable=false
+					break
+			if reusable:
+				for key: Variant in visible_keys:
+					var effect: Variant=buffs[key]
+					var time: int=int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
+					var row: Dictionary=_source523_buff_views[key]
+					(row.remaining as Label).text="%ds" % time
+					(row.button as Button).tooltip_text=str(key)+" · %d초" % time+str(row.get("missing_hint",""))
+				return
+	_source523_buff_views.clear()
+	_source523_buff_signature=source_signature
 	_clear_children(buff_row)
 	if buffs.is_empty():
 		buff_row.add_child(UI.label("활성 효과 없음",11,UI.MUTED))
-	for key: Variant in buffs.keys().slice(0,8):
+	for key: Variant in visible_keys:
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
 		var b := UI.button("",open_character,Vector2(36,42))
 		var icon := TextureRect.new()
 		var source_image: Dictionary = _source523_buff_image(effect if effect is Dictionary else {})
-		icon.texture = source_image.get("texture") if source_image.handled else _load_texture("res://assets/ui/rune.png")
 		if source_image.handled:
-			icon.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
+			source_image=Source523SkillImages.apply(icon,source_image,"active_buff_row")
 			b.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
+		else:
+			icon.texture=_load_texture("res://assets/ui/rune.png")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.position = Vector2(5,2)
@@ -734,9 +766,14 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		b.add_child(remaining)
 		b.add_theme_font_size_override("font_size",10)
 		b.tooltip_text = str(key)+" · %d초" % time
-		if source_image.handled and icon.texture == null:
-			b.tooltip_text += " · 원본 아이콘 " + Source523SkillImages.missing_label(source_image)
+		var missing_hint: String=""
+		if source_image.handled and icon.texture == null and not source_image.get("scene_result",{}).get("ok",false):
+			missing_hint=" · 원본 아이콘 " + Source523SkillImages.missing_label(source_image)
+			b.tooltip_text += missing_hint
 		buff_row.add_child(b)
+		if source_images_selected: _source523_buff_views[key]={"button":b,"remaining":remaining,"missing_hint":missing_hint}
+	if source_images_selected:
+		_source523_buff_signature["ui_revision"]=preload("res://scripts/ui/source523_image_assets.gd").original_ui_revision()
 
 func _source523_buff_image(effect: Dictionary) -> Dictionary:
 	var service: RefCounted = get_parent().get("original_skills")
@@ -753,9 +790,12 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
-		UI.clear_item_visual(quickslot_icons[index])
-		if quickslot_icons[index].has_meta("source523_skill_image"):
-			quickslot_icons[index].remove_meta("source523_skill_image")
+		var valid_entry: bool=absolute<quickslot_entries.size() and quickslot_entries[absolute] is Dictionary and not quickslot_entries[absolute].is_empty()
+		var visual_kind: String=("item" if quickslot_entries[absolute].get("kind","")=="item" else "skill") if valid_entry else "empty"
+		if visual_kind=="empty" or quickslot_icons[index].get_meta("source523_quickslot_kind","")!=visual_kind:
+			UI.clear_item_visual(quickslot_icons[index])
+			Source523SkillImages.clear(quickslot_icons[index])
+		quickslot_icons[index].set_meta("source523_quickslot_kind",visual_kind)
 		quickslot_icons[index].texture = null
 		quickslot_captions[index].text = ""
 		quickslot_auto_badges[index].text = ""
@@ -777,11 +817,11 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 			var path: String = str(skill.get("icon",""))
 			var source_image: Dictionary = Source523SkillImages.describe_skill(skill)
 			if source_image.handled:
-				quickslot_icons[index].texture = source_image.get("texture")
-				quickslot_icons[index].set_meta("source523_skill_image",Source523SkillImages.evidence(source_image))
-				if quickslot_icons[index].texture == null:
+				source_image=Source523SkillImages.apply(quickslot_icons[index],source_image,"skill_quickslot")
+				if quickslot_icons[index].texture == null and not source_image.get("scene_result",{}).get("ok",false):
 					quickslot_captions[index].text = Source523SkillImages.missing_label(source_image)
 			else:
+				Source523SkillImages.clear(quickslot_icons[index])
 				quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
 			quickslot_icons[index].modulate = Color.WHITE
 		if bool(entry.get("auto",false)):

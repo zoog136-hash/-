@@ -105,23 +105,25 @@ func configure_item_class_icon(view: TextureRect, item_class_id: int, title: Str
 	_configure_presentation(view,{},title,{},usage,original_ui_bindings,info,true)
 
 func _configure_presentation(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary, info: Dictionary, reference_presentation: bool = false) -> void:
+	var next_source_presentation: bool = reference_presentation or info.get("route","") == "source523_images"
+	var source_scene_requested: bool = next_source_presentation and info.get("reason","") == "unsupported_csb" and usage != "ground"
 	if is_instance_valid(target) and target != view: _detach_source_scene(target)
-	_detach_source_scene(view)
+	if not source_scene_requested: _detach_source_scene(view)
 	target = view
 	target.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	target.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	source_presentation = reference_presentation or info.get("route","") == "source523_images"
+	source_presentation = next_source_presentation
 	target.texture = info.get("texture") as Texture2D if source_presentation else RESOLVER.texture(record,item_name,images,usage == "ground")
-	var source_scene_requested: bool = source_presentation and info.get("reason","") == "unsupported_csb" and usage != "ground"
 	if source_scene_requested:
-		var attached: Dictionary = SOURCE523.ORIGINAL_UI_ICONS.attach(view,info,original_ui_bindings)
+		var attached: Dictionary = SOURCE523.attach_original_icon(view,info,original_ui_bindings,{"usage":usage,"trigger":"existing_item_visual_bind"})
 		info["scene_result"] = attached
 		info["source_status"] = str(attached.get("status","unavailable"))
 		if attached.get("ok",false):
-			info["status"] = "verified_source_scene"
+			info["status"] = "source_scene_estimate" if attached.get("origin","") == "estimated_single_pass_icon_host" else "verified_source_scene"
 			info["reason"] = ""
 		else:
+			_detach_source_scene(view)
 			info["status"] = "original_icon_not_installed"
 			info["reason"] = str(attached.get("error","source_scene_unavailable"))
 	rank = 0 if reference_presentation else animation_rank(record, item_name)

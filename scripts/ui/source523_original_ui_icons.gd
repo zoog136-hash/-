@@ -1,14 +1,17 @@
 extends RefCounted
-## Item host adapter for the separately owned original UI pack/player.
+## Existing icon host adapter for the separately owned original UI pack/player.
 ## Original nodes, imagery, clips and playback rules remain with UI267.
 const PACK_PATH = "res://scripts/ui/original_ui/source_pack.gd"
 const PLAYER_PATH = "res://scripts/ui/original_ui/sprite_scene.gd"
 const SCHEMA = "patch523-original-ui-icon-scenes-v1"
 const NODE_NAME = "SourceItemIconScene"
+const CONSUMER_FIELDS = {"ItemClass":["IconID"],"SpellClass":["IconID","ActivateIconID"],"BuffClass":["OnIconID","OffIconID"]}
 static var pack: RefCounted
 static var packs_by_manifest: Dictionary = {}
 static var bindings: Dictionary = {}
 static var _bindings_error: String = "source_scene_bindings_not_configured"
+static var _view_cache: Dictionary = {}
+static var _view_exit_hooks: Dictionary = {}
 
 static func configure(document: Dictionary) -> void:
 	bindings = {}
@@ -51,10 +54,30 @@ static func register(document: Dictionary) -> Dictionary:
 static func _unavailable(reason: String, details: Dictionary = {}) -> Dictionary:
 	var result: Dictionary = {"ok":false,"status":"unavailable","error":reason,"inspection_only":false}
 	if not details.is_empty():
-		result["details"] = details.duplicate(true)
+		result["details"] = _metadata_value(details)
 	return result
 
-static func open_pack(root: String, expected_sha256: String) -> Dictionary:
+static func _metadata_value(value: Variant) -> Variant:
+	if value == null or value is String or value is bool or value is int:
+		return value
+	if value is float: return value if is_finite(value) else null
+	if value is Array:
+		var items: Array = []
+		for item: Variant in value:
+			if not item is Object and not item is Callable: items.append(_metadata_value(item))
+		return items
+	if value is Dictionary:
+		var fields: Dictionary = {}
+		for field: String in ["source_text","source_percent","visible","displaystate","selected","source_scroll","callback_name","frame_events"]:
+			if value.has(field): return {"binding_values_omitted":true}
+		for key: Variant in value:
+			if not key is String or key in ["bindings","original_ui_bindings","frame_events"]: continue
+			var item: Variant = value[key]
+			if not item is Object and not item is Callable: fields[key] = _metadata_value(item)
+		return fields
+	return null
+
+static func prepare_pack(root: String, expected_sha256: String) -> Dictionary:
 	if not ResourceLoader.exists(PACK_PATH) or not ResourceLoader.exists(PLAYER_PATH):
 		return _unavailable("source_scene_player_not_installed")
 	var script: Variant = load(PACK_PATH)
@@ -73,16 +96,57 @@ static func open_pack(root: String, expected_sha256: String) -> Dictionary:
 	var actual_pin: Variant = candidate.get("manifest_sha256")
 	if not _sha256(actual_pin) or actual_pin != expected_sha256:
 		return _unavailable("source_scene_pack_contract_unavailable")
-	pack = candidate
-	packs_by_manifest[expected_sha256] = candidate
 	var result: Dictionary = opened.duplicate(true)
-	result["status"] = "source_scene_pack_ready"
+	result["pack"] = candidate
+	result["manifest_sha256"] = actual_pin
+	result["status"] = "source_scene_pack_prepared"
 	result["rendered"] = false
 	return result
+
+static func commit_selection(prepared_packs: Array, document: Dictionary) -> Dictionary:
+	var contract: Dictionary = registration_contract(document)
+	if not contract.get("ok",false): return contract
+	var next_packs: Dictionary = packs_by_manifest.duplicate()
+	var prepared_pins: Dictionary = {}
+	var last_pack: RefCounted = pack
+	for prepared: Variant in prepared_packs:
+		if not prepared is Dictionary or not prepared.get("ok",false):
+			return _unavailable("source_scene_pack_not_prepared")
+		var candidate: Variant = prepared.get("pack")
+		var pin: Variant = prepared.get("manifest_sha256")
+		if not candidate is RefCounted or not candidate.has_method("scene") or not _sha256(pin) or candidate.get("manifest_sha256") != pin:
+			return _unavailable("source_scene_pack_contract_unavailable")
+		if prepared_pins.has(pin): return _unavailable("source_scene_duplicate_prepared_pack")
+		prepared_pins[pin] = true
+		next_packs[pin] = candidate
+		last_pack = candidate
+	var next_bindings: Dictionary = bindings.duplicate(true)
+	for icon: Variant in document.source_icon_scenes.icons:
+		var incoming: Dictionary = document.source_icon_scenes.icons[icon]
+		var pin: Variant = incoming.get("reviewed_current523_manifest_sha256")
+		if not _sha256(pin) or not next_packs.has(pin):
+			return _unavailable("source_scene_pack_not_prepared")
+		next_bindings[icon] = incoming.duplicate(true)
+	# No externally visible selection changes until every candidate and the
+	# complete registration document have passed the same contract.
+	packs_by_manifest = next_packs
+	pack = last_pack
+	bindings = next_bindings
+	_bindings_error = "" if not bindings.is_empty() else "source_scene_bindings_unavailable"
+	return {"ok":true,"status":"source_scene_selection_ready","rendered":false}
+
+static func open_pack(root: String, expected_sha256: String) -> Dictionary:
+	var prepared: Dictionary = prepare_pack(root,expected_sha256)
+	if not prepared.get("ok",false): return prepared
+	var committed: Dictionary = commit_selection([prepared],{"source_icon_scenes":{"schema":SCHEMA,"icons":{}}})
+	if not committed.get("ok",false): return committed
+	prepared["status"] = "source_scene_pack_ready"
+	return prepared
 
 static func detach(view: TextureRect, immediate: bool = true) -> void:
 	if not is_instance_valid(view):
 		return
+	_view_cache.erase(view.get_instance_id())
 	var old: Node = view.get_node_or_null(NODE_NAME)
 	if old == null:
 		return
@@ -115,67 +179,159 @@ static func _safe_relative(value: String) -> bool:
 			return false
 	return true
 
-static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}) -> Dictionary:
+static func _consumer_identity(info: Dictionary, canonical: Dictionary) -> Dictionary:
+	var table: Variant = canonical.get("source_table")
+	var field: Variant = canonical.get("source_field")
+	if not table is String or not CONSUMER_FIELDS.has(table) or not field is String or not field in CONSUMER_FIELDS[table]:
+		return _unavailable("source_scene_consumer_role_required")
+	if not _source_id(canonical.get("source_id")) or not _sha256(canonical.get("source_row_canonical_sha256")):
+		return _unavailable("source_scene_consumer_identity_required")
+	if table == "ItemClass" and (not _source_id(info.get("item_class_id")) or info.item_class_id != canonical.source_id):
+		return _unavailable("source_scene_identity_mismatch")
+	return {"ok":true,"identity":{"source_table":table,"source_id":int(canonical.source_id),"source_field":field,
+		"source_row_canonical_sha256":canonical.source_row_canonical_sha256,
+		"source_table_sha256":canonical.get("source_table_sha256","")}}
+
+static func _playback_policy(spec: Dictionary, context: Dictionary) -> Dictionary:
+	var declared: Variant = spec.get("original_repeat_declared") if spec.get("original_repeat_declared") is bool else null
+	var repeat_value: bool
+	if context.has("repeat"):
+		if not context.repeat is bool: return _unavailable("source_scene_playback_binding_missing")
+		repeat_value = context.repeat
+	elif spec.has("repeat"):
+		if not spec.repeat is bool: return _unavailable("source_scene_playback_binding_missing")
+		repeat_value = spec.repeat
+	elif context.get("allow_estimated_single_pass") is bool and context.allow_estimated_single_pass and spec.get("original_repeat_declared") is bool and not spec.original_repeat_declared:
+		return {"ok":true,"repeat":false,"origin":"estimated_single_pass_icon_host",
+			"original_repeat_declared":false,"original_policy_confirmed":false}
+	else:
+		return _unavailable("source_scene_playback_binding_missing")
+	var confirmed: bool = declared == true and spec.get("original_policy_confirmed") is bool and spec.original_policy_confirmed and spec.get("repeat") is bool and spec.repeat == repeat_value
+	return {"ok":true,"repeat":repeat_value,"origin":"explicit_caller_repeat",
+		"original_repeat_declared":declared,"original_policy_confirmed":confirmed}
+
+static func _host_context(context: Dictionary) -> Dictionary:
+	return {"usage":context.get("usage","") if context.get("usage") is String else "",
+		"trigger":context.get("trigger","") if context.get("trigger") is String else "",
+		"original_trigger_confirmed":false}
+
+static func _attach_failure(view: TextureRect, reason: String, details: Dictionary = {}) -> Dictionary:
+	detach(view)
+	return _unavailable(reason,details)
+
+static func _on_view_tree_exiting(view_id: int) -> void:
+	var cached: Dictionary = _view_cache.get(view_id,{})
+	var reference: Variant = cached.get("view")
+	_view_exit_hooks.erase(view_id)
+	if reference is WeakRef:
+		var view: Variant = reference.get_ref()
+		if is_instance_valid(view) and view is TextureRect:
+			detach(view,false)
+			return
+	_view_cache.erase(view_id)
+
+static func _remember(view: TextureRect, host: Control, scene: Node2D, key: Dictionary, original_ui_bindings: Dictionary, result: Dictionary) -> void:
+	var view_id: int = view.get_instance_id()
+	_view_cache[view_id] = {"view":weakref(view),"host":weakref(host),"scene":weakref(scene),
+		"key":key.duplicate(true),"bindings":original_ui_bindings.duplicate(true),"result":result.duplicate(true)}
+	if not _view_exit_hooks.has(view_id):
+		var cleanup: Callable = _on_view_tree_exiting.bind(view_id)
+		_view_exit_hooks[view_id] = cleanup
+		view.tree_exiting.connect(cleanup,Object.CONNECT_ONE_SHOT)
+
+static func _reuse(view: TextureRect, key: Dictionary, original_ui_bindings: Dictionary, context: Dictionary) -> Dictionary:
+	var cached: Dictionary = _view_cache.get(view.get_instance_id(),{})
+	if cached.is_empty() or cached.get("key") != key or cached.get("bindings") != original_ui_bindings: return {}
+	var view_reference: Variant = cached.get("view")
+	var host_reference: Variant = cached.get("host")
+	var scene_reference: Variant = cached.get("scene")
+	if not view_reference is WeakRef or not host_reference is WeakRef or not scene_reference is WeakRef: return {}
+	var cached_view: Variant = view_reference.get_ref()
+	var host: Variant = host_reference.get_ref()
+	var scene: Variant = scene_reference.get_ref()
+	if cached_view != view or not is_instance_valid(host) or not is_instance_valid(scene): return {}
+	if not host is Control or not scene is Node2D or host.is_queued_for_deletion() or scene.is_queued_for_deletion(): return {}
+	if host.get_parent() != view or scene.get_parent() != host or view.get_node_or_null(NODE_NAME) != host: return {}
+	var result: Dictionary = cached.result.duplicate(true)
+	result["reused"] = true
+	result["play_restarted"] = false
+	result["sync_context"] = _host_context(context)
+	return result
+
+static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if not is_instance_valid(view):
 		return _unavailable("source_scene_host_unavailable")
-	detach(view)
 	if info.get("route") != "source523_images" or info.get("source_snapshot") != "patch523" or info.get("reason") != "unsupported_csb":
-		return _unavailable("source_scene_identity_mismatch")
+		return _attach_failure(view,"source_scene_identity_mismatch")
 	var canonical: Variant = info.get("provenance")
-	if not canonical is Dictionary or not _source_id(info.get("item_class_id")):
-		return _unavailable("source_scene_identity_required")
+	if not canonical is Dictionary:
+		return _attach_failure(view,"source_scene_identity_required")
+	var consumer: Dictionary = _consumer_identity(info,canonical)
+	if not consumer.get("ok",false):
+		return _attach_failure(view,str(consumer.error))
 	for field: String in ["icon_id", "asset_id", "asset_type_id"]:
 		if not _source_id(canonical.get(field)):
-			return _unavailable("source_scene_identity_required")
+			return _attach_failure(view,"source_scene_identity_required")
 	if canonical.asset_type_id != 101 or not canonical.get("path") is String:
-		return _unavailable("source_scene_identity_mismatch")
+		return _attach_failure(view,"source_scene_identity_mismatch")
 	if not _bindings_error.is_empty():
-		return _unavailable(_bindings_error)
+		return _attach_failure(view,_bindings_error)
 	var spec: Variant = bindings.get(str(int(canonical.icon_id)))
 	if not spec is Dictionary:
-		return _unavailable("source_scene_binding_unavailable")
+		return _attach_failure(view,"source_scene_binding_unavailable")
 	for field: String in ["asset_id", "asset_type_id"]:
 		if not _source_id(spec.get(field)) or spec[field] != canonical[field]:
-			return _unavailable("source_scene_identity_mismatch")
+			return _attach_failure(view,"source_scene_identity_mismatch")
 	if not spec.get("file_path") is String or not spec.get("member") is String:
-		return _unavailable("source_scene_path_binding_missing")
+		return _attach_failure(view,"source_scene_path_binding_missing")
 	var literal: String = spec.file_path
 	var member: String = spec.member
 	# The donor namespace is explicit. The current pack's canonical path is
 	# already complete; never strip a prefix or trust an extra file_path field.
 	if not _safe_relative(literal) or not literal.begins_with("icon/") or literal.get_extension() != "csb":
-		return _unavailable("source_scene_path_invalid")
+		return _attach_failure(view,"source_scene_path_invalid")
 	if member != canonical.path or member != "UI/CsbFile/" + literal:
-		return _unavailable("source_scene_identity_mismatch")
-	if not spec.get("clip") is String or spec.clip.is_empty() or not spec.get("repeat") is bool:
-		return _unavailable("source_scene_playback_binding_missing")
+		return _attach_failure(view,"source_scene_identity_mismatch")
+	if not spec.get("clip") is String or spec.clip.is_empty():
+		return _attach_failure(view,"source_scene_playback_binding_missing")
+	var policy: Dictionary = _playback_policy(spec,context)
+	if not policy.get("ok",false):
+		return _attach_failure(view,str(policy.error))
 	if not _sha256(spec.get("reviewed_current523_manifest_sha256")) or not _sha256(spec.get("current523_scene_sha256")):
-		return _unavailable("source_scene_version_unverified")
+		return _attach_failure(view,"source_scene_version_unverified")
 	var selected_pack: RefCounted = packs_by_manifest.get(spec.reviewed_current523_manifest_sha256)
 	# Preserve the original single-pack API for an explicitly supplied pack.
 	if selected_pack == null and pack != null and pack.get("manifest_sha256") == spec.reviewed_current523_manifest_sha256:
 		selected_pack = pack
 	if selected_pack == null:
-		return _unavailable("source_scene_pack_not_open")
+		return _attach_failure(view,"source_scene_pack_not_open")
 	var manifest_sha256: Variant = selected_pack.get("manifest_sha256")
 	if not _sha256(manifest_sha256) or spec.reviewed_current523_manifest_sha256 != manifest_sha256:
-		return _unavailable("source_scene_version_unverified")
+		return _attach_failure(view,"source_scene_version_unverified")
 	var source: Variant = selected_pack.scene(member)
 	if not source is Dictionary or source.is_empty() or source.get("_source_sha256") != spec.current523_scene_sha256:
-		return _unavailable("source_scene_version_unverified")
+		return _attach_failure(view,"source_scene_version_unverified")
 	if not ResourceLoader.exists(PLAYER_PATH):
-		return _unavailable("source_scene_player_not_installed")
+		return _attach_failure(view,"source_scene_player_not_installed")
+	var host_context: Dictionary = _host_context(context)
+	var key: Dictionary = {"consumer":consumer.identity,"icon_id":int(canonical.icon_id),
+		"asset_id":int(canonical.asset_id),"asset_type_id":int(canonical.asset_type_id),"path":canonical.path,
+		"image_pack_manifest_sha256":canonical.get("manifest_sha256",""),"manifest_sha256":manifest_sha256,
+		"scene_sha256":spec.current523_scene_sha256,"member":member,"clip":spec.clip,"policy":policy}
+	var reused: Dictionary = _reuse(view,key,original_ui_bindings,context)
+	if not reused.is_empty(): return reused
+	detach(view)
 	var player_script: Variant = load(PLAYER_PATH)
 	if not player_script is Script or not player_script.can_instantiate():
-		return _unavailable("source_scene_player_not_installed")
+		return _attach_failure(view,"source_scene_player_not_installed")
 	var scene: Variant = player_script.new()
 	if not scene is Node2D:
 		if scene is Node:
 			scene.free()
-		return _unavailable("source_scene_player_contract_unavailable")
+		return _attach_failure(view,"source_scene_player_contract_unavailable")
 	if not scene.has_method("configure") or not scene.has_method("play"):
 		scene.free()
-		return _unavailable("source_scene_player_contract_unavailable")
+		return _attach_failure(view,"source_scene_player_contract_unavailable")
 	var configured: Variant
 	if original_ui_bindings.is_empty():
 		configured = scene.configure(selected_pack, member, false)
@@ -190,15 +346,15 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 			break
 		if not accepts_bindings:
 			scene.free()
-			return _unavailable("source_scene_player_contract_unavailable")
+			return _attach_failure(view,"source_scene_player_contract_unavailable")
 		configured = scene.configure(selected_pack, member, false, original_ui_bindings)
 	if not configured is Dictionary or not configured.get("ok", false):
 		scene.free()
-		return _unavailable("source_scene_configure_unavailable", configured if configured is Dictionary else {})
-	var played: Variant = scene.play(spec.clip, spec.repeat)
+		return _attach_failure(view,"source_scene_configure_unavailable", configured if configured is Dictionary else {})
+	var played: Variant = scene.play(spec.clip, policy.repeat)
 	if not played is Dictionary or not played.get("ok", false):
 		scene.free()
-		return _unavailable("source_scene_playback_unavailable", played if played is Dictionary else {})
+		return _attach_failure(view,"source_scene_playback_unavailable", played if played is Dictionary else {})
 	var host := Control.new()
 	host.name = NODE_NAME
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -207,6 +363,12 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 	# hierarchy, transforms, source frames and timing remain with its player.
 	host.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	host.add_child(scene)
-	return {"ok":true,"status":"original_scene_linked","source":member,
+	var result: Dictionary = {"ok":true,"status":"original_scene_linked","source":member,
 		"manifest_sha256":manifest_sha256,"scene_sha256":spec.current523_scene_sha256,
-		"clip":spec.clip,"repeat":spec.repeat,"inspection_only":false}
+		"consumer":consumer.identity.duplicate(true),"clip":spec.clip,"repeat":policy.repeat,
+		"origin":policy.origin,"original_repeat_declared":policy.original_repeat_declared,
+		"original_policy_confirmed":policy.original_policy_confirmed,"host_context":host_context,
+		"trigger":host_context.trigger,"original_trigger_confirmed":false,
+		"inspection_only":false,"reused":false,"play_restarted":true}
+	_remember(view,host,scene,key,original_ui_bindings,result)
+	return result

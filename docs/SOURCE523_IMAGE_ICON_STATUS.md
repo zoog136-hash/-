@@ -111,6 +111,12 @@ Library identities or saves are included in Git.
   current ItemClass/Icon/AssetView path and the supplied scene binding. Original
   pack and scene hashes, clip name and repeat policy remain explicit inputs.
   Slot reuse, clearing and disposal detach the old source scene.
+- Existing skill-detail pictures, HUD skill quickslots and active buff icons
+  now share the original CSB display adapter using their exact SpellClass or
+  BuffClass icon role. ItemClass, SpellClass and BuffClass IDs remain distinct.
+  Same-identity mounts are reused without restarting their original clip.
+  Buff countdown changes update the existing labels while retaining the icon
+  nodes; role changes and removal detach the previous presentation.
 
 Selection uses a complete explicit pair:
 
@@ -163,16 +169,48 @@ Library identities, originals and source-relation documents remain private.
 
 The six original named clip/frame/speed declarations are retained in the private
 handoff. The source does not declare repeat behavior. API default `repeat=false`
-and a serialized animation name do not supply the missing caller playback
-policy. Exact ItemClass relations are prepared only where the current source
-declares them; the skill/buff scene retains its separate roles.
+and a serialized animation name do not establish the original caller policy.
+The available source and targeted public searches supplied no game caller
+repeat policy. An explicitly selected `estimate_missing_repeat` host option now
+allows one pass of a received clip whose source explicitly declares repeat as
+not supplied. This is `estimated_single_pass_icon_host`, not an original
+LineageM policy. Its result records `original_policy_confirmed:false` and the
+existing view-bind trigger. Explicit caller repeat values take priority.
+The original clip, source frame range, full Action duration and speed remain
+unchanged. The
+[Cocos API](https://docs.cocos2d-x.org/api-ref/cplusplus/V3.5/d7/d2f/class_action_timeline.html)
+documents caller-controlled looping and end-frame behavior; it does not supply
+the original game's missing policy. The skill/buff scene uses its own exact
+source roles instead of being assigned an ItemClass identity.
+
+The existing UI267 loader/player and its declared code dependencies are reused
+unchanged from published commit `d719912b6b9fdf65b145a559bebc3056d40ef8fa`.
+Their source Git blob identities are recorded in
+`docs/SOURCE523_UI_PLAYER_DEPENDENCY.json`; no previous file was overwritten.
+This is an existing renderer dependency, with ownership retained by UI267.
 
 `register_original_ui(document, root, manifest_sha256)` can retain independently
 pinned subsets without replacing other icons' declarations. Each icon selects
 the manifest explicitly named by its own source binding. Identity conflicts
 fail explicitly, and replacement does not inherit a previous repeat value.
 The original UI loader/player remains separately owned. No registration,
-render, playback or gameplay run was started for this new handoff.
+render, playback or gameplay run was started to validate this new code.
+
+Actual item/skill/buff image callers lazily load a complete explicitly pinned
+selection pair only when a source CSB is needed:
+
+```text
+--source523-ui-icons=<private-selection-json>
+--source523-ui-icons-sha256=<selection-sha256>
+```
+
+The environment equivalents are `TWILIGHT_SOURCE523_UI_ICONS` and
+`TWILIGHT_SOURCE523_UI_ICONS_SHA256`. The private selection declares each pack
+root and manifest pin plus exact source icon bindings. All packs are prepared
+before committing the selection, and estimated playback permission is scoped
+to that selection's icons. The private runtime environment file is prepared
+but has not been sourced or used to launch a game. These loader, caller and
+lifecycle changes are unexecuted and unverified.
 
 ## Explicit original dummy-image exclusions
 
@@ -222,8 +260,8 @@ The UI267 caller contract was read at `d719912b6b9fdf65b145a559bebc3056d40ef8fa`
 original layout remain owned there. Source-map terrain, rest-system transactions,
 definition-data work and Sprite actor motion remain separate owners. Source
 CSB icons have an item-slot caller adapter and the received six-scene subsets.
-Remaining scenes, the corresponding UI player and explicit caller playback
-policy still require their owner handoff. Full
+Remaining scenes and original caller policies still require their owner
+handoff; the received subset can use the explicitly tagged host estimate. Full
 mission/NPC/pass/attendance/map-screen/emoticon consumption still needs the
 corresponding existing original UI callers and exact node/selection/timing
 contracts. The adapter API does not establish that those consumers are active.
@@ -255,7 +293,7 @@ presenter, HUD registration and renderer; this lane does not recreate them.
 
 | Target | Required original input before further connection |
 | --- | --- |
-| Item CSB icons | Caller repeat/trigger policy and required node bindings for received subsets; remaining original scenes and corresponding UI player code |
+| Item CSB icons | Original caller repeat/trigger policy and required node bindings remain unconfirmed; received clips have a separately tagged host estimate; remaining scenes still need source inputs |
 | Map-screen images and buttons | Caller-declared current field/screen to original World/ImageInfo identity, original content root/SHA, existing mount, exact image/button node offsets and original map/area selection callbacks; terrain placement is a separate owner |
 | Mission and NPC images | Original content root/SHA, exact image node offsets, source-model asset roles and existing action callbacks |
 | Pass and attendance images | Original content root/SHA, exact image node offsets and caller-provided season/day/reward-row bindings and actions |

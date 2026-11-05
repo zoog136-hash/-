@@ -2,10 +2,20 @@ extends RefCounted
 ## Explicit, read-only image selection. Separate from actor/card pack settings.
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
+const ORIGINAL_UI_SELECTION_SCHEMA = "source523-original-ui-icon-selection-v1"
+const ORIGINAL_UI_SELECTION_MAX_BYTES: int = 2 * 1024 * 1024
 static var _pack: RefCounted
 static var _selected: bool = false
 static var _selection_checked: bool = false
 static var _error: String = ""
+static var _original_ui_selection_checked: bool = false
+static var _original_ui_selected: bool = false
+static var _original_ui_selection_error: String = ""
+static var _original_ui_selection_registered: bool = false
+static var _original_ui_selection_pin: String = ""
+static var _original_ui_estimate_missing_repeat: bool = false
+static var _original_ui_selection_bindings: Dictionary = {}
+static var _original_ui_revision: int = 0
 
 static func configure(root: String, manifest_sha256: String) -> Dictionary:
 	_selection_checked = true
@@ -34,6 +44,7 @@ static func configure_original_ui(document: Dictionary, root: String, manifest_s
 	var result: Dictionary = ORIGINAL_UI_ICONS.open_pack(root,manifest_sha256)
 	if bool(result.get("ok",false)):
 		ORIGINAL_UI_ICONS.configure(document)
+		_original_ui_manual_override(document,true)
 	return result
 
 static func register_original_ui(document: Dictionary, root: String, manifest_sha256: String) -> Dictionary:
@@ -45,7 +56,191 @@ static func register_original_ui(document: Dictionary, root: String, manifest_sh
 	if not opened.get("ok",false): return opened
 	var registered: Dictionary = ORIGINAL_UI_ICONS.register(document)
 	if not registered.get("ok",false): return registered
+	_original_ui_manual_override(document,false)
 	return opened # pack/registration readiness is not rendered/gameplay use
+
+static func _original_ui_manual_override(document: Dictionary, replace: bool) -> void:
+	# Manual calls remain explicit. They never inherit a file selection's
+	# estimated host policy merely because another subset was registered.
+	if replace:
+		_original_ui_selection_bindings.clear()
+	else:
+		for icon: Variant in document.get("source_icon_scenes",{}).get("icons",{}):
+			_original_ui_selection_bindings.erase(icon)
+	_original_ui_selection_error = ""
+	_original_ui_revision += 1
+	if _original_ui_selection_bindings.is_empty():
+		_original_ui_selection_registered = false
+		_original_ui_selected = false
+		_original_ui_selection_pin = ""
+		_original_ui_estimate_missing_repeat = false
+
+static func _original_ui_unavailable(reason: String, details: Dictionary = {}) -> Dictionary:
+	var result: Dictionary = {"ok":false,"status":"unavailable","error":reason,"inspection_only":false}
+	if not details.is_empty(): result["details"] = details.duplicate(true)
+	return result
+
+static func _original_ui_selection_failure(reason: String, details: Dictionary = {}) -> Dictionary:
+	_original_ui_selection_checked = true
+	_original_ui_selected = true
+	_original_ui_selection_error = reason
+	var result: Dictionary = _original_ui_unavailable(reason,details)
+	result["previous_selection_preserved"] = true
+	return result
+
+static func _original_ui_sha256(value: Variant) -> bool:
+	if not value is String or value.length() != 64: return false
+	for offset: int in range(value.length()):
+		if not "0123456789abcdef".contains(value.substr(offset,1)): return false
+	return true
+
+static func original_ui_selection(arguments: PackedStringArray, environment_path: String = "", environment_sha256: String = "") -> Dictionary:
+	var requested_path: String = ""
+	var requested_pin: String = ""
+	var cli_selected: bool = false
+	var seen: Dictionary = {}
+	for argument: String in arguments:
+		var key: String = "path" if argument.begins_with("--source523-ui-icons=") else "sha256" if argument.begins_with("--source523-ui-icons-sha256=") else ""
+		if key.is_empty(): continue
+		cli_selected = true
+		var value: String = argument.substr(argument.find("=")+1)
+		if seen.has(key) and seen[key] != value:
+			return {"selected":true,"error":"conflicting_source523_ui_icon_selection"}
+		seen[key] = value
+		if key == "path": requested_path = value
+		else: requested_pin = value
+	var environment_selected: bool = not environment_path.is_empty() or not environment_sha256.is_empty()
+	if cli_selected and (requested_path.is_empty() or requested_pin.is_empty()):
+		return {"selected":true,"error":"incomplete_source523_ui_icon_selection"}
+	if environment_selected and (environment_path.is_empty() or environment_sha256.is_empty()):
+		return {"selected":true,"error":"incomplete_source523_ui_icon_selection"}
+	if cli_selected and environment_selected and (requested_path != environment_path or requested_pin != environment_sha256):
+		return {"selected":true,"error":"conflicting_source523_ui_icon_selection"}
+	if not cli_selected and not environment_selected: return {"selected":false}
+	if not cli_selected:
+		requested_path = environment_path
+		requested_pin = environment_sha256
+	return {"selected":true,"path":requested_path,"sha256":requested_pin}
+
+static func configure_original_ui_selection(path: String, pin: String) -> Dictionary:
+	_original_ui_selection_checked = true
+	_original_ui_selected = true
+	if path.is_empty() or not _original_ui_sha256(pin):
+		return _original_ui_selection_failure("source_scene_selection_pin_required")
+	var absolute: String = ProjectSettings.globalize_path(path)
+	if not absolute.is_absolute_path():
+		return _original_ui_selection_failure("source_scene_selection_path_required")
+	var file := FileAccess.open(absolute,FileAccess.READ)
+	if file == null:
+		return _original_ui_selection_failure("source_scene_selection_file_unavailable")
+	var byte_count: int = file.get_length()
+	if byte_count <= 0 or byte_count > ORIGINAL_UI_SELECTION_MAX_BYTES:
+		file.close()
+		return _original_ui_selection_failure("source_scene_selection_size_invalid")
+	var bytes: PackedByteArray = file.get_buffer(byte_count)
+	var unchanged_length: bool = file.get_length() == byte_count
+	file.close()
+	if bytes.size() != byte_count or not unchanged_length:
+		return _original_ui_selection_failure("source_scene_selection_bytes_changed")
+	var hash := HashingContext.new()
+	if hash.start(HashingContext.HASH_SHA256) != OK:
+		return _original_ui_selection_failure("source_scene_selection_hash_unavailable")
+	hash.update(bytes)
+	if hash.finish().hex_encode() != pin:
+		return _original_ui_selection_failure("source_scene_selection_sha_mismatch")
+	var text: String = bytes.get_string_from_utf8()
+	if text.to_utf8_buffer() != bytes:
+		return _original_ui_selection_failure("source_scene_selection_utf8_invalid")
+	var selection_document: Variant = JSON.parse_string(text.trim_prefix(String.chr(0xfeff)))
+	if not selection_document is Dictionary or selection_document.get("schema") != ORIGINAL_UI_SELECTION_SCHEMA:
+		return _original_ui_selection_failure("source_scene_selection_schema_invalid")
+	var estimate: Variant = selection_document.get("estimate_missing_repeat",false)
+	if not estimate is bool:
+		return _original_ui_selection_failure("source_scene_selection_estimate_policy_invalid")
+	var requests: Variant = selection_document.get("packs")
+	var document: Variant = selection_document.get("document")
+	if not requests is Array or requests.is_empty() or not document is Dictionary:
+		return _original_ui_selection_failure("source_scene_selection_inputs_required")
+	var contract: Dictionary = ORIGINAL_UI_ICONS.registration_contract(document)
+	if not contract.get("ok",false):
+		return _original_ui_selection_failure(str(contract.get("error","source_scene_bindings_unavailable")),contract)
+	var icons: Variant = document.get("source_icon_scenes",{}).get("icons")
+	if not icons is Dictionary or icons.is_empty():
+		return _original_ui_selection_failure("source_scene_bindings_unavailable")
+	var prepared: Array = []
+	var prepared_pins: Dictionary = {}
+	for request: Variant in requests:
+		if not request is Dictionary or not request.get("root") is String or request.root.is_empty() or not _original_ui_sha256(request.get("manifest_sha256")):
+			return _original_ui_selection_failure("source_scene_pack_selection_invalid")
+		var manifest_pin: String = request.manifest_sha256
+		if prepared_pins.has(manifest_pin):
+			return _original_ui_selection_failure("duplicate_source_scene_pack_selection")
+		var pack_root: String = request.root
+		# A relative root is an explicit path relative to this config file,
+		# never a directory search or a guessed original-resource location.
+		if pack_root.begins_with("res://") or pack_root.begins_with("user://"):
+			pack_root = ProjectSettings.globalize_path(pack_root)
+		elif not pack_root.is_absolute_path():
+			pack_root = absolute.get_base_dir().path_join(pack_root)
+		pack_root = pack_root.simplify_path()
+		var candidate: Dictionary = ORIGINAL_UI_ICONS.prepare_pack(pack_root,manifest_pin)
+		if not candidate.get("ok",false):
+			return _original_ui_selection_failure(str(candidate.get("error","source_scene_pack_unavailable")),candidate)
+		prepared.append(candidate)
+		prepared_pins[manifest_pin] = true
+	for icon: Variant in icons:
+		var spec: Variant = icons[icon]
+		if not spec is Dictionary or not prepared_pins.has(spec.get("reviewed_current523_manifest_sha256")):
+			return _original_ui_selection_failure("source_scene_binding_pack_selection_missing")
+	var committed: Dictionary = ORIGINAL_UI_ICONS.commit_selection(prepared,document)
+	if not committed.get("ok",false):
+		return _original_ui_selection_failure(str(committed.get("error","source_scene_selection_unavailable")),committed)
+	_original_ui_selection_error = ""
+	_original_ui_selection_registered = true
+	_original_ui_selection_pin = pin
+	_original_ui_estimate_missing_repeat = estimate
+	_original_ui_selection_bindings = icons.duplicate(true)
+	_original_ui_revision += 1
+	return {"ok":true,"status":"source_scene_selection_registered","manifest_sha256":pin,
+		"pack_count":prepared.size(),"icon_count":icons.size(),"estimate_missing_repeat":estimate,"rendered":false}
+
+static func _ensure_original_ui_selection() -> void:
+	if _original_ui_selection_checked: return
+	_original_ui_selection_checked = true
+	var request: Dictionary = original_ui_selection(OS.get_cmdline_user_args(),OS.get_environment("TWILIGHT_SOURCE523_UI_ICONS"),OS.get_environment("TWILIGHT_SOURCE523_UI_ICONS_SHA256"))
+	if not request.get("selected",false): return # keep explicit manual registration
+	_original_ui_selected = true
+	if request.has("error"):
+		_original_ui_selection_error = str(request.error)
+		return
+	configure_original_ui_selection(str(request.path),str(request.sha256))
+
+static func original_ui_selection_status() -> Dictionary:
+	# Status does not open a selection file. Original CSB requests are the
+	# only automatic entry point for the lazy private metadata read.
+	return {"selected":_original_ui_selected,"selection_checked":_original_ui_selection_checked,
+		"registered":_original_ui_selection_registered,"error":_original_ui_selection_error,
+		"manifest_sha256":_original_ui_selection_pin,"estimate_missing_repeat":_original_ui_estimate_missing_repeat,
+		"registered_pack_count":ORIGINAL_UI_ICONS.packs_by_manifest.size(),
+		"registered_icon_count":ORIGINAL_UI_ICONS.bindings.size(),"rendered":false}
+
+static func original_ui_revision() -> int:
+	return _original_ui_revision
+
+static func attach_original_icon(view: TextureRect, info: Dictionary, bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
+	if info.get("route") != "source523_images" or info.get("source_snapshot") != "patch523" or info.get("reason") != "unsupported_csb":
+		return _original_ui_unavailable("source_scene_identity_mismatch")
+	_ensure_original_ui_selection()
+	if not _original_ui_selection_error.is_empty():
+		ORIGINAL_UI_ICONS.detach(view)
+		return _original_ui_unavailable(_original_ui_selection_error)
+	var caller_context: Dictionary = context.duplicate(true)
+	var provenance: Variant = info.get("provenance")
+	if provenance is Dictionary and PACK._integer(provenance.get("icon_id")):
+		var icon_key: String = str(int(provenance.icon_id))
+		if _original_ui_selection_bindings.has(icon_key):
+			caller_context["allow_estimated_single_pass"] = _original_ui_estimate_missing_repeat
+	return ORIGINAL_UI_ICONS.attach(view,info,bindings,caller_context)
 
 static func selection(arguments: PackedStringArray, environment_root: String = "", environment_sha256: String = "") -> Dictionary:
 	var root: String = ""

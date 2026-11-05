@@ -26,6 +26,7 @@ static func _binding(host_id: String) -> Dictionary:
 
 static func _info(kind: String, role: String, host_id: String = "") -> Dictionary:
 	return {"handled":selected(),"route":"source523_images" if selected() else "", "kind":kind,
+		"source_snapshot":"patch523",
 		"host_skill_id":host_id,"source_field":role,"status":"original_icon_not_installed",
 		"reason":"source523_image_identity_required","source_status":"source523_image_identity_required",
 		"texture":null,"provenance":{},"original_bytes_unchanged":false,"actual_game_consumption_observed":false}
@@ -52,6 +53,12 @@ static func describe_skill(record: Dictionary, role: String = "IconID") -> Dicti
 	if not role in ["IconID","ActivateIconID"]: return _missing(info,"unsupported_skill_icon_role")
 	var binding: Dictionary = _binding(host_id)
 	if binding.is_empty(): return _missing(info,"host_skill_binding_missing")
+	var reader: RefCounted=IMAGES.active()
+	if reader!=null:
+		var original: Dictionary=reader.source_consumer_row("SpellClass",int(binding.spell_id))
+		if original.get("ok",false) and original.get("row",{}).get("TestSpell",false)==true:
+			info.provenance=original.get("provenance",{}).duplicate(true)
+			return _missing(info,"source_test_spell_excluded")
 	var result: Dictionary = IMAGES.resolve_consumer("SpellClass",int(binding.spell_id),role)
 	var provenance: Dictionary = result.get("provenance",{})
 	if provenance.has("source_row_canonical_sha256") and provenance.source_row_canonical_sha256 != binding.row_sha256:
@@ -119,6 +126,36 @@ static func missing_label(info: Dictionary) -> String:
 	if str(info.get("reason","")).begins_with("unsupported_"): return "미지원"
 	if info.get("reason","") in ["host_skill_binding_missing","native_buff_identity_unconfirmed","native_buff_relation_unavailable","native_buff_relation_ambiguous","native_buff_state_unconfirmed"]: return "미확인"
 	return "미설치"
+
+static func clear(view: TextureRect) -> void:
+	if not is_instance_valid(view): return
+	IMAGES.ORIGINAL_UI_ICONS.detach(view)
+	for key: String in ["source523_skill_image","source523_buff_image"]:
+		if view.has_meta(key): view.remove_meta(key)
+
+static func apply(view: TextureRect, info: Dictionary, usage: String = "skill_icon") -> Dictionary:
+	var shown: Dictionary=info.duplicate(true)
+	if not shown.get("handled",false):
+		clear(view)
+		return shown
+	view.texture=shown.get("texture") as Texture2D
+	if shown.get("reason")=="unsupported_csb":
+		var scene: Dictionary=IMAGES.attach_original_icon(view,shown,{},
+			{"usage":usage,"trigger":"existing_skill_buff_view_bind"})
+		shown["scene_result"]=scene
+		shown["source_status"]=str(scene.get("status","unavailable"))
+		if scene.get("ok",false):
+			shown["status"]="source_scene_estimate" if scene.get("origin")=="estimated_single_pass_icon_host" else "original_scene_linked"
+			shown["playback_policy_origin"]=str(scene.get("origin",""))
+			shown["original_policy_confirmed"]=scene.get("original_policy_confirmed",false)
+			shown["reason"]=""
+		else:
+			shown["reason"]=str(scene.get("error","source_scene_unavailable"))
+	else:
+		IMAGES.ORIGINAL_UI_ICONS.detach(view)
+	var key: String="source523_buff_image" if shown.get("kind")=="buff" else "source523_skill_image"
+	view.set_meta(key,evidence(shown))
+	return shown
 
 static func evidence(info: Dictionary) -> Dictionary:
 	var value: Dictionary = info.duplicate(true)
