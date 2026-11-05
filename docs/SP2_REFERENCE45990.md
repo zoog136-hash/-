@@ -1,9 +1,10 @@
 # Original current523 SP2 connections
 
 This change connects original source actions to a private action-bank registry and
-Main's existing transformation, magic-doll and relic consumer. It keeps the
-existing installed actor first, uses the current source tables to select an
-actor, and reuses the existing SP2 decoder, source clock and layer renderer.
+Main's existing transformation, magic-doll and relic consumer. Final native
+presentation selects the new original bank through the current source tables
+and reuses the existing SP2 decoder, source clock and layer renderer. Stable
+saved m508/m523 keys remain ABI, not authorization to use an old pixel pack.
 It does not create images, sprites, frames, directions or game locations.
 
 The branch starts at `1333851bb2eb193a6ac1fc3e3b852787c08994ff`.
@@ -102,8 +103,9 @@ filename or an older snapshot alone is insufficient.
 
 ## Actual Main call path
 
-`original_source_preview.configure` first retains its existing successful
-consumer. Its source-bank fallback follows the pinned current523 source tables
+`original_source_preview.configure` requires the new bank for native card
+requests. Missing new input stays pending with old pixels hidden. It follows
+the pinned current523 source tables
 through card/buff/bonus/polymorph/entity relationships. Display sprites are not
 substituted for in-world actors. Class/gender and active custom options remain
 explicit inputs. Missing original actor data cannot borrow a legacy image.
@@ -133,18 +135,19 @@ The normal player/follower/relic requests and motion state call the connected
 loader and player. This configuration selects resources; it does not create
 cards, change ownership, activate excluded content, or modify saved progression.
 Without a command-line override, the loader can read an already installed
-`user://current523_source_bank.json`; an absent configuration preserves the
-existing behavior. Configuration generation does not write GameData or saves.
-The fixed existing identity-pack loader keeps its own snapshot and manifest
-checks. Source selection and presentation policy remain distinct from combat
-and game-event authority.
+`user://current523_source_bank.json`; an absent configuration keeps native
+presentation pending. Configuration generation does not write GameData or
+saves. Former pack files and loader code are preserved, but are not final
+native inputs or prerequisites. Source selection and presentation policy remain
+distinct from combat and game-event authority.
 
-The NPC fallback follows the two existing `patch523_spawn_policy.admit` gates
-and preserves a successful base508 view. Only an admitted record whose old view
-cannot load reaches the current source-bank view. It requires the exact
-NPC/Sprite, spawn-view and territory tuple and the current unchanged-field gate;
-it does not create a spawn or bypass map admission. Its existing hit/death and
-attack-sequence state drives the same source preview.
+Native NPC presentation follows the two existing `patch523_spawn_policy.admit`
+gates and uses the new current bank exclusively. The data owner's canonical
+projection precedes this request; only its active admitted registry supplies
+the exact NPC/Sprite/DescId and source-archive identity. A missing visual stays
+pending and cannot expose the old Sprite/species/shadow through pool reuse or
+later motion updates. Existing spawn/map admission, hit/death and attack state
+remain with their owners; no actor or placement is created by this bridge.
 
 `reference_sp2_bank.gd` reads the pinned bank and exact actor/action entries,
 then resolves original member/bit/frame addresses through the existing decoder.
@@ -187,9 +190,9 @@ The admitted NPC view delegates the same typed presentation API. Its combat
 owner retains event admission, timing, targeting, effect limits and lifetime.
 Data, effect, transaction and save-owner logic is not copied into this bridge.
 
-The existing NPC `emit_effect` rendering branch can also request an unparented
-current-source one-shot when its legacy overlay cannot handle the exact source
-action. A working candidate or legacy renderer remains first. The existing
+The existing NPC `emit_effect` rendering branch requests an unparented
+current-source one-shot. A source-only native actor skips former candidate and
+card-manifest effect packs. The existing
 caller still supplies the admitted Spell row, field, actor, point, facing and
 effect limit, adopts the returned node and owns its cleanup. Cast, hit, damage,
 proc, costs, target selection and rewards are unchanged. The source view uses
@@ -206,9 +209,25 @@ The successful counter's existing impact callback uses the same delegation.
 Current spell reads and provenance use the original ZIP member
 `content/SpellClass.json` and its `SpellClass` table key.
 The existing native-option spell presenter also delegates its already selected
-full spell row and existing effect/success events after the legacy renderer.
-Current source selection must match that whole row; the generic Sprite-only
-fallback and invoke activation, probabilities and combat logic are unchanged.
+full spell row and existing effect/success events. Source-only presentation
+does not use an old manifest as a prerequisite or fallback. Current selection
+must match that whole row; invoke activation, probabilities and combat logic
+are unchanged. A Sprite ID alone cannot admit a new current effect.
+
+Card skill awakening uses a full-row current source request under the final
+source-only policy, without old/partial pack fallbacks. Current results retain the
+unverified native composition/trigger status and do not become a complete
+visual claim merely because construction starts. Successful item-use callbacks
+can supply their whole original ItemClass row to the same presenter. Selection
+uses ItemClassID → ItemBonus → Bonus → BonusType → Unit=SpriteID, requires the
+existing requested consume sprite, and preserves the original action domain.
+ItemClass/ItemBonus are loaded only for this optional presentation request.
+
+Per-file connection outcomes now separate the requested original's receipt
+from missing inputs elsewhere in its action graph. A received member cannot
+inherit an earlier `blocked_original_sp2_not_received` planning label. The old
+22,028-row transfer request includes previously received members; it remains a
+historical action-blocked request, not a current raw-original absence count.
 
 The subsequent local aura bridge follows the existing World/subslot
 `source_awakening_aura.configure` and process calls. Its activation still comes
@@ -217,8 +236,8 @@ legacy awakening rules against the full current `BuffCardAwakenEffect` and
 `StatusEffectAttr` rows, including the original gender-neutral attribute48
 reference; it does not make attribute48 a general enum. Original idle3 and
 optional walk0 keep their own source clocks. A missing walk hides this visual
-while moving; idle pixels are not substituted as movement frames. The existing
-legacy visual remains preferred when it succeeds.
+while moving; idle pixels are not substituted as movement frames. The new bank
+is the sole final aura input; an old awakening manifest is not required.
 
 Card selection also uses the actual typed deck rows: transform1,
 MagicDollCardDeck2 and HolyStuffCardDeck98. The previous untested relic3

@@ -16,6 +16,8 @@ var selection_status: Dictionary = {}
 var _source_bank_visual: bool = false
 
 static func rule(category: String, record: Dictionary) -> Dictionary:
+	# The retained registry is a bounded source relationship allowlist, not a
+	# legacy pixel pack or permission to render saved card artwork.
 	if not SOURCE.native(record): return {}
 	var canonical_record: Dictionary = {}
 	for candidate: Dictionary in SOURCE.cards().get("catalog", {}).get(category, []):
@@ -31,33 +33,34 @@ static func rule(category: String, record: Dictionary) -> Dictionary:
 func configure(category: String, record: Dictionary, enabled: bool, target: Node2D, manifest: String, presentation: Dictionary) -> void:
 	settings = presentation.duplicate(true)
 	var binding: Dictionary = rule(category, record) if enabled else {}
-	if binding.is_empty() or not is_instance_valid(target) or not target.installed():
+	if binding.is_empty():
 		deactivate(); return
+	if not is_instance_valid(target) or not target.installed():
+		deactivate(); status="source_host_pending"; return
 	var mode: String = target.source_playback_mode()
-	var path: String = INSTALL.resolve_file(manifest.get_base_dir(), "awakening/manifest.json")
 	var context: Dictionary = target.source_bank_request_context() if target.has_method("source_bank_request_context") else {}
-	var key: String = "%s:%s:%s:%s:%s" % [str(record.sourceId), str(binding.sprite_id), str(target.get_instance_id()), path + mode,str(hash(context))]
-	if signature == key and visual.installed(): return
+	if mode != "compatible":
+		deactivate(); status="strict_unverified_composition"; return
+	# The manifest argument remains part of the existing caller ABI. Current
+	# pixels are selected exclusively from the pinned bank/context below.
+	var selected: Dictionary = CURRENT523.select(category,record,binding,context)
+	if not bool(selected.get("ok",false)):
+		deactivate()
+		selection_status = selected.duplicate(true)
+		status = str(selected.get("reason","source_pixels_pending"))
+		return
+	var key: String = "%s:%s:%s:%s:%s:%s" % [str(record.sourceId),str(selected.sprite_id),str(target.get_instance_id()),str(selected.manifest_path),str(selected.manifest_sha256),mode]
+	if signature == key and _source_bank_visual and visual.installed(): return
 	deactivate()
 	signature = key
 	host = target
 	sprite_id = int(binding.sprite_id)
-	if mode != "compatible": status = "strict_unverified_composition"; return
 	if get_parent() != target:
 		if get_parent() != null: get_parent().remove_child(self)
 		target.add_child(self)
 	if visual.get_parent() == null: add_child(visual)
 	visual.playback_mode_override = mode
-	# Preserve an existing successful native pack. The already-enabled source
-	# awakening can use the new bank only through the same bounded source rule.
-	if FileAccess.file_exists(path) and visual.configure("sprite:" + str(sprite_id), path):
-		status = "compatible_native_anchor_unverified_M_placement_and_blend"
-		return
-	var selected: Dictionary = CURRENT523.select(category,record,binding,context)
 	selection_status = selected.duplicate(true)
-	if not bool(selected.get("ok",false)):
-		status = str(selected.get("reason","source_pixels_pending"))
-		return
 	var roles: Dictionary = selected.role_actions.duplicate()
 	var loops: Dictionary = {"idle":bool(selected.loop_policy.idle)}
 	var optional_walk: bool = selected.get("optional_role_actions",{}).has("walk")
@@ -98,17 +101,15 @@ func apply_settings(value: Dictionary) -> void:
 	settings = value.duplicate(true)
 
 func _process(delta: float) -> void:
-	if not is_instance_valid(host) or not host.installed() or not visual.installed() or not host.is_visible_in_tree(): hide(); return
+	if not _source_bank_visual or not is_instance_valid(host) or not host.installed() or not visual.installed() or not host.is_visible_in_tree(): hide(); return
 	var role: String = "walk" if host.source_role() in ["walk", "run"] else "idle"
 	# Missing walk pixels are not replaced with an invented idle/movement action.
 	var available: bool = visual._playback_tracks.has(role)
 	visible = available and host.visible and not bool(settings.get("reduced_motion", false)) and float(settings.get("impact_intensity", 1.0)) > 0.0
 	if available:
-		if _source_bank_visual:
-			if not visual.advance_reference_source(delta,role,posmod(int(host.source_facing)+3,8)):
-				status = "source_pixels_pending"
-				hide()
-		else: visual.advance_source(delta, role, host.source_facing, 0, false)
+		if not visual.advance_reference_source(delta,role,posmod(int(host.source_facing)+3,8)):
+			status = "source_pixels_pending"
+			hide()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE and is_instance_valid(visual) and visual.get_parent() == null: visual.free()

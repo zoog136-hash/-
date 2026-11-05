@@ -21,7 +21,8 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 	if not player is Node2D or not target is Node2D or preview==null or (not preview.has_method("notify_source_spell_event") and not preview.has_method("notify_current_source_spell_event")):
 		last_result.reason="source_compositor_unavailable";return last_result.duplicate(true)
 	var manifest: String=str(property(player,"original_source_manifest",""))
-	var legacy_manifest_available: bool=not manifest.is_empty() and FileAccess.file_exists(manifest)
+	var source_only: bool=preview.has_method("current523_source_only_presentation") and bool(preview.call("current523_source_only_presentation"))
+	var legacy_manifest_available: bool=not source_only and not manifest.is_empty() and FileAccess.file_exists(manifest)
 	if not legacy_manifest_available and not preview.has_method("notify_current_source_spell_event"):
 		last_result.reason="source_manifest_unavailable";return last_result.duplicate(true)
 	var facing: int=int(property(property(player,"motion"),"facing8",0))

@@ -794,7 +794,33 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 	# admission, costs, proc timing, damage, progression or saved state.
 	var profile: Dictionary = catalog.source523.profiles.get(str(skill.get("id","")),{})
 	var row: Variant = profile.get("row")
-	if not row is Dictionary or catalog.source523.active_sha256.is_empty(): return
+	if not row is Dictionary or row.is_empty(): return
+	if catalog.source523.active_sha256.is_empty():
+		# The raw-definition owner admits profiles without assigning the compiled
+		# pack fingerprint. Read its optional contract dynamically for older owners.
+		var owner: Object = catalog.source523
+		var source_mode: String = ""
+		var source_identity: Variant = {}
+		var fallback_status: Variant = {}
+		for property: Dictionary in owner.get_property_list():
+			match str(property.name):
+				"source_mode":
+					var value: Variant = owner.get("source_mode")
+					if value is String: source_mode = value
+				"source_identity": source_identity = owner.get("source_identity")
+				"source_fallback_status": fallback_status = owner.get("source_fallback_status")
+		if source_mode != "original_bound_profiles" or not source_identity is Dictionary or not fallback_status is Dictionary: return
+		var source_archive_sha: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+		if source_identity.get("kind") != "twilight.current523.original-definitions.v1" or source_identity.get("source_snapshot") != "patch523" or source_identity.get("source_sha256") != source_archive_sha or source_identity.get("source_bytes") != 25031173: return
+		var id: String = str(skill.get("id",""))
+		var applied: Variant = fallback_status.get("applied")
+		var deferred: Variant = fallback_status.get("deferred")
+		if fallback_status.get("state") != "loaded" or not applied is Array or not applied.has(id) or not deferred is Dictionary or deferred.has(id): return
+		var bindings: Dictionary = catalog.source523.bindings
+		var skills: Variant = bindings.get("skills")
+		if not skills is Dictionary: return
+		var binding: Variant = skills.get(id)
+		if bindings.get("source_zip_sha256") != source_archive_sha or not binding is Dictionary or binding.get("spell_id") != row.get("ID"): return
 	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:

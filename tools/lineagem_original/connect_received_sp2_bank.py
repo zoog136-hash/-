@@ -53,11 +53,15 @@ class Writer:
 
 
 def supplied_identity(row, original_root):
-    value = dict(row)
-    value["sha256"] = (row.get("sha256") or row.get("supplied_member_sha256")
-                       or row.get("supplied_sha256") or row.get("expected_sha256"))
-    value["local_path"] = row.get("local_path") or row.get("output_path") or str(original_root / row["member"])
-    value["stage"] = row.get("stage", "previous_acquisition_verified_no_additional_validation_this_run")
+    value = dict(row.get("descriptor", {})) if isinstance(row.get("descriptor"), dict) else {}
+    if isinstance(row.get("supplied_identity"), dict):
+        value.update(row["supplied_identity"])
+    value.update(row)  # Preserve explicit receipt fields, including contradictions and nulls.
+    value["sha256"] = (value.get("sha256") or value.get("supplied_member_sha256")
+                       or value.get("supplied_sha256") or value.get("expected_sha256"))
+    value["local_path"] = value.get("local_path") or value.get("output_path") or str(original_root / value["member"])
+    value["stage"] = value.get("stage", "previous_acquisition_verified_no_additional_validation_this_run"
+                               if value["sha256"] else "source_input_stage_unspecified")
     return value
 
 
@@ -66,14 +70,34 @@ def descriptor(member, receipt):
               "bytes": receipt["bytes"], "sha256": receipt.get("sha256")}
     if result["sha256"] is None:
         relation = receipt.get("current523_relation", {})
+        if not isinstance(relation, dict):
+            relation = {}  # No supplied current-container contract can be inferred from another value.
+        target_domain = receipt.get("target_identity_domain", {})
+        if not isinstance(target_domain, dict):
+            target_domain = {}
+        version_basis = target_domain.get("version_basis") or receipt.get("version_basis")
+        whole_manifest = receipt.get("supplied_source_current523_manifest_match")
+        relation_whole_manifest = relation.get("whole_current523_manifest_match")
+        if whole_manifest is False or relation_whole_manifest is False:
+            whole_manifest = False
+        elif whole_manifest is None:
+            whole_manifest = relation_whole_manifest  # Copy a supplied value; never infer a whole-match claim.
+        container_manifest = None
+        if all(field in relation for field in ("manifest_path", "current523_container_bytes", "current523_container_sha1", "source_provenance_file")):
+            container_manifest = {"archive":relation["manifest_path"], "bytes":relation["current523_container_bytes"],
+                                  "sha1":relation["current523_container_sha1"],
+                                  "source_provenance_file":relation["source_provenance_file"]}
+            if version_basis is None:
+                version_basis = "supplied_current523_container_manifest"
         result.update(crc32=receipt["crc32"], stage=receipt["stage"], source_receipt_id=member,
             source_identity={"source_snapshot": "patch523",
                 "basis": "supplied_exact_current523_member_archive_bytes_crc_domain",
                 "archive": receipt.get("archive") or receipt.get("container"),
                 "source_manifest_reference": receipt.get("source_manifest_reference"),
-                "whole_current523_manifest_match": receipt.get("supplied_source_current523_manifest_match", relation.get("whole_current523_manifest_match")),
+                "whole_current523_manifest_match": whole_manifest,
                 "container_sha256": receipt.get("supplied_container_sha256") or relation.get("supplied_container_sha256"),
-                "version_basis": receipt.get("target_identity_domain", {}).get("version_basis") or receipt.get("version_basis"),
+                "version_basis": version_basis,
+                "container_manifest_identity": container_manifest,
                 "source_original_snapshot": receipt.get("source_snapshot")})
     return result
 
@@ -434,10 +458,37 @@ def connect(args):
                 else:
                     counts["priority_dummy_connection_excluded_files"] += 1
                     counts["priority_dummy_connection_excluded_original_bytes"] += inventory[member]["bytes"]
-            status = ("compiled_source_graph_without_additional_validation" if ready else
-                      "excluded_source_literal_dummy" if touched else previous["status"])
+            # A saved planning status describes its old action graph, not the
+            # current availability of this member. Keep a received original
+            # separate from an action blocked by another missing raw member.
+            input_received = member in receipts
+            blocker_states = sorted({str(link.get("status")) for link in links.values()
+                                     if link.get("status") and not link.get("compiled")})
+            if ready:
+                status = "compiled_source_graph_without_additional_validation"
+            elif touched:
+                status = "excluded_source_literal_dummy"
+            elif not input_received:
+                status = "blocked_original_sp2_not_received"
+            elif "blocked_original_sp2_not_received" in blocker_states:
+                status = "blocked_source_dependency_original_not_received"
+            elif "blocked_current523_dependency_identity" in blocker_states:
+                status = "blocked_current523_dependency_identity"
+            elif "blocked_source_address_construction" in blocker_states:
+                status = "blocked_source_address_construction"
+            elif "blocked_source_graph_construction" in blocker_states:
+                status = "blocked_source_graph_construction"
+            elif previous["status"] in ("blocked_existing_source_contract", "blocked_source_family_contract_review"):
+                status = previous["status"]
+            elif not links:
+                status = "blocked_no_source_action_request"
+            else:
+                status = "blocked_source_actions_or_missing_inputs"
             file_statuses[status] += 1
-            yield {**previous,"status":status,"requests":list(links.values()),"compiled":ready,"input_received":member in receipts,
+            yield {**previous,"status":status,"previous_planning_status":previous["status"],
+                "connection_blocker_states":blocker_states,"requests":list(links.values()),"compiled":ready,"input_received":input_received,
+                "input_status":"received" if input_received else "not_received",
+                "received_original_identity":receipts.get(member),
                 "current_input_stage":receipts.get(member,{}).get("stage","not_received"),
                 "original_identity_receipt_id":member if member in receipts else None,
                 "source_context_from_saved_plan":str(plan),

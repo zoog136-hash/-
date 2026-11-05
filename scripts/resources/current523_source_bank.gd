@@ -216,7 +216,9 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip))
 	if not loaded.ok: return loaded
 	var native: Dictionary = _by_id.BuffCard.get(int(record.get("source_card_id",-1)),{})
-	if native.is_empty() or native != record.source_original_card or int(native.get("BuffCardDeckID",-1)) != DECKS[consumer] or int(record.get("source_deck_id",-1)) != int(native.BuffCardDeckID) or source_id != "%s:%d:%d" % [source_id.get_slice(":",0),int(native.BuffCardDeckID),int(native.ID)]: return fail("current523_complete_typed_card_definition_differs")
+	# The data owner's canonical sourceId is the saved ABI. Do not reconstruct
+	# that namespace from a current deck number or relabel the saved identity.
+	if native.is_empty() or native != record.source_original_card or int(native.get("BuffCardDeckID",-1)) != DECKS[consumer] or int(record.get("source_deck_id",-1)) != int(native.BuffCardDeckID): return fail("current523_complete_typed_card_definition_differs")
 	var deck: Dictionary = _by_id.BuffCardDeck.get(int(native.BuffCardDeckID),{})
 	if deck.get("Name") != DECK_NAMES[consumer]: return fail("current523_typed_card_deck_category_differs")
 	if bool(native.get("IsTest",false)): return fail("current523_test_card_not_admitted")

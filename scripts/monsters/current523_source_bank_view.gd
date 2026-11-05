@@ -6,6 +6,9 @@ const PRESENTATION = preload("res://scripts/animation/source_presentation_policy
 var selection_status: Dictionary = {}
 var _preview: PREVIEW = null
 
+static func source_only_request(record: Dictionary) -> bool:
+	return SELECTION.source_only_request(record)
+
 func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	selection_status = SELECTION.select(record,admission)
 	if not selection_status.get("ok",false): return false
@@ -14,7 +17,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	if not candidate._configure_selected_roles(selected,"idle"):
 		selection_status = selected.duplicate(true)
 		selection_status["ok"] = false
-		selection_status["status"] = "selection_pending"
+		selection_status["status"] = "source_only_pending" if selected.get("source_only",false) else "selection_pending"
 		selection_status["reason"] = candidate.reference_bank_status.get("error","current523_npc_core_source_action_unavailable")
 		candidate.free()
 		return false
@@ -38,7 +41,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	_source_attack = false
 	if not _preview.advance_reference_source(0.0,"idle",posmod(2 + 3,8)):
 		selection_status["ok"] = false
-		selection_status["status"] = "selection_pending"
+		selection_status["status"] = "source_only_pending" if selected.get("source_only",false) else "selection_pending"
 		selection_status["reason"] = _preview.reference_bank_status.get("error","current523_npc_initial_source_frame_unavailable")
 		return false
 	return true
@@ -67,7 +70,7 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 		_clock = 0.0
 	_clock += maxf(delta,0.0)
 	if not _preview.advance_reference_source(maxf(delta,0.0),_role,posmod(facing + 3,8)):
-		selection_status["status"] = "source_input_unavailable"
+		selection_status["status"] = "source_only_pending" if selection_status.get("source_only",false) else "source_input_unavailable"
 		selection_status["reason"] = _preview.reference_bank_status.get("error","current523_npc_source_frame_unavailable")
 		hide()
 		return

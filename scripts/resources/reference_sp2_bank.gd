@@ -157,7 +157,20 @@ func _member(member: String) -> Dictionary:
 		var container_sha: Variant = identity.get("container_sha256")
 		if whole_manifest != null and whole_manifest != true: return fail("Contradictory supplied current523 container identity: " + member)
 		if container_sha != null and not valid_sha(container_sha): return fail("Invalid supplied source container identity: " + member)
-		if whole_manifest != true and identity.get("version_basis") != "retained508_outer_manifest": return fail("Missing exact retained source version basis: " + member)
+		var version_basis: Variant = identity.get("version_basis")
+		if version_basis == "supplied_current523_container_manifest":
+			var container_manifest: Variant = identity.get("container_manifest_identity")
+			if not container_manifest is Dictionary or container_manifest.get("archive") != identity.archive or not integer(container_manifest.get("bytes"),1,9007199254740991): return fail("Missing exact supplied current523 container manifest identity: " + member)
+			var manifest_sha1: Variant = container_manifest.get("sha1")
+			var sha1_supplied: bool = manifest_sha1 is String and manifest_sha1.length() == 40
+			if sha1_supplied:
+				for character: String in str(manifest_sha1).to_lower():
+					if not character in "0123456789abcdef":
+						sha1_supplied = false
+						break
+			var provenance: Variant = container_manifest.get("source_provenance_file")
+			if not sha1_supplied or not provenance is String or provenance.is_empty(): return fail("Missing supplied current523 container SHA1/proof pointer: " + member)
+		elif whole_manifest != true and version_basis != "retained508_outer_manifest": return fail("Missing exact retained source version basis: " + member)
 	var file := FileAccess.open(_root.path_join(spec.path), FileAccess.READ)
 	if file == null or file.get_length() != int(spec.bytes): return fail("Original SP2 missing or changed size: " + member)
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())

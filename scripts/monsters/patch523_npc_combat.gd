@@ -339,6 +339,11 @@ func emit_effect(actor: Node, spell: Dictionary, field: String, point: Vector2) 
 	var key: String = "%d:%s" % [int(spell.get("ID",0)),field]
 	effect_status[key] = {"sprite_id":sprite,"state":"pending"}
 	var requested_action: int = int(spell.get("EffectSpriteActionNo",0)) if field == "EffectSpriteID" else -1
+	var visual_policy: Variant = actor.get_meta("current523_source_only_visual",{})
+	if visual_policy is Dictionary and visual_policy.get("required") == true:
+		# The admitted actor's final source policy excludes both former candidate
+		# effect packs and old card-manifest overlays. The event owner is unchanged.
+		return _emit_source_bank_visual(actor,spell,field,point,key)
 	if source_effects.records.has(str(sprite)):
 		if effects.size() >= 16: return false
 		var pose: Variant = actor.get("motion")

@@ -30,6 +30,7 @@ var _reference_child_problem: Dictionary = {}
 var reference_bank_status: Dictionary = {}
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
+var _current523_source_only: bool = false
 var _playback_tracks: Dictionary = {}
 var _playback_mode: String = "strict"
 var _manifest_path: String = ""
@@ -62,8 +63,13 @@ func current523_source_required(key: String) -> bool:
 	var identity: String = key.substr(key.find(":")+1)
 	return CURRENT523_BANK.DECKS.has(consumer) and (identity.begins_with("m508:") or identity.begins_with("m523:"))
 
+func current523_source_only_presentation() -> bool:
+	# This is a final-input policy, not an assertion that the bank is installed.
+	return _current523_source_only or bool(CURRENT523_BANK.options(_reference_request_context).get("enabled",false))
+
 func configure(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
 	var source_only: bool = current523_source_required(key)
+	_current523_source_only = source_only
 	if source_only:
 		clear()
 		_reference_request_context = context.duplicate(true)
@@ -215,6 +221,7 @@ func configure_reference_bank(manifest_path: String, expected_manifest_sha: Stri
 
 func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
 	clear()
+	_current523_source_only = not card_consumer.is_empty()
 	if not explicit_role_action_bindings.has(initial_role):
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
 		return false
@@ -774,6 +781,9 @@ func _on_source_annotation(event: Dictionary) -> void:
 		spawn_source_overlay(target_id, posmod(int(event.direction) - 3, 8))
 
 func spawn_source_overlay(sprite_id: int, facing: int, world_point: Vector2 = Vector2.INF) -> bool:
+	if current523_source_only_presentation():
+		source_effect_status = {"ok":false,"status":"source_only_pending","reason":"current523_typed_effect_reference_required","legacy_media_fallback_allowed":false}
+		return false
 	var ancestor: Node = self
 	while ancestor!=null:
 		if ancestor.has_method("presentation_effect_manifest"):
@@ -880,7 +890,7 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 	# unspecified clock remain labelled compatibility, never recovered M semantics.
 	if _playback_mode != "compatible": return false
 	var definition: Dictionary = {}
-	if not _manifest_path.is_empty() and FileAccess.file_exists(_manifest_path):
+	if not current523_source_only_presentation() and not _manifest_path.is_empty() and FileAccess.file_exists(_manifest_path):
 		var index: Variant = JSON.parse_string(FileAccess.get_file_as_string(_manifest_path))
 		if INSTALL.card_manifest_problem(index).is_empty():
 			definition = index.get("source_global_effects", {}).get(event_name, {})
@@ -892,6 +902,9 @@ func notify_source_global_event(event_name: String, facing: int) -> bool:
 
 func notify_source_spell_event(source_spell_id: int, stage: String, world_point: Vector2, facing: int, manifest_path: String = "") -> bool:
 	source_effect_status.clear()
+	if current523_source_only_presentation():
+		source_effect_status = {"ok":false,"status":"source_only_pending","reason":"current523_complete_spell_row_required","legacy_media_fallback_allowed":false}
+		return false
 	# Only an explicit base508 spell identity reaches this adapter; no old-ID/name match.
 	var path: String = _manifest_path if manifest_path.is_empty() else manifest_path
 	if path.is_empty() or not FileAccess.file_exists(path): return false
