@@ -145,15 +145,19 @@ func emit_spell(spell: Dictionary,target: Node2D) -> void:
 		var field: String="EffectSpriteID" if stage=="effect" else "SuccessEffectSpriteID"
 		var sprite: int=int(spell.get(field,0))
 		if sprite<=0 or seen.has(sprite):continue
-		seen[sprite]=true
 		if preview!=null and (preview.has_method("notify_current_source_spell_event") or (preview.has_method("notify_source_spell_event") and not manifest.is_empty())):
 			var live: Array[Node2D]=[]
 			for node: Variant in preview._overlay_nodes:
 				if is_instance_valid(node):live.append(node)
 			preview._overlay_nodes=live
-			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):visual_results[str(sprite)]="played_original";continue
-			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):visual_results[str(sprite)]="played_current_source";continue
+			if preview.has_method("notify_source_spell_event") and not manifest.is_empty() and preview.notify_source_spell_event(int(spell.ID),stage,target.global_position,facing,manifest):
+				seen[sprite]=true;visual_results[str(sprite)]="played_original";continue
+			if preview.has_method("notify_current_source_spell_event") and preview.notify_current_source_spell_event(spell,stage,target.global_position,facing):
+				seen[sprite]=true;visual_results[str(sprite)]="played_current_source";continue
 		emit_sprite(sprite,target)
+		# A pending EffectSpriteActionNo must not consume a later success-stage
+		# request. Deduplicate only an effect the existing renderer accepted.
+		if visual_results.get(str(sprite),"")=="played_original":seen[sprite]=true
 func emit_option_pair(option: Dictionary,attacker: Node,target: Node) -> void:
 	# Called only inside an already accepted Invoke branch. The existing owner
 	# supplies both participants; visual selection never rolls or fires an option.
