@@ -82,9 +82,9 @@ same existing image operation after an actual selection.
 `image_pixel_at` uses the final native Sprite2D's
 `get_global_transform_with_canvas().affine_inverse()` and actual texture rect,
 centered/offset/flip fields. It rejects missing/hidden/stale images, out-of-bounds
-points, regions, animation frames and mismatched textures. `raw_pixel` means
-points outside the actual source scroll viewport/ancestor clips are also
-rejected; inspection scenes cannot bind as this game presenter. `raw_pixel` means
+points, regions, animation frames, mismatched textures and points outside the
+actual source scroll viewport/ancestor clips. Inspection scenes cannot bind as
+this game presenter. `raw_pixel` means
 continuous intrinsic texture-edge coordinates: top-left origin, +X right,
 +Y down, before display flips. A flipped edge can equal width/height; no
 clamping or texel-center convention is guessed. Successful raw conversion
