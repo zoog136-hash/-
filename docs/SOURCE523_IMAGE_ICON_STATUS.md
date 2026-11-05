@@ -532,6 +532,11 @@ material supplier instead supply their complete ItemClass rows to the current
 canonical item reader. Currency IDs and weapon/group IDs are not ItemClass
 aliases. Missing fields remain unavailable; costs, payment choice, quotes,
 execution and saves are unchanged.
+The existing Orim preparation buttons now read their single matching original
+OrimsTrailBuff.BuffClassID declaration and the current canonical BuffClass
+OnIconID consumer. No ItemClass/Spell ID alias or partial raw buff row is made.
+The existing reroll button has no such source buff image. Original declaration
+and loader evidence are retained without changing purchase or buff behavior.
 
 These are written caller connections, not observations of game consumption.
 No additional tests, execution, rendering, CI, source recount or quality audit
@@ -568,6 +573,16 @@ acceptance are not established by image availability alone.
 The native inventory/quickslot controllers require that owner's current code;
 this lane's earlier icon-player dependency snapshot is not the complete main-UI
 consumer. Its renderer files remain unchanged by this handoff.
+
+The later UI267 combined-v6 contract at
+`a8c6ed6a8b2d2d6f3b62fa1c76c7d0d20a29b966` supplies one main-UI composition
+for retained main/map, inventory, quickslots and equipped/locked source markers.
+Its `twilight-main-original-ui-composition-v1` selection contract records the
+retained v5 base. It uses the existing single `--source-ui`/`--source-ui-sha256`
+or `TWILIGHT_SOURCE_UI`/`TWILIGHT_SOURCE_UI_SHA256` pair. The image/CSB-icon
+selection and map consumer remain independent inputs; no second per-window
+main-UI selector or automatic cfg rewrite is added. The earlier candidates and
+v5 remain preserved. This composition is source input, not whole-560 completion.
 
 These native texture callers explicitly leave unsupported CSB icons pending.
 The received item CSB subsets and their existing TextureRect adapter do not

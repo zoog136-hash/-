@@ -114,6 +114,7 @@ func _build_play_panel() -> void:
 	var buffs:=HBoxContainer.new();buffs.name="OrimPreparation";play_panel.add_child(buffs)
 	for pair: Array in [[71672,"가속 20만"],[71682,"용기 30만"],[71692,"진주 50만"],[72362,"증표 강화 20다이아"],[0,"자체 능력 재선택"]]:
 		var button:=Button.new();button.text=str(pair[1]);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		button.set_meta("source_orim_buff_id",int(pair[0]));button.expand_icon=true
 		button.pressed.connect(func()->void:
 			var result: Dictionary=world.dungeon_play.reroll() if int(pair[0])==0 else world.dungeon_play.buy_buff(int(pair[0]))
 			_update_play();notice.text="강화를 저장했습니다." if result.get("ok",false) else str(result.get("reason","실패")))
@@ -136,12 +137,44 @@ func _update_play() -> void:
 	play_buttons.retry.disabled=service.pending.is_empty() or service.save_blocked
 	play_buttons.cancel.visible=not service.pending.is_empty();play_buttons.cancel.disabled=service.save_blocked
 	play_panel.get_node("OrimPreparation").visible=_kind()=="orim"
-	for button: Button in play_panel.get_node("OrimPreparation").get_children():button.disabled=service.state.active.is_empty() or service.state.active.get("kind","")!="orim" or service.state.active.get("status","")!="active"
+	for button: Button in play_panel.get_node("OrimPreparation").get_children():
+		button.disabled=service.state.active.is_empty() or service.state.active.get("kind","")!="orim" or service.state.active.get("status","")!="active"
+		_set_orim_buff_icon(button,service)
 	if _kind()=="special" and selected>=0:
 		for target: Dictionary in rows[selected].destinations:
 			for group: Dictionary in target.place.time_groups:
 				var p: Dictionary=service.pool(int(group.row.ID),int(Time.get_unix_time_from_system()))
 				play_status.text+=" · %s 기본%d/충전%d초" % [str(group.name),int(p.base),int(p.bonus)]
+
+func _set_orim_buff_icon(button: Button, service: RefCounted) -> void:
+	button.icon=null
+	for key: String in ["source523_image","source523_image_provenance","source523_image_status"]:
+		if button.has_meta(key):button.remove_meta(key)
+	var buff_id: int=int(button.get_meta("source_orim_buff_id",0))
+	# Zero is the existing host reroll action, not a source buff or icon.
+	if buff_id<=0 or not IMAGES.selected():return
+	var matches: Array=[]
+	var declarations: Variant=service.rules.data.get("declarations",{}).get("OrimsTrailBuff",[])
+	if declarations is Array:
+		for row: Variant in declarations:
+			if row is Dictionary and row.get("BuffClassID")==buff_id:matches.append(row)
+	var reason: String="source_orim_buff_declaration_missing" if matches.is_empty() else "source_orim_buff_declaration_ambiguous"
+	var image: Dictionary={"ok":false,"status":reason,"reason":reason,"texture":null,"provenance":{},"actual_game_consumption_observed":false}
+	if matches.size()==1:
+		# buy_buff consumes this exact declaration field in BuffClass space.
+		# Resolve the canonical BuffClass ON role without manufacturing a row.
+		image=IMAGES.resolve_consumer("BuffClass",buff_id,"OnIconID")
+	var source_rows: Array=[]
+	for row: Dictionary in matches:
+		source_rows.append({"source_table":"OrimsTrailBuff","source_id":row.get("ID"),"source_field":"BuffClassID","source_value":row.get("BuffClassID")})
+	var provenance: Dictionary=image.get("provenance",{}).duplicate(true)
+	provenance["orim_preparation_relation"]={"source_archive_sha256":service.rules.SOURCE_SHA256,"dungeon_payload_sha256":service.rules.PAYLOAD_SHA256,"requested_buff_class_id":buff_id,"source_rows":source_rows}
+	image["provenance"]=provenance
+	button.icon=image.get("texture") as Texture2D
+	var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")
+	button.set_meta("source523_image",evidence)
+	button.set_meta("source523_image_provenance",provenance)
+	button.set_meta("source523_image_status",str(image.get("status",image.get("reason",""))))
 
 func _play_action(action: String) -> void:
 	if action=="settings":
