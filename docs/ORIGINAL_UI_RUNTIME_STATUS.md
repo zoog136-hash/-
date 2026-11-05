@@ -254,3 +254,31 @@ recorded custom-easing scenes. Together with the disjoint five later entries,
 86 entries have inspection renders, not completed service screens.
 
 Reference: https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/ActionTimeline/CSLoader.cpp
+
+
+### Particle parser compatibility correction
+
+The earlier `unreadable_particle_plist` reports were Python parser failures,
+not proof that the original Cocos client could not read those files. Cocos 3.6
+pins external `v3-deps-47`; its SAXParser visits TinyXML2's DOM without checking
+the parse return code. The exact pinned TinyXML2 sources were compiled in an
+isolated reference probe (only the export macro was stubbed). All 44 observed
+trailing-data particle files produced a complete root dictionary identical to
+our compatible first-complete-plist interpretation. Original file bytes/hashes
+remain unchanged; malformed/incomplete root dictionaries still fail and atlas
+parsing is not relaxed. Packs record each compatibility use and original hash.
+Eight decoder/provenance/compatibility tests passed. Particle rendering itself
+remains unsupported and is not declared complete by this parser correction.
+
+With newly received originals and this source-proven parser behavior, the latest
+completed dependency snapshot resolves 490/560 entries (6,434 indexed files).
+This is separate from the 86 accepted inspection renders recorded above.
+The complete 8,303-file parent catalog was officially received and its handoff
+ZIP size/SHA256 verified. The old 68-render pack's 396 hash-read files all match
+catalog paths, sizes and CRC32; 349 also have matching supplied SHA256 values.
+The other 47 retain locally observed SHA256, not invented catalog hashes.
+
+References:
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/external/config.json
+- https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/platform/CCSAXParser.cpp
+- https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin/tree/v3-deps-47/tinyxml2

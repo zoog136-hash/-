@@ -3,14 +3,16 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import plistlib
 import sys
 import tempfile
 import unittest
+from xml.parsers.expat import ExpatError
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools/ui'))
 from read_source_csb import DecodeError, Reader
-from build_original_ui_pack import Builder, source_path
+from build_original_ui_pack import Builder, source_path, particle_dictionary
 
 
 def minimal_source():
@@ -79,6 +81,19 @@ class DecoderTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'existing packs are preserved'):
                 Builder({}).build([], Path(folder))
             self.assertEqual(marker.read_text(), 'preserved')
+
+    def test_complete_particle_root_compatibility_preserves_bytes(self):
+        expected = {'textureFileName': 'original.png', 'maxParticles': 12}
+        raw = plistlib.dumps(expected) + b'>t>ng>\r\n </dict>\r\n</plist>'
+        before = hashlib.sha256(raw).hexdigest()
+        value, mode = particle_dictionary(raw)
+        self.assertEqual(value, expected)
+        self.assertEqual(mode, 'cocos36_first_complete_plist')
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), before)
+        with self.assertRaises((ValueError, ExpatError)):
+            particle_dictionary(b'<plist><dict><key>missing</dict></plist>trailing')
+        with self.assertRaisesRegex(ValueError, 'dictionary'):
+            particle_dictionary(plistlib.dumps(['not', 'particle parameters']))
 
 
 if __name__ == '__main__': unittest.main()

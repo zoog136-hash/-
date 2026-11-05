@@ -30,12 +30,34 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def particle_dictionary(raw):
+    """Match Cocos 3.6's first complete plist, preserving the original bytes.
+
+    Its pinned v3-deps-47 TinyXML2 accepts some source files with trailing
+    non-document data. A complete, strictly parseable root remains required.
+    Atlas parsing deliberately remains unchanged.
+    """
+    try:
+        value = plistlib.loads(raw)
+        mode = 'strict_plist'
+    except ExpatError:
+        end = raw.find(b'</plist>')
+        if end < 0:
+            raise
+        value = plistlib.loads(raw[:end + len(b'</plist>')])
+        mode = 'cocos36_first_complete_plist'
+    if not isinstance(value, dict):
+        raise ValueError('Particle plist must contain a dictionary')
+    return value, mode
+
+
 class Builder:
     def __init__(self, source_index):
         self.index = source_index
         self.files = {}
         self.scenes = {}
         self.atlases = {}
+        self.source_compatibility = []
         self.blockers = []
         self.active = set()
 
@@ -74,7 +96,9 @@ class Builder:
             if raw is not None and path.endswith('.plist'):
                 # Particle PLISTs must retain their texture dependencies too.
                 try:
-                    particle = plistlib.loads(raw)
+                    particle, mode = particle_dictionary(raw)
+                    if mode != 'strict_plist':
+                        self.source_compatibility.append({'member': path, 'sha256': digest(raw), 'mode': mode})
                     texture = particle.get('textureFileName')
                     if texture and not particle.get('textureImageData'):
                         page = str(PurePosixPath(path).parent / texture)
@@ -156,6 +180,8 @@ class Builder:
                     'scenes': self.scenes, 'atlases': self.atlases,
                     'files': {k: {n: v for n, v in item.items() if n != 'raw'} for k, item in self.files.items()},
                     'blockers': blockers, 'runtime_verified': False}
+        if self.source_compatibility:
+            manifest['source_compatibility'] = list({json.dumps(x, sort_keys=True): x for x in self.source_compatibility}.values())
         output.mkdir(parents=True)
         for member, item in self.files.items():
             target = output / 'originals' / member
