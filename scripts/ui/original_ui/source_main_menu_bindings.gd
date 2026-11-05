@@ -8,6 +8,8 @@ const SKILL=29848
 const STORE=35008
 const ALL=37304
 const QUEST=27996
+const WEIGHT_TEXT=32360
+const WEIGHT_BACKGROUND=33104
 const CORE_ROOT_OFFSETS: Array[int]=[37304,31392,29848,35008,34596,29528]
 var _pack: RefCounted
 var _hud: WeakRef
@@ -38,12 +40,20 @@ func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	if include_quest:
 		roots.append(QUEST)
 		roots.append(27336)
+	# An older partial pack has no weight text in its activated source scope.
+	# It must continue to build the same functioning core buttons unchanged.
+	var weight: Dictionary={"ok":false,"code":"source_main_menu_weight_not_in_pack_scope"}
+	if _active_source_node(WEIGHT_TEXT):
+		weight=_weight_display()
+		if weight.get("ok",false):
+			roots.append(WEIGHT_TEXT)
+			if _active_source_node(WEIGHT_BACKGROUND):roots.append(WEIGHT_BACKGROUND)
 	var matches: Dictionary={}
 	var selected: Array[int]=[]
 	_collect_offsets(tree.nodeTree,roots,matches,selected,false)
 	for offset: int in roots:
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_menu_core_node_not_unique","offset":offset}
-	return {"ok":true,"source_node_offsets":selected,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"source_node_offsets":selected,"optional_weight":weight,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionary:
 	var hud: Object=_live_hud()
@@ -59,12 +69,63 @@ func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionar
 		if built.bindings.has(offset):bindings[offset]=built.bindings[offset].duplicate(true)
 	bindings[ALL]={"role":"button","activate":Callable(self,"open_menu")}
 	for offset: int in [34596,29528]:bindings[offset]={"role":"static_source_text"}
+	if scope.optional_weight.get("ok",false):bindings[WEIGHT_TEXT]={"role":"source_text","text":scope.optional_weight.text,"visible":true}
 	var buttons: Array[int]=[ALL,INVENTORY,SKILL,STORE]
 	if include_quest:
 		bindings[QUEST]={"role":"button","activate":Callable(self,"open_quests")}
 		bindings[27336]={"role":"static_source_text"}
 		buttons.append(QUEST)
-	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":scope.source_node_offsets,"bindings":bindings,"bound_button_offsets":buttons,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original_remaining_top_menu_modes_and_controls_excluded_from_scope","original_weight_penalty_post_paid_restart_contracts"]}
+	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":scope.source_node_offsets,"bindings":bindings,"bound_button_offsets":buttons,"optional_weight":scope.optional_weight,"weight_connected":scope.optional_weight.get("ok",false),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original_remaining_top_menu_modes_and_controls_excluded_from_scope","original_weight_gauge_fill_penalty_post_paid_restart_contracts"]}
+
+func refresh_presented(scene: Node2D) -> Dictionary:
+	if not is_instance_valid(scene) or scene.get("source_member")!=MEMBER:return _fail("source_main_menu_scene_mismatch")
+	var nodes: Variant=scene.get("source_nodes")
+	if not nodes is Dictionary or not nodes.has(WEIGHT_TEXT):return {"ok":true,"weight_connected":false,"code":"source_main_menu_weight_not_in_presented_scope"}
+	var weight: Dictionary=_weight_display()
+	if not weight.get("ok",false):
+		# Do not leave a last value or serialized 88% as current information.
+		if scene.has_method("set_bound_visible"):scene.set_bound_visible(WEIGHT_TEXT,false)
+		return {"ok":true,"weight_connected":false,"unresolved_weight":weight}
+	var updated: Dictionary=scene.set_bound_text(WEIGHT_TEXT,weight.text)
+	if not updated.get("ok",false):return updated
+	updated=scene.set_bound_visible(WEIGHT_TEXT,true)
+	if not updated.get("ok",false):return updated
+	return {"ok":true,"weight_connected":true,"weight_display":weight,"complete_screen_contract":false}
+
+func _weight_display() -> Dictionary:
+	var hud: Object=_live_hud()
+	if hud==null:return _fail("source_main_menu_hud_unavailable")
+	var bag: Variant=hud.get("lineage_inventory_ui")
+	if not is_instance_valid(bag) or not bag.has_method("_refresh_weight"):return _fail("source_main_menu_existing_weight_formatter_missing")
+	var state: Variant=bag.get("character_state")
+	if not state is Dictionary or not _actual_number(state.get("current_weight")):return _fail("source_main_menu_current_weight_not_supplied")
+	var capacity: Variant=state.get("max_weight",state.get("carrying_capacity"))
+	if not _actual_number(capacity):return _fail("source_main_menu_weight_capacity_not_supplied")
+	var readout: Variant=bag.get("weight_readout")
+	var label: Variant=bag.get("capacity_label")
+	if not is_instance_valid(readout) or not readout is Label or not is_instance_valid(label) or not label is Label:return _fail("source_main_menu_existing_weight_display_missing")
+	# This is the existing owner's actual formatter and rounded percentage.
+	# Its capacity label contract is '%d%% · <existing slot capacity>'. No
+	# UI-owned ratio, clamp, weight units or penalty thresholds are added.
+	bag.call("_refresh_weight")
+	var text: String=label.text.get_slice(" · ",0)
+	if not text.ends_with("%") or not text.trim_suffix("%").is_valid_int():return _fail("source_main_menu_existing_weight_percent_not_formatted")
+	return {"ok":true,"text":text,"basis":"lineage_inventory_ui._refresh_weight capacity_label rounded-percent prefix","existing_readout":readout.text,"source_offset":WEIGHT_TEXT,"penalty_connected":false,"gauge_fill_connected":false}
+
+func _active_source_node(offset: int) -> bool:
+	# scene(), unlike layout_source(), is the actual permitted partial scope.
+	var active: Dictionary=_pack.scene(MEMBER)
+	return not _source_node(active.get("nodeTree",{}),offset).is_empty()
+
+static func _source_node(node: Dictionary, offset: int) -> Dictionary:
+	if node.get("_offset")==offset:return node
+	for child: Dictionary in node.get("children",[]):
+		var found: Dictionary=_source_node(child,offset)
+		if not found.is_empty():return found
+	return {}
+
+static func _actual_number(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value))
 
 static func _collect_offsets(node: Dictionary, roots: Array[int], matches: Dictionary, selected: Array[int], inside: bool) -> void:
 	var offset: int=int(node.get("_offset",-1))

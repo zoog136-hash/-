@@ -642,3 +642,21 @@ been replaced or counted as original UI completion.
 The controller polls only this existing selection snapshot to refresh native
 visibility; it does not scan drops or implement pickup rules. These changes
 have not been executed or rendered, and no historical completion count changes.
+
+### Optional native weight readout — unexecuted
+
+When an activated TopMenu scope actually includes native Label_Percentage32360,
+the adapter reads the current bag owner's existing weight formatter and displays
+its percent prefix unchanged. Static backdrop33104 may accompany it. Missing
+actual current_weight/max_weight/carrying_capacity inputs hide this optional
+readout; no zero, ratio, threshold or carrying rule is invented. Native gauge
+fill32780 and penalty32008 remain unconnected. Old scopes without the readout
+retain their existing menu buttons. HUD character/inventory updates call its
+refresh only after the current bag state is published. The canonical v5 and
+local inventory candidate do not yet activate these optional offsets.
+
+The public image-owner guardian API `describe_guardian_skill(existing_record,
+world.growth)` at46921c04dc2842aab17f6a86509db90d33f294c7 remains the authority
+for guardian skill images. Native quickslot work must reuse that API rather
+than reconstructing its record/spell/image joins. No guardian image parser or
+quickslot input/save rule is added here.

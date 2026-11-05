@@ -182,7 +182,7 @@ func _inventory_model_signature() -> int:
 	var search: Variant=bag.get("search_line")
 	var grid: Variant=bag.get("item_grid")
 	var state: Variant=bag.get("character_state")
-	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null])
+	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null])
 
 func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -354,6 +354,10 @@ func _mount_main_project(offset: int, contract: Dictionary) -> Dictionary:
 func refresh_combat() -> Dictionary:
 	if _combat==null or not is_instance_valid(_combat_scene):return {"ok":true,"source_combat_presented":false}
 	return _combat.refresh_presented(_combat_scene)
+
+func refresh_menu_state() -> Dictionary:
+	if _menu==null or not is_instance_valid(_menu_scene):return {"ok":true,"source_menu_presented":false}
+	return _menu.refresh_presented(_menu_scene)
 
 func _mount_exp() -> Dictionary:
 	if not _has_player_values:return _fail("source_main_player_values_pending")
