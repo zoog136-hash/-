@@ -82,6 +82,52 @@ describes energy bolt's target within10 cells. This supports distance context;
 it does not establish the internal523 raw unit or a host-length conversion.
 The independent scale settings therefore remain explicit estimates.
 
+The existing skill-learning reader now consumes exact original class/level
+conditions as well. `skill_catalog.minimum_level_for(record)` reads the
+private `_source_learning_input(record)`; actual new purchase/learning
+`reason()` calls `source_learning_status(record,true)`. The default
+`source_learning_status(record,new_learning=false)` retains its previous quest
+knowledge path for historical ownership/effects. `level_locked()` and the
+resolved runtime record's minimum-level assignment explicitly keep
+`_host_minimum_level_for(record)`'s previous host expression, so the new
+learning threshold does not requalify owned spells or rewrite their state.
+
+The learning input requires the existing canonical skill ID/profile, held
+archive, accepted/public binding equality and row SHA, exact original full
+SpellClass row and complete original SpellLearnLimit array including order
+and duplicates. It uses only the existing public job→ClassID mapping and
+current Class reference, with Test/dummy guards. Ordinary matching
+`IsTutorialSpell=false` alternatives with card/polymorph requirements0 reuse
+the existing source-skillbook guard's OR-level threshold. Conditional rows
+are not mixed into that threshold or treated as satisfied; missing class,
+unsupported prerequisites or invalid input holds the new learning request.
+No learning mutation, book debit, grant, receipt, save or new skill identity is
+implemented here. Learning labels can call the existing minimum-level method;
+no new display API is added. This reader change remains unexecuted/unverified;
+the old local-only reader was also present in published269fc86.
+
+Direct player-spell elemental input is also connected:
+the successful `apply_to` tail calls private
+`_apply_original_element_input(record,profile)` and supplies `record.element`
+for existing `skill_service.deal_damage()` →
+`World._elemental_damage_to_monster()` consumption. This requires the current
+archive, full original SpellClass row, exact public binding SHA,
+`TestSpell=false`, original exclusion guards and existing successful active
+attack/class/target/material gates. Only direct `SpellCompositionNode=0`
+attack records are handled. Compositions, child-spell precedence, status-only
+and instant-death effects are not assigned an unused element here.
+
+The declared `SpellClass.ElementalTypeID` must identify one exact current
+ElementalType row. Its literal None/Fire/Water/Air/Earth/Light/Dark names use
+the same physical/fire/water/wind/earth/holy/dark mapping already established
+by `World.resolve_patch523_npc_hit`. Missing, excluded, ambiguous or unknown
+definitions retain the earlier host input; no numeric enum or name-based spell
+identity is inferred. `source523.applied` and `element_input` retain the exact
+source/binding/element row and prior/selected host channel. This is original
+data input, not a new resistance/damage formula, effect or ownership engine.
+No generic element lookup API, estimate or new spell is added. Code remains
+uncompiled/unexecuted/unverified; published269fc86 lacked this player input.
+
 NPC attack distance is now supplied at an existing earlier input as well:
 successful `project_actor_record(record)` → private
 `_project_uniform_attack_range_input(record,source)` → `record.attack_range`

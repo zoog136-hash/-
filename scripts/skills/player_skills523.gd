@@ -10,6 +10,7 @@ const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.
 const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
+const SOURCE_ELEMENT_CHANNELS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
 const RELIC_SOURCE_INPUT = preload("res://scripts/resources/current523_relic_spell_input.gd")
 # Exact ordered node lists from build_player_skills523.py. No composition-node
 # traversal or unreviewed recursive expansion is performed by the reader.
@@ -558,7 +559,40 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		if str(entry.type.Name) == "NextSpellClassID":
 			record.source523["pending_chain"] = true
 			break
-	return _apply_numeric_distance_input(record,profile)
+	record = _apply_numeric_distance_input(record,profile)
+	return _apply_original_element_input(record,profile)
+
+func _apply_original_element_input(record: Dictionary, profile: Dictionary) -> Dictionary:
+	# The existing NPC hit adapter already uses this exact ElementalType.Name
+	# vocabulary. Supply only a direct original attack's existing element input;
+	# composition/child element precedence remains with its execution owner.
+	if str(record.get("activation",""))!="active" or str(record.get("mode",""))!="attack" or bool(record.get("runtime_blocked",false)) or not str(record.get("source523_block_reason","")).is_empty(): return record
+	if not record.get("source523",{}).get("applied",[]).has("target_filter"): return record
+	var row: Dictionary = profile.get("row",{})
+	var binding: Dictionary = bindings.get("skills",{}).get(str(record.get("id","")),{})
+	if binding.is_empty() or not _source_integer(row.get("ID")) or row.ID!=binding.get("spell_id") or not _source_integer(row.get("SpellCompositionNode")) or int(row.SpellCompositionNode)!=0: return record
+	var bound_sha: Variant = binding.get("row_sha256")
+	if not bound_sha is String or bound_sha.length()!=64 or _source_row_json(row,bound_sha).is_empty(): return record
+	var identity: Dictionary = SOURCE_ROWS.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA: return record
+	var original: Dictionary = SOURCE_ROWS.row("SpellClass",int(row.ID))
+	if original.is_empty() or original!=row or original.get("TestSpell") is not bool or original.TestSpell or not SOURCE_ROWS.declared_exclusion("SpellClass",original).is_empty(): return record
+	var element_id: Variant = row.get("ElementalTypeID")
+	if not _source_integer(element_id) or int(element_id)<0: return record
+	var definitions: Array[Dictionary] = SOURCE_ROWS.related("ElementalType","ID",int(element_id))
+	if definitions.size()!=1 or not SOURCE_ROWS.declared_exclusion("ElementalType",definitions[0]).is_empty(): return record
+	var element: Dictionary = definitions[0]
+	if not SOURCE_ELEMENT_CHANNELS.has(element.get("Name")): return record
+	var selected: String = SOURCE_ELEMENT_CHANNELS[element.Name]
+	var prior: Variant = record.get("element")
+	record["element"] = selected
+	record.source523.applied.append("element")
+	record.source523["element_input"] = {"source":identity,"spell_id":row.ID,"bound_row_sha256":bound_sha,
+		"source_field":"SpellClass.ElementalTypeID","elemental_type":element,
+		"prior_host_element":prior,"host_element_input":selected,
+		"mapping":"existing_World.resolve_patch523_npc_hit_channel_names",
+		"scope":"direct_existing_attack_only_no_composition_child_precedence"}
+	return record
 
 func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> Dictionary:
 	# Only the successful active apply_to path calls this helper. It cannot

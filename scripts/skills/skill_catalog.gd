@@ -6,6 +6,7 @@ class_name TwilightOriginalSkillCatalog
 const CURRENT = preload("res://scripts/skills/current_official_skills.gd")
 var current_official = CURRENT.new()
 const SOURCE523 = preload("res://scripts/skills/player_skills523.gd")
+const LEARNING_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 var source523 = SOURCE523.new()
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 var source_quest_knowledge: Dictionary={}
@@ -121,10 +122,17 @@ func record_for(key: String) -> Dictionary:
 	return by_id.get(key, by_id.get(by_name.get(key, ""), current_official.record_for(key)))
 
 func minimum_level_for(record: Dictionary) -> int:
+	var native: Dictionary=_source_learning_input(record)
+	if native.has("minimum_level"):return int(native.minimum_level)
+	return _host_minimum_level_for(record)
+
+func _host_minimum_level_for(record: Dictionary) -> int:
 	return int(record.get("class_learning_levels",{}).get(str(world.job_class),record.get("minimum_level",0)))
 
 func level_locked(record: Dictionary) -> bool:
-	return (bool(record.get("local_design",false)) or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<minimum_level_for(record)
+	# The new source learning threshold is for learning/UI only. Historical
+	# owned spell execution retains its existing host level policy.
+	return (bool(record.get("local_design",false)) or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<_host_minimum_level_for(record)
 
 func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
@@ -145,7 +153,7 @@ func enabled(record: Dictionary) -> bool:
 	return required.is_empty() or required.has(world._current_weapon_type())
 
 func reason(record: Dictionary, buying: bool = false, supplied_book: String = "") -> String:
-	var source_status: Dictionary=source_learning_status(record)
+	var source_status: Dictionary=source_learning_status(record,true)
 	if not source_status.is_empty():return str(source_status.message)
 	if record.is_empty(): return "스킬 정보 없음"
 	if not permitted(record): return "현재 직업에서 습득 불가"
@@ -258,7 +266,7 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 		if not changed: break
 	var job: String=str(world.job_class)
 	if record.get("class_learning_levels",{}).has(job):
-		result["minimum_level"]=minimum_level_for(record)
+		result["minimum_level"]=_host_minimum_level_for(record)
 		result.merge(record.get("class_costs",{}).get(job,{}),true)
 		result["display_class"]=job
 		result["current_class_reference"]=record.class_references[job].duplicate(true)
@@ -316,10 +324,71 @@ func speed() -> float:
 	_ensure_stat_index()
 	return static_speed
 
-func source_learning_status(record: Dictionary)->Dictionary:
+func _source_learning_input(record: Dictionary)->Dictionary:
+	var id: String=str(record.get("id",""))
+	# Existing canonical skill IDs only. An absent optional original profile
+	# neither invents a native ID nor changes the host's other skill contracts.
+	if not by_id.has(id) or not source523.profiles.has(id):return {}
+	var archive: Dictionary=LEARNING_SOURCE.identity()
+	if archive.get("source_sha256")!=SOURCE523.SOURCE_SHA:
+		return {"message":"원본 스킬 학습 입력이 없습니다. 기존 습득 상태는 보존됩니다."}
+	var text: String=FileAccess.get_file_as_string(SOURCE523.BINDINGS_PATH)
+	var public: Variant=JSON.parse_string(text)
+	if not public is Dictionary or public.get("schema_version")!=1 or public.get("patch")!=523 or public.get("source_zip_sha256")!=SOURCE523.SOURCE_SHA or not public.get("skills") is Dictionary or not public.get("class_ids") is Dictionary or public!=source523.bindings:
+		return {"message":"원본 스킬 학습의 공개 ID 연결 확인 필요"}
+	var binding: Variant=public.get("skills",{}).get(id)
+	var native_class: Variant=public.get("class_ids",{}).get(str(world.job_class))
+	if not binding is Dictionary or not SOURCE523._source_integer(binding.get("spell_id")) or not binding.get("row_sha256") is String or not SOURCE523._source_integer(native_class):
+		return {"message":"원본 스킬·현재 직업 ID 연결 확인 필요"}
+	var profile: Dictionary=source523.profiles[id]
+	var spell_id: int=int(binding.spell_id)
+	var raw: Dictionary=LEARNING_SOURCE.row("SpellClass",spell_id)
+	if raw.is_empty() or raw!=profile.get("row") or SOURCE523._source_row_json(raw,str(binding.row_sha256)).is_empty() or str(profile.get("row_json","")).sha256_text()!=str(binding.row_sha256):
+		return {"message":"원본 스킬 학습 행·지문 연결 확인 필요"}
+	if raw.get("TestSpell")!=false or not LEARNING_SOURCE.declared_exclusion("SpellClass",raw).is_empty():
+		return {"message":"원본 시험·제외 스킬은 새로 습득할 수 없습니다."}
+	var class_row: Dictionary=LEARNING_SOURCE.row("Class",int(native_class))
+	if class_row.is_empty() or class_row.get("ID")!=native_class or not LEARNING_SOURCE.declared_exclusion("Class",class_row).is_empty():
+		return {"message":"원본 직업 학습 참조 확인 필요"}
+	var limits: Array[Dictionary]=LEARNING_SOURCE.related("SpellLearnLimit","SpellClassID",spell_id)
+	# Require the complete current original set, including its order/duplicates;
+	# a stale compiled subset cannot become the new learning qualification.
+	if limits.is_empty() or limits!=profile.get("learn_limits"):
+		return {"message":"원본 전체 학습 조건 입력 연결 확인 필요"}
+	var ordinary_levels: Array[int]=[]
+	var matched: bool=false
+	for limit: Dictionary in limits:
+		if not SOURCE523._source_integer(limit.get("ClassID")):
+			return {"message":"원본 학습 조건의 직업 ID 확인 필요"}
+		if limit.ClassID!=native_class:continue
+		if not limit.get("IsTutorialSpell") is bool:
+			return {"message":"원본 일반·튜토리얼 학습 조건 확인 필요"}
+		if limit.IsTutorialSpell:continue
+		matched=true
+		if not LEARNING_SOURCE.declared_exclusion("SpellLearnLimit",limit).is_empty():continue
+		for field: String in ["SpellClassID","CharacterMinLevel","LimitBuffCardID","CharacterPolymorphGradeID"]:
+			if not SOURCE523._source_integer(limit.get(field)) or int(limit[field])<0:
+				return {"message":"원본 학습 조건 수치 확인 필요: "+field}
+		if int(limit.SpellClassID)!=spell_id:return {"message":"원본 학습 조건의 스킬 ID 불일치"}
+		# Same ordinary alternatives as source523_skill_books.learn_reason:
+		# a nonzero card/polymorph requirement is never satisfied by inference.
+		if int(limit.LimitBuffCardID)==0 and int(limit.CharacterPolymorphGradeID)==0:
+			ordinary_levels.append(int(limit.CharacterMinLevel))
+	if not matched:return {"message":"523 원본 직업의 일반 학습 대상이 아닙니다."}
+	if ordinary_levels.is_empty():return {"message":"원본 학습의 선행 카드·변신 등급·제외 조건 확인 필요"}
+	# The existing book guard accepts any ordinary alternative at its level.
+	# This threshold selects that same OR boundary, without mixing conditional rows.
+	return {"minimum_level":ordinary_levels.min()}
+
+func source_learning_status(record: Dictionary, new_learning: bool=false)->Dictionary:
 	var key: String=str(record.get("id",""))
-	if not source_quest_knowledge.has(key):return {}
-	return SOURCE_LEARNING.status(source_quest_knowledge,learned,key)
+	if source_quest_knowledge.has(key):
+		var status: Dictionary=SOURCE_LEARNING.status(source_quest_knowledge,learned,key)
+		if not status.is_empty():return status
+	if new_learning:
+		var native: Dictionary=_source_learning_input(record)
+		if native.has("message"):return native
+	return {}
 
 func export_state() -> Dictionary:
 	var state: Dictionary={"schema_version":1, "learned":learned.duplicate(true), "archived":archived.duplicate(true),"class_slots":class_slots.duplicate(true),"schools":schools.duplicate(true)}
