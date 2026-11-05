@@ -526,6 +526,53 @@ def combined_ui_code_contract(code_root):
     return evidence
 
 
+def native_icon_scene_code_contract(code_root):
+    # Independent optional scene-consumer evidence. These source boundaries
+    # cannot supply per-icon original registration or playback declarations.
+    requirements = {
+        'scripts/ui/renewal_hud.gd': [('bind_original_icon_scene_provider',
+            ['_original_icon_scene_provider=provider', 'refresh_source_icons'])],
+        'scripts/ui/original_ui/source_main_hud.gd': [('_native_icon_context',
+            ['Scene.external_scene_slot_contract', 'source_slot_contract']),
+            ('_inventory_original_image', ['_native_icon_context', 'InventoryImages.resolve_owned']),
+            ('_quickslot_original_image', ['_native_icon_context', 'QuickslotImages.resolve'])],
+        'scripts/ui/original_ui/source_main_inventory_images.gd': [('resolve_owned',
+            ['unsupported_csb', 'source_native_icon_scenes.gd', 'request(hud,info,native_context)'])],
+        'scripts/ui/original_ui/source_main_quickslot_images.gd': [('resolve',
+            ['unsupported_csb', 'source_native_icon_scenes.gd', 'request(hud,info,context)'])],
+        'scripts/ui/original_ui/source_native_icon_scenes.gd': [('request',
+            ['_original_icon_scene_provider', 'provider.call', 'source_slot_contract',
+             'asset_type_id', '101', 'canonical.path', 'source_scene_descriptor'])],
+        'scripts/ui/original_ui/source_asset_scene.gd': [('prepare',
+            ['authored_sprite_anchor', 'original_registration_confirmed',
+             'original_repeat_declared', 'original_policy_confirmed',
+             'player.configure(pack,member,false', 'player.play', 'player.stop'])],
+        'scripts/ui/original_ui/sprite_scene.gd': [('external_scene_slot_contract',
+            ['externally_bound_texture_nodes', 'authored_sprite_anchor']),
+            ('set_bound_source_visual_result', ['source_scene_descriptor',
+             'set_bound_source_scene_result', 'set_bound_source_asset_result']),
+            ('set_bound_source_scene_result', ['source_asset_scene.gd', 'prepare(descriptor)',
+             '_detach_source_scene(node)', 'node.add_child(player)']), ('bound_source_scene', []),
+            ('clear_bound_source_scene', ['_detach_source_scene(node)']),
+            ('_detach_source_scene', ['player.stop()', 'PROCESS_MODE_DISABLED', 'remove_child', 'queue_free']),
+            ('reuse_bound_source_scene_from', ['bound_source_scene', 'registration', 'playback',
+             'source_asset_scene_bindings', 'old_node.remove_child(player)', 'node.add_child(player)'])],
+        'scripts/ui/original_ui/source_main_inventory_slots.gd': [('_slot_binding', ['source_scene_descriptor'])],
+        'scripts/ui/original_ui/source_main_quickslot_bindings.gd': [('build_group', ['source_scene_descriptor'])],
+        'scripts/ui/original_ui/source_main_inventory_view.gd': [('_stage',
+            ['set_bound_source_visual_result', 'source_scene_assigned', '_hits.get(reference',
+             'reuse_bound_source_scene_from', 'parent.add_child(next)'])],
+        'scripts/ui/original_ui/source_main_quickslot_view.gd': [('_stage',
+            ['set_bound_source_visual_result', 'source_scene_assigned', 'old_entry.erase("auto")',
+             'reuse_bound_source_scene_from', 'parent.add_child(next)'])],
+    }
+    evidence, _ = source_contract_evidence(code_root, requirements)
+    evidence['scope'] = 'Existing scene-consumer source boundaries only; independent of static HUD/world readiness'
+    evidence['owner_registration_inputs_verified'] = False
+    evidence['runtime_verified'] = False
+    return evidence
+
+
 def world_map_code_contract(code_root):
     # These are existing owner interfaces/call boundaries, not PR-number or
     # filename-only assertions. Changed code is read from the actual Git stage.
@@ -792,6 +839,10 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             if sha256_file(root / 'original_ui.json') != pin(pack['manifest_sha256']):
                 raise ValueError('UI original root is not available with its exact pin')
         result['ui_icons'] = {'path': str(path), 'sha256': row['sha256']}
+        result['ui_icons']['native_scene_code_contract'] = native_icon_scene_code_contract(code_root)
+        if code_root is not None:
+            for blocker in result['ui_icons']['native_scene_code_contract']['blockers']:
+                log('NATIVE ICON SCENE CODE PENDING: ' + blocker)
     if 'source_bank' in bindings:
         row = bindings['source_bank']
         manifest = inside(resources, row['manifest_path'])
