@@ -7,6 +7,13 @@ const USE = preload("res://scripts/loot/patch523_item_use.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
 
+class InventoryHud extends RefCounted:
+	var host: Node
+	func show_message(message: String) -> void:host.hud.show_message(message)
+	func append_log(message: String) -> void:host.hud.append_log(message)
+	func refresh_inventory(_candidate_inventory: Dictionary) -> void:host.hud.refresh_inventory(host.inventory)
+	func is_card_reveal_busy() -> bool:return host.hud.has_method("is_card_reveal_busy") and host.hud.is_card_reveal_busy()
+
 class View extends Node:
 	const BASE508 = preload("res://scripts/lineagem_base508.gd")
 	var host: Node
@@ -25,6 +32,11 @@ class View extends Node:
 	var committed: bool=false
 	var uncertain: bool=false
 	var selection_entity_id: int=0
+	var rng: RandomNumberGenerator=RandomNumberGenerator.new()
+	var hud: RefCounted
+	var effect_stamp: String
+	func current_effect_stamp() -> String:
+		return JSON.stringify([host.gold,host.hp,host.mp,host.active_item_buffs,host.item_use_cooldowns,str(host.rng.seed),str(host.rng.state)],"",true,true).sha256_text()
 	func _get(key: StringName) -> Variant: return host.get(key) if is_instance_valid(host) else null
 	func is_player_concealed() -> bool:return host.is_player_concealed()
 	func _option_awakening_busy() -> bool:return host._option_awakening_busy()
@@ -40,9 +52,9 @@ class View extends Node:
 	func _find_catalog_item_record(name_value: String) -> Dictionary:return host._find_catalog_item_record(name_value)
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
-		if committed or not OWN.current(host,prepared):return ERR_INVALID_DATA
+		if committed or not OWN.current(host,prepared) or current_effect_stamp()!=effect_stamp:return ERR_INVALID_DATA
 		for key: String in overrides:
-			if key not in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp"]:return ERR_INVALID_PARAMETER
+			if key not in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp","mp"]:return ERR_INVALID_PARAMETER
 		var proposed: Variant=overrides.get("inventory")
 		if not proposed is Dictionary:return ERR_INVALID_DATA
 		var virtual_key: String=str(canonical.name)
@@ -89,16 +101,23 @@ class View extends Node:
 			if delta>0:payload.inventory[key]=int(payload.inventory.get(key,0))+delta
 		for key: String in ["active_item_buffs","item_use_cooldowns"]:
 			if overrides.has(key):payload[key]=overrides[key].duplicate(true)
+		if payload.has("active_item_buffs"):
+			payload["hp"]=mini(host.hp,host._effective_max_hp(-1,payload.active_item_buffs))
+			payload["mp"]=mini(host.mp,host._effective_max_mp(payload.active_item_buffs))
+		if overrides.has("mp"):
+			if canonical.get("source_use_spec",{}).get("kind")!="source_mp_dice" or not overrides.mp is int or overrides.mp<host.mp or overrides.mp>host._effective_max_mp(payload.get("active_item_buffs")):return ERR_INVALID_DATA
+			payload["mp"]=overrides.mp
 		if overrides.has("hp"):
 			if int(canonical.get("source_item_class_id",0))!=233 or not overrides.hp is int or overrides.hp<host.hp or overrides.hp>host._effective_max_hp():return ERR_INVALID_DATA
 			payload["hp"]=overrides.hp
 		# Persist the proven binding/use without converting or regranting the
 		# held inventory. Original grant quantity and receipt remain immutable.
 		if not CONSUMPTION.matches_payload(host,source_step,payload):return ERR_INVALID_DATA
+		payload["patch523_transaction_rng"]={"schema":1,"seed":str(rng.seed),"state":str(rng.state)}
 		var state: Dictionary=payload.quest_state
 		var path: String=host.save_path()
 		var prior: String=FileAccess.get_sha256(path)
-		var error: Error=host._save_game(true,payload)
+		var error: Error=host.quest_item_provider.commit_held_save(host,payload)
 		if error!=OK:
 			if host.get("patch523_owner_state_problem") is String and not host.patch523_owner_state_problem.is_empty():host.quest_service.save_blocked=true;uncertain=true;return error
 			var parser:=JSON.new();var parse_error: Error=parser.parse(FileAccess.get_file_as_string(path))
@@ -116,6 +135,8 @@ class View extends Node:
 		if payload.has("active_item_buffs"):host.active_item_buffs=payload.active_item_buffs
 		if payload.has("item_use_cooldowns"):host.item_use_cooldowns=payload.item_use_cooldowns
 		if payload.has("hp"):host.hp=int(payload.hp)
+		if payload.has("mp"):host.mp=int(payload.mp)
+		host.rng.seed=rng.seed;host.rng.state=rng.state
 		host.quest_service.import_state(state)
 		host.deferred_save.cancel()
 		committed=true
@@ -124,11 +145,14 @@ class View extends Node:
 static func make_view(world: Node, prepared: Dictionary, canonical: Dictionary) -> Node:
 	var view:=View.new()
 	view.host=world;view.prepared=prepared;view.owned=prepared.ownership;view.canonical=canonical
+	view.hud=InventoryHud.new();view.hud.host=world
 	view.inventory=world.inventory.duplicate(true);view.item_instances=world.item_instances.duplicate(true)
 	view.inventory[str(canonical.name)]=int(view.owned.quantity)
 	view.initial_inventory=view.inventory.duplicate(true);view.initial_instances=view.item_instances.duplicate(true)
 	view.active_item_buffs=world.active_item_buffs.duplicate(true);view.item_use_cooldowns=world.item_use_cooldowns.duplicate(true)
 	view.gold=world.gold;view.hp=world.hp;view.mp=world.mp
+	view.rng.seed=world.rng.seed;view.rng.state=world.rng.state
+	view.effect_stamp=view.current_effect_stamp()
 	return view
 
 static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) -> Dictionary:

@@ -3,6 +3,7 @@ extends RefCounted
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SLOT_DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
+const CONSUMPTION=preload("res://scripts/quests/quest_reward_consumption.gd")
 const IDS=[3252,370562,346921,365748,365758,75184,75194,95624,118992,243043]
 const QUANTITY="source_awakening_quantity"
 static func integer(value: Variant) -> bool:return (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>=0 and float(value)<=9007199254740991
@@ -83,7 +84,7 @@ static func prepare_debit(world: Node,item_id: int,quantity: int=1,selected: Str
 	var denied: Dictionary={"ok":false,"error":"검증된 원본 지급·소지 수량 필요 · 기존 아이템 보존"}
 	if item_id not in IDS or quantity<1 or not integer(quantity) or available(world,item_id)<quantity:return denied
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
-	var remaining: int=quantity;var consumed: Array[Dictionary]=[];var quest_state: Dictionary={}
+	var remaining: int=quantity;var consumed: Array[Dictionary]=[];var requests: Array=[]
 	for uid: String in world.item_instances:
 		if not selected.is_empty() and selected!=uid:continue
 		var owned: Dictionary=proof(world,uid,item_id)
@@ -92,21 +93,10 @@ static func prepare_debit(world: Node,item_id: int,quantity: int=1,selected: Str
 		if world._item_locked(name_value,uid) or world._item_locked(name_value):continue
 		var amount: int=mini(remaining,int(owned.quantity));var rest: int=int(owned.quantity)-amount
 		if owned.receipt_kind=="quest":
-			var debit: Dictionary=OWN.prepare_debit(world,uid,amount)
-			if not debit.get("ok",false):return denied
-			var used: Dictionary=OWN.use_state(world,debit,D.DATA_SHA)
-			if not used.get("ok",false):return denied
-			if quest_state.is_empty():quest_state=used.state
-			else:
-				var q: String=str(owned.quest_id);var reward: int=int(owned.reward_id)
-				var rows: Array=quest_state.item_grants.get(q,[]);var replacement: Dictionary={}
-				for row: Dictionary in used.state.item_grants.get(q,[]):
-					if int(row.reward_id)==reward:replacement=row
-				var changed: bool=false
-				for index: int in range(rows.size()):
-					if int(rows[index].reward_id)==reward:rows[index]=replacement;changed=true
-				if not changed:rows.append(replacement)
-				quest_state.item_grants[q]=rows
+			# Reuse the public batch debit rather than replacing a first-use pack
+			# receipt with this owner's digest after another valid consumer used a
+			# partial quantity. Original grants and old saves are never converted.
+			requests.append({"physical_id":uid,"quantity":amount,"expected_quantity":int(owned.quantity),"expected_remaining":rest,"quest_reward_receipt":world.item_instances[uid].quest_reward_receipt.duplicate(true)})
 			if rest==0:instances.erase(uid)
 			else:instances[uid].source_reward_quantity=rest
 		else:
@@ -119,8 +109,21 @@ static func prepare_debit(world: Node,item_id: int,quantity: int=1,selected: Str
 		if remaining==0:break
 	if remaining!=0:return denied
 	var overrides: Dictionary={"inventory":inventory,"item_instances":instances}
-	if not quest_state.is_empty():overrides.quest_state=quest_state
-	return {"ok":true,"overrides":overrides,"consumed":consumed}
+	var step: Dictionary={}
+	if not requests.is_empty():
+		step=CONSUMPTION.stage(world,requests,D.DATA_SHA)
+		if not step.get("ok",false):return denied
+		# Only take the journal from this candidate. Its full inventory and
+		# instances do not include the independently staged non-quest inputs.
+		overrides["quest_state"]=step.overrides.quest_state
+		if not CONSUMPTION.matches_payload(world,step,overrides):return denied
+	return {"ok":true,"overrides":overrides,"consumed":consumed,"quest_step":step}
+
+static func matches_payload(world: Node,paid: Dictionary,payload: Dictionary) -> bool:
+	if not paid.get("ok",false):return false
+	var step: Variant=paid.get("quest_step",{})
+	if not step is Dictionary:return false
+	return step.is_empty() or CONSUMPTION.matches_payload(world,step,payload)
 static func publish(world: Node,overrides: Dictionary) -> void:
 	world.inventory=overrides.inventory;world.item_instances=overrides.item_instances
 	if overrides.has("quest_state"):world.quest_service.import_state(overrides.quest_state)

@@ -477,6 +477,7 @@ func _craft_native_nemesis() -> Dictionary:
 	if ticket.is_empty() or not staged.get("ok",false):_busy=false;return Core.fail("source_rules","원본 카드권 정의 확인 필요")
 	var next: Dictionary=paid.overrides;next.item_instances=staged.item_instances
 	next.inventory[ticket.name]=int(next.inventory.get(ticket.name,0))+1
+	if not Supply.matches_payload(world,paid,next):_busy=false;return Core.fail("source_receipt","원본 제작 코인의 선택 잔량·사용 영수증 불일치 · 재료 보존")
 	if world._save_game(true,next)!=OK:_busy=false;return Core.fail("save_failed","저장 실패 · 제작 재료·결과 보존")
 	Supply.publish(world,next);_busy=false
 	return {"ok":true,"ticket_instance_id":staged.id,"consumed_source_coins":Acquisition.REQUIRED}
@@ -521,6 +522,7 @@ func use_source_awakening_item(item_name: String,selected: String="") -> Diction
 			cards.spare["마법인형"][Acquisition.CARD]=int(amount)+1
 		else:cards.owned["마법인형"][Acquisition.CARD]=true
 		staged.card_draw_fusion=cards
+	if not Supply.matches_payload(world,paid,staged):_busy=false;return {"handled":true,"ok":false,"error":"원본 선택 아이템의 물리 잔량·최종 사용 영수증 불일치 · 보유 보존"}
 	if world._save_game(true,staged)!=OK:_busy=false;return {"handled":true,"ok":false,"error":"저장 실패 · 원본 아이템·카드·해금·지급 영수증 보존"}
 	Supply.publish(world,staged)
 	if staged.has(SAVE_KEY):progress=next;_bonus_signature="";world.set("equipment_records_dirty",true)

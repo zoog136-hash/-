@@ -156,8 +156,6 @@ class HudView extends RefCounted:
 class View extends HELD.View:
 	var owner: RefCounted
 	var basis: Dictionary
-	var hud: RefCounted
-	var rng: RandomNumberGenerator=RandomNumberGenerator.new()
 	func _save_game(_quiet: bool, overrides: Dictionary) -> Error:
 		return owner.commit_view(self,overrides)
 

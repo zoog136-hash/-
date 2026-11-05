@@ -19,6 +19,17 @@ var equipment_owner=preload("res://scripts/quests/quest_equipment523.gd").new()
 var definitions: Dictionary = {}
 var owner: WeakRef
 var ready: bool = false
+var _held_save_candidate: Dictionary = {}
+
+func authorizes_held_save(payload: Dictionary) -> bool:
+	return not _held_save_candidate.is_empty() and preload("res://scripts/equipment523/native_catalog.gd").same(_held_save_candidate,payload)
+
+func commit_held_save(world: Node,payload: Dictionary) -> Error:
+	if not _held_save_candidate.is_empty():return ERR_BUSY
+	_held_save_candidate=payload.duplicate(true)
+	var result: Error=world._save_game(true,payload)
+	_held_save_candidate.clear()
+	return result
 
 class Candidate extends Node:
 	var inventory: Dictionary = {}
@@ -62,6 +73,21 @@ func configure(world: Node) -> void:
 		for reward: Dictionary in spec.get("rewards",[]):
 			var summary: Dictionary = D.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{})
 			if not summary.get("native_record",{}).is_empty(): _register(world,summary.native_record,int(reward.bless_raw))
+	# Bind only actual original quest rewards whose installed item owner already
+	# provides an unrestricted typed buff or MP-dice effect. This does not grant
+	# items, enable Test/expired effects or infer a positive bonus from a name.
+	for quest: Dictionary in world.quest_service.index.values():
+		if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
+		for reward: Dictionary in quest.get("source_rewards",[]):
+			var id: int=int(reward.get("RewardClassID",0))
+			if definitions.has(id) or reward.get("type_name")!="Item" or reward.get("UseImmediately",false) or int(reward.get("ItemBlessCodeID",0))!=1:continue
+			var definition: Dictionary=D.definition_id(str(id))
+			if definition.get("original_item",{}).is_empty() or definition.original_item!=reward.get("source_item") or definition.original_item.get("TestItem",true):continue
+			var record: Dictionary=USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
+			var spec: Dictionary=record.get("source_use_spec",{})
+			if spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","source_mp_dice"]:continue
+			definitions[id]=definition
+			_register(world,definition.native_record,1)
 	world._index_catalog_item_sources()
 	world._index_item_weights()
 	ready=not definitions.is_empty()
@@ -81,6 +107,9 @@ func resolve(reward: Dictionary) -> Dictionary:
 	if not ready or owner.get_ref()==null or bool(reward.get("UseImmediately",false)): return {}
 	var world: Node = owner.get_ref()
 	var id: int = int(reward.get("RewardClassID",0))
+	# Newly connected source rows retain actual quest-owned stacks until the
+	# player selects use. Do not mass-convert grants or expand old save schemas.
+	if id not in REVIEWED_IDS:return {}
 	var definition: Dictionary = definitions.get(id,{})
 	if definition.is_empty() or definition.original_item!=reward.get("source_item",{}): return {}
 	var bless: int = int(reward.ItemBlessCodeID)
@@ -137,7 +166,7 @@ func try_use(world: Node, record: Dictionary) -> bool:
 		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		var aligned: bool=durable is Dictionary
 		if aligned:
-			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp"]:
+			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp","mp"]:
 				if durable.get(key)!=JSON.parse_string(JSON.stringify(world.get(key))):aligned=false;break
 		if not aligned:
 			# The unchanged shared consumer may report an error after the atomic
