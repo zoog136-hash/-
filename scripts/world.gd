@@ -948,6 +948,7 @@ func _equipment_inven_sum(key: String) -> float:
 			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
 			total += float(record.get(key, 0.0))
 			total += ITEM_OPTIONS.additional_original_percent(record,key)
+			total += ITEM_OPTIONS.additional_original_flat(record,key)
 			if key.begins_with("source_elemental_flat_"):
 				total += ITEM_OPTIONS.additional_original_element(record,key.trim_prefix("source_elemental_flat_"),"damage",PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{}))
 	for record: Dictionary in _equipment523_bonus_records():

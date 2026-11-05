@@ -25,18 +25,21 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
 
 static func additional_original_flat(record: Dictionary, key: String) -> int:
-	var names: Dictionary = {"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical"}
+	var names: Dictionary = {"dg":"MeleeEvasion","er":"RangeEvasion","melee_crit":"MeleeCritical","ranged_crit":"RangeCritical","magic_crit":"MagicCritical","weightBonus":"CarryPlus"}
 	if not names.has(key): return 0
 	var aliases: Dictionary = {"dg":["DG","근거리 회피력"],"er":["ER","원거리 회피력"],"melee_crit":["meleeCrit","근거리 치명타"],"ranged_crit":["rangedCrit","원거리 치명타"],"magic_crit":["magicCrit","마법 치명타"]}
 	if not record.get("_patch523_effective_extras",false):
-		for alias: String in aliases[key]:
+		for alias: String in aliases.get(key,[]):
 			if record.has(alias): return 0
 		if key.ends_with("_crit"):
 			for alias: String in ["crit","critical_rate","치명타"]:
 				if record.has(alias): return 0
 	# Critical ValuePercent is already a percentage-point chance operand;
 	# evasion Value is an integer rating. Neither existing receiver takes a ratio.
-	return int(_additional_original_operand(record,key,[names[key]],"ValuePercent" if key.ends_with("_crit") else "Value",1.0))
+	# CarryPlus follows the existing enhancement capacity conversion before the
+	# existing host integer-capacity consumer. It does not define item weight.
+	var unit_name: String = "Weight" if key=="weightBonus" else "ValuePercent" if key.ends_with("_crit") else "Value"
+	return int(_additional_original_operand(record,key,[names[key]],unit_name,100.0 if key=="weightBonus" else 1.0))
 
 static func additional_original_status(record: Dictionary, status: String, kind: String) -> float:
 	if status not in ["stun","hold","fear","poison","silence"] or kind not in ["accuracy","resistance"]: return 0.0
@@ -112,7 +115,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 			if represented is Dictionary and represented.get("bonus_id")==bonus.get("ID"): return 0.0
 		var value: Variant = bonus.get("Value")
 		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
-		if divisor==1.0 and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
+		if (unit_name in ["Value","Weight"] or divisor==1.0) and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
 		total+=float(value)/divisor
 		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target,"consumer_elemental_input":elemental_input})
 	if evidence.is_empty() or not is_finite(total): return 0.0

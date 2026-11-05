@@ -235,3 +235,11 @@ caps remain the host policy. Existing fields, overlays, original mapped IDs,
 possession exclusions and native-row identity guards stay in force. No weapon
 enchantment, extra hit, new element, guessed pixel/actor or save is created.
 These caller connections are uncompiled/unexecuted/unverified.
+
+Direct non-possession CarryPlus with Unit.Weight now also feeds the existing
+weightBonus equipment sum used by _carrying_capacity(). Its raw/100 conversion
+reuses the existing enhancement capacity contract, with integer conversion at
+the existing capacity boundary. It does not redefine source item weight, the
+explicit local weight estimate, encumbrance thresholds, recovery permissions,
+inventory quantity or saved ownership. Already mapped base operands and
+existing explicit fields still win. This connection remains unverified.
