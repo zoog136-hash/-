@@ -384,6 +384,31 @@ input identities. No private compiled file or installation pointer is written.
 This bootstrap has not been compiled or executed; successful admission, model
 identity and gameplay consumption remain unobserved.
 
+### Original inputs to the existing quest service — unverified
+
+`source_quest523.load_pack()` now uses
+`source_quest523_projection` only when both existing USER/DEV payload paths are
+absent. Any existing file, unreadable file or invalid payload retains the
+original failure. The helper ports `tools/build_quest523_pack.py`'s twenty-one
+input tables, four quest relation groups, referenced reward items, prerequisite/
+goal/reward type names, original exclusions, KST timestamp policy, classes,
+starting quests, currency links and source-table evidence. Only the compiler's
+selected quest/scenario/goal/class text references are supporting dependencies;
+this does not start a general description-table implementation.
+
+The canonical memory bytes use sorted keys, original integral numbers and no
+trailing newline. `_load_original()→_load_payload(bytes,"")` still requires the
+existing `PAYLOAD_SHA`
+`2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a`,
+`MAX_BYTES` and `valid_document()` before the unchanged adoption loop can expose
+the quest registry. The archive SHA never substitutes for the payload SHA, and
+the memory mode leaves `loaded_path` empty rather than claiming a generated
+file. Existing files enter the same `_load_payload()` guards. No installed file,
+pack, new quest admission rule, reward operation, gate, ownership or save is
+created or changed. Exact byte/hash reproduction and runtime adoption have not
+been executed; this is not an additional3,621 gameplay-completed quests or any
+whole-table completion claim.
+
 The continuing read-only closures also include BuffClass7,297,860,
 BuffBonus6,005,262, SpellBonus5,997,214 and GachaCraftOutput3,321,937 original JSON bytes. These are the
 recorded sizes of the input tables, not an assertion that all their rows are now
@@ -457,6 +482,12 @@ before following additional references. The already existing
 shop quote→item identity→ItemData caller consumes this exclusion and refuses
 the offer. Missing registry support is not replaced with a guessed dummy rule.
 This adapter is unexecuted and does not add an exclusion/use count.
+The existing item/book reference readers also call SpellData/BuffData
+`describe()`. Those readers now retain their original raw row/source/test
+declaration but return `excluded`, the same owner evidence and a table-specific
+blocker before traversing child bonuses/references when that SPI explicitly
+declares the row dummy. This does not create a second registry or authorize an
+effect; adoption and execution remain the integration owner's responsibility.
 
 ## Ownership and unresolved candidates
 
