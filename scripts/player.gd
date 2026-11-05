@@ -90,6 +90,14 @@ var attack_speed_multiplier: float = 1.0
 var attack_visual_duration: float = 0.42
 var physics_delta: float = 1.0 / 60.0
 
+# Child nodes created at member init are only parented in _ready. If the player
+# is freed before entering the tree, free those orphans instead of leaking them.
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE: return
+	for orphan: Variant in [original_source_preview, current523_identity_actor]:
+		if is_instance_valid(orphan) and orphan is Node and (orphan as Node).get_parent() == null:
+			(orphan as Node).free()
+
 func _ready() -> void:
 	var installed_manifest: String = preload("res://scripts/lineagem_pack_install.gd").active_manifest()
 	if FileAccess.file_exists(installed_manifest):
