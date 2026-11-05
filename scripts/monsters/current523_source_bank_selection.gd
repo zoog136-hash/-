@@ -16,7 +16,7 @@ static func source_only_request(record: Dictionary) -> bool:
 	# This explicit Sprite request flag is a caller contract, not a saved ABI or
 	# an invented field in the source tables. Current definition provenance also
 	# keeps a new m508-identified record from reopening the historical media path.
-	if record.get(SOURCE_ONLY_REQUEST) == true or record.get("source_m_definition_snapshot") == "patch523": return true
+	if record.get(SOURCE_ONLY_REQUEST) == true or record.get("source_m_current523_final") == true or record.get("source_m_definition_snapshot") == "patch523": return true
 	for field: String in ["content_snapshot", "source_content_snapshot"]:
 		if record.get(field) == "patch523": return true
 	var original: Variant = record.get("source_m_original")
@@ -63,20 +63,33 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		return fail("current523_exact_npcclass_sprite_missing",source_only)
 	var definition_admission: Dictionary = {}
 	var definition_archive: Dictionary = {}
+	var definition_selection_only: bool = false
 	if source_only:
-		# Consume the data owner's actual admitted registry entry, not an old pack
-		# registration or a saved record carrying a familiar source namespace.
-		var identity: Variant = admission.get(CURRENT_ADMISSION_IDENTITY)
+		# Pre-spawn selection cannot require an actor registry that is created
+		# only later by Monster.setup. Its explicit final-input marker, archive
+		# pin and complete original row establish definition selection only.
+		var current_final: bool = record.get("source_m_current523_final") == true
 		var original: Variant = record.get("source_m_original")
-		if not identity is Dictionary or not original is Dictionary or record.get("source_m_definition_snapshot") != "patch523" or record.get("source_m_definition_archive_sha256") != supplied.source_tables_sha256:
-			return fail("current523_admitted_original_npc_definition_required",true)
-		if identity.get("source_snapshot") != "patch523" or identity.get("source_archive_sha256") != supplied.source_tables_sha256 or identity.get("npc_class_id") != npc_id or identity.get("sprite") != sprite_id or identity.get("desc_id") != native.get("DescId"):
-			return fail("current523_admitted_original_npc_identity_differs",true)
+		if not original is Dictionary or (not current_final and record.get("source_m_definition_snapshot") != "patch523") or record.get("source_m_definition_archive_sha256") != supplied.source_tables_sha256:
+			return fail("current523_original_npc_definition_origin_required",true)
+		for field: String in native:
+			if not original.has(field) or original[field] != native[field]:
+				return fail("current523_complete_original_npc_definition_differs:" + field,true)
 		for field: String in ["ID", "Sprite", "DescId"]:
 			if not BANK.integer(native.get(field)) or original.get(field) != native[field] or context.npc.get(field) != native[field]:
 				return fail("current523_explicit_npc_definition_identity_differs:" + field,true)
-		definition_admission = identity.duplicate(true)
-		definition_archive = {"source_snapshot":identity.source_snapshot,"source_sha256":identity.source_archive_sha256,"origin":"admitted_current523_npc_source_identity"}
+		if admission.has(CURRENT_ADMISSION_IDENTITY):
+			# A supplied bad/empty identity is a failure, never an invitation to
+			# downgrade to the pre-spawn metadata-only path.
+			var identity: Variant = admission[CURRENT_ADMISSION_IDENTITY]
+			if not identity is Dictionary or identity.get("source_snapshot") != "patch523" or identity.get("source_archive_sha256") != supplied.source_tables_sha256 or identity.get("npc_class_id") != npc_id or identity.get("sprite") != sprite_id or identity.get("desc_id") != native.get("DescId"):
+				return fail("current523_admitted_original_npc_identity_differs",true)
+			definition_admission = identity.duplicate(true)
+		elif current_final:
+			definition_selection_only = true
+		else:
+			return fail("current523_admitted_original_npc_definition_required",true)
+		definition_archive = {"source_snapshot":"patch523","source_sha256":record.source_m_definition_archive_sha256,"origin":"current523_final_definition_selection" if definition_selection_only else "admitted_current523_npc_source_identity"}
 	else:
 		# Historical compatibility retains its old admission contract. The final
 		# source-only request takes the data owner's new definition values above.
@@ -94,6 +107,9 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 	return {"ok":true,"enabled":true,"status":"selected","consumer":"npc","request_key":request_key,
 		"source_snapshot":"patch523","content_snapshot":"patch523","source_content_snapshot":"patch523","npc_id":npc_id,"sprite_id":sprite_id,
 		SOURCE_ONLY_REQUEST:source_only,"source_only":source_only,"legacy_media_fallback_allowed":not source_only,
+		"definition_selection_only":definition_selection_only,"runtime_actor_registry_required":source_only,
+		"runtime_actor_registry_present":not definition_admission.is_empty(),
+		"selection_phase":"definition_metadata_only" if definition_selection_only else "existing_actor_visual_input",
 		"source_definition_archive":definition_archive,"current523_npc_source_identity":definition_admission,
 		"spawn_view_id":view_id,"territory_link_id":territory_link_id,
 		"npc_source_row":native.duplicate(true),"spawn_admission":admitted.duplicate(true),
@@ -103,5 +119,5 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		"optional_role_actions":run_binding.optional_role_actions,"optional_role_actor_ids":run_binding.optional_role_actor_ids,"run_status":run_binding.run_status,
 		"overlay_whitelist_path":supplied.options.get("overlay_whitelist_path",""),
 		"overlay_whitelist_sha256":supplied.options.get("overlay_whitelist_sha256",""),
-		"stats_contract":"current523_admitted_original_registry; saved_encounter_identity_ABI_only" if source_only else "existing_base508_fields_unchanged_by_patch523_spawn_policy",
+		"stats_contract":("current523_final_definition_selection_only; actor_registry_still_required" if definition_selection_only else "current523_admitted_original_registry; saved_encounter_identity_ABI_only") if source_only else "existing_base508_fields_unchanged_by_patch523_spawn_policy",
 		"host_policy":"existing_npc_core_actions_and_facing_plus3; native_dispatch_unverified"}

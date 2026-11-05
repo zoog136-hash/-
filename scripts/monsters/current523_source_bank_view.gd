@@ -13,6 +13,14 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	selection_status = SELECTION.select(record,admission)
 	if not selection_status.get("ok",false): return false
 	var selected: Dictionary = selection_status
+	if selected.get("runtime_actor_registry_required",false):
+		var active_identity: Variant = selected.get("current523_npc_source_identity")
+		if selected.get("definition_selection_only",false) or not active_identity is Dictionary or active_identity.is_empty():
+			selection_status["ok"] = false
+			selection_status["status"] = "source_only_pending"
+			selection_status["reason"] = "current523_active_actor_registry_required_for_view"
+			selection_status["selection_phase"] = "awaiting_active_actor_registry"
+			return false
 	var candidate := PREVIEW.new()
 	if not candidate._configure_selected_roles(selected,"idle"):
 		selection_status = selected.duplicate(true)

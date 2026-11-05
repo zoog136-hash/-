@@ -15,6 +15,29 @@ func emit_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
 	var requested: Array[String]=[]
 	for stage: String in FIELDS:
 		if int(spell.get(FIELDS[stage],0))>0:requested.append(stage)
+	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[],"stage_results":{},"input":"current523_source_bank_only"}
+	var player: Node=property(world,"player")
+	var preview: Node=property(player,"original_source_preview")
+	if not player is Node2D or not target is Node2D or preview==null or not preview.has_method("notify_current_source_spell_event"):
+		last_result.reason="current523_typed_spell_stage_api_unavailable";return last_result.duplicate(true)
+	var facing: int=int(property(property(player,"motion"),"facing8",0))
+	var caster_point: Vector2=player.global_position
+	var impact_point: Vector2=target.global_position
+	for stage: String in requested:
+		var point: Vector2=caster_point if stage=="cast" else impact_point
+		var played: bool=preview.notify_current_source_spell_event(spell,stage,point,facing)
+		var current_status: Variant=property(preview,"source_effect_status",{})
+		last_result.stage_results[stage]={"renderer":"current_source","source_status":current_status.duplicate(true) if current_status is Dictionary else {"status":"unavailable"}}
+		last_result["played" if played else "unavailable"].append(stage)
+		last_result.incomplete_sources.append({"stage":stage,"sprite_id":int(spell[FIELDS[stage]]),"status":"native_composition_and_trigger_unverified" if played else "current_source_effect_action_binding_unavailable"})
+	last_result.status="not_requested" if requested.is_empty() else "played" if last_result.played.size()==requested.size() else "partial" if not last_result.played.is_empty() else "unavailable"
+	return last_result.duplicate(true)
+
+func _emit_legacy_reference_spell(world: Node,spell: Dictionary,target: Node) -> Dictionary:
+	# Preserved reference compositor; final awakening calls use emit_spell above.
+	var requested: Array[String]=[]
+	for stage: String in FIELDS:
+		if int(spell.get(FIELDS[stage],0))>0:requested.append(stage)
 	last_result={"spell_id":int(spell.get("ID",0)),"requested":requested,"played":[],"unavailable":[],"status":"unavailable","source_visual_complete":false,"incomplete_sources":[],"stage_results":{}}
 	var player: Node=property(world,"player")
 	var preview: Node=property(player,"original_source_preview")

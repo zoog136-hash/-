@@ -148,6 +148,12 @@ the exact NPC/Sprite/DescId and source-archive identity. A missing visual stays
 pending and cannot expose the old Sprite/species/shadow through pool reuse or
 later motion updates. Existing spawn/map admission, hit/death and attack state
 remain with their owners; no actor or placement is created by this bridge.
+The integration owner's pre-spawn call uses the same public selector for
+definition metadata only. An explicit current-final record, exact archive pin
+and complete current NpcClass fields can select the requested visual identity
+before an actor exists. This does not create an admitted registry entry. The
+actual view still requires the data owner's active actor registry after its
+existing projection; an invalid supplied entry cannot fall back to metadata.
 
 `reference_sp2_bank.gd` reads the pinned bank and exact actor/action entries,
 then resolves original member/bit/frame addresses through the existing decoder.
@@ -208,6 +214,12 @@ source profile. It adds no success/failure mapping or new gameplay event.
 The successful counter's existing impact callback uses the same delegation.
 Current spell reads and provenance use the original ZIP member
 `content/SpellClass.json` and its `SpellClass` table key.
+The actual presentation API is
+`notify_current_source_spell_event(full_spell_row, stage, world_point, facing, context)`.
+Its stage maps to the original SpellClass sprite field; EffectSpriteID uses
+the explicit EffectSpriteActionNo. Other fields require a sole full original
+SPR action, not merely one compiled entry. A generic overlay Sprite ID is not
+a substitute for this exact event/action contract.
 The existing native-option spell presenter also delegates its already selected
 full spell row and existing effect/success events. Source-only presentation
 does not use an old manifest as a prerequisite or fallback. Current selection
