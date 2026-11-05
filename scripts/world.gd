@@ -227,6 +227,10 @@ const PATCH523_ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const PATCH523_SEAL_ACTIONS = preload("res://scripts/crafting/patch523_seal_actions.gd")
 const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
 var patch523_material_choices: Dictionary = {}
+const PATCH523_QUEST_MATERIALS=preload("res://scripts/crafting/quest_material_inputs.gd")
+# Session-only physical selections. SlotIndex -> source row choices above
+# remain independent; neither mapping is a new ownership grant or save.
+var patch523_owned_material_choices: Dictionary={}
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var patch523_crafting_usage: Dictionary = {}
@@ -5147,6 +5151,7 @@ func _install_patch523_equipment(path: String, expected: String) -> bool:
 	if not patch523_equipment.load_file(path, expected):
 		return false
 	patch523_material_choices.clear()
+	patch523_owned_material_choices.clear()
 	patch523_craft_item_cache={}
 	# Keep existing recipes, IDs and economy unchanged.
 	for key: Variant in crafting.recipes.keys():
@@ -5222,6 +5227,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		if not delegated.get("ok",false):hud.show_message(str(delegated.get("error","가호 소유자 결과 확인 필요")))
 		return
 	_sync_item_instances()
+	var context: Dictionary=_patch523_craft_context(recipe_id,batches)
 	var previous_rng: int=rng.state
 	var outcome_roll: int=-1
 	if patch523_equipment.recipes.get(recipe_id,{}).has("outcomes"):
@@ -5232,7 +5238,8 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		outcome_roll=rng.randi_range(0,999999)
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
 		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
-		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, _patch523_craft_context())
+		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
+	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if not bool(transaction.get("ok", false)):
 		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
@@ -5240,12 +5247,19 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	var staged_log: Array[Dictionary] = crafting_log.duplicate(true)
 	staged_log.append({"recipe_id": recipe_id, "batch": batches, "output": str(transaction.result_name),
 		"quantity": int(transaction.result_quantity), "gold": int(transaction.cost),
-		"rules_sha256": patch523_equipment.digest, "at": Time.get_unix_time_from_system()})
+		"rules_sha256": patch523_equipment.digest, "at": Time.get_unix_time_from_system(),
+		"source_quest_craft_receipt_id":str(transaction.get("source_craft_receipt_id",""))})
 	if staged_log.size() > 200:
 		staged_log.pop_front()
 	var staged: Dictionary = {"inventory": transaction.inventory, "item_instances": transaction.item_instances,
 		"gold": int(transaction.gold_after), "next_item_instance_id": int(transaction.next_instance_id), "crafting_log": staged_log,
 		"patch523_crafting_usage":transaction.get("usage_after",patch523_crafting_usage).duplicate(true)}
+	if transaction.has("quest_state"):staged["quest_state"]=transaction.quest_state
+	if transaction.has("consumable_state"):staged["consumable_state"]=transaction.consumable_state
+	if transaction.has("quest_step") and not PATCH523_QUEST_MATERIALS.Consume.matches_payload(self,transaction.quest_step,staged):
+		rng.state=previous_rng
+		hud.show_message("선택 재료와 최종 제작 저장 후보가 달라졌습니다 · 재료 보존")
+		return
 	var before_content: Dictionary = unconfirmed523.state.duplicate(true)
 	if int(transaction.result_quantity) > 0:
 		unconfirmed523.record_event("craft",{"amount":int(transaction.result_quantity),"source_id":UNCONFIRMED523.native_id(_find_catalog_item_record(str(transaction.result_name))),"event_id":"craft:%s:%d"%[recipe_id,Time.get_ticks_usec()]})
@@ -5255,12 +5269,18 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		unconfirmed523.state = before_content
 		hud.show_message("저장 실패 · 재료·장비·아데나·난수 상태를 보존했습니다")
 		return
+	if staged.has("quest_state") and not quest_service.import_state(staged.quest_state):
+		patch523_owner_state_problem="제작 저장 후 원본 소비 장부 복원 필요 · 정상 저장을 다시 불러오세요"
+		hud.show_message(patch523_owner_state_problem)
+		return
+	if staged.has("consumable_state"):consumable_service.import_state(staged.consumable_state)
 	inventory = staged.inventory
 	item_instances = staged.item_instances
 	gold = int(staged.gold)
 	next_item_instance_id = int(staged.next_item_instance_id)
 	crafting_log = staged_log
 	patch523_crafting_usage=staged.patch523_crafting_usage
+	patch523_owned_material_choices.erase(recipe_id)
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	hud.show_message(("원본 제작 %s · 지급 없음" % str(transaction.get("outcome_label","실패"))) if int(transaction.result_quantity)==0 else ("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)]))
@@ -5383,14 +5403,31 @@ func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
 	if recipe_id.begins_with("patch523:"):
 		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_item_index(), item_instances,
-			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context())
+			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context(recipe_id,batches))
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
 
-func _patch523_craft_context() -> Dictionary:
-	return {"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local}
+func patch523_set_owned_materials(recipe_id: String,batches: int,selections: Array) -> Dictionary:
+	if not recipe_id.begins_with("patch523:") or not patch523_equipment.recipes.has(recipe_id) or _patch523_protection_recipe_item(recipe_id)>0:return {"ok":false,"reason":"기존 일반 원본 제작식의 선택 재료만 이 계약을 사용합니다"}
+	var reviewed: Dictionary=PATCH523_QUEST_MATERIALS.review(self,patch523_equipment,recipe_id,batches,patch523_material_choices.get(recipe_id,{}),selections)
+	if not reviewed.get("ok",false):return reviewed
+	if selections.is_empty():patch523_owned_material_choices.erase(recipe_id)
+	else:patch523_owned_material_choices[recipe_id]={"batch":batches,"selections":selections.duplicate(true)}
+	return {"ok":true,"recipe_id":recipe_id,"batch":batches,"selected":selections.size(),"saved":false,"use_authorized":false}
+
+func patch523_clear_owned_materials(recipe_id: String) -> void:
+	patch523_owned_material_choices.erase(recipe_id)
+
+func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
+	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id}
+	if recipe_id.is_empty():return context
+	var selected: Dictionary=patch523_owned_material_choices.get(recipe_id,{})
+	if not selected.is_empty() and int(selected.batch)!=batches:
+		context["quest_material_review"]={"ok":false,"reason":"제작 횟수가 변경됐습니다 · 원본 물리 재료와 잔량을 다시 선택하세요"}
+	else:context["quest_material_review"]=PATCH523_QUEST_MATERIALS.review(self,patch523_equipment,recipe_id,batches,patch523_material_choices.get(recipe_id,{}),selected.get("selections",[]))
+	return context
 
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())

@@ -5,6 +5,7 @@ const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
 const CONDITIONS = preload("res://scripts/crafting/patch523_craft_conditions.gd")
 const EXPEDITION_MATERIALS=preload("res://scripts/crafting/patch523_expedition_materials.gd")
+const QUEST_MATERIALS=preload("res://scripts/crafting/quest_material_inputs.gd")
 const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
@@ -253,6 +254,7 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 		var item: Dictionary = items.get(item_name, {})
 		var total: int=owned if not _stack_has_owned_entities(material,physical,ownership_key(material)) and _stack_identity_matches(item,material) else 0
 		for value: Dictionary in EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context).values():total+=int(value.amount)
+		for value: Dictionary in QUEST_MATERIALS.owned(material,context).values():total+=int(value.row_limit)
 		return total
 	var eligible: int = 0
 	for id: Variant in physical:
@@ -304,6 +306,10 @@ func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictiona
 func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary = {}, choices: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if not recipes.has(recipe_id) or count < 1 or count > MAX_BATCH or gold < 0 or current_weight < 0 or capacity < 0:
 		return denied("원본 제작법·횟수·보관 상태가 유효하지 않습니다")
+	if context.has("quest_material_review"):
+		var quest_review: Variant=context.quest_material_review
+		if not quest_review is Dictionary:return denied("선택 원본 재료 검토 형식 오류")
+		if not quest_review.get("ok",false):return denied(str(quest_review.get("reason","선택 원본 재료 확인 필요")))
 	var selection: Dictionary = material_selection(recipe_id, choices)
 	if not bool(selection.get("ok", false)): return selection
 	var recipe: Dictionary = selection.recipe
@@ -340,18 +346,27 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 			var pools: Dictionary={}
 			if not _stack_has_owned_entities(material,physical,owned_key) and _stack_identity_matches(item,material):pools[owned_key]={"amount":maxi(0,int(inventory.get(owned_key,0))),"record":item}
 			pools.merge(EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context))
+			pools.merge(QUEST_MATERIALS.owned(material,context))
 			var need: int=required
 			var keys: Array=pools.keys();keys.sort()
 			# Keep exact native ownership first; the remaining typed key is
 			# independently proven, never renamed or promoted into native stock.
 			if owned_key in keys:keys.erase(owned_key);keys.push_front(owned_key)
+			# Explicit selected quest inputs are spent before automatic canonical
+			# or expedition inputs. Their row allocation remains a hard limit.
+			var selected_keys: Array=[]
+			for key: String in keys:
+				if pools[key].get("quest_material",false):selected_keys.append(key)
+			for key: String in selected_keys:keys.erase(key)
+			keys=selected_keys+keys
 			for key: String in keys:
 				var take: int=mini(need,maxi(0,int(pools[key].amount)-int(costs.get(key,0))))
+				if pools[key].get("quest_material",false):take=mini(take,int(pools[key].row_limit))
 				if take<=0:continue
 				costs[key]=int(costs.get(key,0))+take
-				provenance[key]={"source_id":str(material.source_id),"bless_code":int(material.bless_code),"level":int(material.level),"record":pools[key].record,"expedition":pools[key].has("tuple")}
-				material_rows.append({"key":key,"quantity":take,"source_id":str(material.source_id)})
-				net_weight-=maxi(0,int(pools[key].record.get("weight",3)))*take
+				provenance[key]={"source_id":str(material.source_id),"bless_code":int(material.bless_code),"level":int(material.level),"record":pools[key].record,"expedition":pools[key].has("tuple"),"quest_material":pools[key].get("quest_material",false)}
+				material_rows.append({"key":key,"quantity":take,"source_id":str(material.source_id),"material_row_id":int(material.get("row_id",0)),"quest_material":pools[key].get("quest_material",false)})
+				net_weight-=maxi(0,int(pools[key].get("carried_weight",pools[key].record.get("weight",3))))*take
 				need-=take
 				if need==0:break
 			if need>0:return denied(item_name+" 재료가 부족하거나 원본 소지/발급 증명이 일치하지 않습니다")
@@ -395,6 +410,8 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		return denied("제작 결과를 보관할 무게가 부족합니다")
 	qualification.merge({"ok": true, "result_name": str(output.item), "result_quantity": produced, "cost": cost,
 		"materials": costs, "material_provenance":provenance, "material_rows":material_rows, "consumed_ids": selections, "new_weight": net_weight},true)
+	var quest_problem: String=QUEST_MATERIALS.quote_problem(qualification,context)
+	if not quest_problem.is_empty():return denied(quest_problem)
 	return qualification
 
 func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, next_id: int, locks: Dictionary = {}, choices: Dictionary = {}, roll: int = -1, context: Dictionary = {}) -> Dictionary:
@@ -479,7 +496,7 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 				"bless_state": pinned.bless_state, "record": pinned}
 			counter += 1
 	# Return a staged transaction. The actual Main persists this snapshot first.
-	approval.merge({"inventory": staged_inventory, "item_instances": staged_physical,
+	approval.merge({"inventory": staged_inventory, "item_instances": staged_physical, "selected_output":output.duplicate(true),
 		"gold_after": gold - int(approval.cost) + wallet_reward, "next_instance_id": counter})
 	return approval
 
