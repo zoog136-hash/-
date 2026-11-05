@@ -99,7 +99,9 @@ func fail(message: String) -> Dictionary:
 func selected_rewards(point: String) -> Array:
 	var available: Array = source.by_point.get(point,[])
 	var selected := -1
-	var cap := int(str(state.policy).trim_prefix("cap")) if str(state.policy).begins_with("cap") else 100
+	var cap: int = source.current_version
+	if str(state.policy).begins_with("cap"):
+		cap = mini(cap,int(str(state.policy).trim_prefix("cap")))
 	for id: String in available:
 		if int(source.rewards[id].version) <= cap: selected = maxi(selected,int(source.rewards[id].version))
 	# An existing receipt locks the point's version across policy/data changes.
@@ -122,7 +124,7 @@ func quote(action: String, id: String) -> Dictionary:
 	if world == null: return fail("월드 연결이 없습니다.")
 	if save_blocked or not problem.is_empty(): return fail("저장 보호 중입니다. 정상 저장과 원본 정의를 다시 확인해 주세요.")
 	if action == "policy" and id in ["latest_available","hold","cap0","cap1","cap2"]:
-		return {"ok":true,"revision":int(state.revision),"message":"TWILIGHT 보상 버전 정책을 변경합니다. 지점마다 가장 높은 원문 버전을 선택하며, 새 96레벨 Version 0도 유지합니다. 기존 수령은 초기화하지 않습니다."}
+		return {"ok":true,"revision":int(state.revision),"message":"TWILIGHT 보상 버전 정책을 변경합니다. 원본의 현재 버전 이하에서 지점별 최고 버전을 선택하며, 새 96레벨 Version 0도 유지합니다. 기존 수령은 초기화하지 않습니다."}
 	if action == "effects_policy" and id in ["source_only","twilight_estimates"]:
 		return {"ok":true,"revision":int(state.revision),"message":"원문 수치·대상은 보존합니다. TWILIGHT 추정 실행은 비율 무시를 기존 문양 전투 정책으로, 대상14를 현재 기절·침묵·홀드·공포 적중의 5% 배율로 실행합니다. 원작 공식 복원이 아닙니다. 원문 확정만을 고르면 이 추정 부분은 적용하지 않습니다."}
 	if not source.ready: return fail(source.problem)

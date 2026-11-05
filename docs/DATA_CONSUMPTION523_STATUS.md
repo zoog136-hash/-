@@ -65,6 +65,12 @@ passing results do not validate these changes.
   paths instead of fixed totem IDs. The other five constants remain unconnected:
   the generic buff is different from the existing barrier, a generic effect
   timer has no caller, and the two Spine fields belong to the excluded media lane.
+- `GrowthMotivationConstant.Version` now bounds the existing per-point reward
+  version selector. The local save schema stays1, explicit cap0/cap1/cap2 choices
+  still apply, and existing point-version receipts stay locked. Future rows are
+  retained as definitions instead of becoming claimable just because their
+  version is numerically the highest present row. The latest-available policy
+  still permits current lower-version points such as the level96 Version0 rows.
 - Ordinary EXP recovery now stages only changed progression fields. A real level
   gain uses the death owner's transient, exact full-transaction authorization at
   the common save boundary. A saved death namespace by itself cannot authorize

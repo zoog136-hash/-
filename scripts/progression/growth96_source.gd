@@ -14,6 +14,7 @@ var items: Dictionary = {}
 var collections: Dictionary = {}
 var cards: Dictionary = {}
 var audit: Dictionary = {}
+var current_version: int = -1
 
 static func sid(value: Variant) -> String:
 	return str(int(value))
@@ -36,6 +37,7 @@ static func indexed(rows: Array, key: String = "ID") -> Dictionary:
 
 func load_source(path: String = "") -> bool:
 	ready = false; problem = ""; audit.clear(); tables.clear(); points.clear(); rewards.clear(); by_point.clear(); items.clear(); collections.clear(); cards.clear()
+	current_version = -1
 	if path.is_empty():
 		path = OS.get_environment("TWILIGHT_PATCH523_CONTENT")
 		if path.is_empty(): path = INSTALLED
@@ -50,7 +52,7 @@ func load_source(path: String = "") -> bool:
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: problem = "원본 ZIP을 열 수 없습니다."; return false
 	points = indexed(_rows(zip,"GrowthMotivation"))
-	_rows(zip,"GrowthMotivationConstant")
+	var growth_constants: Array = _rows(zip,"GrowthMotivationConstant")
 	var links := _rows(zip,"GrowthMotivationReward")
 	var all_rewards := indexed(_rows(zip,"Reward"))
 	var all_items := indexed(_rows(zip,"ItemClass"))
@@ -71,6 +73,19 @@ func load_source(path: String = "") -> bool:
 	var descriptions := indexed(_rows(zip,"DescData_Korean"))
 	zip.close()
 	if not problem.is_empty(): return false
+	# This is the native reward-version selector, not the local save schema.
+	# Keep every reward row, but do not promote a future version merely because
+	# it exists in a definition pack.
+	var version_rows: int = 0
+	for constant: Dictionary in growth_constants:
+		if constant.get("Name") != "Version": continue
+		version_rows += 1
+		var value: Variant = constant.get("Value")
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<0 or value>100:
+			problem = "원본 성장 보상 버전 값이 유효하지 않습니다."; return false
+		current_version = int(value)
+	if version_rows!=1:
+		problem = "원본 성장 보상 버전이 없거나 중복됩니다."; return false
 	if points.size() != 71 or links.size() != 269:
 		problem = "성장 지점·보상 전수 개수가 다릅니다."; return false
 	var versions: Dictionary = {}
