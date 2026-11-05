@@ -273,3 +273,15 @@ TWILIGHT estimates, never recovered native units/formulas. Source raw rows,
 current admission and all ownership/save/visual identities remain. The dialogue
 text key does not establish a mobile NPC portrait identity. No new test/run/
 parse/render/CI or measured consumption count; see the native owner contract.
+
+
+## Raw quest ammunition receipt bridge (unexecuted)
+
+The previous raw-ammunition boundary is now joined to the existing common quest
+consumption ABI. Original quest physical ID/key/receipt/first-granted amount
+remain unchanged; only a separate current-source effect view reaches existing
+ammo equip/category/shot/skill callers. The real raw remaining quantity and
+item_grants.used_quantity save with MP/selection/outcome through one candidate.
+Invalid selected proofs are handled failures, never name-only fallback. No
+native conversion/regrant, extra ledger, tests, execution, render or CI; the
+historical verified counts are unchanged.

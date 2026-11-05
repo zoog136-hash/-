@@ -237,6 +237,12 @@ func try_use_held(world: Node, id: String) -> bool:
 	var original_owned: Dictionary=OWN.proof(world,id)
 	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
 		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
+		var native_ammo: Script=load("res://scripts/loot/current523_native_stack.gd")
+		if native_ammo.call("native_ammo",D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))):
+			var equipped: Dictionary=native_ammo.call("equip_ammo",world,str(original_owned.inventory_key),id)
+			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
+			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
+			return true
 		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})

@@ -501,3 +501,48 @@ All later code remains unexecuted/unverified. No new tests, parsing, game run,
 render or CI, percentage, natural encounter rate or original-image/UI completion
 is asserted. Unsupported ItemBook/eqc, GachaCraft output namespace, recipe
 recommendation semantics and current polymorph-entity admission remain explicit.
+
+
+## Raw quest ammunition through the existing quest owner (unexecuted)
+
+The existing held quest activation now recognizes only the exact currently
+supported ammunition definition and passes its actual raw physical ID to the
+equip owner. ammo_owned(world, physical_id) is a consumer view: for raw quest
+ownership it requires common OWN.proof, immutable whole current ItemClass,
+source ZIP identity, original blessing and source_use_immediately=false. It
+returns the canonical effect definition separately from the original inventory
+key/physical object/quest receipt. The saved raw record is never renamed or
+registered as a new native grant, and original granted quantity stays immutable.
+
+ammo_record(world, inventory_key) exposes that definition only for the currently
+selected proven raw instance. Existing WeaponType ammunition-category/family,
+skill-arrow and worn checks receive this view; equipped_ammo remains the actual
+raw inventory key. source_native_ammo_equipped adds ownership_kind=quest only
+for this exact proof branch. Native three-field selections retain their format.
+An invalid current selection is handled as a failure, so the old name-count
+skill/shot fallback cannot debit an unproved raw or native balance.
+
+Actual quest ammo debit delegates once to QUEST_CONSUME.stage, preserving its
+first consumer fingerprint, source_reward_quantity and item_grants.used_quantity.
+The same final payload includes quest_state, inventory, actual raw instances,
+MP where needed, selection/exhaustion and ammo outcome/RNG state. It must pass
+QUEST_CONSUME.matches_payload before the sealed save. The quest state is adopted
+only after confirmed save; uncertain adoption blocks retry until normal reload.
+The existing common quest ancestry/receipt/save owner remains authoritative;
+no parallel quest quantity ledger or fake native origin is introduced.
+
+This closes a code-only ownership bridge, not a new runtime pass or all-quest
+completion claim. Natural quest issuance/launch/restart has not been rerun.
+Original UI binding and the other listed unsupported meanings remain pending.
+
+
+UI2673b9821b1 supplies hud.bind_original_npc_dialogue_portrait(context_provider,
+image_provider). The current dialogue_service.resolve(npc_id,node_id,state)
+returns textual npc_id/node_id and dialogue fields; source_registry is the
+existing L1J registry. The admitted actor path exposes source_m_npc_id only for
+that separate actor. Neither existing result supplies an authoritative relation
+between these namespaces. Consequently269 has no ok:true portrait context to
+register; the required context remains unavailable for that exact relationship.
+UI/image implementations are not copied or fed a legacy/name/Sprite guess.
+Source portrait pixels, v14 installation and actual display remain their owners'
+separate boundaries. This information does not block the actual item consumers.

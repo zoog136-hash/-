@@ -9139,14 +9139,14 @@ func _nearest_visible_monster_in_weapon_range(automatic_acquisition: bool = fals
 
 func _weapon_ammo_family() -> String:
 	if _current_weapon_type()=="건틀렛":
-		var chosen: Dictionary=SOURCE_AMMO.definition(_find_catalog_item_record(equipped_ammo))
+		var chosen: Dictionary=SOURCE_AMMO.definition(load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,equipped_ammo))
 		if not chosen.is_empty() and chosen.family=="스팅":return "스팅"
 	var weapon: Dictionary = _equipped_weapon_record()
 	var category: int = preload("res://scripts/loot/patch523_ammo.gd").weapon_category(weapon)
 	var fallback: String = _weapon_ammo_from_type(_current_weapon_type())
 	if category < 0: category = 8 if fallback == "화살" else 10194 if fallback == "총알" else 0
 	if category == 0: return ""
-	var worn: Dictionary = _find_catalog_item_record(equipped_ammo)
+	var worn: Dictionary = load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,equipped_ammo)
 	if category > 0 and int(worn.get("source_category_id",-1)) == category and not preload("res://scripts/loot/patch523_ammo.gd").profile(worn).is_empty():
 		if preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,worn).is_empty(): return equipped_ammo
 	if category == 223: return "스팅"
@@ -9156,11 +9156,11 @@ func _weapon_ammo_family() -> String:
 
 func _skill_arrow_ammo_name() -> String:
 	var current: String = _current_ammo_name()
-	return current if _find_catalog_item_record(current).get("source_category_name") == "Arrow" else "화살"
+	return current if load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,current).get("source_category_name") == "Arrow" else "화살"
 
 func _current_ammo_name() -> String:
 	var family: String=_weapon_ammo_family()
-	var record: Dictionary=_find_catalog_item_record(equipped_ammo)
+	var record: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,equipped_ammo)
 	if record.get("source")=="twilight-shop523-ammo":
 		var spec: Dictionary=SOURCE_AMMO.definition(record)
 		if spec.is_empty() or str(spec.family)==family:return equipped_ammo
@@ -9242,7 +9242,7 @@ func _roll_source_ammo_damage(target: TwilightMonster) -> int:
 ## characters, and bow <-> gun swaps; there is one arrow and one bullet type).
 func _ammo_worn(ammo_name: String, allow_auto: bool = false) -> bool:
 	var owner: Script=load("res://scripts/loot/current523_native_stack.gd")
-	if owner.call("native_ammo",_find_catalog_item_record(ammo_name)):return owner.call("ammo_worn",self,ammo_name)
+	if owner.call("native_ammo",owner.call("ammo_record",self,ammo_name)):return owner.call("ammo_worn",self,ammo_name)
 	if not consumable_service.export_state().get("source_native_ammo_equipped",{}).is_empty():return false
 	if equipped_ammo == ammo_name:
 		return true

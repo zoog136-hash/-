@@ -53,6 +53,7 @@ static func weapon_category(record: Dictionary) -> int:
 
 # The gameplay consumer receives exact current item identity, not visual enums.
 static func current_profile(record: Dictionary) -> Dictionary:
+	if D.equipment(record):return {} # Physical equipment is not also a quantity-ammunition grant.
 	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or D.current_original_definition(record).is_empty() or record.get("source_test_item")!=false or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var fields: Dictionary={"WeaponSmallDamage":"Value","WeaponLargeDamage":"Value","AmmoEffectSpriteID":"SpriteID","AmmoExplosionSpriteID":"SpriteID"}
 	var seen: Dictionary={}

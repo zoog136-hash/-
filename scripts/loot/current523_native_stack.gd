@@ -247,14 +247,17 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 	var selected_ammo: Variant=state.get(AMMO_EQUIPPED,{})
 	if not selected_ammo is Dictionary:return "원본 탄약 선택 소유 형식 확인 필요"
 	if not selected_ammo.is_empty():
-		if selected_ammo.size()!=3 or not selected_ammo.get("physical_id") is String:return "원본 탄약 선택 개체 증명 필요"
-		var selected: Dictionary=proof_entry(instances.get(selected_ammo.physical_id),selected_ammo.physical_id)
-		if selected.is_empty():
-			# A pure staged last-unit debit may still carry the previous selector.
-			# It is an inactive, exact spent receipt, never a usable ghost object.
-			var spent: Variant=state.get(USES,{}).get(selected_ammo.physical_id,{})
-			if not spent is Dictionary or spent.get("receipt")!=selected_ammo.get("receipt") or spent.get("remaining_quantity")!=0 or not integer(spent.get("used_quantity")) or int(spent.used_quantity)<1:return "원본 탄약 소지 개체 또는 정확한 마지막 소비 영수증 보존 필요"
-		elif profile(selected.record).get("kind")!="ammo" or selected.record.get("name")!=selected_ammo.get("name") or selected.receipt!=selected_ammo.get("receipt"):return "착용한 원본 탄약은 실제 소지 개체·최초 영수증을 유지해야 합니다"
+		if selected_ammo.get("ownership_kind")=="quest":
+			var issue: String=quest_ammo_state_error(instances,state,selected_ammo)
+			if not issue.is_empty():return issue
+		else:
+			if selected_ammo.size()!=3 or not selected_ammo.get("physical_id") is String:return "원본 탄약 선택 개체 증명 필요"
+			var selected: Dictionary=proof_entry(instances.get(selected_ammo.physical_id),selected_ammo.physical_id)
+			if selected.is_empty():
+				# Pure staged last-unit debit keeps only its inactive spent receipt.
+				var spent: Variant=state.get(USES,{}).get(selected_ammo.physical_id,{})
+				if not spent is Dictionary or spent.get("receipt")!=selected_ammo.get("receipt") or spent.get("remaining_quantity")!=0 or not integer(spent.get("used_quantity")) or int(spent.used_quantity)<1:return "원본 탄약 소지 개체 또는 정확한 마지막 소비 영수증 보존 필요"
+			elif profile(selected.record).get("kind")!="ammo" or selected.record.get("name")!=selected_ammo.get("name") or selected.receipt!=selected_ammo.get("receipt"):return "착용한 원본 탄약은 실제 소지 개체·최초 영수증을 유지해야 합니다"
 	var ammo_rng: Variant=state.get(AMMO_RNG,{})
 	if not ammo_rng is Dictionary:return "원본 탄약 독립 난수 저장 형식 보존 필요"
 	if not ammo_rng.is_empty() and (ammo_rng.size()!=3 or ammo_rng.get("schema")!=1 or not ammo_rng.get("seed") is String or not ammo_rng.get("state") is String or not str(ammo_rng.seed).is_valid_int() or not str(ammo_rng.state).is_valid_int()):return "원본 탄약 독립 난수 저장 증명 불일치"
@@ -892,15 +895,55 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 static func native_ammo(record: Dictionary) -> bool:
 	return profile(record).get("kind")=="ammo"
 
+# A consumer view only. A raw quest record is never renamed, registered as a
+# native physical grant or copied over its original saved instance.
+static func ammo_owned(world: Node,uid: String) -> Dictionary:
+	var owned: Dictionary=proof(world,uid)
+	if not owned.is_empty() and native_ammo(owned.record):
+		owned["inventory_key"]=str(owned.record.name);owned["ownership_kind"]="native";return owned
+	var quest: Dictionary=QUEST_OWN.proof(world,uid)
+	if not quest.get("ok",false) or quest.get("source_use_immediately",true) or quest.get("source_sha256")!=SOURCE.identity().get("source_sha256") or quest.source_item!=SOURCE.row("ItemClass",int(quest.item_class_id)):return {}
+	var definition: Dictionary=D.definition_id(str(int(quest.item_class_id)))
+	var record: Dictionary=D.variant_item(definition.get("native_record",{}),int(quest.bless_code_id))
+	if not native_ammo(record):return {}
+	return {"record":record,"remaining":int(quest.quantity),"receipt":world.item_instances[uid].quest_reward_receipt.duplicate(true),"inventory_key":str(quest.inventory_key),"ownership_kind":"quest"}
+
+static func ammo_record(world: Node,name_value: String) -> Dictionary:
+	var selected: Variant=world.consumable_service.export_state().get(AMMO_EQUIPPED,{})
+	if selected is Dictionary and selected.get("name")==name_value and selected.get("ownership_kind")=="quest":
+		var owned: Dictionary=ammo_owned(world,str(selected.get("physical_id","")))
+		if not owned.is_empty() and owned.inventory_key==name_value and owned.receipt==selected.get("receipt"):return owned.record
+		return {} # Invalid selected raw ownership cannot fall through to a legacy alias.
+	return world._find_catalog_item_record(name_value)
+
+static func quest_ammo_state_error(instances: Dictionary,state: Dictionary,selected: Dictionary) -> String:
+	if selected.size()!=4 or not selected.get("physical_id") is String or not selected.get("name") is String or not selected.get("receipt") is Dictionary:return "퀘스트 탄약 선택 증명 형식 확인 필요"
+	var uid: String=selected.physical_id;var physical: Variant=instances.get(uid)
+	if not physical is Dictionary:return "착용한 원본 퀘스트 탄약 소지 개체가 없습니다"
+	var receipt: Dictionary=selected.receipt;var record: Variant=physical.get("record")
+	if not record is Dictionary or physical.get("quest_reward_receipt")!=receipt or physical.get("name")!=selected.name or record.get("name")!=selected.name or physical.get("level",0)!=0 or record.get("source_pending_use")!=true or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_use_immediately")!=false:return "원본 퀘스트 탄약 소지 키·출처·영수증 보존 필요"
+	var id: Variant=receipt.get("item_class_id");var remaining: Variant=physical.get("source_reward_quantity")
+	if not integer(id) or int(id)<=0 or receipt.get("schema")!=1 or receipt.get("source_sha256")!=SOURCE.identity().get("source_sha256") or record.get("source_item_class_id")!=id or record.get("sourceId")!="m523:item:"+str(int(id)) or receipt.get("reward_id")!=record.get("source_reward_id") or receipt.get("bless_code_id")!=record.get("source_bless_code_id") or not integer(receipt.get("quantity")) or not integer(remaining) or int(remaining)<1 or int(remaining)>int(receipt.quantity):return "원본 퀘스트 탄약 지급량·잔량·품목 정체 불일치"
+	var definition: Dictionary=D.definition_id(str(int(id)))
+	if record.get("source_original_item")!=definition.get("original_item") or not native_ammo(D.variant_item(definition.get("native_record",{}),int(receipt.get("bless_code_id",0)))):return "원본 퀘스트 탄약 전체 행·효과 계약 불일치"
+	# Complete claimed/reward ancestry and item_grants.used_quantity remain the
+	# common quest save owner, and are rechecked by ammo_owned at each action.
+	return ""
+
 static func ammo_worn(world: Node,name_value: String) -> bool:
 	var selected: Variant=world.consumable_service.export_state().get(AMMO_EQUIPPED,{})
 	if not selected is Dictionary or selected.is_empty() or world.equipped_ammo!=name_value or world.ammo_unequipped or selected.get("name")!=name_value:return false
-	var owned: Dictionary=proof(world,str(selected.get("physical_id","")))
-	return not owned.is_empty() and native_ammo(owned.record) and owned.record.name==name_value and owned.receipt==selected.get("receipt") and not world._item_locked(name_value) and not world._item_locked(name_value,str(selected.physical_id))
+	var owned: Dictionary=ammo_owned(world,str(selected.get("physical_id","")))
+	return not owned.is_empty() and native_ammo(owned.record) and owned.inventory_key==name_value and owned.receipt==selected.get("receipt") and not world._item_locked(name_value) and not world._item_locked(name_value,str(selected.physical_id))
 
 static func equip_ammo(world: Node,name_value: String,selected_id: String="") -> Dictionary:
 	var record: Dictionary=world._find_catalog_item_record(name_value)
 	var state: Dictionary=world.consumable_service.export_state();var previous: Variant=state.get(AMMO_EQUIPPED,{})
+	if not selected_id.is_empty():
+		var requested: Dictionary=ammo_owned(world,selected_id)
+		if not requested.is_empty() and requested.inventory_key==name_value:record=requested.record
+	elif previous is Dictionary and previous.get("name")==name_value and previous.get("ownership_kind")=="quest":
+		selected_id=str(previous.get("physical_id",""));record=ammo_record(world,name_value)
 	var native: bool=native_ammo(record)
 	if not native and previous=={}:return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 탄약 저장 보호 중")
@@ -911,8 +954,8 @@ static func equip_ammo(world: Node,name_value: String,selected_id: String="") ->
 		var candidates: Array=[]
 		for uid: String in world.item_instances:
 			if not selected_id.is_empty() and selected_id!=uid:continue
-			var owned: Dictionary=proof(world,uid)
-			if not owned.is_empty() and owned.record.name==name_value and native_ammo(owned.record):candidates.append({"id":uid,"owned":owned})
+			var owned: Dictionary=ammo_owned(world,uid)
+			if not owned.is_empty() and owned.inventory_key==name_value and native_ammo(owned.record):candidates.append({"id":uid,"owned":owned})
 		if candidates.size()!=1:return _failure("착용할 원본 탄약의 실제 물리 개체를 선택하세요 · 자동 대체하지 않습니다")
 		var chosen: Dictionary=candidates[0];var owned: Dictionary=chosen.owned
 		if world._item_locked(name_value) or world._item_locked(name_value,str(chosen.id)):return _failure("원본 탄약 잠금 상태")
@@ -920,6 +963,7 @@ static func equip_ammo(world: Node,name_value: String,selected_id: String="") ->
 		if not issue.is_empty():return _failure(issue)
 		if world.equipped_ammo!=name_value or previous.get("physical_id")!=chosen.id:
 			next_name=name_value;next={"physical_id":chosen.id,"name":name_value,"receipt":owned.receipt.duplicate(true)}
+			if owned.ownership_kind=="quest":next["ownership_kind"]="quest"
 	state[AMMO_EQUIPPED]=next
 	var payload: Dictionary={"consumable_state":state,"equipped_ammo":next_name,"ammo_unequipped":next_name.is_empty()}
 	busy=true;_candidate_kind="ammo_equip";_candidate=payload.duplicate(true)
@@ -933,16 +977,23 @@ static func equip_ammo(world: Node,name_value: String,selected_id: String="") ->
 # Existing shots/skills supply their established ammo cost; no new hit/cost
 # formulas. MP and the exact selected physical remainder share this save.
 static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: int=0,target: Node=null,roll_damage: bool=false) -> Dictionary:
-	if not native_ammo(world._find_catalog_item_record(name_value)):return {"handled":false}
+	if not native_ammo(ammo_record(world,name_value)):
+		var claimed: Variant=world.consumable_service.export_state().get(AMMO_EQUIPPED,{})
+		var raw: Dictionary=world._find_catalog_item_record(name_value)
+		if (claimed is Dictionary and not claimed.is_empty() and claimed.get("name")==name_value) or (raw.get("source_projection")=="current523_original_typed_game_dto_v1" and raw.get("source_category_name") in ["Arrow","Bullet","Sting"]):return _failure("선택한 원본 탄약의 현재 소유·정체가 미확인입니다 · 이름 기반 차감으로 대체하지 않습니다")
+		return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty() or world.hp<=0 or not world._patch523_item_allowed():return _failure("원본 탄약 사용·저장 보호 중")
 	if quantity<1 or mp_cost<0 or world.mp<mp_cost or not ammo_worn(world,name_value) or world._current_ammo_name()!=name_value:return _failure("선택한 원본 탄약·MP·착용 조건 불일치")
 	var selected: Dictionary=world.consumable_service.export_state()[AMMO_EQUIPPED]
-	var uid: String=selected.physical_id;var owned: Dictionary=proof(world,uid)
+	var uid: String=selected.physical_id;var owned: Dictionary=ammo_owned(world,uid)
 	if owned.is_empty() or int(owned.remaining)<quantity:return _failure("선택한 물리 탄약 잔량 부족 · 다른 개체를 대신 소비하지 않습니다")
 	var issue: String=load("res://scripts/loot/patch523_item_use.gd").call("eligibility",world,owned.record)
 	if not issue.is_empty():return _failure(issue)
-	var paid: Dictionary=stage_debit(world,[{"physical_id":uid,"quantity":quantity,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-quantity,"source_native_stack_receipt":owned.receipt.duplicate(true)}])
-	if not paid.get("ok",false):return paid
+	var is_quest: bool=owned.get("ownership_kind")=="quest"
+	var request: Dictionary={"physical_id":uid,"quantity":quantity,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-quantity}
+	request["quest_reward_receipt" if is_quest else RECEIPT]=owned.receipt.duplicate(true)
+	var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256)) if is_quest else stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason","원본 탄약 공동 차감 후보 연결 대기")))
 	var private_before: Variant=world.consumable_service.export_state().get(AMMO_RNG,{})
 	if not private_before is Dictionary:return _failure("원본 탄약 독립 난수 저장 형식 보존 필요")
 	var candidate_rng:=RandomNumberGenerator.new()
@@ -960,7 +1011,8 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 		var maximum: int=int(ammo.get("large_damage" if size_class=="large" else "small_damage",0))
 		if policy=="maximum":damage=maximum
 		elif policy!="disabled":damage=candidate_rng.randi_range(1,maximum) if maximum>0 else 0
-	var payload: Dictionary=paid.overrides;var state: Dictionary=payload.consumable_state
+	var payload: Dictionary=paid.overrides;var state: Dictionary=payload.get("consumable_state",world.consumable_service.export_state())
+	payload["consumable_state"]=state
 	if int(owned.remaining)==quantity:
 		state[AMMO_EQUIPPED]={};payload["equipped_ammo"]="";payload["ammo_unequipped"]=true
 	var journal: Variant=state.get(AMMO_USES,{})
@@ -970,11 +1022,14 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	journal[id]={"schema":1,"input":paid.selections.duplicate(true),"source_definition_archive":SOURCE.identity(),"quantity":quantity,"mp_cost":mp_cost,"damage_bonus":damage,"damage_origin":"existing_TWILIGHT_ammo_damage_policy" if roll_damage else "skill_does_not_add_new_ammo_damage","damage_policy":policy,"target_size":size_class,"rng_domain":"TWILIGHT_source_native_ammo_independent_v1","rng_before":private_before.duplicate(true),"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
 	state[AMMO_USES]=journal;payload["mp"]=int(world.mp)-mp_cost
 	if roll_damage:state[AMMO_RNG]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
+	if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("퀘스트 탄약 잔량·최초 사용 증명·MP 결과 공동 후보 불일치")
 	busy=true;_candidate_kind="ammo_consume";_candidate=payload.duplicate(true)
 	var saved: Error=world._save_game(true,payload)
 	_candidate.clear();_candidate_kind="";busy=false
 	if saved!=OK:
 		world.patch523_owner_state_problem="원본 탄약 발사 저장 실패·결과 미확정 · 정상 불러오기 전 재발사 중지";return _failure(world.patch523_owner_state_problem)
+	if is_quest and not world.quest_service.import_state(payload.quest_state):
+		world.patch523_owner_state_problem="퀘스트 탄약 저장 후 장부 채택 미확정 · 정상 불러오기 전 재시도 중지";return _failure(world.patch523_owner_state_problem)
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.mp=int(payload.mp);world.consumable_service.import_state(state)
 	if payload.has("equipped_ammo"):world.equipped_ammo=payload.equipped_ammo;world.ammo_unequipped=payload.ammo_unequipped
 	world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
