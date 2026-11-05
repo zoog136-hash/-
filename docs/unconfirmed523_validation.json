@@ -788,9 +788,10 @@
       "explicit_choice_paths": 5886,
       "allowed": 445,
       "rejected": 2924,
-      "newly_allowed": 0,
-      "newly_rejected": 0,
-      "scope": "explicit owned-source fixtures; not natural acquisition"
+      "newly_allowed": null,
+      "newly_rejected": null,
+      "scope": "explicit owned-source fixtures; not natural acquisition",
+      "comparison_basis": "Current full-carrier fixture coverage; counts match the prior run and proposal/source-rule code is unchanged. No frozen prior-domain environment was supplied for a per-carrier old/new comparison in this6004-check run."
     },
     "tests": {
       "nonvisual_caller": 33,
@@ -810,9 +811,9 @@
       "ui-caller-events-final.log": "7ca5ea2133a7ed8d85bc5c30ce7e33ea1b762bc51667472792f498684aab5e03",
       "ui-caller-jade-final.log": "3720783ef94a55d5ae87058a6f500d77e313534e6763cabedefd20771dd6540b",
       "ui-caller-host-final.log": "6ceffc9f436d0c22a822ed17a1db97d57c099abb0250511b3ecbc9dfbcc5c726",
-      "ui-caller-core.log": "5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b",
       "ui-caller-main-verified.log": "3a9981f223296feac3f4ef09e5e2fce46c9a0bc23510b78a9c85711ca3006445",
-      "ui-caller-main-reload-verified.log": "43bcc3db515e5b6bd7ed55258705f8395b234000dbf743a019b2af1f6511a283"
+      "ui-caller-main-reload-verified.log": "43bcc3db515e5b6bd7ed55258705f8395b234000dbf743a019b2af1f6511a283",
+      "ui-caller-core-verified.log": "5b6da4f2d07cfe849daf635b1a56d3fa8d7e1cfa13c0b6bef109de75c971022b"
     },
     "unchanged_from_baseline": [
       "scripts/world.gd",
@@ -844,9 +845,9 @@
       "ui-caller-events-final.log": 0,
       "ui-caller-jade-final.log": 0,
       "ui-caller-host-final.log": 0,
-      "ui-caller-core.log": 0,
       "ui-caller-main-verified.log": 0,
-      "ui-caller-main-reload-verified.log": 0
+      "ui-caller-main-reload-verified.log": 0,
+      "ui-caller-core-verified.log": 0
     },
     "code_sha256": {
       "scripts/unconfirmed523/runtime.gd": "deda18798bdacd3401d3de1ff44c1bc149671e2527e77bfb7e68dfb2341588c7",
@@ -862,6 +863,7 @@
     },
     "all_originals_or_natural_supply_complete": false,
     "original_UI_ownership": "Existing separate560CSB loader/renderer owner; no copy or replacement implementation here",
-    "saved_schema_or_original_rule_values_changed": false
+    "saved_schema_or_original_rule_values_changed": false,
+    "tests_scope_note": "Events6004 does not include the five optional frozen-baseline setup/comparison checks from historical6009 runs. Source carrier counts and explicit paths remain separately reported."
   }
 }
