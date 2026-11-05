@@ -83,7 +83,7 @@ func open() -> Dictionary:
 
 func _route_source_input(event: InputEvent) -> void:
 	if not is_open() or not is_instance_valid(_area) or not _input_handler.is_valid():return
-	var context: Dictionary={"map_ui":self,"event_space":"original_scroll_input_control_local","source_member":Bindings.AREA,"source_scroll_offset":44388,"cell_projection_performed":false}
+	var context: Dictionary={"map_ui":self,"event_space":"original_scroll_input_control_local","source_member":Bindings.AREA,"source_scroll_offset":44388,"scroll_geometry":scroll_geometry(),"cell_projection_performed":false}
 	if event is InputEventMouse or event is InputEventScreenTouch or event is InputEventScreenDrag:
 		var node: Node2D=_area.source_nodes.get(44388)
 		var scroll: Variant=node.get_meta("source_scroll",null) if node!=null else null
@@ -114,6 +114,14 @@ func submit_world_image_click(viewport_point: Vector2, actual_event_metadata: Di
 func set_scroll_position(source_position: Vector2) -> Dictionary:
 	if not is_instance_valid(_area):return _fail("source_world_map_original_area_unavailable")
 	return _area.set_bound_scroll_position(44388,source_position)
+
+func scroll_geometry() -> Dictionary:
+	if not is_instance_valid(_area):return _fail("source_world_map_original_area_unavailable")
+	var node: Node2D=_area.source_nodes.get(44388)
+	var scroll: Variant=node.get_meta("source_scroll",null) if node!=null else null
+	var control: Control=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+	if control==null or not is_instance_valid(scroll.content):return _fail("source_world_map_original_input_extent_missing")
+	return {"ok":true,"source_member":Bindings.AREA,"source_scroll_offset":44388,"viewport_extent":control.size,"input_local_space":"control_top_left_x_right_y_down","input_to_viewport":control.get_global_transform_with_canvas(),"authored_inner_size":scroll.original_inner_size,"content_position":Vector2(scroll.content.position.x,-scroll.content.position.y),"content_position_space":"cocos_parent_x_right_y_up","cell_projection_performed":false}
 
 func close() -> Dictionary:
 	if _bindings!=null:_bindings.close_map()

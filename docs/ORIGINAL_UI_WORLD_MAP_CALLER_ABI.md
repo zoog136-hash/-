@@ -71,6 +71,7 @@ That owner can use these real presenter methods:
 image_pixel_at(viewport_point: Vector2) -> Dictionary
 submit_world_image_click(viewport_point: Vector2, actual_event_metadata: Dictionary={}) -> Dictionary
 set_scroll_position(source_position: Vector2) -> Dictionary
+scroll_geometry() -> Dictionary
 select_offered_world(world_id: int, source_cell: Variant=null) -> Dictionary
 ```
 
