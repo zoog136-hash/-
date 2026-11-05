@@ -10,6 +10,11 @@ const EXP_REWARD_PANEL=1408
 const EXP_REWARD_BUTTON=164
 const CHAR_MEMBER="UI/Main/Hud_CharInfo.csb"
 const CHAR_SHA256="9532ebdf565004332c1a566ee9f7fbf839aaa580b2db3600a187633820c7d805"
+const CLASS_MEMBER="UI/Main/Hud_CharInfo_Class.csb"
+const CLASS_SHA256="5aeced078ab2c0323d3eeacf354856f85d95027c818d68924c68c1528c48e316"
+const CLASS_PROJECT=34940
+const CLASS_LEVEL=7528
+const CLASS_LEVEL_OFFSETS: Array[int]=[8304,7528]
 # Ancestors are retained automatically. Selected bars do not pull in trail,
 # poison or other children. MP's actual text is selected independently.
 const CHAR_NODE_OFFSETS: Array[int]=[46576,40620,37172,35464,35528,20552,20060]
@@ -68,7 +73,15 @@ static func build_char_info(pack: RefCounted, hud: Node, values: Dictionary) -> 
 		20552:{"role":"button","activate":Callable(inputs,"open_character")},
 		20060:{"role":"button","activate":Callable(inputs,"open_inventory")}
 	}
-	return {"ok":true,"member":CHAR_MEMBER,"sha256":CHAR_SHA256,"source_node_offsets":CHAR_NODE_OFFSETS.duplicate(),"bindings":bindings,"values":presented,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"offset":37544,"field":"original_clipping_custom_property","source_property":"clipping","source_value":0.5,"included_in_scope":false},"original_hp_delta_trail_timing","original_poison_weight_lawful_and_other_stat_roles"]}
+	var offsets: Array[int]=CHAR_NODE_OFFSETS.duplicate()
+	# Older, smaller explicit packs remain usable. A supplied native level
+	# subset uses the original serialized normal branch; no class portrait or
+	# myth/sole state is inferred from the level value.
+	if pack.manifest.get("files",{}).get(CLASS_MEMBER,{}).get("sha256","")==CLASS_SHA256 and pack.manifest.get("node_scopes",{}).get(CHAR_MEMBER,[]).has(CLASS_PROJECT):
+		if typeof(values.get("level"))!=TYPE_INT:return _fail("source_main_raw_level_required")
+		offsets.append(CLASS_PROJECT)
+		bindings[CLASS_PROJECT]={"role":"project","source_node_offsets":CLASS_LEVEL_OFFSETS.duplicate(),"bindings":{CLASS_LEVEL:{"role":"source_text","text":str(values.level)}}}
+	return {"ok":true,"member":CHAR_MEMBER,"sha256":CHAR_SHA256,"source_node_offsets":offsets,"bindings":bindings,"values":presented,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"offset":37544,"field":"original_clipping_custom_property","source_property":"clipping","source_value":0.5,"included_in_scope":false},"original_hp_delta_trail_timing","original_poison_weight_lawful_and_other_stat_roles","class_portrait_and_rank_branch_selection"]}
 
 static func refresh_char_info(scene: Node2D, values: Dictionary) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=CHAR_MEMBER:return _fail("source_main_char_info_scene_mismatch")
@@ -82,6 +95,12 @@ static func refresh_char_info(scene: Node2D, values: Dictionary) -> Dictionary:
 		if not result.get("ok",false):return result
 	for offset: int in [40620,35464]:
 		var result: Dictionary=scene.set_bound_percent(offset,presented.hp_percent if offset==40620 else presented.mp_percent)
+		if not result.get("ok",false):return result
+	if scene.source_nodes.has(CLASS_PROJECT):
+		if typeof(values.get("level"))!=TYPE_INT:return _fail("source_main_raw_level_required")
+		var child: Dictionary=scene.project_player([CLASS_PROJECT])
+		if not child.get("ok",false):return child
+		var result: Dictionary=child.player.set_bound_text(CLASS_LEVEL,str(values.level))
 		if not result.get("ok",false):return result
 	return {"ok":true,"values":presented,"partial_source_scene":true,"game_state_written":false}
 

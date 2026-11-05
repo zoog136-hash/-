@@ -226,6 +226,11 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if binding.has("position") and not binding.position is Vector2:problems.append("source_list_position_invalid")
 	if node.classname=="ProjectNode":
 		var connected: bool=binding.get("role")=="project" and binding.get("bindings") is Dictionary
+		if binding.has("source_node_offsets"):
+			if not binding.source_node_offsets is Array:problems.append("source_project_node_scope_invalid")
+			else:
+				for offset: Variant in binding.source_node_offsets:
+					if typeof(offset)!=TYPE_INT:problems.append("source_project_node_scope_invalid")
 		if not connected:unresolved_bindings.append(str(widget.name)+":project_scene_binding")
 		if not inspection_only and not connected:problems.append("unconnected_project_scene")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
@@ -249,6 +254,11 @@ func _build(source: Dictionary) -> Node2D:
 		nested._project_root_options=widget.duplicate(true)
 		var project_binding: Dictionary=_bindings.get(int(source._offset),{})
 		if project_binding.has("visible"):nested._project_root_options.visible=project_binding.visible
+		# A nested original ProjectNode can consume an explicit partial child
+		# scope. The native parent properties still apply to that child's root.
+		# Omitting this field retains ordinary whole-child strict loading.
+		if project_binding.get("source_node_offsets") is Array:
+			nested._requested_source_nodes.assign(project_binding.source_node_offsets)
 		var result: Dictionary=nested.configure(source_pack,member,inspection_only,_bindings.get(int(source._offset),{}).get("bindings",{}))
 		if not result.ok:
 			_build_error="project_scene_rejected:"+member+":"+str(result)

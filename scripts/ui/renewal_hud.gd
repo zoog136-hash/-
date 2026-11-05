@@ -682,6 +682,7 @@ func update_currency_balances(items: Dictionary) -> void:
 	for currency_name: String in ["다이아", "명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
 		currency_balances[currency_name] = maxi(0, int(items.get(currency_name, 0)))
 	_refresh_currency_readout()
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_currency_balances(currency_balances)
 
 func _refresh_currency_readout() -> void:
 	if currency_readout == null or not is_instance_valid(lineage_inventory_ui):
@@ -2673,6 +2674,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		candidate.queue_free()
 		if is_instance_valid(original_main_ui_controller):original_main_ui_controller.sync_legacy_visibility()
 		return configured
+	candidate.update_currency_balances(currency_balances)
 	if not _original_main_player_values.is_empty():
 		var mounted: Dictionary=candidate.callv("update_player",_original_main_player_values)
 		if not mounted.get("ok",false):

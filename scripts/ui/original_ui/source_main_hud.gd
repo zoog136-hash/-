@@ -6,6 +6,7 @@ const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.gd")
 const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
 const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
+const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
 const MAIN="UI/MainScene.csb"
 const MAIN_SHA="80c174a87caf5cfbf910336b64616334ac560ed477f7a663aec58ada70d4285f"
 const EXP_PROJECT=23080
@@ -38,6 +39,11 @@ var _core_attempted: bool=false
 var _combat_availability: Dictionary={}
 var _legacy_combat: Dictionary={}
 var _legacy_shortcuts: Dictionary={}
+var _wallet_scene: Node2D
+var _wallet_result: Dictionary={}
+var _wallet_mount_attempted: bool=false
+var _gold: int=0
+var _balances: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -61,13 +67,15 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	_fit_source_coordinates()
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
-func update_player(_level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, _gold: int) -> Dictionary:
+func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> Dictionary:
 	var unchanged: bool=_has_player_values and _exp_value==experience_value and _exp_need==exp_need
-	var values: Dictionary={"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}
+	var values: Dictionary={"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level}
 	var char_unchanged: bool=values==_char_values
 	_char_values=values
 	_exp_value=experience_value
 	_exp_need=exp_need
+	var gold_changed: bool=not _has_player_values or _gold!=gold
+	_gold=gold
 	_has_player_values=true
 	if not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
 	if not is_instance_valid(_exp_scene):
@@ -78,7 +86,40 @@ func update_player(_level: int, hp: int, max_hp: int, mp: int, max_mp: int, expe
 			if not _char_mount_attempted:_mount_char_info()
 		elif not char_unchanged:_char_result=Vitals.refresh_char_info(_char_scene,_char_values)
 	if not _core_attempted:_mount_core_controls()
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	_refresh_wallet(gold_changed)
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+
+func update_currency_balances(balances: Dictionary) -> Dictionary:
+	var changed: bool=_balances!=balances
+	_balances=balances.duplicate(true)
+	_refresh_wallet(changed)
+	return _wallet_result.duplicate(true)
+
+func _refresh_wallet(changed: bool) -> void:
+	if not _has_player_values or not _balances.has("다이아") or not is_instance_valid(_coordinates):return
+	if not _pack.manifest.get("scenes",{}).has(Wallet.MEMBER):return
+	if is_instance_valid(_wallet_scene):
+		if changed:_wallet_result=Wallet.refresh(_wallet_scene,_gold,_balances)
+		return
+	if _wallet_mount_attempted:return
+	_wallet_mount_attempted=true
+	var header: Dictionary=_pack.layout_source(HEADER)
+	if header.get("_source_sha256")!=HEADER_SHA:
+		_wallet_result=_fail("source_main_header_parent_identity_mismatch")
+		return
+	var contract: Dictionary=Wallet.build(_pack,_gold,_balances)
+	if not contract.get("ok",false):
+		_wallet_result=contract
+		return
+	var scene=Scene.new()
+	var configured: Dictionary=scene.configure_project(_pack,HEADER,1540,contract.bindings,contract.source_node_offsets)
+	if not configured.get("ok",false):
+		scene.free()
+		_wallet_result=configured
+		return
+	_coordinates.add_child(scene)
+	_wallet_scene=scene
+	_wallet_result={"ok":true,"source":Wallet.MEMBER,"source_parent":HEADER,"source_project":1540,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
 
 func _capture_existing_controls(hud: Node) -> void:
 	var previous: Variant=hud.get("original_main_ui_controller")
