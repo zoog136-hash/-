@@ -19,12 +19,13 @@ AGENTS.md와 프로젝트/리소스 보존 규칙을 읽었고 검사는 사용�
 계정 인증까지 대신하거나 Work의 연결 토큰을 휴대폰으로 복사하지 않는다.
 Termux 저장소 권한도 처음 한 번 Android에서 허용해야 한다.
 
-아래 `PRIVATE_PLAN_ID`는 실제 비공개 설치 인계 JSON의 관측된 Drive ID로
-전달한다. 이 문서에는 사용자 원본의 비공개 ID·파일 목록·개인 경로를 싣지 않는다.
-폴더 또는 원본 파일을 매번 선택하는 인수는 없다.
+아래 `PRIVATE_INLINE_PLAN`은 사용자에게 별도로 제공하는 정확한 기존 팩의
+비공개 metadata 인수다. 실제 명령에는 값까지 들어 있으므로 설치 파일이나
+JSON을 따로 다운로드하거나 선택하지 않는다. 이 문서에는 사용자 원본의
+비공개 ID·파일 목록·개인 경로를 싣지 않는다.
 
 ```bash
-pkg install -y curl && curl --proto '=https' --proto-redir '=https' -fL --retry 2 -o "$HOME/twilight_install.sh" "https://raw.githubusercontent.com/zoog136-hash/-/feature/android-private-source-bootstrap-20261105/tools/android/install_private_sources.sh" && bash "$HOME/twilight_install.sh" --plan-id PRIVATE_PLAN_ID
+pkg install -y curl && twilight_entry="$(mktemp)" && curl --proto '=https' --proto-redir '=https' -fL --retry 2 -o "$twilight_entry" "https://raw.githubusercontent.com/zoog136-hash/-/feature/android-private-source-bootstrap-20261105/tools/android/install_private_sources.sh" && bash "$twilight_entry" --plan-inline 'PRIVATE_INLINE_PLAN'
 ```
 
 동일 명령은 최신 **main**의 코드를 설치한다. 설치기 자체는 feature 브랜치의
@@ -106,7 +107,11 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 
 ## 비공개 인계 schema1
 
-설치기는 `--plan` 로컬 인계 또는 `--plan-id` 인증된 Drive 인계를 받는다.
+설치기는 `--plan-inline`을 사용한 같은 명령 안의 비공개 인계, `--plan` 로컬
+인계, `--plan-id` 인증된 Drive 인계를 받는다. inline은 compact UTF-8 JSON을
+zlib/URL-safe base64로 보관하며 최대2MiB까지만 복원하고 추가 stream·trailing
+data를 거부한다. 토큰과 원본 자산은 포함하지 않는다. 이 입력은 Drive 업로드가
+아니며, 해당 명령을 외부에 게시하면 metadata가 노출되므로 사용자에게만 전달한다.
 팩 ID·SHA·경로가 없는 항목은 만들거나 다른 팩으로 대체하지 않는다.
 `--plan-sha256`은 특정 인계 버전을 고정할 때만 사용한다. 생략하면 같은 Drive
 인계 ID의 정상 owner 업데이트를 따르므로 이후에도 같은 명령을 재사용할 수 있다.

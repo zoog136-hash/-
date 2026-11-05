@@ -5,6 +5,7 @@ No per-runtime-file HTTP downloads, reset/clean, Drive writes, or game execution
 The private, owner-maintained plan is kept outside the public repository.
 """
 import argparse
+import base64
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -20,6 +21,7 @@ import sys
 import tempfile
 import urllib.request
 import zipfile
+import zlib
 
 from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects
 
@@ -178,6 +180,24 @@ def packed_code(cache):
 
 
 def fetch_plan(args, cache):
+    if args.plan_inline:
+        # A private handoff can travel in the user's one pasted command. It
+        # contains only pack metadata, never tokens or original asset bytes.
+        if len(args.plan_inline) > 4 * 1024 * 1024:
+            raise ValueError('Oversized inline handoff')
+        compressed = base64.b64decode(args.plan_inline, altchars=b'-_', validate=True)
+        decoder = zlib.decompressobj()
+        data = decoder.decompress(compressed, 2 * 1024 * 1024 + 1)
+        if (len(data) > 2 * 1024 * 1024 or not decoder.eof
+                or decoder.unconsumed_tail or decoder.unused_data):
+            raise ValueError('Invalid or oversized compressed inline handoff')
+        digest = hashlib.sha256(data).hexdigest()
+        if args.plan_sha256 and digest != pin(args.plan_sha256):
+            raise ValueError('Inline handoff SHA256 mismatch')
+        document = json.loads(data.decode('utf-8'))
+        if not isinstance(document, dict):
+            raise ValueError('Inline handoff must be a JSON object')
+        return document, digest
     if args.plan:
         return read_json(args.plan), sha256_file(args.plan)
     if not args.plan_id or not re.fullmatch('[A-Za-z0-9_-]+', args.plan_id):
@@ -714,8 +734,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, default=Path.home() / 'storage/downloads/TWILIGHT_Play')
     parser.add_argument('--cache', type=Path, default=Path.home() / '.cache/twilight-private-install')
-    parser.add_argument('--plan', type=Path, help='Existing private owner handoff JSON')
-    parser.add_argument('--plan-id', help='Authenticated private Drive installation handoff ID')
+    plan_source = parser.add_mutually_exclusive_group()
+    plan_source.add_argument('--plan', type=Path, help='Existing private owner handoff JSON')
+    plan_source.add_argument('--plan-id', help='Authenticated private Drive installation handoff ID')
+    plan_source.add_argument('--plan-inline', help='Owner handoff JSON compressed with zlib and URL-safe base64, supplied in the same command')
     parser.add_argument('--plan-sha256', help='Optional immutable handoff pin; omit to follow owner updates')
     parser.add_argument('--remote', default='twilight-drive', help='Already authorized rclone Drive remote')
     parser.add_argument('--token-file', type=Path, help='Explicit private OAuth token file for HTTP Range resume')
@@ -723,7 +745,7 @@ def main():
     args = parser.parse_args()
     try:
         install(args)
-    except (OSError, ValueError, KeyError, RuntimeError, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, RuntimeError, zlib.error, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
         log('INSTALL STOPPED: ' + str(error))
         log('The previous runtime, source archives and personal data are preserved. Rerun the same command to reuse verified bundles.')
         return 1
