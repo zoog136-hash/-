@@ -180,6 +180,21 @@ func _land_time_conditions(definition: RefCounted, land_id: int, actor_state: Di
 		result.holds.append({"reason":"native_land_time_pool_owner_required","row":row.duplicate(true),"group":group.duplicate(true)})
 	return result
 
+func land_entry_context_for_actor_state(land_id: int, exact_asset: String, actor_state: Dictionary, source_cell: Vector2i) -> Dictionary:
+	# The ordinary selector/reopen path consumes the same M conditions as manual
+	# portal travel. A source cursor is not an admission, calendar or time credit.
+	var definition: RefCounted=_definition(land_id,exact_asset)
+	if definition==null:return {}
+	var attributes: Dictionary=_attribute_evaluation(definition,land_id,source_cell,actor_state.get("level"))
+	var time: Dictionary=_land_time_conditions(definition,land_id,actor_state)
+	var holds: Array=attributes.holds.duplicate(true)
+	holds.append_array(time.holds)
+	for table: String in ["LandWeeklyOpenTime","CompetitionDungeonLand"]:
+		for row: Dictionary in definition.context_rows(table):
+			if int(row.get("LandID",row.get("LandId",-1)))==land_id:
+				holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
+	return {"Land":definition.land.duplicate(true),"source_cell":[source_cell.x,source_cell.y],"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","land_time_conditions":time.evaluations,"actor_level_conditions":attributes.actor_conditions,"declared_inactive_restrictions":attributes.declared_inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_admission_verified":false}
+
 func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant=null, own_landing: Dictionary={}, actor_state: Dictionary={}) -> Dictionary:
 	var source: RefCounted=_definition(land_id,exact_asset)
 	if source==null: return {}

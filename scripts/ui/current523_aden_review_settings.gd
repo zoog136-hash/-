@@ -352,7 +352,7 @@ func _load_play_options() -> void:
 
 func _play_values() -> Dictionary:
 	var saved: Dictionary = PLAY_OPTIONS.read()
-	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "portal_landing_policy":saved.get("portal_landing_policy",PLAY_OPTIONS.EXACT_POINT_ONLY), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
+	var value: Dictionary = {"navigation_profile":PLAY_OPTIONS.GENERIC if play_profile.selected==3 else PLAY_OPTIONS.SOURCE if play_profile.selected == 2 else (PLAY_OPTIONS.LEGACY if play_profile.selected == 1 else PLAY_OPTIONS.NONE), "portal_landing_policy":saved.get("portal_landing_policy",PLAY_OPTIONS.EXACT_POINT_ONLY), "map_time_policy":saved.get("map_time_policy",PLAY_OPTIONS.OWN_MAP_TIME), "offset_x":int(play_offset_x.value), "offset_y":int(play_offset_y.value)}
 	if play_profile.selected in [2,3]:
 		value.aden_inferred_placement_enabled=aden_inferred_placement.button_pressed
 		value.path_search_limit=int(source_search_limit.value)

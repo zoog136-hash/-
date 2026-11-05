@@ -1,5 +1,5 @@
 extends RefCounted
-## Changes presentation only. Existing field/navigation/body/combat stay owned by Main.
+## Own source-field/session lifecycle; host progress and transactions stay owned by Main.
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const RENDERER = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -24,6 +24,12 @@ var _portals: RefCounted
 const DEFINITION_PACK_SHA256="2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const SOURCE_TRAVEL=preload("res://scripts/maps/current523_source_travel.gd")
 const ACTOR_CONTEXT=preload("res://scripts/maps/current523_map_runtime_context.gd")
+const MAP_TIME=preload("res://scripts/maps/current523_map_time_pool.gd")
+var _map_time: RefCounted
+var _map_time_timer: Timer
+var _active_entry_context: Dictionary={}
+var _session_condition_identity: Dictionary={}
+var _last_map_time: Dictionary={}
 var _source_portal_provider: RefCounted
 var _source_travel_busy: bool=false
 var _portal_definition_generation: int=0
@@ -53,9 +59,117 @@ func input_cache_metrics() -> Dictionary:
 
 func configure(world: Node) -> void:
 	_world_ref = weakref(world)
+	_map_time=MAP_TIME.new()
+	_map_time.configure(world)
 
 func _world() -> Node:
 	return _world_ref.get_ref() as Node if _world_ref != null else null
+
+func _time_groups(context: Dictionary, only_land: int=-1) -> Dictionary:
+	var conditions: Variant=context.get("land_time_conditions")
+	if not conditions is Array:return {"ok":false,"reason":"map_time_definition_context_missing"}
+	var by_id: Dictionary={}
+	for condition: Variant in conditions:
+		if not condition is Dictionary or not condition.get("row") is Dictionary or not condition.get("calendar") is Dictionary:
+			return {"ok":false,"reason":"map_time_definition_context_invalid"}
+		if only_land>=0 and condition.get("land_id")!=only_land:continue
+		var row: Dictionary=condition.row
+		var group: Variant=condition.calendar.get("group")
+		if not group is Dictionary or not SOURCE_TRAVEL._uint(group.get("ID"),2147483647) or group.ID<1 or row.get("LandTimeLimitGroupID")!=group.ID or row.get("LandID")!=condition.get("land_id"):
+			return {"ok":false,"reason":"map_time_group_reference_invalid"}
+		var key: String=str(int(group.ID))
+		if by_id.has(key) and by_id[key]!=group:return {"ok":false,"reason":"map_time_group_definition_conflict"}
+		by_id[key]=group.duplicate(true)
+	return {"ok":true,"groups":by_id.values()}
+
+func _with_map_time_quote(context: Dictionary, actor_state: Dictionary, policy: String="") -> Dictionary:
+	var result: Dictionary=context.duplicate(true)
+	var groups: Dictionary=_time_groups(result)
+	var quote: Dictionary={"ok":false,"reason":groups.get("reason","map_time_owner_unavailable")}
+	var chosen_policy: String=policy if not policy.is_empty() else str(settings.get("map_time_policy",OPTIONS.OWN_MAP_TIME))
+	if groups.get("ok",false) and _map_time!=null:
+		if not groups.groups.is_empty() and chosen_policy!=OPTIONS.OWN_MAP_TIME:quote={"ok":false,"reason":"own_map_time_policy_disabled","policy":chosen_policy}
+		else:quote=_map_time.quote(groups.groups,actor_state.get("server_profile",{}))
+	result["own_map_time"]=quote.duplicate(true)
+	var holds: Array=[]
+	for hold: Variant in result.get("source_travel_holds",[]):
+		# Clear only the elapsed-time ownership hold. Dates, weekly conditions,
+		# attributes, fees and native trigger semantics are separate contracts.
+		if hold is Dictionary and hold.get("reason")=="native_land_time_pool_owner_required" and quote.get("ok",false):continue
+		holds.append(hold)
+	if not quote.get("ok",false):holds.append({"reason":"own_map_time_unavailable","detail":quote.duplicate(true)})
+	result.source_travel_holds=holds
+	result.source_travel_hold="native_definition_conditions_require_policy" if not holds.is_empty() else ""
+	return result
+
+func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_state: Dictionary, time_policy: String="") -> Dictionary:
+	if _source_portal_provider==null or not _source_portal_provider.has_method("land_entry_context_for_actor_state"):
+		return {"source_travel_hold":"map_entry_definition_provider_required"}
+	var raw: Variant=_source_portal_provider.call("land_entry_context_for_actor_state",land_id,asset,actor_state,source_cell)
+	if not raw is Dictionary or raw.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or not raw.get("Land") is Dictionary or raw.Land.get("ID")!=land_id or raw.Land.get("AssetPath")!=asset or raw.get("source_cell")!=[source_cell.x,source_cell.y]:
+		return {"source_travel_hold":"map_entry_definition_identity_invalid"}
+	var result: Dictionary=_with_map_time_quote(raw,actor_state,time_policy)
+	result["runtime_condition_identity"]=ACTOR_CONTEXT.identity(actor_state)
+	return result
+
+func _prepare_map_session(context: Dictionary, actor_state: Dictionary) -> bool:
+	if not str(context.get("source_travel_hold","map_entry_definition_missing")).is_empty():
+		problem="원문 지역 조건 보류: "+str(context.get("source_travel_hold"));return false
+	var groups: Dictionary=_time_groups(context)
+	if not groups.get("ok",false) or _map_time==null:
+		problem="맵 시간그룹 소비자가 없습니다.";return false
+	_last_map_time=_map_time.prepare(groups.groups,actor_state.get("server_profile",{}))
+	if not _last_map_time.get("ok",false):
+		problem="맵 시간 등록 보류: "+str(_last_map_time.get("reason","unknown"));return false
+	return true
+
+func _switch_map_session(land_id: int, context: Dictionary, actor_state: Dictionary, previous_options: Dictionary) -> bool:
+	var groups: Dictionary=_time_groups(context)
+	if not groups.get("ok",false) or _map_time==null:
+		problem="맵 시간 전환 입력을 사용할 수 없습니다."
+		if OPTIONS.write(previous_options)!=OK:problem+=" · 이전 위치 설정 복원 실패"
+		return false
+	_last_map_time=_map_time.switch_session(land_id,groups.get("groups",[]),actor_state.get("server_profile",{}))
+	if not _last_map_time.get("ok",false):
+		problem="맵 시간 세션 전환 보류: "+str(_last_map_time.get("reason","unknown"))
+		if OPTIONS.write(previous_options)!=OK:problem+=" · 이전 위치 설정 복원도 실패했습니다. 현재 필드는 보존합니다."
+		return false
+	_active_entry_context=context.duplicate(true)
+	_session_condition_identity=ACTOR_CONTEXT.identity(actor_state)
+	return true
+
+func _start_map_time_monitor(world: Node) -> void:
+	if not is_instance_valid(_map_time_timer):
+		_map_time_timer=Timer.new()
+		_map_time_timer.name="Current523MapTimeMonitor"
+		_map_time_timer.process_mode=Node.PROCESS_MODE_ALWAYS
+		# Own monitoring cadence, not a native M tick or reset interval.
+		_map_time_timer.wait_time=1.0
+		_map_time_timer.timeout.connect(_map_time_tick)
+		world.add_child(_map_time_timer)
+	_map_time_timer.start()
+
+func _map_time_tick() -> void:
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC:return
+	var world: Node=_world()
+	if not is_instance_valid(world) or _source_travel_busy or saving_prior_snapshot:return
+	var state: Dictionary=ACTOR_CONTEXT.capture(world)
+	var identity: Dictionary=ACTOR_CONTEXT.identity(state)
+	var reason: String=""
+	if identity.get("server_profile")!=_session_condition_identity.get("server_profile"):
+		reason="서버 문맥이 바뀌어 원문 맵 세션을 종료합니다."
+	elif identity!=_session_condition_identity:
+		var cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+		var context: Dictionary=_entry_context(int(settings.native_land_id),str(_source_field.get("source_asset")),cell,state)
+		if not str(context.get("source_travel_hold","missing")).is_empty():reason="현재 지역의 원문 조건이 변경되거나 미확인 상태입니다."
+		else:_active_entry_context=context;_session_condition_identity=identity
+	for condition: Dictionary in _active_entry_context.get("land_time_conditions",[]):
+		var calendar: Dictionary=condition.get("calendar",{})
+		if calendar.get("status")=="open":
+			var window: Dictionary=calendar.get("window",{})
+			if not str(state.get("calendar_hold","missing")).is_empty() or state.now_unix<window.get("start_unix",0) or state.now_unix>=window.get("end_unix",0):reason="원문 지역의 기간이 종료되거나 달력 문맥을 사용할 수 없습니다."
+	if _map_time!=null and _map_time.active() and not _map_time.pulse():reason="맵 잔여시간이 만료되었거나 시간 저장을 계속할 수 없습니다."
+	if not reason.is_empty():world.call("close_current523_aden_play",false,reason)
 
 func open(value: Dictionary) -> bool:
 	problem = ""
@@ -133,6 +247,8 @@ func apply_options(value: Dictionary) -> bool:
 			if options.get(key)!=settings.get(key): problem="지역과 원본 검증 정보를 바꾸려면 원문 플레이를 종료해 주세요."; return false
 	if source_owned and (options.allowed_raw_words != settings.allowed_raw_words or options.portal_contract != settings.portal_contract or options.get("path_search_limit",8192)!=settings.get("path_search_limit",8192) or options.get("aden_inferred_placement_enabled",true)!=settings.get("aden_inferred_placement_enabled",true)):
 		problem = "통행 및 경로 설정과 포탈 팩을 바꾸려면 원문 플레이를 종료해 주세요."; return false
+	if source_owned and options.map_time_policy!=settings.get("map_time_policy",OPTIONS.OWN_MAP_TIME):
+		problem="맵 시간정책을 바꾸려면 원문 플레이를 종료해 주세요.";return false
 	if source_owned: options.source_position = _source_checkpoint().source_position
 	var previous_delta := Vector2(settings.offset_x, settings.offset_y)
 	if not bool(_renderer.call("set_visual_delta", Vector2(options.offset_x, options.offset_y))):
@@ -147,7 +263,13 @@ func apply_options(value: Dictionary) -> bool:
 	return true
 
 func metrics() -> Dictionary:
-	return _renderer.call("frame_metrics") if active and is_instance_valid(_renderer) else {}
+	var result: Dictionary=_renderer.call("frame_metrics") if active and is_instance_valid(_renderer) else {}
+	result["own_map_time"]=_last_map_time.duplicate(true)
+	result["own_map_time_active"]=_map_time!=null and _map_time.active()
+	if active and source_owned and settings.get("navigation_profile")==OPTIONS.GENERIC and _map_time!=null:
+		var groups: Dictionary=_time_groups(_active_entry_context)
+		if groups.get("ok",false):result.own_map_time=_map_time.quote(groups.groups,_session_condition_identity.get("server_profile",{}))
+	return result
 
 func _renderer_problem(message: String, sender: FieldRenderer) -> void:
 	_deferred_return.call_deferred(message, sender.get_instance_id())
@@ -169,6 +291,7 @@ func _build_notice(world: Node) -> void:
 	panel.add_child(row)
 	var label: Label = UI.label("아덴 M 타일 실험 플레이\n통행: 기존 TWILIGHT 자체 설정 · M 좌표/발/충돌 미확정", 14, UI.TEXT)
 	if source_owned: label.text = str(_source_field.data.map_name)+"\nS32 속성 기반 자체 통행 · M 원작 판정 미확정"
+	if source_owned and _map_time!=null and _map_time.active():label.text+="\nM 원문 한도 차감 · 자체 시간정책: 자동 초기화/충전 없음"
 	row.add_child(label)
 	var button: Button = UI.button("기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
@@ -205,6 +328,14 @@ func _open_source(value: Dictionary) -> bool:
 	var position: Vector2 = proposed.coordinates.components_to_world(source_position)
 	if not proposed.point_clear(position,4):
 		problem = "선택한 원문 위치는 자체 통행에서 거부됩니다. 원본 좌표를 임의로 바꾸지 않았습니다."; proposed.close(); return false
+	var entry_context: Dictionary={}
+	var actor_state: Dictionary={}
+	if generic:
+		actor_state=ACTOR_CONTEXT.capture(world)
+		var entry_cell: Vector2i=proposed.world_to_cell(position)+proposed.coordinates.origin
+		entry_context=_entry_context(int(options.native_land_id),str(proposed.get("source_asset")),entry_cell,actor_state,str(options.map_time_policy))
+		if not str(entry_context.get("source_travel_hold","missing")).is_empty():
+			problem="선택한 지역의 원문 조건 보류: "+str(entry_context.get("source_travel_hold"));proposed.close();return false
 	proposed.data.spawn_position = [position.x,position.y]
 	var tiles: RefCounted=_tiles_for(options) if generic else null
 	if generic and tiles==null: proposed.close(); return false
@@ -226,9 +357,16 @@ func _open_source(value: Dictionary) -> bool:
 	camera.reset_smoothing(); camera.force_update_scroll()
 	if not valid:
 		problem = candidate.problem; candidate.queue_free(); proposed.close(); return false
+	if generic:
+		actor_state=ACTOR_CONTEXT.capture(world)
+		entry_context=_entry_context(int(options.native_land_id),str(proposed.get("source_asset")),proposed.world_to_cell(position)+proposed.coordinates.origin,actor_state,str(options.map_time_policy))
+		if not _prepare_map_session(entry_context,actor_state):candidate.queue_free();proposed.close();return false
 	options.source_position = source_position
+	var previous_options: Dictionary=OPTIONS.read()
 	if OPTIONS.write(options) != OK:
 		problem = "원문 플레이 설정을 저장하지 못했습니다."; candidate.queue_free(); proposed.close(); return false
+	if generic and not _switch_map_session(int(options.native_land_id),entry_context,actor_state,previous_options):
+		candidate.queue_free();proposed.close();return false
 	_prior = prior_renderer; _prior_visible = _prior.visible; _prior_mode = _prior.process_mode
 	_prior_world = {"field":prior_field,"physics":world.field_physics,"position":actor_position,"world_size":world.world_size,"astar":world.astar,"camera":old_camera,"physics_layer":world.field_physics.collision_layer if is_instance_valid(world.field_physics) else 0,"physics_mode":world.field_physics.process_mode if is_instance_valid(world.field_physics) else Node.PROCESS_MODE_INHERIT}
 	_source_field = proposed
@@ -265,15 +403,23 @@ func _open_source(value: Dictionary) -> bool:
 	world.hud.set_map_name(str(proposed.data.map_name))
 	_build_notice(world)
 	_load_portals()
+	if generic:_start_map_time_monitor(world)
 	return true
 
 func _close_source(remember_disabled: bool) -> bool:
 	var world: Node = _world()
 	var saved: bool = true
+	if is_instance_valid(_map_time_timer):
+		_map_time_timer.stop();_map_time_timer.queue_free();_map_time_timer=null
+	if _map_time!=null and _map_time.active():
+		_last_map_time=_map_time.end_session()
+		if not _last_map_time.get("ok",false):
+			saved=false;problem="기존 지도로 복귀했지만 맵 시간 종료 저장이 실패했습니다. 남은 세션은 보수적으로 복구합니다."
+	_active_entry_context.clear();_session_condition_identity.clear()
 	if remember_disabled:
 		var options: Dictionary = _source_checkpoint()
 		options.enabled = false
-		saved = OPTIONS.write(options) == OK
+		saved = (OPTIONS.write(options) == OK) and saved
 	if is_instance_valid(_renderer):
 		_renderer.hide(); _renderer.process_mode = Node.PROCESS_MODE_DISABLED; _renderer.queue_free()
 	if is_instance_valid(_source_physics):
@@ -322,6 +468,7 @@ func save_source_progress(quiet: bool, collection_override: Dictionary) -> Error
 	# Existing progress commits through its original writer and spatial identity.
 	# The source cursor is separate; it cannot overwrite the old map's coordinates.
 	var world: Node = _world()
+	var time_failed: bool=_map_time!=null and _map_time.active() and not _map_time.pulse()
 	var checkpoint: Dictionary = _source_checkpoint()
 	var position: Vector2 = world.player.global_position
 	world.field_map = _prior_world.field; world.field_physics = _prior_world.physics; world.field_renderer = _prior
@@ -336,6 +483,10 @@ func save_source_progress(quiet: bool, collection_override: Dictionary) -> Error
 		else:
 			problem = "진행도는 저장했지만 원문 위치 설정은 저장하지 못했습니다."
 			world.hud.show_message(problem)
+	if time_failed and is_instance_valid(_renderer):
+		# The item/progression transaction keeps its actual result; a time-ledger
+		# error cannot turn a committed transaction into a refundable failure.
+		_renderer_problem("맵 시간 차감을 저장할 수 없어 기존 지도로 복귀합니다.",_renderer)
 	# Never report an already committed item transaction as failed: callers could refund twice.
 	return result
 
@@ -372,7 +523,11 @@ func portal_evidence() -> Array:
 				level_notes.append("%s %s=%d · 현재%d · %s"%[str(condition.get("side","")),str(condition.type.Name),int(condition.threshold),int(condition.actor_level),"충족" if bool(condition.fulfilled) else "미충족"])
 			var calendar_notes: Array[String]=[]
 			for condition: Dictionary in context.get("land_time_conditions",[]):
-				calendar_notes.append("Land%d · 시간그룹%d 달력:%s · 공유 시간풀 연결 대기"%[int(condition.land_id),int(condition.calendar.group.ID),str(condition.calendar.status)])
+				var own_time: Dictionary=context.get("own_map_time",{})
+				var remaining: Variant=own_time.get("group_remaining_ms",{}).get(str(int(condition.calendar.group.ID)))
+				var time_note: String="시간 소비 보류: "+str(own_time.get("reason","missing"))
+				if own_time.get("ok",false) and remaining!=null:time_note="자체 공유 한도 %.1f초 · 자동 초기화/충전 없음"%(float(remaining)/1000.0)
+				calendar_notes.append("Land%d · 시간그룹%d 달력:%s · %s"%[int(condition.land_id),int(condition.calendar.group.ID),str(condition.calendar.status),time_note])
 			result.append({"declared_inactive_restrictions":inactive_names,"actor_level_notes":level_notes,"calendar_notes":calendar_notes,"configured_arrival_policy":settings.get("portal_landing_policy","EXACT_POINT_ONLY"),"target_declared_bounds":[territory.StartX,territory.StartY,territory.EndX,territory.EndY],"id":id,"source_position":[portal.SourceX,portal.SourceY],"landing_position":point,"target_land_id":territory.LandID,"activation_candidate":false,"activation_mode":"TWILIGHT_OWN_MANUAL_DECLARED_POINT_V1","definition_hold":context.get("source_travel_hold",""),"definition_owner":context.get("definition_owner","CALLER_SUPPLIED"),"navigation_ticket":_navigation_ticket_for_context(id,context),"native_m_rules_verified":false})
 		return result
 	return _portals.call("portal_evidence") if source_owned and _portals != null else []
@@ -389,7 +544,9 @@ func portal_context(id: int) -> Dictionary:
 			# Authoritative current game state, never a level supplied by the UI.
 			context=_source_portal_provider.call("portal_context_for_actor",int(settings.native_land_id),str(_source_field.get("source_asset")),id,world.get("level"))
 		else:context=_source_portal_provider.call("portal_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),id)
-		if context is Dictionary:context["runtime_condition_identity"]=ACTOR_CONTEXT.identity(actor_state)
+		if context is Dictionary:
+			context=_with_map_time_quote(context,actor_state)
+			context["runtime_condition_identity"]=ACTOR_CONTEXT.identity(actor_state)
 		return context.duplicate(true) if context is Dictionary and _source_context_shape(context) else {}
 	return _portals.call("portal_context",id) if source_owned and _portals != null else {}
 
@@ -425,6 +582,8 @@ func bind_source_portal_provider(provider: RefCounted, verified_manifest_sha256:
 	# The caller is PR230's verified definition loader, not arbitrary JSON input.
 	# Comparing this pin does not authenticate an untrusted provider by itself.
 	if _source_travel_busy: return false
+	if active and source_owned and settings.get("navigation_profile")==OPTIONS.GENERIC:
+		problem="원문 맵 세션을 종료한 뒤 정의 제공자를 변경해 주세요.";return false
 	if provider==null:
 		_portal_definition_generation+=1
 		_source_portal_provider=null; return true
@@ -508,7 +667,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 		for key: String in ["Portal","SourceLand","TargetTerritory","TargetLand"]:
 			if selected_context[key]!=context[key]:
 				problem="착지 준비 중 원문 포탈 선언이 바뀌었습니다.";proposed.close();return false
-		context=selected_context
+		context=_with_map_time_quote(selected_context,ACTOR_CONTEXT.capture(world))
 	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
 	var plan: Dictionary=SOURCE_TRAVEL.plan(context,_source_field.get("_raw"),_source_field,proposed,source_cell,str(options.source_manifest_sha256))
 	if not plan.get("ok",false):
@@ -534,12 +693,32 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	camera.reset_smoothing(); camera.force_update_scroll()
 	if not valid:
 		problem="도착 화면 확인 실패: "+str(candidate.problem); candidate.queue_free(); proposed.close(); return false
+	var actor_state: Dictionary=ACTOR_CONTEXT.capture(world)
+	# Rendering may take wall time. Consume the current source AND target
+	# conditions again before committing a transition across a date boundary.
+	var final_context: Variant
+	if _source_portal_provider.has_method("portal_context_for_actor_state_at_landing"):
+		final_context=_source_portal_provider.call("portal_context_for_actor_state_at_landing",int(settings.native_land_id),str(_source_field.get("source_asset")),id,actor_state,destination,str(context.get("own_arrival_policy","EXACT_POINT_ONLY")))
+	else:final_context=portal_context(id)
+	if not final_context is Dictionary or not _source_context_shape(final_context):
+		problem="이동 준비 중 포탈 조건을 사용할 수 없게 되었습니다.";candidate.queue_free();proposed.close();return false
+	for key: String in ["Portal","SourceLand","TargetTerritory","TargetLand"]:
+		if final_context[key]!=context[key]:
+			problem="이동 준비 중 원문 포탈 선언이 바뀌었습니다.";candidate.queue_free();proposed.close();return false
+	final_context=_with_map_time_quote(final_context,actor_state)
+	if not str(final_context.get("source_travel_hold","missing")).is_empty():
+		problem="이동 직전 원문 조건 또는 잔여시간이 보류되었습니다.";candidate.queue_free();proposed.close();return false
+	var entry_context: Dictionary=_entry_context(target_id,str(proposed.get("source_asset")),destination,actor_state)
+	if not _prepare_map_session(entry_context,actor_state):candidate.queue_free();proposed.close();return false
 	var physics: StaticBody2D=proposed.build_physics(world)
 	physics.collision_layer=0; physics.process_mode=Node.PROCESS_MODE_DISABLED
 	options.native_land_id=target_id; options.source_position=[destination.x+0.5,destination.y+0.5]
+	var previous_options: Dictionary=OPTIONS.read()
 	if OPTIONS.write(options)!=OK:
 		problem="목적지 위치를 저장하지 못해 현재 원문 필드를 보존합니다."
 		candidate.queue_free(); physics.queue_free(); proposed.close(); return false
+	if not _switch_map_session(target_id,entry_context,actor_state,previous_options):
+		candidate.queue_free();physics.queue_free();proposed.close();return false
 	# All fallible validation and the atomic checkpoint precede the commit.
 	# The initial host snapshot/paused actors are retained across every hop.
 	var previous_field: OriginalPlayableField=_source_field
@@ -562,6 +741,7 @@ func _prepare_generic_source_travel(id: int,world: Node) -> bool:
 	world.field_minimap.configure(world,proposed); world.region_id=""; world.hud.set_map_name(str(proposed.data.map_name))
 	if is_instance_valid(_notice): _notice.queue_free()
 	_build_notice(world)
+	_start_map_time_monitor(world)
 	world.portal_cooldown=2.0
 	previous_renderer.queue_free(); previous_physics.queue_free(); previous_field.close()
 	return true
