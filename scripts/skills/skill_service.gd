@@ -777,8 +777,7 @@ func import_state(data: Dictionary) -> void:
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
 	if _is_verified_source_skill(skill):
-		world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest)
-		return
+		if world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest): return
 	# Reuse the already admitted skill's pinned current-source profile. This
 	# changes only its existing cast/impact presentation call, not skill identity,
 	# admission, costs, proc timing, damage, progression or saved state.

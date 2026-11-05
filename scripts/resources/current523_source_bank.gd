@@ -5,8 +5,10 @@ const BASE = preload("res://scripts/lineagem_base508.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const TABLES_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SETTINGS = "user://current523_source_bank.json"
-const TABLES = ["BuffCard", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType", "SpriteRun", "SpriteSeparatedWalk", "Spell", "ConstantData"]
-const DECKS = {"transform":1, "doll":2, "relic":3}
+const TABLES = ["BuffCard", "BuffCardDeck", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType", "SpriteRun", "SpriteSeparatedWalk", "Spell", "ConstantData", "BuffCardAwakenEffect", "StatusEffectAttr"]
+# Exact current BuffCardDeck rows. Relics use native deck98 (HolyStuffCardDeck).
+const DECKS = {"transform":1, "doll":2, "relic":98}
+const DECK_NAMES = {"transform":"PolymorphCardDeck", "doll":"MagicDollCardDeck", "relic":"HolyStuffCardDeck"}
 # Existing TWILIGHT primary-family choice. This is explicit host presentation
 # policy; it does not infer native alternate, shield, special or type74 intent.
 const PRIMARY_ACTIONS = {
@@ -199,7 +201,9 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip))
 	if not loaded.ok: return loaded
 	var native: Dictionary = _by_id.BuffCard.get(int(record.get("source_card_id",-1)),{})
-	if native.is_empty() or native != record.source_original_card or int(native.get("BuffCardDeckID",-1)) != DECKS[consumer] or source_id != "%s:%d:%d" % [source_id.get_slice(":",0),int(native.BuffCardDeckID),int(native.ID)]: return fail("current523_complete_typed_card_definition_differs")
+	if native.is_empty() or native != record.source_original_card or int(native.get("BuffCardDeckID",-1)) != DECKS[consumer] or int(record.get("source_deck_id",-1)) != int(native.BuffCardDeckID) or source_id != "%s:%d:%d" % [source_id.get_slice(":",0),int(native.BuffCardDeckID),int(native.ID)]: return fail("current523_complete_typed_card_definition_differs")
+	var deck: Dictionary = _by_id.BuffCardDeck.get(int(native.BuffCardDeckID),{})
+	if deck.get("Name") != DECK_NAMES[consumer]: return fail("current523_typed_card_deck_category_differs")
 	if bool(native.get("IsTest",false)): return fail("current523_test_card_not_admitted")
 	var preserved_rule: Dictionary = BASE.identity_rules().get(int(native.ID),{}) if source_id.begins_with("m508:") else {}
 	var card_conditions: Dictionary = {"ServerLimitSetID":int(native.get("ServerLimitSetID",0)),"StartDateTimeID":int(native.get("StartDateTimeID",0)),"EndDateTimeID":int(native.get("EndDateTimeID",0))}
@@ -207,7 +211,7 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	# A known stable conditional summon must still match its complete source chain
 	# below. New conditional identities do not acquire a local admission meaning.
 	if conditional_card and preserved_rule.get("selection_kind","") != "indirect_subslot_buff_summon": return fail("current523_conditional_card_admission_unresolved")
-	var path: Array = [{"table":"BuffCard","row":native.duplicate(true)}]
+	var path: Array = [{"table":"BuffCard","row":native.duplicate(true)},{"table":"BuffCardDeck","row":deck.duplicate(true)}]
 	var chains: Array = []
 	var active: Dictionary = context.get("active_card_options",{})
 	var option_id: int = int(active.get(source_id,record.get("source_active_custom_option_id",0)))

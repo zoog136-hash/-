@@ -187,6 +187,22 @@ The admitted NPC view delegates the same typed presentation API. Its combat
 owner retains event admission, timing, targeting, effect limits and lifetime.
 Data, effect, transaction and save-owner logic is not copied into this bridge.
 
+The subsequent local aura bridge follows the existing World/subslot
+`source_awakening_aura.configure` and process calls. Its activation still comes
+only from the existing ownership/status service. It matches the bounded twelve
+legacy awakening rules against the full current `BuffCardAwakenEffect` and
+`StatusEffectAttr` rows, including the original gender-neutral attribute48
+reference; it does not make attribute48 a general enum. Original idle3 and
+optional walk0 keep their own source clocks. A missing walk hides this visual
+while moving; idle pixels are not substituted as movement frames. The existing
+legacy visual remains preferred when it succeeds.
+
+Card selection also uses the actual typed deck rows: transform1,
+MagicDollCardDeck2 and HolyStuffCardDeck98. The previous untested relic3
+assumption is corrected; a guessed deck value cannot stand in for canonical
+card/deck/category agreement. These local changes have not been tested,
+rendered, pushed or used as evidence of game consumption.
+
 Literal `]SpriteID` calls use the project's existing host overlay compatibility
 contract. `build_reference_sp2_overlay_calls.py` connects only supplied normal
 visual parent/action/token relationships to a single source child action.

@@ -89,6 +89,9 @@ func current523_card_matches(key: String, context: Dictionary) -> bool:
 func current523_role_available(role: String) -> bool:
 	return _reference_bank != null and not _reference_card_context.is_empty() and installed() and _playback_tracks.has(role)
 
+func source_bank_request_context() -> Dictionary:
+	return _reference_request_context.duplicate(true)
+
 func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
 	# Selection/admission belongs to the existing card/NPC caller. This shared
 	# installer preserves its required roles when an optional typed RUN is absent.
@@ -512,6 +515,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
 		elif not card_consumer: purpose = "diagnostic_reference_preview"
 		if consumer in ["spell_effect","global_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
+		if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
 		var scene: Node = get_tree().current_scene if is_inside_tree() else null
 		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
 		_reference_frame_status = {"purpose":purpose,"consumer":consumer,"request_key":_reference_card_context.get("request_key",_reference_overlay_parent.get("request_key",_reference_attachment_parent.get("request_key",""))),"overlay_parent":_reference_overlay_parent.duplicate(true),"attachment_parent":_reference_attachment_parent.duplicate(true),"role":_role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",_record.source_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":_record.source_sprite_id,"stored_direction":source_direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":in_main and not shown.is_empty(),"M_visual_equivalence_verified":false}
