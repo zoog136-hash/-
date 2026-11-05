@@ -288,21 +288,25 @@ func cast(record: Dictionary) -> bool:
 		"cleanse":
 			Status.cleanse(world.player, skill.get("statuses", []))
 			vfx.emit_skill(presentation_id(skill), "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"convert":
 			var before_mp: int = world.mp
 			world.mp = mini(world._effective_max_mp(), world.mp + int(skill.get("mana", 0)))
 			if skill.get("source523", {}).get("applied", []).has("mana"):
 				world.hud.show_message("%s · MP %d 회복" % [str(skill.name), world.mp - before_mp])
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"teleport":
 			world._clear_combat_actions()
 			world.player.global_position = teleport_landing
 			world.player.clear_click_path()
 			world.player.camera.reset_smoothing()
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"taunt":
 			for monster: TwilightMonster in targets(skill, null): monster.aggro_remaining = maxf(monster.aggro_remaining, float(skill.duration))
 			vfx.emit_skill(id, "impact", world.player.global_position)
+			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"toggle_proc":
 			toggles[id] = not bool(toggles.get(id, false))
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
@@ -366,6 +370,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 		if str(skill.mode) == "status":
 			if status.apply(skill, target, world):
 				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
+				_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 				vfx.maintain_status(presentation_id(skill), target, str(skill.get("status", "")))
 			else: vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			continue
@@ -413,6 +418,7 @@ func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	# roll or recursive on-hit proc attached to this instant-death effect.
 	target.take_damage(target.hp, false, "turnUndead")
 	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
+	_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
 	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
@@ -492,6 +498,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 		shields[str(skill.id)] = {"amount":mini(cap, before + effective - maximum),"remaining":float(skill.get("shield_duration",skill.get("duration", 12)))}
 	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty(): apply_buff(skill)
 	vfx.emit_skill(str(skill.id), "impact", world.player.global_position)
+	_emit_verified_source_effect(skill, "impact", world.player.global_position)
 
 func break_attack_buffs() -> void:
 	for name: String in world.active_skill_buffs.keys():
@@ -501,6 +508,7 @@ func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	var count := mini(limit, int(stacks.get(id, {}).get("count", 0)) + 1)
 	stacks[id] = {"count":count,"stats":stats,"remaining":duration}
 	vfx.emit_skill(id, "impact", world.player.global_position)
+	_emit_verified_source_effect({"id":id}, "impact", world.player.global_position)
 
 func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
 	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
@@ -527,6 +535,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					marks[key] = {"target":weakref(target),"life_id":target.life_id,"count":count,"remaining":10.0}
 					status.set_modifiers(target, "mark:" + id, 10.0, {"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count})
 					vfx.emit_skill(id, "impact", target.combat_hit_position())
+					_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
 					if count >= int(skill.get("stacks", 3)):
 						deal_damage(skill, target)
 						var control := skill.duplicate(true)
@@ -555,6 +564,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 				if skill.has("mana"):
 					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
 					vfx.emit_skill(id, "impact", world.player.global_position)
+					_emit_verified_source_effect(skill, "impact", world.player.global_position)
 				if skill.has("power") and event == "on_hit" and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:

@@ -197,6 +197,12 @@ a shared texture-cache budget across its independent child layers, and the
 caller conservatively reserves its existing available effect-byte budget.
 Original member-byte progress is not mixed with that runtime texture budget.
 
+The skill service also delegates its existing non-damage impact presentation
+sites to the same source helper: cleanse, mana conversion, teleport, taunt,
+successful status and turn-undead results, healing, stacks, marks and mana
+procs. Each call uses the existing event point and the service's already loaded
+source profile. It adds no success/failure mapping or new gameplay event.
+
 The subsequent local aura bridge follows the existing World/subslot
 `source_awakening_aura.configure` and process calls. Its activation still comes
 only from the existing ownership/status service. It matches the bounded twelve
