@@ -167,11 +167,65 @@ func current_group()->int:
  return 0
 func source_id(record:Dictionary)->int:
  # Exact adapter only. Hashed historical IDs and names never become source IDs.
- var value:Variant=record.get('source_spell_class_id',record.get('spell_class_id'))
- if value==null:
-  var identity:Dictionary=record.get('fields',{}).get('basic',{}).get('original_skill_id',{})
-  if identity.get('status')=='VERIFIED' and identity.get('domain')=='SpellClass.ID':value=identity.get('value')
+ var explicit:Dictionary=_explicit_source_claim(record)
+ if explicit.present:return _source_id_value(explicit.value)
+ return _accepted_bound_source_id(record)
+
+static func _source_id_value(value:Variant)->int:
  return int(value) if (value is int or value is float) and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>0 and float(value)<=1000000000 else 0
+
+static func _explicit_source_claim(record:Dictionary)->Dictionary:
+ # Keep the original two-step resolution: a null direct value may still use
+ # the existing valid VERIFIED legacy claim. Presence only blocks the NEW
+ # bound fallback; it must not erase an old successful legacy resolution.
+ var value:Variant=record.get('source_spell_class_id',record.get('spell_class_id'))
+ var identity:Dictionary={}
+ var fields:Variant=record.get('fields',{})
+ if fields is Dictionary:
+  var basic:Variant=fields.get('basic',{})
+  if basic is Dictionary:
+   var claim:Variant=basic.get('original_skill_id',{})
+   if claim is Dictionary:identity=claim
+ var verified:bool=identity.get('status')=='VERIFIED'
+ if value==null and verified and identity.get('domain')=='SpellClass.ID':value=identity.get('value')
+ return {'present':record.has('source_spell_class_id') or record.has('spell_class_id') or verified,'value':value}
+
+func _accepted_bound_source_id(record:Dictionary)->int:
+ # This is the already accepted public canonical binding, not name matching,
+ # hash decoding, skill registration, ownership or a new group choice.
+ if not is_instance_valid(world):return 0
+ var service:Variant=world.get('original_skills')
+ if not service is Object or not is_instance_valid(service):return 0
+ var catalog:Variant=service.get('catalog')
+ if not catalog is Object or not is_instance_valid(catalog):return 0
+ var canonical_id:Variant=record.get('id')
+ var canonical_rows:Variant=catalog.get('by_id')
+ if not canonical_id is String or canonical_id.is_empty() or not canonical_rows is Dictionary:return 0
+ var canonical:Variant=canonical_rows.get(canonical_id)
+ if not canonical is Dictionary or canonical.get('id')!=canonical_id or _explicit_source_claim(canonical).present:return 0
+ var adapter:Variant=catalog.get('source523')
+ if not adapter is Object or not is_instance_valid(adapter) or not adapter.has_method('_profile_problem'):return 0
+ var profile_type:Script=adapter.get_script()
+ if profile_type==null:return 0
+ var constants:Dictionary=profile_type.get_script_constant_map()
+ if constants.get('BINDINGS_PATH')!='res://data/skills/player_skills523_bindings.json' or constants.get('SOURCE_SHA')!=SOURCE_SHA:return 0
+ var bindings:Variant=adapter.get('bindings')
+ var profiles:Variant=adapter.get('profiles')
+ if not bindings is Dictionary or not profiles is Dictionary or bindings.get('source_zip_sha256')!=SOURCE_SHA or not bindings.get('skills') is Dictionary:return 0
+ var binding:Variant=bindings.skills.get(canonical_id)
+ var profile:Variant=profiles.get(canonical_id)
+ if not binding is Dictionary or not profile is Dictionary or not profile.get('row') is Dictionary:return 0
+ var bound_sha:Variant=binding.get('row_sha256')
+ if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false):return 0
+ var id:int=_source_id_value(binding.get('spell_id'))
+ if id==0 or _source_id_value(profile.row.get('ID'))!=id or not adapter._profile_problem(canonical_id,profile,binding).is_empty():return 0
+ if source_input_identity.get('kind')!='twilight.spell-group.current523.input.v1' or source_input_identity.get('source_snapshot')!='patch523' or source_input_identity.get('archive_sha256')!=SOURCE_SHA or source_input_identity.get('source_sha256')!=SOURCE_SHA:return 0
+ var identity:Dictionary=CommonSource.identity()
+ if identity.is_empty() or identity.get('source_sha256')!=SOURCE_SHA:return 0
+ var original:Dictionary=CommonSource.row('SpellClass',id)
+ if original.is_empty() or original!=profile.row or original.get('TestSpell') is not bool or original.TestSpell or not CommonSource.declared_exclusion('SpellClass',original).is_empty():return 0
+ if members.has(id) and (not members[id] is Dictionary or members[id]!=original):return 0
+ return id
 
 func owns_source(id:int)->bool:
  for record:Dictionary in world.original_skills.catalog.records:

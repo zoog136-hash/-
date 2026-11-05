@@ -88,6 +88,28 @@ describes energy bolt's target within10 cells. This supports distance context;
 it does not establish the internal523 raw unit or a host-length conversion.
 The independent scale settings therefore remain explicit estimates.
 
+The existing spell-group identity reader also now accepts the established
+current public skill binding. `spell_group_conversion.source_id(record)`
+retains the direct native-ID then VERIFIED legacy-claim resolution and its
+existing numeric bounds. Only when those claims are absent does private
+`_accepted_bound_source_id(record)` read the already accepted canonical
+catalog.source523 profile/binding, exact root SHA, full current SpellClass
+row and same held archive/group-input pin. Registered canonical IDs are used
+verbatim; no name matching, hash decoding, cross-version ID guess or new
+identity namespace is introduced. A current member row, if present, must
+exactly equal that original. Test/dummy/invalid/missing input does not supply
+a new fallback identity.
+
+The ID goes directly into existing `allows(record)` membership/mastery and
+`owns_source(id)` prerequisite queries. Their group choice, ordinary ownership
+checks, conversion quotes, costs, replacement rules and saved state stay.
+After the original legacy resolution, a remaining explicit invalid/null ID
+or VERIFIED claim cannot be bypassed with a bound alternative. A direct null
+followed by valid VERIFIED legacy identity still resolves exactly as before.
+This is a data-to-reader connection for known canonical bindings, not a new
+spell grant, payment or save engine. It is uncompiled/unexecuted/unverified
+and does not complete SpellClass or prove actual group conversion.
+
 The existing skill-learning reader now consumes exact original class/level
 conditions as well. `skill_catalog.minimum_level_for(record)` reads the
 private `_source_learning_input(record)`; actual new purchase/learning
