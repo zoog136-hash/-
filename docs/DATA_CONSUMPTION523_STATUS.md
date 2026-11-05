@@ -1249,6 +1249,31 @@ set Priority orders. No guessed sorting/admission rule or unused lookup field
 is added. This is that specific consumer's missing contract, not a new audit or
 whole-source blocker classification.
 
+The held recommendation type declarations were read directly for this input
+implementation: they distinguish fixed/history/class/equipment-grade/inventory
+contexts and declare typed parameter units such as ClassID, EquipSlotID,
+GradeID and ItemClassID/Value. Those declarations establish the parameter
+namespace, not grade comparison direction, history scope, count/custody scope
+or Priority's role. The mobile team's
+[27 May2020 patch notes](https://lineagem.plaync.com/board/update/view?articleId=5ecd42aed54e640001fd5d23)
+describe equipment/craftable recommendations refreshed randomly when the
+crafting main screen opens. This historical description does not establish the
+current523 candidate count/grouping/weighting or turn Priority into a global
+recipe sort. No enum operator, new random consumer or eligibility rule is
+estimated; only numeric gaps were authorized for estimates. The actual
+recommendation receiver and these exact selection rules remain prerequisites.
+
+Three other bounded input candidates have no compatible existing receiver:
+PolymorphEntityWeaponLimit's gameplay WeaponTypeID is not the Sprite selector's
+ListSprAction/context weapon enum; no mapping or equipment/use predicate was
+invented. LevelUpEffectDesc's UI type/step/level/order lacks a target information
+reader, so it was not treated as a Sprite event or a new UI. BuffCardSourceView's
+acquisition-display flags are explicitly reference evidence in the public
+acquisition compiler, not permission to invert/replace BuffCard.IsNoMergeOut or
+reweight an existing pool. No unused metadata API was added for these cases.
+These are named consumer contracts, not a reclassification of the frozen712
+unresolved entries or a claim that all those entries share one blocker.
+
 PR269 owns remaining integration, source item ownership/effects and the latest
 231/248/265 handoffs. PR264 owns attendance/pass, source reward consumption,
 jade/grail and ordinary trial backend. PR265 owns its equipment systems. PR267
