@@ -366,6 +366,9 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 	diagnostics = report
 	if not native(value) or npc.is_empty() or int(npc.get("sprite_id", -1)) != int(value.get("source_sprite_id", -2)) or npc.get("source_name") != value.get("source_name"): return {}
 	if not npc.get("attackable", false) or npc.get("test_npc", true): return {}
+	if not preload("res://scripts/quests/source_dummy523.gd").evidence("NpcClass",{"ID":int(id),"Name":npc.get("source_name","")}).is_empty():
+		report["source_dummy_npc_excluded"]=true
+		return {}
 	var groups: Dictionary = {}
 	for row: Dictionary in document.get("drops", {}).get(id, []):
 		# Keep quest-conditioned rows until the separate quest owner supplies

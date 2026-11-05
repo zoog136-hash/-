@@ -293,6 +293,8 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	return _publish(staged,proposal.get("rewards",[]),proposal.get("assumptions",[]))
 
 func observe_staged_owner(overrides: Dictionary) -> Dictionary:
+	if overrides.has("ground_drops") and world!=null and world.get("source_ground_acquisitions")!=null and world.source_ground_acquisitions.authorizes(overrides):
+		return _observe_source_ground_acquisition(overrides)
 	# Read only: a native fishing finish removes its persisted pending cast and
 	# adds exactly one source Fish item. NoMemory catches need no journal entry.
 	if not overrides.has("fishing523") or busy or save_blocked or not problem.is_empty(): return {"ok":true}
@@ -317,6 +319,29 @@ func observe_staged_owner(overrides: Dictionary) -> Dictionary:
 	next.revision = int(next.revision)+1
 	var error: String = validate(next)
 	if not error.is_empty(): return _fail(error)
+	return {"ok":true,"state":next}
+
+func _observe_source_ground_acquisition(overrides: Dictionary) -> Dictionary:
+	# The item owner has sealed exact original drop membership, physical IDs,
+	# quantities and the removed floor record. Reuse the existing event owner.
+	if busy or save_blocked or not problem.is_empty() or not source.ready() or not _source_configured:return {"ok":true}
+	var before: Variant=world.consumable_service.export_state().get("source_ground_acquisitions",{})
+	var after: Variant=overrides.get("consumable_state",{}).get("source_ground_acquisitions",{})
+	if not before is Dictionary or not after is Dictionary:return _fail("원본 습득 이벤트 영수증 형식 오류")
+	var next: Dictionary=state.duplicate(true)
+	var changed: bool=false
+	for id: String in after:
+		if before.has(id):continue
+		var drop: Dictionary=world.ground_loot.records.get(id,{})
+		var receipt: Variant=after[id]
+		if drop.is_empty() or not receipt is Dictionary or int(receipt.get("quantity",0))!=int(drop.get("quantity",-1)):return _fail("원본 습득 이벤트 개체·수량 불일치")
+		var response: Dictionary=_stage_pass_event(next,"pickup",{"amount":int(receipt.quantity),"source_id":native_id(drop.get("item_record",{})),"event_id":id},_fresh_context(next))
+		if not response.get("ok",false):return response
+		changed=changed or bool(response.get("changed",false))
+	if not changed:return {"ok":true}
+	next.revision=int(next.revision)+1
+	var error: String=validate(next)
+	if not error.is_empty():return _fail(error)
 	return {"ok":true,"state":next}
 
 func _fresh_context(candidate: Dictionary) -> Dictionary:

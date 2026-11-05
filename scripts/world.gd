@@ -9,6 +9,7 @@ const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_de
 const EQUIPMENT523_SET_INVOKE = preload("res://scripts/equipment523/set_invoke.gd")
 var equipment523 = EQUIPMENT523_SERVICE.new()
 var alchemy_held_items = preload("res://scripts/equipment523/alchemy_held_use.gd").new()
+var source_ground_acquisitions = preload("res://scripts/loot/source523_ground_acquisition.gd").new()
 
 var patch523_npc_spells = preload("res://scripts/monsters/patch523_npc_combat.gd").new()
 const MONSTERBOOK523_RUNTIME = preload("res://scripts/monsterbook/monsterbook523_runtime.gd")
@@ -3319,20 +3320,28 @@ func _collect_ground_drop(drop: Button) -> bool:
 	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
 		hud.show_message("장비 고유 ID 충돌: 바닥 아이템을 보존했습니다")
 		return false
-	var record: Dictionary = ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
-	if record.is_empty(): return false
-	var item_name: String = str(record["item_name"])
-	var quantity: int = int(record["quantity"])
-	var wallet_item: String = LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record", {}))
-	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
-	var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
-	item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
-	var symbol_pickup: Dictionary = growth.source523.prepare_pickup(record,item_instances,next_item_instance_id)
-	item_instances = symbol_pickup.item_instances; next_item_instance_id = int(symbol_pickup.next_item_instance_id)
-	if wallet_item == "아데나": gold += quantity
+	var acquired: Dictionary=source_ground_acquisitions.collect(self,drop,pending)
+	var record: Dictionary={}
+	var wallet_item: String=""
+	if acquired.get("handled",false):
+		if not acquired.get("ok",false):hud.show_message(str(acquired.get("reason","원본 습득 저장 확인 필요")));return false
+		record=acquired.record
+		wallet_item=LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record",{}))
 	else:
-		var inventory_key: String = wallet_item if not wallet_item.is_empty() else item_name
-		inventory[inventory_key] = int(inventory.get(inventory_key, 0)) + quantity
+		record=ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
+		if record.is_empty():return false
+		wallet_item=LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record",{}))
+		INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
+		var source_pickup: Dictionary=preload("res://scripts/cards/source_awakening_items.gd").prepare_pickup(record,item_instances,next_item_instance_id)
+		item_instances=source_pickup.item_instances;next_item_instance_id=int(source_pickup.next_item_instance_id)
+		var symbol_pickup: Dictionary=growth.source523.prepare_pickup(record,item_instances,next_item_instance_id)
+		item_instances=symbol_pickup.item_instances;next_item_instance_id=int(symbol_pickup.next_item_instance_id)
+		if wallet_item=="아데나":gold+=int(record.quantity)
+		else:
+			var inventory_key: String=wallet_item if not wallet_item.is_empty() else str(record.item_name)
+			inventory[inventory_key]=int(inventory.get(inventory_key,0))+int(record.quantity)
+	var item_name: String=str(record.item_name)
+	var quantity: int=int(record.quantity)
 	_source_dungeon_pickup(record)
 	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
 	quest_service.record_pickup(item_name, quantity)

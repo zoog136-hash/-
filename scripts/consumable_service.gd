@@ -103,6 +103,8 @@ var reusable_state: Variant={}
 
 var source_alchemy_item_uses_present: bool=false
 var source_alchemy_item_uses: Variant={}
+var source_ground_acquisitions_present: bool=false
+var source_ground_acquisitions: Variant={}
 
 var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
@@ -117,6 +119,7 @@ func export_state() -> Dictionary:
 	}
 
 	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
+	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
 	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
 	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
 	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
@@ -124,6 +127,9 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
+	source_ground_acquisitions_present=input is Dictionary and input.has("source_ground_acquisitions")
+	var ground_receipts: Variant=input.get("source_ground_acquisitions",{}) if input is Dictionary else {}
+	source_ground_acquisitions=ground_receipts.duplicate(true) if ground_receipts is Dictionary or ground_receipts is Array else ground_receipts
 	source_alchemy_item_uses_present=input is Dictionary and input.has("source_alchemy_item_uses")
 	var alchemy_uses: Variant=input.get("source_alchemy_item_uses",{}) if input is Dictionary else {}
 	source_alchemy_item_uses=alchemy_uses.duplicate(true) if alchemy_uses is Dictionary or alchemy_uses is Array else alchemy_uses
