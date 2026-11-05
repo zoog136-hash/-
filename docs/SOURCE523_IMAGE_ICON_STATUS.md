@@ -741,6 +741,28 @@ exact arguments, return fields, source-provider scope and remaining input.
 This written connection is unexecuted and unverified; registration, delivery of
 the v14 selection and actual portrait display are separate stages.
 
+### Class/gender main HUD portrait
+
+Original ClassAssets declares distinct HUD/BigHUD/MainHUDPortraitID/Icon roles
+with the composite `(ClassID, GenderID)` key and no single ID. The existing main
+HUD portrait now uses the actual world's native class/gender context and only
+the declared `MainHUDPortraitID`. Data271's original-definition reader supplies
+the exact Class/Gender and unique ClassAssets pair; the existing original-image
+loader supplies the declared asset and original pixel provenance. There is no
+first-row or default-gender choice, ClassID-to-AssetID alias, role substitution,
+new importer, source pack or source UI construction. Character-selection
+portraits remain separate and receive no HUD image by inference.
+
+The shared-file image seam is `hud_v20.gd.set_character_state` and its existing
+portrait TextureRect, without layout/input changes. Successful portraits retain
+their original texture while class/gender and source selection are unchanged.
+Unknown gender, missing/ambiguous source rows and unsupported/excluded assets
+remain unavailable. The existing gender-selection action already refreshes the
+HUD; its state/save behavior is preserved. See
+[the class image contract](SOURCE523_CLASS_IMAGE_CONSUMER_CONTRACT.md) for the
+exact existing data API and source-role limits. These changes are unexecuted
+and unverified; no new tests, game runs, renders, CI or usage counts were added.
+
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
 independent SpellGroup choice and payment/commit data. Shared item views also
