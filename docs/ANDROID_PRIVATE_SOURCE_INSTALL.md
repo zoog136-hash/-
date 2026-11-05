@@ -135,6 +135,21 @@ scenes/files/atlases/blockers 계약을 확인한다. UI267의 화면 mount나 b
 factory는 추정하지 않는다. 메인 HUD 부분팩의 전체 parent metadata가 다른 노드
 활성화나 전체560UI 완료를 뜻하지 않는다.
 
+정식 Combined v6 인계가 공급되면 새 설치·명시적 설치기 업데이트의 기본 UI 입력은
+그 단일 결합 팩이다. 같은 선택기로 HUD·월드맵·normal4/expanded8·퀵슬롯·장착/잠금
+표시를 기존 owner들이 소비한다. 설치기는 후보 manifest를 합치거나 UI를 새로 만들지
+않는다. 원문 selection_contract의 schema/mode/v5 확장 pin과 보존 필드 존재를
+확인하되 retained_base_files/retained_base_node_scopes의 내부 형태는 추측하거나
+다시 쓰지 않는다. 정확한 내용은 공식 원문 manifest pin으로 보존한다.
+
+기존 `--source-ui` pair나 `TWILIGHT_SOURCE_UI` pair가 있으면 기본값으로 덮지
+않으며, 한쪽만 명시된 불완전한 pair도 다른 기본값으로 완성하지 않는다. 다른
+명시 선택을 유지할 때에는 그 선택과 맞지 않는 새 월드맵 cfg도 만들지 않는다.
+이전 v5와 후보·아이콘의 원본 경로는 리소스 버전 정리에서도 보존한다.
+공식 v6의37원본/20장면/19부분범위는 공급 입력 범위이며 전체560UI 완료 수치가 아니다.
+동시 소비·원본 장착/잠금·native touch의 실제 설치 코드 선행 조건도 별도로
+확인하며, 이미지와 실시간 상태의 준비·표시 전환은 기존 원자적 component 소비자에 맡긴다.
+
 월드맵의 등록·문맥·입력·이동은 기존 map owner의
 `configure_from_settings(world)`가 처리한다. 설치기는 등록기를 만들거나 호출하지
 않고 기존 cfg의7개 키만 준비한다: enabled, contract_path, contract_sha256,
@@ -198,7 +213,7 @@ include_prefixes는 `/`로 끝나면 폴더 하위 전체, 그 외는 정확한 
 별도 인벤토리 원본 후보는 기존 `main_ui` 선택과 교체 가능한 후보로만 기록한다.
 현재 공개 계약은 같은 `TWILIGHT_SOURCE_UI`/`TWILIGHT_SOURCE_UI_SHA256` 또는
 `--source-ui`/`--source-ui-sha256` 쌍을 사용하며 별도 인벤토리 선택기가 아니다.
-따라서 v5와 사용자 선택을 자동 교체하거나 두 manifest를 합치지 않고,
+따라서 후보가 v5와 사용자 선택을 자동 교체하거나 두 manifest를 합치지 않고,
 정확한 후보 폴더·manifest·Drive 입력과 코드/노드 선행 조건을 pending으로 둔다.
 normal4 인벤토리 후보를 확장8·PageView 퀵슬롯 후보의 입력으로 계산하지 않는다.
 확장8·퀵슬롯 원본 후보도 별도 폴더·manifest·배포 신원으로 보존한다. 두 후보의

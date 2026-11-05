@@ -92,6 +92,7 @@ func _prepare() -> Dictionary:
 		if descriptor.get("schema") != 1: return _fail("비공개 인계 설정 schema가 다릅니다.")
 	var environment: Dictionary = {}
 	var writes: Array[Dictionary] = []
+	var prepared_main_ui_selected: bool = false
 	if descriptor.has("tables_zip"):
 		var tables: String = _absolute(descriptor.tables_zip)
 		if not _pinned(tables,TABLES_SHA): return {"ok":false}
@@ -116,27 +117,15 @@ func _prepare() -> Dictionary:
 		environment.TWILIGHT_SOURCE523_IMAGES_SHA256 = str(image.manifest_sha256).to_lower()
 	if descriptor.has("main_ui"):
 		if not descriptor.main_ui is Dictionary: return _fail("메인 원본 UI 선택 설정 형식이 다릅니다.")
-		var main_ui: Dictionary = descriptor.main_ui
-		var main_ui_root: String = _absolute(main_ui.get("root"))
-		if main_ui_root.is_empty(): return _fail("메인 원본 UI 팩의 명시적 경로가 없습니다.")
-		var main_ui_manifest: String = main_ui_root.path_join("original_ui.json")
-		if not _pinned(main_ui_manifest,main_ui.get("manifest_sha256")): return {"ok":false}
-		# Match the owning SourcePack limit; this manifest contains native layout
-		# metadata and is not bounded by the small installation descriptor size.
-		read = _json_file(main_ui_manifest,128 * 1024 * 1024)
-		if not read.get("ok",false): return read
-		var main_ui_document: Dictionary = read.value
-		if main_ui_document.get("schema") != "twilight-original-ui-v1" or not main_ui_document.get("scenes") is Dictionary or not main_ui_document.get("files") is Dictionary or not main_ui_document.get("atlases") is Dictionary:
-			return _fail("메인 원본 UI 팩의 공개 계약이 다릅니다.")
-		if not main_ui_document.get("blockers") is Array or not main_ui_document.blockers.is_empty():
-			return _fail("메인 원본 UI 팩에 미해결 입력이 있습니다.")
-		# The existing deferred HUD selection opens the supplied partial pack.
-		# Do not mount other controls or invent a World/coordinate selection here.
-		environment.TWILIGHT_SOURCE_UI = main_ui_root
-		environment.TWILIGHT_SOURCE_UI_SHA256 = str(main_ui.manifest_sha256).to_lower()
+		var ui_selection: Dictionary = _prepare_main_ui(descriptor.main_ui)
+		if not ui_selection.get("ok",false): return ui_selection
+		environment.merge(ui_selection.environment)
+		prepared_main_ui_selected = ui_selection.selected_input
 	if descriptor.has("world_map"):
 		if not descriptor.world_map is Dictionary: return _fail("월드 지도 선택 설정 형식이 다릅니다.")
-		var world_map_write: Dictionary = _prepare_world_map(descriptor.world_map)
+		var world_map_request: Dictionary = descriptor.world_map.duplicate(true)
+		if not prepared_main_ui_selected: world_map_request.ready_for_fresh_install = false
+		var world_map_write: Dictionary = _prepare_world_map(world_map_request)
 		if not world_map_write.get("ok",false): return world_map_write
 		if world_map_write.has("write"): writes.append(world_map_write.write)
 	if descriptor.has("ui_icons"):
@@ -187,6 +176,49 @@ func _prepare() -> Dictionary:
 		if not existing.is_empty() and existing != str(environment[key]):
 			return _fail("이미 명시적으로 선택한 원본 경로와 자동 설치 설정이 충돌합니다: " + key)
 	return {"ok":true,"writes":writes,"environment":environment}
+
+func _prepare_main_ui(value: Dictionary) -> Dictionary:
+	var root: String = _absolute(value.get("root"))
+	if root.is_empty(): return _fail("메인 원본 UI 팩의 명시적 경로가 없습니다.")
+	var explicit_root: String = OS.get_environment("TWILIGHT_SOURCE_UI")
+	var explicit_pin: String = OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")
+	var explicit_choice: bool = not explicit_root.is_empty() or not explicit_pin.is_empty()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--source-ui="):
+			explicit_choice = true
+			explicit_root = argument.trim_prefix("--source-ui=")
+		elif argument.begins_with("--source-ui-sha256="):
+			explicit_choice = true
+			explicit_pin = argument.trim_prefix("--source-ui-sha256=")
+	# Preserve even a partial explicit pair; never complete it with an unrelated
+	# default pin/root. The existing selection owner reports invalid pairs.
+	var matches_input: bool = _absolute(explicit_root) == root and explicit_pin.to_lower() == str(value.get("manifest_sha256","")).to_lower()
+	if explicit_choice and not matches_input:
+		print("기존 명시 원본 UI 선택을 보존했습니다. 설치 기본 선택으로 교체하지 않습니다.")
+		return {"ok":true,"environment":{},"selected_input":false}
+	var manifest: String = root.path_join("original_ui.json")
+	if not _pinned(manifest,value.get("manifest_sha256")): return {"ok":false}
+	var read: Dictionary = _json_file(manifest,128 * 1024 * 1024)
+	if not read.get("ok",false): return read
+	var document: Dictionary = read.value
+	if document.get("schema") != "twilight-original-ui-v1" or not document.get("scenes") is Dictionary or not document.get("files") is Dictionary or not document.get("atlases") is Dictionary:
+		return _fail("메인 원본 UI 팩의 공개 계약이 다릅니다.")
+	if not document.get("blockers") is Array or not document.blockers.is_empty():
+		return _fail("메인 원본 UI 팩에 미해결 입력이 있습니다.")
+	if value.has("expected_composition"):
+		var expected: Variant = value.expected_composition
+		var composition: Variant = document.get("selection_contract")
+		if not expected is Dictionary or not composition is Dictionary: return _fail("정식 결합 UI 선택 계약이 없습니다.")
+		for key: String in ["schema","mode","extends_manifest_sha256"]:
+			if composition.get(key) != expected.get(key): return _fail("정식 결합 UI 선택 계약이 인계와 다릅니다.")
+		if not composition.has("retained_base_files") or not composition.has("retained_base_node_scopes"):
+			return _fail("기존 원본 UI 보존 선언이 없습니다.")
+		# Retention metadata stays opaque under the original manifest hash.
+	var environment: Dictionary = {}
+	if not explicit_choice:
+		environment.TWILIGHT_SOURCE_UI = root
+		environment.TWILIGHT_SOURCE_UI_SHA256 = str(value.manifest_sha256).to_lower()
+	return {"ok":true,"environment":environment,"selected_input":true}
 
 func _land_available(document: Dictionary, land_id: int) -> bool:
 	if not document.get("logical_lands") is Array: return false

@@ -416,6 +416,9 @@ def prepare_resources(plan, downloaded, resources, cache):
         if 'world_map' in plan['bindings']:
             retained.append(plan['bindings']['world_map']['contract_path'])
             retained.extend(x['path'] for x in plan['bindings']['world_map'].get('source_manifests', []))
+        # UI roots remain usable by an explicit existing source-ui selection.
+        # New formal defaults never authorize retiring those original paths.
+        retained.extend(name for name in inventory if name.startswith(('source-ui/', 'ui/')))
         state = {'schema': 1, 'identity': identity, 'files': inventory,
                  'directories': managed_directories(inventory), 'retained_files': retained}
         json_write(stage / RESOURCE_STATE, state)
@@ -470,6 +473,59 @@ def gd_function(source, name):
     return re.sub(r'\s+', '', match.group(0)) if match else ''
 
 
+def source_contract_evidence(code_root, requirements):
+    evidence = {'ready': False, 'files': {}, 'blockers': []}
+    sources = {}
+    if code_root is None:
+        evidence['blockers'].append('Target runtime code is not staged yet')
+        return evidence, sources
+    for name, functions in requirements.items():
+        path = inside(code_root, name)
+        if not path.is_file() or path.stat().st_size > 16 * 1024 * 1024:
+            evidence['blockers'].append('Missing owner module: ' + name)
+            continue
+        source = path.read_text(encoding='utf-8')
+        sources[name] = source
+        evidence['files'][name] = sha256_file(path)
+        for function, markers in functions:
+            body = gd_function(source, function)
+            if not body or any(marker not in body for marker in markers):
+                evidence['blockers'].append('Missing owner boundary: ' + name + ':' + str(function or 'module'))
+    evidence['ready'] = not evidence['blockers']
+    return evidence, sources
+
+
+def combined_ui_code_contract(code_root):
+    requirements = {
+        'scripts/ui/original_ui/source_main_selection.gd': [('selected_pack', ['selection_contract'])],
+        'scripts/ui/original_ui/source_main_hud.gd': [('configure', ['InventoryView.PARENT',
+            'QuickslotView.ROOT', 'candidate.configure(pack,hud,Callable('])],
+        'scripts/ui/original_ui/source_main_inventory_slots.gd': [('_slot_binding', ['Markers.build', 'node_scopes']),
+            ('refresh_slot', ['Markers.build', 'set_bound_visible'])],
+        'scripts/ui/original_ui/source_main_inventory_markers.gd': [('build', ['_is_item_equipped', 'item_locks']),
+            (None, ['EQUIPPED', '8328', 'LOCKED', '7304'])],
+        'scripts/ui/original_ui/source_main_quickslot_view.gd': [('_stage', ['build_group(group)',
+            'pages.register_original_page(page,PANEL,int(model.pages[group]))',
+            'pages.set_page_index(int(model.pages[group]))'])],
+        'scripts/ui/original_ui/source_main_quickslot_bindings.gd': [('build_group', []),
+            (None, ['1628', '1360', '1104', '848', '592', '18488'])],
+        'scripts/ui/original_ui/source_main_quickslot_images.gd': [(None, [])],
+        'scripts/ui/original_ui/source_page_view.gd': [('register_original_page', []),
+            ('set_page_index', []), ('input_control', [])],
+        'scripts/ui/original_ui/source_button.gd': [('_source_input', ['handle_native_touch',
+            'InputEventScreenTouch', 'InputEventScreenDrag']), ('handle_native_touch', ['event.canceled',
+            '_dispatch_activation']), ('cancel_native_touch', [])],
+        'scripts/ui/original_ui/source_main_world_map.gd': [('open', ['_register_native_button(map_all.player,29552)',
+            '7440', '4508']), ('_register_native_button', ['source_button', 'handle_native_touch']),
+            ('_input', ['InputEventScreenTouch', 'InputEventScreenDrag', 'handle_native_touch',
+                        '_forward_native_scroll', 'set_input_as_handled']),
+            ('_forward_native_scroll', ['_route_source_input(local)']),
+            ('_cancel_native_input', ['cancel_native_touch'])],
+    }
+    evidence, _ = source_contract_evidence(code_root, requirements)
+    return evidence
+
+
 def world_map_code_contract(code_root):
     # These are existing owner interfaces/call boundaries, not PR-number or
     # filename-only assertions. Changed code is read from the actual Git stage.
@@ -519,23 +575,9 @@ def world_map_code_contract(code_root):
             'TWILIGHT_SOURCE_UI_SHA256', '.open('])],
         'scripts/ui/original_ui/source_pack.gd': [('open', []), (None, ['twilight-original-ui-v1', 'original_ui.json'])],
     }
-    evidence = {'ready': False, 'files': {}, 'blockers': []}
+    evidence, sources = source_contract_evidence(code_root, requirements)
     if code_root is None:
-        evidence['blockers'].append('Target runtime code is not staged yet')
         return evidence
-    sources = {}
-    for name, functions in requirements.items():
-        path = inside(code_root, name)
-        if not path.is_file() or path.stat().st_size > 16 * 1024 * 1024:
-            evidence['blockers'].append('Missing owner module: ' + name)
-            continue
-        source = path.read_text(encoding='utf-8')
-        sources[name] = source
-        evidence['files'][name] = sha256_file(path)
-        for function, markers in functions:
-            body = gd_function(source, function)
-            if not body or any(marker not in body for marker in markers):
-                evidence['blockers'].append('Missing owner boundary: ' + name + ':' + str(function or 'module'))
     project = inside(code_root, 'project.godot')
     if project.is_file():
         evidence['project_sha256'] = sha256_file(project)
@@ -645,6 +687,21 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                 or not isinstance(manifest.get('blockers'), list) or manifest['blockers']):
             raise ValueError('Main UI original pack contract is incomplete or has blockers')
         result['main_ui'] = {'root': str(root), 'manifest_sha256': row['manifest_sha256']}
+        if row.get('expected_composition'):
+            expected = row['expected_composition']
+            composition = manifest.get('selection_contract')
+            if (not isinstance(composition, dict)
+                    or any(composition.get(key) != expected[key]
+                           for key in ('schema', 'mode', 'extends_manifest_sha256'))
+                    or any(key not in composition for key in ('retained_base_files', 'retained_base_node_scopes'))):
+                raise ValueError('Formal combined UI composition handoff does not match its original manifest')
+            # Retention fields stay opaque and unchanged; their exact bytes
+            # are covered by the supplied manifest pin, not a guessed schema.
+            result['main_ui']['expected_composition'] = expected
+            result['main_ui']['owner_code_contract'] = combined_ui_code_contract(code_root)
+            if code_root is not None:
+                for blocker in result['main_ui']['owner_code_contract']['blockers']:
+                    log('COMBINED UI CODE PENDING: ' + blocker)
         main_ui_document = manifest
     if 'world_map' in bindings:
         row = bindings['world_map']
@@ -684,6 +741,11 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                                'coordinate_policy': row['coordinate_policy'],
                                'ratio_scale': scale, 'source_anchor_offset': offset}
         code = world_map_code_contract(code_root)
+        composition_code = result.get('main_ui', {}).get('owner_code_contract')
+        if composition_code is not None:
+            code['files'].update(composition_code['files'])
+            code['blockers'].extend(composition_code['blockers'])
+            code['ready'] = not code['blockers']
         inputs = world_map_input_contract(result, resources, bindings, main_ui_document)
         if activation is None:
             inputs['blockers'].append('Explicit fresh world-map activation choice is absent')
@@ -781,6 +843,7 @@ def clean_owned(root, state, filename):
         # version's original relation. Retain those source paths as well as the
         # new stable copy, including receipts written by older installers.
         if filename == RESOURCE_STATE and (name in state.get('retained_files', [])
+                or name.startswith(('source-ui/', 'ui/'))
                 or PurePosixPath(name).name == 'all331_current_file_identity_and_pixel_anchor_contracts523.json'):
             continue
         path = inside(root, name)
