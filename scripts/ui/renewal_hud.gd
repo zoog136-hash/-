@@ -2660,3 +2660,7 @@ func register_original_ui_content(section: String, focus_kind: String, member: S
 func close_original_ui_content() -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":true,"closed":true}
 	return original_ui_runtime_presenter.close_content()
+
+func mount_original_ui_menu(button_id: int, mount: Node2D) -> Dictionary:
+	if not is_instance_valid(original_ui_runtime_presenter):return {"ok":false,"code":"source_runtime_not_bound"}
+	return original_ui_runtime_presenter.mount_menu(button_id,mount)

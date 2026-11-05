@@ -154,3 +154,12 @@ only previously declared bindings. Text updates stage their fields before
 commit so an unsupported font glyph/layout leaves the prior display data.
 These live-binding changes have not been run or tested under the latest user
 instruction; they do not increase any completion or render count.
+
+`hud.mount_original_ui_menu(button_id, existing_source_mount)` connects the
+already declared original menu components 106/116 to that same runtime's
+`source_ui.request_menu()`. Only one mounted component per original menu ID is
+retained by the presenter; replacing or rebinding disables/frees the old one.
+The caller supplies its existing original-coordinate mount. Unsupported menu
+IDs still fail. This implementation path uses the existing menu adapter and
+contains no generic menu or new pixels. It is also unexecuted/unverified under
+the latest instruction.

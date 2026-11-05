@@ -136,6 +136,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if int(options.get("fontSize",0))<=0: problems.append("invalid_source_font_size")
 	if node.classname=="LoadingBar":
 		var connected: bool=binding.get("role")=="source_percent" and (binding.get("percent") is int or binding.get("percent") is float) and is_finite(float(binding.percent))
+		if binding.get("role")=="source_percent" and not connected:problems.append("source_percent_value_missing")
 		if not connected:unresolved_bindings.append(str(widget.name)+":source_percent_requires_live_binding")
 		if not inspection_only and not connected:problems.append("unconnected_source_percent")
 	if node.classname=="ListView":
@@ -166,6 +167,8 @@ func _build(source: Dictionary) -> Node2D:
 		nested._project_ancestry=_project_ancestry.duplicate()
 		nested._project_ancestry.append(source_member)
 		nested._project_root_options=widget.duplicate(true)
+		var project_binding: Dictionary=_bindings.get(int(source._offset),{})
+		if project_binding.has("visible"):nested._project_root_options.visible=project_binding.visible
 		var result: Dictionary=nested.configure(source_pack,member,inspection_only,_bindings.get(int(source._offset),{}).get("bindings",{}))
 		if not result.ok:
 			_build_error="project_scene_rejected:"+member+":"+str(result)
