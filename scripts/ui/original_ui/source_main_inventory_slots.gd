@@ -34,14 +34,28 @@ func configure(pack: RefCounted, hud: Node, icon_binding_provider: Callable=Call
 	_icon_binding_provider=icon_binding_provider
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
-	return entries()
+	return {"ok":true,"configured":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func entries() -> Dictionary:
 	var bag: Object=_live_bag()
 	if bag==null:return _fail("source_inventory_slots_existing_bag_unavailable")
+	if bag.has_method("prepare_source_inventory_model"):bag.call("prepare_source_inventory_model")
 	var offered: Variant=bag.call("_inventory_entries")
 	var displayed: Variant=bag.get("legacy_rows")
 	if not offered is Array or not displayed is Array:return _fail("source_inventory_slots_existing_entries_unavailable")
+	# Renewal's existing owner keeps its filtered acquisition order in
+	# sorted_references instead of the base bag's legacy_rows. Reuse that
+	# exact order and resolve entries by their opaque reference, never re-sort.
+	var ordered: Variant=bag.get("sorted_references")
+	if ordered is Array:
+		if bag.get("inventory_grid_dirty")==true:return _fail("source_inventory_slots_current_owner_model_dirty")
+		displayed=[]
+		for reference: String in ordered:
+			var matches: Array=[]
+			for entry: Dictionary in offered:
+				if entry.get("reference")==reference:matches.append(entry)
+			if matches.size()!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
+			displayed.append(matches[0])
 	return {"ok":true,"owned_entries":offered.duplicate(true),"current_display_rows":displayed.duplicate(true),"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot") -> Dictionary:
@@ -60,12 +74,14 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	var set_bindings: Dictionary={}
 	var set_scope: Array[int]=[]
 	var unresolved: Array=[]
+	var owner_results: Dictionary={}
 	for offset: int in authored.slots:
 		set_scope.append(offset)
 		var reference: String=str(assignments.get(offset,""))
 		var slot: Dictionary=_slot_binding(offset,reference)
 		if not slot.get("ok",false):return slot
 		set_bindings[offset]=slot.binding
+		if slot.has("owner_result"):owner_results[offset]=slot.owner_result
 		unresolved.append_array(slot.unresolved_fields)
 	# The exact authored variant is selected explicitly by the host. Its
 	# original parent geometry is untouched; no capacity/page rule is derived.
@@ -76,7 +92,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	if scroll_binding.get("role")=="source_scroll" and scroll_binding.get("input") is Callable and scroll_binding.input.is_valid():
 		parent_bindings[scroll_offset]=scroll_binding.duplicate(true)
 	else:unresolved.append({"field":"existing_native_scroll_input_binding","offset":scroll_offset,"required":"caller source_scroll binding with existing input Callable"})
-	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
+	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
 
 func refresh_slot(slot_scene: Node2D, reference: String) -> Dictionary:
 	if not is_instance_valid(slot_scene) or str(slot_scene.get("source_member"))!=SLOT_MEMBER:return _fail("source_inventory_slots_original_scene_required")
@@ -131,20 +147,15 @@ func _slot_binding(offset: int, reference: String) -> Dictionary:
 		# Text_Amount is preview-hidden. An actual owned entry supplies its
 		# amount before making this existing original text node visible.
 		bindings[AMOUNT]={"role":"source_text","text":str(entry.amount),"visible":true}
-		if _icon_binding_provider.is_valid():
-			# The existing image consumer supplies a ready renderer binding;
-			# this helper never resolves assets or draws substitute pixels.
-			var supplied: Variant=_icon_binding_provider.call(entry.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":offset})
-			if not supplied is Dictionary:return _fail("source_inventory_slots_existing_icon_binding_invalid")
-			if supplied.has("ok"):
-				if not supplied.get("ok",false):return supplied
-				supplied=supplied.get("binding")
-			if not supplied is Dictionary or supplied.get("role")!="source_asset" or not supplied.get("asset_ref") is Dictionary:return _fail("source_inventory_slots_existing_icon_binding_required")
-			scope.append(ICON)
-			bindings[ICON]=supplied.duplicate(true)
-			# Only the successful existing consumer enables the original icon.
-			bindings[ICON].visible=true
-		else:unresolved.append({"field":"existing_item_image_binding","slot_project_offset":offset,"reference":reference,"member":SLOT_MEMBER,"node_offset":ICON,"sample_image_included":false})
+		if not _icon_binding_provider.is_valid():return {"ok":false,"handled":false,"code":"source_inventory_slots_existing_icon_provider_required","reference":reference,"slot_project_offset":offset}
+		# The current image owner provides pixels/provenance, not an asset-ref
+		# for a second lookup. Native renderer handles its existing upload API.
+		var supplied: Variant=_icon_binding_provider.call(entry.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":offset,"reference":reference})
+		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
+		if not supplied.get("ok",false) or not supplied.get("texture") is Texture2D:return {"ok":false,"handled":false,"code":"source_inventory_slots_owned_icon_unavailable","reference":reference,"slot_project_offset":offset,"owner_result":supplied}
+		scope.append(ICON)
+		bindings[ICON]={"role":"source_asset_slot","visible":false}
+		return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"owner_result":supplied,"unresolved_fields":unresolved}
 	return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"unresolved_fields":unresolved}
 
 func _resolve_reference(reference: String) -> Dictionary:

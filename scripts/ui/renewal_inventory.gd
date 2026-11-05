@@ -347,9 +347,21 @@ func _refresh_inventory_grid() -> void:
 	# only the expensive slot controls and item visuals wait for an open bag.
 	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
 		return
+	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
+	prepare_source_inventory_model()
+	visible_first_row = -1
+	_refresh_visible_window()
+	_refresh_weight()
+	_reflow()
+	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
+
+func prepare_source_inventory_model() -> void:
+	# The same owner reference/filter/order producer can serve a native CSB
+	# while these older controls are hidden. Keep its existing UI preference
+	# normalization; do not duplicate filters/order or rebuild another grid.
+	if not inventory_grid_dirty:return
 	inventory_grid_dirty = false
 	inventory_list_rebuilds += 1
-	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
 	sorted_references.clear()
 	var entries: Array[Dictionary] = _inventory_entries()
@@ -363,11 +375,6 @@ func _refresh_inventory_grid() -> void:
 		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
 			sorted_references.append(reference)
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
-	visible_first_row = -1
-	_refresh_visible_window()
-	_refresh_weight()
-	_reflow()
-	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
 
 func _new_reusable_slot() -> Button:
 	var button := Button.new()

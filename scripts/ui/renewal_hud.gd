@@ -785,6 +785,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		if original_inventory_is_open():
+			original_main_ui_controller.close_inventory()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():
 			original_main_ui_controller.close_world_map()
 			get_viewport().set_input_as_handled()
@@ -810,6 +815,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -852,6 +858,7 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
 	if active_section=="emblems" and section!="emblems": get_parent().growth.rerolls.clear()
@@ -1223,6 +1230,10 @@ func open_combat_log() -> void:
 	combat_log_view = history
 
 func toggle_inventory() -> void:
+	if original_inventory_is_open():
+		original_main_ui_controller.close_inventory()
+		_close_workspace()
+		return
 	if active_section=="inventory" and workspace.visible:
 		_close_workspace()
 		return
@@ -1230,6 +1241,12 @@ func toggle_inventory() -> void:
 	workspace.mount(lineage_inventory_ui)
 	lineage_inventory_ui.show()
 	lineage_inventory_ui.show_inventory()
+	if is_instance_valid(original_main_ui_controller):
+		var native: Dictionary=original_main_ui_controller.try_open_inventory()
+		original_main_ui_status["inventory"]=native
+		if native.get("handled",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
 
 func open_character() -> void:
 	_open_window("character","캐릭터 정보","")
@@ -2676,6 +2693,45 @@ var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
 var _original_world_map_inputs: Dictionary={}
 
+func original_inventory_is_open() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
+
+func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
+	if not original_inventory_is_open():return {}
+	var hit: Dictionary=original_main_ui_controller.inventory_hit_at(viewport_point)
+	if not hit.is_empty():hit["source_native"]=true
+	return hit
+
+func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
+	if not is_instance_valid(original_main_ui_controller):return false
+	if original_main_ui_controller.world_map_is_open():return true
+	return original_main_ui_controller.inventory_blocks_point(viewport_point)
+
+func original_inventory_gesture_bounds() -> Control:
+	return original_main_ui_controller.inventory_gesture_bounds() if original_inventory_is_open() else null
+
+func original_inventory_select(reference: String) -> Dictionary:
+	if not original_inventory_is_open():return {"ok":false,"code":"source_inventory_not_open"}
+	return original_main_ui_controller.inventory_select(reference)
+
+func original_inventory_activate_selected(reference: String) -> Dictionary:
+	if not original_inventory_is_open():return {"ok":false,"code":"source_inventory_not_open"}
+	return original_main_ui_controller.inventory_activate_selected(reference)
+
+func _restore_current_inventory_view(reason: Dictionary) -> void:
+	original_main_ui_status["inventory"]=reason.duplicate(true)
+	if active_section!="inventory":return
+	# Restore the same current bag after an unsupported native state. This
+	# adds no alternate form, asset lookup, selection, ownership or save logic.
+	if pointer_transfer!=null:pointer_transfer.cancel()
+	if workspace!=null:workspace.show()
+	lineage_inventory_ui.show()
+	lineage_inventory_ui.show_inventory()
+
+func _original_inventory_closed() -> void:
+	if pointer_transfer!=null:pointer_transfer.cancel()
+	if active_section=="inventory" and workspace!=null and not workspace.visible:active_section=""
+
 func bind_original_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	if image_adapter==null or not context_provider.is_valid() or not input_handler.is_valid():return {"ok":false,"code":"source_world_map_existing_owner_inputs_required"}
 	if not is_instance_valid(original_main_ui_controller):
@@ -2716,6 +2772,8 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		original_main_ui_controller.release(false)
 		original_main_ui_controller.queue_free()
 	original_main_ui_controller=candidate
+	candidate.inventory_return_to_current_requested.connect(_restore_current_inventory_view)
+	candidate.inventory_closed.connect(_original_inventory_closed)
 	candidate.world_image_clicked.connect(func(payload: Dictionary) -> void: original_world_map_image_clicked.emit(payload))
 	var map_registration: Dictionary={}
 	if not _original_world_map_inputs.is_empty():

@@ -63,8 +63,8 @@ func build(remaining: Dictionary={}) -> Dictionary:
 	# Received tab/close subtrees contain only their original Sprite icons
 	# and title textures; they serialize no Text/TextBMFont literal children.
 	# Do not manufacture text labels or bind nearby dynamic preview strings.
-	var roots: Array[int]=[CLOSE]
-	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"close")}}
+	var roots: Array[int]=[CLOSE,60672,59888,59516,59136,58756,58376]
+	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"close")},60672:{"role":"consume"}}
 	for category: String in TABS:
 		var variants: Array=TABS[category]
 		for index: int in range(variants.size()):
@@ -73,6 +73,7 @@ func build(remaining: Dictionary={}) -> Dictionary:
 			bindings[offset]={"role":"button","activate":Callable(self,"select_category").bind(category),"visible":(model.category==category) if index==0 else (model.category!=category)}
 	if model.has("gold_text"):
 		roots.append(GOLD_TEXT)
+		roots.append(13052)
 		bindings[GOLD_TEXT]={"role":"source_text","text":model.gold_text}
 	if model.has("capacity_text"):
 		roots.append(CAPACITY_TEXT)

@@ -10,7 +10,11 @@ const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.g
 const MainMap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
 const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.gd")
 const WorldMap=preload("res://scripts/ui/original_ui/source_main_world_map.gd")
+const InventoryView=preload("res://scripts/ui/original_ui/source_main_inventory_view.gd")
+const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 signal world_image_clicked(payload: Dictionary)
+signal inventory_return_to_current_requested(reason: Dictionary)
+signal inventory_closed
 const MAIN="UI/MainScene.csb"
 const MAIN_SHA="80c174a87caf5cfbf910336b64616334ac560ed477f7a663aec58ada70d4285f"
 const EXP_PROJECT=23080
@@ -60,6 +64,9 @@ var _target_model: Dictionary={}
 var _target_mount_attempted: bool=false
 var _combat_owns_pickup: bool=false
 var _world_map: Node
+var _inventory_view: RefCounted
+var _inventory_result: Dictionary={}
+var _inventory_signature: int=0
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -88,15 +95,29 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
+	if pack.manifest.get("scenes",{}).has(InventoryView.PARENT):
+		var candidate=InventoryView.new()
+		_inventory_result=candidate.configure(pack,hud,Callable(self,"_inventory_original_image"))
+		if _inventory_result.get("ok",false):
+			_inventory_view=candidate
+			candidate.return_to_current_requested.connect(func(reason: Dictionary) -> void: inventory_return_to_current_requested.emit(reason))
+			candidate.closed.connect(func() -> void: inventory_closed.emit())
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup)
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null)
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if inventory_is_open():
+		var pointer: Variant=hud.get("pointer_transfer")
+		if not is_instance_valid(pointer) or pointer.get("pointer")==-2:
+			var signature: int=_inventory_model_signature()
+			if signature!=_inventory_signature:
+				_inventory_result=_inventory_view.refresh()
+				_inventory_signature=_inventory_model_signature()
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
@@ -117,6 +138,51 @@ func _process(_delta: float) -> void:
 
 func source_map_label_availability() -> bool:
 	return _legacy_map_name_visible
+
+func _inventory_original_image(entry: Dictionary, native_context: Dictionary) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	return InventoryImages.resolve_owned(hud,entry,native_context)
+
+func try_open_inventory() -> Dictionary:
+	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
+	if not is_instance_valid(_coordinates):return {"ok":false,"handled":false,"code":"source_main_not_configured"}
+	_inventory_result=_inventory_view.open(_coordinates)
+	if _inventory_result.get("handled",false):
+		var presented: Dictionary=_inventory_view.presentation()
+		var native_scene: Node2D=presented.get("scene")
+		if is_instance_valid(native_scene):native_scene.z_index=150
+		_inventory_signature=_inventory_model_signature()
+	return _inventory_result.duplicate(true)
+
+func inventory_is_open() -> bool:
+	return _inventory_view!=null and _inventory_view.is_open()
+
+func close_inventory() -> void:
+	if _inventory_view!=null:_inventory_view.close()
+
+func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
+	return _inventory_view.hit_at(viewport_point) if inventory_is_open() else {}
+
+func inventory_blocks_point(viewport_point: Vector2) -> bool:
+	return inventory_is_open() and _inventory_view.blocks_point(viewport_point)
+
+func inventory_gesture_bounds() -> Control:
+	return _inventory_view.gesture_bounds() if inventory_is_open() else null
+
+func inventory_select(reference: String) -> Dictionary:
+	return _inventory_view.select(reference) if inventory_is_open() else _fail("source_inventory_not_open")
+
+func inventory_activate_selected(reference: String) -> Dictionary:
+	return _inventory_view.activate_selected(reference) if inventory_is_open() else _fail("source_inventory_not_open")
+
+func _inventory_model_signature() -> int:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
+	if not is_instance_valid(bag):return 0
+	var search: Variant=bag.get("search_line")
+	var grid: Variant=bag.get("item_grid")
+	var state: Variant=bag.get("character_state")
+	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null])
 
 func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -383,6 +449,7 @@ func release(restore_legacy: bool=true) -> void:
 	_restore_legacy=restore_legacy
 	set_process(false)
 	if is_instance_valid(_world_map):_world_map.close()
+	close_inventory()
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas!=null and canvas.resized.is_connected(_fit_source_coordinates):canvas.resized.disconnect(_fit_source_coordinates)
 	if is_instance_valid(_coordinates):

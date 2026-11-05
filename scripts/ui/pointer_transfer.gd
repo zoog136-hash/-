@@ -63,6 +63,10 @@ func _source_at(point: Vector2) -> Dictionary:
 	if hud.class_picker_initial: return {}
 	for child: Node in hud.get_node("Root").get_children():
 		if child.name == "TwilightConfirmation" and not child.is_queued_for_deletion(): return {}
+	if hud.has_method("original_inventory_hit_at"):
+		var native: Dictionary=hud.original_inventory_hit_at(point)
+		if not native.is_empty():return native
+	if hud.has_method("original_source_pointer_capture_blocked") and hud.original_source_pointer_capture_blocked(point):return {}
 	for i: int in range(hud.v20_quickslot_buttons.size()):
 		if inside(hud.v20_quickslot_buttons[i],point) and (not hud.workspace.visible or not inside(hud.workspace,point)):
 			var slot: int = hud.quickslot_index(i)
@@ -168,7 +172,7 @@ func _input(event: InputEvent) -> void:
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar
-			if source.from == "inventory": bar = hud.lineage_inventory_ui.grid_scroll.get_v_scroll_bar()
+			if source.from == "inventory" and not bool(source.get("source_native",false)): bar = hud.lineage_inventory_ui.grid_scroll.get_v_scroll_bar()
 			elif source.from == "skill" and is_instance_valid(hud.skills_view): bar = hud.skills_view.cards.get_v_scroll_bar()
 			elif source.from == "warehouse" and is_instance_valid(hud.transaction_view): bar = hud.transaction_view.listing.get_v_scroll_bar()
 			if bar != null: bar.value -= (position-previous).y
@@ -195,7 +199,8 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if pointer == -2: return
 	elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
-	if source.from == "inventory" and not hud.lineage_inventory_ui.is_visible_in_tree() or source.from == "skill" and (not hud.workspace.visible or hud.active_section != "skills"):
+	var inventory_visible: bool=hud.original_inventory_is_open() if bool(source.get("source_native",false)) else hud.lineage_inventory_ui.is_visible_in_tree()
+	if source.from == "inventory" and not inventory_visible or source.from == "skill" and (not hud.workspace.visible or hud.active_section != "skills"):
 		cancel()
 		return
 	if source.from == "warehouse" and (not hud.workspace.visible or hud.active_section != "warehouse" or not is_instance_valid(hud.transaction_view) or hud.transaction_view.mode.selected != 1):
@@ -213,15 +218,22 @@ func _tap() -> void:
 			else: hud.quickslot_pressed.emit(int(source.slot))
 		"inventory":
 			var reference: String = str(source.id)
-			if not hud.lineage_inventory_ui.slot_buttons.has(reference):
+			var native: bool=bool(source.get("source_native",false))
+			if not native and not hud.lineage_inventory_ui.slot_buttons.has(reference):
 				reset_tap_history()
 				return
 			var now: int = Time.get_ticks_msec()
 			var activate: bool = last_tap_id == reference and now-last_tap_at <= DOUBLE_TAP_MS and position.distance_to(last_tap_position) <= 24.0 and last_tap_touch == (pointer >= 0) and hud.lineage_inventory_ui.selected_item == reference
-			hud.lineage_inventory_ui._select_item(reference)
+			if native:
+				var selected: Dictionary=hud.original_inventory_select(reference)
+				if not selected.get("ok",false):
+					reset_tap_history()
+					return
+			else:hud.lineage_inventory_ui._select_item(reference)
 			if activate:
 				reset_tap_history()
-				hud.lineage_inventory_ui._activate_selected()
+				if native:hud.original_inventory_activate_selected(reference)
+				else:hud.lineage_inventory_ui._activate_selected()
 			else:
 				last_tap_id = reference
 				last_tap_at = now
@@ -246,6 +258,7 @@ func _show_drag() -> void:
 	reset_tap_history()
 	suppress_click = true
 	preview.texture = source.get("texture")
+	preview.material = preload("res://scripts/ui/original_ui/source_material.gd").original_default(preview.texture) if bool(source.get("source_native",false)) and preview.texture!=null else null
 	preview.position = position-Vector2(31,31)+(L.TOUCH_PREVIEW_OFFSET if pointer >= 0 else Vector2(14,-14))
 	preview.show()
 	remove_target.visible = source.from == "quick" and not source.entry.is_empty()
@@ -286,6 +299,14 @@ func _drop() -> void:
 		if absf(delta.x) < L.QUICK_SIZE*.5 and absf(delta.y) >= L.AUTO_DISTANCE:
 			hud.quickslot_edit_requested.emit("auto_on" if delta.y > 0 else "auto_off",int(source.slot),-1)
 			return
+	if hud.has_method("original_inventory_hit_at"):
+		var native_target: Dictionary=hud.original_inventory_hit_at(position)
+		if not native_target.is_empty():
+			if source.from=="inventory":hud.lineage_inventory_ui.reorder(str(source.id),str(native_target.reference))
+			return
+	# Source chrome owns its pixels/hit region. Never assign an underlying
+	# quickslot or drop an item into the world through the original window.
+	if hud.has_method("original_source_pointer_capture_blocked") and hud.original_source_pointer_capture_blocked(position):return
 	for i: int in range(hud.v20_quickslot_buttons.size()):
 		if not inside(hud.v20_quickslot_buttons[i],position): continue
 		var target: int = hud.quickslot_index(i)
@@ -321,6 +342,7 @@ func _finish_gesture() -> void:
 	mode = ""
 	suppress_click = false
 	if is_instance_valid(preview): preview.hide()
+	if is_instance_valid(preview): preview.material=null
 	if is_instance_valid(hint): hint.hide()
 	if is_instance_valid(remove_target): remove_target.hide()
 	if hud != null:
@@ -328,5 +350,8 @@ func _finish_gesture() -> void:
 		for button: Button in hud.lineage_side_ui.equipment_buttons.values(): button.modulate = Color.WHITE
 
 func _inventory_gesture_frame() -> Control:
+	if bool(source.get("source_native",false)):
+		var native: Control=hud.original_inventory_gesture_bounds()
+		if is_instance_valid(native):return native
 	var bag: Control=hud.lineage_inventory_ui
 	return bag.gesture_bounds() if bag.has_method("gesture_bounds") else bag.inventory_panel
