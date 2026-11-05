@@ -1,6 +1,6 @@
 extends Node2D
-## Original Node/SingleNode/Sprite scenes and their discrete texture/visibility
-## tracks. Unsupported UI classes/tracks are rejected, never drawn as substitutes.
+## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
+## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
 var source_member: String=""
 var source_tree: Dictionary={}
@@ -47,14 +47,20 @@ func configure(pack: RefCounted, member: String) -> Dictionary:
 	return {"ok":true,"nodes":source_nodes.size(),"source":member}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
-	if node.get("classname") not in ["Node","SingleNode","Sprite"]:
+	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
 	var options: Dictionary=node.get("options",{})
-	var widget: Dictionary=options.get("nodeOptions",options)
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
 	if not str(widget.get("customProperty","")).is_empty(): problems.append("custom_property")
+	for field: String in ["frameEvent","callBackType","callBackName"]:
+		if widget.get(field)!=null and not str(widget[field]).is_empty(): problems.append("unconnected_source_callback:"+field)
+	if bool(widget.get("touchEnabled",false)): problems.append("unconnected_source_input")
+	if node.classname=="Panel":
+		if int(options.get("colorType",0))!=0 or not str(options.get("backGroundImageData",{}).get("path","")).is_empty(): problems.append("unsupported_panel_background")
+		if bool(options.get("backGroundScale9Enabled",false)): problems.append("unsupported_panel_scale9")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
 		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
@@ -63,7 +69,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
-	var widget: Dictionary=options.get("nodeOptions",options)
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	var node:=Node2D.new()
 	node.name=str(widget.name)
 	# CCNode::getNodeToParentTransform with the Y axis reflected for Godot.
@@ -105,10 +111,27 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_anchor",widget.anchorPoint)
 		node.set_meta("source_origin",origin)
 		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
+	var child_origin: Node=origin
+	if source.classname=="Panel" and bool(options.clipEnabled):
+		# The original transparent Panel clips its children to the source size.
+		# Control uses top-left coordinates; restore Cocos' bottom-left origin
+		# inside it before adding source children. No replacement pixels.
+		var clip:=Control.new()
+		clip.name="SourceClipRect"
+		clip.position=Vector2(0,-float(widget.size[1]))
+		clip.size=Vector2(widget.size[0],widget.size[1])
+		clip.clip_contents=true
+		clip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		origin.add_child(clip)
+		var clipped_origin:=Node2D.new()
+		clipped_origin.name="SourceClippedOrigin"
+		clipped_origin.position.y=float(widget.size[1])
+		clip.add_child(clipped_origin)
+		child_origin=clipped_origin
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
-		origin.add_child(built)
+		child_origin.add_child(built)
 	return node
 
 func play(source_clip: String, repeat: bool=false) -> Dictionary:

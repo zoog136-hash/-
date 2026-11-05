@@ -84,3 +84,48 @@ Service actions, costs/consumption/results, save failure/restart behavior, whole
 game boot, device execution and source screenshot comparison remain unverified
 for this implementation. PR264/265 generic forms have not been presented as
 original UI. No source-free replacement screens are supplied.
+
+## Follow-up: transparent source clipping and further source lookup
+
+The same branch now supports the supplied transparent, noninteractive Panel
+clipping used by three additional icon effects. Background fills, scale-nine
+panels, interactive panels and source callbacks remain rejected. This adds no
+invented pixels or item identity mappings. The original icon scenes are:
+
+- `UI/CsbFile/icon/Fx_Item_Armor_Pants_Myth_Eodin.csb`
+- `UI/CsbFile/icon/Fx_Item_Armor_Shield_Myth_Eir.csb`
+- `UI/CsbFile/icon/Fx_Myth_Saintpaladin_Incarnation.csb`
+
+Their closure contains three CSBs and nine files, manifest SHA-256
+`566a4a66e894abdb3a761e8c0cca51d95799c52989a097030cab76839d99fb19`.
+OpenGL verification passed 76 checks and saved 12 unchanged-source captures.
+A separate clipping probe moves existing source pixels within the viewport:
+they disappear outside the source Panel and reappear when clipping is disabled.
+This probe is behavioral verification, not a source appearance comparison.
+Six source effect leaves have now rendered. Item-to-effect binding still needs
+verified source identity references; filenames alone do not authorize a mapping.
+
+Both supplied split-archive terminal ZIPs were materialized in this environment.
+Central-directory inspection read all 21,553 entries of `111.zip` and 12,390
+entries of `12.zip`. Neither list contains direct CSB, UI*.dat, Atlas_Alchemy or
+Atlas_Pass entries. These archives list older PC-client trees. Nested container
+contents were not inspected, and no current523 equivalence is asserted. Split
+parts were not downloaded without a relevant member identified.
+
+| Received archive | Bytes | SHA-256 |
+| --- | --- | --- |
+| 111.zip | 72419795 | d05875c0d63da43b890128ae97a556d30f8d790be4bf5bd2f77e61b84f41c49d |
+| 12.zip | 58117920 | b96c6b9a7837a195469c0c6842d807a22f1fd654fd429dc50984d3def3e0145a |
+
+Library title search identified three further candidates, not verified inputs:
+`base508-identity-ui-originals-001.zip` (libfile_11c367e8c1e081918837dc203d15d787),
+`TWILIGHT_523_dungeon_UI_local_evidence_20261104.zip`
+(libfile_76c3a981061081919d9c912846d96d6d), and
+`TWILIGHT_latest523_global_map_UI_world_area_coordinates_zoom_hierarchy_20261104.zip`
+(libfile_99ea256c6f2c8191a0a1b337cf665c14).
+The required Library search-result download helper failed before transfer with
+`hosted apps tools/list request failed with HTTP status 401`. This is an
+**authentication failure**, not an automatic approval denial or proof of missing
+source. No bypass or identical retry was attempted. Their contents remain
+unavailable; earlier received bundles remain usable. The requested 560-item
+scope and remaining 535 dependency-blocked entries are unchanged.
