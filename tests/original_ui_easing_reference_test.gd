@@ -10,7 +10,7 @@ func _initialize() -> void:
 	while not reference.eof_reached():
 		var row=reference.get_csv_line()
 		if row.size()==1 and row[0].is_empty():continue
-		if row.size()!=10:quit(2);return
+		if row.size()!=EASING.SUPPORTED.size()+1:quit(2);return
 		for index: int in range(EASING.SUPPORTED.size()):
 			checks+=1
 			if absf(EASING.sample(EASING.SUPPORTED[index],float(row[0]))-float(row[index+1]))>0.000002:failures+=1
@@ -27,4 +27,4 @@ func _initialize() -> void:
 			checks+=1
 			if EASING.accepts(bad):failures+=1
 	print("ORIGINAL_EASING_REFERENCE ",JSON.stringify({"checks":checks,"failures":failures,"reference":"compiled Cocos 3.6 source; explicit private CSV"}))
-	quit(0 if failures==0 and checks>=9009 else 1)
+	quit(0 if failures==0 and checks>=31031 else 1)

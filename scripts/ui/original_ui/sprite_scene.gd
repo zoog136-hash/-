@@ -19,10 +19,12 @@ var _build_error: String=""
 var _project_ancestry: Array[String]=[]
 var _project_root_options: Dictionary={}
 var _bindings: Dictionary={}
+var excluded_audio_events: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindings: Dictionary={}) -> Dictionary:
 	if not source_tree.is_empty(): return {"ok":false,"error":"already_configured"}
 	unresolved_bindings.clear()
+	excluded_audio_events.clear()
 	_build_error=""
 	inspection_only=inspect_only
 	_bindings=bindings.duplicate()
@@ -39,11 +41,20 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_validate(tree.get("nodeTree",{}),problems)
 	var action: Dictionary=tree.get("action",{}) if tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint"]:
+		if timeline.get("property") not in ["FileData","VisibleForFrame","Position","Scale","RotationSkew","Alpha","CColor","BlendFunc","AnchorPoint","FrameEvent"]:
 			problems.append("unsupported_timeline:"+str(timeline.get("property")))
 		for frame: Dictionary in timeline.get("frames",[]):
 			var value: Dictionary=_frame_value(frame)
 			if value.is_empty(): problems.append("unsupported_frame_union")
+			if timeline.get("property")=="FrameEvent":
+				if value.get("_type")!="EventFrame":problems.append("event_track_type")
+				else:
+					var event: Variant=_optional_dictionary(str(value.value))
+					if event is Dictionary and event.size()==1 and event.get("EventSound") is String:
+						excluded_audio_events.append({"frame":value.frameIndex,"value":value.value,"action_tag":timeline.actionTag})
+					else:
+						unresolved_bindings.append("source_frame_event:"+str(value.value))
+						if not inspection_only:problems.append("unconnected_source_frame_event")
 			var expected: String={"Position":"PointFrame","AnchorPoint":"ScaleFrame","Scale":"ScaleFrame","RotationSkew":"ScaleFrame","Alpha":"IntFrame","CColor":"ColorFrame","BlendFunc":"BlendFrame"}.get(str(timeline.property),"")
 			if not expected.is_empty():
 				if value.get("_type")!=expected: problems.append("numeric_track_type")
@@ -71,7 +82,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		if timeline.property in ["BlendFunc","FileData"] and not _tags[int(timeline.actionTag)].has_meta("source_sprite"):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
-	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate()}
+	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
 func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","Button","LoadingBar"]:
@@ -83,7 +94,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
 	if not str(widget.get("customProperty","")).is_empty():
-		var custom: Variant=JSON.parse_string(str(widget.customProperty))
+		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
 		else:
@@ -402,3 +413,8 @@ static func _blend(options: Dictionary) -> String:
 	var value: Variant=options.get("blendFunc")
 	if not value is Array or value.size()!=2: return ""
 	return str(int(value[0]))+":"+str(int(value[1]))
+
+static func _optional_dictionary(text: String) -> Variant:
+	var parser:=JSON.new()
+	if parser.parse(text)!=OK:return null
+	return parser.data

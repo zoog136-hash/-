@@ -18,7 +18,7 @@
 
 extends RefCounted
 # Original numeric TweenType IDs from cocos2d-x-3.6/cocos/2d/CCTweenFunction.
-const SUPPORTED=[0,1,2,3,4,5,25,27,29]
+const SUPPORTED=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 static func accepts(data: Dictionary) -> bool:
 	var kind: int=int(data.get("type",0))
 	var points: Array=data.get("points",[])
@@ -41,6 +41,53 @@ static func sample(kind: int, t: float, points: Array=[]) -> float:
 		3: return (1.0-cos(PI*t))/2.0
 		4: return t*t
 		5: return t*(2.0-t)
+		6:
+			var u: float=t*2.0
+			if u<1.0:return 0.5*u*u
+			u-=1.0
+			return -0.5*(u*(u-2.0)-1.0)
+		7: return t*t*t
+		8: return pow(t-1.0,3)+1.0
+		9:
+			var u: float=t*2.0
+			return 0.5*u*u*u if u<1.0 else 0.5*(pow(u-2.0,3)+2.0)
+		10: return t*t*t*t
+		11: return 1.0-pow(t-1.0,4)
+		12:
+			var u: float=t*2.0
+			return 0.5*pow(u,4) if u<1.0 else -0.5*(pow(u-2.0,4)-2.0)
+		13: return pow(t,5)
+		14: return pow(t-1.0,5)+1.0
+		15:
+			var u: float=t*2.0
+			return 0.5*pow(u,5) if u<1.0 else 0.5*(pow(u-2.0,5)+2.0)
+		16: return 0.0 if t==0.0 else pow(2.0,10.0*(t-1.0))-0.001
+		17: return 1.0 if t==1.0 else 1.0-pow(2.0,-10.0*t)
+		18:
+			# Preserve the original nonzero endpoint values; no normalization.
+			var u: float=t*2.0
+			return 0.5*pow(2.0,10.0*(u-1.0)) if u<1.0 else 0.5*(-pow(2.0,-10.0*(u-1.0))+2.0)
+		19: return 1.0-sqrt(1.0-t*t)
+		20: return sqrt(1.0-(t-1.0)*(t-1.0))
+		21:
+			var u: float=t*2.0
+			return -0.5*(sqrt(1.0-u*u)-1.0) if u<1.0 else 0.5*(sqrt(1.0-(u-2.0)*(u-2.0))+1.0)
+		22:
+			if t==0.0 or t==1.0:return t
+			return -pow(2.0,10.0*(t-1.0))*sin((t-1.0-0.075)*TAU/0.3)
+		23:
+			if t==0.0 or t==1.0:return t
+			return pow(2.0,-10.0*t)*sin((t-0.075)*TAU/0.3)+1.0
+		24:
+			if t==0.0 or t==1.0:return t
+			var u: float=t*2.0-1.0
+			if u<0.0:return -0.5*pow(2.0,10.0*u)*sin((u-0.075)*TAU/0.3)
+			return 0.5*pow(2.0,-10.0*u)*sin((u-0.075)*TAU/0.3)+1.0
+		26:
+			var u: float=t-1.0
+			return u*u*(2.70158*u+1.70158)+1.0
+		28: return 1.0-bounce(1.0-t)
+		30: return (1.0-bounce(1.0-t*2.0))*0.5 if t<0.5 else bounce(t*2.0-1.0)*0.5+0.5
 		25: return t*t*(2.70158*t-1.70158)
 		27:
 			var s: float=1.70158*1.525

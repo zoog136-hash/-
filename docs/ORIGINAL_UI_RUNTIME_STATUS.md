@@ -367,3 +367,19 @@ features rather than rendered as incomplete screens.
 References:
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UILoadingBar.cpp
 - https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/editor-support/cocostudio/ActionTimeline/CCFrame.cpp
+
+### Source easing and audio-excluded timelines
+
+All 31 standard Cocos 3.6 TweenType functions plus validated custom curves now
+match 37,046 compiled upstream-reference checks. Source exponential endpoint
+quirks and default elastic periods are retained. Parameter shapes outside the
+verified contract are still rejected.
+
+FrameEvent entries containing only a string EventSound are retained in
+`excluded_audio_events` with original frame/tag/value while sound stays excluded.
+Other events remain explicitly unbound and cannot pass strict consumption.
+Malformed source custom properties are rejected without emitting parser errors.
+The targeted 107-entry run accepted 55 and rejected 52 after this change, with
+no script/shader/runtime error lines. CharacterSelect_List_Slot adds one further
+inspection render after easing support. Across disjoint tracked entries, 153
+now have inspection captures; this does not establish their service integration.
