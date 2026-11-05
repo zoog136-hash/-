@@ -354,3 +354,64 @@ registry에 없는 member,원문에 없는 동작/프레임과 실제 SP2에 없
 전체 동작을 미대응으로 남겨 중간 프레임만 다른 이미지로 메우지 않는다. 원문에
 프레임이 없는15899와 미선언24592 등의 추가 파일도 보유만으로 표시하지 않는다.
 원문30개·SP2·팩·세이브는 변경하지 않았고 새 픽셀·프레임을 만들지 않았다.
+
+
+## 보유 다른 소스와 공개 코드에 따른 그림자 연결 후속
+
+추가 원문 탐색이 승인된 뒤 기존1065표 전체를 재감사하지 않고 필요한 Content
+표의 필드를 구현 입력으로 읽었다. SpriteAnimation/Asset는 각각 Delay 및
+SpriteAnimationID/AssetID/Order를 가지며 Map S32의 SPR ID와 같은 네임스페이스로
+대체할 수 없다. SpriteGroupData,EffectSpriteSimplify,SpecialSprite,
+EffectObjectSequentialPlayData,EffectObjectPriority,EffectObjectRestrictDelay,
+SpriteRun,SpriteSeparatedWalk,IgnoreGrayScaleSprite,SkipDamageMotionSprite의
+관련 Sprite 필드에도 대상11개 ID의 파일/별칭 및 해당 shadow/clothes 실행 계약이
+없었다. SpriteSeparatedWalk의 SpriteId0/WalkActionType0은 더미0의 맵 그림이나
+활성 규칙으로 전용하지 않았다. 기존 base508 attach_native_layers.py도 자기 설명상
+blend pending/render_enabled=false인 표본 연결이므로 새로운 M 합성 증거로 쓰지 않았다.
+
+다음 공개 1차 코드는 실제 그림자 그리기 경로를 제공한다.
+
+- [uglyoldbob/l1j-client sprite.cpp 736–751](https://github.com/uglyoldbob/l1j-client/blob/83052f6b1c5bda59d4c4cbaf01aa2e72ea409853/src/widgets/sprite.cpp#L736-L751):
+  부모의 현재 sub_sprite+heading/sub_frame으로 shadow를 같은 x,y에 먼저 그린다.
+- [같은 코드의 sprite_motion.cpp 276–325](https://github.com/uglyoldbob/l1j-client/blob/83052f6b1c5bda59d4c4cbaf01aa2e72ea409853/src/widgets/sprite_motion.cpp#L276-L325):
+  이미지의 저장 위치를 사용하지만 범위 밖 프레임은 마지막 프레임으로 보정한다.
+  이 보정은 가져오지 않았다. 원문에 없는 프레임은 계속 거부한다.
+- [javiercorrea/lineage-cliente pantalla_juego.cpp 348–359](https://github.com/javiercorrea/lineage-cliente/blob/f4d4917ad6d1c2682659ca991408db818711fb8c/src/app/pantalla_juego.cpp#L348-L359):
+  같은 부모 프레임/좌표의 그림자에160/255 알파를 적용한다. 이 값은 공개 PC
+  구현의 수치이지 M 원작 수치가 아니다. 이 프로젝트도 기존l1j-client 테이블을
+  재사용하므로 독립적인 M 원작 증거로 중복 세지 않는다.
+- [tabla_sprites.h 1–11/56–58](https://github.com/javiercorrea/lineage-cliente/blob/f4d4917ad6d1c2682659ca991408db818711fb8c/src/recursos/tabla_sprites.h#L1-L11)와
+  [effect 그리기 560–564](https://github.com/javiercorrea/lineage-cliente/blob/f4d4917ad6d1c2682659ca991408db818711fb8c/src/app/pantalla_juego.cpp#L560-L564)는
+  PC effect의 attr&8을 additive로 사용한다.128/256 및 M의 같은 의미를
+  입증하지 않아 해당 블렌드나 clothes 합성을 자동 적용하지 않았다.
+
+이를 근거로 기존 SPR 소비자에 **기본 꺼짐**인
+`PC_TOOL_PARENT_FRAME_ALPHA160_V1` 호환 정책을 연결했다. 기존 설정 파일
+`user://current523_map_static_spr.cfg`의 display.shadow_policy를 이 문자열로
+명시한 경우에만 사용한다. 기본값은 `DISABLED`이며 기존 설정 화면 저장도
+명시 선택을 보존할 뿐 자동으로 켜지 않는다. 새 UI는 추가하지 않았다.
+
+소비 경로는 M 원문의101.shadow 간선→선언이 있는 자식→같은 ID의 보유 registry
+원본→부모의 실제 선택자/프레임→자식의 원시 bounds를 이용한 선행 그리기다.
+자식의 선언과 실제 파일·같은 저장 그룹·부모 프레임이 모두 있어야 하며,자식
+프레임을 만들거나 범위 밖 값을 마지막 프레임으로 바꾸지 않는다. 자기참조나
+재귀 자식 생성도 하지 않는다. 부모/자식 픽셀은 기존 원본 디코더 그대로 두고
+검은 색을 임의로 투명화하지 않으며 그리기 알파만 공개 PC 정책값으로 지정한다.
+누락/손상 자식은 별도 shadow_issues로 남기고 부모와 현재 게임 상태를 유지한다.
+
+이 경로는 원문 자식 픽셀의 실제 지도 소비 코드를 추가한 것이며 단순 그래프
+등록이나 원작 규칙 확인이 아니다. 직접 S32 배치 수와 호환 정책의 shadow_draws를
+분리하고,실제 Main이 그리기에 제출했을 때만 자식 SP2 frame 및 원문101 참조
+바이트를 기존 부분 소비 기록에 넣도록 연결했다. 이번 구현을 실행하지 않았으므로
+그림자 표시 수나 원본 사용량 증가 수치는 새로 보고하지 않는다.
+
+229건의 필수 원본은 그대로다. ID0에는 프레임 선언이 없고,나머지11개 ID
+1850/1886/1887/3977/3978/3979/3980/3996/3997/3998/3999에는 보유 파일
+registry 및 전역 인계의 파일 위치가 없다. 공개 소스 탐색에서도 현재M 원본
+파일·명시적 별칭/선택 계약을 확보하지 못했으며 PC 원본 이미지로 대체하지 않는다.
+105.clothes의 자식 프레임 상속·합성/활성·M attr128/256 실행 의미도 미완이다.
+공개 PC 코드의105 처리는 count/ID를 읽어 출력하는 수준이며 합성 구현이 아니다.
+기존 Space401 경로 재시도나 자격증명/권한 변경·엔진/APK 탐색은 하지 않았다.
+
+**추가 테스트·검증·품질 평가 실행 없이 작성한 미검증 연결 코드**다.
+이전 Main/재접속 검사 통과를 이번 코드나 그림자 시각 동등성의 통과로 승계하지 않는다.

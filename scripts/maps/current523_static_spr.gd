@@ -7,7 +7,9 @@ const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const SETTINGS = "user://current523_map_static_spr.cfg"
 const POLICY = "TWILIGHT_RAW_S32_STATIC_SPR_V1"
 const DECLARATION_SHA = "03378c1a8b462d60c863e4808298918c6af57161491ef872eb4021aa1e058538"
-const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095,"action_overrides":{},"frame_bindings":{}}
+const SHADOW_OFF="DISABLED"
+const SHADOW_PC="PC_TOOL_PARENT_FRAME_ALPHA160_V1"
+const DEFAULTS = {"enabled":false,"source_root":"","declaration_path":"","group_bit":0,"fps":0.0,"anchor_x":0,"anchor_y":0,"layer":-4095,"action_overrides":{},"frame_bindings":{},"shadow_policy":SHADOW_OFF}
 const MAX_RECORDS = 4096
 const MAX_CACHE_BYTES = 32 * 1024 * 1024
 var problem: String = ""
@@ -18,6 +20,7 @@ var _members: Dictionary = {}
 var _parsed: Dictionary = {}
 var _parsed_recent: Array[String] = []
 var _parsed_bytes: int = 0
+var _asset_failures: Dictionary = {}
 var _textures: Dictionary = {}
 var _texture_recent: Array[String] = []
 var _texture_bytes: int = 0
@@ -43,6 +46,9 @@ static func validate(value: Dictionary) -> Dictionary:
 	if not declaration is String or declaration.length()>4096 or declaration.to_utf8_buffer().has(0): return {}
 	out.declaration_path=declaration.strip_edges()
 	if out.enabled and out.source_root.is_empty(): return {}
+	var shadow: Variant=value.get("shadow_policy",SHADOW_OFF)
+	if not shadow is String or shadow not in [SHADOW_OFF,SHADOW_PC]:return {}
+	out.shadow_policy=shadow
 	# An explicit host selection chooses an existing source action. It never
 	# establishes native activation, direction or a filename-suffix conversion.
 	var selected_actions: Variant=value.get("action_overrides",{})
@@ -239,37 +245,49 @@ func _source(sprite_id: int, selector: int=0) -> Dictionary:
 	# nonzero selector requires an explicit exact-member binding before playback.
 	for token: Dictionary in declaration.sequence:
 		if _binding(sprite_id,int(token.get("selector",0))).is_empty():return _unresolved(sprite_id,"original_selector_requires_held_member_binding")
+	var source: Dictionary=_asset(sprite_id,selector)
+	if source.has("error"):return _unresolved(sprite_id,str(source.error))
+	for frame: Dictionary in declaration.sequence:
+		if int(frame.get("selector",0))==selector and int(frame.frame)>=(source.parsed.groups[int(source.group)].frames as Array).size():return _unresolved(sprite_id,"declared_frame_outside_stored_group")
+	var result: Dictionary=source.duplicate()
+	result["declaration"]=declaration
+	return result
+
+func _asset_error(key: String, reason: String) -> Dictionary:
+	_asset_failures[key]=reason
+	return {"error":reason}
+
+func _asset(sprite_id: int, selector: int) -> Dictionary:
 	var binding: Dictionary=_binding(sprite_id,selector)
-	if binding.is_empty():return _unresolved(sprite_id,"original_selector_requires_held_member_binding")
+	if binding.is_empty():return {"error":"original_selector_requires_held_member_binding"}
 	var row: Dictionary=binding.row
 	var cache_key: String="%d:%d:%s:%d"%[sprite_id,selector,row.member,int(binding.group_bit)]
+	if _asset_failures.has(cache_key):return {"error":_asset_failures[cache_key]}
 	if _parsed.has(cache_key):
 		_parsed_recent.erase(cache_key);_parsed_recent.append(cache_key)
 		return _parsed[cache_key]
 	var path: String = options.source_root.path_join(str(row.canonical_package_member))
 	var file := FileAccess.open(path,FileAccess.READ)
-	if file==null: return _unresolved(sprite_id,"source_unreadable")
+	if file==null:return _asset_error(cache_key,"source_unreadable")
 	var length: int = file.get_length()
-	if length!=int(row.bytes) or length>DECODER.MAX_INPUT_BYTES: return _unresolved(sprite_id,"source_size")
+	if length!=int(row.bytes) or length>DECODER.MAX_INPUT_BYTES:return _asset_error(cache_key,"source_size")
 	var raw: PackedByteArray = file.get_buffer(length)
 	file.close()
-	if PACK.digest(raw)!=row.sha256: return _unresolved(sprite_id,"source_sha256")
+	if PACK.digest(raw)!=row.sha256:return _asset_error(cache_key,"source_sha256")
 	var decoded: Dictionary = DECODER.parse(raw)
-	if not decoded.ok: return _unresolved(sprite_id,"source_parse")
+	if not decoded.ok:return _asset_error(cache_key,"source_parse")
 	var group: int = -1
 	for i: int in decoded.groups.size():
 		if decoded.groups[i].bit==int(binding.group_bit): group=i
-	if group<0 or decoded.groups[group].frames.is_empty(): return _unresolved(sprite_id,"unavailable_stored_group")
-	for frame: Dictionary in declaration.get("sequence",[]):
-		if int(frame.get("selector",0))==selector and frame.frame>=decoded.groups[group].frames.size(): return _unresolved(sprite_id,"declared_frame_outside_stored_group")
+	if group<0 or decoded.groups[group].frames.is_empty():return _asset_error(cache_key,"unavailable_stored_group")
 	var cost: int = decoded.body.size()+raw.size()
-	if cost>MAX_CACHE_BYTES: return {}
+	if cost>MAX_CACHE_BYTES:return _asset_error(cache_key,"source_cache_limit")
 	while not _parsed_recent.is_empty() and (_parsed_bytes+cost>MAX_CACHE_BYTES or _parsed.size()>=32):
 		var oldest: String = _parsed_recent.pop_front()
 		_parsed_bytes-=int(_parsed[oldest].cost)
 		_parsed.erase(oldest)
 	_parsed_bytes+=cost
-	var result: Dictionary = {"parsed":decoded,"group":group,"stored_group_bit":int(binding.group_bit),"dispatch":binding.dispatch,"member":row.member,"source_bytes":int(row.bytes),"sha256":row.sha256,"cost":cost,"declaration":declaration}
+	var result: Dictionary = {"parsed":decoded,"group":group,"stored_group_bit":int(binding.group_bit),"dispatch":binding.dispatch,"member":row.member,"source_bytes":int(row.bytes),"sha256":row.sha256,"cost":cost}
 	_parsed[cache_key]=result
 	_parsed_recent.append(cache_key)
 	return result
@@ -277,6 +295,40 @@ func _source(sprite_id: int, selector: int=0) -> Dictionary:
 func _unresolved(sprite_id: int, reason: String) -> Dictionary:
 	_failed[sprite_id]=reason
 	return {}
+
+func _texture(source: Dictionary, frame: int) -> Dictionary:
+	var key: String="%s:%d:%d"%[source.member,int(source.stored_group_bit),frame]
+	if not _textures.has(key):
+		var rendered: Dictionary=DECODER.render(source.parsed,int(source.group),frame,{"alpha_policy":"opaque_samples","rgb_policy":"bit_replication"})
+		if not rendered.ok:return {"error":"source_frame_render"}
+		if rendered.get("empty",false):return {"empty":true}
+		var image: Image=rendered.image
+		var cost: int=image.get_data_size()
+		if cost>MAX_CACHE_BYTES:return {"error":"texture_cache_limit"}
+		while not _texture_recent.is_empty() and (_texture_bytes+cost>MAX_CACHE_BYTES or _textures.size()>=128):
+			var oldest: String=_texture_recent.pop_front()
+			_texture_bytes-=int(_textures[oldest].cost);_textures.erase(oldest)
+		_texture_bytes+=cost
+		_textures[key]={"texture":ImageTexture.create_from_image(image),"bounds":rendered.bounds,"cost":cost,"cache_key":key}
+	_texture_recent.erase(key);_texture_recent.append(key)
+	return _textures[key]
+
+func _pc_shadow(parent_id: int, source: Dictionary, frame: int, selector: int, edge: Dictionary) -> Dictionary:
+	# Explicit opt-in PC-tool policy, NOT proof of native M attachment semantics.
+	# Public provenance: uglyoldbob/l1j-client@83052f6 sprite.cpp:736-751;
+	# javiercorrea/lineage-cliente@f4d4917 pantalla_juego.cpp:348-359.
+	var child: int=int(edge.target_id)
+	if child==parent_id:return {"error":"self_reference_not_activated"}
+	if not _declarations.has(child):return {"error":"no_original_child_declaration"}
+	var declaration: Dictionary=_declarations[child]
+	if declaration.has("unsupported"):return {"error":"unsupported_original_child_declaration"}
+	var asset: Dictionary=_asset(child,selector)
+	if asset.has("error"):return asset
+	if int(asset.stored_group_bit)!=int(source.stored_group_bit):return {"error":"child_parent_stored_groups_differ"}
+	if frame<0 or frame>=(asset.parsed.groups[int(asset.group)].frames as Array).size():return {"error":"child_parent_frame_outside_source"}
+	var display: Dictionary=_texture(asset,frame)
+	if display.has("error") or display.get("empty",false):return display
+	return {"asset":asset,"display":display,"child_id":child,"reference":edge}
 
 func _update_draws() -> void:
 	var tick: int = floori(_clock*float(options.fps)) if float(options.fps)>0 else 0
@@ -289,6 +341,9 @@ func _update_draws() -> void:
 	var visible_textures: Dictionary = {}
 	var visible_bytes: int = 0
 	var declared: int=0
+	var roots_drawn: int=0
+	var shadow_draws: int=0
+	var shadow_issues: Dictionary={}
 	var unresolved_attachments: Dictionary={}
 	for i: int in mini(_records.size(),MAX_RECORDS):
 		var row: Dictionary = _records[i]
@@ -298,34 +353,41 @@ func _update_draws() -> void:
 		var selector: int=int(selected_token.get("selector",0))
 		var source_info: Dictionary = _source(int(row.sprite_id),selector)
 		if source_info.is_empty(): missing+=1; continue
-		var parsed: Dictionary = source_info.parsed
-		var group: int = int(source_info.group)
 		var frame: int = int(selected_token.frame)
 		var declaration: Dictionary=source_info.declaration
 		declared+=1
 		if not declaration.get("attachments_unresolved",[]).is_empty(): unresolved_attachments[int(row.sprite_id)]=declaration.attachments_unresolved
-		var key: String = "%s:%d:%d"%[source_info.member,int(source_info.stored_group_bit),frame]
-		if not _textures.has(key):
-			var rendered: Dictionary = DECODER.render(parsed,group,frame,{"alpha_policy":"opaque_samples","rgb_policy":"bit_replication"})
-			if not rendered.ok: missing+=1; continue
-			if rendered.get("empty",false): empty+=1; continue
-			var image: Image = rendered.image
-			var cost: int = image.get_data_size()
-			if cost>MAX_CACHE_BYTES: missing+=1; continue
-			while not _texture_recent.is_empty() and (_texture_bytes+cost>MAX_CACHE_BYTES or _textures.size()>=128):
-				var oldest: String = _texture_recent.pop_front()
-				_texture_bytes-=int(_textures[oldest].cost)
-				_textures.erase(oldest)
-			_texture_bytes+=cost
-			_textures[key]={"texture":ImageTexture.create_from_image(image),"bounds":rendered.bounds,"cost":cost}
-		var display: Dictionary = _textures[key]
-		_texture_recent.erase(key); _texture_recent.append(key)
+		var display: Dictionary=_texture(source_info,frame)
+		if display.has("error"):missing+=1;continue
+		if display.get("empty",false):empty+=1;continue
+		var key: String=str(display.cache_key)
 		if not visible_textures.has(key):
 			if visible_bytes+int(display.cost)>MAX_CACHE_BYTES: missing+=1; continue
 			visible_bytes+=int(display.cost);visible_textures[key]=true
 		var point: Vector2 = coordinates.to_world(Vector2(row.raw_x,row.raw_y),false)+Vector2(options.anchor_x,options.anchor_y)
-		_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(source_info.source_bytes),"stored_group_bit":int(source_info.stored_group_bit),"source_selector":selector,"selector_dispatch":source_info.dispatch,"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[])})
-	_stats.drawn_records=_draws.size()
+		var root_draw: Dictionary={"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(source_info.source_bytes),"stored_group_bit":int(source_info.stored_group_bit),"source_selector":selector,"selector_dispatch":source_info.dispatch,"frame":frame,"sequence_source":declaration.get("sequence_origin","LIST29_ACTION3"),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[]),"role":"DIRECT_S32","modulate":Color.WHITE}
+		if options.shadow_policy==SHADOW_PC:
+			for edge: Dictionary in declaration.get("references",[]):
+				if edge.get("kind","")!="shadow":continue
+				var shadow_key: String="%d:%d"%[int(row.sprite_id),int(edge.target_id)]
+				if shadow_draws>=MAX_RECORDS:shadow_issues[shadow_key]="shadow_draw_budget";continue
+				var child: Dictionary=_pc_shadow(int(row.sprite_id),source_info,frame,selector,edge)
+				if child.has("error"):shadow_issues[shadow_key]=child.error;continue
+				if child.get("empty",false):continue
+				var child_display: Dictionary=child.display
+				var child_cache: String=str(child_display.cache_key)
+				if not visible_textures.has(child_cache):
+					if visible_bytes+int(child_display.cost)>MAX_CACHE_BYTES:shadow_issues[shadow_key]="shadow_texture_budget";continue
+					visible_bytes+=int(child_display.cost);visible_textures[child_cache]=true
+				var shadow_draw: Dictionary=root_draw.duplicate()
+				shadow_draw.merge({"point":point+Vector2((child_display.bounds as Rect2i).position),"texture":child_display.texture,"member":child.asset.member,"source_sp2_sha256":child.asset.sha256,"source_sp2_bytes":int(child.asset.source_bytes),"stored_group_bit":int(child.asset.stored_group_bit),"selector_dispatch":child.asset.dispatch,"role":"PC_TOOL_SHADOW","child_sprite_id":child.child_id,"source_reference":edge,"modulate":Color(1.0,1.0,1.0,160.0/255.0)},true)
+				_draws.append(shadow_draw);shadow_draws+=1
+		_draws.append(root_draw);roots_drawn+=1
+	_stats.drawn_records=roots_drawn
+	_stats.shadow_draws=shadow_draws
+	_stats.shadow_policy=options.shadow_policy
+	_stats.shadow_issues=shadow_issues
+	_stats.native_shadow_inheritance_blend_verified=false
 	_stats.unresolved_records=missing
 	_stats.empty_frames=empty
 	_stats.budget_skips=clipped
@@ -349,7 +411,7 @@ func _draw() -> void:
 	var observe: bool=USAGE.actual_main(renderer)
 	var view: Rect2=(renderer.call("_view_rect") as Rect2).grow(-64.0) if observe else Rect2()
 	for draw: Dictionary in _draws:
-		draw_texture(draw.texture,draw.point)
+		draw_texture(draw.texture,draw.point,draw.modulate)
 		if not observe or not Rect2(draw.point,(draw.texture as Texture2D).get_size()).intersects(view):continue
 		var row: Dictionary=draw.record
 		USAGE.observe(renderer,str(draw.member),int(draw.source_sp2_bytes),str(draw.source_sp2_sha256),"stored-bit:%d/frame:%d"%[int(draw.stored_group_bit),int(draw.frame)])
@@ -359,6 +421,10 @@ func _draw() -> void:
 		if token.has("source_byte_offset") and draw.declaration_bytes>0:
 			var base: String=str(token.get("raw","")).trim_suffix(str(token.get("unapplied_suffix","")))
 			USAGE.observe(renderer,str(draw.declaration_source),int(draw.declaration_bytes),str(draw.declaration_sha256),"frame-token:"+str(token.source_byte_offset),int(token.source_byte_offset),base.length())
+		var reference: Dictionary=draw.get("source_reference",{})
+		if reference.has("source_byte_offset") and draw.declaration_bytes>0:
+			var literal: String=str(reference.raw)
+			USAGE.observe(renderer,str(draw.declaration_source),int(draw.declaration_bytes),str(draw.declaration_sha256),"shadow-reference:"+str(reference.source_byte_offset),int(reference.source_byte_offset),literal.to_ascii_buffer().size())
 	if observe:USAGE.flush()
 
 func _process(delta: float) -> void:
