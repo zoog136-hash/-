@@ -62,9 +62,12 @@ old-BIN wait below. Its original ItemData→`current523_native_item_projection`
 now feeds native DTO registration and `patch523_craft_catalog.available()`;
 schema4 source markers preserve historical identities/markers. Existing drop,
 floor, typed supplier, supported HP/MP stacks and selected native crafting
-materials use that owner's quantity/receipt/save code. Unsupported effects,
-same-key refunds and typed stack transfers remain unfinished. These are that
-owner's published implementation claims, not observed execution in this Draft.
+materials use that owner's quantity/receipt/save code. At that checkpoint,
+unsupported effects, same-key refunds and typed stack transfers remained
+unfinished. Its later `6bda8cbb` publishes exact retained same-key refunds,
+warehouse/floor custody and explicit partial partitions plus the native-use ABI
+described below. Unsupported effect owners remain held. These are that owner's
+published implementation claims, not observed execution in this Draft.
 
 This Draft changes only the common drop-reader entry's static API selection:
 `_current_item_reference(id)` finds ItemData's published `describe` in the
