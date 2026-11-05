@@ -5,7 +5,14 @@ second installer. No source assets, old packs or save files are deleted. The
 old card/monster packs are not a prerequisite or a fallback for this selection.
 Attendance/pass are deferred. No new test, render, game run or CI was executed.
 
-The latest system-message extension is the single combined **v12** input in
+The latest single combined input is **v14**, in
+[NPC portrait receiver](ORIGINAL_UI_NPC_PORTRAIT_ABI.md). Private delivery
+succeeded. It retains v12 and adds the original timed inventory name header
+and explicitly declared NPC Sprite4912 target for authoritative typed providers.
+There is no current dialogue-ID inference or portrait display claim. The
+inventory addition is a name header, not a completed item detail screen.
+
+The retained system-message extension is the combined **v12** input in
 [Original system-message caller ABI](ORIGINAL_UI_SYSTEM_MESSAGE_CALLER_ABI.md).
 It retains every v11 scope and its private delivery succeeded. Current owner
 messages/timing feed the original text; the local priority2 connection is an

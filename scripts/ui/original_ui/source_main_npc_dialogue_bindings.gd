@@ -7,8 +7,9 @@ const PARENT_SHA256 = "6626721d95d1ca4c2b097730b44d97ce8aa8afb371b5e7806158db788
 const PARENT_PROJECT = 132
 const BASE_OFFSETS: Array[int] = [6800,6172,3512,3940,272,780,324]
 const NEXT_BUTTON = 1872
+const PORTRAIT = 4912
 
-static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next: Callable = Callable()) -> Dictionary:
+static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next: Callable = Callable(), portrait_requested: bool=false) -> Dictionary:
 	if not resolved.get("ok",false) or not resolved.get("npc_name") is String or not resolved.get("text") is String:
 		return _fail("source_npc_dialogue_success_name_and_text_required")
 	if not close.is_valid(): return _fail("source_npc_dialogue_existing_close_callback_required")
@@ -18,6 +19,8 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 		return _fail("source_npc_dialogue_original_parent_identity_mismatch")
 	var offsets: Array[int] = BASE_OFFSETS.duplicate()
 	if next.is_valid(): offsets.append(NEXT_BUTTON)
+	var portrait_declared: bool=portrait_requested and PORTRAIT in pack.manifest.get("externally_bound_texture_nodes",{}).get(MEMBER,[])
+	if portrait_declared:offsets.append(PORTRAIT)
 	var tree: Dictionary = pack.scene(MEMBER)
 	var missing: Array[int] = []
 	for offset: int in offsets:
@@ -32,6 +35,9 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 		324:{"role":"static_source_text"}
 	}
 	if next.is_valid(): bindings[NEXT_BUTTON] = {"role":"button","activate":next}
+	if portrait_declared:bindings[PORTRAIT]={"role":"source_asset_slot","visible":false}
+	var excluded: Array[int]=[4604,5744,5416,2624]
+	if not portrait_declared:excluded.append(PORTRAIT)
 	return {
 		"ok":true,"member":MEMBER,"sha256":SHA256,
 		"source_node_offsets":offsets,"bindings":bindings,
@@ -40,10 +46,11 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 		"parent_original_position":Vector2.ZERO,"parent_original_visible":true,"parent_original_alpha":255,
 		"clips":[{"name":"Npc_On","startIndex":5,"endIndex":45},{"name":"Npc_Loop","startIndex":50,"endIndex":80}],
 		"playback_policy_inferred":false,"next_connected":next.is_valid(),
+		"portrait_target_declared":portrait_declared,"portrait_initially_hidden":true,
 		"value_basis":"existing dialogue_service.resolve successful npc_name/text",
 		"partial_source_scene":true,"complete_screen_contract":false,
 		"unresolved_fields":["NPC_record_to_original_portrait_asset_role","original_clip_playback_policy","choice_to_original_next_contract_owned_by_caller"],
-		"excluded_source_offsets":[4912,4604,5744,5416,2624]
+		"excluded_source_offsets":excluded
 	}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:

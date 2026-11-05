@@ -2767,6 +2767,18 @@ var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
 var _original_world_map_inputs: Dictionary={}
 var _original_icon_scene_provider: Callable
+var _original_npc_portrait_inputs: Dictionary={}
+
+func bind_original_npc_dialogue_portrait(context_provider: Callable, image_provider: Callable) -> Dictionary:
+	if not context_provider.is_valid() or not image_provider.is_valid():return {"ok":false,"code":"source_npc_portrait_context_and_image_providers_required"}
+	_original_npc_portrait_inputs={"context_provider":context_provider,"image_provider":image_provider}
+	if not is_instance_valid(original_main_ui_controller):return {"ok":true,"registered":true,"source_controller_pending":true,"authoritative_mobile_npc_class_context_required":true}
+	var result: Dictionary=original_main_ui_controller.bind_npc_dialogue_portrait(context_provider,image_provider)
+	original_main_ui_status["npc_portrait_registration"]=result
+	if result.get("ok",false) and original_main_ui_controller.npc_dialogue_is_open():
+		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
+		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
+	return result
 
 func bind_original_icon_scene_provider(provider: Callable) -> Dictionary:
 	if not provider.is_valid():return {"ok":false,"code":"source_native_icon_scene_provider_required"}
@@ -2785,6 +2797,9 @@ func original_quickslot_control(visible_index: int) -> Control:
 
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
+
+func original_inventory_name_hint_context(reference: String) -> Dictionary:
+	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}
 
 func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	if not original_inventory_is_open():return {}
@@ -2872,6 +2887,8 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	var map_registration: Dictionary={}
 	if not _original_world_map_inputs.is_empty():
 		map_registration=candidate.bind_world_map(_original_world_map_inputs.image_adapter,_original_world_map_inputs.context_provider,_original_world_map_inputs.input_handler)
+	var npc_portrait_registration: Dictionary={}
+	if not _original_npc_portrait_inputs.is_empty():npc_portrait_registration=candidate.bind_npc_dialogue_portrait(_original_npc_portrait_inputs.context_provider,_original_npc_portrait_inputs.image_provider)
 	candidate.sync_legacy_visibility()
 	candidate.refresh_quickslots()
 	var system_message: Dictionary=candidate.set_system_message_priority(_original_system_message_priority,_original_system_message_routing)
@@ -2879,7 +2896,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	if reopen_dialogue:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):

@@ -101,6 +101,17 @@ func blocks_point(viewport_point: Vector2) -> bool:
 func gesture_bounds() -> Control:
 	return _bounds if is_open() else null
 
+func name_hint_context(reference: String) -> Dictionary:
+	if not is_open() or not _hits.has(reference):return {}
+	var hit: Dictionary=_hits[reference]
+	var control: Variant=hit.get("control")
+	var scroll_offset: int=43832 if _native_capacity==8 else 55712
+	var scroll_node: Variant=_inventory_scene.get("source_nodes").get(scroll_offset)
+	var scroll: Variant=scroll_node.get_meta("source_scroll",null) if is_instance_valid(scroll_node) else null
+	var bounds: Variant=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+	if not control is Control or not is_instance_valid(control) or not bounds is Control or not is_instance_valid(bounds):return {}
+	return {"ok":true,"reference":reference,"control":control,"scroll":bounds,"source_native":true}
+
 func presentation() -> Dictionary:
 	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":_native_capacity,"partial_source_scene":true,"complete_screen_contract":false}
 

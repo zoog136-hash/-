@@ -20,6 +20,7 @@ const AutoMessage=preload("res://scripts/ui/original_ui/source_main_auto_message
 const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_view.gd")
 const NpcDialogueView=preload("res://scripts/ui/original_ui/source_main_npc_dialogue_view.gd")
 const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_message_bindings.gd")
+const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -100,6 +101,8 @@ var _system_message_result: Dictionary={}
 var _system_message_model: Dictionary={}
 var _legacy_message: WeakRef
 var _legacy_message_visible: bool=false
+var _inventory_name_view: RefCounted
+var _inventory_name_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -146,6 +149,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			_inventory_view=candidate
 			candidate.return_to_current_requested.connect(func(reason: Dictionary) -> void: inventory_return_to_current_requested.emit(reason))
 			candidate.closed.connect(func() -> void: inventory_closed.emit())
+	if pack.manifest.get("scenes",{}).has("UI/ToolTip/ToolTip_HudType_Right.csb"):
+		var bag: Variant=hud.get("lineage_inventory_ui")
+		if bag is Control and is_instance_valid(bag):
+			var candidate=InventoryNameView.new()
+			_inventory_name_result=candidate.configure(pack,bag)
+			if _inventory_name_result.get("ok",false):_inventory_name_view=candidate
 	if pack.manifest.get("scenes",{}).has(CharacterView.ALL):
 		var candidate=CharacterView.new()
 		_character_result=candidate.configure(pack,hud)
@@ -191,6 +200,9 @@ func _input(event: InputEvent) -> void:
 		var character: Dictionary=_character_view.presentation()
 		if is_instance_valid(character.get("scene")):_collect_native_buttons(character.scene,candidates)
 	elif inventory_is_open() and inventory_blocks_point(point):
+		if _inventory_name_view!=null and _inventory_name_view.is_open():
+			var name_hint: Dictionary=_inventory_name_view.presentation()
+			if is_instance_valid(name_hint.get("scene")):_collect_native_buttons(name_hint.scene,candidates)
 		var inventory: Dictionary=_inventory_view.presentation()
 		if is_instance_valid(inventory.get("scene")):_collect_native_buttons(inventory.scene,candidates)
 	else:
@@ -231,6 +243,9 @@ func _process(_delta: float) -> void:
 			if signature!=_inventory_signature:
 				_inventory_result=_inventory_view.refresh()
 				_inventory_signature=_inventory_model_signature()
+	if _inventory_name_view!=null and not _source_input_captured(hud):
+		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
+		else:_inventory_name_view.close()
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
@@ -301,6 +316,10 @@ func try_open_npc_dialogue(owner: Control, resolved: Dictionary) -> Dictionary:
 
 func npc_dialogue_is_open() -> bool:
 	return _npc_dialogue_view!=null and _npc_dialogue_view.is_open()
+
+func bind_npc_dialogue_portrait(context_provider: Callable, image_provider: Callable) -> Dictionary:
+	if _npc_dialogue_view==null:return _fail("source_npc_portrait_dialogue_scope_unavailable")
+	return _npc_dialogue_view.bind_portrait(context_provider,image_provider)
 
 func close_npc_dialogue() -> void:
 	_cancel_native_buttons()
@@ -406,7 +425,16 @@ func inventory_is_open() -> bool:
 	return _inventory_view!=null and _inventory_view.is_open()
 
 func close_inventory() -> void:
+	var owned_open: bool=inventory_is_open()
+	_cancel_native_buttons()
+	if _inventory_name_view!=null:_inventory_name_view.close()
 	if _inventory_view!=null:_inventory_view.close()
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
+	if owned_open and is_instance_valid(bag) and bag.has_method("_hide_item_name"):bag.call("_hide_item_name")
+
+func inventory_name_hint_context(reference: String) -> Dictionary:
+	return _inventory_view.name_hint_context(reference) if inventory_is_open() and _inventory_name_view!=null else {}
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	return _inventory_view.hit_at(viewport_point) if inventory_is_open() else {}

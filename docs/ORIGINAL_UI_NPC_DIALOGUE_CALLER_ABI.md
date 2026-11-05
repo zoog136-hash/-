@@ -56,6 +56,11 @@ emulation setting or generated hit layout.
 
 ## NPC image owner boundary
 
+The later v14 optional receiver is documented in
+[NPC portrait ABI](ORIGINAL_UI_NPC_PORTRAIT_ABI.md). It supersedes the v11
+excluded-scope boundary only when the actual current dialogue context and
+image-owner inputs are present. It does not establish those IDs by itself.
+
 The actually authored portrait target is Sprite4912 `Sp_Char`, under
 Nd_Char4860 at[-3.086400032043457,-2.2193000316619873]. Sprite4912 has original
 position[0,0], size500×500 and anchor[0,0]. Its editor reference is
