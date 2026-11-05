@@ -10,6 +10,7 @@ const NPC_STAT_FIELDS = {"hp":"HP","mp":"MP","ac":"AC","mr":"MR","xp":"Exp"}
 const ATTACK_STRUCTURE_FIELDS = ["ID","NpcClassID","SpellID","NextAttack","MotionType","WeaponType","AttackType","ChangeTarget","Range","Prob","FixedDelayTime","DiceCount","DiceSpots","DiceBonus"]
 const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_policy.json"
+const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 var content: Dictionary = {}
 var error: String = ""
@@ -250,6 +251,7 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	for field_name: String in NPC_STAT_FIELDS:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
 	result = _project_numeric_resistance_input(result,source)
+	result = _project_named_special_resistance_input(result,source)
 	return _project_uniform_attack_range_input(result,source)
 
 func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary) -> Dictionary:
@@ -314,6 +316,97 @@ func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary)
 		"prior_host_attack_range":prior,"host_length_input":length,"source_raw_range_unit_scale":"unconfirmed",
 		"native_grid_scale_recovered":false,"calibration_status":policy.get("calibration_status"),
 		"host_range_contract":"existing_record_attack_range_and_current_attack_range_retained"}
+	return record
+
+
+func _project_named_special_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
+	# Existing admitted actor -> existing Monster.setup resistance operands.
+	# The original numeric unit is unconfirmed; only an explicitly enabled
+	# TWILIGHT estimate may supply a finite value below the host immunity gate.
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or not source_available or source_mode!="current523_original" or source_identity!=identity or not source_integer(source.get("ID")) or int(source.ID)<=0: return record
+	var npc_id: int = int(source.ID)
+	if record.get("source_m_npc_id")!=npc_id or record.get("source_m_definition_snapshot")!="patch523" or record.get("source_m_definition_archive_sha256")!=SOURCE_SHA: return record
+	if row("NpcClass",npc_id)!=source or DEFINITIONS.row("NpcClass",npc_id)!=source or not definition_eligible(source): return record
+	var admitted: Variant = admitted_source_identities.get(str(npc_id))
+	if not admitted is Dictionary or admitted.get("npc_class_id")!=npc_id or admitted.get("sprite")!=source.get("Sprite") or admitted.get("desc_id")!=source.get("DescId") or admitted.get("source_archive_sha256")!=SOURCE_SHA: return record
+	var original: Variant = record.get("source_m_original")
+	if not original is Dictionary: return record
+	for field: String in source:
+		if not original.has(field) or original[field]!=source[field]: return record
+	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
+	if file==null: return record
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var parser := JSON.new()
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
+	var policy: Dictionary = parser.data
+	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
+	if typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_damage_formula_recovered"))!=TYPE_BOOL or policy.native_server_damage_formula_recovered or policy.get("host_formula")!="existing_host_formula_retained": return record
+	var nested: Variant = policy.get("special_resistance")
+	if not nested is Dictionary or typeof(nested.get("enabled"))!=TYPE_BOOL or not nested.enabled: return record
+	if nested.get("origin")!="twilight_adjustable_numeric_estimate" or nested.get("scope")!="admitted_actor_NpcSpecialResistance_named_Stun_Hold_Fear_only" or nested.get("source_raw_unit_scale")!="unconfirmed" or typeof(nested.get("native_server_status_formula_recovered"))!=TYPE_BOOL or nested.native_server_status_formula_recovered or nested.get("host_formula")!="existing_host_status_formula_retained": return record
+	var scale: Variant = nested.get("raw_to_host_percent")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<0.0: return record
+	var grouped: Dictionary = {}
+	# The admitted registry owns this complete set, including an empty set.
+	# Never fill it with a larger table or a former NPC pack as a fallback.
+	for link: Dictionary in owned("NpcSpecialResistance",npc_id):
+		if not source_integer(link.get("ID")) or int(link.ID)<0 or link.get("NpcClassID")!=npc_id or not source_integer(link.get("SpecialResistanceTypeID")): return record
+		var originals: Array[Dictionary] = DEFINITIONS.related("NpcSpecialResistance","ID",int(link.ID))
+		if originals.size()!=1 or originals[0]!=link or row("NpcSpecialResistance",int(link.ID))!=link: return record
+		var type_id: int = int(link.SpecialResistanceTypeID)
+		var types: Array[Dictionary] = DEFINITIONS.related("SpecialResistanceType","ID",type_id)
+		if types.size()!=1 or row("SpecialResistanceType",type_id)!=types[0] or not source_integer(types[0].get("ID")) or int(types[0].ID)!=type_id: return record
+		var type: Dictionary = types[0]
+		var name_value: Variant = type.get("Name")
+		if not name_value is String or not NPC_SPECIAL_RESISTANCE_FIELDS.has(name_value): continue
+		if not grouped.has(name_value): grouped[name_value] = []
+		grouped[name_value].append({"link":link,"type":type})
+	if grouped.is_empty(): return record
+	var applied: Dictionary = {}; var evidence: Dictionary = {}
+	for name_value: String in grouped:
+		var field: String = NPC_SPECIAL_RESISTANCE_FIELDS[name_value]
+		var entries: Array = grouped[name_value]
+		var detail: Dictionary = {"field":field,"source_rows":entries,"prior_present":record.has(field),
+			"prior":record.get(field),"applied":false,"raw_to_host_percent":scale,"source_raw_unit_scale":"unconfirmed"}
+		evidence[name_value] = detail
+		if entries.size()!=1:
+			detail["hold_reason"] = "multiple_source_rows_for_status_channel"
+			continue
+		var link: Dictionary = entries[0].link
+		var type: Dictionary = entries[0].type
+		var link_exclusion: Dictionary = DEFINITIONS.declared_exclusion("NpcSpecialResistance",link)
+		var type_exclusion: Dictionary = DEFINITIONS.declared_exclusion("SpecialResistanceType",type)
+		if not link_exclusion.is_empty() or not type_exclusion.is_empty():
+			detail["hold_reason"] = "source_declared_exclusion"
+			detail["declared_exclusion"] = {"link":link_exclusion,"type":type_exclusion}
+			continue
+		var raw: Variant = link.get("Value")
+		detail["raw_value"] = raw
+		if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)<0.0:
+			detail["hold_reason"] = "invalid_or_negative_source_value"
+			continue
+		var value: float = float(raw)*float(scale)
+		detail["derived_host_percent"] = value
+		if not is_finite(value) or value<0.0 or value>=100.0:
+			detail["hold_reason"] = "derived_value_outside_non_immunity_input_range"
+			continue
+		# Monster.setup already uses int() for these existing operands. Keep
+		# that conversion explicit without capping/summing or changing its rules.
+		applied[field] = int(value)
+		detail["receiver_value"] = int(value)
+		detail["integer_receiver_policy"] = "existing_Monster_setup_int_conversion"
+		detail.applied = true
+	var hashing := HashingContext.new()
+	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return record
+	var policy_sha: String = hashing.finish().hex_encode()
+	for field: String in applied: record[field] = applied[field]
+	record["source_m_special_resistance_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
+		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
+		"policy":nested.duplicate(true),"source":identity,"admission":admitted.duplicate(true),"npc_class_id":npc_id,
+		"source_raw_unit_scale":"unconfirmed","fields":evidence,"native_server_status_formula_recovered":false,
+		"host_formula":"existing_host_status_formula_retained"}
 	return record
 
 

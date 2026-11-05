@@ -14,5 +14,22 @@
     "https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C",
     "https://lineagem.plaync.com/guidebook/view?title=%EC%95%85%EC%84%B8%EC%84%9C%EB%A6%AC+%EC%95%84%EC%9D%B4%ED%85%9C"
   ],
-  "reference_limit": "The mobile armor/accessory context does not establish NpcClass raw resistance scaling."
+  "reference_limit": "The mobile armor/accessory context does not establish NpcClass raw resistance scaling.",
+  "special_resistance": {
+    "enabled": true,
+    "raw_to_host_percent": 1,
+    "origin": "twilight_adjustable_numeric_estimate",
+    "scope": "admitted_actor_NpcSpecialResistance_named_Stun_Hold_Fear_only",
+    "source_raw_unit_scale": "unconfirmed",
+    "native_server_status_formula_recovered": false,
+    "host_formula": "existing_host_status_formula_retained",
+    "accepted_derived_range": "finite 0 <= value < 100; otherwise retain prior host input",
+    "duplicate_rows": "retain prior host input; never cap, sum or select one row",
+    "note": "TWILIGHT-only adjustable source-number input estimate. Numeric 100 is not a source immunity declaration. Existing Monster integer conversion and status consumers remain unchanged.",
+    "mobile_percentage_context_references": [
+      "https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C",
+      "https://lineagem.plaync.com/board/update/view?articleId=6509fb9f05e0591cb29c24e7&page=7&size=20&viewMode=list"
+    ],
+    "reference_limit": "Official displayed stun/hold/fear percentages do not establish NpcSpecialResistance.Value raw units, scale or the native server status formula."
+  }
 }

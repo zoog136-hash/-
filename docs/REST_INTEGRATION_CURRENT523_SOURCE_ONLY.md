@@ -338,3 +338,20 @@ selection to the Sprite owner. No ground pickup/quantity/ownership/receipt/save
 or action/frame/image implementation is changed. Original16007 remains a pixel
 input gap, and189/192 delivery in another Sprite environment is not installation
 or rendering proof here. No new tests/game/parse/render/CI or verified count.
+
+
+## Latest original identifiers and status inputs (unexecuted)
+
+Item DTO visual metadata now reads actual ItemClass.SpriteID/SpriteAnimationID,
+not the NPC-style Sprite field. Full raw original rows and immutable receipts
+remain unchanged; no new Sprite/frame/member is made. The floor read-only
+context includes its exact actual record snapshot for the separate Sprite lane.
+
+Public271559efd1d spell-group input/accepted bound IDs and named NPC Stun/Hold/
+Fear resistance inputs are adopted, preserving existing conversion/status/
+ownership/save engines. Explicit bad claims/inputs, source exclusions and
+ambiguous/unsupported immunity-like numbers stay held; the numeric scale stays
+an explicit adjustable1.0 estimate. Missing dialogue/mobile NPC and dungeon
+PartyDungeonTypeID/CompetitionDungeon identity/role bridges remain unavailable;
+no integer/name substitution or replacement UI/image work. Latest code is
+unexecuted/unverified with no new tests/game/parse/render/CI or observed count.

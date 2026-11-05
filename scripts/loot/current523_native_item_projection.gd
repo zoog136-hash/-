@@ -87,7 +87,8 @@ static func record(definition: Dictionary) -> Dictionary:
 		if class_name.is_empty():unresolved_classes.append(entry.get("ClassID"))
 	var out: Dictionary={"name":display+" · 원본#"+str(item_id),"source_display_name":display,"source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":item_id,"sourceId":"m523:item:"+str(item_id),"sourceUrl":"","source_m_native_item":true,"source_bless_raw":1,"grade":grade_label,"source_grade_id":grade.ID,"slot":slot,"type":label(category.get("DescID")),"source_category_id":category.ID,"source_category_name":category.Name,"source_test_item":false,"source_is_trash":raw.get("IsTrash",false),"source_label_status":"source_descriptor","source_category_is_activatable":category.get("IsActivatable",false),"source_is_stackable":category.get("IsStackable",false),"source_is_consumable":category.get("IsConsumable",false),"source_weight":raw.get("Weight",0),"source_weight_unit":"unverified_source_units","source_equip_slots":slot_names,"source_equip_slot_ids":slot_ids,"source_equipment_status":"mapped" if equipment else "unsupported_source_slot" if bad_slot else "ambiguous_source_equip_slots" if not equips.is_empty() else "no_source_equip_slot","source_class_ids":class_ids,"source_class_names":class_names,"source_unresolved_class_ids":unresolved_classes,"source_definition_archive":SOURCE.identity(),"source_projection":"current523_original_typed_game_dto_v1","source_original_item":raw.duplicate(true)}
 	out["source_icon_id"]=raw.get("IconID",0)
-	out["source_sprite_id"]=raw.get("Sprite",0)
+	out["source_sprite_id"]=raw.get("SpriteID",0)
+	out["source_sprite_animation_id"]=raw.get("SpriteAnimationID",0)
 	out["source_image_status"]="current_original_image_owner_not_observed"
 	if str(out.type).is_empty():out.type=category.Name
 	if equipment:

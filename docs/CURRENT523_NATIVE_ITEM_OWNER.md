@@ -731,3 +731,55 @@ receipt, lifetime and save code are unchanged by this floor read-only method.
 It selects no animation/action/frame and supplies no texture or new image. The
 Sprite owner can consume the exact original row and actual floor view through
 its separate actor bank API when published. UI icons remain a separate role.
+
+
+## Original Sprite field correction and latest source readers (unexecuted)
+
+The native item DTO now reads the declared ItemClass.SpriteID and preserves
+SpriteAnimationID separately. The former Sprite field belongs to other source
+schemas and was the wrong item field. No original row is renamed or modified;
+source_sprite_id is derived metadata, not an AssetView ID, effect ID or IconID.
+Existing physical receipts keep their original raw row; there is no mass
+migration or new Sprite/member/frame/image. The readonly floor context also
+returns ground_record, the exact current floor snapshot (including life/map/
+selection data), without changing its save/quantity/ownership behavior.
+
+Data271559efd1d's current spell-group source reader and accepted-bound-ID
+adapter are adopted narrowly. Existing explicit native-ID and VERIFIED legacy
+claim priority/numeric bounds are preserved; an explicit invalid/null claim
+cannot be bypassed with a bound fallback. Only a registered canonical skill,
+actual accepted profile/public binding/root SHA/current whole original spell
+and held same-archive group model may supply an otherwise absent ID. Existing
+allows/owns_source consume it for membership/mastery/prerequisites. Existing
+choice, conversion cost/counters/replacement/state/save code remains. Source
+input can reuse the already supplied common ZIP only when the unoverridden
+default is absent, never after explicit/bad-SHA/read/permission failure. New
+source Test/dummy payment rows are not admitted; historical storage is retained.
+
+The same public checkpoint's named NpcSpecialResistance Stun/Hold/Fear values
+feed the existing actor stun_resistance/hold_resistance/fear_resistance readers.
+The exact admitted NPC, original complete owned rows/type rows and source pin
+are required. The1.0 scale is a configurable TWILIGHT estimate. Duplicate,
+unknown/excluded, invalid or derived>=100 values retain prior input: source100
+is not turned into an immunity declaration. Existing status rolls/AI/effects,
+actor identity, ownership and saves are unchanged.
+
+Image270's published9fc7c6aa ground handoff confirms ItemClass.SpriteID is a
+Sprite domain; ItemClass has no declared base-ground Texture2D AssetID.
+UIItemDropEffect is an effect role and cannot substitute the base item. The
+Sprite owner now has ground_loot.source_item_context(id) plus actual
+views[id] to consume the original declaration and selection without a second
+item owner. Its action/member/render contract is still separate.
+
+The same image checkpoint's dungeon caller requires an actual selected
+PartyDungeon row→PartyDungeonTypeID or selected CompetitionDungeon.ID and an
+explicit entrance/popup target. Existing tower/orim/special/recharger stage/
+row/item IDs do not establish that relation. Current entry models supply no
+authoritative foreign-key/source_basis for it, so269 does not fabricate a
+positive context, name/number alias or substitute UI target. Data271 owns that
+original input relation; UI267 owns its authored node and270 its asset lookup.
+Image follow-up is paused; no replacement image lane is started here. These
+external input/role boundaries do not stop the actual item consumers above.
+
+All these later edits remain unexecuted/unverified. No new test, parse, game,
+render, source-byte audit, CI, pack generation/upload or measured-use count.
