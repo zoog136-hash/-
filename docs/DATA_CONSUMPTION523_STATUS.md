@@ -173,10 +173,13 @@ The next delta connects the original data beyond the reference-returning APIs:
   match the public binding before publication. Original material identities,
   spell/buff bonuses, costs, learning limits, cast groups and target definitions
   feed the existing `apply_to()` reader. Existing profiles remain preferred and a
-  supplied invalid/empty explicit pack is not bypassed. Reviewed execution-graph
-  roots stay deferred to their compiled pack; no partial graph is promoted into
-  an effect implementation. Learning, progression/effect execution and save code
-  are unchanged.
+  supplied invalid/empty explicit pack is not bypassed. The public compiler's
+  fixed nine reviewed root/child graphs and InvokeOption/type joins are read in
+  the same shape, without arbitrary recursive graph expansion. The existing
+  whole-profile identity/reachability guards remain mandatory before adoption;
+  missing or unsupported closures remain individually deferred. No partial
+  graph is promoted into an effect implementation. Learning, progression/effect
+  execution and save code are unchanged.
 - `player_skills523.source_mode`, `source_identity` and
   `source_fallback_status` distinguish raw-source input from the compiled-pack
   path and retain per-binding deferred reasons. Its `active_sha256` remains the

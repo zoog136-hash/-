@@ -8,9 +8,12 @@ const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.
 const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
-# These are the existing compiler's reviewed graph roots, not inferred nodes.
-# The raw fallback leaves their supported compiled execution graphs intact.
-const COMPILED_GRAPH_ROOTS := [2,2312,332,29142,17324,98871,350,29092,69581]
+# Exact ordered node lists from build_player_skills523.py. No composition-node
+# traversal or unreviewed recursive expansion is performed by the reader.
+const REVIEWED_EXECUTION_GRAPHS := {
+	2:[],2312:[],332:[],29142:[],17324:[],
+	98871:[99181,99231],350:[119642,120712],
+	29092:[122982,122992],69581:[70961,107343,107963,71001]}
 const SOURCE_RECOVERY_ROOTS := [54703,35443,69601,95662]
 # Explicitly reviewed self conversions. Host learned=1 means ownership, never
 # native SpellLevel=1; only the unconditional MinSpellLevel=0 value is applied.
@@ -147,6 +150,39 @@ func _source_profile(spell_id: int, expected_row_sha: String = "") -> Dictionary
 		"target_kind":detail.get("references",{}).get("TargetKindID",{}).get("row",{}),
 		"targeting_type":detail.get("references",{}).get("TargettingTypeID",{}).get("row",{})}}
 
+func _source_execution_graph(profile: Dictionary) -> Dictionary:
+	var root_id: int = int(profile.row.ID)
+	if not REVIEWED_EXECUTION_GRAPHS.has(root_id): return {"reason":"execution_graph_not_in_reviewed_compiler"}
+	var nodes: Array = []
+	for child_id: int in REVIEWED_EXECUTION_GRAPHS[root_id]:
+		var built: Dictionary = _source_profile(child_id)
+		var node: Dictionary = built.get("profile",{})
+		if node.is_empty(): return {"reason":"execution_graph_child:"+str(child_id)+":"+str(built.get("reason","unavailable"))}
+		nodes.append(node)
+	var option_ids: Array[int] = []
+	var sources: Array = [profile]
+	sources.append_array(nodes)
+	for node: Dictionary in sources:
+		var entries: Array = node.bonuses.duplicate()
+		for buff: Dictionary in node.buffs: entries.append_array(buff.bonuses)
+		# The compiler collects all declared InvokeOption/application10 rows,
+		# including conditional rows; it does not execute or flatten conditions.
+		for entry: Dictionary in entries:
+			if str(entry.type.Name)!="InvokeOption" or entry.bonus.BonusApplicationTypeID!=10: continue
+			var target: Variant = entry.bonus.BonusApplicationTargetID
+			if not _source_integer(target): return {"reason":"invalid_execution_invoke_reference"}
+			if int(target) not in option_ids: option_ids.append(int(target))
+	option_ids.sort()
+	var invokes: Array = []
+	for option_id: int in option_ids:
+		var option: Dictionary = SOURCE_ROWS.row("InvokeOption",option_id)
+		if option.is_empty(): return {"reason":"execution_invoke_unavailable:"+str(option_id)}
+		if not _source_integer(option.get("InvokeOptionTypeID")): return {"reason":"invalid_execution_invoke_type:"+str(option_id)}
+		var type: Dictionary = SOURCE_ROWS.row("InvokeOptionType",int(option.InvokeOptionTypeID))
+		if type.is_empty(): return {"reason":"execution_invoke_type_unavailable:"+str(option_id)}
+		invokes.append({"row":option,"type":type})
+	return {"graph":{"root_id":root_id,"spells":nodes,"invokes":invokes}}
+
 func _source_materials(local: Dictionary) -> bool:
 	for material: String in local.material_inventory_keys:
 		var bridge: Variant = local.material_inventory_keys[material]
@@ -183,8 +219,6 @@ func _load_source_profiles() -> void:
 		if not _source_integer(binding.get("spell_id")) or not binding.get("row_sha256") is String:
 			deferred[id] = "invalid_public_binding"; continue
 		var spell_id: int = int(binding.spell_id)
-		if spell_id in COMPILED_GRAPH_ROOTS:
-			deferred[id] = "reviewed_execution_graph_requires_compiled_pack"; continue
 		var built: Dictionary = _source_profile(spell_id,str(binding.row_sha256))
 		var profile: Dictionary = built.get("profile",{})
 		if profile.is_empty(): deferred[id] = built.get("reason","source_profile_unavailable"); continue
@@ -203,6 +237,11 @@ func _load_source_profiles() -> void:
 				components.append(component)
 			if deferred.has(id): continue
 			profile["components"] = components
+		if REVIEWED_EXECUTION_GRAPHS.has(spell_id):
+			var graph: Dictionary = _source_execution_graph(profile)
+			if not graph.has("graph"):
+				deferred[id] = graph.get("reason","reviewed_execution_graph_unavailable"); continue
+			profile["execution_graph"] = graph.graph
 		var issue: String = _profile_problem(id,profile,binding)
 		if not issue.is_empty(): deferred[id] = issue; continue
 		candidate[id] = profile
