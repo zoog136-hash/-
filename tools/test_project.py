@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases, missing_private_inputs, ISOLATION_ROOT_VARIABLES
+from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases, missing_private_inputs, ISOLATION_ROOT_VARIABLES, ISOLATION_FLAG_VARIABLES
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -102,6 +102,8 @@ for name,extra in tests:
         env['LOCALAPPDATA']=user_data
         for key in ISOLATION_ROOT_VARIABLES:
             env[key]=user_data
+        for key in ISOLATION_FLAG_VARIABLES:
+            env[key]='1'
         if name == 'option_awakening_ui_test':
             # This native-input test deliberately confirms real card consumption.
             env['TWILIGHT_UI_TEST_ISOLATED']='1'

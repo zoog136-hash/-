@@ -720,6 +720,31 @@ class SourceRuntimeCountedReceiptTests(unittest.TestCase):
         self.assertEqual(classify_result(name, 0, child + '\n' + self.CASES[name] +
                                          '\nCASE_RESULT {"failures":["hidden problem"]}'), (False, False))
 
+class ZeroFailureSummaryContracts(unittest.TestCase):
+    CASES = {
+        'EQUIPMENT_CATEGORY: 39 checks, 0 failures': (True, False),
+        'EQUIPMENT_CATEGORY: 39 checks, 2 failures': (False, False),
+        'SYMBOL523_TEST {"checks":754,"failures":[]}': (True, False),
+        'SYMBOL523_TEST {"checks":754,"failures":["x"]}': (False, False),
+        'SKILL_GROUND_WORLD {"checks":3}': (False, False),
+        'CURRENCY_DROP_PASS': (True, False),
+        'MASTERY523_PASS checks=8153 failures=0 source=synthetic': (True, False),
+        'MASTERY523_PASS checks=8153 failures=1 source=synthetic': (False, False),
+        'DUNGEON523_RUNTIME: 3 checks / 0 failures': (True, False),
+        'A: 3 checks, 0 failures\nB: 4 checks, 1 failures': (False, False),
+        'X: 0 checks, 0 failures': (False, False),
+        'SKILL_EFFECT_EXPORT_INVENTORY checks=12 resources=3 errors=0': (True, False),
+        'nothing here': (False, False),
+    }
+
+    def test_explicit_zero_counts_pass_and_any_nonzero_fails(self):
+        for output, expected in self.CASES.items():
+            with self.subTest(output=output):
+                self.assertEqual(classify_result('generic_summary_test', 0, output), expected)
+                self.assertEqual(classify_result('generic_summary_test', 1, output), (False, False))
+                self.assertEqual(classify_result('generic_summary_test', 0, output + '\nSCRIPT ERROR: x'), (False, False))
+
+
 ROOT = Path(__file__).resolve().parents[1]
 
 

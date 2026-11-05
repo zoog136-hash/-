@@ -19,6 +19,47 @@ ERROR = re.compile(
     re.MULTILINE,
 )
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
+# Explicit final summaries that state their own failure/error count. Accepted
+# only when every such line in the output reports zero; any nonzero count, or a
+# JSON summary without a "failures" list, never passes.
+COUNT_SUMMARY = re.compile(
+    r'^(?P<label>[A-Za-z][A-Za-z0-9_ ]*?)(?::|\s)\s*(?P<checks>\d+) checks?\s*(?:,|/)\s*(?P<bad>\d+) (?:failures?|errors?)\s*$'
+    r'|^(?P<label2>[A-Z][A-Z0-9_]*)(?:_RESULT|_PASS)?\b.*?\bchecks=(?P<checks2>\d+)\b.*?\b(?:failures|errors)=(?P<bad2>\d+)\b'
+    r'|^(?P<label3>[A-Z][A-Z0-9_]*)\s+(?P<json>\{.*\})\s*$'
+    r'|^(?P<label4>[A-Z][A-Z0-9_]*_PASS)\s*$',
+    re.MULTILINE)
+
+
+def zero_failure_summary(output: str) -> bool:
+    # Registered suite-specific receipts keep their exact, own-suite contract.
+    reserved = tuple(prefix for prefix, _ in SCALAR_RESULT_CONTRACTS.values()) + \
+        tuple(prefix for prefix, _ in SCALAR_ONLY_CONTRACTS.values())
+    found = False
+    for match in COUNT_SUMMARY.finditer(output):
+        if match.group(0).startswith(reserved):
+            continue
+        if match.group('label4'):
+            found = True
+            continue
+        if match.group('json') is not None:
+            try:
+                report = json.loads(match.group('json'))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(report, dict) or 'failures' not in report:
+                continue
+            if report['failures'] != []:
+                return False
+            found = True
+            continue
+        bad = match.group('bad') if match.group('bad') is not None else match.group('bad2')
+        checks = match.group('checks') if match.group('checks') is not None else match.group('checks2')
+        if bad != '0':
+            return False
+        if checks is not None and int(checks) == 0:
+            return False
+        found = True
+    return found
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
 OPTIONAL_RENDER_ENV = re.compile(
@@ -370,7 +411,8 @@ def classify_result(name: str, returncode: int, output: str, *,
         receipts = [line for line in output.splitlines() if line.startswith(prefix)]
         return (len(receipts) == 1 and (parsed := pattern.fullmatch(receipts[0])) is not None
                 and parsed.group('bad') == '0'), False
-    return name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output)), False
+    return (name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output))
+            or zero_failure_summary(output)), False
 
 
 def _stop_tree(process: subprocess.Popen) -> None:
@@ -517,11 +559,34 @@ PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
     "mastery523_operations_test": ("TWILIGHT_MASTERY523_PACK",),
     "mastery523_ticket_main_test": ("TWILIGHT_MASTERY523_PACK",),
     "monsterbook523_test": ("MONSTERBOOK523_PACK", "MONSTERBOOK523_SHA256"),
+    "title523_test": ("TWILIGHT_TITLE523_ZIP",),
+    "title523_main_test": ("TWILIGHT_TITLE523_ZIP",),
+    "totem_main_ui_test": ("TWILIGHT_TOTEM_PACK",),
+    "totem_progression_test": ("TWILIGHT_TOTEM_PACK",),
+    "totem_runtime_test": ("TWILIGHT_TOTEM_PACK",),
+    "patch523_item_use_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_catalog_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_delivery_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_use_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_effects_test": ("TWILIGHT_ITEM_EFFECT_EXPECTATIONS",),
+    "patch523_pack_upgrade_test": ("TWILIGHT_PATCH523_DROP_ZIP", "TWILIGHT_PATCH523_OLD_ZIP"),
+    "source_dungeon_runtime_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "source_map_review_pack_test": ("TWILIGHT_MAP84_REVIEW_PACK",),
+    "source_map_runtime_field_test": ("TWILIGHT_SOURCE77_EDGE_ORACLE",),
+    "presentation_effect_pack_test": ("TWILIGHT_PRESENTATION_EFFECT_PACK", "TWILIGHT_PRESENTATION_EFFECT_BAD_PACK"),
+    "source_optimization_integration_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "tower_png_normal_runtime_test": ("TWILIGHT_OMAN_PNG_PACK",),
 }
 
 # Per-test opt-in flags/roots that only assert "this run uses a fresh isolated
 # profile". The runner always allocates one, so it states that explicitly.
 ISOLATION_ROOT_VARIABLES = ("TWILIGHT_GROWTH96_TEST_ROOT", "TWILIGHT_TJ_TEST_ROOT")
+# Test-only guards of the form `VAR != "1" or XDG_DATA_HOME empty -> quit`.
+# None is read by production scripts; the runner's fresh profile satisfies them.
+ISOLATION_FLAG_VARIABLES = ("TWILIGHT_OWNED_RETURN_TEST", "TWILIGHT_REGIONAL_RETURN_TEST",
+                            "TWILIGHT_SOURCE_AMMO_TEST", "TWILIGHT_SOURCE_BOOK_TEST",
+                            "TWILIGHT_SOURCE_RECOVERY_TEST", "TWILIGHT_SOURCE_WISDOM_TEST",
+                            "TWILIGHT_TICKET_CONTRACT_TEST")
 
 
 def missing_private_inputs(name: str, env: Mapping[str, str]) -> list[str]:
