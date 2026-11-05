@@ -213,3 +213,25 @@ The current character attributes, caps, active-item and collection modifiers,
 guardian/skill contributions and status-success formulas are unchanged. This
 does not implement additional source status effects or change actor/save
 ownership. These ten caller connections remain uncompiled and unexecuted.
+
+## Existing elemental combat inputs
+
+ItemOptions.additional_original_element(record,channel,kind,channels) supplies
+base-item ElementalDamage Value operands to the existing separate flat-element
+damage call and ElementalResistance Percentage operands to the existing player
+elemental-resistance call. BonusApplicationType 3 must itself declare
+ElementalResistanceType. That foreign table is absent in the held source;
+the reader does not create it or claim a new recovered enum. It reuses the
+already published enhancement policy's exact source-earring/official-name
+channel mapping for targets 1–4, and the existing equipment523 set-effect
+target-5 contract for whole-element resistance. Evidence records that consumer
+mapping separately from original rows. Ambiguous/unsupported mapping is not
+used. Whole-element input is limited to fire/water/wind/earth.
+
+Original amounts and units remain separate: flat elemental damage has no
+fixed-point conversion, resistance uses raw/10000 percentage points. Existing
+normal/spell scope, target resistance, rounding, damage order and resistance
+caps remain the host policy. Existing fields, overlays, original mapped IDs,
+possession exclusions and native-row identity guards stay in force. No weapon
+enchantment, extra hit, new element, guessed pixel/actor or save is created.
+These caller connections are uncompiled/unexecuted/unverified.

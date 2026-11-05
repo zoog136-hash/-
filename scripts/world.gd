@@ -948,6 +948,8 @@ func _equipment_inven_sum(key: String) -> float:
 			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
 			total += float(record.get(key, 0.0))
 			total += ITEM_OPTIONS.additional_original_percent(record,key)
+			if key.begins_with("source_elemental_flat_"):
+				total += ITEM_OPTIONS.additional_original_element(record,key.trim_prefix("source_elemental_flat_"),"damage",PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{}))
 	for record: Dictionary in _equipment523_bonus_records():
 		total += float(record.get(key, 0.0))
 	return total
@@ -7789,6 +7791,10 @@ func _player_element_resistance(element_name: String) -> float:
 		# Legacy host records retain their established wider channel scope.
 		if not bool(record.get("equipment523_synthetic",false)) or element_name in EQUIPMENT523_COMBAT.CHANNELS:
 			total += float(record.get("element_resist_all",0.0))
+		if element_name in EQUIPMENT523_COMBAT.CHANNELS:
+			var original_channels: Variant = PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{})
+			total += ITEM_OPTIONS.additional_original_element(record,element_name,"resistance",original_channels)
+			total += ITEM_OPTIONS.additional_original_element(record,"all","resistance",original_channels)
 	return clampf(total, -80.0, 85.0)
 
 func _normal_attack_element() -> String:

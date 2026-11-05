@@ -47,7 +47,26 @@ static func additional_original_status(record: Dictionary, status: String, kind:
 			if record.has(alias): return 0.0
 	return _additional_original_operand(record,status+"_"+kind,["HitSpecialResistance" if kind=="accuracy" else "SpecialResistance"],"Percentage",10000.0,status)
 
-static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "") -> float:
+static func additional_original_element(record: Dictionary, channel: String, kind: String, channels: Variant) -> float:
+	if kind not in ["damage","resistance"] or channel not in ["fire","water","wind","earth","all"] or (channel=="all" and kind!="resistance"): return 0.0
+	if not channels is Dictionary: return 0.0
+	var target_id: int = -1
+	var basis: String = "existing_enhancement_source_elemental_target_channels"
+	if channel=="all":
+		# Reuse the exact existing equipment523 set-effect contract, not a
+		# fabricated ElementalResistanceType foreign table (absent in source).
+		target_id=5; basis="existing_equipment523_all_element_target_5"
+	else:
+		for id: Variant in channels:
+			if channels[id]!=channel: continue
+			if not str(id).is_valid_int() or int(str(id)) not in [1,2,3,4] or target_id!=-1: return 0.0
+			target_id=int(str(id))
+		if target_id<0: return 0.0
+	var key: String = "source_elemental_flat_"+channel if kind=="damage" else "element_resist_"+channel
+	var context: Dictionary = {"target_id":target_id,"channel":channel,"basis":basis}
+	return _additional_original_operand(record,key,["ElementalDamage" if kind=="damage" else "ElementalResistance"],"Value" if kind=="damage" else "Percentage",1.0 if kind=="damage" else 10000.0,"",context)
+
+static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "", elemental_input: Dictionary = {}) -> float:
 	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
 	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
 	var bless: Variant = record.get("source_bless_raw")
@@ -71,7 +90,11 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
 		if type.get("Name") not in bonus_names: continue
 		var application: Dictionary = {}; var target: Dictionary = {}
-		if status.is_empty():
+		if not elemental_input.is_empty():
+			if bonus.get("BonusApplicationTypeID")!=3 or bonus.get("BonusApplicationTargetID")!=elemental_input.target_id: continue
+			application = CURRENT_DEFINITIONS.row("BonusApplicationType",3)
+			if application.get("Name")!="ElementalResistanceType" or not CURRENT_DEFINITIONS.declared_exclusion("BonusApplicationType",application).is_empty(): return 0.0
+		elif status.is_empty():
 			if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
 		else:
 			if bonus.get("BonusApplicationTypeID")!=2: continue
@@ -91,7 +114,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
 		if divisor==1.0 and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
 		total+=float(value)/divisor
-		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target})
+		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target,"consumer_elemental_input":elemental_input})
 	if evidence.is_empty() or not is_finite(total): return 0.0
 	if divisor==1.0 and absf(total)>9007199254740991.0: return 0.0
 	original_percent_input_evidence[str(int(id))+":"+key] = {"source":identity,"item_class_id":id,"field":key,"effects":evidence,"source_unit":unit_name,"divisor":divisor,"value":total}
