@@ -180,11 +180,21 @@ No new UI layout, image, Sprite frame, fallback or animation timing is invented.
 ### Current caller contract and required handoffs
 
 The current UI267 caller contract was read from
-[`docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md`](https://github.com/zoog136-hash/-/blob/feature/original-ui-all-20261104/docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md),
-Git blob `c61f00f2a555cb7fac7ec06a1ee522c3d8c4f23b`. Its strict player accepts
+[`docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md`](https://github.com/zoog136-hash/-/blob/d719912b6b9fdf65b145a559bebc3056d40ef8fa/docs/ORIGINAL_UI_ITEM_CONSUMER_CONTRACT.md),
+Git blob `67fdf09dd276ab9fcfaa7e84e82a1c714872e6e3`. Its strict player accepts
 `configure(pack, member, false, bindings)`, followed by the caller's exact
 `play(clip, repeat)`. It has no completion signal. `source_nodes` is keyed by
 exact original CSB offsets; names or suffixes do not establish node identity.
+
+The existing `UI.apply_item_visual` and ItemVisual caller path accepts an
+optional `original_ui_bindings` dictionary and forwards it to this strict
+player contract. The caller supplies exact source offsets and existing
+handlers/values, including named callbacks and original frame-event handlers.
+No binding, action reference, callback name or event meaning is generated.
+The UI owner retains input, timeline/event dispatch and service-session
+lifecycle. Nonempty bindings require the corresponding player API; they are
+not discarded for an older player. This forwarding is unexecuted and does not
+register a screen or establish new original-data consumption.
 
 The UI-owned runtime presenter additionally accepts explicit content routes,
 an existing original-coordinate mount and a caller binding factory. That API

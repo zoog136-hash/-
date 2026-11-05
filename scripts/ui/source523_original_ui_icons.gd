@@ -83,7 +83,7 @@ static func _safe_relative(value: String) -> bool:
 			return false
 	return true
 
-static func attach(view: TextureRect, info: Dictionary) -> Dictionary:
+static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}) -> Dictionary:
 	if not is_instance_valid(view):
 		return _unavailable("source_scene_host_unavailable")
 	detach(view)
@@ -140,7 +140,22 @@ static func attach(view: TextureRect, info: Dictionary) -> Dictionary:
 	if not scene.has_method("configure") or not scene.has_method("play"):
 		scene.free()
 		return _unavailable("source_scene_player_contract_unavailable")
-	var configured: Variant = scene.configure(pack, member, false)
+	var configured: Variant
+	if original_ui_bindings.is_empty():
+		configured = scene.configure(pack, member, false)
+	else:
+		var accepts_bindings: bool = false
+		for method: Dictionary in scene.get_method_list():
+			if str(method.get("name", "")) != "configure":
+				continue
+			var arguments: Variant = method.get("args", [])
+			var defaults: Variant = method.get("default_args", [])
+			accepts_bindings = arguments is Array and defaults is Array and arguments.size() >= 4 and arguments.size() - defaults.size() <= 4
+			break
+		if not accepts_bindings:
+			scene.free()
+			return _unavailable("source_scene_player_contract_unavailable")
+		configured = scene.configure(pack, member, false, original_ui_bindings)
 	if not configured is Dictionary or not configured.get("ok", false):
 		scene.free()
 		return _unavailable("source_scene_configure_unavailable", configured if configured is Dictionary else {})

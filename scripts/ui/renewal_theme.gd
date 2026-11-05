@@ -237,8 +237,8 @@ static func safe(value: Variant) -> String:
 static func item_icon(record: Dictionary, item_name: String, images: Dictionary) -> Texture2D:
 	return preload("res://scripts/ui/item_visual_resolver.gd").texture(record,item_name,images)
 
-static func apply_item_visual(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, context: String = "slot") -> void:
-	preload("res://scripts/ui/item_visual.gd").apply(view,record,item_name,images,context)
+static func apply_item_visual(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, context: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
+	preload("res://scripts/ui/item_visual.gd").apply(view,record,item_name,images,context,original_ui_bindings)
 
 static func clear_item_visual(view: TextureRect) -> void:
 	preload("res://scripts/ui/item_visual.gd").clear(view)

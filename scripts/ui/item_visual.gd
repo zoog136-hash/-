@@ -42,13 +42,13 @@ static func animation_rank(record: Dictionary, item_name: String = "") -> int:
 	if is_blessed_scroll(record, item_name): return GRADES.find("영웅")
 	return maxi(0, GRADES.find(str(record.get("grade", "일반"))))
 
-static func apply(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, usage: String = "slot") -> void:
+static func apply(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, usage: String = "slot", original_ui_bindings: Dictionary = {}) -> void:
 	var effect: Node = view.get_node_or_null("ItemVisual")
 	if effect == null:
 		effect = new()
 		effect.name = "ItemVisual"
 		view.add_child(effect)
-	effect.configure(view, record, item_name, images, usage)
+	effect.configure(view, record, item_name, images, usage, original_ui_bindings)
 
 static func clear(view: TextureRect) -> void:
 	if view == null: return
@@ -76,7 +76,7 @@ static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
 	materials[key] = result
 	return result
 
-func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String) -> void:
+func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary = {}) -> void:
 	if is_instance_valid(target) and target != view: _detach_source_scene(target)
 	_detach_source_scene(view)
 	target = view
@@ -88,7 +88,7 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 	target.texture = info.get("texture") as Texture2D if source_presentation else RESOLVER.texture(record,item_name,images,usage == "ground")
 	var source_scene_requested: bool = source_presentation and info.get("reason","") == "unsupported_csb" and usage != "ground"
 	if source_scene_requested:
-		var attached: Dictionary = SOURCE523.ORIGINAL_UI_ICONS.attach(view,info)
+		var attached: Dictionary = SOURCE523.ORIGINAL_UI_ICONS.attach(view,info,original_ui_bindings)
 		info["scene_result"] = attached
 		info["source_status"] = str(attached.get("status","unavailable"))
 		if attached.get("ok",false):
