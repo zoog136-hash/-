@@ -784,3 +784,20 @@ source exclusions remain unavailable.
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
 loads, component renders and delivery bytes do not count as that completion.
+
+### Follow-up after PR270: dungeon reward action images
+
+The existing tower claim and immediate-completion buttons now use the same
+`reward_preview("tower", stage_id, immediate_mode)` rows as the settlement
+service. The extended dungeon claim button uses the cleared active run's stored
+`rewards`, preserving its already selected settlement result. An image is
+requested only for exactly one declared Item reward whose `RewardClassID`
+matches the complete supplied ItemClass row. The existing original item-image
+consumer resolves that row and retains its source provenance. Multiple rewards,
+experience rewards and missing source rows receive no representative image;
+refreshing the selection clears the previous image and its metadata.
+
+This change adds image calls to existing buttons. It does not choose rewards,
+change claim/transaction/save behavior, supply entrance/popup asset identities,
+or construct original UI nodes. It is unexecuted and unverified. No additional
+tests, game runs, renders or CI were started, and no actual-use counts changed.
