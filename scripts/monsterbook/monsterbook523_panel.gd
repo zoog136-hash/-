@@ -187,6 +187,12 @@ func show_selected() -> void:
 			button.scroll_host = scroll_host
 			button.scroll_area = stage_scroll
 			button.name = "MonsterBook_%s_%d" % [action, level_id]
+			if action == "claim" and stage.rewards.size() == 1:
+				var only_reward: Dictionary = stage.rewards[0]
+				var reward_type: Dictionary = book_service.row("RewardType", int(only_reward.get("RewardTypeID", 0)))
+				if reward_type.get("Name") == "Item":
+					var reward_item_id: int = int(only_reward.get("RewardClassID", 0))
+					_button_item_image(button, book_service.row("ItemClass", reward_item_id), _description("ItemClass", reward_item_id))
 			var reason: String = world.call("monsterbook_action_status", action, selected_id, level_id)
 			button.disabled = not reason.is_empty()
 			button.tooltip_text = reason

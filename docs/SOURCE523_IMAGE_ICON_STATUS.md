@@ -763,6 +763,15 @@ HUD; its state/save behavior is preserved. See
 exact existing data API and source-role limits. These changes are unexecuted
 and unverified; no new tests, game runs, renders, CI or usage counts were added.
 
+The existing monster-book stage claim button also uses its original reward
+image when the owning `levels()` result has exactly one reward row and that
+row's original RewardType declares Item. Its `RewardClassID` then supplies the
+full ItemClass row to the existing canonical original item-image helper.
+Multi-reward and non-item claims receive no representative image; NpcGroupID
+does not select a portrait. Existing claim arguments, status, quantities,
+ownership, storage and detail lifecycle retain their current calls. This image
+hookup is unexecuted and unverified, with no additional tests/game/render/CI.
+
 Existing spell-group review and confirmation buttons additionally consume the
 quote's declared GameClassSpellGroupCostView.ItemClassID image, preserving the
 independent SpellGroup choice and payment/commit data. Shared item views also
