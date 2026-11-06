@@ -391,7 +391,10 @@ func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 	record["ai"]={"aggressive":role in ["Monster","MiddleBoss","Boss"]}
 	var attribute_input: Dictionary=preload("res://scripts/resources/current523_actor_attribute_input.gd").orim(source_id,int(state.active.stage_id),row)
 	if not attribute_input.is_empty():record["original_attribute_input"]=attribute_input
-	monster.setup(record,world.player,world,world._monster_texture(record));monster.set_meta("summoned",true)
+	if not monster.setup(record,world.player,world,world._monster_texture(record)):
+		monster.queue_free()
+		return false
+	monster.set_meta("summoned",true)
 	var factor: int=int(state.settings.hard_multiplier) if bool(rules.stage("orim",int(state.active.stage_id)).stage.IsHard) else 1
 	var definition: Dictionary=rules.orim_actor_defs.get(source_id,{})
 	if not definition.is_empty():
@@ -400,7 +403,12 @@ func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 		monster.attack_power=0
 		for attack: Dictionary in definition.attacks:
 			if not attack.IsSpell:
-				monster.attack_power=maxi(0,int(round(float(attack.DiceCount)*(float(attack.DiceSpots)+1.0)/2.0+float(attack.DiceBonus))));monster.set_meta("dungeon_play_attack",attack.duplicate(true));break
+				monster.attack_power=maxi(0,int(round(float(attack.DiceCount)*(float(attack.DiceSpots)+1.0)/2.0+float(attack.DiceBonus))));monster.set_meta("dungeon_play_attack",attack.duplicate(true))
+				var range_input: Dictionary = preload("res://scripts/resources/current523_actor_attribute_input.gd").attack_range(attribute_input,attack,monster.attack_type)
+				if not range_input.is_empty():
+					monster.configured_attack_range=float(range_input.host_length)
+					monster.set_meta("original_orim_attack_range_input",range_input)
+				break
 	monster.max_hp*=factor*(int(state.settings.boss_hp_multiplier) if role=="Boss" else 1);monster.hp=monster.max_hp;monster.hp_bar.max_value=monster.max_hp;monster.hp_bar.value=monster.hp
 	monster.attack_power*=factor;monster.is_boss=role in ["MiddleBoss","Boss"]
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,world.field_map is RemakePlayableField or world.field_map is NativePngField)

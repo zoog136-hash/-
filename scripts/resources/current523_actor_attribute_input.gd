@@ -49,16 +49,9 @@ static func numeric(input: Dictionary) -> Dictionary:
 	# A separate explicit local-input policy; the admitted-native-actor policy
 	# is neither widened nor used as a replacement for source admission.
 	if values(input).is_empty(): return {}
-	var file := FileAccess.open(NUMERIC_POLICY,FileAccess.READ)
-	if file==null: return {}
-	if file.get_length()>16384:
-		file.close()
-		return {}
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	file.close()
-	var policy: Variant = JSON.parse_string(bytes.get_string_from_utf8())
-	if not policy is Dictionary or policy.get("schema")!="twilight.current523.orim-numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE.SOURCE_SHA: return {}
-	if typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled or policy.get("scope")!="verified_original_orim_stage_spawn_npc_numeric_input_only" or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_damage_formula_recovered"))!=TYPE_BOOL or policy.native_server_damage_formula_recovered or policy.get("host_formula")!="existing_host_formula_retained": return {}
+	var document: Dictionary = _policy()
+	if document.is_empty(): return {}
+	var policy: Dictionary = document.policy
 	var scale: Variant = policy.get("raw_resistance_to_host_percent")
 	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<0.0: return {}
 	var resistance: Dictionary = {}; var evidence: Dictionary = {}
@@ -70,14 +63,51 @@ static func numeric(input: Dictionary) -> Dictionary:
 		if not is_finite(value): return {}
 		resistance[channel]=value
 		evidence[channel]={"field":field,"raw":raw,"host_input":value}
-	var hashing := HashingContext.new()
-	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return {}
 	var status: Dictionary = _named_resistances(int(input.npc.ID),policy.get("special_resistance"))
 	return {"source":input.source,"npc_class_id":input.npc.ID,"element_resistance":resistance,
 		"status_resistance":status.get("values",{}),"status_evidence":status.get("evidence",{}),
-		"fields":evidence,"policy_path":NUMERIC_POLICY,"policy_sha256":hashing.finish().hex_encode(),
+		"fields":evidence,"policy_path":NUMERIC_POLICY,"policy_sha256":document.sha256,
 		"origin":"twilight_adjustable_numeric_estimate","source_raw_unit_scale":"unconfirmed",
 		"scale":float(scale),"native_server_damage_formula_recovered":false,"native_admission":false}
+
+static func _policy() -> Dictionary:
+	var file := FileAccess.open(NUMERIC_POLICY,FileAccess.READ)
+	if file==null: return {}
+	if file.get_length()>16384:
+		file.close()
+		return {}
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var policy: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	if not policy is Dictionary or policy.get("schema")!="twilight.current523.orim-numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE.SOURCE_SHA: return {}
+	if typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled or policy.get("scope")!="verified_original_orim_stage_spawn_npc_numeric_input_only" or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_damage_formula_recovered"))!=TYPE_BOOL or policy.native_server_damage_formula_recovered or policy.get("host_formula")!="existing_host_formula_retained": return {}
+	var hashing := HashingContext.new()
+	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return {}
+	return {"policy":policy,"sha256":hashing.finish().hex_encode()}
+
+static func attack_range(input: Dictionary, attack: Dictionary, host_kind: String) -> Dictionary:
+	# The existing owner already chose this attack for its actual dice hit.
+	# Never choose another row/range or change the host's attack-style role.
+	if values(input).is_empty() or not whole(attack.get("ID")) or host_kind not in ["melee","ranged","magic"]: return {}
+	var original: Dictionary = unique("NpcAttack",int(attack.ID))
+	if original.is_empty() or original!=attack or original.get("NpcClassID")!=input.npc.ID or original.get("IsSpell")!=false or not whole(original.get("AttackType")): return {}
+	var type: Dictionary = unique("AttackType",int(original.AttackType))
+	if type.get("Name")!={"melee":"Melee","ranged":"Range","magic":"Magic"}[host_kind]: return {}
+	var document: Dictionary = _policy()
+	if document.is_empty(): return {}
+	var policy: Variant = document.policy.get("attack_range")
+	if not policy is Dictionary or typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled: return {}
+	if policy.get("scope")!="existing_selected_nonspell_orim_attack_matching_host_kind" or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_range_unit_scale")!="unconfirmed" or typeof(policy.get("native_grid_scale_recovered"))!=TYPE_BOOL or policy.native_grid_scale_recovered: return {}
+	var scale: Variant = policy.get("raw_attack_range_to_host_length")
+	var raw: Variant = original.get("Range")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0.0 or not whole(raw) or float(raw)<=0.0: return {}
+	var length: float = float(raw)*float(scale)
+	if not is_finite(length) or length<=0.0: return {}
+	return {"source":input.source,"npc_class_id":input.npc.ID,"attack":original,"attack_type":type,
+		"raw_range":raw,"host_kind":host_kind,"host_length":length,"scale":float(scale),
+		"policy_path":NUMERIC_POLICY,"policy_sha256":document.sha256,
+		"origin":"twilight_adjustable_numeric_estimate","source_raw_range_unit_scale":"unconfirmed",
+		"native_grid_scale_recovered":false,"native_admission":false}
 
 static func _named_resistances(npc_id: int, policy: Variant) -> Dictionary:
 	if not policy is Dictionary or typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled: return {}

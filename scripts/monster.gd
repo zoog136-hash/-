@@ -239,6 +239,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	if source523 != null: source523.forget(self)
 	_original_attribute_values.clear()
 	if has_meta("original_orim_numeric_input"): remove_meta("original_orim_numeric_input")
+	if has_meta("original_orim_attack_range_input"): remove_meta("original_orim_attack_range_input")
 	var original_numeric: Dictionary = {}
 	# A numeric local-adapter input does not assert a native spawn/Sprite ID.
 	if record.get("source")=="twilight_dungeon_visual_adapter" and record.get("original_attribute_input") is Dictionary:

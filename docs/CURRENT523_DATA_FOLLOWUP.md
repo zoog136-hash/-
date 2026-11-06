@@ -465,3 +465,33 @@ performed. Sparse checkout omitted this already tracked document during the
 merge; the exact tracked HEAD file was restored, not regenerated or discarded.
 New data code remains uncompiled/unexecuted/unverified, with no extra tests,
 game/render/CI or table-use recount started.
+
+## Actual selected Orim NpcAttack range input
+
+The existing Orim owner already chooses a non-spell NpcAttack row for both
+its damage dice and dungeon_play_attack metadata. Immediately after that same
+choice it now supplies that exact row to
+current523_actor_attribute_input.attack_range(descriptor,attack,host_kind).
+The reader reconstructs the verified stage/spawn/NPC descriptor, requires a
+unique full original NpcAttack row for that NPC, IsSpell=false and a positive
+integer Range. Its original AttackType relation must name the same existing
+host kind (Melee/Range/Magic); All, mixed/unsupported types and mismatches do
+not change the host role or supply a range. WeaponType/MotionType are not
+translated into Sprite or gameplay weapon enums.
+
+The distinct local Orim policy explicitly estimates58 host-length units per
+raw range1, reusing the previously recorded NPC range calibration choice.
+Source internal grid units remain unconfirmed. The exact selected row, scale,
+policy/source SHA and resulting host length are retained as per-life metadata;
+the next setup clears it. This numeric estimate is separate from native actor
+admission and from the existing admitted-native uniform-range policy.
+
+The actual receiver is Monster.configured_attack_range, read by the existing
+current_attack_range() chase/release checks. Existing silence fallback,
+attack selection/order, dice, spell routing, intervals, RNG, map placement and
+saved run identity are unchanged. A rejected Monster.setup() now returns a
+failed spawn before applying data, connecting callbacks or issuing a new
+token; the staged/saved issued state is preserved. No alternate source/pixel
+input bypasses that rejection. Player SpellClass range/weapon/minimum-range
+receiver contracts are still separate; this does not claim to finish them.
+This additional source-to-actual-NPC-caller connection remains unverified.
