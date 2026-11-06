@@ -440,3 +440,28 @@ files are not modified in this data lane.
 This handoff adds no image/UI/ownership implementation and no execution or
 new adoption count. Actual missing image caller contracts remain separated
 from the independently implemented original reward-rate and NPC input paths.
+
+## Typed flat damage-reduction inputs
+
+The current native ItemBonus reader now supplies direct Unit.Value
+MeleeDamageReduction/RangeDamageReduction/MagicDamageReduction operands to the
+existing flat stage of _pve_damage_after_item_buffs(raw,ignore,attack_type).
+The actual hit caller already passes its normalized attack type. Each operand
+stays in that style, separate from the existing percent-reduction field, card
+collections, critical/elemental reductions and source conditions. No PvP-only
+effect is projected into this input.
+
+PoisonDamageReduction similarly supplies the poison-only flat operand in the
+existing _source_dot_damage() path before its existing percentage stage.
+Bleed and other tick channels do not borrow that flat value. Existing host
+minimum damage and flat-before-percent ordering are retained; this is not a
+claim to recover original-server ordering. Exact native row/identity, Unit,
+typed-field/alias and mapped-bonus safeguards still apply. No new status,
+physical item, quantity, transaction, RNG or save owner is introduced.
+
+Current main d758bcfc0 was merged into this feature branch with its existing
+startup/save/source-only fixes preserved; no PR/main merge or force push was
+performed. Sparse checkout omitted this already tracked document during the
+merge; the exact tracked HEAD file was restored, not regenerated or discarded.
+New data code remains uncompiled/unexecuted/unverified, with no extra tests,
+game/render/CI or table-use recount started.

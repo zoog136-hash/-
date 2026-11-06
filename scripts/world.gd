@@ -9819,14 +9819,16 @@ func _damage_reduction_stat() -> int:
 func _source_dot_damage(raw_damage: int,kind: String) -> int:
 	var percent: float=0.0
 	if kind in PATCH523_ENHANCE.policy().get("source_dot_channels",[]):percent=clampf(_equipment_inven_sum("dot_damage_reduction_pct"),0,90)
-	return maxi(1,int(round(float(raw_damage)*(1.0-percent/100.0))))
+	var flat: int = int(_equipment_inven_sum("poison_damage_reduction")) if kind=="poison" else 0
+	return maxi(1,int(round(float(maxi(1,raw_damage-flat))*(1.0-percent/100.0))))
 
 func _pve_damage_after_item_buffs(raw_damage: int,ignore_percent: float=0.0,attack_type: String="") -> int:
 	var protection: Dictionary=_patch523_protection_effects()
 	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
 	var protection_flat: int=int(protection.get("possession_flat",0))+int(protection.get("active_flat",0)) if projection else 0
 	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
-	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - protection_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
+	var style_flat: int = int(_equipment_inven_sum(attack_type+"_damage_reduction")) if attack_type in ["melee","ranged","magic"] else 0
+	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - protection_flat - style_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
 	var percent: float = maxf(0.0,_pve_reduction_percent(attack_type)-ignore_percent)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
