@@ -720,5 +720,102 @@ class SourceRuntimeCountedReceiptTests(unittest.TestCase):
         self.assertEqual(classify_result(name, 0, child + '\n' + self.CASES[name] +
                                          '\nCASE_RESULT {"failures":["hidden problem"]}'), (False, False))
 
+class ZeroFailureSummaryContracts(unittest.TestCase):
+    CASES = {
+        'EQUIPMENT_CATEGORY: 39 checks, 0 failures': (True, False),
+        'EQUIPMENT_CATEGORY: 39 checks, 2 failures': (False, False),
+        'SYMBOL523_TEST {"checks":754,"failures":[]}': (True, False),
+        'SYMBOL523_TEST {"checks":754,"failures":["x"]}': (False, False),
+        'SKILL_GROUND_WORLD {"checks":3}': (False, False),
+        'CURRENCY_DROP_PASS': (True, False),
+        'MASTERY523_PASS checks=8153 failures=0 source=synthetic': (True, False),
+        'MASTERY523_PASS checks=8153 failures=1 source=synthetic': (False, False),
+        'DUNGEON523_RUNTIME: 3 checks / 0 failures': (True, False),
+        'A: 3 checks, 0 failures\nB: 4 checks, 1 failures': (False, False),
+        'X: 0 checks, 0 failures': (False, False),
+        'SKILL_EFFECT_EXPORT_INVENTORY checks=12 resources=3 errors=0': (True, False),
+        'nothing here': (False, False),
+    }
+
+    def test_explicit_zero_counts_pass_and_any_nonzero_fails(self):
+        for output, expected in self.CASES.items():
+            with self.subTest(output=output):
+                self.assertEqual(classify_result('generic_summary_test', 0, output), expected)
+                self.assertEqual(classify_result('generic_summary_test', 1, output), (False, False))
+                self.assertEqual(classify_result('generic_summary_test', 0, output + '\nSCRIPT ERROR: x'), (False, False))
+
+
+class ScriptErrorFailFast(unittest.TestCase):
+    def run_child(self, code, **kw):
+        from test_project_support import run_isolated
+        return run_isolated([sys.executable, '-c', code], env=dict(os.environ), **kw)
+
+    def test_hang_after_script_error_stops_after_grace_and_still_fails(self):
+        import time as _t
+        began = _t.monotonic()
+        result = self.run_child("import sys,time;print('SCRIPT ERROR: x',flush=True);time.sleep(60)",
+                                timeout=30, script_error_grace=0.5)
+        self.assertLess(_t.monotonic() - began, 15)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+        self.assertEqual(classify_result('any_test', result.returncode, result.stdout + result.stderr), (False, False))
+
+    def test_clean_exit_is_unchanged(self):
+        result = self.run_child("print('X_OK')", timeout=30, script_error_grace=0.5)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stdout.strip(), 'X_OK')
+        self.assertNotIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+
+    def test_error_then_prompt_exit_keeps_real_return_code(self):
+        result = self.run_child("import sys;print('SCRIPT ERROR: y',flush=True);sys.exit(3)",
+                                timeout=30, script_error_grace=5)
+        self.assertEqual(result.returncode, 3)
+        self.assertNotIn('STOPPED_AFTER_SCRIPT_ERROR', result.stderr)
+
+    def test_plain_hang_still_times_out(self):
+        with self.assertRaises(subprocess.TimeoutExpired):
+            self.run_child("import time;time.sleep(60)", timeout=1, script_error_grace=0.5)
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class PrivateInputContracts(unittest.TestCase):
+    def test_missing_private_inputs_are_named_and_whitespace_counts_as_missing(self):
+        from test_project_support import missing_private_inputs, PRIVATE_INPUT_REQUIREMENTS
+        self.assertEqual(missing_private_inputs('base508_pack_test', {}), ['TWILIGHT_BASE508_PACK'])
+        self.assertEqual(missing_private_inputs('base508_pack_test', {'TWILIGHT_BASE508_PACK': '  '}), ['TWILIGHT_BASE508_PACK'])
+        self.assertEqual(missing_private_inputs('base508_pack_test', {'TWILIGHT_BASE508_PACK': '/p'}), [])
+        self.assertEqual(missing_private_inputs('job_smoke_test', {}), [])
+        for name, keys in PRIVATE_INPUT_REQUIREMENTS.items():
+            with self.subTest(name=name):
+                self.assertTrue((ROOT / 'tests' / (name + '.gd')).is_file(), name)
+                source = (ROOT / 'tests' / (name + '.gd')).read_text(encoding='utf-8')
+                for key in keys:
+                    self.assertIn(key, source, 'requirement must be read by the test itself')
+
+    def test_runner_never_counts_unavailable_private_input_as_pass(self):
+        runner = (ROOT / 'tools/test_project.py').read_text(encoding='utf-8')
+        self.assertIn("private_unavailable[name]=missing", runner)
+        self.assertIn("skipped.append(name)", runner)
+        self.assertIn("'private_input_unavailable':private_unavailable", runner)
+
+
+class RetiredLegacyMapContracts(unittest.TestCase):
+    def test_retired_tests_exist_and_are_never_counted_as_passed(self):
+        from test_project_support import RETIRED_LEGACY_MAP_TESTS, PRIVATE_INPUT_REQUIREMENTS
+        for name in RETIRED_LEGACY_MAP_TESTS:
+            with self.subTest(name=name):
+                self.assertTrue((ROOT / 'tests' / (name + '.gd')).is_file())
+                self.assertNotIn(name, PRIVATE_INPUT_REQUIREMENTS)
+        self.assertNotIn('world_regions_test', RETIRED_LEGACY_MAP_TESTS)
+        self.assertNotIn('native_png_teleport_test', RETIRED_LEGACY_MAP_TESTS)
+        runner = (ROOT / 'tools/test_project.py').read_text(encoding='utf-8')
+        self.assertIn("'legacy_map_retired':retired_legacy", runner)
+        source = (ROOT / 'scripts/maps/source_map_runtime.gd').read_text(encoding='utf-8')
+        self.assertIn('mid=="aden_world" or not LEGACY_LAYOUT.active("--legacy-map-layouts")', source,
+                      'retirement relies on aden_world always using the source map runtime')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

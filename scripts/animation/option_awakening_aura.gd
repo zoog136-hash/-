@@ -18,6 +18,7 @@ var redraw_elapsed: float = 0.0
 
 func _ready() -> void:
 	name = "OptionAwakeningAura"
+	set_meta("original_option_lightning",{"status":"source_effect_role_pending","legacy_visual_excluded":true})
 	z_index = 0
 	material = LIGHTNING.make_material(grade)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -100,12 +101,6 @@ func _process(delta: float) -> void:
 			queue_redraw()
 
 func _draw() -> void:
-	if not awakened or not visible:
-		return
-	# Offset each attachment's discharge; never make all three flash in sync.
-	var phase_offset: float = 0.17 if category == "마법인형" else 0.34 if category == "성물" else 0.0
-	var frame: int = LIGHTNING.frame_at(clock + phase_offset, reduced_motion)
-	if frame < 0: return
-	var extent := radii * Vector2(2.05, 1.75)
-	var opacity: float = intensity * (0.40 if reduced_motion else 0.85 if low_detail else 1.0)
-	draw_texture_rect_region(LIGHTNING.ATLAS, Rect2(center - extent * 0.5, extent), LIGHTNING.source_rect(frame), Color(1,1,1,opacity))
+	# Do not substitute this retired authored flipbook for a native effect.
+	# Actual awakening rules/source-bank consumers are not changed here.
+	return

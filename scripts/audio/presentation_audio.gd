@@ -2,25 +2,22 @@ extends Node
 class_name TwilightPresentationAudio
 
 ## Presentation-only event sink. Call after an action has actually succeeded.
-## Reuses shipped authored WAVs; these are not recordings of Lineage M audio.
+## Sound is excluded by the user's original-only installation selection.
 ## Four spatial voices and two UI voices keep bursts bounded without allowing
 ## menu clicks to steal confirmed world feedback. No timers or gameplay calls.
 const WORLD_VOICES: int = 4
 const UI_VOICES: int = 2
-const CONTACT = preload("res://assets/skills/audio/lm_00d9f77d3ff9315a.wav")
-const ACCENT = preload("res://assets/skills/audio/lm_024a0e845c280295.wav")
-const SOFT = preload("res://assets/skills/audio/lm_01141f56509e111e.wav")
 const WORLD_EVENTS: Dictionary = {
-	"attack": {"stream": SOFT, "gain": -24.0, "pitch": 0.82},
-	"impact": {"stream": CONTACT, "gain": -20.0, "pitch": 1.0},
-	"hurt": {"stream": CONTACT, "gain": -23.0, "pitch": 0.68},
-	"drop": {"stream": ACCENT, "gain": -22.0, "pitch": 1.10},
-	"pickup": {"stream": ACCENT, "gain": -19.0, "pitch": 1.38},
+	"attack": {"stream": null, "gain": -24.0, "pitch": 0.82},
+	"impact": {"stream": null, "gain": -20.0, "pitch": 1.0},
+	"hurt": {"stream": null, "gain": -23.0, "pitch": 0.68},
+	"drop": {"stream": null, "gain": -22.0, "pitch": 1.10},
+	"pickup": {"stream": null, "gain": -19.0, "pitch": 1.38},
 }
 const UI_EVENTS: Dictionary = {
-	"button": {"stream": SOFT, "gain": -28.0, "pitch": 1.45},
-	"transition": {"stream": SOFT, "gain": -25.0, "pitch": 0.90},
-	"confirm": {"stream": ACCENT, "gain": -23.0, "pitch": 1.18},
+	"button": {"stream": null, "gain": -28.0, "pitch": 1.45},
+	"transition": {"stream": null, "gain": -25.0, "pitch": 0.90},
+	"confirm": {"stream": null, "gain": -23.0, "pitch": 1.18},
 }
 # Local mixing choices, not source-game timing measurements. Coalesce only
 # presentation bursts; each confirmed event still performs its original action.
@@ -61,6 +58,10 @@ func _accept(event: String) -> bool:
 
 func play_world(event: String, point: Vector2, critical: bool = false) -> bool:
 	if not WORLD_EVENTS.has(event) or world_voices.is_empty() or not point.is_finite(): return false
+	if not WORLD_EVENTS[event].get("stream") is AudioStream:
+		last_event=event;suppressed+=1
+		set_meta("source_audio_status","user_excluded")
+		return false
 	if not _accept(event): return false
 	var profile: Dictionary = WORLD_EVENTS[event]
 	var voice := world_voices[world_cursor]
@@ -75,6 +76,10 @@ func play_world(event: String, point: Vector2, critical: bool = false) -> bool:
 
 func play_ui(event: String) -> bool:
 	if not UI_EVENTS.has(event) or ui_voices.is_empty(): return false
+	if not UI_EVENTS[event].get("stream") is AudioStream:
+		last_event=event;suppressed+=1
+		set_meta("source_audio_status","user_excluded")
+		return false
 	if not _accept(event): return false
 	var profile: Dictionary = UI_EVENTS[event]
 	var voice := ui_voices[ui_cursor]

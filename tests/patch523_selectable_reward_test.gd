@@ -11,8 +11,9 @@ var rejected_writes: int = 0
 class Adapter extends RefCounted:
 	var profiles: Dictionary = {}
 	var bindings: Dictionary = {}
+# skill_catalog.gd now declares source523 itself; the fixture only replaces it.
 class BridgedCatalog extends "res://scripts/skills/skill_catalog.gd":
-	var source523: RefCounted
+	pass
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool,label: String) -> void:

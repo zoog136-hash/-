@@ -656,11 +656,11 @@ func _refresh_detail(item_reference: String) -> void:
 	var source_classes: Variant=source_item.get("source_class_names")
 	if source_classes is Array and not source_classes.is_empty():
 		var class_names: PackedStringArray=[]
-		for class_name: Variant in source_classes:
-			if not class_name is String or class_name.is_empty():
+		for source_class: Variant in source_classes:
+			if not source_class is String or source_class.is_empty():
 				class_names.clear()
 				break
-			class_names.append(class_name)
+			class_names.append(source_class)
 		if not class_names.is_empty():source_detail_classes={"reference":item_reference,"text":"/".join(class_names)}
 	var safe_host: Node=controller.get_parent() if is_instance_valid(controller) else null
 	if is_instance_valid(safe_host) and safe_host.has_method("_enhancement_kind_for_record") and safe_host.has_method("_safe_enhancement_level"):

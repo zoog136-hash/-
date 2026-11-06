@@ -3,30 +3,9 @@ extends Node
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
-const ATLAS=preload("res://assets/ui/card_frame_atlas.png")
-const METAL=preload("res://assets/effects/catalog_card_metal.gdshader")
-const AURA=preload("res://assets/effects/catalog_card_aura.gdshader")
-const AURA_ART=preload("res://assets/ui/card_aura_wisps.png")
+const SourceSurfaces=preload("res://scripts/ui/original_card_surfaces.gd")
 const GRADES: Array[String]=["일반","고급","희귀","영웅","전설","신화","유일"]
-# Presentation tuning, shared by all three catalogs and their details.
-# Original-game RGB/timing measurements are not implied by these profiles.
-const AURA_PROFILES: Array[Dictionary]=[
-	{"spread":.48,"light_strength":.025,"veil_strength":0.0,"flow_speed":0.0},
-	{"spread":.55,"light_strength":.065,"veil_strength":0.0,"flow_speed":0.0},
-	{"spread":.64,"light_strength":.18,"veil_strength":.08,"flow_speed":.20},
-	{"spread":.74,"light_strength":.27,"veil_strength":.15,"flow_speed":.36},
-	{"spread":.83,"light_strength":.36,"veil_strength":.25,"flow_speed":.50},
-	{"spread":.92,"light_strength":.44,"veil_strength":.32,"flow_speed":.62},
-	{"spread":1.0,"light_strength":.52,"veil_strength":.42,"flow_speed":.78}
-]
-# Inspected game screens, used for structure/color hierarchy, not extracted assets:
-# https://www.inven.co.kr/webzine/news/?news=286630&site=lineagem
-# https://www.inven.co.kr/board/lineagem/5019/488524
-# https://www.inven.co.kr/board/lineagem/5056/20468
-# Original imagegen atlas, three painted metal variants; transparent centres.
-const REGIONS: Array[Rect2]=[Rect2(48,52,534,715),Rect2(675,9,537,758),Rect2(1302,4,549,774)]
-static var textures: Array[AtlasTexture]=[]
-static var materials: Dictionary={}
+# Original frame pixels require the UI owner's exact selected-pack node role.
 var hud: Node
 var active: bool=false
 var slots: Control
@@ -44,34 +23,16 @@ var layout_icon_size:=Vector2i(-1,-1)
 var quantities: Control
 static var quantity_font: FontVariation
 
-static func texture_for(rank: int) -> AtlasTexture:
-	if textures.is_empty():
-		for region: Rect2 in REGIONS:
-			var texture:=AtlasTexture.new()
-			texture.atlas=ATLAS
-			texture.region=region
-			texture.filter_clip=true
-			textures.append(texture)
-	return textures[0 if rank<2 else 1 if rank<4 else 2]
+static func texture_for(_rank: int, record: Dictionary={}) -> Texture2D:
+	# Grade rank is a display label, not an original asset identity. Only the
+	# UI owner's exact source-grade/node binding can supply a frame.
+	var original: Dictionary=SourceSurfaces.resolve("grade_frame",record)
+	return original.get("texture") as Texture2D
 
-static func material_for(rank: int, aura: bool, detail: bool=false, reduced: bool=false, low: bool=false) -> ShaderMaterial:
-	var key: String=str([rank,aura,detail if aura else false,reduced,low])
-	if not materials.has(key):
-		var material:=ShaderMaterial.new()
-		material.shader=AURA if aura else METAL
-		material.set_shader_parameter("grade_color",UI.grade(GRADES[rank]))
-		material.set_shader_parameter("rank",float(rank))
-		material.set_shader_parameter("motion",0.0 if reduced or low else 1.0)
-		if aura:
-			material.set_shader_parameter("aura_texture",AURA_ART)
-			var variant: int=0 if rank<3 else 1 if rank<5 else 2
-			material.set_shader_parameter("aura_region",Vector4(variant/3.0,0,1.0/3.0,1))
-			material.set_shader_parameter("detail_view",detail)
-			material.set_shader_parameter("intensity",0.65 if low else 1.0)
-			for field: String in AURA_PROFILES[rank]:material.set_shader_parameter(field,AURA_PROFILES[rank][field])
-			if low:material.set_shader_parameter("veil_strength",0.0)
-		materials[key]=material
-	return materials[key]
+static func material_for(_rank: int, _aura: bool, _detail: bool=false, _reduced: bool=false, _low: bool=false) -> ShaderMaterial:
+	# Keep original pixels unmodified; retired generated metal/aura shaders
+	# are not an original decoration or a substitute for a missing source role.
+	return null
 
 func configure(controller: Node) -> void:
 	if quantity_font==null:
@@ -161,16 +122,16 @@ func _refresh_layout() -> void:
 		if hud.catalog_category!="성물":rect.size.y=minf(rect.size.y,float(listing.fixed_icon_size.y)+8.0)
 		visible_cards.append({"index":index,"rect":rect,"rank":rank,"owned":owned.has(Cards.card_id(record)),"native":preload("res://scripts/ui/source_card_presentation.gd").native(record)})
 	for rank: int in range(GRADES.size()):
-		var used: bool=visible_cards.any(func(card: Dictionary) -> bool:return card.rank==rank and not card.native)
+		var used: bool=visible_cards.any(func(card: Dictionary) -> bool:return card.rank==rank)
 		frame_layers[rank].visible=used
-		aura_layers[rank].visible=used
+		aura_layers[rank].visible=false
 		frame_layers[rank].queue_redraw()
 		aura_layers[rank].queue_redraw()
 	quantities.visible=hud.catalog_category in ["변신","마법인형"] or visible_cards.any(func(card: Dictionary) -> bool:return card.native)
 	quantities.queue_redraw()
 	selected_rank=maxi(0,GRADES.find(str(hud.selected_catalog_record.get("grade","일반"))))
-	preview.visible=not hud.selected_catalog_record.is_empty() and not preload("res://scripts/ui/source_card_presentation.gd").native(hud.selected_catalog_record)
-	preview_aura.visible=preview.visible
+	preview.visible=not hud.selected_catalog_record.is_empty()
+	preview_aura.visible=false
 	preview_frame.material=material_for(selected_rank,false,true,reduced,low)
 	preview_aura.material=material_for(selected_rank,true,true,reduced,low)
 	preview_frame.queue_redraw()
@@ -181,11 +142,11 @@ func _refresh_layout() -> void:
 
 func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 	if not active or layout_generation != hud.catalog_icon_generation:return
+	if aura:return
 	for card: Dictionary in visible_cards:
-		if card.rank!=rank or card.native:continue
-		if aura:
-			if card.owned:layer.draw_rect(card.rect,Color.WHITE)
-		else:layer.draw_texture_rect(texture_for(rank),card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
+		if card.rank!=rank or card.index<0 or card.index>=hud.catalog_results.size():continue
+		var original: Texture2D=texture_for(rank,hud.catalog_results[card.index])
+		if original!=null:layer.draw_texture_rect(original,card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
 
 func _draw_card_quantities() -> void:
 	# A filter/page change replaces catalog_results synchronously, while this
@@ -218,7 +179,10 @@ func _preview_rect() -> Rect2:
 	return Rect2((extent-size)*.5,size).grow(-1)
 
 func _draw_preview_frame() -> void:
-	if active and not hud.selected_catalog_record.is_empty():preview_frame.draw_texture_rect(texture_for(selected_rank),_preview_rect(),false)
+	if active and not hud.selected_catalog_record.is_empty():
+		var original: Texture2D=texture_for(selected_rank,hud.selected_catalog_record)
+		if original!=null:preview_frame.draw_texture_rect(original,_preview_rect(),false)
 
 func _draw_preview_aura() -> void:
-	if active and not hud.selected_catalog_record.is_empty():preview_aura.draw_rect(_preview_rect(),Color.WHITE)
+	# No authoritative original aura-role input has been delivered.
+	return

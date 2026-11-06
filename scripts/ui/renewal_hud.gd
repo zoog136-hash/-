@@ -1,5 +1,10 @@
 extends "res://scripts/hud_v20.gd"
 
+signal equipment523_open_requested
+signal equipment523_preview_requested(action: Dictionary)
+signal equipment523_commit_requested(action: Dictionary)
+signal equipment523_install_requested(path: String, sha256: String)
+var equipment523_view: Control
 # Source gives priority1/2 positions but no routing for this local show_message
 # API. Source/official lookup did not establish a rule. This numeric connection
 # policy is a TWILIGHT estimate under the user's source/search/estimate order.
@@ -47,6 +52,7 @@ var pointer_transfer: Node
 var quick_page_buttons: Array[Button] = []
 var screen_backdrop: ColorRect
 
+const CardSourcePresentation=preload("res://scripts/cards/source_card_operation_presentation.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const CARD_RULES = preload("res://scripts/card_draw_fusion.gd")
@@ -108,6 +114,7 @@ const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var quest_view: Control
 var quest_refresh_pending: bool = false
+var card_skill_awakening_view: Control
 var workspace: PanelContainer
 var menu_page: VBoxContainer
 var menu_scroll_view: ScrollContainer
@@ -663,6 +670,7 @@ func _process(delta: float) -> void:
 	var world: Node = get_parent()
 	if world == null or not world.has_method("_update_hud"):
 		return
+	refresh_card_skill_awakening_growth()
 	var actor: Node = world.get("player")
 	if actor != null and coordinates_readout != null:
 		coordinates_readout.text = "좌표  %d, %d" % [int(actor.global_position.x),int(actor.global_position.y)]
@@ -1147,6 +1155,7 @@ func _navigate(section: String) -> void:
 		"enhance": _open_enhance_chooser()
 		"warehouse": open_warehouse()
 		"crafting": open_crafting()
+		"equipment523": equipment523_open_requested.emit()
 		"sell": open_item_sell()
 		_: open_catalog(section)
 
@@ -2784,7 +2793,23 @@ func open_expedition() -> void:
 	workspace.mount(screen)
 	screen.configure(world.get_expedition_catalog(), world.expedition_owned_cards(), world.expedition_local, self)
 
+func refresh_card_skill_awakening_growth() -> void:
+	if active_section=="card_skill_awakening" and is_instance_valid(card_skill_awakening_view) and not card_skill_awakening_view.is_queued_for_deletion():card_skill_awakening_view.refresh_growth()
+
+func _unregistered_card_source_operation(operation: String) -> Dictionary:
+	var result: Dictionary=CardSourcePresentation.request(operation)
+	show_message(str(result.error))
+	return result
+
+func open_native_card_craft() -> Dictionary:
+	return _unregistered_card_source_operation(CardSourcePresentation.CRAFT)
+
+func open_card_skill_growth(_category: String,_identity: String) -> Dictionary:
+	return _unregistered_card_source_operation(CardSourcePresentation.GROWTH)
+
 func open_card_skill_awakening(category: String, identity: String) -> void:
+	if not CardSourcePresentation.available(CardSourcePresentation.AWAKENING):
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING);return
 	var runtime: Variant=get_parent().get("skill_awakening")
 	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
 	_open_window("card_skill_awakening",category+" 스킬 각성","")
@@ -2793,6 +2818,7 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	workspace.mount(scroll)
 	var view: Control=preload("res://scripts/ui/card_skill_awakening_view.gd").new()
+	card_skill_awakening_view=view
 	scroll.add_child(view)
 	view.configure(runtime,identity)
 	workspace.register_scroll_drag(scroll,view)
@@ -2887,6 +2913,17 @@ func open_protection523() -> void:
 	view.configure(self)
 
 
+func open_equipment523(_snapshot: Dictionary) -> void:
+	show_message("원본 장비 가공 UI 연결 대기 · 거래 데이터와 소유 상태 보존")
+
+func equipment523_refresh(snapshot: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("set_snapshot",snapshot)
+
+func equipment523_quote_result(result: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("show_quote",result)
+
+func equipment523_action_result(result: Dictionary) -> void:
+	if is_instance_valid(equipment523_view): equipment523_view.call("show_result",result)
 # Original CSB presentation is supplied by the UI owner. These adapters do not
 # create forms, select content from filenames, or implement service operations.
 var original_ui_runtime_presenter: Node
