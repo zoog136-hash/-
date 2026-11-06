@@ -3,6 +3,7 @@ extends Node2D
 ## Presentation reads motion only; source annotations never reach game callbacks.
 const PACK = preload("res://scripts/resources/current523_identity_pack.gd")
 const TEXTURE_LIMIT: int = 64
+const GPU_ACTOR_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
 var _revision: int = -1
 var _options: Dictionary = {}
 var _request_key: String = ""
@@ -258,7 +259,7 @@ func _show_frame(frame: Dictionary, index: int) -> bool:
 			if not bool(rendered.get("ok",false)) or not image_value is Image or image_value.is_empty():
 				_fail(str(rendered.get("error","523 원문 레이어를 그리지 못했습니다.")))
 				return false
-			entry = {"texture":ImageTexture.create_from_image(image_value),"offset":rendered.offset}
+			entry = {"texture":GPU_ACTOR_TEXTURE.from_image(image_value),"offset":rendered.offset}
 			if _textures.size() >= TEXTURE_LIMIT: _textures.erase(_textures.keys()[0])
 			_textures[key] = entry
 		pending.append({"texture":entry.texture,"offset":entry.offset,"shadow":str(layer.get("kind","")) == "shadow"})

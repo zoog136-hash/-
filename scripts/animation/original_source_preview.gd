@@ -44,6 +44,7 @@ var _effect_nodes: Dictionary = {}
 var _last_token: String = ""
 var _record: Dictionary = {}
 var _root: String = ""
+const GPU_ACTOR_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
 var _textures: Dictionary = {}
 var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
@@ -246,7 +247,7 @@ func _configure_existing_source(key: String, manifest_path: String, context: Dic
 						if image == null or image.is_empty():
 							clear()
 							return false
-						_textures[path] = ImageTexture.create_from_image(image)
+						_textures[path] = GPU_ACTOR_TEXTURE.from_image(image)
 	return _configure_source_nodes(candidate, tracks, layer_count, manifest_path)
 
 func configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String) -> bool:

@@ -178,7 +178,7 @@ var path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var dead: bool = false
 # Sleeping-actor visual residency: while the field population keeps a
-# monster or boss asleep (far outside the screen), it holds only its first
+# ordinary monster asleep (far outside the screen), it holds only its first
 # frame instead of every pose texture. Waking restores the same SpriteFrames
 # before the actor can reach the screen, so presentation is unchanged.
 var visual_parked: bool = false
@@ -1195,7 +1195,9 @@ func note_asleep() -> void:
 		park_visual()
 
 func park_visual() -> void:
-	if visual_parked or motion.frame_source == null or dead or motion.active or _source_only_native_visuals: return
+	# Bosses keep their frames: their save/respawn lifecycle and encounter
+	# presentation are checked against the live frames.
+	if visual_parked or motion.frame_source == null or is_boss or dead or motion.active or _source_only_native_visuals: return
 	if motion.profile == null or motion.profile.frames_path.is_empty(): return
 	var first: Texture2D = ANIMATION_CATALOG.first_texture(motion.frame_source)
 	motion.frame_source = null
