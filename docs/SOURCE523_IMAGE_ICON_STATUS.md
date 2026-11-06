@@ -899,3 +899,25 @@ is added by the image method. Existing stamps/callbacks and all transaction
 admission stay with their original owners. This consumes an existing button,
 without a new UI node, picture, source ID, animation or pack. The added calls
 remain uncompiled/unexecuted/unverified; no additional tests/game/render/CI ran.
+
+### Current card identities at the original grade-frame consumer
+
+The current523 card catalog intentionally retains `source=lineagem_base508`
+for saved m508 identities. The original grade-frame consumer previously rejected
+those actual current cards before their canonical definition could be read.
+It now accepts both existing native labels, then requires the canonical
+`source_snapshot=patch523`, unchanged saved sourceId, and agreement between the
+canonical card/grade keys and its preserved current-original descriptor.
+The existing exact GradeID binding and selected-original-UI pin still supply
+the frame; an old saved namespace never selects an old pack.
+
+The inspected current Grade rows declare GradeValue/ColorID/drop-effect roles,
+not a frame AssetView or CSB-node foreign key. No GradeValue, array position or
+color is mapped to the newly reported front-frame offsets. The image lane's
+held selected v6 source closure contains the original inventory/quickslot/map
+scopes, not the newly reported card-result/quest scenes. This data-boundary fix
+does not register those unknown surfaces or establish quest RewardID-to-slot
+assignment. Exact original role/member/SHA/node and any grade assignment remain
+the UI owner's narrow handoff, with original pixels required in the explicitly
+selected source pack. Existing distribution and private candidates are unchanged.
+This code change is uncompiled/unexecuted/unverified; no test/game/render/CI ran.
