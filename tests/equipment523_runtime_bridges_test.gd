@@ -29,7 +29,7 @@ class LegacyStunWorld extends ProbeWorld:
 	func _melee_hit_chance(_target: TwilightMonster) -> float: return 1.0
 	func _roll_melee_hit(_target: TwilightMonster) -> bool: return true
 	func _player_critical_rate(_kind: String) -> int: return 0
-	func _deal_successful_player_hit(target: TwilightMonster, damage: int, critical: bool = false, kind: String = "", main_target: bool = true, by_spell: bool = false, context: Dictionary = {}) -> void:
+	func _deal_successful_player_hit(target: TwilightMonster, damage: int, critical: bool = false, kind: String = "", main_target: bool = true, by_spell: bool = false, context: Dictionary = {}, ordinary_attack: bool = false, relic_attack_context: Dictionary = {}) -> void:
 		landed_hits.append({"target":target,"damage":damage,"critical":critical})
 	func _update_hud() -> void: pass
 	func _update_target_hud() -> void: pass
@@ -230,7 +230,10 @@ func put(catalog: RefCounted, table: String, row: Dictionary) -> void:
 
 func _catalog() -> RefCounted:
 	var catalog = CATALOG.new()
-	catalog.content = {"tables":{}}
+	# Explicit synthetic admitted registry: the catalog only reads rows from an
+	# admitted current523 NPC input, so the fixture declares that shape.
+	catalog.content = {"tables":{},"input_kind":"twilight.current523.npc-input.v1"}
+	catalog.source_available = true
 	for row: Dictionary in [{"ID":1,"Name":"Value"},{"ID":20,"Name":"TrueFalse"},{"ID":10431,"Name":"AttackTypeID"}]: put(catalog,"Unit",row)
 	for row: Dictionary in [{"ID":1,"Name":"Melee"},{"ID":2,"Name":"Range"},{"ID":3,"Name":"Magic"}]: put(catalog,"AttackType",row)
 	put(catalog,"NpcClass",{"ID":111,"Sprite":222,"TestNPC":false})
