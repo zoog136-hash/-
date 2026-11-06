@@ -177,11 +177,14 @@ var path_stuck_elapsed: float = 0.0
 var path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var dead: bool = false
-# Sleeping-actor visual residency: while the field population keeps an
-# ordinary monster asleep (far outside the screen), it holds only its first
+# Sleeping-actor visual residency: while the field population keeps a
+# monster or boss asleep (far outside the screen), it holds only its first
 # frame instead of every pose texture. Waking restores the same SpriteFrames
 # before the actor can reach the screen, so presentation is unchanged.
 var visual_parked: bool = false
+const VISUAL_PARK_AFTER_MSEC := 4000
+var _asleep_since_msec: int = -1
+var _awake_since_setup: bool = false
 var home_position: Vector2 = Vector2.ZERO
 var spawn_region_id: String = ""
 var roaming_radius: float = 180.0
@@ -1180,8 +1183,19 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 		if touch_event.pressed:
 			selected.emit(self)
 
+func note_asleep() -> void:
+	# Park only after the actor has stayed asleep for a while, so actors at the
+	# sleep boundary never thrash their frames. An actor spawned asleep has
+	# never been seen, so it parks at once and the spawn burst stays small.
+	if not _awake_since_setup:
+		park_visual()
+	elif _asleep_since_msec < 0:
+		_asleep_since_msec = Time.get_ticks_msec()
+	elif Time.get_ticks_msec() - _asleep_since_msec >= VISUAL_PARK_AFTER_MSEC:
+		park_visual()
+
 func park_visual() -> void:
-	if visual_parked or motion.frame_source == null or is_boss or dead or motion.active or _source_only_native_visuals: return
+	if visual_parked or motion.frame_source == null or dead or motion.active or _source_only_native_visuals: return
 	if motion.profile == null or motion.profile.frames_path.is_empty(): return
 	var first: Texture2D = ANIMATION_CATALOG.first_texture(motion.frame_source)
 	motion.frame_source = null
@@ -1195,6 +1209,8 @@ func park_visual() -> void:
 	visual_parked = true
 
 func restore_visual() -> void:
+	_asleep_since_msec = -1
+	_awake_since_setup = true
 	if not visual_parked: return
 	visual_parked = false
 	var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(motion.profile, "")
@@ -1206,6 +1222,8 @@ func restore_visual() -> void:
 
 func _setup_animation(record: Dictionary) -> void:
 	visual_parked = false
+	_asleep_since_msec = -1
+	_awake_since_setup = false
 	motion.profile = ANIMATION_CATALOG.for_record("monster", record)
 	# Sample optional native art onto the existing Sprite2D; no scene/AI/UI changes.
 	motion.frame_source = null

@@ -7,7 +7,7 @@ extends Node
 ## The worker now cuts the verified, decoded image into TILE_SIZE squares
 ## (exact pixels, no resampling) and the scene thread uploads a few ~1 MB tiles
 ## per frame instead. Whole-image requests keep the original behaviour.
-const IDLE_BYTES: int=64*1024*1024
+const IDLE_BYTES: int=32*1024*1024
 const MAX_DECODERS: int=2
 const MAX_UPLOADS: int=1
 const TILE_SIZE: int=512
