@@ -3081,7 +3081,9 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
 	if active_section=="enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_visible_in_tree():_bind_original_enhance_action(enhancement_forge)
 	if active_section=="quests" and is_instance_valid(quest_view) and quest_view.is_visible_in_tree():original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(quest_view)
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
+	var card_frames: Dictionary=preload("res://scripts/ui/original_ui/source_main_card_frames.gd").bind(source_pack)
+	if card_frames.get("ok",false) and is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"card_frame_registration":card_frames,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):
