@@ -55,11 +55,18 @@ const OPERANDS = {
 	"source_undead_damage_max":{"UndeadAdditionalMaxDamage":["Value",1]},
 	"source_final_blow_chance_pct":{"FinalBlowProbability":["Percentage",10000]},
 	"source_final_blow_amp_pct":{"FinalBlowAdditionalScale":["Percentage",10000]}}
-# These two held families have an established zero baseline and explicit units.
+# Each whitelisted item/key has its own held-source zero baseline and units.
 # A different source item/key must establish its own owner baseline first.
 const WHOLE_ZERO_FAMILIES = {
 	"213621:attackSpeed":12241,
-	"233812:pve_damage_reduction":12922}
+	"233812:pve_damage_reduction":12922,
+	"233812:pve_damage_reduction_pct":12922,
+	"233812:adena_drop_pct":12922,
+	"233812:source_undead_damage_max":12922,
+	"425:damage_amp_pct":10712,
+	"226348:stun_accuracy":12468,
+	"226348:fear_accuracy":12468,
+	"226358:fear_resistance":12488}
 static var evidence: Dictionary = {}
 
 static func integer(value: Variant) -> bool:
@@ -151,6 +158,9 @@ static func _whole_zero_baseline(world: Node, item_key: String, key: String, cur
 	var current_base: Variant = current.get(key,0)
 	if typeof(current_base) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(current_base)) or current_base!=baseline: return {}
 	if key=="attackSpeed" and (CATALOG_EFFECTS.attack_speed_percent(canonical)!=0 or CATALOG_EFFECTS.attack_speed_percent(current)!=0): return {}
+	var status_receiver: String = {"stun_accuracy":"_record_stun_accuracy","fear_accuracy":"_record_fear_accuracy","fear_resistance":"_record_fear_resistance"}.get(key,"")
+	if not status_receiver.is_empty():
+		if not world.has_method(status_receiver) or world.call(status_receiver,canonical)!=0 or world.call(status_receiver,current)!=0: return {}
 	return {"total":whole,"base_key":key,"base":baseline,"scale":1,"delta":float(whole)-float(baseline)}
 
 static func sum_native(world: Node, key: String) -> float:
