@@ -112,6 +112,9 @@ func refresh() -> void:
 	mode.set_item_text(2,"현재 원문 지역 · 포탈" if _regional_active() else "아덴 본토 · 포탈 정의")
 	mode.set_item_disabled(2,not links.loaded and not _regional_active())
 	var active: String = str(world.active_map.get("name", world.active_map_id))
+	if _regional_active():
+		var native_land: Dictionary=world.field_map.get("native_land")
+		active="%s [Land%d]"%[str(native_land.get("Name","원문 지역")),int(native_land.ID)]
 	summary.text = "현재 플레이 지역: %s\n" % active
 	if links.loaded:
 		summary.text += "아덴 본토 자료 · 포탈 %d · 출현 영역 연결 %d · 구성 확인 중 %d팩" % [links.shard.portals.size(), links.shard.spawn_relations.size(), links.shard.unresolved_class_view_packs.size()]
