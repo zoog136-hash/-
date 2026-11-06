@@ -15,16 +15,19 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 		"ranged_damage_reduction_pct":"RangeDamageReductionPercent",
 		"magic_damage_reduction_pct":"MagicDamageReductionPercent",
 		"melee_critical_resistance":"MeleeCriticalResist","ranged_critical_resistance":"RangeCriticalResist",
+		"magic_critical_resistance":"MagicCriticalResist",
 		"pve_damage_reduction_pct":["DamageReductionPercent","PVEDamageReductionPercent"],
 		"damage_amp_pct":["PierceDamageReductionPercent","PVEPierceDamageReductionPercent"],
 		"potionCooldownPct":"PotionConsumeDelayDecreasePercent",
 		"equipment523_element_crit_pct":"ElementalCriticalProbability",
 		"equipment523_element_crit_resist_pct":"ElementalCriticalResistance",
-		"xp":"AbsoluteExperienceAdditionPercent"}
+		"xp":"AbsoluteExperienceAdditionPercent",
+		"magic_penetration_pct":"PierceMagicShieldPercent","weapon_block_pct":"WeaponBlock"}
 	if not names.has(key): return 0.0
-	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct"] else "Percentage"
+	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct","magic_penetration_pct"] else "Percentage"
 	var divisor: float = 100.0 if unit_name=="ValuePercent" else 10000.0
 	if key=="xp": divisor=1000000.0 # Existing xp receiver takes a ratio.
+	if key=="magic_penetration_pct": divisor=1.0 # ValuePercent is already percent points.
 	var selected: Variant = names[key]
 	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
 
@@ -37,7 +40,8 @@ static func additional_original_flat(record: Dictionary, key: String) -> int:
 		"melee_critical_damage":"CriticalMeleeDamage","ranged_critical_damage":"CriticalRangeDamage","magic_critical_damage":"CriticalMagicDamage",
 		"pve_melee_hit":"PVEMeleeHit","pve_ranged_hit":"PVERangeHit","pve_magic_hit":"PVEMagicHit",
 		"melee_damage_reduction":"MeleeDamageReduction","ranged_damage_reduction":"RangeDamageReduction",
-		"magic_damage_reduction":"MagicDamageReduction","poison_damage_reduction":"PoisonDamageReduction"}
+		"magic_damage_reduction":"MagicDamageReduction","poison_damage_reduction":"PoisonDamageReduction",
+		"source_undead_damage_max":"UndeadAdditionalMaxDamage"}
 	if not names.has(key): return 0
 	var aliases: Dictionary = {"dg":["DG","근거리 회피력"],"er":["ER","원거리 회피력"],"melee_crit":["meleeCrit","근거리 치명타"],"ranged_crit":["rangedCrit","원거리 치명타"],"magic_crit":["magicCrit","마법 치명타"]}
 	aliases["damage_reduction_ignore"]=["damageReductionIgnore"]
@@ -179,7 +183,7 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 			if represented is Dictionary and represented.get("bonus_id")==bonus.get("ID"): return 0.0
 		var value: Variant = bonus.get("Value")
 		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
-		if (unit_name in ["Value","Weight"] or divisor==1.0) and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
+		if (unit_name in ["Value","Weight"] or key.ends_with("_crit")) and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
 		total+=float(value)/divisor
 		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target,"consumer_elemental_input":elemental_input})
 	if evidence.is_empty() or not is_finite(total): return 0.0

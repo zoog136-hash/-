@@ -2383,7 +2383,7 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0))))*halphas_star.combat.hit_factor(player)
+	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)),_equipment_inven_sum("magic_penetration_pct")))*halphas_star.combat.hit_factor(player)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
@@ -3634,7 +3634,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		player.show_status_text("GUARD")
 		_refresh_combat_hud()
 		return
-	if card_collections.blocks_weapon_hit(normalized_type,rng):
+	if card_collections.blocks_weapon_hit(normalized_type,rng,_equipment_inven_sum("weapon_block_pct")):
 		damage_value=maxi(0,int(round(damage_value*(1.0-float(card_collections.policy_values.weapon_block_reduction)/100.0))))
 		hud.append_log("무기 막기 · "+attacker.monster_name)
 		if damage_value<=0:player.show_miss();return
@@ -9709,7 +9709,7 @@ func _critical_resistance_stat(kind: String="melee",elemental: bool=false) -> in
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
 	total += int(EQUIPMENT523_COMBAT.critical_resistance(_all_equipped_records(),kind))
-	if kind in ["melee","ranged"]:total+=int(_equipment_inven_sum(kind+"_critical_resistance"))
+	if kind in ["melee","ranged","magic"]:total+=int(_equipment_inven_sum(kind+"_critical_resistance"))
 	return clampi(total+int(growth.guardian_combat.critical_resistance(kind))+int(card_collections.critical_resistance(kind,elemental)), 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:

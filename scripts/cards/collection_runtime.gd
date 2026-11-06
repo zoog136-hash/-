@@ -184,9 +184,10 @@ func magic_heal(amount: int) -> int:
 	var life: float=bonus("life:flat")*float(policy_values.life_heal_per_point) if estimated() else 0.0
 	return maxi(0,int(round((amount+life)*(1.0+maxf(0.0,bonus("magic_heal:percent"))/100.0))))
 
-func blocks_weapon_hit(kind: String,rng: RandomNumberGenerator) -> bool:
+func blocks_weapon_hit(kind: String,rng: RandomNumberGenerator, additional_percent: float=0.0) -> bool:
 	if kind not in ["melee","ranged"] or not estimated():return false
-	var chance: float=clampf(bonus("weapon_block:percent"),0.0,100.0)
+	var input: float = additional_percent if is_finite(additional_percent) else 0.0
+	var chance: float=clampf(bonus("weapon_block:percent")+input,0.0,100.0)
 	return chance>0.0 and rng.randf()<chance/100.0
 
 func final_blow(amount: int,rng: RandomNumberGenerator) -> Dictionary:
@@ -238,8 +239,9 @@ func apply_policy(values: Dictionary, context: Variant=null) -> Dictionary:
 
 func death_damage_bonus() -> int:return int(round(bonus("death:flat")*float(policy_values.death_damage_per_point))) if estimated() else 0
 
-func magic_resistance_after_pierce(mr: int) -> int:
-	var percent: float=clampf(bonus("magic_penetration:percent")*float(policy_values.magic_penetration_factor),0.0,100.0) if estimated() else 0.0
+func magic_resistance_after_pierce(mr: int, additional_percent: float=0.0) -> int:
+	var input: float = additional_percent if is_finite(additional_percent) else 0.0
+	var percent: float=clampf((bonus("magic_penetration:percent")+input)*float(policy_values.magic_penetration_factor),0.0,100.0) if estimated() else 0.0
 	return maxi(0,int(round(mr*(1.0-percent/100.0))))
 
 func native_spell_id(skill: Dictionary) -> int:

@@ -495,3 +495,48 @@ token; the staged/saved issued state is preserved. No alternate source/pixel
 input bypasses that rejection. Player SpellClass range/weapon/minimum-range
 receiver contracts are still separate; this does not claim to finish them.
 This additional source-to-actual-NPC-caller connection remains unverified.
+
+## Existing undead and magic-critical equipment inputs
+
+Direct non-possession UndeadAdditionalMaxDamage Unit.Value now supplies the
+existing source_undead_damage_max equipment operand. The actual successful-hit
+caller already checks the target's existing is_undead() classification, the
+configured hit scope and the established min..source-max damage roll. Those
+classifiers, random-roll/order and explicitly local scope remain unchanged.
+No NpcRaceType table, undead identity or source-server distribution is inferred.
+Native regeneration/drain is not counted again through this field.
+
+MagicCriticalResist Percentage now supplies the magic branch of the existing
+_critical_resistance_stat(kind,elemental) equipment sum, using raw/10000 percent
+points. This extends the already existing typed melee/ranged input to the
+already supported magic attack kind; generic, elemental and collection
+resistance remain separate and the chance formula/cap/RNG stay unchanged.
+The shared exact-native-row, source exclusion, explicit-field and mapped-ID
+guards apply to both. No physical ownership, quantity or save is altered.
+These additions are uncompiled/unexecuted/unverified, not table completion.
+
+## Original equipment operands for the shared estimated combat receiver
+
+Original ItemBonus rows also declare direct non-possession
+PierceMagicShieldPercent for items such as153222/4121 (Unit.ValuePercent) and
+WeaponBlock for163553/163563 (Unit.Percentage). The first is already percent
+points; the latter uses raw/10000. They are not scaled as if they had the same
+source unit. The existing equipment sum now supplies these missing native
+operands to the existing MR-penetration and weapon-block functions.
+
+The existing shared receiver API now accepts optional additional_percent=0.0:
+collection_runtime.magic_resistance_after_pierce(mr,additional_percent), and
+blocks_weapon_hit(kind,rng,additional_percent). All previous callers remain
+valid. World passes magic_penetration_pct from _player_magic_hit_chance and
+weapon_block_pct from its existing weapon-hit check. Missing/nonfinite input
+adds zero. The source reader retains explicit-field/mapped-ID and exact-native
+guards. ValuePercent may retain fractional percent points for float receivers;
+integer evasion/critical/raw Value/Weight receivers keep integer safeguards.
+
+There is one combined percentage cap/roll at the established receiver, not a
+second block or MR engine. Existing estimates_enabled, magic_penetration_factor,
+weapon_block_reduction, attack-kind gating, rounding, RNG and damage order stay
+authoritative. This applies the same explicitly estimated host interpretation
+to original item operands; it does not claim a recovered source-server MR/block
+formula. Card collection totals/ownership/completion/policy save shapes are not
+changed or supplied with gear records. All new calls remain unverified.
