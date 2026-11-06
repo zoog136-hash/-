@@ -2,8 +2,18 @@
 
 Base main: `5db920332` (includes the merged data271 and integration269 lanes).
 The original private inputs, saved identities and existing ownership services
-remain unchanged. No tests, compilation, parsing command, game, rendering or
+remain unchanged. No tests, compilation, model/parser validation, game, rendering or
 CI was started. All changes below are unexecuted/unverified.
+
+Latest user scope withdrawal: pending spell-stage, potion and emoticon source
+connections are excluded from further investigation, implementation, handoffs
+and outstanding counts. This includes pending Item233/Sprite16007 recovery.
+Existing code, original inputs/caches and saved data are preserved. Previous
+sections describing already-written potion inputs are implementation history,
+not a request to continue that excluded target or count it as completed use.
+Ordinary spells, weapon skills, transformations and combat effects are not
+excluded by the narrower spell-stage withdrawal. The frozen62ZIP/v30/Drive/
+index and separately held UI candidates remain untouched.
 
 ## Existing Orim execution input
 
@@ -431,11 +441,10 @@ files are not modified in this data lane.
   original_goal_story_and_reward_slot_roles as unresolved. Data identities
   are available above, but this does not supply an original target node or
   authorize a new reward selection/representative image for multiple rewards.
-- Emoticon declares ID/SpriteAnimationID/SoundMaterialID. The inspected current
-  World, dialogue, quest and dungeon caller paths did not supply an explicit
-  selected Emoticon.ID plus target actor/node/event contract. SpriteAnimationID
-  is not turned into an item icon or actor target. Sound remains excluded.
-  This is a scoped caller finding, not a repository-wide absence claim.
+- Emoticon: the pending source connection was withdrawn by the latest user
+  scope. No caller/target recovery or outstanding input is requested for it.
+  Original definitions and existing shared code remain preserved; sound is
+  still excluded. The withdrawn target is not counted as connected use.
 
 This handoff adds no image/UI/ownership implementation and no execution or
 new adoption count. Actual missing image caller contracts remain separated
@@ -561,3 +570,23 @@ No new flat final-blow rule, unknown NPC type table, actor identity, range
 selector, collection migration or dialogue mapping is fabricated to fill these
 gaps. Existing graph/row retention is not counted as execution or whole-table
 adoption. Tests/compile/game/render/CI remain unrun for these changes.
+
+The native owner confirmed the flat final-blow gap at PR281
+af3ec2b35c533d98f21c6fc7949291c482d86b22. Its totals/damage receiver accepts
+chance/amplification percentage points and, on success, adds the rounded
+amount*amplification/100; amplification<=0 returns without a roll or firing.
+The existing native stage is after amplification/growth and before separate
+elemental/undead additions. There is no native flat parameter/policy. Required
+owner decisions are shared/separate chance roll, flat placement relative to
+amplification, zero-amplification activation, combination/rounding and firing
+reporting. These are receiver/rule decisions, not missing ItemBonus values or
+permission to copy the card engine. See the owner's
+[native receiver](https://github.com/zoog136-hash/-/blob/af3ec2b35c533d98f21c6fc7949291c482d86b22/scripts/crafting/patch523_final_blow.gd#L43).
+
+The independently inspected Orim Silence candidate has declared type/rows,
+but no matching row falls inside the existing non-immunity numeric estimate's
+accepted0<=value<100 input range. No range, scale, immunity or fake receiver is
+created to force an additional connection. The existing typed/raw definitions
+remain preserved; any future in-scope implementation requires authoritative
+unit/status meaning or an owner-supplied approved receiver contract. This is
+separate from the withdrawn spell-stage/potion/emoticon targets.
