@@ -356,17 +356,45 @@ func _choose(cid: String, sid: String) -> void:
 		evidence.erase("texture")
 		source_images[str(item.instance_id)] = evidence
 	candidates_list.set_meta("source523_item_images",source_images)
-	var button := UI.button("선택 장비 등록",func() -> void:
+	var register_action: Callable=func() -> void:
 		if hud.workspace.was_scroll_dragged(detail_scroll): return
 		if candidates_list == null or candidates_list.get_selected_items().is_empty(): hud.show_message("등록할 장비를 먼저 선택하세요"); return
 		var chosen: Dictionary = picked_candidates[candidates_list.get_selected_items()[0]]
 		var request: Dictionary = runtime.request_for(cid,sid,[str(chosen.instance_id)])
-		hud.confirm_action("장비 컬렉션 등록", "+%d %s\n실물 ID %s\n이 장비 1개가 영구히 소모됩니다." % [int(chosen.enchant),Core.normalize_name(str(chosen.name)),chosen.instance_id],"소모하고 등록",func(_count: int) -> void:
+		var accept: Callable=func(_count: int) -> void:
 			var outcome: Dictionary = runtime.register(request)
 			hud.show_message("컬렉션 완성" if bool(outcome.get("ok",false)) and bool(outcome.get("completed",false)) else ("장비 등록 완료" if bool(outcome.get("ok",false)) else str(outcome.get("message","등록 실패"))))
-			if is_instance_valid(self) and is_inside_tree(): _filter(true)),Vector2(0,44))
+			if is_instance_valid(self) and is_inside_tree(): _filter(true)
+		var dialog: Control=hud.confirm_action("장비 컬렉션 등록", "+%d %s\n실물 ID %s\n이 장비 1개가 영구히 소모됩니다." % [int(chosen.enchant),Core.normalize_name(str(chosen.name)),chosen.instance_id],"소모하고 등록",accept)
+		if dialog!=null and dialog.get("callback")==accept:
+			var confirm_button: Variant=dialog.get("confirm_button")
+			if confirm_button is Button:_bind_physical_candidate(confirm_button,chosen)
+	var button := UI.button("선택 장비 등록",register_action,Vector2(0,44))
 	button.name = "RegisterCollectionItem"
 	button.set_script(TouchButton);Surfaces.action(button)
 	for previous: Node in registration_dock.get_children():registration_dock.remove_child(previous);previous.queue_free()
 	registration_dock.add_child(button)
+	candidates_list.item_selected.connect(func(index: int) -> void:
+		if not is_instance_valid(button) or button.is_queued_for_deletion():return
+		_bind_physical_candidate(button,picked_candidates[index] if index>=0 and index<picked_candidates.size() else {}))
 	detail_scroll.get_v_scroll_bar().set_deferred("value",detail_scroll.get_v_scroll_bar().max_value)
+
+func _bind_physical_candidate(button: Button, candidate: Dictionary) -> void:
+	button.icon=null
+	if button.has_meta("source523_selected_physical_image"):button.remove_meta("source523_selected_physical_image")
+	if not SourceImages.selected() or candidate.is_empty():return
+	var instance_id: String=str(candidate.get("instance_id",""))
+	var physical: Dictionary=runtime.world.item_instances.get(instance_id,{})
+	var record: Dictionary=physical.get("record",{})
+	# Never reuse the runtime's legacy name-only candidate correspondence as
+	# image identity. The selected physical record must declare the same source.
+	var source_id: String=str(record.get("sourceId",""))
+	if instance_id.is_empty() or source_id.is_empty() or source_id!=str(candidate.get("source_id","")) or not SourceImages.handles_item(record):return
+	var image: Dictionary=SourceImages.describe_item(record,str(candidate.get("name","")))
+	button.icon=image.get("texture") as Texture2D
+	button.expand_icon=true
+	var evidence: Dictionary=image.duplicate(true)
+	evidence.erase("texture")
+	evidence["selected_instance_id"]=instance_id
+	evidence["selected_source_id"]=source_id
+	button.set_meta("source523_selected_physical_image",evidence)
