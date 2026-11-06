@@ -14,6 +14,14 @@ concurrency:
 
 jobs:
   godot-integration:
+    # 730 Godot checks no longer fit one 4h job (2026-11-05: 349 ran, then the
+    # job was cancelled). Every check still runs exactly once across 8 shards;
+    # render stages run once, in shard 0.
+    name: godot-integration (shard ${{ matrix.shard }}/8)
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     runs-on: ubuntu-24.04
     # c19b53a passed all 177 checks, then the final render hit the old 40m cap.
     # Retain the full suite and allow the additional real boss lifecycle tests.
@@ -40,6 +48,12 @@ jobs:
             !/docs/
       - name: Add referenced docs files to the sparse checkout
         run: python3 tools/ci_sparse_docs.py --root .
+      - name: Prepare exact current map inputs
+        # Same verified pack the required core gate stages from tracked blobs, so
+        # TWILIGHT_SOURCE_MAP_PACK tests run instead of failing on absence.
+        run: |
+          python3 tools/ci_core_map_pack.py --output "$RUNNER_TEMP/core-source-pack"
+          echo "TWILIGHT_SOURCE_MAP_PACK=$RUNNER_TEMP/core-source-pack" >> "$GITHUB_ENV"
       - name: Restore trusted-main PNG import shards
         uses: ./.github/actions/restore-godot-png-cache
       - name: Restore pinned Godot engine cache
@@ -94,8 +108,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 5400 --logs test-results
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 5400 --logs test-results --shard-index ${{ matrix.shard }} --shard-count 8
       - name: Floor-loot visual, manual pickup and live AUTO regression
+        if: ${{ matrix.shard == 0 }}
         shell: bash
         run: |
           set -euo pipefail
@@ -105,6 +120,7 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-loot-render.log; then exit 1; fi
           grep -q 'GROUND_LOOT_RENDER_OK' test-results/integration-loot-render.log
       - name: Combat animation and world rendering regression
+        if: ${{ matrix.shard == 0 }}
         shell: bash
         run: |
           set -euo pipefail
@@ -117,7 +133,7 @@ jobs:
           xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd -- --legacy-map-layouts 2>&1 | tee test-results/integration-regions-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-regions-render.log; then exit 1; fi
       - name: Monster-crowd and authored-state animation regression
-        if: ${{ hashFiles('tests/capture_combat_crowd.gd') != '' }}
+        if: ${{ matrix.shard == 0 && hashFiles('tests/capture_combat_crowd.gd') != '' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -130,7 +146,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: twilight-integration-check-${{ github.sha }}
+          name: twilight-integration-check-${{ github.sha }}-shard${{ matrix.shard }}
           path: |
             test-results/
             ${{ runner.temp }}/twilight-integration-loot/**/ground-loot-review/

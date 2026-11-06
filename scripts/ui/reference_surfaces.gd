@@ -2,14 +2,16 @@ extends RefCounted
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const CardRules=preload("res://scripts/card_draw_fusion.gd")
-const CARD_BACKDROP=preload("res://assets/ui/fusion_background_painted.png")
+const SourceSurfaces=preload("res://scripts/ui/original_card_surfaces.gd")
 
 # The inspected 2023 card menus use the same restrained blue/black material.
 # Reuse the existing original raster; this does not restyle other screens.
 static func card_surface(margin: int=0) -> StyleBoxTexture:
 	var style:=StyleBoxTexture.new()
-	style.texture=CARD_BACKDROP
-	style.modulate_color=Color(.24,.30,.36,1)
+	var original: Dictionary=SourceSurfaces.resolve("fusion_background")
+	style.texture=original.get("texture") as Texture2D
+	var evidence: Dictionary=original.duplicate();evidence.erase("texture")
+	style.set_meta("original_card_background",evidence)
 	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:style.set_content_margin(side,margin)
 	return style
 

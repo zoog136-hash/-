@@ -8,9 +8,7 @@ const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
-const BACKGROUND = preload("res://assets/card_reveal/authored_background.webp")
-const IMPACT = preload("res://assets/card_reveal/impact.wav")
-const UPGRADE = preload("res://assets/card_reveal/upgrade.wav")
+const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
 @export var showcase_on_ready: bool = false
 var cards: Array[Control] = []
 var results: Array[Dictionary] = []
@@ -119,14 +117,10 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 	seek(0.0)
 
 func present_showcase() -> void:
-	showcase = true
-	var values: Array[Dictionary] = []
-	for grade: String in PROFILES.SHOWCASE:
-		values.append({"name":"황혼의 기사", "grade":grade})
-	var textures: Array[Texture2D] = []
-	for i: int in range(8):
-		textures.append(CARD.authored_art(i))
-	present(values,textures,"변신")
+	# The old synthetic showcase has no awarded source card identities. Do
+	# not substitute arbitrary originals or reuse its retired painted atlas.
+	set_meta("source_showcase_status",{"ok":false,"status":"source_showcase_exact_card_identities_required"})
+	push_warning("Original card showcase requires explicit source card identities; normal awarded-result presentation is unchanged.")
 
 func layout_for(design: Vector2) -> Array[Rect2]:
 	var rects: Array[Rect2] = []
@@ -223,20 +217,21 @@ func _process(delta: float) -> void:
 				var at: float = cards[i].lightning_at()
 				if previous < at and clock >= at and not sound_played.has(i):
 					sound_played[i] = true
-					sound_player.stream = IMPACT
-					sound_player.play()
+					set_meta("source_card_impact_audio",{"status":"original_audio_not_supplied","legacy_audio_excluded":true})
 			var promoted_card: Control = _first_upgraded_card()
 			if fusion and promoted_card != null:
 				var promotion_at: float = promoted_card.promotion_at()
 				if previous < promotion_at and clock >= promotion_at and not sound_played.has("promotion"):
 					sound_played["promotion"] = true
-					sound_player.stream = UPGRADE
-					sound_player.play()
+					set_meta("source_card_upgrade_audio",{"status":"original_audio_not_supplied","legacy_audio_excluded":true})
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO,size),Color("060b13"))
-	if BACKGROUND != null:
-		draw_texture_rect(BACKGROUND,Rect2(Vector2.ZERO,size),false,Color(0.38,0.45,0.54))
+	var original_background: Dictionary=SourceSurfaces.resolve("reveal_background")
+	var background: Texture2D=original_background.get("texture") as Texture2D
+	var evidence: Dictionary=original_background.duplicate();evidence.erase("texture")
+	set_meta("original_card_background",evidence)
+	if background!=null:draw_texture_rect(background,Rect2(Vector2.ZERO,size),false)
 	draw_rect(Rect2(Vector2.ZERO,size),Color(0.01,0.025,0.05,0.4))
 	# Illumination is separate from smoke, card movement and surface discharges.
 	if not reduced_motion:

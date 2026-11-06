@@ -18,7 +18,8 @@ func configure(grade: String, reduced: bool, detail: float, intensity: float) ->
 	low_detail=detail<0.8
 	glow=_layer("SameGradeAura")
 	glow.modulate.a=clampf(intensity,0.0,1.5)
-	glow.draw.connect(func() -> void:glow.draw_rect(Rect2(Vector2.ZERO,glow.size),Color.WHITE))
+	glow.draw.connect(func() -> void:
+		if glow.material!=null:glow.draw_rect(Rect2(Vector2.ZERO,glow.size),Color.WHITE))
 	_apply_materials()
 	hide()
 
@@ -34,6 +35,7 @@ func _layer(label: String) -> Control:
 func _apply_materials() -> void:
 	var still: bool=reduced_motion or not ambient_playing
 	glow.material=Chrome.material_for(rank,true,false,still,low_detail)
+	glow.visible=glow.material!=null
 	glow.queue_redraw()
 
 func set_ambient_playing(value: bool) -> void:

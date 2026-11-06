@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases
+from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases, missing_private_inputs, ISOLATION_ROOT_VARIABLES, ISOLATION_FLAG_VARIABLES, RETIRED_LEGACY_MAP_TESTS
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -63,6 +63,8 @@ except ValueError as exc:
     parser.error(str(exc))
 failed=[]
 skipped=[]
+private_unavailable={}
+retired_legacy=[]
 executed=[]
 not_run=[]
 scopes={}
@@ -70,7 +72,7 @@ native_scopes={}
 def write_summary() -> None:
     # Save after each completed check so cancellation cannot conceal omissions.
     report={'total':len(tests),'passed':len(executed)-len(failed)-len(skipped),
-        'failed':failed,'skipped':skipped,'not_run':[n for n,_ in tests[len(executed):]],
+        'failed':failed,'skipped':skipped,'private_input_unavailable':private_unavailable,'legacy_map_retired':retired_legacy,'not_run':[n for n,_ in tests[len(executed):]],
         'checks':[name for name,_ in tests], 'validation_scopes':scopes, 'native_fixture_scopes':native_scopes,
         'selection':args.only or ('SHARDED_FULL_SUITE' if args.shard_count>1 else 'FULL_SUITE'),
         'plan':plan, 'synthetic_fixture_policy':'DISABLED' if args.no_ci_synthetic_fixtures else 'EXISTING_CI_AUTO'}
@@ -99,6 +101,10 @@ for name,extra in tests:
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
+        for key in ISOLATION_ROOT_VARIABLES:
+            env[key]=user_data
+        for key in ISOLATION_FLAG_VARIABLES:
+            env[key]='1'
         if name == 'option_awakening_ui_test':
             # This native-input test deliberately confirms real card consumption.
             env['TWILIGHT_UI_TEST_ISOLATED']='1'
@@ -114,6 +120,25 @@ for name,extra in tests:
             env['TWILIGHT_PR100_BATCH_CONFIG']='res://tests/fixtures/pr100_transform_regression.json'
             env['TWILIGHT_PR100_BATCH_REPORT']=str(logs/(name+'.batch.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
+        if name in RETIRED_LEGACY_MAP_TESTS:
+            retired_legacy.append(name)
+            skipped.append(name)
+            output='LEGACY_MAP_RETIRED '+name+' (pre-remake Aden layout is no longer served; not counted as passed)'
+            (logs/(name+'.log')).write_text(output,encoding='utf-8')
+            print('SKIP '+name+' LEGACY_MAP_RETIRED',flush=True)
+            write_summary()
+            continue
+        missing=missing_private_inputs(name,env)
+        if missing:
+            # Not run and never counted as passed: the private original input
+            # this test exists to verify is not available here.
+            private_unavailable[name]=missing
+            skipped.append(name)
+            output='PRIVATE_INPUT_UNAVAILABLE '+name+' missing='+','.join(missing)
+            (logs/(name+'.log')).write_text(output,encoding='utf-8')
+            print('SKIP '+name+' PRIVATE_INPUT_UNAVAILABLE '+','.join(missing),flush=True)
+            write_summary()
+            continue
         try:
             audit={}
             if name in PR122_NATIVE_FIXTURE_MODES:
@@ -173,5 +198,14 @@ for name,extra in tests:
         write_summary()
 passed=len(executed)-len(failed)-len(skipped)
 print(f'{passed}/{len(tests)} checks passed; {len(skipped)} skipped; {len(not_run)} not run',flush=True)
+if retired_legacy:
+    print(f'LEGACY_MAP_RETIRED {len(retired_legacy)} checks not run: '+', '.join(sorted(retired_legacy)),flush=True)
+    if os.environ.get('GITHUB_ACTIONS')=='true':
+        print(f'::warning title=Retired legacy Aden layout checks ({len(retired_legacy)} NOT run)::'+', '.join(sorted(retired_legacy)),flush=True)
+if private_unavailable:
+    listing=', '.join(sorted(private_unavailable))
+    print(f'PRIVATE_INPUT_UNAVAILABLE {len(private_unavailable)} checks not verified: {listing}',flush=True)
+    if os.environ.get('GITHUB_ACTIONS')=='true':
+        print(f'::warning title=Private original inputs unavailable ({len(private_unavailable)} checks NOT verified)::{listing}',flush=True)
 write_summary()
 raise SystemExit(bool(failed or not_run))

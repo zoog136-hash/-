@@ -1,6 +1,7 @@
 extends SceneTree
 
 const QA = preload("res://tests/qa_class_selection.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -25,15 +26,26 @@ func run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	world.save_timer = -100000.0
 	var identity := ""
+	# Skill awakening definitions come only from the user's owned current523 ZIP.
+	# Without it (CI), use a real source card without awakening progress; the
+	# expedition checks below are unchanged.
+	var awakening_definitions: bool = not DEFINITIONS.not_installed()
 	for card: Dictionary in world.catalog_db.get("마법인형", []):
 		var id := world.CARD_DRAW_FUSION.card_id(card)
 		var candidates: Array = world.skill_awakening.core.candidates(id)
-		if card.get("source") == "lineagem_base508" and card.get("grade") == "희귀" and not candidates.is_empty():
+		if card.get("source") == "lineagem_base508" and card.get("grade") == "희귀" and (not awakening_definitions or not candidates.is_empty()):
 			identity = id
 			world.card_draw_fusion.owned["마법인형"][id] = true
-			world.skill_awakening.progress.cards[id] = {"spell_id": int(candidates[0].spell_id), "level": 5, "experience": "0"}
+			if awakening_definitions:
+				world.skill_awakening.progress.cards[id] = {"spell_id": int(candidates[0].spell_id), "level": 5, "experience": "0"}
 			break
-	check(not identity.is_empty(), "real source card and skill save identity")
+	if awakening_definitions:
+		check(not identity.is_empty(), "real source card and skill save identity")
+	else:
+		# Current cards come only from the owned ZIP; absence must stay empty
+		# rather than substituting another card registry. Not counted as a pass.
+		print("VALIDATION_SCOPE current523 definitions not installed: no source card identity; card-dependent expedition paths need the owned ZIP")
+		check(world.catalog_db.get("마법인형", []).is_empty() and identity.is_empty(), "absent current523 install exposes no substitute card identity")
 	world.gold = 200000
 	check(world._save_game(true) == OK, "baseline save through production writer")
 	var path := world.save_path()

@@ -51,6 +51,7 @@ func _paint_quantities() -> void:
 
 func _paint(layer: Control, rank: int, aura: bool) -> void:
 	if not is_visible_in_tree():return
+	if aura:return
 	var visible:=Rect2(Vector2.ZERO,size)
 	for index: int in range(listing.item_count):
 		var data: Dictionary=listing.get_item_metadata(index)
@@ -60,5 +61,6 @@ func _paint(layer: Control, rank: int, aura: bool) -> void:
 		var extent:=Vector2(listing.fixed_icon_size)
 		var picture:=Rect2(cell.position+Vector2((cell.size.x-extent.x)*.5,0),extent)
 		if not visible.intersects(picture):continue
-		if aura:layer.draw_rect(picture,Color.WHITE)
-		else:layer.draw_texture_rect(Chrome.texture_for(rank),picture,false)
+		var record: Variant=data.get("source_record",{})
+		var original: Texture2D=Chrome.texture_for(rank,record if record is Dictionary else {})
+		if original!=null:layer.draw_texture_rect(original,picture,false)

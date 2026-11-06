@@ -27,6 +27,7 @@ static var _tables: Dictionary = {}
 static var _relations: Dictionary = {}
 static var _metadata: Dictionary = {}
 static var _problem := ""
+static var _not_installed := false
 
 static func reset() -> void:
 	if _archive != null: _archive.close()
@@ -36,11 +37,20 @@ static func reset() -> void:
 	_relations.clear()
 	_metadata.clear()
 	_problem = ""
+	_not_installed = false
 
 static func problem() -> String:
 	return _problem
 
+## True only when no ZIP was named and none is present on disk. A ZIP that is
+## present but unreadable, named empty, or has another identity is not this
+## state: those stay problems that protect existing owned data.
+static func not_installed() -> bool:
+	_open()
+	return _not_installed
+
 static func _open() -> bool:
+	_not_installed = false
 	var explicit: bool = OS.has_environment("TWILIGHT_PATCH523_CONTENT")
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_CONTENT")
 	if explicit and path.is_empty():
@@ -69,6 +79,7 @@ static func _open() -> bool:
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null:
 		var open_error: Error = FileAccess.get_open_error()
+		_not_installed = not explicit and open_error == ERR_FILE_NOT_FOUND
 		_problem = "보유 원본523 정의 ZIP을 읽을 수 없습니다: "+error_string(open_error)+". 기존 정의와 소유 상태는 보존합니다."
 		return false
 	var size: int = file.get_length()

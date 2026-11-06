@@ -7,6 +7,7 @@ const SourceVFX=preload("res://scripts/cards/skill_awakening_source_vfx.gd")
 const Growth=preload("res://scripts/cards/skill_awakening_growth.gd")
 const CurrentMaterial=preload("res://scripts/cards/current523_owned_card_material.gd")
 const Supply=preload("res://scripts/cards/native_awakening_supply.gd")
+const DefinitionRows=preload("res://scripts/resources/current523_definition_rows.gd")
 const SAVE_KEY: String="card_skill_awakening"
 var core=Core.new()
 var world: Node
@@ -27,6 +28,19 @@ func _init() -> void:selection_rng.randomize()
 func configure(host: Node) -> bool:
 	world=host;problem=core.problem;return problem.is_empty()
 func export_state() -> Dictionary:return progress.duplicate(true)
+## The owned original-definition ZIP is simply absent (not damaged): awakening
+## stays off. Every awakening action still refuses while problem is set.
+func definitions_not_installed() -> bool:
+	return not problem.is_empty() and DefinitionRows.not_installed()
+## Saving is refused while awakening data could be lost or misread. With the
+## definitions not installed and no awakening progress to protect (a profile
+## that never awakened anything), the rest of the game may still save; the
+## saved awakening state is the untouched fresh state.
+func blocks_save() -> bool:
+	if save_blocked:return true
+	if problem.is_empty():return false
+	var untouched: bool=(progress.get("cards",{}) as Dictionary).is_empty() and int(progress.get("revision",0))==0
+	return not (definitions_not_installed() and untouched)
 func check_load(data: Dictionary) -> String:
 	return core.validate_state(data[SAVE_KEY]) if data.has(SAVE_KEY) else ""
 func accept_load(data: Dictionary) -> bool:

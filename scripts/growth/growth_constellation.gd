@@ -29,6 +29,11 @@ func configure(rt, rows: Array, hud: Node, scroll: ScrollContainer, chosen: Stri
 		# Dim only the socket, so unopened node names remain readable.
 		button.self_modulate=Color.WHITE if runtime.state.nodes.has(id) else Color(.58,.58,.67)
 		button.icon=Art.sigil(8 if runtime.state.nodes.has(id) else 7)
+		if button.icon==null:
+			# Real source slot/node identity stays selectable without inventing
+			# an icon. The existing original node-name label remains below it.
+			button.text=str(row.get("source_slot_id",id))
+			button.set_meta("original_growth_icon",{"status":"source_icon_role_pending"})
 		button.expand_icon=true
 		button.add_theme_constant_override("icon_max_width",38 if row.kind=="stat" else 60)
 		button.add_theme_stylebox_override("normal",UI.box(Color(0,0,0,0),Color(0,0,0,0),2))

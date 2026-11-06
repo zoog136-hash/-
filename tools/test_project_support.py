@@ -19,6 +19,47 @@ ERROR = re.compile(
     re.MULTILINE,
 )
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
+# Explicit final summaries that state their own failure/error count. Accepted
+# only when every such line in the output reports zero; any nonzero count, or a
+# JSON summary without a "failures" list, never passes.
+COUNT_SUMMARY = re.compile(
+    r'^(?P<label>[A-Za-z][A-Za-z0-9_ ]*?)(?::|\s)\s*(?P<checks>\d+) checks?\s*(?:,|/)\s*(?P<bad>\d+) (?:failures?|errors?)\s*$'
+    r'|^(?P<label2>[A-Z][A-Z0-9_]*)(?:_RESULT|_PASS)?\b.*?\bchecks=(?P<checks2>\d+)\b.*?\b(?:failures|errors)=(?P<bad2>\d+)\b'
+    r'|^(?P<label3>[A-Z][A-Z0-9_]*)\s+(?P<json>\{.*\})\s*$'
+    r'|^(?P<label4>[A-Z][A-Z0-9_]*_PASS)\s*$',
+    re.MULTILINE)
+
+
+def zero_failure_summary(output: str) -> bool:
+    # Registered suite-specific receipts keep their exact, own-suite contract.
+    reserved = tuple(prefix for prefix, _ in SCALAR_RESULT_CONTRACTS.values()) + \
+        tuple(prefix for prefix, _ in SCALAR_ONLY_CONTRACTS.values())
+    found = False
+    for match in COUNT_SUMMARY.finditer(output):
+        if match.group(0).startswith(reserved):
+            continue
+        if match.group('label4'):
+            found = True
+            continue
+        if match.group('json') is not None:
+            try:
+                report = json.loads(match.group('json'))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(report, dict) or 'failures' not in report:
+                continue
+            if report['failures'] != []:
+                return False
+            found = True
+            continue
+        bad = match.group('bad') if match.group('bad') is not None else match.group('bad2')
+        checks = match.group('checks') if match.group('checks') is not None else match.group('checks2')
+        if bad != '0':
+            return False
+        if checks is not None and int(checks) == 0:
+            return False
+        found = True
+    return found
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
 OPTIONAL_RENDER_ENV = re.compile(
@@ -370,7 +411,8 @@ def classify_result(name: str, returncode: int, output: str, *,
         receipts = [line for line in output.splitlines() if line.startswith(prefix)]
         return (len(receipts) == 1 and (parsed := pattern.fullmatch(receipts[0])) is not None
                 and parsed.group('bad') == '0'), False
-    return name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output)), False
+    return (name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output))
+            or zero_failure_summary(output)), False
 
 
 def _stop_tree(process: subprocess.Popen) -> None:
@@ -394,9 +436,19 @@ def _stop_tree(process: subprocess.Popen) -> None:
             process.kill()
 
 
+# A GDScript runtime error aborts the current function; tests that never reach
+# quit() then idle until the timeout (69 of 75 timeouts in run 42023183132).
+# Any SCRIPT ERROR already fails classification, so after a short grace period
+# the runner stops the process instead of waiting. The verdict is unchanged.
+SCRIPT_ERROR_GRACE_SECONDS = 20.0
+STOPPED_AFTER_SCRIPT_ERROR = 'STOPPED_AFTER_SCRIPT_ERROR'
+
+
 def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: float,
-                 cwd: str | None = None) -> subprocess.CompletedProcess:
+                 cwd: str | None = None,
+                 script_error_grace: float | None = SCRIPT_ERROR_GRACE_SECONDS) -> subprocess.CompletedProcess:
     """Capture logs loss-tolerantly and clean up descendant processes on timeout."""
+    import threading
     kwargs = {'start_new_session': True} if os.name == 'posix' else {
         'creationflags': subprocess.CREATE_NEW_PROCESS_GROUP,
     }
@@ -404,22 +456,52 @@ def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: flo
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         text=True, encoding='utf-8', errors='replace', env=env, cwd=cwd, **kwargs,
     ) as process:
+        chunks: dict[str, list[str]] = {'out': [], 'err': []}
+        first_error: list[float] = []
+
+        def pump(stream, key: str) -> None:
+            for line in iter(stream.readline, ''):
+                chunks[key].append(line)
+                if not first_error and 'SCRIPT ERROR:' in line:
+                    first_error.append(time.monotonic())
+            stream.close()
+
+        readers = [threading.Thread(target=pump, args=(process.stdout, 'out'), daemon=True),
+                   threading.Thread(target=pump, args=(process.stderr, 'err'), daemon=True)]
+        for reader in readers:
+            reader.start()
+        began = time.monotonic()
+        stopped_early = False
         try:
-            stdout, stderr = process.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired as original:
-            _stop_tree(process)
-            try:
-                stdout, stderr = process.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                # An escaped descendant may retain a pipe. Never hang on it.
-                process.stdout.close()
-                process.stderr.close()
-                stdout, stderr = original.stdout, original.stderr
-            raise subprocess.TimeoutExpired(command, timeout, output=stdout, stderr=stderr) from None
+            while process.poll() is None:
+                now = time.monotonic()
+                if now - began >= timeout:
+                    _stop_tree(process)
+                    for reader in readers:
+                        reader.join(5)
+                    raise subprocess.TimeoutExpired(command, timeout, output=''.join(chunks['out']),
+                                                    stderr=''.join(chunks['err']))
+                if (script_error_grace is not None and first_error
+                        and now - first_error[0] >= script_error_grace):
+                    _stop_tree(process)
+                    stopped_early = True
+                    break
+                time.sleep(0.2)
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            raise
         except BaseException:
             _stop_tree(process)
             raise
-    return subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
+        for reader in readers:
+            reader.join(5)
+    stdout = ''.join(chunks['out'])
+    stderr = ''.join(chunks['err'])
+    returncode = process.returncode
+    if stopped_early:
+        stderr += f'\n{STOPPED_AFTER_SCRIPT_ERROR} after {script_error_grace:.0f}s grace; SCRIPT ERROR already fails this check\n'
+        returncode = returncode if returncode not in (0, None) else 1
+    return subprocess.CompletedProcess(command, returncode, stdout, stderr)
 
 
 def run_native_fixture_cases(command: Sequence[str], *, name: str, keys: Sequence[str],
@@ -490,6 +572,83 @@ def run_native_fixture_cases(command: Sequence[str], *, name: str, keys: Sequenc
 
 
 # Audits reuse this runner contract, rather than copying its execution loop.
+# Tests whose assertions require a private, user-supplied original pack that
+# GitHub CI never has. Their authors state that absence is not a pass, so the
+# runner records them as PRIVATE_INPUT_UNAVAILABLE (never PASS) with the
+# missing variables, instead of letting each fail or hang until its timeout.
+# Evidence: Integration run 41986133718 on main 4d18a44 (2026-11-05).
+PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
+    "base508_pack_test": ("TWILIGHT_BASE508_PACK",),
+    "base508_game_api_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),
+    "base508_registered_navigation_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),
+    "base508_shared_land_context_test": ("TWILIGHT_BASE508_SHARED_CONTEXT_PACK",),
+    "dungeon_execution_contract_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_execution_main_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_installed_play_pack_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "dungeon_remaining_play_test": ("TWILIGHT_DUNGEON523_PACK", "TWILIGHT_DUNGEON523_PREVIOUS_PACK"),
+    "fishing523_main_test": ("TWILIGHT_FISHING523_PACK",),
+    "fishing523_source_test": ("TWILIGHT_FISHING523_PACK",),
+    "guardian_media_test": ("GUARDIAN_ORIGINAL_MEDIA_PACK",),
+    "half_elixir_main_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),
+    "half_elixir_source_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),
+    "inventory_registry523_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "inventory_source523_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "inventory_supplier523_contract_test": ("TWILIGHT_AUTO_INVENTORY523_FILE",),
+    "local_presentation_region_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "mastery523_effects_main_test": ("TWILIGHT_MASTERY523_PACK",),
+    "mastery523_operations_test": ("TWILIGHT_MASTERY523_PACK",),
+    "mastery523_ticket_main_test": ("TWILIGHT_MASTERY523_PACK",),
+    "monsterbook523_test": ("MONSTERBOOK523_PACK", "MONSTERBOOK523_SHA256"),
+    "title523_test": ("TWILIGHT_TITLE523_ZIP",),
+    "title523_main_test": ("TWILIGHT_TITLE523_ZIP",),
+    "totem_main_ui_test": ("TWILIGHT_TOTEM_PACK",),
+    "totem_progression_test": ("TWILIGHT_TOTEM_PACK",),
+    "totem_runtime_test": ("TWILIGHT_TOTEM_PACK",),
+    "patch523_item_use_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_catalog_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_delivery_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_use_test": ("TWILIGHT_PATCH523_DROP_ZIP",),
+    "patch523_full_item_effects_test": ("TWILIGHT_ITEM_EFFECT_EXPECTATIONS",),
+    "patch523_pack_upgrade_test": ("TWILIGHT_PATCH523_DROP_ZIP", "TWILIGHT_PATCH523_OLD_ZIP"),
+    "source_dungeon_runtime_test": ("TWILIGHT_DUNGEON523_PACK",),
+    "source_map_review_pack_test": ("TWILIGHT_MAP84_REVIEW_PACK",),
+    "source_map_runtime_field_test": ("TWILIGHT_SOURCE77_EDGE_ORACLE",),
+    "presentation_effect_pack_test": ("TWILIGHT_PRESENTATION_EFFECT_PACK", "TWILIGHT_PRESENTATION_EFFECT_BAD_PACK"),
+    "source_optimization_integration_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "tower_png_normal_runtime_test": ("TWILIGHT_OMAN_PNG_PACK",),
+}
+
+# Tests of the pre-remake authored Aden layout. source_map_runtime.supports()
+# deliberately serves aden_world from the current source map even under
+# --legacy-map-layouts, so these fixtures no longer exist in the game (user's
+# map transition to current523, 2026-11). They are kept in the repository and
+# reported as LEGACY_MAP_RETIRED (never passed). Checks that also cover other
+# maps (e.g. native_png_teleport_test, world_regions_test) stay active.
+RETIRED_LEGACY_MAP_TESTS = frozenset({
+    "aden_building_test", "aden_courtyard_test", "aden_shoreline_test", "aden_terrain_polish_test",
+    "field_world_test", "reference_object_placement_test", "road_surface_render_test",
+    "terrain_surface_render_test", "world_region_portals_test", "world_structure_test",
+    "world_terrain_coverage_test",
+    "aden_batch_review_test", "aden_hut_collision_test", "aden_mobile_occlusion_test",
+    "aden_mobile_streaming_test", "aden_png_scale_migration_test",
+})
+
+
+# Per-test opt-in flags/roots that only assert "this run uses a fresh isolated
+# profile". The runner always allocates one, so it states that explicitly.
+ISOLATION_ROOT_VARIABLES = ("TWILIGHT_GROWTH96_TEST_ROOT", "TWILIGHT_TJ_TEST_ROOT")
+# Test-only guards of the form `VAR != "1" or XDG_DATA_HOME empty -> quit`.
+# None is read by production scripts; the runner's fresh profile satisfies them.
+ISOLATION_FLAG_VARIABLES = ("TWILIGHT_OWNED_RETURN_TEST", "TWILIGHT_REGIONAL_RETURN_TEST",
+                            "TWILIGHT_SOURCE_AMMO_TEST", "TWILIGHT_SOURCE_BOOK_TEST",
+                            "TWILIGHT_SOURCE_RECOVERY_TEST", "TWILIGHT_SOURCE_WISDOM_TEST",
+                            "TWILIGHT_TICKET_CONTRACT_TEST")
+
+
+def missing_private_inputs(name: str, env: Mapping[str, str]) -> list[str]:
+    return [key for key in PRIVATE_INPUT_REQUIREMENTS.get(name, ()) if not env.get(key, "").strip()]
+
+
 PREPARATION = ("import", "bake_navigation", "boot")
 
 

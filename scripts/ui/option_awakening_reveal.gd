@@ -9,8 +9,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const BORDER = preload("res://scripts/ui/option_awakening_border.gd")
 const TOUCH_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
-const BACKGROUND = preload("res://assets/card_reveal/authored_background.webp")
-const SUCCESS_SOUND = preload("res://assets/card_reveal/upgrade.wav")
+const SourceSurfaces=preload("res://scripts/ui/original_card_surfaces.gd")
 const GOLD = Color("f5cf7b")
 const PALE_GOLD = Color("fff0c6")
 const REVEAL_AT: float = 1.35
@@ -85,7 +84,7 @@ func _ready() -> void:
 	confirm_button.disabled = true
 	controls_layer.add_child(confirm_button)
 	sound = AudioStreamPlayer.new()
-	sound.stream = SUCCESS_SOUND
+	sound.set_meta("original_audio_status","original_audio_not_supplied_legacy_audio_excluded")
 	sound.volume_db = -15
 	add_child(sound)
 	resized.connect(_fit)
@@ -220,7 +219,7 @@ func _show_result(play_sound: bool = true) -> void:
 	confirm_button.disabled = false
 	skip_button.disabled = true
 	if succeeded and play_sound and not silent and intensity > 0.0:
-		sound.play()
+		if sound.stream!=null:sound.play()
 	queue_redraw()
 
 func seek(time_value: float) -> void:
@@ -295,8 +294,12 @@ func _draw() -> void:
 	if board == null:
 		return
 	draw_rect(Rect2(Vector2.ZERO, size), Color("080b12"))
-	# Existing TWILIGHT-generated background, never a source-game screenshot.
-	draw_texture_rect(BACKGROUND, Rect2(Vector2.ZERO, size), false, Color(0.35, 0.31, 0.26, 0.40))
+	# Only an explicitly bound original awakening-background node may supply pixels.
+	var original_background: Dictionary=SourceSurfaces.resolve("awakening_background")
+	var background: Texture2D=original_background.get("texture") as Texture2D
+	var background_evidence: Dictionary=original_background.duplicate();background_evidence.erase("texture")
+	set_meta("original_card_background",background_evidence)
+	if background!=null:draw_texture_rect(background,Rect2(Vector2.ZERO,size),false)
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.015, 0.018, 0.026, 0.66))
 	draw_set_transform(design_offset, 0, Vector2.ONE * design_scale)
 	var age: float = maxf(0.0, clock - reveal_time())

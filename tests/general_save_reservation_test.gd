@@ -14,6 +14,11 @@ func run() -> void:
 	for monster: Node in world.monsters_root.get_children():
 		monster.set_process(false)
 		monster.set_physics_process(false)
+	# Current fields fill their population in per-frame batches and tick boss
+	# timers; both feed the saved boss state. Freeze them like the world above so
+	# "same snapshot" really is the same snapshot.
+	for population: Variant in [world.get("field_population"), world.get("original_population"), world.get("legacy_population")]:
+		if population is Node: (population as Node).set_process(false)
 	var writer = world.equipment_collections
 	if world._save_game(true) != OK:failures.append("baseline durable save")
 	var baseline_writes: int = writer.save_writes

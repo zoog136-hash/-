@@ -110,10 +110,13 @@ func _add_card(grid: GridContainer,requirement: Dictionary) -> void:
 	if acquired and not native:
 		var aura:=ColorRect.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		aura.material=Chrome.material_for(rank,true,false,bool(settings.get("reduced_motion",false)),str(settings.get("effect_detail","full"))=="low")
-		card.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	if not native:
+		if aura.material!=null:
+			card.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		else:aura.free()
+	var original_frame: Texture2D=Chrome.texture_for(rank,record)
+	if original_frame!=null:
 		var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		metal.texture=Chrome.texture_for(rank);metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		metal.texture=original_frame;metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		metal.material=Chrome.material_for(rank,false,false,bool(settings.get("reduced_motion",false)))
 		metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
 		card.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

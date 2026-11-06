@@ -9,14 +9,33 @@ func check(ok: bool, label: String) -> void:
 		failures.append(label)
 		printerr("PATCH523_EQUIPMENT_FAIL: ", label)
 
+func fixture_class(id: int) -> Dictionary:
+	return {"ID":id,"TestItem":false}
+
+func fixture_inputs(craft: int, rows: Array) -> Array:
+	var result: Array = [{"ID":craft*100+1,"ItemCraftID":craft,"SlotIndex":0,"ItemClassID":26,"Amount":5,"Enchant":0,"ItemBlessCodeID":1}]
+	for row: Array in rows:
+		result.append({"ID":row[0],"ItemCraftID":craft,"SlotIndex":row[1],"ItemClassID":row[2],"Amount":row[3],"Enchant":row[4],"ItemBlessCodeID":row[5]})
+	return result
+
+func fixture_output(craft: int) -> Dictionary:
+	return {"ItemCraftID":craft,"ItemCraftOutputTypeID":1,"ItemClassID":102,"Amount":1,"Enchant":7,"ItemBlessCodeID":1,"Probability":1000000}
+
+func fixture_view(craft: int) -> Dictionary:
+	return {"ItemCraftID":craft,"ItemClassID":102,"Amount":1,"Enchant":7,"ItemBlessCodeID":1,"ServerLimitSetID":0,"IsCoalitionItem":false,"NoRepeat":false,"IsBelowLevelLimit":false,"LevelLimitValue":0,"CraftTimeTypeID":1,"EffectiveFrom":1,"EffectiveTo":3,"PopupText":0,"AlwaysSuccess":1}
+
 func _initialize() -> void:
 	var rules = RULES.new()
 	# Explicit synthetic transaction fixture, not a source-game rule or price.
 	var old: Dictionary = {"name":"fixture_old", "source":"inven", "sourceId":"101", "slot":"earring", "weight":3}
 	var fresh: Dictionary = {"name":"fixture_new", "source":"inven", "sourceId":"102", "slot":"earring", "weight":3}
-	var material: Dictionary = {"item":"fixture_old", "quantity":1, "source_id":"101", "level":8, "bless_code":2, "physical":true}
-	rules.data = {"items":{"101":{"catalog_record":old},"102":{"catalog_record":fresh}}}
-	rules.recipes = {"patch523:17":{"id":"patch523:17", "adena":5, "popup_text_id":0, "materials":[material],
+	var material: Dictionary = {"item":"fixture_old", "quantity":1, "source_id":"101", "level":8, "bless_code":2, "physical":true, "row_id":10, "slot_index":1}
+	# Synthetic cached source join rows (ItemCraftInput/OutputView/View/
+	# Restriction) so the recipe contract is exercised without the private pack.
+	rules.data = {"items":{"26":{"item_class":fixture_class(26)},"101":{"catalog_record":old,"item_class":fixture_class(101)},"102":{"catalog_record":fresh,"item_class":fixture_class(102)}},
+		"raw_recipes":{"inputs":{"17":fixture_inputs(17,[[10,1,101,1,8,2]]),"18":fixture_inputs(18,[[10,1,101,1,8,2],[20,1,101,1,7,1]])},
+			"outputs":{"17":[fixture_output(17)],"18":[fixture_output(18)]},"views":{"17":[fixture_view(17)],"18":[fixture_view(18)]},"restrictions":{"17":[],"18":[]}}}
+	rules.recipes = {"patch523:17":{"id":"patch523:17", "source_craft_id":17, "adena":5, "popup_text_id":0, "materials":[material],
 		"result":{"item":"fixture_new", "quantity":1, "source_id":"102", "level":7, "bless_code":1, "physical":true}}}
 	var physical: Dictionary = {"7":{"name":"fixture_old", "record":old, "sourceId":"101", "level":8, "bless_state":"blessed", "element":"", "element_level":0}}
 	var inventory: Dictionary = {"fixture_old":1}
@@ -49,12 +68,14 @@ func _initialize() -> void:
 	second["row_id"] = 20
 	second["level"] = 7
 	second["bless_code"] = 1
-	rules.recipes["patch523:choice"] = rules.recipes["patch523:17"].duplicate(true)
-	rules.recipes["patch523:choice"]["material_slots"] = [{"slot_index":1,"candidates":[alternative,second]}]
-	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100).get("ok",false)),"candidate material is never silently selected")
-	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100,{}, {"1":999}).get("ok",false)),"forged candidate row is rejected")
-	check(not bool(rules.quote("patch523:choice",1,inventory,100,items,physical,{},3,100,{}, {"1":20}).get("ok",false)),"selected candidate still requires its exact physical state")
-	check(bool(rules.execute("patch523:choice",1,inventory,100,items,physical,{},3,100,8,{}, {"1":10}).get("ok",false)),"explicit valid candidate produces staged transaction")
+	rules.recipes["patch523:18"] = rules.recipes["patch523:17"].duplicate(true)
+	rules.recipes["patch523:18"]["id"] = "patch523:18"
+	rules.recipes["patch523:18"]["source_craft_id"] = 18
+	rules.recipes["patch523:18"]["material_slots"] = [{"slot_index":1,"candidates":[alternative,second]}]
+	check(not bool(rules.quote("patch523:18",1,inventory,100,items,physical,{},3,100).get("ok",false)),"candidate material is never silently selected")
+	check(not bool(rules.quote("patch523:18",1,inventory,100,items,physical,{},3,100,{}, {"1":999}).get("ok",false)),"forged candidate row is rejected")
+	check(not bool(rules.quote("patch523:18",1,inventory,100,items,physical,{},3,100,{}, {"1":20}).get("ok",false)),"selected candidate still requires its exact physical state")
+	check(bool(rules.execute("patch523:18",1,inventory,100,items,physical,{},3,100,8,{}, {"1":10}).get("ok",false)),"explicit valid candidate produces staged transaction")
 	var indexed: Dictionary = physical.duplicate(true)
 	indexed["7"].record["originalSourceOptions"] = []
 	check(bool(rules.quote("patch523:17",1,inventory,100,items,indexed,{},3,100).get("ok",false)),"Main's immutable original-option metadata remains eligible")

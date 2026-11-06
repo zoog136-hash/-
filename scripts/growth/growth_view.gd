@@ -89,14 +89,9 @@ func _balance() -> void:
 	var strip:=HBoxContainer.new()
 	strip.name="GrowthBalance"
 	body.add_child(strip)
-	for pair: Array in [["축복 포인트 %d" % int(runtime.state.points),preload("res://assets/growth/point.svg")],["수호석 %d" % int(runtime.world.inventory.get("수호석",0)),preload("res://assets/growth/stone.svg")]]:
-		var icon:=TextureRect.new()
-		icon.texture=pair[1]
-		icon.custom_minimum_size=Vector2(22,22)
-		icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		strip.add_child(icon)
-		_copy(str(pair[0]),strip,14,Palette.GOLD)
+	for text: String in ["축복 포인트 %d" % int(runtime.state.points),"수호석 %d" % int(runtime.world.inventory.get("수호석",0))]:
+		_copy(text,strip,14,Palette.GOLD)
+	strip.set_meta("original_balance_icons",{"status":"source_icon_roles_pending"})
 	var spacer:=Control.new()
 	spacer.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	strip.add_child(spacer)
@@ -387,7 +382,7 @@ func _card_selection() -> void:
 	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var subtitle: Label=_copy(str(runtime.node(node_id).name),body,14,Palette.TEXT)
 	subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	var provenance: Label=_copy("TWILIGHT 자체 카드 표시 · 원본 아님" if guardian_presentation.preferences.cards else "자체 카드 표시 꺼짐 · 번호와 결과로 선택",body,12,Palette.MUTED)
+	var provenance: Label=_copy("원본 카드 장식 연결 대기 · 번호와 결과로 선택",body,12,Palette.MUTED)
 	provenance.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var status: Label=_copy("카드를 선택해주세요 · 남은 선택지 %d / %d" % [count-search.failed.size(),count] if pending else "슬롯 개방 성공" if last_reveal.won else "개방 실패 · 선택한 카드는 다음 도전에서 제외",body,14,Palette.GOLD if pending else Color("9bdfdb") if last_reveal.won else Color("d59a9b"))
 	status.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -414,7 +409,7 @@ func _card_selection() -> void:
 			face.failed=search.failed.has(index)
 			face.selected=not pending and int(last_reveal.index)==index
 			face.success=face.selected and bool(last_reveal.won)
-			face.authored_art=bool(guardian_presentation.preferences.cards)
+			face.authored_art=false
 			b.mouse_entered.connect(func() -> void: face.set_interaction(true))
 			b.mouse_exited.connect(func() -> void: face.set_interaction(false))
 			b.feedback_changed.connect(face.set_interaction)
@@ -577,7 +572,7 @@ func _save_guardian_presentation(key: String,value: Variant) -> void:
 	result.text="TWILIGHT 자체 표현 설정 저장됨" if saved else "표현 설정 저장 실패 · 이전 설정 유지"
 
 func _draw() -> void:
-	draw_texture_rect(Art.BACKDROP,Rect2(Vector2.ZERO,size),false)
+	set_meta("original_growth_background",{"status":"source_background_role_pending"})
 	draw_rect(Rect2(Vector2.ZERO,size),Color(.01,.012,.025,.45))
 	var tint: Color=Art.COLORS[Art.index(selected)] if mode=="emblems" else Color("4e82a9")
 	for layer: int in range(8):

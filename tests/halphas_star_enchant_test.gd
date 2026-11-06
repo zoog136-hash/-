@@ -2,6 +2,7 @@ extends SceneTree
 const Rules = preload("res://scripts/cards/native_halphas_star_enchant.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -51,6 +52,18 @@ func run() -> void:
 				record = candidate
 			else:
 				check(not Rules.snapshot(category, candidate, {}, 999999999).ok, "no generalization " + Cards.card_id(candidate))
+	if DEFINITIONS.not_installed():
+		# CI never has the user's owned current523 definition ZIP. The rule then
+		# has no definition: no card qualifies and every request refuses.
+		print("VALIDATION_SCOPE current523 definitions not installed: Halphas checks verify the absent-install path")
+		var status: Dictionary = Rules.input_status()
+		check(matches == 0 and record.is_empty(), "no card qualifies without the owned definitions")
+		check(not bool(status.available) and str(status.problem).begins_with("halphas_current523_unavailable"), "unavailable definitions are reported, not substituted")
+		print("HALPHAS_STAR_ENCHANT_RESULT ", JSON.stringify({"checks":checks, "failures":failures}))
+		world.queue_free()
+		await process_frame
+		quit(0 if failures.is_empty() else 1)
+		return
 	check(matches == 1 and not record.is_empty(), "only original Halphas group qualifies")
 	if record.is_empty():
 		world.queue_free()

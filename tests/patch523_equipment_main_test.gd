@@ -45,9 +45,14 @@ func run() -> void:
 	var actual_source: bool = not OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES").is_empty()
 	if not actual_source:
 		# Explicit synthetic transaction fixture on real Main, not source evidence.
-		world.patch523_equipment.data = {"items":{"30671":{"catalog_record":record,"item_bonuses":[],"enchant_effects":[]}},"bonuses":{},"enchantment":{}}
-		world.patch523_equipment.recipes = {recipe_id:{"id":recipe_id,"name":"Synthetic seal conversion fixture","source_snapshot":"patch523","category":"장신구","adena":0,"popup_text_id":0,
-			"materials":[{"item":"수호의 인장","quantity":2,"source_id":"30671","level":3,"bless_code":1,"physical":true}],
+		# Synthetic cached ItemCraft* join rows keep the source recipe contract active.
+		var view: Dictionary = {"ItemCraftID":77552,"ItemClassID":30671,"Amount":1,"Enchant":3,"ItemBlessCodeID":2,"ServerLimitSetID":0,"IsCoalitionItem":false,"NoRepeat":false,"IsBelowLevelLimit":false,"LevelLimitValue":0,"CraftTimeTypeID":1,"EffectiveFrom":1,"EffectiveTo":3,"PopupText":0,"AlwaysSuccess":1}
+		world.patch523_equipment.data = {"items":{"30671":{"catalog_record":record,"item_class":{"ID":30671,"TestItem":false},"item_bonuses":[],"enchant_effects":[]}},"bonuses":{},"enchantment":{},
+			"raw_recipes":{"inputs":{"77552":[{"ID":1,"ItemCraftID":77552,"SlotIndex":0,"ItemClassID":30671,"Amount":2,"Enchant":3,"ItemBlessCodeID":1}]},
+				"outputs":{"77552":[{"ItemCraftID":77552,"ItemCraftOutputTypeID":1,"ItemClassID":30671,"Amount":1,"Enchant":3,"ItemBlessCodeID":2,"Probability":1000000}]},
+				"views":{"77552":[view]},"restrictions":{"77552":[]}}}
+		world.patch523_equipment.recipes = {recipe_id:{"id":recipe_id,"source_craft_id":77552,"name":"Synthetic seal conversion fixture","source_snapshot":"patch523","category":"장신구","adena":0,"popup_text_id":0,
+			"materials":[{"item":"수호의 인장","quantity":2,"source_id":"30671","level":3,"bless_code":1,"physical":true,"row_id":1,"slot_index":0}],
 			"result":{"item":"수호의 인장","quantity":1,"source_id":"30671","level":3,"bless_code":2,"physical":true}}}
 		world.crafting.recipes.merge(world.patch523_equipment.recipes)
 	else:

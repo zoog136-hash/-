@@ -4,9 +4,6 @@ extends Control
 # Receives a committed result: no RNG, inventory writes, or transaction callbacks.
 signal finished
 const UI = preload("res://scripts/ui/renewal_theme.gd")
-const CHARGE = preload("res://assets/enhancement/charge.wav")
-const SUCCESS = preload("res://assets/enhancement/success.wav")
-const FAILURE = preload("res://assets/enhancement/failure.wav")
 const REVEAL_AT: float = 1.85
 const SETTLE_AT: float = 3.45
 const DESIGN = Vector2(1000,640)
@@ -97,7 +94,7 @@ func present(outcome: String, display_name: String, before: int, after: int, tex
 	item_label.text = display_name
 	level_label.text = "+%d" % from_level
 	result_label.text = ""
-	_play(CHARGE)
+	_play("charge")
 	queue_redraw()
 
 func _fit() -> void:
@@ -142,7 +139,7 @@ func _reveal() -> void:
 			result_label.text = "강화 실패 · 수치 유지"
 			result_label.add_theme_color_override("font_color",Color("a9b9c9"))
 			note.text = "강화 수치와 장비가 보존되었습니다"
-	_play(SUCCESS if result == "success" else FAILURE)
+	_play("success" if result == "success" else "failure")
 
 func skip_to_result() -> void:
 	if closed or revealed: return
@@ -180,10 +177,11 @@ func _unhandled_input(_event: InputEvent) -> void:
 	if not closed and is_visible_in_tree():
 		get_viewport().set_input_as_handled()
 
-func _play(stream: AudioStream) -> void:
+func _play(event: String) -> void:
 	if silent: return
-	sound.stream = stream
-	sound.play()
+	# Sound is excluded by the user's original-only installation selection.
+	# Result/confirmation timing is independent of this presentation event.
+	set_meta("enhancement_audio",{"status":"user_excluded","event":event})
 
 func _glow(center: Vector2, radius: float, tint: Color, alpha: float) -> void:
 	var layers: int = 5 if low_detail else 10

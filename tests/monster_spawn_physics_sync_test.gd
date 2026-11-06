@@ -31,7 +31,6 @@ func run() -> void:
 	var monsters: Array[TwilightMonster] = []
 	for node: Node in world.monsters_root.get_children():
 		if node is TwilightMonster and not (node as TwilightMonster).dead: monsters.append(node)
-	check(monsters.size() >= 100, "crowded field spawned its population (%d)" % monsters.size())
 	var unsynced: int = 0
 	var far_labels: int = 0
 	for monster: TwilightMonster in monsters:
@@ -43,6 +42,25 @@ func run() -> void:
 			far_labels += 1
 	check(unsynced == 0, "%d spawned actors far from their spawn point in the physics server" % unsynced)
 	check(far_labels == 0, "%d offscreen actors show overhead UI on their first frame" % far_labels)
+	# Current source fields fill the rest of their population in bounded
+	# per-frame batches (no arrival stall). Each batch must also register at its
+	# spawn point; then the whole crowd must stay physics-local.
+	var population = world.get("field_population")
+	var waited: int = 0
+	var known: Dictionary = {}
+	for monster: TwilightMonster in monsters: known[monster.get_instance_id()] = true
+	while population != null and not population.pending_initial_spawns.is_empty() and waited < 600:
+		await process_frame
+		waited += 1
+		for node: Node in world.monsters_root.get_children():
+			if not node is TwilightMonster or known.has(node.get_instance_id()) or (node as TwilightMonster).dead: continue
+			known[node.get_instance_id()] = true
+			var fresh: TwilightMonster = node as TwilightMonster
+			if PhysicsServer2D.body_get_state(fresh.get_rid(), PhysicsServer2D.BODY_STATE_TRANSFORM).origin.distance_to(fresh.global_position) > 1000.0: unsynced += 1
+			monsters.append(fresh)
+	check(population == null or population.pending_initial_spawns.is_empty(), "initial population batches finish")
+	check(unsynced == 0, "%d batch-spawned actors far from their spawn point in the physics server" % unsynced)
+	check(monsters.size() >= 100, "crowded field spawned its population (%d)" % monsters.size())
 	var started: int = Time.get_ticks_msec()
 	await physics_frame
 	await physics_frame

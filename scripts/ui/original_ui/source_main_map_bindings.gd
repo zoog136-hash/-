@@ -17,6 +17,9 @@ const ROW="UI/Map/Map_List_Button.csb"
 const ROW_SHA="a3d55dcab8f9385870916e6df5d1cd30b47f1da5417d60a764cbcffbe1e0f3f4"
 const AREA_IMAGE=44440
 const AREA_AUTHORED_ROW=37316
+const AREA_INFO=2032
+const AREA_INFO_SCOPE: Array[int]=[2032,4612,4280,3916,3300,2864,2528,2148]
+const WorldPanel=preload("res://scripts/ui/patch523_world_panel.gd")
 signal world_selection_changed(result: Dictionary)
 signal world_image_clicked(payload: Dictionary)
 const OwnerPixels=preload("res://scripts/ui/original_ui/source_asset_pixels.gd")
@@ -177,6 +180,14 @@ func build_map_scene(field_map: Object, offered_world_id: int, world_label: Stri
 		# Aden tab IDs, category types or preview On variants are guessed.
 		31656:{"role":"project","visible":true,"source_node_offsets":area.source_node_offsets,"bindings":area.bindings}
 	}
+	# Original Btn_AreaInfo and both authored state branches. This opens
+	# the existing host's region information; it does not turn a World image
+	# selection into a portal destination or a new Land/World ID mapping.
+	if _area_info_in_active_scope():
+		all_scope.append_array(AREA_INFO_SCOPE)
+		all_bindings[AREA_INFO]={"role":"button","activate":Callable(self,"open_area_info"),"displaystate":true}
+		all_bindings[3856]={"visible":true};all_bindings[2084]={"visible":false}
+		all_bindings[3916]={"role":"static_source_text"};all_bindings[2148]={"role":"static_source_text"}
 	var bindings: Dictionary={132:{"role":"project","source_node_offsets":all_scope,"bindings":all_bindings}}
 	return {"ok":true,"member":MAP_SCENE,"sha256":MAP_SCENE_SHA,"source_node_offsets":[132],"bindings":bindings,"child_member":MAP_ALL,"child_sha256":MAP_ALL_SHA,"child_source_node_offsets":all_scope,"child_bindings":all_bindings,"area_contract":area,"native_parent":map_scene_contract(),"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -327,6 +338,29 @@ func close_map() -> Dictionary:
 	if is_instance_valid(scene):scene.queue_free()
 	if _dismiss_map.is_valid():_dismiss_map.call()
 	return {"ok":true,"closed":true,"game_state_written":false}
+
+func open_area_info() -> Dictionary:
+	var hud: Node=_hud.get_ref() as Node if _hud!=null else null
+	var scene: Node2D=_map_scene.get_ref() as Node2D if _map_scene!=null else null
+	var field: Object=_field_map.get_ref() if _field_map!=null else null
+	if not is_instance_valid(hud) or not hud.has_method("_open_window") or not is_instance_valid(scene) or scene.is_queued_for_deletion() or not scene.is_inside_tree() or not is_instance_valid(field):return _fail("source_main_map_current_information_owner_required")
+	if not _area_info_in_active_scope():return _fail("source_main_map_original_area_info_scope_required")
+	# _open_window inside the existing panel closes the native map through
+	# its normal owner path, cancelling the old mouse/touch/scroll capture.
+	WorldPanel.open(hud)
+	return {"ok":true,"dispatched":true,"source_member":MAP_ALL,"source_node_offset":AREA_INFO,"method":"patch523_world_panel.open(hud)","context":"existing current gameplay world; no UIMapWorld selection remap","portal_travel_requested":false,"game_state_written":false}
+
+func _area_info_in_active_scope() -> bool:
+	if _pack==null or _pack.manifest.get("files",{}).get(MAP_ALL,{}).get("sha256")!=MAP_ALL_SHA:return false
+	var tree: Dictionary=_pack.scene(MAP_ALL)
+	for offset: int in AREA_INFO_SCOPE:
+		if _node_at(tree.get("nodeTree",{}),offset).is_empty():return false
+	var button: Dictionary=_node_at(tree.get("nodeTree",{}),AREA_INFO)
+	if button.get("classname")!="Button" or button.get("options",{}).get("widgetOptions",{}).get("name")!="Btn_AreaInfo":return false
+	for offset: int in [3916,2148]:
+		var label: Dictionary=_node_at(tree.get("nodeTree",{}),offset)
+		if label.get("classname")!="Text" or label.get("options",{}).get("text")!="지역 정보":return false
+	return true
 
 func map_scene_contract() -> Dictionary:
 	var identity: Dictionary=_map_identities()

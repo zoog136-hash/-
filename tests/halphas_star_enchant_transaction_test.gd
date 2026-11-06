@@ -4,6 +4,8 @@ const Cards = preload("res://scripts/card_draw_fusion.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const Positions=preload("res://tests/active_source_test_positions.gd")
 const Writer = preload("res://scripts/skills/save_writer.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const Rules = preload("res://scripts/cards/native_halphas_star_enchant.gd")
 var checks: int=0
 var failures: Array[String]=[]
 var world: TwilightWorld
@@ -167,6 +169,19 @@ func run() -> void:
 	var baseline: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(path))
 	check(not runtime.settings.offline_enable_despite_native_flag and not runtime.settings.offline_server_override,"production activation overrides remain false")
 	check(not runtime.attempt(ID,{ID:1},0,"blocked").ok and FileAccess.get_sha256(path)==before,"economic approval does not bypass technical gate")
+	if DEFINITIONS.not_installed():
+		# Halphas definitions come only from the owned current523 ZIP. Even the
+		# isolated activation fixture must refuse without touching save bytes.
+		print("VALIDATION_SCOPE current523 definitions not installed: Halphas transaction checks verify the absent-install path")
+		var status: Dictionary=Rules.input_status()
+		check(not bool(status.available) and str(status.problem).begins_with("halphas_current523_unavailable"),"unavailable definitions are reported, not substituted")
+		runtime.settings.offline_enable_despite_native_flag=true;runtime.settings.offline_server_override=true
+		var rng_before: int=runtime.rng.state
+		check(not runtime.attempt(ID,{ID:1},0,"absent").ok and FileAccess.get_sha256(path)==before and runtime.rng.state==rng_before and runtime.progress.level==0 and world.gold==100000000,"absent definitions refuse even with isolated activation and preserve save, RNG, level and Adena")
+		runtime.settings.offline_enable_despite_native_flag=false;runtime.settings.offline_server_override=false
+		print("HALPHAS_STAR_TRANSACTION_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"CURRENT523_NOT_INSTALLED"}))
+		world.queue_free();await process_frame;quit(0 if failures.is_empty() else 1)
+		return
 	# Explicit isolated fixture: production JSON and native flags remain untouched.
 	runtime.settings.offline_enable_despite_native_flag=true;runtime.settings.offline_server_override=true
 	for invalid: Dictionary in [{ID:0},{ID:-1},{ID:0.5},{ID:2},{"source:m508:2:25072":1},{"forged":1},{}]:

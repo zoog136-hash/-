@@ -4,7 +4,14 @@ const Smith = preload("res://scripts/equipment523/smith_smelt.gd")
 var checks: int = 0
 var failures: int = 0
 
+class Consumables extends RefCounted:
+	# Synthetic owner of the production consumable ledger; starts empty.
+	var state: Dictionary = {}
+	func export_state() -> Dictionary: return state.duplicate(true)
+	func import_state(value: Dictionary) -> void: state = value.duplicate(true)
+
 class World extends Node:
+	var consumable_service := Consumables.new()
 	var inventory: Dictionary = {"검":1,"주문서":3}
 	var item_instances: Dictionary = {}
 	var equipped_items: Dictionary = {}
