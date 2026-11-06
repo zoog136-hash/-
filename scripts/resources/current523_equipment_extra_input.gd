@@ -3,6 +3,8 @@ extends RefCounted
 ## Read-only: the existing equipment/rules owners retain physical/save authority.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
+const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
+const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 # Only names with an established gameplay receiver are admitted. The last
 # operand is the original Unit.Name; percentage raw values use divisor10000.
 const OPERANDS = {
@@ -53,6 +55,11 @@ const OPERANDS = {
 	"source_undead_damage_max":{"UndeadAdditionalMaxDamage":["Value",1]},
 	"source_final_blow_chance_pct":{"FinalBlowProbability":["Percentage",10000]},
 	"source_final_blow_amp_pct":{"FinalBlowAdditionalScale":["Percentage",10000]}}
+# These two held families have an established zero baseline and explicit units.
+# A different source item/key must establish its own owner baseline first.
+const WHOLE_ZERO_FAMILIES = {
+	"213621:attackSpeed":12241,
+	"233812:pve_damage_reduction":12922}
 static var evidence: Dictionary = {}
 
 static func integer(value: Variant) -> bool:
@@ -74,7 +81,7 @@ static func _application_matches(bonus: Dictionary, operand: Array) -> bool:
 		return channels is Dictionary and channels.get(str(target))==operand[3]
 	return application==5 and target==operand[3]
 
-static func _original_delta(item_id: int, effects: Array, level: int, blessing: int, key: String) -> Dictionary:
+static func _original_delta(item_id: int, effects: Array, level: int, blessing: int, key: String, allow_whole: bool = false) -> Dictionary:
 	var groups: Dictionary = {}; var selectors: Dictionary = {}
 	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_id):
 		var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
@@ -96,7 +103,7 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 		var group: int = int(row.ItemEnchantBonusGroupID)
 		if not groups.has(group): groups[group]=[]
 		groups[group].append(row)
-	var total: float = 0.0; var used: Array = []
+	var total: float = 0.0; var used: Array = []; var zero_rows: Array = []
 	for group: int in groups:
 		if not selectors.has(group): continue
 		var codes: Dictionary = {}
@@ -111,17 +118,40 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 			if not _application_matches(bonus,operand): continue
 			var unit: Dictionary = SOURCE.row("Unit",int(type.get("UnitID",-1)))
 			if unit.get("Name")!=operand[0] or not integer(row.get("EnchantLevel")): return {}
-			# Whole-value +0 families need their owner's baseline subtraction;
-			# they must never be added to a separately supplied base operand here.
-			if int(row.EnchantLevel)==0: return {}
-			if int(row.EnchantLevel)!=level: continue
 			for pair: Array in [["Bonus",bonus],["BonusType",type],["Unit",unit]]:
 				if not SOURCE.declared_exclusion(pair[0],pair[1]).is_empty(): return {}
 			var value: Variant = bonus.get("Value")
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return {}
+			# A whole family is admitted only with its exact established baseline.
+			if allow_whole and group!=WHOLE_ZERO_FAMILIES.get(str(item_id)+":"+key,-1): return {}
+			if int(row.EnchantLevel)==0:
+				if not allow_whole: return {}
+				zero_rows.append(row)
+			if int(row.EnchantLevel)!=level: continue
 			total+=float(value)/float(operand[1]) # Preserve the original declared unit.
 			used.append({"selector":selectors[group],"row":row,"bonus":bonus,"type":type,"unit":unit})
-	return {"value":total,"rows":used} if not used.is_empty() and is_finite(total) else {}
+	return {"value":total,"rows":used,"zero_rows":zero_rows} if not used.is_empty() and is_finite(total) else {}
+
+static func _whole_zero_baseline(world: Node, item_key: String, key: String, current: Dictionary, expected: Dictionary) -> Dictionary:
+	# No base-key/unit/scale policy is generalized beyond these held families.
+	if not WHOLE_ZERO_FAMILIES.has(item_key+":"+key) or expected.keys().size()!=3 or expected.get("base_key")!=key or not integer(expected.get("scale")) or expected.get("scale")!=1: return {}
+	var whole: Variant = expected.get("total")
+	if typeof(whole) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(whole)): return {}
+	for row: Dictionary in SOURCE.related("ItemBonus","ItemClassID",int(item_key)):
+		var bonus: Dictionary = SOURCE.row("Bonus",int(row.get("BonusID",-1)))
+		var kind: Dictionary = SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1)))
+		if OPERANDS[key].has(kind.get("Name","")): return {} # No base operand in these originals.
+	var canonical: Dictionary = world.patch523_equipment.record(item_key)
+	for field: String in ["source","source_snapshot","source_projection","sourceId","source_definition_archive","source_original_item","slot"]:
+		if canonical.get(field)!=current.get(field): return {}
+	if canonical.get("source_m_native_item")!=true or not world.patch523_equipment.catalog_identity_matches(canonical,item_key): return {}
+	var annotated: Dictionary = OPTIONS.annotate(canonical)
+	var baseline: Variant = annotated.get(key,0)
+	if typeof(baseline) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(baseline)) or baseline!=0: return {}
+	var current_base: Variant = current.get(key,0)
+	if typeof(current_base) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(current_base)) or current_base!=baseline: return {}
+	if key=="attackSpeed" and (CATALOG_EFFECTS.attack_speed_percent(canonical)!=0 or CATALOG_EFFECTS.attack_speed_percent(current)!=0): return {}
+	return {"total":whole,"base_key":key,"base":baseline,"scale":1,"delta":float(whole)-float(baseline)}
 
 static func sum_native(world: Node, key: String) -> float:
 	if not OPERANDS.has(key) or not is_instance_valid(world): return 0.0
@@ -157,11 +187,18 @@ static func sum_native(world: Node, key: String) -> float:
 		if bound.get("item_class")!=raw: continue
 		var expected: Variant = world.patch523_equipment.data.get("equipment_runtime",{}).get(item_key,{}).get("extra_options",{}).get(str(blessing),{}).get(str(level),{}).get(key)
 		var actual: Variant = prepared.get("enhancement_extra_options",{}).get(str(level),{}).get(key)
-		if typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(expected)) or not is_finite(float(actual)) or actual!=expected: continue
+		if typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(actual)): continue
+		var whole_basis: Dictionary = {}
+		var source_total: Variant = expected
+		if expected is Dictionary:
+			whole_basis = _whole_zero_baseline(world,item_key,key,current,expected)
+			if whole_basis.is_empty() or actual!=whole_basis.delta: continue
+			source_total = whole_basis.total
+		elif typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(expected)) or actual!=expected: continue
 		var effects: Variant = bound.get("enchant_effects")
 		if not effects is Array: continue
-		var source: Dictionary = _original_delta(int(id),effects,level,blessing,key)
-		if source.is_empty() or source.value!=expected: continue
-		total+=float(expected)
-		evidence[key][physical_id]={"source":identity,"item_class_id":id,"level":level,"bless_code":blessing,"rows":source.rows,"value":expected,"model_sha256":world.patch523_equipment.digest}
+		var source: Dictionary = _original_delta(int(id),effects,level,blessing,key,not whole_basis.is_empty())
+		if source.is_empty() or source.value!=source_total or (not whole_basis.is_empty() and source.zero_rows.is_empty()): continue
+		total+=float(actual)
+		evidence[key][physical_id]={"source":identity,"item_class_id":id,"level":level,"bless_code":blessing,"rows":source.rows,"value":actual,"whole_basis":whole_basis,"model_sha256":world.patch523_equipment.digest}
 	return total if is_finite(total) else 0.0
