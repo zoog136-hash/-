@@ -129,6 +129,7 @@ const OPTION_AWAKENING = preload("res://scripts/cards/option_awakening_runtime.g
 const OPTION_AWAKENING_AURA = preload("res://scripts/animation/option_awakening_aura.gd")
 var option_awakening = OPTION_AWAKENING.new()
 const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
+const CURRENT523_DEFINITION_ROWS=preload("res://scripts/resources/current523_definition_rows.gd")
 var skill_awakening=SKILL_AWAKENING.new()
 const HALPHAS_STAR = preload("res://scripts/cards/halphas_star_enchant_runtime.gd")
 var halphas_star = HALPHAS_STAR.new()
@@ -555,10 +556,16 @@ func _ready() -> void:
 	preload("res://scripts/expedition/reward_cards.gd").supplement(catalog_db,get_expedition_catalog())
 	card_draw_fusion.configure(catalog_db)
 	combinations.configure(self)
-	if not card_collections.configure(self):push_error(card_collections.problem)
+	# An absent owned original-definition ZIP is an expected install state, not
+	# an engine error: those features stay off and say so. Damage still errors.
+	if not card_collections.configure(self):
+		if CURRENT523_DEFINITION_ROWS.not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED card_collections: "+card_collections.problem)
+		else:push_error(card_collections.problem)
 	option_awakening.configure(self)
 	halphas_star.configure(self)
-	if not skill_awakening.configure(self):push_error(skill_awakening.problem)
+	if not skill_awakening.configure(self):
+		if skill_awakening.definitions_not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED skill_awakening: "+skill_awakening.problem)
+		else:push_error(skill_awakening.problem)
 	preload("res://scripts/expedition/reward_cards.gd").register_profiles(self,get_expedition_catalog())
 	expedition_local.world = self
 	consumable_service = CONSUMABLE_SERVICE.new()
@@ -5992,7 +5999,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not migration_pointer_error.is_empty():
 		if not quiet:hud.show_message("이전된 저장 파일 확인 실패 · 원본 저장 보존 중")
 		return ERR_FILE_CORRUPT
-	if skill_awakening.save_blocked or not skill_awakening.problem.is_empty():
+	if skill_awakening.blocks_save():
 		if not quiet:hud.show_message("스킬 각성 저장 보호 중 · 원본 저장 보존")
 		return ERR_UNAVAILABLE
 	if option_awakening.save_blocked or not option_awakening.problem.is_empty():
