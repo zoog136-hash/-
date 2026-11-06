@@ -837,3 +837,28 @@ existing portrait/list. Multi-material selections clear the action icon, and
 review cancellation or snapshot refresh removes the stale confirmation image.
 No source asset, ownership, cost, roll, effect, or transaction semantics are
 invented or changed. These additions remain unexecuted and unverified.
+
+### Live actor rows, existing purchases and deterministic crafting
+
+The existing current-generation list now requests an original NPC illustration
+for its actual live actor only. The actor's positive mobile ID, original
+ID/Sprite/DescId and the current catalog admission must agree. The shared
+`NpcClass.IllustAssetID` consumer supplies pixels and provenance; list metadata
+also records the actual pooled actor instance/life. Spawn packs and mixed groups
+receive no representative illustration. Actor animation, spawn admission,
+targeting and dialogue identity are unchanged; this does not establish the
+missing dialogue-key-to-mobile-NPC correspondence.
+
+The ordinary existing purchase/review buttons also consume the same preserved
+catalog item record already supplied to their selected-item details. Source
+provenance belongs to that item, without asserting original merchant stock,
+NPC or price identity. The existing source crafting action and its confirmation
+use the selected recipe's explicit ItemClass result and published data reference.
+Recipes with outcome pools receive no action image; an empty filter clears the
+previous result image. Transaction signals, quantities, quotes, random choices
+and save ownership stay with their existing services.
+
+These follow-ups preserve the merged main UI/Sprite contracts. No original UI
+nodes, actor Sprite player, pixels, source identities or missing relationships
+were manufactured. No tests, compile, game runs, renders or CI were started;
+the added calls are unexecuted and unverified, with no usage numerator change.
