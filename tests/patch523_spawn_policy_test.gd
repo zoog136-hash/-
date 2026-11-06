@@ -3,6 +3,7 @@ const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const CONTEXT = preload("res://scripts/monsters/base508_monster_context.gd")
 const BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -37,6 +38,15 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label); printerr("PATCH523_SPAWN_FAIL: ", label)
 
 func _initialize() -> void:
+	if DEFINITIONS.not_installed():
+		# NPC rows come only from the user's owned current523 ZIP. Verify the
+		# absent-install hold honestly; this is not counted as the full contract.
+		print("VALIDATION_SCOPE current523 definitions not installed: spawn admission contract needs the owned ZIP")
+		var joined: Dictionary = CONTEXT.context(90, 762, 558)
+		check(not joined.ok and joined.reason == "npc_id_missing", "absent current523 install supplies no substitute NPC context")
+		print("PATCH523_SPAWN_POLICY_RESULT ", JSON.stringify({"checks": checks, "failures": failures, "scope": "CURRENT523_NOT_INSTALLED"}))
+		quit(0 if failures.is_empty() else 1)
+		return
 	var catalog := CatalogFixture.new()
 	var record: Dictionary = catalog.record()
 	var original: String = JSON.stringify(record)
