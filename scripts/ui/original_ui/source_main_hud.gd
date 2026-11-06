@@ -7,6 +7,9 @@ const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.g
 const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
 const MainMenu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
 const Wallet=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
+const Blessing=preload("res://scripts/ui/original_ui/source_main_blessing_bindings.gd")
+const DungeonControls=preload("res://scripts/ui/original_ui/source_main_dungeon_controls.gd")
+const WorkspaceControls=preload("res://scripts/ui/original_ui/source_main_workspace_controls.gd")
 const MainMap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
 const Target=preload("res://scripts/ui/original_ui/source_main_target_bindings.gd")
 const WorldMap=preload("res://scripts/ui/original_ui/source_main_world_map.gd")
@@ -62,6 +65,14 @@ var _legacy_shortcuts: Dictionary={}
 var _wallet_scene: Node2D
 var _wallet_result: Dictionary={}
 var _wallet_mount_attempted: bool=false
+var _blessing_scene: Node2D
+var _blessing_result: Dictionary={}
+var _blessing_model: Dictionary={}
+var _blessing_mount_attempted: bool=false
+var _blessing_info_in_scope: bool=false
+var _legacy_blessing: Array[Dictionary]=[]
+var _dungeon_controls: RefCounted
+var _workspace_controls: RefCounted
 var _gold: int=0
 var _balances: Dictionary={}
 var _map_bindings: RefCounted
@@ -149,6 +160,14 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
 	_native_buttons=ButtonRouter.new()
+	for spec: Dictionary in WorkspaceControls.SPECS.values():
+		if pack.manifest.get("scenes",{}).has(spec.member):
+			_workspace_controls=WorkspaceControls.new()
+			_workspace_controls.configure(pack,hud)
+			break
+	if pack.manifest.get("scenes",{}).has(DungeonControls.MEMBER):
+		_dungeon_controls=DungeonControls.new()
+		_dungeon_controls.configure(pack,hud)
 	if not get_window().focus_exited.is_connected(_cancel_native_buttons):get_window().focus_exited.connect(_cancel_native_buttons)
 	if pack.manifest.get("scenes",{}).has(QuickslotView.ROOT):
 		var candidate=QuickslotView.new()
@@ -188,7 +207,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -197,13 +216,15 @@ func _input(event: InputEvent) -> void:
 	if hud==null or not is_instance_valid(_coordinates):return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
-	if inventory_search_is_open():
+	var crafting_search: bool=crafting_search_is_open()
+	if inventory_search_is_open() or crafting_search:
 		for property: String in ["detail_window","companion_window","workspace"]:
+			if crafting_search and property=="workspace":continue
 			var overlay: Variant=hud.get(property)
 			if overlay is Control and overlay.is_visible_in_tree() and Rect2(Vector2.ZERO,overlay.size).has_point(overlay.get_global_transform_with_canvas().affine_inverse()*event.position):
 				_cancel_native_buttons()
 				return
-		var search: Dictionary=_inventory_view.search_presentation()
+		var search: Dictionary=_workspace_controls.search_presentation() if crafting_search else _inventory_view.search_presentation()
 		var editor: Variant=search.get("editor")
 		var blocked: bool=not editor is Control or hud.get("class_picker_initial")==true or hud.call("blocks_keyboard_input_except_source_editor",editor)
 		if blocked:
@@ -212,7 +233,9 @@ func _input(event: InputEvent) -> void:
 		var buttons: Array=[]
 		if is_instance_valid(search.get("scene")):_collect_native_buttons(search.scene,buttons)
 		var routed: Dictionary=_native_buttons.route(event,event.position,buttons)
-		if not routed.get("handled",false) and event is InputEventScreenTouch and event.pressed and not event.canceled:_inventory_view.focus_search_at(event.position)
+		if not routed.get("handled",false) and event is InputEventScreenTouch and event.pressed and not event.canceled:
+			if crafting_search:_workspace_controls.focus_search_at(event.position)
+			else:_inventory_view.focus_search_at(event.position)
 		# The source popup owns this gesture; it cannot reach a slot/world.
 		get_viewport().set_input_as_handled()
 		return
@@ -275,6 +298,9 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if _workspace_controls!=null:
+		var shown: Dictionary=_workspace_controls.presentation()
+		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
 	if _enhance_action!=null:
 		var shown: Dictionary=_enhance_action.presentation()
 		var button: Variant=shown.get("source_button")
@@ -299,6 +325,10 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
+	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
+	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()
@@ -558,6 +588,27 @@ func source_quickslot_availability() -> Array:
 	for record: Dictionary in _legacy_quickslots:values.append(record.visible)
 	return values
 
+func source_blessing_control_availability() -> Array:
+	var values: Array=[]
+	for record: Dictionary in _legacy_blessing:values.append(record.visible)
+	return values
+
+func source_blessing_status() -> Dictionary:
+	return _blessing_result.duplicate(true)
+
+func dungeon_blocks_point(point: Vector2) -> bool:
+	return _dungeon_controls!=null and _dungeon_controls.blocks_point(point)
+
+func workspace_controls_block_point(point: Vector2) -> bool:
+	return _workspace_controls!=null and _workspace_controls.blocks_point(point)
+
+func crafting_search_is_open() -> bool:
+	return _workspace_controls!=null and _workspace_controls.search_is_open()
+
+func close_crafting_search() -> void:
+	_cancel_native_buttons()
+	if _workspace_controls!=null:_workspace_controls.close_search()
+
 func try_open_inventory() -> Dictionary:
 	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
 	if not is_instance_valid(_coordinates):return {"ok":false,"handled":false,"code":"source_main_not_configured"}
@@ -702,7 +753,7 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 	if not _core_attempted:_mount_core_controls()
 	refresh_primary_stats()
 	_refresh_wallet(gold_changed)
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"blessing":_blessing_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
 
 func refresh_primary_stats() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -768,8 +819,49 @@ func _refresh_wallet(changed: bool) -> void:
 	_wallet_scene=scene
 	_wallet_result={"ok":true,"source":Wallet.MEMBER,"source_parent":HEADER,"source_project":1540,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
 
+func _refresh_blessing(hud: Node) -> void:
+	var state: Dictionary=Blessing.source_state(hud)
+	if not state.get("ok",false):
+		if is_instance_valid(_blessing_scene):
+			_blessing_scene.hide()
+			_blessing_scene.queue_free()
+			_blessing_mount_attempted=false
+		_blessing_scene=null
+		_blessing_model.clear()
+		_blessing_result=state
+		sync_legacy_visibility()
+		return
+	if is_instance_valid(_blessing_scene):
+		if state==_blessing_model:return
+		var result: Dictionary=Blessing.refresh(_blessing_scene,state,_blessing_info_in_scope)
+		_blessing_result=result
+		if result.get("ok",false):_blessing_model=state;return
+		_blessing_scene.hide();_blessing_scene.queue_free();_blessing_scene=null
+		sync_legacy_visibility()
+		return
+	if _blessing_mount_attempted:return
+	_blessing_mount_attempted=true
+	var contract: Dictionary=Blessing.build(_pack,hud)
+	if not contract.get("ok",false):_blessing_result=contract;return
+	if _pack.layout_source(HEADER).get("_source_sha256")!=HEADER_SHA:_blessing_result=_fail("source_blessing_original_header_required");return
+	var scene:=Scene.new()
+	var scope: Array[int]=[]
+	scope.assign(contract.source_node_offsets)
+	var result: Dictionary=scene.configure_project(_pack,HEADER,1540,contract.bindings,scope)
+	if not result.get("ok",false):scene.free();_blessing_result=result;return
+	_coordinates.add_child(scene)
+	_blessing_scene=scene
+	_blessing_model=state
+	_blessing_info_in_scope=contract.info_in_scope
+	_blessing_result={"ok":true,"amount_connected":true,"information_entry_connected":true,"rate_fields_connected":_blessing_info_in_scope,"source_parent":HEADER,"source_project":1540,"partial_source_scene":true,"complete_screen_contract":false,"icon_stage_connected":false,"game_state_written":false}
+	sync_legacy_visibility()
+
 func _capture_existing_controls(hud: Node) -> void:
 	var previous: Variant=hud.get("original_main_ui_controller")
+	var blessing_visibility: Array=previous.source_blessing_control_availability() if is_instance_valid(previous) and previous.has_method("source_blessing_control_availability") else []
+	for index: int in range(2):
+		var control: Variant=hud.get(["v20_leaf_button","v20_leaf_count"][index])
+		if control is CanvasItem and is_instance_valid(control):_legacy_blessing.append({"control":weakref(control),"visible":bool(blessing_visibility[index]) if index<blessing_visibility.size() else control.visible})
 	var previous_quickslots: Array=previous.source_quickslot_availability() if is_instance_valid(previous) and previous.has_method("source_quickslot_availability") else []
 	var buttons: Variant=hud.get("v20_quickslot_buttons")
 	if buttons is Array:
@@ -949,6 +1041,9 @@ func sync_legacy_visibility() -> void:
 	# only the fields no longer owned by an accepted original component.
 	_set_legacy_exp_visible(not is_instance_valid(_exp_scene))
 	_set_legacy_vitals_visible(not is_instance_valid(_char_scene))
+	for record: Dictionary in _legacy_blessing:
+		var control: Object=record.control.get_ref()
+		if control!=null:control.visible=false if is_instance_valid(_blessing_scene) else record.visible
 	for record: Dictionary in _legacy_quickslots:
 		var control: Object=record.control.get_ref()
 		if control!=null:control.visible=false if _quickslot_view!=null and _quickslot_view.is_open() else record.visible
@@ -979,6 +1074,8 @@ func release(restore_legacy: bool=true) -> void:
 	if is_instance_valid(_world_map):_world_map.close()
 	close_character()
 	close_npc_dialogue()
+	if _dungeon_controls!=null:_dungeon_controls.close()
+	if _workspace_controls!=null:_workspace_controls.close()
 	close_enhance_action()
 	close_quest_controls()
 	if _inventory_lock_view!=null:_inventory_lock_view.close()
@@ -992,6 +1089,9 @@ func release(restore_legacy: bool=true) -> void:
 		_coordinates.queue_free()
 	_coordinates=null
 	if restore_legacy:
+		for record: Dictionary in _legacy_blessing:
+			var control: Object=record.control.get_ref()
+			if control!=null:control.visible=record.visible
 		var message: Object=_legacy_message.get_ref() if _legacy_message!=null else null
 		if message!=null:message.visible=_legacy_message_visible
 		for record: Dictionary in _legacy_quickslots:

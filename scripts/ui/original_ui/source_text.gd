@@ -1,6 +1,6 @@
 extends Node2D
-## Draw only the supplied font and serialized text with explicit source line breaks. The caller must
-## bind live values separately; source placeholder strings are not game rules.
+## Draw only the supplied font and serialized text. Explicit caller opt-in connects
+## constrained source word wrapping; source placeholder strings are not game rules.
 var original_font: FontFile
 var original_options: Dictionary={}
 var original_size: Vector2
@@ -11,7 +11,15 @@ func configure(font: FontFile, options: Dictionary, size_value: Vector2) -> Dict
 	for index: int in range(value.length()):
 		if not value[index].strip_edges().is_empty() and not font.has_char(value.unicode_at(index)):return {"ok":false,"error":"original_font_glyph_missing"}
 	var next_lines: PackedStringArray=value.split("\n",true)
-	if next_lines.size()>1 and not bool(options.widgetOptions.get("ignoreSize",false)):
+	if bool(options.get("_cocos_wrap",false)):
+		if options.get("_type")!="TextOptions" or not bool(options.get("isCustomSize",false)) or bool(options.widgetOptions.get("ignoreSize",false)):return {"ok":false,"error":"original_constrained_custom_text_required_for_wrap"}
+		var wrapped: Dictionary=preload("res://scripts/ui/original_ui/source_text_wrap.gd").lines(font,value,int(options.fontSize),size_value.x)
+		if not wrapped.get("ok",false):return wrapped
+		next_lines=wrapped.lines
+		# The actual caller has no established original continuation/page
+		# control for overflowing body text. Preserve its complete old owner.
+		if next_lines.size()*font.get_height(int(options.fontSize))>size_value.y:return {"ok":false,"error":"original_dialogue_text_continuation_required"}
+	elif next_lines.size()>1 and not bool(options.widgetOptions.get("ignoreSize",false)):
 		var font_size: int=int(options.fontSize)
 		for line: String in next_lines:
 			if font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>size_value.x:return {"ok":false,"error":"original_multiline_requires_word_wrap"}

@@ -18,6 +18,10 @@ var _field: Node2D
 var _bounds: Control
 var _parent: WeakRef
 var last_result: Dictionary={}
+var _crafting: bool=false
+var _editor_property: String="search_line"
+var _member: String=MEMBER
+var _member_sha: String=SHA256
 
 func configure(pack: RefCounted, bag: Control) -> Dictionary:
 	if not is_instance_valid(bag) or not bag.has_method("_on_search_changed") or not bag.get("search_line") is LineEdit:return _fail("source_inventory_search_existing_owner_required")
@@ -26,19 +30,35 @@ func configure(pack: RefCounted, bag: Control) -> Dictionary:
 	if not pack.manifest.get("scenes",{}).has(MEMBER):return _fail("source_inventory_search_original_scope_required")
 	_pack=pack
 	_bag=weakref(bag)
+	_crafting=false;_editor_property="search_line";_member=MEMBER;_member_sha=SHA256
+	return {"ok":true,"partial_source_scene":true,"complete_screen_contract":false}
+
+func configure_crafting(pack: RefCounted, owner: Control) -> Dictionary:
+	var script: Script=owner.get_script() if is_instance_valid(owner) else null
+	if script==null or script.resource_path!="res://scripts/ui/renewal_crafting.gd" or not owner.has_method("_rebuild_listing") or not owner.get("name_filter") is LineEdit:return _fail("source_craft_search_existing_owner_required")
+	if not owner.get("name_filter").editable:return _fail("source_craft_search_existing_editor_not_editable")
+	for pair: Array in [["UI/ProductionScene.csb","cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328"],["UI/Production/Production_All.csb","328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec"],["UI/Production/Production_Popup_Keypad.csb","e4203840af58b4feebc832c4059c1a819f5348085ee3f5b6ecf5a3eb05f82aa8"]]:
+		if pack==null or pack.manifest.get("files",{}).get(pair[0],{}).get("sha256")!=pair[1]:return _fail("source_craft_search_original_identity_required")
+	_pack=pack;_bag=weakref(owner)
+	_crafting=true;_editor_property="name_filter"
+	_member="UI/Production/Production_Popup_Keypad.csb"
+	_member_sha="e4203840af58b4feebc832c4059c1a819f5348085ee3f5b6ecf5a3eb05f82aa8"
 	return {"ok":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func open(parent: Node) -> Dictionary:
 	if is_open():return {"ok":true,"handled":true}
 	var bag: Object=_bag.get_ref() if _bag!=null else null
 	if not is_instance_valid(parent) or bag==null:return _fail("source_inventory_search_actual_parent_and_owner_required")
-	var editor: Variant=bag.get("search_line")
+	var editor: Variant=bag.get(_editor_property)
 	if not editor is LineEdit or not is_instance_valid(editor):return _fail("source_inventory_search_existing_editor_unavailable")
 	var bindings: Dictionary={8316:{"role":"consume"},7556:{"role":"consume"},FIELD:{"role":"source_text_field","editor":editor},5072:{"role":"button","activate":Callable(self,"apply_query")},2808:{"role":"button","activate":Callable(self,"_close_requested")},5132:{"role":"static_source_text"},2868:{"role":"static_source_text"}}
 	var next:=Scene.new()
-	var result: Dictionary=next.configure_nodes(_pack,PARENT,[1572],{1572:{"role":"project","source_node_offsets":[728],"bindings":{728:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}}}})
+	var result: Dictionary
+	if _crafting:result=next.configure_project(_pack,"UI/ProductionScene.csb",132,{628:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}},[628])
+	else:result=next.configure_nodes(_pack,PARENT,[1572],{1572:{"role":"project","source_node_offsets":[728],"bindings":{728:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}}}})
 	if not result.get("ok",false):next.free();return result
-	var nested: Dictionary=next.project_player([1572,728])
+	var project_path: Array[int]=[628] if _crafting else [1572,728]
+	var nested: Dictionary=next.project_player(project_path)
 	if not nested.get("ok",false):next.free();return nested
 	var renderer: Node2D=nested.player
 	var field_node: Variant=renderer.get("source_nodes").get(FIELD)
@@ -47,7 +67,11 @@ func open(parent: Node) -> Dictionary:
 	if not is_instance_valid(field) or bounds==null:next.free();return _fail("source_inventory_search_original_input_mount_required")
 	# Same original inventory parent end state; popup visibility is an
 	# explicit response to its own original search entry button, not autoplay.
-	next.seek_frame(17.0)
+	if _crafting:
+		result=next.activate_authored_component_opacity()
+		if result.get("ok",false):result=renderer.activate_authored_component_opacity()
+		if not result.get("ok",false):next.free();return result
+	else:next.seek_frame(17.0)
 	parent.add_child(next)
 	next.z_index=151
 	_scene=next
@@ -59,18 +83,23 @@ func open(parent: Node) -> Dictionary:
 	field.unsupported_input.connect(_unsupported_input)
 	parent.tree_exiting.connect(close,CONNECT_ONE_SHOT)
 	_parent=weakref(parent)
-	last_result={"ok":true,"handled":true,"member":MEMBER,"sha256":SHA256,"source_project":728,"source_field":FIELD,"same_existing_editor":true,"owner_live_filter_preserved":true,"source_result_rows_connected":false,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+	last_result={"ok":true,"handled":true,"member":_member,"sha256":_member_sha,"source_project":628 if _crafting else 728,"source_field":FIELD,"same_existing_editor":true,"owner_live_filter_preserved":true,"source_result_rows_connected":false,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
 	return last_result.duplicate(true)
 
 func apply_query() -> Dictionary:
 	var bag: Object=_bag.get_ref() if _bag!=null else null
 	var editor: Control=input_control()
-	if bag==null or not is_instance_valid(editor) or editor!=bag.get("search_line"):return _fail("source_inventory_search_actual_query_owner_required")
+	if bag==null or not is_instance_valid(editor) or editor!=bag.get(_editor_property):return _fail("source_inventory_search_actual_query_owner_required")
+	if _crafting:
+		var hud: Variant=bag.get("hud")
+		var workspace: Variant=hud.get("workspace") if is_instance_valid(hud) else null
+		if not is_instance_valid(hud) or hud.get("active_section")!="crafting" or not workspace is Control or not workspace.is_ancestor_of(bag) or not bag.is_visible_in_tree():return _fail("source_craft_search_current_owner_changed")
 	if editor.has_method("apply_ime"):editor.call("apply_ime")
 	if not is_open():return _fail("source_inventory_search_original_input_became_unavailable")
 	# Keep the owner's live text_changed path; explicit Search applies the
 	# same current query. No replacement filter, sort or close policy.
-	bag.call("_on_search_changed",editor.text)
+	if _crafting:bag.call("_rebuild_listing")
+	else:bag.call("_on_search_changed",editor.text)
 	return {"ok":true,"owner_callback_invoked":true,"query":editor.text,"game_state_written":false}
 
 func input_control() -> Control:
