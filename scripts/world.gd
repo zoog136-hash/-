@@ -2916,7 +2916,10 @@ func auto_hunting_movement_assessment(schedule_id: int, landing_link_id: int) ->
 		var wallet: Dictionary = auto_hunting_local.gem_wallet(self)
 		if not bool(wallet.ok): return wallet
 		gems = int(wallet.balance)
-	return auto_hunting_local.assess(self, auto_hunting_schedule.request_definition(schedule_id, landing_link_id, level, gold, gems))
+	var definition: Dictionary=auto_hunting_schedule.request_definition(schedule_id, landing_link_id, level, gold, gems)
+	if current523_aden_source_active() and not current523_source_geographic_contract().is_empty():
+		return _aden_play_controller().call("assess_source_schedule",definition)
+	return auto_hunting_local.assess(self, definition)
 
 func auto_hunting_gem_wallet() -> Dictionary:
 	return auto_hunting_local.gem_wallet(self)
@@ -2940,6 +2943,11 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 	if not bool(quote.ok):
 		auto_hunting_move_in_progress = false
 		return quote
+	if current523_aden_source_active() and not current523_source_geographic_contract().is_empty():
+		var original: Dictionary=auto_hunting_schedule.request_definition(schedule_id,landing_link_id,level,gold)
+		var moved: Dictionary=_aden_play_controller().call("move_source_schedule",original)
+		auto_hunting_move_in_progress=false
+		return moved
 	# Persist the validated destination and original fee before changing live
 	# state. Save faults leave position, gold, AUTO, paths and items untouched.
 	var staged_cost: Dictionary = AUTO_HUNTING_LOCAL.cost_override(self, quote)

@@ -868,7 +868,7 @@ func _return_within_aden(world: Node,save_changes: Dictionary) -> bool:
 	if save_changes.has("gold"):world.set("gold",int(save_changes.gold))
 	return true
 
-func _commit_source_destination(world: Node,proposed: OriginalPlayableField,options: Dictionary,destination: Vector2i,catalog: RefCounted,context: Dictionary={},id: int=-1,save_changes: Dictionary={}) -> bool:
+func _commit_source_destination(world: Node,proposed: OriginalPlayableField,options: Dictionary,destination: Vector2i,catalog: RefCounted,context: Dictionary={},id: int=-1,save_changes: Dictionary={},precommit_guard: Callable=Callable()) -> bool:
 	_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	var target_id: int=int(proposed.get("native_land").ID)
 	var position: Vector2=proposed.coordinates.to_world(Vector2(destination))
@@ -908,6 +908,8 @@ func _commit_source_destination(world: Node,proposed: OriginalPlayableField,opti
 		if not str(final_context.get("source_travel_hold","missing")).is_empty():
 			problem="이동 직전 원문 조건 또는 잔여시간이 보류되었습니다.";candidate.queue_free();proposed.close();return false
 	var entry_context: Dictionary=_entry_context(target_id,str(proposed.get("source_asset")),destination,actor_state)
+	if precommit_guard.is_valid() and not precommit_guard.call():
+		problem="도착 준비 중 원문 일정·비용·위치·조건이 바뀌었습니다.";candidate.queue_free();proposed.close();return false
 	if not _prepare_map_session(entry_context,actor_state):candidate.queue_free();proposed.close();return false
 	var physics: StaticBody2D=proposed.build_physics(world)
 	physics.collision_layer=0; physics.process_mode=Node.PROCESS_MODE_DISABLED
@@ -1001,3 +1003,65 @@ func source_geographic_contract() -> Dictionary:
 	var contract: Dictionary=_source_field.call("source_geographic_contract")
 	contract.current_source_components=_source_field.coordinates.source_components(world.player.global_position)
 	return contract
+
+# Existing AutoSchedule caller selects an exact typed landing relation. This
+# OWN adapter is same-Land only; it is neither a Portal nor automatic admission.
+func assess_source_schedule(definition: Dictionary) -> Dictionary:
+	var world: Node=_world()
+	if not definition.get("ok",false):return definition
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or not is_instance_valid(world) or world.field_map!=_source_field:return {"ok":false,"reason":"현재 원문 필드가 필요합니다."}
+	var local: Dictionary=world.auto_hunting_local.get_settings()
+	if not local.enabled or not world.auto_hunting_local.problem.is_empty():return {"ok":false,"reason":"기존 자체 이동 설정을 켜 주세요."}
+	if int(world.hp)<=0 or world.player.movement_locked or world.player.is_stunned() or world.player.is_held() or world.player.is_feared() or not world.charge_skill.is_empty() or float(world.portal_cooldown)>0:return {"ok":false,"reason":"현재 이동 상태에서는 사용할 수 없습니다."}
+	if int(definition.get("currency_id",-1))!=1:return {"ok":false,"reason":"원문 필드의 이 호출은 아데나 결제만 연결돼 있습니다."}
+	var landing: Dictionary=definition.landing
+	if landing.land!=_source_field.get("native_land") or landing.territory.get("LandID")!=landing.land.ID:return {"ok":false,"reason":"현재와 같은 원문 Land의 명시 착지만 지원합니다."}
+	var actor_state: Dictionary=_actor_state(world)
+	var source_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+	var departure: Dictionary=_entry_context(int(landing.land.ID),str(landing.land.AssetPath),source_cell,actor_state)
+	if not str(departure.get("source_travel_hold","missing")).is_empty():return {"ok":false,"reason":"출발 원문 조건 보류: "+str(departure.source_travel_hold)}
+	var bounds: Rect2i=world.AUTO_HUNTING_LOCAL.territory_bounds(landing.territory,bool(local.end_inclusive))
+	if not bounds.has_area():return {"ok":false,"reason":"선택한 끝 좌표 정책에서 도착 영역이 비어 있습니다."}
+	if bounds.has_point(source_cell):return {"ok":false,"reason":"이미 선택한 도착 영역 안에 있습니다. 비용을 소모하지 않습니다."}
+	var selected: Dictionary=world.AUTO_HUNTING_LOCAL.find_cell(_source_field,bounds,str(local.search_order),func(point: Vector2) -> bool:
+		if not _source_field.point_clear(point,4.0) or not world._teleport_landing_clear(point):return false
+		var cell: Vector2i=_source_field.world_to_cell(point)+_source_field.coordinates.origin
+		var conditions: Dictionary=_entry_context(int(landing.land.ID),str(landing.land.AssetPath),cell,actor_state)
+		return str(conditions.get("source_travel_hold","missing")).is_empty())
+	if not selected.get("ok",false):return selected
+	var payment: Dictionary=TRAVEL_PAYMENT.quote(world,int(definition.price))
+	if not payment.get("ok",false):return payment
+	var result: Dictionary=definition.duplicate(true)
+	result.merge(selected,true)
+	result["policy"]="OWN_SAME_SOURCE_LAND_SCHEDULE_V1"
+	result["native_activation_verified"]=false
+	result["reason"]="현재 원문 Land 내 자체 착지 · 원본 비용 %d 아데나"%int(definition.price)
+	result["navigation_ticket"]={"field":_source_field.get_instance_id(),"definition_generation":_portal_definition_generation,"position":world.player.global_position,"wallet_gold":world.gold,"source_settings":settings.duplicate(true),"local_settings":local,"definition":definition.duplicate(true)}
+	return result
+
+func move_source_schedule(definition: Dictionary) -> Dictionary:
+	if _source_travel_busy:return {"ok":false,"reason":"기존 원문 이동 처리 중입니다."}
+	var quote: Dictionary=assess_source_schedule(definition)
+	if not quote.get("ok",false):return quote
+	var world: Node=_world()
+	var held: Dictionary=quote.duplicate(true)
+	var options: Dictionary=settings.duplicate(true)
+	var catalog: RefCounted=_catalog_for(options)
+	if catalog==null:return {"ok":false,"reason":problem}
+	var proposed: OriginalPlayableField=load("res://scripts/maps/current523_source_field.gd").new()
+	if not proposed.configure_verified_catalog(catalog,str(options.source_manifest_sha256),int(options.native_land_id),_source_field.policy.duplicate(true)):
+		var reason: String=str(proposed.problem);proposed.close();return {"ok":false,"reason":reason}
+	var payment: Dictionary=TRAVEL_PAYMENT.quote(world,int(quote.price))
+	if not payment.get("ok",false):proposed.close();return payment
+	# The existing source transaction owns cursor, renderer, rollback and save.
+	# Requote the original caller after render preparation, before any commit.
+	var guard: Callable=func() -> bool:
+		var fresh_definition: Dictionary=world.auto_hunting_schedule.request_definition(int(definition.schedule_id),int(definition.landing_link_id),int(world.level),int(world.gold))
+		var fresh: Dictionary=assess_source_schedule(fresh_definition)
+		return fresh==held
+	_source_travel_busy=true
+	var completed: bool=_commit_source_destination(world,proposed,options,quote.source_cell,catalog,{},-1,payment.changes,guard)
+	_source_travel_busy=false
+	var result: Dictionary=_last_source_transition.duplicate(true)
+	result.merge({"ok":completed,"policy":quote.policy,"reason":"원문 도착 영역으로 이동했습니다 · 자체 착지" if completed else problem},true)
+	return result
