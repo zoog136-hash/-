@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Choose large exported actor sheets for GPU (VRAM/ETC2) texture import.
 
-Lossless sheets are decoded on the CPU when a monster/boss first appears:
-a boss's 35 sheets took ~1.3 s (desktop) versus ~70 ms as ETC2, with about a
-quarter of the GPU memory. ETC2 stores 1 byte per pixel, so a sheet is chosen
-only when that is not larger than its PNG; the APK must not grow (it is near
-the 4 GB limit). Rules (all must hold):
-  - under assets/actors/, a .png larger than 1 MB, not under a .gdignore folder
+Lossless sheets are decoded on the CPU when a monster/boss first appears
+and stay in GPU memory at 4 bytes per pixel: a boss's 35 sheets took ~1.3 s
+(desktop) versus ~70 ms as ETC2, with a quarter of the memory. The Android
+editor was killed by the OS for LOW_MEMORY after loading, so every shipped
+actor sheet is chosen, as mobile MMORPGs ship character art block-compressed.
+Godot pads sides that are not multiples of 4 inside the compressed texture;
+the reported size and pixels are not resampled. ETC2 may be larger than a
+highly compressible PNG, so the APK can grow; memory takes priority.
+Rules (all must hold):
+  - under assets/actors/, a .png larger than 8 KB, not under a .gdignore folder
   - exported to Android (not matched by export_presets.cfg exclude_filter)
-  - width and height are multiples of 4 (block compression, no resampling)
-  - width*height <= PNG bytes
 
   --list   print the selection
   --write  set compress/mode=2 in each selected sheet's existing .import
@@ -27,7 +29,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MIN_BYTES = 1_000_000
+MIN_BYTES = 8_192
 
 
 def png_size(path: Path) -> tuple[int, int]:
@@ -57,9 +59,7 @@ def select(root: Path) -> list[str]:
             continue
         if any(fnmatch.fnmatchcase(relative, pattern) for pattern in patterns):
             continue
-        width, height = png_size(path)
-        if width % 4 or height % 4 or width * height > size:
-            continue
+        png_size(path)  # must be a real PNG
         chosen.append(relative)
     return chosen
 
