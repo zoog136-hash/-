@@ -55,6 +55,19 @@ These are consumer-local retention locations, not proof of transfer to another
 executor or durable external delivery. Original sources, historical packs and
 all candidates remain intact; no large asset copies are included in Git.
 
+## Committed held code snapshot
+
+`docs/checkpoints/image-ui-integration-20261106.held.patch` and its adjacent
+`.held.json` retain the exact separate 14-file code snapshot against checkpoint
+f96493baed4cff4b4b7d72042bd1744a36f28e1e: eleven changed files are encoded in
+the patch, three unchanged files are recoverable from that commit. Patch size
+72,206 bytes; SHA256 e449d2fbea8b56c4f9ee2d37ffac1f13e83af38f6c26142c5a814a7f5eb34bfe.
+The index includes every baseline/result blob, byte count/SHA, and the received
+but unapplied Action delta. It explicitly marks INCOMPLETE/HELD and the missing
+Action producer; it contains no raw resource datasets or media. These are
+retention artifacts, not files applied to active game paths. Earlier private
+copies remain preserved; reconstruction no longer depends on those paths.
+
 ## Static accounting and integration gates
 
 The existing audit identifies a four-scope field-join subset of 5,155 original
