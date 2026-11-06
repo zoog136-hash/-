@@ -9,6 +9,11 @@ const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
 const EXTENSION_BUTTON=21648
 const SEARCH_BUTTON=44780
+const SEARCH_TEXT=46132
+const SEARCH_RESET=47700
+const SEARCH_RESET_NORMAL=48312
+const SEARCH_RESET_DISABLED=47752
+const SEARCH_RESET_SCOPE: Array[int]=[47700,48312,48368,47752,47804]
 const FRAMES={
  false:{"parent":55184,"background":60672,"offsets":[60672,59888,59516,59136,58756,58376]},
  true:{"parent":43300,"background":54484,"offsets":[54484,53776,53404,53028,52648,52268,51888]}
@@ -26,6 +31,7 @@ var _pack: RefCounted
 var _inventory: WeakRef
 var _scene: WeakRef
 var _dismiss_presenter: Callable
+var _query_editor: WeakRef
 
 static func parent_contract(parent_member: String) -> Dictionary:
 	if not PARENTS.has(parent_member):return _fail("source_main_inventory_explicit_parent_required")
@@ -41,6 +47,8 @@ func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable
 	_pack=pack
 	_inventory=weakref(inventory_ui)
 	_dismiss_presenter=dismiss_presenter
+	var editor: Variant=inventory_ui.get("search_line")
+	_query_editor=weakref(editor) if editor is LineEdit and is_instance_valid(editor) else null
 	return snapshot()
 
 func snapshot() -> Dictionary:
@@ -65,6 +73,10 @@ func snapshot() -> Dictionary:
 		var count: String=capacity.text.get_slice(" · ",capacity.text.get_slice_count(" · ")-1)
 		var fields: PackedStringArray=count.split("/")
 		if fields.size()==2 and fields[0].strip_edges().is_valid_int() and fields[1].strip_edges().is_valid_int():model["capacity_text"]=count
+	var query: Dictionary=_search_display()
+	if query.get("ok",false):
+		model["search_query"]=query.text
+		model["search_reset_enabled"]=query.enabled
 	return model
 
 func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
@@ -93,7 +105,18 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb") and not _node_at(active.get("nodeTree",{}),SEARCH_BUTTON).is_empty():
 		roots.append(SEARCH_BUTTON)
 		bindings[SEARCH_BUTTON]={"role":"button","activate":Callable(self,"_search_requested")}
-		bindings[46132]={"role":"static_source_text"}
+		bindings[SEARCH_TEXT]={"role":"source_text","text":_query_caption(model,tree)}
+		var reset_in_scope: bool=true
+		for offset: int in SEARCH_RESET_SCOPE:
+			if _node_at(active.get("nodeTree",{}),offset).is_empty():reset_in_scope=false
+		if reset_in_scope:
+			roots.append(SEARCH_RESET)
+			var enabled: bool=model.get("search_reset_enabled",false)
+			bindings[SEARCH_RESET]={"role":"button","activate":Callable(self,"reset_search_query"),"displaystate":enabled}
+			bindings[SEARCH_RESET_NORMAL]={"visible":enabled}
+			bindings[SEARCH_RESET_DISABLED]={"visible":not enabled}
+			bindings[48368]={"role":"static_source_text"}
+			bindings[47804]={"role":"static_source_text"}
 	for category: String in TABS:
 		var variants: Array=TABS[category]
 		for index: int in range(variants.size()):
@@ -114,7 +137,7 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_inventory_core_node_not_unique","offset":offset}
 	for offset: int in selected:
 		if not bindings.has(offset) and remaining.has(offset):bindings[offset]=remaining[offset].duplicate(true)
-	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"expanded":expanded,"background_offset":frame.background,"branch_parent_offset":frame.parent,"original_variant_clip":{"name":"Fx_Extension_On","start_frame":40,"end_frame":70} if expanded else {},"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},{"field":"existing_sort_action_contract","offsets":[19772,8004,4764,2864]},"original_search_lock_delete_move_dissolve_and_keypad_contracts"]}
+	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"expanded":expanded,"background_offset":frame.background,"branch_parent_offset":frame.parent,"original_variant_clip":{"name":"Fx_Extension_On","start_frame":40,"end_frame":70} if expanded else {},"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},{"field":"existing_sort_action_contract","offsets":[19772,8004,4764,2864]},"original_lock_delete_move_dissolve_and_remaining_keypad_contracts"]}
 
 func bind_presented(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
@@ -138,7 +161,56 @@ func refresh(scene: Node2D) -> Dictionary:
 		if model.has(entry[1]):
 			var result: Dictionary=scene.set_bound_text(int(entry[0]),model[entry[1]])
 			if not result.get("ok",false):return result
+	var nodes: Variant=scene.get("source_nodes")
+	if nodes is Dictionary and nodes.has(SEARCH_TEXT):
+		var tree: Dictionary=_pack.layout_source(MEMBER)
+		if tree.is_empty():tree=_pack.scene(MEMBER)
+		var result: Dictionary=scene.set_bound_text(SEARCH_TEXT,_query_caption(model,tree))
+		if not result.get("ok",false):return result
+		if nodes.has(SEARCH_RESET):
+			var enabled: bool=model.get("search_reset_enabled",false)
+			var native: Variant=nodes[SEARCH_RESET].get_meta("source_button",null)
+			if not is_instance_valid(native) or (native.get("current_state")=="disabled")==enabled:
+				result=scene.set_bound_displaystate(SEARCH_RESET,enabled)
+				if not result.get("ok",false):return result
+			result=scene.set_bound_visible(SEARCH_RESET_NORMAL,enabled)
+			if result.get("ok",false):result=scene.set_bound_visible(SEARCH_RESET_DISABLED,not enabled)
+			if not result.get("ok",false):return result
 	return {"ok":true,"model":model,"partial_source_scene":true,"complete_screen_contract":false}
+
+func reset_search_query() -> Dictionary:
+	var bag: Object=_live_inventory()
+	var scene: Object=_scene.get_ref() if _scene!=null else null
+	var query: Dictionary=_search_display()
+	if bag==null or not query.get("ok",false) or not query.get("enabled",false) or not is_instance_valid(scene) or scene.is_queued_for_deletion() or not scene.is_inside_tree() or not scene.is_visible_in_tree() or scene.get("source_member")!=MEMBER:return _fail("source_inventory_reset_current_presented_query_required")
+	var nodes: Variant=scene.get("source_nodes")
+	var button: Variant=nodes.get(SEARCH_RESET) if nodes is Dictionary else null
+	if not is_instance_valid(button) or not button.is_visible_in_tree() or not bag.has_method("_on_search_changed"):return _fail("source_inventory_reset_original_control_required")
+	var editor: LineEdit=_query_editor.get_ref()
+	# Clearing explicitly discards the same editor's in-progress composition;
+	# an unsubmitted IME fragment must not restore a supposedly reset query.
+	if editor.has_method("cancel_ime"):editor.call("cancel_ime")
+	editor.clear()
+	bag.call("_on_search_changed",editor.text)
+	var result: Dictionary=refresh(scene)
+	if result.get("ok",false):model_changed.emit(result.duplicate(true))
+	result["query_reset"]=true
+	result["category_reset"]=false
+	result["sort_or_save_requested"]=false
+	return result
+
+func _search_display() -> Dictionary:
+	var bag: Object=_live_inventory()
+	var editor: Object=_query_editor.get_ref() if _query_editor!=null else null
+	if bag==null or not editor is LineEdit or not is_instance_valid(editor) or editor.is_queued_for_deletion() or bag.get("search_line")!=editor:return _fail("source_inventory_actual_query_editor_required")
+	var composition: bool=editor.call("has_ime_text") if editor.has_method("has_ime_text") else false
+	return {"ok":true,"text":editor.text,"enabled":editor.editable and (not editor.text.is_empty() or composition),"basis":"same actual bag.search_line used by existing original input/IME adoption"}
+
+static func _query_caption(model: Dictionary, tree: Dictionary) -> String:
+	var query: Variant=model.get("search_query")
+	if query is String and not query.is_empty():return query
+	# Retain the exact source instruction, not a reconstructed translation.
+	return str(_node_at(tree.get("nodeTree",{}),SEARCH_TEXT).get("options",{}).get("text",""))
 
 func select_category(category: String) -> Dictionary:
 	var inventory_ui: Object=_live_inventory()

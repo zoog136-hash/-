@@ -1,6 +1,7 @@
 extends RefCounted
 ## The authored inventory input bar borrows the bag's existing query editor.
-## Source result rows and the source cancel/clear action are not inferred.
+## Source result rows and popup-cancel rollback are not inferred.
+## Expanded-bar query reset belongs to source_main_inventory_bindings.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const PARENT="UI/FloatingUiScene.csb"
 const PARENT_SHA="b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8"

@@ -674,9 +674,12 @@ func _inventory_model_signature() -> int:
 	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
 	if not is_instance_valid(bag):return 0
 	var search: Variant=bag.get("search_line")
+	var query_state: Variant=null
+	if search is LineEdit:
+		query_state=[search.get_instance_id(),search.text,search.editable,search.call("has_ime_text") if search.has_method("has_ime_text") else false]
 	var grid: Variant=bag.get("item_grid")
 	var state: Variant=bag.get("character_state")
-	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
+	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),query_state,grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
 
 func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
