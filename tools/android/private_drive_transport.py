@@ -42,30 +42,54 @@ class DownloadError(RuntimeError):
     """The download is unavailable; staged/previous installations are intact."""
 
 
-def rclone_failure(returncode, stderr):
+def rclone_failure(returncode, stderr, stdout=b''):
     """Classify locally without echoing account details, tokens or auth URLs.
 
     A category is evidence from an error string, not a credential diagnosis.
     Unknown provider errors deliberately remain unknown.
     """
-    message = stderr.decode('utf-8', errors='replace').lower() if isinstance(stderr, bytes) else str(stderr).lower()
-    if any(value in message for value in ('unknown command', 'command not found', 'command "copyid" not found', 'doesn\'t support backend commands', 'does not support backend commands')):
+    def bounded_text(value):
+        return (value[-32768:].decode('utf-8', errors='replace') if isinstance(value, bytes)
+                else str(value)[-32768:]).lower()
+    message = bounded_text(stderr) + '\n' + bounded_text(stdout)
+    codes = sorted(set(re.findall(r'(?:googleapi:\s*error|http(?:/\d(?:\.\d)?)?(?:\s+status)?|status(?:\s+code)?)\s*[:=]?\s*([1-5]\d\d)', message)))[:3]
+    category = 'UNCLASSIFIED'
+    if returncode < 0:
+        category = 'PROCESS_SIGNAL'
+        reason = 'process terminated by a signal; this is not proof of an authentication failure'
+    elif not message.strip():
+        category = 'NO_CAPTURED_MESSAGE'
+        reason = 'no process output was captured; logging redirection or process termination needs a classified local read'
+    elif any(value in message for value in ('unknown command', 'unknown backend command', 'unknown flag', 'command not found', 'command "copyid" not found', 'doesn\'t support backend commands', 'does not support backend commands', 'not supported by this backend', 'backend does not support')):
+        category = 'BACKEND_COMMAND'
         reason = 'backend/command support: confirm the selected remote is Google Drive and check the installed rclone version'
-    elif any(value in message for value in ('didn\'t find section in config file', 'not found in config', 'failed to find config')):
+    elif any(value in message for value in ('failed to decrypt', 'configuration is encrypted', 'config file is encrypted', 'unable to read password', 'password not provided')):
+        category = 'CONFIG_ENCRYPTED'
+        reason = 'the existing local configuration could not be unlocked; no password/config contents are requested or changed'
+    elif any(value in message for value in ('didn\'t find section in config file', 'not found in config', 'failed to find config', 'config file not found', 'failed to load config', 'failed to read config')):
+        category = 'CONFIG_ACCESS'
         reason = 'remote configuration: the selected remote is missing or unavailable'
+    elif any(value in message for value in ('no space left on device', 'read-only file system', 'failed to save config', 'failed to write config', 'is a directory', 'no such file or directory')):
+        category = 'LOCAL_IO'
+        reason = 'local file/storage access was reported; preserve existing files and inspect the selected local destination/config availability'
     elif any(value in message for value in ('invalid_client', 'unauthorized_client', 'deleted_client')):
+        category = 'OAUTH_CLIENT'
         reason = 'OAuth client configuration rejected: inspect the local rclone setup; reconnect alone may not resolve this'
-    elif any(value in message for value in ('empty token', 'couldn\'t find token', 'invalid_grant', 'invalid token', 'token expired', 'oauth2:', 'unauthenticated', '401 unauthorized')):
-        reason = 'authentication: complete or reconnect the existing remote using your own browser, then retry the same read'
+    elif '401' in codes or any(value in message for value in ('empty token', 'token is empty', 'no token found', 'token not found', 'couldn\'t find token', 'couldn\'t fetch token', 'no refresh token', 'invalid_grant', 'invalid token', 'token expired', 'oauth2:', 'unauthenticated', '401 unauthorized')):
+        category = 'AUTH_REPORTED'
+        reason = 'authentication-related output was reported; no automatic reconnect, new credentials or scope change was attempted'
     elif any(value in message for value in ('ratelimit', 'rate limit', 'quota', '429', 'downloadquotaexceeded')):
+        category = 'QUOTA_REPORTED'
         reason = 'provider quota/rate limit: wait before retrying; no alternate account or limit bypass is attempted'
     elif any(value in message for value in ('403', '404', 'permission', 'insufficient', 'file not found', 'notfound', 'access denied')):
+        category = 'FILE_ACCESS_REPORTED'
         reason = 'file access: check the selected account, existing read scope and access to the exact file; this does not prove authentication failed'
     elif any(value in message for value in ('timeout', 'timed out', 'no such host', 'network', 'connection', 'tls handshake', 'certificate')):
+        category = 'NETWORK_REPORTED'
         reason = 'network/TLS: check the connection and device clock before retrying'
     else:
-        reason = 'unclassified failure: run the same read-only command locally to inspect its error; do not share tokens, auth URLs or config dumps'
-    return 'rclone stopped (exit %d); %s. Existing installation and completed cache are preserved.' % (returncode, reason)
+        reason = 'unclassified failure: only a classified local probe is needed; do not share raw errors, tokens, auth URLs or config dumps'
+    return 'rclone stopped (exit %d; category=%s; HTTP=%s; stderr_bytes=%d; stdout_bytes=%d); %s. Existing installation and completed cache are preserved.' % (returncode, category, ','.join(codes) or 'none', len(stderr), len(stdout), reason)
 
 
 def sha256_file(path):
@@ -251,11 +275,12 @@ class DriveTransport:
                    row['file_id'], str(partial), '--transfers', '1', '--checkers', '1',
                    '--multi-thread-streams', '0', '--retries', '1',
                    '--low-level-retries', '1', '--stats', '0', '--log-level', 'ERROR']
-        result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                stdin=subprocess.DEVNULL)
         if result.returncode:
             # Avoid echoing raw process stderr: authorization URLs and account
             # details belong to rclone's explicit configuration flow.
-            raise DownloadError(rclone_failure(result.returncode, result.stderr))
+            raise DownloadError(rclone_failure(result.returncode, result.stderr, result.stdout))
 
     def download(self, row):
         """Return a SHA256-named cached file only after full length/hash match."""
