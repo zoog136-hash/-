@@ -303,3 +303,31 @@ new condition, subject, cast, probability roll, final-blow order or stun effect
 is introduced. Missing/unsupported declarations supply no operand. Other
 conditional meanings and the enhancement-only fear-ignore owner stay separate.
 These actual conditional caller inputs remain unverified.
+
+## Reward-rate inputs after the 2026-11-06 continuation
+
+Original IncreaseNpcItemDropAmount now supplies the existing adena_drop_pct
+sum. It must declare BonusApplicationType.ItemClass, target the original
+ItemClass26 and resolve that non-Test/non-excluded row to ItemCategory.Currency.
+Other item targets are not converted to Adena or activated. ValuePercent raw
+values remain percentage points, matching the existing enhancement projection.
+The existing kill path retains the separate blessing/Jade multiplier and
+its current 0–500 percent clamp. Floor drops, physical acquisition, currency
+ownership and save remain in the existing owner.
+
+Direct AbsoluteExperienceAdditionPercent supplies a missing native xp operand
+to the existing experience multiplier. The original Percentage fixed-point
+value is divided by1,000,000 to match that receiver's ratio, as in the existing
+ordinary ExperienceAdditionPercent projection. A mixed item can add the missing
+absolute operand only if every existing mapped xp entry resolves to its actual
+ItemBonus/Bonus/BonusType/Unit, belongs to the same item, is a unique direct
+ExperienceAdditionPercent row, has the exact projected value, and sums exactly
+to the existing typed xp field. Otherwise the explicit field wins. Already
+mapped absolute bonuses are not added again. Existing enhancement, active
+item, totem and blessing multipliers keep their current order and ownership.
+
+This continuation observed main52c8f4be5 and unchanged open PR282. New UI/Sprite
+owner changes are not copied or overwritten. ItemBook saved eqc identity,
+admitted range/weapon context and dialogue-to-mobile-NPC identity remain exact
+separate dependencies. No test/compile/game/render/CI or adoption recount ran.
+Both reward-rate caller connections are unverified.

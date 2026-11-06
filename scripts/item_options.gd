@@ -19,10 +19,12 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 		"damage_amp_pct":["PierceDamageReductionPercent","PVEPierceDamageReductionPercent"],
 		"potionCooldownPct":"PotionConsumeDelayDecreasePercent",
 		"equipment523_element_crit_pct":"ElementalCriticalProbability",
-		"equipment523_element_crit_resist_pct":"ElementalCriticalResistance"}
+		"equipment523_element_crit_resist_pct":"ElementalCriticalResistance",
+		"xp":"AbsoluteExperienceAdditionPercent"}
 	if not names.has(key): return 0.0
 	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct"] else "Percentage"
 	var divisor: float = 100.0 if unit_name=="ValuePercent" else 10000.0
+	if key=="xp": divisor=1000000.0 # Existing xp receiver takes a ratio.
 	var selected: Variant = names[key]
 	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
 
@@ -88,12 +90,39 @@ static func additional_original_element(record: Dictionary, channel: String, kin
 	var context: Dictionary = {"target_id":target_id,"channel":channel,"basis":basis}
 	return _additional_original_operand(record,key,["ElementalDamage" if kind=="damage" else "ElementalResistance"],"Value" if kind=="damage" else "Percentage",1.0 if kind=="damage" else 10000.0,"",context)
 
-static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "", elemental_input: Dictionary = {}) -> float:
+static func additional_original_reward(record: Dictionary, key: String) -> float:
+	if key!="adena_drop_pct": return 0.0
+	# Existing enhancement/reward contract: only source ItemClass26 is Adena.
+	# ValuePercent is already percentage points for the existing drop-rate sum.
+	return _additional_original_operand(record,key,["IncreaseNpcItemDropAmount"],"ValuePercent",1.0,"",{},26)
+
+static func _represented_xp(record: Dictionary, item_id: int, applied: Array) -> bool:
+	# Only the exact existing ordinary-XP projection may share a key with a
+	# missing absolute-XP operand. Never reinterpret a custom explicit xp field.
+	var total: float = 0.0; var found: bool = false; var seen: Dictionary = {}
+	for entry: Variant in applied:
+		if not entry is Dictionary or entry.get("field")!="xp": continue
+		var link: Dictionary = CURRENT_DEFINITIONS.row("ItemBonus",int(entry.get("item_bonus_id",-1)))
+		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(entry.get("bonus_id",-1)))
+		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
+		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
+		if link.get("ItemClassID")!=item_id or link.get("BonusID")!=bonus.get("ID") or link.get("IsPossession")!=false or seen.has(link.get("ID")): return false
+		if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or type.get("Name")!="ExperienceAdditionPercent" or unit.get("Name")!="Percentage": return false
+		var ui: Array[Dictionary] = CURRENT_DEFINITIONS.related("UIUnit","UnitID",int(unit.get("ID",-1)))
+		if ui.size()!=1 or ui[0].get("Denominator")!=10000 or not CURRENT_DEFINITIONS.declared_exclusion("UIUnit",ui[0]).is_empty(): return false
+		var amount: Variant = bonus.get("Value")
+		if typeof(amount) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(amount)) or float(amount)!=floorf(float(amount)) or absf(float(amount))>9007199254740991.0 or entry.get("value")!=float(amount)/1000000.0: return false
+		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
+			if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return false
+		seen[link.ID]=true; found=true; total+=float(amount)/1000000.0
+	var value: Variant = record.get("xp")
+	return found and typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and is_finite(total) and float(value)==total
+
+static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "", elemental_input: Dictionary = {}, target_item: int = 0) -> float:
 	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
 	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
 	var bless: Variant = record.get("source_bless_raw")
 	if typeof(bless) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(bless)) or float(bless)!=floorf(float(bless)) or int(bless) not in [1,2,3]: return 0.0
-	if record.has(key) and not record.get("_patch523_effective_extras",false): return 0.0
 	if key=="blessing_consumption_reduction_pct" and not record.get("_patch523_effective_extras",false):
 		for alias: String in ["ain_consumption_reduction_pct","blessing_spend_reduction_pct"]:
 			if record.has(alias): return 0.0
@@ -106,13 +135,24 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 	if raw.is_empty() or raw!=record.get("source_original_item") or raw.get("TestItem")!=false or not CURRENT_DEFINITIONS.declared_exclusion("ItemClass",raw).is_empty(): return 0.0
 	var applied: Variant = record.get("source_mapped_bonuses")
 	if not applied is Array: return 0.0
+	if record.has(key) and not record.get("_patch523_effective_extras",false):
+		if key!="xp" or not _represented_xp(record,int(id),applied): return 0.0
 	var total: float = 0.0; var evidence: Array = []
 	for link: Dictionary in CURRENT_DEFINITIONS.related("ItemBonus","ItemClassID",int(id)):
 		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(link.get("BonusID",-1)))
 		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
 		if type.get("Name") not in bonus_names: continue
 		var application: Dictionary = {}; var target: Dictionary = {}
-		if not elemental_input.is_empty():
+		if target_item>0:
+			if bonus.get("BonusApplicationTypeID")!=5 or bonus.get("BonusApplicationTargetID")!=target_item: continue
+			application = CURRENT_DEFINITIONS.row("BonusApplicationType",5)
+			target = CURRENT_DEFINITIONS.row("ItemClass",target_item)
+			if application.get("Name")!="ItemClass" or target.get("TestItem")!=false: return 0.0
+			var category: Dictionary = CURRENT_DEFINITIONS.row("ItemCategory",int(target.get("CategoryID",-1)))
+			if category.get("Name")!="Currency": return 0.0
+			for pair: Array in [["BonusApplicationType",application],["ItemClass",target],["ItemCategory",category]]:
+				if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return 0.0
+		elif not elemental_input.is_empty():
 			if bonus.get("BonusApplicationTypeID")!=3 or bonus.get("BonusApplicationTargetID")!=elemental_input.target_id: continue
 			application = CURRENT_DEFINITIONS.row("BonusApplicationType",3)
 			if application.get("Name")!="ElementalResistanceType" or not CURRENT_DEFINITIONS.declared_exclusion("BonusApplicationType",application).is_empty(): return 0.0
@@ -128,6 +168,9 @@ static func _additional_original_operand(record: Dictionary, key: String, bonus_
 		if link.get("IsPossession")!=false: return 0.0
 		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
 		if unit.get("Name")!=unit_name: return 0.0
+		if key=="xp":
+			var ui: Array[Dictionary] = CURRENT_DEFINITIONS.related("UIUnit","UnitID",int(unit.get("ID",-1)))
+			if ui.size()!=1 or ui[0].get("Denominator")!=10000 or not CURRENT_DEFINITIONS.declared_exclusion("UIUnit",ui[0]).is_empty(): return 0.0
 		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
 			if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return 0.0
 		for represented: Variant in applied:

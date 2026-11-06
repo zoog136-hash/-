@@ -962,6 +962,7 @@ func _equipped_numeric_sum(key: String) -> float:
 		total += float(record.get(key, 0.0))
 		total += ITEM_OPTIONS.additional_original_percent(record,key)
 		total += ITEM_OPTIONS.additional_original_flat(record,key)
+		total += ITEM_OPTIONS.additional_original_reward(record,key)
 	return total
 
 
@@ -9933,6 +9934,7 @@ func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
+		bonus += ITEM_OPTIONS.additional_original_percent(record,"xp")
 	bonus += float(_enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "xp_pct")) / 100.0
 	return maxf(1.0, 1.0 + bonus + totem_map_experience() + float(_active_item_buff_total("xp")) / 100.0)
 
