@@ -1,0 +1,33 @@
+--- a/scripts/monsters/patch523_npc_extensions.gd
++++ b/scripts/monsters/patch523_npc_extensions.gd
+@@ -200,13 +200,29 @@
+ 			if typeof(flag) in [TYPE_INT,TYPE_FLOAT] and float(flag) == 1.0: return true
+ 	return false
+ 
++func _live_source_actor_buff(actor: Node, entry: Dictionary) -> bool:
++	# Same lifetime/source evidence already required by actor_invisible().
++	# Used only for current-original self buffs; custom/legacy bindings retain
++	# their existing owner behavior and environment admission stays in bindings.
++	var holder: Variant = entry.get("actor")
++	if not holder is WeakRef or holder.get_ref() != actor: return false
++	if entry.get("life") != actor.life_id or entry.get("generation") != service.world.combat_generation: return false
++	var duration: Variant = entry.get("remaining")
++	if typeof(duration) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(duration)) or float(duration) <= 0.0: return false
++	var id: Variant = entry.get("id")
++	if typeof(id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(id)) or float(id) <= 0.0 or float(id) != floorf(float(id)): return false
++	var source: Dictionary = service.catalog.row("BuffClass",int(id))
++	return not source.is_empty() and source.get("ID") == id and entry.get("source") == source
++
+ func bindings(actor: Node) -> Array:
+ 	var result: Array = []
+ 	if service == null: return result
+ 	if not service.host_enabled or not is_instance_valid(actor) or bool(actor.get("dead")): return result
+ 	if enabled:
+ 		for entry: Dictionary in actor_buffs.get(actor.get_instance_id(),[]):
+-			if int(entry.life) == int(actor.life_id) and int(entry.generation) == int(service.world.combat_generation): result.append({"attribute":{"ID":0,"Value":entry.id},"buff":service.catalog.buff_details(int(entry.id)),"self_spell":true})
++			if int(entry.life) == int(actor.life_id) and int(entry.generation) == int(service.world.combat_generation):
++				if service.catalog.get("source_mode") == "current523_original" and not _live_source_actor_buff(actor,entry): continue
++				result.append({"attribute":{"ID":0,"Value":entry.id},"buff":service.catalog.buff_details(int(entry.id)),"self_spell":true})
+ 	var field: Variant = service.world.get("field_map")
+ 	if not environment_enabled or field == null: return result
+ 	var definition: Variant = field.get("definition")

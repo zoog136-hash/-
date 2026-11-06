@@ -1,0 +1,69 @@
+diff --git a/scripts/world.gd b/scripts/world.gd
+index 6e00b4362..2f6e8def1 100644
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -6818,7 +6818,22 @@
+ 		rng.seed=int(data.patch523_transaction_rng.seed)
+ 		rng.state=int(data.patch523_transaction_rng.state)
+ 	var batch_restore: Dictionary=_explicit_warehouse_batch.accepted_load(self)
+-	if not batch_restore.get("ok",false):hud.append_log(str(batch_restore.get("reason","일괄 창고 복원 보호 유지")))
++	if not batch_restore.get("ok",false):
++		hud.append_log(str(batch_restore.get("reason","일괄 창고 복원 보호 유지")))
++	else:
++		# Only this successful load endpoint issues the UI recovery handoff. Failed
++		# reads/restores never release held carts; hidden carts stay in World metadata.
++		var ui_restore: Dictionary={"ok":false,"code":"reviewed_cart_bridge_unavailable","held_ui_evidence_preserved":true}
++		var cart_path: String="res://scripts/ui/warehouse_reviewed_cart.gd"
++		if _explicit_warehouse_batch.owner_load_receipt_matches(self,batch_restore) and ResourceLoader.exists(cart_path):
++			var cart_script: Script=load(cart_path)
++			if cart_script!=null and cart_script.has_method("accept_successful_owner_load"):
++				var response: Variant=cart_script.accept_successful_owner_load(self,batch_restore)
++				if response is Dictionary:ui_restore=response.duplicate(true)
++		# Record delivery separately from authoritative load acceptance and the
++		# live-view subresult. No callback submits, discards or refunds old intents.
++		set_meta("twilight_warehouse_ui_load_delivery",{"accepted_load":batch_restore.duplicate(true),"ui_restore":ui_restore,"owner_context_retained":_explicit_warehouse_batch.owner_load_receipt_matches(self,batch_restore)})
++		if not ui_restore.get("ok",false):hud.append_log(str(ui_restore.get("code","창고 검토 카트 복구 전달 보류")))
+ 	if not quiet:
+ 		hud.show_message("불러오기 완료")
+ 
+diff --git a/scripts/warehouse/explicit_warehouse_batch.gd b/scripts/warehouse/explicit_warehouse_batch.gd
+index ee886df5c..444f28409 100644
+--- a/scripts/warehouse/explicit_warehouse_batch.gd
++++ b/scripts/warehouse/explicit_warehouse_batch.gd
+@@ -7,6 +7,10 @@
+ var receipts: Dictionary={}
+ var busy: bool=false
+ var uncertain: bool=false
++var _load_generation: int=0
++var _accepted_load_receipt: Dictionary={}
++var _accepted_load_state: Dictionary={}
++var _accepted_load_requests: Dictionary={}
+ 
+ func fail(code: String,reason: String) -> Dictionary:
+ 	return {"ok":false,"code":code,"reason":reason,"saved":false,"live_adopted":false}
+@@ -20,11 +24,24 @@
+ 	# the outcome of an earlier write or replay its reviewed list after a load.
+ 	if busy or NATIVE.busy or world.source_save_blocked or world.equipment_collections.save_blocked or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return fail("restore_held","실제 소유자 복원이 끝나기 전 일괄 창고 보호 유지")
+ 	var count: int=quotes.size()
++	var invalidated: Array=quotes.keys()
+ 	quotes.clear()
+ 	uncertain=false
+ 	# Keep old request receipts (including saved:null) immutable. A late request
+ 	# can read its old receipt, but cannot execute it; new intents need new quotes.
+-	return {"ok":true,"owner_load_accepted":true,"invalidated_quotes":count,"pending_intent_replayed":false}
++	_load_generation+=1
++	_accepted_load_state=snapshot(world)
++	_accepted_load_requests=receipts.duplicate(true)
++	_accepted_load_receipt={"ok":true,"owner_load_accepted":true,"invalidated_quotes":count,"invalidated_quote_ids":invalidated,"pending_intent_replayed":false,"world_id":world.get_instance_id(),"batch_owner_id":get_instance_id(),"load_generation":_load_generation,"combat_generation":world.combat_generation,"owner_state_sha256":JSON.stringify(_accepted_load_state,"",true,true).sha256_text(),"prior_request_receipts_sha256":JSON.stringify(_accepted_load_requests,"",true,true).sha256_text()}
++	return _accepted_load_receipt.duplicate(true)
++
++func owner_load_receipt_matches(world: Node,receipt: Dictionary) -> bool:
++	# A UI boolean is not load authority. Match the actual accepted owner result
++	# and its still-current custody/epoch; never reinterpret an old saved:null.
++	if not is_instance_valid(world) or _accepted_load_receipt.is_empty() or busy or uncertain or NATIVE.busy:return false
++	if world.source_save_blocked or world.equipment_collections.save_blocked or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return false
++	if receipt.get("world_id")!=world.get_instance_id() or receipt.get("batch_owner_id")!=get_instance_id() or receipt.get("load_generation")!=_load_generation or receipt.get("combat_generation")!=world.combat_generation:return false
++	return world.equipment_collections._same_save_value(receipt,_accepted_load_receipt) and world.equipment_collections._same_save_value(snapshot(world),_accepted_load_state) and world.equipment_collections._same_save_value(receipts,_accepted_load_requests)
+ 
+ func prepare(world: Node,direction: String,entries: Array,reserved_partitions: Dictionary={}) -> Dictionary:
+ 	if busy or uncertain or NATIVE.busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return fail("owner_held","창고 거래 저장 보호 중")

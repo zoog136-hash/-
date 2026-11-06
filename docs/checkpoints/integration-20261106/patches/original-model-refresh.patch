@@ -1,0 +1,95 @@
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -223,6 +223,9 @@
+ var crafting = EXPANDED_CRAFTING.new()
+ const PATCH523_EQUIPMENT = preload("res://scripts/crafting/patch523_rules.gd")
+ var patch523_equipment = PATCH523_EQUIPMENT.new()
++var _patch523_original_equipment_owner: WeakRef
++var _patch523_equipment_refresh_busy: bool = false
++var patch523_equipment_refresh_status: Dictionary = {}
+ const PATCH523_ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
+ const PATCH523_SEAL_ACTIONS = preload("res://scripts/crafting/patch523_seal_actions.gd")
+ const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
+@@ -5199,9 +5202,11 @@
+ 	# compiler, never a world/UI object or newly fabricated native identity.
+ 	var binding: Dictionary = {"아이템":catalog_db.get("아이템",[]),"patch523_crafting_catalog_contract":catalog_db.get("patch523_crafting_catalog_contract",{})}
+ 	var binding_bytes: PackedByteArray = JSON.stringify(binding,"",true,true).to_utf8_buffer()
++	var original_was_empty: bool = patch523_equipment.data.is_empty()
+ 	if not patch523_equipment.load_original(catalog_bytes,binding_bytes):
+ 		push_warning(patch523_equipment.problem)
+ 		return
++	if original_was_empty: _patch523_original_equipment_owner = weakref(patch523_equipment)
+ 	_apply_loaded_patch523_equipment()
+ 
+ func install_patch523_craft_catalog_zip(path: String) -> bool:
+@@ -5212,11 +5217,62 @@
+ 		PATCH523_CRAFT_CATALOG.problem=str(result.get("reason","공통 아이템 등록 실패")); return false
+ 	patch523_craft_catalog_status=result
+ 	_index_catalog_item_sources(); _index_item_weights()
++	# Catalog registration and derived model replacement are distinct results.
++	# A selected file/pin is never silently replaced by an in-memory build.
++	patch523_equipment_refresh_status = _refresh_original_patch523_equipment_after_catalog()
+ 	if is_instance_valid(hud):
+ 		hud.set_catalog_data(catalog_db,catalog_image_index)
+ 		hud.refresh_inventory(inventory)
+ 	return true
+ 
++func _patch523_registered_equipment_binding() -> PackedByteArray:
++	var binding: Dictionary = {"아이템":catalog_db.get("아이템",[]),"patch523_crafting_catalog_contract":catalog_db.get("patch523_crafting_catalog_contract",{})}
++	return JSON.stringify(binding,"",true,true).to_utf8_buffer()
++
++func _patch523_equipment_selection_explicit() -> bool:
++	return OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES") or OS.has_environment("TWILIGHT_PATCH523_EQUIPMENT_SHA256") or FileAccess.file_exists(PATCH523_STORE.INDEX)
++
++func _refresh_original_patch523_equipment_after_catalog() -> Dictionary:
++	var prior = patch523_equipment
++	var prior_sha: String = prior.digest
++	if _patch523_equipment_refresh_busy:
++		return {"ok":false,"held":true,"reason":"original_model_refresh_busy","previous_sha256":prior_sha}
++	if _patch523_equipment_selection_explicit():
++		return {"ok":false,"held":true,"reason":"explicit_equipment_model_preserved_select_new_file_and_sha_explicitly","previous_sha256":prior_sha}
++	if not prior.data.is_empty() and (_patch523_original_equipment_owner == null or _patch523_original_equipment_owner.get_ref() != prior):
++		return {"ok":false,"held":true,"reason":"accepted_model_origin_untracked_preserved","previous_sha256":prior_sha}
++	if not patch523_owner_state_problem.is_empty() or quest_service.save_blocked:
++		return {"ok":false,"held":true,"reason":"existing_owner_save_guard","previous_sha256":prior_sha}
++	var definitions: Script = preload("res://scripts/resources/current523_definition_rows.gd")
++	var source: Dictionary = definitions.identity()
++	if source.is_empty() or source.get("source_sha256") != definitions.SOURCE_SHA:
++		return {"ok":false,"held":true,"reason":"original_definition_identity_unavailable","previous_sha256":prior_sha}
++	var catalog_bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://data/catalog_v19.json")
++	var binding_bytes: PackedByteArray = _patch523_registered_equipment_binding()
++	if catalog_bytes.is_empty() or not catalog_db.get("아이템") is Array or catalog_db["아이템"].is_empty():
++		return {"ok":false,"held":true,"reason":"registered_catalog_input_unavailable","previous_sha256":prior_sha}
++	# Build into a fresh existing owner: load_original's accepted-data early
++	# return must not mistake the old model for a newly prepared candidate.
++	_patch523_equipment_refresh_busy = true
++	var staged = PATCH523_EQUIPMENT.new()
++	if not staged.load_original(catalog_bytes,binding_bytes):
++		_patch523_equipment_refresh_busy = false
++		return {"ok":false,"held":true,"reason":staged.problem,"previous_sha256":prior_sha}
++	# No yield or live data mutation before adoption; recheck exact inputs and
++	# selection so a changed source/catalog/model cannot adopt a stale result.
++	var current: bool = not _patch523_equipment_selection_explicit() and patch523_equipment == prior and prior.digest == prior_sha and definitions.identity() == source and FileAccess.get_file_as_bytes("res://data/catalog_v19.json") == catalog_bytes and _patch523_registered_equipment_binding() == binding_bytes
++	if not current or not patch523_owner_state_problem.is_empty() or quest_service.save_blocked:
++		_patch523_equipment_refresh_busy = false
++		return {"ok":false,"held":true,"reason":"original_model_inputs_or_selection_changed","previous_sha256":prior_sha}
++	if not prior.data.is_empty() and staged.digest == prior_sha:
++		_patch523_equipment_refresh_busy = false
++		return {"ok":true,"adopted":false,"reason":"original_model_unchanged","sha256":prior_sha}
++	patch523_equipment = staged
++	_patch523_original_equipment_owner = weakref(staged)
++	_apply_loaded_patch523_equipment()
++	_patch523_equipment_refresh_busy = false
++	return {"ok":true,"adopted":true,"origin":"current523_original_memory_model","previous_sha256":prior_sha,"sha256":staged.digest,"source_definition_archive":source}
++
+ func install_patch523_equipment_file(path: String, expected: String) -> bool:
+ 	var installed: Dictionary = PATCH523_STORE.install(path, expected)
+ 	if installed.is_empty():
+@@ -5227,6 +5283,7 @@
+ func _install_patch523_equipment(path: String, expected: String) -> bool:
+ 	if not patch523_equipment.load_file(path, expected):
+ 		return false
++	_patch523_original_equipment_owner = null
+ 	_apply_loaded_patch523_equipment()
+ 	return true
+ 

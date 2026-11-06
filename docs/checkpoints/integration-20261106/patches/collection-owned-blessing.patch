@@ -1,0 +1,17 @@
+diff --git a/scripts/collections/current523_collection_provenance.gd b/scripts/collections/current523_collection_provenance.gd
+index 9c085e1d8..f4f9106d4 100644
+--- a/scripts/collections/current523_collection_provenance.gd
++++ b/scripts/collections/current523_collection_provenance.gd
+@@ -28,8 +28,10 @@
+ 	if not physical is Dictionary or physical.is_empty() or not physical.get("record") is Dictionary or physical.get("name")!=item.get("name") or physical.get("level")!=item.get("enchant"):return "신규 원본 등록의 실제 물리 snapshot 필요"
+ 	if item.get("source_id")!=registered_source_id or pinned.get("sourceId")!=registered_source_id or catalog_record.get("sourceId")!=registered_source_id or INPUT._hash(physical)!=evidence.physical.get("input_snapshot_sha256"):return "신규 원본 등록 실물·등록 원본 키 불일치"
+ 	for row: Dictionary in [catalog_record,pinned]:
+-		if row.get("source_m_native_item")!=true or row.get("source_projection")!="current523_original_typed_game_dto_v1" or row.get("source_definition_archive")!=witness.original_archive or row.get("source_original_item")!=witness.original_item_class or row.get("source_item_class_id")!=witness.item_class_id or row.get("source_bless_raw")!=witness.bless_raw:return "신규 원본 등록 archive·전체 행·축복 불일치"
+-	if physical.get("source_bless_code")!=witness.bless_raw:return "신규 원본 등록 명시 물리 축복 필요"
++		if row.get("source_m_native_item")!=true or row.get("source_projection")!="current523_original_typed_game_dto_v1" or row.get("source_definition_archive")!=witness.original_archive or row.get("source_original_item")!=witness.original_item_class or row.get("source_item_class_id")!=witness.item_class_id:return "신규 원본 등록 archive·전체 행 불일치"
++	# Catalog blessing is a template default; the producer proves the current
++	# owned blessing against this physical snapshot, pinned DTO and selected book.
++	if physical.get("source_bless_code")!=witness.bless_raw or pinned.get("source_bless_raw")!=witness.bless_raw:return "신규 원본 등록 명시 물리·고정 DTO 축복 필요"
+ 	var admission: Variant=evidence.get("admission")
+ 	if not admission is Dictionary or admission.get("catalog_identity_matches")!=true or admission.get("model_original_item_row_matches")!=true:return "신규 원본 등록의 실제 선택 모델 증거 필요"
+ 	var digest: Variant=admission.get("equipment_model_sha256")

@@ -1,0 +1,92 @@
+diff --git a/scripts/collections/current523_collection_provenance.gd b/scripts/collections/current523_collection_provenance.gd
+--- a/scripts/collections/current523_collection_provenance.gd
++++ b/scripts/collections/current523_collection_provenance.gd
+@@ -7,6 +7,34 @@
+ 
+ static func pending(reason: String) -> Dictionary:
+ 	return {"schema":1,"status":"pending","reason":reason,"native_collection_binding":"pending"}
++
++# Classify from the owner's catalog/raw physical DTO, never display labels or
++# an extra caller-supplied native flag. Incomplete native claims fail closed.
++static func native_claim(record: Dictionary) -> bool:
++	var archive: Variant=record.get("source_definition_archive",{})
++	return record.get("source")=="lineagem_patch523" or record.get("source_snapshot")=="patch523" or record.get("source_projection")=="current523_original_typed_game_dto_v1" or record.get("source_m_native_item")==true or str(record.get("sourceId","")).begins_with("m523:item:") or (archive is Dictionary and archive.get("kind")=="twilight.current523.original-definitions.v1")
++
++# NEW registration only. Saved absent/pending witnesses remain readable below.
++static func new_registration_reason(item: Dictionary,catalog_record: Dictionary,registered_source_id: String) -> String:
++	var physical: Variant=item.get("physical_snapshot",{})
++	var pinned: Dictionary=physical.get("record",{}) if physical is Dictionary and physical.get("record") is Dictionary else {}
++	var native: bool=native_claim(catalog_record) or native_claim(pinned) or registered_source_id.begins_with("m523:item:")
++	if not native:return ""
++	var witness: Variant=item.get("source_provenance")
++	if not witness is Dictionary or witness.get("status")!="verified_item_witness":return "신규 원본 컬렉션 등록 증거 보류 · 실물 보존"
++	if not receipt_valid({"instance_id":item.get("instance_id"),"source_id":item.get("source_id"),"enchant":item.get("enchant"),"source_provenance":witness}):return "신규 원본 등록 증거 형식·정체 불일치"
++	var evidence: Dictionary=witness.source_witness_capture
++	if not evidence.get("pending") is Array or not evidence.pending.is_empty() or evidence.get("ok")!=true or evidence.get("ready_for_owner_recheck")!=true:return "신규 원본 등록 producer 증거 보류"
++	if not physical is Dictionary or physical.is_empty() or not physical.get("record") is Dictionary or physical.get("name")!=item.get("name") or physical.get("level")!=item.get("enchant"):return "신규 원본 등록의 실제 물리 snapshot 필요"
++	if item.get("source_id")!=registered_source_id or pinned.get("sourceId")!=registered_source_id or catalog_record.get("sourceId")!=registered_source_id or INPUT._hash(physical)!=evidence.physical.get("input_snapshot_sha256"):return "신규 원본 등록 실물·등록 원본 키 불일치"
++	for row: Dictionary in [catalog_record,pinned]:
++		if row.get("source_m_native_item")!=true or row.get("source_projection")!="current523_original_typed_game_dto_v1" or row.get("source_definition_archive")!=witness.original_archive or row.get("source_original_item")!=witness.original_item_class or row.get("source_item_class_id")!=witness.item_class_id or row.get("source_bless_raw")!=witness.bless_raw:return "신규 원본 등록 archive·전체 행·축복 불일치"
++	if physical.get("source_bless_code")!=witness.bless_raw:return "신규 원본 등록 명시 물리 축복 필요"
++	var admission: Variant=evidence.get("admission")
++	if not admission is Dictionary or admission.get("catalog_identity_matches")!=true or admission.get("model_original_item_row_matches")!=true:return "신규 원본 등록의 실제 선택 모델 증거 필요"
++	var digest: Variant=admission.get("equipment_model_sha256")
++	if not digest is String or digest.length()!=64 or not digest.is_valid_hex_number(false) or admission.get("equipment_item_key")!=str(int(witness.item_class_id)):return "신규 원본 등록 모델 지문 불일치"
++	return ""
+ 
+ static func capture(world: Node,uid: String) -> Dictionary:
+ 	var physical: Variant=world.item_instances.get(uid)
+diff --git a/scripts/collections/equipment_collection_runtime.gd b/scripts/collections/equipment_collection_runtime.gd
+--- a/scripts/collections/equipment_collection_runtime.gd
++++ b/scripts/collections/equipment_collection_runtime.gd
+@@ -56,7 +56,8 @@
+ 		_exact_names[name_value].append(source)
+ 		if not _normalized_names.has(canonical): _normalized_names[canonical] = []
+ 		_normalized_names[canonical].append(source)
+-		catalog.append({"source_id":source,"name":name_value,"kind":"equipment"})
++		# Private authoritative catalog DTO for new native-registration admission.
++		catalog.append({"source_id":source,"name":name_value,"kind":"equipment","source_record":row.duplicate(true)})
+ 	if not core.configure(parser.data,catalog,Stats.SUPPORTED):
+ 		problem = core.last_error
+ 		save_blocked = true
+@@ -242,6 +243,7 @@
+ 			"equipped":bool(world._is_instance_equipped(id)),
+ 			"locked":bool(world._item_locked(name_value,id)) or bool(world._item_locked(name_value)) or bool(physical.get("locked",false))}
+ 		out.gear[id]["source_provenance"]=PROVENANCE.capture(world,id)
++		out.gear[id]["physical_snapshot"]=physical.duplicate(true)
+ 	return out
+ 
+ func candidates(cid: String, sid: String) -> Array:
+@@ -271,12 +273,19 @@
+ 	if not bool(result.get("ok",false)) or bool(result.get("already_applied",false)):
+ 		_busy = false
+ 		return result
++	var current_snapshot: Dictionary=snapshot()
++	var requirement: Dictionary=core._requirement(core.resolve(str(request.collection_id)),str(request.slot_id))
+ 	var next_inventory: Dictionary = world.inventory.duplicate(true)
+ 	var next_instances: Dictionary = world.item_instances.duplicate(true)
+ 	var requested_counts: Dictionary = {}
+ 	for raw_id: Variant in request.instance_ids:
+ 		var id: String = str(raw_id)
+-		if not _same_save_value(snapshot_value.gear[id].get("source_provenance"),PROVENANCE.capture(world,id)):
++		var current_item: Dictionary=current_snapshot.gear.get(id,{})
++		var native_reason: String=core.candidate_reason(current_item,requirement)
++		if not native_reason.is_empty():
++			_busy=false
++			return fail("source_registration_pending",native_reason)
++		if not _same_save_value(snapshot_value.gear[id].get("source_provenance"),current_item.get("source_provenance")) or not _same_save_value(snapshot_value.gear[id].get("physical_snapshot"),current_item.get("physical_snapshot")):
+ 			_busy=false
+ 			return fail("source_witness_changed","등록 준비 후 원본/모델/실물 증거가 변경됐습니다")
+ 		var name_value: String = str(next_instances[id].name)
+diff --git a/scripts/collections/equipment_collection_service.gd b/scripts/collections/equipment_collection_service.gd
+--- a/scripts/collections/equipment_collection_service.gd
++++ b/scripts/collections/equipment_collection_service.gd
+@@ -186,6 +186,8 @@
+ 		return "다른 장비"
+ 	if item.get("enchant") != req.get("enchant"):
+ 		return "요구 강화 수치 불일치"
++	var native_reason: String=PROVENANCE.new_registration_reason(item,source.get("source_record",{}),str(source.get("source_id","")))
++	if not native_reason.is_empty():return native_reason
+ 	if item.has("source_provenance") and not PROVENANCE.receipt_valid({"instance_id":item.get("instance_id"),"source_id":item.get("source_id"),"enchant":item.get("enchant"),"source_provenance":item.source_provenance}):return "신규 등록 원본 품목 증거 불일치"
+ 	return ""
+ 

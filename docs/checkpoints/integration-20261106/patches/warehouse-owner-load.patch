@@ -1,0 +1,44 @@
+diff --git a/scripts/warehouse/explicit_warehouse_batch.gd b/scripts/warehouse/explicit_warehouse_batch.gd
+--- a/scripts/warehouse/explicit_warehouse_batch.gd
++++ b/scripts/warehouse/explicit_warehouse_batch.gd
+@@ -13,6 +13,18 @@
+ 
+ func snapshot(world: Node) -> Dictionary:
+ 	return {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"warehouse":world.warehouse.snapshot(),"equipped_items":world.equipped_items.duplicate(true),"consumable_state":world.consumable_service.export_state().duplicate(true)}
++
++func accepted_load(world: Node) -> Dictionary:
++	# Called only at the existing successful World load's final owner boundary.
++	# Failed reads/validation/migration never reach this method. Do not reinterpret
++	# the outcome of an earlier write or replay its reviewed list after a load.
++	if busy or NATIVE.busy or world.source_save_blocked or world.equipment_collections.save_blocked or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return fail("restore_held","실제 소유자 복원이 끝나기 전 일괄 창고 보호 유지")
++	var count: int=quotes.size()
++	quotes.clear()
++	uncertain=false
++	# Keep old request receipts (including saved:null) immutable. A late request
++	# can read its old receipt, but cannot execute it; new intents need new quotes.
++	return {"ok":true,"owner_load_accepted":true,"invalidated_quotes":count,"pending_intent_replayed":false}
+ 
+ func prepare(world: Node,direction: String,entries: Array) -> Dictionary:
+ 	if busy or uncertain or NATIVE.busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return fail("owner_held","창고 거래 저장 보호 중")
+diff --git a/scripts/world.gd b/scripts/world.gd
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -6264,6 +6264,9 @@
+ 	return OK
+ 
+ func _load_game(quiet: bool) -> void:
++	if _explicit_warehouse_batch.busy:
++		if not quiet:hud.show_message("일괄 창고 저장 중에는 불러올 수 없습니다")
++		return
+ 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return
+ 	if BASE508_TEST.enabled():return
+ 	if not migration_pointer_error.is_empty():migration_path_checked=false
+@@ -6814,6 +6817,8 @@
+ 	if data.has("patch523_transaction_rng"):
+ 		rng.seed=int(data.patch523_transaction_rng.seed)
+ 		rng.state=int(data.patch523_transaction_rng.state)
++	var batch_restore: Dictionary=_explicit_warehouse_batch.accepted_load(self)
++	if not batch_restore.get("ok",false):hud.append_log(str(batch_restore.get("reason","일괄 창고 복원 보호 유지")))
+ 	if not quiet:
+ 		hud.show_message("불러오기 완료")
+ 

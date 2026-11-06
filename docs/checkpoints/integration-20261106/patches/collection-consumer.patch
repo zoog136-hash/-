@@ -1,0 +1,130 @@
+diff --git a/scripts/collections/current523_collection_provenance.gd b/scripts/collections/current523_collection_provenance.gd
+--- /dev/null
++++ b/scripts/collections/current523_collection_provenance.gd
+@@ -0,0 +1,46 @@
++extends RefCounted
++## Prospective ITEM witness only. Never an ItemBook -> eqc binding or reward.
++const INPUT=preload("res://scripts/resources/current523_owned_item_witness.gd")
++
++static func integer(value: Variant) -> bool:
++	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
++
++static func pending(reason: String) -> Dictionary:
++	return {"schema":1,"status":"pending","reason":reason,"native_collection_binding":"pending"}
++
++static func capture(world: Node,uid: String) -> Dictionary:
++	var physical: Variant=world.item_instances.get(uid)
++	if not physical is Dictionary or not physical.get("record") is Dictionary:return pending("original_physical_record_missing")
++	if physical.record.get("source_m_native_item")!=true or not physical.record.get("sourceId") is String or physical.record.sourceId.is_empty():return pending("explicit_original_source_id_missing")
++	var snapshot: Dictionary=physical.duplicate(true)
++	# Exact live catalog lookup; no name fallback or legacy migration.
++	var selected: Dictionary=world._catalog_item_from_source_id(physical.record.sourceId)
++	var evidence: Dictionary=INPUT.inspect(world.patch523_equipment,selected,uid,snapshot)
++	if evidence.get("ok")!=true or evidence.get("ready_for_owner_recheck")!=true or not evidence.get("pending") is Array or not evidence.pending.is_empty():
++		var held: Dictionary=pending("producer_contract_held")
++		held["source_witness_capture"]=evidence.duplicate(true)
++		return held
++	# The producer deliberately cannot prove live membership or custody. Recheck
++	# the actual key/name/quantity here, then registration repeats this capture
++	# before its existing lock/revision/physical-removal joint-save boundary.
++	if not world.item_instances.get(uid) is Dictionary or INPUT._hash(world.item_instances[uid])!=evidence.physical.input_snapshot_sha256 or world.item_instances[uid]!=snapshot or not integer(world.inventory.get(str(snapshot.name))) or int(world.inventory[snapshot.name])<1:return pending("actual_physical_owner_changed")
++	var raw: Dictionary=evidence.original.item_class_row
++	return {"schema":1,"status":"verified_item_witness","native_collection_binding":"pending","physical_id":uid,"source_id":evidence.original.source_id,"item_class_id":evidence.original.item_class_id,"enchant":evidence.physical.enchant_level,"bless_raw":evidence.physical.bless_code,"quantity":1,"original_archive":evidence.source.duplicate(true),"original_item_class":raw.duplicate(true),"canonical_item_row_sha256":evidence.original.item_class_row_sha256,"row_hash_encoding":evidence.row_hash_encoding,"physical_modifiers":evidence.physical.explicit_fields.duplicate(true),"source_witness_capture":evidence.duplicate(true),"witness_scope":"registration_snapshot_item_identity_only_not_grant_or_native_collection_identity"}
++
++# Saved witnesses validate internally; do not rebind old receipts to whatever
++# archive/model happens to be selected now. Existing absent metadata stays valid.
++static func receipt_valid(receipt: Dictionary) -> bool:
++	if not receipt.has("source_provenance"):return true
++	var witness: Variant=receipt.source_provenance
++	if not witness is Dictionary or witness.get("schema")!=1 or witness.get("native_collection_binding")!="pending":return false
++	if witness.get("status")=="pending":return witness.get("reason") is String and not witness.reason.is_empty()
++	if witness.get("status")!="verified_item_witness" or not witness.get("original_archive") is Dictionary or witness.original_archive.is_empty() or not witness.get("original_item_class") is Dictionary or not witness.get("physical_modifiers") is Dictionary:return false
++	var raw: Dictionary=witness.original_item_class
++	var archive: Dictionary=witness.original_archive
++	var sha: Variant=archive.get("source_sha256")
++	if archive.get("kind")!="twilight.current523.original-definitions.v1" or archive.get("source_snapshot")!="patch523" or not sha is String or sha.length()!=64 or not sha.is_valid_hex_number(false) or not integer(archive.get("source_bytes")) or int(archive.source_bytes)<=0:return false
++	var evidence: Variant=witness.get("source_witness_capture")
++	if witness.get("witness_scope")!="registration_snapshot_item_identity_only_not_grant_or_native_collection_identity" or not evidence is Dictionary or evidence.get("schema")!="twilight.current523.owned-item-source-witness.v1" or evidence.get("ok")!=true or evidence.get("ready_for_owner_recheck")!=true or evidence.get("reference_only")!=true or evidence.get("ownership_authorized")!=false or evidence.get("collection_eligible")!=false:return false
++	if evidence.get("source")!=archive or not evidence.get("original") is Dictionary or not evidence.get("physical") is Dictionary:return false
++	if evidence.original.get("item_class_row")!=raw or evidence.original.get("item_class_id")!=witness.get("item_class_id") or evidence.original.get("source_id")!=witness.get("source_id") or evidence.physical.get("provided_physical_id")!=witness.get("physical_id") or evidence.physical.get("enchant_level")!=witness.get("enchant") or evidence.physical.get("bless_code")!=witness.get("bless_raw"):return false
++	return witness.get("physical_id")==receipt.get("instance_id") and witness.get("source_id")==receipt.get("source_id") and witness.get("enchant")==receipt.get("enchant") and integer(witness.get("item_class_id")) and int(witness.item_class_id)>0 and raw.get("ID")==witness.item_class_id and raw.get("TestItem")==false and witness.get("bless_raw") in [1,2,3] and witness.get("quantity")==1 and witness.get("row_hash_encoding")=="Godot JSON.stringify sorted keys/full precision; semantic row hash, not original member byte hash" and witness.get("canonical_item_row_sha256")==JSON.stringify(raw,"",true,true).sha256_text()
+diff --git a/scripts/collections/equipment_collection_runtime.gd b/scripts/collections/equipment_collection_runtime.gd
+--- a/scripts/collections/equipment_collection_runtime.gd
++++ b/scripts/collections/equipment_collection_runtime.gd
+@@ -3,6 +3,7 @@
+ ## fuzzy name matching, PvP conversion, or per-frame collection scans.
+ const Core = preload("res://scripts/collections/equipment_collection_service.gd")
+ const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
++const PROVENANCE=preload("res://scripts/collections/current523_collection_provenance.gd")
+ const PATH: String = "res://data/collections/equipment_collections.json"
+ const SAVE_KEY: String = "equipment_collections"
+ var world
+@@ -142,6 +143,15 @@
+ 
+ func write_save(path: String, data: Dictionary) -> Error:
+ 	if save_blocked or not problem.is_empty(): return ERR_UNAVAILABLE
++	# New immutable item witnesses may be added by registration; existing ones
++	# cannot be rewritten/removed by another whole-save override.
++	var next_collection: Variant=data.get(SAVE_KEY)
++	for uid: String in progress.receipts:
++		var prior: Dictionary=progress.receipts[uid]
++		if prior.has("source_provenance"):
++			if not next_collection is Dictionary or not next_collection.get("receipts") is Dictionary:return ERR_INVALID_DATA
++			var after: Variant=next_collection.receipts.get(uid)
++			if not after is Dictionary or not _same_save_value(prior.source_provenance,after.get("source_provenance")):return ERR_INVALID_DATA
+ 	# Refuse an external/stale save replacement rather than resurrecting consumed gear.
+ 	var current_hash: String = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+ 	if _disk_path == path and current_hash != _disk_hash:
+@@ -231,6 +241,7 @@
+ 			"enchant":physical.get("level",0),"quantity":1,
+ 			"equipped":bool(world._is_instance_equipped(id)),
+ 			"locked":bool(world._item_locked(name_value,id)) or bool(world._item_locked(name_value)) or bool(physical.get("locked",false))}
++		out.gear[id]["source_provenance"]=PROVENANCE.capture(world,id)
+ 	return out
+ 
+ func candidates(cid: String, sid: String) -> Array:
+@@ -265,6 +276,9 @@
+ 	var requested_counts: Dictionary = {}
+ 	for raw_id: Variant in request.instance_ids:
+ 		var id: String = str(raw_id)
++		if not _same_save_value(snapshot_value.gear[id].get("source_provenance"),PROVENANCE.capture(world,id)):
++			_busy=false
++			return fail("source_witness_changed","등록 준비 후 원본/모델/실물 증거가 변경됐습니다")
+ 		var name_value: String = str(next_instances[id].name)
+ 		requested_counts[name_value] = int(requested_counts.get(name_value,0))+1
+ 	for name_value: String in requested_counts:
+diff --git a/scripts/collections/equipment_collection_service.gd b/scripts/collections/equipment_collection_service.gd
+--- a/scripts/collections/equipment_collection_service.gd
++++ b/scripts/collections/equipment_collection_service.gd
+@@ -1,5 +1,6 @@
+ extends RefCounted
+ class_name TwilightEquipmentCollectionService
++const PROVENANCE=preload("res://scripts/collections/current523_collection_provenance.gd")
+ ## Equipment-only service. No implicit inventory rename, item creation or save I/O.
+ ## Integrator supplies verified source IDs, explicit combat capabilities and one
+ ## synchronous atomic writer for the WHOLE adapted game snapshot.
+@@ -134,6 +135,7 @@
+ 				var receipt: Variant = state.receipts[item_id]
+ 				if not receipt is Dictionary:
+ 					return "영수증 형식 오류"
++				if not PROVENANCE.receipt_valid(receipt):return "컬렉션 원본 품목 증거 불일치"
+ 				if str(receipt.get("instance_id", "")) != item_id or str(receipt.get("collection_id", "")) != cid or str(receipt.get("slot_id", "")) != sid:
+ 					return "영수증 대상 불일치"
+ 				if not req.is_empty() and (str(receipt.get("canonical_name", "")) != str(req.name) or receipt.get("enchant") != req.enchant):
+@@ -184,6 +186,7 @@
+ 		return "다른 장비"
+ 	if item.get("enchant") != req.get("enchant"):
+ 		return "요구 강화 수치 불일치"
++	if item.has("source_provenance") and not PROVENANCE.receipt_valid({"instance_id":item.get("instance_id"),"source_id":item.get("source_id"),"enchant":item.get("enchant"),"source_provenance":item.source_provenance}):return "신규 등록 원본 품목 증거 불일치"
+ 	return ""
+ 
+ func candidates(snapshot: Dictionary, cid: String, slot_id: String) -> Array:
+@@ -290,6 +293,8 @@
+ 		next.receipts[item_id] = {"instance_id": item_id, "source_id": str(item.source_id), "original_name": str(item.name),
+ 			"canonical_name": str(req.name), "enchant": item.enchant, "collection_id": str(c.id), "slot_id": slot_id,
+ 			"request_id": request_id, "registered_at": str(request.get("timestamp", Time.get_datetime_string_from_system(true)))}
++		# Absence is recorded as pending, never inferred from a completed bool.
++		next.receipts[item_id]["source_provenance"]=item.get("source_provenance",PROVENANCE.pending("snapshot_witness_missing")).duplicate(true)
+ 		next.progress[str(c.id)][slot_id].append(item_id)
+ 		next.gear.erase(item_id)
+ 	next.requests[request_id] = payload

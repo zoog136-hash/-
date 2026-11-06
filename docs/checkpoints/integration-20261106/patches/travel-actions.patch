@@ -1,0 +1,107 @@
+diff --git a/scripts/world.gd b/scripts/world.gd
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -10271,6 +10271,14 @@
+ 	feedback_style = "slash"
+ 	resolving_combat_action = false
+ 
++var _current523_transition_actions=preload("res://scripts/maps/current523_transition_actions.gd").new()
++
++func prepare_current523_transition_actions(prior_actor_root: Node2D,prior_population: Node) -> Dictionary:
++	return _current523_transition_actions.prepare(self,prior_actor_root,prior_population)
++
++func cancel_current523_transition_actions(token: String,expected_combat_generation: int,committed_receipt: String) -> Dictionary:
++	return _current523_transition_actions.cancel(self,token,expected_combat_generation,committed_receipt)
++
+ func _clear_combat_actions() -> void:
+ 	EQUIPMENT523_INVOKE_DEBUFF.clear(self)
+ 	patch523_npc_spells.clear()
+diff --git a/scripts/maps/current523_transition_actions.gd b/scripts/maps/current523_transition_actions.gd
+--- /dev/null
++++ b/scripts/maps/current523_transition_actions.gd
+@@ -0,0 +1,85 @@
++extends RefCounted
++## Volatile cancellation receipts, not a save, teleport permission or buff clock.
++var prepared: Dictionary={}
++var receipts: Dictionary={}
++
++func failure(reason: String,epoch: int) -> Dictionary:
++	return {"ok":false,"reason":reason,"combat_generation":epoch,"transient_mutation":false}
++
++func context(world: Node) -> Array:
++	var source: Dictionary={}
++	if is_instance_valid(world.field_map) and world.field_map.get_meta("current523_generic_field",false)==true:
++		for key: String in ["native_land","definition","catalog_sha256","source_asset"]:
++			var value: Variant=world.field_map.get(key)
++			source[key]=value.duplicate(true) if value is Dictionary or value is Array else value
++	return [world.field_map,world.monsters_root,world.field_population,world.player,str(world.active_map_id),source]
++
++# Capture the actual departing owner/lives BEFORE save or owner replacement.
++func prepare(world: Node,root: Node2D,population: Node) -> Dictionary:
++	var epoch: int=int(world.combat_generation)
++	if not is_instance_valid(world.player):return failure("current_player_missing",epoch)
++	if not is_instance_valid(root) or not is_instance_valid(population) or root!=world.monsters_root or population!=world.field_population or not world.is_ancestor_of(root) or not world.is_ancestor_of(population):return failure("departing_owner_not_current",epoch)
++	if world.resolving_combat_action:return failure("combat_callback_in_progress",epoch)
++	if int(world.patch523_npc_spells.generation)!=epoch:return failure("npc_service_epoch_not_current",epoch)
++	var actors: Array=[];var queue: Array[Node]=[root]
++	while not queue.is_empty():
++		var node: Node=queue.pop_back()
++		for child: Node in node.get_children():
++			queue.append(child)
++			if child is TwilightMonster:actors.append({"actor":weakref(child),"life":child.life_id})
++	var token: String=Crypto.new().generate_random_bytes(16).hex_encode()
++	while prepared.has(token) or receipts.has(token):token=Crypto.new().generate_random_bytes(16).hex_encode()
++	prepared[token]={"world":weakref(world),"root":weakref(root),"population":weakref(population),"player":weakref(world.player),"epoch":epoch,"actors":actors}
++	return {"ok":true,"token":token,"combat_generation":epoch,"prior_actor_root_id":root.get_instance_id(),"prior_population_id":population.get_instance_id(),"actor_count":actors.size(),"transient_mutation":false}
++
++# ONLY after the map owner has confirmed its save and catalog adoption. Actors
++# must remain disabled until this returns ok. No rollback/refund/retry here.
++func cancel(world: Node,token: String,expected_epoch: int,committed_receipt: String) -> Dictionary:
++	var epoch: int=int(world.combat_generation)
++	if receipts.has(token):
++		var previous: Dictionary=receipts[token]
++		if previous.world!=world.get_instance_id() or previous.epoch!=expected_epoch or previous.receipt!=committed_receipt:return failure("transition_receipt_collision",epoch)
++		if epoch!=expected_epoch or (previous.get("complete",false) and previous.context!=context(world)):return failure("completed_transition_context_changed",epoch)
++		if previous.get("complete",false)!=true:return {"ok":false,"reason":"cleanup_outcome_uncertain","combat_generation":epoch,"transient_mutation":true}
++		var repeated: Dictionary=previous.result.duplicate(true);repeated["already_applied"]=true
++		return repeated
++	var capture: Dictionary=prepared.get(token,{})
++	if capture.is_empty() or committed_receipt.is_empty() or capture.world.get_ref()!=world or expected_epoch!=epoch or capture.epoch!=epoch:return failure("transition_owner_epoch_or_receipt_mismatch",epoch)
++	var root: Node=capture.root.get_ref();var population: Node=capture.population.get_ref()
++	if not is_instance_valid(root) or not is_instance_valid(population) or capture.player.get_ref()!=world.player or world.resolving_combat_action or int(world.patch523_npc_spells.generation)!=epoch:return failure("departing_owner_or_player_changed",epoch)
++	for row: Dictionary in capture.actors:
++		var actor: Node=row.actor.get_ref()
++		if not is_instance_valid(actor) or actor.life_id!=row.life or not root.is_ancestor_of(actor):return failure("departing_actor_life_or_owner_changed",epoch)
++	# Mark started before cancellation signals can re-enter this owner. A runtime
++	# interruption keeps a held receipt, never a second automatic cleanup.
++	var committed_context: Array=context(world)
++	receipts[token]={"world":world.get_instance_id(),"epoch":epoch,"receipt":committed_receipt,"complete":false,"context":committed_context}
++	world._cancel_player_attack(int(world.pending_attack.get("id",-1)))
++	world.pending_attack.clear()
++	world._clear_skill_charge()
++	world.halphas_star.combat.cancel_charge()
++	world.player.cancel_attack()
++	world.player.velocity=Vector2.ZERO
++	world.player.clear_click_path()
++	world.player.set_touch_vector(Vector2.ZERO)
++	if is_instance_valid(world.combat_flights):world.combat_flights.clear()
++	for row: Dictionary in capture.actors:
++		var actor: Node=row.actor.get_ref()
++		# Existing retirement owner removes only this departed actor's actions/
++		# self state, never NPC-applied player buffs or shared skill lifetimes.
++		world.patch523_npc_spells.forget(actor)
++		actor.source_boss_combat._cancel_pending_motion()
++		actor.motion.cancel_attack()
++	world.selected_monster=null;world.auto_target=null
++	world.auto_target_failed_paths.clear()
++	world.auto_target_next_search_ms=0;world.auto_target_failed_search_actor_count=-1
++	world.auto_repath_timer=0.0;world.auto_attack_timer=0.0;world.auto_stuck_time=0.0
++	world.manual_route_pending_target=Vector2.INF
++	if is_instance_valid(world.world_interactions):world.world_interactions.clear_selection()
++	world.loot_pickup.cancel()
++	if is_instance_valid(world.hud):world.hud.clear_target()
++	if epoch!=int(world.combat_generation) or committed_context!=context(world):return {"ok":false,"reason":"context_changed_during_cleanup","combat_generation":int(world.combat_generation),"transient_mutation":true}
++	var result: Dictionary={"ok":true,"already_applied":false,"combat_generation":epoch,"transient_mutation":true,"retired_actor_count":capture.actors.size(),"prior_actor_root_id":root.get_instance_id(),"prior_population_id":population.get_instance_id(),"player_buff_and_skill_state_preserved":true,"epoch_retained":true}
++	receipts[token]["complete"]=true;receipts[token]["result"]=result.duplicate(true)
++	prepared.erase(token)
++	return result

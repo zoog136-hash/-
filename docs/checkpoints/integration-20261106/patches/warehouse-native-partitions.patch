@@ -1,0 +1,273 @@
+diff --git a/scripts/loot/current523_native_stack.gd b/scripts/loot/current523_native_stack.gd
+--- a/scripts/loot/current523_native_stack.gd
++++ b/scripts/loot/current523_native_stack.gd
+@@ -22,6 +22,9 @@
+ static var _floor_record: Dictionary={}
+ static var _floor_commit_confirmed: bool=false
+ static var _partition_parent: String=""
++static var _warehouse_batch_parents: Dictionary={}
++static var _warehouse_batch_full_moves: Dictionary={}
++static var _warehouse_batch_events: Dictionary={}
+ 
+ class SupplierView extends Node:
+ 	var host: Node
+@@ -341,6 +344,9 @@
+ 		if before.is_empty():return "기존 원본 물리 증명 보존 필요"
+ 		var next: Variant=instances.get(uid)
+ 		if next==previous:continue
++		if authorizes(overrides) and _candidate_kind=="partition_warehouse_batch":
++			if _warehouse_batch_parents.has(uid):continue
++			if _warehouse_batch_full_moves.has(uid) and next==null and warehouse.get("instances",{}).get(uid)==previous:continue
+ 		if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
+ 		if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
+ 		if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
+@@ -358,6 +364,9 @@
+ 		var previous: Variant=world.warehouse.instances[uid]
+ 		if not previous is Dictionary or not previous.has(RECEIPT):continue
+ 		if warehouse.get("instances",{}).get(uid)==previous:continue
++		if authorizes(overrides) and _candidate_kind=="partition_warehouse_batch":
++			if _warehouse_batch_parents.has(uid):continue
++			if _warehouse_batch_full_moves.has(uid) and instances.get(uid)==previous:continue
+ 		if authorizes(overrides) and _candidate_kind=="partition_warehouse" and uid==_partition_parent:continue
+ 		if authorizes(overrides) and _candidate_kind=="warehouse_transfer" and instances.get(uid)==previous:continue
+ 		return "창고 원본 개체의 정확한 이동 소유자 필요 · 영수증 보존"
+@@ -402,11 +411,13 @@
+ 	for id: String in previous_partitions:
+ 		if next_partitions.get(id)!=previous_partitions[id]:return "원본 물리 분할 이력 변경 금지"
+ 	for id: String in next_partitions:
++		if not previous_partitions.has(id) and authorizes(overrides) and _candidate_kind=="partition_warehouse_batch" and _warehouse_batch_events.has(id):continue
+ 		if not previous_partitions.has(id) and not (authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"]):return "새 물리 분할은 정확한 이전 소유자 거래가 필요합니다"
+ 	var old_ledger: Variant=world.consumable_service.export_state().get(USES,{})
+ 	if not old_ledger is Dictionary:return "기존 원본 사용 장부 보존 필요"
+ 	for uid: String in old_ledger:
+ 		if ledger.get(uid)==old_ledger[uid]:continue
++		if authorizes(overrides) and _candidate_kind=="partition_warehouse_batch" and _warehouse_batch_parents.has(uid):continue
+ 		if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
+ 		if not world.item_instances.has(uid) or not world.item_instances[uid].has(RECEIPT):
+ 			if authorizes(overrides) and _candidate_kind=="floor_expire" and old_floor.has(uid):continue
+@@ -601,6 +612,77 @@
+ 	if saved!=OK:world.patch523_owner_state_problem="일괄 창고 저장 결과 미확정 · 정상 저장 불러오기 전 재이동 중지"
+ 	return {"ok":saved==OK,"save_attempted":true,"error":saved}
+ 
++static func _clear_warehouse_partition_candidate() -> void:
++	_candidate.clear();_candidate_kind=""
++	_warehouse_batch_parents.clear();_warehouse_batch_full_moves.clear();_warehouse_batch_events.clear()
++	busy=false
++
++# Rebuild every native split from the live parent and the quoted opaque IDs.
++# Only exact existing prepare_partition outputs can open the save guard below.
++static func save_partitioned_warehouse_batch(world: Node,payload: Dictionary,moves: Array,reservations: Dictionary) -> Dictionary:
++	if busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return {"ok":false,"save_attempted":false,"error":ERR_BUSY}
++	if reservations.is_empty() or moves.is_empty() or payload.size()!=4 or not payload.get("inventory") is Dictionary or not payload.get("item_instances") is Dictionary or not payload.get("warehouse") is Dictionary or not payload.warehouse.get("instances") is Dictionary or not payload.warehouse.get("stacks") is Dictionary or not payload.get("consumable_state") is Dictionary:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	var journal: Dictionary=world.consumable_service.export_state().duplicate(true)
++	var selected: Dictionary={};var parents: Dictionary={};var full: Dictionary={};var children: Dictionary={};var events: Dictionary={};var amounts: Dictionary={}
++	var direction: String=""
++	for move: Variant in moves:
++		if not move is Dictionary or move.get("direction") not in ["deposit","withdraw"] or not move.get("physical_id") is String or not move.get("item_name") is String or not integer(move.get("quantity")):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		if direction.is_empty():direction=move.direction
++		if direction!=move.direction:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		var uid: String=move.physical_id;var name_value: String=move.item_name;var quantity: int=int(move.quantity)
++		if selected.has(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		selected[uid]=true
++		var from_instances: Dictionary=world.item_instances if direction=="deposit" else world.warehouse.instances
++		var old_destination: Dictionary=world.warehouse.instances if direction=="deposit" else world.item_instances
++		var from_after: Dictionary=payload.item_instances if direction=="deposit" else payload.warehouse.instances
++		var to_after: Dictionary=payload.warehouse.instances if direction=="deposit" else payload.item_instances
++		var owned: Dictionary=proof_entry(from_instances.get(uid),uid)
++		if owned.is_empty() or owned.record.get("name")!=name_value or quantity<1 or quantity>99 or quantity>int(owned.remaining) or old_destination.has(uid) or world._item_locked(name_value,uid) or world._item_locked(name_value):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		if direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		if int(amounts.get(name_value,0))>9007199254740991-quantity:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		amounts[name_value]=int(amounts.get(name_value,0))+quantity
++		if quantity==int(owned.remaining):
++			if reservations.has(uid) or from_after.has(uid) or to_after.get(uid)!=from_instances[uid]:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			full[uid]=true
++		else:
++			var reserved: Variant=reservations.get(uid)
++			if not reserved is Dictionary:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			var partition: Dictionary=prepare_partition(world,from_instances[uid],uid,quantity,journal,reserved)
++			if not partition.get("ok",false):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			var child: String=str(partition.child_id);var event: String=str(partition.partition_id)
++			if children.has(child) or events.has(event) or to_after.has(uid) or from_after.has(child) or from_after.get(uid)!=partition.parent or to_after.get(child)!=partition.child:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			parents[uid]=true;children[child]=true;events[event]=true
++			journal=partition.consumable_state
++	if parents.size()!=reservations.size() or not world.equipment_collections._same_save_value(journal,payload.consumable_state):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	# An unselected native object cannot change owner, fields or quantity.
++	var known: Dictionary={}
++	for pair: Array in [[world.item_instances,payload.item_instances],[world.warehouse.instances,payload.warehouse.instances]]:
++		for uid: String in pair[0]:
++			var previous: Variant=pair[0][uid]
++			if not previous is Dictionary or not previous.has(RECEIPT):continue
++			if known.has(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			known[uid]=true
++			if not selected.has(uid) and pair[1].get(uid)!=previous:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	var after_seen: Dictionary={}
++	for instances: Dictionary in [payload.item_instances,payload.warehouse.instances]:
++		for uid: String in instances:
++			if not instances[uid] is Dictionary or not instances[uid].has(RECEIPT):continue
++			if after_seen.has(uid) or (not known.has(uid) and not children.has(uid)):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			after_seen[uid]=true
++	for name_value: String in amounts:
++		var change: int=int(amounts[name_value])*(-1 if direction=="deposit" else 1)
++		if not integer(world.inventory.get(name_value,0)) or not integer(world.warehouse.stacks.get(name_value,0)) or payload.inventory.get(name_value,0)!=int(world.inventory.get(name_value,0))+change or payload.warehouse.stacks.get(name_value,0)!=int(world.warehouse.stacks.get(name_value,0))-change:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	busy=true;_candidate_kind="partition_warehouse_batch";_candidate=payload.duplicate(true)
++	_warehouse_batch_parents=parents.duplicate();_warehouse_batch_full_moves=full.duplicate();_warehouse_batch_events=events.duplicate()
++	var issue: String=override_error(world,payload)
++	if not issue.is_empty():
++		_clear_warehouse_partition_candidate()
++		return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA,"reason":issue}
++	var saved: Error=world._save_game(true,payload)
++	_clear_warehouse_partition_candidate()
++	if saved!=OK and str(world.patch523_owner_state_problem).is_empty():world.patch523_owner_state_problem="분할 창고 저장 결과 미확정 · 정상 저장 불러오기 전 재이동 중지"
++	return {"ok":saved==OK,"save_attempted":true,"error":saved,"partition_count":parents.size()}
++
+ static func floor_physical(floor: Array,uid: String) -> Dictionary:
+ 	for record: Dictionary in floor:
+ 		if record.get("physical_item",{}).get("id")==uid:return record.physical_item.get("data",{})
+@@ -753,16 +835,28 @@
+ 		if amount!=int(transferred.get(uid,0)):return "원본 물리 이전량과 분할 장부 합계 불일치"
+ 	return ""
+ 
+-static func prepare_partition(world: Node,parent: Dictionary,uid: String,quantity: int,state: Dictionary) -> Dictionary:
++static func partition_uid_available(world: Node,uid: String,ledger: Dictionary,events: Dictionary) -> bool:
++	if uid.is_empty() or world.item_instances.has(uid) or world.warehouse.instances.has(uid) or not floor_physical(world.ground_loot.records.values(),uid).is_empty() or ledger.has(uid):return false
++	for event: Variant in events.values():
++		if event is Dictionary and (event.get("child_id")==uid or event.get("parent_id")==uid):return false
++	return true
++
++static func prepare_partition(world: Node,parent: Dictionary,uid: String,quantity: int,state: Dictionary,reserved: Dictionary={}) -> Dictionary:
+ 	var owned: Dictionary=proof_entry(parent,uid)
+ 	if owned.is_empty() or quantity<1 or quantity>=int(owned.remaining):return _failure("실제 원본 잔량 안의 부분 수량 필요")
+ 	var events: Variant=state.get(PARTITIONS,{})
+ 	var ledger: Variant=state.get(USES,{})
+ 	if not events is Dictionary or not ledger is Dictionary:return _failure("원본 분할·사용 장부 형식 보존")
+-	var child_id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+-	while world.item_instances.has(child_id) or world.warehouse.instances.has(child_id) or not floor_physical(world.ground_loot.records.values(),child_id).is_empty() or ledger.has(child_id):child_id=Crypto.new().generate_random_bytes(16).hex_encode()
+-	var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+-	while events.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
++	var child_id: String="";var id: String=""
++	if reserved.is_empty():
++		child_id=Crypto.new().generate_random_bytes(16).hex_encode()
++		while not partition_uid_available(world,child_id,ledger,events):child_id=Crypto.new().generate_random_bytes(16).hex_encode()
++		id=Crypto.new().generate_random_bytes(16).hex_encode()
++		while events.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
++	else:
++		if reserved.size()!=2 or not reserved.get("child_id") is String or not reserved.get("partition_id") is String:return _failure("검토한 분할 개체·장부 ID 필요")
++		child_id=reserved.child_id;id=reserved.partition_id
++		if id.is_empty() or events.has(id) or not partition_uid_available(world,child_id,ledger,events):return _failure("검토 이후 분할 ID 충돌 · 원래 소유 보존")
+ 	var receipt: Dictionary=owned.receipt.duplicate(true);receipt.schema=2;receipt.issued_physical_id=child_id;receipt.granted_quantity=quantity
+ 	receipt.origin={"kind":"owned_quantity_partition","partition_id":id,"parent_physical_id":uid,"parent_receipt":owned.receipt.duplicate(true)}
+ 	var child: Dictionary=parent.duplicate(true);child[QUANTITY]=quantity;child[RECEIPT]=receipt;child.source_native_stack_used_quantity=0;child.erase(TRANSFERRED)
+diff --git a/scripts/warehouse/explicit_warehouse_batch.gd b/scripts/warehouse/explicit_warehouse_batch.gd
+--- a/scripts/warehouse/explicit_warehouse_batch.gd
++++ b/scripts/warehouse/explicit_warehouse_batch.gd
+@@ -26,7 +26,7 @@
+ 	# can read its old receipt, but cannot execute it; new intents need new quotes.
+ 	return {"ok":true,"owner_load_accepted":true,"invalidated_quotes":count,"pending_intent_replayed":false}
+ 
+-func prepare(world: Node,direction: String,entries: Array) -> Dictionary:
++func prepare(world: Node,direction: String,entries: Array,reserved_partitions: Dictionary={}) -> Dictionary:
+ 	if busy or uncertain or NATIVE.busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return fail("owner_held","창고 거래 저장 보호 중")
+ 	if direction not in ["deposit","withdraw"] or entries.is_empty():return fail("invalid_intents","방향과 명시적 선택 목록이 필요합니다")
+ 	var before: Dictionary=snapshot(world)
+@@ -34,6 +34,8 @@
+ 	var warehouse=STORE.new();warehouse.stacks=before.warehouse.stacks.duplicate(true);warehouse.instances=before.warehouse.instances.duplicate(true)
+ 	var source: Dictionary=before.item_instances if direction=="deposit" else before.warehouse.instances
+ 	var seen: Dictionary={};var native_moves: Array=[];var reviewed: Array=[];var totals: Dictionary={}
++	var journal: Dictionary=before.consumable_state.duplicate(true)
++	var partitions: Dictionary={};var lineage: Array=[]
+ 	var weight: int=world._inventory_total_weight()
+ 	for raw: Variant in entries:
+ 		if not raw is Dictionary or not raw.get("record") is Dictionary or not raw.get("item_name") is String or not raw.get("instance_id") is String or not raw.get("source_id") is String or not NATIVE.integer(raw.get("quantity")):return fail("invalid_intent","아이템·정확한 원문 레코드·소유 ID·정수 수량이 필요합니다")
+@@ -55,7 +57,7 @@
+ 		if native_claim:
+ 			var owned: Dictionary=NATIVE.proof_entry(source.get(uid),uid)
+ 			if owned.is_empty() or owned.record!=record or owned.record.get("sourceId")!=raw.source_id:return fail("native_identity","실제 원본 묶음과 검토 정체가 다릅니다")
+-			if quantity!=int(owned.remaining):return fail("native_partition_pending","원본 묶음 일부 분할의 다중 거래 계약은 보류입니다. 전체 배치는 저장하지 않습니다")
++			if quantity>int(owned.remaining):return fail("native_quantity","선택한 원본 묶음의 잔량보다 많습니다")
+ 			if world._item_locked(name_value) or world._item_locked(name_value,uid):return fail("locked","잠긴 원본 개체는 이동할 수 없습니다")
+ 			if direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return fail("native_storage","원본 보관·장착 조건 미충족")
+ 			var from_counts: Dictionary=inventory if direction=="deposit" else warehouse.stacks
+@@ -64,7 +66,21 @@
+ 			var to_instances: Dictionary=warehouse.instances if direction=="deposit" else physical
+ 			if not NATIVE.integer(from_counts.get(name_value,0)) or int(from_counts.get(name_value,0))<quantity or not NATIVE.integer(to_counts.get(name_value,0)) or int(to_counts.get(name_value,0))>9007199254740991-quantity or to_instances.has(uid):return fail("native_collision","원본 수량·개체 충돌")
+ 			if direction=="deposit" and int(to_counts.get(name_value,0))>1000000-quantity:return fail("warehouse_limit","기존 창고 저장 한도 초과")
+-			to_instances[uid]=from_instances[uid].duplicate(true);from_instances.erase(uid)
++			if quantity==int(owned.remaining):
++				if reserved_partitions.has(uid):return fail("partition_changed","검토한 분할 조건이 전체 이동으로 바뀌었습니다")
++				to_instances[uid]=from_instances[uid].duplicate(true);from_instances.erase(uid)
++			else:
++				if not reserved_partitions.is_empty() and not reserved_partitions.has(uid):return fail("partition_selection_changed","검토하지 않은 새 분할 부모입니다")
++				var reserved: Variant=reserved_partitions.get(uid,{})
++				if not reserved is Dictionary:return fail("partition_ids","검토한 분할 ID 형식 오류")
++				var partition: Dictionary=NATIVE.prepare_partition(world,from_instances[uid],uid,quantity,journal,reserved)
++				if not partition.get("ok",false):return fail("partition_rejected",str(partition.get("message",partition.get("reason","분할 소유 증명 보류"))))
++				var child_id: String=str(partition.child_id)
++				if from_instances.has(child_id) or to_instances.has(child_id):return fail("partition_collision","계획된 분할 개체 충돌")
++				from_instances[uid]=partition.parent;to_instances[child_id]=partition.child
++				journal=partition.consumable_state
++				partitions[uid]={"child_id":child_id,"partition_id":partition.partition_id}
++				lineage.append({"parent_physical_id":uid,"child_physical_id":child_id,"partition_id":partition.partition_id,"quantity":quantity,"parent_remaining":int(owned.remaining)-quantity,"direction":direction})
+ 			from_counts[name_value]=int(from_counts[name_value])-quantity
+ 			if int(from_counts[name_value])==0:from_counts.erase(name_value)
+ 			to_counts[name_value]=int(to_counts.get(name_value,0))+quantity
+@@ -86,7 +102,13 @@
+ 		weight+=delta if direction=="withdraw" else -delta
+ 		if direction=="withdraw" and weight>world._carrying_capacity():return fail("weight_limit","누적 소지 무게 한도 초과")
+ 		reviewed.append(raw.duplicate(true))
+-	return {"ok":true,"before":before,"direction":direction,"entries":reviewed,"native_moves":native_moves,"payload":{"inventory":inventory,"item_instances":physical,"warehouse":warehouse.snapshot()}}
++	for uid: String in reserved_partitions:
++		if not partitions.has(uid):return fail("partition_selection_changed","검토한 분할 부모가 현재 선택에 없습니다")
++	var payload: Dictionary={"inventory":inventory,"item_instances":physical,"warehouse":warehouse.snapshot()}
++	if not partitions.is_empty():payload["consumable_state"]=journal
++	var ownership_error: String=NATIVE.state_error(inventory,physical,journal,warehouse.snapshot(),world._ground_drops_snapshot())
++	if not ownership_error.is_empty():return fail("ownership_plan_rejected",ownership_error)
++	return {"ok":true,"before":before,"direction":direction,"entries":reviewed,"native_moves":native_moves,"partition_ids":partitions,"partition_lineage":lineage,"payload":payload}
+ 
+ func quote(world: Node,direction: String,entries: Array) -> Dictionary:
+ 	var plan: Dictionary=prepare(world,direction,entries)
+@@ -94,7 +116,7 @@
+ 	var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+ 	while quotes.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
+ 	plan["world_id"]=world.get_instance_id();quotes[id]=plan.duplicate(true)
+-	return {"ok":true,"quote_id":id,"direction":direction,"entries":plan.entries.duplicate(true),"atomic":true,"save_count":1,"transfer_limit_per_entry":99,"cost_policy":"existing_single_transfer_no_added_fee","confirmation_required":true,"native_partial_partition_supported":false}
++	return {"ok":true,"quote_id":id,"direction":direction,"entries":plan.entries.duplicate(true),"partition_lineage":plan.partition_lineage.duplicate(true),"atomic":true,"save_count":1,"transfer_limit_per_entry":99,"cost_policy":"existing_single_transfer_no_added_fee","confirmation_required":true,"native_partial_partition_supported":true,"awakening_partial_partition_supported":false,"native_partial_scope":"existing_source_native_stack_receipt_schema1_or2"}
+ 
+ func confirm(world: Node,quote_id: String,request_id: String) -> Dictionary:
+ 	if request_id.strip_edges().is_empty():return fail("request_id_required","확정 요청 ID 필요")
+@@ -107,13 +129,13 @@
+ 	var plan: Dictionary=quotes.get(quote_id,{})
+ 	if plan.is_empty() or plan.world_id!=world.get_instance_id():return fail("quote_missing","실제 검토 목록을 다시 준비하세요")
+ 	if world.equipment_collections._same_save_value(snapshot(world),plan.before)!=true:return fail("stale_quote","검토 후 소유/장착/창고/소비 상태가 변경됐습니다")
+-	var current: Dictionary=prepare(world,plan.direction,plan.entries)
++	var current: Dictionary=prepare(world,plan.direction,plan.entries,plan.partition_ids)
+ 	if not current.get("ok",false):return current
+ 	if world.equipment_collections._same_save_value(current.payload,plan.payload)!=true:return fail("candidate_changed","확정 후보가 검토 목록과 달라졌습니다")
+ 	busy=true
+ 	var pending: Dictionary={"ok":false,"code":"save_outcome_uncertain","saved":null,"save_confirmed":false,"live_adopted":false,"retry_allowed":false,"quote_id":quote_id,"request_id":request_id}
+ 	receipts[request_id]={"world_id":world.get_instance_id(),"quote_id":quote_id,"result":pending}
+-	var saved: Dictionary=NATIVE.save_full_warehouse_batch(world,plan.payload,plan.native_moves)
++	var saved: Dictionary=NATIVE.save_full_warehouse_batch(world,plan.payload,plan.native_moves) if plan.partition_ids.is_empty() else NATIVE.save_partitioned_warehouse_batch(world,plan.payload,plan.native_moves,plan.partition_ids)
+ 	if not saved.get("ok",false):
+ 		uncertain=saved.get("save_attempted",false);busy=false
+ 		pending["save_attempted"]=uncertain
+@@ -122,11 +144,20 @@
+ 		pending["save_error"]=saved.get("error",ERR_INVALID_DATA)
+ 		receipts[request_id]["result"]=pending.duplicate(true)
+ 		return pending.duplicate(true)
++	if plan.payload.has("consumable_state"):
++		world.consumable_service.import_state(plan.payload.consumable_state)
++		if not world.equipment_collections._same_save_value(world.consumable_service.export_state(),plan.payload.consumable_state):
++			uncertain=true;busy=false
++			world.patch523_owner_state_problem="분할 창고 저장 후 장부 채택 미확정 · 정상 저장 불러오기 필요"
++			var adoption: Dictionary={"ok":false,"code":"post_save_adoption_pending","saved":true,"save_confirmed":true,"live_adopted":false,"live_adoption_incomplete":true,"retry_allowed":false,"quote_id":quote_id,"request_id":request_id}
++			receipts[request_id]["result"]=adoption.duplicate(true)
++			return adoption
+ 	world.inventory=plan.payload.inventory;world.item_instances=plan.payload.item_instances
+ 	world.warehouse.stacks=plan.payload.warehouse.stacks;world.warehouse.instances=plan.payload.warehouse.instances
+ 	world.deferred_save.cancel()
+ 	world._update_hud()
+ 	if world.hud.has_method("refresh_service"):world.hud.call("refresh_service")
+ 	var result: Dictionary={"ok":true,"saved":true,"save_confirmed":true,"save_attempted":true,"live_adopted":true,"quote_id":quote_id,"request_id":request_id,"direction":plan.direction,"entries":plan.entries.duplicate(true),"save_count":1}
++	result["partition_lineage"]=plan.partition_lineage.duplicate(true)
+ 	receipts[request_id]["result"]=result.duplicate(true);quotes.erase(quote_id);busy=false
+ 	return result

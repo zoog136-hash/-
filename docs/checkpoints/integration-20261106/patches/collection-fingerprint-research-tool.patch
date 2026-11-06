@@ -1,0 +1,226 @@
+--- /dev/null
++++ b/audit/build_itembook_fingerprint_evidence.py
+@@ -0,0 +1,223 @@
++"""Read original JSON and retained official-guide evidence; write audit evidence only.
++
++This is not a model compiler, save migration, native mapping or game admission API.
++Canonical row hashes identify this audit's JSON representation, not original row bytes.
++"""
++import collections
++import hashlib
++import json
++import re
++from pathlib import Path
++
++OUT = Path(__file__).parent
++SOURCE = Path('/workspace/scratch/current523/content')
++RETAINED = Path('/tmp/pr281-consumer-audit')
++ARCHIVE = 'd5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
++
++def canonical(value):
++    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
++
++def digest(value):
++    return hashlib.sha256(canonical(value).encode()).hexdigest()
++
++def write(name, value):
++    (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
++
++names = ['ItemBookCollection', 'ItemBookCollectionSlot', 'ItemBookCollectionSlotBonus',
++         'ItemBookCard', 'ItemBookCardForCollection', 'ItemBookCardForItem',
++         'ItemBookItem', 'ItemClass', 'Bonus', 'BonusType', 'Unit', 'DescData_Korean']
++tables = {n: json.loads((SOURCE / (n + '.json')).read_text(encoding='utf-8-sig'))['rows'] for n in names}
++by_id = {n: {x['ID']: x for x in rows} for n, rows in tables.items()}
++
++def links(table, field):
++    result = collections.defaultdict(list)
++    for row in tables[table]:
++        result[row[field]].append(row)
++    return result
++
++collection_cards = links('ItemBookCardForCollection', 'ItemBookCollectionID')
++card_items = links('ItemBookCardForItem', 'ItemBookCardID')
++collection_slots = links('ItemBookCollectionSlot', 'ItemBookCollectionID')
++slot_bonuses = links('ItemBookCollectionSlotBonus', 'ItemBookCollectionSlotID')
++
++def ref(table, row):
++    return {'table': table, 'id': row['ID'], 'canonical_row_sha256': digest(row)}
++
++def desc(value):
++    return by_id['DescData_Korean'].get(value, {}).get('Description', '')
++
++def sorted_multiset(values):
++    return sorted(values, key=canonical)
++
++native = []
++for root in tables['ItemBookCollection']:
++    refs = [ref('ItemBookCollection', root)]
++    holds = []
++    cards = []
++    for link in collection_cards[root['ID']]:
++        refs.append(ref('ItemBookCardForCollection', link))
++        card_id = link['ItemBookCardID']
++        card = by_id['ItemBookCard'].get(card_id)
++        if card is None:
++            holds.append('missing_ItemBookCard:' + str(card_id))
++        else:
++            refs.append(ref('ItemBookCard', card))
++        leaves = []
++        for item_link in card_items[card_id]:
++            refs.append(ref('ItemBookCardForItem', item_link))
++            item = by_id['ItemBookItem'].get(item_link['ItemBookItemID'])
++            if item is None:
++                holds.append('missing_ItemBookItem:' + str(item_link['ItemBookItemID']))
++                continue
++            raw = by_id['ItemClass'].get(item['ItemClassID'])
++            refs.append(ref('ItemBookItem', item))
++            if raw is None:
++                holds.append('missing_ItemClass:' + str(item['ItemClassID']))
++                continue
++            refs.append(ref('ItemClass', raw))
++            if raw.get('TestItem') is not False:
++                holds.append('TestItem_or_undeclared_TestItem:' + str(raw['ID']))
++            leaves.append({'item_book_item_id': item['ID'], 'item_class_id': raw['ID'],
++                           'original_name': raw['Name'], 'identified_desc_id': raw['IdentifiedDescID'],
++                           'identified_text': desc(raw['IdentifiedDescID']),
++                           'enchant': item['Enchant'], 'quantity': item['Amount'],
++                           'bless_code': item['BlessCode'], 'elemental_type': item['ElementalType'],
++                           'elemental_enchant': item['ElementalEnchant']})
++        if not leaves:
++            holds.append('empty_card:' + str(card_id))
++        cards.append({'card_id': card_id, 'linked_leaves': sorted_multiset(leaves),
++                      'aggregation': 'unspecified_in_rows_not_inferred'})
++    if not cards:
++        holds.append('no_collection_cards')
++    effects = []
++    slots = []
++    for slot in collection_slots[root['ID']]:
++        refs.append(ref('ItemBookCollectionSlot', slot))
++        slots.append(dict(slot))
++        for link in slot_bonuses[slot['ID']]:
++            refs.append(ref('ItemBookCollectionSlotBonus', link))
++            bonus = by_id['Bonus'].get(link['BonusID'])
++            typ = by_id['BonusType'].get(bonus.get('BonusTypeID')) if bonus else None
++            unit = by_id['Unit'].get(typ.get('UnitID')) if typ else None
++            if not bonus or not typ or not unit:
++                holds.append('missing_bonus_type_or_unit:' + str(link['ID']))
++                continue
++            for table, row in [('Bonus', bonus), ('BonusType', typ), ('Unit', unit)]:
++                refs.append(ref(table, row))
++            effects.append({'slot_id': slot['ID'], 'slot_no': slot['SlotNo'],
++                            'game_class_id': link['GameClassID'], 'bonus_id': bonus['ID'],
++                            'bonus_type_id': typ['ID'], 'bonus_type_name': typ['Name'],
++                            'unit_id': unit['ID'], 'unit_name': unit['Name'], 'raw_value': bonus['Value'],
++                            'application_type': bonus['BonusApplicationTypeID'],
++                            'application_target': bonus['BonusApplicationTargetID']})
++    if not effects:
++        holds.append('no_collection_bonus')
++    semantic = {'cards_multiset': sorted_multiset([
++        sorted_multiset([{k: v for k, v in leaf.items() if k not in
++                         ['item_book_item_id', 'original_name', 'identified_desc_id', 'identified_text']}
++                        for leaf in card['linked_leaves']]) for card in cards]),
++        'effects_multiset': sorted_multiset([{k: v for k, v in x.items() if k not in
++                                             ['slot_id', 'slot_no', 'bonus_id']} for x in effects]),
++        'conditions': {k: root[k] for k in ['GradeID', 'MainTabType', 'IsEvent', 'Level', 'ServerLimitSetID', 'Alchemy', 'ExpireDateTimeID']}}
++    native.append({'collection_id': root['ID'], 'root': root, 'title': desc(root['DescID']),
++                   'cards': cards, 'bonus_slots': slots, 'effects': effects,
++                   'semantic_fingerprint': digest(semantic),
++                   'same_archive_identity_fingerprint': digest({'archive': ARCHIVE, 'refs': refs}),
++                   'references': refs, 'structural_holds': sorted(set(holds)),
++                   'slot_role_note': 'Native collection SlotNo is a bonus-slot relation; no eqc material-slot index equivalence inferred.'})
++
++legacy = json.loads(Path('/workspace/-/data/collections/equipment_collections.json').read_text())
++guide = json.loads((RETAINED / 'official-guide-alias-comparison.json').read_text())
++guide_rows = {x['alias']: x for x in guide['rows']}
++# Audit comparison only: these Unit1 operand correspondences already exist in
++# native item projection and the equipment-collection stat capability map.
++# Unsupported units/types are NOT guessed, converted, summed or admitted.
++flat_labels = {'HPPlus': 'max_hp', 'MPPlus': 'max_mp',
++    'MeleeDamage': 'melee_damage', 'RangeDamage': 'ranged_damage', 'MagicDamage': 'magic_damage',
++    'MeleeHit': 'melee_hit', 'RangeHit': 'ranged_hit', 'MagicHit': 'magic_hit',
++    'DamageReduction': 'damage_reduction', 'MagicResist': 'mr', 'SpellPower': 'sp',
++    'Strength': 'str', 'Dexterity': 'dex', 'Constitution': 'con',
++    'Intelligence': 'int', 'Wisdom': 'wis', 'Charisma': 'cha'}
++
++def whitespace(value):
++    return ' '.join(value.split())
++
++def display_comparison(c, candidate):
++    rows = [guide_rows[a]['official_row'] for a in c['source_ids']
++            if guide_rows.get(a, {}).get('official_row') and
++            guide_rows[a]['official_row']['cells'][0] == candidate['title']]
++    comparisons = []
++    for row in rows:
++        tokens = []
++        unsupported = []
++        for card in candidate['cards']:
++            # A display collapse never changes linked leaf multiplicity or
++            # asserts that the bless-specific leaves are gameplay alternatives.
++            labels = {(x['identified_text'], x['enchant'], x['quantity']) for x in card['linked_leaves']}
++            if len(labels) != 1:
++                unsupported.append('card_has_multiple_display_requirements:' + str(card['card_id']))
++                continue
++            name, enchant, amount = next(iter(labels))
++            if amount != 1 or enchant <= 0:
++                unsupported.append('guide_quantity_or_unmarked_enchant_not_typed:' + str(card['card_id']))
++                continue
++            tokens.append(whitespace('+' + str(enchant) + ' ' + name))
++        official_tokens = sorted(whitespace(x) for x in row['cells'][2].split(','))
++        materials_equal = not unsupported and sorted(tokens) == official_tokens
++        source_effects = []
++        unsupported_effects = []
++        for effect in candidate['effects']:
++            name = effect['bonus_type_name']
++            if name not in flat_labels or effect['unit_id'] != 1 or effect['unit_name'] != 'Value' or effect['game_class_id'] != 0 or effect['application_type'] != 0 or effect['application_target'] != 0:
++                unsupported_effects.append(effect['bonus_id'])
++            else:
++                source_effects.append([flat_labels[name], 'flat', effect['raw_value']])
++        legacy_effects = [[x['key'], x['unit'], x['value']] for x in c['effects']]
++        effects_equal = not unsupported_effects and sorted_multiset(source_effects) == sorted_multiset(legacy_effects)
++        comparisons.append({'official_table': row['table'], 'official_row_including_header': row['row_including_header'],
++            'material_display_multiset_equal': materials_equal,
++            'material_display_holds': unsupported,
++            'supported_flat_effect_multiset_equal': effects_equal,
++            'unsupported_bonus_ids': unsupported_effects,
++            'identity_proof': False,
++            'note': 'Display-only comparison does not prove blessing acceptance, engraving equivalence, material-slot binding, native source version or runtime eligibility.'})
++    return comparisons
++
++comparisons = []
++for c in legacy['collections']:
++    # Title lookup is discovery only, never admission or a native ID mapping.
++    candidates = [x for x in native if x['title'] in c['source_names']]
++    comparisons.append({'legacy_key': c['id'],
++        'legacy_full_requirement_fingerprint': digest(c['requirements']),
++        'legacy_full_effect_fingerprint': digest(c['effects']),
++        'legacy_requirements': c['requirements'], 'legacy_effects': c['effects'],
++        'official_rows': [guide_rows.get(a) for a in c['source_ids']],
++        'title_discovery_candidates': [{'collection_id': x['collection_id'],
++            'semantic_fingerprint': x['semantic_fingerprint'],
++            'item_classes': sorted(set(y['item_class_id'] for z in x['cards'] for y in z['linked_leaves'])),
++            'bless_codes': sorted(set(y['bless_code'] for z in x['cards'] for y in z['linked_leaves'])),
++            'official_display_comparisons': display_comparison(c, x),
++            'structural_holds': x['structural_holds']} for x in candidates],
++        'binding_status': 'held_no_complete_typed_legacy_identity',
++        'missing': ['legacy requirements do not declare ItemClass IDs or accepted blessing/elemental leaves',
++                    'official guide has no same-archive native root/card/material-slot identity contract',
++                    'native bonus SlotNo must not be used as an eqc material slot number']})
++
++source_index = {x['path']: x for x in json.loads((SOURCE.parent / 'index.json').read_text())}
++write('native-collection-fingerprints.json', {'archive_sha256': ARCHIVE, 'source_version': 523,
++    'canonicalization': 'UTF-8 sorted-key compact JSON; canonical row hashes are audit hashes, not raw member hashes',
++    'source_members': [{'path': 'content/' + n + '.json', 'bytes': (SOURCE / (n + '.json')).stat().st_size,
++                        'sha256': hashlib.sha256((SOURCE / (n + '.json')).read_bytes()).hexdigest(),
++                        'provided_member_inventory': source_index['content/' + n + '.json']} for n in names],
++    'collections': native})
++write('legacy-candidate-comparison.json', comparisons)
++write('summary.json', {'source_roots': len(native), 'legacy_keys': len(comparisons),
++    'title_discovery_no_candidate': sum(not x['title_discovery_candidates'] for x in comparisons),
++    'title_discovery_one_candidate': sum(len(x['title_discovery_candidates']) == 1 for x in comparisons),
++    'title_discovery_multiple_candidates': sum(len(x['title_discovery_candidates']) > 1 for x in comparisons),
++    'keys_with_material_and_supported_flat_effect_display_match': sum(any(
++        y['material_display_multiset_equal'] and y['supported_flat_effect_multiset_equal']
++        for x in row['title_discovery_candidates'] for y in x['official_display_comparisons']) for row in comparisons),
++    'exact_native_saved_bindings_proven': 0, 'prospective_bindings_implemented': 0,
++    'note': 'Candidate cardinality is not full requirement/effect equality, activation, or identity proof. No save or gameplay code changed.'})
++print((OUT / 'summary.json').read_text())

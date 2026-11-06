@@ -1,0 +1,65 @@
+--- a/scripts/monsters/patch523_npc_extensions.gd
++++ b/scripts/monsters/patch523_npc_extensions.gd
+@@ -167,11 +167,22 @@
+ 			service.world._on_player_poison_tick(damage)
+ 			if int(service.world.combat_generation) != generation or not service.player_buffs.has(id): return
+ 
++func environment_attributes() -> Array:
++	if service == null: return []
++	# Current originals are explicit registry roots, not the whole source table.
++	# An older catalog without the registry API stays held in this mode.
++	if service.catalog.get("source_mode") == "current523_original":
++		return service.catalog.environment_attributes() if service.catalog.has_method("environment_attributes") else []
++	var result: Array = []
++	for entry: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values():
++		result.append(entry.row)
++	return result
++
+ func bind_current(attribute_id: int) -> bool:
+ 	if not is_instance_valid(service.world.get("field_map")): return false
+ 	var found: bool = false
+-	for entry: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values():
+-		if int(entry.row.ID) == attribute_id: found = true
++	for attribute: Dictionary in environment_attributes():
++		if int(attribute.ID) == attribute_id: found = true
+ 	if not found: return false
+ 	own_attribute = attribute_id; own_map = str(service.world.active_map_id); own_center = service.world.player.global_position
+ 	return true
+@@ -247,12 +258,12 @@
+ 			var t: Dictionary = binding.territory
+ 			if int(binding.attribute.TerritoryID) == 0 or (int(t.get("LandID",-1)) == land_id and xy[0] >= t.StartX and xy[0] <= t.EndX and xy[1] >= t.StartY and xy[1] <= t.EndY): result.append(binding)
+ 	if own_attribute > 0 and str(service.world.active_map_id) == own_map and actor.global_position.distance_to(own_center) <= own_radius:
+-		for entry: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values():
+-			if int(entry.row.ID) == own_attribute:
++		for attribute: Dictionary in environment_attributes():
++			if int(attribute.ID) == own_attribute:
+ 				var duplicate: bool = false
+ 				for old: Dictionary in result:
+ 					if int(old.attribute.ID) == own_attribute: duplicate = true
+-				if not duplicate: result.append({"attribute":entry.row,"buff":service.catalog.buff_details(int(entry.row.Value)),"host_context":true})
++				if not duplicate: result.append({"attribute":attribute,"buff":service.catalog.buff_details(int(attribute.Value)),"host_context":true})
+ 	var own_extra: Dictionary = remaining.own_binding(actor)
+ 	if not own_extra.is_empty():
+ 		var exists: bool = false
+--- a/scripts/ui/patch523_npc_panel.gd
++++ b/scripts/ui/patch523_npc_panel.gd
+@@ -206,8 +206,8 @@
+ 	for source_id: Variant in service.catalog.content.get("boss_npc_ids",[]): ids.append(int(source_id))
+ 	if environment_mode:
+ 		ids.clear()
+-		for entry: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values():
+-			var id: int = int(entry.row.LandID)
++		for attribute: Dictionary in service.extensions.environment_attributes():
++			var id: int = int(attribute.LandID)
+ 			if not ids.has(id): ids.append(id)
+ 		ids.sort()
+ 	for id: Variant in ids:
+@@ -350,7 +350,7 @@
+ 			if not update_remaining(key,value): spin.set_value_no_signal(service.extensions.remaining.get(key)))
+ 	remaining_buff_choice = OptionButton.new(); remaining_buff_choice.name = "BossRemainingBuff"; remaining_buff_choice.fit_to_longest_item = false; remaining_buff_choice.clip_text = true; remaining_buff_choice.expand_icon = true; box.add_child(remaining_buff_choice)
+ 	var environment_ids: Dictionary = {}
+-	for source: Dictionary in service.catalog.content.tables.get("LandAttribute",{}).values(): environment_ids[int(source.row.Value)] = true
++	for attribute: Dictionary in service.extensions.environment_attributes(): environment_ids[int(attribute.Value)] = true
+ 	for entry: Dictionary in service.catalog.content.tables.get("BuffClass",{}).values():
+ 		var profile: String = "전체 환경 보너스" if environment_ids.has(int(entry.row.ID)) else "개별 드랍 보너스만"
+ 		var drop_profile: bool = false

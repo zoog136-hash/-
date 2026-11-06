@@ -1,0 +1,105 @@
+diff --git a/scripts/maps/current523_transition_actions.gd b/scripts/maps/current523_transition_actions.gd
+--- a/scripts/maps/current523_transition_actions.gd
++++ b/scripts/maps/current523_transition_actions.gd
+@@ -2,6 +2,7 @@
+ ## Volatile cancellation receipts, not a save, teleport permission or buff clock.
+ var prepared: Dictionary={}
+ var receipts: Dictionary={}
++var discarded: Dictionary={}
+ 
+ func failure(reason: String,epoch: int) -> Dictionary:
+ 	return {"ok":false,"reason":reason,"combat_generation":epoch,"transient_mutation":false}
+@@ -15,7 +16,7 @@
+ 	return [world.field_map,world.monsters_root,world.field_population,world.player,str(world.active_map_id),source]
+ 
+ # Capture the actual departing owner/lives BEFORE save or owner replacement.
+-func prepare(world: Node,root: Node2D,population: Node) -> Dictionary:
++func prepare(world: Node,root: Node2D,population: Node,before_attempt_guard: Callable=Callable()) -> Dictionary:
+ 	var epoch: int=int(world.combat_generation)
+ 	if not is_instance_valid(world.player):return failure("current_player_missing",epoch)
+ 	if not is_instance_valid(root) or not is_instance_valid(population) or root!=world.monsters_root or population!=world.field_population or not world.is_ancestor_of(root) or not world.is_ancestor_of(population):return failure("departing_owner_not_current",epoch)
+@@ -28,9 +29,54 @@
+ 			queue.append(child)
+ 			if child is TwilightMonster:actors.append({"actor":weakref(child),"life":child.life_id})
+ 	var token: String=Crypto.new().generate_random_bytes(16).hex_encode()
+-	while prepared.has(token) or receipts.has(token):token=Crypto.new().generate_random_bytes(16).hex_encode()
+-	prepared[token]={"world":weakref(world),"root":weakref(root),"population":weakref(population),"player":weakref(world.player),"epoch":epoch,"actors":actors}
++	while prepared.has(token) or receipts.has(token) or discarded.has(token):token=Crypto.new().generate_random_bytes(16).hex_encode()
++	prepared[token]={"world":weakref(world),"root":weakref(root),"population":weakref(population),"player":weakref(world.player),"epoch":epoch,"actors":actors,"phase":"prepared","before_context":context(world),"abort_guard":before_attempt_guard}
+ 	return {"ok":true,"token":token,"combat_generation":epoch,"prior_actor_root_id":root.get_instance_id(),"prior_population_id":population.get_instance_id(),"actor_count":actors.size(),"transient_mutation":false}
++
++func prepared_context_matches(world: Node,capture: Dictionary,expected_epoch: int) -> bool:
++	if capture.is_empty() or capture.world.get_ref()!=world or capture.epoch!=expected_epoch or int(world.combat_generation)!=expected_epoch:return false
++	var root: Node=capture.root.get_ref();var population: Node=capture.population.get_ref()
++	return is_instance_valid(root) and is_instance_valid(population) and world.is_ancestor_of(root) and world.is_ancestor_of(population) and root==world.monsters_root and population==world.field_population and capture.player.get_ref()==world.player and capture.before_context==context(world) and not world.resolving_combat_action and int(world.patch523_npc_spells.generation)==expected_epoch
++
++func prepared_lives_match(capture: Dictionary) -> bool:
++	var root: Node=capture.root.get_ref()
++	for row: Dictionary in capture.actors:
++		var actor: Node=row.actor.get_ref()
++		if not is_instance_valid(actor) or actor.life_id!=row.life or not root.is_ancestor_of(actor):return false
++	return true
++
++# Mandatory barrier BEFORE options write/session switch/owner adoption/save.
++# It records an attempt, not success, and never performs that attempt itself.
++func begin_attempt(world: Node,token: String,expected_epoch: int) -> Dictionary:
++	if receipts.has(token) or discarded.has(token):return failure("transition_not_uncommitted",int(world.combat_generation))
++	var capture: Dictionary=prepared.get(token,{})
++	if not prepared_context_matches(world,capture,expected_epoch) or capture.get("phase")!="prepared":return failure("transition_attempt_context_ambiguous",int(world.combat_generation))
++	if not prepared_lives_match(capture):return failure("departing_actor_life_or_owner_changed",expected_epoch)
++	capture["phase"]="attempt_started"
++	return {"ok":true,"attempt_started":true,"combat_generation":expected_epoch,"transient_mutation":false}
++
++# A stored Map-owned callback must prove its ACTUAL transaction has attempted
++# neither owner adoption, save nor catalog finish. Missing/ambiguous proof holds.
++# This releases metadata only; it is never rollback, refund or cleanup success.
++func discard(world: Node,token: String,expected_epoch: int) -> Dictionary:
++	if receipts.has(token):return failure("cleanup_receipt_must_be_preserved",int(world.combat_generation))
++	if discarded.has(token):
++		var tombstone: Dictionary=discarded[token]
++		if tombstone.world!=world.get_instance_id() or tombstone.epoch!=expected_epoch:return failure("discard_token_collision",int(world.combat_generation))
++		return {"ok":true,"discarded":true,"already_discarded":true,"transient_mutation":false,"authorizes_transition":false}
++	var capture: Dictionary=prepared.get(token,{})
++	if not prepared_context_matches(world,capture,expected_epoch) or capture.get("phase")!="prepared" or not prepared_lives_match(capture):return failure("discard_not_proven_uncommitted",int(world.combat_generation))
++	var guard: Callable=capture.abort_guard
++	if not guard.is_valid():return failure("map_before_attempt_witness_required",expected_epoch)
++	capture["phase"]="discard_checking"
++	var proof: Variant=guard.call(token,expected_epoch)
++	var safe: bool=proof is Dictionary and proof.get("ok")==true and proof.get("token")==token and proof.get("combat_generation")==expected_epoch and proof.get("abort_kind")=="registered_cross_land_route_rejected" and proof.get("catalog_restore_confirmed")==true and proof.get("options_write_attempted")==false and proof.get("owner_adoption_attempted")==false and proof.get("save_attempted")==false and proof.get("catalog_finish_attempted")==false
++	if not safe or receipts.has(token) or not prepared_context_matches(world,capture,expected_epoch) or capture.get("phase")!="discard_checking" or not prepared_lives_match(capture):
++		if capture.get("phase")=="discard_checking":capture["phase"]="prepared"
++		return failure("map_uncommitted_phase_not_proven",int(world.combat_generation))
++	discarded[token]={"world":world.get_instance_id(),"epoch":expected_epoch}
++	prepared.erase(token)
++	return {"ok":true,"discarded":true,"already_discarded":false,"combat_generation":expected_epoch,"transient_mutation":false,"authorizes_transition":false}
+ 
+ # ONLY after the map owner has confirmed its save and catalog adoption. Actors
+ # must remain disabled until this returns ok. No rollback/refund/retry here.
+@@ -45,6 +91,7 @@
+ 		return repeated
+ 	var capture: Dictionary=prepared.get(token,{})
+ 	if capture.is_empty() or committed_receipt.is_empty() or capture.world.get_ref()!=world or expected_epoch!=epoch or capture.epoch!=epoch:return failure("transition_owner_epoch_or_receipt_mismatch",epoch)
++	if capture.get("phase")!="attempt_started":return failure("transition_attempt_barrier_required",epoch)
+ 	var root: Node=capture.root.get_ref();var population: Node=capture.population.get_ref()
+ 	if not is_instance_valid(root) or not is_instance_valid(population) or capture.player.get_ref()!=world.player or world.resolving_combat_action or int(world.patch523_npc_spells.generation)!=epoch:return failure("departing_owner_or_player_changed",epoch)
+ 	for row: Dictionary in capture.actors:
+diff --git a/scripts/world.gd b/scripts/world.gd
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -10273,8 +10273,14 @@
+ 
+ var _current523_transition_actions=preload("res://scripts/maps/current523_transition_actions.gd").new()
+ 
+-func prepare_current523_transition_actions(prior_actor_root: Node2D,prior_population: Node) -> Dictionary:
+-	return _current523_transition_actions.prepare(self,prior_actor_root,prior_population)
++func prepare_current523_transition_actions(prior_actor_root: Node2D,prior_population: Node,before_attempt_guard: Callable=Callable()) -> Dictionary:
++	return _current523_transition_actions.prepare(self,prior_actor_root,prior_population,before_attempt_guard)
++
++func begin_current523_transition_attempt(token: String,expected_combat_generation: int) -> Dictionary:
++	return _current523_transition_actions.begin_attempt(self,token,expected_combat_generation)
++
++func discard_current523_transition_actions(token: String,expected_combat_generation: int) -> Dictionary:
++	return _current523_transition_actions.discard(self,token,expected_combat_generation)
+ 
+ func cancel_current523_transition_actions(token: String,expected_combat_generation: int,committed_receipt: String) -> Dictionary:
+ 	return _current523_transition_actions.cancel(self,token,expected_combat_generation,committed_receipt)

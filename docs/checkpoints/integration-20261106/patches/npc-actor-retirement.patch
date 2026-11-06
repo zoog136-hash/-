@@ -1,0 +1,37 @@
+--- a/scripts/monsters/patch523_npc_extensions.gd
++++ b/scripts/monsters/patch523_npc_extensions.gd
+@@ -55,6 +55,14 @@
+ 	remaining.clear()
+ 	active.clear(); incoming.clear(); last_event.clear(); suppressed.clear(); actor_buffs.clear(); environment_clock = 0
+ 
++func forget_actor(actor: Node) -> void:
++	remaining.forget(actor)
++	# Existing pool retirement/setup calls this before the next actor life.
++	# Do not infer that caster retirement expires buffs applied to the player.
++	if service == null or service.catalog.get("source_mode") != "current523_original": return
++	var key: int = actor.get_instance_id()
++	actor_buffs.erase(key); suppressed.erase(key); incoming.erase(key); active.erase(key)
++
+ func heal_spec(spell: Dictionary) -> Dictionary:
+ 	var id: int = int(spell.get("ID",0))
+ 	var base: int = int(service.catalog.scalar("SpellBonus",id,"HPRestoration","Value"))
+@@ -77,6 +85,8 @@
+ 	if cost > 0 and not already_paid: actor.mp -= cost # Explicit host policy: once at validated release.
+ 	if int(spell.SpellCategoryID) == 2:
+ 		var key: int = actor.get_instance_id(); var entries: Array = actor_buffs.get(key,[]).filter(func(old: Dictionary) -> bool: return int(old.life) == int(actor.life_id) and int(old.generation) == int(service.world.combat_generation))
++		if service.catalog.get("source_mode") == "current523_original":
++			entries = entries.filter(func(old: Dictionary) -> bool: return _live_source_actor_buff(actor,old))
+ 		var changed: bool = false
+ 		for value: Variant in service.catalog.values("SpellBonus",id,"BuffClassID","BuffClassID"):
+ 			var source: Dictionary = service.catalog.row("BuffClass",int(value)); var blocked: bool = false
+--- a/scripts/monsters/patch523_npc_combat.gd
++++ b/scripts/monsters/patch523_npc_combat.gd
+@@ -85,7 +85,7 @@
+ 	extensions.tick_environment(delta)
+ 
+ func forget(actor: Node) -> void:
+-	extensions.remaining.forget(actor)
++	extensions.forget_actor(actor)
+ 	compatibility.forget(actor)
+ 	var action: Dictionary = pending.get(actor.get_instance_id(),{})
+ 	pending.erase(actor.get_instance_id()); cursor.erase(actor.get_instance_id()); followups.erase(actor.get_instance_id())

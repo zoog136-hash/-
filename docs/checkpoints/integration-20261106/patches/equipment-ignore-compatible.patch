@@ -1,0 +1,309 @@
+--- a/scripts/crafting/patch523_enchantment_projection.gd
++++ b/scripts/crafting/patch523_enchantment_projection.gd
+@@ -17,6 +17,10 @@
+ 	"PotionConsumeDelayDecreasePercent":["potion_cooldown_pct","potionCooldownPct",10000],
+ 	"_stun":["stun_resistance","stun_resistance",10000]}
+ const EXTRA := {
++	"IgnoreDamageReductionPercent":["source_equipment_ignore_reduction_pct",10000],
++	"IgnoreMeleeDamageReductionPercent":["source_equipment_ignore_melee_reduction_pct",10000],
++	"IgnoreRangeDamageReductionPercent":["source_equipment_ignore_ranged_reduction_pct",10000],
++	"IgnoreMagicDamageReductionPercent":["source_equipment_ignore_magic_reduction_pct",10000],
+ 	"Strength":["strFlat",1],"Dexterity":["dexFlat",1],"Intelligence":["intFlat",1],
+ 	"RangeEvasion":["er",1],"MeleeEvasion":["dg",1],"RegenMP":["mpRecoveryTick",1],
+ 	"MagicDamage":["magicDamage",1],"AttackSpeedBonus":["attackSpeed",10000],
+@@ -209,6 +213,8 @@
+ 						skipped[int(row.ID)] = true; continue
+ 					if name in ["FinalBlowProbability","FinalBlowAdditionalScale"] and type.UnitID!=3:
+ 						skipped[int(row.ID)] = true; continue
++					if name in ["IgnoreDamageReductionPercent","IgnoreMeleeDamageReductionPercent","IgnoreRangeDamageReductionPercent","IgnoreMagicDamageReductionPercent"] and type.UnitID!=3:
++						skipped[int(row.ID)] = true; continue
+ 					if name=="FinalBlowAdditionalDmg" and type.UnitID!=1:
+ 						skipped[int(row.ID)] = true; continue
+ 					if name=="MagicDamage" and b.BonusApplicationTypeID==2 and type.UnitID!=1: name = null
+--- a/scripts/growth/guardian_combat.gd
++++ b/scripts/growth/guardian_combat.gd
+@@ -1,5 +1,6 @@
+ extends RefCounted
+ ## Exact source magnitudes; TWILIGHT's existing combat/status consumers determine resolution.
++const EQUIPMENT_IGNORE=preload("res://scripts/resources/current523_equipment_ignore_input.gd")
+ const Visuals=preload("res://scripts/cards/native_option_combat.gd")
+ var runtime_ref: WeakRef
+ var runtime:
+@@ -112,6 +113,8 @@
+ 	result+=minf(budget,maxf(0,pierce))
+ 	var percentage_budget: float=maxf(0,float(context.get("percent_reduction",0)))
+ 	var ignore: float=value("IgnoreDamageReductionPercent")+value("IgnoreMeleeDamageReductionPercent" if kind=="melee" else "IgnoreRangeDamageReductionPercent" if kind=="ranged" else "IgnoreMagicDamageReductionPercent")
++	# Exact native equipment operands share this existing percentage-budget receiver.
++	ignore+=EQUIPMENT_IGNORE.sum_equipped(world,kind)
+ 	if pvp:ignore+=value("IgnorePVPDamageReductionPercent")
+ 	result*=1-minf(100,maxf(0,percentage_budget-ignore))/100
+ 	if bool(context.get("final_blow",false)):result=result*(1+value("FinalBlowAdditionalScale")/100)+value("FinalBlowAdditionalDmg")
+--- a/scripts/item_options.gd
++++ b/scripts/item_options.gd
+@@ -1,6 +1,114 @@
+ extends RefCounted
+ class_name TwilightItemOptions
+ const CURRENT_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
++static var original_percent_input_evidence: Dictionary = {}
++
++static func additional_original_percent(record: Dictionary, key: String) -> float:
++	# Missing base equipment operands only. Existing DTO fields and mapped
++	# bonuses win; enhancement overlays remain separate existing contributions.
++	var names: Dictionary = {
++		"source_equipment_ignore_reduction_pct":"IgnoreDamageReductionPercent",
++		"source_equipment_ignore_melee_reduction_pct":"IgnoreMeleeDamageReductionPercent",
++		"source_equipment_ignore_ranged_reduction_pct":"IgnoreRangeDamageReductionPercent",
++		"source_equipment_ignore_magic_reduction_pct":"IgnoreMagicDamageReductionPercent"}
++	if not names.has(key): return 0.0
++	var unit_name: String = "ValuePercent" if key in ["hpPct","mpPct","magic_penetration_pct"] else "Percentage"
++	var divisor: float = 100.0 if unit_name=="ValuePercent" else 10000.0
++	if key=="xp": divisor=1000000.0 # Existing xp receiver takes a ratio.
++	if key=="magic_penetration_pct": divisor=1.0 # ValuePercent is already percent points.
++	var selected: Variant = names[key]
++	return _additional_original_operand(record,key,selected if selected is Array else [selected],unit_name,divisor)
++
++static func _represented_xp(record: Dictionary, item_id: int, applied: Array) -> bool:
++	# Only the exact existing ordinary-XP projection may share a key with a
++	# missing absolute-XP operand. Never reinterpret a custom explicit xp field.
++	var total: float = 0.0; var found: bool = false; var seen: Dictionary = {}
++	for entry: Variant in applied:
++		if not entry is Dictionary or entry.get("field")!="xp": continue
++		var link: Dictionary = CURRENT_DEFINITIONS.row("ItemBonus",int(entry.get("item_bonus_id",-1)))
++		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(entry.get("bonus_id",-1)))
++		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
++		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
++		if link.get("ItemClassID")!=item_id or link.get("BonusID")!=bonus.get("ID") or link.get("IsPossession")!=false or seen.has(link.get("ID")): return false
++		if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or type.get("Name")!="ExperienceAdditionPercent" or unit.get("Name")!="Percentage": return false
++		var ui: Array[Dictionary] = CURRENT_DEFINITIONS.related("UIUnit","UnitID",int(unit.get("ID",-1)))
++		if ui.size()!=1 or ui[0].get("Denominator")!=10000 or not CURRENT_DEFINITIONS.declared_exclusion("UIUnit",ui[0]).is_empty(): return false
++		var amount: Variant = bonus.get("Value")
++		if typeof(amount) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(amount)) or float(amount)!=floorf(float(amount)) or absf(float(amount))>9007199254740991.0 or entry.get("value")!=float(amount)/1000000.0: return false
++		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
++			if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return false
++		seen[link.ID]=true; found=true; total+=float(amount)/1000000.0
++	var value: Variant = record.get("xp")
++	return found and typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and is_finite(total) and float(value)==total
++
++static func _additional_original_operand(record: Dictionary, key: String, bonus_names: Array, unit_name: String, divisor: float, status: String = "", elemental_input: Dictionary = {}, target_item: int = 0) -> float:
++	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1": return 0.0
++	if record.get("source_equipment_status")!="mapped" or record.get("source_test_item")!=false or record.get("source_legacy_catalog_alias",false) or record.get("source_legacy_stack_variant",false): return 0.0
++	var bless: Variant = record.get("source_bless_raw")
++	if typeof(bless) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(bless)) or float(bless)!=floorf(float(bless)) or int(bless) not in [1,2,3]: return 0.0
++	if key=="blessing_consumption_reduction_pct" and not record.get("_patch523_effective_extras",false):
++		for alias: String in ["ain_consumption_reduction_pct","blessing_spend_reduction_pct"]:
++			if record.has(alias): return 0.0
++	var id: Variant = record.get("source_item_class_id")
++	if typeof(id) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(id)) or float(id)!=floorf(float(id)) or float(id)<=0 or float(id)>9007199254740991.0: return 0.0
++	if record.get("sourceId")!="m523:item:"+str(int(id)): return 0.0
++	var identity: Dictionary = CURRENT_DEFINITIONS.identity()
++	if identity.is_empty() or record.get("source_definition_archive")!=identity: return 0.0
++	var raw: Dictionary = CURRENT_DEFINITIONS.row("ItemClass",int(id))
++	if raw.is_empty() or raw!=record.get("source_original_item") or raw.get("TestItem")!=false or not CURRENT_DEFINITIONS.declared_exclusion("ItemClass",raw).is_empty(): return 0.0
++	var applied: Variant = record.get("source_mapped_bonuses")
++	if not applied is Array: return 0.0
++	if record.has(key) and not record.get("_patch523_effective_extras",false):
++		if key!="xp" or not _represented_xp(record,int(id),applied): return 0.0
++	var total: float = 0.0; var evidence: Array = []
++	for link: Dictionary in CURRENT_DEFINITIONS.related("ItemBonus","ItemClassID",int(id)):
++		var bonus: Dictionary = CURRENT_DEFINITIONS.row("Bonus",int(link.get("BonusID",-1)))
++		var type: Dictionary = CURRENT_DEFINITIONS.row("BonusType",int(bonus.get("BonusTypeID",-1)))
++		if type.get("Name") not in bonus_names: continue
++		var application: Dictionary = {}; var target: Dictionary = {}
++		if target_item>0:
++			if bonus.get("BonusApplicationTypeID")!=5 or bonus.get("BonusApplicationTargetID")!=target_item: continue
++			application = CURRENT_DEFINITIONS.row("BonusApplicationType",5)
++			target = CURRENT_DEFINITIONS.row("ItemClass",target_item)
++			if application.get("Name")!="ItemClass" or target.get("TestItem")!=false: return 0.0
++			var category: Dictionary = CURRENT_DEFINITIONS.row("ItemCategory",int(target.get("CategoryID",-1)))
++			if category.get("Name")!="Currency": return 0.0
++			for pair: Array in [["BonusApplicationType",application],["ItemClass",target],["ItemCategory",category]]:
++				if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return 0.0
++		elif not elemental_input.is_empty():
++			if bonus.get("BonusApplicationTypeID")!=3 or bonus.get("BonusApplicationTargetID")!=elemental_input.target_id: continue
++			application = CURRENT_DEFINITIONS.row("BonusApplicationType",3)
++			if application.get("Name")!="ElementalResistanceType" or not CURRENT_DEFINITIONS.declared_exclusion("BonusApplicationType",application).is_empty(): return 0.0
++		elif status.is_empty():
++			if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return 0.0
++		else:
++			if bonus.get("BonusApplicationTypeID")!=2: continue
++			application = CURRENT_DEFINITIONS.row("BonusApplicationType",2)
++			if application.get("Name")!="SpecialResistanceType": return 0.0
++			target = CURRENT_DEFINITIONS.row("SpecialResistanceType",int(bonus.get("BonusApplicationTargetID",-1)))
++			if str(target.get("Name","")).to_lower()!=status: continue
++			if not CURRENT_DEFINITIONS.declared_exclusion("BonusApplicationType",application).is_empty() or not CURRENT_DEFINITIONS.declared_exclusion("SpecialResistanceType",target).is_empty(): return 0.0
++		if link.get("IsPossession")!=false: return 0.0
++		var unit: Dictionary = CURRENT_DEFINITIONS.row("Unit",int(type.get("UnitID",-1)))
++		if unit.get("Name")!=unit_name: return 0.0
++		if key=="xp":
++			var ui: Array[Dictionary] = CURRENT_DEFINITIONS.related("UIUnit","UnitID",int(unit.get("ID",-1)))
++			if ui.size()!=1 or ui[0].get("Denominator")!=10000 or not CURRENT_DEFINITIONS.declared_exclusion("UIUnit",ui[0]).is_empty(): return 0.0
++		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
++			if not CURRENT_DEFINITIONS.declared_exclusion(pair[0],pair[1]).is_empty(): return 0.0
++		for represented: Variant in applied:
++			if represented is Dictionary and represented.get("bonus_id")==bonus.get("ID"): return 0.0
++		var value: Variant = bonus.get("Value")
++		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return 0.0
++		if (unit_name in ["Value","Weight"] or key.ends_with("_crit")) and (float(value)!=floorf(float(value)) or absf(float(value))>9007199254740991.0): return 0.0
++		total+=float(value)/divisor
++		evidence.append({"link":link,"bonus":bonus,"type":type,"unit":unit,"application":application,"target":target,"consumer_elemental_input":elemental_input})
++	if evidence.is_empty() or not is_finite(total): return 0.0
++	if (divisor==1.0 or unit_name=="Weight") and absf(total)>9007199254740991.0: return 0.0
++	original_percent_input_evidence[str(int(id))+":"+key] = {"source":identity,"item_class_id":id,"field":key,"effects":evidence,"source_unit":unit_name,"divisor":divisor,"value":total}
++	return total
++
++
+ 
+ # Item option adapter: typed record fields take precedence over legacy Korean
+ # descriptions. This keeps preexisting catalog records and save data unchanged.
+--- a/tools/equipment/patch523_enhancement.py
++++ b/tools/equipment/patch523_enhancement.py
+@@ -25,6 +25,10 @@
+     '_stun':('stun_resistance','stun_resistance',10000),
+ }
+ EXTRA = {
++    'IgnoreDamageReductionPercent':('source_equipment_ignore_reduction_pct',10000),
++    'IgnoreMeleeDamageReductionPercent':('source_equipment_ignore_melee_reduction_pct',10000),
++    'IgnoreRangeDamageReductionPercent':('source_equipment_ignore_ranged_reduction_pct',10000),
++    'IgnoreMagicDamageReductionPercent':('source_equipment_ignore_magic_reduction_pct',10000),
+     'Strength':('strFlat',1), 'Dexterity':('dexFlat',1), 'Intelligence':('intFlat',1),
+     'RangeEvasion':('er',1), 'MeleeEvasion':('dg',1), 'RegenMP':('mpRecoveryTick',1),
+     'MagicDamage':('magicDamage',1), 'AttackSpeedBonus':('attackSpeed',10000),
+@@ -161,6 +165,8 @@
+                         skipped.add(row['ID']); continue
+                     if name in ['FinalBlowProbability','FinalBlowAdditionalScale'] and types[b['BonusTypeID']]['UnitID']!=3:
+                         skipped.add(row['ID']); continue
++                    if name in ['IgnoreDamageReductionPercent','IgnoreMeleeDamageReductionPercent','IgnoreRangeDamageReductionPercent','IgnoreMagicDamageReductionPercent'] and types[b['BonusTypeID']]['UnitID']!=3:
++                        skipped.add(row['ID']); continue
+                     if name=='MagicDamage' and b['BonusApplicationTypeID']==2 and types[b['BonusTypeID']]['UnitID']!=1:
+                         name=None
+                     else:
+--- /dev/null
++++ b/scripts/resources/current523_equipment_ignore_input.gd
+@@ -0,0 +1,127 @@
++extends RefCounted
++## Exact native enhancement operands for the existing percentage-budget consumer.
++## No flat-as-percent conversion, new hit, custody, save or combat ordering.
++const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
++const ENHANCE=preload("res://scripts/crafting/patch523_enhancement.gd")
++const OPTIONS=preload("res://scripts/item_options.gd")
++const CONDITIONS=preload("res://scripts/loot/patch523_monster_drops.gd")
++const INPUTS={"IgnoreDamageReductionPercent":"source_equipment_ignore_reduction_pct","IgnoreMeleeDamageReductionPercent":"source_equipment_ignore_melee_reduction_pct","IgnoreRangeDamageReductionPercent":"source_equipment_ignore_ranged_reduction_pct","IgnoreMagicDamageReductionPercent":"source_equipment_ignore_magic_reduction_pct"}
++static var evidence: Dictionary={}
++
++static func integer(value: Variant) -> bool:
++	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
++
++static func _original(item_id: int,effects: Array,level: int,bless: int) -> Dictionary:
++	var selectors: Dictionary={};var groups: Dictionary={};var seen: Dictionary={}
++	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_id):
++		var bonus: Dictionary=SOURCE.row("Bonus",int(link.get("BonusID",-1)))
++		var type: Dictionary=SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1)))
++		if type.get("Name")!="EnchantBonusGroupID":continue
++		var unit: Dictionary=SOURCE.row("Unit",int(type.get("UnitID",-1)))
++		if link.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or unit.get("Name")!="EnchantBonusGroupID":return {}
++		for pair: Array in [["ItemBonus",link],["Bonus",bonus],["BonusType",type],["Unit",unit]]:
++			if not SOURCE.declared_exclusion(pair[0],pair[1]).is_empty():return {}
++		if selectors.has(int(bonus.Value)):return {}
++		selectors[int(bonus.Value)]={"link":link,"bonus":bonus,"type":type,"unit":unit}
++	for entry: Variant in effects:
++		if not entry is Dictionary or not integer(entry.get("ID")) or not integer(entry.get("ItemEnchantBonusGroupID")) or not integer(entry.get("BlessCode")) or not integer(entry.get("EnchantLevel")):return {}
++		var row: Dictionary=entry
++		var originals: Array[Dictionary]=SOURCE.related("ItemEnchantBonus","ID",int(row.ID))
++		if originals.size()!=1 or originals[0]!=row or seen.has(int(row.ID)) or not SOURCE.declared_exclusion("ItemEnchantBonus",row).is_empty():return {}
++		seen[int(row.ID)]=true
++		var group: int=int(row.ItemEnchantBonusGroupID)
++		if not selectors.has(group):return {}
++		if not groups.has(group):groups[group]=[]
++		groups[group].append(row)
++	var totals: Dictionary={};var used: Array=[]
++	for group: int in groups:
++		var codes: Dictionary={}
++		for row: Dictionary in groups[group]:codes[int(row.BlessCode)]=true
++		var selected: int=bless if codes.has(bless) else 0
++		for row: Dictionary in groups[group]:
++			if row.BlessCode!=selected:continue
++			var bonus: Dictionary=SOURCE.row("Bonus",int(row.get("BonusID",-1)))
++			var type: Dictionary=SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1)))
++			if not INPUTS.has(type.get("Name","")):continue
++			var unit: Dictionary=SOURCE.row("Unit",int(type.get("UnitID",-1)))
++			if type.get("UnitID")!=3 or unit.get("Name")!="Percentage" or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(bonus.get("Value")):return {}
++			for pair: Array in [["Bonus",bonus],["BonusType",type],["Unit",unit]]:
++				if not SOURCE.declared_exclusion(pair[0],pair[1]).is_empty():return {}
++			# Whole-value families need their own exact base contract; none is assumed.
++			if int(row.EnchantLevel)==0:return {}
++			if int(row.EnchantLevel)!=level:continue
++			var key: String=INPUTS[type.Name]
++			totals[key]=float(totals.get(key,0))+float(bonus.Value)/10000.0
++			used.append({"selector":selectors[group],"row":row,"bonus":bonus,"type":type,"unit":unit})
++	return {"values":totals,"rows":used} if not used.is_empty() else {}
++
++static func sum_equipped(world: Node,kind: String) -> float:
++	evidence={}
++	if not is_instance_valid(world) or kind not in ["melee","ranged","magic"]:return 0.0
++	var identity: Dictionary=SOURCE.identity()
++	if identity.is_empty():return 0.0
++	var keys: Array=[INPUTS.IgnoreDamageReductionPercent,"source_equipment_ignore_"+kind+"_reduction_pct"]
++	var total: float=0.0;var visited: Dictionary={}
++	for slot: String in world.EQUIPMENT_SLOT_ORDER:
++		var worn: Dictionary=world.equipped_items.get(slot,{})
++		var uid: String=str(worn.get("instance_id",""))
++		if uid.is_empty() or visited.has(uid):continue
++		visited[uid]=true
++		var physical: Dictionary=world.item_instances.get(uid,{})
++		if physical.is_empty() or physical.get("name")!=worn.get("name") or not integer(physical.get("level")) or not world._is_instance_equipped(uid):continue
++		var level: int=int(physical.level)
++		if level<0 or level>20:continue
++		var current: Dictionary=world._source_catalog_record("아이템",worn)
++		if current.get("source")!="lineagem_patch523" or current.get("source_snapshot")!="patch523" or current.get("source_projection")!="current523_original_typed_game_dto_v1" or current.get("source_m_native_item")!=true or current.get("source_test_item")!=false or current.get("source_equipment_status")!="mapped" or current.get("source_legacy_catalog_alias",false) or current.get("source_legacy_stack_variant",false):continue
++		if current.get("_patch523_effective_extras",false):continue
++		var pending: Variant=current.get("source_condition_pending",[])
++		if not pending is Array or not pending.is_empty() or not CONDITIONS.equipment_error(current,str(world.job_class),int(world.level),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty():continue
++		var id: Variant=current.get("source_item_class_id")
++		if not integer(id) or int(id)<=0 or current.get("sourceId")!="m523:item:"+str(int(id)) or current.get("source_definition_archive")!=identity:continue
++		var raw: Dictionary=SOURCE.row("ItemClass",int(id))
++		if raw.is_empty() or raw!=current.get("source_original_item") or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
++		if physical.has("sourceId") and physical.sourceId!=current.get("sourceId"):continue
++		var bless: int=world.patch523_equipment.bless_code(physical)
++		if bless not in [1,2]:continue
++		# The existing base reader proves exact current ItemBonus rows, units and
++		# mapped-ID non-duplication. Source-only base items need no invented model.
++		var pinned: Variant=physical.get("record",{})
++		if not pinned is Dictionary or pinned.get("sourceId")!=current.get("sourceId") or pinned.get("source_projection")!=current.get("source_projection") or pinned.get("source_definition_archive")!=identity or pinned.get("source_original_item")!=raw or CONDITIONS.current_owned_record(pinned).is_empty():continue
++		var base_amount: float=0.0;var base_evidence: Dictionary={}
++		for key: String in keys:
++			OPTIONS.original_percent_input_evidence.erase(str(int(id))+":"+key)
++			base_amount+=OPTIONS.additional_original_percent(current,key)
++			var proof: Dictionary=OPTIONS.original_percent_input_evidence.get(str(int(id))+":"+key,{})
++			if not proof.is_empty():base_evidence[key]=proof.duplicate(true)
++		total+=base_amount
++		evidence[uid]={"source":identity,"item_class_id":id,"level":level,"bless_code":bless,"kind":kind,"base_value":base_amount,"base_rows":base_evidence,"enhancement_value":0.0}
++		var prepared: Dictionary=world._physical_enhancement_record(worn)
++		var item_key: String=ENHANCE.item_id(prepared)
++		if item_key!=str(int(id)) or prepared.get("source_projection")!=current.source_projection or prepared.get("source_definition_archive")!=identity or prepared.get("source_original_item")!=raw or not world.patch523_equipment.catalog_identity_matches(prepared,item_key):continue
++		var canonical: Dictionary=world.patch523_equipment.record(item_key)
++		var same_input: bool=true
++		for field: String in ["source_definition_archive","source_original_item","source_mapped_bonuses","source_enchant_group_ids"]:
++			if not current.has(field) or canonical.get(field)!=current[field] or prepared.get(field)!=current[field]:same_input=false;break
++		if not same_input:continue
++		var basis: Dictionary=prepared.get("patch523_effect_basis",{})
++		if basis.get("selection")!="source_exact_level" or basis.get("sha256")!=world.patch523_equipment.digest or basis.get("bless_code")!=bless:continue
++		var bound: Dictionary=world.patch523_equipment.data.get("items",{}).get(item_key,{})
++		if bound.get("item_class")!=raw or not bound.get("enchant_effects") is Array:continue
++		var source: Dictionary=_original(int(id),bound.enchant_effects,level,bless)
++		if source.is_empty():continue
++		var original_values: Dictionary=source.get("values",{})
++		var compiled: Dictionary=world.patch523_equipment.data.get("equipment_runtime",{}).get(item_key,{}).get("extra_options",{}).get(str(bless),{}).get(str(level),{})
++		var actual: Dictionary=prepared.get("enhancement_extra_options",{}).get(str(level),{})
++		var amount: float=0.0;var matched: bool=true
++		for key: String in keys:
++			if not original_values.has(key):continue
++			var expected: Variant=compiled.get(key)
++			var value: Variant=actual.get(key)
++			if current.has(key) or typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(expected)) or typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or expected!=original_values[key] or value!=expected:matched=false;break
++			amount+=float(value)
++		if not matched:continue
++		total+=amount
++		evidence[uid]["model_sha256"]=world.patch523_equipment.digest
++		evidence[uid]["enhancement_rows"]=source.rows
++		evidence[uid]["enhancement_value"]=amount
++	return total if is_finite(total) else 0.0

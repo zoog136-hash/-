@@ -1,0 +1,243 @@
+diff --git a/scripts/loot/current523_native_stack.gd b/scripts/loot/current523_native_stack.gd
+--- a/scripts/loot/current523_native_stack.gd
++++ b/scripts/loot/current523_native_stack.gd
+@@ -563,6 +563,44 @@
+ 	world.deferred_save.cancel();busy=false
+ 	return {"handled":true,"ok":true,"saved":true,"physical_id":moved_uid,"parent_physical_id":uid,"quantity":quantity,"direction":direction,"message":"원본 영수증과 실제 수량을 보존해 창고 이동했습니다"}
+ 
++# Narrow save authorization for the explicit batch owner's whole-instance moves.
++# Partial partitions/ledger edits are not admitted by this API.
++static func save_full_warehouse_batch(world: Node,payload: Dictionary,moves: Array) -> Dictionary:
++	if busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return {"ok":false,"save_attempted":false,"error":ERR_BUSY}
++	if payload.size()!=3 or not payload.get("inventory") is Dictionary or not payload.get("item_instances") is Dictionary or not payload.get("warehouse") is Dictionary or not payload.warehouse.get("instances") is Dictionary or not payload.warehouse.get("stacks") is Dictionary:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	var selected: Dictionary={}
++	for move: Variant in moves:
++		if not move is Dictionary or move.get("direction") not in ["deposit","withdraw"] or not move.get("physical_id") is String or not integer(move.get("quantity")):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		var uid: String=move.physical_id
++		if selected.has(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		var from_instances: Dictionary=world.item_instances if move.direction=="deposit" else world.warehouse.instances
++		var to_instances: Dictionary=payload.warehouse.instances if move.direction=="deposit" else payload.item_instances
++		var remaining_instances: Dictionary=payload.item_instances if move.direction=="deposit" else payload.warehouse.instances
++		var old_destination: Dictionary=world.warehouse.instances if move.direction=="deposit" else world.item_instances
++		var owned: Dictionary=proof_entry(from_instances.get(uid),uid)
++		if owned.is_empty() or owned.record.get("name")!=move.get("item_name") or move.quantity<1 or move.quantity>99 or move.quantity!=owned.remaining or old_destination.has(uid) or remaining_instances.has(uid) or to_instances.get(uid)!=from_instances.get(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		if world._item_locked(str(move.item_name),uid) or world._item_locked(str(move.item_name)):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		if move.direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++		selected[uid]=true
++	# Every other native physical remains byte-value equivalent in its owner.
++	# No new receipt, changed native quantity, origin or partition is authorized.
++	var known: Dictionary={}
++	for pair: Array in [[world.item_instances,payload.item_instances],[world.warehouse.instances,payload.warehouse.instances]]:
++		for uid: String in pair[0]:
++			var physical: Variant=pair[0][uid]
++			if not physical is Dictionary or not physical.has(RECEIPT):continue
++			if known.has(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++			known[uid]=true
++			if not selected.has(uid) and pair[1].get(uid)!=physical:return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	for instances: Dictionary in [payload.item_instances,payload.warehouse.instances]:
++		for uid: String in instances:
++			if instances[uid] is Dictionary and instances[uid].has(RECEIPT) and not known.has(uid):return {"ok":false,"save_attempted":false,"error":ERR_INVALID_DATA}
++	busy=true;_candidate_kind="warehouse_transfer";_candidate=payload.duplicate(true)
++	var saved: Error=world._save_game(true,payload)
++	_candidate.clear();_candidate_kind="";busy=false
++	if saved!=OK:world.patch523_owner_state_problem="일괄 창고 저장 결과 미확정 · 정상 저장 불러오기 전 재이동 중지"
++	return {"ok":saved==OK,"save_attempted":true,"error":saved}
++
+ static func floor_physical(floor: Array,uid: String) -> Dictionary:
+ 	for record: Dictionary in floor:
+ 		if record.get("physical_item",{}).get("id")==uid:return record.physical_item.get("data",{})
+diff --git a/scripts/warehouse/explicit_warehouse_batch.gd b/scripts/warehouse/explicit_warehouse_batch.gd
+--- /dev/null
++++ b/scripts/warehouse/explicit_warehouse_batch.gd
+@@ -0,0 +1,120 @@
++extends RefCounted
++## Explicit reviewed intents only. No interpretation of original All buttons.
++const STORE=preload("res://scripts/warehouse/local_warehouse.gd")
++const NATIVE=preload("res://scripts/loot/current523_native_stack.gd")
++const AWAKENING=preload("res://scripts/cards/source_awakening_items.gd")
++var quotes: Dictionary={}
++var receipts: Dictionary={}
++var busy: bool=false
++var uncertain: bool=false
++
++func fail(code: String,reason: String) -> Dictionary:
++	return {"ok":false,"code":code,"reason":reason,"saved":false,"live_adopted":false}
++
++func snapshot(world: Node) -> Dictionary:
++	return {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"warehouse":world.warehouse.snapshot(),"equipped_items":world.equipped_items.duplicate(true),"consumable_state":world.consumable_service.export_state().duplicate(true)}
++
++func prepare(world: Node,direction: String,entries: Array) -> Dictionary:
++	if busy or uncertain or NATIVE.busy or not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return fail("owner_held","창고 거래 저장 보호 중")
++	if direction not in ["deposit","withdraw"] or entries.is_empty():return fail("invalid_intents","방향과 명시적 선택 목록이 필요합니다")
++	var before: Dictionary=snapshot(world)
++	var inventory: Dictionary=before.inventory.duplicate(true);var physical: Dictionary=before.item_instances.duplicate(true)
++	var warehouse=STORE.new();warehouse.stacks=before.warehouse.stacks.duplicate(true);warehouse.instances=before.warehouse.instances.duplicate(true)
++	var source: Dictionary=before.item_instances if direction=="deposit" else before.warehouse.instances
++	var seen: Dictionary={};var native_moves: Array=[];var reviewed: Array=[];var totals: Dictionary={}
++	var weight: int=world._inventory_total_weight()
++	for raw: Variant in entries:
++		if not raw is Dictionary or not raw.get("record") is Dictionary or not raw.get("item_name") is String or not raw.get("instance_id") is String or not raw.get("source_id") is String or not NATIVE.integer(raw.get("quantity")):return fail("invalid_intent","아이템·정확한 원문 레코드·소유 ID·정수 수량이 필요합니다")
++		var name_value: String=raw.item_name;var uid: String=raw.instance_id;var quantity: int=int(raw.quantity)
++		var record: Dictionary=world._find_catalog_item_record(name_value)
++		if not world.equipment_collections._same_save_value(record,raw.record) or raw.source_id.is_empty() or record.get("sourceId")!=raw.source_id:return fail("source_changed","검토한 원본 카탈로그 정체가 달라졌습니다")
++		var problem: String=world._warehouse_transfer_reason(name_value,quantity,direction,uid)
++		if not problem.is_empty():return fail("ineligible",problem)
++		var key: String="physical:"+uid if not uid.is_empty() else "source:"+raw.source_id
++		if seen.has(key):return fail("duplicate_selection","동일 소유 개체/묶음은 한 번만 명시하세요")
++		seen[key]=true
++		totals[name_value]=int(totals.get(name_value,0))+quantity
++		if direction=="withdraw" and name_value==world.titles.source.powder_record.get("name","") and not world.titles.can_pickup({"item_name":name_value,"quantity":totals[name_value]}):return fail("holding_limit","누적 소지 수량 한도 초과")
++		var native_claim: bool=false
++		for item: Variant in source.values():
++			if item is Dictionary and item.get("name")==name_value and item.has(NATIVE.RECEIPT):native_claim=true;break
++		var is_equipment: bool=not world._enhancement_kind_for_record(record).is_empty()
++		var awakening: bool=AWAKENING.has_physical_item(name_value,source)
++		if native_claim:
++			var owned: Dictionary=NATIVE.proof_entry(source.get(uid),uid)
++			if owned.is_empty() or owned.record!=record or owned.record.get("sourceId")!=raw.source_id:return fail("native_identity","실제 원본 묶음과 검토 정체가 다릅니다")
++			if quantity!=int(owned.remaining):return fail("native_partition_pending","원본 묶음 일부 분할의 다중 거래 계약은 보류입니다. 전체 배치는 저장하지 않습니다")
++			if world._item_locked(name_value) or world._item_locked(name_value,uid):return fail("locked","잠긴 원본 개체는 이동할 수 없습니다")
++			if direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return fail("native_storage","원본 보관·장착 조건 미충족")
++			var from_counts: Dictionary=inventory if direction=="deposit" else warehouse.stacks
++			var to_counts: Dictionary=warehouse.stacks if direction=="deposit" else inventory
++			var from_instances: Dictionary=physical if direction=="deposit" else warehouse.instances
++			var to_instances: Dictionary=warehouse.instances if direction=="deposit" else physical
++			if not NATIVE.integer(from_counts.get(name_value,0)) or int(from_counts.get(name_value,0))<quantity or not NATIVE.integer(to_counts.get(name_value,0)) or int(to_counts.get(name_value,0))>9007199254740991-quantity or to_instances.has(uid):return fail("native_collision","원본 수량·개체 충돌")
++			if direction=="deposit" and int(to_counts.get(name_value,0))>1000000-quantity:return fail("warehouse_limit","기존 창고 저장 한도 초과")
++			to_instances[uid]=from_instances[uid].duplicate(true);from_instances.erase(uid)
++			from_counts[name_value]=int(from_counts[name_value])-quantity
++			if int(from_counts[name_value])==0:from_counts.erase(name_value)
++			to_counts[name_value]=int(to_counts.get(name_value,0))+quantity
++			native_moves.append({"physical_id":uid,"item_name":name_value,"quantity":quantity,"direction":direction})
++		else:
++			if direction=="deposit" and not AWAKENING.storage_allowed(name_value,record,before.item_instances):return fail("storage","원본 보관 제한")
++			if is_equipment or awakening:
++				if uid.is_empty() or quantity!=1 or not source.get(uid) is Dictionary or source[uid].get("name")!=name_value:return fail("physical_selection","장비/원본 개체를 정확히 한 개씩 선택하세요")
++				var pinned: Variant=source[uid].get("record")
++				if not pinned is Dictionary or pinned.get("sourceId")!=raw.source_id:return fail("physical_source","실물 원본 ID 불일치")
++				if awakening and (not AWAKENING.recognized(pinned) or int(source[uid].get("source_awakening_quantity",1))!=1):return fail("awakening_partition_pending","각성 묶음 분할은 일괄 거래 보류")
++				if direction=="deposit" and (world._item_locked(name_value) or world._is_instance_equipped(uid)):return fail("locked_or_worn","잠금·착용 개체는 보관할 수 없습니다")
++				is_equipment=true
++			elif not uid.is_empty() or record.get("source_m_native_item",false):return fail("unsupported_physical","실제 원본 소유 공급 계약 확인 필요")
++			var moved: Dictionary=warehouse.store(name_value,quantity,uid,inventory,physical,world.equipped_items,is_equipment) if direction=="deposit" else warehouse.retrieve(name_value,quantity,uid,inventory,physical,is_equipment,weight,world._carrying_capacity(),maxi(0,int(world.item_weight_index.get(name_value,3))))
++			if not moved.get("ok",false):return fail("transfer_rejected",str(moved.get("reason","창고 요청 거절")))
++			if direction=="deposit" and int(warehouse.stacks.get(name_value,0))>1000000:return fail("warehouse_limit","기존 창고 저장 한도 초과")
++		var delta: int=quantity*maxi(0,int(world.item_weight_index.get(name_value,3)))
++		weight+=delta if direction=="withdraw" else -delta
++		if direction=="withdraw" and weight>world._carrying_capacity():return fail("weight_limit","누적 소지 무게 한도 초과")
++		reviewed.append(raw.duplicate(true))
++	return {"ok":true,"before":before,"direction":direction,"entries":reviewed,"native_moves":native_moves,"payload":{"inventory":inventory,"item_instances":physical,"warehouse":warehouse.snapshot()}}
++
++func quote(world: Node,direction: String,entries: Array) -> Dictionary:
++	var plan: Dictionary=prepare(world,direction,entries)
++	if not plan.get("ok",false):return plan
++	var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
++	while quotes.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
++	plan["world_id"]=world.get_instance_id();quotes[id]=plan.duplicate(true)
++	return {"ok":true,"quote_id":id,"direction":direction,"entries":plan.entries.duplicate(true),"atomic":true,"save_count":1,"transfer_limit_per_entry":99,"cost_policy":"existing_single_transfer_no_added_fee","confirmation_required":true,"native_partial_partition_supported":false}
++
++func confirm(world: Node,quote_id: String,request_id: String) -> Dictionary:
++	if request_id.strip_edges().is_empty():return fail("request_id_required","확정 요청 ID 필요")
++	if receipts.has(request_id):
++		var receipt: Dictionary=receipts[request_id]
++		if receipt.quote_id!=quote_id or receipt.world_id!=world.get_instance_id():return fail("request_collision","확정 요청 ID 충돌")
++		var repeated: Dictionary=receipt.result.duplicate(true);repeated["replayed_receipt"]=true
++		return repeated
++	if busy or uncertain:return fail("owner_held","이전 저장 결과 확인 전 재실행 금지")
++	var plan: Dictionary=quotes.get(quote_id,{})
++	if plan.is_empty() or plan.world_id!=world.get_instance_id():return fail("quote_missing","실제 검토 목록을 다시 준비하세요")
++	if world.equipment_collections._same_save_value(snapshot(world),plan.before)!=true:return fail("stale_quote","검토 후 소유/장착/창고/소비 상태가 변경됐습니다")
++	var current: Dictionary=prepare(world,plan.direction,plan.entries)
++	if not current.get("ok",false):return current
++	if world.equipment_collections._same_save_value(current.payload,plan.payload)!=true:return fail("candidate_changed","확정 후보가 검토 목록과 달라졌습니다")
++	busy=true
++	var pending: Dictionary={"ok":false,"code":"save_outcome_uncertain","saved":null,"save_confirmed":false,"live_adopted":false,"retry_allowed":false,"quote_id":quote_id,"request_id":request_id}
++	receipts[request_id]={"world_id":world.get_instance_id(),"quote_id":quote_id,"result":pending}
++	var saved: Dictionary=NATIVE.save_full_warehouse_batch(world,plan.payload,plan.native_moves)
++	if not saved.get("ok",false):
++		uncertain=saved.get("save_attempted",false);busy=false
++		pending["save_attempted"]=uncertain
++		if not uncertain:pending["saved"]=false
++		pending["code"]="save_outcome_uncertain" if uncertain else "save_guard_rejected"
++		pending["save_error"]=saved.get("error",ERR_INVALID_DATA)
++		receipts[request_id]["result"]=pending.duplicate(true)
++		return pending.duplicate(true)
++	world.inventory=plan.payload.inventory;world.item_instances=plan.payload.item_instances
++	world.warehouse.stacks=plan.payload.warehouse.stacks;world.warehouse.instances=plan.payload.warehouse.instances
++	world.deferred_save.cancel()
++	world._update_hud()
++	if world.hud.has_method("refresh_service"):world.hud.call("refresh_service")
++	var result: Dictionary={"ok":true,"saved":true,"save_confirmed":true,"save_attempted":true,"live_adopted":true,"quote_id":quote_id,"request_id":request_id,"direction":plan.direction,"entries":plan.entries.duplicate(true),"save_count":1}
++	receipts[request_id]["result"]=result.duplicate(true);quotes.erase(quote_id);busy=false
++	return result
+diff --git a/scripts/world.gd b/scripts/world.gd
+--- a/scripts/world.gd
++++ b/scripts/world.gd
+@@ -5618,39 +5618,46 @@
+ 	hud.show_message("텔레포트 완료 · %d 아데나" % cost)
+ 
+ 
+-func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+-	if death_recovery.blocked(): return
++var _explicit_warehouse_batch=preload("res://scripts/warehouse/explicit_warehouse_batch.gd").new()
++
++func quote_warehouse_batch(direction: String,entries: Array) -> Dictionary:
++	return _explicit_warehouse_batch.quote(self,direction,entries)
++
++func confirm_warehouse_batch(quote_id: String,request_id: String) -> Dictionary:
++	return _explicit_warehouse_batch.confirm(self,quote_id,request_id)
++
++func _warehouse_transfer_reason(item_name: String, quantity: int, direction: String, instance_id: String) -> String:
++	if _explicit_warehouse_batch.busy or _explicit_warehouse_batch.uncertain:return "일괄 창고 저장 처리/결과 보호 중 · 정상 저장을 다시 불러오세요"
++	if death_recovery.blocked(): return "사망 복구 저장 보호 중"
+ 	if direction == "deposit" and not half_elixir.storable(item_name):
+-		hud.show_message("원본에서 보관할 수 없는 하프 엘릭서 품목입니다.")
+-		return
++		return "원본에서 보관할 수 없는 하프 엘릭서 품목입니다."
+ 	if item_name==titles.source.powder_record.get("name",""):
+ 		if direction=="deposit" and not bool(titles.source.powder_record.get("storable",false)):
+-			hud.show_message("상급 축복의 가루는 원본에서 창고 보관 불가입니다.")
+-			return
++			return "상급 축복의 가루는 원본에서 창고 보관 불가입니다."
+ 		if direction=="withdraw" and not titles.can_pickup({"item_name":item_name,"quantity":quantity}):
+-			hud.show_message("상급 축복의 가루 최대 소지 수량을 초과합니다.")
+-			return
++			return "상급 축복의 가루 최대 소지 수량을 초과합니다."
+ 	if direction == "deposit" and protection523.managed(_find_catalog_item_record(item_name)):
+-		hud.show_message("원본 가호는 창고 보관 불가 아이템입니다")
+-		return
++		return "원본 가호는 창고 보관 불가 아이템입니다"
+ 	if item_name.begins_with("[원본 보상] "):
+-		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
+-		return
++		return "원본 보상 보관 중 · 사용/이동 기능 연결 대기"
+ 	if item_name == "아데나" or item_name.is_empty():
+-		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
+-		return
++		return "이 아이템은 창고에 보관할 수 없습니다"
+ 	var record: Dictionary = _find_catalog_item_record(item_name)
+ 	if direction == "deposit" and record.has("growth96_item_id") and not bool(record.get("storable",false)):
+-		hud.show_message("원본 성장 보상은 창고 보관이 제한되어 있습니다")
+-		return
++		return "원본 성장 보상은 창고 보관이 제한되어 있습니다"
+ 	if record.get("monsterbook_source_item",false) and not record.get("storable",false):
+-		hud.show_message("원본 보관 제한 아이템입니다")
+-		return
++		return "원본 보관 제한 아이템입니다"
+ 	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
+-		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
+-		return
++		return "창고 아이템 또는 수량이 유효하지 않습니다"
+ 	var source_restriction:String=expedition_local.transfer_restriction(item_name,direction)
+-	if not source_restriction.is_empty() or _item_locked(item_name,instance_id):hud.show_message(source_restriction if not source_restriction.is_empty() else "잠긴 아이템은 이동할 수 없습니다");return
++	if not source_restriction.is_empty() or _item_locked(item_name,instance_id):return source_restriction if not source_restriction.is_empty() else "잠긴 아이템은 이동할 수 없습니다"
++	if direction not in ["deposit","withdraw"]:return "잘못된 창고 요청입니다"
++	return ""
++
++func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
++	var transfer_reason: String=_warehouse_transfer_reason(item_name,quantity,direction,instance_id)
++	if not transfer_reason.is_empty():hud.show_message(transfer_reason);return
++	var record: Dictionary=_find_catalog_item_record(item_name)
+ 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").transfer_warehouse(self,item_name,quantity,direction,instance_id)
+ 	if native_stack.get("handled",false):
+ 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 창고 개체 확인 필요"))))

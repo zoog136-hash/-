@@ -1,0 +1,347 @@
+diff --git a/docs/CURRENT523_DIRECT_SKILL_REGION_GATE.md b/docs/CURRENT523_DIRECT_SKILL_REGION_GATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..ddf7081964430dd013d2a4939f35e683bf299329
+--- /dev/null
++++ b/docs/CURRENT523_DIRECT_SKILL_REGION_GATE.md
+@@ -0,0 +1,11 @@
++# Direct explicit SkillService source-region gate — local follow-up
++
++Read public map PR285 d4d04e298b6debe8e4eee5a22de9176ed2e97740 scripts/world.gd::current523_source_spell_cast_reason(record)->String. The exact callback resolves admitted current source profile, binding/row hash and active source-cell declarations in the MAP owner. Empty permits existing owner processing; nonempty rejects the explicit request. This bridge copies no map row, SpellClass mapping or definition parser and grants no Land admission.
++
++The actual newly covered path is SkillService.ready -> _source_region_cast_reason -> world.current523_source_spell_cast_reason. Direct SkillService.cast already calls ready before its toggle/local-runtime branches, material spend, cooldown and effect queueing, so it receives the same gate without a second effect/payment path. A non-string callback result is held. Main's existing ready/cast dispatch may also recheck the same READ-ONLY callback; no permission is cached between changing cells, and no cost/effect is run twice. This is not a claim that every game skill entrypoint is covered.
++
++When the map callback is absent, ordinary host behavior remains. An actually active source session with an already bound source profile is held until its source-region owner exists; no ID is fabricated from a local skill. Unbound legacy/local behavior stays unchanged. When the callback is present it alone owns the generic/non-generic source-field distinction and exact declaration scope.
++
++This gate is ONLY at explicit ready/cast requests. It does not remove active buffs, re-gate already launched impacts, interpret passive/NPC/proc/child-stage behavior, expand NoSpellToOther, release an entry restriction or touch map/population files. The map's LandAttributeType164/Unit12 meaning is not reimplemented here. Existing ownership, costs, saves and frozen distribution stay unchanged.
++
++This candidate and its area receiver are separate from both frozen f71 twelve-file and fe908 three-file candidates. No publication/merge/phone update or game/tests/compilation/render/CI was run. Original assets, packs, source bank, saves and excluded work remain preserved.
+diff --git a/docs/CURRENT523_PLAYER_DISTANCE_RECEIVER.md b/docs/CURRENT523_PLAYER_DISTANCE_RECEIVER.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..faac22e6b5f771cfbb678861603945426c3d40ee
+--- /dev/null
++++ b/docs/CURRENT523_PLAYER_DISTANCE_RECEIVER.md
+@@ -0,0 +1,31 @@
++# Actual selected-player distance receiver — separate local candidate
++
++Frozen publication candidate f71ec28aa5fb48157429131d8097bf6fbda987ae and its12-file patch/metadata remain unchanged. This follow-up is separate, untested and unpublished; no game, tests, compilation, rendering, CI, merge, uploads or phone/resource changes.
++
++## Existing source input and actual caller
++
++The published player_skills523._apply_numeric_distance_input already supplies exact bound SpellClass.CastRange through a configurable labelled distance-input policy, records the full row's bound SHA, current original archive identity and actual policy-byte SHA, and explicitly says the original distance scale is unconfirmed. It currently skips IsAttackRange=true and MinCastRange!=0. This follow-up does not edit that reader, change a policy value or activate its skipped branches.
++
++New `scripts/skills/current523_distance_receiver.gd::check(world, skill, target, expected={})` is called by SkillService.cast AFTER existing actual target selection/target_allowed and BEFORE spend. An admitted projection gets a runtime-only source_distance_snapshot. The existing SkillService.impact callback rechecks that same snapshot BEFORE its current damage/status/turn-undead branch. No second cost, cooldown, RNG, event, save, source effect or animation stage is added. Missing source distance metadata preserves existing host behavior; present invalid/stale metadata holds that projected cast rather than silently switching input.
++
++The snapshot binds selected local skill ID, exact original SpellClass ID and row SHA, current source identity, actual policy SHA, projected maximum/minimum world length, target instance and life, field instance and combat generation. Positions are remeasured and are not frozen into the token. A reused target life, field switch, source/policy change or out-of-range target cannot use the old projection. Existing active/owned/level/class/weapon/target eligibility remains the service/catalog owner's responsibility. The existing current523_aden_source_active target-admission guard in World._skill_target is preserved; this module does not enable a separate native-map combat path.
++
++## Data-owner input contract
++
++Existing `skill.source523.distance_numeric_input` remains the carrier. Require its original current source identity, spell_id, bound_row_sha256, policy_path, policy_schema, policy_sha256, origin=twilight_adjustable_numeric_estimate, source_raw_distance_unit_scale=unconfirmed, native_grid_scale_recovered=false and host_geometry=existing_host_distance_engine_retained. The receiver reuses PLAYER._source_row_json against the full canonical SpellClass and reads the EXISTING DISTANCE_INPUT_POLICY_PATH; no new source loader/policy/default numeric value is created.
++
++Supported actual target paths are existing active attack/status/turn_undead single/circle/target_circle with target_filter already applied, original TargettingTypeID2 and IsAttackRange=false. Existing range field evidence must be {source_field:CastRange, raw_value:actual original CastRange, multiplier:the existing positive cast_range_to_host_length, host_length_input:that product}, and skill.range must equal it. Its unit is existing world-position Euclidean length (pixels), not a recovered original cell size.
++
++Optional new `distance_numeric_input.fields.min_range` must contain source_field=MinCastRange, the exact original raw_value, the same existing positive multiplier, exact host_length_input product, and explicit comparison=host_center_distance_gte. A positive original MinCastRange without that complete input is blocked. Zero minimum needs no new field. The comparison is an explicit host center-distance receiver contract, not claimed original server boundary behavior. The resulting minimum must be nonnegative, finite and no larger than maximum. The same min/max and existing line-of-sight API are checked against the selected primary target before cost and at impact. Radius/secondary-target/shape semantics stay unchanged.
++
++The current data reader DOES NOT emit positive-minimum inputs; publication of this receiver is not proof of that data-side connection, observed runtime use or approval to change it. Reference-only, Test/dummy, unbound, unsupported weapon-relative and excluded spell-stage/potion/emoticon branches remain unactivated.
++
++## Actual equipped gameplay weapon context
++
++`world.original_skills.current_source_weapon_context()` delegates to `weapon_context(world) -> {ok:true, physical_id,item_class_id,source_id,bless_raw,enchant,weapon_type_id,weapon_type_row,original_item_row,source,source_basis,use_authorized:false}` or {ok:false,reason}. It reads the ACTUAL equipped_items.weapon.instance_id, matching live physical object and current source DTO/full ItemClass/archive, preserves normal/blessed/cursed qualified source IDs through existing original/owned-definition checks, and applies the EXISTING equipment condition helper. Exact ItemBonus→WeaponType is obtained from patch523_ammo.weapon_type(record) and compared with canonical original WeaponType.ID. No Sprite/local_type conversion, legacy-name match, physical identity manufacture, grant or save occurs.
++
++The returned WeaponType.AttackRange is the raw original row used by the existing normal-attack cell consumer. It is NOT automatically a world-length spell range, proof of IsAttackRange meaning, a source scale, or permission to override a skill's existing weapon restriction. This metadata API is available to the data owner for a later exact typed connection; check() continues to reject weapon-relative projection until that separate contract is established.
++
++No asset/raw original table/player receipt/save bytes are included. Public baseline af3ec2b3 and all earlier local commits remain preserved. New publication needs its own exact approval; the pending frozen12-file approval must not include these additional files implicitly.
++
++Read-only caller API: SkillService.source_distance_context(record, actual_target, expected={}) resolves the selected skill through the EXISTING catalog, calls this receiver, and always reports use_authorized=false. It neither spends nor queues an attack. Cast/impact remain the actual execution owners and run their existing readiness/ownership checks.
+diff --git a/docs/CURRENT523_SOURCE_AREA_RECEIVER.md b/docs/CURRENT523_SOURCE_AREA_RECEIVER.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..cd6474b7d114a86d4d76884f9e188aa8523dbf8a
+--- /dev/null
++++ b/docs/CURRENT523_SOURCE_AREA_RECEIVER.md
+@@ -0,0 +1,23 @@
++# Existing circular source-area operand receiver — separate local follow-up
++
++Parent checkpoint fe90888ae11c71ab6b5b2ee63a777f750ddce422 and frozen f71ec28aa5fb48157429131d8097bf6fbda987ae publication scopes are preserved unchanged. This additional candidate is not included in either pending approval. Uncompiled, unexecuted, unverified; no game/tests/render/CI/upload/merge/phone/resource changes.
++
++## Original input already supplied
++
++player_skills523._apply_numeric_distance_input already supplies TargetAreaRadius for (TargettingTypeID1, shape self_circle) or (TargettingTypeID2, shape circle/target_circle), using the existing area_radius_to_host_length scale and a labelled unconfirmed-unit numeric policy. It emits distance_numeric_input.fields.radius with full canonical SpellClass-row SHA, current archive identity and actual policy-byte SHA. This follow-up adds no source loader, policy value, unit recovery, new spell or source shape.
++
++## Actual consumer calls
++
++SkillService.cast validates SOURCE_AREA.check after its existing target/landing checks and BEFORE spend/cooldown/effects. An admitted projection carries a runtime-only source_area_snapshot into the same existing queued area/targeted attack. SkillService.impact rechecks the snapshot before its existing effect branch. SkillService.targets also checks the projection/snapshot before running the unchanged actual selector. AUTO's existing self_circle empty-target check therefore uses the same receiver. Read-only API: world.original_skills.source_area_context(record, actual_primary=null, expected={}); it resolves the existing catalog and always returns use_authorized=false.
++
++Snapshot identity includes local skill/original SpellClass ID, bound row/policy SHA, archive, projected radius, existing shape/target cap, actual player/primary instance and primary life, field instance and combat generation. It deliberately does NOT freeze center coordinates or target membership. At use time the existing selector still centers on current player position or current primary position, applies its existing target_allowed and line-of-sight filter, sorts by current distance and uses the same existing target limit. No target, callback, hit, random draw, cost, save or source admission is added by this check.
++
++## Scope and explicit holds
++
++Only existing active attack/status/turn_undead with target_filter applied and the exact matching original self/target circle shape are accepted. Canonical whole-row identity, non-Test/non-excluded source, IsAttackRange=false, MinCastRange0, positive TargetAreaRadius and the complete original radius projection are required. Wrong/missing/stale explicit evidence does not fall back to host radius. Absence of a radius projection preserves existing host behavior. Self circles must not receive a primary; target circles require their actual live primary. Positive MinCastRange is not an inner radius and remains outside this area adapter; weapon-relative area, line/cone/chain/new target roles remain unsupported.
++
++The shared distance receiver's _policy now accepts one of the existing whitelisted scale fields (default cast_range_to_host_length, or area_radius_to_host_length). Existing distance calls keep their original default and behavior. Area does not duplicate the source-policy reader or choose a new conversion number. Source raw units remain unconfirmed and all results report native_area_rule_verified=false.
++
++Input: skill.source523.distance_numeric_input.fields.radius={source_field:TargetAreaRadius,raw_value:exact row.TargetAreaRadius,multiplier:existing policy.area_radius_to_host_length,host_length_input:that exact product}; skill.radius must equal it. Success returns handled:true/ok:true/snapshot/radius_world_length/origin:twilight_adjustable_numeric_estimate/native_area_rule_verified:false. No applicable radius returns handled:false/ok:true. Explicit invalid input returns handled:true/ok:false/reason. This metadata/API is not spell ownership or effect authorization.
++
++All original identity/learning/role/level/weapon/cost/source-target restrictions remain with the existing owner. No NPC identity, Map/Land admission, shape/unit/lifetime rule, positive-minimum formula, image, Sprite, spell-stage, potion or emoticon is fabricated. Sound remains excluded.
+diff --git a/scripts/skills/current523_area_receiver.gd b/scripts/skills/current523_area_receiver.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..a0ca762a7c231ac7f6c23ebde8c6a2ffa381510f
+--- /dev/null
++++ b/scripts/skills/current523_area_receiver.gd
+@@ -0,0 +1,51 @@
++extends RefCounted
++## Authenticated source-radius operand for the EXISTING host circle selector.
++## No source unit, new shape, annulus, target order, cap or lifetime is inferred.
++const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
++const PLAYER=preload("res://scripts/skills/player_skills523.gd")
++const DISTANCE=preload("res://scripts/skills/current523_distance_receiver.gd")
++
++static func _fail(reason: String) -> Dictionary:
++	return {"handled":true,"ok":false,"reason":reason}
++
++static func check(world: Node,skill: Dictionary,primary: Node=null,expected: Dictionary={}) -> Dictionary:
++	var source: Variant=skill.get("source523",{})
++	if not source is Dictionary:return {"handled":false,"ok":true}
++	var input: Variant=source.get("distance_numeric_input",{})
++	if not input is Dictionary:return _fail("원본 반경 입력 형식 확인 필요")
++	if input.is_empty():return {"handled":false,"ok":true} if expected.is_empty() else _fail("선택 후 원본 반경 입력이 없어졌습니다")
++	var fields: Variant=input.get("fields",{})
++	if not fields is Dictionary:return _fail("원본 반경 필드 증명 확인 필요")
++	if not fields.has("radius"):return {"handled":false,"ok":true} if expected.is_empty() else _fail("선택한 원본 반경 투영이 변경됐습니다")
++	var applied: Variant=source.get("applied",[])
++	if not applied is Array or not applied.has("target_filter") or skill.get("activation")!="active" or skill.get("runtime_blocked",false) or not str(skill.get("source523_block_reason","")).is_empty() or skill.get("mode") not in ["attack","status","turn_undead"]:return _fail("기존 활성·대상 승인 밖의 원본 반경입니다")
++	var identity: Dictionary=SOURCE.identity()
++	var spell_id: Variant=source.get("spell_id")
++	if identity.is_empty() or not PLAYER._source_integer(spell_id) or int(spell_id)<1 or input.get("source")!=identity or input.get("spell_id")!=spell_id or input.get("origin")!="twilight_adjustable_numeric_estimate" or input.get("source_raw_distance_unit_scale")!="unconfirmed" or input.get("native_grid_scale_recovered")!=false or input.get("host_geometry")!="existing_host_distance_engine_retained":return _fail("원본 반경의 현재 주문·출처 정체 불일치")
++	var raw: Dictionary=SOURCE.row("SpellClass",int(spell_id))
++	var bound_sha: Variant=input.get("bound_row_sha256")
++	if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false) or raw.is_empty() or PLAYER._source_row_json(raw,bound_sha).is_empty() or not SOURCE.declared_exclusion("SpellClass",raw).is_empty() or raw.get("TestSpell",false):return _fail("원본 반경의 전체 주문 행·고정 지문 불일치")
++	# Preserve the data owner's current supported scope; MinCastRange is NOT
++	# an inner radius and IsAttackRange does not select a weapon here.
++	if raw.get("IsAttackRange") is not bool or raw.IsAttackRange or not DISTANCE._number(raw.get("MinCastRange")) or float(raw.MinCastRange)!=0:return _fail("최소거리·무기 상대 반경은 별도 수신 계약이 필요합니다")
++	var shape: String=str(skill.get("shape",""))
++	var self_center: bool=raw.get("TargettingTypeID")==1 and shape=="self_circle"
++	var target_center: bool=raw.get("TargettingTypeID")==2 and shape in ["circle","target_circle"]
++	if not self_center and not target_center:return _fail("기존 원형 대상 선택과 원문 대상 유형이 다릅니다")
++	if self_center and primary!=null:return _fail("자기 중심 원문 반경에 별도 대상 중심을 넣을 수 없습니다")
++	if target_center and (not is_instance_valid(primary) or primary.get("dead")!=false):return _fail("원문 대상 중심 반경의 실제 선택 대상이 없습니다")
++	if not is_instance_valid(world.player) or world.hp<=0 or not is_instance_valid(world.field_map):return _fail("반경 수신의 실제 플레이어·필드 확인 필요")
++	var policy: Dictionary=DISTANCE._policy(input,"area_radius_to_host_length")
++	if not policy.get("ok",false):return policy
++	var value: Variant=raw.get("TargetAreaRadius")
++	if not DISTANCE._number(value) or float(value)<=0:return _fail("원문 반경의 양수 수치 확인 필요")
++	var radius: float=float(value)*float(policy.scale)
++	var projected: Variant=fields.radius
++	if not is_finite(radius) or radius<=0 or not projected is Dictionary or projected.get("source_field")!="TargetAreaRadius" or projected.get("raw_value")!=value or not DISTANCE._number(projected.get("multiplier")) or float(projected.multiplier)!=float(policy.scale) or not DISTANCE._number(projected.get("host_length_input")) or float(projected.host_length_input)!=radius or not DISTANCE._number(skill.get("radius")) or float(skill.radius)!=radius:return _fail("실제 스킬 반경과 원문 수치·현재 자체 배율 불일치")
++	var limit: Variant=skill.get("targets",6)
++	if not PLAYER._source_integer(limit) or int(limit)<1:return _fail("기존 원형 대상 수 제한 형식 확인 필요")
++	var snapshot: Dictionary={"skill_id":str(skill.get("id","")),"spell_id":int(spell_id),"bound_row_sha256":bound_sha,"policy_sha256":input.policy_sha256,"source":identity.duplicate(true),"radius_world_length":radius,"center_kind":"existing_player_position" if self_center else "existing_selected_target_position","shape":shape,"host_target_limit":int(limit),"player_instance_id":world.player.get_instance_id(),"primary_instance_id":primary.get_instance_id() if target_center else 0,"primary_life_id":primary.get("life_id") if target_center else 0,"field_instance_id":world.field_map.get_instance_id(),"combat_generation":world.combat_generation}
++	if not expected.is_empty() and expected!=snapshot:return _fail("선택 이후 원문 반경·중심 대상 생명·필드가 바뀌었습니다")
++	# Center follows the existing selector at the moment of use; do not freeze
++	# coordinates or replace its target filtering, LOS, sort or target count.
++	return {"handled":true,"ok":true,"snapshot":snapshot,"radius_world_length":radius,"origin":"twilight_adjustable_numeric_estimate","native_area_rule_verified":false}
+diff --git a/scripts/skills/current523_distance_receiver.gd b/scripts/skills/current523_distance_receiver.gd
+new file mode 100644
+index 0000000000000000000000000000000000000000..f6a80e1f99179601b32a496d89238f9c7f5056c7
+--- /dev/null
++++ b/scripts/skills/current523_distance_receiver.gd
+@@ -0,0 +1,88 @@
++extends RefCounted
++## Existing world-length distance receiver. Source conversion remains the
++## data owner's explicitly labelled numeric estimate, never a native grid rule.
++const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
++const PLAYER=preload("res://scripts/skills/player_skills523.gd")
++const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
++const AMMO=preload("res://scripts/loot/patch523_ammo.gd")
++
++static func _number(value: Variant) -> bool:
++	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value))
++
++static func _fail(reason: String) -> Dictionary:
++	return {"handled":true,"ok":false,"reason":reason}
++
++# Read-only actual equipment context. No Sprite enum, name-based identity,
++# source admission, weapon-relative spell rule or additional permission is made.
++static func weapon_context(world: Node) -> Dictionary:
++	var worn: Variant=world.equipped_items.get("weapon",{})
++	if not worn is Dictionary:return {"ok":false,"reason":"actual_weapon_slot_unavailable"}
++	var uid: Variant=worn.get("instance_id")
++	if not uid is String or uid.is_empty() or not world.item_instances.get(uid) is Dictionary:return {"ok":false,"reason":"selected_physical_weapon_unavailable"}
++	var physical: Dictionary=world.item_instances[uid]
++	var record: Dictionary=world._equipped_weapon_record()
++	var identity: Dictionary=SOURCE.identity()
++	var item_id: Variant=record.get("source_item_class_id")
++	if identity.is_empty() or not PLAYER._source_integer(item_id) or int(item_id)<1 or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_m_native_item")!=true or record.get("source_definition_archive")!=identity:return {"ok":false,"reason":"actual_current_source_weapon_unavailable"}
++	if physical.get("name")!=worn.get("name") or physical.get("name")!=record.get("name") or not physical.get("record") is Dictionary or physical.record.get("sourceId")!=record.get("sourceId") or not world._is_instance_equipped(uid):return {"ok":false,"reason":"weapon_slot_physical_identity_mismatch"}
++	var original: Dictionary=SOURCE.row("ItemClass",int(item_id))
++	if DROPS.current_original_definition(record).is_empty() or DROPS.current_owned_record(physical.record).is_empty() or physical.record.get("source_m_native_item")!=true or physical.record.get("source_snapshot")!="patch523" or physical.record.get("source_definition_archive")!=identity or physical.record.get("source_original_item")!=original or physical.record.get("source_item_class_id")!=item_id or physical.record.get("source_bless_raw")!=record.get("source_bless_raw"):return {"ok":false,"reason":"actual_weapon_current_ownership_definition_mismatch"}
++	if original.is_empty() or original!=record.get("source_original_item") or original.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",original).is_empty() or not record.get("source_condition_pending",[]).is_empty():return {"ok":false,"reason":"source_weapon_original_or_conditions_unavailable"}
++	if not PLAYER._source_integer(physical.get("level")) or int(physical.level)<0 or not DROPS.equipment_error(record,str(world.job_class),int(world.level),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty():return {"ok":false,"reason":"actual_source_weapon_equipment_conditions_unmet"}
++	var type: Dictionary=AMMO.weapon_type(record)
++	if type.is_empty() or not PLAYER._source_integer(type.get("ID")) or int(type.ID)<1 or SOURCE.row("WeaponType",int(type.ID))!=type or not SOURCE.declared_exclusion("WeaponType",type).is_empty():return {"ok":false,"reason":"original_gameplay_weapon_type_unavailable"}
++	return {"ok":true,"physical_id":uid,"item_class_id":int(item_id),"source_id":record.sourceId,"bless_raw":record.get("source_bless_raw"),"enchant":physical.get("level"),"weapon_type_id":int(type.ID),"weapon_type_row":type.duplicate(true),"original_item_row":original.duplicate(true),"source":identity.duplicate(true),"source_basis":"actual_equipped_physical_ItemClass_ItemBonus_WeaponType","use_authorized":false}
++
++static func _policy(input: Dictionary,scale_field: String="cast_range_to_host_length") -> Dictionary:
++	if scale_field not in ["cast_range_to_host_length","area_radius_to_host_length"]:return _fail("미지원 기존 거리 정책 수신 필드")
++	var file:=FileAccess.open(PLAYER.DISTANCE_INPUT_POLICY_PATH,FileAccess.READ)
++	if file==null or file.get_length()>65536:return _fail("기존 거리 정책 입력을 읽을 수 없습니다")
++	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
++	var parser:=JSON.new()
++	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary:return _fail("기존 거리 정책 형식 확인 필요")
++	var policy: Dictionary=parser.data
++	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA256);hash.update(bytes)
++	if input.get("policy_path")!=PLAYER.DISTANCE_INPUT_POLICY_PATH or input.get("policy_schema")!="twilight.current523.distance-input-policy.v1" or hash.finish().hex_encode()!=input.get("policy_sha256") or policy.get("schema")!="twilight.current523.distance-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=PLAYER.SOURCE_SHA or policy.get("enabled")!=true or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_distance_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_geometry")!="existing_host_distance_engine_retained":return _fail("원본 거리 입력과 현재 명시적 자체 배율 정책이 다릅니다")
++	var scale: Variant=policy.get(scale_field)
++	if not _number(scale) or float(scale)<=0:return _fail("기존 원본 거리 배율 확인 필요")
++	return {"ok":true,"scale":float(scale)}
++
++# Call before costs and again at the existing impact callback. Only a complete
++# source-reader projection is consumed; absence preserves existing host behavior.
++static func check(world: Node,skill: Dictionary,target: Node,expected: Dictionary={}) -> Dictionary:
++	var source: Variant=skill.get("source523",{})
++	if not source is Dictionary:return {"handled":false,"ok":true}
++	var input: Variant=source.get("distance_numeric_input",{})
++	if not input is Dictionary:return _fail("원본 거리 입력 형식 확인 필요")
++	if input.is_empty():return {"handled":false,"ok":true} if expected.is_empty() else _fail("선택 후 원본 거리 입력이 없어졌습니다")
++	var fields: Variant=input.get("fields",{})
++	if not fields is Dictionary:return _fail("원본 거리 필드 증명 확인 필요")
++	if not fields.has("range"):
++		return {"handled":false,"ok":true} if expected.is_empty() and not fields.has("min_range") else _fail("최소거리에는 동일 원문 최대거리 입력이 함께 필요합니다")
++	var applied: Variant=source.get("applied",[])
++	if not applied is Array:return _fail("기존 대상 승인 입력 형식 확인 필요")
++	if skill.get("activation")!="active" or skill.get("runtime_blocked",false) or not str(skill.get("source523_block_reason","")).is_empty() or skill.get("mode") not in ["attack","status","turn_undead"] or skill.get("shape","single") not in ["single","circle","target_circle"] or not applied.has("target_filter"):return _fail("기존 활성·대상 선택 계약 밖의 거리 입력입니다")
++	var identity: Dictionary=SOURCE.identity()
++	var spell_id: Variant=source.get("spell_id")
++	if identity.is_empty() or not PLAYER._source_integer(spell_id) or int(spell_id)<1 or input.get("source")!=identity or input.get("spell_id")!=spell_id or input.get("origin")!="twilight_adjustable_numeric_estimate" or input.get("source_raw_distance_unit_scale")!="unconfirmed" or input.get("native_grid_scale_recovered")!=false or input.get("host_geometry")!="existing_host_distance_engine_retained":return _fail("선택 스킬의 현재 원본 거리 정체 불일치")
++	var raw: Dictionary=SOURCE.row("SpellClass",int(spell_id))
++	var bound_sha: Variant=input.get("bound_row_sha256")
++	if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false) or raw.is_empty() or PLAYER._source_row_json(raw,bound_sha).is_empty() or not SOURCE.declared_exclusion("SpellClass",raw).is_empty() or raw.get("TestSpell",false):return _fail("선택 원본 주문 전체 행·고정 지문 불일치")
++	if raw.get("TargettingTypeID")!=2 or raw.get("IsAttackRange") is not bool or raw.IsAttackRange:return _fail("원문 무기 상대 사거리는 별도 실제 수신 계약이 필요합니다")
++	if not _number(raw.get("CastRange")) or float(raw.CastRange)<=0 or not _number(raw.get("MinCastRange")) or float(raw.MinCastRange)<0:return _fail("원문 최대·최소거리 수치 확인 필요")
++	var policy: Dictionary=_policy(input)
++	if not policy.get("ok",false):return policy
++	var maximum: float=float(raw.CastRange)*float(policy.scale)
++	var minimum: float=float(raw.MinCastRange)*float(policy.scale)
++	var projected: Variant=fields.range
++	if not projected is Dictionary or projected.get("source_field")!="CastRange" or projected.get("raw_value")!=raw.CastRange or not _number(projected.get("multiplier")) or float(projected.multiplier)!=float(policy.scale) or not _number(projected.get("host_length_input")) or float(projected.host_length_input)!=maximum or not _number(skill.get("range")) or float(skill.range)!=maximum:return _fail("현재 스킬 최대거리와 원본 수치 투영이 다릅니다")
++	if minimum>0 or fields.has("min_range"):
++		var lower: Variant=fields.get("min_range")
++		if not lower is Dictionary or lower.get("source_field")!="MinCastRange" or lower.get("raw_value")!=raw.MinCastRange or not _number(lower.get("multiplier")) or float(lower.multiplier)!=float(policy.scale) or not _number(lower.get("host_length_input")) or float(lower.host_length_input)!=minimum or lower.get("comparison")!="host_center_distance_gte":return _fail("원문 최소거리와 명시된 자체 거리 수신 입력이 필요합니다")
++	if not is_finite(maximum) or not is_finite(minimum) or minimum>maximum:return _fail("원본 거리 투영의 유효 범위 확인 필요")
++	if not is_instance_valid(world.player) or not is_instance_valid(target) or target.get("dead")!=false or not is_instance_valid(world.field_map):return _fail("실제 선택 대상·현재 필드 확인 필요")
++	var snapshot: Dictionary={"skill_id":str(skill.get("id","")),"spell_id":int(spell_id),"bound_row_sha256":bound_sha,"policy_sha256":input.policy_sha256,"source":identity.duplicate(true),"maximum_world_length":maximum,"minimum_world_length":minimum,"target_instance_id":target.get_instance_id(),"target_life_id":target.get("life_id"),"field_instance_id":world.field_map.get_instance_id(),"combat_generation":world.combat_generation}
++	if not expected.is_empty() and expected!=snapshot:return _fail("선택 이후 대상 생명·필드·거리 입력이 바뀌었습니다")
++	var distance: float=world.player.global_position.distance_to(target.global_position)
++	if not is_finite(distance) or distance<minimum or distance>maximum or not world._has_line_of_sight_world(world.player.global_position,target.global_position):return _fail("원문 수치 기반 자체 거리·시야 범위 밖입니다")
++	return {"handled":true,"ok":true,"snapshot":snapshot,"distance_world_length":distance,"origin":"twilight_adjustable_numeric_estimate","native_distance_rule_verified":false}
+diff --git a/scripts/skills/skill_service.gd b/scripts/skills/skill_service.gd
+index fa0c3f58522a71eb6bb0195355595b32740be2fc..96cef1e3561c3ec2bec5f6231715703f8242b0f0 100644
+--- a/scripts/skills/skill_service.gd
++++ b/scripts/skills/skill_service.gd
+@@ -1,5 +1,7 @@
+ extends RefCounted
++const SOURCE_DISTANCE=preload("res://scripts/skills/current523_distance_receiver.gd")
+ class_name TwilightOriginalSkillService
++const SOURCE_AREA=preload("res://scripts/skills/current523_area_receiver.gd")
+ 
+ const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
+ const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
+@@ -232,7 +234,25 @@ func spend(skill: Dictionary) -> bool:
+ 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
+ 	return true
+ 
++# The map owner alone resolves current Land/cell/SpellClass declarations.
++# This is a read-only explicit-request gate, not an entry/admission permission.
++func _source_region_cast_reason(record: Dictionary) -> String:
++	if world.has_method("current523_source_spell_cast_reason"):
++		var response: Variant=world.call("current523_source_spell_cast_reason",record)
++		return response if response is String else "원문 지역 주문 제한 수신 결과 확인 필요"
++	# Preserve ordinary host behavior where the map lane is not installed.
++	# An actually active source session with a bound source profile cannot
++	# silently treat a missing owner callback as source-region permission.
++	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active")==true:
++		var selected: Dictionary=catalog.resolve(record)
++		if not catalog.source523.evidence_for(str(selected.get("id",""))).is_empty():return "원문 지역 주문 제한 소유자 연결 필요"
++	return ""
++
+ func ready(skill: Dictionary, announce: bool = false) -> bool:
++	var region_reason: String=_source_region_cast_reason(skill)
++	if not region_reason.is_empty():
++		if announce:world.hud.show_message(region_reason)
++		return false
+ 	var source_status: Dictionary=catalog.source_learning_status(skill)
+ 	if not source_status.is_empty():
+ 		if announce:world.hud.show_message(str(source_status.message))
+@@ -259,9 +279,29 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
+ 	if not reason.is_empty() and announce: world.hud.show_message(reason)
+ 	return reason.is_empty()
+ 
++# Read-only metadata from the actually equipped source physical weapon.
++# This never admits a source spell or interprets a Sprite/local_type number.
++func current_source_weapon_context() -> Dictionary:
++	return SOURCE_DISTANCE.weapon_context(world)
++
++
++func source_area_context(record: Dictionary,primary: TwilightMonster=null,expected: Dictionary={}) -> Dictionary:
++	var selected: Dictionary=catalog.resolve(record)
++	var result: Dictionary=SOURCE_AREA.check(world,selected,primary,expected)
++	result["use_authorized"]=false
++	return result
++
++func source_distance_context(record: Dictionary,target: TwilightMonster,expected: Dictionary={}) -> Dictionary:
++	var selected: Dictionary=catalog.resolve(record)
++	var result: Dictionary=SOURCE_DISTANCE.check(world,selected,target,expected)
++	result["use_authorized"]=false
++	return result
++
+ func cast(record: Dictionary) -> bool:
+ 	if not ready(record, true): return false
+ 	var skill := catalog.resolve(record)
++	skill.erase("source_distance_snapshot") # Never reuse a prior target/field token.
++	skill.erase("source_area_snapshot")
+ 	if progression.is_toggle(skill):return progression.toggle(skill)
+ 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
+ 	# Cast-speed options reduce cooldown through the world's shared policy;
+@@ -280,6 +320,11 @@ func cast(record: Dictionary) -> bool:
+ 			if estimated_nodes.kind(skill) == "grab" and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
+ 			else: return false
+ 		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target): return false
++		if not dash_only:
++			var distance_check: Dictionary=SOURCE_DISTANCE.check(world,skill,target)
++			if distance_check.get("handled",false):
++				if not distance_check.get("ok",false):world.hud.show_message(str(distance_check.get("reason","원본 거리 입력 확인 필요")));return false
++				skill["source_distance_snapshot"]=distance_check.snapshot.duplicate(true)
+ 	var dash_end := Vector2.INF
+ 	if estimated_nodes.kind(skill) == "grab":
+ 		dash_end = estimated_nodes.dash_plan(skill, target)
+@@ -296,6 +341,10 @@ func cast(record: Dictionary) -> bool:
+ 		if not teleport_landing.is_finite():
+ 			world.hud.show_message("이동 가능한 위치가 없습니다")
+ 			return false
++	var area_check: Dictionary=SOURCE_AREA.check(world,skill,target)
++	if area_check.get("handled",false):
++		if not area_check.get("ok",false):world.hud.show_message(str(area_check.get("reason","원본 반경 입력 확인 필요")));return false
++		skill["source_area_snapshot"]=area_check.snapshot.duplicate(true)
+ 	# Validation ends here. Costs and cooldowns happen once, before the marker.
+ 	if not spend(skill): return false
+ 	if dash_end.is_finite(): estimated_nodes.move_to(dash_end)
+@@ -387,6 +436,8 @@ func area_marker(skill: Dictionary, generation: int) -> void:
+ 
+ func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonster]:
+ 	var result: Array[TwilightMonster] = []
++	var area_check: Dictionary=SOURCE_AREA.check(world,skill,primary,skill.get("source_area_snapshot",{}))
++	if area_check.get("handled",false) and not area_check.get("ok",false):return result
+ 	var origin: Vector2 = world.player.global_position
+ 	var shape := str(skill.get("shape", "single"))
+ 	if shape == "single" and is_instance_valid(primary):
+@@ -409,6 +460,12 @@ func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonst
+ 
+ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1) -> void:
+ 	if expected_life >= 0 and (not is_instance_valid(primary) or primary.life_id != expected_life): return
++	if skill.has("source_distance_snapshot"):
++		var distance_check: Dictionary=SOURCE_DISTANCE.check(world,skill,primary,skill.source_distance_snapshot)
++		if not distance_check.get("handled",false) or not distance_check.get("ok",false):return
++	if skill.has("source_area_snapshot"):
++		var area_check: Dictionary=SOURCE_AREA.check(world,skill,primary,skill.source_area_snapshot)
++		if not area_check.get("handled",false) or not area_check.get("ok",false):return
+ 	combat_elapsed = 0
+ 	for target: TwilightMonster in targets(skill, primary):
+ 		if not is_instance_valid(target) or target.dead: continue
