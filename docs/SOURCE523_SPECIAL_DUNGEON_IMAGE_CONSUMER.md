@@ -30,14 +30,40 @@ have no direct matches to those entrance IDs in this source. No map coordinate,
 ImageInfo offset/ratio or unrelated preview picture is inserted into this role.
 These are source/metadata findings, not game rendering or execution evidence.
 
-The missing UI-owner receiver is precise: the actual selected special entry's
-authored entrance-image Sprite/ImageView member/SHA/node, its original parent
-registration/role and selection/lifetime callback. Current source dungeon
-controls bind outside-close only; current source_dungeon_view has an ItemList,
-text details and service action buttons but no established original entrance
-image target. No new TextureRect, arbitrary list-thumbnail assignment, popup
-role or entrance layout is created. UI can call this provider when it supplies
-that receiver and compare special_dungeon_id with its actual selected row.
+UI286 checkpoint3e4bffa3abcc0693730a381de247c3c7bfdb03b8 supplies the
+actual ImageView28700 receiver API and selection/list/visibility/exit notices.
+The image-owned adapter now consumes those APIs without editing UI files:
+
+```gdscript
+const EntranceBinding = preload("res://scripts/ui/source523_special_entrance_binding.gd")
+# UI owner retains this instance and calls only after its legitimate mount.
+var entrance_binding = EntranceBinding.new()
+var result: Dictionary = entrance_binding.bind(actual_view, registered_player)
+# Before replacing that mount, or explicitly tearing it down:
+entrance_binding.close()
+```
+
+`registered_player` must be the existing source sprite_scene renderer beneath
+that live view, configured for the exact Mission_DungeonSpecial_Btn member/SHA
+and original external ImageView28700 slot, initially hidden. No renderer or
+node is created by this adapter. It re-queries the actual owner after each
+selection notification, verifies its pack/manifest/member/node/widget against
+the mounted receiver, then passes the existing exact-row provider result to
+`set_bound_source_asset_result(28700, image)`. Only a successful assignment is
+made visible. Invalid selection, list rebuild, family change, hiding, closing,
+failed pixels and either owner's teardown clear the image. Selection signals
+are wakeups, never a replacement authority for the selected row. Explicit
+close disconnects every callback. No selection, travel, payout or save changes.
+
+The missing mount remains specifically Panel392 to ListView_Daily2560 item
+registration. The adapter neither declares that absent source relationship nor
+calls itself from the current unmounted view. A live tree descendant alone is
+not source-parent proof: `source_parent_registration_established` remains false.
+Only a future actual successful receiver call reports `pixels_assigned=true`;
+this turn did not invoke the adapter or mount any pixels. UI owns the remaining
+source-backed mount and must retain the binding at that point. The selected
+pack must contain the exact external ImageView scope (v37 is only a local UI
+candidate, not an update to the frozen installed v30).
 
 Source/renderer support is identified and the pixel descriptor is implemented;
 screen attachment remains pending the stated receiver. No source pack, phone
