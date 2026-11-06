@@ -38,5 +38,15 @@ unchanged. This code connects existing inputs; no bank or approved distribution
 file is changed or uploaded again. Missing16007/6082 inputs, exact Class and
 dependency identities, type9 ground roles and Invoke34 admission remain separate.
 
+The reference reader shares one immutable parsed manifest for the same path/pin
+across live NPC/action readers. It still reads and hashes the actual bounded
+manifest bytes on every load, and retains the per-render metadata-pin checks and
+per-use SP2 SHA/CRC checks. Actor JSON is not added to this shared cache. Nested
+manifest arrays/dictionaries are read-only, and outgoing member provenance is
+copied so one consumer cannot edit another actor's source identity. Reader reset
+detaches its dictionary reference instead of clearing the shared snapshot. This
+avoids a separate parsed31MiB registry per NPC without trusting timestamps or
+weakening the source admission boundary; no performance measurement is claimed.
+
 No tests, compilation, game, rendering or main CI were executed for this change.
 Actual displayed source actions and gameplay equivalence remain unobserved.
