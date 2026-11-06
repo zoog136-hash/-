@@ -140,6 +140,12 @@ func source_context() -> Dictionary:
 	var data: Dictionary = world.field_map.data
 	if data.has("source_land_id"): out.land = int(data.source_land_id)
 	if data.has("source_m_land_id"): out.land = int(data.source_m_land_id)
+	if world.field_map.get_meta("current523_generic_field",false)==true and world.field_map.has_method("death_source_context"):
+		var current: Variant=world.field_map.call("death_source_context",world.player.global_position)
+		if current is Dictionary and current.get("land")==out.land and current.get("position") is Vector2 and current.position.is_finite() and current.get("source_location") is Dictionary:
+			out.position=current.position
+			out["source_location"]=current.source_location.duplicate(true)
+		return out
 	if world.field_map.has_method("world_to_source"):
 		out.position = world.field_map.call("world_to_source",world.player.global_position)
 	return out
@@ -149,6 +155,7 @@ func death_policy() -> Dictionary:
 	var p: Dictionary = source.land_policy(int(context.land),context.position)
 	var safe: bool = world.field_map != null and world.field_map.is_safe(world.player.global_position)
 	p["exempt"] = bool(p.no_penalty) or (safe and not bool(p.npc_penalty))
+	if context.get("source_location") is Dictionary:p["source_location"]=context.source_location.duplicate(true)
 	return p
 
 func death_stats() -> Dictionary:
@@ -210,6 +217,7 @@ func begin_death(cause: String) -> void:
 		var id: String = str(int(next.next_id))
 		var entry: Dictionary = {"id":id,"at":now(),"map":world.active_map_id,"cause":cause,"level":world.level,"exp":lost,"cost":source.cost(world.level),"exp_claimed":lost == 0,"item":item,"item_claimed":item.is_empty(),"revived":false,"full_revive":bool(p.full_revive),"source_rules":source.ready,"exempt":p.exempt}
 		entry["death_stat_policy"] = stats
+		if p.get("source_location") is Dictionary:entry["source_location"]=p.source_location.duplicate(true)
 		next.last_time = int(entry.at)
 		next.next_id = int(next.next_id)+1; next.revision = int(next.revision)+1
 		next.dead_id = id; next.records.append(entry)

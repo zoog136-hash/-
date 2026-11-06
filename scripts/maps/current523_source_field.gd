@@ -124,3 +124,16 @@ func choose_source_landing(declared_bounds: Array, selection_policy: String = "E
 			return result
 	result.reason="no_confirmed_clear_cell"; result.inspected_cells=inspected
 	return result
+
+func death_source_context(point: Vector2) -> Dictionary:
+	# Existing death rules compare inclusive integer source-cell territories.
+	# Supply the selected M Land's cell, not host pixels or a legacy grid.
+	if not loaded or not coordinates.valid or not point.is_finite():return {}
+	var cell: Vector2i=world_to_cell(point)+coordinates.origin
+	if not source_bounds.has_point(cell):return {}
+	var sample: Dictionary=source_cell_info(cell)
+	var member: Variant=sample.get("member")
+	var digest: Variant=sample.get("source_sha256")
+	if not member is String or member.is_empty() or not digest is String or not SOURCE_PACK.S32_FORMAT._sha(digest):return {}
+	var identity: Dictionary={"schema":1,"source_snapshot":523,"land_id":int(native_land.ID),"asset_path":source_asset,"source_cell":[cell.x,cell.y],"source_manifest_sha256":catalog_sha256,"member":member,"member_sha256":digest,"coordinate_policy":"OWN_SOURCE_CELL_FLOOR_V1","native_m_rules_verified":false}
+	return {"land":int(native_land.ID),"position":Vector2(cell),"source_location":identity}
