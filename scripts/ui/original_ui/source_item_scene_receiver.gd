@@ -52,6 +52,17 @@ func validate_descriptor(descriptor: Dictionary) -> Dictionary:
 	if not current.get("ok",false):return current
 	var registration: Variant=descriptor.get("registration")
 	if not registration is Dictionary or registration.get("schema")!=SCHEMA or registration.get("kind")!="TWILIGHT_host_registration" or registration.get("space")!=SPACE or typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=false or registration.get("receiver")!=self or registration.get("target")!=_target:return _fail("host_item_scene_typed_registration_mismatch")
+	var proof: Dictionary=validate_source_content(descriptor,current.record)
+	if not proof.get("ok",false):return proof
+	proof["registration_kind"]="TWILIGHT_host_registration"
+	proof["original_registration_confirmed"]=false
+	proof["target"]=_target.duplicate(true)
+	proof["physical_instance_id"]=_physical_id
+	return proof
+
+static func validate_source_content(descriptor: Dictionary, current_raw_record: Dictionary) -> Dictionary:
+	# Shared original-content proof only. Each typed host receiver separately
+	# validates its actual owner, destination, record and lifecycle.
 	# These five source cases declare clips, but no trigger/repeat policy.
 	if descriptor.has("playback"):return _fail("host_item_scene_playback_policy_not_declared")
 	var member: Variant=descriptor.get("member")
@@ -62,7 +73,7 @@ func validate_descriptor(descriptor: Dictionary) -> Dictionary:
 	if not pack is RefCounted or not is_instance_valid(pack) or pack.get("manifest_sha256")!=spec.pin:return _fail("host_item_scene_selected_pack_required")
 	var bindings: Variant=descriptor.get("bindings",{})
 	if not bindings is Dictionary or not bindings.is_empty():return _fail("host_item_scene_full_original_hierarchy_required")
-	var info: Dictionary=Images.describe_item(current.record)
+	var info: Dictionary=Images.describe_item(current_raw_record)
 	var canonical: Variant=info.get("provenance")
 	if info.get("reason")!="unsupported_csb" or info.get("source_snapshot")!="patch523" or not canonical is Dictionary or canonical.get("source_table")!="ItemClass" or canonical.get("source_field")!="IconID" or canonical.get("path")!=member or canonical.get("asset_type_id")!=101:return _fail("host_item_scene_current_canonical_item_required")
 	if info.get("item_class_id") not in spec.items or canonical.get("source_id")!=info.item_class_id or canonical.get("icon_id")!=spec.icon or canonical.get("asset_id")!=spec.asset:return _fail("host_item_scene_current_item_icon_asset_mismatch")
@@ -87,7 +98,7 @@ func validate_descriptor(descriptor: Dictionary) -> Dictionary:
 	for offset: int in spec.nodes:
 		if not nodes.has(offset) or nodes[offset].node.get("classname")!=spec.nodes[offset][0] or nodes[offset].parent!=spec.nodes[offset][1]:return _fail("host_item_scene_original_hierarchy_changed")
 	if nodes[int(spec.panel)].node.get("options",{}).get("clipEnabled")!=1:return _fail("host_item_scene_required_original_clip_missing")
-	return {"ok":true,"registration_kind":"TWILIGHT_host_registration","original_registration_confirmed":false,"target":_target.duplicate(true),"physical_instance_id":_physical_id,"source_internal_proof":{"member":member,"source_sha256":spec.sha,"manifest_sha256":spec.pin,"full_node_count":nodes.size(),"required_panel_clip_preserved":true,"blend_and_transform_support":"existing strict full-scene renderer must accept; no omitted nodes or flattened textures"},"runtime_rendering_verified":false}
+	return {"ok":true,"source_internal_proof":{"member":member,"source_sha256":spec.sha,"manifest_sha256":spec.pin,"full_node_count":nodes.size(),"required_panel_clip_preserved":true,"blend_and_transform_support":"existing strict full-scene renderer must accept; no omitted nodes or flattened textures"},"runtime_rendering_verified":false}
 
 func validate_attachment(renderer: Node2D, offset: int, descriptor: Dictionary) -> Dictionary:
 	if _player==null or _player.get_ref()!=renderer or offset!=15012:return _fail("host_item_scene_actual_destination_changed")

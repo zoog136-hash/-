@@ -20,7 +20,15 @@ static func resolve_owned(hud: Node, entry: Dictionary, native_context: Dictiona
 	var api: Script=load(OWNER_API)
 	if api==null:return _fail("source_inventory_existing_image_owner_unavailable")
 	var info: Dictionary=api.describe_item(record,str(entry.get("name","")))
-	if info.get("reason")=="unsupported_csb":return preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").request(hud,info,native_context)
+	if info.get("reason")=="unsupported_csb":
+		var native: Dictionary=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").request(hud,info,native_context)
+		if not native.get("ok",false):
+			# Identity only, never an accepted image/scene. The actual inventory
+			# view may prepare a hidden original receiver before requesting again.
+			native["pending_native_item_scene"]=true
+			native["image_owner_info"]=info.duplicate(true)
+			native["current_raw_record"]=record.duplicate(true)
+		return native
 	# This is only normalization of the owner's successful descriptor for the
 	# shared original Sprite upload path. No old image path or sample fallback.
 	if info.get("route")!="source523_images" or info.get("status")!="original_linked" or info.get("original_bytes_unchanged")!=true or not info.get("texture") is Texture2D:
