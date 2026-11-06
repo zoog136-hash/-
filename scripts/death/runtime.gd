@@ -412,6 +412,13 @@ func resurrect() -> Dictionary:
 	var next: Dictionary = export_state()
 	var entry: Dictionary = _staged_entry(next,str(next.dead_id))
 	entry.revived = true; entry.resurrected_at = now()
+	# Capture the actual chosen existing field-start endpoint separately from
+	# death origin; no original restart route or destination is inferred.
+	if world.field_map.get_meta("current523_generic_field",false)==true and world.field_map.has_method("death_source_context"):
+		var restart: Variant=world.field_map.call("death_source_context",destination)
+		if restart is Dictionary and restart.get("source_location") is Dictionary:
+			entry["restart_source_location"]=restart.source_location.duplicate(true)
+			entry["restart_location_policy"]="EXISTING_FIELD_START_V1"
 	next.dead_id = ""; next.revision = int(next.revision)+1
 	var hp_ratio: float = 1.0 if bool(entry.get("full_revive",false)) else float(policy.get("restart_hp_fraction",0.5))
 	var fields: Dictionary = {"hp":maxi(1,int(world._effective_max_hp()*hp_ratio)),"mp":int(world._effective_max_mp()*float(policy.get("restart_mp_fraction",0.2))),KEY:next}
@@ -449,3 +456,15 @@ func show_death() -> void:
 	death_overlay = preload("res://scripts/death/death_ui.gd").new()
 	world.hud.get_node("Root").add_child(death_overlay)
 	death_overlay.configure(self)
+
+static func source_location_text(entry: Dictionary, key: String="source_location") -> String:
+	# Saved provenance is display-only. Never grants travel/refund permission.
+	if key not in ["source_location","restart_source_location"]:return ""
+	var location: Variant=entry.get(key)
+	if not location is Dictionary or location.get("schema")!=1 or location.get("source_snapshot")!=523 or not integer(location.get("land_id")):return ""
+	var cell: Variant=location.get("source_cell")
+	if not cell is Array or cell.size()!=2 or not integer(cell[0]) or not integer(cell[1]):return ""
+	for field: String in ["source_manifest_sha256","member_sha256"]:
+		var digest: Variant=location.get(field)
+		if not digest is String or digest.length()!=64 or not digest.is_valid_hex_number(false):return ""
+	return "원문 Land%d · 소스 셀 (%d, %d)"%[int(location.land_id),int(cell[0]),int(cell[1])]

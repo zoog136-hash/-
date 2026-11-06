@@ -36,3 +36,26 @@ This connects current source-cell context to the already implemented regional
 death consumer. It does not establish native safety zones, new death formulas,
 whole-map execution coverage or native source-attribute ordering. Missing point
 provenance retains the prior unknown-position behavior; no cell is fabricated.
+
+## Existing death/recovery screens consume the saved context
+
+The existing death summary, recovery list and charged-recovery confirmation now
+read the recorded M Land/source-cell annotation, rather than presenting every
+source death as the shared host aden_world. The formatter validates the optional
+annotation's source snapshot/schema, integer identity/cell and SHA format. It
+never resolves the historical ID into a new destination or permission. Old or
+unusable annotations fall back to the original display; old records are untouched.
+
+New successful restart receipts can also retain restart_source_location from
+the actual chosen existing field-start endpoint. This is separate from the
+recorded death origin and labelled EXISTING_FIELD_START_V1. Destination selection,
+HP/MP formulas, cost, writer, failure rollback and revival effects are unchanged.
+The annotation is staged in the same existing death transaction, so failed writes
+do not publish a successful restart annotation. No original restart relationship
+is synthesized. Existing source content supplied no restart link on Land, and
+only FullResurrectionOnDeadRestart's bool was found in the relevant attribute
+schema; it changes the already-owned recovery amount, not destination selection.
+
+These label/receipt consumers add no UI nodes, templates, art or sound. They do
+not change source item identities, costs, recovery eligibility or target selection.
+This continuation is also unexecuted/unverified under the standing instruction.

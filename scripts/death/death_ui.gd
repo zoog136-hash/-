@@ -35,6 +35,10 @@ func configure(value) -> void:
 		var entry: Dictionary = service._entry(str(service.state.dead_id))
 		var item: Dictionary = entry.get("item",{})
 		info.text = "경험치 손실 %d\n아이템 손실: %s\n부활 후 메뉴 → 사망 복구에서 복구할 수 있습니다.\n시작 지점 부활은 무료입니다.\n회복량: TWILIGHT 자체 정책" % [int(entry.get("exp",0)),"없음" if item.is_empty() else str(item.physical.name)+" (원래 장비 보관)"]
+	var source_entry: Dictionary=service._entry(str(service.state.dead_id))
+	if not service.pending.is_empty():source_entry=service._staged_entry(service.pending.state,str(service.pending.state.dead_id))
+	var origin: String=service.source_location_text(source_entry)
+	if not origin.is_empty():info.text+="\n사망 위치: "+origin
 	box.add_child(info)
 	var result := Label.new()
 	result.name = "Death523Result"

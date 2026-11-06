@@ -80,7 +80,11 @@ func refresh() -> void:
 	for entry: Dictionary in entries:
 		var age: int = maxi(0,service.now()-int(entry.at))
 		var item: Dictionary = entry.item
-		var summary: String = "#%s · Lv.%d · %s\n경험치 %d %s · 아이템 %s\n%s" % [entry.id,int(entry.level),entry.map,int(entry.exp),"(복구 완료)" if entry.exp_claimed else "(미복구)","없음" if item.is_empty() else str(item.physical.name)+( " (복구 완료)" if entry.item_claimed else " (미복구)"),"기한 만료 · 기록 보존" if age >= 259200 else "남은 시간 %d분" % maxi(0,int((259200-age)/60))]
+		var origin: String=service.source_location_text(entry)
+		if origin.is_empty():origin=str(entry.map)
+		var summary: String = "#%s · Lv.%d · %s\n경험치 %d %s · 아이템 %s\n%s" % [entry.id,int(entry.level),origin,int(entry.exp),"(복구 완료)" if entry.exp_claimed else "(미복구)","없음" if item.is_empty() else str(item.physical.name)+( " (복구 완료)" if entry.item_claimed else " (미복구)"),"기한 만료 · 기록 보존" if age >= 259200 else "남은 시간 %d분" % maxi(0,int((259200-age)/60))]
+		var restarted: String=service.source_location_text(entry,"restart_source_location")
+		if not restarted.is_empty():summary+="\n부활 위치: "+restarted+" · 기존 시작점 정책"
 		label(summary)
 		for kind: String in ["exp","item"]:
 			if bool(entry[kind+"_claimed"]): continue
@@ -102,7 +106,9 @@ func _confirm(id: String, kind: String, mode: String) -> void:
 	var request: Dictionary = service.quote(id,kind,mode)
 	if not request.ok: result.text = str(request.message); return
 	var currency: String = {"free":"무료 횟수 1회","certificate":"%s %d개 (자체 소모량)" % [str(request.certificate.get("name","구호증서")),int(request.cost)],"adena":"%d 아데나" % int(request.cost),"gem":"%d 다이아" % int(request.cost)}[mode]
-	service.world.hud.confirm_action("사망 복구 확인","#%s %s을 복구합니다.\n소모: %s\n%s" % [id,"경험치" if kind == "exp" else "원래 장비",currency,"자체 복구비/환산/소모 정책 적용" if kind == "item" or mode in ["gem","certificate"] or not service.source.ready else "원본 레벨별 비용 · 로컬 아데나 연결"],"복구",func(_amount: int) -> void:
+	var origin: String=service.source_location_text(service._entry(id))
+	var where: String="" if origin.is_empty() else "\n사망 위치: "+origin
+	service.world.hud.confirm_action("사망 복구 확인","#%s %s을 복구합니다.%s\n소모: %s\n%s" % [id,"경험치" if kind == "exp" else "원래 장비",where,currency,"자체 복구비/환산/소모 정책 적용" if kind == "item" or mode in ["gem","certificate"] or not service.source.ready else "원본 레벨별 비용 · 로컬 아데나 연결"],"복구",func(_amount: int) -> void:
 		var response: Dictionary = service.recover(request)
 		refresh()
 		result.text = str(response.message)
