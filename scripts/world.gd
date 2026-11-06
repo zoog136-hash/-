@@ -1457,6 +1457,7 @@ func _equipment_additional_damage(kind: String) -> int:
 	if PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer")=="existing_typed_flat_damage_projection":projected=PATCH523_EQUIPMENT_COMBAT.typed_flat_ignore(self,kind)
 	var result: int = projected + PATCH523_EQUIPMENT_COMBAT.pvp_flat_ignore(self,kind) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore")) + int(growth.bonus(kind+"_reduction_ignore:flat"))
 	result += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"damage_reduction_ignore"))
+	if kind=="magic":result += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"magicDamage"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -9393,6 +9394,7 @@ func _effective_move_speed_multiplier() -> float:
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
 		awakening_percent += float(record.get("speedBonusPct", 0.0))
+	awakening_percent += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"speedBonusPct")
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
@@ -9406,6 +9408,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"attackSpeed")
 	total += float(_active_item_buff_total("attack_speed"))
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
@@ -9488,6 +9491,7 @@ func _player_critical_rate(attack_type: String) -> int:
 			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
+	base += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"ranged_crit" if attack_type=="ranged" else "magic_crit" if attack_type=="magic" else "melee_crit"))
 	base += _catalog_critical_bonus(attack_type)
 	if original_skills != null: base += int(original_skills.stat("meleeCrit" if attack_type == "melee" else "rangedCrit" if attack_type == "ranged" else "magicCrit"))
 	return clampi(base, 0, 50)
@@ -9767,12 +9771,14 @@ func _effective_dg() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_dg(record)
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"dg"))
 	return maxi(0, total + int(original_skills.stat("dg") if original_skills != null else 0))
 
 func _effective_er() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"er"))
 	return maxi(0, total + int(original_skills.stat("er") if original_skills != null else 0))
 
 func _record_mr(record: Dictionary) -> int:
