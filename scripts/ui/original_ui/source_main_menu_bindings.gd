@@ -7,6 +7,7 @@ const INVENTORY=31392
 const SKILL=29848
 const STORE=35008
 const ALL=37304
+const ALL_OFF=36572
 const QUEST=27996
 const WEIGHT_TEXT=32360
 const WEIGHT_BACKGROUND=33104
@@ -37,6 +38,8 @@ func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	if tree.is_empty():tree=_pack.scene(MEMBER)
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_menu_original_layout_missing")
 	var roots: Array[int]=CORE_ROOT_OFFSETS.duplicate()
+	var menu_variant: Dictionary=menu_variant_state() if _active_source_node(ALL_OFF) else {"ok":false}
+	if menu_variant.get("ok",false):roots.append(ALL_OFF)
 	if include_quest:
 		roots.append(QUEST)
 		roots.append(27336)
@@ -53,7 +56,7 @@ func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	_collect_offsets(tree.nodeTree,roots,matches,selected,false)
 	for offset: int in roots:
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_menu_core_node_not_unique","offset":offset}
-	return {"ok":true,"source_node_offsets":selected,"optional_weight":weight,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"source_node_offsets":selected,"optional_weight":weight,"menu_variant":menu_variant,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionary:
 	var hud: Object=_live_hud()
@@ -68,9 +71,13 @@ func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionar
 	for offset: int in scope.source_node_offsets:
 		if built.bindings.has(offset):bindings[offset]=built.bindings[offset].duplicate(true)
 	bindings[ALL]={"role":"button","activate":Callable(self,"open_menu")}
+	if scope.menu_variant.get("ok",false):
+		bindings[ALL]={"role":"button","activate":Callable(self,"toggle_presented_menu").bind(false),"visible":not scope.menu_variant.open}
+		bindings[ALL_OFF]={"role":"button","activate":Callable(self,"toggle_presented_menu").bind(true),"visible":scope.menu_variant.open}
 	for offset: int in [34596,29528]:bindings[offset]={"role":"static_source_text"}
 	if scope.optional_weight.get("ok",false):bindings[WEIGHT_TEXT]={"role":"source_text","text":scope.optional_weight.text,"visible":true}
 	var buttons: Array[int]=[ALL,INVENTORY,SKILL,STORE]
+	if scope.menu_variant.get("ok",false):buttons.append(ALL_OFF)
 	if include_quest:
 		bindings[QUEST]={"role":"button","activate":Callable(self,"open_quests")}
 		bindings[27336]={"role":"static_source_text"}
@@ -79,6 +86,8 @@ func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionar
 
 func refresh_presented(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=MEMBER:return _fail("source_main_menu_scene_mismatch")
+	var variant: Dictionary=refresh_menu_variant(scene)
+	if not variant.get("ok",false):return variant
 	var nodes: Variant=scene.get("source_nodes")
 	if not nodes is Dictionary or not nodes.has(WEIGHT_TEXT):return {"ok":true,"weight_connected":false,"code":"source_main_menu_weight_not_in_presented_scope"}
 	var weight: Dictionary=_weight_display()
@@ -91,6 +100,38 @@ func refresh_presented(scene: Node2D) -> Dictionary:
 	updated=scene.set_bound_visible(WEIGHT_TEXT,true)
 	if not updated.get("ok",false):return updated
 	return {"ok":true,"weight_connected":true,"weight_display":weight,"complete_screen_contract":false}
+
+func menu_variant_state() -> Dictionary:
+	var hud: Object=_live_hud()
+	if hud==null:return _fail("source_main_menu_hud_unavailable")
+	var workspace: Variant=hud.get("workspace")
+	var section: Variant=hud.get("active_section")
+	if not workspace is Control or not is_instance_valid(workspace) or not section is String:return _fail("source_main_menu_existing_workspace_state_required")
+	return {"ok":true,"open":section=="menu" and workspace.visible}
+
+func refresh_menu_variant(scene: Node2D) -> Dictionary:
+	if not is_instance_valid(scene) or scene.get("source_member")!=MEMBER:return _fail("source_main_menu_scene_mismatch")
+	if not scene.get("source_nodes").has(ALL_OFF):return {"ok":true,"menu_variant_connected":false}
+	var state: Dictionary=menu_variant_state()
+	for offset: int in [ALL,ALL_OFF]:
+		var visible: bool=state.get("ok",false) and (bool(state.get("open",false)) if offset==ALL_OFF else not bool(state.get("open",false)))
+		var node: Variant=scene.get("source_nodes").get(offset)
+		if not is_instance_valid(node):return _fail("source_main_menu_original_variant_node_required")
+		if node.visible==visible:continue
+		var changed: Dictionary=scene.set_bound_visible(offset,visible)
+		if not changed.get("ok",false):return changed
+	return {"ok":state.get("ok",false),"menu_variant_connected":state.get("ok",false),"state":state}
+
+func toggle_presented_menu(expected_open: bool) -> Dictionary:
+	var state: Dictionary=menu_variant_state()
+	if not state.get("ok",false) or state.open!=expected_open:return _fail("source_main_menu_presented_variant_changed")
+	return open_menu()
+
+func presented_close_button(scene: Node2D) -> Variant:
+	var state: Dictionary=menu_variant_state()
+	if not state.get("ok",false) or not state.open or not is_instance_valid(scene) or scene.get("source_member")!=MEMBER:return null
+	var node: Variant=scene.get("source_nodes").get(ALL_OFF)
+	return node.get_meta("source_button",null) if is_instance_valid(node) and node.is_visible_in_tree() else null
 
 func _weight_display() -> Dictionary:
 	var hud: Object=_live_hud()

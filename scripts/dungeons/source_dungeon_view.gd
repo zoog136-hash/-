@@ -104,6 +104,17 @@ func configure(controller: Node) -> void:
 	_build_play_panel()
 	_refresh()
 
+func select_existing_family(kind: String, hard: bool=false) -> Dictionary:
+	# A source UI shortcut selects an existing filter only. The current
+	# refresh retains its own row-default policy; no run/settings/save here.
+	var index: int=FAMILIES.find([kind,hard])
+	if index<0:return {"ok":false,"code":"source_dungeon_existing_family_required"}
+	if not is_instance_valid(world) or not is_instance_valid(family) or not is_inside_tree() or is_queued_for_deletion() or not is_visible_in_tree() or family.item_count!=FAMILIES.size():return {"ok":false,"code":"source_dungeon_live_family_selector_required"}
+	if family.selected!=index:
+		family.select(index)
+		family.emit_signal("item_selected",index)
+	return {"ok":true,"family":kind,"hard":hard,"existing_filter_selected":true,"entry_requested":false,"game_state_written":false}
+
 func _build_play_panel() -> void:
 	play_panel=VBoxContainer.new();play_panel.name="DungeonExtendedPlay";add_child(play_panel)
 	play_status=Label.new();play_status.name="DungeonPlayStatus";play_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;play_panel.add_child(play_status)

@@ -298,6 +298,9 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if _menu!=null and is_instance_valid(_menu_scene):
+		var menu_close: Variant=_menu.presented_close_button(_menu_scene)
+		if is_instance_valid(menu_close):buttons.append(menu_close)
 	if _workspace_controls!=null:
 		var shown: Dictionary=_workspace_controls.presentation()
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
@@ -329,6 +332,7 @@ func _process(_delta: float) -> void:
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	if _menu!=null and is_instance_valid(_menu_scene):_menu_result["menu_variant"]=_menu.refresh_menu_variant(_menu_scene)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()

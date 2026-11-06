@@ -19,6 +19,8 @@ const AREA_IMAGE=44440
 const AREA_AUTHORED_ROW=37316
 const AREA_INFO=2032
 const AREA_INFO_SCOPE: Array[int]=[2032,4612,4280,3916,3300,2864,2528,2148]
+const SPECIAL_DUNGEON=7648
+const SPECIAL_DUNGEON_SCOPE: Array[int]=[7648,7700]
 const WorldPanel=preload("res://scripts/ui/patch523_world_panel.gd")
 signal world_selection_changed(result: Dictionary)
 signal world_image_clicked(payload: Dictionary)
@@ -188,6 +190,10 @@ func build_map_scene(field_map: Object, offered_world_id: int, world_label: Stri
 		all_bindings[AREA_INFO]={"role":"button","activate":Callable(self,"open_area_info"),"displaystate":true}
 		all_bindings[3856]={"visible":true};all_bindings[2084]={"visible":false}
 		all_bindings[3916]={"role":"static_source_text"};all_bindings[2148]={"role":"static_source_text"}
+	if _special_dungeon_in_active_scope():
+		all_scope.append_array(SPECIAL_DUNGEON_SCOPE)
+		all_bindings[SPECIAL_DUNGEON]={"role":"button","activate":Callable(self,"open_special_dungeons"),"displaystate":true}
+		all_bindings[7700]={"role":"static_source_text"}
 	var bindings: Dictionary={132:{"role":"project","source_node_offsets":all_scope,"bindings":all_bindings}}
 	return {"ok":true,"member":MAP_SCENE,"sha256":MAP_SCENE_SHA,"source_node_offsets":[132],"bindings":bindings,"child_member":MAP_ALL,"child_sha256":MAP_ALL_SHA,"child_source_node_offsets":all_scope,"child_bindings":all_bindings,"area_contract":area,"native_parent":map_scene_contract(),"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -361,6 +367,28 @@ func _area_info_in_active_scope() -> bool:
 		var label: Dictionary=_node_at(tree.get("nodeTree",{}),offset)
 		if label.get("classname")!="Text" or label.get("options",{}).get("text")!="지역 정보":return false
 	return true
+
+func open_special_dungeons() -> Dictionary:
+	var hud: Node=_hud.get_ref() as Node if _hud!=null else null
+	var scene: Node2D=_map_scene.get_ref() as Node2D if _map_scene!=null else null
+	var field: Object=_field_map.get_ref() if _field_map!=null else null
+	if not is_instance_valid(hud) or not hud.has_method("open_source_dungeon_family") or not is_instance_valid(scene) or scene.is_queued_for_deletion() or not scene.is_inside_tree() or not is_instance_valid(field):return _fail("source_main_map_current_special_dungeon_owner_required")
+	if not _special_dungeon_in_active_scope():return _fail("source_main_map_original_special_dungeon_scope_required")
+	var result: Variant=hud.call("open_source_dungeon_family","special",false)
+	if not result is Dictionary:return _fail("source_main_map_special_dungeon_owner_result_required")
+	var report: Dictionary=result.duplicate(true)
+	report["source_member"]=MAP_ALL;report["source_node_offset"]=SPECIAL_DUNGEON
+	report["method"]="existing HUD.open_source_dungeon_family(special,false)"
+	return report
+
+func _special_dungeon_in_active_scope() -> bool:
+	if _pack==null or _pack.manifest.get("files",{}).get(MAP_ALL,{}).get("sha256")!=MAP_ALL_SHA:return false
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if not is_instance_valid(hud) or not hud.has_method("open_source_dungeon_family"):return false
+	var tree: Dictionary=_pack.scene(MAP_ALL)
+	var button: Dictionary=_node_at(tree.get("nodeTree",{}),SPECIAL_DUNGEON)
+	var label: Dictionary=_node_at(button,7700)
+	return button.get("classname")=="Button" and button.get("options",{}).get("widgetOptions",{}).get("name")=="Btn_SpecialDungeon" and label.get("classname")=="Text" and label.get("options",{}).get("text")=="특수 던전 바로가기"
 
 func map_scene_contract() -> Dictionary:
 	var identity: Dictionary=_map_identities()
