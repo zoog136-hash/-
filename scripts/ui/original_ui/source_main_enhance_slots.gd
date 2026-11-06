@@ -62,11 +62,11 @@ func refresh() -> Dictionary:
 		# This is the existing image owner's exact original ItemClass/Icon/Asset path.
 		# A CSB icon without its separate established registration remains pending.
 		var image: Dictionary=Images.describe_item(record,str(record.get("name","")))
-		if image.get("route")!="source523_images" or image.get("status")!="original_linked" or image.get("original_bytes_unchanged")!=true or not image.get("texture") is Texture2D:
+		if not image.get("ok",false) or image.get("route")!="source523_images" or image.get("status")!="original_linked" or image.get("original_bytes_unchanged")!=true or not image.get("texture") is Texture2D:
 			var pending: Dictionary=image.duplicate(true);pending.erase("texture")
 			results[role]={"assigned":false,"owner_result":pending}
 			continue
-		var owner_result: Dictionary=image.duplicate(true);owner_result["ok"]=true
+		var owner_result: Dictionary=image.duplicate(true)
 		var assigned: Dictionary=player.set_bound_source_visual_result(ICON,owner_result)
 		if assigned.get("ok",false):assigned=player.set_bound_visible(ICON,true)
 		var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")

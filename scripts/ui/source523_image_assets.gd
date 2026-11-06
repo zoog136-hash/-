@@ -423,7 +423,7 @@ static func handles_item(record: Dictionary, ground: bool = false) -> bool:
 	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
-	return {"source_id":source_id,"name":title,
+	return {"ok":false,"source_id":source_id,"name":title,
 		"source_snapshot":"patch523","item_class_id":id,"family":"","path":"",
 		"route":"source523_images","status":"original_icon_not_installed","reason":"source523_item_identity_required",
 		"texture":null,"provenance":{},"original_bytes_unchanged":false,"actual_game_consumption_observed":false}
@@ -597,6 +597,7 @@ static func _resolve_item_presentation(info: Dictionary, identity: Dictionary) -
 		info["texture"] = null
 		return info
 	if bool(result.get("ok",false)) and result.get("texture") is Texture2D:
+		info["ok"] = true
 		info.status = "original_linked"
 		info.texture = result.texture
 		info.original_bytes_unchanged = true
