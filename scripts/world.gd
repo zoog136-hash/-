@@ -5596,6 +5596,15 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	var source_objects: Dictionary=item_instances if direction=="deposit" else warehouse.instances
+	var selected: Variant=source_objects.get(instance_id,{})
+	if selected is Dictionary and selected.get("name")==item_name and selected.has("source_native_stack_receipt"):
+		# A qualified variant can exist only in the warehouse, with no name
+		# entry in the carried/catalog index. Use the selected actual proof,
+		# never a same-name alias, before the unchanged transfer owner runs.
+		var owned: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").proof_entry(selected,instance_id)
+		if owned.is_empty():hud.show_message("선택 창고 개체의 원본 영수증·잔량 확인 필요");return
+		record=owned.record
 	if direction == "deposit" and record.has("growth96_item_id") and not bool(record.get("storable",false)):
 		hud.show_message("원본 성장 보상은 창고 보관이 제한되어 있습니다")
 		return
@@ -5610,7 +5619,9 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").transfer_warehouse(self,item_name,quantity,direction,instance_id)
 	if native_stack.get("handled",false):
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 창고 개체 확인 필요"))))
-		if native_stack.get("ok",false):_update_hud();hud.refresh_inventory(inventory)
+		if native_stack.get("ok",false) and native_stack.get("saved",false):
+			_update_hud();hud.refresh_inventory(inventory)
+			if hud.has_method("refresh_service"):hud.call("refresh_service")
 		return
 	if direction=="deposit" and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,record,item_instances):
 		hud.show_message("창고 보관이 불가능한 원본 아이템입니다")

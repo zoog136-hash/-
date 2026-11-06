@@ -174,10 +174,18 @@ func try_use_inventory(world: Node, item_key: String) -> bool:
 		if physical is Dictionary and physical.get("name")==item_key and physical.has("quest_reward_receipt"):issued_ids.append(id)
 	if not issued_ids.is_empty():
 		issued_ids.sort() # Explicit host selection policy; no native order inferred.
+		var source_identity: Dictionary={}
 		for id: String in issued_ids:
 			var owned: Dictionary=OWN.proof(world,id)
 			if not owned.get("ok",false):
 				world.hud.show_message(str(owned.get("reason","원본 소지 영수증 확인 필요")));return true
+			var identity: Dictionary={"item_class_id":owned.item_class_id,"bless_code_id":owned.bless_code_id,"source_item":owned.source_item,"source_use_immediately":owned.source_use_immediately}
+			if source_identity.is_empty():source_identity=identity
+			elif source_identity!=identity:
+				# The quick-use caller supplied only a raw name. It cannot choose
+				# between different original identities/blessings/use roles. The
+				# explicit physical-ID activation remains the existing owner path.
+				world.hud.show_message("동명 원본 보상의 정체·축복·사용 역할이 다릅니다 · 실제 개체를 선택하세요");return true
 		if world._item_locked(item_key):
 			world.hud.show_message("잠긴 원본 보상 보존");return true
 		for id: String in issued_ids:

@@ -81,14 +81,29 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 		return {"kind":"craft_material","standalone_effect_complete":false}
 	return {"kind":"held_original_item","standalone_effect_complete":false,"use_owner_required":true}
 
+static func grant_quantity_plan(record: Dictionary,quantity: int) -> Dictionary:
+	if quantity<1 or not integer(quantity) or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
+	var category: Dictionary=D.item_definition(record).get("category",{})
+	var separate: bool=category.get("IsStackable") is bool and category.IsStackable==false
+	if separate and quantity>65536:return {"ok":false,"error":"비중첩 원본 물리 개체 공급 묶음 한도 초과 · 기존 소유 보존"}
+	return {"ok":true,"physical_count":quantity if separate else 1,"unit_quantity":1 if separate else quantity,"separate_units":separate,"source_stackability_known":category.get("IsStackable") is bool}
+
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
-	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
-	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
-	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
-	var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,"source_definition_archive":SOURCE.identity(),"source_original_item":record.source_original_item.duplicate(true),"origin":origin.duplicate(true)}
+	if origin.is_empty():return {"ok":false,"error":"원본 지급 출처 명세 필요"}
+	var plan: Dictionary=grant_quantity_plan(record,quantity)
+	if not plan.get("ok",false):return plan
 	var result: Dictionary=instances.duplicate(true)
-	result[uid]={"name":str(record.name),"record":record.duplicate(true),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
-	return {"ok":true,"item_instances":result,"id":uid}
+	var ids: Array[String]=[]
+	for index: int in range(int(plan.physical_count)):
+		var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
+		while result.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
+		var issued: int=int(plan.unit_quantity)
+		var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":issued,"source_definition_archive":SOURCE.identity(),"source_original_item":record.source_original_item.duplicate(true),"origin":origin.duplicate(true)}
+		result[uid]={"name":str(record.name),"record":record.duplicate(true),"level":0,QUANTITY:issued,RECEIPT:receipt,"source_native_stack_used_quantity":0}
+		ids.append(uid)
+	# Existing callers consume the complete candidate instances. id remains
+	# the first actual created object; ids exposes every new object explicitly.
+	return {"ok":true,"item_instances":result,"id":ids[0],"ids":ids}
 
 static func proof(world: Node,uid: String) -> Dictionary:
 	return proof_entry(world.item_instances.get(uid),uid)
