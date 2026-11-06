@@ -5,6 +5,7 @@ const Browser=preload("res://scripts/ui/renewal_browser.gd")
 const CraftRules=preload("res://scripts/crafting/expanded_crafting.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
+const SOURCE_CONDITIONS=preload("res://scripts/crafting/patch523_craft_conditions.gd")
 var hud: Node
 var world: Node
 var listing: ItemList
@@ -18,6 +19,7 @@ var category_filter: OptionButton
 var grade_filter: OptionButton
 var name_filter: LineEdit
 var current_id: String = ""
+var source_condition_display: Dictionary={}
 var layout: Control
 var product: TextureRect
 var product_name: Label
@@ -247,6 +249,7 @@ func _rebuild_listing() -> void:
 	listing.set_meta("source523_images",source_images)
 	if recipe_ids.is_empty():
 		current_id = ""
+		source_condition_display={}
 		product.texture=null
 		UI.clear_item_visual(product)
 		product_name.text="선택한 제작법 없음"
@@ -278,6 +281,21 @@ func _refresh_quote() -> void:
 	if current_id.begins_with("patch523:"):
 		var selection: Dictionary = world.patch523_equipment.material_selection(current_id, world.patch523_material_choices.get(current_id, {}))
 		if selection.get("recipe") is Dictionary: recipe = selection.recipe
+	# These are display-only fields of the actual selected/material-resolved
+	# recipe already used below. Eligibility, clocks, counters and saves stay
+	# with the existing Conditions/World owners.
+	source_condition_display={"recipe_id":current_id,"level_text":"","period_text":"","quota_text":""}
+	var condition: Variant=recipe.get("craft_conditions")
+	if recipe.get("source_snapshot")=="patch523" and SOURCE_CONDITIONS.valid(condition):
+		var context: Dictionary=world._patch523_craft_context()
+		var levels: PackedStringArray=[]
+		if int(condition.min_level)>0:levels.append("%d 이상" % int(condition.min_level))
+		if int(condition.max_level)>0:levels.append("%d 이하" % int(condition.max_level))
+		if not levels.is_empty():source_condition_display.level_text="레벨 제한 : "+" / ".join(levels)
+		if condition.has("active_window"):source_condition_display.period_text=SOURCE_CONDITIONS.window_text(condition.active_window)
+		if condition.has("quota"):source_condition_display.quota_text=SOURCE_CONDITIONS.brief(recipe,context)
+		source_condition_display["source_conditions"]=condition.duplicate(true)
+		source_condition_display["basis"]="actual selected current523 recipe craft_conditions and existing Conditions formatter/context; no new eligibility or clock policy"
 	var count: int = int(amount.value)
 	var quote: Dictionary = world.call("_craft_quote",current_id,count)
 	var result: Dictionary=recipe.get("result",{})
