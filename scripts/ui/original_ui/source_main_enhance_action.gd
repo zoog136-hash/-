@@ -71,7 +71,9 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 	if pair_contract.get("ok",false):
 		for offset: int in pair_contract.source_node_offsets:
 			scope.append(offset)
-			bindings[offset]=pair_contract.bindings[offset]
+			# The original static plus Sprite needs no dynamic binding. Keep
+			# its source scope without indexing a nonexistent binding entry.
+			if pair_contract.bindings.has(offset):bindings[offset]=pair_contract.bindings[offset]
 		staged_pair=pair_candidate
 	var staged := Scene.new()
 	var result: Dictionary = staged.configure_nodes(pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","source_node_offsets":scope,"bindings":bindings}})
