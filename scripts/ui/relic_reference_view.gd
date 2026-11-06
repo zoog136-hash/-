@@ -306,6 +306,7 @@ func activate() -> void:
 
 func deactivate() -> void:
 	if not active:return
+	_clear_secondary_image()
 	preload("res://scripts/ui/source_card_skin.gd").restore_surface(hud)
 	preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
 	for button: Button in tab_buttons: preload("res://scripts/ui/source_card_skin.gd").restore(button)
@@ -452,7 +453,21 @@ func _request_secondary() -> void:
 	var chosen: String=CardRules.card_id(hud.selected_catalog_record)
 	hud.secondary_relic_requested.emit("" if state.identity==chosen else chosen)
 
+func _clear_secondary_image() -> bool:
+	if not is_instance_valid(secondary_button):return true
+	if secondary_button.has_meta("source523_selected_relic_image"):
+		var previous: Dictionary=secondary_button.get_meta("source523_selected_relic_image")
+		var current_id: int=secondary_button.icon.get_instance_id() if secondary_button.icon!=null else 0
+		var still_owned: bool=current_id==int(previous.get("assigned_texture_instance_id",-1)) and secondary_button.expand_icon==previous.get("assigned_expand_icon")
+		if still_owned:
+			secondary_button.icon=null
+			secondary_button.expand_icon=bool(previous.get("prior_expand_icon",secondary_button.expand_icon))
+		secondary_button.remove_meta("source523_selected_relic_image")
+		return still_owned
+	return true
+
 func _refresh_secondary(record: Dictionary) -> void:
+	var image_ownership_available: bool=_clear_secondary_image()
 	secondary_effects.text="";secondary_effects.hide()
 	secondary_button.visible=preload("res://scripts/ui/source_card_presentation.gd").native(record)
 	if not secondary_button.visible:return
@@ -466,6 +481,23 @@ func _refresh_secondary(record: Dictionary) -> void:
 	secondary_button.text="추가 소환 해제" if release else "추가 소환"
 	secondary_button.disabled=not bool(available.ok) or runtime.save_blocked
 	secondary_button.tooltip_text=available.get("error","주 성물과 다른 카드·등급 · 에바의 계시로 해금")
+	# This action applies/releases this exact selected relic. Reuse its admitted
+	# list-role pixels, never another card, a grade frame or an unowned tint.
+	var canonical: Dictionary=preload("res://scripts/lineagem_base508.gd").canonical(record)
+	if image_ownership_available and secondary_button.icon==null and canonical.get("source_snapshot")=="patch523" and canonical.get("source_deck_id")==98 and CardRules.card_id(canonical)==chosen:
+		var image: Dictionary=preload("res://scripts/ui/source_card_presentation.gd").detail(canonical,true,false)
+		var prior_expand_icon: bool=secondary_button.expand_icon
+		if image.get("source523_verified_original",false) and image.get("role")=="DisplayBaseAssetID":
+			secondary_button.icon=image.get("texture") as Texture2D
+			secondary_button.expand_icon=true
+		var evidence: Dictionary=image.duplicate(true)
+		evidence.erase("texture")
+		evidence["selected_card_identity"]=chosen
+		evidence["action"]="release" if release else "summon"
+		evidence["prior_expand_icon"]=prior_expand_icon
+		evidence["assigned_texture_instance_id"]=secondary_button.icon.get_instance_id() if secondary_button.icon!=null else 0
+		evidence["assigned_expand_icon"]=secondary_button.expand_icon
+		secondary_button.set_meta("source523_selected_relic_image",evidence)
 	if not state.identity.is_empty():
 		var selected: Dictionary=runtime.core.catalog["성물"].get(state.identity,{})
 		status.text+=" · 추가: "+str(selected.get("name","미확인"))+("" if state.active else " (조건 확인 필요)")
