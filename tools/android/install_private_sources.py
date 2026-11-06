@@ -126,6 +126,10 @@ def runtime_path(name):
     # Git assets are selected below only through explicit source dependencies.
     if path.parts[0] == 'assets':
         return False
+    if path.parts[0] == 'data':
+        # Model/report files are not all runtime inputs. Exact source literals
+        # and bounded declared namespaces add required metadata below.
+        return False
     if any(name == x or name.startswith(x + '/') for x in OFFLINE_DIRS):
         return False
     if name.startswith('data/pr122_'):
@@ -167,7 +171,7 @@ def original_runtime_dependencies(repo, tree, inventory):
     reintroduced through a data catalog or an optional load. Required legacy
     preloads must be removed by their code owner before this target can run.
     """
-    inspect_suffixes = {'.gd', '.tscn', '.tres', '.godot', '.gdshader', '.gdshaderinc'}
+    inspect_suffixes = {'.gd', '.tscn', '.tres', '.godot', '.gdshader', '.gdshaderinc', '.json'}
     source = {name: row for name, row in inventory.items()
               if PurePosixPath(name).suffix in inspect_suffixes}
     prefetch_runtime_blobs(repo, source)
@@ -200,6 +204,21 @@ def original_runtime_dependencies(repo, tree, inventory):
                     required.update(re.findall(r'res://([^\"\'\s)]+)', text))
                 for reference in set(re.findall(r'res://([^\"\'\s)]+)', text)):
                     if reference not in tree:
+                        # Preserve explicit dynamically indexed model families
+                        # without pulling every report below data/. Actual
+                        # names still come from this pinned Git tree.
+                        prefix = re.split(r'[%{]', reference, maxsplit=1)[0]
+                        namespace = prefix.rstrip('/') + '/'
+                        if (prefix.startswith('data/') and prefix != 'data/'
+                                and ('%' in reference or '{' in reference
+                                     or any(path.startswith(namespace) for path in tree))):
+                            suffix = PurePosixPath(reference).suffix.lower()
+                            for path, entry in tree.items():
+                                if (path.startswith(prefix if ('%' in reference or '{' in reference) else namespace)
+                                        and PurePosixPath(path).suffix.lower() in {'.json', '.bin', '.nav', '.cfg'}
+                                        and (not suffix or PurePosixPath(path).suffix.lower() == suffix)
+                                        and path not in inventory):
+                                    dependencies[path] = entry
                         continue  # Dynamic paths are not invented or expanded.
                     relative(reference)
                     if (reference.split('/', 1)[0] not in RUNTIME_ROOTS
@@ -210,7 +229,9 @@ def original_runtime_dependencies(repo, tree, inventory):
                     suffix = PurePosixPath(reference).suffix.lower()
                     historical = (reference.startswith('external_map_packs/') or
                                   reference.startswith('assets/') and suffix not in
-                                  {'.ttf', '.otf', '.gdshader', '.gdshaderinc'})
+                                  {'.ttf', '.otf', '.gdshader', '.gdshaderinc'} or
+                                  suffix in {'.png', '.jpg', '.jpeg', '.webp', '.svg',
+                                             '.ogg', '.wav', '.mp3', '.flac'})
                     if historical:
                         omitted.add(reference)
                         if reference in required:
