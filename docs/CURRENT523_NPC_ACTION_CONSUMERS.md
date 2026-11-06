@@ -10,7 +10,9 @@ action therefore could not reach the bank renderer.
 The combat owner still chooses the source action from its existing original
 attack MotionType/WeaponType agreement and checks life, sequence and generation.
 The view binds that exact ID on its already admitted NPC Sprite through the
-ordinary pinned bank reader, with a single non-looping caller presentation role.
+ordinary pinned bank reader, with a single non-looping caller attack role. Keeping
+that existing role also preserves identity/action-scoped source timing repairs;
+an arbitrary new role label must not discard an available original clock.
 It never selects a similar action, applies damage or creates a combat event.
 At most one additional action preview is retained, shares any existing texture
 budget, and is freed on owner release, death or sequence replacement. The owner's

@@ -3,7 +3,7 @@ extends "res://scripts/monsters/base508_monster_view.gd"
 const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const SELECTION = preload("res://scripts/monsters/current523_source_bank_selection.gd")
 const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
-const ACTION_ROLE = "npc_action"
+const ACTION_ROLE = "attack"
 var selection_status: Dictionary = {}
 var _preview: PREVIEW = null
 var _action_preview: PREVIEW = null
@@ -92,6 +92,7 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 		selection_status["status"] = "source_only_pending" if selection_status.get("source_only",false) else "source_input_unavailable"
 		selection_status["reason"] = "current523_npc_source_role_unavailable:" + role
 		source_state_status = {"ok":false,"status":"source_only_pending","requested_role":role,"reason":selection_status.reason}
+		last_source_frame = -1
 		_preview.hide()
 		return
 	_clock += maxf(delta,0.0)
@@ -99,6 +100,7 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 		selection_status["status"] = "source_only_pending" if selection_status.get("source_only",false) else "source_input_unavailable"
 		selection_status["reason"] = _preview.reference_bank_status.get("error","current523_npc_source_frame_unavailable")
 		source_state_status = {"ok":false,"status":"source_only_pending","requested_role":role,"reason":selection_status.reason}
+		last_source_frame = -1
 		_preview.hide()
 		return
 	_preview.show()
@@ -128,6 +130,7 @@ func advance_source_action(action_id: int, delta: float, facing: int, sequence: 
 		_source_action_id = action_id
 		_sequence = sequence
 		_preview.hide()
+		last_source_frame = -1
 		var candidate := PREVIEW.new()
 		candidate.playback_mode_override = _preview.source_playback_mode()
 		if not candidate._configure_reference_bank(str(selection_status.manifest_path),str(selection_status.manifest_sha256),int(selection_status.sprite_id),{ACTION_ROLE:action_id},{ACTION_ROLE:false},ACTION_ROLE,"npc"):
@@ -150,6 +153,7 @@ func advance_source_action(action_id: int, delta: float, facing: int, sequence: 
 		source_state_status = {"ok":false,"status":"source_only_pending","requested_source_action_id":action_id,"reason":_action_preview.reference_bank_status.get("error","current523_npc_explicit_action_frame_unavailable")}
 		_action_preview.free()
 		_action_preview = null
+		last_source_frame = -1
 		return false
 	last_source_frame = _action_preview.last_source_frame
 	source_state_status = {"ok":true,"status":"current523_source_action","source_action_id":action_id,"sequence":sequence,
@@ -175,7 +179,9 @@ func clear_source_action() -> void:
 	_source_attack = false
 	_clock = 0.0
 	source_state_status = {}
-	if is_instance_valid(_preview): _preview.show()
+	if is_instance_valid(_preview):
+		_preview.show()
+		last_source_frame = _preview.last_source_frame
 
 func notify_current_source_spell_event(spell: Dictionary, stage: String, point: Vector2, facing: int, context: Dictionary = {}) -> bool:
 	# The combat owner keeps admission, hit timing, target and effect budgets.
