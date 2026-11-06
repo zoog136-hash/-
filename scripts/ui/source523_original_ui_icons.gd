@@ -3,6 +3,7 @@ extends RefCounted
 ## Original nodes, imagery, clips and playback rules remain with UI267.
 const PACK_PATH = "res://scripts/ui/original_ui/source_pack.gd"
 const PLAYER_PATH = "res://scripts/ui/original_ui/sprite_scene.gd"
+const ITEM_HOST_RECEIVER_PATH = "res://scripts/ui/original_ui/source_item_scene_receiver.gd"
 const SCHEMA = "patch523-original-ui-icon-scenes-v1"
 const NODE_NAME = "SourceItemIconScene"
 const CONSUMER_FIELDS = {"ItemClass":["IconID"],"SpellClass":["IconID","ActivateIconID"],"BuffClass":["OnIconID","OffIconID"]}
@@ -319,6 +320,8 @@ static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Di
 		return _unavailable("source_scene_original_native_slot_identity_required")
 	var target: Dictionary = {"member":slot.member,"source_sha256":slot.source_sha256,
 		"manifest_sha256":slot.manifest_sha256,"node_offset":int(slot.node_offset)}
+	if context.has("source_host_registration"):
+		return _typed_item_host_descriptor(resolved,context.source_host_registration,target)
 	var spec: Dictionary = resolved.spec
 	var declarations: Variant = spec.get("native_registrations")
 	if not declarations is Array:
@@ -366,6 +369,35 @@ static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Di
 	# No playback means the UI owner's strict loader keeps serialized source
 	# state stopped. Legacy host single-pass estimates never enter this path.
 	return {"ok":true,"descriptor":descriptor,"rendered":false,"actual_game_consumption_observed":false}
+
+static func _typed_item_host_descriptor(resolved: Dictionary, registration: Variant, target: Dictionary) -> Dictionary:
+	# This is the UI owner's distinct host policy, never recovered original
+	# root registration. An ordinary context dictionary cannot authorize it.
+	if not registration is Dictionary or registration.get("schema")!="twilight-item-scene-host-registration-v1" or registration.get("kind")!="TWILIGHT_host_registration" or registration.get("space")!="twilight_host_sprite_anchor":
+		return _unavailable("source_scene_typed_host_registration_required")
+	if resolved.consumer.get("source_table")!="ItemClass" or resolved.consumer.get("source_field")!="IconID":return _unavailable("source_scene_typed_host_item_role_required")
+	if typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=false or not registration.get("target") is Dictionary or registration.target!=target:
+		return _unavailable("source_scene_typed_host_target_mismatch")
+	var receiver: Variant=registration.get("receiver")
+	if not receiver is RefCounted or not is_instance_valid(receiver) or not ResourceLoader.exists(ITEM_HOST_RECEIVER_PATH):
+		return _unavailable("source_scene_typed_host_receiver_not_installed")
+	var expected: Script=load(ITEM_HOST_RECEIVER_PATH)
+	if expected==null or receiver.get_script()!=expected or not receiver.has_method("validate_descriptor") or not receiver.has_method("validate_attachment"):
+		return _unavailable("source_scene_actual_typed_host_receiver_required")
+	var descriptor: Dictionary={"pack":resolved.pack,"manifest_sha256":resolved.manifest_sha256,
+		"member":resolved.spec.member,"source_sha256":resolved.spec.current523_scene_sha256,
+		"registration":registration.duplicate(true),"bindings":{},
+		"image_owner_identity":{"consumer":resolved.consumer.duplicate(true),
+			"icon_id":int(resolved.canonical.icon_id),"asset_id":int(resolved.canonical.asset_id),
+			"image_pack_manifest_sha256":resolved.canonical.get("manifest_sha256","")}}
+	# Revalidate the actual live physical record, raw source identity, selected
+	# packs and full source hierarchy here. UI revalidates again at attachment.
+	# No playback key: preserve serialized source state without guessing policy.
+	var checked: Variant=receiver.call("validate_descriptor",descriptor)
+	if not checked is Dictionary or not checked.get("ok",false):
+		return _unavailable("source_scene_typed_host_descriptor_rejected",{"receiver_result":checked})
+	return {"ok":true,"descriptor":descriptor,"registration_kind":"TWILIGHT_host_registration",
+		"original_registration_confirmed":false,"rendered":false,"actual_game_consumption_observed":false}
 
 static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	if not is_instance_valid(view):

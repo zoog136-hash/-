@@ -152,9 +152,13 @@ No `play`, `seek`, inferred loop or trigger is added. Without playback the
 existing prepare leaves serialized source defaults stopped. Source animation
 metadata, such as Sword clip end116 versus duration170, is not a policy.
 
-The Image descriptor branch is a separate owner dependency and is not present
-in this checkout. Until it accepts this exact typed schema, native requests
-return pending; no false static PNG success is substituted. A newly selected
+At receiver checkpoint `7b8338408`, the Image descriptor branch was a separate
+owner dependency. Its exact owner-supplied narrow patch is now composed locally:
+Image file base blob `f4b73c60098ea11071822b015a7992e427d8f373` to result blob
+`180733119a945d2546acac74aacf84e1b663bf84`. It consumes this exact typed schema,
+requires the actual receiver script and calls `validate_descriptor` before
+returning a descriptor. This removes the missing provider branch only; it is
+not evidence of an actual current owned item or displayed scene. A newly selected
 current source pack must already contain all original dependencies; neither
 this adapter nor the caller selects/installs packs. No actual owned/selected
 profile of these five icons was found in the Image investigation. This is
