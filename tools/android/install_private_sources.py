@@ -10,6 +10,8 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import bisect
+import io
 import json
 import math
 import os
@@ -32,7 +34,7 @@ RESOURCE_STATE = '.twilight_resource_state.json'
 TABLES_SOURCE_BYTES = 25031173
 TABLES_SOURCE_SHA256 = 'd5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
 GENERATED = ('twilight_private_install.json', 'scripts/install/private_source_bootstrap.gd')
-RUNTIME_ROOTS = {'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts'}
+RUNTIME_ROOTS = {'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts', 'shaders'}
 RUNTIME_FILES = {'project.godot', 'Main.tscn', 'external_map_packs/.gdignore'}
 OFFLINE_DIRS = ('assets/maps/aden_city_region', 'assets/maps/aden_modular_district_01',
                 'assets/maps/aden_modular_pilot', 'assets/maps/aden_rebuild_preview',
@@ -137,6 +139,7 @@ def runtime_path(name):
         'addons': {'.gd', '.uid', '.gdextension', '.json', '.cfg', '.gdshader', '.gdshaderinc'},
         'scenes': {'.tscn', '.uid'},
         'data': {'.json', '.bin', '.nav', '.cfg'},
+        'shaders': {'.gdshader', '.gdshaderinc'},
     }
     return path.suffix.lower() in code_metadata.get(path.parts[0], set()) and not name.endswith(('.bak', '.tmp', '.backup'))
 
@@ -792,6 +795,77 @@ def safe_extract(archive, root, include_prefixes=None, *, staged=None, replace_m
     return inventory
 
 
+class JoinedZipParts(io.RawIOBase):
+    """Seekable view of verified transport chunks; never writes a second ZIP."""
+    def __init__(self, parts):
+        super().__init__()
+        self.parts = parts
+        self.ends = []
+        total = 0
+        for path, length in parts:
+            total += length
+            self.ends.append(total)
+        self.length = total
+        self.position = 0
+        self.active = None
+        self.active_index = None
+
+    def readable(self):
+        return True
+
+    def seekable(self):
+        return True
+
+    def tell(self):
+        return self.position
+
+    def seek(self, offset, whence=os.SEEK_SET):
+        if self.closed:
+            raise ValueError('Joined ZIP view is closed')
+        if whence not in (os.SEEK_SET, os.SEEK_CUR, os.SEEK_END):
+            raise ValueError('Invalid joined ZIP seek mode')
+        position = offset + (self.position if whence == os.SEEK_CUR else
+                             self.length if whence == os.SEEK_END else 0)
+        if position < 0 or position > self.length:
+            raise ValueError('Joined ZIP seek is outside the verified archive')
+        self.position = position
+        return position
+
+    def read(self, size=-1):
+        if self.closed:
+            raise ValueError('Joined ZIP view is closed')
+        size = min(self.length - self.position, size if size >= 0 else self.length)
+        # ZIP central-directory reads are bounded too; extracted members are
+        # streamed by safe_extract rather than loaded into this buffer.
+        if size > 64 * 1024 * 1024:
+            raise ValueError('Oversized joined ZIP metadata read')
+        chunks = []
+        while size:
+            index = bisect.bisect_right(self.ends, self.position)
+            path, length = self.parts[index]
+            start = self.ends[index] - length
+            if self.active_index != index:
+                if self.active is not None:
+                    self.active.close()
+                no_links(path)
+                self.active = path.open('rb')
+                self.active_index = index
+            self.active.seek(self.position - start)
+            data = self.active.read(min(size, self.ends[index] - self.position))
+            if not data:
+                raise ValueError('Verified joined ZIP chunk was truncated')
+            chunks.append(data)
+            self.position += len(data)
+            size -= len(data)
+        return b''.join(chunks)
+
+    def close(self):
+        if self.active is not None:
+            self.active.close()
+            self.active = None
+        super().close()
+
+
 def assembled(pack, downloaded, cache):
     if pack['format'] != 'joined-zip':
         return [downloaded[row['sha256']] for row in pack['files']]
@@ -805,22 +879,23 @@ def assembled(pack, downloaded, cache):
         if not matches(target, pack):
             raise ValueError('Assembled ZIP changed; preserved without use')
         return [target]
-    fd, name = tempfile.mkstemp(prefix='join-', dir=cache)
-    os.close(fd)
-    temporary = Path(name)
-    try:
-        if pack['bytes'] > shutil.disk_usage(cache).free:
-            raise ValueError('Not enough space to join private parts')
-        with temporary.open('wb') as output:
-            for row in rows:
-                with downloaded[row['sha256']].open('rb') as source:
-                    shutil.copyfileobj(source, output, 1024 * 1024)
-        if not matches(temporary, pack):
-            raise ValueError('Joined ZIP failed its complete size/SHA256')
-        os.replace(temporary, target)
-        return [target]
-    finally:
-        temporary.unlink(missing_ok=True)
+    digest = hashlib.sha256()
+    count = 0
+    parts = []
+    for row in rows:
+        path = downloaded[row['sha256']]
+        no_links(path)
+        if path.stat().st_size != row['bytes']:
+            raise ValueError('Joined ZIP transport chunk length changed')
+        parts.append((path, row['bytes']))
+        with path.open('rb') as source:
+            for block in iter(lambda: source.read(1024 * 1024), b''):
+                digest.update(block)
+                count += len(block)
+    if count != pack['bytes'] or digest.hexdigest() != pack['sha256']:
+        raise ValueError('Joined ZIP failed its complete size/SHA256')
+    log('Reading verified ZIP directly from retained transport chunks; no duplicate joined file: %d bytes.' % count)
+    return [JoinedZipParts(parts)]
 
 
 def needed_transport_files(packs, cache):
@@ -836,6 +911,34 @@ def needed_transport_files(packs, cache):
                 continue
         rows.extend(pack['files'])
     return rows
+
+
+def require_download_space(plan, work):
+    """Conservative compressed-download floor, not an extraction guarantee."""
+    rows = {}
+    for row in needed_transport_files(plan['packs'], work):
+        digest = pin(row['sha256'])
+        if isinstance(row['bytes'], bool) or not isinstance(row['bytes'], int) or row['bytes'] < 0:
+            raise ValueError('Invalid transport byte length')
+        if digest in rows and rows[digest]['bytes'] != row['bytes']:
+            raise ValueError('Conflicting transport sizes for one SHA256')
+        rows[digest] = row
+    remaining = 0
+    for digest, row in rows.items():
+        complete = work / 'bundles' / (digest + '.bundle')
+        no_links(complete)
+        if complete.exists():
+            if not matches(complete, row):
+                raise ValueError('Changed completed archive preserved without reuse: ' + digest)
+        else:
+            # Keep partials intact; do not assume rclone can resume their bytes
+            # or that its local temporary destination needs no extra space.
+            remaining += row['bytes']
+    free = shutil.disk_usage(work).free
+    log('Compressed original downloads still needed: %d bytes; cache filesystem free: %d bytes.' % (remaining, free))
+    log('This excludes resource expansion, code checkout/staging and previous preserved versions; it is not a total-space guarantee.')
+    if remaining > free:
+        raise ValueError('Insufficient space even for remaining original ZIPs: need at least %d new bytes before extraction, free %d. No download or automatic cache deletion started.' % (remaining, free))
 
 
 def pinned_member(root, name, digest):
@@ -955,8 +1058,12 @@ def prepare_resources(plan, downloaded, resources, cache):
                     replacements = (metadata_replacements(archive, root, checkpoint, staged_archives)
                                     if pack.get('overlay_from_checkpoint') else None)
                     kwargs = delta.extract_kwargs(archive, sequence) if delta else {'replace_members': replacements}
-                    extracted = safe_extract(archive, root, pack.get('include_prefixes'),
-                                             staged=staged_archives, **kwargs)
+                    try:
+                        extracted = safe_extract(archive, root, pack.get('include_prefixes'),
+                                                 staged=staged_archives, **kwargs)
+                    finally:
+                        if isinstance(archive, JoinedZipParts):
+                            archive.close()
                     payload.update(extracted)
                     if replacements:
                         for member in replacements:
@@ -1891,6 +1998,13 @@ def install(args):
             log('HANDOFF PENDING: ' + str(message))
         if root.exists() and not owned_state(root) and any(root.iterdir()):
             raise ValueError('Existing folder has no ownership receipt from this installer; no automatic takeover')
+        if not root.exists():
+            # Explicit --project selects this new folder. An interrupted first
+            # install may leave it empty; it never adopts an unowned nonempty
+            # directory or places a success receipt before publication.
+            root.mkdir()
+            log('Created empty selected project folder: ' + str(root))
+        require_download_space(plan, work)
         code_root, commit, code_inventory = packed_code(work)
         preflight_required_code(plan, code_root)
         transport = DriveTransport(work / 'bundles', token_file=args.token_file,
