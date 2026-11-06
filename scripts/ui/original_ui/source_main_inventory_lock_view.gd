@@ -19,10 +19,17 @@ var _scene: Node2D
 var _child: Node2D
 var _buttons: Array = []
 var _controls: Array = []
+var _presented_offsets: Array[int]=[]
 var _reference: String=""
 var _type_in_scope: bool=false
 var _safe_in_scope: bool=false
 var _class_in_scope: bool=false
+var _storage_in_scope: bool=false
+var _expiration_in_scope: bool=false
+const STORAGE_ON=55344
+const STORAGE_OFF=54036
+const STORAGE_OFFSETS: Array[int]=[55716,55400,54796,54412,54096]
+const EXPIRATION=42072
 var _header_hidden: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, bag: Control) -> Dictionary:
@@ -37,6 +44,10 @@ func configure(pack: RefCounted, bag: Control) -> Dictionary:
 	_type_in_scope=not _find(active.get("nodeTree",{}),42456).is_empty()
 	_safe_in_scope=not _find(active.get("nodeTree",{}),52788).is_empty() and not _find(active.get("nodeTree",{}),53168).is_empty()
 	_class_in_scope=not _find(active.get("nodeTree",{}),40928).is_empty() and not _find(active.get("nodeTree",{}),40580).is_empty()
+	_storage_in_scope=true
+	for offset: int in STORAGE_OFFSETS:
+		if _find(active.get("nodeTree",{}),offset).is_empty():_storage_in_scope=false
+	_expiration_in_scope=not _find(active.get("nodeTree",{}),EXPIRATION).is_empty()
 	_bag = weakref(bag)
 	return {"ok":true,"configured":true,"member":MEMBER,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -80,6 +91,15 @@ func refresh(parent: Node) -> Dictionary:
 		bindings[39492]={"visible":not model.class_text.is_empty()}
 		bindings[40928]={"role":"static_source_text"}
 		bindings[40580]={"role":"source_text","text":model.class_text}
+	if _storage_in_scope:
+		scope.append_array(STORAGE_OFFSETS)
+		bindings[STORAGE_ON]={"visible":model.storage.get("value")==true}
+		bindings[STORAGE_OFF]={"visible":model.storage.get("value")==false}
+		bindings[55400]={"role":"static_source_text"}
+		bindings[54096]={"role":"static_source_text"}
+	if _expiration_in_scope:
+		scope.append(EXPIRATION)
+		bindings[EXPIRATION]={"role":"source_text","text":model.expiration_text,"visible":not model.expiration_text.is_empty()}
 	var result: Dictionary = staged.configure_nodes(_pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","visible":true,"source_node_offsets":scope,"bindings":bindings}})
 	if not result.get("ok",false):
 		staged.free()
@@ -108,6 +128,7 @@ func refresh(parent: Node) -> Dictionary:
 	_action = weakref(model.action)
 	_action_visible = model.action.visible
 	_reference=model.reference
+	_presented_offsets=scope.duplicate()
 	parent.add_child(staged)
 	var fresh: Dictionary = _model(bag)
 	if not staged.is_inside_tree() or not fresh.get("ok",false) or fresh.action != model.action:
@@ -147,6 +168,7 @@ func _close_scene() -> void:
 	_child = null
 	_buttons.clear()
 	_controls.clear()
+	_presented_offsets.clear()
 	_reference=""
 	var previous: Node2D = _scene
 	_scene = null
@@ -155,7 +177,7 @@ func _close_scene() -> void:
 		previous.queue_free()
 
 func presentation() -> Dictionary:
-	return {"scene":_scene,"renderer":_child,"source_buttons":_buttons.duplicate(),"controls":_controls.duplicate(),"source_node_offsets":SOURCE_OFFSETS.duplicate(),"parent_member":PARENT_MEMBER,"parent_sha256":PARENT_SHA256,"parent_project_offset":PROJECT,"parent_original_position":Vector2(1008,345),"parent_original_visible":false,"parent_activation_basis":"existing bag.detail_active and actual visibility","partial_source_scene":true,"complete_screen_contract":false}
+	return {"scene":_scene,"renderer":_child,"source_buttons":_buttons.duplicate(),"controls":_controls.duplicate(),"source_node_offsets":_presented_offsets.duplicate(),"parent_member":PARENT_MEMBER,"parent_sha256":PARENT_SHA256,"parent_project_offset":PROJECT,"parent_original_position":Vector2(1008,345),"parent_original_visible":false,"parent_activation_basis":"existing bag.detail_active and actual visibility","partial_source_scene":true,"complete_screen_contract":false}
 
 func _apply(model: Dictionary) -> Dictionary:
 	if _class_in_scope:model.class_text=_fitting_class_text(model.class_text)
@@ -189,6 +211,14 @@ func _apply(model: Dictionary) -> Dictionary:
 		if not class_result.get("ok",false):
 			_close_scene()
 			return class_result
+	if _storage_in_scope:
+		for pair: Array in [[STORAGE_ON,model.storage.get("value")==true],[STORAGE_OFF,model.storage.get("value")==false]]:
+			var changed: Dictionary=_child.set_bound_visible(pair[0],pair[1])
+			if not changed.get("ok",false):_close_scene();return changed
+	if _expiration_in_scope:
+		var changed: Dictionary=_child.set_bound_text(EXPIRATION,model.expiration_text)
+		if changed.get("ok",false):changed=_child.set_bound_visible(EXPIRATION,not model.expiration_text.is_empty())
+		if not changed.get("ok",false):_close_scene();return changed
 	for offset: int in LOCK_BUTTONS:
 		# Do not reset a current pressed state on every ordinary refresh.
 		var button: Variant=_child.source_nodes[offset].get_meta("source_button",null)
@@ -197,7 +227,7 @@ func _apply(model: Dictionary) -> Dictionary:
 		if not result.get("ok",false):
 			_close_scene()
 			return result
-	return {"ok":true,"handled":true,"reference":model.reference,"locked":model.locked,"member":MEMBER,"sha256":SHA256,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"handled":true,"reference":model.reference,"locked":model.locked,"member":MEMBER,"sha256":SHA256,"storage_definition_connected":_storage_in_scope and model.storage.has("value"),"expiration_calendar_connected":_expiration_in_scope and not model.expiration_text.is_empty(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func _activate() -> Dictionary:
 	var bag: Object = _bag.get_ref() if _bag != null else null
@@ -267,7 +297,12 @@ static func _model(bag: Object) -> Dictionary:
 	var classes: Variant=bag.get("source_detail_classes")
 	var class_text: String=""
 	if classes is Dictionary and classes.get("reference")==reference and classes.get("text") is String:class_text=classes.text
-	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_text,"close_button":close_button,"type_text":type_text,"safe":safe,"class_text":class_text}
+	var storage: Variant=bag.get("source_detail_storage")
+	if not storage is Dictionary or storage.get("reference")!=reference or typeof(storage.get("value"))!=TYPE_BOOL:storage={}
+	var expiration: Variant=bag.get("source_detail_expiration")
+	var expiration_text: String=""
+	if expiration is Dictionary and expiration.get("reference")==reference and expiration.get("text") is String:expiration_text=expiration.text
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_text,"close_button":close_button,"type_text":type_text,"safe":safe,"class_text":class_text,"storage":storage,"expiration_text":expiration_text}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset") == offset: return node

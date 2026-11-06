@@ -23,6 +23,8 @@ var source_detail_type: Dictionary = {}
 var source_detail_name: Dictionary = {}
 var source_detail_safe_enhancement: Dictionary = {}
 var source_detail_classes: Dictionary = {}
+var source_detail_storage: Dictionary = {}
+var source_detail_expiration: Dictionary = {}
 var detail_layout_queued: bool = false
 var category_tabs: Control
 var inventory_left: Control
@@ -653,6 +655,20 @@ func _refresh_detail(item_reference: String) -> void:
 	source_detail_type = {"reference":item_reference,"text":source_item.type} if source_item.get("type") is String and not source_item.type.is_empty() else {}
 	source_detail_safe_enhancement={}
 	source_detail_classes={}
+	source_detail_storage={}
+	source_detail_expiration={}
+	var original_item: Variant=source_item.get("source_original_item")
+	if source_item.get("source_snapshot")=="patch523" and source_item.get("source_m_native_item")==true and original_item is Dictionary and typeof(original_item.get("ID")) in [TYPE_INT,TYPE_FLOAT] and original_item.ID>0 and original_item.get("ID")==source_item.get("source_item_class_id"):
+		if typeof(original_item.get("IsStorable"))==TYPE_BOOL:
+			source_detail_storage={"reference":item_reference,"value":original_item.IsStorable,"source_item_class_id":original_item.ID,"basis":"selected current523 ItemClass.IsStorable; definition capability only"}
+		# Existing native projection date_value emits YYYYMMDDHHMM, not a
+		# Unix timestamp. Keep the original calendar fields; do not subtract
+		# a clock, change timezone, expire ownership or infer remaining time.
+		var deletion: Variant=source_item.get("source_delete_time_raw")
+		if source_item.get("source_delete_time_unresolved")!=true and typeof(deletion)==TYPE_INT and deletion>0:
+			var encoded: String=str(deletion)
+			if encoded.length()==12:
+				source_detail_expiration={"reference":item_reference,"text":"삭제시간 : %s.%s.%s %s:%s" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),encoded.substr(10,2)],"source_calendar_value":deletion,"basis":"existing current523 native projection source_delete_time_raw calendar fields; no timezone conversion or remaining-time policy"}
 	var source_classes: Variant=source_item.get("source_class_names")
 	if source_classes is Array and not source_classes.is_empty():
 		var class_names: PackedStringArray=[]
