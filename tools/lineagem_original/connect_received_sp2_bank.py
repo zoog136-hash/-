@@ -89,7 +89,11 @@ def descriptor(member, receipt):
                                   "source_provenance_file":relation["source_provenance_file"]}
             if version_basis is None:
                 version_basis = "supplied_current523_container_manifest"
-        result.update(crc32=receipt["crc32"], stage=receipt["stage"], source_receipt_id=member,
+        # Runtime stage is a closed contract, not the acquisition log's wording.
+        # Keep the original wording separately; CRC/source identity guards still
+        # apply and a missing SHA stays unknown.
+        result.update(crc32=receipt["crc32"], stage="received_not_additionally_validated",
+            source_acquisition_stage=receipt["stage"], source_receipt_id=member,
             source_identity={"source_snapshot": "patch523",
                 "basis": "supplied_exact_current523_member_archive_bytes_crc_domain",
                 "archive": receipt.get("archive") or receipt.get("container"),
