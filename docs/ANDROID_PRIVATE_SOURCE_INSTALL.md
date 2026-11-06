@@ -115,6 +115,11 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
   제한 대기·실제 Retry-After/backoff 준수·같은 캐시의 추후 재개를 안내한다.
   접근 거절이나 미분류 HTTP403은 quota라고 단정하지 않고 제한 원인 확인 전
   반복·인증 초기화를 권하지 않는다. 이 메시지 분기는 다운로드 동작을 바꾸지 않는다.
+  공식 googleapi 오류가 `Details` 여러 줄 JSON 뒤에 단일 reason을 별도 줄로
+  붙이는 형식도 검사한다. 그래도 `ErrorItem.Reason`이 없거나 HTML/일반 body만
+  전달됐다면 구체 코드를 복원할 수 없다. `not_observed`는 reason 미관측이며
+  quota 부재·특정 다운로드 제한·해제 시각의 증거가 아니다. 이 형식 보완은
+  provider 제한을 해제하거나 기존 실패 원인을 소급 확정하는 수정이 아니다.
 - 별도 `--token-file`로 명시한 로컬 OAuth access token을 사용하는 경우에만 정확한
   HTTP206/Content-Range 응답을 확인해 바이트 이어받기를 한다. 서버가 Range를
   무시하면 그 묶음만 처음부터 받는다. 인증정보는 로그·캐시·공개 저장소에 넣지 않는다.

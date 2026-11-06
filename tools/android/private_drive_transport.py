@@ -61,6 +61,10 @@ def _drive_limit_reasons(message):
             r'["\']reason["\']\s*:\s*["\']' + token + r'["\']',
             r'(?m)^\s*reason:\s*' + token + r'\s*,\s*message:',
             r'(?m)\bgoogleapi:[^\n]*,\s*' + token + r'\s*$',
+            # googleapi.Error writes indented Details JSON before appending
+            # the sole reason. The suffix then starts on a separate line.
+            r'(?m)\bgoogleapi:\s*error\s+[1-5]\d\d:[^\n]*\n'
+            r'details:\s*\n[\s\S]*?\n[ \t]*,[ \t]*' + token + r'[ \t]*$',
         )
         if any(re.search(pattern, message) for pattern in patterns):
             observed.append(canonical)
