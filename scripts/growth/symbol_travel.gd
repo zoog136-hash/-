@@ -42,6 +42,7 @@ func layout_key(field: Variant = null) -> String:
 	return str(field.data.get("layout_revision",0))+":"+str(field.definition.get("source_sha256","")) if field is OriginalPlayableField else str(field.data.get("layout_revision",0))
 
 func destination(mark: Dictionary) -> Dictionary:
+	if world.field_map!=null and world.field_map.get_meta("current523_source_field",false)==true and not str(mark.layout_key).begins_with("m523:"):return runtime.fail("기존 지형의 기억 좌표를 원문 Land에서 재사용할 수 없습니다")
 	# Source keys can be used only in that exact live source context; no
 	# cross-host load may reinterpret their canvas position as legacy data.
 	if str(mark.layout_key).begins_with("m523:") and (world.field_map==null or world.field_map.get_meta("current523_source_field",false)!=true or mark.layout_key!=layout_key()):return runtime.fail("현재 원문 Land·지형·좌표 기준과 다른 기억 장소입니다")
