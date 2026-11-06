@@ -1085,3 +1085,18 @@ func source_bookmark_destination_status(point: Vector2) -> Dictionary:
 		var context: Dictionary=_entry_context(int(settings.native_land_id),str(_source_field.get("source_asset")),cell,state)
 		if not str(context.get("source_travel_hold","missing")).is_empty():return {"ok":false,"reason":"기억 장소 출발·도착의 원문 지역 조건이 보류됩니다."}
 	return {"ok":true,"native_admission_verified":false,"reason":"같은 원문 Land의 기존 기억 이동 소비자 · 자체 통행/입장 정책"}
+
+func source_hunt_experience_rule() -> Dictionary:
+	var world: Node=_world()
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or not is_instance_valid(world) or world.field_map!=_source_field:return {"ok":false}
+	# Use the pinned admitted-context snapshot; reward processing does not
+	# reopen a pack or turn a transient read error into a new XP decision.
+	if _active_entry_context.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or _active_entry_context.get("Land")!=_source_field.get("native_land") or not _active_entry_context.get("non_admission_attributes") is Array:return {"ok":false}
+	var applied: Array=[]
+	var suppressed: bool=false
+	for entry: Dictionary in _active_entry_context.non_admission_attributes:
+		if entry.type.get("ID")!=612:continue
+		if entry.type.get("Name")!="NoExperience" or entry.type.get("UnitID")!=20 or entry.row.get("LandID")!=int(settings.native_land_id) or entry.row.get("TerritoryID")!=0:return {"ok":false}
+		applied.append(entry.duplicate(true))
+		if entry.row.Value==1:suppressed=true
+	return {"ok":true,"suppress_hunt_experience":suppressed,"rows":applied,"land_id":int(settings.native_land_id),"definition_manifest_sha256":DEFINITION_PACK_SHA256,"consumer_scope":"EXISTING_HUNT_EXPERIENCE_ONLY"}

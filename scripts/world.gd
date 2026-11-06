@@ -3261,6 +3261,9 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
 	var source_experience: int = maxi(0,monster.exp_reward+int(source_reward.get("experience",0)))
 	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(source_experience * _experience_multiplier() * exp_rate * map_rate)))
+	if current523_aden_source_active():
+		var source_exp_rule: Dictionary=current523_source_hunt_experience_rule()
+		if source_exp_rule.get("ok",false) and source_exp_rule.get("suppress_hunt_experience",false):gained_experience=0
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
@@ -10922,6 +10925,9 @@ func prepare_current523_source_landing(raw_root: String, source_manifest_sha256:
 	var result: Dictionary=candidate.choose_source_landing(declared_bounds,selection_policy)
 	candidate.close()
 	return result
+
+func current523_source_hunt_experience_rule() -> Dictionary:
+	return _aden_play_controller().call("source_hunt_experience_rule")
 
 func current523_source_bookmark_destination_status(point: Vector2) -> Dictionary:
 	return _aden_play_controller().call("source_bookmark_destination_status",point)
