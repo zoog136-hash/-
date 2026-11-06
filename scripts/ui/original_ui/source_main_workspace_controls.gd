@@ -4,6 +4,7 @@ extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
 const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
+const STORAGE_AUTO_OFFSETS: Array[int]=[3780,5884,5500,5116,4448,3884]
 const SPECS={
 	"warehouse":{"owner":"res://scripts/ui/renewal_warehouse.gd","parent":"UI/StorageScene.csb","parent_sha":"0df424e7ed29a314e112ef618d40f89806c9df6ad6ce56df7dedd5e08e9ebde7","project":132,"member":"UI/Storage/Storage_All.csb","sha":"eb4ddfa71dc9be978fd03948ff938c12e2366f6542ff5844509c47f110b38328","close":47160},
 	"crafting":{"owner":"res://scripts/ui/renewal_crafting.gd","parent":"UI/ProductionScene.csb","parent_sha":"cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328","project":132,"member":"UI/Production/Production_All.csb","sha":"328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec","close":41600},
@@ -22,6 +23,8 @@ var _search: RefCounted
 var _production: RefCounted
 var _production_status: Dictionary={}
 var _production_attempted_owner: WeakRef
+var _warehouse_auto_bound: bool=false
+var _warehouse_auto_visible: bool=false
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node) -> void:
@@ -35,6 +38,12 @@ func refresh(parent: Node) -> Dictionary:
 		return {"ok":true,"handled":false}
 	if is_instance_valid(_scene) and _owner!=null and _owner.get_ref()==current.owner and _section==current.section:
 		_refresh_production(parent,current)
+		if _warehouse_auto_bound:
+			var available: bool=_warehouse_auto_available(current)
+			if available!=_warehouse_auto_visible:
+				var updated: Dictionary=_scene.set_bound_visible(3780,available)
+				if not updated.get("ok",false):close();last_result=updated;return updated
+				_warehouse_auto_visible=available
 		var texts: Dictionary=_current_texts(current.owner,current.section)
 		for offset: int in _texts:
 			if not texts.has(offset):close();return _fail("source_workspace_current_text_owner_unavailable")
@@ -59,6 +68,16 @@ func refresh(parent: Node) -> Dictionary:
 		if texts.has(47920) and (not allowed is Array or allowed.has(47920)):
 			scope.append(47920);bindings[47920]={"role":"source_text","text":texts[47920]}
 			_texts[47920]=texts[47920]
+		var auto_scope_present: bool=true
+		for offset: int in STORAGE_AUTO_OFFSETS:
+			if allowed is Array and not allowed.has(offset):auto_scope_present=false
+		if auto_scope_present:
+			scope.append_array(STORAGE_AUTO_OFFSETS)
+			_warehouse_auto_visible=_warehouse_auto_available(current)
+			bindings[3780]={"role":"button","activate":Callable(self,"_warehouse_auto_requested"),"visible":_warehouse_auto_visible,"displaystate":true}
+			bindings[4380]={"visible":true};bindings[3832]={"visible":false}
+			bindings[4448]={"role":"static_source_text"};bindings[3884]={"role":"static_source_text"}
+			_warehouse_auto_bound=true
 	if current.section=="crafting" and _pack.manifest.get("scenes",{}).has("UI/Production/Production_Popup_Keypad.csb") and (not allowed is Array or (allowed.has(964) and allowed.has(2252))):
 		scope.append_array([964,2252])
 		bindings[964]={"role":"button","activate":Callable(self,"open_search")}
@@ -89,10 +108,14 @@ func blocks_point(point: Vector2) -> bool:
 	if not point.is_finite() or not is_instance_valid(_scene) or _scene.is_queued_for_deletion():return false
 	var current: Dictionary=_current()
 	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!=current.section:return false
-	var node: Variant=_scene.source_nodes.get(int(SPECS[_section].close))
-	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
-	var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
-	return control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point)
+	var offsets: Array[int]=[int(SPECS[_section].close)]
+	if _warehouse_auto_bound and _warehouse_auto_available(current):offsets.append(3780)
+	for offset: int in offsets:
+		var node: Variant=_scene.source_nodes.get(offset)
+		var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+		var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
+		if control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point):return true
+	return false
 
 func close() -> void:
 	close_search()
@@ -101,6 +124,7 @@ func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null;_owner=null;_section=""
 	_texts.clear()
+	_warehouse_auto_bound=false;_warehouse_auto_visible=false
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
 
 func _refresh_production(parent: Node, current: Dictionary) -> void:
@@ -143,6 +167,22 @@ func _close_requested() -> Dictionary:
 	hud.call("_close_workspace")
 	close()
 	return {"ok":true,"dispatched":true,"method":"existing HUD._close_workspace","transaction_requested":false,"game_state_written":false}
+
+func _warehouse_auto_available(current: Dictionary) -> bool:
+	if current.get("section")!="warehouse":return false
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	var mode: Variant=current.owner.get("mode")
+	return is_instance_valid(hud) and hud.has_method("open_inventory_automation_settings") and mode is OptionButton and is_instance_valid(mode) and mode.item_count==2 and mode.selected==0
+
+func _warehouse_auto_requested() -> Dictionary:
+	var current: Dictionary=_current()
+	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!="warehouse" or not _warehouse_auto_bound or not _warehouse_auto_available(current):return _fail("source_storage_actual_deposit_settings_owner_required")
+	# The same deposit-settings caller already used by this owner's controls;
+	# no automatic material/category, batch or transfer action is inferred.
+	var hud: Object=_hud.get_ref()
+	hud.call("open_inventory_automation_settings","deposit")
+	close()
+	return {"ok":true,"dispatched":true,"method":"existing HUD.open_inventory_automation_settings","mode":"deposit","transaction_requested":false,"game_state_written":false}
 
 func _current() -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
