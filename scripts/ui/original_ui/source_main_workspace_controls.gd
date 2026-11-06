@@ -6,7 +6,10 @@ const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.
 const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
 const SkillControls=preload("res://scripts/ui/original_ui/source_main_skill_controls.gd")
 const STORAGE_AUTO_OFFSETS: Array[int]=[3780,5884,5500,5116,4448,3884]
+const SALE_AUTO_OFFSETS: Array[int]=[26364,28124,27780,22048,23384,23052,22488,22156]
+const SALE_AUTO_CONTROLS={26364:"settings",22048:"fill"}
 const SPECS={
+	"sell":{"owner":"res://scripts/ui/renewal_sell.gd","parent":"UI/StoreScene.csb","parent_sha":"8e414c1d179d395048f8fb963c08ccbde12dfcc125f3b0bc1cc4c5fa8b999a68","project":148,"member":"UI/Store/Store_All.csb","sha":"fb2a67543f60e42caa675d8e0b9f1d3834f78c1e2a85645f424da3ef5cbf7c05","close":67396},
 	"skills":{"owner":"res://scripts/ui/renewal_skills.gd","parent":"UI/FloatingUiScene.csb","parent_sha":"b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8","project":10236,"member":"UI/FloatingUi/Skill_All.csb","sha":"5f2f800c5e461c372cc2b9de13b9c742f9879115fb1028c937668f054e00f099","close":16260},
 	"warehouse":{"owner":"res://scripts/ui/renewal_warehouse.gd","parent":"UI/StorageScene.csb","parent_sha":"0df424e7ed29a314e112ef618d40f89806c9df6ad6ce56df7dedd5e08e9ebde7","project":132,"member":"UI/Storage/Storage_All.csb","sha":"eb4ddfa71dc9be978fd03948ff938c12e2366f6542ff5844509c47f110b38328","close":47160},
 	"crafting":{"owner":"res://scripts/ui/renewal_crafting.gd","parent":"UI/ProductionScene.csb","parent_sha":"cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328","project":132,"member":"UI/Production/Production_All.csb","sha":"328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec","close":41600},
@@ -30,6 +33,9 @@ var _skills_status: Dictionary={}
 var _skills_attempted_owner: WeakRef
 var _warehouse_auto_bound: bool=false
 var _warehouse_auto_visible: bool=false
+var _sale_auto_bound: bool=false
+var _sale_auto_state: Dictionary={}
+var _sale_auto_owner_buttons: Dictionary={}
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node) -> void:
@@ -44,6 +50,9 @@ func refresh(parent: Node) -> Dictionary:
 	if is_instance_valid(_scene) and _owner!=null and _owner.get_ref()==current.owner and _section==current.section:
 		_refresh_production(parent,current)
 		_refresh_skills(parent,current)
+		if _sale_auto_bound:
+			var updated: Dictionary=_refresh_sale_automation(current)
+			if not updated.get("ok",false):close();last_result=updated;return updated
 		if _warehouse_auto_bound:
 			var available: bool=_warehouse_auto_available(current)
 			if available!=_warehouse_auto_visible:
@@ -88,6 +97,25 @@ func refresh(parent: Node) -> Dictionary:
 		scope.append_array([964,2252])
 		bindings[964]={"role":"button","activate":Callable(self,"open_search")}
 		bindings[2252]={"role":"static_source_text"}
+	if current.section=="sell":
+		var sale_scope_present: bool=true
+		for offset: int in SALE_AUTO_OFFSETS:
+			if allowed is Array and not allowed.has(offset):sale_scope_present=false
+		if sale_scope_present:
+			var model: Dictionary=_sale_automation_model(current)
+			scope.append_array(SALE_AUTO_OFFSETS)
+			for offset: int in SALE_AUTO_CONTROLS:
+				var kind: String=SALE_AUTO_CONTROLS[offset]
+				var row: Dictionary=model.get(kind,{})
+				var available: bool=row.get("available",false)
+				var enabled: bool=available and row.get("enabled",false)
+				bindings[offset]={"role":"button","activate":Callable(self,"_sale_automation_requested").bind(kind),"visible":available,"displaystate":enabled}
+				_sale_auto_state[kind]={"available":available,"enabled":enabled}
+				if row.has("button"):_sale_auto_owner_buttons[kind]=weakref(row.button)
+			bindings[22996]={"visible":_sale_auto_state.fill.enabled}
+			bindings[22100]={"visible":not _sale_auto_state.fill.enabled}
+			for offset: int in [27780,23384,22488]:bindings[offset]={"role":"static_source_text"}
+			_sale_auto_bound=true
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_project(_pack,spec.parent,int(spec.project),bindings,scope)
 	if not result.get("ok",false):scene.free();last_result=result;return result
@@ -100,7 +128,7 @@ func refresh(parent: Node) -> Dictionary:
 	_scene=scene;_owner=weakref(current.owner);_section=current.section
 	_refresh_production(parent,current)
 	_refresh_skills(parent,current)
-	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"game_state_written":false}
+	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"sale_automation_controls_connected":_sale_auto_bound,"game_state_written":false}
 	return last_result.duplicate(true)
 
 func presentation() -> Dictionary:
@@ -123,6 +151,7 @@ func blocks_point(point: Vector2) -> bool:
 	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!=current.section:return false
 	var offsets: Array[int]=[int(SPECS[_section].close)]
 	if _warehouse_auto_bound and _warehouse_auto_available(current):offsets.append(3780)
+	if _sale_auto_bound:offsets.append_array([26364,22048])
 	for offset: int in offsets:
 		var node: Variant=_scene.source_nodes.get(offset)
 		var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
@@ -140,6 +169,7 @@ func close() -> void:
 	_scene=null;_owner=null;_section=""
 	_texts.clear()
 	_warehouse_auto_bound=false;_warehouse_auto_visible=false
+	_sale_auto_bound=false;_sale_auto_state.clear();_sale_auto_owner_buttons.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
 
 func _refresh_skills(parent: Node, current: Dictionary) -> void:
@@ -193,6 +223,55 @@ func _close_requested() -> Dictionary:
 	hud.call("_close_workspace")
 	close()
 	return {"ok":true,"dispatched":true,"method":"existing HUD._close_workspace","transaction_requested":false,"game_state_written":false}
+
+func _refresh_sale_automation(current: Dictionary) -> Dictionary:
+	var model: Dictionary=_sale_automation_model(current)
+	for offset: int in SALE_AUTO_CONTROLS:
+		var kind: String=SALE_AUTO_CONTROLS[offset]
+		var row: Dictionary=model.get(kind,{})
+		var captured: WeakRef=_sale_auto_owner_buttons.get(kind)
+		var same_owner: bool=captured!=null and captured.get_ref()==row.get("button")
+		var state: Dictionary={"available":same_owner and row.get("available",false),"enabled":same_owner and row.get("available",false) and row.get("enabled",false)}
+		if state==_sale_auto_state.get(kind):continue
+		var result: Dictionary=_scene.set_bound_visible(offset,state.available)
+		if result.get("ok",false):result=_scene.set_bound_displaystate(offset,state.enabled)
+		if kind=="fill":
+			if result.get("ok",false):result=_scene.set_bound_visible(22996,state.enabled)
+			if result.get("ok",false):result=_scene.set_bound_visible(22100,not state.enabled)
+		if not result.get("ok",false):return result
+		_sale_auto_state[kind]=state
+	return {"ok":true,"sale_automation_states":_sale_auto_state.duplicate(true),"transaction_requested":false}
+
+func _sale_automation_requested(kind: String) -> Dictionary:
+	var current: Dictionary=_current()
+	if not _sale_auto_bound or kind not in ["settings","fill"] or not current.get("ok",false) or current.section!="sell" or _section!="sell" or _owner==null or _owner.get_ref()!=current.owner:return _fail("source_sale_automation_actual_presented_owner_required")
+	var model: Dictionary=_sale_automation_model(current)
+	var row: Dictionary=model.get(kind,{})
+	var captured: WeakRef=_sale_auto_owner_buttons.get(kind)
+	var button: Variant=row.get("button")
+	if captured==null or captured.get_ref()!=button or not row.get("available",false) or not row.get("enabled",false):return _fail("source_sale_automation_existing_action_unavailable")
+	# These actual owner buttons already open sell settings or construct the
+	# saved-rule cart preview/confirmation. Do not create a new cart, stamp,
+	# selected-item sell, price, execution, confirmation or save path here.
+	button.emit_signal("pressed")
+	return {"ok":true,"existing_owner_callback_invoked":true,"mode":"sell","kind":kind,"transaction_result_known":false,"game_state_written_by_ui_adapter":false}
+
+static func _sale_automation_model(current: Dictionary) -> Dictionary:
+	if current.get("section")!="sell" or not is_instance_valid(current.get("owner")):return {}
+	var owner: Control=current.owner
+	var automation: Variant=owner.get("auto_controls")
+	if not automation is Control or not is_instance_valid(automation) or automation.is_queued_for_deletion() or not owner.is_ancestor_of(automation):return {}
+	var script: Script=automation.get_script()
+	if script==null or script.resource_path!="res://scripts/ui/renewal_auto_inventory.gd" or automation.get("host")!=owner or automation.get("hud")!=owner.get("hud") or automation.get("world")!=owner.get("world") or automation.get("mode")!="sell":return {}
+	var rows: Dictionary={}
+	for spec: Array in [["settings","AutoClear"],["fill","AutoFill"]]:
+		var matches: Array[Node]=automation.find_children(spec[1],"Button",true,false)
+		if matches.size()!=1 or not matches[0] is BaseButton:continue
+		var button: BaseButton=matches[0]
+		if spec[0]=="fill" and not button.pressed.is_connected(Callable(automation,"_fill")):continue
+		if spec[0]=="settings" and button.get_signal_connection_list("pressed").is_empty():continue
+		rows[spec[0]]={"button":button,"available":button.is_inside_tree() and not button.is_queued_for_deletion() and button.is_visible_in_tree(),"enabled":not button.disabled}
+	return rows
 
 func _warehouse_auto_available(current: Dictionary) -> bool:
 	if current.get("section")!="warehouse":return false
