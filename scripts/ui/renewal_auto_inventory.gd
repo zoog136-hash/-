@@ -150,9 +150,9 @@ func _fill() -> void:
 		if not result.get("ok",false): _report(result)
 		if is_instance_valid(host):
 			host._refresh()
-			refresh())
+			refresh(),plan.cart)
 
-func _confirm(title: String, description: String, action: String, accept: Callable) -> void:
+func _confirm(title: String, description: String, action: String, accept: Callable, cart: Array = []) -> void:
 	var root: Node = hud.get_node("Root")
 	for dialog: Node in root.get_children():
 		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): return
@@ -160,3 +160,4 @@ func _confirm(title: String, description: String, action: String, accept: Callab
 	var dialog := preload("res://scripts/ui/auto_inventory_confirmation.gd").new()
 	root.add_child(dialog)
 	dialog.configure(title,description,action,accept)
+	dialog.bind_source_cart(world,cart)

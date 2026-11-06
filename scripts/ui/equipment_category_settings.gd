@@ -221,6 +221,7 @@ func _preview(sale: bool) -> void:
 			_restore_filters()
 			permit_custom.visible = bool(service.state.get("source_only",false))
 		_refresh())
+	dialog.bind_source_cart(world,plan.cart)
 
 func _report(result: Dictionary) -> void:
 	hud.show_message("판매 완료" if result.get("ok",false) and result.has("cart") else "조건·ID 저장 완료" if result.get("ok",false) else str(result.get("reason","처리할 수 없습니다")))

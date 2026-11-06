@@ -882,3 +882,20 @@ warehouse counts, physical IDs, lock/weight/price checks, transaction signals
 and save behavior remain unchanged. The same callback boundary is retained for
 the previously connected purchase/craft confirmations. No new UI targets or
 source assets were added, and no tests/compile/game/render/CI were executed.
+
+### Existing automatic cart confirmations
+
+Automatic warehouse/sale, equipment-category sale/selection and automatic
+maintenance setup now pass their already prepared cart to the existing
+confirmation's original-image consumer. Only a single deposit/sell entry with
+a positive quantity can supply an image. Physical selections use the actual
+instance record; stack selections reuse the owner's current catalog lookup.
+Record/name and current quantity must still agree before the existing common
+original-item provider resolves the source identity. An empty or multiple-entry
+cart clears the icon rather than selecting a representative item.
+
+No cart preview, movement, schedule, commit, price, inventory or save operation
+is added by the image method. Existing stamps/callbacks and all transaction
+admission stay with their original owners. This consumes an existing button,
+without a new UI node, picture, source ID, animation or pack. The added calls
+remain uncompiled/unexecuted/unverified; no additional tests/game/render/CI ran.
