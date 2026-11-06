@@ -972,6 +972,10 @@ func refresh_menu_state() -> Dictionary:
 	if _menu==null or not is_instance_valid(_menu_scene):return {"ok":true,"source_menu_presented":false}
 	return _menu.refresh_presented(_menu_scene)
 
+func source_role_pack() -> RefCounted:
+	# Existing selected pack for UI-owned role consumers; no new selector.
+	return _pack
+
 func _mount_exp() -> Dictionary:
 	if not _has_player_values:return _fail("source_main_player_values_pending")
 	_exp_mount_attempted=true

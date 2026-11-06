@@ -20,6 +20,8 @@ var play_buttons: Dictionary = {}
 var play_settings_dialog: AcceptDialog
 var play_settings_text: TextEdit
 const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false]]
+const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
+var source_ui_pack: RefCounted
 
 func configure(controller: Node) -> void:
 	world = controller
@@ -114,6 +116,17 @@ func select_existing_family(kind: String, hard: bool=false) -> Dictionary:
 		family.select(index)
 		family.emit_signal("item_selected",index)
 	return {"ok":true,"family":kind,"hard":hard,"existing_filter_selected":true,"entry_requested":false,"game_state_written":false}
+
+func original_selected_special_entrance() -> Dictionary:
+	if not is_instance_valid(world) or not is_inside_tree() or is_queued_for_deletion() or not is_visible_in_tree() or not is_instance_valid(family) or family.selected<0 or family.selected>=FAMILIES.size() or family.item_count!=FAMILIES.size() or _kind()!="special" or selected<0 or selected>=rows.size():return {"ok":false,"code":"source_special_actual_visible_selection_required"}
+	var entry: Variant=rows[selected]
+	var raw: Variant=entry.get("row") if entry is Dictionary else null
+	if not raw is Dictionary or not SourceResultRoles._positive(raw.get("ID")) or not SourceResultRoles._positive(raw.get("EntranceAssetID")):return {"ok":false,"code":"source_special_selected_original_row_required"}
+	var matches: Array=[]
+	for current: Dictionary in world.source_dungeon_entries("special",false):
+		if current.get("row",{}).get("ID")==raw.ID:matches.append(current)
+	if matches.size()!=1 or matches[0].get("row")!=raw:return {"ok":false,"code":"source_special_selected_original_row_changed"}
+	return {"ok":true,"special_dungeon_id":int(raw.ID),"entrance_asset_id":int(raw.EntranceAssetID),"actual_selected_entry":entry.duplicate(true),"selected_index":selected,"role":"SpecialDungeon.EntranceAssetID","original_ui_target":SourceResultRoles.special_entrance_target(source_ui_pack),"selection_basis":"existing rows[selected] and unique current world.source_dungeon_entries(special,false) row","first_entry_chosen":false,"game_state_written":false,"pixels_assigned":false}
 
 func _build_play_panel() -> void:
 	play_panel=VBoxContainer.new();play_panel.name="DungeonExtendedPlay";add_child(play_panel)

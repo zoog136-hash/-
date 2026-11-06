@@ -9,6 +9,8 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
+var source_ui_pack: RefCounted
 @export var showcase_on_ready: bool = false
 var cards: Array[Control] = []
 var results: Array[Dictionary] = []
@@ -92,6 +94,8 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		card.intensity_scale = intensity_scale
 		card.show_grade_heading = showcase
 		card.waiting_for_press = manual_reveal
+		card.source_ui_pack=source_ui_pack
+		card.source_result_operation="fusion" if fusion else "draw"
 		var grade: String = str(results[i].get("grade","일반"))
 		var high: bool = int(PROFILES.profile(grade).get("tier",0)) >= 1
 		card.open_at = 0.65 if showcase or fusion or results.size() == 1 else 0.45+i*0.16
@@ -267,6 +271,17 @@ func _first_upgraded_card() -> Control:
 
 func _all_revealed() -> bool:
 	return not cards.is_empty() and cards.all(func(card: Control) -> bool: return not card.waiting_for_press and clock >= card.reveal_at())
+
+func original_result_background_contract() -> Dictionary:
+	if showcase or results.is_empty():return {"ok":false,"code":"source_result_actual_awarded_stage_required"}
+	var identities: Array=[]
+	for record: Dictionary in results:
+		var identity: Dictionary=SourceResultRoles.current_card_identity(record)
+		if not identity.get("ok",false):return identity
+		identities.append(identity)
+	var contract: Dictionary=SourceResultRoles.fusion_stage(source_ui_pack,"fusion" if fusion else "draw")
+	contract["actual_results_in_owner_order"]=identities
+	return contract
 
 func _reveal_card(index: int) -> void:
 	if closing or index < 0 or index >= cards.size():

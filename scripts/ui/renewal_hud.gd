@@ -2074,6 +2074,7 @@ func _new_card_reveal_stage() -> Control:
 	stage.intensity_scale = clampf(float(settings.get("impact_intensity",0.85)),0.0,1.5)
 	stage.detail_scale = 0.6 if str(settings.get("effect_detail","full")) == "low" else 1.0
 	card_reveal_stage = stage
+	if is_instance_valid(original_main_ui_controller):stage.source_ui_pack=original_main_ui_controller.source_role_pack()
 	layer.add_child(stage)
 	stage.finished.connect(func() -> void:
 		card_reveal_stage = null
@@ -2829,6 +2830,7 @@ func open_source_dungeons() -> void:
 	var view := SourceDungeonUI.new()
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
+	if is_instance_valid(original_main_ui_controller):view.source_ui_pack=original_main_ui_controller.source_role_pack()
 	view.configure(get_parent())
 
 func open_source_dungeon_family(kind: String, hard: bool=false) -> Dictionary:
