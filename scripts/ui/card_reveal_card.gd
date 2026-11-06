@@ -9,6 +9,8 @@ const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
 const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
+const ResultFaceHost=preload("res://scripts/ui/original_ui/source_result_face_host.gd")
+var _original_result_face_host: RefCounted
 var source_ui_pack: RefCounted
 var source_result_operation: String=""
 const LIGHTNING_EARLY_SECONDS: float = 0.1
@@ -37,6 +39,7 @@ var waiting_for_press: bool = false
 var reveal_button: Button
 
 class Face extends Control:
+	var original_back_receiver_active: bool=false
 	var artwork: Texture2D
 	var back: Texture2D
 	var candidates: Array[Texture2D] = []
@@ -53,6 +56,7 @@ class Face extends Control:
 		draw_texture_rect(texture,Rect2(at+(size-fitted)*0.5,fitted),false)
 
 	func _draw() -> void:
+		if elapsed<0 and original_back_receiver_active:return
 		draw_rect(Rect2(Vector2.ZERO,size),Color("0a1119"))
 		if elapsed < 0:
 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
@@ -181,6 +185,7 @@ func _fit() -> void:
 	grade_heading.size = Vector2(size.x*1.4,40)
 	if reveal_button != null:
 		reveal_button.size = size
+	_refresh_original_result_face()
 
 func start_reveal(at_time: float) -> bool:
 	if not waiting_for_press:
@@ -207,6 +212,7 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 		face.elapsed = -1.0
 		name_label.hide()
 		grade_label.hide()
+		_refresh_original_result_face()
 		# Unopened cards do not leak the result, run lightning, or redraw FX.
 		return
 	var local: float = clock-open_at
@@ -226,6 +232,7 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	rim.show()
 	confirmed_chrome.visible=revealed
 	(rim.get_theme_stylebox("panel") as StyleBoxFlat).border_color = tint
+	_refresh_original_result_face()
 	queue_redraw()
 
 func set_sequence_playing(value: bool) -> void:
@@ -235,3 +242,11 @@ func original_result_card_contract() -> Dictionary:
 	if not is_instance_valid(face) or record.is_empty():return {"ok":false,"code":"source_result_actual_card_face_required"}
 	var phase: String="back" if waiting_for_press or face.elapsed<0 else "front" if face.elapsed>=face.duration else "transition"
 	return SourceResultRoles.selected_card(source_ui_pack,record,source_result_operation,phase)
+
+func _refresh_original_result_face() -> void:
+	if _original_result_face_host==null:_original_result_face_host=ResultFaceHost.new()
+	set_meta("original_result_face_status",_original_result_face_host.refresh(self))
+
+func original_result_face_receiver() -> Dictionary:
+	if _original_result_face_host==null:return {"ok":false,"code":"result_face_actual_receiver_unavailable"}
+	return _original_result_face_host.receiver()
