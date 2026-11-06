@@ -3,6 +3,7 @@ extends RefCounted
 ## not a replacement form, transaction interpreter or generic source layout.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
+const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
 const SPECS={
 	"warehouse":{"owner":"res://scripts/ui/renewal_warehouse.gd","parent":"UI/StorageScene.csb","parent_sha":"0df424e7ed29a314e112ef618d40f89806c9df6ad6ce56df7dedd5e08e9ebde7","project":132,"member":"UI/Storage/Storage_All.csb","sha":"eb4ddfa71dc9be978fd03948ff938c12e2366f6542ff5844509c47f110b38328","close":47160},
 	"crafting":{"owner":"res://scripts/ui/renewal_crafting.gd","parent":"UI/ProductionScene.csb","parent_sha":"cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328","project":132,"member":"UI/Production/Production_All.csb","sha":"328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec","close":41600},
@@ -18,6 +19,9 @@ var _attempted_section: String=""
 var _scene: Node2D
 var _texts: Dictionary={}
 var _search: RefCounted
+var _production: RefCounted
+var _production_status: Dictionary={}
+var _production_attempted_owner: WeakRef
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node) -> void:
@@ -30,6 +34,7 @@ func refresh(parent: Node) -> Dictionary:
 		close();_attempted_owner=null;_attempted_section=""
 		return {"ok":true,"handled":false}
 	if is_instance_valid(_scene) and _owner!=null and _owner.get_ref()==current.owner and _section==current.section:
+		_refresh_production(parent,current)
 		var texts: Dictionary=_current_texts(current.owner,current.section)
 		for offset: int in _texts:
 			if not texts.has(offset):close();return _fail("source_workspace_current_text_owner_unavailable")
@@ -68,13 +73,19 @@ func refresh(parent: Node) -> Dictionary:
 	if not result.get("ok",false):scene.free();last_result=result;return result
 	parent.add_child(scene)
 	_scene=scene;_owner=weakref(current.owner);_section=current.section
+	_refresh_production(parent,current)
 	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"game_state_written":false}
 	return last_result.duplicate(true)
 
 func presentation() -> Dictionary:
-	return {"scene":_scene,"handled":is_instance_valid(_scene),"partial_source_scene":true}
+	var additional: Array=[]
+	if _production!=null:
+		var shown: Dictionary=_production.presentation()
+		if is_instance_valid(shown.get("scene")):additional.append(shown.scene)
+	return {"scene":_scene,"additional_scenes":additional,"production":_production_status.duplicate(true),"handled":is_instance_valid(_scene),"partial_source_scene":true}
 
 func blocks_point(point: Vector2) -> bool:
+	if _production!=null and _production.blocks_point(point):return true
 	if not point.is_finite() or not is_instance_valid(_scene) or _scene.is_queued_for_deletion():return false
 	var current: Dictionary=_current()
 	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!=current.section:return false
@@ -85,10 +96,23 @@ func blocks_point(point: Vector2) -> bool:
 
 func close() -> void:
 	close_search()
+	if _production!=null:_production.close()
+	_production=null;_production_attempted_owner=null;_production_status.clear()
 	var previous: Node2D=_scene
 	_scene=null;_owner=null;_section=""
 	_texts.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
+
+func _refresh_production(parent: Node, current: Dictionary) -> void:
+	if current.section!="crafting" or not _pack.manifest.get("scenes",{}).has(Production.MEMBER):return
+	if _production==null:
+		if _production_attempted_owner!=null and _production_attempted_owner.get_ref()==current.owner:return
+		_production_attempted_owner=weakref(current.owner)
+		var candidate=Production.new()
+		_production_status=candidate.configure(_pack,current.owner)
+		if not _production_status.get("ok",false):return
+		_production=candidate
+	_production_status=_production.refresh(parent)
 
 func open_search() -> Dictionary:
 	var current: Dictionary=_current()
