@@ -7,6 +7,7 @@ const SHA="5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face"
 const COMMON="UI/CommonUi/Common_Slot.csb"
 const COMMON_SHA="b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6"
 const PROJECTS={"scroll":145044,"equipment":144788}
+const PLUS=144460
 const ICON=15012
 const BUTTON=15728
 const BACKGROUND=15316
@@ -27,13 +28,16 @@ func build(pack: RefCounted, forge: Control) -> Dictionary:
 		var node: Dictionary=_node_at(tree.get("nodeTree",{}),PROJECTS[role])
 		if node.get("classname")!="ProjectNode" or node.get("options",{}).get("fileName")!="CommonUi/Common_Slot.csb":return _fail("enhance_slots_original_pair_not_in_selected_scope")
 		bindings[PROJECTS[role]]={"role":"project","visible":true,"source_node_offsets":[BUTTON,BACKGROUND,ICON],"bindings":{BUTTON:{"role":"button","activate":Callable(),"displaystate":false},ICON:{"role":"source_asset_slot","visible":false}}}
+	var scope: Array=PROJECTS.values()
+	var plus: Dictionary=_node_at(tree.get("nodeTree",{}),PLUS)
+	if plus.get("classname")=="Sprite" and plus.get("options",{}).get("fileNameData",{}).get("path")=="Com_Icn_Plus.png" and plus.options.fileNameData.get("plistFile")=="UI_Resource/Atlas_Common.plist":scope.append(PLUS)
 	_forge=weakref(forge)
 	var snapshot: Dictionary=_snapshot()
 	if not snapshot.get("ok",false):_forge=null;return snapshot
 	for role: String in PROJECTS:
 		var view: TextureRect=forge.scroll_icon if role=="scroll" else forge.preview
 		_legacy[role]={"view":weakref(view),"visible":view.visible,"replaced":false}
-	return {"ok":true,"source_node_offsets":PROJECTS.values(),"bindings":bindings,"registration":BASIS.duplicate(true),"partial_source_scene":true}
+	return {"ok":true,"source_node_offsets":scope,"source_plus_connected":scope.has(PLUS),"bindings":bindings,"registration":BASIS.duplicate(true),"partial_source_scene":true}
 
 func bind_renderer(renderer: Node2D) -> Dictionary:
 	if not is_instance_valid(renderer) or renderer.get("source_member")!=MEMBER:return _fail("enhance_slots_actual_source_renderer_required")
