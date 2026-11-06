@@ -9,6 +9,9 @@ const ALL_SHA="328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec"
 const MEMBER="UI/Production/Production_Tab_List.csb"
 const SHA256="14c9c7ed1333e0b20a2362d9c095065716e91cc4641e1b77adefe21d03fd1afb"
 const PROJECT=14392
+const CONDITION_FIELDS={26204:"level_text",21148:"quota_text",20368:"period_text"}
+const EMPTY_NOTICE=13448
+const LIMITED_PANEL=18004
 const BUTTONS={
 	42160:{"kind":"craft","normal":42772,"disabled":42212,"labels":[44244,42264]},
 	34356:{"kind":"reset","normal":35292,"disabled":34408,"labels":[35348,34464]},
@@ -26,6 +29,9 @@ var _recipe: String=""
 var _flags: Dictionary={}
 var _attempted_recipe: String=""
 var _attempted_action: WeakRef
+var _condition_offsets: Array[int]=[]
+var _empty_notice_available: bool=false
+var _condition_model: Dictionary={}
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, owner: Control) -> Dictionary:
@@ -34,6 +40,11 @@ func configure(pack: RefCounted, owner: Control) -> Dictionary:
 	var allowed: Variant=pack.manifest.get("node_scopes",{}).get(MEMBER)
 	for offset: int in OFFSETS:
 		if allowed is Array and not allowed.has(offset):return _fail("source_production_controls_original_scope_required")
+	var tree: Dictionary=pack.scene(MEMBER)
+	_condition_offsets.clear()
+	for offset: int in CONDITION_FIELDS:
+		if not _node_at(tree.get("nodeTree",{}),offset).is_empty():_condition_offsets.append(offset)
+	_empty_notice_available=not _node_at(tree.get("nodeTree",{}),EMPTY_NOTICE).is_empty()
 	_pack=pack;_owner=weakref(owner)
 	return {"ok":true,"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -52,13 +63,25 @@ func refresh(parent: Node) -> Dictionary:
 			if result.get("ok",false):result=_child.set_bound_visible(int(BUTTONS[offset].disabled),not enabled)
 			if not result.get("ok",false):close();return result
 		_flags=model.flags.duplicate()
+		var fields: Dictionary=_refresh_condition_fields(model)
+		if not fields.get("ok",false):close();return fields
 		return last_result.duplicate(true)
 	# A rejected static source construction must not be repeated every frame.
 	# A genuinely different selected recipe/action can make a new attempt.
 	if _attempted_recipe==model.recipe and _attempted_action!=null and _attempted_action.get_ref()==model.action:return last_result.duplicate(true)
 	close()
 	_attempted_recipe=model.recipe;_attempted_action=weakref(model.action)
-	var bindings: Dictionary={14172:{"visible":true}}
+	var bindings: Dictionary={14172:{"visible":model.selected}}
+	var scope: Array[int]=OFFSETS.duplicate()
+	for offset: int in _condition_offsets:
+		scope.append(offset)
+		var text: String=model.conditions.get(CONDITION_FIELDS[offset],"")
+		bindings[offset]={"role":"source_text","text":text,"visible":not text.is_empty()}
+	if 21148 in _condition_offsets or 20368 in _condition_offsets:
+		bindings[LIMITED_PANEL]={"visible":not model.conditions.get("period_text","").is_empty() or not model.conditions.get("quota_text","").is_empty(),"input":Callable(self,"_consume_condition_input")}
+	if _empty_notice_available:
+		scope.append(EMPTY_NOTICE)
+		bindings[EMPTY_NOTICE]={"role":"static_source_text","visible":not model.selected}
 	for offset: int in BUTTONS:
 		var spec: Dictionary=BUTTONS[offset]
 		var enabled: bool=model.flags[offset]
@@ -67,7 +90,7 @@ func refresh(parent: Node) -> Dictionary:
 		bindings[int(spec.disabled)]={"visible":not enabled}
 		for label: int in spec.labels:bindings[label]={"role":"static_source_text"}
 	var next:=Scene.new()
-	var result: Dictionary=next.configure_project(_pack,PARENT,132,{PROJECT:{"role":"project","visible":true,"source_node_offsets":OFFSETS.duplicate(),"bindings":bindings}},[PROJECT])
+	var result: Dictionary=next.configure_project(_pack,PARENT,132,{PROJECT:{"role":"project","visible":true,"source_node_offsets":scope,"bindings":bindings}},[PROJECT])
 	if not result.get("ok",false):next.free();last_result=result;return result
 	var nested: Dictionary=next.project_player([PROJECT])
 	if not nested.get("ok",false):next.free();last_result=nested;return nested
@@ -79,9 +102,10 @@ func refresh(parent: Node) -> Dictionary:
 		if _button_control(nested.player,offset)==null:next.free();last_result=_fail("source_production_controls_original_input_required");return last_result.duplicate(true)
 	parent.add_child(next);next.z_index=150
 	_scene=next;_child=nested.player;_recipe=model.recipe;_flags=model.flags.duplicate()
+	_condition_model={"selected":model.selected,"conditions":model.conditions.duplicate(true)}
 	_action=weakref(model.action);_action_visible=model.action.visible
 	model.action.hide()
-	last_result={"ok":true,"handled":true,"recipe_id":_recipe,"source_member":MEMBER,"craft_action_connected":true,"quantity_buttons_connected":true,"partial_source_scene":true,"complete_screen_contract":false,"progress_cancel_or_result_connected":false,"game_state_written":false}
+	last_result={"ok":true,"handled":true,"recipe_id":_recipe,"source_member":MEMBER,"craft_action_connected":true,"quantity_buttons_connected":true,"partial_source_scene":true,"complete_screen_contract":false,"progress_cancel_or_result_connected":false,"condition_text_offsets":_condition_offsets.duplicate(),"empty_selection_notice_connected":_empty_notice_available,"game_state_written":false}
 	return last_result.duplicate(true)
 
 func presentation() -> Dictionary:
@@ -91,6 +115,10 @@ func blocks_point(point: Vector2) -> bool:
 	if not point.is_finite() or not is_instance_valid(_scene) or _scene.is_queued_for_deletion():return false
 	var model: Dictionary=_model()
 	if not model.get("ok",false) or model.recipe!=_recipe:return false
+	if 21148 in _condition_offsets or 20368 in _condition_offsets:
+		var node: Variant=_child.source_nodes.get(LIMITED_PANEL)
+		var control: Variant=node.get_node_or_null("SourceContentOrigin/OriginalSourceInput") if is_instance_valid(node) else null
+		if control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point):return true
 	for offset: int in BUTTONS:
 		var control: Control=_button_control(_child,offset)
 		if control!=null and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point):return true
@@ -99,7 +127,7 @@ func blocks_point(point: Vector2) -> bool:
 func close() -> void:
 	var action: Object=_action.get_ref() if _action!=null else null
 	if is_instance_valid(action):action.visible=_action_visible
-	_action=null;_child=null;_recipe="";_flags.clear()
+	_action=null;_child=null;_recipe="";_flags.clear();_condition_model.clear()
 	var previous: Node2D=_scene
 	_scene=null
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
@@ -130,13 +158,47 @@ func _model() -> Dictionary:
 	var ids: Variant=owner.get("recipe_ids")
 	var amount: Variant=owner.get("amount")
 	var action: Variant=owner.get("action")
-	if not recipe is String or recipe.is_empty() or not ids is Array or recipe not in ids:return _fail("source_production_controls_actual_recipe_selection_required")
+	if not recipe is String or not ids is Array or (not recipe.is_empty() and recipe not in ids):return _fail("source_production_controls_actual_recipe_selection_required")
+	if recipe.is_empty() and not _empty_notice_available:return _fail("source_production_controls_actual_recipe_selection_required")
 	if not amount is SpinBox or not is_instance_valid(amount) or not action is BaseButton or not is_instance_valid(action):return _fail("source_production_controls_existing_amount_and_action_required")
 	for value: float in [amount.value,amount.min_value,amount.max_value]:
 		if not is_finite(value) or value!=floor(value):return _fail("source_production_controls_integer_quantity_required")
 	if amount.step!=1 or amount.min_value<1 or amount.value<amount.min_value or amount.value>amount.max_value:return _fail("source_production_controls_owner_quantity_bounds_required")
-	var editable: bool=amount.editable
-	return {"ok":true,"recipe":recipe,"amount":amount,"action":action,"flags":{42160:not action.disabled,34356:editable and amount.value>amount.min_value,31860:editable and amount.value+10<=amount.max_value,29364:editable and amount.value+50<=amount.max_value}}
+	var selected: bool=not recipe.is_empty()
+	var editable: bool=selected and amount.editable
+	var conditions: Dictionary={}
+	var display: Variant=owner.get("source_condition_display")
+	if selected and display is Dictionary and display.get("recipe_id")==recipe:
+		for key: String in ["level_text","period_text","quota_text"]:
+			if display.get(key) is String:conditions[key]=display[key]
+	return {"ok":true,"recipe":recipe,"selected":selected,"conditions":conditions,"amount":amount,"action":action,"flags":{42160:selected and not action.disabled,34356:editable and amount.value>amount.min_value,31860:editable and amount.value+10<=amount.max_value,29364:editable and amount.value+50<=amount.max_value}}
+
+func _refresh_condition_fields(model: Dictionary) -> Dictionary:
+	var current: Dictionary={"selected":model.selected,"conditions":model.conditions}
+	if current==_condition_model:return {"ok":true,"changed":false}
+	var result: Dictionary=_child.set_bound_visible(14172,model.selected)
+	if not result.get("ok",false):return result
+	for offset: int in _condition_offsets:
+		var text: String=model.conditions.get(CONDITION_FIELDS[offset],"")
+		result=_child.set_bound_text(offset,text)
+		if result.get("ok",false):result=_child.set_bound_visible(offset,not text.is_empty())
+		if not result.get("ok",false):return result
+	if 21148 in _condition_offsets or 20368 in _condition_offsets:
+		result=_child.set_bound_visible(LIMITED_PANEL,not model.conditions.get("period_text","").is_empty() or not model.conditions.get("quota_text","").is_empty())
+		if not result.get("ok",false):return result
+	if _empty_notice_available:result=_child.set_bound_visible(EMPTY_NOTICE,not model.selected)
+	if result.get("ok",false):_condition_model=current.duplicate(true)
+	return result
+
+func _consume_condition_input(_event: InputEvent) -> void:
+	if is_instance_valid(_scene) and _scene.is_inside_tree():_scene.get_viewport().set_input_as_handled()
+
+static func _node_at(node: Dictionary, offset: int) -> Dictionary:
+	if node.get("_offset")==offset:return node
+	for child: Dictionary in node.get("children",[]):
+		var found: Dictionary=_node_at(child,offset)
+		if not found.is_empty():return found
+	return {}
 
 static func _button_control(scene: Node2D, offset: int) -> Control:
 	if not is_instance_valid(scene):return null
