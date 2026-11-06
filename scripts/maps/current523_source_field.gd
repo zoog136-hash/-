@@ -137,3 +137,13 @@ func death_source_context(point: Vector2) -> Dictionary:
 	if not member is String or member.is_empty() or not digest is String or not SOURCE_PACK.S32_FORMAT._sha(digest):return {}
 	var identity: Dictionary={"schema":1,"source_snapshot":523,"land_id":int(native_land.ID),"asset_path":source_asset,"source_cell":[cell.x,cell.y],"source_manifest_sha256":catalog_sha256,"member":member,"member_sha256":digest,"coordinate_policy":"OWN_SOURCE_CELL_FLOOR_V1","native_m_rules_verified":false}
 	return {"land":int(native_land.ID),"position":Vector2(cell),"source_location":identity}
+
+func source_region_context(point: Vector2, admitted_land: Dictionary) -> Dictionary:
+	# The receiver supplies its explicitly admitted Land row. A numeric folder
+	# resemblance is never a join and another catalog cannot fill this input.
+	if admitted_land.is_empty() or admitted_land!=native_land or definition.get("source_map_id")!=native_land.get("ID") or definition.get("source_asset_path")!=native_land.get("AssetPath") or source_asset!=native_land.get("AssetPath"):return {}
+	if definition.get("source_manifest_sha256")!=catalog_sha256 or not SOURCE_PACK.S32_FORMAT._sha(catalog_sha256):return {}
+	# Shared read-only source-cell proof; this has no death/gameplay effects.
+	var point_context: Dictionary=death_source_context(point)
+	if point_context.is_empty():return {}
+	return {"schema":1,"source_snapshot":523,"land_id":int(native_land.ID),"land":native_land.duplicate(true),"asset_path":source_asset,"source_cell":point_context.source_location.source_cell.duplicate(),"source_manifest_sha256":catalog_sha256,"native_land_table_sha256":SOURCE_PACK.LAND_SHA256,"source_location":point_context.source_location.duplicate(true),"field_instance":get_instance_id(),"native_m_rules_verified":false}
