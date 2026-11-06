@@ -5,8 +5,11 @@ const EXPECTED_JOBS: Array[String] = [
 	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
 ]
 
+const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+
 var failures: Array[String] = []
 var legacy_mythic_jobs: Dictionary = {}
+var definitions_absent: bool = false
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -32,7 +35,14 @@ func _run() -> void:
 		_fail("job_classes is not an Array")
 	else:
 		var jobs: Array = jobs_value as Array
-		if jobs.size() != EXPECTED_JOBS.size():
+		# Class rows come from the owned current523 definitions. Without that
+		# private install the honest result is an empty class list: no former
+		# mythic card pack may stand in for the source class definitions.
+		definitions_absent = DEFINITIONS.not_installed()
+		if definitions_absent:
+			if not jobs.is_empty():
+				_fail("absent current523 install exposed %d substitute job classes" % jobs.size())
+		elif jobs.size() != EXPECTED_JOBS.size():
 			_fail("expected %d job classes, got %d" % [EXPECTED_JOBS.size(), jobs.size()])
 		var seen: Dictionary = {}
 		for value: Variant in jobs:
@@ -57,7 +67,7 @@ func _run() -> void:
 					_fail("%s representative mythic image is missing: %s" % [job_name, image_path])
 				legacy_mythic_jobs[job_name] = true
 		for job_name: String in EXPECTED_JOBS:
-			if not seen.has(job_name):
+			if not definitions_absent and not seen.has(job_name):
 				_fail("missing job class: " + job_name)
 
 	var skills_value: Variant = world.get("skills_db")
@@ -96,7 +106,12 @@ func _run() -> void:
 	_finish()
 
 func _finish() -> void:
-	if failures.is_empty():
+	if failures.is_empty() and definitions_absent:
+		# Scope is explicit: class rows were NOT validated, only that none were substituted.
+		print("JOB_SMOKE_RESULT {\"scope\":\"CURRENT523_NOT_INSTALLED\",\"job_classes\":0,\"class_rows_validated\":false}")
+		print("JOB_SMOKE_OK: CURRENT523_NOT_INSTALLED - no substitute job classes; class skills, job change and quickbars validated")
+		quit(0)
+	elif failures.is_empty():
 		print("JOB_SMOKE_OK: 13 jobs, source class definitions (legacy mythic visuals where used), class skills and quickbars validated")
 		quit(0)
 	else:
