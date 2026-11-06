@@ -92,10 +92,12 @@ func _refresh() -> void:
 		var record: Dictionary = world._find_catalog_item_record(name)
 		if record.is_empty(): continue
 		var equipment: bool = str(world._enhancement_kind_for_record(record)) != ""
-		if filter_kind == "장비" and not equipment:
-			continue
-		if filter_kind == "소모품" and equipment:
-			continue
+		var native_category: Dictionary=preload("res://scripts/ui/original_ui/source_inventory_category.gd").describe(record)
+		if filter_kind!="전체" and native_category.get("handled",false):
+			if not native_category.get("ok",false) or native_category.category!=filter_kind:continue
+		else:
+			if filter_kind == "장비" and not equipment:continue
+			if filter_kind == "소모품" and equipment:continue
 		if not equipment:
 			_add_item(name,count,"","×%d" % count)
 		else:

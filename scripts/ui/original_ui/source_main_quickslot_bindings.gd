@@ -35,24 +35,23 @@ func snapshot() -> Dictionary:
 	if not is_instance_valid(world) or not world.has_method("_quickslot_pages"):return _fail("source_quickslot_existing_world_pages_missing")
 	var pages: Variant=world.call("_quickslot_pages")
 	var entries: Variant=hud.get("quickslot_entries")
-	var captions: Variant=hud.get("quickslot_captions")
 	var cooldowns: Variant=hud.get("quickslot_cooldown_labels")
 	if not pages is Array or pages.size()!=2:return _fail("source_quickslot_existing_page_model_invalid")
 	for page: Variant in pages:
 		if typeof(page)!=TYPE_INT or int(page)<0:return _fail("source_quickslot_existing_page_index_invalid")
-	if not entries is Array or not captions is Array or not cooldowns is Array or captions.size()<10 or cooldowns.size()<10:return _fail("source_quickslot_existing_visible_model_missing")
+	if not entries is Array or not cooldowns is Array or cooldowns.size()<10:return _fail("source_quickslot_existing_visible_model_missing")
 	var rows: Array=[]
 	for visible: int in range(10):
 		var absolute: Variant=hud.call("quickslot_index",visible)
 		if typeof(absolute)!=TYPE_INT or int(absolute)<0:return _fail("source_quickslot_existing_index_invalid")
-		var caption: Variant=captions[visible]
 		var cooldown: Variant=cooldowns[visible]
-		if not is_instance_valid(caption) or not caption is Label or not is_instance_valid(cooldown) or not cooldown is Label:return _fail("source_quickslot_existing_text_label_missing")
+		if not is_instance_valid(cooldown) or not cooldown is Label:return _fail("source_quickslot_existing_text_label_missing")
 		# This is the same out-of-range/non-dictionary empty case the HUD
 		# presents. No 50-slot count, page modulus or game filter is reproduced.
 		var entry: Dictionary=entries[absolute].duplicate(true) if absolute<entries.size() and entries[absolute] is Dictionary else {}
+		var amount: Dictionary=hud.call("original_quickslot_amount",absolute,entry) if hud.has_method("original_quickslot_amount") else {"ok":false,"code":"source_quickslot_quantity_producer_unavailable"}
 		var group: int=visible/5
-		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":caption.text,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
+		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":str(amount.get("amount_text","")) if amount.get("ok",false) else "","amount_state":amount,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
 	return {"ok":true,"rows":rows,"pages":pages.duplicate(true),"model_basis":"existing HUD quickslot_index/entries/captions/cooldown_labels and World._quickslot_pages","partial_source_scene":true,"complete_screen_contract":false}
 
 func build_group(group: int) -> Dictionary:

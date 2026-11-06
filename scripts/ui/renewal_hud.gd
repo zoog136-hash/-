@@ -123,6 +123,7 @@ var coordinates_readout: Label
 var quickslot_cooldown_labels: Array[Label] = []
 var quickslot_icons: Array[TextureRect] = []
 var quickslot_captions: Array[Label] = []
+var _source_quickslot_amounts: Dictionary = {}
 var quickslot_auto_badges: Array[Label] = []
 var refresh_clock: float = 0
 var active_buffs_view: Dictionary = {}
@@ -815,7 +816,16 @@ func _source523_buff_image(effect: Dictionary) -> Dictionary:
 			record = get_parent()._skill_record(str(effect.get("skill_id","")))
 	return Source523SkillImages.describe_buff(effect,"OnIconID",source,record)
 
+func original_quickslot_amount(absolute: int, entry: Dictionary) -> Dictionary:
+	if entry.get("kind")!="item":return {"ok":true,"amount_text":"","quantity_applicable":false}
+	var current: Dictionary=_source_quickslot_amounts.get(absolute,{})
+	var identity: Dictionary=entry.duplicate(true)
+	identity.erase("auto")
+	if current.get("entry")!=identity or typeof(current.get("amount"))!=TYPE_INT:return {"ok":false,"code":"source_quickslot_current_quantity_unavailable"}
+	return {"ok":true,"amount_text":str(current.amount),"amount":current.amount,"quantity_applicable":true,"basis":"current _render_quickslots inventory snapshot and exact registered entry"}
+
 func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
+	_source_quickslot_amounts.clear()
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
@@ -838,6 +848,13 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		var id: String = str(entry.get("id",""))
 		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
 		if entry.get("kind","") == "item":
+			# Keep the actual quantity independent of captions also used for
+			# missing-image explanations. Never parse that UI text as an amount.
+			var raw_amount: Variant=inventory.get(id,0)
+			if typeof(raw_amount)==TYPE_INT and raw_amount>=0:
+				var identity: Dictionary=entry.duplicate(true)
+				identity.erase("auto")
+				_source_quickslot_amounts[absolute]={"entry":identity,"amount":raw_amount}
 			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}),"quickslot")
 			quickslot_captions[index].text = str(int(inventory.get(id,0)))
 			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
