@@ -1,0 +1,12 @@
+{
+  "schema": "twilight.current523.ordinary-damage-input-policy.v1",
+  "source_snapshot": "patch523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "enabled": true,
+  "origin": "twilight_adjustable_numeric_estimate",
+  "projection": "floor(DiceBonus + DiceCount * (DiceSpots + 1) / 2)",
+  "scope": "same_admitted_nonboss_melee_host_actor_with_one_ordinary_unchained_NpcAttack_and_no_special_host_action_contract",
+  "native_damage_formula_recovered": false,
+  "host_formula": "existing_Monster_attack_power_receiver_retained",
+  "note": "Original dice operands remain authoritative. Uniform die expectation and floor-to-existing-integer attack_power are explicit TWILIGHT numeric estimates, not a recovered NPC/server damage formula. Existing attack/accuracy derivation, modifiers, queued-hit order and clock remain. Native patch523_npc_combat.damage_spec still consumes the raw original dice, never this mean. No new attack admission, selection, timing, hit eligibility, costs, effects, ownership or save is introduced."
+}
