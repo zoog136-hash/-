@@ -575,5 +575,7 @@ func _update_activity(monster: TwilightMonster, view: Rect2 = Rect2(), view_radi
 		var radius: float=maxf(view_radius,float(monster.ai.get("aggro_radius",420.0))*1.7+320.0)
 		awake=busy or distance<radius
 		monster.visible=view.has_point(monster.global_position) or (monster.is_boss and monster.motion.active)
+	if awake:monster.restore_visual()
+	else:monster.note_asleep()
 	monster.set_physics_process(awake)
 	if not awake:monster.velocity=Vector2.ZERO

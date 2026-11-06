@@ -4,6 +4,7 @@ const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 const PACK_CACHE = preload("res://scripts/monsters/base508_monster_pack_cache.gd")
 const SP2 = preload("res://scripts/monsters/base508_sp2_frames.gd")
 const TEXTURE_BUDGET_BYTES: int = 96 * 1024 * 1024
+const GPU_ACTOR_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
 static var _textures: Dictionary = {}
 static var _texture_order: Array[String] = []
 static var _texture_costs: Dictionary = {}
@@ -168,13 +169,13 @@ static func _texture(source_path: String, layer: Dictionary = {}) -> Texture2D:
 	else:
 		image = Image.load_from_file(source_path)
 	if image == null or image.is_empty(): return null
-	var cost: int = image.get_width() * image.get_height() * 4
+	var texture: Texture2D = GPU_ACTOR_TEXTURE.from_image(image)
+	var cost: int = GPU_ACTOR_TEXTURE.bytes_of(texture, image.get_width() * image.get_height() * 4)
 	while not _texture_order.is_empty() and _texture_bytes + cost > TEXTURE_BUDGET_BYTES:
 		var old: String = _texture_order.pop_front()
 		_texture_bytes -= int(_texture_costs[old])
 		_texture_costs.erase(old)
 		_textures.erase(old)
-	var texture: ImageTexture = ImageTexture.create_from_image(image)
 	if cost <= TEXTURE_BUDGET_BYTES:
 		_textures[path] = texture
 		_texture_costs[path] = cost
