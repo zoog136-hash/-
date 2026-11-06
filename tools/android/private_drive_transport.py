@@ -42,6 +42,32 @@ class DownloadError(RuntimeError):
     """The download is unavailable; staged/previous installations are intact."""
 
 
+def rclone_failure(returncode, stderr):
+    """Classify locally without echoing account details, tokens or auth URLs.
+
+    A category is evidence from an error string, not a credential diagnosis.
+    Unknown provider errors deliberately remain unknown.
+    """
+    message = stderr.decode('utf-8', errors='replace').lower() if isinstance(stderr, bytes) else str(stderr).lower()
+    if any(value in message for value in ('unknown command', 'command not found', 'command "copyid" not found', 'doesn\'t support backend commands', 'does not support backend commands')):
+        reason = 'backend/command support: confirm the selected remote is Google Drive and check the installed rclone version'
+    elif any(value in message for value in ('didn\'t find section in config file', 'not found in config', 'failed to find config')):
+        reason = 'remote configuration: the selected remote is missing or unavailable'
+    elif any(value in message for value in ('invalid_client', 'unauthorized_client', 'deleted_client')):
+        reason = 'OAuth client configuration rejected: inspect the local rclone setup; reconnect alone may not resolve this'
+    elif any(value in message for value in ('empty token', 'couldn\'t find token', 'invalid_grant', 'invalid token', 'token expired', 'oauth2:', 'unauthenticated', '401 unauthorized')):
+        reason = 'authentication: complete or reconnect the existing remote using your own browser, then retry the same read'
+    elif any(value in message for value in ('ratelimit', 'rate limit', 'quota', '429', 'downloadquotaexceeded')):
+        reason = 'provider quota/rate limit: wait before retrying; no alternate account or limit bypass is attempted'
+    elif any(value in message for value in ('403', '404', 'permission', 'insufficient', 'file not found', 'notfound', 'access denied')):
+        reason = 'file access: check the selected account, existing read scope and access to the exact file; this does not prove authentication failed'
+    elif any(value in message for value in ('timeout', 'timed out', 'no such host', 'network', 'connection', 'tls handshake', 'certificate')):
+        reason = 'network/TLS: check the connection and device clock before retrying'
+    else:
+        reason = 'unclassified failure: run the same read-only command locally to inspect its error; do not share tokens, auth URLs or config dumps'
+    return 'rclone stopped (exit %d); %s. Existing installation and completed cache are preserved.' % (returncode, reason)
+
+
 def sha256_file(path):
     digest = hashlib.sha256()
     with Path(path).open('rb') as source:
@@ -229,7 +255,7 @@ class DriveTransport:
         if result.returncode:
             # Avoid echoing raw process stderr: authorization URLs and account
             # details belong to rclone's explicit configuration flow.
-            raise DownloadError('rclone download stopped (exit %d). Check the selected remote/auth/quota; completed verified bundles remain cached.' % result.returncode)
+            raise DownloadError(rclone_failure(result.returncode, result.stderr))
 
     def download(self, row):
         """Return a SHA256-named cached file only after full length/hash match."""

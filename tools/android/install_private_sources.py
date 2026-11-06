@@ -24,7 +24,7 @@ import urllib.request
 import zipfile
 import zlib
 
-from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects
+from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects, rclone_failure
 
 REPO = 'https://github.com/zoog136-hash/-.git'
 STATE = '.twilight_private_install_state.json'
@@ -52,7 +52,9 @@ OFFLINE_FILES = {'scripts/maps/aden_modular_preview_renderer.gd',
 
 
 def log(message):
-    print(message, flush=True)
+    # Status and failures must remain visible when the calling terminal has
+    # redirected stdout (curl progress and the interactive prompt use stderr).
+    print(message, file=sys.stderr, flush=True)
 
 
 def relative(value):
@@ -222,9 +224,16 @@ def fetch_plan(args, cache):
                 raise ValueError('Oversized private plan')
             temporary.write_bytes(data)
         else:
-            run(['rclone', 'backend', 'copyid', args.remote + ':', args.plan_id,
-                 str(temporary), '--retries', '1', '--low-level-retries', '1',
-                 '--stats', '0', '--log-level', 'ERROR'])
+            # Presence in listremotes is not proof of completed OAuth setup.
+            # This exact plan read is the access preflight, before Git/resource
+            # downloads. Do not list unrelated private files or auto-reconnect.
+            log('Checking access to the selected private plan; a configured remote name alone does not confirm authentication.')
+            command = ['rclone', 'backend', 'copyid', args.remote + ':', args.plan_id,
+                       str(temporary), '--retries', '1', '--low-level-retries', '1',
+                       '--stats', '0', '--log-level', 'ERROR']
+            result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            if result.returncode:
+                raise DownloadError('Private plan read failed. ' + rclone_failure(result.returncode, result.stderr))
         if args.plan_sha256 and sha256_file(temporary) != pin(args.plan_sha256):
             raise ValueError('Private plan SHA256 mismatch')
         return read_json(temporary), sha256_file(temporary)
@@ -1834,6 +1843,7 @@ def main():
     parser.add_argument('--token-file', type=Path, help='Explicit private OAuth token file for HTTP Range resume')
     parser.add_argument('--workers', type=int, choices=(1, 2, 3), default=2, help='Concurrent bundles, not individual images')
     args = parser.parse_args()
+    log('Installer Python entry reached. Reading the selected private plan before code/resource downloads.')
     try:
         install(args)
     except (OSError, ValueError, KeyError, RuntimeError, zlib.error, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
