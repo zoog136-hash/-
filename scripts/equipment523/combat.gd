@@ -35,8 +35,8 @@ static func elemental_extra(records: Array, resistance: Dictionary, rng: RandomN
 		total += resisted
 	return total
 
-static func elemental_critical_resistance(records: Array) -> float:
-	return maxf(0.0, sum_stat(records, "equipment523_element_crit_resist_pct"))
+static func elemental_critical_resistance(records: Array, additional_percent: float = 0.0) -> float:
+	return maxf(0.0, sum_stat(records, "equipment523_element_crit_resist_pct") + additional_percent)
 
 # Apply only to incoming attacks which actually carry an elemental channel.
 static func elemental_reduction(records: Array) -> int:

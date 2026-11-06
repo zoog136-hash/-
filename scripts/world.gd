@@ -3654,7 +3654,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	collection_context.physical_magic=normalized_type=="magic" and attack_element=="physical"
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
 	var elemental_critical_resistance: int = int(half_elixir.value("ElementalCriticalResistance")) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
-	var source_critical_resist: int = int(EQUIPMENT523_COMBAT.elemental_critical_resistance(_all_equipped_records())) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
+	var source_critical_resist: int = int(EQUIPMENT523_COMBAT.elemental_critical_resistance(_all_equipped_records(),SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"equipment523_element_crit_resist_pct"))) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
 	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type,attack_element!="physical") + elemental_critical_resistance + source_critical_resist)
 	var critical: bool = rng.randf() < critical_chance
 	var contextual_damage: int=maxi(1,damage_value+int(original_skills.status.modifier(attacker,"source_"+normalized_type+"_damage") if original_skills!=null else 0)+growth.guardian_combat.npc_damage_delta(attacker,normalized_type))

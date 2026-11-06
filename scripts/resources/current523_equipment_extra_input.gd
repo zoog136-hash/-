@@ -6,6 +6,8 @@ const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 # Only names with an established gameplay receiver are admitted. The last
 # operand is the original Unit.Name; percentage raw values use divisor10000.
 const OPERANDS = {
+	"healing_magic_pct":{"HPHealIncreasePercent":["Percentage",10000]},
+	"equipment523_element_crit_resist_pct":{"ElementalCriticalResistance":["Percentage",10000]},
 	"mpRecoveryTick":{"RegenMP":["Value",1]},
 	"adena_drop_pct":{"IncreaseNpcItemDropAmount":["ValuePercent",1,5,26]},
 	"stun_accuracy":{"HitSpecialResistance":["Percentage",10000,2,"Stun"]},
