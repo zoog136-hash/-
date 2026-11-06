@@ -6,6 +6,18 @@ const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 # Only names with an established gameplay receiver are admitted. The last
 # operand is the original Unit.Name; percentage raw values use divisor10000.
 const OPERANDS = {
+	"mpRecoveryTick":{"RegenMP":["Value",1]},
+	"adena_drop_pct":{"IncreaseNpcItemDropAmount":["ValuePercent",1,5,26]},
+	"stun_accuracy":{"HitSpecialResistance":["Percentage",10000,2,"Stun"]},
+	"fear_accuracy":{"HitSpecialResistance":["Percentage",10000,2,"Fear"]},
+	"hold_resistance":{"SpecialResistance":["Percentage",10000,2,"Hold"]},
+	"fear_resistance":{"SpecialResistance":["Percentage",10000,2,"Fear"]},
+	"source_final_blow_stun_chance_pct":{"FinalBlowProbability":["Percentage",10000,2,"Stun"]},
+	"source_stun_magic_damage":{"MagicDamage":["Value",1,2,"Stun"]},
+	"source_elemental_flat_fire":{"ElementalDamage":["Value",1,3,"fire"]},
+	"source_elemental_flat_water":{"ElementalDamage":["Value",1,3,"water"]},
+	"source_elemental_flat_wind":{"ElementalDamage":["Value",1,3,"wind"]},
+	"source_elemental_flat_earth":{"ElementalDamage":["Value",1,3,"earth"]},
 	"melee_crit":{"MeleeCritical":["ValuePercent",1]},
 	"ranged_crit":{"RangeCritical":["ValuePercent",1]},
 	"magic_crit":{"MagicCritical":["ValuePercent",1]},
@@ -44,6 +56,22 @@ static var evidence: Dictionary = {}
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
 
+static func _application_matches(bonus: Dictionary, operand: Array) -> bool:
+	if not integer(bonus.get("BonusApplicationTypeID")) or not integer(bonus.get("BonusApplicationTargetID")): return false
+	var application: int = int(bonus.BonusApplicationTypeID)
+	var target: int = int(bonus.BonusApplicationTargetID)
+	if operand.size()==2: return application==0 and target==0
+	if application!=operand[2]: return false
+	if application==2:
+		var status: Dictionary = SOURCE.row("SpecialResistanceType",target)
+		return not status.is_empty() and SOURCE.declared_exclusion("SpecialResistanceType",status).is_empty() and status.get("Name")==operand[3]
+	if application==3:
+		# Reuse the already configured compiler/receiver channel contract.
+		# This is not a new inferred elemental target namespace.
+		var channels: Variant = ENHANCE.policy().get("source_elemental_target_channels",{})
+		return channels is Dictionary and channels.get(str(target))==operand[3]
+	return application==5 and target==operand[3]
+
 static func _original_delta(item_id: int, effects: Array, level: int, blessing: int, key: String) -> Dictionary:
 	var groups: Dictionary = {}; var selectors: Dictionary = {}
 	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_id):
@@ -78,8 +106,9 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 			var type: Dictionary = SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1)))
 			if not OPERANDS[key].has(type.get("Name","")): continue
 			var operand: Array = OPERANDS[key][type.Name]
+			if not _application_matches(bonus,operand): continue
 			var unit: Dictionary = SOURCE.row("Unit",int(type.get("UnitID",-1)))
-			if unit.get("Name")!=operand[0] or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(row.get("EnchantLevel")): return {}
+			if unit.get("Name")!=operand[0] or not integer(row.get("EnchantLevel")): return {}
 			# Whole-value +0 families need their owner's baseline subtraction;
 			# they must never be added to a separately supplied base operand here.
 			if int(row.EnchantLevel)==0: return {}

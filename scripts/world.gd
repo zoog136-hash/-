@@ -1132,6 +1132,7 @@ func _refresh_equipment_effects() -> void:
 	flags.mp_tick_amount=quest_recovery_mp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) else 0)+source_mp_regeneration+_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"mp_recovery")+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	flags.mp_tick_amount+=int(card_collections.bonus("absolute_mp_regeneration:flat"))+halphas_star.catalog_bonus("mp_regen")
 	flags.mp_tick_amount+=int(monsterbook523_runtime.extra_stats().get("mp_regeneration",0))
+	flags.mp_tick_amount+=int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"mpRecoveryTick"))
 	flags.source_item_passives = native_passives
 	flags.hp_tick_amount += EQUIPMENT523_COMBAT.regeneration(_all_equipped_records(),"hp")
 	flags.mp_tick_amount += EQUIPMENT523_COMBAT.regeneration(_all_equipped_records(),"mp")
@@ -9513,6 +9514,7 @@ func _stun_accuracy_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"stun","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("stun"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"stun_accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _stun_resistance_stat() -> int:
@@ -9580,6 +9582,7 @@ func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"hold","resistance"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"hold_resistance"))
 	return int(original_skills.stat("holdResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_hold_chance(target: TwilightMonster) -> float:
@@ -9609,6 +9612,7 @@ func _fear_accuracy_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("fear"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"fear_accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _fear_resistance_stat() -> int:
@@ -9617,6 +9621,7 @@ func _fear_resistance_stat() -> int:
 		total += _record_fear_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","resistance"))
 	total+=int(growth.guardian_combat.status_resistance("fear"))
 	total += int(card_collections.interval_bonus("fear_resistance:percent",hp,_effective_max_hp()))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"fear_resistance"))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:
