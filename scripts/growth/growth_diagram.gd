@@ -34,7 +34,8 @@ func _draw() -> void:
 		draw_circle(center,radius*(.7+ring*.04),Color(tint,.016+sin(time*.8)*.003))
 	draw_arc(center,radius,-PI/2,TAU-PI/2,100,Color("6f5e5f"),1,true)
 	draw_arc(center,radius+4,-PI/2,-PI/2+TAU*shown/30.0,100,Color(tint,.45),1.5,true)
-	draw_texture_rect(Art.sigil(sigil_index),Rect2(center-Vector2.ONE*radius*.91,Vector2.ONE*radius*1.82),false)
+	var original_sigil: Texture2D=Art.sigil(sigil_index)
+	if original_sigil!=null:draw_texture_rect(original_sigil,Rect2(center-Vector2.ONE*radius*.91,Vector2.ONE*radius*1.82),false)
 	for i: int in range(30):
 		var point:=center+Vector2.from_angle(-PI/2+TAU*i/30.0)*radius
 		var active: bool=i<shown

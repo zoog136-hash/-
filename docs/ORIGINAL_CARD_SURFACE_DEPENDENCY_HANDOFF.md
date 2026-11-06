@@ -74,8 +74,29 @@ phone can receive its consumers. Publishing installer PR275 alone does not
 apply these files: packed_code reads actual main. No client overlay, automatic
 PR merge, direct-main push or protection bypass is implemented.
 
-Other original-only preload blockers remain in project icon, growth art,
-option-lightning art, enhancement audio and world/UI presentation audio owners.
-This candidate does not claim to supply those original roles. The installer
-keeps its fail-closed dependency gate until all required owner changes and
-original inputs are actually present.
+## Thirteen remaining parse-time references
+
+The follow-up removes these retired inputs from parse-time dependencies:
+
+| Existing owner/input | Disposition |
+| --- | --- |
+| project.godot application sword icon (1) | Optional application decoration; remove the obsolete icon setting, preserve Main and input/render settings |
+| presentation_audio and enhancement WAVs (6) | User-excluded sound; event APIs remain, no stream/playback or generated sound; game actions and result timing remain independent |
+| growth point/stone SVGs and sigil/card/backdrop PNGs (5) | Optional decoration; keep actual balances, node name/slot ID, numbered choice captions, failed/success states, quote/confirmation/retry/save callers |
+| option-lightning flipbook (1) | Retired appearance-only decoration; no replacement pixels/material, preserve awakening rules and independent source-bank effect owners |
+
+All direct callers of nullable growth art and retired lightning are adjusted;
+no texture dimensions or draw calls dereference absent decoration. Existing
+guardian card-choice Buttons still carry the same indices, disabled states,
+quote calls and captions. Constellation Buttons expose their real slot/node ID
+when the decorative icon is unavailable, retaining the existing name label.
+No generated card/constellation/point image or substitute silhouette is added.
+The original item/skill image providers already used by growth actions are
+unchanged. Source-only decorative roles remain pending without blocking code
+installation. This is static source review, not gameplay or parser verification.
+
+The installer continues to reject genuinely required retired preloads. The
+local literal-source comparison finds no remaining historical image/audio
+preload among the materialized main sources with this branch overlaid. Dynamic
+resource completeness, rendering, input equivalence and actual installation
+remain unverified; the static result is not a full-original-completion claim.
