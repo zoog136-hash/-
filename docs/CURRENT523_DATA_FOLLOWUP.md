@@ -391,3 +391,52 @@ at/above100 retain prior inputs; no numeric value creates an immunity. Existing
 integer conversion and status-success formulas remain unchanged. Neither the
 admitted native registry nor its complete owned row set is widened. These
 three additional resistance consumers are also unverified.
+
+## Image283 caller-data handoff (2026-11-06)
+
+PR283 was read at0d3a1ce832ef955b173e4186334db5d745fc9284. Its consumer
+files are not modified in this data lane.
+
+- Dialogue: scripts/npc/dialogue_service.gd::resolve returns npc_id from
+  data/npc/twilight_dialogues.json or source_six_dialogues.json. The former
+  contains host keys such as warden/merchant; the latter has explicitly PC
+  l1j_tw380 keys. Neither inspected declaration supplies a mobile NpcClass.ID.
+  No name, numeric suffix or PC-to-mobile mapping is inferred. The existing
+  source523_npc_images context.npc_class_id input is therefore still pending.
+- Dungeon: source_dungeon_view.gd::FAMILIES has tower normal/hard, orim
+  normal/hard, special and rechargers. _refresh uses
+  world.source_dungeon_entries(kind,hard); _select reads rows[index]. These
+  selectors do not currently carry PartyDungeonTypeID/CompetitionDungeon.ID.
+  The original PartyDungeon.PartyDungeonTypeID and CompetitionDungeon.ID
+  asset joins remain valid for an actual caller supplying those identities,
+  but tower/orim stage IDs, a SpecialDungeon.ID/LandTeleportID or an item ID
+  do not establish that caller relation. No first asset or shared numeric ID
+  is selected as a substitute.
+- Quest: source_quest523_projection.gd joins QuestView.ID through
+  QuestReward.QuestID/RewardID to Reward.ID; each source_rewards[] entry keeps
+  that actual Reward row, .relation and .type_name. For RewardType.ID2/NameItem,
+  RewardClassID resolves to ItemClass and .source_item retains that row.
+  quest_service.entries() retains source_rewards[] on each returned quest;
+  it separately supplies the eligible reward_plan under .rewards. Actual
+  eligible items[].source_reward_id identifies the Reward row, and
+  items[].record carries its existing canonical/preserved item record.
+  The aggregated plan.exp/plan.adena values do not themselves carry per-reward
+  IDs; their image caller still needs the actual eligible source reward role
+  from the owner instead of choosing an arbitrary source_rewards[] member.
+  Do not use the quest ID as a reward ID or an unfiltered reward of a different
+  character class as the actual selected payout. Existing source image item
+  resolution can consume the proven ItemClass role; RewardIconID is retained
+  as its own original field, not asserted here to be an AssetView key.
+- The original quest controller currently exposes
+  original_goal_story_and_reward_slot_roles as unresolved. Data identities
+  are available above, but this does not supply an original target node or
+  authorize a new reward selection/representative image for multiple rewards.
+- Emoticon declares ID/SpriteAnimationID/SoundMaterialID. The inspected current
+  World, dialogue, quest and dungeon caller paths did not supply an explicit
+  selected Emoticon.ID plus target actor/node/event contract. SpriteAnimationID
+  is not turned into an item icon or actor target. Sound remains excluded.
+  This is a scoped caller finding, not a repository-wide absence claim.
+
+This handoff adds no image/UI/ownership implementation and no execution or
+new adoption count. Actual missing image caller contracts remain separated
+from the independently implemented original reward-rate and NPC input paths.
