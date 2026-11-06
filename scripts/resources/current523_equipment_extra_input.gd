@@ -6,6 +6,13 @@ const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 # Only names with an established gameplay receiver are admitted. The last
 # operand is the original Unit.Name; percentage raw values use divisor10000.
 const OPERANDS = {
+	"pve_damage_reduction":{"PVEDamageReduction":["Value",1]},
+	"pve_melee_damage":{"PVEMeleeAdditionDamage":["Value",1]},
+	"pve_ranged_damage":{"PVERangeAdditionDamage":["Value",1]},
+	"pve_magic_damage":{"PVEMagicAdditionDamage":["Value",1]},
+	"melee_evasion_ignore":{"PierceMeleeEvasion":["Value",1]},
+	"ranged_evasion_ignore":{"PierceRangeEvasion":["Value",1]},
+	"damage_reduction_ignore":{"PierceDamageReduction":["Value",1]},
 	"magic_penetration_pct":{"PierceMagicShieldPercent":["ValuePercent",1]},
 	"castSpeed":{"CastSpeedBonus":["Percentage",10000]},
 	"dot_damage_reduction_pct":{"PoisonDamageReductionPercent":["Percentage",10000]},

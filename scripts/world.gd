@@ -972,6 +972,7 @@ func _equipped_numeric_sum(key: String) -> float:
 		total += ITEM_OPTIONS.additional_original_percent(record,key)
 		total += ITEM_OPTIONS.additional_original_flat(record,key)
 		total += ITEM_OPTIONS.additional_original_reward(record,key)
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,key)
 	return total
 
 
@@ -1455,6 +1456,7 @@ func _equipment_additional_damage(kind: String) -> int:
 	var projected: int=0
 	if PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer")=="existing_typed_flat_damage_projection":projected=PATCH523_EQUIPMENT_COMBAT.typed_flat_ignore(self,kind)
 	var result: int = projected + PATCH523_EQUIPMENT_COMBAT.pvp_flat_ignore(self,kind) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore")) + int(growth.bonus(kind+"_reduction_ignore:flat"))
+	result += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"damage_reduction_ignore"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
