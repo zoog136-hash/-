@@ -524,6 +524,13 @@ The shared exact-native-row, source exclusion, explicit-field and mapped-ID
 guards apply to both. No physical ownership, quantity or save is altered.
 These additions are uncompiled/unexecuted/unverified, not table completion.
 
+Eligibility correction from the subsequent exact source lookup: the current
+ItemBonus roots for MagicCriticalResist and WeaponBlock have no non-Test item
+target. Their guarded code paths therefore do not establish eligible current
+item use. Existing TestItem guards keep them inactive. UndeadAdditionalMaxDamage
+and PierceMagicShieldPercent do have non-Test direct item targets. No source
+flags were altered, and code availability is not reported as source adoption.
+
 ## Original equipment operands for the shared estimated combat receiver
 
 Original ItemBonus rows also declare direct non-possession
@@ -558,7 +565,7 @@ is blocked/completed:
 
 | Original input | Existing boundary | Missing prerequisite |
 | --- | --- | --- |
-| ItemBonus→BonusType.FinalBlowAdditionalDmg, Unit.Value, e.g. items163573/172231 | patch523_final_blow.gd::totals/damage currently take chance and percentage amplification; the ItemData graph preserves the flat row | Native owner must specify its flat-value input, ordering relative to amplification and behavior when amplification is zero. The separate card final-blow engine's flat placement is not silently reused as a native rule. |
+| ItemBonus→BonusType.FinalBlowAdditionalDmg, Unit.Value | The public receiver is unchanged; a later owner-supplied unpublished flat receiver is held as a separate local candidate | Current direct targets163573/172231/172241 are all TestItem=true, with no non-Test direct target or corresponding ItemEnchantBonus group. They are excluded, not an eligible source-binding backlog. The local receiver already reads original base/enhancement rows; no duplicate ItemOptions fallback was added. |
 | NpcAttribute.NpcAttributeTypeID | Raw rows remain in current523_npc_input_projection/patch523_npc_catalog | NpcAttributeType is absent in the supplied archive. A declared type/role mapping is required before turning numeric IDs into critical, AI or other actor stats. |
 | Original NpcRace classification | Monster.is_undead() and the already existing undead-hit gate | The original race-type definition/authoritative actor classification is still missing. New item operands do not infer an undead identity or activate that classification. |
 | Additional NpcAttack.Prob/NextAttack/FixedDelayTime/MotionType/WeaponType branches | Existing supported NPC attack owners and the currently selected Orim attack | Source meaning plus actual selection/transition/timing/weapon receiver contract is required for branches not already supported by the owner. The new selected Range input does not reinterpret those fields or replace current supported branches. |
@@ -590,3 +597,40 @@ created to force an additional connection. The existing typed/raw definitions
 remain preserved; any future in-scope implementation requires authoritative
 unit/status meaning or an owner-supplied approved receiver contract. This is
 separate from the withdrawn spell-stage/potion/emoticon targets.
+
+## Native enhancement MR-penetration input
+
+Non-Test items140721/152732 declare EnchantBonusGroupID11291/11362 through
+their actual ItemBonus→Bonus selector. Those groups contain direct
+ItemEnchantBonus→PierceMagicShieldPercent rows with Unit.ValuePercent and no
++0 row. The existing enchantment projection now retains those exact operands
+as magic_penetration_pct (divisor1), with an explicit Unit211 guard.
+
+current523_equipment_extra_input.sum_native(world,key) supplies only that
+missing native enhancement operand to the existing MR-penetration receiver.
+It validates the currently equipped physical ID/name/source, blessing, exact
+original item/archive, current prepared source model and exact0–20 level.
+The prepared value and model value must equal the sum of the selected original
+same-level rows. Group-selector units, application/possession/exclusion flags,
+source row IDs and per-group blessing fallback retain their existing meanings.
+Duplicate selectors/rows, unsupported groups, nonfinite/mismatched values,
+whole-value +0 families and missing-rank extrapolation are not supplied.
+
+Native base ItemBonus still comes from the established equipment sum. Legacy
+extra values already in that sum are not added by the native-only reader;
+an already marked effective-extra record is skipped as well. No source DTO,
+mapped-ID marker, physical state, quantity, receipt, policy save or model
+installation is rewritten. There is one existing shared MR formula/cap, still
+controlled by the user's unchanged estimated combat policy. This is equipment
+enhancement data, not the excluded spell-stage/potion work. New code remains
+uncompiled/unexecuted/unverified.
+
+The exact flat-only four-file receiver text from integration72858520/full
+d37af099955b4a8e93311f9ce318d2c88e4af848 is retained outside Git as a separate
+local candidate. File fingerprints match the supplied handoff. It has not
+been applied, published or installed, and no multi-receipt payment was copied.
+Its base() and enhancement projection already supply the proposed flat field;
+adding another raw fallback would risk counting the same original operand
+twice. Source eligibility is a separate result: all three current direct
+targets are TestItem=true and remain excluded. This does not count a local
+receiver copy or test-only source graph as actual game use.

@@ -40,6 +40,7 @@ const EXTRA := {
 	"DamageReductionPercent":["pve_damage_reduction_pct",10000],
 	"_adena_drop":["adena_drop_pct",1],"HPHealIncreasePercent":["healing_magic_pct",10000],
 	"CastSpeedBonus":["castSpeed",10000],
+	"PierceMagicShieldPercent":["magic_penetration_pct",1],
 	"MeleeCriticalResist":["melee_critical_resistance",10000],
 	"RangeCriticalResist":["ranged_critical_resistance",10000],
 	"MeleeDamageReductionPercent":["melee_damage_reduction_pct",10000],
@@ -207,6 +208,8 @@ func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> 
 					if name in ["PierceMeleeDamageReduction","PierceRangeDamageReduction","PierceMagicDamageReduction","PiercePVPDamageReduction","PVPSpellByLevelAdditionLevel","PierceDamageReduction"] and type.UnitID!=1:
 						skipped[int(row.ID)] = true; continue
 					if name in ["FinalBlowProbability","FinalBlowAdditionalScale"] and type.UnitID!=3:
+						skipped[int(row.ID)] = true; continue
+					if name=="PierceMagicShieldPercent" and type.UnitID!=211:
 						skipped[int(row.ID)] = true; continue
 					if name=="MagicDamage" and b.BonusApplicationTypeID==2 and type.UnitID!=1: name = null
 					else: name = qualified_name(b,str(name),resistance_types,elemental_targets)

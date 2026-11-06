@@ -5,6 +5,7 @@ var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd")
 
 const EQUIPMENT523_SERVICE = preload("res://scripts/equipment523/service.gd")
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
+const SOURCE_EQUIPMENT_EXTRA_INPUT = preload("res://scripts/resources/current523_equipment_extra_input.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 const EQUIPMENT523_SET_INVOKE = preload("res://scripts/equipment523/set_invoke.gd")
 var equipment523 = EQUIPMENT523_SERVICE.new()
@@ -2383,7 +2384,8 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)),_equipment_inven_sum("magic_penetration_pct")))*halphas_star.combat.hit_factor(player)
+	var gear_pierce: float = _equipment_inven_sum("magic_penetration_pct")+SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"magic_penetration_pct")
+	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)),gear_pierce))*halphas_star.combat.hit_factor(player)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
