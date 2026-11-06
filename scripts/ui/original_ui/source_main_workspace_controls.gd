@@ -4,8 +4,10 @@ extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
 const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
+const SkillControls=preload("res://scripts/ui/original_ui/source_main_skill_controls.gd")
 const STORAGE_AUTO_OFFSETS: Array[int]=[3780,5884,5500,5116,4448,3884]
 const SPECS={
+	"skills":{"owner":"res://scripts/ui/renewal_skills.gd","parent":"UI/FloatingUiScene.csb","parent_sha":"b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8","project":10236,"member":"UI/FloatingUi/Skill_All.csb","sha":"5f2f800c5e461c372cc2b9de13b9c742f9879115fb1028c937668f054e00f099","close":16260},
 	"warehouse":{"owner":"res://scripts/ui/renewal_warehouse.gd","parent":"UI/StorageScene.csb","parent_sha":"0df424e7ed29a314e112ef618d40f89806c9df6ad6ce56df7dedd5e08e9ebde7","project":132,"member":"UI/Storage/Storage_All.csb","sha":"eb4ddfa71dc9be978fd03948ff938c12e2366f6542ff5844509c47f110b38328","close":47160},
 	"crafting":{"owner":"res://scripts/ui/renewal_crafting.gd","parent":"UI/ProductionScene.csb","parent_sha":"cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328","project":132,"member":"UI/Production/Production_All.csb","sha":"328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec","close":41600},
 	"shop":{"owner":"res://scripts/ui/renewal_shop.gd","parent":"UI/ShopScene.csb","parent_sha":"4cea51464273a19104c10a90a0be317f6502af5928c614b126305ffc793ed7e1","project":788,"member":"UI/Shop/Shop_All.csb","sha":"42b0701448ae9b2485818dce05fb33961b997e5621064964330d6f5bea9991c8","close":324},
@@ -23,6 +25,9 @@ var _search: RefCounted
 var _production: RefCounted
 var _production_status: Dictionary={}
 var _production_attempted_owner: WeakRef
+var _skills: RefCounted
+var _skills_status: Dictionary={}
+var _skills_attempted_owner: WeakRef
 var _warehouse_auto_bound: bool=false
 var _warehouse_auto_visible: bool=false
 var last_result: Dictionary={}
@@ -38,6 +43,7 @@ func refresh(parent: Node) -> Dictionary:
 		return {"ok":true,"handled":false}
 	if is_instance_valid(_scene) and _owner!=null and _owner.get_ref()==current.owner and _section==current.section:
 		_refresh_production(parent,current)
+		_refresh_skills(parent,current)
 		if _warehouse_auto_bound:
 			var available: bool=_warehouse_auto_available(current)
 			if available!=_warehouse_auto_visible:
@@ -93,6 +99,7 @@ func refresh(parent: Node) -> Dictionary:
 	parent.add_child(scene)
 	_scene=scene;_owner=weakref(current.owner);_section=current.section
 	_refresh_production(parent,current)
+	_refresh_skills(parent,current)
 	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"game_state_written":false}
 	return last_result.duplicate(true)
 
@@ -101,9 +108,15 @@ func presentation() -> Dictionary:
 	if _production!=null:
 		var shown: Dictionary=_production.presentation()
 		if is_instance_valid(shown.get("scene")):additional.append(shown.scene)
-	return {"scene":_scene,"additional_scenes":additional,"production":_production_status.duplicate(true),"handled":is_instance_valid(_scene),"partial_source_scene":true}
+	var foreground: Array=[]
+	if _skills!=null:
+		var shown: Dictionary=_skills.presentation()
+		additional.append_array(shown.additional_scenes)
+		foreground=shown.foreground_scenes
+	return {"scene":_scene,"additional_scenes":additional,"foreground_scenes":foreground,"production":_production_status.duplicate(true),"skills":_skills_status.duplicate(true),"handled":is_instance_valid(_scene),"partial_source_scene":true}
 
 func blocks_point(point: Vector2) -> bool:
+	if _skills!=null and _skills.blocks_point(point):return true
 	if _production!=null and _production.blocks_point(point):return true
 	if not point.is_finite() or not is_instance_valid(_scene) or _scene.is_queued_for_deletion():return false
 	var current: Dictionary=_current()
@@ -119,6 +132,8 @@ func blocks_point(point: Vector2) -> bool:
 
 func close() -> void:
 	close_search()
+	if _skills!=null:_skills.close()
+	_skills=null;_skills_status.clear();_skills_attempted_owner=null
 	if _production!=null:_production.close()
 	_production=null;_production_attempted_owner=null;_production_status.clear()
 	var previous: Node2D=_scene
@@ -126,6 +141,17 @@ func close() -> void:
 	_texts.clear()
 	_warehouse_auto_bound=false;_warehouse_auto_visible=false
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
+
+func _refresh_skills(parent: Node, current: Dictionary) -> void:
+	if current.section!="skills":return
+	if _skills==null:
+		if _skills_attempted_owner!=null and _skills_attempted_owner.get_ref()==current.owner:return
+		_skills_attempted_owner=weakref(current.owner)
+		var candidate=SkillControls.new()
+		_skills_status=candidate.configure(_pack,current.owner)
+		if not _skills_status.get("ok",false):return
+		_skills=candidate
+	_skills_status=_skills.refresh(parent)
 
 func _refresh_production(parent: Node, current: Dictionary) -> void:
 	if current.section!="crafting" or not _pack.manifest.get("scenes",{}).has(Production.MEMBER):return
