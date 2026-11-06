@@ -41,3 +41,25 @@ No remote ID, upload, source selection, phone/install/index/source-bank change. 
 Image PR283becdee85ee18d45459bcff44d5f9ec51e7b5ba40 requested an original HUD current-target portrait receiver. The held full `UI/Main/Set_T_Cen_TargetLayout.csb` SHAbf0da029e6bc3ce8fd4d4a89ff65c47b5c906b5b75776e8581414f2a2961f9ad contains target Text8876 plus authored backgrounds, lawful/chaotic/neutral, PK/clan/rank/chat/signal/arrow icons. Its Sp_Clan_Icon5864 is explicitly a guild emblem, and its Icon nodes have explicit social/chat resources. No NPC/monster portrait role is established in that component; those unrelated icons are not repurposed. This is a component-scoped finding, not a claim that all originals lack a portrait. Actual actor source_m_npc_id/source_m_original identity does not create a missing UI target. The separate dialogue Sp_Char4912 role is not stolen for the HUD target. No portrait target or registration callback was invented.
 
 Result-parent→Face, SpecialDungeon Panel392→ListView2560 insertion and selected mixed quest-reward presentation remain separate exact pending inputs. The published image binding can consume a legitimate registered receiver when available; this enhancement work does not fabricate one or duplicate image-owner adapters.
+
+## Exact two-slot source handoff after official guide research
+
+The image owner supplied four official weapon/armor before/after screenshots; the [official guide](https://lineagem-jp.com/guides/lm/guides/item_enchant) describes selecting a scroll, then equipment. This supports left-scroll/right-equipment visual roles in those guide images. It does not alone bind a current523 Project offset or establish result/close lifecycle. The held original was read directly for the following exact declarations; these are text metadata another executor can consume without assuming a producer-local path.
+
+Member remains UI/FloatingUi/Enchant_All.csb SHA5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face. Both parents are Node2100 → Nd_Common142656 → Nd_Slot144400. All three ancestor widgets declare position[0,0], scale[1,1], anchor[0,0]. Both targets are **ProjectNode**, customClassName empty, with no children; reference `CommonUi/Common_Slot.csb`, innerActionSpeed1.0. Child member UI/CommonUi/Common_Slot.csb SHA b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6.
+
+| Exact field | Project145044 | Project144788 |
+|---|---|---|
+|Original name|Inventory_Slot0|Inventory_Slot1|
+|actionTag|781710763|793436403|
+|tag|450|480|
+|position|[-110.00779724121094,127]|[108.99220275878906,127]|
+|scale / anchor / size|[1,1] /[0,0] /[0,0]|[1,1] /[0,0] /[0,0]|
+|rotationSkew / flipX / flipY|[0,0] /0 /0|[0,0] /0 /0|
+|visible / alpha / color|1 /255 /[255,255,255,255]|1 /255 /[255,255,255,255]|
+|ignoreSize / touchEnabled|0 /0|0 /0|
+|customProperty / frameEvent|empty /empty|empty /empty|
+|callBackType / callBackName|null /null|null /null|
+|left/right/top/bottom margins|[-110.00779724121094,110.00779724121094,-127,127]|[108.99220275878906,-108.99220275878906,-127,127]|
+
+Layout percentage/stretch flags are all0 and horizontal/vertical edge strings empty. The source action has no timeline targeting either actionTag. Neither Project serializes a role argument, per-instance label, resource override or event referring to a scroll/equipment identity. The common child is the same generic slot for both; global equipment question Text145444 does not label one Project. Thus positions now align with the guide's observed left/right arrangement, but **Inventory_Slot0→scroll and Inventory_Slot1→selected physical equipment are not newly asserted as original current523 bindings** from coordinates alone. The precise remaining input is a role declaration/actual original binding between those generic Projects and the real scroll/physical-target inputs. No image assigner, fabricated parent, first selection or result/close policy was added, and no unavailable controller is claimed to have been found.

@@ -303,6 +303,7 @@ func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 		if is_instance_valid(menu_close):buttons.append(menu_close)
 	if _workspace_controls!=null:
 		var shown: Dictionary=_workspace_controls.presentation()
+		for foreground: Node2D in shown.get("foreground_scenes",[]):_collect_native_buttons(foreground,buttons)
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
 		for scene: Node2D in shown.get("additional_scenes",[]):_collect_native_buttons(scene,buttons)
 	if _enhance_action!=null:
