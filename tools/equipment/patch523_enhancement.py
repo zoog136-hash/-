@@ -25,6 +25,10 @@ FIELDS = {
     '_stun':('stun_resistance','stun_resistance',10000),
 }
 EXTRA = {
+    'IgnoreDamageReductionPercent':('source_equipment_ignore_reduction_pct',10000),
+    'IgnoreMeleeDamageReductionPercent':('source_equipment_ignore_melee_reduction_pct',10000),
+    'IgnoreRangeDamageReductionPercent':('source_equipment_ignore_ranged_reduction_pct',10000),
+    'IgnoreMagicDamageReductionPercent':('source_equipment_ignore_magic_reduction_pct',10000),
     'PierceMagicShieldPercent':('magic_penetration_pct',1),
     'ElementalCriticalResistance':('equipment523_element_crit_resist_pct',10000),
     'Strength':('strFlat',1), 'Dexterity':('dexFlat',1), 'Intelligence':('intFlat',1),
@@ -162,6 +166,8 @@ def compile_equipment(tables, bound_items, bonuses):
                     if name in ['PierceMeleeDamageReduction','PierceRangeDamageReduction','PierceMagicDamageReduction','PiercePVPDamageReduction','PVPSpellByLevelAdditionLevel','PierceDamageReduction'] and types[b['BonusTypeID']]['UnitID']!=1:
                         skipped.add(row['ID']); continue
                     if name in ['FinalBlowProbability','FinalBlowAdditionalScale'] and types[b['BonusTypeID']]['UnitID']!=3:
+                        skipped.add(row['ID']); continue
+                    if name in ['IgnoreDamageReductionPercent','IgnoreMeleeDamageReductionPercent','IgnoreRangeDamageReductionPercent','IgnoreMagicDamageReductionPercent'] and types[b['BonusTypeID']]['UnitID']!=3:
                         skipped.add(row['ID']); continue
                     if name=='PierceMagicShieldPercent' and types[b['BonusTypeID']]['UnitID']!=211:
                         skipped.add(row['ID']); continue

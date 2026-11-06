@@ -3,6 +3,8 @@ extends RefCounted
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const ORIGINAL_INPUT = preload("res://scripts/monsters/current523_npc_input_projection.gd")
+const ACTOR_BATCH=preload("res://scripts/monsters/current523_npc_batch.gd")
+const ORDINARY_DAMAGE_INPUT=preload("res://scripts/monsters/current523_ordinary_damage_input.gd")
 const MAX_BYTES = 16 * 1024 * 1024
 const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
@@ -13,6 +15,7 @@ const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_
 const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
+var _actor_batch_revision: int = 0
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -70,6 +73,7 @@ func configure_original() -> bool:
 	return true
 
 func _publish_original(candidate: Dictionary) -> void:
+	_actor_batch_revision+=1
 	content = candidate
 	indexes = {}
 	for pair: Array in [["NpcAttack","NpcClassID"],["NpcAttribute","NpcClassID"],["NpcSpecialResistance","NpcClassID"],["NpcRace","NpcClassID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"],["LandAttribute","LandID"]]:
@@ -305,7 +309,8 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
 	result = _project_numeric_resistance_input(result,source)
 	result = _project_named_special_resistance_input(result,source)
-	return _project_uniform_attack_range_input(result,source)
+	result = _project_uniform_attack_range_input(result,source)
+	return ORDINARY_DAMAGE_INPUT.project(self,result,source)
 
 func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
 	# Called only after the same exact actor/source admission above. This is an
@@ -661,7 +666,9 @@ func adopt_land_environment(candidate: Dictionary) -> Dictionary:
 	# Commit only the separate in-memory environment registry after all joins.
 	_environment_inputs = next; _environment_tables = tables; _environment_indexes = owner_indexes
 	environment_model_sha256 = JSON.stringify({"kind":"twilight.current523.land-environment-registry.v1","archive":identity,"inputs":next},"",true,true).sha256_text()
-	if changed: environment_revision+=1
+	if changed:
+		environment_revision+=1
+		_actor_batch_revision+=1
 	environment_error = ""
 	var receipt: Dictionary = registered_land_environment(int(selection.land_id),selection.asset_path)
 	receipt["ok"] = true; receipt["changed"] = changed; receipt["npc_admission_changed"] = false
@@ -690,3 +697,20 @@ func environment_attributes() -> Array:
 	var keys: Array = selected.keys(); keys.sort()
 	for key: String in keys: result.append(selected[key].row.duplicate(true))
 	return result
+
+# Explicit host population transaction. Preparation never calls live admission.
+func prepare_actor_batch(records: Array,field: RefCounted,world: Node,population: Node,expected_model_sha256: String) -> Dictionary:
+	var candidate=ACTOR_BATCH.new()
+	return candidate.prepare(self,records,field,world,population,expected_model_sha256)
+
+func commit_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.commit(self)
+
+func restore_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.restore(self)
+
+func finish_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.finish(self)

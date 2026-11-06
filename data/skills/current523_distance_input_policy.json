@@ -35,5 +35,59 @@
   },
   "mobile_distance_context_reference": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95",
   "reference_limit": "The official mobile guide describes Energy Bolt's target within 10 cells. It does not define patch523 raw distance units or their conversion into TWILIGHT host lengths.",
-  "note": "The two scales are independent TWILIGHT numeric estimates calibrated to existing host lengths. They do not recover a native grid, targeting geometry or server formula. Zero source distances retain existing host input. IsAttackRange must be explicitly false and MinCastRange must be zero; unsupported weapon-relative or minimum-distance context retains existing host geometry and raw source fields. CastDelay is not used."
+  "note": "The two scales are independent TWILIGHT numeric estimates calibrated to existing host lengths. They do not recover a native grid, targeting geometry or server formula. Zero source distances retain existing host input. IsAttackRange must be explicitly false and MinCastRange must be zero; unsupported weapon-relative or minimum-distance context retains existing host geometry and raw source fields. CastDelay is not used.",
+  "research": {
+    "checked_on": "2026-11-06",
+    "source_snapshot": "patch523",
+    "source_version_status": "Held archive SHA pins source rows; current/legacy public guides do not declare the same patch523 version or internal IDs.",
+    "raw_unit_status": "SpellClass has no CastRange/TargetAreaRadius unit FK; MPCostUnit is unrelated. Unit10392 LocationRange is not assigned to these fields by its name.",
+    "public_distance_context": [
+      {
+        "spell_class_id": 1,
+        "source_field": "CastRange",
+        "raw": 10,
+        "url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95",
+        "result": "Named Energy Bolt guide range10 cells agrees numerically; no internal-ID or raw-to-host unit proof."
+      },
+      {
+        "spell_class_id": 47,
+        "source_field": "TargetAreaRadius",
+        "raw": 3,
+        "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%A7%88%EB%B2%95%EC%82%AC+%EB%A7%88%EB%B2%95",
+        "result": "Named Fire Storm guide radius3 agrees numerically; no patch523 internal-unit proof."
+      },
+      {
+        "root_spell_class_id": 350,
+        "selected_effect_spell_class_id": 120712,
+        "source_field": "CastRange",
+        "raw": 10,
+        "url": "https://rc-wstatic.plaync.co.kr/lineagem/guidebook/game_class_fairy.html",
+        "result": "Official indexed Triple Arrow description says10 cells. Existing reviewed root350->on119642->effect120712 graph supplies the source identity; the guide does not supply internal IDs."
+      },
+      {
+        "spell_class_id": 82,
+        "source_field": "CastRange",
+        "raw": 2,
+        "url": "https://rc-wstatic.plaync.co.kr/lineagem/guidebook/game_class_knight.html",
+        "result": "Legacy indexed Shock Stun description says1 cell; source raw2 retained. Same-version identity is not established, so no source overwrite or universal raw-cell inference."
+      },
+      {
+        "root_spell_class_id": 69581,
+        "selected_effect_spell_class_id": 107963,
+        "source_field": "TargetAreaRadius",
+        "raw": 3,
+        "url": "https://lineagem.plaync.com/guidebook/view?title=%EB%87%8C%EC%8B%A0+%EB%A7%88%EB%B2%95",
+        "result": "Official guide/update confirms named Static Field area-effect context but returned excerpt does not pin radius3 or patch523 ID. Held source row and already selected static effect remain authority; host48 remains an estimate."
+      },
+      {
+        "root_spell_class_id": 98871,
+        "selected_effect_spell_class_id": 99231,
+        "source_field": "TargetAreaRadius",
+        "raw": 10,
+        "url": "https://lineagem.plaync.com/guidebook/view?title=%EA%B8%B0%EC%82%AC+%EB%A7%88%EB%B2%95",
+        "result": "Official indexed Taunt guide says NPC targets within10 cells. Existing reviewed Aura_Spell17541->effect99231 relation supplies identity; source raw10 is retained, raw-to-host48 remains an estimate. Existing boss/conceal filters, target cap and tick clock are unchanged."
+      }
+    ],
+    "conversion": "cast_range_to_host_length32 and area_radius_to_host_length48 remain independent adjustable TWILIGHT numerical estimates, not recovered client/server scale."
+  }
 }

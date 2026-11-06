@@ -7,6 +7,10 @@ static func additional_original_percent(record: Dictionary, key: String) -> floa
 	# Missing base equipment operands only. Existing DTO fields and mapped
 	# bonuses win; enhancement overlays remain separate existing contributions.
 	var names: Dictionary = {
+		"source_equipment_ignore_reduction_pct":"IgnoreDamageReductionPercent",
+		"source_equipment_ignore_melee_reduction_pct":"IgnoreMeleeDamageReductionPercent",
+		"source_equipment_ignore_ranged_reduction_pct":"IgnoreRangeDamageReductionPercent",
+		"source_equipment_ignore_magic_reduction_pct":"IgnoreMagicDamageReductionPercent",
 		"castSpeed":"CastSpeedBonus","blessing_consumption_reduction_pct":"EinasadSavingPercent",
 		"hpPct":"HPPlusPercent","mpPct":"MPPlusPercent",
 		"strPercent":"StrengthScale","dexPercent":"DexterityScale","intPercent":"IntelligenceScale",
