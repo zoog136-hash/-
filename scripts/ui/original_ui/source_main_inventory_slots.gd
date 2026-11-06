@@ -50,13 +50,20 @@ func entries() -> Dictionary:
 	var ordered: Variant=bag.get("sorted_references")
 	if ordered is Array:
 		if bag.get("inventory_grid_dirty")==true:return _fail("source_inventory_slots_current_owner_model_dirty")
+		# Large native inventories must not rescan every owned row for every
+		# displayed reference, including before a4/8-slot scope declines.
+		# Index once while preserving the same exact-reference uniqueness rule.
+		var by_reference: Dictionary={}
+		var duplicates: Dictionary={}
+		for value: Variant in offered:
+			if not value is Dictionary or not value.get("reference") is String or value.reference.is_empty():return _fail("source_inventory_slots_existing_entry_reference_invalid")
+			var reference: String=value.reference
+			if by_reference.has(reference):duplicates[reference]=true
+			else:by_reference[reference]=value
 		displayed=[]
-		for reference: String in ordered:
-			var matches: Array=[]
-			for entry: Dictionary in offered:
-				if entry.get("reference")==reference:matches.append(entry)
-			if matches.size()!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
-			displayed.append(matches[0])
+		for reference: Variant in ordered:
+			if not reference is String or duplicates.has(reference) or not by_reference.has(reference):return _fail("source_inventory_slots_current_order_reference_not_unique")
+			displayed.append(by_reference[reference])
 	return {"ok":true,"owned_entries":offered.duplicate(true),"current_display_rows":displayed.duplicate(true),"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot") -> Dictionary:
