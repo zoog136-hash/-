@@ -6,6 +6,7 @@ The private, owner-maintained plan is kept outside the public repository.
 """
 import argparse
 import base64
+import copy
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -1381,9 +1382,129 @@ def additional_source_code_contracts(code_root, specifications, scope):
     return result
 
 
-def additional_ui_code_contracts(code_root, specifications):
-    return additional_source_code_contracts(code_root, specifications,
+def v30_owner_boundary_requirements(ui, specifications):
+    """Adapt only the shipped v30's exact obsolete owner marker declarations.
+
+    The original plan/pin stays unchanged. Unknown declarations fail closed via
+    the normal reader. These replacement boundaries follow the public owner
+    refactor: configured CharacterView instance and inventory/crafting editor.
+    No game code is patched or executed here.
+    """
+    if not isinstance(ui, dict) or any(ui.get(key) != value for key, value in {
+            'pack_id': 'current523-main-game-original-ui-combined-v30',
+            'root': 'source-ui/current523-main-game-original-ui-v30',
+            'manifest_sha256': 'db62defeb1d1170f990689dac2e6be6c1c9015d13a9f4cfa5db710c834fc4ae3',
+    }.items()):
+        return specifications, []
+    adapted = copy.deepcopy(specifications)
+    applied = []
+    hud = 'scripts/ui/original_ui/source_main_hud.gd'
+    view = 'scripts/ui/original_ui/source_main_character_view.gd'
+    stats = 'scripts/ui/original_ui/source_main_character_stats_bindings.gd'
+    character = adapted.get('character_stats', {}) if isinstance(adapted, dict) else {}
+    if (character.get(hud) == [['try_open_character_stats', ['CharacterView', 'open_stats']]]
+            and character.get(view) == [['configure', []], ['open_stats', []], ['refresh', []]]
+            and character.get(stats) == [['build', []], ['refresh', []]]):
+        character[hud] = [
+            [None, ['const CharacterView=preload("res://scripts/ui/original_ui/source_main_character_view.gd")']],
+            ['configure', ['pack.manifest.get("scenes",{}).has(CharacterView.ALL)',
+                'var candidate=CharacterView.new()', '_character_result=candidate.configure(pack,hud)',
+                'if _character_result.get("ok",false):', '_character_view=candidate']],
+            ['try_open_character_stats', ['if _character_view==null or not is_instance_valid(_coordinates):return _fail("source_character_original_view_not_available")',
+                '_cancel_native_buttons()', '_character_result=_character_view.open_stats(_coordinates)',
+                'return _character_result.duplicate(true)']]]
+        character[view] = [
+            [None, ['const PROJECT=12856', 'const STATS_PROJECT=1384',
+                'const ALL="UI/FloatingUi/CharacterInfo_All.csb"',
+                'const ALL_SHA="d19edfa099c5770cf43f08bd73f9370185ac7dbccdb67b89bf39d77330527be7"',
+                'const PARENT_SHA="b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8"']],
+            ['configure', ['pack.manifest.get("files",{}).get(PARENT,{}).get("sha256")!=PARENT_SHA',
+                'pack.manifest.get("files",{}).get(ALL,{}).get("sha256")!=ALL_SHA', '_hud=weakref(hud)']],
+            ['open_stats', ['hud.get("lineage_side_ui")', 'side.get("stats_page")',
+                'if not current_page is Control or not current_page.visible:return _fail(',
+                '_owner_actions_supported(hud)', 'Stats.build(_pack,hud)',
+                'next.project_player([PROJECT,STATS_PROJECT])']],
+            ['_owner_actions_supported', ['hud.get("character_state")',
+                'typeof(state.get("stat_points"))!=TYPE_INT', 'if state.stat_points!=0:return _fail(']],
+            ['refresh', []]]
+        character[stats] = [
+            [None, ['const MEMBER="UI/FloatingUi/CharacterInfo_StatInfo.csb"',
+                'const SHA256="75e7ad019977077a5e447bba55a5b6f7d15794ad0bca8807143dc275abba620c"']],
+            ['build', ['_active_source(pack)', 'snapshot(owner)']], ['refresh', []],
+            ['snapshot', ['owner.get("character_state")', 'typeof(state.get(field))!=TYPE_INT']],
+            ['_active_source', ['pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256',
+                'source_character_stats_original_text_role_mismatch']]]
+        applied.append('character_stats')
+    search_path = 'scripts/ui/original_ui/source_main_inventory_search.gd'
+    search = adapted.get('inventory_search', {}) if isinstance(adapted, dict) else {}
+    old_search = [
+        ['configure', ['bag.has_method("_on_search_changed")', 'bag.get("search_line")isLineEdit',
+            'source_inventory_search_original_identity_required']],
+        ['open', ['"role":"source_text_field","editor":editor', 'next.project_player([1572,728])',
+            'field.attach_editor()', 'field.unsupported_input.connect(_unsupported_input)']],
+        ['apply_query', ['editor!=bag.get("search_line")', 'editor.call("apply_ime")',
+            'bag.call("_on_search_changed",editor.text)']],
+        ['close', ['_field.release_editor()']]]
+    if search.get(search_path) == old_search:
+        requests = copy.deepcopy(old_search)
+        requests[0][1].extend(['[[PARENT,PARENT_SHA],[INVENTORY,INVENTORY_SHA],[MEMBER,SHA256]]',
+            'pack.manifest.get("files",{}).get(pair[0],{}).get("sha256","")!=pair[1]',
+            'pack.manifest.get("scenes",{}).has(MEMBER)', '_pack=pack', '_bag=weakref(bag)',
+            '_crafting=false;_editor_property="search_line";_member=MEMBER;_member_sha=SHA256'])
+        requests[1][1].remove('next.project_player([1572,728])')
+        requests[1][1].extend(['var bag: Object=_bag.get_ref() if _bag!=null else null',
+            'if not is_instance_valid(parent) or bag==null:return _fail("source_inventory_search_actual_parent_and_owner_required")',
+            'var editor: Variant=bag.get(_editor_property)',
+            'if not editor is LineEdit or not is_instance_valid(editor):return _fail("source_inventory_search_existing_editor_unavailable")',
+            'else:result=next.configure_nodes(_pack,PARENT,[1572]',
+            'var project_path: Array[int]=[628] if _crafting else [1572,728]',
+            'next.project_player(project_path)',
+            'if not result.get("ok",false):next.free();return result',
+            'if not nested.get("ok",false):next.free();return nested'])
+        requests[2][1].remove('editor!=bag.get("search_line")')
+        requests[2][1].extend(['var editor: Control=input_control()',
+            'if bag==null or not is_instance_valid(editor) or editor!=bag.get(_editor_property):return _fail("source_inventory_search_actual_query_owner_required")',
+            'hud.get("active_section")!="crafting"', 'not workspace.is_ancestor_of(bag)',
+            'not bag.is_visible_in_tree()', 'source_craft_search_current_owner_changed',
+            'if not is_open():return _fail("source_inventory_search_original_input_became_unavailable")',
+            'if _crafting:bag.call("_rebuild_listing")'])
+        requests.extend([
+            [None, ['const PARENT="UI/FloatingUiScene.csb"',
+                'const PARENT_SHA="b689e91a9fc15eda9c35bed5b1073588a33a416a57890c293c531fe5c69ccbc8"',
+                'const INVENTORY="UI/FloatingUi/Inventory_All.csb"',
+                'const INVENTORY_SHA="c2c021fbc49f0699f2002a3f1cb73f523c3dd629bd1df567192dcb7f4da22293"',
+                'const MEMBER="UI/FloatingUi/Inventory_Popup_Keypad.csb"',
+                'const SHA256="3892e910ad1c6b3e04714f26402ed171a98a08fe3e7e97362cd4fe07a79478d5"']],
+            ['configure_crafting', ['script.resource_path!="res://scripts/ui/renewal_crafting.gd"',
+                'owner.get("name_filter") is LineEdit', 'source_craft_search_existing_editor_not_editable',
+                '[["UI/ProductionScene.csb","cae6672733b914c0143fe376574e73012b0cd628113002693f0639c877f47328"],["UI/Production/Production_All.csb","328546745405eac58203853570d76e07d9cc95477ac4ecd701d786651e3786ec"],["UI/Production/Production_Popup_Keypad.csb","e4203840af58b4feebc832c4059c1a819f5348085ee3f5b6ecf5a3eb05f82aa8"]]',
+                'pack.manifest.get("files",{}).get(pair[0],{}).get("sha256")!=pair[1]',
+                'source_craft_search_original_identity_required', '_pack=pack;_bag=weakref(owner)',
+                '_crafting=true;_editor_property="name_filter"',
+                '_member="UI/Production/Production_Popup_Keypad.csb"',
+                '_member_sha="e4203840af58b4feebc832c4059c1a819f5348085ee3f5b6ecf5a3eb05f82aa8"']]])
+        search[search_path] = requests
+        applied.append('inventory_search')
+    return adapted, applied
+
+
+def additional_ui_code_contracts(code_root, specifications, ui=None):
+    requirements, adapted = v30_owner_boundary_requirements(ui, specifications)
+    result = additional_source_code_contracts(code_root, requirements,
         'Owner script boundaries only; independent of main/world activation')
+    for component in adapted:
+        result[component]['compatibility_contract'] = 'official-v30-configured-owner-boundaries-v1'
+    if 'inventory_search' in adapted and result['inventory_search']['ready']:
+        source = inside(code_root, 'scripts/ui/original_ui/source_main_inventory_search.gd').read_text(encoding='utf-8')
+        body = gd_function(source, 'apply_query')
+        sequence = ['editor!=bag.get(_editor_property)', 'editor.call("apply_ime")',
+                    'ifnotis_open():return_fail(', 'if_crafting:bag.call("_rebuild_listing")',
+                    'else:bag.call("_on_search_changed",editor.text)']
+        positions = [body.find(marker) for marker in sequence]
+        if any(position < 0 for position in positions) or positions != sorted(positions):
+            result['inventory_search']['blockers'].append('Inventory query must validate owner, commit IME, recheck open state, then call the existing owner')
+            result['inventory_search']['ready'] = False
+    return result
 
 
 def ui_identity_order_contract(code_root):
@@ -1409,7 +1530,7 @@ def preflight_required_code(plan, code_root):
     contracts = [source_bank_code_contract(code_root, bank['required_manifest_bytes']),
                  combined_ui_code_contract(code_root, ui.get('code_components', [])),
                  ui_identity_order_contract(code_root)]
-    contracts.extend(additional_ui_code_contracts(code_root, ui['feature_code_requirements']).values())
+    contracts.extend(additional_ui_code_contracts(code_root, ui['feature_code_requirements'], ui).values())
     blockers = [message for contract in contracts for message in contract['blockers']]
     if blockers:
         raise ValueError('Selected official resources require compatible actual main code: ' + '; '.join(blockers))
@@ -1706,7 +1827,7 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
                 for blocker in result['main_ui']['owner_code_contract']['blockers']:
                     log('COMBINED UI CODE PENDING: ' + blocker)
         if 'feature_code_requirements' in row:
-            features = additional_ui_code_contracts(code_root, row['feature_code_requirements'])
+            features = additional_ui_code_contracts(code_root, row['feature_code_requirements'], row)
             result['main_ui']['feature_code_contracts'] = features
             if code_root is not None:
                 for component, evidence in features.items():

@@ -390,6 +390,15 @@ normal4 인벤토리 후보를 확장8·PageView 퀵슬롯 후보의 입력으�
 같은 PR에 더 최신 팩용 선택 기능이 함께 들어있어도 그 팩을 자동 선택하지 않는다.
 기존 UI 선택·설정·세이브와 이전 원본은 보존한다.
 
+공식 v30 manifest pin과 배포된 과거 `character_stats`/`inventory_search` 요구
+목록이 정확히 일치하면, 설치기는 현재 owner 리팩터링의 동등한 경계를 검사한다.
+CharacterView는 `configure`에서 생성·등록하고 열기 함수는 그 인스턴스를 사용한다.
+검색창은 inventory/crafting 설정에 따른 실제 editor와 project 경로를 확인하며,
+원본 CSB/SHA·IME·현재 owner·편집기 반환 검사도 유지한다. 다른 버전이나 다른
+요구 목록은 이 호환 처리를 적용하지 않는다. 사전 검사와 최종 descriptor는 같은
+검사를 사용하고 적용한 호환 계약을 기록한다. 원본 설치 목록·pin·게임 코드는
+변경하지 않으며, 이 정적 경계 확인은 설치·게임 실행 검증을 뜻하지 않는다.
+
 게시 승인은 코드·대상 HEAD와 비공개 설치 목록의 정확한 바이트 크기·SHA를
 함께 고정한 뒤 요청한다. `[skip ci]`는 `pull_request_target` 보조 workflow를
 막지 않으며, main 병합의 push workflow도 별도 고려해야 한다. 보조 cleanup의
