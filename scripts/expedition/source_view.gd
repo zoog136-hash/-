@@ -337,7 +337,7 @@ func _storage_action(open: bool) -> void:
 	if runtime == null or hud == null or storage_picker.selected < 0: return
 	var row: Dictionary = storage_rows[storage_picker.selected].duplicate(true)
 	var contents_before: Dictionary = runtime.state.storage.duplicate(true)
-	hud.confirm_action("탐험 보상", "상자1개를 소모해 원본 가중치로%d회 추첨합니다. 개봉 횟수는 TWILIGHT 자체 규칙입니다." % int(runtime.rules_view().completion_box_draws) if open else "선택한 보상 %d개를 원본 ID를 보존해 인벤토리로 옮깁니다." % int(row.amount), "상자 열기" if open else "수령", func(_count: int = 1) -> void:
+	var accept: Callable=func(_count: int = 1) -> void:
 		# Timer progress alone must not invalidate a box confirmation.
 		if runtime.state.storage != contents_before:
 			result_message = "보관함 상태가 변경되었습니다. 다시 선택하세요."
@@ -345,7 +345,11 @@ func _storage_action(open: bool) -> void:
 			return
 		var result: Dictionary = runtime.open_box(str(row.key)) if open else runtime.withdraw(str(row.key), int(row.amount))
 		result_message = str(result.get("message", result.get("error", "")))
-		_render())
+		_render()
+	var dialog: Control=hud.confirm_action("탐험 보상", "상자1개를 소모해 원본 가중치로%d회 추첨합니다. 개봉 횟수는 TWILIGHT 자체 규칙입니다." % int(runtime.rules_view().completion_box_draws) if open else "선택한 보상 %d개를 원본 ID를 보존해 인벤토리로 옮깁니다." % int(row.amount), "상자 열기" if open else "수령", accept)
+	if dialog!=null and dialog.get("callback")==accept:
+		var button: Variant=dialog.get("confirm_button")
+		if button is Button:_apply_item_icon(button,row.item)
 
 func _job_action(action: String) -> void:
 	if runtime == null or hud == null or job_picker.selected < 0: return
