@@ -257,6 +257,9 @@ static func _model(bag: Object) -> Dictionary:
 	var close_button: Node=bag.find_child("InventoryDetailClose",true,false)
 	if not bag.has_method("close_detail") or not name_label is Label or not is_instance_valid(name_label) or not close_button is BaseButton:return _fail("source_inventory_detail_existing_header_required")
 	var type_value: Variant=bag.get("source_detail_type")
+	var name_value: Variant=bag.get("source_detail_name")
+	var name_text: String=name_label.text
+	if name_value is Dictionary and name_value.get("reference")==reference and name_value.get("text") is String:name_text=name_value.text
 	var type_text: String=""
 	if type_value is Dictionary and type_value.get("reference")==reference and type_value.get("text") is String:type_text=type_value.text
 	var safe: Variant=bag.get("source_detail_safe_enhancement")
@@ -264,7 +267,7 @@ static func _model(bag: Object) -> Dictionary:
 	var classes: Variant=bag.get("source_detail_classes")
 	var class_text: String=""
 	if classes is Dictionary and classes.get("reference")==reference and classes.get("text") is String:class_text=classes.text
-	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_label.text,"close_button":close_button,"type_text":type_text,"safe":safe,"class_text":class_text}
+	return {"ok":true,"reference":reference,"locked":locked,"disabled":action.disabled,"action":action,"name_label":name_label,"name_text":name_text,"close_button":close_button,"type_text":type_text,"safe":safe,"class_text":class_text}
 
 static func _find(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset") == offset: return node
