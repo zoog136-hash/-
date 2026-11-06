@@ -821,6 +821,10 @@ func original_quickslot_amount(absolute: int, entry: Dictionary) -> Dictionary:
 	var current: Dictionary=_source_quickslot_amounts.get(absolute,{})
 	var identity: Dictionary=entry.duplicate(true)
 	identity.erase("auto")
+	if absolute<0 or absolute>=quickslot_entries.size() or not quickslot_entries[absolute] is Dictionary:return {"ok":false,"code":"source_quickslot_current_registration_unavailable"}
+	var registered: Dictionary=quickslot_entries[absolute].duplicate(true)
+	registered.erase("auto")
+	if registered!=identity:return {"ok":false,"code":"source_quickslot_current_registration_changed"}
 	if current.get("entry")!=identity or typeof(current.get("amount"))!=TYPE_INT:return {"ok":false,"code":"source_quickslot_current_quantity_unavailable"}
 	return {"ok":true,"amount_text":str(current.amount),"amount":current.amount,"quantity_applicable":true,"basis":"current _render_quickslots inventory snapshot and exact registered entry"}
 
