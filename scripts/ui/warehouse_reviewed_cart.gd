@@ -57,6 +57,7 @@ func remove_reviewed(intent: Dictionary) -> Dictionary:
 	return _fail("review_cart_exact_reviewed_entry_required")
 
 func owner_changed() -> void:
+	if phase=="review" and _quote_context==_context():_present();return
 	if phase!="confirming":_invalidate()
 	_present()
 
@@ -79,6 +80,8 @@ func input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch and event.device!=InputEvent.DEVICE_ID_EMULATION and event.pressed:
 		_touch.clear()
 		if not event.double_tap or event.canceled or _has_modal(owner):return
+		if owner.hud.has_method("blocks_keyboard_input") and owner.hud.blocks_keyboard_input():return
+		if owner.hud.has_method("original_source_pointer_capture_blocked") and owner.hud.original_source_pointer_capture_blocked(event.position):return
 		var point: Vector2=listing.get_global_transform_with_canvas().affine_inverse()*event.position
 		if not Rect2(Vector2.ZERO,listing.size).has_point(point):return
 		var current: Dictionary=_selected()
@@ -282,6 +285,9 @@ func _live() -> Object:
 	var owner: Object=_owner.get_ref() if _owner!=null else null
 	var world: Object=_world.get_ref() if _world!=null else null
 	if not is_instance_valid(owner) or not is_instance_valid(world) or owner.world!=world or owner.is_queued_for_deletion() or not owner.is_inside_tree() or not owner.is_visible_in_tree():return null
+	if not is_instance_valid(owner.hud) or owner.hud.get("active_section")!="warehouse":return null
+	var active: Variant=owner.hud.get("transaction_view")
+	if is_instance_valid(active) and active!=owner:return null
 	if owner.get_script()==null or owner.get_script().resource_path!=OWNER:return null
 	for field: String in _controls:
 		var control: Object=_controls[field].get_ref()
