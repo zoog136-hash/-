@@ -117,12 +117,17 @@ generation and actual World instance ID. No serializer/transaction owner is
 duplicated in UI.
 
 Integration must forward the actual successful final load receipt returned by
-its existing `accepted_load(self)` to the actual current warehouse view:
+its existing `accepted_load(self)` to the UI-owned static bridge. This also
+handles held cart metadata when the warehouse window was closed during load:
 
 ```gdscript
-if batch_restore.get("ok", false) and is_instance_valid(hud.transaction_view):
-    if hud.transaction_view.has_method("accepted_warehouse_batch_owner_load"):
-        hud.transaction_view.accepted_warehouse_batch_owner_load(self, batch_restore)
+if batch_restore.get("ok", false):
+    var ui_cart_path := "res://scripts/ui/warehouse_reviewed_cart.gd"
+    if ResourceLoader.exists(ui_cart_path):
+        var ui_cart: Script = load(ui_cart_path)
+        var ui_restore: Dictionary = ui_cart.accept_successful_owner_load(self, batch_restore)
+        # Inspect ui_restore/live_cart_result; this optional UI handoff must
+        # not turn a successful World load into another transaction/retry.
 ```
 
 This is a requested narrow Integration-owned hook, not installed into World
@@ -135,6 +140,27 @@ next activation opens an existing confirmation labelled `검토 카트 비우기
 only that approval clears session intents. Old receipts/recovery history stay
 preserved. New staging must then be deliberate again. No new quote/confirm is
 automatically issued by load, reopening or discard.
+
+`static accept_successful_owner_load(world: Node, receipt: Dictionary) -> Dictionary`
+additionally requires the real `explicit_warehouse_batch.gd` script and a
+nonnegative integer receipt.invalidated_quotes. It updates only this same
+World instance's held UI session snapshots. Prior entries, result/saved:null
+and full quote evidence are preserved in recovery_history; old quotes are
+invalidated and the phase becomes restored_pending_discard. Other Worlds,
+unknown shapes and unrelated metadata are not promoted to recovered carts.
+Repeated forwarding does not append a second recovery entry for an already
+restored closed snapshot. A current live cart receives the same actual receipt
+through its existing instance method; its distinct result is returned as
+live_cart_result. A hidden/unavailable live view is not represented as restored.
+Reopening reads the now-restored held snapshot, so receipt delivery no longer
+depends on a window being open at load time. It still requires explicit discard
+before any new deliberate staging, and never infers the old write outcome.
+
+Before entering the World confirm call, the UI now records the exact pending
+request ID/quote/list with saved:null. If the owner closes during that call,
+the actual returned completion updates that same held request and preserves
+its pre-result snapshot. Only the already strictly validated success branch
+records confirmed completion. No later load fabricates a success receipt.
 
 The complete World batch/recovery patches remain Integration-owned. They were
 not copied into this UI checkout or World replaced. Until those methods and

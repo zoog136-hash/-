@@ -187,6 +187,9 @@ func _confirm(generation: int, request_id: String) -> Dictionary:
 	var quote_id: String=_quote.quote_id
 	var reviewed: Array=_quote.entries.duplicate(true)
 	phase="confirming" # Re-entry/duplicate callback cannot call World twice.
+	# A close triggered during the owner call must retain this exact request,
+	# not the previous receipt. It is still unknown until World returns.
+	last_result={"ok":false,"code":"confirmation_in_progress","saved":null,"ui_confirmed_success":false,"ui_request":{"quote_id":quote_id,"request_id":request_id,"reviewed_entries":reviewed.duplicate(true),"direction":direction}}
 	var result: Variant=owner.world.call("confirm_warehouse_batch",quote_id,request_id)
 	if not result is Dictionary:
 		result={"ok":false,"code":"save_outcome_uncertain","saved":null,"save_confirmed":false,"retry_allowed":false,"quote_id":quote_id,"request_id":request_id}
@@ -196,19 +199,69 @@ func _confirm(generation: int, request_id: String) -> Dictionary:
 	if result.get("ok",false) and result.get("saved")==true and result.get("save_confirmed")==true and result.get("live_adopted")==true and result.get("quote_id")==quote_id and result.get("request_id")==request_id and result.get("entries")==reviewed and result.get("direction")==direction and result.get("save_count")==1:
 		last_result["ui_confirmed_success"]=true
 		entries.clear();direction="";phase="idle";_invalidate();_present()
+		_persist_closed_completion()
 		return result
 	var known_no_save: bool=result.get("ok")==false and result.get("saved")==false and result.get("save_attempted",false)==false
 	if not known_no_save:
 		phase="uncertain" # Keep entries, quote, request and receipt; never retry.
 		last_result["ui_held_reviewed_entries"]=reviewed
 	else:phase="idle";_invalidate()
-	_present();return last_result.duplicate(true)
+	_present();_persist_closed_completion();return last_result.duplicate(true)
+
+static func accept_successful_owner_load(world: Node, receipt: Dictionary) -> Dictionary:
+	# Integration calls this only with its real accepted_load result, at the
+	# successful load's final boundary. No save/confirm/quote is called here.
+	if not is_instance_valid(world) or receipt.get("ok")!=true or receipt.get("owner_load_accepted")!=true or receipt.get("pending_intent_replayed")!=false or typeof(receipt.get("invalidated_quotes"))!=TYPE_INT or receipt.invalidated_quotes<0:return _fail("review_cart_actual_successful_load_receipt_required")
+	var batch: Variant=world.get("_explicit_warehouse_batch")
+	if not batch is RefCounted or not is_instance_valid(batch) or batch.get_script()==null or batch.get_script().resource_path!="res://scripts/warehouse/explicit_warehouse_batch.gd" or batch.get("busy")!=false or batch.get("uncertain")!=false:return _fail("review_cart_actual_restored_batch_owner_required")
+	var held_value: Variant=world.get_meta("twilight_warehouse_held_ui_carts",[])
+	if not held_value is Array:return _fail("review_cart_held_session_metadata_shape_required")
+	var held: Array=held_value.duplicate(true)
+	var updated: int=0
+	for index: int in range(held.size()):
+		var record: Variant=held[index]
+		if not record is Dictionary or record.get("world_id")!=world.get_instance_id() or record.get("phase") not in ["confirming","uncertain"]:continue
+		if not record.get("entries") is Array or not record.get("last_result") is Dictionary or not record.get("issued_quote") is Dictionary or not record.get("recovery_history",[]) is Array:return _fail("review_cart_closed_snapshot_shape_required")
+		var history: Array=record.get("recovery_history",[]).duplicate(true)
+		history.append({"result":record.get("last_result",{}).duplicate(true),"entries":record.get("entries",[]).duplicate(true),"issued_quote":record.get("issued_quote",{}).duplicate(true),"prior_phase":record.phase,"accepted_load":receipt.duplicate(true)})
+		record["recovery_history"]=history
+		record["phase"]="restored_pending_discard"
+		record["issued_quote"]={}
+		record["generation"]=int(record.get("generation",0))+1
+		# Entries and last_result, including saved:null, are unchanged.
+		held[index]=record;updated+=1
+	world.set_meta("twilight_warehouse_held_ui_carts",held)
+	var live_result: Dictionary={"ok":true,"active_cart_present":false}
+	var hud: Variant=world.get("hud")
+	var view: Variant=hud.get("transaction_view") if is_instance_valid(hud) else null
+	if view is Control and is_instance_valid(view) and not view.is_queued_for_deletion() and view.get_script()!=null and view.get_script().resource_path==OWNER and view.get("world")==world:
+		var cart: Variant=view.get("reviewed_batch")
+		if cart is RefCounted and is_instance_valid(cart) and cart.get_script()!=null and cart.get_script().resource_path=="res://scripts/ui/warehouse_reviewed_cart.gd":
+			live_result=cart.accepted_owner_load(world,receipt)
+	return {"ok":true,"closed_session_snapshots_prepared":updated,"live_cart_result":live_result,"old_requests_resubmitted":false,"old_saved_null_reinterpreted":false,"explicit_discard_still_required":true,"game_state_written":false}
+
+func _persist_closed_completion() -> void:
+	if _live()!=null:return
+	var world: Object=_world.get_ref() if _world!=null else null
+	var request: String=str(last_result.get("ui_request",{}).get("request_id",""))
+	if not is_instance_valid(world) or request.is_empty():return
+	var value: Variant=world.get_meta("twilight_warehouse_held_ui_carts",[])
+	if not value is Array:return
+	var held: Array=value.duplicate(true)
+	for index: int in range(held.size()):
+		var previous: Variant=held[index]
+		if not previous is Dictionary:continue
+		if previous.get("world_id")!=world.get_instance_id() or previous.get("last_result",{}).get("ui_request",{}).get("request_id")!=request:continue
+		var completed: Dictionary=snapshot()
+		completed["completion_prior_snapshot"]=previous.duplicate(true)
+		held[index]=completed
+	world.set_meta("twilight_warehouse_held_ui_carts",held)
 
 func accepted_owner_load(world: Node, receipt: Dictionary) -> Dictionary:
 	var owner: Object=_live()
-	if owner==null or world!=_world.get_ref() or owner.world!=world or receipt.get("ok")!=true or receipt.get("owner_load_accepted")!=true or receipt.get("pending_intent_replayed")!=false:return _fail("review_cart_successful_actual_owner_load_receipt_required")
+	if owner==null or world!=_world.get_ref() or owner.world!=world or receipt.get("ok")!=true or receipt.get("owner_load_accepted")!=true or receipt.get("pending_intent_replayed")!=false or typeof(receipt.get("invalidated_quotes"))!=TYPE_INT or receipt.invalidated_quotes<0:return _fail("review_cart_successful_actual_owner_load_receipt_required")
 	var batch: Variant=world.get("_explicit_warehouse_batch")
-	if not is_instance_valid(batch) or batch.get("busy")!=false or batch.get("uncertain")!=false:return _fail("review_cart_restored_owner_still_held")
+	if not batch is RefCounted or not is_instance_valid(batch) or batch.get_script()==null or batch.get_script().resource_path!="res://scripts/warehouse/explicit_warehouse_batch.gd" or batch.get("busy")!=false or batch.get("uncertain")!=false:return _fail("review_cart_restored_owner_still_held")
 	if phase=="uncertain":
 		recovery_history.append({"result":last_result.duplicate(true),"entries":entries.duplicate(true),"issued_quote":_quote.duplicate(true),"accepted_load":receipt.duplicate(true)})
 		phase="restored_pending_discard"
