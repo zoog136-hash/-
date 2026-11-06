@@ -5,6 +5,7 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const EQUIPMENT_CONDITIONS = preload("res://scripts/loot/patch523_monster_drops.gd")
 # Only names with an established gameplay receiver are admitted. The last
 # operand is the original Unit.Name; percentage raw values use divisor10000.
 const OPERANDS = {
@@ -68,11 +69,95 @@ const WHOLE_ZERO_FAMILIES = {
 	"226348:fear_accuracy":12468,
 	"226358:fear_resistance":12488,
 	"276058:source_attack_drain_hp":13138,
-	"276058:source_attack_drain_mp":13138}
+	"276058:source_attack_drain_mp":13138,
+	"450:damage_amp_pct":10702,
+	"461:damage_amp_pct":321,
+	"488:damage_amp_pct":291,
+	"499:damage_amp_pct":463,
+	"30793:damage_amp_pct":463,
+	"113462:damage_amp_pct":10722,
+	"113552:damage_amp_pct":10732,
+	"114272:damage_amp_pct":10722,
+	"127793:damage_amp_pct":10832,
+	"129593:damage_amp_pct":10712,
+	"129613:damage_amp_pct":10702,
+	"129623:damage_amp_pct":321,
+	"129633:damage_amp_pct":291,
+	"129643:damage_amp_pct":10732,
+	"129653:damage_amp_pct":10832,
+	"157101:damage_amp_pct":11471,
+	"157181:damage_amp_pct":11481,
+	"157511:damage_amp_pct":11471,
+	"157591:damage_amp_pct":11481,
+	"179094:damage_amp_pct":11814,
+	"179104:damage_amp_pct":11814,
+	"179114:damage_amp_pct":11854,
+	"179124:damage_amp_pct":11854,
+	"179134:damage_amp_pct":11864,
+	"179144:damage_amp_pct":11864,
+	"185984:damage_amp_pct":12064,
+	"185994:damage_amp_pct":12064,
+	"186004:damage_amp_pct":12074,
+	"186014:damage_amp_pct":12074,
+	"222901:damage_amp_pct":12351,
+	"222891:damage_amp_pct":12351,
+	"233832:pve_damage_reduction":12962,
+	"233832:pve_damage_reduction_pct":12962,
+	"233832:source_undead_damage_max":12962,
+	"239911:damage_amp_pct":12981,
+	"239941:damage_amp_pct":12981,
+	"239971:damage_amp_pct":12991,
+	"239981:damage_amp_pct":12991,
+	"253302:damage_amp_pct":13062,
+	"253312:damage_amp_pct":13062,
+	"263728:damage_amp_pct":13088,
+	"263738:damage_amp_pct":13088,
+	"263788:damage_amp_pct":13108,
+	"263798:damage_amp_pct":13108,
+	"276058:pve_damage_reduction":13138,
+	"276058:pve_damage_reduction_pct":13138,
+	"276058:speedBonusPct":13138,
+	"276808:pve_damage_reduction":13158,
+	"276808:pve_damage_reduction_pct":13158,
+	"276808:source_attack_drain_hp":13158,
+	"276808:source_attack_drain_mp":13158,
+	"276808:speedBonusPct":13158,
+	"291602:damage_amp_pct":13272,
+	"291612:damage_amp_pct":13282,
+	"292402:damage_amp_pct":13272,
+	"292412:damage_amp_pct":13282,
+	"306391:damage_amp_pct":13391,
+	"306401:damage_amp_pct":13391,
+	"357541:damage_amp_pct":13631,
+	"357571:damage_amp_pct":13631,
+	"357591:damage_amp_pct":13631,
+	"357601:damage_amp_pct":13631,
+	"357611:damage_amp_pct":13651,
+	"357621:damage_amp_pct":13641,
+	"357631:damage_amp_pct":13698,
+	"357641:damage_amp_pct":13631,
+	"357671:damage_amp_pct":13631,
+	"357681:damage_amp_pct":13631,
+	"357701:damage_amp_pct":13631,
+	"357721:damage_amp_pct":13631,
+	"362371:damage_amp_pct":13631,
+	"362381:damage_amp_pct":13631,
+	"362391:damage_amp_pct":13631,
+	"362401:damage_amp_pct":13631,
+	"362411:damage_amp_pct":13651,
+	"362421:damage_amp_pct":13641,
+	"362431:damage_amp_pct":13698,
+	"362441:damage_amp_pct":13631,
+	"362451:damage_amp_pct":13631,
+	"362461:damage_amp_pct":13631,
+	"362471:damage_amp_pct":13631,
+	"362481:damage_amp_pct":13631}
 # The owner declares these two distinct canonical baseline keys explicitly.
 const WHOLE_ZERO_BASE_KEYS = {
 	"276058:source_attack_drain_hp":"hpAbsorption",
-	"276058:source_attack_drain_mp":"mpAbsorption"}
+	"276058:source_attack_drain_mp":"mpAbsorption",
+	"276808:source_attack_drain_hp":"hpAbsorption",
+	"276808:source_attack_drain_mp":"mpAbsorption"}
 static var evidence: Dictionary = {}
 
 static func integer(value: Variant) -> bool:
@@ -172,6 +257,7 @@ static func _whole_zero_baseline(world: Node, item_key: String, key: String, cur
 		if key=="source_attack_drain_hp":
 			for record: Dictionary in [canonical,current]:
 				if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"): return {}
+	if key=="speedBonusPct" and (not world.has_method("_record_move_speed_multiplier") or world.call("_record_move_speed_multiplier",canonical)!=1.0 or world.call("_record_move_speed_multiplier",current)!=1.0): return {}
 	if key=="attackSpeed" and (CATALOG_EFFECTS.attack_speed_percent(canonical)!=0 or CATALOG_EFFECTS.attack_speed_percent(current)!=0): return {}
 	var status_receiver: String = {"stun_accuracy":"_record_stun_accuracy","fear_accuracy":"_record_fear_accuracy","fear_resistance":"_record_fear_resistance"}.get(key,"")
 	if not status_receiver.is_empty():
@@ -191,10 +277,14 @@ static func sum_native(world: Node, key: String) -> float:
 		visited[physical_id]=true
 		var physical: Dictionary = world.item_instances.get(physical_id,{})
 		if physical.is_empty() or physical.get("name")!=worn.get("name") or not integer(physical.get("level",0)): continue
+		if not world.has_method("_is_instance_equipped") or not world._is_instance_equipped(physical_id): continue
 		var level: int = int(physical.get("level",0))
 		if level<0 or level>20: continue # No missing-rank extrapolation.
 		var current: Dictionary = world._source_catalog_record("아이템",worn)
 		if current.get("source")!="lineagem_patch523" or current.get("source_snapshot")!="patch523" or current.get("source_projection")!="current523_original_typed_game_dto_v1" or current.get("source_m_native_item")!=true or current.get("source_test_item")!=false or current.get("source_equipment_status")!="mapped" or current.get("source_legacy_catalog_alias",false) or current.get("source_legacy_stack_variant",false): continue
+		var pending: Variant = current.get("source_condition_pending",[])
+		if not pending is Array or not pending.is_empty(): continue
+		if not EQUIPMENT_CONDITIONS.equipment_error(current,str(world.job_class),int(world.level),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty(): continue
 		if current.get("_patch523_effective_extras",false) and current.has(key): continue # Already in the normal sum.
 		var id: Variant = current.get("source_item_class_id")
 		if not integer(id) or int(id)<=0 or current.get("sourceId")!="m523:item:"+str(int(id)) or current.get("source_definition_archive")!=identity: continue
