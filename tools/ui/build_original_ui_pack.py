@@ -248,8 +248,8 @@ class Builder:
             raise ValueError('External texture input must be in the explicit node scope: ' + member)
 
         def external_sprites(node):
-            if node['_offset'] in external and node.get('classname') != 'Sprite':
-                raise ValueError('External texture input requires an original Sprite: ' + member)
+            if node['_offset'] in external and node.get('classname') not in ('Sprite', 'ImageView'):
+                raise ValueError('External texture input requires an original Sprite or ImageView: ' + member)
             for child in node.get('children', []):
                 external_sprites(child)
         external_sprites(scoped['nodeTree'])
@@ -263,7 +263,7 @@ class Builder:
 
         def dependencies(value):
             if isinstance(value, dict):
-                if value.get('classname') == 'Sprite' and value.get('_offset') in external:
+                if value.get('classname') in ('Sprite', 'ImageView') and value.get('_offset') in external:
                     # Keep the original node/CSB/reference intact. Only its
                     # editor preview is not a required runtime dependency:
                     # an explicit existing image owner supplies these pixels.

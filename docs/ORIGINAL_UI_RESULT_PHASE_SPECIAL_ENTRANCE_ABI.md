@@ -75,3 +75,46 @@ Current quest projection preserves Reward relations/order and item identity; que
 ## Local v36 only
 
 TWILIGHT_current523_main_game_original_UI_result_roles_v36_20261106.zip:14,200,105B; ZIP SHA2a8abfd506122d0bd8131420a045414090049cfbf3f946519e4a63741f88c9c4; manifest24cc72992ddbf878667fb022b1b2d5f601dc9ec0bc9e59d0575dd455939d1bfb. It retains v35, adds explicit static result front/back and fusion-background scopes, and holds Special_Btn **layout metadata only**, with no new Mission_Dummy pixels. Root proposal source-ui/current523-main-game-original-ui-v36; unchanged selected-pack schema/selector. Packaging99 original files/57 scenes/56 partial scopes/0 dependency blockers is not rendering, screen completion or a full-UI denominator. No remote ID, upload, installation or source bank/index update. Pending potion/ambiguous spell-stage/emoticon/sound work remains excluded without deletion of originals or shared systems.
+
+## Follow-up: original ImageView receiver and selection lifetime implemented
+
+The renderer now accepts an explicitly scoped **original ImageView**, as well as the existing Sprite, for `source_asset_slot`. The builder permits only those two authored classes and omits only that declared target's editor preview resource dependency. Original CSB/reference bytes and node metadata remain intact. No arbitrary display target, list thumbnail or new UI component is introduced. Source scene attachment remains Sprite-only; this change is static original-image reception, not CSB-root registration.
+
+For a legitimately registered instance of the original component, the existing renderer contract is:
+
+```gdscript
+# At existing renderer configure: exact externally_bound_texture_nodes scope
+# and binding {28700: {"role":"source_asset_slot", "visible":false}} required.
+# This does NOT establish or perform the missing parent registration.
+var assigned: Dictionary = player.set_bound_source_asset_result(28700, image_owner_result)
+if assigned.get("ok", false) and assigned.get("texture_assigned", false):
+    player.set_bound_visible(28700, true)
+else:
+    player.clear_bound_source_image(28700)
+# Selection invalidation / family switch / owner exit:
+player.clear_bound_source_image(28700)
+```
+
+The actual existing ImageView rendering block is shared with replacement reception. It retains authored widget size/position/anchor/rotation/scale, flip, tint cascade and the existing scale9/cap-inset renderer. `Img_Special` declares ignoreSize0, scale9Enabled0, size154×262; the existing image owner's154×262 PNG therefore needs no guessed fit, source map ratio or intrinsic-size migration. A non-scale9 ignoreSize1 node with different replacement dimensions is explicitly rejected until its child/input-size registration is established. Original Sprite replacement and CSB scene-attachment APIs retain their separate paths.
+
+Replacement first removes/frees the previous original image and clears provenance/visibility. Failed/missing/excluded pixels leave the target empty and hidden. A successful replacement retains the image owner's evidence, reapplies source display tint, and remains hidden until the owner explicitly requests visibility. The existing hidden-slot guard now recognizes an actual populated ImageView. Clear and node destruction release its display object; no game state or saves are written.
+
+`source_dungeon_view.original_special_selection_changed(selection)` now emits from the actual existing owner:
+
+- `_refresh()` invalidates the previous selection before rebuilding rows;
+- `_select(index)` publishes the existing selected row after assigning `selected`;
+- `visibility_changed` re-queries the actual live/visible owner;
+- `tree_exiting` emits an explicit invalidation.
+
+Consumers connect to this signal and query `original_selected_special_entrance()` on initial registration. Invalid payloads require clearing the old picture. Valid payloads carry the unchanged actual entry for `source523_dungeon_images.describe_special()`. Existing owner selection/default policy, row ordering, gameplay actions and saves are unchanged. The signal does not choose a dungeon and does not create a receiver when none is registered.
+
+Engine semantics were checked against the official Cocos2d-x3.6 source [UIImageView.cpp](https://github.com/cocos2d/cocos2d-x/blob/cocos2d-x-3.6/cocos/ui/UIImageView.cpp): loadTexture updates renderer texture/content size; nonintrinsic widgets scale their image to declared content extent; scale9 uses the declared preferred size. This establishes ImageView texture behavior, **not** the game's controller insertion/call sequence. A targeted reverse-reference search of the held3034-CSB inventory still contains no ProjectNode parent for Special_Btn, Change_Card_Result, Change_Card_Gacha_Result or Change_WinResult. Therefore **Panel392→ListView_Daily2560 insertion** and result-root→live-stage registration remain unestablished. No first-item placement, list margin, center attachment, clip repeat or phase timing is inferred from engine methods.
+
+A separate v37 local candidate includes Special_Btn's explicit28700 ImageView scope, with the original Mission_Dummy preview dependency omitted through the declared external-input contract. It does not mount that scene or resolve the missing parent relation:
+
+- `TWILIGHT_current523_main_game_original_UI_special_image_receiver_v37_20261106.zip`,14,200,821B.
+- ZIP SHA256 `836740f82c37f7188c1347fcae4ff1b6a0d4afd766d6d94bca378c97af8eef12`.
+- Manifest pin `267372d2e1453b70642013ae1e1c80db8940897ab4a22bb5da889b94936afc0f`.
+- Proposed relative destination `source-ui/current523-main-game-original-ui-v37`;99 original files/58 scoped scenes/57 partial scopes are packaging quantities only.
+
+v36 and all earlier packs remain preserved. No remote file ID/upload, phone source selection, distribution/index change, runtime attachment, test/compile/game/render/CI or PR merge. This receiver code is unexecuted and unverified.
