@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local authenticated extraction, then the unchanged published manual installer.
+# Local authenticated extraction, then the base-768 manual compatibility reader.
 set -euo pipefail
 stage='prerequisites'
 trap 'code=$?; printf "LOCAL BOOTSTRAP: stage=%s exit=%s.\n" "$stage" "$code" >&2' EXIT
@@ -21,9 +21,14 @@ curl --proto '=https' --proto-redir '=https' -fL --retry 2 \
   -o "$source_dir/manual_resource_extract.py" \
   "https://raw.githubusercontent.com/zoog136-hash/-/$extractor_ref/tools/android/manual_resource_extract.py"
 for source_file in install_private_sources.py manual_resource_install.py private_drive_transport.py private_source_bootstrap.gd; do
+  source_ref="$installer_ref"
+  # The original private index keeps its base-768 contract. Only the two
+  # explicit manual-verification compatibility modules come from this helper
+  # revision; source pins, resources and the original runtime guards stay intact.
+  case "$source_file" in install_private_sources.py|manual_resource_install.py) source_ref="$extractor_ref" ;; esac
   curl --proto '=https' --proto-redir '=https' -fL --retry 2 \
     -o "$source_dir/$source_file" \
-    "https://raw.githubusercontent.com/zoog136-hash/-/$installer_ref/tools/android/$source_file"
+    "https://raw.githubusercontent.com/zoog136-hash/-/$source_ref/tools/android/$source_file"
 done
 stage='verify-local-zip-set-and-extract'
 printf 'Verify all exact local ZIP names and hashes before extraction; then add minimal GitHub code using the pinned original manual installer. No Drive or original downloads.\n' >&2

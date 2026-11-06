@@ -1702,7 +1702,7 @@ def world_map_code_contract(code_root):
     return evidence
 
 
-def world_map_input_contract(result, resources, bindings, main_ui):
+def world_map_input_contract(result, resources, bindings, main_ui, verified_world_images=None):
     evidence = {'ready': False, 'files': {}, 'blockers': []}
     def require(key, path, digest, size=None):
         if (not path.is_file() or sha256_file(path) != pin(digest)
@@ -1744,8 +1744,23 @@ def world_map_input_contract(result, resources, bindings, main_ui):
                 # No guessed raw/decoded SHA: bind the actual original member
                 # recorded while extracting the fully pinned official ZIPs.
                 member = inside(root, image['path'])
-                state = owned_state(resources, RESOURCE_STATE)
-                record = state.get('files', {}).get(member.relative_to(resources).as_posix())
+                name = member.relative_to(resources).as_posix()
+                if verified_world_images is None:
+                    state = owned_state(resources, RESOURCE_STATE)
+                    record = state.get('files', {}).get(name)
+                else:
+                    # Manual mode has no normal-installer resource marker.
+                    # Expected SHA/size came from the selected member inside
+                    # its SHA-authenticated ZIP, then matched the extracted file.
+                    record = verified_world_images.get(name)
+                    if record:
+                        if (record.get('verification') != 'manual-pinned-zip-member-sha256-v1'
+                                or record.get('member_path') != name
+                                or type(record.get('crc32')) is not int
+                                or not 0 <= record['crc32'] <= 0xffffffff):
+                            raise ValueError('Invalid manual World extraction evidence')
+                        pin(record.get('archive_sha256'))
+                        pin(record.get('sha256'))
                 if not record or not matches(member, record):
                     evidence['blockers'].append('Offered World original is not in verified extraction: ' + str(image['world_id']))
                 else:
@@ -1762,7 +1777,7 @@ def world_map_input_contract(result, resources, bindings, main_ui):
     return evidence
 
 
-def descriptor(plan, resources, persistent_contracts=None, code_root=None):
+def descriptor(plan, resources, persistent_contracts=None, code_root=None, verified_world_images=None):
     bindings = plan['bindings']
     result = {'schema': 1}
     main_ui_document = None
@@ -1878,7 +1893,7 @@ def descriptor(plan, resources, persistent_contracts=None, code_root=None):
             code['files'].update(composition_code['files'])
             code['blockers'].extend(composition_code['blockers'])
             code['ready'] = not code['blockers']
-        inputs = world_map_input_contract(result, resources, bindings, main_ui_document)
+        inputs = world_map_input_contract(result, resources, bindings, main_ui_document, verified_world_images)
         if activation is None:
             inputs['blockers'].append('Explicit fresh world-map activation choice is absent')
             inputs['ready'] = False

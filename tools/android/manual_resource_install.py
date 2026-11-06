@@ -45,6 +45,26 @@ def _file_digest(path):
     return digest.hexdigest(), crc & 0xffffffff
 
 
+def _world_zip_record(source, info, archive_sha256, member):
+    # Only the few explicitly offered World members are read from their already
+    # SHA-authenticated retained ZIPs. No decode, extract, write or resource copy.
+    if info.file_size > 64 * 1024 * 1024:
+        raise ValueError('Offered World ZIP member exceeds the bounded verification scope')
+    digest = hashlib.sha256()
+    count = 0
+    with source.open(info) as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b''):
+            count += len(block)
+            if count > info.file_size:
+                raise ValueError('Offered World ZIP member exceeds its declared size')
+            digest.update(block)
+    if count != info.file_size:
+        raise ValueError('Offered World ZIP member size differs')
+    return {'bytes': count, 'sha256': digest.hexdigest(), 'archive_sha256': archive_sha256,
+            'crc32': info.CRC, 'member_path': member,
+            'verification': 'manual-pinned-zip-member-sha256-v1'}
+
+
 def _manual_inputs(args, a, root):
     resources = a.inside(root, RESOURCE_DIR)
     if not resources.is_dir():
@@ -81,6 +101,17 @@ def _manual_inputs(args, a, root):
     a.no_links(archives)
     expected = {}
     names = set()
+    # Select only unchanged plan paths, never infer one from World/Asset IDs.
+    world_records = {}
+    world_members = set()
+    image_binding = plan['bindings'].get('images', {})
+    for image in plan['bindings'].get('world_map', {}).get('required_world_images', []):
+        if image.get('from_verified_extraction') is True:
+            member = a.inside(a.inside(resources, image_binding['root']), image['path'])
+            world_members.add(member.relative_to(resources).as_posix())
+    if len(world_members) > 16:
+        raise ValueError('Too many World originals for bounded manual verification')
+    a.log('Manual local ZIP authentication started: %d retained archives; no extraction or download.' % len(index['archives']))
     for row in index['archives']:
         if not isinstance(row, dict) or row.get('component') not in components:
             raise ValueError('Manual archive has no declared producer component')
@@ -93,10 +124,17 @@ def _manual_inputs(args, a, root):
             raise ValueError('Manual archive requires its exact positive byte length')
         a.pin(row.get('sha256'))
         archive = a.inside(archives, name)
+        before = archive.stat()
+        identity = lambda value: (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns)
         if not a.matches(archive, row):
             raise ValueError('Required downloaded manual ZIP absent or changed: ' + name)
-        # Central-directory inspection only: do not decompress or re-extract.
+        if identity(archive.stat()) != identity(before):
+            raise ValueError('Manual ZIP changed during SHA authentication')
+        # Inspect metadata for all members. Read only selected World members
+        # to derive their expected SHA from the authenticated ZIP, not the tree.
         with zipfile.ZipFile(archive) as source:
+            if identity(os.fstat(source.fp.fileno())) != identity(before):
+                raise ValueError('Manual ZIP identity changed before member verification')
             for info in source.infolist():
                 mode = info.external_attr >> 16
                 if (info.flag_bits & 1 or stat.S_ISLNK(mode)
@@ -106,12 +144,18 @@ def _manual_inputs(args, a, root):
                     a.relative(info.filename.rstrip('/'))
                     continue
                 relative = _resource_path(a, info.filename)
-                record = {'bytes': info.file_size, 'crc32': info.CRC}
+                record = {'bytes': info.file_size, 'crc32': info.CRC, 'archive_sha256': row['sha256']}
                 if relative in expected:
                     raise ValueError('Manual components overlap a file: ' + relative)
                 if relative in own or relative == BOOTSTRAP:
                     raise ValueError('A producer ZIP overlaps the bootstrap component')
                 expected[relative] = record
+                if relative in world_members:
+                    world_records[relative] = _world_zip_record(source, info, row['sha256'], relative)
+            if (identity(os.fstat(source.fp.fileno())) != identity(before)
+                    or identity(archive.stat()) != identity(before)):
+                raise ValueError('Manual ZIP changed during member verification')
+        a.log('Manual ZIP SHA/inventory verified: %d/%d.' % (len(names), len(index['archives'])))
     if {row['component'] for row in index['archives']} != set(components):
         raise ValueError('Manual archive list omits a required producer component')
     if len(expected) > 200000:
@@ -119,8 +163,13 @@ def _manual_inputs(args, a, root):
     if (index.get('resource_files') != len(expected)
             or index.get('resource_bytes') != sum(record['bytes'] for record in expected.values())):
         raise ValueError('Manual archive set does not match the complete producer inventory totals')
+    if world_members - world_records.keys():
+        raise ValueError('Offered World original is absent from the authenticated manual ZIP inventory: ' + sorted(world_members - world_records.keys())[0])
     actual = set()
     total = 0
+    verified_count = 0
+    reported_bytes = 0
+    a.log('Manual extracted-file verification started: %d files / %d bytes; originals stay in place.' % (len(expected), index['resource_bytes']))
     for base, folders, files in os.walk(resources, followlinks=False):
         for folder in folders:
             a.no_links(Path(base) / folder)
@@ -136,17 +185,27 @@ def _manual_inputs(args, a, root):
             wanted = expected.get(relative)
             if wanted is None or path.stat().st_size != wanted['bytes']:
                 raise ValueError('Unreceipted or changed manual resource: ' + relative)
-            _, crc = _file_digest(path)
+            digest, crc = _file_digest(path)
             if crc != wanted['crc32']:
                 raise ValueError('Extracted resource CRC differs from its authenticated ZIP: ' + relative)
+            if relative in world_members:
+                original = world_records[relative]
+                if digest != original['sha256'] or path.stat().st_size != original['bytes']:
+                    raise ValueError('Offered World original SHA/size differs from its authenticated ZIP member: ' + relative)
             total += wanted['bytes']
+            verified_count += 1
+            if verified_count % 2048 == 0 or total - reported_bytes >= 128 * 1024 * 1024:
+                a.log('Manual extracted files verified: %d/%d; %d/%d bytes.' % (verified_count, len(expected), total, index['resource_bytes']))
+                reported_bytes = total
     if set(expected) - actual:
         raise ValueError('Manual ZIP extraction is incomplete: ' + sorted(set(expected) - actual)[0])
     a.log('Manual original resources verified in place: %d files, %d bytes. No Drive calls, extraction or resource copy.' % (len(expected), total))
     # The original manifest/CSB/config pins must pass before any Git download.
     # This prepares only an in-memory descriptor; no user cfg is written here.
-    a.descriptor(plan, resources, code_root=None)
-    return plan, resources
+    a.log('Checking original manifest and World input pins; runtime code is not verified yet.')
+    a.descriptor(plan, resources, code_root=None, verified_world_images=world_records)
+    a.log('Original input pins verified. Code ownership checks and minimal Git stage follow.')
+    return plan, resources, world_records
 
 
 def _relative_descriptor(value, root):
@@ -235,7 +294,7 @@ def install_manual(args, a):
     a.no_links(root)
     if not root.is_dir():
         raise ValueError('Selected extracted manual folder is missing; no automatic search or creation')
-    plan, resources = _manual_inputs(args, a, root)
+    plan, resources, world_records = _manual_inputs(args, a, root)
     cache = args.cache.expanduser()
     if cache.is_symlink():
         raise ValueError('Manual code cache cannot be a symlink')
@@ -255,7 +314,7 @@ def install_manual(args, a):
             raise ValueError('Unmanaged files exist beside manual resources; no automatic adoption or overwrite')
         source, commit, inventory = a.packed_code(work)
         a.preflight_required_code(plan, source)
-        selected = a.descriptor(plan, resources, code_root=source)
+        selected = a.descriptor(plan, resources, code_root=source, verified_world_images=world_records)
         required = [(selected.get('source_bank', {}), 'ready_for_fresh_install', 'Sprite bank'),
                     (selected.get('world_map', {}), 'ready_for_fresh_install', 'world map'),
                     (selected.get('native_item_input', {}).get('code_contract', {}), 'ready', 'native item owner'),

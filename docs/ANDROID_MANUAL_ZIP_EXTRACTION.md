@@ -37,12 +37,20 @@ Complete files must match their declared length/CRC. No file is removed. Receipt
 replacement happens only in the private Termux cache. A creation interrupted
 before the root receipt is saved fails closed rather than taking over the root.
 
-After extraction, the helper invokes the **unchanged published manual installer
-768dd49388c99b8c9e87df9a07d1adbffd6f6fa6**. Its resource/manifest/owner/code guards
-run normally before minimal GitHub runtime publication. The existing private
-Bootstrap/index and its `installer_commit` remain unchanged. The extractor's
-commit is a separate public helper pin, not a replacement resource contract.
-No local followup patch or unmerged game code is implicitly adopted.
+After extraction, the helper invokes the **base-768 manual installer contract**.
+Two explicit compatibility modules (`install_private_sources.py` and
+`manual_resource_install.py`) come from the selected extractor revision. Other
+helpers remain pinned to 768dd49388c99b8c9e87df9a07d1adbffd6f6fa6. The correction
+reads only the selected World members from already SHA-authenticated local ZIPs
+(bounded to 16 members, 64 MiB each) and derives their expected size/SHA there.
+The actual extracted file must match that expected size/SHA as well as its ZIP
+CRC. Only this explicit ZIP/member evidence is passed in memory to the map guard.
+It does not fabricate the general installer's resource ownership marker or write
+metadata into the immutable source tree. Missing or altered originals still fail,
+and actual map-owner code readiness is still required. Progress is logged during
+manual revalidation. The private Bootstrap/index, source pins and its base
+`installer_commit` remain unchanged. No declined audit patch or unmerged game
+code is implicitly adopted.
 
 The current ZIPs occupy 5,416,453,962 bytes and expand to 7,833,739,317 bytes
 (121,381 files): 13,250,193,279 logical bytes together. Code, Git, existing caches,
