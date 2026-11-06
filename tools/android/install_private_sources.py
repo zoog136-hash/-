@@ -913,7 +913,7 @@ def needed_transport_files(packs, cache):
     return rows
 
 
-def require_download_space(plan, work):
+def require_download_space(plan, work, resources):
     """Conservative compressed-download floor, not an extraction guarantee."""
     rows = {}
     for row in needed_transport_files(plan['packs'], work):
@@ -934,11 +934,44 @@ def require_download_space(plan, work):
             # Keep partials intact; do not assume rclone can resume their bytes
             # or that its local temporary destination needs no extra space.
             remaining += row['bytes']
-    free = shutil.disk_usage(work).free
-    log('Compressed original downloads still needed: %d bytes; cache filesystem free: %d bytes.' % (remaining, free))
-    log('This excludes resource expansion, code checkout/staging and previous preserved versions; it is not a total-space guarantee.')
-    if remaining > free:
-        raise ValueError('Insufficient space even for remaining original ZIPs: need at least %d new bytes before extraction, free %d. No download or automatic cache deletion started.' % (remaining, free))
+    known_expansion = 0
+    supplied = plan.get('space_requirements', {})
+    if supplied:
+        if (not isinstance(supplied, dict) or supplied.get('schema') != 1
+                or not isinstance(supplied.get('entries'), list)
+                or len(supplied['entries']) > len(plan['packs'])):
+            raise ValueError('Invalid source expansion metadata')
+        packs = {pack['id']: pack for pack in plan['packs']}
+        seen = set()
+        for entry in supplied['entries']:
+            if not isinstance(entry, dict) or entry.get('pack_id') not in packs or entry['pack_id'] in seen:
+                raise ValueError('Unknown or duplicate expansion metadata pack')
+            seen.add(entry['pack_id'])
+            pack_digest = hashlib.sha256(json.dumps(packs[entry['pack_id']], sort_keys=True,
+                                                   separators=(',', ':')).encode()).hexdigest()
+            if pack_digest != pin(entry.get('pack_contract_sha256')):
+                raise ValueError('Expansion metadata does not match the exact selected archive/paths')
+            count = entry.get('extracted_bytes')
+            if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+                raise ValueError('Invalid selected expansion byte count')
+            known_expansion += count
+        identity = hashlib.sha256(json.dumps({'packs': plan['packs'], 'bindings': plan['bindings']},
+                                           sort_keys=True).encode()).hexdigest()
+        destination = resources / identity
+        no_links(destination)
+        if destination.exists():
+            prior = owned_state(destination, RESOURCE_STATE)
+            if prior.get('identity') != identity:
+                raise ValueError('Existing resource version has no matching ownership; preserved')
+            # prepare_resources still verifies every member before reuse and
+            # refuses changes; it never silently re-extracts over this version.
+            known_expansion = 0
+    free = min(shutil.disk_usage(work).free, shutil.disk_usage(resources).free)
+    floor = remaining + known_expansion
+    log('Compressed originals still needed: %d bytes; declared selected expansion: %d bytes; minimum observed free: %d bytes.' % (remaining, known_expansion, free))
+    log('Cache and Download may share physical storage. This conservative floor excludes undeclared expansion, Git objects, code checkout/staging, allocation overhead and preserved previous versions; it is not a total-space guarantee.')
+    if floor > free:
+        raise ValueError('Insufficient space for the declared source floor: need at least %d new bytes, free %d. No download or automatic cache deletion started.' % (floor, free))
 
 
 def pinned_member(root, name, digest):
@@ -2004,7 +2037,7 @@ def install(args):
             # directory or places a success receipt before publication.
             root.mkdir()
             log('Created empty selected project folder: ' + str(root))
-        require_download_space(plan, work)
+        require_download_space(plan, work, resources)
         code_root, commit, code_inventory = packed_code(work)
         preflight_required_code(plan, code_root)
         transport = DriveTransport(work / 'bundles', token_file=args.token_file,
