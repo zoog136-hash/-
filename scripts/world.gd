@@ -7448,7 +7448,13 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
 	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
 	if skill.get("origin","")=="TWILIGHT_GUARDIAN523":return bool(growth.quote("guardian_cast",str(skill.id).trim_prefix("guardian:")).ok)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.ready(skill, announce)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
+		if not original_skills.ready(skill, announce):return false
+		var region_reason: String=current523_source_spell_cast_reason(skill)
+		if not region_reason.is_empty():
+			if announce:hud.show_message(region_reason)
+			return false
+		return true
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
 	if _is_passive_skill(skill):
@@ -7684,7 +7690,11 @@ func _cast_job_skill(skill_name: String) -> bool:
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
+		if not original_skills.ready(skill, true):return false
+		var region_reason: String=current523_source_spell_cast_reason(skill)
+		if not region_reason.is_empty():hud.show_message(region_reason);return false
+		return original_skills.cast(skill)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -10928,6 +10938,28 @@ func prepare_current523_source_landing(raw_root: String, source_manifest_sha256:
 
 func current523_source_hunt_experience_rule() -> Dictionary:
 	return _aden_play_controller().call("source_hunt_experience_rule")
+
+func current523_source_spell_cast_reason(record: Dictionary) -> String:
+	# Main's manual/auto explicit skill casts only. Existing effects, procs,
+	# stage graphs, cost/save owners and passive skills are not reinterpreted.
+	if not current523_aden_source_active() or _current523_aden_play_controller.settings.get("navigation_profile")!=CURRENT523_ADEN_PLAY_OPTIONS.GENERIC:return ""
+	if original_skills==null:return "원문 스킬 소비자가 필요합니다."
+	var skill: Dictionary=original_skills.catalog.resolve(record)
+	var source: Variant=original_skills.catalog.source523
+	var id: String=str(skill.get("id",""))
+	var profile: Dictionary=source.evidence_for(id)
+	# An unbound legacy/local skill has no confirmed current SpellClass join;
+	# leave its existing owner unchanged rather than invent a numeric identity.
+	# No entry restriction is relaxed on the strength of this partial consumer.
+	if profile.is_empty():return ""
+	var binding: Dictionary=source.bindings.get(id,{})
+	if source.source_identity.get("source_sha256")!=source.SOURCE_SHA or binding.is_empty():return "시전 스킬의 원문 입력 신원이 필요합니다."
+	var row: Variant=profile.get("row")
+	var canonical: Variant=profile.get("row_json")
+	if not row is Dictionary or not canonical is String or canonical.sha256_text()!=binding.get("row_sha256") or row.get("ID")!=binding.get("spell_id") or skill.get("source523",{}).get("spell_id")!=row.get("ID"):return "시전 스킬의 원문 SpellClass 참조가 일치하지 않습니다."
+	var status: Dictionary=_current523_aden_play_controller.call("source_spell_cast_status",int(row.ID))
+	if not status.get("ok",false) or status.get("allowed")!=true:return str(status.get("reason","원문 지역 스킬 제한을 확인할 수 없습니다."))
+	return ""
 
 func current523_source_bookmark_destination_status(point: Vector2) -> Dictionary:
 	return _aden_play_controller().call("source_bookmark_destination_status",point)

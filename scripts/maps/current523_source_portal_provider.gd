@@ -311,6 +311,35 @@ func bookmark_context_for_land(land_id: int, exact_asset: String, point: Vector2
 		if row.Value==1:forbidden=true
 	return {"ok":true,"allowed":not forbidden,"reason":"원문 NoBookmark 제한으로 현재 위치를 기억할 수 없습니다." if forbidden else "기존 기억 장소 동작에 적용되는 원문 기억 금지 없음 · 입장/이동 허가 아님","Land":definition.land.duplicate(true),"source_cell":[point.x,point.y],"type":type.duplicate(true),"rows":applied,"definition_manifest_sha256":MANIFEST_SHA256}
 
+func spell_cast_context_for_land(land_id: int, exact_asset: String, point: Vector2i, spell_id: int) -> Dictionary:
+	# NoSpell is a typed SpellClassID, not a boolean or a spell-name match.
+	# This purpose-specific query does not waive an entry/teleport condition.
+	if spell_id<=0:return {"ok":false,"reason":"정확한 원문 SpellClass ID가 필요합니다."}
+	var definition: RefCounted=_definition(land_id,exact_asset)
+	if definition==null:return {"ok":false,"reason":"스킬 제한 원문 지역 정의를 읽을 수 없습니다."}
+	var type: Dictionary={}
+	for row: Dictionary in definition.context_rows("LandAttributeType"):
+		if row.get("ID")==164:type=row
+	if type.get("Name")!="NoSpell" or type.get("UnitID")!=12:return {"ok":false,"reason":"NoSpell의 원문 SpellClassID 형식이 필요합니다."}
+	var applied: Array=[]
+	for row: Dictionary in definition.context_rows("LandAttribute"):
+		if row.get("LandID")!=land_id or row.get("LandAttributeTypeID")!=164:continue
+		if not OWNER._integer(row.get("Value")) or row.Value<=0:return {"ok":false,"reason":"NoSpell의 스킬 참조가 미확인입니다."}
+		if row.Value!=spell_id:continue
+		for key: String in ["Param1","Param2","Param3"]:
+			if not OWNER._integer(row.get(key)) or row[key]!=0:return {"ok":false,"reason":"매개변수가 있는 NoSpell 실행 규칙은 미확인입니다."}
+		var territory_id: Variant=row.get("TerritoryID")
+		if not OWNER._integer(territory_id) or territory_id<0:return {"ok":false,"reason":"스킬 금지 영역 참조가 유효하지 않습니다."}
+		if territory_id!=0:
+			var territory: Dictionary=definition.territories.get(int(territory_id),{})
+			if territory.is_empty() or territory.get("LandID")!=land_id:return {"ok":false,"reason":"스킬 금지 영역의 Land가 일치하지 않습니다."}
+			for key: String in ["StartX","StartY","EndX","EndY"]:
+				if not OWNER._integer(territory.get(key)):return {"ok":false,"reason":"스킬 금지 영역의 좌표가 유효하지 않습니다."}
+			if territory.StartX>territory.EndX or territory.StartY>territory.EndY:return {"ok":false,"reason":"스킬 금지 영역의 경계가 유효하지 않습니다."}
+			if point.x<territory.StartX or point.x>territory.EndX or point.y<territory.StartY or point.y>territory.EndY:continue
+		applied.append(row.duplicate(true))
+	return {"ok":true,"allowed":applied.is_empty(),"reason":"현재 원문 지역에서 이 스킬의 시전이 금지됩니다." if not applied.is_empty() else "","Land":definition.land.duplicate(true),"source_cell":[point.x,point.y],"spell_id":spell_id,"type":type.duplicate(true),"rows":applied,"definition_manifest_sha256":MANIFEST_SHA256}
+
 static func _non_admission_consumer(type: Dictionary, row: Dictionary, consumers: Dictionary) -> bool:
 	# These exact flags have actual reward/death consumers; not entry waivers.
 	if type.get("UnitID")!=20 or not OWNER._integer(row.get("Value")) or row.Value not in [0,1]:return false

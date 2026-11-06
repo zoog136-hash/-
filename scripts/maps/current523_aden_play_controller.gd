@@ -1086,6 +1086,21 @@ func source_bookmark_destination_status(point: Vector2) -> Dictionary:
 		if not str(context.get("source_travel_hold","missing")).is_empty():return {"ok":false,"reason":"기억 장소 출발·도착의 원문 지역 조건이 보류됩니다."}
 	return {"ok":true,"native_admission_verified":false,"reason":"같은 원문 Land의 기존 기억 이동 소비자 · 자체 통행/입장 정책"}
 
+func source_spell_cast_status(spell_id: int) -> Dictionary:
+	var world: Node=_world()
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC:return {"ok":true,"applicable":false}
+	if not is_instance_valid(world) or world.field_map!=_source_field or _source_travel_busy:return {"ok":false,"reason":"현재 원문 시전 지역 문맥이 유효하지 않습니다."}
+	if _source_portal_provider==null or not _source_portal_provider.has_method("spell_cast_context_for_land"):return {"ok":false,"reason":"원문 지역 스킬 제한 소비자가 필요합니다."}
+	var location: Dictionary=_source_field.death_source_context(world.player.global_position)
+	if location.is_empty():return {"ok":false,"reason":"현재 소스 셀의 원문 위치를 확인할 수 없습니다."}
+	var xy: Array=location.source_location.source_cell
+	var cell:=Vector2i(xy[0],xy[1])
+	var result: Dictionary=_source_portal_provider.call("spell_cast_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),cell,spell_id)
+	if result.get("ok")!=true:return result
+	if result.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or result.get("Land")!=_source_field.get("native_land") or result.get("source_cell")!=xy or result.get("spell_id")!=spell_id:return {"ok":false,"reason":"원문 스킬 제한의 지역·좌표·스킬 신원이 맞지 않습니다."}
+	result["applicable"]=true
+	return result
+
 func source_hunt_experience_rule() -> Dictionary:
 	var world: Node=_world()
 	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or not is_instance_valid(world) or world.field_map!=_source_field:return {"ok":false}
