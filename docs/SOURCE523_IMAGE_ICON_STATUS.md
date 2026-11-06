@@ -954,3 +954,10 @@ Quest still requires a real selected/displayed quest and the owner's complete
 mixed-reward slot/overflow model. No first-five or representative reward,
 result variant, attachment transform, new image or missing relation is created.
 No resource update/upload, tests, compile, game, render, CI or merge was run.
+
+The existing registered-material previews in `card_fusion_view` also subscribe
+their presentation-only `_refresh_previews` method to that same registration.
+Their existing TextureRects retain each canonical source-frame descriptor.
+The callback rebuilds only the existing preview from `registered_materials`;
+it does not recompute selected cards, quantities, probabilities or transactions.
+Subscriptions hold weak owners and are removed when the owner is gone.

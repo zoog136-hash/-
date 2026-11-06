@@ -303,6 +303,7 @@ func _refresh() -> void:
  _fit()
 
 func _refresh_previews() -> void:
+ SourceSurfaces.watch_frames(self,"_refresh_previews")
  for child: Node in _preview.get_children():_preview.remove_child(child);child.queue_free()
  _previews.clear()
  for entry: Dictionary in registered_materials:
@@ -324,7 +325,10 @@ func _refresh_previews() -> void:
   aura.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),true,true)
   art.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   aura.resized.connect(aura.queue_redraw)
-  var frame:=TextureRect.new();frame.texture=Chrome.texture_for(maxi(0,Cards.GRADES.find(str(record.grade))),record);frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;frame.stretch_mode=TextureRect.STRETCH_SCALE;frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  var frame_visual: Dictionary=Chrome.frame_for(record)
+  var frame_evidence: Dictionary=frame_visual.duplicate(true);frame_evidence.erase("texture")
+  var frame:=TextureRect.new();frame.texture=frame_visual.get("texture") as Texture2D;frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;frame.stretch_mode=TextureRect.STRETCH_SCALE;frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  frame.set_meta("source_grade_frame",frame_evidence)
   art.add_child(frame);frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   frame.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),false,true)
   # The corner is actual spendable ownership, never this transaction's allocation.

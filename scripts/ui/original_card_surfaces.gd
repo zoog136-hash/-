@@ -5,27 +5,27 @@ const Selection=preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const SOURCE_API="res://scripts/lineagem_base508.gd"
 const Roles: Array[String]=["reveal_back","reveal_background","fusion_background","awakening_background","grade_frame"]
 static var _bindings: Dictionary={}
-static var _frame_consumers: Array[WeakRef]=[]
+static var _frame_consumers: Array[Dictionary]=[]
 
-static func watch_frames(consumer: Node) -> void:
-	if not is_instance_valid(consumer) or not consumer.has_method("refresh"):return
-	var live: Array[WeakRef]=[]
+static func watch_frames(consumer: Node, method: String="refresh") -> void:
+	if not is_instance_valid(consumer) or not consumer.has_method(method):return
+	var live: Array[Dictionary]=[]
 	var present: bool=false
-	for reference: WeakRef in _frame_consumers:
-		var owner: Object=reference.get_ref()
+	for entry: Dictionary in _frame_consumers:
+		var owner: Object=entry.owner.get_ref()
 		if not is_instance_valid(owner):continue
-		live.append(reference)
-		if owner==consumer:present=true
-	if not present:live.append(weakref(consumer))
+		live.append(entry)
+		if owner==consumer and entry.method==method:present=true
+	if not present:live.append({"owner":weakref(consumer),"method":method})
 	_frame_consumers=live
 
 static func _frames_registered() -> void:
-	var live: Array[WeakRef]=[]
-	for reference: WeakRef in _frame_consumers:
-		var owner: Object=reference.get_ref()
+	var live: Array[Dictionary]=[]
+	for entry: Dictionary in _frame_consumers:
+		var owner: Object=entry.owner.get_ref()
 		if not is_instance_valid(owner):continue
-		live.append(reference)
-		if owner.has_method("refresh"):owner.call_deferred("refresh")
+		live.append(entry)
+		if owner.has_method(entry.method):owner.call_deferred(entry.method)
 	_frame_consumers=live
 
 static func _missing(role: String, reason: String) -> Dictionary:
