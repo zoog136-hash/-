@@ -6,6 +6,7 @@ const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.
 const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
 const SkillControls=preload("res://scripts/ui/original_ui/source_main_skill_controls.gd")
 const SellFilters=preload("res://scripts/ui/original_ui/source_main_sell_inventory_filters.gd")
+const StorageQuantity=preload("res://scripts/ui/original_ui/source_main_storage_quantity_controls.gd")
 const STORAGE_AUTO_OFFSETS: Array[int]=[3780,5884,5500,5116,4448,3884]
 const SALE_AUTO_OFFSETS: Array[int]=[26364,28124,27780,22048,23384,23052,22488,22156]
 const SALE_AUTO_CONTROLS={26364:"settings",22048:"fill"}
@@ -25,6 +26,8 @@ var _section: String=""
 var _attempted_section: String=""
 var _scene: Node2D
 var _texts: Dictionary={}
+var _storage_quantity: RefCounted
+var _storage_quantity_status: Dictionary={}
 var _search: RefCounted
 var _production: RefCounted
 var _production_status: Dictionary={}
@@ -54,6 +57,11 @@ func refresh(parent: Node) -> Dictionary:
 		_refresh_production(parent,current)
 		_refresh_skills(parent,current)
 		if _sell_filters!=null:_sell_filter_status=_sell_filters.refresh()
+		if _storage_quantity!=null:
+			_storage_quantity_status=_storage_quantity.refresh()
+			if not _storage_quantity_status.get("ok",false):
+				var failure: Dictionary=_storage_quantity_status.duplicate(true)
+				close();return failure
 		if _sale_auto_bound:
 			var updated: Dictionary=_refresh_sale_automation(current)
 			if not updated.get("ok",false):close();last_result=updated;return updated
@@ -82,7 +90,15 @@ func refresh(parent: Node) -> Dictionary:
 	var bindings: Dictionary={int(spec.close):{"role":"button","activate":Callable(self,"_close_requested")}}
 	var texts: Dictionary=_current_texts(current.owner,current.section)
 	var allowed: Variant=_pack.manifest.get("node_scopes",{}).get(spec.member)
+	var staged_quantity: RefCounted
 	if current.section=="warehouse":
+		var quantity_candidate=StorageQuantity.new()
+		var quantity_contract: Dictionary=quantity_candidate.configure(_pack,current.owner)
+		if quantity_contract.get("ok",false):
+			scope.append_array(quantity_contract.source_node_offsets)
+			bindings.merge(quantity_contract.bindings,true)
+			staged_quantity=quantity_candidate
+			_storage_quantity_status=quantity_contract
 		if not allowed is Array or allowed.has(48640):scope.append(48640);bindings[48640]={"role":"static_source_text"}
 		if texts.has(47920) and (not allowed is Array or allowed.has(47920)):
 			scope.append(47920);bindings[47920]={"role":"source_text","text":texts[47920]}
@@ -134,6 +150,10 @@ func refresh(parent: Node) -> Dictionary:
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_project(_pack,spec.parent,int(spec.project),bindings,scope)
 	if not result.get("ok",false):scene.free();last_result=result;return result
+	if staged_quantity!=null:
+		result=staged_quantity.bind_scene(scene)
+		if not result.get("ok",false):scene.free();last_result=result;return result
+		_storage_quantity=staged_quantity
 	# The current owner has explicitly opened this screen. Retain parent
 	# geometry and use the child component's authored active root opacity;
 	# do not make its visible close icon an invisible editor-preview hit area.
@@ -150,6 +170,7 @@ func refresh(parent: Node) -> Dictionary:
 	_refresh_production(parent,current)
 	_refresh_skills(parent,current)
 	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"sale_automation_controls_connected":_sale_auto_bound,"sell_inventory_filters_connected":_sell_filters!=null,"game_state_written":false}
+	last_result["storage_quantity_controls_connected"]=_storage_quantity!=null
 	return last_result.duplicate(true)
 
 func presentation() -> Dictionary:
@@ -172,6 +193,7 @@ func blocks_point(point: Vector2) -> bool:
 	var current: Dictionary=_current()
 	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!=current.section:return false
 	var offsets: Array[int]=[int(SPECS[_section].close)]
+	if _storage_quantity!=null:offsets.append_array([39288,37892,36496,35036])
 	if _warehouse_auto_bound and _warehouse_auto_available(current):offsets.append(3780)
 	if _sale_auto_bound:offsets.append_array([26364,22048])
 	for offset: int in offsets:
@@ -190,6 +212,7 @@ func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null;_owner=null;_section=""
 	_texts.clear()
+	_storage_quantity=null;_storage_quantity_status.clear()
 	_warehouse_auto_bound=false;_warehouse_auto_visible=false
 	_sale_auto_bound=false;_sale_auto_state.clear();_sale_auto_owner_buttons.clear()
 	_sell_filters=null;_sell_filter_status.clear()
