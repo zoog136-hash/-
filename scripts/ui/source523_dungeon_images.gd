@@ -5,6 +5,21 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const ROLE = "SpecialDungeon.EntranceAssetID"
 
+static func describe_selected_special(owner: Object) -> Dictionary:
+	if not is_instance_valid(owner) or not owner.has_method("original_selected_special_entrance"):return _missing("source_special_live_selected_owner_required")
+	var script: Variant=owner.get_script()
+	if not script is Script or script.resource_path!="res://scripts/dungeons/source_dungeon_view.gd":return _missing("source_special_actual_owner_required")
+	var selected: Variant=owner.call("original_selected_special_entrance")
+	if not selected is Dictionary or not selected.get("ok",false) or selected.get("role")!=ROLE or not selected.get("actual_selected_entry") is Dictionary:return _missing("source_special_current_selection_unavailable")
+	var image: Dictionary=describe_special(selected.actual_selected_entry)
+	if image.get("special_dungeon_id")!=selected.get("special_dungeon_id"):return _missing("source_special_current_selection_changed")
+	if image.get("ok",false) and image.get("provenance",{}).get("special_dungeon_relation",{}).get("asset_id")!=selected.get("entrance_asset_id"):return _missing("source_special_current_selection_changed")
+	image["original_ui_target"]=selected.get("original_ui_target",{}).duplicate(true)
+	image["runtime_target_registered"]=false
+	image["pixels_assigned"]=false
+	image["selected_index"]=selected.get("selected_index")
+	return image
+
 static func _missing(reason: String, id: int = 0) -> Dictionary:
 	return {"ok":false,"special_dungeon_id":id,"role":ROLE,"route":"source523_images",
 		"status":"original_icon_not_installed","source_status":reason,"reason":reason,
