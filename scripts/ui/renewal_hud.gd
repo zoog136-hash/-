@@ -2831,6 +2831,14 @@ func open_source_dungeons() -> void:
 	workspace.mount(view)
 	view.configure(get_parent())
 
+func open_source_dungeon_family(kind: String, hard: bool=false) -> Dictionary:
+	if not SourceDungeonUI.FAMILIES.has([kind,hard]):return {"ok":false,"code":"source_dungeon_existing_family_required"}
+	open_source_dungeons()
+	var view: Node=workspace.find_child("SourceDungeonView",true,false)
+	var script: Script=view.get_script() if is_instance_valid(view) else null
+	if active_section!="source_dungeons" or script!=SourceDungeonUI or not workspace.is_ancestor_of(view) or not view.has_method("select_existing_family"):return {"ok":false,"code":"source_dungeon_current_family_view_required"}
+	return view.call("select_existing_family",kind,hard)
+
 
 func refresh_source_dungeon_progress() -> void:
 	if active_section != "source_dungeons" or dungeon_progress_refresh_pending: return
