@@ -5,6 +5,7 @@ const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
 const Production=preload("res://scripts/ui/original_ui/source_main_production_controls.gd")
 const SkillControls=preload("res://scripts/ui/original_ui/source_main_skill_controls.gd")
+const SellFilters=preload("res://scripts/ui/original_ui/source_main_sell_inventory_filters.gd")
 const STORAGE_AUTO_OFFSETS: Array[int]=[3780,5884,5500,5116,4448,3884]
 const SALE_AUTO_OFFSETS: Array[int]=[26364,28124,27780,22048,23384,23052,22488,22156]
 const SALE_AUTO_CONTROLS={26364:"settings",22048:"fill"}
@@ -33,6 +34,8 @@ var _skills_status: Dictionary={}
 var _skills_attempted_owner: WeakRef
 var _warehouse_auto_bound: bool=false
 var _warehouse_auto_visible: bool=false
+var _sell_filters: RefCounted
+var _sell_filter_status: Dictionary={}
 var _sale_auto_bound: bool=false
 var _sale_auto_state: Dictionary={}
 var _sale_auto_owner_buttons: Dictionary={}
@@ -50,6 +53,7 @@ func refresh(parent: Node) -> Dictionary:
 	if is_instance_valid(_scene) and _owner!=null and _owner.get_ref()==current.owner and _section==current.section:
 		_refresh_production(parent,current)
 		_refresh_skills(parent,current)
+		if _sell_filters!=null:_sell_filter_status=_sell_filters.refresh()
 		if _sale_auto_bound:
 			var updated: Dictionary=_refresh_sale_automation(current)
 			if not updated.get("ok",false):close();last_result=updated;return updated
@@ -116,6 +120,17 @@ func refresh(parent: Node) -> Dictionary:
 			bindings[22100]={"visible":not _sale_auto_state.fill.enabled}
 			for offset: int in [27780,23384,22488]:bindings[offset]={"role":"static_source_text"}
 			_sale_auto_bound=true
+	var staged_filters: RefCounted
+	if current.section=="sell" and _pack.manifest.get("scenes",{}).has(SellFilters.MEMBER) and (not allowed is Array or allowed.has(SellFilters.PROJECT)):
+		var candidate=SellFilters.new()
+		_sell_filter_status=candidate.configure(_pack,current.owner)
+		if _sell_filter_status.get("ok",false):
+			var contract: Dictionary=candidate.build()
+			_sell_filter_status=contract
+			if contract.get("ok",false):
+				scope.append(SellFilters.PROJECT)
+				bindings[SellFilters.PROJECT]={"role":"project","visible":true,"source_node_offsets":contract.source_node_offsets,"bindings":contract.bindings}
+				staged_filters=candidate
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_project(_pack,spec.parent,int(spec.project),bindings,scope)
 	if not result.get("ok",false):scene.free();last_result=result;return result
@@ -124,11 +139,17 @@ func refresh(parent: Node) -> Dictionary:
 	# do not make its visible close icon an invisible editor-preview hit area.
 	result=scene.activate_authored_component_opacity()
 	if not result.get("ok",false):scene.free();last_result=result;return result
+	if staged_filters!=null:
+		var nested: Dictionary=scene.project_player([SellFilters.PROJECT])
+		if not nested.get("ok",false):scene.free();last_result=nested;return nested
+		result=staged_filters.bind_player(nested.player)
+		if not result.get("ok",false):scene.free();last_result=result;return result
+		_sell_filters=staged_filters
 	parent.add_child(scene)
 	_scene=scene;_owner=weakref(current.owner);_section=current.section
 	_refresh_production(parent,current)
 	_refresh_skills(parent,current)
-	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"sale_automation_controls_connected":_sale_auto_bound,"game_state_written":false}
+	last_result={"ok":true,"handled":true,"section":_section,"member":spec.member,"close_offset":spec.close,"close_connected":true,"bound_text_offsets":_texts.keys(),"partial_source_scene":true,"complete_screen_contract":false,"transactions_connected":false,"sale_automation_controls_connected":_sale_auto_bound,"sell_inventory_filters_connected":_sell_filters!=null,"game_state_written":false}
 	return last_result.duplicate(true)
 
 func presentation() -> Dictionary:
@@ -141,9 +162,10 @@ func presentation() -> Dictionary:
 		var shown: Dictionary=_skills.presentation()
 		additional.append_array(shown.additional_scenes)
 		foreground=shown.foreground_scenes
-	return {"scene":_scene,"additional_scenes":additional,"foreground_scenes":foreground,"production":_production_status.duplicate(true),"skills":_skills_status.duplicate(true),"handled":is_instance_valid(_scene),"partial_source_scene":true}
+	return {"scene":_scene,"additional_scenes":additional,"foreground_scenes":foreground,"production":_production_status.duplicate(true),"skills":_skills_status.duplicate(true),"sell_inventory_filters":_sell_filter_status.duplicate(true),"handled":is_instance_valid(_scene),"partial_source_scene":true}
 
 func blocks_point(point: Vector2) -> bool:
+	if _sell_filters!=null and _sell_filters.blocks_point(point):return true
 	if _skills!=null and _skills.blocks_point(point):return true
 	if _production!=null and _production.blocks_point(point):return true
 	if not point.is_finite() or not is_instance_valid(_scene) or _scene.is_queued_for_deletion():return false
@@ -170,6 +192,7 @@ func close() -> void:
 	_texts.clear()
 	_warehouse_auto_bound=false;_warehouse_auto_visible=false
 	_sale_auto_bound=false;_sale_auto_state.clear();_sale_auto_owner_buttons.clear()
+	_sell_filters=null;_sell_filter_status.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
 
 func _refresh_skills(parent: Node, current: Dictionary) -> void:
