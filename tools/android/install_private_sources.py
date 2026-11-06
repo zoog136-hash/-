@@ -2294,6 +2294,16 @@ def main():
         log(('DIAGNOSTIC STOPPED: ' if args.diagnose_bundle else 'INSTALL STOPPED: ') + str(error))
         if args.diagnose_bundle:
             log('No installation, media download or automatic retry was started. Existing cache and user data are preserved.')
+        elif isinstance(error, DownloadError) and (
+                'category=QUOTA_REPORTED;' in str(error) or str(error).startswith('Drive HTTP 429:')):
+            # Match our fixed classifier field, never infer quota from HTTP403
+            # alone or from an arbitrary file name/provider error fragment.
+            log('PROVIDER LIMIT: do not rerun immediately or reset authentication. Wait for provider availability; honor any actual Retry-After and request-rate backoff. The reset time is not known.')
+            log('Verified bundles, marked partials and user data are preserved. After the limit permits access, resume deliberately with the same plan/project/cache; no automatic retry or limit bypass is performed.')
+        elif isinstance(error, DownloadError) and (
+                'category=FILE_ACCESS_REPORTED;' in str(error) or str(error).startswith('Drive HTTP 403:')):
+            log('PROVIDER ACCESS STOP: do not repeat immediately or reset authentication. HTTP403 alone does not identify quota. Review the reported reason and existing access; no alternate account or permission change was attempted.')
+            log('Verified bundles, marked partials and user data are preserved. Resume with the same plan/project/cache only after the reported restriction is resolved.')
         else:
             log('The previous runtime, source archives and personal data are preserved. Rerun the same command to reuse verified bundles.')
         return 1
