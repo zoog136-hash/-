@@ -105,6 +105,7 @@ func _prepare() -> Dictionary:
 		# same-byte copies for older fixed-path consumers; current source readers
 		# need only the one ZIP above, never a generated or substituted pack.
 		for installed: String in TABLE_INSTALL_PATHS:
+			if descriptor.get("legacy_table_copies",true) == false: break
 			if FileAccess.file_exists(installed) and FileAccess.get_sha256(installed) == TABLES_SHA: continue
 			writes.append({"path":installed,"source":tables,"source_sha256":TABLES_SHA})
 	if descriptor.has("images"):

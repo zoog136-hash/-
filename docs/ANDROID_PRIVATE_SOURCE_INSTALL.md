@@ -129,6 +129,40 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
 [rclone copyid의 로컬 목적지](https://rclone.org/drive/#copyid),
 [Git partial clone](https://git-scm.com/docs/partial-clone).
 
+## 이미 압축해제한 수동 배포 연결
+
+`--manual-resources`는 `TWILIGHT_Play_Source523_Manual/source523_resources`에
+풀어 놓은 정식 구성요소를 그 자리에 두고 최소 GitHub main 코드만 추가한다.
+일반 설치기의 비관리 폴더 거부 규칙은 그대로다. 이 모드는 정확한 새 루트 이름,
+명시한 `--manual-bootstrap-sha256`, 비공개 bootstrap index의 schema/완성 상태,
+고정 plan SHA, 실제 구성요소별 ZIP 이름·bytes·SHA와 전체 해제 수량을 검증한다.
+받아 둔 ZIP은 기본적으로 프로젝트 상위 Download 폴더에 그대로 보관한다.
+다른 보관 위치는 명시적인 `--manual-archives`로만 지정하며 주변 파일을 검색하지 않는다.
+
+압축파일은 SHA를 확인하고 central directory만 읽는다. 실제 해제 파일은 경로·
+종류·크기·CRC를 해당 인증된 ZIP과 대조한다. ZIP을 다시 해제하거나 원본 8GB를
+새 코드 staging에 복사하지 않는다. 경로 중복·symlink·보호 경로·미해제/변경 파일은
+중단 사유다. 이후 기존 manifest/CSB/원문 SHA와 실제 main의 필수 소비 경계도
+확인한다. 원문 manifest나 icon 선택 JSON은 재작성하지 않는다.
+
+수동 모드의 shell은 rclone 설치/존재 검사/listremotes/인증 설정을 하지 않는다.
+Drive plan·리소스 수신도 없고 패키지 설치나 저장소 권한 흐름을 시작하지 않는다.
+필요한 python3/git/curl이 없으면 중단한다. 네트워크는 고정된 GitHub helper와
+기존 packed-code의 최소 sparse/blob 전송에만 사용한다. 비공개 plan/index/원문
+리소스 bytes와 배포 Drive ID 목록은 공개 저장소가 아니라 비공개 Bootstrap ZIP에 둔다.
+
+새 root에는 검증된 source523_resources만 있을 때 최초 코드 채택이 가능하다.
+업데이트는 별도의 `.twilight_manual_code_state.json`이 소유한 변경되지 않은 코드만
+교체한다. 개인/수정 파일 충돌은 보존하고 중단한다. 코드만 staging/이전 사본에
+두는 journal로 중단 복구하며 리소스 디렉터리는 이동·교체·정리하지 않는다.
+공통 twilight_private_install.json은 이 코드 경로가 한 번 작성하고, 모든 원본
+경로는 프로젝트 기준 상대경로로 저장한다. 기존 bridge의 pins·owner·기존 명시
+선택/cfg 보존은 유지하며 수동 모드에서는 과거 고정 경로용 tables ZIP 사본도 만들지 않는다.
+
+배포 구성요소가 모두 갖춰지고 연결 코드가 게시되기 전에는 사용자 실행 명령을
+완성으로 제공하지 않는다. 이 구현은 설치/게임/Android 실행·컴파일·렌더·CI를
+검증했다는 뜻이 아니다. 새 배포 포장도 provider 다운로드 제한 해제를 보장하지 않는다.
+
 ## 배치와 보존
 
 프로젝트는 `Download/TWILIGHT_Play`, 확장된 새 리소스는 같은 Download의

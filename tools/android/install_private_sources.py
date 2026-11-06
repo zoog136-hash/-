@@ -2271,7 +2271,7 @@ def diagnose_bundle(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--project', type=Path, default=Path.home() / 'storage/downloads/TWILIGHT_Play')
+    parser.add_argument('--project', type=Path)
     parser.add_argument('--cache', type=Path, default=Path.home() / '.cache/twilight-private-install')
     plan_source = parser.add_mutually_exclusive_group()
     plan_source.add_argument('--plan', type=Path, help='Existing private owner handoff JSON')
@@ -2282,17 +2282,30 @@ def main():
     parser.add_argument('--token-file', type=Path, help='Explicit private OAuth token file for HTTP Range resume')
     parser.add_argument('--workers', type=int, choices=(1, 2, 3), default=2, help='Concurrent bundles, not individual images')
     parser.add_argument('--diagnose-bundle', type=pin, help='Full SHA256 from the pinned local plan: one metadata/path copyid dry-run, no installation or media download')
+    parser.add_argument('--manual-resources', action='store_true', help='Verify the existing manual distribution and add minimal GitHub code only; never invoke Drive')
+    parser.add_argument('--manual-bootstrap-sha256', type=pin, help='Exact private manual bootstrap receipt pin')
+    parser.add_argument('--manual-archives', type=Path, help='Directory holding the exact manual ZIP names; defaults to the selected project parent')
     args = parser.parse_args()
-    log('Read-only bundle diagnostic selected; installation will not start.' if args.diagnose_bundle else
+    if not args.manual_resources and (args.manual_bootstrap_sha256 or args.manual_archives):
+        parser.error('Manual input options require the explicit --manual-resources mode')
+    if args.project is None:
+        args.project = Path.home() / 'storage/downloads' / ('TWILIGHT_Play_Source523_Manual' if args.manual_resources else 'TWILIGHT_Play')
+    log('Manual resource adoption selected; no rclone or source-resource download.' if args.manual_resources else
+        'Read-only bundle diagnostic selected; installation will not start.' if args.diagnose_bundle else
         'Installer Python entry reached. Reading the selected private plan before code/resource downloads.')
     try:
-        if args.diagnose_bundle:
+        if args.manual_resources:
+            from manual_resource_install import install_manual
+            install_manual(args, sys.modules[__name__])
+        elif args.diagnose_bundle:
             diagnose_bundle(args)
         else:
             install(args)
     except (OSError, ValueError, KeyError, RuntimeError, zlib.error, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
-        log(('DIAGNOSTIC STOPPED: ' if args.diagnose_bundle else 'INSTALL STOPPED: ') + str(error))
-        if args.diagnose_bundle:
+        log(('MANUAL INSTALL STOPPED: ' if args.manual_resources else 'DIAGNOSTIC STOPPED: ' if args.diagnose_bundle else 'INSTALL STOPPED: ') + str(error))
+        if args.manual_resources:
+            log('No Drive calls, source-media download or resource extraction were started. Existing originals, caches, settings and user files are preserved; no automatic fallback.')
+        elif args.diagnose_bundle:
             log('No installation, media download or automatic retry was started. Existing cache and user data are preserved.')
         elif isinstance(error, DownloadError) and (
                 'category=QUOTA_REPORTED;' in str(error) or str(error).startswith('Drive HTTP 429:')):
