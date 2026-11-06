@@ -118,9 +118,20 @@ static func validate(value: Variant) -> String:
 					if not selection.source_native_stack_receipt is Dictionary or selection.source_native_stack_receipt.get("issued_physical_id")!=selection.physical_id:return "원본 결제 영수증 개체 불일치"
 				elif selection.has("source_awakening_supply"):
 					if not selection.source_awakening_supply is Dictionary or selection.source_awakening_supply.get("schema")!=2 or not integer(selection.source_awakening_supply.get("granted_quantity")) or int(selection.quantity)+int(selection.remaining_after)>int(selection.source_awakening_supply.granted_quantity):return "특수 결제 최초량 증명 오류"
+				elif selection.has("quest_reward_receipt"):
+					if not selection.quest_reward_receipt is Dictionary or selection.quest_reward_receipt.get("schema")!=1 or not integer(selection.quest_reward_receipt.get("quantity")) or int(selection.quantity)+int(selection.remaining_after)>int(selection.quest_reward_receipt.quantity):return "퀘스트 결제 최초 지급량 증명 오류"
 				else:return "원본 결제 영수증 누락"
 				paid+=int(selection.quantity);payment_ids[selection.physical_id]=true
 			if paid!=int(order.payment.amount):return "원본 결제 총량과 주문 불일치"
+			var quest_inputs: Array=[]
+			for selection: Dictionary in order.payment_native_inputs:
+				if selection.has("quest_reward_receipt"):quest_inputs.append(selection)
+			if not quest_inputs.is_empty():
+				if not order.get("payment_quest_consumption") is Array or order.payment_quest_consumption.size()!=quest_inputs.size() or not order.get("payment_consumer_data_sha256") is String or order.payment_consumer_data_sha256.length()!=64 or not order.payment_consumer_data_sha256.is_valid_hex_number(false):return "퀘스트 결제 소비자 출처·장부 목록 오류"
+				for index: int in range(quest_inputs.size()):
+					var input: Dictionary=quest_inputs[index];var journal: Variant=order.payment_quest_consumption[index]
+					if not journal is Dictionary or journal.get("physical_id")!=input.physical_id or journal.get("quantity")!=input.quantity or journal.get("remaining_after")!=input.remaining_after or journal.get("quest_reward_receipt")!=input.quest_reward_receipt or journal.get("consumer_data_sha256")!=order.payment_consumer_data_sha256 or journal.get("quest_id")!=input.quest_reward_receipt.get("quest_id") or journal.get("reward_id")!=input.quest_reward_receipt.get("reward_id"):return "퀘스트 결제 선택·소비 영수증 불일치"
+		elif order.has("payment_quest_consumption") or order.has("payment_consumer_data_sha256"):return "퀘스트 결제 개체 없는 장부 금지"
 		if order.status == "pending" and int(order.claimed_at) != 0: return "미수령 주문의 수령 시각 오류"
 		if order.status == "claimed" and int(order.claimed_at) < int(order.paid_at): return "상점 주문 시각 오류"
 	if int(value.next_order) <= highest: return "상점 주문 번호 재사용 오류"
@@ -358,6 +369,8 @@ class NativeGrantView extends Node:
 	var inventory: Dictionary
 	var item_instances: Dictionary
 	var gold: int
+	var quest_service: Variant=null # Batch source payment never adopts quest ownership.
+	func _item_locked(name_value: String,uid: String="") -> bool:return host._item_locked(name_value,uid)
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
 
 func _source_model_identity() -> Dictionary:
@@ -427,7 +440,7 @@ func _special_payment_binding(original: Dictionary,amount: int) -> Dictionary:
 	if not current.get("handled",false) or not current.get("ok",false):return current
 	if source.get("source_item")!=original or source.get("source_definition_archive")!=current.binding.record.get("source_definition_archive"):return {"handled":false}
 	var ids: Array=world.item_instances.keys();ids.sort()
-	var selected: String="";var balance: int=0;var count: int=0
+	var requests: Array=[];var needed: int=amount;var balance: int=0;var count: int=0
 	var selected_ammo: Variant=world.consumable_service.export_state().get("source_native_ammo_equipped",{})
 	for uid: Variant in ids:
 		var entry: Variant=world.item_instances[uid]
@@ -443,17 +456,83 @@ func _special_payment_binding(original: Dictionary,amount: int) -> Dictionary:
 		if int(owned.quantity)>LIMIT-balance:
 			var rejected: Dictionary=fail("특수 결제 잔량 범위 오류");rejected["handled"]=true;return rejected
 		balance+=int(owned.quantity)
-		if int(owned.quantity)>=amount and selected.is_empty():selected=str(uid)
+		var take: int=mini(needed,int(owned.quantity))
+		if take>0:
+			requests.append({"physical_id":str(uid),"item_class_id":id,"quantity":take,"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-take,"source_awakening_supply":entry.source_awakening_supply.duplicate(true)})
+			needed-=take
 	if count==0:return {"handled":false}
 	if balance>int(world.inventory.get(str(source.name),0)):
 		var rejected: Dictionary=fail("특수 결제 물리 잔량과 소지량 불일치");rejected["handled"]=true;return rejected
 	var legacy: Dictionary=_bindings.get("4:%d" % id,{})
 	if not legacy.is_empty() and str(legacy.get("name",""))!=str(source.name) and int(world.inventory.get(str(legacy.get("name","")),0))>0:
 		var rejected: Dictionary=fail("특수 결제와 기존 재화의 출처 선택 필요");rejected["handled"]=true;return rejected
-	# Multiple-receipt aggregation needs an exact batch owner; don't fake a merged receipt.
-	if selected.is_empty():
-		var rejected: Dictionary=fail("특수 결제는 한 실제 개체의 잔량으로 결제해야 합니다 · 배치 소유자 대기");rejected["handled"]=true;return rejected
-	return {"ok":true,"handled":true,"binding":{"name":str(source.name),"record":source,"current_native_payment":true,"special_native_payment":true,"selected_physical_id":selected,"item_class_id":id,"owned_balance":balance}}
+	# Keep every selected receipt distinct; use the existing selected debit in sequence.
+	if needed>0:
+		var rejected: Dictionary=fail("잠금 제외 특수 원본 결제 개체의 실제 합계 수량 부족");rejected["handled"]=true;return rejected
+	return {"ok":true,"handled":true,"binding":{"name":str(source.name),"record":source,"current_native_payment":true,"special_native_payment":true,"selected_physical_inputs":requests,"item_class_id":id,"owned_balance":balance}}
+
+# An original ItemClass payment authorizes a material trade, not that item's use effect.
+# Raw quest keys/receipts stay raw; this is not native materialization or regrant.
+func _quest_material_payment_binding(original: Dictionary,amount: int) -> Dictionary:
+	if amount<1 or amount>LIMIT:return {"ok":false,"handled":true,"reason":"퀘스트 재료 결제 수량 범위 오류"}
+	var id: int=int(original.get("ID",0))
+	var ids: Array=world.item_instances.keys();ids.sort()
+	var candidates: Array=[]
+	for uid: Variant in ids:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary or not entry.get("quest_reward_receipt") is Dictionary:continue
+		if entry.quest_reward_receipt.get("item_class_id")==id:candidates.append(str(uid))
+	if candidates.is_empty():return {"handled":false}
+	var template: Dictionary=_current_native_gift_binding(original,false)
+	if template.get("ok",false) and template.binding.record.get("slot")!="material":return {"handled":false}
+	if not template.get("ok",false):
+		var rejected: Dictionary=fail("정확한 현재 원문 재료 공급 정체 필요 · 퀘스트 보관품 보존");rejected["handled"]=true;return rejected
+	var consumption: Script=load("res://scripts/quests/quest_reward_consumption.gd")
+	if not consumption.call("available",world):
+		var rejected: Dictionary=fail("공동 퀘스트 소비 장부 소유자 미설치");rejected["handled"]=true;return rejected
+	var ownership: Script=load("res://scripts/quests/quest_reward_ownership.gd")
+	var selected_ammo: Variant=world.consumable_service.export_state().get("source_native_ammo_equipped",{})
+	var requests: Array=[];var balance: int=0;var needed: int=amount;var raw_keys: Dictionary={}
+	for uid: String in candidates:
+		var owned: Dictionary=ownership.call("proof",world,uid)
+		if not owned.get("ok",false) or owned.get("item_class_id")!=id or owned.get("bless_code_id")!=1 or owned.get("source_use_immediately")!=false or owned.get("source_item")!=original:
+			var rejected: Dictionary=fail("원본 결제와 퀘스트 지급 행·축복·보상 영수증 불일치");rejected["handled"]=true;return rejected
+		var name_value: String=str(owned.inventory_key);raw_keys[name_value]=true
+		if world._item_locked(name_value,uid) or world._item_locked(name_value) or world._is_instance_equipped(uid):continue
+		if selected_ammo is Dictionary and selected_ammo.get("physical_id")==uid:continue
+		if int(owned.quantity)>LIMIT-balance:
+			var rejected: Dictionary=fail("퀘스트 재료 결제 잔량 범위 오류");rejected["handled"]=true;return rejected
+		balance+=int(owned.quantity)
+		var take: int=mini(needed,int(owned.quantity))
+		if take>0:
+			requests.append({"physical_id":uid,"quantity":take,"expected_quantity":int(owned.quantity),"expected_remaining":int(owned.quantity)-take,"quest_reward_receipt":world.item_instances[uid].quest_reward_receipt.duplicate(true)})
+			needed-=take
+	# Do not silently prefer a quest origin over funded native/legacy custody.
+	var other_keys: Array=[str(template.binding.name)]
+	var legacy: Dictionary=_bindings.get("4:%d" % id,{})
+	if not legacy.is_empty():other_keys.append(str(legacy.get("name","")))
+	for value: Variant in world.item_instances.values():
+		if value is Dictionary and value.get("record") is Dictionary and value.record.get("source_item_class_id")==id and not value.has("quest_reward_receipt"):other_keys.append(str(value.get("name","")))
+	for key: String in other_keys:
+		if not raw_keys.has(key) and int(world.inventory.get(key,0))>0:
+			var rejected: Dictionary=fail("퀘스트·기존 결제 재료의 실제 출처 선택 필요");rejected["handled"]=true;return rejected
+	if needed>0 or requests.size()>128:
+		var rejected: Dictionary=fail("잠금 제외 퀘스트 재료 부족 또는 기존128개 소비 선택 한도 초과");rejected["handled"]=true;return rejected
+	return {"ok":true,"handled":true,"binding":{"name":str(world.item_instances[candidates[0]].name),"record":template.binding.record.duplicate(true),"item_class_id":id,"current_native_payment":true,"quest_material_payment":true,"selected_physical_inputs":requests,"owned_balance":balance}}
+
+func _prepare_quest_material_payment(binding: Dictionary,token: Dictionary) -> Dictionary:
+	var consumption: Script=load("res://scripts/quests/quest_reward_consumption.gd")
+	var consumer_sha: String=JSON.stringify({"consumer":"current523_shop_quest_material_payment_v1","shop_model_sha256":str(catalog.loaded_sha256),"source_input_identity":_source_model_identity(),"payment":token,"original_item":binding.record.get("source_original_item",{}),"source_definition_archive":binding.record.get("source_definition_archive",{})},"",true,true).sha256_text()
+	var paid: Dictionary=consumption.call("stage",world,binding.selected_physical_inputs,consumer_sha)
+	if not paid.get("ok",false) or not consumption.call("matches_payload",world,paid,paid.get("overrides",{})):return fail(str(paid.get("reason","퀘스트 재료 공동 차감 후보 거부")))
+	var selections: Array=[];var total: int=0
+	for row: Dictionary in paid.selections:
+		if row.item_class_id!=binding.item_class_id or row.bless_raw!=1 or int(row.quantity)>LIMIT-total:return fail("퀘스트 재료 결제 원문 정체·총량 불일치")
+		total+=int(row.quantity)
+		selections.append({"physical_id":row.physical_id,"inventory_key":str(world.item_instances[row.physical_id].name),"quantity":int(row.quantity),"remaining_after":int(row.remaining_after),"quest_reward_receipt":row.quest_reward_receipt.duplicate(true)})
+	if selections.is_empty() or total!=int(token.amount):return fail("퀘스트 재료 소비 장부와 실제 원문 가격 불일치")
+	var step: Dictionary={"ok":true,"overrides":paid.overrides.duplicate(true),"selections":selections,"quest_step":paid}
+	return {"ok":true,"token":token.duplicate(true),"binding":binding.duplicate(true),"step":step}
 
 func _current_native_payment_binding(original: Dictionary,amount: int) -> Dictionary:
 	var current: Dictionary=_current_native_gift_binding(original)
@@ -473,22 +552,42 @@ func _prepare_native_payment(binding: Dictionary,token: Dictionary) -> Dictionar
 	var resolved: Dictionary=_resolve(token,false,world.inventory,int(world.gold))
 	if not resolved.get("ok",false):return resolved
 	if resolved.binding!=binding or not binding.get("current_native_payment",false):return fail("원본 결제 선택이 변경됐습니다")
-	if binding.get("special_native_payment",false):
-		var owner: Script=load("res://scripts/cards/native_awakening_supply.gd")
-		var uid: String=str(binding.selected_physical_id)
-		var entry: Dictionary=world.item_instances.get(uid,{})
-		var paid: Dictionary=owner.call("prepare_debit",world,int(binding.item_class_id),int(token.amount),uid)
-		if not paid.get("ok",false) or not paid.get("quest_step",{}).is_empty() or not owner.call("matches_payload",world,paid,paid.get("overrides",{})):return fail("특수 원본 결제 소유자 후보 거부")
-		if paid.consumed.size()!=1 or paid.consumed[0].physical_id!=uid or paid.consumed[0].origin!="source" or int(paid.consumed[0].quantity)!=int(token.amount):return fail("특수 결제는 선택한 한 개체만 소비해야 합니다")
-		var remaining: int=int(entry.source_awakening_quantity)-int(token.amount)
-		paid["selections"]=[{"physical_id":uid,"inventory_key":str(binding.name),"quantity":int(token.amount),"remaining_after":remaining,"source_awakening_supply":entry.source_awakening_supply.duplicate(true)}]
-		return {"ok":true,"token":token.duplicate(true),"binding":binding.duplicate(true),"step":paid}
+	if binding.get("quest_material_payment",false):return _prepare_quest_material_payment(binding,token)
+	if binding.get("special_native_payment",false):return _prepare_special_payment(binding,token)
 	var selected: Dictionary=_native_payment_snapshot(binding.record,int(token.amount))
 	if not selected.get("ok",false):return selected
 	if int(selected.unfunded)!=0:return fail("잠금 제외 원본 결제 개체 수량 부족")
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	var step: Dictionary=stock.call("stage_debit",world,selected.requests)
 	if not step.get("ok",false):return fail(str(step.get("error","원본 결제 후보 거부")))
+	return {"ok":true,"token":token.duplicate(true),"binding":binding.duplicate(true),"step":step}
+
+func _prepare_special_payment(binding: Dictionary,token: Dictionary) -> Dictionary:
+	var owner: Script=load("res://scripts/cards/native_awakening_supply.gd")
+	var view=NativeGrantView.new()
+	view.host=world;view.inventory=world.inventory.duplicate(true);view.item_instances=world.item_instances.duplicate(true);view.gold=int(world.gold)
+	var selections: Array=[];var seen: Dictionary={};var paid_total: int=0;var issue: String=""
+	for request: Dictionary in binding.selected_physical_inputs:
+		var uid: String=str(request.physical_id)
+		var entry: Variant=view.item_instances.get(uid)
+		if request.size()!=6 or seen.has(uid) or not entry is Dictionary or entry.get("source_awakening_supply")!=request.source_awakening_supply or entry.get("source_awakening_quantity")!=request.expected_quantity or int(request.item_class_id)!=int(binding.item_class_id) or not integer(request.quantity) or int(request.quantity)<1 or int(request.quantity)>int(request.expected_quantity) or int(request.expected_remaining)!=int(request.expected_quantity)-int(request.quantity):
+			issue="특수 결제 선택·영수증·예상 잔량 불일치";break
+		if world._is_instance_equipped(uid):issue="장착한 특수 결제 개체 보존";break
+		var paid: Dictionary=owner.call("prepare_debit",view,int(binding.item_class_id),int(request.quantity),uid)
+		if not paid.get("ok",false) or not paid.get("quest_step",{}).is_empty() or not owner.call("matches_payload",view,paid,paid.get("overrides",{})):
+			issue="특수 원본 결제 소유자 후보 거부";break
+		if paid.consumed.size()!=1 or paid.consumed[0].physical_id!=uid or paid.consumed[0].origin!="source" or int(paid.consumed[0].quantity)!=int(request.quantity):
+			issue="특수 결제는 선택한 실제 개체만 소비해야 합니다";break
+		var after: Variant=paid.overrides.item_instances.get(uid)
+		if (int(request.expected_remaining)==0 and after!=null) or (int(request.expected_remaining)>0 and (not after is Dictionary or after.get("source_awakening_quantity")!=request.expected_remaining or after.get("source_awakening_supply")!=request.source_awakening_supply)):
+			issue="특수 결제 소유자의 실제 잔량 후보 불일치";break
+		view.inventory=paid.overrides.inventory.duplicate(true);view.item_instances=paid.overrides.item_instances.duplicate(true)
+		selections.append({"physical_id":uid,"inventory_key":str(binding.name),"quantity":int(request.quantity),"remaining_after":int(request.expected_remaining),"source_awakening_supply":request.source_awakening_supply.duplicate(true)})
+		seen[uid]=true;paid_total+=int(request.quantity)
+	var step: Dictionary={"ok":true,"overrides":{"inventory":view.inventory.duplicate(true),"item_instances":view.item_instances.duplicate(true)},"selections":selections}
+	view.free()
+	if not issue.is_empty():return fail(issue)
+	if selections.is_empty() or paid_total!=int(token.amount):return fail("특수 결제 개체 합계와 원문 가격 불일치")
 	return {"ok":true,"token":token.duplicate(true),"binding":binding.duplicate(true),"step":step}
 
 func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int) -> Dictionary:
@@ -509,7 +608,8 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 						if not plan.get("ok",false):return fail(str(plan.get("error","원문 물리 공급 수량 계획 미지원")))
 				return current
 		else:
-			var current: Dictionary=_special_payment_binding(original,int(token.amount))
+			var current: Dictionary=_quest_material_payment_binding(original,int(token.amount))
+			if not current.get("handled",false):current=_special_payment_binding(original,int(token.amount))
 			if not current.get("handled",false):current=_current_native_payment_binding(original,int(token.amount))
 			if current.get("handled",false):
 				if not current.get("ok",false):current["native_payment_hold"]=true
@@ -632,13 +732,26 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 		if fresh!=owned_payment or fresh.step.overrides.inventory!=inventory or fresh.step.overrides.item_instances!=instances:
 			_busy=false;return fail("원본 결제 개체·잔량 후보가 변경됐습니다")
 		if fresh.step.overrides.has("consumable_state"):overrides["consumable_state"]=fresh.step.overrides.consumable_state.duplicate(true)
+		if fresh.step.overrides.has("quest_state"):
+			var consumption: Script=load("res://scripts/quests/quest_reward_consumption.gd")
+			if not consumption.call("matches_payload",world,fresh.step.quest_step,fresh.step.overrides):_busy=false;return fail("퀘스트 결제 공동 장부 후보 변경")
+			overrides["quest_state"]=fresh.step.overrides.quest_state.duplicate(true)
 	var result: Error = world._save_game(true, overrides)
 	if result != OK:
 		# A response error may follow an atomic disk commit or map-pointer
 		# write. Do not issue another purchase from stale live order balances.
 		save_blocked=true
+		if overrides.has("quest_state"):
+			world.quest_service.save_blocked=true
+			world.patch523_owner_state_problem="퀘스트 결제 저장 결과 미확정 · 정상 저장 다시 불러오기 필요"
 		_busy = false
 		return fail("상점 저장 응답 확인 필요 · 라이브 재화 보존, 정상 저장을 다시 불러온 뒤 거래하세요")
+	if overrides.has("quest_state"):
+		if not world.quest_service.import_state(overrides.quest_state):
+			save_blocked=true;world.quest_service.save_blocked=true;_busy=false
+			world.patch523_owner_state_problem="퀘스트 결제 저장은 성공했으나 장부 채택 실패 · 다시 불러오기 필요"
+			var adoption_error: Dictionary=fail(world.patch523_owner_state_problem);adoption_error["saved"]=true;adoption_error["reload_required"]=true;return adoption_error
+		world.deferred_save.cancel()
 	if overrides.has("consumable_state"):
 		world.consumable_service.import_state(overrides.consumable_state)
 		world.deferred_save.cancel()
@@ -688,6 +801,9 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String) -> Dicti
 	next.next_order = int(next.next_order) + 1
 	next.orders[order_id] = {"kind":kind,"display_name":str(prepared.name),"offer_id":id,"quantity":quantity,"status":"pending","paid_at":_now(),"claimed_at":0,"payment":prepared.payment.duplicate(true),"goods":receiver_goods,"pack_sha256":catalog.loaded_sha256}
 	if not owned_payment.is_empty():next.orders[order_id]["payment_native_inputs"]=owned_payment.step.selections.duplicate(true)
+	if owned_payment.get("step",{}).has("quest_step"):
+		next.orders[order_id]["payment_quest_consumption"]=owned_payment.step.quest_step.selections.duplicate(true)
+		next.orders[order_id]["payment_consumer_data_sha256"]=owned_payment.step.quest_step.consumer_data_sha256
 	var input: Variant=catalog.get("model_input_identity")
 	if input is Dictionary and not input.is_empty():
 		var input_error: String=input_identity_problem(input,str(catalog.loaded_sha256))

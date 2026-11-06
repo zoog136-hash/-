@@ -1,6 +1,6 @@
 extends RefCounted
-## Exact source probability/amplification; hit scope/order are TWILIGHT policy.
-const FIELD_NAMES={"FinalBlowProbability":"source_final_blow_chance_pct","FinalBlowAdditionalScale":"source_final_blow_amp_pct"}
+## Exact source operands; flat-before-amplification is the explicit user policy.
+const FIELD_NAMES={"FinalBlowProbability":"source_final_blow_chance_pct","FinalBlowAdditionalScale":"source_final_blow_amp_pct","FinalBlowAdditionalDmg":"source_final_blow_flat"}
 
 static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	var result: Dictionary={}
@@ -12,9 +12,10 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 		if row.get("IsPossession")!=false:continue
 		var bonus: Dictionary=book.data.bonuses.get(str(int(row.BonusID)),{})
 		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
-		if not FIELD_NAMES.has(kind.get("Name","")) or kind.get("UnitID")!=3 or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:continue
+		var flat: bool=kind.get("Name","")=="FinalBlowAdditionalDmg"
+		if not FIELD_NAMES.has(kind.get("Name","")) or kind.get("UnitID")!=(1 if flat else 3) or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:continue
 		var key: String=FIELD_NAMES[kind.Name]
-		result[key]=float(result.get(key,0))+float(bonus.Value)/10000.0
+		result[key]=float(result.get(key,0))+float(bonus.Value)/(1.0 if flat else 10000.0)
 	# A +0 family denotes whole values, so its baseline is not added twice.
 	# The currently connected crystal families have no base final-blow rows.
 	var families: Dictionary={}
@@ -27,7 +28,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 		if int(row.EnchantLevel)!=0 or int(row.BlessCode)!=(bless if codes.has(bless) else 0):continue
 		var bonus: Dictionary=book.data.bonuses.get(str(int(row.BonusID)),{})
 		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
-		if FIELD_NAMES.has(kind.get("Name","")) and bonus.get("BonusApplicationTypeID")==0 and bonus.get("BonusApplicationTargetID")==0:result.erase(FIELD_NAMES[kind.Name])
+		if FIELD_NAMES.has(kind.get("Name","")) and kind.get("UnitID")== (1 if kind.get("Name","")=="FinalBlowAdditionalDmg" else 3) and bonus.get("BonusApplicationTypeID")==0 and bonus.get("BonusApplicationTargetID")==0:result.erase(FIELD_NAMES[kind.Name])
 	return result
 
 static func conditional_stun_active(world: Node,target: Node) -> bool:
@@ -41,7 +42,7 @@ static func conditional_magic_damage(world: Node,target: Node,by_spell: bool) ->
 	return maxi(0,int(world._equipment_inven_sum("source_stun_magic_damage"))) if conditional_stun_active(world,target) else 0
 
 static func totals(world: Node,target: Node=null) -> Dictionary:
-	var out: Dictionary={"chance_pct":world._equipment_inven_sum("source_final_blow_chance_pct"),"amp_pct":world._equipment_inven_sum("source_final_blow_amp_pct")}
+	var out: Dictionary={"chance_pct":world._equipment_inven_sum("source_final_blow_chance_pct"),"amp_pct":world._equipment_inven_sum("source_final_blow_amp_pct"),"flat":world._equipment_inven_sum("source_final_blow_flat")}
 	if conditional_stun_active(world,target):out.chance_pct+=world._equipment_inven_sum("source_final_blow_stun_chance_pct")
 	for record: Dictionary in world._all_equipped_records():
 		var physical: Dictionary=world.item_instances.get(str(record.get("instance_id","")),{})
@@ -49,6 +50,7 @@ static func totals(world: Node,target: Node=null) -> Dictionary:
 		var extra: Dictionary=base(world.patch523_equipment,record,bless)
 		out.chance_pct+=float(extra.get("source_final_blow_chance_pct",0))
 		out.amp_pct+=float(extra.get("source_final_blow_amp_pct",0))
+		out.flat+=float(extra.get("source_final_blow_flat",0))
 	return out
 
 static func damage(world: Node,amount: int,by_spell: bool,target: Node=null) -> int:
@@ -58,10 +60,14 @@ static func damage(world: Node,amount: int,by_spell: bool,target: Node=null) -> 
 	var current: Dictionary=totals(world,target)
 	var threshold: int=clampi(int(round(float(current.chance_pct)*10000.0)),0,1000000)
 	var amplification: float=maxf(0,float(current.amp_pct))
-	if threshold<=0 or amplification<=0:return amount
+	# User decision: same success roll; positive flat is truncated to an integer,
+	# added before amplification, and remains effective with zero amplification.
+	var raw_flat: float=float(current.flat)
+	var flat: int=int(raw_flat) if is_finite(raw_flat) and raw_flat>0 else 0
+	if threshold<=0 or (amplification<=0 and flat<=0):return amount
 	if threshold<1000000 and world.rng.randi_range(0,999999)>=threshold:return amount
-	var extra: float=float(amount)*amplification/100.0
-	var increase: int=maxi(0,int(floor(extra)) if policy.get("source_final_blow_rounding","")=="floor" else int(round(extra)))
+	var extra: float=(float(amount)+float(flat))*amplification/100.0
+	var increase: int=flat+maxi(0,int(floor(extra)) if policy.get("source_final_blow_rounding","")=="floor" else int(round(extra)))
 	world.patch523_final_blow_fired=true
-	world.hud.append_log("결정타 · 대미지 +%d · 원본 증폭 %.2f%% · 계산 순서는 TWILIGHT 설정" % [increase,amplification])
+	world.hud.append_log("결정타 · 대미지 +%d · 원본 고정 %d · 원본 증폭 %.2f%% · 계산 순서는 사용자 설정" % [increase,flat,amplification])
 	return amount+increase

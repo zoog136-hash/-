@@ -447,6 +447,33 @@ static func stage_debit(world: Node,requests: Array) -> Dictionary:
 	if not issue.is_empty():return _failure(issue)
 	return {"ok":true,"overrides":overrides,"selections":selections}
 
+# Authenticate every newly issued object; a nonstackable quantity can create
+# several physical IDs and every one must enter the same production receipt.
+static func issued_ids(record: Dictionary,quantity: int,previous: Dictionary,granted: Dictionary,origin: Dictionary,typed: bool) -> Dictionary:
+	var instances: Variant=granted.get("item_instances")
+	var ids: Variant=granted.get("ids",[granted.get("id","")])
+	if not instances is Dictionary or not ids is Array or ids.is_empty() or ids.size()>65536:return _failure("원본 공급 실제 발급 개체 목록 형식 오류")
+	var seen: Dictionary={};var total: int=0
+	for uid: Variant in ids:
+		if not uid is String or uid.is_empty() or seen.has(uid) or previous.has(uid):return _failure("원본 공급 출력 개체 중복·기존 소유 덮어쓰기 금지")
+		var entry: Variant=instances.get(uid)
+		if not entry is Dictionary or entry.get("record")!=record or entry.get("name")!=record.get("name") or entry.get("level")!=0:return _failure("원본 공급 실제 출력과 카탈로그 정체 불일치")
+		var amount: Variant=entry.get("source_awakening_quantity") if typed else entry.get(QUANTITY)
+		if not integer(amount) or int(amount)<1 or total>quantity-int(amount):return _failure("원본 공급 출력 개체별 수량·총량 불일치")
+		if typed:
+			var stamp: Variant=entry.get("source_awakening_supply")
+			if not stamp is Dictionary or stamp.get("schema")!=2 or stamp.get("item_class_id")!=record.get("source_item_class_id") or stamp.get("granted_quantity")!=amount or stamp.get("source_definition_archive")!=record.get("source_definition_archive") or stamp.get("origin")!=origin:return _failure("특수 공급 출력의 최초 지급·공급 출처 불일치")
+		else:
+			var owned: Dictionary=proof_entry(entry,uid)
+			if owned.is_empty() or int(owned.used)!=0 or int(owned.transferred)!=0 or int(owned.remaining)!=int(amount) or owned.receipt.get("granted_quantity")!=amount or owned.receipt.get("origin")!=origin:return _failure("공급 출력의 실제 잔량·최초 공급 영수증 불일치")
+		seen[uid]=true;total+=int(amount)
+	if total!=quantity:return _failure("원본 공급 출력 총량과 실제 발급 합계 불일치")
+	for uid: Variant in previous:
+		if instances.get(uid)!=previous[uid]:return _failure("출력 공급자가 기존 입력 재료·소유 후보를 변경했습니다")
+	for uid: Variant in instances:
+		if not previous.has(uid) and not seen.has(uid):return _failure("공급 영수증에 없는 추가 물리 출력 거부")
+	return {"ok":true,"ids":ids.duplicate(true)}
+
 static func join_craft_output(world: Node,book: RefCounted,transaction: Dictionary,context: Dictionary) -> Dictionary:
 	var output: Dictionary=transaction.get("selected_output",{})
 	var quantity: Variant=transaction.get("result_quantity",0)
@@ -463,12 +490,20 @@ static func join_craft_output(world: Node,book: RefCounted,transaction: Dictiona
 	var typed: bool=supply.call("exact",record,int(output.get("source_id",0)))
 	if not typed and record.get("source_projection")!="current523_original_typed_game_dto_v1":return transaction
 	if int(output.get("level",-1))!=0 or not integer(transaction.inventory.get(str(record.get("name","")),0)) or int(transaction.inventory.get(str(record.get("name","")),0))<int(quantity):return _failure("원본 제작 출력 강화·소지 수량 불일치")
-	var origin: Dictionary={"kind":"source523_compiled_craft","recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"source_output":output.duplicate(true),"source_craft_receipt_id":str(transaction.get("source_craft_receipt_id","")),"selected_native_inputs":context.get("quest_material_review",{}).get("native_requests",[]).duplicate(true)}
+	var origin: Dictionary={"kind":"source523_compiled_craft","recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"source_output":output.duplicate(true),"source_craft_receipt_id":str(transaction.get("source_craft_receipt_id","")),"selected_native_inputs":context.get("quest_material_review",{}).get("native_requests",[]).duplicate(true),"selected_quest_inputs":context.get("quest_material_review",{}).get("requests",[]).duplicate(true)}
 	var granted: Dictionary=supply.call("stage_grant",record,int(quantity),transaction.item_instances,origin) if typed else stage_grant(record,int(quantity),transaction.item_instances,origin)
 	if not granted.get("ok",false):return _failure("원본 제작 비장비 출력의 물리 소유·사용 계약 연결 대기 · 재료와 난수 보존")
-	transaction.item_instances=granted.item_instances
+	var issued: Dictionary=issued_ids(record,int(quantity),transaction.item_instances,granted,origin,typed)
+	if not issued.get("ok",false):return issued
 	var receipt_id: String=str(transaction.get("source_craft_receipt_id",""))
-	if not receipt_id.is_empty() and transaction.get("consumable_state",{}).get("source_quest_craft_receipts",{}).has(receipt_id):transaction.consumable_state.source_quest_craft_receipts[receipt_id].output_physical_ids.append(str(granted.id))
+	if not receipt_id.is_empty():
+		var journal: Variant=transaction.get("consumable_state",{}).get("source_quest_craft_receipts",{}).get(receipt_id)
+		if not journal is Dictionary or not journal.get("output_physical_ids") is Array or journal.get("recipe_id")!=str(context.get("source_recipe_id","")) or journal.get("rules_sha256")!=book.digest or journal.get("selected_output")!=output or journal.get("output_name")!=transaction.get("result_name") or journal.get("output_quantity")!=transaction.get("result_quantity"):return _failure("원본 제작 출력 장부와 실제 제작 후보 정체 불일치")
+		for uid: String in issued.ids:
+			if journal.output_physical_ids.has(uid):return _failure("동일 제작 출력 영수증의 개체 중복 금지")
+		journal.output_physical_ids.append_array(issued.ids)
+	transaction.item_instances=granted.item_instances
+	transaction["source_native_output_physical_ids"]=issued.ids.duplicate(true)
 	return transaction
 
 static func can_supply(record: Dictionary,inventory: Dictionary,instances: Dictionary) -> bool:
