@@ -961,3 +961,11 @@ Their existing TextureRects retain each canonical source-frame descriptor.
 The callback rebuilds only the existing preview from `registered_materials`;
 it does not recompute selected cards, quantities, probabilities or transactions.
 Subscriptions hold weak owners and are removed when the owner is gone.
+
+Normal and awakening collection cards also pass their actual card record to
+the same descriptor and retain its source evidence on their existing frame
+TextureRects. Original frame pixels receive no host unowned-frame tint there
+either. Existing acquired/condition/copy labels and card portrait semantics
+remain unchanged. These collection frames are constructed by their existing
+row-owner refresh; no new row, alternate image or automatic pack selection is
+introduced. This extension is also uncompiled/unexecuted/unverified.
