@@ -10923,6 +10923,12 @@ func prepare_current523_source_landing(raw_root: String, source_manifest_sha256:
 	candidate.close()
 	return result
 
+func current523_source_bookmark_destination_status(point: Vector2) -> Dictionary:
+	return _aden_play_controller().call("source_bookmark_destination_status",point)
+
+func current523_source_bookmark_status() -> Dictionary:
+	return _aden_play_controller().call("source_bookmark_status")
+
 func current523_source_geographic_contract() -> Dictionary:
 	return _aden_play_controller().call("source_geographic_contract")
 

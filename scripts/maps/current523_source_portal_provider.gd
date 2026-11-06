@@ -282,3 +282,28 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 
 func cache_metrics() -> Dictionary:
 	return {"cached_native_lands":_lands.size(),"maximum_native_lands":MAX_CACHED_LANDS,"definition_manifest_sha256":MANIFEST_SHA256 if loaded else ""}
+
+func bookmark_context_for_land(land_id: int, exact_asset: String, point: Vector2i) -> Dictionary:
+	# Purpose-specific NoBookmark enforcement, not entry/teleport permission.
+	var definition: RefCounted=_definition(land_id,exact_asset)
+	if definition==null:return {"ok":false,"reason":"기억 장소 원문 정의를 읽을 수 없습니다."}
+	var type: Dictionary={}
+	for row: Dictionary in definition.context_rows("LandAttributeType"):
+		if row.get("ID")==2:type=row
+	if type.get("Name")!="NoBookmark" or type.get("UnitID")!=20:return {"ok":false,"reason":"NoBookmark 원문 형식을 확인할 수 없습니다."}
+	var applied: Array=[]
+	var forbidden: bool=false
+	for row: Dictionary in definition.context_rows("LandAttribute"):
+		if row.get("LandID")!=land_id or row.get("LandAttributeTypeID")!=2:continue
+		var territory_id: Variant=row.get("TerritoryID")
+		if not OWNER._integer(territory_id) or territory_id<0:return {"ok":false,"reason":"기억 금지 영역 참조가 유효하지 않습니다."}
+		if territory_id!=0:
+			var territory: Dictionary=definition.territories.get(int(territory_id),{})
+			if territory.is_empty() or territory.get("LandID")!=land_id or territory.StartX>territory.EndX or territory.StartY>territory.EndY:return {"ok":false,"reason":"기억 금지 영역 원문을 확인할 수 없습니다."}
+			if point.x<territory.StartX or point.x>territory.EndX or point.y<territory.StartY or point.y>territory.EndY:continue
+		if not OWNER._integer(row.get("Value")) or row.Value not in [0,1]:return {"ok":false,"reason":"NoBookmark 값의 실행 형식이 미확인입니다."}
+		for key: String in ["Param1","Param2","Param3"]:
+			if not OWNER._integer(row.get(key)) or row[key]!=0:return {"ok":false,"reason":"매개변수가 있는 NoBookmark 규칙은 미확인입니다."}
+		applied.append(row.duplicate(true))
+		if row.Value==1:forbidden=true
+	return {"ok":true,"allowed":not forbidden,"reason":"원문 NoBookmark 제한으로 현재 위치를 기억할 수 없습니다." if forbidden else "기존 기억 장소 동작에 적용되는 원문 기억 금지 없음 · 입장/이동 허가 아님","Land":definition.land.duplicate(true),"source_cell":[point.x,point.y],"type":type.duplicate(true),"rows":applied,"definition_manifest_sha256":MANIFEST_SHA256}

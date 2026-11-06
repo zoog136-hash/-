@@ -1065,3 +1065,23 @@ func move_source_schedule(definition: Dictionary) -> Dictionary:
 	var result: Dictionary=_last_source_transition.duplicate(true)
 	result.merge({"ok":completed,"policy":quote.policy,"reason":"원문 도착 영역으로 이동했습니다 · 자체 착지" if completed else problem},true)
 	return result
+
+func source_bookmark_status() -> Dictionary:
+	var world: Node=_world()
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or not is_instance_valid(world) or world.field_map!=_source_field:return {"ok":false,"reason":"정확한 현재 원문 지역이 필요합니다."}
+	if _source_portal_provider==null or not _source_portal_provider.has_method("bookmark_context_for_land"):return {"ok":false,"reason":"원문 기억 제한 소비자가 필요합니다."}
+	var cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+	var result: Dictionary=_source_portal_provider.call("bookmark_context_for_land",int(settings.native_land_id),str(_source_field.get("source_asset")),cell)
+	if result.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or result.get("Land")!=_source_field.get("native_land") or result.get("source_cell")!=[cell.x,cell.y]:return {"ok":false,"reason":"원문 기억 제한의 지역·좌표 신원이 맞지 않습니다."}
+	return result
+
+func source_bookmark_destination_status(point: Vector2) -> Dictionary:
+	var world: Node=_world()
+	if not active or not source_owned or settings.get("navigation_profile")!=OPTIONS.GENERIC or not is_instance_valid(world) or world.field_map!=_source_field or _source_travel_busy:return {"ok":false,"reason":"현재 원문 기억 장소 이동 문맥이 유효하지 않습니다."}
+	if not point.is_finite() or not _source_field.point_clear(point,4.0) or not world._teleport_landing_clear(point):return {"ok":false,"reason":"기억한 원문 위치의 통행·점유 검사를 통과하지 못했습니다."}
+	var state: Dictionary=_actor_state(world)
+	for position: Vector2 in [world.player.global_position,point]:
+		var cell: Vector2i=_source_field.world_to_cell(position)+_source_field.coordinates.origin
+		var context: Dictionary=_entry_context(int(settings.native_land_id),str(_source_field.get("source_asset")),cell,state)
+		if not str(context.get("source_travel_hold","missing")).is_empty():return {"ok":false,"reason":"기억 장소 출발·도착의 원문 지역 조건이 보류됩니다."}
+	return {"ok":true,"native_admission_verified":false,"reason":"같은 원문 Land의 기존 기억 이동 소비자 · 자체 통행/입장 정책"}
