@@ -4,6 +4,8 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
 var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
+const ReviewedCart=preload("res://scripts/ui/warehouse_reviewed_cart.gd")
+var reviewed_batch: RefCounted
 var transfer_sheet: RefCounted
 var hud: Node
 var world: Node
@@ -62,6 +64,22 @@ func configure(controller: Node) -> void:
 	auto_controls = AutoInventory.new()
 	add_child(auto_controls)
 	auto_controls.configure(self,"deposit")
+	reviewed_batch=ReviewedCart.new()
+	reviewed_batch.configure(self)
+	listing.tooltip_text="TWILIGHT 검토 카트: 선택 행 더블클릭/Enter·더블탭으로 현재 수량 담기. 같은 항목·수량을 다시 활성화하면 빼기. 기존 보관/찾기는 단일 이동입니다."
+	reviewed_batch.owner_changed()
+
+func _input(event: InputEvent) -> void:
+	if reviewed_batch!=null:reviewed_batch.input(event)
+
+func original_reviewed_warehouse_batch() -> Dictionary:
+	return reviewed_batch.snapshot() if reviewed_batch!=null else {"ok":false,"code":"warehouse_reviewed_cart_unavailable"}
+
+func review_original_warehouse_batch(direction: String) -> Dictionary:
+	return reviewed_batch.review(direction) if reviewed_batch!=null else {"ok":false,"code":"warehouse_reviewed_cart_unavailable"}
+
+func accepted_warehouse_batch_owner_load(actual_world: Node, receipt: Dictionary) -> Dictionary:
+	return reviewed_batch.accepted_owner_load(actual_world,receipt) if reviewed_batch!=null else {"ok":false,"code":"warehouse_reviewed_cart_unavailable"}
 
 func _is_equipment(item_name: String) -> bool:
 	var record: Dictionary = world.call("_find_catalog_item_record", item_name)
@@ -124,6 +142,7 @@ func _refresh() -> void:
 		_selected(0)
 	transfer_sheet.refresh({},true)
 	if auto_controls != null: auto_controls.refresh()
+	if reviewed_batch!=null:reviewed_batch.owner_changed()
 
 func _selected(index: int) -> void:
 	if index < 0 or index >= entries.size():
@@ -135,6 +154,7 @@ func _selected(index: int) -> void:
 	quantity.value = 1
 	transfer_sheet.refresh()
 	if auto_controls != null: auto_controls.refresh()
+	if reviewed_batch!=null:reviewed_batch.owner_changed()
 
 func _transfer() -> void:
 	if selected_index < 0 or selected_index >= entries.size():
