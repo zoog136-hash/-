@@ -565,6 +565,7 @@ func show_received_damage(amount: int, critical: bool = false, kind: String = "m
 	var world: Node = get_parent()
 	if not world is TwilightWorld or world.original_skills==null or world.original_skills.stat("ignoreDamageMotion")<=0:
 		motion.react(critical, source.direction_to(combat_hit_position()))
+		if not motion.dead: original_source_preview.notify_current_source_hit(motion.active)
 	if world is TwilightWorld and world.combat_vfx != null:
 		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)

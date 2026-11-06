@@ -434,6 +434,9 @@ func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, poi
 	candidate.set_meta("patch523_frame_bytes",budget)
 	candidate.set_meta("patch523_owner_id",actor.get_instance_id())
 	actor.add_child(candidate)
+	# Keep the existing actor-owned lifetime/budget, but preserve the combat
+	# owner's world impact point instead of inheriting later NPC movement.
+	candidate.set_as_top_level(true)
 	candidate.global_position = point
 	if not bool(candidate.call("advance_reference_source",0.0,"idle",int(candidate.get("_overlay_facing")))):
 		result["ok"] = false
@@ -443,6 +446,7 @@ func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, poi
 		return false
 	effects.append(candidate)
 	result["status"] = "configured_existing_source_effect"
+	result["placement_policy"] = "existing_caller_world_point"
 	var previous_state: String = str(effect_status[key].get("state","pending"))
 	effect_status[key]["previous_renderer_state"] = previous_state
 	effect_status[key].state = "current_source_bank_visual; native_trigger_and_composition_unverified"
