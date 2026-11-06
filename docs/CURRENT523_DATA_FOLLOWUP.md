@@ -540,3 +540,24 @@ authoritative. This applies the same explicitly estimated host interpretation
 to original item operands; it does not claim a recovered source-server MR/block
 formula. Card collection totals/ownership/completion/policy save shapes are not
 changed or supplied with gear records. All new calls remain unverified.
+
+### Exact next receiver/declaration dependencies
+
+The following are scoped known dependencies after the independent operand
+connections above, not a new inventory or a claim that every remaining table
+is blocked/completed:
+
+| Original input | Existing boundary | Missing prerequisite |
+| --- | --- | --- |
+| ItemBonus→BonusType.FinalBlowAdditionalDmg, Unit.Value, e.g. items163573/172231 | patch523_final_blow.gd::totals/damage currently take chance and percentage amplification; the ItemData graph preserves the flat row | Native owner must specify its flat-value input, ordering relative to amplification and behavior when amplification is zero. The separate card final-blow engine's flat placement is not silently reused as a native rule. |
+| NpcAttribute.NpcAttributeTypeID | Raw rows remain in current523_npc_input_projection/patch523_npc_catalog | NpcAttributeType is absent in the supplied archive. A declared type/role mapping is required before turning numeric IDs into critical, AI or other actor stats. |
+| Original NpcRace classification | Monster.is_undead() and the already existing undead-hit gate | The original race-type definition/authoritative actor classification is still missing. New item operands do not infer an undead identity or activate that classification. |
+| Additional NpcAttack.Prob/NextAttack/FixedDelayTime/MotionType/WeaponType branches | Existing supported NPC attack owners and the currently selected Orim attack | Source meaning plus actual selection/transition/timing/weapon receiver contract is required for branches not already supported by the owner. The new selected Range input does not reinterpret those fields or replace current supported branches. |
+| ItemBook identity | Existing saved eqc collection IDs | Exact owner-provided source-to-saved identity mapping; no numeric/name similarity fallback. |
+| Player SpellClass range/weapon/minimum context | Existing player skill/equipment owner | Admitted typed receiver context requested from integration; no Sprite-enum conversion. |
+| Current dialogue key | source523_npc_images context.npc_class_id | Authoritative dialogue-to-mobile-NpcClass.ID relation; unchanged pending input. |
+
+No new flat final-blow rule, unknown NPC type table, actor identity, range
+selector, collection migration or dialogue mapping is fabricated to fill these
+gaps. Existing graph/row retention is not counted as execution or whole-table
+adoption. Tests/compile/game/render/CI remain unrun for these changes.
