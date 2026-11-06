@@ -168,7 +168,7 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if binding.get("role")=="source_text_field" and node.classname!="TextField":problems.append("source_text_field_original_widget_required")
 	var external: bool=int(node.get("_offset",-1)) in _external_texture_nodes
 	if external and binding.get("role")!="source_asset_slot":problems.append("external_texture_owner_binding_required")
-	if binding.get("role")=="source_asset_slot" and (not external or node.classname!="Sprite" or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
+	if binding.get("role")=="source_asset_slot" and (not external or node.classname not in ["Sprite","ImageView"] or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
 	if binding.get("role")=="source_asset":
 		if node.classname not in ["Sprite","ImageView"] or not binding.get("asset_ref") is Dictionary:problems.append("source_asset_node_or_reference_missing")
 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
@@ -451,33 +451,15 @@ func _build(source: Dictionary) -> Node2D:
 		if pending:
 			node.set_meta("source_asset_slot",true)
 			node.set_meta("source_asset_pending",true)
-	if source.classname=="ImageView" and bound_texture!=null:
-		var texture: Texture2D=bound_texture
-		var picture: Control
-		if bool(options.scale9Enabled):
-			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
-			var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
-			if not configured.ok:
-				_build_error=str(configured.error)+":"+str(widget.name)
-				nine.free(); node.free(); return null
-			picture=nine
-		else:
-			var flat:=TextureRect.new()
-			flat.texture=texture
-			flat.material=MATERIAL.original_default(texture)
-			if flat.material==null:
-				_build_error="original_material_unavailable";flat.free();node.free();return null
-			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-			flat.stretch_mode=TextureRect.STRETCH_SCALE
-			picture=flat
-		picture.name="OriginalImage"
-		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		picture.size=Vector2(widget.size[0],widget.size[1])
-		picture.position=Vector2(0,-float(widget.size[1]))
-		if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
-		if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
-		origin.add_child(picture)
-		node.set_meta("source_image",picture)
+	if source.classname=="ImageView":
+		node.set_meta("source_image_options",options.duplicate(true))
+		node.set_meta("source_image_widget",widget.duplicate(true))
+		node.set_meta("source_image_origin",origin)
+		if bound_texture!=null:
+			var built_image: Dictionary=_original_image_picture(bound_texture,options,widget)
+			if not built_image.get("ok",false):node.free();return null
+			origin.add_child(built_image.picture)
+			node.set_meta("source_image",built_image.picture)
 	if source.classname=="Sprite":
 		var texture: Texture2D=bound_texture
 		var sprite:=Sprite2D.new()
@@ -841,7 +823,9 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 		var sprite: Sprite2D=node.get_meta("source_sprite",null)
 		var scene: Variant=node.get_meta("source_asset_scene",null)
 		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
-		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
+		var picture: Variant=node.get_meta("source_image",null)
+		var image_ready: bool=is_instance_valid(picture) and not picture.is_queued_for_deletion() and picture.get_parent()==node.get_meta("source_image_origin",null)
+		if (not image_ready and (sprite==null or (sprite.texture==null and not scene_ready))) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
 	return {"ok":true}
 
@@ -870,8 +854,35 @@ func activate_authored_component_opacity() -> Dictionary:
 	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"authored_component_alpha":alpha,"animation_policy_inferred":false,"source_fields_modified":false}
 
+func _original_image_picture(texture: Texture2D, options: Dictionary, widget: Dictionary) -> Dictionary:
+	var picture: Control
+	if bool(options.scale9Enabled):
+		var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
+		var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
+		if not configured.ok:
+			_build_error=str(configured.error)+":"+str(widget.name)
+			nine.free(); return {"ok":false,"error":str(configured.error)}
+		picture=nine
+	else:
+		var flat:=TextureRect.new()
+		flat.texture=texture
+		flat.material=MATERIAL.original_default(texture)
+		if flat.material==null:
+			_build_error="original_material_unavailable";flat.free();return {"ok":false,"error":"original_material_unavailable"}
+		flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		flat.stretch_mode=TextureRect.STRETCH_SCALE
+		picture=flat
+	picture.name="OriginalImage"
+	picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	picture.size=Vector2(widget.size[0],widget.size[1])
+	picture.position=Vector2(0,-float(widget.size[1]))
+	if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
+	if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
+	return {"ok":true,"picture":picture}
+
 func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
+	if node!=null and node.has_meta("source_image_options"):return _set_bound_source_image_result(source_offset,owner_result)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}
 	var sprite: Sprite2D=node.get_meta("source_sprite")
 	_detach_source_scene(node)
@@ -902,6 +913,43 @@ func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary)
 	_resolved_assets[source_offset]=consumed.evidence.duplicate(true)
 	MATERIAL.bind_display(sprite,node.get_meta("source_display_color",Color.WHITE))
 	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"image_info_registration_complete":false}
+
+func clear_bound_source_image(source_offset: int) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_image_options"):return {"ok":false,"error":"source_image_slot_binding_missing"}
+	var previous: Variant=node.get_meta("source_image",null)
+	if is_instance_valid(previous):
+		previous.get_parent().remove_child(previous)
+		previous.free()
+	if node.has_meta("source_image"):node.remove_meta("source_image")
+	if node.has_meta("source523_original_asset"):node.remove_meta("source523_original_asset")
+	_resolved_assets.erase(source_offset)
+	node.set_meta("source_asset_pending",true)
+	node.visible=false
+	return {"ok":true,"cleared":true,"game_state_written":false}
+
+func _set_bound_source_image_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
+	var cleared: Dictionary=clear_bound_source_image(source_offset)
+	if not cleared.get("ok",false):return cleared
+	var node: Node2D=source_nodes[source_offset]
+	var consumed: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").consume_owner_result(owner_result)
+	if not consumed.get("ok",false) or consumed.get("texture")==null:return consumed
+	var texture: Texture2D=consumed.texture
+	var widget: Dictionary=node.get_meta("source_image_widget")
+	var options: Dictionary=node.get_meta("source_image_options")
+	# Intrinsic-size ImageViews need full child/hit-area resizing when their
+	# texture size changes. Do not silently reinterpret that unknown case.
+	if bool(widget.get("ignoreSize",false)) and not bool(options.scale9Enabled) and texture.get_size()!=Vector2(widget.size[0],widget.size[1]):return {"ok":false,"error":"source_image_intrinsic_size_registration_required"}
+	var built: Dictionary=_original_image_picture(texture,options,widget)
+	if not built.get("ok",false):return built
+	var origin: Node2D=node.get_meta("source_image_origin")
+	origin.add_child(built.picture)
+	node.set_meta("source_image",built.picture)
+	node.set_meta("source523_original_asset",consumed.evidence.duplicate(true))
+	node.set_meta("source_asset_pending",false)
+	_resolved_assets[source_offset]=consumed.evidence.duplicate(true)
+	MATERIAL.bind_tree_display(built.picture,node.get_meta("source_display_color",Color.WHITE))
+	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"original_image_view_geometry_retained":true,"visibility_requires_owner":true,"runtime_rendering_verified":false}
 
 static func external_scene_slot_contract(pack: RefCounted, member: String, source_offset: int) -> Dictionary:
 	if pack==null or source_offset not in pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[]):return {"ok":false,"error":"source_asset_slot_declaration_required"}

@@ -22,9 +22,18 @@ var play_settings_text: TextEdit
 const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false]]
 const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
 var source_ui_pack: RefCounted
+signal original_special_selection_changed(selection: Dictionary)
+
+func _publish_original_special_selection() -> void:
+	original_special_selection_changed.emit(original_selected_special_entrance())
+
+func _expire_original_special_selection() -> void:
+	original_special_selection_changed.emit({"ok":false,"code":"source_special_owner_exiting","pixels_assigned":false})
 
 func configure(controller: Node) -> void:
 	world = controller
+	if not visibility_changed.is_connected(_publish_original_special_selection):visibility_changed.connect(_publish_original_special_selection)
+	if not tree_exiting.is_connected(_expire_original_special_selection):tree_exiting.connect(_expire_original_special_selection)
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var tools := HBoxContainer.new()
@@ -248,6 +257,7 @@ func _kind() -> String:
 
 func _refresh() -> void:
 	selected = -1
+	_publish_original_special_selection()
 	local_toggle.get_parent().visible=_kind()=="tower"
 	listing.clear()
 	_set_recharger_icons({})
@@ -315,6 +325,7 @@ func _deletion_lines(item: Dictionary) -> Array[String]:
 func _select(index: int) -> void:
 	if index < 0 or index >= rows.size(): return
 	selected = index
+	_publish_original_special_selection()
 	var entry: Dictionary = rows[index]
 	var lines: Array[String] = []
 	if _kind() == "rechargers":
