@@ -537,10 +537,11 @@ func _craft() -> void:
 		if recipe.has("missing_failure_policy"):
 			var failure: Dictionary=recipe.missing_failure_policy
 			warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
-		var confirmation: Control = hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
-			hud.emit_signal("craft_requested",id,count))
+		var accept: Callable = func(_amount: int) -> void:
+			hud.emit_signal("craft_requested",id,count)
+		var confirmation: Control = hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",accept)
 		var evidence: Dictionary = action.get_meta("source523_result_image",{})
-		if confirmation != null and SOURCE_IMAGES.selected() and evidence.get("caller_recipe_id") == id and not recipe.has("outcomes"):
+		if confirmation != null and confirmation.get("callback") == accept and SOURCE_IMAGES.selected() and evidence.get("caller_recipe_id") == id and not recipe.has("outcomes"):
 			var confirm_button: Variant = confirmation.get("confirm_button")
 			if confirm_button is Button:
 				confirm_button.icon = action.icon

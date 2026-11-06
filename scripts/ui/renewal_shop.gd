@@ -395,12 +395,13 @@ func _buy() -> void:
 	var total: int = int(selected[1])*quantity
 	# Never send a payment amount from the UI. World rechecks the price, stock
 	# rules, wallet, weight and special consumable restrictions atomically.
-	var confirmation: Control = hud.confirm_action("구매 확인","%s ×%s\n합계 %s 아데나" % [name,UI.number_text(quantity),UI.number_text(total)],"구매",func(_count: int) -> void:
+	var accept: Callable = func(_count: int) -> void:
 		if not vendor.is_empty() and hud.has_signal("reviewed_shop_buy_requested"):
 			hud.emit_signal("reviewed_shop_buy_requested",vendor,name,quantity)
 		elif hud.has_signal("shop_bulk_buy_requested"):
-			hud.emit_signal("shop_bulk_buy_requested",name,quantity))
-	if confirmation != null and SOURCE_IMAGES.selected() and purchase.has_meta("source523_image"):
+			hud.emit_signal("shop_bulk_buy_requested",name,quantity)
+	var confirmation: Control = hud.confirm_action("구매 확인","%s ×%s\n합계 %s 아데나" % [name,UI.number_text(quantity),UI.number_text(total)],"구매",accept)
+	if confirmation != null and confirmation.get("callback") == accept and SOURCE_IMAGES.selected() and purchase.has_meta("source523_image"):
 		var confirm_button: Variant = confirmation.get("confirm_button")
 		if confirm_button is Button:
 			confirm_button.icon = purchase.icon

@@ -862,3 +862,23 @@ These follow-ups preserve the merged main UI/Sprite contracts. No original UI
 nodes, actor Sprite player, pixels, source identities or missing relationships
 were manufactured. No tests, compile, game runs, renders or CI were started;
 the added calls are unexecuted and unverified, with no usage numerator change.
+
+### Warehouse and sale source-item actions
+
+The existing warehouse deposit/withdraw and sale actions now consume the same
+preserved item record as their selection details. Physical entries reread their
+actual instance record and require the instance/record names to agree with the
+selected entry; they do not reconstruct an original ID from its caption. Sale
+rows preserve all record forms already supported by the common image consumer,
+including supplied original reward/material records, rather than replacing
+those physical records with a catalog-name lookup.
+
+The existing quantity/final confirmations receive that same image only when
+their actual transaction callback is the one passed to the modal owner. A modal
+already open for another action is left intact. Warehouse drag requests supply
+an image only for an unambiguous existing entry in the requested current
+direction. Empty selections clear previous action art and provenance. Existing
+warehouse counts, physical IDs, lock/weight/price checks, transaction signals
+and save behavior remain unchanged. The same callback boundary is retained for
+the previously connected purchase/craft confirmations. No new UI targets or
+source assets were added, and no tests/compile/game/render/CI were executed.

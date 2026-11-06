@@ -104,6 +104,7 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 			view.listing.set_item_text(i,badge)
 			view.listing.set_item_tooltip(i,str(entry.name)+" · "+badge)
 	if index<0 or index>=view.entries.size():
+		bind_entry_button(view.action,{})
 		UI.clear_item_visual(picture)
 		picture.texture=null;title.text="선택한 아이템 없음";count_label.text=""
 		if not warehouse:view.details.text="조건에 맞는 판매 아이템이 없습니다."
@@ -117,6 +118,7 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 	if not id.is_empty() and physical.has(id):
 		var source_record: Variant=physical[id].get("record")
 		if source_record is Dictionary and not source_record.is_empty(): record=source_record
+	bind_entry_button(view.action,entry,record)
 	if SOURCE523.handles_item(record):
 		UI.apply_item_visual(picture,record,str(entry.name),{},"detail")
 	else:
@@ -132,3 +134,36 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 	if not warehouse and view.world._item_locked(str(entry.name),id):
 		view.action.disabled=true
 		view.details.text="잠긴 아이템은 판매할 수 없습니다."
+
+func bind_entry_button(button: Button,entry: Dictionary,record: Dictionary={}) -> void:
+	button.icon=null
+	if button.has_meta("source523_transfer_image"):button.remove_meta("source523_transfer_image")
+	if not SOURCE523.selected() or entry.is_empty():return
+	var selected_record: Dictionary=record if not record.is_empty() else entry.get("record",{})
+	var id: String=str(entry.get("instance_id",""))
+	if not id.is_empty():
+		var physical: Dictionary=view.world.warehouse.instances if warehouse and view.mode.selected==1 else view.world.item_instances
+		var instance: Variant=physical.get(id)
+		if not instance is Dictionary or instance.get("name")!=entry.get("name") or not instance.get("record") is Dictionary:return
+		selected_record=instance.record
+	if selected_record.get("name")!=entry.get("name") or not SOURCE523.handles_item(selected_record):return
+	var image: Dictionary=SOURCE523.describe_item(selected_record,str(entry.get("name","")))
+	button.icon=image.get("texture") as Texture2D
+	button.expand_icon=true
+	var evidence: Dictionary=image.duplicate(true)
+	evidence.erase("texture")
+	evidence["transfer_context"]={"instance_id":id,"item_name":str(entry.get("name","")),"operation":"withdraw" if warehouse and view.mode.selected==1 else "deposit" if warehouse else "sell"}
+	button.set_meta("source523_transfer_image",evidence)
+
+func bind_confirmation(confirmation: Control,entry: Dictionary,accept: Callable) -> void:
+	# confirm_action may return an already open modal owned by another action.
+	if confirmation==null or confirmation.get("callback")!=accept:return
+	var button: Variant=confirmation.get("confirm_button")
+	if button is Button:bind_entry_button(button,entry)
+
+func bind_reference_confirmation(confirmation: Control,item: String,id: String,direction: String,accept: Callable) -> void:
+	if not warehouse or direction!=("deposit" if view.mode.selected==0 else "withdraw"):return
+	var matches: Array[Dictionary]=[]
+	for entry: Dictionary in view.entries:
+		if entry.get("name")==item and str(entry.get("instance_id",""))==id:matches.append(entry)
+	if matches.size()==1:bind_confirmation(confirmation,matches[0],accept)
