@@ -27,7 +27,7 @@ import urllib.request
 import zipfile
 import zlib
 
-from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects, rclone_read
+from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects, rclone_read, diagnose_rclone_bundle
 
 REPO = 'https://github.com/zoog136-hash/-.git'
 STATE = '.twilight_private_install_state.json'
@@ -375,7 +375,7 @@ def fetch_plan(args, cache):
             log('Checking access to the selected private plan; a configured remote name alone does not confirm authentication.')
             command = ['rclone', 'backend', 'copyid', args.remote + ':', args.plan_id,
                        str(temporary), '--retries', '1', '--low-level-retries', '1',
-                       '--stats', '0', '--log-level', 'ERROR']
+                       '--stats', '0']
             result, summary = rclone_read(command)
             if result.returncode:
                 raise DownloadError('Private plan read failed. ' + summary)
@@ -2239,6 +2239,36 @@ def install(args):
         log('UNVERIFIED: no game run, render, tests or CI were executed by this installer.')
 
 
+def diagnose_bundle(args):
+    # Deliberately bypass install(): no Git, recovery, cache marker, bundle,
+    # extraction, activation or cleanup. Only the already-held pinned plan is read.
+    if not args.plan or not args.plan_sha256 or args.token_file:
+        raise ValueError('Diagnostic requires --plan and --plan-sha256 with the existing rclone remote; no plan download or credentials change.')
+    if sha256_file(args.plan) != pin(args.plan_sha256):
+        raise ValueError('Diagnostic local plan SHA256 mismatch')
+    plan = read_json(args.plan)
+    digest = pin(args.diagnose_bundle)
+    rows = [row for pack in plan['packs'] for row in pack['files'] if row.get('sha256') == digest]
+    if not rows or any({key: row.get(key) for key in ('file_id', 'bytes', 'sha256')} !=
+                       {key: rows[0].get(key) for key in ('file_id', 'bytes', 'sha256')} for row in rows):
+        raise ValueError('Diagnostic bundle is absent or ambiguous in the pinned local plan')
+    candidate = args.project.expanduser()
+    if candidate.is_symlink():
+        raise ValueError('Diagnostic project cannot itself be a symlink')
+    root = candidate.parent.resolve() / candidate.name
+    no_links(root)
+    candidate_cache = args.cache.expanduser()
+    if candidate_cache.is_symlink():
+        raise ValueError('Diagnostic cache cannot itself be a symlink')
+    cache = candidate_cache.parent.resolve() / candidate_cache.name
+    no_links(cache)
+    key = hashlib.sha256(str(root).encode()).hexdigest()[:16]
+    destination = cache / key / 'bundles' / (digest + '.partial')
+    no_links(destination)
+    log(diagnose_rclone_bundle(rows[0], args.remote, destination))
+    log('DIAGNOSTIC ONLY: metadata/path dry-run completed; media download and installation remain unverified. No bundle or marker was written; no retry attempted.')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, default=Path.home() / 'storage/downloads/TWILIGHT_Play')
@@ -2251,13 +2281,21 @@ def main():
     parser.add_argument('--remote', default='twilight-drive', help='Already authorized rclone Drive remote')
     parser.add_argument('--token-file', type=Path, help='Explicit private OAuth token file for HTTP Range resume')
     parser.add_argument('--workers', type=int, choices=(1, 2, 3), default=2, help='Concurrent bundles, not individual images')
+    parser.add_argument('--diagnose-bundle', type=pin, help='Full SHA256 from the pinned local plan: one metadata/path copyid dry-run, no installation or media download')
     args = parser.parse_args()
-    log('Installer Python entry reached. Reading the selected private plan before code/resource downloads.')
+    log('Read-only bundle diagnostic selected; installation will not start.' if args.diagnose_bundle else
+        'Installer Python entry reached. Reading the selected private plan before code/resource downloads.')
     try:
-        install(args)
+        if args.diagnose_bundle:
+            diagnose_bundle(args)
+        else:
+            install(args)
     except (OSError, ValueError, KeyError, RuntimeError, zlib.error, zipfile.BadZipFile, subprocess.CalledProcessError) as error:
-        log('INSTALL STOPPED: ' + str(error))
-        log('The previous runtime, source archives and personal data are preserved. Rerun the same command to reuse verified bundles.')
+        log(('DIAGNOSTIC STOPPED: ' if args.diagnose_bundle else 'INSTALL STOPPED: ') + str(error))
+        if args.diagnose_bundle:
+            log('No installation, media download or automatic retry was started. Existing cache and user data are preserved.')
+        else:
+            log('The previous runtime, source archives and personal data are preserved. Rerun the same command to reuse verified bundles.')
         return 1
     return 0
 

@@ -2,19 +2,24 @@
 # One entry point for first installation and later updates. No game/tests/CI.
 set -euo pipefail
 
+diagnostic_only=false
+for argument in "$@"; do
+  case "$argument" in --diagnose-bundle|--diagnose-bundle=*) diagnostic_only=true ;; esac
+done
+
 bootstrap_stage='prerequisites'
 # Report only a fixed stage and exit code: tracing commands/arguments can
 # expose private paths or authentication input and is deliberately avoided.
 trap 'bootstrap_code=$?; if [ "$bootstrap_stage" = complete ] && [ "$bootstrap_code" -eq 0 ]; then printf "BOOTSTRAP FINISHED: Python exit=0. See installer result above.\n" >&2; else printf "BOOTSTRAP STOPPED: stage=%s exit=%s.\n" "$bootstrap_stage" "$bootstrap_code" >&2; fi' EXIT
 
-if command -v pkg >/dev/null 2>&1; then
+if ! "$diagnostic_only" && command -v pkg >/dev/null 2>&1; then
   pkg install -y python git curl rclone
 fi
 for executable in python3 git curl rclone; do
   command -v "$executable" >/dev/null || { echo "Missing prerequisite: $executable" >&2; exit 1; }
 done
 
-if [ ! -d "$HOME/storage/downloads" ] && command -v termux-setup-storage >/dev/null 2>&1; then
+if ! "$diagnostic_only" && [ ! -d "$HOME/storage/downloads" ] && command -v termux-setup-storage >/dev/null 2>&1; then
   echo 'Allow Termux shared-storage access in Android, then return here.' >&2
   termux-setup-storage
 fi
@@ -69,6 +74,10 @@ if ! "$use_token"; then
     if [ "$configured_remote" = "$drive_remote:" ]; then found_remote=true; fi
   done <<< "$configured_remotes"
   if ! "$found_remote"; then
+    if "$diagnostic_only"; then
+      echo 'Diagnostic stopped: the existing selected remote is unavailable. No authorization or configuration flow was started.' >&2
+      exit 1
+    fi
     echo "Private Drive authorization is required once. In rclone config, create '$drive_remote' as Google Drive with read-only access." >&2
     echo 'Use the normal setup (advanced config: no), complete your browser authorization, save the remote, then quit config. Do not paste tokens or auth URLs into chat.' >&2
     rclone config
@@ -76,7 +85,11 @@ if ! "$use_token"; then
   echo 'A saved remote name is not proof of authentication. The installer first checks access by reading the selected private plan.' >&2
 fi
 
-echo 'Close Godot before continuing. Code uses packed Git transfer; Drive uses verified ZIP bundles (default two at once).' >&2
+if "$diagnostic_only"; then
+  echo 'Read-only diagnostic: one pinned bundle metadata/path dry-run. No game-code checkout, source-media download or installation will start.' >&2
+else
+  echo 'Close Godot before continuing. Code uses packed Git transfer; Drive uses verified ZIP bundles (default two at once).' >&2
+fi
 bootstrap_stage='python-handoff'
 # Keep this supervising shell alive so even a silent Python exit has a
 # visible final status. Preserve the Python exit code; do not retry or turn

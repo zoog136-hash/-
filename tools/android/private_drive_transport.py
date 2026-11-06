@@ -99,6 +99,10 @@ RCLONE_LOG_ENV = ('RCLONE_LOG_FILE', 'RCLONE_LOG_LEVEL', 'RCLONE_LOG_FORMAT',
     'RCLONE_SYSLOG', 'RCLONE_LOG_SYSTEMD', 'RCLONE_USE_JSON_LOG',
     'RCLONE_QUIET', 'RCLONE_VERBOSE', 'RCLONE_DUMP', 'RCLONE_DUMP_HEADERS',
     'RCLONE_DUMP_BODIES', 'RCLONE_DUMP_AUTH', 'RCLONE_DUMP_REQUESTS', 'RCLONE_DUMP_RESPONSES')
+# cmd.Run reports returned backend errors with fs.Logf (NOTICE) in current
+# rclone. ERROR can suppress the only final error before a nonzero exit.
+# Capture NOTICE privately, never DEBUG/HTTP dumps or unfiltered user output.
+RCLONE_CAPTURE_LOG_LEVEL = 'NOTICE'
 
 
 def _rclone_log_environment():
@@ -125,14 +129,14 @@ def _rclone_log_flags():
 def rclone_read(command):
     """One read attempt with isolated, private error capture; return no raw log.
 
-    ERROR logs can contain private paths/provider details. A fresh 0600 local
+    NOTICE logs can contain private paths/provider details. A fresh 0600 local
     temporary file is read only for classification, then closed/unlinked. Neither
     logs nor environment values become a persistent receipt or user output.
     """
     environment, present = _rclone_log_environment()
     log_file_supported, syslog_supported = _rclone_log_flags()
     with tempfile.NamedTemporaryFile(prefix='twilight-rclone-error-', mode='w+b') as captured:
-        args = list(command)
+        args = list(command) + ['--log-level', RCLONE_CAPTURE_LOG_LEVEL]
         if log_file_supported:
             args.extend(['--log-file', captured.name])
         if syslog_supported:
@@ -142,12 +146,39 @@ def rclone_read(command):
         log_bytes = os.fstat(captured.fileno()).st_size
         captured.seek(max(0, log_bytes - 32768))
         log_tail = captured.read(32768)
-        summary = rclone_failure(result.returncode, result.stderr, result.stdout, log_tail)
-    summary += (' Capture: log_bytes=%d; log_file_supported=%s; syslog_flag_supported=%s;'
+        summary = (rclone_failure(result.returncode, result.stderr, result.stdout, log_tail)
+                   if result.returncode else 'rclone completed (exit 0; stderr_bytes=%d; stdout_bytes=%d).' %
+                   (len(result.stderr), len(result.stdout)))
+    summary += (' Capture: log_level=%s; log_bytes=%d; log_file_supported=%s; syslog_flag_supported=%s;'
                 ' logging_env_present=%s; stdin=closed; tty=false; command_attempt=1.' %
-                (log_bytes, str(log_file_supported).lower(), str(syslog_supported).lower(),
+                (RCLONE_CAPTURE_LOG_LEVEL, log_bytes, str(log_file_supported).lower(), str(syslog_supported).lower(),
                  ','.join(present) or 'none'))
     return result, summary
+
+
+def _copyid_read_command(remote, file_id, destination, *, dry_run=False):
+    command = ['rclone', 'backend', 'copyid', remote + ':', file_id, str(destination),
+        '--transfers', '1', '--checkers', '1', '--multi-thread-streams', '0',
+        '--retries', '1', '--low-level-retries', '1', '--stats', '0']
+    if dry_run:
+        command.append('--dry-run')
+    return command
+
+
+def diagnose_rclone_bundle(row, remote, destination):
+    """One explicit metadata/path dry-run, never a bundle/content download."""
+    identity = _validate_row(row)
+    if not isinstance(remote, str) or not re.fullmatch(r'[A-Za-z0-9_. -]+', remote):
+        raise DownloadError('Diagnostic requires the existing named rclone remote.')
+    destination = Path(destination)
+    _regular(destination)
+    if not destination.parent.is_dir():
+        raise DownloadError('Diagnostic requires the existing bundle cache; no folder created.')
+    result, summary = rclone_read(_copyid_read_command(remote, identity['file_id'], destination, dry_run=True))
+    context = 'Bundle sha256=%s bytes=%d; mode=metadata_path_dry_run; command_attempt=1; media_download_verified=false; ' % (identity['sha256'][:12], identity['bytes'])
+    if result.returncode:
+        raise DownloadError(context + summary)
+    return context + summary
 
 
 def sha256_file(path):
@@ -329,10 +360,7 @@ class DriveTransport:
         # rclone. This command reads Drive and writes a LOCAL owned cache file.
         # Do not add copy-to-Drive, server-side copies, alt account rotation,
         # acknowledge-abuse or download-limit workarounds here.
-        command = ['rclone', 'backend', 'copyid', self.remote + ':',
-                   row['file_id'], str(partial), '--transfers', '1', '--checkers', '1',
-                   '--multi-thread-streams', '0', '--retries', '1',
-                   '--low-level-retries', '1', '--stats', '0', '--log-level', 'ERROR']
+        command = _copyid_read_command(self.remote, row['file_id'], partial)
         result, summary = rclone_read(command)
         if result.returncode:
             # Avoid echoing raw process stderr: authorization URLs and account
