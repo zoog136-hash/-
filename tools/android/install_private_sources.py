@@ -27,7 +27,7 @@ import urllib.request
 import zipfile
 import zlib
 
-from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects, rclone_failure
+from private_drive_transport import DriveTransport, DownloadError, sha256_file, _DriveRedirects, rclone_read
 
 REPO = 'https://github.com/zoog136-hash/-.git'
 STATE = '.twilight_private_install_state.json'
@@ -376,10 +376,9 @@ def fetch_plan(args, cache):
             command = ['rclone', 'backend', 'copyid', args.remote + ':', args.plan_id,
                        str(temporary), '--retries', '1', '--low-level-retries', '1',
                        '--stats', '0', '--log-level', 'ERROR']
-            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    stdin=subprocess.DEVNULL)
+            result, summary = rclone_read(command)
             if result.returncode:
-                raise DownloadError('Private plan read failed. ' + rclone_failure(result.returncode, result.stderr, result.stdout))
+                raise DownloadError('Private plan read failed. ' + summary)
         if args.plan_sha256 and sha256_file(temporary) != pin(args.plan_sha256):
             raise ValueError('Private plan SHA256 mismatch')
         return read_json(temporary), sha256_file(temporary)

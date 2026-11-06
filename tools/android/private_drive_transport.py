@@ -11,6 +11,7 @@ References: https://developers.google.com/workspace/drive/api/guides/manage-down
             https://rclone.org/drive/#copyid
 """
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+from functools import lru_cache
 from pathlib import Path
 import hashlib
 import http.client
@@ -42,7 +43,7 @@ class DownloadError(RuntimeError):
     """The download is unavailable; staged/previous installations are intact."""
 
 
-def rclone_failure(returncode, stderr, stdout=b''):
+def rclone_failure(returncode, stderr, stdout=b'', log_output=b''):
     """Classify locally without echoing account details, tokens or auth URLs.
 
     A category is evidence from an error string, not a credential diagnosis.
@@ -51,7 +52,7 @@ def rclone_failure(returncode, stderr, stdout=b''):
     def bounded_text(value):
         return (value[-32768:].decode('utf-8', errors='replace') if isinstance(value, bytes)
                 else str(value)[-32768:]).lower()
-    message = bounded_text(stderr) + '\n' + bounded_text(stdout)
+    message = bounded_text(stderr) + '\n' + bounded_text(stdout) + '\n' + bounded_text(log_output)
     codes = sorted(set(re.findall(r'(?:googleapi:\s*error|http(?:/\d(?:\.\d)?)?(?:\s+status)?|status(?:\s+code)?)\s*[:=]?\s*([1-5]\d\d)', message)))[:3]
     category = 'UNCLASSIFIED'
     if returncode < 0:
@@ -90,6 +91,63 @@ def rclone_failure(returncode, stderr, stdout=b''):
     else:
         reason = 'unclassified failure: only a classified local probe is needed; do not share raw errors, tokens, auth URLs or config dumps'
     return 'rclone stopped (exit %d; category=%s; HTTP=%s; stderr_bytes=%d; stdout_bytes=%d); %s. Existing installation and completed cache are preserved.' % (returncode, category, ','.join(codes) or 'none', len(stderr), len(stdout), reason)
+
+
+# Change child logging only; authentication/configuration and the parent's
+# environment are untouched. Never inspect pre-existing log files or their paths.
+RCLONE_LOG_ENV = ('RCLONE_LOG_FILE', 'RCLONE_LOG_LEVEL', 'RCLONE_LOG_FORMAT',
+    'RCLONE_SYSLOG', 'RCLONE_LOG_SYSTEMD', 'RCLONE_USE_JSON_LOG',
+    'RCLONE_QUIET', 'RCLONE_VERBOSE', 'RCLONE_DUMP', 'RCLONE_DUMP_HEADERS',
+    'RCLONE_DUMP_BODIES', 'RCLONE_DUMP_AUTH', 'RCLONE_DUMP_REQUESTS', 'RCLONE_DUMP_RESPONSES')
+
+
+def _rclone_log_environment():
+    environment = os.environ.copy()
+    present = [key for key in RCLONE_LOG_ENV if key in environment]
+    for key in RCLONE_LOG_ENV:
+        environment.pop(key, None)
+    return environment, present
+
+
+@lru_cache(maxsize=1)
+def _rclone_log_flags():
+    """Inspect local CLI support only; no remote access or credentials read."""
+    environment, _ = _rclone_log_environment()
+    try:
+        result = subprocess.run(['rclone', 'help', 'flags'], stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=environment, timeout=10)
+    except (OSError, subprocess.TimeoutExpired):
+        return False, False
+    flags = result.stdout.decode('utf-8', errors='replace') if result.returncode == 0 else ''
+    return bool(re.search(r'(?m)^\s*--log-file\s', flags)), bool(re.search(r'(?m)^\s*--syslog\s', flags))
+
+
+def rclone_read(command):
+    """One read attempt with isolated, private error capture; return no raw log.
+
+    ERROR logs can contain private paths/provider details. A fresh 0600 local
+    temporary file is read only for classification, then closed/unlinked. Neither
+    logs nor environment values become a persistent receipt or user output.
+    """
+    environment, present = _rclone_log_environment()
+    log_file_supported, syslog_supported = _rclone_log_flags()
+    with tempfile.NamedTemporaryFile(prefix='twilight-rclone-error-', mode='w+b') as captured:
+        args = list(command)
+        if log_file_supported:
+            args.extend(['--log-file', captured.name])
+        if syslog_supported:
+            args.append('--syslog=false')
+        result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                stdin=subprocess.DEVNULL, env=environment)
+        log_bytes = os.fstat(captured.fileno()).st_size
+        captured.seek(max(0, log_bytes - 32768))
+        log_tail = captured.read(32768)
+        summary = rclone_failure(result.returncode, result.stderr, result.stdout, log_tail)
+    summary += (' Capture: log_bytes=%d; log_file_supported=%s; syslog_flag_supported=%s;'
+                ' logging_env_present=%s; stdin=closed; tty=false; command_attempt=1.' %
+                (log_bytes, str(log_file_supported).lower(), str(syslog_supported).lower(),
+                 ','.join(present) or 'none'))
+    return result, summary
 
 
 def sha256_file(path):
@@ -275,12 +333,11 @@ class DriveTransport:
                    row['file_id'], str(partial), '--transfers', '1', '--checkers', '1',
                    '--multi-thread-streams', '0', '--retries', '1',
                    '--low-level-retries', '1', '--stats', '0', '--log-level', 'ERROR']
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                stdin=subprocess.DEVNULL)
+        result, summary = rclone_read(command)
         if result.returncode:
             # Avoid echoing raw process stderr: authorization URLs and account
             # details belong to rclone's explicit configuration flow.
-            raise DownloadError(rclone_failure(result.returncode, result.stderr, result.stdout))
+            raise DownloadError(summary)
 
     def download(self, row):
         """Return a SHA256-named cached file only after full length/hash match."""
@@ -330,12 +387,15 @@ class DriveTransport:
     def download_many(self, rows):
         """Bound active bundles and stop scheduling after the first error."""
         unique = {}
+        labels = {}
         for row in rows:
             identity = _validate_row(row)
             key = identity['sha256']
             if key in unique and unique[key] != identity:
                 raise DownloadError('Conflicting metadata for one pinned bundle.')
             unique[key] = identity
+            name = row.get('name', '')
+            labels[key] = name if isinstance(name, str) and re.fullmatch(r'[A-Za-z0-9_. ()-]{1,160}', name) else 'unnamed'
         results = {}
         iterator = iter(unique.values())
         with ThreadPoolExecutor(max_workers=self.workers) as executor:
@@ -348,7 +408,16 @@ class DriveTransport:
                     done, _ = wait(tuple(futures), return_when=FIRST_COMPLETED)
                     for future in done:
                         row = futures.pop(future)
-                        results[row['sha256']] = future.result()
+                        try:
+                            results[row['sha256']] = future.result()
+                        except DownloadError as error:
+                            raise DownloadError('Bundle sha256=%s name=%s bytes=%d workers=%d: %s' %
+                                (row['sha256'][:12], labels[row['sha256']], row['bytes'],
+                                 self.workers, error)) from None
+                        except OSError as error:
+                            raise DownloadError('Bundle sha256=%s name=%s bytes=%d workers=%d: local I/O errno=%s; existing cache preserved.' %
+                                (row['sha256'][:12], labels[row['sha256']], row['bytes'],
+                                 self.workers, error.errno)) from None
                     for _ in done:
                         row = next(iterator, None)
                         if row is not None:
