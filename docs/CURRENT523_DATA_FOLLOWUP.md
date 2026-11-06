@@ -634,3 +634,12 @@ adding another raw fallback would risk counting the same original operand
 twice. Source eligibility is a separate result: all three current direct
 targets are TestItem=true and remain excluded. This does not count a local
 receiver copy or test-only source graph as actual game use.
+
+
+### Native exact enhancement deltas through existing combat consumers (unverified)
+
+The guarded native reader now supplies the existing equipment sum for cast-speed cooldown policy, STR/DEX/INT percentage scaling, melee/ranged critical resistance, melee/ranged/magic and existing PvE reduction percentage, poison damage reduction, HP/MP attack drain, undead maximum addition, and native final-blow probability/amplification. The existing equipment-effect rebuild separately receives damage amplification; MR piercing now passes through the common sum exactly once. These reuse current receivers and their existing scope/caps/order. No new effect rule, attack or save owner is introduced.
+
+Held original examples include item322/group11182 (damage amplification), item560/group12183 (magic reduction), item681/group12722 (critical resistance), item629/group25 (poison reduction), item140701/group11271 (HP drain), item178523/group12792 (cast speed), item213481/group12221 (final-blow chance/amplification, MP drain and PvE reduction), item226358/group12488 (melee/ranged reduction), item226872/group12812 (undead maximum), and items289062/289072/289322 with groups13212/13222/13232 (attribute scaling). These are non-TestItem selectors; this is input evidence, not runtime adoption or a whole-table completion claim.
+
+Every admitted operand is still checked against its exact source selector, row, direct application, possession flag, Unit.Name, divisor, current physical identity, blessing, exact enhancement rank and matching compiled/runtime value. Unit.Percentage uses10000, Unit.Value and ValuePercent use1. Whole-value +0 families remain rejected rather than assuming missing baseline semantics. Conditional types, unsupported receivers, excluded content and withdrawn spell-stage/potion/emoticon work are not added. The unpublished final-blow **flat** receiver is absent from this code; only the already published probability/amplification receiver is used. Changes remain untested and uncompiled by request.

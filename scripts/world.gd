@@ -962,6 +962,7 @@ func _equipment_inven_sum(key: String) -> float:
 				total += ITEM_OPTIONS.additional_original_element(record,key.trim_prefix("source_elemental_flat_"),"damage",PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{}))
 	for record: Dictionary in _equipment523_bonus_records():
 		total += float(record.get(key, 0.0))
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,key)
 	return total
 
 func _equipped_numeric_sum(key: String) -> float:
@@ -1125,6 +1126,7 @@ func _refresh_equipment_effects() -> void:
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 		flags.damage_amp_pct+=ITEM_OPTIONS.additional_original_percent(record,"damage_amp_pct")
+	flags.damage_amp_pct+=SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"damage_amp_pct")
 	flags.hp_tick_amount=quest_recovery_hp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))+halphas_star.catalog_bonus("hp_regen")
 	flags.mp_tick_amount=quest_recovery_mp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) else 0)+source_mp_regeneration+_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"mp_recovery")+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	flags.mp_tick_amount+=int(card_collections.bonus("absolute_mp_regeneration:flat"))+halphas_star.catalog_bonus("mp_regen")
@@ -2384,7 +2386,7 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	var gear_pierce: float = _equipment_inven_sum("magic_penetration_pct")+SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"magic_penetration_pct")
+	var gear_pierce: float = _equipment_inven_sum("magic_penetration_pct")
 	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)),gear_pierce))*halphas_star.combat.hit_factor(player)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:

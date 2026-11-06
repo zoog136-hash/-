@@ -3,12 +3,33 @@ extends RefCounted
 ## Read-only: the existing equipment/rules owners retain physical/save authority.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
+# Only names with an established gameplay receiver are admitted. The last
+# operand is the original Unit.Name; percentage raw values use divisor10000.
+const OPERANDS = {
+	"magic_penetration_pct":{"PierceMagicShieldPercent":["ValuePercent",1]},
+	"castSpeed":{"CastSpeedBonus":["Percentage",10000]},
+	"dot_damage_reduction_pct":{"PoisonDamageReductionPercent":["Percentage",10000]},
+	"strPercent":{"StrengthScale":["Percentage",10000]},
+	"dexPercent":{"DexterityScale":["Percentage",10000]},
+	"intPercent":{"IntelligenceScale":["Percentage",10000]},
+	"melee_critical_resistance":{"MeleeCriticalResist":["Percentage",10000]},
+	"ranged_critical_resistance":{"RangeCriticalResist":["Percentage",10000]},
+	"melee_damage_reduction_pct":{"MeleeDamageReductionPercent":["Percentage",10000]},
+	"ranged_damage_reduction_pct":{"RangeDamageReductionPercent":["Percentage",10000]},
+	"magic_damage_reduction_pct":{"MagicDamageReductionPercent":["Percentage",10000]},
+	"pve_damage_reduction_pct":{"PVEDamageReductionPercent":["Percentage",10000],"DamageReductionPercent":["Percentage",10000]},
+	"damage_amp_pct":{"PierceDamageReductionPercent":["Percentage",10000],"PVEPierceDamageReductionPercent":["Percentage",10000]},
+	"source_attack_drain_hp":{"AttackDrainHP":["Value",1]},
+	"source_attack_drain_mp":{"AttackDrainMP":["Value",1]},
+	"source_undead_damage_max":{"UndeadAdditionalMaxDamage":["Value",1]},
+	"source_final_blow_chance_pct":{"FinalBlowProbability":["Percentage",10000]},
+	"source_final_blow_amp_pct":{"FinalBlowAdditionalScale":["Percentage",10000]}}
 static var evidence: Dictionary = {}
 
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
 
-static func _original_delta(item_id: int, effects: Array, level: int, blessing: int) -> Dictionary:
+static func _original_delta(item_id: int, effects: Array, level: int, blessing: int, key: String) -> Dictionary:
 	var groups: Dictionary = {}; var selectors: Dictionary = {}
 	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_id):
 		var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
@@ -40,9 +61,10 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 			if row.BlessCode!=selected_code: continue
 			var bonus: Dictionary = SOURCE.row("Bonus",int(row.get("BonusID",-1)))
 			var type: Dictionary = SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1)))
-			if type.get("Name")!="PierceMagicShieldPercent": continue
+			if not OPERANDS[key].has(type.get("Name","")): continue
+			var operand: Array = OPERANDS[key][type.Name]
 			var unit: Dictionary = SOURCE.row("Unit",int(type.get("UnitID",-1)))
-			if unit.get("Name")!="ValuePercent" or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(row.get("EnchantLevel")): return {}
+			if unit.get("Name")!=operand[0] or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(row.get("EnchantLevel")): return {}
 			# Whole-value +0 families need their owner's baseline subtraction;
 			# they must never be added to a separately supplied base operand here.
 			if int(row.EnchantLevel)==0: return {}
@@ -51,13 +73,13 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 				if not SOURCE.declared_exclusion(pair[0],pair[1]).is_empty(): return {}
 			var value: Variant = bonus.get("Value")
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)): return {}
-			total+=float(value) # ValuePercent is already percentage points.
+			total+=float(value)/float(operand[1]) # Preserve the original declared unit.
 			used.append({"selector":selectors[group],"row":row,"bonus":bonus,"type":type,"unit":unit})
 	return {"value":total,"rows":used} if not used.is_empty() and is_finite(total) else {}
 
 static func sum_native(world: Node, key: String) -> float:
-	if key!="magic_penetration_pct" or not is_instance_valid(world): return 0.0
-	evidence.clear()
+	if not OPERANDS.has(key) or not is_instance_valid(world): return 0.0
+	evidence[key]={}
 	var identity: Dictionary = SOURCE.identity()
 	if identity.is_empty(): return 0.0
 	var total: float = 0.0; var visited: Dictionary = {}
@@ -92,8 +114,8 @@ static func sum_native(world: Node, key: String) -> float:
 		if typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(expected)) or not is_finite(float(actual)) or actual!=expected: continue
 		var effects: Variant = bound.get("enchant_effects")
 		if not effects is Array: continue
-		var source: Dictionary = _original_delta(int(id),effects,level,blessing)
+		var source: Dictionary = _original_delta(int(id),effects,level,blessing,key)
 		if source.is_empty() or source.value!=expected: continue
 		total+=float(expected)
-		evidence[physical_id]={"source":identity,"item_class_id":id,"level":level,"bless_code":blessing,"rows":source.rows,"value":expected,"model_sha256":world.patch523_equipment.digest}
+		evidence[key][physical_id]={"source":identity,"item_class_id":id,"level":level,"bless_code":blessing,"rows":source.rows,"value":expected,"model_sha256":world.patch523_equipment.digest}
 	return total if is_finite(total) else 0.0
