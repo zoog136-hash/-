@@ -421,8 +421,12 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
+          if python3 -c "import sys; sys.path.insert(0,'tools'); from test_project_support import RETIRED_LEGACY_MAP_TESTS as R; sys.exit(0 if 'field_world_test' in R else 1)"; then
+            echo "::warning title=Retired legacy Aden layout check NOT run::field_world_test (see RETIRED_LEGACY_MAP_TESTS)"
+            exit 0
+          fi
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-field-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/field_world_test.gd -- --legacy-map-layouts 2>&1 | tee godot-field-world.log
+          timeout 900 ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/field_world_test.gd -- --legacy-map-layouts 2>&1 | tee godot-field-world.log
           if grep -E "SCRIPT ERROR:|ERROR:|FIELD FAIL:|FIELD_WORLD_FAILED" godot-field-world.log; then
             exit 1
           fi
@@ -459,7 +463,11 @@ jobs:
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-portal-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd -- --legacy-map-layouts 2>&1 | tee godot-region-portals.log
+          if python3 -c "import sys; sys.path.insert(0,'tools'); from test_project_support import RETIRED_LEGACY_MAP_TESTS as R; sys.exit(0 if 'world_region_portals_test' in R else 1)"; then
+            echo "::warning title=Retired legacy Aden layout check NOT run::world_region_portals_test (see RETIRED_LEGACY_MAP_TESTS)"
+            exit 0
+          fi
+          timeout 900 ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd -- --legacy-map-layouts 2>&1 | tee godot-region-portals.log
           if grep -E "SCRIPT ERROR:|ERROR:|PORTAL FAIL:|WORLD_REGION_PORTALS_FAILED" godot-region-portals.log; then
             exit 1
           fi

@@ -244,6 +244,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
+	# A pooled body has been kinematic before, so the move above is applied at
+	# the next step as motion from its previous life (Node.reparent() is a no-op
+	# under the same parent). Teleport it at the server instead.
+	teleport_body(monster, p)
 	# A pooled actor may carry the last map's source override. Restore that
 	# before setup writes this life/record's normal animation collision shape.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,false)
@@ -291,6 +295,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 			var saved := Vector2(float(position[0]),float(position[1]))
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
+				# The body is already in the physics space; a kinematic body moved
+				# there is simulated as motion from p, sweeping its broadphase box
+				# (the 2026-10-30 Aden stall). Re-register it at the restored point.
+				teleport_body(monster, saved)
 		restore_boss_hp(monster,state)
 		boss_director.capture(str(field.data.map_id),region,monster)
 	_update_activity(monster)
@@ -318,6 +326,19 @@ func _patch523_boss_hold(region: Dictionary) -> String:
 		if SOURCE_M_PORT.native(SOURCE_M_PORT.apply(decision.record, str(field.data.map_id))): return ""
 		reason = "patch523_original_pixels_not_ready"
 	return reason
+
+## Places a kinematic actor at point without simulating motion to it.
+## Godot's 2D server applies a kinematic body's transform immediately only the
+## first time it becomes kinematic; later transforms are integrated as motion,
+## which sweeps the broadphase box across the map (the 2026-10-30 Aden stall).
+## Re-entering kinematic mode restores that first placement for this body.
+static func teleport_body(body: CollisionObject2D, point: Vector2) -> void:
+	body.global_position = point
+	var rid: RID = body.get_rid()
+	if not rid.is_valid() or PhysicsServer2D.body_get_space(rid) == RID(): return
+	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_STATIC)
+	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_KINEMATIC)
+	PhysicsServer2D.body_set_state(rid, PhysicsServer2D.BODY_STATE_TRANSFORM, body.global_transform)
 
 func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
