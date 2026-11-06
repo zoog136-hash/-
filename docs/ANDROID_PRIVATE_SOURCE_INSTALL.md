@@ -98,6 +98,19 @@ startup bridge가 처리한다. 이것은 APK 생성/설치 또는 Android 앱 �
   수행하지 않는다. 이 모드의 shell 진입점은 package 설치·저장소 권한 요청·새
   rclone 인증 설정을 시작하지 않는다. 성공은 media 수신 검증이 아니며, 실패는
   기존 정제된 범주로만 보고하고 자동 재시도하지 않는다.
+  새 오류에서 공식 reason 형식이 관측됐을 때만 고정 허용 목록의 코드를 출력한다:
+  `downloadQuotaExceeded`, `rateLimitExceeded`, `userRateLimitExceeded`,
+  `dailyLimitExceeded`, `storageQuotaExceeded`, `quotaExceeded`. 일반 quota 문구나
+  HTTP403만으로 구체 reason을 추정하지 않는다. 다운로드 제한은 해제 시각을
+  단정하지 않고 대기한다. 요청 속도 제한은 실제 Retry-After가 있으면 준수하고,
+  이후 재개 전에 지수 backoff를 적용해야 한다. 일일 프로젝트 제한이나 Drive
+  저장 한도는 각각 구분하며 폰 용량 부족으로 해석하거나 사용자 파일을 지우지 않는다.
+  Retry-After는 캡처에 문자열이 관측됐는지만 보고한다. 정상 NOTICE 오류는 HTTP
+  헤더를 생략할 수 있으므로 `not_observed`는 헤더 부재 증거가 아니다. 원문·헤더
+  dump를 켜지 않고 과거 로그를 읽지 않으며 제한 해제 시간을 만들어내지 않는다.
+  실패가 확인되면 새 묶음 예약을 중단한다. 이미 진행 중인 다른 작업은 끝날 수
+  있고 완료 캐시는 보존된다. 이후 사용자가 대기 후 같은 명령으로 재개할 때만
+  미완료 묶음을 다시 시도하며, 설치기는 자체적인 반복 다운로드를 시작하지 않는다.
 - 별도 `--token-file`로 명시한 로컬 OAuth access token을 사용하는 경우에만 정확한
   HTTP206/Content-Range 응답을 확인해 바이트 이어받기를 한다. 서버가 Range를
   무시하면 그 묶음만 처음부터 받는다. 인증정보는 로그·캐시·공개 저장소에 넣지 않는다.

@@ -43,6 +43,43 @@ class DownloadError(RuntimeError):
     """The download is unavailable; staged/previous installations are intact."""
 
 
+DRIVE_LIMIT_REASONS = ('downloadQuotaExceeded', 'rateLimitExceeded',
+    'userRateLimitExceeded', 'dailyLimitExceeded', 'storageQuotaExceeded', 'quotaExceeded')
+
+
+def _drive_limit_reasons(message):
+    """Read only fixed reason codes in provider error formats, never raw text.
+
+    googleapi.Error renders either a trailing ', reason', separate
+    'Reason: reason, Message: ...' lines, or a JSON error body. A bare quota
+    word or filename is not sufficient to assert a particular provider code.
+    """
+    observed = []
+    for canonical in DRIVE_LIMIT_REASONS:
+        token = re.escape(canonical.lower())
+        patterns = (
+            r'["\']reason["\']\s*:\s*["\']' + token + r'["\']',
+            r'(?m)^\s*reason:\s*' + token + r'\s*,\s*message:',
+            r'(?m)\bgoogleapi:[^\n]*,\s*' + token + r'\s*$',
+        )
+        if any(re.search(pattern, message) for pattern in patterns):
+            observed.append(canonical)
+    return observed
+
+
+def _drive_limit_guidance(reasons):
+    observed = set(reasons)
+    if observed and observed <= {'rateLimitExceeded', 'userRateLimitExceeded'}:
+        return 'provider request-rate limit: stop; honor any actual Retry-After and use exponential backoff before a deliberate later resume; no automatic retry'
+    if observed == {'downloadQuotaExceeded'}:
+        return 'provider download quota: stop and wait for provider availability; quota scope and reset time are unknown; no automatic retry'
+    if observed == {'dailyLimitExceeded'}:
+        return 'provider project daily usage limit: stop; reset time is unknown; no client/account change or automatic retry'
+    if observed == {'storageQuotaExceeded'}:
+        return 'provider Drive storage quota: stop; this is not evidence of low phone disk space; no files removed or automatic retry'
+    return 'provider quota/rate limit: specific type is unknown or mixed; stop and wait before a deliberate later resume; no alternate account, automatic retry or limit bypass'
+
+
 def rclone_failure(returncode, stderr, stdout=b'', log_output=b''):
     """Classify locally without echoing account details, tokens or auth URLs.
 
@@ -53,6 +90,10 @@ def rclone_failure(returncode, stderr, stdout=b'', log_output=b''):
         return (value[-32768:].decode('utf-8', errors='replace') if isinstance(value, bytes)
                 else str(value)[-32768:]).lower()
     message = bounded_text(stderr) + '\n' + bounded_text(stdout) + '\n' + bounded_text(log_output)
+    provider_reasons = _drive_limit_reasons(message)
+    # NOTICE error strings normally omit response headers. Not observing this
+    # marker cannot establish that the actual HTTP response had no Retry-After.
+    retry_after = 'mentioned' if re.search(r'\bretry-after\b', message) else 'not_observed'
     codes = sorted(set(re.findall(r'(?:googleapi:\s*error|http(?:/\d(?:\.\d)?)?(?:\s+status)?|status(?:\s+code)?)\s*[:=]?\s*([1-5]\d\d)', message)))[:3]
     category = 'UNCLASSIFIED'
     if returncode < 0:
@@ -79,9 +120,9 @@ def rclone_failure(returncode, stderr, stdout=b'', log_output=b''):
     elif '401' in codes or any(value in message for value in ('empty token', 'token is empty', 'no token found', 'token not found', 'couldn\'t find token', 'couldn\'t fetch token', 'no refresh token', 'invalid_grant', 'invalid token', 'token expired', 'oauth2:', 'unauthenticated', '401 unauthorized')):
         category = 'AUTH_REPORTED'
         reason = 'authentication-related output was reported; no automatic reconnect, new credentials or scope change was attempted'
-    elif any(value in message for value in ('ratelimit', 'rate limit', 'quota', '429', 'downloadquotaexceeded')):
+    elif provider_reasons or any(value in message for value in ('ratelimit', 'rate limit', 'quota', '429', 'downloadquotaexceeded')):
         category = 'QUOTA_REPORTED'
-        reason = 'provider quota/rate limit: wait before retrying; no alternate account or limit bypass is attempted'
+        reason = _drive_limit_guidance(provider_reasons)
     elif any(value in message for value in ('403', '404', 'permission', 'insufficient', 'file not found', 'notfound', 'access denied')):
         category = 'FILE_ACCESS_REPORTED'
         reason = 'file access: check the selected account, existing read scope and access to the exact file; this does not prove authentication failed'
@@ -90,7 +131,7 @@ def rclone_failure(returncode, stderr, stdout=b'', log_output=b''):
         reason = 'network/TLS: check the connection and device clock before retrying'
     else:
         reason = 'unclassified failure: only a classified local probe is needed; do not share raw errors, tokens, auth URLs or config dumps'
-    return 'rclone stopped (exit %d; category=%s; HTTP=%s; stderr_bytes=%d; stdout_bytes=%d); %s. Existing installation and completed cache are preserved.' % (returncode, category, ','.join(codes) or 'none', len(stderr), len(stdout), reason)
+    return 'rclone stopped (exit %d; category=%s; HTTP=%s; provider_reason_codes=%s; retry_after_in_capture=%s; response_headers_inspected=false; stderr_bytes=%d; stdout_bytes=%d); %s. Existing installation and completed cache are preserved.' % (returncode, category, ','.join(codes) or 'none', ','.join(provider_reasons) or 'not_observed', retry_after, len(stderr), len(stdout), reason)
 
 
 # Change child logging only; authentication/configuration and the parent's
