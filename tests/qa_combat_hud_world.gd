@@ -31,9 +31,9 @@ func _character_stats_snapshot() -> Dictionary:
 	character_snapshots += 1
 	return super._character_stats_snapshot()
 
-func _effective_max_hp() -> int:
+func _effective_max_hp(base_override: int = -1) -> int:
 	max_hp_queries += 1
-	return super._effective_max_hp()
+	return super._effective_max_hp(base_override)
 
 func _effective_max_mp() -> int:
 	max_mp_queries += 1

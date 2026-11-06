@@ -12,7 +12,7 @@ const RosterChrome=preload("res://scripts/ui/fusion_card_chrome.gd")
 const SourceButton=preload("res://scripts/ui/native_touch_button.gd")
 const ScrollButton=preload("res://scripts/growth/growth_touch_button.gd")
 const SourceList=preload("res://scripts/ui/native_touch_list.gd")
-const BACKDROP=preload("res://assets/ui/fusion_background_painted.png")
+const SourceSurfaces=preload("res://scripts/ui/original_card_surfaces.gd")
 const MATERIAL_GRADES: Array[String]=["일반","고급","희귀","영웅","전설","신화"]
 var catalog: Dictionary={}
 var collection: Dictionary={}
@@ -86,7 +86,10 @@ func _build() -> void:
  _built=true
  name="CardFusionView"
  var surface:=TextureRect.new()
- surface.texture=BACKDROP
+ var original_background: Dictionary=SourceSurfaces.resolve("fusion_background")
+ surface.texture=original_background.get("texture") as Texture2D
+ var background_evidence: Dictionary=original_background.duplicate();background_evidence.erase("texture")
+ surface.set_meta("original_card_background",background_evidence)
  surface.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
  surface.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
  surface.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -271,10 +274,9 @@ func _refresh() -> void:
    source_asset=SourceCard.detail(record,true,false)
    picture=source_asset.get("texture") as Texture2D
   else:
-   var path: String=str(record.get("image_path",""))
-   picture=load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+   source_asset={"status":"source_card_identity_required","texture":null}
   var index: int=_cards.add_item(str(duplicates),picture)
-  var metadata: Dictionary={"id":identity,"grade":str(record.grade),"copies":copies,"duplicates":duplicates}
+  var metadata: Dictionary={"id":identity,"grade":str(record.grade),"copies":copies,"duplicates":duplicates,"source_record":record.duplicate(true)}
   if not source_asset.is_empty():
    var evidence: Dictionary=source_asset.duplicate(true);evidence.erase("texture")
    metadata["original_card_asset"]=evidence
@@ -314,15 +316,15 @@ func _refresh_previews() -> void:
    var evidence: Dictionary=source_asset.duplicate(true);evidence.erase("texture")
    portrait.set_meta("original_card_asset",evidence)
   else:
-   var path: String=str(record.get("image_path",""))
-   if not path.is_empty() and ResourceLoader.exists(path):portrait.texture=load(path)
+   portrait.set_meta("original_card_asset",{"status":"source_card_identity_required"})
   art.add_child(portrait);portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   var aura:=Control.new();aura.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  aura.hide()
+  aura.set_meta("original_card_aura",{"status":"source_card_aura_role_pending"})
   aura.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),true,true)
   art.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-  aura.draw.connect(func() -> void:aura.draw_rect(Rect2(Vector2.ZERO,aura.size),Color.WHITE))
   aura.resized.connect(aura.queue_redraw)
-  var frame:=TextureRect.new();frame.texture=Chrome.texture_for(maxi(0,Cards.GRADES.find(str(record.grade))));frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;frame.stretch_mode=TextureRect.STRETCH_SCALE;frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  var frame:=TextureRect.new();frame.texture=Chrome.texture_for(maxi(0,Cards.GRADES.find(str(record.grade))),record);frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;frame.stretch_mode=TextureRect.STRETCH_SCALE;frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
   art.add_child(frame);frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   frame.material=Chrome.material_for(maxi(0,Cards.GRADES.find(str(record.grade))),false,true)
   # The corner is actual spendable ownership, never this transaction's allocation.

@@ -28,7 +28,7 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var path: String = str(options.get("manifest_path",""))
 	var expected: String = str(options.get("manifest_sha256",""))
 	var file := FileAccess.open(path,FileAccess.READ)
-	if file == null or file.get_length() <= 0 or file.get_length() > BANK.MAX_JSON or not BANK.valid_sha(expected): return fail("current523_awakening_bank_missing_or_oversized")
+	if file == null or file.get_length() <= 0 or file.get_length() > BANK.MAX_MANIFEST_JSON or not BANK.valid_sha(expected): return fail("current523_awakening_bank_missing_or_oversized")
 	file.close()
 	# Ordinary production pin admission; this does not launch an asset audit.
 	if FileAccess.get_sha256(path) != expected: return fail("current523_awakening_bank_pin_changed")

@@ -39,7 +39,7 @@ func verify_actual_npc_hit(world: TwilightWorld,key: String) -> void:
   var crit_roll: float=world.rng.randf()
   if critical_case and not (crit_roll>=world._critical_chance(50,world._critical_resistance_stat(kind)) and crit_roll<world._critical_chance(50,world._critical_resistance_stat())):continue
   var expected: int=100 if kind=="magic" else world._physical_damage_after_reduction(100)
-  expected=world.growth.incoming_damage(world._pve_damage_after_item_buffs(expected,kind))
+  expected=world.growth.incoming_damage(world._pve_damage_after_item_buffs(expected,0.0,kind))
   world.rng.seed=seed;world.hp=world._effective_max_hp();var before: int=world.hp
   actor.player_hit.emit(actor,100,kind)
   if not COMBAT.fired.is_empty():continue
@@ -125,7 +125,7 @@ func run() -> void:
    check(world._critical_resistance_stat(kind)==clampi(common+int(value),0,50) and world._critical_resistance_stat(other)==clampi(common+int(world._equipment_inven_sum(other+"_critical_resistance")),0,50),"critical resistance keeps exact attack scope including gear with both bonuses "+key)
   elif key.ends_with("_damage_reduction_pct") and key!="dot_damage_reduction_pct":
    var kind: String=key.get_slice("_",0)
-   check(world._pve_damage_after_item_buffs(10000,kind)<world._pve_damage_after_item_buffs(10000,""),"actual attack-scoped incoming percent "+key)
+   check(world._pve_damage_after_item_buffs(10000,0.0,kind)<world._pve_damage_after_item_buffs(10000,0.0,""),"actual attack-scoped incoming percent "+key)
   elif key=="dot_damage_reduction_pct":
    for kind: String in ["poison","bleed"]:
     world.hp=world._effective_max_hp();var before: int=world.hp
