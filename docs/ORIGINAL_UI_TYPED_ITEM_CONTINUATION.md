@@ -27,6 +27,10 @@ The old quickslot caption can contain a missing-original-image explanation for a
 
 The source quickslot consumer uses this producer instead of parsing or copying a caption. Zero remains an actual zero; missing/stale/invalid quantity hides only the amount field and does not invent a stock count. Existing missing-image explanations, image resolver, cooldown formatter, icon ownership, page policy and use callback remain unchanged. The existing original Text18112 and current v30 pack are reused.
 
+## Large inventory row consumption
+
+The original slot consumer previously scanned every owned entry again for each displayed reference before checking its authored capacity. It now creates one exact-reference index and follows the existing owner's filtered acquisition order through that index. Duplicate/missing references remain rejected; no sorting, first-match substitution, row placement or ownership is introduced. The linking pass is linear in owned plus ordered entries instead of their product. This also avoids the quadratic work before a large inventory correctly declines the current4/8-slot presentation. The fallback/partial-layout limitation remains unchanged and is not counted as full native inventory support.
+
 ## Specific remaining contracts
 
 The original inventory presenter still has only the authored4/8 slot instances and declines larger filtered inventories. Repeated row placement/content sizing beyond that authored set remains unestablished; no pitch, row cloning or pagination was invented here. Tooltip quantity/use/equip targets, native cart/row/quantity/batch confirmation relations, original CSB-to-Sprite registration, reward targets and authoritative dialogue NPC identity remain separate missing inputs. The36 dependency gaps are unchanged.
