@@ -331,3 +331,33 @@ owner changes are not copied or overwritten. ItemBook saved eqc identity,
 admitted range/weapon context and dialogue-to-mobile-NPC identity remain exact
 separate dependencies. No test/compile/game/render/CI or adoption recount ran.
 Both reward-rate caller connections are unverified.
+
+### Existing map-owner boundary (no duplicate placement)
+
+PR276 was read at6b9cfc85f4113c7d054ae5057724225f0c7bd04d. Its
+scripts/maps/current523_source_spawns.gd::context_key(npc_id,view_id,link_id)
+already requests lineagem_base508:npc:N:spawn:V:territory:L, with V being
+NpcSpawnPackNpcClassView.ID and L being NpcSpawnPackTerritory.ID, not the
+Territories.ID. The two rows join on NpcSpawnPackID; view.NpcClassID is N.
+Territory-link.TerritoriesID resolves through Territories to Land.ID.
+
+The existing current reader scripts/monsters/base508_source_roster.gd::
+for_spawn(key,host_map_id) accepts that exact tuple, calls the current original
+CONTEXT.record(N,V,L,host), sets source_m_current523_final=true and leaves
+source_m_asset_manifest_path empty. The legacy key spelling preserves identity;
+it does not select the old actor pack. patch523_spawn_policy.gd subsequently
+checks the actual view/link/NPC/territory/land/level relation. This PR adds no
+second placement, density, respawn or population controller. Those remain PR276.
+
+For travel, the actual original forward LandTeleport.ID relations currently
+held here are SpecialDungeon.LandTeleportID (already consumed by
+source_dungeon_projection.gd::_special) and
+AutoScheduleLandTeleport.LandTeleportID. A TeleportToTerritory bonus points to
+a territory, not a LandTeleport.ID. patch523_world_links.gd's separate_routes
+is an array of LandTeleportTerritories alternatives explicitly marked
+UNVERIFIED_SEPARATE_TRAVEL_ROUTE; selecting its first route or using a
+territory/item/NPC ID as LandTeleport.ID is not authorized by that relation.
+The current NpcClass declaration has no teleport or talk identity field.
+This is not a claim that every NPC action table has been examined. Actual
+item/NPC action -> chosen route -> prerequisite/cost result remains the
+integration owner's caller contract, so no World travel code is duplicated.
