@@ -66,7 +66,13 @@ const WHOLE_ZERO_FAMILIES = {
 	"425:damage_amp_pct":10712,
 	"226348:stun_accuracy":12468,
 	"226348:fear_accuracy":12468,
-	"226358:fear_resistance":12488}
+	"226358:fear_resistance":12488,
+	"276058:source_attack_drain_hp":13138,
+	"276058:source_attack_drain_mp":13138}
+# The owner declares these two distinct canonical baseline keys explicitly.
+const WHOLE_ZERO_BASE_KEYS = {
+	"276058:source_attack_drain_hp":"hpAbsorption",
+	"276058:source_attack_drain_mp":"mpAbsorption"}
 static var evidence: Dictionary = {}
 
 static func integer(value: Variant) -> bool:
@@ -141,7 +147,9 @@ static func _original_delta(item_id: int, effects: Array, level: int, blessing: 
 
 static func _whole_zero_baseline(world: Node, item_key: String, key: String, current: Dictionary, expected: Dictionary) -> Dictionary:
 	# No base-key/unit/scale policy is generalized beyond these held families.
-	if not WHOLE_ZERO_FAMILIES.has(item_key+":"+key) or expected.keys().size()!=3 or expected.get("base_key")!=key or not integer(expected.get("scale")) or expected.get("scale")!=1: return {}
+	var entry_key: String = item_key+":"+key
+	var base_key: String = WHOLE_ZERO_BASE_KEYS.get(entry_key,key)
+	if not WHOLE_ZERO_FAMILIES.has(entry_key) or expected.keys().size()!=3 or expected.get("base_key")!=base_key or not integer(expected.get("scale")) or expected.get("scale")!=1: return {}
 	var whole: Variant = expected.get("total")
 	if typeof(whole) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(whole)): return {}
 	for row: Dictionary in SOURCE.related("ItemBonus","ItemClassID",int(item_key)):
@@ -153,15 +161,22 @@ static func _whole_zero_baseline(world: Node, item_key: String, key: String, cur
 		if canonical.get(field)!=current.get(field): return {}
 	if canonical.get("source_m_native_item")!=true or not world.patch523_equipment.catalog_identity_matches(canonical,item_key): return {}
 	var annotated: Dictionary = OPTIONS.annotate(canonical)
-	var baseline: Variant = annotated.get(key,0)
+	var baseline: Variant = annotated.get(base_key,0)
 	if typeof(baseline) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(baseline)) or baseline!=0: return {}
-	var current_base: Variant = current.get(key,0)
+	var current_base: Variant = current.get(base_key,0)
 	if typeof(current_base) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(current_base)) or current_base!=baseline: return {}
+	if base_key!=key:
+		for record: Dictionary in [annotated,current]:
+			var operand: Variant = record.get(key,0)
+			if typeof(operand) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(operand)) or operand!=0: return {}
+		if key=="source_attack_drain_hp":
+			for record: Dictionary in [canonical,current]:
+				if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"): return {}
 	if key=="attackSpeed" and (CATALOG_EFFECTS.attack_speed_percent(canonical)!=0 or CATALOG_EFFECTS.attack_speed_percent(current)!=0): return {}
 	var status_receiver: String = {"stun_accuracy":"_record_stun_accuracy","fear_accuracy":"_record_fear_accuracy","fear_resistance":"_record_fear_resistance"}.get(key,"")
 	if not status_receiver.is_empty():
 		if not world.has_method(status_receiver) or world.call(status_receiver,canonical)!=0 or world.call(status_receiver,current)!=0: return {}
-	return {"total":whole,"base_key":key,"base":baseline,"scale":1,"delta":float(whole)-float(baseline)}
+	return {"total":whole,"base_key":base_key,"base":baseline,"scale":1,"delta":float(whole)-float(baseline)}
 
 static func sum_native(world: Node, key: String) -> float:
 	if not OPERANDS.has(key) or not is_instance_valid(world): return 0.0
