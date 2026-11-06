@@ -914,6 +914,20 @@ func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary)
 	MATERIAL.bind_display(sprite,node.get_meta("source_display_color",Color.WHITE))
 	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"image_info_registration_complete":false}
 
+func clear_bound_source_visual(source_offset: int) -> Dictionary:
+	var node: Node2D=source_nodes.get(source_offset)
+	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot":return {"ok":false,"error":"source_asset_slot_binding_missing"}
+	_detach_source_scene(node)
+	if node.has_meta("source_image_options"):return clear_bound_source_image(source_offset)
+	if not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_original_sprite_required"}
+	var sprite: Sprite2D=node.get_meta("source_sprite")
+	sprite.texture=null
+	if node.has_meta("source523_original_asset"):node.remove_meta("source523_original_asset")
+	if node.has_meta("source_runtime_texture_size"):node.remove_meta("source_runtime_texture_size")
+	_resolved_assets.erase(source_offset)
+	node.set_meta("source_asset_pending",true);node.visible=false
+	return {"ok":true,"cleared":true,"original_node_transform_retained":true}
+
 func clear_bound_source_image(source_offset: int) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_image_options"):return {"ok":false,"error":"source_image_slot_binding_missing"}
@@ -981,6 +995,9 @@ func set_bound_source_scene_result(source_offset: int, descriptor: Dictionary) -
 	var prepared: Dictionary=preload("res://scripts/ui/original_ui/source_asset_scene.gd").prepare(descriptor)
 	if not prepared.get("ok",false):return prepared
 	var player: Node2D=prepared.player
+	if registration.get("kind")=="TWILIGHT_host_registration":
+		var confirmed: Dictionary=registration.receiver.validate_attachment(self,source_offset,descriptor)
+		if not confirmed.get("ok",false):player.free();return confirmed
 	# This is the exact authored Sprite anchor node, not its preview texture's
 	# bottom-left origin. The owner must prove this registration explicitly.
 	# Both the target transform and the identity original CSB root are retained.

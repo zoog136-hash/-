@@ -8,9 +8,18 @@ const RENDERER_SCRIPT_PATH="res://scripts/ui/original_ui/sprite_scene.gd"
 static func prepare(descriptor: Dictionary) -> Dictionary:
 	var registration: Variant=descriptor.get("registration")
 	if not registration is Dictionary:return _fail("source_asset_scene_original_registration_required",["registration"])
-	if registration.get("space")!="authored_sprite_anchor":return _fail("source_asset_scene_registration_space_unsupported",["registration.space=authored_sprite_anchor"])
-	if typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=true:return _fail("source_asset_scene_original_registration_pending",["registration.original_registration_confirmed=true"])
-	if not registration.get("source_basis") is String or str(registration.source_basis).strip_edges().is_empty():return _fail("source_asset_scene_original_registration_basis_required",["registration.source_basis"])
+	var host_receiver: RefCounted
+	var host_proof: Dictionary={}
+	if registration.get("kind")=="TWILIGHT_host_registration":
+		var candidate: Variant=registration.get("receiver")
+		if not candidate is RefCounted or not is_instance_valid(candidate) or candidate.get_script()==null or candidate.get_script().resource_path!="res://scripts/ui/original_ui/source_item_scene_receiver.gd":return _fail("source_asset_scene_typed_host_receiver_required")
+		host_receiver=candidate
+		host_proof=host_receiver.validate_descriptor(descriptor)
+		if not host_proof.get("ok",false):return host_proof
+	else:
+		if registration.get("space")!="authored_sprite_anchor":return _fail("source_asset_scene_registration_space_unsupported",["registration.space=authored_sprite_anchor"])
+		if typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=true:return _fail("source_asset_scene_original_registration_pending",["registration.original_registration_confirmed=true"])
+		if not registration.get("source_basis") is String or str(registration.source_basis).strip_edges().is_empty():return _fail("source_asset_scene_original_registration_basis_required",["registration.source_basis"])
 	var pack: Variant=descriptor.get("pack")
 	if not is_instance_valid(pack) or not pack is RefCounted:return _fail("source_asset_scene_open_source_pack_required",["pack"])
 	var pack_script: Script=pack.get_script()
@@ -72,7 +81,10 @@ static func prepare(descriptor: Dictionary) -> Dictionary:
 		# Do not seek frame zero or choose an animation when the owner has
 		# supplied no policy. Existing strict loader initialization is retained.
 		player.stop()
-	return {"ok":true,"player":player,"member":member,"manifest_sha256":manifest_pin,"source_sha256":source_pin,"registration":registration.duplicate(true),"playback":playback,"renderer_result":configured,"unparented":player.get_parent()==null,"wrapper_identity":true,"original_root_options":options.duplicate(true),"root_transform_modified":false,"layout_inferred":false,"runtime_rendering_verified":false}
+	if host_receiver!=null:
+		host_proof=host_receiver.validate_descriptor(descriptor)
+		if not host_proof.get("ok",false):player.free();return host_proof
+	return {"ok":true,"player":player,"member":member,"host_registration_proof":host_proof,"manifest_sha256":manifest_pin,"source_sha256":source_pin,"registration":registration.duplicate(true),"playback":playback,"renderer_result":configured,"unparented":player.get_parent()==null,"wrapper_identity":true,"original_root_options":options.duplicate(true),"root_transform_modified":false,"layout_inferred":false,"runtime_rendering_verified":false}
 
 static func _identity_root(widget: Dictionary) -> bool:
 	return _vector(widget.get("position"),Vector2.ZERO) and _vector(widget.get("size"),Vector2.ZERO) and _vector(widget.get("anchorPoint"),Vector2.ZERO) and _vector(widget.get("scale"),Vector2.ONE) and _vector(widget.get("rotationSkew"),Vector2.ZERO) and widget.has("flipX") and widget.has("flipY") and not bool(widget.flipX) and not bool(widget.flipY)

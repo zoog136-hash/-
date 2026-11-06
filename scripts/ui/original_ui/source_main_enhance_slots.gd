@@ -2,6 +2,9 @@ extends RefCounted
 ## Explicit TWILIGHT host registration, not a recovered original controller.
 ## Supplied paired source Projects + official before/after guide + actual Forge inputs.
 const Images=preload("res://scripts/ui/source523_image_assets.gd")
+const ItemSceneReceiver=preload("res://scripts/ui/original_ui/source_item_scene_receiver.gd")
+const NativeScenes=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
+const SourceScene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const MEMBER="UI/FloatingUi/Enchant_All.csb"
 const SHA="5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face"
 const COMMON="UI/CommonUi/Common_Slot.csb"
@@ -18,6 +21,7 @@ var _legacy: Dictionary={}
 var _signature: int=0
 var _cached: bool=false
 var _status: Dictionary={}
+var _native_descriptors: Dictionary={}
 
 func build(pack: RefCounted, forge: Control) -> Dictionary:
 	for spec: Array in [[MEMBER,SHA],[COMMON,COMMON_SHA]]:
@@ -52,7 +56,11 @@ func refresh() -> Dictionary:
 	if not snapshot.get("ok",false):clear();return snapshot
 	var reader: RefCounted=Images.active()
 	var signature: int=hash([snapshot.scroll,snapshot.equipment,snapshot.scroll_record,snapshot.equipment_record,reader.get_instance_id() if reader!=null else 0])
-	if _cached and signature==_signature:return _status.duplicate(true)
+	if _cached and signature==_signature:
+		var valid: bool=true
+		for descriptor: Dictionary in _native_descriptors.values():
+			if not descriptor.registration.receiver.validate_descriptor(descriptor).get("ok",false):valid=false;break
+		if valid:return _status.duplicate(true)
 	clear()
 	var results: Dictionary={}
 	for role: String in PROJECTS:
@@ -62,19 +70,33 @@ func refresh() -> Dictionary:
 		# This is the existing image owner's exact original ItemClass/Icon/Asset path.
 		# A CSB icon without its separate established registration remains pending.
 		var image: Dictionary=Images.describe_item(record,str(record.get("name","")))
-		if not image.get("ok",false) or image.get("route")!="source523_images" or image.get("status")!="original_linked" or image.get("original_bytes_unchanged")!=true or not image.get("texture") is Texture2D:
-			var pending: Dictionary=image.duplicate(true);pending.erase("texture")
-			results[role]={"assigned":false,"owner_result":pending}
-			continue
 		var owner_result: Dictionary=image.duplicate(true)
+		if image.get("reason")=="unsupported_csb" and role=="equipment":
+			var forge: Object=_forge.get_ref()
+			var issued: Dictionary=ItemSceneReceiver.capture_forge(forge.hud,role)
+			if issued.get("ok",false):
+				var slot: Dictionary=SourceScene.external_scene_slot_contract(player.source_pack,COMMON,ICON)
+				owner_result=NativeScenes.request(forge.hud,image,{"source_slot_contract":slot,"source_host_registration":issued.registration})
+			else:owner_result=issued
+		elif not image.get("ok",false) or image.get("route")!="source523_images" or image.get("status")!="original_linked" or image.get("original_bytes_unchanged")!=true or not image.get("texture") is Texture2D:
+			owner_result={"ok":false,"owner_result":image}
+		if not owner_result.get("ok",false):
+			var pending: Dictionary=image.duplicate(true);pending.erase("texture")
+			results[role]={"assigned":false,"owner_result":pending,"receiver_result":owner_result}
+			continue
 		var assigned: Dictionary=player.set_bound_source_visual_result(ICON,owner_result)
 		if assigned.get("ok",false):assigned=player.set_bound_visible(ICON,true)
 		var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")
 		results[role]={"assigned":assigned.get("ok",false),"image":evidence,"receiver_result":assigned}
 		if assigned.get("ok",false):
+			if owner_result.get("source_scene_descriptor") is Dictionary:_native_descriptors[role]=owner_result.source_scene_descriptor
 			var view: Object=_legacy[role].view.get_ref()
 			if is_instance_valid(view):view.hide();_legacy[role].replaced=true
 	_signature=signature;_cached=true
+	# A provider/selected-pack dependency can arrive after this mount. Never
+	# cache a pending native descriptor as a permanent completed presentation.
+	for role: String in results:
+		if not results[role].get("assigned",false):_cached=false
 	_status={"ok":true,"target_reference":snapshot.equipment,"scroll_reference":snapshot.scroll,"roles":results,"registration":BASIS.duplicate(true),"game_state_written":false,"runtime_rendering_verified":false}
 	return _status.duplicate(true)
 
@@ -84,7 +106,17 @@ func receiver(role: String) -> Dictionary:
 	if not snapshot.get("ok",false):return snapshot
 	var player: Node2D=_players[role].get_ref() if _players.has(role) else null
 	if not is_instance_valid(player) or player.is_queued_for_deletion() or not player.is_inside_tree():return _fail("enhance_slots_live_receiver_required")
-	return {"ok":true,"player":player,"host_role":role,"source_member":COMMON,"source_sha256":COMMON_SHA,"node_offset":ICON,"parent_member":MEMBER,"parent_sha256":SHA,"project_path":[724,PROJECTS[role]],"actual_scroll_reference":snapshot.scroll,"actual_target_reference":snapshot.equipment,"record":snapshot[role+"_record"].duplicate(true),"registration":BASIS.duplicate(true),"csb_icon_root_registration_confirmed":false,"runtime_rendering_verified":false}
+	var forge: Object=_forge.get_ref()
+	var physical_id: String=""
+	if role=="equipment":
+		var entry: Dictionary=forge.values[forge.selected_index]
+		var raw_id: Variant=entry.get("instance_id")
+		var instances: Variant=forge.hud.get_parent().get("item_instances")
+		if not raw_id is String or raw_id.is_empty() or not instances is Dictionary or not instances.get(raw_id) is Dictionary:return _fail("enhance_slots_actual_owned_physical_target_required")
+		var physical: Dictionary=instances[raw_id]
+		if physical.get("name")!=entry.get("name") or physical.get("record")!=snapshot.equipment_record:return _fail("enhance_slots_current_physical_source_record_required")
+		physical_id=raw_id
+	return {"ok":true,"player":player,"host_role":role,"physical_instance_id":physical_id,"source_member":COMMON,"source_sha256":COMMON_SHA,"node_offset":ICON,"parent_member":MEMBER,"parent_sha256":SHA,"project_path":[724,PROJECTS[role]],"actual_scroll_reference":snapshot.scroll,"actual_target_reference":snapshot.equipment,"record":snapshot[role+"_record"].duplicate(true),"registration":BASIS.duplicate(true),"csb_icon_root_registration_confirmed":false,"runtime_rendering_verified":false}
 
 func invalidate_images() -> void:
 	_cached=false
@@ -92,12 +124,12 @@ func invalidate_images() -> void:
 func clear() -> void:
 	for role: String in PROJECTS:
 		var player: Node2D=_players[role].get_ref() if _players.has(role) else null
-		if is_instance_valid(player) and not player.is_queued_for_deletion():player.clear_bound_source_image(ICON)
+		if is_instance_valid(player) and not player.is_queued_for_deletion():player.clear_bound_source_visual(ICON)
 		if _legacy.has(role) and _legacy[role].replaced:
 			var view: Object=_legacy[role].view.get_ref()
 			if is_instance_valid(view):view.visible=_legacy[role].visible
 			_legacy[role].replaced=false
-	_cached=false;_status.clear()
+	_native_descriptors.clear();_cached=false;_status.clear()
 
 func close() -> void:
 	clear();_players.clear();_legacy.clear();_forge=null
