@@ -54,6 +54,13 @@ these unresolved decorative roles. Actual display and full-function equivalence
 remain unverified, including the missing surface roles and disabled synthetic
 developer showcase.
 
+Collection and awakening-collection frame callers pass the actual canonical
+record to the same frame resolver. Unavailable original frames are not painted.
+Retired aura materials cannot leave a white ColorRect/Control over the original
+portrait: those drawing paths are guarded or hidden when no material exists.
+Ownership, selected-card IDs and collection requirements remain with their
+existing owners. This does not supply an original aura role.
+
 ## Owner boundaries and deployment
 
 Read owner checkpoints: PR283 `0d3a1ce832ef955b173e4186334db5d745fc9284`
