@@ -7,7 +7,7 @@ const PROFILES = preload("res://scripts/ui/card_reveal_profiles.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
-const ATLAS = preload("res://assets/card_reveal/authored_atlas.webp")
+const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
 const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
@@ -52,13 +52,13 @@ class Face extends Control:
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO,size),Color("0a1119"))
 		if elapsed < 0:
-			draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
+			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 			return
 		draw_rect(Rect2(Vector2.ZERO,size),Color(tint,0.08))
 		if elapsed >= duration:
 			_art(artwork,Vector2.ZERO)
 		elif candidates.is_empty():
-			draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
+			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 		else:
 			# Keep visibly moving after the grade signal, then land at reveal_at.
 			var position_value: float = (1-pow(1-clampf(elapsed/duration,0,1),2.0))*40.0
@@ -69,13 +69,6 @@ class Face extends Control:
 				_art(image,Vector2((float(j)-offset)*size.x,0))
 		# Surface reflection follows the result color and leaves the figure legible.
 		draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
-
-static func authored_art(index: int = 4) -> AtlasTexture:
-	var result := AtlasTexture.new()
-	result.atlas = ATLAS
-	var cell: Vector2 = ATLAS.get_size()/Vector2(4,3)
-	result.region = Rect2(Vector2(index%4,index/4)*cell+Vector2(2,2),cell-Vector2(4,4))
-	return result
 
 func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = []) -> void:
 	record = value.duplicate(true)
@@ -100,7 +93,7 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 			candidate_assets.append(candidate_evidence)
 		face.set_meta("source_candidate_assets",candidate_assets)
 	else:
-		face.candidates = candidates
+		face.set_meta("source_candidate_assets",{"status":"source_card_identity_required"})
 	face.tint = PROFILES.color(grade)
 	if SourceCard.native(record):
 		var original: Dictionary = SourceCard.detail(record,true)
@@ -110,18 +103,12 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		evidence["card_id"] = SourceCard.CARDS.card_id(record)
 		face.set_meta("original_card_asset",evidence)
 	else:
-		var path: String = str(record.get("image_path",""))
-		if not path.is_empty() and ResourceLoader.exists(path):
-			face.artwork = load(path) as Texture2D
-		elif str(record.get("id","")).is_empty() and str(record.get("sourceId","")).is_empty():
-			# The explicitly marked developer showcase has no awarded card identity.
-			face.artwork = authored_art()
+		face.set_meta("original_card_asset",{"status":"source_card_identity_required","texture":null})
 	art_missing=face.artwork==null
-	var back := AtlasTexture.new()
-	back.atlas = ATLAS
-	var cell: Vector2 = ATLAS.get_size()/Vector2(4,3)
-	back.region = Rect2(Vector2(3.13,2.045)*cell,cell*Vector2(0.74,0.86))
-	face.back = back
+	var back: Dictionary=SourceSurfaces.resolve("reveal_back",record)
+	face.back=back.get("texture") as Texture2D
+	var back_evidence: Dictionary=back.duplicate();back_evidence.erase("texture")
+	face.set_meta("original_card_back",back_evidence)
 	clip.add_child(face)
 	for pass_name: String in ["GradeLightningInsideCard","PromotionLightningInsideCard"]:
 		var effect: Control = FX.new()

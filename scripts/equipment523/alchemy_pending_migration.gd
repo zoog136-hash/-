@@ -33,7 +33,10 @@ static func snapshot(world: Node) -> Dictionary:
 	var warehouse: Variant = _property(world,"warehouse")
 	if warehouse != null and warehouse.has_method("snapshot"): references["warehouse"] = warehouse.call("snapshot")
 	var catalog: Array = []
-	for source: Variant in [world.get("catalog_db").get("아이템",[]),world.get("item_db")]:
+	# Hosts without a catalog (service fixtures, early boot) have nothing to
+	# migrate; read every host field defensively instead of failing mid-tick.
+	var catalog_db: Variant = _property(world,"catalog_db")
+	for source: Variant in [catalog_db.get("아이템",[]) if catalog_db is Dictionary else [],_property(world,"item_db")]:
 		if not source is Array: continue
 		for record: Variant in source:
 			if not record is Dictionary: continue
@@ -41,7 +44,9 @@ static func snapshot(world: Node) -> Dictionary:
 			for field: String in Native.IDENTITY_FIELDS:
 				if record.has(field): identity[field] = record[field]
 			catalog.append(identity)
-	return {"inventory":world.get("inventory").duplicate(true),"item_instances":world.get("item_instances").duplicate(true),"references":references,"catalog":catalog}
+	var inventory: Variant = _property(world,"inventory")
+	var item_instances: Variant = _property(world,"item_instances")
+	return {"inventory":inventory.duplicate(true) if inventory is Dictionary else {},"item_instances":item_instances.duplicate(true) if item_instances is Dictionary else {},"references":references,"catalog":catalog}
 
 static func _referenced(value: Variant, name: String, id: String) -> bool:
 	if value is String:

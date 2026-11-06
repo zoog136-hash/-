@@ -3,7 +3,9 @@ extends Node
 ## No original card atlas / six original UI OGG payloads have been received.
 const DESIGN=preload("res://data/growth/guardian_authored_presentation.json")
 const AUDIO=preload("res://scripts/audio/presentation_audio.gd")
-const SAMPLES={"soft":AUDIO.SOFT,"accent":AUDIO.ACCENT,"contact":AUDIO.CONTACT}
+# 78b7d50 excluded the shared WAVs from the original-only installation; these
+# cues therefore have no sample and stay silent.
+const SAMPLES={"soft":null,"accent":null,"contact":null}
 var settings_path: String="user://guardian_authored_presentation_v1.cfg"
 var preferences: Dictionary=DESIGN.data.defaults.duplicate(true)
 var voices: Array[AudioStreamPlayer]=[]
@@ -57,6 +59,7 @@ func play_confirmed(event: String) -> bool:
 	if world!=null and "presentation_audio" in world and is_instance_valid(world.presentation_audio) and world.presentation_audio.muted:return false
 	if voices.is_empty():return false
 	var cue: Dictionary=DESIGN.data.cues[event]
+	if SAMPLES.get(cue.sample)==null:return false
 	var voice: AudioStreamPlayer=voices[cursor]
 	cursor=(cursor+1)%voices.size()
 	voice.stop();voice.stream=SAMPLES[cue.sample]
