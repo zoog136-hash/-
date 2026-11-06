@@ -34,12 +34,6 @@ TABLES_SOURCE_SHA256 = 'd5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4e
 GENERATED = ('twilight_private_install.json', 'scripts/install/private_source_bootstrap.gd')
 RUNTIME_ROOTS = {'addons', 'assets', 'data', 'external_map_packs', 'scenes', 'scripts'}
 RUNTIME_FILES = {'project.godot', 'Main.tscn', 'external_map_packs/.gdignore'}
-RUNTIME_MAPS = {'native_png_v5', 'aden_faith_png_v1', 'domination_png_v1',
-                'oman_png_v1', 'oman_v2', 'source84_v3'}
-SUFFIXES = {'.gd', '.gdshader', '.gdshaderinc', '.gdextension', '.tscn', '.tres',
-            '.res', '.uid', '.cfg', '.json', '.bin', '.nav', '.l1jpng', '.png',
-            '.jpg', '.jpeg', '.webp', '.svg', '.ttf', '.otf', '.ogg', '.wav',
-            '.mp3', '.flac', '.glb'}
 OFFLINE_DIRS = ('assets/maps/aden_city_region', 'assets/maps/aden_modular_district_01',
                 'assets/maps/aden_modular_pilot', 'assets/maps/aden_rebuild_preview',
                 'assets/maps/aden_world_draft', 'assets/original_sheets')
@@ -125,24 +119,146 @@ def runtime_path(name):
         return True
     if path.parts[0] not in RUNTIME_ROOTS or name in OFFLINE_FILES:
         return False
+    # Private original packs are separate installer inputs. A filename suffix
+    # is not permission to hydrate every historical image/animation family.
+    # Git assets are selected below only through explicit source dependencies.
+    if path.parts[0] == 'assets':
+        return False
     if any(name == x or name.startswith(x + '/') for x in OFFLINE_DIRS):
         return False
     if name.startswith('data/pr122_'):
         return False
-    if re.match(r'assets/actors/eight_direction/native_locomotion_staging/transform_[^/]+/draft001/', name):
-        return False
     if path.parts[0] == 'external_map_packs':
-        if len(path.parts) < 2 or path.parts[1] not in RUNTIME_MAPS:
-            return False
-        if name.startswith('external_map_packs/source84_v3/') and name.endswith('.u8.gz'):
-            return True
-    return path.suffix.lower() in SUFFIXES and not name.endswith(('.bak', '.tmp', '.backup'))
+        # New maps arrive in pinned private bundles, not the historical Git
+        # PNG/map archives. Explicit code references are checked separately.
+        return False
+    code_metadata = {
+        'scripts': {'.gd', '.uid', '.gdshader', '.gdshaderinc'},
+        'addons': {'.gd', '.uid', '.gdextension', '.json', '.cfg', '.gdshader', '.gdshaderinc'},
+        'scenes': {'.tscn', '.uid'},
+        'data': {'.json', '.bin', '.nav', '.cfg'},
+    }
+    return path.suffix.lower() in code_metadata.get(path.parts[0], set()) and not name.endswith(('.bak', '.tmp', '.backup'))
+
+
+def prefetch_runtime_blobs(repo, entries):
+    """Request only selected object IDs together, never all asset trees."""
+    # --missing=print inspects promisor metadata without materializing missing
+    # image blobs. Reuse existing code objects on updates instead of requesting
+    # every selected SHA again with a new no-negotiation fetch.
+    objects = run(['git', 'rev-list', '--objects', '--all', '--missing=print'],
+                  cwd=repo, capture=True)
+    missing = {line[1:] for line in objects.splitlines() if line.startswith('?')}
+    wants = sorted({entry['blob_sha1'] for entry in entries.values()} & missing)
+    if wants:
+        run(['git', '-c', 'fetch.negotiationAlgorithm=noop', 'fetch',
+             '--no-tags', '--no-write-fetch-head', '--recurse-submodules=no',
+             '--filter=blob:none', 'origin', '--stdin'], cwd=repo,
+            input_text='\n'.join(wants) + '\n')
+
+
+def original_runtime_dependencies(repo, tree, inventory):
+    """Static, fail-closed boundary; not evidence that the game was run.
+
+    Existing code/data remains intact. Historical visual packs are never
+    reintroduced through a data catalog or an optional load. Required legacy
+    preloads must be removed by their code owner before this target can run.
+    """
+    inspect_suffixes = {'.gd', '.tscn', '.tres', '.godot', '.gdshader', '.gdshaderinc'}
+    source = {name: row for name, row in inventory.items()
+              if PurePosixPath(name).suffix in inspect_suffixes}
+    prefetch_runtime_blobs(repo, source)
+    examined = set()
+    blockers = []
+    omitted = set()
+    while source:
+        dependencies = {}
+        process = subprocess.Popen(['git', 'cat-file', '--batch'], cwd=repo,
+                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                   stderr=subprocess.DEVNULL)
+        try:
+            for name, row in sorted(source.items()):
+                process.stdin.write((row['blob_sha1'] + '\n').encode('ascii'))
+                process.stdin.flush()
+                header = process.stdout.readline().decode('ascii').split()
+                if (len(header) != 3 or header[0] != row['blob_sha1']
+                        or header[1] != 'blob' or not header[2].isdigit()):
+                    raise ValueError('Missing selected runtime source object: ' + name)
+                size = int(header[2])
+                if size > 16 * 1024 * 1024:
+                    raise ValueError('Oversized runtime dependency source: ' + name)
+                data = process.stdout.read(size)
+                if len(data) != size or process.stdout.read(1) != b'\n':
+                    raise ValueError('Truncated runtime dependency source: ' + name)
+                text = data.decode('utf-8')
+                examined.add(name)
+                required = set(re.findall(r'preload\s*\(\s*[\"\']res://([^\"\']+)[\"\']', text))
+                if PurePosixPath(name).suffix in {'.tscn', '.tres', '.godot'}:
+                    required.update(re.findall(r'res://([^\"\'\s)]+)', text))
+                for reference in set(re.findall(r'res://([^\"\'\s)]+)', text)):
+                    if reference not in tree:
+                        continue  # Dynamic paths are not invented or expanded.
+                    relative(reference)
+                    if (reference.split('/', 1)[0] not in RUNTIME_ROOTS
+                            and reference not in RUNTIME_FILES):
+                        if reference in required:
+                            blockers.append(name + ' -> non-runtime dependency ' + reference)
+                        continue
+                    suffix = PurePosixPath(reference).suffix.lower()
+                    historical = (reference.startswith('external_map_packs/') or
+                                  reference.startswith('assets/') and suffix not in
+                                  {'.ttf', '.otf', '.gdshader', '.gdshaderinc'})
+                    if historical:
+                        omitted.add(reference)
+                        if reference in required:
+                            blockers.append(name + ' -> ' + reference)
+                        continue
+                    if reference not in inventory:
+                        dependencies[reference] = tree[reference]
+        finally:
+            process.stdin.close()
+            if process.poll() is None:
+                process.terminate()
+            process.wait()
+            process.stdout.close()
+        # Do not fetch any legacy image/audio merely to make a preload parse.
+        if blockers:
+            log('Original-only code dependency blockers (no legacy visual pack downloaded):')
+            for blocker in sorted(set(blockers))[:32]:
+                log('  ' + blocker)
+            raise ValueError('Current main still requires %d legacy visual preloads/resources; owner code integration is required, not a larger download or fallback pack.' % len(set(blockers)))
+        if not dependencies:
+            break
+        prefetch_runtime_blobs(repo, dependencies)
+        inventory.update(dependencies)
+        source = {name: row for name, row in dependencies.items()
+                  if name not in examined and PurePosixPath(name).suffix in inspect_suffixes}
+    log('Original-only Git selection: %d files; %d explicit historical visual references omitted. Dynamic catalog asset trees are not expanded.' % (len(inventory), len(omitted)))
+    return inventory
 
 
 def packed_code(cache):
     """Git checkout fetches missing sparse blobs together in a pack, not raw URLs."""
-    repo = cache / 'github-runtime'
+    # Preserve the old oversized/failed checkout. Never reset, clean or prune
+    # it automatically. This version has an explicit private ownership receipt.
+    repo = cache / 'github-runtime-minimal-v1'
+    owner_path = cache / 'github-runtime-minimal-v1.owner.json'
+    log('Minimal Git code cache: ' + str(repo))
+    log('Git cache filesystem free bytes: %d' % shutil.disk_usage(cache).free)
+    legacy_repo = cache / 'github-runtime'
+    if legacy_repo.exists():
+        log('Previous Git cache preserved without cleanup: ' + str(legacy_repo))
+    owner = {'schema': 1, 'role': 'twilight-installer-code-cache',
+             'origin': REPO, 'directory': str(repo.resolve())}
+    no_links(owner_path)
     no_links(repo)
+    if owner_path.exists():
+        if read_json(owner_path) != owner:
+            raise ValueError('Unexpected minimal code-cache owner; nothing changed')
+    elif repo.exists():
+        raise ValueError('Existing minimal code cache has no ownership receipt; no takeover')
+    else:
+        json_write(owner_path, owner)
     if not repo.exists():
         run(['git', 'clone', '--filter=blob:none', '--depth=1', '--no-checkout',
              '--single-branch', '--branch', 'main', '--no-tags', REPO, str(repo)])
@@ -159,19 +275,23 @@ def packed_code(cache):
     # of lazy object requests in a partial clone. Tree SHAs alone are enough.
     output = subprocess.check_output(['git', 'ls-tree', '-r', '-z', commit], cwd=repo)
     inventory = {}
+    tree = {}
     for entry in output.split(b'\0'):
         if not entry:
             continue
         header, raw_name = entry.split(b'\t', 1)
         mode, kind, digest = header.decode('ascii').split()
         name = raw_name.decode('utf-8')
-        if not runtime_path(name):
-            continue
         if kind != 'blob' or mode not in ('100644', '100755'):
+            if not runtime_path(name):
+                continue
             raise ValueError('Unsupported runtime tree entry: ' + name)
-        inventory[name] = {'blob_sha1': digest}
+        tree[name] = {'blob_sha1': digest}
+        if runtime_path(name):
+            inventory[name] = tree[name]
     if not {'project.godot', 'Main.tscn'}.issubset(inventory):
         raise ValueError('Incomplete Godot runtime tree')
+    inventory = original_runtime_dependencies(repo, tree, inventory)
     # no-cone patterns are exact escaped file names, not broad root downloads.
     patterns = ['/' + re.sub(r'([\\*?\[\]!#])', r'\\\1', n) for n in sorted(inventory)]
     log('GitHub main %s: %d runtime files, fetched in Git object packs.' % (commit[:12], len(inventory)))
