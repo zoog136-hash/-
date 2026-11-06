@@ -26,8 +26,11 @@ static var quantity_font: FontVariation
 static func texture_for(_rank: int, record: Dictionary={}) -> Texture2D:
 	# Grade rank is a display label, not an original asset identity. Only the
 	# UI owner's exact source-grade/node binding can supply a frame.
-	var original: Dictionary=SourceSurfaces.resolve("grade_frame",record)
+	var original: Dictionary=frame_for(record)
 	return original.get("texture") as Texture2D
+
+static func frame_for(record: Dictionary) -> Dictionary:
+	return SourceSurfaces.resolve("grade_frame",record)
 
 static func material_for(_rank: int, _aura: bool, _detail: bool=false, _reduced: bool=false, _low: bool=false) -> ShaderMaterial:
 	# Keep original pixels unmodified; retired generated metal/aura shaders
@@ -39,6 +42,7 @@ func configure(controller: Node) -> void:
 		quantity_font=FontVariation.new();quantity_font.base_font=UI.FONT
 		quantity_font.variation_opentype={2003265652:650.0}
 	hud=controller
+	SourceSurfaces.watch_frames(self)
 	name="CatalogCardChrome"
 	slots=_layer(hud.catalog_list,"CardBordersAndAuras")
 	slots.clip_contents=true
@@ -143,10 +147,16 @@ func _refresh_layout() -> void:
 func _draw_rank(layer: Control, rank: int, aura: bool) -> void:
 	if not active or layout_generation != hud.catalog_icon_generation:return
 	if aura:return
+	var results: Dictionary={}
 	for card: Dictionary in visible_cards:
 		if card.rank!=rank or card.index<0 or card.index>=hud.catalog_results.size():continue
-		var original: Texture2D=texture_for(rank,hud.catalog_results[card.index])
-		if original!=null:layer.draw_texture_rect(original,card.rect,false,Color.WHITE if card.owned else Ownership.UNOWNED_FRAME_TINT)
+		var frame: Dictionary=frame_for(hud.catalog_results[card.index])
+		var original: Texture2D=frame.get("texture") as Texture2D
+		var evidence: Dictionary=frame.duplicate(true)
+		evidence.erase("texture")
+		results[card.index]=evidence
+		if original!=null:layer.draw_texture_rect(original,card.rect,false)
+	layer.set_meta("source_grade_frame_results",results)
 
 func _draw_card_quantities() -> void:
 	# A filter/page change replaces catalog_results synchronously, while this
@@ -179,8 +189,13 @@ func _preview_rect() -> Rect2:
 	return Rect2((extent-size)*.5,size).grow(-1)
 
 func _draw_preview_frame() -> void:
+	if preview_frame.has_meta("source_grade_frame"):preview_frame.remove_meta("source_grade_frame")
 	if active and not hud.selected_catalog_record.is_empty():
-		var original: Texture2D=texture_for(selected_rank,hud.selected_catalog_record)
+		var frame: Dictionary=frame_for(hud.selected_catalog_record)
+		var original: Texture2D=frame.get("texture") as Texture2D
+		var evidence: Dictionary=frame.duplicate(true)
+		evidence.erase("texture")
+		preview_frame.set_meta("source_grade_frame",evidence)
 		if original!=null:preview_frame.draw_texture_rect(original,_preview_rect(),false)
 
 func _draw_preview_aura() -> void:

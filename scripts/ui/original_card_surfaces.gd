@@ -5,6 +5,28 @@ const Selection=preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const SOURCE_API="res://scripts/lineagem_base508.gd"
 const Roles: Array[String]=["reveal_back","reveal_background","fusion_background","awakening_background","grade_frame"]
 static var _bindings: Dictionary={}
+static var _frame_consumers: Array[WeakRef]=[]
+
+static func watch_frames(consumer: Node) -> void:
+	if not is_instance_valid(consumer) or not consumer.has_method("refresh"):return
+	var live: Array[WeakRef]=[]
+	var present: bool=false
+	for reference: WeakRef in _frame_consumers:
+		var owner: Object=reference.get_ref()
+		if not is_instance_valid(owner):continue
+		live.append(reference)
+		if owner==consumer:present=true
+	if not present:live.append(weakref(consumer))
+	_frame_consumers=live
+
+static func _frames_registered() -> void:
+	var live: Array[WeakRef]=[]
+	for reference: WeakRef in _frame_consumers:
+		var owner: Object=reference.get_ref()
+		if not is_instance_valid(owner):continue
+		live.append(reference)
+		if owner.has_method("refresh"):owner.call_deferred("refresh")
+	_frame_consumers=live
 
 static func _missing(role: String, reason: String) -> Dictionary:
 	return {"ok":false,"status":reason,"role":role,"texture":null,"actual_game_consumption_observed":false}
@@ -43,6 +65,7 @@ static func bind(role: String, member: String, member_sha256: String, node_offse
 	if texture==null:return _missing(role,"source_card_surface_original_pixels_unavailable")
 	var key: String=role+":"+str(grade_id)
 	_bindings[key]={"pack":pack,"texture":texture,"selection":_selected_identity(),"role":role,"source_grade_id":grade_id,"member":member,"member_sha256":member_sha256,"node_offset":node_offset,"source_field":"fileNameData","reference":reference.duplicate(true),"manifest_sha256":pack.manifest_sha256}
+	if role=="grade_frame":_frames_registered()
 	return {"ok":true,"role":role,"registered":true,"rendered":false}
 
 static func resolve(role: String, record: Dictionary={}) -> Dictionary:

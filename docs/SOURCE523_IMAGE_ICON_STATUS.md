@@ -921,3 +921,36 @@ assignment. Exact original role/member/SHA/node and any grade assignment remain
 the UI owner's narrow handoff, with original pixels required in the explicitly
 selected source pack. Existing distribution and private candidates are unchanged.
 This code change is uncompiled/unexecuted/unverified; no test/game/render/CI ran.
+
+### Seven-grade UI registration reaches existing frame consumers
+
+UI286 `265a46e45234bc4894352905bdc55cbac306232e` supplies the actual
+seven GradeID family bindings (1/2/3/4/5/32/52) through
+`source_main_card_frames.bind(pack)` and this image lane's existing
+`original_card_surfaces.bind("grade_frame",member,sha,node,grade_id)` API.
+Its existing family declarations and current card projection share Grade SHA
+`7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da`.
+This supersedes the earlier missing catalogue-frame family handoff only.
+
+The image API now notifies weakly held existing catalogue and fusion consumers
+when an exact original frame registers. This also refreshes a fusion roster
+that was already open when the UI owner bound its source pack. Catalogue rows,
+selected-preview frame and fusion rows consume the canonical card's actual
+GradeID through the same descriptor; no grade rank, name or color selects art.
+Their existing drawing controls retain texture-free per-card frame evidence,
+including selected source pin/member/node/reference and unavailable reasons.
+The catalogue no longer applies a host-invented unowned tint to original frame
+pixels. Existing ownership labels/portraits and transaction state are unchanged.
+
+No UI-owned registration/renderer is copied. Both PR283 and that UI286 change
+are required, together with an explicitly approved original pack containing
+the seven scoped Card_A Sprite nodes. UI's v35 is a local-only candidate;
+the phone's frozen v30/62ZIP selection is unchanged and lacks these optional
+scopes. A registered binding is not an observed game render or completion count.
+
+Result-scene inner backing11140 is not the full reveal background, and its
+front/back variants are not substituted for these Card_A catalogue frames.
+Quest still requires a real selected/displayed quest and the owner's complete
+mixed-reward slot/overflow model. No first-five or representative reward,
+result variant, attachment transform, new image or missing relation is created.
+No resource update/upload, tests, compile, game, render, CI or merge was run.
