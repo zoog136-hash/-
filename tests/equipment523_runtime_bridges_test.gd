@@ -29,7 +29,7 @@ class LegacyStunWorld extends ProbeWorld:
 	func _melee_hit_chance(_target: TwilightMonster) -> float: return 1.0
 	func _roll_melee_hit(_target: TwilightMonster) -> bool: return true
 	func _player_critical_rate(_kind: String) -> int: return 0
-	func _deal_successful_player_hit(target: TwilightMonster, damage: int, critical: bool = false, kind: String = "", main_target: bool = true, by_spell: bool = false, context: Dictionary = {}) -> void:
+	func _deal_successful_player_hit(target: TwilightMonster, damage: int, critical: bool = false, kind: String = "", main_target: bool = true, by_spell: bool = false, context: Dictionary = {}, ordinary_attack: bool = false, relic_attack_context: Dictionary = {}) -> void:
 		landed_hits.append({"target":target,"damage":damage,"critical":critical})
 	func _update_hud() -> void: pass
 	func _update_target_hud() -> void: pass
