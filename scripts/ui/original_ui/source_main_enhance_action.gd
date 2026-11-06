@@ -1,6 +1,7 @@
 extends RefCounted
 ## Only the authored ordinary enhancement action; existing Forge owns the flow.
 const Scene = preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const SlotPair=preload("res://scripts/ui/original_ui/source_main_enhance_slots.gd")
 const MEMBER = "UI/FloatingUi/Enchant_All.csb"
 const SHA256 = "5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face"
 const PARENT_MEMBER = "UI/EnchantScene.csb"
@@ -25,6 +26,8 @@ var _button: Node2D
 var _original_action_visible: bool
 var _replaced: bool = false
 var _fields: Dictionary={}
+var _slot_pair: RefCounted
+var _slot_status: Dictionary={}
 var _presented_offsets: Array[int]=[]
 var _presented_target: String=""
 
@@ -61,6 +64,15 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 		scope.append_array([PROBABILITY,PROBABILITY_LABEL])
 		bindings[PROBABILITY]={"role":"button","activate":Callable(self,"_show_probabilities"),"displaystate":model.info_button!=null and not model.info_button.disabled,"visible":model.info_button!=null}
 		bindings[PROBABILITY_LABEL]={"role":"static_source_text"}
+	var staged_pair: RefCounted
+	var pair_candidate=SlotPair.new()
+	var pair_contract: Dictionary=pair_candidate.build(pack,forge)
+	_slot_status=pair_contract.duplicate(true)
+	if pair_contract.get("ok",false):
+		for offset: int in pair_contract.source_node_offsets:
+			scope.append(offset)
+			bindings[offset]=pair_contract.bindings[offset]
+		staged_pair=pair_candidate
 	var staged := Scene.new()
 	var result: Dictionary = staged.configure_nodes(pack,PARENT_MEMBER,[PROJECT],{PROJECT:{"role":"project","source_node_offsets":scope,"bindings":bindings}})
 	if not result.get("ok",false):
@@ -71,6 +83,11 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 		staged.free()
 		return nested
 	var child: Node2D = nested.player
+	if staged_pair!=null:
+		var registered: Dictionary=staged_pair.bind_renderer(nested.player)
+		if not registered.get("ok",false):staged.free();return registered
+		_slot_pair=staged_pair
+		_fields["slot_pair"]=true
 	var native_node: Variant = child.get("source_nodes").get(BUTTON)
 	var native_button: Variant = native_node.get_meta("source_button",null) if is_instance_valid(native_node) else null
 	var native_control: Variant = native_button.get("_input_area") if is_instance_valid(native_button) else null
@@ -102,7 +119,15 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 	forge.visibility_changed.connect(_owner_visibility_changed)
 	forge.tree_exiting.connect(close)
 	parent.tree_exiting.connect(close,CONNECT_ONE_SHOT)
+	if _slot_pair!=null:_slot_status=_slot_pair.refresh()
 	return {"ok":true,"handled":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":scope.duplicate(),"bound_detail_fields":_fields.keys(),"parent_member":PARENT_MEMBER,"parent_sha256":PARENT_SHA256,"parent_project_offset":PROJECT,"parent_original_position":Vector2(603,343.50750732421875),"parent_original_alpha":255,"opening_clip_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"selection_cost_confirmation_owner":"existing forge._execute"}
+
+func original_slot_receiver(role: String) -> Dictionary:
+	if _slot_pair==null:return _fail("enhance_slots_selected_original_pair_unavailable")
+	return _slot_pair.receiver(role)
+
+func invalidate_source_images() -> void:
+	if _slot_pair!=null:_slot_pair.invalidate_images()
 
 func refresh() -> Dictionary:
 	var forge: Object = _forge.get_ref() if _forge != null else null
@@ -145,6 +170,7 @@ func _refresh_fields(model: Dictionary) -> Dictionary:
 		if result.get("ok",false) and (not is_instance_valid(button) or (button.get("current_state")=="disabled")==enabled):result=_child.set_bound_displaystate(PROBABILITY,enabled)
 		if not result.get("ok",false):return result
 	_presented_target=model.target
+	if _slot_pair!=null:_slot_status=_slot_pair.refresh()
 	return {"ok":true,"target_reference":_presented_target,"bound_detail_fields":_fields.keys(),"transaction_requested":false}
 
 func _show_probabilities() -> Dictionary:
@@ -160,6 +186,8 @@ func _show_probabilities() -> Dictionary:
 	return {"ok":true,"existing_probability_detail_requested":true,"target_reference":model.target,"transaction_requested":false,"game_state_written":false}
 
 func close() -> void:
+	if _slot_pair!=null:_slot_pair.close()
+	_slot_pair=null;_slot_status.clear()
 	var parent: Object = _parent.get_ref() if _parent != null else null
 	if is_instance_valid(parent) and parent.tree_exiting.is_connected(close): parent.tree_exiting.disconnect(close)
 	_parent = null
@@ -185,7 +213,7 @@ func close() -> void:
 		previous.queue_free()
 
 func presentation() -> Dictionary:
-	return {"scene":_scene,"renderer":_child,"control":_control,"source_button":_button,"member":MEMBER,"source_offset":BUTTON,"handled":is_instance_valid(_scene),"source_node_offsets":_presented_offsets.duplicate(),"bound_detail_fields":_fields.keys(),"partial_source_scene":true,"complete_screen_contract":false}
+	return {"scene":_scene,"renderer":_child,"control":_control,"source_button":_button,"member":MEMBER,"source_offset":BUTTON,"handled":is_instance_valid(_scene),"source_node_offsets":_presented_offsets.duplicate(),"bound_detail_fields":_fields.keys(),"slot_pair":_slot_status.duplicate(true),"partial_source_scene":true,"complete_screen_contract":false}
 
 func _activate() -> Dictionary:
 	var forge: Object = _forge.get_ref() if _forge != null else null

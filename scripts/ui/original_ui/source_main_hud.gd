@@ -392,6 +392,7 @@ func _native_icon_context(context: Dictionary) -> Dictionary:
 	return result
 
 func refresh_source_icons() -> Dictionary:
+	if _enhance_action!=null:_enhance_action.invalidate_source_images()
 	_icons_refresh_pending=true
 	return refresh_quickslots()
 
@@ -431,6 +432,10 @@ func npc_dialogue_is_open() -> bool:
 func bind_npc_dialogue_portrait(context_provider: Callable, image_provider: Callable) -> Dictionary:
 	if _npc_dialogue_view==null:return _fail("source_npc_portrait_dialogue_scope_unavailable")
 	return _npc_dialogue_view.bind_portrait(context_provider,image_provider)
+
+func original_enhance_slot_receiver(role: String) -> Dictionary:
+	if _enhance_action==null:return _fail("enhance_slots_actual_owner_unavailable")
+	return _enhance_action.original_slot_receiver(role)
 
 func bind_enhance_action(forge: Control) -> Dictionary:
 	close_enhance_action()
