@@ -238,9 +238,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
 	_original_attribute_values.clear()
+	if has_meta("original_orim_numeric_input"): remove_meta("original_orim_numeric_input")
+	var original_numeric: Dictionary = {}
 	# A numeric local-adapter input does not assert a native spawn/Sprite ID.
 	if record.get("source")=="twilight_dungeon_visual_adapter" and record.get("original_attribute_input") is Dictionary:
 		_original_attribute_values = preload("res://scripts/resources/current523_actor_attribute_input.gd").values(record.original_attribute_input)
+		original_numeric = preload("res://scripts/resources/current523_actor_attribute_input.gd").numeric(record.original_attribute_input)
 	source_targeting.clear()
 	source_option_debuffs.clear()
 	source_boss_combat.clear()
@@ -370,6 +373,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	undead = bool(record.get("undead", monster_type == "언데드"))
 	var raw_resistance: Variant = record.get("element_resistance", {})
 	element_resistance = (raw_resistance as Dictionary).duplicate(true) if raw_resistance is Dictionary else {}
+	if not original_numeric.is_empty():
+		element_resistance.merge(original_numeric.element_resistance,true)
+		set_meta("original_orim_numeric_input",original_numeric)
 	attack_element = str(record.get("attack_element", "physical"))
 	monster_level = maxi(1, int(record.get("lv", record.get("level", 1))))
 	defense_value = maxi(0, int(record.get("def", record.get("defense", record.get("방어력", 0)))))
@@ -423,6 +429,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	bleed_duration = maxf(0.0, float(record.get("bleed_duration", record.get("출혈 지속시간", 0.0))))
 	bleed_tick_damage = maxi(0, int(record.get("bleed_tick_damage", record.get("출혈 피해", 0))))
 	bleed_tick_interval = maxf(0.1, float(record.get("bleed_tick_interval", record.get("출혈 주기", 0.75))))
+	if not original_numeric.is_empty():
+		var original_status: Dictionary = original_numeric.get("status_resistance",{})
+		stun_resistance=int(original_status.get("stun_resistance",stun_resistance))
+		hold_resistance=int(original_status.get("hold_resistance",hold_resistance))
+		fear_resistance=int(original_status.get("fear_resistance",fear_resistance))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"

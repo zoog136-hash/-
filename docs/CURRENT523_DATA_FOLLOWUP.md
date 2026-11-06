@@ -361,3 +361,33 @@ The current NpcClass declaration has no teleport or talk identity field.
 This is not a claim that every NPC action table has been examined. Actual
 item/NPC action -> chosen route -> prerequisite/cost result remains the
 integration owner's caller contract, so no World travel code is duplicated.
+
+### Orim NPC elemental numeric input
+
+The existing verified Orim NPC/stage/spawn/group descriptor now also supplies
+NpcClass.FireResistance/WaterResistance/AirResistance/EarthResistance to
+Monster's existing element_resistance dictionary. Monster independently
+reconstructs the descriptor before accepting the input. The four existing
+fire/water/wind/earth consumers then read these values; other supplied channels
+and the host damage formulas/clamps stay unchanged. No native source_m actor
+marker, Sprite identity, role, admission or world placement is added.
+
+The raw unit is still unconfirmed. The separate configurable
+data/monsters/current523_orim_numeric_input_policy.json explicitly estimates a
+1.0 raw-to-host-percent scale, reusing the previously recorded estimate for
+these same NpcClass fields while preserving the admitted-native policy's scope.
+This is a numeric TWILIGHT estimate, not a recovered original percentage or
+server formula. Disabled/missing/invalid policy or source preserves the prior
+input. The per-life metadata records raw fields, scale, source and policy SHA,
+is cleared on setup and is never saved. No immunity/status formula is inferred
+from the missing NpcAttributeType table. These calls remain unverified.
+
+The same verified local NPC context also supplies unique named
+NpcSpecialResistance→SpecialResistanceType Stun/Hold/Fear operands to the
+existing Monster.setup resistance fields. Its distinct local policy carries
+the same explicitly estimated scale and unconfirmed-unit warning. Unknown
+names, duplicate rows, source exclusions, negative/nonfinite values and values
+at/above100 retain prior inputs; no numeric value creates an immunity. Existing
+integer conversion and status-success formulas remain unchanged. Neither the
+admitted native registry nor its complete owned row set is widened. These
+three additional resistance consumers are also unverified.

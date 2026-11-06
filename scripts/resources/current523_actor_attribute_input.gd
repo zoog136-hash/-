@@ -3,6 +3,9 @@ extends RefCounted
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const KIND = "twilight.orim.npc-attribute-input.v1"
 const FIELDS = ["Str","Dex","Con","Wis","Cha","Int"]
+const NUMERIC_POLICY = "res://data/monsters/current523_orim_numeric_input_policy.json"
+const ELEMENT_FIELDS = {"fire":"FireResistance","water":"WaterResistance","wind":"AirResistance","earth":"EarthResistance"}
+const STATUS_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
 
 static func whole(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>=0 and float(value)<=9007199254740991.0
@@ -41,3 +44,64 @@ static func values(input: Dictionary) -> Dictionary:
 	if not whole(input.npc.get("ID")) or not whole(input.stage.get("ID")): return {}
 	var current: Dictionary = orim(int(input.npc.ID),int(input.stage.ID),input.spawn)
 	return current.get("values",{}).duplicate(true) if not current.is_empty() and current==input else {}
+
+static func numeric(input: Dictionary) -> Dictionary:
+	# A separate explicit local-input policy; the admitted-native-actor policy
+	# is neither widened nor used as a replacement for source admission.
+	if values(input).is_empty(): return {}
+	var file := FileAccess.open(NUMERIC_POLICY,FileAccess.READ)
+	if file==null: return {}
+	if file.get_length()>16384:
+		file.close()
+		return {}
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var policy: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	if not policy is Dictionary or policy.get("schema")!="twilight.current523.orim-numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE.SOURCE_SHA: return {}
+	if typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled or policy.get("scope")!="verified_original_orim_stage_spawn_npc_numeric_input_only" or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_damage_formula_recovered"))!=TYPE_BOOL or policy.native_server_damage_formula_recovered or policy.get("host_formula")!="existing_host_formula_retained": return {}
+	var scale: Variant = policy.get("raw_resistance_to_host_percent")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<0.0: return {}
+	var resistance: Dictionary = {}; var evidence: Dictionary = {}
+	for channel: String in ELEMENT_FIELDS:
+		var field: String = ELEMENT_FIELDS[channel]
+		var raw: Variant = input.npc.get(field)
+		if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)!=floorf(float(raw)) or absf(float(raw))>9007199254740991.0: return {}
+		var value: float = float(raw)*float(scale)
+		if not is_finite(value): return {}
+		resistance[channel]=value
+		evidence[channel]={"field":field,"raw":raw,"host_input":value}
+	var hashing := HashingContext.new()
+	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return {}
+	var status: Dictionary = _named_resistances(int(input.npc.ID),policy.get("special_resistance"))
+	return {"source":input.source,"npc_class_id":input.npc.ID,"element_resistance":resistance,
+		"status_resistance":status.get("values",{}),"status_evidence":status.get("evidence",{}),
+		"fields":evidence,"policy_path":NUMERIC_POLICY,"policy_sha256":hashing.finish().hex_encode(),
+		"origin":"twilight_adjustable_numeric_estimate","source_raw_unit_scale":"unconfirmed",
+		"scale":float(scale),"native_server_damage_formula_recovered":false,"native_admission":false}
+
+static func _named_resistances(npc_id: int, policy: Variant) -> Dictionary:
+	if not policy is Dictionary or typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled: return {}
+	if policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_status_formula_recovered"))!=TYPE_BOOL or policy.native_server_status_formula_recovered or policy.get("scope")!="verified_original_orim_NpcSpecialResistance_named_Stun_Hold_Fear_only": return {}
+	var scale: Variant = policy.get("raw_to_host_percent")
+	if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<0.0: return {}
+	var grouped: Dictionary = {}
+	for link: Dictionary in SOURCE.related("NpcSpecialResistance","NpcClassID",npc_id):
+		if not whole(link.get("ID")) or not whole(link.get("SpecialResistanceTypeID")): return {}
+		if unique("NpcSpecialResistance",int(link.ID))!=link: return {}
+		var type: Dictionary = unique("SpecialResistanceType",int(link.SpecialResistanceTypeID))
+		var name_value: Variant = type.get("Name")
+		if not name_value is String or not STATUS_FIELDS.has(name_value): continue
+		if not grouped.has(name_value): grouped[name_value]=[]
+		grouped[name_value].append({"link":link,"type":type})
+	var result: Dictionary = {}; var evidence: Dictionary = {}
+	for name_value: String in grouped:
+		var entries: Array = grouped[name_value]
+		if entries.size()!=1: continue
+		var raw: Variant = entries[0].link.get("Value")
+		if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)<0.0: continue
+		var value: float = float(raw)*float(scale)
+		# 100 is not an immunity declaration. Keep the previous host value.
+		if not is_finite(value) or value<0.0 or value>=100.0: continue
+		result[STATUS_FIELDS[name_value]]=int(value)
+		evidence[name_value]={"source_rows":entries,"raw":raw,"scale":float(scale),"host_input":int(value),"source_raw_unit_scale":"unconfirmed"}
+	return {"values":result,"evidence":evidence}
