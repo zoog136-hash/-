@@ -177,6 +177,11 @@ var path_stuck_elapsed: float = 0.0
 var path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var dead: bool = false
+# Sleeping-actor visual residency: while the field population keeps an
+# ordinary monster asleep (far outside the screen), it holds only its first
+# frame instead of every pose texture. Waking restores the same SpriteFrames
+# before the actor can reach the screen, so presentation is unchanged.
+var visual_parked: bool = false
 var home_position: Vector2 = Vector2.ZERO
 var spawn_region_id: String = ""
 var roaming_radius: float = 180.0
@@ -547,6 +552,7 @@ func _physics_process(delta: float) -> void:
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
+		if visual_parked: restore_visual()
 		velocity = Vector2.ZERO
 		motion.advance(delta, Vector2.ZERO)
 		motion.apply(sprite, animation_base_scale)
@@ -1174,7 +1180,32 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 		if touch_event.pressed:
 			selected.emit(self)
 
+func park_visual() -> void:
+	if visual_parked or motion.frame_source == null or is_boss or dead or motion.active or _source_only_native_visuals: return
+	if motion.profile == null or motion.profile.frames_path.is_empty(): return
+	var first: Texture2D = ANIMATION_CATALOG.first_texture(motion.frame_source)
+	motion.frame_source = null
+	motion._track_source = null
+	motion._native_hit_source = null
+	motion._native_hit_clock = 0.0
+	motion._tracks = {}
+	motion._resolved_profile = null
+	motion._resolved_key = ""
+	if first != null: sprite.texture = first
+	visual_parked = true
+
+func restore_visual() -> void:
+	if not visual_parked: return
+	visual_parked = false
+	var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(motion.profile, "")
+	var first: Texture2D = ANIMATION_CATALOG.first_texture(frames)
+	if first == null: return
+	motion.frame_source = frames
+	sprite.texture = first
+	motion.apply(sprite, animation_base_scale)
+
 func _setup_animation(record: Dictionary) -> void:
+	visual_parked = false
 	motion.profile = ANIMATION_CATALOG.for_record("monster", record)
 	# Sample optional native art onto the existing Sprite2D; no scene/AI/UI changes.
 	motion.frame_source = null
