@@ -36,7 +36,7 @@ static func values(profile: Dictionary) -> Dictionary:
  return out
 
 static func item_reason(world: Node,record: Dictionary,id: String) -> String:
- var raw: Dictionary=world.patch523_equipment.data.get("items",{}).get(id,{}).get("item_class",{})
+ var raw: Dictionary=world.patch523_equipment.item_entry(id).get("item_class",{})
  if raw.is_empty() or raw.get("TestItem")!=false or not str(raw.get("ServiceRegionCode","")).is_empty():return "원본 테스트/서비스 지역 조건"
  var source: Dictionary=world.patch523_equipment.data.get("equipment_spell_item_constraints",{}).get(id,{})
  if source.get("schema")!="patch523-equipment-spell-item-v1":return "원본 장비 발동 자격 입력 필요"

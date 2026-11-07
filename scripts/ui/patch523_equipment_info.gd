@@ -98,7 +98,7 @@ func configure(controller: Node) -> void:
 		equipment.add_item("%s +%d · %s · ID %s" % [str(physical.name), int(physical.level), "축복" if book.bless_code(physical) == 2 else "일반", str(id)])
 		_option_source_image(equipment,equipment.item_count-1,int(source_id))
 	for source_id: String in book.data.get("items", {}):
-		var item: Dictionary = book.data.items[source_id]
+		var item: Dictionary = book.item_entry(source_id)
 		var is_scroll: bool = false
 		for link: Dictionary in item.item_bonuses:
 			if int(book.data.bonuses[str(int(link.BonusID))].BonusTypeID) in [2022, 8352]:
@@ -234,7 +234,7 @@ func _refresh() -> void:
 			effect_text += "%s %s%s · %s\n" % [UI.safe(label),sign,value,application_label]
 	var displayed: Dictionary = {}
 	var blessing_branches: Array = [1]
-	for link: Dictionary in book.data.get("items", {}).get(str(scroll_id), {}).get("item_bonuses", []):
+	for link: Dictionary in book.item_entry(str(scroll_id)).get("item_bonuses", []):
 		if int(book.data.bonuses[str(int(link.BonusID))].BonusTypeID) == 8352:
 			blessing_branches = [1, 2]
 	for scroll_bless: int in blessing_branches:

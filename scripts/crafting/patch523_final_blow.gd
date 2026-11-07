@@ -6,7 +6,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	var result: Dictionary={}
 	var id: String=book.identity({"record":record})
 	if not record.get("source_m_native_item",false) or bless not in [1,2] or not book.catalog_identity_matches(record,id):return result
-	var item: Dictionary=book.data.get("items",{}).get(id,{})
+	var item: Dictionary=book.item_entry(id)
 	if item.get("item_class",{}).get("TestItem",true):return result
 	for row: Dictionary in item.get("item_bonuses",[]):
 		if row.get("IsPossession")!=false:continue

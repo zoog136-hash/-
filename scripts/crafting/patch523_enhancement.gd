@@ -115,7 +115,7 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 	if not book.catalog_identity_matches(record,id):
 		return {"source_rule":true,"success":0.0,"reason":"원본 ID와 현재 등록 카탈로그 정체를 확인하세요"} if book.data.get("items",{}).has(id) else {}
 	if blessing not in [1,2] or scroll_bless not in [1,2]:return {"source_rule":true,"success":0.0,"reason":"지원하지 않거나 일치하지 않는 원본 축복 상태입니다"}
-	var scroll_class: Dictionary=book.data.get("items",{}).get(scroll_id,{}).get("item_class",{})
+	var scroll_class: Dictionary=book.item_entry(scroll_id).get("item_class",{})
 	if scroll_class.is_empty() or scroll_class.get("TestItem",false) or not str(scroll_class.get("ServiceRegionCode","")).is_empty():return {"source_rule":true,"success":0.0,"reason":"원본 테스트·서비스 지역 자격을 확인하세요"}
 	# Preserve the narrower, publicly verified seal eligibility from the earlier
 	# delivered path. A default-zero selector must never widen that contract.
@@ -143,7 +143,7 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 		safe=current+1
 	var leaps: Array=[{"gain":1,"probability":1000000}]
 	var disabled: bool=false
-	for link: Dictionary in book.data.items.get(scroll_id,{}).get("item_bonuses",[]):
+	for link: Dictionary in book.item_entry(scroll_id).get("item_bonuses",[]):
 		var b: Dictionary=book.data.bonuses.get(str(int(link.BonusID)),{})
 		if int(b.get("BonusTypeID",0))==8402: disabled=bool(settings.get("leap_disabled_bonus_presence",true)) or int(b.get("Value",0))!=0
 	if scroll_bless==2 and not disabled:
@@ -160,7 +160,7 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 	var gains: PackedStringArray=[]
 	for row: Dictionary in leaps: gains.append("+%d" % int(row.gain))
 	var material: String=""
-	var material_id: int=int(book.data.items[id].item_class.MaterialID)
+	var material_id: int=int(book.item_entry(id).item_class.MaterialID)
 	for row: Dictionary in tables.get("Material",[]):
 		if int(row.ID)==material_id: material=str(row.Name)
 	return {"source_rule":true,"success":float(probability.Success)/10000.0,"no_change":float(probability.Remain)/10000.0,

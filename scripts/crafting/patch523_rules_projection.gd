@@ -469,6 +469,22 @@ static func slim_binding_record(record: Variant) -> Variant:
 	if record.get("source") == "lineagem_patch523" and record.get("source_m_native_item") == true: result["twilight_binding_slim"] = true
 	return result
 
+const SOURCE_FIELDS: Array[String] = ["item_class","item_bonuses","enchant_effects"]
+
+## The original rows _bound_items() stores for one ItemClass ID: the ItemClass
+## row (last row per ID), its ItemBonus rows in table order, and the
+## ItemEnchantBonus groups referenced by its BonusTypeID 71 bonuses.
+static func source_fields(key: String) -> Dictionary:
+	if not key.is_valid_int(): return {}
+	var items: Array[Dictionary] = SOURCE.related("ItemClass","ID",int(key))
+	if items.is_empty(): return {}
+	var links: Array = SOURCE.related("ItemBonus","ItemClassID",int(key))
+	var effects: Array = []
+	for link: Dictionary in links:
+		var bonuses: Array[Dictionary] = SOURCE.related("Bonus","ID",int(link.BonusID))
+		if not bonuses.is_empty() and bonuses[-1].BonusTypeID == 71: effects.append_array(SOURCE.related("ItemEnchantBonus","ItemEnchantBonusGroupID",int(bonuses[-1].Value)))
+	return {"item_class":items[-1],"item_bonuses":links,"enchant_effects":effects}
+
 static func original_digest(row: Variant) -> String:
 	return JSON.stringify(row,"",true,true).sha256_text()
 
@@ -614,5 +630,14 @@ func build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_sh
 	result.equipment_runtime = equipment.build(_tables,eligible_items,bonuses)
 	if not str(equipment.problem).is_empty(): problem = str(equipment.problem); return {}
 	for table: String in ["ItemBlessBonus","Material","Unit","UIUnit","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","SpecialResistanceType"]: result.enchantment[table] = _tables[table]
+	# item_class/item_bonuses/enchant_effects are verbatim original rows; the
+	# model keeps a lazy marker and patch523_rules.item_entry() reads the same
+	# rows back from the shared reader (source_fields) instead of ~0.6 GB of copies.
+	for key: String in bound_items:
+		for field: String in SOURCE_FIELDS: bound_items[key].erase(field)
+		bound_items[key]["twilight_source_lazy"] = true
+	# The grouped craft rows are the verbatim ItemCraftID groups;
+	# patch523_rules.recipe_evidence() reads them from the shared reader.
+	result.raw_recipes = {"twilight_source_lazy":true}
 	return result
 

@@ -50,7 +50,7 @@ static func quote(book: Object, physical: Dictionary, scroll_id: String, invento
 		return RULES.denied("공식 실패 규칙과 원본이 다릅니다")
 	var scroll_record: Dictionary = book.record(scroll_id)
 	var scroll_name: String = str(scroll_record.get("name",""))
-	if scroll_name.is_empty() or bool(book.data.items[scroll_id].item_class.TestItem): return RULES.denied("영구 주문서 정보를 확인하세요")
+	if scroll_name.is_empty() or bool(book.item_entry(scroll_id).item_class.TestItem): return RULES.denied("영구 주문서 정보를 확인하세요")
 	if int(inventory.get(scroll_name,0))<count or gold<expected_cost: return RULES.denied("주문서 또는 아데나가 부족합니다")
 	return {"ok":true,"scroll_name":scroll_name,"scroll_id":scroll_id,"count":count,"cost":expected_cost,
 		"success":expected_rate,"protected":protected,"level":level,"item":str(physical.name),

@@ -3889,7 +3889,7 @@ func _scroll_kind(scroll_name: String) -> String:
 	if scroll_name.find("장신구 마법 주문서") >= 0:
 		return "accessory"
 	var source_id: String=PATCH523_ENHANCE.item_id(_find_catalog_item_record(scroll_name))
-	for link: Dictionary in patch523_equipment.data.get("items",{}).get(source_id,{}).get("item_bonuses",[]):
+	for link: Dictionary in patch523_equipment.item_entry(source_id).get("item_bonuses",[]):
 		if int(patch523_equipment.data.bonuses.get(str(int(link.BonusID)),{}).get("BonusTypeID",0)) in [2022,8352]: return "source"
 	return ""
 
@@ -5244,7 +5244,7 @@ func _patch523_protection_recipe_item(recipe_id: String) -> int:
 	if not recipe_id.begins_with("patch523:"):return 0
 	var key: String=recipe_id.trim_prefix("patch523:")
 	if not key.is_valid_int() or int(key)<=0:return 0
-	for row: Dictionary in patch523_equipment.data.get("raw_recipes",{}).get("outputs",{}).get(key,[]):
+	for row: Dictionary in patch523_equipment.recipe_evidence(int(key)).get("outputs",[]):
 		if int(row.get("ItemCraftID",0))==int(key) and int(row.get("ItemCraftOutputTypeID",0))==1 and int(row.get("Amount",0))==1 and int(row.get("Enchant",-1))==0 and int(row.get("ItemBlessCodeID",0))==1 and int(row.get("Probability",0))==1000000 and int(row.get("ItemClassID",0)) in [200723,245718,297828,328254,346911,371108,75764,123373]:return int(row.ItemClassID)
 	return 0
 

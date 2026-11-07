@@ -15,7 +15,7 @@ static func owned(book: RefCounted,material: Dictionary,inventory: Dictionary,ph
 	if host==null or not host.has_method("get_expedition_catalog"):return result
 	var catalog: RefCounted=host.get_expedition_catalog()
 	if catalog==null or not catalog.ready():return result
-	var original: Dictionary=book.data.get("items",{}).get(str(id),{}).get("item_class",{})
+	var original: Dictionary=book.item_entry(str(id)).get("item_class",{})
 	if original.is_empty() or original.get("TestItem")!=false or catalog.record("ItemClass",id)!=original:return result
 	var tuple: String="%d:%d:%d" % [id,int(material.bless_code),int(material.level)]
 	var key: String=str(original.get("Name",""))+" (탐험 "+tuple+")"

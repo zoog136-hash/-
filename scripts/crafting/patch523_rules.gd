@@ -186,7 +186,7 @@ func recipe_definition(craft_id: int) -> Dictionary:
 	return result
 
 func _source_item_allowed(source_id: int) -> bool:
-	var original: Dictionary = data.get("items",{}).get(str(source_id),{}).get("item_class",{})
+	var original: Dictionary = item_entry(str(source_id)).get("item_class",{})
 	if original.is_empty(): original = SOURCE_ITEMS.describe(source_id).get("item_class",{})
 	if not SOURCE_DEFINITIONS.declared_exclusion("ItemClass",original).is_empty():return false
 	# UNVERIFIED: read the supplied item's explicit flag; retain excluded rows
@@ -284,7 +284,20 @@ static func _source_material_contract(recipe: Dictionary, source: Dictionary) ->
 static func denied(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
 
+## One compiled item entry with its original rows. Entries compiled from the
+## installed original keep only a lazy marker; their item_class/item_bonuses/
+## enchant_effects are read back from the shared original reader.
+func item_entry(source_id: String) -> Dictionary:
+	var entry: Variant = data.get("items",{}).get(source_id)
+	if not entry is Dictionary: return {}
+	if (entry as Dictionary).get("twilight_source_lazy") != true: return entry
+	var full: Dictionary = (entry as Dictionary).duplicate()
+	full.erase("twilight_source_lazy")
+	full.merge(ORIGINAL_PROJECTION.source_fields(source_id), true)
+	return full
+
 func record(source_id: String, stack_bless: int=1) -> Dictionary:
+	# Only catalog/variant/use fields are read; no original rows are needed.
 	var item: Dictionary = data.get("items",{}).get(source_id,{})
 	var result: Dictionary = (item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else item.get("catalog_record",{})).duplicate(true)
 	if result.get("twilight_binding_slim") == true:
@@ -301,7 +314,7 @@ func craftsman_weapon_rule(pinned: Dictionary) -> Dictionary:
 	# enter this override; local and unidentified host items keep their rules.
 	if pinned.get("source","")!="inven" or pinned.get("slot","")!="weapon": return {}
 	var id: String = str(pinned.get("sourceId",""))
-	var entry: Dictionary = data.get("items",{}).get(id,{})
+	var entry: Dictionary = item_entry(id)
 	var canonical: Dictionary = entry.get("catalog_record",{})
 	if canonical.get("source","")!="inven" or canonical.get("name")!=pinned.get("name") or canonical.get("grade")!=pinned.get("grade"): return {}
 	var grade: int = int(entry.get("item_class",{}).get("GradeID",-1))
@@ -332,15 +345,23 @@ static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=fa
 	a.sort(); b.sort()
 	return a==b
 
+## The compiled catalog identity (no live-record substitution).
+func compiled_record(source_id: String, stack_bless: int=1) -> Dictionary:
+	var item: Dictionary = data.get("items",{}).get(source_id,{})
+	var result: Dictionary = (item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else item.get("catalog_record",{})).duplicate(true)
+	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty():return {}
+	return result
+
 func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: int=1) -> bool:
-	var canonical: Dictionary=record(source_id,stack_bless)
+	# Compare against the compiled identity, never the live record itself.
+	var canonical: Dictionary=compiled_record(source_id,stack_bless)
 	if canonical.is_empty() or item.get("name")!=canonical.get("name") or item.get("source")!=canonical.get("source") or item.get("sourceId")!=canonical.get("sourceId"): return false
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
 		if item.get(key)!=canonical.get(key): return false
 	for key: String in ["source_class_ids","source_equip_slot_ids"]:
-		var entry: Dictionary=data.get("items",{}).get(source_id,{})
+		var entry: Dictionary=item_entry(source_id)
 		var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
 		var allow_zero: bool=key=="source_class_ids" and canonical.get("slot")=="material" and allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==canonical.get(key) and entry.get("item_bonuses",[]).is_empty()
 		if not _source_ids_match(item.get(key),canonical.get(key),allow_zero): return false
@@ -459,7 +480,7 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 func ownership_key(material: Dictionary) -> String:
 	if not material.has("inventory_key"): return str(material.item)
 	var key: String=str(material.inventory_key)
-	var entry: Dictionary=data.get("items",{}).get(str(material.source_id),{})
+	var entry: Dictionary=item_entry(str(material.source_id))
 	return key if not key.is_empty() and key==str(entry.get("currency_inventory_key","")) and not bool(material.physical) and int(material.level)==0 and int(material.bless_code)==1 else ""
 
 func _stack_identity_matches(item: Dictionary, material: Dictionary) -> bool:
@@ -773,7 +794,7 @@ func refresh_derived_options(physical: Dictionary) -> bool:
 
 func effect_evidence(item_id: int, level: int, raw_bless_code: int) -> Array:
 	var result: Array = []
-	for row: Dictionary in data.get("items", {}).get(str(item_id), {}).get("enchant_effects", []):
+	for row: Dictionary in item_entry(str(item_id)).get("enchant_effects", []):
 		if int(row.EnchantLevel) == level and int(row.BlessCode) == raw_bless_code:
 			var bonus: Dictionary = data.bonuses.get(str(int(row.BonusID)), {})
 			result.append({"row": row.duplicate(true), "bonus": bonus.duplicate(true),
@@ -783,11 +804,11 @@ func effect_evidence(item_id: int, level: int, raw_bless_code: int) -> Array:
 func enhancement_evidence(item_id: int, scroll_id: int, level: int, target_bless: int, scroll_bless: int) -> Dictionary:
 	var equip_groups: Array = []
 	var scroll_groups: Array = []
-	for link: Dictionary in data.get("items", {}).get(str(item_id), {}).get("item_bonuses", []):
+	for link: Dictionary in item_entry(str(item_id)).get("item_bonuses", []):
 		var bonus: Dictionary = data.bonuses.get(str(int(link.BonusID)), {})
 		if int(bonus.get("BonusTypeID", -1)) == 2032:
 			equip_groups.append(int(bonus.Value))
-	for link: Dictionary in data.get("items", {}).get(str(scroll_id), {}).get("item_bonuses", []):
+	for link: Dictionary in item_entry(str(scroll_id)).get("item_bonuses", []):
 		var bonus: Dictionary = data.bonuses.get(str(int(link.BonusID)), {})
 		var kind: int = int(bonus.get("BonusTypeID", -1))
 		if kind == 2022 or (kind == 8352 and int(bonus.get("BonusApplicationTypeID", 0)) == 202 and int(bonus.get("BonusApplicationTargetID", -1)) == scroll_bless):

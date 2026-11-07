@@ -57,7 +57,7 @@ static func review(world: Node,book: RefCounted,recipe_id: String,batches: int,c
 			var amount: int=Own.positive(allocation.get("quantity"))
 			if row_id<1 or amount<1 or seen_rows.has(row_id) or not rows.has(str(row_id)) or sum>9007199254740991-amount:return fail("현재 선택 제작식의 재료 행·수량 불일치")
 			var material: Dictionary=rows[str(row_id)]
-			var entry: Dictionary=book.data.get("items",{}).get(str(material.get("source_id","")),{})
+			var entry: Dictionary=book.item_entry(str(material.get("source_id","")))
 			if material.get("physical",true) or material.get("wallet",false) or int(material.get("level",-1))!=0 or int(material.get("bless_code",0))!=int(owned.bless_code_id) or not Same.same(entry.get("item_class"),owned.source_item):return fail("원본 행·품목·축복·강화가 같은 비장비 재료만 선택할 수 있습니다")
 			var canonical: Dictionary=book.record(str(material.source_id),int(material.bless_code))
 			if canonical.is_empty():return fail("원본 재료의 현재 제작 카탈로그 정체 확인 필요")
