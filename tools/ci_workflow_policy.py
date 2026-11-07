@@ -21,10 +21,11 @@ ACTIVE = frozenset({
     "ci-consolidated-preflight.yml",
 })
 ARCHIVE = Path("docs/ci/workflow-archive-20261028")
+ARCHIVED_COUNT = 79
 # Workflows added after the 84 -> 10 consolidation. Each must be listed here
 # explicitly (never silently) and must stay path-filtered so it does not run on
-# every pull request. pr122-approval-ledgers.yml: PR122 boss ledger guards.
-POST_CONSOLIDATION = frozenset({"pr122-approval-ledgers.yml", "auto-hunting523-validate.yml"})
+# every pull request.
+POST_CONSOLIDATION = frozenset({"auto-hunting523-validate.yml", "twilight-android-playtest-apk.yml"})
 # User-approved required merge gates (2026-11-02 transition policy, AGENTS.md,
 # docs/CI_TRANSITION_POLICY.md). They must run on every pull request to main,
 # so they are listed explicitly and exempt from the path-filter rule only.
@@ -50,8 +51,10 @@ def check(root: Path) -> dict[str, int]:
             raise ValueError(f"{name} must run on every pull request")
     archive = root / ARCHIVE
     historical = {p.name for p in archive.glob("*.yml")} | {p.name for p in archive.glob("*.yaml")}
-    if len(historical) != 84:
-        raise ValueError(f"Expected all 84 archived source workflows, found {len(historical)}")
+    # 84 workflows were archived at consolidation; the five PR122 authoring
+    # workflows were removed with the PR122 pipeline on 2026-11-07.
+    if len(historical) != ARCHIVED_COUNT:
+        raise ValueError(f"Expected all {ARCHIVED_COUNT} archived source workflows, found {len(historical)}")
     if not (ACTIVE - {"ci-consolidated-preflight.yml"}) <= historical:
         raise ValueError("Missing preserved original of an active workflow")
     if not historical.isdisjoint({"ci-consolidated-preflight.yml"}):

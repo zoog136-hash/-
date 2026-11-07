@@ -36,6 +36,39 @@ class AndroidRuntimeReachabilityTest(unittest.TestCase):
         write("data/pr122_native_locomotion_staging.json",
               '{"rows": ["res://' + ACTOR + '/r001/SpriteFrames.tres"]}\n')
 
+    def test_replaced_legacy_catalog_sections_do_not_keep_actor_art(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            # BASE508.apply_catalog replaces 변신 at load: its art is dead, items stay live.
+            (root / "data/catalog_v19.json").write_text(
+                '{"변신": [{"frames": "res://' + ACTOR + '/r002/SpriteFrames.tres"}],'
+                ' "아이템": [{"frames": "res://' + ACTOR + '/r001/SpriteFrames.tres"}]}\n', encoding="utf-8")
+            self.assertEqual(unreachable_actor_folders(root), [ACTOR + "/r002"])
+
+    def test_pack_loader_does_not_keep_every_actor(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            (root / "scripts/boot").mkdir(parents=True)
+            (root / "scripts/boot/actor_pack.gd").write_text(
+                'const SENTINEL := "res://assets/actors/eight_direction"\n', encoding="utf-8")
+            (root / "project.godot").write_text('[autoload]\nActorPack="*res://scripts/boot/actor_pack.gd"\n', encoding="utf-8")
+            self.assertEqual(unreachable_actor_folders(root), [ACTOR + "/r001"])
+
+    def test_exclusions_are_written_to_the_actor_pack_preset(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            (root / "export_presets.cfg").write_text(
+                '[preset.0]\nname="Android"\nexclude_filter="docs/*,assets/actors/*"\n'
+                '[preset.1]\nname="AndroidActorPack"\nexclude_filter="' + DRAFT_EXPORT_PATTERN + '"\n', encoding="utf-8")
+            self.assertTrue(write_preset(root, unreachable_actor_folders(root)))
+            text = (root / "export_presets.cfg").read_text()
+            self.assertIn('exclude_filter="docs/*,assets/actors/*"', text)
+            self.assertIn(ACTOR + "/r001/*", preset_patterns(text))
+            self.assertEqual(check_generated(root, preset_patterns(text))["excluded_unreachable_folders"], [ACTOR + "/r001"])
+
     def test_only_the_unloaded_revision_is_listed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

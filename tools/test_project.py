@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, PR122_NATIVE_FIXTURE_MODES, native_fixture_environment, run_native_fixture_cases, missing_private_inputs, ISOLATION_ROOT_VARIABLES, ISOLATION_FLAG_VARIABLES, RETIRED_LEGACY_MAP_TESTS
+from test_project_support import classify_result, failure_annotation, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS, select_checks, missing_private_inputs, ISOLATION_ROOT_VARIABLES, ISOLATION_FLAG_VARIABLES, RETIRED_LEGACY_MAP_TESTS
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -68,12 +68,11 @@ retired_legacy=[]
 executed=[]
 not_run=[]
 scopes={}
-native_scopes={}
 def write_summary() -> None:
     # Save after each completed check so cancellation cannot conceal omissions.
     report={'total':len(tests),'passed':len(executed)-len(failed)-len(skipped),
         'failed':failed,'skipped':skipped,'private_input_unavailable':private_unavailable,'legacy_map_retired':retired_legacy,'not_run':[n for n,_ in tests[len(executed):]],
-        'checks':[name for name,_ in tests], 'validation_scopes':scopes, 'native_fixture_scopes':native_scopes,
+        'checks':[name for name,_ in tests], 'validation_scopes':scopes,
         'selection':args.only or ('SHARDED_FULL_SUITE' if args.shard_count>1 else 'FULL_SUITE'),
         'plan':plan, 'synthetic_fixture_policy':'DISABLED' if args.no_ci_synthetic_fixtures else 'EXISTING_CI_AUTO'}
     (logs/'summary.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
@@ -140,12 +139,6 @@ for name,extra in tests:
             write_summary()
             continue
         try:
-            audit={}
-            if name in PR122_NATIVE_FIXTURE_MODES:
-                register=json.loads((root/'data/pr122_native_locomotion_staging.json').read_text(encoding='utf-8'))
-                defaults,audit=native_fixture_environment(name,register,env)
-                env.update(defaults)
-                native_scopes[name]=audit
             budget=timeout_budget(name,args.timeout,args.import_timeout)
             command=[args.godot,*display_args,'--path',str(root),*extra]
             if legacy_geometry:
@@ -158,16 +151,9 @@ for name,extra in tests:
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
                 command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
-            if audit.get('scope_origin')=='registry_default' and len(audit['keys'])>1:
-                ok,output,cases=run_native_fixture_cases(command,name=name,keys=audit['keys'],
-                    env=env,timeout=budget,case_timeout=args.timeout,cwd=str(root),logs=logs/(name+'.cases'))
-                native_scopes[name]['cases']=cases
-                output='VALIDATION_SCOPE '+scopes[name]+'\n'+output
-                is_skipped=False
-            else:
-                p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
-                output='VALIDATION_SCOPE '+scopes[name]+'\n'+p.stdout+p.stderr
-                ok,is_skipped=classify_result(name,p.returncode,output,expected_native_keys=audit.get('keys'))
+            p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
+            output='VALIDATION_SCOPE '+scopes[name]+'\n'+p.stdout+p.stderr
+            ok,is_skipped=classify_result(name,p.returncode,output)
             if is_skipped:
                 skipped.append(name)
             if ok and name=='bake_navigation':
