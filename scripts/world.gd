@@ -3891,7 +3891,7 @@ func _scroll_kind(scroll_name: String) -> String:
 		return "accessory"
 	var source_id: String=PATCH523_ENHANCE.item_id(_find_catalog_item_record(scroll_name))
 	for link: Dictionary in patch523_equipment.item_entry(source_id).get("item_bonuses",[]):
-		if int(patch523_equipment.data.bonuses.get(str(int(link.BonusID)),{}).get("BonusTypeID",0)) in [2022,8352]: return "source"
+		if int(patch523_equipment.bonus_row(str(int(link.BonusID))).get("BonusTypeID",0)) in [2022,8352]: return "source"
 	return ""
 
 func _scroll_mode(scroll_name: String) -> String:

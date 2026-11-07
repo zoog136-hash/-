@@ -647,5 +647,9 @@ func build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_sh
 	# The grouped craft rows are the verbatim ItemCraftID groups;
 	# patch523_rules.recipe_evidence() reads them from the shared reader.
 	result.raw_recipes = {"twilight_source_lazy":true}
+	# The selected Bonus rows are verbatim original rows: the model keeps their
+	# IDs and patch523_rules.bonus() reads the row from the shared reader.
+	var bonus_ids: Array = result.bonuses.keys()
+	result.bonuses = {"twilight_source_lazy":true,"ids":bonus_ids}
 	return result
 

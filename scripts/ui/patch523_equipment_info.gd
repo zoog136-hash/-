@@ -101,12 +101,12 @@ func configure(controller: Node) -> void:
 		var item: Dictionary = book.item_entry(source_id)
 		var is_scroll: bool = false
 		for link: Dictionary in item.item_bonuses:
-			if int(book.data.bonuses[str(int(link.BonusID))].BonusTypeID) in [2022, 8352]:
+			if int(book.bonus_row(str(int(link.BonusID))).get("BonusTypeID",0)) in [2022, 8352]:
 				is_scroll = true
 		if not is_scroll:
 			continue
 		scroll_ids.append(source_id)
-		scroll.add_item(str(item.catalog_record.name))
+		scroll.add_item(str(book.catalog_record_of(source_id).get("name","")))
 		_option_source_image(scroll,scroll.item_count-1,int(source_id))
 	equipment.item_selected.connect(func(_i: int) -> void: _refresh())
 	scroll.item_selected.connect(func(_i: int) -> void: _refresh())
@@ -235,7 +235,7 @@ func _refresh() -> void:
 	var displayed: Dictionary = {}
 	var blessing_branches: Array = [1]
 	for link: Dictionary in book.item_entry(str(scroll_id)).get("item_bonuses", []):
-		if int(book.data.bonuses[str(int(link.BonusID))].BonusTypeID) == 8352:
+		if int(book.bonus_row(str(int(link.BonusID))).get("BonusTypeID",0)) == 8352:
 			blessing_branches = [1, 2]
 	for scroll_bless: int in blessing_branches:
 		var evidence: Dictionary = world.patch523_enhancement_evidence(source_id, scroll_id, level_value, blessing, scroll_bless)
