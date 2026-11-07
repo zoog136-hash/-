@@ -405,23 +405,66 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 	if not _tables.has(table): return result
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
-		var groups: Dictionary = {}
 		var column: Variant = null
 		if not store.has("rows"):
 			var position: int = (store.columns as PackedStringArray).find(foreign_key)
 			if position >= 0: column = _column_data(store, position)
-		for index: int in int(store.count):
+		# Compact sorted index (keys, starts, rows) instead of a Dictionary of
+		# per-ID arrays: ~1.2M groups cost ~15 MB instead of ~190 MB. Rows
+		# within one ID stay in table order.
+		var count: int = int(store.count)
+		var composite := PackedInt64Array()
+		composite.resize(count)
+		var compact: bool = count < RELATION_ROW_LIMIT
+		var groups: Dictionary = {}
+		for index: int in count:
 			var value: Variant = column[index] if column != null else (store.rows[index] as Dictionary).get(foreign_key) if store.has("rows") else null
 			if not _integer(value):
 				_problem = "원본 정수 참조가 없습니다: "+table+"."+foreign_key
 				return result
 			var identifier: int = int(value)
-			if not groups.has(identifier): groups[identifier] = []
-			(groups[identifier] as Array).append(index)
-		for identifier: int in groups: groups[identifier] = PackedInt32Array(groups[identifier])
-		_relations[key] = groups
-	for index: int in _relations[key].get(id, PackedInt32Array()): result.append(_row_at(store, index))
+			if compact and absi(identifier) >= RELATION_VALUE_LIMIT: compact = false
+			if compact: composite[index] = identifier * RELATION_ROW_LIMIT + index
+			else:
+				if not groups.has(identifier): groups[identifier] = []
+				(groups[identifier] as Array).append(index)
+		if compact:
+			composite.sort()
+			var keys := PackedInt64Array()
+			var starts := PackedInt32Array()
+			var rows := PackedInt32Array()
+			rows.resize(count)
+			for position: int in count:
+				var index: int = posmod(composite[position], RELATION_ROW_LIMIT)
+				var identifier: int = (composite[position] - index) / RELATION_ROW_LIMIT
+				if keys.is_empty() or keys[keys.size() - 1] != identifier:
+					keys.append(identifier)
+					starts.append(position)
+				rows[position] = index
+			starts.append(count)
+			_relations[key] = {"keys": keys, "starts": starts, "rows": rows}
+		else:
+			# Fallback for very large values or tables: per-ID arrays.
+			if groups.is_empty():
+				for index: int in count:
+					var value: Variant = column[index] if column != null else (store.rows[index] as Dictionary).get(foreign_key) if store.has("rows") else null
+					var identifier: int = int(value)
+					if not groups.has(identifier): groups[identifier] = []
+					(groups[identifier] as Array).append(index)
+			for identifier: int in groups: groups[identifier] = PackedInt32Array(groups[identifier])
+			_relations[key] = {"groups": groups}
+	for index: int in _relation_rows(_relations[key], id): result.append(_row_at(store, index))
 	return result
+
+const RELATION_ROW_LIMIT: int = 1048576
+const RELATION_VALUE_LIMIT: int = 4398046511104 # 2^42 keeps value * 2^20 + row in 63 bits
+
+static func _relation_rows(relation: Dictionary, id: int) -> PackedInt32Array:
+	if relation.has("groups"): return relation.groups.get(id, PackedInt32Array())
+	var keys: PackedInt64Array = relation.keys
+	var position: int = keys.bsearch(id, true)
+	if position >= keys.size() or keys[position] != id: return PackedInt32Array()
+	return (relation.rows as PackedInt32Array).slice(int(relation.starts[position]), int(relation.starts[position + 1]))
 
 static func row(table: String, id: int) -> Dictionary:
 	var matches: Array[Dictionary] = related(table,"ID",id)
