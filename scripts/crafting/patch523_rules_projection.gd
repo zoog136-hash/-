@@ -492,7 +492,11 @@ func _same_original(record: Dictionary, native: Dictionary) -> bool:
 	if record.has("twilight_source_original_item_sha256"): return record.twilight_source_original_item_sha256 == original_digest(native)
 	return record.get("source_original_item") == native
 
-static func binding_document(items: Array, contract: Dictionary) -> Dictionary:
+## SHA256 of the binding JSON bytes only (binding_document() without copies).
+static func binding_sha256(items: Array, contract: Dictionary) -> String:
+	return binding_document(items,contract,false).sha256
+
+static func binding_document(items: Array, contract: Dictionary, parse: bool = true) -> Dictionary:
 	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
 	var document: Dictionary = {"아이템":items,"patch523_crafting_catalog_contract":contract}
 	var keys: Array = document.keys()
@@ -505,16 +509,16 @@ static func binding_document(items: Array, contract: Dictionary) -> Dictionary:
 		if key != "아이템":
 			var text: String = JSON.stringify(document[key],"",true,true)
 			size += _hash_text(hash,text)
-			parsed[key] = JSON.parse_string(text)
+			if parse: parsed[key] = JSON.parse_string(text)
 			continue
 		var copies: Array = []
-		copies.resize(items.size())
+		if parse: copies.resize(items.size())
 		size += _hash_text(hash,"[")
 		for index: int in items.size():
 			var text: String = JSON.stringify(items[index],"",true,true)
 			size += _hash_text(hash,("" if index == 0 else ",")+text)
 			# Same values a whole-document parse gives for these fields.
-			copies[index] = JSON.parse_string(JSON.stringify(slim_binding_record(items[index]),"",true,true))
+			if parse: copies[index] = JSON.parse_string(JSON.stringify(slim_binding_record(items[index]),"",true,true))
 		size += _hash_text(hash,"]")
 		parsed[key] = copies
 	size += _hash_text(hash,"}")

@@ -31,6 +31,20 @@ func _rows(zip: ZIPReader, name: String) -> Array:
 	tables[name] = parsed.rows
 	return parsed.rows
 
+## indexed() lookups (last row per ID) over a Dictionary index or, when the
+## index is a table name, over the common reader.
+static func _row_of(index: Variant, id: String) -> Dictionary:
+	if index is Dictionary: return index.get(id,{})
+	if not id.is_valid_int(): return {}
+	var matches: Array[Dictionary] = COMMON_SOURCE.related(str(index),"ID",int(id))
+	return matches[-1] if not matches.is_empty() else {}
+
+static func _has(index: Variant, id: String) -> bool:
+	return index.has(id) if index is Dictionary else not _row_of(index,id).is_empty()
+
+static func _at(index: Variant, id: String) -> Dictionary:
+	return index[id] if index is Dictionary else _row_of(index,id)
+
 static func indexed(rows: Array, key: String = "ID") -> Dictionary:
 	var out: Dictionary = {}
 	for row: Dictionary in rows: out[sid(row[key])] = row
@@ -58,12 +72,15 @@ func load_source(path: String = "") -> bool:
 		return false
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: problem = "원본 ZIP을 열 수 없습니다."; return false
+	# The common reader holds these same verified archive bytes; its large
+	# tables are looked up there instead of being parsed and indexed again.
+	var shared: bool = COMMON_SOURCE.identity().get("source_sha256") == ZIP_SHA
 	points = indexed(_rows(zip,"GrowthMotivation"))
 	var growth_constants: Array = _rows(zip,"GrowthMotivationConstant")
 	var links := _rows(zip,"GrowthMotivationReward")
-	var all_rewards := indexed(_rows(zip,"Reward"))
+	var all_rewards: Variant = "Reward" if shared else indexed(_rows(zip,"Reward"))
 	var reward_types := indexed(_rows(zip,"RewardType"))
-	var all_items := indexed(_rows(zip,"ItemClass"))
+	var all_items: Variant = "ItemClass" if shared else indexed(_rows(zip,"ItemClass"))
 	var item_rows := _rows(zip,"ItemBookItem")
 	var card_links := _rows(zip,"ItemBookCardForItem")
 	var all_cards := indexed(_rows(zip,"ItemBookCard"))
@@ -71,14 +88,14 @@ func load_source(path: String = "") -> bool:
 	var collection_rows := indexed(_rows(zip,"ItemBookCollection"))
 	var slots := indexed(_rows(zip,"ItemBookCollectionSlot"))
 	var slot_bonuses := _rows(zip,"ItemBookCollectionSlotBonus")
-	var bonuses := indexed(_rows(zip,"Bonus"))
+	var bonuses: Variant = "Bonus" if shared else indexed(_rows(zip,"Bonus"))
 	var types := indexed(_rows(zip,"BonusType"))
 	var units := indexed(_rows(zip,"Unit"))
 	var ui_units := indexed(_rows(zip,"UIUnit"),"UnitID")
 	var attributes := _rows(zip,"RewardAttribute")
 	_rows(zip,"RewardEnhancement")
 	var reward_groups := _rows(zip,"RewardGroup")
-	var descriptions := indexed(_rows(zip,"DescData_Korean"))
+	var descriptions: Variant = "DescData_Korean" if shared else indexed(_rows(zip,"DescData_Korean"))
 	zip.close()
 	if not problem.is_empty(): return false
 	# This is the native reward-version selector, not the local save schema.
@@ -101,17 +118,17 @@ func load_source(path: String = "") -> bool:
 		if int(point.Level) < 1 or int(point.Percent) < 0 or int(point.Percent) > 100: problem = "성장 달성 조건 오류"; return false
 	for link: Dictionary in links:
 		var id := sid(link.RewardID); var point := sid(link.GrowthMotivationID)
-		if not points.has(point) or not all_rewards.has(id) or rewards.has(id): problem = "보상 연결 또는 중복 오류"; return false
-		var row: Dictionary = all_rewards[id].duplicate(true)
+		if not points.has(point) or not _has(all_rewards,id) or rewards.has(id): problem = "보상 연결 또는 중복 오류"; return false
+		var row: Dictionary = _at(all_rewards,id).duplicate(true)
 		# Match the source namespace by its declared kind, as the existing quest
 		# supplier does. A coincident numeric type ID is not an item contract.
 		var reward_type: Dictionary = reward_types.get(sid(row.RewardTypeID),{})
 		if reward_type.get("Name") != "Item" or int(row.RewardGetTimeTypeID) != 2 or int(row.CharacterClassID) != 0 or bool(row.UseImmediately) or bool(row.ClanOnly) or int(row.RewardEnhancementTypeID) != 1 or int(row.ItemBlessCodeID) != 1 or int(row.Ranking) != 0 or int(row.Amount) <= 0:
 			problem = "지원하지 않는 성장 보상 조건: " + id; return false
 		var item_id := sid(row.RewardClassID)
-		if not all_items.has(item_id): problem = "원본 아이템 연결 누락"; return false
+		if not _has(all_items,item_id): problem = "원본 아이템 연결 누락"; return false
 		row["point_id"] = point; row["version"] = int(link.Version)
-		rewards[id] = row; items[item_id] = all_items[item_id]
+		rewards[id] = row; items[item_id] = _at(all_items,item_id)
 		if not by_point.has(point): by_point[point] = []
 		by_point[point].append(id); versions[sid(link.Version)] = true
 	for row: Dictionary in attributes:
@@ -139,14 +156,14 @@ func load_source(path: String = "") -> bool:
 		if not collections.has(cid):
 			var raw: Dictionary = collection_rows[cid]
 			if int(raw.Level) != 96 or int(raw.ServerLimitSetID) != 0 or int(raw.ExpireDateTimeID) != 0 or bool(raw.IsEvent): problem = "컬렉션 보호 조건이 다릅니다."; return false
-			collections[cid] = {"id":cid,"name":str(descriptions.get(sid(raw.DescID),{}).get("Description","증표 컬렉션 " + cid)),"raw":raw,"cards":[],"effects":[]}
+			collections[cid] = {"id":cid,"name":str(_row_of(descriptions,sid(raw.DescID)).get("Description","증표 컬렉션 " + cid)),"raw":raw,"cards":[],"effects":[]}
 		collections[cid].cards.append(id)
 	var effect_count := 0
 	for link: Dictionary in slot_bonuses:
 		var slot: Dictionary = slots.get(sid(link.ItemBookCollectionSlotID),{})
 		var cid := sid(slot.get("ItemBookCollectionID",0))
 		if not collections.has(cid): continue
-		var bonus: Dictionary = bonuses.get(sid(link.BonusID),{})
+		var bonus: Dictionary = _row_of(bonuses,sid(link.BonusID))
 		var type: Dictionary = types.get(sid(bonus.get("BonusTypeID","")),{})
 		if int(link.GameClassID) != 0 or bonus.is_empty() or type.is_empty(): problem = "효과 연결 또는 클래스 조건 오류"; return false
 		var unit: String = str(units.get(sid(type.UnitID),{}).get("Name",""))
@@ -159,7 +176,7 @@ func load_source(path: String = "") -> bool:
 		var scoped := name == "HitSpecialResistanceScale"
 		if (scoped and (int(bonus.BonusApplicationTypeID) != 252 or int(bonus.BonusApplicationTargetID) != 14)) or (not scoped and (int(bonus.BonusApplicationTypeID) != 0 or int(bonus.BonusApplicationTargetID) != 0)):
 			problem = "효과 적용 대상이 다릅니다."; return false
-		collections[cid].effects.append({"name":name,"value":value,"display":str(descriptions.get(sid(type.DescID),{}).get("Description",name)) + " +" + str(value) + ("%" if unit == "Percentage" else ""),"raw":bonus,"type":type,"slot":slot,"link":link,"policy_note":"대상14와 비율 공식은 원문에 없으므로 TWILIGHT 추정 실행을 선택할 수 있습니다." if scoped else ""})
+		collections[cid].effects.append({"name":name,"value":value,"display":str(_row_of(descriptions,sid(type.DescID)).get("Description",name)) + " +" + str(value) + ("%" if unit == "Percentage" else ""),"raw":bonus,"type":type,"slot":slot,"link":link,"policy_note":"대상14와 비율 공식은 원문에 없으므로 TWILIGHT 추정 실행을 선택할 수 있습니다." if scoped else ""})
 		effect_count += 1
 	if token_items.size() != 63 or cards.size() != 63 or collections.size() != 8 or effect_count != 16 or items.size() != 17:
 		problem = "원본 증표·아이템 전수 연결 개수가 다릅니다."; return false

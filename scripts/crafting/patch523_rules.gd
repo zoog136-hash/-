@@ -56,8 +56,31 @@ func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: Packed
 
 ## load_original() with the registered catalog given as items + contract; the
 ## same bytes are identified without building the whole binding text.
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "equipment_rules"
+## Everything the compiled model depends on besides the inputs in the key.
+const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
+	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/resources/current523_definition_rows.gd",
+	"res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
+	"res://data/crafting/patch523_enhancement_policy.json"]
+## True when the model was read from this device's bake instead of compiled.
+var loaded_from_bake: bool = false
+var _bake_key: String = ""
+
 func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary) -> bool:
 	if not data.is_empty(): return true
+	loaded_from_bake = false
+	# The model is a pure function of these inputs; reuse this device's
+	# compile of the same inputs (see current523_bake_cache.gd).
+	var catalog_hash := HashingContext.new(); catalog_hash.start(HashingContext.HASH_SHA256); catalog_hash.update(catalog_bytes)
+	_bake_key = BAKE.key([catalog_hash.finish().hex_encode(),ORIGINAL_PROJECTION.binding_sha256(items,contract),
+		str(SOURCE_DEFINITIONS.identity().get("source_sha256","")),BAKE.code_key(BAKE_CODE)])
+	var baked: Variant = BAKE.read(BAKE_NAME,_bake_key)
+	if baked is Dictionary and baked.get("model") is Dictionary and baked.get("sha256") is String:
+		if _accept(baked.model,baked.sha256):
+			loaded_from_bake = true
+			return true
+		data = {}
 	var projection = ORIGINAL_PROJECTION.new()
 	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract)
 	return _load_candidate(projection,projection.build_bound(catalog_bytes,document.binding,document.sha256))
@@ -80,7 +103,11 @@ func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
 	if int(size[0]) > MAX_BYTES:
 		problem = "원본523 제작 규칙 파일 크기를 확인하세요"
 		return false
-	return _accept(parsed,hash.finish().hex_encode())
+	var sha: String = hash.finish().hex_encode()
+	# Baked before _accept() so a later start receives the identical input.
+	if not _bake_key.is_empty(): BAKE.write(BAKE_NAME,_bake_key,{"model":parsed,"sha256":sha})
+	_bake_key = ""
+	return _accept(parsed,sha)
 
 func _load_payload(text: String, expected_sha256: String) -> bool:
 	if text.to_utf8_buffer().size() > MAX_BYTES:

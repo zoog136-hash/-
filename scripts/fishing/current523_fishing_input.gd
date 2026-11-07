@@ -95,7 +95,8 @@ func _project() -> Dictionary:
 		if row.get("RuleID") in [1,11,21] and _integer(row.get("ItemClassID")): effect_ids[int(row.ItemClassID)] = true
 	for row: Dictionary in tables.Fish:
 		if _integer(row.get("ItemClassID")) and int(row.ItemClassID) > 0: effect_ids[int(row.ItemClassID)] = true
-	for link: Dictionary in _table("ItemBonus"):
+	for link_index: int in _count("ItemBonus"):
+		var link: Dictionary = SOURCE.row_at("ItemBonus",link_index)
 		if not _integer(link.get("ItemClassID")):
 			_fail("invalid_source_ItemBonus.ItemClassID")
 			continue
@@ -111,7 +112,8 @@ func _project() -> Dictionary:
 			if not rods.has(key): rods[key] = {}
 			rods[key][detail.type] = detail.value
 	var items: Array = []
-	for raw: Dictionary in _table("ItemClass"):
+	for raw_index: int in _count("ItemClass"):
+		var raw: Dictionary = SOURCE.row_at("ItemClass",raw_index)
 		var selected: Dictionary = {}
 		for field: String in ITEM_FIELDS:
 			if not raw.has(field):
@@ -160,10 +162,29 @@ func _project() -> Dictionary:
 	tables.Currency = _select("Currency","ID",{2561:true})
 	return {"version":523,"tables":tables,"rods":rods,"item_effects":effects,"source_effect_rows":effect_rows}
 
+## Verified row count of a table streamed by position (0 on failure), so a
+## large table is never materialized whole (same checks as _table()).
+func _count(table: String) -> int:
+	if not _table_metadata(table): return 0
+	var count: int = SOURCE.row_count(table)
+	if count != int(_metadata[table].row_count):
+		_fail("source_table_rows_unavailable:"+table+":"+SOURCE.problem())
+		return 0
+	return count
+
 func _select(table: String, field: String, ids: Dictionary) -> Array:
 	var result: Array = []
 	var selected: Dictionary = {}
 	for value: Variant in ids: selected[_id(value)] = true
+	var count: int = 0 if _raw.has(table) else _count(table)
+	var column: Variant = SOURCE.column(table,field) if count > 0 else []
+	if count > 0 and column.size() == count:
+		# Same per-row reference checks, read from the packed column; only
+		# the selected rows are built.
+		for value: Variant in column: _id(value)
+		result.append_array(SOURCE.rows_matching(table,field,selected))
+		return result
+	if count == 0 and not _raw.has(table) and _fatal: return result
 	for row: Dictionary in _table(table):
 		if selected.has(_id(row.get(field))): result.append(row)
 	return result
@@ -173,7 +194,8 @@ func _admit(original: Dictionary) -> Dictionary:
 	var blocked_items: Dictionary = {}; var blocked_fish: Dictionary = {}; var blocked_pools: Dictionary = {}
 	var blocked_territories: Dictionary = {}; var blocked_bags: Dictionary = {}
 	var known_items: Dictionary = {}; var known_fish: Dictionary = {}
-	for raw: Dictionary in _table("ItemClass"):
+	for raw_index: int in _count("ItemClass"):
+		var raw: Dictionary = SOURCE.row_at("ItemClass",raw_index)
 		if not _integer(raw.get("ID")): _fail("invalid_source_ItemClass.ID"); continue
 		known_items[int(raw.ID)] = true
 		if _excluded("ItemClass",raw) or typeof(raw.get("TestItem")) != TYPE_BOOL or raw.TestItem:
