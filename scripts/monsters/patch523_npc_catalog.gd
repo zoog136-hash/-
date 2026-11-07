@@ -3,6 +3,8 @@ extends RefCounted
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const ORIGINAL_INPUT = preload("res://scripts/monsters/current523_npc_input_projection.gd")
+const ACTOR_BATCH=preload("res://scripts/monsters/current523_npc_batch.gd")
+const ORDINARY_DAMAGE_INPUT=preload("res://scripts/monsters/current523_ordinary_damage_input.gd")
 const MAX_BYTES = 16 * 1024 * 1024
 const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
 const DEFINITION_OWNERS = {"NpcAttribute":"NpcClassID","NpcSpecialResistance":"NpcClassID","NpcRace":"NpcClassID","SpellBonus":"SpellClassID","BuffBonus":"BuffClassID","StatusEffectAttr":"StatusEffectID"}
@@ -13,6 +15,7 @@ const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_
 const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
+var _actor_batch_revision: int = 0
 var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
@@ -24,6 +27,16 @@ var admitted_source_identities: Dictionary = {}
 var deferred_npc_inputs: Dictionary = {}
 var source_status: Dictionary = {}
 var _original_input = ORIGINAL_INPUT.new()
+# Explicit environment selections have a separate identity and registry. Never
+# republish the NPC payload or clear its admitted actors to register a Land.
+var environment_error: String = ""
+var _environment_input = ORIGINAL_INPUT.new()
+var environment_revision: int = 0
+var environment_model_sha256: String = ""
+var _environment_inputs: Dictionary = {}
+var _environment_tables: Dictionary = {}
+var _environment_indexes: Dictionary = {}
+
 
 func configure_original() -> bool:
 	source_mode = "current523_original"
@@ -60,6 +73,7 @@ func configure_original() -> bool:
 	return true
 
 func _publish_original(candidate: Dictionary) -> void:
+	_actor_batch_revision+=1
 	content = candidate
 	indexes = {}
 	for pair: Array in [["NpcAttack","NpcClassID"],["NpcAttribute","NpcClassID"],["NpcSpecialResistance","NpcClassID"],["NpcRace","NpcClassID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"],["LandAttribute","LandID"]]:
@@ -70,8 +84,9 @@ func _publish_original(candidate: Dictionary) -> void:
 			if not index.has(owner): index[owner] = []
 			index[owner].append(entry.row)
 		indexes[pair[0]] = index
-	# This is the actual in-memory registry payload, never a legacy manifest or
-	# source-archive fingerprint. No model/pack/receipt is written to disk.
+	# This is the actual NPC payload identity, not an archive fingerprint.
+	# Explicit environment inputs have their own retained registry/hash; they
+	# never republish this payload. No model/pack/receipt is written to disk.
 	source_model_sha256 = JSON.stringify(content,"",true,true).sha256_text()
 
 func _admit_original_actor(source: Dictionary) -> bool:
@@ -143,7 +158,9 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 
 func row(table: String, id: int) -> Dictionary:
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return {}
-	var selected: Dictionary = content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{}).duplicate(true)
+	var selected: Dictionary = content.get("tables",{}).get(table,{}).get(str(id),{}).get("row",{})
+	if selected.is_empty() and source_identity==DEFINITIONS.identity(): selected = _environment_tables.get(table,{}).get(str(id),{}).get("row",{})
+	selected = selected.duplicate(true)
 	return _selected_spell_attack_view(selected) if table=="NpcAttack" else selected
 
 func owned(table: String, id: int) -> Array:
@@ -151,6 +168,9 @@ func owned(table: String, id: int) -> Array:
 	# authoritative; neither a legacy cache nor a larger source relation fills them.
 	if not source_available or content.get("input_kind")!="twilight.current523.npc-input.v1": return []
 	var selected: Array = indexes.get(table,{}).get(str(id),[]).duplicate(true)
+	if source_identity==DEFINITIONS.identity():
+		for extra: Dictionary in _environment_indexes.get(table,{}).get(str(id),[]):
+			if not selected.has(extra): selected.append(extra.duplicate(true))
 	if table=="NpcAttack":
 		for position: int in range(selected.size()): selected[position] = _selected_spell_attack_view(selected[position])
 	return selected
@@ -289,7 +309,8 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
 	result = _project_numeric_resistance_input(result,source)
 	result = _project_named_special_resistance_input(result,source)
-	return _project_uniform_attack_range_input(result,source)
+	result = _project_uniform_attack_range_input(result,source)
+	return ORDINARY_DAMAGE_INPUT.project(self,result,source)
 
 func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
 	# Called only after the same exact actor/source admission above. This is an
@@ -578,3 +599,118 @@ func environment_buffs(land_id: int) -> Array:
 		if type.get("Name") != "NpcBuff": continue
 		result.append({"attribute":attribute,"territory":row("Territories",int(attribute.TerritoryID)),"buff":buff_details(int(attribute.Value)),"application":"requires_verified_position_and_environment_lifecycle"})
 	return result
+
+static func _land_environment_key(land_id: int, asset_path: String) -> String:
+	return JSON.stringify([land_id,asset_path])
+
+func build_land_environment(land_id: int, asset_path: String, land_attribute_ids: Array) -> Dictionary:
+	# No lookup/adoption side effect; only the selected original dependency closure.
+	var candidate: Dictionary = _environment_input.build_land_environment(land_id,asset_path,land_attribute_ids)
+	environment_error = _environment_input.problem if candidate.is_empty() else ""
+	return candidate
+
+func _environment_failure(reason: String) -> Dictionary:
+	environment_error = reason
+	return {"ok":false,"reason":reason,"environment_revision":environment_revision,
+		"environment_registry_sha256":environment_model_sha256,"npc_model_sha256":source_model_sha256,
+		"npc_admission_changed":false}
+
+func adopt_land_environment(candidate: Dictionary) -> Dictionary:
+	# The normal NPC configure path must already exist. This operation never
+	# configures/replaces it, increments combat generation, or admits an actor.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1":
+		return _environment_failure("current_original_npc_registry_not_configured")
+	var identity: Dictionary = DEFINITIONS.identity()
+	if identity.is_empty() or identity!=source_identity or identity.get("source_sha256")!=SOURCE_SHA:
+		return _environment_failure("environment_source_identity_mismatch")
+	if candidate.get("kind")!="patch523_npc_land_environment_input" or candidate.get("schema")!=1 or candidate.get("input_kind")!="twilight.current523.land-environment-input.v1" or candidate.get("source_snapshot")!="patch523" or candidate.get("source_archive_sha256")!=SOURCE_SHA or candidate.get("source_archive_identity")!=identity:
+		return _environment_failure("environment_input_identity_mismatch")
+	var selection: Variant = candidate.get("selection")
+	if not selection is Dictionary or not source_integer(selection.get("land_id")) or not selection.get("asset_path") is String or not selection.get("land_attribute_ids") is Array:
+		return _environment_failure("environment_selection_shape_mismatch")
+	var exact: Dictionary = _environment_input.build_land_environment(int(selection.land_id),selection.asset_path,selection.land_attribute_ids)
+	if exact.is_empty(): return _environment_failure(_environment_input.problem)
+	if exact!=candidate: return _environment_failure("environment_input_not_exact_original_closure")
+	var key: String = _land_environment_key(int(selection.land_id),selection.asset_path)
+	var next: Dictionary = _environment_inputs.duplicate(true)
+	next[key] = candidate.duplicate(true)
+	var tables: Dictionary = {}; var provenance: Dictionary = {}
+	var keys: Array = next.keys(); keys.sort()
+	for input_key: String in keys:
+		var input: Dictionary = next[input_key]
+		if input.get("source_archive_identity")!=identity: return _environment_failure("retained_environment_identity_mismatch")
+		for table: String in input.tables:
+			if not tables.has(table): tables[table] = {}
+			var metadata: Variant = input.provenance.get(table)
+			if not metadata is Dictionary: return _environment_failure("environment_provenance_missing:"+table)
+			if provenance.has(table) and provenance[table]!=metadata: return _environment_failure("environment_provenance_conflict:"+table)
+			provenance[table] = metadata.duplicate(true)
+			for row_key: String in input.tables[table]:
+				var entry: Dictionary = input.tables[table][row_key]
+				var npc: Dictionary = content.tables.get(table,{}).get(row_key,{})
+				if not npc.is_empty() and npc!=entry: return _environment_failure("environment_npc_row_conflict:"+table+":"+row_key)
+				if tables[table].has(row_key) and tables[table][row_key]!=entry: return _environment_failure("environment_row_conflict:"+table+":"+row_key)
+				tables[table][row_key] = entry.duplicate(true)
+	var owner_indexes: Dictionary = {}
+	for pair: Array in [["LandAttribute","LandID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"]]:
+		var index: Dictionary = {}
+		var entries: Array = tables.get(pair[0],{}).values()
+		entries.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.source_row_1based)<int(b.source_row_1based))
+		for entry: Dictionary in entries:
+			if not source_integer(entry.row.get(pair[1])): return _environment_failure("environment_owner_field_invalid:"+pair[0])
+			var owner: String = str(int(entry.row[pair[1]]))
+			if not index.has(owner): index[owner] = []
+			index[owner].append(entry.row.duplicate(true))
+		owner_indexes[pair[0]] = index
+	var changed: bool = _environment_inputs!=next
+	# Commit only the separate in-memory environment registry after all joins.
+	_environment_inputs = next; _environment_tables = tables; _environment_indexes = owner_indexes
+	environment_model_sha256 = JSON.stringify({"kind":"twilight.current523.land-environment-registry.v1","archive":identity,"inputs":next},"",true,true).sha256_text()
+	if changed:
+		environment_revision+=1
+		_actor_batch_revision+=1
+	environment_error = ""
+	var receipt: Dictionary = registered_land_environment(int(selection.land_id),selection.asset_path)
+	receipt["ok"] = true; receipt["changed"] = changed; receipt["npc_admission_changed"] = false
+	return receipt
+
+func admit_land_environment(land_id: int, asset_path: String, land_attribute_ids: Array) -> Dictionary:
+	var candidate: Dictionary = build_land_environment(land_id,asset_path,land_attribute_ids)
+	return _environment_failure(environment_error) if candidate.is_empty() else adopt_land_environment(candidate)
+
+func registered_land_environment(land_id: int, asset_path: String) -> Dictionary:
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or source_identity!=DEFINITIONS.identity(): return {}
+	var candidate: Dictionary = _environment_inputs.get(_land_environment_key(land_id,asset_path),{})
+	if candidate.is_empty(): return {}
+	return {"kind":"twilight.current523.registered-land-environment.v1","source_archive_identity":source_identity.duplicate(true),
+		"selection":candidate.selection.duplicate(true),"environment_input_sha256":JSON.stringify(candidate,"",true,true).sha256_text(),
+		"environment_registry_sha256":environment_model_sha256,"environment_revision":environment_revision,
+		"npc_model_sha256":source_model_sha256,"land":row("Land",land_id)}
+
+func environment_attributes() -> Array:
+	# Explicit registry roots only, including any historical admitted NPC roots.
+	if not source_available or source_mode!="current523_original" or content.get("input_kind")!="twilight.current523.npc-input.v1" or source_identity!=DEFINITIONS.identity(): return []
+	var selected: Dictionary = content.get("tables",{}).get("LandAttribute",{}).duplicate(true)
+	for key: String in _environment_tables.get("LandAttribute",{}):
+		if not selected.has(key): selected[key] = _environment_tables.LandAttribute[key]
+	var result: Array = []
+	var keys: Array = selected.keys(); keys.sort()
+	for key: String in keys: result.append(selected[key].row.duplicate(true))
+	return result
+
+# Explicit host population transaction. Preparation never calls live admission.
+func prepare_actor_batch(records: Array,field: RefCounted,world: Node,population: Node,expected_model_sha256: String) -> Dictionary:
+	var candidate=ACTOR_BATCH.new()
+	return candidate.prepare(self,records,field,world,population,expected_model_sha256)
+
+func commit_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.commit(self)
+
+func restore_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.restore(self)
+
+func finish_actor_batch(candidate: RefCounted) -> Dictionary:
+	if candidate==null or candidate.get_script()!=ACTOR_BATCH:return {"ok":false,"reason":"invalid_actor_batch_candidate"}
+	return candidate.finish(self)

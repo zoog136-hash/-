@@ -6,6 +6,8 @@ const PAYLOAD_BYTES := 6050456
 const DEFAULT_MANIFEST := "user://dungeon523/" + PAYLOAD_SHA256 + "/manifest.json"
 const MAX_MANIFEST_BYTES := 4096
 const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_projection.gd")
+const ORIGINAL_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const ORIGINAL_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
 var data: Dictionary = {}
 var last_error: String = ""
 var tower_by_id: Dictionary = {}
@@ -20,13 +22,131 @@ var orim_actor_types: Dictionary = {}
 var orim_groups: Dictionary = {}
 var orim_item_effects: Dictionary = {}
 var orim_actor_defs: Dictionary = {}
+var execution_input_identity: Dictionary = {}
+var orim_speed_input_provenance: Dictionary = {}
+var _speed_input_identity: Dictionary = {}
 
-func _load_execution(directory: String) -> void:
-	orim_actor_types.clear(); orim_groups.clear();orim_item_effects.clear();orim_actor_defs.clear()
+func original_orim_speed_input(buff_id: int, stat: String) -> Dictionary:
+	# Only the existing three preparation buffs and two actual speed operands.
+	if buff_id not in [71672,71682,71692] or stat not in ["move_speed","attack_speed"]: return {}
+	var identity: Dictionary = ORIGINAL_ROWS.identity()
+	if identity.get("source_sha256")!=SOURCE_SHA256 or data.get("source_sha256")!=SOURCE_SHA256: return {}
+	if identity!=_speed_input_identity:
+		orim_speed_input_provenance.clear()
+		_speed_input_identity = identity.duplicate(true)
+	var key: String = str(buff_id)+":"+stat
+	if orim_speed_input_provenance.has(key): return orim_speed_input_provenance[key].duplicate(true)
+	var declarations: Array[Dictionary] = ORIGINAL_ROWS.related("OrimsTrailBuff","BuffClassID",buff_id)
+	if declarations.size()!=1 or declarations[0] not in data.get("declarations",{}).get("OrimsTrailBuff",[]): return {}
+	var graph: Dictionary = ORIGINAL_BUFFS.describe(buff_id)
+	if graph.get("source")!=identity: return {}
+	if graph.get("excluded",false) or not ORIGINAL_ROWS.declared_exclusion("BuffGroup",graph.get("group",{})).is_empty() or not ORIGINAL_ROWS.declared_exclusion("OrimsTrailBuff",declarations[0]).is_empty():
+		return {"ok":true,"value":0.0,"excluded":true}
+	if not graph.get("ok",false): return {}
+	var name_value: String = "MoveSpeedBonus" if stat=="move_speed" else "AttackSpeedBonus"
+	var matched: Array = []
+	for effect: Dictionary in graph.get("bonuses",[]):
+		if effect.get("type",{}).get("Name")==name_value: matched.append(effect)
+	if matched.size()!=1: return {}
+	var effect: Dictionary = matched[0]
+	var link: Dictionary = effect.get("link",{}); var bonus: Dictionary = effect.get("bonus",{})
+	if effect.get("unit",{}).get("Name")!="Percentage" or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0: return {}
+	for field: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+		if link.get(field)!=0: return {}
+	for pair: Array in [["BuffBonus",link],["Bonus",bonus],["BonusType",effect.get("type",{})],["Unit",effect.get("unit",{})]]:
+		if not ORIGINAL_ROWS.declared_exclusion(pair[0],pair[1]).is_empty(): return {"ok":true,"value":0.0,"excluded":true}
+	var raw: Variant = bonus.get("Value")
+	if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)<0.0: return {}
+	# Existing Percentage conversion used by the skill/equipment projections:
+	# 10,000 raw units per host percentage point, not a new status formula.
+	var result: Dictionary = {"ok":true,"value":float(raw)/10000.0,"source":identity,
+		"declaration":declarations[0],"buff_class_id":buff_id,"stat":stat,
+		"link":link,"bonus":bonus,"type":effect.type,"unit":effect.unit,"raw_per_percent":10000}
+	orim_speed_input_provenance[key] = result.duplicate(true)
+	return result
+
+func _original_execution_input() -> Dictionary:
+	# Same selection as build_orim523_execution.py; no builder, file or new
+	# execution policy. Retain complete source rows and their original order.
+	var identity: Dictionary = ORIGINAL_ROWS.identity()
+	if identity.get("source_sha256") != SOURCE_SHA256: return {}
+	var tables: Dictionary = {}
+	for name: String in ["OrimsTrailNpc","OrimsTrailNpcType","NpcClassForNpcGroup","ItemBonus","Bonus","BonusType","NpcClass","NpcAttack","DescData_Korean","OrimsTrailSpawn"]:
+		var meta: Dictionary = ORIGINAL_ROWS.table_metadata(name)
+		var rows: Array[Dictionary] = ORIGINAL_ROWS.rows(name)
+		if meta.is_empty() or rows.size()!=int(meta.get("row_count",-1)): return {}
+		tables[name] = rows
+	var links: Array = []; var bonus_ids: Dictionary = {}
+	for row: Dictionary in tables.ItemBonus:
+		if row.ItemClassID in [231162,232352]: links.append(row); bonus_ids[int(row.BonusID)] = true
+	tables.ItemBonus = links
+	var bonuses: Array = []; var type_ids: Dictionary = {}
+	for row: Dictionary in tables.Bonus:
+		if bonus_ids.has(int(row.ID)): bonuses.append(row); type_ids[int(row.BonusTypeID)] = true
+	tables.Bonus = bonuses
+	var types: Array = []
+	for row: Dictionary in tables.BonusType:
+		if type_ids.has(int(row.ID)): types.append(row)
+	tables.BonusType = types
+	var groups: Dictionary = {}; var actors: Dictionary = {}
+	for row: Dictionary in tables.OrimsTrailSpawn:
+		if row.NpcGroupID: groups[int(row.NpcGroupID)] = true
+	for row: Dictionary in tables.OrimsTrailNpc: actors[int(row.NpcClassID)] = true
+	for row: Dictionary in tables.NpcClassForNpcGroup:
+		if groups.has(int(row.NpcGroupID)): actors[int(row.NpcClassID)] = true
+	var definitions: Array = []; var descriptions: Dictionary = {}
+	for row: Dictionary in tables.NpcClass:
+		if actors.has(int(row.ID)): definitions.append(row); descriptions[int(row.DescId)] = true
+	tables.NpcClass = definitions
+	var attacks: Array = []
+	for row: Dictionary in tables.NpcAttack:
+		if actors.has(int(row.NpcClassID)): attacks.append(row)
+	tables.NpcAttack = attacks
+	var texts: Array = []
+	for row: Dictionary in tables.DescData_Korean:
+		if descriptions.has(int(row.ID)): texts.append(row)
+	tables.DescData_Korean = texts
+	tables.erase("OrimsTrailSpawn")
+	# Exclusions are never filtered to manufacture the historical model hash.
+	# Hold this optional input instead of admitting dummy/test source records.
+	for name: String in tables:
+		for row: Dictionary in tables[name]:
+			# The historical model retains all group rows for its fingerprint;
+			# only groups explicitly referenced by Orim spawns can be consumed.
+			if name=="NpcClassForNpcGroup" and not groups.has(int(row.NpcGroupID)): continue
+			if not ORIGINAL_ROWS.declared_exclusion(name,row).is_empty() or row.get("TestNpc")==true: return {}
+	for id: int in [231162,232352]:
+		var item: Dictionary = ORIGINAL_ROWS.row("ItemClass",id)
+		if item.is_empty() or item.get("TestItem")!=false or not ORIGINAL_ROWS.declared_exclusion("ItemClass",item).is_empty(): return {}
+	var candidate: Dictionary = {"source_sha256":SOURCE_SHA256,"schema":1,"tables":tables}
+	var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(candidate)
+	var hashing := HashingContext.new()
+	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return {}
+	var actual: String = hashing.finish().hex_encode()
+	if actual not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]: return {}
+	return {"data":candidate,"identity":{"kind":"held_original_in_memory","source":identity,"model_sha256":actual,"model_bytes":bytes.size()}}
+
+func _load_execution(directory: String, allow_original: bool = false) -> void:
 	var path := directory.path_join("orim_execution.json")
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]: return
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var parsed: Variant
+	var input_identity: Dictionary = {}
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file==null:
+		if FileAccess.get_open_error()!=ERR_FILE_NOT_FOUND or not allow_original: return
+		if not orim_actor_types.is_empty() or not orim_groups.is_empty() or not orim_item_effects.is_empty() or not orim_actor_defs.is_empty(): return
+		var original: Dictionary = _original_execution_input()
+		if original.is_empty(): return
+		parsed = original.data
+		input_identity = original.identity
+	else:
+		file.close()
+		var actual: String = FileAccess.get_sha256(path)
+		if actual not in [EXECUTION_SHA,PREVIOUS_EXECUTION_SHA]: return
+		parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+		input_identity = {"kind":"installed_execution_sidecar","source_sha256":SOURCE_SHA256,"model_sha256":actual}
 	if not parsed is Dictionary or parsed.get("source_sha256","") != SOURCE_SHA256: return
+	orim_actor_types.clear(); orim_groups.clear();orim_item_effects.clear();orim_actor_defs.clear()
+	execution_input_identity = input_identity
 	var types: Dictionary = {}
 	for row: Dictionary in parsed.tables.OrimsTrailNpcType: types[int(row.ID)] = str(row.Name)
 	for row: Dictionary in parsed.tables.OrimsTrailNpc: orim_actor_types[int(row.NpcClassID)] = types[int(row.OrimsTrailNpcTypeID)]
@@ -117,9 +237,9 @@ func _load_original_projection() -> Dictionary:
 		last_error = "보유 원본의 던전 projection 바이트가 기존 팩 정체와 다릅니다 · 기존 자료 보존"
 		return {"ok":false,"reason":last_error}
 	_activate(candidate)
-	# No execution sidecar is manufactured. This existing optional reader only
-	# clears unavailable sidecar definitions for the absent default installation.
-	_load_execution(DEFAULT_MANIFEST.get_base_dir())
+	# The same optional reader accepts the held original only on actual absence;
+	# no sidecar is manufactured and its established model hash is still required.
+	_load_execution(DEFAULT_MANIFEST.get_base_dir(),true)
 	return {"ok":true,"tower":200,"orim":20,"special":22,"source":"existing_original_in_memory","payload_sha256":PAYLOAD_SHA256,"unverified":true}
 
 func load_pack(path: String = DEFAULT_MANIFEST) -> Dictionary:

@@ -1,5 +1,71 @@
 # Current523 definition consumption audit
 
+## Local checkpoint — 2026-11-06
+
+This section records saved local work, not release, game execution or full source
+completion. The existing feature lineage is retained at parent
+`0feeb580935b270871afa41b5940c2c3ced65e0a`; the latest narrowly reviewed main
+was `e1513f7da10d6282f1ea7b8bdabe9606843b52fa`. No rebase, merge, push,
+compiler, parser validation, game, rendering, tests or CI were performed for
+this checkpoint. The user's explicit no-execution instruction supersedes the
+usual project preflight/test commands for this local save.
+
+Saved code groups:
+
+- Four exact Unit3 equipment percentage-reduction-ignore inputs, matching
+  Python/GDScript projections and one existing guardian reduction-budget
+  consumer. No second card/general amplification supply.
+- NPC batch preparation/admission/restore/finish with actual RefCounted fields
+  and retained source/model/environment/revision guards.
+- Three reviewed child geometry inputs: Triple Arrow effect120712 range10,
+  Static Field effect107963 radius3, and Taunt effect99231 radius10. Host32/48
+  scales remain labelled estimates. The repeat fix proves the selected child
+  TargetKind instead of requiring a direct-root flag absent on native toggles.
+- Optional owned-item source witness with fail-closed final success flags.
+  Immutable source rows/model admission and mutable physical state stay
+  separate. It supplies neither ownership nor a native collection binding.
+- Ordinary NPC damage input only for an explicitly marked, unoverridden roster
+  atk8 default and a single admitted simple non-spell attack. The source dice
+  mean/floor is an explicit host numeric estimate; native dice RNG/selection,
+  clock, targets, costs and saves stay with existing owners. Existing host
+  accuracy defaults can change downstream of the supplied attack_power.
+
+The latest static audit retains the fixed1,065 JSON-member denominator,
+457,729,872 uncompressed bytes and archive SHA
+`d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832`.
+Its bounded current-main paths attest132 unique partial/conditional members,
+283,211,115 bytes of **whole-file footprint**, not consumed byte extents.
+The other933/174,518,757 bytes are unclassified by that bounded pass, not
+declared unused or user-excluded. PR/local-only code is not counted as main
+adoption. No whole-file use or actual game-byte measurement is asserted.
+
+Private research, source-row witnesses, historical logs, audit ledgers and
+held candidate patches are retained through the ignored local checkpoint
+index `checkpoint-index.json` under the project's local checkpoint store.
+Original ZIP/media and the existing large code view remain in their original
+locations; no private source rows or internal locators are committed here.
+Local retention is not an external delivery or phone installation.
+
+Important fixed artifact hashes (SHA256):
+
+| Artifact | Hash | State |
+| --- | --- | --- |
+| 132-member canonical consumer CSV | `58303ba836620624d386d75dc746bfd3d22b32b614e84732ef8af545cccc03f1` | Static partial-footprint evidence |
+| Three-child geometry patch | `ffa479206e88139f7af52e7882782db4883c8948ff1a73650af98f0882f4f10a` | Saved code, plus repeat correction |
+| Repeat target-contract correction | `0273e7b5f5249570ef6169026ca3c7fc0020e4f0e0d87c511668b5ece60e8f2c` | Saved code |
+| Ordinary NPC four-file patch | `271da1f75432cef154ed58e13c4ec2a4bc062cc81963b3a3e0b865501b925079` | Saved code; runtime unobserved |
+| Final source-witness result file | `107685be8c80f29da56594e229332eea81c660453b18b34825b474c9e34a24eb` | Saved producer; prospective owner recheck |
+| Direct attack-type joint patch | `244e65c108b843d61934bd512f723323c17c206ef0d084f0a6600e1025adf388` | HELD/unapplied; active player file unchanged |
+
+The direct attack-type candidate proves bound Rune Burst95542's direct
+SpellAttackType/AttackTypeID→Melee relation. It stays held because the current
+attack_type field also controls casting restrictions and queue kind. The
+Integration owner must separate those receivers before activation. FoeSlayer
+still lacks an established weapon-range composition rule. The Land0, flat,
+positive-minimum and historical quest candidates remain retained separately;
+this checkpoint does not activate them or resume excluded quest work. Scope
+exclusions and original/saves/phone/active resource pins remain unchanged.
+
 This Draft retains the earlier private consumption audit tool and connects
 bounded source fields to existing gameplay consumers. It does not complete all
 original definitions or establish 95% use.

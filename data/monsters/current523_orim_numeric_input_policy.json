@@ -1,0 +1,36 @@
+{
+  "schema": "twilight.current523.orim-numeric-input-policy.v1",
+  "source_snapshot": "patch523",
+  "source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+  "enabled": true,
+  "scope": "verified_original_orim_stage_spawn_npc_numeric_input_only",
+  "origin": "twilight_adjustable_numeric_estimate",
+  "source_raw_unit_scale": "unconfirmed",
+  "raw_resistance_to_host_percent": 1.0,
+  "native_server_damage_formula_recovered": false,
+  "host_formula": "existing_host_formula_retained",
+  "basis": "Reuse the explicitly estimated numeric scale of current523_numeric_input_policy.json for the same NpcClass fields, under a distinct verified-Orim context. No native actor admission, source unit or actor role is inferred.",
+  "existing_context_references": [
+    "https://lineagem.plaync.com/guidebook/view?title=%EB%B0%A9%EC%96%B4%EA%B5%AC+%EC%95%84%EC%9D%B4%ED%85%9C",
+    "https://lineagem.plaync.com/guidebook/view?title=%EC%95%85%EC%84%B8%EC%84%9C%EB%A6%AC+%EC%95%84%EC%9D%B4%ED%85%9C"
+  ],
+  "reference_limit": "The previously recorded mobile equipment percentage context does not establish NpcClass raw resistance units or the native server damage formula.",
+  "attack_range": {
+    "enabled": true,
+    "origin": "twilight_adjustable_numeric_estimate",
+    "scope": "existing_selected_nonspell_orim_attack_matching_host_kind",
+    "source_raw_range_unit_scale": "unconfirmed",
+    "native_grid_scale_recovered": false,
+    "raw_attack_range_to_host_length": 58.0,
+    "basis": "Reuse the previously recorded NPC range scale58 host-length units per raw1 under a distinct exact selected-Orim-attack context. This does not establish a native grid unit or select an attack, weapon or style."
+  },
+  "special_resistance": {
+    "enabled": true,
+    "raw_to_host_percent": 1.0,
+    "origin": "twilight_adjustable_numeric_estimate",
+    "source_raw_unit_scale": "unconfirmed",
+    "native_server_status_formula_recovered": false,
+    "scope": "verified_original_orim_NpcSpecialResistance_named_Stun_Hold_Fear_only",
+    "accepted_range": "finite0<=value<100; duplicates and excluded/unsupported values preserve prior input"
+  }
+}

@@ -83,10 +83,12 @@ func tick(delta: float) -> void:
 		var aura:=RULES.node_for(detail.graph,99231)
 		var seconds:=RECOVERY.values(aura,"SpellBuffDuration","Seconds")
 		if seconds.size()!=1:continue
+		skill["radius"]=maxf(24,config.value(id,"radius"))
+		skill=_apply_reviewed_child_distance_input(skill,record,detail,aura)
 		var count:=0
 		for child: Node in world.monsters_root.get_children():
 			if not child is TwilightMonster or child.dead or child.is_boss or child.concealed523:continue
-			if child.global_position.distance_to(world.player.global_position)>maxf(24,config.value(id,"radius")) or not world._has_line_of_sight_world(world.player.global_position,child.global_position):continue
+			if child.global_position.distance_to(world.player.global_position)>float(skill.radius) or not world._has_line_of_sight_world(world.player.global_position,child.global_position):continue
 			child.aggro_remaining=maxf(child.aggro_remaining,float(seconds[0]));count+=1
 			if count>=int(aura.row.TargetLimitCount):break
 		clocks[id]=maxf(.1,config.value(id,"interval"))
@@ -164,6 +166,86 @@ func _apply_reviewed_child_element_input(skill: Dictionary, record: Dictionary, 
 	return skill
 
 
+func _apply_reviewed_child_distance_input(skill: Dictionary, record: Dictionary, detail: Dictionary, node: Dictionary) -> Dictionary:
+	# Only the already selected repeat/static/aura effect supplies its geometry. No new child,
+	# target selection, native grid, minimum rule or weapon-relative scale.
+	if service==null or not skill.get("source523") is Dictionary: return skill
+	var adapter: RefCounted = source()
+	var profile_type: Script = adapter.get_script()
+	var constants: Dictionary = profile_type.get_script_constant_map()
+	var definitions: Variant = constants.get("SOURCE_ROWS")
+	var pin: Variant = constants.get("SOURCE_SHA")
+	if not definitions is Script or not pin is String: return skill
+	var id: String = str(record.get("id",""))
+	var profile: Dictionary = adapter.profiles.get(id,{})
+	var binding: Dictionary = adapter.bindings.get("skills",{}).get(id,{})
+	var rule: Dictionary = adapter.progression_rules.rules.get(id,{})
+	if profile.is_empty() or binding.is_empty() or rule.get("kind") not in ["repeat","static","aura"] or detail.get("meta",{}).get("kind")!=rule.kind: return skill
+	if adapter.bindings.get("source_zip_sha256")!=pin or not adapter._profile_problem(id,profile,binding).is_empty(): return skill
+	var graph: Dictionary = adapter.progression_rules.graph_for(id,profile)
+	if graph.is_empty() or graph!=detail.get("graph",{}): return skill
+	var effect_id: Variant = rule.get("effect_id")
+	if not profile_type._source_integer(effect_id): return skill
+	var selected: Dictionary = RULES.node_for(graph,int(effect_id))
+	if selected.is_empty() or selected!=node or not node.get("row") is Dictionary or node.row.get("ID")!=effect_id: return skill
+	var identity: Dictionary = definitions.identity()
+	if identity.is_empty() or identity.get("source_sha256")!=pin: return skill
+	var root: Dictionary = profile.row
+	var roots: Array = definitions.related("SpellClass","ID",int(root.ID))
+	if roots.size()!=1 or roots[0]!=root or root.get("TestSpell") is not bool or root.TestSpell or not definitions.declared_exclusion("SpellClass",root).is_empty(): return skill
+	var children: Array = definitions.related("SpellClass","ID",int(effect_id))
+	if children.size()!=1 or children[0]!=node.row: return skill
+	var child: Dictionary = children[0]
+	if not profile_type._source_integer(child.get("SpellCompositionNode")) or child.SpellCompositionNode!=0 or child.get("TestSpell") is not bool or child.TestSpell or not definitions.declared_exclusion("SpellClass",child).is_empty(): return skill
+	if child.get("IsAttackRange") is not bool or child.IsAttackRange or not profile_type._source_integer(child.get("MinCastRange")) or int(child.MinCastRange)!=0:return skill
+	var source_field: String="CastRange";var host_field: String="range";var scale_field: String="cast_range_to_host_length"
+	if rule.kind=="repeat":
+		if skill.get("source523_repeated_attack")!=true or skill.get("execution_spell_id")!=effect_id or skill.get("activation")!="active" or skill.get("mode")!="attack" or skill.get("shape")!="single" or child.get("TargettingTypeID")!=2:return skill
+		# Root toggles carry native_toggle, not the direct-cast target_filter flag.
+		# try_repeat uses this selected child's target_kind in target_allowed before
+		# queuing/payment; prove that exact existing target contract here.
+		var target_kind: Variant=node.get("target_kind")
+		if not target_kind is Dictionary or target_kind.get("ID")!=child.get("TargetKindID") or target_kind.get("Name") not in ["All","AllButMe","Enemy","TargetNEnemy","AttackableNPC","Undead"] or skill.source523.get("target_kind")!=target_kind.Name:return skill
+		var target_rows: Array=definitions.related("TargetKind","ID",int(child.TargetKindID))
+		if target_rows.size()!=1 or target_rows[0]!=target_kind or not definitions.declared_exclusion("TargetKind",target_kind).is_empty():return skill
+	elif rule.kind=="static":
+		# This caller already owns the enabled/on normal-hit proc and chooses the
+		# same effect. Only its existing self-circle radius is replaced.
+		if not is_on(record) or not service.catalog.enabled(record) or skill.get("mode")!="attack" or skill.get("shape")!="self_circle" or child.get("TargettingTypeID")!=1 or node.get("target_kind",{}).get("Name")!="Enemy":return skill
+		source_field="TargetAreaRadius";host_field="radius";scale_field="area_radius_to_host_length"
+	else:
+		# Existing aura tick owns its provokable-monster filtering, count and clock.
+		if not is_on(record) or not service.catalog.enabled(record) or skill.get("mode")!="source_toggle" or child.get("TargettingTypeID")!=1 or node.get("target_kind",{}).get("Name")!="ProvokableNpc":return skill
+		source_field="TargetAreaRadius";host_field="radius";scale_field="area_radius_to_host_length"
+	var raw: Variant=child.get(source_field)
+	if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)<=0:return skill
+	var path: Variant=constants.get("DISTANCE_INPUT_POLICY_PATH")
+	if not path is String:return skill
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()>65536:return skill
+	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
+	var parser:=JSON.new()
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary:return skill
+	var policy: Dictionary=parser.data
+	if policy.get("schema")!="twilight.current523.distance-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=pin or policy.get("enabled") is not bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_distance_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_geometry")!="existing_host_distance_engine_retained":return skill
+	for field: String in ["cast_range_to_host_length","area_radius_to_host_length"]:
+		var scale: Variant=policy.get(field)
+		if typeof(scale) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(scale)) or float(scale)<=0:return skill
+	var multiplier: Variant=policy[scale_field]
+	var length: float=float(raw)*float(multiplier)
+	if not is_finite(length) or length<=0:return skill
+	var applied: Variant=skill.source523.get("applied")
+	if not applied is Array:return skill
+	var prior: Variant=skill.get(host_field)
+	var hashing:=HashingContext.new();hashing.start(HashingContext.HASH_SHA256);hashing.update(bytes)
+	skill[host_field]=length
+	if not applied.has("reviewed_child_"+host_field):applied.append("reviewed_child_"+host_field)
+	# This is not the root-only distance_numeric_input ABI: the root can be a
+	# self toggle with CastRange0. Existing repeat queue/targets reads range/radius.
+	skill.source523["reviewed_child_distance_input"]={"source":identity,"root_spell_id":root.ID,"root_bound_row_sha256":binding.row_sha256,"execution_spell_id":effect_id,"source_child_row_sha256":profile_type._source_row_json(child).sha256_text(),"source_field":source_field,"host_field":host_field,"raw_value":raw,"multiplier":multiplier,"prior_host_value":prior,"host_length_input":length,"policy_path":path,"policy_sha256":hashing.finish().hex_encode(),"origin":"twilight_adjustable_numeric_estimate","source_raw_distance_unit_scale":"unconfirmed","native_grid_scale_recovered":false,"scope":"already_selected_reviewed_execution_effect_only"}
+	return skill
+
+
 func repeat_skill(record: Dictionary) -> Dictionary:
 	var detail:=spec(record)
 	if detail.is_empty() or str(detail.meta.kind)!="repeat":return {}
@@ -179,7 +261,8 @@ func repeat_skill(record: Dictionary) -> Dictionary:
 	if int(effect.row.SpellMaterialItemAmount)>0:return {}
 	skill.source523.target_kind=effect.target_kind.Name
 	if int(attack[0])==2:skill.items={"화살":int(hits[0])};skill.weapons=["활"]
-	return _apply_reviewed_child_element_input(skill,record,detail,effect)
+	skill = _apply_reviewed_child_element_input(skill,record,detail,effect)
+	return _apply_reviewed_child_distance_input(skill,record,detail,effect)
 
 func try_repeat(target: TwilightMonster) -> bool:
 	if not is_instance_valid(target) or target.dead:return false
@@ -239,6 +322,7 @@ func on_normal_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 		skill.power+=int((int(sides[0])+1)/2.0) if policy.value(id,"average_dice")>=.5 else service.world.rng.randi_range(1,int(sides[0]))
 	clocks[id]=maxf(.1,policy.value(id,"interval"))
 	skill = _apply_reviewed_child_element_input(skill,record,detail,effect)
+	skill = _apply_reviewed_child_distance_input(skill,record,detail,effect)
 	for victim: TwilightMonster in service.targets(skill,null):service.deal_damage(skill,victim)
 	fired[id]=int(fired.get(id,0))+1
 	service.world.hud.show_message("스태틱 필드 발동 · 번개석 "+str(int(option.MaterialAmount))+"개")

@@ -649,7 +649,7 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
 		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
-			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade),
+			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade, record), "success_basis": BLESSING.success_basis(grade, record),
 			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
@@ -697,7 +697,7 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var before: Dictionary={"inventory":inv.duplicate(true),"instances":instances.duplicate(true),"rng":rng.state,
 		"equipped":world.equipped_items.duplicate(true),"hp":world.hp,"mp":world.mp}
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
-	var success: bool = BLESSING.roll_succeeds(grade, roll)
+	var success: bool = BLESSING.roll_succeeds(grade, roll, record)
 	if success:
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
@@ -861,9 +861,10 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 				var grade: String = str(record.get("grade", "일반"))
 				record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 				var kind: String = str(world.call("_enhancement_kind_for_record", record))
-				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (임시)" % [
+				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (%s)" % [
 					grade_text, parts[0], instance_id,
-					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade)
+					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade, record),
+					"원본" if BLESSING.success_basis(grade, record).begins_with("원본") else "임시"
 				]
 			var element_level: int = int(entry.get("element_level", 0))
 			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))

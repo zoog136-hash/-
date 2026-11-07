@@ -36,6 +36,10 @@ static func _current_record(source_key: String,host: Dictionary) -> Dictionary:
 static func record(source_key: String, _manifest_path: String="",compatibility: Dictionary={}) -> Dictionary:
 	var host: Dictionary={"atk":8,"speed":70.0,"attack_interval":1.25,"attack_range":58.0,"collision_radius":19.0,"grade":"일반"}
 	host.merge(compatibility,true)
+	# Exact host fallback provenance only; explicit caller stats keep ownership.
+	host.erase("source_m_ordinary_host_atk_default")
+	if not compatibility.has("atk") and not compatibility.has("attack") and not compatibility.has("공격력"):
+		host["source_m_ordinary_host_atk_default"]={"kind":"twilight_host_default","producer":"base508_source_roster.record","value":8}
 	return _current_record(source_key,host)
 
 static func for_spawn(source_key: String,host_map_id: String,_manifest_path: String="",allow_contextual: bool=false) -> Dictionary:

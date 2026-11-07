@@ -1,6 +1,7 @@
 extends RefCounted
 
 const ElementRules = preload("res://scripts/elemental_rules.gd")
+const ORIGINAL_INPUT = preload("res://scripts/item_options.gd")
 const CHANNELS: Array[String] = ["fire", "water", "wind", "earth"]
 
 # These are typed patch-523 record consumers, deliberately independent of the
@@ -10,6 +11,8 @@ static func sum_stat(records: Array, key: String) -> float:
 	for value: Variant in records:
 		if value is Dictionary:
 			total += float(value.get(key, 0.0))
+			total += ORIGINAL_INPUT.additional_original_flat(value,key)
+			total += ORIGINAL_INPUT.additional_original_percent(value,key)
 	return total
 
 # Twilight-local ordering: sum flat damage and pierce for each source channel;
@@ -32,8 +35,8 @@ static func elemental_extra(records: Array, resistance: Dictionary, rng: RandomN
 		total += resisted
 	return total
 
-static func elemental_critical_resistance(records: Array) -> float:
-	return maxf(0.0, sum_stat(records, "equipment523_element_crit_resist_pct"))
+static func elemental_critical_resistance(records: Array, additional_percent: float = 0.0) -> float:
+	return maxf(0.0, sum_stat(records, "equipment523_element_crit_resist_pct") + additional_percent)
 
 # Apply only to incoming attacks which actually carry an elemental channel.
 static func elemental_reduction(records: Array) -> int:

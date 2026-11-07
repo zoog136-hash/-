@@ -5,6 +5,7 @@ var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd")
 
 const EQUIPMENT523_SERVICE = preload("res://scripts/equipment523/service.gd")
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
+const SOURCE_EQUIPMENT_EXTRA_INPUT = preload("res://scripts/resources/current523_equipment_extra_input.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 const EQUIPMENT523_SET_INVOKE = preload("res://scripts/equipment523/set_invoke.gd")
 var equipment523 = EQUIPMENT523_SERVICE.new()
@@ -954,14 +955,24 @@ func _equipment_inven_sum(key: String) -> float:
 		if raw is Dictionary and not (raw as Dictionary).is_empty():
 			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
 			total += float(record.get(key, 0.0))
+			total += ITEM_OPTIONS.additional_original_percent(record,key)
+			total += ITEM_OPTIONS.additional_original_flat(record,key)
+			total += ITEM_OPTIONS.additional_original_conditional(record,key)
+			if key.begins_with("source_elemental_flat_"):
+				total += ITEM_OPTIONS.additional_original_element(record,key.trim_prefix("source_elemental_flat_"),"damage",PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{}))
 	for record: Dictionary in _equipment523_bonus_records():
 		total += float(record.get(key, 0.0))
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,key)
 	return total
 
 func _equipped_numeric_sum(key: String) -> float:
 	var total: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		total += float(record.get(key, 0.0))
+		total += ITEM_OPTIONS.additional_original_percent(record,key)
+		total += ITEM_OPTIONS.additional_original_flat(record,key)
+		total += ITEM_OPTIONS.additional_original_reward(record,key)
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,key)
 	return total
 
 
@@ -1115,10 +1126,13 @@ func _refresh_equipment_effects() -> void:
 		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
+		flags.damage_amp_pct+=ITEM_OPTIONS.additional_original_percent(record,"damage_amp_pct")
+	flags.damage_amp_pct+=SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"damage_amp_pct")
 	flags.hp_tick_amount=quest_recovery_hp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))+halphas_star.catalog_bonus("hp_regen")
 	flags.mp_tick_amount=quest_recovery_mp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.mpRecoveryTick) else 0)+source_mp_regeneration+_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER,"mp_recovery")+int(growth.bonus("mp_regeneration:flat"))+int(card_collections.bonus("mp_regeneration:flat"))
 	flags.mp_tick_amount+=int(card_collections.bonus("absolute_mp_regeneration:flat"))+halphas_star.catalog_bonus("mp_regen")
 	flags.mp_tick_amount+=int(monsterbook523_runtime.extra_stats().get("mp_regeneration",0))
+	flags.mp_tick_amount+=int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"mpRecoveryTick"))
 	flags.source_item_passives = native_passives
 	flags.hp_tick_amount += EQUIPMENT523_COMBAT.regeneration(_all_equipped_records(),"hp")
 	flags.mp_tick_amount += EQUIPMENT523_COMBAT.regeneration(_all_equipped_records(),"mp")
@@ -1417,6 +1431,7 @@ func _effective_attribute(stat: String) -> int:
 
 func _equipment_accuracy_bonus(kind: String) -> int:
 	var result: int = (_equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0) + _source_enchantment_extra(ACCESSORY_EQUIPMENT_SLOTS,kind+"_accuracy") + (_source_enchantment_extra(["weapon"],"accuracy") if kind in ["melee","ranged"] else 0)
+	if kind in ["melee","ranged","magic"]: result += int(_equipment_inven_sum("pve_"+kind+"_hit"))
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
@@ -1442,6 +1457,8 @@ func _equipment_additional_damage(kind: String) -> int:
 	var projected: int=0
 	if PATCH523_ENHANCE.policy().get("source_typed_flat_ignore_consumer")=="existing_typed_flat_damage_projection":projected=PATCH523_EQUIPMENT_COMBAT.typed_flat_ignore(self,kind)
 	var result: int = projected + PATCH523_EQUIPMENT_COMBAT.pvp_flat_ignore(self,kind) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore")) + int(growth.bonus(kind+"_reduction_ignore:flat"))
+	result += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"damage_reduction_ignore"))
+	if kind=="magic":result += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"magicDamage"))
 	if kind in ["melee", "ranged"]:
 		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -1450,6 +1467,7 @@ func _equipment_additional_damage(kind: String) -> int:
 			var item: Dictionary = _source_catalog_record("아이템", entry as Dictionary)
 			result += ITEM_OPTIONS.additional_damage(item, kind)
 			var typed_ignore: int = int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
+			typed_ignore += ITEM_OPTIONS.additional_original_flat(item,"damage_reduction_ignore")
 			result += typed_ignore
 			if typed_ignore == 0:
 				for fragment: String in str(item.get("desc", "")).split("·"):
@@ -2372,7 +2390,8 @@ func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0))))*halphas_star.combat.hit_factor(player)
+	var gear_pierce: float = _equipment_inven_sum("magic_penetration_pct")
+	return _magic_hit_chance(_magic_accuracy_stat(), card_collections.magic_resistance_after_pierce(target.magic_resistance+int(original_skills.status.modifier(target,"mr") if original_skills!=null else 0)+int(patch523_npc_spells.extensions.actor_values(target).get("MagicResist",0)),gear_pierce))*halphas_star.combat.hit_factor(player)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
@@ -3623,7 +3642,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		player.show_status_text("GUARD")
 		_refresh_combat_hud()
 		return
-	if card_collections.blocks_weapon_hit(normalized_type,rng):
+	if card_collections.blocks_weapon_hit(normalized_type,rng,_equipment_inven_sum("weapon_block_pct")):
 		damage_value=maxi(0,int(round(damage_value*(1.0-float(card_collections.policy_values.weapon_block_reduction)/100.0))))
 		hud.append_log("무기 막기 · "+attacker.monster_name)
 		if damage_value<=0:player.show_miss();return
@@ -3635,7 +3654,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	collection_context.physical_magic=normalized_type=="magic" and attack_element=="physical"
 	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
 	var elemental_critical_resistance: int = int(half_elixir.value("ElementalCriticalResistance")) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
-	var source_critical_resist: int = int(EQUIPMENT523_COMBAT.elemental_critical_resistance(_all_equipped_records())) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
+	var source_critical_resist: int = int(EQUIPMENT523_COMBAT.elemental_critical_resistance(_all_equipped_records(),SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"equipment523_element_crit_resist_pct"))) if ELEMENT_RULES.channel(attacker.attack_element) != "physical" else 0
 	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat(normalized_type,attack_element!="physical") + elemental_critical_resistance + source_critical_resist)
 	var critical: bool = rng.randf() < critical_chance
 	var contextual_damage: int=maxi(1,damage_value+int(original_skills.status.modifier(attacker,"source_"+normalized_type+"_damage") if original_skills!=null else 0)+growth.guardian_combat.npc_damage_delta(attacker,normalized_type))
@@ -5711,7 +5730,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	next_inventory[item_name] = int(next_inventory.get(item_name, 0)) - 1
 	if is_source and int(next_inventory[item_name]) == 0: next_inventory.erase(item_name)
 	var next_cooldowns: Dictionary = item_use_cooldowns.duplicate(true)
-	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct"),0.0,90.0)/100.0)
+	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct") + _equipment_inven_sum("potionCooldownPct"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
 	var adjusted_heal: int = patch523_npc_spells.extensions.healing(maxi(1, enhanced_heal),true)
@@ -5735,7 +5754,7 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 	# source dice consumer without replacing the NPC healing adjustment/event.
 	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
 	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct"))/100.0))
-	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
+	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent")+_equipment_inven_sum("potionCooldownPct"),0.0,90.0)/100.0)}
 
 func _source_hp_potion_committed(amount: int) -> void:
 	if amount>0:patch523_npc_spells.extensions.on_player_event("healed")
@@ -7793,6 +7812,10 @@ func _player_element_resistance(element_name: String) -> float:
 		# Legacy host records retain their established wider channel scope.
 		if not bool(record.get("equipment523_synthetic",false)) or element_name in EQUIPMENT523_COMBAT.CHANNELS:
 			total += float(record.get("element_resist_all",0.0))
+		if element_name in EQUIPMENT523_COMBAT.CHANNELS:
+			var original_channels: Variant = PATCH523_ENHANCE.policy().get("source_elemental_target_channels",{})
+			total += ITEM_OPTIONS.additional_original_element(record,element_name,"resistance",original_channels)
+			total += ITEM_OPTIONS.additional_original_element(record,"all","resistance",original_channels)
 	return clampf(total, -80.0, 85.0)
 
 func _normal_attack_element() -> String:
@@ -9372,6 +9395,7 @@ func _effective_move_speed_multiplier() -> float:
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
 		awakening_percent += float(record.get("speedBonusPct", 0.0))
+	awakening_percent += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"speedBonusPct")
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
@@ -9385,6 +9409,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
+	total += SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"attackSpeed")
 	total += float(_active_item_buff_total("attack_speed"))
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
@@ -9447,6 +9472,7 @@ func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 			total += int(record.get("magic_crit", record.get("magicCrit", record.get("마법 치명타", 0))))
 		_:
 			total += int(record.get("melee_crit", record.get("meleeCrit", record.get("근거리 치명타", 0))))
+	total += ITEM_OPTIONS.additional_original_flat(record,"ranged_crit" if attack_type=="ranged" else "magic_crit" if attack_type=="magic" else "melee_crit")
 	return total
 
 func _record_critical_resistance(record: Dictionary) -> int:
@@ -9466,6 +9492,7 @@ func _player_critical_rate(attack_type: String) -> int:
 			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
+	base += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"ranged_crit" if attack_type=="ranged" else "magic_crit" if attack_type=="magic" else "melee_crit"))
 	base += _catalog_critical_bonus(attack_type)
 	if original_skills != null: base += int(original_skills.stat("meleeCrit" if attack_type == "melee" else "rangedCrit" if attack_type == "ranged" else "magicCrit"))
 	return clampi(base, 0, 50)
@@ -9485,14 +9512,15 @@ func _record_stun_resistance(record: Dictionary) -> int:
 func _stun_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0) + int(titles.bonus("HitSpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
-		total += _record_stun_accuracy(record)
+		total += _record_stun_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"stun","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("stun"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"stun_accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0) + int(titles.bonus("SpecialResistance"))
 	for record: Dictionary in _all_equipped_records():
-		total += _record_stun_resistance(record)
+		total += _record_stun_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"stun","resistance"))
 	total += _active_item_buff_total("stun_resistance") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "stun_resistance")
 	total+=int(growth.guardian_combat.status_resistance("stun"))
 	total += int(card_collections.interval_bonus("stun_resistance:percent",hp,_effective_max_hp()))
@@ -9513,13 +9541,13 @@ func _record_silence_resistance(record: Dictionary) -> int:
 func _silence_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_silence_accuracy(record)
+		total += _record_silence_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"silence","accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _silence_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_silence_resistance(record)
+		total += _record_silence_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"silence","resistance"))
 	return int(original_skills.stat("silenceResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_silence_chance(target: TwilightMonster) -> float:
@@ -9547,13 +9575,14 @@ func _record_hold_resistance(record: Dictionary) -> int:
 func _hold_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_hold_accuracy(record)
+		total += _record_hold_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"hold","accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_hold_resistance(record)
+		total += _record_hold_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"hold","resistance"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"hold_resistance"))
 	return int(original_skills.stat("holdResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_hold_chance(target: TwilightMonster) -> float:
@@ -9581,16 +9610,18 @@ func _record_fear_resistance(record: Dictionary) -> int:
 func _fear_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_fear_accuracy(record)
+		total += _record_fear_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","accuracy"))
 	total+=int(growth.guardian_combat.status_hit("fear"))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"fear_accuracy"))
 	return growth96.status_accuracy(clampi(total, 0, 100))
 
 func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_fear_resistance(record)
+		total += _record_fear_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"fear","resistance"))
 	total+=int(growth.guardian_combat.status_resistance("fear"))
 	total += int(card_collections.interval_bonus("fear_resistance:percent",hp,_effective_max_hp()))
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"fear_resistance"))
 	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:
@@ -9618,13 +9649,13 @@ func _record_poison_resistance(record: Dictionary) -> int:
 func _poison_accuracy_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_poison_accuracy(record)
+		total += _record_poison_accuracy(record) + int(ITEM_OPTIONS.additional_original_status(record,"poison","accuracy"))
 	return clampi(total, 0, 100)
 
 func _poison_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
-		total += _record_poison_resistance(record)
+		total += _record_poison_resistance(record) + int(ITEM_OPTIONS.additional_original_status(record,"poison","resistance"))
 	return int(original_skills.stat("poisonResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_poison_chance(target: TwilightMonster) -> float:
@@ -9693,7 +9724,7 @@ func _critical_resistance_stat(kind: String="melee",elemental: bool=false) -> in
 	for record: Dictionary in _all_equipped_records():
 		total += _record_critical_resistance(record)
 	total += int(EQUIPMENT523_COMBAT.critical_resistance(_all_equipped_records(),kind))
-	if kind in ["melee","ranged"]:total+=int(_equipment_inven_sum(kind+"_critical_resistance"))
+	if kind in ["melee","ranged","magic"]:total+=int(_equipment_inven_sum(kind+"_critical_resistance"))
 	return clampi(total+int(growth.guardian_combat.critical_resistance(kind))+int(card_collections.critical_resistance(kind,elemental)), 0, 50)
 
 func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
@@ -9722,33 +9753,37 @@ func _effective_ac() -> int:
 	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus")) + int(titles.bonus("ArmorClass")) - totems.bonus("ArmorClass")
 
 func _record_dg(record: Dictionary) -> int:
+	var original: int = ITEM_OPTIONS.additional_original_flat(record,"dg")
 	if record.has("dg"):
-		return maxi(0, int(record.get("dg", 0)))
+		return maxi(0, int(record.get("dg", 0))+original)
 	if record.has("DG"):
-		return maxi(0, int(record.get("DG", 0)))
+		return maxi(0, int(record.get("DG", 0))+original)
 	if record.has("근거리 회피력"):
-		return maxi(0, int(record.get("근거리 회피력", 0)))
-	return 0
+		return maxi(0, int(record.get("근거리 회피력", 0))+original)
+	return maxi(0,original)
 
 func _record_er(record: Dictionary) -> int:
+	var original: int = ITEM_OPTIONS.additional_original_flat(record,"er")
 	if record.has("er"):
-		return maxi(0, int(record.get("er", 0)))
+		return maxi(0, int(record.get("er", 0))+original)
 	if record.has("ER"):
-		return maxi(0, int(record.get("ER", 0)))
+		return maxi(0, int(record.get("ER", 0))+original)
 	if record.has("원거리 회피력"):
-		return maxi(0, int(record.get("원거리 회피력", 0)))
-	return 0
+		return maxi(0, int(record.get("원거리 회피력", 0))+original)
+	return maxi(0,original)
 
 func _effective_dg() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_dg(record)
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"dg"))
 	return maxi(0, total + int(original_skills.stat("dg") if original_skills != null else 0))
 
 func _effective_er() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
+	total += int(SOURCE_EQUIPMENT_EXTRA_INPUT.sum_native(self,"er"))
 	return maxi(0, total + int(original_skills.stat("er") if original_skills != null else 0))
 
 func _record_mr(record: Dictionary) -> int:
@@ -9801,14 +9836,16 @@ func _damage_reduction_stat() -> int:
 func _source_dot_damage(raw_damage: int,kind: String) -> int:
 	var percent: float=0.0
 	if kind in PATCH523_ENHANCE.policy().get("source_dot_channels",[]):percent=clampf(_equipment_inven_sum("dot_damage_reduction_pct"),0,90)
-	return maxi(1,int(round(float(raw_damage)*(1.0-percent/100.0))))
+	var flat: int = int(_equipment_inven_sum("poison_damage_reduction")) if kind=="poison" else 0
+	return maxi(1,int(round(float(maxi(1,raw_damage-flat))*(1.0-percent/100.0))))
 
 func _pve_damage_after_item_buffs(raw_damage: int,ignore_percent: float=0.0,attack_type: String="") -> int:
 	var protection: Dictionary=_patch523_protection_effects()
 	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
 	var protection_flat: int=int(protection.get("possession_flat",0))+int(protection.get("active_flat",0)) if projection else 0
 	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
-	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - protection_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
+	var style_flat: int = int(_equipment_inven_sum(attack_type+"_damage_reduction")) if attack_type in ["melee","ranged","magic"] else 0
+	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - protection_flat - style_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
 	var percent: float = maxf(0.0,_pve_reduction_percent(attack_type)-ignore_percent)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
@@ -9903,6 +9940,7 @@ func _effective_max_hp(base_override: int = -1, item_buff_override: Variant = nu
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
+		percent_bonus += ITEM_OPTIONS.additional_original_percent(record,"hpPct")
 	flat_bonus += float(_enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "hp"))
 	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))
@@ -9922,6 +9960,7 @@ func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
+		bonus += ITEM_OPTIONS.additional_original_percent(record,"xp")
 	bonus += float(_enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "xp_pct")) / 100.0
 	return maxf(1.0, 1.0 + bonus + totem_map_experience() + float(_active_item_buff_total("xp")) / 100.0)
 

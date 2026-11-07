@@ -4,8 +4,10 @@ class_name TwilightEquipmentBlessing
 # Base equipment blessing: per physical item; separate from blessed enchant scrolls.
 # Current523 ItemBlessBonus and NC blessing-option disclosure agree. IsTest
 # rows (unique armor/accessory) are excluded from the active source table.
-# Success rates are TWILIGHT placeholders until current NC numeric disclosure can
-# be verified. Never describe these numbers as official probabilities.
+# Success rates come from the original current523 BlessSuccessRate table
+# (Rate is per 1,000,000) when the original definitions are installed; the
+# HolyGrail category (10622) has its own rows. Without the original input the
+# TWILIGHT placeholder table below is used and labelled as such.
 const SUCCESS_CHANCES: Dictionary = {
 	"일반": 60.0, "고급": 45.0, "희귀": 25.0, "영웅": 12.0,
 	"전설": 6.0, "신화": 2.0, "유일": 1.0
@@ -22,7 +24,35 @@ const ACCESSORY_BONUSES: Dictionary = {"일반":{"hp":5},"고급":{"hp":10},"희
 	"영웅":{"potion_heal_pct":1},"전설":{"potion_heal_pct":2},"신화":{"potion_heal_pct":3}}
 const SOURCE: String="https://probability.plaync.com/lineagem/view?probCategoryId=6656e1b796b3cf5ad823b7bb"
 
-static func success_chance(grade: String) -> float:
+const CURRENT_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const GRADE_POLICY = preload("res://scripts/catalog_grade_policy.gd")
+const SOURCE_RATE_SCALE: float = 10000.0 # Rate 1,000,000 = 100%
+
+static func _record_category(record: Dictionary) -> int:
+	var class_id: int = int(record.get("source_item_class_id", record.get("ItemClassID", 0)))
+	if class_id <= 0: return 0
+	return int(CURRENT_DEFINITIONS.row("ItemClass", class_id).get("ItemCategoryID", 0))
+
+## Original rate for this grade/category, or -1 when the original row is absent.
+static func source_success_chance(grade: String, record: Dictionary = {}) -> float:
+	var key: Variant = GRADE_POLICY.QUALITY_GRADES.find_key(grade)
+	var grade_id: int = int(key) if key != null else 0
+	if grade_id <= 0: return -1.0
+	var category: int = _record_category(record)
+	var general: float = -1.0
+	for row: Dictionary in CURRENT_DEFINITIONS.rows("BlessSuccessRate"):
+		if int(row.get("GradeID", -1)) != grade_id: continue
+		var rate: float = clampf(float(row.get("Rate", 0)) / SOURCE_RATE_SCALE, 0.0, 100.0)
+		if category != 0 and int(row.get("ItemCategoryID", 0)) == category: return rate
+		if int(row.get("ItemCategoryID", -1)) == 0: general = rate
+	return general
+
+static func success_basis(grade: String, record: Dictionary = {}) -> String:
+	return "원본523 BlessSuccessRate" if source_success_chance(grade, record) >= 0.0 else "TWILIGHT 임시값"
+
+static func success_chance(grade: String, record: Dictionary = {}) -> float:
+	var source: float = source_success_chance(grade, record)
+	if source >= 0.0: return source
 	var settings: Variant=JSON.parse_string(FileAccess.get_file_as_string("res://data/crafting/patch523_enhancement_policy.json"))
 	var value: float=float(settings.get("blessing_success_pct",SUCCESS_CHANCES).get(grade,0.0)) if settings is Dictionary else float(SUCCESS_CHANCES.get(grade,0.0))
 	return clampf(value,0.0,100.0)
@@ -65,5 +95,6 @@ static func is_blessed(physical: Dictionary, record: Dictionary) -> bool:
 		return true
 	return bool(record.get("blessed", false)) or str(record.get("name", "")).begins_with("축복받은 ")
 
-static func roll_succeeds(grade: String, roll_percent: float) -> bool:
-	return success_chance(grade) > 0.0 and roll_percent < success_chance(grade)
+static func roll_succeeds(grade: String, roll_percent: float, record: Dictionary = {}) -> bool:
+	var chance: float = success_chance(grade, record)
+	return chance > 0.0 and roll_percent < chance

@@ -1,5 +1,6 @@
 extends RefCounted
 ## Exact source magnitudes; TWILIGHT's existing combat/status consumers determine resolution.
+const EQUIPMENT_IGNORE=preload("res://scripts/resources/current523_equipment_ignore_input.gd")
 const Visuals=preload("res://scripts/cards/native_option_combat.gd")
 var runtime_ref: WeakRef
 var runtime:
@@ -112,6 +113,8 @@ func outgoing(target: Node,amount: int,critical: bool,kind: String,context: Dict
 	result+=minf(budget,maxf(0,pierce))
 	var percentage_budget: float=maxf(0,float(context.get("percent_reduction",0)))
 	var ignore: float=value("IgnoreDamageReductionPercent")+value("IgnoreMeleeDamageReductionPercent" if kind=="melee" else "IgnoreRangeDamageReductionPercent" if kind=="ranged" else "IgnoreMagicDamageReductionPercent")
+	# Exact native equipment operands share this existing percentage-budget receiver.
+	ignore+=EQUIPMENT_IGNORE.sum_equipped(world,kind)
 	if pvp:ignore+=value("IgnorePVPDamageReductionPercent")
 	result*=1-minf(100,maxf(0,percentage_budget-ignore))/100
 	if bool(context.get("final_blow",false)):result=result*(1+value("FinalBlowAdditionalScale")/100)+value("FinalBlowAdditionalDmg")
@@ -211,6 +214,8 @@ func final_blow_chance() -> float:
 
 func attribute(target: Node,name: String) -> Dictionary:
 	var source: Dictionary=target.get("source_m_original")
+	if source.is_empty() and target.has_method("original_attribute_input"):
+		source=target.original_attribute_input()
 	var original: String=name.capitalize()
 	if world==null or not source.has(original) or world.original_skills==null:return {"known":false,"before":0,"after":0}
 	var before: float=float(source[original])
