@@ -74,3 +74,7 @@ samples/twilight-ui/dist/review/*.webp
 
 # Private original quest rows are distributed through the private data pack.
 /data/quests/private_current523.json
+
+# Private installed definition packs (cumulative523 world-links etc.). Never commit contents.
+/private_packs/*
+!/private_packs/.gdignore
