@@ -5184,9 +5184,8 @@ func _load_patch523_equipment() -> void:
 	var catalog_bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://data/catalog_v19.json")
 	# Export exactly the already registered catalog inputs used by the public
 	# compiler, never a world/UI object or newly fabricated native identity.
-	var binding: Dictionary = {"아이템":catalog_db.get("아이템",[]),"patch523_crafting_catalog_contract":catalog_db.get("patch523_crafting_catalog_contract",{})}
-	var binding_bytes: PackedByteArray = JSON.stringify(binding,"",true,true).to_utf8_buffer()
-	if not patch523_equipment.load_original(catalog_bytes,binding_bytes):
+	# Identified as the JSON bytes of {"아이템","patch523_crafting_catalog_contract"}.
+	if not patch523_equipment.load_original_bound(catalog_bytes,catalog_db.get("아이템",[]),catalog_db.get("patch523_crafting_catalog_contract",{})):
 		push_warning(patch523_equipment.problem)
 		return
 	_apply_loaded_patch523_equipment()

@@ -35,6 +35,7 @@ static func reset() -> void:
 	_archive_path = ""
 	_tables.clear()
 	_relations.clear()
+	_integer_fields.clear()
 	_metadata.clear()
 	_problem = ""
 	_not_installed = false
@@ -225,6 +226,30 @@ static func rows_matching(table: String, field: String, ids: Dictionary) -> Arra
 		if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
 	return result
 
+## Row count and one fresh row by position, for streaming a table in order
+## without materializing every row at once.
+static func row_count(table: String) -> int:
+	return int(_store(table).get("count", 0))
+
+static func row_at(table: String, index: int) -> Dictionary:
+	var store: Dictionary = _store(table)
+	if index < 0 or index >= int(store.get("count", 0)): return {}
+	return _row_at(store, index)
+
+## One column's values in table order (a copy-on-write packed array when the
+## column is uniform); empty when the field is not a column of every row.
+static func column(table: String, field: String) -> Variant:
+	var store: Dictionary = _store(table)
+	if store.is_empty(): return []
+	if store.has("rows"):
+		var values: Array = []
+		for value: Dictionary in store.rows:
+			if not value.has(field): return []
+			values.append(value[field])
+		return values
+	var position: int = (store.columns as PackedStringArray).find(field)
+	return store.data[position] if position >= 0 else []
+
 static func rows(table: String) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var store: Dictionary = _store(table)
@@ -233,6 +258,25 @@ static func rows(table: String) -> Array[Dictionary]:
 
 static func _integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
+
+## True when every row has an integer value in `field` (so related() indexes it).
+static var _integer_fields: Dictionary = {}
+static func integer_field(table: String, field: String) -> bool:
+	var key: String = table + ":" + field
+	if _integer_fields.has(key) and _tables.has(table): return _integer_fields[key]
+	_integer_fields[key] = _integer_column(table, field)
+	return _integer_fields[key]
+
+static func _integer_column(table: String, field: String) -> bool:
+	var store: Dictionary = _store(table)
+	if store.is_empty() or store.has("rows"): return false
+	var position: int = (store.columns as PackedStringArray).find(field)
+	if position < 0: return false
+	var column: Variant = store.data[position]
+	if not column is PackedFloat64Array: return false
+	for value: float in column:
+		if not _integer(value): return false
+	return true
 
 static func related(table: String, foreign_key: String, id: int) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

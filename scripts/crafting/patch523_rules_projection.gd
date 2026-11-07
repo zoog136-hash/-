@@ -437,17 +437,59 @@ func _boxes() -> Dictionary:
 		result[str(target[0])] = {"bag_class":classes[str(target[1])],"rewards":rewards}
 	return result
 
+## The registered catalog inputs exactly as JSON.parse_string(JSON.stringify(
+## {"아이템":items,"patch523_crafting_catalog_contract":contract},"",true,true))
+## would return them, plus the SHA256 of those JSON bytes. Each item is
+## serialized and parsed on its own, so the whole document text (hundreds of MB
+## as a Godot String with every native item registered) is never built.
+static func binding_document(items: Array, contract: Dictionary) -> Dictionary:
+	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
+	var document: Dictionary = {"아이템":items,"patch523_crafting_catalog_contract":contract}
+	var keys: Array = document.keys()
+	keys.sort()
+	var parsed: Dictionary = {}
+	var size: int = 0
+	for key_index: int in keys.size():
+		var key: String = keys[key_index]
+		size += _hash_text(hash,("{" if key_index == 0 else ",")+JSON.stringify(key)+":")
+		if key != "아이템":
+			var text: String = JSON.stringify(document[key],"",true,true)
+			size += _hash_text(hash,text)
+			parsed[key] = JSON.parse_string(text)
+			continue
+		var copies: Array = []
+		copies.resize(items.size())
+		size += _hash_text(hash,"[")
+		for index: int in items.size():
+			var text: String = JSON.stringify(items[index],"",true,true)
+			size += _hash_text(hash,("" if index == 0 else ",")+text)
+			copies[index] = JSON.parse_string(text)
+		size += _hash_text(hash,"]")
+		parsed[key] = copies
+	size += _hash_text(hash,"}")
+	return {"binding":parsed,"sha256":hash.finish().hex_encode(),"bytes":size}
+
+static func _hash_text(hash: HashingContext, text: String) -> int:
+	var bytes: PackedByteArray = text.to_utf8_buffer()
+	hash.update(bytes)
+	return bytes.size()
+
 func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> Dictionary:
-	problem = ""
-	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
-	_full_native = false
-	var original: Variant = JSON.parse_string(catalog_bytes.get_string_from_utf8())
-	if not original is Dictionary or not original.get("아이템") is Array: problem = "기존 제작 카탈로그 입력이 필요합니다"; return {}
 	var binding: Dictionary = {}
 	if not binding_catalog_bytes.is_empty():
 		var parsed: Variant = JSON.parse_string(binding_catalog_bytes.get_string_from_utf8())
 		if not parsed is Dictionary or not parsed.get("아이템") is Array: problem = "실제 등록된 제작 카탈로그 정체가 필요합니다"; return {}
 		binding = parsed
+	return build_bound(catalog_bytes,binding,_sha(binding_catalog_bytes) if not binding_catalog_bytes.is_empty() else "")
+
+## Same as build() with the binding catalog already parsed (binding_document()).
+func build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_sha256: String) -> Dictionary:
+	problem = ""
+	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
+	_full_native = false
+	var original: Variant = JSON.parse_string(catalog_bytes.get_string_from_utf8())
+	if not original is Dictionary or not original.get("아이템") is Array: problem = "기존 제작 카탈로그 입력이 필요합니다"; return {}
+	if not binding.is_empty() and not binding.get("아이템") is Array: problem = "실제 등록된 제작 카탈로그 정체가 필요합니다"; return {}
 	var parsed_policy: Variant = JSON.parse_string(FileAccess.get_file_as_string(POLICY_PATH))
 	if not parsed_policy is Dictionary or parsed_policy.is_empty(): problem = "기존 공개 제작 정책을 읽을 수 없습니다"; return {}
 	_policy = parsed_policy
@@ -482,7 +524,7 @@ func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArra
 		"source_archive_sha256":SOURCE.SOURCE_SHA,"recipes":recipes,"recipe_summary":{"active":recipes.size(),"rejected":rejected},"recipe_admission":admission,
 		"raw_recipes":{"inputs":inputs,"outputs":outputs,"views":views,"restrictions":restrictions},"guaranteed_boxes":boxes,
 		"items":bound_items,"bonuses":selected_bonuses,"bonus_types":_index(_tables.BonusType),"enchantment":enchantment,"source_exclusions":_exclusions}
-	if not binding_catalog_bytes.is_empty(): result.binding_catalog_sha256 = _sha(binding_catalog_bytes)
+	if not binding_sha256.is_empty(): result.binding_catalog_sha256 = binding_sha256
 	if not ResourceLoader.exists(EQUIPMENT_PATH): problem = "제작 장비 projection 모듈이 아직 없습니다 · 미완료"; return {}
 	var equipment_script: Script = load(EQUIPMENT_PATH)
 	if equipment_script == null: problem = "제작 장비 projection 모듈을 읽을 수 없습니다 · 미완료"; return {}

@@ -48,11 +48,21 @@ func load_file(path: String, expected_sha256: String) -> bool:
 
 func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> bool:
 	if not data.is_empty(): return true # Preserve an already accepted live model.
+	var projection = ORIGINAL_PROJECTION.new()
+	return _load_candidate(projection,projection.build(catalog_bytes,binding_catalog_bytes))
+
+## load_original() with the registered catalog given as items + contract; the
+## same bytes are identified without building the whole binding text.
+func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary) -> bool:
+	if not data.is_empty(): return true
+	var projection = ORIGINAL_PROJECTION.new()
+	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract)
+	return _load_candidate(projection,projection.build_bound(catalog_bytes,document.binding,document.sha256))
+
+func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
 	# UNVERIFIED: the original ZIP identifies inputs; the actual normalized
 	# payload bytes identify this rules model. No private file is generated.
 	problem = ""
-	var projection = ORIGINAL_PROJECTION.new()
-	var candidate: Dictionary = projection.build(catalog_bytes,binding_catalog_bytes)
 	if candidate.is_empty():
 		problem = projection.problem
 		return false

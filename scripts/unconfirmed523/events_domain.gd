@@ -85,12 +85,11 @@ func setup(source: Object) -> void:
 		if not _class_limits.has(key):
 			_class_limits[key] = []
 		_class_limits[key].append(int(limit.get("ClassID", 0)))
+	# Bonus rows per item are resolved on demand (_bonuses_for); keeping all
+	# 89,702 here held the whole Bonus table a second time.
 	for link in _rows("ItemBonus"):
 		var bonus := _row("Bonus", int(link.get("BonusID", 0)))
 		var item_id := int(link.get("ItemClassID", 0))
-		if not _item_bonuses.has(str(item_id)):
-			_item_bonuses[str(item_id)] = []
-		_item_bonuses[str(item_id)].append(bonus)
 		var type_id := int(bonus.get("BonusTypeID", 0))
 		if bool(link.get("IsPossession", false)) or type_id not in [110, 5031, 5774]:
 			continue
@@ -688,6 +687,19 @@ func _claim_map(value: Variant) -> bool:
 			return false
 	return true
 
+func _bonuses_for(item_id: int) -> Array:
+	var result: Array = []
+	if _source == null or item_id == 0: return result
+	var links: Array = []
+	if _source.has_method("find_rows"): links = _source.call("find_rows", "ItemBonus", "ItemClassID", item_id)
+	else:
+		for row: Variant in _source.call("rows", "ItemBonus"):
+			var owner: Variant = row.get("ItemClassID") if row is Dictionary else null
+			if (owner is int or owner is float) and float(owner) == float(item_id): links.append(row)
+	for link in links:
+		result.append(_row("Bonus", int(link.get("BonusID", 0))))
+	return result
+
 func _whole(value: Variant, minimum: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == float(int(value)) and int(value) >= minimum
 
@@ -740,7 +752,7 @@ func _item_reason(item_id: int, context: Dictionary, state: Dictionary = {}) -> 
 			if not permitted:
 				return "현재 직업이 사용할 수 없는 상자입니다."
 			break
-	for bonus in _item_bonuses.get(str(item_id), []):
+	for bonus in _bonuses_for(item_id):
 		var type_id := int(bonus.get("BonusTypeID", 0))
 		match type_id:
 			110, 5031, 5774:
@@ -1331,14 +1343,14 @@ func _owned_units(item_id: int, context: Dictionary) -> Array:
 	return result
 
 func _has_life_bonus(item_id: int) -> bool:
-	for bonus in _item_bonuses.get(str(item_id), []):
+	for bonus in _bonuses_for(item_id):
 		if int(bonus.get("BonusTypeID", 0)) == 422:
 			return true
 	return false
 
 func _life_rule(item_id: int) -> Dictionary:
 	var definitions: Array = []
-	for bonus in _item_bonuses.get(str(item_id), []):
+	for bonus in _bonuses_for(item_id):
 		if int(bonus.get("BonusTypeID", 0)) == 422:
 			definitions.append(bonus)
 	var type := _row("BonusType", 422)

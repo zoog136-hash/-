@@ -26,7 +26,7 @@ static func _spec() -> Dictionary:
 		if not values.has(kind):source_problem="원본 지혜 물약 효과가 없습니다: "+kind;return {}
 	if values.BuffClassID!=39 or not buff_values.has("SpellPower") or not buff_values.has("RegenMP"):source_problem="원본 지혜 물약 버프 참조·수치 계약이 다릅니다.";return {}
 	for field: String in ["IsEraseOnAttack","IsEraseOnAttacked","IsEraseOnMove","IsEraseOnSpellCastAndShieldIt","IsEraseOnSkillCastAndShieldIt","IsEraseOnItemUse","IsEraseOnSpellAttacked","IsEraseOnSkillAttacked","IsEraseOnCast","IsEraseOnHealed","IsAbsoluteTimeBuff","IsImmuneToDead"]:
-		if buff.get(field)!=false:source_problem="원본 지혜 물약 버프의 미지원 유지 조건: "+field;return {}
+		if not buff.get(field) is bool or buff.get(field):source_problem="원본 지혜 물약 버프의 미지원 유지 조건: "+field;return {}
 	if buff.get("IsEraseOnTimeEnd")!=true or not _integer(buff.get("BuffGroupID")):source_problem="원본 지혜 물약의 만료·버프 그룹 계약이 다릅니다.";return {}
 	var label: Dictionary=SOURCE.row("DescData_Korean",int(item.get("DescID",0)))
 	if not label.get("Description") is String or str(label.Description).is_empty():source_problem="원본 지혜 물약 이름 입력이 없습니다.";return {}

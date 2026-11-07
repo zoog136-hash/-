@@ -169,6 +169,10 @@ func load_source(path: String = "") -> bool:
 			p96 += 1; r96 += by_point.get(sid(point.ID),[]).size()
 	if p96 != 9 or r96 != 36: problem = "96레벨 전수 연결 오류"; return false
 	audit = {"points":points.size(),"rewards":rewards.size(),"items":items.size(),"versions":versions.keys(),"points96":p96,"rewards96":r96,"requirements":cards.size(),"collections":collections.size(),"effects":effect_count}
+	# The selected rows live on in points/rewards/items/cards/collections. Whole
+	# parsed tables (Bonus, ItemClass, Reward, ...) are not read after loading
+	# and held ~0.9 GB with the original installed.
+	tables.clear()
 	ready = true
 	return true
 

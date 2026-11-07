@@ -50,17 +50,15 @@ func setup(source: Object) -> void:
 	_set_prefixes.clear()
 	_set_bonuses.clear()
 	_scroll_id = 0
-	for link: Dictionary in _rows("ItemBonus"):
-		_append(_item_bonuses, int(link.get("ItemClassID", 0)), link)
-	for link: Dictionary in _rows("BuffBonus"):
-		_append(_buff_bonuses, int(link.get("BuffClassID", 0)), link)
+	# ItemBonus/BuffBonus links are looked up per item/buff (_links) instead of
+	# indexing all 89,702 + 34,623 rows here (~0.4 GB with the original installed).
 	for item: Dictionary in _rows("ItemClass"):
 		var item_id: int = int(item.get("ID", 0))
 		if int(item.get("CategoryID", 0)) == RECHARGER_CATEGORY:
 			var duration: int = 0
 			var subscription: int = 0
 			var delete_time: int = 0
-			for link: Dictionary in _item_bonuses.get(item_id, []):
+			for link: Dictionary in _links("ItemBonus", "ItemClassID", item_id):
 				var bonus: Dictionary = _row("Bonus", int(link.get("BonusID", 0)))
 				match int(bonus.get("BonusTypeID", 0)):
 					109: duration = int(bonus.get("Value", 0))
@@ -83,6 +81,17 @@ func setup(source: Object) -> void:
 		_append(_set_prefixes, int(link.get("GraceSetID", 0)), int(link.get("GracePrefixID", 0)))
 	for link: Dictionary in _rows("ItemGraceSetBonus"):
 		_append(_set_bonuses, int(link.get("GraceSetID", 0)), link)
+
+func _links(table: String, field: String, id: int) -> Array:
+	if _source == null or id == 0: return []
+	if _source.has_method("find_rows"): return _source.call("find_rows", table, field, id)
+	var result: Array = []
+	for row: Variant in _source.call("rows", table):
+		if row is Dictionary and _same_id(row.get(field), id): result.append(row)
+	return result
+
+static func _same_id(value: Variant, id: int) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) == float(id)
 
 func initial_state() -> Dictionary:
 	return {"version": 1, "rng_state": 52371, "latest_at": 0, "jade": {}, "grails": {}}
@@ -243,7 +252,7 @@ func jade_status(context: Dictionary, state: Dictionary) -> Dictionary:
 		var buff: Dictionary = _row("BuffClass", buff_id)
 		var erase_level: int = int(buff.get("EraseOnLevel", 0))
 		if erase_level <= 0 or int(context.get("level", 1)) < erase_level:
-			for link: Dictionary in _buff_bonuses.get(buff_id, []):
+			for link: Dictionary in _links("BuffBonus", "BuffClassID", buff_id):
 				var bonus: Dictionary = _row("Bonus", int(link.get("BonusID", 0)))
 				if int(bonus.get("BonusTypeID", 0)) == 3632:
 					result.protection_level = int(bonus.get("Value", 0))
@@ -273,7 +282,7 @@ func bonuses(context: Dictionary, state: Dictionary) -> Dictionary:
 		var item_id: int = int(owned[instance_id].sourceID)
 		if not _item_eligibility(_row("ItemClass", item_id), effective_context).is_empty():
 			continue
-		for link: Dictionary in _item_bonuses.get(item_id, []):
+		for link: Dictionary in _links("ItemBonus", "ItemClassID", item_id):
 			if bool(link.get("IsPossession", false)):
 				_add_effect(result, int(link.get("BonusID", 0)), effective_context, {"origin": "possession", "instance_id": str(instance_id)})
 		var grace: Dictionary = state.grails.get(str(instance_id), {})
@@ -374,7 +383,7 @@ func _jade_eligibility(item_id: int, context: Dictionary) -> String:
 			return "source_item_expired"
 	var buff_id: int = _protection_buff(item_id, int(definition.subscription))
 	var buff: Dictionary = _row("BuffClass", buff_id)
-	if buff_id <= 0 or buff.is_empty() or _buff_bonuses.get(buff_id, []).is_empty():
+	if buff_id <= 0 or buff.is_empty() or _links("BuffBonus", "BuffClassID", buff_id).is_empty():
 		return "subscription_protection_dispatch_unresolved"
 	if int(buff.get("EraseOnLevel", 0)) > 0 and int(context.get("level", 1)) >= int(buff.EraseOnLevel):
 		return "protection_level_limit"
@@ -499,10 +508,17 @@ func _protection_buff(item_id: int, subscription: int) -> int:
 func _rows(table: String) -> Array:
 	if not _tables.has(table):
 		var value: Variant = _source.call("rows", table) if is_instance_valid(_source) and _source.has_method("rows") else []
-		_tables[table] = value.duplicate(true) if value is Array else []
+		var copied: Array = value.duplicate(true) if value is Array else []
+		# Large original tables are read through the source each time instead of
+		# a private deep copy (ItemClass/Bonus held ~0.3 GB here).
+		if is_instance_valid(_source) and _source.has_method("_shared") and _source.call("_shared", table): return copied
+		_tables[table] = copied
 	return _tables[table]
 
 func _row(table: String, id: int) -> Dictionary:
+	if not _indices.has(table) and is_instance_valid(_source) and _source.has_method("_shared") and _source.call("_shared", table):
+		var found: Dictionary = _source.call("row", table, id)
+		return found.duplicate(true) if not found.is_empty() else {}
 	if not _indices.has(table):
 		var index: Dictionary = {}
 		for row: Dictionary in _rows(table):

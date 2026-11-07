@@ -11,6 +11,11 @@ const TABLE_COUNT := 1065
 const PROBABILITY_DENOMINATOR := 1000000
 const MAX_REWARD_DEPTH := 24
 const MAX_REWARD_LEAVES := 4096
+const COMMON = preload("res://scripts/resources/current523_definition_rows.gd")
+## Tables at least this large are read through the shared column-packed store
+## instead of a second full Dictionary copy here (Bonus alone is 217,916 rows;
+## this reader held ~1.3 GB with the original installed).
+const SHARED_ROW_THRESHOLD := 20000
 
 var last_error: String = ""
 var problem: String:
@@ -172,9 +177,25 @@ func configure_directory(directory: String) -> Dictionary:
 	last_error = ""
 	return {"ok": true, "test_source": true, "table_count": _paths.size()}
 
+func _shared(table: String) -> bool:
+	if not _loaded or not _metadata.has(table) or int(_metadata[table].get("row_count", 0)) < SHARED_ROW_THRESHOLD: return false
+	return COMMON.identity().get("source_sha256") == SOURCE_SHA256 and not COMMON.table_metadata(table).is_empty()
+
+static func _read_only(values: Array) -> Array:
+	var result: Array = []
+	for value: Dictionary in values:
+		value.make_read_only()
+		result.append(value)
+	result.make_read_only()
+	return result
+
 func rows(table: String) -> Array:
 	if _tables.has(table):
 		return _tables[table]
+	if _shared(table):
+		# Same original bytes (whole-archive SHA verified by the shared reader).
+		# Not cached: callers that need a subset keep only that subset.
+		return _read_only(COMMON.rows(table))
 	if not _loaded or not _paths.has(table):
 		last_error = "missing_table:" + table
 		return []
@@ -213,6 +234,15 @@ func rows(table: String) -> Array:
 	return result
 
 func row(table: String, id: int) -> Dictionary:
+	if not _tables.has(table) and _shared(table) and COMMON.integer_field(table, "ID"):
+		var matches: Array = _read_only(COMMON.related(table, "ID", id))
+		if matches.size() > 1:
+			last_error = "duplicate_id:%s:%d" % [table, id]
+			return {}
+		if matches.is_empty():
+			last_error = "missing_row:%s:%d" % [table, id]
+			return {}
+		return matches[0]
 	rows(table)
 	var index: Dictionary = _indices.get(table, {})
 	if index.has(id) and index[id] == null:
@@ -225,6 +255,8 @@ func row(table: String, id: int) -> Dictionary:
 
 func find_rows(table: String, field: String, value: Variant) -> Array:
 	var key: String = table + ":" + field
+	if not _tables.has(table) and not _joins.has(key) and _shared(table) and typeof(value) in [TYPE_INT, TYPE_FLOAT] and float(value) == floorf(float(value)) and COMMON.integer_field(table, field):
+		return _read_only(COMMON.related(table, field, int(value)))
 	if not _joins.has(key):
 		var index: Dictionary = {}
 		for record: Dictionary in rows(table):
