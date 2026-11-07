@@ -195,16 +195,44 @@ static func record(definition: Dictionary) -> Dictionary:
 
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	if SOURCE.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
-	var records: Array=catalog.get("아이템",[]).duplicate(true);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
+	# World._load_data registers through the drop owner and again through the
+	# craft catalog with the same inputs. The pass is deterministic and only
+	# replaces native records with themselves, so an identical second pass on
+	# the same catalog reuses the first result instead of describing ~34,700
+	# items again (about 80 s on desktop, far longer on a phone).
+	var contract: Variant=catalog.get("patch523_crafting_catalog_contract",{})
+	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==SOURCE.identity() and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
+		var registered: int=0
+		for record: Variant in catalog.get("아이템",[]):
+			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==SOURCE.identity():registered+=1
+		if registered>=int(document.get("current_native_registered_count",-1)):
+			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
+	# Records are replaced, never edited in place, so a shallow copy keeps the
+	# input catalog untouched without a second deep copy of every record.
+	var records: Array=catalog.get("아이템",[]).duplicate(false);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
 	for index: int in range(records.size()):
 		if not records[index] is Dictionary:continue
 		var key: String=str(records[index].get("sourceId",""))
 		if not positions.has(key):positions[key]=[]
 		positions[key].append(index)
-	for raw: Dictionary in SOURCE.rows("ItemClass"):
+	# The owner caches a full original description per item. Registering all
+	# ~34,700 ItemClass rows kept every description (~185 KB each in memory),
+	# >6 GB, and Android killed the game for LOW_MEMORY. Only the projected
+	# record is needed here; descriptions this loop created are dropped again
+	# and rebuilt on demand by definition_id(). Entries cached before (drop and
+	# reward items) stay.
+	var cache: Dictionary=owner.call("data")
+	var references: Dictionary=cache.get("source_item_references",{})
+	var definitions: Dictionary=cache.get("item_definitions",{})
+	# Rows are streamed from the packed reader, not materialized all at once.
+	for row_index: int in SOURCE.row_count("ItemClass"):
+		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
-		var id: String=str(int(raw.ID));var definition: Dictionary=owner.call("definition_id",id)
+		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
+		var definition: Dictionary=owner.call("definition_id",id)
 		var current: Dictionary=definition.get("native_record",{})
+		if not cached:
+			references.erase(id);definitions.erase(id)
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
 		var key: String=str(current.sourceId);var previous: Array=positions.get(key,[])
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue
@@ -214,9 +242,9 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 			if typed_supply:admitted.append(id);continue
 			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or saved.get("source_display_name")!=current.source_display_name:
 				pending[id]="unverified_registered_source_identity_preserved";continue
-			records[int(previous[0])]=current.duplicate(true)
+			records[int(previous[0])]=current.duplicate(true) if cached else current
 		else:
-			records.append(current.duplicate(true));positions[key]=[records.size()-1]
+			records.append(current.duplicate(true) if cached else current);positions[key]=[records.size()-1]
 		admitted.append(id)
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}

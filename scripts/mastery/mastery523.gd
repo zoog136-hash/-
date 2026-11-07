@@ -83,8 +83,8 @@ static func _constant_id(row: Dictionary) -> int:
 static func _project_original(table: String, field: String, ids: Dictionary) -> Array:
 	var result: Array = []
 	# Preserve the compiler's original table order and complete projected rows.
-	for row: Dictionary in SOURCE.rows(table):
-		if ids.has(int(row.get(field,-1))): result.append(row)
+	# Only matching rows are built (Bonus alone has 217,916 rows).
+	for row: Dictionary in SOURCE.rows_matching(table,field,ids): result.append(row)
 	return result
 
 func _original_reset_ticket(projected: Dictionary, constants: Array) -> Dictionary:

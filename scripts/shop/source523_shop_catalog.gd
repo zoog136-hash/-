@@ -40,6 +40,9 @@ static var _session: RefCounted
 var _tables: Dictionary = {}
 var _indices: Dictionary = {}
 var _links: Dictionary = {}
+## Original-path tables served by the shared definitions reader.
+var _shared: Dictionary = {}
+const SHARED_ROW_THRESHOLD: int = 20000
 var loaded_sha256: String = ""
 var model_input_identity: Dictionary = {}
 var error: String = ""
@@ -91,9 +94,12 @@ func load_original() -> bool:
 		return _fail("보유 원본523 상점 입력이 없습니다: "+Definitions.problem())
 	var tables: Dictionary = {}
 	var provenance: Dictionary = {}
+	var shared: Dictionary = {}
 	var label_ids: Dictionary = {"0":true,"1":true}
 	# Same complete-row projection and label closure as build_source523_shop.py.
 	# DescData is the sole selected table; its provenance remains the full member.
+	# Large tables stay in the shared packed original reader instead of being
+	# copied here (and again through a JSON round trip); they are streamed once.
 	for table: String in REQUIRED_TABLES:
 		var metadata: Dictionary = Definitions.table_metadata(table)
 		var member: String = "content/"+table+".json"
@@ -102,33 +108,67 @@ func load_original() -> bool:
 			return _fail("원본 상점 표 정체 누락: "+table)
 		if int(metadata.bytes)<0 or int(metadata.row_count)<0 or digest.length()!=64 or not digest.is_valid_hex_number(false):
 			return _fail("원본 상점 표 정체 오류: "+table)
-		var source_rows: Array[Dictionary] = Definitions.rows(table)
-		if source_rows.size()!=int(metadata.row_count): return _fail("원본 상점 표 행수 불일치: "+table)
-		provenance[table] = {"member":member,"bytes":metadata.bytes,"sha256":digest,"source_rows":source_rows.size(),"packed_rows":source_rows.size()}
+		var count: int = Definitions.row_count(table)
+		if count!=int(metadata.row_count): return _fail("원본 상점 표 행수 불일치: "+table)
+		provenance[table] = {"member":member,"bytes":metadata.bytes,"sha256":digest,"source_rows":count,"packed_rows":count}
 		if table == "DescData_Korean":
+			var ids: Variant = Definitions.column(table,"ID")
+			if ids.size() != count: return _fail("원본 상점 라벨 ID 오류")
 			var selected: Array[Dictionary] = []
-			for row: Dictionary in source_rows:
-				if not _integer(row.get("ID")): return _fail("원본 상점 라벨 ID 오류")
-				if label_ids.has(str(int(row.ID))): selected.append(row)
+			for index: int in count:
+				if not _integer(ids[index]): return _fail("원본 상점 라벨 ID 오류")
+				if label_ids.has(str(int(ids[index]))): selected.append(Definitions.row_at(table,index))
 			tables[table] = selected
 			provenance[table].packed_rows = selected.size()
 			continue
-		tables[table] = source_rows
-		for row: Dictionary in source_rows:
+		var stream: bool = count >= SHARED_ROW_THRESHOLD
+		var source_rows: Array[Dictionary] = []
+		if not stream: source_rows = Definitions.rows(table)
+		for index: int in count:
+			var row: Dictionary = Definitions.row_at(table,index) if stream else source_rows[index]
 			for key: String in row:
 				if key.ends_with("DescID") or key.ends_with("DescId"):
 					if not _integer(row[key]): return _fail("원본 상점 라벨 참조 오류: "+table+"."+key)
 					label_ids[str(int(row[key]))] = true
+		if stream:
+			shared[table] = true
+			tables[table] = []
+		else: tables[table] = source_rows
 	var model: Dictionary = {"schema":SCHEMA,"patch":523,"source_zip_sha256":SOURCE_SHA256,"delivery":"PRIVATE_LOCAL_ONLY","tables":tables,"provenance":provenance}
-	# This digest identifies these actual JSON bytes, not the raw source archive
-	# or another compiler's serialization. Existing policy/NPC mismatches remain.
-	var bytes: PackedByteArray = JSON.stringify(model,"",false,true).to_utf8_buffer()
-	if bytes.size()>MAX_PACK_BYTES: return _fail("원본 상점 팩을 읽을 수 없습니다")
+	# This digest identifies the same JSON bytes JSON.stringify(model,"",false,true)
+	# produces (not the raw source archive or another compiler's serialization);
+	# they are hashed piece by piece so the whole text is never held at once.
+	# Existing policy/NPC mismatches remain.
 	var hash_context := HashingContext.new()
 	hash_context.start(HashingContext.HASH_SHA256)
-	hash_context.update(bytes)
+	var size: int = 0
+	var pieces: PackedStringArray = []
+	for key: String in model:
+		pieces.append(JSON.stringify(key)+":"+("" if key == "tables" else JSON.stringify(model[key],"",false,true)))
+	for piece_index: int in pieces.size():
+		var head: String = ("{" if piece_index == 0 else ",")+pieces[piece_index]
+		size += _hash_text(hash_context,head)
+		if pieces[piece_index] != JSON.stringify("tables")+":": continue
+		size += _hash_text(hash_context,"{")
+		var first_table: bool = true
+		for table: String in tables:
+			size += _hash_text(hash_context,("" if first_table else ",")+JSON.stringify(table)+":[")
+			first_table = false
+			var count: int = Definitions.row_count(table) if shared.has(table) else (tables[table] as Array).size()
+			for index: int in count:
+				var row: Dictionary = Definitions.row_at(table,index) if shared.has(table) else tables[table][index]
+				size += _hash_text(hash_context,("" if index == 0 else ",")+JSON.stringify(row,"",false,true))
+			size += _hash_text(hash_context,"]")
+		size += _hash_text(hash_context,"}")
+	size += _hash_text(hash_context,"}")
+	if size>MAX_PACK_BYTES: return _fail("원본 상점 팩을 읽을 수 없습니다")
 	var actual: String = hash_context.finish().hex_encode()
-	return _load_payload(bytes,actual,{"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":bytes.size(),"projection":"tools/shop/build_source523_shop.py"})
+	return _stage(tables,provenance,actual,{"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":size,"projection":"tools/shop/build_source523_shop.py"},shared)
+
+static func _hash_text(context: HashingContext, text: String) -> int:
+	var bytes: PackedByteArray = text.to_utf8_buffer()
+	context.update(bytes)
+	return bytes.size()
 
 func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dictionary) -> bool:
 	# Both inputs share the existing JSON/schema/table/row/relationship staging.
@@ -140,14 +180,21 @@ func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dicti
 	var tables: Variant = pack.get("tables")
 	var provenance: Variant = pack.get("provenance")
 	if not tables is Dictionary or not provenance is Dictionary: return _fail("상점 팩 표 누락")
+	return _stage(tables,provenance,actual,input_identity)
+
+## `shared` tables are read from the original definitions reader (same rows,
+## same order) instead of `tables`; they are validated here like any other.
+func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_identity: Dictionary, shared: Dictionary = {}) -> bool:
 	var indices: Dictionary = {}
 	for table: String in REQUIRED_TABLES:
 		if not tables.get(table) is Array or not provenance.get(table) is Dictionary:
 			return _fail("상점 팩 표 누락: " + table)
-		if not _integer(provenance[table].get("packed_rows")) or int(provenance[table].get("packed_rows", -1)) != tables[table].size():
+		var count: int = Definitions.row_count(table) if shared.has(table) else (tables[table] as Array).size()
+		if not _integer(provenance[table].get("packed_rows")) or int(provenance[table].get("packed_rows", -1)) != count:
 			return _fail("상점 팩 행수 불일치: " + table)
 		var indexed: Dictionary = {}
-		for row: Variant in tables[table]:
+		for index: int in count:
+			var row: Variant = Definitions.row_at(table,index) if shared.has(table) else tables[table][index]
 			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
 			for field: String in FIELDS.get(table, ["ID"]):
 				if field in STRING_FIELDS:
@@ -162,8 +209,8 @@ func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dicti
 			if table == "MarketPayment_Korean" and int(row.ID) == 0: continue
 			var key: String = str(int(row.ID))
 			if indexed.has(key): return _fail("상점 팩 중복 ID: " + table)
-			indexed[key] = row
-		indices[table] = indexed
+			indexed[key] = true if shared.has(table) else row
+		indices[table] = {} if shared.has(table) else indexed
 	var links: Dictionary = {}
 	var joins: Dictionary = {"MarketPurchaseProduct":"MarketPurchaseID", "MarketBonusForPurchase":"MarketPurchaseID",
 		"MarketProductAdditional":"MarketProductID", "MarketPurchaseRestriction":"MarketPurchaseId",
@@ -180,6 +227,7 @@ func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dicti
 	_tables = tables
 	_indices = indices
 	_links = links
+	_shared = shared.duplicate()
 	loaded_sha256 = actual
 	model_input_identity = input_identity.duplicate(true)
 	error = ""
@@ -193,9 +241,13 @@ static func _integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and absf(float(value)) <= MAX_EXACT_INTEGER and float(value) == floorf(float(value))
 
 func rows(table: String) -> Array:
+	if _shared.has(table): return Definitions.rows(table)
 	return _tables.get(table, []).duplicate(true)
 
 func record(table: String, id: int) -> Dictionary:
+	if _shared.has(table):
+		var matches: Array[Dictionary] = Definitions.related(table, "ID", id)
+		return matches[0] if matches.size() == 1 and id >= 0 else {}
 	return _indices.get(table, {}).get(str(id), {}).duplicate(true)
 
 func _related(table: String, id: int) -> Array:
@@ -205,8 +257,13 @@ func _definition_record(table: String, id: int) -> Dictionary:
 	return record(table,id) if available() else Definitions.row(table,id)
 
 func _definition_related(table: String, field: String, id: int) -> Array:
-	if not available(): return Definitions.related(table,field,id)
+	if not available() or (_shared.has(table) and Definitions.integer_field(table,field)): return Definitions.related(table,field,id)
 	var result: Array = []
+	if _shared.has(table):
+		for index: int in Definitions.row_count(table):
+			var row: Dictionary = Definitions.row_at(table,index)
+			if _integer(row.get(field)) and int(row[field]) == id: result.append(row)
+		return result
 	for row: Dictionary in _tables.get(table,[]):
 		if _integer(row.get(field)) and int(row[field]) == id: result.append(row.duplicate(true))
 	return result

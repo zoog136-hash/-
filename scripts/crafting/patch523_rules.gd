@@ -14,6 +14,9 @@ const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
 const MAX_BATCH: int = 20
 var data: Dictionary = {}
+## sourceId -> live catalog record. Native items are compiled as slim
+## identities (twilight_binding_slim); record() returns the live record.
+var live_record: Callable
 var recipes: Dictionary = {}
 var problem: String = ""
 var digest: String = ""
@@ -48,18 +51,36 @@ func load_file(path: String, expected_sha256: String) -> bool:
 
 func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> bool:
 	if not data.is_empty(): return true # Preserve an already accepted live model.
+	var projection = ORIGINAL_PROJECTION.new()
+	return _load_candidate(projection,projection.build(catalog_bytes,binding_catalog_bytes))
+
+## load_original() with the registered catalog given as items + contract; the
+## same bytes are identified without building the whole binding text.
+func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary) -> bool:
+	if not data.is_empty(): return true
+	var projection = ORIGINAL_PROJECTION.new()
+	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract)
+	return _load_candidate(projection,projection.build_bound(catalog_bytes,document.binding,document.sha256))
+
+func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
 	# UNVERIFIED: the original ZIP identifies inputs; the actual normalized
 	# payload bytes identify this rules model. No private file is generated.
 	problem = ""
-	var projection = ORIGINAL_PROJECTION.new()
-	var candidate: Dictionary = projection.build(catalog_bytes,binding_catalog_bytes)
 	if candidate.is_empty():
 		problem = projection.problem
 		return false
-	var payload: PackedByteArray = JSON.stringify(candidate,"",true,true).to_utf8_buffer()
+	projection.call("release")
+	# The model is identified by, and loaded as, the parse of its JSON bytes;
+	# both come from one streamed pass instead of a whole-model text.
 	var hash := HashingContext.new()
-	hash.start(HashingContext.HASH_SHA256); hash.update(payload)
-	return _load_payload(payload.get_string_from_utf8(),hash.finish().hex_encode())
+	hash.start(HashingContext.HASH_SHA256)
+	var size: Array = [0]
+	var parsed: Variant = ORIGINAL_PROJECTION.stream_round_trip(candidate,hash,3,size)
+	candidate.clear()
+	if int(size[0]) > MAX_BYTES:
+		problem = "원본523 제작 규칙 파일 크기를 확인하세요"
+		return false
+	return _accept(parsed,hash.finish().hex_encode())
 
 func _load_payload(text: String, expected_sha256: String) -> bool:
 	if text.to_utf8_buffer().size() > MAX_BYTES:
@@ -69,7 +90,9 @@ func _load_payload(text: String, expected_sha256: String) -> bool:
 	if parser.parse(text) != OK:
 		problem = "원본523 규칙 JSON 형식 오류"
 		return false
-	var parsed: Variant = parser.data
+	return _accept(parser.data,expected_sha256)
+
+func _accept(parsed: Variant, expected_sha256: String) -> bool:
 	if not parsed is Dictionary or parsed.get("schema", "") != SCHEMA or parsed.get("snapshot", "") != "patch523" or parsed.get("catalog_sha256", "") != FileAccess.get_sha256("res://data/catalog_v19.json"):
 		problem = "원본523 제작 규칙·현재 아이템 DB 불일치"
 		return false
@@ -264,6 +287,10 @@ static func denied(reason: String) -> Dictionary:
 func record(source_id: String, stack_bless: int=1) -> Dictionary:
 	var item: Dictionary = data.get("items",{}).get(source_id,{})
 	var result: Dictionary = (item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else item.get("catalog_record",{})).duplicate(true)
+	if result.get("twilight_binding_slim") == true:
+		var live: Variant = live_record.call(str(result.get("sourceId",""))) if live_record.is_valid() else {}
+		if live is Dictionary and not (live as Dictionary).is_empty() and (live as Dictionary).get("name") == result.get("name"): result = (live as Dictionary).duplicate(true)
+		else: result.erase("twilight_binding_slim")
 	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty():return {}
 	var use: Dictionary = item.get("use_conditions",{})
 	if not use.is_empty(): result["patch523_item_use"]=use.duplicate(true)

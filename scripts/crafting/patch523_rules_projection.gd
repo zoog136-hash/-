@@ -88,8 +88,12 @@ func _read_source() -> bool:
 		if meta.is_empty(): problem = "제작 원본 메타데이터가 없습니다: "+name; return false
 		_evidence[name] = {"sha256":meta.get("sha256"),"bytes":meta.get("bytes"),"rows":meta.get("row_count")}
 		# Only support descriptions selected by the original compiler's joins.
-		_tables[name] = [] if name == "DescData_Korean" else SOURCE.rows(name)
-		if name != "DescData_Korean" and _tables[name].size() != int(meta.get("row_count",-1)):
+		# Bonus (~218,000 rows) is indexed later only for the IDs that
+		# ItemBonus/ItemEnchantBonus reference; no other join reads it.
+		_tables[name] = [] if name in ["DescData_Korean","Bonus"] else SOURCE.rows(name)
+		if name == "Bonus" and SOURCE.row_count(name) != int(meta.get("row_count",-1)):
+			problem = "제작 원본 표를 읽을 수 없습니다: "+name; return false
+		if name not in ["DescData_Korean","Bonus"] and _tables[name].size() != int(meta.get("row_count",-1)):
 			problem = "제작 원본 표를 읽을 수 없습니다: "+name; return false
 	_items = _index(_tables.ItemClass); _categories = _index(_tables.ItemCategory)
 	_classes = _index(_tables.Class); _dates = _index(_tables.DateTimes_Korean)
@@ -133,7 +137,7 @@ func _bind_catalog(catalog: Array, wallet_records: Array) -> bool:
 		if record.get("source_test_item") != native.TestItem or record.get("source_is_stackable") != _categories[str(int(native.CategoryID))].IsStackable or record.get("source_level_limit_min") != native.LevelLimitMin or record.get("source_level_limit_max") != native.LevelLimitMax: continue
 		if _sorted_ids(record.get("source_class_ids",[])) != _ids(_limits.get(key,[]),"ClassID",true) or _sorted_ids(record.get("source_equip_slot_ids",[])) != _ids(_equip_links.get(key,[]),"EquipSlotID"): continue
 		var previous: Array = _by_id.get(key,[])
-		if not _full_native and previous.size() == 1 and _by_name[previous[0].name].size() == 1 and not (record.get("source_projection")=="current523_original_typed_game_dto_v1" and record.get("source_definition_archive")==SOURCE.identity() and record.get("source_original_item")==native): continue
+		if not _full_native and previous.size() == 1 and _by_name[previous[0].name].size() == 1 and not (record.get("source_projection")=="current523_original_typed_game_dto_v1" and record.get("source_definition_archive")==SOURCE.identity() and _same_original(record,native)): continue
 		if _by_name[record.name].size() == 1: _by_id[key] = [record]
 	for entry: Dictionary in catalog:
 		var raw_id: Variant = entry.get("source_item_class_id",0)
@@ -437,17 +441,130 @@ func _boxes() -> Dictionary:
 		result[str(target[0])] = {"bag_class":classes[str(target[1])],"rewards":rewards}
 	return result
 
-func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> Dictionary:
-	problem = ""
+## The registered catalog inputs exactly as JSON.parse_string(JSON.stringify(
+## {"아이템":items,"patch523_crafting_catalog_contract":contract},"",true,true))
+## would return them, plus the SHA256 of those JSON bytes. Each item is
+## serialized and parsed on its own, so the whole document text (hundreds of MB
+## as a Godot String with every native item registered) is never built.
+## Registered native records are compiled from these fields only. The rules
+## model keeps this slim identity (marked twilight_binding_slim) instead of a
+## copy of every native record; patch523_rules.record() returns the live
+## catalog record for it. Non-native binding records only identify registered
+## names and wallets; their full records come from catalog_v19.
+const BINDING_FIELDS: Array[String] = ["name","source","sourceId","slot","grade","weight","source_snapshot",
+	"source_item_class_id","source_m_native_item","source_bless_raw","source_display_name","source_test_item",
+	"source_is_stackable","source_level_limit_min","source_level_limit_max","source_class_ids","source_equip_slot_ids",
+	"source_projection","source_definition_archive","source_original_item","source_equipment_status"]
+
+static func slim_binding_record(record: Variant) -> Variant:
+	if not record is Dictionary: return record
+	var result: Dictionary = {}
+	for field: String in BINDING_FIELDS:
+		if (record as Dictionary).has(field): result[field] = record[field]
+	# The compiler only compares the full original row with the definition
+	# row; that comparison is kept as the digest of the row's JSON round trip.
+	if result.has("source_original_item"):
+		result["twilight_source_original_item_sha256"] = original_digest(JSON.parse_string(JSON.stringify(result.source_original_item,"",true,true)))
+		result.erase("source_original_item")
+	if record.get("source") == "lineagem_patch523" and record.get("source_m_native_item") == true: result["twilight_binding_slim"] = true
+	return result
+
+static func original_digest(row: Variant) -> String:
+	return JSON.stringify(row,"",true,true).sha256_text()
+
+func _same_original(record: Dictionary, native: Dictionary) -> bool:
+	if record.has("twilight_source_original_item_sha256"): return record.twilight_source_original_item_sha256 == original_digest(native)
+	return record.get("source_original_item") == native
+
+static func binding_document(items: Array, contract: Dictionary) -> Dictionary:
+	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
+	var document: Dictionary = {"아이템":items,"patch523_crafting_catalog_contract":contract}
+	var keys: Array = document.keys()
+	keys.sort()
+	var parsed: Dictionary = {}
+	var size: int = 0
+	for key_index: int in keys.size():
+		var key: String = keys[key_index]
+		size += _hash_text(hash,("{" if key_index == 0 else ",")+JSON.stringify(key)+":")
+		if key != "아이템":
+			var text: String = JSON.stringify(document[key],"",true,true)
+			size += _hash_text(hash,text)
+			parsed[key] = JSON.parse_string(text)
+			continue
+		var copies: Array = []
+		copies.resize(items.size())
+		size += _hash_text(hash,"[")
+		for index: int in items.size():
+			var text: String = JSON.stringify(items[index],"",true,true)
+			size += _hash_text(hash,("" if index == 0 else ",")+text)
+			# Same values a whole-document parse gives for these fields.
+			copies[index] = JSON.parse_string(JSON.stringify(slim_binding_record(items[index]),"",true,true))
+		size += _hash_text(hash,"]")
+		parsed[key] = copies
+	size += _hash_text(hash,"}")
+	return {"binding":parsed,"sha256":hash.finish().hex_encode(),"bytes":size}
+
+## JSON.parse_string(JSON.stringify(value,"",true,true)) and the SHA256 input
+## of that text, produced container by container to `depth` levels so the
+## whole text never exists at once. hash.update() receives the exact bytes.
+static func stream_round_trip(value: Variant, hash: HashingContext, depth: int, size: Array) -> Variant:
+	if depth <= 0 or not (value is Dictionary or value is Array) or value.is_empty():
+		var text: String = JSON.stringify(value,"",true,true)
+		size[0] += _hash_text(hash,text)
+		return JSON.parse_string(text)
+	if value is Array:
+		var copies: Array = []
+		copies.resize(value.size())
+		size[0] += _hash_text(hash,"[")
+		for index: int in value.size():
+			if index > 0: size[0] += _hash_text(hash,",")
+			copies[index] = stream_round_trip(value[index],hash,depth-1,size)
+		size[0] += _hash_text(hash,"]")
+		return copies
+	var keys: Array = value.keys()
+	# Same order as Godot's JSON key sort: String and StringName compare as
+	# text, other types by type first.
+	keys.sort_custom(func(a: Variant, b: Variant) -> bool:
+		if (a is String or a is StringName) and (b is String or b is StringName): return str(a) < str(b)
+		return typeof(a) < typeof(b) if typeof(a) != typeof(b) else a < b)
+	var result: Dictionary = {}
+	size[0] += _hash_text(hash,"{")
+	for index: int in keys.size():
+		var name: String = str(keys[index])
+		size[0] += _hash_text(hash,("" if index == 0 else ",")+JSON.stringify(name)+":")
+		result[name] = stream_round_trip(value[keys[index]],hash,depth-1,size)
+	size[0] += _hash_text(hash,"}")
+	return result
+
+## Drops the source tables and indexes once the model is built.
+func release() -> void:
 	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
-	_full_native = false
-	var original: Variant = JSON.parse_string(catalog_bytes.get_string_from_utf8())
-	if not original is Dictionary or not original.get("아이템") is Array: problem = "기존 제작 카탈로그 입력이 필요합니다"; return {}
+	_items = {}; _categories = {}; _classes = {}; _dates = {}; _limits = {}; _equip_links = {}; _item_bonuses = {}
+
+static func _hash_text(hash: HashingContext, text: String) -> int:
+	var bytes: PackedByteArray = text.to_utf8_buffer()
+	hash.update(bytes)
+	return bytes.size()
+
+func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> Dictionary:
 	var binding: Dictionary = {}
 	if not binding_catalog_bytes.is_empty():
 		var parsed: Variant = JSON.parse_string(binding_catalog_bytes.get_string_from_utf8())
 		if not parsed is Dictionary or not parsed.get("아이템") is Array: problem = "실제 등록된 제작 카탈로그 정체가 필요합니다"; return {}
 		binding = parsed
+		var slim: Array = []
+		for record: Variant in binding["아이템"]: slim.append(slim_binding_record(record))
+		binding["아이템"] = slim
+	return build_bound(catalog_bytes,binding,_sha(binding_catalog_bytes) if not binding_catalog_bytes.is_empty() else "")
+
+## Same as build() with the binding catalog already parsed (binding_document()).
+func build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_sha256: String) -> Dictionary:
+	problem = ""
+	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
+	_full_native = false
+	var original: Variant = JSON.parse_string(catalog_bytes.get_string_from_utf8())
+	if not original is Dictionary or not original.get("아이템") is Array: problem = "기존 제작 카탈로그 입력이 필요합니다"; return {}
+	if not binding.is_empty() and not binding.get("아이템") is Array: problem = "실제 등록된 제작 카탈로그 정체가 필요합니다"; return {}
 	var parsed_policy: Variant = JSON.parse_string(FileAccess.get_file_as_string(POLICY_PATH))
 	if not parsed_policy is Dictionary or parsed_policy.is_empty(): problem = "기존 공개 제작 정책을 읽을 수 없습니다"; return {}
 	_policy = parsed_policy
@@ -469,7 +586,11 @@ func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArra
 		admission[craft_id] = {"reason":reason}
 		if compiled.has("source_exclusion"): admission[craft_id].source_exclusion = compiled.source_exclusion
 		if reason in ["missing_or_ambiguous_catalog_identity","unresolved_item_condition","unmapped_physical_slot","unresolved_item_state","source_identity_name_disagreement","stack_state_cannot_be_represented"]: admission[craft_id].first_blocking_item_class_id = compiled.get("item_id")
-	var bonuses: Dictionary = _index(_tables.Bonus)
+	var referenced: Dictionary = {}
+	for table: String in ["ItemBonus","ItemEnchantBonus"]:
+		for row: Dictionary in _tables[table]:
+			if _integer(row.get("BonusID")): referenced[int(row.BonusID)] = true
+	var bonuses: Dictionary = _index(SOURCE.rows_matching("Bonus","ID",referenced))
 	var used: Dictionary = {}
 	var bound_items: Dictionary = _bound_items(bonuses,used)
 	var boxes: Dictionary = _boxes()
@@ -482,7 +603,7 @@ func build(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArra
 		"source_archive_sha256":SOURCE.SOURCE_SHA,"recipes":recipes,"recipe_summary":{"active":recipes.size(),"rejected":rejected},"recipe_admission":admission,
 		"raw_recipes":{"inputs":inputs,"outputs":outputs,"views":views,"restrictions":restrictions},"guaranteed_boxes":boxes,
 		"items":bound_items,"bonuses":selected_bonuses,"bonus_types":_index(_tables.BonusType),"enchantment":enchantment,"source_exclusions":_exclusions}
-	if not binding_catalog_bytes.is_empty(): result.binding_catalog_sha256 = _sha(binding_catalog_bytes)
+	if not binding_sha256.is_empty(): result.binding_catalog_sha256 = binding_sha256
 	if not ResourceLoader.exists(EQUIPMENT_PATH): problem = "제작 장비 projection 모듈이 아직 없습니다 · 미완료"; return {}
 	var equipment_script: Script = load(EQUIPMENT_PATH)
 	if equipment_script == null: problem = "제작 장비 projection 모듈을 읽을 수 없습니다 · 미완료"; return {}
