@@ -17,6 +17,17 @@ var _actor_pins: Dictionary = {}
 var _parsed: Dictionary = {}
 var _parse_order: Array[String] = []
 static var _crc_table: Array[int] = []
+static var _manifest_cache_path: String = ""
+static var _manifest_cache_sha: String = ""
+static var _manifest_cache_value: Dictionary = {}
+
+static func _freeze_manifest_value(value: Variant) -> void:
+	if value is Dictionary:
+		for child: Variant in value.values(): _freeze_manifest_value(child)
+		value.make_read_only()
+	elif value is Array:
+		for child: Variant in value: _freeze_manifest_value(child)
+		value.make_read_only()
 
 static func fail(message: String) -> Dictionary:
 	return {"ok":false,"error":message}
@@ -59,8 +70,18 @@ func _json(path: String, expected: String, manifest_json: bool = false) -> Dicti
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	if not valid_sha(expected) or digest(bytes) != expected: return fail("Bank JSON SHA256 mismatch: " + path)
+	# Every request above checks the current bytes, including cache hits. Share
+	# only the immutable parsed aggregate; never skip actor/raw integrity checks.
+	if manifest_json and path == _manifest_cache_path and expected == _manifest_cache_sha and not _manifest_cache_value.is_empty():
+		return {"ok":true,"value":_manifest_cache_value}
 	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
-	return {"ok":true,"value":value} if value is Dictionary else fail("Bank JSON is not an object.")
+	if not value is Dictionary: return fail("Bank JSON is not an object.")
+	if manifest_json:
+		_freeze_manifest_value(value)
+		_manifest_cache_path = path
+		_manifest_cache_sha = expected
+		_manifest_cache_value = value
+	return {"ok":true,"value":value}
 
 func _pins_valid() -> bool:
 	if FileAccess.get_sha256(_manifest_path) != _manifest_sha: return false
@@ -193,7 +214,10 @@ func _member(member: String) -> Dictionary:
 			_parsed.erase(oldest)
 		_parsed[member] = parsed
 		_parse_order.append(member)
-	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
+	# Provenance handed to callers remains an owned copy, not a mutable route
+	# into the shared immutable manifest used by another actor.
+	var returned_identity: Variant = spec.get("source_identity")
+	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":returned_identity.duplicate(true) if returned_identity is Dictionary else returned_identity}
 
 func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
@@ -261,7 +285,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	_manifest = {}; _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
 	var loaded: Dictionary = _json(manifest_path, expected_sha, true)
 	if not loaded.ok: return loaded
 	_manifest = loaded.value

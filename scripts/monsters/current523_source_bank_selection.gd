@@ -8,6 +8,8 @@ const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const CORE_ACTIONS = {"idle":3, "walk":0, "attack":1, "hit":2, "death":8}
 const CORE_MOTIONS = {"idle":4, "walk":1, "attack":2, "hit":3, "death":5}
 const LOOPS = {"idle":true, "walk":true, "attack":false, "hit":false, "death":false}
+const PRIMARY_ACTIONS = {"idle":3, "walk":0, "attack":1}
+const PRIMARY_LOOPS = {"idle":true, "walk":true, "attack":false}
 const ADMITTED_NPC_FIELDS = ["ID", "Sprite", "HP", "MP", "AC", "MR", "Exp", "Category", "IsOccupyLandTile", "TestNPC"]
 const SOURCE_ONLY_REQUEST = "current523_source_only"
 const CURRENT_ADMISSION_IDENTITY = "current523_npc_source_identity"
@@ -104,6 +106,15 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 			return fail("current523_existing_npc_core_action_family_differs:" + role,source_only)
 		action_rows[role] = action.duplicate(true)
 	var run_binding: Dictionary = SOURCE.source_run_binding(sprite_id,int(CORE_ACTIONS.walk),0)
+	# Missing original HIT/DEATH must not erase independently available primary
+	# actions. Each optional role still loads its exact pinned original before
+	# use; a missing state remains hidden rather than borrowing another action.
+	var optional_actions: Dictionary = {"hit":int(CORE_ACTIONS.hit),"death":int(CORE_ACTIONS.death)}
+	var optional_actors: Dictionary = {"hit":sprite_id,"death":sprite_id}
+	var optional_loops: Dictionary = {"hit":false,"death":false}
+	optional_actions.merge(run_binding.optional_role_actions,true)
+	optional_actors.merge(run_binding.optional_role_actor_ids,true)
+	if optional_actions.has("run"): optional_loops["run"] = true
 	return {"ok":true,"enabled":true,"status":"selected","consumer":"npc","request_key":request_key,
 		"source_snapshot":"patch523","content_snapshot":"patch523","source_content_snapshot":"patch523","npc_id":npc_id,"sprite_id":sprite_id,
 		SOURCE_ONLY_REQUEST:source_only,"source_only":source_only,"legacy_media_fallback_allowed":not source_only,
@@ -116,8 +127,8 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		"source_tables_sha256":supplied.source_tables_sha256,"source_action_rows":action_rows,
 		"manifest_path":supplied.options.manifest_path,"manifest_sha256":supplied.options.manifest_sha256,
 		"source_bank_context":{"current523_source_bank":supplied.options.duplicate(true)},
-		"role_actions":CORE_ACTIONS.duplicate(),"loop_policy":LOOPS.duplicate(),
-		"optional_role_actions":run_binding.optional_role_actions,"optional_role_actor_ids":run_binding.optional_role_actor_ids,"run_status":run_binding.run_status,
+		"role_actions":PRIMARY_ACTIONS.duplicate(),"loop_policy":PRIMARY_LOOPS.duplicate(),
+		"optional_role_actions":optional_actions,"optional_role_actor_ids":optional_actors,"optional_role_loop_policy":optional_loops,"run_status":run_binding.run_status,
 		"overlay_whitelist_path":supplied.options.get("overlay_whitelist_path",""),
 		"overlay_whitelist_sha256":supplied.options.get("overlay_whitelist_sha256",""),
 		"stats_contract":("current523_final_definition_selection_only; actor_registry_still_required" if definition_selection_only else "current523_admitted_original_registry; saved_encounter_identity_ABI_only") if source_only else "existing_base508_fields_unchanged_by_patch523_spawn_policy",

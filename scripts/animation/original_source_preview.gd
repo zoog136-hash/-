@@ -55,6 +55,7 @@ var _clock: float = 0.0
 var _sequence: int = -1
 var _source_attack: bool = false
 var _attack_completed: bool = false
+var _source_hit_active: bool = false
 var last_source_frame: int = -1
 
 func current523_source_required(key: String) -> bool:
@@ -298,6 +299,7 @@ func restart_reference_source(explicit_role: String, sequence: int) -> bool:
 	_clock = 0.0
 	_source_attack = false
 	_attack_completed = false
+	_source_hit_active = false
 	_annotation_clock = -0.000000001
 	_annotation_track_key = ""
 	_reference_overlay_clock = -0.000000001
@@ -435,6 +437,7 @@ func clear() -> void:
 	_source_attack = false
 	_attack_completed = false
 	last_source_frame = -1
+	_source_hit_active = false
 	hide()
 
 func source_role() -> String:
@@ -456,6 +459,16 @@ func cancel_source_attack() -> void:
 	_role = "idle"
 	_clock = 0.0
 
+func notify_current_source_hit(gameplay_active: bool) -> bool:
+	# The existing received-damage owner has already applied ignoreDamageMotion.
+	# Its event restarts repeated HITs, even if motion.state never left "hit".
+	# This visual clock never interrupts an attack or changes movement/recovery.
+	if gameplay_active or _source_attack or _reference_bank == null or not installed(): return false
+	if _reference_card_context.get("consumer") not in ["class","transform"] or not _playback_tracks.has("hit"): return false
+	if not restart_reference_source("hit",_sequence): return false
+	_source_hit_active = true
+	return true
+
 func advance_source(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
 	# Diagnostic bank requests still require explicit source dispatch. A typed card
 	# request uses this existing host motion clock, without source gameplay events.
@@ -463,19 +476,29 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 	if not installed(): return
 	source_facing = facing
 	if sequence != _sequence and (gameplay_active or state in ["attack", "recovery"]) and _playback_tracks.has("attack"):
+		_source_hit_active = false
 		_sequence = sequence
 		_source_attack = true
 		_attack_completed = false
 		_role = "attack"
 		_clock = 0.0
 	var requested: String = state if state in ["walk", "run", "hit"] else "idle"
+	if state in ["death","corpse"]: _source_hit_active = false
+	if _source_hit_active: requested = "hit"
 	if _source_attack:
 		requested = "attack"
 	elif gameplay_active and _attack_completed:
 		requested = "attack"
 	if requested in ["walk", "run"] and not _playback_tracks.has(requested) and _playback_tracks.has("walk"):
 		requested = "walk" # The displayed native action remains WALK, never a fabricated RUN track.
-	if not _playback_tracks.has(requested): requested = "idle"
+	if not _playback_tracks.has(requested):
+		if _reference_bank != null and not _reference_card_context.is_empty() and requested == "hit":
+			# Missing reaction pixels must not be reported as an idle HIT frame.
+			_reference_frame_status = {"ok":false,"status":"source_only_pending","consumer":_reference_card_context.get("consumer"),"requested_role":requested,"reason":"current523_source_role_unavailable:hit"}
+			last_source_frame = -1
+			hide()
+			return
+		requested = "idle"
 	if requested != _role:
 		_role = requested
 		_clock = 0.0
@@ -507,6 +530,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	if (_reference_bank == null or not _reference_card_context.is_empty()) and _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true
+	if _role == "hit" and (static_track or _clock >= total): _source_hit_active = false
 	last_source_frame = int(selected.source_frame)
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
@@ -1022,8 +1046,15 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
-	if fixed_world_point: overlay.set_as_top_level(true)
+	# Skill/awakening/item/Invoke owners pass a copied world impact position,
+	# sometimes before the target is recycled. Parenting under the caster must
+	# not turn that point into a following offset when the caster moves/scales.
+	# INF remains the explicit owner-relative apply-event placement contract.
+	var world_anchored: bool = fixed_world_point or world_point.is_finite()
+	if world_anchored: overlay.set_as_top_level(true)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
+	var placement: String = "existing_caller_world_point" if world_anchored else "existing_owner_relative_apply_event"
+	overlay._reference_overlay_parent["placement_policy"] = placement
 	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
@@ -1033,6 +1064,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"
+	source_effect_status["placement_policy"] = placement
 	return true
 
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
