@@ -5,7 +5,16 @@ const RENDERER = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const STATIC_SPR=preload("res://scripts/maps/current523_static_spr.gd")
 const TRAVEL_PAYMENT=preload("res://scripts/maps/current523_map_travel_payment.gd")
+const SOURCE_SPAWNS=preload("res://scripts/maps/current523_source_spawns.gd")
+const SOURCE_POPULATION=preload("res://scripts/maps/current523_source_population.gd")
 var active: bool = false
+## Source-field actors live in their own root/population. The host Aden root
+## and population stay paused for return and keep their saved boss state.
+var _source_population: FieldPopulation
+var _source_monsters: Node2D
+var _host_population: FieldPopulation
+var _host_monsters: Node2D
+var spawn_summary: Dictionary = {}
 var problem: String = ""
 var settings: Dictionary = {}
 var _world_ref: WeakRef
@@ -361,10 +370,19 @@ func _build_notice(world: Node) -> void:
 	if source_owned: label.text = str(_source_field.data.map_name)+"\nS32 속성 기반 자체 통행 · M 원작 판정 미확정"
 	if source_owned and _always_open(settings):label.text+="\n상시 오픈 자체정책 · 기간·요일·대기·시간 한도 미적용"
 	elif source_owned and _map_time!=null and _map_time.active():label.text+="\nM 원문 한도 차감 · 자체 시간정책: 자동 초기화/충전 없음"
+	if source_owned: label.text+="\n"+_spawn_notice_line()
 	row.add_child(label)
 	var button: Button = UI.button("기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
 	row.add_child(button)
+
+func _spawn_notice_line() -> String:
+	if spawn_summary.is_empty(): return "몬스터: 없음"
+	if not bool(spawn_summary.get("ok",false)):
+		return "몬스터: 출현 정의 팩 없음 (patch523-world-links 설치 필요)"
+	if int(spawn_summary.get("regions",0))>0 and int(spawn_summary.get("registered",0))==0:
+		return "몬스터: 원문 구역 %d곳 · 현재523 원본 몬스터 연결 없음 (구형 팩은 사용하지 않음)" % int(spawn_summary.get("regions",0))
+	return "몬스터: 원문 구역 %d곳 중 %d곳 사용 가능 · 보스 %d · 마리 수는 자체 정책 · 리스폰은 기존 규칙" % [int(spawn_summary.get("regions",0)),int(spawn_summary.get("registered",0)),int(spawn_summary.get("bosses",0))]
 
 func _return_pressed() -> void:
 	var world: Node = _world()
@@ -468,6 +486,7 @@ func _open_source(value: Dictionary) -> bool:
 	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
 	candidate.process_mode = Node.PROCESS_MODE_INHERIT; candidate.show()
 	world.field_minimap.configure(world,proposed)
+	_attach_source_population(world,proposed)
 	world.region_id=""
 	world.hud.set_map_name(str(proposed.data.map_name))
 	_build_notice(world)
@@ -475,6 +494,58 @@ func _open_source(value: Dictionary) -> bool:
 	if world.has_method("_refresh_regional_return_slots"):world.call("_refresh_regional_return_slots")
 	if generic:_start_map_time_monitor(world)
 	return true
+
+func _clear_source_actors(world: Node) -> void:
+	world.selected_monster = null; world.auto_target = null
+	if is_instance_valid(_source_population): _source_population.configure(world,null)
+	if is_instance_valid(_source_monsters):
+		for child: Node in _source_monsters.get_children():
+			_source_monsters.remove_child(child); child.queue_free()
+
+func _attach_source_population(world: Node, field: OriginalPlayableField) -> void:
+	if not is_instance_valid(world) or field == null: return
+	if not is_instance_valid(_source_monsters):
+		_host_monsters = world.monsters_root; _host_population = world.field_population
+		_source_monsters = Node2D.new()
+		_source_monsters.name = "Current523SourceMonsters"
+		_source_monsters.y_sort_enabled = true
+		_source_monsters.z_index = _host_monsters.z_index
+		world.add_child(_source_monsters)
+		world.move_child(_source_monsters, _host_monsters.get_index()+1)
+		_source_population = SOURCE_POPULATION.new()
+		_source_population.name = "Current523SourcePopulation"
+		# Existing boss rule: wall-clock deadlines kept in the save. Share the
+		# saved original-world director; source keys ("current523…:m523:boss:N")
+		# never collide with host boss keys, and the paused host does not tick it.
+		var saved_population: Variant = world.get("original_population")
+		if saved_population is FieldPopulation and saved_population.boss_director != null:
+			_source_population.boss_director = saved_population.boss_director
+		world.add_child(_source_population)
+		world.monsters_root = _source_monsters; world.field_population = _source_population
+	else:
+		_clear_source_actors(world)
+	spawn_summary = SOURCE_SPAWNS.apply(field)
+	_source_population.configure(world,field)
+	spawn_summary.merge(_source_population.source_metrics(),true)
+	# Drops on a source field stay on that field's own map identity.
+	world.ground_loot.activate(str(field.data.map_id))
+	world.loot_pickup.map_changed()
+
+func _detach_source_population(world: Node) -> void:
+	if is_instance_valid(world) and is_instance_valid(_source_monsters):
+		_clear_source_actors(world)
+		if world.monsters_root == _source_monsters and is_instance_valid(_host_monsters): world.monsters_root = _host_monsters
+		if world.field_population == _source_population and is_instance_valid(_host_population): world.field_population = _host_population
+		world.pending_ground_pickup = null
+		world.loot_pickup.map_changed()
+	if is_instance_valid(_source_population): _source_population.queue_free()
+	if is_instance_valid(_source_monsters): _source_monsters.queue_free()
+	_source_population = null; _source_monsters = null; _host_population = null; _host_monsters = null
+
+func source_spawn_metrics() -> Dictionary:
+	var result: Dictionary = spawn_summary.duplicate(true)
+	if is_instance_valid(_source_population): result.merge(_source_population.source_metrics(),true)
+	return result
 
 func _close_source(remember_disabled: bool) -> bool:
 	var world: Node = _world()
@@ -496,6 +567,7 @@ func _close_source(remember_disabled: bool) -> bool:
 		_renderer.hide(); _renderer.process_mode = Node.PROCESS_MODE_DISABLED; _renderer.queue_free()
 	if is_instance_valid(_source_physics):
 		_source_physics.collision_layer = 0; _source_physics.queue_free()
+	_detach_source_population(world)
 	if is_instance_valid(world) and not _prior_world.is_empty():
 		# Source fields share the preserved host map ID; it cannot invalidate
 		# a held pointer by itself when returning to another field/camera.
@@ -965,6 +1037,7 @@ func _commit_source_destination(world: Node,proposed: OriginalPlayableField,opti
 	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
 	candidate.process_mode=Node.PROCESS_MODE_INHERIT; candidate.show()
 	world.field_minimap.configure(world,proposed); world.region_id=""; world.hud.set_map_name(str(proposed.data.map_name))
+	_attach_source_population(world,proposed)
 	if is_instance_valid(_notice): _notice.queue_free()
 	_build_notice(world)
 	_start_map_time_monitor(world)
