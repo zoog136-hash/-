@@ -25,6 +25,25 @@ static func code_key(paths: Array) -> String:
 		hash.update((path + ":" + digest + "\n").to_utf8_buffer())
 	return hash.finish().hex_encode()
 
+## SHA256 over every file under res://scripts and res://data (paths and
+## contents). Bakes whose producer depends on many modules use this, so any
+## code or data change at all invalidates them. Computed once per run.
+static var _global_code: String = ""
+static func global_code_key() -> String:
+	if not _global_code.is_empty(): return _global_code
+	var files: PackedStringArray = []
+	for root: String in ["res://scripts","res://data"]: _collect(root, files)
+	files.sort()
+	_global_code = code_key(Array(files)) if not files.is_empty() else ""
+	return _global_code
+
+static func _collect(directory: String, files: PackedStringArray) -> void:
+	var dir := DirAccess.open(directory)
+	if dir == null: return
+	for name: String in dir.get_files(): files.append(directory.path_join(name))
+	for name: String in dir.get_directories():
+		if not name.begins_with("."): _collect(directory.path_join(name), files)
+
 static func key(parts: Array) -> String:
 	for part: Variant in parts:
 		if not part is String or (part as String).is_empty(): return ""

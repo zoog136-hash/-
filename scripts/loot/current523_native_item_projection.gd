@@ -207,6 +207,75 @@ static func _archive_identity() -> Dictionary:
 	if _identity_cache!=current:_identity_cache=current
 	return _identity_cache
 
+const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
+const TEMPLATE_BAKE:="native_item_templates"
+const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v1"
+
+static func _template_key() -> String:
+	return BAKE.key([SOURCE.SOURCE_SHA,str(SOURCE.SOURCE_BYTES),TEMPLATE_SCHEMA,BAKE.global_code_key()])
+
+## Baked native records by ItemClass ID (one var per record, offsets indexed).
+class TemplateStore extends RefCounted:
+	var file: FileAccess
+	var offsets: Dictionary={}
+	## One pool for every key and text read back, so ~30,000 decoded records
+	## share their strings as the projected records shared their literals.
+	var strings: Dictionary={}
+	func record(id: String) -> Variant:
+		if not offsets.has(id):return null
+		file.seek(int(offsets[id]))
+		return _shared(file.get_var())
+	func _shared(value: Variant) -> Variant:
+		if value is String:
+			var known: Variant=strings.get(value)
+			if known==null:strings[value]=value;return value
+			return known
+		if value is Dictionary:
+			var result: Dictionary={}
+			for key: Variant in value:result[_shared(key)]=_shared(value[key])
+			return result
+		if value is Array and not (value as Array).is_typed():
+			for index: int in (value as Array).size():value[index]=_shared(value[index])
+		return value
+
+class TemplateWriter extends RefCounted:
+	var file: FileAccess
+	var ids: PackedStringArray=[]
+	var positions: PackedInt64Array=[]
+	var ok: bool=true
+	static func start() -> TemplateWriter:
+		var path: String=BAKE.data_path(TEMPLATE_BAKE)
+		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+		var writer:=TemplateWriter.new()
+		writer.file=FileAccess.open(path+".part",FileAccess.WRITE)
+		return writer if writer.file!=null else null
+	func add(id: String,record: Dictionary) -> void:
+		ids.append(id);positions.append(file.get_position());file.store_var(record)
+	func finish(value_key: String) -> void:
+		var index_position: int=file.get_position()
+		file.store_var({"schema":TEMPLATE_SCHEMA,"ids":ids,"offsets":positions})
+		file.store_64(index_position)
+		var stored: bool=file.get_error()==OK
+		file.close()
+		var part: String=BAKE.data_path(TEMPLATE_BAKE)+".part"
+		if not stored or not BAKE.commit_file(TEMPLATE_BAKE,value_key,part):DirAccess.remove_absolute(part)
+
+static func _open_templates() -> TemplateStore:
+	var path: String=BAKE.verified_file(TEMPLATE_BAKE,_template_key())
+	if path.is_empty():return null
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()<8:return null
+	file.seek(file.get_length()-8)
+	var index_position: int=file.get_64()
+	if index_position<0 or index_position>=file.get_length()-8:return null
+	file.seek(index_position)
+	var index: Variant=file.get_var()
+	if not index is Dictionary or index.get("schema")!=TEMPLATE_SCHEMA or not index.get("ids") is PackedStringArray or not index.get("offsets") is PackedInt64Array or (index.ids as PackedStringArray).size()!=(index.offsets as PackedInt64Array).size():return null
+	var store:=TemplateStore.new()
+	store.file=file
+	for position: int in (index.ids as PackedStringArray).size():store.offsets[index.ids[position]]=index.offsets[position]
+	return store
+
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	if SOURCE.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
 	# World._load_data registers through the drop owner and again through the
@@ -238,15 +307,28 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	var cache: Dictionary=owner.call("data")
 	var references: Dictionary=cache.get("source_item_references",{})
 	var definitions: Dictionary=cache.get("item_definitions",{})
+	# Item templates (Lineage M style): every native record is a pure function
+	# of the verified original and this code, so it is baked once on the
+	# device and read back by ID on later starts instead of describing every
+	# item again. Any code/data change or damaged file rebuilds the bake.
+	var templates: TemplateStore=_open_templates()
+	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in SOURCE.row_count("ItemClass"):
 		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
 		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
-		var definition: Dictionary=owner.call("definition_id",id)
-		var current: Dictionary=definition.get("native_record",{})
-		if not cached:
-			references.erase(id);definitions.erase(id)
+		var current: Dictionary={}
+		var baked: Variant=templates.record(id) if templates!=null else null
+		if baked is Dictionary:
+			current=baked
+			if current.get("source_definition_archive")==_archive_identity():current["source_definition_archive"]=_archive_identity()
+		else:
+			var definition: Dictionary=owner.call("definition_id",id)
+			current=definition.get("native_record",{})
+			if not cached:
+				references.erase(id);definitions.erase(id)
+			if writer!=null:writer.add(id,current)
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
 		var key: String=str(current.sourceId);var previous: Array=positions.get(key,[])
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue
@@ -260,6 +342,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 		else:
 			records.append(current.duplicate(true) if cached else current);positions[key]=[records.size()-1]
 		admitted.append(id)
+	if writer!=null:writer.finish(_template_key())
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
