@@ -50,6 +50,9 @@ RESOURCE_LITERAL = re.compile(r'res:(?://|\\/\\/)([^"\'\s\\\]\),;<>|]+)')
 SEED_SUFFIXES = {".gd", ".tscn", ".gdshader"}
 FOLLOW_SUFFIXES = {".tres", ".tscn", ".json", ".gd", ".cfg", ".gdshader"}
 NON_RUNTIME_TOPS = {"docs", "tools", "tests", ".github", "build", ".godot"}
+# Mounts the actor art pack and only checks that the actor root exists; it
+# never loads anything by that folder name, so its literals are not seeds.
+PRESENCE_ONLY_SCRIPTS = {"scripts/boot/actor_pack.gd"}
 PRESET_LINE = re.compile(r'^exclude_filter="([^"]*)"$', re.MULTILINE)
 
 
@@ -75,7 +78,16 @@ ANCESTOR_FOLDERS = {"assets/", "assets/actors/", GENERATED_PREFIX}
 PREFIX_GUARD = re.compile(r'begins_with\(\s*"$')
 
 
-def _literals(path: Path) -> list[str]:
+# Catalog sections that BASE508.apply_catalog (scripts/lineagem_base508.gd)
+# replaces unconditionally while the world loads: their records are kept only
+# under _legacy_collectibles_before_base508 for preservation and are never
+# shown, equipped from the catalog, or rendered. A transform equipped in a save
+# written before that replacement can still carry its own animation_profile;
+# saves do not move between the editor and the APK, which starts fresh.
+REPLACED_CATALOG_SECTIONS = {"data/catalog_v19.json": ("변신", "마법인형", "성물")}
+
+
+def _all_literals(path: Path) -> list[str]:
     try:
         text = path.read_text(encoding="utf-8", errors="ignore")
     except OSError:
@@ -90,6 +102,20 @@ def _literals(path: Path) -> list[str]:
     return found
 
 
+def _literals(path: Path) -> list[str]:
+    for relative, sections in REPLACED_CATALOG_SECTIONS.items():
+        if path.as_posix().endswith(relative):
+            try:
+                document = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                return _all_literals(path)
+            if not isinstance(document, dict):
+                return _all_literals(path)
+            kept = {key: value for key, value in document.items() if key not in sections}
+            return [literal.rstrip(".") for literal in RESOURCE_LITERAL.findall(json.dumps(kept, ensure_ascii=False))]
+    return _all_literals(path)
+
+
 def _is_folder_literal(literal: str) -> bool:
     return literal.endswith("/") or PurePosixPath(literal).suffix == ""
 
@@ -100,7 +126,7 @@ def reachable(root: Path, files: list[str] | None = None) -> tuple[set[str], set
     stack: list[str] = []
     for name in files:
         top = name.split("/", 1)[0]
-        if top in NON_RUNTIME_TOPS or PurePosixPath(name).suffix not in SEED_SUFFIXES:
+        if top in NON_RUNTIME_TOPS or name in PRESENCE_ONLY_SCRIPTS or PurePosixPath(name).suffix not in SEED_SUFFIXES:
             continue
         stack.extend(_literals(root / name))
     for name in ("Main.tscn", "project.godot"):
@@ -116,7 +142,7 @@ def reachable(root: Path, files: list[str] | None = None) -> tuple[set[str], set
             folders.add(literal.rstrip("/") + "/")
             continue
         path = root / literal
-        if PurePosixPath(literal).suffix in FOLLOW_SUFFIXES and path.is_file():
+        if PurePosixPath(literal).suffix in FOLLOW_SUFFIXES and path.is_file() and literal not in PRESENCE_ONLY_SCRIPTS:
             stack.extend(_literals(path))
     return seen, folders
 
@@ -166,10 +192,32 @@ def patterns_for(folders: list[str]) -> list[str]:
     return [folder + "/*" for folder in folders]
 
 
+# Actor folders ship in the separate actor art pack (scripts/boot/actor_pack.gd);
+# the APK preset excludes assets/actors entirely. The generated exclusions
+# live on the pack preset; a project with a single preset keeps using it.
+ACTOR_PACK_PRESET = "AndroidActorPack"
+PRESET_HEADER = re.compile(r'^\[preset\.(\d+)\]$', re.MULTILINE)
+
+
+def _actor_preset_span(preset_text: str) -> tuple[int, int]:
+    """Start/end offsets of the preset section whose exclusions this tool owns."""
+    headers = list(PRESET_HEADER.finditer(preset_text))
+    sections = [(match.start(), headers[index + 1].start() if index + 1 < len(headers) else len(preset_text))
+                for index, match in enumerate(headers)]
+    if len(sections) <= 1:
+        return 0, len(preset_text)
+    for start, end in sections:
+        body = preset_text[start:end]
+        if re.search(r'^name="' + ACTOR_PACK_PRESET + '"$', body, re.MULTILINE):
+            return start, end
+    raise ValueError("Expected the " + ACTOR_PACK_PRESET + " preset in export_presets.cfg")
+
+
 def preset_patterns(preset_text: str) -> list[str]:
-    filters = PRESET_LINE.findall(preset_text)
+    start, end = _actor_preset_span(preset_text)
+    filters = PRESET_LINE.findall(preset_text[start:end])
     if len(filters) != 1:
-        raise ValueError("Expected exactly one exclude_filter in export_presets.cfg")
+        raise ValueError("Expected exactly one exclude_filter in the actor export preset")
     return [pattern for pattern in filters[0].split(",") if pattern]
 
 
@@ -207,7 +255,9 @@ def write_preset(root: Path, folders: list[str]) -> bool:
     current = preset_patterns(text)
     kept = [pattern for pattern in current if pattern not in generated_patterns(current)]
     updated = ",".join(kept + patterns_for(folders))
-    new_text = PRESET_LINE.sub(lambda _: 'exclude_filter="' + updated + '"', text, count=1)
+    start, end = _actor_preset_span(text)
+    section = PRESET_LINE.sub(lambda _: 'exclude_filter="' + updated + '"', text[start:end], count=1)
+    new_text = text[:start] + section + text[end:]
     if new_text != text:
         path.write_text(new_text, encoding="utf-8")
     return new_text != text
