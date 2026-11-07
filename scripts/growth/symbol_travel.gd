@@ -33,12 +33,26 @@ func enabled() -> bool:
 func layout_key(field: Variant = null) -> String:
 	if field==null:field=world.field_map
 	if field==null: return ""
+	if field.get_meta("current523_source_field",false)==true:
+		# Shared geometry is not shared logical Land identity. Retain the old
+		# row schema, but never resolve an M bookmark with a legacy layout key.
+		var c: RefCounted=field.coordinates
+		var identity: Dictionary={"definition":field.definition.duplicate(true),"origin":[c.origin.x,c.origin.y],"dimensions":[c.dimensions.x,c.dimensions.y],"basis_x":[c.basis_x.x,c.basis_x.y],"basis_y":[c.basis_y.x,c.basis_y.y],"translation":[c.translation.x,c.translation.y]}
+		return "m523:"+JSON.stringify(identity).sha256_text()
 	return str(field.data.get("layout_revision",0))+":"+str(field.definition.get("source_sha256","")) if field is OriginalPlayableField else str(field.data.get("layout_revision",0))
 
 func destination(mark: Dictionary) -> Dictionary:
+	if world.field_map!=null and world.field_map.get_meta("current523_source_field",false)==true and not str(mark.layout_key).begins_with("m523:"):return runtime.fail("기존 지형의 기억 좌표를 원문 Land에서 재사용할 수 없습니다")
+	# Source keys can be used only in that exact live source context; no
+	# cross-host load may reinterpret their canvas position as legacy data.
+	if str(mark.layout_key).begins_with("m523:") and (world.field_map==null or world.field_map.get_meta("current523_source_field",false)!=true or mark.layout_key!=layout_key()):return runtime.fail("현재 원문 Land·지형·좌표 기준과 다른 기억 장소입니다")
 	var point:=Vector2(float(mark.position[0]),float(mark.position[1]))
 	if mark.map_id==world.active_map_id:
 		if mark.layout_key!=layout_key():return runtime.fail("지도가 변경되었습니다 · 장소를 다시 기억하세요")
+		if world.field_map.get_meta("current523_source_field",false)==true:
+			if not world.has_method("current523_source_bookmark_destination_status"):return runtime.fail("원문 기억 이동 조건 소비자가 없습니다")
+			var source_status: Dictionary=world.current523_source_bookmark_destination_status(point)
+			if not source_status.get("ok",false):return runtime.fail(str(source_status.get("reason","원문 기억 이동 조건 미확인")))
 		if not world.field_map.point_clear(point,4) or not world._is_walkable_world(point):return runtime.fail("기억한 위치로 이동할 수 없습니다")
 		return {"ok":true,"destination":point,"gold":0,"cross":false}
 	if not Maps.supports(str(mark.map_id)) or world.player.is_held() or not world.pending_map_save_record.is_empty():return runtime.fail("이 지역의 기억 장소 이동을 지금 사용할 수 없습니다")
@@ -69,6 +83,10 @@ func open(source: Dictionary = {}) -> void:
 
 func remember(label: String, revision: int) -> Dictionary:
 	if not allowed() or not world._is_walkable_world(world.player.global_position): return runtime.fail("현재 위치를 기억할 수 없습니다")
+	if world.field_map.get_meta("current523_source_field",false)==true:
+		if not world.has_method("current523_source_bookmark_status"):return runtime.fail("원문 기억 제한 소비자가 없습니다")
+		var restriction: Dictionary=world.current523_source_bookmark_status()
+		if not restriction.get("ok",false) or restriction.get("allowed")!=true:return runtime.fail(str(restriction.get("reason","원문 기억 제한을 확인할 수 없습니다")))
 	var values: Array=marks()
 	if values.size()>=int(POLICY.bookmark_limit): return runtime.fail("기억 장소가 가득 찼습니다")
 	label=label.strip_edges().left(int(POLICY.name_limit))

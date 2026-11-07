@@ -213,7 +213,18 @@ func bindings(actor: Node) -> Array:
 	var land_id: int = int(definition.get("source_map_id",-1)) if definition is Dictionary else -1
 	var land: Dictionary = service.catalog.row("Land",land_id)
 	# AssetPath confirms the Land namespace against the exact current source map.
-	if native_regions and str(land.get("AssetPath","")) == "%d/" % land_id and field.get("coordinates") != null:
+	var source_field: bool=field.get_meta("current523_source_field",false)==true
+	if native_regions and source_field:
+		var context: Dictionary=_current_source_region(actor,field,land)
+		if not context.is_empty():
+			# Read only the catalog's admitted environment set. No SOURCE.rows
+			# fallback and no NoBuffGroup/World/Territory-ID substitution.
+			for binding: Dictionary in service.catalog.environment_buffs(land_id):
+				if _source_environment_contains(binding,context):
+					var located: Dictionary=binding.duplicate(true)
+					located["source_region_context"]=context.duplicate(true)
+					result.append(located)
+	elif native_regions and str(land.get("AssetPath","")) == "%d/" % land_id and field.get("coordinates") != null:
 		var xy: Array = field.coordinates.source_components(actor.global_position)
 		xy = [floori(xy[0]),floori(xy[1])]
 		for binding: Dictionary in service.catalog.environment_buffs(land_id):
@@ -320,3 +331,43 @@ func tick_environment(delta: float = .25) -> void:
 			if not remaining.is_empty(): suppressed[actor.get_instance_id()] = {"ids":remaining,"life":actor.life_id,"generation":service.world.combat_generation}
 		var found: Array = bindings(actor)
 		if not found.is_empty(): active[actor.get_instance_id()] = {"actor":weakref(actor),"bindings":found}
+
+func _current_source_region(actor: Node, field: Object, land: Dictionary) -> Dictionary:
+	if field.get_meta("current523_generic_field",false)!=true or not field.has_method("source_region_context") or land.is_empty():return {}
+	if service.catalog.source_mode!="current523_original" or not service.catalog.source_available or service.catalog.source_identity.get("source_sha256")!=service.catalog.SOURCE_SHA:return {}
+	if service.catalog.content.get("input_kind")!="twilight.current523.npc-input.v1" or service.catalog.content.get("source_archive_sha256")!=service.catalog.SOURCE_SHA:return {}
+	# Only the actual current population's living M actor supplies this point.
+	# Never project the player, a paused previous root or target-map coordinates.
+	if not actor is TwilightMonster or actor.source_m_original.is_empty() or actor.get_parent()!=service.world.monsters_root or not actor.is_inside_tree() or actor.is_queued_for_deletion():return {}
+	var admitted: Dictionary=service.catalog.admitted_source_identities.get(str(actor.source_m_npc_id),{})
+	if admitted.get("source_archive_sha256")!=service.catalog.SOURCE_SHA or admitted.get("npc_class_id")!=actor.source_m_original.get("ID"):return {}
+	if admitted.get("sprite")!=actor.source_m_original.get("Sprite") or admitted.get("desc_id")!=actor.source_m_original.get("DescId"):return {}
+	var population: Variant=service.world.get("field_population")
+	if not population is Object or population.get("field")!=field:return {}
+	var context: Variant=field.call("source_region_context",actor.global_position,land)
+	if not context is Dictionary or context.get("schema")!=1 or context.get("source_snapshot")!=523 or context.get("land")!=land or context.get("land_id")!=land.get("ID") or context.get("asset_path")!=land.get("AssetPath") or context.get("field_instance")!=field.get_instance_id():return {}
+	return context
+
+static func _source_region_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>=0 and float(value)<=2147483647
+
+func _source_environment_contains(binding: Dictionary, context: Dictionary) -> bool:
+	var attribute: Variant=binding.get("attribute")
+	var buff: Variant=binding.get("buff")
+	if not attribute is Dictionary or not buff is Dictionary:return false
+	var type: Dictionary=service.catalog.row("LandAttributeType",504)
+	var unit: Dictionary=service.catalog.row("Unit",16)
+	if type.get("Name")!="NpcBuff" or type.get("UnitID")!=16 or unit.get("Name")!="BuffClassID" or attribute.get("LandAttributeTypeID")!=504 or attribute.get("LandID")!=context.land_id:return false
+	if not _source_region_integer(attribute.get("ID")) or not _source_region_integer(attribute.get("Value")) or attribute.Value==0 or not buff.get("source") is Dictionary or buff.source.get("ID")!=attribute.Value:return false
+	for key: String in ["Param1","Param2","Param3"]:
+		if not _source_region_integer(attribute.get(key)) or attribute[key]!=0:return false
+	var id: Variant=attribute.get("TerritoryID")
+	if not _source_region_integer(id):return false
+	if id==0:return true
+	var territory: Variant=binding.get("territory")
+	if not territory is Dictionary or territory.get("ID")!=id or territory.get("LandID")!=context.land_id:return false
+	for key: String in ["StartX","StartY","EndX","EndY"]:
+		if not _source_region_integer(territory.get(key)):return false
+	if territory.StartX>territory.EndX or territory.StartY>territory.EndY:return false
+	var xy: Array=context.source_cell
+	return xy[0]>=territory.StartX and xy[0]<=territory.EndX and xy[1]>=territory.StartY and xy[1]<=territory.EndY

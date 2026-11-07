@@ -140,6 +140,12 @@ func source_context() -> Dictionary:
 	var data: Dictionary = world.field_map.data
 	if data.has("source_land_id"): out.land = int(data.source_land_id)
 	if data.has("source_m_land_id"): out.land = int(data.source_m_land_id)
+	if world.field_map.get_meta("current523_generic_field",false)==true and world.field_map.has_method("death_source_context"):
+		var current: Variant=world.field_map.call("death_source_context",world.player.global_position)
+		if current is Dictionary and current.get("land")==out.land and current.get("position") is Vector2 and current.position.is_finite() and current.get("source_location") is Dictionary:
+			out.position=current.position
+			out["source_location"]=current.source_location.duplicate(true)
+		return out
 	if world.field_map.has_method("world_to_source"):
 		out.position = world.field_map.call("world_to_source",world.player.global_position)
 	return out
@@ -149,6 +155,7 @@ func death_policy() -> Dictionary:
 	var p: Dictionary = source.land_policy(int(context.land),context.position)
 	var safe: bool = world.field_map != null and world.field_map.is_safe(world.player.global_position)
 	p["exempt"] = bool(p.no_penalty) or (safe and not bool(p.npc_penalty))
+	if context.get("source_location") is Dictionary:p["source_location"]=context.source_location.duplicate(true)
 	return p
 
 func death_stats() -> Dictionary:
@@ -210,6 +217,7 @@ func begin_death(cause: String) -> void:
 		var id: String = str(int(next.next_id))
 		var entry: Dictionary = {"id":id,"at":now(),"map":world.active_map_id,"cause":cause,"level":world.level,"exp":lost,"cost":source.cost(world.level),"exp_claimed":lost == 0,"item":item,"item_claimed":item.is_empty(),"revived":false,"full_revive":bool(p.full_revive),"source_rules":source.ready,"exempt":p.exempt}
 		entry["death_stat_policy"] = stats
+		if p.get("source_location") is Dictionary:entry["source_location"]=p.source_location.duplicate(true)
 		next.last_time = int(entry.at)
 		next.next_id = int(next.next_id)+1; next.revision = int(next.revision)+1
 		next.dead_id = id; next.records.append(entry)
@@ -404,6 +412,13 @@ func resurrect() -> Dictionary:
 	var next: Dictionary = export_state()
 	var entry: Dictionary = _staged_entry(next,str(next.dead_id))
 	entry.revived = true; entry.resurrected_at = now()
+	# Capture the actual chosen existing field-start endpoint separately from
+	# death origin; no original restart route or destination is inferred.
+	if world.field_map.get_meta("current523_generic_field",false)==true and world.field_map.has_method("death_source_context"):
+		var restart: Variant=world.field_map.call("death_source_context",destination)
+		if restart is Dictionary and restart.get("source_location") is Dictionary:
+			entry["restart_source_location"]=restart.source_location.duplicate(true)
+			entry["restart_location_policy"]="EXISTING_FIELD_START_V1"
 	next.dead_id = ""; next.revision = int(next.revision)+1
 	var hp_ratio: float = 1.0 if bool(entry.get("full_revive",false)) else float(policy.get("restart_hp_fraction",0.5))
 	var fields: Dictionary = {"hp":maxi(1,int(world._effective_max_hp()*hp_ratio)),"mp":int(world._effective_max_mp()*float(policy.get("restart_mp_fraction",0.2))),KEY:next}
@@ -441,3 +456,15 @@ func show_death() -> void:
 	death_overlay = preload("res://scripts/death/death_ui.gd").new()
 	world.hud.get_node("Root").add_child(death_overlay)
 	death_overlay.configure(self)
+
+static func source_location_text(entry: Dictionary, key: String="source_location") -> String:
+	# Saved provenance is display-only. Never grants travel/refund permission.
+	if key not in ["source_location","restart_source_location"]:return ""
+	var location: Variant=entry.get(key)
+	if not location is Dictionary or location.get("schema")!=1 or location.get("source_snapshot")!=523 or not integer(location.get("land_id")):return ""
+	var cell: Variant=location.get("source_cell")
+	if not cell is Array or cell.size()!=2 or not integer(cell[0]) or not integer(cell[1]):return ""
+	for field: String in ["source_manifest_sha256","member_sha256"]:
+		var digest: Variant=location.get(field)
+		if not digest is String or digest.length()!=64 or not digest.is_valid_hex_number(false):return ""
+	return "원문 Land%d · 소스 셀 (%d, %d)"%[int(location.land_id),int(cell[0]),int(cell[1])]

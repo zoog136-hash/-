@@ -84,13 +84,14 @@ static func _actor_level_condition(type: Dictionary, row: Dictionary, actor_leve
 	var fulfilled: bool=actor_level>=row.Value if type_id==91 else actor_level<=row.Value
 	return {"fulfilled":fulfilled,"actor_level":int(actor_level),"threshold":int(row.Value),"comparison":"at_least" if type_id==91 else "at_most","type":type.duplicate(true),"row":row.duplicate(true)}
 
-func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i, actor_level: Variant=null, open_policy: String=OPTIONS.SOURCE_CONDITIONS_V1) -> Dictionary:
+func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i, actor_level: Variant=null, open_policy: String=OPTIONS.SOURCE_CONDITIONS_V1, consumers: Dictionary={}) -> Dictionary:
 	var types: Dictionary={}
 	for row: Dictionary in definition.context_rows("LandAttributeType"): types[int(row.ID)]=row
 	var result: Array=[]
 	var inactive: Array=[]
 	var actor_conditions: Array=[]
 	var waived: Array=[]
+	var consumed: Array=[]
 	for row: Dictionary in definition.context_rows("LandAttribute"):
 		if int(row.get("LandID",-1))!=land_id: continue
 		var territory_id: int=int(row.get("TerritoryID",0))
@@ -106,6 +107,8 @@ func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i
 		# These declarations do not authorize entry or a teleport: this adapter
 		# neither creates bookmarks nor changes depth/manner mechanics.
 		if name in ["NoBookmark","Underground","IgnoreMannerMode"]: continue
+		if _non_admission_consumer(type,row,consumers):
+			consumed.append({"type":type.duplicate(true),"row":row.duplicate(true)});continue
 		var level: Dictionary=_actor_level_condition(type,row,actor_level)
 		if not level.is_empty():
 			actor_conditions.append(level)
@@ -114,7 +117,7 @@ func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i
 		if _declared_inactive_restriction(type,row):
 			inactive.append({"type":type.duplicate(true),"row":row.duplicate(true)}); continue
 		result.append({"reason":"native_attribute_requires_policy","type":type.duplicate(true),"row":row.duplicate(true)})
-	return {"holds":result,"declared_inactive":inactive,"actor_conditions":actor_conditions,"waived_time_conditions":waived}
+	return {"holds":result,"declared_inactive":inactive,"actor_conditions":actor_conditions,"waived_time_conditions":waived,"non_admission_attributes":consumed}
 
 func portal_context_for_land(land_id: int, exact_asset: String, portal_id: int) -> Dictionary:
 	return _portal_context(land_id,exact_asset,portal_id)
@@ -210,7 +213,7 @@ func land_entry_context_for_actor_state(land_id: int, exact_asset: String, actor
 	# portal travel. A source cursor is not an admission, calendar or time credit.
 	var definition: RefCounted=_definition(land_id,exact_asset)
 	if definition==null:return {}
-	var attributes: Dictionary=_attribute_evaluation(definition,land_id,source_cell,actor_state.get("level"),_open_policy(actor_state))
+	var attributes: Dictionary=_attribute_evaluation(definition,land_id,source_cell,actor_state.get("level"),_open_policy(actor_state),actor_state.get("map_rule_consumers",{}))
 	var time: Dictionary=_land_time_conditions(definition,land_id,actor_state)
 	var holds: Array=attributes.holds.duplicate(true)
 	holds.append_array(time.holds)
@@ -222,7 +225,7 @@ func land_entry_context_for_actor_state(land_id: int, exact_asset: String, actor
 				if table=="LandWeeklyOpenTime" and _open_policy(actor_state)==OPTIONS.OWN_ALWAYS_OPEN_V1:
 					waived.append({"table":table,"row":row.duplicate(true),"policy":OPTIONS.OWN_ALWAYS_OPEN_V1})
 				else:holds.append({"reason":"native_land_condition_requires_policy","table":table,"row":row.duplicate(true)})
-	return {"Land":definition.land.duplicate(true),"source_cell":[source_cell.x,source_cell.y],"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","land_time_conditions":time.evaluations,"map_open_policy":_open_policy(actor_state),"waived_time_conditions":waived,"actor_level_conditions":attributes.actor_conditions,"declared_inactive_restrictions":attributes.declared_inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_admission_verified":false}
+	return {"Land":definition.land.duplicate(true),"source_cell":[source_cell.x,source_cell.y],"definition_manifest_sha256":MANIFEST_SHA256,"definition_owner":"PR230_PATCH523_WORLD_LINKS","land_time_conditions":time.evaluations,"map_open_policy":_open_policy(actor_state),"waived_time_conditions":waived,"actor_level_conditions":attributes.actor_conditions,"non_admission_attributes":attributes.non_admission_attributes,"declared_inactive_restrictions":attributes.declared_inactive,"source_travel_holds":holds,"source_travel_hold":"native_definition_conditions_require_policy" if not holds.is_empty() else "","native_admission_verified":false}
 
 func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_level: Variant=null, own_landing: Dictionary={}, actor_state: Dictionary={}) -> Dictionary:
 	var source: RefCounted=_definition(land_id,exact_asset)
@@ -246,7 +249,7 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 			selected_point=cell;arrival_policy="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1"
 	if selected_point==null:holds.append({"reason":"native_region_arrival_policy_unverified"})
 	var source_point:=Vector2i(int(portal.SourceX),int(portal.SourceY))
-	var source_attributes: Dictionary=_attribute_evaluation(source,land_id,source_point,actor_level,_open_policy(actor_state))
+	var source_attributes: Dictionary=_attribute_evaluation(source,land_id,source_point,actor_level,_open_policy(actor_state),actor_state.get("map_rule_consumers",{}))
 	var waived_attributes: Array=source_attributes.waived_time_conditions.duplicate(true)
 	holds.append_array(source_attributes.holds)
 	var inactive: Array=[]
@@ -256,7 +259,7 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 	for item: Dictionary in source_attributes.declared_inactive:
 		var evidence: Dictionary=item.duplicate(true); evidence["side"]="source"; inactive.append(evidence)
 	if selected_point is Vector2i:
-		var target_attributes: Dictionary=_attribute_evaluation(target,int(target_land.ID),selected_point,actor_level,_open_policy(actor_state))
+		var target_attributes: Dictionary=_attribute_evaluation(target,int(target_land.ID),selected_point,actor_level,_open_policy(actor_state),actor_state.get("map_rule_consumers",{}))
 		waived_attributes.append_array(target_attributes.waived_time_conditions)
 		holds.append_array(target_attributes.holds)
 		for item: Dictionary in target_attributes.actor_conditions:
@@ -282,3 +285,69 @@ func _portal_context(land_id: int, exact_asset: String, portal_id: int, actor_le
 
 func cache_metrics() -> Dictionary:
 	return {"cached_native_lands":_lands.size(),"maximum_native_lands":MAX_CACHED_LANDS,"definition_manifest_sha256":MANIFEST_SHA256 if loaded else ""}
+
+func bookmark_context_for_land(land_id: int, exact_asset: String, point: Vector2i) -> Dictionary:
+	# Purpose-specific NoBookmark enforcement, not entry/teleport permission.
+	var definition: RefCounted=_definition(land_id,exact_asset)
+	if definition==null:return {"ok":false,"reason":"기억 장소 원문 정의를 읽을 수 없습니다."}
+	var type: Dictionary={}
+	for row: Dictionary in definition.context_rows("LandAttributeType"):
+		if row.get("ID")==2:type=row
+	if type.get("Name")!="NoBookmark" or type.get("UnitID")!=20:return {"ok":false,"reason":"NoBookmark 원문 형식을 확인할 수 없습니다."}
+	var applied: Array=[]
+	var forbidden: bool=false
+	for row: Dictionary in definition.context_rows("LandAttribute"):
+		if row.get("LandID")!=land_id or row.get("LandAttributeTypeID")!=2:continue
+		var territory_id: Variant=row.get("TerritoryID")
+		if not OWNER._integer(territory_id) or territory_id<0:return {"ok":false,"reason":"기억 금지 영역 참조가 유효하지 않습니다."}
+		if territory_id!=0:
+			var territory: Dictionary=definition.territories.get(int(territory_id),{})
+			if territory.is_empty() or territory.get("LandID")!=land_id or territory.StartX>territory.EndX or territory.StartY>territory.EndY:return {"ok":false,"reason":"기억 금지 영역 원문을 확인할 수 없습니다."}
+			if point.x<territory.StartX or point.x>territory.EndX or point.y<territory.StartY or point.y>territory.EndY:continue
+		if not OWNER._integer(row.get("Value")) or row.Value not in [0,1]:return {"ok":false,"reason":"NoBookmark 값의 실행 형식이 미확인입니다."}
+		for key: String in ["Param1","Param2","Param3"]:
+			if not OWNER._integer(row.get(key)) or row[key]!=0:return {"ok":false,"reason":"매개변수가 있는 NoBookmark 규칙은 미확인입니다."}
+		applied.append(row.duplicate(true))
+		if row.Value==1:forbidden=true
+	return {"ok":true,"allowed":not forbidden,"reason":"원문 NoBookmark 제한으로 현재 위치를 기억할 수 없습니다." if forbidden else "기존 기억 장소 동작에 적용되는 원문 기억 금지 없음 · 입장/이동 허가 아님","Land":definition.land.duplicate(true),"source_cell":[point.x,point.y],"type":type.duplicate(true),"rows":applied,"definition_manifest_sha256":MANIFEST_SHA256}
+
+func spell_cast_context_for_land(land_id: int, exact_asset: String, point: Vector2i, spell_id: int) -> Dictionary:
+	# NoSpell is a typed SpellClassID, not a boolean or a spell-name match.
+	# This purpose-specific query does not waive an entry/teleport condition.
+	if spell_id<=0:return {"ok":false,"reason":"정확한 원문 SpellClass ID가 필요합니다."}
+	var definition: RefCounted=_definition(land_id,exact_asset)
+	if definition==null:return {"ok":false,"reason":"스킬 제한 원문 지역 정의를 읽을 수 없습니다."}
+	var type: Dictionary={}
+	for row: Dictionary in definition.context_rows("LandAttributeType"):
+		if row.get("ID")==164:type=row
+	if type.get("Name")!="NoSpell" or type.get("UnitID")!=12:return {"ok":false,"reason":"NoSpell의 원문 SpellClassID 형식이 필요합니다."}
+	var applied: Array=[]
+	for row: Dictionary in definition.context_rows("LandAttribute"):
+		if row.get("LandID")!=land_id or row.get("LandAttributeTypeID")!=164:continue
+		if not OWNER._integer(row.get("Value")) or row.Value<=0:return {"ok":false,"reason":"NoSpell의 스킬 참조가 미확인입니다."}
+		if row.Value!=spell_id:continue
+		for key: String in ["Param1","Param2","Param3"]:
+			if not OWNER._integer(row.get(key)) or row[key]!=0:return {"ok":false,"reason":"매개변수가 있는 NoSpell 실행 규칙은 미확인입니다."}
+		var territory_id: Variant=row.get("TerritoryID")
+		if not OWNER._integer(territory_id) or territory_id<0:return {"ok":false,"reason":"스킬 금지 영역 참조가 유효하지 않습니다."}
+		if territory_id!=0:
+			var territory: Dictionary=definition.territories.get(int(territory_id),{})
+			if territory.is_empty() or territory.get("LandID")!=land_id:return {"ok":false,"reason":"스킬 금지 영역의 Land가 일치하지 않습니다."}
+			for key: String in ["StartX","StartY","EndX","EndY"]:
+				if not OWNER._integer(territory.get(key)):return {"ok":false,"reason":"스킬 금지 영역의 좌표가 유효하지 않습니다."}
+			if territory.StartX>territory.EndX or territory.StartY>territory.EndY:return {"ok":false,"reason":"스킬 금지 영역의 경계가 유효하지 않습니다."}
+			if point.x<territory.StartX or point.x>territory.EndX or point.y<territory.StartY or point.y>territory.EndY:continue
+		applied.append(row.duplicate(true))
+	return {"ok":true,"allowed":applied.is_empty(),"reason":"현재 원문 지역에서 이 스킬의 시전이 금지됩니다." if not applied.is_empty() else "","Land":definition.land.duplicate(true),"source_cell":[point.x,point.y],"spell_id":spell_id,"type":type.duplicate(true),"rows":applied,"definition_manifest_sha256":MANIFEST_SHA256}
+
+static func _non_admission_consumer(type: Dictionary, row: Dictionary, consumers: Dictionary) -> bool:
+	# These exact flags have actual reward/death consumers; not entry waivers.
+	if type.get("UnitID")!=20 or not OWNER._integer(row.get("Value")) or row.Value not in [0,1]:return false
+	for key: String in ["Param1","Param2","Param3"]:
+		if not OWNER._integer(row.get(key)) or row[key]!=0:return false
+	if type.get("ID")==612 and type.get("Name")=="NoExperience":
+		# All held612 declarations are global. No territorial reward-origin rule
+		# is invented; any new scoped form retains the ordinary unknown hold.
+		return consumers.get("hunt_experience")==true and row.get("TerritoryID")==0
+	var expected: String={3:"NoDropItem",4:"NoLoseExperience",494:"TakeDeathPenaltyFromNPC",878:"FullResurrectionOnDeadRestart",1122:"NonDeathPenalty"}.get(int(type.get("ID",-1)),"")
+	return consumers.get("source_death")==true and not expected.is_empty() and type.get("Name")==expected

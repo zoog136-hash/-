@@ -55,7 +55,7 @@ func configure(owner_world: Node) -> void:
 	status.name = "AutoHuntingMovementStatus"
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(status)
-	var policy_note: Label = UI.label("TWILIGHT 자체 이동 · 현재 아덴 / 용의 계곡 던전 5층 안에서 사용\n원본 M 좌표·통행 재현이 아닙니다. 원본 착지 범위를 현재 지형 셀에 대응하며, 기존 통행·점유 검사를 통과한 곳만 사용합니다.", 13)
+	var policy_note: Label = UI.label("TWILIGHT 자체 착지 · 원문 소스 필드에서는 현재와 같은 Land의 명시 도착 영역만 사용\n원본 비용·전제조건과 현재 지형·점유·지역 조건을 적용합니다. 원작 활성 규칙 확인을 뜻하지 않습니다. 구형 대응 지형은 기존 자체 정책을 유지합니다.", 13)
 	policy_note.name = "AutoHuntingLocalPolicyNote"
 	policy_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(policy_note)

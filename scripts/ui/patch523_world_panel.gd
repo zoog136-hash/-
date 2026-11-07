@@ -89,7 +89,7 @@ func configure(controller: Node) -> void:
 	var evidence_path: String = PORTAL_SOURCE.configured_path()
 	if not evidence_path.is_empty(): portal_source.load_archive(evidence_path, links)
 	mode.set_item_disabled(1, not links.loaded)
-	mode.set_item_disabled(2, not links.loaded)
+	mode.set_item_disabled(2, not links.loaded and not _regional_active())
 	refresh()
 
 static func hold_text(reason: String) -> String:
@@ -108,7 +108,13 @@ static func targeting_text(category: Dictionary) -> String:
 
 func refresh() -> void:
 	entries.clear()
+	source_selection.clear()
+	mode.set_item_text(2,"현재 원문 지역 · 포탈" if _regional_active() else "아덴 본토 · 포탈 정의")
+	mode.set_item_disabled(2,not links.loaded and not _regional_active())
 	var active: String = str(world.active_map.get("name", world.active_map_id))
+	if _regional_active():
+		var native_land: Dictionary=world.field_map.get("native_land")
+		active="%s [Land%d]"%[str(native_land.get("Name","원문 지역")),int(native_land.ID)]
 	summary.text = "현재 플레이 지역: %s\n" % active
 	if links.loaded:
 		summary.text += "아덴 본토 자료 · 포탈 %d · 출현 영역 연결 %d · 구성 확인 중 %d팩" % [links.shard.portals.size(), links.shard.spawn_relations.size(), links.shard.unresolved_class_view_packs.size()]
@@ -130,6 +136,13 @@ func refresh() -> void:
 			var query: String = title + " " + str(entry.territory.ID)
 			for member: Dictionary in entry.classes: query += " " + str(member.npc_class.get("Name", "")) + " " + str(int(member.view.NpcClassID)) + " " + str(int(member.view.ID))
 			entries.append({"title": title, "query": query, "kind": "spawn", "data": entry})
+	elif mode.selected == 2 and _regional_active():
+		# The live map owner supplies exact current-Land contexts and tickets.
+		# Do not reuse Land4's shard for a different logical source Land.
+		for row: Dictionary in world.current523_aden_source_portals():
+			var context: Dictionary=world.current523_aden_source_portal_context(int(row.id))
+			if not context.get("Portal") is Dictionary or not context.get("TargetLand") is Dictionary:continue
+			entries.append({"kind":"regional_portal","title":"포탈 %d → %s [Land%d]"%[int(row.id),str(context.TargetLand.get("Name","지역")),int(row.target_land_id)],"row":row.duplicate(true),"context":context.duplicate(true)})
 	elif mode.selected == 2 and links.loaded:
 		for entry: Dictionary in links.portal_evidence():
 			entries.append({"title": "포탈 %d → %s [%d]" % [int(entry.portal.ID), str(entry.target_land.get("Name", "목적 지역")), int(entry.target_land.ID)], "kind": "portal", "data": entry})
@@ -190,7 +203,24 @@ func show_entry(index: int) -> void:
 		var conditions: Dictionary = links.pack_conditions(int(data.relation.NpcSpawnPackID))
 		if not conditions.NpcSpawnPackSchedulePeriod.is_empty() or not conditions.DaynightSpawnPack.is_empty() or not conditions.WorldBossRaidView.is_empty(): lines.append("기간·주야·보스 일정 조건이 있어 자동 생성을 보류합니다.")
 		lines.append("\n이 영역을 생성 개체 수나 확정된 개별 위치로 사용하지 않습니다.")
+	elif entry.kind == "regional_portal":
+		var row: Dictionary=entry.row
+		lines.append("현재 원문 Land의 명시 포탈 · 자동 활성 아님")
+		lines.append("원문 출발: %s · 도착 영역: %s"%[str(row.source_position),str(row.target_declared_bounds)])
+		lines.append_array(row.get("actor_level_notes",[]))
+		lines.append_array(row.get("calendar_notes",[]))
+		lines.append("원문 조건 보류: "+str(row.get("definition_hold","")))
+		source_selection={"regional":true,"id":int(row.id),"ticket":row.get("navigation_ticket",{}).duplicate(true)}
+		var current: bool=_regional_current()
+		action.text="자체 수동 사용 요청"
+		action.disabled=not current
+		action.show()
+		navigate.text="원문 출발점까지 걷기"
+		navigate.disabled=not current
+		navigate.show()
+		lines.append("출발점 보행과 수동 사용은 별도 요청입니다. 도착·비용·입장 조건은 기존 맵 소유자가 다시 판정합니다.")
 	elif entry.kind == "host_portal":
+		navigate.text="이동석으로 이동"
 		var state: Dictionary = HOST_PORTALS.inspect(world, entry.receipt)
 		lines.append("현재 게임에 이미 연결된 이동석입니다.")
 		lines.append("기존 통행 격자로 걸어가며, 도착하면 기존 포탈 규칙이 적용됩니다.")
@@ -240,6 +270,16 @@ func check_arrival() -> void:
 	detail.scroll_to_line(0)
 
 func use_source_portal() -> void:
+	if source_selection.get("regional",false):
+		if not _regional_current():
+			world.hud.show_message("지역·정의·현재 위치가 바뀌었습니다. 목록을 새로고침하세요.")
+			action.disabled=true
+			return
+		var used: bool=world.use_current523_aden_source_portal(int(source_selection.id))
+		world.hud.show_message("자체 수동 포탈로 이동했습니다." if used else world.current523_aden_play_problem)
+		if used:world.hud._close_workspace()
+		else:action.disabled=true
+		return
 	last_source_result = source_runtime.request(world, links, source_selection.duplicate(true))
 	world.hud.show_message(str(last_source_result.reason))
 	if last_source_result.ok:
@@ -253,6 +293,16 @@ func navigate_selected() -> void:
 	var selection: PackedInt32Array = rows.get_selected_items()
 	if selection.is_empty() or selection[0] >= visible_entries.size(): return
 	var entry: Dictionary = visible_entries[selection[0]]
+	if entry.kind == "regional_portal":
+		if not _regional_current():
+			world.hud.show_message("지역·정의·현재 위치가 바뀌었습니다. 목록을 새로고침하세요.")
+			navigate.disabled=true
+			return
+		var walking: bool=world.walk_to_current523_source_portal(int(source_selection.id),source_selection.ticket)
+		world.hud.show_message("원문 출발점으로 걸어갑니다. 자동 전환하지 않습니다." if walking else world.current523_aden_play_problem)
+		if walking:world.hud._close_workspace()
+		else:navigate.disabled=true
+		return
 	if entry.kind != "host_portal": return
 	var result: Dictionary = HOST_PORTALS.walk_to(world, entry.receipt)
 	world.hud.show_message(str(result.reason))
@@ -260,3 +310,11 @@ func navigate_selected() -> void:
 	else:
 		detail.text += "\n\n" + str(result.reason)
 		navigate.disabled = true
+
+func _regional_active() -> bool:
+	return is_instance_valid(world) and world.has_method("current523_source_geographic_contract") and not world.current523_source_geographic_contract().is_empty()
+
+func _regional_current() -> bool:
+	if not _regional_active() or not source_selection.get("regional",false):return false
+	var ticket: Dictionary=source_selection.get("ticket",{})
+	return not ticket.is_empty() and ticket==world.current523_source_portal_navigation_ticket(int(source_selection.id))
