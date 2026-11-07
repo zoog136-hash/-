@@ -18,6 +18,9 @@ var certificates: Dictionary = {}
 var slot_offers: Dictionary = {}
 var item_death_stats: Dictionary = {}
 var ready: bool = false
+## ItemClass rows/names are read on demand from the shared original reader.
+var _lazy: bool = false
+const SHARED_TABLES: Array[String] = ["ItemClass","DescData_Korean","ItemBonus","Bonus"]
 var problem: String = "원본523 미설치 · TWILIGHT 추정 정책"
 
 func load_default_source() -> bool:
@@ -33,7 +36,12 @@ func load_pack(path: String = PATH) -> bool:
 	var archive := ZIPReader.new()
 	if archive.open(path) != OK: return false
 	var tables: Dictionary = {}
+	# The shared reader holds the same pinned archive bytes. Its large tables
+	# (ItemClass, DescData_Korean, ItemBonus, Bonus) are read there instead of
+	# parsing ~1 GB of rows again; ItemClass rows and names are indexed lazily.
+	var shared: bool = CommonSource.identity().get("source_sha256") == SHA
 	for table: String in ["Experience","ItemClass","LandAttribute","Territories","DescData_Korean","UIMarketPurchase","MarketPurchase_Korean","MarketPayment_Korean","MarketPurchaseProduct","MarketProduct","Unit","IntangibleItemClass","Currency","ItemBonus","Bonus","ConstantData"]:
+		if shared and table in SHARED_TABLES: continue
 		var parser := JSON.new()
 		var text: String = archive.read_file("content/"+table+".json").get_string_from_utf8()
 		if table == "Experience":
@@ -46,19 +54,22 @@ func load_pack(path: String = PATH) -> bool:
 			archive.close(); return false
 		tables[table] = parser.data.rows
 	archive.close()
-	if tables.Experience.size() != 160 or tables.ItemClass.size() != 34743: return false
+	if tables.Experience.size() != 160 or (CommonSource.row_count("ItemClass") if shared else tables.ItemClass.size()) != 34743: return false
 	var next_exp: Dictionary = {}
 	for row: Dictionary in tables.Experience: next_exp[int(row.Level)] = row
 	var next_item_exemption: int = read_item_exemption_level(tables.ConstantData,next_exp.size())
 	if next_item_exemption < 0: return false
 	var descriptions: Dictionary = {}
-	for row: Dictionary in tables.DescData_Korean: descriptions[int(row.ID)] = str(row.Description)
 	var next_items: Dictionary = {}
 	var next_names: Dictionary = {}
-	for row: Dictionary in tables.ItemClass:
-		var id: String = str(int(row.ID))
-		next_items[id] = row
-		next_names[id] = [str(descriptions.get(int(row.DescID),"")),str(descriptions.get(int(row.IdentifiedDescID),""))]
+	if shared:
+		for id: String in ["895","198494"]: _shared_item(id,next_items,next_names)
+	else:
+		for row: Dictionary in tables.DescData_Korean: descriptions[int(row.ID)] = str(row.Description)
+		for row: Dictionary in tables.ItemClass:
+			var id: String = str(int(row.ID))
+			next_items[id] = row
+			next_names[id] = [str(descriptions.get(int(row.DescID),"")),str(descriptions.get(int(row.IdentifiedDescID),""))]
 	var next_territories: Dictionary = {}
 	for row: Dictionary in tables.Territories: next_territories[int(row.ID)] = row
 	var next_certificates: Dictionary = {}
@@ -66,17 +77,17 @@ func load_pack(path: String = PATH) -> bool:
 	# collapsed into this wallet contract, even if their display names coincide.
 	for id: String in ["895","198494"]:
 		if next_items.has(id) and int(next_items[id].CategoryID) == 122 and not bool(next_items[id].TestItem):
-			next_certificates[id] = str(descriptions.get(int(next_items[id].IdentifiedDescID),""))
+			next_certificates[id] = str(next_names[id][1]) if shared else str(descriptions.get(int(next_items[id].IdentifiedDescID),""))
 	var indexed: Dictionary = {}
 	for table: String in ["MarketPurchase_Korean","MarketPayment_Korean","MarketProduct","Unit","IntangibleItemClass","Currency"]:
 		indexed[table] = {}
 		for row: Dictionary in tables[table]: indexed[table][int(row.ID)] = row
 	var next_offers: Dictionary = {}
 	var death_bonuses: Dictionary = {}
-	for row: Dictionary in tables.Bonus:
+	for row: Dictionary in (CommonSource.rows_matching("Bonus","BonusTypeID",{3103:true}) if shared else tables.Bonus):
 		if int(row.BonusTypeID) == 3103: death_bonuses[int(row.ID)] = int(row.Value)
 	var next_death_stats: Dictionary = {}
-	for row: Dictionary in tables.ItemBonus:
+	for row: Dictionary in (CommonSource.rows_matching("ItemBonus","BonusID",death_bonuses) if shared else tables.ItemBonus):
 		if not bool(row.IsPossession) and death_bonuses.has(int(row.BonusID)):
 			var id: String = str(int(row.ItemClassID))
 			next_death_stats[id] = int(next_death_stats.get(id,0))+int(death_bonuses[int(row.BonusID)])
@@ -97,6 +108,7 @@ func load_pack(path: String = PATH) -> bool:
 			# Behavior implementations are absent from523. The UI's explicit
 			# restoration kind maps this purchase onto our persisted local slots.
 			next_offers[kind] = {"cost":int(payment.Amount),"amount":int(product.Amount),"purchase_id":int(purchase.ID),"product_id":int(product.ID),"behavior_id":int(product.ClassID)}
+	_lazy = shared
 	experience = next_exp; items = next_items; item_names = next_names; territories = next_territories
 	certificates = next_certificates; slot_offers = next_offers
 	item_death_stats = next_death_stats
@@ -137,10 +149,28 @@ func item_exemption_level() -> int:
 func item_exemption_origin() -> String:
 	return "SOURCE_CONSTANT_APPLIED_TO_LOCAL_ITEM_POLICY" if ready and source_item_exemption_level >= 0 else "TWILIGHT_REVIEWED_DEFAULT"
 
+## Original ItemClass row by ID string ({} when absent).
+func item(id: String) -> Dictionary:
+	if _lazy and not items.has(id): _shared_item(id,items,item_names)
+	return items.get(id,{})
+
+static func _shared_item(id: String, rows: Dictionary, names: Dictionary) -> void:
+	if not id.is_valid_int() or id != str(int(id)): return
+	var matches: Array[Dictionary] = CommonSource.related("ItemClass","ID",int(id))
+	if matches.is_empty(): return
+	var row: Dictionary = matches[-1] # Same as the last-wins full index.
+	rows[id] = row
+	names[id] = [_description(row.get("DescID")),_description(row.get("IdentifiedDescID"))]
+
+static func _description(id: Variant) -> String:
+	if not (id is int or id is float): return ""
+	var matches: Array[Dictionary] = CommonSource.related("DescData_Korean","ID",int(id))
+	return str(matches[-1].Description) if not matches.is_empty() else ""
+
 func matches_item(record: Dictionary, id: String) -> bool:
 	# Inven/community and native IDs are never joined by number alone. Keep
 	# blessing/variant words intact; missing or differing names are ineligible.
-	return ready and items.has(id) and str(record.get("sourceId","")) == id and not str(record.get("name","")).is_empty() and item_names.get(id,[]).has(str(record.name))
+	return ready and not item(id).is_empty() and str(record.get("sourceId","")) == id and not str(record.get("name","")).is_empty() and item_names.get(id,[]).has(str(record.name))
 
 func row(level: int) -> Dictionary:
 	return experience.get(level,{})

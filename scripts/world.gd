@@ -5185,6 +5185,7 @@ func _load_patch523_equipment() -> void:
 	# Export exactly the already registered catalog inputs used by the public
 	# compiler, never a world/UI object or newly fabricated native identity.
 	# Identified as the JSON bytes of {"아이템","patch523_crafting_catalog_contract"}.
+	patch523_equipment.live_record = _catalog_item_from_source_id
 	if not patch523_equipment.load_original_bound(catalog_bytes,catalog_db.get("아이템",[]),catalog_db.get("patch523_crafting_catalog_contract",{})):
 		push_warning(patch523_equipment.problem)
 		return

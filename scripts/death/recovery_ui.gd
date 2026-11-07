@@ -40,7 +40,7 @@ func _bind_item_icon(control: Button, source_id: String, role: String) -> void:
 	if source_id.is_empty() or not source_id.is_valid_int() or not IMAGES.selected(): return
 	# The loss receipt and certificate wallet preserve the ItemClass key
 	# chosen by the recovery service. Currency and behavior IDs never enter here.
-	var source_row: Dictionary = service.source.items.get(source_id, {})
+	var source_row: Dictionary = service.source.item(source_id)
 	var source_info: Dictionary = IMAGES.describe_item_class_row(source_row) if not source_row.is_empty() else IMAGES.describe_item_class(int(source_id))
 	control.icon = source_info.get("texture") as Texture2D
 	control.expand_icon = true
