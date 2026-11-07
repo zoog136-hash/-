@@ -110,12 +110,17 @@ func _parse_source_input(zip:ZIPReader)->Dictionary:
    problem='원본 계열의 SpellGroup 참조가 없습니다: '+str(setting.SpellGroupID)
    return {}
   wanted[int(next_groups[int(setting.SpellGroupID)].DescID)]=int(setting.SpellGroupID)
- for row:Dictionary in rows(zip,'DescData_Korean'):
+ # The common reader holds these same pinned bytes; its large tables are
+ # filtered there (same rows, same order) instead of parsed whole again.
+ var shared:bool=CommonSource.identity().get('source_sha256')==SOURCE_SHA
+ var group_ids:Dictionary={}
+ for setting:Dictionary in next_settings:group_ids[int(setting.SpellGroupID)]=true
+ for row:Dictionary in (CommonSource.rows_matching('DescData_Korean','ID',wanted) if shared else rows(zip,'DescData_Korean')):
   if wanted.has(int(row.ID)):next_labels[wanted[int(row.ID)]]=str(row.Description)
  # These are original membership facts, not skill registration or acquisition.
- for row:Dictionary in rows(zip,'SpellClass'):
+ for row:Dictionary in (CommonSource.rows_matching('SpellClass','SpellGroupID',group_ids) if shared else rows(zip,'SpellClass')):
   if next_settings.any(func(s:Dictionary)->bool:return int(s.SpellGroupID)==int(row.SpellGroupID)):next_members[int(row.ID)]=row
- for row:Dictionary in rows(zip,'ItemClass'):
+ for row:Dictionary in (CommonSource.rows_matching('ItemClass','ID',{26:true,1122:true,32801:true}) if shared else rows(zip,'ItemClass')):
   var id:int=int(row.ID)
   if id not in [26,1122,32801]:continue
   selected_items[id]=row

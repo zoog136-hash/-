@@ -42,12 +42,43 @@ func _keyed(table: String) -> Dictionary:
 		_indexes[table] = index
 	return _indexes[table]
 
+## Large original tables are read through the shared reader by ID instead of
+## being materialized and indexed here; _keyed()'s duplicate rule (only the
+## sentinel ID0 may repeat, last row kept) is checked once over the column.
+const SHARED_TABLES: Array[String] = ["Bonus","ItemClass","Reward","DateTimes_Korean","Territories","ItemBonus"]
+var _checked: Dictionary = {}
+
+func _shared_keyed(table: String) -> bool:
+	if not table in SHARED_TABLES: return false
+	if not _checked.has(table):
+		_metadata(table)
+		var ids: Variant = SOURCE.column(table,"ID")
+		var count: int = SOURCE.row_count(table)
+		_require(count == int(_provenance.get(table,{}).get("row_count",-1)),"던전 원본 행을 읽을 수 없습니다: "+table)
+		var seen: Dictionary = {}
+		if ids.size() == count:
+			for value: Variant in ids:
+				var id: int = int(value)
+				if not _require(id == 0 or not seen.has(id),"던전 원본 ID가 중복됩니다: "+table): break
+				seen[id] = true
+		_checked[table] = true
+	return true
+
+func _shared_row(table: String, id: int) -> Variant:
+	var matches: Array[Dictionary] = SOURCE.related(table,"ID",id)
+	return matches[-1] if not matches.is_empty() else null
+
 func _row(table: String, id: int) -> Dictionary:
+	if _shared_keyed(table):
+		var shared: Variant = _shared_row(table,id)
+		_require(shared != null,"던전 원본 참조가 없습니다: "+table+"#"+str(id))
+		return shared if shared != null else {}
 	var value: Dictionary = _keyed(table).get(id,{})
 	_require(not value.is_empty(),"던전 원본 참조가 없습니다: "+table+"#"+str(id))
 	return value
 
 func _optional_row(table: String, id: int) -> Variant:
+	if _shared_keyed(table): return _shared_row(table,id)
 	return _keyed(table).get(id)
 
 func _grouped(table: String, field: String) -> Dictionary:
@@ -180,13 +211,34 @@ func _special() -> Array:
 			"teleport":teleport,"currency":_currency(int(teleport.CurrencyID)),"destinations":destinations,"prerequisites":conditions})
 	return result
 
+func _recharge_candidates() -> Array:
+	_metadata("ItemBonus")
+	var count: int = SOURCE.row_count("ItemBonus")
+	_require(count == int(_provenance.get("ItemBonus",{}).get("row_count",-1)),"던전 원본 행을 읽을 수 없습니다: ItemBonus")
+	var recharge_bonuses: Dictionary = {}
+	for bonus: Dictionary in SOURCE.rows_matching("Bonus","BonusTypeID",{712:true}): recharge_bonuses[int(bonus.ID)] = true
+	var owners: Variant = SOURCE.column("ItemBonus","ItemClassID")
+	var bonus_ids: Variant = SOURCE.column("ItemBonus","BonusID")
+	var candidates: Dictionary = {}
+	for index: int in count:
+		if recharge_bonuses.has(int(bonus_ids[index])): candidates[int(owners[index])] = true
+	var ordered: Array = []
+	var seen: Dictionary = {}
+	for index: int in count:
+		var owner: int = int(owners[index])
+		if candidates.has(owner) and not seen.has(owner):
+			seen[owner] = true
+			ordered.append(owner)
+	return ordered
+
 func _rechargers() -> Array:
 	# Existing source-specific recharge declarations, not a new use engine.
 	_keyed("UseDesc")
 	var result: Array = []
-	var item_bonuses: Dictionary = _grouped("ItemBonus","ItemClassID")
-	for item_id: int in item_bonuses:
-		var links: Array = item_bonuses[item_id]
+	# Only items with a BonusTypeID 712 link can recharge; they are visited in
+	# the same first-appearance order _grouped("ItemBonus","ItemClassID") gives.
+	for item_id: int in _recharge_candidates():
+		var links: Array = SOURCE.related("ItemBonus","ItemClassID",item_id)
 		var group_links: Array = []
 		for link: Dictionary in links:
 			if _row("Bonus",int(link.BonusID)).get("BonusTypeID") == 712: group_links.append(link)

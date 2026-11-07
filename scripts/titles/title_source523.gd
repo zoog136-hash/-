@@ -32,6 +32,22 @@ static func rows(zip: ZIPReader, name: String) -> Array:
 	if not parser.data is Dictionary or not parser.data.get("rows") is Array: return []
 	return parser.data.rows
 
+const COMMON = preload("res://scripts/resources/current523_definition_rows.gd")
+var _shared: bool = false
+## index() of a table, or (shared) its name for _at()/_get_or() lookups.
+func _index_of(zip: ZIPReader, name: String) -> Variant:
+	return name if _shared else index(rows(zip,name))
+
+## index()[id] (the last row with that ID).
+static func _at(table: Variant, id: int) -> Dictionary:
+	if table is Dictionary: return table[id]
+	var matches: Array[Dictionary] = COMMON.related(str(table),"ID",id)
+	return matches[-1] if not matches.is_empty() else {}
+
+static func _get_or(table: Variant, id: int) -> Dictionary:
+	if table is Dictionary: return table.get(id,{})
+	return _at(table,id)
+
 static func index(values: Array, key: String = "ID") -> Dictionary:
 	var result: Dictionary = {}
 	for row: Dictionary in values: result[int(row[key])] = row
@@ -62,18 +78,21 @@ func load_zip(path: String) -> String:
 	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != SHA: return "작위 원본523 SHA 불일치·누락"
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: return "작위 원본 ZIP 열기 실패"
+	# Same verified bytes as the common reader: its large tables are looked up
+	# there instead of parsed and indexed whole again.
+	_shared = COMMON.identity().get("source_sha256") == SHA
 	var subs := index(rows(zip,"SubTitle"))
 	var mains := index(rows(zip,"MainTitle"))
 	var order := sequence(subs,rows(zip,"SubTitleSequence"),"PrevSubTitleID","NextSubTitleID")
 	if order.size() != 25 or sequence(mains,rows(zip,"MainTitleSequence"),"PrevMainTitleID","NextMainTitleID").size() != 6:
 		zip.close(); return "작위 연결표 오류"
-	var descriptions := index(rows(zip,"DescData_Korean"))
+	var descriptions: Variant = _index_of(zip,"DescData_Korean")
 	var letter_rows: Array[Dictionary]=[]
 	var upgrade_rows: Array[Dictionary]=[]
 	for row: Dictionary in rows(zip,"TitleLetterMessage"):
-		var entry:=row.duplicate(true); entry.text=str(descriptions[int(row.DescID)].Description); letter_rows.append(entry)
+		var entry:=row.duplicate(true); entry.text=str(_at(descriptions,int(row.DescID)).Description); letter_rows.append(entry)
 	for row: Dictionary in rows(zip,"TitleUpgradeDesc"):
-		var entry:=row.duplicate(true); entry.text=str(descriptions[int(row.DescID)].Description); upgrade_rows.append(entry)
+		var entry:=row.duplicate(true); entry.text=str(_at(descriptions,int(row.DescID)).Description); upgrade_rows.append(entry)
 	var personal_data: Dictionary={"title_limit":0,"max_names":0,"activation_delay_raw":0,"colors":[]}
 	var color_table:=index(rows(zip,"ColorTable"))
 	var appellations:=index(rows(zip,"Appellation"))
@@ -87,22 +106,22 @@ func load_zip(path: String) -> String:
 	for row: Dictionary in rows(zip,"TitleResultMessage"):
 		var stage_id:=int(row.SubTitleID)
 		if not messages.has(stage_id): messages[stage_id]={}
-		messages[stage_id][int(row.ResultType)]=str(descriptions[int(row.DescID)].Description)
-	var item: Dictionary=index(rows(zip,"ItemClass"))[117544]
+		messages[stage_id][int(row.ResultType)]=str(_at(descriptions,int(row.DescID)).Description)
+	var item: Dictionary=_at(_index_of(zip,"ItemClass"),117544)
 	var category: Dictionary=index(rows(zip,"ItemCategory"))[int(item.CategoryID)]
-	var powder_name:=str(descriptions[int(item.IdentifiedDescID)].Description)
+	var powder_name:=str(_at(descriptions,int(item.IdentifiedDescID)).Description)
 	var material: Dictionary={"name":powder_name+" · 원본#117544","source_display_name":powder_name,"source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":117544,"sourceId":"m523:item:117544","source_m_native_item":true,"source_category_name":str(category.Name),"source_bless_raw":1,"source_test_item":bool(item.TestItem),"source_is_stackable":bool(category.IsStackable),"slot":"material","type":"재료","grade":"일반","crafting_material":true,"droppable":bool(item.IsDroppable),"storable":bool(item.IsStorable),"tradable":bool(item.IsTradable),"source_weight":int(item.Weight),"source_item_row":item.duplicate(true)}
 	var supplier_rows: Array[Dictionary]=[]
 	var supplier_npcs: Dictionary={}
-	var npcs:=index(rows(zip,"NpcClass"))
-	for drop: Dictionary in rows(zip,"NpcItemDropView"):
+	var npcs: Variant=_index_of(zip,"NpcClass")
+	for drop: Dictionary in (COMMON.rows_matching("NpcItemDropView","ItemClassID",{117544:true}) if _shared else rows(zip,"NpcItemDropView")):
 		if int(drop.ItemClassID)!=117544: continue
 		supplier_rows.append(drop.duplicate(true))
 		if int(drop.RequiredQuestID)==0 and int(drop.Bless)==1:
-			supplier_npcs[int(drop.NpcClassID)]=npcs[int(drop.NpcClassID)].duplicate(true)
+			supplier_npcs[int(drop.NpcClassID)]=_at(npcs,int(drop.NpcClassID)).duplicate(true)
 	var donations := index(rows(zip,"SubTitleDonation"),"SubTitleID")
 	var rates := index(rows(zip,"SubTitleDonationProbability"),"SubTitleDonationID")
-	var bonuses := index(rows(zip,"Bonus"))
+	var bonuses: Variant = _index_of(zip,"Bonus")
 	var types := index(rows(zip,"BonusType"))
 	var resistance_types:=index(rows(zip,"SpecialResistanceType"))
 	var units := index(rows(zip,"UIUnit"),"UnitID")
@@ -110,13 +129,13 @@ func load_zip(path: String) -> String:
 	var main_links := rows(zip,"MainTitleBonus")
 	var sub_links := rows(zip,"SubTitleBonus")
 	for link: Dictionary in main_links + sub_links:
-		var bonus: Dictionary = bonuses[int(link.BonusID)].duplicate(true)
+		var bonus: Dictionary = _at(bonuses,int(link.BonusID)).duplicate(true)
 		var type: Dictionary = types[int(bonus.BonusTypeID)]
 		bonus["type"] = str(type.Name)
-		bonus["label"] = str(descriptions.get(int(type.DescID),{}).get("Description",type.Name))
+		bonus["label"] = str(_get_or(descriptions,int(type.DescID)).get("Description",type.Name))
 		if int(bonus.BonusApplicationTypeID)==2:
 			var resistance: Dictionary=resistance_types.get(int(bonus.BonusApplicationTargetID),{})
-			bonus.label=str(bonus.label).replace("{0}",str(descriptions.get(int(resistance.get("DescID",0)),{}).get("Description","스턴")))
+			bonus.label=str(bonus.label).replace("{0}",str(_get_or(descriptions,int(resistance.get("DescID",0))).get("Description","스턴")))
 		bonus["denominator"] = maxi(1,int(units.get(int(type.UnitID),{}).get("Denominator",0)))
 		bonus["value"] = float(bonus.Value) / float(bonus.denominator)
 		if bonus.type == "ArmorClass": bonus.value = -bonus.value
@@ -129,7 +148,7 @@ func load_zip(path: String) -> String:
 		var appellation: Dictionary=appellations[int(sub.AppellationID)]
 		var title_display: Dictionary=title_displays[int(appellation.TitleID)]
 		var title_color: Dictionary=color_table[int(title_display.ColorTableID)]
-		var entry := {"id":id,"main":int(sub.MainTitleID),"name":str(descriptions[int(sub.DescID)].Description),"quest_amount_raw":int(sub.QuestAmount),"cost":int(donation.Cost),"probability_raw":int(rates[int(donation.ID)].Probability),"main_effects":[],"sub_effects":[],"quests":[],"display_name":str(descriptions[int(title_display.DescID)].Description),"display_color":str(title_color.Value).trim_prefix("#"),"appellation":appellation.duplicate(true),"title_display":title_display.duplicate(true)}
+		var entry := {"id":id,"main":int(sub.MainTitleID),"name":str(_at(descriptions,int(sub.DescID)).Description),"quest_amount_raw":int(sub.QuestAmount),"cost":int(donation.Cost),"probability_raw":int(rates[int(donation.ID)].Probability),"main_effects":[],"sub_effects":[],"quests":[],"display_name":str(_at(descriptions,int(title_display.DescID)).Description),"display_color":str(title_color.Value).trim_prefix("#"),"appellation":appellation.duplicate(true),"title_display":title_display.duplicate(true)}
 		for link: Dictionary in main_links:
 			if int(link.MainTitleID) == entry.main: entry.main_effects.append(int(link.BonusID))
 		for link: Dictionary in sub_links:
@@ -162,8 +181,8 @@ func load_zip(path: String) -> String:
 		if int(prerequisite.PrerequisiteTypeID) != 1 or int(prerequisite.Value) != 85: zip.close(); return "작위 수락 조건 변경"
 		if kind not in [261,574] or not bool(view.CannotReveal) or int(view.LimitHours) != 24: zip.close(); return "심사 목표 계약 변경"
 		var targets: Array = [int(goal.GoalClassID)] if kind == 261 else groups[int(goal.GoalClassID)].duplicate()
-		for target: int in targets: selected_trial_npcs[target]=npcs[target].duplicate(true)
-		selected_quests[id] = {"id":id,"stage":int(link.SubTitleID),"name":str(descriptions[int(view.TitleDescID)].Description),"description":str(descriptions[int(goal.DescID)].Description),"goal_type":kind,"amount":int(goal.Amount),"targets":targets,"limit_seconds":int(view.LimitHours)*3600,"source_quest_row":view.duplicate(true),"calendar_start":date_definitions[int(view.StartTime)].duplicate(true),"calendar_end":date_definitions[int(view.EndTime)].duplicate(true),"server_limit_set":int(view.ServerLimitSetID),"server_memberships":server_definitions.get(int(view.ServerLimitSetID),[]).duplicate(true)}
+		for target: int in targets: selected_trial_npcs[target]=_at(npcs,target).duplicate(true)
+		selected_quests[id] = {"id":id,"stage":int(link.SubTitleID),"name":str(_at(descriptions,int(view.TitleDescID)).Description),"description":str(_at(descriptions,int(goal.DescID)).Description),"goal_type":kind,"amount":int(goal.Amount),"targets":targets,"limit_seconds":int(view.LimitHours)*3600,"source_quest_row":view.duplicate(true),"calendar_start":date_definitions[int(view.StartTime)].duplicate(true),"calendar_end":date_definitions[int(view.EndTime)].duplicate(true),"server_limit_set":int(view.ServerLimitSetID),"server_memberships":server_definitions.get(int(view.ServerLimitSetID),[]).duplicate(true)}
 		for stage: Dictionary in staged:
 			if stage.id == int(link.SubTitleID): stage.quests.append(id)
 	var currency := index(rows(zip,"CurrencyUnitClass"))

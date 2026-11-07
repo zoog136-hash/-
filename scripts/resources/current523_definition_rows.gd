@@ -154,6 +154,14 @@ static func _store(table: String) -> Dictionary:
 	if not _archive.file_exists(member):
 		_problem = "원본 표가 없습니다: "+table
 		return {}
+	# Mobile-style baked table: the packed form of this member, made on this
+	# device from the verified archive, skips re-parsing the JSON (a transient
+	# several times the table's size) on later starts.
+	var bake_key: String = _bake_key(table)
+	var baked: Variant = BAKE.read("definitions_"+table, bake_key)
+	if _valid_store(baked):
+		_tables[table] = baked
+		return baked
 	var parsed: Variant = JSON.parse_string(_archive.read_file(member).get_string_from_utf8())
 	if not parsed is Dictionary or not parsed.get("rows") is Array:
 		_problem = "원본 표 구조를 읽을 수 없습니다: "+table
@@ -164,7 +172,28 @@ static func _store(table: String) -> Dictionary:
 			_problem = "원본 행 구조가 다릅니다: "+table
 			return {}
 	_tables[table] = _pack(source)
+	parsed = null
+	source = []
+	BAKE.write("definitions_"+table, bake_key, _tables[table])
 	return _tables[table]
+
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_definition_rows.gd","res://scripts/resources/current523_bake_cache.gd"]
+static var _bake_code: String = ""
+
+static func _bake_key(table: String) -> String:
+	if _bake_code.is_empty(): _bake_code = BAKE.code_key(BAKE_CODE)
+	# The archive was verified against SOURCE_SHA/SOURCE_BYTES in _open().
+	return BAKE.key([SOURCE_SHA, str(SOURCE_BYTES), table, _bake_code])
+
+static func _valid_store(value: Variant) -> bool:
+	if not value is Dictionary or not _integer(value.get("count")) or int(value.count) < 0: return false
+	if value.has("rows"): return value.rows is Array and (value.rows as Array).size() == int(value.count)
+	if not value.get("columns") is PackedStringArray or not value.get("data") is Array: return false
+	if (value.data as Array).size() != (value.columns as PackedStringArray).size(): return false
+	for column: Variant in value.data:
+		if not (column is PackedFloat64Array or column is PackedStringArray or column is Array) or column.size() != int(value.count): return false
+	return true
 
 static func _pack(source: Array) -> Dictionary:
 	var count: int = source.size()
