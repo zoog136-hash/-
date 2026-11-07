@@ -206,6 +206,25 @@ static func _row_at(store: Dictionary, index: int) -> Dictionary:
 		result[columns[column_index]] = value.duplicate(true) if value is Array or value is Dictionary else value
 	return result
 
+## Rows whose integer `field` is a key of `ids`, in original table order.
+## Same rows as filtering rows(table), without building the whole table.
+static func rows_matching(table: String, field: String, ids: Dictionary) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var store: Dictionary = _store(table)
+	if store.is_empty() or ids.is_empty(): return result
+	if store.has("rows"):
+		for index: int in int(store.count):
+			var value: Variant = (store.rows[index] as Dictionary).get(field)
+			if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
+		return result
+	var position: int = (store.columns as PackedStringArray).find(field)
+	if position < 0: return result
+	var column: Variant = store.data[position]
+	for index: int in int(store.count):
+		var value: Variant = column[index]
+		if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
+	return result
+
 static func rows(table: String) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var store: Dictionary = _store(table)

@@ -195,6 +195,18 @@ static func record(definition: Dictionary) -> Dictionary:
 
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	if SOURCE.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
+	# World._load_data registers through the drop owner and again through the
+	# craft catalog with the same inputs. The pass is deterministic and only
+	# replaces native records with themselves, so an identical second pass on
+	# the same catalog reuses the first result instead of describing ~34,700
+	# items again (about 80 s on desktop, far longer on a phone).
+	var contract: Variant=catalog.get("patch523_crafting_catalog_contract",{})
+	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==SOURCE.identity() and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
+		var registered: int=0
+		for record: Variant in catalog.get("아이템",[]):
+			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==SOURCE.identity():registered+=1
+		if registered>=int(document.get("current_native_registered_count",-1)):
+			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
 	var records: Array=catalog.get("아이템",[]).duplicate(true);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
 	for index: int in range(records.size()):
 		if not records[index] is Dictionary:continue

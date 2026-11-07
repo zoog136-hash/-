@@ -80,7 +80,9 @@ static func canonical(record: Dictionary) -> Dictionary:
 	return current
 static func apply_catalog(existing: Dictionary) -> Dictionary:
 	var data: Dictionary = cards()
-	var result: Dictionary = existing.duplicate(true)
+	# Shallow copy: only the three replaced categories get new arrays below. A
+	# deep copy duplicated the whole item catalog (~34,700 original records).
+	var result: Dictionary = existing.duplicate(false)
 	# Keep prior registries for preservation only. Missing current source input
 	# cannot make a former card pack the active numeric catalog again.
 	var preserved: Variant = existing.get("_legacy_collectibles_before_base508",{})
