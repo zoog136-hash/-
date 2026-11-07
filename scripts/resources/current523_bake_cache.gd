@@ -107,6 +107,53 @@ static func _size(path: String) -> int:
 	var file := FileAccess.open(path, FileAccess.READ)
 	return int(file.get_length()) if file != null else -1
 
+## Keyed values on storage, read one at a time (offset indexed).
+class RecordFile extends RefCounted:
+	var file: FileAccess
+	var offsets: Dictionary = {}
+	func has(id: String) -> bool: return offsets.has(id)
+	func read(id: String) -> Variant:
+		if not offsets.has(id): return null
+		file.seek(int(offsets[id]))
+		return file.get_var()
+
+static func write_records(name: String, value_key: String, ids: PackedStringArray, values: Array) -> bool:
+	if value_key.is_empty() or ids.size() != values.size(): return false
+	DirAccess.make_dir_recursive_absolute(ROOT)
+	var part: String = _data(name) + ".part"
+	var file := FileAccess.open(part, FileAccess.WRITE)
+	if file == null: return false
+	var positions := PackedInt64Array()
+	for index: int in ids.size():
+		positions.append(file.get_position())
+		file.store_var(values[index])
+	var index_position: int = file.get_position()
+	file.store_var({"schema": SCHEMA, "ids": ids, "offsets": positions})
+	file.store_64(index_position)
+	var stored: bool = file.get_error() == OK
+	file.close()
+	if not stored or not commit_file(name, value_key, part):
+		DirAccess.remove_absolute(part)
+		return false
+	return true
+
+static func open_records(name: String, value_key: String) -> RecordFile:
+	var path: String = verified_file(name, value_key)
+	if path.is_empty(): return null
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null or file.get_length() < 8: return null
+	file.seek(file.get_length() - 8)
+	var index_position: int = file.get_64()
+	if index_position < 0 or index_position >= file.get_length() - 8: return null
+	file.seek(index_position)
+	var index: Variant = file.get_var()
+	if not index is Dictionary or index.get("schema") != SCHEMA or not index.get("ids") is PackedStringArray or not index.get("offsets") is PackedInt64Array: return null
+	if (index.ids as PackedStringArray).size() != (index.offsets as PackedInt64Array).size(): return null
+	var records := RecordFile.new()
+	records.file = file
+	for position: int in (index.ids as PackedStringArray).size(): records.offsets[index.ids[position]] = index.offsets[position]
+	return records
+
 static func clear(name: String) -> void:
 	DirAccess.remove_absolute(_meta(name))
 	DirAccess.remove_absolute(_data(name))

@@ -10,7 +10,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	if item.get("item_class",{}).get("TestItem",true):return result
 	for row: Dictionary in item.get("item_bonuses",[]):
 		if row.get("IsPossession")!=false:continue
-		var bonus: Dictionary=book.data.bonuses.get(str(int(row.BonusID)),{})
+		var bonus: Dictionary=book.bonus_row(str(int(row.BonusID)))
 		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
 		if not FIELD_NAMES.has(kind.get("Name","")) or kind.get("UnitID")!=3 or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:continue
 		var key: String=FIELD_NAMES[kind.Name]
@@ -25,7 +25,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	for row: Dictionary in item.get("enchant_effects",[]):
 		var codes: Array=families[str(int(row.ItemEnchantBonusGroupID))]
 		if int(row.EnchantLevel)!=0 or int(row.BlessCode)!=(bless if codes.has(bless) else 0):continue
-		var bonus: Dictionary=book.data.bonuses.get(str(int(row.BonusID)),{})
+		var bonus: Dictionary=book.bonus_row(str(int(row.BonusID)))
 		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
 		if FIELD_NAMES.has(kind.get("Name","")) and bonus.get("BonusApplicationTypeID")==0 and bonus.get("BonusApplicationTargetID")==0:result.erase(FIELD_NAMES[kind.Name])
 	return result

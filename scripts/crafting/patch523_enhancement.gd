@@ -144,7 +144,7 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 	var leaps: Array=[{"gain":1,"probability":1000000}]
 	var disabled: bool=false
 	for link: Dictionary in book.item_entry(scroll_id).get("item_bonuses",[]):
-		var b: Dictionary=book.data.bonuses.get(str(int(link.BonusID)),{})
+		var b: Dictionary=book.bonus_row(str(int(link.BonusID)))
 		if int(b.get("BonusTypeID",0))==8402: disabled=bool(settings.get("leap_disabled_bonus_presence",true)) or int(b.get("Value",0))!=0
 	if scroll_bless==2 and not disabled:
 		var leap_group: int=0
