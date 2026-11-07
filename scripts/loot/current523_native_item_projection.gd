@@ -191,7 +191,21 @@ static func record(definition: Dictionary) -> Dictionary:
 	out["source_effect_scope"]="existing_flat_equipment_hp_mp_finite_buff_original_bag_selection_and_book_learning_projection; other_typed_effects_preserved_pending"
 	if slot=="consumable" and not out.has("source_use_spec") and not out.has("heal_spec"):out["source_use_spec"]={"kind":"current_source_effect_pending","activation_status":"blocked","blocked_reasons":["current_typed_effect_owner_required"]}
 	out["source_catalog_eligible"]=true;out["source_acquisition_policy"]="verified_supplier_only_no_fabricated_supply"
+	# Every native record names the same archive; one shared instance instead
+	# of ~30,000 copies (records are replaced, never edited in place).
+	out["source_definition_archive"]=_archive_identity()
+	# source_entities (full original entity graphs) are read only by the
+	# original selection claim. Lucky bags are drawn from their rewards and
+	# never read their entity graphs, so bags do not keep a copy of them.
+	var use_spec: Variant=out.get("source_use_spec")
+	if use_spec is Dictionary and use_spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:use_spec.erase("source_entities")
 	return out
+
+static var _identity_cache: Dictionary={}
+static func _archive_identity() -> Dictionary:
+	var current: Dictionary=SOURCE.identity()
+	if _identity_cache!=current:_identity_cache=current
+	return _identity_cache
 
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	if SOURCE.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
