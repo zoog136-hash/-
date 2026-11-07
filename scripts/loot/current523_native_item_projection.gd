@@ -201,10 +201,22 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 		var key: String=str(records[index].get("sourceId",""))
 		if not positions.has(key):positions[key]=[]
 		positions[key].append(index)
+	# The owner caches a full original description per item. Registering all
+	# ~34,700 ItemClass rows kept every description (~185 KB each in memory),
+	# >6 GB, and Android killed the game for LOW_MEMORY. Only the projected
+	# record is needed here; descriptions this loop created are dropped again
+	# and rebuilt on demand by definition_id(). Entries cached before (drop and
+	# reward items) stay.
+	var cache: Dictionary=owner.call("data")
+	var references: Dictionary=cache.get("source_item_references",{})
+	var definitions: Dictionary=cache.get("item_definitions",{})
 	for raw: Dictionary in SOURCE.rows("ItemClass"):
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
-		var id: String=str(int(raw.ID));var definition: Dictionary=owner.call("definition_id",id)
+		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
+		var definition: Dictionary=owner.call("definition_id",id)
 		var current: Dictionary=definition.get("native_record",{})
+		if not cached:
+			references.erase(id);definitions.erase(id)
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
 		var key: String=str(current.sourceId);var previous: Array=positions.get(key,[])
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue

@@ -129,37 +129,87 @@ static func table_metadata(table: String) -> Dictionary:
 			_metadata[entry.path] = entry
 	return _metadata.get("content/"+table+".json",{}).duplicate(true)
 
-static func _raw_rows(table: String) -> Array:
+# Parsed original tables are kept column-packed. A JSON row dictionary costs
+# about 1.2 KB in Godot (Bonus alone, 217,916 rows, was ~255 MB), and the game
+# loads ~150 tables at start: the dictionaries alone passed 3 GB and Android
+# killed the process for LOW_MEMORY. Columns of numbers are PackedFloat64Array
+# (JSON numbers are floats, so callers see exactly the same values and types),
+# strings PackedStringArray, everything else a plain Array. Each call still
+# returns fresh dictionaries, as the previous duplicate(true) did.
+static func _store(table: String) -> Dictionary:
 	# User-excluded game word filters are never loaded through this reader.
 	# The original archive and fixed inventory/byte denominators stay intact.
 	if table in EXCLUDED_TABLES:
 		_tables.erase(table)
 		_problem = "사용자 제외 원본 표: "+table
-		return []
-	if not _open(): return []
+		return {}
+	if not _open(): return {}
 	if _tables.has(table): return _tables[table]
 	# Table names are member basenames, never paths or external references.
 	if table.is_empty() or not table.is_valid_identifier():
 		_problem = "원본 표 이름이 유효하지 않습니다."
-		return []
+		return {}
 	var member: String = "content/"+table+".json"
 	if not _archive.file_exists(member):
 		_problem = "원본 표가 없습니다: "+table
-		return []
+		return {}
 	var parsed: Variant = JSON.parse_string(_archive.read_file(member).get_string_from_utf8())
 	if not parsed is Dictionary or not parsed.get("rows") is Array:
 		_problem = "원본 표 구조를 읽을 수 없습니다: "+table
-		return []
-	for value: Variant in parsed.rows:
+		return {}
+	var source: Array = parsed.rows
+	for value: Variant in source:
 		if not value is Dictionary:
 			_problem = "원본 행 구조가 다릅니다: "+table
-			return []
-	_tables[table] = parsed.rows
+			return {}
+	_tables[table] = _pack(source)
 	return _tables[table]
+
+static func _pack(source: Array) -> Dictionary:
+	var count: int = source.size()
+	if count == 0: return {"count": 0, "columns": PackedStringArray(), "data": []}
+	var columns: PackedStringArray = PackedStringArray((source[0] as Dictionary).keys())
+	for value: Dictionary in source:
+		if value.size() != columns.size(): return {"count": count, "rows": source}
+		for column: String in columns:
+			if not value.has(column): return {"count": count, "rows": source}
+	var data: Array = []
+	for column: String in columns:
+		var kind: int = typeof(source[0][column])
+		for value: Dictionary in source:
+			if typeof(value[column]) != kind:
+				kind = TYPE_NIL
+				break
+		if kind == TYPE_FLOAT:
+			var numbers := PackedFloat64Array()
+			numbers.resize(count)
+			for index: int in count: numbers[index] = source[index][column]
+			data.append(numbers)
+		elif kind == TYPE_STRING:
+			var texts := PackedStringArray()
+			texts.resize(count)
+			for index: int in count: texts[index] = source[index][column]
+			data.append(texts)
+		else:
+			var values: Array = []
+			values.resize(count)
+			for index: int in count: values[index] = source[index][column]
+			data.append(values)
+	return {"count": count, "columns": columns, "data": data}
+
+static func _row_at(store: Dictionary, index: int) -> Dictionary:
+	if store.has("rows"): return (store.rows[index] as Dictionary).duplicate(true)
+	var result: Dictionary = {}
+	var columns: PackedStringArray = store.columns
+	for column_index: int in columns.size():
+		var value: Variant = store.data[column_index][index]
+		result[columns[column_index]] = value.duplicate(true) if value is Array or value is Dictionary else value
+	return result
 
 static func rows(table: String) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	for value: Dictionary in _raw_rows(table): result.append(value.duplicate(true))
+	var store: Dictionary = _store(table)
+	for index: int in int(store.get("count", 0)): result.append(_row_at(store, index))
 	return result
 
 static func _integer(value: Variant) -> bool:
@@ -167,20 +217,26 @@ static func _integer(value: Variant) -> bool:
 
 static func related(table: String, foreign_key: String, id: int) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	var source: Array = _raw_rows(table)
+	var store: Dictionary = _store(table)
 	if not _tables.has(table): return result
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
 		var groups: Dictionary = {}
-		for value: Dictionary in source:
-			if not _integer(value.get(foreign_key)):
+		var column: Variant = null
+		if not store.has("rows"):
+			var position: int = (store.columns as PackedStringArray).find(foreign_key)
+			if position >= 0: column = store.data[position]
+		for index: int in int(store.count):
+			var value: Variant = column[index] if column != null else (store.rows[index] as Dictionary).get(foreign_key) if store.has("rows") else null
+			if not _integer(value):
 				_problem = "원본 정수 참조가 없습니다: "+table+"."+foreign_key
 				return result
-			var identifier: String = str(int(value[foreign_key]))
+			var identifier: int = int(value)
 			if not groups.has(identifier): groups[identifier] = []
-			groups[identifier].append(value)
+			(groups[identifier] as Array).append(index)
+		for identifier: int in groups: groups[identifier] = PackedInt32Array(groups[identifier])
 		_relations[key] = groups
-	for value: Dictionary in _relations[key].get(str(id),[]): result.append(value.duplicate(true))
+	for index: int in _relations[key].get(id, PackedInt32Array()): result.append(_row_at(store, index))
 	return result
 
 static func row(table: String, id: int) -> Dictionary:
