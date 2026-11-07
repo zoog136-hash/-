@@ -153,7 +153,7 @@ class View extends Node:
 			if canonical.get("source_use_spec",{}).get("kind")!="source_mp_dice" or not overrides.mp is int or overrides.mp<host.mp or overrides.mp>host._effective_max_mp(payload.get("active_item_buffs")):return ERR_INVALID_DATA
 			payload["mp"]=overrides.mp
 		if overrides.has("hp"):
-			if int(canonical.get("source_item_class_id",0))!=233 or not overrides.hp is int or overrides.hp<host.hp or overrides.hp>host._effective_max_hp():return ERR_INVALID_DATA
+			if not HP233.current_metadata(canonical).get("ok",false) or not overrides.hp is int or overrides.hp<host.hp or overrides.hp>host._effective_max_hp():return ERR_INVALID_DATA
 			payload["hp"]=overrides.hp
 		# Persist the proven binding/use without converting or regranting the
 		# held inventory. Original grant quantity and receipt remain immutable.
@@ -204,7 +204,7 @@ static func make_view(world: Node, prepared: Dictionary, canonical: Dictionary) 
 static func perform(world: Node, prepared: Dictionary, canonical: Dictionary) -> Dictionary:
 	if not OWN.current(world,prepared):return {"handled":true,"committed":false,"uncertain":false}
 	var view: Node=make_view(world,prepared,canonical)
-	var handled: bool=HP233.use(view,canonical) if int(canonical.get("source_item_class_id",0))==233 else USE.try_use(view,canonical)
+	var handled: bool=HP233.use(view,canonical,true) if not canonical.get("heal_spec",{}).is_empty() else USE.try_use(view,canonical)
 	var result: Dictionary={"handled":handled,"committed":view.committed,"uncertain":view.uncertain}
 	view.free()
 	return result

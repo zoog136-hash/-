@@ -70,22 +70,40 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not effect.is_empty():return effect
 	var material: Dictionary=spell_material_profile(record)
 	if not material.is_empty():return material
-	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot") not in ["material","consumable"] or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
-	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
-	# This is a material-owner admission, not individual use/effect activation.
-	# Actual recipe rows/choices/limits are still checked by the craft executor.
-	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return {}
-	return {"kind":"craft_material","standalone_effect_complete":false}
+	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or D.current_original_definition(record).is_empty():return {}
+	if not D.currency_identity_name(record).is_empty():return {} # Wallets retain their distinct existing owners.
+	# Physical acquisition does not assert an effect or a recipe. The existing
+	# supplier already knows the exact source row, blessing and explicit amount;
+	# keep that quantity/receipt rather than require an invented use operation.
+	if record.get("slot")=="material" and not SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():
+		return {"kind":"craft_material","standalone_effect_complete":false}
+	return {"kind":"held_original_item","standalone_effect_complete":false,"use_owner_required":true}
+
+static func grant_quantity_plan(record: Dictionary,quantity: int) -> Dictionary:
+	if quantity<1 or not integer(quantity) or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
+	var category: Dictionary=D.item_definition(record).get("category",{})
+	var separate: bool=category.get("IsStackable") is bool and category.IsStackable==false
+	if separate and quantity>65536:return {"ok":false,"error":"비중첩 원본 물리 개체 공급 묶음 한도 초과 · 기존 소유 보존"}
+	return {"ok":true,"physical_count":quantity if separate else 1,"unit_quantity":1 if separate else quantity,"separate_units":separate,"source_stackability_known":category.get("IsStackable") is bool}
 
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
-	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
-	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
-	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
-	var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,"source_definition_archive":SOURCE.identity(),"source_original_item":record.source_original_item.duplicate(true),"origin":origin.duplicate(true)}
+	if origin.is_empty():return {"ok":false,"error":"원본 지급 출처 명세 필요"}
+	var plan: Dictionary=grant_quantity_plan(record,quantity)
+	if not plan.get("ok",false):return plan
 	var result: Dictionary=instances.duplicate(true)
-	result[uid]={"name":str(record.name),"record":record.duplicate(true),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
-	return {"ok":true,"item_instances":result,"id":uid}
+	var ids: Array[String]=[]
+	for index: int in range(int(plan.physical_count)):
+		var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
+		while result.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
+		var issued: int=int(plan.unit_quantity)
+		var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":issued,"source_definition_archive":SOURCE.identity(),"source_original_item":record.source_original_item.duplicate(true),"origin":origin.duplicate(true)}
+		result[uid]={"name":str(record.name),"record":record.duplicate(true),"level":0,QUANTITY:issued,RECEIPT:receipt,"source_native_stack_used_quantity":0}
+		ids.append(uid)
+	# Existing callers consume the complete candidate instances. id remains
+	# the first actual created object; ids exposes every new object explicitly.
+	return {"ok":true,"item_instances":result,"id":ids[0],"ids":ids}
 
 static func proof(world: Node,uid: String) -> Dictionary:
 	return proof_entry(world.item_instances.get(uid),uid)
@@ -146,7 +164,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
-	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
+	if effect.is_empty():return _failure("원본 소지 개체·수량 보존 · 실제 사용 효과 또는 재료 소비자를 연결해야 합니다")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
 	var use_owner: Resource=load("res://scripts/loot/patch523_item_use.gd")
 	var problem: String=str(use_owner.call("eligibility",world,record))
@@ -429,6 +447,33 @@ static func stage_debit(world: Node,requests: Array) -> Dictionary:
 	if not issue.is_empty():return _failure(issue)
 	return {"ok":true,"overrides":overrides,"selections":selections}
 
+# Authenticate every newly issued object; a nonstackable quantity can create
+# several physical IDs and every one must enter the same production receipt.
+static func issued_ids(record: Dictionary,quantity: int,previous: Dictionary,granted: Dictionary,origin: Dictionary,typed: bool) -> Dictionary:
+	var instances: Variant=granted.get("item_instances")
+	var ids: Variant=granted.get("ids",[granted.get("id","")])
+	if not instances is Dictionary or not ids is Array or ids.is_empty() or ids.size()>65536:return _failure("원본 공급 실제 발급 개체 목록 형식 오류")
+	var seen: Dictionary={};var total: int=0
+	for uid: Variant in ids:
+		if not uid is String or uid.is_empty() or seen.has(uid) or previous.has(uid):return _failure("원본 공급 출력 개체 중복·기존 소유 덮어쓰기 금지")
+		var entry: Variant=instances.get(uid)
+		if not entry is Dictionary or entry.get("record")!=record or entry.get("name")!=record.get("name") or entry.get("level")!=0:return _failure("원본 공급 실제 출력과 카탈로그 정체 불일치")
+		var amount: Variant=entry.get("source_awakening_quantity") if typed else entry.get(QUANTITY)
+		if not integer(amount) or int(amount)<1 or total>quantity-int(amount):return _failure("원본 공급 출력 개체별 수량·총량 불일치")
+		if typed:
+			var stamp: Variant=entry.get("source_awakening_supply")
+			if not stamp is Dictionary or stamp.get("schema")!=2 or stamp.get("item_class_id")!=record.get("source_item_class_id") or stamp.get("granted_quantity")!=amount or stamp.get("source_definition_archive")!=record.get("source_definition_archive") or stamp.get("origin")!=origin:return _failure("특수 공급 출력의 최초 지급·공급 출처 불일치")
+		else:
+			var owned: Dictionary=proof_entry(entry,uid)
+			if owned.is_empty() or int(owned.used)!=0 or int(owned.transferred)!=0 or int(owned.remaining)!=int(amount) or owned.receipt.get("granted_quantity")!=amount or owned.receipt.get("origin")!=origin:return _failure("공급 출력의 실제 잔량·최초 공급 영수증 불일치")
+		seen[uid]=true;total+=int(amount)
+	if total!=quantity:return _failure("원본 공급 출력 총량과 실제 발급 합계 불일치")
+	for uid: Variant in previous:
+		if instances.get(uid)!=previous[uid]:return _failure("출력 공급자가 기존 입력 재료·소유 후보를 변경했습니다")
+	for uid: Variant in instances:
+		if not previous.has(uid) and not seen.has(uid):return _failure("공급 영수증에 없는 추가 물리 출력 거부")
+	return {"ok":true,"ids":ids.duplicate(true)}
+
 static func join_craft_output(world: Node,book: RefCounted,transaction: Dictionary,context: Dictionary) -> Dictionary:
 	var output: Dictionary=transaction.get("selected_output",{})
 	var quantity: Variant=transaction.get("result_quantity",0)
@@ -445,12 +490,20 @@ static func join_craft_output(world: Node,book: RefCounted,transaction: Dictiona
 	var typed: bool=supply.call("exact",record,int(output.get("source_id",0)))
 	if not typed and record.get("source_projection")!="current523_original_typed_game_dto_v1":return transaction
 	if int(output.get("level",-1))!=0 or not integer(transaction.inventory.get(str(record.get("name","")),0)) or int(transaction.inventory.get(str(record.get("name","")),0))<int(quantity):return _failure("원본 제작 출력 강화·소지 수량 불일치")
-	var origin: Dictionary={"kind":"source523_compiled_craft","recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"source_output":output.duplicate(true),"source_craft_receipt_id":str(transaction.get("source_craft_receipt_id","")),"selected_native_inputs":context.get("quest_material_review",{}).get("native_requests",[]).duplicate(true)}
+	var origin: Dictionary={"kind":"source523_compiled_craft","recipe_id":str(context.get("source_recipe_id","")),"rules_sha256":book.digest,"source_output":output.duplicate(true),"source_craft_receipt_id":str(transaction.get("source_craft_receipt_id","")),"selected_native_inputs":context.get("quest_material_review",{}).get("native_requests",[]).duplicate(true),"selected_quest_inputs":context.get("quest_material_review",{}).get("requests",[]).duplicate(true)}
 	var granted: Dictionary=supply.call("stage_grant",record,int(quantity),transaction.item_instances,origin) if typed else stage_grant(record,int(quantity),transaction.item_instances,origin)
 	if not granted.get("ok",false):return _failure("원본 제작 비장비 출력의 물리 소유·사용 계약 연결 대기 · 재료와 난수 보존")
-	transaction.item_instances=granted.item_instances
+	var issued: Dictionary=issued_ids(record,int(quantity),transaction.item_instances,granted,origin,typed)
+	if not issued.get("ok",false):return issued
 	var receipt_id: String=str(transaction.get("source_craft_receipt_id",""))
-	if not receipt_id.is_empty() and transaction.get("consumable_state",{}).get("source_quest_craft_receipts",{}).has(receipt_id):transaction.consumable_state.source_quest_craft_receipts[receipt_id].output_physical_ids.append(str(granted.id))
+	if not receipt_id.is_empty():
+		var journal: Variant=transaction.get("consumable_state",{}).get("source_quest_craft_receipts",{}).get(receipt_id)
+		if not journal is Dictionary or not journal.get("output_physical_ids") is Array or journal.get("recipe_id")!=str(context.get("source_recipe_id","")) or journal.get("rules_sha256")!=book.digest or journal.get("selected_output")!=output or journal.get("output_name")!=transaction.get("result_name") or journal.get("output_quantity")!=transaction.get("result_quantity"):return _failure("원본 제작 출력 장부와 실제 제작 후보 정체 불일치")
+		for uid: String in issued.ids:
+			if journal.output_physical_ids.has(uid):return _failure("동일 제작 출력 영수증의 개체 중복 금지")
+		journal.output_physical_ids.append_array(issued.ids)
+	transaction.item_instances=granted.item_instances
+	transaction["source_native_output_physical_ids"]=issued.ids.duplicate(true)
 	return transaction
 
 static func can_supply(record: Dictionary,inventory: Dictionary,instances: Dictionary) -> bool:
@@ -478,7 +531,7 @@ static func transfer_warehouse(world: Node,item_name: String,quantity: int,direc
 	if quantity<1 or quantity>99 or quantity>int(owned.remaining):return _failure("선택한 원본 묶음의 실제 잔량 안에서 수량을 지정하세요")
 	if world._item_locked(item_name,uid) or world._item_locked(item_name):return _failure("잠긴 원본 개체는 이동할 수 없습니다")
 	if direction=="deposit" and (owned.receipt.source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
-	if direction=="withdraw" and world._inventory_total_weight()+quantity*maxi(0,int(world.item_weight_index.get(item_name,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	if direction=="withdraw" and world._inventory_total_weight()+quantity*world._indexed_item_weight(item_name,owned.record)>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	var warehouse: Dictionary=world.warehouse.snapshot()
 	var from_counts: Dictionary=inventory if direction=="deposit" else warehouse.stacks
@@ -587,7 +640,7 @@ static func collect_floor(world: Node,view: Button,record: Dictionary) -> Dictio
 	var destination:=Vector2(float(point[0]),float(point[1]))
 	if not destination.is_finite() or world.player.global_position.distance_to(destination)>world.GROUND_PICKUP_RADIUS or Time.get_ticks_msec()-int(view.get("visible_since"))<world.ground_loot.MIN_VISIBLE_MS or not world._has_line_of_sight_world(world.player.global_position,destination):return _failure("기존 바닥 습득 거리·시간·시야 조건 미충족")
 	var name_value: String=str(source.physical.name)
-	if world._inventory_total_weight()+maxi(0,int(world.item_weight_index.get(name_value,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	if world._inventory_total_weight()+world._indexed_item_weight(name_value,source.physical.record)>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))>=9007199254740991:return _failure("원본 습득 수량 범위 초과")
 	inventory[name_value]=int(inventory.get(name_value,0))+1;instances[source.uid]=source.physical.duplicate(true)
@@ -700,6 +753,11 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 		return result
 	return try_use(world,str(owned.record.name),str(request.physical_id))
 
+static func held_scalar_supported(record: Dictionary) -> bool:
+	# Existing source-validated effect owners only; no name mapping or unknown HP admission.
+	var effect: Dictionary=profile(record)
+	return effect.get("kind") in ["hp","mp","buff"]
+
 static func use_quest_original_bag(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 상자 저장 보호 중")
 	var uid: String=str(request.physical_id);var owned: Dictionary=QUEST_OWN.proof(world,uid)
@@ -711,6 +769,26 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 	record=executor.call("action_record",world,record)
 	var issue: String=str(executor.call("eligibility",world,record))
 	if not issue.is_empty():return _failure(issue)
+	# The five-field original-use API already authenticated this exact quest
+	# object, immutable receipt and expected remainder above. Reuse the actual
+	# instant-cure owner, which rechecks poison, source310/Buff27, locks, cooldown
+	# and the selected debit before its single save and post-save visual event.
+	# Its zero-duration cure must not enter the ordinary timed-buff/bag gate.
+	if int(owned.item_class_id)==239:
+		return world.consumable_service.use_owned_quest_return(uid)
+	if int(owned.item_class_id)==310:
+		var cure_owner: Script=load("res://scripts/quests/quest_cure310.gd")
+		if cure_owner.call("profile",record).is_empty():return _failure("원본310 해독 효과 계약 불일치 · 소유 보존")
+		return cure_owner.call("perform",world,record,uid)
+	if held_scalar_supported(record):
+		var prepared: Dictionary=QUEST_OWN.prepare_debit(world,uid,1)
+		if not prepared.get("ok",false) or prepared.get("ownership")!=owned:return _failure("선택 원문 효과 소지 상태 변경 · 소유 보존")
+		# The existing isolated consumer view runs its effect with candidate RNG.
+		# Its common receipt/debit + effect + cooldown save is the only commit.
+		var held: Script=load("res://scripts/quests/quest_held_use238.gd")
+		var result: Dictionary=held.call("perform",world,prepared,record)
+		var saved: bool=bool(result.get("committed",false))
+		return {"ok":saved,"saved":saved,"handled":true,"consumed":1 if saved else 0,"uncertain":bool(result.get("uncertain",false)),"source_item_id":int(owned.item_class_id),"physical_id":uid,"reason":"원본 효과 사용 저장 완료" if saved else "원본 효과 소비가 확정되지 않았습니다 · 재시도 전 소유 상태 확인"}
 	var spec: Dictionary=record.get("source_use_spec",{})
 	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
@@ -879,7 +957,7 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	var weight: int=world._inventory_total_weight();var keys: Dictionary={}
 	for key: String in world.inventory:keys[key]=true
 	for key: String in payload.inventory:keys[key]=true
-	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
+	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*world._indexed_item_weight(key,{},payload.item_instances)
 	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
 	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
 	var journal: Variant=state.get(BAG_USES,{})

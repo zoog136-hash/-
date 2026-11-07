@@ -981,8 +981,10 @@ func _index_catalog_item_sources() -> void:
 			catalog_item_variant_count[item_name] = int(catalog_item_variant_count.get(item_name, 0)) + 1
 
 func _catalog_item_from_source_id(source_id: String) -> Dictionary:
-	var source: Variant = catalog_item_by_source_id.get(source_id, {})
-	return source as Dictionary if source is Dictionary else {}
+	if catalog_item_by_source_id.has(source_id):
+		var source: Variant = catalog_item_by_source_id[source_id]
+		return source as Dictionary if source is Dictionary else {}
+	return preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,source_id,catalog_db.get("patch523_crafting_catalog_contract",{}))
 
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
@@ -1342,13 +1344,28 @@ func _index_item_weights() -> void:
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
 
+func _indexed_item_weight(item_name: String, record: Dictionary={}, candidates: Dictionary={}) -> int:
+	if item_weight_index.has(item_name):return maxi(0,int(item_weight_index[item_name]))
+	var current: Dictionary=record
+	if current.is_empty():
+		for value: Variant in candidates.values():
+			if value is Dictionary and value.get("name")==item_name and value.get("record") is Dictionary:
+				current=value.record;break
+	if current.is_empty():current=_find_catalog_item_record(item_name)
+	if current.get("name")==item_name:
+		var derived: Dictionary=preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,str(current.get("sourceId","")),catalog_db.get("patch523_crafting_catalog_contract",{}))
+		if not derived.is_empty() and current.get("source_projection")==derived.get("source_projection") and current.get("source_definition_archive")==derived.get("source_definition_archive") and current.get("source_original_item")==derived.get("source_original_item"):
+			var base: Dictionary=catalog_item_by_source_id.get("m523:item:"+str(int(derived.source_item_class_id)),{})
+			if item_weight_index.has(str(base.get("name",""))):return maxi(0,int(item_weight_index[str(base.name)]))
+	return 0 if item_name=="아데나" else 3 # Existing legacy fallback, never a new source scale.
+
 func _inventory_total_weight() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
 		# Held source rewards are provenance stacks until their item adapter is
 		# available; legacy default weight must not turn them into carried gear.
 		if str(name_value).begins_with("[원본 보상] "): continue
-		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0 if str(name_value) == "아데나" else 3)))
+		total += maxi(0, int(inventory.get(name_value, 0))) * _indexed_item_weight(str(name_value))
 	return total
 
 func _carrying_capacity() -> int:
@@ -5148,9 +5165,12 @@ func _patch523_craft_item_index() -> Dictionary:
 			for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
 				var variant: Dictionary=patch523_equipment.record(source_id,int(state))
 				var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
-				if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
+				var count: int=int(catalog_item_variant_count.get(str(variant.get("name","")),0))
+				var derived: Dictionary=preload("res://scripts/loot/current523_item_variant_identity.gd").missing_variant(catalog_item_by_source_id,str(variant.get("sourceId","")),catalog_db.get("patch523_crafting_catalog_contract",{})) if count==0 else {}
+				var unique: bool=count==1 or (count==0 and not derived.is_empty() and derived==current_variant)
+				if unique and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
 					var weighted_variant: Dictionary=current_variant.duplicate(true)
-					weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
+					weighted_variant["weight"]=_indexed_item_weight(str(variant.name),current_variant)
 					result[str(variant.name)]=weighted_variant
 			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
 			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
@@ -5583,6 +5603,15 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	var source_objects: Dictionary=item_instances if direction=="deposit" else warehouse.instances
+	var selected: Variant=source_objects.get(instance_id,{})
+	if selected is Dictionary and selected.get("name")==item_name and selected.has("source_native_stack_receipt"):
+		# A qualified variant can exist only in the warehouse, with no name
+		# entry in the carried/catalog index. Use the selected actual proof,
+		# never a same-name alias, before the unchanged transfer owner runs.
+		var owned: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").proof_entry(selected,instance_id)
+		if owned.is_empty():hud.show_message("선택 창고 개체의 원본 영수증·잔량 확인 필요");return
+		record=owned.record
 	if direction == "deposit" and record.has("growth96_item_id") and not bool(record.get("storable",false)):
 		hud.show_message("원본 성장 보상은 창고 보관이 제한되어 있습니다")
 		return
@@ -5597,7 +5626,9 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").transfer_warehouse(self,item_name,quantity,direction,instance_id)
 	if native_stack.get("handled",false):
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 창고 개체 확인 필요"))))
-		if native_stack.get("ok",false):_update_hud();hud.refresh_inventory(inventory)
+		if native_stack.get("ok",false) and native_stack.get("saved",false):
+			_update_hud();hud.refresh_inventory(inventory)
+			if hud.has_method("refresh_service"):hud.call("refresh_service")
 		return
 	if direction=="deposit" and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,record,item_instances):
 		hud.show_message("창고 보관이 불가능한 원본 아이템입니다")

@@ -57,6 +57,7 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var source: Dictionary=_source(pending)
 	if source.is_empty():return {"handled":false}
 	if _busy:return _fail("원본 습득 저장 중 · 중복 요청 보존")
+	if not str(world.patch523_owner_state_problem).is_empty() or world.quest_service.save_blocked:return _fail("공동 소유 저장 보호 중 · 원본 바닥 보존")
 	if not world.ground_loot.valid_view(view) or not Transfer.can_collect(world,pending) or world.hp<=0:return _fail("바닥 개체·생존·물리 소유 상태 확인 필요")
 	var point: Variant=pending.get("position")
 	if not point is Array or point.size()<2 or typeof(point[0]) not in [TYPE_INT,TYPE_FLOAT] or typeof(point[1]) not in [TYPE_INT,TYPE_FLOAT]:return _fail("바닥 좌표 구조 오류 · 원본 보존")
@@ -66,6 +67,19 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var problem: String=_proof_problem(source.item,source.proof,quantity)
 	if not problem.is_empty():return _fail(problem)
 	if source.item.get("name")!=pending.get("item_name"):return _fail("바닥 원본 소지 키 불일치")
+	var equipment_uid: String=""
+	if D.equipment(source.item) and source.item.get("slot")!="consumable":
+		var envelope: Variant=pending.get("physical_item")
+		if not envelope is Dictionary or not envelope.get("id") is String or str(envelope.id).is_empty() or not envelope.get("data") is Dictionary:return _fail("원본 장비의 실제 바닥 개체 증명 필요")
+		var actual: Dictionary=envelope.data
+		equipment_uid=str(envelope.id)
+		if actual.get("name")!=pending.item_name or actual.get("record")!=source.item or actual.get("level")!=0 or actual.get("source_m_drop_proof")!=source.proof:return _fail("원본 드랍 장비와 실제 물리 개체·출처 불일치")
+		if world.item_instances.has(equipment_uid) or world.warehouse.instances.has(equipment_uid):return _fail("이미 소유·보관 중인 장비 ID와 바닥 충돌 · 개체 보존")
+		for previous: Dictionary in world._ground_drops_snapshot():
+			if previous.get("id")==pending.get("id"):continue
+			var other: Variant=previous.get("physical_item",{})
+			if not other is Dictionary:return _fail("기존 바닥 물리 소유 구조 확인 필요")
+			if other.get("id")==equipment_uid:return _fail("서로 다른 바닥 레코드의 장비 ID 중복 · 습득 보류")
 	var pack: Dictionary=D.pack_identity()
 	if pack.get("source_snapshot")!="patch523" or pack.get("schema") not in [3,4]:return _fail("원본 습득 입력 정체 확인 필요")
 	if pack.get("schema")==4 and pack.get("source_definition_archive")!=preload("res://scripts/resources/current523_definition_rows.gd").identity():return _fail("새 원문 정의 출처 불일치 · 바닥 보존")
@@ -87,7 +101,7 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		var before: int=_integer(inventory.get(key,0))
 		if before<0 or before>9007199254740991-quantity:return _fail("원본 소지 수량 범위 초과")
 		inventory[key]=before+quantity
-		var unit_weight: int=maxi(0,int(world.item_weight_index.get(key,3)))
+		var unit_weight: int=world._indexed_item_weight(key,source.item)
 		if world._inventory_total_weight()+quantity*unit_weight>world._carrying_capacity():return _fail("기존 소지 무게 한도 초과 · 바닥 아이템 보존")
 	var physical:=PhysicalView.new()
 	physical.item_instances=world.item_instances.duplicate(true);physical.next_item_instance_id=world.next_item_instance_id
@@ -97,10 +111,25 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var instances: Dictionary=symbols.item_instances
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+	var native_issued: Array=[];var native_proofs: Array=[]
 	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor","floor_id":id,"drop":source.proof.duplicate(true)})
+		# One ground quantity must not be granted by two physical suppliers.
+		if instances!=world.item_instances:physical.free();return _fail("동일 드랍에 복수 물리 공급자가 응답했습니다 · 바닥·소유 보존")
+		var origin: Dictionary={"kind":"source523_floor","floor_id":id,"drop":source.proof.duplicate(true)}
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,origin)
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
-		instances=granted.item_instances
+		var issued: Dictionary=stock.call("issued_ids",source.item,quantity,instances,granted,origin,false)
+		if not issued.get("ok",false):physical.free();return _fail(str(issued.get("reason","원본 물리 공급 결과 확인 필요")))
+		for uid: String in issued.ids:
+			if world.warehouse.instances.has(uid):physical.free();return _fail("신규 원본 개체 ID가 창고 소유와 충돌했습니다")
+			for previous: Dictionary in world._ground_drops_snapshot():
+				var other: Variant=previous.get("physical_item",{})
+				if not other is Dictionary:physical.free();return _fail("기존 바닥 물리 소유 구조 확인 필요")
+				if other.get("id")==uid:physical.free();return _fail("신규 원본 개체 ID가 기존 바닥 소유와 충돌했습니다")
+			native_proofs.append({"physical_id":uid,"quantity":int(granted.item_instances[uid].source_native_stack_quantity),"source_native_stack_receipt":granted.item_instances[uid].source_native_stack_receipt.duplicate(true)})
+		native_issued=issued.ids.duplicate(true);instances=granted.item_instances
+	if not equipment_uid.is_empty() and instances.get(equipment_uid)!=pending.physical_item.data:
+		physical.free();return _fail("장비 습득 공급자가 선택한 실제 바닥 개체를 변경했습니다")
 	physical.free()
 	var added: Array=[]
 	for uid: String in instances:
@@ -108,6 +137,12 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var source_rows: Array=[]
 	for row: Dictionary in source.proof.source_rows:source_rows.append(row.get("ID"))
 	var receipt: Dictionary={"schema":1,"source_snapshot":"patch523","source_pack_sha256":str(pack.sha256),"source_npc_id":int(source.proof.source_npc_id),"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key,"physical_ids":added,"source_row_ids":source_rows,"drop_proof_sha256":JSON.stringify(source.proof,"",true,true).sha256_text()}
+	if not native_issued.is_empty():
+		if added!=native_issued:
+			var sorted_added: Array=added.duplicate();var sorted_native: Array=native_issued.duplicate();sorted_added.sort();sorted_native.sort()
+			if sorted_added!=sorted_native:return _fail("원본 습득 물리 ID 목록과 실제 공급 결과 불일치")
+		receipt["native_physical_receipts"]=native_proofs
+	if not equipment_uid.is_empty():receipt["source_equipment_physical_id"]=equipment_uid
 	if pack.get("schema")==4:
 		receipt.schema=2;receipt["source_input_marker"]=pack.duplicate(true);receipt["source_pack_sha256_scope"]="current_original_archive_not_legacy_bin"
 	receipts=receipts.duplicate(true);receipts[id]=receipt;state[FIELD]=receipts

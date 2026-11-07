@@ -52,6 +52,7 @@ const EXTRA := {
 	"UndeadAdditionalMaxDamage":["source_undead_damage_max",1],
 	"FinalBlowProbability":["source_final_blow_chance_pct",10000],
 	"FinalBlowAdditionalScale":["source_final_blow_amp_pct",10000],
+	"FinalBlowAdditionalDmg":["source_final_blow_flat",1],
 	"_final_blow_stun":["source_final_blow_stun_chance_pct",10000],
 	"_stun_magic":["source_stun_magic_damage",1]}
 var problem: String = ""
@@ -207,6 +208,8 @@ func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> 
 					if name in ["PierceMeleeDamageReduction","PierceRangeDamageReduction","PierceMagicDamageReduction","PiercePVPDamageReduction","PVPSpellByLevelAdditionLevel","PierceDamageReduction"] and type.UnitID!=1:
 						skipped[int(row.ID)] = true; continue
 					if name in ["FinalBlowProbability","FinalBlowAdditionalScale"] and type.UnitID!=3:
+						skipped[int(row.ID)] = true; continue
+					if name=="FinalBlowAdditionalDmg" and type.UnitID!=1:
 						skipped[int(row.ID)] = true; continue
 					if name=="MagicDamage" and b.BonusApplicationTypeID==2 and type.UnitID!=1: name = null
 					else: name = qualified_name(b,str(name),resistance_types,elemental_targets)

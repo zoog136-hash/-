@@ -165,6 +165,34 @@ func retains_issued_reference(world: Node, item_key: String) -> bool:
 	return false
 
 func try_use_inventory(world: Node, item_key: String) -> bool:
+	# Quick-use carries a raw inventory key, not an implicit native ownership
+	# grant. Select an actual issued physical object and enter the same owned
+	# consumer as manual activation; never fall through to a legacy name debit.
+	var issued_ids: Array[String]=[]
+	for id: String in world.item_instances:
+		var physical: Variant=world.item_instances[id]
+		if physical is Dictionary and physical.get("name")==item_key and physical.has("quest_reward_receipt"):issued_ids.append(id)
+	if not issued_ids.is_empty():
+		issued_ids.sort() # Explicit host selection policy; no native order inferred.
+		var source_identity: Dictionary={}
+		for id: String in issued_ids:
+			var owned: Dictionary=OWN.proof(world,id)
+			if not owned.get("ok",false):
+				world.hud.show_message(str(owned.get("reason","원본 소지 영수증 확인 필요")));return true
+			var identity: Dictionary={"item_class_id":owned.item_class_id,"bless_code_id":owned.bless_code_id,"source_item":owned.source_item,"source_use_immediately":owned.source_use_immediately}
+			if source_identity.is_empty():source_identity=identity
+			elif source_identity!=identity:
+				# The quick-use caller supplied only a raw name. It cannot choose
+				# between different original identities/blessings/use roles. The
+				# explicit physical-ID activation remains the existing owner path.
+				world.hud.show_message("동명 원본 보상의 정체·축복·사용 역할이 다릅니다 · 실제 개체를 선택하세요");return true
+		if world._item_locked(item_key):
+			world.hud.show_message("잠긴 원본 보상 보존");return true
+		for id: String in issued_ids:
+			if world._item_locked(item_key,id):continue
+			if try_use_held(world,id):return true
+			world.hud.show_message("원본 소지 효과 소비자 미연결 · 이름 기반 차감 없이 보존");return true
+		world.hud.show_message("모든 원본 소지 개체가 잠겨 있습니다");return true
 	if try_use(world,world._find_catalog_item_record(item_key)):return true
 	for rows: Array in world.quest_service.item_grants.values():
 		for receipt: Dictionary in rows:
@@ -243,10 +271,11 @@ func try_use_held(world: Node, id: String) -> bool:
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 			return true
-		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]:
+		var original_record: Dictionary=D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))
+		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"] or native_ammo.call("held_scalar_supported",original_record) or int(original_owned.item_class_id) in [239,310]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
-			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
+			world.hud.show_message(str(used.get("message",used.get("reason","원본 소지 효과 사용 결과 확인 필요"))))
 			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
 				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)
 			return used.get("handled",false)
