@@ -124,7 +124,7 @@ static func existing_target(host:Node,item:Dictionary,bless:int,enchant:int)->Di
 static func recipient(host:Node,record:Dictionary,item:Dictionary,attached:Dictionary={})->String:
 	var id:String=str(int(item.ID))
 	var equipment:Variant=attached.get("patch523_equipment",host_property(host,"patch523_equipment"))
-	if equipment!=null and equipment.data.get("items",{}).get(id,{}).get("item_class",{})==item and equipment.catalog_identity_matches(record,id):return "PR239 제작·가공"
+	if equipment!=null and equipment.item_entry(id).get("item_class",{})==item and equipment.catalog_identity_matches(record,id):return "PR239 제작·가공"
 	var automation:Variant=attached.get("inventory_automation",host_property(host,"inventory_automation"))
 	if automation!=null and bool(item.get("IsStorable",false)) and not automation.source_rules.resolve(record).is_empty():return "PR251 창고·판매"
 	var shop:Variant=attached.get("source_shop",host_property(host,"source_shop"))
@@ -139,7 +139,7 @@ static func registered_material_target(host:Node,item:Dictionary,bless:int,encha
 	if not protected_reason(item).is_empty() or bless!=1 or enchant!=0:return {}
 	var rules:Variant=attached.get("patch523_equipment",host_property(host,"patch523_equipment"))
 	var id:String=str(int(item.ID))
-	if rules==null or rules.data.get("items",{}).get(id,{}).get("item_class",{})!=item:return {}
+	if rules==null or rules.item_entry(id).get("item_class",{})!=item:return {}
 	var record:Dictionary=rules.record(id)
 	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not record.get("source_use_spec",{}).is_empty() or not record.get("source_equip_slot_ids",[]).is_empty():return {}
 	var registered:Dictionary=host._find_catalog_item_record(str(record.get("name","")))
