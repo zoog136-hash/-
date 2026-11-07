@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Original310/Buff27 is an instant cure, not a duration-zero timed buff.
 ## Reuse the existing Player.clear_poison after one confirmed ownership save.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -11,7 +12,7 @@ static func profile(saved: Dictionary)->Dictionary:
 	if int(saved.get("source_item_class_id",0))!=310 or D.current_original_definition(saved).is_empty():return {}
 	var definition: Dictionary=D.definition_id("310");var record: Dictionary=D.expected_variant(definition.get("native_record",{}),saved)
 	if record.is_empty() or not D.matches(record,saved) or record.get("source_test_item",true):return {}
-	var spec: Dictionary=record.get("source_use_spec",{})
+	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("kind")!="source_timed_buff" or spec.get("duration_seconds")!=0 or spec.get("consume_delay_ms")!=500 or spec.get("buff_class_id")!=27 or not spec.get("typed_effects",{}).is_empty() or not spec.get("source_buff_bonus",[]).is_empty():return {}
 	if not C.same(spec.get("blocked_reasons"),["missing_or_ambiguous_positive_duration","no_supported_buff_effects","unsupported_buff_priority_or_spell_level_rule"]):return {}
 	var source: Dictionary=spec.get("source_buff_class",{});var group: Dictionary=spec.get("source_buff_group",{})
@@ -41,7 +42,7 @@ static func prepare(world: Node,saved: Dictionary,physical_id: String="")->Dicti
 	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return fail("현재 동작 종료 후 해독제 사용 가능")
 	var problem: String=use.eligibility(world,record)
 	if not problem.is_empty():return fail(problem)
-	var requirements: Dictionary=record.source_use_spec.get("item_requirements",{})
+	var requirements: Dictionary=NATIVE_FIELDS.full(record).source_use_spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or requirements.get("service_region_code")!="" or (not requirements.get("can_use_when_invisible",false) and world.is_player_concealed()):return fail("원본 사용 대상·서비스·은신 조건 확인 필요")
 	var observed: Dictionary=poison(world)
 	if observed.is_empty() or not world.player.is_poisoned():return fail("해제할 기존 플레이어 독 없음 · 해독제 보존 (TWILIGHT 보존 정책)")
@@ -51,7 +52,7 @@ static func prepare(world: Node,saved: Dictionary,physical_id: String="")->Dicti
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	var native_quantity: Dictionary=stock.call("proof",world,physical_id) if not physical_id.is_empty() else {}
 	if not native_quantity.is_empty():
-		if native_quantity.record.get("source_item_class_id")!=310 or native_quantity.record.get("source_bless_raw")!=record.get("source_bless_raw") or native_quantity.receipt.get("source_original_item")!=D.definition_id("310").get("original_item"):return fail("선택한 원문 물리 해독제 정체 불일치")
+		if native_quantity.record.get("source_item_class_id")!=310 or native_quantity.record.get("source_bless_raw")!=record.get("source_bless_raw") or NATIVE_FIELDS.full(native_quantity.receipt).get("source_original_item")!=D.definition_id("310").get("original_item"):return fail("선택한 원문 물리 해독제 정체 불일치")
 		var native_step: Dictionary=stock.call("stage_debit",world,[{"physical_id":physical_id,"quantity":1,"expected_quantity":native_quantity.remaining,"expected_remaining":int(native_quantity.remaining)-1,"source_native_stack_receipt":native_quantity.receipt.duplicate(true)}])
 		if not native_step.get("ok",false):return fail(str(native_step.get("reason","원문 물리 해독제 차감 후보 연결 필요")))
 		payload=native_step.overrides.duplicate(true)
@@ -116,7 +117,7 @@ static func commit(world: Node,quote: Dictionary)->Dictionary:
 	# No persisted source DOT/curse namespace is inferred or erased by name.
 	world.player.clear_poison();world.deferred_save.cancel();world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
 	var result: Dictionary={"ok":true,"saved":true,"handled":true,"consumed":1,"physical_id":str(quote.physical_id),"source_item_class_id":310,"source_buff_class_id":27,"cleared_owner":"Player.clear_poison","message":"원본 해독제 · 기존 플레이어 독 해제"}
-	result["source_use_context"]={"original_item":quote.record.get("source_original_item",{}).duplicate(true),"source_definition_archive":preload("res://scripts/resources/current523_definition_rows.gd").identity(),"physical_id":str(quote.physical_id),"effect_sprite_id":192,"commit_key":JSON.stringify([KIND,quote.get("base_stamp","")]).sha256_text(),"visual_dispatch_owner":"quest_cure310.perform","visual_dispatch_attempted":false,"render_observed":false}
+	result["source_use_context"]={"original_item":NATIVE_FIELDS.full(quote.record).get("source_original_item",{}).duplicate(true),"source_definition_archive":preload("res://scripts/resources/current523_definition_rows.gd").identity(),"physical_id":str(quote.physical_id),"effect_sprite_id":192,"commit_key":JSON.stringify([KIND,quote.get("base_stamp","")]).sha256_text(),"visual_dispatch_owner":"quest_cure310.perform","visual_dispatch_attempted":false,"render_observed":false}
 	return result
 static func perform(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
 	var quote: Dictionary=prepare(world,record,physical_id);var result: Dictionary=commit(world,quote) if quote.get("ok",false) else quote

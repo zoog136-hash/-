@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## New, source-proven acquisition only. Never backfill legacy name-only stacks.
 const IDS: Array[int]=[75184,75194,95624,118992,243043,346901]
 static func recognized(record: Dictionary) -> bool:
@@ -32,7 +33,7 @@ static func stackable_book(record: Dictionary) -> bool:
 
 static func storage_allowed(item_name: String,record: Dictionary,instances: Dictionary) -> bool:
 	for physical: Variant in instances.values():
-		if physical is Dictionary and physical.get("name")==item_name and physical.has("source_native_stack_receipt") and physical.get("source_native_stack_receipt",{}).get("source_original_item",{}).get("IsStorable")!=true:return false # Metadata only; the selected whole-quantity owner still authorizes the actual move.
+		if physical is Dictionary and physical.get("name")==item_name and physical.has("source_native_stack_receipt") and NATIVE_FIELDS.full(physical.get("source_native_stack_receipt",{})).get("source_original_item",{}).get("IsStorable")!=true:return false # Metadata only; the selected whole-quantity owner still authorizes the actual move.
 	if not _record_storage_allowed(record):return false
 	for entry: Variant in instances.values():
 		if entry is Dictionary and entry.get("name","")==item_name and entry.get("record") is Dictionary and not _record_storage_allowed(entry.record):return false

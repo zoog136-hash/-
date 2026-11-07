@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightGroundLootManager
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const LOOT = preload("res://scripts/loot/ground_loot.gd")
 const GRADES = preload("res://scripts/catalog_grade_policy.gd")
@@ -319,6 +320,6 @@ func source_item_context(ground_id: String) -> Dictionary:
 	var source: Script=load("res://scripts/resources/current523_definition_rows.gd")
 	var definition: Dictionary=load("res://scripts/loot/patch523_monster_drops.gd").call("current_original_definition",item)
 	var original: Variant=definition.get("original_item")
-	if not original is Dictionary or original.is_empty() or original!=item.get("source_original_item") or original!=source.call("row","ItemClass",int(original.get("ID",0))):return {"ok":false,"reason":"current_ground_full_original_item_identity_required"}
+	if not original is Dictionary or original.is_empty() or original!=NATIVE_FIELDS.full(item).get("source_original_item") or original!=source.call("row","ItemClass",int(original.get("ID",0))):return {"ok":false,"reason":"current_ground_full_original_item_identity_required"}
 	var physical: Variant=record.get("physical_item",{})
 	return {"ok":true,"ground_id":ground_id,"ground_record":record.duplicate(true),"map_id":current_map,"quantity":record.get("quantity"),"item_name":str(record.get("item_name","")),"position":record.get("position",[]).duplicate(),"physical_id":str(physical.get("id","")) if physical is Dictionary else "","physical_item":physical.duplicate(true) if physical is Dictionary else {},"original_item":original.duplicate(true),"item_record":item.duplicate(true),"source_definition_archive":source.call("identity"),"source_basis":"existing_current_floor_record_and_exact_current_original_item","ownership_authorized":false,"sprite_action_selected":false,"render_observed":false}

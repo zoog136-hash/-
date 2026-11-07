@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Read-only bridge to the existing verified native catalog. It grants nothing,
 ## registers nothing and never converts an unavailable original into an alias.
 const C = preload("res://scripts/equipment523/common.gd")
@@ -45,7 +46,7 @@ static func validate_identity(pack: Dictionary, record: Dictionary, definition: 
 	# Pure contract reducer, also used by explicitly synthetic kernel tests.
 	if pack.get("source_sha256") != C.SOURCE_SHA or identity.get("schema") not in [3,4] or identity.get("source_snapshot") != "patch523": return {}
 	if identity.get("schema")==4:
-		if identity.get("kind")!="current523_original_definition_projection" or identity.get("source_definition_archive",{}).get("source_sha256")!=C.SOURCE_SHA or expected.get("source_projection")!="current523_original_typed_game_dto_v1" or expected.get("source_original_item")!=definition.get("original_item"):return {}
+		if identity.get("kind")!="current523_original_definition_projection" or identity.get("source_definition_archive",{}).get("source_sha256")!=C.SOURCE_SHA or expected.get("source_projection")!="current523_original_typed_game_dto_v1" or NATIVE_FIELDS.full(expected).get("source_original_item")!=definition.get("original_item"):return {}
 	var digest: Variant = identity.get("sha256")
 	if not digest is String or digest.length() != 64 or not digest.is_valid_hex_number(false) or digest != digest.to_lower(): return {}
 	if not record.get("source_m_native_item") is bool or record.source_m_native_item != true or expected.get("source_m_native_item") != true: return {}

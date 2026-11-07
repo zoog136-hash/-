@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Selected alchemy output -> the existing source use owner. No catalog rename,
 ## native flag conversion, regrant or live temporary ownership is performed.
 const C = preload("res://scripts/equipment523/common.gd")
@@ -75,7 +76,7 @@ static func prepare(world: Node, physical_id: String) -> Dictionary:
 			if key not in Legacy.LEGACY_RECORD_FIELDS: return _fail("미확인 기존 연금 기록 보존")
 		for key: String in Legacy.LEGACY_RECORD_FIELDS:
 			if not record.has(key): return _fail("기존 연금 지급 기록 누락")
-		if record.get("source")!="lineagem_current523" or record.get("source_snapshot")!="current523" or record.get("source_original_item")!=true or record.get("sourceId")!="m523:item:"+str(item_id) or _whole(record.get("source_item_class_id"))!=item_id or _whole(record.get("source_bless_code_id"))!=bless or _whole(record.get("source_reward_id"))!=result_id or _whole(record.get("source_reward_quantity"))!=remaining or record.get("desc")!=Legacy.LEGACY_DESCRIPTION: return _fail("기존 연금 결과의 불변 지급 증명 불일치")
+		if record.get("source")!="lineagem_current523" or record.get("source_snapshot")!="current523" or NATIVE_FIELDS.full(record).get("source_original_item")!=true or record.get("sourceId")!="m523:item:"+str(item_id) or _whole(record.get("source_item_class_id"))!=item_id or _whole(record.get("source_bless_code_id"))!=bless or _whole(record.get("source_reward_id"))!=result_id or _whole(record.get("source_reward_quantity"))!=remaining or record.get("desc")!=Legacy.LEGACY_DESCRIPTION: return _fail("기존 연금 결과의 불변 지급 증명 불일치")
 		if entry.get("name")!="[원본보상]"+str(C.item(store.pack,item_id).get("name","")) or record.get("name")!=entry.get("name"): return _fail("기존 연금 개체의 소지 키 불일치")
 		if record.get("bless_state")!={1:"normal",2:"blessed",3:"cursed"}[bless] or record.get("blessed")!=(bless==2): return _fail("기존 연금 기록의 축복 표시 불일치")
 	if entry.has("sourceId") and entry.sourceId!=record.get("sourceId"): return _fail("물리 개체와 지급 기록의 원본 ID 불일치")
@@ -109,7 +110,7 @@ static func prepare(world: Node, physical_id: String) -> Dictionary:
 		var expected: Dictionary=receipt.duplicate(true);expected["used_quantity"]=used
 		if not Native.same(previous,expected): return _fail("연금 결과의 최초 지급량·사용 장부 불일치")
 	canonical=Use.action_record(world,canonical)
-	if canonical.get("source_use_spec",{}).get("kind") not in KINDS: return _fail("이 연금 결과의 효과 소유자 연결은 별도입니다 · 개체 보존")
+	if NATIVE_FIELDS.full(canonical).get("source_use_spec",{}).get("kind") not in KINDS: return _fail("이 연금 결과의 효과 소유자 연결은 별도입니다 · 개체 보존")
 	var problem: String=Use.eligibility(world,canonical)
 	if not problem.is_empty(): return _fail(problem)
 	return {"ok":true,"physical_id":physical_id,"inventory_key":key,"quantity":remaining,"receipt":receipt,"used":used,"record":canonical,"stamp":_stamp(world)}

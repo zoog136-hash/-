@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Reuses exact PR238 modules; quest eligibility and receipts remain quest-owned.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const USE = preload("res://scripts/loot/patch523_item_use.gd")
@@ -71,7 +72,7 @@ func configure(world: Node) -> void:
 	if world.quest_service.source.quests.is_empty() or not current_input_available(): return
 	for id: int in REVIEWED_IDS:
 		var definition: Dictionary = D.definition_id(str(id))
-		var spec: Dictionary = definition.get("native_record",{}).get("source_use_spec",{})
+		var spec: Dictionary = NATIVE_FIELDS.full(definition.get("native_record",{})).get("source_use_spec",{})
 		if id==239:
 			if not world.consumable_service.has_method("use_owned_native_return"):continue
 		elif id==233:
@@ -89,9 +90,9 @@ func configure(world: Node) -> void:
 		elif id==310:
 			if CURE.profile(D.variant_item(definition.get("native_record",{}),1)).is_empty():continue
 		elif id==1186:
-			if USE.action_record(world,D.variant_item(definition.get("native_record",{}),1)).get("source_use_spec",{}).get("activation_status")!="unrestricted":continue
+			if NATIVE_FIELDS.full(USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))).get("source_use_spec",{}).get("activation_status")!="unrestricted":continue
 		elif id in REGEN.IDS:
-			if REGEN.action(world,D.variant_item(definition.get("native_record",{}),1)).get("source_use_spec",{}).get("activation_status")!="unrestricted":continue
+			if NATIVE_FIELDS.full(REGEN.action(world,D.variant_item(definition.get("native_record",{}),1))).get("source_use_spec",{}).get("activation_status")!="unrestricted":continue
 		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag","source_selectable_reward"]: continue
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
@@ -109,7 +110,7 @@ func configure(world: Node) -> void:
 			var definition: Dictionary=D.definition_id(str(id))
 			if definition.get("original_item",{}).is_empty() or definition.original_item!=reward.get("source_item") or definition.original_item.get("TestItem",true):continue
 			var record: Dictionary=USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
-			var spec: Dictionary=record.get("source_use_spec",{})
+			var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 			if spec.get("activation_status")!="unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):continue
 			definitions[id]=definition
 			_register(world,definition.native_record,1)
@@ -243,7 +244,7 @@ func try_use_held(world: Node, id: String) -> bool:
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 			return true
-		if original_definition.get("native_record",{}).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]:
+		if NATIVE_FIELDS.full(original_definition.get("native_record",{})).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
 			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))

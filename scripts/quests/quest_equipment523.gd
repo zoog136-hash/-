@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Selected quest ownership -> staged physical gear/equip -> one durable save.
 ## Exact base AC/HP/MP/MR/STR and compiled rank0 XP; other positive effects stay held.
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -132,7 +133,7 @@ func _reward_proof_matches(world: Node,id: String,physical: Dictionary)->bool:
   for key: String in proof:
    if key not in ["source_snapshot","item_class_id","source_item_class_id","lucky_bag_class_id","select_reward_id","entity_id","bless","enchant","initial_enchant_origin","original_initial_enchant"]:return false
   if output!=226318 or OWN.positive(proof.get("item_class_id"))!=369002 or OWN.positive(proof.get("source_item_class_id"))!=226318 or OWN.positive(proof.get("select_reward_id"))!=12522 or OWN.positive(proof.get("entity_id"))!=59062 or proof.get("lucky_bag_class_id")!=0 or int(receipt.quantity)!=1:return false
-  var spec: Dictionary=D.definition_id("369002").native_record.get("source_use_spec",{});var choices: Array=[]
+  var spec: Dictionary=NATIVE_FIELDS.full(D.definition_id("369002").native_record).get("source_use_spec",{});var choices: Array=[]
   for row: Dictionary in spec.get("rewards",[]):
    if int(row.source_entity_id)==59062:choices.append(row)
   if choices.size()!=1 or int(spec.get("select_reward_id",0))!=12522 or int(choices[0].item_class_id)!=output or int(choices[0].amount)!=1 or int(choices[0].bless_raw)!=1:return false

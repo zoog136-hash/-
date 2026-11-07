@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const Rules = preload("res://scripts/fishing/fishing_rules.gd")
 const Session = preload("res://scripts/fishing/fishing_session.gd")
 const CARD_ITEMS: Dictionary = {"306611":"23801", "306621":"23811", "306631":"23821", "306641":"23831"}
@@ -428,7 +429,7 @@ func transfer_to_inventory(item: String, token: String, revision: int) -> Dictio
 	if not str(world._enhancement_kind_for_record(record)).is_empty():
 		var next_id: int = int(world.next_item_instance_id)
 		while instances.has(str(next_id)): next_id += 1
-		instances[str(next_id)] = {"name":name_value, "level":0, "sourceId":str(record.sourceId), "record":record.duplicate(true), "element":"", "element_level":0}
+		instances[str(next_id)] = {"name":name_value, "level":0, "sourceId":str(record.sourceId), "record":NATIVE_FIELDS.full(record).duplicate(true), "element":"", "element_level":0}
 		overrides["next_item_instance_id"] = next_id + 1
 	else:
 		var identities: Dictionary = {}

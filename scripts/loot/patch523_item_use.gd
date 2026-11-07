@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const PRESENTATION_FLAGS: Dictionary = {"UIShowFilter":"Value","NoAnnounce":"TrueFalse"}
@@ -7,7 +8,7 @@ static func canonical(record: Dictionary) -> Dictionary:
 	if not record.get("source_m_native_item", false):
 		var existing: Dictionary = DROPS.item_definition(record)
 		var converted: Dictionary = existing.get("native_record", {}).duplicate(true)
-		if converted.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return {}
+		if NATIVE_FIELDS.full(converted).get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return {}
 		for key: String in ["name", "source", "sourceId", "sourceUrl", "slot", "type", "grade"]: converted[key] = record.get(key, "")
 		return converted
 	var definition: Dictionary = DROPS.definition_id(str(int(record.get("source_item_class_id", -1))))
@@ -25,7 +26,7 @@ static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	if int(record.get("source_item_class_id",0))==310:
 		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").profile(record)
 		if not cure.is_empty():record=cure
-	var spec: Dictionary = record.get("source_use_spec",{})
+	var spec: Dictionary = NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("activation_status") != "blocked" or not world.ui_preferences.get("patch523_item_presentation_flags_policy",true): return record
 	var presentation: Dictionary = {}
 	for row: Dictionary in DROPS.item_definition(saved).get("item_bonus",[]):
@@ -95,7 +96,7 @@ static func try_use(world: Node, saved: Dictionary) -> bool:
 	if int(world.inventory.get(name_value, 0)) < 1:
 		world.hud.show_message("아이템이 없습니다")
 		return true
-	var spec: Dictionary = record.get("source_use_spec", {})
+	var spec: Dictionary = NATIVE_FIELDS.full(record).get("source_use_spec", {})
 	if spec.get("activation_status", "") != "unrestricted":
 		world.hud.show_message("원본 사용 조건·효과 미지원 · 아이템을 보존했습니다")
 		return true
@@ -291,7 +292,7 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 			for index: int in range(int(reward.amount)):
 				var identity: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(identity): identity = Crypto.new().generate_random_bytes(16).hex_encode()
-				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":item.duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"source_item_class_id":int(reward.item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
+				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":NATIVE_FIELDS.full(item).duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"source_item_class_id":int(reward.item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
 		rewards.append("%s ×%d" % [str(base.source_display_name),int(reward.amount)])
 	if rewards.is_empty():
 		world.rng.state = rng_before
@@ -371,7 +372,7 @@ static func claim_selection(world: Node, saved: Dictionary, entity_id: int, owne
 		if ownership.is_empty():
 			world.hud.show_message("선택한 원본 물리 개체·수량·영수증 요청 필요 · 아이템 보존")
 			return false
-		var result: Dictionary=world.consumable_service.claim_owned_original_selection(current.get("source_original_item",{}),ownership,entity_id)
+		var result: Dictionary=world.consumable_service.claim_owned_original_selection(NATIVE_FIELDS.full(current).get("source_original_item",{}),ownership,entity_id)
 		world.hud.show_message(str(result.get("message",result.get("reason","원본 선택 보상 연결 대기"))))
 		return result.get("ok",false) and result.get("saved",false) and result.get("consumed")==1
 	# Re-read the pinned pack and ownership at confirmation, never trust the UI row.
@@ -380,7 +381,7 @@ static func claim_selection(world: Node, saved: Dictionary, entity_id: int, owne
 	if not problem.is_empty():
 		world.hud.show_message(problem)
 		return false
-	var spec: Dictionary = record.get("source_use_spec", {})
+	var spec: Dictionary = NATIVE_FIELDS.full(record).get("source_use_spec", {})
 	if spec.get("kind") != "source_selectable_reward" or spec.get("activation_status") != "unrestricted" or int(spec.get("select_max_count",0)) != 1: return false
 	if int(world.inventory.get(str(record.name),0)) < 1: return false
 	var requirements: Dictionary = spec.get("item_requirements", {})

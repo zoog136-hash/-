@@ -1,5 +1,6 @@
 extends Node2D
 class_name TwilightWorld
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
 
@@ -8465,7 +8466,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 				next_item_instance_id += 1
 				symbol_physical_id = str(next_item_instance_id)
 			next_item_instance_id += 1
-			item_instances[symbol_physical_id] = {"name":item_name,"level":0,"record":record.duplicate(true)}
+			item_instances[symbol_physical_id] = {"name":item_name,"level":0,"record":NATIVE_FIELDS.full(record).duplicate(true)}
 		# Generated gear without static catalog rows must also acquire a physical
 		# ID and retain its schema for reload, equip and all scroll types.
 		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():
@@ -8474,7 +8475,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 				next_item_instance_id += 1
 				new_id = str(next_item_instance_id)
 			next_item_instance_id += 1
-			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":record.duplicate(true)}
+			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":NATIVE_FIELDS.full(record).duplicate(true)}
 	var effective_use: Dictionary = _patch523_use_record(item_name + ("@@@"+requested_id if not requested_id.is_empty() else ""))
 	var source_use_reason: String = PATCH523_ITEM_USE.reason(effective_use if not effective_use.is_empty() else record,level,BASE508.source_class_id(job_class))
 	if not source_use_reason.is_empty():

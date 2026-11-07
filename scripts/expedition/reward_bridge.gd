@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Exact inventory bindings only. Effect/craft/shop/automation engines stay with their owners.
 const CURRENCY=preload("res://scripts/loot/currency_drops.gd")
 const CARDS=preload("res://scripts/expedition/reward_cards.gd")
@@ -141,7 +142,7 @@ static func registered_material_target(host:Node,item:Dictionary,bless:int,encha
 	var id:String=str(int(item.ID))
 	if rules==null or rules.item_entry(id).get("item_class",{})!=item:return {}
 	var record:Dictionary=rules.record(id)
-	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not record.get("source_use_spec",{}).is_empty() or not record.get("source_equip_slot_ids",[]).is_empty():return {}
+	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not NATIVE_FIELDS.full(record).get("source_use_spec",{}).is_empty() or not record.get("source_equip_slot_ids",[]).is_empty():return {}
 	var registered:Dictionary=host._find_catalog_item_record(str(record.get("name","")))
 	if not rules.catalog_identity_matches(registered,id):return {}
 	for pair:Array in [["source_is_storable","IsStorable"],["source_is_tradable","IsTradable"],["source_is_droppable","IsDroppable"],["source_is_deletable","IsDeletable"]]:

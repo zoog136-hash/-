@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Run the unchanged PR238 consumer against an isolated inventory view. Only a
 ## verified held-stack debit plus the consumer effect is committed to the host.
 const CONSUMPTION=preload("res://scripts/quests/quest_reward_consumption.gd")
@@ -52,7 +53,7 @@ class View extends Node:
 	func _find_catalog_item_record(name_value: String) -> Dictionary:return host._find_catalog_item_record(name_value)
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
 	func _expected_bag() -> Dictionary:
-		var spec: Dictionary=canonical.get("source_use_spec",{})
+		var spec: Dictionary=NATIVE_FIELDS.full(canonical).get("source_use_spec",{})
 		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:return {}
 		var candidate_rng:=RandomNumberGenerator.new()
 		candidate_rng.seed=host.rng.seed;candidate_rng.state=host.rng.state
@@ -106,7 +107,7 @@ class View extends Node:
 		if proposed_instances!=initial_instances:
 			if int(canonical.get("source_item_class_id",0))!=369002 or selection_entity_id<=0:return ERR_INVALID_DATA
 			var choices: Array=[]
-			for row: Dictionary in canonical.get("source_use_spec",{}).get("rewards",[]):
+			for row: Dictionary in NATIVE_FIELDS.full(canonical).get("source_use_spec",{}).get("rewards",[]):
 				if int(row.source_entity_id)==selection_entity_id:choices.append(row)
 			if choices.size()!=1:return ERR_INVALID_DATA
 			var choice: Dictionary=choices[0]
@@ -150,7 +151,7 @@ class View extends Node:
 			payload["hp"]=mini(host.hp,host._effective_max_hp(-1,payload.active_item_buffs))
 			payload["mp"]=mini(host.mp,host._effective_max_mp(payload.active_item_buffs))
 		if overrides.has("mp"):
-			if canonical.get("source_use_spec",{}).get("kind")!="source_mp_dice" or not overrides.mp is int or overrides.mp<host.mp or overrides.mp>host._effective_max_mp(payload.get("active_item_buffs")):return ERR_INVALID_DATA
+			if NATIVE_FIELDS.full(canonical).get("source_use_spec",{}).get("kind")!="source_mp_dice" or not overrides.mp is int or overrides.mp<host.mp or overrides.mp>host._effective_max_mp(payload.get("active_item_buffs")):return ERR_INVALID_DATA
 			payload["mp"]=overrides.mp
 		if overrides.has("hp"):
 			if int(canonical.get("source_item_class_id",0))!=233 or not overrides.hp is int or overrides.hp<host.hp or overrides.hp>host._effective_max_hp():return ERR_INVALID_DATA

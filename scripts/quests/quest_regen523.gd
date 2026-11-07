@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Finite source MP regeneration, with an explicit host cadence. Source data
 ## provides amount/duration, not a verified server regeneration interval.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -11,7 +12,7 @@ static func interval(world: Node)->float:
 static func contract(record: Dictionary)->Dictionary:
 	var id: int=int(record.get("source_item_class_id",0))
 	if id not in IDS or D.current_original_definition(record).is_empty():return {}
-	var spec: Dictionary=record.get("source_use_spec",{})
+	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("kind")!="source_timed_buff" or spec.get("activation_status")!="blocked" or spec.get("source_snapshot")!="patch523":return {}
 	var reasons: Array=spec.get("blocked_reasons",[])
 	if reasons.is_empty() or not reasons.has("unsupported_buff_effect:RegenMP"):return {}

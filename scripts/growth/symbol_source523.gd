@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Source definitions and explicit TWILIGHT adapters; not a server emulator.
 const PATH = "res://data/growth/symbol_source523.json"
 const Combat = preload("res://scripts/growth/symbol_combat.gd")
@@ -250,7 +251,7 @@ func reset_material(instance: Dictionary) -> bool:
 	if not bound: return false
 	# Temporary variants have timezone-less expiry mappings; do not guess.
 	if id != 231772 or record.get("sourceId") != item_key(id) or instance.get("name") != record.get("name"): return false
-	return record.get("source_original_item") == data.items.get(str(id))
+	return NATIVE_FIELDS.full(record).get("source_original_item") == data.items.get(str(id))
 
 func material(instance: Dictionary) -> bool:
 	return reset_material(instance) or not recharge(instance).is_empty()
@@ -279,7 +280,7 @@ func prepare_pickup(drop: Dictionary, instances: Dictionary, next_id: int) -> Di
 	var candidate: int = maxi(1,next_id)
 	for index: int in range(int(quantity)):
 		while result.has(str(candidate)): candidate += 1
-		result[str(candidate)] = {"name":str(record.name),"level":0,"record":record.duplicate(true)}
+		result[str(candidate)] = {"name":str(record.name),"level":0,"record":NATIVE_FIELDS.full(record).duplicate(true)}
 		candidate += 1
 	return {"item_instances":result,"next_item_instance_id":candidate}
 
@@ -300,6 +301,6 @@ func recharge(instance: Dictionary) -> Dictionary:
 		# dropped. Base holy water remains usable; event definitions remain data.
 		for detail: Dictionary in data.item_bonuses:
 			if int(detail.row.ItemClassID) == id and detail.type.Name not in ["IntangibleItemClassID","IntangibleItemAmount"]: return {}
-		if record.get("source_original_item") != item: return {}
+		if NATIVE_FIELDS.full(record).get("source_original_item") != item: return {}
 		return {"item_id":id,"amount":int(row.amount),"name":str(record.name)}
 	return {}

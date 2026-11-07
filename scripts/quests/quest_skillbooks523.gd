@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Bounded PR238 learning transaction + public PR245 exact evidence contract.
 ## No cast engine, reference activation, skill replacement or estimated formulas.
 const BOOK=preload("res://scripts/loot/patch523_skill_book.gd")
@@ -49,7 +50,7 @@ func identity(record: Dictionary,world: Node=null)->Dictionary:
  var result: Dictionary={}
  var evidence: Dictionary={}
  if active_sha256==PACK_SHA:
-  result=BOOK.resolve(self,record.get("source_use_spec",{}))
+  result=BOOK.resolve(self,NATIVE_FIELDS.full(record).get("source_use_spec",{}))
   evidence={"kind":"compiled_pack","source_sha256":SOURCE_SHA,"binding_sha256":BINDING_SHA,"skill_pack_sha256":PACK_SHA}
  elif world!=null and world.get("original_skills")!=null:
   # Consume the existing public source reader's actually loaded adapter. No
@@ -59,11 +60,11 @@ func identity(record: Dictionary,world: Node=null)->Dictionary:
   var source: Variant=adapter.get("source_identity")
   if not source is Dictionary or source.get("source_snapshot")!="patch523" or source.get("source_sha256")!=SOURCE_SHA or source.get("source_bytes")!=25031173:return {}
   if FileAccess.get_file_as_string(BINDINGS_PATH).sha256_text()!=BINDING_SHA:return {}
-  result=BOOK.resolve(adapter,record.get("source_use_spec",{}))
+  result=BOOK.resolve(adapter,NATIVE_FIELDS.full(record).get("source_use_spec",{}))
   evidence={"kind":"original_bound_profiles","source_sha256":SOURCE_SHA,"binding_sha256":BINDING_SHA,"source_identity":source.duplicate(true)}
  if result.is_empty():return {}
  if not preload("res://scripts/quests/source_dummy523.gd").evidence("SpellClass",result.get("profile",{}).get("row",{})).is_empty():return {}
- if str(result.get("local_skill_id","")).begins_with("lmref_") and not REFERENCE.matches(int(record.get("source_item_class_id",0)),int(record.get("source_use_spec",{}).get("spell_class_id",0)),str(result.local_skill_id),str(record.get("source_use_spec",{}).get("source_spell_row_sha256",""))):return {}
+ if str(result.get("local_skill_id","")).begins_with("lmref_") and not REFERENCE.matches(int(record.get("source_item_class_id",0)),int(NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("spell_class_id",0)),str(result.local_skill_id),str(NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("source_spell_row_sha256",""))):return {}
  result["skill_evidence"]=evidence
  return result
 func fail(world: Node,reason: String)->Dictionary:
@@ -72,8 +73,8 @@ func fail(world: Node,reason: String)->Dictionary:
 func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  if world.quest_service.save_blocked or not world._patch523_item_allowed():return fail(world,"현재 저장·아이템 사용 보호")
  var canonical: Dictionary=USE.canonical(record)
- var spec: Dictionary=canonical.get("source_use_spec",{})
- if record.get("source_use_spec")!=spec:return fail(world,"제공된 주문 원본 증명 불일치")
+ var spec: Dictionary=NATIVE_FIELDS.full(canonical).get("source_use_spec",{})
+ if NATIVE_FIELDS.full(record).get("source_use_spec")!=spec:return fail(world,"제공된 주문 원본 증명 불일치")
  var error: String=USE.eligibility(world,canonical)
  if not error.is_empty():return fail(world,error)
  if spec.get("kind")!="source_skill_book" or spec.get("activation_status")!="unrestricted":return fail(world,"원본 학습 효과 미지원")

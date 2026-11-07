@@ -208,6 +208,7 @@ static func _archive_identity() -> Dictionary:
 	return _identity_cache
 
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
+const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const TEMPLATE_BAKE:="native_item_templates"
 const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v1"
 
@@ -312,6 +313,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# device and read back by ID on later starts instead of describing every
 	# item again. Any code/data change or damaged file rebuilds the bake.
 	var templates: TemplateStore=_open_templates()
+	var placed: Array[int]=[]
 	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in SOURCE.row_count("ItemClass"):
@@ -339,10 +341,19 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or saved.get("source_display_name")!=current.source_display_name:
 				pending[id]="unverified_registered_source_identity_preserved";continue
 			records[int(previous[0])]=current.duplicate(true) if cached else current
+			placed.append(int(previous[0]))
 		else:
 			records.append(current.duplicate(true) if cached else current);positions[key]=[records.size()-1]
+			placed.append(records.size()-1)
 		admitted.append(id)
 	if writer!=null:writer.finish(_template_key())
+	# The catalog keeps the light identity of each record just registered; its
+	# heavy fields are read from the baked template when used (FIELDS.full()).
+	var store: TemplateStore=templates if templates!=null else _open_templates()
+	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
+	if store!=null and OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1":
+		FIELDS.bind(store)
+		for index: int in placed:records[index]=FIELDS.slim(records[index])
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
@@ -352,6 +363,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 # ItemEnchantBonus/Bonus/BonusType/Unit rows as the public compiler. Saved item
 # identity and enhancement level remain with the existing physical owner.
 static func enchant_stats(item: Dictionary,level: int,bless: int) -> Dictionary:
+	item=FIELDS.full(item)
 	var id: Variant=item.get("source_item_class_id")
 	if not integer(id) or int(id)<=0 or level<0 or bless not in [1,2,3] or item.get("source_projection")!="current523_original_typed_game_dto_v1" or item.get("source_definition_archive")!=SOURCE.identity() or item.get("source_original_item")!=SOURCE.row("ItemClass",int(id)):return {}
 	var names: Dictionary={"WeaponHitBonus":"accuracy","WeaponDamageBonus":"damage","ArmorClass":"defense","ArmorClassBonus":"defense","HPPlus":"hp","MPPlus":"mp","MagicResist":"mr","SpellPower":"sp","DamageReduction":"reduction","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy","Strength":"str","Dexterity":"dex","Constitution":"con","Intelligence":"int","Wisdom":"wis","Charisma":"cha","HPPotionIncreaseStatic":"potion_heal_flat"}

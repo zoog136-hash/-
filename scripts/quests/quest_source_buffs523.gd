@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Exact source effects, consumed by the existing finite/infinite item owners.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const C=preload("res://scripts/quests/quest_reward_consumption.gd")
@@ -15,7 +16,7 @@ static func profile(saved: Dictionary)->Dictionary:
 	if id not in IDS or D.current_original_definition(saved).is_empty():return {}
 	var definition: Dictionary=D.definition_id(str(id));var record: Dictionary=D.expected_variant(definition.get("native_record",{}),saved)
 	if record.is_empty() or not D.matches(record,saved) or record.get("source_test_item",true):return {}
-	var spec: Dictionary=record.get("source_use_spec",{});var food: bool=id in FOOD
+	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{});var food: bool=id in FOOD
 	var reasons: Array=["source_infinite_amount_not_supported","unsupported_buff_effect:RegenMP","unsupported_buff_effect:RegenHP"] if food else ["unsupported_buff_effect:ExperienceAdditionPercent","no_supported_buff_effects"]
 	if spec.get("kind")!="source_timed_buff" or spec.get("source_snapshot")!="patch523" or spec.get("activation_status")!="blocked" or not C.same(spec.get("blocked_reasons"),reasons) or spec.get("duration_seconds")!=1800 or spec.get("consume_delay_ms")!=500:return {}
 	var buff_id: int=78583 if id==282793 else (80852 if id==295524 else 278)
@@ -48,6 +49,6 @@ static func action(world: Node,saved: Dictionary)->Dictionary:
 	if int(record.source_item_class_id) in FOOD:
 		var cadence: float=interval(world)
 		if cadence<=0:return saved
-		record.source_use_spec.typed_effects.merge({"mp_regen_tick":3,"hp_regen_tick":2,"tick_interval":cadence,"tick_elapsed":0.0,"quest523_food_policy":{"source_MP":3,"source_HP":2,"interval_seconds":cadence,"source_interval_verified":false,"policy":"TWILIGHT_existing_regeneration_clock"}})
-		record.source_use_spec["activation_status"]="unrestricted"
+		NATIVE_FIELDS.full(record).source_use_spec.typed_effects.merge({"mp_regen_tick":3,"hp_regen_tick":2,"tick_interval":cadence,"tick_elapsed":0.0,"quest523_food_policy":{"source_MP":3,"source_HP":2,"interval_seconds":cadence,"source_interval_verified":false,"policy":"TWILIGHT_existing_regeneration_clock"}})
+		NATIVE_FIELDS.full(record).source_use_spec["activation_status"]="unrestricted"
 	return record

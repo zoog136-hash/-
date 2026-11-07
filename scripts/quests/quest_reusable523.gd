@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Source InfiniteAmount is ownership-preserving use, never a zero-quantity
 ## call to the material debit ABI. Reuse the existing source buff/MP consumers.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -15,7 +16,7 @@ static func profile(record: Dictionary)->Dictionary:
 	var expected: Dictionary=D.expected_variant(definition.get("native_record",{}),record)
 	if expected.is_empty() or not D.matches(record,expected) or expected.get("source_test_item",true):return {}
 	if id in EXTRA.FOOD:return EXTRA.profile(record)
-	var spec: Dictionary=expected.get("source_use_spec",{})
+	var spec: Dictionary=NATIVE_FIELDS.full(expected).get("source_use_spec",{})
 	if id in MP_IDS:return mp_profile(definition,expected)
 	if spec.get("kind")!="source_timed_buff" or spec.get("activation_status")!="blocked" or spec.get("blocked_reasons")!=["source_infinite_amount_not_supported"]:return {}
 	var amounts: Dictionary={"ItemConsumeDelay":[500,"MilliSeconds"],"BuffClassID":[223 if id==295544 else 5,"BuffClassID"],"BuffDuration":[1800,"Seconds"],"ItemConsumeEffectSpriteID":[751 if id==295544 else 15889,"SpriteID"],"InfiniteAmount":[1,"Value"]}
@@ -32,11 +33,11 @@ static func profile(record: Dictionary)->Dictionary:
 	for row: Dictionary in spec.get("source_buff_bonus",[]):
 		if row.get("CharacterLevel")!=0 or row.get("CharacterClass")!=0 or row.get("MinSpellLevel")!=0 or row.bonus.get("BonusApplicationTypeID")!=0 or row.bonus.get("BonusApplicationTargetID")!=0 or row.unit.Name!="Value" or row.bonus.Value!=3:return {}
 	var result: Dictionary=expected.duplicate(true)
-	result.source_use_spec=result.source_use_spec.duplicate(true)
-	result.source_use_spec["activation_status"]="unrestricted"
+	result.source_use_spec=NATIVE_FIELDS.full(result).source_use_spec.duplicate(true)
+	NATIVE_FIELDS.full(result).source_use_spec["activation_status"]="unrestricted"
 	return result
 static func mp_profile(definition: Dictionary,expected: Dictionary)->Dictionary:
-	var spec: Dictionary=expected.get("source_use_spec",{})
+	var spec: Dictionary=NATIVE_FIELDS.full(expected).get("source_use_spec",{})
 	if spec.get("kind")!="source_mp_dice" or spec.get("activation_status")!="blocked" or not C.same(spec.get("blocked_reasons"),["unsupported_item_bonus:ClassUsageInterval","source_infinite_amount_not_supported"]):return {}
 	if spec.get("base")!=1000 or spec.get("MPRestoration")!=1000 or spec.get("dice_number")!=0 or spec.get("dice_spot_count")!=0 or spec.get("consume_delay_ms")!=1000:return {}
 	var expected_bonuses: Dictionary={"MPRestoration":[1000,"Value"],"ItemConsumeEffectSpriteID":[190,"SpriteID"],"ItemConsumeDelay":[1000,"MilliSeconds"],"ClassUsageInterval":[1800,"Seconds"],"InfiniteAmount":[1,"Value"]}
@@ -47,10 +48,10 @@ static func mp_profile(definition: Dictionary,expected: Dictionary)->Dictionary:
 		seen[name]=true
 	if seen.size()!=5:return {}
 	var result: Dictionary=expected.duplicate(true)
-	result.source_use_spec=result.source_use_spec.duplicate(true)
-	result.source_use_spec["activation_status"]="unrestricted"
-	result.source_use_spec["source_class_usage_interval_seconds"]=1800
-	result.source_use_spec["host_interval_policy"]="per_ItemClass_active_play_seconds; native_shared_scope_offline_clock_unverified"
+	result.source_use_spec=NATIVE_FIELDS.full(result).source_use_spec.duplicate(true)
+	NATIVE_FIELDS.full(result).source_use_spec["activation_status"]="unrestricted"
+	NATIVE_FIELDS.full(result).source_use_spec["source_class_usage_interval_seconds"]=1800
+	NATIVE_FIELDS.full(result).source_use_spec["host_interval_policy"]="per_ItemClass_active_play_seconds; native_shared_scope_offline_clock_unverified"
 	return result
 static func interval_key(record: Dictionary)->String:return "m523:class-interval:"+str(int(record.source_item_class_id))
 static func stamp(world: Node)->String:
@@ -144,8 +145,8 @@ static func perform(world: Node,record: Dictionary,physical_id: String="")->Dict
 	var canonical: Dictionary=EXTRA.action(world,profile(record))
 	var proof: Dictionary=ownership(world,canonical,physical_id)
 	var use: GDScript=load("res://scripts/loot/patch523_item_use.gd")
-	if canonical.is_empty() or canonical.get("source_use_spec",{}).get("activation_status")!="unrestricted" or proof.is_empty() or not use.eligibility(world,canonical).is_empty() or not world._patch523_item_allowed() or world._option_awakening_busy() or (world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy()):world.hud.show_message("원본 무한 아이템 소유·조건 확인 필요 · 보존");return result
-	var spec: Dictionary=canonical.source_use_spec;var requirements: Dictionary=spec.get("item_requirements",{})
+	if canonical.is_empty() or NATIVE_FIELDS.full(canonical).get("source_use_spec",{}).get("activation_status")!="unrestricted" or proof.is_empty() or not use.eligibility(world,canonical).is_empty() or not world._patch523_item_allowed() or world._option_awakening_busy() or (world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy()):world.hud.show_message("원본 무한 아이템 소유·조건 확인 필요 · 보존");return result
+	var spec: Dictionary=NATIVE_FIELDS.full(canonical).source_use_spec;var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or requirements.get("service_region_code")!="" or (not requirements.get("can_use_when_invisible",false) and world.is_player_concealed()):return result
 	if float(world.item_use_cooldowns.get("m523:item:"+str(int(canonical.source_item_class_id)),0))>0:world.hud.show_message("원본 아이템 재사용 대기");return result
 	if int(canonical.source_item_class_id) in MP_IDS:

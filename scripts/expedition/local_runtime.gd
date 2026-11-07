@@ -1,4 +1,5 @@
 extends "res://scripts/expedition/legacy_runtime.gd"
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const REWARD_BRIDGE=preload("res://scripts/expedition/reward_bridge.gd")
 const REWARD_CARDS=preload("res://scripts/expedition/reward_cards.gd")
@@ -462,7 +463,7 @@ func _native_target(key:String) -> Dictionary:
 	var action:Dictionary=target
 	var consumer:Variant=REWARD_BRIDGE.consumer()
 	if REWARD_BRIDGE.exposes(consumer,"action_record"):action=consumer.action_record(world,target)
-	var spec:Dictionary=action.get("source_use_spec",{})
+	var spec:Dictionary=NATIVE_FIELDS.full(action).get("source_use_spec",{})
 	var use_ready:bool=spec.get("activation_status")=="unrestricted" and spec.get("kind") in ["source_timed_buff","source_mp_dice","guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"]
 	var receiver:String=REWARD_BRIDGE.recipient(world,target,source,reward_recipients)
 	if not use_ready and receiver.is_empty():return _fail("원본 사용 조건 또는 재료 소비자가 미연결입니다. 아이템은 보존됩니다.")
@@ -668,7 +669,7 @@ func withdraw(key: String, amount: int = 1) -> Dictionary:
 		for index in range(amount):
 			var physical_id:String="expedition-book:%s:%d:%d"%[key,int(next.revision),index]
 			if physicals.has(physical_id):return _fail("각성서 물리 ID 충돌 · 기존 저장 보존")
-			physicals[physical_id]={"name":name,"level":0,"element":"","element_level":0,"record":skill_book.duplicate(true)}
+			physicals[physical_id]={"name":name,"level":0,"element":"","element_level":0,"record":NATIVE_FIELDS.full(skill_book).duplicate(true)}
 		overrides.item_instances=physicals
 	if not _commit(next, overrides): return _fail(last_error)
 	world.inventory = bag

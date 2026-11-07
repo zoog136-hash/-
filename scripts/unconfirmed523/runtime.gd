@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## One existing World save owns costs, rewards, event progress and durable RNG.
 const Source = preload("res://scripts/unconfirmed523/source523.gd")
 const StatAdapter = preload("res://scripts/collections/equipment_collection_stats.gd")
@@ -178,7 +179,7 @@ func context() -> Dictionary:
 		if sid <= 0: continue
 		var definition: Dictionary = source.row("ItemClass",sid)
 		if int(definition.get("MaxStackAmount",1)) <= 1: continue
-		ctx.stacks[item_name] = {"sourceID":sid,"quantity":remainder,"record":record.duplicate(true),"locked":bool(world.ui_preferences.get("item_locks",{}).get(item_name,false))}
+		ctx.stacks[item_name] = {"sourceID":sid,"quantity":remainder,"record":NATIVE_FIELDS.full(record).duplicate(true),"locked":bool(world.ui_preferences.get("item_locks",{}).get(item_name,false))}
 		ctx.owned[str(sid)] = int(ctx.owned.get(str(sid),0)) + remainder
 	for slot: String in world.equipped_items:
 		var equipped: Variant = world.equipped_items[slot]

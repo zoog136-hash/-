@@ -1,4 +1,5 @@
 extends VBoxContainer
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Art = preload("res://scripts/growth/growth_art.gd")
 const CardFace = preload("res://scripts/growth/growth_card_face.gd")
@@ -132,7 +133,7 @@ func _action_image(action: String, id: String, offer: Dictionary = {}) -> Dictio
 		# A scroll name or a symbol/group ID cannot provide an ItemClass identity.
 		var instance: Dictionary = runtime.world.item_instances.get(str(offer.get("consume_instance", "")), {})
 		if runtime.source523.reset_material(instance):
-			return IMAGES.describe_item_class_row(instance.record.source_original_item)
+			return IMAGES.describe_item_class_row(NATIVE_FIELDS.full(instance.record).source_original_item)
 	elif action == "guardian_cast" and runtime.guardian_source.has_node(id):
 		# Use the same native spell reward as the existing guardian_cast caller.
 		var rewards: Array = runtime.guardian_rewards(id)

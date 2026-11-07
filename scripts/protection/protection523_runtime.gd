@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const Source = preload("res://scripts/protection/protection523_source.gd")
 const SAVE_KEY := "protection523"
 const POLICY_PATH := "res://data/protection/protection523_policy.json"
@@ -199,7 +200,7 @@ func pending_material_id(record: Dictionary) -> int:
 	if id not in Source.QUEST_MATERIAL_IDS or not source.items.has(str(id)): return 0
 	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("sourceId") != "m523:item:%d" % id: return 0
 	var original: Dictionary = source.items[str(id)]
-	if record.get("source_original_item") != original or record.get("name") != "[원본 보상] "+str(original.Name) or record.get("source_display_name") != original.Name: return 0
+	if NATIVE_FIELDS.full(record).get("source_original_item") != original or record.get("name") != "[원본 보상] "+str(original.Name) or record.get("source_display_name") != original.Name: return 0
 	if record.get("slot") != "quest_reward" or not record.get("quest_item") is bool or not bool(record.quest_item) or not integer(record.get("source_bless_code_id"),1,1) or not record.get("source_use_immediately") is bool or bool(record.source_use_immediately): return 0
 	if not integer(record.get("source_reward_id"),1): return 0
 	var rid := str(int(record.source_reward_id))

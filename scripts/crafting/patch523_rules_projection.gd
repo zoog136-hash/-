@@ -2,6 +2,7 @@ extends RefCounted
 ## UNVERIFIED: in-memory input port of tools/equipment/build_patch523_rules.py.
 ## Existing public policies only; no item registration, alias, grant, or save.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const POLICY_PATH = "res://data/crafting/patch523_crafting_policy.json"
 const EQUIPMENT_PATH = "res://scripts/crafting/patch523_enchantment_projection.gd"
 const TABLES = ["SpecialResistanceType","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","ItemBlessBonus","Material","Unit","UIUnit","Class","LuckyBagClass","LuckyBagEntityView","LuckyBagEntityType","LuckyBagEntityClassLimit","DescData_Korean","ItemCraftInput","ItemCraftOutputView","ItemCraftView","ItemCraftRestriction","ItemClass","ItemCategory","ItemClassLimit","ItemBonus","Bonus","BonusType","ItemEnchantBonus","ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroup","ItemEnchantScrollGroupMapping","BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView","ItemBlessEnchantProbability","DateTimes_Korean","ItemBlessCode","EquipSlotConfig","ItemEquipSlot"]
@@ -515,10 +516,13 @@ static func binding_document(items: Array, contract: Dictionary, parse: bool = t
 		if parse: copies.resize(items.size())
 		size += _hash_text(hash,"[")
 		for index: int in items.size():
-			var text: String = JSON.stringify(items[index],"",true,true)
+			# Registered records are identified by their full form (template
+			# fields included), exactly as registration produced them.
+			var item: Variant = NATIVE_FIELDS.full(items[index])
+			var text: String = JSON.stringify(item,"",true,true)
 			size += _hash_text(hash,("" if index == 0 else ",")+text)
 			# Same values a whole-document parse gives for these fields.
-			if parse: copies[index] = JSON.parse_string(JSON.stringify(slim_binding_record(items[index]),"",true,true))
+			if parse: copies[index] = JSON.parse_string(JSON.stringify(slim_binding_record(item),"",true,true))
 		size += _hash_text(hash,"]")
 		parsed[key] = copies
 	size += _hash_text(hash,"}")

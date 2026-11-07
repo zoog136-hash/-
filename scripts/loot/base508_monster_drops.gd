@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Native memberships select only verified existing item IDs. Host rolls remain authoritative.
 const DATA_SHA="df3ebf9c5bc2bd18d97014e377ee434fce7b412385a7cb720b037f30f6f18151"
 const DATA_PATH="res://data/lineagem_base508/monster_drops.bin"
@@ -72,7 +73,7 @@ static func pick(groups: Dictionary, kind: String, grade: String, rng: RandomNum
  var selected: Dictionary=choices[rng.randi_range(0,choices.size()-1)]
  var keys: Array=selected.variants.keys();keys.sort()
  var variant: Dictionary=selected.variants[keys[rng.randi_range(0,keys.size()-1)]]
- var item: Dictionary=selected.item.duplicate(true)
+ var item: Dictionary=NATIVE_FIELDS.full(selected.item).duplicate(true)
  item["source_m_item_id"]=selected.item_class_id
  item["source_m_item_bless_raw"]=variant.bless_raw
  item["bless_state"]=variant.bless_state
@@ -80,7 +81,7 @@ static func pick(groups: Dictionary, kind: String, grade: String, rng: RandomNum
  return {"item_name":str(item.name),"quantity":1,"item_record":item,"source_m_item_id":selected.item_class_id,"source_m_drop_proof":variant.duplicate(true)}
 static func ground_metadata(entry: Dictionary, physical: bool) -> Dictionary:
  if not entry.has("source_m_drop_proof") or not entry.get("item_record") is Dictionary: return {}
- var item: Dictionary=entry.item_record.duplicate(true)
+ var item: Dictionary=NATIVE_FIELDS.full(entry.item_record).duplicate(true)
  var result: Dictionary={"item_record":item}
  if physical:
   var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
