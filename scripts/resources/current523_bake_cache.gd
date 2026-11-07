@@ -61,6 +61,33 @@ static func write(name: String, value_key: String, value: Variant) -> bool:
 	meta.close()
 	return true
 
+## Where a file-format bake (written by its owner) lives.
+static func data_path(name: String) -> String: return _data(name)
+
+## Moves a finished `part` file into place and records its key and SHA256.
+static func commit_file(name: String, value_key: String, part: String) -> bool:
+	if value_key.is_empty(): return false
+	DirAccess.remove_absolute(_meta(name))
+	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
+	if DirAccess.rename_absolute(part, _data(name)) != OK: return false
+	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
+	if meta == null: return false
+	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": FileAccess.get_sha256(_data(name)), "bytes": _size(_data(name))}))
+	meta.close()
+	return true
+
+## The file of a file-format bake when its key matches and its bytes verify; "" otherwise.
+static func verified_file(name: String, expected_key: String) -> String:
+	if expected_key.is_empty(): return ""
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
+	if not meta is Dictionary or meta.get("schema") != SCHEMA or meta.get("key") != expected_key: return ""
+	if _size(_data(name)) != int(meta.get("bytes", -1)) or FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")): return ""
+	return _data(name)
+
+static func _size(path: String) -> int:
+	var file := FileAccess.open(path, FileAccess.READ)
+	return int(file.get_length()) if file != null else -1
+
 static func clear(name: String) -> void:
 	DirAccess.remove_absolute(_meta(name))
 	DirAccess.remove_absolute(_data(name))

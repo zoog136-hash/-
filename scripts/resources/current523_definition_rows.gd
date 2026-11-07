@@ -158,7 +158,15 @@ static func _store(table: String) -> Dictionary:
 	# device from the verified archive, skips re-parsing the JSON (a transient
 	# several times the table's size) on later starts.
 	var bake_key: String = _bake_key(table)
-	var baked: Variant = BAKE.read("definitions_"+table, bake_key)
+	# Large tables stay on the device's storage: only their row offsets and
+	# the columns actually queried are held in memory (DiskTable below).
+	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
+	if on_disk:
+		var opened: Dictionary = _open_disk(table, bake_key)
+		if not opened.is_empty():
+			_tables[table] = opened
+			return opened
+	var baked: Variant = null if on_disk else BAKE.read("definitions_"+table, bake_key)
 	if _valid_store(baked):
 		_tables[table] = baked
 		return baked
@@ -174,8 +182,91 @@ static func _store(table: String) -> Dictionary:
 	_tables[table] = _pack(source)
 	parsed = null
 	source = []
-	BAKE.write("definitions_"+table, bake_key, _tables[table])
+	if on_disk and not _tables[table].has("rows") and _write_disk(table, bake_key, _tables[table]):
+		var reopened: Dictionary = _open_disk(table, bake_key)
+		if not reopened.is_empty(): _tables[table] = reopened
+	elif not on_disk:
+		BAKE.write("definitions_"+table, bake_key, _tables[table])
 	return _tables[table]
+
+## Tables with at least this many rows are kept on storage once baked.
+const DISK_ROWS: int = 5000
+const DISK_SCHEMA := "twilight.current523.disk-table.v2"
+
+## A column-packed table on storage. row() is exactly _row_at() of the packed
+## table it was written from; column() is the same packed column.
+class DiskTable extends RefCounted:
+	var file: FileAccess
+	var row_offsets: PackedInt64Array
+	var column_offsets: PackedInt64Array
+	var columns: PackedStringArray
+	var loaded: Dictionary = {}
+	func row(index: int) -> Dictionary:
+		# Values only are stored; keys come from the shared column names, as
+		# in _row_at(), so retained rows do not each own their key strings.
+		file.seek(row_offsets[index])
+		var values: Variant = file.get_var()
+		var result: Dictionary = {}
+		if not values is Array or (values as Array).size() != columns.size(): return result
+		for position: int in columns.size(): result[columns[position]] = values[position]
+		return result
+	func column(position: int) -> Variant:
+		if not loaded.has(position):
+			file.seek(column_offsets[position])
+			loaded[position] = file.get_var()
+		return loaded[position]
+
+static func _write_disk(table: String, bake_key: String, store: Dictionary) -> bool:
+	var path: String = BAKE.data_path("disk_"+table)
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var file := FileAccess.open(path + ".part", FileAccess.WRITE)
+	if file == null: return false
+	var column_offsets := PackedInt64Array()
+	for position: int in (store.columns as PackedStringArray).size():
+		column_offsets.append(file.get_position())
+		file.store_var(store.data[position])
+	var row_offsets := PackedInt64Array()
+	var names: PackedStringArray = store.columns
+	for index: int in int(store.count):
+		row_offsets.append(file.get_position())
+		var row: Dictionary = _row_at(store, index)
+		var values: Array = []
+		for name: String in names: values.append(row[name])
+		file.store_var(values)
+	var index_position: int = file.get_position()
+	file.store_var({"schema":DISK_SCHEMA,"count":int(store.count),"columns":store.columns,"column_offsets":column_offsets,"row_offsets":row_offsets})
+	file.store_64(index_position)
+	var stored: bool = file.get_error() == OK
+	file.close()
+	if not stored or not BAKE.commit_file("disk_"+table, bake_key, path + ".part"):
+		DirAccess.remove_absolute(path + ".part")
+		return false
+	return true
+
+static func _open_disk(table: String, bake_key: String) -> Dictionary:
+	var path: String = BAKE.verified_file("disk_"+table, bake_key)
+	if path.is_empty(): return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null or file.get_length() < 8: return {}
+	file.seek(file.get_length() - 8)
+	var index_position: int = file.get_64()
+	if index_position < 0 or index_position >= file.get_length() - 8: return {}
+	file.seek(index_position)
+	var index: Variant = file.get_var()
+	if not index is Dictionary or index.get("schema") != DISK_SCHEMA or not _integer(index.get("count")): return {}
+	if not index.get("columns") is PackedStringArray or not index.get("row_offsets") is PackedInt64Array or not index.get("column_offsets") is PackedInt64Array: return {}
+	if (index.row_offsets as PackedInt64Array).size() != int(index.count) or (index.column_offsets as PackedInt64Array).size() != (index.columns as PackedStringArray).size(): return {}
+	var disk := DiskTable.new()
+	disk.file = file
+	disk.row_offsets = index.row_offsets
+	disk.column_offsets = index.column_offsets
+	disk.columns = index.columns
+	return {"count": int(index.count), "columns": index.columns, "disk": disk}
+
+## Packed column `position` of a column store (read from storage for a disk table).
+static func _column_data(store: Dictionary, position: int) -> Variant:
+	if store.has("disk"): return (store.disk as DiskTable).column(position)
+	return store.data[position]
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_definition_rows.gd","res://scripts/resources/current523_bake_cache.gd"]
@@ -229,6 +320,7 @@ static func _pack(source: Array) -> Dictionary:
 
 static func _row_at(store: Dictionary, index: int) -> Dictionary:
 	if store.has("rows"): return (store.rows[index] as Dictionary).duplicate(true)
+	if store.has("disk"): return (store.disk as DiskTable).row(index)
 	var result: Dictionary = {}
 	var columns: PackedStringArray = store.columns
 	for column_index: int in columns.size():
@@ -249,7 +341,7 @@ static func rows_matching(table: String, field: String, ids: Dictionary) -> Arra
 		return result
 	var position: int = (store.columns as PackedStringArray).find(field)
 	if position < 0: return result
-	var column: Variant = store.data[position]
+	var column: Variant = _column_data(store, position)
 	for index: int in int(store.count):
 		var value: Variant = column[index]
 		if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
@@ -277,7 +369,7 @@ static func column(table: String, field: String) -> Variant:
 			values.append(value[field])
 		return values
 	var position: int = (store.columns as PackedStringArray).find(field)
-	return store.data[position] if position >= 0 else []
+	return _column_data(store, position) if position >= 0 else []
 
 static func rows(table: String) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -301,7 +393,7 @@ static func _integer_column(table: String, field: String) -> bool:
 	if store.is_empty() or store.has("rows"): return false
 	var position: int = (store.columns as PackedStringArray).find(field)
 	if position < 0: return false
-	var column: Variant = store.data[position]
+	var column: Variant = _column_data(store, position)
 	if not column is PackedFloat64Array: return false
 	for value: float in column:
 		if not _integer(value): return false
@@ -317,7 +409,7 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 		var column: Variant = null
 		if not store.has("rows"):
 			var position: int = (store.columns as PackedStringArray).find(foreign_key)
-			if position >= 0: column = store.data[position]
+			if position >= 0: column = _column_data(store, position)
 		for index: int in int(store.count):
 			var value: Variant = column[index] if column != null else (store.rows[index] as Dictionary).get(foreign_key) if store.has("rows") else null
 			if not _integer(value):
