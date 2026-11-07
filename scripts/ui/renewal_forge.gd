@@ -257,7 +257,7 @@ func _select(index: int) -> void:
 		action.text="강화 · %d장 + %d 아데나" % [int(entry.get("count",1)),int(entry.get("cost",0))]
 	if mode=="blessing":
 		selected_state.text=("장착 중" if bool(entry.get("equipped",false)) else "인벤토리 보관")+" · 축복 부여"
-		detail.text="축복 성공률: %.1f%% (TWILIGHT 임시값)\n축복 옵션: %s\n\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [float(entry.get("success_chance",0.0)),UI.safe(entry.get("bonus_text",""))]
+		detail.text="축복 성공률: %.1f%% (%s)\n축복 옵션: %s\n\n성공/실패 모두 주문서 1장 소모 · 장비 유지" % [float(entry.get("success_chance",0.0)),str(entry.get("success_basis","TWILIGHT 임시값")),UI.safe(entry.get("bonus_text",""))]
 		action.text="축복 부여 · 주문서 1장"
 	action.disabled=false
 	if selection_built and browser.size.x<660:
