@@ -133,6 +133,8 @@ func _update_play() -> void:
 	play_buttons.begin.disabled=not service.check_idle().is_empty() or rows.is_empty()
 	play_buttons.recharge.disabled=not service.check_idle().is_empty() or rows.is_empty()
 	play_buttons.claim.disabled=service.state.active.is_empty() or service.state.active.get("status","")!="cleared" or service.save_blocked
+	var settled_rewards: Array = service.state.active.get("rewards",[]) if service.state.active.get("status","") == "cleared" else []
+	_set_reward_action_image(play_buttons.claim,settled_rewards)
 	play_buttons.stop.disabled=service.state.active.is_empty() or service.save_blocked
 	play_buttons.retry.disabled=service.pending.is_empty() or service.save_blocked
 	play_buttons.cancel.visible=not service.pending.is_empty();play_buttons.cancel.disabled=service.save_blocked
@@ -227,6 +229,9 @@ func _refresh() -> void:
 	local_toggle.get_parent().visible=_kind()=="tower"
 	listing.clear()
 	_set_recharger_icons({})
+	_set_reward_action_image(execution_buttons.claim,[])
+	_set_reward_action_image(execution_buttons.immediate,[])
+	_set_reward_action_image(play_buttons.claim,[])
 	details.text = ""
 	rows = world.source_dungeon_entries(_kind(),bool(FAMILIES[family.selected][1]))
 	reward_mode.visible = _kind() == "tower"
@@ -269,6 +274,24 @@ func _set_recharger_icons(item_row: Dictionary, title: String = "") -> void:
 			button.set_meta("source523_image",evidence)
 		elif button.has_meta("source523_image"):
 			button.remove_meta("source523_image")
+
+func _set_reward_action_image(button: Button, rewards: Array) -> void:
+	button.icon = null
+	if button.has_meta("source523_image"): button.remove_meta("source523_image")
+	if not IMAGES.selected() or rewards.size() != 1: return
+	var reward: Variant = rewards[0]
+	if not reward is Dictionary or reward.get("type") != "Item" or not reward.get("row") is Dictionary or not reward.get("item") is Dictionary: return
+	var item: Variant = reward.item.get("row")
+	var item_id: Variant = reward.row.get("RewardClassID")
+	if not item is Dictionary or not IMAGES.PACK._integer(item_id) or int(item_id) <= 0 or item.get("ID") != item_id: return
+	var image: Dictionary = IMAGES.describe_item_class_row(item,str(reward.item.get("name","")))
+	button.icon = image.get("texture") as Texture2D
+	button.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	evidence["reward_relation"] = {"source_table":"Reward","source_id":reward.row.get("ID"),
+		"source_field":"RewardClassID","source_item_class_id":item_id,"source_type":"Item"}
+	button.set_meta("source523_image",evidence)
 
 func _reward_lines(rewards: Array) -> Array[String]:
 	var result: Array[String] = []
@@ -391,6 +414,13 @@ func _check_entry() -> void:
 
 
 func _update_actions(entry: Dictionary) -> void:
+	# These are the exact readonly rows used by the service's settlement path.
+	_set_reward_action_image(execution_buttons.immediate,world.source_dungeon_runs.rules.reward_preview("tower",int(entry.stage.ID),true))
+	var active_run: Dictionary = world.source_dungeon_runs.state.active
+	var claim_rewards: Array = []
+	if active_run.get("status","") == "cleared" and active_run.get("stage_id") == entry.stage.ID:
+		claim_rewards = world.source_dungeon_runs.rules.reward_preview("tower",int(entry.stage.ID),false)
+	_set_reward_action_image(execution_buttons.claim,claim_rewards)
 	var local_settings: Dictionary = world.LOCAL_TOWER.settings(world.source_dungeon_runs.state)
 	local_toggle.set_pressed_no_signal(bool(local_settings.enabled))
 	local_time_scale.set_value_no_signal(float(local_settings.time_scale))

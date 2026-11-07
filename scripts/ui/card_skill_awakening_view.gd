@@ -5,6 +5,7 @@ const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Ownership=preload("res://scripts/ui/catalog_card_ownership.gd")
 const SourceSkin=preload("res://scripts/ui/source_skill_awakening_skin.gd")
 const SkillImages=preload("res://scripts/ui/source523_skill_buff_images.gd")
+const ItemImages=preload("res://scripts/ui/source523_image_assets.gd")
 var runtime: RefCounted
 var identity: String
 var level: OptionButton
@@ -63,10 +64,28 @@ func configure(service: RefCounted,target: String) -> void:
 	action=UI.button("재각성" if int(snapshot.entry.spell_id)>0 else "각성",_execute,Vector2(0,44))
 	action.set_script(preload("res://scripts/ui/native_touch_button.gd"))
 	action.name="SkillAwakeningExecute";action.disabled=not bool(snapshot.can_awaken) or bool(snapshot.get("save_blocked",false));action.tooltip_text=str(snapshot.blocked_reason);add_child(action)
+	_bind_book_image()
 	var original_action: bool=SourceSkin.button(action,"Btn_Production")
 	var note: Label=UI.label("옵션 각성과 별도 상태 · 원본 각성 재질 적용 / 반응형 배치" if original_action else "원본 각성 화면 재질 미설치",12,UI.MUTED);add_child(note)
 	_preview(0)
 	if candidates.item_count>0:candidates.select(0);_select(0)
+func _bind_book_image() -> void:
+	action.icon=null
+	if action.has_meta("source523_book_image"):action.remove_meta("source523_book_image")
+	if not ItemImages.selected():return
+	var book: Dictionary=snapshot.get("book",{})
+	var item: Variant=book.get("item_row")
+	var requirement: Dictionary=snapshot.get("book_requirement",{})
+	var item_id: Variant=requirement.get("item_class_id")
+	if not item is Dictionary or not ItemImages.PACK._integer(item_id) or int(item_id)<=0 or item.get("ID")!=item_id:return
+	var image: Dictionary=ItemImages.describe_item_class_row(item,str(book.get("name","")))
+	action.icon=image.get("texture") as Texture2D
+	action.expand_icon=true
+	var evidence: Dictionary=image.duplicate(true)
+	evidence.erase("texture")
+	evidence["caller_item_class_id"]=item_id
+	action.set_meta("source523_book_image",evidence)
+
 func _preview(index: int) -> void:
 	var data: Dictionary=runtime.view(identity,index+1)
 	var p: Dictionary=data.get("preview_profile",{})
@@ -102,6 +121,7 @@ func refresh_growth(_force: bool=false) -> void:
 	# Existing read-only saved EXP text; no material picker or synthesis form.
 	snapshot=runtime.view(identity)
 	if not snapshot.ok:return
+	_bind_book_image()
 	var entry: Dictionary=snapshot.entry
 	current.text="현재 각성 스킬 없음" if int(entry.spell_id)==0 else str(runtime.core.DATA.data.spells[str(int(entry.spell_id))].name)+" · Lv."+str(int(entry.level))
 	growth.text="저장 경험치 "+str(entry.experience)+" · 재각성 시 Lv.1 · 경험치 0부터"

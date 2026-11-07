@@ -247,6 +247,7 @@ func _rebuild_listing() -> void:
 	listing.set_meta("source523_images",source_images)
 	if recipe_ids.is_empty():
 		current_id = ""
+		_bind_result_action_image({},{})
 		product.texture=null
 		UI.clear_item_visual(product)
 		product_name.text="선택한 제작법 없음"
@@ -358,7 +359,24 @@ func _refresh_quote() -> void:
 		if int(recipe.get("popup_text_id", 0)) != 0:
 			detail.text += "\n[color=#ec8075]재료 장비의 속성 제련 효과는 결과물에 계승되지 않습니다.[/color]"
 	action.disabled = not bool(quote.get("ok",false))
+	_bind_result_action_image(recipe,result)
 	_update_action_label()
+
+func _bind_result_action_image(recipe: Dictionary,result: Dictionary) -> void:
+	action.icon = null
+	if action.has_meta("source523_result_image"): action.remove_meta("source523_result_image")
+	if not _uses_source_recipe_images(recipe,current_id) or recipe.has("outcomes"): return
+	var id: int = _recipe_item_class_id(recipe,result,current_id)
+	if id <= 0: return
+	var references: Dictionary = _source_recipe_image_references()
+	var reference: Variant = references.get(str(id))
+	var image: Dictionary = SOURCE_IMAGES.describe_item_reference(reference,str(result.get("item",""))) if reference is Dictionary and not reference.is_empty() else SOURCE_IMAGES.describe_item_class(id,str(result.get("item","")))
+	action.icon = image.get("texture") as Texture2D
+	action.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	evidence["caller_recipe_id"] = current_id
+	action.set_meta("source523_result_image",evidence)
 
 func _clear_materials() -> void:
 	material_rows.clear()
@@ -519,5 +537,13 @@ func _craft() -> void:
 		if recipe.has("missing_failure_policy"):
 			var failure: Dictionary=recipe.missing_failure_policy
 			warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
-		hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
-			hud.emit_signal("craft_requested",id,count))
+		var accept: Callable = func(_amount: int) -> void:
+			hud.emit_signal("craft_requested",id,count)
+		var confirmation: Control = hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",accept)
+		var evidence: Dictionary = action.get_meta("source523_result_image",{})
+		if confirmation != null and confirmation.get("callback") == accept and SOURCE_IMAGES.selected() and evidence.get("caller_recipe_id") == id and not recipe.has("outcomes"):
+			var confirm_button: Variant = confirmation.get("confirm_button")
+			if confirm_button is Button:
+				confirm_button.icon = action.icon
+				confirm_button.expand_icon = true
+				confirm_button.set_meta("source523_result_image",evidence.duplicate(true))

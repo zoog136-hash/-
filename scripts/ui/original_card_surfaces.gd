@@ -5,6 +5,28 @@ const Selection=preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const SOURCE_API="res://scripts/lineagem_base508.gd"
 const Roles: Array[String]=["reveal_back","reveal_background","fusion_background","awakening_background","grade_frame"]
 static var _bindings: Dictionary={}
+static var _frame_consumers: Array[Dictionary]=[]
+
+static func watch_frames(consumer: Node, method: String="refresh") -> void:
+	if not is_instance_valid(consumer) or not consumer.has_method(method):return
+	var live: Array[Dictionary]=[]
+	var present: bool=false
+	for entry: Dictionary in _frame_consumers:
+		var owner: Object=entry.owner.get_ref()
+		if not is_instance_valid(owner):continue
+		live.append(entry)
+		if owner==consumer and entry.method==method:present=true
+	if not present:live.append({"owner":weakref(consumer),"method":method})
+	_frame_consumers=live
+
+static func _frames_registered() -> void:
+	var live: Array[Dictionary]=[]
+	for entry: Dictionary in _frame_consumers:
+		var owner: Object=entry.owner.get_ref()
+		if not is_instance_valid(owner):continue
+		live.append(entry)
+		if owner.has_method(entry.method):owner.call_deferred(entry.method)
+	_frame_consumers=live
 
 static func _missing(role: String, reason: String) -> Dictionary:
 	return {"ok":false,"status":reason,"role":role,"texture":null,"actual_game_consumption_observed":false}
@@ -43,16 +65,21 @@ static func bind(role: String, member: String, member_sha256: String, node_offse
 	if texture==null:return _missing(role,"source_card_surface_original_pixels_unavailable")
 	var key: String=role+":"+str(grade_id)
 	_bindings[key]={"pack":pack,"texture":texture,"selection":_selected_identity(),"role":role,"source_grade_id":grade_id,"member":member,"member_sha256":member_sha256,"node_offset":node_offset,"source_field":"fileNameData","reference":reference.duplicate(true),"manifest_sha256":pack.manifest_sha256}
+	if role=="grade_frame":_frames_registered()
 	return {"ok":true,"role":role,"registered":true,"rendered":false}
 
 static func resolve(role: String, record: Dictionary={}) -> Dictionary:
 	if role not in Roles:return _missing(role,"source_card_surface_role_unsupported")
 	var grade_id: int=0
 	if role=="grade_frame":
-		if record.get("source")!="lineagem_patch523" or not ResourceLoader.exists(SOURCE_API):return _missing(role,"source_card_surface_original_card_identity_required")
+		# Current523 preserves m508 saved identities in the actual card model.
+		# Its source label is ABI, not permission to load a historical frame.
+		if record.get("source") not in ["lineagem_base508","lineagem_patch523"] or not ResourceLoader.exists(SOURCE_API):return _missing(role,"source_card_surface_original_card_identity_required")
 		var api: Script=load(SOURCE_API)
 		var canonical: Dictionary=api.canonical(record) if api!=null else {}
-		if canonical.is_empty() or canonical.get("sourceId")!=record.get("sourceId"):return _missing(role,"source_card_surface_current_card_definition_required")
+		if canonical.is_empty() or canonical.get("source_snapshot")!="patch523" or canonical.get("sourceId")!=record.get("sourceId"):return _missing(role,"source_card_surface_current_card_definition_required")
+		var original: Variant=canonical.get("source_original")
+		if not original is Dictionary or original.get("source_snapshot")!="patch523" or original.get("card_id")!=canonical.get("source_card_id") or original.get("grade_id")!=canonical.get("source_grade_id"):return _missing(role,"source_card_surface_current_card_definition_required")
 		var source_grade: Variant=canonical.get("source_grade_id")
 		if typeof(source_grade) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(source_grade)) or float(source_grade)!=floor(float(source_grade)) or source_grade<=0:return _missing(role,"source_card_surface_original_grade_identity_required")
 		grade_id=int(source_grade)
@@ -61,4 +88,7 @@ static func resolve(role: String, record: Dictionary={}) -> Dictionary:
 	if binding.selection!=_selected_identity():return _missing(role,"source_card_surface_selection_changed_rebind_required")
 	var evidence: Dictionary=binding.duplicate()
 	evidence.erase("texture");evidence.erase("pack");evidence.erase("selection")
+	if role=="grade_frame":
+		evidence["caller_card_identity"]=str(record.get("sourceId",""))
+		evidence["grade_basis"]="current523_canonical_card_and_preserved_original_grade_id"
 	return {"ok":true,"status":"original","role":role,"texture":binding.texture,"provenance":evidence,"actual_game_consumption_observed":false}

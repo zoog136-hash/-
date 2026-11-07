@@ -146,8 +146,10 @@ func _transfer() -> void:
 		return
 	var item: String = str(entry["name"])
 	var id: String = str(entry.get("instance_id",""))
-	hud.confirm_action("보관 확인" if direction == "deposit" else "찾기 확인","%s ×%d" % [item,count],"이동",func(_amount: int) -> void:
-		hud.emit_signal("warehouse_transfer_requested",item,count,direction,id))
+	var accept: Callable=func(_amount: int) -> void:
+		hud.emit_signal("warehouse_transfer_requested",item,count,direction,id)
+	var confirmation: Control=hud.confirm_action("보관 확인" if direction == "deposit" else "찾기 확인","%s ×%d" % [item,count],"이동",accept)
+	transfer_sheet.bind_confirmation(confirmation,entry,accept)
 
 func request_drop(reference: String) -> void:
 	var parts: PackedStringArray = reference.split("@@@")
@@ -158,8 +160,10 @@ func request_drop(reference: String) -> void:
 		return
 	var count: int = 1 if not id.is_empty() else mini(99,int(world.inventory.get(item,0)))
 	if count <= 0: return
-	hud.confirm_action("창고 보관",item+"\n보관할 수량을 선택하세요","보관",func(amount: int) -> void:
-		hud.warehouse_transfer_requested.emit(item,amount,"deposit",id),count)
+	var accept: Callable=func(amount: int) -> void:
+		hud.warehouse_transfer_requested.emit(item,amount,"deposit",id)
+	var confirmation: Control=hud.confirm_action("창고 보관",item+"\n보관할 수량을 선택하세요","보관",accept,count)
+	transfer_sheet.bind_reference_confirmation(confirmation,item,id,"deposit",accept)
 
 func request_withdraw(reference: String) -> void:
 	var parts: PackedStringArray = reference.split("@@@")
@@ -168,5 +172,7 @@ func request_withdraw(reference: String) -> void:
 	if not id.is_empty() and (not world.warehouse.instances.has(id) or world.warehouse.instances[id].get("name","") != item): return
 	var count: int = 1 if not id.is_empty() else mini(99,int(world.warehouse.stacks.get(item,0)))
 	if count <= 0: return
-	hud.confirm_action("창고 찾기",item+"\n찾을 수량을 선택하세요","찾기",func(amount: int) -> void:
-		hud.warehouse_transfer_requested.emit(item,amount,"withdraw",id),count)
+	var accept: Callable=func(amount: int) -> void:
+		hud.warehouse_transfer_requested.emit(item,amount,"withdraw",id)
+	var confirmation: Control=hud.confirm_action("창고 찾기",item+"\n찾을 수량을 선택하세요","찾기",accept,count)
+	transfer_sheet.bind_reference_confirmation(confirmation,item,id,"withdraw",accept)

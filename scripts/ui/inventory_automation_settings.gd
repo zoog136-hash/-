@@ -342,7 +342,7 @@ func _enable_automatic() -> void:
 	_confirm("자동 정비 대상·비용 확인","\n".join(lines),"자동 정비 켜기",func(_amount: int) -> void:
 		if stamp != service._stamp("maintenance"): hud.show_message("대상·상태가 변경됐습니다. 다시 확인해주세요"); return
 		_report(service.maintenance.arm(id,do_store,do_sell,seconds,false,{"setup":true,"resume_auto":resume}))
-		_refresh_maintenance())
+		_refresh_maintenance(),plan.cart)
 
 func _arm() -> void:
 	if portal_choice.selected < 0 or portal_choice.selected >= local_portals.size():
@@ -357,7 +357,7 @@ func _arm() -> void:
 		if result.get("ok",false): hud._close_workspace()
 		else: _refresh_maintenance())
 
-func _confirm(title: String, description: String, action: String, accept: Callable) -> void:
+func _confirm(title: String, description: String, action: String, accept: Callable, cart: Array = []) -> void:
 	var root: Node = hud.get_node("Root")
 	for child: Node in root.get_children():
 		if child.name == "TwilightConfirmation" and not child.is_queued_for_deletion(): return
@@ -365,3 +365,4 @@ func _confirm(title: String, description: String, action: String, accept: Callab
 	var dialog := preload("res://scripts/ui/auto_inventory_confirmation.gd").new()
 	root.add_child(dialog)
 	dialog.configure(title,description,action,accept)
+	dialog.bind_source_cart(world,cart)

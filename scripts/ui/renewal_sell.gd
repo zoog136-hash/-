@@ -122,7 +122,7 @@ func _add_item(name: String, count: int, instance_id: String, suffix: String) ->
 	var physical: Variant=world.item_instances.get(instance_id)
 	if physical is Dictionary:
 		var original: Variant=physical.get("record")
-		if original is Dictionary and SOURCE_IMAGES.recognized_item(original): source_record=original
+		if original is Dictionary and SOURCE_IMAGES.handles_item(original): source_record=original
 	entries.append({"name":name,"count":count,"instance_id":instance_id,"record":source_record.duplicate(true)})
 	var images: Dictionary = hud.item_image_index.get("아이템",{})
 	var visual_record: Dictionary=source_record if SOURCE_IMAGES.handles_item(source_record) else catalog_record
@@ -160,8 +160,10 @@ func _sell() -> void:
 	if world._item_locked(item,id):
 		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
-	hud.confirm_action("판매 확인",item+" ×%d\n" % count+details.text,"판매",func(_amount: int) -> void:
-		hud.emit_signal("shop_sell_requested",item,count,id))
+	var accept: Callable=func(_amount: int) -> void:
+		hud.emit_signal("shop_sell_requested",item,count,id)
+	var confirmation: Control=hud.confirm_action("판매 확인",item+" ×%d\n" % count+details.text,"판매",accept)
+	transfer_sheet.bind_confirmation(confirmation,entry,accept)
 
 func request_drop(reference: String) -> void:
 	var parts: PackedStringArray = reference.split("@@@")
@@ -175,8 +177,10 @@ func request_drop(reference: String) -> void:
 				hud.show_message("판매할 수 없는 아이템입니다")
 				return
 			var maximum: int = int(quantity.max_value)
-			hud.confirm_action("판매 수량",item+"\n다음 화면에서 최종 판매 금액을 확인합니다","금액 확인",func(count: int) -> void:
+			var accept: Callable=func(count: int) -> void:
 				quantity.value = count
-				_sell(),maximum)
+				_sell()
+			var confirmation: Control=hud.confirm_action("판매 수량",item+"\n다음 화면에서 최종 판매 금액을 확인합니다","금액 확인",accept,maximum)
+			transfer_sheet.bind_confirmation(confirmation,entries[index],accept)
 			return
 	hud.show_message("장착 중이거나 판매할 수 없는 아이템입니다")

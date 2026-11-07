@@ -8,6 +8,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+const ResultImages = preload("res://scripts/ui/source523_result_card_images.gd")
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
 const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
@@ -227,3 +228,8 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 
 func set_sequence_playing(value: bool) -> void:
 	if is_instance_valid(confirmed_chrome):confirmed_chrome.set_ambient_playing(value)
+
+func original_result_card_image() -> Dictionary:
+	# This instance and its UI-owned phase contract select the pixels. Never
+	# assign them to the old fit/stretch fields as a fabricated source transform.
+	return ResultImages.describe(self)

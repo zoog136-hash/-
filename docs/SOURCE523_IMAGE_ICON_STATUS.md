@@ -784,3 +784,188 @@ source exclusions remain unavailable.
 Actual acquisition/display/input/effect/save/restart coverage and deduplicated
 actual-use percentages remain unverified. Inventory presence, metadata joins,
 loads, component renders and delivery bytes do not count as that completion.
+
+### Follow-up after PR270: dungeon reward action images
+
+The existing tower claim and immediate-completion buttons now use the same
+`reward_preview("tower", stage_id, immediate_mode)` rows as the settlement
+service. The extended dungeon claim button uses the cleared active run's stored
+`rewards`, preserving its already selected settlement result. An image is
+requested only for exactly one declared Item reward whose `RewardClassID`
+matches the complete supplied ItemClass row. The existing original item-image
+consumer resolves that row and retains its source provenance. Multiple rewards,
+experience rewards and missing source rows receive no representative image;
+refreshing the selection clears the previous image and its metadata.
+
+This change adds image calls to existing buttons. It does not choose rewards,
+change claim/transaction/save behavior, supply entrance/popup asset identities,
+or construct original UI nodes. It is unexecuted and unverified. No additional
+tests, game runs, renders or CI were started, and no actual-use counts changed.
+
+The existing fishing cast button also displays the currently selected rod's
+original ItemClass image using the rod option's declared ID and existing
+`rules.items` source row. Its image follows the existing selection event; no
+default rod, Fish-to-Item alias, cast cost or confirmation behavior is added.
+This follow-up is also unexecuted and unverified.
+
+### Equipment operation selections
+
+The existing equipment-operation target, single-material and alchemy-material
+lists now consume the service snapshot's preserved item record through the
+shared original-image consumer. Its recognized item identity must match the
+snapshot's explicit source ItemClass ID. Each row retains image provenance
+separately from its physical instance selection metadata; refreshing the
+snapshot clears old image evidence. Host names and local physical IDs never
+select a source asset. Existing lock/equipped filters, quote/commit arguments,
+alchemy result selection and save handling remain with the service. This code
+is unexecuted and unverified; no tests, compile, game, render or CI was started.
+
+The existing equipment preview and commit buttons now reuse the selected target
+row's image and provenance only when its physical instance ID still matches the
+action. Alchemy and set operations receive no representative target image.
+Preserved records with existing supported display contracts also pass through
+the common image consumer without requiring a native gameplay flag.
+
+Card skill awakening's existing execution button uses the service's exact
+`book.item_row` only when it matches `book_requirement.item_class_id`; its source
+Bonus/ItemBonus book selection stays with the service. Candidate skills do not
+choose a displayed result for this paid random action. Option awakening's
+existing attempt and confirmation buttons use the actual target card. Its feed
+and feed-confirmation buttons display a material card only for one explicitly
+selected material identity, using the same current original card consumer as the
+existing portrait/list. Multi-material selections clear the action icon, and
+review cancellation or snapshot refresh removes the stale confirmation image.
+No source asset, ownership, cost, roll, effect, or transaction semantics are
+invented or changed. These additions remain unexecuted and unverified.
+
+### Live actor rows, existing purchases and deterministic crafting
+
+The existing current-generation list now requests an original NPC illustration
+for its actual live actor only. The actor's positive mobile ID, original
+ID/Sprite/DescId and the current catalog admission must agree. The shared
+`NpcClass.IllustAssetID` consumer supplies pixels and provenance; list metadata
+also records the actual pooled actor instance/life. Spawn packs and mixed groups
+receive no representative illustration. Actor animation, spawn admission,
+targeting and dialogue identity are unchanged; this does not establish the
+missing dialogue-key-to-mobile-NPC correspondence.
+
+The ordinary existing purchase/review buttons also consume the same preserved
+catalog item record already supplied to their selected-item details. Source
+provenance belongs to that item, without asserting original merchant stock,
+NPC or price identity. The existing source crafting action and its confirmation
+use the selected recipe's explicit ItemClass result and published data reference.
+Recipes with outcome pools receive no action image; an empty filter clears the
+previous result image. Transaction signals, quantities, quotes, random choices
+and save ownership stay with their existing services.
+
+These follow-ups preserve the merged main UI/Sprite contracts. No original UI
+nodes, actor Sprite player, pixels, source identities or missing relationships
+were manufactured. No tests, compile, game runs, renders or CI were started;
+the added calls are unexecuted and unverified, with no usage numerator change.
+
+### Warehouse and sale source-item actions
+
+The existing warehouse deposit/withdraw and sale actions now consume the same
+preserved item record as their selection details. Physical entries reread their
+actual instance record and require the instance/record names to agree with the
+selected entry; they do not reconstruct an original ID from its caption. Sale
+rows preserve all record forms already supported by the common image consumer,
+including supplied original reward/material records, rather than replacing
+those physical records with a catalog-name lookup.
+
+The existing quantity/final confirmations receive that same image only when
+their actual transaction callback is the one passed to the modal owner. A modal
+already open for another action is left intact. Warehouse drag requests supply
+an image only for an unambiguous existing entry in the requested current
+direction. Empty selections clear previous action art and provenance. Existing
+warehouse counts, physical IDs, lock/weight/price checks, transaction signals
+and save behavior remain unchanged. The same callback boundary is retained for
+the previously connected purchase/craft confirmations. No new UI targets or
+source assets were added, and no tests/compile/game/render/CI were executed.
+
+### Existing automatic cart confirmations
+
+Automatic warehouse/sale, equipment-category sale/selection and automatic
+maintenance setup now pass their already prepared cart to the existing
+confirmation's original-image consumer. Only a single deposit/sell entry with
+a positive quantity can supply an image. Physical selections use the actual
+instance record; stack selections reuse the owner's current catalog lookup.
+Record/name and current quantity must still agree before the existing common
+original-item provider resolves the source identity. An empty or multiple-entry
+cart clears the icon rather than selecting a representative item.
+
+No cart preview, movement, schedule, commit, price, inventory or save operation
+is added by the image method. Existing stamps/callbacks and all transaction
+admission stay with their original owners. This consumes an existing button,
+without a new UI node, picture, source ID, animation or pack. The added calls
+remain uncompiled/unexecuted/unverified; no additional tests/game/render/CI ran.
+
+### Current card identities at the original grade-frame consumer
+
+The current523 card catalog intentionally retains `source=lineagem_base508`
+for saved m508 identities. The original grade-frame consumer previously rejected
+those actual current cards before their canonical definition could be read.
+It now accepts both existing native labels, then requires the canonical
+`source_snapshot=patch523`, unchanged saved sourceId, and agreement between the
+canonical card/grade keys and its preserved current-original descriptor.
+The existing exact GradeID binding and selected-original-UI pin still supply
+the frame; an old saved namespace never selects an old pack.
+
+The inspected current Grade rows declare GradeValue/ColorID/drop-effect roles,
+not a frame AssetView or CSB-node foreign key. No GradeValue, array position or
+color is mapped to the newly reported front-frame offsets. The image lane's
+held selected v6 source closure contains the original inventory/quickslot/map
+scopes, not the newly reported card-result/quest scenes. This data-boundary fix
+does not register those unknown surfaces or establish quest RewardID-to-slot
+assignment. Exact original role/member/SHA/node and any grade assignment remain
+the UI owner's narrow handoff, with original pixels required in the explicitly
+selected source pack. Existing distribution and private candidates are unchanged.
+This code change is uncompiled/unexecuted/unverified; no test/game/render/CI ran.
+
+### Seven-grade UI registration reaches existing frame consumers
+
+UI286 `265a46e45234bc4894352905bdc55cbac306232e` supplies the actual
+seven GradeID family bindings (1/2/3/4/5/32/52) through
+`source_main_card_frames.bind(pack)` and this image lane's existing
+`original_card_surfaces.bind("grade_frame",member,sha,node,grade_id)` API.
+Its existing family declarations and current card projection share Grade SHA
+`7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da`.
+This supersedes the earlier missing catalogue-frame family handoff only.
+
+The image API now notifies weakly held existing catalogue and fusion consumers
+when an exact original frame registers. This also refreshes a fusion roster
+that was already open when the UI owner bound its source pack. Catalogue rows,
+selected-preview frame and fusion rows consume the canonical card's actual
+GradeID through the same descriptor; no grade rank, name or color selects art.
+Their existing drawing controls retain texture-free per-card frame evidence,
+including selected source pin/member/node/reference and unavailable reasons.
+The catalogue no longer applies a host-invented unowned tint to original frame
+pixels. Existing ownership labels/portraits and transaction state are unchanged.
+
+No UI-owned registration/renderer is copied. Both PR283 and that UI286 change
+are required, together with an explicitly approved original pack containing
+the seven scoped Card_A Sprite nodes. UI's v35 is a local-only candidate;
+the phone's frozen v30/62ZIP selection is unchanged and lacks these optional
+scopes. A registered binding is not an observed game render or completion count.
+
+Result-scene inner backing11140 is not the full reveal background, and its
+front/back variants are not substituted for these Card_A catalogue frames.
+Quest still requires a real selected/displayed quest and the owner's complete
+mixed-reward slot/overflow model. No first-five or representative reward,
+result variant, attachment transform, new image or missing relation is created.
+No resource update/upload, tests, compile, game, render, CI or merge was run.
+
+The existing registered-material previews in `card_fusion_view` also subscribe
+their presentation-only `_refresh_previews` method to that same registration.
+Their existing TextureRects retain each canonical source-frame descriptor.
+The callback rebuilds only the existing preview from `registered_materials`;
+it does not recompute selected cards, quantities, probabilities or transactions.
+Subscriptions hold weak owners and are removed when the owner is gone.
+
+Normal and awakening collection cards also pass their actual card record to
+the same descriptor and retain its source evidence on their existing frame
+TextureRects. Original frame pixels receive no host unowned-frame tint there
+either. Existing acquired/condition/copy labels and card portrait semantics
+remain unchanged. These collection frames are constructed by their existing
+row-owner refresh; no new row, alternate image or automatic pack selection is
+introduced. This extension is also uncompiled/unexecuted/unverified.

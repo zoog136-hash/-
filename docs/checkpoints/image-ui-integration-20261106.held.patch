@@ -1,0 +1,970 @@
+--- a/scripts/ui/card_reveal_card.gd
++++ b/scripts/ui/card_reveal_card.gd
+@@ -9,6 +9,11 @@
+ const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
+ const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+ const ResultImages = preload("res://scripts/ui/source523_result_card_images.gd")
++const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
++const ResultFaceHost=preload("res://scripts/ui/original_ui/source_result_face_host.gd")
++var _original_result_face_host: RefCounted
++var source_ui_pack: RefCounted
++var source_result_operation: String=""
+ const LIGHTNING_EARLY_SECONDS: float = 0.1
+ const CONFIRM_DELAY_SECONDS: float = 2.0
+ const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
+@@ -35,6 +40,7 @@
+ var reveal_button: Button
+ 
+ class Face extends Control:
++	var original_back_receiver_active: bool=false
+ 	var artwork: Texture2D
+ 	var back: Texture2D
+ 	var candidates: Array[Texture2D] = []
+@@ -51,6 +57,7 @@
+ 		draw_texture_rect(texture,Rect2(at+(size-fitted)*0.5,fitted),false)
+ 
+ 	func _draw() -> void:
++		if elapsed<0 and original_back_receiver_active:return
+ 		draw_rect(Rect2(Vector2.ZERO,size),Color("0a1119"))
+ 		if elapsed < 0:
+ 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
+@@ -179,6 +186,7 @@
+ 	grade_heading.size = Vector2(size.x*1.4,40)
+ 	if reveal_button != null:
+ 		reveal_button.size = size
++	_refresh_original_result_face()
+ 
+ func start_reveal(at_time: float) -> bool:
+ 	if not waiting_for_press:
+@@ -205,6 +213,7 @@
+ 		face.elapsed = -1.0
+ 		name_label.hide()
+ 		grade_label.hide()
++		_refresh_original_result_face()
+ 		# Unopened cards do not leak the result, run lightning, or redraw FX.
+ 		return
+ 	var local: float = clock-open_at
+@@ -224,10 +233,24 @@
+ 	rim.show()
+ 	confirmed_chrome.visible=revealed
+ 	(rim.get_theme_stylebox("panel") as StyleBoxFlat).border_color = tint
++	_refresh_original_result_face()
+ 	queue_redraw()
+ 
+ func set_sequence_playing(value: bool) -> void:
+ 	if is_instance_valid(confirmed_chrome):confirmed_chrome.set_ambient_playing(value)
++
++func original_result_card_contract() -> Dictionary:
++	if not is_instance_valid(face) or record.is_empty():return {"ok":false,"code":"source_result_actual_card_face_required"}
++	var phase: String="back" if waiting_for_press or face.elapsed<0 else "front" if face.elapsed>=face.duration else "transition"
++	return SourceResultRoles.selected_card(source_ui_pack,record,source_result_operation,phase)
++
++func _refresh_original_result_face() -> void:
++	if _original_result_face_host==null:_original_result_face_host=ResultFaceHost.new()
++	set_meta("original_result_face_status",_original_result_face_host.refresh(self))
++
++func original_result_face_receiver() -> Dictionary:
++	if _original_result_face_host==null:return {"ok":false,"code":"result_face_actual_receiver_unavailable"}
++	return _original_result_face_host.receiver()
+ 
+ func original_result_card_image() -> Dictionary:
+ 	# This instance and its UI-owned phase contract select the pixels. Never
+--- a/scripts/ui/card_reveal_stage.gd
++++ b/scripts/ui/card_reveal_stage.gd
+@@ -9,6 +9,8 @@
+ const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
+ const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
+ const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
++const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
++var source_ui_pack: RefCounted
+ @export var showcase_on_ready: bool = false
+ var cards: Array[Control] = []
+ var results: Array[Dictionary] = []
+@@ -92,6 +94,8 @@
+ 		card.intensity_scale = intensity_scale
+ 		card.show_grade_heading = showcase
+ 		card.waiting_for_press = manual_reveal
++		card.source_ui_pack=source_ui_pack
++		card.source_result_operation="fusion" if fusion else "draw"
+ 		var grade: String = str(results[i].get("grade","일반"))
+ 		var high: bool = int(PROFILES.profile(grade).get("tier",0)) >= 1
+ 		card.open_at = 0.65 if showcase or fusion or results.size() == 1 else 0.45+i*0.16
+@@ -268,6 +272,17 @@
+ func _all_revealed() -> bool:
+ 	return not cards.is_empty() and cards.all(func(card: Control) -> bool: return not card.waiting_for_press and clock >= card.reveal_at())
+ 
++func original_result_background_contract() -> Dictionary:
++	if showcase or results.is_empty():return {"ok":false,"code":"source_result_actual_awarded_stage_required"}
++	var identities: Array=[]
++	for record: Dictionary in results:
++		var identity: Dictionary=SourceResultRoles.current_card_identity(record)
++		if not identity.get("ok",false):return identity
++		identities.append(identity)
++	var contract: Dictionary=SourceResultRoles.fusion_stage(source_ui_pack,"fusion" if fusion else "draw")
++	contract["actual_results_in_owner_order"]=identities
++	return contract
++
+ func _reveal_card(index: int) -> void:
+ 	if closing or index < 0 or index >= cards.size():
+ 		return
+--- a/scripts/ui/original_ui/source_asset_scene.gd
++++ b/scripts/ui/original_ui/source_asset_scene.gd
+@@ -8,9 +8,18 @@
+ static func prepare(descriptor: Dictionary) -> Dictionary:
+ 	var registration: Variant=descriptor.get("registration")
+ 	if not registration is Dictionary:return _fail("source_asset_scene_original_registration_required",["registration"])
+-	if registration.get("space")!="authored_sprite_anchor":return _fail("source_asset_scene_registration_space_unsupported",["registration.space=authored_sprite_anchor"])
+-	if typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=true:return _fail("source_asset_scene_original_registration_pending",["registration.original_registration_confirmed=true"])
+-	if not registration.get("source_basis") is String or str(registration.source_basis).strip_edges().is_empty():return _fail("source_asset_scene_original_registration_basis_required",["registration.source_basis"])
++	var host_receiver: RefCounted
++	var host_proof: Dictionary={}
++	if registration.get("kind")=="TWILIGHT_host_registration":
++		var candidate: Variant=registration.get("receiver")
++		if not candidate is RefCounted or not is_instance_valid(candidate) or candidate.get_script()==null or candidate.get_script().resource_path!="res://scripts/ui/original_ui/source_item_scene_receiver.gd":return _fail("source_asset_scene_typed_host_receiver_required")
++		host_receiver=candidate
++		host_proof=host_receiver.validate_descriptor(descriptor)
++		if not host_proof.get("ok",false):return host_proof
++	else:
++		if registration.get("space")!="authored_sprite_anchor":return _fail("source_asset_scene_registration_space_unsupported",["registration.space=authored_sprite_anchor"])
++		if typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=true:return _fail("source_asset_scene_original_registration_pending",["registration.original_registration_confirmed=true"])
++		if not registration.get("source_basis") is String or str(registration.source_basis).strip_edges().is_empty():return _fail("source_asset_scene_original_registration_basis_required",["registration.source_basis"])
+ 	var pack: Variant=descriptor.get("pack")
+ 	if not is_instance_valid(pack) or not pack is RefCounted:return _fail("source_asset_scene_open_source_pack_required",["pack"])
+ 	var pack_script: Script=pack.get_script()
+@@ -72,7 +81,10 @@
+ 		# Do not seek frame zero or choose an animation when the owner has
+ 		# supplied no policy. Existing strict loader initialization is retained.
+ 		player.stop()
+-	return {"ok":true,"player":player,"member":member,"manifest_sha256":manifest_pin,"source_sha256":source_pin,"registration":registration.duplicate(true),"playback":playback,"renderer_result":configured,"unparented":player.get_parent()==null,"wrapper_identity":true,"original_root_options":options.duplicate(true),"root_transform_modified":false,"layout_inferred":false,"runtime_rendering_verified":false}
++	if host_receiver!=null:
++		host_proof=host_receiver.validate_descriptor(descriptor)
++		if not host_proof.get("ok",false):player.free();return host_proof
++	return {"ok":true,"player":player,"member":member,"host_registration_proof":host_proof,"manifest_sha256":manifest_pin,"source_sha256":source_pin,"registration":registration.duplicate(true),"playback":playback,"renderer_result":configured,"unparented":player.get_parent()==null,"wrapper_identity":true,"original_root_options":options.duplicate(true),"root_transform_modified":false,"layout_inferred":false,"runtime_rendering_verified":false}
+ 
+ static func _identity_root(widget: Dictionary) -> bool:
+ 	return _vector(widget.get("position"),Vector2.ZERO) and _vector(widget.get("size"),Vector2.ZERO) and _vector(widget.get("anchorPoint"),Vector2.ZERO) and _vector(widget.get("scale"),Vector2.ONE) and _vector(widget.get("rotationSkew"),Vector2.ZERO) and widget.has("flipX") and widget.has("flipY") and not bool(widget.flipX) and not bool(widget.flipY)
+--- /dev/null
++++ b/scripts/ui/original_ui/source_item_scene_receiver.gd
+@@ -0,0 +1,115 @@
++extends RefCounted
++## Typed live Forge-equipment receiver. Never asserts original-client attachment.
++const SCRIPT_PATH="res://scripts/ui/original_ui/source_item_scene_receiver.gd"
++const CONTROLLER_PATH="res://scripts/ui/original_ui/source_main_hud.gd"
++const PLAYER_PATH="res://scripts/ui/original_ui/sprite_scene.gd"
++const SCHEMA="twilight-item-scene-host-registration-v1"
++const SPACE="twilight_host_sprite_anchor"
++const Images=preload("res://scripts/ui/source523_image_assets.gd")
++const Icons=preload("res://scripts/ui/source523_original_ui_icons.gd")
++const FIRST_PIN="566a4a66e894abdb3a761e8c0cca51d95799c52989a097030cab76839d99fb19"
++const ALICE_PIN="ebf14ad21218b6ac7d5a9e9e68ef3c81f366b78e0e725df04e2ec69f2a5894f0"
++# Explicit, source-verified admission subset, not a new ItemClass/Icon resolver.
++const SCENES={
++ "UI/CsbFile/icon/Fx_Item_Armor_Pants_Myth_Eodin.csb":{"sha":"022dc8eb3ba72097b04f46263d7d622b2c753820ceeb337871493d2faf377401","pin":FIRST_PIN,"items":[242761,243271],"icon":83331,"asset":320181,"panel":340,"nodes":{288:["Node",-1],1192:["Sprite",288],340:["Panel",288],388:["Sprite",340]}},
++ "UI/CsbFile/icon/Fx_Item_Armor_Shield_Myth_Eir.csb":{"sha":"375469b59bb6af5dee32027c4193dc0b469b1b8effd1116f993c03624cba9916","pin":FIRST_PIN,"items":[253282,253292],"icon":83762,"asset":321512,"panel":244,"nodes":{192:["Node",-1],1096:["Sprite",192],244:["Panel",192],292:["Sprite",244]}},
++ "UI/CsbFile/icon/Fx_Item_Weapon_Bow_Myth_Alice.csb":{"sha":"83529910ff502e6817fd36eb33fe64ac67a451a69bff4a5fbc62a753497562a5","pin":ALICE_PIN,"items":[239911,239941],"icon":83063,"asset":319133,"panel":340,"nodes":{288:["Node",-1],1668:["Sprite",288],340:["Panel",288],864:["Sprite",340],392:["Sprite",340]}},
++ "UI/CsbFile/icon/Fx_Item_Weapon_Staff_Myth_Alice.csb":{"sha":"4f766d2311025f1d46d0b11f0ce7e87a400cacc1b043136aaffe04d20a78dff1","pin":ALICE_PIN,"items":[239971,239981],"icon":83073,"asset":319143,"panel":340,"nodes":{288:["Node",-1],1676:["Sprite",288],340:["Panel",288],864:["Sprite",340],392:["Sprite",340]}},
++ "UI/CsbFile/icon/Fx_Item_Weapon_Sword_Myth_Alice.csb":{"sha":"a060e7ff788346a7c179e229623a8c126203fab9656bfb6933f93c5c6e31a3c9","pin":ALICE_PIN,"items":[253302,253312],"icon":83992,"asset":321782,"panel":292,"nodes":{240:["Node",-1],1628:["Sprite",240],292:["Panel",240],816:["Sprite",292],344:["Sprite",292]}}
++}
++var _hud: WeakRef
++var _controller: WeakRef
++var _player: WeakRef
++var _node: WeakRef
++var _target: Dictionary={}
++var _record: Dictionary={}
++var _target_reference: String=""
++var _physical_id: String=""
++const ITEM_TABLE_SHA="adaf246e6a70c2e24f144a5147bebaff27e9168bc5a74da8bcf871ca1287a165"
++const ITEM_ROWS={242761:"afdde819db00afe16fcfc82895c099136166f74339e6925fb1240ac0e0017105",243271:"6b58f2bce8f254d4afacbc159cf5e7197a659d5ead5b57dec835e966dc10185f",253282:"25d7a012f5d80d4487c860a1de4c450e90ad2a7bc3cfc6ea353323056d9c6434",253292:"f80595cea118b1d6869d2af467a0565d42dae66dacc6884cfd433beb897e3d63",239911:"bf1808d748644d66dc3abd7931d9e9adff82f5090efac95dfaa1dc5eadd0405e",239941:"306da141084e3ce6f755ae6231eb2c8b6f89bf53120f2f34528b73e9f6c70ab0",239971:"7b261f8bf0a9b163f5f5cad09887741476bb8f85bccb4fd710a76e7ab0808ca0",239981:"9ab9896d8c5bd6a3b1358b5e8c32c9c3c41edfa3083f04edf0626421e2272852",253302:"04285597646821567aaf17831851c0bc1be0d43e6017b11834181ba6e8e3de61",253312:"b27fc87f1e3275ed25e013a2ceaa3d4705bf7a0cec437db1d0e0ff96a64543c3"}
++
++static func capture_forge(hud: Node, role: String="equipment") -> Dictionary:
++	if role!="equipment":return _fail("host_item_scene_equipment_receiver_required")
++	if not is_instance_valid(hud):return _fail("host_item_scene_live_hud_required")
++	var controller: Variant=hud.get("original_main_ui_controller")
++	if not controller is Node or not is_instance_valid(controller) or not controller.is_inside_tree():return _fail("host_item_scene_live_controller_required")
++	var script: Script=controller.get_script()
++	if script==null or script.resource_path!=CONTROLLER_PATH:return _fail("host_item_scene_actual_controller_required")
++	var current: Dictionary=controller.original_enhance_slot_receiver(role)
++	if not current.get("ok",false):return current
++	if not current.get("physical_instance_id") is String or current.physical_instance_id.is_empty():return _fail("host_item_scene_owned_physical_target_required")
++	var factory: Script=load(SCRIPT_PATH)
++	var receiver: RefCounted=factory.new()
++	receiver._hud=weakref(hud);receiver._controller=weakref(controller);receiver._player=weakref(current.player)
++	receiver._node=weakref(current.player.source_nodes[15012])
++	receiver._record=current.record.duplicate(true);receiver._target_reference=current.actual_target_reference;receiver._physical_id=current.physical_instance_id
++	receiver._target={"member":current.source_member,"source_sha256":current.source_sha256,"manifest_sha256":current.player.source_pack.manifest_sha256,"node_offset":15012}
++	var registration: Dictionary={"schema":SCHEMA,"kind":"TWILIGHT_host_registration","space":SPACE,"original_registration_confirmed":false,"receiver":receiver,"target":receiver._target.duplicate(true),"host_policy":"identity original item-CSB root at actual live equipment Common_Slot15012 authored Sprite anchor; no fit/offset or inferred playback"}
++	return {"ok":true,"receiver":receiver,"registration":registration,"target":receiver._target.duplicate(true),"current_raw_record":receiver._record.duplicate(true),"actual_target_reference":receiver._target_reference,"physical_instance_id":receiver._physical_id,"rendered":false}
++
++func validate_descriptor(descriptor: Dictionary) -> Dictionary:
++	var current: Dictionary=_current()
++	if not current.get("ok",false):return current
++	var registration: Variant=descriptor.get("registration")
++	if not registration is Dictionary or registration.get("schema")!=SCHEMA or registration.get("kind")!="TWILIGHT_host_registration" or registration.get("space")!=SPACE or typeof(registration.get("original_registration_confirmed"))!=TYPE_BOOL or registration.original_registration_confirmed!=false or registration.get("receiver")!=self or registration.get("target")!=_target:return _fail("host_item_scene_typed_registration_mismatch")
++	# These five source cases declare clips, but no trigger/repeat policy.
++	if descriptor.has("playback"):return _fail("host_item_scene_playback_policy_not_declared")
++	var member: Variant=descriptor.get("member")
++	if not member is String or not SCENES.has(member):return _fail("host_item_scene_original_case_not_admitted")
++	var spec: Dictionary=SCENES[member]
++	if descriptor.get("source_sha256")!=spec.sha or descriptor.get("manifest_sha256")!=spec.pin:return _fail("host_item_scene_original_member_pin_mismatch")
++	var pack: Variant=descriptor.get("pack")
++	if not pack is RefCounted or not is_instance_valid(pack) or pack.get("manifest_sha256")!=spec.pin:return _fail("host_item_scene_selected_pack_required")
++	var bindings: Variant=descriptor.get("bindings",{})
++	if not bindings is Dictionary or not bindings.is_empty():return _fail("host_item_scene_full_original_hierarchy_required")
++	var info: Dictionary=Images.describe_item(current.record)
++	var canonical: Variant=info.get("provenance")
++	if info.get("reason")!="unsupported_csb" or info.get("source_snapshot")!="patch523" or not canonical is Dictionary or canonical.get("source_table")!="ItemClass" or canonical.get("source_field")!="IconID" or canonical.get("path")!=member or canonical.get("asset_type_id")!=101:return _fail("host_item_scene_current_canonical_item_required")
++	if info.get("item_class_id") not in spec.items or canonical.get("source_id")!=info.item_class_id or canonical.get("icon_id")!=spec.icon or canonical.get("asset_id")!=spec.asset:return _fail("host_item_scene_current_item_icon_asset_mismatch")
++	if canonical.get("source_table_sha256")!=ITEM_TABLE_SHA or canonical.get("source_row_canonical_sha256")!=ITEM_ROWS.get(int(info.item_class_id)):return _fail("host_item_scene_reviewed_current_source_row_required")
++	var identity: Variant=descriptor.get("image_owner_identity")
++	if not identity is Dictionary or identity.get("icon_id")!=canonical.icon_id or identity.get("asset_id")!=canonical.asset_id or identity.get("image_pack_manifest_sha256")!=canonical.get("manifest_sha256"):return _fail("host_item_scene_image_owner_identity_required")
++	var consumer: Variant=identity.get("consumer")
++	if not consumer is Dictionary:return _fail("host_item_scene_current_consumer_proof_required")
++	for field: String in ["source_table","source_id","source_field","source_row_canonical_sha256","source_table_sha256"]:
++		if not canonical.has(field) or consumer.get(field)!=canonical[field]:return _fail("host_item_scene_current_consumer_proof_changed")
++	if str(consumer.source_row_canonical_sha256).length()!=64 or str(consumer.source_table_sha256).length()!=64:return _fail("host_item_scene_source_row_table_sha_required")
++	var selected: Variant=Icons.bindings.get(str(int(canonical.icon_id)))
++	if not selected is Dictionary or selected.get("member")!=member or selected.get("reviewed_current523_manifest_sha256")!=spec.pin or selected.get("current523_scene_sha256")!=spec.sha or selected.get("asset_id")!=canonical.asset_id or selected.get("asset_type_id")!=101 or "UI/CsbFile/"+str(selected.get("file_path",""))!=member:return _fail("host_item_scene_current_icon_selection_changed")
++	var selected_pack: RefCounted=Icons.packs_by_manifest.get(spec.pin)
++	if selected_pack==null and Icons.pack!=null and Icons.pack.manifest_sha256==spec.pin:selected_pack=Icons.pack
++	if selected_pack!=pack:return _fail("host_item_scene_pack_not_currently_selected")
++	var tree: Dictionary=pack.scene(member)
++	if tree.get("_source_sha256")!=spec.sha or tree.get("_partial_source_scene",false):return _fail("host_item_scene_complete_original_scene_required")
++	var nodes: Dictionary={}
++	_collect(tree.get("nodeTree",{}),-1,nodes)
++	if nodes.size()!=spec.nodes.size():return _fail("host_item_scene_original_node_set_changed")
++	for offset: int in spec.nodes:
++		if not nodes.has(offset) or nodes[offset].node.get("classname")!=spec.nodes[offset][0] or nodes[offset].parent!=spec.nodes[offset][1]:return _fail("host_item_scene_original_hierarchy_changed")
++	if nodes[int(spec.panel)].node.get("options",{}).get("clipEnabled")!=1:return _fail("host_item_scene_required_original_clip_missing")
++	return {"ok":true,"registration_kind":"TWILIGHT_host_registration","original_registration_confirmed":false,"target":_target.duplicate(true),"physical_instance_id":_physical_id,"source_internal_proof":{"member":member,"source_sha256":spec.sha,"manifest_sha256":spec.pin,"full_node_count":nodes.size(),"required_panel_clip_preserved":true,"blend_and_transform_support":"existing strict full-scene renderer must accept; no omitted nodes or flattened textures"},"runtime_rendering_verified":false}
++
++func validate_attachment(renderer: Node2D, offset: int, descriptor: Dictionary) -> Dictionary:
++	if _player==null or _player.get_ref()!=renderer or offset!=15012:return _fail("host_item_scene_actual_destination_changed")
++	return validate_descriptor(descriptor)
++
++func _current() -> Dictionary:
++	var hud: Object=_hud.get_ref() if _hud!=null else null
++	var controller: Object=_controller.get_ref() if _controller!=null else null
++	var player: Object=_player.get_ref() if _player!=null else null
++	var node: Object=_node.get_ref() if _node!=null else null
++	if not is_instance_valid(hud) or not is_instance_valid(controller) or hud.get("original_main_ui_controller")!=controller or not controller.is_inside_tree():return _fail("host_item_scene_controller_replaced_or_freed")
++	if not player is Node2D or not is_instance_valid(player) or not player.is_inside_tree() or player.is_queued_for_deletion() or not player.is_visible_in_tree() or not is_instance_valid(node) or node.is_queued_for_deletion():return _fail("host_item_scene_live_destination_required")
++	var current: Dictionary=controller.original_enhance_slot_receiver("equipment")
++	if not current.get("ok",false):return current
++	if current.player!=player or current.record!=_record or current.actual_target_reference!=_target_reference or current.get("physical_instance_id")!=_physical_id or player.source_nodes.get(15012)!=node:return _fail("host_item_scene_selected_record_or_receiver_changed")
++	if player.get_script()==null or player.get_script().resource_path!=PLAYER_PATH or player.source_pack!=controller.source_role_pack() or player.source_member!=_target.member or player.source_pack.manifest_sha256!=_target.manifest_sha256 or player.source_pack.manifest.get("files",{}).get(_target.member,{}).get("sha256")!=_target.source_sha256 or not node.get_meta("source_asset_slot",false):return _fail("host_item_scene_target_root_or_pin_changed")
++	return current
++
++static func _collect(node: Dictionary, parent: int, result: Dictionary) -> void:
++	var offset: int=int(node.get("_offset",-1))
++	result[offset]={"node":node,"parent":parent}
++	for child: Dictionary in node.get("children",[]):_collect(child,offset,result)
++
++static func _fail(code: String) -> Dictionary:
++	return {"ok":false,"error":code,"code":code,"runtime_rendering_verified":false}
+--- /dev/null
++++ b/scripts/ui/original_ui/source_main_card_frames.gd
+@@ -0,0 +1,66 @@
++extends RefCounted
++## UI-owned node roles registered with the existing image-owner surface API.
++## Metadata reuse only: never load the retired atlas pack or infer a grade.
++const Surfaces=preload("res://scripts/ui/original_card_surfaces.gd")
++const GradeBindings=preload("res://data/ui/base508_card_atlas.json")
++const CurrentCards=preload("res://data/lineagem_base508/cards_patch523.json")
++const Layout=preload("res://data/ui/base508_card_layout.json")
++const GRADE_SHA="7ccc62ce1c95ff02cb833e09a68469a1f66ff739db0ada613e4fd498226984da"
++const SOURCES={
++	"UI/Change/Change_Card_A_Common.csb":{"sha":"a98120fedf60c03ed6b1a8347e3ce6ad8cd95b6ebdf4d87fb29b4bd1fc36b1e4","offset":2520},
++	"UI/Change/Change_Card_A_Rare.csb":{"sha":"e1a45e737e107e49a6fbc87753dc56303883b9670d0a4cd06cd93db7169f88f2","offset":2524},
++	"UI/Change/Change_Card_A_Unique.csb":{"sha":"80c492f2f35f9a021987a8366013e1b36df15a8ead6d224375f2279dbbd92ac8","offset":2568},
++	"UI/Change/Change_Card_A_Legend.csb":{"sha":"dfdd5f57b20a100b321b3c97114e8e4fbb82960ec310f0ef894b8f47567348af","offset":2568},
++	"UI/Change/Change_Card_A_Epic.csb":{"sha":"ff34c845841a818909497632ff6b1d485609039dede8ece1c03738346788613d","offset":2568},
++	"UI/Change/Change_Card_A_Myth.csb":{"sha":"1dcc3c2bbe32ca9ca085af9611750bd329d9ddc0cc5665d6cd73ef450f52312a","offset":2564},
++	"UI/Change/Change_Card_A_Sole.csb":{"sha":"675ef6e6628743034e2f19992b96354f1dfd00af6a445df676dea5a18350fe10","offset":2596}
++}
++
++static func bind(pack: RefCounted) -> Dictionary:
++	if pack==null:return {"ok":false,"code":"source_card_frames_selected_pack_required"}
++	# This existing UI family binding and the current523 card projection
++	# reference byte-identical Grade rows. Do not use a localized label/rank.
++	if GradeBindings.data.get("table_evidence",{}).get("Grade")!=GRADE_SHA or CurrentCards.data.get("source_table_sha256",{}).get("Grade")!=GRADE_SHA:return {"ok":false,"code":"source_card_frames_grade_identity_required"}
++	var registered: Array=[]
++	var unavailable: Array=[]
++	for key: String in GradeBindings.data.grade_bindings:
++		var declaration: Dictionary=GradeBindings.data.grade_bindings[key]
++		var role: Dictionary=_role(pack,key,declaration)
++		if not role.get("ok",false):unavailable.append(role);continue
++		# The image owner decodes pixels and binds its existing grade_frame
++		# consumer. This helper supplies identities, never another renderer.
++		var result: Dictionary=Surfaces.bind("grade_frame",role.member,role.sha256,role.node_offset,role.grade_id)
++		if not result.get("ok",false):unavailable.append({"grade_id":role.grade_id,"member":role.member,"owner_result":result});continue
++		registered.append(role)
++	return {"ok":not registered.is_empty(),"registered":registered,"unavailable":unavailable,"role":"grade_frame","consumer":"existing catalog_card_chrome texture_for/selected-preview frame","basis":"existing explicit UI grade-family binding; current523 Grade table SHA identical","grade_table_sha256":GRADE_SHA,"result_screen_background_bound":false,"dynamic_csb_registration_asserted":false,"actual_game_consumption_observed":false}
++
++static func _role(pack: RefCounted, key: String, declaration: Dictionary) -> Dictionary:
++	if not key.is_valid_int() or int(key)<=0 or declaration.get("grade",{}).get("ID")!=int(key):return {"ok":false,"code":"source_card_frames_exact_grade_required"}
++	var member: String=str(declaration.get("prefab",""))
++	if not SOURCES.has(member):return {"ok":false,"code":"source_card_frames_pinned_component_required","grade_id":int(key)}
++	var identity: Dictionary=SOURCES[member]
++	if pack.manifest.get("files",{}).get(member,{}).get("sha256")!=identity.sha:return {"ok":false,"code":"source_card_frames_active_component_identity_required","grade_id":int(key),"member":member}
++	var scene: Dictionary=pack.scene(member)
++	var scope: Variant=pack.manifest.get("node_scopes",{}).get(member)
++	if scope is Array and not scope.has(identity.offset):return {"ok":false,"code":"source_card_frames_active_node_scope_required","grade_id":int(key),"member":member}
++	var node: Dictionary=_find(scene.get("nodeTree",{}),int(identity.offset))
++	var options: Dictionary=node.get("options",{})
++	var widget: Dictionary=options.get("widgetOptions",{})
++	if node.get("classname")!="Sprite" or widget.get("name")!=declaration.get("sprite_node"):return {"ok":false,"code":"source_card_frames_original_node_role_required","grade_id":int(key)}
++	var prior: Array=[]
++	for candidate: Dictionary in Layout.data.screens.get(member,[]):
++		if candidate.get("name")==declaration.sprite_node and candidate.get("table_offset")==identity.offset:
++			for prior_ref: Dictionary in candidate.get("resources",[]):
++				if prior_ref.get("field")=="fileNameData":prior.append(prior_ref)
++	var resource_ref: Variant=options.get("fileNameData")
++	if prior.size()!=1 or not resource_ref is Dictionary:return {"ok":false,"code":"source_card_frames_existing_reference_required","grade_id":int(key)}
++	for field: String in ["path","plistFile","resourceType"]:
++		if prior[0].get(field)!=resource_ref.get(field):return {"ok":false,"code":"source_card_frames_existing_reference_changed","grade_id":int(key)}
++	return {"ok":true,"grade_id":int(key),"member":member,"sha256":identity.sha,"node_offset":identity.offset,"source_node_name":widget.name,"reference":resource_ref.duplicate(true),"authored_anchor":widget.get("anchorPoint"),"authored_position":widget.get("position"),"authored_size":widget.get("size"),"event":"read-only surface registration; no input callback"}
++
++static func _find(node: Dictionary, offset: int) -> Dictionary:
++	if node.get("_offset")==offset:return node
++	for child: Dictionary in node.get("children",[]):
++		var found: Dictionary=_find(child,offset)
++		if not found.is_empty():return found
++	return {}
+--- /dev/null
++++ b/scripts/ui/original_ui/source_main_enhance_slots.gd
+@@ -0,0 +1,168 @@
++extends RefCounted
++## Explicit TWILIGHT host registration, not a recovered original controller.
++## Supplied paired source Projects + official before/after guide + actual Forge inputs.
++const Images=preload("res://scripts/ui/source523_image_assets.gd")
++const ItemSceneReceiver=preload("res://scripts/ui/original_ui/source_item_scene_receiver.gd")
++const NativeScenes=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
++const SourceScene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
++const MEMBER="UI/FloatingUi/Enchant_All.csb"
++const SHA="5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face"
++const COMMON="UI/CommonUi/Common_Slot.csb"
++const COMMON_SHA="b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6"
++const PROJECTS={"scroll":145044,"equipment":144788}
++const PLUS=144460
++const ICON=15012
++const BUTTON=15728
++const BACKGROUND=15316
++const BASIS={"kind":"TWILIGHT_host_registration","original_controller_binding_recovered":false,"source_parent":"Node2100/Nd_Common142656/Nd_Slot144400","guide":"https://lm.ncsoft.jp/guides/lm/guides/item_enchant","guide_evidence":"weapon/armor before-and-after: selected scroll left, actual selected equipment right; original source pair and existing Forge typed inputs used together, not coordinates alone","original_geometry_modified":false,"original_callback_or_clip_policy_inferred":false}
++var _forge: WeakRef
++var _players: Dictionary={}
++var _legacy: Dictionary={}
++var _signature: int=0
++var _cached: bool=false
++var _status: Dictionary={}
++var _native_descriptors: Dictionary={}
++
++func build(pack: RefCounted, forge: Control) -> Dictionary:
++	for spec: Array in [[MEMBER,SHA],[COMMON,COMMON_SHA]]:
++		if pack==null or pack.manifest.get("files",{}).get(spec[0],{}).get("sha256")!=spec[1]:return _fail("enhance_slots_original_identity_required")
++	var tree: Dictionary=pack.scene(MEMBER)
++	var bindings: Dictionary={}
++	for role: String in PROJECTS:
++		var node: Dictionary=_node_at(tree.get("nodeTree",{}),PROJECTS[role])
++		if node.get("classname")!="ProjectNode" or node.get("options",{}).get("fileName")!="CommonUi/Common_Slot.csb":return _fail("enhance_slots_original_pair_not_in_selected_scope")
++		bindings[PROJECTS[role]]={"role":"project","visible":true,"source_node_offsets":[BUTTON,BACKGROUND,ICON],"bindings":{BUTTON:{"role":"button","activate":Callable(),"displaystate":false},ICON:{"role":"source_asset_slot","visible":false}}}
++	var scope: Array=PROJECTS.values()
++	var plus: Dictionary=_node_at(tree.get("nodeTree",{}),PLUS)
++	if plus.get("classname")=="Sprite" and plus.get("options",{}).get("fileNameData",{}).get("path")=="Com_Icn_Plus.png" and plus.options.fileNameData.get("plistFile")=="UI_Resource/Atlas_Common.plist":scope.append(PLUS)
++	_forge=weakref(forge)
++	var snapshot: Dictionary=_snapshot()
++	if not snapshot.get("ok",false):_forge=null;return snapshot
++	for role: String in PROJECTS:
++		var view: TextureRect=forge.scroll_icon if role=="scroll" else forge.preview
++		_legacy[role]={"view":weakref(view),"visible":view.visible,"replaced":false}
++	return {"ok":true,"source_node_offsets":scope,"source_plus_connected":scope.has(PLUS),"bindings":bindings,"registration":BASIS.duplicate(true),"partial_source_scene":true}
++
++func bind_renderer(renderer: Node2D) -> Dictionary:
++	if not is_instance_valid(renderer) or renderer.get("source_member")!=MEMBER:return _fail("enhance_slots_actual_source_renderer_required")
++	for role: String in PROJECTS:
++		var child: Dictionary=renderer.project_player([PROJECTS[role]])
++		if not child.get("ok",false) or child.player.get("source_member")!=COMMON or not child.player.source_nodes.has(ICON):return _fail("enhance_slots_actual_nested_receiver_required")
++		_players[role]=weakref(child.player)
++	return {"ok":true,"registration":BASIS.duplicate(true)}
++
++func refresh() -> Dictionary:
++	var snapshot: Dictionary=_snapshot()
++	if not snapshot.get("ok",false):clear();return snapshot
++	var reader: RefCounted=Images.active()
++	var signature: int=hash([snapshot.scroll,snapshot.equipment,snapshot.scroll_record,snapshot.equipment_record,reader.get_instance_id() if reader!=null else 0])
++	if _cached and signature==_signature:
++		var valid: bool=true
++		for descriptor: Dictionary in _native_descriptors.values():
++			if not descriptor.registration.receiver.validate_descriptor(descriptor).get("ok",false):valid=false;break
++		if valid:return _status.duplicate(true)
++	clear()
++	var results: Dictionary={}
++	for role: String in PROJECTS:
++		var player: Node2D=_players[role].get_ref() if _players.has(role) else null
++		if not is_instance_valid(player) or player.is_queued_for_deletion():return _fail("enhance_slots_live_nested_receiver_required")
++		var record: Dictionary=snapshot[role+"_record"]
++		# This is the existing image owner's exact original ItemClass/Icon/Asset path.
++		# A CSB icon without its separate established registration remains pending.
++		var image: Dictionary=Images.describe_item(record,str(record.get("name","")))
++		var owner_result: Dictionary=image.duplicate(true)
++		if image.get("reason")=="unsupported_csb" and role=="equipment":
++			var forge: Object=_forge.get_ref()
++			var issued: Dictionary=ItemSceneReceiver.capture_forge(forge.hud,role)
++			if issued.get("ok",false):
++				var slot: Dictionary=SourceScene.external_scene_slot_contract(player.source_pack,COMMON,ICON)
++				owner_result=NativeScenes.request(forge.hud,image,{"source_slot_contract":slot,"source_host_registration":issued.registration})
++			else:owner_result=issued
++		elif not image.get("ok",false) or image.get("route")!="source523_images" or image.get("status")!="original_linked" or image.get("original_bytes_unchanged")!=true or not image.get("texture") is Texture2D:
++			owner_result={"ok":false,"owner_result":image}
++		if not owner_result.get("ok",false):
++			var pending: Dictionary=image.duplicate(true);pending.erase("texture")
++			results[role]={"assigned":false,"owner_result":pending,"receiver_result":owner_result}
++			continue
++		var assigned: Dictionary=player.set_bound_source_visual_result(ICON,owner_result)
++		if assigned.get("ok",false):assigned=player.set_bound_visible(ICON,true)
++		var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")
++		results[role]={"assigned":assigned.get("ok",false),"image":evidence,"receiver_result":assigned}
++		if assigned.get("ok",false):
++			if owner_result.get("source_scene_descriptor") is Dictionary:_native_descriptors[role]=owner_result.source_scene_descriptor
++			var view: Object=_legacy[role].view.get_ref()
++			if is_instance_valid(view):view.hide();_legacy[role].replaced=true
++	_signature=signature;_cached=true
++	# A provider/selected-pack dependency can arrive after this mount. Never
++	# cache a pending native descriptor as a permanent completed presentation.
++	for role: String in results:
++		if not results[role].get("assigned",false):_cached=false
++	_status={"ok":true,"target_reference":snapshot.equipment,"scroll_reference":snapshot.scroll,"roles":results,"registration":BASIS.duplicate(true),"game_state_written":false,"runtime_rendering_verified":false}
++	return _status.duplicate(true)
++
++func receiver(role: String) -> Dictionary:
++	if not PROJECTS.has(role):return _fail("enhance_slots_unknown_host_role")
++	var snapshot: Dictionary=_snapshot()
++	if not snapshot.get("ok",false):return snapshot
++	var player: Node2D=_players[role].get_ref() if _players.has(role) else null
++	if not is_instance_valid(player) or player.is_queued_for_deletion() or not player.is_inside_tree():return _fail("enhance_slots_live_receiver_required")
++	var forge: Object=_forge.get_ref()
++	var physical_id: String=""
++	if role=="equipment":
++		var entry: Dictionary=forge.values[forge.selected_index]
++		var raw_id: Variant=entry.get("instance_id")
++		var instances: Variant=forge.hud.get_parent().get("item_instances")
++		if not raw_id is String or raw_id.is_empty() or not instances is Dictionary or not instances.get(raw_id) is Dictionary:return _fail("enhance_slots_actual_owned_physical_target_required")
++		var physical: Dictionary=instances[raw_id]
++		if physical.get("name")!=entry.get("name") or physical.get("record")!=snapshot.equipment_record:return _fail("enhance_slots_current_physical_source_record_required")
++		physical_id=raw_id
++	return {"ok":true,"player":player,"host_role":role,"physical_instance_id":physical_id,"source_member":COMMON,"source_sha256":COMMON_SHA,"node_offset":ICON,"parent_member":MEMBER,"parent_sha256":SHA,"project_path":[724,PROJECTS[role]],"actual_scroll_reference":snapshot.scroll,"actual_target_reference":snapshot.equipment,"record":snapshot[role+"_record"].duplicate(true),"registration":BASIS.duplicate(true),"csb_icon_root_registration_confirmed":false,"runtime_rendering_verified":false}
++
++func invalidate_images() -> void:
++	_cached=false
++
++func clear() -> void:
++	for role: String in PROJECTS:
++		var player: Node2D=_players[role].get_ref() if _players.has(role) else null
++		if is_instance_valid(player) and not player.is_queued_for_deletion():player.clear_bound_source_visual(ICON)
++		if _legacy.has(role) and _legacy[role].replaced:
++			var view: Object=_legacy[role].view.get_ref()
++			if is_instance_valid(view):view.visible=_legacy[role].visible
++			_legacy[role].replaced=false
++	_native_descriptors.clear();_cached=false;_status.clear()
++
++func close() -> void:
++	clear();_players.clear();_legacy.clear();_forge=null
++
++func _snapshot() -> Dictionary:
++	var forge: Object=_forge.get_ref() if _forge!=null else null
++	if not forge is Control or not is_instance_valid(forge) or not forge.is_inside_tree() or not forge.is_visible_in_tree() or forge.is_queued_for_deletion() or forge.get("mode")!="target":return _fail("enhance_slots_live_ordinary_forge_required")
++	var script: Script=forge.get_script()
++	if script==null or script.resource_path!="res://scripts/ui/renewal_forge.gd":return _fail("enhance_slots_actual_forge_type_required")
++	var index: Variant=forge.get("selected_index")
++	var values: Variant=forge.get("values")
++	var listing: Variant=forge.get("listing")
++	if typeof(index)!=TYPE_INT or not values is Array or index<0 or index>=values.size() or not listing is ItemList or not is_instance_valid(listing) or index>=listing.item_count or listing.get_selected_items()!=PackedInt32Array([index]):return _fail("enhance_slots_actual_selected_row_required")
++	var entry: Variant=values[index]
++	var scroll: Variant=forge.get("scroll_name")
++	if not entry is Dictionary or not entry.get("target_id") is String or entry.target_id.is_empty() or listing.get_item_metadata(index)!=entry.target_id or not scroll is String or scroll.is_empty():return _fail("enhance_slots_exact_owner_references_required")
++	var hud: Variant=forge.get("hud")
++	var bag: Variant=hud.get("lineage_inventory_ui") if is_instance_valid(hud) else null
++	if not is_instance_valid(bag) or not bag.get("inventory") is Dictionary or int(bag.inventory.get(scroll,0))<=0:return _fail("enhance_slots_owned_scroll_required")
++	if not forge.get("scroll_icon") is TextureRect or not forge.get("preview") is TextureRect:return _fail("enhance_slots_existing_owner_image_views_required")
++	for role: String in _legacy:
++		if _legacy[role].view.get_ref()!=(forge.scroll_icon if role=="scroll" else forge.preview):return _fail("enhance_slots_owner_image_view_replaced")
++	var scroll_record: Dictionary=bag.call("_find_item_record",scroll)
++	scroll_record=bag.call("_item_visual_record",scroll,scroll_record)
++	var equipment_record: Dictionary=forge.call("_image_record",entry)
++	return {"ok":true,"scroll":scroll,"equipment":entry.target_id,"scroll_record":scroll_record,"equipment_record":equipment_record}
++
++static func _node_at(node: Dictionary, offset: int) -> Dictionary:
++	if node.get("_offset")==offset:return node
++	for child: Dictionary in node.get("children",[]):
++		var found: Dictionary=_node_at(child,offset)
++		if not found.is_empty():return found
++	return {}
++
++static func _fail(code: String) -> Dictionary:
++	return {"ok":false,"code":code}
+--- a/scripts/ui/original_ui/source_main_hud.gd
++++ b/scripts/ui/original_ui/source_main_hud.gd
+@@ -303,8 +303,7 @@
+ 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+ 	if _enhance_action!=null:
+ 		var shown: Dictionary=_enhance_action.presentation()
+-		var button: Variant=shown.get("source_button")
+-		if is_instance_valid(button):buttons.append(button)
++		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+ 	if _quest_controls!=null:
+ 		var shown: Dictionary=_quest_controls.presentation()
+ 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+@@ -387,6 +386,7 @@
+ 	return result
+ 
+ func refresh_source_icons() -> Dictionary:
++	if _enhance_action!=null:_enhance_action.invalidate_source_images()
+ 	_icons_refresh_pending=true
+ 	return refresh_quickslots()
+ 
+@@ -426,6 +426,10 @@
+ func bind_npc_dialogue_portrait(context_provider: Callable, image_provider: Callable) -> Dictionary:
+ 	if _npc_dialogue_view==null:return _fail("source_npc_portrait_dialogue_scope_unavailable")
+ 	return _npc_dialogue_view.bind_portrait(context_provider,image_provider)
++
++func original_enhance_slot_receiver(role: String) -> Dictionary:
++	if _enhance_action==null:return _fail("enhance_slots_actual_owner_unavailable")
++	return _enhance_action.original_slot_receiver(role)
+ 
+ func bind_enhance_action(forge: Control) -> Dictionary:
+ 	close_enhance_action()
+@@ -966,6 +970,10 @@
+ func refresh_menu_state() -> Dictionary:
+ 	if _menu==null or not is_instance_valid(_menu_scene):return {"ok":true,"source_menu_presented":false}
+ 	return _menu.refresh_presented(_menu_scene)
++
++func source_role_pack() -> RefCounted:
++	# Existing selected pack for UI-owned role consumers; no new selector.
++	return _pack
+ 
+ func _mount_exp() -> Dictionary:
+ 	if not _has_player_values:return _fail("source_main_player_values_pending")
+--- /dev/null
++++ b/scripts/ui/original_ui/source_result_face_host.gd
+@@ -0,0 +1,152 @@
++extends RefCounted
++## Actual card instance -> exact source back hierarchy, in a declared host frame.
++## Source transforms are never flattened into Face.back or a fitted rectangle.
++const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
++const Cards=preload("res://scripts/lineagem_base508.gd")
++const OWNER="res://scripts/ui/card_reveal_card.gd"
++const PROVIDER="res://scripts/ui/source523_result_card_images.gd"
++const CHECKBOX_FIELDS=["backGroundBoxData","backGroundBoxSelectedData","frontCrossData","backGroundBoxDisabledData","frontCrossDisabledData"]
++var _owner: WeakRef
++var _face: WeakRef
++var _rim: WeakRef
++var _bridge: Node2D
++var _scene: Node2D
++var _sprite: Sprite2D
++var _prior_rim_visible: bool=true
++var _prior_face_active: bool=false
++var _seed: int=0
++var _cached: bool=false
++var _status: Dictionary={}
++
++func refresh(owner: Control) -> Dictionary:
++	if not _actual_owner(owner):clear();return _missing("result_face_actual_live_owner_required")
++	if _owner!=null and _owner.get_ref()!=owner:close()
++	if _owner==null:
++		_owner=weakref(owner)
++		owner.tree_exiting.connect(close)
++		owner.visibility_changed.connect(_visibility_changed)
++	var face: Control=owner.face
++	if face.size.x<=0 or face.size.y<=0 or not face.size.is_finite():clear();return _missing("result_face_actual_extent_pending")
++	var phase: String="back" if owner.waiting_for_press or face.elapsed<0 else "front" if face.elapsed>=face.duration else "transition"
++	if phase!="back":
++		clear()
++		return _missing("result_face_front_portrait_registration_pending" if phase=="front" else "result_face_transition_retains_actual_candidates")
++	var seed: int=_model_seed(owner)
++	if _cached and seed==_seed and (not is_instance_valid(_scene) or _scene.is_queued_for_deletion() or not _scene.is_inside_tree()):_cached=false
++	if _cached and seed==_seed:
++		_update_host_transform(owner,face)
++		return _status.duplicate(true)
++	clear()
++	var canonical: Dictionary=Cards.canonical(owner.record)
++	if canonical.get("source_deck_id") not in [1,2,98]:return _missing("result_face_deck_outside_current_image_scope")
++	var role: Dictionary=owner.original_result_card_contract()
++	if not role.get("ok",false):return _missing(str(role.get("code","result_face_source_role_unavailable")))
++	if not ResourceLoader.exists(PROVIDER):return _missing("result_face_public_image_provider_dependency_pending")
++	var api: Script=load(PROVIDER)
++	if api==null:return _missing("result_face_public_image_provider_unavailable")
++	var image: Dictionary=api.describe(owner)
++	if not image.get("ok",false) or image.get("phase")!="back" or not image.get("texture") is Texture2D:return _missing(str(image.get("status","result_face_original_back_pixels_required")))
++	var selected: Dictionary=role.back
++	var pack: RefCounted=selected.pack
++	var provenance: Dictionary=image.get("provenance",{})
++	if image.get("source_id")!=role.source_id or image.get("grade_id")!=role.grade_id or image.get("operation")!=role.operation or provenance.get("manifest_sha256")!=pack.manifest_sha256 or provenance.get("member")!=selected.member or provenance.get("source_sha256")!=selected.source_sha256 or provenance.get("node_offset")!=selected.node_offset or provenance.get("reference")!=selected.fileNameData or image.get("parent_chain")!=selected.parent_chain:return _missing("result_face_exact_owner_descriptor_changed")
++	var offset: int=int(selected.node_offset)
++	var tree: Dictionary=pack.scene(selected.member)
++	var check: int=972 if role.operation=="fusion" else 9176
++	var checkbox: Dictionary=_node_at(tree.get("nodeTree",{}),check)
++	if checkbox.get("classname")!="CheckBox" or checkbox.get("options",{}).get("selectedState")!=0:return _missing("result_face_original_passive_checkbox_state_required")
++	# This source ancestor has no own state pixels. Disabling its input cannot
++	# change any checkbox texture; actual reveal input stays with RevealCard.
++	for field: String in CHECKBOX_FIELDS:
++		if checkbox.options.get(field,{}).get("path")!="":return _missing("result_face_checkbox_state_pixels_require_separate_registration")
++	var player:=Scene.new()
++	var result: Dictionary=player.configure_nodes(pack,selected.member,[offset],{offset:{"visible":true},check:{"role":"checkbox","displaystate":false,"activate":Callable(),"selected":false}})
++	if not result.get("ok",false):player.free();return _missing("result_face_source_hierarchy_rejected",result)
++	player.stop() # Retain serialized authored state; do not choose a clip/frame.
++	var node: Variant=player.source_nodes.get(offset)
++	var sprite: Variant=node.get_meta("source_sprite",null) if is_instance_valid(node) else null
++	if not sprite is Sprite2D or sprite.texture!=image.texture or _model_seed(owner)!=seed:player.free();return _missing("result_face_current_pixels_or_owner_changed")
++	if face.has_meta("original_result_back_writer") and face.get_meta("original_result_back_writer")!=get_instance_id():player.free();return _missing("result_face_other_writer_owns_receiver")
++	var bridge:=Node2D.new()
++	bridge.name="OriginalResultBackHost"
++	bridge.add_child(player)
++	owner.add_child(bridge)
++	# Native back replaces the Face draw pass, below the existing clipped FX,
++	# labels and RevealCard input. It is outside that portrait-fit clip so the
++	# complete authored back extent is not cropped to a different host ratio.
++	owner.move_child(bridge,owner.get_node("CardSurfaceClip").get_index())
++	_bridge=bridge;_scene=player;_sprite=sprite;_face=weakref(face)
++	_prior_face_active=face.original_back_receiver_active
++	face.set_meta("original_result_back_writer",get_instance_id())
++	face.original_back_receiver_active=true
++	face.queue_redraw()
++	var rim: Node=owner.get_node_or_null("MetalRim")
++	if rim is CanvasItem:
++		_rim=weakref(rim);_prior_rim_visible=rim.visible;rim.hide()
++	var evidence: Dictionary=image.duplicate(true);evidence.erase("texture")
++	_status={"ok":true,"phase":"back","source_id":role.source_id,"grade_id":role.grade_id,"operation":role.operation,"image":evidence,"registration":{"kind":"TWILIGHT_host_registration","actual_receiver":"same card.face rectangle centre","matrix":"inverse(card.global_transform) * face.global_transform * translation(face.size/2)","original_controller_recovered":false,"source_root_and_all_ancestors_preserved":true,"source_layout_scaled_to_host":false,"original_clip_or_callback_order_inferred":false,"input_owner":"existing RevealCard button"},"source_renderer_attached":true,"pixels_assigned":true,"source_animation_started":false,"game_state_written":false,"runtime_rendering_verified":false}
++	_seed=seed;_cached=true
++	_update_host_transform(owner,face)
++	return _status.duplicate(true)
++
++func receiver() -> Dictionary:
++	var owner: Object=_owner.get_ref() if _owner!=null else null
++	if not _actual_owner(owner) or not is_instance_valid(_scene) or _scene.is_queued_for_deletion() or not is_instance_valid(_sprite):return _missing("result_face_actual_receiver_unavailable")
++	if _model_seed(owner)!=_seed:clear();return _missing("result_face_owner_changed_requery_required")
++	_update_host_transform(owner,owner.face)
++	var result: Dictionary=_status.duplicate(true)
++	result["player"]=_scene;result["source_sprite"]=_sprite;result["host_bridge"]=_bridge
++	result["actual_record"]=owner.record.duplicate(true)
++	result["host_transform"]=_bridge.transform
++	result["actual_sprite_global_transform"]=_sprite.get_global_transform()
++	return result
++
++func _update_host_transform(owner: Control, face: Control) -> void:
++	if not is_instance_valid(_bridge):return
++	_bridge.transform=owner.get_global_transform().affine_inverse()*face.get_global_transform()*Transform2D(0.0,face.size*0.5)
++	var rim: Object=_rim.get_ref() if _rim!=null else null
++	if is_instance_valid(rim):rim.hide()
++
++func clear() -> void:
++	var face: Object=_face.get_ref() if _face!=null else null
++	if is_instance_valid(face) and face.get_meta("original_result_back_writer",0)==get_instance_id():
++		face.original_back_receiver_active=_prior_face_active
++		face.remove_meta("original_result_back_writer");face.queue_redraw()
++	var rim: Object=_rim.get_ref() if _rim!=null else null
++	if is_instance_valid(rim) and not rim.visible:rim.visible=_prior_rim_visible
++	_face=null;_rim=null;_sprite=null
++	if is_instance_valid(_bridge) and not _bridge.is_queued_for_deletion():_bridge.hide();_bridge.queue_free()
++	_bridge=null;_scene=null;_cached=false;_status.clear()
++
++func _visibility_changed() -> void:
++	var owner: Object=_owner.get_ref() if _owner!=null else null
++	if _actual_owner(owner):refresh(owner)
++	else:clear()
++
++func close() -> void:
++	clear()
++	var owner: Object=_owner.get_ref() if _owner!=null else null
++	if is_instance_valid(owner):
++		if owner.tree_exiting.is_connected(close):owner.tree_exiting.disconnect(close)
++		if owner.visibility_changed.is_connected(_visibility_changed):owner.visibility_changed.disconnect(_visibility_changed)
++	_owner=null
++
++static func _actual_owner(owner: Object) -> bool:
++	if not owner is Control or not is_instance_valid(owner) or owner.is_queued_for_deletion() or not owner.is_inside_tree() or not owner.is_visible_in_tree():return false
++	var script: Script=owner.get_script()
++	var face: Variant=owner.get("face")
++	return script!=null and script.resource_path==OWNER and face is Control and is_instance_valid(face) and face.get_parent()==owner.get_node_or_null("CardSurfaceClip")
++
++static func _model_seed(owner: Control) -> int:
++	var pack: RefCounted=owner.source_ui_pack
++	return hash([owner.record,owner.source_result_operation,owner.waiting_for_press,owner.face.elapsed<0,owner.face.elapsed>=owner.face.duration,owner.face.get_instance_id(),pack.get_instance_id() if pack!=null else 0,pack.manifest_sha256 if pack!=null else "",ResourceLoader.exists(PROVIDER)])
++
++static func _node_at(node: Dictionary, offset: int) -> Dictionary:
++	if node.get("_offset")==offset:return node
++	for child: Dictionary in node.get("children",[]):
++		var found: Dictionary=_node_at(child,offset)
++		if not found.is_empty():return found
++	return {}
++
++static func _missing(code: String, detail: Dictionary={}) -> Dictionary:
++	return {"ok":false,"code":code,"detail":detail,"pixels_assigned":false,"runtime_rendering_verified":false}
+--- /dev/null
++++ b/scripts/ui/original_ui/source_result_role_contract.gd
+@@ -0,0 +1,88 @@
++extends RefCounted
++## Exact original result roles for the actual existing card/phase owner.
++## Metadata only: no texture decoder, renderer, phase clock or award logic.
++const Families=preload("res://data/ui/base508_card_atlas.json")
++const Current=preload("res://data/lineagem_base508/cards_patch523.json")
++const GradeFrames=preload("res://scripts/ui/original_ui/source_main_card_frames.gd")
++const SOURCE_API=preload("res://scripts/lineagem_base508.gd")
++const RESULT="UI/Change/Change_Card_Result.csb"
++const RESULT_SHA="846392b76ee58324528002be91665885a1466fb2b515e00e7d4c22ea69406ab1"
++const GACHA="UI/Change/Change_Card_Gacha_Result.csb"
++const GACHA_SHA="7b083ccf01c6a5038fe05a5ddb2d107be7ce45aeb9ffaeab2c9a34b95cdd862e"
++const STAGE="UI/Change/Change_WinResult.csb"
++const STAGE_SHA="c72f1dacbb855358c4ca25aa3326ffd565d4cd0bb6699ba02062521c7b153e7a"
++const SPECIAL="UI/Mission/Mission_DungeonSpecial_Btn.csb"
++const SPECIAL_SHA="289353c38b5f8efb7c3caf4913640819864f72c2868c327c71d97a5d4231462d"
++const VARIANTS={
++	"Sp_Card_Common":{"family":"Common","name":"Sp_Card_Common","fusion":[10856,3136],"draw":[16416,12600]},
++	"Sp_Card_Rare":{"family":"Rare","name":"Sp_Card_Rare","fusion":[10572,2848],"draw":[16112,11996]},
++	"Sp_Card_Unique":{"family":"Unique","name":"Sp_Card_Unique","fusion":[10288,2560],"draw":[15808,11392]},
++	"Sp_Card_Legend":{"family":"legend","name":"Sp_Card_legend","fusion":[10004,2272],"draw":[15508,10792]},
++	"Sp_Card_Epic":{"family":"Epic","name":"Sp_Card_Epic","fusion":[9720,1984],"draw":[15204,10188]}
++}
++
++static func selected_card(pack: RefCounted, actual_record: Dictionary, operation: String, phase: String) -> Dictionary:
++	if operation not in ["fusion","draw"] or phase not in ["back","transition","front"]:return _missing("source_result_actual_operation_phase_required")
++	if Families.data.table_evidence.Grade!=GradeFrames.GRADE_SHA or Current.data.source_table_sha256.Grade!=GradeFrames.GRADE_SHA:return _missing("source_result_grade_table_identity_required")
++	var identity: Dictionary=current_card_identity(actual_record)
++	if not identity.get("ok",false):return identity
++	var grade: int=identity.grade_id
++	var declared: Dictionary=Families.data.grade_bindings.get(str(grade),{})
++	var variant: Variant=VARIANTS.get(declared.get("sprite_node",""))
++	if not variant is Dictionary:return {"ok":false,"code":"source_result_original_grade_variant_absent","grade_id":grade,"source_id":identity.source_id,"default_variant_chosen":false}
++	var member: String=RESULT if operation=="fusion" else GACHA
++	var sha: String=RESULT_SHA if operation=="fusion" else GACHA_SHA
++	var front: Dictionary=image_node(pack,member,sha,int(variant[operation][0]),"Sprite",str(variant.name),"ChangeImg/Card_Slot_"+str(variant.family)+".png",true)
++	var back: Dictionary=image_node(pack,member,sha,int(variant[operation][1]),"Sprite",str(variant.name),"ChangeImg/Card_Slot_Back_"+str(variant.family)+".png",true)
++	if not front.get("ok",false):return front
++	if not back.get("ok",false):return back
++	var tree: Dictionary=pack.layout_source(member)
++	return {"ok":true,"schema":"twilight-original-result-card-roles-v1","source_id":identity.source_id,"grade_id":grade,"operation":operation,"phase":phase,"front":front,"back":back,"source_clips":tree.get("animationList",[]).duplicate(true),"source_action_duration":tree.get("action",{}).get("duration"),"phase_basis":"existing per-card Face.elapsed/duration and waiting_for_press; no source clip/seconds mapping","grade_basis":"existing UI grade-family declaration with identical current523 Grade SHA","whole_stage_background":false,"source_animation_started":false,"dynamic_csb_registration_asserted":false,"pixels_assigned":false}
++
++static func current_card_identity(actual_record: Dictionary) -> Dictionary:
++	var canonical: Dictionary=SOURCE_API.canonical(actual_record)
++	var raw: Variant=canonical.get("source_original_card")
++	var grade: Variant=canonical.get("source_grade_id")
++	if canonical.is_empty() or canonical.get("sourceId")!=actual_record.get("sourceId") or canonical.get("source_snapshot")!="patch523" or not raw is Dictionary or not _positive(grade) or raw.get("GradeID")!=grade or raw.get("ID")!=canonical.get("source_card_id"):return _missing("source_result_actual_current_card_identity_required")
++	return {"ok":true,"source_id":canonical.sourceId,"grade_id":int(grade)}
++
++static func fusion_stage(pack: RefCounted, operation: String) -> Dictionary:
++	if operation!="fusion":return _missing("source_result_draw_stage_parent_unestablished")
++	var layers: Array=[]
++	for spec: Array in [[8456,"Img_BG","ProductionImg/Sp_BG.png"],[8124,"Img_BG2","ProductionImg/ResultBG_B.png"]]:
++		var layer: Dictionary=image_node(pack,STAGE,STAGE_SHA,int(spec[0]),"ImageView",str(spec[1]),str(spec[2]),true)
++		if not layer.get("ok",false):return layer
++		layers.append(layer)
++	return {"ok":true,"operation":"fusion","member":STAGE,"source_sha256":STAGE_SHA,"background_layers":layers,"source_design_extent":[1200,675],"original_title":"합성 결과","requires_authored_tint_scale9_and_layer_order":true,"inner_card_background_11140_used":false,"parent_registration_established":false,"pixels_assigned":false}
++
++static func special_entrance_target(pack: RefCounted) -> Dictionary:
++	var target: Dictionary=image_node(pack,SPECIAL,SPECIAL_SHA,28700,"ImageView","Img_Special","Effect/Common_Effect_texture/Mission_Dummy.png",false)
++	if not target.get("ok",false):return target
++	if target.authored_widget.get("size")!=[154.0,262.0] or target.image_view.get("scale9Enabled")!=0:return _missing("source_special_original_image_view_shape_required")
++	return {"ok":true,"role":"SpecialDungeon.EntranceAssetID","original_target":target,"sample_pixels_must_not_be_used":true,"runtime_target_registered":false,"missing_registration":"Mission_DungeonSpecial_Btn root Panel392 to Mission_Dungeon_Special ListView_Daily2560 item; ImageView static-asset receiver","ui_map_coordinates_used":false,"pixels_assigned":false}
++
++static func image_node(pack: RefCounted, member: String, sha: String, offset: int, kind: String, name: String, path: String, active_required: bool) -> Dictionary:
++	if pack==null or pack.manifest.get("files",{}).get(member,{}).get("sha256")!=sha:return _missing("source_result_component_identity_required",member)
++	var tree: Dictionary=pack.scene(member) if active_required else pack.layout_source(member)
++	var found: Array=[]
++	_find(tree.get("nodeTree",{}),offset,[],found)
++	if found.size()!=1:return _missing("source_result_original_target_scope_required",member)
++	var node: Dictionary=found[0].node
++	var options: Dictionary=node.get("options",{})
++	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
++	var ref: Variant=options.get("fileNameData")
++	if node.get("classname")!=kind or widget.get("name")!=name or not ref is Dictionary or ref.get("path")!=path:return _missing("source_result_exact_original_role_required",member)
++	return {"ok":true,"pack":pack,"manifest_sha256":pack.manifest_sha256,"member":member,"source_sha256":sha,"node_offset":offset,"node_type":kind,"node_name":name,"fileNameData":ref.duplicate(true),"authored_widget":widget.duplicate(true),"parent_chain":found[0].parents,"image_view":{"scale9Enabled":options.get("scale9Enabled"),"capInsets":options.get("capInsets"),"scale9Size":options.get("scale9Size")},"runtime_scope_required":active_required}
++
++static func _find(node: Dictionary, offset: int, parents: Array, found: Array) -> void:
++	if node.get("_offset")==offset:found.append({"node":node,"parents":parents.duplicate(true)})
++	var options: Dictionary=node.get("options",{})
++	var chain: Array=parents.duplicate()
++	chain.append({"offset":node.get("_offset"),"type":node.get("classname"),"options":options.get("widgetOptions",options.get("nodeOptions",options)).duplicate(true)})
++	for child: Dictionary in node.get("children",[]):_find(child,offset,chain,found)
++
++static func _positive(value: Variant) -> bool:
++	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floor(float(value)) and value>0
++
++static func _missing(code: String, member: String="") -> Dictionary:
++	return {"ok":false,"code":code,"member":member,"pixels_assigned":false}
+--- a/scripts/ui/original_ui/sprite_scene.gd
++++ b/scripts/ui/original_ui/sprite_scene.gd
+@@ -168,7 +168,7 @@
+ 	if binding.get("role")=="source_text_field" and node.classname!="TextField":problems.append("source_text_field_original_widget_required")
+ 	var external: bool=int(node.get("_offset",-1)) in _external_texture_nodes
+ 	if external and binding.get("role")!="source_asset_slot":problems.append("external_texture_owner_binding_required")
+-	if binding.get("role")=="source_asset_slot" and (not external or node.classname!="Sprite" or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
++	if binding.get("role")=="source_asset_slot" and (not external or node.classname not in ["Sprite","ImageView"] or binding.get("visible")!=false):problems.append("source_asset_slot_declaration_required")
+ 	if binding.get("role")=="source_asset":
+ 		if node.classname not in ["Sprite","ImageView"] or not binding.get("asset_ref") is Dictionary:problems.append("source_asset_node_or_reference_missing")
+ 	if binding.has("visible") and not binding.visible is bool:problems.append("source_visibility_value_missing")
+@@ -451,33 +451,15 @@
+ 		if pending:
+ 			node.set_meta("source_asset_slot",true)
+ 			node.set_meta("source_asset_pending",true)
+-	if source.classname=="ImageView" and bound_texture!=null:
+-		var texture: Texture2D=bound_texture
+-		var picture: Control
+-		if bool(options.scale9Enabled):
+-			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
+-			var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
+-			if not configured.ok:
+-				_build_error=str(configured.error)+":"+str(widget.name)
+-				nine.free(); node.free(); return null
+-			picture=nine
+-		else:
+-			var flat:=TextureRect.new()
+-			flat.texture=texture
+-			flat.material=MATERIAL.original_default(texture)
+-			if flat.material==null:
+-				_build_error="original_material_unavailable";flat.free();node.free();return null
+-			flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+-			flat.stretch_mode=TextureRect.STRETCH_SCALE
+-			picture=flat
+-		picture.name="OriginalImage"
+-		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+-		picture.size=Vector2(widget.size[0],widget.size[1])
+-		picture.position=Vector2(0,-float(widget.size[1]))
+-		if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
+-		if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
+-		origin.add_child(picture)
+-		node.set_meta("source_image",picture)
++	if source.classname=="ImageView":
++		node.set_meta("source_image_options",options.duplicate(true))
++		node.set_meta("source_image_widget",widget.duplicate(true))
++		node.set_meta("source_image_origin",origin)
++		if bound_texture!=null:
++			var built_image: Dictionary=_original_image_picture(bound_texture,options,widget)
++			if not built_image.get("ok",false):node.free();return null
++			origin.add_child(built_image.picture)
++			node.set_meta("source_image",built_image.picture)
+ 	if source.classname=="Sprite":
+ 		var texture: Texture2D=bound_texture
+ 		var sprite:=Sprite2D.new()
+@@ -841,7 +823,9 @@
+ 		var sprite: Sprite2D=node.get_meta("source_sprite",null)
+ 		var scene: Variant=node.get_meta("source_asset_scene",null)
+ 		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
+-		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
++		var picture: Variant=node.get_meta("source_image",null)
++		var image_ready: bool=is_instance_valid(picture) and not picture.is_queued_for_deletion() and picture.get_parent()==node.get_meta("source_image_origin",null)
++		if (not image_ready and (sprite==null or (sprite.texture==null and not scene_ready))) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
+ 	node.visible=value
+ 	return {"ok":true}
+ 
+@@ -870,8 +854,35 @@
+ 	_sync_source_display(self,_source_parent_display())
+ 	return {"ok":true,"authored_component_alpha":alpha,"animation_policy_inferred":false,"source_fields_modified":false}
+ 
++func _original_image_picture(texture: Texture2D, options: Dictionary, widget: Dictionary) -> Dictionary:
++	var picture: Control
++	if bool(options.scale9Enabled):
++		var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
++		var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
++		if not configured.ok:
++			_build_error=str(configured.error)+":"+str(widget.name)
++			nine.free(); return {"ok":false,"error":str(configured.error)}
++		picture=nine
++	else:
++		var flat:=TextureRect.new()
++		flat.texture=texture
++		flat.material=MATERIAL.original_default(texture)
++		if flat.material==null:
++			_build_error="original_material_unavailable";flat.free();return {"ok":false,"error":"original_material_unavailable"}
++		flat.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
++		flat.stretch_mode=TextureRect.STRETCH_SCALE
++		picture=flat
++	picture.name="OriginalImage"
++	picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
++	picture.size=Vector2(widget.size[0],widget.size[1])
++	picture.position=Vector2(0,-float(widget.size[1]))
++	if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
++	if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
++	return {"ok":true,"picture":picture}
++
+ func set_bound_source_asset_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
+ 	var node: Node2D=source_nodes.get(source_offset)
++	if node!=null and node.has_meta("source_image_options"):return _set_bound_source_image_result(source_offset,owner_result)
+ 	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_binding_missing"}
+ 	var sprite: Sprite2D=node.get_meta("source_sprite")
+ 	_detach_source_scene(node)
+@@ -903,6 +914,57 @@
+ 	MATERIAL.bind_display(sprite,node.get_meta("source_display_color",Color.WHITE))
+ 	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"image_info_registration_complete":false}
+ 
++func clear_bound_source_visual(source_offset: int) -> Dictionary:
++	var node: Node2D=source_nodes.get(source_offset)
++	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot":return {"ok":false,"error":"source_asset_slot_binding_missing"}
++	_detach_source_scene(node)
++	if node.has_meta("source_image_options"):return clear_bound_source_image(source_offset)
++	if not node.has_meta("source_sprite"):return {"ok":false,"error":"source_asset_slot_original_sprite_required"}
++	var sprite: Sprite2D=node.get_meta("source_sprite")
++	sprite.texture=null
++	if node.has_meta("source523_original_asset"):node.remove_meta("source523_original_asset")
++	if node.has_meta("source_runtime_texture_size"):node.remove_meta("source_runtime_texture_size")
++	_resolved_assets.erase(source_offset)
++	node.set_meta("source_asset_pending",true);node.visible=false
++	return {"ok":true,"cleared":true,"original_node_transform_retained":true}
++
++func clear_bound_source_image(source_offset: int) -> Dictionary:
++	var node: Node2D=source_nodes.get(source_offset)
++	if node==null or _bindings.get(source_offset,{}).get("role")!="source_asset_slot" or not node.has_meta("source_image_options"):return {"ok":false,"error":"source_image_slot_binding_missing"}
++	var previous: Variant=node.get_meta("source_image",null)
++	if is_instance_valid(previous):
++		previous.get_parent().remove_child(previous)
++		previous.free()
++	if node.has_meta("source_image"):node.remove_meta("source_image")
++	if node.has_meta("source523_original_asset"):node.remove_meta("source523_original_asset")
++	_resolved_assets.erase(source_offset)
++	node.set_meta("source_asset_pending",true)
++	node.visible=false
++	return {"ok":true,"cleared":true,"game_state_written":false}
++
++func _set_bound_source_image_result(source_offset: int, owner_result: Dictionary) -> Dictionary:
++	var cleared: Dictionary=clear_bound_source_image(source_offset)
++	if not cleared.get("ok",false):return cleared
++	var node: Node2D=source_nodes[source_offset]
++	var consumed: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").consume_owner_result(owner_result)
++	if not consumed.get("ok",false) or consumed.get("texture")==null:return consumed
++	var texture: Texture2D=consumed.texture
++	var widget: Dictionary=node.get_meta("source_image_widget")
++	var options: Dictionary=node.get_meta("source_image_options")
++	# Intrinsic-size ImageViews need full child/hit-area resizing when their
++	# texture size changes. Do not silently reinterpret that unknown case.
++	if bool(widget.get("ignoreSize",false)) and not bool(options.scale9Enabled) and texture.get_size()!=Vector2(widget.size[0],widget.size[1]):return {"ok":false,"error":"source_image_intrinsic_size_registration_required"}
++	var built: Dictionary=_original_image_picture(texture,options,widget)
++	if not built.get("ok",false):return built
++	var origin: Node2D=node.get_meta("source_image_origin")
++	origin.add_child(built.picture)
++	node.set_meta("source_image",built.picture)
++	node.set_meta("source523_original_asset",consumed.evidence.duplicate(true))
++	node.set_meta("source_asset_pending",false)
++	_resolved_assets[source_offset]=consumed.evidence.duplicate(true)
++	MATERIAL.bind_tree_display(built.picture,node.get_meta("source_display_color",Color.WHITE))
++	return {"ok":true,"texture_assigned":true,"texture":texture,"evidence":consumed.evidence,"original_node_transform_retained":true,"original_image_view_geometry_retained":true,"visibility_requires_owner":true,"runtime_rendering_verified":false}
++
+ static func external_scene_slot_contract(pack: RefCounted, member: String, source_offset: int) -> Dictionary:
+ 	if pack==null or source_offset not in pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[]):return {"ok":false,"error":"source_asset_slot_declaration_required"}
+ 	var tree: Dictionary=pack.layout_source(member)
+@@ -933,6 +995,9 @@
+ 	var prepared: Dictionary=preload("res://scripts/ui/original_ui/source_asset_scene.gd").prepare(descriptor)
+ 	if not prepared.get("ok",false):return prepared
+ 	var player: Node2D=prepared.player
++	if registration.get("kind")=="TWILIGHT_host_registration":
++		var confirmed: Dictionary=registration.receiver.validate_attachment(self,source_offset,descriptor)
++		if not confirmed.get("ok",false):player.free();return confirmed
+ 	# This is the exact authored Sprite anchor node, not its preview texture's
+ 	# bottom-left origin. The owner must prove this registration explicitly.
+ 	# Both the target transform and the identity original CSB root are retained.
+--- a/scripts/ui/renewal_hud.gd
++++ b/scripts/ui/renewal_hud.gd
+@@ -2053,6 +2053,7 @@
+ 	stage.intensity_scale = clampf(float(settings.get("impact_intensity",0.85)),0.0,1.5)
+ 	stage.detail_scale = 0.6 if str(settings.get("effect_detail","full")) == "low" else 1.0
+ 	card_reveal_stage = stage
++	if is_instance_valid(original_main_ui_controller):stage.source_ui_pack=original_main_ui_controller.source_role_pack()
+ 	layer.add_child(stage)
+ 	stage.finished.connect(func() -> void:
+ 		card_reveal_stage = null

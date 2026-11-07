@@ -308,11 +308,13 @@ func _card(parent: Node,requirement: Dictionary,width: float) -> void:
 			if aura.material!=null:
 				button.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			else:aura.free()
-		var original_frame: Texture2D=Chrome.texture_for(rank,record)
+		var frame_visual: Dictionary=Chrome.frame_for(record)
+		var original_frame: Texture2D=frame_visual.get("texture") as Texture2D
 		if original_frame!=null:
 			var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE;metal.texture=original_frame
 			metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;metal.material=Chrome.material_for(rank,false,false,bool(hud.get_parent().presentation_settings.get("reduced_motion",false)))
-			metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
+			var frame_evidence: Dictionary=frame_visual.duplicate(true);frame_evidence.erase("texture")
+			metal.set_meta("source_grade_frame",frame_evidence)
 			button.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var copies: int=(1 if acquired else 0)+int(hud.card_collection_state.get("spare",{}).get(member_category,{}).get(key,0))
 		if copies>1 or (native and copies>0):

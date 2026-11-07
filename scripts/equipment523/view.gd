@@ -7,6 +7,7 @@ signal install_requested(path: String, sha256: String)
 
 const KINDS: Array[String] = ["elemental_smith", "bless_reinforcement", "smelt", "spirit_smelt", "alchemy", "invoke_replacement", "sets"]
 const KIND_NAMES: Array[String] = ["속성 세공", "축복 세공", "일반 제련", "정령 제련", "연금", "발동 스킬 교체", "장비 세트"]
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 
 var _snapshot: Dictionary = {}
 var _built: bool = false
@@ -236,6 +237,10 @@ func _render_snapshot() -> void:
 	_target.clear()
 	_material.clear()
 	_materials.clear()
+	for list in [_target, _material, _materials]:
+		if list.has_meta("source523_images"): list.remove_meta("source523_images")
+	_target.expand_icon = true
+	_material.expand_icon = true
 	_target.add_item("장비를 선택하세요")
 	_target.set_item_metadata(0, "")
 	_material.add_item("소모품을 선택하세요")
@@ -253,6 +258,7 @@ func _render_snapshot() -> void:
 		var ti: int = _target.item_count - 1
 		_target.set_item_metadata(ti, physical)
 		_target.set_item_tooltip(ti, caption)
+		_bind_source_item_image(_target, ti, info)
 		if physical == selected_target:
 			_target.select(ti)
 		if bool(info.get("locked", false)) or bool(info.get("equipped", false)):
@@ -261,12 +267,14 @@ func _render_snapshot() -> void:
 		var mi: int = _material.item_count - 1
 		_material.set_item_metadata(mi, physical)
 		_material.set_item_tooltip(mi, caption)
+		_bind_source_item_image(_material, mi, info)
 		if physical == selected_material:
 			_material.select(mi)
 		_materials.add_item(caption)
 		var ai: int = _materials.item_count - 1
 		_materials.set_item_metadata(ai, physical)
 		_materials.set_item_tooltip(ai, caption)
+		_bind_source_item_image(_materials, ai, info)
 		if selected_materials.has(physical):
 			_materials.select(ai, false)
 	_status.text = str(_snapshot.get("status", "규칙팩 준비 완료" if _snapshot.get("pack_ready", false) else "규칙팩을 설치하면 사용할 수 있습니다."))
@@ -276,6 +284,22 @@ func _render_snapshot() -> void:
 	_render_selection()
 	_render_sets()
 	_update_buttons()
+
+
+func _bind_source_item_image(list, index: int, info: Dictionary) -> void:
+	if not SOURCE_IMAGES.selected(): return
+	var record: Variant = info.get("record")
+	if not record is Dictionary: return
+	var source_id: Variant = info.get("source_id")
+	if not SOURCE_IMAGES.PACK._integer(source_id) or int(source_id) <= 0 or SOURCE_IMAGES.item_class_id(record) != int(source_id): return
+	var image: Dictionary = SOURCE_IMAGES.describe_item(record,str(info.get("name","")))
+	list.set_item_icon(index,image.get("texture") as Texture2D)
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	evidence["equipment_instance_id"] = str(info.get("instance_id",""))
+	var images: Dictionary = list.get_meta("source523_images",{})
+	images[index] = evidence
+	list.set_meta("source523_images",images)
 
 
 func _render_selection() -> void:
@@ -403,6 +427,17 @@ func _invalidate_quote() -> void:
 
 func _update_buttons() -> void:
 	var action: Dictionary = _action()
+	for button: Button in [_preview, _commit]:
+		button.icon = null
+		if button.has_meta("source523_image"): button.remove_meta("source523_image")
+	if _current_kind() not in ["alchemy", "sets"] and SOURCE_IMAGES.selected() and _target.selected >= 0:
+		var images: Dictionary = _target.get_meta("source523_images",{})
+		var evidence: Dictionary = images.get(_target.selected,{})
+		if not evidence.is_empty() and evidence.get("equipment_instance_id") == action.target_id:
+			for button: Button in [_preview, _commit]:
+				button.icon = _target.get_item_icon(_target.selected)
+				button.expand_icon = true
+				button.set_meta("source523_image",evidence.duplicate(true))
 	var ready: bool = bool(_snapshot.get("pack_ready", false)) and not _waiting
 	var valid: bool = not str(action.target_id).is_empty() and action.material_ids.size() == 1
 	if _current_kind() == "alchemy":

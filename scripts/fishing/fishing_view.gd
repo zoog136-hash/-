@@ -88,8 +88,14 @@ func show_result(result: Dictionary) -> void:
 	status_label.text = str(result.get("message", ""))
 	refresh()
 
-func confirm(title: String, detail: String, callback: Callable) -> void:
-	hud.confirm_action(title, detail, "확인", func(_count: int) -> void: show_result(callback.call()))
+func confirm(title: String, detail: String, callback: Callable, item_class_key: String = "") -> void:
+	var accept: Callable=func(_count: int) -> void: show_result(callback.call())
+	var dialog: Control=hud.confirm_action(title, detail, "확인", accept)
+	# The shared HUD may return a different action's already open dialog.
+	# Only the exact callback owner may supply this single selected item icon.
+	if dialog==null or dialog.get("callback")!=accept or item_class_key.is_empty():return
+	var button: Variant=dialog.get("confirm_button")
+	if button is Button:_bind_item_button(button,item_class_key)
 
 func refresh() -> void:
 	for child: Node in body.get_children():
@@ -128,9 +134,13 @@ func build_fish() -> void:
 		rods.add_item("%s ×%d" % [runtime.rules.item_name(id), int(runtime.state.items.get(id, 0))], int(id))
 		_bind_item_entry(rods, rods.item_count - 1, id)
 	body.add_child(rods)
-	action("낚싯대 %d개로 시작" % int(runtime.policy.cast_cost), func() -> void:
+	var cast_button: Button = action("낚싯대 %d개로 시작" % int(runtime.policy.cast_cost), func() -> void:
 		var rod: int = rods.get_selected_id()
-		confirm("낚시 시작", "낚싯대 %d개를 소모합니다. 취소·실패·재접속 시 이미 쓴 낚싯대는 돌아오지 않습니다." % int(runtime.policy.cast_cost), func() -> Dictionary: return runtime.cast(rod)))
+		confirm("낚시 시작", "낚싯대 %d개를 소모합니다. 취소·실패·재접속 시 이미 쓴 낚싯대는 돌아오지 않습니다." % int(runtime.policy.cast_cost), func() -> Dictionary: return runtime.cast(rod),str(rod)))
+	rods.item_selected.connect(func(index: int) -> void:
+		_bind_item_button(cast_button,str(rods.get_item_id(index))))
+	if rods.selected >= 0:
+		_bind_item_button(cast_button,str(rods.get_selected_id()))
 	live_label = UI.label("", 13)
 	live_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_child(live_label)
@@ -169,7 +179,7 @@ func build_fish() -> void:
 		var purchase: Button = action("%s %d개 구매 · 주화 %d · 레벨 %d" % [runtime.rules.item_name(item), int(goods.Amount), cost, int(goods.LimitMinLevel)], func() -> void:
 			var token: String = runtime.request_id()
 			var revision: int = int(runtime.state.revision)
-			confirm("낚싯대 구매", "표시된 낚시 주화를 지불합니다.", func() -> Dictionary: return runtime.buy_rod(goods_id, token, revision)))
+			confirm("낚싯대 구매", "표시된 낚시 주화를 지불합니다.", func() -> Dictionary: return runtime.buy_rod(goods_id, token, revision),item))
 		_bind_item_button(purchase, item, true)
 
 func build_exchange() -> void:
@@ -219,14 +229,14 @@ func build_bag() -> void:
 			var use_card: Button = action("해당 폴 변신 카드 사용", func() -> void:
 				var token: String = runtime.request_id()
 				var revision: int = int(runtime.state.revision)
-				confirm("변신 카드 사용", "아이템 1개를 사용해 정확한 원본 ID의 변신을 획득합니다.", func() -> Dictionary: return runtime.use_card(id, token, revision)))
+				confirm("변신 카드 사용", "아이템 1개를 사용해 정확한 원본 ID의 변신을 획득합니다.", func() -> Dictionary: return runtime.use_card(id, token, revision),id))
 			use_card.name = "FishingCard_" + id
 			_bind_item_button(use_card, id)
 		elif runtime.has_bag(id):
 			var open_bag: Button = action("%s 열기" % runtime.rules.item_name(id), func() -> void:
 				var token: String = runtime.request_id()
 				var revision: int = int(runtime.state.revision)
-				confirm("보물 상자 사용", "아이템 1개를 사용합니다. 원본 확정 보상은 그대로 지급하고 확률 보상은 별도로 1종 판정합니다.", func() -> Dictionary: return runtime.open_treasure(id, token, revision)))
+				confirm("보물 상자 사용", "아이템 1개를 사용합니다. 원본 확정 보상은 그대로 지급하고 확률 보상은 별도로 1종 판정합니다.", func() -> Dictionary: return runtime.open_treasure(id, token, revision),id))
 			open_bag.name = "FishingBag_" + id
 			_bind_item_button(open_bag, id)
 		elif id != "303031" and not runtime.rules.rods.has(id):

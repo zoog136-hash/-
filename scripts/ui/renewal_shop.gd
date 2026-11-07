@@ -9,6 +9,7 @@ const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const SOURCE523 = preload("res://scripts/shop/source523_shop_catalog.gd")
 const SOURCE523_PANEL = preload("res://scripts/ui/source523_shop_panel.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var source523_panel
 static var selected_vendor_id: String = ""
 var hud: Node
@@ -192,6 +193,7 @@ func _refresh() -> void:
 		filtered.append(entry)
 		listing.add_item(_caption(entry),UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
 	if filtered.is_empty():
+		_bind_purchase_image({})
 		detail.text = "검색 조건에 맞는 상품이 없습니다."
 		purchase.disabled = true
 		purchase.text = "상품 선택"
@@ -371,6 +373,18 @@ func _refresh_selection() -> void:
 	purchase_state.text = purchase.tooltip_text if purchase.disabled else "선택한 상품 · 확인 후 구매"
 	purchase_state.add_theme_color_override("font_color",UI.GOLD if purchase.disabled else UI.MUTED)
 	selection_sheet.show_shop(name,info,quantity,price,count,available)
+	_bind_purchase_image(info)
+
+func _bind_purchase_image(record: Dictionary) -> void:
+	purchase.icon = null
+	if purchase.has_meta("source523_image"): purchase.remove_meta("source523_image")
+	if not SOURCE_IMAGES.selected() or not SOURCE_IMAGES.handles_item(record): return
+	var image: Dictionary = SOURCE_IMAGES.describe_item(record,str(record.get("name","")))
+	purchase.icon = image.get("texture") as Texture2D
+	purchase.expand_icon = true
+	var evidence: Dictionary = image.duplicate(true)
+	evidence.erase("texture")
+	purchase.set_meta("source523_image",evidence)
 
 func _buy() -> void:
 	if selected.is_empty() or purchase.disabled: return
@@ -381,8 +395,15 @@ func _buy() -> void:
 	var total: int = int(selected[1])*quantity
 	# Never send a payment amount from the UI. World rechecks the price, stock
 	# rules, wallet, weight and special consumable restrictions atomically.
-	hud.confirm_action("구매 확인","%s ×%s\n합계 %s 아데나" % [name,UI.number_text(quantity),UI.number_text(total)],"구매",func(_count: int) -> void:
+	var accept: Callable = func(_count: int) -> void:
 		if not vendor.is_empty() and hud.has_signal("reviewed_shop_buy_requested"):
 			hud.emit_signal("reviewed_shop_buy_requested",vendor,name,quantity)
 		elif hud.has_signal("shop_bulk_buy_requested"):
-			hud.emit_signal("shop_bulk_buy_requested",name,quantity))
+			hud.emit_signal("shop_bulk_buy_requested",name,quantity)
+	var confirmation: Control = hud.confirm_action("구매 확인","%s ×%s\n합계 %s 아데나" % [name,UI.number_text(quantity),UI.number_text(total)],"구매",accept)
+	if confirmation != null and confirmation.get("callback") == accept and SOURCE_IMAGES.selected() and purchase.has_meta("source523_image"):
+		var confirm_button: Variant = confirmation.get("confirm_button")
+		if confirm_button is Button:
+			confirm_button.icon = purchase.icon
+			confirm_button.expand_icon = true
+			confirm_button.set_meta("source523_image",purchase.get_meta("source523_image").duplicate(true))

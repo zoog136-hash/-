@@ -156,6 +156,23 @@ func _open_verified() -> Dictionary:
 			if check != true: return _failure("decoder_contract","Full current catalog check is incomplete.")
 	elif _manifest.metrics.get("whole_current_source_denominator") != null:
 		return _failure("decoder_contract","Partial catalog cannot claim a whole current denominator.")
+	# Optional exact retained-original supplement; never an old graphics-pack
+	# fallback. Its unchanged source members still match the pinned decoder row.
+	var retained_paths: Dictionary = {}
+	if _manifest.has("retained_original_supplement"):
+		var supplement_spec: Variant=_manifest.retained_original_supplement
+		if not supplement_spec is Dictionary or supplement_spec.get("path")!="source/retained-original-supplement.json" or supplement_spec.get("sha256")!="5855a8b82d675e8697d3585b37482e183c26a7e8ca9d42d453bb16d416eaceea":return _failure("retained_supplement_contract","Exact original supplement pin required.")
+		var supplement: Dictionary=_json(supplement_spec)
+		if not supplement.ok:return supplement
+		var declaration: Variant=supplement.value
+		if not declaration is Dictionary or declaration.get("kind")!="source523-original-image-supplement" or declaration.get("source_snapshot")!="patch523" or declaration.get("base_manifest_sha256")!="b743a3f192ff5c4196bcd5d1775935068fe22a10a108334080be2e2fc8a1e58c" or declaration.get("catalog_sha256")!=_manifest.decoder_catalog.sha256 or not declaration.get("members") is Array:return _failure("retained_supplement_contract","Original supplement source identity differs.")
+		for entry: Variant in declaration.members:
+			if not entry is Dictionary or not _safe_relative(str(entry.get("path",""))) or retained_paths.has(entry.path) or not catalog_members.has(entry.path):return _failure("retained_supplement_contract","Original supplement member unavailable.")
+			var raw: Dictionary=catalog_members[entry.path]
+			if raw.get("current523_component")!="retained_historical_card_lineage1216" or entry.get("sha256")!=raw.get("sha256") or entry.get("plain_bytes")!=raw.get("plain_bytes"):return _failure("retained_supplement_contract","Original supplement member identity differs.")
+			retained_paths[entry.path]=true
+		if retained_paths.size()!=1216:return _failure("retained_supplement_contract","Exact original supplement extent required.")
+	var retained_selected: int=0
 	var folded: Dictionary = {}
 	for record: Variant in _manifest.members:
 		if not record is Dictionary or not _safe_relative(str(record.get("path",""))) or not _safe_relative(str(record.get("file",""))): return _failure("invalid_member","Unsafe original member.")
@@ -167,9 +184,12 @@ func _open_verified() -> Dictionary:
 		if record.size() != raw.size() or record.file != "originals/" + path: return _failure("member_catalog_mismatch","Original member identity fields are incomplete.")
 		for field: String in raw:
 			if field != "relative_output_path" and (not record.has(field) or record[field] != raw[field]): return _failure("member_catalog_mismatch","Original member field differs from decoder catalog.")
-		if record.get("original_bytes_preserved") != true or record.get("pillow_verify_and_load") != true or not record.get("format") in ["PNG","JPEG","BMP"] or not record.get("current523_component") in ["retained_noncard_lineage14964","changed4_current523"]:
+		var retained: bool=record.get("current523_component")=="retained_historical_card_lineage1216" and retained_paths.has(path)
+		if record.get("original_bytes_preserved") != true or record.get("pillow_verify_and_load") != true or not record.get("format") in ["PNG","JPEG","BMP"] or (not record.get("current523_component") in ["retained_noncard_lineage14964","changed4_current523"] and not retained):
 			return _failure("invalid_member_proof","Original member verification proof missing.")
+		if retained:retained_selected+=1
 		_members[path] = record
+	if retained_selected!=retained_paths.size():return _failure("retained_supplement_contract","Original supplement members not fully materialized.")
 	if _manifest.metrics.get("pack_members") != _members.size(): return _failure("member_catalog_mismatch","Pack member count differs.")
 	var types: Dictionary = {}
 	var type_indexes: Dictionary = {}

@@ -6,6 +6,7 @@ const POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 const HOST_PORTALS = preload("res://scripts/maps/host_portal_navigation.gd")
 const PORTAL_SOURCE = preload("res://scripts/maps/patch523_portal_source_evidence.gd")
 const SOURCE_RUNTIME = preload("res://scripts/maps/patch523_source_portal_bridge.gd")
+const NPC_IMAGES = preload("res://scripts/ui/source523_npc_images.gd")
 var source_runtime = SOURCE_RUNTIME.new()
 var source_selection: Dictionary = {}
 var last_source_result: Dictionary = {}
@@ -142,10 +143,18 @@ func refresh() -> void:
 
 func filter_rows() -> void:
 	rows.clear(); visible_entries.clear()
+	var images: Dictionary = {}
 	for entry: Dictionary in entries:
 		if not search.text.is_empty() and not str(entry.get("query", entry.title)).containsn(search.text): continue
 		visible_entries.append(entry)
-		rows.add_item(str(entry.title))
+		var image: Dictionary = _live_actor_image(entry)
+		var index: int = rows.add_item(str(entry.title),image.get("texture") as Texture2D)
+		if not image.is_empty():
+			var evidence: Dictionary = image.duplicate(true)
+			evidence.erase("texture")
+			images[index] = evidence
+	if rows.has_meta("source523_npc_images"): rows.remove_meta("source523_npc_images")
+	if not images.is_empty(): rows.set_meta("source523_npc_images",images)
 	if not visible_entries.is_empty(): rows.select(0); show_entry(0)
 	else:
 		detail.text = "표시할 항목이 없습니다. 검색어 또는 현재 생성 상태를 확인하세요."
@@ -154,6 +163,26 @@ func filter_rows() -> void:
 		action.disabled = true
 		navigate.hide()
 		inspect_arrival.hide()
+
+func _live_actor_image(entry: Dictionary) -> Dictionary:
+	# A live row has one actual pooled actor. A spawn pack/group does not.
+	if entry.get("kind") != "live" or not NPC_IMAGES.IMAGES.selected(): return {}
+	var actor: Variant = entry.get("slot",{}).get("monster")
+	if not is_instance_valid(actor): return {}
+	var npc_id: Variant = actor.get("source_m_npc_id")
+	var original: Variant = actor.get("source_m_original")
+	if not npc_id is int or npc_id <= 0 or not original is Dictionary or original.get("ID") != npc_id: return {}
+	var service: Variant = world.get("patch523_npc_spells")
+	var catalog: Variant = service.get("catalog") if is_instance_valid(service) else null
+	if not is_instance_valid(catalog): return {}
+	var registry: Variant = catalog.get("admitted_source_identities")
+	if not registry is Dictionary: return {}
+	var admitted: Dictionary = registry.get(str(npc_id),{})
+	if admitted.get("source_snapshot") != "patch523" or admitted.get("source_archive_sha256") != catalog.SOURCE_SHA or admitted.get("npc_class_id") != npc_id or admitted.get("sprite") != original.get("Sprite") or admitted.get("desc_id") != original.get("DescId"): return {}
+	var image: Dictionary = NPC_IMAGES.resolve(catalog,npc_id)
+	image["live_actor_context"] = {"instance_id":actor.get_instance_id(),"life_id":actor.get("life_id"),"npc_class_id":npc_id,
+		"identity_basis":"existing_actor_original_and_current_catalog_admission"}
+	return image
 
 func show_entry(index: int) -> void:
 	if index < 0 or index >= visible_entries.size(): return

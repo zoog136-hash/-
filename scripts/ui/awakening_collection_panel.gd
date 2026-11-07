@@ -113,12 +113,14 @@ func _add_card(grid: GridContainer,requirement: Dictionary) -> void:
 		if aura.material!=null:
 			card.add_child(aura);aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		else:aura.free()
-	var original_frame: Texture2D=Chrome.texture_for(rank,record)
+	var frame_visual: Dictionary=Chrome.frame_for(record)
+	var original_frame: Texture2D=frame_visual.get("texture") as Texture2D
 	if original_frame!=null:
 		var metal:=TextureRect.new();metal.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		metal.texture=original_frame;metal.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		metal.material=Chrome.material_for(rank,false,false,bool(settings.get("reduced_motion",false)))
-		metal.modulate=Color.WHITE if acquired else Ownership.UNOWNED_FRAME_TINT
+		var frame_evidence: Dictionary=frame_visual.duplicate(true);frame_evidence.erase("texture")
+		metal.set_meta("source_grade_frame",frame_evidence)
 		card.add_child(metal);metal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var duplicates: int=int(ownership.get("spare",{}).get(category,{}).get(identity,0))
 	if native and acquired:duplicates+=1

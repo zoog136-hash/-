@@ -3,6 +3,7 @@ extends Control
 const Chrome=preload("res://scripts/ui/catalog_card_chrome.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const UI=preload("res://scripts/ui/renewal_theme.gd")
+const SourceSurfaces=preload("res://scripts/ui/original_card_surfaces.gd")
 var listing: ItemList
 var layers: Array[Control]=[]
 var quantities: Control
@@ -13,6 +14,7 @@ func configure(source: ItemList) -> void:
 		count_font=FontVariation.new();count_font.base_font=UI.FONT
 		count_font.variation_opentype={2003265652:650.0}
 	listing=source
+	SourceSurfaces.watch_frames(self)
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	clip_contents=true
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -53,6 +55,7 @@ func _paint(layer: Control, rank: int, aura: bool) -> void:
 	if not is_visible_in_tree():return
 	if aura:return
 	var visible:=Rect2(Vector2.ZERO,size)
+	var results: Dictionary={}
 	for index: int in range(listing.item_count):
 		var data: Dictionary=listing.get_item_metadata(index)
 		if Cards.GRADES.find(str(data.get("grade","")))!=rank:continue
@@ -62,5 +65,10 @@ func _paint(layer: Control, rank: int, aura: bool) -> void:
 		var picture:=Rect2(cell.position+Vector2((cell.size.x-extent.x)*.5,0),extent)
 		if not visible.intersects(picture):continue
 		var record: Variant=data.get("source_record",{})
-		var original: Texture2D=Chrome.texture_for(rank,record if record is Dictionary else {})
+		var frame: Dictionary=Chrome.frame_for(record if record is Dictionary else {})
+		var original: Texture2D=frame.get("texture") as Texture2D
+		var evidence: Dictionary=frame.duplicate(true)
+		evidence.erase("texture")
+		results[index]=evidence
 		if original!=null:layer.draw_texture_rect(original,picture,false)
+	layer.set_meta("source_grade_frame_results",results)

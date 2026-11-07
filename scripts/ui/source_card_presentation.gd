@@ -131,6 +131,7 @@ static func apply(hud: Node) -> void:
 	var badge: Label = preview.get_node_or_null("OriginalCardAssetStatus")
 	var record: Dictionary = hud.selected_catalog_record
 	if not native(record):
+		_clear_selected_action_icon(hud.catalog_equip_button)
 		preload("res://scripts/ui/source_card_skin.gd").restore(hud.catalog_equip_button)
 		if badge != null: badge.hide()
 		preview.self_modulate = Color.WHITE
@@ -151,6 +152,7 @@ static func apply(hud: Node) -> void:
 	var identity: String = CARDS.card_id(record)
 	var owned: Dictionary = hud.card_collection_state.get("owned", {}).get(hud.catalog_category, {})
 	var acquired: bool = owned.get(identity, false) == true
+	_apply_selected_action_icon(hud.catalog_equip_button,record,acquired)
 	var result: Dictionary = detail(record, acquired)
 	preview.texture = null if result.get("status","") == "source_dummy_excluded" else result.get("texture")
 	preview.self_modulate = Color.WHITE if acquired or result.get("source523_verified_original",false) else Color(.68,.68,.68,.62)
@@ -179,6 +181,44 @@ static func apply(hud: Node) -> void:
 			hud.catalog_equip_button.disabled=true
 			hud.catalog_equip_button.text="원본 조건 확인 필요"
 			hud.catalog_equip_button.tooltip_text="카드의 서버·기간 조건을 확인해야 적용할 수 있습니다"
+
+static func _clear_selected_action_icon(button: Button) -> bool:
+	# Clear only this image owner's presentation, not an unrelated button icon.
+	if not button.has_meta("source523_selected_card_action_image"):return true
+	var previous: Dictionary=button.get_meta("source523_selected_card_action_image")
+	var current_id: int=button.icon.get_instance_id() if button.icon!=null else 0
+	var still_owned: bool=current_id==int(previous.get("assigned_texture_instance_id",-1)) and button.expand_icon==previous.get("assigned_expand_icon")
+	if still_owned:
+		button.icon=null
+		button.expand_icon=bool(previous.get("prior_expand_icon",button.expand_icon))
+	button.remove_meta("source523_selected_card_action_image")
+	return still_owned
+
+static func _apply_selected_action_icon(button: Button, record: Dictionary, acquired: bool) -> void:
+	if button.icon!=null and not button.has_meta("source523_selected_card_action_image"):return
+	if not _clear_selected_action_icon(button):return
+	var canonical: Dictionary=preload("res://scripts/lineagem_base508.gd").canonical(record)
+	var raw: Variant=canonical.get("source_original_card")
+	if canonical.get("source_snapshot")!="patch523" or not raw is Dictionary:return
+	var deck: Variant=canonical.get("source_deck_id")
+	if deck not in [1,2,98] or raw.get("BuffCardDeckID")!=deck or raw.get("ID")!=canonical.get("source_card_id") or CARDS.card_id(canonical)!=CARDS.card_id(record):return
+	# These are the actual selected transformation/doll/relic action owners.
+	# Use the same explicit list portrait role, not the larger illustration,
+	# reveal front/back, decorative layer or a representative card.
+	var image: Dictionary=detail(canonical,acquired,false)
+	var prior_expand_icon: bool=button.expand_icon
+	button.icon=null
+	if image.get("source523_verified_original",false) and image.get("role")=="DisplayBaseAssetID":
+		button.icon=image.get("texture") as Texture2D
+		button.expand_icon=true
+	var evidence: Dictionary=image.duplicate(true)
+	evidence.erase("texture")
+	evidence["selected_card_identity"]=CARDS.card_id(canonical)
+	evidence["source_deck_id"]=deck
+	evidence["prior_expand_icon"]=prior_expand_icon
+	evidence["assigned_texture_instance_id"]=button.icon.get_instance_id() if button.icon!=null else 0
+	evidence["assigned_expand_icon"]=button.expand_icon
+	button.set_meta("source523_selected_card_action_image",evidence)
 
 static func canonical_record_snapshot(record: Dictionary) -> String:
 	var original: Variant=record.get("source_original",{})

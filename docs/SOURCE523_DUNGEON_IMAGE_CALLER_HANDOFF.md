@@ -4,6 +4,12 @@ The held source declares static image roles that the existing source523 image
 loader can consume. These definitions do not provide a current game selection
 or UI target on their own.
 
+The current SpecialDungeon selection is now separately traced: its actual
+`entry.row.EntranceAssetID` directly selects a type11 original entrance image.
+The image provider and its precise remaining UI receiver are documented in
+[the SpecialDungeon consumer contract](SOURCE523_SPECIAL_DUNGEON_IMAGE_CONSUMER.md).
+It does not depend on either Party/Competition join below.
+
 - `PartyDungeon.PartyDungeonTypeID → PartyDungeonAsset.DungeonType`, then the
   declared `EntranceAssetId` or `PopupAssetId` → actual AssetView type/path.
 - `CompetitionDungeon.ID → CompetitionDungeonAsset.CompetitionDungeonId`,

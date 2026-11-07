@@ -1,0 +1,170 @@
+{
+  "status": "INCOMPLETE/HELD; code retention only, not active implementation",
+  "checkpoint_base_commit": "f96493baed4cff4b4b7d72042bd1744a36f28e1e",
+  "patch_path": "docs/checkpoints/image-ui-integration-20261106.held.patch",
+  "patch_bytes": 72206,
+  "patch_sha256": "e449d2fbea8b56c4f9ee2d37ffac1f13e83af38f6c26142c5a814a7f5eb34bfe",
+  "snapshot_files": [
+    {
+      "path": "scripts/ui/card_reveal_card.gd",
+      "bytes": 10961,
+      "sha256": "69dda14acb05a600a5be889edba173ef064b605793e4bc11c79e78a784df6146",
+      "blob": "223ef427ac6840e4e37ad1160bb566e6090e5f4e",
+      "base_blob": "a4194c5465e0b18c1bc4e3648ce659bf5541a0d8",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/card_reveal_stage.gd",
+      "bytes": 14133,
+      "sha256": "bd03ac2b5104d40da67796ae26bfe163a69a985f016115b7851755fa7a1501a4",
+      "blob": "44b325f502b220910b9308b6069bbcd621a9d554",
+      "base_blob": "a9463911571857be1053f7111ee6903bd96380b7",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_asset_scene.gd",
+      "bytes": 8130,
+      "sha256": "28bdf188e21e3d541e3d885017da685ce17bf26265eb3fff353f19cbe194b743",
+      "blob": "8e86de5eb8b3b85e7d358a42c564328e9c18ff6b",
+      "base_blob": "e794dd9b7799265884277c593a4ed1801e3cc02a",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_item_scene_receiver.gd",
+      "bytes": 13043,
+      "sha256": "325cc9474636cf8f163ac5869fb709b93d0dcb0df76d47c8dc1f4bd264b0ab77",
+      "blob": "a2b985d54e5f2f038711519078256d8327b898f5",
+      "base_blob": null,
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_main_card_frames.gd",
+      "bytes": 5726,
+      "sha256": "121e20f7de76a76b2d49ff1b2a40ebe7785d0d23b5ee6cee3d09a97ff811c532",
+      "blob": "9759199b7ea7cae3a14c2e0a6dbaca6e1d0933d1",
+      "base_blob": null,
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_main_enhance_slots.gd",
+      "bytes": 11874,
+      "sha256": "fbb081e6f53a395cc9ba56191bf9a166d51e44ae1a9cf10b82aaed1bb731bf42",
+      "blob": "50a9a1fd58d76b45f1702b7630484acceb9a6421",
+      "base_blob": null,
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_main_hud.gd",
+      "bytes": 59056,
+      "sha256": "f42b5c2093a71f49edd860486abab32ebfd037ac41524ab096dc4335c0bc83b6",
+      "blob": "546fc7e7f02d242d297a7fd94d242bc4333be51f",
+      "base_blob": "80393ab02f8e153c03bd640fe0bf7df086c58b1f",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_result_face_host.gd",
+      "bytes": 10086,
+      "sha256": "30e295bfa9d39a90c7a0a93736a0d18fb9e830046d3f8fc8e052dec744c53bc4",
+      "blob": "c3478da151fc0a04dc25918940b2c9c7d335ca8e",
+      "base_blob": null,
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/source_result_role_contract.gd",
+      "bytes": 8178,
+      "sha256": "e1eee6761082ccccbaf33c5abfe88465bdf14b08e5835230343867342e9a3fcf",
+      "blob": "9329075ad3bec2d5edb86f98fda019a58e0fca3e",
+      "base_blob": null,
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/original_ui/sprite_scene.gd",
+      "bytes": 73339,
+      "sha256": "44df63e037ecf879de35f66ed95abaedc41e78c8ea46677e72e1bdb077df149c",
+      "blob": "38f65793140ddc5054ef5905409d8a95a688df33",
+      "base_blob": "8d23859fec5fc91746339d16c6e78ee638bf46f3",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/renewal_hud.gd",
+      "bytes": 163322,
+      "sha256": "8fbedb84c651546c8dad567bf7136e4e5c319976dc8ad70ba40ba3d40d1d1430",
+      "blob": "9a30d15873525ce8f30c6a299d7bf2374deec3af",
+      "base_blob": "78a68cdcf253ed63a9d11460da20106e50b64650",
+      "included_in_patch": true,
+      "reconstruct_from": "patch plus checkpoint base"
+    },
+    {
+      "path": "scripts/ui/source523_image_assets.gd",
+      "bytes": 36276,
+      "sha256": "1c8fee84bdbe0f4563740f114ca49ed6567c141e7f3bb6fa720597a7b13c601b",
+      "blob": "8af861459c4f63e1c661c8af141702b422f91d7e",
+      "base_blob": "8af861459c4f63e1c661c8af141702b422f91d7e",
+      "included_in_patch": false,
+      "reconstruct_from": "checkpoint base unchanged"
+    },
+    {
+      "path": "scripts/ui/source523_original_ui_icons.gd",
+      "bytes": 28490,
+      "sha256": "3cab7e2c1760cf6332f1dafd05e412a948eaf883e4dd280cd2f04cca37efa611",
+      "blob": "180733119a945d2546acac74aacf84e1b663bf84",
+      "base_blob": "180733119a945d2546acac74aacf84e1b663bf84",
+      "included_in_patch": false,
+      "reconstruct_from": "checkpoint base unchanged"
+    },
+    {
+      "path": "scripts/ui/source523_result_card_images.gd",
+      "bytes": 4752,
+      "sha256": "edc2aa40fe2e21a378aac14f8ce5cc419b02902dc20073984bf160949380cff3",
+      "blob": "4faf1dcb3cf3e5eecd0a541a6ac3512fe57f1bc8",
+      "base_blob": "4faf1dcb3cf3e5eecd0a541a6ac3512fe57f1bc8",
+      "included_in_patch": false,
+      "reconstruct_from": "checkpoint base unchanged"
+    }
+  ],
+  "reconstruction": "Use a separate directory based on checkpoint_base_commit; the held unified patch reproduces all changed snapshot members, unchanged entries come from that commit. Do not apply to active paths or claim runnable integration. No Action file is fabricated.",
+  "remaining_required_producer": {
+    "path": "scripts/ui/original_ui/source_main_enhance_action.gd",
+    "patch_base_blob_required": "c3fb8e0c9ca0de1fb30713d48b6f79db8cc5f335",
+    "actual_working_blob": "2fee775a1178a15bf3c75eb12f50d44531f7f7cf",
+    "required_base_in_local_object_inventory": false,
+    "acceptable_input": "exact required base or final result625d5adbc198de07159471e29fbb3782df39f3e6 (14937B/SHA2560e9330ffc33a13c2329f79e7fd15decd60d0e67c0b29a528fc2798dd2754e3eb)"
+  },
+  "unapplied_action_patch": "--- a/scripts/ui/original_ui/source_main_enhance_action.gd\n+++ b/scripts/ui/original_ui/source_main_enhance_action.gd\n@@ -1,6 +1,7 @@\n extends RefCounted\n ## Only the authored ordinary enhancement action; existing Forge owns the flow.\n const Scene = preload(\"res://scripts/ui/original_ui/sprite_scene.gd\")\n+const SlotPair=preload(\"res://scripts/ui/original_ui/source_main_enhance_slots.gd\")\n const MEMBER = \"UI/FloatingUi/Enchant_All.csb\"\n const SHA256 = \"5a22899447b7b750c01e500beba49d80d081d65669bfc77c91309fe58946face\"\n const PARENT_MEMBER = \"UI/EnchantScene.csb\"\n@@ -25,6 +26,8 @@\n var _original_action_visible: bool\n var _replaced: bool = false\n var _fields: Dictionary={}\n+var _slot_pair: RefCounted\n+var _slot_status: Dictionary={}\n var _presented_offsets: Array[int]=[]\n var _presented_target: String=\"\"\n \n@@ -61,6 +64,17 @@\n \t\tscope.append_array([PROBABILITY,PROBABILITY_LABEL])\n \t\tbindings[PROBABILITY]={\"role\":\"button\",\"activate\":Callable(self,\"_show_probabilities\"),\"displaystate\":model.info_button!=null and not model.info_button.disabled,\"visible\":model.info_button!=null}\n \t\tbindings[PROBABILITY_LABEL]={\"role\":\"static_source_text\"}\n+\tvar staged_pair: RefCounted\n+\tvar pair_candidate=SlotPair.new()\n+\tvar pair_contract: Dictionary=pair_candidate.build(pack,forge)\n+\t_slot_status=pair_contract.duplicate(true)\n+\tif pair_contract.get(\"ok\",false):\n+\t\tfor offset: int in pair_contract.source_node_offsets:\n+\t\t\tscope.append(offset)\n+\t\t\t# The original static plus Sprite needs no dynamic binding. Keep\n+\t\t\t# its source scope without indexing a nonexistent binding entry.\n+\t\t\tif pair_contract.bindings.has(offset):bindings[offset]=pair_contract.bindings[offset]\n+\t\tstaged_pair=pair_candidate\n \tvar staged := Scene.new()\n \tvar result: Dictionary = staged.configure_nodes(pack,PARENT_MEMBER,[PROJECT],{PROJECT:{\"role\":\"project\",\"source_node_offsets\":scope,\"bindings\":bindings}})\n \tif not result.get(\"ok\",false):\n@@ -71,6 +85,11 @@\n \t\tstaged.free()\n \t\treturn nested\n \tvar child: Node2D = nested.player\n+\tif staged_pair!=null:\n+\t\tvar registered: Dictionary=staged_pair.bind_renderer(nested.player)\n+\t\tif not registered.get(\"ok\",false):staged.free();return registered\n+\t\t_slot_pair=staged_pair\n+\t\t_fields[\"slot_pair\"]=true\n \tvar native_node: Variant = child.get(\"source_nodes\").get(BUTTON)\n \tvar native_button: Variant = native_node.get_meta(\"source_button\",null) if is_instance_valid(native_node) else null\n \tvar native_control: Variant = native_button.get(\"_input_area\") if is_instance_valid(native_button) else null\n@@ -102,8 +121,16 @@\n \tforge.visibility_changed.connect(_owner_visibility_changed)\n \tforge.tree_exiting.connect(close)\n \tparent.tree_exiting.connect(close,CONNECT_ONE_SHOT)\n+\tif _slot_pair!=null:_slot_status=_slot_pair.refresh()\n \treturn {\"ok\":true,\"handled\":true,\"member\":MEMBER,\"sha256\":SHA256,\"source_node_offsets\":scope.duplicate(),\"bound_detail_fields\":_fields.keys(),\"parent_member\":PARENT_MEMBER,\"parent_sha256\":PARENT_SHA256,\"parent_project_offset\":PROJECT,\"parent_original_position\":Vector2(603,343.50750732421875),\"parent_original_alpha\":255,\"opening_clip_inferred\":false,\"partial_source_scene\":true,\"complete_screen_contract\":false,\"selection_cost_confirmation_owner\":\"existing forge._execute\"}\n \n+func original_slot_receiver(role: String) -> Dictionary:\n+\tif _slot_pair==null:return _fail(\"enhance_slots_selected_original_pair_unavailable\")\n+\treturn _slot_pair.receiver(role)\n+\n+func invalidate_source_images() -> void:\n+\tif _slot_pair!=null:_slot_pair.invalidate_images()\n+\n func refresh() -> Dictionary:\n \tvar forge: Object = _forge.get_ref() if _forge != null else null\n \tvar model: Dictionary = _model(forge)\n@@ -145,6 +172,7 @@\n \t\tif result.get(\"ok\",false) and (not is_instance_valid(button) or (button.get(\"current_state\")==\"disabled\")==enabled):result=_child.set_bound_displaystate(PROBABILITY,enabled)\n \t\tif not result.get(\"ok\",false):return result\n \t_presented_target=model.target\n+\tif _slot_pair!=null:_slot_status=_slot_pair.refresh()\n \treturn {\"ok\":true,\"target_reference\":_presented_target,\"bound_detail_fields\":_fields.keys(),\"transaction_requested\":false}\n \n func _show_probabilities() -> Dictionary:\n@@ -160,6 +188,8 @@\n \treturn {\"ok\":true,\"existing_probability_detail_requested\":true,\"target_reference\":model.target,\"transaction_requested\":false,\"game_state_written\":false}\n \n func close() -> void:\n+\tif _slot_pair!=null:_slot_pair.close()\n+\t_slot_pair=null;_slot_status.clear()\n \tvar parent: Object = _parent.get_ref() if _parent != null else null\n \tif is_instance_valid(parent) and parent.tree_exiting.is_connected(close): parent.tree_exiting.disconnect(close)\n \t_parent = null\n@@ -185,7 +215,7 @@\n \t\tprevious.queue_free()\n \n func presentation() -> Dictionary:\n-\treturn {\"scene\":_scene,\"renderer\":_child,\"control\":_control,\"source_button\":_button,\"member\":MEMBER,\"source_offset\":BUTTON,\"handled\":is_instance_valid(_scene),\"source_node_offsets\":_presented_offsets.duplicate(),\"bound_detail_fields\":_fields.keys(),\"partial_source_scene\":true,\"complete_screen_contract\":false}\n+\treturn {\"scene\":_scene,\"renderer\":_child,\"control\":_control,\"source_button\":_button,\"member\":MEMBER,\"source_offset\":BUTTON,\"handled\":is_instance_valid(_scene),\"source_node_offsets\":_presented_offsets.duplicate(),\"bound_detail_fields\":_fields.keys(),\"slot_pair\":_slot_status.duplicate(true),\"partial_source_scene\":true,\"complete_screen_contract\":false}\n \n func _activate() -> Dictionary:\n \tvar forge: Object = _forge.get_ref() if _forge != null else null\n",
+  "unapplied_action_patch_sha256": "164cb54d25239a4761b8d9a00490f8feed87558c15d1e46b226d4289c161fa44",
+  "card_provider_compatibility": {
+    "provider_blob": "4faf1dcb3cf3e5eecd0a541a6ac3512fe57f1bc8",
+    "actual_card_caller_result_blob": "223ef427ac6840e4e37ad1160bb566e6090e5f4e",
+    "source_back_helper_blob": "c3478da151fc0a04dc25918940b2c9c7d335ca8e",
+    "phase_source": "same live waiting_for_press/Face.elapsed/duration",
+    "role_guard": "current sourceId/raw BuffCard.ID/raw GradeID and exact current source pack/member/node/reference/ancestor chain",
+    "deck_scope": [
+      1,
+      2,
+      98
+    ],
+    "host_registration": "explicit host Face-centre affine bridge, complete authored BACK ancestry; not original FRONT insertion",
+    "provider_change_needed": false,
+    "observed_pixels_assigned": false,
+    "pending_roles": [
+      "front portrait registration",
+      "Myth/Sole/event absent back variant",
+      "source transition playback policy",
+      "whole-stage background layers"
+    ]
+  },
+  "runtime_tested": false,
+  "source_assets_or_private_datasets_included": false,
+  "active_paths_modified": false,
+  "published": false
+}
