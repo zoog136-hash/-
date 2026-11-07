@@ -8,6 +8,9 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+const SourceResultRoles=preload("res://scripts/ui/original_ui/source_result_role_contract.gd")
+var source_ui_pack: RefCounted
+var source_result_operation: String=""
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
 const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
@@ -227,3 +230,8 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 
 func set_sequence_playing(value: bool) -> void:
 	if is_instance_valid(confirmed_chrome):confirmed_chrome.set_ambient_playing(value)
+
+func original_result_card_contract() -> Dictionary:
+	if not is_instance_valid(face) or record.is_empty():return {"ok":false,"code":"source_result_actual_card_face_required"}
+	var phase: String="back" if waiting_for_press or face.elapsed<0 else "front" if face.elapsed>=face.duration else "transition"
+	return SourceResultRoles.selected_card(source_ui_pack,record,source_result_operation,phase)

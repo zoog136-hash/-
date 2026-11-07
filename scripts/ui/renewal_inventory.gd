@@ -20,8 +20,11 @@ var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
 var detail_active: bool = false
 var source_detail_type: Dictionary = {}
+var source_detail_name: Dictionary = {}
 var source_detail_safe_enhancement: Dictionary = {}
 var source_detail_classes: Dictionary = {}
+var source_detail_storage: Dictionary = {}
+var source_detail_expiration: Dictionary = {}
 var detail_layout_queued: bool = false
 var category_tabs: Control
 var inventory_left: Control
@@ -398,6 +401,7 @@ func prepare_source_inventory_model() -> void:
 	for reference: String in _acquisition_order(entries):
 		var name: String = _base_item_name(reference)
 		var record: Dictionary = _find_item_record(reference)
+		record=_item_visual_record(reference,record)
 		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
 			sorted_references.append(reference)
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
@@ -642,12 +646,30 @@ func _refresh_detail(item_reference: String) -> void:
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
+	# The selected physical source record already supplies the original icon.
+	# Read its presentation fields too, without changing gameplay lookup/use.
+	var source_item: Dictionary=_item_visual_record(item_reference,item)
+	source_detail_name={"reference":item_reference,"text":_enhanced_display_name(source_item,item_reference)}
 	# Pass through the selected owner's type only; the old mixed detail label
 	# also carries selection/lock/engraving text and is not a source type field.
-	source_detail_type = {"reference":item_reference,"text":item.type} if item.get("type") is String and not item.type.is_empty() else {}
+	source_detail_type = {"reference":item_reference,"text":source_item.type} if source_item.get("type") is String and not source_item.type.is_empty() else {}
 	source_detail_safe_enhancement={}
 	source_detail_classes={}
-	var source_classes: Variant=item.get("source_class_names")
+	source_detail_storage={}
+	source_detail_expiration={}
+	var original_item: Variant=source_item.get("source_original_item")
+	if source_item.get("source_snapshot")=="patch523" and source_item.get("source_m_native_item")==true and original_item is Dictionary and typeof(original_item.get("ID")) in [TYPE_INT,TYPE_FLOAT] and original_item.ID>0 and original_item.get("ID")==source_item.get("source_item_class_id"):
+		if typeof(original_item.get("IsStorable"))==TYPE_BOOL:
+			source_detail_storage={"reference":item_reference,"value":original_item.IsStorable,"source_item_class_id":original_item.ID,"basis":"selected current523 ItemClass.IsStorable; definition capability only"}
+		# Existing native projection date_value emits YYYYMMDDHHMM, not a
+		# Unix timestamp. Keep the original calendar fields; do not subtract
+		# a clock, change timezone, expire ownership or infer remaining time.
+		var deletion: Variant=source_item.get("source_delete_time_raw")
+		if source_item.get("source_delete_time_unresolved")!=true and typeof(deletion)==TYPE_INT and deletion>0:
+			var encoded: String=str(deletion)
+			if encoded.length()==12:
+				source_detail_expiration={"reference":item_reference,"text":"삭제시간 : %s.%s.%s %s:%s" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),encoded.substr(10,2)],"source_calendar_value":deletion,"basis":"existing current523 native projection source_delete_time_raw calendar fields; no timezone conversion or remaining-time policy"}
+	var source_classes: Variant=source_item.get("source_class_names")
 	if source_classes is Array and not source_classes.is_empty():
 		var class_names: PackedStringArray=[]
 		for source_class: Variant in source_classes:
@@ -658,9 +680,9 @@ func _refresh_detail(item_reference: String) -> void:
 		if not class_names.is_empty():source_detail_classes={"reference":item_reference,"text":"/".join(class_names)}
 	var safe_host: Node=controller.get_parent() if is_instance_valid(controller) else null
 	if is_instance_valid(safe_host) and safe_host.has_method("_enhancement_kind_for_record") and safe_host.has_method("_safe_enhancement_level"):
-		var source_enhance_kind: Variant=safe_host.call("_enhancement_kind_for_record",item)
+		var source_enhance_kind: Variant=safe_host.call("_enhancement_kind_for_record",source_item)
 		if source_enhance_kind is String and not source_enhance_kind.is_empty():
-			var source_safe_value: Variant=safe_host.call("_safe_enhancement_level",source_enhance_kind,item)
+			var source_safe_value: Variant=safe_host.call("_safe_enhancement_level",source_enhance_kind,source_item)
 			if typeof(source_safe_value)==TYPE_INT and source_safe_value>=0:source_detail_safe_enhancement={"reference":item_reference,"value":source_safe_value,"basis":"existing world._safe_enhancement_level(kind,selected record)"}
 	UI.apply_item_visual(detail_icon,item,item_name,item_image_index.get("아이템",{}),"detail")
 	var lines := PackedStringArray()

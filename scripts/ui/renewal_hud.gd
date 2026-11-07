@@ -130,6 +130,7 @@ var coordinates_readout: Label
 var quickslot_cooldown_labels: Array[Label] = []
 var quickslot_icons: Array[TextureRect] = []
 var quickslot_captions: Array[Label] = []
+var _source_quickslot_amounts: Dictionary = {}
 var quickslot_auto_badges: Array[Label] = []
 var refresh_clock: float = 0
 var active_buffs_view: Dictionary = {}
@@ -823,7 +824,20 @@ func _source523_buff_image(effect: Dictionary) -> Dictionary:
 			record = get_parent()._skill_record(str(effect.get("skill_id","")))
 	return Source523SkillImages.describe_buff(effect,"OnIconID",source,record)
 
+func original_quickslot_amount(absolute: int, entry: Dictionary) -> Dictionary:
+	if entry.get("kind")!="item":return {"ok":true,"amount_text":"","quantity_applicable":false}
+	var current: Dictionary=_source_quickslot_amounts.get(absolute,{})
+	var identity: Dictionary=entry.duplicate(true)
+	identity.erase("auto")
+	if absolute<0 or absolute>=quickslot_entries.size() or not quickslot_entries[absolute] is Dictionary:return {"ok":false,"code":"source_quickslot_current_registration_unavailable"}
+	var registered: Dictionary=quickslot_entries[absolute].duplicate(true)
+	registered.erase("auto")
+	if registered!=identity:return {"ok":false,"code":"source_quickslot_current_registration_changed"}
+	if current.get("entry")!=identity or typeof(current.get("amount"))!=TYPE_INT:return {"ok":false,"code":"source_quickslot_current_quantity_unavailable"}
+	return {"ok":true,"amount_text":str(current.amount),"amount":current.amount,"quantity_applicable":true,"basis":"current _render_quickslots inventory snapshot and exact registered entry"}
+
 func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
+	_source_quickslot_amounts.clear()
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
@@ -846,6 +860,13 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		var id: String = str(entry.get("id",""))
 		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
 		if entry.get("kind","") == "item":
+			# Keep the actual quantity independent of captions also used for
+			# missing-image explanations. Never parse that UI text as an amount.
+			var raw_amount: Variant=inventory.get(id,0)
+			if typeof(raw_amount)==TYPE_INT and raw_amount>=0:
+				var identity: Dictionary=entry.duplicate(true)
+				identity.erase("auto")
+				_source_quickslot_amounts[absolute]={"entry":identity,"amount":raw_amount}
 			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}),"quickslot")
 			quickslot_captions[index].text = str(int(inventory.get(id,0)))
 			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
@@ -2053,6 +2074,7 @@ func _new_card_reveal_stage() -> Control:
 	stage.intensity_scale = clampf(float(settings.get("impact_intensity",0.85)),0.0,1.5)
 	stage.detail_scale = 0.6 if str(settings.get("effect_detail","full")) == "low" else 1.0
 	card_reveal_stage = stage
+	if is_instance_valid(original_main_ui_controller):stage.source_ui_pack=original_main_ui_controller.source_role_pack()
 	layer.add_child(stage)
 	stage.finished.connect(func() -> void:
 		card_reveal_stage = null
@@ -2808,7 +2830,16 @@ func open_source_dungeons() -> void:
 	var view := SourceDungeonUI.new()
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
+	if is_instance_valid(original_main_ui_controller):view.source_ui_pack=original_main_ui_controller.source_role_pack()
 	view.configure(get_parent())
+
+func open_source_dungeon_family(kind: String, hard: bool=false) -> Dictionary:
+	if not SourceDungeonUI.FAMILIES.has([kind,hard]):return {"ok":false,"code":"source_dungeon_existing_family_required"}
+	open_source_dungeons()
+	var view: Node=workspace.find_child("SourceDungeonView",true,false)
+	var script: Script=view.get_script() if is_instance_valid(view) else null
+	if active_section!="source_dungeons" or script!=SourceDungeonUI or not workspace.is_ancestor_of(view) or not view.has_method("select_existing_family"):return {"ok":false,"code":"source_dungeon_current_family_view_required"}
+	return view.call("select_existing_family",kind,hard)
 
 
 func refresh_source_dungeon_progress() -> void:
@@ -3052,7 +3083,9 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
 	if active_section=="enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_visible_in_tree():_bind_original_enhance_action(enhancement_forge)
 	if active_section=="quests" and is_instance_valid(quest_view) and quest_view.is_visible_in_tree():original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(quest_view)
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
+	var card_frames: Dictionary=preload("res://scripts/ui/original_ui/source_main_card_frames.gd").bind(source_pack)
+	if card_frames.get("ok",false) and is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"card_frame_registration":card_frames,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):

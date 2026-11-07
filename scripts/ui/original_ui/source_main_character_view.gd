@@ -85,7 +85,9 @@ func open_stats(parent: Node) -> Dictionary:
 	_stats=child.player
 	_bounds=bounds
 	_model=contract["values"].duplicate(true)
-	return {"ok":true,"handled":true,"member":ALL,"tab":"stats","bound_fields":Stats.FIELDS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false,"unresolved_fields":["LFE_DTH_Elixir_detail_contracts","equipment class/mode to page selection and remaining slot aliases","nickname and other original character modes"]}
+	var fields: Array=Stats.FIELDS.duplicate()
+	if contract.get("dth_source_connected",false):fields.append("dth")
+	return {"ok":true,"handled":true,"member":ALL,"tab":"stats","bound_fields":fields,"dth_source_connected":contract.get("dth_source_connected",false),"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false,"unresolved_fields":["LFE_Elixir_detail_contracts","DTH requires original active scope and actual host integer","equipment class/mode to page selection and remaining slot aliases","nickname and other original character modes"]}
 
 func refresh() -> Dictionary:
 	if not is_open():return _fail("source_character_stats_not_open")

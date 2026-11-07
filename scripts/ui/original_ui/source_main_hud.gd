@@ -298,13 +298,17 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if _menu!=null and is_instance_valid(_menu_scene):
+		var menu_close: Variant=_menu.presented_close_button(_menu_scene)
+		if is_instance_valid(menu_close):buttons.append(menu_close)
 	if _workspace_controls!=null:
 		var shown: Dictionary=_workspace_controls.presentation()
+		for foreground: Node2D in shown.get("foreground_scenes",[]):_collect_native_buttons(foreground,buttons)
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
+		for scene: Node2D in shown.get("additional_scenes",[]):_collect_native_buttons(scene,buttons)
 	if _enhance_action!=null:
 		var shown: Dictionary=_enhance_action.presentation()
-		var button: Variant=shown.get("source_button")
-		if is_instance_valid(button):buttons.append(button)
+		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
 	if _quest_controls!=null:
 		var shown: Dictionary=_quest_controls.presentation()
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
@@ -328,6 +332,7 @@ func _process(_delta: float) -> void:
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	if _menu!=null and is_instance_valid(_menu_scene):_menu_result["menu_variant"]=_menu.refresh_menu_variant(_menu_scene)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
@@ -669,9 +674,12 @@ func _inventory_model_signature() -> int:
 	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
 	if not is_instance_valid(bag):return 0
 	var search: Variant=bag.get("search_line")
+	var query_state: Variant=null
+	if search is LineEdit:
+		query_state=[search.get_instance_id(),search.text,search.editable,search.call("has_ime_text") if search.has_method("has_ime_text") else false]
 	var grid: Variant=bag.get("item_grid")
 	var state: Variant=bag.get("character_state")
-	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
+	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),query_state,grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
 
 func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -966,6 +974,10 @@ func _refresh_auto_message() -> Dictionary:
 func refresh_menu_state() -> Dictionary:
 	if _menu==null or not is_instance_valid(_menu_scene):return {"ok":true,"source_menu_presented":false}
 	return _menu.refresh_presented(_menu_scene)
+
+func source_role_pack() -> RefCounted:
+	# Existing selected pack for UI-owned role consumers; no new selector.
+	return _pack
 
 func _mount_exp() -> Dictionary:
 	if not _has_player_values:return _fail("source_main_player_values_pending")
