@@ -1,5 +1,7 @@
 extends "res://tests/pr100_direction_gameplay_test.gd"
 
+const CURRENT523_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+
 # TWILIGHT_OPTIONAL_RENDER_CAPTURE
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR100_CAPTURE_DIR
 # RenderingServer.frame_post_draw is awaited by the inherited capture helper.
@@ -69,6 +71,12 @@ func run() -> void:
 	var transform: Dictionary = {}
 	for record: Dictionary in world.catalog_db["변신"]:
 		if str(record.get("sourceId", "")) == spec.transform_id: transform = record; break
+	if transform.is_empty() and CURRENT523_DEFINITIONS.not_installed():
+		# Transform rows come only from the owned current523 install. Its absence
+		# is reported as its own scope, never as a validated transformation.
+		await absent_current523_transform(profile_id)
+		await finish()
+		return
 	check(not transform.is_empty(), "existing subject transformation")
 	world._equip_catalog("변신", transform)
 	await tick(14)
@@ -88,6 +96,13 @@ func run() -> void:
 	await inspect_poses()
 	await incoming_and_death()
 	await finish()
+
+func absent_current523_transform(profile_id: String) -> void:
+	check((world.catalog_db.get("변신", []) as Array).is_empty(), "absent current523 install exposes no substitute transformation catalog")
+	await tick(14)
+	check(not world.player.transform_active and world.player.motion.profile.profile_id != profile_id, "absent current523 install leaves the player untransformed")
+	report.scope = "CURRENT523_NOT_INSTALLED"
+	report.setup = {"scene":"Main.tscn", "map":"aden_world", "transform":profile_id, "transform_validated":false}
 
 func inspect_poses() -> void:
 	report.pose_samples = []

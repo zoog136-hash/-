@@ -240,7 +240,8 @@ func finish_batch() -> void:
 	# Expose the real failure array for the full-suite fail-closed *_RESULT parser.
 	# Keep the count, all ten case files and the independent batch report.
 	print("PR100_TRANSFORM_BATCH_RESULT " + JSON.stringify({"cases": batch_results.size(), "checks": batch_checks,
-		"failures": batch_failures.duplicate(), "failure_count": batch_failures.size(), "report": batch_report_path}))
+		"failures": batch_failures.duplicate(), "failure_count": batch_failures.size(), "report": batch_report_path,
+		"current523_not_installed_cases": batch_results.filter(func(r: Dictionary) -> bool: return r.get("scope", "") == "CURRENT523_NOT_INSTALLED").size()}))
 	if batch_failures.is_empty(): print("PR100_TRANSFORM_BATCH_OK")
 	quit(0 if batch_failures.is_empty() else 1)
 
@@ -293,7 +294,7 @@ func run() -> void:
 		await super.run()
 		batch_checks += checks
 		for failure: String in failures: batch_failures.append(str(spec.slug) + ": " + failure)
-		var result := {"name": spec.name, "folder": spec.folder, "slug": spec.slug, "transform_id": spec.spec.transform_id,
+		var result := {"scope": str(report.get("scope", "")), "name": spec.name, "folder": spec.folder, "slug": spec.slug, "transform_id": spec.spec.transform_id,
 			"checks": checks, "failures": failures.duplicate(), "physics_ticks": ticks_elapsed, "report": out,
 			"player_directions": report.player.size(), "incoming_directions": report.get("incoming", []).size(),
 			"monster_directions": report.monster.size(), "lifecycle": report.lifecycle.duplicate(true),
