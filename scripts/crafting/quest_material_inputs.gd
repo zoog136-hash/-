@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Typed selected quest materials for the existing compiled recipe executor.
 ## Source row selection and physical ownership selection are separate inputs.
 const Own=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -40,7 +41,7 @@ static func review(world: Node,book: RefCounted,recipe_id: String,batches: int,c
 			var physical: Dictionary=Stock.proof(world,id)
 			if physical.is_empty() or physical.receipt!=request[receipt_field] or int(physical.remaining)!=before:return fail("원본 공급 재료의 물리 수량·불변 영수증 불일치")
 			if world._item_locked(str(physical.record.name),id) or world._item_locked(str(physical.record.name)):return fail("잠긴 원본 물리 재료 보존")
-			owned={"quantity":physical.remaining,"bless_code_id":physical.record.source_bless_raw,"source_item":physical.receipt.source_original_item,"inventory_key":str(physical.record.name),"record":physical.record}
+			owned={"quantity":physical.remaining,"bless_code_id":physical.record.source_bless_raw,"source_item":NATIVE_FIELDS.full(physical.receipt).source_original_item,"inventory_key":str(physical.record.name),"record":physical.record}
 		else:
 			if not Consume.available(world):return fail("원본 퀘스트 소비 소유자 미연결 · 보상 보존")
 			var prepared: Dictionary=Own.prepare_debit(world,id,quantity)

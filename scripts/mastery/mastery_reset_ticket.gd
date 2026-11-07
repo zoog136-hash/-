@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Ticket-specific adapter, not a second general item catalog or ownership source.
 var definition: Dictionary = {}
 var fingerprint: String = ""
@@ -46,6 +47,7 @@ func record() -> Dictionary:
 	return {"name":label+" · 원본#184652","source_display_name":label,"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:item:184652","source_item_class_id":184652,"source_m_native_item":true,"source_category_id":int(definition.category.ID),"source_category_name":"Currency","source_is_stackable":true,"source_is_consumable":false,"source_bless_raw":1,"source_definition_sha256":fingerprint,"source_original_item":item.duplicate(true),"source_grade_id":int(item.GradeID),"grade":"일반","type":"재화","slot":"currency","stackable":true,"weight":int(item.Weight),"source_grade_name":str(definition.grade.Name),"source_image_status":"original_icon_not_installed","tradable":bool(item.IsTradable),"storable":bool(item.IsStorable),"droppable":bool(item.IsDroppable),"deletable":bool(item.IsDeletable),"desc":"숙련 옵션 변경 지불용 · 원본 티켓 · 지급/획득 경로 별도"}
 
 func exact(value: Dictionary) -> bool:
+	value = NATIVE_FIELDS.full(value)
 	var target: Dictionary = record()
 	if target.is_empty(): return false
 	for key: String in ["name","source","source_snapshot","sourceId","source_item_class_id","source_category_id","source_category_name","source_bless_raw","source_definition_sha256","source_original_item"]:

@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## World bridge. Quotes are read-only; transactions persist staged copies first.
 const Common = preload("res://scripts/equipment523/common.gd")
 const SmithSmelt = preload("res://scripts/equipment523/smith_smelt.gd")
@@ -329,7 +330,7 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	var target: Dictionary = by_id.get(target_id,{})
 	if kind != "alchemy" and (target.is_empty() or bool(target.get("virtual_stack",false))): return Common.fail("원본 ID가 확인된 실제 장비를 선택하세요.")
 	if kind != "alchemy" and bool(target.get("quest_reward_receipt",false)): return Common.fail("원본 보상 장비의 가공 대상 계약을 확인할 때까지 장비를 보존합니다.")
-	if kind != "alchemy" and not bool(target.get("record",{}).get("source_m_native_item",false)) and bool(target.get("record",{}).get("source_original_item",false)):
+	if kind != "alchemy" and not bool(target.get("record",{}).get("source_m_native_item",false)) and bool(NATIVE_FIELDS.full(target.get("record",{})).get("source_original_item",false)):
 		return Common.fail("이 원본 장비는 아직 카탈로그에 등록되지 않았습니다. 실제 장착 경로가 준비될 때까지 재료를 보존합니다.")
 	if not target.is_empty() and bool(target.get("locked",false)): return Common.fail("대상 장비의 잠금을 해제하세요.")
 	if kind in ["smelt","spirit_smelt"] and not target_id.is_empty():
@@ -391,7 +392,7 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 			output_records[output_key] = registered
 		var unregistered: int = 0
 		for registered: Dictionary in output_records.values():
-			if not bool(registered.get("source_m_native_item",false)) and registered.get("source_original_item",false): unregistered += 1
+			if not bool(registered.get("source_m_native_item",false)) and NATIVE_FIELDS.full(registered).get("source_original_item",false): unregistered += 1
 		if unregistered > 0: q["detail"] = str(q.get("detail","")) + " · 미등록 원본 결과 %d종은 정확한 원본 보상 기록으로 보관하며 실제 장비 효과는 카탈로그 등록 후 적용합니다." % unregistered
 	q["_materials"] = materials.duplicate(true)
 	q["_spend"] = spent
@@ -483,7 +484,7 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 			return Common.fail("결과 아이템 수량이 저장 범위를 벗어납니다.")
 		var item_name: String = str(record.get("name",""))
 		var native_output: bool = bool(record.get("source_m_native_item",false))
-		if not native_output and record.get("source_original_item",false):
+		if not native_output and NATIVE_FIELDS.full(record).get("source_original_item",false):
 			record["source_bless_code_id"] = int(output.get("bless_code",1))
 			record["source_reward_id"] = int(outcome.get("result_id",0))
 			record["source_reward_quantity"] = amount
@@ -500,7 +501,7 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 				instance.record["bless_state"] = instance.bless_state
 				instance.record["blessed"] = int(output.get("bless_code",1)) == 2
 				if instance.record.has("source_bless_raw"): instance.record["source_bless_raw"] = int(output.get("bless_code",1))
-			if not separate and (amount > 1 or record.get("source_original_item",false)): instance["source_reward_quantity"] = amount
+			if not separate and (amount > 1 or NATIVE_FIELDS.full(record).get("source_original_item",false)): instance["source_reward_quantity"] = amount
 			physical[str(next_id)] = instance
 			next_id += 1
 	if _weight(world,inventory) > int(world.call("_carrying_capacity")):
@@ -576,7 +577,7 @@ func _source(record: Dictionary) -> int:
 	if bool(record.get("source_m_native_item",false)): return int(_native_identity(record).get("source_id",0))
 	var host_id: String = str(record.get("sourceId",""))
 	var name: String = str(record.get("name",""))
-	var original: Variant = record.get("source_original_item",false)
+	var original: Variant = NATIVE_FIELDS.full(record).get("source_original_item",false)
 	# PR262's older held rewards use a complete ItemClass row and a distinct
 	# exact prefix. Compare every source field retained by the rules compiler.
 	if original is Dictionary:
@@ -595,9 +596,9 @@ func _source(record: Dictionary) -> int:
 	var item: Dictionary = Common.item(store.pack,id)
 	if id <= 0 or item.is_empty() or host_id != "m523:item:" + str(id): return 0
 	var expected: String = name
-	if record.get("source_original_item",false) == true and expected.begins_with("[원본보상]"): expected = expected.trim_prefix("[원본보상]").strip_edges()
+	if NATIVE_FIELDS.full(record).get("source_original_item",false) == true and expected.begins_with("[원본보상]"): expected = expected.trim_prefix("[원본보상]").strip_edges()
 	if expected not in item.get("names",[]): return 0
-	if not bool(record.get("source_original_item",false)) and not host_id.begins_with("m523:item:"): return 0
+	if not bool(NATIVE_FIELDS.full(record).get("source_original_item",false)) and not host_id.begins_with("m523:item:"): return 0
 	return id
 
 func _native_identity(record: Dictionary) -> Dictionary:
@@ -609,7 +610,7 @@ static func _variant_key(source: int, bless: int) -> String:
 func _source_hint(record: Dictionary) -> int:
 	# A cheap prefilter only. Every selected record still calls _source and its
 	# exact owner validation; this must follow the same namespace precedence.
-	if bool(record.get("source_m_native_item",false)) or record.get("source_original_item") is Dictionary:
+	if bool(record.get("source_m_native_item",false)) or NATIVE_FIELDS.full(record).get("source_original_item") is Dictionary:
 		return _positive_integer(record.get("source_item_class_id",0))
 	var binding: Dictionary = store.pack.get("bindings",{}).get(str(record.get("sourceId","")),{})
 	if binding.get("name") == record.get("name"): return int(binding.get("source_id",0))
@@ -796,7 +797,7 @@ func _output_catalog(world: Node, source_ids: Dictionary = {}) -> Dictionary:
 		if not source_ids.is_empty() and not source_ids.has(_source_hint(record)): continue
 		var id: int = _source(record)
 		var native: bool = bool(record.get("source_m_native_item",false))
-		if id <= 0 or not native and bool(record.get("source_original_item",false)): continue
+		if id <= 0 or not native and bool(NATIVE_FIELDS.full(record).get("source_original_item",false)): continue
 		var bless: int = _bless_code(record)
 		if bless not in [1,2]: continue
 		var key: String = _variant_key(id,bless) if native else "legacy:"+str(id)

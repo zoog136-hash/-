@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightItemOptions
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const CURRENT_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 
 # Item option adapter: typed record fields take precedence over legacy Korean
@@ -128,9 +129,9 @@ static func current_source_weight_input(record: Dictionary, estimate: Dictionary
 	if record.get("sourceId") != expected_id:
 		return ignored
 	var identity: Dictionary = CURRENT_DEFINITIONS.identity()
-	if identity.is_empty() or record.get("source_definition_archive") != identity or not record.get("source_original_item") is Dictionary:
+	if identity.is_empty() or record.get("source_definition_archive") != identity or not NATIVE_FIELDS.full(record).get("source_original_item") is Dictionary:
 		return ignored
-	var raw: Dictionary = record.source_original_item
+	var raw: Dictionary = NATIVE_FIELDS.full(record).source_original_item
 	if raw.is_empty() or raw.get("ID") != int(item_id) or typeof(raw.get("TestItem")) != TYPE_BOOL or bool(raw.TestItem) or raw != CURRENT_DEFINITIONS.row("ItemClass",int(item_id)) or not _weight_integer(record.get("source_weight")) or record.get("source_weight") != raw.get("Weight"):
 		return ignored
 	if not CURRENT_DEFINITIONS.declared_exclusion("ItemClass",raw).is_empty():

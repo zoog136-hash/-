@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Read the already-approved PR238 application payload into the existing item
 ## encyclopedia. This never grants ownership, installs data or widens loot pools.
 const SHA = "bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
@@ -48,7 +49,7 @@ func attach(catalog: Dictionary, rules) -> Dictionary:
 			if not states.has(id): states[id] = {1:true}
 			states[id][int(row.Bless)] = true
 	for definition: Dictionary in document.get("item_definitions",{}).values():
-		var spec: Dictionary = definition.get("native_record",{}).get("source_use_spec",{})
+		var spec: Dictionary = NATIVE_FIELDS.full(definition.get("native_record",{})).get("source_use_spec",{})
 		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] or spec.get("activation_status") != "unrestricted": continue
 		for row: Dictionary in spec.get("rewards",[]):
 			var id: String = str(int(row.item_class_id))

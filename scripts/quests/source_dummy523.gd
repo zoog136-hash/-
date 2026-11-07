@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit original declarations only. This excludes gameplay connections,
 ## never deletes source rows/assets, existing ownership or original denominators.
 const SOURCE_SHA="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -32,7 +33,7 @@ static func item_evidence(row: Dictionary) -> Dictionary:
 static func record_evidence(record: Dictionary) -> Dictionary:
 	if record.get("source_snapshot") not in ["patch523","current523"] or record.get("source") not in ["lineagem_patch523","lineagem_current523"]:return {}
 	var id: int=int(record.get("source_item_class_id",0))
-	var raw: Variant=record.get("source_original_item")
+	var raw: Variant=NATIVE_FIELDS.full(record).get("source_original_item")
 	if raw is Dictionary and int(raw.get("ID",0))==id:
 		return item_evidence(raw)
 	# IDs below bind to reviewed declarations in this exact snapshot, never to

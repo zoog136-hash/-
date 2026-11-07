@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit, read-only image selection. Separate from actor/card pack settings.
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
@@ -356,10 +357,10 @@ static func _original_quest_item(record: Dictionary) -> bool:
 	# native execution. This predicate admits only its existing display shape.
 	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523": return false
 	if not record.get("source_pending_use") is bool or not record.source_pending_use or not record.get("quest_item") is bool or not record.quest_item: return false
-	if not record.get("source_original_item") is Dictionary: return false
+	if not NATIVE_FIELDS.full(record).get("source_original_item") is Dictionary: return false
 	var id: Variant = record.get("source_item_class_id")
 	if not PACK._integer(id) or int(id) <= 0: return false
-	return record.get("sourceId") == "m523:item:" + str(int(id)) and record.source_original_item.get("ID") == id
+	return record.get("sourceId") == "m523:item:" + str(int(id)) and NATIVE_FIELDS.full(record).source_original_item.get("ID") == id
 
 static func _shop_item_class_id(record: Dictionary) -> int:
 	# Existing shop installers explicitly declare these fields as ItemClass.ID.
@@ -379,7 +380,7 @@ static func _original_symbol_item(record: Dictionary) -> bool:
 	# symbol_source523.item_record preserves this exact supplier shape. Its
 	# original ItemClass row is required again by describe_item_class_row.
 	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("type") != "문양 재료": return false
-	var row: Variant = record.get("source_original_item")
+	var row: Variant = NATIVE_FIELDS.full(record).get("source_original_item")
 	var id: Variant = record.get("source_item_class_id")
 	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
 	return record.get("sourceId") == "m523:item:" + str(int(id)) and row.get("ID") == id and record.get("source_grade_id") == row.get("GradeID")
@@ -414,7 +415,7 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	# native execution flag. Admit only the explicit ItemClass namespace here;
 	# describe_item_class_row still requires complete current canonical equality.
 	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523": return false
-	var row: Variant = record.get("source_original_item")
+	var row: Variant = NATIVE_FIELDS.full(record).get("source_original_item")
 	var id: Variant = record.get("source_item_class_id")
 	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
@@ -443,7 +444,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	var card_skill_material: bool = _original_card_skill_material(record)
 	var declared_item: bool = _declared_current_item(record)
 	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material or declared_item):
-		var original_row: Dictionary = record.source_original_item if quest_record or symbol_record or declared_item else record.source_item if expedition_record or card_skill_material else record.source_original
+		var original_row: Dictionary = NATIVE_FIELDS.full(record).source_original_item if quest_record or symbol_record or declared_item else record.source_item if expedition_record or card_skill_material else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))

@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Exact normal quest fixed cards; staged existing public243 card owner.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const USE=preload("res://scripts/loot/patch523_item_use.gd")
@@ -10,7 +11,7 @@ static func target(world: Node,record: Dictionary)->Dictionary:
  var id: int=int(record.get("source_item_class_id",0))
  if id not in IDS or int(record.get("source_bless_raw",0))!=1:return {}
  var definition: Dictionary=D.definition_id(str(id))
- var spec: Dictionary=record.get("source_use_spec",{})
+ var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
  if definition.get("original_item",{}).get("TestItem",true) or spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return {}
  var original: Dictionary=spec.get("original_card",{})
  if original.get("IsNoMergeOut")!=true or original.get("IsNoSwapOut")!=true or int(original.get("ServerLimitSetID",-1))!=0 or int(original.get("StartDateTimeID",-1))!=0 or int(original.get("EndDateTimeID",-1))!=0:return {}
@@ -29,12 +30,12 @@ static func fail(world: Node,message: String)->Dictionary:
 static func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
  if world.quest_service.save_blocked or not world._patch523_item_allowed():return fail(world,"현재 저장·사용 보호")
  var canonical: Dictionary=USE.canonical(record)
- if record.get("source_use_spec")!=canonical.get("source_use_spec"):return fail(world,"전달된 원본 카드 증명 불일치")
+ if NATIVE_FIELDS.full(record).get("source_use_spec")!=NATIVE_FIELDS.full(canonical).get("source_use_spec"):return fail(world,"전달된 원본 카드 증명 불일치")
  var problem: String=USE.eligibility(world,canonical)
  if not problem.is_empty():return fail(world,problem)
  var exact: Dictionary=target(world,canonical)
  if exact.is_empty():return fail(world,"정확한 카드 등록·원본 전역 제한 확인 필요")
- var spec: Dictionary=canonical.source_use_spec;var requirements: Dictionary=spec.get("item_requirements",{})
+ var spec: Dictionary=NATIVE_FIELDS.full(canonical).source_use_spec;var requirements: Dictionary=spec.get("item_requirements",{})
  if int(requirements.get("targetting_type_id",-1))!=1 or not str(requirements.get("service_region_code","")).is_empty():return fail(world,"원본 대상·서버 조건 미지원")
  if not requirements.get("can_use_when_invisible",false) and world.is_player_concealed():return fail(world,"원본 은신 사용 제한")
  if float(world.item_use_cooldowns.get("m523:item:"+str(int(canonical.source_item_class_id)),0))>0:return fail(world,"원본 사용 대기")

@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## A catalog ID is not proof that its original item or consumer is connected.
 static func item_id(value: Variant) -> int:
 	if not (value is int or value is float) or not is_finite(float(value)) or float(value)!=floorf(float(value)) or value<1 or value>1000000000: return 0
@@ -32,7 +33,7 @@ static func resolve(reward: Dictionary, records: Dictionary, consumer: Callable)
 	for record: Dictionary in candidates:
 		if id<=0 or record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("sourceId") != "m523:item:"+str(id) or item_id(record.get("source_item_class_id",0)) != id: return {"record":{},"reason":"원본 아이템 ID 충돌"}
 		if record.get("source_bless_raw",1) != 1: return {"record":{},"reason":"소비자 축복 상태 불일치"}
-		if record.get("source_original_item",{}) != original: return {"record":{},"reason":"원본 아이템 행 불일치"}
+		if NATIVE_FIELDS.full(record).get("source_original_item",{}) != original: return {"record":{},"reason":"원본 아이템 행 불일치"}
 		if record.get("source_automation_catalog_only",false) or record.get("source_pending_use",false): return unavailable
 		if not bool(consumer.call({"name":str(record.get("name","")),"record":record})): return unavailable
 		if not accepted.is_empty() and accepted != record: return {"record":{},"reason":"중복 원본 아이템 정의 충돌"}

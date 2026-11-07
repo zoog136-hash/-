@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Shared exact-ID supplier contract. Prices/recipes/skills remain with owners.
 const SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -66,7 +67,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			for index: int in range(amount):
 				var uid: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(uid): uid = Crypto.new().generate_random_bytes(16).hex_encode()
-				instances[uid] = {"name":str(record.name),"record":record.duplicate(true),"level":enchant,"element":"","element_level":0,"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(id),"source_item_class_id":int(id),"bless":bless,"enchant":enchant,"supplier":origin.duplicate(true)}}
+				instances[uid] = {"name":str(record.name),"record":NATIVE_FIELDS.full(record).duplicate(true),"level":enchant,"element":"","element_level":0,"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(id),"source_item_class_id":int(id),"bless":bless,"enchant":enchant,"supplier":origin.duplicate(true)}}
 	return {"ok":true,"overrides":{"inventory":inventory,"item_instances":instances,"gold":gold}}
 
 static func commit(world: Node, grants: Array, origin: Dictionary) -> bool:

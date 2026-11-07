@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Rebind proven, untouched Amount=1 alchemy equipment; never grants or saves.
 ## The caller must recheck current() and commit overrides with its atomic writer.
 const C = preload("res://scripts/equipment523/common.gd")
@@ -61,7 +62,7 @@ static func _referenced(value: Variant, name: String, id: String) -> bool:
 
 static func _pending(physical: Dictionary) -> bool:
 	var record: Variant = physical.get("record")
-	return record is Dictionary and (record.get("source") == OLD_SOURCE or record.get("source_snapshot") == OLD_SNAPSHOT) and record.get("source_original_item") is bool and record.source_original_item == true
+	return record is Dictionary and (record.get("source") == OLD_SOURCE or record.get("source_snapshot") == OLD_SNAPSHOT) and NATIVE_FIELDS.full(record).get("source_original_item") is bool and NATIVE_FIELDS.full(record).source_original_item == true
 
 static func _reason(pack: Dictionary, physical: Dictionary, id: String, references: Dictionary, authority: Dictionary, consumer_sha: String) -> String:
 	var record: Dictionary = physical.record

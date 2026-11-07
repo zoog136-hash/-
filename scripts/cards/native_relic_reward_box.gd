@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit deterministic box opening, independent of unresolved quest claims.
 const DATA=preload("res://scripts/cards/patch523_slot_data.gd")
 const Unlock=preload("res://scripts/cards/native_relic_unlock_item.gd")
@@ -88,7 +89,7 @@ static func prepare(inventory: Dictionary,instances: Dictionary,next_id: int,sel
 		var current: Variant=bag.get(str(reward.name),0)
 		if not integer(current) or int(current)<0 or int(current)>=2147483647:return {"ok":false,"code":"reward_quantity","error":"보상 아이템 수량 오류 · 상자 보존"}
 		while physicals.has(str(candidate)):candidate+=1
-		physicals[str(candidate)]={"name":str(reward.name),"level":0,"record":reward.duplicate(true),"source_reward_entity_id":int(content.entity.raw.ID),"source_reward_bless_code_id":1}
+		physicals[str(candidate)]={"name":str(reward.name),"level":0,"record":NATIVE_FIELDS.full(reward).duplicate(true),"source_reward_entity_id":int(content.entity.raw.ID),"source_reward_bless_code_id":1}
 		bag[str(reward.name)]=int(current)+1
 		rewards.append({"item_class_id":item_id,"name":str(reward.name),"instance_id":str(candidate),"quantity":1})
 		candidate+=1

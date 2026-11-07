@@ -1,4 +1,5 @@
 extends Control
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit source entity selection. Opening/cancelling never debits inventory.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
@@ -47,7 +48,7 @@ func _ready() -> void:
 	content.add_child(choices)
 	var use_source_images: bool = IMAGES.selected()
 	var source_images: Dictionary = {}
-	for reward: Dictionary in record.get("source_use_spec",{}).get("rewards",[]):
+	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
 		if not use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): continue
 		var item: Dictionary = DROPS.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{})
 		var blessing: String = str({1:"일반",2:"축복",3:"저주"}.get(int(reward.bless_raw),"미확인 상태"))

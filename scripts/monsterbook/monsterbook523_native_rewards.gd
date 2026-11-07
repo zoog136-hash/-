@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## New confirmed source-book rewards -> the existing exact native supplier.
 ## Existing source-qualified stacks are never converted, renamed or regranted.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -23,7 +24,7 @@ static func target(runtime: RefCounted,world: Node,reward: Dictionary) -> Dictio
 	elif id in Supply.IDS and Supply.exact(record,id):kind="typed_card_supply"
 	else:
 		var action: Dictionary=Use.action_record(world,record)
-		var spec: Dictionary=action.get("source_use_spec",{})
+		var spec: Dictionary=NATIVE_FIELDS.full(action).get("source_use_spec",{})
 		if spec.get("activation_status")=="unrestricted" and spec.get("kind") in ["source_timed_buff","source_mp_dice","guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:kind=str(spec.kind)
 		elif not action.get("heal_spec",{}).is_empty():kind="source_hp_potion"
 	if kind.is_empty():return {}

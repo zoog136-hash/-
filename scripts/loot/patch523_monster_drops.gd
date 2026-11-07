@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
 const KIND = "patch523_monster_drop_membership"
 const DATA_SHA = "38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
@@ -552,7 +553,7 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 			if not needed_states.has(key): needed_states[key] = {}
 			needed_states[key][int(row.Bless)] = true
 	for definition: Dictionary in document.get("item_definitions", {}).values():
-		var spec: Dictionary = definition.get("native_record", {}).get("source_use_spec", {})
+		var spec: Dictionary = NATIVE_FIELDS.full(definition.get("native_record", {})).get("source_use_spec", {})
 		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"] or spec.get("activation_status") != "unrestricted": continue
 		for reward: Dictionary in spec.get("rewards", []):
 			var key: String = str(int(reward.item_class_id))
@@ -844,7 +845,7 @@ static func pick(groups: Dictionary, kind: String, grade: String, rng: RandomNum
 
 static func ground_metadata(entry: Dictionary) -> Dictionary:
 	if not entry.has("source_m_drop_proof") or not entry.get("item_record") is Dictionary: return {}
-	var item: Dictionary = entry.item_record.duplicate(true)
+	var item: Dictionary = NATIVE_FIELDS.full(entry.item_record).duplicate(true)
 	var result: Dictionary = {"item_record":item}
 	if equipment(item) and item.get("slot") != "consumable":
 		result["physical_item"] = {"id":Crypto.new().generate_random_bytes(16).hex_encode(), "data":{"name":str(entry.item_name), "level":0, "element":"", "element_level":0, "record":item, "bless_state":item.bless_state, "source_m_drop_proof":entry.source_m_drop_proof.duplicate(true)}}
@@ -893,7 +894,7 @@ static func item_details(item: Dictionary) -> String:
 		if not full.is_empty(): item = full
 	if not item.get("source_m_native_item", false):
 		var original: Dictionary = item_definition(item).get("native_record", {})
-		if original.get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return invoke_details(item)
+		if NATIVE_FIELDS.full(original).get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return invoke_details(item)
 		item = original
 	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(item.get("source_display_name", ""))]]
 	if item.get("source_category_name") in ["Arrow","Bullet","Sting"]:
@@ -922,7 +923,7 @@ static func item_details(item: Dictionary) -> String:
 		lines.append("HP 회복 %d + %dD%d · 기존 물약 사용 규칙" % [int(heal.get("HPRestoration", 0)), int(heal.get("HPRestorationDiceNumber", 0)), int(heal.get("HPRestorationDiceSpotCount", 0))])
 		var problem: String = hp_use_problem(item)
 		if not problem.is_empty(): lines.append(problem)
-	var spec: Dictionary = item.get("source_use_spec", {})
+	var spec: Dictionary = NATIVE_FIELDS.full(item).get("source_use_spec", {})
 	var presentation_flags: PackedStringArray = []
 	for row: Dictionary in full_definition.get("item_bonus",[]):
 		if row.bonus_type.Name in ["UIShowFilter","NoAnnounce"]: presentation_flags.append(str(row.bonus_type.Name)+"="+str(int(row.bonus.Value)))

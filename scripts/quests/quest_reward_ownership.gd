@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Ownership/debit contract for consumer-owned effects. Never applies an effect,
 ## converts a stack name, changes a claim or commits a save on its own.
 const NUMBERS = preload("res://scripts/quests/quest_item_bindings.gd")
@@ -30,7 +31,7 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 	if original.type_name!="Item" or int(original.RewardClassID)!=id or int(original.RewardEnhancementTypeID)!=1 or original.ClanOnly: return denied("원본 일반 보상 관계 불일치")
 	var item: Dictionary = original.get("source_item",{})
 	var name_value: String = "[원본 보상] "+str(item.get("Name",""))
-	if item.is_empty() or int(item.get("ID",0))!=id or record.get("source_original_item")!=item or record.get("name")!=name_value or physical.get("name")!=name_value or physical.get("level",0)!=0: return denied("원본 행/소지 키 불일치")
+	if item.is_empty() or int(item.get("ID",0))!=id or NATIVE_FIELDS.full(record).get("source_original_item")!=item or record.get("name")!=name_value or physical.get("name")!=name_value or physical.get("level",0)!=0: return denied("원본 행/소지 키 불일치")
 	if receipt.get("bless_code_id")!=original.ItemBlessCodeID or record.get("source_bless_code_id")!=original.ItemBlessCodeID or record.get("source_reward_id")!=reward_id or record.get("source_use_immediately")!=original.UseImmediately: return denied("원본 축복/사용/보상 상태 불일치")
 	var quantity: int = positive(physical.get("source_reward_quantity"))
 	var granted: int = positive(receipt.get("quantity"))

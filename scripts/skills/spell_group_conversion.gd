@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Source facts remain private. Counter/payment execution is explicit TWILIGHT policy.
 const SOURCE_SHA='d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832'
 const CommonSource=preload('res://scripts/resources/current523_definition_rows.gd')
@@ -287,7 +288,7 @@ func material_instances(item:int,amount:int)->Array:
   var instance:Variant=world.item_instances[id]
   if not instance is Dictionary:continue
   var record:Variant=instance.get('record')
-  if not record is Dictionary or record.get('source')!='lineagem_patch523' or record.get('source_snapshot')!='patch523' or record.get('sourceId')!='m523:item:'+str(item) or record.get('source_original_item')!=items[item]:continue
+  if not record is Dictionary or record.get('source')!='lineagem_patch523' or record.get('source_snapshot')!='patch523' or record.get('sourceId')!='m523:item:'+str(item) or NATIVE_FIELDS.full(record).get('source_original_item')!=items[item]:continue
   var raw_id:Variant=record.get('source_item_class_id')
   if not (raw_id is int or raw_id is float) or not is_finite(float(raw_id)) or float(raw_id)!=float(item) or instance.get('name')!=record.get('name'):continue
   var name:String=instance.name
