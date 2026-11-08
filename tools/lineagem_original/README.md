@@ -61,6 +61,20 @@ python tools/lineagem_original/build_reference_sp2_bank.py --metadata PRIVATE_ME
 
 Plan-only results for the complete 523 client (2026-11-08): 74,656 target SP2 members. Strict explicit timing plans 39,161; with the client default 66,317 (88.8%). Of the remainder, 4,546 members are emitted by no declared action and 3,793 are blocked by missing dependency members or by the existing literal-dummy exclusion. A real compilation of a 200-root sample (150 NPC and 50 polymorph sprites, random seed 7) from the extracted client SP2 compiled 4,821 of 5,109 requested actions (94.4%) with all 30 original SPR files verified; 42 failed the SP2 frame contract and 246 the source contract. That run used a validation-only Brotli stand-in because the pinned `brotli` package was not installable offline; use `requirements.txt` for real builds.
 
+### One-command private install (PC)
+
+`build_client523_private_install.py` runs the source adapter, the metadata generator, the bank builder and `configure_current523_source_bank.py` into one new private directory and prints the Main loader config path:
+
+```sh
+python tools/lineagem_original/build_client523_private_install.py --files-info files_info.json.523 \
+  --client-zip part1 ... --patch-zip patch509.zip ... --content-password-b64-file PRIVATE_KEY_FILE \
+  --runtime-tables-zip PINNED_d5192c3c.zip --output PRIVATE_INSTALL_523
+```
+
+* The runtime still pins the original tables ZIP (`d5192c3c…`). The command refuses any other file and stops unless that ZIP's `content/*.json` are byte-identical to the tables decoded from the client (`client523_source.py --verify-tables-zip`, recorded in the receipt).
+* `--link-raw` hard-links the verified SP2 originals into the bank's `raw/` instead of copying (~6 GB saved; same filesystem required, and the extracted originals must not be edited afterwards).
+* Sample check (2026-11-09, 30 roots, validation-only Brotli stand-in): 200 of 208 requested actions compiled, 309 raw members hard-linked, bank contract timing `source_explicit_or_client_section_default`. The full command was not run end to end here because the pinned tables ZIP was not available in this environment.
+
 ## Runtime policy and current limits
 
 The default policy is **unverified compatibility playback**, not proven M-client equivalence. Explicit SPR rates take precedence. Missing clocks use separately identified candidates; attr8 additive and attr128 alpha0.5 are declared host approximations. `--lineagem-source-strict` preserves unresolved clocks as static and disables unverified blending. See [COMPATIBILITY.md](COMPATIBILITY.md) for evidence, scope and controls.

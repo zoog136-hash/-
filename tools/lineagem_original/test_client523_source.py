@@ -92,6 +92,20 @@ class ClientSourceTest(unittest.TestCase):
         with self.assertRaises(cs.SourceError):
             self.run_source()
 
+    def test_runtime_tables_zip_comparison(self):
+        npc = zipfile.ZipFile(io.BytesIO(self.content)).read('content/NpcClass.json')
+        same = self.tmp / 'same.zip'
+        same.write_bytes(zbytes({'content/NpcClass.json': npc, 'content/Item.json': b'{"rows":[]}', 'index.json': b'[]'}))
+        other = self.tmp / 'other.zip'
+        other.write_bytes(zbytes({'content/NpcClass.json': b'{"rows":[]}'}))
+        source = cs.ClientSource(self.info, self.parts, [self.patch])
+        try:
+            receipt, _ = cs.write_outputs(source, self.tmp / 'out', None, verify_tables_zip=same)
+        finally:
+            source.close()
+        self.assertTrue(receipt['runtime_tables_zip_comparison']['equivalent'])
+        self.assertEqual(cs.compare_tables_zip(other, {'content/NpcClass.json': npc})['different'], ['content/NpcClass.json'])
+
 
 if __name__ == '__main__':
     unittest.main()
