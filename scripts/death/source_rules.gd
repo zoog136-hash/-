@@ -20,7 +20,13 @@ var item_death_stats: Dictionary = {}
 var ready: bool = false
 ## ItemClass rows/names are read on demand from the shared original reader.
 var _lazy: bool = false
-const SHARED_TABLES: Array[String] = ["ItemClass","DescData_Korean","ItemBonus","Bonus"]
+const SHARED_TABLES: Array[String] = ["ItemClass","DescData_Korean","ItemBonus","Bonus","Territories"]
+
+## territories[id] (last row per ID), read from the shared reader when lazy.
+func _territory(id: int) -> Dictionary:
+	if not _lazy: return territories.get(id,{})
+	var matches: Array[Dictionary] = CommonSource.related("Territories","ID",id)
+	return matches[-1] if not matches.is_empty() else {}
 var problem: String = "원본523 미설치 · TWILIGHT 추정 정책"
 
 func load_default_source() -> bool:
@@ -71,7 +77,8 @@ func load_pack(path: String = PATH) -> bool:
 			next_items[id] = row
 			next_names[id] = [str(descriptions.get(int(row.DescID),"")),str(descriptions.get(int(row.IdentifiedDescID),""))]
 	var next_territories: Dictionary = {}
-	for row: Dictionary in tables.Territories: next_territories[int(row.ID)] = row
+	if not shared:
+		for row: Dictionary in tables.Territories: next_territories[int(row.ID)] = row
 	var next_certificates: Dictionary = {}
 	# Permanent native currencies only. Event/dated names are deliberately not
 	# collapsed into this wallet contract, even if their display names coincide.
@@ -200,8 +207,8 @@ func land_policy(land_id: int, source_position: Vector2) -> Dictionary:
 		if kind not in [3,4,494,878,1122]: continue
 		var territory_id: int = int(raw.TerritoryID)
 		if territory_id != 0:
-			if not source_position.is_finite() or not territories.has(territory_id): continue
-			var t: Dictionary = territories[territory_id]
+			var t: Dictionary = _territory(territory_id)
+			if not source_position.is_finite() or t.is_empty(): continue
 			if int(t.LandID) != land_id or source_position.x < mini(int(t.StartX),int(t.EndX)) or source_position.x > maxi(int(t.StartX),int(t.EndX)) or source_position.y < mini(int(t.StartY),int(t.EndY)) or source_position.y > maxi(int(t.StartY),int(t.EndY)): continue
 		out.source = true
 		if kind == 3: out.no_item = bool(raw.Value)

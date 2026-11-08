@@ -129,7 +129,7 @@ static func source_integer(world: Node,key: String) -> int:
 		if basis.get("selection")!="source_exact_level" or basis.get("sha256")!=world.patch523_equipment.digest or not world.patch523_equipment.catalog_identity_matches(record,id):continue
 		if physical.has("sourceId") and physical.sourceId!=record.get("sourceId"):continue
 		var rank: String=str(int(physical.get("level",0)))
-		var expected: Variant=world.patch523_equipment.data.get("equipment_runtime",{}).get(id,{}).get("extra_options",{}).get(str(blessing),{}).get(rank,{}).get(key)
+		var expected: Variant=world.patch523_equipment.equipment_runtime_of(id).get("extra_options",{}).get(str(blessing),{}).get(rank,{}).get(key)
 		var actual: Variant=record.get("enhancement_extra_options",{}).get(rank,{}).get(key)
 		if typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or actual!=expected or not is_finite(float(expected)) or float(expected)!=float(int(expected)) or int(expected)<0:continue
 		total+=int(expected)

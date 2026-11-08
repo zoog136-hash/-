@@ -222,10 +222,13 @@ class TemplateStore extends RefCounted:
 	## One pool for every key and text read back, so ~30,000 decoded records
 	## share their strings as the projected records shared their literals.
 	var strings: Dictionary={}
+	## Interning is for the ~30,000 records registration keeps; later reads
+	## (template fields of one item) are short-lived and are not pooled.
+	var interning: bool=true
 	func record(id: String) -> Variant:
 		if not offsets.has(id):return null
 		file.seek(int(offsets[id]))
-		return _shared(file.get_var())
+		return _shared(file.get_var()) if interning else file.get_var()
 	func _shared(value: Variant) -> Variant:
 		if value is String:
 			var known: Variant=strings.get(value)
@@ -351,6 +354,9 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# heavy fields are read from the baked template when used (FIELDS.full()).
 	var store: TemplateStore=templates if templates!=null else _open_templates()
 	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
+	if store!=null:
+		store.interning=false
+		store.strings.clear()
 	if store!=null and OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1":
 		FIELDS.bind(store)
 		for index: int in placed:records[index]=FIELDS.slim(records[index])
