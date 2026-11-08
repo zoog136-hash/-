@@ -4,8 +4,10 @@ const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
-# finite: the pinned cf2677 manifest is 31,361,924 bytes; actor JSON stays 16MiB.
-const MAX_MANIFEST_JSON = 32 * 1024 * 1024
+# finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
+# 523 bank (63,661 members, 114,758 actions) is 39,481,600 bytes. Actor JSON
+# stays 16MiB.
+const MAX_MANIFEST_JSON = 64 * 1024 * 1024
 const SOURCE_DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
 const SOURCE_REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bindings_native_draw_multiplicity_unverified"
 var _root: String = ""
