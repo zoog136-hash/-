@@ -233,6 +233,22 @@ func rows(table: String) -> Array:
 	_indices[table] = index
 	return result
 
+## One column of a large table read through the shared reader, in table order
+## (the same values rows(table) would carry); null when the table is read here.
+## Lets owners scan a large table without materializing every row.
+func shared_column(table: String, field: String) -> Variant:
+	if _tables.has(table) or not _shared(table): return null
+	var values: Variant = COMMON.column(table, field)
+	if not (values is Array or values is PackedFloat64Array or values is PackedStringArray): return null
+	if values.size() != COMMON.row_count(table) or values.size() == 0: return null
+	return values
+
+## The read-only row at `index` of a large shared table (same row rows() gives).
+func shared_row_at(table: String, index: int) -> Dictionary:
+	var value: Dictionary = COMMON.row_at(table, index)
+	value.make_read_only()
+	return value
+
 func row(table: String, id: int) -> Dictionary:
 	if not _tables.has(table) and _shared(table) and COMMON.integer_field(table, "ID"):
 		var matches: Array = _read_only(COMMON.related(table, "ID", id))

@@ -10,6 +10,9 @@ var _quests: Dictionary = {}
 var _pools: Dictionary = {}
 var _item_contracts: Dictionary = {}
 var _luckybags: Dictionary = {}
+## LuckyBagClassID key -> row positions of the shared LuckyBagEntityView
+## (41,625 rows), read back on use instead of holding every row.
+var _luckybag_positions: Dictionary = {}
 var _class_limits: Dictionary = {}
 var _item_bonuses: Dictionary = {}
 var _quest_links: Dictionary = {}
@@ -33,6 +36,7 @@ func setup(source: Object) -> void:
 	_pools.clear()
 	_item_contracts.clear()
 	_luckybags.clear()
+	_luckybag_positions.clear()
 	_class_limits.clear()
 	_item_bonuses.clear()
 	_quest_links.clear()
@@ -75,11 +79,21 @@ func setup(source: Object) -> void:
 			_pools[key] = []
 		_pools[key].append(row)
 
-	for entity in _rows("LuckyBagEntityView"):
-		var key := str(int(entity.get("LuckyBagClassID", 0)))
-		if not _luckybags.has(key):
-			_luckybags[key] = []
-		_luckybags[key].append(entity)
+	var bag_column: Variant = _shared_column("LuckyBagEntityView", "LuckyBagClassID")
+	if bag_column != null:
+		var grouped: Dictionary = {}
+		for index: int in bag_column.size():
+			var key := str(int(bag_column[index]))
+			if not grouped.has(key): grouped[key] = []
+			(grouped[key] as Array).append(index)
+		for key: String in grouped: grouped[key] = PackedInt32Array(grouped[key])
+		_luckybag_positions = grouped
+	else:
+		for entity in _rows("LuckyBagEntityView"):
+			var key := str(int(entity.get("LuckyBagClassID", 0)))
+			if not _luckybags.has(key):
+				_luckybags[key] = []
+			_luckybags[key].append(entity)
 	for limit in _rows("LuckyBagEntityClassLimit"):
 		var key := str(int(limit.get("LuckyBagEntityID", 0)))
 		if not _class_limits.has(key):
@@ -87,11 +101,23 @@ func setup(source: Object) -> void:
 		_class_limits[key].append(int(limit.get("ClassID", 0)))
 	# Bonus rows per item are resolved on demand (_bonuses_for); keeping all
 	# 89,702 here held the whole Bonus table a second time.
-	for link in _rows("ItemBonus"):
-		var bonus := _row("Bonus", int(link.get("BonusID", 0)))
-		var item_id := int(link.get("ItemClassID", 0))
+	# The shared ItemBonus is scanned by column (one link row is read only when
+	# its possession flag is not a column); same order and checks as rows().
+	var bonus_ids: Variant = _shared_column("ItemBonus", "BonusID")
+	var link_items: Variant = _shared_column("ItemBonus", "ItemClassID") if bonus_ids != null else null
+	var possessions: Variant = _shared_column("ItemBonus", "IsPossession") if link_items != null else null
+	var links: Array = _rows("ItemBonus") if link_items == null else []
+	var link_count: int = links.size() if link_items == null else (link_items as Variant).size()
+	for link_index: int in link_count:
+		var link: Dictionary = links[link_index] if link_items == null else {}
+		var bonus := _row("Bonus", int(link.get("BonusID", 0)) if link_items == null else int(bonus_ids[link_index]))
+		var item_id := int(link.get("ItemClassID", 0)) if link_items == null else int(link_items[link_index])
 		var type_id := int(bonus.get("BonusTypeID", 0))
-		if bool(link.get("IsPossession", false)) or type_id not in [110, 5031, 5774]:
+		var possession: bool
+		if link_items == null: possession = bool(link.get("IsPossession", false))
+		elif possessions != null: possession = bool(possessions[link_index])
+		else: possession = bool(_source.call("shared_row_at", "ItemBonus", link_index).get("IsPossession", false))
+		if possession or type_id not in [110, 5031, 5774]:
 			continue
 		var item := _row("ItemClass", item_id)
 		var category := _row("ItemCategory", int(item.get("CategoryID", 0)))
@@ -708,6 +734,20 @@ func _rows(table: String) -> Array:
 		return []
 	return _source.call("rows", table)
 
+func _shared_column(table: String, field: String) -> Variant:
+	if _source == null or not _source.has_method("shared_column"): return null
+	return _source.call("shared_column", table, field)
+
+## Entity rows of one lucky bag, in table order.
+func _luckybag_rows(key: String) -> Array:
+	if not _luckybag_positions.has(key): return _luckybags.get(key, [])
+	var result: Array = []
+	for index: int in _luckybag_positions[key]: result.append(_source.call("shared_row_at", "LuckyBagEntityView", index))
+	return result
+
+func _luckybag_keys() -> Array:
+	return _luckybag_positions.keys() if not _luckybag_positions.is_empty() else _luckybags.keys()
+
 func _row(table: String, id: int) -> Dictionary:
 	if _source == null or id == 0:
 		return {}
@@ -823,7 +863,7 @@ func _record_item_use(item_id: int, context: Dictionary, state: Dictionary) -> v
 
 func _eligible_bag(bag_id: int, context: Dictionary) -> Array:
 	var result: Array = []
-	for entity in _luckybags.get(str(bag_id), []):
+	for entity in _luckybag_rows(str(bag_id)):
 		var limits: Array = _class_limits.get(str(int(entity.get("ID", 0))), [])
 		if not limits.is_empty():
 			if int(context.get("class_id", 0)) not in limits:
@@ -836,7 +876,7 @@ func _eligible_bag(bag_id: int, context: Dictionary) -> Array:
 func _luckybag_reward_reason(bag_id: int, context: Dictionary) -> String:
 	# Shared read-only gate for the owned-bag view and committed opening. A
 	# preview checks every eligible leaf without resolving or rolling rewards.
-	for raw_entity in _luckybags.get(str(bag_id), []):
+	for raw_entity in _luckybag_rows(str(bag_id)):
 		if int(raw_entity.get("LimitClass", 10000)) != 10000 and not _class_limits.has(str(int(raw_entity.get("ID", 0)))):
 			return "원문 보상 직업 제한을 해석할 수 없어 상자를 보존합니다."
 	var entries := _eligible_bag(bag_id, context)
@@ -1250,7 +1290,7 @@ func _validate_quest_token(token: String) -> String:
 	return ""
 
 func _has_final_reward(bag_id: int) -> bool:
-	for entity in _luckybags.get(str(bag_id), []):
+	for entity in _luckybag_rows(str(bag_id)):
 		if int(entity.get("LuckyBagEntityTypeID", -1)) == 2:
 			return true
 	return false
@@ -1287,7 +1327,7 @@ func _final_rule(item_id: int, bag_id: int, context: Dictionary) -> Dictionary:
 		return _failure("지원하지 않는 TWILIGHT 완료 보상 지급 방식입니다.")
 	if item_id == 8951 and bag_id == 1991:
 		var finals: Array = []
-		for entity in _luckybags.get("1991", []):
+		for entity in _luckybag_rows("1991"):
 			if int(entity.get("LuckyBagEntityTypeID", -1)) == 2:
 				finals.append(entity)
 		if finals.size() != 1 or int(finals[0].get("ID", 0)) != 19111 or int(finals[0].get("ItemClassID", 0)) != 8361 or int(finals[0].get("ItemAmount", 0)) != 4:
