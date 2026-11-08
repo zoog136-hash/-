@@ -114,11 +114,14 @@ func load_original() -> bool:
 		if table == "DescData_Korean":
 			var ids: Variant = Definitions.column(table,"ID")
 			if ids.size() != count: return _fail("원본 상점 라벨 ID 오류")
-			var selected: Array[Dictionary] = []
+			# The selected label rows stay in the shared reader; only their
+			# positions are kept (rows are read back in the same order).
+			var selected := PackedInt32Array()
 			for index: int in count:
 				if not _integer(ids[index]): return _fail("원본 상점 라벨 ID 오류")
-				if label_ids.has(str(int(ids[index]))): selected.append(Definitions.row_at(table,index))
-			tables[table] = selected
+				if label_ids.has(str(int(ids[index]))): selected.append(index)
+			tables[table] = []
+			shared[table] = selected
 			provenance[table].packed_rows = selected.size()
 			continue
 		var stream: bool = count >= SHARED_ROW_THRESHOLD
@@ -154,9 +157,9 @@ func load_original() -> bool:
 		for table: String in tables:
 			size += _hash_text(hash_context,("" if first_table else ",")+JSON.stringify(table)+":[")
 			first_table = false
-			var count: int = Definitions.row_count(table) if shared.has(table) else (tables[table] as Array).size()
+			var count: int = _row_count(table,tables,shared)
 			for index: int in count:
-				var row: Dictionary = Definitions.row_at(table,index) if shared.has(table) else tables[table][index]
+				var row: Dictionary = _row_of(table,index,tables,shared)
 				size += _hash_text(hash_context,("" if index == 0 else ",")+JSON.stringify(row,"",false,true))
 			size += _hash_text(hash_context,"]")
 		size += _hash_text(hash_context,"}")
@@ -189,12 +192,12 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 	for table: String in REQUIRED_TABLES:
 		if not tables.get(table) is Array or not provenance.get(table) is Dictionary:
 			return _fail("상점 팩 표 누락: " + table)
-		var count: int = Definitions.row_count(table) if shared.has(table) else (tables[table] as Array).size()
+		var count: int = _row_count(table,tables,shared)
 		if not _integer(provenance[table].get("packed_rows")) or int(provenance[table].get("packed_rows", -1)) != count:
 			return _fail("상점 팩 행수 불일치: " + table)
 		var indexed: Dictionary = {}
 		for index: int in count:
-			var row: Variant = Definitions.row_at(table,index) if shared.has(table) else tables[table][index]
+			var row: Variant = _row_of(table,index,tables,shared)
 			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
 			for field: String in FIELDS.get(table, ["ID"]):
 				if field in STRING_FIELDS:
@@ -210,7 +213,7 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 			var key: String = str(int(row.ID))
 			if indexed.has(key): return _fail("상점 팩 중복 ID: " + table)
 			indexed[key] = true if shared.has(table) else row
-		indices[table] = {} if shared.has(table) else indexed
+		indices[table] = indexed if not shared.has(table) or shared[table] is PackedInt32Array else {}
 	var links: Dictionary = {}
 	var joins: Dictionary = {"MarketPurchaseProduct":"MarketPurchaseID", "MarketBonusForPurchase":"MarketPurchaseID",
 		"MarketProductAdditional":"MarketProductID", "MarketPurchaseRestriction":"MarketPurchaseId",
@@ -240,12 +243,27 @@ func _fail(message: String) -> bool:
 static func _integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and absf(float(value)) <= MAX_EXACT_INTEGER and float(value) == floorf(float(value))
 
+## Rows of a staged table: in `tables`, every row of the shared reader
+## (shared[table] == true) or the selected positions (PackedInt32Array).
+static func _row_count(table: String, tables: Dictionary, shared: Dictionary) -> int:
+	if not shared.has(table): return (tables[table] as Array).size()
+	return (shared[table] as PackedInt32Array).size() if shared[table] is PackedInt32Array else Definitions.row_count(table)
+
+static func _row_of(table: String, index: int, tables: Dictionary, shared: Dictionary) -> Dictionary:
+	if not shared.has(table): return tables[table][index]
+	return Definitions.row_at(table, (shared[table] as PackedInt32Array)[index] if shared[table] is PackedInt32Array else index)
+
 func rows(table: String) -> Array:
+	if _shared.get(table) is PackedInt32Array:
+		var selected: Array = []
+		for index: int in (_shared[table] as PackedInt32Array): selected.append(Definitions.row_at(table,index))
+		return selected
 	if _shared.has(table): return Definitions.rows(table)
 	return _tables.get(table, []).duplicate(true)
 
 func record(table: String, id: int) -> Dictionary:
 	if _shared.has(table):
+		if _shared[table] is PackedInt32Array and not _indices.get(table,{}).has(str(id)): return {}
 		var matches: Array[Dictionary] = Definitions.related(table, "ID", id)
 		return matches[0] if matches.size() == 1 and id >= 0 else {}
 	return _indices.get(table, {}).get(str(id), {}).duplicate(true)
@@ -257,8 +275,12 @@ func _definition_record(table: String, id: int) -> Dictionary:
 	return record(table,id) if available() else Definitions.row(table,id)
 
 func _definition_related(table: String, field: String, id: int) -> Array:
-	if not available() or (_shared.has(table) and Definitions.integer_field(table,field)): return Definitions.related(table,field,id)
+	if not available() or (_shared.has(table) and not _shared[table] is PackedInt32Array and Definitions.integer_field(table,field)): return Definitions.related(table,field,id)
 	var result: Array = []
+	if _shared.get(table) is PackedInt32Array:
+		for row: Dictionary in rows(table):
+			if _integer(row.get(field)) and int(row[field]) == id: result.append(row)
+		return result
 	if _shared.has(table):
 		for index: int in Definitions.row_count(table):
 			var row: Dictionary = Definitions.row_at(table,index)
