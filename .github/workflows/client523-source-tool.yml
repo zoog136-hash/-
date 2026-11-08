@@ -5,6 +5,10 @@ on:
     paths:
       - 'tools/lineagem_original/client523_source.py'
       - 'tools/lineagem_original/test_client523_source.py'
+      - 'tools/lineagem_original/client523_bank_metadata.py'
+      - 'tools/lineagem_original/test_client523_bank_metadata.py'
+      - 'tools/lineagem_original/build_reference_sp2_bank.py'
+      - 'tools/lineagem_original/original_spr.py'
       - '.github/workflows/client523-source-tool.yml'
   workflow_dispatch:
 
@@ -25,4 +29,4 @@ jobs:
           python-version: '3.12'
       - name: Run tests
         working-directory: tools/lineagem_original
-        run: python -m unittest test_client523_source -v
+        run: python -m unittest test_client523_source test_client523_bank_metadata test_original_spr -v
