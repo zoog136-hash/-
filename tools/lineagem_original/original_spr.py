@@ -22,7 +22,19 @@ class Declaration:
     references: list = field(default_factory=list)
 
 
-def read(paths):
+# The client's list parser resets the rate to 24 at every '#' sprite section;
+# code 110 changes it for frames parsed after it (static analysis of LineageM
+# 1.10.22.0 ListSprLoader, RVA 0x035FAF49 and 0x035FBC38). Opt-in only: the
+# default reader keeps an absent rate as None and invents nothing.
+CLIENT_SECTION_DEFAULT_FPS = 24
+CLIENT_DEFAULT_EVIDENCE = 'LineageM_1.10.22.0 ListSprLoader: fps=24 per sprite section (RVA 0x035FAF49); code110 overrides later frames (0x035FBC38)'
+
+
+def read(paths, section_default_fps=None):
+    if section_default_fps not in (None, CLIENT_SECTION_DEFAULT_FPS):
+        raise ValueError('only the evidenced client section default (24) is supported')
+    default_source = None if section_default_fps is None else {
+        'kind': 'client_section_default', 'fps': section_default_fps, 'evidence': CLIENT_DEFAULT_EVIDENCE}
     declarations = {}
     for path in sorted(map(Path, paths)):
         current = None
@@ -37,8 +49,8 @@ def read(paths):
                     continue
                 current = Declaration(int(match[1]), int(match[3]) if match[3] else None, path.name, line_number)
                 declarations.setdefault(current.sprite_id, []).append(current)
-                fps = None  # A previous declaration's rate is not an implicit default.
-                rate_source = None
+                fps = section_default_fps  # A previous declaration's rate is not an implicit default.
+                rate_source = dict(default_source) if default_source else None
                 scan = scan[match.end():]
             if current is None:
                 continue

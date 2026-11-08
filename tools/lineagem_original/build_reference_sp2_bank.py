@@ -50,8 +50,11 @@ CONTRACT = {
 }
 
 
-def consumer_contract(allow_host_timing=False):
+def consumer_contract(allow_host_timing=False, client_default_fps=False):
     contract = dict(CONTRACT)
+    if client_default_fps:
+        contract.update(timing="source_explicit_or_client_section_default", client_section_default_fps=original_spr.CLIENT_SECTION_DEFAULT_FPS,
+                        client_default_evidence=original_spr.CLIENT_DEFAULT_EVIDENCE)
     if allow_host_timing:
         contract.update(timing="source_explicit_or_existing_host_policy", host_timing_opt_in=True,
                         source_fps_policy="preserve_literal_value_including_null")
@@ -204,8 +207,15 @@ def verified_metadata(directory):
         data = (directory / name).read_bytes()
         require(len(data) == row["bytes"] and sha(data) == row["sha256"], f"metadata member changed: {name}")
     require({INVENTORY, ACTIONS, DECLARATIONS} <= seen, "incomplete metadata handoff")
+    # The original handoff fixed its denominators in code. A generated complete
+    # client handoff (client523_bank_metadata.py) declares them explicitly; the
+    # loader still requires the declared counts to match exactly.
+    expected = manifest.get("expected_counts", {"inventory_members": 54384, "target_members": 45990})
+    require(type(expected.get("inventory_members")) is int and type(expected.get("target_members")) is int,
+            "invalid handoff expected_counts")
     return {"manifest_sha256": sha((directory / HANDOFF).read_bytes()),
-            "members": {row["name"]: row["sha256"] for row in manifest["members"]}}
+            "members": {row["name"]: row["sha256"] for row in manifest["members"]},
+            "expected_counts": dict(expected), "generator": manifest.get("generator")}
 
 
 def load_metadata(directory, dependency_index=None):
@@ -215,9 +225,12 @@ def load_metadata(directory, dependency_index=None):
         check_identity(row)
         require(row["member"] not in inventory, "duplicate handoff member identity")
         inventory[row["member"]] = row
-    require(len(inventory) == 54384, "expected complete54384 handoff inventory")
+    expected = proof["expected_counts"]
+    require(len(inventory) == expected["inventory_members"],
+            f"expected complete{expected['inventory_members']} handoff inventory")
     targets = {name for name, row in inventory.items() if row.get("source_family_categories")}
-    require(len(targets) == 45990, "expected complete45990 source-family targets")
+    require(len(targets) == expected["target_members"],
+            f"expected complete{expected['target_members']} source-family targets")
     identities = dict(inventory)
     if dependency_index is not None:
         for row in records(dependency_index):
@@ -310,7 +323,7 @@ def metadata_declarations(metadata):
     return dict(result)
 
 
-def verified_declarations(metadata, root, source_inputs=None):
+def verified_declarations(metadata, root, source_inputs=None, section_default_fps=None):
     require(root is not None, "complete original SPR files unavailable (--spr-root required)")
     root = root.resolve()
     paths, verified, missing = [], {}, {}
@@ -330,7 +343,7 @@ def verified_declarations(metadata, root, source_inputs=None):
         source_inputs.update(expected_count=len(metadata["sources"]), verified_count=len(verified),
                              verified=verified, missing=missing)
     require(paths, "original SPR unavailable: no complete source file verified")
-    declarations = original_spr.read(paths)
+    declarations = original_spr.read(paths, section_default_fps)
     for path in paths:
         require(sha(path.read_bytes()) == metadata["sources"][path.name]["sha256"],
                 f"original SPR changed while reading: {path.name}")
@@ -347,7 +360,7 @@ def requests_from(path, targets, body=None):
         members = row.get("target_members")
         require(isinstance(members, list) and bool(members), "request requires exact target_members")
         members = sorted({member_name(name) for name in members})
-        require(set(members) <= targets, "request target is outside complete45990 denominator")
+        require(set(members) <= targets, "request target is outside the complete target denominator")
         require("selection_semantics" in row, "request must preserve selection_semantics")
         identity_key = (actor, action)
         if identity_key in requests:
@@ -742,11 +755,19 @@ def build(args):
     request_sha256 = sha(request_bytes)
     seed_requests = requests_from(args.requests, metadata["targets"], request_bytes)
     allow_host_timing = getattr(args, "allow_host_timing", False)
-    contract = consumer_contract(allow_host_timing)
+    client_default_fps = getattr(args, "client_section_default_fps", False)
+    require(not (allow_host_timing and client_default_fps), "choose host timing or the client section default, not both")
+    timing_policy = "client_section_default_fps_24" if client_default_fps else "source_explicit_only"
+    if client_default_fps or metadata["proof"].get("generator"):
+        handoff = json.loads((args.metadata / HANDOFF).read_text(encoding="utf-8"))
+        require(handoff.get("timing_policy", "source_explicit_only") == timing_policy,
+                "metadata handoff timing policy differs from the requested build timing policy")
+    contract = consumer_contract(allow_host_timing, client_default_fps)
     original, source_problem, source_inputs = None, None, {}
     if not args.plan_only:
         try:
-            original = verified_declarations(metadata, args.spr_root, source_inputs)
+            original = verified_declarations(metadata, args.spr_root, source_inputs,
+                                             original_spr.CLIENT_SECTION_DEFAULT_FPS if client_default_fps else None)
         except (ValueError, OSError) as error:
             source_problem = str(error)
     planning = metadata_declarations(metadata)
@@ -894,6 +915,9 @@ def main(argv=None):
     parser.add_argument("--dependency-index", type=Path)
     parser.add_argument("--allow-host-timing", action="store_true",
                         help="Keep absent source FPS null and permit the existing explicitly labelled host timing policy.")
+    parser.add_argument("--client-section-default-fps", action="store_true",
+                        help="Use the client's evidenced per-section default rate (24) for actions without code110; "
+                             "the metadata handoff must have been generated with the same policy.")
     parser.add_argument("--connect-received", action="store_true",
                         help="Write source connections from supplied receipts without additional hash/CRC/frame validation.")
     parser.add_argument("--saved-plan", type=Path)
