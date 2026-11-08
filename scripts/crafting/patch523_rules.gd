@@ -322,6 +322,9 @@ static func denied(reason: String) -> Dictionary:
 
 func _offload_catalog_records() -> void:
 	_records = null
+	_runtime = null
+	_runtime_ids.clear()
+	_runtime_cache.clear()
 	var key: String = _model_key
 	_model_key = ""
 	if key.is_empty() or not data.get("items") is Dictionary or OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": return
@@ -342,6 +345,48 @@ func _offload_catalog_records() -> void:
 			entry.erase("catalog_record")
 			entry[RECORDS_MARK] = true
 	_records = records
+	# Per-item equipment runtime (enchant/extra option tables) likewise.
+	var runtime: Variant = data.get("equipment_runtime")
+	if not runtime is Dictionary or (runtime as Dictionary).is_empty(): return
+	var stored: Object = BAKE.open_records(RUNTIME_NAME,key)
+	if stored == null:
+		var ids := PackedStringArray()
+		var values: Array = []
+		for id: Variant in runtime: ids.append(str(id)); values.append(runtime[id])
+		if not BAKE.write_records(RUNTIME_NAME,key,ids,values): return
+		stored = BAKE.open_records(RUNTIME_NAME,key)
+		if stored == null: return
+	for id: Variant in runtime:
+		if not stored.has(str(id)): return
+	_runtime_ids.clear()
+	for id: Variant in runtime: _runtime_ids[str(id)] = true
+	_runtime = stored
+	data.equipment_runtime = {RUNTIME_MARK: true}
+
+const RUNTIME_NAME := "equipment_rules_runtime"
+const RUNTIME_MARK := "twilight_runtime_offloaded"
+var _runtime: Object = null
+var _runtime_ids: Dictionary = {}
+var _runtime_cache: Dictionary = {}
+
+## The compiled equipment runtime of one item ({} when it has none).
+func equipment_runtime_of(source_id: String) -> Dictionary:
+	var runtime: Dictionary = data.get("equipment_runtime",{})
+	if runtime.get(RUNTIME_MARK) != true: return runtime.get(source_id,{})
+	if not _runtime_ids.has(source_id) or _runtime == null: return {}
+	if not _runtime_cache.has(source_id):
+		if _runtime_cache.size() >= 64: _runtime_cache.clear()
+		var value: Variant = _runtime.read(source_id)
+		_runtime_cache[source_id] = value if value is Dictionary else {}
+	return _runtime_cache[source_id]
+
+func has_equipment_runtime(source_id: String) -> bool:
+	var runtime: Dictionary = data.get("equipment_runtime",{})
+	return _runtime_ids.has(source_id) if runtime.get(RUNTIME_MARK) == true else runtime.has(source_id)
+
+func has_any_equipment_runtime() -> bool:
+	var runtime: Dictionary = data.get("equipment_runtime",{})
+	return not _runtime_ids.is_empty() if runtime.get(RUNTIME_MARK) == true else not runtime.is_empty()
 
 ## The compiled catalog record of one item entry (from storage when offloaded).
 func catalog_record_of(source_id: String) -> Dictionary:

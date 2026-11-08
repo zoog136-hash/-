@@ -11,7 +11,7 @@ extends RefCounted
 
 const HEAVY: Array[String] = ["source_use_spec","source_original_item","source_unhandled_bonuses","source_mapped_bonuses"]
 const MARK := "twilight_lazy_native_fields"
-const CACHE_LIMIT := 512
+const CACHE_LIMIT := 128
 
 static var _store: Object = null
 static var _cache: Dictionary = {}

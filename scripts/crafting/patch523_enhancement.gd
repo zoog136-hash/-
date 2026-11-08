@@ -23,7 +23,7 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 	if blessing not in [1,2]:return record
 	var id: String=item_id(record)
 	if id.is_empty() or not book.catalog_identity_matches(record,id): return record
-	var runtime: Dictionary=book.data.get("equipment_runtime",{}).get(id,{})
+	var runtime: Dictionary=book.equipment_runtime_of(id)
 	if runtime.is_empty(): return record
 	var settings: Dictionary=policy()
 	var basis: Dictionary=record.get("patch523_effect_basis",{})

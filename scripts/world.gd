@@ -1104,7 +1104,7 @@ func _refresh_equipment_effects() -> void:
 		var effects: Dictionary = preload("res://scripts/loot/patch523_passive_items.gd").effects(record)
 		for key: String in effects: native_passives[key] = int(native_passives.get(key,0))+int(effects[key])
 		var source_id: String=PATCH523_ENHANCE.item_id(record)
-		var source_mp: bool=patch523_equipment.data.get("equipment_runtime",{}).has(source_id) and patch523_equipment.catalog_identity_matches(record,source_id)
+		var source_mp: bool=patch523_equipment.has_equipment_runtime(source_id) and patch523_equipment.catalog_identity_matches(record,source_id)
 		var original: Dictionary=quest_item_provider.equipment_owner.recovery_for_worn(self,record)
 		quest_recovery_hp+=int(original.get("hp",0));quest_recovery_mp+=int(original.get("mp",0))
 		for key: String in ["hpAbsoluteRecovery","hpRecoveryTick","mpRecoveryTick"]:
@@ -4448,7 +4448,7 @@ func _sync_item_instances() -> void:
 		if int(inventory.get(name_value, 0)) <= 0 and not _is_instance_equipped(instance_id):
 			item_instances.erase(raw_id)
 			continue
-		if not patch523_equipment.data.get("equipment_runtime",{}).is_empty():
+		if patch523_equipment.has_any_equipment_runtime():
 			var physical: Dictionary=item_instances[raw_id]
 			var pinned: Dictionary=physical.get("record",_find_catalog_item_record(name_value))
 			var prepared: Dictionary=PATCH523_ENHANCE.prepare(patch523_equipment,pinned,patch523_equipment.bless_code(physical))
