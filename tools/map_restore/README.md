@@ -4,6 +4,39 @@ These tools consume local validated Land tables, original map/tile inventories,
 and separately retained original files. Generated art and resource packs stay
 outside public Git. No tool activates maps in the default game or changes saves.
 
+## Complete 523 client maps and tiles (all maps)
+
+`client523_map_inventory.py` and `client523_tile_inventory.py` build the existing
+pack builders' inputs straight from the client's `Map*.dat` / `Tile*.dat`, each
+checked against the 523 `files_info.json` SHA-1. Outputs stay outside Git.
+
+```sh
+python tools/map_restore/client523_map_inventory.py --files-info files_info.json.523 \
+  --map-dat-dir PRIVATE/Client/Data --land-table PRIVATE/content/Land.json --output PRIVATE_MAPS
+chmod -R go-rwx PRIVATE_MAPS/source   # hardlink mode requires private sources
+python tools/map_restore/build_current523_source_pack.py --source-dir PRIVATE_MAPS/source \
+  --land-table PRIVATE/content/Land.json --inventory PRIVATE_MAPS/map523_inventory.json \
+  --expected-inventory-sha256 <printed sha> --output PRIVATE_MAPS/pack --storage-mode hardlink
+python tools/map_restore/client523_tile_inventory.py --files-info files_info.json.523 \
+  --tile-dat-dir PRIVATE/Client/Data --output PRIVATE_TILES
+python tools/map_restore/build_current523_tile_pack.py --source-dir PRIVATE_TILES/source \
+  --inventory PRIVATE_TILES/tile523_inventory.json --expected-inventory-sha256 <printed sha> \
+  --output PRIVATE_TILES/pack --atlas-storage runtime_ti2 --tile-ids <decodable ids>
+```
+
+Land scope follows the user's decision of 2026-11-09 to implement every map: all
+1,065 Lands are selected with no content exclusion, recorded as policy provenance
+(the earlier pinned handoff excluded 68 siege/clan/ziggurat/arena Lands).
+
+Results on the complete client (2026-11-09): 94 Map DATs, 8,311 members; 7,518
+belong to 619 Land AssetPaths (7,505 S32 ready, 13 SEG unsupported; 613 assets
+ready, 6 partial) and 793 sit under 57 roots no Land declares (e.g. `Map/99998`).
+`tests/current523_source_field_test.gd` (Godot 4.7.2 headless, now scope-aware)
+passes all 51,361 checks with this pack: every one of the 1,065 Lands configures
+and 7,504 of 7,505 available originals are placed. Tiles: 29 DATs, 8,513 TI2; 8,511 packed with runtime TI2 storage,
+2 rejected by the existing decoder (4690 writes outside the 24x24 canvas, 5668
+truncated).
+
 ## Composition and evidence
 
 - `build_base508_universe.py` separates source availability, referenced Land

@@ -5,6 +5,7 @@ extends SceneTree
 ## optionally retain earlier immutable snapshots as missing/scope regressions.
 const FIELD = preload("res://scripts/maps/current523_source_field.gd")
 const PACK = preload("res://scripts/maps/current523_source_pack.gd")
+var all_maps_scope: bool = false
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -49,7 +50,11 @@ func _actual_sources(root: String, pin: String) -> void:
 	for row: Dictionary in catalog.catalog_lands():
 		if row.excluded_content.is_empty(): included += 1
 		else: excluded += 1
-	check(included == 997 and excluded == 68,"exact handoff scope remains per logical Land")
+	# Two explicit scopes exist: the pinned full-map handoff (997 ordinary, 68
+	# excluded) and the user's all-maps decision (client523_map_inventory.py,
+	# every Land included). Both must still classify every native Land row.
+	all_maps_scope = excluded == 0 and str(catalog.catalog_lands()[0].get("policy_provenance",{}).get("source","")).begins_with("User decision 2026-11-09")
+	check((included == 997 and excluded == 68) or (all_maps_scope and included == 1065),"exact explicit scope remains per logical Land")
 	var definitions: Dictionary = {}
 	var physical_members: Dictionary = {}
 	var placed_members: Dictionary = {}
@@ -131,10 +136,14 @@ func _policy_and_scope(root: String, pin: String, catalog: RefCounted) -> void:
 	check(not field.configure_catalog(root,pin,3,{"allowed_raw_words":[0],"spawn_source":[32658,32785]})
 		and not field.loaded and field.native_land.is_empty() and field.registered_source_members().is_empty()
 		and not field.has_meta("current523_generic_field"),"blocked explicit spawn fails closed without retaining partial field")
-	check(catalog.land_record(22793).declaration.AssetPath == "15/" and catalog.land_record(22793).excluded_content.is_empty()
-		and catalog.land_record(22803).declaration.AssetPath == "15/" and catalog.land_record(22803).excluded_content.has("siege"),"mixed physical root keeps ordinary and excluded logical declarations separate")
-	check(not field.configure_catalog(root,pin,22803) and not field.loaded and field.native_land.is_empty()
-		and field.problem.begins_with("제외"),"excluded logical Land refuses by scope before looking for its shared physical source")
+	if all_maps_scope:
+		check(catalog.land_record(22793).declaration.AssetPath == "15/" and catalog.land_record(22803).declaration.AssetPath == "15/"
+			and catalog.land_record(22803).excluded_content.is_empty() and field.configure_catalog(root,pin,22803) and field.loaded,"all-maps scope configures a formerly excluded logical Land on its shared physical root")
+	else:
+		check(catalog.land_record(22793).declaration.AssetPath == "15/" and catalog.land_record(22793).excluded_content.is_empty()
+			and catalog.land_record(22803).declaration.AssetPath == "15/" and catalog.land_record(22803).excluded_content.has("siege"),"mixed physical root keeps ordinary and excluded logical declarations separate")
+		check(not field.configure_catalog(root,pin,22803) and not field.loaded and field.native_land.is_empty()
+			and field.problem.begins_with("제외"),"excluded logical Land refuses by scope before looking for its shared physical source")
 	check(not field.configure_catalog(root,pin,999999) and not field.loaded,"unknown logical Land has no numeric folder fallback")
 	check(not field.configure_catalog(root,"0".repeat(64),1) and not field.loaded,"incorrect manifest pin denies field replacement")
 	var unknown_root: String = argument("--unclassified-root=")
