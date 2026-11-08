@@ -52,7 +52,9 @@ def gz_jsonl(rows) -> bytes:
 
 
 def action_key(declaration, code):
-    return f"{declaration.source_file}:{declaration.source_line}:{declaration.sprite_id}:{code}"
+    # Runtime contract (reference_sp2_bank.gd): "<source_file>:B<block>:A<action_id>".
+    # The block is the declaration header's source line, unique within a file.
+    return f"{declaration.source_file}:B{declaration.source_line}:A{code}"
 
 
 def reference_raw(reference):

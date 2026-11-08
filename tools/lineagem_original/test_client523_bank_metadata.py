@@ -56,6 +56,12 @@ class GeneratedHandoffTest(unittest.TestCase):
                 self.assertTrue(bank._matching_action(action, source))
         self.assertEqual(original_spr.resolve_references(planned, 11)["shadow"][0]["targets"], [30])
 
+    def test_action_keys_follow_runtime_pattern(self):
+        import re
+        metadata = bank.load_metadata(self.tmp / "meta")
+        for key, action in metadata["actions"].items():
+            self.assertRegex(key, "^" + re.escape(action["source_file"]) + r":B[0-9]+:A" + str(action["action_id"]) + "$")
+
     def test_literal_dummy_declaration_is_registered(self):
         metadata = bank.load_metadata(self.tmp / "meta")
         self.assertIn(20, bank.metadata_dummy_declarations(metadata))
