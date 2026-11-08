@@ -45,6 +45,22 @@ python tools/lineagem_original/client523_source.py \
 
 Verified on 2026-11-08 against a complete 523 client (26 raw parts + patches 509–523): 679 files used, 0 missing; 74,656 SP2 members; 1,065 tables; of 6,479 table-referenced sprite IDs, 4,877 direct, 1,471 via alias, 131 unresolved. `original_spr.read` accepts all 30 extracted 523 `list_*.spr` files (29,491 declarations). The new tables ZIP has a different SHA-256 from the earlier private `d5192c3c…` ZIP, so runtime configuration that pins that SHA is not yet switched to this source.
 
+### Complete-client source bank
+
+`client523_bank_metadata.py` writes the bank builder's metadata handoff from that private source, using this repository's SPR reader so planning and compilation share one parser. Every SP2 member is a target; source-family roots are table-referenced sprite IDs plus every declared sprite owning SP2 members. The handoff declares its own `expected_counts`; handoffs without them keep the original fixed 54,384/45,990 checks.
+
+```sh
+python tools/lineagem_original/client523_bank_metadata.py --client-source PRIVATE_SOURCE_523 \
+  --output PRIVATE_META_523 --client-section-default-fps
+python tools/lineagem_original/build_reference_sp2_bank.py --metadata PRIVATE_META_523 \
+  --requests PRIVATE_META_523/seed-requests.jsonl --output PRIVATE_BANK_523 \
+  --original-root PRIVATE_SOURCE_523/sp2 --spr-root PRIVATE_SOURCE_523/spr --client-section-default-fps
+```
+
+`--client-section-default-fps` (opt-in, both steps) applies the client's own per-section default of 24fps to actions that have no code110. Static analysis of LineageM 1.10.22.0 shows the list parser resetting the rate to 24 at each `#` section (RVA 0x035FAF49) and code110 changing it for later frames (0x035FBC38). Actions keep `fps_provenance.kind = client_section_default`, and the bank contract records `timing = source_explicit_or_client_section_default`, which the runtime loader accepts only with the 24fps evidence fields. Without the flag nothing changes.
+
+Plan-only results for the complete 523 client (2026-11-08): 74,656 target SP2 members. Strict explicit timing plans 39,161; with the client default 66,317 (88.8%). Of the remainder, 4,546 members are emitted by no declared action and 3,793 are blocked by missing dependency members or by the existing literal-dummy exclusion. A real compilation of a 200-root sample (150 NPC and 50 polymorph sprites, random seed 7) from the extracted client SP2 compiled 4,821 of 5,109 requested actions (94.4%) with all 30 original SPR files verified; 42 failed the SP2 frame contract and 246 the source contract. That run used a validation-only Brotli stand-in because the pinned `brotli` package was not installable offline; use `requirements.txt` for real builds.
+
 ## Runtime policy and current limits
 
 The default policy is **unverified compatibility playback**, not proven M-client equivalence. Explicit SPR rates take precedence. Missing clocks use separately identified candidates; attr8 additive and attr128 alpha0.5 are declared host approximations. `--lineagem-source-strict` preserves unresolved clocks as static and disables unverified blending. See [COMPATIBILITY.md](COMPATIBILITY.md) for evidence, scope and controls.
