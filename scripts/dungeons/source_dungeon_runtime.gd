@@ -6,6 +6,8 @@ const PAYLOAD_BYTES := 6050456
 const DEFAULT_MANIFEST := "user://dungeon523/" + PAYLOAD_SHA256 + "/manifest.json"
 const MAX_MANIFEST_BYTES := 4096
 const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_projection.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "source_dungeon_candidate"
 var data: Dictionary = {}
 var last_error: String = ""
 var tower_by_id: Dictionary = {}
@@ -104,11 +106,19 @@ func _load_original_projection() -> Dictionary:
 	# UNVERIFIED: never substitute the source archive hash for a model hash.
 	# Only the actual canonical projection bytes matching the established pack
 	# fingerprint may enter the existing runtime and its existing services.
-	var projection = ORIGINAL_PROJECTION.new()
-	var candidate: Dictionary = projection.build()
+	# The projection is a pure function of the verified original and this
+	# code; a later start reuses this device's baked candidate (the byte
+	# identity check below still runs on it).
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, str(ORIGINAL_PROJECTION.SOURCE.identity().get("source_sha256","")))
+	var baked: Variant = BAKE.read(BAKE_NAME, bake_key) if not str(ORIGINAL_PROJECTION.SOURCE.identity().get("source_sha256","")).is_empty() else null
+	var candidate: Dictionary = baked if baked is Dictionary and not (baked as Dictionary).is_empty() else {}
 	if candidate.is_empty():
-		last_error = projection.problem
-		return {"ok":false,"reason":last_error}
+		var projection = ORIGINAL_PROJECTION.new()
+		candidate = projection.build()
+		if candidate.is_empty():
+			last_error = projection.problem
+			return {"ok":false,"reason":last_error}
+		BAKE.write(BAKE_NAME, bake_key, candidate)
 	var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(candidate)
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)

@@ -210,10 +210,10 @@ static func _archive_identity() -> Dictionary:
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const TEMPLATE_BAKE:="native_item_templates"
-const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v1"
+const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v2"
 
 static func _template_key() -> String:
-	return BAKE.key([SOURCE.SOURCE_SHA,str(SOURCE.SOURCE_BYTES),TEMPLATE_SCHEMA,BAKE.global_code_key()])
+	return BAKE.key([SOURCE.verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
 
 ## Baked native records by ItemClass ID (one var per record, offsets indexed).
 class TemplateStore extends RefCounted:
@@ -225,10 +225,28 @@ class TemplateStore extends RefCounted:
 	## Interning is for the ~30,000 records registration keeps; later reads
 	## (template fields of one item) are short-lived and are not pooled.
 	var interning: bool=true
+	## The full record (light part + heavy fields, in the original key order).
 	func record(id: String) -> Variant:
 		if not offsets.has(id):return null
 		file.seek(int(offsets[id]))
-		return _shared(file.get_var()) if interning else file.get_var()
+		var light: Variant=file.get_var()
+		var heavy: Variant=file.get_var()
+		if not light is Dictionary or not heavy is Dictionary or not heavy.get("keys") is Array or not heavy.get("fields") is Dictionary:return null
+		var result: Dictionary={}
+		for key: Variant in heavy.keys:
+			if (light as Dictionary).has(key):result[key]=light[key]
+			elif (heavy.fields as Dictionary).has(key):result[key]=heavy.fields[key]
+		return _shared(result) if interning else result
+	## The light catalog form (FIELDS.slim() of the record) without decoding
+	## the heavy fields.
+	func light(id: String) -> Variant:
+		if not offsets.has(id):return null
+		file.seek(int(offsets[id]))
+		var value: Variant=file.get_var()
+		if not value is Dictionary:return null
+		if (value as Dictionary).is_empty():return value # pending: no native record
+		value[FIELDS.MARK]=true
+		return _shared(value) if interning else value
 	func _shared(value: Variant) -> Variant:
 		if value is String:
 			var known: Variant=strings.get(value)
@@ -254,7 +272,12 @@ class TemplateWriter extends RefCounted:
 		writer.file=FileAccess.open(path+".part",FileAccess.WRITE)
 		return writer if writer.file!=null else null
 	func add(id: String,record: Dictionary) -> void:
-		ids.append(id);positions.append(file.get_position());file.store_var(record)
+		var light: Dictionary={};var fields: Dictionary={}
+		for key: Variant in record:
+			if key in FIELDS.HEAVY:fields[key]=record[key]
+			else:light[key]=record[key]
+		ids.append(id);positions.append(file.get_position())
+		file.store_var(light);file.store_var({"keys":record.keys(),"fields":fields})
 	func finish(value_key: String) -> void:
 		var index_position: int=file.get_position()
 		file.store_var({"schema":TEMPLATE_SCHEMA,"ids":ids,"offsets":positions})
@@ -316,6 +339,8 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# device and read back by ID on later starts instead of describing every
 	# item again. Any code/data change or damaged file rebuilds the bake.
 	var templates: TemplateStore=_open_templates()
+	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
+	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
 	var placed: Array[int]=[]
 	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start()
 	# Rows are streamed from the packed reader, not materialized all at once.
@@ -324,7 +349,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
 		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
 		var current: Dictionary={}
-		var baked: Variant=templates.record(id) if templates!=null else null
+		var baked: Variant=(templates.light(id) if lazy else templates.record(id)) if templates!=null else null
 		if baked is Dictionary:
 			current=baked
 			if current.get("source_definition_archive")==_archive_identity():current["source_definition_archive"]=_archive_identity()
@@ -353,13 +378,13 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# The catalog keeps the light identity of each record just registered; its
 	# heavy fields are read from the baked template when used (FIELDS.full()).
 	var store: TemplateStore=templates if templates!=null else _open_templates()
-	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
 	if store!=null:
 		store.interning=false
 		store.strings.clear()
-	if store!=null and OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1":
+	if store!=null and lazy:
 		FIELDS.bind(store)
-		for index: int in placed:records[index]=FIELDS.slim(records[index])
+		for index: int in placed:
+			if not FIELDS.lazy(records[index]):records[index]=FIELDS.slim(records[index])
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()

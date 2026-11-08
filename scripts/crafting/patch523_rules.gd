@@ -57,6 +57,7 @@ func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: Packed
 ## load_original() with the registered catalog given as items + contract; the
 ## same bytes are identified without building the whole binding text.
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const NATIVE_PROJECTION = preload("res://scripts/loot/current523_native_item_projection.gd")
 const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
 const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
@@ -73,17 +74,33 @@ var _records: Object = null
 const RECORDS_NAME := "equipment_rules_catalog_records"
 const RECORDS_MARK := "twilight_catalog_record_offloaded"
 
+## Identifies the registered catalog for the bake key without expanding every
+## record: light records are hashed as stored and their template fields are
+## identified by the item template bake key (full() = light + template).
+static func _registered_catalog_key(items: Array, contract: Dictionary) -> String:
+	var template_key: String = NATIVE_PROJECTION._template_key()
+	if template_key.is_empty(): return ""
+	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
+	hash.update(("templates:" + template_key + "\n").to_utf8_buffer())
+	for item: Variant in items: hash.update(var_to_bytes(item))
+	hash.update(var_to_bytes(contract))
+	return hash.finish().hex_encode()
+
 func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary) -> bool:
 	if not data.is_empty(): return true
 	loaded_from_bake = false
 	# The model is a pure function of these inputs; reuse this device's
 	# compile of the same inputs (see current523_bake_cache.gd).
 	var catalog_hash := HashingContext.new(); catalog_hash.start(HashingContext.HASH_SHA256); catalog_hash.update(catalog_bytes)
-	_bake_key = BAKE.key([catalog_hash.finish().hex_encode(),ORIGINAL_PROJECTION.binding_sha256(items,contract),
+	_bake_key = BAKE.key([catalog_hash.finish().hex_encode(),_registered_catalog_key(items,contract),
 		str(SOURCE_DEFINITIONS.identity().get("source_sha256","")),BAKE.code_key(BAKE_CODE)])
 	_model_key = _bake_key
 	var baked: Variant = BAKE.read(BAKE_NAME,_bake_key)
-	if baked is Dictionary and baked.get("model") is Dictionary and baked.get("sha256") is String:
+	var usable: bool = baked is Dictionary and baked.get("model") is Dictionary and baked.get("sha256") is String and baked.get("offloaded") == true
+	if usable and OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": usable = false
+	if usable and BAKE.open_records(RECORDS_NAME,_bake_key) == null: usable = false
+	if usable and (baked.model.get("equipment_runtime",{}) as Dictionary).get(RUNTIME_MARK) == true and BAKE.open_records(RUNTIME_NAME,_bake_key) == null: usable = false
+	if usable:
 		if _accept(baked.model,baked.sha256):
 			loaded_from_bake = true
 			return true
@@ -112,9 +129,15 @@ func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
 		return false
 	var sha: String = hash.finish().hex_encode()
 	# Baked before _accept() so a later start receives the identical input.
-	if not _bake_key.is_empty(): BAKE.write(BAKE_NAME,_bake_key,{"model":parsed,"sha256":sha})
+	var bake_key: String = _bake_key
 	_bake_key = ""
-	return _accept(parsed,sha)
+	if not _accept(parsed,sha): return false
+	# Baked after acceptance in its offloaded form (catalog identities and
+	# runtime live in their record files), so a later start decodes only the
+	# light model. Without both record files the bake is never used.
+	if not bake_key.is_empty() and _records != null and (_runtime != null or not has_any_equipment_runtime()):
+		BAKE.write(BAKE_NAME,bake_key,{"model":data,"sha256":sha,"offloaded":true})
+	return true
 
 func _load_payload(text: String, expected_sha256: String) -> bool:
 	if text.to_utf8_buffer().size() > MAX_BYTES:
@@ -348,6 +371,13 @@ func _offload_catalog_records() -> void:
 	# Per-item equipment runtime (enchant/extra option tables) likewise.
 	var runtime: Variant = data.get("equipment_runtime")
 	if not runtime is Dictionary or (runtime as Dictionary).is_empty(): return
+	if (runtime as Dictionary).get(RUNTIME_MARK) == true:
+		var existing: Object = BAKE.open_records(RUNTIME_NAME,key)
+		if existing == null: return
+		_runtime_ids.clear()
+		for id: Variant in existing.offsets: _runtime_ids[str(id)] = true
+		_runtime = existing
+		return
 	var stored: Object = BAKE.open_records(RUNTIME_NAME,key)
 	if stored == null:
 		var ids := PackedStringArray()

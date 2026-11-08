@@ -6,6 +6,8 @@ signal changed
 const SCHEMA := "twilight.monsterbook523.v1"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "monsterbook523_payload"
 const MAX_PACK_BYTES := 16 * 1024 * 1024
 const TABLES := ["MonsterBook", "MonsterBookLevel", "MonsterBookLevelBonus", "MonsterBookLevelReward", "NpcClassForNpcGroup", "Bonus", "BonusType", "Reward", "RewardType", "Currency", "DateTimes_Korean", "Unit", "ItemClass", "DescData_Korean"]
 const OPTIONAL_TABLES := ["ItemCategory", "Grade", "ItemBonus", "UIUnit", "BonusApplicationType", "SpecialResistanceType", "SelectReward", "SelectRewardEntity", "MarketPurchase_Korean", "MarketPurchaseProduct", "MarketProduct", "MarketProductAdditional", "MarketBonusForPurchase", "GotChaEntityView", "BuffCard", "IntangibleItemClass"]
@@ -106,6 +108,12 @@ func load_original() -> bool:
 	var identity: Dictionary = Definitions.identity()
 	if identity.is_empty() or identity.get("source_sha256") != SOURCE_SHA:
 		return _fail("original_source_unavailable:"+Definitions.problem())
+	# The projection is a pure function of the verified original and this code:
+	# a later start loads the same payload bytes from this device's bake.
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, Definitions.verified_key())
+	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
+	if not baked.is_empty() and baked.identity.get("archive") == identity:
+		return _load_payload(baked.bytes, baked.sha256, baked.identity)
 	# Exact full projection from tools/monsterbook523/build_pack.py. This builds
 	# the existing model in memory; it does not reinterpret source authority.
 	var cache: Dictionary = {}
@@ -229,7 +237,9 @@ func load_original() -> bool:
 	digest.start(HashingContext.HASH_SHA256)
 	digest.update(data)
 	var actual: String = digest.finish().hex_encode()
-	return _load_payload(data,actual,{"kind":"twilight.monsterbook523.original-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":data.size(),"projection":"tools/monsterbook523/build_pack.py"})
+	var input_identity: Dictionary = {"kind":"twilight.monsterbook523.original-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":data.size(),"projection":"tools/monsterbook523/build_pack.py"}
+	BAKE.write(BAKE_NAME, bake_key, {"bytes":data,"sha256":actual,"identity":input_identity})
+	return _load_payload(data,actual,input_identity)
 
 func _load_payload(data: PackedByteArray, expected_sha: String, input_identity: Dictionary) -> bool:
 	var parser := JSON.new()

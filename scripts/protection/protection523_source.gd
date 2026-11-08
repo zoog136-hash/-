@@ -218,6 +218,9 @@ static func install(path: String) -> Dictionary:
 	result["runtime_sha256"] = digest
 	return result
 
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "protection523_original"
+
 static func restore() -> Dictionary:
 	var selected := FileAccess.open(POINTER,FileAccess.READ)
 	if selected == null:
@@ -229,8 +232,15 @@ static func restore() -> Dictionary:
 		if parent != null and parent.is_link(POINTER.get_file()): return denied("가호 설치 선택 파일 접근 실패")
 		var source_path: String = CommonSource.archive_path()
 		if source_path.is_empty(): return denied("원본523 ZIP을 설치해 주세요")
+		# The extraction is a pure function of the verified original and this
+		# code; a later start reuses this device's baked result.
+		var verified: bool = CommonSource.identity().get("source_sha256") == SOURCE_SHA
+		var bake_key: String = BAKE.projection_key(BAKE_NAME, CommonSource.verified_key()) if verified else ""
+		var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
+		if baked is Dictionary and bool((baked as Dictionary).get("ok", false)): return baked
 		var original := extract(source_path)
 		original.erase("capsule")
+		if verified and bool(original.get("ok", false)): BAKE.write(BAKE_NAME, bake_key, original)
 		return original
 	selected.close()
 	var parser := JSON.new()

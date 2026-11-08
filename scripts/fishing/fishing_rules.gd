@@ -53,9 +53,21 @@ func load_pack(path: String) -> bool:
 		"model_payload_sha256":model_input_identity.get("model_payload_sha256",""),"archive":{}}
 	return true
 
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "fishing523_input"
+
 func load_original() -> bool:
-	var source = ORIGINAL.new()
-	var data: Dictionary = source.build()
+	# The built input is a pure function of the verified original and this
+	# code; a later start reuses this device's baked build.
+	var archive_sha: String = str(ORIGINAL.SOURCE.identity().get("source_sha256",""))
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, archive_sha) if not archive_sha.is_empty() else ""
+	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
+	var data: Dictionary = baked if baked is Dictionary and not (baked as Dictionary).is_empty() else {}
+	var source = null
+	if data.is_empty():
+		source = ORIGINAL.new()
+		data = source.build()
+		if not data.is_empty(): BAKE.write(BAKE_NAME, bake_key, data)
 	if data.is_empty():
 		failure = "보유 원본523 낚시 입력을 연결할 수 없습니다: "+source.problem
 		input_problem = source.problem

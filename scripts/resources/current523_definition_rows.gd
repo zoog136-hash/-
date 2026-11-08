@@ -33,6 +33,8 @@ static func reset() -> void:
 	if _archive != null: _archive.close()
 	_archive = null
 	_archive_path = ""
+	_verified_sha = ""
+	_verified_bytes = -1
 	_tables.clear()
 	_relations.clear()
 	_integer_fields.clear()
@@ -85,7 +87,8 @@ static func _open() -> bool:
 		return false
 	var size: int = file.get_length()
 	file.close()
-	if size != SOURCE_BYTES or FileAccess.get_sha256(path) != SOURCE_SHA:
+	var measured_sha: String = FileAccess.get_sha256(path)
+	if size != SOURCE_BYTES or measured_sha != SOURCE_SHA:
 		_problem = "원본523 정의 ZIP 정체가 다릅니다. 참조 관계를 추정하지 않습니다."
 		return false
 	var archive := ZIPReader.new()
@@ -94,12 +97,24 @@ static func _open() -> bool:
 		return false
 	_archive = archive
 	_archive_path = path
+	# Bakes key on what was actually measured here, not on the pin constant, so
+	# a later change of how the original is pinned (e.g. receipts) can never
+	# reuse a bake made from a different archive.
+	_verified_sha = measured_sha
+	_verified_bytes = size
 	_problem = ""
 	return true
 
 static func identity() -> Dictionary:
 	if not _open(): return {}
-	return {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":SOURCE_SHA,"source_bytes":SOURCE_BYTES}
+	return {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":_verified_sha,"source_bytes":_verified_bytes}
+
+## Bake key part for the archive verified in _open(); "" when none is open.
+static var _verified_sha: String = ""
+static var _verified_bytes: int = -1
+static func verified_key() -> String:
+	if not _open() or _verified_sha.is_empty() or _verified_bytes < 0: return ""
+	return _verified_sha + ":" + str(_verified_bytes)
 
 static func archive_path() -> String:
 	# Reuse existing whole-archive parsers without copying/installing another
@@ -274,8 +289,7 @@ static var _bake_code: String = ""
 
 static func _bake_key(table: String) -> String:
 	if _bake_code.is_empty(): _bake_code = BAKE.code_key(BAKE_CODE)
-	# The archive was verified against SOURCE_SHA/SOURCE_BYTES in _open().
-	return BAKE.key([SOURCE_SHA, str(SOURCE_BYTES), table, _bake_code])
+	return BAKE.key([verified_key(), table, _bake_code])
 
 static func _valid_store(value: Variant) -> bool:
 	if not value is Dictionary or not _integer(value.get("count")) or int(value.count) < 0: return false
