@@ -1,0 +1,28 @@
+name: Client523 source adapter tests
+
+on:
+  pull_request:
+    paths:
+      - 'tools/lineagem_original/client523_source.py'
+      - 'tools/lineagem_original/test_client523_source.py'
+      - '.github/workflows/client523-source-tool.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Synthetic fixture tests (no original files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/lineagem_original
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run tests
+        working-directory: tools/lineagem_original
+        run: python -m unittest test_client523_source -v

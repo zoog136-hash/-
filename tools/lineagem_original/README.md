@@ -25,6 +25,26 @@ python tools/lineagem_original/build_playback_policy.py --inputs INPUTS --pack P
 
 Copy the authorized UI files into `PRIVATE_PACK/ui` with original relative paths. Install the complete pack into the game's user-data location, or use `--lineagem-original-preview=/absolute/path/manifest.json` for an isolated local inspection. The builders support targeted sprite refreshes so new inputs do not require converting the entire pack again.
 
+## Complete current523 client as the source (new)
+
+`client523_source.py` turns the user's own complete client into the inputs above, selecting every file by exact SHA-1 from the 523 `files_info.json`. The base client ZIP can be given as one file or as raw byte-split parts in order; per-version patch ZIPs supply the files changed after the base. Outputs go to a new private directory outside the repository:
+
+```sh
+python tools/lineagem_original/client523_source.py \
+  --files-info files_info.json.523 \
+  --client-zip part1 --client-zip part2 ... \
+  --patch-zip patch509.zip --patch-zip patch510.zip ... \
+  --content-password-b64-file PRIVATE_KEY_FILE \
+  --output PRIVATE_SOURCE_523
+```
+
+* `sp2/` is the exact `Sprite/*.sp2` namespace (`--original-root`); `spr/` holds `list_*.spr` (`--spr-root`/`--spr-dir`); `tables/current523_content_tables.zip` is a deterministic ZIP of the decoded `content/*.json`.
+* `client523_receipt.json` records the SHA-1 and origin (base or patch) of each used file and lists anything missing; a file with no exact candidate is never substituted. The content password is never written anywhere.
+* `client523_connection_report.json` resolves table sprite references directly or through `list_*.spr` sprite aliases. This is reference resolution only, not proof of playback or gameplay use.
+* `--no-extract-sp2` produces the receipt and report without writing ~7 GB of SP2 files.
+
+Verified on 2026-11-08 against a complete 523 client (26 raw parts + patches 509–523): 679 files used, 0 missing; 74,656 SP2 members; 1,065 tables; of 6,479 table-referenced sprite IDs, 4,877 direct, 1,471 via alias, 131 unresolved. `original_spr.read` accepts all 30 extracted 523 `list_*.spr` files (29,491 declarations). The new tables ZIP has a different SHA-256 from the earlier private `d5192c3c…` ZIP, so runtime configuration that pins that SHA is not yet switched to this source.
+
 ## Runtime policy and current limits
 
 The default policy is **unverified compatibility playback**, not proven M-client equivalence. Explicit SPR rates take precedence. Missing clocks use separately identified candidates; attr8 additive and attr128 alpha0.5 are declared host approximations. `--lineagem-source-strict` preserves unresolved clocks as static and disables unverified blending. See [COMPATIBILITY.md](COMPATIBILITY.md) for evidence, scope and controls.
