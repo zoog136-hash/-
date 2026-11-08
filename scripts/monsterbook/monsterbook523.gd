@@ -110,7 +110,7 @@ func load_original() -> bool:
 		return _fail("original_source_unavailable:"+Definitions.problem())
 	# The projection is a pure function of the verified original and this code:
 	# a later start loads the same payload bytes from this device's bake.
-	var bake_key: String = BAKE.projection_key(BAKE_NAME, SOURCE_SHA)
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, Definitions.verified_key())
 	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
 	if not baked.is_empty() and baked.identity.get("archive") == identity:
 		return _load_payload(baked.bytes, baked.sha256, baked.identity)

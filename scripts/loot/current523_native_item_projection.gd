@@ -213,7 +213,7 @@ const TEMPLATE_BAKE:="native_item_templates"
 const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v2"
 
 static func _template_key() -> String:
-	return BAKE.key([SOURCE.SOURCE_SHA,str(SOURCE.SOURCE_BYTES),TEMPLATE_SCHEMA,BAKE.global_code_key()])
+	return BAKE.key([SOURCE.verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
 
 ## Baked native records by ItemClass ID (one var per record, offsets indexed).
 class TemplateStore extends RefCounted:
