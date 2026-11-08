@@ -44,6 +44,21 @@ static func _collect(directory: String, files: PackedStringArray) -> void:
 	for name: String in dir.get_directories():
 		if not name.begins_with("."): _collect(directory.path_join(name), files)
 
+## Key for a projection derived only from the verified original and this
+## game's code/data (every file under res://scripts and res://data).
+static func projection_key(name: String, source_sha256: String) -> String:
+	return key([name, source_sha256, global_code_key()])
+
+## A baked projection payload {bytes, sha256, identity}; {} when absent/stale.
+static func read_payload(name: String, value_key: String) -> Dictionary:
+	var value: Variant = read(name, value_key)
+	if not value is Dictionary or not value.get("bytes") is PackedByteArray or not value.get("sha256") is String or not value.get("identity") is Dictionary: return {}
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(value.bytes)
+	if hash.finish().hex_encode() != value.sha256: return {}
+	return value
+
 static func key(parts: Array) -> String:
 	for part: Variant in parts:
 		if not part is String or (part as String).is_empty(): return ""
