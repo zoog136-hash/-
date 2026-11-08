@@ -19,6 +19,7 @@ from dataclasses import replace
 import gzip
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import sys
@@ -739,6 +740,17 @@ def write_file(output, name, body):
     target.chmod(0o600)
 
 
+def link_file(output, name, source, body):
+    """Hard-link a verified original instead of copying it (same filesystem only)."""
+    target = output / name
+    target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    require(source.read_bytes() == body, f"original changed before linking: {name}")
+    try:
+        os.link(source, target)
+    except OSError as error:
+        raise ValueError(f"--link-raw needs the output on the same filesystem as --original-root: {error}") from error
+
+
 def write_records(output, name, rows):
     data = b"".join(json_bytes(row) for row in rows)
     write_file(output, name, gzip.compress(data, mtime=0) if name.endswith(".gz") else data)
@@ -817,7 +829,10 @@ def build(args):
                     if member in written_members:
                         require(written_members[member]["sha256"] == raw_record["proof"]["sha256"], "original SP2 changed during build")
                         continue
-                    write_file(output, "raw/" + member, raw_record["body"])
+                    if getattr(args, "link_raw", False):
+                        link_file(output, "raw/" + member, args.original_root / member, raw_record["body"])
+                    else:
+                        write_file(output, "raw/" + member, raw_record["body"])
                     written_members[member] = {**raw_record["proof"], "path": "raw/" + member}
                 write_file(output, name, body)
                 compiled.setdefault("sprite:" + str(request["actor_id"]), {})[str(request["action_id"])] = {"path": name, "sha256": sha(body)}
@@ -915,6 +930,9 @@ def main(argv=None):
     parser.add_argument("--dependency-index", type=Path)
     parser.add_argument("--allow-host-timing", action="store_true",
                         help="Keep absent source FPS null and permit the existing explicitly labelled host timing policy.")
+    parser.add_argument("--link-raw", action="store_true",
+                        help="Hard-link verified original SP2 files into raw/ instead of copying them "
+                             "(output must be on the same filesystem; the original files must not be edited afterwards).")
     parser.add_argument("--client-section-default-fps", action="store_true",
                         help="Use the client's evidenced per-section default rate (24) for actions without code110; "
                              "the metadata handoff must have been generated with the same policy.")

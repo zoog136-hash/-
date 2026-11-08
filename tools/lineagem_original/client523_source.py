@@ -268,7 +268,19 @@ def connection_report(inventory_files, tables, list_files):
     }
 
 
-def write_outputs(source, out: Path, password, extract_sp2=True, sprite_filter=None):
+def compare_tables_zip(path: Path, tables: dict) -> dict:
+    """Compare an existing runtime tables ZIP's content/*.json with the decoded client tables."""
+    with zipfile.ZipFile(path) as archive:
+        theirs = {n: archive.read(n) for n in archive.namelist() if re.match(r'^content/[A-Za-z0-9_]+\.json$', n)}
+    same = sorted(n for n in theirs if tables.get(n) == theirs[n])
+    differ = sorted(n for n in theirs if n in tables and tables[n] != theirs[n])
+    return {'path': str(path), 'sha256': sha256_file(path), 'tables_in_zip': len(theirs),
+            'byte_identical': len(same), 'different': differ,
+            'only_in_zip': sorted(set(theirs) - set(tables)), 'only_in_client': sorted(set(tables) - set(theirs)),
+            'equivalent': not differ and set(theirs) == set(tables)}
+
+
+def write_outputs(source, out: Path, password, extract_sp2=True, sprite_filter=None, verify_tables_zip=None):
     if out.exists() and any(out.iterdir()):
         raise SourceError(f'output directory must be new or empty: {out}')
     out.mkdir(parents=True, exist_ok=True)
@@ -288,6 +300,8 @@ def write_outputs(source, out: Path, password, extract_sp2=True, sprite_filter=N
         (out / 'spr' / PurePosixPath(path).name).write_bytes(data)
     # content tables
     tables = content_tables(source, password, receipt)
+    if verify_tables_zip is not None:
+        receipt['runtime_tables_zip_comparison'] = compare_tables_zip(verify_tables_zip, tables)
     (out / 'tables').mkdir()
     zip_bytes = deterministic_zip(tables)
     tables_zip = out / 'tables' / 'current523_content_tables.zip'
@@ -345,6 +359,8 @@ def main(argv=None):
     parser.add_argument('--content-password-b64-file', type=Path)
     parser.add_argument('--output', type=Path, required=True,
                         help='new private directory outside the repository')
+    parser.add_argument('--verify-tables-zip', type=Path,
+                        help='existing runtime tables ZIP (e.g. the pinned d5192c3c ZIP) to compare table-by-table')
     parser.add_argument('--no-extract-sp2', action='store_true',
                         help='inventory and report only; do not write SP2 files')
     parser.add_argument('--sprite-id', type=int, action='append',
@@ -363,7 +379,8 @@ def main(argv=None):
     source = ClientSource(info, args.client_zip, args.patch_zip, args.client_dir)
     try:
         receipt, report = write_outputs(source, out, password, not args.no_extract_sp2,
-                                        set(args.sprite_id) if args.sprite_id else None)
+                                        set(args.sprite_id) if args.sprite_id else None,
+                                        args.verify_tables_zip)
     finally:
         source.close()
     refs = report['table_references']
@@ -371,6 +388,7 @@ def main(argv=None):
                       'sp2_members': receipt['outputs']['sp2']['members'],
                       'tables': receipt['outputs']['tables_zip']['tables'],
                       'tables_zip_sha256': receipt['outputs']['tables_zip']['sha256'],
+                      'runtime_tables_equivalent': receipt.get('runtime_tables_zip_comparison', {}).get('equivalent'),
                       'referenced_ids': refs['referenced_ids'], 'direct': refs['direct'],
                       'via_alias': refs['via_alias'], 'unresolved': refs['unresolved']},
                      ensure_ascii=False))
