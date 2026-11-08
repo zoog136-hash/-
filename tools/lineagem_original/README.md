@@ -59,7 +59,7 @@ python tools/lineagem_original/build_reference_sp2_bank.py --metadata PRIVATE_ME
 
 `--client-section-default-fps` (opt-in, both steps) applies the client's own per-section default of 24fps to actions that have no code110. Static analysis of LineageM 1.10.22.0 shows the list parser resetting the rate to 24 at each `#` section (RVA 0x035FAF49) and code110 changing it for later frames (0x035FBC38). Actions keep `fps_provenance.kind = client_section_default`, and the bank contract records `timing = source_explicit_or_client_section_default`, which the runtime loader accepts only with the 24fps evidence fields. Without the flag nothing changes.
 
-Plan-only results for the complete 523 client (2026-11-08): 74,656 target SP2 members. Strict explicit timing plans 39,161; with the client default 66,317 (88.8%). Of the remainder, 4,546 members are emitted by no declared action and 3,793 are blocked by missing dependency members or by the existing literal-dummy exclusion.
+Plan-only results for the complete 523 client (2026-11-08): 74,656 target SP2 members. Strict explicit timing plans 39,161; with the client default 66,317 (88.8%). Of the remainder, 4,546 members are emitted by no declared action and 3,793 are blocked by missing dependency members or by the existing literal-dummy exclusion. A real compilation of a 200-root sample (150 NPC and 50 polymorph sprites, random seed 7) from the extracted client SP2 compiled 4,821 of 5,109 requested actions (94.4%) with all 30 original SPR files verified; 42 failed the SP2 frame contract and 246 the source contract. That run used a validation-only Brotli stand-in because the pinned `brotli` package was not installable offline; use `requirements.txt` for real builds.
 
 ## Runtime policy and current limits
 
