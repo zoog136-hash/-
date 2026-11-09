@@ -1,6 +1,8 @@
 extends VBoxContainer
 ## The source catalog is a separate view; legacy purchases keep their policy.
 signal back_requested
+const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
+const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
@@ -143,7 +145,10 @@ func _build_entries() -> void:
 		var title: String = str(row.get("Name", ""))
 		if mode.selected == 0:
 			if not all_definitions.button_pressed and not displayed.has(id): continue
+			# One row per converted cash offer; other store copies and diamond top-ups stay hidden.
+			if not all_definitions.button_pressed and CashMarket.hidden(id, catalog.record("MarketPayment_Korean", int(row.get("MarketPaymentID", 0)))): continue
 			title = catalog.label(int(row.get("DescID", 0)))
+			if CashMarket.listed(id): title += " · 다이아 %d" % int(CashMarket.entry(id).diamonds)
 		elif mode.selected == 1:
 			var seller: String=runtime.npc_label(int(row.MerchantsID)) if runtime!=null else ""
 			title = _item_name(int(row.ItemClassID)) + " · " + (seller if not seller.is_empty() else "NPC %d" % int(row.MerchantsID))
@@ -456,8 +461,10 @@ func _market_detail(id: int) -> Array[String]:
 	if payment.is_empty():
 		result.append("결제 정보 미확인")
 	else:
-		if int(payment.UnitID) == 37:
-			result.append("외부 결제 상품 · 실제 금액은 스토어 확인 필요")
+		if int(payment.UnitID) == 37 and CashMarket.listed(id):
+			result.append(CashMarket.describe(id))
+		elif int(payment.UnitID) == 37:
+			result.append("외부 결제 상품 · TWILIGHT 다이아 환산가 미등록")
 		elif int(payment.MarketPaymentTypeID) == 4:
 			result.append("결제 금액: %d · %s" % [int(payment.Amount), _value_name(int(payment.UnitID), int(payment.ClassID))])
 		else:
@@ -467,7 +474,9 @@ func _market_detail(id: int) -> Array[String]:
 	for link: Dictionary in offer.products:
 		var product: Dictionary = link.product.definition
 		if product.is_empty(): result.append("지급 대상 연결 누락"); continue
+		if CashMarket.strip(id, product): continue
 		result.append("%s ×%d" % [_value_name(int(product.UnitID), int(product.ClassID)), int(product.Amount)])
+		if int(product.UnitID) == 4 and CashPackages.is_package(int(product.ClassID)): result.append(CashPackages._summary(int(product.ClassID)))
 		if not link.product.additional.is_empty(): result.append("클래스체인지 대상 조건 %d개 · 추가 아이템 지급과 구분" % link.product.additional.size())
 	if not offer.bonuses.is_empty(): result.append("별도 구매 보너스: %d개 정의 · 지급 조건 확인 필요" % offer.bonuses.size())
 	result.append("\n기간: %s ~ %s\n원본 판매 플래그: %s" % [_date_text(offer.effective_from), _date_text(offer.effective_to), "켜짐" if offer.purchase.OnSale else "꺼짐"])

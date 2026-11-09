@@ -64,7 +64,7 @@ static func records() -> Array[Dictionary]:
 		{"name":"순간이동 주문서", "grade":"일반", "type":"이동주문서", "slot":"consumable",
 		 "kind":"teleport", "desc":"현재 맵 안의 도달 가능한 무작위 위치로 순간이동"},
 		{"name":"축복 부여 주문서", "grade":"희귀", "type":"강화주문서", "slot":"consumable",
-		 "kind":"equipment_bless", "desc":"무기·방어구에 축복 옵션 부여 · 실패 시 장비 유지, 주문서 소모 · 성공률은 TWILIGHT 임시값"},
+		 "kind":"equipment_bless", "desc":"무기·방어구에 축복 옵션 부여 · 실패 시 장비 유지, 주문서 소모 · 성공률은 원본 523 축복 성공률(원본 미설치 시 TWILIGHT 임시값)"},
 		{"name":"속성 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
 		 "kind":"element", "element":"", "desc":"일반 무기 최대 3단계 · 고강화 무기 추가 단계 · 실패 시 무기 유지 · 확률 일부 임시값"},
 		{"name":"화령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",

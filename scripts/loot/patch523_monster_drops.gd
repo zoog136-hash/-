@@ -935,7 +935,11 @@ static func item_details(item: Dictionary) -> String:
 	for row: Dictionary in full_definition.get("item_bonus",[]):
 		if row.bonus_type.Name in ["UIShowFilter","NoAnnounce"]: presentation_flags.append(str(row.bonus_type.Name)+"="+str(int(row.bonus.Value)))
 	if not presentation_flags.is_empty(): lines.append("원본 표시 플래그 %s · TWILIGHT 추정 설정을 켜면 이 무조건 표시·공지 플래그만으로 사용을 차단하지 않음" % ", ".join(presentation_flags))
-	if item.has("source_delete_time_raw"): lines.append("원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9) · 만료 시 소유 보존" % str(int(item.source_delete_time_raw)))
+	if item.has("source_delete_time_raw"):
+		var expiry: String = "원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9)" % str(int(item.source_delete_time_raw))
+		expiry += " · 지난 기한은 오프라인 순환으로 사용 가능" if rotate_ended_dates else " · 만료 시 소유 보존"
+		if item.get("source_cannot_extend_delete_time",false): expiry += " · 원본 기간 연장 불가"
+		lines.append(expiry)
 	if not spec.is_empty():
 		if spec.get("activation_status") != "unrestricted": lines.append("원본 사용 조건·효과 미지원 · 사용 시 소비하지 않음")
 		else:

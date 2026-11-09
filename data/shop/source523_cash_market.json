@@ -1,0 +1,589 @@
+{
+ "schema": "twilight.source523.cash-market.v1",
+ "enabled": true,
+ "origin": "TWILIGHT 자체 환산 · 사용자 지정 2000다이아=55,000원 · 원작 현금 결제를 게임 다이아로 대체 (2026-11-09)",
+ "rate": {
+  "diamonds": 2000,
+  "krw": 55000,
+  "rounding": "ceil"
+ },
+ "payment": {
+  "unit_id": 201,
+  "class_id": 4,
+  "name": "다이아"
+ },
+ "strip_products": [
+  {
+   "unit_id": 34,
+   "class_id": 2,
+   "name": "다이아",
+   "reason": "사용자 결정: 현금 상품 구성의 다이아는 지급하지 않음"
+  }
+ ],
+ "excluded_names": [
+  "120 다이아",
+  "400 다이아",
+  "1200 다이아",
+  "2000 다이아",
+  "4000 다이아"
+ ],
+ "excluded_reason": "다이아 충전 상품은 다이아 맞교환이 되므로 사용자 결정으로 제외",
+ "entries": {
+  "98338": {
+   "name": "게렝의 지원 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g124",
+   "duplicate_store_purchase_ids": [
+    98348,
+    98328,
+    98358,
+    98368,
+    105448
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6ad7c1386cfe4756db5b8e6b",
+    "title": "[안내] 10월 21일(수) 게렝의 지원 상자 상품 안내",
+    "posted": "2026-10-20",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "99904": {
+   "name": "군터의 지원 상자",
+   "krw": 6500,
+   "diamonds": 237,
+   "store_key": "com.ncsoft.lineagem19_g129",
+   "duplicate_store_purchase_ids": [
+    99914,
+    99894,
+    99924,
+    99934,
+    104778
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6851c238d0edd27080a212f4",
+    "title": "[안내] 6월 18일(수) 군터의 지원 상자 상품 안내",
+    "posted": "2025-06-17",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "63243": {
+   "name": "나르엔의 찬란한 보급 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g68",
+   "duplicate_store_purchase_ids": [
+    63233,
+    63213,
+    63223,
+    63253,
+    104948
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=659d9eb86f4f90225d2d9c59",
+    "title": "[안내] 1월 10일(수) 나르엔의 찬란한 보급 상자 상품 안내 (수정)",
+    "posted": "2024-01-09",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "59343": {
+   "name": "라라의 진귀한 보급 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g56",
+   "duplicate_store_purchase_ids": [
+    59333,
+    59353,
+    59363,
+    59373,
+    104838
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d1369",
+    "title": "[안내] 10월 28일(수) 라라의 진귀한 보급 상자 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "105648": {
+   "name": "보랏빛 고속 성장 지원 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "801024119",
+   "duplicate_store_purchase_ids": [],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d136d",
+    "title": "[안내] 10월 28일(수) 보랏빛 고속 성장 지원 상자 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "105618": {
+   "name": "보랏빛 성장 재화 지원 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "721106312",
+   "duplicate_store_purchase_ids": [],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d136f",
+    "title": "[안내] 10월 28일(수) 보랏빛 성장 재화 지원 상자 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "105628": {
+   "name": "보랏빛 코인 선택 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "721106313",
+   "duplicate_store_purchase_ids": [],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d1371",
+    "title": "[안내] 10월 28일(수) 보랏빛 코인 선택 상자 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "105638": {
+   "name": "보랏빛 티켓 꾸러미",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "721106314",
+   "duplicate_store_purchase_ids": [],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d1373",
+    "title": "[안내] 10월 28일(수) 보랏빛 티켓 꾸러미 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "54194": {
+   "name": "빛나는 드래곤의 다이아몬드 상자 패키지",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "com.ncsoft.lineagem19_g29",
+   "duplicate_store_purchase_ids": [
+    54184,
+    54174,
+    56453,
+    57624,
+    104738
+   ],
+   "origin": {
+    "kind": "apple_app_store_iap_list",
+    "url": "https://apps.apple.com/kr/app/%EB%A6%AC%EB%8B%88%EC%A7%80m/id1474589366",
+    "title": "리니지M App Store 앱 내 구입",
+    "posted": "2026-11-09",
+    "note": "App Store 표시 가격"
+   }
+  },
+  "110913": {
+   "name": "빛나는 보호 패키지",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g139",
+   "duplicate_store_purchase_ids": [
+    110923,
+    110903,
+    110933,
+    110943,
+    110953
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a568e38cd660b7fb4e884c5",
+    "title": "[안내] 7월 15일(수) 빛나는 보호 패키지 상품 안내",
+    "posted": "2026-07-14",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "110853": {
+   "name": "빛나는 성장 패키지",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g140",
+   "duplicate_store_purchase_ids": [
+    110863,
+    110843,
+    110873,
+    110883,
+    110893
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a568e38cd660b7fb4e884c7",
+    "title": "[안내] 7월 15일(수) 빛나는 성장 패키지 상품 안내",
+    "posted": "2026-07-14",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "60423": {
+   "name": "빛나는 컬렉션 조각 상자 패키지",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "com.ncsoft.lineagem19_g61",
+   "duplicate_store_purchase_ids": [
+    60413,
+    60403,
+    60433,
+    60443,
+    104748
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=659d9eb86f4f90225d2d9c5c",
+    "title": "[안내] 1월 10일(수) 빛나는 컬렉션 조각 상자 패키지 상품 안내 (그림리퍼, 발록 서버 추가)",
+    "posted": "2024-01-09",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "85068": {
+   "name": "빛나는 코인 선택 상자 패키지",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "com.ncsoft.lineagem19_g106",
+   "duplicate_store_purchase_ids": [
+    85058,
+    85048,
+    85078,
+    85088,
+    104768
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6463d9b8e382d67b13947df8",
+    "title": "[안내] 5월 17일(수) 빛나는 코인 선택 상자 패키지 안내",
+    "posted": "2023-05-16",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "85118": {
+   "name": "빛나는 퓨어 엘릭서 상자 패키지",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "com.ncsoft.lineagem19_g105",
+   "duplicate_store_purchase_ids": [
+    85108,
+    85098,
+    85128,
+    85138,
+    104758
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6463d9b8e382d67b13947dfb",
+    "title": "[안내] 5월 17일(수) 빛나는 퓨어 엘릭서 상자 패키지 안내",
+    "posted": "2023-05-16",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "67791": {
+   "name": "아덴성 상인의 교역품",
+   "krw": 55000,
+   "diamonds": 2000,
+   "store_key": "com.ncsoft.lineagem19_g75",
+   "duplicate_store_purchase_ids": [
+    67781,
+    67751,
+    67761,
+    67771,
+    105018
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6ad7c1386cfe4756db5b8e6f",
+    "title": "[안내] 10월 21일(수) 아덴성 상인의 교역품 상품 안내",
+    "posted": "2026-10-20",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "98538": {
+   "name": "에바의 찬란한 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g128",
+   "duplicate_store_purchase_ids": [
+    98548,
+    98528,
+    98558,
+    98568,
+    105488
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a9727b8a279104f7d9d59c6",
+    "title": "[안내] 9월 2일(수) 에바의 찬란한 상자 상품 안내 (수정)",
+    "posted": "2026-09-01",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "98388": {
+   "name": "이실로테의 성장 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g125",
+   "duplicate_store_purchase_ids": [
+    98398,
+    98378,
+    98408,
+    98418,
+    105458
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a9727b8a279104f7d9d59c3",
+    "title": "[안내] 9월 2일(수) 이실로테의 성장 상자 상품 안내",
+    "posted": "2026-09-01",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "80753": {
+   "name": "이실로테의 신성한 상자",
+   "krw": 110000,
+   "diamonds": 4000,
+   "store_key": "com.ncsoft.lineagem19_g94",
+   "duplicate_store_purchase_ids": [
+    80743,
+    80723,
+    80733,
+    80763,
+    105178
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a84b2b8d97eae18cc40dacc",
+    "title": "[안내] 8월 19일(수) 이실로테의 신성한 상자 상품 안내 (수정)",
+    "posted": "2026-08-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "68081": {
+   "name": "인나드릴 상인의 신비한 교역품",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g81",
+   "duplicate_store_purchase_ids": [
+    68071,
+    68051,
+    68061,
+    68091,
+    105078
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6adfaa38263e537d356d136b",
+    "title": "[안내] 10월 28일(수) 인나드릴 상인의 신비한 교역품 상품 안내",
+    "posted": "2026-10-27",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "80633": {
+   "name": "조우의 지원 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g92",
+   "duplicate_store_purchase_ids": [
+    80643,
+    80623,
+    80653,
+    80663,
+    105158
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a9727b8a279104f7d9d59c0",
+    "title": "[안내] 9월 2일(수) 조우의 지원 상자 상품 안내",
+    "posted": "2026-09-01",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "73541": {
+   "name": "켄라우헬의 고귀한 상자 패키지",
+   "krw": 110000,
+   "diamonds": 4000,
+   "store_key": "com.ncsoft.lineagem19_g84",
+   "duplicate_store_purchase_ids": [
+    73531,
+    73511,
+    73521,
+    73551,
+    105108
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a84b2b8d97eae18cc40dacf",
+    "title": "[안내] 8월 19일(수) 켄라우헬의 고귀한 상자 패키지 상품 안내",
+    "posted": "2026-08-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "80783": {
+   "name": "크리스터의 고귀한 상자",
+   "krw": 110000,
+   "diamonds": 4000,
+   "store_key": "com.ncsoft.lineagem19_g95",
+   "duplicate_store_purchase_ids": [
+    80793,
+    80773,
+    80803,
+    80813,
+    105188
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a84b2b8d97eae18cc40dabd",
+    "title": "[안내] 8월 19일(수) 크리스터의 고귀한 상자 상품 안내",
+    "posted": "2026-08-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "80693": {
+   "name": "크리스터의 수련 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g93",
+   "duplicate_store_purchase_ids": [
+    80683,
+    80673,
+    80703,
+    80713,
+    105168
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=66f31374a6acf62e167e4df0",
+    "title": "[안내] 9월 25일(수) 크리스터의 수련 상자 상품 안내 (수정)",
+    "posted": "2024-09-24",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "98288": {
+   "name": "판도라의 보급품 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g123",
+   "duplicate_store_purchase_ids": [
+    98298,
+    98278,
+    98308,
+    98318,
+    105438
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=67d9546e8a67931889787e1e",
+    "title": "[안내] 3월 19일(수) 판도라의 보급품 상자 상품 안내",
+    "posted": "2025-03-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "91874": {
+   "name": "판도라의 상점 장비 보급 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g116",
+   "duplicate_store_purchase_ids": [
+    91884,
+    91864,
+    91894,
+    91904,
+    105328
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6671e03880b04d50408681a0",
+    "title": "[안내] 6월 19일(수) 말하는섬, 윈다우드 서버 전용 상품 안내 (2차 수정)",
+    "posted": "2024-06-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "91974": {
+   "name": "판도라의 성장 지원 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g114",
+   "duplicate_store_purchase_ids": [
+    91984,
+    91964,
+    91994,
+    92004,
+    105348
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6671e03880b04d50408681a0",
+    "title": "[안내] 6월 19일(수) 말하는섬, 윈다우드 서버 전용 상품 안내 (2차 수정)",
+    "posted": "2024-06-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "91924": {
+   "name": "판도라의 스킬 지원 상자",
+   "krw": 33000,
+   "diamonds": 1200,
+   "store_key": "com.ncsoft.lineagem19_g115",
+   "duplicate_store_purchase_ids": [
+    91934,
+    91914,
+    91944,
+    91954,
+    105338
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6671e03880b04d50408681a0",
+    "title": "[안내] 6월 19일(수) 말하는섬, 윈다우드 서버 전용 상품 안내 (2차 수정)",
+    "posted": "2024-06-18",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "92024": {
+   "name": "판도라의 카드 보급 상자",
+   "krw": 11000,
+   "diamonds": 400,
+   "store_key": "com.ncsoft.lineagem19_g113",
+   "duplicate_store_purchase_ids": [
+    92034,
+    92014,
+    92044,
+    92054,
+    105358
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6851c238d0edd27080a212e0",
+    "title": "[안내] 6월 18일(수) 판도라의 카드 보급 상자 상품 안내",
+    "posted": "2025-06-17",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  },
+  "98188": {
+   "name": "하피의 행운 상자",
+   "krw": 5500,
+   "diamonds": 200,
+   "store_key": "com.ncsoft.lineagem19_g121",
+   "duplicate_store_purchase_ids": [
+    98198,
+    98178,
+    98208,
+    98218,
+    105418
+   ],
+   "origin": {
+    "kind": "nc_official_notice",
+    "url": "https://lineagem.plaync.com/board/notice/view?articleId=6a9727b8a279104f7d9d59bd",
+    "title": "[안내] 9월 2일(수) 하피의 행운 상자 상품 안내",
+    "posted": "2026-09-01",
+    "note": "판매 가격은 구글 플레이 스토어 기준(공지 문구)"
+   }
+  }
+ }
+}
