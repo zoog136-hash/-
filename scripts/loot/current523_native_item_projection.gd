@@ -211,6 +211,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=fixed_card
 		if fixed_card.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var bless_scroll: Dictionary=source_bless_scroll(definition)
+	if not bless_scroll.is_empty():
+		out["source_use_spec"]=bless_scroll
+		if bless_scroll.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -698,6 +703,34 @@ static func source_fixed_card(definition: Dictionary) -> Dictionary:
 	spec.merge({"kind":"fixed_card","source_snapshot":"patch523","source_item_class_id":definition.original_item.ID,"card_kind":CARD_DECKS[deck_id][1],"card_id":id,"deck_id":deck_id,"original_card":card.duplicate(true),"original_deck":deck.duplicate(true),"buff_card_cannot_swap":swap==[1],"server_limit_set_id":server,"source_item_bonus_ids":[],"item_requirements":{"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique})
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec
+
+
+## Equipment bless scrolls (ItemCategory ScrollBless, item target). The
+## blessing itself is the existing equipment blessing owner; its success rate
+## is the target's original BlessSuccessRate row, and GuaranteeBlessProb makes
+## it certain. Lifetime rows follow the item lifetime rule.
+static func source_bless_scroll(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="ScrollBless" or raw.is_empty():return {}
+	var reasons: Array=[];var guarantee: Array=[];var ids: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=8:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value in ["CannotExtendDeleteTime","GuaranteeBlessProb"] and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(row.get("bonus",{}).get("Value")) in [0,1]:
+			if name_value=="GuaranteeBlessProb":guarantee.append(whole(row.bonus.Value))
+			continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	if guarantee.size()>1:reasons.append("ambiguous_bless_guarantee")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"equipment_bless","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"guaranteed":guarantee==[1],"rate_table":"BlessSuccessRate","source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
 
 
 # Public _source_skill_book_spec semantics using the existing typed ItemData

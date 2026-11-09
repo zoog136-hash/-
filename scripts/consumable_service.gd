@@ -8,6 +8,7 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const QUEST_RETURN239 = preload("res://scripts/quests/quest_return239.gd")
 const BLESSING = preload("res://scripts/equipment_blessing.gd")
+const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
 
@@ -301,6 +302,7 @@ func prune_removed() -> void:
 func try_use(item_name: String,selected_instance: String="") -> bool:
 	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
+		if stack.get("silent",false):return true # The owner shows its own chooser or message.
 		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
 		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 		return true
@@ -635,6 +637,7 @@ func _use_bless_scroll(scroll_name: String) -> void:
 	if candidates.is_empty():
 		_message("축복 부여가 가능한 미축복 장비가 없습니다")
 		return
+	var guaranteed: bool = bool(NATIVE_STACK.bless_scroll_owned(world, scroll_name).get("spec", {}).get("guaranteed", false))
 	# Use the game's native touch-friendly equipment chooser, not a floating
 	# ConfirmationDialog which can be unreachable in Android editor/play mode.
 	var views: Array = []
@@ -649,7 +652,8 @@ func _use_bless_scroll(scroll_name: String) -> void:
 		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 		var kind: String = str(world.call("_enhancement_kind_for_record", record))
 		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
-			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade),
+			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade, record, guaranteed),
+			"success_basis": BLESSING.success_basis(grade, record, guaranteed),
 			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
@@ -657,8 +661,15 @@ func _use_bless_scroll(scroll_name: String) -> void:
 # have different blessings, enchants, pinned catalog variants and equip state.
 func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
 	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return false
-	if str(RULES.definition(scroll_name).get("kind", "")) != "equipment_bless":
+	# An original 523 bless scroll is a physical stack debited through its
+	# grant receipt; other scrolls keep the existing rule and name count.
+	var native: Dictionary = NATIVE_STACK.bless_scroll_owned(world, scroll_name)
+	if native.has("error"):
+		_message(str(native.error) + " · 주문서 보존")
 		return false
+	if native.is_empty() and str(RULES.definition(scroll_name).get("kind", "")) != "equipment_bless":
+		return false
+	var guaranteed: bool = bool(native.get("spec", {}).get("guaranteed", false))
 	var selected: Dictionary = world.call("_parse_enhancement_target", target_reference)
 	var item_name: String = str(selected.get("name", ""))
 	var item_id: String = str(selected.get("id", ""))
@@ -697,7 +708,7 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var before: Dictionary={"inventory":inv.duplicate(true),"instances":instances.duplicate(true),"rng":rng.state,
 		"equipped":world.equipped_items.duplicate(true),"hp":world.hp,"mp":world.mp}
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
-	var success: bool = BLESSING.roll_succeeds(grade, roll)
+	var success: bool = BLESSING.roll_succeeds(grade, roll, record, guaranteed)
 	if success:
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
@@ -707,14 +718,29 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 		if record.get("source_m_native_item",false): record["source_bless_raw"]=2
 		physical["record"]=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,2)
 		instances[item_id] = physical
-	inv[scroll_name]=int(inv[scroll_name])-1
-	if int(inv[scroll_name])<=0: inv.erase(scroll_name)
+	var state_before: Dictionary = export_state()
+	if native.is_empty():
+		inv[scroll_name]=int(inv[scroll_name])-1
+		if int(inv[scroll_name])<=0: inv.erase(scroll_name)
+	else:
+		# Staged from the live state, which already holds the blessed target.
+		var paid: Dictionary = NATIVE_STACK.stage_debit(world, [native.request])
+		if not paid.get("ok", false):
+			instances.clear();instances.merge(before.instances)
+			rng.state=int(before.rng)
+			_message(str(paid.get("reason", paid.get("error", "원본 축복 주문서 차감 확인 필요"))) + " · 주문서·장비 보존")
+			return false
+		world.inventory = paid.overrides.inventory
+		world.item_instances = paid.overrides.item_instances
+		import_state(paid.overrides.consumable_state)
 	world.call("_invalidate_equipment_static")
 	world.hp=mini(world.hp,int(world.call("_effective_max_hp")))
 	world.mp=mini(world.mp,int(world.call("_effective_max_mp")))
 	if int(world.call("_save_game",true))!=OK:
 		inv.clear();inv.merge(before.inventory)
 		instances.clear();instances.merge(before.instances)
+		if not native.is_empty():
+			world.inventory=inv;world.item_instances=instances;import_state(state_before)
 		world.equipped_items=before.equipped
 		rng.state=int(before.rng)
 		world.hp=int(before.hp);world.mp=int(before.mp)
@@ -727,7 +753,7 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 		item_name, item_id, BLESSING.effect_text(grade, kind, record) if success else "주문서만 소모"
 	])
 	world.hud.append_log("축복 부여 %s · %s [ID %s]" % ["성공" if success else "실패", item_name, item_id])
-	world.hud.refresh_inventory(inv)
+	world.hud.refresh_inventory(world.inventory)
 	world.call("_update_hud")
 	return success
 
@@ -861,9 +887,10 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 				var grade: String = str(record.get("grade", "일반"))
 				record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
 				var kind: String = str(world.call("_enhancement_kind_for_record", record))
-				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (임시)" % [
+				var guaranteed: bool = bool(NATIVE_STACK.bless_scroll_owned(world, item_name).get("spec", {}).get("guaranteed", false))
+				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (%s)" % [
 					grade_text, parts[0], instance_id,
-					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade)
+					BLESSING.effect_text(grade, kind, record), BLESSING.success_chance(grade, record, guaranteed), BLESSING.success_basis(grade, record, guaranteed)
 				]
 			var element_level: int = int(entry.get("element_level", 0))
 			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))
