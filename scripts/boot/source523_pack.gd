@@ -37,6 +37,7 @@ const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"sourc
 const REQUIRED := ["bank","images","maps","tiles"]
 const FRAME_BUDGET_MSEC: int = 30
 const COPY_CHUNK: int = 16 * 1024 * 1024
+const STYLE = preload("res://scripts/boot/boot_style.gd")
 
 ## Install target; tests use a scratch directory instead of ROOT.
 var root: String = ROOT
@@ -183,24 +184,14 @@ func _show_installer() -> void:
 	_layer.layer = 127
 	_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().root.add_child(_layer)
-	var panel := PanelContainer.new()
-	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_layer.add_child(panel)
-	var box := VBoxContainer.new()
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	panel.add_child(box)
-	_status = Label.new()
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var box: VBoxContainer = STYLE.installer_frame(_layer)
+	box.add_child(STYLE.label("원본 리소스 팩 설치", 26, STYLE.GOLD))
+	_status = STYLE.label("", 20)
 	box.add_child(_status)
-	_choose = Button.new()
-	_choose.text = "리소스 팩(.zip) 선택"
-	_choose.custom_minimum_size = Vector2(320, 72)
+	_choose = STYLE.button("리소스 팩(.zip) 선택")
 	_choose.pressed.connect(func() -> void: _picker.popup_centered_ratio(0.8))
 	box.add_child(_choose)
-	_later = Button.new()
-	_later.text = "나중에 (원본 그림 없이 시작)"
-	_later.custom_minimum_size = Vector2(320, 56)
+	_later = STYLE.button("나중에 (원본 그림 없이 시작)", false, 52)
 	_later.pressed.connect(_close_installer)
 	box.add_child(_later)
 	_picker = FileDialog.new()

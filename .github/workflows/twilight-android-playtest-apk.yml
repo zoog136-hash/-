@@ -66,8 +66,10 @@ jobs:
           echo "ANDROID_HOME=${ANDROID_HOME:-}" >> "$GITHUB_ENV"
           echo "JAVA_HOME=${JAVA_HOME:-}" >> "$GITHUB_ENV"
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
-          mkdir -p "$HOME/.android"
-          keytool -genkeypair -noprompt -validity 1000 -keyalg RSA -keysize 2048 -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keystore "$HOME/.android/debug.keystore" -storepass android -keypass android
+          # One fixed playtest key (tools/android/twilight-playtest.keystore):
+          # every build installs over the previous one, keeping the installed
+          # resource pack and saves. A new key per run forced an uninstall.
+          test -s tools/android/twilight-playtest.keystore
           cat > /tmp/config-editor.gd <<'GDSCRIPT'
           extends SceneTree
           func _initialize() -> void:
@@ -78,10 +80,11 @@ jobs:
               print("ANDROID_EDITOR_SETTINGS_OK")
               quit()
           GDSCRIPT
-          # Android signing credentials supplied only via workflow env, not in repository.
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.android/debug.keystore" >> "$GITHUB_ENV"
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
-          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
+          # The playtest key is public on purpose (like any Android debug key):
+          # it only keeps the app's signature the same between builds.
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$GITHUB_WORKSPACE/tools/android/twilight-playtest.keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=twilight" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=twilight-playtest" >> "$GITHUB_ENV"
       - name: Import Android game resources
         shell: bash
         run: |
@@ -127,6 +130,21 @@ jobs:
           set -euo pipefail
           mkdir -p build
           df -h . /tmp | sed 's/^/DISK_BEFORE_EXPORT /'
+          # Android only installs an update whose version code is not lower.
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          run = int(os.environ["GITHUB_RUN_NUMBER"])
+          name = f"523.{run}"
+          p = Path("export_presets.cfg")
+          text = re.sub(r"^version/code=.*$", f"version/code={run}", p.read_text(), flags=re.M)
+          p.write_text(re.sub(r'^version/name=.*$', f'version/name="{name}"', text, flags=re.M))
+          g = Path("project.godot")
+          text = g.read_text()
+          text = re.sub(r'^config/version=.*\n', '', text, flags=re.M)
+          g.write_text(text.replace('[application]\n', f'[application]\nconfig/version="{name}"\n', 1))
+          print("ANDROID_VERSION", run, name)
+          PY
           timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
           grep -F "SOURCE84_RAW_EXPORT files=" /tmp/export-android.txt || { echo "::error::Raw Source84 pack was not added to APK"; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
