@@ -44,6 +44,7 @@ PREFIX = "source523/"
 DATE = (2026, 1, 1, 0, 0, 0)
 MAX_PART_BYTES = 1_900_000_000
 DEFLATE_LEVEL = 6
+DESCRIPTOR_RESERVE = 1 << 20
 TEXT_SUFFIXES = {".json", ".jsonl", ".txt", ".cfg", ".csv", ".xml", ".plist", ".spr"}
 MAX_PART_ENTRIES = 60_000
 
@@ -157,11 +158,12 @@ def plan_parts(members, max_bytes, max_entries):
     parts, current, size = [], [], 0
     for member in members:
         require(member[3] < max_bytes, f"member larger than a part: {member[0]}")
-        if current and (size + member[3] + 1024 > max_bytes or len(current) + 2 >= max_entries):
+        if current and (size + member[3] + DESCRIPTOR_RESERVE > max_bytes or len(current) + 2 >= max_entries):
             parts.append(current)
             current, size = [], 0
         current.append(member)
-        size += member[3] + 128 + len(member[0]) * 2  # local and central headers
+        # local and central headers, plus the member's row in the part index
+        size += member[3] + 128 + len(member[0].encode()) * 3 + 32
     if current:
         parts.append(current)
     return parts

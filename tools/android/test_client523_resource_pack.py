@@ -48,6 +48,8 @@ class ResourcePackTest(unittest.TestCase):
 
     def test_parts_hold_every_member_unchanged_with_descriptor_in_part_one(self):
         output, report = self.build(part_entries=6)
+        for part in report["parts"]:
+            self.assertLessEqual(part["bytes"], pack.MAX_PART_BYTES)
         parts = sorted(output.glob("twilight523-resources-*.zip"))
         self.assertEqual(len(parts), len(report["parts"]))
         self.assertGreater(len(parts), 1)
