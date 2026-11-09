@@ -11,9 +11,11 @@ phone's storage (scripts/boot/source523_pack.gd):
   `source523_part.json` (pack ID, part number, members with their byte sizes);
   part 1 also holds `source523_pack.json`, the descriptor with the relative
   roots and the SHA-256 pins of every pack manifest;
-* parts stay below 4 GiB and 65,535 entries, so no ZIP64 reader is needed;
-* nothing is recompressed, renamed or regenerated; each runtime reader still
-  checks its own pins when it loads.
+* parts stay below 2 GB (default) and 65,535 entries, so no ZIP64 reader is
+  needed;
+* text members (mostly the bank's per-action JSON) are deflated, everything
+  else is stored; extraction restores the exact bytes, nothing is renamed or
+  regenerated, and each runtime reader still checks its own pins.
 
 Output goes to a new private directory outside the repository. Nothing is
 uploaded.
@@ -24,9 +26,10 @@ import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import sys
 import zipfile
+import zlib
 
 SCHEMA = "twilight-client523-resource-pack-v1"
 PART_SCHEMA = "twilight-client523-resource-pack-part-v1"
@@ -39,7 +42,9 @@ PART_INDEX = "source523_part.json"
 # descriptor the second, so a ZIP reader finds them without scanning.
 PREFIX = "source523/"
 DATE = (2026, 1, 1, 0, 0, 0)
-MAX_PART_BYTES = 3_500_000_000
+MAX_PART_BYTES = 1_900_000_000
+DEFLATE_LEVEL = 6
+TEXT_SUFFIXES = {".json", ".jsonl", ".txt", ".cfg", ".csv", ".xml", ".plist", ".spr"}
 MAX_PART_ENTRIES = 60_000
 
 # Pack directory -> (name inside the pack, manifest file, expected kind check)
@@ -121,48 +126,69 @@ def collect(args):
     return descriptor, members
 
 
+def deflated(name: str) -> bool:
+    """Text members (the bank's per-action JSON is most of them) are deflated;
+    SP2, images, maps and ZIPs are already compressed and stay stored."""
+    return PurePosixPath(name).suffix.lower() in TEXT_SUFFIXES
+
+
+def packed_size(name: str, source: Path, size: int) -> int:
+    """Bytes the member occupies in a part, as zipfile will write it."""
+    if not deflated(name):
+        return size
+    compressor = zlib.compressobj(DEFLATE_LEVEL, zlib.DEFLATED, -15)
+    total = 0
+    with source.open("rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            total += len(compressor.compress(block))
+    return total + len(compressor.flush())
+
+
 def plan_parts(members, max_bytes, max_entries):
+    """Members are (name, path, bytes, packed bytes); order is kept."""
     parts, current, size = [], [], 0
     for member in members:
-        require(member[2] < max_bytes, f"member larger than a part: {member[0]}")
-        if current and (size + member[2] > max_bytes or len(current) + 2 >= max_entries):
+        require(member[3] < max_bytes, f"member larger than a part: {member[0]}")
+        if current and (size + member[3] + 1024 > max_bytes or len(current) + 2 >= max_entries):
             parts.append(current)
             current, size = [], 0
         current.append(member)
-        size += member[2]
+        size += member[3] + 128 + len(member[0]) * 2  # local and central headers
     if current:
         parts.append(current)
     return parts
 
 
-def stored(name: str) -> zipfile.ZipInfo:
+def entry(name: str, compress: bool = False) -> zipfile.ZipInfo:
     info = zipfile.ZipInfo(name, DATE)
-    info.compress_type = zipfile.ZIP_STORED
+    info.compress_type = zipfile.ZIP_DEFLATED if compress else zipfile.ZIP_STORED
     info.external_attr = 0o600 << 16
     return info
 
 
 def write_part(path: Path, index: dict, members, descriptor_bytes=None):
-    with zipfile.ZipFile(path, "x", zipfile.ZIP_STORED, allowZip64=False) as archive:
-        archive.writestr(stored(PREFIX + PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True,
-                                                        separators=(",", ":")).encode())
+    with zipfile.ZipFile(path, "x", zipfile.ZIP_STORED, allowZip64=False, compresslevel=DEFLATE_LEVEL) as archive:
+        archive.writestr(entry(PREFIX + PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True,
+                                                       separators=(",", ":")).encode())
         if descriptor_bytes is not None:
-            archive.writestr(stored(PREFIX + DESCRIPTOR), descriptor_bytes)
-        for name, source, size in members:
+            archive.writestr(entry(PREFIX + DESCRIPTOR), descriptor_bytes)
+        for name, source, size, _ in members:
             require(source.stat().st_size == size, f"changed while packing: {source}")
-            with source.open("rb") as handle, archive.open(stored(PREFIX + name), "w") as target:
+            info = entry(PREFIX + name, deflated(name))
+            with source.open("rb") as handle, archive.open(info, "w") as target:
                 for block in iter(lambda: handle.read(1 << 20), b""):
                     target.write(block)
 
 
 def build(args):
     descriptor, members = collect(args)
+    members = [(name, path, size, packed_size(name, path, size)) for name, path, size in members]
     parts = plan_parts(members, args.part_bytes, args.part_entries)
     listing = hashlib.sha256()
-    for name, _, size in members:
+    for name, _, size, _ in members:
         listing.update(f"{name}\0{size}\n".encode())
     descriptor["members"] = len(members)
-    descriptor["bytes"] = sum(size for _, _, size in members)
+    descriptor["bytes"] = sum(member[2] for member in members)
     descriptor["parts"] = len(parts)
     descriptor["member_listing_sha256"] = listing.hexdigest()
     pin_basis = json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
@@ -173,7 +199,7 @@ def build(args):
     written = []
     for number, chunk in enumerate(parts, 1):
         index = {"schema": PART_SCHEMA, "pack_id": descriptor["pack_id"], "part": number, "parts": len(parts),
-                 "members": [[name, size] for name, _, size in chunk]}
+                 "members": [[name, size] for name, _, size, _ in chunk]}
         name = f"twilight523-resources-{number}of{len(parts)}.zip"
         write_part(out / name, index, chunk, descriptor_bytes if number == 1 else None)
         written.append({"file": name, "members": len(chunk), "bytes": (out / name).stat().st_size})

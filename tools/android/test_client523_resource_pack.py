@@ -58,7 +58,9 @@ class ResourcePackTest(unittest.TestCase):
                 self.assertEqual(archive.namelist()[0], pack.PREFIX + pack.PART_INDEX)
                 self.assertEqual((index["part"], index["parts"], index["pack_id"]), (number, len(parts), report["pack_id"]))
                 self.assertEqual(pack.PREFIX + pack.DESCRIPTOR in archive.namelist(), number == 1)
-                self.assertTrue(all(i.compress_type == zipfile.ZIP_STORED for i in archive.infolist()))
+                for info in archive.infolist()[1:]:
+                    text = info.filename.endswith(".json") and not info.filename.endswith(pack.DESCRIPTOR)
+                    self.assertEqual(info.compress_type, zipfile.ZIP_DEFLATED if text else zipfile.ZIP_STORED, info.filename)
                 self.assertLessEqual(len(archive.namelist()), 6)
                 for name, size in index["members"]:
                     seen[name] = archive.read(pack.PREFIX + name)
