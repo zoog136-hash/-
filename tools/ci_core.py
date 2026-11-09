@@ -85,6 +85,7 @@ CHECKS = [
     ('current523_host_world_test', []),
     ('updater_test', []),
     ('current523_server_profile_test', []),
+    ('current523_bank_objects_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -401,7 +402,8 @@ def main():
                       'current523_bless_rate_test':'CURRENT523_BLESS_RATE_RESULT',
                       'current523_host_world_test':'CURRENT523_HOST_WORLD_RESULT',
                       'updater_test':'UPDATER_RESULT',
-                      'current523_server_profile_test':'CURRENT523_SERVER_PROFILE_RESULT'}[name]
+                      'current523_server_profile_test':'CURRENT523_SERVER_PROFILE_RESULT',
+                      'current523_bank_objects_test':'CURRENT523_BANK_OBJECTS_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
