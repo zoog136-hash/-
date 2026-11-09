@@ -21,6 +21,8 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('reference_sp2_asset_sharing_test', []),
+    ('original_ui_page_cache_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),

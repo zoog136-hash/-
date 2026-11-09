@@ -45,7 +45,12 @@ var _last_token: String = ""
 var _record: Dictionary = {}
 var _root: String = ""
 const GPU_ACTOR_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
+const SHARED_ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 var _textures: Dictionary = {}
+# Reference frames come from the process-wide asset store: local texture_key
+# -> shared rendered key leased by this preview. Clocks/selection stay here.
+var _texture_leases: Dictionary = {}
+var _asset_owner: int = SHARED_ASSETS.new_owner()
 var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
 var _source_body_material: CanvasItemMaterial
@@ -425,6 +430,7 @@ func clear() -> void:
 		if copy != null: copy.free()
 		effect_node.free()
 	_effect_nodes.clear()
+	_release_shared_textures()
 	_textures.clear()
 	for sprite: Sprite2D in _layers:
 		sprite.free()
@@ -667,8 +673,15 @@ func _release_reference_texture_charges() -> void:
 		_reference_texture_budget["used"] = maxi(0,int(_reference_texture_budget.get("used",0))-released)
 	_reference_texture_charges.clear()
 
+func _release_shared_textures() -> void:
+	for key: String in _texture_leases:
+		SHARED_ASSETS.release("texture", str(_texture_leases[key]), _asset_owner)
+	_texture_leases.clear()
+
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_PREDELETE: _release_reference_texture_charges()
+	if what == NOTIFICATION_PREDELETE:
+		_release_reference_texture_charges()
+		_release_shared_textures()
 
 func _abort_reference_source(problem: Dictionary) -> void:
 	var one_shot: bool = _is_overlay
@@ -679,22 +692,48 @@ func _abort_reference_source(problem: Dictionary) -> void:
 func _source_texture(layer: Dictionary) -> Texture2D:
 	var key: String = str(layer.get("texture_key", layer.get("path", "")))
 	if _reference_bank != null:
-		var result: Dictionary = _reference_bank.render_layer(layer, not _textures.has(key))
+		var member: String = str(layer.get("member", ""))
+		var shared_key: String = ""
+		if not _textures.has(key):
+			shared_key = SHARED_ASSETS.rendered_key(_reference_bank.parsed_asset_key(member),int(layer.get("group_bit",-1)),int(layer.get("frame_index",-1)))
+		# Per-actor admission, pins and member bytes are always rechecked here;
+		# pixels are only decoded when no identical shared frame exists.
+		var need_pixels: bool = not _textures.has(key) and not SHARED_ASSETS.has_entry("texture",shared_key)
+		var result: Dictionary = _reference_bank.render_layer(layer, need_pixels)
 		if not result.ok:
 			_abort_reference_source(result)
 			return null
 		if not _textures.has(key):
-			var charge: int = int(result.image.get_width())*int(result.image.get_height())*4
+			# The key the bank verified on this very call decides sharing.
+			var verified_key: String = SHARED_ASSETS.rendered_key(_reference_bank.parsed_asset_key(member),int(layer.get("group_bit",-1)),int(layer.get("frame_index",-1)))
+			var shared: bool = not need_pixels and verified_key == shared_key and SHARED_ASSETS.has_entry("texture",verified_key)
+			if not shared and not result.has("image"):
+				result = _reference_bank.render_layer(layer, true)
+				if not result.ok:
+					_abort_reference_source(result)
+					return null
+			var charge: int = SHARED_ASSETS.entry_bytes("texture",verified_key) if shared else int(result.image.get_width())*int(result.image.get_height())*4
 			var used: int = int(_reference_texture_budget.get("used",0))
 			var limit: int = int(_reference_texture_budget.get("limit",0))
 			if limit > 0 and charge > limit-used:
 				var problem: Dictionary = {"ok":false,"reason":"source_texture_budget_exceeded","error":"Source effect texture cache would exceed its shared owner budget.","texture_budget_limit_bytes":limit,"texture_budget_used_bytes":used,"texture_allocation_bytes":charge}
 				_abort_reference_source(problem)
 				return null
-			var texture: ImageTexture = ImageTexture.create_from_image(result.image)
+			var texture: Texture2D = SHARED_ASSETS.acquire("texture",verified_key,_asset_owner) as Texture2D if shared else null
+			if texture == null and not result.has("image"):
+				result = _reference_bank.render_layer(layer, true)
+				if not result.ok:
+					_abort_reference_source(result)
+					return null
 			if texture == null:
-				_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
-				return null
+				var reservation: int = SHARED_ASSETS.reserve("texture",verified_key,charge)
+				texture = ImageTexture.create_from_image(result.image)
+				if texture == null:
+					SHARED_ASSETS.cancel(reservation)
+					_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
+					return null
+				texture = SHARED_ASSETS.complete(reservation,texture,charge,_asset_owner) as Texture2D
+			if SHARED_ASSETS.holds("texture",verified_key,_asset_owner): _texture_leases[key] = verified_key
 			_textures[key] = texture
 			if not _reference_texture_budget.is_empty():
 				_reference_texture_budget["used"] = used+charge
