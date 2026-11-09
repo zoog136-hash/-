@@ -62,6 +62,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
 	if spec.get("kind")=="fixed_card" and spec.get("activation_status")=="unrestricted":return {"kind":"card","spec":spec}
 	if spec.get("kind")=="equipment_bless" and spec.get("activation_status")=="unrestricted":return {"kind":"bless","spec":spec}
+	if spec.get("kind")=="weapon_mastery_points" and spec.get("activation_status")=="unrestricted":return {"kind":"mastery","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_selectable_reward" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"selection","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -188,6 +189,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
+	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
 	# A bless scroll needs a target: the existing blessing chooser opens and its
 	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
 	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
@@ -970,6 +972,36 @@ static func bless_scroll_owned(world: Node,scroll_name: String) -> Dictionary:
 		if spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
 		return {"uid":id,"owned":owned,"record":owned.record,"spec":spec,"request":{"physical_id":id,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}}
 	return {"error":"선택 물리 개체·잠금·소지 수량 확인 필요"}
+
+## A weapon mastery point item: the existing mastery owner plans the original
+## points for the normalized weapon type and saves them together with the
+## one-unit physical debit.
+static func use_mastery_points(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="weapon_mastery_points" or spec.get("activation_status")!="unrestricted":return _failure("원본 숙련 아이템 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 숙련 아이템 사용 대상·서비스 조건 미지원")
+	var runtime: Variant=world.get("weapon_mastery")
+	if runtime==null or not bool(runtime.enabled):return _failure("무기 숙련 원본 팩을 확인할 수 없습니다 · 아이템 보존")
+	var weapon: int=int(runtime.core.normalize_weapon(int(spec.get("weapon_type",0))))
+	if weapon<=0:return _failure("원본 무기 종류를 숙련에 연결할 수 없습니다 · 아이템 보존")
+	var plan: Dictionary=runtime.core.plan_points(runtime.state,weapon,str(int(spec.get("points",0))),runtime._receipt("native_mastery_point_item"))
+	if not plan.get("ok",false):return _failure(str(runtime.reason_text(str(plan.get("reason",""))))+" · 아이템 보존")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 숙련 아이템 차감 소유자 연결 필요"))))
+	var resources: Dictionary=paid.overrides.duplicate(true)
+	resources["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var committed: Dictionary=runtime._commit(plan,resources)
+	busy=false
+	if not committed.get("ok",false):
+		if committed.get("committed",false):world.patch523_owner_state_problem="원본 숙련 아이템 저장 후 적용 미확정 · 정상 불러오기 전 재사용 중지"
+		return _failure(str(runtime.reason_text(str(committed.get("reason",""))))+" · 아이템 보존")
+	world.consumable_service.import_state(resources.consumable_state);world.item_use_cooldowns=resources.item_use_cooldowns;world.deferred_save.cancel()
+	var message: String="%s 사용 · 무기 숙련치 +%d" % [str(record.get("source_display_name",record.get("name",""))),int(spec.points)]
+	world.hud.append_log(message)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"weapon_type":weapon,"points":int(spec.points),"message":message}
+	return committed_use_context(result,record,0,false,"current523_native_stack.use_mastery_points")
 
 ## A card item: one physical unit is debited through its grant receipt and the
 ## exact original card is credited to the existing card owner in one save.

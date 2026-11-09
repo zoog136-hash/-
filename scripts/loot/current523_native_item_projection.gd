@@ -216,6 +216,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var mastery: Dictionary=source_mastery_points(definition)
+	if not mastery.is_empty():
+		out["source_use_spec"]=mastery
+		if mastery.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -720,6 +725,37 @@ static func source_fixed_card(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec
 
+
+## Weapon mastery point items (ItemCategory MasteryPointRecharger): one
+## MasteryWeaponPointAmount row whose BonusApplicationType is WeaponType (22)
+## gives Value points to its BonusApplicationTargetID weapon type, normalized
+## by the existing mastery owner through the original MasteryWeaponType rows.
+static func source_mastery_points(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="MasteryPointRecharger" or raw.is_empty():return {}
+	var reasons: Array=[];var grants: Array=[];var ids: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	var application: Dictionary=SOURCE.row("BonusApplicationType",22)
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value=="MasteryWeaponPointAmount":
+			if row.get("IsPossession")!=false or whole(bonus.get("BonusApplicationTypeID"))!=22 or (not application.is_empty() and application.get("Name")!="WeaponType") or row.get("unit",{}).get("Name")!="Value" or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or not integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID)<=0:reasons.append("unsupported_mastery_point_row")
+			else:grants.append({"points":int(bonus.Value),"weapon_type":int(bonus.BonusApplicationTargetID)})
+			continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	if grants.size()!=1:reasons.append("missing_or_ambiguous_mastery_points")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	var grant: Dictionary=grants[0] if grants.size()==1 else {}
+	return {"kind":"weapon_mastery_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":grant.get("points",0),"weapon_type":grant.get("weapon_type",0),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
 
 ## Equipment bless scrolls (ItemCategory ScrollBless, item target). The
 ## blessing itself is the existing equipment blessing owner; its success rate
