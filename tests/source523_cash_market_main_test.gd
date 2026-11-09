@@ -127,6 +127,29 @@ func _run() -> void:
 		var learned_after: int = world.original_skills.catalog.export_state().learned.size() if world.original_skills != null else 0
 		print("source523_cash_market_main_test: learned skills %d -> %d" % [learned_before, learned_after])
 		check(learned_after > learned_before, "a drawn skill book is learned through the native path")
+	# Halpas stone (native relic equipment) and the mastery option change ticket.
+	var stone: Dictionary = CashPackages.resolve(world, 365553)
+	var ticket: Dictionary = CashPackages.resolve(world, 184652)
+	print("source523_cash_market_main_test: halpas=%s ticket=%s" % [stone.kind, ticket.kind])
+	check(stone.kind == "native_equipment", "Halpas stone issued as native equipment")
+	# The mastery runtime only owns tickets when its exact catalog record is
+	# installed; otherwise the ticket stays a plain kept item (existing rule).
+	var ticket_installed: bool = world.weapon_mastery.reset_ticket.owned_ids(world).get("ok", false)
+	check(ticket.kind == ("mastery_ticket" if ticket_installed else "item"), "mastery ticket follows the mastery runtime identity (installed=%s)" % str(ticket_installed))
+	var carrier: Dictionary = CashPackages.box_record(world, 374534)
+	world.inventory[str(carrier.name)] = 1
+	var tickets_before: int = int(world.weapon_mastery.reset_ticket.owned_ids(world).get("ids", []).size())
+	var opened_extra: Dictionary = CashPackages.open(world, str(carrier.name), [{"item_class_id":365553, "amount":1}, {"item_class_id":184652, "amount":2}])
+	check(opened_extra.ok, "stone/ticket delivery: %s" % opened_extra.get("reason", ""))
+	if ticket_installed:
+		var owned_tickets: Dictionary = world.weapon_mastery.reset_ticket.owned_ids(world)
+		check(owned_tickets.get("ok", false) and owned_tickets.ids.size() == tickets_before + 2, "mastery runtime counts delivered tickets: %s" % str(owned_tickets))
+	else:
+		print("source523_cash_market_main_test: mastery ticket catalog not installed (%s); ticket kept as item" % str(world.weapon_mastery.reset_ticket.owned_ids(world).get("reason", "")))
+	var stone_instances: int = 0
+	for uid: String in world.item_instances:
+		if str(world.item_instances[uid].get("name", "")) == str(stone.get("name", "")): stone_instances += 1
+	check(stone_instances >= 1, "Halpas stone physical instance exists")
 	# Original weapon mastery book (one-hand sword) through the inventory path.
 	var book: Dictionary = CashPackages.resolve(world, 171893)
 	check(book.kind == "item" and book.record.get("slot") == "consumable", "mastery book registered as usable")
