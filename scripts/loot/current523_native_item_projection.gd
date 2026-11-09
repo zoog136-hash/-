@@ -472,7 +472,12 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		if row.bonus_type.Name=="BuffDuration" and direct(row) and row.unit.Name=="Seconds" and integer(row.bonus.get("Value")):durations.append(int(row.bonus.Value))
 	var duration: int=int(durations[0]) if durations.size()==1 else 0
 	if duration<=0:reasons.append("missing_or_ambiguous_positive_duration")
-	var fields: Dictionary={"ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hp_flat","MPPlus":"mp_flat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy"}
+	var fields: Dictionary={"ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hp_flat","MPPlus":"mp_flat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction"}
+	# Percentage effects the existing buff consumers read as whole percent
+	# points: the original value over its UIUnit Denominator (10000), e.g.
+	# ExperienceAdditionPercent 100000 = 10 %. A fraction of a point is not
+	# truncated; that effect stays unsupported.
+	var percent_fields: Dictionary={"ExperienceAdditionPercent":"xp","MoveSpeedBonus":"move_speed","AttackSpeedBonus":"attack_speed"}
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
 		var row: Dictionary=effect.get("link",{}).duplicate(true);var bonus: Dictionary=effect.get("bonus",{});var kind: Dictionary=effect.get("type",{});var unit: Dictionary=effect.get("unit",{})
@@ -483,6 +488,10 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
 		if conditional:reasons.append("conditional_buff_effect:"+name_value)
+		elif percent_fields.has(name_value) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
+			var scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
+			if scale.size()!=1 or whole(scale[0].get("Denominator"))!=10000 or int(bonus.Value)%10000!=0:reasons.append("unsupported_buff_effect:"+name_value)
+			else:typed[percent_fields[name_value]]=int(typed.get(percent_fields[name_value],0))+int(bonus.Value)/10000
 		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
 		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
 	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
