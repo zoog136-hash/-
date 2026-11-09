@@ -81,7 +81,7 @@ func _actual_sources(root: String, pin: String) -> void:
 		check(field.native_land == record.declaration and field.source_asset == record.declaration.AssetPath,"logical identity is exact native declaration: "+str(id))
 		check(field.definition.source_map_id == id and field.definition.source_asset_path == record.declaration.AssetPath
 			and field.definition.source_sha256 == asset.source_inventory_sha256 and field.definition.source_manifest_sha256 == pin,"definition binds exact per-asset inventory and external manifest: "+str(id))
-		check(field.data.navigation_profile == field.OWN_PROFILE and not field.uses_original_gameplay_rules(),"generic field retains explicit own policy: "+str(id))
+		check(field.data.navigation_profile == field.CLIENT_PROFILE and field.policy.attribute_rule == field.CLIENT_RULE and not field.uses_original_gameplay_rules(),"generic field defaults to the client S32 attribute rule: "+str(id))
 		check(field.data.npc_spawn.is_empty() and field.data.monster_spawn.is_empty() and field.data.portal.is_empty()
 			and field.data.regions.is_empty() and field.chunk_table.is_empty() and field.nav_cache.is_empty() and field.packs.is_empty(),"shared raw terrain copies no legacy content or navigation grids: "+str(id))
 		check(field.has_meta("current523_source_field") and field.has_meta("current523_generic_field"),"successful generic field owns source metadata: "+str(id))

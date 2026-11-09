@@ -8,6 +8,13 @@ const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const INFERRED = preload("res://scripts/maps/current523_aden_inferred_placement.gd")
 const RAW_CACHE_LIMIT: int = 48
 const OWN_PROFILE: String = "CURRENT523_S32_OWN_ALLOWLIST_V1"
+## Client rule (LineageM 1.10.22.0 static analysis, movement edge test RVA
+## 0x01CC95C0): an S32 attribute word rejects movement when bit0 is set; a
+## diagonal step is rejected only when both orthogonal sides reject
+## ((r0||r1)&&(r2||r3)). Applied per TWILIGHT cell (one S32 word pair).
+const CLIENT_PROFILE: String = "CURRENT523_S32_CLIENT_ATTR_BIT0_V1"
+const CLIENT_RULE: String = "client523_attr_bit0"
+const OWN_RULE: String = "own_allowlist"
 const OWN_LAYOUT_REVISION: int = 5230001
 const DEFAULT_ALLOWED_RAW_WORDS: Array[int] = [0, 4, 8, 12, 32]
 var loaded: bool = false
@@ -59,11 +66,11 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 	astar = AStarGrid2D.new()
 	astar.region = Rect2i(0, 0, 1, 1)
 	astar.update()
-	definition = {"map_id":str(policy.get("map_id", "current523_aden")), "source_map_id":4, "source_land_id":4, "source_sha256":RAW.INVENTORY_SHA256, "origin":[minimum.x,minimum.y], "dimensions":[width,height], "layout_revision":OWN_LAYOUT_REVISION, "navigation":{"profile":OWN_PROFILE}, "native_m_rules_verified":false}
+	definition = {"map_id":str(policy.get("map_id", "current523_aden")), "source_map_id":4, "source_land_id":4, "source_sha256":RAW.INVENTORY_SHA256, "origin":[minimum.x,minimum.y], "dimensions":[width,height], "layout_revision":OWN_LAYOUT_REVISION, "navigation":{"profile":str(policy.get("profile",OWN_PROFILE))}, "native_m_rules_verified":false}
 	data = {"map_id":str(policy.get("map_id", "current523_aden")), "source_land_id":4, "map_name":"아덴 523 · 원본 S32 / 자체 통행", "short_name":"M 원본 · 자체 통행 해석",
-		"layout_revision":OWN_LAYOUT_REVISION, "navigation_profile":OWN_PROFILE, "spawn_position":[], "bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
+		"layout_revision":OWN_LAYOUT_REVISION, "navigation_profile":str(policy.get("profile",OWN_PROFILE)), "spawn_position":[], "bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
 		"collision":[], "regions":[], "water":[], "roads":[], "surfaces":[], "npc_spawn":[], "monster_spawn":[], "portal":[],
-		"navigation":{"profile":OWN_PROFILE}, "camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},
+		"navigation":{"profile":str(policy.get("profile",OWN_PROFILE))}, "camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},
 		"streaming":{"monster_sleep_distance":1600}, "native_m_rules_verified":false}
 	if not inferred_placements.is_empty(): data.map_name+=" · TWILIGHT 추정 배치1"
 	loaded = true
@@ -79,7 +86,12 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 func _configure_policy(value: Dictionary) -> bool:
 	_allowed_words.clear()
 	policy = value.duplicate(true)
-	policy["profile"] = OWN_PROFILE
+	# Resource first: without an explicit own allowlist or mask the client rule applies.
+	var explicit_own: bool = value.has("allowed_raw_words") or value.has("allowed_mask") or value.has("must_mask") or value.has("forbidden_mask")
+	var rule: Variant = value.get("attribute_rule", OWN_RULE if explicit_own else CLIENT_RULE)
+	if not rule in [CLIENT_RULE, OWN_RULE]: return _fail("Unknown S32 attribute rule")
+	policy["attribute_rule"] = rule
+	policy["profile"] = CLIENT_PROFILE if rule == CLIENT_RULE else OWN_PROFILE
 	policy["native_m_rules_verified"] = false
 	var inference: Variant=value.get(INFERRED.OPTION,true)
 	if not inference is bool: return _fail("Invalid inferred Aden placement choice")
@@ -155,6 +167,7 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 	return row
 
 func _allows_word(word: int) -> bool:
+	if policy.get("attribute_rule") == CLIENT_RULE: return (word & 1) == 0
 	if word == 65535 or (_use_allowlist and not _allowed_words.has(word)): return false
 	return (word & ~int(policy.allowed_mask)) == 0 and (word & int(policy.must_mask)) == int(policy.must_mask) and (word & int(policy.forbidden_mask)) == 0
 
@@ -166,7 +179,7 @@ func _pair_status(attributes: PackedByteArray, floor_refs: PackedByteArray, inde
 	return "allowed" if _allows_word(first) and _allows_word(second) else "policy_blocked"
 
 func source_cell_info(source: Vector2i) -> Dictionary:
-	var result: Dictionary = {"source_cell":source, "member":"", "source_sha256":"", "local_cell":Vector2i(-1,-1), "raw_pair":[], "floor_pair":[], "status":"not_configured", "walkable":false, "own_profile":OWN_PROFILE, "native_m_rules_verified":false}
+	var result: Dictionary = {"source_cell":source, "member":"", "source_sha256":"", "local_cell":Vector2i(-1,-1), "raw_pair":[], "floor_pair":[], "status":"not_configured", "walkable":false, "own_profile":str(policy.get("profile",OWN_PROFILE)), "native_m_rules_verified":false}
 	if not loaded: return result
 	if not source_bounds.has_point(source): result.status = "outside_source_bounds"; return result
 	var origin: Vector2i = _source_origin(source)
@@ -212,6 +225,8 @@ func can_step(cell: Vector2i, heading: int) -> bool:
 	var offset: Vector2i = DIRECTIONS[heading]
 	if not _cell_allowed(cell+offset): return false
 	if offset.x != 0 and offset.y != 0:
+		if policy.get("attribute_rule") == CLIENT_RULE:
+			return _cell_allowed(cell+Vector2i(offset.x,0)) or _cell_allowed(cell+Vector2i(0,offset.y))
 		return _cell_allowed(cell+Vector2i(offset.x,0)) and _cell_allowed(cell+Vector2i(0,offset.y))
 	return true
 

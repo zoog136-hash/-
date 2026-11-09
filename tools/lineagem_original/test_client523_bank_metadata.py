@@ -94,6 +94,24 @@ class GeneratedHandoffTest(unittest.TestCase):
         self.assertEqual(contract["timing"], "source_explicit_or_client_section_default")
         self.assertEqual(contract["client_section_default_fps"], 24)
 
+    def test_missing_layers_follow_client_rules(self):
+        def frame(*layers):
+            return {"duration_ticks": 1, "layers": [{"kind": k, "source_sprite_id": sid, "member": m, "group_bit": 0, "frame_index": 0} for k, sid, m in layers]}
+        layers = (("body", 1, "Sprite/1-0.sp2"), ("clothes", 2, "Sprite/2-0.sp2"), ("clothes", 3, "Sprite/3-0.sp2"),
+                  ("clothes", 4, "Sprite/4-0.sp2"), ("shadow", 5, "Sprite/5-0.sp2"))
+        actor = {"source_sprite_id": 1, "roles": {"r": {"directions": [[frame(*layers)]]}}}
+        proof = {"declarations": [{"kind": k, "declaration_path": [{"sprite_id": sid}]} for k, sid, _ in layers]}
+        members = {m for _, _, m in layers}
+        identities = {m: {} for m in members - {"Sprite/3-0.sp2", "Sprite/5-0.sp2"}}
+        new_actor, kept, new_proof, omitted = bank.omit_missing_layers(actor, members, proof, identities)
+        kinds = [(l["kind"], l["source_sprite_id"]) for l in new_actor["roles"]["r"]["directions"][0][0]["layers"]]
+        self.assertEqual(kinds, [("body", 1), ("clothes", 2)])  # prefix before first missing clothes; shadow absent
+        self.assertEqual(kept, {"Sprite/1-0.sp2", "Sprite/2-0.sp2"})
+        self.assertEqual({(o["kind"], o["source_sprite_id"]) for o in omitted}, {("clothes", 3), ("clothes", 4), ("shadow", 5)})
+        self.assertEqual(len(new_proof["declarations"]), 2)
+        with self.assertRaises(ValueError):
+            bank.omit_missing_layers(actor, members, proof, {m: {} for m in members - {"Sprite/1-0.sp2"}})
+
 
 if __name__ == "__main__":
     unittest.main()
