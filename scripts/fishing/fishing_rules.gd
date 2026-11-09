@@ -63,6 +63,7 @@ func load_original() -> bool:
 	var bake_key: String = BAKE.projection_key(BAKE_NAME, archive_sha) if not archive_sha.is_empty() else ""
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	var data: Dictionary = baked if baked is Dictionary and not (baked as Dictionary).is_empty() else {}
+	if not data.is_empty(): _share_admitted_rows(data)
 	var source = null
 	if data.is_empty():
 		source = ORIGINAL.new()
@@ -74,12 +75,30 @@ func load_original() -> bool:
 		unavailable_source_definitions = source.unavailable_source_definitions.duplicate(true)
 		source_exclusion_evidence = source.source_exclusion_evidence.duplicate(true)
 		return false
-	if not configure(data): return false
+	# The built/baked input is private to this call, so it is adopted without
+	# the defensive deep copies an external pack needs.
+	if not configure(data, true): return false
 	model_input_identity = data.input_identity.duplicate(true)
 	loaded_sha256 = str(model_input_identity.model_payload_sha256)
 	return true
 
-func configure(data: Variant) -> bool:
+## A fresh build's admitted tables hold the very row objects of raw_tables
+## (admission only filters). A baked copy has separate equal rows; point them
+## back at the raw rows so the restored model shares rows like a fresh build.
+static func _share_admitted_rows(data: Dictionary) -> void:
+	if not data.get("tables") is Dictionary or not data.get("raw_tables") is Dictionary: return
+	for table: Variant in data.tables:
+		var admitted: Variant = data.tables[table]
+		var raw: Variant = data.raw_tables.get(table)
+		if not admitted is Array or not raw is Array: continue
+		var cursor: int = 0
+		for index: int in (admitted as Array).size():
+			while cursor < (raw as Array).size() and raw[cursor] != admitted[index]: cursor += 1
+			if cursor >= (raw as Array).size(): break
+			admitted[index] = raw[cursor]
+			cursor += 1
+
+func configure(data: Variant, owned: bool = false) -> bool:
 	if not data is Dictionary or not ORIGINAL._integer(data.get("version")) or int(data.version) != 523 or not data.get("tables") is Dictionary:
 		failure = "낚시 523 입력 형식이 다릅니다."
 		input_problem = "fishing_model_schema_invalid"
@@ -93,7 +112,7 @@ func configure(data: Variant) -> bool:
 		failure = "낚시 523 낚싯대·아이템 입력 형식이 다릅니다."
 		input_problem = "fishing_model_effect_shape_invalid"
 		return false
-	var staged_tables: Dictionary = data.tables.duplicate(true)
+	var staged_tables: Dictionary = data.tables if owned else data.tables.duplicate(true)
 	for key: Variant in staged_tables:
 		if not key is String or not staged_tables[key] is Array:
 			failure = "낚시 523 표 배열 형식이 다릅니다."
@@ -132,15 +151,15 @@ func configure(data: Variant) -> bool:
 	var digest: String = hash.finish().hex_encode()
 	# Commit the complete candidate together; failures retain the prior registry.
 	tables = staged_tables
-	rods = data.get("rods",{}).duplicate(true)
-	item_effects = data.get("item_effects",{}).duplicate(true)
+	rods = data.get("rods",{}) if owned else data.get("rods",{}).duplicate(true)
+	item_effects = data.get("item_effects",{}) if owned else data.get("item_effects",{}).duplicate(true)
 	items = staged_items
-	raw_tables = data.get("raw_tables",data.tables).duplicate(true)
-	raw_rods = data.get("raw_rods",data.get("rods",{})).duplicate(true)
-	raw_item_effects = data.get("raw_item_effects",data.get("item_effects",{})).duplicate(true)
-	source_effect_rows = data.get("source_effect_rows",{}).duplicate(true)
-	unavailable_source_definitions = data.get("unavailable_source_definitions",[]).duplicate(true)
-	source_exclusion_evidence = data.get("source_exclusion_evidence",[]).duplicate(true)
+	raw_tables = data.get("raw_tables",data.tables) if owned else data.get("raw_tables",data.tables).duplicate(true)
+	raw_rods = data.get("raw_rods",data.get("rods",{})) if owned else data.get("raw_rods",data.get("rods",{})).duplicate(true)
+	raw_item_effects = data.get("raw_item_effects",data.get("item_effects",{})) if owned else data.get("raw_item_effects",data.get("item_effects",{})).duplicate(true)
+	source_effect_rows = data.get("source_effect_rows",{}) if owned else data.get("source_effect_rows",{}).duplicate(true)
+	unavailable_source_definitions = data.get("unavailable_source_definitions",[]) if owned else data.get("unavailable_source_definitions",[]).duplicate(true)
+	source_exclusion_evidence = data.get("source_exclusion_evidence",[]) if owned else data.get("source_exclusion_evidence",[]).duplicate(true)
 	model_input_identity = {"kind":"direct_fishing_model","model_payload_sha256":digest,"archive":{},
 		"model_payload_sha256_scope":"JSON.stringify(model_without_input_identity).to_utf8_buffer()"}
 	loaded_sha256 = digest
