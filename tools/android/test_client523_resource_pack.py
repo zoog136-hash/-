@@ -76,6 +76,20 @@ class ResourcePackTest(unittest.TestCase):
         self.assertNotIn("ui", descriptor)
         self.assertEqual(descriptor["start_land_id"], 4)
 
+    def test_icon_selection_section_is_relative(self):
+        icons = self.tmp / "ui_icons"
+        (icons / "icon_pack").mkdir(parents=True)
+        (icons / "icon_pack/original_ui.json").write_text("{}")
+        selection = {"schema": "source523-original-ui-icon-selection-v1", "packs": [{"root": "icon_pack", "manifest_sha256": "0" * 64}]}
+        (icons / "icon-selection.json").write_text(json.dumps(selection))
+        output, _ = self.build(ui_icons=icons)
+        with zipfile.ZipFile(sorted(output.glob("*.zip"))[0]) as archive:
+            descriptor = json.loads(archive.read(pack.PREFIX + pack.DESCRIPTOR))
+        self.assertEqual(descriptor["ui_icons"]["manifest"], "ui_icons/icon-selection.json")
+        selection["packs"][0]["root"] = "/abs/icon_pack"
+        (icons / "icon-selection.json").write_text(json.dumps(selection))
+        self.assertEqual(pack.main(self.args(self.tmp / "out3", ui_icons=icons)), 1)
+
     def test_pack_id_is_deterministic(self):
         _, first = self.build()
         again = self.tmp / "again"

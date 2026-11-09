@@ -3,9 +3,9 @@
 
 Git and the APK carry code only. The user's own client resources are built
 outside the repository (tables ZIP, SP2 bank, image pack, map and tile packs,
-optionally the original UI pack). This tool puts those finished private
-directories, unchanged, into stored ZIP parts that the APK installs from the
-phone's storage (scripts/boot/source523_pack.gd):
+optionally the original UI pack and the CSB icon selection). This tool puts
+those finished private directories, unchanged, into ZIP parts that the APK
+installs from the phone's storage (scripts/boot/source523_pack.gd):
 
 * every entry sits under `source523/`; every part starts with
   `source523_part.json` (pack ID, part number, members with their byte sizes);
@@ -54,7 +54,9 @@ SECTIONS = (
     ("maps", "source523.json"),
     ("tiles", "tilepack523.json"),
     ("ui", "original_ui.json"),
+    ("ui_icons", "icon-selection.json"),
 )
+OPTIONAL = {"ui", "ui_icons"}
 
 
 class PackError(Exception):
@@ -83,6 +85,12 @@ def manifest_checks(section: str, document: dict):
     elif section == "ui":
         require(document.get("schema") == "twilight-original-ui-v1", "UI manifest schema differs")
         require(document.get("blockers") == [], "UI pack still has unresolved inputs")
+    elif section == "ui_icons":
+        require(document.get("schema") == "source523-original-ui-icon-selection-v1", "icon selection schema differs")
+        packs = document.get("packs")
+        require(isinstance(packs, list) and packs and all(
+            isinstance(p, dict) and isinstance(p.get("root"), str) and not p["root"].startswith("/") and ".." not in p["root"].split("/")
+            for p in packs), "icon selection packs must be relative to the selection folder")
 
 
 def walk(root: Path):
@@ -110,7 +118,7 @@ def collect(args):
     for section, manifest_name in SECTIONS:
         root = getattr(args, section)
         if root is None:
-            require(section == "ui", f"--{section} is required")
+            require(section in OPTIONAL, f"--{section.replace('_', '-')} is required")
             continue
         root = root.resolve()
         manifest = root / manifest_name
@@ -217,6 +225,8 @@ def main(argv=None):
     parser.add_argument("--maps", type=Path, required=True, help="current523 S32 source pack (source523.json)")
     parser.add_argument("--tiles", type=Path, required=True, help="current523 tile pack (tilepack523.json)")
     parser.add_argument("--ui", type=Path, help="original UI pack (original_ui.json), optional")
+    parser.add_argument("--ui-icons", type=Path,
+                        help="folder with icon-selection.json and the CSB icon pack it names, optional")
     parser.add_argument("--start-land", type=int, default=4, help="Land ID entered on a fresh install (4 = Aden)")
     parser.add_argument("--part-bytes", type=int, default=MAX_PART_BYTES)
     parser.add_argument("--part-entries", type=int, default=MAX_PART_ENTRIES)

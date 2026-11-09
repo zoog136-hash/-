@@ -97,6 +97,11 @@ func run() -> void:
 		var selected: Dictionary = PACK.selections(base, read.descriptor)
 		check(selected.environment.TWILIGHT_PATCH523_CONTENT == base.path_join("tables/source.zip") and selected.environment.TWILIGHT_SOURCE523_IMAGES == base.path_join("images") and not selected.environment.has("TWILIGHT_SOURCE_UI"), "environment points at the extracted pack")
 		check(selected.bank.manifest_path == base.path_join("bank/manifest.json") and selected.bank.manifest_sha256 == descriptor.bank.manifest_sha256 and selected.bank.source_snapshot == "patch523", "bank selection keeps the manifest pin")
+		check(not selected.environment.has("TWILIGHT_SOURCE523_UI_ICONS"), "no icon selection without its section")
+		var with_icons: Dictionary = read.descriptor.duplicate(true)
+		with_icons.ui_icons = {"root":"ui_icons","manifest":"ui_icons/icon-selection.json","manifest_sha256":"cd".repeat(32)}
+		var icon_env: Dictionary = PACK.selections(base, with_icons).environment
+		check(icon_env.TWILIGHT_SOURCE523_UI_ICONS == base.path_join("ui_icons/icon-selection.json") and icon_env.TWILIGHT_SOURCE523_UI_ICONS_SHA256 == "cd".repeat(32), "icon selection points at the extracted selection file")
 		check(selected.maps.raw_root == base.path_join("maps") and selected.maps.tile_root == base.path_join("tiles") and selected.start_land_id == 4, "map selection uses the extracted map and tile packs")
 	var unsafe: Dictionary = descriptor.duplicate(true)
 	unsafe.bank.root = "../bank"

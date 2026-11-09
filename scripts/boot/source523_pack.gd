@@ -7,8 +7,9 @@ extends Node
 ## parts once from the phone's storage; their members are extracted unchanged
 ## into user://source523/. On every launch, before Main loads, the runtime
 ## readers are pointed at that directory: the same selections the desktop
-## flags and the Termux bootstrap make (tables ZIP, image pack, UI pack,
-## source maps and tiles, SP2 bank). Every reader still checks its own pins.
+## flags and the Termux bootstrap make (tables ZIP, image pack, UI pack, CSB
+## icon selection, source maps and tiles, SP2 bank). Every reader still checks
+## its own pins.
 ##
 ## Runs in exported builds, or on desktop only with an explicit
 ## --source523-pack=<extracted pack directory>.
@@ -32,7 +33,7 @@ const TABLE_COPIES := ["user://growth96_definitions/source.zip","user://source_r
 const BANK_SETTINGS := "user://current523_source_bank.json"
 const MAP_SETTINGS := "user://current523_aden_play.cfg"
 const GENERIC_MAP := "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
-const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json"}
+const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json","ui_icons":"icon-selection.json"}
 const REQUIRED := ["bank","images","maps","tiles"]
 const FRAME_BUDGET_MSEC: int = 30
 const COPY_CHUNK: int = 16 * 1024 * 1024
@@ -103,6 +104,10 @@ static func selections(base: String, descriptor: Dictionary) -> Dictionary:
 	if descriptor.has("ui"):
 		environment.TWILIGHT_SOURCE_UI = base.path_join(descriptor.ui.root)
 		environment.TWILIGHT_SOURCE_UI_SHA256 = str(descriptor.ui.manifest_sha256).to_lower()
+	if descriptor.has("ui_icons"):
+		# The selection names its CSB icon pack relative to its own folder.
+		environment.TWILIGHT_SOURCE523_UI_ICONS = base.path_join(descriptor.ui_icons.manifest)
+		environment.TWILIGHT_SOURCE523_UI_ICONS_SHA256 = str(descriptor.ui_icons.manifest_sha256).to_lower()
 	var bank: Dictionary = {"schema":1,"enabled":true,"source_snapshot":"patch523","tables_zip":tables,
 		"manifest_path":base.path_join(descriptor.bank.manifest),"manifest_sha256":str(descriptor.bank.manifest_sha256).to_lower()}
 	var maps: Dictionary = {"raw_root":base.path_join(descriptor.maps.root),"tile_root":base.path_join(descriptor.tiles.root),
