@@ -3,14 +3,20 @@
 
 An add-on adds sections to the pack already on the phone without
 reinstalling its parts. It is one ZIP picked in the same installer
-("리소스 팩(.zip) 선택"). The first add-on carries the 523 map travel
-definitions (world-links: Land, Portal and Territory rows per Land), which
-523 play mode needs to enter and travel between Lands.
+("리소스 팩(.zip) 선택"). Sections:
+
+* world_links: the 523 map travel definitions (Land, Portal and Territory
+  rows per Land), which 523 play mode needs to enter and travel between Lands;
+* ui: the original main HUD pack (original_ui.json from
+  tools/ui/build_original_ui_pack.py over the 523 client UI files, zero
+  blockers), selected as TWILIGHT_SOURCE_UI.
 
     python3 tools/map_restore/build_patch523_world_links.py \\
         --source-zip <523 tables ZIP> --output /private/world-links
     python3 tools/android/build_client523_addon.py \\
         --world-links /private/world-links --output /private/addon
+    python3 tools/android/build_client523_addon.py \\
+        --ui /private/ui523/main_pack --output /private/addon-ui
 
 The add-on holds derived original rows: keep it private like the pack.
 """
@@ -28,8 +34,26 @@ import build_client523_resource_pack as pack  # noqa: E402
 ADDON_SCHEMA = "twilight-client523-resource-addon-v1"
 ADDON_DESCRIPTOR = "source523_addon.json"
 WORLD_LINKS_SHA256 = "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
-# section -> (manifest file, required manifest SHA-256)
-ADDON_SECTIONS = {"world_links": ("manifest.json", WORLD_LINKS_SHA256)}
+UI_SCHEMA = "twilight-original-ui-v1"
+UI_MANIFEST_LIMIT = 128 * 1024 * 1024
+# section -> (manifest file, required manifest SHA-256 or None when the
+# runtime checks the section itself)
+ADDON_SECTIONS = {"world_links": ("manifest.json", WORLD_LINKS_SHA256),
+                  "ui": ("original_ui.json", None)}
+
+
+def check_ui(root: Path, manifest: Path) -> None:
+    """The runtime refuses a UI pack with blockers or missing originals."""
+    pack.require(manifest.stat().st_size <= UI_MANIFEST_LIMIT, "ui: original_ui.json is above the runtime 128 MB limit")
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    pack.require(document.get("schema") == UI_SCHEMA, "ui: not an original UI pack")
+    pack.require(document.get("blockers") == [], "ui: the pack has unresolved blockers")
+    files = document.get("files")
+    pack.require(isinstance(files, dict) and files, "ui: the pack lists no originals")
+    for member, record in files.items():
+        path = root / "originals" / member
+        pack.require(path.is_file() and path.stat().st_size == record.get("bytes"), f"ui: original missing or resized: {member}")
+        pack.require(pack.sha256_file(path) == record.get("sha256"), f"ui: original changed: {member}")
 
 
 def build(args) -> dict:
@@ -43,7 +67,9 @@ def build(args) -> dict:
         manifest = root / manifest_name
         pack.require(manifest.is_file(), f"{section}: {manifest_name} missing")
         digest = pack.sha256_file(manifest)
-        pack.require(digest == pin, f"{section}: manifest SHA-256 {digest} is not the pinned {pin}")
+        pack.require(pin is None or digest == pin, f"{section}: manifest SHA-256 {digest} is not the pinned {pin}")
+        if section == "ui":
+            check_ui(root, manifest)
         files = pack.walk(root)
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
         sections[section] = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": digest}
@@ -79,6 +105,7 @@ def build(args) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--world-links", type=Path, help="world-links folder (manifest.json 2de8cebb...)")
+    parser.add_argument("--ui", type=Path, help="original main UI pack folder (original_ui.json)")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]

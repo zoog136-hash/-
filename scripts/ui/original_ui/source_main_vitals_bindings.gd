@@ -71,8 +71,10 @@ static func build_char_info(pack: RefCounted, hud: Node, values: Dictionary) -> 
 		37172:{"role":"source_text","text":presented.hp_text},
 		35464:{"role":"source_percent","percent":presented.mp_percent},
 		35528:{"role":"source_text","text":presented.mp_text},
-		20552:{"role":"button","activate":Callable(inputs,"open_character")},
-		20060:{"role":"button","activate":Callable(inputs,"open_inventory")}
+		# A Callable does not keep its RefCounted target alive: the lambdas
+		# hold `inputs` for as long as the mounted buttons hold them.
+		20552:{"role":"button","activate":func() -> Dictionary: return inputs.open_character()},
+		20060:{"role":"button","activate":func() -> Dictionary: return inputs.open_inventory()}
 	}
 	var offsets: Array[int]=CHAR_NODE_OFFSETS.duplicate()
 	if pack.manifest.get("node_scopes",{}).get(CHAR_MEMBER,[]).has(POISON_BAR):

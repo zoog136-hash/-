@@ -141,6 +141,11 @@ func run() -> void:
 	var unknown_index: Dictionary = addon_index.duplicate(true)
 	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":{"bank":section.world_links}}).to_utf8_buffer(), unknown_index).is_empty(), "an add-on cannot replace a base section")
 	check(PACK.read_addon(addon_files["source523_addon.json"], {"pack_id":"12".repeat(32)}).is_empty(), "an add-on descriptor must match its part")
+	var ui_section: Dictionary = {"ui":{"root":"ui","manifest":"ui/original_ui.json","manifest_sha256":"34".repeat(32)}}
+	check(not PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on is accepted")
+	ui_section.ui.manifest = "ui/other.json"
+	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
+	check(PACK.missing_addons(read.descriptor, addons) == ["ui"], "after the travel definitions only the main UI add-on is asked for")
 	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false
 	node.queue_free()

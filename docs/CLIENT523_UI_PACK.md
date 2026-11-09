@@ -81,3 +81,46 @@ P11, `Node::create` fallback); that fallback is not implemented in the strict
 player yet, so those scenes stay listed rather than packed. The complete pack
 manifest is about 194 MB, above the runtime's 128 MB manifest limit, so it is
 an inventory and a source for scoped packs, not a runtime selection.
+
+## Main HUD pack and the UI add-on (2026-11-09)
+
+The original main HUD (`scripts/ui/original_ui/source_main_hud.gd`, bound by
+`renewal_hud._bind_selected_original_main_ui`) now comes from the 523 client
+as a resource-pack add-on, so an installed 31-part pack is not reinstalled.
+
+```sh
+python3 tools/ui/build_client523_main_ui_pack.py \
+  --source-index <private>/ui523/inputs/source-index.json --output <private>/ui523/main_pack
+python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack --output <private>/addon-ui
+# -> twilight523-addon-ui.zip, picked in the same installer ("리소스 팩(.zip) 선택")
+```
+
+* Scenes: every scene the main HUD code names whose whole 523 closure resolves
+  (42), the parents it reads as geometry (`MainScene`, `HUDScene`, workspace
+  parents) as layout sources, and explicit node scopes for the incomplete ones
+  (`ToolTip_HudType_Right`, `ToolTipScene`, `Storage_All`, `Store_All`) plus
+  `Hud_CharInfo` (so the poison bar and level label are in scope).
+  `UI/FloatingUi/FloatingUiScene.csb` is left out (its closure names absent members).
+* All 53 SHA-256 pins in the main HUD code match the 523 client files.
+* Measured: 269 scenes, 594 originals, 0 blockers, manifest 24.4 MB
+  (`1d4e0ad4e5c5…`), add-on ZIP 94 MB. The repo tool reproduces the same
+  manifest SHA.
+* The add-on's `ui` section becomes `TWILIGHT_SOURCE_UI`/`_SHA256`
+  (`scripts/boot/source523_pack.gd` `selections()`); the installer asks for any
+  missing add-on (`missing_addons()`: world_links, ui) and can be postponed.
+
+Fixes found while connecting:
+
+* `source_pack.gd` now stores node scopes, partial-scene offsets and external
+  texture nodes as ints. JSON loads them as floats and `[1012.0].has(1012)` is
+  false in Godot 4.7, so every partial scope was refused.
+* Vitals and blessing buttons used `Callable(local_input, ...)`; a Callable does
+  not keep a RefCounted alive, so the input was freed and the button refused
+  as unconnected. They now use lambdas that hold the input.
+
+Real pack boot (`tests/current523_main_ui_test.gd`, 523 Aden): EXP, HP/MP,
+primary stats, attack pad, top menu, wallet, blessing, map name, target,
+auto message, character, inventory and item name mount. Not mounted:
+system message (523 `Text_Line` carries `customProperty {"transfer":"false"}`,
+which the strict player does not interpret), quickslot (needs owner visuals),
+inventory lock (mounts when an item detail is open).

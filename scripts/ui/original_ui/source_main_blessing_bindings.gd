@@ -49,8 +49,9 @@ static func build(pack: RefCounted, hud: Object) -> Dictionary:
 	if not state.get("ok",false):return state
 	var input=BlessingInput.new()
 	input.host=weakref(hud)
+	# The lambda below holds `input`; a Callable(input, ...) would not.
 	var scope: Array[int]=[BUTTON,SLOT_PROJECT]
-	var bindings: Dictionary={BUTTON:{"role":"button","activate":Callable(input,"activate"),"displaystate":not state.disabled},SLOT_PROJECT:{"role":"project","source_node_offsets":[3496,AMOUNT],"bindings":{AMOUNT:{"role":"source_text","text":str(state.amount)}}}}
+	var bindings: Dictionary={BUTTON:{"role":"button","activate":func() -> Dictionary: return input.activate(),"displaystate":not state.disabled},SLOT_PROJECT:{"role":"project","source_node_offsets":[3496,AMOUNT],"bindings":{AMOUNT:{"role":"source_text","text":str(state.amount)}}}}
 	var info_in_scope: bool=true
 	var allowed: Variant=pack.manifest.get("node_scopes",{}).get(MEMBER)
 	if allowed is Array:
