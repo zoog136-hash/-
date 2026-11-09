@@ -8,8 +8,10 @@ reinstalling its parts. It is one ZIP picked in the same installer
 * world_links: the 523 map travel definitions (Land, Portal and Territory
   rows per Land), which 523 play mode needs to enter and travel between Lands;
 * ui: the original main HUD pack (original_ui.json from
-  tools/ui/build_original_ui_pack.py over the 523 client UI files, zero
-  blockers), selected as TWILIGHT_SOURCE_UI.
+  tools/ui/build_client523_main_ui_pack.py over the 523 client UI files, zero
+  blockers), selected as TWILIGHT_SOURCE_UI;
+* world_map: the 523 world-map contract (tools/maps/build_client523_world_map.py),
+  selected in user://current523_world_map.cfg. Shipped with ui in one file.
 
     python3 tools/map_restore/build_patch523_world_links.py \\
         --source-zip <523 tables ZIP> --output /private/world-links
@@ -39,7 +41,24 @@ UI_MANIFEST_LIMIT = 128 * 1024 * 1024
 # section -> (manifest file, required manifest SHA-256 or None when the
 # runtime checks the section itself)
 ADDON_SECTIONS = {"world_links": ("manifest.json", WORLD_LINKS_SHA256),
-                  "ui": ("original_ui.json", None)}
+                  "ui": ("original_ui.json", None),
+                  "world_map": ("contract.json", None)}
+WORLD_MAP_SCHEMA = "twilight-source523-world-map-v1"
+# Sections delivered in one file share its name (the installer asks for it).
+FILE_NAMES = {"ui": "ui", "world_map": "ui", "world_links": "world-links"}
+
+
+def check_world_map(root: Path, manifest: Path) -> None:
+    """The game's map adapter reads at most 4 MB; offers name a World per Land."""
+    pack.require(manifest.stat().st_size <= 4 * 1024 * 1024, "world_map: contract.json is above the 4 MB adapter limit")
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    pack.require(document.get("schema") == WORLD_MAP_SCHEMA, "world_map: not a 523 world-map contract")
+    pack.require(isinstance(document.get("image_infos"), list) and document["image_infos"], "world_map: no image rows")
+    offers = document.get("offered_worlds")
+    pack.require(isinstance(offers, dict) and offers, "world_map: no offered worlds")
+    for land, offer in offers.items():
+        pack.require(land.isdigit() and isinstance(offer, dict) and type(offer.get("world_id")) is int
+                     and isinstance(offer.get("label"), str) and offer["label"], f"world_map: invalid offer for Land {land}")
 
 
 def check_ui(root: Path, manifest: Path) -> None:
@@ -70,6 +89,8 @@ def build(args) -> dict:
         pack.require(pin is None or digest == pin, f"{section}: manifest SHA-256 {digest} is not the pinned {pin}")
         if section == "ui":
             check_ui(root, manifest)
+        if section == "world_map":
+            check_world_map(root, manifest)
         files = pack.walk(root)
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
         sections[section] = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": digest}
@@ -84,7 +105,7 @@ def build(args) -> dict:
     descriptor_bytes = json.dumps(descriptor, ensure_ascii=False, indent=1, sort_keys=True).encode() + b"\n"
     out = args.output
     out.mkdir(mode=0o700)
-    name = "twilight523-addon-" + "-".join(sorted(s.replace("_", "-") for s in sections)) + ".zip"
+    name = "twilight523-addon-" + "-".join(sorted({FILE_NAMES[s] for s in sections})) + ".zip"
     index = {"schema": pack.PART_SCHEMA, "pack_id": descriptor["addon_id"], "part": 1, "parts": 1, "addon": True,
              "members": [[member, size] for member, _, size in members]}
     import zipfile
@@ -106,6 +127,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--world-links", type=Path, help="world-links folder (manifest.json 2de8cebb...)")
     parser.add_argument("--ui", type=Path, help="original main UI pack folder (original_ui.json)")
+    parser.add_argument("--world-map", type=Path, help="523 world-map contract folder (contract.json)")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]

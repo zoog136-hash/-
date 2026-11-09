@@ -357,7 +357,8 @@ func _area_target(scene: Node2D) -> Dictionary:
 
 func _mark_authored_row(area_scene: Node2D) -> Dictionary:
 	if not area_scene.has_method("project_player"):return _fail("source_main_map_project_player_api_missing")
-	var nested: Dictionary=area_scene.project_player([AREA_AUTHORED_ROW])
+	var row_path: Array[int]=[AREA_AUTHORED_ROW]
+	var nested: Dictionary=area_scene.project_player(row_path)
 	if not nested.get("ok",false):return nested
 	var row: Variant=nested.get("player")
 	if not is_instance_valid(row) or not row.has_method("set_bound_visible"):return _fail("source_main_map_original_authored_row_missing")

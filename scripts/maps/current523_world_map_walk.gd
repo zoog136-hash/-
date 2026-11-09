@@ -7,6 +7,10 @@ const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const KIND: String = "CURRENT523_WORLD_MAP_WALK_V1"
 const GEOGRAPHY: String = "CURRENT523_S32_OWN_SOURCE_FIELD_V1"
 const WALK_PROFILE: String = "CURRENT523_S32_OWN_ALLOWLIST_V1"
+## The field's client rule (S32 attribute bit0). Walking still goes through
+## the field's own point_clear/find_world_path, which apply whichever rule the
+## field was opened with.
+const CLIENT_WALK_PROFILE: String = "CURRENT523_S32_CLIENT_ATTR_BIT0_V1"
 
 ## Actual playable source fields are RefCounted, not scene Nodes.
 ## This is an ephemeral stale-input identity, never a saved movement authority.
@@ -117,7 +121,7 @@ static func _context(world: Node, field: RefCounted) -> Dictionary:
 	var policy: Variant = _property(field, "policy")
 	var source_bounds: Variant = _property(field, "source_bounds")
 	if not definition is Dictionary or definition.get("geographic_contract") != GEOGRAPHY or definition.get("source_manifest_sha256") != settings.source_manifest_sha256: return {}
-	if not native_land is Dictionary or native_land.is_empty() or native_land.get("ID") != settings.get("native_land_id") or not policy is Dictionary or policy.get("profile") != WALK_PROFILE: return {}
+	if not native_land is Dictionary or native_land.is_empty() or native_land.get("ID") != settings.get("native_land_id") or not policy is Dictionary or not policy.get("profile") in [WALK_PROFILE, CLIENT_WALK_PROFILE]: return {}
 	if not source_bounds is Rect2i or not source_bounds.has_area() or not _property(field, "source_asset") is String: return {}
 	var coordinates: Variant = _property(field, "coordinates")
 	if not coordinates is RefCounted or not is_instance_valid(coordinates) or coordinates.get_script() != COORDINATES or _property(coordinates, "valid") != true: return {}

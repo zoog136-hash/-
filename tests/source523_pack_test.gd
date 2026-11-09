@@ -145,7 +145,7 @@ func run() -> void:
 	check(not PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on is accepted")
 	ui_section.ui.manifest = "ui/other.json"
 	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
-	check(PACK.missing_addons(read.descriptor, addons) == ["ui"], "after the travel definitions only the main UI add-on is asked for")
+	check(PACK.missing_addons(read.descriptor, addons) == ["ui","world_map"], "after the travel definitions the main UI add-on (UI and world map) is asked for")
 	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false
 	node.queue_free()
