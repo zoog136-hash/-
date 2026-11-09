@@ -1119,6 +1119,7 @@ func _navigate(section: String) -> void:
 			var view=load("res://scripts/ui/spell_group_conversion_view.gd").new()
 			view.configure(get_parent());workspace.mount(view)
 		"tj_coupons": open_tj_coupons()
+		"promo_code": open_promo_code()
 		"quests": open_quests()
 		"shop": open_shop()
 		"npc_shop": open_npc_shop()
@@ -1152,6 +1153,10 @@ func _on_lineage_side_action(action_id: String) -> void:
 		if is_instance_valid(lineage_side_ui):lineage_side_ui.hide_all()
 		open_tj_coupons()
 		return
+	if action_id == "promo_code":
+		if is_instance_valid(lineage_side_ui):lineage_side_ui.hide_all()
+		open_promo_code()
+		return
 	if action_id == "quests":
 		if is_instance_valid(lineage_side_ui):
 			lineage_side_ui.hide_all()
@@ -1163,6 +1168,12 @@ func _on_lineage_side_action(action_id: String) -> void:
 func open_tj_coupons() -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
 	var view = preload("res://scripts/tj/view.gd").new()
+	workspace.mount(view)
+	view.configure(get_parent())
+
+func open_promo_code() -> void:
+	_open_window("promo_code", "쿠폰 코드", "코드 입력 · 보상 지급")
+	var view = preload("res://scripts/ui/promo_code_view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent())
 
