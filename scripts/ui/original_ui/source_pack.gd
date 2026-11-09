@@ -1,6 +1,11 @@
 extends RefCounted
 ## Explicit private source pack. Failed replacement preserves the prior pack.
 const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
+## Decoded CPU pages and reconstructed frames are shared across instances that
+## opened the same verified pack; see source_pack_page_cache.gd for identity,
+## leases and the idle byte budget. This instance holds a lease on every page
+## in _pages until release_cache_leases(), a successful open() or deletion.
+const PAGE_CACHE=preload("res://scripts/ui/original_ui/source_pack_page_cache.gd")
 var manifest: Dictionary={}
 var root: String=""
 var manifest_sha256: String=""
@@ -9,6 +14,34 @@ var _pages: Dictionary={}
 var _textures: Dictionary={}
 var _fonts: Dictionary={}
 var _bitmap_fonts: Dictionary={}
+var _page_leases: Dictionary={}
+# Captured at construction: a RefCounted cannot call its own methods during
+# NOTIFICATION_PREDELETE, so the lease owner id must already be stored.
+var _lease_owner: int=0
+
+func _init() -> void:
+	_lease_owner=get_instance_id()
+
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_PREDELETE and not _page_leases.is_empty():
+		PAGE_CACHE.release(_lease_owner,_page_leases.keys())
+		_page_leases.clear()
+
+## Screen/owner close: returns this instance's page leases so the pages become
+## idle (evictable) unless another open screen still leases them. Textures
+## already handed out stay valid; pages are re-acquired on the next decode.
+func release_cache_leases() -> void:
+	var keys: Array=_page_leases.keys()
+	_page_leases.clear()
+	_pages.clear()
+	if not keys.is_empty():PAGE_CACHE.release(_lease_owner,keys)
+
+func cache_stats() -> Dictionary:
+	var result: Dictionary=PAGE_CACHE.stats()
+	result["instance_pages"]=_pages.size()
+	result["instance_page_leases"]=_page_leases.size()
+	result["instance_textures"]=_textures.size()
+	return result
 
 func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	var manifest_path: String=pack_root.path_join("original_ui.json")
@@ -61,6 +94,7 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256
+	release_cache_leases()
 	_pages.clear()
 	_textures.clear()
 	_fonts.clear()
@@ -114,6 +148,15 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	var plist: String=str(reference.get("plistFile",""))
 	var key: String=plist+":"+str(reference.path)+":"+str(cocos_pixels)
 	if _textures.has(key): return _textures[key]
+	var shared_key: String=""
+	# Same early rejection as the decode path below, before any shared lookup.
+	if plist.is_empty() and int(reference.get("resourceType",0))!=0: return null
+	if PAGE_CACHE.enabled:
+		shared_key=PAGE_CACHE.frame_key(manifest_sha256,root,"page" if plist.is_empty() else "atlas",plist,str(reference.path),cocos_pixels)
+		var shared: Texture2D=PAGE_CACHE.shared_frame(shared_key)
+		if shared!=null:
+			_textures[key]=shared
+			return shared
 	var original: Image
 	var premultiplied: bool=false
 	if plist.is_empty():
@@ -137,11 +180,20 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	var result:=ImageTexture.create_from_image(original)
 	result.set_meta("cocos_premultiplied",cocos_pixels and premultiplied)
 	_textures[key]=result
+	if not shared_key.is_empty():PAGE_CACHE.register_frame(shared_key,result)
 	return result
 
 func _page(member: String) -> Image:
 	if _pages.has(member): return _pages[member]
 	if not _safe_member(member) or not manifest.files.has(member): return null
+	var cache_key: String=""
+	if PAGE_CACHE.enabled:
+		cache_key=PAGE_CACHE.page_key(manifest_sha256,root,member,str(manifest.files[member].sha256))
+		var shared: Image=PAGE_CACHE.acquire_page(cache_key,_lease_owner)
+		if shared!=null:
+			_page_leases[cache_key]=true
+			_pages[member]=shared
+			return shared
 	var path: String=root.path_join("originals").path_join(member)
 	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=manifest.files[member].sha256:
 		last_error="source_hash_or_size:"+member; return null
@@ -149,6 +201,9 @@ func _page(member: String) -> Image:
 	if original==null or original.is_empty(): return null
 	original.convert(Image.FORMAT_RGBA8)
 	original.set_meta("cocos_png_pma",_png_premultiplies(path))
+	if not cache_key.is_empty():
+		original=PAGE_CACHE.store_page(cache_key,_lease_owner,original)
+		_page_leases[cache_key]=true
 	_pages[member]=original
 	return original
 
@@ -258,6 +313,13 @@ func particle(reference: Dictionary) -> Dictionary:
 func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
 	var key: String="embedded_particle:"+member
 	if _textures.has(key):return _textures[key]
+	var shared_key: String=""
+	if PAGE_CACHE.enabled:
+		shared_key=PAGE_CACHE.frame_key(manifest_sha256,root,"embedded_particle","",member,true)
+		var shared: Texture2D=PAGE_CACHE.shared_frame(shared_key)
+		if shared!=null:
+			_textures[key]=shared
+			return shared
 	var compressed: PackedByteArray=Marshalls.base64_to_raw(encoded)
 	if compressed.size()<2:return null
 	var mode: int=FileAccess.COMPRESSION_GZIP if compressed[0]==31 and compressed[1]==139 else FileAccess.COMPRESSION_DEFLATE
@@ -275,6 +337,7 @@ func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
 	result.set_meta("cocos_premultiplied",true)
 	result.set_meta("original_embedded_png_sha256",_sha256(png))
 	_textures[key]=result
+	if not shared_key.is_empty():PAGE_CACHE.register_frame(shared_key,result)
 	return result
 
 

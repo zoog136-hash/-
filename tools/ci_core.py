@@ -21,6 +21,8 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('reference_sp2_asset_sharing_test', []),
+    ('original_ui_page_cache_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
@@ -334,7 +336,9 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
+            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+                      'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
+                      'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
                       'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
