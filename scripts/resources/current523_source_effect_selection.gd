@@ -71,7 +71,7 @@ static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: 
 	if source_snapshot not in ["base508","patch523"] or not STAGES.has(stage) or not BANK.integer(spell.get("ID"),1): return fail("current523_effect_explicit_spell_and_stage_required")
 	var supplied: Dictionary = SOURCE.source_tables(context)
 	if not supplied.ok: return supplied
-	var native: Dictionary = supplied.by_id.get("SpellClass",{}).get(int(spell.ID),{})
+	var native: Dictionary = SOURCE.table_row("SpellClass",int(spell.ID))
 	# Full source-row agreement protects legacy callers from numeric snapshot
 	# substitution. Current-row callers supply their actual admitted Spell row.
 	if native.is_empty() or native != spell: return fail("current523_effect_complete_spell_definition_differs")
@@ -96,7 +96,7 @@ static func select_invoke_effect(original_option: Dictionary, field: String, con
 	if field not in ["TargetEffectSpriteID","AttackerEffectSpriteID"] or not BANK.integer(original_option.get("ID"),1): return fail("current523_invoke_effect_complete_source_option_and_field_required")
 	var supplied: Dictionary = SOURCE.source_tables(context,["InvokeOption"])
 	if not supplied.ok: return supplied
-	var native: Dictionary = supplied.by_id.get("InvokeOption",{}).get(int(original_option.ID),{})
+	var native: Dictionary = SOURCE.table_row("InvokeOption",int(original_option.ID))
 	if native.is_empty() or native != original_option: return fail("current523_invoke_effect_complete_option_definition_differs")
 	var reference: Dictionary = {"table":"InvokeOption","row":native.duplicate(true),"field":field,
 		"action_field":"sole_original_SPR_action_host_policy",
@@ -122,7 +122,7 @@ static func select_player_death(request_key: String, context: Dictionary = {}) -
 	var supplied: Dictionary = SOURCE.source_tables(context)
 	if not supplied.get("ok",false): return supplied
 	var matches: Array[Dictionary] = []
-	for row: Dictionary in supplied.rows.get("ListSprAction",[]):
+	for row: Dictionary in SOURCE.table_rows("ListSprAction"):
 		# Death is a distinct source motion, not an inferred weapon attack or
 		# a fabricated corpse frame. Require its unique canonical declaration.
 		if row.get("MotionType") == 5 and row.get("WeaponType") == 0 and row.get("WeaponAlterType") == 0:
@@ -140,17 +140,16 @@ static func select_item_consume(original_item: Dictionary, requested_sprite: int
 	if not BANK.integer(original_item.get("ID"),1) or requested_sprite <= 0: return fail("current523_item_consume_complete_source_item_required")
 	var supplied: Dictionary = SOURCE.source_tables(context,["ItemClass","ItemBonus"])
 	if not supplied.ok: return supplied
-	var native: Dictionary = supplied.by_id.get("ItemClass",{}).get(int(original_item.ID),{})
+	var native: Dictionary = SOURCE.table_row("ItemClass",int(original_item.ID))
 	if native.is_empty() or native != original_item: return fail("current523_item_consume_complete_item_definition_differs")
 	if not native.get("TestItem") is bool or native.TestItem != false: return fail("current523_test_item_consume_effect_not_admitted")
 	var matches: Dictionary = {}
 	var chains: Array = []
-	for link: Dictionary in supplied.rows.get("ItemBonus",[]):
-		if not BANK.integer(link.get("ItemClassID")) or int(link.ItemClassID) != int(native.ID): continue
+	for link: Dictionary in SOURCE.table_where("ItemBonus","ItemClassID",int(native.ID)):
 		if not BANK.integer(link.get("BonusID"),1): return fail("current523_item_consume_typed_bonus_link_missing")
-		var bonus: Dictionary = supplied.by_id.get("Bonus",{}).get(int(link.BonusID),{})
+		var bonus: Dictionary = SOURCE.table_row("Bonus",int(link.BonusID))
 		if bonus.is_empty() or not BANK.integer(bonus.get("BonusTypeID")): return fail("current523_item_consume_typed_bonus_chain_incomplete")
-		var kind: Dictionary = supplied.by_id.get("BonusType",{}).get(int(bonus.get("BonusTypeID",-1)),{})
+		var kind: Dictionary = SOURCE.table_row("BonusType",int(bonus.get("BonusTypeID",-1)))
 		if bonus.is_empty() or kind.is_empty(): return fail("current523_item_consume_typed_bonus_chain_incomplete")
 		if kind.get("Name") != "ItemConsumeEffectSpriteID": continue
 		var chain: Dictionary = {"ItemClass":native.duplicate(true),"ItemBonus":link.duplicate(true),
@@ -158,7 +157,7 @@ static func select_item_consume(original_item: Dictionary, requested_sprite: int
 		if not link.get("IsPossession") is bool or link.IsPossession != false: return fail("current523_item_consume_possession_condition_unresolved",chain)
 		if not BANK.integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID) != 0 or not BANK.integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID) != 0: return fail("current523_item_consume_bonus_condition_unresolved",chain)
 		if not BANK.integer(kind.get("UnitID"),1): return fail("current523_item_consume_typed_sprite_unit_missing",chain)
-		var unit: Dictionary = supplied.by_id.get("Unit",{}).get(int(kind.UnitID),{})
+		var unit: Dictionary = SOURCE.table_row("Unit",int(kind.UnitID))
 		if unit.get("Name") != "SpriteID": return fail("current523_item_consume_bonus_unit_not_sprite_id",chain)
 		chain["Unit"] = unit.duplicate(true)
 		var sprite: int = _source_integer(bonus.get("Value"))
@@ -182,7 +181,7 @@ static func select_global(event_name: String, legacy_definition: Dictionary = {}
 	var supplied: Dictionary = SOURCE.source_tables(context)
 	if not supplied.ok: return supplied
 	var matches: Array[Dictionary] = []
-	for row: Dictionary in supplied.rows.get("ConstantData",[]):
+	for row: Dictionary in SOURCE.table_rows("ConstantData"):
 		if row.get("Name") == GLOBALS[event_name]: matches.append(row)
 	if matches.size() != 1: return fail("current523_global_source_constant_not_unique")
 	var row: Dictionary = matches[0]

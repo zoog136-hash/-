@@ -22,10 +22,20 @@ const PRIMARY_ACTIONS = {
 	34:{"idle":122,"walk":119,"attack":120}, 54:{"idle":127,"walk":124,"attack":125},
 	84:{"idle":151,"walk":147,"attack":148}, 102:{"idle":156,"walk":152,"attack":153}
 }
+const DEF = preload("res://scripts/resources/current523_definition_rows.gd")
 static var _table_path: String = ""
 static var _table_sha: String = ""
+static var _table_stamp: String = ""
 static var _rows: Dictionary = {}
 static var _by_id: Dictionary = {}
+# True when the shared original-definition reader has opened an archive with
+# this same pinned SHA. Its tables are column-packed and large ones stay on
+# storage, so this module keeps no second whole-table copy (Bonus, SpellClass,
+# NpcClass, ItemClass... cost about 1.4 GB as row dictionaries on a device).
+static var _shared: bool = false
+static var _shared_tables: Dictionary = {}
+## Tests turn this off to compare against the row-dictionary path.
+static var shared_tables_enabled: bool = true
 
 static func fail(reason: String, enabled: bool = true) -> Dictionary:
 	return {"ok":false,"enabled":enabled,"status":"selection_pending","reason":reason,"source_snapshot":"patch523"}
@@ -58,13 +68,28 @@ static func _load_tables(path: String, additional_tables: Array[String] = []) ->
 		if not OPTIONAL_TABLES.has(table): return fail("current523_additional_source_table_not_supported:" + table)
 		if not required.has(table): required.append(table)
 	# Normal production integrity guard, independent of the optional old identity pack.
-	var current_sha: String = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
-	if path != _table_path or current_sha != _table_sha:
+	# The SHA is measured again only when the file's size or time changes; every
+	# NPC, effect and card selection calls this, and hashing 25 MB each time
+	# cost tens of milliseconds per call on a phone.
+	var stamp: String = ""
+	if FileAccess.file_exists(path): stamp = "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
+	var current_sha: String = _table_sha if path == _table_path and not stamp.is_empty() and stamp == _table_stamp else (FileAccess.get_sha256(path) if not stamp.is_empty() else "")
+	if path != _table_path or current_sha != _table_sha or stamp != _table_stamp:
 		_rows.clear()
 		_by_id.clear()
+		_shared = false
+		_shared_tables.clear()
 		_table_path = path
 		_table_sha = current_sha
+		_table_stamp = stamp
 	if current_sha != TABLES_SHA: return fail("current523_exact_source_tables_missing_or_changed")
+	if shared_tables_enabled and (_shared or (DEF.SOURCE_SHA == TABLES_SHA and DEF.verified_key() == TABLES_SHA + ":" + str(DEF.SOURCE_BYTES))):
+		for table: String in required:
+			if _shared_tables.has(table): continue
+			if DEF.table_metadata(table).is_empty(): return fail("current523_source_table_missing:" + table)
+			_shared_tables[table] = true
+		_shared = true
+		return {"ok":true}
 	var missing: Array[String] = []
 	for table: String in required:
 		if not _rows.has(table): missing.append(table)
@@ -105,14 +130,46 @@ static func source_tables(context: Dictionary = {}, additional_tables: Array[Str
 	if not configured.ok: return configured
 	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip), additional_tables)
 	if not loaded.ok: return loaded
-	return {"ok":true,"rows":_rows,"by_id":_by_id,"options":configured.options,"source_tables_sha256":TABLES_SHA}
+	return {"ok":true,"options":configured.options,"source_tables_sha256":TABLES_SHA}
+
+## One original row by ID (a fresh copy), or {} when absent or not unique.
+## Callers must have loaded the table through source_tables() first.
+static func table_row(table: String, id: int) -> Dictionary:
+	if not _shared:
+		var row: Dictionary = _by_id.get(table,{}).get(id,{})
+		return row
+	var matches: Array[Dictionary] = table_where(table,"ID",id)
+	return matches[0] if matches.size() == 1 else {}
+
+## Rows whose `field` equals the integer `value`, in original table order.
+static func table_where(table: String, field: String, value: int) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if not _shared:
+		for row: Dictionary in _rows.get(table,[]):
+			if row.has(field) and BANK.integer(row[field]) and int(row[field]) == value: result.append(row)
+		return result
+	if DEF.integer_field(table,field): return DEF.related(table,field,value)
+	var column: Variant = DEF.column(table,field)
+	if column is Array or column is PackedFloat64Array:
+		for index: int in column.size():
+			if BANK.integer(column[index]) and int(column[index]) == value: result.append(DEF.row_at(table,index))
+		return result
+	# A field missing from some rows: test each row as the dictionaries did.
+	for index: int in DEF.row_count(table):
+		var row: Dictionary = DEF.row_at(table,index)
+		if row.has(field) and BANK.integer(row[field]) and int(row[field]) == value: result.append(row)
+	return result
+
+## Every row of a small table, in original table order.
+static func table_rows(table: String) -> Array:
+	if not _shared: return _rows.get(table,[])
+	return DEF.rows(table)
 
 static func _add_set(set_id: int, path: Array, output: Array) -> bool:
-	var source_set: Dictionary = _by_id.PolymorphSet.get(set_id,{})
+	var source_set: Dictionary = table_row("PolymorphSet",set_id)
 	if source_set.is_empty(): return false
-	for join: Dictionary in _rows.PolymorphEntityForSet:
-		if int(join.get("PolymorphSetID",-1)) != set_id: continue
-		var entity: Dictionary = _by_id.PolymorphEntity.get(int(join.get("PolymorphEntityID",-1)),{})
+	for join: Dictionary in table_where("PolymorphEntityForSet","PolymorphSetID",set_id):
+		var entity: Dictionary = table_row("PolymorphEntity",int(join.get("PolymorphEntityID",-1)))
 		if entity.is_empty() or not BANK.integer(entity.get("SpriteID"),1): return false
 		output.append({"sprite_id":int(entity.SpriteID),"entity":entity.duplicate(true),"path":path + [{"table":"PolymorphSet","row":source_set.duplicate(true)},{"table":"PolymorphEntityForSet","row":join.duplicate(true)},{"table":"PolymorphEntity","row":entity.duplicate(true)}]})
 	return true
@@ -142,11 +199,11 @@ static func _preserved_summon_matches(path: Array, npc: Dictionary, application:
 	return true
 
 static func _add_npc_summon(bonus: Dictionary, kind: Dictionary, path: Array, output: Array, preserved_rule: Dictionary) -> bool:
-	var unit: Dictionary = _by_id.Unit.get(int(kind.get("UnitID",-1)),{})
+	var unit: Dictionary = table_row("Unit",int(kind.get("UnitID",-1)))
 	if unit.get("Name","") != "NPCClassID": return false
-	var npc: Dictionary = _by_id.NpcClass.get(int(bonus.get("Value",-1)),{})
+	var npc: Dictionary = table_row("NpcClass",int(bonus.get("Value",-1)))
 	if npc.is_empty() or not BANK.integer(npc.get("Sprite"),1) or bool(npc.get("TestNPC",false)): return false
-	var application: Dictionary = _by_id.BonusApplicationType.get(int(bonus.get("BonusApplicationTypeID",-1)),{})
+	var application: Dictionary = table_row("BonusApplicationType",int(bonus.get("BonusApplicationTypeID",-1)))
 	if application.is_empty(): return false
 	var condition: Dictionary = {"BonusApplicationTypeID":int(bonus.BonusApplicationTypeID),"BonusApplicationTypeName":str(application.get("Name","")),"BonusApplicationTargetID":int(bonus.get("BonusApplicationTargetID",0))}
 	var preserved: bool = _preserved_summon_matches(path,npc,application,condition,preserved_rule)
@@ -158,13 +215,12 @@ static func _add_npc_summon(bonus: Dictionary, kind: Dictionary, path: Array, ou
 
 static func _walk_buff(buff_id: int, path: Array, seen: Array, output: Array, preserved_rule: Dictionary = {}) -> bool:
 	if buff_id in seen or seen.size() >= 16: return false
-	var buff: Dictionary = _by_id.BuffClass.get(buff_id,{})
+	var buff: Dictionary = table_row("BuffClass",buff_id)
 	if buff.is_empty(): return false
 	var base: Array = path + [{"table":"BuffClass","row":buff.duplicate(true)}]
-	for link: Dictionary in _rows.BuffBonus:
-		if int(link.get("BuffClassID",-1)) != buff_id: continue
-		var bonus: Dictionary = _by_id.Bonus.get(int(link.get("BonusID",-1)),{})
-		var kind: Dictionary = _by_id.BonusType.get(int(bonus.get("BonusTypeID",-1)),{})
+	for link: Dictionary in table_where("BuffBonus","BuffClassID",buff_id):
+		var bonus: Dictionary = table_row("Bonus",int(link.get("BonusID",-1)))
+		var kind: Dictionary = table_row("BonusType",int(bonus.get("BonusTypeID",-1)))
 		if bonus.is_empty() or kind.is_empty(): return false
 		if kind.get("Name","") == "BuffCardSummonNPCClassID" and (int(link.get("CharacterLevel",0)) != 0 or int(link.get("CharacterClass",0)) != 0 or int(link.get("MinSpellLevel",0)) != 0): return false
 		if kind.get("Name","") in ["PolymorphSetID","SpecialPolymorphSetID","SubSlotBuffClassID"]:
@@ -181,15 +237,13 @@ static func _walk_buff(buff_id: int, path: Array, seen: Array, output: Array, pr
 
 static func source_run_binding(identity_actor: int, source_walk_action: int, source_weapon_type: int = 0) -> Dictionary:
 	var run_rows: Array = []
-	for row: Dictionary in _rows.get("SpriteRun",[]):
-		if int(row.get("WalkSpriteID",-1)) == identity_actor: run_rows.append(row.duplicate(true))
+	for row: Dictionary in table_where("SpriteRun","WalkSpriteID",identity_actor): run_rows.append(row.duplicate(true))
 	var separate_rows: Array = []
-	for row: Dictionary in _rows.get("SpriteSeparatedWalk",[]):
-		if int(row.get("SpriteId",-1)) == identity_actor: separate_rows.append(row.duplicate(true))
+	for row: Dictionary in table_where("SpriteSeparatedWalk","SpriteId",identity_actor): separate_rows.append(row.duplicate(true))
 	var optional_actions: Dictionary = {}
 	var optional_actors: Dictionary = {}
 	var status: Dictionary = {"state":"no_unique_source_run_declared","source_SpriteRun_rows":run_rows,"source_SpriteSeparatedWalk_rows":separate_rows,"separate_walk_action_hint":"preserved_uninterpreted; no inferred action-ID conversion","fallback":"existing_native_walk_is_not_a_run_track"}
-	var action: Dictionary = _by_id.get("ListSprAction",{}).get(source_walk_action,{})
+	var action: Dictionary = table_row("ListSprAction",source_walk_action)
 	if action.get("MotionType") != 1 or action.get("WeaponType") != source_weapon_type or action.get("WeaponAlterType") != 0:
 		status["state"] = "source_run_walk_action_family_unresolved"
 	elif run_rows.size() == 1 and BANK.integer(run_rows[0].get("RunSpriteID"),1):
@@ -213,8 +267,8 @@ static func select_class(context: Dictionary = {}) -> Dictionary:
 		return fail("current523_explicit_character_class_gender_weapon_required")
 	var gender_id: int = int(context.gender_id)
 	if gender_id not in [1,2]: return fail("current523_explicit_character_gender_required")
-	var native: Dictionary = supplied.by_id.Class.get(int(context.class_id),{})
-	var gender: Dictionary = supplied.by_id.Gender.get(gender_id,{})
+	var native: Dictionary = table_row("Class",int(context.class_id))
+	var gender: Dictionary = table_row("Gender",gender_id)
 	if native.is_empty() or gender.get("Name") != ("Male" if gender_id == 1 else "Female"):
 		return fail("current523_original_character_class_or_gender_missing")
 	var field: String = "MaleSpriteID" if gender_id == 1 else "FemaleSpriteID"
@@ -224,7 +278,7 @@ static func select_class(context: Dictionary = {}) -> Dictionary:
 	var actions: Dictionary = PRIMARY_ACTIONS[weapon].duplicate()
 	var action_rows: Dictionary = {}
 	for role: String in actions:
-		var action: Dictionary = supplied.by_id.ListSprAction.get(int(actions[role]),{})
+		var action: Dictionary = table_row("ListSprAction",int(actions[role]))
 		if action.is_empty() or action.get("WeaponType") != weapon or action.get("MotionType") != {"idle":4,"walk":1,"attack":2}[role] or action.get("WeaponAlterType") != (1 if weapon in [3,10] and role == "attack" else 0):
 			return fail("current523_primary_action_source_row_differs")
 		action_rows[role] = action.duplicate(true)
@@ -248,7 +302,7 @@ static func source_hit_binding(weapon: int) -> Dictionary:
 	# The existing player motion owner has already admitted the hit state.
 	# Only its exact current primary weapon family supplies a reaction action.
 	var matches: Array[Dictionary] = []
-	for row: Dictionary in _rows.get("ListSprAction",[]):
+	for row: Dictionary in table_rows("ListSprAction"):
 		if row.get("MotionType") == 3 and row.get("WeaponType") == weapon and row.get("WeaponAlterType") == 0:
 			matches.append(row)
 	if matches.size() != 1: return {"ok":false,"state":"source_primary_hit_action_not_unique","source_weapon_type":weapon}
@@ -265,11 +319,11 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	if record.get("sourceId","") != source_id or not record.get("source_original_card") is Dictionary: return fail("current523_canonical_card_required")
 	var loaded: Dictionary = _load_tables(str(configured.options.tables_zip))
 	if not loaded.ok: return loaded
-	var native: Dictionary = _by_id.BuffCard.get(int(record.get("source_card_id",-1)),{})
+	var native: Dictionary = table_row("BuffCard",int(record.get("source_card_id",-1)))
 	# The data owner's canonical sourceId is the saved ABI. Do not reconstruct
 	# that namespace from a current deck number or relabel the saved identity.
 	if native.is_empty() or native != record.source_original_card or int(native.get("BuffCardDeckID",-1)) != DECKS[consumer] or int(record.get("source_deck_id",-1)) != int(native.BuffCardDeckID): return fail("current523_complete_typed_card_definition_differs")
-	var deck: Dictionary = _by_id.BuffCardDeck.get(int(native.BuffCardDeckID),{})
+	var deck: Dictionary = table_row("BuffCardDeck",int(native.BuffCardDeckID))
 	if deck.get("Name") != DECK_NAMES[consumer]: return fail("current523_typed_card_deck_category_differs")
 	if bool(native.get("IsTest",false)): return fail("current523_test_card_not_admitted")
 	var preserved_rule: Dictionary = BASE.identity_rules().get(int(native.ID),{}) if source_id.begins_with("m508:") else {}
@@ -283,8 +337,8 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var active: Dictionary = context.get("active_card_options",{})
 	var option_id: int = int(active.get(source_id,record.get("source_active_custom_option_id",0)))
 	if option_id > 0:
-		var option: Dictionary = _by_id.BuffCardSpriteCustomizingOption.get(option_id,{})
-		var unit: Dictionary = _by_id.Unit.get(int(option.get("UnitID",-1)),{})
+		var option: Dictionary = table_row("BuffCardSpriteCustomizingOption",option_id)
+		var unit: Dictionary = table_row("Unit",int(option.get("UnitID",-1)))
 		if int(option.get("BuffCardID",-1)) != int(native.ID) or unit.get("Name","") != "PolymorphSetID": return fail("current523_active_option_not_declared_for_card")
 		if not _add_set(int(option.get("Value",-1)),path + [{"table":"BuffCardSpriteCustomizingOption","row":option.duplicate(true)},{"table":"Unit","row":unit.duplicate(true)}],chains): return fail("current523_active_option_entity_missing")
 	elif not _walk_buff(int(native.get("BuffClassID",-1)),path,[],chains,preserved_rule): return fail("current523_typed_buff_entity_chain_incomplete")
@@ -308,7 +362,7 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 	var actions: Dictionary = PRIMARY_ACTIONS[weapon].duplicate()
 	if consumer != "transform": actions.erase("attack")
 	for role: String in actions:
-		var action: Dictionary = _by_id.ListSprAction.get(int(actions[role]),{})
+		var action: Dictionary = table_row("ListSprAction",int(actions[role]))
 		if action.is_empty() or int(action.get("WeaponType",-1)) != weapon or int(action.get("MotionType",-1)) != {"idle":4,"walk":1,"attack":2}[role]: return fail("current523_primary_action_source_row_differs")
 		if int(action.get("WeaponAlterType",-1)) != (1 if weapon in [3,10] and role == "attack" else 0): return fail("current523_primary_action_alter_policy_differs")
 	var identity_actor: int = int(matches.keys()[0])

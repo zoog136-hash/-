@@ -5,6 +5,7 @@ const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selecti
 const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
+const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -20,8 +21,13 @@ var _manifest: Dictionary = {} # top-level fields; actors/members via _index
 var _index: RefCounted = null
 var _excluded_source_actors: Dictionary = {}
 var _actor_pins: Dictionary = {}
+# This bank's working set: member -> shared read-only parse. Each entry holds
+# one lease in ASSETS under _parsed_keys[member]; the same 3-member/32 MiB
+# body rule as before decides when this bank lets go of a member.
 var _parsed: Dictionary = {}
 var _parse_order: Array[String] = []
+var _parsed_keys: Dictionary = {}
+var _asset_owner: int = ASSETS.new_owner()
 static var _crc_table: Array[int] = []
 
 ## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
@@ -195,25 +201,69 @@ func _member(member: String) -> Dictionary:
 			var provenance: Variant = container_manifest.get("source_provenance_file")
 			if not sha1_supplied or not provenance is String or provenance.is_empty(): return fail("Missing supplied current523 container SHA1/proof pointer: " + member)
 		elif whole_manifest != true and version_basis != "retained508_outer_manifest": return fail("Missing exact retained source version basis: " + member)
-	var file := FileAccess.open(_root.path_join(spec.path), FileAccess.READ)
+	var file_path: String = _root.path_join(spec.path)
+	var file := FileAccess.open(file_path, FileAccess.READ)
 	if file == null or file.get_length() != int(spec.bytes): return fail("Original SP2 missing or changed size: " + member)
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
-	# Recheck the actual bytes before every cache use, including texture cache hits.
+	# Recheck the actual bytes before every cache use, including texture cache
+	# hits and shared-parse hits. Sharing never skips this read and hash.
 	if supplied_sha and digest(bytes) != spec.sha256: return fail("Original SP2 SHA256 mismatch: " + member)
 	if received and crc32(bytes) != spec.crc32: return fail("Received original SP2 CRC32 mismatch: " + member)
+	# Shared parse identity: verified manifest SHA + this member's checked
+	# identity + decoder version (received members stay CRC/receipt scoped).
+	var asset_key: String = ASSETS.parsed_key(_manifest_sha, member, spec, file_path)
+	if _parsed.has(member) and _parsed_keys.get(member, "") != asset_key: _drop_parsed(member)
 	if not _parsed.has(member):
-		var parsed: Dictionary = DECODER.parse(bytes)
-		if not parsed.ok: return parsed
+		var parsed: Variant = ASSETS.acquire("parsed", asset_key, _asset_owner) if not asset_key.is_empty() else null
+		if parsed == null:
+			var reservation: int = ASSETS.reserve("parsed", asset_key, bytes.size())
+			var fresh: Dictionary = DECODER.parse(bytes)
+			if not fresh.ok:
+				ASSETS.cancel(reservation)
+				return fresh
+			parsed = ASSETS.complete(reservation, fresh, _parsed_payload_bytes(fresh), _asset_owner)
 		var budget: int = parsed.body.size()
 		for cached: Dictionary in _parsed.values(): budget += cached.body.size()
 		while not _parse_order.is_empty() and (_parsed.size() >= 3 or budget > 32 * 1024 * 1024):
-			var oldest: String = _parse_order.pop_front()
+			var oldest: String = _parse_order[0]
 			budget -= _parsed[oldest].body.size()
-			_parsed.erase(oldest)
+			_drop_parsed(oldest)
 		_parsed[member] = parsed
+		_parsed_keys[member] = asset_key
 		_parse_order.append(member)
 	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
+
+## Payload estimate for the shared store: parse body plus a separate raw input
+## buffer (an FE body is the raw buffer itself and is not counted twice).
+static func _parsed_payload_bytes(parsed: Dictionary) -> int:
+	var raw: PackedByteArray = parsed.get("raw", PackedByteArray())
+	var body: PackedByteArray = parsed.get("body", PackedByteArray())
+	return body.size() + (raw.size() if not raw.is_empty() and raw[0] != 254 else 0)
+
+func _drop_parsed(member: String) -> void:
+	ASSETS.release("parsed", str(_parsed_keys.get(member, "")), _asset_owner)
+	_parsed.erase(member)
+	_parsed_keys.erase(member)
+	_parse_order.erase(member)
+
+func _release_parsed() -> void:
+	for member: String in _parsed_keys:
+		ASSETS.release("parsed", str(_parsed_keys[member]), _asset_owner)
+	_parsed.clear()
+	_parsed_keys.clear()
+	_parse_order.clear()
+
+func _notification(what: int) -> void:
+	# A RefCounted cannot call its own script methods during predelete, so the
+	# leases are released inline (static call into the store only).
+	if what == NOTIFICATION_PREDELETE:
+		for member: String in _parsed_keys: ASSETS.release("parsed", str(_parsed_keys[member]), _asset_owner)
+		_parsed_keys.clear()
+
+## Shared parsed-asset key of `member` as last verified by this bank, or "".
+func parsed_asset_key(member: String) -> String:
+	return str(_parsed_keys.get(member, ""))
 
 ## Client static branch (no action descriptor): body Sprite/<remapped id>-0.sp2
 ## direction 0 picture 0, plus its 101 shadow drawn the same way; clothes are
@@ -222,7 +272,7 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _release_parsed()
 	# Same shared, storage-backed manifest view as load_bank(); _member() reads it.
 	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened
@@ -315,7 +365,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _release_parsed()
 	# One shared, storage-backed view of the pinned manifest per process.
 	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened

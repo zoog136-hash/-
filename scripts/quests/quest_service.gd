@@ -162,8 +162,14 @@ func _progress_value(quest: Dictionary, level: int, inventory: Dictionary) -> in
 func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictionary]:
 	_advance_day(now if now >= 0 else int(Time.get_unix_time_from_system()))
 	var result: Array[Dictionary] = []
-	for quest: Dictionary in quests:
-		var row: Dictionary = quest.duplicate(true)
+	var bulk: bool = source != null and source.has_method("begin_bulk")
+	if bulk: source.begin_bulk()
+	for resident: Dictionary in quests:
+		# Original rows keep only their compact form resident; the complete
+		# row is read back from the device record bake (an independent copy,
+		# exactly what duplicating the old resident row returned).
+		var row: Dictionary = source.detached(resident) if source != null and source.has_method("detached") else resident.duplicate(true)
+		var quest: Dictionary = row.duplicate(false) if row.has("source_id") else resident
 		var quest_id: String = str(quest["id"])
 		row["completed"] = bool(claimed.get(quest_id, false))
 		row["available"] = level >= int(quest.get("min_level", 1))
@@ -184,7 +190,17 @@ func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictiona
 			row["rewards"] = plan if plan.ok else {}
 		row["progress"] = mini(int((quest["objective"] as Dictionary).get("count", 1)), _progress_value(quest, level, inventory))
 		result.append(row)
+	if bulk: source.end_bulk()
 	return result
+
+## The complete row of an index/quests row (original rows are compact in
+## memory; local and injected rows are returned unchanged).
+func full(row: Dictionary, cache: bool = true) -> Dictionary:
+	return source.full(row, cache) if source != null and source.has_method("full") else row
+
+## index.get(quest_id, {}) with the original row materialized.
+func full_quest(quest_id: String) -> Dictionary:
+	return full(index.get(quest_id, {}))
 
 func record_kill(monster_name: String, is_boss: bool) -> void:
 	for quest: Dictionary in quests:

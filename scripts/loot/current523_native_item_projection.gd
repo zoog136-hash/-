@@ -45,6 +45,16 @@ static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,pe
 	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
 	for row: Dictionary in rows:
 		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		# Item lifetime: record() projects DeleteTime to source_delete_time_raw
+		# and use eligibility refuses the item once it is reached (the client's
+		# expiry). Only a lifetime that cannot be resolved still blocks use.
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		# The game has no lifetime extension, so this flag only forbids one.
+		if name_value=="CannotExtendDeleteTime":
+			if not direct(row) or row.get("unit",{}).get("Name")!="TrueFalse" or whole(row.get("bonus",{}).get("Value")) not in [0,1]:reasons.append("unsupported_item_bonus_unit_or_value:"+name_value)
+			continue
 		if not direct(row):reasons.append("conditional_or_possession_item_bonus:"+name_value);continue
 		if not units.has(name_value):reasons.append("source_item_lifetime_unresolved" if name_value=="DeleteTime" else "source_infinite_amount_not_supported" if name_value=="InfiniteAmount" else "unsupported_item_bonus:"+name_value);continue
 		if row.get("unit",{}).get("Name")!=units[name_value] or not integer(row.get("bonus",{}).get("Value")):reasons.append("unsupported_item_bonus_unit_or_value:"+name_value);continue
@@ -63,6 +73,19 @@ static func date_value(raw: Dictionary) -> int:
 	var stamp: int=Time.get_unix_time_from_datetime_string(text)
 	if Time.get_datetime_string_from_unix_time(stamp)!=text:return 0
 	return int("%04d%02d%02d%02d%02d" % [int(raw.Year),int(raw.Month),int(raw.Day),int(raw.Hour),int(raw.Minute)])
+
+## A DeleteTime bonus as the local yyyymmddhhmm deadline the client applies,
+## or 0 when its representation is not resolved: either a DateTimes_Korean
+## reference (BonusApplicationTypeID 298, Value 0) or a direct yyyymmddhh value.
+static func delete_time_stamp(row: Dictionary) -> int:
+	if row.get("bonus_type",{}).get("Name")!="DeleteTime" or row.get("IsPossession")!=false or row.get("unit",{}).get("Name")!="Time":return 0
+	var bonus: Dictionary=row.get("bonus",{})
+	if bonus.get("BonusApplicationTypeID")==298 and bonus.get("Value")==0 and integer(bonus.get("BonusApplicationTargetID")):
+		return date_value(SOURCE.row("DateTimes_Korean",int(bonus.BonusApplicationTargetID)))
+	if direct(row) and integer(bonus.get("Value")) and str(int(bonus.Value)).length()==10:
+		var encoded: String=str(int(bonus.Value))
+		return date_value({"Year":int(encoded.substr(0,4)),"Month":int(encoded.substr(4,2)),"Day":int(encoded.substr(6,2)),"Hour":int(encoded.substr(8,2)),"Minute":0})
+	return 0
 
 static func record(definition: Dictionary) -> Dictionary:
 	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{});var grade: Dictionary=definition.get("grade",{})
@@ -116,16 +139,13 @@ static func record(definition: Dictionary) -> Dictionary:
 	var deadlines: Array=[];var delete_unknown: bool=false
 	for row: Dictionary in rows:
 		if row.bonus_type.Name!="DeleteTime":continue
-		if row.get("IsPossession")!=false or row.unit.Name!="Time":delete_unknown=true;continue
-		var stamp: int=0
-		if row.bonus.get("BonusApplicationTypeID")==298 and row.bonus.get("Value")==0 and integer(row.bonus.get("BonusApplicationTargetID")):
-			stamp=date_value(SOURCE.row("DateTimes_Korean",int(row.bonus.BonusApplicationTargetID)))
-		elif direct(row) and integer(row.bonus.get("Value")) and str(int(row.bonus.Value)).length()==10:
-			var encoded: String=str(int(row.bonus.Value));stamp=date_value({"Year":int(encoded.substr(0,4)),"Month":int(encoded.substr(4,2)),"Day":int(encoded.substr(6,2)),"Hour":int(encoded.substr(8,2)),"Minute":0})
+		var stamp: int=delete_time_stamp(row)
 		if stamp<=0:delete_unknown=true
 		else:deadlines.append(stamp)
 	if delete_unknown:out["source_delete_time_unresolved"]=true
 	elif not deadlines.is_empty():deadlines.sort();out["source_delete_time_raw"]=deadlines[0]
+	for row: Dictionary in rows:
+		if row.bonus_type.Name=="CannotExtendDeleteTime" and direct(row) and row.unit.Name=="TrueFalse" and whole(row.bonus.get("Value"))==1:out["source_cannot_extend_delete_time"]=true
 	out["source_condition_pending"]=pending_conditions
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
 	for index: int in range(rows.size()):
@@ -185,6 +205,21 @@ static func record(definition: Dictionary) -> Dictionary:
 	if not selection.is_empty():
 		out["source_use_spec"]=selection
 		if selection.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
+	var fixed_card: Dictionary=source_fixed_card(definition)
+	if not fixed_card.is_empty():
+		out["source_use_spec"]=fixed_card
+		if fixed_card.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
+	var bless_scroll: Dictionary=source_bless_scroll(definition)
+	if not bless_scroll.is_empty():
+		out["source_use_spec"]=bless_scroll
+		if bless_scroll.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
+	var mastery: Dictionary=source_mastery_points(definition)
+	if not mastery.is_empty():
+		out["source_use_spec"]=mastery
+		if mastery.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
@@ -336,7 +371,10 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# record is needed here; descriptions this loop created are dropped again
 	# and rebuilt on demand by definition_id(). Entries cached before (drop and
 	# reward items) stay.
-	var cache: Dictionary=owner.call("data")
+	# The owner keeps only a bounded definition cache plus an index of IDs
+	# read before; its accessors answer exactly as the former dictionaries.
+	var indexed: bool=owner.has_method("has_definition") and owner.has_method("transient_definition")
+	var cache: Dictionary=owner.call("data") if not indexed else {}
 	var references: Dictionary=cache.get("source_item_references",{})
 	var definitions: Dictionary=cache.get("item_definitions",{})
 	# Item templates (Lineage M style): every native record is a pure function
@@ -352,16 +390,18 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	for row_index: int in SOURCE.row_count("ItemClass"):
 		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
-		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
+		var id: String=str(int(raw.ID));var cached: bool=bool(owner.call("has_definition",id)) if indexed else (references.has(id) or definitions.has(id))
 		var current: Dictionary={}
 		var baked: Variant=(templates.light(id) if lazy else templates.record(id)) if templates!=null else null
 		if baked is Dictionary:
 			current=baked
 			if current.get("source_definition_archive")==_archive_identity():current["source_definition_archive"]=_archive_identity()
 		else:
-			var definition: Dictionary=owner.call("definition_id",id)
+			# An ID not read before is built without being remembered (the
+			# former read-then-erase), so the bounded cache keeps its entries.
+			var definition: Dictionary=owner.call("definition_id",id) if cached or not indexed else owner.call("transient_definition",id)
 			current=definition.get("native_record",{})
-			if not cached:
+			if not cached and not indexed:
 				references.erase(id);definitions.erase(id)
 			if writer!=null:writer.add(id,current)
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
@@ -442,7 +482,12 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		if row.bonus_type.Name=="BuffDuration" and direct(row) and row.unit.Name=="Seconds" and integer(row.bonus.get("Value")):durations.append(int(row.bonus.Value))
 	var duration: int=int(durations[0]) if durations.size()==1 else 0
 	if duration<=0:reasons.append("missing_or_ambiguous_positive_duration")
-	var fields: Dictionary={"ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hp_flat","MPPlus":"mp_flat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy"}
+	var fields: Dictionary={"ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hp_flat","MPPlus":"mp_flat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage","MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction"}
+	# Percentage effects the existing buff consumers read as whole percent
+	# points: the original value over its UIUnit Denominator (10000), e.g.
+	# ExperienceAdditionPercent 100000 = 10 %. A fraction of a point is not
+	# truncated; that effect stays unsupported.
+	var percent_fields: Dictionary={"ExperienceAdditionPercent":"xp","MoveSpeedBonus":"move_speed","AttackSpeedBonus":"attack_speed"}
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
 		var row: Dictionary=effect.get("link",{}).duplicate(true);var bonus: Dictionary=effect.get("bonus",{});var kind: Dictionary=effect.get("type",{});var unit: Dictionary=effect.get("unit",{})
@@ -453,6 +498,10 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
 		if conditional:reasons.append("conditional_buff_effect:"+name_value)
+		elif percent_fields.has(name_value) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
+			var scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
+			if scale.size()!=1 or whole(scale[0].get("Denominator"))!=10000 or int(bonus.Value)%10000!=0:reasons.append("unsupported_buff_effect:"+name_value)
+			else:typed[percent_fields[name_value]]=int(typed.get(percent_fields[name_value],0))+int(bonus.Value)/10000
 		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
 		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
 	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
@@ -635,6 +684,107 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	return spec
 
 
+## Card items (ItemCategory BuffCardDrawer) whose single BuffCardID is a
+## Polymorph, MagicDoll or HolyStuff (relic) collection card: using one grants
+## exactly that original card to the existing card owner. The card itself is
+## bound by the use owner (source ID, deck, grade, merge/swap flags) at use.
+const CARD_DECKS={1:["PolymorphCardDeck","변신"],2:["MagicDollCardDeck","마법인형"],98:["HolyStuffCardDeck","성물"]}
+static func source_fixed_card(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffCardID":refs.append(row)
+	if refs.size()!=1 or not integer(refs[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(refs[0].bonus.Value);var joins: Array=[]
+	for ref: Dictionary in definition.get("source_typed_references",[]):
+		if ref.get("item_bonus_id")==refs[0].ID and ref.get("unit")=="BuffCardID" and ref.get("id")==id:joins.append(ref)
+	if joins.size()!=1:return {}
+	var card: Dictionary=joins[0].get("card",{});var deck: Dictionary=joins[0].get("deck",{})
+	var deck_id: Variant=whole(deck.get("ID"))
+	if card.get("ID")!=id or not CARD_DECKS.has(deck_id) or deck.get("Name")!=CARD_DECKS[deck_id][0] or whole(card.get("BuffCardDeckID"))!=deck_id:return {}
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"BuffCardID":"BuffCardID","ItemConsumeEffectSpriteID":"SpriteID","BuffCardCannotSwap":"TrueFalse"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons
+	if definition.category.get("Name")!="BuffCardDrawer" or deck.get("CharacterBased")!=false:reasons.append("unsupported_card_item_category_or_deck")
+	if not SOURCE.declared_exclusion("BuffCard",card).is_empty() or not SOURCE.declared_exclusion("BuffCardDeck",deck).is_empty():reasons.append("source_excluded_card")
+	# A defined server set is checked at use against the current server profile
+	# (current523_server_profile.gd); a set without original rows stays closed.
+	var server: Variant=card.get("ServerLimitSetID",0)
+	if not integer(server):reasons.append("invalid_card_server_limit")
+	elif int(server)!=0 and SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty():reasons.append("server_definition_missing")
+	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_card_date_context_required")
+	var swap: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffCardCannotSwap":swap.append(whole(row.get("bonus",{}).get("Value")))
+	if swap.size()>1:reasons.append("ambiguous_card_flag:BuffCardCannotSwap")
+	for value: Variant in swap:
+		if value not in [0,1]:reasons.append("invalid_card_flag:BuffCardCannotSwap")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec.merge({"kind":"fixed_card","source_snapshot":"patch523","source_item_class_id":definition.original_item.ID,"card_kind":CARD_DECKS[deck_id][1],"card_id":id,"deck_id":deck_id,"original_card":card.duplicate(true),"original_deck":deck.duplicate(true),"buff_card_cannot_swap":swap==[1],"server_limit_set_id":server,"source_item_bonus_ids":[],"item_requirements":{"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique})
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	return spec
+
+
+## Weapon mastery point items (ItemCategory MasteryPointRecharger): one
+## MasteryWeaponPointAmount row whose BonusApplicationType is WeaponType (22)
+## gives Value points to its BonusApplicationTargetID weapon type, normalized
+## by the existing mastery owner through the original MasteryWeaponType rows.
+static func source_mastery_points(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="MasteryPointRecharger" or raw.is_empty():return {}
+	var reasons: Array=[];var grants: Array=[];var ids: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	var application: Dictionary=SOURCE.row("BonusApplicationType",22)
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value=="MasteryWeaponPointAmount":
+			if row.get("IsPossession")!=false or whole(bonus.get("BonusApplicationTypeID"))!=22 or (not application.is_empty() and application.get("Name")!="WeaponType") or row.get("unit",{}).get("Name")!="Value" or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or not integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID)<=0:reasons.append("unsupported_mastery_point_row")
+			else:grants.append({"points":int(bonus.Value),"weapon_type":int(bonus.BonusApplicationTargetID)})
+			continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	if grants.size()!=1:reasons.append("missing_or_ambiguous_mastery_points")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	var grant: Dictionary=grants[0] if grants.size()==1 else {}
+	return {"kind":"weapon_mastery_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":grant.get("points",0),"weapon_type":grant.get("weapon_type",0),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## Equipment bless scrolls (ItemCategory ScrollBless, item target). The
+## blessing itself is the existing equipment blessing owner; its success rate
+## is the target's original BlessSuccessRate row, and GuaranteeBlessProb makes
+## it certain. Lifetime rows follow the item lifetime rule.
+static func source_bless_scroll(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="ScrollBless" or raw.is_empty():return {}
+	var reasons: Array=[];var guarantee: Array=[];var ids: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=8:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value in ["CannotExtendDeleteTime","GuaranteeBlessProb"] and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(row.get("bonus",{}).get("Value")) in [0,1]:
+			if name_value=="GuaranteeBlessProb":guarantee.append(whole(row.bonus.Value))
+			continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	if guarantee.size()>1:reasons.append("ambiguous_bless_guarantee")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"equipment_bless","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"guaranteed":guarantee==[1],"rate_table":"BlessSuccessRate","source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+
 # Public _source_skill_book_spec semantics using the existing typed ItemData
 # card/deck/spell graph. No new source reader or spell runtime is introduced.
 static func source_skill_book(definition: Dictionary) -> Dictionary:
@@ -670,7 +820,8 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 	var server: Variant=card.get("ServerLimitSetID",0);var server_rows: Array=[]
 	if not integer(server):reasons.append("invalid_skill_card_server_limit")
 	elif int(server)!=0:
-		server_rows=SOURCE.related("ServerLimit","ServerLimitSetID",int(server));reasons.append("server_context_required" if not server_rows.is_empty() else "server_definition_missing")
+		server_rows=SOURCE.related("ServerLimit","ServerLimitSetID",int(server))
+		if server_rows.is_empty():reasons.append("server_definition_missing") # A defined set is checked at learning.
 	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_skill_card_date_context_required")
 	var limits: Array=[];var tutorials: Array=[]
 	for edge: Dictionary in graph.get("learn_limits",[]):

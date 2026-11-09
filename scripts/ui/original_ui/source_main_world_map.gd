@@ -65,7 +65,9 @@ func open() -> Dictionary:
 	var mount: Node2D=_mount.get_ref() if _mount!=null else null
 	if not is_instance_valid(mount):return _remember(_fail("source_world_map_original_mount_unavailable"))
 	var scene=Scene.new()
-	var configured: Dictionary=scene.configure_nodes(_pack,contract.member,contract.source_node_offsets,contract.bindings)
+	var scope: Array[int]=[]
+	scope.assign(contract.source_node_offsets)
+	var configured: Dictionary=scene.configure_nodes(_pack,contract.member,scope,contract.bindings)
 	if not configured.get("ok",false):
 		scene.free()
 		return _remember(configured)
@@ -86,7 +88,9 @@ func open() -> Dictionary:
 	_field=weakref(field_map)
 	_native_buttons.clear()
 	var map_all: Dictionary=scene.project_player([132])
-	var map_row: Dictionary=child.player.project_player([Bindings.AREA_AUTHORED_ROW])
+	# A dynamic call gets no typed literal from another script's constant.
+	var row_path: Array[int]=[Bindings.AREA_AUTHORED_ROW]
+	var map_row: Dictionary=child.player.project_player(row_path)
 	if map_all.get("ok",false):_register_native_button(map_all.player,29552)
 	if map_row.get("ok",false):
 		_register_native_button(map_row.player,7440)

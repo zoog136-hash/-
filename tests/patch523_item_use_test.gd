@@ -18,7 +18,7 @@ func reject_write(_path: String, _state: Dictionary) -> Error:
 	return ERR_CANT_CREATE
 
 func grant(world: TwilightWorld, id: String, amount: int = 1) -> Dictionary:
-	var definition: Dictionary = DROPS.data().item_definitions[id]
+	var definition: Dictionary = DROPS.cached_definition(id)
 	var native: Dictionary = definition.native_record
 	var record: Dictionary = world._find_catalog_item_record(str(native.name))
 	if record.is_empty(): record = world._find_catalog_item_record(str(definition.get("existing_binding", {}).get("name", "")))
@@ -87,8 +87,8 @@ func run() -> void:
 	world.level = 90
 	var card_specs: Array[Dictionary] = []
 	var bags: Array[Dictionary] = []
-	for key: String in document.item_definitions:
-		var definition: Dictionary = document.item_definitions[key]
+	for key: String in DROPS.definition_ids():
+		var definition: Dictionary = DROPS.cached_definition(key)
 		var record: Dictionary = definition.native_record
 		var spec: Dictionary = record.get("source_use_spec",{})
 		if spec.get("kind") == "fixed_card" and spec.get("activation_status") == "unrestricted" and not record.source_test_item: card_specs.append({"id":key,"spec":spec})
@@ -117,7 +117,7 @@ func run() -> void:
 	# Source item no-swap metadata survives alongside the fixed source identity.
 	check(not world.card_draw_fusion.source_card_receipts.is_empty(),"fixed grants retain provenance ledger")
 	for receipt: Dictionary in world.card_draw_fusion.source_card_receipts:
-		var spec: Dictionary = document.item_definitions[str(int(receipt.item_class_id))].native_record.source_use_spec
+		var spec: Dictionary = DROPS.cached_definition(str(int(receipt.item_class_id))).native_record.source_use_spec
 		check(receipt.buff_card_cannot_swap == spec.buff_card_cannot_swap,"source no-swap flag preserved per receipt")
 	var buffs_before: Dictionary = world.active_item_buffs.duplicate(true)
 	for id: String in ["859","2982","3022","230592","248198"]:
@@ -177,8 +177,8 @@ func run() -> void:
 			check(instance.record.source_item_class_id > 0 and instance.level == 0,"source guaranteed gear pinned to physical identity")
 	print("PATCH523_USE_STAGE guaranteed_bags_done ",bags.size())
 	var random_bags: int = 0
-	for key: String in document.item_definitions:
-		var spec: Dictionary = document.item_definitions[key].native_record.get("source_use_spec",{})
+	for key: String in DROPS.definition_ids():
+		var spec: Dictionary = DROPS.cached_definition(key).native_record.get("source_use_spec",{})
 		if spec.get("kind") not in ["source_weighted_bag","mixed_rewards_bag"] or spec.get("activation_status") != "unrestricted": continue
 		var record: Dictionary = grant(world,key,2)
 		if key == "6851": await fail_use(world,record)
@@ -203,7 +203,7 @@ func run() -> void:
 	check(str(world.hud.enhancement_scroll_name) == enhancement_before,"unmapped source scroll cannot open generic enhancement UI")
 	var blocked: int = 0
 	for key: String in document.native_item_ids:
-		var record: Dictionary = document.item_definitions[key].native_record
+		var record: Dictionary = DROPS.cached_definition(key).native_record
 		var spec: Dictionary = record.get("source_use_spec",{})
 		if (spec.get("kind") == "fixed_card" and spec.get("activation_status") != "unrestricted") or (record.source_test_item and spec.get("kind") == "fixed_card"):
 			grant(world,key)

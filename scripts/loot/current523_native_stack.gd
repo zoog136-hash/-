@@ -4,6 +4,7 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const QUEST_CONSUME=preload("res://scripts/quests/quest_reward_consumption.gd")
@@ -59,6 +60,9 @@ static func profile(record: Dictionary) -> Dictionary:
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("kind")=="source_skill_book" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"skill_book","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
+	if spec.get("kind")=="fixed_card" and spec.get("activation_status")=="unrestricted":return {"kind":"card","spec":spec}
+	if spec.get("kind")=="equipment_bless" and spec.get("activation_status")=="unrestricted":return {"kind":"bless","spec":spec}
+	if spec.get("kind")=="weapon_mastery_points" and spec.get("activation_status")=="unrestricted":return {"kind":"mastery","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_selectable_reward" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"selection","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -75,6 +79,8 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not effect.is_empty():return effect
 	var material: Dictionary=spell_material_profile(record)
 	if not material.is_empty():return material
+	var ticket: Dictionary=draw_ticket_profile(record)
+	if not ticket.is_empty():return ticket
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
@@ -82,6 +88,16 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	# Actual recipe rows/choices/limits are still checked by the craft executor.
 	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return {}
 	return {"kind":"craft_material","standalone_effect_complete":false}
+
+## Original draw tickets (ItemCategory LinMarketProduct) are owned as physical
+## stacks like materials. Redemption belongs to the owned-ticket service
+## (source523_inventory_tickets.gd), which checks the ticket's products and
+## pools; an unsupported ticket is explained there and stays owned.
+static func draw_ticket_profile(record: Dictionary) -> Dictionary:
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_category_name")!="LinMarketProduct" or record.get("slot")!="consumable" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	var definition: Dictionary=D.item_definition(record)
+	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
+	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
 
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
@@ -151,6 +167,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
+	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
 	var use_owner: Resource=load("res://scripts/loot/patch523_item_use.gd")
@@ -171,6 +188,11 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
+	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
+	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
+	# A bless scroll needs a target: the existing blessing chooser opens and its
+	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
+	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
 	if effect.kind=="selection":return selection_pending(world,uid,owned,record,spec)
 	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
 	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else (world._effective_max_mp() if effect.kind=="mp" else 0)
@@ -916,6 +938,112 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.commit_owned_rewards")
 
 
+## The one registered collection card for an original BuffCard ID, bound the
+## way the owned-ticket service binds pool members (deck, source ID, grade,
+## merge/swap flags and registration in the card owner); {} otherwise.
+static func card_binding(world: Node,category: String,card_id: int) -> Dictionary:
+	var original: Dictionary=SOURCE.row("BuffCard",card_id);var found: Array=[]
+	if original.is_empty():return {}
+	var suffix: String=str(int(original.get("BuffCardDeckID",0)))+":"+str(card_id)
+	for card: Variant in world.catalog_db.get(category,[]):
+		if not card is Dictionary or int(card.get("source_card_id",0))!=card_id:continue
+		if card.get("source") not in ["lineagem_base508","lineagem_patch523"] or str(card.get("sourceId","")) not in ["m508:"+suffix,"m523:"+suffix] or int(card.get("source_deck_id",0))!=int(original.BuffCardDeckID):continue
+		if int(card.get("source_grade_id",0))!=int(original.GradeID) or card.get("source_merge_out_disabled",false)!=original.get("IsNoMergeOut") or card.get("source_swap_out_disabled",false)!=original.get("IsNoSwapOut"):continue
+		found.append(card)
+	if found.size()!=1:return {}
+	var identity: String=world.card_draw_fusion.card_id(found[0])
+	if not world.card_draw_fusion.known_ids.get(category,{}).has(identity):return {}
+	return found[0]
+
+## The owned physical stack of an original bless scroll, ready for one debit:
+## {} when the name is not one; {"error"} when its conditions refuse it.
+static func bless_scroll_owned(world: Node,scroll_name: String) -> Dictionary:
+	var named: Dictionary=world._find_catalog_item_record(scroll_name)
+	if profile(named).get("kind")!="bless":return {}
+	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return {"error":"원본 소비 저장 보호 중 · 물리 수량 보존"}
+	for id: String in world.item_instances:
+		var entry: Variant=world.item_instances[id]
+		if not entry is Dictionary or entry.get("name")!=scroll_name or not entry.has(RECEIPT) or world._item_locked(scroll_name,id):continue
+		var owned: Dictionary=proof(world,id)
+		if owned.is_empty():return {"error":"원본 물리 소유·최초량·잔량 증명 불일치"}
+		var problem: String=str(load("res://scripts/loot/patch523_item_use.gd").call("eligibility",world,owned.record))
+		if not problem.is_empty():return {"error":problem}
+		var spec: Dictionary=profile(owned.record).get("spec",{})
+		if spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
+		return {"uid":id,"owned":owned,"record":owned.record,"spec":spec,"request":{"physical_id":id,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}}
+	return {"error":"선택 물리 개체·잠금·소지 수량 확인 필요"}
+
+## A weapon mastery point item: the existing mastery owner plans the original
+## points for the normalized weapon type and saves them together with the
+## one-unit physical debit.
+static func use_mastery_points(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="weapon_mastery_points" or spec.get("activation_status")!="unrestricted":return _failure("원본 숙련 아이템 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 숙련 아이템 사용 대상·서비스 조건 미지원")
+	var runtime: Variant=world.get("weapon_mastery")
+	if runtime==null or not bool(runtime.enabled):return _failure("무기 숙련 원본 팩을 확인할 수 없습니다 · 아이템 보존")
+	var weapon: int=int(runtime.core.normalize_weapon(int(spec.get("weapon_type",0))))
+	if weapon<=0:return _failure("원본 무기 종류를 숙련에 연결할 수 없습니다 · 아이템 보존")
+	var plan: Dictionary=runtime.core.plan_points(runtime.state,weapon,str(int(spec.get("points",0))),runtime._receipt("native_mastery_point_item"))
+	if not plan.get("ok",false):return _failure(str(runtime.reason_text(str(plan.get("reason",""))))+" · 아이템 보존")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 숙련 아이템 차감 소유자 연결 필요"))))
+	var resources: Dictionary=paid.overrides.duplicate(true)
+	resources["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var committed: Dictionary=runtime._commit(plan,resources)
+	busy=false
+	if not committed.get("ok",false):
+		if committed.get("committed",false):world.patch523_owner_state_problem="원본 숙련 아이템 저장 후 적용 미확정 · 정상 불러오기 전 재사용 중지"
+		return _failure(str(runtime.reason_text(str(committed.get("reason",""))))+" · 아이템 보존")
+	world.consumable_service.import_state(resources.consumable_state);world.item_use_cooldowns=resources.item_use_cooldowns;world.deferred_save.cancel()
+	var message: String="%s 사용 · 무기 숙련치 +%d" % [str(record.get("source_display_name",record.get("name",""))),int(spec.points)]
+	world.hud.append_log(message)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"weapon_type":weapon,"points":int(spec.points),"message":message}
+	return committed_use_context(result,record,0,false,"current523_native_stack.use_mastery_points")
+
+## A card item: one physical unit is debited through its grant receipt and the
+## exact original card is credited to the existing card owner in one save.
+static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 카드 아이템 사용 대상·서비스 조건 미지원")
+	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
+	if not server.ok:return _failure(str(server.reason)+" · 아이템 보존")
+	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
+	var category: String=str(spec.get("card_kind",""));var card_id: int=int(spec.get("card_id",0))
+	if SOURCE.row("BuffCard",card_id)!=spec.get("original_card"):return _failure("원본 카드 정의 변경 감지 · 아이템 보존")
+	var card: Dictionary=card_binding(world,category,card_id)
+	if card.is_empty():return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 아이템 보존")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 카드 아이템 차감 소유자 연결 필요"))))
+	var scratch: Object=preload("res://scripts/card_draw_fusion.gd").new()
+	scratch.configure(world.catalog_db);scratch.import_state(world.card_draw_fusion.export_state())
+	var outcome: Dictionary=scratch.receive_source_card(category,card,{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"card_id":card_id,"buff_card_cannot_swap":bool(spec.get("buff_card_cannot_swap",false)),"bless":int(record.get("source_bless_raw",1)),"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true)})
+	if not outcome.get("ok",false):return _failure(str(outcome.get("error","원본 카드 지급 실패"))+" · 아이템 보존")
+	var payload: Dictionary=paid.overrides.duplicate(true)
+	payload["card_draw_fusion"]=scratch.export_state()
+	payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var saved: Error=world._save_game(true,payload)
+	busy=false
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 카드 아이템 저장 결과 미확정 · 정상 불러오기 전 재사용 중지";return _failure(world.patch523_owner_state_problem)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(payload.consumable_state)
+	world.card_draw_fusion.import_state(payload.card_draw_fusion);world.deferred_save.cancel()
+	world._invalidate_equipment_static()
+	if world.get("card_collections")!=null:world.card_collections.invalidate()
+	var message: String="원본 지정 카드 지급 · %s (%s)" % [str(card.get("name","")),category]
+	world.hud.append_log(message)
+	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
+	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
+	world.hud.set_card_draw_fusion_result(category,message)
+	world.hud.present_card_reveal(category,outcome,false)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"category":category,"card_id":card_id,"results":outcome.results,"message":message}
+	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.use_fixed_card")
+
 static func native_ammo(record: Dictionary) -> bool:
 	return profile(record).get("kind")=="ammo"
 
@@ -1088,6 +1216,8 @@ static func learn_skill_book(world: Node,uid: String,owned: Dictionary,record: D
 	# Existing skill catalog/engine owns execution. Only exact known current
 	# learning can be joined with this quantity owner's selected physical debit.
 	if spec.get("kind")!="source_skill_book" or spec.get("activation_status")!="unrestricted" or world.original_skills==null:return _failure("현재 원문 스킬서·학습 소유자 연결 필요")
+	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
+	if not server.ok:return _failure(str(server.reason)+" · 스킬서 보존")
 	if current_class(world)<=0:return _failure("원문 스킬서의 실제 현재 직업 정체 연결 필요")
 	var book: Script=load("res://scripts/loot/patch523_skill_book.gd")
 	var issue: String=book.call("source_limit_problem",world,spec)

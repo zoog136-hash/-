@@ -81,3 +81,75 @@ P11, `Node::create` fallback); that fallback is not implemented in the strict
 player yet, so those scenes stay listed rather than packed. The complete pack
 manifest is about 194 MB, above the runtime's 128 MB manifest limit, so it is
 an inventory and a source for scoped packs, not a runtime selection.
+
+## Main HUD pack and the UI add-on (2026-11-09)
+
+The original main HUD (`scripts/ui/original_ui/source_main_hud.gd`, bound by
+`renewal_hud._bind_selected_original_main_ui`) now comes from the 523 client
+as a resource-pack add-on, so an installed 31-part pack is not reinstalled.
+
+```sh
+python3 tools/ui/build_client523_main_ui_pack.py \
+  --source-index <private>/ui523/inputs/source-index.json --output <private>/ui523/main_pack
+python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack --output <private>/addon-ui
+# -> twilight523-addon-ui.zip, picked in the same installer ("리소스 팩(.zip) 선택")
+```
+
+* Scenes: every scene the main HUD code names whose whole 523 closure resolves
+  (42), the parents it reads as geometry (`MainScene`, `HUDScene`, workspace
+  parents) as layout sources, and explicit node scopes for the incomplete ones
+  (`ToolTip_HudType_Right`, `ToolTipScene`, `Storage_All`, `Store_All`) plus
+  `Hud_CharInfo` (so the poison bar and level label are in scope).
+  `UI/FloatingUi/FloatingUiScene.csb` is left out (its closure names absent members).
+* All 53 SHA-256 pins in the main HUD code match the 523 client files.
+* Measured: 269 scenes, 594 originals, 0 blockers, manifest 24.4 MB
+  (`1d4e0ad4e5c5…`), add-on ZIP 94 MB. The repo tool reproduces the same
+  manifest SHA.
+* The add-on's `ui` section becomes `TWILIGHT_SOURCE_UI`/`_SHA256`
+  (`scripts/boot/source523_pack.gd` `selections()`); the installer asks for any
+  missing add-on (`missing_addons()`: world_links, ui) and can be postponed.
+
+Fixes found while connecting:
+
+* `source_pack.gd` now stores node scopes, partial-scene offsets and external
+  texture nodes as ints. JSON loads them as floats and `[1012.0].has(1012)` is
+  false in Godot 4.7, so every partial scope was refused.
+* Vitals and blessing buttons used `Callable(local_input, ...)`; a Callable does
+  not keep a RefCounted alive, so the input was freed and the button refused
+  as unconnected. They now use lambdas that hold the input.
+
+Real pack boot (`tests/current523_main_ui_test.gd`, 523 Aden): EXP, HP/MP,
+primary stats, attack pad, top menu, wallet, blessing, map name, target,
+auto message, character, inventory and item name mount. Not mounted:
+system message (523 `Text_Line` carries `customProperty {"transfer":"false"}`,
+which the strict player does not interpret), quickslot (needs owner visuals),
+inventory lock (mounts when an item detail is open).
+
+## World map from the 523 tables (add-on `world_map` section)
+
+```sh
+python3 tools/maps/build_client523_world_map.py --tables <pack>/tables/source.zip \
+  --images-manifest <pack>/images/manifest.json --output <private>/world_map
+python3 tools/ui/build_client523_main_ui_pack.py --source-index <inputs>/source-index.json --output <private>/ui523/main_pack
+python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack \
+  --world-map <private>/world_map --output <private>/addon-ui    # one file: twilight523-addon-ui.zip
+```
+
+* `contract.json` is what `source523_map_image_adapter.gd open_contract()` reads:
+  every UIMapImageInfo row a UIMapWorld row names, joined to its AssetView
+  (AssetId == ImageID) and AssetType rows (exact path `Path + FilePath`), with
+  table/row-index provenance. 287 image rows from the pinned tables (`d5192c3c…`).
+* Offers: a Land with exactly one image-bearing UIMapWorld row offers that
+  World, labelled with its Korean `DescData_Korean` text (Aden: World 5
+  "아덴대륙"). 344 Lands; Land 284 has two such rows and gets no offer. Every
+  offered image (`Image/Map/W_*.png`) is a verified original in the image pack.
+* The installer writes `user://current523_world_map.cfg` from the contract
+  (`Source523Pack.write_world_map`), only when the contract changes; a contract
+  that does not verify leaves the rest of the pack working.
+* The main UI pack scopes the map controls the code mounts (`MapScene` 132,
+  `Map_All` 6 nodes, `Map_Tab_Area` 44440/37316 with 44440 declared as the
+  externally bound World image slot, `Map_List_Button` 4 nodes).
+* `current523_world_map_walk.gd` accepted only the older own-allowlist field
+  profile; the 523 field now uses the client attr-bit0 rule
+  (`CURRENT523_S32_CLIENT_ATTR_BIT0_V1`). The walk goes through the field's own
+  `point_clear`/`find_world_path`, so both profiles are accepted.

@@ -40,6 +40,9 @@ static func policy() -> Dictionary:
 	return policy_cache
 
 static func supports(mid: String) -> bool:
+	# With the 523 pack installed, aden_world is the original 523 Aden
+	# (current523_host.gd) and this old picture pack is not consulted for it.
+	if mid=="aden_world" and preload("res://scripts/maps/current523_host.gd").requested(): return false
 	return policy().has(mid) and (mid=="aden_world" or not LEGACY_LAYOUT.active("--legacy-map-layouts"))
 
 static func catalog_entries() -> Array:

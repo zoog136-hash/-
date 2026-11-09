@@ -21,6 +21,9 @@ func configure(owner_hud: Node) -> void:
 	name = "Fishing523View"
 	visibility_changed.connect(func() -> void:
 		if not is_visible_in_tree(): runtime.leave())
+	tree_exiting.connect(func() -> void:
+		runtime.leave()
+		runtime.release_rules())
 	var tabs := HBoxContainer.new()
 	add_child(tabs)
 	for pair: Array in [["fish", "낚시"], ["exchange", "장비 교환"], ["bag", "낚시 보관함"], ["contest", "대회"]]:

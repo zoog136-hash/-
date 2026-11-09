@@ -1,5 +1,6 @@
 extends RefCounted
 ## Optional source commerce catalog. It never changes wallets, saves or clocks.
+const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const ItemData = preload("res://scripts/resources/current523_item_data.gd")
 const SCHEMA: String = "twilight.source523.shop.v1"
@@ -36,6 +37,8 @@ const FIELDS: Dictionary = {
 	"CumulativePurchaseStep":["ID", "CumulativePurchaseID", "Step", "RewardID"]}
 const BOOLEAN_FIELDS: Array[String] = ["OnSale", "ClassChangeDiscount", "LimitCountPerAccount", "AvailableSiegeTime", "LimitNotInSiegeTime", "ForGive"]
 const STRING_FIELDS: Array[String] = ["Name", "Description", "ServiceRegionCode"]
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "source523_shop_input"
 static var _session: RefCounted
 var _tables: Dictionary = {}
 var _indices: Dictionary = {}
@@ -66,6 +69,11 @@ static func session() -> RefCounted:
 		else: _session.load_original()
 	return _session
 
+## Drops the session model; the next session() reads it again (from the
+## device's packed definitions, not by re-parsing the original).
+static func release() -> void:
+	_session = null
+
 func available() -> bool:
 	return not _tables.is_empty()
 
@@ -92,6 +100,14 @@ func load_original() -> bool:
 	var identity: Dictionary = Definitions.identity()
 	if identity.is_empty() or identity.get("source_sha256") != SOURCE_SHA256:
 		return _fail("보유 원본523 상점 입력이 없습니다: "+Definitions.problem())
+	# The projection below is a pure function of the verified original and this
+	# code; the shop model is released between uses, so reopening reads this
+	# device's bake (still fully staged/validated by _stage) instead of
+	# scanning and hashing the label tables again.
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, Definitions.verified_key())
+	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
+	if baked is Dictionary and baked.get("tables") is Dictionary and baked.get("provenance") is Dictionary and baked.get("actual") is String and baked.get("identity") is Dictionary and baked.get("shared") is Dictionary:
+		return _stage(baked.tables, baked.provenance, baked.actual, baked.identity, baked.shared, true)
 	var tables: Dictionary = {}
 	var provenance: Dictionary = {}
 	var shared: Dictionary = {}
@@ -166,7 +182,10 @@ func load_original() -> bool:
 	size += _hash_text(hash_context,"}")
 	if size>MAX_PACK_BYTES: return _fail("원본 상점 팩을 읽을 수 없습니다")
 	var actual: String = hash_context.finish().hex_encode()
-	return _stage(tables,provenance,actual,{"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":size,"projection":"tools/shop/build_source523_shop.py"},shared)
+	var input_identity: Dictionary = {"kind":"twilight.source523.original-shop-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":size,"projection":"tools/shop/build_source523_shop.py"}
+	if not _stage(tables,provenance,actual,input_identity,shared): return false
+	BAKE.write(BAKE_NAME, bake_key, {"tables":tables,"provenance":provenance,"actual":actual,"identity":input_identity,"shared":shared})
+	return true
 
 static func _hash_text(context: HashingContext, text: String) -> int:
 	var bytes: PackedByteArray = text.to_utf8_buffer()
@@ -187,7 +206,10 @@ func _load_payload(bytes: PackedByteArray, actual: String, input_identity: Dicti
 
 ## `shared` tables are read from the original definitions reader (same rows,
 ## same order) instead of `tables`; they are validated here like any other.
-func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_identity: Dictionary, shared: Dictionary = {}) -> bool:
+## `staged`: these exact inputs already passed _stage on this device (a bake
+## written only after success); whole shared original tables, which keep no
+## index, are then not re-read row by row.
+func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_identity: Dictionary, shared: Dictionary = {}, staged: bool = false) -> bool:
 	var indices: Dictionary = {}
 	for table: String in REQUIRED_TABLES:
 		if not tables.get(table) is Array or not provenance.get(table) is Dictionary:
@@ -196,6 +218,9 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 		if not _integer(provenance[table].get("packed_rows")) or int(provenance[table].get("packed_rows", -1)) != count:
 			return _fail("상점 팩 행수 불일치: " + table)
 		var indexed: Dictionary = {}
+		if staged and shared.get(table) is bool:
+			indices[table] = {}
+			continue
 		for index: int in count:
 			var row: Variant = _row_of(table,index,tables,shared)
 			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
@@ -431,6 +456,9 @@ func payment_quote(purchase_id: int, quantity: int) -> Dictionary:
 	var offer: Dictionary = market_offer(purchase_id)
 	if offer.is_empty() or quantity < 1 or quantity > 1000: return {"ok":false, "reason":"상품 또는 수량 오류"}
 	var payment: Dictionary = offer.payment
+	if not payment.is_empty() and int(payment.get("UnitID", 0)) == CashMarket.STORE_UNIT:
+		# Original store payment replaced by the recorded TWILIGHT diamond price.
+		return CashMarket.payment_quote(purchase_id, quantity)
 	if payment.is_empty() or int(payment.get("MarketPaymentTypeID", -1)) != 4:
 		return {"ok":false, "reason":"외부 결제·무료·쿠폰 경로는 미연결"}
 	if payment.get("ClassChangeDiscount") == true:

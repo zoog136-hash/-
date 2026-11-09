@@ -59,7 +59,7 @@ func run()->void:
 	for candidate: Dictionary in canonical.source_use_spec.rewards:
 		if int(candidate.source_entity_id)==entity:row=candidate
 	check(not row.is_empty() and entity!=int(row.item_class_id),"real source entityID is distinct from output ItemClass ID")
-	var output: Dictionary=D.variant_item(D.data().item_definitions[str(int(row.item_class_id))].native_record,int(row.bless_raw))
+	var output: Dictionary=D.variant_item(D.cached_definition(str(int(row.item_class_id))).native_record,int(row.bless_raw))
 	dialog.find_child("CancelSourceReward",true,false).pressed.emit();await process_frame
 	check(world.inventory==inventory and world.item_instances==instances and FileAccess.get_sha256(path)==hash,"actual cancel button preserves exact input and all ownership")
 	dialog=open_box(world,key,id)

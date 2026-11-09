@@ -110,6 +110,43 @@ func run() -> void:
 	file.store_string(JSON.stringify(unsafe))
 	file.close()
 	check(not PACK.read_descriptor(unsafe_path, sha(tables)).ok, "paths outside the pack are refused")
+	# Add-on: 523 map travel definitions added to the installed pack.
+	var links_manifest: PackedByteArray = JSON.stringify({"kind":"fixture-world-links"}).to_utf8_buffer()
+	PACK.world_links_sha = sha(links_manifest)
+	var links: Dictionary = {"world_links/manifest.json":links_manifest,"world_links/lands/4.json":"{}".to_utf8_buffer()}
+	var section: Dictionary = {"world_links":{"root":"world_links","manifest":"world_links/manifest.json","manifest_sha256":sha(links_manifest)}}
+	var addon_id: String = "ef".repeat(32)
+	var addon_files: Dictionary = links.duplicate()
+	addon_files["source523_addon.json"] = JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":section}).to_utf8_buffer()
+	var addon_index: Dictionary = {"schema":PACK.PART_SCHEMA,"pack_id":addon_id,"part":1,"parts":1,"addon":true,"members":[["world_links/manifest.json",links_manifest.size()],["world_links/lands/4.json",2]]}
+	write_part(BASE.path_join("in/addon.zip"), addon_index, addon_files)
+	var bad_files: Dictionary = addon_files.duplicate()
+	var bad_section: Dictionary = section.duplicate(true)
+	bad_section.world_links.manifest_sha256 = "00".repeat(32)
+	bad_files["source523_addon.json"] = JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":bad_section}).to_utf8_buffer()
+	write_part(BASE.path_join("in/addon_bad.zip"), addon_index, bad_files)
+	var state_before: Dictionary = node._state()
+	var descriptor_before: PackedByteArray = FileAccess.get_file_as_bytes(target.path_join("source523_pack.json"))
+	await install(node, [BASE.path_join("in/addon_bad.zip")])
+	check(not FileAccess.file_exists(target.path_join(PACK.ADDONS)) and not FileAccess.file_exists(target.path_join("world_links/manifest.json")), "an add-on with another definitions pin installs nothing")
+	await install(node, [BASE.path_join("in/addon.zip")])
+	check(FileAccess.get_file_as_bytes(target.path_join("world_links/manifest.json")) == links_manifest and FileAccess.file_exists(target.path_join("world_links/lands/4.json")), "add-on files are extracted")
+	check(node._state() == state_before and FileAccess.get_file_as_bytes(target.path_join("source523_pack.json")) == descriptor_before, "an add-on leaves the installed pack's parts and descriptor alone")
+	var addons: Dictionary = PACK.read_addons(ProjectSettings.globalize_path(target))
+	check(addons.has("world_links") and PACK.has_world_links(read.descriptor, addons) and not PACK.has_world_links(read.descriptor, {}), "the add-on supplies the travel definitions")
+	if read.ok:
+		var with_links: Dictionary = PACK.selections("/pack", read.descriptor, addons)
+		check(with_links.get("definitions", {}).get("directory") == "/pack/world_links" and with_links.definitions.manifest_sha256 == sha(links_manifest), "travel definitions point at the extracted add-on")
+		check(not PACK.selections("/pack", read.descriptor).has("definitions"), "no definitions without the add-on")
+	var unknown_index: Dictionary = addon_index.duplicate(true)
+	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":{"bank":section.world_links}}).to_utf8_buffer(), unknown_index).is_empty(), "an add-on cannot replace a base section")
+	check(PACK.read_addon(addon_files["source523_addon.json"], {"pack_id":"12".repeat(32)}).is_empty(), "an add-on descriptor must match its part")
+	var ui_section: Dictionary = {"ui":{"root":"ui","manifest":"ui/original_ui.json","manifest_sha256":"34".repeat(32)}}
+	check(not PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on is accepted")
+	ui_section.ui.manifest = "ui/other.json"
+	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
+	check(PACK.missing_addons(read.descriptor, addons) == ["ui","world_map"], "after the travel definitions the main UI add-on (UI and world map) is asked for")
+	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false
 	node.queue_free()
 	remove_tree(BASE)

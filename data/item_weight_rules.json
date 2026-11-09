@@ -146,11 +146,244 @@
     "철 광석": 2,
     "동 광석": 2,
     "미스릴 원석": 2,
-    "정제된 목재": 2
+    "정제된 목재": 2,
+    "기사단의 기부 증서": 1,
+    "룸티스의 검은빛 귀걸이": 5,
+    "룸티스의 보랏빛 귀걸이": 5,
+    "룸티스의 붉은빛 귀걸이": 5,
+    "룸티스의 푸른빛 귀걸이": 5,
+    "명예 주화": 0,
+    "빛나는 민첩의 견갑": 9,
+    "빛나는 민첩의 티셔츠": 5,
+    "빛나는 방어의 팔찌": 5,
+    "빛나는 성장의 견갑": 9,
+    "빛나는 성장의 티셔츠": 5,
+    "빛나는 성장의 팔찌": 5,
+    "빛나는 완력의 견갑": 9,
+    "빛나는 완력의 티셔츠": 5,
+    "빛나는 용사의 팔찌": 5,
+    "빛나는 지식의 견갑": 9,
+    "빛나는 지식의 티셔츠": 5,
+    "사냥꾼의 휘장": 5,
+    "상급 축복의 가루": 0,
+    "수룡의 수정": 5,
+    "수호의 인장": 1,
+    "스냅퍼의 방어 반지": 5,
+    "스냅퍼의 용사 반지": 5,
+    "스냅퍼의 지혜 반지": 5,
+    "아크 변신 카드 제작서": 1,
+    "지룡의 수정": 5,
+    "지휘관의 휘장": 5,
+    "토템 강화석 (아틀란티스)(각인)": 1,
+    "토템 강화석 (테베라스)(각인)": 1,
+    "토템 강화석 (티칼)(각인)": 1,
+    "판도라의 컬렉션 조각": 0,
+    "풍룡의 수정": 5,
+    "퓨어 엘릭서": 1,
+    "화룡의 수정": 5,
+    "회복의 인장": 1,
+    "드래곤의 다이아몬드": 0,
+    "축복의 성수(대)": 0,
+    "문양 초기화 두루마리": 0
   },
   "verified_sources": {
     "다마스커스 검 (각인)": "https://lineagem.inven.co.kr/dataninfo/item/detail.php?code=248",
     "도펠겡어 보스의 오른쪽 반지": "https://lineagem.inven.co.kr/db/item/665?vtype=pc"
   },
-  "resolution": "Current ItemClass.Weight remains raw in native DTOs. The current523_source_weight policy supplies host points only for full original-row/archive-matched current native records and their published non-equipment blessing2/3 variants; missing or invalid estimate settings hold the index refresh. Other inputs retain their existing legacy overrides, record weights, type defaults and bounds."
+  "resolution": "Current ItemClass.Weight remains raw in native DTOs. The current523_source_weight policy supplies host points only for full original-row/archive-matched current native records and their published non-equipment blessing2/3 variants; missing or invalid estimate settings hold the index refresh. Other inputs retain their existing legacy overrides, record weights, type defaults and bounds.",
+  "current523_original_weight_overrides": {
+    "origin": "사용자 결정 2026-11-09 '원작대로': 원작 현금 상점 상자 보상으로 들어오는 기존 TWILIGHT 아이템에 원본523 ItemClass.Weight를 current523_source_weight 추정(ceil(raw*3/351))으로 적용",
+    "items": {
+      "기사단의 기부 증서": {
+        "item_class_id": 337388,
+        "source_weight_raw": 1,
+        "points": 1
+      },
+      "룸티스의 검은빛 귀걸이": {
+        "item_class_id": 632,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "룸티스의 보랏빛 귀걸이": {
+        "item_class_id": 630,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "룸티스의 붉은빛 귀걸이": {
+        "item_class_id": 629,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "룸티스의 푸른빛 귀걸이": {
+        "item_class_id": 631,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "명예 주화": {
+        "item_class_id": 216053,
+        "source_weight_raw": 0,
+        "points": 0
+      },
+      "빛나는 민첩의 견갑": {
+        "item_class_id": 140681,
+        "source_weight_raw": 1000,
+        "points": 9
+      },
+      "빛나는 민첩의 티셔츠": {
+        "item_class_id": 44942,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 방어의 팔찌": {
+        "item_class_id": 158771,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 성장의 견갑": {
+        "item_class_id": 276048,
+        "source_weight_raw": 1000,
+        "points": 9
+      },
+      "빛나는 성장의 티셔츠": {
+        "item_class_id": 234362,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 성장의 팔찌": {
+        "item_class_id": 259541,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 완력의 견갑": {
+        "item_class_id": 140671,
+        "source_weight_raw": 1000,
+        "points": 9
+      },
+      "빛나는 완력의 티셔츠": {
+        "item_class_id": 44932,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 용사의 팔찌": {
+        "item_class_id": 158761,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "빛나는 지식의 견갑": {
+        "item_class_id": 140691,
+        "source_weight_raw": 1000,
+        "points": 9
+      },
+      "빛나는 지식의 티셔츠": {
+        "item_class_id": 44952,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "사냥꾼의 휘장": {
+        "item_class_id": 183691,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "상급 축복의 가루": {
+        "item_class_id": 117544,
+        "source_weight_raw": 0,
+        "points": 0
+      },
+      "수룡의 수정": {
+        "item_class_id": 213631,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "수호의 인장": {
+        "item_class_id": 30671,
+        "source_weight_raw": 1,
+        "points": 1
+      },
+      "스냅퍼의 방어 반지": {
+        "item_class_id": 2401,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "스냅퍼의 용사 반지": {
+        "item_class_id": 2421,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "스냅퍼의 지혜 반지": {
+        "item_class_id": 2391,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "아크 변신 카드 제작서": {
+        "item_class_id": 6241,
+        "source_weight_raw": 1,
+        "points": 1
+      },
+      "지룡의 수정": {
+        "item_class_id": 213481,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "지휘관의 휘장": {
+        "item_class_id": 183681,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "토템 강화석 (아틀란티스)(각인)": {
+        "item_class_id": 347184,
+        "source_weight_raw": 100,
+        "points": 1
+      },
+      "토템 강화석 (테베라스)(각인)": {
+        "item_class_id": 347164,
+        "source_weight_raw": 100,
+        "points": 1
+      },
+      "토템 강화석 (티칼)(각인)": {
+        "item_class_id": 347174,
+        "source_weight_raw": 100,
+        "points": 1
+      },
+      "판도라의 컬렉션 조각": {
+        "item_class_id": 129274,
+        "source_weight_raw": 0,
+        "points": 0
+      },
+      "풍룡의 수정": {
+        "item_class_id": 213621,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "퓨어 엘릭서": {
+        "item_class_id": 4141,
+        "source_weight_raw": 1,
+        "points": 1
+      },
+      "화룡의 수정": {
+        "item_class_id": 213611,
+        "source_weight_raw": 500,
+        "points": 5
+      },
+      "회복의 인장": {
+        "item_class_id": 130551,
+        "source_weight_raw": 1,
+        "points": 1
+      },
+      "드래곤의 다이아몬드": {
+        "item_class_id": 549,
+        "source_weight_raw": 0,
+        "points": 0
+      },
+      "축복의 성수(대)": {
+        "item_class_id": 117304,
+        "source_weight_raw": 0,
+        "points": 0
+      },
+      "문양 초기화 두루마리": {
+        "item_class_id": 231772,
+        "source_weight_raw": 0,
+        "points": 0
+      }
+    }
+  }
 }

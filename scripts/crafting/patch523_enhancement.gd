@@ -64,14 +64,16 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 		if settings.get("missing_level21_invoke","")=="keep_level20" and invokes.get("21",[]).is_empty() and not invokes.get("20",[]).is_empty():invokes["21"]=invokes["20"].duplicate(true)
 		# New rows store a source option reference once in the private table.
 		# Hydrate only this physical item's rows; old delivered inline rows work.
-		if not _invoke_tables.has(book.digest):
+		# A rules model whose InvokeOption table is on storage reads one row.
+		var offloaded: bool=book.has_method("offloaded_invoke_option") and book.call("offloaded_invoke_option","") != null
+		if not offloaded and not _invoke_tables.has(book.digest):
 			var lookup: Dictionary={}
 			for option: Dictionary in book.data.get("enchantment",{}).get("InvokeOption",[]):lookup[str(int(option.ID))]=option
 			_invoke_tables[book.digest]=lookup
 		for rows: Array in invokes.values():
 			for effect: Dictionary in rows:
 				if not effect.has("option") and effect.has("option_id"):
-					var option: Dictionary=_invoke_tables[book.digest].get(str(int(effect.option_id)),{})
+					var option: Dictionary=book.call("offloaded_invoke_option",str(int(effect.option_id))) if offloaded else _invoke_tables[book.digest].get(str(int(effect.option_id)),{})
 					if not option.is_empty():effect["option"]=option.duplicate(true)
 				if effect.get("kind")=="attack_source_spell" and effect.get("option") is Dictionary:
 					effect["spell_name"]=str(book.data.get("equipment_spell_profiles",{}).get(str(int(effect.option.Param1)),{}).get("source_spell",{}).get("Name",""))

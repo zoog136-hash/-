@@ -58,8 +58,9 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	var deadline: String = DROPS.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty(): return deadline
 	if int(record.get("source_bless_raw", 1)) not in [1, 2, 3]: return "원본 축복 상태 미지원"
-	if not record.get("source_unresolved_class_ids", []).is_empty(): return "원본 사용 직업 조건 미확인"
-	var classes: Array = record.get("source_class_names", [])
+	var full: Dictionary = NATIVE_FIELDS.full(record)
+	if not full.get("source_unresolved_class_ids", []).is_empty(): return "원본 사용 직업 조건 미확인"
+	var classes: Array = full.get("source_class_names", [])
 	if not classes.is_empty() and not classes.has(world.job_class): return "원본 사용 직업 조건에 맞지 않습니다"
 	var level: int = world.level
 	for prefix: String in ["source_level_limit_", "source_max_level_limit_"]:
@@ -241,7 +242,7 @@ static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(reward.item_class_id)).is_empty():
 			world.hud.show_message("원본 더미 보상이 포함된 상자는 보존합니다 · 후보 제거·확률 재배분 없음")
 			return
-		var base: Dictionary = DROPS.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{})
+		var base: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
 		if base.is_empty() or base.get("source_test_item",true) or not DROPS.matches(world._find_catalog_item_record(str(DROPS.variant_item(base,int(reward.bless_raw)).name)),DROPS.variant_item(base,int(reward.bless_raw))):
 			world.hud.show_message("원본 보상 정의·등록 확인 실패 · 상자 보존")
 			return
@@ -266,7 +267,7 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 			world.rng.state=rng_before
 			world.hud.show_message("원본 더미 보상 연결 제외 · 상자와 기존 소유 보존")
 			return false
-		var definition: Dictionary = DROPS.data().get("item_definitions", {}).get(str(int(reward.item_class_id)), {})
+		var definition: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id)))
 		var base: Dictionary = definition.get("native_record", {})
 		var enchant: int = int(reward.get("enchant", 0)) if reward.get("enchant") != null else 0
 		var local_initial: bool = reward.get("enchant") == null and DROPS.equipment(base)

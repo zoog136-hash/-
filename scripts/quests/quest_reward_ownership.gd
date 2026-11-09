@@ -22,6 +22,7 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 	if id<=0 or reward_id<=0 or record.get("sourceId")!="m523:item:"+str(id) or receipt.get("source_sha256")!=service.source.SOURCE_SHA or receipt.get("schema")!=1 or receipt.get("item_class_id")!=id: return denied("원본 지급 정체 불일치")
 	if not service.claimed.get(quest_id) is bool or service.claimed.get(quest_id)!=true: return denied("완료 지급 이력 없음")
 	var quest: Dictionary = service.index.get(quest_id,{})
+	if service.has_method("full"): quest = service.full(quest)
 	if quest.is_empty() or not quest.blockers.is_empty() or not quest.excluded_reasons.is_empty(): return denied("원본 퀘스트 관계/제외 확인 필요")
 	var matches: Array[Dictionary] = []
 	for reward: Dictionary in quest.source_rewards:

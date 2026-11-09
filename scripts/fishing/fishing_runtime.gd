@@ -4,7 +4,17 @@ const Rules = preload("res://scripts/fishing/fishing_rules.gd")
 const Session = preload("res://scripts/fishing/fishing_session.gd")
 const CARD_ITEMS: Dictionary = {"306611":"23801", "306621":"23811", "306631":"23821", "306641":"23831"}
 var world
-var rules = Rules.new()
+## The original fishing model is loaded on first use and released when the
+## fishing window closes (Lineage M style); nothing at boot reads it. Any
+## access to `rules` loads it.
+var _rules: RefCounted = null
+var _rules_loaded: bool = false
+var _policy_file_keys: Array = []
+var rules:
+	get: return _loaded_rules()
+	set(value):
+		_rules = value
+		_rules_loaded = value != null
 var state: Dictionary = fresh_state()
 var busy: bool = false
 var blocked: bool = false
@@ -23,13 +33,11 @@ static func fresh_state() -> Dictionary:
 
 func configure(host: Node) -> void:
 	world = host
-	var default_path: String="user://private_content/fishing523.json"
-	if OS.has_environment("TWILIGHT_FISHING523_PACK"):
-		rules.load_pack(OS.get_environment("TWILIGHT_FISHING523_PACK"))
-	elif FileAccess.file_exists(default_path):rules.load_pack(default_path)
-	else:rules.load_original()
-	policy.length_min_coefficient = rules.constant("FishMinLengthCoefficient", 900)
-	policy.length_max_coefficient = rules.constant("FishMaxLengthCoefficient", 1100)
+	_rules = null
+	_rules_loaded = false
+	_policy_file_keys = []
+	# The owner policy file is validated now (save protection depends on it);
+	# coefficients it does not set come from the model when it loads.
 	var policy_path: String = "user://private_content/fishing_policy.json"
 	if FileAccess.file_exists(policy_path):
 		var parser := JSON.new()
@@ -38,13 +46,40 @@ func configure(host: Node) -> void:
 			policy_invalid = true
 			return
 		for key: String in policy:
-			if parser.data.has(key): policy[key] = parser.data[key]
+			if parser.data.has(key):
+				policy[key] = parser.data[key]
+				_policy_file_keys.append(key)
 	if not valid_policy():
 		policy_invalid = true
 		blocked = true
 		return
-	rules.exchange_denominator = int(policy.exchange_denominator)
-	rules.independent_extras = bool(policy.independent_extras)
+
+func _loaded_rules() -> RefCounted:
+	if _rules_loaded: return _rules
+	_rules_loaded = true
+	if _rules == null: _rules = Rules.new()
+	var default_path: String="user://private_content/fishing523.json"
+	if OS.has_environment("TWILIGHT_FISHING523_PACK"):
+		_rules.load_pack(OS.get_environment("TWILIGHT_FISHING523_PACK"))
+	elif FileAccess.file_exists(default_path):_rules.load_pack(default_path)
+	else:_rules.load_original()
+	if policy_invalid: return _rules
+	for pair: Array in [["length_min_coefficient","FishMinLengthCoefficient",900],["length_max_coefficient","FishMaxLengthCoefficient",1100]]:
+		if not pair[0] in _policy_file_keys: policy[pair[0]] = _rules.constant(pair[1], pair[2])
+	if not valid_policy():
+		policy_invalid = true
+		blocked = true
+		return _rules
+	_rules.exchange_denominator = int(policy.exchange_denominator)
+	_rules.independent_extras = bool(policy.independent_extras)
+	return _rules
+
+## Drops the loaded model when no fishing is in progress (window closed).
+func release_rules() -> void:
+	if busy or active_territory != 0 or session.phase in ["waiting", "bite", "playing", "caught"]: return
+	_rules = null
+	_rules_loaded = false
+	session = Session.new()
 
 func valid_policy() -> bool:
 	for key: String in ["host_equipment_exchange", "simulate_opponents", "independent_extras"]:

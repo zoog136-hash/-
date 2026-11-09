@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Selected-item cart automation. World remains the only persistence authority.
 const KEY: String = "inventory_automation"
 const BUYBACK = preload("res://scripts/shop/local_buyback.gd")
@@ -96,7 +97,9 @@ func _protected(name: String, id: String, mode: String = "deposit") -> bool:
 	var custom: Dictionary = world.item_instances.get(id, {}).get("record", {}) if id != "" else {}
 	if bool(custom.get("quest_item", false)): return true
 	if mode == "deposit":
-		return (record.has("IsStorable") and not bool(record.IsStorable)) or (record.has("source_is_storable") and not bool(record.source_is_storable)) or (custom.has("IsStorable") and not bool(custom.IsStorable)) or (custom.has("source_is_storable") and not bool(custom.source_is_storable))
+		var record_full: Dictionary = NATIVE_FIELDS.full(record)
+		var custom_full: Dictionary = NATIVE_FIELDS.full(custom)
+		return (record.has("IsStorable") and not bool(record.IsStorable)) or (record_full.has("source_is_storable") and not bool(record_full.source_is_storable)) or (custom.has("IsStorable") and not bool(custom.IsStorable)) or (custom_full.has("source_is_storable") and not bool(custom_full.source_is_storable))
 	return bool(custom.get("bound",false)) or not bool(custom.get("tradeable",true))
 
 func contains(mode: String, name: String, id: String) -> bool:

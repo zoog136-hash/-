@@ -23,6 +23,9 @@ var _rewards: Dictionary = {}
 var _sections: Dictionary = {}
 var _section_rewards: Dictionary = {}
 var _npc_groups: Dictionary = {}
+## NpcClassID -> row positions of the shared NpcClassForNpcGroup (8,548 rows),
+## read back on use; _npc_groups keeps the rows only for a non-shared source.
+var _npc_group_positions: Dictionary = {}
 
 func setup(source: Object) -> void:
 	_source = source
@@ -36,6 +39,7 @@ func setup(source: Object) -> void:
 	_sections.clear()
 	_section_rewards.clear()
 	_npc_groups.clear()
+	_npc_group_positions.clear()
 	for row: Dictionary in _rows("Challenge"):
 		_challenges[int(row.get("ID", 0))] = row
 	for link: Dictionary in _rows("ChallengeGoal"):
@@ -53,8 +57,20 @@ func setup(source: Object) -> void:
 		_append(_sections, int(section.get("ChallengeID", 0)), section)
 	for link: Dictionary in _rows("ChallengeExtraReward"):
 		_append(_section_rewards, int(link.get("SectionID", 0)), int(link.get("RewardID", 0)))
-	for link: Dictionary in _rows("NpcClassForNpcGroup"):
-		_append(_npc_groups, int(link.get("NpcClassID", 0)), link)
+	# Shared table: group its NpcClassID column into row positions (same keys in
+	# the same order as grouping the rows) and read the rows back on use.
+	var npc_column: Variant = _source.call("shared_column", "NpcClassForNpcGroup", "NpcClassID") if _source != null and _source.has_method("shared_column") else null
+	if npc_column != null:
+		var grouped: Dictionary = {}
+		for index: int in npc_column.size():
+			var key: int = int(npc_column[index])
+			if not grouped.has(key): grouped[key] = []
+			(grouped[key] as Array).append(index)
+		for key: int in grouped: grouped[key] = PackedInt32Array(grouped[key])
+		_npc_group_positions = grouped
+	else:
+		for link: Dictionary in _rows("NpcClassForNpcGroup"):
+			_append(_npc_groups, int(link.get("NpcClassID", 0)), link)
 
 func initial_state() -> Dictionary:
 	return {"version": 1, "latest_at": 0, "next_run_id": 1,
@@ -479,7 +495,7 @@ func _instant_price(challenge_id: int, context: Dictionary) -> Dictionary:
 	if starts < 0 or ends < 0 or (starts > 0 and now < starts) or (ends > 0 and now >= ends):
 		return _fail("challenge_instant_source_date_inactive")
 	var linked: bool = false
-	for product_link: Dictionary in _rows("MarketPurchaseProduct"):
+	for product_link: Dictionary in _links("MarketPurchaseProduct", "MarketPurchaseID", int(purchase.ID)):
 		if int(product_link.get("MarketPurchaseID", 0)) != int(purchase.ID):
 			continue
 		var product: Dictionary = _row("MarketProduct", int(product_link.get("MarketProductID", 0)))
@@ -571,10 +587,28 @@ func _set_daily(state: Dictionary, day: String, challenge_id: int, entry: Dictio
 	state.days[day][str(challenge_id)] = entry
 
 func _group_member(npc_id: int, group_id: int, context: Dictionary) -> bool:
-	for link: Dictionary in _npc_groups.get(npc_id, []):
+	for link: Dictionary in _npc_group_links(npc_id):
 		if int(link.get("NpcGroupID", 0)) == group_id and _region_allowed(int(link.get("ServerLimitSetID", 0)), context):
 			return true
 	return false
+
+## NpcClassForNpcGroup links of one NpcClassID, in table order.
+func _npc_group_links(npc_id: int) -> Array:
+	if not _npc_group_positions.has(npc_id): return _npc_groups.get(npc_id, [])
+	var result: Array = []
+	for index: int in _npc_group_positions[npc_id]: result.append(_source.call("shared_row_at", "NpcClassForNpcGroup", index))
+	return result
+
+## Rows of `table` whose integer `field` is `id`, in table order: the source's
+## indexed join when it has one, otherwise a scan of its rows.
+func _links(table: String, field: String, id: int) -> Array:
+	if _source == null: return []
+	if _source.has_method("find_rows"): return _source.call("find_rows", table, field, id)
+	var result: Array = []
+	for row: Dictionary in _rows(table):
+		var value: Variant = row.get(field)
+		if (value is int or value is float) and is_finite(float(value)) and float(value) == float(id): result.append(row)
+	return result
 
 func _section_for(challenge_id: int, section_id: int) -> bool:
 	for section: Dictionary in _sections.get(challenge_id, []):
@@ -597,10 +631,17 @@ func _progress_label(active: Dictionary) -> String:
 func _rows(table: String) -> Array:
 	if not _tables.has(table):
 		var value: Variant = _source.call("rows", table) if _source != null and _source.has_method("rows") else []
+		# Large original tables are read through the source each time instead of
+		# keeping their fresh copy here (Reward alone is 36,038 rows).
+		if _shared(table): return value if value is Array else []
 		_tables[table] = value if value is Array else []
 	return _tables[table]
 
 func _row(table: String, id: int) -> Dictionary:
+	if not _index.has(table) and _shared(table) and _source.has_method("row"):
+		# The source's own ID index (one row, {} for a missing or duplicated ID).
+		var found: Variant = _source.call("row", table, id)
+		return found if found is Dictionary else {}
 	if not _index.has(table):
 		var index: Dictionary = {}
 		for row: Dictionary in _rows(table):
@@ -608,6 +649,9 @@ func _row(table: String, id: int) -> Dictionary:
 			index[row_id] = {} if index.has(row_id) else row
 		_index[table] = index
 	return _index[table].get(id, {})
+
+func _shared(table: String) -> bool:
+	return _source != null and _source.has_method("_shared") and bool(_source.call("_shared", table))
 
 func _region_allowed(set_id: int, context: Dictionary) -> bool:
 	if set_id == 0:

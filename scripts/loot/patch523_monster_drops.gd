@@ -22,11 +22,30 @@ static var _root: String = ""
 static var _active_sha: String = ""
 static var _sources: Dictionary = {}
 static var diagnostics: Dictionary = {}
+## Most recently resolved per-NPC membership documents (newest last). Older
+## ones are rebuilt from the original rows on the next death of that NPC; the
+## shared item references stay in data(), so a rebuild yields the same values.
 static var _current_documents: Dictionary = {}
+const DOCUMENT_CACHE_LIMIT: int = 16
+## NPC IDs whose membership has been merged into data() (once per source).
+static var _current_resolved: Dictionary = {}
 static var _current_source_identity: Dictionary = {}
 static var _current_drop_positions: Dictionary = {}
 static var _current_reference_data: Dictionary = {}
 static var _current_input_problem: String = ""
+## Item definitions (Lineage M style): every definition is a pure function of
+## the verified original and this code, so it is built on demand and only a
+## small LRU of built [reference, definition] pairs stays resident (the whole
+## original ItemData descriptions were ~264 KB each, >1 MB for boxes, and the
+## former unbounded cache held ~78 MB at boot and grew with every kill).
+## _definition_ids is the stable index: exactly the IDs (in the same order)
+## the former data().item_definitions/source_item_references held, so
+## has_definition()/cached_definition() answer as the former cache did.
+## data().item_definitions/source_item_references stay as empty dictionaries;
+## read them through the accessors below.
+const DEFINITION_CACHE_LIMIT: int = 64
+static var _definition_ids: Dictionary = {}
+static var _definition_lru: Dictionary = {}
 
 static func _source_integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and absf(float(value)) <= 9007199254740991.0
@@ -82,12 +101,14 @@ static func _legacy_data_for_reference() -> Dictionary:
 static func data() -> Dictionary:
 	var source_identity: Dictionary = CURRENT_SOURCE.identity()
 	if source_identity.is_empty():
-		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
+		_definition_ids.clear(); _definition_lru.clear()
 		_current_source_identity = {}
 		diagnostics = {"status":"current523_drop_input_unavailable","reason":CURRENT_SOURCE.problem()}
 		return {}
 	if source_identity != _current_source_identity:
-		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
+		_definition_ids.clear(); _definition_lru.clear()
 		_current_source_identity = source_identity.duplicate(true)
 	if _current_reference_data.is_empty():
 		_current_reference_data = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
@@ -141,12 +162,104 @@ static func identity(record: Dictionary, admitted_registry: RefCounted = null) -
 	return result
 
 static func _current_item_reference(item_id: int) -> Dictionary:
+	var entry: Array = _current_item_entry(item_id)
+	return entry[0] if not entry.is_empty() else {}
+
+## [reference, definition] for an item, remembering it in the stable index
+## (what the former cache did on first read); [] when ItemData is unavailable.
+static func _current_item_entry(item_id: int) -> Array:
+	var document: Dictionary = data()
+	if document.is_empty(): return []
+	var id: String = str(item_id)
+	if _definition_ids.has(id): return _known_entry(id)
+	var detail: Dictionary = _describe_item(item_id)
+	if detail.is_empty(): return []
+	var entry: Array = [detail,_current_raw_definition(detail)]
+	_definition_ids[id] = true
+	_remember_entry(id,entry)
+	return entry
+
+## A known ID's pair: from the LRU, else shared from a cached NPC document
+## (same objects, no rebuild), else rebuilt from the verified original. The
+## build is deterministic for one source identity (all caches reset with it),
+## so a rebuild equals what the former cache kept.
+static func _known_entry(id: String) -> Array:
+	if _definition_lru.has(id):
+		var hit: Array = _definition_lru[id]
+		_definition_lru.erase(id)
+		_definition_lru[id] = hit
+		return hit
+	for document: Dictionary in _current_documents.values():
+		if document.source_item_references.has(id) and document.item_definitions.has(id) and not document.source_item_references[id].is_empty():
+			var shared: Array = [document.source_item_references[id],document.item_definitions[id]]
+			_remember_entry(id,shared)
+			return shared
+	var detail: Dictionary = _describe_item(int(id))
+	if detail.is_empty(): return []
+	var built: Array = [detail,_current_raw_definition(detail)]
+	_remember_entry(id,built)
+	return built
+
+static func _remember_entry(id: String, entry: Array) -> void:
+	_definition_lru.erase(id)
+	_definition_lru[id] = entry
+	while _definition_lru.size() > DEFINITION_CACHE_LIMIT: _definition_lru.erase(_definition_lru.keys()[0])
+
+## Same value as the former data().item_definitions.get(id,{}): the built
+## definition for an ID that has been read before, {} otherwise. Does not
+## remember new IDs (definition_id() does).
+static func cached_definition(item_id: String) -> Dictionary:
+	if data().is_empty() or not _definition_ids.has(item_id): return {}
+	var entry: Array = _known_entry(item_id)
+	return entry[1] if not entry.is_empty() else {}
+
+## Same value as the former data().source_item_references.get(id,{}).
+static func cached_reference(item_id: String) -> Dictionary:
+	if data().is_empty() or not _definition_ids.has(item_id): return {}
+	var entry: Array = _known_entry(item_id)
+	return entry[0] if not entry.is_empty() else {}
+
+## Former data().item_definitions.has(id) / source_item_references.has(id).
+static func has_definition(item_id: String) -> bool:
+	return not data().is_empty() and _definition_ids.has(item_id)
+
+## Former data().item_definitions.keys() (same order) and .size().
+static func definition_ids() -> Array:
+	return _definition_ids.keys() if not data().is_empty() else []
+
+static func definition_count() -> int:
+	return _definition_ids.size() if not data().is_empty() else 0
+
+## Former erase of an ID from both data() caches.
+static func forget_definition(item_id: String) -> void:
+	_definition_ids.erase(item_id)
+	_definition_lru.erase(item_id)
+
+## definition_id() without remembering an ID that was not read before (the
+## former read-then-erase in the catalog registrar). Known IDs behave as
+## definition_id().
+static func transient_definition(item_id: String) -> Dictionary:
+	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
+	if data().is_empty(): return {}
+	if _definition_ids.has(item_id): return definition_id(item_id)
+	var detail: Dictionary = _describe_item(int(item_id))
+	return _current_raw_definition(detail) if not detail.is_empty() else {}
+
+## Resident-memory diagnostics for the bounded cache.
+static func definition_cache_state() -> Dictionary:
+	return {"known_ids":_definition_ids.size(),"resident":_definition_lru.size(),"limit":DEFINITION_CACHE_LIMIT,"documents":_current_documents.size()}
+
+## The former cache dictionaries were read directly by some callers. A
+## document is that cache when it shares data()'s (now index-only) dictionary.
+static func _document_definition(document: Dictionary, item_id: String) -> Dictionary:
+	var definitions: Variant = document.get("item_definitions")
+	if not _current_reference_data.is_empty() and definitions is Dictionary and is_same(definitions,_current_reference_data.get("item_definitions")):
+		return cached_definition(item_id)
+	return document.get("item_definitions",{}).get(item_id,{})
+
+static func _describe_item(item_id: int) -> Dictionary:
 	# ItemData retains a legacy helper preload of this module. Defer loading
 	# until this actual read path; a static preload here would form a cycle.
-	var document: Dictionary = data()
-	if document.is_empty(): return {}
-	var id: String = str(item_id)
-	if document.source_item_references.has(id): return document.source_item_references[id]
 	var path: String = "res://scripts/resources/current523_item_data.gd"
 	if not ResourceLoader.exists(path): return {}
 	var reader: Script = load(path) as Script
@@ -159,8 +272,6 @@ static func _current_item_reference(item_id: int) -> Dictionary:
 	if not has_describe: return {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
-	document.source_item_references[id] = detail
-	document.item_definitions[id] = _current_raw_definition(detail)
 	return detail
 
 static func _current_raw_definition(reference: Dictionary) -> Dictionary:
@@ -198,22 +309,62 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 		definition.unresolved_source_reference=""
 	return definition
 
+## 1-based table position of each NpcItemDropView row ID. Kept as one sorted
+## packed array of (ID << 20 | row) instead of a Dictionary of ~47k strings
+## (~6 MB), built from the ID column without materializing every row.
+const POSITION_ROW_LIMIT: int = 1048576
+const POSITION_ID_LIMIT: int = 4398046511104
+
 static func _current_source_positions() -> bool:
 	if not _current_drop_positions.is_empty(): return true
 	var metadata: Dictionary = CURRENT_SOURCE.table_metadata("NpcItemDropView")
-	var rows: Array[Dictionary] = CURRENT_SOURCE.rows("NpcItemDropView")
-	if not _source_integer(metadata.get("row_count")) or int(metadata.row_count) != rows.size():
+	var count: int = CURRENT_SOURCE.row_count("NpcItemDropView")
+	if not _source_integer(metadata.get("row_count")) or int(metadata.row_count) != count:
 		_current_input_problem = "current523_NpcItemDropView_rows_or_provenance_unavailable"
 		return false
-	var positions: Dictionary = {}
-	for index: int in range(rows.size()):
-		var row: Dictionary = rows[index]
-		if not _source_integer(row.get("ID")) or positions.has(str(int(row.ID))):
+	if count == 0: return true
+	var column: Variant = CURRENT_SOURCE.column("NpcItemDropView","ID")
+	var values: Array = []
+	if (column is Array or column is PackedFloat64Array or column is PackedInt64Array or column is PackedInt32Array) and column.size() == count:
+		values = Array(column)
+	else:
+		# Some row has no ID column value: read rows one at a time, as before.
+		for index: int in count: values.append(CURRENT_SOURCE.row_at("NpcItemDropView",index).get("ID"))
+	var composite := PackedInt64Array()
+	var compact: bool = count < POSITION_ROW_LIMIT
+	var fallback: Dictionary = {}
+	for index: int in count:
+		var value: Variant = values[index]
+		if not _source_integer(value):
 			_current_input_problem = "invalid_or_duplicate_original_drop_row_ID"
 			return false
-		positions[str(int(row.ID))] = index+1
-	_current_drop_positions = positions
+		var id: int = int(value)
+		if compact and absi(id) >= POSITION_ID_LIMIT: compact = false
+		if fallback.has(id):
+			_current_input_problem = "invalid_or_duplicate_original_drop_row_ID"
+			return false
+		fallback[id] = index+1
+	if compact:
+		composite.resize(count)
+		var position: int = 0
+		for id: int in fallback:
+			composite[position] = id*POSITION_ROW_LIMIT + int(fallback[id])
+			position += 1
+		composite.sort()
+		_current_drop_positions = {"composite":composite}
+	else:
+		_current_drop_positions = {"ids":fallback}
 	return true
+
+## 0 when `id` is not a row ID of the verified NpcItemDropView.
+static func _current_drop_position(id: int) -> int:
+	if _current_drop_positions.has("ids"): return int(_current_drop_positions.ids.get(id,0))
+	var composite: PackedInt64Array = _current_drop_positions.get("composite",PackedInt64Array())
+	if composite.is_empty() or absi(id) >= POSITION_ID_LIMIT: return 0
+	var at: int = composite.bsearch(id*POSITION_ROW_LIMIT, true)
+	if at >= composite.size(): return 0
+	var position: int = posmod(composite[at], POSITION_ROW_LIMIT)
+	return position if (composite[at]-position)/POSITION_ROW_LIMIT == id else 0
 
 static func _current_source_document(value: Dictionary) -> Dictionary:
 	_current_input_problem = ""
@@ -240,7 +391,11 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 	if category.get("IsAttackable") != true or not category.get("IsShowDropInfo") is bool:
 		_current_input_problem = "current523_npc_drop_category_unavailable"
 		return {}
-	if _current_documents.has(id): return _current_documents[id]
+	if _current_documents.has(id):
+		var cached: Dictionary = _current_documents[id]
+		_current_documents.erase(id)
+		_current_documents[id] = cached
+		return cached
 	if not _current_source_positions(): return {}
 	var document: Dictionary = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
 		"input_kind":"current523_original_membership_with_exact_host_bindings","source_input_identity":source_identity,
@@ -257,7 +412,7 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 		var valid: bool = true
 		for field: String in ["ID","NpcClassID","ItemClassID","Bless","RequiredQuestID"]:
 			if not _source_integer(raw.get(field)) or raw[field] < 0: valid = false
-		if not valid or raw.get("NpcClassID") != npc_id or not _current_drop_positions.has(str(int(raw.get("ID",-1)))):
+		if not valid or raw.get("NpcClassID") != npc_id or _current_drop_position(int(raw.get("ID",-1))) == 0:
 			document.unavailable_source_definitions.append({"table":"NpcItemDropView","row":raw,"reason":"invalid_original_drop_reference"})
 			continue
 		var exclusion: Dictionary = CURRENT_SOURCE.declared_exclusion("NpcItemDropView",raw)
@@ -266,9 +421,11 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 			continue
 		var item_id: String = str(int(raw.ItemClassID))
 		if not document.source_item_references.has(item_id):
-			var reference: Dictionary = _current_item_reference(int(raw.ItemClassID))
-			document.source_item_references[item_id] = reference
-			document.item_definitions[item_id] = _current_raw_definition(reference)
+			# The same values as before; the definition object is now shared
+			# with the bounded owner cache instead of being built twice.
+			var entry: Array = _current_item_entry(int(raw.ItemClassID))
+			document.source_item_references[item_id] = entry[0] if not entry.is_empty() else {}
+			document.item_definitions[item_id] = entry[1] if not entry.is_empty() else {}
 		var detail: Dictionary = document.source_item_references[item_id]
 		var item: Dictionary = detail.get("item_class",{})
 		if item.get("ID") != raw.ItemClassID or detail.get("source") != source_identity:
@@ -284,19 +441,23 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 			continue
 		document.bless_codes[str(int(raw.Bless))] = str(bless.Name).to_lower()
 		var row: Dictionary = raw.duplicate(true)
-		row["source_row_1based"] = _current_drop_positions[str(int(raw.ID))]
+		row["source_row_1based"] = _current_drop_position(int(raw.ID))
 		active.append(row)
 	document.drops[id] = active
 	for table: String in ["NpcClass","NpcCategory","NpcItemDropView","ItemClass","ItemBlessCode","DescData_Korean"]:
 		document.source_tables[table] = CURRENT_SOURCE.table_metadata(table)
 	# Only actually admitted NPC memberships enter this read registry. The
 	# existing executor still consumes the separately resolved exact host DTOs.
-	reference_document.npcs[id] = document.npcs[id]
-	reference_document.drops[id] = active.duplicate(true)
-	for bless: String in document.bless_codes: reference_document.bless_codes[bless] = document.bless_codes[bless]
-	reference_document.source_exclusion_evidence.append_array(document.source_exclusion_evidence)
-	reference_document.unavailable_source_definitions.append_array(document.unavailable_source_definitions)
+	# A rebuilt (evicted) document was merged already; merge only once.
+	if not _current_resolved.has(id):
+		_current_resolved[id] = true
+		reference_document.npcs[id] = document.npcs[id]
+		reference_document.drops[id] = active.duplicate(true)
+		for bless: String in document.bless_codes: reference_document.bless_codes[bless] = document.bless_codes[bless]
+		reference_document.source_exclusion_evidence.append_array(document.source_exclusion_evidence)
+		reference_document.unavailable_source_definitions.append_array(document.unavailable_source_definitions)
 	_current_documents[id] = document
+	while _current_documents.size() > DOCUMENT_CACHE_LIMIT: _current_documents.erase(_current_documents.keys()[0])
 	return document
 
 static func _current_missing_reference_evidence(value: Variant, evidence: Array, path: String = "item_data") -> void:
@@ -362,11 +523,24 @@ static func _current_host_condition_admission(detail: Dictionary) -> Dictionary:
 	if not evidence.is_empty(): return {"reason":"unsupported_source_item_condition","evidence":evidence,"item_data_ok":detail.get("ok",false)}
 	return {}
 
+## The same values as original.duplicate(true) for this resolution. The item
+## references (whole original ItemData descriptions, up to MBs per box item),
+## definitions, rows and NPC entries are only read here and by resolve(), so
+## they are shared with the cached document instead of deep-copied on every
+## death; only the containers a resolution writes get their own copy.
+const WORKING_WRITES: Array[String] = ["bindings","unresolved_item_ids","host_binding_problems","binding_provenance","unavailable_source_definitions"]
+static func _working_document(original: Dictionary) -> Dictionary:
+	var document: Dictionary = original.duplicate(false)
+	for key: String in WORKING_WRITES:
+		var value: Variant = document.get(key)
+		if value is Dictionary or value is Array: document[key] = value.duplicate(false)
+	return document
+
 static func _current_host_bindings(original: Dictionary, catalog: Dictionary) -> Dictionary:
 	# Same bounded public compiler binding: exact Inven ID/URL, one current
 	# inventory name, and one of the two declared localized descriptors.
 	# A former native sidecar DTO/alias is never accepted as this host source.
-	var document: Dictionary = original.duplicate(true)
+	var document: Dictionary = _working_document(original)
 	document["source_condition_evidence"] = {}
 	var unique: Variant = catalog.get("patch523_by_name")
 	if not unique is Dictionary:
@@ -483,7 +657,7 @@ static func item_kind(item: Dictionary) -> String:
 	# Existing crafting scrolls already share the rarity roll without becoming
 	# wearables. Source skill books/scrolls/reward consumables use that same
 	# seven-grade host path; they must not all become 28%-chance materials.
-	if item.get("source_m_native_item", false) and item.get("source_is_consumable", false) and item.get("grade", "") in ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]: return "equipment"
+	if item.get("source_m_native_item", false) and NATIVE_FIELDS.full(item).get("source_is_consumable", false) and item.get("grade", "") in ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]: return "equipment"
 	return "material"
 
 static func matches(item: Dictionary, link: Dictionary) -> bool:
@@ -628,13 +802,14 @@ static func equipment_error(item: Dictionary, job: String, level: int, timezone_
 	if not item.get("source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
 	var deadline: String = deadline_problem(item,timezone_minutes)
 	if not deadline.is_empty(): return deadline
-	var classes: Array = item.get("source_class_names", [])
-	if not item.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
+	var full: Dictionary = NATIVE_FIELDS.full(item)
+	var classes: Array = full.get("source_class_names", [])
+	if not full.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
 	if not classes.is_empty() and not classes.has(job): return "원본 직업 조건에 맞지 않는 장비입니다"
 	var minimum: int = int(item.get("source_level_limit_min", 0))
 	var maximum: int = int(item.get("source_level_limit_max", 0))
 	if level < minimum or (maximum > 0 and level > maximum): return "원본 장비 레벨 조건에 맞지 않습니다"
-	if level < int(item.get("source_max_level_limit_min",0)) or (int(item.get("source_max_level_limit_max",0)) > 0 and level > int(item.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
+	if level < int(full.get("source_max_level_limit_min",0)) or (int(full.get("source_max_level_limit_max",0)) > 0 and level > int(full.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
 	return ""
 
 static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallback: int) -> int:
@@ -685,8 +860,8 @@ static func definition_id(item_id: String) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
 	var document: Dictionary = data()
 	if document.is_empty(): return {}
-	if not document.item_definitions.has(item_id): _current_item_reference(int(item_id))
-	return document.item_definitions.get(item_id,{})
+	var entry: Array = _current_item_entry(int(item_id))
+	return entry[1] if not entry.is_empty() else {}
 
 static func pack_identity() -> Dictionary:
 	var identity: Dictionary=CURRENT_SOURCE.identity()
@@ -789,7 +964,7 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 		# exact source quest state; never make the requirement unconditional.
 		if int(row.RequiredQuestID) != 0: report.quest_rows_blocked += 1; continue
 		var item_id: String = str(int(row.ItemClassID))
-		if document.get("item_definitions", {}).get(item_id, {}).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
+		if _document_definition(document,item_id).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
 		var link: Dictionary = document.get("bindings", {}).get(item_id, {})
 		var item: Dictionary = catalog.get("patch523_by_name", catalog.get("by_name", {})).get(str(link.get("name", "")), {})
 		if not matches(item, link): report.missing_item_bindings += 1; continue
@@ -822,10 +997,12 @@ static func candidates(value: Dictionary, catalog: Dictionary) -> Dictionary:
 	diagnostics["binding_provenance"] = document.binding_provenance.duplicate(true)
 	diagnostics["unresolved_item_ids"] = document.unresolved_item_ids.duplicate(true)
 	diagnostics["host_binding_problems"] = document.host_binding_problems.duplicate(true)
-	diagnostics["source_condition_evidence"] = document.source_condition_evidence.duplicate(true)
-	diagnostics["source_item_references"] = document.source_item_references.duplicate(true)
-	diagnostics["unavailable_source_definitions"] = document.unavailable_source_definitions.duplicate(true)
-	diagnostics["source_exclusion_evidence"] = document.source_exclusion_evidence.duplicate(true)
+	# Same values as deep copies; the read-only original references and
+	# evidence rows are shared with data() rather than copied per death.
+	diagnostics["source_condition_evidence"] = document.source_condition_evidence.duplicate(false)
+	diagnostics["source_item_references"] = document.source_item_references.duplicate(false)
+	diagnostics["unavailable_source_definitions"] = document.unavailable_source_definitions.duplicate(false)
+	diagnostics["source_exclusion_evidence"] = document.source_exclusion_evidence.duplicate(false)
 	diagnostics["original_numeric_projection_complete"] = false
 	return groups
 
@@ -861,7 +1038,7 @@ static func source_rows(item: Dictionary) -> Array:
 	var document: Dictionary = data()
 	var item_id: String = str(int(item.source_item_class_id)) if item.get("source_m_native_item", false) else str(item.get("sourceId", ""))
 	var binding: Dictionary = document.get("bindings", {}).get(item_id, {})
-	var base: Dictionary = document.get("item_definitions", {}).get(item_id, {}).get("native_record", {})
+	var base: Dictionary = _document_definition(document,item_id).get("native_record", {})
 	var validated: bool = matches(item, binding)
 	if item.get("source_m_native_item", false) and not base.is_empty():
 		var expected: Dictionary = expected_variant(base,item)
@@ -918,7 +1095,7 @@ static func item_details(item: Dictionary) -> String:
 			if row.get("IsPossession") != false or int(row.bonus.BonusApplicationTypeID) != 0 or int(row.bonus.BonusApplicationTargetID) != 0: continue
 			if row.bonus_type.Name in ["RegenHP","RegenMP","AbsoluteRegenHP","AbsoluteRegenMP","AttackDrainHP","AttackDrainMP"]:
 				lines.append("원본 %s %+d · 회복 간격·일반 명중 흡수 발동률은 TWILIGHT 설정" % [str(row.bonus_type.Name),int(row.bonus.Value)])
-	if item.get("source_is_trash",false): lines.append("원본 IsTrash 표시 · 이 표시만으로 제외하지 않고 공급·사용 조건을 따름")
+	if NATIVE_FIELDS.full(item).get("source_is_trash",false): lines.append("원본 IsTrash 표시 · 이 표시만으로 제외하지 않고 공급·사용 조건을 따름")
 	var labels: Dictionary = {"small_damage":"작은 대상 무기 대미지", "large_damage":"큰 대상 무기 대미지", "hit":"무기 명중", "additionalDamage":"추가 대미지", "def":"방어", "strFlat":"STR", "dexFlat":"DEX", "conFlat":"CON", "intFlat":"INT", "wisFlat":"WIS", "chaFlat":"CHA", "hpFlat":"HP", "mpFlat":"MP", "mr":"MR", "damage_reduction":"리덕션", "sp":"SP", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "meleeHit":"근거리 명중", "rangedHit":"원거리 명중", "magicHit":"마법 명중"}
 	for key: String in labels:
 		if item.has(key): lines.append("%s %+d" % [str(labels[key]), int(item[key])])
@@ -934,7 +1111,11 @@ static func item_details(item: Dictionary) -> String:
 	for row: Dictionary in full_definition.get("item_bonus",[]):
 		if row.bonus_type.Name in ["UIShowFilter","NoAnnounce"]: presentation_flags.append(str(row.bonus_type.Name)+"="+str(int(row.bonus.Value)))
 	if not presentation_flags.is_empty(): lines.append("원본 표시 플래그 %s · TWILIGHT 추정 설정을 켜면 이 무조건 표시·공지 플래그만으로 사용을 차단하지 않음" % ", ".join(presentation_flags))
-	if item.has("source_delete_time_raw"): lines.append("원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9) · 만료 시 소유 보존" % str(int(item.source_delete_time_raw)))
+	if item.has("source_delete_time_raw"):
+		var expiry: String = "원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9)" % str(int(item.source_delete_time_raw))
+		expiry += " · 지난 기한은 오프라인 순환으로 사용 가능" if rotate_ended_dates else " · 만료 시 소유 보존"
+		if item.get("source_cannot_extend_delete_time",false): expiry += " · 원본 기간 연장 불가"
+		lines.append(expiry)
 	if not spec.is_empty():
 		if spec.get("activation_status") != "unrestricted": lines.append("원본 사용 조건·효과 미지원 · 사용 시 소비하지 않음")
 		else:
@@ -955,22 +1136,23 @@ static func item_details(item: Dictionary) -> String:
 				"guaranteed_bag":
 					lines.append("사용: 원본 확정 보상 지급 · 확률 추첨 없음")
 					for reward: Dictionary in spec.get("rewards", []):
-						var label: String = str(data().get("item_definitions", {}).get(str(int(reward.item_class_id)), {}).get("native_record", {}).get("source_display_name", "아이템 #"+str(int(reward.item_class_id))))
+						var label: String = str(cached_definition(str(int(reward.item_class_id))).get("native_record", {}).get("source_display_name", "아이템 #"+str(int(reward.item_class_id))))
 						lines.append("%s ×%d%s" % [label,int(reward.amount)," · 원본 직업 조건에 해당할 때" if not reward.get("class_ids", []).is_empty() else ""])
 				"source_weighted_bag", "mixed_rewards_bag":
 					lines.append("사용: 원본 확률·보상 수량 적용 · 직업 조건 보존")
 					lines.append("확률 보상 선택 횟수: TWILIGHT 자체 규칙 · 기본 1회 · 설정에서 변경 가능")
 					for reward: Dictionary in spec.get("rewards",[]).slice(0,40):
-						var label: String = str(data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{}).get("source_display_name","아이템 #"+str(int(reward.item_class_id))))
+						var label: String = str(cached_definition(str(int(reward.item_class_id))).get("native_record",{}).get("source_display_name","아이템 #"+str(int(reward.item_class_id))))
 						var chance: String = "확정" if int(reward.entity_type_id) == 1 else "%.6f%%" % (float(reward.probability_raw)/100000.0)
 						lines.append("%s ×%d · %s%s" % [label,int(reward.amount),chance," · 원본 직업 조건" if not reward.get("class_ids",[]).is_empty() else ""])
 					if spec.get("rewards",[]).size() > 40: lines.append("외 %d개 원본 보상" % (spec.rewards.size()-40))
 			if int(spec.get("consume_delay_ms", 0)) > 0: lines.append("원본 재사용 대기 %.1f초" % (float(spec.consume_delay_ms)/1000.0))
-	var classes: Array = item.get("source_class_names", [])
+	var full_item: Dictionary = NATIVE_FIELDS.full(item)
+	var classes: Array = full_item.get("source_class_names", [])
 	if not classes.is_empty(): lines.append("원본 착용 직업: " + ", ".join(classes))
 	if int(item.get("source_level_limit_min", 0)) > 0: lines.append("착용 최소 레벨 %d" % int(item.source_level_limit_min))
-	if item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
-	if item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
+	if full_item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
+	if full_item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
 	if item.get("source_test_item", false): lines.append("원본 테스트 아이템 · 드랍 제외")
 	var invokes: String = invoke_details(item)
 	if not invokes.is_empty(): lines.append(invokes)

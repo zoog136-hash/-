@@ -111,7 +111,7 @@ class View extends Node:
 				if int(row.source_entity_id)==selection_entity_id:choices.append(row)
 			if choices.size()!=1:return ERR_INVALID_DATA
 			var choice: Dictionary=choices[0]
-			var definition: Dictionary=D.data().item_definitions.get(str(int(choice.item_class_id)),{}).get("native_record",{})
+			var definition: Dictionary=D.cached_definition(str(int(choice.item_class_id))).get("native_record",{})
 			var expected: Dictionary=D.variant_item(definition,int(choice.bless_raw))
 			for id: String in initial_instances:
 				if proposed_instances.get(id)!=initial_instances[id]:return ERR_INVALID_DATA

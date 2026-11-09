@@ -3,6 +3,7 @@ extends RefCounted
 ## money, progression or RNG. The runtime commits one complete game save first.
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const NativeEconomy=preload("res://scripts/cards/native_option_economy.gd")
+const SHARED=preload("res://scripts/resources/shared_values.gd")
 const CATEGORIES: Array[String] = ["변신", "마법인형", "성물"]
 const GRADES: Array[String] = ["영웅", "전설", "신화", "유일"]
 const MAX_COUNT: int = 1000000
@@ -87,7 +88,11 @@ func configure(data: Dictionary, settings: Dictionary, source_catalog: Dictionar
 			var identity: String = Cards.card_id(raw)
 			if identity.is_empty() or catalog[category].has(identity):
 				return _configuration_error("카탈로그 카드 ID 누락 또는 중복: " + category)
-			catalog[category][identity] = raw.duplicate(true)
+			# The caller's catalog record itself (World keeps catalog_db for the
+			# whole session and never changes a card record after boot): a deep
+			# copy of every card held the ~30 MB card catalog a second time.
+			# Readers only look rows up or duplicate() what they hand out.
+			catalog[category][identity] = raw
 		var source: Variant = provenance.sources.get(category)
 		if not source is Dictionary or not source.get("success_probabilities") is Array:
 			return _configuration_error("공식 각성 확률 누락: " + category)
@@ -122,6 +127,14 @@ func configure(data: Dictionary, settings: Dictionary, source_catalog: Dictionar
 		if row.has("native_source") and int(row.native_source.group.AwakenProbability)!=int(probabilities[category][grade])*100:
 			unavailable.append({"category":category,"id":identity,"reason":"원본 확률과 기존 정책 불일치"});continue
 		definitions[category][identity] = row.duplicate(true)
+	# Every card restricted to the same original server set carries that set's
+	# whole ServerLimit row list (hundreds of rows) plus the same BonusType,
+	# Unit, UIUnit and archive identity rows; share each distinct read-only
+	# value once (same content; definition() still hands out deep copies).
+	var shared: Dictionary = {}
+	for category: String in CATEGORIES:
+		for identity: String in definitions[category]: SHARED.intern(definitions[category][identity], shared, 8)
+	shared = {}
 	for raw: Variant in data.get("collections", []):
 		if not raw is Dictionary or not raw.get("requirements") is Array or raw.requirements.is_empty() or not _valid_stats(raw.get("stats")):
 			return _configuration_error("각성 컬렉션 정의 오류")

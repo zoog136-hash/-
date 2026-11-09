@@ -107,6 +107,7 @@ func _input(world: Node,receipt: Dictionary)->Dictionary:
  var qid: String=str(receipt.get("quest_id",""));var reward_id: int=OWN.positive(receipt.get("reward_id"))
  if receipt.get("schema")!=1 or receipt.get("source_sha256")!=SOURCE or world.quest_service.claimed.get(qid)!=true:return {}
  var q: Dictionary=world.quest_service.index.get(qid,{})
+ if world.quest_service.has_method("full"):q=world.quest_service.full(q)
  if q.is_empty() or not q.get("blockers",[]).is_empty() or not q.get("excluded_reasons",[]).is_empty():return {}
  var matches: Array=[]
  for row: Dictionary in q.source_rewards:
@@ -170,7 +171,7 @@ func _state_matches(world: Node,id: String)->Dictionary:
  if canonical.is_empty():return fail("현재 검증된 +0 능력·경험치 이외 원본 장비 효과 연결 대기")
  var expected: Dictionary=canonical.duplicate(true)
  if r.has("bless_state"):expected["bless_state"]="normal"
- var root_record: Dictionary=D.variant_item(D.data().get("item_definitions",{}).get(str(int(canonical.source_item_class_id)),{}).get("native_record",{}),1)
+ var root_record: Dictionary=D.variant_item(D.cached_definition(str(int(canonical.source_item_class_id))).get("native_record",{}),1)
  if r.has("bless_state"):root_record["bless_state"]="normal"
  var normalized: Variant=JSON.parse_string(JSON.stringify(r))
  var exact_record: bool=normalized==JSON.parse_string(JSON.stringify(expected)) or normalized==JSON.parse_string(JSON.stringify(root_record))

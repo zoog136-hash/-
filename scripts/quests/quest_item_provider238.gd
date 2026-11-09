@@ -97,14 +97,17 @@ func configure(world: Node) -> void:
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
 		for reward: Dictionary in spec.get("rewards",[]):
-			var summary: Dictionary = D.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{})
+			var summary: Dictionary = D.cached_definition(str(int(reward.item_class_id)))
 			if not summary.get("native_record",{}).is_empty(): _register(world,summary.native_record,int(reward.bless_raw))
 	# Bind only actual original quest rewards whose installed item owner already
 	# provides an unrestricted typed effect or scalar bag. This does not grant
 	# items, enable Test/expired effects or infer a positive bonus from a name.
 	for quest: Dictionary in world.quest_service.index.values():
 		if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
-		for reward: Dictionary in quest.get("source_rewards",[]):
+		# One pass over every quest at start: each complete row is read on its
+		# own and dropped (not cached, nothing kept resident).
+		var complete: Dictionary = world.quest_service.full(quest,false) if world.quest_service.has_method("full") else quest
+		for reward: Dictionary in complete.get("source_rewards",[]):
 			var id: int=int(reward.get("RewardClassID",0))
 			if definitions.has(id) or reward.get("type_name")!="Item" or reward.get("UseImmediately",false) or int(reward.get("ItemBlessCodeID",0))!=1:continue
 			var definition: Dictionary=D.definition_id(str(id))

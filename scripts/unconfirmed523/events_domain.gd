@@ -8,6 +8,9 @@ var _attendance: Dictionary = {}
 var _levels: Dictionary = {}
 var _quests: Dictionary = {}
 var _pools: Dictionary = {}
+## str(ItemClassID) -> PackedInt64Array of (type, target) pairs, one pair per
+## consume contract in ItemBonus order; _contracts() rebuilds the dictionaries
+## (15,428 one-element arrays of dictionaries held ~12 MB).
 var _item_contracts: Dictionary = {}
 var _luckybags: Dictionary = {}
 ## LuckyBagClassID key -> row positions of the shared LuckyBagEntityView
@@ -19,6 +22,17 @@ var _quest_links: Dictionary = {}
 var _quest_rewards: Dictionary = {}
 var _quest_prerequisites: Dictionary = {}
 var _npc_groups: Dictionary = {}
+## The same grouping as the row dictionaries above, as row positions of the
+## shared tables (ServerLimit, PassSystemLevel, QuestGoal, QuestPrerequisite,
+## NpcClassForNpcGroup, GotChaEntityView), read back on use in table order.
+## Filled instead of the row dictionary when the source reads that table
+## through the shared store; a test/fixture source keeps the rows.
+var _server_positions: Dictionary = {}
+var _level_positions: Dictionary = {}
+var _quest_link_positions: Dictionary = {}
+var _quest_prerequisite_positions: Dictionary = {}
+var _npc_group_positions: Dictionary = {}
+var _pool_positions: Dictionary = {}
 
 class FixtureChoicePlanner extends "res://scripts/unconfirmed523/source523.gd":
 	# Tiny table-only test doubles reuse the production read-only planner.
@@ -43,62 +57,110 @@ func setup(source: Object) -> void:
 	_quest_rewards.clear()
 	_quest_prerequisites.clear()
 	_npc_groups.clear()
-	for row in _rows("ServerLimit"):
-		var key := str(int(row.get("ServerLimitSetID", 0)))
-		if not _servers.has(key):
-			_servers[key] = []
-		_servers[key].append(row)
+	_server_positions.clear()
+	_level_positions.clear()
+	_quest_link_positions.clear()
+	_quest_prerequisite_positions.clear()
+	_npc_group_positions.clear()
+	_pool_positions.clear()
+	# Each shared table is grouped by one column (same keys, same table order as
+	# grouping its rows); the rows themselves are read back on use.
+	var server_positions: Variant = _grouped_positions("ServerLimit", "ServerLimitSetID")
+	if server_positions != null:
+		_server_positions = server_positions
+	else:
+		for row in _rows("ServerLimit"):
+			var key := str(int(row.get("ServerLimitSetID", 0)))
+			if not _servers.has(key):
+				_servers[key] = []
+			_servers[key].append(row)
 	for row in _rows("AttendanceReward"):
 		var key := str(int(row.get("AttendanceVersionID", 0)))
 		if not _attendance.has(key):
 			_attendance[key] = []
 		_attendance[key].append(row)
-	for row in _rows("PassSystemLevel"):
-		var key := str(int(row.get("PassSystemID", 0)))
-		if int(key) == 0:
-			continue # Source sentinel is not an actual pass tier.
-		if not _levels.has(key):
-			_levels[key] = []
-		_levels[key].append(row)
-	for row in _rows("PassSystemQuest"):
-		var key := str(int(row.get("PassSystemQuestListID", 0)))
-		if not _quests.has(key):
-			_quests[key] = []
-		_quests[key].append(int(row.get("QuestID", 0)))
-	for link in _rows("QuestGoal"):
-		_append(_quest_links, str(int(link.get("QuestID", 0))), link)
-	for link in _rows("QuestReward"):
-		_append(_quest_rewards, str(int(link.get("QuestID", 0))), int(link.get("RewardID", 0)))
-	for link in _rows("QuestPrerequisite"):
-		_append(_quest_prerequisites, str(int(link.get("QuestID", 0))), link)
-	for link in _rows("NpcClassForNpcGroup"):
-		_append(_npc_groups, str(int(link.get("NpcClassID", 0))), link)
-	for row in _rows("GotChaEntityView"):
-		var key := str(int(row.get("GotChaClassID", 0)))
-		if not _pools.has(key):
-			_pools[key] = []
-		_pools[key].append(row)
+	var level_positions: Variant = _grouped_positions("PassSystemLevel", "PassSystemID")
+	if level_positions != null:
+		(level_positions as Dictionary).erase("0") # Source sentinel is not an actual pass tier.
+		_level_positions = level_positions
+	else:
+		for row in _rows("PassSystemLevel"):
+			var key := str(int(row.get("PassSystemID", 0)))
+			if int(key) == 0:
+				continue # Source sentinel is not an actual pass tier.
+			if not _levels.has(key):
+				_levels[key] = []
+			_levels[key].append(row)
+	var quest_lists: Array = _shared_columns("PassSystemQuest", ["PassSystemQuestListID", "QuestID"])
+	if not quest_lists.is_empty():
+		for index: int in (quest_lists[0] as Variant).size():
+			var key := str(int(quest_lists[0][index]))
+			if not _quests.has(key):
+				_quests[key] = []
+			_quests[key].append(int(quest_lists[1][index]))
+	else:
+		for row in _rows("PassSystemQuest"):
+			var key := str(int(row.get("PassSystemQuestListID", 0)))
+			if not _quests.has(key):
+				_quests[key] = []
+			_quests[key].append(int(row.get("QuestID", 0)))
+	var link_positions: Variant = _grouped_positions("QuestGoal", "QuestID")
+	if link_positions != null:
+		_quest_link_positions = link_positions
+	else:
+		for link in _rows("QuestGoal"):
+			_append(_quest_links, str(int(link.get("QuestID", 0))), link)
+	var reward_links: Array = _shared_columns("QuestReward", ["QuestID", "RewardID"])
+	if not reward_links.is_empty():
+		for index: int in (reward_links[0] as Variant).size():
+			_append(_quest_rewards, str(int(reward_links[0][index])), int(reward_links[1][index]))
+	else:
+		for link in _rows("QuestReward"):
+			_append(_quest_rewards, str(int(link.get("QuestID", 0))), int(link.get("RewardID", 0)))
+	var prerequisite_positions: Variant = _grouped_positions("QuestPrerequisite", "QuestID")
+	if prerequisite_positions != null:
+		_quest_prerequisite_positions = prerequisite_positions
+	else:
+		for link in _rows("QuestPrerequisite"):
+			_append(_quest_prerequisites, str(int(link.get("QuestID", 0))), link)
+	var group_positions: Variant = _grouped_positions("NpcClassForNpcGroup", "NpcClassID")
+	if group_positions != null:
+		_npc_group_positions = group_positions
+	else:
+		for link in _rows("NpcClassForNpcGroup"):
+			_append(_npc_groups, str(int(link.get("NpcClassID", 0))), link)
+	var pool_positions: Variant = _grouped_positions("GotChaEntityView", "GotChaClassID")
+	if pool_positions != null:
+		_pool_positions = pool_positions
+	else:
+		for row in _rows("GotChaEntityView"):
+			var key := str(int(row.get("GotChaClassID", 0)))
+			if not _pools.has(key):
+				_pools[key] = []
+			_pools[key].append(row)
 
-	var bag_column: Variant = _shared_column("LuckyBagEntityView", "LuckyBagClassID")
-	if bag_column != null:
-		var grouped: Dictionary = {}
-		for index: int in bag_column.size():
-			var key := str(int(bag_column[index]))
-			if not grouped.has(key): grouped[key] = []
-			(grouped[key] as Array).append(index)
-		for key: String in grouped: grouped[key] = PackedInt32Array(grouped[key])
-		_luckybag_positions = grouped
+	var bag_positions: Variant = _grouped_positions("LuckyBagEntityView", "LuckyBagClassID")
+	if bag_positions != null:
+		_luckybag_positions = bag_positions
 	else:
 		for entity in _rows("LuckyBagEntityView"):
 			var key := str(int(entity.get("LuckyBagClassID", 0)))
 			if not _luckybags.has(key):
 				_luckybags[key] = []
 			_luckybags[key].append(entity)
-	for limit in _rows("LuckyBagEntityClassLimit"):
-		var key := str(int(limit.get("LuckyBagEntityID", 0)))
-		if not _class_limits.has(key):
-			_class_limits[key] = []
-		_class_limits[key].append(int(limit.get("ClassID", 0)))
+	var limit_columns: Array = _shared_columns("LuckyBagEntityClassLimit", ["LuckyBagEntityID", "ClassID"])
+	if not limit_columns.is_empty():
+		for index: int in (limit_columns[0] as Variant).size():
+			var key := str(int(limit_columns[0][index]))
+			if not _class_limits.has(key):
+				_class_limits[key] = []
+			_class_limits[key].append(int(limit_columns[1][index]))
+	else:
+		for limit in _rows("LuckyBagEntityClassLimit"):
+			var key := str(int(limit.get("LuckyBagEntityID", 0)))
+			if not _class_limits.has(key):
+				_class_limits[key] = []
+			_class_limits[key].append(int(limit.get("ClassID", 0)))
 	# Bonus rows per item are resolved on demand (_bonuses_for); keeping all
 	# 89,702 here held the whole Bonus table a second time.
 	# The shared ItemBonus is scanned by column (one link row is read only when
@@ -127,8 +189,11 @@ func setup(source: Object) -> void:
 		if int(item.get("CategoryID", 0)) != expected:
 			continue
 		if not _item_contracts.has(str(item_id)):
-			_item_contracts[str(item_id)] = []
-		_item_contracts[str(item_id)].append({"type": type_id, "target": int(bonus.get("Value", 0))})
+			_item_contracts[str(item_id)] = PackedInt64Array()
+		var contracts: PackedInt64Array = _item_contracts[str(item_id)]
+		contracts.append(type_id)
+		contracts.append(int(bonus.get("Value", 0)))
+		_item_contracts[str(item_id)] = contracts
 
 func initial_state() -> Dictionary:
 	return {"schema": 1, "attendance": {}, "passes": {}, "rng_state": "52338039", "roulette_pool": 0, "uses": {}, "quest_progress": {}, "quest_claims": {}, "latest_at": 0, "final_progress": {}}
@@ -157,7 +222,7 @@ func validate_state(value: Variant) -> String:
 			return token_error
 		var quest_id := str(quest_key).get_slice(":", 1).to_int()
 		var goals: Dictionary = {}
-		for link in _quest_links.get(str(quest_id), []):
+		for link in _quest_goal_links(str(quest_id)):
 			goals[str(int(link.get("GoalID", 0)))] = _row("Goal", int(link.get("GoalID", 0)))
 		for goal_key in value.quest_progress[quest_key]:
 			if not goal_key is String or not goals.has(goal_key) or not _whole(value.quest_progress[quest_key][goal_key], 0) or int(value.quest_progress[quest_key][goal_key]) > int(goals[goal_key].get("Amount", 0)):
@@ -168,7 +233,7 @@ func validate_state(value: Variant) -> String:
 			return token_error
 		var quest_id := str(token).get_slice(":", 1).to_int()
 		var progress: Dictionary = value.get("quest_progress", {}).get(token, {})
-		for link in _quest_links.get(str(quest_id), []):
+		for link in _quest_goal_links(str(quest_id)):
 			var goal := _row("Goal", int(link.get("GoalID", 0)))
 			if int(progress.get(str(int(goal.get("ID", 0))), 0)) != int(goal.get("Amount", 0)):
 				return "패스 퀘스트 완료 기록이 진행도와 일치하지 않습니다."
@@ -261,7 +326,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 				if not reward_labels.is_empty():
 					quest_detail += " · " + ", ".join(reward_labels)
 				result.rows.append({"id": "pass-quest:%d:%d" % [pass_id, int(quest_id)], "label": "패스 %d 퀘스트 %d" % [pass_id, int(quest_id)], "detail": "%s · %s" % [quest_detail, "수령 가능" if quest_reason.is_empty() else quest_reason], "actions": [{"label": "경험치 수령", "request": {"action": "pass_quest_claim", "pass_id": pass_id, "quest_id": int(quest_id)}}] if quest_reason.is_empty() else []})
-		for tier in _levels.get(str(pass_id), []):
+		for tier in _level_rows(str(pass_id)):
 			for premium in [false, true]:
 				var reason := _tier_reason(pass_row, tier, premium, context, state)
 				var reward_id := int(tier.get("PremiumRewardID" if premium else "RewardID", 0))
@@ -273,7 +338,8 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		if owned <= 0:
 			continue
 		var item := _row("ItemClass", item_id)
-		var contract: Dictionary = _item_contracts[item_key][0] if _item_contracts[item_key].size() == 1 else {}
+		var contracts: Array = _contracts(item_key)
+		var contract: Dictionary = contracts[0] if contracts.size() == 1 else {}
 		var request := {"action": "consume_item", "item_id": item_id}
 		var actions: Array = []
 		var detail := "보유 %d · 원본 상자 1개 소비" % owned
@@ -332,12 +398,14 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 			detail += " · " + reason
 		result.rows.append({"id": "container:%d" % item_id, "label": _item_label(item_id), "detail": detail, "actions": actions})
 	var pool_id := int(state.get("roulette_pool", 0))
-	if pool_id == 0 and not _pools.is_empty():
-		pool_id = int(_pools.keys()[0])
-	for key in _pools:
-		result.rows.append({"id": "pool:%s" % key, "label": "GotCha 보상 풀 %s" % key, "detail": "%d개 보상 · 원문 가중치 합 %d" % [_pools[key].size(), _pool_total(_pools[key])], "actions": [{"label": "확률 보기", "request": {"action": "roulette_inspect", "pool_id": int(key)}}]})
-	for entity in _pools.get(str(pool_id), []):
-		result.rows.append({"id": "pool-entity:%d" % int(entity.ID), "label": "풀 %d · 카드 %d" % [pool_id, int(entity.get("BuffCardID", 0))], "detail": "원문 가중치 %d / %d · Grade %d · Unit %d · Class %d" % [int(entity.get("Probability", 0)), _pool_total(_pools.get(str(pool_id), [])), int(entity.get("Grade", 0)), int(entity.get("UnitID", 0)), int(entity.get("ClassID", 0))], "actions": []})
+	var pool_keys: Array = _pool_keys()
+	if pool_id == 0 and not pool_keys.is_empty():
+		pool_id = int(pool_keys[0])
+	for key in pool_keys:
+		result.rows.append({"id": "pool:%s" % key, "label": "GotCha 보상 풀 %s" % key, "detail": "%d개 보상 · 원문 가중치 합 %d" % [_pool_size(key), _pool_weight(key)], "actions": [{"label": "확률 보기", "request": {"action": "roulette_inspect", "pool_id": int(key)}}]})
+	var selected_weight := _pool_weight(str(pool_id))
+	for entity in _pool_rows(str(pool_id)):
+		result.rows.append({"id": "pool-entity:%d" % int(entity.ID), "label": "풀 %d · 카드 %d" % [pool_id, int(entity.get("BuffCardID", 0))], "detail": "원문 가중치 %d / %d · Grade %d · Unit %d · Class %d" % [int(entity.get("Probability", 0)), selected_weight, int(entity.get("Grade", 0)), int(entity.get("UnitID", 0)), int(entity.get("ClassID", 0))], "actions": []})
 	for table in ["RouletteDisplayOfGachaProbability", "RouletteDisplayOfMergeProbability"]:
 		for row in _rows(table):
 			result.rows.append({"id": "%s:%d" % [table, int(row.ID)], "label": "룰렛 연출 · %s" % ("추첨" if table == "RouletteDisplayOfGachaProbability" else "합성"), "detail": "Step %d · Grade %d · Route %d · Type %d · 원문 확률 %d" % [int(row.RouletteDisplayStepID), int(row.GradeID), int(row.RouletteDisplayRouteID), int(row.RouletteDisplayTypeID), int(row.Probability)], "actions": []})
@@ -446,7 +514,7 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 				return _failure(error)
 			if _count(context.get("owned", {}), item_id) <= 0:
 				return _failure("보유한 원본 상자가 없습니다.")
-			var contract: Dictionary = _item_contracts[str(item_id)][0]
+			var contract: Dictionary = _contracts(str(item_id))[0]
 			var costs: Array = [{"kind": "item", "id": item_id, "amount": 1}]
 			var unit: Dictionary = {}
 			if (int(contract.type) == 110 and _has_final_reward(int(contract.target))) or _has_life_bonus(item_id):
@@ -468,7 +536,7 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 			if not _whole(request.get("pool_id"), 1):
 				return _failure("추첨 풀 번호가 올바르지 않습니다.")
 			var pool_id := int(request.get("pool_id", 0))
-			if not _pools.has(str(pool_id)):
+			if not _has_pool(str(pool_id)):
 				return _failure("원문에 없는 GotCha 보상 풀입니다.")
 			next.roulette_pool = pool_id
 			return _success(next, [], [])
@@ -704,7 +772,7 @@ func _local_day(context: Dictionary) -> int:
 func _server_ok(set_id: int, context: Dictionary) -> bool:
 	if set_id == 0:
 		return true
-	for server in _servers.get(str(set_id), []):
+	for server in _server_rows(str(set_id)):
 		if str(server.get("ServiceRegionCode", "")) == str(context.get("region", "KR")) and int(server.get("WorldNo", -1)) == int(context.get("world_no", 1)):
 			return true
 	return false
@@ -776,6 +844,17 @@ func _bonuses_for(item_id: int) -> Array:
 		result.append(_row("Bonus", int(link.get("BonusID", 0))))
 	return result
 
+## ItemClassLimit rows of one item, in table order: the rows a scan of
+## rows("ItemClassLimit") for that ItemClassID finds, through the source's
+## indexed join (11,025 shared rows are not re-read per check) when it has one.
+func _item_class_limits(item_id: int) -> Array:
+	if _source == null: return []
+	if _source.has_method("find_rows"): return _source.call("find_rows", "ItemClassLimit", "ItemClassID", item_id)
+	var result: Array = []
+	for limit in _rows("ItemClassLimit"):
+		if int(limit.get("ItemClassID", 0)) == item_id: result.append(limit)
+	return result
+
 func _whole(value: Variant, minimum: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == float(int(value)) and int(value) >= minimum
 
@@ -788,15 +867,100 @@ func _shared_column(table: String, field: String) -> Variant:
 	if _source == null or not _source.has_method("shared_column"): return null
 	return _source.call("shared_column", table, field)
 
+## Columns of a shared table (all or nothing); [] when the table is read as rows.
+func _shared_columns(table: String, fields: Array) -> Array:
+	var result: Array = []
+	for field: String in fields:
+		var values: Variant = _shared_column(table, field)
+		if values == null: return []
+		result.append(values)
+	return result
+
+## Row positions of a shared table grouped by str(int(field)), keys in order of
+## first appearance and positions in table order: the same groups as grouping
+## rows(table) by that field. null when the table is not read through the
+## shared store (then the owner keeps the rows themselves).
+func _grouped_positions(table: String, field: String) -> Variant:
+	var column: Variant = _shared_column(table, field)
+	if column == null: return null
+	var grouped: Dictionary = {}
+	for index: int in column.size():
+		var key := str(int(column[index]))
+		if not grouped.has(key): grouped[key] = []
+		(grouped[key] as Array).append(index)
+	for key: String in grouped: grouped[key] = PackedInt32Array(grouped[key])
+	return grouped
+
+## The rows behind one key of a position index, read back in table order; the
+## retained rows when that table was not shared.
+func _positioned_rows(table: String, positions: Dictionary, key: String, retained: Dictionary) -> Array:
+	if not positions.has(key): return retained.get(key, [])
+	var result: Array = []
+	for index: int in positions[key]: result.append(_source.call("shared_row_at", table, index))
+	return result
+
 ## Entity rows of one lucky bag, in table order.
 func _luckybag_rows(key: String) -> Array:
-	if not _luckybag_positions.has(key): return _luckybags.get(key, [])
-	var result: Array = []
-	for index: int in _luckybag_positions[key]: result.append(_source.call("shared_row_at", "LuckyBagEntityView", index))
-	return result
+	return _positioned_rows("LuckyBagEntityView", _luckybag_positions, key, _luckybags)
 
 func _luckybag_keys() -> Array:
 	return _luckybag_positions.keys() if not _luckybag_positions.is_empty() else _luckybags.keys()
+
+## ServerLimit rows of one ServerLimitSetID.
+func _server_rows(key: String) -> Array:
+	return _positioned_rows("ServerLimit", _server_positions, key, _servers)
+
+## PassSystemLevel rows of one pass (never the PassSystemID 0 sentinel).
+func _level_rows(key: String) -> Array:
+	return _positioned_rows("PassSystemLevel", _level_positions, key, _levels)
+
+## QuestGoal links of one quest.
+func _quest_goal_links(key: String) -> Array:
+	return _positioned_rows("QuestGoal", _quest_link_positions, key, _quest_links)
+
+## Whether a quest has QuestPrerequisite links (the rows are never needed).
+func _has_quest_prerequisites(key: String) -> bool:
+	if _quest_prerequisite_positions.has(key): return not (_quest_prerequisite_positions[key] as PackedInt32Array).is_empty()
+	return not _quest_prerequisites.get(key, []).is_empty()
+
+## NpcClassForNpcGroup links of one NpcClassID.
+func _npc_group_links(key: String) -> Array:
+	return _positioned_rows("NpcClassForNpcGroup", _npc_group_positions, key, _npc_groups)
+
+## GotCha pools: keys in table order of first appearance, members in table order.
+func _pool_keys() -> Array:
+	return _pool_positions.keys() if not _pool_positions.is_empty() else _pools.keys()
+
+func _has_pool(key: String) -> bool:
+	return _pool_positions.has(key) if not _pool_positions.is_empty() else _pools.has(key)
+
+func _pool_rows(key: String) -> Array:
+	return _positioned_rows("GotChaEntityView", _pool_positions, key, _pools)
+
+func _pool_size(key: String) -> int:
+	if _pool_positions.has(key): return (_pool_positions[key] as PackedInt32Array).size()
+	return _pools.get(key, []).size()
+
+## _pool_total() of one pool; summed from the shared Probability column when
+## the pool is held as positions (the same values the rows carry).
+func _pool_weight(key: String) -> int:
+	if not _pool_positions.has(key): return _pool_total(_pools.get(key, []))
+	var column: Variant = _shared_column("GotChaEntityView", "Probability")
+	if column == null: return _pool_total(_pool_rows(key))
+	var total := 0
+	for index: int in _pool_positions[key]:
+		total += int(column[index])
+	return total
+
+## Consume contracts of one item: [{"type": BonusTypeID, "target": Bonus Value}, ...]
+## in ItemBonus order ([] for an item without one).
+func _contracts(key: String) -> Array:
+	var result: Array = []
+	if not _item_contracts.has(key): return result
+	var packed: PackedInt64Array = _item_contracts[key]
+	for index: int in range(0, packed.size(), 2):
+		result.append({"type": int(packed[index]), "target": int(packed[index + 1])})
+	return result
 
 func _row(table: String, id: int) -> Dictionary:
 	if _source == null or id == 0:
@@ -810,7 +974,7 @@ func _failure(error: String) -> Dictionary:
 	return {"ok": false, "error": error}
 
 func _item_reason(item_id: int, context: Dictionary, state: Dictionary = {}) -> String:
-	if not _item_contracts.has(str(item_id)) or _item_contracts[str(item_id)].size() != 1:
+	if not _item_contracts.has(str(item_id)) or _contracts(str(item_id)).size() != 1:
 		return "원문 소비 보상 연결을 하나로 확정할 수 없습니다."
 	var item := _row("ItemClass", item_id)
 	if item.is_empty() or bool(item.get("TestItem", false)):
@@ -833,15 +997,14 @@ func _item_reason(item_id: int, context: Dictionary, state: Dictionary = {}) -> 
 		var max_level := int(context.max_level)
 		if max_level < max_min or (max_max > 0 and max_level > max_max):
 			return "상자의 최고 레벨 사용 조건을 충족하지 못했습니다."
-	for limit in _rows("ItemClassLimit"):
-		if int(limit.get("ItemClassID", 0)) == item_id:
-			var permitted := false
-			for candidate in _rows("ItemClassLimit"):
-				if int(candidate.get("ItemClassID", 0)) == item_id and int(candidate.get("ClassID", 0)) == int(context.get("class_id", 0)):
-					permitted = true
-			if not permitted:
-				return "현재 직업이 사용할 수 없는 상자입니다."
-			break
+	var class_limits: Array = _item_class_limits(item_id)
+	if not class_limits.is_empty():
+		var permitted := false
+		for candidate in class_limits:
+			if int(candidate.get("ItemClassID", 0)) == item_id and int(candidate.get("ClassID", 0)) == int(context.get("class_id", 0)):
+				permitted = true
+		if not permitted:
+			return "현재 직업이 사용할 수 없는 상자입니다."
 	for bonus in _bonuses_for(item_id):
 		var type_id := int(bonus.get("BonusTypeID", 0))
 		match type_id:
@@ -1207,7 +1370,7 @@ func event(event_data: Dictionary, context: Dictionary, state: Dictionary) -> Di
 				if state.get("quest_claims", {}).has(token):
 					continue
 				var progress: Dictionary = next.quest_progress.get(token, {}).duplicate(true)
-				for link in _quest_links.get(str(quest_id), []):
+				for link in _quest_goal_links(str(quest_id)):
 					var goal := _row("Goal", int(link.get("GoalID", 0)))
 					if _goal_event_matches(goal, event_data, context):
 						var key := str(int(goal.ID))
@@ -1234,11 +1397,11 @@ func _pass_quest_eligible(pass_row: Dictionary, quest: Dictionary, context: Dict
 	error = _window(int(quest.get("StartTime", 0)), int(quest.get("EndTime", 0)), context)
 	if not error.is_empty():
 		return error
-	if not _quest_prerequisites.get(str(quest_id), []).is_empty():
+	if _has_quest_prerequisites(str(quest_id)):
 		return "추가 선행 조건이 있는 패스 퀘스트입니다."
 	if int(quest.get("QuestResetType", 0)) not in [0, 11]:
 		return "원문 퀘스트 초기화 규칙을 확인할 수 없습니다."
-	var links: Array = _quest_links.get(str(quest_id), [])
+	var links: Array = _quest_goal_links(str(quest_id))
 	if links.is_empty():
 		return "원문 퀘스트 목표가 없습니다."
 	for link in links:
@@ -1260,7 +1423,7 @@ func _pass_quest_reason(pass_row: Dictionary, quest: Dictionary, context: Dictio
 	if state.get("quest_claims", {}).has(token):
 		return "이미 경험치를 수령했습니다."
 	var progress: Dictionary = state.get("quest_progress", {}).get(token, {})
-	for link in _quest_links.get(str(int(quest.ID)), []):
+	for link in _quest_goal_links(str(int(quest.ID))):
 		var goal := _row("Goal", int(link.get("GoalID", 0)))
 		if int(progress.get(str(int(goal.ID)), 0)) < int(goal.get("Amount", 0)):
 			return "실제 플레이 목표를 진행하세요."
@@ -1287,7 +1450,7 @@ func _goal_event_matches(goal: Dictionary, event_data: Dictionary, context: Dict
 		72:
 			if kind != "kill" or source_id <= 0:
 				return false
-			for link in _npc_groups.get(str(source_id), []):
+			for link in _npc_group_links(str(source_id)):
 				if int(link.get("NpcGroupID", 0)) == class_id and _server_ok(int(link.get("ServerLimitSetID", 0)), context):
 					return true
 		10:
@@ -1313,7 +1476,7 @@ func _pass_quest_detail(pass_row: Dictionary, quest: Dictionary, context: Dictio
 	var progress: Dictionary = state.get("quest_progress", {}).get(token, {})
 	var labels: Array[String] = []
 	var names: Dictionary = {10: "아인 사용", 17: "장비 강화 성공", 21: "제작", 62: "몬스터 처치", 72: "지정 몬스터군 처치", 142: "카드 합성", 211: "시련 완료", 324: "파티 던전 완료", 742: "아데나 카드 구매", 851: "낚시 성공"}
-	for link in _quest_links.get(str(int(quest.get("ID", 0))), []):
+	for link in _quest_goal_links(str(int(quest.get("ID", 0)))):
 		var goal := _row("Goal", int(link.get("GoalID", 0)))
 		labels.append("%s %d/%d" % [str(names.get(int(goal.get("GoalTypeID", 0)), "미연결 목표")), int(progress.get(str(int(goal.get("ID", 0))), 0)), int(goal.get("Amount", 0))])
 	return " · ".join(labels)
@@ -1521,7 +1684,7 @@ func _validate_final_progress(value: Variant) -> String:
 		if int(progress.completed) != expected:
 			return "완료 보상 지급 기록이 횟수와 일치하지 않습니다."
 		var valid_contract := false
-		for contract in _item_contracts.get(str(key), []):
+		for contract in _contracts(str(key)):
 			valid_contract = valid_contract or (int(contract.get("type", 0)) == 110 and int(contract.get("target", 0)) == int(progress.bag_id))
 		if not valid_contract or not _has_final_reward(int(progress.bag_id)):
 			return "원문 완료 보상 상자와 저장 기록이 일치하지 않습니다."

@@ -1,10 +1,13 @@
 extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
+const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
+const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
 const Economy = preload("res://scripts/shop/source523_shop_economy.gd")
 const NpcDefinitions = preload("res://scripts/shop/source523_npc_definitions.gd")
 const NpcConsumables = preload("res://scripts/shop/source523_npc_consumables.gd")
 const InventoryTickets = preload("res://scripts/shop/source523_inventory_tickets.gd")
+const SERVER_PROFILE = preload("res://scripts/loot/current523_server_profile.gd")
 const SkillBooks = preload("res://scripts/shop/source523_skill_books.gd")
 const NpcResets = preload("res://scripts/shop/source523_npc_resets.gd")
 const Exact=preload("res://scripts/equipment523/native_catalog.gd")
@@ -14,7 +17,21 @@ const LIMIT: int = 9007199254740991
 const ITEM_BINDINGS: Dictionary = {549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
 const INTANGIBLE_BINDINGS: Dictionary = {2:"다이아",1:"마일리지"}
 var world
-var catalog
+## The original shop model is needed to install bindings at boot and while
+## the shop is used; between uses it is released (Lineage M style) and any
+## access to `catalog` reads it again.
+var _catalog = null
+var _catalog_released: bool = false
+var catalog:
+	get:
+		if _catalog == null and _catalog_released:
+			_catalog_released = false
+			var source = Catalog.session()
+			_catalog = source if source.available() else null
+		return _catalog
+	set(value):
+		_catalog = value
+		_catalog_released = false
 var state: Dictionary = fresh_state()
 var save_blocked: bool = false
 var problem: String = ""
@@ -139,7 +156,16 @@ func configure(host: Node) -> void:
 		world.catalog_db["아이템"].append(record)
 	world._index_item_weights()
 	var configured_source=Catalog.session()
-	if configured_source.available():bind_source(configured_source)
+	if configured_source.available():
+		bind_source(configured_source)
+		release_catalog()
+
+## Releases the original shop model until the shop is used again.
+func release_catalog() -> void:
+	if _busy or _catalog == null: return
+	_catalog = null
+	_catalog_released = true
+	Catalog.release()
 
 func bind_source(source) -> void:
 	if catalog == source and not _bindings.is_empty(): return
@@ -171,6 +197,7 @@ func bind_source(source) -> void:
 	_bindings.merge(preload("res://scripts/shop/source523_wisdom.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_ammo.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_restoration.gd").install(world,catalog))
+	_bindings.merge(CashPackages.install(world,catalog))
 	inventory_tickets.configure(self)
 	_bindings.merge(inventory_tickets.install())
 	npc_definitions.configure(catalog)
@@ -300,21 +327,26 @@ func _window(start: Dictionary, end: Dictionary) -> Dictionary:
 	if now < first + 172800 or now >= last - 172800: return fail("원본 시간대 미확정 · 기간 경계 구매 대기")
 	return {"ok":true}
 
+## An explicit policy server context wins; otherwise the shared item server
+## profile (declared card-collection context, else offline Korean world 1).
+func effective_server_context() -> Dictionary:
+	if server_context.has("world_no") and server_context.has("region"): return server_context
+	var current: Dictionary = SERVER_PROFILE.profile(world)
+	return {"region":str(current.ServiceRegionCode),"world_no":int(current.WorldNo),"origin":"twilight_offline_server_profile"}
+
 func _server(sets: Array) -> Dictionary:
 	if sets.is_empty(): return {"ok":true}
-	if not server_context.has("world_no") or not server_context.has("region"): return fail("원본 서버 조건을 확인할 수 없습니다")
+	var context: Dictionary = effective_server_context()
 	for set: Variant in sets:
-		var matched: bool = false
-		for row: Dictionary in catalog._related("ServerLimit", int(set)):
-			if int(row.WorldNo) == int(server_context.world_no) and str(row.ServiceRegionCode) == str(server_context.region): matched = true
-		if not matched: return fail("서버 조건 미충족 또는 미해석 서버세트")
+		if not SERVER_PROFILE.rows_allow(catalog._related("ServerLimit", int(set)), str(context.region), int(context.world_no)): return fail("서버 조건 미충족 또는 미해석 서버세트")
 	return {"ok":true}
 
-func _period(unit: int, at: int, reset: int) -> String:
+func _period(unit: int, at: int, reset: int, offset: Variant = null) -> String:
 	if unit == 111: return "lifetime"
-	if calendar_offset_minutes == null: return ""
+	if offset == null: offset = calendar_offset_minutes
+	if offset == null: return ""
 	var day_seconds: int = 86400
-	var shifted: int = at + int(calendar_offset_minutes) * 60 - reset * 3600
+	var shifted: int = at + int(offset) * 60 - reset * 3600
 	var day: int = floori(float(shifted) / day_seconds)
 	var date: Dictionary = Time.get_datetime_dict_from_unix_time(shifted)
 	match unit:
@@ -332,12 +364,17 @@ func _restrictions(id: int, rows: Array, quantity: int, counter_key: String = ""
 		elif int(row.MarketRestrictionTypeId) == 3:
 			if int(row.DurationValue) != 1: return fail("구매 제한 기간 배수 미해석")
 			var unit: int = int(row.DurationUnitId)
-			if unit != 111 and not period_reset_hour.has(str(unit)): return fail("구매 한도 초기화 시각 미확정")
-			var bucket: String = _period(unit, _now(), int(period_reset_hour.get(str(unit), 0)))
+			# Converted cash offers use TWILIGHT's offline default (05:00 KST) unless
+			# an explicit policy supplies the reset; other offers stay fail-closed.
+			var cash: bool = counter_key.is_empty() and CashMarket.listed(id)
+			var reset: int = int(period_reset_hour.get(str(unit), CashMarket.RESET_HOUR if cash else 0))
+			var offset: Variant = calendar_offset_minutes if calendar_offset_minutes != null or not cash else CashMarket.CALENDAR_OFFSET_MINUTES
+			if unit != 111 and not period_reset_hour.has(str(unit)) and not cash: return fail("구매 한도 초기화 시각 미확정")
+			var bucket: String = _period(unit, _now(), reset, offset)
 			if bucket.is_empty(): return fail("구매 한도 시간 기준 미확정")
 			var count: int = 0
 			for purchase: Dictionary in state.purchases.get(counter_key if not counter_key.is_empty() else str(id), []):
-				if _period(unit, int(purchase.at), int(period_reset_hour.get(str(unit), 0))) == bucket: count += int(purchase.quantity)
+				if _period(unit, int(purchase.at), reset, offset) == bucket: count += int(purchase.quantity)
 			if count + quantity > int(row.Value): return fail("계정 구매 한도를 초과합니다")
 		else:
 			return fail("미해석 구매 제한 · 유형 %d" % int(row.MarketRestrictionTypeId))
@@ -349,7 +386,8 @@ func _token(unit: int, id: int, amount: int) -> Dictionary:
 func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int) -> Dictionary:
 	if int(token.unit_id)==4:
 		var original: Dictionary=catalog.record("ItemClass",int(token.class_id))
-		if original.is_empty() or original.get("TestItem",false) or not Dummy.item_evidence(original).is_empty():return fail("미확인·시험·원본 더미 품목은 상점 지급·차감 연결에서 제외")
+		var package: bool=giving and original.get("TestItem",false) and CashPackages.is_package(int(token.class_id))
+		if original.is_empty() or (original.get("TestItem",false) and not package) or not Dummy.item_evidence(original).is_empty():return fail("미확인·시험·원본 더미 품목은 상점 지급·차감 연결에서 제외")
 	if int(token.unit_id) != 201:
 		var binding: Dictionary = _bindings.get("%d:%d" % [int(token.unit_id),int(token.class_id)], {})
 		if not binding.is_empty() and not binding.get("gold",false):
@@ -383,19 +421,25 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 func _products(offer: Dictionary, quantity: int) -> Dictionary:
 	var goods: Array = []
 	var source_items: Dictionary = {}
+	var cash: bool = CashMarket.listed(int(offer.purchase.get("ID", 0)))
 	for link: Dictionary in offer.products + offer.bonuses:
 		var product: Dictionary = link.product.definition
+		# User decision: diamonds inside a converted cash offer are not granted.
+		if cash and CashMarket.strip(int(offer.purchase.ID), product): continue
 		if product.is_empty() or not link.product.additional.is_empty() or product.get("ClassChangeDiscount", false): return fail("지급 상품의 추가 조건 미해석")
 		var multiplied: Dictionary = Catalog._checked_product([product.get("Amount", -1), quantity])
 		if not multiplied.ok or int(multiplied.value) < 1: return fail("상품 지급 수량 오류")
 		var token: Dictionary = _token(int(product.UnitID),int(product.ClassID),int(multiplied.value))
 		if int(token.unit_id) == 4:
 			var identity: Dictionary = _source_item_identity(int(token.class_id))
-			if identity.get("excluded") == true: return fail("원본 아이템 선언으로 제외된 상품입니다")
+			if identity.get("excluded") == true and not (cash and CashPackages.is_package(int(token.class_id))): return fail("원본 아이템 선언으로 제외된 상품입니다")
 			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
-			if item.get("TestItem", false) or original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"):
+			var package: bool = cash and CashPackages.is_package(int(token.class_id))
+			# Cash package boxes carry the original BM deletion note in their internal
+			# name; offline TWILIGHT keeps them (see source523_cash_packages.gd).
+			if (item.get("TestItem", false) and not package) or (not package and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
 				return fail("테스트·기간제 상품의 사용·만료 조건 미확인")
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
 		if not resolved.ok: return resolved
@@ -412,12 +456,16 @@ func _quote(id: int, quantity: int, internal: bool) -> Dictionary:
 	if not ready.ok: return ready
 	var offer: Dictionary = catalog.market_offer(id)
 	if offer.is_empty() or offer.purchase.get("OnSale") != true or offer.displays.is_empty(): return fail("현재 판매·진열 중인 상품이 아닙니다")
-	var window: Dictionary = _window(offer.effective_from, offer.effective_to)
-	if not window.ok: return window
-	var sets: Array = []
-	for row: Dictionary in offer.server_limits: sets.append(int(row.ServerLimitSetID))
-	var server: Dictionary = _server(sets)
-	if not server.ok: return server
+	# Converted cash offers (user decision: all of them) are sold in TWILIGHT's
+	# single offline world regardless of the original store server group/period.
+	var cash: bool = CashMarket.listed(id)
+	if not cash:
+		var window: Dictionary = _window(offer.effective_from, offer.effective_to)
+		if not window.ok: return window
+		var sets: Array = []
+		for row: Dictionary in offer.server_limits: sets.append(int(row.ServerLimitSetID))
+		var server: Dictionary = _server(sets)
+		if not server.ok: return server
 	var restrictions: Dictionary = _restrictions(id, offer.restrictions, quantity)
 	if not restrictions.ok: return restrictions
 	var price: Dictionary = catalog.payment_quote(id, quantity)
@@ -458,7 +506,7 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	var error: String = validate(next)
 	if not error.is_empty(): _busy = false; return fail(error)
 	for key: String in extra:
-		if key!="card_draw_fusion":_busy=false;return fail("미지원 티켓 원자 저장 필드")
+		if key not in ["card_draw_fusion","consumable_state"]:_busy=false;return fail("미지원 티켓 원자 저장 필드")
 	var overrides: Dictionary={SAVE_KEY:next,"inventory":inventory,"gold":gold,"item_instances":instances,"next_item_instance_id":next_instance}
 	overrides.merge(extra,false)
 	var result: Error = world._save_game(true, overrides)
@@ -473,6 +521,8 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	world.gold = gold
 	world.item_instances = instances
 	world.next_item_instance_id = next_instance
+	# A physical original ticket's use ledger was saved with the same commit.
+	if extra.has("consumable_state"): world.consumable_service.import_state(extra.consumable_state)
 	_busy = false
 	return {"ok":true}
 

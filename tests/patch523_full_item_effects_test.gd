@@ -34,7 +34,7 @@ func run() -> void:
 	var passive_definitions: int = 0
 	var weapons: Dictionary = {}
 	for key: String in document.native_item_ids:
-		var record: Dictionary = document.item_definitions[key].native_record
+		var record: Dictionary = D.cached_definition(key).native_record
 		if record.slot != "weapon" or not D.deadline_problem(record).is_empty(): continue
 		var category: int = A.weapon_category(record)
 		if category > 0 and not weapons.has(category): weapons[category] = record

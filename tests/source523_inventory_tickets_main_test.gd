@@ -27,11 +27,11 @@ func run() -> void:
 	var pity_before:Dictionary=world.card_draw_fusion.pity.duplicate(true)
 	for id:int in TicketRules.IDS:
 		var spec:Dictionary=consumer.document.tickets[str(id)]
-		var key:String=str(id)+":1:0";var name:String=str(spec.original_item.Name)+" (탐험 "+key+")"
+		var key:String=str(id)+":1:0";var original:Dictionary=consumer.runtime.catalog.record("ItemClass",id);var name:String=str(original.Name)+" (탐험 "+key+")"
 		keys[id]=name
 		# QA-owned stock only, not a production ticket/card grant or expedition run.
 		world.expedition_local.state.issued[key]=name;world.inventory[name]=2
-		world.catalog_db["아이템"].append({"name":name,"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:expedition:"+key,"source_item_class_id":id,"source_item":spec.original_item.duplicate(true),"expedition_key":key,"slot":"material","type":"탐험 보상","grade":"일반","weight":0})
+		world.catalog_db["아이템"].append({"name":name,"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:expedition:"+key,"source_item_class_id":id,"source_item":original.duplicate(true),"expedition_key":key,"slot":"material","type":"탐험 보상","grade":"일반","weight":0})
 	world._index_item_weights()
 	check(world._save_game(true)==OK,"controlled owned-ticket and issuer proof baseline saved")
 	var blocked:Dictionary=runtime.quote_inventory_ticket(str(keys[254088]))

@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Exact source ammunition and WeaponType.AmmoItemCategoryID. Spell-only
 ## projectiles stay raw definitions until their spell provider executes them.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -22,6 +23,7 @@ static func weapon_type(record: Dictionary) -> Dictionary:
 
 static func profile(record: Dictionary) -> Dictionary:
 	if not record.get("source_m_native_item",false) or record.get("source_category_name") not in ["Arrow","Bullet","Sting"]: return {}
+	record = NATIVE_FIELDS.full(record)
 	var id: String = str(int(record.get("source_item_class_id",-1)))
 	var definition: Dictionary = D.item_definition(record)
 	if definition.is_empty(): return {}

@@ -21,6 +21,8 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('reference_sp2_asset_sharing_test', []),
+    ('original_ui_page_cache_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
@@ -30,6 +32,7 @@ CHECKS = [
     ('current523_aden_play_options_test', []),
     ('current523_aden_play_renderer_test', []),
     ('current523_aden_play_controller_test', []),
+    ('current523_prior_renderer_release_test', []),
     ('current523_aden_source_field_test', []),
     ('current523_aden_source_portals_test', []),
     ('current523_source_pack_test', []),
@@ -76,6 +79,18 @@ CHECKS = [
     ('source_spawn_admission_cache_test', []),
     ('source523_pack_test', []),
     ('current523_item_use_numeric_test', []),
+    ('current523_draw_ticket_test', []),
+    ('current523_item_lifetime_test', []),
+    ('current523_card_item_test', []),
+    ('current523_bless_rate_test', []),
+    ('current523_host_world_test', []),
+    ('current523_main_ui_test', []),
+    ('updater_test', []),
+    ('current523_server_profile_test', []),
+    ('current523_bank_objects_test', []),
+    ('current523_ti2_display_alpha_test', []),
+    ('current523_buff_effect_test', []),
+    ('current523_mastery_points_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -329,7 +344,9 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
+            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+                      'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
+                      'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
                       'current523_aden_review_unit_test':'CURRENT523_ADEN_REVIEW_UNIT_RESULT',
@@ -338,6 +355,7 @@ def main():
                       'current523_aden_play_options_test':'CURRENT523_ADEN_PLAY_OPTIONS_RESULT',
                       'current523_aden_play_renderer_test':'CURRENT523_ADEN_PLAY_RENDERER_RESULT',
                       'current523_aden_play_controller_test':'CURRENT523_ADEN_PLAY_CONTROLLER_RESULT',
+                      'current523_prior_renderer_release_test':'CURRENT523_PRIOR_RENDERER_RESULT',
                       'current523_aden_source_field_test':'CURRENT523_ADEN_SOURCE_FIELD_RESULT',
                       'current523_aden_source_portals_test':'CURRENT523_ADEN_SOURCE_PORTALS_RESULT',
                       'current523_source_pack_test':'CURRENT523_SOURCE_PACK_RESULT',
@@ -383,7 +401,19 @@ def main():
                       'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
                       'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT',
                       'source523_pack_test':'SOURCE523_PACK_RESULT',
-                      'current523_item_use_numeric_test':'CURRENT523_ITEM_USE_NUMERIC_RESULT'}[name]
+                      'current523_item_use_numeric_test':'CURRENT523_ITEM_USE_NUMERIC_RESULT',
+                      'current523_draw_ticket_test':'CURRENT523_DRAW_TICKET_RESULT',
+                      'current523_item_lifetime_test':'CURRENT523_ITEM_LIFETIME_RESULT',
+                      'current523_card_item_test':'CURRENT523_CARD_ITEM_RESULT',
+                      'current523_bless_rate_test':'CURRENT523_BLESS_RATE_RESULT',
+                      'current523_host_world_test':'CURRENT523_HOST_WORLD_RESULT',
+                      'updater_test':'UPDATER_RESULT',
+                      'current523_server_profile_test':'CURRENT523_SERVER_PROFILE_RESULT',
+                      'current523_bank_objects_test':'CURRENT523_BANK_OBJECTS_RESULT',
+                      'current523_ti2_display_alpha_test':'CURRENT523_TI2_DISPLAY_ALPHA_RESULT',
+                      'current523_buff_effect_test':'CURRENT523_BUFF_EFFECT_RESULT',
+                      'current523_main_ui_test':'CURRENT523_MAIN_UI_RESULT',
+                      'current523_mastery_points_test':'CURRENT523_MASTERY_POINTS_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

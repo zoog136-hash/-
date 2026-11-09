@@ -9,6 +9,7 @@ const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
+const BANK_OBJECTS = preload("res://scripts/maps/current523_bank_objects.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
@@ -31,6 +32,8 @@ var _tile_pack: RefCounted
 var _visual_delta := Vector2.ZERO
 var _tile_ground: Node2D
 var _static_spr: Node2D
+## Why the 523 bank could not draw this map's objects ("" when it does).
+var map_objects_problem: String = ""
 var _static_tails: Dictionary = {}
 var _configured: bool = false
 var _return_pending: bool = false
@@ -176,6 +179,18 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 			return _fail(detail)
 		add_child(_static_spr)
 		_static_spr.position=_visual_delta
+	elif source_owned and not BANK_OBJECTS.bank_selection().is_empty():
+		# Without the separate static SPR selection, the installed 523 SP2 bank
+		# draws the map's objects. A failure leaves the terrain shown as before.
+		var objects: Node2D=BANK_OBJECTS.new()
+		objects.name="Current523BankMapObjects"
+		if objects.configure(BANK_OBJECTS.bank_selection(),field.coordinates):
+			_static_spr=objects
+			add_child(_static_spr)
+			_static_spr.position=_visual_delta
+		else:
+			map_objects_problem=objects.problem
+			objects.free()
 	if not _build_frame(): return false
 	_configured = true
 	y_sort_enabled = true

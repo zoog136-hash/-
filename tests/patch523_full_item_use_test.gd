@@ -93,7 +93,7 @@ func run() -> void:
 			quit(0 if failures.is_empty() else 1);return
 	var visited: int = 0
 	var option_claims: int = 0
-	for id: String in document.item_definitions:
+	for id: String in D.definition_ids():
 		if not selected.is_empty() and not selected.has(id): continue
 		visited += 1
 		if document.source_exclusions.has(id): mark(id,"source_excluded",str(document.source_exclusions[id]));continue
@@ -185,9 +185,9 @@ func run() -> void:
 			else:
 				mark(id,"runtime_use_contract_blocked",str(spec.kind))
 		if visited%500 == 0:
-			print("ALL_USE_PROGRESS ",visited,"/",document.item_definitions.size()," options ",option_claims)
+			print("ALL_USE_PROGRESS ",visited,"/",D.definition_count()," options ",option_claims)
 			await process_frame
-	check(outcomes.size() == (document.item_definitions.size() if selected.is_empty() else selected.size()),"every selected source ItemClass has actual execution/exclusion outcome")
+	check(outcomes.size() == (D.definition_count() if selected.is_empty() else selected.size()),"every selected source ItemClass has actual execution/exclusion outcome")
 	var result: Dictionary = {"checks":checks,"failures":failures,"source_rows":outcomes.size(),"input_scope":"all_ItemClass" if selected.is_empty() else "all_presentation_policy_candidates","counts":counts,"actual_current_class_selector_entity_claims":option_claims,"skill_engine":"PR245 not installed; preserved","other_class_choices":"raw relationships verified, current eligible class executed"}
 	var output: String = OS.get_environment("TWILIGHT_ITEM_COVERAGE_OUTPUT")
 	if not output.is_empty():

@@ -7,6 +7,7 @@ const STATIC_SPR=preload("res://scripts/maps/current523_static_spr.gd")
 const TRAVEL_PAYMENT=preload("res://scripts/maps/current523_map_travel_payment.gd")
 const SOURCE_SPAWNS=preload("res://scripts/maps/current523_source_spawns.gd")
 const SOURCE_POPULATION=preload("res://scripts/maps/current523_source_population.gd")
+const HOST=preload("res://scripts/maps/current523_host.gd")
 var active: bool = false
 ## Source-field actors live in their own root/population. The host Aden root
 ## and population stay paused for return and keep their saved boss state.
@@ -21,6 +22,15 @@ var _world_ref: WeakRef
 var _prior: FieldRenderer
 var _prior_visible: bool = false
 var _prior_mode: int = Node.PROCESS_MODE_INHERIT
+## P3-A step 1: while a source field is active the hidden prior field renderer
+## (its chunks, textures and tile leases) is released and rebuilt on return.
+## Only that renderer: host monsters, population and logic state stay as-is.
+const RELEASE_PRIOR_RENDERER := true
+var release_prior_renderer: bool = RELEASE_PRIOR_RENDERER
+## What the released renderer looked like, for an equivalent rebuild.
+var _prior_released: Dictionary = {}
+## Last release/rebuild outcome (diagnostics and tests).
+var prior_renderer_report: Dictionary = {}
 var _renderer: FieldRenderer
 var _notice: CanvasLayer
 var source_owned: bool = false
@@ -372,7 +382,8 @@ func _build_notice(world: Node) -> void:
 	elif source_owned and _map_time!=null and _map_time.active():label.text+="\nM 원문 한도 차감 · 자체 시간정책: 자동 초기화/충전 없음"
 	if source_owned: label.text+="\n"+_spawn_notice_line()
 	row.add_child(label)
-	var button: Button = UI.button("기존 지도로 복귀", _return_pressed, Vector2(150, 42))
+	var over_host: bool = source_owned and HOST.is_host(_prior_world.get("field"))
+	var button: Button = UI.button("아덴 마을로" if over_host else "기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
 	row.add_child(button)
 
@@ -386,7 +397,13 @@ func _spawn_notice_line() -> String:
 
 func _return_pressed() -> void:
 	var world: Node = _world()
-	if is_instance_valid(world): world.call("close_current523_aden_play")
+	if not is_instance_valid(world): return
+	if source_owned and HOST.is_host(_prior_world.get("field")):
+		# Over the 523 host there is no older map to return to: go to Aden town.
+		var result: Dictionary = world.call("return_current523_source_to_aden")
+		if not result.get("ok", false) and is_instance_valid(world.get("hud")): world.hud.show_message(str(result.get("reason", "아덴 귀환 보류")))
+		return
+	world.call("close_current523_aden_play")
 
 func _open_source(value: Dictionary) -> bool:
 	var world: Node = _world()
@@ -409,6 +426,10 @@ func _open_source(value: Dictionary) -> bool:
 	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
 	var source_position: Array = options.source_position
+	if generic and source_position.is_empty() and HOST.is_host(prior_field) and int(options.native_land_id)==HOST.ADEN_LAND:
+		# A fresh install over the 523 host Aden: the host is the same Land and
+		# coordinate system, so its current point is the entry point.
+		source_position = prior_field.coordinates.source_components(world.player.global_position)
 	if generic and source_position.is_empty():
 		problem="선택한 논리 Land의 원문 입장 좌표를 지정해 주세요. 다른 지도의 좌표를 재사용하지 않습니다."; proposed.close(); return false
 	if source_position.is_empty(): source_position = prior_field.coordinates.source_components(world.player.global_position)
@@ -493,7 +514,65 @@ func _open_source(value: Dictionary) -> bool:
 	_load_portals()
 	if world.has_method("_refresh_regional_return_slots"):world.call("_refresh_regional_return_slots")
 	if generic:_start_map_time_monitor(world)
+	# Every failure exit precedes this point, so rollback keeps the live renderer.
+	_release_prior_renderer(world)
 	return true
+
+## Identity of a field renderer as its owner sees it.
+static func renderer_signature(renderer: Node) -> Dictionary:
+	return {"script":renderer.get_script(),"name":str(renderer.name),"index":renderer.get_index() if renderer.get_parent()!=null else -1,
+		"visible":bool(renderer.get("visible")),"process_mode":renderer.process_mode,"visual_mode":str(renderer.get("visual_mode")),
+		"debug_collision":renderer.get("debug_collision")==true,"png_review_active":renderer.get("png_review_active")==true}
+
+func _release_prior_renderer(world: Node) -> void:
+	_prior_released = {}
+	if not release_prior_renderer or not is_instance_valid(_prior) or _prior.get_parent()!=world or world.get("field_renderer")==_prior: return
+	var record: Dictionary = renderer_signature(_prior)
+	# The state it returns to, not the hidden/disabled state it has right now.
+	record.visible = _prior_visible; record.process_mode = _prior_mode
+	world.remove_child(_prior)
+	_prior.queue_free()
+	_prior = null
+	_prior_released = record
+	prior_renderer_report = {"released":true,"rebuilt":false,"mismatch":[]}
+
+## Rebuilds the released renderer on the restored host field, with the factory
+## `_set_map` uses. Null when none was made; a failure reopens the map later.
+func _rebuild_prior_renderer(world: Node) -> FieldRenderer:
+	var record: Dictionary = _prior_released
+	_prior_released = {}
+	var report: Dictionary = {"released":true,"rebuilt":false,"mismatch":[]}
+	prior_renderer_report = report
+	if bool(world.get("current523_prior_rebuild_suppressed")) or not world.is_inside_tree() or world.is_queued_for_deletion():
+		report.skipped = "the caller releases the map"; return null
+	var field: Variant = world.get("field_map")
+	var made: Dictionary = world.call("_new_field_renderer", field) if field is PlayableField and world.has_method("_new_field_renderer") else {}
+	var renderer: Variant = made.get("renderer")
+	if made.get("abort", true) or not renderer is FieldRenderer or not is_instance_valid(renderer):
+		report.failed = "renderer factory"
+		problem += (" · " if not problem.is_empty() else "") + "기존 지도 표시를 다시 만들지 못해 지도를 다시 엽니다."
+		_reopen_after_failed_rebuild.call_deferred(str(world.get("active_map_id")))
+		return null
+	world.call("_mount_field_renderer", renderer, field)
+	if str(renderer.name) != record.name: renderer.name = record.name
+	if renderer.get_parent() == world and int(record.index) >= 0: world.move_child(renderer, mini(int(record.index), world.get_child_count()-1))
+	renderer.set_visual_mode(str(world.call("_saved_visual_mode")))
+	var now: Dictionary = renderer_signature(renderer)
+	if now.debug_collision != record.debug_collision: renderer.set_visual_mode("collision" if record.debug_collision else record.visual_mode)
+	elif now.visual_mode != record.visual_mode: renderer.set_visual_mode(record.visual_mode)
+	renderer.visible = record.visible; renderer.process_mode = record.process_mode
+	renderer.refresh_visible()
+	now = renderer_signature(renderer)
+	for key: String in record:
+		if now[key] != record[key]: report.mismatch.append(key)
+	report.rebuilt = true
+	return renderer
+
+func _reopen_after_failed_rebuild(map_id: String) -> void:
+	var world: Node = _world()
+	if active or not is_instance_valid(world) or not world.is_inside_tree() or world.is_queued_for_deletion(): return
+	if is_instance_valid(world.get("field_renderer")) or str(world.get("active_map_id")) != map_id: return
+	world.call("_set_map", map_id, true)
 
 func _clear_source_actors(world: Node) -> void:
 	world.selected_monster = null; world.auto_target = null
@@ -583,6 +662,7 @@ func _close_source(remember_disabled: bool) -> bool:
 		if is_instance_valid(world.field_physics):
 			world.field_physics.collision_layer = _prior_world.physics_layer
 			world.field_physics.process_mode = _prior_world.physics_mode
+		if not _prior_released.is_empty(): _prior = _rebuild_prior_renderer(world)
 		world.field_renderer = _prior
 		if is_instance_valid(_prior): _prior.visible = _prior_visible; _prior.process_mode = _prior_mode
 		for row: Dictionary in _paused_nodes:
@@ -591,14 +671,14 @@ func _close_source(remember_disabled: bool) -> bool:
 			if row.node is CanvasItem or row.node is CanvasLayer: row.node.set("visible",row.visible)
 		world.ground_loot.activate(str(world.active_map_id))
 		if world.is_inside_tree() and not world.is_queued_for_deletion():
-			if world.field_population.get("field")==null: world.field_population.configure(world,world.field_map)
+			if world.field_population.get("field")==null and not HOST.is_host(world.field_map): world.field_population.configure(world,world.field_map)
 			world.field_minimap.configure(world,world.field_map)
 			world.region_id=""
 			world.hud.set_map_name(str(world.field_map.region_at(world.player.global_position).get("name",world.active_map.get("name",""))))
 	if _source_field != null: _source_field.close()
 	if is_instance_valid(_notice): _notice.queue_free()
 	_renderer = null; _source_physics = null; _source_field = null; _prior = null; _notice = null; _portals = null
-	_prior_world.clear(); _paused_nodes.clear()
+	_prior_world.clear(); _paused_nodes.clear(); _prior_released = {}
 	source_owned = false; active = false
 	if is_instance_valid(world) and world.is_inside_tree() and not world.is_queued_for_deletion() and world.has_method("_refresh_regional_return_slots"):
 		world.call("_refresh_regional_return_slots")

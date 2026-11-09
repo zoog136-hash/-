@@ -145,6 +145,7 @@ static func registered_material_target(host:Node,item:Dictionary,bless:int,encha
 	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not NATIVE_FIELDS.full(record).get("source_use_spec",{}).is_empty() or not record.get("source_equip_slot_ids",[]).is_empty():return {}
 	var registered:Dictionary=host._find_catalog_item_record(str(record.get("name","")))
 	if not rules.catalog_identity_matches(registered,id):return {}
+	var registered_full:Dictionary=NATIVE_FIELDS.full(registered)
 	for pair:Array in [["source_is_storable","IsStorable"],["source_is_tradable","IsTradable"],["source_is_droppable","IsDroppable"],["source_is_deletable","IsDeletable"]]:
-		if bool(registered.get(pair[0],false))!=bool(item.get(pair[1],false)):return {}
+		if bool(registered_full.get(pair[0],false))!=bool(item.get(pair[1],false)):return {}
 	return {"ok":true,"record":registered,"wallet":"","kind":"native_material","recipient":"PR239 제작·가공"}
