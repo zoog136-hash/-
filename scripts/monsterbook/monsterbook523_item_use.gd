@@ -106,7 +106,9 @@ func category_for_deck(deck_id: int) -> String:
 
 func _award(card_id: int, state: Dictionary, results: Array) -> bool:
 	var raw: Dictionary = runtime.catalog.row("BuffCard",card_id)
-	if raw.is_empty() or int(raw.ServerLimitSetID) != 0 or int(raw.StartDateTimeID) != 0 or int(raw.EndDateTimeID) != 0: return false
+	# A server-limited card is awarded when its original set names the current
+	# server profile (declared context, else offline Korean world 1).
+	if raw.is_empty() or not preload("res://scripts/loot/current523_server_profile.gd").allows(world,raw.ServerLimitSetID).ok or int(raw.StartDateTimeID) != 0 or int(raw.EndDateTimeID) != 0: return false
 	var category := category_for_deck(int(raw.BuffCardDeckID))
 	if category.is_empty(): return false
 	var identity: String = ""
