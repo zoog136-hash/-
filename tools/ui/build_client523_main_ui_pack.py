@@ -53,7 +53,14 @@ NODE_SCOPES = [
     ("UI/Main/Hud_CharInfo.csb", [46576, 40620, 37172, 35464, 35528, 20552, 20060, 39796, 34940, 18508, 18556, 15324, 15372]),
     ("UI/Storage/Storage_All.csb", [47160, 48640, 47920]),
     ("UI/Store/Store_All.csb", [67396]),
+    # World map (source_main_map_bindings.build_map_scene): row, area with the
+    # World image slot 44440 (pixels come from the 523 image pack), Map_All, MapScene.
+    ("UI/Map/Map_List_Button.csb", [7440, 4508, 7492, 4560]),
+    ("UI/Map/Map_Tab_Area.csb", [44440, 37316]),
+    ("UI/Map/Map_All.csb", [35332, 34904, 30312, 29552, 29228, 31656]),
+    ("UI/MapScene.csb", [132]),
 ]
+EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440]}
 
 
 def code_members(repo: Path) -> list[str]:
@@ -84,6 +91,8 @@ def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
             continue
         entries.append(member)
     builder = Builder(files, link_originals=True)
+    for member, offsets in EXTERNAL_TEXTURE_NODES.items():
+        builder.external_texture_nodes[member] = list(offsets)
     for member in LAYOUT_SOURCES:
         builder.layout_source(member)
     for member, offsets in NODE_SCOPES:

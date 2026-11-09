@@ -33,15 +33,18 @@ const TABLE_COPIES := ["user://growth96_definitions/source.zip","user://source_r
 const BANK_SETTINGS := "user://current523_source_bank.json"
 const MAP_SETTINGS := "user://current523_aden_play.cfg"
 const GENERIC_MAP := "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
-const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json","ui_icons":"icon-selection.json","world_links":"manifest.json"}
+const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json","ui_icons":"icon-selection.json","world_links":"manifest.json","world_map":"contract.json"}
 ## Add-ons extend an installed pack without reinstalling its parts.
 const ADDON_SCHEMA := "twilight-client523-resource-addon-v1"
 const ADDON_DESCRIPTOR := "source523_addon.json"
 const ADDONS := "source523_addons.json"
-const ADDON_SECTIONS := ["world_links","ui"]
+const ADDON_SECTIONS := ["world_links","ui","world_map"]
 ## The add-on file that carries each section (what the installer asks for).
-const ADDON_FILES := {"world_links":"twilight523-addon-world-links.zip","ui":"twilight523-addon-ui.zip"}
-const ADDON_NAMES := {"world_links":"523 맵 이동 정의","ui":"원작 메인 화면(UI)"}
+const ADDON_FILES := {"world_links":"twilight523-addon-world-links.zip","ui":"twilight523-addon-ui.zip","world_map":"twilight523-addon-ui.zip"}
+const ADDON_NAMES := {"world_links":"523 맵 이동 정의","ui":"원작 메인 화면(UI)","world_map":"원작 월드맵"}
+## The world map selection the world-map input reads at start.
+const WORLD_MAP_SETTINGS := "user://current523_world_map.cfg"
+const WORLD_MAP_SCHEMA := "twilight-source523-world-map-v1"
 ## 523 map travel definitions; 523 play mode needs them to enter a Land.
 const WORLD_LINKS_SHA := "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const DEFINITIONS = preload("res://scripts/maps/current523_source_definition_preferences.gd")
@@ -91,6 +94,38 @@ static func _safe_relative(value: Variant) -> bool:
 
 static func _sha(value: Variant) -> bool:
 	return value is String and value.length() == 64 and value.is_valid_hex_number(false)
+
+## Writes the world-map selection for the add-on's 523 contract. Rewritten
+## only when the contract changes (its offers are read from the contract).
+static func write_world_map(selected: Dictionary, path: String = WORLD_MAP_SETTINGS) -> Dictionary:
+	var config := ConfigFile.new()
+	if config.load(path) == OK and config.get_value("world_map","contract_sha256","") == selected.contract_sha256 and config.get_value("world_map","contract_path","") == selected.contract_path:
+		return {"ok":true}
+	var file := FileAccess.open(selected.contract_path, FileAccess.READ)
+	if file == null or file.get_length() > 4 * 1024 * 1024: return {"ok":false,"reason":"source523_pack_world_map_contract_missing"}
+	var raw: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var digest := HashingContext.new()
+	digest.start(HashingContext.HASH_SHA256)
+	digest.update(raw)
+	if digest.finish().hex_encode() != selected.contract_sha256: return {"ok":false,"reason":"source523_pack_world_map_contract_pin"}
+	var contract: Variant = JSON.parse_string(raw.get_string_from_utf8())
+	if not contract is Dictionary or contract.get("schema") != WORLD_MAP_SCHEMA or not contract.get("offered_worlds") is Dictionary: return {"ok":false,"reason":"source523_pack_world_map_contract_schema"}
+	var offers: Dictionary = {}
+	for land: Variant in contract.offered_worlds:
+		var offer: Variant = contract.offered_worlds[land]
+		if not offer is Dictionary or not (offer.get("world_id") is int or offer.get("world_id") is float) or not offer.get("label") is String: return {"ok":false,"reason":"source523_pack_world_map_offer"}
+		offers[str(land)] = {"world_id":int(offer.world_id),"label":str(offer.label)}
+	config = ConfigFile.new()
+	config.set_value("world_map","enabled",true)
+	config.set_value("world_map","contract_path",selected.contract_path)
+	config.set_value("world_map","contract_sha256",selected.contract_sha256)
+	config.set_value("world_map","offered_worlds",offers)
+	config.set_value("world_map","coordinate_policy",str(contract.get("coordinate_policy","OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1")))
+	config.set_value("world_map","ratio_scale",float(contract.get("ratio_scale",1.0)))
+	config.set_value("world_map","source_anchor_offset",contract.get("source_anchor_offset",[0.5,0.5]))
+	if config.save(path) != OK: return {"ok":false,"reason":"source523_pack_world_map_settings_unwritable"}
+	return {"ok":true}
 
 ## Reads and checks an extracted pack descriptor. No hashing here: readers pin.
 static func read_descriptor(path: String, tables_sha: String = TABLES_SHA) -> Dictionary:
@@ -160,6 +195,8 @@ static func selections(base: String, descriptor: Dictionary, addons: Dictionary 
 	var maps: Dictionary = {"raw_root":base.path_join(descriptor.maps.root),"tile_root":base.path_join(descriptor.tiles.root),
 		"source_manifest_sha256":str(descriptor.maps.manifest_sha256).to_lower(),"tile_manifest_sha256":str(descriptor.tiles.manifest_sha256).to_lower()}
 	var result: Dictionary = {"environment":environment,"bank":bank,"maps":maps,"start_land_id":int(descriptor.get("start_land_id",4)),"tables":tables}
+	var world_map: Variant = descriptor.get("world_map", addons.get("world_map"))
+	if world_map is Dictionary: result["world_map"] = {"contract_path":base.path_join(world_map.manifest),"contract_sha256":str(world_map.manifest_sha256).to_lower()}
 	var links: Variant = descriptor.get("world_links", addons.get("world_links"))
 	if links is Dictionary: result["definitions"] = {"directory":base.path_join(links.root),"manifest_sha256":str(links.manifest_sha256).to_lower()}
 	return result
@@ -187,6 +224,10 @@ static func apply(selected: Dictionary) -> Dictionary:
 		config.set_value("play","native_land_id",selected.start_land_id)
 		config.set_value("play","source_position",[])
 	if config.save(MAP_SETTINGS) != OK: return {"ok":false,"reason":"source523_pack_map_settings_unwritable"}
+	if selected.has("world_map"):
+		# A world map that cannot be selected leaves the rest of the pack working.
+		var written: Dictionary = write_world_map(selected.world_map)
+		if not written.ok: push_warning("원작 월드맵을 연결하지 못했습니다: " + str(written.reason))
 	if selected.has("definitions"):
 		var stored: Dictionary = DEFINITIONS.read()
 		if not stored.get("ok", false) or not stored.get("configured", false) or stored.get("directory") != selected.definitions.directory:
@@ -291,7 +332,7 @@ func _waiting_text() -> String:
 		var files: Array[String] = []
 		for section: String in _missing:
 			names.append(str(ADDON_NAMES[section]))
-			files.append(str(ADDON_FILES[section]))
+			if not files.has(str(ADDON_FILES[section])): files.append(str(ADDON_FILES[section]))
 		return "원본 리소스 팩은 설치되어 있습니다.\n추가 리소스가 더 필요합니다: %s\n%s 을(를) 선택하세요.\n(조각을 다시 받을 필요는 없습니다)" % [", ".join(names), ", ".join(files)]
 	var state: Dictionary = _state()
 	if int(state.get("parts", 0)) > 0:

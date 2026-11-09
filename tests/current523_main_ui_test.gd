@@ -51,11 +51,33 @@ func _rules() -> void:
 	var selected: Dictionary = PACK.selections("/pack", descriptor, addon)
 	check(selected.environment.get("TWILIGHT_SOURCE_UI") == "/pack/ui" and selected.environment.get("TWILIGHT_SOURCE_UI_SHA256") == sha, "the UI add-on selects the main UI pack")
 	check(not PACK.selections("/pack", descriptor).environment.has("TWILIGHT_SOURCE_UI"), "no add-on, no main UI selection")
-	check(PACK.missing_addons(descriptor, addon) == ["world_links"], "the installer still asks for the travel definitions")
-	check(PACK.missing_addons(descriptor, {}) == ["world_links","ui"], "both add-ons are asked for on a bare pack")
-	check(PACK.missing_addons(descriptor, addon.merged({"world_links":{}})).is_empty(), "nothing is asked for when both are installed")
+	check(PACK.missing_addons(descriptor, addon) == ["world_links","world_map"], "the installer still asks for the travel definitions and the world map")
+	check(PACK.missing_addons(descriptor, {}) == ["world_links","ui","world_map"], "every add-on is asked for on a bare pack")
+	check(PACK.missing_addons(descriptor, addon.merged({"world_links":{},"world_map":{}})).is_empty(), "nothing is asked for when all are installed")
 	_scope_offsets()
 	_callbacks_survive()
+	_world_map_settings()
+
+## The add-on's world-map contract becomes the world-map input's settings.
+func _world_map_settings() -> void:
+	var dir: String = ProjectSettings.globalize_path("user://current523_main_ui_fixture")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var raw: PackedByteArray = JSON.stringify({"schema":PACK.WORLD_MAP_SCHEMA,"image_infos":[],"offered_worlds":{"4":{"world_id":5,"label":"아덴대륙"}},"coordinate_policy":"OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1","ratio_scale":1.0,"source_anchor_offset":[0.5,0.5]}).to_utf8_buffer()
+	var file := FileAccess.open(dir.path_join("contract.json"), FileAccess.WRITE)
+	file.store_buffer(raw)
+	file.close()
+	var digest := HashingContext.new()
+	digest.start(HashingContext.HASH_SHA256)
+	digest.update(raw)
+	var sha: String = digest.finish().hex_encode()
+	var cfg: String = "user://current523_main_ui_fixture/world_map.cfg"
+	check(not PACK.write_world_map({"contract_path":dir.path_join("contract.json"),"contract_sha256":"00".repeat(32)}, cfg).ok, "a contract with another pin is not selected")
+	check(PACK.write_world_map({"contract_path":dir.path_join("contract.json"),"contract_sha256":sha}, cfg).ok, "the world-map contract is selected")
+	var config := ConfigFile.new()
+	check(config.load(cfg) == OK and config.get_value("world_map","enabled") == true and config.get_value("world_map","offered_worlds",{}).get("4",{}).get("world_id") == 5 and config.get_value("world_map","contract_sha256") == sha, "the settings carry the contract pin and the Land 4 offer")
+	var addon: Dictionary = {"world_map":{"root":"world_map","manifest":"world_map/contract.json","manifest_sha256":sha}}
+	var descriptor: Dictionary = {"tables":{"path":"t.zip"},"images":{"root":"i","manifest_sha256":sha},"bank":{"manifest":"b/m.json","manifest_sha256":sha},"maps":{"root":"m","manifest_sha256":sha},"tiles":{"root":"t","manifest_sha256":sha}}
+	check(PACK.selections("/pack", descriptor, addon).get("world_map",{}).get("contract_path") == "/pack/world_map/contract.json", "the add-on's contract path is selected")
 
 ## A pack's partial node scopes load from JSON as floats; consumers ask with
 ## int source offsets, so the opened pack must hold ints.
@@ -161,4 +183,24 @@ func _run() -> void:
 		if bool(hud.get("class_picker_initial")): hud.call("complete_class_selection")
 		for _frame: int in 30: await process_frame
 		root.get_viewport().get_texture().get_image().save_png(shot)
-	_finish({"real_input_checked":true,"components":mounted})
+	var map: Dictionary = {}
+	if addons.has("world_map") and is_instance_valid(controller):
+		map["input"] = world.get("current523_world_map_status")
+		check(bool(controller.call("has_world_map_binding")), "the original world map is bound: " + str(map.input))
+		if bool(hud.get("class_picker_initial")): hud.call("complete_class_selection")
+		var opened: Dictionary = controller.call("toggle_world_map")
+		map["open"] = opened.get("ok", false)
+		check(opened.get("ok", false) and bool(controller.call("world_map_is_open")), "the original world map opens on 523 Aden: " + _reason(opened))
+		if not opened.get("ok", false):
+			map["open_result"] = JSON.stringify(opened).left(700)
+		map["offered_world_id"] = opened.get("offered_world_id")
+		# The player taps the offered World row: the 523 World image is shown.
+		var presenter: Variant = controller.get("_world_map")
+		var chosen: Dictionary = presenter.get("_bindings").call("select_world", int(opened.get("offered_world_id", 0))) if is_instance_valid(presenter) and opened.get("ok", false) else {}
+		map["image_applied"] = chosen.get("image_applied", false)
+		check(bool(chosen.get("image_applied", false)), "the 523 World image is shown: " + _reason(chosen))
+		for _frame: int in 30: await process_frame
+		if not shot.is_empty() and DisplayServer.get_name() != "headless":
+			root.get_viewport().get_texture().get_image().save_png(shot.get_basename() + "_map.png")
+		controller.call("close_world_map")
+	_finish({"real_input_checked":true,"components":mounted,"world_map":map})

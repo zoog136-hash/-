@@ -124,3 +124,32 @@ auto message, character, inventory and item name mount. Not mounted:
 system message (523 `Text_Line` carries `customProperty {"transfer":"false"}`,
 which the strict player does not interpret), quickslot (needs owner visuals),
 inventory lock (mounts when an item detail is open).
+
+## World map from the 523 tables (add-on `world_map` section)
+
+```sh
+python3 tools/maps/build_client523_world_map.py --tables <pack>/tables/source.zip \
+  --images-manifest <pack>/images/manifest.json --output <private>/world_map
+python3 tools/ui/build_client523_main_ui_pack.py --source-index <inputs>/source-index.json --output <private>/ui523/main_pack
+python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack \
+  --world-map <private>/world_map --output <private>/addon-ui    # one file: twilight523-addon-ui.zip
+```
+
+* `contract.json` is what `source523_map_image_adapter.gd open_contract()` reads:
+  every UIMapImageInfo row a UIMapWorld row names, joined to its AssetView
+  (AssetId == ImageID) and AssetType rows (exact path `Path + FilePath`), with
+  table/row-index provenance. 287 image rows from the pinned tables (`d5192c3c…`).
+* Offers: a Land with exactly one image-bearing UIMapWorld row offers that
+  World, labelled with its Korean `DescData_Korean` text (Aden: World 5
+  "아덴대륙"). 344 Lands; Land 284 has two such rows and gets no offer. Every
+  offered image (`Image/Map/W_*.png`) is a verified original in the image pack.
+* The installer writes `user://current523_world_map.cfg` from the contract
+  (`Source523Pack.write_world_map`), only when the contract changes; a contract
+  that does not verify leaves the rest of the pack working.
+* The main UI pack scopes the map controls the code mounts (`MapScene` 132,
+  `Map_All` 6 nodes, `Map_Tab_Area` 44440/37316 with 44440 declared as the
+  externally bound World image slot, `Map_List_Button` 4 nodes).
+* `current523_world_map_walk.gd` accepted only the older own-allowlist field
+  profile; the 523 field now uses the client attr-bit0 rule
+  (`CURRENT523_S32_CLIENT_ATTR_BIT0_V1`). The walk goes through the field's own
+  `point_clear`/`find_world_path`, so both profiles are accepted.

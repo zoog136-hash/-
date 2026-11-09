@@ -78,6 +78,25 @@ class AddonTest(unittest.TestCase):
         self.assertEqual(report["file"], "twilight523-addon-ui-world-links.zip")
         self.assertEqual(sorted(report["sections"]), ["ui", "world_links"])
 
+    def _world_map(self, offers=None):
+        root = self.base / "world_map"
+        root.mkdir()
+        contract = {"schema": "twilight-source523-world-map-v1", "image_infos": [{"image_info": {}}],
+                    "offered_worlds": offers if offers is not None else {"4": {"world_id": 5, "label": "아덴대륙"}}}
+        (root / "contract.json").write_text(json.dumps(contract, ensure_ascii=False))
+        return root
+
+    def test_ui_and_world_map_ship_in_one_file(self):
+        out = self.base / "out-map"
+        self.assertEqual(addon.main(["--ui", str(self._ui_pack()), "--world-map", str(self._world_map()), "--output", str(out)]), 0)
+        report = json.loads((out / "source523_addon_report.json").read_text())
+        self.assertEqual(report["file"], "twilight523-addon-ui.zip")
+        self.assertEqual(report["sections"]["world_map"]["manifest"], "world_map/contract.json")
+
+    def test_refuses_world_map_without_offers(self):
+        out = self.base / "out-map"
+        self.assertEqual(addon.main(["--world-map", str(self._world_map(offers={})), "--output", str(out)]), 1)
+
     def test_refuses_ui_pack_with_blockers(self):
         ui = self._ui_pack(blockers=[{"member": "UI/x.png", "reason": "missing"}])
         self.assertEqual(addon.main(["--ui", str(ui), "--output", str(self.base / "out")]), 1)
