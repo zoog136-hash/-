@@ -24,7 +24,7 @@ func run() -> void:
 	check(independent.configure([],[]) and independent.source.quests.size()==3621,"native source loading never depends on retired sample monster/item names")
 	if service.source.quests.size()!=3621: quit(1);return
 	for native: Dictionary in service.source.quests:
-		if int(native.definition.TypeID)==3: check(native.category=="common","original Common type is displayed as general quests")
+		if int(service.source.full(native).definition.TypeID)==3: check(native.category=="common","original Common type is displayed as general quests")
 	var at: int = int(Time.get_unix_time_from_system())
 	var context: Dictionary = {"level":100,"max_level":100,"class_id":1,"source_items":{}}
 	var all_claimed: Dictionary = {}
@@ -36,11 +36,13 @@ func run() -> void:
 	var level_goals: int = 0
 	var open_level_goals: int = 0
 	for row: Dictionary in service.source.quests:
-		check(row.id=="m523:quest:"+str(int(row.definition.ID)),"native quest identity")
+		var complete: Dictionary = service.source.full(row)
+		check(row.id=="m523:quest:"+str(int(complete.definition.ID)),"native quest identity")
 		check(row.blockers.is_empty(),"all original goal/reward/prerequisite links resolve")
 		var reason: String = service.source.gate(row,context,all_claimed,at)
 		gate_reasons[reason] = int(gate_reasons.get(reason,0))+1
-		for goal: Dictionary in row.goals:
+		check(service.source.gate(complete,context,all_claimed,at)==reason and service.source.gate(complete,{"level":1,"class_id":-1},{},at)==service.source.gate(row,{"level":1,"class_id":-1},{},at),"resident compact row gates exactly like the complete row")
+		for goal: Dictionary in complete.goals:
 			if goal.type_name != "Level": continue
 			level_goals += 1
 			if not reason.is_empty(): continue # Period/exclusion/other source guards remain authoritative.
