@@ -52,7 +52,12 @@ func setup(source: Object) -> void:
 	_scroll_id = 0
 	# ItemBonus/BuffBonus links are looked up per item/buff (_links) instead of
 	# indexing all 89,702 + 34,623 rows here (~0.4 GB with the original installed).
-	for item: Dictionary in _rows("ItemClass"):
+	# The shared ItemClass is scanned by its three used columns, not copied.
+	var item_columns: Array = _shared_columns("ItemClass", ["ID", "CategoryID", "GradeID"])
+	var items: Array = _rows("ItemClass") if item_columns.is_empty() else []
+	var item_count: int = items.size() if item_columns.is_empty() else (item_columns[0] as Variant).size()
+	for item_index: int in item_count:
+		var item: Dictionary = items[item_index] if item_columns.is_empty() else {"ID": item_columns[0][item_index], "CategoryID": item_columns[1][item_index], "GradeID": item_columns[2][item_index]}
 		var item_id: int = int(item.get("ID", 0))
 		if int(item.get("CategoryID", 0)) == RECHARGER_CATEGORY:
 			var duration: int = 0
@@ -504,6 +509,16 @@ func _grace_cost(grace_id: int) -> Dictionary:
 
 func _protection_buff(item_id: int, subscription: int) -> int:
 	return int(test_protection_dispatch.get(item_id, protection_dispatch.get(subscription, 0)))
+
+## Columns of a large shared table (all or nothing); [] when read as rows.
+func _shared_columns(table: String, fields: Array) -> Array:
+	if not is_instance_valid(_source) or not _source.has_method("shared_column"): return []
+	var result: Array = []
+	for field: String in fields:
+		var values: Variant = _source.call("shared_column", table, field)
+		if values == null: return []
+		result.append(values)
+	return result
 
 func _rows(table: String) -> Array:
 	if not _tables.has(table):

@@ -43,7 +43,34 @@ func _excluded(table: String, row: Dictionary) -> bool:
 	_exclusions.append({"table":table,"row":row,"evidence":evidence})
 	return true
 
+## Large tables read only by ID: kept in the shared reader and looked up per
+## ID instead of materialized (Bonus alone is 217,916 rows). The same
+## whole-table ID check as the index below runs on the packed ID column.
+const BY_ID_TABLES = ["Bonus","SpellClass"]
+var _by_id: Dictionary = {}
+
+func _by_id_ready(table: String) -> bool:
+	if not _by_id.has(table):
+		var ids: Variant = SOURCE.column(table,"ID")
+		var ready: bool = ids is PackedFloat64Array and (ids as PackedFloat64Array).size() == SOURCE.row_count(table) and SOURCE.integer_field(table,"ID")
+		if ready:
+			var sorted := PackedInt64Array()
+			for value: float in ids: sorted.append(int(value))
+			sorted.sort()
+			for index: int in range(1, sorted.size()):
+				if sorted[index] == sorted[index - 1]: ready = false; break
+		_by_id[table] = ready
+	return _by_id[table]
+
 func _row(table: String, id: int, required: bool = true) -> Dictionary:
+	if table in BY_ID_TABLES and not _tables.has(table):
+		if not _by_id_ready(table):
+			if required: problem = "컬렉션 원본 ID가 없거나 중복됩니다: "+table
+			return {}
+		var matches: Array[Dictionary] = SOURCE.related(table,"ID",id)
+		var found: Dictionary = matches[0] if matches.size() == 1 else {}
+		if required and found.is_empty(): problem = "컬렉션 원본 참조가 없습니다: "+table+"#"+str(id)
+		return found
 	if not _indexes.has(table):
 		var index: Dictionary = {}
 		for row: Dictionary in _tables.get(table,[]):
@@ -70,6 +97,9 @@ func _read() -> bool:
 		var meta: Dictionary = SOURCE.table_metadata(table)
 		if meta.is_empty(): problem = "컬렉션 원본 메타데이터가 없습니다: "+table; return false
 		_hashes[table] = meta.get("sha256")
+		if table in BY_ID_TABLES and _by_id_ready(table):
+			if SOURCE.row_count(table) != int(meta.get("row_count",-1)): problem = "컬렉션 원본 표가 없습니다: "+table; return false
+			continue
 		_tables[table] = [] if table == "DescData_Korean" else SOURCE.rows(table)
 		if table != "DescData_Korean" and _tables[table].size() != int(meta.get("row_count",-1)): problem = "컬렉션 원본 표가 없습니다: "+table; return false
 	for row: Dictionary in _tables.UIUnit: _ui[int(row.UnitID)] = row
@@ -225,7 +255,7 @@ static func _group(rows: Array, field: String) -> Dictionary:
 
 func build(catalog: Dictionary) -> Dictionary:
 	problem = ""
-	_tables.clear(); _indexes.clear(); _hashes.clear(); _descriptions.clear(); _records.clear(); _ui.clear(); _exclusions.clear()
+	_tables.clear(); _indexes.clear(); _by_id.clear(); _hashes.clear(); _descriptions.clear(); _records.clear(); _ui.clear(); _exclusions.clear()
 	if not _read() or not _bind_catalog(catalog): return {}
 	var members: Dictionary = _group(_tables.BuffCardForCollection,"BuffCardCollectionID")
 	var rewards: Dictionary = _group(_tables.BuffCardCollectionBonus,"BuffCardCollectionID")
