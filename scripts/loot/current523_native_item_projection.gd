@@ -9,6 +9,11 @@ const MP=["MPRestoration","MPRestorationDiceNumber","MPRestorationDiceSpotCount"
 
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
+## Table JSON numbers are floats. `in`, `match` and Array/Dictionary equality
+## are type-strict, so an integral one is compared as the int it is; any other
+## value (fractional, string, null) is returned unchanged and still fails.
+static func whole(value: Variant) -> Variant:
+	return int(value) if typeof(value)==TYPE_FLOAT and integer(value) else value
 static func label(id: Variant) -> String:
 	if not integer(id) or int(id)<=0:return ""
 	return str(SOURCE.row("DescData_Korean",int(id)).get("Description","")).strip_edges()
@@ -402,7 +407,7 @@ static func enchant_stats(item: Dictionary,level: int,bless: int) -> Dictionary:
 	for group: Variant in item.get("source_enchant_group_ids",[]):
 		if not integer(group) or int(group)<=0:continue
 		for row: Dictionary in SOURCE.related("ItemEnchantBonus","ItemEnchantBonusGroupID",int(group)):
-			if not SOURCE.declared_exclusion("ItemEnchantBonus",row).is_empty() or row.get("EnchantLevel")!=level or row.get("BlessCode") not in [0,bless]:continue
+			if not SOURCE.declared_exclusion("ItemEnchantBonus",row).is_empty() or row.get("EnchantLevel")!=level or whole(row.get("BlessCode")) not in [0,bless]:continue
 			if not integer(row.get("BonusID")):continue
 			var bonus: Dictionary=SOURCE.row("Bonus",int(row.BonusID))
 			if not SOURCE.declared_exclusion("Bonus",bonus).is_empty() or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or not integer(bonus.get("BonusTypeID")) or not integer(bonus.get("Value")):continue
@@ -506,7 +511,7 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
 			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):distribution.append("unsupported_lucky_bag_entity_class");continue
 			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
-		if (row.get("LimitClass")==10000 and not classes.is_empty()) or (row.get("LimitClass")!=10000 and row.get("LimitClass") not in classes):distribution.append("unresolved_lucky_bag_class_limit")
+		if (row.get("LimitClass")==10000 and not classes.is_empty()) or (row.get("LimitClass")!=10000 and whole(row.get("LimitClass")) not in classes):distribution.append("unresolved_lucky_bag_class_limit")
 		for class_id: int in classes:
 			if not active.has(class_id):distribution.append("unsupported_lucky_bag_entity_class")
 		var eligible: bool=classes.is_empty()
@@ -522,7 +527,7 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 				var slot: Dictionary=SOURCE.row("EquipSlot",int(equip.get("EquipSlotID",-1)));var name_value: String=str(slot.get("Name",""));slots[equip.get("EquipSlotID")]=true
 				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and equip.get("EquipSlotID")!=293):level_ok=false
 			if slots.size()!=1:level_ok=false
-		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or row.get("ItemBlessCodeID") not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
+		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
 		var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
 		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
 		rewards.append(reward)
@@ -608,13 +613,13 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			for class_id: int in domain:
 				if (class_ids.is_empty() or class_id in class_ids) and (root.get("CharacterClassID")==0 or root.get("CharacterClassID")==class_id):eligible=true
 			if eligible and (item.get("TestItem")!=false or child.get("excluded",false) or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
-			if not integer(row.get("Amount")) or int(row.Amount)<1 or row.get("ItemBlessCodeID") not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
+			if not integer(row.get("Amount")) or int(row.Amount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
 			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0))).is_empty();initial_rule=initial_rule or needs
 			rewards.append({"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs})
 	var counts: Dictionary={}
 	for class_id: int in domain:
 		var count: int=0
-		if root.get("CharacterClassID") in [0,class_id]:
+		if whole(root.get("CharacterClassID")) in [0,class_id]:
 			for reward: Dictionary in rewards:
 				if reward.class_ids.is_empty() or class_id in reward.class_ids:count+=1
 		counts[str(class_id)]=count
@@ -657,7 +662,7 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 	for kind: String in ["BuffCardCannotSwap","CannotStackCard"]:
 		var values: Array=[]
 		for row: Dictionary in rows:
-			if row.get("bonus_type",{}).get("Name")==kind:values.append(row.get("bonus",{}).get("Value"))
+			if row.get("bonus_type",{}).get("Name")==kind:values.append(whole(row.get("bonus",{}).get("Value")))
 		if values.size()>1:reasons.append("ambiguous_skill_card_flag:"+kind)
 		for value: Variant in values:
 			if not integer(value) or value not in [0,1]:reasons.append("invalid_skill_card_flag:"+kind)
