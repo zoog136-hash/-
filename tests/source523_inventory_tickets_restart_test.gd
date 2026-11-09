@@ -8,9 +8,9 @@ func run() -> void:
 	check(world.expedition_local.state.issued.size()==6,"contract-only issuer ledger restored by fixture save hook")
 	var before:PackedByteArray=FileAccess.get_file_as_bytes(world.save_path())
 	var cards:Dictionary=world.card_draw_fusion.export_state();var state:Dictionary=runtime.export_state()
-	var good_key:String=str(consumer.document.tickets["166744"].original_item.Name)+" (탐험 166744:1:0)"
+	var good_key:String=str(consumer.runtime.catalog.record("ItemClass",166744).Name)+" (탐험 166744:1:0)"
 	check(int(world.inventory.get(good_key,0))==0 and not runtime.use_inventory_ticket(good_key).ok,"fresh empty source stack cannot replay committed native result")
-	var relic_key:String=str(consumer.document.tickets["254088"].original_item.Name)+" (탐험 254088:1:0)"
+	var relic_key:String=str(consumer.runtime.catalog.record("ItemClass",254088).Name)+" (탐험 254088:1:0)"
 	var blocked:Dictionary=runtime.quote_inventory_ticket(relic_key)
 	check(not blocked.ok and blocked.get("missing_card_ids",[])==[25162] and int(world.inventory.get(relic_key,0))==2,"fresh exact relic ticket retains full original pool and missing positive-weight card25162")
 	# Nonpersistent quote-isolation probes; no ticket/card issuance or redemption.

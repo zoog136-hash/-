@@ -71,6 +71,8 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not effect.is_empty():return effect
 	var material: Dictionary=spell_material_profile(record)
 	if not material.is_empty():return material
+	var ticket: Dictionary=draw_ticket_profile(record)
+	if not ticket.is_empty():return ticket
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
@@ -78,6 +80,16 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	# Actual recipe rows/choices/limits are still checked by the craft executor.
 	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return {}
 	return {"kind":"craft_material","standalone_effect_complete":false}
+
+## Original draw tickets (ItemCategory LinMarketProduct) are owned as physical
+## stacks like materials. Redemption belongs to the owned-ticket service
+## (source523_inventory_tickets.gd), which checks the ticket's products and
+## pools; an unsupported ticket is explained there and stays owned.
+static func draw_ticket_profile(record: Dictionary) -> Dictionary:
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_category_name")!="LinMarketProduct" or record.get("slot")!="consumable" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	var definition: Dictionary=D.item_definition(record)
+	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
+	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
 
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
@@ -147,6 +159,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
+	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
 	var use_owner: Resource=load("res://scripts/loot/patch523_item_use.gd")
