@@ -129,7 +129,12 @@ func minimum_level_for(record: Dictionary) -> int:
 
 
 func _host_minimum_level_for(record: Dictionary) -> int:
-	return int(record.get("class_learning_levels",{}).get(str(world.job_class),record.get("minimum_level",0)))
+	# Reference-only held-back rows (e.g. 버닝 드라이브, 매직 마스터(에이션트)) carry
+	# no learning level. int(null) aborted reason()/buy_book()/learn() with a
+	# script error; no known level means no level gate (they stay held back).
+	var levels: Variant = record.get("class_learning_levels",{})
+	var value: Variant = (levels as Dictionary).get(str(world.job_class),record.get("minimum_level",0)) if levels is Dictionary else record.get("minimum_level",0)
+	return int(value) if value is int or value is float else 0
 
 
 func level_locked(record: Dictionary) -> bool:
