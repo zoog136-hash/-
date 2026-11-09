@@ -9,6 +9,8 @@ on:
       - 'tools/lineagem_original/test_client523_bank_metadata.py'
       - 'tools/lineagem_original/build_reference_sp2_bank.py'
       - 'tools/lineagem_original/original_spr.py'
+      - 'tools/android/build_client523_resource_pack.py'
+      - 'tools/android/test_client523_resource_pack.py'
       - '.github/workflows/client523-source-tool.yml'
   workflow_dispatch:
 
@@ -30,3 +32,18 @@ jobs:
       - name: Run tests
         working-directory: tools/lineagem_original
         run: python -m unittest test_client523_source test_client523_bank_metadata test_original_spr -v
+
+  resource-pack:
+    name: Android resource pack fixture tests (no original files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/android
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run tests
+        working-directory: tools/android
+        run: python -m unittest test_client523_resource_pack -v

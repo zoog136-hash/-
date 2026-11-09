@@ -74,6 +74,7 @@ CHECKS = [
     ('equipment523_native_catalog_test', []),
     ('equipment523_alchemy_pending_migration_test', []),
     ('source_spawn_admission_cache_test', []),
+    ('source523_pack_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -379,7 +380,8 @@ def main():
                       'equipment523_spell_visuals_test':'EQUIPMENT523_SPELL_VISUALS_RESULT',
                       'equipment523_native_catalog_test':'EQUIPMENT523_NATIVE_CATALOG_RESULT',
                       'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
-                      'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT'}[name]
+                      'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT',
+                      'source523_pack_test':'SOURCE523_PACK_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
