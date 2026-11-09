@@ -117,8 +117,12 @@ func show_selected() -> void:
 		return
 	var book: Dictionary = book_service.row("MonsterBook", selected_id)
 	var period: Dictionary = book_service.raw_period(selected_id)
+	var book_runtime: Variant = world.get("monsterbook523_runtime") if world != null else null
+	if book_runtime != null and book_service.has_method("local_period"):
+		period = book_service.local_period(selected_id, book_runtime.local.source_clock())
 	_text(str(book.Name), UI.GOLD)
-	_text("집계: %s ~ %s\n옵션 종료: %s · 한국 날짜 표기" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID)], UI.MUTED)
+	var turn_note: String = " · 로컬 순환 %d회차" % int(period.rotation) if int(period.get("rotation", 0)) > 0 else ""
+	_text("집계: %s ~ %s\n옵션 종료: %s · 한국 날짜 표기%s" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID), turn_note], UI.MUTED)
 	if int(book.NpcGroupID) == 0:
 		_text("현재 대상 연결이 없는 과거 정의입니다. 기존 기록을 조회할 수 있습니다.", UI.MUTED)
 	var progress: Dictionary = book_service.progress(selected_id)
@@ -235,7 +239,8 @@ func _owned_items(live: RefCounted) -> void:
 		var expired: int = int(saved.get("expired_items",{}).get(name,{}).get("quantity",0))
 		if quantity <= 0 and expired <= 0: continue
 		_text("보상 보유: %s × %d" % [name,quantity],UI.GOLD)
-		if record.has("source_delete_clock"): _text("원본 아이템 삭제: " + str(record.source_delete_clock),UI.MUTED)
+		if record.has("local_delete_clock"): _text("아이템 삭제: " + str(record.local_delete_clock) + " (로컬 순환)",UI.MUTED)
+		elif record.has("source_delete_clock"): _text("원본 아이템 삭제: " + str(record.source_delete_clock),UI.MUTED)
 		if expired > 0: _text("삭제 처리된 수량 %d · 수령·사용·소유 이력 보존" % expired,UI.MUTED)
 		if quantity <= 0: continue
 		var action: Dictionary = live.item_use.spec(record)

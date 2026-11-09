@@ -49,7 +49,7 @@ func run() -> void:
 	var bad:=FileAccess.open(bad_directory.path_join("orim_execution.json"),FileAccess.WRITE);bad.store_string("{}");bad.close()
 	check(not restored.load_pack(bad_directory.path_join("manifest.json")).ok and not restored.orim_actor_defs.is_empty(),"corrupt sidecar cannot replace the verified installed definitions")
 	view.family.select(2);view.family.item_selected.emit(2)
-	check(view.play_buttons.begin.disabled,"default own execution off")
+	check(service.state.settings.enabled==true,"own execution on by default")
 	view._play_action("settings")
 	var cfg: Dictionary=service.state.settings.duplicate(true);cfg.enabled=true;cfg.live_limit=2;cfg.attempts=2;cfg.token_chance=0
 	view.play_settings_text.text=JSON.stringify(cfg);view.play_settings_dialog.confirmed.emit();view.play_settings_dialog.hide()

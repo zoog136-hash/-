@@ -27,7 +27,9 @@ func epoch(book_id: int) -> String:
 	if book_id == 6013 and int(book.ResetType) == 1:
 		return "korean-day:" + str(QuestCalendar.korean_daily_key(now()))
 	if int(book.ResetType) == 0:
-		return "source-season:" + str(int(book.StartDateTimeID))
+		# A local rotation is a new season: progress restarts, earlier seasons stay saved.
+		var turn: int = runtime.catalog.rotation(book_id, source_clock())
+		return "source-season:" + str(int(book.StartDateTimeID)) + ("" if turn == 0 else ":r" + str(turn))
 	return ""
 
 func receipt(action: String, book_id: int) -> Dictionary:

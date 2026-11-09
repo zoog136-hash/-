@@ -8,7 +8,7 @@ static func install_definition(world: Node) -> void:
 	world.item_db.append({"name":"TWILIGHT 도전 목표물","type":"재료","slot":"material","grade":"일반","weight":0,"stackable":true,"droppable":false,"sellable":false,"source":"twilight_local_dungeon"})
 
 static func settings(state: Dictionary) -> Dictionary:
-	return state.get("local_settings",{"enabled":false,"time_scale":1})
+	return state.get("local_settings",{"enabled":true,"time_scale":1})
 
 static func cycle(state: Dictionary, now: int) -> int:
 	return maxi(int(state.get("local_day",0)),DAILY.korean_daily_key(now))

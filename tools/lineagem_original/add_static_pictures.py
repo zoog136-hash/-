@@ -134,7 +134,10 @@ def add_static_pictures(bank_dir: Path, metadata_dir: Path, spr_root: Path, orig
             identity = metadata["identities"][name]
             target = bank_dir / "raw" / name
             target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            if link_raw:
+            if target.exists():
+                # Left by an interrupted run: keep it only if it is the exact member.
+                bank.require(sha(target.read_bytes()) == identity["sha256"], f"stale raw member differs: {name}")
+            elif link_raw:
                 os.link(original_root / name, target)
             else:
                 target.write_bytes(body_bytes)

@@ -11,7 +11,7 @@ var save_blocked: bool = false
 var problem: String = ""
 
 static func empty_state() -> Dictionary:
-	return {"schema":1,"source_sha256":SOURCE_SHA,"revision":0,"next_run":1,"active":{},"clears":{},"settled":{},"cycles":{}}
+	return {"schema":1,"source_sha256":SOURCE_SHA,"revision":0,"next_run":1,"active":{},"clears":{},"settled":{},"cycles":{},"local_settings":{"enabled":true,"time_scale":1},"local_default_on_v2":true}
 
 static func whole(value: Variant, lower: int = 0, upper: int = 1000000000) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value)) and float(value) >= lower and float(value) <= upper
@@ -24,7 +24,7 @@ func validate(value: Variant) -> String:
 	if not value is Dictionary: return "던전 저장 형식이 손상되었습니다."
 	if not whole(value.get("schema"),1,1) or value.get("source_sha256","") != SOURCE_SHA: return "알 수 없는 던전 저장 버전입니다."
 	if not whole(value.get("local_day",0)): return "현재 지역 도전의 일일 기록이 손상되었습니다."
-	var local: Variant = value.get("local_settings",{"enabled":false,"time_scale":1})
+	var local: Variant = value.get("local_settings",{"enabled":true,"time_scale":1})
 	if not local is Dictionary or not local.get("enabled") is bool or not whole(local.get("time_scale"),1,10): return "현재 지역 도전 설정이 손상되었습니다."
 	for key: String in ["revision","next_run"]:
 		if not whole(value.get(key),1 if key == "next_run" else 0): return "던전 저장 번호가 손상되었습니다."
@@ -73,6 +73,11 @@ func restore(value: Variant) -> bool:
 	save_blocked = not problem.is_empty()
 	if save_blocked: return false
 	state = value.duplicate(true)
+	# The local Tower of Trials host is on by default; older saves are switched on once.
+	if not state.get("local_default_on_v2", false):
+		var local: Dictionary = state.get("local_settings", {"enabled":true,"time_scale":1})
+		state["local_settings"] = {"enabled":true,"time_scale":int(local.get("time_scale",1))}
+		state["local_default_on_v2"] = true
 	return true
 
 func has_experience_award() -> bool:

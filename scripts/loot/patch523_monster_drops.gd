@@ -602,6 +602,12 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 	catalog["아이템"] = records
 	return {"added":added,"updated":updated, "native_definition_count":document.get("native_item_ids", []).size()}
 
+## TWILIGHT is offline: a source item whose end/delete date has passed would
+## otherwise be unusable forever. Repeating its window back to back (local
+## rotation) means a passed end/delete date no longer blocks; a start date in
+## the future still does. false = source dates only.
+static var rotate_ended_dates: bool = true
+
 static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> String:
 	if item.get("source_delete_time_unresolved",false): return "원본 아이템 수명 조건 미지원 · 아이템 보존"
 	for key: String in ["source_start_time_raw","source_end_time_raw","source_delete_time_raw"]:
@@ -613,7 +619,7 @@ static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> S
 		var deadline: int = Time.get_unix_time_from_datetime_string(local_time)-clampi(timezone_minutes,-720,840)*60
 		var now: int = int(Time.get_unix_time_from_system())
 		if key == "source_start_time_raw" and now < deadline: return "원본 사용 기간 시작 전 · 보유 아이템 보존"
-		if key != "source_start_time_raw" and now >= deadline: return "원본 사용 기한 만료 · 보유 아이템은 보존"
+		if key != "source_start_time_raw" and now >= deadline and not rotate_ended_dates: return "원본 사용 기한 만료 · 보유 아이템은 보존"
 	return ""
 
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
