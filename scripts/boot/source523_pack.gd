@@ -38,7 +38,10 @@ const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"sourc
 const ADDON_SCHEMA := "twilight-client523-resource-addon-v1"
 const ADDON_DESCRIPTOR := "source523_addon.json"
 const ADDONS := "source523_addons.json"
-const ADDON_SECTIONS := ["world_links"]
+const ADDON_SECTIONS := ["world_links","ui"]
+## The add-on file that carries each section (what the installer asks for).
+const ADDON_FILES := {"world_links":"twilight523-addon-world-links.zip","ui":"twilight523-addon-ui.zip"}
+const ADDON_NAMES := {"world_links":"523 맵 이동 정의","ui":"원작 메인 화면(UI)"}
 ## 523 map travel definitions; 523 play mode needs them to enter a Land.
 const WORLD_LINKS_SHA := "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 const DEFINITIONS = preload("res://scripts/maps/current523_source_definition_preferences.gd")
@@ -74,6 +77,7 @@ var _incoming: String = ""
 var _incoming_serial: int = 0
 var _descriptor_bytes := PackedByteArray()
 var _addon: Dictionary = {}
+var _missing: Array[String] = []
 var _index: Dictionary = {}
 var _cursor: int = 0
 var _verify: Array = []
@@ -129,15 +133,24 @@ static func read_addons(base: String) -> Dictionary:
 static func has_world_links(descriptor: Dictionary, addons: Dictionary) -> bool:
 	return descriptor.has("world_links") or addons.has("world_links")
 
+## Add-on sections neither the pack nor its installed add-ons supply.
+static func missing_addons(descriptor: Dictionary, addons: Dictionary) -> Array[String]:
+	var missing: Array[String] = []
+	for section: String in ADDON_SECTIONS:
+		if not descriptor.has(section) and not addons.has(section): missing.append(section)
+	return missing
+
 ## The selections for an extracted pack at absolute directory `base`.
 static func selections(base: String, descriptor: Dictionary, addons: Dictionary = {}) -> Dictionary:
 	var tables: String = base.path_join(descriptor.tables.path)
 	var environment: Dictionary = {"TWILIGHT_PATCH523_CONTENT":tables,
 		"TWILIGHT_SOURCE523_IMAGES":base.path_join(descriptor.images.root),
 		"TWILIGHT_SOURCE523_IMAGES_SHA256":str(descriptor.images.manifest_sha256).to_lower()}
-	if descriptor.has("ui"):
-		environment.TWILIGHT_SOURCE_UI = base.path_join(descriptor.ui.root)
-		environment.TWILIGHT_SOURCE_UI_SHA256 = str(descriptor.ui.manifest_sha256).to_lower()
+	# The original main HUD pack: in the pack itself or from the UI add-on.
+	var ui: Variant = descriptor.get("ui", addons.get("ui"))
+	if ui is Dictionary:
+		environment.TWILIGHT_SOURCE_UI = base.path_join(ui.root)
+		environment.TWILIGHT_SOURCE_UI_SHA256 = str(ui.manifest_sha256).to_lower()
 	if descriptor.has("ui_icons"):
 		# The selection names its CSB icon pack relative to its own folder.
 		environment.TWILIGHT_SOURCE523_UI_ICONS = base.path_join(descriptor.ui_icons.manifest)
@@ -207,7 +220,8 @@ func _init() -> void:
 	var addons: Dictionary = read_addons(base)
 	var applied: Dictionary = apply(selections(base, read.descriptor, addons))
 	configured = applied.ok
-	addon_needed = configured and exported and requested.is_empty() and not has_world_links(read.descriptor, addons)
+	addon_needed = configured and exported and requested.is_empty() and not missing_addons(read.descriptor, addons).is_empty()
+	_missing = missing_addons(read.descriptor, addons)
 	if not configured:
 		problem = applied.reason
 		push_error("원본 리소스 팩을 연결하지 못했습니다: " + problem)
@@ -233,7 +247,7 @@ func _show_installer() -> void:
 	_choose = STYLE.button("리소스 팩(.zip) 선택")
 	_choose.pressed.connect(func() -> void: _picker.popup_centered_ratio(0.8))
 	box.add_child(_choose)
-	_later = STYLE.button("나중에 (523 맵 이동 없이 시작)", false, 52)
+	_later = STYLE.button("나중에 (추가 리소스 없이 시작)", false, 52)
 	_later.pressed.connect(_close_installer)
 	# The game has no older pictures to start with: only a missing add-on can
 	# be postponed, never the pack itself.
@@ -273,7 +287,12 @@ func _save_state(value: Dictionary) -> void:
 
 func _waiting_text() -> String:
 	if addon_needed:
-		return "원본 리소스 팩은 설치되어 있습니다.\n523 맵 이동 정의(추가 리소스 1개)가 더 필요합니다.\ntwilight523-addon-world-links.zip을 선택하세요."
+		var names: Array[String] = []
+		var files: Array[String] = []
+		for section: String in _missing:
+			names.append(str(ADDON_NAMES[section]))
+			files.append(str(ADDON_FILES[section]))
+		return "원본 리소스 팩은 설치되어 있습니다.\n추가 리소스가 더 필요합니다: %s\n%s 을(를) 선택하세요.\n(조각을 다시 받을 필요는 없습니다)" % [", ".join(names), ", ".join(files)]
 	var state: Dictionary = _state()
 	if int(state.get("parts", 0)) > 0:
 		return "원본 리소스 팩 설치 중: %d / %d 조각 완료.\n남은 조각(twilight523-resources-*.zip)을 선택하세요." % [state.get("done", []).size(), int(state.parts)]
@@ -481,9 +500,21 @@ func _finish_addon() -> void:
 	if DirAccess.rename_absolute(root.path_join(ADDONS + ".pending"), root.path_join(ADDONS)) != OK:
 		_fail_part("추가 리소스 기록을 저장하지 못했습니다.")
 		return
-	addon_needed = false
+	for section: String in addon.sections: _missing.erase(section)
+	addon_needed = not _missing.is_empty()
 	if not _queue.is_empty():
 		_next_part()
+		return
+	if addon_needed:
+		# Another add-on is still missing: ask for it now; restart after it.
+		_status.text = "추가 리소스 설치 완료.\n\n" + _waiting_text()
+		_choose.disabled = false
+		# What was just installed takes effect after a restart.
+		_later.text = "앱 닫기 (나머지는 나중에)"
+		_later.disabled = false
+		for connection: Dictionary in _later.pressed.get_connections():
+			_later.pressed.disconnect(connection.callable)
+		_later.pressed.connect(func() -> void: get_tree().quit())
 		return
 	_status.text = "추가 리소스 설치 완료.\n앱을 완전히 닫고 다시 실행하세요.\n(설치에 쓴 zip은 지워도 됩니다)"
 	_offer_quit()

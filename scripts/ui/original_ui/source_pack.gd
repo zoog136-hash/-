@@ -91,6 +91,14 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 			for offset: Variant in offsets:
 				if typeof(offset) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(offset)) or float(offset)!=floor(float(offset)) or offset not in scope or unique.has(int(offset)):return _fail("external_texture_node_scope_mismatch")
 				unique[int(offset)]=true
+	# JSON numbers load as floats, and an Array of floats never has() an int
+	# offset. Every consumer asks with int source offsets: store them as ints.
+	if value.get("node_scopes") is Dictionary:
+		for member: String in value.node_scopes:value.node_scopes[member]=_offsets(value.node_scopes[member])
+	if value.get("externally_bound_texture_nodes") is Dictionary:
+		for member: String in value.externally_bound_texture_nodes:value.externally_bound_texture_nodes[member]=_offsets(value.externally_bound_texture_nodes[member])
+	for member: String in value.scenes:
+		if bool(value.scenes[member].get("_partial_source_scene",false)):value.scenes[member]._selected_source_offsets=_offsets(value.scenes[member]._selected_source_offsets)
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256
@@ -101,6 +109,12 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_bitmap_fonts.clear()
 	last_error=""
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+static func _offsets(values: Variant) -> Array:
+	var result: Array=[]
+	if values is Array:
+		for value: Variant in values:result.append(int(value) if typeof(value) in [TYPE_INT,TYPE_FLOAT] else value)
+	return result
 
 static func _font_pages_present(path: String, member: String, files: Dictionary) -> bool:
 	var text: String=FileAccess.get_file_as_string(path)

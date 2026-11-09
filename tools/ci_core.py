@@ -83,6 +83,7 @@ CHECKS = [
     ('current523_card_item_test', []),
     ('current523_bless_rate_test', []),
     ('current523_host_world_test', []),
+    ('current523_main_ui_test', []),
     ('updater_test', []),
     ('current523_server_profile_test', []),
     ('current523_bank_objects_test', []),
@@ -407,7 +408,8 @@ def main():
                       'current523_server_profile_test':'CURRENT523_SERVER_PROFILE_RESULT',
                       'current523_bank_objects_test':'CURRENT523_BANK_OBJECTS_RESULT',
                       'current523_ti2_display_alpha_test':'CURRENT523_TI2_DISPLAY_ALPHA_RESULT',
-                      'current523_buff_effect_test':'CURRENT523_BUFF_EFFECT_RESULT'}[name]
+                      'current523_buff_effect_test':'CURRENT523_BUFF_EFFECT_RESULT',
+                      'current523_main_ui_test':'CURRENT523_MAIN_UI_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
