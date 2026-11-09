@@ -7,6 +7,8 @@ const PAYLOAD_SHA = "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590
 const MAX_BYTES = 16 * 1024 * 1024
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projection.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "quest523_payload"
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
@@ -28,12 +30,26 @@ func _load_original() -> bool:
 	if not document.is_empty(): return not quests.is_empty() # No replacement of live input.
 	# UNVERIFIED: only called when neither established private file exists.
 	# Reproduce the old payload, never replace its fingerprint with archive SHA.
+	# The payload is a pure function of the verified original and this code;
+	# a later start reads this device's baked bytes (still checked against
+	# PAYLOAD_SHA by _load_payload) instead of projecting the tables again.
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, ORIGINAL_PROJECTION.SOURCE.verified_key())
+	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
+	if not baked.is_empty() and _load_payload(baked.bytes,""): return true
 	var projection = ORIGINAL_PROJECTION.new()
 	var value: Dictionary = projection.build()
 	if value.is_empty():
 		problem = projection.problem
 		return false
-	return _load_payload(ORIGINAL_PROJECTION.encoded(value),"")
+	var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(value)
+	projection = null
+	value = {}
+	if not _load_payload(bytes,""): return false
+	var digest := HashingContext.new()
+	digest.start(HashingContext.HASH_SHA256)
+	digest.update(bytes)
+	BAKE.write(BAKE_NAME, bake_key, {"bytes":bytes,"sha256":digest.finish().hex_encode(),"identity":ORIGINAL_PROJECTION.SOURCE.identity()})
+	return true
 
 func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	if bytes.size() > MAX_BYTES:
@@ -51,7 +67,10 @@ func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	for link: Dictionary in document.currency_links:
 		if int(link.UnitID)==4 and bool(link.ForGive) and not currency_ids.has(int(link.ClassID)): currency_ids[int(link.ClassID)] = int(link.CurrencyID)
 	for raw: Dictionary in document.quests:
-		var row: Dictionary = raw.duplicate(true)
+		# Rows are completed in place: the parsed document is private to this
+		# loader and nothing reads its quest rows again, so a deep copy only
+		# held all 3,621 quests twice.
+		var row: Dictionary = raw
 		# Original QuestType=3 is Common/[일반], not the retired demo's
 		# daily bucket. The approved v1 data bytes stay immutable; original
 		# TypeID, rather than that older presentation key, is authoritative.

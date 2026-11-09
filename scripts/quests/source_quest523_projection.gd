@@ -74,7 +74,7 @@ func build() -> Dictionary:
 		var title: String = _text(int(original.TitleDescID))
 		var row: Dictionary = {"id":"m523:quest:"+str(id),"source_id":original.ID,
 			"title":title if not title.is_empty() else "퀘스트 "+str(id),"description":_text(int(original.ScenarioDescID)),"definition":original,
-			"category":"main" if original.TypeID == 1 else "achievement" if original.TypeID in [4,46,121] else "daily" if original.TypeID == 3 else "other",
+			"category":"main" if original.TypeID == 1 else "achievement" if int(original.TypeID) in [4,46,121] else "daily" if original.TypeID == 3 else "other",
 			"type_name":_indexes.QuestType.get(int(original.TypeID),{}).get("Name","Unknown"),
 			"starts_at":_timestamp(int(original.StartTime)),"ends_at":_timestamp(int(original.EndTime)),
 			"prerequisites":[],"goals":[],"source_rewards":[],"enhancements":[],"blockers":[]}
@@ -133,7 +133,13 @@ static func _canonical(value: Variant) -> String:
 		for element: Variant in value: parts.append(_canonical(element))
 		return "["+",".join(parts)+"]"
 	if value is Dictionary:
-		var keys: Array = value.keys(); keys.sort()
+		# Keys sort as text, like the Python compiler's sort_keys. Rows built
+		# with `row.name = ...` carry StringName keys, and a StringName sorts
+		# by identity rather than text, so the order (and the pinned payload
+		# SHA) depended on what else the process had interned.
+		var keys := PackedStringArray()
+		for key: Variant in value: keys.append(str(key))
+		keys.sort()
 		var parts: PackedStringArray = []
 		for key: String in keys: parts.append(JSON.stringify(key)+":"+_canonical(value[key]))
 		return "{"+",".join(parts)+"}"

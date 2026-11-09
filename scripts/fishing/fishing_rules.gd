@@ -121,7 +121,8 @@ func configure(data: Variant) -> bool:
 			failure = "낚시 523 제외 근거 형식이 다릅니다."
 			input_problem = "fishing_model_exclusion_shape_invalid:"+key
 			return false
-	var payload: Dictionary = data.duplicate(true)
+	# Shallow: only the top-level identity is left out of the hashed model.
+	var payload: Dictionary = data.duplicate(false)
 	payload.erase("input_identity")
 	var hash = HashingContext.new()
 	if hash.start(HashingContext.HASH_SHA256) != OK or hash.update(JSON.stringify(payload).to_utf8_buffer()) != OK:

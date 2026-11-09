@@ -6,6 +6,8 @@ const SOURCE_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4ea
 const P = "MagicDollExpedition"
 const MAX_BYTES = 8 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "expedition523_tables"
 const ORIGINAL_CORE_SUFFIXES = ["Spot","SpotAsset","Group","SpotReward","SpotRewardType",
 	"CompleteRewardView","SpotEvent","EventView","Bonus","BonusType","Buff","Monster"]
 const ORIGINAL_SYNERGY = ["BuffCardExpeditionSynergy","BuffCardExpeditionSynergyCards","BuffCardExpeditionSynergyBonus"]
@@ -111,7 +113,14 @@ func load_original() -> bool:
 	if identity.get("source_sha256")!=SOURCE_SHA256:
 		error = "누적523 탐험 원본 정체가 다릅니다."
 		return false
-	var candidate: Dictionary = _original_projection()
+	# The projection is a pure function of the verified original and this
+	# code; a later start reads this device's baked tables (still validated
+	# and fingerprinted below) instead of reading whole Bonus/ItemBonus/
+	# ItemClass/LuckyBagEntityView tables again (~0.6 GB transient).
+	var bake_key: String = BAKE.projection_key(BAKE_NAME, SOURCE_ROWS.verified_key())
+	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
+	var from_bake: bool = baked is Dictionary and not (baked as Dictionary).is_empty()
+	var candidate: Dictionary = baked if from_bake else _original_projection()
 	if candidate.is_empty():
 		source_status = {"state":"rejected","reason":error}
 		return false
@@ -127,6 +136,7 @@ func load_original() -> bool:
 		error = "탐험 원본 카탈로그 크기 초과"
 		source_status = {"state":"rejected","reason":error}
 		return false
+	if not from_bake: BAKE.write(BAKE_NAME, bake_key, candidate)
 	_tables = candidate.duplicate(true)
 	pack_sha256 = payload.sha256_text()
 	source_mode = "original_rows"
