@@ -94,7 +94,7 @@ func run()->void:
 	var expected: Dictionary={}
 	for reward: Dictionary in D.definition_id("1281").native_record.source_use_spec.rewards:
 		if preload("res://scripts/loot/patch523_item_use.gd").class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)):
-			var output: Dictionary=D.variant_item(D.data().item_definitions[str(int(reward.item_class_id))].native_record,int(reward.bless_raw))
+			var output: Dictionary=D.variant_item(D.cached_definition(str(int(reward.item_class_id))).native_record,int(reward.bless_raw))
 			expected[str(output.name)]=int(reward.amount)
 	for key: String in expected:check(int(world.inventory.get(key,0))==int(box_inventory.get(key,0))+int(expected[key]),"held box grants original class-specific output/bless/quantity: "+key)
 	check(not world.inventory.has(str(D.definition_id("1281").native_record.name)),"spent held box never becomes native aliases")

@@ -28,7 +28,7 @@ func same_inventory(a: Dictionary,b: Dictionary) -> bool:
 		if not b.has(key) or int(a[key]) != int(b[key]): return false
 	return true
 func grant(world: TwilightWorld,id: String,amount: int = 1) -> Dictionary:
-	var native: Dictionary = D.data().item_definitions[id].native_record
+	var native: Dictionary = D.cached_definition(id).native_record
 	var record: Dictionary = world._find_catalog_item_record(str(native.name))
 	if record.is_empty(): record = world._catalog_item_from_source_id(id)
 	if record.is_empty():
@@ -108,15 +108,15 @@ func run() -> void:
 	# Exercise every explicit entity option, including closure-only books/cards/gear.
 	var roots: int = 0
 	var options: int = 0
-	for id: String in D.data().item_definitions:
-		var spec: Dictionary = D.data().item_definitions[id].native_record.get("source_use_spec",{})
+	for id: String in D.definition_ids():
+		var spec: Dictionary = D.cached_definition(id).native_record.get("source_use_spec",{})
 		if spec.get("kind") != "source_selectable_reward" or spec.get("activation_status") != "unrestricted": continue
 		roots += 1
 		for reward: Dictionary in spec.rewards:
 			if not U.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): continue
 			options += 1
 			record = grant(world,id)
-			var source: Dictionary = D.data().item_definitions[str(int(reward.item_class_id))].native_record
+			var source: Dictionary = D.cached_definition(str(int(reward.item_class_id))).native_record
 			var key: String = str(D.variant_item(source,int(reward.bless_raw)).name)
 			var count: int = int(world.inventory.get(key,0))
 			var rng: int = world.rng.state

@@ -171,7 +171,7 @@ func _state_matches(world: Node,id: String)->Dictionary:
  if canonical.is_empty():return fail("현재 검증된 +0 능력·경험치 이외 원본 장비 효과 연결 대기")
  var expected: Dictionary=canonical.duplicate(true)
  if r.has("bless_state"):expected["bless_state"]="normal"
- var root_record: Dictionary=D.variant_item(D.data().get("item_definitions",{}).get(str(int(canonical.source_item_class_id)),{}).get("native_record",{}),1)
+ var root_record: Dictionary=D.variant_item(D.cached_definition(str(int(canonical.source_item_class_id))).get("native_record",{}),1)
  if r.has("bless_state"):root_record["bless_state"]="normal"
  var normalized: Variant=JSON.parse_string(JSON.stringify(r))
  var exact_record: bool=normalized==JSON.parse_string(JSON.stringify(expected)) or normalized==JSON.parse_string(JSON.stringify(root_record))

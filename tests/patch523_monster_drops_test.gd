@@ -126,9 +126,9 @@ func world_checks() -> void:
 		check(document.counts.rows == 46854 and document.counts.duplicate_extra_rows == 2582 and document.counts.pairs_with_condition_variants == 1858, "real 523 counts")
 		if int(document.get("schema", 1)) == 2:
 			check(document.counts.verified_item_bindings == 2379 and document.counts.unresolved_item_bindings == 0 and document.counts.native_definition_bindings == 1380, "all source item IDs mapped by existing identity or exact native definition")
-			check(document.item_definitions.size() == int(document.counts.get("item_definitions", 2379)), "full original drop and guaranteed-reward dependency joins preserved")
+			check(DROPS.definition_count() == int(document.counts.get("item_definitions", 2379)), "full original drop and guaranteed-reward dependency joins preserved")
 			for key: String in document.native_item_ids:
-				var definition: Dictionary = document.item_definitions[key]
+				var definition: Dictionary = DROPS.cached_definition(key)
 				var source_record: Dictionary = definition.native_record
 				var registered: Dictionary = world.loot_catalog.patch523_by_name.get(str(source_record.name), {})
 				check(registered.get("source_item_class_id", -1) == int(key) and registered.get("sourceId") == "m523:item:"+key, "native item catalog exact ID: "+key)

@@ -3945,7 +3945,7 @@ func _scroll_mode(scroll_name: String) -> String:
 # Temporary catalog test grants. Never available in the production/main HUD.
 # Only catalog-backed names and the three known enhancement scrolls are accepted.
 func source_item_record(item_class_id: int, bless_raw: int = 1) -> Dictionary:
-	var record: Dictionary = LOOT_DROP.PATCH523_DROPS.data().get("item_definitions",{}).get(str(item_class_id),{}).get("native_record",{})
+	var record: Dictionary = LOOT_DROP.PATCH523_DROPS.cached_definition(str(item_class_id)).get("native_record",{})
 	if record.is_empty() or record.get("source_test_item",true) or bless_raw not in [1,2,3]: return {}
 	return LOOT_DROP.PATCH523_DROPS.variant_item(record,bless_raw)
 

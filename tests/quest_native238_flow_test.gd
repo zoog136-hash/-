@@ -110,7 +110,7 @@ func run()->void:
 	var expected_food: Dictionary={}
 	for reward: Dictionary in bag.source_use_spec.rewards:
 		if preload("res://scripts/loot/patch523_item_use.gd").class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)):
-			var output: Dictionary=D.variant_item(D.data().item_definitions[str(int(reward.item_class_id))].native_record,int(reward.bless_raw))
+			var output: Dictionary=D.variant_item(D.cached_definition(str(int(reward.item_class_id))).native_record,int(reward.bless_raw))
 			expected_food[str(output.name)]=int(reward.amount)
 	check(not expected_food.is_empty(),"original box has exact outputs for the actual class")
 	world._on_inventory_item_activated(bag_name)

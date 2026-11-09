@@ -22,10 +22,10 @@ func run() -> void:
 	check(installed.get("ok",false),"full source root and every detail shard installed: "+str(installed.get("error","")))
 	if not installed.get("ok",false): quit(1);return
 	var document: Dictionary = D.data()
-	check(int(document.counts.source_item_class_rows) == 34743 and document.item_definitions.size() == 34743,"all 34743 source definitions indexed")
+	check(int(document.counts.source_item_class_rows) == 34743 and D.definition_count() == 34743,"all 34743 source definitions indexed")
 	check(document.native_item_ids.size() == 30398,"every non-Test source class registered")
 	check(document.source_exclusions.size() == 4345 and document.source_exclusions.get("0") == "source_none_sentinel","Test and None preserved with exact exclusion reason")
-	print("FULL_ITEM_STAGE source_installed ",document.item_definitions.size())
+	print("FULL_ITEM_STAGE source_installed ",D.definition_count())
 	var world: TwilightWorld = load("res://Main.tscn").instantiate()
 	root.add_child(world);world.set_process(false);world.save_timer = -100000
 	check(QA.enter_game(world),"actual Main source map entry")
@@ -74,7 +74,7 @@ func run() -> void:
 		check(world.source_item_record(int(id)).is_empty(),"excluded source remains ungrantable "+id)
 	for id: String in document.catalog_aliases:
 		var alias: Dictionary = world._catalog_item_from_source_id(id)
-		var source: Dictionary = document.item_definitions[id].native_record
+		var source: Dictionary = D.cached_definition(id).native_record
 		check(alias.get("source_m_native_item",false) and int(alias.get("source_item_class_id",-1)) == int(id),"every reviewed old source key replaced "+id)
 		for field: String in ["small_damage","large_damage","additionalDamage","hit","def","hpFlat","mpFlat","strFlat","mr","xp","speed","attackSpeed"]:
 			check(alias.get(field) == source.get(field),"native source stat outranks old web field "+id+"/"+field)
