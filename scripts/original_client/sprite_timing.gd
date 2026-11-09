@@ -16,6 +16,24 @@ static func stored_delay(raw: int, fps: int) -> Dictionary:
 	var quotient: int = VOCAB.u32(raw * 1000) / divisor
 	return {"status": "OK", "delay_u16_ms": VOCAB.u16(quotient)}
 
+## Seconds a host frame should last for a stored SPR delay (raw ticks at an explicit
+## integer FPS). The original keeps whole milliseconds, so the value is truncated to
+## a millisecond. Only the plain domain is converted: raw >= 0, FPS >= 1 and a stored
+## delay that fits u16. Anything else reports why and leaves the caller's own
+## computation in place, so the u16 wrap of the original is never applied silently.
+static func frame_seconds(raw: int, fps: int) -> Dictionary:
+	if raw < 0 or fps < 1:
+		return {"status": "OUTSIDE_PLAIN_DOMAIN", "seconds": null}
+	var scaled: int = raw * 1000
+	if scaled > 0xFFFFFFFF:
+		return {"status": "OUTSIDE_PLAIN_DOMAIN", "seconds": null}
+	var stored: Dictionary = stored_delay(raw, fps)
+	@warning_ignore("integer_division")
+	var exact_ms: int = scaled / fps
+	if stored.status != "OK" or exact_ms > 0xFFFF:
+		return {"status": "STORED_DELAY_U16_WRAP", "seconds": null}
+	return {"status": "OK", "seconds": float(stored.delay_u16_ms) / 1000.0, "delay_ms": stored.delay_u16_ms}
+
 ## entries: [{"raw":int} | {"code110_fps":int}]. A code-110 FPS change affects only
 ## the frames after it; already stored delays are never rewritten.
 static func store_delays(entries: Array, default_fps: int = DEFAULT_FPS) -> Array:

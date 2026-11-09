@@ -2,6 +2,7 @@ extends RefCounted
 ## Pinned, opt-in source-action metadata. No installation, role inference or events.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selection.gd")
+const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
@@ -20,6 +21,14 @@ var _actor_pins: Dictionary = {}
 var _parsed: Dictionary = {}
 var _parse_order: Array[String] = []
 static var _crc_table: Array[int] = []
+
+## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
+## contract adapter). Values outside the plain domain keep the previous exact division.
+static func _frame_seconds(raw_ticks: int, source_fps: Variant) -> float:
+	var timed: Dictionary = ORIGINAL_TIMING.frame_seconds(raw_ticks, int(source_fps))
+	if timed.status == "OK":
+		return float(timed.seconds)
+	return float(raw_ticks) / float(source_fps)
 
 static func fail(message: String) -> Dictionary:
 	return {"ok":false,"error":message}
@@ -392,7 +401,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 				var frame: Variant = frames[index]
 				var token: Array = tokens[index]
 				if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
-				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":float(token[2])/float(source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
+				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":_frame_seconds(int(token[2]),source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
 				for layer_index: int in range(frame.layers.size()):
 					var layer: Variant = frame.layers[layer_index]
 					var spec: Variant = layer_specs[layer_index]

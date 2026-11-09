@@ -57,7 +57,7 @@
 - `2500` 구간 폴더 fallback 이름 규칙은 인계 JSON에 구체 형식이 없어 `fallback_name=null`로 두었다(참조 DB `logical_assets.fallback_name`에서 확인 필요).
 - 실제 current 테이블 행·참조 DB·SP2 payload는 사용하지 않았다. SP2 payload decode와 frame 수는 caller가 줄 때만 사용하며 그 외는 `UNVERIFIED`.
 - 자동 action의 "source frame start0 copy 생략 예외"는 모델링하지 않았다.
-- 어댑터를 연결한 곳은 아래 "게임 연결"의 세 지점뿐이다. 나머지 현재 게임 로직(액터 표시, 지연 시간 계산, 리소스 읽기 계층, 지도·입력)은 연결하지 않았다. CI 필수 게이트(`tools/ci_core.py`)에도 등록하지 않았다. 등록은 사용자 결정이 필요하다.
+- 어댑터를 연결한 곳은 아래 "게임 연결"의 세 지점뿐이다. 나머지 현재 게임 로직(리소스 읽기 계층, 지도·입력, 구팩 호환 타이밍 정책 등)은 연결하지 않았다. CI 필수 게이트(`tools/ci_core.py`)에도 등록하지 않았다. 등록은 사용자 결정이 필요하다.
 - 테스트는 전체 프로젝트가 아니라 필요한 파일만 담은 최소 Godot 4.7.2 프로젝트(headless)에서 실행했다. 전체 프로젝트 임포트는 에셋 용량 때문에 이 환경에서 제한 시간 안에 끝나지 않았다.
 - 원본 바이너리를 실행하지 않았으므로 native 동등성이나 실제 화면 완성을 주장하지 않는다.
 - 서버 경계: 전투·AI·spawn·drop·경제는 이 모듈에 포함하지 않았다(P8, 별도 설계).
@@ -76,10 +76,30 @@
 
 **이 환경에서 확인하지 못한 것:** 두 SP2 지점은 비공개 팩이 있어야 도는 기존 테스트(`reference_sp2_bank_test`, `current523_identity_pack_local`)가 덮고 있다. 이 환경에는 팩이 없어서 그 테스트들은 실행하지 못했다. 위 전수 비교가 대신하는 증명이며, 실제 팩으로 한 번 돌려 보는 것이 남은 확인이다.
 
+### C07 지연 시간 연결 (3차)
+
+| 파일 | 바꾼 내용 | 계약 |
+| --- | --- | --- |
+| `scripts/resources/reference_sp2_bank.gd` | SPR이 FPS를 명시한 523 액터 프레임의 `float(틱)/FPS`를 `sprite_timing.gd`의 `frame_seconds`(정수 밀리초 `low16(틱×1000/FPS)`를 초로 환산)로 교체 | C07 |
+
+**영향 범위** (`tests/original_client_timing_wiring_test.gd`, 틱 0..3000 × FPS 1..120 = 360,120 조합):
+
+| 구분 | 조합 수 | 의미 |
+| --- | ---: | --- |
+| 옛 값과 동일 | 32,683 | 틱×1000이 FPS로 나누어떨어지는 경우 |
+| 1ms 미만 차이 | 260,245 | 원본처럼 밀리초 미만을 버림. 최대 차이 0.99ms(틱 533, FPS 119) |
+| 옛 나눗셈 유지 | 67,192 | 저장 지연이 u16(65,535ms)을 넘는 값. 원본의 u16 되감김을 조용히 적용하지 않고 기존 계산을 그대로 둠 |
+| 1ms 이상 차이 | 0 | |
+
+프레임 하나당 최대 1ms 미만이므로 8프레임짜리 동작이라도 합계 8ms 안쪽이다. 틱 0인 프레임(순간 이벤트)은 옛 값과 같이 0초다.
+
+**연결하지 않은 것:** 구팩(base508) 호환 정책인 `source_playback_policy.gd`는 "원본 클라이언트 동작으로 제시하지 않는다"고 명시된 상속·기본값 FPS 규칙(24 기본, 상속 후보 등)을 담고 있고 몬스터·보스·인형 전반이 쓰므로 건드리지 않았다. 호스트 FPS로 재생하는 `current523_identity_actor.gd`의 틱 시계, 효과 스프라이트(`patch523_effect_sprite.gd`)도 별도 정책이라 그대로다. 실행 중 rate(`effective_delay`)는 이를 쓰는 입력 경로(motion_speed 등)가 아직 게임에 없어 연결하지 않았다.
+
 ## 재실행 방법
 
 ```bash
 godot --headless --path <최소 프로젝트 또는 저장소> --script res://tests/original_client_contract_p0_p2_test.gd
 godot --headless --path <저장소> --script res://tests/original_client_wiring_test.gd
+godot --headless --path <저장소> --script res://tests/original_client_timing_wiring_test.gd
 python3 tools/original_client_acceptance.py --run-log <출력 파일> --commit <SHA>
 ```
