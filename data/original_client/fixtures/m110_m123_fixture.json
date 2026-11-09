@@ -1,0 +1,1970 @@
+{
+ "fixture_id": "OC_M110_M123_FIXTURE_V1",
+ "design_status": "DESIGN_NOT_RECOVERED_API",
+ "basis_ko": "real 항목은 첨부 참조 패키지(01–123)의 data/asset 사본에서 그대로 옮긴 값이며 각 항목에 package 내부 경로와 SHA256을 기록했다. 원본 바이너리 실행·현재 runtime registry 적재 결과가 아니다(CONDITIONAL).",
+ "package": {
+  "guide": "IMPLEMENTATION_GUIDE_KO.md",
+  "guide_sha256": "af6f5435597dae3f95135716e8f270b97785b10870c93c66ef2fccab6b0136e9",
+  "modules_sha256": "d37806328f4aea29e243a234282107472dd6e8c519216cbd0f5599f8386cb125"
+ },
+ "real": {
+  "m113_land_attribute_type11": {
+   "source": {
+    "package_path": "extensions/checkpoint_client_111_113_20261109/lineagem_land_water_selection_20261109/CURRENT_DATA_JOINS.json",
+    "sha256": "b34a6a46572a2c79519cdef748970de34e15c54f20d79d3c87ef37dfcc7c6ef0"
+   },
+   "rows": [
+    {
+     "ID": 7012,
+     "LandID": 12167,
+     "LandAttributeTypeID": 11,
+     "Value": 1,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    },
+    {
+     "ID": 25711,
+     "LandID": 65,
+     "LandAttributeTypeID": 11,
+     "Value": 1,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    },
+    {
+     "ID": 30031,
+     "LandID": 63,
+     "LandAttributeTypeID": 11,
+     "Value": 5,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    },
+    {
+     "ID": 147723,
+     "LandID": 47013,
+     "LandAttributeTypeID": 11,
+     "Value": 5,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    },
+    {
+     "ID": 186881,
+     "LandID": 48171,
+     "LandAttributeTypeID": 11,
+     "Value": 5,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    },
+    {
+     "ID": 240051,
+     "LandID": 49181,
+     "LandAttributeTypeID": 11,
+     "Value": 5,
+     "TerritoryID": 0,
+     "Param1": 0,
+     "Param2": 0,
+     "Param3": 0
+    }
+   ]
+  },
+  "m114_arena_fog": {
+   "source": {
+    "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_arena_fog_routing_20261109/CONDITIONAL_CURRENT_DATA.json",
+    "sha256": "a89337d37d9e9f2b0faf7a559a0f3016d49abd699e76cfdc081ffd9d6d38891f"
+   },
+   "arena_constant": [
+    {
+     "ID": 832,
+     "ArenaTypeID": 12,
+     "ArenaConstantTypeID": 562,
+     "ArenaConstantDataTypeID": 2,
+     "Value": 2352,
+     "ArenaModeTypeID": 0
+    }
+   ],
+   "screen_effect": [
+    {
+     "ID": 2352,
+     "Name": "[방어전] pvp 진입 시 안개 효과",
+     "GroupId": 1,
+     "EffectAssetId": 403302,
+     "Priority": 2,
+     "AnimationName": "Fx_Start",
+     "isLoop": true,
+     "ScreenEffectTypeID": 4,
+     "UISpineID": 0,
+     "ShakeDuration": 0,
+     "ShakeSpeed": 0,
+     "ShakeMagnitude": 0,
+     "isOnlyShakeTile": false,
+     "ShakeDelay": 0,
+     "EffectDelay": 0,
+     "AnimationSpeed": 60,
+     "IsForceHideUI": false,
+     "IsTopScreenEffect": false
+    }
+   ],
+   "string_aliases": {
+    "SCREENEFFECT_START_ON_ANIM": "Fx_Start",
+    "SCREENEFFECT_START_LOOP_ANIM": "Fx_Loop"
+   },
+   "string_alias_source": "UI/StringTable.xml sha256 36da1dd304fa3077aff54f9c6e7c2feee92a72e9e5abfdf7504f3b0faf8ef7a7 (copies inside package extensions)"
+  },
+  "m116_arena_mode": {
+   "source": {
+    "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_arena_mode_selection_20261109/CONDITIONAL_CURRENT_DATA.json",
+    "sha256": "f89283a891a8f33f667edd865402392f882e04be9c6d65be0b044b8adb3defa6"
+   },
+   "arena_mode_type": [
+    {
+     "ID": 4,
+     "Name": "LastStand",
+     "ArenaTypeID": 2,
+     "DescID": 2468934,
+     "ContentsControlID": 1314,
+     "SelectWeight": 1,
+     "BGImageNode": "Img_ChapterImg01",
+     "ResultDelaySeconds": 0
+    },
+    {
+     "ID": 14,
+     "Name": "DragonHighland",
+     "ArenaTypeID": 2,
+     "DescID": 2468944,
+     "ContentsControlID": 1324,
+     "SelectWeight": 1,
+     "BGImageNode": "Img_ChapterImg02",
+     "ResultDelaySeconds": 5
+    },
+    {
+     "ID": 24,
+     "Name": "UnderwaterTemple",
+     "ArenaTypeID": 2,
+     "DescID": 2468954,
+     "ContentsControlID": 1334,
+     "SelectWeight": 1,
+     "BGImageNode": "Img_ChapterImg03",
+     "ResultDelaySeconds": 0
+    }
+   ],
+   "arena_constant": [
+    {
+     "ID": 42,
+     "ArenaTypeID": 2,
+     "ArenaConstantTypeID": 42,
+     "ArenaConstantDataTypeID": 22,
+     "Value": 50882,
+     "ArenaModeTypeID": 4
+    },
+    {
+     "ID": 392,
+     "ArenaTypeID": 12,
+     "ArenaConstantTypeID": 42,
+     "ArenaConstantDataTypeID": 22,
+     "Value": 51112,
+     "ArenaModeTypeID": 0
+    },
+    {
+     "ID": 832,
+     "ArenaTypeID": 12,
+     "ArenaConstantTypeID": 562,
+     "ArenaConstantDataTypeID": 2,
+     "Value": 2352,
+     "ArenaModeTypeID": 0
+    },
+    {
+     "ID": 3004,
+     "ArenaTypeID": 2,
+     "ArenaConstantTypeID": 42,
+     "ArenaConstantDataTypeID": 22,
+     "Value": 51234,
+     "ArenaModeTypeID": 24
+    },
+    {
+     "ID": 3014,
+     "ArenaTypeID": 2,
+     "ArenaConstantTypeID": 42,
+     "ArenaConstantDataTypeID": 22,
+     "Value": 51244,
+     "ArenaModeTypeID": 14
+    }
+   ]
+  },
+  "m115_outline": {
+   "sources": [
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/data/UIOutline.json",
+     "sha256": "40a81fbd7facd8ecfefc2e7b66227f3d4e4f37194a879531e1d3a7f494b7ed72"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/data/UIOutlineRef.json",
+     "sha256": "b58290920353b75fe5078372c599194cba76e7550539ad60c8861b2ff0965b76"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/data/UINpcOutline.json",
+     "sha256": "38b92a878a2b80940ac3c361444380084169322989de0f17561912eb378e6b6d"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/data/Color.json",
+     "sha256": "2c7b044c3d9a200377c22b340499bfea5678a0b2ec6391f841cb8d64af4a0e86"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/data/ColorTable.json",
+     "sha256": "31b5a9e7011d5061dbcff78273f9e428893cf434aeff81085c0ec11c91124c5b"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_114_116_20261109/lineagem_actor_outline_producers_20261109_corrected_v3/DECISION_TABLE.json",
+     "sha256": "4f0be41f9b0d04c5c308173931adbf23e43c66f6c371fc29026febf441caddde"
+    }
+   ],
+   "ui_outline": [
+    {
+     "ID": 8,
+     "MinColorTableID": 38,
+     "MaxColorTableID": 37,
+     "Width": 1,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 11
+    },
+    {
+     "ID": 18,
+     "MinColorTableID": 22161,
+     "MaxColorTableID": 22151,
+     "Width": 1,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 28,
+     "MinColorTableID": 43,
+     "MaxColorTableID": 42,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 38,
+     "MinColorTableID": 46,
+     "MaxColorTableID": 45,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 48,
+     "MinColorTableID": 52,
+     "MaxColorTableID": 51,
+     "Width": 2,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 58,
+     "MinColorTableID": 48,
+     "MaxColorTableID": 47,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 68,
+     "MinColorTableID": 50,
+     "MaxColorTableID": 49,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 78,
+     "MinColorTableID": 21774,
+     "MaxColorTableID": 21784,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 88,
+     "MinColorTableID": 21951,
+     "MaxColorTableID": 21961,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 98,
+     "MinColorTableID": 22078,
+     "MaxColorTableID": 22088,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 111,
+     "MinColorTableID": 22101,
+     "MaxColorTableID": 22111,
+     "Width": 1,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 11
+    },
+    {
+     "ID": 121,
+     "MinColorTableID": 41,
+     "MaxColorTableID": 40,
+     "Width": 1,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 171,
+     "MinColorTableID": 22301,
+     "MaxColorTableID": 22311,
+     "Width": 13,
+     "Period": 40,
+     "MinAlpha": 100,
+     "MaxAlpha": 100,
+     "IsIncludeMinColor": true,
+     "DrawType": 1
+    },
+    {
+     "ID": 181,
+     "MinColorTableID": 22511,
+     "MaxColorTableID": 22501,
+     "Width": 15,
+     "Period": 0,
+     "MinAlpha": 100,
+     "MaxAlpha": 100,
+     "IsIncludeMinColor": true,
+     "DrawType": 1
+    },
+    {
+     "ID": 193,
+     "MinColorTableID": 22613,
+     "MaxColorTableID": 22613,
+     "Width": 13,
+     "Period": 40,
+     "MinAlpha": 100,
+     "MaxAlpha": 100,
+     "IsIncludeMinColor": true,
+     "DrawType": 1
+    },
+    {
+     "ID": 208,
+     "MinColorTableID": 43,
+     "MaxColorTableID": 42,
+     "Width": 5,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    },
+    {
+     "ID": 218,
+     "MinColorTableID": 22101,
+     "MaxColorTableID": 22111,
+     "Width": 1,
+     "Period": 0,
+     "MinAlpha": -1,
+     "MaxAlpha": -1,
+     "IsIncludeMinColor": false,
+     "DrawType": 1
+    }
+   ],
+   "ui_outline_ref": [
+    {
+     "ID": 8,
+     "Name": "MonsterTarget",
+     "UIOutlineID": 8
+    },
+    {
+     "ID": 18,
+     "Name": "MonsterCandidate",
+     "UIOutlineID": 18
+    },
+    {
+     "ID": 28,
+     "Name": "NpcTarget",
+     "UIOutlineID": 28
+    },
+    {
+     "ID": 38,
+     "Name": "ItemTarget",
+     "UIOutlineID": 38
+    },
+    {
+     "ID": 48,
+     "Name": "ItemCandidate",
+     "UIOutlineID": 48
+    },
+    {
+     "ID": 58,
+     "Name": "BlessedItemIcon",
+     "UIOutlineID": 58
+    },
+    {
+     "ID": 68,
+     "Name": "MonsterQuestTarget",
+     "UIOutlineID": 68
+    },
+    {
+     "ID": 78,
+     "Name": "ClanQuestTarget",
+     "UIOutlineID": 78
+    },
+    {
+     "ID": 88,
+     "Name": "ElvenWingShoes",
+     "UIOutlineID": 88
+    },
+    {
+     "ID": 101,
+     "Name": "PlayerOutline",
+     "UIOutlineID": 111
+    },
+    {
+     "ID": 111,
+     "Name": "MonsterFirstCandidate",
+     "UIOutlineID": 121
+    },
+    {
+     "ID": 128,
+     "Name": "LuckyDefenceNpc",
+     "UIOutlineID": 208
+    },
+    {
+     "ID": 138,
+     "Name": "LuckyDefenceSelectedNpc",
+     "UIOutlineID": 218
+    }
+   ],
+   "ui_npc_outline": [
+    {
+     "ID": 8,
+     "UINpcOutlineTypeID": 18,
+     "ClassID": 259631,
+     "UIOutlineID": 98
+    }
+   ],
+   "color_table_used": [
+    {
+     "ID": 37,
+     "Name": "MonsterTargetOutlineMax",
+     "Value": "FF0000",
+     "Type": 1
+    },
+    {
+     "ID": 38,
+     "Name": "MonsterTargetOutlineMin",
+     "Value": "FF6C6C",
+     "Type": 1
+    },
+    {
+     "ID": 40,
+     "Name": "MonsterCandidateOutlineMax",
+     "Value": "FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 41,
+     "Name": "MonsterCandidateOutlineMin",
+     "Value": "FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 42,
+     "Name": "NpcTargetOutlineMax",
+     "Value": "e3ffdf",
+     "Type": 1
+    },
+    {
+     "ID": 43,
+     "Name": "NpcTargetOutlineMin",
+     "Value": "209a37",
+     "Type": 1
+    },
+    {
+     "ID": 45,
+     "Name": "ItemTargetOutlineMax",
+     "Value": "e3ffdf",
+     "Type": 1
+    },
+    {
+     "ID": 46,
+     "Name": "ItemTargetOutlineMin",
+     "Value": "209a37",
+     "Type": 1
+    },
+    {
+     "ID": 47,
+     "Name": "OutlineBlessedItemIconMax",
+     "Value": "ffffff",
+     "Type": 1
+    },
+    {
+     "ID": 48,
+     "Name": "OutlineBlessedItemIconMin",
+     "Value": "909090",
+     "Type": 1
+    },
+    {
+     "ID": 49,
+     "Name": "MonsterQuestOutlineMax",
+     "Value": "45ff37",
+     "Type": 1
+    },
+    {
+     "ID": 50,
+     "Name": "MonsterQuestOutlineMin",
+     "Value": "00a920",
+     "Type": 1
+    },
+    {
+     "ID": 51,
+     "Name": "ItemCandidateOutlineMax",
+     "Value": "e1feff",
+     "Type": 1
+    },
+    {
+     "ID": 52,
+     "Name": "ItemCandidateOutlineMin",
+     "Value": "6aaed3",
+     "Type": 1
+    },
+    {
+     "ID": 21774,
+     "Name": "ClanQuestOutlineMin",
+     "Value": "ffffc5",
+     "Type": 1
+    },
+    {
+     "ID": 21784,
+     "Name": "ClanQuestOutlineMax",
+     "Value": "ffff24",
+     "Type": 1
+    },
+    {
+     "ID": 21951,
+     "Name": "ElvenWingShoesOutlineMin",
+     "Value": "#B1F7AF",
+     "Type": 1
+    },
+    {
+     "ID": 21961,
+     "Name": "ElvenWingShoesOutlineMax",
+     "Value": "#B1F7AF",
+     "Type": 1
+    },
+    {
+     "ID": 22078,
+     "Name": "BlessedPiratePendantOutlineMin",
+     "Value": "E33FB7",
+     "Type": 1
+    },
+    {
+     "ID": 22088,
+     "Name": "BlessedPiratePendantOutlineMax",
+     "Value": "F9C2F5",
+     "Type": 1
+    },
+    {
+     "ID": 22101,
+     "Name": "PlayerOutlineMin",
+     "Value": "2478FF",
+     "Type": 1
+    },
+    {
+     "ID": 22111,
+     "Name": "PlayerOutlineMax",
+     "Value": "0000FF",
+     "Type": 1
+    },
+    {
+     "ID": 22151,
+     "Name": "MonsterCandidateOutlineMax",
+     "Value": "FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 22161,
+     "Name": "MonsterCandidateOutlineMin",
+     "Value": "FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 22301,
+     "Name": "기사 리부트 뱅가드 아웃라인 최소 값",
+     "Value": "#FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 22311,
+     "Name": "기사 리부트 뱅가드 아웃라인 최대 값",
+     "Value": "00a2ff",
+     "Type": 1
+    },
+    {
+     "ID": 22501,
+     "Name": "총사 앱솔루트 제로 동결 MAX",
+     "Value": "#FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 22511,
+     "Name": "총사 앱솔루트 제로 동결 MIN",
+     "Value": "#FFFFFF",
+     "Type": 1
+    },
+    {
+     "ID": 22613,
+     "Name": "뇌신 우라칸",
+     "Value": "#FFFF00",
+     "Type": 1
+    }
+   ],
+   "color_11441": [
+    {
+     "ID": 11441,
+     "Name": "ElvenWingShoesOutlineMin",
+     "ColorTableID": 0
+    }
+   ],
+   "decision_table": [
+    {
+     "priority": 1,
+     "resolver_ref_key": 8,
+     "current_outline_id": 8,
+     "predicate": "type==6 && identity_equal(selection+30, actor+F0)"
+    },
+    {
+     "priority": 2,
+     "resolver_ref_key": 111,
+     "current_outline_id": 121,
+     "predicate": "type==6 && i32(actor+B8)==0"
+    },
+    {
+     "priority": 3,
+     "resolver_ref_key": 18,
+     "current_outline_id": 18,
+     "predicate": "type==6 && i32(actor+B8)!=-1"
+    },
+    {
+     "priority": 4,
+     "resolver_ref_key": null,
+     "current_outline_id": 98,
+     "predicate": "M42 NPC predicate"
+    },
+    {
+     "priority": 5,
+     "resolver_ref_key": 68,
+     "current_outline_id": 68,
+     "predicate": "(!character || !blocked(character)) && type==6 && byte(actor+7E)!=0"
+    },
+    {
+     "priority": 6,
+     "resolver_ref_key": 78,
+     "current_outline_id": 78,
+     "predicate": "(!character || !blocked(character)) && type==6 && byte(actor+7F)!=0"
+    },
+    {
+     "priority": 7,
+     "resolver_ref_key": 28,
+     "current_outline_id": 28,
+     "predicate": "type==22 && i32(actor+B8)!=-1"
+    },
+    {
+     "priority": 8,
+     "resolver_ref_key": 68,
+     "current_outline_id": 68,
+     "predicate": "(!character || !blocked(character)) && type==22 && byte(actor+7E)!=0"
+    },
+    {
+     "priority": 9,
+     "resolver_ref_key": 38,
+     "current_outline_id": 38,
+     "predicate": "type==3 && i32(actor+B8)!=-1"
+    },
+    {
+     "priority": 10,
+     "resolver_ref_key": 48,
+     "current_outline_id": 48,
+     "predicate": "type==3 && i32(actor+B8)!=-1"
+    },
+    {
+     "priority": 11,
+     "resolver_ref_key": 88,
+     "current_outline_id": 88,
+     "predicate": "type==2 && character && !blocked(character) && Color[11441].payload_i32_1C!=0 && byte(character+E4)!=0"
+    },
+    {
+     "priority": 12,
+     "resolver_ref_key": 8,
+     "current_outline_id": 8,
+     "predicate": "type==2 && identity_equal(selection+30, actor+F0)"
+    },
+    {
+     "priority": 13,
+     "resolver_ref_key": 111,
+     "current_outline_id": 121,
+     "predicate": "type==2 && i32(actor+B8)==0"
+    },
+    {
+     "priority": 14,
+     "resolver_ref_key": 18,
+     "current_outline_id": 18,
+     "predicate": "type==2 && i32(actor+B8)!=-1"
+    },
+    {
+     "priority": 15,
+     "resolver_ref_key": 88,
+     "current_outline_id": 88,
+     "predicate": "type==7 && character && !blocked(character) && Color[11441].payload_i32_1C!=0 && byte(character+E4)!=0"
+    },
+    {
+     "priority": 16,
+     "resolver_ref_key": 8,
+     "current_outline_id": 8,
+     "predicate": "type==7 && identity_equal(selection+30, actor+F0)"
+    },
+    {
+     "priority": 17,
+     "resolver_ref_key": 111,
+     "current_outline_id": 121,
+     "predicate": "type==7 && i32(actor+B8)==0"
+    },
+    {
+     "priority": 18,
+     "resolver_ref_key": 18,
+     "current_outline_id": 18,
+     "predicate": "type==7 && i32(actor+B8)!=-1"
+    }
+   ]
+  },
+  "m117_conquest": {
+   "source": {
+    "package_path": "extensions/checkpoint_client_117_118_20261109/lineagem_conquest_hero_announcement_20261109_corrected_v2/CURRENT_HERO_JOIN.json",
+    "sha256": "accd726aa31b0ff45e062727b776cea4e30a90efd7c3f276308b6eda6f5fa0f8"
+   },
+   "hero_rows": [
+    {
+     "ID": 12,
+     "TeamAssetID": 214752,
+     "EnemyAssetID": 210781,
+     "HeroSkillDescID": 907802,
+     "HeroSpawnSpeechDescID": 908162
+    },
+    {
+     "ID": 22,
+     "TeamAssetID": 214732,
+     "EnemyAssetID": 210761,
+     "HeroSkillDescID": 907812,
+     "HeroSpawnSpeechDescID": 908172
+    },
+    {
+     "ID": 32,
+     "TeamAssetID": 214772,
+     "EnemyAssetID": 210801,
+     "HeroSkillDescID": 907822,
+     "HeroSpawnSpeechDescID": 908182
+    },
+    {
+     "ID": 42,
+     "TeamAssetID": 214782,
+     "EnemyAssetID": 210811,
+     "HeroSkillDescID": 907832,
+     "HeroSpawnSpeechDescID": 908192
+    },
+    {
+     "ID": 52,
+     "TeamAssetID": 214792,
+     "EnemyAssetID": 210821,
+     "HeroSkillDescID": 907842,
+     "HeroSpawnSpeechDescID": 908202
+    },
+    {
+     "ID": 62,
+     "TeamAssetID": 214722,
+     "EnemyAssetID": 210751,
+     "HeroSkillDescID": 907852,
+     "HeroSpawnSpeechDescID": 908212
+    },
+    {
+     "ID": 72,
+     "TeamAssetID": 214742,
+     "EnemyAssetID": 210771,
+     "HeroSkillDescID": 907862,
+     "HeroSpawnSpeechDescID": 908222
+    },
+    {
+     "ID": 82,
+     "TeamAssetID": 214712,
+     "EnemyAssetID": 214702,
+     "HeroSkillDescID": 907872,
+     "HeroSpawnSpeechDescID": 908232
+    },
+    {
+     "ID": 92,
+     "TeamAssetID": 214762,
+     "EnemyAssetID": 210791,
+     "HeroSkillDescID": 907882,
+     "HeroSpawnSpeechDescID": 908242
+    },
+    {
+     "ID": 102,
+     "TeamAssetID": 214752,
+     "EnemyAssetID": 210781,
+     "HeroSkillDescID": 907892,
+     "HeroSpawnSpeechDescID": 908252
+    },
+    {
+     "ID": 112,
+     "TeamAssetID": 214732,
+     "EnemyAssetID": 210761,
+     "HeroSkillDescID": 907902,
+     "HeroSpawnSpeechDescID": 908262
+    },
+    {
+     "ID": 122,
+     "TeamAssetID": 214772,
+     "EnemyAssetID": 210801,
+     "HeroSkillDescID": 907912,
+     "HeroSpawnSpeechDescID": 908272
+    },
+    {
+     "ID": 132,
+     "TeamAssetID": 214782,
+     "EnemyAssetID": 210811,
+     "HeroSkillDescID": 907922,
+     "HeroSpawnSpeechDescID": 908282
+    },
+    {
+     "ID": 142,
+     "TeamAssetID": 214792,
+     "EnemyAssetID": 210821,
+     "HeroSkillDescID": 907932,
+     "HeroSpawnSpeechDescID": 908292
+    },
+    {
+     "ID": 152,
+     "TeamAssetID": 214722,
+     "EnemyAssetID": 210751,
+     "HeroSkillDescID": 907942,
+     "HeroSpawnSpeechDescID": 908302
+    },
+    {
+     "ID": 162,
+     "TeamAssetID": 214742,
+     "EnemyAssetID": 210771,
+     "HeroSkillDescID": 907952,
+     "HeroSpawnSpeechDescID": 908312
+    },
+    {
+     "ID": 172,
+     "TeamAssetID": 214712,
+     "EnemyAssetID": 214702,
+     "HeroSkillDescID": 907962,
+     "HeroSpawnSpeechDescID": 908322
+    },
+    {
+     "ID": 182,
+     "TeamAssetID": 214762,
+     "EnemyAssetID": 210791,
+     "HeroSkillDescID": 907972,
+     "HeroSpawnSpeechDescID": 908332
+    },
+    {
+     "ID": 192,
+     "TeamAssetID": 214752,
+     "EnemyAssetID": 210781,
+     "HeroSkillDescID": 907982,
+     "HeroSpawnSpeechDescID": 908342
+    },
+    {
+     "ID": 202,
+     "TeamAssetID": 214732,
+     "EnemyAssetID": 210761,
+     "HeroSkillDescID": 907992,
+     "HeroSpawnSpeechDescID": 908352
+    },
+    {
+     "ID": 212,
+     "TeamAssetID": 214772,
+     "EnemyAssetID": 210801,
+     "HeroSkillDescID": 908002,
+     "HeroSpawnSpeechDescID": 908362
+    },
+    {
+     "ID": 222,
+     "TeamAssetID": 214782,
+     "EnemyAssetID": 210811,
+     "HeroSkillDescID": 908012,
+     "HeroSpawnSpeechDescID": 908372
+    },
+    {
+     "ID": 232,
+     "TeamAssetID": 214792,
+     "EnemyAssetID": 210821,
+     "HeroSkillDescID": 908022,
+     "HeroSpawnSpeechDescID": 908382
+    },
+    {
+     "ID": 242,
+     "TeamAssetID": 214722,
+     "EnemyAssetID": 210751,
+     "HeroSkillDescID": 908032,
+     "HeroSpawnSpeechDescID": 908392
+    },
+    {
+     "ID": 252,
+     "TeamAssetID": 214742,
+     "EnemyAssetID": 210771,
+     "HeroSkillDescID": 908042,
+     "HeroSpawnSpeechDescID": 908402
+    },
+    {
+     "ID": 262,
+     "TeamAssetID": 214712,
+     "EnemyAssetID": 214702,
+     "HeroSkillDescID": 908052,
+     "HeroSpawnSpeechDescID": 908412
+    },
+    {
+     "ID": 272,
+     "TeamAssetID": 214762,
+     "EnemyAssetID": 210791,
+     "HeroSkillDescID": 908062,
+     "HeroSpawnSpeechDescID": 908422
+    },
+    {
+     "ID": 282,
+     "TeamAssetID": 214752,
+     "EnemyAssetID": 210781,
+     "HeroSkillDescID": 908072,
+     "HeroSpawnSpeechDescID": 908432
+    },
+    {
+     "ID": 292,
+     "TeamAssetID": 214732,
+     "EnemyAssetID": 210761,
+     "HeroSkillDescID": 908082,
+     "HeroSpawnSpeechDescID": 908442
+    },
+    {
+     "ID": 302,
+     "TeamAssetID": 214772,
+     "EnemyAssetID": 210801,
+     "HeroSkillDescID": 908092,
+     "HeroSpawnSpeechDescID": 908452
+    },
+    {
+     "ID": 312,
+     "TeamAssetID": 214782,
+     "EnemyAssetID": 210811,
+     "HeroSkillDescID": 908102,
+     "HeroSpawnSpeechDescID": 908462
+    },
+    {
+     "ID": 322,
+     "TeamAssetID": 214792,
+     "EnemyAssetID": 210821,
+     "HeroSkillDescID": 908112,
+     "HeroSpawnSpeechDescID": 908472
+    },
+    {
+     "ID": 332,
+     "TeamAssetID": 214722,
+     "EnemyAssetID": 210751,
+     "HeroSkillDescID": 908122,
+     "HeroSpawnSpeechDescID": 908482
+    },
+    {
+     "ID": 342,
+     "TeamAssetID": 214742,
+     "EnemyAssetID": 210771,
+     "HeroSkillDescID": 908132,
+     "HeroSpawnSpeechDescID": 908492
+    },
+    {
+     "ID": 352,
+     "TeamAssetID": 214712,
+     "EnemyAssetID": 214702,
+     "HeroSkillDescID": 908142,
+     "HeroSpawnSpeechDescID": 908502
+    },
+    {
+     "ID": 362,
+     "TeamAssetID": 214762,
+     "EnemyAssetID": 210791,
+     "HeroSkillDescID": 908152,
+     "HeroSpawnSpeechDescID": 908512
+    }
+   ],
+   "aliases": {
+    "CONQUEST_WAR_SCREEN_EFFECT_FILE": "CsbFile/CutScene_HeroLand_Hero_MyClan.csb",
+    "CONQUEST_WAR_SCREEN_EFFECT_HERO_IMG": "Img",
+    "CONQUEST_WAR_SCREEN_EFFECT_SKILL_TEXT": "Nd_Text_1.Text_1",
+    "CONQUEST_WAR_SCREEN_EFFECT_SPEECH_TEXT": "Nd_Text_2.Text_2",
+    "CONQUEST_WAR_SCREEN_EFFECT_START_ANIM": "Fx_Start"
+   },
+   "authored": {
+    "Fx_Start": [
+     5,
+     130
+    ],
+    "action_duration": 125,
+    "speed": 1.0,
+    "source": "ASSET_SCOPE_KO.md CutScene_HeroLand_Hero_MyClan.csb sha256 d0d0c24fa16bd36a2f41c50a59301293c312f6e18a18486590316b323c59b9da"
+   },
+   "event_id_hex": "0x612"
+  },
+  "m118_albino": {
+   "aliases": {
+    "ALBINO_BOSS_SCREENEFFECT_FILENAME": "Main/Set_R_Top_Albino_Boss.csb",
+    "ALBINO_BOSS_SCREENEFFECT_ANIM": "Fx_On",
+    "ALBINO_BOSS_SCREENEFFECT_BOSS_SPRITE": "Nd_AlbinoBoss.Sp_Boss",
+    "ALBINO_BOSS_SCREENEFFECT_BOSS_TEXT": "Nd_AlbinoBoss.Label"
+   },
+   "authored": {
+    "Fx_On": [
+     5,
+     210
+    ],
+    "action_duration": 272,
+    "speed": 1.0,
+    "source": "ASSET_SCOPE_KO.md Set_R_Top_Albino_Boss.csb sha256 48a46744472577045f54fb2be8b250c2346a427019d7a650ce74726bb08fc8e9"
+   },
+   "event_id": 423
+  },
+  "m119_escaros": {
+   "sources": [
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_escaros_priority_presentation_20261109/schema/SELECTED_CURRENT_ROWS.json",
+     "sha256": "f7f1a37a859863b12e87c5afc6f88195c44487c412b0b671272b1232f259af01"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_escaros_priority_presentation_20261109/spell/SELECTED_CURRENT_DATA.json",
+     "sha256": "4d6996c9706dd77f099e21bd0fad3a3524cfecab495d5662aed88c63e501f3df"
+    }
+   ],
+   "screen_effect": [
+    {
+     "ID": 534,
+     "Name": "Escaros_Npc_Action_Spell",
+     "Priority": 0
+    },
+    {
+     "ID": 544,
+     "Name": "Escaros_Npc_Survival",
+     "Priority": 1
+    },
+    {
+     "ID": 554,
+     "Name": "Escaros_Npc_TimeLineMsg",
+     "Priority": 1
+    }
+   ],
+   "npc_class": [
+    {
+     "ID": 1,
+     "DescId": 198,
+     "IllustAssetID": 0
+    },
+    {
+     "ID": 71774,
+     "DescId": 1099754,
+     "IllustAssetID": 256874
+    },
+    {
+     "ID": 95814,
+     "DescId": 2078584,
+     "IllustAssetID": 256874
+    },
+    {
+     "ID": 103823,
+     "DescId": 2400713,
+     "IllustAssetID": 256874
+    }
+   ],
+   "npc_attribute": [
+    {
+     "NpcClassID": 71774,
+     "NpcAttributeTypeID": 564,
+     "Value": 284
+    },
+    {
+     "NpcClassID": 95814,
+     "NpcAttributeTypeID": 564,
+     "Value": 284
+    },
+    {
+     "NpcClassID": 103823,
+     "NpcAttributeTypeID": 564,
+     "Value": 2123
+    }
+   ],
+   "appellation_title": [
+    {
+     "ID": 284,
+     "DescID": 1107104
+    },
+    {
+     "ID": 2123,
+     "DescID": 2400743
+    }
+   ],
+   "spell_chain": {
+    "SpellClass": {
+     "ID": 62024,
+     "DescID": 1100834
+    },
+    "SpellBonus": {
+     "ID": 414584,
+     "SpellClassID": 62024,
+     "BonusID": 1057434,
+     "MinSpellLevel": 0
+    },
+    "Bonus": {
+     "ID": 1057434,
+     "BonusTypeID": 6544,
+     "Value": 4,
+     "BonusApplicationTypeID": 0,
+     "BonusApplicationTargetID": 0
+    },
+    "SpellMark": {
+     "ID": 4,
+     "SpellClassID": 1,
+     "TargetNumber": 1,
+     "Range": 10,
+     "Delay": 10,
+     "RangeStatusEffectID": 1354,
+     "PivotStatusEffectID": 1284,
+     "TargetStatusEffectID": 1294,
+     "SpellMarkType": 0
+    },
+    "SpellMarkType": null
+   },
+   "aliases": {
+    "ESCAROS_SCREEN_EFFECT_FILE": "CsbFile/CutScene_Escaros_Hero.csb",
+    "ESCAROS_SCREEN_EFFECT_NPC_APPELLATION_TEXT": "Nd_Text_2.Text_2",
+    "ESCAROS_SCREEN_EFFECT_NPC_DESC_TEXT": "Nd_Text_2.Text_2",
+    "ESCAROS_SCREEN_EFFECT_NPC_ICON_IMG": "Fx_Dummy.Fx_Panel_Img.Img",
+    "ESCAROS_SCREEN_EFFECT_NPC_NAME_TEXT": "Nd_Text_1.Text_1",
+    "ESCAROS_SCREEN_EFFECT_SHOW_ANIM": "Fx_Start",
+    "ESCAROS_SCREEN_EFFECT_SPELL_FILE": "Main/Set_R_Top_ActionSpell.csb",
+    "ESCAROS_SCREEN_EFFECT_SPELL_HIDE_ANIM": "Fx_End",
+    "ESCAROS_SCREEN_EFFECT_SPELL_ICON_IMG": "Nd_ActionSpell.Nd_SkillInfo.Sp_SkillIcon",
+    "ESCAROS_SCREEN_EFFECT_SPELL_LOOP_ANIM": "Fx_Loop",
+    "ESCAROS_SCREEN_EFFECT_SPELL_NAME_TEXT": "Nd_ActionSpell.Nd_SkillName.Text_1",
+    "ESCAROS_SCREEN_EFFECT_SPELL_ROOT_NODE": "Nd_Set_R_Top_ActionSpell",
+    "ESCAROS_SCREEN_EFFECT_SPELL_SHOW_ANIM": "Fx_Start"
+   },
+   "authored": {
+    "main": {
+     "Fx_Start": [
+      5,
+      130
+     ],
+     "action_duration": 130
+    },
+    "child": {
+     "Fx_Start": [
+      5,
+      35
+     ],
+     "Fx_Loop": [
+      40,
+      315
+     ],
+     "Fx_End": [
+      315,
+      340
+     ],
+     "action_duration": 340
+    },
+    "frame7_event": "{\"EventSound\":\"UI_CUTSCENE_ESCAROS_BOSS\"}"
+   },
+   "initial_priority_F8": 99,
+   "event_id_hex": "0x727"
+  },
+  "m120_ziggurat": {
+   "sources": [
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_ziggurat_message_variants_20261109_corrected_v4/assets/raw/ZigguratScreenMessage.json",
+     "sha256": "002a0823d5b85b13f49072e1e6f9104d279f15e1f91241ce46b2ef31e733d3e9"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_ziggurat_message_variants_20261109_corrected_v4/assets/raw/ZigguratScreenMessageType.json",
+     "sha256": "6fc43fe853c5fb3cbbb4afa982e295049327fd0eb9b6e352b0bddda82bad49cf"
+    }
+   ],
+   "messages_native_order": [
+    {
+     "ID": 8,
+     "ScreenEffectID": 1088,
+     "DescID": 1574348,
+     "ZigguratScreenMessageTypeID": 18
+    },
+    {
+     "ID": 18,
+     "ScreenEffectID": 1078,
+     "DescID": 1574368,
+     "ZigguratScreenMessageTypeID": 8
+    },
+    {
+     "ID": 28,
+     "ScreenEffectID": 1098,
+     "DescID": 1574378,
+     "ZigguratScreenMessageTypeID": 38
+    },
+    {
+     "ID": 38,
+     "ScreenEffectID": 1108,
+     "DescID": 1574388,
+     "ZigguratScreenMessageTypeID": 28
+    },
+    {
+     "ID": 88,
+     "ScreenEffectID": 1218,
+     "DescID": 1600918,
+     "ZigguratScreenMessageTypeID": 8
+    },
+    {
+     "ID": 98,
+     "ScreenEffectID": 1258,
+     "DescID": 1621178,
+     "ZigguratScreenMessageTypeID": 8
+    },
+    {
+     "ID": 108,
+     "ScreenEffectID": 1238,
+     "DescID": 1621188,
+     "ZigguratScreenMessageTypeID": 38
+    },
+    {
+     "ID": 118,
+     "ScreenEffectID": 1248,
+     "DescID": 1621198,
+     "ZigguratScreenMessageTypeID": 28
+    },
+    {
+     "ID": 128,
+     "ScreenEffectID": 1228,
+     "DescID": 1621208,
+     "ZigguratScreenMessageTypeID": 18
+    }
+   ],
+   "types_native_order": [
+    {
+     "ID": 8,
+     "Type": "EINHASAD"
+    },
+    {
+     "ID": 18,
+     "Type": "GRANKAIN"
+    },
+    {
+     "ID": 28,
+     "Type": "SAYHA"
+    },
+    {
+     "ID": 38,
+     "Type": "SYLENE"
+    }
+   ],
+   "aliases": {
+    "ZIGGURAT_MESSAGE_ANMIMATION_FILE_NAME": "Main/ScreenMessage_Ziggurat.csb",
+    "ZIGGURAT_MESSAGE_ANIM_ON": "On",
+    "ZIGGURAT_MESSAGE_BG_EINHASAD_NODE": "Nd_Einhasad",
+    "ZIGGURAT_MESSAGE_BG_GRANKAIN_NODE": "Nd_Grankain",
+    "ZIGGURAT_MESSAGE_BG_SAYHA_NODE": "Nd_Sayha",
+    "ZIGGURAT_MESSAGE_BG_SYLENE_NODE": "Nd_Sylene",
+    "ZIGGURAT_MESSAGE_TEXT": "Label"
+   },
+   "authored": {
+    "On": [
+     5,
+     260
+    ],
+    "action_duration": 260,
+    "speed": 1.0,
+    "source": "ScreenMessage_Ziggurat.csb sha256 0851119b3f9b6ace56760e52cb81e1ba9faff28dec458ef1d7cb2260ee541b13"
+   },
+   "native_order_note": "JSON row order used as the CONDITIONAL native order; runtime order not verified"
+  },
+  "m121_warzone": {
+   "sources": [
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_warzone_authored_weather_20261109/data/CSB_RECORDS.json",
+     "sha256": "37711e7cdeb8b340aa548696ef638fa5c2fa3d231968c5cfd3cf1dd5236dec7a"
+    },
+    {
+     "package_path": "extensions/checkpoint_client_119_121_corrected_v2_20261109/lineagem_warzone_authored_weather_20261109/data/RESOURCE_IDENTITIES.json",
+     "sha256": "07fc90b4147fd55b8de4ccbc7bb861a073bd106687287305501384d430150da2"
+    }
+   ],
+   "csb_logical_path": "UI/Effect/Effect_Source/Fx_Weather_WarZone.csb",
+   "csb_sha256": "753d32d3d649ebf352e4f6eec3e62665b89e57185b3bef40466ede4233b54397",
+   "action": {
+    "duration": 500,
+    "speed": 0.5
+   },
+   "ranges": {
+    "Fx_Start": [
+     5,
+     500
+    ],
+    "animation0": [
+     1500,
+     2000
+    ]
+   },
+   "node_count": 21,
+   "frame_event": {
+    "tag": -398168696,
+    "frame": 7,
+    "text": "{\"EventSound\":\"UI_WARZONE_IN\"}",
+    "node": "Fx_CloudLoop_01"
+   },
+   "direct_references": [
+    "UI/Effect/Effect_Soon/plist/particle_prince_female_00.plist",
+    "UI/Effect/Effect_Soon/plist/particle_highelf_male_smoke.plist",
+    "UI/Effect/Common_Effect_texture/Fx_Clouds_02.png",
+    "UI/Effect/Common_Effect_texture/Fx_smoke_1.png",
+    "UI/Effect/Common_Effect_texture/FX_HellFire_screen.png",
+    "UI/Effect/Common_Effect_texture/Fx_Glow_Bar_01.png",
+    "UI/Effect/Common_Effect_texture/Fx_Slot_Effect_glow.png",
+    "UI/UI_Draft/Dungeon007.png"
+   ],
+   "particle_textures": [
+    "UI/Effect/Effect_Soon/plist/particle_prince_female_00.png",
+    "UI/Effect/Effect_Soon/plist/ef_smoke_00.png"
+   ],
+   "sound_join": {
+    "name": "UI_WARZONE_IN",
+    "SoundMaterialID": 84903,
+    "AssetID": 380003,
+    "FilePath": "90551.ogg",
+    "container": "Sound74.dat",
+    "payload_inspected": false
+   },
+   "plists": {
+    "particle_highelf_male_smoke": {
+     "base64": "77u/PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBwbGlzdCBQVUJMSUMgIi0vL0FwcGxlLy9EVEQgUExJU1QgMS4wLy9FTiIgImh0dHA6Ly93d3cuYXBwbGUuY29tL0RURHMvUHJvcGVydHlMaXN0LTEuMC5kdGQiPg0KPHBsaXN0IHZlcnNpb249IjEuMCI+DQogIDxkaWN0Pg0KICAgIDxrZXk+YW5nbGU8L2tleT4NCiAgICA8cmVhbD4tMjA8L3JlYWw+DQogICAgPGtleT5hbmdsZVZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+MTA8L3JlYWw+DQogICAgPGtleT5ibGVuZEZ1bmNEZXN0aW5hdGlvbjwva2V5Pg0KICAgIDxpbnRlZ2VyPjc3MTwvaW50ZWdlcj4NCiAgICA8a2V5PmJsZW5kRnVuY1NvdXJjZTwva2V5Pg0KICAgIDxpbnRlZ2VyPjc3MDwvaW50ZWdlcj4NCiAgICA8a2V5PmR1cmF0aW9uPC9rZXk+DQogICAgPHJlYWw+LTE8L3JlYWw+DQogICAgPGtleT5lbWl0dGVyVHlwZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5lbWlzc2lvblJhdGU8L2tleT4NCiAgICA8cmVhbD4xMDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yQWxwaGE8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JCbHVlPC9rZXk+DQogICAgPHJlYWw+MTwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yR3JlZW48L2tleT4NCiAgICA8cmVhbD4xPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JSZWQ8L2tleT4NCiAgICA8cmVhbD4xPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JWYXJpYW5jZUFscGhhPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yVmFyaWFuY2VCbHVlPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yVmFyaWFuY2VHcmVlbjwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5maW5pc2hDb2xvclZhcmlhbmNlUmVkPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnJvdGF0aW9uU3RhcnQ8L2tleT4NCiAgICA8cmVhbD4zMDwvcmVhbD4NCiAgICA8a2V5PnJvdGF0aW9uU3RhcnRWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjUwPC9yZWFsPg0KICAgIDxrZXk+cm90YXRpb25FbmQ8L2tleT4NCiAgICA8cmVhbD4tMzA8L3JlYWw+DQogICAgPGtleT5yb3RhdGlvbkVuZFZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+NTA8L3JlYWw+DQogICAgPGtleT5maW5pc2hQYXJ0aWNsZVNpemU8L2tleT4NCiAgICA8cmVhbD4zMDA8L3JlYWw+DQogICAgPGtleT5maW5pc2hQYXJ0aWNsZVNpemVWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjEwMDwvcmVhbD4NCiAgICA8a2V5PmdyYXZpdHl4PC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmdyYXZpdHl5PC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5Pm1heFBhcnRpY2xlczwva2V5Pg0KICAgIDxyZWFsPjIwPC9yZWFsPg0KICAgIDxrZXk+bWF4UmFkaXVzPC9rZXk+DQogICAgPHJlYWw+MTAwPC9yZWFsPg0KICAgIDxrZXk+bWF4UmFkaXVzVmFyaWFuY2U8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+bWluUmFkaXVzPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5Pm1pblJhZGl1c1ZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnBhcnRpY2xlTGlmZXNwYW48L2tleT4NCiAgICA8cmVhbD43PC9yZWFsPg0KICAgIDxrZXk+cGFydGljbGVMaWZlc3BhblZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+MC4yPC9yZWFsPg0KICAgIDxrZXk+cmFkaWFsQWNjZWxWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5yYWRpYWxBY2NlbGVyYXRpb248L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+cm90YXRlUGVyU2Vjb25kPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnJvdGF0ZVBlclNlY29uZFZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+OTA8L3JlYWw+DQogICAgPGtleT5zb3VyY2VQb3NpdGlvblZhcmlhbmNleDwva2V5Pg0KICAgIDxyZWFsPjEwMDwvcmVhbD4NCiAgICA8a2V5PnNvdXJjZVBvc2l0aW9uVmFyaWFuY2V5PC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnNvdXJjZVBvc2l0aW9ueDwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5zb3VyY2VQb3NpdGlvbnk8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c3BlZWQ8L2tleT4NCiAgICA8cmVhbD4xNTwvcmVhbD4NCiAgICA8a2V5PnNwZWVkVmFyaWFuY2U8L2tleT4NCiAgICA8cmVhbD44PC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvckFscGhhPC9rZXk+DQogICAgPHJlYWw+MC4xPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvckJsdWU8L2tleT4NCiAgICA8cmVhbD4xPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvckdyZWVuPC9rZXk+DQogICAgPHJlYWw+MTwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0Q29sb3JSZWQ8L2tleT4NCiAgICA8cmVhbD4xPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvclZhcmlhbmNlQWxwaGE8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvclZhcmlhbmNlQmx1ZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5zdGFydENvbG9yVmFyaWFuY2VHcmVlbjwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5zdGFydENvbG9yVmFyaWFuY2VSZWQ8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRQYXJ0aWNsZVNpemU8L2tleT4NCiAgICA8cmVhbD4xNTA8L3JlYWw+DQogICAgPGtleT5zdGFydFBhcnRpY2xlU2l6ZVZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+NzA8L3JlYWw+DQogICAgPGtleT50YW5nZW50aWFsQWNjZWxWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT50YW5nZW50aWFsQWNjZWxlcmF0aW9uPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnRleHR1cmVGaWxlRGlyPC9rZXk+DQogICAgPHN0cmluZz5DOi9Vc2Vycy9nYXJyaXNvbi9EZXNrdG9wL2NvY29zL2NvY29zVUkvY29jb3NzdHVkaW8vRWZmZWN0L0VmZmVjdF9Tb29uL3BsaXN0PC9zdHJpbmc+DQogICAgPGtleT50ZXh0dXJlRmlsZU5hbWU8L2tleT4NCiAgICA8c3RyaW5nPmVmX3Ntb2tlXzAwLnBuZzwvc3RyaW5nPg0KICA8L2RpY3Q+DQo8L3BsaXN0Pmxpc3Q+L3BsaXN0Pj50Pg0KPC9wbGlzdD4=",
+     "sha256": "ac2b104954f1b96201ab216c0b9c4ea39fe1378bca2a0c72c08ba1023b9a3830",
+     "size": 3260,
+     "xml_end_offset": 3235,
+     "trailing_hex": "6c6973743e2f706c6973743e3e743e0d0a3c2f706c6973743e",
+     "textureFileName": "ef_smoke_00.png"
+    },
+    "particle_prince_female_00": {
+     "base64": "77u/PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBwbGlzdCBQVUJMSUMgIi0vL0FwcGxlLy9EVEQgUExJU1QgMS4wLy9FTiIgImh0dHA6Ly93d3cuYXBwbGUuY29tL0RURHMvUHJvcGVydHlMaXN0LTEuMC5kdGQiPg0KPHBsaXN0IHZlcnNpb249IjEuMCI+DQogIDxkaWN0Pg0KICAgIDxrZXk+YW5nbGU8L2tleT4NCiAgICA8cmVhbD4xODEuMzQ8L3JlYWw+DQogICAgPGtleT5hbmdsZVZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+MjwvcmVhbD4NCiAgICA8a2V5PmJsZW5kRnVuY0Rlc3RpbmF0aW9uPC9rZXk+DQogICAgPGludGVnZXI+MTwvaW50ZWdlcj4NCiAgICA8a2V5PmJsZW5kRnVuY1NvdXJjZTwva2V5Pg0KICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+DQogICAgPGtleT5kdXJhdGlvbjwva2V5Pg0KICAgIDxyZWFsPi0xPC9yZWFsPg0KICAgIDxrZXk+ZW1pdHRlclR5cGU8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+ZW1pc3Npb25SYXRlPC9rZXk+DQogICAgPHJlYWw+ODwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yQWxwaGE8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JCbHVlPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yR3JlZW48L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JSZWQ8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+ZmluaXNoQ29sb3JWYXJpYW5jZUFscGhhPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yVmFyaWFuY2VCbHVlPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PmZpbmlzaENvbG9yVmFyaWFuY2VHcmVlbjwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5maW5pc2hDb2xvclZhcmlhbmNlUmVkPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnJvdGF0aW9uU3RhcnQ8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+cm90YXRpb25TdGFydFZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+OTA8L3JlYWw+DQogICAgPGtleT5yb3RhdGlvbkVuZDwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5yb3RhdGlvbkVuZFZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+OTA8L3JlYWw+DQogICAgPGtleT5maW5pc2hQYXJ0aWNsZVNpemU8L2tleT4NCiAgICA8cmVhbD4xNTA8L3JlYWw+DQogICAgPGtleT5maW5pc2hQYXJ0aWNsZVNpemVWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjUwPC9yZWFsPg0KICAgIDxrZXk+Z3Jhdml0eXg8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+Z3Jhdml0eXk8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+bWF4UGFydGljbGVzPC9rZXk+DQogICAgPHJlYWw+MjU8L3JlYWw+DQogICAgPGtleT5tYXhSYWRpdXM8L2tleT4NCiAgICA8cmVhbD4xMDA8L3JlYWw+DQogICAgPGtleT5tYXhSYWRpdXNWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5taW5SYWRpdXM8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+bWluUmFkaXVzVmFyaWFuY2U8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+cGFydGljbGVMaWZlc3Bhbjwva2V5Pg0KICAgIDxyZWFsPjI8L3JlYWw+DQogICAgPGtleT5wYXJ0aWNsZUxpZmVzcGFuVmFyaWFuY2U8L2tleT4NCiAgICA8cmVhbD4xPC9yZWFsPg0KICAgIDxrZXk+cmFkaWFsQWNjZWxWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT5yYWRpYWxBY2NlbGVyYXRpb248L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+cm90YXRlUGVyU2Vjb25kPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnJvdGF0ZVBlclNlY29uZFZhcmlhbmNlPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnNvdXJjZVBvc2l0aW9uVmFyaWFuY2V4PC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnNvdXJjZVBvc2l0aW9uVmFyaWFuY2V5PC9rZXk+DQogICAgPHJlYWw+MjU8L3JlYWw+DQogICAgPGtleT5zb3VyY2VQb3NpdGlvbng8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c291cmNlUG9zaXRpb255PC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnNwZWVkPC9rZXk+DQogICAgPHJlYWw+MTgwPC9yZWFsPg0KICAgIDxrZXk+c3BlZWRWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjQ1PC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvckFscGhhPC9rZXk+DQogICAgPHJlYWw+MTwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0Q29sb3JCbHVlPC9rZXk+DQogICAgPHJlYWw+MTwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0Q29sb3JHcmVlbjwva2V5Pg0KICAgIDxyZWFsPjE8L3JlYWw+DQogICAgPGtleT5zdGFydENvbG9yUmVkPC9rZXk+DQogICAgPHJlYWw+MTwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0Q29sb3JWYXJpYW5jZUFscGhhPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0Q29sb3JWYXJpYW5jZUJsdWU8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvclZhcmlhbmNlR3JlZW48L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRDb2xvclZhcmlhbmNlUmVkPC9rZXk+DQogICAgPHJlYWw+MDwvcmVhbD4NCiAgICA8a2V5PnN0YXJ0UGFydGljbGVTaXplPC9rZXk+DQogICAgPHJlYWw+MTIwPC9yZWFsPg0KICAgIDxrZXk+c3RhcnRQYXJ0aWNsZVNpemVWYXJpYW5jZTwva2V5Pg0KICAgIDxyZWFsPjUwPC9yZWFsPg0KICAgIDxrZXk+dGFuZ2VudGlhbEFjY2VsVmFyaWFuY2U8L2tleT4NCiAgICA8cmVhbD4wPC9yZWFsPg0KICAgIDxrZXk+dGFuZ2VudGlhbEFjY2VsZXJhdGlvbjwva2V5Pg0KICAgIDxyZWFsPjA8L3JlYWw+DQogICAgPGtleT50ZXh0dXJlRmlsZURpcjwva2V5Pg0KICAgIDxzdHJpbmc+QzovVXNlcnMvZ2Fycmlzb24vRGVza3RvcC9jb2Nvcy9jb2Nvc1VJX2JhY2t1cC9jb2Nvc3N0dWRpby9FZmZlY3QvRWZmZWN0X1Nvb24vcGxpc3Q8L3N0cmluZz4NCiAgICA8a2V5PnRleHR1cmVGaWxlTmFtZTwva2V5Pg0KICAgIDxzdHJpbmc+cGFydGljbGVfcHJpbmNlX2ZlbWFsZV8wMC5wbmc8L3N0cmluZz4NCiAgPC9kaWN0Pg0KPC9wbGlzdD5zdD50PnQ+L3N0cmluZz4NCiAgPC9kaWN0Pg0KPC9wbGlzdD4=",
+     "sha256": "259b2bcd02e3d38045076c783dc0f4d2da48157e11e6b88b12a6860d12f905dc",
+     "size": 3281,
+     "xml_end_offset": 3245,
+     "trailing_hex": "73743e743e743e2f737472696e673e0d0a20203c2f646963743e0d0a3c2f706c6973743e",
+     "textureFileName": "particle_prince_female_00.png"
+    }
+   }
+  },
+  "m122_spine": {
+   "sources": [
+    {
+     "package_path": "extensions/M122/lineagem_screen_spine_presentation_20261109_corrected_v2/tables/CURRENT_SELECTED_ROWS.json",
+     "sha256": "747d61b876a23f3be87c1bc2464dc586896672468eb5b4001352ed6ab5066618"
+    },
+    {
+     "package_path": "extensions/M122/lineagem_screen_spine_presentation_20261109_corrected_v2/assets/SPINE_STRUCTURE.json",
+     "sha256": "0ddfd66d151391f2d868f753e26e6750f799204a4a071a3554a0ffe3f0716c75"
+    }
+   ],
+   "screen_effect": {
+    "ID": 832,
+    "Name": "ValakasRaidSkill",
+    "GroupId": 14,
+    "EffectAssetId": 302172,
+    "Priority": 1,
+    "AnimationName": "PlayOn",
+    "isLoop": false,
+    "ScreenEffectTypeID": 4,
+    "UISpineID": 1382,
+    "ShakeDuration": 0,
+    "ShakeSpeed": 0,
+    "ShakeMagnitude": 0,
+    "isOnlyShakeTile": false,
+    "ShakeDelay": 0,
+    "EffectDelay": 0,
+    "AnimationSpeed": 60,
+    "IsForceHideUI": false,
+    "IsTopScreenEffect": false
+   },
+   "ui_spine": {
+    "ID": 1382,
+    "AssetID": 302112,
+    "OffsetX": 0,
+    "OffsetY": 0,
+    "Flip": false
+   },
+   "asset_view": [
+    {
+     "AssetId": 302112,
+     "AssetTypeId": 22,
+     "FilePath": "Cut_Scene_Spine/Spine_Cut_Scene_Valakas_Raid.json"
+    },
+    {
+     "AssetId": 302172,
+     "AssetTypeId": 101,
+     "FilePath": "CutScene_Valakas_Raid2.csb"
+    }
+   ],
+   "target_alias": {
+    "SCREEN_EFFECT_SPINE_TARGET_NODE": "Node.Nd_Spine"
+   },
+   "spine_version": "3.6.52",
+   "animations": [
+    "animation"
+   ],
+   "csb": {
+    "PlayOn": [
+     5,
+     300
+    ],
+    "action_duration": 80
+   }
+  },
+  "m123_model_cases": {
+   "source": {
+    "package_path": "extensions/M123/lineagem_short_selector_arbitration_20261109_corrected_v2/delivery/MODEL_CASES.json",
+    "sha256": "4ba0152504f77d16335374c11cce04f6d91522ef9ca592f825e697551f03aba0"
+   },
+   "case_count": 72,
+   "cases": [
+    {
+     "name": "entry player False world 0",
+     "expected": false
+    },
+    {
+     "name": "entry player True world 1",
+     "expected": false
+    },
+    {
+     "name": "entry player True world 2",
+     "expected": false
+    },
+    {
+     "name": "entry player True world 0",
+     "expected": true
+    },
+    {
+     "name": "phase 2 armed False",
+     "expected": "C6"
+    },
+    {
+     "name": "phase 2 armed True",
+     "expected": "C5"
+    },
+    {
+     "name": "phase 3 armed False",
+     "expected": "C5"
+    },
+    {
+     "name": "phase 3 armed True",
+     "expected": "C5"
+    },
+    {
+     "name": "phase 0 armed False",
+     "expected": "other"
+    },
+    {
+     "name": "phase 1 armed True",
+     "expected": "other"
+    },
+    {
+     "name": "walking early stop",
+     "expected": [
+      [
+       "walking"
+      ],
+      0
+     ]
+    },
+    {
+     "name": "first live coordinate failure",
+     "expected": [
+      [
+       "walking",
+       "coordinate1"
+      ],
+      0
+     ]
+    },
+    {
+     "name": "second live coordinate failure",
+     "expected": [
+      [
+       "walking",
+       "coordinate1",
+       "facing-read",
+       "coordinate2"
+      ],
+      0
+     ]
+    },
+    {
+     "name": "third actor motion failure",
+     "expected": [
+      [
+       "walking",
+       "coordinate1",
+       "facing-read",
+       "coordinate2",
+       "motion4"
+      ],
+      0
+     ]
+    },
+    {
+     "name": "deadline 11 now 10",
+     "expected": [
+      false,
+      11
+     ]
+    },
+    {
+     "name": "deadline 10 now 10",
+     "expected": [
+      true,
+      310
+     ]
+    },
+    {
+     "name": "deadline 9 now 10",
+     "expected": [
+      true,
+      310
+     ]
+    },
+    {
+     "name": "deadline 18446744073709551615 now 0",
+     "expected": [
+      false,
+      "u64:0xffffffffffffffff"
+     ]
+    },
+    {
+     "name": "deadline 0 now 18446744073709551615",
+     "expected": [
+      true,
+      299
+     ]
+    },
+    {
+     "name": "deadline 0 now 0",
+     "expected": [
+      true,
+      300
+     ]
+    },
+    {
+     "name": "signed facing -128",
+     "expected": -7
+    },
+    {
+     "name": "signed facing -9",
+     "expected": 0
+    },
+    {
+     "name": "signed facing -8",
+     "expected": -7
+    },
+    {
+     "name": "signed facing -2",
+     "expected": -1
+    },
+    {
+     "name": "signed facing -1",
+     "expected": 0
+    },
+    {
+     "name": "signed facing 0",
+     "expected": 1
+    },
+    {
+     "name": "signed facing 6",
+     "expected": 7
+    },
+    {
+     "name": "signed facing 7",
+     "expected": 0
+    },
+    {
+     "name": "signed facing 127",
+     "expected": 0
+    },
+    {
+     "name": "preparation failure retains throttle",
+     "expected": 340
+    },
+    {
+     "name": "auto False count 0 resolved False",
+     "expected": "search"
+    },
+    {
+     "name": "auto False count 0 resolved True",
+     "expected": "search"
+    },
+    {
+     "name": "auto False count 1 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto False count 1 resolved True",
+     "expected": "search"
+    },
+    {
+     "name": "auto False count 2 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto False count 2 resolved True",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto False count 4294967295 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto False count 4294967295 resolved True",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto True count 0 resolved False",
+     "expected": "none"
+    },
+    {
+     "name": "auto True count 0 resolved True",
+     "expected": "none"
+    },
+    {
+     "name": "auto True count 1 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto True count 1 resolved True",
+     "expected": "search"
+    },
+    {
+     "name": "auto True count 2 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto True count 2 resolved True",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto True count 4294967295 resolved False",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto True count 4294967295 resolved True",
+     "expected": "rotate"
+    },
+    {
+     "name": "auto empty candidate destroys before rotate",
+     "expected": [
+      "input-create",
+      "select:3",
+      "descriptor-destroy",
+      "rotate-call",
+      "input-destroy"
+     ]
+    },
+    {
+     "name": "auto full operation order",
+     "expected": [
+      "input-create",
+      "select:3",
+      "clear-call",
+      "apply-call",
+      "temporary-front-targetable",
+      "choose-call",
+      "descriptor-destroy",
+      "input-destroy"
+     ]
+    },
+    {
+     "name": "apply false not inspected",
+     "expected": [
+      "input-create",
+      "select:3",
+      "clear-call",
+      "apply-call",
+      "temporary-front-targetable",
+      "choose-call",
+      "descriptor-destroy",
+      "input-destroy"
+     ]
+    },
+    {
+     "name": "choose false not inspected",
+     "expected": [
+      "input-create",
+      "select:3",
+      "clear-call",
+      "apply-call",
+      "temporary-front-targetable",
+      "choose-call",
+      "descriptor-destroy",
+      "input-destroy"
+     ]
+    },
+    {
+     "name": "untargetable skips choose",
+     "expected": false
+    },
+    {
+     "name": "manual empty candidates still apply",
+     "expected": true
+    },
+    {
+     "name": "low32 count truncation",
+     "expected": []
+    },
+    {
+     "name": "rotate multi",
+     "expected": [
+      "b",
+      "c",
+      "a"
+     ]
+    },
+    {
+     "name": "rotate gate blocked",
+     "expected": [
+      [
+       "a",
+       "b"
+      ],
+      []
+     ]
+    },
+    {
+     "name": "rotate singleton",
+     "expected": [
+      [
+       "a"
+      ],
+      []
+     ]
+    },
+    {
+     "name": "rotation auto front type 2",
+     "expected": false
+    },
+    {
+     "name": "rotation auto front type 7",
+     "expected": false
+    },
+    {
+     "name": "rotation auto front type 3",
+     "expected": true
+    },
+    {
+     "name": "rotation no previous current",
+     "expected": false
+    },
+    {
+     "name": "all 256 signed-byte arithmetic equivalence",
+     "expected": 256
+    },
+    {
+     "name": "singleton shared ownership survives temporary",
+     "expected": [
+      2,
+      1
+     ]
+    },
+    {
+     "name": "cleanup last shared",
+     "expected": [
+      0,
+      0,
+      [
+       "strong-decrement",
+       "destroy-owned",
+       "destroy-control",
+       "delete-node",
+       "delete-sentinel"
+      ]
+     ]
+    },
+    {
+     "name": "cleanup shared retained",
+     "expected": [
+      1,
+      1,
+      [
+       "strong-decrement",
+       "delete-node",
+       "delete-sentinel"
+      ]
+     ]
+    },
+    {
+     "name": "writer kind zero to one reread",
+     "expected": [
+      160,
+      3,
+      -1,
+      136,
+      "old-widget",
+      306,
+      24
+     ]
+    },
+    {
+     "name": "writer kind one to zero reread",
+     "expected": [
+      304,
+      3,
+      -1,
+      280,
+      "old-widget",
+      307,
+      25
+     ]
+    },
+    {
+     "name": "writer kind unchanged zero",
+     "expected": [
+      160,
+      2,
+      -1,
+      136,
+      "old-widget",
+      307,
+      25
+     ]
+    },
+    {
+     "name": "writer kind unchanged nonzero",
+     "expected": [
+      304,
+      2,
+      -1,
+      280,
+      "old-widget",
+      306,
+      24
+     ]
+    },
+    {
+     "name": "writer slot address not sentinel value",
+     "expected": [
+      304,
+      null,
+      -1,
+      280,
+      "old-widget",
+      306,
+      24
+     ]
+    },
+    {
+     "name": "writer zero is valid row index",
+     "expected": [
+      160,
+      0,
+      -1,
+      136,
+      "old-widget",
+      307,
+      25
+     ]
+    },
+    {
+     "name": "writer callback changes current row record",
+     "expected": [
+      160,
+      4,
+      9,
+      136,
+      "old-widget",
+      306,
+      24
+     ]
+    },
+    {
+     "name": "writer callback changes widget record before reread",
+     "expected": [
+      304,
+      4,
+      6,
+      280,
+      "new-widget",
+      307,
+      25
+     ]
+    }
+   ],
+   "u64_note": "values above int64 range are written as 'u64:0x...' because JSON numbers cannot carry them exactly"
+  }
+ },
+ "synthetic": {
+  "notice_ko": "아래 값은 이 시험용으로 만든 합성 값이다. 원본 데이터/실행 관측이 아니다.",
+  "m110": "peer ids, f78/f94 bytes, tuple ids, control-block counts and callback behaviour",
+  "m111": "pool pointer names p1..p4, batch sizes, allocator/constructor/destructor hooks",
+  "m112": "awakening grade/deck pairs and effect ids (no current Awakening rows in the package payload)",
+  "m113": "non-type11 rows, Value0/negative synthetic rows, weather block states",
+  "m114": "EffectDelay/ShakeDuration/ShakeDelay variants other than row 2352, node/path factory hooks, map mutations",
+  "m115": "actor field combinations (type24, b8, bytes 7E/7F/E4, identities), clock values, period 65535/65536/65537 rows, alpha (0,150)/(30,70) rows",
+  "m116": "negative/duplicate mode candidate rows, override values, world values other than 51244",
+  "m117_m120": "description texts, asset paths, UI node trees (authored node NAMES follow the real aliases), callback hooks",
+  "m121": "node/timeline/particle factory hooks; current frame numbers",
+  "m122": "file-existence sets, missing atlas/target variants, OffsetX=7/Flip=true synthetic UISpine row, listener throw",
+  "m123": "actor/LUID ids, control counts, clock values beyond MODEL_CASES, selector descriptor contents"
+ }
+}

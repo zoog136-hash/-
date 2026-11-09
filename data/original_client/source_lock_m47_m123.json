@@ -1,0 +1,37 @@
+{
+ "format_version": 1,
+ "design_status": "DESIGN_NOT_RECOVERED_API",
+ "purpose_ko": "원본 클라이언트 소스 기반 구현참조 01–123 중 M47–M123 DESIGN 모듈의 출처 고정. 원본 EXE/DLL은 실행·로드하지 않았다. 해시는 식별용이다.",
+ "package": {
+  "name": "TWILIGHT 클라이언트 소스 기반 구현참조 01-123 (20261109)",
+  "zip_sha256": "1e5a75bf2db9b7c5a61b58b0072aa9a6775bb83ea61e20a4a7c7f45ad19e0837",
+  "zip_bytes": 19503851,
+  "committed": false
+ },
+ "source_identity": {
+  "code_origin": 524,
+  "data_snapshot": 525,
+  "exe_sha256": "9f9c3b9c9a49fb598899b3da308b4776cbbc47cbb98dbe4b4aa368cce519019d",
+  "exe_image_base": "0x140000000",
+  "dll_sha256": "36857a2a13f46c4f24ebe8bce6626edfdd0c39b582a947ab03a6d43c551d185a",
+  "dll_image_base": "0x180000000"
+ },
+ "modules": {
+  "M47-M81": "tests/original_client_m47_m81_test.gd",
+  "M82-M109": "tests/original_client_m82_m109_test.gd",
+  "M110-M123": "tests/original_client_m110_m123_test.gd"
+ },
+ "final_corrections_used": {
+  "M115": "corrected_v3",
+  "M117": "v2",
+  "M118": "v2",
+  "M120": "v4",
+  "M122": "v2",
+  "M123": "corrected_v2"
+ },
+ "notes_ko": [
+  "M47–M81은 패키지에 수동 의사코드·원바이트가 없어 baseline_01_81의 계약 문장·QA 인용·정정 규칙만 구현했다. 설명 없는 분기는 BRANCH_NOT_DESCRIBED_BY_PACKAGE.",
+  "M82–M109의 실제 CSB/plist/PNG 대조 2건(R01)은 환경변수 OC_M82_M109_ASSET_DIR가 있을 때만 실행된다. 리소스는 저장소에 넣지 않는다.",
+  "기존 oc_vocab.gd의 CONFIRMED_STATIC_BOUNDED와 01–123 가이드의 CONFIRMED_BOUNDED_STATIC은 같은 등급이며 새 파일은 가이드 표기를 따른다."
+ ]
+}

@@ -1,0 +1,1289 @@
+{
+ "fixture_id": "OC_M82_M109_FIXTURE_V1",
+ "design_status": "DESIGN_NOT_RECOVERED_API",
+ "basis_ko": "참조 패키지 evidence/M82..M109의 실제 작성·추출 값(real)과 이 fixture를 위해 만든 합성값(synthetic)을 구획별로 분리했다. real 값도 원본 바이너리 실행 결과가 아니라 패키지의 정적 추출 자료다.",
+ "real": {
+  "m82_sp2": {
+   "source_ko": "SELECTED_BYTE_ANNOTATIONS.json의 frame-shaped record로 decoded bytes를 재구성했고 각 파일 raw_sha256과 일치함을 생성 시 확인했다.",
+   "files": {
+    "Sprite/19030-0.sp2": {
+     "hex": "fe01000000000000ff08c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff00000000000008c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff0000c000780080ff88ff000000000000",
+     "sha256": "f001f0131d2c6bbf6142e9ba7a0445e18553e8daa1ed13a588d80057fc0c9618",
+     "length": 689,
+     "alternate_directions": 8,
+     "alternate_records": 64,
+     "alternate_mask": 255
+    },
+    "Sprite/22593-8.sp2": {
+     "hex": "fe01000000000000ff0cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000000000000cb9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff0000b9006e0079ff7eff000000000000",
+     "sha256": "2c762b179a4f2d69554ba8be3b161825e5d8af29dccdbe3133f8989d985922ff",
+     "length": 1009,
+     "alternate_directions": 8,
+     "alternate_records": 96,
+     "alternate_mask": 255
+    },
+    "Sprite/23006-32.sp2": {
+     "hex": "fe01000000000000ff44b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff00000000000044b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff0000b9006d0079ff7dff000000000000",
+     "sha256": "98e4ebb2f185648b995e412f4d92af8a78453aa5ea68401981cce585e8573217",
+     "length": 5489,
+     "alternate_directions": 8,
+     "alternate_records": 544,
+     "alternate_mask": 255
+    },
+    "Sprite/26664-8.sp2": {
+     "hex": "fe010000000000000101c000780080ff88ff000000000000",
+     "sha256": "996efe6bb797fc9cd13018bd8701a7ba2dd5235ba3ec4ba0237101a7ca4aa0fc",
+     "length": 24,
+     "alternate_directions": 1,
+     "alternate_records": 1,
+     "alternate_mask": 1
+    }
+   },
+   "non_fe": {
+    "logical": "Sprite/28708-15.sp2",
+    "length": 48981,
+    "sha256": "29b425fc1fb643cee2c09d09ab474d82ef285dc27c019299f04d0e9b35bd6712",
+    "prefix32_hex": "08ffffa8ff3500040000fc0900180007fc2c000008fc30010009fc30020003fd"
+   },
+   "palette_zero_cmd_rvas": [
+    "035F7F7C",
+    "035F7F81"
+   ]
+  },
+  "m88_png": {
+   "source_ko": "M88 REPORT §5: icon/Item/bm_magic_scroll3.png 실제 64x64 RGBA, 전부 alpha255",
+   "png_sha256": "e624487a1c07c96c99d1dc5b577ed2c46e8b5766c01ea288c66882b6d8cafd1d",
+   "rgba_bytes": 16384,
+   "rgba_sha256": "048361cbe35fdec4dd36bca8fcdcd15f81a985b3c2c35984bdc6b1744f462791",
+   "rgb565_bytes": 8192,
+   "rgb565_sha256": "247becc9fac6d764ec485904613746c965d4cfa69749d3ff739a416e025a91ff",
+   "alpha255_count": 4096,
+   "descriptor_key2_hex": [
+    "1908",
+    "1908",
+    "1401",
+    32,
+    0,
+    1
+   ],
+   "descriptor_key4_hex": [
+    "1907",
+    "1907",
+    "8363",
+    16,
+    0,
+    0
+   ]
+  },
+  "m94_literals": {
+   "source_ko": "M94 producer/literals 실제 EXE 문자열(NUL 제외)",
+   "texts": {
+    "program_key.txt": "ShaderPosition_uColor",
+    "vertex.glsl": "\n\nattribute vec4 a_position;\nuniform vec4 u_color;\nuniform float u_pointSize;\n\n#ifdef GL_ES\nvarying lowp vec4 v_fragmentColor;\n#else\nvarying vec4 v_fragmentColor;\n#endif\n\nvoid main()\n{\n    gl_Position = CC_MVPMatrix * a_position;\n    gl_PointSize = u_pointSize;\n    v_fragmentColor = u_color;\n}\n",
+    "fragment.glsl": "\n\n#ifdef GL_ES\nprecision lowp float;\n#endif\n\nvarying vec4 v_fragmentColor;\n\nvoid main()\n{\n    gl_FragColor = v_fragmentColor;\n}\n",
+    "a_position.txt": "a_position",
+    "aVertex.txt": "aVertex"
+   },
+   "sha256_without_nul": {
+    "program_key.txt": "c90dd7b85fc41cda41a3abe04e9f6354e804263533d1d55ad240b26462494f96",
+    "vertex.glsl": "601abc98e2e1570ab8e96bc9a40f3e21b2cfa52fc9087214f06c5cdc941695e2",
+    "fragment.glsl": "83eb09441664235f33266c643ea1cd2df6ab2223cf97e3dac5da3ff8f969a9aa",
+    "a_position.txt": "67f5b1491eac5a474c63bc8cf7009a97bbfb2ba6883e47729e0411aae4a99075",
+    "aVertex.txt": "04c06e9915a2670da2cdcb3b3cf10c67d273268b1583bd243e67c27f0b12df79"
+   }
+  },
+  "m96_prelude": {
+   "hex_with_nul": "756e69666f726d206d6174342043435f504d61747269783b0a756e69666f726d206d6174342043435f4d756c746956696577504d61747269785b345d3b0a756e69666f726d206d6174342043435f4d564d61747269783b0a756e69666f726d206d6174342043435f4d56504d61747269783b0a756e69666f726d206d6174342043435f4d756c7469566965774d56504d61747269785b345d3b0a756e69666f726d206d6174332043435f4e6f726d616c4d61747269783b0a756e69666f726d20766563342043435f54696d653b0a756e69666f726d20766563342043435f53696e54696d653b0a756e69666f726d20766563342043435f436f7354696d653b0a756e69666f726d20766563342043435f52616e646f6d30313b0a756e69666f726d2073616d706c657232442043435f54657874757265303b0a756e69666f726d2073616d706c657232442043435f54657874757265313b0a756e69666f726d2073616d706c657232442043435f54657874757265323b0a756e69666f726d2073616d706c657232442043435f54657874757265333b0a2f2f434320494e434c5544455320454e440a0a00",
+   "sha256": "8560e618feacd3740f4d22743b214f69546cac74269f9f394731b45ece20ca0e",
+   "bytes": 425
+  },
+  "m106_literals": {
+   "normal_fragment.glsl": "\n#ifdef GL_ES\nprecision lowp float;\n#endif\n\nvarying vec4 v_fragmentColor;\nvarying vec2 v_texCoord;\n\nvoid main()\n{\n    gl_FragColor = v_fragmentColor * texture2D(CC_Texture0, v_texCoord);\n}\n",
+   "split_fragment.glsl": "\n#ifdef GL_ES\n    precision mediump float;\n#endif\n\nvarying vec4 v_fragmentColor;\nvarying vec2 v_texCoord;\n\nvoid main() {\n    vec4 texColor = vec4(texture2D(CC_Texture0, v_texCoord).rgb, texture2D(CC_Texture1, v_texCoord).r);\n\n    texColor.rgb *= texColor.a; // Premultiply with Alpha channel\n\n    gl_FragColor = v_fragmentColor * texColor;\n}\n",
+   "normal_name.txt": "ShaderPositionTextureColor_noMVP",
+   "split_name.txt": "#ShaderETC1ASPositionTextureColor_noMVP",
+   "vertex.glsl": "\nattribute vec4 a_position;\nattribute vec2 a_texCoord;\nattribute vec4 a_color;\n\n#ifdef GL_ES\nvarying lowp vec4 v_fragmentColor;\nvarying mediump vec2 v_texCoord;\n#else\nvarying vec4 v_fragmentColor;\nvarying vec2 v_texCoord;\n#endif\n\nvoid main()\n{\n    gl_Position = CC_PMatrix * a_position;\n    v_fragmentColor = a_color;\n    v_texCoord = a_texCoord;\n}\n"
+  },
+  "m95_m97_current525_joins": {
+   "source_ko": "M95 REPORT §CURRENT525_DATA / M97 REPORT: 실제 current525 JSON join. native 공급은 조건부.",
+   "bonus_types": {
+    "9492": "IsStackableSpell",
+    "9482": "StackableSpellMaxSummon"
+   },
+   "spells": {
+    "34922": [
+     {
+      "spell_bonus": 566222,
+      "bonus": 1628382,
+      "type": 9482,
+      "value": 2,
+      "min_spell_level": 0
+     },
+     {
+      "spell_bonus": 566232,
+      "bonus": 1628392,
+      "type": 9492,
+      "value": 1,
+      "min_spell_level": 0
+     }
+    ],
+    "89112": [
+     {
+      "spell_bonus": 566252,
+      "bonus": 1628412,
+      "type": 9482,
+      "value": 4,
+      "min_spell_level": 0
+     },
+     {
+      "spell_bonus": 566262,
+      "bonus": 1628422,
+      "type": 9492,
+      "value": 1,
+      "min_spell_level": 0
+     }
+    ]
+   },
+   "json_array_order_is_not_native_order": true
+  },
+  "m101_identity_007F33B0": {
+   "rva": "007F33B0",
+   "hex": "0000803f000000000000000000000000000000000000803f000000000000000000000000000000000000803f000000000000000000000000000000000000803f",
+   "u32": [
+    1065353216,
+    0,
+    0,
+    0,
+    0,
+    1065353216,
+    0,
+    0,
+    0,
+    0,
+    1065353216,
+    0,
+    0,
+    0,
+    0,
+    1065353216
+   ],
+   "float32": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  "m101_operation_index_table": [
+   {
+    "o": 0,
+    "A": [
+     0,
+     4,
+     8,
+     12
+    ],
+    "B": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 1,
+    "A": [
+     1,
+     5,
+     9,
+     13
+    ],
+    "B": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "mul_order": "A then B"
+   },
+   {
+    "o": 2,
+    "A": [
+     2,
+     6,
+     10,
+     14
+    ],
+    "B": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "mul_order": "A then B"
+   },
+   {
+    "o": 3,
+    "A": [
+     3,
+     7,
+     11,
+     15
+    ],
+    "B": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "mul_order": "A then B"
+   },
+   {
+    "o": 4,
+    "A": [
+     0,
+     4,
+     8,
+     12
+    ],
+    "B": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 5,
+    "A": [
+     1,
+     5,
+     9,
+     13
+    ],
+    "B": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 6,
+    "A": [
+     2,
+     6,
+     10,
+     14
+    ],
+    "B": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 7,
+    "A": [
+     3,
+     7,
+     11,
+     15
+    ],
+    "B": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 8,
+    "A": [
+     0,
+     4,
+     8,
+     12
+    ],
+    "B": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 9,
+    "A": [
+     1,
+     5,
+     9,
+     13
+    ],
+    "B": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 10,
+    "A": [
+     2,
+     6,
+     10,
+     14
+    ],
+    "B": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 11,
+    "A": [
+     3,
+     7,
+     11,
+     15
+    ],
+    "B": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 12,
+    "A": [
+     0,
+     4,
+     8,
+     12
+    ],
+    "B": [
+     12,
+     13,
+     14,
+     15
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 13,
+    "A": [
+     1,
+     5,
+     9,
+     13
+    ],
+    "B": [
+     12,
+     13,
+     14,
+     15
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 14,
+    "A": [
+     2,
+     6,
+     10,
+     14
+    ],
+    "B": [
+     12,
+     13,
+     14,
+     15
+    ],
+    "mul_order": "B then A"
+   },
+   {
+    "o": 15,
+    "A": [
+     3,
+     7,
+     11,
+     15
+    ],
+    "B": [
+     12,
+     13,
+     14,
+     15
+    ],
+    "mul_order": "B then A"
+   }
+  ],
+  "m104_buffcard_awaken_effect": {
+   "source_ko": "M104 REPORT: BuffCardAwakenEffect.json 12행 (deck,grade)->StatusEffectID 후보. loader key binding은 조건부.",
+   "json_sha256": "fc3385c528e70bc01e45d2b4e28fca4609dd60b809b4cea2cd709d2979ec046b",
+   "rows": [
+    [
+     1,
+     4,
+     1183
+    ],
+    [
+     1,
+     5,
+     1193
+    ],
+    [
+     1,
+     32,
+     1203
+    ],
+    [
+     1,
+     52,
+     2403
+    ],
+    [
+     2,
+     4,
+     1524
+    ],
+    [
+     2,
+     5,
+     1534
+    ],
+    [
+     2,
+     32,
+     1544
+    ],
+    [
+     2,
+     52,
+     3371
+    ],
+    [
+     98,
+     4,
+     2418
+    ],
+    [
+     98,
+     5,
+     2391
+    ],
+    [
+     98,
+     32,
+     2408
+    ],
+    [
+     98,
+     52,
+     3361
+    ]
+   ]
+  },
+  "m105_csb": {
+   "logical": "UI/MainFloating/Fx_Slot_Saintpaladin_TimeClear.csb",
+   "bytes": 5816,
+   "sha256": "5933944dfabd74bf3b7ce84ef1ce0455f2ae60f39b0a0510dd456a15462bf345",
+   "schema_version": "2.1.0.0",
+   "string_table": {
+    "TIME_CLEAR_SLOT_FX_FILE": "MainFloating/Fx_Slot_Saintpaladin_TimeClear.csb",
+    "TIME_CLEAR_SLOT_ANIM_NAME": "Start"
+   },
+   "action": {
+    "duration": 75,
+    "duration_offset": 2408,
+    "speed": 1.0,
+    "speed_offset": 2412,
+    "current_animation_name": "Start"
+   },
+   "animations": [
+    {
+     "name": "Start",
+     "start": 5,
+     "start_offset": 2372,
+     "end": 75,
+     "end_offset": 2376
+    }
+   ],
+   "nodes": [
+    {
+     "name": "Node",
+     "class": "Node",
+     "action_tag": null,
+     "action_tag_offset": null,
+     "node_tag": 1225,
+     "node_tag_offset": 2220,
+     "tree_offset": 148,
+     "parent": null
+    },
+    {
+     "name": "Node",
+     "class": "SingleNode",
+     "action_tag": 1116072923,
+     "action_tag_offset": 2024,
+     "node_tag": 75,
+     "node_tag_offset": 2036,
+     "tree_offset": 196,
+     "parent": 148
+    },
+    {
+     "name": "Img_Outline_Glow",
+     "class": "ImageView",
+     "action_tag": -1253072878,
+     "action_tag_offset": 1740,
+     "node_tag": 76,
+     "node_tag_offset": 1752,
+     "tree_offset": 1460,
+     "parent": 196
+    },
+    {
+     "name": "Img_Outline",
+     "class": "ImageView",
+     "action_tag": -2025293431,
+     "action_tag_offset": 1296,
+     "node_tag": 6,
+     "node_tag_offset": 1308,
+     "tree_offset": 1076,
+     "parent": 196
+    },
+    {
+     "name": "Panel",
+     "class": "Panel",
+     "action_tag": 246207419,
+     "action_tag_offset": 916,
+     "node_tag": 39,
+     "node_tag_offset": 928,
+     "tree_offset": 256,
+     "parent": 196
+    },
+    {
+     "name": "Fx_Seet_GlowLoop",
+     "class": "Sprite",
+     "action_tag": -649854124,
+     "action_tag_offset": 536,
+     "node_tag": 77,
+     "node_tag_offset": 548,
+     "tree_offset": 304,
+     "parent": 256
+    }
+   ],
+   "keyframes": [
+    {
+     "track": 0,
+     "property": "Alpha",
+     "action_tag": -1253072878,
+     "index": 5,
+     "index_offset": 5780,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5784,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 0,
+     "property": "Alpha",
+     "action_tag": -1253072878,
+     "index": 10,
+     "index_offset": 5704,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5708,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 0,
+     "property": "Alpha",
+     "action_tag": -1253072878,
+     "index": 65,
+     "index_offset": 5664,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 25,
+     "alpha_offset": 5668,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 0,
+     "property": "Alpha",
+     "action_tag": -1253072878,
+     "index": 75,
+     "index_offset": 5624,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5628,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 1,
+     "property": "Alpha",
+     "action_tag": -2025293431,
+     "index": 5,
+     "index_offset": 5524,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5528,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 1,
+     "property": "Alpha",
+     "action_tag": -2025293431,
+     "index": 10,
+     "index_offset": 5484,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5488,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 1,
+     "property": "Alpha",
+     "action_tag": -2025293431,
+     "index": 65,
+     "index_offset": 5444,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 38,
+     "alpha_offset": 5448,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 1,
+     "property": "Alpha",
+     "action_tag": -2025293431,
+     "index": 75,
+     "index_offset": 5404,
+     "tween_present": false,
+     "tween": null,
+     "tween_offset": null,
+     "alpha": 127,
+     "alpha_offset": 5408,
+     "resource": null,
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 5,
+     "index_offset": 5176,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 5175,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_01.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 10,
+     "index_offset": 4956,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4955,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_02.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 15,
+     "index_offset": 4772,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4771,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_03.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 20,
+     "index_offset": 4588,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4587,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_04.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 25,
+     "index_offset": 4404,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4403,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_05.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 30,
+     "index_offset": 4220,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4219,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_06.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 35,
+     "index_offset": 4036,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 4035,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_07.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 40,
+     "index_offset": 3852,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 3851,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_08.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 45,
+     "index_offset": 3668,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 3667,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_09.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 50,
+     "index_offset": 3484,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 3483,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_10.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 55,
+     "index_offset": 3300,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 3299,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_11.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 60,
+     "index_offset": 3116,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 3115,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_12.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 65,
+     "index_offset": 2932,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 2931,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_13.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 70,
+     "index_offset": 2748,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 2747,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_14.png",
+     "easing_type": 0
+    },
+    {
+     "track": 2,
+     "property": "FileData",
+     "action_tag": -649854124,
+     "index": 75,
+     "index_offset": 2564,
+     "tween_present": true,
+     "tween": 0,
+     "tween_offset": 2563,
+     "alpha": null,
+     "alpha_offset": null,
+     "resource": "Fx_Seet_GlowLoop_01.png",
+     "easing_type": 0
+    }
+   ],
+   "root_plists": [
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+    "UI_Resource/Atlas_Hud.plist",
+    "UI_Resource/Atlas_Hud.plist",
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist"
+   ]
+  },
+  "m108_atlas": {
+   "assets_sha256": {
+    "Atlas_Hud.plist": "b3e8bafe62468a3e193c3d473c849585e5f2e933d2d92b3b4002c4ab159e124b",
+    "Atlas_Hud.png": "a9670378cb832a99dec4f984df2e32ab3f7e34d455ea9cba568bf2c2643571bb",
+    "Atlas_Z_Fx_Seet_GlowLoop.plist": "977bca9211c27e2e935f5cf86c6ced9906e542e421bfcaa09e92de1ccc28d052",
+    "Atlas_Z_Fx_Seet_GlowLoop.png": "f04a8e902ee8e394a75cd57551466c2e2ccf2a5d8fee45d12fca56723bb9f83d"
+   },
+   "containers": {
+    "UI_Resource/Atlas_Hud.plist": {
+     "dat": "UI38.dat",
+     "origin": 521
+    },
+    "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist": {
+     "dat": "UI51.dat",
+     "origin": 518
+    }
+   },
+   "frames": [
+    {
+     "plist": "UI_Resource/Atlas_Hud.plist",
+     "name": "Hud_Orim_SkillSlot_Line.png",
+     "frame": "{{1307,1720},{62,62}}",
+     "xywh": [
+      1307,
+      1720,
+      62,
+      62
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{62,62}",
+     "sourceColorRect": "{{0,0},{62,62}}",
+     "window_rgba_sha256": "d76a0e41c6e3517b56db4e8f3691b02f165a414237c24342dd9587b67d9f0497"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Hud.plist",
+     "name": "Hud_QuicSlot_Glow.png",
+     "frame": "{{487,1888},{44,44}}",
+     "xywh": [
+      487,
+      1888,
+      44,
+      44
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{44,44}",
+     "sourceColorRect": "{{0,0},{44,44}}",
+     "window_rgba_sha256": "1120f66293bcc46937ff9c714151ba02847b8359af324feaa4c7c485a1af8a5c"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_01.png",
+     "frame": "{{4,4},{256,256}}",
+     "xywh": [
+      4,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "a5e9a02929dee4163ff7e7b16bf641e9789ed3a2eb4e82c498eb2ffd065e9128"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_02.png",
+     "frame": "{{266,4},{256,256}}",
+     "xywh": [
+      266,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "27e49200d35b658b61dcb5e926ada6e01604abeb14c42a47dcea740f08a2ea11"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_03.png",
+     "frame": "{{528,4},{256,256}}",
+     "xywh": [
+      528,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "38b34825441bc187d11fb139c3d65cdf8d82fcda6405b53e467cdc99635a4a68"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_04.png",
+     "frame": "{{790,4},{256,256}}",
+     "xywh": [
+      790,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "e16f65a469b0a9085bcb3f77d86bb4a70efb850ac895c08f2d6acc9256a736db"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_05.png",
+     "frame": "{{1052,4},{256,256}}",
+     "xywh": [
+      1052,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "f39ade3cf3b9a56d9b60e1562a8a14c72bfdaae3b2793400f8e12ada0f63615b"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_06.png",
+     "frame": "{{1314,4},{256,256}}",
+     "xywh": [
+      1314,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "1827e82e139b9d150567b7c4a07c5a78fefa5d079c2f1812b2b62708f13b029a"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_07.png",
+     "frame": "{{1576,4},{256,256}}",
+     "xywh": [
+      1576,
+      4,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "be6eca0e6feb75b5c7e038306855032791b80b6015a3678669d494c339faac0a"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_08.png",
+     "frame": "{{4,266},{256,256}}",
+     "xywh": [
+      4,
+      266,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "bbfdb8c5096c9f0d720ffa6004191009f4b8ac8c072739c6bc07cd414da78e78"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_09.png",
+     "frame": "{{266,266},{256,256}}",
+     "xywh": [
+      266,
+      266,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "a69e8d3989838b49c65a979331d3634f97ec63decc6b3c792fa1bd065734da0d"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_10.png",
+     "frame": "{{528,266},{256,256}}",
+     "xywh": [
+      528,
+      266,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "d307433816633eaa27851d718459a82483f750f5f2de032b29c674fddf5c09b8"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_11.png",
+     "frame": "{{790,266},{256,256}}",
+     "xywh": [
+      790,
+      266,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "0c158db7d99fd2f0d5c7ac1c3a7937d5f2b3c9507637097963fa0365d7ffe1d8"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_12.png",
+     "frame": "{{1052,266},{256,256}}",
+     "xywh": [
+      1052,
+      266,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "49cadeb73a55e71191b75f485d0b0122d88b64d38372c2e2bfb7118a017e0fa4"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_13.png",
+     "frame": "{{1314,329},{256,256}}",
+     "xywh": [
+      1314,
+      329,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "8dfc3cc552e4671e933965b069232b38df8d70fbd6b0e06bf2a8ae38a69d5168"
+    },
+    {
+     "plist": "UI_Resource/Atlas_Z_Fx_Seet_GlowLoop.plist",
+     "name": "Fx_Seet_GlowLoop_14.png",
+     "frame": "{{1576,329},{256,256}}",
+     "xywh": [
+      1576,
+      329,
+      256,
+      256
+     ],
+     "rotated": false,
+     "offset": "{0,0}",
+     "sourceSize": "{256,256}",
+     "sourceColorRect": "{{0,0},{256,256}}",
+     "window_rgba_sha256": "2deafc85d9bc1d1eaa577bc8ecb5ceffb58d3cae51699d5827366983b0c21e70"
+    }
+   ]
+  }
+ },
+ "synthetic": {
+  "notice_ko": "아래 값은 계약 분기/경계를 시험하려고 만든 합성 입력이다. 실제 게임 자료·런타임 관측이 아니다.",
+  "m88_pixels": [
+   {
+    "rgba": [
+     255,
+     128,
+     7,
+     128
+    ],
+    "pma_on_rgb565_le": "0082",
+    "pma_off_rgb565_le": "00FC"
+   },
+   {
+    "rgba": [
+     255,
+     255,
+     255,
+     0
+    ],
+    "pma_on_rgb565_le": "0000",
+    "pma_off_rgb565_le": "FFFF"
+   },
+   {
+    "rgba": [
+     255,
+     0,
+     0,
+     255
+    ],
+    "pma_on_rgb565_le": "00F8"
+   },
+   {
+    "rgba": [
+     0,
+     255,
+     0,
+     255
+    ],
+    "pma_on_rgb565_le": "E007"
+   },
+   {
+    "rgba": [
+     0,
+     0,
+     255,
+     255
+    ],
+    "pma_on_rgb565_le": "1F00"
+   }
+  ],
+  "m101_cancellation_row": "A(selector1) column entries 1e8,1,-1e8,1 against B=identity-like ones: f32 left-associated sum differs from f64 sum",
+  "m92_stencil": {
+   "B_values": [
+    8,
+    32
+   ],
+   "layers": [
+    0,
+    7,
+    30,
+    31,
+    32
+   ]
+  },
+  "other_ko": "M83/M84/M85/M86/M87/M89/M90/M91/M93/M98/M99/M100/M102/M103/M107/M109의 객체·ID·좌표·콜백 값은 테스트 코드 안의 합성 입력이다(34922/89112 등 실제 ID를 쓴 경우 해당 줄에 표시)."
+ }
+}

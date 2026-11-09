@@ -1,0 +1,2092 @@
+{
+ "schema_version": 1,
+ "status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+ "scope": "M82-M109 (reference package 01-123 extensions_82_109)",
+ "note_ko": "A01은 참조 패키지 IMPLEMENTATION_CHECKLIST.json의 제안 인수시험, X/R은 패키지 근거에서 만든 추가 DESIGN 사례다. 원본 바이너리 실행 또는 패키지 작성 중 통과 결과가 아니다.",
+ "note_result_scope_ko": "result가 PASS인 항목은 DESIGN 모듈이 문서화된 계약을 fixture에서 따랐다는 뜻이다. 원본 바이너리 실행·native 동등성·GPU/화면 결과를 뜻하지 않는다. NOT_RUN_ON_IMPLEMENTATION 항목은 미실행이다. R01은 OC_M82_M109_ASSET_DIR에 실제 CSB/plist/PNG가 있을 때만 실행된다.",
+ "tests": [
+  {
+   "test_id": "M82-A01",
+   "module_id": "M82",
+   "input_ko": "네 선정 SP2의 byte4와 byte8 해석을 분리한다.",
+   "expected_ko": "패키지 제안 인수시험: 네 선정 SP2의 byte4와 byte8 해석을 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C07",
+   "contract_ids": [
+    "C07",
+    "C08"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M82/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M82/producer/REPORT_KO.md",
+    "evidence/M82/qa/REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M82-X1",
+   "module_id": "M82",
+   "input_ko": "non-FE 28708-15 실제 prefix: native false, 강제 frame-stream 후보는 322571>48981로 이 후보만 기각",
+   "expected_ko": "non-FE 28708-15 실제 prefix: native false, 강제 frame-stream 후보는 322571>48981로 이 후보만 기각",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C07",
+   "contract_ids": [
+    "C07",
+    "C08"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M82/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M82/producer/REPORT_KO.md",
+    "evidence/M82/qa/REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M82-X2",
+   "module_id": "M82",
+   "input_ko": "palette count0=256 (합성 bytes)",
+   "expected_ko": "palette count0=256 (합성 bytes)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C07",
+   "contract_ids": [
+    "C07",
+    "C08"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M82/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M82/producer/REPORT_KO.md",
+    "evidence/M82/qa/REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M83-A01",
+   "module_id": "M83",
+   "input_ko": "pixel malloc 실패 뒤 metadata rollback을 임의로 추가하지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: pixel malloc 실패 뒤 metadata rollback을 임의로 추가하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M83/producer/REPORT_KO.md",
+    "evidence/M83/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M83/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M83-X1",
+   "module_id": "M83",
+   "input_ko": "read_info 이후 오류의 W/H 유지, signature 실패 무기록, 미지원 color는 F 유지, read_image 오류 false는 조건부",
+   "expected_ko": "read_info 이후 오류의 W/H 유지, signature 실패 무기록, 미지원 color는 F 유지, read_image 오류 false는 조건부",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M83/producer/REPORT_KO.md",
+    "evidence/M83/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M83/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M83-X2",
+   "module_id": "M83",
+   "input_ko": "H65536 16bit counter 비종료는 DESIGN 거부, callback signed32 end wrap은 통과하지만 표시",
+   "expected_ko": "H65536 16bit counter 비종료는 DESIGN 거부, callback signed32 end wrap은 통과하지만 표시",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M83/producer/REPORT_KO.md",
+    "evidence/M83/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M83/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M83-X3",
+   "module_id": "M83",
+   "input_ko": "Texture filename 복사가 size guard보다 먼저, 0/음수는 size guard가 직접 거부하지 않음",
+   "expected_ko": "Texture filename 복사가 size guard보다 먼저, 0/음수는 size guard가 직접 거부하지 않음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M83/producer/REPORT_KO.md",
+    "evidence/M83/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M83/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M84-A01",
+   "module_id": "M84",
+   "input_ko": "power state0/1/다른 nonzero와 force0/1을 분리한다.",
+   "expected_ko": "패키지 제안 인수시험: power state0/1/다른 nonzero와 force0/1을 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M84/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M84/producer/VISIBILITY_PRODUCERS_KO.md",
+    "evidence/M84/qa/QA_84_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M84-X1",
+   "module_id": "M84",
+   "input_ko": "0은 retained 값(erase 아님), 정확히1만 visibility를 막음",
+   "expected_ko": "0은 retained 값(erase 아님), 정확히1만 visibility를 막음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M84/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M84/producer/VISIBILITY_PRODUCERS_KO.md",
+    "evidence/M84/qa/QA_84_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M84-X2",
+   "module_id": "M84",
+   "input_ko": "AppDelegate gate 두 번 호출 0→4는 false, gate true면 event/blocker 생략",
+   "expected_ko": "AppDelegate gate 두 번 호출 0→4는 false, gate true면 event/blocker 생략",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M84/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M84/producer/VISIBILITY_PRODUCERS_KO.md",
+    "evidence/M84/qa/QA_84_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M84-X3",
+   "module_id": "M84",
+   "input_ko": "LayoutManager A/C/B 순차 membership, clear는 순수 B, cast 실패 skip",
+   "expected_ko": "LayoutManager A/C/B 순차 membership, clear는 순수 B, cast 실패 skip",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M84/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M84/producer/VISIBILITY_PRODUCERS_KO.md",
+    "evidence/M84/qa/QA_84_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M84-X4",
+   "module_id": "M84",
+   "input_ko": "GLFW focus event 이름은 focused==1 정확 일치",
+   "expected_ko": "GLFW focus event 이름은 focused==1 정확 일치",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M84/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M84/producer/VISIBILITY_PRODUCERS_KO.md",
+    "evidence/M84/qa/QA_84_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M85-A01",
+   "module_id": "M85",
+   "input_ko": "AL false여도 list size2면 다음 gate를 통과하는 계약을 확인한다.",
+   "expected_ko": "패키지 제안 인수시험: AL false여도 list size2면 다음 gate를 통과하는 계약을 확인한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M85/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M85/producer/REPORT_KO.md",
+    "evidence/M85/qa/REPORT_KO.md",
+    "evidence/M85/qa/REQUIRED_CALLER_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M85-X1",
+   "module_id": "M85",
+   "input_ko": "01C0E470 category mask {5,12,32,42}와 category2/5 인자",
+   "expected_ko": "01C0E470 category mask {5,12,32,42}와 category2/5 인자",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M85/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M85/producer/REPORT_KO.md",
+    "evidence/M85/qa/REPORT_KO.md",
+    "evidence/M85/qa/REQUIRED_CALLER_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M85-X2",
+   "module_id": "M85",
+   "input_ko": "abs32 INT_MIN 보존, x sar1 거리식, accept budget 식",
+   "expected_ko": "abs32 INT_MIN 보존, x sar1 거리식, accept budget 식",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M85/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M85/producer/REPORT_KO.md",
+    "evidence/M85/qa/REPORT_KO.md",
+    "evidence/M85/qa/REQUIRED_CALLER_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M85-X3",
+   "module_id": "M85",
+   "input_ko": "동일 좌표 즉시 true, initial H는 signed range>0일 때만",
+   "expected_ko": "동일 좌표 즉시 true, initial H는 signed range>0일 때만",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C10",
+   "contract_ids": [
+    "C10",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M85/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M85/producer/REPORT_KO.md",
+    "evidence/M85/qa/REPORT_KO.md",
+    "evidence/M85/qa/REQUIRED_CALLER_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M86-A01",
+   "module_id": "M86",
+   "input_ko": "정상 helper 반환 조건과 중단 prefix를 구별한다.",
+   "expected_ko": "패키지 제안 인수시험: 정상 helper 반환 조건과 중단 prefix를 구별한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M86/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M86/producer/REPORT_KO.md",
+    "evidence/M86/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M86/qa/REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M86-X1",
+   "module_id": "M86",
+   "input_ko": "pool shutdown 상대순서 UNKNOWN, 기록된 edge만 BEFORE/AFTER, owner 종류 분리",
+   "expected_ko": "pool shutdown 상대순서 UNKNOWN, 기록된 edge만 BEFORE/AFTER, owner 종류 분리",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M86/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M86/producer/REPORT_KO.md",
+    "evidence/M86/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M86/qa/REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M87-A01",
+   "module_id": "M87",
+   "input_ko": "callback이 상태를 바꾸는 경우와 sticky state3을 state1과 구분한다.",
+   "expected_ko": "패키지 제안 인수시험: callback이 상태를 바꾸는 경우와 sticky state3을 state1과 구분한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C12",
+   "contract_ids": [
+    "C12"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M87/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M87/producer/REPORT_KO.md",
+    "evidence/M87/qa/QA_87_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M87-X1",
+   "module_id": "M87",
+   "input_ko": "focus -1: unfocused custom event, native release loop 없음",
+   "expected_ko": "focus -1: unfocused custom event, native release loop 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C12",
+   "contract_ids": [
+    "C12"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M87/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M87/producer/REPORT_KO.md",
+    "evidence/M87/qa/QA_87_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M87-X2",
+   "module_id": "M87",
+   "input_ko": "게임 consumer: block31이면 방향 release 무시, C4/C5",
+   "expected_ko": "게임 consumer: block31이면 방향 release 무시, C4/C5",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C12",
+   "contract_ids": [
+    "C12"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M87/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M87/producer/REPORT_KO.md",
+    "evidence/M87/qa/QA_87_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M88-A01",
+   "module_id": "M88",
+   "input_ko": "C/A 경계에서 /255 반올림 식으로 바꾸지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: C/A 경계에서 /255 반올림 식으로 바꾸지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M88/producer/REPORT_KO.md",
+    "evidence/M88/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M88/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M88-X1",
+   "module_id": "M88",
+   "input_ko": "premultiply는 global!=0 && color6, w*h<=0이면 flag만1",
+   "expected_ko": "premultiply는 global!=0 && color6, w*h<=0이면 flag만1",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M88/producer/REPORT_KO.md",
+    "evidence/M88/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M88/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M88-X2",
+   "module_id": "M88",
+   "input_ko": "converter 반환은 format enum, alias passthrough, N6 alloc3/write2, malloc-null·음수길이는 거부",
+   "expected_ko": "converter 반환은 format enum, alias passthrough, N6 alloc3/write2, malloc-null·음수길이는 거부",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M88/producer/REPORT_KO.md",
+    "evidence/M88/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M88/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M88-X3",
+   "module_id": "M88",
+   "input_ko": "format4=RGB565 실제 descriptor, 실제 64x64 fixture는 전부 alpha255(반투명은 합성)",
+   "expected_ko": "format4=RGB565 실제 descriptor, 실제 64x64 fixture는 전부 alpha255(반투명은 합성)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M88/producer/REPORT_KO.md",
+    "evidence/M88/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M88/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M89-A01",
+   "module_id": "M89",
+   "input_ko": "pixel alpha와 vertex opacity를 별도로 바꾸고 갱신0/1/2회를 분리한다.",
+   "expected_ko": "패키지 제안 인수시험: pixel alpha와 vertex opacity를 별도로 바꾸고 갱신0/1/2회를 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M89/producer/REPORT_KO.md",
+    "evidence/M89/qa/CORRECTIONS_KO.md",
+    "evidence/M89/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M89/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M89-X1",
+   "module_id": "M89",
+   "input_ko": "same pointer/mode3 tail 생략 시 refresh 횟수",
+   "expected_ko": "same pointer/mode3 tail 생략 시 refresh 횟수",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M89/producer/REPORT_KO.md",
+    "evidence/M89/qa/CORRECTIONS_KO.md",
+    "evidence/M89/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M89/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M89-X2",
+   "module_id": "M89",
+   "input_ko": "type101 분기·loader-null hide 분리, override 전 기본 pair",
+   "expected_ko": "type101 분기·loader-null hide 분리, override 전 기본 pair",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M89/producer/REPORT_KO.md",
+    "evidence/M89/qa/CORRECTIONS_KO.md",
+    "evidence/M89/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M89/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M90-A01",
+   "module_id": "M90",
+   "input_ko": "기존 program state nonnull에서 선택 요청을 새로 만들지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: 기존 program state nonnull에서 선택 요청을 새로 만들지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M90/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/producer/REPORT_KO.md",
+    "evidence/M90/qa/CORRECTIONS_KO.md",
+    "evidence/M90/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M90-X1",
+   "module_id": "M90",
+   "input_ko": "Texture+78→q+1C nonzero(0xFFFFFFFF 포함)+정확한 이름만 치환",
+   "expected_ko": "Texture+78→q+1C nonzero(0xFFFFFFFF 포함)+정확한 이름만 치환",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M90/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/producer/REPORT_KO.md",
+    "evidence/M90/qa/CORRECTIONS_KO.md",
+    "evidence/M90/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M90-X2",
+   "module_id": "M90",
+   "input_ko": "cache hit는 null도 그대로, init false는 release 후 같은 bits 반환",
+   "expected_ko": "cache hit는 null도 그대로, init false는 release 후 같은 bits 반환",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M90/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/producer/REPORT_KO.md",
+    "evidence/M90/qa/CORRECTIONS_KO.md",
+    "evidence/M90/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M90-X3",
+   "module_id": "M90",
+   "input_ko": "기본 setter release→store→retain→reload→bind, 동일 값 no-op",
+   "expected_ko": "기본 setter release→store→retain→reload→bind, 동일 값 no-op",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M90/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/producer/REPORT_KO.md",
+    "evidence/M90/qa/CORRECTIONS_KO.md",
+    "evidence/M90/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M90/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M91-A01",
+   "module_id": "M91",
+   "input_ko": "초기 duplicate flag0과 growth 후 equality를 같은 분기로 합치지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: 초기 duplicate flag0과 growth 후 equality를 같은 분기로 합치지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M91/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/producer/REPORT_KO.md",
+    "evidence/M91/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M91-X1",
+   "module_id": "M91",
+   "input_ko": "FNV-1a 8 pointer bytes (합성 pointer 값)",
+   "expected_ko": "FNV-1a 8 pointer bytes (합성 pointer 값)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M91/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/producer/REPORT_KO.md",
+    "evidence/M91/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M91-X2",
+   "module_id": "M91",
+   "input_ko": "insertion helper는 old release보다 candidate retain이 먼저",
+   "expected_ko": "insertion helper는 old release보다 candidate retain이 먼저",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M91/producer/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/producer/REPORT_KO.md",
+    "evidence/M91/qa/MANDATORY_QA_NOTES_KO.md",
+    "evidence/M91/qa/QA_REPORT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M92-A01",
+   "module_id": "M92",
+   "input_ko": "layer31/32 반례를 unsigned mask와 signed ref로 각각 비교한다.",
+   "expected_ko": "패키지 제안 인수시험: layer31/32 반례를 unsigned mask와 signed ref로 각각 비교한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M92/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M92/producer/REPORT_KO.md",
+    "evidence/M92/producer/REVISION_NOTES_KO.md",
+    "evidence/M92/qa/QA_REPORT_KO.md",
+    "evidence/M92/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M92-X1",
+   "module_id": "M92",
+   "input_ko": "0<=layer<min(B,31) 정상 교집합 (합성 B=8)",
+   "expected_ko": "0<=layer<min(B,31) 정상 교집합 (합성 B=8)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M92/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M92/producer/REPORT_KO.md",
+    "evidence/M92/producer/REVISION_NOTES_KO.md",
+    "evidence/M92/qa/QA_REPORT_KO.md",
+    "evidence/M92/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M92-X2",
+   "module_id": "M92",
+   "input_ko": "inverted stencilOp, threshold<1일 때만 alpha 요청",
+   "expected_ko": "inverted stencilOp, threshold<1일 때만 alpha 요청",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M92/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M92/producer/REPORT_KO.md",
+    "evidence/M92/producer/REVISION_NOTES_KO.md",
+    "evidence/M92/qa/QA_REPORT_KO.md",
+    "evidence/M92/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M92-X3",
+   "module_id": "M92",
+   "input_ko": "afterVisit 부분 복원, 재enable/depth 복원 없음",
+   "expected_ko": "afterVisit 부분 복원, 재enable/depth 복원 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M92/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M92/producer/REPORT_KO.md",
+    "evidence/M92/producer/REVISION_NOTES_KO.md",
+    "evidence/M92/qa/QA_REPORT_KO.md",
+    "evidence/M92/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M93-A01",
+   "module_id": "M93",
+   "input_ko": "raw GLboolean2와 helper canonical1을 같은 byte로 간주하지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: raw GLboolean2와 helper canonical1을 같은 byte로 간주하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M93/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M93/producer/REPORT_KO.md",
+    "evidence/M93/qa/QA_REPORT_KO.md",
+    "evidence/M93/qa/REQUIRED_NOTES_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M93-X1",
+   "module_id": "M93",
+   "input_ko": "no-restore false source는 true cache를 지우지 않음, bind=restore→no-restore",
+   "expected_ko": "no-restore false source는 true cache를 지우지 않음, bind=restore→no-restore",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M93/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M93/producer/REPORT_KO.md",
+    "evidence/M93/qa/QA_REPORT_KO.md",
+    "evidence/M93/qa/REQUIRED_NOTES_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M93-X2",
+   "module_id": "M93",
+   "input_ko": "stencil callable swap: raw manager 복사, null 유지, invoke null guard 없음",
+   "expected_ko": "stencil callable swap: raw manager 복사, null 유지, invoke null guard 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C13",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M93/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M93/producer/REPORT_KO.md",
+    "evidence/M93/qa/QA_REPORT_KO.md",
+    "evidence/M93/qa/REQUIRED_NOTES_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M94-A01",
+   "module_id": "M94",
+   "input_ko": "shader literal과 요청 uniform 이름을 대조하되 GPU 성공으로 표시하지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: shader literal과 요청 uniform 이름을 대조하되 GPU 성공으로 표시하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M94/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M94/producer/REPORT_KO.md",
+    "evidence/M94/qa/QA_REPORT_KO.md",
+    "evidence/M94/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M94-X1",
+   "module_id": "M94",
+   "input_ko": "link 실패도 updateUniforms/이름 삽입 요청, duplicate는 기존 payload 유지",
+   "expected_ko": "link 실패도 updateUniforms/이름 삽입 요청, duplicate는 기존 payload 유지",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C18",
+   "contract_ids": [
+    "C18",
+    "C14"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M94/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M94/producer/REPORT_KO.md",
+    "evidence/M94/qa/QA_REPORT_KO.md",
+    "evidence/M94/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M95-A01",
+   "module_id": "M95",
+   "input_ko": "첫 max가0이면 뒤 양수 max를 찾지 않고 호출 순서대로 비교한다.",
+   "expected_ko": "패키지 제안 인수시험: 첫 max가0이면 뒤 양수 max를 찾지 않고 호출 순서대로 비교한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M95/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M95/producer/REPORT_KO.md",
+    "evidence/M95/qa/REPORT_KO.md",
+    "evidence/M95/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M95-X1",
+   "module_id": "M95",
+   "input_ko": "current<=0 D1DA 후 뒤 read 생략, membership 없으면 continue",
+   "expected_ko": "current<=0 D1DA 후 뒤 read 생략, membership 없으면 continue",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M95/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M95/producer/REPORT_KO.md",
+    "evidence/M95/qa/REPORT_KO.md",
+    "evidence/M95/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M95-X2",
+   "module_id": "M95",
+   "input_ko": "remap cycle은 표시(가상 reject 없음), remap restart, 음수 비정규화",
+   "expected_ko": "remap cycle은 표시(가상 reject 없음), remap restart, 음수 비정규화",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C15"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M95/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M95/producer/REPORT_KO.md",
+    "evidence/M95/qa/REPORT_KO.md",
+    "evidence/M95/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M96-A01",
+   "module_id": "M96",
+   "input_ko": "source-null과 stage별 status를 별개의 입력으로 둔다.",
+   "expected_ko": "패키지 제안 인수시험: source-null과 stage별 status를 별개의 입력으로 둔다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M96/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M96/producer/REPORT_KO.md",
+    "evidence/M96/qa/QA_REPORT_KO.md",
+    "evidence/M96/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M96-X1",
+   "module_id": "M96",
+   "input_ko": "실제 prelude 425B와 4-fragment ShaderSource 배열, lengths=NULL",
+   "expected_ko": "실제 prelude 425B와 4-fragment ShaderSource 배열, lengths=NULL",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M96/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M96/producer/REPORT_KO.md",
+    "evidence/M96/qa/QA_REPORT_KO.md",
+    "evidence/M96/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M96-X2",
+   "module_id": "M96",
+   "input_ko": "define 변환: empty는 output 유지, 토큰별 \\n#define",
+   "expected_ko": "define 변환: empty는 output 유지, 토큰별 \\n#define",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M96/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M96/producer/REPORT_KO.md",
+    "evidence/M96/qa/QA_REPORT_KO.md",
+    "evidence/M96/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M97-A01",
+   "module_id": "M97",
+   "input_ko": "같은 BonusID 중복과 missing link를 보존하며 level 필터를 임의 추가하지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: 같은 BonusID 중복과 missing link를 보존하며 level 필터를 임의 추가하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M97/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M97/producer/REPORT_KO.md",
+    "evidence/M97/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M97/qa/REPORT_KO.md",
+    "evidence/M97/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M97-X1",
+   "module_id": "M97",
+   "input_ko": "초기화 후 hit는 cache 목록 반환(stale 허용), manager miss는 빈 목록 캐시",
+   "expected_ko": "초기화 후 hit는 cache 목록 반환(stale 허용), manager miss는 빈 목록 캐시",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M97/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M97/producer/REPORT_KO.md",
+    "evidence/M97/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M97/qa/REPORT_KO.md",
+    "evidence/M97/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M98-A01",
+   "module_id": "M98",
+   "input_ko": "location -1/-2/0과 같은 float의 다른 byte pattern을 분리한다.",
+   "expected_ko": "패키지 제안 인수시험: location -1/-2/0과 같은 float의 다른 byte pattern을 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M98/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M98/producer/REPORT_KO.md",
+    "evidence/M98/qa/QA_REPORT_KO.md",
+    "evidence/M98/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M98-X1",
+   "module_id": "M98",
+   "input_ko": "shrink 시 저장 size/suffix 유지, matrix 요청 transpose0",
+   "expected_ko": "shrink 시 저장 size/suffix 유지, matrix 요청 transpose0",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M98/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M98/producer/REPORT_KO.md",
+    "evidence/M98/qa/QA_REPORT_KO.md",
+    "evidence/M98/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M99-A01",
+   "module_id": "M99",
+   "input_ko": "음수/zero counter를 clamp하지 않고 전체 overwrite를 검증한다.",
+   "expected_ko": "패키지 제안 인수시험: 음수/zero counter를 clamp하지 않고 전체 overwrite를 검증한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M99/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M99/producer/REPORT_KO.md",
+    "evidence/M99/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M99/qa/REPORT_KO.md",
+    "evidence/M99/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M99-X1",
+   "module_id": "M99",
+   "input_ko": "동일값도 dispatch, null event도 sink 요청",
+   "expected_ko": "동일값도 dispatch, null event도 sink 요청",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M99/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M99/producer/REPORT_KO.md",
+    "evidence/M99/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M99/qa/REPORT_KO.md",
+    "evidence/M99/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M99-X2",
+   "module_id": "M99",
+   "input_ko": "raw writer key와 remapped reader 분리, packet node+24 getter",
+   "expected_ko": "raw writer key와 remapped reader 분리, packet node+24 getter",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M99/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M99/producer/REPORT_KO.md",
+    "evidence/M99/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M99/qa/REPORT_KO.md",
+    "evidence/M99/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M99-X3",
+   "module_id": "M99",
+   "input_ko": "parser: 미수신 field 0 유지, 중복 마지막 값, reset529 all-clear",
+   "expected_ko": "parser: 미수신 field 0 유지, 중복 마지막 값, reset529 all-clear",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M99/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M99/producer/REPORT_KO.md",
+    "evidence/M99/producer/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M99/qa/REPORT_KO.md",
+    "evidence/M99/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M100-A01",
+   "module_id": "M100",
+   "input_ko": "첫 slot·두 번째 slot·세 번 BulletID read를 독립 관측으로 둔다.",
+   "expected_ko": "패키지 제안 인수시험: 첫 slot·두 번째 slot·세 번 BulletID read를 독립 관측으로 둔다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M100/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M100/producer/REPORT_KO.md",
+    "evidence/M100/qa/REPORT_KO.md",
+    "evidence/M100/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M100-X1",
+   "module_id": "M100",
+   "input_ko": "flag35 hide 먼저, flag34+count>0이면 9EE",
+   "expected_ko": "flag35 hide 먼저, flag34+count>0이면 9EE",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M100/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M100/producer/REPORT_KO.md",
+    "evidence/M100/qa/REPORT_KO.md",
+    "evidence/M100/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M100-X2",
+   "module_id": "M100",
+   "input_ko": "spellId miss=0, mapping miss는 stack count 유지, Loaded row miss는 무가드(거부)",
+   "expected_ko": "spellId miss=0, mapping miss는 stack count 유지, Loaded row miss는 무가드(거부)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M100/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M100/producer/REPORT_KO.md",
+    "evidence/M100/qa/REPORT_KO.md",
+    "evidence/M100/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M100-X3",
+   "module_id": "M100",
+   "input_ko": "formatter mode1 signed count, clamp 없음",
+   "expected_ko": "formatter mode1 signed count, clamp 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M100/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M100/producer/REPORT_KO.md",
+    "evidence/M100/qa/REPORT_KO.md",
+    "evidence/M100/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M101-A01",
+   "module_id": "M101",
+   "input_ko": "matrix alias와 비중첩 copy 전제를 구별하고 연산 순서를 대조한다.",
+   "expected_ko": "패키지 제안 인수시험: matrix alias와 비중첩 copy 전제를 구별하고 연산 순서를 대조한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M101/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M101/producer/REPORT_KO.md",
+    "evidence/M101/qa/QA_REPORT_KO.md",
+    "evidence/M101/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M101-X1",
+   "module_id": "M101",
+   "input_ko": "실제 007F33B0 64B는 file상 identity (uploaded MVP identity 주장 아님)",
+   "expected_ko": "실제 007F33B0 64B는 file상 identity (uploaded MVP identity 주장 아님)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C18"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M101/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M101/producer/REPORT_KO.md",
+    "evidence/M101/qa/QA_REPORT_KO.md",
+    "evidence/M101/qa/SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M102-A01",
+   "module_id": "M102",
+   "input_ko": "full-row+20으로 잘못 읽지 않고 reload→ammo→refresh 순서를 지킨다.",
+   "expected_ko": "패키지 제안 인수시험: full-row+20으로 잘못 읽지 않고 reload→ammo→refresh 순서를 지킨다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M102/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M102/producer/REPORT_KO.md",
+    "evidence/M102/producer/REQUIRED_COMPANION_KO.md",
+    "evidence/M102/qa/REPORT_KO.md",
+    "evidence/M102/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M102-X1",
+   "module_id": "M102",
+   "input_ko": "bullet1!=capture id면 refresh 없음, cast null은 쓰기 전 반환, 세 번 fresh BulletID read",
+   "expected_ko": "bullet1!=capture id면 refresh 없음, cast null은 쓰기 전 반환, 세 번 fresh BulletID read",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C20",
+   "contract_ids": [
+    "C20",
+    "C17",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M102/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M102/producer/REPORT_KO.md",
+    "evidence/M102/producer/REQUIRED_COMPANION_KO.md",
+    "evidence/M102/qa/REPORT_KO.md",
+    "evidence/M102/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M103-A01",
+   "module_id": "M103",
+   "input_ko": "중복 호출과 false cleanup, hidden/page mismatch를 별도로 검사한다.",
+   "expected_ko": "패키지 제안 인수시험: 중복 호출과 false cleanup, hidden/page mismatch를 별도로 검사한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C13",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M103/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M103/producer/REPORT_KO.md",
+    "evidence/M103/qa/REPORT_KO.md",
+    "evidence/M103/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M103-X1",
+   "module_id": "M103",
+   "input_ko": "current_page_88+first_count page 허용, page/button 누락·타입 불일치는 0이 아님",
+   "expected_ko": "current_page_88+first_count page 허용, page/button 누락·타입 불일치는 0이 아님",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C13",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M103/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M103/producer/REPORT_KO.md",
+    "evidence/M103/qa/REPORT_KO.md",
+    "evidence/M103/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M103-X2",
+   "module_id": "M103",
+   "input_ko": "위치식 round32 단계와 size/2.0f (합성 좌표)",
+   "expected_ko": "위치식 round32 단계와 size/2.0f (합성 좌표)",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C13",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M103/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M103/producer/REPORT_KO.md",
+    "evidence/M103/qa/REPORT_KO.md",
+    "evidence/M103/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M104-A01",
+   "module_id": "M104",
+   "input_ko": "선택목록 순서·중복과 downstream live instance를 동일시하지 않는다.",
+   "expected_ko": "패키지 제안 인수시험: 선택목록 순서·중복과 downstream live instance를 동일시하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M104/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M104/producer/REPORT_KO.md",
+    "evidence/M104/qa/ASM_SEMANTIC_AUDIT_KO.md",
+    "evidence/M104/qa/QA_REPORT_KO.md",
+    "evidence/M104/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M104-X1",
+   "module_id": "M104",
+   "input_ko": "peer 있고 component 없으면 pending fallback 없음, component 있으면 즉시 reconcile",
+   "expected_ko": "peer 있고 component 없으면 pending fallback 없음, component 있으면 즉시 reconcile",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M104/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M104/producer/REPORT_KO.md",
+    "evidence/M104/qa/ASM_SEMANTIC_AUDIT_KO.md",
+    "evidence/M104/qa/QA_REPORT_KO.md",
+    "evidence/M104/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M104-X2",
+   "module_id": "M104",
+   "input_ko": "mode1은 self owner만 augmentation, unsigned index>1 dispose",
+   "expected_ko": "mode1은 self owner만 augmentation, unsigned index>1 dispose",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M104/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M104/producer/REPORT_KO.md",
+    "evidence/M104/qa/ASM_SEMANTIC_AUDIT_KO.md",
+    "evidence/M104/qa/QA_REPORT_KO.md",
+    "evidence/M104/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M104-X3",
+   "module_id": "M104",
+   "input_ko": "physical [grade,deck] bytes 대 signed(deck,grade) 순서, 비정렬 table 거부, growth 규칙",
+   "expected_ko": "physical [grade,deck] bytes 대 signed(deck,grade) 순서, 비정렬 table 거부, growth 규칙",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C04"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M104/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M104/producer/REPORT_KO.md",
+    "evidence/M104/qa/ASM_SEMANTIC_AUDIT_KO.md",
+    "evidence/M104/qa/QA_REPORT_KO.md",
+    "evidence/M104/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M105-A01",
+   "module_id": "M105",
+   "input_ko": "tag2329를 authored actionTag/nodeTag와 합치지 않고 key75=_01을 확인한다.",
+   "expected_ko": "패키지 제안 인수시험: tag2329를 authored actionTag/nodeTag와 합치지 않고 key75=_01을 확인한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M105/producer/REPORT_KO.md",
+    "evidence/M105/qa/REPORT_KO.md",
+    "evidence/M105/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M105-R01",
+   "module_id": "M105",
+   "input_ko": "실제 CSB 5816B의 SHA256과 기록된 모든 int32/byte offset 값 대조",
+   "expected_ko": "실제 CSB 5816B의 SHA256과 기록된 모든 int32/byte offset 값 대조",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M105/producer/REPORT_KO.md",
+    "evidence/M105/qa/REPORT_KO.md",
+    "evidence/M105/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M105-X1",
+   "module_id": "M105",
+   "input_ko": "Alpha slot3 easing 비소비, 실제 frame65 alpha 25/38, Start 이름·18 root texture",
+   "expected_ko": "Alpha slot3 easing 비소비, 실제 frame65 alpha 25/38, Start 이름·18 root texture",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M105/producer/REPORT_KO.md",
+    "evidence/M105/qa/REPORT_KO.md",
+    "evidence/M105/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M106-A01",
+   "module_id": "M106",
+   "input_ko": "Texture1.r와Texture1.a를 다르게 주는 제안 사례로 alpha source를 구별한다.",
+   "expected_ko": "패키지 제안 인수시험: Texture1.r와Texture1.a를 다르게 주는 제안 사례로 alpha source를 구별한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M106/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M106/producer/REPORT_KO.md",
+    "evidence/M106/qa/QA_REPORT_KO.md",
+    "evidence/M106/qa/REQUIRED_SCOPE_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M106-X1",
+   "module_id": "M106",
+   "input_ko": "type1/31만 선택, init/link bool gate 없음",
+   "expected_ko": "type1/31만 선택, init/link bool gate 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C14",
+   "contract_ids": [
+    "C14",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M106/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M106/producer/REPORT_KO.md",
+    "evidence/M106/qa/QA_REPORT_KO.md",
+    "evidence/M106/qa/REQUIRED_SCOPE_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M107-A01",
+   "module_id": "M107",
+   "input_ko": "생성 후 reparent된 경우 현재 parent 기준의 정리 요청을 유지한다.",
+   "expected_ko": "패키지 제안 인수시험: 생성 후 reparent된 경우 현재 parent 기준의 정리 요청을 유지한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M107/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M107/producer/REPORT_KO.md",
+    "evidence/M107/qa/REPORT_KO.md",
+    "evidence/M107/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M107-X1",
+   "module_id": "M107",
+   "input_ko": "parent null이면 remove 생략·release 유지, removeChild 후 +18 재조회, node-null gate, flags&1 free",
+   "expected_ko": "parent null이면 remove 생략·release 유지, removeChild 후 +18 재조회, node-null gate, flags&1 free",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C13",
+   "contract_ids": [
+    "C13",
+    "C11"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M107/producer/MANUAL_PSEUDOCODE.txt",
+    "evidence/M107/producer/REPORT_KO.md",
+    "evidence/M107/qa/REPORT_KO.md",
+    "evidence/M107/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M108-A01",
+   "module_id": "M108",
+   "input_ko": "선택16개 frame 이름·rectangle·원본 PNG hash를 데이터로 대조한다.",
+   "expected_ko": "패키지 제안 인수시험: 선택16개 frame 이름·rectangle·원본 PNG hash를 데이터로 대조한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M108/producer/FRAME_TABLE_KO.md",
+    "evidence/M108/producer/REPORT_KO.md",
+    "evidence/M108/qa/REPORT_KO.md",
+    "evidence/M108/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M108-R01",
+   "module_id": "M108",
+   "input_ko": "실제 plist 2개의 선택16 frame 문자열/rotated와 asset4개 SHA256 대조",
+   "expected_ko": "실제 plist 2개의 선택16 frame 문자열/rotated와 asset4개 SHA256 대조",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M108/producer/FRAME_TABLE_KO.md",
+    "evidence/M108/producer/REPORT_KO.md",
+    "evidence/M108/qa/REPORT_KO.md",
+    "evidence/M108/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M108-X1",
+   "module_id": "M108",
+   "input_ko": "runtime SpriteFrame·metadata PMA 주장 없음",
+   "expected_ko": "runtime SpriteFrame·metadata PMA 주장 없음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C11",
+   "contract_ids": [
+    "C11",
+    "C20"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M108/producer/FRAME_TABLE_KO.md",
+    "evidence/M108/producer/REPORT_KO.md",
+    "evidence/M108/qa/REPORT_KO.md",
+    "evidence/M108/qa/REQUIRED_SCOPE_COMPANION_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M109-A01",
+   "module_id": "M109",
+   "input_ko": "이미 associated이면 pending을 적용하지 않으며 callback 뒤 현재값과 pending 보존을 확인한다.",
+   "expected_ko": "패키지 제안 인수시험: 이미 associated이면 pending을 적용하지 않으며 callback 뒤 현재값과 pending 보존을 확인한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M109/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M109/producer/REPORT_KO.md",
+    "evidence/M109/qa/QA_REPORT_KO.md",
+    "evidence/M109/qa/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M109/qa/SEMANTIC_AUDIT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M109-X1",
+   "module_id": "M109",
+   "input_ko": "pending empty면 reconcile 없음, factory-null caller guard를 만들지 않음",
+   "expected_ko": "pending empty면 reconcile 없음, factory-null caller guard를 만들지 않음",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M109/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M109/producer/REPORT_KO.md",
+    "evidence/M109/qa/QA_REPORT_KO.md",
+    "evidence/M109/qa/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M109/qa/SEMANTIC_AUDIT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M109-X2",
+   "module_id": "M109",
+   "input_ko": "controller DL0은 raw slot에 opaque 01CAC840",
+   "expected_ko": "controller DL0은 raw slot에 opaque 01CAC840",
+   "basis": "DESIGN_CASE_FROM_PACKAGE_EVIDENCE",
+   "contract_id": "C09",
+   "contract_ids": [
+    "C09",
+    "C13"
+   ],
+   "phase": "EXT_82_109",
+   "source_refs": [
+    "evidence/M109/producer/MANUAL_PSEUDOCODE.md",
+    "evidence/M109/producer/REPORT_KO.md",
+    "evidence/M109/qa/QA_REPORT_KO.md",
+    "evidence/M109/qa/REQUIRED_SCOPE_COMPANION_KO.md",
+    "evidence/M109/qa/SEMANTIC_AUDIT_KO.md"
+   ],
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+   "evidence_log": "tests/original_client_m82_m109_test.gd :: all checks passed"
+  }
+ ],
+ "recorded_run": {
+  "commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+  "fixture_sha256": "e9ad31df9419c0fc26f54d738c5f75f1ba71ba8ff75d088d96636aced66ab11a",
+  "executed": 87,
+  "markers": [
+   "ORIGINAL_CLIENT_M82_M109_RESULT"
+  ],
+  "godot": "4.7.2-stable headless"
+ }
+}
