@@ -31,6 +31,7 @@ func rules() -> void:
 	var other: Dictionary = native.duplicate(); other.source_category_name = "LuckyBag"
 	check(not TICKETS.claims(other) and not TICKETS.claims({"source_item_class_id":122784}), "other categories and non-original records are not claimed")
 	check(STACK.draw_ticket_profile({"source_category_name":"LinMarketProduct"}).is_empty(), "a ticket profile needs the exact current original record")
+	check(TICKETS.SPELL_DECK == 41 and TICKETS.SKILL_BOOKS != "" and not TICKETS.SKILL_BOOKS in ["변신","마법인형","성물"], "skill card pools have their own reward kind")
 
 func runtime(per_list: int) -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -59,7 +60,15 @@ func runtime(per_list: int) -> void:
 		var result: Dictionary = world.source_shop.use_inventory_ticket(name_value)
 		if is_instance_valid(world.hud.card_reveal_stage): world.hud.card_reveal_stage.close_reveal()
 		if result.get("ok", false):
-			check(int(world.inventory.get(name_value, 0)) == 0 and world.item_instances.is_empty(), "drawn ticket is debited through its physical receipt " + str(id))
+			if result.get("category") == TICKETS.SKILL_BOOKS:
+				# Drawn original skill cards arrive as their skill book stacks.
+				var books: int = 0
+				for entry: Variant in world.item_instances.values():
+					if entry is Dictionary and entry.has(STACK.RECEIPT): books += int(entry.get(STACK.QUANTITY, 0))
+				check(int(world.inventory.get(name_value, 0)) == 0 and books == int(result.get("count", 0)), "skill card draw debits the ticket and grants one original skill book per draw " + str(id))
+				outcome["skill_books"] = int(outcome.get("skill_books", 0)) + books
+			else:
+				check(int(world.inventory.get(name_value, 0)) == 0 and world.item_instances.is_empty(), "drawn ticket is debited through its physical receipt " + str(id))
 			outcome.drawn += 1; outcome.cards += int(result.get("count", 0))
 		else:
 			check(int(world.inventory.get(name_value, 0)) == 1, "refused ticket stays owned " + str(id))

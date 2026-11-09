@@ -17,6 +17,12 @@ const OriginalInput=preload("res://scripts/shop/current523_ticket_input.gd")
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
+const CASH_PACKAGES=preload("res://scripts/shop/source523_cash_packages.gd")
+## Original skill cards (BuffCardDeck 41 "Spell") are learned through their
+## original skill book item, as the cash-market packs deliver them; a drawn
+## skill card is granted as that book's physical stack.
+const SPELL_DECK:int=41
+const SKILL_BOOKS:String="스킬서"
 const MODEL_CODE:Array[String]=["res://scripts/shop/current523_ticket_input.gd","res://scripts/resources/current523_definition_rows.gd"]
 var owner_ref:WeakRef
 var runtime:
@@ -207,6 +213,20 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 		for entry:Dictionary in document.pools[pool_id]:
 			if int(entry.weight)==0:continue
 			var card_id:int=int(entry.card_id)
+			var spell:Dictionary=runtime.catalog.record("BuffCard",card_id)
+			if int(spell.get("BuffCardDeckID",0))==SPELL_DECK:
+				var book:int=CASH_PACKAGES.skill_book_for(card_id)
+				var book_record:Dictionary=DROPS.variant_item(DROPS.definition_id(str(book)).get("native_record",{}),1) if book>0 else {}
+				if int(spell.GradeID)!=int(entry.grade_id) or book_record.is_empty() or STACK.supply_profile(book_record).is_empty():missing.append(card_id);continue
+				var spell_server:Dictionary=runtime._server([] if int(spell.ServerLimitSetID)==0 else [int(spell.ServerLimitSetID)])
+				if not spell_server.ok:return spell_server
+				if int(spell.StartDateTimeID)!=0 or int(spell.EndDateTimeID)!=0:
+					var spell_window:Dictionary=runtime._window(runtime.catalog.record("DateTimes_Korean",int(spell.StartDateTimeID)),runtime.catalog.record("DateTimes_Korean",int(spell.EndDateTimeID)))
+					if not spell_window.ok:return spell_window
+				if category.is_empty():category=SKILL_BOOKS
+				if category!=SKILL_BOOKS:return runtime.fail("복수 분류 카드의 원본 선택 계약 필요")
+				candidates.append({"weight":int(entry.weight),"entry":{"kind":"skill_book","id":str(card_id),"spell_card_id":card_id,"item_class_id":book,"name":str(book_record.name)}})
+				continue
 			if not index.has(card_id):missing.append(card_id);continue
 			var bound:Dictionary=index[card_id];var original:Dictionary=runtime.catalog.record("BuffCard",card_id)
 			if original.is_empty() or int(original.GradeID)!=int(entry.grade_id) or int(bound.record.get("source_grade_id",0))!=int(original.GradeID) or bound.record.get("source_merge_out_disabled",false)!=original.IsNoMergeOut or bound.record.get("source_swap_out_disabled",false)!=original.IsNoSwapOut:return runtime.fail("원본 카드 등급·교체/합성 제한 정체 불일치")
@@ -247,6 +267,9 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 				cursor+=int(candidate.weight)
 				if roll<=cursor:chosen=candidate.entry;break
 			if chosen.is_empty():runtime._busy=false;return runtime.fail("원본 추첨 구간 누락 · 티켓/난수 보존")
+			if chosen.get("kind")=="skill_book":
+				results.append({"category":SKILL_BOOKS,"source_buff_card_id":int(chosen.spell_card_id),"item_class_id":int(chosen.item_class_id),"name":str(chosen.name)})
+				continue
 			if scratch.owned[str(prepared.category)].has(str(chosen.id)) and int(scratch.spare[str(prepared.category)].get(str(chosen.id),0))>=1000000:
 				runtime._busy=false;return runtime.fail("중복 카드 저장 한도 초과 · 티켓/난수 보존")
 			var received:Dictionary=scratch._receive(str(prepared.category),chosen)
@@ -264,6 +287,17 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	else:
 		inventory[name]=int(inventory[name])-1
 		if int(inventory[name])==0:inventory.erase(name)
+	if prepared.category==SKILL_BOOKS:
+		# Drawn skill cards arrive as their original skill book stacks.
+		var counts:Dictionary={}
+		for result:Dictionary in results:counts[int(result.item_class_id)]=int(counts.get(int(result.item_class_id),0))+1
+		var grants:Array=[]
+		for book:int in counts:grants.append({"item_class_id":book,"amount":int(counts[book]),"bless_raw":1,"enchant":0})
+		var view:=STACK.SupplierView.new();view.host=runtime.world;view.inventory=inventory;view.item_instances=instances;view.gold=int(runtime.world.gold)
+		var staged:Dictionary=load("res://scripts/loot/patch523_item_inventory.gd").stage(view,grants,{"kind":"source523_inventory_ticket_skill_card","ticket_item_class_id":int(prepared.source_item_id),"policy_sha256":loaded_sha})
+		view.free()
+		if not staged.get("ok",false):runtime._busy=false;return runtime.fail(str(staged.get("error","원본 스킬서 지급 후보 실패"))+" · 티켓/난수 보존")
+		inventory=staged.overrides.inventory;instances=staged.overrides.item_instances
 	var next:Dictionary=runtime.export_state()
 	var uses:int=int(previous.get("uses",0))
 	if uses>=runtime.LIMIT:runtime._busy=false;return runtime.fail("티켓 소비 이력 범위 초과")
@@ -274,6 +308,13 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	runtime.world.card_draw_fusion.import_state(scratch.export_state())
 	runtime.world._invalidate_equipment_static();runtime.world.card_collections.invalidate();runtime.world._update_hud()
 	var outcome:Dictionary={"ok":true,"category":prepared.category,"results":results,"count":results.size(),"consumed":1,"inventory_key":name,"source_item_id":prepared.source_item_id,"message":"소지 티켓1개 소비 · 원본 가중치 %d회 추첨 · TWILIGHT 소지품 소비 정책" % results.size()}
+	if prepared.category==SKILL_BOOKS:
+		var names:PackedStringArray=[]
+		for result:Dictionary in results:names.append(str(result.name))
+		outcome.message="소지 티켓1개 소비 · 원본 스킬 카드 %d회 추첨 · 원본 스킬서 지급: %s" % [results.size(),", ".join(names)]
+		runtime.world.hud.refresh_inventory(runtime.world.inventory)
+		runtime.world.hud.append_log(str(outcome.message))
+		return outcome
 	runtime.world.hud.set_card_draw_fusion_result(str(prepared.category),str(outcome.message))
 	runtime.world.hud.present_card_reveal(str(prepared.category),outcome,false)
 	return outcome
