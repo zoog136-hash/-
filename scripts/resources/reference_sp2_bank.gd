@@ -212,14 +212,16 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
-	var loaded: Dictionary = _json(manifest_path, expected_sha, true)
-	if not loaded.ok: return loaded
-	_manifest = loaded.value
+	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	# Same shared, storage-backed manifest view as load_bank(); _member() reads it.
+	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
+	if not opened.ok: return opened
+	_index = opened.index
+	_manifest = _index.top
 	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
 	var contract: Variant = _manifest.get("static_picture_contract")
 	if not contract is Dictionary or contract.get("branch") != "client_static_no_action_descriptor" or contract.get("frame") != "direction0_picture0" or not contract.get("evidence") is String: return fail("Bank has no client static picture contract.")
-	if not _manifest.get("static_pictures") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing static picture registry.")
+	if not _manifest.get("static_pictures") is Dictionary or not _index.registry_is_dictionary("members"): return fail("Missing static picture registry.")
 	var exclusions: Dictionary = _install_source_exclusions()
 	if not exclusions.ok: return exclusions
 	var admitted: Dictionary = source_actor_admission(source_sprite_id)
