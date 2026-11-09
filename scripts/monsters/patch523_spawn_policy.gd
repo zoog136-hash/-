@@ -4,6 +4,7 @@ extends RefCounted
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 const BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 const ORIGINAL = preload("res://scripts/monsters/base508_monster_context.gd")
+const DEFINITION_PREFERENCES = preload("res://scripts/maps/current523_source_definition_preferences.gd")
 static var catalogs: Dictionary = {}
 static var catalog_errors: Dictionary = {}
 
@@ -21,6 +22,14 @@ static func settings() -> Dictionary:
 		if arg.begins_with("--patch523-world-links-sha256="):
 			result.enabled = true; result.sha = arg.trim_prefix("--patch523-world-links-sha256=")
 	if result.enabled: return result
+	# The 523 resource pack installer records where it put the world links
+	# (the same selection 523 play mode binds); without this the installed
+	# definitions never reached monster spawning on 523 maps.
+	var selected: Dictionary = DEFINITION_PREFERENCES.read()
+	if selected.get("ok", false) and selected.get("configured", false):
+		var selected_manifest: String = str(selected.directory).path_join("manifest.json")
+		if FileAccess.file_exists(selected_manifest) and FileAccess.get_sha256(selected_manifest) == PINNED_PACK_SHA256:
+			return {"enabled": true, "root": str(selected.directory), "sha": PINNED_PACK_SHA256, "installed": true}
 	for candidate: String in INSTALLED_ROOTS:
 		var manifest: String = candidate.path_join("manifest.json")
 		if FileAccess.file_exists(manifest) and FileAccess.get_sha256(manifest) == PINNED_PACK_SHA256:
