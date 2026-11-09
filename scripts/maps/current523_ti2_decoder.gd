@@ -10,7 +10,9 @@ func _fail(message: String) -> PackedByteArray:
 	problem = message
 	return PackedByteArray()
 
-func decode_rgba(compressed: PackedByteArray, row: Dictionary) -> PackedByteArray:
+## `display`: after the pinned coverage check, apply the block-flag display
+## alpha (see display_alpha) to the returned copy.
+func decode_rgba(compressed: PackedByteArray, row: Dictionary, display: bool = false) -> PackedByteArray:
 	problem = ""
 	if not _uint(row.get("source_bytes"), MAX_SOURCE_BYTES) or int(row.source_bytes) < 1 or compressed.size() != int(row.source_bytes) or not _sha(row.get("source_sha256")) or _hash(compressed) != row.source_sha256:
 		return _fail("Original TI2 size or digest mismatch")
@@ -21,9 +23,9 @@ func decode_rgba(compressed: PackedByteArray, row: Dictionary) -> PackedByteArra
 	# to those exact bytes; no unbounded dynamic decompression is used here.
 	var decoded: PackedByteArray = compressed.decompress(int(row.decoded_bytes), FileAccess.COMPRESSION_BROTLI)
 	if decoded.size() != int(row.decoded_bytes): return _fail("Brotli TI2 output differs from the expected bounded size")
-	return decode_raw_rgba(decoded, row)
+	return decode_raw_rgba(decoded, row, display)
 
-func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary) -> PackedByteArray:
+func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary, display: bool = false) -> PackedByteArray:
 	problem = ""
 	if not _raw_identity(decoded, row): return _fail("Decoded TI2 metadata, digest or section mismatch")
 	var header: int = decoded.decode_u32(0)
@@ -87,8 +89,17 @@ func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary) -> PackedByteArr
 	var rgba := PackedByteArray()
 	rgba.resize(ATLAS_BYTES)
 	rgba.fill(0)
+	# The display copy is written in the same pass (one palette table per
+	# flag rule), so the coverage pin is still checked on untouched bytes.
+	var shown := PackedByteArray()
+	var tables: Array[PackedInt64Array] = []
+	if display:
+		shown.resize(ATLAS_BYTES)
+		shown.fill(0)
+		tables = display_tables(colors)
 	for frame: int in range(physical_count):
 		var block: Dictionary = blocks[frame]
+		var table: PackedInt64Array = tables[display_rule(int(block.flag))] if display else colors
 		var atlas_x: int = (frame % 16) * 24
 		var atlas_y: int = (frame >> 4) * 24
 		var pixel_end: int = position + int(block.pixels)
@@ -102,6 +113,7 @@ func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary) -> PackedByteArr
 					position += 1
 					if palette_index >= palette_count: return _fail("TI2 stored index exceeds unsigned palette")
 					rgba.encode_u32(destination + x * 4, colors[palette_index])
+					if display: shown.encode_u32(destination + x * 4, table[palette_index])
 		else:
 			var x_origin: int = int(block.x)
 			var x_base: int = x_origin
@@ -124,6 +136,7 @@ func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary) -> PackedByteArr
 						position += 1
 						if palette_index >= palette_count: return _fail("TI2 stored index exceeds unsigned palette")
 						rgba.encode_u32(destination + column * 4, colors[palette_index])
+						if display: shown.encode_u32(destination + column * 4, table[palette_index])
 				# Each command advances from its own x/count. Positive row_step
 				# resets x to the raw origin; commands are never grouped as RLE rows.
 				if row_step > 0:
@@ -134,7 +147,60 @@ func decode_raw_rgba(decoded: PackedByteArray, row: Dictionary) -> PackedByteArr
 		if position != pixel_end: return _fail("TI2 span/index consumption mismatch")
 	if position != decoded.size(): return _fail("Unconsumed decoded TI2 bytes")
 	if _hash(rgba) != row.atlas_rgba_sha256: return _fail("Runtime TI2 coverage RGBA differs from the pinned interpretation")
-	return rgba
+	return shown if display else rgba
+
+## Which display rule a block flag selects: 0 opaque, 1 half (bit 4),
+## 2 brightness (bit 16), 3 darkness (bit 32, wins over bit 16).
+static func display_rule(flag: int) -> int:
+	if (flag & 32) != 0: return 3
+	if (flag & 16) != 0: return 2
+	if (flag & 4) != 0: return 1
+	return 0
+
+## The RGBA8 palette (alpha 255) once per display rule.
+static func display_tables(colors: PackedInt64Array) -> Array[PackedInt64Array]:
+	var tables: Array[PackedInt64Array] = [colors]
+	for rule: int in [1, 2, 3]:
+		var table := PackedInt64Array()
+		table.resize(colors.size())
+		for index: int in colors.size():
+			var color: int = colors[index]
+			table[index] = (color & 0xFFFFFF) | (display_alpha_of(color & 255, (color >> 8) & 255, (color >> 16) & 255, rule) << 24)
+		tables.append(table)
+	return tables
+
+## One covered pixel's display alpha (8-bit RGB expanded from RGB565).
+static func display_alpha_of(red8: int, green8: int, blue8: int, rule: int) -> int:
+	if rule == 0: return 255
+	if rule == 1: return 128
+	var red: int = red8 >> 3
+	var green: int = green8 >> 2
+	var blue: int = blue8 >> 3
+	var rgb555: int = (red << 10) | ((green >> 1) << 5) | blue
+	var brightness: int = maxi(red, maxi(green >> 1, blue))
+	var alpha: int = ((31 - brightness) if rule == 3 else brightness) * 255 / 31
+	if rgb555 in [0, 0x0421, 0x7fff, 0x7fe0] or alpha < 8: return 0
+	return alpha
+
+## The reviewed TI2 block-flag display alpha, the same rule the 508 tile tools
+## apply (tools/map_restore/base508_ti2.py render(display_alpha=True)):
+## flag bit 16 → alpha from brightness, bit 32 → alpha from darkness (pure
+## black/white/0x0421/0x7fe0 and alpha < 8 drop out), else bit 4 → half alpha.
+## Colors stay the original RGB565 values; only stored (covered) pixels change.
+## Without it these translucent fog/water/shadow blocks draw as opaque patches.
+## Per-pixel reference; decode_rgba(display=true) gives the same bytes in one pass.
+static func display_alpha(rgba: PackedByteArray, flags: PackedByteArray) -> void:
+	for frame: int in range(mini(flags.size(), 256)):
+		var flag: int = flags[frame]
+		if (flag & 52) == 0: continue
+		var atlas_x: int = (frame % 16) * 24
+		var atlas_y: int = (frame >> 4) * 24
+		for y: int in range(24):
+			var row_start: int = ((atlas_y + y) * 384 + atlas_x) * 4
+			for x: int in range(24):
+				var at: int = row_start + x * 4
+				if rgba[at + 3] == 0: continue
+				rgba[at + 3] = display_alpha_of(rgba[at], rgba[at + 1], rgba[at + 2], display_rule(flag))
 
 static func _raw_identity(decoded: PackedByteArray, row: Dictionary) -> bool:
 	if not _uint(row.get("decoded_bytes"), MAX_SOURCE_BYTES) or int(row.decoded_bytes) < 4 or decoded.size() != int(row.decoded_bytes) or not _sha(row.get("decoded_sha256")) or _hash(decoded) != row.decoded_sha256: return false
