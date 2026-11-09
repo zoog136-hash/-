@@ -9,6 +9,7 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import plistlib
 import re
@@ -53,8 +54,11 @@ def particle_dictionary(raw):
 
 
 class Builder:
-    def __init__(self, source_index):
+    def __init__(self, source_index, link_originals=False):
         self.index = source_index
+        # Hardlink unchanged originals from plain-file origins (for example
+        # client523_ui_inputs.py members) instead of copying their bytes.
+        self.link_originals = link_originals
         self.files = {}
         self.scenes = {}
         self.layout_sources = {}
@@ -64,16 +68,28 @@ class Builder:
         self.source_compatibility = []
         self.blockers = []
         self.active = set()
+        self.touched = set()
+        self._trees = {}
+
+    def _parse(self, raw):
+        # Identical original bytes decode to the same read-only tree.
+        key = digest(raw)
+        if key not in self._trees:
+            self._trees[key] = Reader(raw).parse()
+        return self._trees[key]
 
     def read(self, member):
         member = source_path(member)
         if member in self.files:
-            return self.files[member]['raw']
+            self.touched.add(member)
+            item = self.files[member]
+            return item['raw'] if item['raw'] is not None else item['origin'].read_bytes()
         entry = self.index.get(member)
         if entry is None:
             self.blockers.append({'member': member, 'reason': 'source_not_received'})
             return None
         origin = Path(entry['origin'])
+        linked = False
         if origin.suffix.lower() == '.dat':
             with zipfile.ZipFile(origin) as archive:
                 if archive.namelist().count(member) != 1:
@@ -81,9 +97,13 @@ class Builder:
                 raw = archive.read(member)
         else:
             raw = origin.read_bytes()
+            linked = self.link_originals
         if digest(raw) != entry['sha256']:
             raise ValueError('Original source hash mismatch: ' + member)
-        self.files[member] = {'raw': raw, 'sha256': digest(raw), 'bytes': len(raw)}
+        self.files[member] = {'raw': None if linked else raw, 'sha256': digest(raw), 'bytes': len(raw)}
+        if linked:
+            self.files[member]['origin'] = origin
+        self.touched.add(member)
         return raw
 
     def resource(self, ref, owner):
@@ -134,6 +154,10 @@ class Builder:
 
     def atlas(self, member):
         if member in self.atlases:
+            # Shared caches still record this closure's plist/page use and
+            # an absent page as its own blocker.
+            self.read(member)
+            self.read(self.atlases[member]['page'])
             return self.atlases[member]
         raw = self.read(member)
         if raw is None:
@@ -172,7 +196,7 @@ class Builder:
         if raw is None:
             return
         self.active.add(member)
-        tree = Reader(raw).parse()
+        tree = self._parse(raw)
         self.scenes[member] = tree
         self.blockers.extend({'scene': member, 'reason': 'unsupported_source_field', 'detail': b}
                              for b in tree['_decode_blockers'])
@@ -286,6 +310,41 @@ class Builder:
                     dependencies(child)
         dependencies(scoped)
 
+    def closure(self, member):
+        """One scene's own dependency closure, sharing verified read caches."""
+        probe = Builder(self.index, self.link_originals)
+        probe.files, probe.atlases, probe._trees = self.files, self.atlases, self._trees
+        probe.scene(member)
+        return probe
+
+    def complete_scenes(self, entries):
+        """Keep only entry scenes whose whole closure resolves.
+
+        A scene whose closure names a member absent from the source index (or
+        an absent atlas frame) is listed with its own blockers and left out;
+        nothing is substituted. Returns the kept entries and the exclusions.
+        """
+        if self.node_scopes or self.layout_sources or self.external_texture_nodes:
+            raise ValueError('Complete-scene selection does not combine with partial scopes')
+        kept, excluded, touched, scenes, compatibility = [], {}, set(), {}, []
+        for member in entries:
+            probe = self.closure(member)
+            blockers = list({json.dumps(b, sort_keys=True): b for b in probe.blockers}.values())
+            if blockers:
+                excluded[source_path(member)] = blockers
+                continue
+            kept.append(member)
+            touched |= probe.touched
+            scenes.update(probe.scenes)
+            compatibility.extend(probe.source_compatibility)
+        self.scenes = scenes
+        self.files = {k: v for k, v in self.files.items() if k in touched}
+        self.atlases = {k: v for k, v in self.atlases.items() if k in touched}
+        self.source_compatibility = compatibility
+        self.blockers = []
+        self.excluded_scenes = excluded
+        return kept, excluded
+
     def build(self, entries, output):
         output = Path(output)
         if output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
@@ -300,7 +359,8 @@ class Builder:
         blockers = list({json.dumps(b, sort_keys=True): b for b in self.blockers}.values())
         manifest = {'schema': 'twilight-original-ui-v1', 'entries': entries,
                     'scenes': self.scenes, 'atlases': self.atlases,
-                    'files': {k: {n: v for n, v in item.items() if n != 'raw'} for k, item in self.files.items()},
+                    'files': {k: {n: v for n, v in item.items() if n not in ('raw', 'origin')}
+                             for k, item in self.files.items()},
                     'blockers': blockers, 'runtime_verified': False}
         if self.layout_sources:
             manifest['layout_sources'] = self.layout_sources
@@ -310,15 +370,28 @@ class Builder:
             manifest['externally_bound_texture_nodes'] = self.external_texture_nodes
         if self.source_compatibility:
             manifest['source_compatibility'] = list({json.dumps(x, sort_keys=True): x for x in self.source_compatibility}.values())
+        excluded = getattr(self, 'excluded_scenes', None)
+        if excluded is not None:
+            # Entry scenes left out because their closure names members the
+            # source index does not hold. Not loaded and not blockers.
+            manifest['incomplete_source_scenes'] = excluded
         output.mkdir(parents=True)
         for member, item in self.files.items():
             target = output / 'originals' / member
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(item['raw'])
+            if item['raw'] is None:
+                os.link(item['origin'], target)
+                if digest(target.read_bytes()) != item['sha256']:
+                    raise ValueError('Linked original changed: ' + member)
+            else:
+                target.write_bytes(item['raw'])
         raw = (json.dumps(manifest, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
         (output / 'original_ui.json').write_bytes(raw)
         receipt = {'manifest_sha256': digest(raw), 'scenes': len(self.scenes), 'files': len(self.files),
                    'blockers': len(blockers), 'status': 'DEPENDENCIES_RESOLVED_NOT_RENDERED' if not blockers else 'BLOCKED'}
+        if excluded is not None:
+            receipt['entries'] = len(entries)
+            receipt['incomplete_source_scenes'] = len(excluded)
         if self.node_scopes:
             receipt['partial_node_scopes'] = self.node_scopes
             receipt['whole_scene_completion_claimed'] = False
@@ -333,7 +406,13 @@ class Builder:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-index', type=Path, required=True)
-    parser.add_argument('--scene', action='append', required=True)
+    parser.add_argument('--scene', action='append', default=[])
+    parser.add_argument('--scene-list', type=Path,
+                        help='file with one original scene member per line (for example csb-scenes.txt)')
+    parser.add_argument('--complete-scenes-only', action='store_true',
+                        help='keep only entry scenes whose whole closure resolves; list the others')
+    parser.add_argument('--link-originals', action='store_true',
+                        help='hardlink unchanged originals from plain-file origins instead of copying')
     parser.add_argument('--layout-source', action='append', default=[],
                         help='Original parent CSB geometry only; not an activated scene closure')
     parser.add_argument('--node-scene', action='append', default=[],
@@ -344,8 +423,15 @@ def main():
     args = parser.parse_args()
     if args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]):
         parser.error('Original UI packs must stay outside the public checkout')
+    scenes = list(args.scene)
+    if args.scene_list:
+        scenes += [line.strip() for line in args.scene_list.read_text(encoding='utf-8').splitlines() if line.strip()]
+    if not scenes:
+        parser.error('at least one --scene or --scene-list entry is required')
+    if len(set(scenes)) != len(scenes):
+        parser.error('duplicate scene entry')
     index = json.loads(args.source_index.read_text())
-    builder = Builder(index.get('source_files', index))
+    builder = Builder(index.get('source_files', index), link_originals=args.link_originals)
     for spec in args.external_texture_node:
         member, separator, offset = spec.rpartition(':')
         if not separator:
@@ -363,7 +449,11 @@ def main():
         if not separator:
             parser.error('--node-scene requires an original member and offsets')
         builder.node_scene(member, [int(value) for value in values.split(',')])
-    print(json.dumps(builder.build(args.scene, args.output)))
+    if args.complete_scenes_only:
+        if args.output.exists():
+            parser.error('Use a new private output directory; existing packs are preserved')
+        scenes, _ = builder.complete_scenes(scenes)
+    print(json.dumps(builder.build(scenes, args.output)))
 
 
 if __name__ == '__main__':
