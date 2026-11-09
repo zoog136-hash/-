@@ -137,6 +137,7 @@ func run() -> void:
 	var protected: Dictionary=state()
 	var host=world.field_map
 	var host_renderer=world.field_renderer
+	var host_view: Dictionary=PRIOR_RENDERER.renderer_signature(host_renderer)
 	var host_position: Vector2=world.player.global_position
 	var save_sha: String=FileAccess.get_sha256(world.save_path())
 	var provider=PinnedHandoffTestProvider.new()
@@ -163,7 +164,7 @@ func run() -> void:
 	preserved(blocked_snapshot,"blockedPortal523")
 	world.player.global_position=valid_position
 	world.close_current523_aden_play(); await frames()
-	check(world.field_map==host and world.field_renderer==host_renderer and world.player.global_position==host_position
+	check(world.field_map==host and restored_renderer(host_renderer,host_view) and world.player.global_position==host_position
 		and state()==protected and FileAccess.get_sha256(world.save_path())==save_sha,"blocked portal session restores exact initial host and protected state")
 	check(open_generic(1,Vector2i(32668,32803)),"World API entersLand1 nativePortal1101 exact source cell")
 	if not world.current523_aden_source_active(): await finish_portal(); return

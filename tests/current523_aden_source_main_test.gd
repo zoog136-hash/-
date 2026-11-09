@@ -4,6 +4,7 @@ const QA = preload("res://tests/qa_class_selection.gd")
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const FIELD = preload("res://scripts/maps/current523_aden_source_field.gd")
 const EXPECTED = "user://current523-source-main-expected.json"
+const PRIOR_RENDERER = preload("res://scripts/maps/current523_aden_play_controller.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var world: Node
@@ -16,6 +17,13 @@ var captures: Array[String] = []
 func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value: failures.append(label); printerr("ADEN_SOURCE_MAIN_FAIL ",label)
+
+## P3-A: a source session releases the hidden prior renderer and rebuilds an
+## equivalent one on return (the same instance when the release flag is off).
+func restored_renderer(old: Variant, signature: Dictionary) -> bool:
+	var now: Variant = world.field_renderer
+	if is_instance_valid(old) and now == old: return true
+	return now is Node and is_instance_valid(now) and PRIOR_RENDERER.renderer_signature(now) == signature
 
 func _initialize() -> void: call_deferred("run")
 
@@ -183,6 +191,7 @@ func regions() -> void:
 	var protected: Dictionary = state()
 	var old_field = world.field_map
 	var old_renderer = world.field_renderer
+	var old_view: Dictionary = PRIOR_RENDERER.renderer_signature(old_renderer)
 	var old_position: Vector2 = world.player.global_position
 	var save_sha: String = FileAccess.get_sha256(world.save_path())
 	for source_cell: Vector2i in [Vector2i(34002,32326),Vector2i(33471,32769),Vector2i(32319,33595)]:
@@ -213,7 +222,7 @@ func regions() -> void:
 		measurements.append({"entry":[source_cell.x,source_cell.y],"member":field.source_cell_info(source_cell).member,"metrics":world.current523_aden_play_metrics()})
 		world.close_current523_aden_play()
 		await frames()
-		check(world.field_map==old_field and world.field_renderer==old_renderer and world.player.global_position==old_position,"region return restores exact original field,renderer and position")
+		check(world.field_map==old_field and restored_renderer(old_renderer,old_view) and world.player.global_position==old_position,"region return restores exact original field, an equivalent renderer and position")
 	check(state()==protected and FileAccess.get_sha256(world.save_path())==save_sha,"multiple region entries/seams/portals preserve all protected state and save bytes")
 	# Budget failure after a validated source entry must restore the original field.
 	check(enter_at(Vector2i(33412,32768)),"source failure-return entry in changed523 chunk")
