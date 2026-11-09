@@ -78,18 +78,18 @@ static func select(category: String, record: Dictionary, legacy_rule: Dictionary
 	if canonical.get("sourceId","") != source_id or not canonical.get("source_original_card") is Dictionary: return fail("current523_awakening_canonical_card_required")
 	var supplied: Dictionary = SOURCE.source_tables(context)
 	if not supplied.ok: return supplied
-	var native: Dictionary = supplied.by_id.get("BuffCard",{}).get(int(canonical.get("source_card_id",-1)),{})
+	var native: Dictionary = SOURCE.table_row("BuffCard",int(canonical.get("source_card_id",-1)))
 	if native.is_empty() or native != canonical.source_original_card or int(native.get("BuffCardDeckID",-1)) != SOURCE.DECKS[consumer] or int(canonical.get("source_deck_id",-1)) != int(native.BuffCardDeckID) or source_id != "%s:%d:%d" % [source_id.get_slice(":",0),int(native.BuffCardDeckID),int(native.ID)]: return fail("current523_awakening_complete_typed_card_differs")
 	if bool(native.get("IsTest",false)): return fail("current523_awakening_test_card_not_admitted")
-	var deck: Dictionary = supplied.by_id.get("BuffCardDeck",{}).get(int(native.BuffCardDeckID),{})
+	var deck: Dictionary = SOURCE.table_row("BuffCardDeck",int(native.BuffCardDeckID))
 	if deck.get("Name") != SOURCE.DECK_NAMES[consumer]: return fail("current523_awakening_typed_card_deck_differs")
 	var matches: Array[Dictionary] = []
-	for row: Dictionary in supplied.rows.get("BuffCardAwakenEffect",[]):
+	for row: Dictionary in SOURCE.table_rows("BuffCardAwakenEffect"):
 		if row.get("BuffCardDeckID") == native.BuffCardDeckID and row.get("GradeID") == native.get("GradeID"): matches.append(row)
 	if matches.size() != 1 or matches[0] != legacy_rule.get("effect_row"): return fail("current523_awakening_complete_effect_row_differs")
 	var effect: Dictionary = matches[0]
 	var attrs: Array[Dictionary] = []
-	for row: Dictionary in supplied.rows.get("StatusEffectAttr",[]):
+	for row: Dictionary in SOURCE.table_rows("StatusEffectAttr"):
 		if row.get("StatusEffectID") == effect.get("StatusEffectID"): attrs.append(row.duplicate(true))
 	if attrs != legacy_rule.get("status_attributes"): return fail("current523_awakening_complete_status_attributes_differ")
 	var references: Array[Dictionary] = []

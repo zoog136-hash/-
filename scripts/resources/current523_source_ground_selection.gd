@@ -17,7 +17,7 @@ static func select(original_item: Dictionary, context: Dictionary = {}, binding:
 		var pending: Dictionary = fail(str(supplied.get("reason","current523_ground_source_tables_unavailable")),reference)
 		pending["source_tables_status"] = supplied.duplicate(true)
 		return pending
-	var native: Dictionary = supplied.by_id.get("ItemClass",{}).get(int(original_item.ID),{})
+	var native: Dictionary = SOURCE.table_row("ItemClass",int(original_item.ID))
 	if native.is_empty() or native != original_item: return fail("current523_ground_complete_item_definition_differs",reference)
 	if not native.get("TestItem") is bool or native.TestItem != false: return fail("current523_test_ground_item_not_admitted",reference)
 	if not BANK.integer(native.get("SpriteID"),1): return fail("current523_ground_source_sprite_missing",reference)

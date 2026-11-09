@@ -58,7 +58,7 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		return fail("current523_npc_context_identity_differs",source_only)
 	var supplied: Dictionary = SOURCE.source_tables(record)
 	if not supplied.ok: return fail(str(supplied.get("reason","current523_original_visual_input_unavailable")),source_only)
-	var native: Dictionary = supplied.by_id.NpcClass.get(npc_id,{})
+	var native: Dictionary = SOURCE.table_row("NpcClass",npc_id)
 	if native.is_empty() or native.get("Sprite") != sprite_id:
 		return fail("current523_exact_npcclass_sprite_missing",source_only)
 	var definition_admission: Dictionary = {}
@@ -99,7 +99,7 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 	if native.get("TestNPC") != false: return fail("current523_test_npc_not_admitted",source_only)
 	var action_rows: Dictionary = {}
 	for role: String in CORE_ACTIONS:
-		var action: Dictionary = supplied.by_id.ListSprAction.get(int(CORE_ACTIONS[role]),{})
+		var action: Dictionary = SOURCE.table_row("ListSprAction",int(CORE_ACTIONS[role]))
 		if action.is_empty() or action.get("MotionType") != CORE_MOTIONS[role] or action.get("WeaponType") != 0 or action.get("WeaponAlterType") != 0:
 			return fail("current523_existing_npc_core_action_family_differs:" + role,source_only)
 		action_rows[role] = action.duplicate(true)
