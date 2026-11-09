@@ -74,6 +74,7 @@ var loading_source_door_state: bool=false
 var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
+const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
 const CURRENT523_ADEN_PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
@@ -588,7 +589,9 @@ func _ready() -> void:
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
 	_setup_collision_tileset()
 	_setup_field_services()
-	hud.refresh_maps(NATIVE_PNG.menu_entries(maps))
+	# With the 523 pack, travel is the 523 world map and portals; the old
+	# picture-pack destinations are not offered beside 523 Aden.
+	hud.refresh_maps(maps.filter(func(record: Dictionary) -> bool: return str(record.get("id","")) == CURRENT523_HOST.MAP_ID) if CURRENT523_HOST.requested() else NATIVE_PNG.menu_entries(maps))
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
 	var requested_png_map: String = ""
@@ -1818,7 +1821,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			return
 		requested_field = loaded_field as Dictionary
 	var requested_original: OriginalPlayableField = null
-	if requested_native != null:
+	if requested_native == null and map_id == CURRENT523_HOST.MAP_ID and CURRENT523_HOST.requested():
+		# The installed 523 pack supplies Aden itself; the old picture pack is
+		# neither read nor required. If the 523 selection cannot open, this
+		# session uses the old pack (when present) instead of a blank world.
+		requested_original = CURRENT523_HOST.load_field(_aden_play_controller())
+		if requested_original == null:
+			CURRENT523_HOST.fail_session()
+			hud.show_message("523 아덴 지도를 열 수 없습니다: " + CURRENT523_HOST.problem)
+	if requested_native != null or requested_original != null:
 		pass
 	elif SOURCE_MAP84.supports(map_id):
 		requested_original = SOURCE_MAP84.load_field(map_id)
@@ -1950,22 +1961,30 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 				push_error("Native PNG renderer script could not be loaded")
 				return
 			field_renderer = native_renderer_script.new() as FieldRenderer
+		elif CURRENT523_HOST.is_host(field_map):
+			field_renderer = CURRENT523_HOST.make_renderer(self, _aden_play_controller(), field_map)
+			if field_renderer == null:
+				hud.show_message("523 아덴 지형 표시를 준비하지 못했습니다: " + CURRENT523_HOST.problem)
 		elif bool(field_map.get_meta("source_map84",false)): field_renderer = SOURCE_MAP84_RENDERER.new()
 		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
 		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
-		field_renderer.name = "FieldRenderer"
-		add_child(field_renderer)
-		field_renderer.configure(field_map, player)
-		if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
-			hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
-			player.global_position = field_renderer.png_review_spawn
-			player.camera.reset_smoothing();player.camera.force_update_scroll()
-			field_renderer.refresh_visible()
-		_apply_saved_visual_mode()
+		# Only the 523 host can be without a renderer (its own was rejected);
+		# the field still exists for saving and the 523 play mode on top.
+		if field_renderer != null:
+			if not field_renderer.is_inside_tree():
+				field_renderer.name = "FieldRenderer"
+				add_child(field_renderer)
+			field_renderer.configure(field_map, player)
+			if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
+				hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
+				player.global_position = field_renderer.png_review_spawn
+				player.camera.reset_smoothing();player.camera.force_update_scroll()
+				field_renderer.refresh_visible()
+			_apply_saved_visual_mode()
 		# A saved source-field session must not create host encounters before its
 		# own field is restored. Existing boss data is imported/exported unchanged.
-		field_population.configure(self, null if _current523_source_restore_requested() else field_map)
+		field_population.configure(self, null if _current523_source_restore_requested() or CURRENT523_HOST.is_host(field_map) else field_map)
 	else:
 		_spawn_monsters(9)
 	field_minimap.configure(self, field_map)
@@ -6522,7 +6541,17 @@ func _load_game(quiet: bool) -> void:
 				source_save_blocked=true
 				hud.show_message("이전 지도 저장 백업 실패: 저장 파일을 보존합니다")
 				return
-	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
+	if saved_map_id == CURRENT523_HOST.MAP_ID and CURRENT523_HOST.requested() and not data.get("original_position",{}).is_empty():
+		# The 523 host replaces the old Aden picture pack. A position saved on
+		# the old pack does not match the host's grid and is not restored (the
+		# character starts at Aden town); progression loads unchanged. The
+		# first save loaded this way is kept once, byte for byte.
+		var host_backup: String=save_path()+".pre-current523-host"
+		if not FileAccess.file_exists(host_backup) and DirAccess.copy_absolute(save_path(),host_backup)!=OK:
+			source_save_blocked=true
+			hud.show_message("523 아덴 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+	elif saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
 		var saved_field: OriginalPlayableField = SOURCE_MAP84.load_field(saved_map_id) if SOURCE_MAP84.supports(saved_map_id) else (REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{})))
 		if saved_field is RemakePlayableField and not bool(saved_field.get_meta("source_map84",false)) and (data.has("oman_png_index_sha256") or SOURCE_PNG_GAME.requested(saved_map_id)) and not LEGACY_LAYOUT.active("--legacy-map-layouts"):
 			if not SOURCE_PNG_GAME.attach(saved_field) or (data.has("oman_png_index_sha256") and data.oman_png_index_sha256!=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")):
@@ -11051,15 +11080,19 @@ func return_current523_source_to_aden(save_changes: Dictionary={}) -> Dictionary
 func _restore_current523_aden_play() -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or current523_aden_play_active or current523_aden_review_active or CURRENT523_ADEN_REVIEW.requested(): return
 	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
-	if not options.enabled: return
+	# Over the 523 host Aden, play mode is how the world is played: it always
+	# resumes (the old picture-pack world no longer exists to fall back to).
+	var host: bool = CURRENT523_HOST.is_host(field_map)
+	if not options.enabled and not host: return
 	# Other maps keep their normal presentation; this never redirects travel.
 	if active_map_id != "aden_world": return
-	if not open_current523_aden_play(options.raw_root, options.tile_root, options) and field_population.get("field")==null:
+	if not open_current523_aden_play(options.raw_root, options.tile_root, options) and field_population.get("field")==null and not host:
 		field_population.configure(self,field_map)
 
 func _current523_source_restore_requested() -> bool:
 	if active_map_id!="aden_world" or CURRENT523_ADEN_REVIEW.requested(): return false
 	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
+	if CURRENT523_HOST.requested(): return true
 	return bool(options.enabled) and options.navigation_profile in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC]
 
 func _exit_tree() -> void:
