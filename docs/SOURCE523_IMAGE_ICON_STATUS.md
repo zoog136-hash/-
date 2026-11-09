@@ -44,6 +44,11 @@ reported, not folded. The real-pack Godot checks for items (41) and
 skills/buffs (2,166) pass against this pack; the item probe skips source
 `TestItem` rows, which the resolver already excludes.
 
+The CSB icons are now bound from the same client: see
+[Original UI from the complete 523 client](CLIENT523_UI_PACK.md)
+(181 of 182 CSB icons, all 661 ItemClass/SpellClass/BuffClass references,
+played as the client's `normal` loop).
+
 ## Original inventory and private pack
 
 The completed source inventory contains 101 DATs and 17,278 original images:

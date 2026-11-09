@@ -1,0 +1,32 @@
+name: Client523 UI source tests
+
+on:
+  pull_request:
+    paths:
+      - 'tools/ui/**'
+      - 'tests/test_client523_ui_inputs.py'
+      - 'tests/test_original_ui_decoder.py'
+      - '.github/workflows/client523-ui-tool.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Synthetic UI fixture tests (no original files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools/ui
+            tests/test_client523_ui_inputs.py
+            tests/test_original_ui_decoder.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run tests
+        run: python -m unittest tests/test_client523_ui_inputs.py tests/test_original_ui_decoder.py -v
