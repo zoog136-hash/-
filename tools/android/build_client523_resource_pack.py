@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+"""Pack the private 523 resource builds into ZIP parts for the Android APK.
+
+Git and the APK carry code only. The user's own client resources are built
+outside the repository (tables ZIP, SP2 bank, image pack, map and tile packs,
+optionally the original UI pack). This tool puts those finished private
+directories, unchanged, into stored ZIP parts that the APK installs from the
+phone's storage (scripts/boot/source523_pack.gd):
+
+* every part holds `source523_part.json` (pack ID, part number, members with
+  their byte sizes); part 1 also holds `source523_pack.json`, the descriptor
+  with the relative roots and the SHA-256 pins of every pack manifest;
+* parts stay below 4 GiB and 65,535 entries, so no ZIP64 reader is needed;
+* nothing is recompressed, renamed or regenerated; each runtime reader still
+  checks its own pins when it loads.
+
+Output goes to a new private directory outside the repository. Nothing is
+uploaded.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import sys
+import zipfile
+
+SCHEMA = "twilight-client523-resource-pack-v1"
+PART_SCHEMA = "twilight-client523-resource-pack-part-v1"
+TABLES_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+TABLES_BYTES = 25031173
+DESCRIPTOR = "source523_pack.json"
+PART_INDEX = "source523_part.json"
+DATE = (2026, 1, 1, 0, 0, 0)
+MAX_PART_BYTES = 3_500_000_000
+MAX_PART_ENTRIES = 60_000
+
+# Pack directory -> (name inside the pack, manifest file, expected kind check)
+SECTIONS = (
+    ("bank", "manifest.json"),
+    ("images", "manifest.json"),
+    ("maps", "source523.json"),
+    ("tiles", "tilepack523.json"),
+    ("ui", "original_ui.json"),
+)
+
+
+class PackError(Exception):
+    pass
+
+
+def require(condition, message):
+    if not condition:
+        raise PackError(message)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def manifest_checks(section: str, document: dict):
+    if section == "bank":
+        require(document.get("kind") == "current523_reference_sp2_action_bank", "bank manifest kind differs")
+    elif section == "maps":
+        require(document.get("kind") == "current523_s32_source_pack" and document.get("cumulative_version") == 523,
+                "map manifest is not the current523 S32 source pack")
+    elif section == "ui":
+        require(document.get("schema") == "twilight-original-ui-v1", "UI manifest schema differs")
+        require(document.get("blockers") == [], "UI pack still has unresolved inputs")
+
+
+def walk(root: Path):
+    """Regular files under root, sorted, as (relative posix name, path, bytes)."""
+    found = []
+    for directory, dirs, files in os.walk(root):
+        dirs.sort()
+        for name in sorted(files):
+            path = Path(directory) / name
+            require(not path.is_symlink(), f"symlink in private pack: {path}")
+            relative = path.relative_to(root).as_posix()
+            require(not relative.startswith("."), f"hidden file in private pack: {relative}")
+            found.append((relative, path, path.stat().st_size))
+    return found
+
+
+def collect(args):
+    tables = args.tables.resolve()
+    require(tables.stat().st_size == TABLES_BYTES and sha256_file(tables) == TABLES_SHA256,
+            "tables ZIP is not the runtime-pinned 523 tables ZIP")
+    members = [("tables/source.zip", tables, TABLES_BYTES)]
+    descriptor = {"schema": SCHEMA, "cumulative_version": 523,
+                  "tables": {"path": "tables/source.zip", "sha256": TABLES_SHA256},
+                  "start_land_id": args.start_land}
+    for section, manifest_name in SECTIONS:
+        root = getattr(args, section)
+        if root is None:
+            require(section == "ui", f"--{section} is required")
+            continue
+        root = root.resolve()
+        manifest = root / manifest_name
+        require(manifest.is_file(), f"{section}: {manifest_name} missing")
+        manifest_checks(section, json.loads(manifest.read_text(encoding="utf-8-sig")))
+        files = walk(root)
+        require(any(name == manifest_name for name, _, _ in files), f"{section}: manifest not under root")
+        members.extend((f"{section}/{name}", path, size) for name, path, size in files)
+        descriptor[section] = {"root": section, "manifest": f"{section}/{manifest_name}",
+                               "manifest_sha256": sha256_file(manifest)}
+    names = [name for name, _, _ in members]
+    require(len(names) == len(set(names)), "duplicate member names")
+    return descriptor, members
+
+
+def plan_parts(members, max_bytes, max_entries):
+    parts, current, size = [], [], 0
+    for member in members:
+        require(member[2] < max_bytes, f"member larger than a part: {member[0]}")
+        if current and (size + member[2] > max_bytes or len(current) + 2 >= max_entries):
+            parts.append(current)
+            current, size = [], 0
+        current.append(member)
+        size += member[2]
+    if current:
+        parts.append(current)
+    return parts
+
+
+def stored(name: str) -> zipfile.ZipInfo:
+    info = zipfile.ZipInfo(name, DATE)
+    info.compress_type = zipfile.ZIP_STORED
+    info.external_attr = 0o600 << 16
+    return info
+
+
+def write_part(path: Path, index: dict, members, descriptor_bytes=None):
+    with zipfile.ZipFile(path, "x", zipfile.ZIP_STORED, allowZip64=False) as archive:
+        archive.writestr(stored(PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True,
+                                                        separators=(",", ":")).encode())
+        if descriptor_bytes is not None:
+            archive.writestr(stored(DESCRIPTOR), descriptor_bytes)
+        for name, source, size in members:
+            require(source.stat().st_size == size, f"changed while packing: {source}")
+            with source.open("rb") as handle, archive.open(stored(name), "w") as target:
+                for block in iter(lambda: handle.read(1 << 20), b""):
+                    target.write(block)
+
+
+def build(args):
+    descriptor, members = collect(args)
+    parts = plan_parts(members, args.part_bytes, args.part_entries)
+    listing = hashlib.sha256()
+    for name, _, size in members:
+        listing.update(f"{name}\0{size}\n".encode())
+    descriptor["members"] = len(members)
+    descriptor["bytes"] = sum(size for _, _, size in members)
+    descriptor["parts"] = len(parts)
+    descriptor["member_listing_sha256"] = listing.hexdigest()
+    pin_basis = json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
+    descriptor["pack_id"] = hashlib.sha256(pin_basis).hexdigest()
+    descriptor_bytes = json.dumps(descriptor, ensure_ascii=False, indent=1, sort_keys=True).encode() + b"\n"
+    out = args.output
+    out.mkdir(mode=0o700)
+    written = []
+    for number, chunk in enumerate(parts, 1):
+        index = {"schema": PART_SCHEMA, "pack_id": descriptor["pack_id"], "part": number, "parts": len(parts),
+                 "members": [[name, size] for name, _, size in chunk]}
+        name = f"twilight523-resources-{number}of{len(parts)}.zip"
+        write_part(out / name, index, chunk, descriptor_bytes if number == 1 else None)
+        written.append({"file": name, "members": len(chunk), "bytes": (out / name).stat().st_size})
+    report = {"pack_id": descriptor["pack_id"], "members": descriptor["members"], "bytes": descriptor["bytes"],
+              "parts": written, "descriptor": {k: v for k, v in descriptor.items() if isinstance(v, dict)}}
+    (out / "source523_pack_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1))
+    return report
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--tables", type=Path, required=True, help="runtime-pinned 523 tables ZIP (d5192c3c...)")
+    parser.add_argument("--bank", type=Path, required=True, help="SP2 bank directory (manifest.json)")
+    parser.add_argument("--images", type=Path, required=True, help="source523 image pack directory (manifest.json)")
+    parser.add_argument("--maps", type=Path, required=True, help="current523 S32 source pack (source523.json)")
+    parser.add_argument("--tiles", type=Path, required=True, help="current523 tile pack (tilepack523.json)")
+    parser.add_argument("--ui", type=Path, help="original UI pack (original_ui.json), optional")
+    parser.add_argument("--start-land", type=int, default=4, help="Land ID entered on a fresh install (4 = Aden)")
+    parser.add_argument("--part-bytes", type=int, default=MAX_PART_BYTES)
+    parser.add_argument("--part-entries", type=int, default=MAX_PART_ENTRIES)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args(argv)
+    repo = Path(__file__).resolve().parents[2]
+    out = args.output.resolve()
+    if out == repo or repo in out.parents:
+        parser.error("--output must be outside the repository")
+    if out.exists():
+        parser.error("--output must be a new directory")
+    if not 0 < args.part_bytes <= 4_000_000_000 or not 3 <= args.part_entries <= 65_000:
+        parser.error("parts must stay below 4 GB and 65,535 entries")
+    try:
+        print(json.dumps(build(args), ensure_ascii=False, indent=1))
+    except PackError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
