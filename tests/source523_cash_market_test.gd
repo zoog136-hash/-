@@ -111,6 +111,7 @@ func _integration() -> void:
 	runtime.bind_source(catalog)
 	var opened: int = 0
 	var cards: int = 0
+	var gotcha_opened: int = 0
 	CashPackages.rng.seed = 523
 	for key: String in CashMarket.data().entries:
 		var id: int = int(key)
@@ -141,6 +142,12 @@ func _integration() -> void:
 				check(not choices.is_empty(), "select box has options for 기사: " + box)
 				if choices.is_empty(): host.inventory.erase(box); continue
 				rewards = [choices[0]]
+			elif spec.kind == "gotcha":
+				rewards = CashPackages.roll_gotcha(spec, CashPackages.rng)
+				var count: int = 0
+				for draw: Dictionary in spec.draws: count += int(draw.count)
+				check(rewards.size() == count, "gotcha draws original count: " + box)
+				gotcha_opened += 1
 			else:
 				var rolled: Dictionary = CashPackages.roll_bag(spec, CashPackages.current_class(host), CashPackages.rng)
 				check(rolled.ok, "bag yields rewards for 기사: " + box)
@@ -156,6 +163,8 @@ func _integration() -> void:
 			for category: String in Fusion.CATEGORIES: owned_after += host.card_draw_fusion.owned[category].size() + host.card_draw_fusion.spare[category].values().reduce(func(a, b): return a + b, 0)
 			cards += owned_after - owned_before
 	check(opened >= 29, "boxes opened: %d" % opened)
+	check(gotcha_opened > 0, "original card draw packs opened: %d" % gotcha_opened)
+	print("source523_cash_market_test: card draw packs opened %d" % gotcha_opened)
 	print("source523_cash_market_test: opened %d boxes, %d cards received" % [opened, cards])
 	var waiting: Array = []
 	for row: Dictionary in host.catalog_db["아이템"]:
@@ -165,8 +174,11 @@ func _integration() -> void:
 	for id: Variant in CashPackages._definitions:
 		for entry: Dictionary in CashPackages._definitions[id].get("entries", []):
 			var item_id: int = int(entry.item_class_id)
-			if not CashPackages.card_reference(item_id).is_empty() and CashPackages.resolve(host, item_id).kind != "card": unresolved_cards.append(CashPackages.label(item_id))
+			if int(entry.get("card_id", 0)) > 0:
+				if CashPackages._card_target(host, int(entry.card_id)).is_empty(): unresolved_cards.append("BuffCard#%d" % int(entry.card_id))
+			elif not CashPackages.card_reference(item_id).is_empty() and CashPackages.resolve(host, item_id).kind != "card": unresolved_cards.append(CashPackages.label(item_id))
 	print("source523_cash_market_test: card items without a matching card (%d): %s" % [unresolved_cards.size(), ", ".join(unresolved_cards)])
+	check(unresolved_cards.is_empty(), "every original card reward resolves to a TWILIGHT card")
 	host.queue_free()
 
 func _run() -> void:

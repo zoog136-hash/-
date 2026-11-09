@@ -13,6 +13,8 @@ const ALL_CLASSES: int = 10000
 const SELECT_REWARD_TYPE: int = 111
 const ITEM_REWARD_TYPE: int = 2
 const MAX_DEPTH: int = 8
+const GOTCHA_UNIT: int = 35
+const BUFF_CARD_UNIT: int = 33
 const LIMIT: int = 9007199254740991
 static var _definitions: Dictionary = {}
 static var _names: Dictionary = {}
@@ -59,6 +61,8 @@ static func definition(item_id: int) -> Dictionary:
 			result = _bag(item_id, int(bags[0]))
 		elif selects.size() == 1 and bags.is_empty() and integer(selects[0]):
 			result = _select(item_id, int(selects[0]))
+		elif bags.is_empty() and selects.is_empty() and values.get("MarketPurchaseID", []).size() == 1 and integer(values.MarketPurchaseID[0]):
+			result = _gotcha(item_id, int(values.MarketPurchaseID[0]))
 	_definitions[item_id] = result
 	return result
 
@@ -90,6 +94,50 @@ static func _select(item_id: int, reward_id: int) -> Dictionary:
 	return {"kind":"select", "item_class_id":item_id, "reward_id":reward_id, "select_reward_id":int(group.ID),
 		"root_class_id":int(root.get("CharacterClassID", 0)), "max":int(group.get("SelectMaxCount", 1)), "entries":entries}
 
+## Original card draw pack: the item runs a market purchase whose products are
+## GotChaClass draws (Unit 35). Only polymorph/doll/relic card pools qualify.
+static func _gotcha(item_id: int, purchase_id: int) -> Dictionary:
+	var draws: Array = []
+	for link: Dictionary in SOURCE.related("MarketPurchaseProduct", "MarketPurchaseID", purchase_id):
+		var product: Dictionary = SOURCE.row("MarketProduct", int(link.get("MarketProductID", 0)))
+		if int(product.get("UnitID", 0)) != GOTCHA_UNIT or not integer(product.get("Amount")) or int(product.Amount) < 1: return {}
+		var entries: Array = []
+		var total: int = 0
+		for row: Dictionary in SOURCE.related("GotChaEntityView", "GotChaClassID", int(product.ClassID)):
+			if int(row.get("UnitID", 0)) != BUFF_CARD_UNIT or int(row.get("Probability", 0)) <= 0: return {}
+			var card: Dictionary = SOURCE.row("BuffCard", int(row.ClassID))
+			if not CARD_CATEGORIES.has(int(card.get("BuffCardDeckID", 0))): return {}
+			entries.append({"entity_id":int(row.ID), "card_id":int(row.ClassID), "probability":int(row.Probability), "amount":1, "item_class_id":0})
+			total += int(row.Probability)
+		if entries.is_empty() or total <= 0: return {}
+		draws.append({"gotcha_class_id":int(product.ClassID), "count":int(product.Amount), "total":total, "entries":entries})
+	if draws.is_empty(): return {}
+	var flat: Array = []
+	for draw: Dictionary in draws: flat.append_array(draw.entries)
+	return {"kind":"gotcha", "item_class_id":item_id, "market_purchase_id":purchase_id, "draws":draws, "entries":flat}
+
+static func roll_gotcha(spec: Dictionary, random: RandomNumberGenerator) -> Array:
+	var rewards: Array = []
+	for draw: Dictionary in spec.draws:
+		for unused: int in range(int(draw.count)):
+			var pick: int = random.randi_range(1, int(draw.total))
+			for entry: Dictionary in draw.entries:
+				pick -= int(entry.probability)
+				if pick <= 0:
+					rewards.append(entry)
+					break
+	return rewards
+
+static func _card_target(world, card_id: int) -> Dictionary:
+	var card: Dictionary = SOURCE.row("BuffCard", card_id)
+	var category: String = str(CARD_CATEGORIES.get(int(card.get("BuffCardDeckID", 0)), ""))
+	if category.is_empty(): return {}
+	var candidates: Array = []
+	for row: Dictionary in world.catalog_db.get(category, []):
+		if int(row.get("source_card_id", -1)) == card_id and row.get("source") in ["lineagem_base508", "lineagem_patch523"]: candidates.append(row)
+	if candidates.size() != 1: return {}
+	return {"kind":"card", "category":category, "card_id":card_id, "record":candidates[0]}
+
 static func is_package(item_id: int) -> bool:
 	return not definition(item_id).is_empty()
 
@@ -119,6 +167,10 @@ static func _grade(item_id: int) -> String:
 static func _summary(item_id: int) -> String:
 	var spec: Dictionary = definition(item_id)
 	var lines: Array[String] = []
+	if spec.kind == "gotcha":
+		var count: int = 0
+		for draw: Dictionary in spec.draws: count += int(draw.count)
+		return "원본 카드 뽑기 %d회 · 카드 %d종 중 원본 확률로 획득\n원본523 GotCha 정의 · 원작 현금 상점 경로" % [count, spec.entries.size()]
 	if spec.kind == "select": lines.append("구성품 중 1종 선택하여 획득")
 	else:
 		var weighted: bool = false
@@ -156,7 +208,7 @@ static func _register(world, record: Dictionary) -> Dictionary:
 static func box_record(world, item_id: int) -> Dictionary:
 	var name: String = _box_name(world, item_id)
 	return _register(world, {"name":name, "grade":_grade(item_id), "type":"상자", "slot":"consumable", "stackable":true,
-		"weight":_weight(item_id), "droppable":false, "sellable":false, "source":TAG, "source_item_class_id":item_id,
+		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":TAG, "source_item_class_id":item_id,
 		"sourceId":"cash523:%d" % item_id, "cash_package":true, "desc":_summary(item_id)})
 
 ## Where one original reward item goes in TWILIGHT.
@@ -164,10 +216,8 @@ static func resolve(world, item_id: int) -> Dictionary:
 	if is_package(item_id): return {"kind":"box", "name":box_record(world, item_id).name, "record":world._find_catalog_item_record(_box_name(world, item_id))}
 	var card: Dictionary = card_reference(item_id)
 	if not card.is_empty():
-		var candidates: Array = []
-		for row: Dictionary in world.catalog_db.get(card.category, []):
-			if int(row.get("source_card_id", -1)) == int(card.card_id) and row.get("source") in ["lineagem_base508", "lineagem_patch523"]: candidates.append(row)
-		if candidates.size() == 1: return {"kind":"card", "category":card.category, "card_id":card.card_id, "record":candidates[0]}
+		var found: Dictionary = _card_target(world, int(card.card_id))
+		if not found.is_empty(): return found
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = {}
@@ -185,7 +235,7 @@ static func resolve(world, item_id: int) -> Dictionary:
 	# Original item without a TWILIGHT owner yet: kept as a plain inventory item.
 	var name: String = _box_name(world, item_id)
 	var record: Dictionary = _register(world, {"name":name, "grade":_grade(item_id), "type":"재료", "slot":"material", "stackable":true,
-		"weight":_weight(item_id), "droppable":false, "sellable":false, "source":ITEM_TAG, "source_item_class_id":item_id,
+		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":ITEM_TAG, "source_item_class_id":item_id,
 		"sourceId":"cash523:%d" % item_id, "desc":"원본523 아이템 · 현금 상점 상자 구성품 · TWILIGHT 사용 기능 연결 대기"})
 	return {"kind":"item", "name":name, "record":record}
 
@@ -194,6 +244,7 @@ static func _walk(world, item_id: int, seen: Dictionary, depth: int) -> void:
 	seen[item_id] = true
 	resolve(world, item_id)
 	var spec: Dictionary = definition(item_id)
+	if spec.get("kind") == "gotcha": return
 	for entry: Dictionary in spec.get("entries", []): _walk(world, int(entry.item_class_id), seen, depth + 1)
 
 ## Registers every box/reward item reachable from listed offers (also needed
@@ -268,6 +319,10 @@ static func try_use(world, item_name: String) -> bool:
 			return true
 		_choose(world, item_name, choices)
 		return true
+	if spec.kind == "gotcha":
+		var drawn: Dictionary = open(world, item_name, roll_gotcha(spec, rng))
+		world.hud.show_message(str(drawn.get("message", drawn.get("reason", ""))))
+		return true
 	var rolled: Dictionary = roll_bag(spec, class_id, rng)
 	if not rolled.ok:
 		world.hud.show_message(str(rolled.reason) + " · 아이템 보존")
@@ -311,7 +366,10 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	for entry: Dictionary in rewards:
 		var item_id: int = int(entry.item_class_id)
 		var amount: int = int(entry.amount)
-		var target: Dictionary = resolve(world, item_id)
+		var target: Dictionary = _card_target(world, int(entry.card_id)) if int(entry.get("card_id", 0)) > 0 else resolve(world, item_id)
+		if target.is_empty():
+			failure = "원본 카드 정의 연결 실패"
+			break
 		if target.kind == "card":
 			for unused: int in range(amount):
 				var outcome: Dictionary = world.card_draw_fusion.receive_source_card(target.category, target.record, {"card_id":int(target.card_id),
@@ -355,7 +413,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	var message: String = "%s 개봉 · %s" % [item_name, ", ".join(received)]
 	if world.hud.has_method("append_log"): world.hud.append_log(message)
 	if not card_results.is_empty() and world.hud.has_method("present_card_reveal"):
-		world.hud.present_card_reveal(str(resolve(world, int(rewards[0].item_class_id)).get("category", "변신")), {"ok":true, "results":card_results}, false)
+		var first: Dictionary = _card_target(world, int(rewards[0].card_id)) if int(rewards[0].get("card_id", 0)) > 0 else resolve(world, int(rewards[0].item_class_id))
+		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results}, false)
 	return {"ok":true, "message":message, "received":received}
 
 static func definition_id_of(world, item_name: String) -> int:

@@ -96,6 +96,9 @@ func _run() -> void:
 	print("source523_cash_market_main_test: kept by existing weight rule (%d): %s" % [weight_blocked.size(), ", ".join(weight_blocked)])
 	print("source523_cash_market_main_test: waiting items (%d): %s" % [waiting.size(), ", ".join(waiting)])
 	check(bought == 29, "all 29 offers bought in Main")
+	check(weight_blocked.is_empty(), "original weights let every box open: %s" % ", ".join(weight_blocked))
+	for name: String in ["상급 축복의 가루", "드래곤의 다이아몬드", "명예 주화", "판도라의 컬렉션 조각"]:
+		check(int(world.item_weight_index.get(name, -1)) == 0, "original zero weight kept: " + name)
 	check(world._save_game(true) == OK, "final save")
 	print("source523_cash_market_main_test: %d checks, %d failures" % [checks, failures])
 	world.queue_free()
