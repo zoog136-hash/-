@@ -35,6 +35,7 @@ const GENERIC_MAP := "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
 const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json"}
 const REQUIRED := ["bank","images","maps","tiles"]
 const FRAME_BUDGET_MSEC: int = 30
+const COPY_CHUNK: int = 16 * 1024 * 1024
 
 ## Install target; tests use a scratch directory instead of ROOT.
 var root: String = ROOT
@@ -50,6 +51,13 @@ var _later: Button
 var _picker: FileDialog
 var _queue: Array[String] = []
 var _mounted: bool = false
+var _copy_source: FileAccess
+var _copy_target: FileAccess
+var _copy_name: String = ""
+var _copy_total: int = 0
+var _copied: int = 0
+var _incoming: String = ""
+var _incoming_serial: int = 0
 var _descriptor_bytes := PackedByteArray()
 var _index: Dictionary = {}
 var _cursor: int = 0
@@ -244,22 +252,63 @@ func _fail_part(message: String) -> void:
 	_later.disabled = false
 
 ## A mounted pack stays mapped until restart; later parts replace its names.
+## Its local copy is no longer read and is removed.
 func _release_part() -> void:
 	_mounted = false
+	_copy_source = null
+	if _copy_target != null: _copy_target.close()
+	_copy_target = null
 	set_process(false)
+	if not _incoming.is_empty() and FileAccess.file_exists(_incoming): DirAccess.remove_absolute(_incoming)
+	_incoming = ""
 
 func _next_part() -> void:
 	if _queue.is_empty():
 		_finish_or_wait()
 		return
-	var path: String = _queue.pop_front()
+	# Like ActorPack, the picked file (often a content URI) is first copied into
+	# app storage; the ZIP is then read and mounted from a plain local file.
+	var picked: String = _queue.pop_front()
+	_copy_source = FileAccess.open(picked, FileAccess.READ)
+	if _copy_source == null:
+		_fail_part("파일을 열 수 없습니다 (%s): %s" % [error_string(FileAccess.get_open_error()), picked.get_file()])
+		return
+	_copy_name = picked.get_file()
+	_incoming_serial += 1
+	_incoming = root.path_join("incoming-%d.zip" % _incoming_serial)
+	_copy_target = FileAccess.open(_incoming, FileAccess.WRITE)
+	if _copy_target == null:
+		_copy_source = null
+		_fail_part("앱 저장소에 쓸 수 없습니다 (저장 공간을 확인하세요).")
+		return
+	_copy_total = int(_copy_source.get_length())
+	_copied = 0
+	set_process(true)
+
+func _copy_step() -> void:
+	var chunk: PackedByteArray = _copy_source.get_buffer(mini(COPY_CHUNK, _copy_total - _copied))
+	_copy_target.store_buffer(chunk)
+	_copied += chunk.size()
+	_status.text = "조각 가져오는 중 (%s): %d / %d MB" % [_copy_name, _copied >> 20, _copy_total >> 20]
+	if not chunk.is_empty() and _copied < _copy_total: return
+	var complete: bool = _copied == _copy_total and _copy_target.get_error() == OK
+	_copy_source = null
+	_copy_target.close()
+	_copy_target = null
+	set_process(false)
+	if not complete:
+		_fail_part("조각을 가져오지 못했습니다. 저장 공간을 확인하세요: " + _copy_name)
+		return
+	_open_part(_incoming)
+
+func _open_part(path: String) -> void:
 	var reader := ZIPReader.new()
 	if reader.open(path) != OK:
-		_fail_part("ZIP을 열 수 없습니다: " + path.get_file())
+		_fail_part("ZIP을 열 수 없습니다: " + _copy_name)
 		return
 	if not reader.file_exists(PREFIX + PART_INDEX):
 		reader.close()
-		_fail_part("TWILIGHT 리소스 팩 조각이 아닙니다: " + path.get_file())
+		_fail_part("TWILIGHT 리소스 팩 조각이 아닙니다: " + _copy_name)
 		return
 	var index: Variant = JSON.parse_string(reader.read_file(PREFIX + PART_INDEX).get_string_from_utf8())
 	_descriptor_bytes = reader.read_file(PREFIX + DESCRIPTOR_MEMBER) if reader.file_exists(PREFIX + DESCRIPTOR_MEMBER) else PackedByteArray()
@@ -267,7 +316,7 @@ func _next_part() -> void:
 	if not index is Dictionary or index.get("schema") != PART_SCHEMA or not _sha(index.get("pack_id")) or not index.get("members") is Array \
 			or not (index.get("part") is float or index.get("part") is int) or not (index.get("parts") is float or index.get("parts") is int) \
 			or int(index.part) < 1 or int(index.part) > int(index.parts):
-		_fail_part("리소스 팩 조각 정보가 다릅니다: " + path.get_file())
+		_fail_part("리소스 팩 조각 정보가 다릅니다: " + _copy_name)
 		return
 	var state: Dictionary = _state()
 	if state.get("pack_id") != index.pack_id:
@@ -281,7 +330,7 @@ func _next_part() -> void:
 		return
 	# Names are unique across one pack's parts; the folder exists only in parts.
 	if not ProjectSettings.load_resource_pack(path, true):
-		_fail_part("조각을 읽을 수 없습니다: " + path.get_file())
+		_fail_part("조각을 읽을 수 없습니다: " + _copy_name)
 		return
 	_mounted = true
 	_index = index
@@ -289,6 +338,9 @@ func _next_part() -> void:
 	set_process(true)
 
 func _process(_delta: float) -> void:
+	if _copy_source != null:
+		_copy_step()
+		return
 	if not _verify.is_empty():
 		_verify_step()
 		return

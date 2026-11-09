@@ -47,7 +47,7 @@ func members(files: Dictionary) -> Array:
 func install(node: Node, paths: Array) -> void:
 	node._queue_parts(PackedStringArray(paths))
 	for frame: int in 600:
-		if not node.is_processing() and not node._mounted and node._verify.is_empty(): return
+		if not node.is_processing() and not node._mounted and node._copy_source == null and node._verify.is_empty(): return
 		await process_frame
 
 func run() -> void:
@@ -87,6 +87,7 @@ func run() -> void:
 	check(node._state().get("done") == [2] and not FileAccess.file_exists(target.path_join("source523_pack.json")), "one of two parts leaves the pack inactive")
 	await install(node, [ProjectSettings.globalize_path(BASE.path_join("in/p1.zip"))])
 	check(FileAccess.file_exists(target.path_join("source523_pack.json")) and not FileAccess.file_exists(target.path_join("source523_pack.pending.json")), "all parts and pins activate the pack")
+	check(DirAccess.get_files_at(target).size() == 2, "imported part copies are removed after extraction")
 	check(FileAccess.get_file_as_bytes(target.path_join("bank/raw/Sprite/45-0.sp2")) == PackedByteArray([254, 0, 1, 2]) and FileAccess.get_file_as_bytes(target.path_join("maps/originals/Aden/a.s32")) == PackedByteArray([1, 2, 3]), "members are extracted unchanged")
 	var read: Dictionary = PACK.read_descriptor(target.path_join("source523_pack.json"), sha(tables))
 	check(read.ok, "installed descriptor validates")
