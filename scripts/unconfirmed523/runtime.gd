@@ -662,7 +662,9 @@ func _reward(reward: Dictionary, staged: Dictionary, next: Dictionary, ctx: Dict
 			return "" if loop_count < 150 else "경험치 보상 상한 오류"
 		"pass_exp":
 			if not domains.has("events") or not domains.events.has_method("add_pass_exp"): return "패스 경험치 소비자 연결 확인 필요"
-			var updated: Dictionary = domains.events.add_pass_exp(next.domains.events,id,amount,ctx)
+			# The clock lets a rotated pass season credit its current rotation;
+			# older two-argument-style domains (and test doubles) still work.
+			var updated: Dictionary = domains.events.add_pass_exp(next.domains.events,id,amount,ctx) if domains.events.get_method_argument_count("add_pass_exp") >= 4 else domains.events.add_pass_exp(next.domains.events,id,amount)
 			if not bool(updated.get("ok",false)): return str(updated.get("error","패스 경험치 오류"))
 			next.domains.events = updated.state; return ""
 		"bonus":
