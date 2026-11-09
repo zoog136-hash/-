@@ -6,6 +6,9 @@ const IMAGE_TYPES: Array[int] = [1, 3, 5, 6, 7, 9, 10, 11, 82, 143, 161]
 const CONSUMER_FIELDS: Dictionary = {"ItemClass":["IconID"], "SpellClass":["IconID","ActivateIconID"], "BuffClass":["OnIconID","OffIconID"]}
 const TABLE_KEYS: Dictionary = {"AssetView":"AssetId", "AssetType":"ID", "Icon":"ID", "ItemClass":"ID", "SpellClass":"ID", "BuffClass":"ID"}
 const DUMMY_IMAGE_TABLE: String = "UIBuffCardDummyImagePath"
+## Members may come from the earlier handoff components or, for a pack built
+## from the complete client (tools/images/client523_image_inputs.py), from
+## containers identified by the 523 files_info SHA-1/size.
 var _root: String = ""
 var _manifest_sha: String = ""
 var _manifest: Dictionary = {}
@@ -167,7 +170,7 @@ func _open_verified() -> Dictionary:
 		if record.size() != raw.size() or record.file != "originals/" + path: return _failure("member_catalog_mismatch","Original member identity fields are incomplete.")
 		for field: String in raw:
 			if field != "relative_output_path" and (not record.has(field) or record[field] != raw[field]): return _failure("member_catalog_mismatch","Original member field differs from decoder catalog.")
-		if record.get("original_bytes_preserved") != true or record.get("pillow_verify_and_load") != true or not record.get("format") in ["PNG","JPEG","BMP"] or not record.get("current523_component") in ["retained_noncard_lineage14964","changed4_current523"]:
+		if record.get("original_bytes_preserved") != true or record.get("pillow_verify_and_load") != true or not record.get("format") in ["PNG","JPEG","BMP"] or not record.get("current523_component") in ["retained_noncard_lineage14964","changed4_current523","client523_files_info_verified"]:
 			return _failure("invalid_member_proof","Original member verification proof missing.")
 		_members[path] = record
 	if _manifest.metrics.get("pack_members") != _members.size(): return _failure("member_catalog_mismatch","Pack member count differs.")

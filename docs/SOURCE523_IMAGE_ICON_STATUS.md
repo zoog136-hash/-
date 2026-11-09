@@ -7,6 +7,43 @@ without starting further tests, runtime/render validation or quality audits.
 Missing data relationships may use relevant references with estimates labelled
 separately. Later changes remain unverified, and prior evidence is preserved.
 
+## Complete-client source mode (2026-11-09)
+
+The earlier handoff is no longer required. `client523_image_inputs.py` builds
+the builder inputs directly from the complete 523 client: every
+`Client/Data/Image*.dat` and `icon*.dat` listed in the 523 `files_info.json`
+is checked against its SHA-1 and size there, then strictly decoded by the
+existing decoder. The decoder summary carries `source_mode =
+client523_files_info` and one component, `client523_files_info_verified`.
+`build_source523_image_pack.py` accepts that mode without an inventory: each
+member must carry the matching container SHA-1/SHA-256/size identity proof,
+and handoff retained/changed identities cannot be mixed in.
+`--hardlink-originals` links the verified originals into the pack on the same
+filesystem instead of copying them. The runtime accepts the new component; the
+manifest is still pinned by SHA-256 and lookups stay exact-path.
+
+Measured on the private pack built this way (no images in Git):
+
+| Measure | Count |
+| --- | ---: |
+| Containers SHA-1/size verified against files_info 523 | 101 / 101 |
+| Strictly decoded originals (PNG 17,195, JPEG 79, BMP 4) | 17,278 |
+| Strict failures | 0 |
+| Pack members (previously 16,062 retained + changed) | 17,278 |
+| AssetView image-type rows resolving to a verified original | 17,148 / 17,376 (98.7%) |
+| AssetView image-type rows with no current member | 228 (1 differs only by case) |
+| Icon rows: verified / CSB / missing / zero sentinel | 10,178 / 182 / 60 / 54 |
+| ItemClass non-zero IconID: verified / CSB | 34,205 / 483 |
+| SpellClass non-zero icon roles: verified / CSB / sentinel | 4,288 / 177 / 1 |
+| BuffClass non-zero icon roles: verified / CSB / sentinel | 5,101 / 1 / 5 |
+
+No ItemClass, SpellClass or BuffClass icon reference points at a missing
+member; the remainder is source CSB (UI animation, owned elsewhere) or the
+source zero sentinel. Matching stays exact: the single case-only difference is
+reported, not folded. The real-pack Godot checks for items (41) and
+skills/buffs (2,166) pass against this pack; the item probe skips source
+`TestItem` rows, which the resolver already excludes.
+
 ## Original inventory and private pack
 
 The completed source inventory contains 101 DATs and 17,278 original images:
