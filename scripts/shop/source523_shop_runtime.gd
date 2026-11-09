@@ -14,7 +14,21 @@ const LIMIT: int = 9007199254740991
 const ITEM_BINDINGS: Dictionary = {549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
 const INTANGIBLE_BINDINGS: Dictionary = {2:"다이아",1:"마일리지"}
 var world
-var catalog
+## The original shop model is needed to install bindings at boot and while
+## the shop is used; between uses it is released (Lineage M style) and any
+## access to `catalog` reads it again.
+var _catalog = null
+var _catalog_released: bool = false
+var catalog:
+	get:
+		if _catalog == null and _catalog_released:
+			_catalog_released = false
+			var source = Catalog.session()
+			_catalog = source if source.available() else null
+		return _catalog
+	set(value):
+		_catalog = value
+		_catalog_released = false
 var state: Dictionary = fresh_state()
 var save_blocked: bool = false
 var problem: String = ""
@@ -139,7 +153,16 @@ func configure(host: Node) -> void:
 		world.catalog_db["아이템"].append(record)
 	world._index_item_weights()
 	var configured_source=Catalog.session()
-	if configured_source.available():bind_source(configured_source)
+	if configured_source.available():
+		bind_source(configured_source)
+		release_catalog()
+
+## Releases the original shop model until the shop is used again.
+func release_catalog() -> void:
+	if _busy or _catalog == null: return
+	_catalog = null
+	_catalog_released = true
+	Catalog.release()
 
 func bind_source(source) -> void:
 	if catalog == source and not _bindings.is_empty(): return

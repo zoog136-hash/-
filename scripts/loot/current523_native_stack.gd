@@ -36,6 +36,10 @@ static func authorizes(payload: Dictionary) -> bool:
 
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and value>=0 and value<=9007199254740991.0
+## Table and save JSON numbers are floats; `in` is type-strict, so an integral
+## one is compared as the int it is. Other values are returned unchanged.
+static func whole(value: Variant) -> Variant:
+	return int(value) if typeof(value)==TYPE_FLOAT and is_finite(value) and value==floorf(value) and absf(value)<=9007199254740991.0 else value
 
 static func profile(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity():return {}
@@ -50,7 +54,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if not record.get("heal_spec",{}).is_empty():
 		var metadata: Dictionary=D.hp_use_metadata(record)
 		if record.get("source_item_class_id")==233:metadata=load("res://scripts/loot/quest_hp233_use.gd").call("metadata",record)
-		elif record.get("source_item_class_id") in [237,236]:metadata=restoration_metadata(record)
+		elif whole(record.get("source_item_class_id")) in [237,236]:metadata=restoration_metadata(record)
 		if metadata.get("ok",false):return {"kind":"hp","metadata":metadata}
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("kind")=="source_skill_book" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"skill_book","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -114,7 +118,7 @@ static func proof_entry(entry: Variant,uid: String) -> Dictionary:
 	return {"record":record,"remaining":int(remaining),"used":int(used),"transferred":int(transferred),"receipt":receipt,"first_grant_receipt":first_grant_receipt(receipt),"allocated_quantity":int(granted)}
 
 static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0) -> bool:
-	if depth>128 or receipt.get("schema") not in [1,2] or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or NATIVE_FIELDS.full(receipt).get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or receipt.get("bless_raw") not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
+	if depth>128 or whole(receipt.get("schema")) not in [1,2] or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or NATIVE_FIELDS.full(receipt).get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
 	if receipt.schema==1:return true
 	var origin: Dictionary=receipt.origin
 	if origin.get("kind")!="owned_quantity_partition" or not origin.get("partition_id") is String or str(origin.partition_id).length()!=32 or not str(origin.partition_id).is_valid_hex_number(false) or not origin.get("parent_physical_id") is String or origin.parent_physical_id==uid or not origin.get("parent_receipt") is Dictionary:return false
@@ -750,7 +754,7 @@ static func restoration_metadata(record: Dictionary) -> Dictionary:
 		if not allowed.has(name_value) or seen.has(name_value) or row.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or row.get("unit",{}).get("Name")!=allowed[name_value]:return {"ok":false}
 		seen[name_value]=true
 		if name_value=="AutoUseRegistrable":
-			if bonus.get("Value") not in [0,1]:return {"ok":false}
+			if whole(bonus.get("Value")) not in [0,1]:return {"ok":false}
 			result.auto_use_registrable=bonus.Value==1
 		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
 		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
@@ -762,7 +766,7 @@ static func presentation_only(record: Dictionary,spec: Dictionary) -> bool:
 	for row: Dictionary in D.item_definition(record).get("item_bonus",[]):
 		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
 		if not flags.has(name_value):continue
-		if row.get("IsPossession")!=false or row.get("bonus",{}).get("BonusApplicationTypeID")!=0 or row.bonus.get("BonusApplicationTargetID")!=0 or row.get("unit",{}).get("Name")!=flags[name_value] or row.bonus.get("Value") not in [0,1]:return false
+		if row.get("IsPossession")!=false or row.get("bonus",{}).get("BonusApplicationTypeID")!=0 or row.bonus.get("BonusApplicationTargetID")!=0 or row.get("unit",{}).get("Name")!=flags[name_value] or whole(row.bonus.get("Value")) not in [0,1]:return false
 		recognized["unsupported_item_bonus:"+name_value]=true
 	if recognized.is_empty():return false
 	for reason: String in spec.blocked_reasons:
@@ -815,7 +819,7 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 static func selection_pending(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
 	if spec.get("kind")!="source_selectable_reward" or spec.get("activation_status")!="unrestricted" or spec.get("select_max_count")!=1:return _failure("원문 선택 보상 규칙 연결 대기")
 	var class_id: int=current_class(world)
-	if class_id<=0 or class_id not in spec.get("source_class_domain",[]) or spec.get("original_reward",{}).get("row",{}).get("CharacterClassID") not in [0,class_id]:return _failure("원문 선택 보상의 실제 직업 조건 불일치")
+	if class_id<=0 or class_id not in spec.get("source_class_domain",[]) or whole(spec.get("original_reward",{}).get("row",{}).get("CharacterClassID")) not in [0,class_id]:return _failure("원문 선택 보상의 실제 직업 조건 불일치")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원문 선택 보상 사용 대상·서비스 조건 미지원")
 	var choices: Array=[]
