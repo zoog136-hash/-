@@ -642,6 +642,7 @@ func _ready() -> void:
 		hud.call("open_class_selection",true)
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
+	_release_idle_original_models.call_deferred()
 
 func _process(delta: float) -> void:
 	option_awakening.refresh_timed_relic()
@@ -10564,6 +10565,16 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 	_save_game(true)
 	return true
 
+
+## Original models needed only while their window is open are released once
+## boot is done (Lineage M style); each reloads on its next use.
+func _release_idle_original_models() -> void:
+	source_shop.release_catalog()
+	# A dungeon in progress keeps its model.
+	for service: Variant in [source_dungeon_runs, dungeon_play]:
+		var running: Variant = service.get("state")
+		if running is Dictionary and running.get("active") is Dictionary and not (running.active as Dictionary).is_empty(): return
+	source_dungeons.release()
 
 func _load_source_dungeon_pack() -> void:
 	source_dungeons.load_configured()

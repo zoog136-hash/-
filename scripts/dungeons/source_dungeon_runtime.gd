@@ -8,20 +8,91 @@ const MAX_MANIFEST_BYTES := 4096
 const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_projection.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "source_dungeon_candidate"
-var data: Dictionary = {}
+var _data: Dictionary = {}
+var data: Dictionary:
+	get:
+		_ensure()
+		return _data
+	set(value): _data = value
 var last_error: String = ""
-var tower_by_id: Dictionary = {}
-var orim_by_id: Dictionary = {}
-var special_by_id: Dictionary = {}
-var time_by_id: Dictionary = {}
-var time_by_land: Dictionary = {}
-var recharge_by_item: Dictionary = {}
+var _tower_by_id: Dictionary = {}
+var tower_by_id: Dictionary:
+	get:
+		_ensure()
+		return _tower_by_id
+	set(value): _tower_by_id = value
+var _orim_by_id: Dictionary = {}
+var orim_by_id: Dictionary:
+	get:
+		_ensure()
+		return _orim_by_id
+	set(value): _orim_by_id = value
+var _special_by_id: Dictionary = {}
+var special_by_id: Dictionary:
+	get:
+		_ensure()
+		return _special_by_id
+	set(value): _special_by_id = value
+var _time_by_id: Dictionary = {}
+var time_by_id: Dictionary:
+	get:
+		_ensure()
+		return _time_by_id
+	set(value): _time_by_id = value
+var _time_by_land: Dictionary = {}
+var time_by_land: Dictionary:
+	get:
+		_ensure()
+		return _time_by_land
+	set(value): _time_by_land = value
+var _recharge_by_item: Dictionary = {}
+var recharge_by_item: Dictionary:
+	get:
+		_ensure()
+		return _recharge_by_item
+	set(value): _recharge_by_item = value
 const EXECUTION_SHA := "f61176042e92c2ba77c50b987f3f4932acaf7cb38b341050155ba7d2510ccc6e"
 const PREVIOUS_EXECUTION_SHA := "ad0fb91d91c8301c66f383e9d7a63aeca5b7260fed2319b733971b50e9f559d3"
-var orim_actor_types: Dictionary = {}
-var orim_groups: Dictionary = {}
-var orim_item_effects: Dictionary = {}
-var orim_actor_defs: Dictionary = {}
+var _orim_actor_types: Dictionary = {}
+var orim_actor_types: Dictionary:
+	get:
+		_ensure()
+		return _orim_actor_types
+	set(value): _orim_actor_types = value
+var _orim_groups: Dictionary = {}
+var orim_groups: Dictionary:
+	get:
+		_ensure()
+		return _orim_groups
+	set(value): _orim_groups = value
+var _orim_item_effects: Dictionary = {}
+var orim_item_effects: Dictionary:
+	get:
+		_ensure()
+		return _orim_item_effects
+	set(value): _orim_item_effects = value
+var _orim_actor_defs: Dictionary = {}
+var orim_actor_defs: Dictionary:
+	get:
+		_ensure()
+		return _orim_actor_defs
+	set(value): _orim_actor_defs = value
+
+## The model is released after boot and when the dungeon window closes
+## (Lineage M style); any access reloads it the way boot did (the device's
+## baked projection, byte-checked against the pinned payload again).
+var _released: bool = false
+
+func _ensure() -> void:
+	if not _released: return
+	_released = false
+	load_configured()
+
+func release() -> void:
+	if _released or _data.is_empty(): return
+	for name: String in ["data","tower_by_id","orim_by_id","special_by_id","time_by_id","time_by_land","recharge_by_item","orim_actor_types","orim_groups","orim_item_effects","orim_actor_defs"]:
+		set("_" + name, {})
+	_released = true
 
 func _load_execution(directory: String) -> void:
 	orim_actor_types.clear(); orim_groups.clear();orim_item_effects.clear();orim_actor_defs.clear()
