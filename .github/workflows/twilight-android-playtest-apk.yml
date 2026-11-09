@@ -17,6 +17,7 @@ on:
     paths:
       - '.github/workflows/twilight-android-playtest-apk.yml'
       - 'scripts/boot/actor_pack.gd'
+      - 'addons/source84_export/raw_pack_export.gd'
       - 'scripts/boot/updater.gd'
       - 'tools/android/update_pack.py'
       - 'export_presets.cfg'
@@ -158,7 +159,8 @@ jobs:
           # Build identity for scripts/boot/updater.gd (shipped in APK and pack).
           python3 tools/android/update_pack.py build-info --version-code "$GITHUB_RUN_NUMBER" --version-name "523.$GITHUB_RUN_NUMBER" --commit "$GITHUB_SHA" --godot-version "$(/tmp/Godot_v4.7.2-stable_linux.x86_64 --version)"
           timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
-          grep -F "SOURCE84_RAW_EXPORT files=" /tmp/export-android.txt || { echo "::error::Raw Source84 pack was not added to APK"; exit 1; }
+          # The old source84 Aden pack is retired (523 Aden is the starting world).
+          if grep -F "SOURCE84_RAW_EXPORT files=" /tmp/export-android.txt; then echo "::error::retired source84 raw map bytes were added to the APK"; exit 1; fi
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
@@ -166,16 +168,14 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/alignment-android.txt
           echo "TWILIGHT_ANDROID_APK_BUILD_OK"
           ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
-      - name: Export actor art pack
-        # Android cannot sign an APK over 4 GB; assets/actors ships beside it
-        # and scripts/boot/actor_pack.gd mounts it before anything loads.
+      - name: Check retired legacy art is not in the APK
+        # Pre-523 actor, monster, transform and map art no longer ships: the
+        # 523 resource pack supplies them (and the old actor pack is retired).
         shell: bash
         run: |
           set -euo pipefail
-          timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-pack "AndroidActorPack" build/twilight_actor_pack.pck > /tmp/export-actor-pack.txt 2>&1 || { echo "ACTOR_PACK_EXPORT_FAILED"; tail -n 80 /tmp/export-actor-pack.txt; exit 1; }
-          test -s build/twilight_actor_pack.pck
-          ls -lh build/twilight_actor_pack.pck
-          if unzip -l build/TWILIGHT_ANDROID_PLAYTEST.apk | grep -q 'assets/actors/'; then echo "::error::APK still contains assets/actors"; exit 1; fi
+          if unzip -l build/TWILIGHT_ANDROID_PLAYTEST.apk | grep -E -q 'assets/(actors|catalog_motion|monsters|local_source_transforms|directional|external_spx)/|external_map_packs/'; then echo "::error::APK still contains retired legacy art"; exit 1; fi
+          ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
       - name: Export over-the-air update pack
         # Code, scenes, data and small art; mounted over this APK's build line
         # by scripts/boot/updater.gd. Large art changes only with a new APK.
@@ -212,13 +212,6 @@ jobs:
           path: build/TWILIGHT_ANDROID_PLAYTEST.apk
           if-no-files-found: error
           compression-level: 0
-      - name: Upload actor art pack
-        uses: actions/upload-artifact@v4
-        with:
-          name: TWILIGHT_ACTOR_PACK_${{ github.sha }}
-          path: build/twilight_actor_pack.pck
-          if-no-files-found: error
-          compression-level: 0
       - name: Verify exported animation scope
         # Reported separately; a stale expectation must not hide the playtest APK.
         continue-on-error: true
@@ -235,7 +228,6 @@ jobs:
           path: |
             /tmp/import-android.txt
             /tmp/export-android.txt
-            /tmp/export-actor-pack.txt
             /tmp/export-update-pack.txt
             build/update.json
             /tmp/android-settings.txt
