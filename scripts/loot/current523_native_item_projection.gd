@@ -45,6 +45,16 @@ static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,pe
 	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
 	for row: Dictionary in rows:
 		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		# Item lifetime: record() projects DeleteTime to source_delete_time_raw
+		# and use eligibility refuses the item once it is reached (the client's
+		# expiry). Only a lifetime that cannot be resolved still blocks use.
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		# The game has no lifetime extension, so this flag only forbids one.
+		if name_value=="CannotExtendDeleteTime":
+			if not direct(row) or row.get("unit",{}).get("Name")!="TrueFalse" or whole(row.get("bonus",{}).get("Value")) not in [0,1]:reasons.append("unsupported_item_bonus_unit_or_value:"+name_value)
+			continue
 		if not direct(row):reasons.append("conditional_or_possession_item_bonus:"+name_value);continue
 		if not units.has(name_value):reasons.append("source_item_lifetime_unresolved" if name_value=="DeleteTime" else "source_infinite_amount_not_supported" if name_value=="InfiniteAmount" else "unsupported_item_bonus:"+name_value);continue
 		if row.get("unit",{}).get("Name")!=units[name_value] or not integer(row.get("bonus",{}).get("Value")):reasons.append("unsupported_item_bonus_unit_or_value:"+name_value);continue
@@ -63,6 +73,19 @@ static func date_value(raw: Dictionary) -> int:
 	var stamp: int=Time.get_unix_time_from_datetime_string(text)
 	if Time.get_datetime_string_from_unix_time(stamp)!=text:return 0
 	return int("%04d%02d%02d%02d%02d" % [int(raw.Year),int(raw.Month),int(raw.Day),int(raw.Hour),int(raw.Minute)])
+
+## A DeleteTime bonus as the local yyyymmddhhmm deadline the client applies,
+## or 0 when its representation is not resolved: either a DateTimes_Korean
+## reference (BonusApplicationTypeID 298, Value 0) or a direct yyyymmddhh value.
+static func delete_time_stamp(row: Dictionary) -> int:
+	if row.get("bonus_type",{}).get("Name")!="DeleteTime" or row.get("IsPossession")!=false or row.get("unit",{}).get("Name")!="Time":return 0
+	var bonus: Dictionary=row.get("bonus",{})
+	if bonus.get("BonusApplicationTypeID")==298 and bonus.get("Value")==0 and integer(bonus.get("BonusApplicationTargetID")):
+		return date_value(SOURCE.row("DateTimes_Korean",int(bonus.BonusApplicationTargetID)))
+	if direct(row) and integer(bonus.get("Value")) and str(int(bonus.Value)).length()==10:
+		var encoded: String=str(int(bonus.Value))
+		return date_value({"Year":int(encoded.substr(0,4)),"Month":int(encoded.substr(4,2)),"Day":int(encoded.substr(6,2)),"Hour":int(encoded.substr(8,2)),"Minute":0})
+	return 0
 
 static func record(definition: Dictionary) -> Dictionary:
 	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{});var grade: Dictionary=definition.get("grade",{})
@@ -116,16 +139,13 @@ static func record(definition: Dictionary) -> Dictionary:
 	var deadlines: Array=[];var delete_unknown: bool=false
 	for row: Dictionary in rows:
 		if row.bonus_type.Name!="DeleteTime":continue
-		if row.get("IsPossession")!=false or row.unit.Name!="Time":delete_unknown=true;continue
-		var stamp: int=0
-		if row.bonus.get("BonusApplicationTypeID")==298 and row.bonus.get("Value")==0 and integer(row.bonus.get("BonusApplicationTargetID")):
-			stamp=date_value(SOURCE.row("DateTimes_Korean",int(row.bonus.BonusApplicationTargetID)))
-		elif direct(row) and integer(row.bonus.get("Value")) and str(int(row.bonus.Value)).length()==10:
-			var encoded: String=str(int(row.bonus.Value));stamp=date_value({"Year":int(encoded.substr(0,4)),"Month":int(encoded.substr(4,2)),"Day":int(encoded.substr(6,2)),"Hour":int(encoded.substr(8,2)),"Minute":0})
+		var stamp: int=delete_time_stamp(row)
 		if stamp<=0:delete_unknown=true
 		else:deadlines.append(stamp)
 	if delete_unknown:out["source_delete_time_unresolved"]=true
 	elif not deadlines.is_empty():deadlines.sort();out["source_delete_time_raw"]=deadlines[0]
+	for row: Dictionary in rows:
+		if row.bonus_type.Name=="CannotExtendDeleteTime" and direct(row) and row.unit.Name=="TrueFalse" and whole(row.bonus.get("Value"))==1:out["source_cannot_extend_delete_time"]=true
 	out["source_condition_pending"]=pending_conditions
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
 	for index: int in range(rows.size()):
