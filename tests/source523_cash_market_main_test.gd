@@ -99,6 +99,19 @@ func _run() -> void:
 	check(weight_blocked.is_empty(), "original weights let every box open: %s" % ", ".join(weight_blocked))
 	for name: String in ["상급 축복의 가루", "드래곤의 다이아몬드", "명예 주화", "판도라의 컬렉션 조각"]:
 		check(int(world.item_weight_index.get(name, -1)) == 0, "original zero weight kept: " + name)
+	# Original weapon mastery book (one-hand sword) through the inventory path.
+	var book: Dictionary = CashPackages.resolve(world, 171893)
+	check(book.kind == "item" and book.record.get("slot") == "consumable", "mastery book registered as usable")
+	if world.weapon_mastery.enabled:
+		var weapon: int = int(world.weapon_mastery.core.normalize_weapon(1))
+		var before_points: int = int(world.weapon_mastery.core.record(world.weapon_mastery.state, weapon).points)
+		world.inventory[str(book.name)] = 2
+		world._on_inventory_item_activated(str(book.name))
+		var after_points: int = int(world.weapon_mastery.core.record(world.weapon_mastery.state, weapon).points)
+		check(after_points == before_points + int(CashPackages.mastery_spec(171893).points), "mastery book credits original points: %d -> %d" % [before_points, after_points])
+		check(int(world.inventory.get(str(book.name), 0)) == 1, "mastery book consumed once")
+	else:
+		print("source523_cash_market_main_test: mastery pack unavailable; book use not exercised")
 	check(world._save_game(true) == OK, "final save")
 	print("source523_cash_market_main_test: %d checks, %d failures" % [checks, failures])
 	world.queue_free()

@@ -234,10 +234,16 @@ static func resolve(world, item_id: int) -> Dictionary:
 		return {"kind":"item", "name":str(exact.name), "record":exact}
 	# Original item without a TWILIGHT owner yet: kept as a plain inventory item.
 	var name: String = _box_name(world, item_id)
-	var record: Dictionary = _register(world, {"name":name, "grade":_grade(item_id), "type":"재료", "slot":"material", "stackable":true,
+	var usable: bool = not mastery_spec(item_id).is_empty()
+	var record: Dictionary = _register(world, {"name":name, "grade":_grade(item_id), "type":"소모품" if usable else "재료", "slot":"consumable" if usable else "material", "stackable":true,
 		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":ITEM_TAG, "source_item_class_id":item_id,
-		"sourceId":"cash523:%d" % item_id, "desc":"원본523 아이템 · 현금 상점 상자 구성품 · TWILIGHT 사용 기능 연결 대기"})
+		"sourceId":"cash523:%d" % item_id, "desc":_leaf_desc(item_id)})
 	return {"kind":"item", "name":name, "record":record}
+
+static func _leaf_desc(item_id: int) -> String:
+	var book: Dictionary = mastery_spec(item_id)
+	if not book.is_empty(): return "원본523 무기 수련의 서 · 사용 시 해당 무기 숙련치 +%d" % int(book.points)
+	return "원본523 아이템 · 현금 상점 상자 구성품 · TWILIGHT 사용 기능 연결 대기"
 
 static func _walk(world, item_id: int, seen: Dictionary, depth: int) -> void:
 	if depth > MAX_DEPTH or seen.has(item_id): return
@@ -300,8 +306,40 @@ static func options(spec: Dictionary, class_id: int) -> Array:
 		if _eligible(entry, class_id, true): result.append(entry)
 	return result
 
+## Original weapon mastery book: MasteryWeaponPointAmount with the weapon
+## type as BonusApplicationTargetID.
+static func mastery_spec(item_id: int) -> Dictionary:
+	var found: Array = []
+	for link: Dictionary in SOURCE.related("ItemBonus", "ItemClassID", item_id):
+		var bonus: Dictionary = SOURCE.row("Bonus", int(link.get("BonusID", 0)))
+		if str(SOURCE.row("BonusType", int(bonus.get("BonusTypeID", 0))).get("Name", "")) == "MasteryWeaponPointAmount": found.append(bonus)
+	if found.size() != 1 or not integer(found[0].get("Value")) or int(found[0].Value) <= 0 or not integer(found[0].get("BonusApplicationTargetID")): return {}
+	return {"points":int(found[0].Value), "weapon_type":int(found[0].BonusApplicationTargetID)}
+
+static func _use_mastery(world, item_name: String, spec: Dictionary) -> String:
+	var runtime = world.get("weapon_mastery")
+	if runtime == null or not bool(runtime.enabled): return "무기 숙련 원본 팩을 확인할 수 없습니다 · 아이템 보존"
+	var weapon: int = int(runtime.core.normalize_weapon(int(spec.weapon_type)))
+	if weapon <= 0: return "원본 무기 종류를 숙련에 연결할 수 없습니다 · 아이템 보존"
+	var plan: Dictionary = runtime.core.plan_points(runtime.state, weapon, str(int(spec.points)), runtime._receipt("cash_package_mastery_book"))
+	if not plan.get("ok", false): return "%s · 아이템 보존" % runtime.reason_text(str(plan.get("reason", "")))
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	var have: int = int(inventory.get(item_name, 0))
+	if have < 1: return "아이템이 없습니다"
+	if have == 1: inventory.erase(item_name)
+	else: inventory[item_name] = have - 1
+	var result: Dictionary = runtime._commit(plan, {"inventory":inventory})
+	if not result.get("ok", false): return "%s · 아이템 보존" % runtime.reason_text(str(result.get("reason", "")))
+	world.hud.refresh_inventory(world.inventory)
+	return "%s 사용 · 무기 숙련치 +%d" % [item_name, int(spec.points)]
+
 static func try_use(world, item_name: String) -> bool:
 	var record: Dictionary = world._find_catalog_item_record(item_name)
+	if record.get("source") == ITEM_TAG:
+		var book: Dictionary = mastery_spec(int(record.get("source_item_class_id", 0)))
+		if book.is_empty(): return false
+		world.hud.show_message(_use_mastery(world, item_name, book))
+		return true
 	if record.get("source") != TAG: return false
 	var item_id: int = int(record.get("source_item_class_id", 0))
 	var spec: Dictionary = definition(item_id)
