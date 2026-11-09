@@ -403,7 +403,7 @@ func _item_eligibility(item: Dictionary, context: Dictionary) -> String:
 		bridge.service_region = str(context.get("region", "KR"))
 		bridge.enforce_item_use_limits = true
 		if not bridge.has("time_policy"):
-			bridge.time_policy = {"utc_offset_minutes": int(Time.get_time_zone_from_system().get("bias", 0))}
+			bridge.time_policy = {"utc_offset_minutes": 540}
 		var eligibility: Variant = _source.call("item_eligibility", int(item.get("ID", 0)), bridge)
 		if not eligibility is Dictionary or not bool(eligibility.get("ok", false)):
 			var reason: String = str(eligibility.get("error", "item_eligibility_invalid")) if eligibility is Dictionary else "item_eligibility_invalid"

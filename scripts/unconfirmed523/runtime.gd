@@ -662,7 +662,7 @@ func _reward(reward: Dictionary, staged: Dictionary, next: Dictionary, ctx: Dict
 			return "" if loop_count < 150 else "경험치 보상 상한 오류"
 		"pass_exp":
 			if not domains.has("events") or not domains.events.has_method("add_pass_exp"): return "패스 경험치 소비자 연결 확인 필요"
-			var updated: Dictionary = domains.events.add_pass_exp(next.domains.events,id,amount)
+			var updated: Dictionary = domains.events.add_pass_exp(next.domains.events,id,amount,ctx)
 			if not bool(updated.get("ok",false)): return str(updated.get("error","패스 경험치 오류"))
 			next.domains.events = updated.state; return ""
 		"bonus":
@@ -907,7 +907,11 @@ static func _physical_expired(physical: Dictionary, clock: int) -> bool:
 	return false
 
 func _time_policy() -> Dictionary:
-	var result: Dictionary = {"utc_offset_minutes":int(Time.get_time_zone_from_system().get("bias",0)),"attendance_reset_hour":0}
+	# One TWILIGHT calendar: Korea time (UTC+9), daily reset at 05:00, the same
+	# boundary as quests, the monster book and dungeons (QuestCalendar.korean_daily_key).
+	# Source datetimes are Korean local time, so they are read with +540 too.
+	# user://twilight-policy time_policy overrides still apply.
+	var result: Dictionary = {"utc_offset_minutes":540,"attendance_reset_hour":5}
 	result.merge(time_policy,true)
 	return result
 

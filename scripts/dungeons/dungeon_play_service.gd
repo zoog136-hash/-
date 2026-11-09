@@ -15,10 +15,10 @@ var tick_clock := 0.0
 var placement_blocked := false
 
 static func defaults() -> Dictionary:
-	return {"enabled":false,"entry_currency":174,"entry_cost":10,"attempts":1,"duration":420,"live_limit":16,"group_size":1,"care":"timeout","replacement":true,"preserve_items":true,"carry_bonus":true,"zero_cap":86400,"ungrouped_time":3600,"speed_percent":25,"pearl_percent":10,"token_chance":10,"reroll_currency":4,"reroll_percent":10,"specific_daily":true,"holy_ain":900,"heal_percent":20,"boss_hp_multiplier":1,"hard_multiplier":1,"group_time_scale":1,"recharger_price":100000}
+	return {"enabled":true,"entry_currency":174,"entry_cost":10,"attempts":1,"duration":420,"live_limit":16,"group_size":1,"care":"timeout","replacement":true,"preserve_items":true,"carry_bonus":true,"zero_cap":86400,"ungrouped_time":3600,"speed_percent":25,"pearl_percent":10,"token_chance":10,"reroll_currency":4,"reroll_percent":10,"specific_daily":true,"holy_ain":900,"heal_percent":20,"boss_hp_multiplier":1,"hard_multiplier":1,"group_time_scale":1,"recharger_price":100000}
 
 static func empty_state() -> Dictionary:
-	return {"schema":1,"revision":0,"settings":defaults(),"next":1,"day":0,"active":{},"pools":{},"attempts":{},"receipts":{}}
+	return {"schema":1,"revision":0,"settings":defaults(),"next":1,"day":0,"active":{},"pools":{},"attempts":{},"receipts":{},"default_on_v2":true}
 
 func configure(owner: Node, source: RefCounted) -> void:
 	world=owner;rules=source
@@ -96,7 +96,10 @@ func valid(value: Variant) -> String:
 func restore(value: Dictionary) -> bool:
 	problem=valid(value);save_blocked=not problem.is_empty()
 	if save_blocked:return false
-	cleanup();state=value.duplicate(true);pending.clear();changed.emit();return true
+	cleanup();state=value.duplicate(true);pending.clear()
+	# Dungeons are on by default now; saves from before that are switched on once.
+	if not state.get("default_on_v2",false):state.settings.enabled=true;state["default_on_v2"]=true
+	changed.emit();return true
 
 func commit(candidate: Dictionary, changes: Dictionary = {}) -> Dictionary:
 	if save_blocked:return {"ok":false,"reason":problem}

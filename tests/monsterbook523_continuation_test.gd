@@ -74,6 +74,8 @@ func run() -> void:
 	runtime = world.monsterbook523_runtime
 	check(runtime.catalog.loaded(),"actual external v3 pack loaded")
 	if not runtime.catalog.loaded(): world.queue_free(); quit(1); return
+	# Regression of the source-date mode; local season rotation is covered by monsterbook523_rotation_test.
+	runtime.catalog.rotate_ended_seasons = false
 	check(runtime.local.window_problem(5903) == "도감 기간 종료","system date keeps original season closed")
 	fixture_unix = int(Time.get_unix_time_from_datetime_string("2026-10-20T00:00:00"))
 	runtime.local.unix_clock = func() -> int: return fixture_unix

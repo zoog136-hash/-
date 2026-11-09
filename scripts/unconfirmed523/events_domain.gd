@@ -237,7 +237,7 @@ func view(context: Dictionary, state: Dictionary) -> Dictionary:
 		if not _pass_available(pass_row, context).is_empty():
 			continue
 		var pass_id := int(pass_row.ID)
-		var progress := _pass_progress(state, pass_id)
+		var progress := _pass_progress(state, pass_id, context)
 		var actions: Array = []
 		for premium in [false, true]:
 			var reason := _purchase_reason(pass_row, premium, context, state)
@@ -394,7 +394,7 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 			var amount := int(price.amount)
 			if _count(context.get("currencies", {}), currency_id) < amount:
 				return _failure("패스 구매 재화가 부족합니다.")
-			var progress := _pass_progress(next, int(pass_row.ID))
+			var progress := _pass_progress(next, int(pass_row.ID), context)
 			progress["premium" if premium else "base"] = true
 			next.passes[str(int(pass_row.ID))] = progress
 			return _success(next, [{"kind": "currency", "id": currency_id, "amount": amount}], [])
@@ -410,7 +410,7 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 			var resolved := _resolve(int(tier.get("PremiumRewardID" if premium else "RewardID", 0)), request, context, next)
 			if not bool(resolved.get("ok", false)):
 				return resolved
-			var progress := _pass_progress(next, int(pass_row.ID))
+			var progress := _pass_progress(next, int(pass_row.ID), context)
 			progress.claims[_tier_key(tier, premium)] = true
 			next.passes[str(int(pass_row.ID))] = progress
 			return _success(next, [], resolved.rewards)
@@ -474,7 +474,7 @@ func propose(request: Dictionary, context: Dictionary, state: Dictionary) -> Dic
 			return _success(next, [], [])
 	return _failure("지원하지 않는 출석/패스 작업입니다.")
 
-func add_pass_exp(state: Dictionary, pass_id: int, amount: int) -> Dictionary:
+func add_pass_exp(state: Dictionary, pass_id: int, amount: int, context: Dictionary = {}) -> Dictionary:
 	# Privileged host adapter for already resolved source rewards. Never exposed
 	# through propose(), so arbitrary UI requests cannot mint experience.
 	var error := validate_state(state)
@@ -484,7 +484,7 @@ func add_pass_exp(state: Dictionary, pass_id: int, amount: int) -> Dictionary:
 	if pass_row.is_empty() or int(pass_row.get("PassSystemTypeID", 0)) != 12 or amount <= 0:
 		return _failure("원문 시즌 패스 경험치 대상/수량이 올바르지 않습니다.")
 	var next := state.duplicate(true)
-	var progress := _pass_progress(next, pass_id)
+	var progress := _pass_progress(next, pass_id, context)
 	var current := int(progress.experience)
 	if current > 9223372036854775807 - amount:
 		return _failure("시즌 패스 경험치 범위를 초과합니다.")
@@ -515,18 +515,54 @@ func _attendance_reason(version: Dictionary, reward: Dictionary, context: Dictio
 			return "누적 출석 %d회 필요" % int(reward.get("Goal", 0))
 	return ""
 
+## TWILIGHT is offline: when a pass season has ended, the same season length
+## repeats back to back from the source start. Each repetition has fresh
+## purchases, experience, claims and quests. false = source dates only.
+var rotate_ended_passes: bool = true
+
+func _pass_season_length(pass_row: Dictionary, context: Dictionary) -> Array:
+	var start_id := int(pass_row.get("SeasonStartDateTimeID", 0))
+	var end_id := int(pass_row.get("SeasonEndDateTimeID", 0))
+	if start_id == 0 or end_id == 0: return [0, 0]
+	var start := _timestamp(start_id, context)
+	var end := _timestamp(end_id, context)
+	if start < 0 or end <= start: return [0, 0]
+	return [start, end - start]
+
+## Context whose clock is mapped back into the pass's source window.
+## Idempotent: an already mapped context for the same pass is returned as is.
+func _pass_ctx(pass_row: Dictionary, context: Dictionary) -> Dictionary:
+	if int(context.get("pass_rotation_id", 0)) == int(pass_row.get("ID", -1)): return context
+	var turn := 0
+	var span: Array = _pass_season_length(pass_row, context)
+	var now := int(context.get("now", 0))
+	if rotate_ended_passes and int(span[1]) > 0 and now >= int(span[0]) + int(span[1]):
+		turn = floori(float(now - int(span[0])) / float(span[1]))
+	var mapped := context.duplicate()
+	mapped["pass_rotation_id"] = int(pass_row.get("ID", 0))
+	mapped["pass_rotation"] = turn
+	mapped["real_now"] = now
+	if turn > 0:
+		mapped["now"] = now - turn * int(span[1])
+		if mapped.has("nowUnix"): mapped["nowUnix"] = mapped["now"]
+	return mapped
+
+func _pass_rotation(pass_row: Dictionary, context: Dictionary) -> int:
+	return int(_pass_ctx(pass_row, context).get("pass_rotation", 0))
+
 func _pass_available(pass_row: Dictionary, context: Dictionary) -> String:
 	if pass_row.is_empty() or not bool(pass_row.get("IsActive", false)):
 		return "활성 패스가 아닙니다."
 	if not _server_ok(int(pass_row.get("ServerLimitSetID", 0)), context):
 		return "현재 서버의 패스가 아닙니다."
-	return _window(int(pass_row.get("SeasonStartDateTimeID", 0)), int(pass_row.get("SeasonEndDateTimeID", 0)), context)
+	return _window(int(pass_row.get("SeasonStartDateTimeID", 0)), int(pass_row.get("SeasonEndDateTimeID", 0)), _pass_ctx(pass_row, context))
 
 func _purchase_reason(pass_row: Dictionary, premium: bool, context: Dictionary, state: Dictionary) -> String:
+	context = _pass_ctx(pass_row, context)
 	var reason := _pass_available(pass_row, context)
 	if not reason.is_empty():
 		return reason
-	var progress := _pass_progress(state, int(pass_row.ID))
+	var progress := _pass_progress(state, int(pass_row.ID), context)
 	if bool(progress.get("premium" if premium else "base", false)):
 		return "이미 구매했습니다."
 	if premium and not bool(progress.base):
@@ -557,12 +593,13 @@ func _purchase_price(pass_row: Dictionary, premium: bool) -> Dictionary:
 	return {"ok": true, "id": int(payment.ClassID), "amount": int(payment.Amount)}
 
 func _tier_reason(pass_row: Dictionary, tier: Dictionary, premium: bool, context: Dictionary, state: Dictionary) -> String:
+	context = _pass_ctx(pass_row, context)
 	var reason := _pass_available(pass_row, context)
 	if not reason.is_empty():
 		return reason
 	if tier.is_empty() or int(tier.get("PassSystemID", 0)) != int(pass_row.get("ID", -1)):
 		return "패스와 단계가 일치하지 않습니다."
-	var progress := _pass_progress(state, int(pass_row.ID))
+	var progress := _pass_progress(state, int(pass_row.ID), context)
 	if not bool(progress.get("premium" if premium else "base", false)):
 		return "해당 패스를 먼저 구매하세요."
 	if progress.claims.has(_tier_key(tier, premium)):
@@ -608,6 +645,8 @@ func _resolve(reward_id: int, request: Dictionary, context: Dictionary, next: Di
 		var pass_row := _row("PassSystem", pass_id)
 		reward_context["pass_id"] = pass_id
 		reward_context["pass_expires_at"] = _timestamp(int(pass_row.get("SeasonEndDateTimeID", 0)), context) if int(pass_row.get("SeasonEndDateTimeID", 0)) != 0 else 0
+		var span: Array = _pass_season_length(pass_row, context)
+		if int(reward_context.pass_expires_at) > 0: reward_context["pass_expires_at"] = int(reward_context.pass_expires_at) + _pass_rotation(pass_row, context) * int(span[1])
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 52338039
 	rng.state = int(next.rng_state)
@@ -656,11 +695,11 @@ func _date_label(id: int) -> String:
 
 func _offset_minutes(context: Dictionary) -> int:
 	var policy: Dictionary = context.get("time_policy", {})
-	return int(policy.get("utc_offset_minutes", Time.get_time_zone_from_system().get("bias", 0)))
+	return int(policy.get("utc_offset_minutes", 540))
 
 func _local_day(context: Dictionary) -> int:
 	var policy: Dictionary = context.get("time_policy", {})
-	return int(floor(float(int(context.get("now", 0)) + _offset_minutes(context) * 60 - int(policy.get("attendance_reset_hour", 0)) * 3600) / 86400.0))
+	return int(floor(float(int(context.get("now", 0)) + _offset_minutes(context) * 60 - int(policy.get("attendance_reset_hour", 5)) * 3600) / 86400.0))
 
 func _server_ok(set_id: int, context: Dictionary) -> bool:
 	if set_id == 0:
@@ -676,11 +715,22 @@ func _attendance_key(version: Dictionary) -> String:
 func _attendance_progress(state: Dictionary, key: String) -> Dictionary:
 	return state.get("attendance", {}).get(key, {"count": 0, "last_day": -1, "claims": {}}).duplicate(true)
 
-func _pass_progress(state: Dictionary, pass_id: int) -> Dictionary:
-	return state.get("passes", {}).get(str(pass_id), {"experience": 0, "base": false, "premium": false, "claims": {}}).duplicate(true)
+func _pass_progress(state: Dictionary, pass_id: int, context: Dictionary = {}) -> Dictionary:
+	var fresh := {"experience": 0, "base": false, "premium": false, "claims": {}}
+	var saved: Dictionary = state.get("passes", {}).get(str(pass_id), fresh)
+	var turn := 0
+	if context.has("now"):
+		turn = _pass_rotation(_row("PassSystem", pass_id), context)
+	elif saved.has("rotation"):
+		turn = int(saved.rotation)
+	if int(saved.get("rotation", 0)) != turn:
+		saved = fresh
+	var progress: Dictionary = saved.duplicate(true)
+	if turn > 0: progress["rotation"] = turn
+	return progress
 
 func _pass_experience(pass_id: int, context: Dictionary, state: Dictionary) -> int:
-	var progress := _pass_progress(state, pass_id)
+	var progress := _pass_progress(state, pass_id, context)
 	var supplied := _count(context.get("pass_exp", {}), pass_id)
 	var counter := int(context.get("event_counters", {}).get("pass_exp:%d" % pass_id, 0))
 	return maxi(int(progress.experience), maxi(supplied, counter))
@@ -1167,6 +1217,7 @@ func event(event_data: Dictionary, context: Dictionary, state: Dictionary) -> Di
 	return _success(next, [], [])
 
 func _pass_quest_eligible(pass_row: Dictionary, quest: Dictionary, context: Dictionary) -> String:
+	context = _pass_ctx(pass_row, context)
 	var error := _pass_available(pass_row, context)
 	if not error.is_empty():
 		return error
@@ -1216,11 +1267,14 @@ func _pass_quest_reason(pass_row: Dictionary, quest: Dictionary, context: Dictio
 	return ""
 
 func _quest_token(pass_row: Dictionary, quest: Dictionary, context: Dictionary) -> String:
+	context = _pass_ctx(pass_row, context)
 	var reset := "season"
 	if int(quest.get("QuestResetType", 0)) == 11:
 		var date := _row("DateTimes_Korean", int(quest.get("StartTime", 0)))
 		var hour := int(context.get("time_policy", {}).get("pass_reset_hour", date.get("Hour", 5)))
 		reset = str(int(floor(float(int(context.get("now", 0)) + _offset_minutes(context) * 60 - hour * 3600) / 86400.0)))
+	var turn := int(context.get("pass_rotation", 0))
+	if turn > 0: reset += "~" + str(turn)
 	return "%d:%d:%s" % [int(pass_row.get("ID", 0)), int(quest.get("ID", 0)), reset]
 
 func _goal_event_matches(goal: Dictionary, event_data: Dictionary, context: Dictionary) -> bool:
@@ -1282,10 +1336,15 @@ func _validate_quest_token(token: String) -> String:
 		member = member or int(quest.ID) in _quests.get(str(list_id), [])
 	if not member:
 		return "패스와 퀘스트 저장 기록이 일치하지 않습니다."
+	# "~n" marks the n-th local rotation of an ended season.
+	var period := str(parts[2]).get_slice("~", 0)
+	var turn_text := str(parts[2]).get_slice("~", 1) if str(parts[2]).contains("~") else "0"
+	if not turn_text.is_valid_int() or int(turn_text) < 0 or (str(parts[2]).contains("~") and int(turn_text) == 0):
+		return "패스 퀘스트 순환 회차가 손상되었습니다."
 	if int(quest.get("QuestResetType", 0)) == 11:
-		if not str(parts[2]).is_valid_int() or int(parts[2]) < 0:
+		if not period.is_valid_int() or int(period) < 0:
 			return "일일 패스 퀘스트 날짜가 손상되었습니다."
-	elif str(parts[2]) != "season":
+	elif period != "season":
 		return "시즌 패스 퀘스트 기간이 손상되었습니다."
 	return ""
 

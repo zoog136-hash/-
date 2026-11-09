@@ -117,8 +117,12 @@ func show_selected() -> void:
 		return
 	var book: Dictionary = book_service.row("MonsterBook", selected_id)
 	var period: Dictionary = book_service.raw_period(selected_id)
+	var book_runtime: Variant = world.get("monsterbook523_runtime") if world != null else null
+	if book_runtime != null and book_service.has_method("local_period"):
+		period = book_service.local_period(selected_id, book_runtime.local.source_clock())
 	_text(str(book.Name), UI.GOLD)
-	_text("집계: %s ~ %s\n옵션 종료: %s · 한국 날짜 표기" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID)], UI.MUTED)
+	var turn_note: String = " · 로컬 순환 %d회차" % int(period.rotation) if int(period.get("rotation", 0)) > 0 else ""
+	_text("집계: %s ~ %s\n옵션 종료: %s · 한국 날짜 표기%s" % [_date(period.StartDateTimeID), _date(period.CountingEndDateTimeID), _date(period.EndDateTimeID), turn_note], UI.MUTED)
 	if int(book.NpcGroupID) == 0:
 		_text("현재 대상 연결이 없는 과거 정의입니다. 기존 기록을 조회할 수 있습니다.", UI.MUTED)
 	var progress: Dictionary = book_service.progress(selected_id)

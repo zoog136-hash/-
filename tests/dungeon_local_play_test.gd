@@ -43,7 +43,9 @@ func run() -> void:
 	check(world._save_game(true)==OK,"initial test balance save")
 	world.hud.open_source_dungeons()
 	var view: Node = world.hud.workspace.find_child("SourceDungeonView",true,false)
-	check(not view.local_toggle.button_pressed and view.execution_buttons.begin.disabled,"default inspection cannot spend")
+	check(view.local_toggle.button_pressed and world.LOCAL_TOWER.settings(world.source_dungeon_runs.state).enabled==true,"local tower host is on by default")
+	view.local_toggle.button_pressed=false
+	check(not view.local_toggle.button_pressed and view.execution_buttons.begin.disabled,"switched off inspection cannot spend")
 	world.source_save_blocked=true
 	view.local_toggle.button_pressed=true
 	check(not view.local_toggle.button_pressed and not world.LOCAL_TOWER.settings(world.source_dungeon_runs.state).enabled,"settings save failure rolls UI back")
