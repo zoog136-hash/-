@@ -2820,6 +2820,10 @@ func open_source_dungeons() -> void:
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
 	view.configure(get_parent())
+	# The dungeon model is released again when this window closes.
+	view.tree_exiting.connect(func() -> void:
+		var world: Node = get_parent()
+		if is_instance_valid(world) and world.has_method("_release_idle_original_models"): world._release_idle_original_models())
 
 
 func refresh_source_dungeon_progress() -> void:

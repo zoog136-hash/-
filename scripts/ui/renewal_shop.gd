@@ -39,6 +39,12 @@ var raw_touch_name: String = ""
 
 func configure(controller: Node, at_npc: bool = false) -> void:
 	hud = controller
+	# The original shop model is read while this window is open and released
+	# again when it closes (Lineage M style).
+	tree_exiting.connect(func() -> void:
+		var world: Node = hud.get_parent() if is_instance_valid(hud) else null
+		var shop: Variant = world.get("source_shop") if world != null else null
+		if shop != null and shop.has_method("release_catalog"): shop.release_catalog())
 	npc_mode = at_npc
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
