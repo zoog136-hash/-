@@ -7,6 +7,8 @@ extends RefCounted
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
+const ITEM_INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
+const MASTERY_TICKET_ID: int = 184652
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const TAG: String = "twilight-cash-package"
 const ITEM_TAG: String = "twilight-cash-package-item"
@@ -260,6 +262,17 @@ static func native_record(world, item_id: int) -> Dictionary:
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
+## Original native equipment (e.g. Halpas stones, slot relic_item) that the
+## shared native supplier can issue as a physical equipment instance.
+static func native_equipment(world, item_id: int) -> Dictionary:
+	var definition: Dictionary = DROPS.definition_id(str(item_id))
+	var base: Dictionary = definition.get("native_record", {})
+	if base.is_empty() or definition.get("excluded") == true: return {}
+	var record: Dictionary = DROPS.variant_item(base, 1)
+	if record.is_empty() or not DROPS.equipment(record): return {}
+	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
+	return record
+
 static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionary:
 	if is_package(item_id): return {"kind":"box", "name":box_record(world, item_id).name, "record":world._find_catalog_item_record(_box_name(world, item_id))}
 	var card: Dictionary = card_reference(item_id)
@@ -282,6 +295,14 @@ static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionar
 		return {"kind":"item", "name":str(exact.name), "record":exact}
 	# Original item with a supported native physical stack (e.g. skill books):
 	# delivered as a receipted native instance so its existing use path works.
+	# Original mastery option change ticket: the mastery runtime's exact ticket.
+	if allow_native and item_id == MASTERY_TICKET_ID and world.get("weapon_mastery") != null:
+		var ticket: Dictionary = world.weapon_mastery.reset_ticket.record()
+		if not ticket.is_empty() and world.weapon_mastery.reset_ticket.exact(world._find_catalog_item_record(str(ticket.name), str(ticket.sourceId))):
+			return {"kind":"mastery_ticket", "name":str(ticket.name), "record":ticket}
+	if allow_native:
+		var equipment: Dictionary = native_equipment(world, item_id)
+		if not equipment.is_empty(): return {"kind":"native_equipment", "name":str(equipment.name), "record":equipment}
 	if allow_native and mastery_spec(item_id).is_empty():
 		var native: Dictionary = native_record(world, item_id)
 		if not native.is_empty(): return {"kind":"native", "name":str(native.name), "record":native}
@@ -470,6 +491,30 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 					break
 				card_results.append_array(outcome.get("results", []))
 			received.append("%s (%s)" % [str(target.record.name), target.category])
+		elif target.kind == "mastery_ticket":
+			var ticket_name: String = str(target.name)
+			if amount > 1000: failure = "한 번에 받을 티켓이 너무 많습니다"
+			else:
+				inventory[ticket_name] = int(inventory.get(ticket_name, 0)) + amount
+				for unused: int in range(amount):
+					var uid: String = Crypto.new().generate_random_bytes(16).hex_encode()
+					while instances.has(uid): uid = Crypto.new().generate_random_bytes(16).hex_encode()
+					instances[uid] = {"name":ticket_name, "record":target.record.duplicate(true), "level":0, "element":"", "element_level":0, "bless_state":"normal"}
+				received.append("%s ×%d" % [ticket_name, amount])
+		elif target.kind == "native_equipment":
+			# Shared native supplier issues the physical equipment with its proof.
+			var saved_inventory: Dictionary = world.inventory
+			var saved_instances: Dictionary = world.item_instances
+			world.inventory = inventory
+			world.item_instances = instances
+			var issued: Dictionary = ITEM_INVENTORY.stage(world, [{"item_class_id":item_id, "amount":amount, "bless_raw":1, "enchant":0}], {"kind":"twilight_cash_package", "box_item_class_id":definition_id_of(world, item_name), "item_class_id":item_id})
+			world.inventory = saved_inventory
+			world.item_instances = saved_instances
+			if not issued.get("ok", false): failure = str(issued.get("error", "원본 장비 지급 실패"))
+			else:
+				inventory = issued.overrides.inventory
+				instances = issued.overrides.item_instances
+				received.append("%s ×%d" % [str(target.name), amount])
 		elif target.kind == "native":
 			var native_name: String = str(target.name)
 			if int(inventory.get(native_name, 0)) > LIMIT - amount:
