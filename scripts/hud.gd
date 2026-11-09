@@ -23,6 +23,8 @@ signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
 signal stat_increase_requested(stat_name: String)
 signal job_class_selected(job_name: String)
+## 1 = Male, 2 = Female (the original Gender table IDs).
+signal source_gender_selected(gender_id: int)
 signal job_skill_pressed(skill_name: String)
 signal shop_buy_requested(item_name: String, price: int)
 signal inventory_item_activated(item_name: String)

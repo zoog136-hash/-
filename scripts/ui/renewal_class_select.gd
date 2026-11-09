@@ -19,6 +19,12 @@ var class_grid: GridContainer
 var portrait: TextureRect
 var details: RichTextLabel
 var confirm_button: Button
+## Original Gender table IDs; the 523 character picture is per class and gender.
+const GENDERS := {1:"남성", 2:"여성"}
+var gender_buttons: Dictionary = {}
+var selected_gender: int = 0
+var current_gender: int = 0
+var current_job: String = ""
 
 func configure(controller: Node, initial: bool = false) -> void:
 	hud = controller
@@ -87,6 +93,18 @@ func configure(controller: Node, initial: bool = false) -> void:
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.custom_minimum_size.y = 140
 	summary.add_child(details)
+	var gender_row := HBoxContainer.new()
+	gender_row.name = "GenderRow"
+	gender_row.add_theme_constant_override("separation", 8)
+	gender_row.add_child(UI.label("성별",14,UI.GOLD))
+	for gender_id: int in GENDERS:
+		var gender_button: Button = UI.button(GENDERS[gender_id],func() -> void: _choose_gender(gender_id),Vector2(120,44))
+		gender_button.name = "Gender_%d" % gender_id
+		gender_button.toggle_mode = true
+		gender_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		gender_row.add_child(gender_button)
+		gender_buttons[gender_id] = gender_button
+	stack.add_child(gender_row)
 	var stage := PanelContainer.new()
 	stage.add_theme_stylebox_override("panel",UI.box(Color("11141b"),UI.BRONZE,8))
 	stack.add_child(stage)
@@ -97,8 +115,11 @@ func configure(controller: Node, initial: bool = false) -> void:
 	confirm_button.disabled = true
 	add_child(confirm_button)
 	add_child(UI.label("현재 저장 데이터, 아데나, 장비와 인벤토리는 삭제되지 않습니다." if not initial else "선택 후 캐릭터가 생성되며 자동 저장됩니다.",11,UI.MUTED))
+	current_gender = int(hud.character_state.get("source_gender_id", 0))
+	if current_gender in GENDERS: _choose_gender(current_gender)
 	if not initial:
 		var current: String = str(hud.character_state.get("job_class","기사"))
+		current_job = current
 		if CLASS_NAMES.has(current):
 			_choose(current)
 	_reflow()
@@ -125,12 +146,43 @@ func _choose(job_name: String) -> void:
 		UI.safe(profile.get("weapon","직업 무기")), UI.safe(profile.get("primary_stat","직업별")),
 		UI.safe(profile.get("transform_name","미설정"))
 	]
-	confirm_button.text = "%s 선택 확정" % job_name
-	confirm_button.disabled = false
+	# A class the original client draws for one gender only offers that one.
+	var allowed: Array = _allowed_genders(job_name)
+	for key: int in gender_buttons:
+		(gender_buttons[key] as Button).disabled = not key in allowed
+	if selected_gender != 0 and not selected_gender in allowed:
+		selected_gender = 0
+		for key: int in gender_buttons: (gender_buttons[key] as Button).button_pressed = false
+	if selected_gender == 0 and allowed.size() == 1: _choose_gender(int(allowed[0]))
+	_refresh_confirm()
+
+func _allowed_genders(job_name: String) -> Array:
+	var world: Node = hud.get_parent() if hud != null else null
+	if world != null and world.has_method("source_class_genders"): return world.call("source_class_genders", job_name)
+	return [1, 2]
+
+func _choose_gender(gender_id: int) -> void:
+	if not GENDERS.has(gender_id): return
+	if selected_job != "" and not gender_id in _allowed_genders(selected_job): return
+	selected_gender = gender_id
+	for key: int in gender_buttons:
+		(gender_buttons[key] as Button).button_pressed = key == gender_id
+	_refresh_confirm()
+
+func _refresh_confirm() -> void:
+	if confirm_button == null: return
+	confirm_button.disabled = selected_job == "" or not GENDERS.has(selected_gender)
+	if selected_job == "": confirm_button.text = "클래스를 선택하세요"
+	elif not GENDERS.has(selected_gender): confirm_button.text = "성별을 선택하세요"
+	else: confirm_button.text = "%s · %s 선택 확정" % [selected_job, GENDERS[selected_gender]]
 
 func _confirm() -> void:
-	if selected_job == "" or not CLASS_NAMES.has(selected_job):
+	if selected_job == "" or not CLASS_NAMES.has(selected_job) or not GENDERS.has(selected_gender):
 		return
 	# World owns class rules, skillbar updates, equipment compatibility and saves.
-	hud.job_class_selected.emit(selected_job)
+	if selected_gender != current_gender and hud.has_signal("source_gender_selected"):
+		hud.source_gender_selected.emit(selected_gender)
+	# Confirming only a gender keeps the current class and its equipped cards.
+	if first_character or selected_job != current_job:
+		hud.job_class_selected.emit(selected_job)
 	hud.complete_class_selection()

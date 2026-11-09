@@ -3,6 +3,12 @@ extends RefCounted
 ## Storage evidence: handoff objective_decoder_checks/all989_direct_M_model_QA.json
 ## (989 EOFs / 17,054 nonempty half-open extents; 72 grouped-row counterexamples).
 ## Palette, group bits, raw bounds, reference order/types and commands are retained.
+## Frame bounds: most frames store half-open bounds (x2/y2 exclusive) that the
+## samples fill exactly. Some 523 files (e.g. the male knight 15270) mix in
+## frames whose stored x2/y2 is the last sample pixel (end-inclusive) and a few
+## half-open frames with blank rows above the samples. Each nonempty frame must
+## end exactly on its stored end under one of the two readings and keep every
+## sample inside; anything else is rejected. The canvas covers the samples.
 ## RGB expansion, alpha and overwrite compositing remain configurable estimates.
 const MAX_INPUT_BYTES = 2 * 1024 * 1024
 const MAX_BODY_BYTES = 32 * 1024 * 1024
@@ -156,11 +162,37 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 			if not geometry.ok: return geometry
 			frame["empty"] = geometry.empty
 			frame["sample_count"] = geometry.sample_count
+			frame["sample_extent"] = geometry.extent
 			frame_count += 1
 			if not geometry.empty: nonempty_count += 1
 	if not reader.error.is_empty(): return _fail(reader.error)
 	if reader.position != body.size(): return _fail("Trailing SP2 bytes: %d." % (body.size() - reader.position))
-	return {"ok":true,"error":"","palette":palette,"mask":mask,"groups":groups,"frame_count":frame_count,"nonempty_count":nonempty_count,"sample_count":total_samples}
+	var all_exact: bool = true
+	for group: Dictionary in groups:
+		for frame: Dictionary in group.frames:
+			if frame.empty: continue
+			var rule: String = frame_bounds_rule(frame.bounds,frame.sample_extent)
+			if rule.is_empty(): return _fail("SP2 sample extent does not match native half-open bounds (nor end-inclusive bounds).")
+			frame["bounds_rule"] = rule
+			if rule != "half_open": all_exact = false
+			if rule == "end_inclusive":
+				var stored: Rect2i = frame.bounds
+				frame["bounds"] = Rect2i(stored.position,stored.size + Vector2i.ONE)
+			var bounds: Rect2i = frame.bounds
+			if bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x > MAX_DIMENSION or bounds.size.y > MAX_DIMENSION or bounds.size.x * bounds.size.y > MAX_CANVAS_PIXELS:
+				return _fail("SP2 native frame bounds exceed the canvas limit.")
+	return {"ok":true,"error":"","palette":palette,"mask":mask,"groups":groups,"frame_count":frame_count,"nonempty_count":nonempty_count,"sample_count":total_samples,"bounds_rule":"half_open" if all_exact else "per_frame"}
+
+## "half_open": the samples fill the stored bounds exactly (the long-standing
+## rule). "half_open_margin": they end exactly on the stored half-open end with
+## blank rows/columns before them. "end_inclusive": they end exactly on the
+## stored x2/y2 pixel. "" when none holds.
+static func frame_bounds_rule(stored: Rect2i,extent: Rect2i) -> String:
+	if extent == stored: return "half_open"
+	if extent.end == stored.end and stored.encloses(extent): return "half_open_margin"
+	var inclusive := Rect2i(stored.position,stored.size + Vector2i.ONE)
+	if extent.end == inclusive.end and inclusive.encloses(extent): return "end_inclusive"
+	return ""
 
 static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> Dictionary:
 	var commands: PackedInt32Array = block.commands
@@ -216,12 +248,7 @@ static func _frame_geometry(frame: Dictionary,blocks: Array[Dictionary]) -> Dict
 		current.position += _placement(ref,block)
 		extent = extent.merge(current) if has_samples else current
 		has_samples = true
-	if has_samples:
-		var bounds: Rect2i = frame.bounds
-		if bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x > MAX_DIMENSION or bounds.size.y > MAX_DIMENSION or bounds.size.x * bounds.size.y > MAX_CANVAS_PIXELS:
-			return _fail("SP2 native frame bounds exceed the canvas limit.")
-		if extent != bounds: return _fail("SP2 sample extent does not match native half-open bounds.")
-	return {"ok":true,"error":"","empty":not has_samples,"sample_count":sample_count}
+	return {"ok":true,"error":"","empty":not has_samples,"sample_count":sample_count,"extent":extent}
 
 static func render(parsed: Dictionary,group_index: int,frame_index: int,options: Dictionary = {}) -> Dictionary:
 	if not parsed.get("ok",false): return _fail("Cannot render an invalid SP2 parse.")
@@ -237,6 +264,9 @@ static func render(parsed: Dictionary,group_index: int,frame_index: int,options:
 	var bounds: Rect2i = frame.bounds
 	var geometry: Dictionary = _frame_geometry(frame,group.blocks)
 	if not geometry.ok: return geometry
+	# Every sample must land on the canvas (parse checked the bounds rule).
+	if not geometry.empty and (bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x * bounds.size.y > MAX_CANVAS_PIXELS or not bounds.encloses(geometry.extent)):
+		return _fail("SP2 samples fall outside the frame canvas.")
 	if geometry.empty:
 		return {"ok":true,"error":"","image":Image.create(1,1,false,Image.FORMAT_RGBA8),"offset":bounds.position,"bounds":bounds,"empty":true,"estimated":true,"alpha_policy":alpha,"rgb_policy":rgb}
 	var palette: PackedInt32Array = parsed.palette

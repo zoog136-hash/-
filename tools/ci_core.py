@@ -94,6 +94,8 @@ CHECKS = [
     ('current523_installed_spawn_definitions_test', []),
     ('boot_index_once_test', []),
     ('source523_image_pack_bake_test', []),
+    ('source_gender_selection_test', []),
+    ('current523_sp2_bounds_rule_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -419,7 +421,9 @@ def main():
                       'current523_mastery_points_test':'CURRENT523_MASTERY_POINTS_RESULT',
                       'current523_installed_spawn_definitions_test':'CURRENT523_INSTALLED_SPAWN_DEFINITIONS_RESULT',
                       'boot_index_once_test':'BOOT_INDEX_ONCE_RESULT',
-                      'source523_image_pack_bake_test':'SOURCE523_IMAGE_PACK_BAKE_RESULT'}[name]
+                      'source523_image_pack_bake_test':'SOURCE523_IMAGE_PACK_BAKE_RESULT',
+                      'source_gender_selection_test':'SOURCE_GENDER_SELECTION_RESULT',
+                      'current523_sp2_bounds_rule_test':'CURRENT523_SP2_BOUNDS_RULE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
