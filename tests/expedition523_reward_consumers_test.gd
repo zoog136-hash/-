@@ -50,7 +50,7 @@ func run()->void:
 		owned_tickets_restart()
 		finish();return
 	var require_peer:bool="--require-peer-consumers" in OS.get_cmdline_user_args()
-	check(not require_peer or (peer!=null and peer_use!=null and peer.data().item_definitions.size() in [2568,34743]),"requested real PR238 code and existing verified payload")
+	check(not require_peer or (peer!=null and peer_use!=null and peer.definition_count() in [2568,34743]),"requested real PR238 code and existing verified payload")
 	var completed:Dictionary={}
 	for row:Dictionary in source.rows("MagicDollExpeditionCompleteRewardView"):
 		completed[int(source.record("Reward",int(row.RewardID)).RewardClassID)]=true
@@ -86,7 +86,7 @@ func run()->void:
 			destination=str(existing.wallet) if not str(existing.wallet).is_empty() else str(existing.record.name)
 			counts[existing.kind]+=1
 		else:
-			destination=str(peer.data().item_definitions[str(id)].native_record.name)
+			destination=str(peer.cached_definition(str(id)).native_record.name)
 			counts.native_buff+=1
 		check(not world.inventory.has(typed) and int(world.inventory.get(destination,0))>=3,"exact destination receipt "+str(id))
 		if executable_buff and Bridge.supplier()!=null:
@@ -272,7 +272,7 @@ func full_boxes(source:RefCounted,peer:Variant,peer_use:Variant)->void:
 	if not installed.ok:installed=peer.install_zip(zip_path)
 	check(installed.get("ok",false),"official validated consumer-local root and136 shards available; reuse identical installation")
 	if not installed.get("ok",false):return
-	check(peer.data().item_definitions.size()==34743 and peer.pack_identity().get("sha256")=="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27","actual full catalog loaded from installed pinned root")
+	check(peer.definition_count()==34743 and peer.pack_identity().get("sha256")=="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27","actual full catalog loaded from installed pinned root")
 	# Register the complete five-box output closure through the real owner
 	# registrar. The full verified document and probabilities remain unchanged;
 	# unrelated34k items need no duplicate catalog/UI allocation in this test.

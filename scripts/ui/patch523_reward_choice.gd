@@ -50,7 +50,7 @@ func _ready() -> void:
 	var source_images: Dictionary = {}
 	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
 		if not use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): continue
-		var item: Dictionary = DROPS.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{})
+		var item: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
 		var blessing: String = str({1:"일반",2:"축복",3:"저주"}.get(int(reward.bless_raw),"미확인 상태"))
 		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(item.get("source_display_name","?")),int(reward.amount),int(reward.item_class_id),blessing," · 자체 초기 +0" if DROPS.equipment(item) and reward.get("enchant") == null else ""])
 		if use_source_images:

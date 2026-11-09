@@ -97,7 +97,7 @@ func configure(world: Node) -> void:
 		definitions[id]=definition
 		_register(world,definition.native_record,1)
 		for reward: Dictionary in spec.get("rewards",[]):
-			var summary: Dictionary = D.data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{})
+			var summary: Dictionary = D.cached_definition(str(int(reward.item_class_id)))
 			if not summary.get("native_record",{}).is_empty(): _register(world,summary.native_record,int(reward.bless_raw))
 	# Bind only actual original quest rewards whose installed item owner already
 	# provides an unrestricted typed effect or scalar bag. This does not grant

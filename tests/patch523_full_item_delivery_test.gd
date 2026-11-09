@@ -39,7 +39,7 @@ func run() -> void:
 	var result: Dictionary = D.install_zip(OS.get_environment("TWILIGHT_PATCH523_DROP_ZIP"))
 	check(result.get("ok",false),"explicit candidate full ZIP installed")
 	if not result.get("ok",false):quit(1);return
-	check(D.pack_identity().sha256 == D.DATA_SHA and D.data().item_definitions.size() == 34743,"latest exact whole ItemClass root active")
+	check(D.pack_identity().sha256 == D.DATA_SHA and D.definition_count() == 34743,"latest exact whole ItemClass root active")
 	var actual_root: String = ProjectSettings.globalize_path(D._root)
 	check(FileAccess.get_sha256(actual_root.path_join("monster_drops.bin")) == D.DATA_SHA,"actual consumed root bytes match approved Drive payload")
 	for relative: String in D.data().item_shards:

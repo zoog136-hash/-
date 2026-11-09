@@ -33,6 +33,19 @@ static var _current_source_identity: Dictionary = {}
 static var _current_drop_positions: Dictionary = {}
 static var _current_reference_data: Dictionary = {}
 static var _current_input_problem: String = ""
+## Item definitions (Lineage M style): every definition is a pure function of
+## the verified original and this code, so it is built on demand and only a
+## small LRU of built [reference, definition] pairs stays resident (the whole
+## original ItemData descriptions were ~264 KB each, >1 MB for boxes, and the
+## former unbounded cache held ~78 MB at boot and grew with every kill).
+## _definition_ids is the stable index: exactly the IDs (in the same order)
+## the former data().item_definitions/source_item_references held, so
+## has_definition()/cached_definition() answer as the former cache did.
+## data().item_definitions/source_item_references stay as empty dictionaries;
+## read them through the accessors below.
+const DEFINITION_CACHE_LIMIT: int = 64
+static var _definition_ids: Dictionary = {}
+static var _definition_lru: Dictionary = {}
 
 static func _source_integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and absf(float(value)) <= 9007199254740991.0
@@ -89,11 +102,13 @@ static func data() -> Dictionary:
 	var source_identity: Dictionary = CURRENT_SOURCE.identity()
 	if source_identity.is_empty():
 		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
+		_definition_ids.clear(); _definition_lru.clear()
 		_current_source_identity = {}
 		diagnostics = {"status":"current523_drop_input_unavailable","reason":CURRENT_SOURCE.problem()}
 		return {}
 	if source_identity != _current_source_identity:
 		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
+		_definition_ids.clear(); _definition_lru.clear()
 		_current_source_identity = source_identity.duplicate(true)
 	if _current_reference_data.is_empty():
 		_current_reference_data = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
@@ -147,12 +162,104 @@ static func identity(record: Dictionary, admitted_registry: RefCounted = null) -
 	return result
 
 static func _current_item_reference(item_id: int) -> Dictionary:
+	var entry: Array = _current_item_entry(item_id)
+	return entry[0] if not entry.is_empty() else {}
+
+## [reference, definition] for an item, remembering it in the stable index
+## (what the former cache did on first read); [] when ItemData is unavailable.
+static func _current_item_entry(item_id: int) -> Array:
+	var document: Dictionary = data()
+	if document.is_empty(): return []
+	var id: String = str(item_id)
+	if _definition_ids.has(id): return _known_entry(id)
+	var detail: Dictionary = _describe_item(item_id)
+	if detail.is_empty(): return []
+	var entry: Array = [detail,_current_raw_definition(detail)]
+	_definition_ids[id] = true
+	_remember_entry(id,entry)
+	return entry
+
+## A known ID's pair: from the LRU, else shared from a cached NPC document
+## (same objects, no rebuild), else rebuilt from the verified original. The
+## build is deterministic for one source identity (all caches reset with it),
+## so a rebuild equals what the former cache kept.
+static func _known_entry(id: String) -> Array:
+	if _definition_lru.has(id):
+		var hit: Array = _definition_lru[id]
+		_definition_lru.erase(id)
+		_definition_lru[id] = hit
+		return hit
+	for document: Dictionary in _current_documents.values():
+		if document.source_item_references.has(id) and document.item_definitions.has(id) and not document.source_item_references[id].is_empty():
+			var shared: Array = [document.source_item_references[id],document.item_definitions[id]]
+			_remember_entry(id,shared)
+			return shared
+	var detail: Dictionary = _describe_item(int(id))
+	if detail.is_empty(): return []
+	var built: Array = [detail,_current_raw_definition(detail)]
+	_remember_entry(id,built)
+	return built
+
+static func _remember_entry(id: String, entry: Array) -> void:
+	_definition_lru.erase(id)
+	_definition_lru[id] = entry
+	while _definition_lru.size() > DEFINITION_CACHE_LIMIT: _definition_lru.erase(_definition_lru.keys()[0])
+
+## Same value as the former data().item_definitions.get(id,{}): the built
+## definition for an ID that has been read before, {} otherwise. Does not
+## remember new IDs (definition_id() does).
+static func cached_definition(item_id: String) -> Dictionary:
+	if data().is_empty() or not _definition_ids.has(item_id): return {}
+	var entry: Array = _known_entry(item_id)
+	return entry[1] if not entry.is_empty() else {}
+
+## Same value as the former data().source_item_references.get(id,{}).
+static func cached_reference(item_id: String) -> Dictionary:
+	if data().is_empty() or not _definition_ids.has(item_id): return {}
+	var entry: Array = _known_entry(item_id)
+	return entry[0] if not entry.is_empty() else {}
+
+## Former data().item_definitions.has(id) / source_item_references.has(id).
+static func has_definition(item_id: String) -> bool:
+	return not data().is_empty() and _definition_ids.has(item_id)
+
+## Former data().item_definitions.keys() (same order) and .size().
+static func definition_ids() -> Array:
+	return _definition_ids.keys() if not data().is_empty() else []
+
+static func definition_count() -> int:
+	return _definition_ids.size() if not data().is_empty() else 0
+
+## Former erase of an ID from both data() caches.
+static func forget_definition(item_id: String) -> void:
+	_definition_ids.erase(item_id)
+	_definition_lru.erase(item_id)
+
+## definition_id() without remembering an ID that was not read before (the
+## former read-then-erase in the catalog registrar). Known IDs behave as
+## definition_id().
+static func transient_definition(item_id: String) -> Dictionary:
+	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
+	if data().is_empty(): return {}
+	if _definition_ids.has(item_id): return definition_id(item_id)
+	var detail: Dictionary = _describe_item(int(item_id))
+	return _current_raw_definition(detail) if not detail.is_empty() else {}
+
+## Resident-memory diagnostics for the bounded cache.
+static func definition_cache_state() -> Dictionary:
+	return {"known_ids":_definition_ids.size(),"resident":_definition_lru.size(),"limit":DEFINITION_CACHE_LIMIT,"documents":_current_documents.size()}
+
+## The former cache dictionaries were read directly by some callers. A
+## document is that cache when it shares data()'s (now index-only) dictionary.
+static func _document_definition(document: Dictionary, item_id: String) -> Dictionary:
+	var definitions: Variant = document.get("item_definitions")
+	if not _current_reference_data.is_empty() and definitions is Dictionary and is_same(definitions,_current_reference_data.get("item_definitions")):
+		return cached_definition(item_id)
+	return document.get("item_definitions",{}).get(item_id,{})
+
+static func _describe_item(item_id: int) -> Dictionary:
 	# ItemData retains a legacy helper preload of this module. Defer loading
 	# until this actual read path; a static preload here would form a cycle.
-	var document: Dictionary = data()
-	if document.is_empty(): return {}
-	var id: String = str(item_id)
-	if document.source_item_references.has(id): return document.source_item_references[id]
 	var path: String = "res://scripts/resources/current523_item_data.gd"
 	if not ResourceLoader.exists(path): return {}
 	var reader: Script = load(path) as Script
@@ -165,8 +272,6 @@ static func _current_item_reference(item_id: int) -> Dictionary:
 	if not has_describe: return {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
-	document.source_item_references[id] = detail
-	document.item_definitions[id] = _current_raw_definition(detail)
 	return detail
 
 static func _current_raw_definition(reference: Dictionary) -> Dictionary:
@@ -316,9 +421,11 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 			continue
 		var item_id: String = str(int(raw.ItemClassID))
 		if not document.source_item_references.has(item_id):
-			var reference: Dictionary = _current_item_reference(int(raw.ItemClassID))
-			document.source_item_references[item_id] = reference
-			document.item_definitions[item_id] = _current_raw_definition(reference)
+			# The same values as before; the definition object is now shared
+			# with the bounded owner cache instead of being built twice.
+			var entry: Array = _current_item_entry(int(raw.ItemClassID))
+			document.source_item_references[item_id] = entry[0] if not entry.is_empty() else {}
+			document.item_definitions[item_id] = entry[1] if not entry.is_empty() else {}
 		var detail: Dictionary = document.source_item_references[item_id]
 		var item: Dictionary = detail.get("item_class",{})
 		if item.get("ID") != raw.ItemClassID or detail.get("source") != source_identity:
@@ -753,8 +860,8 @@ static func definition_id(item_id: String) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
 	var document: Dictionary = data()
 	if document.is_empty(): return {}
-	if not document.item_definitions.has(item_id): _current_item_reference(int(item_id))
-	return document.item_definitions.get(item_id,{})
+	var entry: Array = _current_item_entry(int(item_id))
+	return entry[1] if not entry.is_empty() else {}
 
 static func pack_identity() -> Dictionary:
 	var identity: Dictionary=CURRENT_SOURCE.identity()
@@ -857,7 +964,7 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 		# exact source quest state; never make the requirement unconditional.
 		if int(row.RequiredQuestID) != 0: report.quest_rows_blocked += 1; continue
 		var item_id: String = str(int(row.ItemClassID))
-		if document.get("item_definitions", {}).get(item_id, {}).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
+		if _document_definition(document,item_id).get("original_item", {}).get("TestItem", false): report.test_item_rows_blocked += 1; continue
 		var link: Dictionary = document.get("bindings", {}).get(item_id, {})
 		var item: Dictionary = catalog.get("patch523_by_name", catalog.get("by_name", {})).get(str(link.get("name", "")), {})
 		if not matches(item, link): report.missing_item_bindings += 1; continue
@@ -931,7 +1038,7 @@ static func source_rows(item: Dictionary) -> Array:
 	var document: Dictionary = data()
 	var item_id: String = str(int(item.source_item_class_id)) if item.get("source_m_native_item", false) else str(item.get("sourceId", ""))
 	var binding: Dictionary = document.get("bindings", {}).get(item_id, {})
-	var base: Dictionary = document.get("item_definitions", {}).get(item_id, {}).get("native_record", {})
+	var base: Dictionary = _document_definition(document,item_id).get("native_record", {})
 	var validated: bool = matches(item, binding)
 	if item.get("source_m_native_item", false) and not base.is_empty():
 		var expected: Dictionary = expected_variant(base,item)
@@ -1029,13 +1136,13 @@ static func item_details(item: Dictionary) -> String:
 				"guaranteed_bag":
 					lines.append("사용: 원본 확정 보상 지급 · 확률 추첨 없음")
 					for reward: Dictionary in spec.get("rewards", []):
-						var label: String = str(data().get("item_definitions", {}).get(str(int(reward.item_class_id)), {}).get("native_record", {}).get("source_display_name", "아이템 #"+str(int(reward.item_class_id))))
+						var label: String = str(cached_definition(str(int(reward.item_class_id))).get("native_record", {}).get("source_display_name", "아이템 #"+str(int(reward.item_class_id))))
 						lines.append("%s ×%d%s" % [label,int(reward.amount)," · 원본 직업 조건에 해당할 때" if not reward.get("class_ids", []).is_empty() else ""])
 				"source_weighted_bag", "mixed_rewards_bag":
 					lines.append("사용: 원본 확률·보상 수량 적용 · 직업 조건 보존")
 					lines.append("확률 보상 선택 횟수: TWILIGHT 자체 규칙 · 기본 1회 · 설정에서 변경 가능")
 					for reward: Dictionary in spec.get("rewards",[]).slice(0,40):
-						var label: String = str(data().get("item_definitions",{}).get(str(int(reward.item_class_id)),{}).get("native_record",{}).get("source_display_name","아이템 #"+str(int(reward.item_class_id))))
+						var label: String = str(cached_definition(str(int(reward.item_class_id))).get("native_record",{}).get("source_display_name","아이템 #"+str(int(reward.item_class_id))))
 						var chance: String = "확정" if int(reward.entity_type_id) == 1 else "%.6f%%" % (float(reward.probability_raw)/100000.0)
 						lines.append("%s ×%d · %s%s" % [label,int(reward.amount),chance," · 원본 직업 조건" if not reward.get("class_ids",[]).is_empty() else ""])
 					if spec.get("rewards",[]).size() > 40: lines.append("외 %d개 원본 보상" % (spec.rewards.size()-40))

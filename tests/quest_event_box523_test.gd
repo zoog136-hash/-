@@ -53,7 +53,7 @@ func run()->void:
 	var outputs: Dictionary={}
 	for reward: Dictionary in record.source_use_spec.rewards:
 		if USE.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)):
-			var child: Dictionary=D.variant_item(D.data().item_definitions[str(int(reward.item_class_id))].native_record,int(reward.bless_raw))
+			var child: Dictionary=D.variant_item(D.cached_definition(str(int(reward.item_class_id))).native_record,int(reward.bless_raw))
 			outputs[str(child.name)]=int(reward.amount)
 	check(outputs.size()==1,"actual Knight gets only its exact source class output")
 	var claims: Dictionary=world.quest_service.claimed.duplicate(true);var slots: Array=world.quickslots.duplicate(true)

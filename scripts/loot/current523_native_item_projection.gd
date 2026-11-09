@@ -366,7 +366,10 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# record is needed here; descriptions this loop created are dropped again
 	# and rebuilt on demand by definition_id(). Entries cached before (drop and
 	# reward items) stay.
-	var cache: Dictionary=owner.call("data")
+	# The owner keeps only a bounded definition cache plus an index of IDs
+	# read before; its accessors answer exactly as the former dictionaries.
+	var indexed: bool=owner.has_method("has_definition") and owner.has_method("transient_definition")
+	var cache: Dictionary=owner.call("data") if not indexed else {}
 	var references: Dictionary=cache.get("source_item_references",{})
 	var definitions: Dictionary=cache.get("item_definitions",{})
 	# Item templates (Lineage M style): every native record is a pure function
@@ -382,16 +385,18 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	for row_index: int in SOURCE.row_count("ItemClass"):
 		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
-		var id: String=str(int(raw.ID));var cached: bool=references.has(id) or definitions.has(id)
+		var id: String=str(int(raw.ID));var cached: bool=bool(owner.call("has_definition",id)) if indexed else (references.has(id) or definitions.has(id))
 		var current: Dictionary={}
 		var baked: Variant=(templates.light(id) if lazy else templates.record(id)) if templates!=null else null
 		if baked is Dictionary:
 			current=baked
 			if current.get("source_definition_archive")==_archive_identity():current["source_definition_archive"]=_archive_identity()
 		else:
-			var definition: Dictionary=owner.call("definition_id",id)
+			# An ID not read before is built without being remembered (the
+			# former read-then-erase), so the bounded cache keeps its entries.
+			var definition: Dictionary=owner.call("definition_id",id) if cached or not indexed else owner.call("transient_definition",id)
 			current=definition.get("native_record",{})
-			if not cached:
+			if not cached and not indexed:
 				references.erase(id);definitions.erase(id)
 			if writer!=null:writer.add(id,current)
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
