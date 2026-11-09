@@ -483,7 +483,7 @@ static func item_kind(item: Dictionary) -> String:
 	# Existing crafting scrolls already share the rarity roll without becoming
 	# wearables. Source skill books/scrolls/reward consumables use that same
 	# seven-grade host path; they must not all become 28%-chance materials.
-	if item.get("source_m_native_item", false) and item.get("source_is_consumable", false) and item.get("grade", "") in ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]: return "equipment"
+	if item.get("source_m_native_item", false) and NATIVE_FIELDS.full(item).get("source_is_consumable", false) and item.get("grade", "") in ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]: return "equipment"
 	return "material"
 
 static func matches(item: Dictionary, link: Dictionary) -> bool:
@@ -628,13 +628,14 @@ static func equipment_error(item: Dictionary, job: String, level: int, timezone_
 	if not item.get("source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
 	var deadline: String = deadline_problem(item,timezone_minutes)
 	if not deadline.is_empty(): return deadline
-	var classes: Array = item.get("source_class_names", [])
-	if not item.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
+	var full: Dictionary = NATIVE_FIELDS.full(item)
+	var classes: Array = full.get("source_class_names", [])
+	if not full.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
 	if not classes.is_empty() and not classes.has(job): return "원본 직업 조건에 맞지 않는 장비입니다"
 	var minimum: int = int(item.get("source_level_limit_min", 0))
 	var maximum: int = int(item.get("source_level_limit_max", 0))
 	if level < minimum or (maximum > 0 and level > maximum): return "원본 장비 레벨 조건에 맞지 않습니다"
-	if level < int(item.get("source_max_level_limit_min",0)) or (int(item.get("source_max_level_limit_max",0)) > 0 and level > int(item.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
+	if level < int(full.get("source_max_level_limit_min",0)) or (int(full.get("source_max_level_limit_max",0)) > 0 and level > int(full.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
 	return ""
 
 static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallback: int) -> int:
@@ -918,7 +919,7 @@ static func item_details(item: Dictionary) -> String:
 			if row.get("IsPossession") != false or int(row.bonus.BonusApplicationTypeID) != 0 or int(row.bonus.BonusApplicationTargetID) != 0: continue
 			if row.bonus_type.Name in ["RegenHP","RegenMP","AbsoluteRegenHP","AbsoluteRegenMP","AttackDrainHP","AttackDrainMP"]:
 				lines.append("원본 %s %+d · 회복 간격·일반 명중 흡수 발동률은 TWILIGHT 설정" % [str(row.bonus_type.Name),int(row.bonus.Value)])
-	if item.get("source_is_trash",false): lines.append("원본 IsTrash 표시 · 이 표시만으로 제외하지 않고 공급·사용 조건을 따름")
+	if NATIVE_FIELDS.full(item).get("source_is_trash",false): lines.append("원본 IsTrash 표시 · 이 표시만으로 제외하지 않고 공급·사용 조건을 따름")
 	var labels: Dictionary = {"small_damage":"작은 대상 무기 대미지", "large_damage":"큰 대상 무기 대미지", "hit":"무기 명중", "additionalDamage":"추가 대미지", "def":"방어", "strFlat":"STR", "dexFlat":"DEX", "conFlat":"CON", "intFlat":"INT", "wisFlat":"WIS", "chaFlat":"CHA", "hpFlat":"HP", "mpFlat":"MP", "mr":"MR", "damage_reduction":"리덕션", "sp":"SP", "meleeDamage":"근거리 대미지", "rangedDamage":"원거리 대미지", "magicDamage":"마법 대미지", "meleeHit":"근거리 명중", "rangedHit":"원거리 명중", "magicHit":"마법 명중"}
 	for key: String in labels:
 		if item.has(key): lines.append("%s %+d" % [str(labels[key]), int(item[key])])
@@ -970,11 +971,12 @@ static func item_details(item: Dictionary) -> String:
 						lines.append("%s ×%d · %s%s" % [label,int(reward.amount),chance," · 원본 직업 조건" if not reward.get("class_ids",[]).is_empty() else ""])
 					if spec.get("rewards",[]).size() > 40: lines.append("외 %d개 원본 보상" % (spec.rewards.size()-40))
 			if int(spec.get("consume_delay_ms", 0)) > 0: lines.append("원본 재사용 대기 %.1f초" % (float(spec.consume_delay_ms)/1000.0))
-	var classes: Array = item.get("source_class_names", [])
+	var full_item: Dictionary = NATIVE_FIELDS.full(item)
+	var classes: Array = full_item.get("source_class_names", [])
 	if not classes.is_empty(): lines.append("원본 착용 직업: " + ", ".join(classes))
 	if int(item.get("source_level_limit_min", 0)) > 0: lines.append("착용 최소 레벨 %d" % int(item.source_level_limit_min))
-	if item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
-	if item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
+	if full_item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
+	if full_item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
 	if item.get("source_test_item", false): lines.append("원본 테스트 아이템 · 드랍 제외")
 	var invokes: String = invoke_details(item)
 	if not invokes.is_empty(): lines.append(invokes)

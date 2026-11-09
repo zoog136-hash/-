@@ -56,6 +56,7 @@ func setup(source: Object) -> void:
 	var item_columns: Array = _shared_columns("ItemClass", ["ID", "CategoryID", "GradeID"])
 	var items: Array = _rows("ItemClass") if item_columns.is_empty() else []
 	var item_count: int = items.size() if item_columns.is_empty() else (item_columns[0] as Variant).size()
+	var graces: Array = _rows("ItemGrace")
 	for item_index: int in item_count:
 		var item: Dictionary = items[item_index] if item_columns.is_empty() else {"ID": item_columns[0][item_index], "CategoryID": item_columns[1][item_index], "GradeID": item_columns[2][item_index]}
 		var item_id: int = int(item.get("ID", 0))
@@ -72,7 +73,7 @@ func setup(source: Object) -> void:
 			if duration > 0 and subscription > 0:
 				_jade[item_id] = {"item_id": item_id, "duration": duration,
 					"subscription": subscription, "delete_time": delete_time}
-		for grace: Dictionary in _rows("ItemGrace"):
+		for grace: Dictionary in graces:
 			if int(item.get("CategoryID", 0)) == int(grace.get("ItemCategoryID", -1)) and int(item.get("GradeID", 0)) == int(grace.get("GradeID", -1)):
 				_grail[item_id] = int(grace.get("ID", 0))
 	for link: Dictionary in _rows("CurrencyUnitClass"):
@@ -417,7 +418,9 @@ func _item_eligibility(item: Dictionary, context: Dictionary) -> String:
 	if not region.is_empty() and not str(context.get("region", "KR")) in region.split(","):
 		return "source_region_limit"
 	var classes: Array = []
-	for link: Dictionary in _rows("ItemClassLimit"):
+	# The item's own ItemClassLimit rows (same rows a scan of the table finds);
+	# the shared 11,025-row table is not re-read for every eligibility check.
+	for link: Dictionary in _links("ItemClassLimit", "ItemClassID", int(item.get("ID", 0))):
 		if int(link.get("ItemClassID", 0)) == int(item.get("ID", 0)):
 			classes.append(int(link.get("ClassID", 0)))
 	if not classes.is_empty() and not int(context.get("class_id", 0)) in classes:

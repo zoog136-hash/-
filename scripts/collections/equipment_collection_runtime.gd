@@ -48,7 +48,11 @@ func configure(host: Node) -> bool:
 		var row: Dictionary = raw
 		var source: String = str(row.get("sourceId",""))
 		if source.is_empty() or _sources.has(source) or world._enhancement_kind_for_record(row).is_empty(): continue
-		_sources[source] = row.duplicate(true)
+		# The catalog record itself: World keeps catalog_db for the whole session,
+		# and this index only reads a name from it or duplicate()s the record it
+		# hands out (icon_record). A deep copy of every enhanceable item held
+		# ~24 MB of the item catalog a second time.
+		_sources[source] = row
 		var name_value: String = str(row.get("name",""))
 		var canonical: String = Core.normalize_name(name_value)
 		if not _exact_names.has(name_value): _exact_names[name_value] = []

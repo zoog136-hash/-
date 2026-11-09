@@ -9,6 +9,7 @@ const NATIVE_PATH: String="res://data/cards/patch523_collections.json"
 const ExistingStats=preload("res://scripts/collections/equipment_collection_stats.gd")
 const PATH: String="res://data/cards/normal_collections.json"
 const Policy=preload("res://scripts/cards/collection_policy.gd")
+const SHARED=preload("res://scripts/resources/shared_values.gd")
 var policy_values: Dictionary=Policy.DEFAULTS.duplicate(true)
 var policy_saved: Variant={}
 var policy_problem: String=""
@@ -18,7 +19,12 @@ var problem: String=""
 var revision: int=0
 var rebuild_count: int=0
 var totals: Dictionary={}
-var _views: Array=[]
+## One entry per core.definitions row: the keys derive() added to that row and
+## to each of its requirements ({"id","fields","requirements"}). snapshot()
+## rebuilds a derived row from the definition plus its entry, so the full
+## derived rows (a second copy of the model, ~35 MB with the original
+## installed) are not kept.
+var _view_deltas: Array=[]
 var _interval_rewards: Array[Dictionary]=[]
 var _completed: Dictionary={}
 var _announced: Dictionary={}
@@ -51,6 +57,14 @@ func configure(host: Node) -> bool:
 	var data: Dictionary=projection.build(world.catalog_db)
 	if data.is_empty():problem=projection.problem;return false
 	if not core.configure(data,world.catalog_db):problem=core.error;return false
+	data={};projection=null
+	# The definitions repeat the same read-only original rows (Grade, deck,
+	# BonusType, Unit, UIUnit, application targets, interval branches, member
+	# availability) in every collection that uses them; share each distinct
+	# value once. Content is unchanged; derive() and snapshot() only read them.
+	var shared: Dictionary={}
+	for row: Dictionary in core.definitions:SHARED.intern(row,shared,8)
+	shared={}
 	problem="";restore_from_owned();return true
 
 func invalidate() -> void:_dirty=true
@@ -72,13 +86,17 @@ func _ensure() -> void:
 	var state: Dictionary={"owned":owned,"source_server_context":_source_server_context}
 	if core is NativeRules:state.source_option_awakening=world.option_awakening.native_collection_state()
 	var derived: Dictionary=core.derive(state)
-	_views=derived.rows;totals=derived.totals;_completed=derived.completed
+	totals=derived.totals;_completed=derived.completed
+	_view_deltas.clear()
 	_interval_rewards.clear()
-	if core is NativeRules:
-		for row: Dictionary in _views:
-			if row.completed:
-				for effect: Dictionary in row.effects:
-					if NativeRules.interval_supported(effect):_interval_rewards.append(effect)
+	var rows: Array=derived.rows
+	for index: int in rows.size():
+		var row: Dictionary=rows[index]
+		_view_deltas.append(_delta(core.definitions[index] if index<core.definitions.size() else {},row))
+		if core is NativeRules and row.completed:
+			# Effects are the definitions' own read-only rows (view_row shares them).
+			for effect: Dictionary in row.effects:
+				if NativeRules.interval_supported(effect):_interval_rewards.append(effect)
 	_record=ExistingStats.record(totals)
 	if core is NativeRules:_record.merge(NativeRules.stat_record_additions(totals),true)
 	if not _record.is_empty():
@@ -102,12 +120,69 @@ func reconcile() -> Array[String]:
 
 func snapshot(category: String="",card_id: String="") -> Array:
 	_ensure()
+	if not _aligned():_has_cache=false;_dirty=true;_ensure()
 	var rows: Array=[]
-	for row: Dictionary in _views:
-		if card_id.is_empty() and not category.is_empty() and str(row.category)!=category:continue
-		if not card_id.is_empty() and not row.requirements.any(func(requirement: Dictionary) -> bool:return str(requirement.id)==card_id and str(requirement.category)==category):continue
-		rows.append(row.duplicate(true))
+	if not _aligned():return rows
+	for index: int in core.definitions.size():
+		var definition: Dictionary=core.definitions[index]
+		if card_id.is_empty() and not category.is_empty() and str(definition.category)!=category:continue
+		if not card_id.is_empty() and not definition.requirements.any(func(requirement: Dictionary) -> bool:return str(requirement.id)==card_id and str(requirement.category)==category):continue
+		rows.append(_view(definition,_view_deltas[index]))
 	return rows
+
+## True when the kept deltas belong to the current core.definitions rows (a
+## core reconfigured underneath the runtime is derived again before use).
+func _aligned() -> bool:
+	if _view_deltas.size()!=core.definitions.size():return false
+	for index: int in _view_deltas.size():
+		if str((_view_deltas[index] as Dictionary).get("id",""))!=str((core.definitions[index] as Dictionary).get("id","")):return false
+	return true
+
+## The keys derive() gave `row` beyond its definition (in derive()'s order),
+## and the same for each requirement. Values are the derived row's own (its
+## problems, evaluations, flags); shared sub-values are never among them.
+static func _delta(definition: Dictionary,row: Dictionary) -> Dictionary:
+	var fields: Dictionary={}
+	for key: Variant in row:
+		if key is String and key=="requirements":continue
+		if not definition.has(key) or (not is_same(definition[key],row[key]) and definition[key]!=row[key]):fields[key]=row[key]
+	var requirements: Array=[]
+	var base_rows: Variant=definition.get("requirements",[])
+	var derived_rows: Variant=row.get("requirements",[])
+	if derived_rows is Array:
+		for index: int in (derived_rows as Array).size():
+			var requirement: Variant=derived_rows[index]
+			var base: Variant=base_rows[index] if base_rows is Array and index<(base_rows as Array).size() else {}
+			var added: Dictionary={}
+			if requirement is Dictionary:
+				for key: Variant in requirement:
+					if not base is Dictionary or not base.has(key) or (not is_same(base[key],requirement[key]) and base[key]!=requirement[key]):added[key]=requirement[key]
+			# Only "met" in the common case: keep the bool, not a Dictionary per member.
+			if added.size()==1 and added.has("met") and added.met is bool:requirements.append(added.met)
+			else:requirements.append(added)
+	return {"id":row.get("id",""),"fields":fields,"requirements":requirements}
+
+## The derived row derive() produced for `definition`, rebuilt from the kept
+## delta: a deep copy of the definition with the derived keys set in the same
+## order derive() added them (equal to the former _views row, byte for byte).
+static func _view(definition: Dictionary,delta: Dictionary) -> Dictionary:
+	var row: Dictionary=definition.duplicate(true)
+	var fields: Dictionary=delta.get("fields",{})
+	for key: Variant in fields:
+		var value: Variant=fields[key]
+		row[key]=value.duplicate(true) if value is Dictionary or value is Array else value
+	var requirements: Variant=row.get("requirements")
+	var added_rows: Array=delta.get("requirements",[])
+	if requirements is Array:
+		for index: int in mini((requirements as Array).size(),added_rows.size()):
+			if not requirements[index] is Dictionary:continue
+			var requirement: Dictionary=requirements[index]
+			var added: Variant=added_rows[index]
+			if added is bool:requirement["met"]=added;continue
+			for key: Variant in added:
+				var value: Variant=added[key]
+				requirement[key]=value.duplicate(true) if value is Dictionary or value is Array else value
+	return row
 
 func bonus(code: String) -> float:
 	_ensure();return float(totals.get(code,0.0))

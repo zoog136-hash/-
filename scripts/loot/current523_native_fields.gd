@@ -9,7 +9,15 @@ extends RefCounted
 ## grade sync win), the template's values for the heavy fields it left out.
 ## Records without the marker (non-native, saved, edited) are returned as is.
 
-const HEAVY: Array[String] = ["source_use_spec","source_original_item","source_unhandled_bonuses","source_mapped_bonuses"]
+## Heavy or rarely read registration fields. Readers go through full().
+## The second group is read only by a few item checks and detail views; each
+## key costs ~2.4 MB resident across the 30,310 registered records.
+const HEAVY: Array[String] = ["source_use_spec","source_original_item","source_unhandled_bonuses","source_mapped_bonuses",
+	"source_acquisition_policy","source_catalog_eligible","source_category_is_activatable","source_equip_slots","source_icon_id",
+	"source_sprite_animation_id","source_unhandled_bonus_ids","source_weapon_type_name","source_effect_scope",
+	"source_is_deletable","source_is_droppable","source_is_trash","source_label_status","source_max_level_limit_max",
+	"source_max_level_limit_min","source_weight_unit","source_is_storable","source_effect_status","source_equipment_status",
+	"source_unresolved_class_ids","source_is_tradable","source_is_consumable","source_category_id","source_class_names"]
 const MARK := "twilight_lazy_native_fields"
 const CACHE_LIMIT := 128
 
