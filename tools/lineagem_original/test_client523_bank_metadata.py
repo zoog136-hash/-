@@ -112,6 +112,34 @@ class GeneratedHandoffTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             bank.omit_missing_layers(actor, members, proof, {m: {} for m in members - {"Sprite/1-0.sp2"}})
 
+    def test_client_frame_rules(self):
+        def layer(kind, member, bit, frame):
+            return {"kind": kind, "source_sprite_id": 1, "member": member, "group_bit": bit, "frame_index": frame}
+        actor = {"source_sprite_id": 1, "roles": {"r": {"directions": [[
+            {"duration_ticks": 1, "layers": [layer("body", "Sprite/1-0.sp2", 0, 5), layer("shadow", "Sprite/2-0.sp2", 3, 0)]},
+            {"duration_ticks": 1, "layers": [layer("body", "Sprite/1-0.sp2", 0, 1), layer("shadow", "Sprite/2-0.sp2", 0, 0)]}]]}}}
+        parsed = {"Sprite/1-0.sp2": {"groups": {0: {"frames": [{"samples": 4}, {"samples": 0}]}}},
+                  "Sprite/2-0.sp2": {"groups": {0: {"frames": [{"samples": 2}]}}}}
+        result = bank.apply_client_frame_rules(actor, {}, parsed)
+        first, second = result["roles"]["r"]["directions"][0]
+        self.assertEqual((first["layers"][0]["frame_index"], first["layers"][0]["clamped_from_frame_index"]), (1, 5))
+        self.assertEqual(first["layers"][0]["client_null"], "empty_body_frame")  # clamped onto an empty frame
+        self.assertEqual(first["layers"][1]["client_null"], "direction_absent")
+        self.assertEqual(second["layers"][0]["client_null"], "empty_body_frame")
+        self.assertNotIn("client_null", second["layers"][1])
+        self.assertNotIn("clamped_from_frame_index", actor["roles"]["r"]["directions"][0][0]["layers"][0])  # input untouched
+
+    def test_static_candidates_follow_client_branch(self):
+        import add_static_pictures as statics
+        path = self.tmp / "static.spr"
+        path.write_bytes(b"#40 1 potion 101.shadow(41)\r\n#41 1 potion shadow\r\n#42 1=40 alias potion\r\n"
+                         b"#43 4 walker\r\n\t0.walk(1 1,0.0:2)\r\n")
+        found = statics.static_candidates(original_spr.read([path]))
+        self.assertEqual(found[40]["file_id"], 40)
+        self.assertEqual(found[40]["shadow_file_id"], 41)
+        self.assertEqual(found[42]["file_id"], 40)  # one non-recursive header remap
+        self.assertNotIn(43, found)  # has an action: animated branch
+
 
 if __name__ == "__main__":
     unittest.main()

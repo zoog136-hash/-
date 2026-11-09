@@ -25,10 +25,21 @@ static func select(original_item: Dictionary, context: Dictionary = {}, binding:
 	reference["original_sprite_animation_id"] = native.get("SpriteAnimationID")
 	reference["caller_binding"] = binding.duplicate(true)
 	# ItemClass.SpriteID is not permission to bind a same-numbered actor action.
-	# The inspected mobile ground examples have type9 declarations without SPR
-	# actions. Their member/frame and consuming renderer relationship is still an
-	# input dependency, even when the raw SP2 bytes have already been preserved.
+	# Ground item sprites are declarations without SPR actions; the client's
+	# no-action static branch (LineageM 1.10.22.0 auxiliary-layer analysis) draws
+	# Sprite/<remapped id>-0.sp2 direction 0 picture 0 plus its 101 shadow. The
+	# bank's static_pictures registry carries exactly that relationship.
+	var bank_options: Dictionary = supplied.options
+	var statics = BANK.new()
+	var picture: Dictionary = statics.load_static(str(bank_options.manifest_path),str(bank_options.manifest_sha256),sprite)
+	if picture.get("ok",false):
+		return {"ok":true,"enabled":true,"status":"selected_static_picture","consumer":"ground_item","source_snapshot":"patch523",
+			"source_reference":reference,"request_key":"current523:item:%d:ground" % int(native.ID),"sprite_id":sprite,
+			"layers":picture.layers,"branch":picture.branch,"source_declaration":picture.source_declaration,
+			"manifest_path":str(bank_options.manifest_path),"manifest_sha256":str(bank_options.manifest_sha256),
+			"source_tables_sha256":supplied.source_tables_sha256}
 	var pending: Dictionary = fail("current523_ground_original_member_and_renderer_role_unresolved",reference)
+	pending["static_picture_status"] = picture.duplicate(true)
 	pending["request_key"] = "current523:item:%d:ground" % int(native.ID)
 	pending["sprite_id"] = sprite
 	pending["source_tables_sha256"] = supplied.source_tables_sha256

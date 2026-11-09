@@ -511,6 +511,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
 	for effect: Dictionary in selected.get("effect_layers", []):
+		if effect.has("client_null"): continue
 		if is_reference:
 			var verified: Dictionary = _reference_bank.render_layer(effect, false)
 			if not verified.ok:
@@ -551,6 +552,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
 		var layer: Dictionary = selected.layers[index]
+		if layer.has("client_null"):
+			_layers[index].hide()
+			continue
 		var is_body: bool = layer.get("kind") == "body" if is_reference else int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
 		_layers[index].material = _source_body_material if is_body and not is_reference else null
 		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and not is_reference and _source_body_material != null else 1.0
