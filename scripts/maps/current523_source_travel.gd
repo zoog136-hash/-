@@ -39,7 +39,7 @@ static func _field_problem(field: RefCounted, record: Dictionary, catalog: RefCo
 
 static func _endpoint_clear(field: RefCounted, cell: Vector2i, info: Dictionary) -> bool:
 	if info.get("status")!="allowed" or info.get("walkable")!=true or info.get("source_cell")!=cell \
-		or info.get("native_m_rules_verified")!=false or info.get("own_profile")!=field.OWN_PROFILE:
+		or info.get("native_m_rules_verified")!=false or info.get("own_profile")!=str(field.policy.get("profile",field.OWN_PROFILE)):
 		return false
 	var member: Variant = info.get("member")
 	if not member is String or not member.begins_with(PACK._asset_root(field.source_asset)): return false

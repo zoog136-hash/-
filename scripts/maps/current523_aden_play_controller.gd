@@ -404,7 +404,7 @@ func _open_source(value: Dictionary) -> bool:
 	if generic and catalog==null: return false
 	var script: Script = load("res://scripts/maps/current523_source_field.gd" if generic else "res://scripts/maps/current523_aden_source_field.gd")
 	var proposed: OriginalPlayableField = script.new()
-	var interpretation: Dictionary={"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}
+	var interpretation: Dictionary={"attribute_rule":str(options.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}
 	var configured: bool=proposed.call("configure_verified_catalog",catalog,options.source_manifest_sha256,options.native_land_id,interpretation) if generic else proposed.call("configure_current523",options.raw_root,interpretation)
 	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
@@ -837,7 +837,7 @@ func _prepare_generic_source_travel(id: int,world: Node,save_changes: Dictionary
 	var target_id: int=int(context.TargetLand.get("ID",-1))
 	var catalog: RefCounted=_catalog_for(options)
 	if catalog==null: proposed.close(); return false
-	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}):
+	if not proposed.configure_verified_catalog(catalog,options.source_manifest_sha256,target_id,{"attribute_rule":str(options.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":options.allowed_raw_words,"path_search_limit":options.get("path_search_limit",8192),"aden_inferred_placement_enabled":options.get("aden_inferred_placement_enabled",true)}):
 		problem="대상 원문 필드 보류: "+str(proposed.problem); proposed.close(); return false
 	var territory: Dictionary=context.TargetTerritory
 	if (territory.StartX!=territory.EndX or territory.StartY!=territory.EndY) and options.get("portal_landing_policy","EXACT_POINT_ONLY")=="OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1":
@@ -898,7 +898,7 @@ func return_to_aden(save_changes: Dictionary={}) -> Dictionary:
 		if catalog!=null:
 			var script: Script=load("res://scripts/maps/current523_source_field.gd")
 			var proposed: OriginalPlayableField=script.new()
-			if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,4,{"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
+			if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,4,{"attribute_rule":str(settings.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
 				var landing: Dictionary=_aden_return_point(proposed,int(settings.get("aden_return_radius",8)))
 				if landing.get("ok",false):completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
 				else:problem=str(landing.reason);proposed.close()

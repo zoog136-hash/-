@@ -61,6 +61,23 @@ python tools/lineagem_original/build_reference_sp2_bank.py --metadata PRIVATE_ME
 
 Plan-only results for the complete 523 client (2026-11-08): 74,656 target SP2 members. Strict explicit timing plans 39,161; with the client default 66,317 (88.8%). Of the remainder, 4,546 members are emitted by no declared action and 3,793 are blocked by missing dependency members or by the existing literal-dummy exclusion. A real compilation of a 200-root sample (150 NPC and 50 polymorph sprites, random seed 7) from the extracted client SP2 compiled 4,821 of 5,109 requested actions (94.4%) with all 30 original SPR files verified; 42 failed the SP2 frame contract and 246 the source contract. That run used a validation-only Brotli stand-in because the pinned `brotli` package was not installable offline; use `requirements.txt` for real builds.
 
+### Client rule for absent layer files
+
+`--client-omit-missing-layers` (bank builder, opt-in) follows the client when a
+shadow or clothes layer addresses an SP2 file the client itself does not ship:
+that layer is not drawn, clothes keep only the prefix before the first missing
+entry, and the body is never dropped (LineageM 1.10.22.0 static analysis of the
+auxiliary-layer path). Each affected action records `omitted_missing_layers`,
+and the bank contract records `missing_layer_policy`. On the complete 523 client
+the absent files are 2,865 files of 530 layer sprites (e.g. `*_sc`, `*_mu`);
+none of them resolves through the one-hop header remap.
+
+Full 523 bank with this rule and the 24fps section default (2026-11-09):
+122,624 of 126,213 requested actions compiled (97.2%), 66,378 of 74,656 SP2
+members (88.9%). Remaining: 4,546 members no declared action uses, 2,717 that fail
+the existing SP2 frame contract, 1,009 behind the user's literal-dummy exclusion
+or other source-contract failures.
+
 ### One-command private install (PC)
 
 `build_client523_private_install.py` runs the source adapter, the metadata generator, the bank builder and `configure_current523_source_bank.py` into one new private directory and prints the Main loader config path:

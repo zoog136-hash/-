@@ -18,6 +18,7 @@ from collections import Counter, defaultdict
 from dataclasses import replace
 import gzip
 import hashlib
+import copy
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -460,7 +461,55 @@ def expanded_requests(seeds, declarations, metadata, failures, statistics):
         yield {**seed, "seed_target_members": list(seed["target_members"])}, None
 
 
-def plan_action(request, declarations, metadata, prepared=None, allow_host_timing=False):
+MISSING_LAYER_POLICY = "client_omits_non_body_layer_without_client_file"
+
+
+def omit_missing_layers(actor, members, proof, identities):
+    """Drop shadow/clothes layers whose SP2 files the client itself does not ship.
+
+    The client loads each layer by file name and draws nothing for an absent
+    file; the body is never dropped. A layer identity (kind, sprite) is removed
+    from the whole action when any of its addressed files is absent, so every
+    frame keeps the same layer list the runtime requires; for clothes the
+    client keeps only the prefix before the first missing entry.
+    """
+    absent = members - identities.keys()
+    if not absent:
+        return actor, members, proof, []
+    dropped, clothes_order = set(), []
+    for track in actor["roles"].values():
+        for frames in track["directions"]:
+            for frame in frames:
+                for layer in frame["layers"]:
+                    identity_key = (layer["kind"], layer["source_sprite_id"])
+                    if layer["kind"] == "clothes" and identity_key not in clothes_order:
+                        clothes_order.append(identity_key)
+                    if layer["member"] in absent:
+                        require(layer["kind"] != "body", f"dependency identity unavailable: body file absent from client {layer['member']}")
+                        dropped.add(identity_key)
+    # Clothes are built in list order and the client stops at the first null,
+    # keeping only the successful prefix (LineageM 1.10.22.0 aux-layer analysis).
+    first_missing = next((index for index, key in enumerate(clothes_order) if key in dropped), None)
+    if first_missing is not None:
+        dropped.update(clothes_order[first_missing:])
+    actor = copy.deepcopy(actor)
+    kept = set()
+    for track in actor["roles"].values():
+        for frames in track["directions"]:
+            for frame in frames:
+                frame["layers"] = [layer for layer in frame["layers"] if (layer["kind"], layer["source_sprite_id"]) not in dropped]
+                kept.update(layer["member"] for layer in frame["layers"])
+    proof = copy.deepcopy(proof)
+    proof["declarations"] = [layer for layer in proof["declarations"]
+                             if (layer["kind"], layer["declaration_path"][-1]["sprite_id"]) not in dropped]
+    omitted = [{"kind": kind, "source_sprite_id": sprite, "policy": MISSING_LAYER_POLICY,
+                "absent_files": sorted(m for m in absent if m.startswith(f"Sprite/{sprite}-"))}
+               for kind, sprite in sorted(dropped)]
+    proof["omitted_missing_layers"] = omitted
+    return actor, kept, proof, omitted
+
+
+def plan_action(request, declarations, metadata, prepared=None, allow_host_timing=False, omit_missing=False):
     dummy = metadata.get("dummy_declarations", {})
     require(source_dummy_alias_path(request["actor_id"], declarations, dummy) is None,
             "source_literal_dummy: explicit source declaration/alias path excluded by user")
@@ -483,6 +532,9 @@ def plan_action(request, declarations, metadata, prepared=None, allow_host_timin
     # action number carries no loop/one-shot or gameplay event meaning.
     actor["roles"][role]["loop"] = None
     require(set(request["target_members"]) <= members, "requested target is not emitted by this exact action/layer contract")
+    if omit_missing:
+        actor, members, proof, _ = omit_missing_layers(actor, members, proof, metadata["identities"])
+        require(set(request["target_members"]) <= members, "requested target belongs only to an omitted absent layer")
     unknown = sorted(members - metadata["identities"].keys())
     require(not unknown, f"dependency identity unavailable: {unknown}")
     return actor, members, proof
@@ -768,6 +820,7 @@ def build(args):
     seed_requests = requests_from(args.requests, metadata["targets"], request_bytes)
     allow_host_timing = getattr(args, "allow_host_timing", False)
     client_default_fps = getattr(args, "client_section_default_fps", False)
+    omit_missing = getattr(args, "client_omit_missing_layers", False)
     require(not (allow_host_timing and client_default_fps), "choose host timing or the client section default, not both")
     timing_policy = "client_section_default_fps_24" if client_default_fps else "source_explicit_only"
     if client_default_fps or metadata["proof"].get("generator"):
@@ -775,6 +828,8 @@ def build(args):
         require(handoff.get("timing_policy", "source_explicit_only") == timing_policy,
                 "metadata handoff timing policy differs from the requested build timing policy")
     contract = consumer_contract(allow_host_timing, client_default_fps)
+    if omit_missing:
+        contract["missing_layer_policy"] = MISSING_LAYER_POLICY
     original, source_problem, source_inputs = None, None, {}
     if not args.plan_only:
         try:
@@ -795,7 +850,7 @@ def build(args):
             if not args.plan_only and source_problem is not None:
                 result["status"] = "blocked_original_spr_unavailable_or_unverified"
                 require(False, source_problem)
-            actor, members, proof = plan_action(request, planning, metadata, prepared, allow_host_timing)
+            actor, members, proof = plan_action(request, planning, metadata, prepared, allow_host_timing, omit_missing)
             result["required_members"] = sorted(members)
             result["saved_address_issues"] = saved_address_issues(actor, metadata["identities"])
             result["status"] = "blocked_saved_direction_or_frame"
@@ -808,7 +863,8 @@ def build(args):
                 require(source_problem is None, source_problem)
                 result["status"] = "blocked_actual_source_contract"
                 planned_actor, planned_members = actor, members
-                actor, members, proof = plan_action(request, original, metadata, allow_host_timing=allow_host_timing)
+                actor, members, proof = plan_action(request, original, metadata, allow_host_timing=allow_host_timing,
+                                                     omit_missing=omit_missing)
                 require(members == planned_members and actor == planned_actor,
                         "actual SPR compiler relationships differ from metadata plan")
                 result["status"] = "blocked_original_sp2_unavailable_or_unverified"
@@ -930,6 +986,9 @@ def main(argv=None):
     parser.add_argument("--dependency-index", type=Path)
     parser.add_argument("--allow-host-timing", action="store_true",
                         help="Keep absent source FPS null and permit the existing explicitly labelled host timing policy.")
+    parser.add_argument("--client-omit-missing-layers", action="store_true",
+                        help="Follow the client: drop shadow/clothes layers whose SP2 files the client does not ship "
+                             "(the body is never dropped); recorded per action and in the bank contract.")
     parser.add_argument("--link-raw", action="store_true",
                         help="Hard-link verified original SP2 files into raw/ instead of copying them "
                              "(output must be on the same filesystem; the original files must not be edited afterwards).")

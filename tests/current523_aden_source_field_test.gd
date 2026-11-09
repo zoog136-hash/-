@@ -6,8 +6,8 @@ var failures: Array[String] = []
 
 class MemoryField extends FIELD:
 	var rows: Dictionary = {}
-	func prepare() -> void:
-		_configure_policy({})
+	func prepare(interpretation: Dictionary = {"attribute_rule":"own_allowlist"}) -> void:
+		_configure_policy(interpretation)
 		source_bounds = Rect2i(32000,32000,128,64)
 		coordinates.configure([32000,32000],[128,64],policy.coordinate_mapping)
 		width = 128
@@ -76,6 +76,19 @@ func _initialize() -> void:
 	check(memory.source_cell_info(Vector2i(32022,32020)).floor_pair == [0,0] and memory.walkable(memory.cell_to_world(Vector2i(22,20))),"zero floor references preserved under explicit own choice")
 	memory.attribute(Vector2i(23,20),0,8196)
 	check(not memory.walkable(memory.cell_to_world(Vector2i(23,20))),"unmapped high attribute bits never truncate into allowed4")
+	var client := MemoryField.new()
+	client.prepare({})
+	check(client.policy.attribute_rule == FIELD.CLIENT_RULE and client.data.get("navigation_profile",FIELD.CLIENT_PROFILE) == FIELD.CLIENT_PROFILE,"resource-first default is the client S32 attribute rule")
+	client.attribute(Vector2i(11,10),1,1)
+	check(client.can_step(Vector2i(10,10),3),"client rule: one open orthogonal side permits the diagonal")
+	client.attribute(Vector2i(10,11),0,1)
+	check(not client.can_step(Vector2i(10,10),3),"client rule: both orthogonal sides rejected blocks the diagonal")
+	client.attribute(Vector2i(23,20),0,8196)
+	check(client.walkable(client.cell_to_world(Vector2i(23,20))),"client rule: bit0 clear passes regardless of other bits")
+	client.attribute(Vector2i(24,20),1,65535)
+	check(not client.walkable(client.cell_to_world(Vector2i(24,20))),"client rule: 0xffff has bit0 and rejects")
+	client.attribute(Vector2i(25,20),0,1)
+	check(not client.walkable(client.cell_to_world(Vector2i(25,20))),"client rule: bit0 set rejects")
 	memory.attribute(Vector2i(24,20),0,4)
 	memory.attribute(Vector2i(24,20),1,8)
 	check(memory.source_cell_info(Vector2i(32024,32020)).raw_pair == [4,8] and memory.walkable(memory.cell_to_world(Vector2i(24,20))),"allowed exact words remain separate u16 values")
