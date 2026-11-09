@@ -1,0 +1,34 @@
+{
+  "fixture_id": "OC_M47_M81_FIXTURE_V1",
+  "design_status": "DESIGN_NOT_RECOVERED_API",
+  "package": "TWILIGHT 클라이언트 소스 기반 구현참조 01–123, baseline_01_81 (CONTRACTS.json, CONTRACT_GUIDE_KO.txt, MODULES_01_81.json approval_evidence, CORRECTION_DEPENDENCIES.json rules)",
+  "basis_ko": "package_values의 값은 패키지 계약 문장·최종 QA 인용·정정 규칙에 적힌 수치/주소/이름을 그대로 옮긴 것이다. M47–M81의 수동 의사코드·원바이트 원문(S0315 등)은 이 패키지에 포함되지 않아 읽지 않았다.",
+  "synthetic_notice_ko": "synthetic_values의 모든 값은 이 fixture를 위해 만든 합성 입력이다. 원본 실행·실제 테이블·실제 패킷에서 관측한 값이 아니다. package_values 안에서도 'synthetic': true 표시가 있는 항목은 합성이다.",
+  "package_values": {
+    "M47": {"vtable_stride": 56, "callable_slots": 6, "tables_in_erratum": 61, "ref": "S0318 L10"},
+    "M48": {"dat": 753, "canonical_resources": 91465, "direct_spr": 30, "sp2": 74656, "sp2_complete": 72034, "sp2_prefix_only": 2621, "sp2_unsupported_non_fe": 1, "ti2": 8513, "ti2_eof_pass": 8512, "s32": 8296, "non_fe_path": "Sprite/28708-15.sp2", "ti2_exception": "Tile/5668.ti2", "ti2_short_bytes": 19296, "ref": "C08, S0331 L7-12, historical guide 남은 기술 경계"},
+    "M49": {"helper_cfg_rows": 2631, "must_include": "01CBFC5F", "ref": "R49 / S0696"},
+    "M52": {"purge_priority": 1, "reset_priority": 2, "ref": "S0369 L49"},
+    "M53": {"no_return_call_terminal": "021F7A90", "leaf_int3_bytes": 47, "superseded": 46, "ref": "S0378, S0701"},
+    "M54": {"ack_constants": ["0443B850", "0443B860", "0443B880"], "ref": "S0389 L7"},
+    "M56": {"events": ["2F8", "9DD"], "ref": "S0410 L20"},
+    "M61": {"input": 65536, "stored_i16": 0, "constantdata_candidate": 20889, "ref": "S0459 L16"},
+    "M62": {"lea": "02135799", "copy_call": "0213579E", "ref": "S0471 L9"},
+    "M63": {"index": -5, "count": 2147483649, "remainder": 2147483648, "address_index": -2147483648, "stride": 40, "sprite_offset": 24, "ref": "C09-T01, S0481 L25"},
+    "M64": {"pdata": ["005058B0", "00506120"], "switch": ["005060D4", "00506120"], "switch_bytes": 76, "ref": "S0494 L10"},
+    "M66": {"event": 213, "ref": "S0516 L32"},
+    "M71": {"candidate_ids": [22, 24], "null_candidate_synthetic": true, "ref": "S0574 L5 (QA는 현행 카드22가 실제 null이라고 주장하지 않는다)"},
+    "M74": {"shared_empty_address": "05958E48", "alias_survey_count": 16881, "ref": "S0612 L5"},
+    "M77": {"fixed_envelope": [1200, 675], "cx": 0.5, "cy": 0.5, "unpack_target": "0x88EC", "binding_pname": "0x88EF", "ref": "C14, S0655 L40/L46"},
+    "M80": {"arrow_tag_write": "E0330B7BC", "superseded": "E0330B7BB", "tag": 1234567, "loop_windows": [[5, 30], [35, 100]], "ref": "S0685 L5/L9"},
+    "M81": {"interval": 0.5, "equal_case_elapsed": 0.5, "accumulated_case": 0.75, "expected_remaining": 0.25, "divisor": 1000.0, "ref": "C20-T01, S0989 L32"}
+  },
+  "synthetic_values": {
+    "M47_double_rounding_int64": {"value": "1152921573326323713", "note": "decimal string because JSON numbers parse as binary64; 2^60 + 2^36 + 1: direct f32 rounds up, f64-first rounds to even", "synthetic": true},
+    "M50_fields": {"synthetic": true, "fields": [{"name": "bgm", "value": 3, "convertible": true}, {"name": "sfx", "value": 5, "convertible": true}, {"name": "bad", "value": "x", "convertible": false}, {"name": "late", "value": 9, "convertible": true}]},
+    "M77_alloc_cases": {"synthetic": true, "normal": [1200, 675, 32], "wrap_zero": [32768, 32768, 32], "negative_low32": [1, 268435457, 8]},
+    "M79_direction": {"synthetic": true, "original_direction": 6, "facing": 2},
+    "M81_delta_qword": {"synthetic": true, "value": 16, "expected_seconds_f32_bits": "3C83126F"},
+    "M81_pairs": {"synthetic": true, "pairs": [{"page": 1, "button": 2}, {"page": 0, "button": 4}, {"page": 429496730, "button": 0}]}
+  }
+}

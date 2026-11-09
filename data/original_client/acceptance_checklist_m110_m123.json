@@ -1,0 +1,1116 @@
+{
+ "schema_version": 1,
+ "status": "PROPOSED_NOT_RUN",
+ "scope": "M110-M123 (reference package 01-123)",
+ "note_ko": "아래 항목은 M110–M123 DESIGN 모듈 회귀 테스트다. 원본 바이너리 실행 결과가 아니다.",
+ "tests": [
+  {
+   "test_id": "FIXTURE",
+   "input_ko": "m110_m123 fixture 읽기",
+   "expected_ko": "fixture가 읽히고 real 절이 비어 있지 않다",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M110",
+   "feature_id": "F110",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M110",
+    "MODULES_110_123.json:M110"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M110-T01",
+   "input_ko": "component 없음/present-empty/nonempty",
+   "expected_ko": "absent는 pending 보존, empty는 empty로 교체, nonempty는 순서·중복 보존 복사; +D0 clear 후 callable 요청",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M110",
+   "feature_id": "F110",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M110",
+    "MODULES_110_123.json:M110"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M110-T02",
+   "input_ko": "callback이 association(+D0/+78)을 다시 씀",
+   "expected_ko": "callback 뒤 강제 재-clear 없음; callback이 설치한 값이 남는다",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M110",
+   "feature_id": "F110",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M110",
+    "MODULES_110_123.json:M110"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M110-X1",
+   "input_ko": "entry peer null, cleanup 중 peer 교체, callable 없음",
+   "expected_ko": "최종 reread/reset은 수행; entry와 captured peer 분리; callable 없음은 clear 뒤 boundary",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M110",
+   "feature_id": "F110",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M110",
+    "MODULES_110_123.json:M110"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M111-T01",
+   "input_ko": "pool empty/nonempty, batch 1회 읽기",
+   "expected_ko": "empty면 batch refill(중복 all-key는 free·append 없음) 후 마지막 항목 checkout; nonempty는 refill 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M111",
+   "feature_id": "F111",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M111",
+    "MODULES_110_123.json:M111"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M111-T02",
+   "input_ko": "active duplicate 등록 실패",
+   "expected_ko": "constructor→destructor0→append(saved)→null, A+[p](n+1); 사전 pop 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M111",
+   "feature_id": "F111",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M111",
+    "MODULES_110_123.json:M111"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M111-X1",
+   "input_ko": "factory 직접 할당 null",
+   "expected_ko": "결과 null; F3 control은 분기 뒤 release",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C13",
+   "phase": "M111",
+   "feature_id": "F111",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M111",
+    "MODULES_110_123.json:M111"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M112-T01",
+   "input_ko": "grade/deck가 서로 다른 signed 값인 key",
+   "expected_ko": "physical [grade,deck] bytes, 비교는 signed(deck,grade); uint64 비교와 다름",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C09",
+   "phase": "M112",
+   "feature_id": "F112",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M112",
+    "MODULES_110_123.json:M112"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M112-X1",
+   "input_ko": "key callable 없음",
+   "expected_ko": "key 출력 없이 boundary",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C09",
+   "phase": "M112",
+   "feature_id": "F112",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M112",
+    "MODULES_110_123.json:M112"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M113-T01",
+   "input_ko": "type11 없음",
+   "expected_ko": "active면 stop 요청, inactive면 아무 것도 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10",
+   "phase": "M113",
+   "feature_id": "F113",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M113",
+    "MODULES_110_123.json:M113"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M113-T02",
+   "input_ko": "type11 존재(현재 6행)·Value0/음수 합성행",
+   "expected_ko": "Value를 읽지 않고 Water 시작 요청",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10",
+   "phase": "M113",
+   "feature_id": "F113",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M113",
+    "MODULES_110_123.json:M113"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M113-T03",
+   "input_ko": "이미 active",
+   "expected_ko": "재시작 요청 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10",
+   "phase": "M113",
+   "feature_id": "F113",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M113",
+    "MODULES_110_123.json:M113"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M113-X1",
+   "input_ko": "missing table / missing block / query 후 상태 변화",
+   "expected_ko": "missing table은 safe no-op 아님; missing block은 요청만; query와 wrapper lookup 분리",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10",
+   "phase": "M113",
+   "feature_id": "F113",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M113",
+    "MODULES_110_123.json:M113"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M114-T01",
+   "input_ko": "id0 / wrong type / 음수 id",
+   "expected_ko": "id0는 lookup·schedule·reset 없음; 음수 id는 lookup",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C13",
+   "phase": "M114",
+   "feature_id": "F114",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M114",
+    "MODULES_110_123.json:M114"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M114-T02",
+   "input_ko": "null map60 entry",
+   "expected_ko": "신규 생성 차단; remove는 erase·visual 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C13",
+   "phase": "M114",
+   "feature_id": "F114",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M114",
+    "MODULES_110_123.json:M114"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M114-T03",
+   "input_ko": "display 중 map70 mutation",
+   "expected_ko": "callback 뒤 현재 map70[id]를 identity 비교 없이 reset",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C13",
+   "phase": "M114",
+   "feature_id": "F114",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M114",
+    "MODULES_110_123.json:M114"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M114-X1",
+   "input_ko": "ArenaConstant 832→ScreenEffect 2352 실데이터 경로, 두 번째 검사/insert 경합, empty path",
+   "expected_ko": "424 id=2352 is_new; Fx_Start 특수 분기 시작·0x297; 425는 +70/+80 reset-insert 후 즉시 제거",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C13",
+   "phase": "M114",
+   "feature_id": "F114",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M114",
+    "MODULES_110_123.json:M114"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M115-T01",
+   "input_ko": "첫 predicate true / resolver0",
+   "expected_ko": "첫 true만 선택; resolver0도 적용, 다음 후보로 넘어가지 않음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C14",
+   "phase": "M115",
+   "feature_id": "F115",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M115",
+    "MODULES_110_123.json:M115"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M115-T02",
+   "input_ko": "period 65535/65536/65537/INT_MAX/음수",
+   "expected_ko": "low16: 65536→0(IDIV0 boundary), 65537→1; 음수/0은 default 100",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C14",
+   "phase": "M115",
+   "feature_id": "F115",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M115",
+    "MODULES_110_123.json:M115"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M115-T03",
+   "input_ko": "alpha 경계",
+   "expected_ko": "음수 alpha는 vector 없음→100; 0..100 clamp; 현재 100/100",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C14",
+   "phase": "M115",
+   "feature_id": "F115",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M115",
+    "MODULES_110_123.json:M115"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M115-X1",
+   "input_ko": "18쌍 DECISION_TABLE, 실제 ColorTable RGB565, Ref111→121, Color11441 gate",
+   "expected_ko": "현재 데이터에서 계산한 RGB565 샘플과 순서 일치",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C09/C14",
+   "phase": "M115",
+   "feature_id": "F115",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M115",
+    "MODULES_110_123.json:M115"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M116-T01",
+   "input_ko": "동일 mode 중복 후보",
+   "expected_ko": "native 순서상 마지막 행이 덮어씀",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C10",
+   "phase": "M116",
+   "feature_id": "F116",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M116",
+    "MODULES_110_123.json:M116"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M116-T02",
+   "input_ko": "override 변경, world 1회 capture",
+   "expected_ko": "getter 뒤 재읽기; world는 한 번만 읽음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C10",
+   "phase": "M116",
+   "feature_id": "F116",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M116",
+    "MODULES_110_123.json:M116"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M116-T03",
+   "input_ko": "signed mode 음수/양수/0",
+   "expected_ko": "signed 오름차순 첫 일치; mode0 승리는 미일치와 관측상 같음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C10",
+   "phase": "M116",
+   "feature_id": "F116",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M116",
+    "MODULES_110_123.json:M116"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M116-X1",
+   "input_ko": "physical key와 현재 ArenaConstant/ArenaModeType",
+   "expected_ko": "[Mode,Constant,Type] / [ID]; 51244→14, 562→2352, mode miss→mode0 재검색",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C10",
+   "phase": "M116",
+   "feature_id": "F116",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M116",
+    "MODULES_110_123.json:M116"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M117-T01",
+   "input_ko": "wrong event / typed message 없음",
+   "expected_ko": "무시",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M117-T02",
+   "input_ko": "missing hero row",
+   "expected_ko": "변경 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M117-T03",
+   "input_ko": "두 번째 child 실패",
+   "expected_ko": "첫 text 유지, show 없음, rollback 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M117-T04",
+   "input_ko": "callback 재진입(root 교체), null animation target, 반복 이벤트",
+   "expected_ko": "child마다 현재 root 재읽기; target null이어도 show; 중복 제거 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M117-X1",
+   "input_ko": "현재 hero 12 / Fx_Start 5..130·duration125 / completion",
+   "expected_ko": "skill→speech→TeamAsset→named play→show; completion은 hide만",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M118-T01",
+   "input_ko": "visible에서 A/B 추가, callback pop B",
+   "expected_ko": "hide 후 최신 pair 하나 pop→423 재발행(LIFO)",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M118",
+   "feature_id": "F118",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M118",
+    "MODULES_110_123.json:M118"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M118-T02",
+   "input_ko": "null timeline / null root / Sprite 실패 / show 중 timeline 해제",
+   "expected_ko": "null timeline에도 root 변경; null root는 두 child 생략; Sprite 실패는 Text 생략",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M118",
+   "feature_id": "F118",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M118",
+    "MODULES_110_123.json:M118"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M118-X1",
+   "input_ko": "growth 뒤 LIFO, typed 실패 0",
+   "expected_ko": "용량 8→16에도 최신 pop; 실패 cast는 0",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17",
+   "phase": "M118",
+   "feature_id": "F118",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M118",
+    "MODULES_110_123.json:M118"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M119-T01",
+   "input_ko": "visible 동일/큰/작은 priority",
+   "expected_ko": "더 작은 signed priority만 교체; visible 교체 시 main show 재시작 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17/C20",
+   "phase": "M119",
+   "feature_id": "F119",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M119",
+    "MODULES_110_123.json:M119"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M119-T02",
+   "input_ko": "선택 spell 없음/있음(62024 실데이터)",
+   "expected_ko": "spell0은 completion이 hide; spell 존재는 10000ms timer, SpellMarkType 없음은 texture 생략",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17/C20",
+   "phase": "M119",
+   "feature_id": "F119",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M119",
+    "MODULES_110_123.json:M119"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M119-T03",
+   "input_ko": "중간 child(desc Text) 실패",
+   "expected_ko": "completion 교체·이름 기록은 남고 priority는 commit 안 됨",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17/C20",
+   "phase": "M119",
+   "feature_id": "F119",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M119",
+    "MODULES_110_123.json:M119"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M119-X1",
+   "input_ko": "+F8=99, title gate, preflight",
+   "expected_ko": "attribute 564 있고 title 없으면 desc 뒤 반환; 네 포인터 모두 null만 preflight",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C11/C17/C20",
+   "phase": "M119",
+   "feature_id": "F119",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M119",
+    "MODULES_110_123.json:M119"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M120-T01",
+   "input_ko": "첫 일치 뒤 중복 ScreenEffectID",
+   "expected_ko": "native 순서 첫 일치 사용",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C17",
+   "phase": "M120",
+   "feature_id": "F120",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M120",
+    "MODULES_110_123.json:M120"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M120-T02",
+   "input_ko": "선택 Label 실패",
+   "expected_ko": "앞 hide와 선택 show는 남고 뒤 variant 미변경, show 요청 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C17",
+   "phase": "M120",
+   "feature_id": "F120",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M120",
+    "MODULES_110_123.json:M120"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M120-T03",
+   "input_ko": "callback별 capture",
+   "expected_ko": "생성자 On-end capture와 현재 controller+98 last-frame slot 분리; On-end는 hide+pause만",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C17",
+   "phase": "M120",
+   "feature_id": "F120",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M120",
+    "MODULES_110_123.json:M120"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M120-X1",
+   "input_ko": "현재 9행/4형식 결합",
+   "expected_ko": "1088→GRANKAIN, message ID 8은 미일치; types null은 boundary",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C17",
+   "phase": "M120",
+   "feature_id": "F120",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M120",
+    "MODULES_110_123.json:M120"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M121-T01",
+   "input_ko": "native 0..500 요청 대 named range",
+   "expected_ko": "gotoFrameAndPlay(0) loop=true end=500; Fx_Start 5..500과 다름; null action은 node 유지",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C19",
+   "phase": "M121",
+   "feature_id": "F121",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M121",
+    "MODULES_110_123.json:M121"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M121-T02",
+   "input_ko": "frame7 event",
+   "expected_ko": "EventSound UI_WARZONE_IN 이름 조회만, 재생 관측 아님; guard 밖이면 미발행",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C19",
+   "phase": "M121",
+   "feature_id": "F121",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M121",
+    "MODULES_110_123.json:M121"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M121-T03",
+   "input_ko": "malformed plist fixture(실제 2개 파일)",
+   "expected_ko": "strict REJECTED, 첫 문서 끝 3235/3245, 원본 bytes 유지, native 수용 UNKNOWN",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C19",
+   "phase": "M121",
+   "feature_id": "F121",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M121",
+    "MODULES_110_123.json:M121"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M121-X1",
+   "input_ko": "직접 참조 8개",
+   "expected_ko": "plist2+PNG6 및 particle texture 2",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C10/C11/C19",
+   "phase": "M121",
+   "feature_id": "F121",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M121",
+    "MODULES_110_123.json:M121"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M122-T01",
+   "input_ko": "isLoop=false/autoFirst=true (ScreenEffect832)",
+   "expected_ko": "track0 첫 animation loop=true, scale1; PlayOn은 Spine 이름 아님",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M122-T02",
+   "input_ko": "empty/missing target",
+   "expected_ko": "attach 생략, parent fallback 없음; 뒤 shake/audio 진행",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M122-T03",
+   "input_ko": "missing atlas / json / table / parsed data null",
+   "expected_ko": "json 먼저, atlas 없음 null; parsed null은 safe null 아닌 boundary",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M122-T04",
+   "input_ko": "completion callback 예외",
+   "expected_ko": "catch 없음, 이후 event 미전달, reentrancy flag 남음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M122-X1",
+   "input_ko": "stem, Offset/Flip 미적용, Loop/EventSound event wrapper",
+   "expected_ko": "마지막 dot stem; Offset/Flip 미사용; Loop는 callback 전 기록",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-T01",
+   "input_ko": "AutoPlay와 count0/비0",
+   "expected_ko": "auto&0 none, manual&0 0x3D 탐색, auto&1 selector3, count>1 순환",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-T02",
+   "input_ko": "empty/nonempty list",
+   "expected_ko": "front 미해결이면 순환 시도; 빈 descriptor는 destroy 후 순환",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-T03",
+   "input_ko": "deadline equality/wrap",
+   "expected_ko": "unsigned 비교, equality 진행, low64(now+300) 저장",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-T04",
+   "input_ko": "rotation 중 allocation failure, gate blocked",
+   "expected_ko": "deselect·front 제거 뒤 실패해도 rollback 없음; gate 막히면 변경 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-T05",
+   "input_ko": "callback kind0→1/1→0와 row/widget mutation",
+   "expected_ko": "row/widget은 initial kind, 저장 field/hasbit는 current kind; 덮어쓰기 복원 없음",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M123-MC",
+   "input_ko": "corrected_v2 MODEL_CASES.json 72 사례",
+   "expected_ko": "72/72 일치",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": "PASS",
+   "implementation_commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+   "fixture_hash": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+   "evidence_log": "tests/original_client_m110_m123_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "M110-N01",
+   "input_ko": "실제 release callable target·peer 파괴/pool 반환 시점",
+   "expected_ko": "원본 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C09/C13",
+   "phase": "M110",
+   "feature_id": "F110",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M110",
+    "MODULES_110_123.json:M110"
+   ],
+   "result": null
+  },
+  {
+   "test_id": "M115-N01",
+   "input_ko": "실제 GPU outline pixel/폭 결과",
+   "expected_ko": "원본 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C09/C14",
+   "phase": "M115",
+   "feature_id": "F115",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M115",
+    "MODULES_110_123.json:M115"
+   ],
+   "result": null
+  },
+  {
+   "test_id": "M117-N01",
+   "input_ko": "Fx_Start 실제 재생 시간·완료 callback 시각",
+   "expected_ko": "원본 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C11/C17",
+   "phase": "M117",
+   "feature_id": "F117",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M117",
+    "MODULES_110_123.json:M117"
+   ],
+   "result": null
+  },
+  {
+   "test_id": "M121-N01",
+   "input_ko": "0..500 loop의 실제 주기(이상화 약 16.7초)와 frame7 전달",
+   "expected_ko": "원본 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C10/C11/C19",
+   "phase": "M121",
+   "feature_id": "F121",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M121",
+    "MODULES_110_123.json:M121"
+   ],
+   "result": null
+  },
+  {
+   "test_id": "M122-N01",
+   "input_ko": "Spine 평가·mesh·renderer 결과",
+   "expected_ko": "원본 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C04/C11/C13",
+   "phase": "M122",
+   "feature_id": "F122",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M122",
+    "MODULES_110_123.json:M122"
+   ],
+   "result": null
+  },
+  {
+   "test_id": "M123-N01",
+   "input_ko": "0x77 방향 패킷 전송·서버 수락",
+   "expected_ko": "원본/서버 실행 관측 필요",
+   "basis": "RUNTIME_OBSERVATION_REQUIRED",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C12/C15/C16/C20",
+   "phase": "M123",
+   "feature_id": "F123",
+   "source_refs": [
+    "IMPLEMENTATION_GUIDE_KO.md#M123",
+    "MODULES_110_123.json:M123"
+   ],
+   "result": null
+  }
+ ],
+ "note_result_scope_ko": "result가 PASS인 항목은 DESIGN 모듈이 문서화된 계약을 fixture에서 따랐다는 뜻이다. 원본 바이너리 실행·native 동등성·실제 화면 결과를 뜻하지 않는다. NOT_RUN_ON_IMPLEMENTATION 항목은 미실행이다.",
+ "recorded_run": {
+  "commit": "UNCOMMITTED_WORKTREE_ON_6076a535315e778c44edf31f132b9763ab311033",
+  "fixture_sha256": "1e8dcb649b2322c0f8b374afa72e7c30016bb0518011f07a4bcdd6f7ddb505e1",
+  "source_lock_sha256": null,
+  "executed": 56,
+  "markers": [
+   "ORIGINAL_CLIENT_M110_M123_RESULT"
+  ]
+ }
+}
