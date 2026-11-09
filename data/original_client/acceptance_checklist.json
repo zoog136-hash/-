@@ -1,0 +1,1670 @@
+{
+ "schema_version": 1,
+ "status": "PROPOSED_NOT_RUN",
+ "note_ko": "아래 항목은 앞으로 구현한 adapter/모델로 실행할 회귀 테스트다. 원본 바이너리 실행 또는 본 패키지 작성 중 통과 결과가 아니다.",
+ "tests": [
+  {
+   "test_id": "C01-T01",
+   "input_ko": "EXE가 기준 SHA256과 다름",
+   "expected_ko": "실행/분석 adapter 진입을 중단하고 다른 빌드로 분리한다. 이는 DESIGN 보호 장치다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C01",
+   "phase": "P0",
+   "source_refs": [
+    "S001",
+    "S002"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C01-T02",
+   "input_ko": "manifest_hit=true, payload검증 없음",
+   "expected_ko": "payload_status=UNVERIFIED, render_status=NOT_OBSERVED를 유지한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C01",
+   "phase": "P0",
+   "source_refs": [
+    "S001",
+    "S002"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C02-T01",
+   "input_ko": "use_packing_resource=\"FALSE\" / \" false \" / JSON false",
+   "expected_ko": "각각 mode0 / mode1 / STRING 변환 실패로 구분한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C02",
+   "phase": "P1",
+   "source_refs": [
+    "S003"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C02-T02",
+   "input_ko": "필드 absent 또는 null로 merge",
+   "expected_ko": "기존 destination 값 유지. 최초 null이면 effective true다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C02",
+   "phase": "P1",
+   "source_refs": [
+    "S003"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C02-T03",
+   "input_ko": "delegate 교체 후 LayoutManager 이미 존재",
+   "expected_ko": "기존 검색경로가 복사됐다는 가정을 하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C02",
+   "phase": "P1",
+   "source_refs": [
+    "S003"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C03-T01",
+   "input_ko": "ItemClass 논리명 content/ItemClass.json",
+   "expected_ko": "manifest에서 content8.dat/type1/canonical member로 연결한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C03",
+   "phase": "P1",
+   "source_refs": [
+    "S004",
+    "S005"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C03-T02",
+   "input_ko": "DAT read 성공, 길이0",
+   "expected_ko": "EmptySuccess를 기록하고 이 reader 층에서는 loose를 호출하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C03",
+   "phase": "P1",
+   "source_refs": [
+    "S004",
+    "S005"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C03-T03",
+   "input_ko": "Bundle에 stream-open 요청",
+   "expected_ko": "bytes 성공 여부와 무관하게 stream unavailable을 별도 처리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C03",
+   "phase": "P1",
+   "source_refs": [
+    "S004",
+    "S005"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C03-T04",
+   "input_ko": "Brotli probe 실패",
+   "expected_ko": "평문 성공으로 확정하지 않고 승인된 streaming fallback/실패 결과를 구분한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C03",
+   "phase": "P1",
+   "source_refs": [
+    "S004",
+    "S005"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C04-T01",
+   "input_ko": "Land 검색",
+   "expected_ko": "네트워크 Land의 id/channel을 resource Land.AssetPath와 join하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04",
+   "phase": "P1",
+   "source_refs": [
+    "S001",
+    "S002"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C04-T02",
+   "input_ko": "payload+18을 읽는 호출자",
+   "expected_ko": "pointer가 payload인지 entry인지 확인 전에는 row+18로 변환하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04",
+   "phase": "P1",
+   "source_refs": [
+    "S001",
+    "S002"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C04-T03",
+   "input_ko": "field descriptor type14",
+   "expected_ko": "enum이며 wire type0. wire type14로 저장하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C04",
+   "phase": "P1",
+   "source_refs": [
+    "S001",
+    "S002"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C05-T01",
+   "input_ko": "ItemClass26",
+   "expected_ko": "icon/Item/adena_3.png. 숫자26.png로 만들지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C05",
+   "phase": "P2",
+   "source_refs": [
+    "S006",
+    "S007",
+    "S008"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C05-T02",
+   "input_ko": "AssetType.Path=\"icon/\",FilePath=\"Item/x.png\"",
+   "expected_ko": "resolver 결과 icon/Item/x.png; 빈 prefix면 empty.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C05",
+   "phase": "P2",
+   "source_refs": [
+    "S006",
+    "S007",
+    "S008"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C05-T03",
+   "input_ko": "SpriteAnimation 프레임0, AssetType101",
+   "expected_ko": "프레임 반복 fallback이어도 CSB timeline 가능성을 유지한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C05",
+   "phase": "P2",
+   "source_refs": [
+    "S006",
+    "S007",
+    "S008"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C06-T01",
+   "input_ko": "whole remap 27255→23095→19678",
+   "expected_ko": "출력 파일ID23095. 재귀 remap 금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C06",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S010",
+    "S011",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C06-T02",
+   "input_ko": "word0=7,directional=true,direction=1",
+   "expected_ko": "low16=8,file_b=8,direction=0. 파일 group이 바뀐다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C06",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S010",
+    "S011",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C06-T03",
+   "input_ko": "source alias가 아직 없음",
+   "expected_ko": "이 분기 descriptor를 생성하지 않고 진단을 남긴다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C06",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S010",
+    "S011",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C06-T04",
+   "input_ko": "SPR word0=FFFF",
+   "expected_ko": "fallback 경로로 분리, payload 성공을 추정하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C06",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S010",
+    "S011",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C06-T05",
+   "input_ko": "simple direction8 /actor direction8",
+   "expected_ko": "simple01C78EE0은0으로 clamp. actor01C8F2D0에는 같은 clamp를 추가하지 않는다. 후속 low16 계산과 정상입력 도메인을 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C06",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S010",
+    "S011",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C07-T01",
+   "input_ko": "rawdelay4,FPS36",
+   "expected_ko": "stored delay111ms. 이후 FPS변경이 이미 저장된 frame을 바꾸지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C07",
+   "phase": "P2",
+   "source_refs": [
+    "S013",
+    "S012",
+    "S010",
+    "S014"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C07-T02",
+   "input_ko": "delay100,rate2000000,bucket<2",
+   "expected_ko": "정상범위 effective50ms.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C07",
+   "phase": "P2",
+   "source_refs": [
+    "S013",
+    "S012",
+    "S010",
+    "S014"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C07-T03",
+   "input_ko": "auto descriptor의 +8",
+   "expected_ko": "FPS로 역산하지 않고 생성 경로 태그를 검사한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C07",
+   "phase": "P2",
+   "source_refs": [
+    "S013",
+    "S012",
+    "S010",
+    "S014"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C07-T04",
+   "input_ko": "base/Walker callback에서 SPR ordinal이 끝에 도달",
+   "expected_ko": "일반은 ordinal0, action96은 max(count-1,0) 선택 후 false. 무조건 loop 또는 SP2 last-frame clamp로 합치지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C07",
+   "phase": "P2",
+   "source_refs": [
+    "S013",
+    "S012",
+    "S010",
+    "S014"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C08-T01",
+   "input_ko": "picture WORD256 /128",
+   "expected_ko": "각각 picture0 /signed -128이 unsigned out-of-range가 되어 마지막frame. 단 nonempty 유효vector 전제.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C08",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S015",
+    "S010",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C08-T02",
+   "input_ko": "SPR ordinal이 count와 같음",
+   "expected_ko": "null/기존 handle 보존 경로. 마지막 SPR frame으로 clamp하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C08",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S015",
+    "S010",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C08-T03",
+   "input_ko": "manifest만 존재하는 SP2",
+   "expected_ko": "frame_count=null, payload_status=UNVERIFIED.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C08",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S015",
+    "S010",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C08-T04",
+   "input_ko": "SP2 direction mask0x08, request direction3 /0",
+   "expected_ko": "direction3은 packed record index0. direction0은 누락/null이며 자동 fallback하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
+   "contract_id": "C08",
+   "phase": "P2",
+   "source_refs": [
+    "S009",
+    "S015",
+    "S010",
+    "S012"
+   ],
+   "result": "PASS",
+   "implementation_commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+   "fixture_hash": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+   "evidence_log": "tests/original_client_contract_p0_p2_test.gd :: all checks passed"
+  },
+  {
+   "test_id": "C09-T01",
+   "input_ko": "refresh_aux=false, main 변경",
+   "expected_ko": "기존 shadow/clothes 유지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C09",
+   "phase": "P2",
+   "source_refs": [
+    "S016",
+    "S010",
+    "S017"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C09-T02",
+   "input_ko": "clothes [valid,missing,valid]",
+   "expected_ko": "성공 prefix1개만 남고 세 번째 lookup을 진행하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C09",
+   "phase": "P2",
+   "source_refs": [
+    "S016",
+    "S010",
+    "S017"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C09-T03",
+   "input_ko": "animated shadow0와 static shadow0",
+   "expected_ko": "전자는 clear, 후자는 보존으로 구분한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C09",
+   "phase": "P2",
+   "source_refs": [
+    "S016",
+    "S010",
+    "S017"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C10-T01",
+   "input_ko": "null 요청 cache 후 같은 키 remap 추가",
+   "expected_ko": "기존 null hit를 유지한다. 명시 재생성 없이는 성공 재시도라고 주장하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C10",
+   "phase": "P2",
+   "source_refs": [
+    "S018",
+    "S019",
+    "S011"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C10-T02",
+   "input_ko": "mode1→0",
+   "expected_ko": "manager retained 상태와 사용 mode를 따로 기록한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C10",
+   "phase": "P2",
+   "source_refs": [
+    "S018",
+    "S019",
+    "S011"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C11-T01",
+   "input_ko": "Land row 없음",
+   "expected_ko": "empty prefix/cleanup; 다른Land나 기본Map을 임의 선택하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C11",
+   "phase": "P3",
+   "source_refs": [
+    "S020",
+    "S021"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C11-T02",
+   "input_ko": "Land.AssetPath=\"\",AssetType.Path=\"Map/\"",
+   "expected_ko": "Map/+basename 읽기 후보를 만든다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C11",
+   "phase": "P3",
+   "source_refs": [
+    "S020",
+    "S021"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C11-T03",
+   "input_ko": "sourceX16383의 반칸변환",
+   "expected_ko": "signed trunc 수식을 사용하며 floor 기반 단축식과 같은 값으로 가정하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C11",
+   "phase": "P3",
+   "source_refs": [
+    "S020",
+    "S021"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C12-T01",
+   "input_ko": "floor FFFFFFFF, 후속 attribute0",
+   "expected_ko": "fallback floor지만 최종 attr0. sentinel만으로 통행불가 확정 금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C12",
+   "phase": "P3",
+   "source_refs": [
+    "S021",
+    "S022"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C12-T02",
+   "input_ko": "tail W8000",
+   "expected_ko": "extended 형식 count0. 특수object sentinel로 만들지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C12",
+   "phase": "P3",
+   "source_refs": [
+    "S021",
+    "S022"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C12-T03",
+   "input_ko": "tail 후8B 잔여",
+   "expected_ko": "opaque trailing bytes로 보존. arbitrary date/portal 필드 생성 금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C12",
+   "phase": "P3",
+   "source_refs": [
+    "S021",
+    "S022"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C12-T04",
+   "input_ko": "negative count/절단record",
+   "expected_ko": "DESIGN 안전오류. 원본이 같은 방식으로 거절한다고 주장하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C12",
+   "phase": "P3",
+   "source_refs": [
+    "S021",
+    "S022"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C13-T01",
+   "input_ko": "direction1,point(100,20)",
+   "expected_ko": "(102,19). source-cell X+1과 half-cell X+2를 분리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C13",
+   "phase": "P3",
+   "source_refs": [
+    "S023",
+    "S024",
+    "S025",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C13-T02",
+   "input_ko": "terrain predicate1",
+   "expected_ko": "blocked로 처리. true=walkable 반전 오류를 검사한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C13",
+   "phase": "P3",
+   "source_refs": [
+    "S023",
+    "S024",
+    "S025",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C13-T03",
+   "input_ko": "start==target",
+   "expected_ko": "선택 pathcore는 success+empty output 가능. empty를 항상 실패로 취급하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C13",
+   "phase": "P3",
+   "source_refs": [
+    "S023",
+    "S024",
+    "S025",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C13-T04",
+   "input_ko": "attr0x41,allow40=false /true",
+   "expected_ko": "각각 reject=true /false. bit0 검사를 bit1로 바꾸면 안 된다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C13",
+   "phase": "P3",
+   "source_refs": [
+    "S023",
+    "S024",
+    "S025",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C13-T05",
+   "input_ko": "홀수 방향 r=[true,false,false,false] /[true,false,true,false]",
+   "expected_ko": "각각 reject=false /true. 한 셀만 막혔거나 네 셀 모두 막혀야 하는 규칙과 다르다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C13",
+   "phase": "P3",
+   "source_refs": [
+    "S023",
+    "S024",
+    "S025",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C14-T01",
+   "input_ko": "view(-0.75,-0.75)",
+   "expected_ko": "정수(0,0)로 trunc된 뒤 시작 gate 통과 가능.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C14",
+   "phase": "P3",
+   "source_refs": [
+    "S024"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C14-T02",
+   "input_ko": "view(1200.75,675.75)",
+   "expected_ko": "정수(1200,675)로 trunc된 뒤 gate 통과 가능.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C14",
+   "phase": "P3",
+   "source_refs": [
+    "S024"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C14-T03",
+   "input_ko": "정상 path101 points",
+   "expected_ko": "direction50개만 요청. 클릭과 동시에 actor 확정좌표를 쓰지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C14",
+   "phase": "P3",
+   "source_refs": [
+    "S024"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C15-T01",
+   "input_ko": "CANCEL ACK",
+   "expected_ko": "확정좌표를 원점으로 reset하거나 무조건 현재step을 중단하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C15",
+   "phase": "P4",
+   "source_refs": [
+    "S017",
+    "S014"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C15-T02",
+   "input_ko": "END,target와player+150이 멂",
+   "expected_ko": "재길찾기 가능 경로를 유지한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C15",
+   "phase": "P4",
+   "source_refs": [
+    "S017",
+    "S014"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C15-T03",
+   "input_ko": "timer callback 동일/object다름",
+   "expected_ko": "다른object timer를 취소하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C15",
+   "phase": "P4",
+   "source_refs": [
+    "S017",
+    "S014"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C16-T01",
+   "input_ko": "Missile 잔여0,목적좌표 미도달",
+   "expected_ko": "완료callback 없이 제거.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C16",
+   "phase": "P4",
+   "source_refs": [
+    "S027",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C16-T02",
+   "input_ko": "Direct advance완료",
+   "expected_ko": "즉시삭제가 아니라 다음callback 제거.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C16",
+   "phase": "P4",
+   "source_refs": [
+    "S027",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C16-T03",
+   "input_ko": "primary factory null",
+   "expected_ko": "shield/addition/target callback 가능성을 별도평가.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C16",
+   "phase": "P4",
+   "source_refs": [
+    "S027",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C16-T04",
+   "input_ko": "target가 callback전 이동",
+   "expected_ko": "현재 위치 재조회, 최초 위치를 무조건고정하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C16",
+   "phase": "P4",
+   "source_refs": [
+    "S027",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C17-T01",
+   "input_ko": "round input+0.5/-0.5",
+   "expected_ko": "각각+1/-1.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C17",
+   "phase": "P4",
+   "source_refs": [
+    "S025"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C17-T02",
+   "input_ko": "동일좌표key,land변경",
+   "expected_ko": "원본 호환 cache는 재검사 없는hit. 안전invalidaton 추가는 DESIGN 변경으로 별도기록.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C17",
+   "phase": "P4",
+   "source_refs": [
+    "S025"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C18-T01",
+   "input_ko": "같은path/mode,callback없음,set만변경",
+   "expected_ko": "cache hit가 새set으로parse하지 않을 수 있음을 테스트한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C18",
+   "phase": "P5",
+   "source_refs": [
+    "S029",
+    "S030"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C18-T02",
+   "input_ko": "ProjectNode 제외 hit",
+   "expected_ko": "empty Node fallback과 구분하여 null.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C18",
+   "phase": "P5",
+   "source_refs": [
+    "S029",
+    "S030"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C18-T03",
+   "input_ko": "다른CSB로 nested load",
+   "expected_ko": "상위 제외set을 자동전파하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C18",
+   "phase": "P5",
+   "source_refs": [
+    "S029",
+    "S030"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C19-T01",
+   "input_ko": "Dungeon party node명",
+   "expected_ko": "PARTY1–4 사용, ICON_1–4 생성 금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C19",
+   "phase": "P5",
+   "source_refs": [
+    "S031",
+    "S032",
+    "S033"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C19-T02",
+   "input_ko": "Minimap local1CB 수신",
+   "expected_ko": "payload 좌표/context로 업데이트. 큰지도cache timer를 먼저 기다리는 설계금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C19",
+   "phase": "P5",
+   "source_refs": [
+    "S031",
+    "S032",
+    "S033"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C19-T03",
+   "input_ko": "view hide",
+   "expected_ko": "destructor/unsubscribe 완료와 동일상태로 표시하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C19",
+   "phase": "P5",
+   "source_refs": [
+    "S031",
+    "S032",
+    "S033"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C20-T01",
+   "input_ko": "q19999 /99999999",
+   "expected_ko": "1만 /9,999만.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C20",
+   "phase": "P5",
+   "source_refs": [
+    "S034"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C20-T02",
+   "input_ko": "q1,이전문자열9,999",
+   "expected_ko": "hide하되 text저장값보존.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C20",
+   "phase": "P5",
+   "source_refs": [
+    "S034"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C20-T03",
+   "input_ko": "다른badge tag,false",
+   "expected_ko": "현재badge를숨기지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C20",
+   "phase": "P5",
+   "source_refs": [
+    "S034"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C21-T01",
+   "input_ko": "remaining0x8000008000000001",
+   "expected_ko": "U24 bits5F000001,duration bits5A031270.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C21",
+   "phase": "P5",
+   "source_refs": [
+    "S035",
+    "S036",
+    "S037"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C21-T02",
+   "input_ko": "remaining3697547247084070,total9593810773161135784",
+   "expected_ko": "percent bits3D1DDD22. multiply-first 결과로대체금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C21",
+   "phase": "P5",
+   "source_refs": [
+    "S035",
+    "S036",
+    "S037"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C21-T03",
+   "input_ko": "기존tag100이다른action type",
+   "expected_ko": "stopAllActionsByTag 호출없이새ProgressFromTo생성시도.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C21",
+   "phase": "P5",
+   "source_refs": [
+    "S035",
+    "S036",
+    "S037"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C21-T04",
+   "input_ko": "기존ProgressFromTo유지조건충족,childhidden",
+   "expected_ko": "hidden유지. 자동show금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C21",
+   "phase": "P5",
+   "source_refs": [
+    "S035",
+    "S036",
+    "S037"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C22-T01",
+   "input_ko": "HP50/maxHP101",
+   "expected_ko": "정수raw49%.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C22",
+   "phase": "P5",
+   "source_refs": [
+    "S038",
+    "S039"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C22-T02",
+   "input_ko": "NpcHpMp maxMP0,HP가full",
+   "expected_ko": "HPraw0%.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C22",
+   "phase": "P5",
+   "source_refs": [
+    "S038",
+    "S039"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C22-T03",
+   "input_ko": "node없음에서percent변경후node생김,같은percent재수신",
+   "expected_ko": "cachehit로lookup을생략할수있음.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C22",
+   "phase": "P5",
+   "source_refs": [
+    "S038",
+    "S039"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C22-T04",
+   "input_ko": "rawpercent -33",
+   "expected_ko": "zeroextend큰양수→DLL100clamp. signed0clamp와구분.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C22",
+   "phase": "P5",
+   "source_refs": [
+    "S038",
+    "S039"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C23-T01",
+   "input_ko": "timerelapsed==interval",
+   "expected_ko": "이번tickcallback없음.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C23",
+   "phase": "P6",
+   "source_refs": [
+    "S026",
+    "S040"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C23-T02",
+   "input_ko": "large dt",
+   "expected_ko": "한tick에서한번만호출,whilecatch-up금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C23",
+   "phase": "P6",
+   "source_refs": [
+    "S026",
+    "S040"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C23-T03",
+   "input_ko": "같은primary/secondaryscore",
+   "expected_ko": "입력순서유지. LUID정렬추가금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C23",
+   "phase": "P6",
+   "source_refs": [
+    "S026",
+    "S040"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C23-T04",
+   "input_ko": "resolvedfront지만재선택부적격",
+   "expected_ko": "retentiontrue로새검색이막히는분기보존.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C23",
+   "phase": "P6",
+   "source_refs": [
+    "S026",
+    "S040"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C23-T05",
+   "input_ko": "단일400ms /float32 timer에16ms씩25번 누적",
+   "expected_ko": "strict FP > 기준에서 단일400ms는 미발화이며16ms 누적 경로는 반올림으로 발화할 수 있다. 정수400ms 비교로 치환하지 않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C23",
+   "phase": "P6",
+   "source_refs": [
+    "S026",
+    "S040"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C24-T01",
+   "input_ko": "wire96/97/98/local97",
+   "expected_ko": "서로다른typednamespace로직렬화/로그.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C24",
+   "phase": "P6",
+   "source_refs": [
+    "S024",
+    "S036",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C24-T02",
+   "input_ko": "CHANGE_ATTACK_TARGET 입력0",
+   "expected_ko": "함수는요청생성없이return.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C24",
+   "phase": "P6",
+   "source_refs": [
+    "S024",
+    "S036",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C24-T03",
+   "input_ko": "cast type4",
+   "expected_ko": "확인된branch에서actorLUID. 이름기반point추정금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C24",
+   "phase": "P6",
+   "source_refs": [
+    "S024",
+    "S036",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C24-T04",
+   "input_ko": "requestqueue적재성공",
+   "expected_ko": "server_accepted를true로쓰지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C24",
+   "phase": "P6",
+   "source_refs": [
+    "S024",
+    "S036",
+    "S026"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C25-T01",
+   "input_ko": "event3수신",
+   "expected_ko": "root70/78삭제+null,01CC57A0. root60/68을직접삭제하지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C25",
+   "phase": "P7",
+   "source_refs": [
+    "S041",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C25-T02",
+   "input_ko": "duplicate local2",
+   "expected_ko": "원본이모두idempotent하다고테스트를생략하지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C25",
+   "phase": "P7",
+   "source_refs": [
+    "S041",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C25-T03",
+   "input_ko": "source/outputsurface",
+   "expected_ko": "크기와역할을교환하지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C25",
+   "phase": "P7",
+   "source_refs": [
+    "S041",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C26-T01",
+   "input_ko": "gate=true,cell+58=0,item40개",
+   "expected_ko": "뒤35개처리.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C26",
+   "phase": "P7",
+   "source_refs": [
+    "S043",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C26-T02",
+   "input_ko": "floorinterceptoraccepted",
+   "expected_ko": "itemdispatcher를생략하지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C26",
+   "phase": "P7",
+   "source_refs": [
+    "S043",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C26-T03",
+   "input_ko": "textureuploadfalse",
+   "expected_ko": "API호출로그와화면성공을별도상태로기록한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C26",
+   "phase": "P7",
+   "source_refs": [
+    "S043",
+    "S042"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C27-T01",
+   "input_ko": "weatherFIFO2개,tick1회",
+   "expected_ko": "한개만소비.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C27",
+   "phase": "P7",
+   "source_refs": [
+    "S044",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C27-T02",
+   "input_ko": "type0 weather",
+   "expected_ko": "clearenum7,기존weatherstop.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C27",
+   "phase": "P7",
+   "source_refs": [
+    "S044",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C27-T03",
+   "input_ko": "localtarget중복screen-effectrecord",
+   "expected_ko": "publisher의중복event를임의dedup하지않는다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C27",
+   "phase": "P7",
+   "source_refs": [
+    "S044",
+    "S028"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C28-T01",
+   "input_ko": "SPR soundID34",
+   "expected_ko": "Sound/34.ogg.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C28",
+   "phase": "P7",
+   "source_refs": [
+    "S045"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C28-T02",
+   "input_ko": "material효과호출",
+   "expected_ko": "category72×caller gain; 이진입점에서material ratio추가곱금지.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C28",
+   "phase": "P7",
+   "source_refs": [
+    "S045"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  },
+  {
+   "test_id": "C28-T03",
+   "input_ko": "BGM과VOICE동일asset",
+   "expected_ko": "owner/category정책을별도관리한다.",
+   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
+   "execution_status": "NOT_RUN_ON_IMPLEMENTATION",
+   "contract_id": "C28",
+   "phase": "P7",
+   "source_refs": [
+    "S045"
+   ],
+   "result": null,
+   "implementation_commit": null,
+   "fixture_hash": null,
+   "evidence_log": null
+  }
+ ],
+ "note_result_scope_ko": "result가 PASS인 항목은 DESIGN 모듈이 문서화된 계약을 fixture에서 따랐다는 뜻이다. 원본 바이너리 실행·native 동등성·실제 화면 결과를 뜻하지 않는다. NOT_RUN_ON_IMPLEMENTATION 항목은 미실행이다.",
+ "recorded_run": {
+  "commit": "84f41cd50978aef032e60dc2f8bd98de46c88555",
+  "fixture_sha256": "f44a096f6b4825fa03e5b3ea76140b4220d2c65645087569275e846e3cb28433",
+  "source_lock_sha256": "208d29801efeee526a9913d912fbc845112c56caa856ca0e180294862a0ee30d",
+  "executed": 29
+ }
+}
