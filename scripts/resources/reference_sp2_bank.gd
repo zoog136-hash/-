@@ -1,6 +1,7 @@
 extends RefCounted
 ## Pinned, opt-in source-action metadata. No installation, role inference or events.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selection.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
@@ -398,12 +399,13 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
 					var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
 					if not reference_binding.ok: return reference_binding
-					var address: int = int(token[0]) + (direction if int(compact.declared_flag) == 1 else 0)
-					var member: String = "Sprite/%d-%d.sp2" % [int(layer.source_sprite_id),address & ~7]
+					# C06: u16(word0 + direction) -> file group and in-file direction (original-client contract adapter).
+					var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
+					var member: String = ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id), group.file_b)
 					var client_frames: bool = contract.get("frame_policy") == "client_clamp_frame_null_missing_direction_or_empty_body"
 					var frame_matches: bool = layer.get("frame_index") == token[1]
 					if client_frames and not frame_matches and layer.get("clamped_from_frame_index") == token[1] and integer(layer.get("frame_index"),0,255) and int(layer.frame_index) < int(token[1]): frame_matches = true
-					if layer.get("member") != member or layer.get("group_bit") != (address & 7) or not frame_matches: return fail("Literal source address differs from identity contract.")
+					if layer.get("member") != member or layer.get("group_bit") != group.direction or not frame_matches: return fail("Literal source address differs from identity contract.")
 					if layer.has("client_null"):
 						# Client: a missing direction or empty main frame draws nothing; other layers continue.
 						if not client_frames or layer.client_null not in ["direction_absent","empty_body_frame"] or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")

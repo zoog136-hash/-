@@ -4,7 +4,7 @@
 
 ## 이번에 한 것
 
-기존 게임 코드와 분리된 `scripts/original_client/`에 새 어댑터를 추가했다. **기존 런타임에는 연결하지 않았다.**
+기존 게임 코드와 분리된 `scripts/original_client/`에 새 어댑터를 추가했다. 1차(PR 최초 커밋)는 연결 없이 모듈만 추가했고, 2차에서 아래 "게임 연결"의 세 지점을 실제로 연결했다.
 
 | 파일 | 계약 | 내용 |
 | --- | --- | --- |
@@ -57,14 +57,29 @@
 - `2500` 구간 폴더 fallback 이름 규칙은 인계 JSON에 구체 형식이 없어 `fallback_name=null`로 두었다(참조 DB `logical_assets.fallback_name`에서 확인 필요).
 - 실제 current 테이블 행·참조 DB·SP2 payload는 사용하지 않았다. SP2 payload decode와 frame 수는 caller가 줄 때만 사용하며 그 외는 `UNVERIFIED`.
 - 자동 action의 "source frame start0 copy 생략 예외"는 모델링하지 않았다.
-- 새 어댑터를 현재 게임 로직에 연결하지 않았다. CI 필수 게이트(`tools/ci_core.py`)에도 등록하지 않았다. 등록은 사용자 결정이 필요하다.
+- 어댑터를 연결한 곳은 아래 "게임 연결"의 세 지점뿐이다. 나머지 현재 게임 로직(액터 표시, 지연 시간 계산, 리소스 읽기 계층, 지도·입력)은 연결하지 않았다. CI 필수 게이트(`tools/ci_core.py`)에도 등록하지 않았다. 등록은 사용자 결정이 필요하다.
 - 테스트는 전체 프로젝트가 아니라 필요한 파일만 담은 최소 Godot 4.7.2 프로젝트(headless)에서 실행했다. 전체 프로젝트 임포트는 에셋 용량 때문에 이 환경에서 제한 시간 안에 끝나지 않았다.
 - 원본 바이너리를 실행하지 않았으므로 native 동등성이나 실제 화면 완성을 주장하지 않는다.
 - 서버 경계: 전투·AI·spawn·drop·경제는 이 모듈에 포함하지 않았다(P8, 별도 설계).
+
+## 게임 연결 (2차)
+
+기존 코드가 직접 하던 계산을 어댑터 호출로 바꿨다.
+
+| 파일 | 바꾼 내용 | 계약 |
+| --- | --- | --- |
+| `scripts/resources/reference_sp2_bank.gd` | `address & ~7`, `address & 7`로 직접 계산하던 SP2 파일명·그룹 비트를 `sprite_selection.gd`의 `sp2_group`·`primary_name`으로 교체 | C06 |
+| `scripts/resources/current523_identity_pack.gd` | 같은 계산(액터 역할별 방향 8개 layer 생성)을 `sp2_group`·`primary_name`으로 교체 | C06 |
+| `scripts/resources/source523_image_pack.gd` | `AssetType.Path + AssetView.FilePath` 연결을 `asset_resolver.gd`의 `join_path`로 교체 | C05 |
+
+**동작 동일성 증명** (`tests/original_client_wiring_test.gd`): `word0` 0..65535 × declared_flag 0/1 × 방향 0..7 = 1,048,576개 조합을 옛 산술과 비교했다. 1,048,548개는 파일명·그룹 비트가 완전히 같고, 나머지 28개는 `word0+방향`이 65535를 넘는 범위 밖 입력이다. 이 28개에서는 옛 코드가 `Sprite/N-65536.sp2` 같은 이름을 만들었고, 어댑터는 계약대로 u16로 감아 계산한다(`file_b`와 방향이 0부터 다시 시작). 이것이 이번 연결에서 의도한 유일한 동작 변화다. 같은 테스트가 세 파일이 어댑터를 호출하는지, 옛 산술이 남아 있지 않은지, 파일이 컴파일되는지도 검사한다.
+
+**이 환경에서 확인하지 못한 것:** 두 SP2 지점은 비공개 팩이 있어야 도는 기존 테스트(`reference_sp2_bank_test`, `current523_identity_pack_local`)가 덮고 있다. 이 환경에는 팩이 없어서 그 테스트들은 실행하지 못했다. 위 전수 비교가 대신하는 증명이며, 실제 팩으로 한 번 돌려 보는 것이 남은 확인이다.
 
 ## 재실행 방법
 
 ```bash
 godot --headless --path <최소 프로젝트 또는 저장소> --script res://tests/original_client_contract_p0_p2_test.gd
+godot --headless --path <저장소> --script res://tests/original_client_wiring_test.gd
 python3 tools/original_client_acceptance.py --run-log <출력 파일> --commit <SHA>
 ```

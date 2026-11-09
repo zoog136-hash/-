@@ -7,6 +7,11 @@ const VOCAB = preload("res://scripts/original_client/oc_vocab.gd")
 const TEXTURE_FAILURE_ICON_ID := 683 # wrapper contract, applies only after a texture failure
 const CSB_ASSET_TYPE := 101
 
+## AssetType.Path + AssetView.FilePath, literally. No slash is added or removed;
+## the texture wrapper's '//' normalisation is a later stage.
+static func join_path(prefix: String, file_path: String) -> String:
+	return prefix + file_path
+
 static func icon_id(value: int) -> Dictionary:
 	return {"kind": "IconID", "value": value}
 
@@ -35,7 +40,7 @@ static func resolve_asset_path(tables: Dictionary, asset: Dictionary) -> Diction
 		return {"status": "EMPTY_PREFIX", "path": ""}
 	if file_path.is_empty():
 		return {"status": "EMPTY_FILE_PATH", "path": ""}
-	return {"status": "OK", "path": prefix + file_path, "asset_type_id": view.get("AssetTypeId")}
+	return {"status": "OK", "path": join_path(prefix, file_path), "asset_type_id": view.get("AssetTypeId")}
 
 static func resolve_icon(tables: Dictionary, icon: Dictionary) -> Dictionary:
 	if icon.get("kind") != "IconID":
