@@ -687,9 +687,11 @@ static func source_fixed_card(definition: Dictionary) -> Dictionary:
 	var reasons: Array=spec.blocked_reasons
 	if definition.category.get("Name")!="BuffCardDrawer" or deck.get("CharacterBased")!=false:reasons.append("unsupported_card_item_category_or_deck")
 	if not SOURCE.declared_exclusion("BuffCard",card).is_empty() or not SOURCE.declared_exclusion("BuffCardDeck",deck).is_empty():reasons.append("source_excluded_card")
+	# A defined server set is checked at use against the current server profile
+	# (current523_server_profile.gd); a set without original rows stays closed.
 	var server: Variant=card.get("ServerLimitSetID",0)
 	if not integer(server):reasons.append("invalid_card_server_limit")
-	elif int(server)!=0:reasons.append("server_context_required" if not SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty() else "server_definition_missing")
+	elif int(server)!=0 and SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty():reasons.append("server_definition_missing")
 	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_card_date_context_required")
 	var swap: Array=[]
 	for row: Dictionary in rows:
@@ -768,7 +770,8 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 	var server: Variant=card.get("ServerLimitSetID",0);var server_rows: Array=[]
 	if not integer(server):reasons.append("invalid_skill_card_server_limit")
 	elif int(server)!=0:
-		server_rows=SOURCE.related("ServerLimit","ServerLimitSetID",int(server));reasons.append("server_context_required" if not server_rows.is_empty() else "server_definition_missing")
+		server_rows=SOURCE.related("ServerLimit","ServerLimitSetID",int(server))
+		if server_rows.is_empty():reasons.append("server_definition_missing") # A defined set is checked at learning.
 	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_skill_card_date_context_required")
 	var limits: Array=[];var tutorials: Array=[]
 	for edge: Dictionary in graph.get("learn_limits",[]):

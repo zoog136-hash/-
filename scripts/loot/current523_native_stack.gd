@@ -4,6 +4,7 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const QUEST_CONSUME=preload("res://scripts/quests/quest_reward_consumption.gd")
@@ -976,6 +977,8 @@ static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dic
 	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 카드 아이템 사용 대상·서비스 조건 미지원")
+	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
+	if not server.ok:return _failure(str(server.reason)+" · 아이템 보존")
 	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
 	var category: String=str(spec.get("card_kind",""));var card_id: int=int(spec.get("card_id",0))
 	if SOURCE.row("BuffCard",card_id)!=spec.get("original_card"):return _failure("원본 카드 정의 변경 감지 · 아이템 보존")
@@ -1181,6 +1184,8 @@ static func learn_skill_book(world: Node,uid: String,owned: Dictionary,record: D
 	# Existing skill catalog/engine owns execution. Only exact known current
 	# learning can be joined with this quantity owner's selected physical debit.
 	if spec.get("kind")!="source_skill_book" or spec.get("activation_status")!="unrestricted" or world.original_skills==null:return _failure("현재 원문 스킬서·학습 소유자 연결 필요")
+	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
+	if not server.ok:return _failure(str(server.reason)+" · 스킬서 보존")
 	if current_class(world)<=0:return _failure("원문 스킬서의 실제 현재 직업 정체 연결 필요")
 	var book: Script=load("res://scripts/loot/patch523_skill_book.gd")
 	var issue: String=book.call("source_limit_problem",world,spec)
