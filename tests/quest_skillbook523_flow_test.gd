@@ -61,7 +61,7 @@ func run()->void:
  var before_profiles: Dictionary=reader.profiles.duplicate(true)
  check(not reader.load_pack(skill_path,"0".repeat(64)) and reader.profiles==before_profiles,"wrong pinned SHA rejects without replacing active profiles")
  check(not reader.load_pack("user://absent-quest262-skills.json",BOOK.PACK_SHA),"missing input rejects")
- for item: int in BOOK.IDS:check(w.quest_item_provider.definitions.has(item),"exact existing runtime skill book linked "+str(item))
+ for item: int in BOOK.IDS:check(w.quest_item_provider.has_definition(item),"exact existing runtime skill book linked "+str(item))
  var input: Dictionary=owned(w,177232,fresh)
  check(not input.is_empty() and int(w.inventory.get(input.key,0))>0,"genuine quest4981 reward ownership located")
  if input.is_empty():w.queue_free();quit(1);return

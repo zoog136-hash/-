@@ -33,7 +33,7 @@ func run()->void:
 		check(FileAccess.get_sha256("user://twilight_v20_save.json")==seed and seed.length()==64,"untouched real811 grant save copied")
 		if not failures.is_empty():quit(1);return
 	var world: TwilightWorld=make_world()
-	check(world.quest_item_provider.definitions.has(ID),"verified existing guaranteed-bag consumer installed")
+	check(world.quest_item_provider.has_definition(ID),"verified existing guaranteed-bag consumer installed")
 	if fresh:
 		for batch: int in range(100):
 			world.quest_auto.retry_at=0;world.quest_auto.next_scan=0

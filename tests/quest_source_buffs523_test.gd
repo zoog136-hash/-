@@ -44,7 +44,7 @@ func run()->void:
 		else:check(not uid.is_empty(),"actual source-issued selected held physical record")
 		if (mode=="fresh" and int(w.inventory.get(key,0))<=0) or (mode!="fresh" and uid.is_empty()):continue
 		issued[str(iid)]={"physical_id":uid,"quantity":int(w.inventory.get(key,0)) if uid.is_empty() else int(w.item_instances[uid].source_reward_quantity)}
-		check(w.quest_item_provider.definitions.has(iid) and USE.action_record(w,record).get("source_use_spec",{}).get("activation_status")=="unrestricted","exact complete source joins enable only reviewed effect")
+		check(w.quest_item_provider.has_definition(iid) and USE.action_record(w,record).get("source_use_spec",{}).get("activation_status")=="unrestricted","exact complete source joins enable only reviewed effect")
 		var inv: Dictionary=w.inventory.duplicate(true);var objects: Dictionary=w.item_instances.duplicate(true);var quest: Dictionary=w.quest_service.export_state();var buffs: Dictionary=w.active_item_buffs.duplicate(true);var state: Dictionary=w.consumable_service.export_state();var hash: String=FileAccess.get_sha256(w.save_path())
 		if mode=="uncertain":
 			if iid==1186:continue

@@ -33,7 +33,7 @@ func run()->void:
 		check(seed.length()==64 and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"untouched copy of actual original811-grant save")
 		if not failures.is_empty():quit(1);return
 	var world: TwilightWorld=make_world()
-	check(world.quest_item_provider.definitions.has(233),"verified full-row HP consumer available")
+	check(world.quest_item_provider.has_definition(233),"verified full-row HP consumer available")
 	if fresh:
 		for batch: int in range(100):
 			world.quest_auto.retry_at=0;world.quest_auto.next_scan=0

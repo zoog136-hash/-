@@ -18,10 +18,47 @@ const FIXED=preload("res://scripts/quests/quest_fixed_cards523.gd")
 const REVIEWED_IDS: Array[int] = [310,1186,282793,295524,203422,295504,295544,302461,376,385,177292,177322,177342,177432,306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
 var skill_books=SKILL_BOOKS.new()
 var equipment_owner=preload("res://scripts/quests/quest_equipment523.gd").new()
-var definitions: Dictionary = {}
+## Lineage M style: only the bound item IDs stay resident (in binding
+## order). A definition is the same pure function of the verified original
+## the binding read (D.definition_id), built on demand and kept in D's LRU
+## plus a small one here; the former resident copies held ~14 MB.
+var _definition_ids: Dictionary = {}
+var _definition_lru: Dictionary = {}
+const DEFINITION_CACHE_LIMIT: int = 8
 var owner: WeakRef
 var ready: bool = false
 var _held_save_candidate: Dictionary = {}
+
+## Former definitions.has(id).
+func has_definition(id: int) -> bool:
+	return _definition_ids.has(id)
+
+## Former definitions.get(id,{}) (the same value; shared, read-only).
+func bound_definition(id: int) -> Dictionary:
+	if not _definition_ids.has(id): return {}
+	if _definition_lru.has(id):
+		var hit: Dictionary = _definition_lru[id]
+		_definition_lru.erase(id)
+		_definition_lru[id] = hit
+		return hit
+	var built: Dictionary = D.definition_id(str(id))
+	if built.is_empty(): return built
+	_definition_lru[id] = built
+	while _definition_lru.size() > DEFINITION_CACHE_LIMIT: _definition_lru.erase(_definition_lru.keys()[0])
+	return built
+
+## Former definitions.keys() (binding order) and .size().
+func definition_ids() -> Array:
+	return _definition_ids.keys()
+
+func definition_count() -> int:
+	return _definition_ids.size()
+
+func _bind_definition(id: int, value: Dictionary) -> void:
+	_definition_ids[id] = true
+	_definition_lru.erase(id)
+	_definition_lru[id] = value
+	while _definition_lru.size() > DEFINITION_CACHE_LIMIT: _definition_lru.erase(_definition_lru.keys()[0])
 
 func authorizes_held_save(payload: Dictionary) -> bool:
 	return not _held_save_candidate.is_empty() and preload("res://scripts/equipment523/native_catalog.gd").same(_held_save_candidate,payload)
@@ -66,7 +103,7 @@ func current_input_available() -> bool:
 
 func configure(world: Node) -> void:
 	owner=weakref(world)
-	definitions.clear();ready=false
+	_definition_ids.clear();_definition_lru.clear();ready=false
 	skill_books.configure_arguments()
 	equipment_owner.configure(world)
 	if world.quest_service.source.quests.is_empty() or not current_input_available(): return
@@ -94,7 +131,7 @@ func configure(world: Node) -> void:
 		elif id in REGEN.IDS:
 			if NATIVE_FIELDS.full(REGEN.action(world,D.variant_item(definition.get("native_record",{}),1))).get("source_use_spec",{}).get("activation_status")!="unrestricted":continue
 		elif spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["source_timed_buff","guaranteed_bag","source_selectable_reward"]: continue
-		definitions[id]=definition
+		_bind_definition(id,definition)
 		_register(world,definition.native_record,1)
 		for reward: Dictionary in spec.get("rewards",[]):
 			var summary: Dictionary = D.cached_definition(str(int(reward.item_class_id)))
@@ -109,13 +146,13 @@ func configure(world: Node) -> void:
 		var complete: Dictionary = world.quest_service.full(quest,false) if world.quest_service.has_method("full") else quest
 		for reward: Dictionary in complete.get("source_rewards",[]):
 			var id: int=int(reward.get("RewardClassID",0))
-			if definitions.has(id) or reward.get("type_name")!="Item" or reward.get("UseImmediately",false) or int(reward.get("ItemBlessCodeID",0))!=1:continue
+			if _definition_ids.has(id) or reward.get("type_name")!="Item" or reward.get("UseImmediately",false) or int(reward.get("ItemBlessCodeID",0))!=1:continue
 			var definition: Dictionary=D.definition_id(str(id))
 			if definition.get("original_item",{}).is_empty() or definition.original_item!=reward.get("source_item") or definition.original_item.get("TestItem",true):continue
 			var record: Dictionary=USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
 			var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 			if spec.get("activation_status")!="unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):continue
-			definitions[id]=definition
+			_bind_definition(id,definition)
 			_register(world,definition.native_record,1)
 			if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:
 				for output: Dictionary in spec.rewards:
@@ -124,7 +161,7 @@ func configure(world: Node) -> void:
 					if not child.get("native_record",{}).is_empty():_register(world,child.native_record,int(output.bless_raw))
 	world._index_catalog_item_sources()
 	world._index_item_weights()
-	ready=not definitions.is_empty()
+	ready=not _definition_ids.is_empty()
 
 func _register(world: Node, original: Dictionary, bless: int) -> void:
 	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(original).is_empty():return
@@ -145,7 +182,7 @@ func resolve(reward: Dictionary) -> Dictionary:
 	# Newly connected source rows retain actual quest-owned stacks until the
 	# player selects use. Do not mass-convert grants or expand old save schemas.
 	if id not in REVIEWED_IDS:return {}
-	var definition: Dictionary = definitions.get(id,{})
+	var definition: Dictionary = bound_definition(id)
 	if definition.is_empty() or definition.original_item!=reward.get("source_item",{}): return {}
 	var bless: int = int(reward.ItemBlessCodeID)
 	if bless not in [1,2,3] or definition.original_item.get("TestItem",true): return {}
@@ -157,7 +194,7 @@ func resolve(reward: Dictionary) -> Dictionary:
 	return {"record":record,"pack_sha256":str(D.pack_identity().get("sha256","")),"source_input_marker":D.pack_identity()}
 
 func handles(record: Dictionary) -> bool:
-	return ready and record.get("source_m_native_item",false) and definitions.has(int(record.get("source_item_class_id",0)))
+	return ready and record.get("source_m_native_item",false) and _definition_ids.has(int(record.get("source_item_class_id",0)))
 
 func retains_issued_reference(world: Node, item_key: String) -> bool:
 	# Preserve an unavailable saved reference; this never permits use, new
@@ -214,10 +251,10 @@ func try_use(world: Node, record: Dictionary) -> bool:
 func held_binding(world: Node, id: String) -> Dictionary:
 	if not ready: return {}
 	var owned: Dictionary=OWN.proof(world,id)
-	if not owned.ok or owned.source_use_immediately or not definitions.has(int(owned.item_class_id)): return {}
+	if not owned.ok or owned.source_use_immediately or not _definition_ids.has(int(owned.item_class_id)): return {}
 	if not preload("res://scripts/quests/source_dummy523.gd").item_evidence(owned.source_item).is_empty():return {}
 	if int(owned.item_class_id) not in REVIEWED_IDS and int(owned.bless_code_id)!=1:return {}
-	var definition: Dictionary=definitions[int(owned.item_class_id)]
+	var definition: Dictionary=bound_definition(int(owned.item_class_id))
 	if owned.source_item!=definition.original_item or int(owned.bless_code_id) not in [1,2,3]: return {}
 	if int(owned.item_class_id)==239 and int(owned.bless_code_id)!=1:return {}
 	return owned
@@ -227,7 +264,7 @@ func supported_held(world: Node) -> Dictionary:
 	if not ready:return result
 	for id: String in world.item_instances:
 		var record: Dictionary=world.item_instances[id].get("record",{})
-		if not definitions.has(int(record.get("source_item_class_id",0))):continue
+		if not _definition_ids.has(int(record.get("source_item_class_id",0))):continue
 		var owned: Dictionary=held_binding(world,id)
 		if owned.is_empty():continue
 		if not result.has(owned.quest_id):result[owned.quest_id]={}
@@ -258,19 +295,19 @@ func try_use_held(world: Node, id: String) -> bool:
 	if owned.is_empty():return false
 	if not world._patch523_item_allowed():return true
 	if int(owned.item_class_id)==310:
-		var canonical: Dictionary=D.variant_item(definitions[310].native_record,int(owned.bless_code_id))
+		var canonical: Dictionary=D.variant_item(bound_definition(310).native_record,int(owned.bless_code_id))
 		CURE.perform(world,canonical,id);return true
 	if int(owned.item_class_id) in REUSABLE.IDS:
-		var canonical: Dictionary=D.variant_item(definitions[int(owned.item_class_id)].native_record,int(owned.bless_code_id))
+		var canonical: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 		REUSABLE.perform(world,canonical,id);return true
 	if int(owned.item_class_id) in FIXED.IDS:
-		var canonical: Dictionary=D.variant_item(definitions[int(owned.item_class_id)].native_record,int(owned.bless_code_id))
+		var canonical: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 		FIXED.use(world,canonical,id);return true
 	if int(owned.item_class_id) in SKILL_BOOKS.IDS:
-		var canonical: Dictionary=D.variant_item(definitions[int(owned.item_class_id)].native_record,int(owned.bless_code_id))
+		var canonical: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 		skill_books.use(world,canonical,id);return true
 	if int(owned.item_class_id)==369002:
-		var record: Dictionary=D.variant_item(definitions[369002].native_record,int(owned.bless_code_id))
+		var record: Dictionary=D.variant_item(bound_definition(369002).native_record,int(owned.bless_code_id))
 		return CHOICE.open(world,record,id)
 	if int(owned.item_class_id)==239:
 		var outcome: Dictionary=world.consumable_service.use_owned_quest_return(id)
@@ -280,7 +317,7 @@ func try_use_held(world: Node, id: String) -> bool:
 	var prepared: Dictionary=OWN.prepare_debit(world,id,1)
 	if not prepared.ok:
 		world.hud.show_message(str(prepared.reason));return true
-	var record: Dictionary=D.variant_item(definitions[int(owned.item_class_id)].native_record,int(owned.bless_code_id))
+	var record: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 	var result: Dictionary=HELD_USE.perform(world,prepared,record)
 	if result.uncertain:world.hud.show_message("저장 결과 확인 필요 · 원본 보상 재사용 중지")
 	if result.committed:

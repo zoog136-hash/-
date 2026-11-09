@@ -18,7 +18,7 @@ func held_id(w: Node,iid: int)->String:
 func attempt(w: Node,id: String)->Dictionary:
 	var owned: Dictionary=OWN.prepare_debit(w,id,1)
 	if not owned.get("ok",false):return {"handled":true,"committed":false,"uncertain":false}
-	return HELD.perform(w,owned,D.variant_item(w.quest_item_provider.definitions[int(owned.ownership.item_class_id)].native_record,int(owned.ownership.bless_code_id)))
+	return HELD.perform(w,owned,D.variant_item(w.quest_item_provider.bound_definition(int(owned.ownership.item_class_id)).native_record,int(owned.ownership.bless_code_id)))
 func _initialize()->void:call_deferred("run")
 func run()->void:
 	var seed: String="";var mode: String="normal"
@@ -29,7 +29,7 @@ func run()->void:
 	if not failures.is_empty():quit(1);return
 	var w: TwilightWorld=load("res://Main.tscn").instantiate();root.add_child(w);w.set_process(false);w.player.set_physics_process(false);check(QA.enter_game(w,"기사"),"actual Main/class window")
 	var id: String=held_id(w,385);var wisdom: String=held_id(w,376)
-	check(not id.is_empty() and not wisdom.is_empty() and w.quest_item_provider.definitions.has(385) and w.quest_item_provider.definitions.has(376),"actual original two-class ownership and source provider installed")
+	check(not id.is_empty() and not wisdom.is_empty() and w.quest_item_provider.has_definition(385) and w.quest_item_provider.has_definition(376),"actual original two-class ownership and source provider installed")
 	if not failures.is_empty():w.queue_free();await process_frame;quit(1);return
 	w.quest_auto.refresh_context(w);var completed: int=0;var pending: int=0
 	for row: Dictionary in w.quest_service.entries(w.level,w.inventory):
@@ -55,7 +55,7 @@ func run()->void:
 		check(not attempt(w,id).committed,"disabled cadence leaves source activation blocked");w.ui_preferences.erase("quest523_mp_regen_interval_seconds")
 		var old_hp: int=w.hp;w.hp=0;check(not attempt(w,id).committed,"dead actor preserves potion");w.hp=old_hp
 		var stale: Dictionary=OWN.prepare_debit(w,id,1);w.inventory[original.name]=int(w.inventory[original.name])+1
-		check(not HELD.perform(w,stale,D.variant_item(w.quest_item_provider.definitions[385].native_record,1)).committed,"stale selected-ownership debit cannot execute");w.inventory=inv.duplicate(true)
+		check(not HELD.perform(w,stale,D.variant_item(w.quest_item_provider.bound_definition(385).native_record,1)).committed,"stale selected-ownership debit cannot execute");w.inventory=inv.duplicate(true)
 		check(w.item_instances==objects and FileAccess.get_sha256(w.save_path())==before,"all failed eligibility attempts preserve owned records and save bytes")
 		w.equipment_collections.test_save_writer=func(_path: String,_data: Dictionary)->Error:return ERR_FILE_CANT_WRITE
 		check(not attempt(w,id).committed,"prewrite failure does not commit source use");w.equipment_collections.test_save_writer=Callable()
@@ -63,7 +63,7 @@ func run()->void:
 		var bag: Variant=w.hud.lineage_inventory_ui;bag.set_character_state(w.hud.character_state);bag.inventory=w.inventory;bag._select_item(str(original.name)+"@@@"+id)
 		check(not bag.detail_action.disabled and bag.detail_text.text.contains("TWILIGHT") and bag.detail_text.text.contains("원본 주기 미확인") and bag.detail_text.text.contains("300초"),"actual selected inventory describes source amount and host cadence")
 		bag.detail_action.pressed.emit()
-		var key: String=str(D.variant_item(w.quest_item_provider.definitions[385].native_record,1).name);var buff: Dictionary=w.active_item_buffs.get(key,{})
+		var key: String=str(D.variant_item(w.quest_item_provider.bound_definition(385).native_record,1).name);var buff: Dictionary=w.active_item_buffs.get(key,{})
 		check(int(w.item_instances[id].source_reward_quantity)==int(original.source_reward_quantity)-1 and w.item_instances[id].quest_reward_receipt==original.quest_reward_receipt,"selected actual stack partially debited with immutable grant proof")
 		check(int(buff.get("mp_regen_tick",0))==3 and float(buff.get("remaining",0))==300 and float(buff.get("tick_interval",0))==30 and buff.get("quest523_regen_policy",{}).get("source_interval_verified")==false,"source RegenMP3/300seconds with labelled30second host cadence")
 		for uid: String in objects:
@@ -86,7 +86,7 @@ func run()->void:
 		w.equipment_collections.test_save_writer=func(path: String,data: Dictionary)->Error:
 			var f:=FileAccess.open(path,FileAccess.WRITE);f.store_string(JSON.stringify(data));f.close();return ERR_FILE_CANT_WRITE
 		var result: Dictionary=attempt(w,wisdom);w.equipment_collections.test_save_writer=Callable();check(result.committed and not result.uncertain,"confirmed write-then-error jointly commits source unit and buff once")
-		key=str(D.variant_item(w.quest_item_provider.definitions[376].native_record,1).name);buff=w.active_item_buffs.get(key,{})
+		key=str(D.variant_item(w.quest_item_provider.bound_definition(376).native_record,1).name);buff=w.active_item_buffs.get(key,{})
 		check(int(w.item_instances[wisdom].source_reward_quantity)==int(q.source_reward_quantity)-1 and w._active_item_buff_total("sp")==2 and int(buff.get("mp_regen_tick",0))==2,"actual Mage-owned wisdom reaches SP2 and source MP2")
 		var left: int=int(w.item_instances[wisdom].source_reward_quantity)
 		check(not attempt(w,wisdom).committed and int(w.item_instances[wisdom].source_reward_quantity)==left,"immediate repeated use respects500ms cooldown without another debit")

@@ -31,7 +31,8 @@ func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 
 func refresh_context(world: Node) -> void:
 	var service: Variant = world.quest_service
-	var source_items: Dictionary = ITEM_BINDINGS.index([world.item_db,world.catalog_db.get("아이템",[])])
+	# Packed lookup with index()'s candidates (no per-item Dictionary/Array).
+	var source_items: RefCounted = ITEM_BINDINGS.lookup([world.item_db,world.catalog_db.get("아이템",[])])
 	# Bind the existing production consumer directly: no speculative foreign
 	# provider and no Callable(self) cycle retaining this runner after restart.
 	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"source_item_consumer":Callable(world.growth.source523,"material"),"currency_items":world.loot_catalog.get("by_name",{})}
