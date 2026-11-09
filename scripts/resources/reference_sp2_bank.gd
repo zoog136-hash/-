@@ -197,6 +197,38 @@ func _member(member: String) -> Dictionary:
 		_parse_order.append(member)
 	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
 
+## Client static branch (no action descriptor): body Sprite/<remapped id>-0.sp2
+## direction 0 picture 0, plus its 101 shadow drawn the same way; clothes are
+## not collected. Returns layers for render_layer(); nothing is played here.
+func load_static(manifest_path: String, expected_sha: String, source_sprite_id: int) -> Dictionary:
+	_root = manifest_path.get_base_dir()
+	_manifest_path = manifest_path
+	_manifest_sha = expected_sha
+	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	var loaded: Dictionary = _json(manifest_path, expected_sha, true)
+	if not loaded.ok: return loaded
+	_manifest = loaded.value
+	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
+	var contract: Variant = _manifest.get("static_picture_contract")
+	if not contract is Dictionary or contract.get("branch") != "client_static_no_action_descriptor" or contract.get("frame") != "direction0_picture0" or not contract.get("evidence") is String: return fail("Bank has no client static picture contract.")
+	if not _manifest.get("static_pictures") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing static picture registry.")
+	var exclusions: Dictionary = _install_source_exclusions()
+	if not exclusions.ok: return exclusions
+	var admitted: Dictionary = source_actor_admission(source_sprite_id)
+	if not admitted.ok: return admitted
+	var entry: Variant = _manifest.static_pictures.get("sprite:" + str(source_sprite_id))
+	if not entry is Dictionary or entry.get("branch") != "client_static_no_action_descriptor" or not entry.get("layers") is Array: return fail("Exact source sprite has no static picture.")
+	var layers: Array = []
+	for layer: Variant in entry.layers:
+		if not layer is Dictionary or layer.get("kind") not in ["body","shadow"] or layer.get("source_sprite_id") != source_sprite_id or int(layer.get("group_bit",-1)) != 0 or int(layer.get("frame_index",-1)) != 0: return fail("Invalid static picture layer.")
+		var member: String = "Sprite/%d-0.sp2" % int(layer.get("file_sprite_id",-1))
+		if layer.get("member") != member: return fail("Static picture member differs from its file identity.")
+		var source: Dictionary = _member(member)
+		if not source.ok: return source
+		layers.append(layer.duplicate(true))
+	if layers.is_empty() or layers[0].kind != "body": return fail("Static picture requires its body first.")
+	return {"ok":true,"layers":layers,"source_declaration":entry.get("source_declaration",{}).duplicate(true),"branch":entry.branch,"manifest_sha256":expected_sha}
+
 func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
 	if not integer(layer.get("source_sprite_id")): return fail("Missing declared source layer actor identity.")
@@ -368,12 +400,23 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 					if not reference_binding.ok: return reference_binding
 					var address: int = int(token[0]) + (direction if int(compact.declared_flag) == 1 else 0)
 					var member: String = "Sprite/%d-%d.sp2" % [int(layer.source_sprite_id),address & ~7]
-					if layer.get("member") != member or layer.get("group_bit") != (address & 7) or layer.get("frame_index") != token[1]: return fail("Literal source address differs from identity contract.")
+					var client_frames: bool = contract.get("frame_policy") == "client_clamp_frame_null_missing_direction_or_empty_body"
+					var frame_matches: bool = layer.get("frame_index") == token[1]
+					if client_frames and not frame_matches and layer.get("clamped_from_frame_index") == token[1] and integer(layer.get("frame_index"),0,255) and int(layer.frame_index) < int(token[1]): frame_matches = true
+					if layer.get("member") != member or layer.get("group_bit") != (address & 7) or not frame_matches: return fail("Literal source address differs from identity contract.")
+					if layer.has("client_null"):
+						# Client: a missing direction or empty main frame draws nothing; other layers continue.
+						if not client_frames or layer.client_null not in ["direction_absent","empty_body_frame"] or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
+						var null_layer: Dictionary = layer.duplicate(true)
+						null_layer.merge({"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
+						if layer.kind == "clothes": shown.effect_layers.append(null_layer)
+						else: shown.layers.append(null_layer)
+						continue
 					var attributes: Dictionary = _attributes(source, layer.kind, int(layer.source_sprite_id))
 					if not attributes.ok: return attributes
 					var picture: Dictionary = render_layer(layer, false)
 					if not picture.ok: return picture
-					if layer.kind == "body" and bool(picture.empty): return fail("Exact source action has an empty body frame.")
+					if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
 					var converted_layer: Dictionary = layer.duplicate(true)
 					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
 					if not reference_binding.instances.is_empty():
