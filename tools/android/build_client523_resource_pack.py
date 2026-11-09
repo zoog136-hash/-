@@ -207,10 +207,15 @@ def build(args):
     out = args.output
     out.mkdir(mode=0o700)
     written = []
+    selected = set(args.write_parts or range(1, len(parts) + 1))
+    require(selected <= set(range(1, len(parts) + 1)), f"--write-parts outside 1..{len(parts)}")
     for number, chunk in enumerate(parts, 1):
+        name = f"twilight523-resources-{number}of{len(parts)}.zip"
+        if number not in selected:
+            written.append({"file": name, "members": len(chunk), "written": False})
+            continue
         index = {"schema": PART_SCHEMA, "pack_id": descriptor["pack_id"], "part": number, "parts": len(parts),
                  "members": [[name, size] for name, _, size, _ in chunk]}
-        name = f"twilight523-resources-{number}of{len(parts)}.zip"
         write_part(out / name, index, chunk, descriptor_bytes if number == 1 else None)
         written.append({"file": name, "members": len(chunk), "bytes": (out / name).stat().st_size})
     report = {"pack_id": descriptor["pack_id"], "members": descriptor["members"], "bytes": descriptor["bytes"],
@@ -232,6 +237,9 @@ def main(argv=None):
     parser.add_argument("--start-land", type=int, default=4, help="Land ID entered on a fresh install (4 = Aden)")
     parser.add_argument("--part-bytes", type=int, default=MAX_PART_BYTES)
     parser.add_argument("--part-entries", type=int, default=MAX_PART_ENTRIES)
+    parser.add_argument("--write-parts", type=lambda v: [int(x) for x in v.split(",") if x],
+                        help="write only these part numbers (e.g. 2,3); the plan and pack ID stay the same, "
+                             "so parts written in separate runs belong to one pack")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]

@@ -92,6 +92,16 @@ class ResourcePackTest(unittest.TestCase):
         (icons / "icon-selection.json").write_text(json.dumps(selection))
         self.assertEqual(pack.main(self.args(self.tmp / "out3", ui_icons=icons)), 1)
 
+    def test_selected_parts_match_a_full_build(self):
+        output, full = self.build(part_entries=6)
+        only = self.tmp / "only"
+        self.assertEqual(pack.main(self.args(only, part_entries=6, write_parts="2")), 0)
+        report = json.loads((only / "source523_pack_report.json").read_text())
+        self.assertEqual(report["pack_id"], full["pack_id"])
+        name = report["parts"][1]["file"]
+        self.assertEqual([p.name for p in only.glob("*.zip")], [name])
+        self.assertEqual((only / name).read_bytes(), (output / name).read_bytes())
+
     def test_pack_id_is_deterministic(self):
         _, first = self.build()
         again = self.tmp / "again"
