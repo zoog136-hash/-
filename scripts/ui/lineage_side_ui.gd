@@ -54,6 +54,7 @@ const MENU_ITEMS: Array = [
 	["map", "월드맵", "⌖"],
 	["quests", "퀘스트", "▤"],
 	["tj_coupons", "TJ 쿠폰", "▤"],
+	["promo_code", "쿠폰 코드", "✉"],
 	["craft", "제작", "⚒"],
 	["macro", "자동사냥", "◎"],
 	["save", "저장", "▰"],

@@ -146,6 +146,7 @@ var option_awakening_transaction_busy: bool = false
 const CARD_PACK_ITEMS = preload("res://scripts/card_pack_items.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const CURRENCY_DROP = preload("res://scripts/loot/currency_drops.gd")
+const PROMO_CODES = preload("res://scripts/promo/promo_codes.gd")
 const QUEST_SERVICE = preload("res://scripts/quests/quest_service.gd")
 var quest_service = QUEST_SERVICE.new()
 const TJ_RUNTIME = preload("res://scripts/tj/runtime.gd")
@@ -5885,6 +5886,20 @@ func _commit_general_save() -> void:
 ## Ask for a save after DEFERRED_SAVE_SECONDS of quiet. Use only for state that
 ## is consistent if the last few seconds are lost; RNG outcomes and item/skill
 ## transactions keep calling _save_game directly.
+## Promotion code entry (UI: 메뉴 > 쿠폰 코드). Codes have no use limit.
+func redeem_promo_code(raw_code: String) -> Dictionary:
+	var result: Dictionary = PROMO_CODES.apply(raw_code, gold, inventory)
+	if not bool(result.get("ok", false)):
+		return result
+	gold = int(result.gold)
+	inventory[PROMO_CODES.DIAMOND_ITEM] = int(result.diamond)
+	hud.refresh_inventory(inventory)
+	hud.show_message("쿠폰 코드 보상 · 다이아 %d · 아데나 %d" % [int(result.diamond_gain), int(result.gold_gain)])
+	hud.append_log("쿠폰 코드 %s · 다이아 +%d · 아데나 +%d" % [str(result.code), int(result.diamond_gain), int(result.gold_gain)])
+	_update_hud()
+	_request_deferred_save()
+	return result
+
 func _request_deferred_save() -> void:
 	if not deferred_save_enabled:
 		_save_game(true)
