@@ -56,8 +56,11 @@ SECTIONS = (
     ("tiles", "tilepack523.json"),
     ("ui", "original_ui.json"),
     ("ui_icons", "icon-selection.json"),
+    ("world_links", "manifest.json"),
 )
-OPTIONAL = {"ui", "ui_icons"}
+OPTIONAL = {"ui", "ui_icons", "world_links"}
+# 523 map travel definitions (tools/map_restore/build_patch523_world_links.py).
+WORLD_LINKS_SHA256 = "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
 
 
 class PackError(Exception):
@@ -125,6 +128,8 @@ def collect(args):
         manifest = root / manifest_name
         require(manifest.is_file(), f"{section}: {manifest_name} missing")
         manifest_checks(section, json.loads(manifest.read_text(encoding="utf-8-sig")))
+        if section == "world_links":
+            require(sha256_file(manifest) == WORLD_LINKS_SHA256, "world-links manifest is not the pinned 523 definition pack")
         files = walk(root)
         require(any(name == manifest_name for name, _, _ in files), f"{section}: manifest not under root")
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
@@ -234,6 +239,8 @@ def main(argv=None):
     parser.add_argument("--ui", type=Path, help="original UI pack (original_ui.json), optional")
     parser.add_argument("--ui-icons", type=Path,
                         help="folder with icon-selection.json and the CSB icon pack it names, optional")
+    parser.add_argument("--world-links", type=Path,
+                        help="523 map travel definitions (manifest.json 2de8cebb...), optional")
     parser.add_argument("--start-land", type=int, default=4, help="Land ID entered on a fresh install (4 = Aden)")
     parser.add_argument("--part-bytes", type=int, default=MAX_PART_BYTES)
     parser.add_argument("--part-entries", type=int, default=MAX_PART_ENTRIES)
