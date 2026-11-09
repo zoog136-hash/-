@@ -14,8 +14,13 @@ const MAX_REWARD_LEAVES := 4096
 const COMMON = preload("res://scripts/resources/current523_definition_rows.gd")
 ## Tables at least this large are read through the shared column-packed store
 ## instead of a second full Dictionary copy here (Bonus alone is 217,916 rows;
-## this reader held ~1.3 GB with the original installed).
-const SHARED_ROW_THRESHOLD := 20000
+## this reader held ~1.3 GB with the original installed). The shared rows are
+## the same values in the same order as parsing here (every table the owners
+## read was compared), so only tables under this size keep a parsed copy:
+## with the original installed the ~60,000 rows of the 1,000-20,000 row tables
+## (GotChaEntityView, NpcClassForNpcGroup, QuestReward, Goal, ServerLimit,
+## ItemClassLimit, MarketPurchase_Korean, ...) cost ~75 MB as dictionaries.
+const SHARED_ROW_THRESHOLD := 1000
 
 var last_error: String = ""
 var problem: String:

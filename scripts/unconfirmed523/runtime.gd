@@ -411,9 +411,7 @@ func prepare_pass_reward(proof: Dictionary) -> Dictionary:
 	var claim_id: String = str(proof.get("claim_id",""))
 	if not proof.get("claim_id") is String or claim_id.is_empty() or claim_id.length() > 96: return _fail("검증된 상위 청구 ID 필요")
 	var quest_id: int = int(proof.quest_id); var reward_id: int = int(proof.reward_id)
-	var linked: bool = false
-	for link: Dictionary in source.rows("QuestReward"):
-		if int(link.get("QuestID",0)) == quest_id and int(link.get("RewardID",0)) == reward_id: linked = true; break
+	var linked: bool = _quest_reward_linked(quest_id,reward_id)
 	var raw: Dictionary = source.row("Reward",reward_id)
 	if not linked or int(raw.get("RewardTypeID",0)) != 172: return _fail("원본 퀘스트·시즌 경험치 연결 오류")
 	var pass_id: int = int(raw.get("RewardClassID",0))
@@ -530,15 +528,21 @@ func _grant_receipt_error(physical: Dictionary, item_id: int, remaining: int, ph
 	if int(proof.bless_code_id) not in [1,2,3] or bless != int(proof.bless_code_id): return "원본 퀘스트 축복 증명 불일치"
 	var reward: Dictionary = source.row("Reward",int(proof.reward_id))
 	if int(reward.get("RewardTypeID",0)) != 2 or int(reward.get("RewardClassID",0)) != item_id or int(reward.get("ItemBlessCodeID",1)) != int(proof.bless_code_id) or int(proof.quantity) > int(reward.get("Amount",0)): return "원본 퀘스트 지급 보상 연결 오류"
-	var linked: bool = false
-	for link: Dictionary in source.rows("QuestReward"):
-		if int(link.get("QuestID",0)) == quest_id and int(link.get("RewardID",0)) == int(proof.reward_id): linked = true; break
-	if not linked: return "원본 퀘스트 지급 출처 연결 오류"
+	if not _quest_reward_linked(quest_id,int(proof.reward_id)): return "원본 퀘스트 지급 출처 연결 오류"
 	if physical_id.is_empty(): return "원본 퀘스트 지급 개체 확인 필요"
 	var owned: Dictionary = QuestOwnership.proof(world,physical_id)
 	if not owned.get("ok",false): return str(owned.get("reason","원본 퀘스트 소유권 확인 필요"))
 	if int(owned.item_class_id) != item_id or int(owned.quantity) != remaining: return "원본 퀘스트 소유 수량 불일치"
 	return ""
+
+func _quest_reward_linked(quest_id: int, reward_id: int) -> bool:
+	# The raw QuestReward edge. The quest's own links come through the source's
+	# indexed join (the 6,276-row shared table is not re-read per owned item);
+	# a source without one is scanned as before.
+	var links: Array = source.find_rows("QuestReward","QuestID",quest_id) if source.has_method("find_rows") else source.rows("QuestReward")
+	for link: Dictionary in links:
+		if int(link.get("QuestID",0)) == quest_id and int(link.get("RewardID",0)) == reward_id: return true
+	return false
 
 static func _canonical_quest_number(value: Variant) -> int:
 	if not value is String or not value.begins_with("m523:quest:"): return 0
