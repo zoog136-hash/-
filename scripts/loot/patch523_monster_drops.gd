@@ -22,7 +22,13 @@ static var _root: String = ""
 static var _active_sha: String = ""
 static var _sources: Dictionary = {}
 static var diagnostics: Dictionary = {}
+## Most recently resolved per-NPC membership documents (newest last). Older
+## ones are rebuilt from the original rows on the next death of that NPC; the
+## shared item references stay in data(), so a rebuild yields the same values.
 static var _current_documents: Dictionary = {}
+const DOCUMENT_CACHE_LIMIT: int = 16
+## NPC IDs whose membership has been merged into data() (once per source).
+static var _current_resolved: Dictionary = {}
 static var _current_source_identity: Dictionary = {}
 static var _current_drop_positions: Dictionary = {}
 static var _current_reference_data: Dictionary = {}
@@ -82,12 +88,12 @@ static func _legacy_data_for_reference() -> Dictionary:
 static func data() -> Dictionary:
 	var source_identity: Dictionary = CURRENT_SOURCE.identity()
 	if source_identity.is_empty():
-		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
 		_current_source_identity = {}
 		diagnostics = {"status":"current523_drop_input_unavailable","reason":CURRENT_SOURCE.problem()}
 		return {}
 	if source_identity != _current_source_identity:
-		_current_reference_data.clear(); _current_documents.clear(); _current_drop_positions.clear()
+		_current_reference_data.clear(); _current_documents.clear(); _current_resolved.clear(); _current_drop_positions.clear()
 		_current_source_identity = source_identity.duplicate(true)
 	if _current_reference_data.is_empty():
 		_current_reference_data = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
@@ -198,22 +204,62 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 		definition.unresolved_source_reference=""
 	return definition
 
+## 1-based table position of each NpcItemDropView row ID. Kept as one sorted
+## packed array of (ID << 20 | row) instead of a Dictionary of ~47k strings
+## (~6 MB), built from the ID column without materializing every row.
+const POSITION_ROW_LIMIT: int = 1048576
+const POSITION_ID_LIMIT: int = 4398046511104
+
 static func _current_source_positions() -> bool:
 	if not _current_drop_positions.is_empty(): return true
 	var metadata: Dictionary = CURRENT_SOURCE.table_metadata("NpcItemDropView")
-	var rows: Array[Dictionary] = CURRENT_SOURCE.rows("NpcItemDropView")
-	if not _source_integer(metadata.get("row_count")) or int(metadata.row_count) != rows.size():
+	var count: int = CURRENT_SOURCE.row_count("NpcItemDropView")
+	if not _source_integer(metadata.get("row_count")) or int(metadata.row_count) != count:
 		_current_input_problem = "current523_NpcItemDropView_rows_or_provenance_unavailable"
 		return false
-	var positions: Dictionary = {}
-	for index: int in range(rows.size()):
-		var row: Dictionary = rows[index]
-		if not _source_integer(row.get("ID")) or positions.has(str(int(row.ID))):
+	if count == 0: return true
+	var column: Variant = CURRENT_SOURCE.column("NpcItemDropView","ID")
+	var values: Array = []
+	if (column is Array or column is PackedFloat64Array or column is PackedInt64Array or column is PackedInt32Array) and column.size() == count:
+		values = Array(column)
+	else:
+		# Some row has no ID column value: read rows one at a time, as before.
+		for index: int in count: values.append(CURRENT_SOURCE.row_at("NpcItemDropView",index).get("ID"))
+	var composite := PackedInt64Array()
+	var compact: bool = count < POSITION_ROW_LIMIT
+	var fallback: Dictionary = {}
+	for index: int in count:
+		var value: Variant = values[index]
+		if not _source_integer(value):
 			_current_input_problem = "invalid_or_duplicate_original_drop_row_ID"
 			return false
-		positions[str(int(row.ID))] = index+1
-	_current_drop_positions = positions
+		var id: int = int(value)
+		if compact and absi(id) >= POSITION_ID_LIMIT: compact = false
+		if fallback.has(id):
+			_current_input_problem = "invalid_or_duplicate_original_drop_row_ID"
+			return false
+		fallback[id] = index+1
+	if compact:
+		composite.resize(count)
+		var position: int = 0
+		for id: int in fallback:
+			composite[position] = id*POSITION_ROW_LIMIT + int(fallback[id])
+			position += 1
+		composite.sort()
+		_current_drop_positions = {"composite":composite}
+	else:
+		_current_drop_positions = {"ids":fallback}
 	return true
+
+## 0 when `id` is not a row ID of the verified NpcItemDropView.
+static func _current_drop_position(id: int) -> int:
+	if _current_drop_positions.has("ids"): return int(_current_drop_positions.ids.get(id,0))
+	var composite: PackedInt64Array = _current_drop_positions.get("composite",PackedInt64Array())
+	if composite.is_empty() or absi(id) >= POSITION_ID_LIMIT: return 0
+	var at: int = composite.bsearch(id*POSITION_ROW_LIMIT, true)
+	if at >= composite.size(): return 0
+	var position: int = posmod(composite[at], POSITION_ROW_LIMIT)
+	return position if (composite[at]-position)/POSITION_ROW_LIMIT == id else 0
 
 static func _current_source_document(value: Dictionary) -> Dictionary:
 	_current_input_problem = ""
@@ -240,7 +286,11 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 	if category.get("IsAttackable") != true or not category.get("IsShowDropInfo") is bool:
 		_current_input_problem = "current523_npc_drop_category_unavailable"
 		return {}
-	if _current_documents.has(id): return _current_documents[id]
+	if _current_documents.has(id):
+		var cached: Dictionary = _current_documents[id]
+		_current_documents.erase(id)
+		_current_documents[id] = cached
+		return cached
 	if not _current_source_positions(): return {}
 	var document: Dictionary = {"schema":2,"kind":KIND,"source_snapshot":"patch523",
 		"input_kind":"current523_original_membership_with_exact_host_bindings","source_input_identity":source_identity,
@@ -257,7 +307,7 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 		var valid: bool = true
 		for field: String in ["ID","NpcClassID","ItemClassID","Bless","RequiredQuestID"]:
 			if not _source_integer(raw.get(field)) or raw[field] < 0: valid = false
-		if not valid or raw.get("NpcClassID") != npc_id or not _current_drop_positions.has(str(int(raw.get("ID",-1)))):
+		if not valid or raw.get("NpcClassID") != npc_id or _current_drop_position(int(raw.get("ID",-1))) == 0:
 			document.unavailable_source_definitions.append({"table":"NpcItemDropView","row":raw,"reason":"invalid_original_drop_reference"})
 			continue
 		var exclusion: Dictionary = CURRENT_SOURCE.declared_exclusion("NpcItemDropView",raw)
@@ -284,19 +334,23 @@ static func _current_source_document(value: Dictionary) -> Dictionary:
 			continue
 		document.bless_codes[str(int(raw.Bless))] = str(bless.Name).to_lower()
 		var row: Dictionary = raw.duplicate(true)
-		row["source_row_1based"] = _current_drop_positions[str(int(raw.ID))]
+		row["source_row_1based"] = _current_drop_position(int(raw.ID))
 		active.append(row)
 	document.drops[id] = active
 	for table: String in ["NpcClass","NpcCategory","NpcItemDropView","ItemClass","ItemBlessCode","DescData_Korean"]:
 		document.source_tables[table] = CURRENT_SOURCE.table_metadata(table)
 	# Only actually admitted NPC memberships enter this read registry. The
 	# existing executor still consumes the separately resolved exact host DTOs.
-	reference_document.npcs[id] = document.npcs[id]
-	reference_document.drops[id] = active.duplicate(true)
-	for bless: String in document.bless_codes: reference_document.bless_codes[bless] = document.bless_codes[bless]
-	reference_document.source_exclusion_evidence.append_array(document.source_exclusion_evidence)
-	reference_document.unavailable_source_definitions.append_array(document.unavailable_source_definitions)
+	# A rebuilt (evicted) document was merged already; merge only once.
+	if not _current_resolved.has(id):
+		_current_resolved[id] = true
+		reference_document.npcs[id] = document.npcs[id]
+		reference_document.drops[id] = active.duplicate(true)
+		for bless: String in document.bless_codes: reference_document.bless_codes[bless] = document.bless_codes[bless]
+		reference_document.source_exclusion_evidence.append_array(document.source_exclusion_evidence)
+		reference_document.unavailable_source_definitions.append_array(document.unavailable_source_definitions)
 	_current_documents[id] = document
+	while _current_documents.size() > DOCUMENT_CACHE_LIMIT: _current_documents.erase(_current_documents.keys()[0])
 	return document
 
 static func _current_missing_reference_evidence(value: Variant, evidence: Array, path: String = "item_data") -> void:
@@ -362,11 +416,24 @@ static func _current_host_condition_admission(detail: Dictionary) -> Dictionary:
 	if not evidence.is_empty(): return {"reason":"unsupported_source_item_condition","evidence":evidence,"item_data_ok":detail.get("ok",false)}
 	return {}
 
+## The same values as original.duplicate(true) for this resolution. The item
+## references (whole original ItemData descriptions, up to MBs per box item),
+## definitions, rows and NPC entries are only read here and by resolve(), so
+## they are shared with the cached document instead of deep-copied on every
+## death; only the containers a resolution writes get their own copy.
+const WORKING_WRITES: Array[String] = ["bindings","unresolved_item_ids","host_binding_problems","binding_provenance","unavailable_source_definitions"]
+static func _working_document(original: Dictionary) -> Dictionary:
+	var document: Dictionary = original.duplicate(false)
+	for key: String in WORKING_WRITES:
+		var value: Variant = document.get(key)
+		if value is Dictionary or value is Array: document[key] = value.duplicate(false)
+	return document
+
 static func _current_host_bindings(original: Dictionary, catalog: Dictionary) -> Dictionary:
 	# Same bounded public compiler binding: exact Inven ID/URL, one current
 	# inventory name, and one of the two declared localized descriptors.
 	# A former native sidecar DTO/alias is never accepted as this host source.
-	var document: Dictionary = original.duplicate(true)
+	var document: Dictionary = _working_document(original)
 	document["source_condition_evidence"] = {}
 	var unique: Variant = catalog.get("patch523_by_name")
 	if not unique is Dictionary:
@@ -822,10 +889,12 @@ static func candidates(value: Dictionary, catalog: Dictionary) -> Dictionary:
 	diagnostics["binding_provenance"] = document.binding_provenance.duplicate(true)
 	diagnostics["unresolved_item_ids"] = document.unresolved_item_ids.duplicate(true)
 	diagnostics["host_binding_problems"] = document.host_binding_problems.duplicate(true)
-	diagnostics["source_condition_evidence"] = document.source_condition_evidence.duplicate(true)
-	diagnostics["source_item_references"] = document.source_item_references.duplicate(true)
-	diagnostics["unavailable_source_definitions"] = document.unavailable_source_definitions.duplicate(true)
-	diagnostics["source_exclusion_evidence"] = document.source_exclusion_evidence.duplicate(true)
+	# Same values as deep copies; the read-only original references and
+	# evidence rows are shared with data() rather than copied per death.
+	diagnostics["source_condition_evidence"] = document.source_condition_evidence.duplicate(false)
+	diagnostics["source_item_references"] = document.source_item_references.duplicate(false)
+	diagnostics["unavailable_source_definitions"] = document.unavailable_source_definitions.duplicate(false)
+	diagnostics["source_exclusion_evidence"] = document.source_exclusion_evidence.duplicate(false)
 	diagnostics["original_numeric_projection_complete"] = false
 	return groups
 

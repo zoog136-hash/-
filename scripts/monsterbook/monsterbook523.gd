@@ -15,6 +15,14 @@ var _tables: Dictionary = {}
 var _indexes: Dictionary = {}
 var _level_ids: Dictionary = {}
 var _link_ids: Dictionary = {}
+## Tables read only by row()/table_rows() (rewards, items, cards, market and
+## the level link rows already folded into _link_ids). With the verified
+## original they live in a device-local record bake and are read back per
+## row on demand (Lineage M style); fixture/explicit packs keep them resident.
+const STORED_TABLES := ["Reward", "ItemClass", "BuffCard", "GotChaEntityView", "ItemBonus", "DescData_Korean", "MonsterBookLevelReward", "MonsterBookLevelBonus", "MarketPurchase_Korean", "MarketPurchaseProduct", "MarketProduct", "MarketProductAdditional", "MarketBonusForPurchase", "SelectReward", "SelectRewardEntity", "IntangibleItemClass", "ItemCategory", "Grade"]
+const ROWS_BAKE_NAME := "monsterbook523_stored_rows"
+var _stored: Dictionary = {}
+var _stored_rows: RefCounted = null
 var _state: Dictionary = {"schema": 1, "books": {}}
 var pack_sha: String = ""
 var model_input_identity: Dictionary = {}
@@ -113,7 +121,9 @@ func load_original() -> bool:
 	var bake_key: String = BAKE.projection_key(BAKE_NAME, Definitions.verified_key())
 	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
 	if not baked.is_empty() and baked.identity.get("archive") == identity:
-		return _load_payload(baked.bytes, baked.sha256, baked.identity)
+		if not _load_payload(baked.bytes, baked.sha256, baked.identity): return false
+		_store_cold_tables()
+		return true
 	# Exact full projection from tools/monsterbook523/build_pack.py. This builds
 	# the existing model in memory; it does not reinterpret source authority.
 	var cache: Dictionary = {}
@@ -239,7 +249,45 @@ func load_original() -> bool:
 	var actual: String = digest.finish().hex_encode()
 	var input_identity: Dictionary = {"kind":"twilight.monsterbook523.original-input.v1","archive":identity,"payload_sha256":actual,"payload_bytes":data.size(),"projection":"tools/monsterbook523/build_pack.py"}
 	BAKE.write(BAKE_NAME, bake_key, {"bytes":data,"sha256":actual,"identity":input_identity})
-	return _load_payload(data,actual,input_identity)
+	if not _load_payload(data,actual,input_identity): return false
+	_store_cold_tables()
+	return true
+
+## Moves STORED_TABLES of the just loaded original payload to a record bake
+## keyed by the verified original, this code and the payload SHA256. Rows are
+## the same parsed values, read back one at a time. Any failure keeps them
+## resident (the previous behavior).
+func _store_cold_tables() -> void:
+	var source_key: String = Definitions.verified_key()
+	if source_key.is_empty() or pack_sha.is_empty(): return
+	var key: String = BAKE.projection_key(ROWS_BAKE_NAME, source_key + ":" + pack_sha)
+	if key.is_empty(): return
+	var tables: Array[String] = []
+	for table: String in STORED_TABLES:
+		if _tables.has(table): tables.append(table)
+	var records: RefCounted = BAKE.open_records(ROWS_BAKE_NAME, key)
+	if records != null:
+		for table: String in tables:
+			if not records.has("T|" + table): records = null; break
+	if records == null:
+		var writer: RefCounted = BAKE.record_writer(ROWS_BAKE_NAME, key)
+		if writer == null: return
+		for table: String in tables:
+			writer.add("T|" + table, _tables[table])
+			if _indexes.has(table):
+				for id: int in _indexes[table]: writer.add("R|" + table + "|" + str(id), _indexes[table][id])
+		if not BAKE.finish_records(writer): return
+		records = BAKE.open_records(ROWS_BAKE_NAME, key)
+		if records == null: return
+	_stored_rows = records
+	for table: String in tables:
+		_stored[table] = true
+		_tables.erase(table)
+		_indexes.erase(table)
+
+func _stored_row(table: String, id: int) -> Dictionary:
+	var value: Variant = _stored_rows.read("R|" + table + "|" + str(id)) if _stored_rows != null else null
+	return value if value is Dictionary else {}
 
 func _load_payload(data: PackedByteArray, expected_sha: String, input_identity: Dictionary) -> bool:
 	var parser := JSON.new()
@@ -265,8 +313,13 @@ func _load_payload(data: PackedByteArray, expected_sha: String, input_identity: 
 		indexes[table] = index
 	if not _validate_catalog(tables, indexes):
 		return _fail("catalog_relationships")
-	_tables = tables.duplicate(true)
-	_indexes = indexes.duplicate(true)
+	# The parsed model is owned by this call only and rows are never edited in
+	# place (every reader returns a copy), so keep it and let the indexes share
+	# its row dictionaries instead of holding two deep copies of every row.
+	_tables = tables
+	_indexes = indexes
+	_stored = {}
+	_stored_rows = null
 	_level_ids.clear()
 	_link_ids.clear()
 	for level: Dictionary in _tables.MonsterBookLevel:
@@ -327,6 +380,7 @@ func books(current_only: bool = true) -> Array:
 	return result
 
 func row(table: String, id: int) -> Dictionary:
+	if _stored.has(table): return _stored_row(table, id)
 	return _indexes.get(table, {}).get(id, {}).duplicate(true)
 
 func target_books(npc_class_id: int) -> Array:
@@ -812,5 +866,8 @@ func current_period(book_id: int, clock: String) -> String:
 	return "counting"
 
 func table_rows(table: String) -> Array:
+	if _stored.has(table):
+		var value: Variant = _stored_rows.read("T|" + table) if _stored_rows != null else null
+		return value if value is Array else []
 	return _tables.get(table, []).duplicate(true)
 
