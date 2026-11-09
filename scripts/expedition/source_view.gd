@@ -31,6 +31,11 @@ var storage_title: Label
 var open_button: Button
 var withdraw_button: Button
 
+## Closing the window drops the catalogue's resident table cache (rows stay on
+## device storage and are read again on the next open).
+func _exit_tree() -> void:
+	if catalogue != null and catalogue.has_method("release"): catalogue.release()
+
 func configure(source: RefCounted, cards: Array, local_runtime: RefCounted = null, host_hud: Node = null) -> void:
 	catalogue = source
 	runtime = local_runtime

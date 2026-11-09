@@ -46,7 +46,7 @@ func run()->void:
  for item: int in FIXED.IDS:
   var record: Dictionary=D.variant_item(D.definition_id(str(item)).native_record,1)
   var target: Dictionary=FIXED.target(w,record);targets[item]=target
-  check(not target.is_empty() and w.quest_item_provider.definitions.has(item),"actual stable registry/NoSwap/NoMerge owner available "+str(item))
+  check(not target.is_empty() and w.quest_item_provider.has_definition(item),"actual stable registry/NoSwap/NoMerge owner available "+str(item))
   var ids: Array=[]
   for uid: String in w.item_instances:
    if int(w.item_instances[uid].get("record",{}).get("source_item_class_id",0))==item:ids.append(uid)
@@ -57,7 +57,7 @@ func run()->void:
   if not fresh:
    for uid: String in ids:check(OWN.proof(w,uid).ok and int(OWN.proof(w,uid).original_quantity)==1,"real immutable individual source reward proof "+uid)
  for item: int in [969,970,992,993,994,996,997,998,999,1001,1003,1004,1005,1007,1009,1010,1012,1013,1016,1025,1030,1055,1063,1067,1076,35101,35111]:
-  check(not w.quest_item_provider.definitions.has(item),"source TestItem remains blocked "+str(item))
+  check(not w.quest_item_provider.has_definition(item),"source TestItem remains blocked "+str(item))
  var claims: Dictionary=w.quest_service.claimed.duplicate(true);var slots: Array=w.quickslots.duplicate(true)
  var before_cards: Dictionary=w.card_draw_fusion.export_state();var pity: Dictionary=w.card_draw_fusion.pity.duplicate(true);var rng: int=w.card_draw_fusion.rng.state
  var path: String=w.save_path();var hash: String=FileAccess.get_sha256(path)

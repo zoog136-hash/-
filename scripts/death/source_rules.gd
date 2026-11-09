@@ -12,7 +12,14 @@ var fallback_cost_factor: int = 12
 var experience: Dictionary = {}
 var items: Dictionary = {}
 var item_names: Dictionary = {}
+## LandAttribute rows land_policy() reads (types 3/4/494/878/1122, source
+## order, only the fields it reads); the rest of the table is not kept
+## resident.
 var attributes: Array = []
+## The same rows by int(LandID) (source order); {} = scan `attributes`.
+var _attributes_by_land: Dictionary = {}
+const POLICY_ATTRIBUTE_TYPES: Array[int] = [3,4,494,878,1122]
+const POLICY_ATTRIBUTE_FIELDS: Array[String] = ["LandID","LandAttributeTypeID","TerritoryID","Value"]
 var territories: Dictionary = {}
 var certificates: Dictionary = {}
 var slot_offers: Dictionary = {}
@@ -120,7 +127,22 @@ func load_pack(path: String = PATH) -> bool:
 	certificates = next_certificates; slot_offers = next_offers
 	item_death_stats = next_death_stats
 	source_item_exemption_level = next_item_exemption
-	attributes = tables.LandAttribute
+	var policy_rows: Array = []
+	var by_land: Dictionary = {}
+	for raw: Variant in tables.LandAttribute:
+		if not raw is Dictionary or not (raw as Dictionary).has("LandID") or not (raw as Dictionary).has("LandAttributeTypeID"):
+			policy_rows = tables.LandAttribute; by_land = {}; break
+		if int(raw.LandAttributeTypeID) not in POLICY_ATTRIBUTE_TYPES: continue
+		# Only the fields land_policy() reads, with their original values.
+		var kept: Dictionary = {}
+		for field: String in POLICY_ATTRIBUTE_FIELDS:
+			if (raw as Dictionary).has(field): kept[field] = raw[field]
+		policy_rows.append(kept)
+		var land: int = int(raw.LandID)
+		if not by_land.has(land): by_land[land] = []
+		by_land[land].append(kept)
+	attributes = policy_rows
+	_attributes_by_land = by_land
 	ready = true; problem = "최신523 원본 규칙 · 로컬 투영/추정 정책 별도"
 	return true
 
@@ -201,7 +223,7 @@ func cost(level: int) -> int:
 func land_policy(land_id: int, source_position: Vector2) -> Dictionary:
 	var out: Dictionary = {"no_exp":false,"no_item":false,"no_penalty":false,"npc_penalty":false,"full_revive":false,"source":false}
 	if not ready or land_id < 0: return out
-	for raw: Dictionary in attributes:
+	for raw: Dictionary in (_attributes_by_land.get(land_id, []) if not _attributes_by_land.is_empty() else attributes):
 		if int(raw.LandID) != land_id: continue
 		var kind: int = int(raw.LandAttributeTypeID)
 		if kind not in [3,4,494,878,1122]: continue

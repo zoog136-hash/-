@@ -8,10 +8,21 @@ const MAX_BYTES = 8 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "expedition523_tables"
+## Lineage M style: the validated tables live in a device record bake and are
+## read on demand (whole table by "T|name", first row per ID by
+## "R|name|id"); only a small LRU of recently read tables stays resident.
+const RECORDS_BAKE_NAME := "expedition523_records"
+const RECORDS_SCHEMA := "twilight.expedition523.records.v1"
+const TABLE_CACHE_LIMIT: int = 4
+const TABLE_NAMES = ["MagicDollExpeditionSpot","MagicDollExpeditionSpotAsset","MagicDollExpeditionGroup","MagicDollExpeditionSpotReward","MagicDollExpeditionSpotRewardType","MagicDollExpeditionCompleteRewardView","MagicDollExpeditionSpotEvent","MagicDollExpeditionEventView","MagicDollExpeditionBonus","MagicDollExpeditionBonusType","MagicDollExpeditionBuff","MagicDollExpeditionMonster","BuffCardExpeditionSynergy","BuffCardExpeditionSynergyCards","BuffCardExpeditionSynergyBonus","Grade","BuffCard","ConstantData","Reward","LuckyBagClass","LuckyBagEntityView","ItemClass","ItemBonus","Bonus","BonusType","Currency","CurrencyUnitClass"]
 const ORIGINAL_CORE_SUFFIXES = ["Spot","SpotAsset","Group","SpotReward","SpotRewardType",
 	"CompleteRewardView","SpotEvent","EventView","Bonus","BonusType","Buff","Monster"]
 const ORIGINAL_SYNERGY = ["BuffCardExpeditionSynergy","BuffCardExpeditionSynergyCards","BuffCardExpeditionSynergyBonus"]
 var _tables: Dictionary = {}
+## Record bake of the loaded original tables (null: tables are resident).
+var _stored_rows: RefCounted = null
+var _stored_names: Dictionary = {}
+var _table_cache: Dictionary = {}
 var pack_sha256: String = ""
 var error: String = "원본 탐험 데이터 팩을 설치하지 않았습니다."
 var source_mode: String = ""
@@ -117,6 +128,13 @@ func load_original() -> bool:
 	# code; a later start reads this device's baked tables (still validated
 	# and fingerprinted below) instead of reading whole Bonus/ItemBonus/
 	# ItemClass/LuckyBagEntityView tables again (~0.6 GB transient).
+	var records_key: String = BAKE.projection_key(RECORDS_BAKE_NAME, SOURCE_ROWS.verified_key())
+	if _open_stored(records_key):
+		source_mode = "original_rows"
+		source_identity = identity.duplicate(true)
+		source_status = {"state":"loaded","model_identity":"actual_in_memory_catalogue_payload"}
+		error = ""
+		return true
 	var bake_key: String = BAKE.projection_key(BAKE_NAME, SOURCE_ROWS.verified_key())
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	var from_bake: bool = baked is Dictionary and not (baked as Dictionary).is_empty()
@@ -136,9 +154,16 @@ func load_original() -> bool:
 		error = "탐험 원본 카탈로그 크기 초과"
 		source_status = {"state":"rejected","reason":error}
 		return false
-	if not from_bake: BAKE.write(BAKE_NAME, bake_key, candidate)
-	_tables = candidate.duplicate(true)
 	pack_sha256 = payload.sha256_text()
+	payload = ""
+	_release_stored()
+	if _store_records(records_key, candidate):
+		# The record bake now holds the same tables; the whole-table bake is
+		# no longer read (a missing record bake rebuilds both).
+		BAKE.clear(BAKE_NAME)
+	else:
+		if not from_bake: BAKE.write(BAKE_NAME, bake_key, candidate)
+		_tables = candidate.duplicate(true)
 	source_mode = "original_rows"
 	source_identity = identity.duplicate(true)
 	source_status = {"state":"loaded","model_identity":"actual_in_memory_catalogue_payload"}
@@ -169,6 +194,7 @@ func install(path: String, expected_sha256: String) -> bool:
 	if not candidate is Dictionary or not _valid_tables(candidate):
 		error = "탐험 팩의 표 또는 참조가 손상되었습니다."
 		return false
+	_release_stored()
 	_tables = candidate.duplicate(true)
 	pack_sha256 = expected_sha256.to_lower()
 	source_mode = "compiled_pack"
@@ -217,10 +243,77 @@ func _valid_tables(t: Dictionary) -> bool:
 			return false
 	return true
 
+## Writes `tables` (already validated) as a record bake and serves it from
+## storage; false (tables stay resident) when storage is unavailable.
+func _store_records(records_key: String, tables: Dictionary) -> bool:
+	if records_key.is_empty(): return false
+	var writer: RefCounted = BAKE.record_writer(RECORDS_BAKE_NAME, records_key)
+	if writer == null: return false
+	var names: Array = []
+	for name: String in tables:
+		if not tables[name] is Array: continue
+		names.append(name)
+		writer.add("T|" + name, tables[name])
+		var seen: Dictionary = {}
+		for row: Variant in tables[name]:
+			if not row is Dictionary: continue
+			# Same row record() found by its linear scan: the first one per ID.
+			var id: String = str(int((row as Dictionary).get("ID", -1)))
+			if seen.has(id): continue
+			seen[id] = true
+			writer.add("R|" + name + "|" + id, row)
+	writer.add("M", {"schema":RECORDS_SCHEMA,"pack_sha256":pack_sha256,"tables":names})
+	if not BAKE.finish_records(writer): return false
+	return _open_stored(records_key)
+
+## Serves the tables from a verified record bake; false when absent/stale.
+func _open_stored(records_key: String) -> bool:
+	if records_key.is_empty(): return false
+	var records: RefCounted = BAKE.open_records(RECORDS_BAKE_NAME, records_key)
+	if records == null: return false
+	var meta: Variant = records.read("M")
+	if not meta is Dictionary or meta.get("schema") != RECORDS_SCHEMA or not meta.get("pack_sha256") is String or (meta.pack_sha256 as String).length() != 64 or not meta.get("tables") is Array: return false
+	var names: Dictionary = {}
+	for name: Variant in meta.tables:
+		if not name is String or not records.has("T|" + name): return false
+		names[name] = true
+	for name: String in TABLE_NAMES:
+		if not names.has(name): return false
+	_tables = {}
+	_table_cache.clear()
+	_stored_rows = records
+	_stored_names = names
+	pack_sha256 = meta.pack_sha256
+	return true
+
+func _release_stored() -> void:
+	_stored_rows = null
+	_stored_names = {}
+	_table_cache.clear()
+
+## The stored table (shared cache instance; callers copy it).
+func _stored_table(name: String) -> Array:
+	if not _stored_names.has(name): return []
+	if _table_cache.has(name):
+		var hit: Array = _table_cache[name]
+		_table_cache.erase(name)
+		_table_cache[name] = hit
+		return hit
+	var value: Variant = _stored_rows.read("T|" + name)
+	var table: Array = value if value is Array else []
+	_table_cache[name] = table
+	while _table_cache.size() > TABLE_CACHE_LIMIT: _table_cache.erase(_table_cache.keys()[0])
+	return table
+
+## Drops the resident table cache (rows stay on storage).
+func release() -> void:
+	_table_cache.clear()
+
 func ready() -> bool:
-	return not _tables.is_empty()
+	return not _tables.is_empty() or _stored_rows != null
 
 func rows(name: String) -> Array:
+	if _stored_rows != null: return _stored_table(name).duplicate(true)
 	return _tables.get(name, []).duplicate(true)
 
 func _find(t: Dictionary, name: String, id: int) -> Dictionary:
@@ -230,6 +323,10 @@ func _find(t: Dictionary, name: String, id: int) -> Dictionary:
 	return {}
 
 func record(name: String, id: int) -> Dictionary:
+	if _stored_rows != null:
+		if not _stored_names.has(name): return {}
+		var value: Variant = _stored_rows.read("R|" + name + "|" + str(id))
+		return value if value is Dictionary else {}
 	return _find(_tables, name, id).duplicate(true)
 
 func spots(deck: int = 0) -> Array:
