@@ -126,7 +126,9 @@ func texture_for(tile_id: int) -> Texture2D:
 	var image: Image
 	if _atlas_storage == "runtime_ti2":
 		var decoder = TI2_DECODER.new()
-		var rgba: PackedByteArray = decoder.decode_rgba(compressed, row)
+		# Coverage is checked against its pin first; the drawn atlas then
+		# carries the TI2 block flags' display alpha.
+		var rgba: PackedByteArray = decoder.decode_rgba(compressed, row, true)
 		if rgba.size() != 384 * 384 * 4:
 			_fail(decoder.problem)
 			return null
