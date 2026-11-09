@@ -58,8 +58,9 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	var deadline: String = DROPS.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty(): return deadline
 	if int(record.get("source_bless_raw", 1)) not in [1, 2, 3]: return "원본 축복 상태 미지원"
-	if not record.get("source_unresolved_class_ids", []).is_empty(): return "원본 사용 직업 조건 미확인"
-	var classes: Array = record.get("source_class_names", [])
+	var full: Dictionary = NATIVE_FIELDS.full(record)
+	if not full.get("source_unresolved_class_ids", []).is_empty(): return "원본 사용 직업 조건 미확인"
+	var classes: Array = full.get("source_class_names", [])
 	if not classes.is_empty() and not classes.has(world.job_class): return "원본 사용 직업 조건에 맞지 않습니다"
 	var level: int = world.level
 	for prefix: String in ["source_level_limit_", "source_max_level_limit_"]:

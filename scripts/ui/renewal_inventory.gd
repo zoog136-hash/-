@@ -1,4 +1,5 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
@@ -647,7 +648,7 @@ func _refresh_detail(item_reference: String) -> void:
 	source_detail_type = {"reference":item_reference,"text":item.type} if item.get("type") is String and not item.type.is_empty() else {}
 	source_detail_safe_enhancement={}
 	source_detail_classes={}
-	var source_classes: Variant=item.get("source_class_names")
+	var source_classes: Variant=NATIVE_FIELDS.full(item).get("source_class_names")
 	if source_classes is Array and not source_classes.is_empty():
 		var class_names: PackedStringArray=[]
 		for source_class: Variant in source_classes:

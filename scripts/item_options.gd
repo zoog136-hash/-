@@ -112,7 +112,7 @@ static func current_source_weight_input(record: Dictionary, estimate: Dictionary
 		return ignored
 	if record.get("source_projection") != "current523_original_typed_game_dto_v1": return ignored
 	var item_id: Variant = record.get("source_item_class_id")
-	if not _weight_integer(item_id) or int(item_id) <= 0 or record.get("source_weight_unit") != "unverified_source_units":
+	if not _weight_integer(item_id) or int(item_id) <= 0 or NATIVE_FIELDS.full(record).get("source_weight_unit") != "unverified_source_units":
 		return ignored
 	if record.get("source_legacy_stack_variant",false) or record.get("source_legacy_catalog_alias",false): return ignored
 	var blessing: Variant = record.get("source_bless_raw")

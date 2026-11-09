@@ -9070,8 +9070,9 @@ func _weapon_allowed_for_job(record: Dictionary, target_job: String) -> bool:
 	if record.is_empty():
 		return true
 	if record.get("source_m_native_item",false):
-		if not record.get("source_unresolved_class_ids",[]).is_empty(): return false
-		var classes: Array = record.get("source_class_names",[])
+		var full: Dictionary = NATIVE_FIELDS.full(record)
+		if not full.get("source_unresolved_class_ids",[]).is_empty(): return false
+		var classes: Array = full.get("source_class_names",[])
 		return classes.is_empty() or classes.has(target_job)
 	var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
 	var allowed_value: Variant = JOB_ALLOWED_WEAPONS.get(target_job, [])
@@ -9175,7 +9176,7 @@ func _weapon_ammo_family() -> String:
 	if category < 0: category = 8 if fallback == "화살" else 10194 if fallback == "총알" else 0
 	if category == 0: return ""
 	var worn: Dictionary = load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,equipped_ammo)
-	if category > 0 and int(worn.get("source_category_id",-1)) == category and not preload("res://scripts/loot/patch523_ammo.gd").profile(worn).is_empty():
+	if category > 0 and int(NATIVE_FIELDS.full(worn).get("source_category_id",-1)) == category and not preload("res://scripts/loot/patch523_ammo.gd").profile(worn).is_empty():
 		if preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,worn).is_empty(): return equipped_ammo
 	if category == 223: return "스팅"
 	if weapon.has("ammo"):

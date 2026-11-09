@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Immutable private rule pack. Identity joins never grant or rename items.
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const PACK_SHA = "a6f06d657bc34a86d91ccbcaf9f2c836312df6e57d15d38e890aa74061b12bc5"
@@ -87,7 +88,7 @@ static func _sidecar_descriptions(item_id: int, original: Dictionary, grade: Dic
 		if reference is Dictionary and reference.get("id") == original.get(field):
 			_remember_description(cache,reference.get("id"),reference.get("text"))
 	# compile_items binds this exact Grade.DescID to native_record.grade.
-	var native: Dictionary = definition.get("native_record",{})
+	var native: Dictionary = NATIVE_FIELDS.full(definition.get("native_record",{}))
 	if _source_json(definition.get("grade",{})) == _source_json(grade) and native.get("source_grade_id") == grade.get("ID") and native.get("source_label_status") == "source_descriptor":
 		_remember_description(cache,grade.get("DescID"),native.get("grade"))
 
