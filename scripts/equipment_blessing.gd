@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightEquipmentBlessing
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 # Base equipment blessing: per physical item; separate from blessed enchant scrolls.
 # Current523 ItemBlessBonus and NC blessing-option disclosure agree. IsTest
@@ -48,7 +49,8 @@ static func source_grade_id(grade: String, record: Dictionary = {}) -> int:
 static func source_rate(grade: String, record: Dictionary = {}) -> Dictionary:
 	if DEFINITIONS.not_installed() or DEFINITIONS.identity().is_empty(): return {}
 	var grade_id: int = source_grade_id(grade, record)
-	var category: int = int(record.get("source_category_id",0)) if record.get("source_m_native_item",false) and _integer(record.get("source_category_id")) else 0
+	var full: Dictionary = NATIVE_FIELDS.full(record)
+	var category: int = int(full.get("source_category_id",0)) if record.get("source_m_native_item",false) and _integer(full.get("source_category_id")) else 0
 	var specific: Array = []; var general: Array = []
 	for row: Dictionary in DEFINITIONS.rows("BlessSuccessRate"):
 		if not _integer(row.get("GradeID")) or int(row.GradeID)!=grade_id or not _integer(row.get("ItemCategoryID")): continue
