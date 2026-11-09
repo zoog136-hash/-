@@ -66,7 +66,7 @@ static func key(parts: Array) -> String:
 
 ## The baked value for `name` when its key matches and its bytes verify; null otherwise.
 static func read(name: String, expected_key: String) -> Variant:
-	if expected_key.is_empty(): return null
+	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return null
 	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
 	if not meta is Dictionary or meta.get("schema") != SCHEMA or meta.get("key") != expected_key: return null
 	if FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")): return null
@@ -112,7 +112,7 @@ static func commit_file(name: String, value_key: String, part: String) -> bool:
 
 ## The file of a file-format bake when its key matches and its bytes verify; "" otherwise.
 static func verified_file(name: String, expected_key: String) -> String:
-	if expected_key.is_empty(): return ""
+	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return ""
 	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
 	if not meta is Dictionary or meta.get("schema") != SCHEMA or meta.get("key") != expected_key: return ""
 	if _size(_data(name)) != int(meta.get("bytes", -1)) or FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")): return ""
@@ -134,23 +134,50 @@ class RecordFile extends RefCounted:
 
 static func write_records(name: String, value_key: String, ids: PackedStringArray, values: Array) -> bool:
 	if value_key.is_empty() or ids.size() != values.size(): return false
-	DirAccess.make_dir_recursive_absolute(ROOT)
-	var part: String = _data(name) + ".part"
-	var file := FileAccess.open(part, FileAccess.WRITE)
-	if file == null: return false
+	var writer := record_writer(name, value_key)
+	if writer == null: return false
+	for index: int in ids.size(): writer.add(ids[index], values[index])
+	return finish_records(writer)
+
+## Streams keyed values into a record bake one at a time (a later duplicate
+## ID wins on read); finish_records() commits it, abort() discards it.
+class RecordWriter extends RefCounted:
+	var file: FileAccess
+	var part: String
+	var name: String
+	var value_key: String
+	var ids := PackedStringArray()
 	var positions := PackedInt64Array()
-	for index: int in ids.size():
+	func add(id: String, value: Variant) -> void:
 		positions.append(file.get_position())
-		file.store_var(values[index])
+		ids.append(id)
+		file.store_var(value)
+	func abort() -> void:
+		file.close()
+		DirAccess.remove_absolute(part)
+
+static func finish_records(writer: RecordWriter) -> bool:
+	var file: FileAccess = writer.file
 	var index_position: int = file.get_position()
-	file.store_var({"schema": SCHEMA, "ids": ids, "offsets": positions})
+	file.store_var({"schema": SCHEMA, "ids": writer.ids, "offsets": writer.positions})
 	file.store_64(index_position)
 	var stored: bool = file.get_error() == OK
 	file.close()
-	if not stored or not commit_file(name, value_key, part):
-		DirAccess.remove_absolute(part)
+	if not stored or not commit_file(writer.name, writer.value_key, writer.part):
+		DirAccess.remove_absolute(writer.part)
 		return false
 	return true
+
+static func record_writer(name: String, value_key: String) -> RecordWriter:
+	if value_key.is_empty(): return null
+	DirAccess.make_dir_recursive_absolute(ROOT)
+	var writer := RecordWriter.new()
+	writer.part = _data(name) + ".part"
+	writer.file = FileAccess.open(writer.part, FileAccess.WRITE)
+	if writer.file == null: return null
+	writer.name = name
+	writer.value_key = value_key
+	return writer
 
 static func open_records(name: String, value_key: String) -> RecordFile:
 	var path: String = verified_file(name, value_key)

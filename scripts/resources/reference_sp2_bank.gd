@@ -2,6 +2,7 @@ extends RefCounted
 ## Pinned, opt-in source-action metadata. No installation, role inference or events.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
+const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -13,7 +14,8 @@ const SOURCE_REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bin
 var _root: String = ""
 var _manifest_path: String = ""
 var _manifest_sha: String = ""
-var _manifest: Dictionary = {}
+var _manifest: Dictionary = {} # top-level fields; actors/members via _index
+var _index: RefCounted = null
 var _excluded_source_actors: Dictionary = {}
 var _actor_pins: Dictionary = {}
 var _parsed: Dictionary = {}
@@ -64,11 +66,17 @@ func _json(path: String, expected: String, manifest_json: bool = false) -> Dicti
 	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
 	return {"ok":true,"value":value} if value is Dictionary else fail("Bank JSON is not an object.")
 
+## Each pinned file still has its SHA256. A file verified earlier in this
+## process is re-hashed only when its size or modification time changed, so
+## per-frame checks no longer hash the ~40 MB manifest every time.
 func _pins_valid() -> bool:
-	if FileAccess.get_sha256(_manifest_path) != _manifest_sha: return false
+	if not MANIFEST_INDEX.pinned(_manifest_path, _manifest_sha): return false
 	for path: String in _actor_pins:
-		if FileAccess.get_sha256(path) != _actor_pins[path]: return false
+		if not MANIFEST_INDEX.pinned(path, _actor_pins[path]): return false
 	return true
+
+func _actor_registry(key: String) -> Variant:
+	return _index.lookup("actors", key) if _index != null else null
 
 func source_actor_admission(source_actor_id: int) -> Dictionary:
 	# This registry is pinned current523 source evidence. Actor/graph identities
@@ -148,7 +156,7 @@ func _reference_binding(source: Dictionary, instances: Dictionary, layer: Dictio
 	return {"ok":true,"instances":ordered}
 
 func _member(member: String) -> Dictionary:
-	var spec: Variant = _manifest.get("members", {}).get(member)
+	var spec: Variant = _index.lookup("members", member) if _index != null else null
 	if not spec is Dictionary or spec.get("member") != member or spec.get("path") != "raw/" + member or not INSTALL.safe_relative(str(spec.get("path", ""))): return fail("Invalid exact raw member path: " + member)
 	var supplied_sha: bool = valid_sha(spec.get("sha256"))
 	var received: bool = spec.has("sha256") and spec.sha256 == null and spec.get("stage") == "received_not_additionally_validated"
@@ -263,10 +271,12 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest.clear(); _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
-	var loaded: Dictionary = _json(manifest_path, expected_sha, true)
-	if not loaded.ok: return loaded
-	_manifest = loaded.value
+	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _parsed.clear(); _parse_order.clear()
+	# One shared, storage-backed view of the pinned manifest per process.
+	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
+	if not opened.ok: return opened
+	_index = opened.index
+	_manifest = _index.top
 	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
 	if not consumer_scope.is_empty() and (_manifest.get("source_dummy_exclusion_policy") != SOURCE_DUMMY_EXCLUSION_POLICY or not _manifest.has("excluded_source_actors")): return fail("Production source consumers require the explicit source-declared dummy exclusion contract.")
 	var contract: Variant = _manifest.get("consumer_contract")
@@ -276,12 +286,12 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	if source_actor_id < 0 or bindings.is_empty() or bindings.size() > 16 or bindings.size() != loop_policy.size(): return fail("Explicit source action bindings and loop policy are required for each role.")
 	for role: Variant in role_actor_ids:
 		if not bindings.has(role) or not integer(role_actor_ids[role],1): return fail("Each alternate role actor requires an exact existing caller role.")
-	if not _manifest.get("actors") is Dictionary or not _manifest.get("members") is Dictionary: return fail("Missing source bank registry.")
+	if not _index.registry_is_dictionary("actors") or not _index.registry_is_dictionary("members"): return fail("Missing source bank registry.")
 	var exclusions: Dictionary = _install_source_exclusions()
 	if not exclusions.ok: return exclusions
 	var admitted: Dictionary = source_actor_admission(source_actor_id)
 	if not admitted.ok: return admitted
-	var entries: Variant = _manifest.actors.get("sprite:" + str(source_actor_id))
+	var entries: Variant = _actor_registry("sprite:" + str(source_actor_id))
 	if not entries is Dictionary: return fail("Exact source actor ID is absent.")
 	var tracks: Dictionary = {}
 	var record: Dictionary = {"source_sprite_id":source_actor_id,"tracks":tracks,"source_snapshot":"patch523"}
@@ -297,7 +307,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 		var role_actor_id: int = int(role_actor_ids.get(role,source_actor_id))
 		admitted = source_actor_admission(role_actor_id)
 		if not admitted.ok: return admitted
-		var role_entries: Variant = _manifest.actors.get("sprite:" + str(role_actor_id))
+		var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
 		if not role_entries is Dictionary: return fail("Exact source role actor ID is absent.")
 		var entry: Variant = role_entries.get(str(action_id))
 		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [role_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
@@ -398,7 +408,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 			if not admitted.ok: return admitted
 			var child_key: String = "sprite:" + str(target_id)
 			var child_path: String = "actors/%d/action-%d.json" % [target_id,action_id]
-			var child_registry: Variant = _manifest.actors.get(child_key,{})
+			var child_registry: Variant = _actor_registry(child_key) if _index.contains("actors", child_key) else {}
 			if attachment.get("child_actor_key") != child_key or attachment.get("child_action_path") != child_path or not child_registry is Dictionary: return fail("Independent layer has no exact child actor registry.")
 			var child_entry: Variant = child_registry.get(str(action_id))
 			if not child_entry is Dictionary or child_entry.get("path") != child_path or not valid_sha(child_entry.get("sha256")) or not attachment.get("child_source_action_key") is String: return fail("Independent layer child source action is unavailable.")
