@@ -22,6 +22,9 @@ var confirm_button: Button
 ## Original Gender table IDs; the 523 character picture is per class and gender.
 const GENDERS := {1:"남성", 2:"여성"}
 var gender_buttons: Dictionary = {}
+## Only the installed 523 bank draws the character by gender; without it the
+## picker stays class-only as before.
+var gender_required: bool = false
 var selected_gender: int = 0
 var current_gender: int = 0
 var current_job: String = ""
@@ -104,6 +107,8 @@ func configure(controller: Node, initial: bool = false) -> void:
 		gender_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		gender_row.add_child(gender_button)
 		gender_buttons[gender_id] = gender_button
+	gender_required = _gender_required()
+	gender_row.visible = gender_required
 	stack.add_child(gender_row)
 	var stage := PanelContainer.new()
 	stage.add_theme_stylebox_override("panel",UI.box(Color("11141b"),UI.BRONZE,8))
@@ -156,6 +161,10 @@ func _choose(job_name: String) -> void:
 	if selected_gender == 0 and allowed.size() == 1: _choose_gender(int(allowed[0]))
 	_refresh_confirm()
 
+func _gender_required() -> bool:
+	var world: Node = hud.get_parent() if hud != null else null
+	return world != null and world.has_method("source_gender_required") and bool(world.call("source_gender_required"))
+
 func _allowed_genders(job_name: String) -> Array:
 	var world: Node = hud.get_parent() if hud != null else null
 	if world != null and world.has_method("source_class_genders"): return world.call("source_class_genders", job_name)
@@ -171,14 +180,22 @@ func _choose_gender(gender_id: int) -> void:
 
 func _refresh_confirm() -> void:
 	if confirm_button == null: return
+	if not gender_required:
+		confirm_button.disabled = selected_job == ""
+		if selected_job != "": confirm_button.text = "%s 선택 확정" % selected_job
+		return
 	confirm_button.disabled = selected_job == "" or not GENDERS.has(selected_gender)
 	if selected_job == "": confirm_button.text = "클래스를 선택하세요"
 	elif not GENDERS.has(selected_gender): confirm_button.text = "성별을 선택하세요"
 	else: confirm_button.text = "%s · %s 선택 확정" % [selected_job, GENDERS[selected_gender]]
 
 func _confirm() -> void:
-	if selected_job == "" or not CLASS_NAMES.has(selected_job) or not GENDERS.has(selected_gender):
+	if selected_job == "" or not CLASS_NAMES.has(selected_job): return
+	if not gender_required:
+		hud.job_class_selected.emit(selected_job)
+		hud.complete_class_selection()
 		return
+	if not GENDERS.has(selected_gender): return
 	# World owns class rules, skillbar updates, equipment compatibility and saves.
 	if selected_gender != current_gender and hud.has_signal("source_gender_selected"):
 		hud.source_gender_selected.emit(selected_gender)

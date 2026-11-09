@@ -66,17 +66,27 @@ func _run() -> void:
 	var picker: Node = _picker()
 	check(picker != null, "the class picker opens")
 	if picker == null: _finish(); return
-	check(picker.find_child("Gender_1", true, false) is Button and picker.find_child("Gender_2", true, false) is Button, "the picker offers 남성/여성")
 	var confirm: Button = picker.find_child("ClassConfirm", true, false)
+	var gender_row: Control = picker.find_child("GenderRow", true, false)
+	if base.is_empty():
+		# Without the 523 bank nothing is drawn by gender: class-only, as before.
+		check(gender_row != null and not gender_row.visible, "without the 523 bank the picker stays class-only")
+		picker.call("_choose", "기사")
+		check(not confirm.disabled, "a class alone confirms without the 523 bank")
+		picker.call("_confirm")
+		for _frame: int in 5: await process_frame
+		check(str(world.get("job_class")) == "기사" and int(world.get("source_gender_id")) == 0, "the character is created without a gender")
+		check(not bool(world.call("_source_gender_needed")), "no gender is asked for without the 523 bank")
+		_finish()
+		return
+	check(gender_row != null and gender_row.visible, "with the 523 bank the picker asks for the gender")
+	check(picker.find_child("Gender_1", true, false) is Button and picker.find_child("Gender_2", true, false) is Button, "the picker offers 남성/여성")
 	picker.call("_choose", "기사")
 	check(confirm.disabled, "a class alone cannot be confirmed without a gender")
 	# 마검사 has no female picture in the original Class table (FemaleSpriteID 0).
 	picker.call("_choose", "마검사")
 	var female: Button = picker.find_child("Gender_2", true, false)
-	if base.is_empty():
-		check(not female.disabled and int(picker.get("selected_gender")) == 0, "without the 523 tables both genders stay selectable")
-	else:
-		check(female.disabled and int(picker.get("selected_gender")) == 1, "a male-only class offers only 남성")
+	check(female.disabled and int(picker.get("selected_gender")) == 1, "a male-only class offers only 남성")
 	picker.call("_choose", "기사")
 	check(not female.disabled, "기사 offers both genders")
 	picker.call("_choose_gender", 2)

@@ -10661,10 +10661,13 @@ func source_class_genders(job_name: String) -> Array:
 	if int(row.get("FemaleSpriteID", 0)) > 0: genders.append(2)
 	return genders if not genders.is_empty() else [1, 2]
 
+## True when the installed 523 bank draws the character (by class and gender).
+func source_gender_required() -> bool:
+	return bool(preload("res://scripts/resources/current523_source_bank.gd").options(_source_visual_context()).get("enabled", false))
+
 ## True when the installed 523 bank draws the character but no gender is known.
 func _source_gender_needed() -> bool:
-	if source_gender_id in [1, 2]: return false
-	return bool(preload("res://scripts/resources/current523_source_bank.gd").options(_source_visual_context()).get("enabled", false))
+	return source_gender_id not in [1, 2] and source_gender_required()
 
 func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false
