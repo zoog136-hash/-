@@ -59,13 +59,30 @@ func _fail(message: String) -> bool:
 static func effect_code(effect: Dictionary) -> String:
 	return str(effect.get("key",""))+":"+str(effect.get("unit",""))
 
+## The derived row for a definition: its own top-level Dictionary and its own
+## requirement Dictionaries (derive() writes met/awakening_source into those),
+## while effects, source rows and every other read-only sub-value are the
+## definition's instances instead of copies. Same content and key order as
+## definition.duplicate(true); only identity differs (a deep copy of every row
+## held the whole model twice, ~35 MB with the original installed). Derived rows
+## are read-only below the keys derive() adds; callers copy before changing one.
+static func view_row(definition: Dictionary) -> Dictionary:
+	var row: Dictionary=definition.duplicate(false)
+	var requirements: Variant=definition.get("requirements")
+	if requirements is Array:
+		var copies: Array=(requirements as Array).duplicate(false)
+		for index: int in copies.size():
+			if copies[index] is Dictionary: copies[index]=(copies[index] as Dictionary).duplicate(false)
+		row["requirements"]=copies
+	return row
+
 func derive(card_state: Dictionary) -> Dictionary:
 	var owned: Dictionary=card_state.get("owned",{})
 	var views: Array[Dictionary]=[]
 	var totals: Dictionary={}
 	var completed: Dictionary={}
 	for definition: Dictionary in definitions:
-		var row: Dictionary=definition.duplicate(true)
+		var row: Dictionary=view_row(definition)
 		var met: int=0
 		for requirement: Dictionary in row.requirements:
 			# First acquisition is retained after all spendable duplicates are gone.

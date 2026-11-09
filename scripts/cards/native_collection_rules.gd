@@ -110,6 +110,8 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 	return true
 
 func derive(card_state: Dictionary) -> Dictionary:
+	# Rows share their source sub-values with the definitions (view_row); this
+	# only reads those and writes the row's and requirements' own keys.
 	var result: Dictionary = super.derive(card_state)
 	var context: Dictionary=card_state.get("source_server_context",{})
 	# Only exact original SlotIndex1 option bindings can satisfy IsAwaken.
