@@ -10,12 +10,28 @@ const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projec
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "quest523_payload"
 const SHARED = preload("res://scripts/resources/shared_values.gd")
+const DUMMY = preload("res://scripts/quests/source_dummy523.gd")
+## Lineage M style: only what the hot paths read (identity, title, category,
+## period, blockers/exclusions, objective and the compact gate inputs) stays
+## resident. Each quest's complete row (QuestView definition, joined goals,
+## rewards with ItemClass rows, prerequisites, enhancements, description)
+## lives in a device record bake and is read back on demand by full().
+const RECORDS_NAME := "quest523_records"
+const RECORDS_SCHEMA := 1
+const HOT_RECORD := "__hot__"
+## Key of the compact gate inputs on a row whose complete form is on storage.
+const LAZY_KEY := "source_lazy_gate"
+const CACHE_SIZE := 128
+const LINKED_TYPES := [92,102,131,143,172,182,162,71,81]
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
 var class_ids: Dictionary = {}
 var currency_ids: Dictionary = {}
 var loaded_path: String = ""
+var _records = null # BAKE.RecordFile while rows are materialized on demand.
+var _cache: Dictionary = {} # Small LRU: quest id -> complete row.
+var _bulk: PackedByteArray = PackedByteArray()
 
 func load_pack() -> bool:
 	var path: String = USER_PATH if FileAccess.file_exists(USER_PATH) else DEV_PATH
@@ -56,13 +72,22 @@ func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	if bytes.size() > MAX_BYTES:
 		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
 		return false
-	if bytes.get_string_from_utf8().sha256_text() != PAYLOAD_SHA:
+	var text: String = bytes.get_string_from_utf8()
+	if text.sha256_text() != PAYLOAD_SHA:
 		problem = "퀘스트 팩 SHA-256 불일치"
 		return false
-	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	# The verified payload bytes (and this code) fully determine the records:
+	# a later start reads the compact rows instead of parsing all 3,621 quests.
+	if _open_records(PAYLOAD_SHA, path): return true
+	var value: Variant = JSON.parse_string(text)
+	text = ""
 	if not value is Dictionary or not valid_document(value):
 		problem = "퀘스트 팩 구조 오류"
 		return false
+	return _adopt(value, path, PAYLOAD_SHA)
+
+## Completes the parsed, already verified document into quest rows.
+func _adopt(value: Dictionary, path: String, payload_sha: String) -> bool:
 	# Rewards repeat the same full ItemClass row in every quest that grants it
 	# (765 distinct rows across 3,621 quests); share each distinct read-only
 	# value once instead of one parsed copy per quest.
@@ -72,6 +97,7 @@ func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	shared = {}
 	document = value
 	loaded_path = path
+	var start: int = quests.size()
 	for link: Dictionary in document.currency_links:
 		if int(link.UnitID)==4 and bool(link.ForGive) and not currency_ids.has(int(link.ClassID)): currency_ids[int(link.ClassID)] = int(link.CurrencyID)
 	for raw: Dictionary in document.quests:
@@ -91,8 +117,152 @@ func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 		quests.append(row)
 	for row: Dictionary in document.classes:
 		class_ids[str(row.name)] = int(row.id)
+	# Only the header, class names and evidence stay; quest rows live in
+	# `quests` and the currency tables were consumed into currency_ids above.
+	for key: String in ["quests","currency_links","currencies"]: document.erase(key)
+	_bake_records(payload_sha, start)
 	problem = ""
 	return true
+
+## Writes every complete row to a device record bake, then keeps only the
+## compact form of each row resident. Any write/open failure keeps the
+## complete rows resident (the previous behavior).
+func _bake_records(payload_sha: String, start: int) -> void:
+	var key: String = BAKE.projection_key(RECORDS_NAME, payload_sha)
+	if key.is_empty(): return
+	var compact: Array[Dictionary] = []
+	var hot: Array = []
+	for at: int in range(start, quests.size()):
+		var lean: Dictionary = _compact(quests[at])
+		compact.append(lean)
+		hot.append(quests[at] if lean.is_empty() else lean)
+	var writer = BAKE.record_writer(RECORDS_NAME, key)
+	if writer == null: return
+	for at: int in range(start, quests.size()): writer.add(str(quests[at].id), quests[at])
+	writer.add(HOT_RECORD, {"schema":RECORDS_SCHEMA,"payload_sha256":payload_sha,"quests":hot,"class_ids":class_ids,"currency_ids":currency_ids,"document":document})
+	if not BAKE.finish_records(writer): return
+	var records = BAKE.open_records(RECORDS_NAME, key)
+	if records == null: return
+	_records = records
+	_cache.clear()
+	var shared: Dictionary = {}
+	for at: int in compact.size():
+		if not compact[at].is_empty(): quests[start+at] = SHARED.intern(compact[at], shared, 3)
+
+## Adopts the compact rows of a record bake made from these verified bytes.
+func _open_records(payload_sha: String, path: String) -> bool:
+	var records = BAKE.open_records(RECORDS_NAME, BAKE.projection_key(RECORDS_NAME, payload_sha))
+	if records == null or not records.has(HOT_RECORD): return false
+	var hot: Variant = records.read(HOT_RECORD)
+	if not hot is Dictionary or hot.get("schema") != RECORDS_SCHEMA or hot.get("payload_sha256") != payload_sha: return false
+	if not hot.get("quests") is Array or hot.quests.size() != 3621 or not hot.get("class_ids") is Dictionary or not hot.get("currency_ids") is Dictionary or not hot.get("document") is Dictionary: return false
+	for row: Variant in hot.quests:
+		if not row is Dictionary or not row.get("id") is String: return false
+		if row.has(LAZY_KEY) and not records.has(row.id): return false
+	_records = records
+	_cache.clear()
+	document = hot.document
+	loaded_path = path
+	var shared: Dictionary = {}
+	for row: Dictionary in hot.quests: quests.append(SHARED.intern(row, shared, 3))
+	for id: Variant in hot.currency_ids:
+		if not currency_ids.has(id): currency_ids[id] = hot.currency_ids[id]
+	for name: Variant in hot.class_ids: class_ids[name] = hot.class_ids[name]
+	problem = ""
+	return true
+
+static func _number(value: Variant) -> bool:
+	return value is int or value is float or value is bool
+
+## The resident form of a complete row: every field except the heavy source
+## joins, plus exactly the values gate() reads from them. {} keeps the row
+## complete (any shape gate() could not read identically).
+static func _compact(row: Dictionary) -> Dictionary:
+	for key: String in ["id","definition","prerequisites","goals","source_rewards","enhancements","blockers","excluded_reasons","starts_at","ends_at"]:
+		if not row.has(key): return {}
+	var definition: Variant = row.definition
+	if not row.id is String or not definition is Dictionary or not row.prerequisites is Array or not row.goals is Array or not row.blockers is Array or not row.excluded_reasons is Array: return {}
+	if not _number(definition.get("TypeID")): return {}
+	for field: String in ["LimitWeeklyOpenTimeGroup","LimitHours","QuestResetType","MaxDailyRepeat"]:
+		if definition.has(field) and not _number(definition[field]): return {}
+	var lazy: Dictionary = {}
+	var name_value: Variant = definition.get("Name")
+	# QuestView rows match only the "[더미]" declaration (record scope).
+	if name_value is String and (name_value as String).contains("[더미]"): lazy["dummy"] = {"ID":definition.get("ID",0),"Name":name_value}
+	var after: String = ""
+	if int(definition.TypeID) in LINKED_TYPES: after = "연계 콘텐츠의 획득 조건 확인 필요"
+	elif int(definition.get("LimitWeeklyOpenTimeGroup",0)) != 0 or int(definition.get("LimitHours",0)) != 0: after = "원본 운영 시간 조건 확인 필요"
+	elif int(definition.get("QuestResetType",0)) != 0 or int(definition.get("MaxDailyRepeat",0)) != 0: after = "원본 반복/초기화 규칙 확인 필요"
+	lazy["after"] = after
+	var conditions: Array = []
+	for condition: Variant in row.prerequisites:
+		if not condition is Dictionary or not condition.has("type_name") or not _number(condition.get("Value")): return {}
+		conditions.append([str(condition.type_name), int(condition.Value)])
+	lazy["prerequisites"] = conditions
+	var levels: Array = []
+	for goal: Variant in row.goals:
+		if not goal is Dictionary or not goal.get("type_name") is String: return {}
+		if goal.type_name != "Level": continue
+		if not _number(goal.get("CharacterClassID")) or not goal.get("relation") is Dictionary or not _number(goal.get("Amount")): return {}
+		if goal.relation.has("GoalPredicateTypeID") and not _number(goal.relation.GoalPredicateTypeID): return {}
+		levels.append([int(goal.CharacterClassID), int(goal.relation.get("GoalPredicateTypeID",0)), int(goal.Amount)])
+	lazy["level_goals"] = levels
+	var lean: Dictionary = {}
+	for key: Variant in row:
+		if str(key) not in ["definition","prerequisites","goals","source_rewards","enhancements","description"]: lean[key] = row[key]
+	lean[LAZY_KEY] = lazy
+	return lean
+
+## The complete row (QuestView definition, goals, rewards, prerequisites,
+## enhancements, description) of `row`. Rows that are already complete,
+## including injected/local rows, are returned unchanged. With cache=false a
+## row is read without entering the small LRU (bulk scans).
+func full(row: Dictionary, cache: bool = true) -> Dictionary:
+	if not row.has(LAZY_KEY) or _records == null: return row
+	var id: String = str(row.get("id",""))
+	if _cache.has(id):
+		var known: Dictionary = _cache[id]
+		if cache:
+			_cache.erase(id)
+			_cache[id] = known
+		return known
+	var value: Dictionary = _read_record(id)
+	if value.is_empty(): return row
+	if cache:
+		_cache[id] = value
+		while _cache.size() > CACHE_SIZE: _cache.erase(_cache.keys()[0])
+	return value
+
+## An independent complete copy of `row` (what row.duplicate(true) of the
+## resident complete row returned before).
+func detached(row: Dictionary) -> Dictionary:
+	if row.has(LAZY_KEY) and _records != null:
+		var value: Dictionary = _read_record(str(row.get("id","")))
+		if not value.is_empty(): return value
+	return row.duplicate(true)
+
+## Bulk scans (every UI row) read the record file once and decode in place;
+## end_bulk() releases the buffer. Single reads seek the open file.
+func begin_bulk() -> void:
+	if _records == null: return
+	var file: FileAccess = _records.file
+	file.seek(0)
+	_bulk = file.get_buffer(file.get_length())
+
+func end_bulk() -> void:
+	_bulk = PackedByteArray()
+
+func _read_record(id: String) -> Dictionary:
+	var value: Variant = null
+	if _records.has(id):
+		var at: int = int(_records.offsets[id])
+		if not _bulk.is_empty() and at >= 0 and at + 4 <= _bulk.size() and at + 4 + int(_bulk.decode_u32(at)) <= _bulk.size():
+			value = _bulk.decode_var(at + 4)
+		else: value = _records.read(id)
+	if not value is Dictionary or str(value.get("id","")) != id:
+		push_error("퀘스트 원본 기록을 읽을 수 없습니다: "+id)
+		return {}
+	return value
 
 static func valid_document(value: Dictionary) -> bool:
 	if value.get("schema_version") != 2 or value.get("source_snapshot") != "patch523" or value.get("source_sha256") != SOURCE_SHA or value.get("provenance") != "verified_original_quest_projection": return false
@@ -146,6 +316,8 @@ static func install_zip(path: String) -> Dictionary:
 	return {"ok":result==OK,"error":"퀘스트 팩 저장 실패 · 기존 파일 보존" if result!=OK else ""}
 
 func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -> String:
+	var lazy: Variant = row.get(LAZY_KEY)
+	if lazy is Dictionary: return _gate_compact(row, lazy, context, claimed, now)
 	if not preload("res://scripts/quests/source_dummy523.gd").evidence("QuestView",row.get("definition",{})).is_empty():return "원본 더미 선언 퀘스트 연결 제외"
 	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
 	if not row.blockers.is_empty(): return str(row.blockers[0])
@@ -189,7 +361,46 @@ func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -
 		if int(context.get("level",1)) < int(goal.Amount): return "레벨 %d부터 이용" % int(goal.Amount)
 	return ""
 
+## gate() for a compact row: the same checks in the same order, reading the
+## values _compact() took from the definition, prerequisites and goals.
+func _gate_compact(row: Dictionary, lazy: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -> String:
+	if lazy.has("dummy") and not DUMMY.evidence("QuestView",lazy.dummy).is_empty(): return "원본 더미 선언 퀘스트 연결 제외"
+	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
+	if not row.blockers.is_empty(): return str(row.blockers[0])
+	if row.starts_at == null or row.ends_at == null: return "원본 운영 기간 해석 보류"
+	if now < int(row.starts_at): return "시작 전"
+	if now > int(row.ends_at): return "기간 종료"
+	if not str(lazy.after).is_empty(): return str(lazy.after)
+	for condition: Array in lazy.prerequisites:
+		var amount: int = int(condition[1])
+		match str(condition[0]):
+			"MinLevel":
+				if int(context.get("level",1)) < amount: return "레벨 %d부터 이용" % amount
+			"MaxLevel":
+				if int(context.get("level",1)) > amount: return "최대 레벨 %d 제한" % amount
+			"MinLevelByCharacterMaxLevel":
+				if int(context.get("max_level",context.get("level",1))) < amount: return "최고 레벨 %d 필요" % amount
+			"Class":
+				if int(context.get("class_id",-1)) != amount: return "직업 조건 미충족"
+			"ClassNot":
+				if int(context.get("class_id",-1)) < 0 or int(context.get("class_id",-1)) == amount: return "직업 조건 미충족"
+			"Quest":
+				if not claimed.has("m523:quest:"+str(amount)): return "선행 퀘스트 %d 필요" % amount
+			"CreateCharacter":
+				if amount != 1: return "캐릭터 생성 조건 확인 필요"
+			_: return "선행 조건 미연결: "+str(condition[0])
+	for goal: Array in lazy.level_goals:
+		var character: int = int(goal[0])
+		if character != 0 and int(context.get("class_id",-1)) < 0: return "직업별 레벨 조건 확인 필요"
+		if character != 0 and character != int(context.get("class_id",-1)): continue
+		if int(goal[1]) != 1 or int(goal[2]) < 1: return "원본 레벨 목표 조건 해석 보류"
+		if int(context.get("level",1)) < int(goal[2]): return "레벨 %d부터 이용" % int(goal[2])
+	return ""
+
 func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
+	if row.has(LAZY_KEY):
+		row = full(row)
+		if row.has(LAZY_KEY): return {"ok":false,"error":"퀘스트 원본 기록을 읽을 수 없습니다"}
 	# QuestRewardEnhancement is an optional paid boost. The original base
 	# Reward rows are granted; automatic completion never spends diamonds.
 	# NC confirmation: 2019-01-30 patch notes, additional diamond consumption.

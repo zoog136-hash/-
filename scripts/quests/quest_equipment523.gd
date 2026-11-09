@@ -107,6 +107,7 @@ func _input(world: Node,receipt: Dictionary)->Dictionary:
  var qid: String=str(receipt.get("quest_id",""));var reward_id: int=OWN.positive(receipt.get("reward_id"))
  if receipt.get("schema")!=1 or receipt.get("source_sha256")!=SOURCE or world.quest_service.claimed.get(qid)!=true:return {}
  var q: Dictionary=world.quest_service.index.get(qid,{})
+ if world.quest_service.has_method("full"):q=world.quest_service.full(q)
  if q.is_empty() or not q.get("blockers",[]).is_empty() or not q.get("excluded_reasons",[]).is_empty():return {}
  var matches: Array=[]
  for row: Dictionary in q.source_rewards:

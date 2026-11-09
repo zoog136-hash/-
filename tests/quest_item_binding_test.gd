@@ -16,7 +16,7 @@ func run() -> void:
 	var symbol := SYMBOL.new()
 	var reward: Dictionary = {}
 	for row: Dictionary in source.quests:
-		for item: Dictionary in row.source_rewards:
+		for item: Dictionary in source.full(row).source_rewards:
 			if item.type_name=="Item" and int(item.RewardClassID)==117304 and int(item.ItemBlessCodeID)==1 and not item.UseImmediately: reward=item
 	check(not reward.is_empty(),"real quest has original symbol holy-water reward")
 	if reward.is_empty(): quit(1);return

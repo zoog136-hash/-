@@ -21,7 +21,7 @@ func run() -> void:
 	for id: int in [859,1281]:
 		var original: Dictionary={}
 		for row: Dictionary in source.quests:
-			for reward: Dictionary in row.source_rewards:
+			for reward: Dictionary in source.full(row).source_rewards:
 				if reward.type_name=="Item" and int(reward.RewardClassID)==id:original=reward.source_item
 		var definition: Dictionary=D.definition_id(str(id))
 		check(not original.is_empty() and definition.get("original_item")==original,"full ItemClass row matches both independently pinned inputs: "+str(id))
