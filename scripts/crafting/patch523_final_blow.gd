@@ -2,6 +2,10 @@ extends RefCounted
 ## Exact source probability/amplification; hit scope/order are TWILIGHT policy.
 const FIELD_NAMES={"FinalBlowProbability":"source_final_blow_chance_pct","FinalBlowAdditionalScale":"source_final_blow_amp_pct"}
 
+## One BonusType row; read through the rules model when it keeps them on storage.
+static func _bonus_type(book: RefCounted,id: String) -> Dictionary:
+	return book.call("bonus_type",id) if book.has_method("bonus_type") else book.data.bonus_types.get(id,{})
+
 static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	var result: Dictionary={}
 	var id: String=book.identity({"record":record})
@@ -11,7 +15,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 	for row: Dictionary in item.get("item_bonuses",[]):
 		if row.get("IsPossession")!=false:continue
 		var bonus: Dictionary=book.bonus_row(str(int(row.BonusID)))
-		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
+		var kind: Dictionary=_bonus_type(book,str(int(bonus.get("BonusTypeID",0))))
 		if not FIELD_NAMES.has(kind.get("Name","")) or kind.get("UnitID")!=3 or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:continue
 		var key: String=FIELD_NAMES[kind.Name]
 		result[key]=float(result.get(key,0))+float(bonus.Value)/10000.0
@@ -26,7 +30,7 @@ static func base(book: RefCounted,record: Dictionary,bless: int) -> Dictionary:
 		var codes: Array=families[str(int(row.ItemEnchantBonusGroupID))]
 		if int(row.EnchantLevel)!=0 or int(row.BlessCode)!=(bless if codes.has(bless) else 0):continue
 		var bonus: Dictionary=book.bonus_row(str(int(row.BonusID)))
-		var kind: Dictionary=book.data.bonus_types.get(str(int(bonus.get("BonusTypeID",0))),{})
+		var kind: Dictionary=_bonus_type(book,str(int(bonus.get("BonusTypeID",0))))
 		if FIELD_NAMES.has(kind.get("Name","")) and bonus.get("BonusApplicationTypeID")==0 and bonus.get("BonusApplicationTargetID")==0:result.erase(FIELD_NAMES[kind.Name])
 	return result
 
