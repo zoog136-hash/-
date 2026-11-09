@@ -86,9 +86,15 @@ func _real_pack(view: TextureRect, request: Dictionary) -> void:
 	var assets: Dictionary = {}
 	for icon: Dictionary in manifest.icons: icons[int(icon.id)] = icon
 	for asset: Dictionary in manifest.assets: assets[int(asset.asset_id)] = asset
+	# Source TestItem rows are excluded by the resolver (checked below); probe a non-test row.
+	var test_items: Dictionary = {}
+	var source_items: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(request.root).path_join(str(manifest.source_tables.ItemClass.path))))
+	for row: Dictionary in source_items.get("rows",[]):
+		if row.get("TestItem",false) == true: test_items[int(row.ID)] = true
 	var native_id: int = 0
 	var csb_id: int = 0
 	for consumer: Dictionary in manifest.consumers.ItemClass:
+		if test_items.has(int(consumer.id)): continue
 		var icon: Dictionary = icons.get(int(consumer.roles.IconID),{})
 		var asset: Dictionary = assets.get(int(icon.get("asset_id",0)),{})
 		if int(consumer.id) > 0 and asset.get("status","") == "verified_original" and native_id == 0: native_id = int(consumer.id)

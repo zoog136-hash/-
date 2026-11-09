@@ -181,6 +181,34 @@ class ImagePackStructuralFixtures(unittest.TestCase):
         with self.assertRaises(ValueError):
             BUILDER.validate_member_record(unverified, spec, retained, changed)
 
+    def client_member_fixture(self):
+        row, spec, _, _ = self.member_fixture()
+        sha1 = hashlib.sha1(b'opaque client DAT').hexdigest()
+        row = dict(row, current523_component=BUILDER.CLIENT_COMPONENT,
+                    current523_alignment=BUILDER.CLIENT_ALIGNMENT,
+                    retained_prior_catalog_all_fields_verified=False)
+        spec = dict(spec, sha1=sha1, identity_basis={'sha256': spec['sha256'], 'bytes': spec['bytes'], 'sha1': sha1,
+                                                     'current523_alignment': BUILDER.CLIENT_ALIGNMENT})
+        return row, spec
+
+    def test_client_files_info_member_needs_exact_container_identity(self):
+        row, spec = self.client_member_fixture()
+        self.assertEqual(BUILDER.validate_member_record(row, spec, {}, {}), row)
+        for change in ({'sha1': '0' * 40}, {'current523_alignment': 'retained_container_size_sha1_identical'}):
+            altered = copy.deepcopy(spec)
+            altered['identity_basis'].update(change)
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                BUILDER.validate_member_record(row, altered, {}, {})
+        with self.assertRaises(ValueError):
+            BUILDER.validate_member_record(dict(row, current523_alignment='other'), spec, {}, {})
+
+    def test_client_member_cannot_mix_with_handoff_identities(self):
+        row, spec = self.client_member_fixture()
+        with self.assertRaises(ValueError):
+            BUILDER.validate_member_record(row, spec, {(row['container'], row['path']): row}, {})
+        with self.assertRaises(ValueError):
+            BUILDER.validate_member_record(row, spec, {}, {row['container']: {'sha256': spec['sha256'], 'bytes': 128}})
+
     def test_bool_is_not_a_member_byte_count(self):
         row, spec, retained, changed = self.member_fixture()
         row['plain_bytes'] = True

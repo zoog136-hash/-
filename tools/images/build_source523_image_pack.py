@@ -9,6 +9,7 @@ import collections
 import hashlib
 import io
 import json
+import os
 import pathlib
 import shutil
 import tempfile
@@ -19,7 +20,13 @@ CONSUMER_FIELDS = {'ItemClass': ['IconID'], 'SpellClass': ['IconID', 'ActivateIc
 SOURCE_TABLES = ['AssetView', 'AssetType', 'Icon', *CONSUMER_FIELDS]
 DUMMY_IMAGE_TABLE = 'UIBuffCardDummyImagePath'
 COMPONENTS = {'retained_noncard_lineage14964', 'changed4_current523',
-              'retained_historical_card_lineage1216'}
+              'retained_historical_card_lineage1216', 'client523_files_info_verified'}
+# Complete-client mode (tools/images/client523_image_inputs.py): every container
+# is identified by the 523 files_info SHA-1/size instead of the earlier handoff's
+# retained-lineage inventory and four changed DATs.
+CLIENT_SOURCE_MODE = 'client523_files_info'
+CLIENT_COMPONENT = 'client523_files_info_verified'
+CLIENT_ALIGNMENT = 'client523_files_info_sha1_size_verified'
 
 
 def require(condition, message):
@@ -117,6 +124,15 @@ def validate_member_record(row, container_spec, retained_by_identity, changed_sp
     require(row.get('original_bytes_preserved') is True and row.get('pkcs7_padding_verified') is True
             and row.get('pillow_verify_and_load') is True, 'Original member proof missing')
     require(row.get('format') in {'PNG', 'JPEG', 'BMP'}, 'Unsupported original image format')
+    if row['current523_component'] == CLIENT_COMPONENT:
+        basis = container_spec.get('identity_basis', {})
+        require(row.get('current523_alignment') == CLIENT_ALIGNMENT
+                and basis.get('current523_alignment') == CLIENT_ALIGNMENT
+                and basis.get('sha1') == container_spec.get('sha1')
+                and basis.get('sha256') == row['original_container_sha256']
+                and basis.get('bytes') == row['original_container_bytes'],
+                'Client files_info container identity proof missing')
+        require(not retained_by_identity and not changed_specs, 'Client mode cannot mix handoff identities')
     if row['format'] == 'PNG':
         require(row.get('png_all_chunk_crc_verified') is True, 'PNG CRC proof missing')
     for field in ['encrypted_bytes', 'plain_bytes', 'width', 'height']:
@@ -124,6 +140,10 @@ def validate_member_record(row, container_spec, retained_by_identity, changed_sp
     for field in ['sha256', 'stored_member_sha256', 'original_container_sha256']:
         require(isinstance(row.get(field), str) and len(row[field]) == 64
                 and all(c in '0123456789abcdef' for c in row[field]), 'Invalid member SHA field: ' + field)
+    if row['current523_component'] == CLIENT_COMPONENT:
+        for field in ['encrypted_bytes', 'plain_bytes', 'width', 'height']:
+            require(type(row.get(field)) is int and row[field] > 0, 'Invalid member numeric field: ' + field)
+        return row
     changed = changed_specs.get(row['container'])
     if row['current523_component'] == 'changed4_current523':
         require(changed is not None and changed['sha256'] == row['original_container_sha256']
@@ -186,15 +206,22 @@ def json_bytes(value):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ['tables', 'source-index', 'decoder-summary', 'inventory', 'output']:
+    for name in ['tables', 'source-index', 'decoder-summary', 'output']:
         parser.add_argument('--' + name, type=pathlib.Path, required=True)
+    parser.add_argument('--inventory', type=pathlib.Path,
+                        help='Earlier handoff inventory; not used for a client523_files_info decoder summary')
     parser.add_argument('--decoded-root', type=pathlib.Path,
                         help='Original decoded files root when catalog/summary are a pinned snapshot')
-    for name in ['source-index', 'decoder-summary', 'inventory-manifest']:
+    for name in ['source-index', 'decoder-summary']:
         parser.add_argument('--expected-' + name + '-sha256', required=True)
+    parser.add_argument('--expected-inventory-manifest-sha256')
+    parser.add_argument('--hardlink-originals', action='store_true',
+                        help='Hard-link verified decoded originals into the pack instead of copying (same filesystem)')
     args = parser.parse_args()
-    validate_output_destination(args.output, [args.tables, args.source_index.parent,
-                                args.decoder_summary.parent, args.inventory], pathlib.Path(__file__))
+    protected = [args.tables, args.source_index.parent, args.decoder_summary.parent]
+    if args.inventory is not None:
+        protected.append(args.inventory)
+    validate_output_destination(args.output, protected, pathlib.Path(__file__))
     source_raw = args.source_index.read_bytes()
     summary_raw = args.decoder_summary.read_bytes()
     require(sha256(source_raw) == args.expected_source_index_sha256, 'Pinned source index SHA mismatch')
@@ -210,21 +237,31 @@ def main():
     catalog = [strict_json(line) for line in catalog_raw.splitlines() if line]
     require(len(catalog) == summary['verified_original_members'], 'Decoder member count mismatch')
     all_members = unique_members(catalog)
-    inventory_raw = (args.inventory / 'MANIFEST.json').read_bytes()
-    require(sha256(inventory_raw) == args.expected_inventory_manifest_sha256, 'Pinned inventory manifest SHA mismatch')
-    inventory = strict_json(inventory_raw)
-    retained_name = 'audit/current523_retained_images_lineage_diff.jsonl.gz'
-    retained_specs = [r for r in inventory['files'] if r['path'] == retained_name]
-    require(len(retained_specs) == 1, 'Missing/duplicate retained inventory contract')
-    retained_spec = retained_specs[0]
-    retained_raw = verify_file(args.inventory / retained_name, retained_spec['bytes'], retained_spec['sha256'])
-    import gzip
-    retained_rows = [strict_json(line) for line in gzip.decompress(retained_raw).splitlines() if line]
-    retained = {(r['container'], r['path']): r for r in retained_rows}
-    require(len(retained) == len(retained_rows), 'Duplicate retained identity')
-    changed = {r['path'].removeprefix('current523-originals/'): r for r in inventory['files']
-               if r['path'].startswith('current523-originals/') and r['path'].endswith('.dat')}
-    require(len(changed) == 4, 'Exactly four current changed DAT identities required')
+    client_mode = summary.get('source_mode') == CLIENT_SOURCE_MODE
+    inventory_raw = None
+    if client_mode:
+        require(args.inventory is None and args.expected_inventory_manifest_sha256 is None,
+                'Client-source decoder summary takes no earlier handoff inventory')
+        require(summary.get('files_info_version') == 523, 'Client-source summary is not 523')
+        retained_rows, retained, changed = [], {}, {}
+    else:
+        require(args.inventory is not None and args.expected_inventory_manifest_sha256 is not None,
+                'Handoff decoder summary requires --inventory and its manifest pin')
+        inventory_raw = (args.inventory / 'MANIFEST.json').read_bytes()
+        require(sha256(inventory_raw) == args.expected_inventory_manifest_sha256, 'Pinned inventory manifest SHA mismatch')
+        inventory = strict_json(inventory_raw)
+        retained_name = 'audit/current523_retained_images_lineage_diff.jsonl.gz'
+        retained_specs = [r for r in inventory['files'] if r['path'] == retained_name]
+        require(len(retained_specs) == 1, 'Missing/duplicate retained inventory contract')
+        retained_spec = retained_specs[0]
+        retained_raw = verify_file(args.inventory / retained_name, retained_spec['bytes'], retained_spec['sha256'])
+        import gzip
+        retained_rows = [strict_json(line) for line in gzip.decompress(retained_raw).splitlines() if line]
+        retained = {(r['container'], r['path']): r for r in retained_rows}
+        require(len(retained) == len(retained_rows), 'Duplicate retained identity')
+        changed = {r['path'].removeprefix('current523-originals/'): r for r in inventory['files']
+                   if r['path'].startswith('current523-originals/') and r['path'].endswith('.dat')}
+        require(len(changed) == 4, 'Exactly four current changed DAT identities required')
     tables, table_raw, source_files = {}, {}, {}
     source_tables = list(SOURCE_TABLES)
     # Preserve the original declaration and all image members. Runtime excludes
@@ -280,7 +317,8 @@ def main():
         (stage / 'source/index.json').write_bytes(source_raw)
         (stage / 'source/decoder-summary.json').write_bytes(summary_raw)
         (stage / 'source/decoder-catalog.jsonl').write_bytes(catalog_raw)
-        (stage / 'source/inventory-manifest.json').write_bytes(inventory_raw)
+        if inventory_raw is not None:
+            (stage / 'source/inventory-manifest.json').write_bytes(inventory_raw)
         for name, data in table_raw.items():
             (stage / source_files[name]['path']).write_bytes(data)
         packed_members = []
@@ -290,14 +328,18 @@ def main():
             verify_image(data, record)
             target = 'originals/' + safe_relative(record['path'])
             (stage / target).parent.mkdir(parents=True, exist_ok=True)
-            (stage / target).write_bytes(data)
+            if args.hardlink_originals:
+                os.link(original, stage / target)
+            else:
+                (stage / target).write_bytes(data)
             packed = {k: v for k, v in record.items() if k != 'relative_output_path'}
             packed['file'] = target
             packed_members.append(packed)
         fixed = [r for r in retained_rows if not r.get('historical_card_pack_lineage')]
-        require(summary.get('fixed_retained_noncard_file_denominator') == len(fixed)
-                and summary.get('fixed_retained_noncard_stored_byte_denominator') == sum(r['encrypted_bytes'] for r in fixed),
-                'Fixed retained scope denominator differs from inherited inventory')
+        if not client_mode:
+            require(summary.get('fixed_retained_noncard_file_denominator') == len(fixed)
+                    and summary.get('fixed_retained_noncard_stored_byte_denominator') == sum(r['encrypted_bytes'] for r in fixed),
+                    'Fixed retained scope denominator differs from inherited inventory')
         full_current = None
         if summary.get('source_current_catalog_complete') is True:
             checks = summary.get('source_current_catalog_completion_checks', {})
@@ -318,6 +360,7 @@ def main():
                     'icons': [{'id': r['ID'], 'asset_id': r['AssetID'], 'row_index_zero': i}
                               for i, r in enumerate(tables['Icon'])],
                     'metrics': {'validated_catalog_components': dict(component_counts), 'pack_members': len(packed_members),
+                                'source_mode': CLIENT_SOURCE_MODE if client_mode else 'earlier_handoff',
                                 'fixed_retained_noncard': {'files': len(fixed),
                                     'stored_encrypted_member_bytes': sum(r['encrypted_bytes'] for r in fixed),
                                     'decoded_file_bytes_inherited_metadata': sum(r['plain_bytes'] for r in fixed)},
