@@ -293,7 +293,7 @@ func find_rows(table: String, field: String, value: Variant) -> Array:
 
 func _offset(context: Dictionary) -> int:
 	var policy: Dictionary = context.get("time_policy", {})
-	return int(policy.get("utc_offset_minutes", Time.get_time_zone_from_system().get("bias", 0)))
+	return int(policy.get("utc_offset_minutes", 540))
 
 func timestamp(date_id: int, context: Dictionary = {}) -> int:
 	if date_id == 0:

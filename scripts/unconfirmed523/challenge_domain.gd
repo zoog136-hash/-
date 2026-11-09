@@ -560,7 +560,7 @@ func _day_key(context: Dictionary) -> String:
 
 func _offset(context: Dictionary) -> int:
 	var policy: Variant = context.get("time_policy", {})
-	return int(policy.get("utc_offset_minutes", Time.get_time_zone_from_system().get("bias", 0))) if policy is Dictionary else 1442
+	return int(policy.get("utc_offset_minutes", 540)) if policy is Dictionary else 1442
 
 func _daily(state: Dictionary, day: String, challenge_id: int) -> Dictionary:
 	return state.days.get(day, {}).get(str(challenge_id), {"used": 0, "retry_used": 0, "claimed": 0}).duplicate(true)

@@ -495,9 +495,57 @@ func _clock(date: Dictionary) -> String:
 static func valid_clock(clock: String) -> bool:
 	return preload("res://scripts/monsterbook/monsterbook523_clock.gd").valid(clock)
 
+## TWILIGHT is offline: no operator opens new seasons. When the source season
+## of a book has ended, the same window repeats back to back from the source
+## start (counting, options-only, then the next rotation). false = source dates only.
+var rotate_ended_seasons: bool = true
+
+static func _clock_unix(clock: String) -> int:
+	return int(Time.get_unix_time_from_datetime_dict({"year":int(clock.substr(0,4)),"month":int(clock.substr(4,2)),"day":int(clock.substr(6,2)),"hour":int(clock.substr(8,2)),"minute":int(clock.substr(10,2)),"second":0}))
+
+static func _unix_clock(unix: int) -> String:
+	var d := Time.get_datetime_dict_from_unix_time(unix)
+	return "%04d%02d%02d%02d%02d" % [d.year,d.month,d.day,d.hour,d.minute]
+
+## 0 = source season; n > 0 = n-th local repetition after the source end.
+func rotation(book_id: int, clock: String) -> int:
+	if not rotate_ended_seasons or not valid_clock(clock): return 0
+	var period := raw_period(book_id)
+	var start := _clock(period.StartDateTimeID)
+	var end := _clock(period.EndDateTimeID)
+	if not valid_clock(start) or not valid_clock(end) or clock < end: return 0
+	var length: int = _clock_unix(end) - _clock_unix(start)
+	if length <= 0: return 0
+	return floori(float(_clock_unix(clock) - _clock_unix(start)) / float(length))
+
+## Map the current clock back into the source window of its rotation.
+func book_clock(book_id: int, clock: String) -> String:
+	var turn := rotation(book_id, clock)
+	if turn == 0: return clock
+	var period := raw_period(book_id)
+	var length: int = _clock_unix(_clock(period.EndDateTimeID)) - _clock_unix(_clock(period.StartDateTimeID))
+	return _unix_clock(_clock_unix(clock) - turn * length)
+
+## Source period rows shifted to the rotation that contains clock (for display).
+func local_period(book_id: int, clock: String) -> Dictionary:
+	var period := raw_period(book_id)
+	var turn := rotation(book_id, clock)
+	var result: Dictionary = {"rotation": turn}
+	var length: int = 0
+	if turn > 0: length = _clock_unix(_clock(period.EndDateTimeID)) - _clock_unix(_clock(period.StartDateTimeID))
+	for key: String in ["StartDateTimeID", "CountingEndDateTimeID", "EndDateTimeID"]:
+		var row: Dictionary = period[key]
+		if turn == 0 or row.is_empty():
+			result[key] = row.duplicate()
+			continue
+		var d := Time.get_datetime_dict_from_unix_time(_clock_unix(_clock(row)) + turn * length)
+		result[key] = {"Year":d.year,"Month":d.month,"Day":d.day,"Hour":d.hour,"Minute":d.minute}
+	return result
+
 func _within(book_id: int, clock: String, end_key: String) -> bool:
 	if not valid_clock(clock):
 		return false
+	clock = book_clock(book_id, clock)
 	var period := raw_period(book_id)
 	var start := _clock(period.StartDateTimeID)
 	var end := _clock(period[end_key])
@@ -734,6 +782,13 @@ func _level_belongs(id: Variant, book_id: int) -> bool:
 func effective_bonuses(book_id: int, source_clock: String) -> Array:
 	if not _within(book_id, source_clock, "EndDateTimeID"):
 		return []
+	# A previous season's (or rotation's) options never carry into the next one.
+	var current_epoch: String = str(_state.books.get(str(book_id), {}).get("current_epoch", ""))
+	if current_epoch.begins_with("source-season:"):
+		var turn := rotation(book_id, source_clock)
+		var suffix_at := current_epoch.find(":r")
+		var saved_turn: int = int(current_epoch.substr(suffix_at + 2)) if suffix_at >= 0 else 0
+		if saved_turn != turn: return []
 	var result: Array = []
 	for id: Variant in progress(book_id).get("effective_levels", []):
 		result.append_array(_linked("MonsterBookLevelBonus", int(id), "BonusID", "Bonus"))
@@ -745,6 +800,7 @@ func reward_claimed(book_id: int, level_id: int, reward_id: int) -> bool:
 
 func current_period(book_id: int, clock: String) -> String:
 	if not valid_clock(clock): return "unknown"
+	clock = book_clock(book_id, clock)
 	var period := raw_period(book_id)
 	var start := _clock(period.StartDateTimeID)
 	var end := _clock(period.EndDateTimeID)
