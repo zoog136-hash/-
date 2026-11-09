@@ -81,5 +81,9 @@ func _run() -> void:
 	check(saved is Dictionary and saved.get("map_id") == "aden_world", "the save names aden_world")
 	check(saved is Dictionary and int(saved.get("original_position", {}).get("source_map_id", -1)) == HOST.ADEN_LAND, "the save records a position on the 523 Aden grid")
 	var host_renderer: Variant = controller.get("_prior")
-	check(host_renderer is Node and not (host_renderer as Node).can_process() and not (host_renderer as CanvasItem).visible, "the hidden host renderer does not run under play mode")
+	if bool(controller.get("release_prior_renderer")):
+		# P3-A: the hidden host renderer is released under play mode, rebuilt on return.
+		check(host_renderer == null and not (controller.get("_prior_released") as Dictionary).is_empty(), "the hidden host renderer is released under play mode")
+	else:
+		check(host_renderer is Node and not (host_renderer as Node).can_process() and not (host_renderer as CanvasItem).visible, "the hidden host renderer does not run under play mode")
 	_finish({"real_input_checked":true,"boot_ms":boot_ms,"position":[first.x, first.y],"map_name":str(world.field_map.data.get("map_name",""))})

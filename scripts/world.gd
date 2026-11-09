@@ -1857,7 +1857,12 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			hud.show_message(str(failed_run.get("reason","던전 이탈을 저장할 수 없습니다."))); return
 	# Restore the retained renderer before the existing map lifecycle releases it.
 	# Requested experimental presentation can reapply on a supported destination.
-	if current523_aden_play_active: close_current523_aden_play(false)
+	if current523_aden_play_active:
+		# The renderer restored here is freed right below; one released by 523
+		# play mode is not rebuilt only to be discarded.
+		current523_prior_rebuild_suppressed = true
+		close_current523_aden_play(false)
+		current523_prior_rebuild_suppressed = false
 	_clear_combat_actions()
 	manual_route_pending_target=Vector2.INF
 	if is_instance_valid(world_interactions):
@@ -1952,30 +1957,13 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		if bool(field_map.get_meta("base508_source_test",false)):
-			field_renderer=load(BASE508_TEST.RENDERER_PATH).new() as FieldRenderer
-		elif field_map is NativePngField:
-			# Instantiate only when an actual native-PNG field is active.
-			var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
-			if native_renderer_script == null:
-				push_error("Native PNG renderer script could not be loaded")
-				return
-			field_renderer = native_renderer_script.new() as FieldRenderer
-		elif CURRENT523_HOST.is_host(field_map):
-			field_renderer = CURRENT523_HOST.make_renderer(self, _aden_play_controller(), field_map)
-			if field_renderer == null:
-				hud.show_message("523 아덴 지형 표시를 준비하지 못했습니다: " + CURRENT523_HOST.problem)
-		elif bool(field_map.get_meta("source_map84",false)): field_renderer = SOURCE_MAP84_RENDERER.new()
-		elif field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
-		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
-		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
+		var made: Dictionary = _new_field_renderer(field_map)
+		if made.abort: return
+		field_renderer = made.renderer
 		# Only the 523 host can be without a renderer (its own was rejected);
 		# the field still exists for saving and the 523 play mode on top.
 		if field_renderer != null:
-			if not field_renderer.is_inside_tree():
-				field_renderer.name = "FieldRenderer"
-				add_child(field_renderer)
-			field_renderer.configure(field_map, player)
+			_mount_field_renderer(field_renderer, field_map)
 			if field_renderer is RemakeSourceRenderer and field_renderer.png_review_active:
 				hud.set_map_name(str(active_map.get("name",active_map_id))+" · PNG 검수")
 				player.global_position = field_renderer.png_review_spawn
@@ -2003,6 +1991,39 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if not FileAccess.file_exists(save_path()):source_save_blocked=false
 	_restore_current523_aden_play.call_deferred()
 
+## The renderer `_set_map` selects for `field` (also used to rebuild a renderer
+## released while 523 play mode covered the field). Returns
+## {"renderer": FieldRenderer or null, "abort": bool}; abort means the native
+## PNG renderer script is missing and the caller must stop, as it always did.
+func _new_field_renderer(field: PlayableField) -> Dictionary:
+	var renderer: FieldRenderer = null
+	if bool(field.get_meta("base508_source_test",false)):
+		renderer=load(BASE508_TEST.RENDERER_PATH).new() as FieldRenderer
+	elif field is NativePngField:
+		# Instantiate only when an actual native-PNG field is active.
+		var native_renderer_script: Variant = load(NATIVE_PNG_RENDERER_PATH)
+		if native_renderer_script == null:
+			push_error("Native PNG renderer script could not be loaded")
+			return {"renderer":null,"abort":true}
+		renderer = native_renderer_script.new() as FieldRenderer
+	elif CURRENT523_HOST.is_host(field):
+		renderer = CURRENT523_HOST.make_renderer(self, _aden_play_controller(), field)
+		if renderer == null:
+			hud.show_message("523 아덴 지형 표시를 준비하지 못했습니다: " + CURRENT523_HOST.problem)
+	elif bool(field.get_meta("source_map84",false)): renderer = SOURCE_MAP84_RENDERER.new()
+	elif field is RemakePlayableField: renderer = REMAKE_RENDERER.new()
+	elif field is AuthoredRemakeField: renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
+	else: renderer = SOURCE_RENDERER.new() if field is OriginalPlayableField else FIELD_RENDERER.new()
+	return {"renderer":renderer,"abort":false}
+
+## Adds a new renderer under the world (the 523 host one already is) and
+## configures it on `field`, exactly as `_set_map` does.
+func _mount_field_renderer(renderer: FieldRenderer, field: PlayableField) -> void:
+	if not renderer.is_inside_tree():
+		renderer.name = "FieldRenderer"
+		add_child(renderer)
+	renderer.configure(field, player)
+
 func _reject_map_pack(message: String) -> void:
 	hud.show_message(message)
 	if field_map==null and field_renderer==null and map_background.texture==null:
@@ -2018,11 +2039,15 @@ func _set_visual_mode(mode: String) -> void:
 func _apply_saved_visual_mode() -> void:
 	if not is_instance_valid(field_renderer):
 		return
+	_set_visual_mode(_saved_visual_mode())
+
+## The map visual mode saved in the user's settings ("twilight" by default).
+func _saved_visual_mode() -> String:
 	var options := ConfigFile.new()
 	var mode: String = "twilight"
 	if options.load("user://twilight_ui_settings.cfg") == OK:
 		mode = str(options.get_value("visual","map_mode","twilight"))
-	_set_visual_mode(mode)
+	return mode
 
 func _apply_map_background() -> void:
 	var path: String = str(active_map.get("image_path", ""))
@@ -10899,6 +10924,8 @@ var _current523_aden_review_from_boot: bool = false
 signal current523_aden_review_closed
 var current523_aden_play_active: bool = false
 var current523_aden_play_problem: String = ""
+## True only while a caller that discards the field renderer closes 523 play.
+var current523_prior_rebuild_suppressed: bool = false
 var _current523_aden_play_controller: RefCounted
 var _current523_source_definition_provider: RefCounted
 var _current523_world_map_input: Node
@@ -11098,7 +11125,9 @@ func _current523_source_restore_requested() -> bool:
 
 func _exit_tree() -> void:
 	if _current523_aden_play_controller != null:
+		current523_prior_rebuild_suppressed = true
 		_current523_aden_play_controller.call("close", false)
+		current523_prior_rebuild_suppressed = false
 	current523_aden_play_active = false
 	EQUIPMENT523_INVOKE_DEBUFF.clear(self)
 	equipment523.shutdown(self)
