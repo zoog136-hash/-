@@ -35,7 +35,7 @@ func _finish(extra: Dictionary = {}) -> void:
 	quit(0 if failures.is_empty() else 1)
 
 static func _reason(value: Dictionary) -> String:
-	var text: String = str(value.get("code", value.get("error", "not_mounted")))
+	var text: String = str(value.get("code", value.get("error", value.get("reason", value.get("status", "not_mounted")))))
 	for key: String in ["details","offset","member","missing_source_offsets"]:
 		if value.has(key): text += " %s=%s" % [key, str(value[key])]
 	return text.left(300)
@@ -105,7 +105,10 @@ func _callbacks_survive() -> void:
 	if blessing.get("ok", false):
 		var button: Callable = blessing.bindings[BLESSING.PROJECT].bindings[BLESSING.BUTTON].activate
 		check(button.is_valid() and button.call().get("ok", false) and hud.toggled, "the blessing button still reaches the HUD")
-	hud.queue_free()
+	# Free now: the no-input run quits before a queued free would happen.
+	hud.v20_leaf_button.free()
+	hud.v20_ain_panel.free()
+	hud.free()
 
 class FakePack extends RefCounted:
 	var manifest: Dictionary = {}
