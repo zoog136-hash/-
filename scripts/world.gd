@@ -1307,6 +1307,8 @@ func _index_item_weights() -> void:
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
 	var source_weight_policy: Dictionary = {}
+	# User decision "원작대로": these keep the original estimate, including zero.
+	var original_weight_names: Dictionary = {}
 	var path: String = "res://data/item_weight_rules.json"
 	if FileAccess.file_exists(path):
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -1315,6 +1317,8 @@ func _index_item_weights() -> void:
 			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
 			var declared_source_policy: Variant = parsed.get("current523_source_weight")
 			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
+			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
+			if original_items is Dictionary: original_weight_names = original_items
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
@@ -1335,6 +1339,12 @@ func _index_item_weights() -> void:
 				next_weight_index[name_value] = int(source_weight.weight)
 				continue
 			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+			if original_weight_names.has(name_value) and overrides.has(name_value):
+				next_weight_index[name_value] = maxi(0, int(overrides[name_value]))
+				continue
+			if record.get("source_weight_origin") == "current523_original_estimate":
+				next_weight_index[name_value] = maxi(0, int(record.get("weight", 0)))
+				continue
 			if record.has("growth96_item_id"):
 				next_weight_index[name_value] = maxi(0,int(record.weight))
 				continue
@@ -4062,6 +4072,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var selected_source: Dictionary=item_instances.get(str(selected.get("id","")),{}).get("record",source_reward)
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
+	if preload("res://scripts/shop/source523_cash_packages.gd").try_use(self,item_name):return
 	if alchemy_held_items.try_use(self,item_name,str(selected.get("id",""))):return
 	if unconfirmed523.try_use(item_name):return
 	if str(selected.get("id","")).is_empty() and quest_item_provider.equipment_owner.requires_selected(self,item_name):hud.show_message("실제 장비 개체를 선택하세요");return

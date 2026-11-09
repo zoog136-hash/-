@@ -1,5 +1,6 @@
 extends RefCounted
 ## Optional source commerce catalog. It never changes wallets, saves or clocks.
+const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const ItemData = preload("res://scripts/resources/current523_item_data.gd")
 const SCHEMA: String = "twilight.source523.shop.v1"
@@ -455,6 +456,9 @@ func payment_quote(purchase_id: int, quantity: int) -> Dictionary:
 	var offer: Dictionary = market_offer(purchase_id)
 	if offer.is_empty() or quantity < 1 or quantity > 1000: return {"ok":false, "reason":"상품 또는 수량 오류"}
 	var payment: Dictionary = offer.payment
+	if not payment.is_empty() and int(payment.get("UnitID", 0)) == CashMarket.STORE_UNIT:
+		# Original store payment replaced by the recorded TWILIGHT diamond price.
+		return CashMarket.payment_quote(purchase_id, quantity)
 	if payment.is_empty() or int(payment.get("MarketPaymentTypeID", -1)) != 4:
 		return {"ok":false, "reason":"외부 결제·무료·쿠폰 경로는 미연결"}
 	if payment.get("ClassChangeDiscount") == true:
