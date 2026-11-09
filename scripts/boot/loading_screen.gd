@@ -50,8 +50,11 @@ func _ready() -> void:
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(version)
 
-static func _version_text() -> String:
-	var name: String = str(ProjectSettings.get_setting("application/config/version", ""))
+func _version_text() -> String:
+	# A mounted update pack is newer than the APK's own version setting.
+	var updater: Node = get_node_or_null("/root/Updater")
+	var name: String = str(updater.call("version_name")) if updater != null else ""
+	if name.is_empty(): name = str(ProjectSettings.get_setting("application/config/version", ""))
 	return "TWILIGHT " + name if not name.is_empty() else "TWILIGHT"
 
 func _process(delta: float) -> void:

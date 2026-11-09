@@ -91,7 +91,7 @@ func _run() -> void:
 	for category: String in ["변신", "마법인형", "성물"]: cards_after += world.card_draw_fusion.owned[category].size()
 	var waiting: Array = []
 	for row: Dictionary in world.catalog_db["아이템"]:
-		if row.get("source") == CashPackages.ITEM_TAG: waiting.append(str(row.name))
+		if row.get("source") == CashPackages.ITEM_TAG and CashPackages.mastery_spec(int(row.source_item_class_id)).is_empty(): waiting.append(str(row.name))
 	print("source523_cash_market_main_test: class=%s bought=%d opened=%d new_cards=%d" % [world.job_class, bought, opened, cards_after - cards_before])
 	print("source523_cash_market_main_test: kept by existing weight rule (%d): %s" % [weight_blocked.size(), ", ".join(weight_blocked)])
 	print("source523_cash_market_main_test: waiting items (%d): %s" % [waiting.size(), ", ".join(waiting)])
@@ -99,6 +99,57 @@ func _run() -> void:
 	check(weight_blocked.is_empty(), "original weights let every box open: %s" % ", ".join(weight_blocked))
 	for name: String in ["상급 축복의 가루", "드래곤의 다이아몬드", "명예 주화", "판도라의 컬렉션 조각"]:
 		check(int(world.item_weight_index.get(name, -1)) == 0, "original zero weight kept: " + name)
+	# Original skill card draw pack (기사): draws Spell cards and delivers the
+	# original skill books as receipted native stacks; one is then learned.
+	var pack: Dictionary = CashPackages.resolve(world, 364304)
+	check(pack.kind == "box" and CashPackages.definition(364304).get("kind") == "gotcha", "skill card pack is an original draw pack")
+	if pack.kind == "box":
+		world.inventory[str(pack.name)] = 1
+		world._on_inventory_item_activated(str(pack.name))
+		check(not world.inventory.has(str(pack.name)), "skill card pack consumed")
+		var books: Array = []
+		for uid: String in world.item_instances:
+			var entry: Dictionary = world.item_instances[uid]
+			if str(entry.get("name", "")).contains("기술서") or str(entry.get("name", "")).contains("마법서"):
+				if not books.has(str(entry.name)): books.append(str(entry.name))
+		for name: String in world.inventory:
+			if (name.contains("기술서") or name.contains("마법서")) and not books.has(name): books.append(name)
+		check(not books.is_empty(), "skill books granted: %s" % ", ".join(books))
+		print("source523_cash_market_main_test: skill books from pack: %s" % ", ".join(books))
+		var learned_before: int = world.original_skills.catalog.export_state().learned.size() if world.original_skills != null else 0
+		# Original learn limits include a character level; use a level-80 knight.
+		world.level = 80
+		for book_name: String in books:
+			var record: Dictionary = world._find_catalog_item_record(book_name)
+			var spec: Dictionary = preload("res://scripts/loot/current523_native_fields.gd").full(record).get("source_use_spec", {})
+			print("source523_cash_market_main_test: book %s limit=%s" % [book_name, preload("res://scripts/loot/patch523_skill_book.gd").source_limit_problem(world, spec)])
+			world._on_inventory_item_activated(book_name)
+		var learned_after: int = world.original_skills.catalog.export_state().learned.size() if world.original_skills != null else 0
+		print("source523_cash_market_main_test: learned skills %d -> %d" % [learned_before, learned_after])
+		check(learned_after > learned_before, "a drawn skill book is learned through the native path")
+	# Halpas stone (native relic equipment) and the mastery option change ticket.
+	var stone: Dictionary = CashPackages.resolve(world, 365553)
+	var ticket: Dictionary = CashPackages.resolve(world, 184652)
+	print("source523_cash_market_main_test: halpas=%s ticket=%s" % [stone.kind, ticket.kind])
+	check(stone.kind == "native_equipment", "Halpas stone issued as native equipment")
+	# The mastery runtime only owns tickets when its exact catalog record is
+	# installed; otherwise the ticket stays a plain kept item (existing rule).
+	var ticket_installed: bool = world.weapon_mastery.reset_ticket.owned_ids(world).get("ok", false)
+	check(ticket.kind == ("mastery_ticket" if ticket_installed else "item"), "mastery ticket follows the mastery runtime identity (installed=%s)" % str(ticket_installed))
+	var carrier: Dictionary = CashPackages.box_record(world, 374534)
+	world.inventory[str(carrier.name)] = 1
+	var tickets_before: int = int(world.weapon_mastery.reset_ticket.owned_ids(world).get("ids", []).size())
+	var opened_extra: Dictionary = CashPackages.open(world, str(carrier.name), [{"item_class_id":365553, "amount":1}, {"item_class_id":184652, "amount":2}])
+	check(opened_extra.ok, "stone/ticket delivery: %s" % opened_extra.get("reason", ""))
+	if ticket_installed:
+		var owned_tickets: Dictionary = world.weapon_mastery.reset_ticket.owned_ids(world)
+		check(owned_tickets.get("ok", false) and owned_tickets.ids.size() == tickets_before + 2, "mastery runtime counts delivered tickets: %s" % str(owned_tickets))
+	else:
+		print("source523_cash_market_main_test: mastery ticket catalog not installed (%s); ticket kept as item" % str(world.weapon_mastery.reset_ticket.owned_ids(world).get("reason", "")))
+	var stone_instances: int = 0
+	for uid: String in world.item_instances:
+		if str(world.item_instances[uid].get("name", "")) == str(stone.get("name", "")): stone_instances += 1
+	check(stone_instances >= 1, "Halpas stone physical instance exists")
 	# Original weapon mastery book (one-hand sword) through the inventory path.
 	var book: Dictionary = CashPackages.resolve(world, 171893)
 	check(book.kind == "item" and book.record.get("slot") == "consumable", "mastery book registered as usable")
