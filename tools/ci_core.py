@@ -78,6 +78,7 @@ CHECKS = [
     ('current523_item_use_numeric_test', []),
     ('current523_draw_ticket_test', []),
     ('current523_item_lifetime_test', []),
+    ('current523_card_item_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -387,7 +388,8 @@ def main():
                       'source523_pack_test':'SOURCE523_PACK_RESULT',
                       'current523_item_use_numeric_test':'CURRENT523_ITEM_USE_NUMERIC_RESULT',
                       'current523_draw_ticket_test':'CURRENT523_DRAW_TICKET_RESULT',
-                      'current523_item_lifetime_test':'CURRENT523_ITEM_LIFETIME_RESULT'}[name]
+                      'current523_item_lifetime_test':'CURRENT523_ITEM_LIFETIME_RESULT',
+                      'current523_card_item_test':'CURRENT523_CARD_ITEM_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
