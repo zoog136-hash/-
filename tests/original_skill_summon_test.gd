@@ -18,7 +18,7 @@ func fresh() -> void:
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
 	world.hp = world._effective_max_hp()
-	world.mp = 999
+	world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 
 func hit_seed(chance: float, hit: bool) -> void:
 	for seed_value: int in range(10000):

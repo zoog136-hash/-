@@ -53,7 +53,7 @@ func run() -> void:
 	respawn()
 	var spell := catalog.record_for("에너지 볼트")
 	var plain_chance := service.hit_chance(spell, dummy)
-	world.mp = 999
+	world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 	world.equipped_items["weapon"] = {"name":"상태 검사 양손검", "type":"양손검", "slot":"weapon"}
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
