@@ -103,6 +103,7 @@ func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract:
 	if usable:
 		if _accept(baked.model,baked.sha256):
 			loaded_from_bake = true
+			_release_cold()
 			return true
 		data = {}
 	var projection = ORIGINAL_PROJECTION.new()
@@ -137,6 +138,8 @@ func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
 	# light model. Without both record files the bake is never used.
 	if not bake_key.is_empty() and _records != null and (_runtime != null or not has_any_equipment_runtime()):
 		BAKE.write(BAKE_NAME,bake_key,{"model":data,"sha256":sha,"offloaded":true})
+	# The bake keeps the whole model; only then are cold parts released.
+	_release_cold()
 	return true
 
 func _load_payload(text: String, expected_sha256: String) -> bool:
@@ -193,6 +196,13 @@ func _accept(parsed: Variant, expected_sha256: String) -> bool:
 	# Rejected replacements never erase the last valid registry.
 	data = parsed
 	_bonus_ids.clear()
+	_bonus_ready = false
+	_bonus_packed = false
+	_bonus_sorted = PackedInt64Array()
+	_cold = null
+	_cold_key = ""
+	_cold_parts = PackedStringArray()
+	_cold_cache.clear()
 	_offload_catalog_records()
 	recipes = data.recipes.duplicate(true)
 	digest = expected_sha256
@@ -351,6 +361,7 @@ func _offload_catalog_records() -> void:
 	var key: String = _model_key
 	_model_key = ""
 	if key.is_empty() or not data.get("items") is Dictionary or OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": return
+	_cold_key = key
 	var items: Dictionary = data.items
 	var records: Object = BAKE.open_records(RECORDS_NAME,key)
 	if records == null:
@@ -367,7 +378,7 @@ func _offload_catalog_records() -> void:
 		if entry is Dictionary and (entry as Dictionary).has("catalog_record") and records.has(str(id)):
 			entry.erase("catalog_record")
 			entry[RECORDS_MARK] = true
-	_records = records
+	_records = _compact_records(records)
 	# Per-item equipment runtime (enchant/extra option tables) likewise.
 	var runtime: Variant = data.get("equipment_runtime")
 	if not runtime is Dictionary or (runtime as Dictionary).is_empty(): return
@@ -433,11 +444,209 @@ var _bonus_ids: Dictionary = {}
 func bonus_row(id: String) -> Dictionary:
 	var bonuses: Dictionary = data.get("bonuses",{})
 	if bonuses.get("twilight_source_lazy") != true: return bonuses.get(id,{})
-	if _bonus_ids.is_empty():
-		for value: Variant in bonuses.get("ids",[]): _bonus_ids[str(value)] = true
-	if not _bonus_ids.has(id) or not id.is_valid_int(): return {}
+	if not _bonus_ready: _prepare_bonus_index()
+	if not _bonus_member(id) or not id.is_valid_int(): return {}
 	var rows: Array[Dictionary] = SOURCE_DEFINITIONS.related("Bonus","ID",int(id))
 	return rows[-1] if not rows.is_empty() else {}
+
+## Membership of the lazy Bonus ID list: a sorted PackedInt64Array (~0.7 MB)
+## instead of a Dictionary of ~80,000 ID strings (~7 MB). The packed form is
+## used only when every listed ID is a canonical integer string, so it answers
+## exactly as the string-keyed set did.
+var _bonus_ready: bool = false
+var _bonus_packed: bool = false
+var _bonus_sorted := PackedInt64Array()
+
+func _prepare_bonus_index() -> void:
+	_bonus_ids.clear()
+	_bonus_sorted = PackedInt64Array()
+	var values: Variant = (data.get("bonuses",{}) as Dictionary).get("ids",[])
+	_bonus_packed = values is Array
+	if _bonus_packed:
+		for value: Variant in values:
+			var text: String = str(value)
+			if not text.is_valid_int() or str(text.to_int()) != text:
+				_bonus_packed = false
+				break
+			_bonus_sorted.append(text.to_int())
+	if _bonus_packed: _bonus_sorted.sort()
+	else:
+		_bonus_sorted = PackedInt64Array()
+		for value: Variant in values: _bonus_ids[str(value)] = true
+	# An empty list is read again on the next call, as before.
+	_bonus_ready = not _bonus_sorted.is_empty() or not _bonus_ids.is_empty()
+
+func _bonus_member(id: String) -> bool:
+	if not _bonus_packed: return _bonus_ids.has(id)
+	if not id.is_valid_int() or str(id.to_int()) != id: return false
+	var value: int = id.to_int()
+	var position: int = _bonus_sorted.bsearch(value)
+	return position < _bonus_sorted.size() and _bonus_sorted[position] == value
+
+## Cold model parts. After the original-compiled model is accepted (and baked
+## whole), the parts no hot path reads by scanning are kept in a record file on
+## this device (keyed like the bake: catalog SHA + registered catalog key +
+## source SHA + code key) and replaced in `data` by empty placeholders of the
+## same type at the same key. Readers: bonus_type(), offloaded_invoke_option(),
+## materialized_data(). TWILIGHT_RULES_RECORDS_RESIDENT=1 keeps everything.
+const COLD_NAME := "equipment_rules_cold"
+const COLD_ENCHANTMENT: Array[String] = ["InvokeOption","InvokeOptionType","ItemEquipSlot","EquipSlotConfig","ItemBlessBonus",
+	"Unit","UIUnit","BonusApplicationType","AttackType","ItemBlessCode","ItemEnchantScrollGroup"]
+var _cold: Object = null
+var _cold_key: String = ""
+var _cold_parts := PackedStringArray()
+var _cold_cache: Dictionary = {}
+
+func _release_cold() -> void:
+	var key: String = _cold_key
+	_cold_key = ""
+	if key.is_empty() or data.is_empty() or digest.is_empty() or OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": return
+	_share_item_entries()
+	var parts: Dictionary = {}
+	for name: String in ["recipes","recipe_admission","bonus_types"]:
+		if data.get(name) is Dictionary and not (data[name] as Dictionary).is_empty(): parts[name] = data[name]
+	var bonuses: Variant = data.get("bonuses")
+	if bonuses is Dictionary and bonuses.get("twilight_source_lazy") == true and bonuses.get("ids") is Array and not (bonuses.ids as Array).is_empty():
+		_prepare_bonus_index()
+		if _bonus_ready: parts["bonus_ids"] = bonuses.ids
+	var tables: Variant = data.get("enchantment")
+	if tables is Dictionary:
+		for name: String in COLD_ENCHANTMENT:
+			if tables.get(name) is Array and not (tables[name] as Array).is_empty(): parts["enchantment:"+name] = tables[name]
+	if parts.has("enchantment:InvokeOption"):
+		for row: Variant in parts["enchantment:InvokeOption"]:
+			if not row is Dictionary or typeof(row.get("ID")) not in [TYPE_INT,TYPE_FLOAT]:
+				parts.erase("enchantment:InvokeOption")
+				break
+	if parts.is_empty(): return
+	var cold: Object = BAKE.open_records(COLD_NAME,key)
+	if not _cold_complete(cold,parts):
+		var writer = BAKE.record_writer(COLD_NAME,key)
+		if writer == null: return
+		writer.add("digest",digest)
+		for name: String in parts:
+			writer.add(name,parts[name])
+			if name == "bonus_types":
+				for id: Variant in parts[name]: writer.add("bonus_type:"+str(id),parts[name][id])
+			elif name == "enchantment:InvokeOption":
+				# Last row per ID, as the enhancement lookup indexed them.
+				for row: Dictionary in parts[name]: writer.add("invoke:"+str(int(row.ID)),row)
+		if not BAKE.finish_records(writer): return
+		cold = BAKE.open_records(COLD_NAME,key)
+		if not _cold_complete(cold,parts): return
+	_cold = cold
+	_cold_cache.clear()
+	# Same key, same type, emptied: key order and readers' types are kept.
+	for name: String in parts:
+		if name.begins_with("enchantment:"): data.enchantment[name.trim_prefix("enchantment:")] = []
+		elif name == "bonus_ids": data.bonuses.ids = []
+		else: data[name] = {}
+	_cold_parts = PackedStringArray(parts.keys())
+
+func _cold_complete(cold: Object, parts: Dictionary) -> bool:
+	if cold == null or cold.read("digest") != digest: return false
+	for name: String in parts:
+		if not cold.has(name): return false
+		if name == "bonus_types":
+			for id: Variant in parts[name]:
+				if not cold.has("bonus_type:"+str(id)): return false
+	return true
+
+func _cold_read(record_id: String) -> Variant:
+	if _cold_cache.has(record_id): return _cold_cache[record_id]
+	if _cold_cache.size() >= 256: _cold_cache.clear()
+	var value: Variant = _cold.read(record_id)
+	_cold_cache[record_id] = value
+	return value
+
+## Identical offloaded item entries (most native items: lazy marker, offloaded
+## marker, no use conditions) share one read-only Dictionary. item_entry()
+## never returns an offloaded entry itself, so readers see the same values.
+func _share_item_entries() -> void:
+	var items: Variant = data.get("items")
+	if not items is Dictionary: return
+	var canonical: Dictionary = {}
+	for id: Variant in (items as Dictionary).keys():
+		var entry: Variant = items[id]
+		if not entry is Dictionary or (entry as Dictionary).get(RECORDS_MARK) != true: continue
+		var bytes: PackedByteArray = var_to_bytes(entry)
+		var shared: Variant = canonical.get(bytes)
+		if shared == null:
+			canonical[bytes] = entry
+			continue
+		if not (shared as Dictionary).is_read_only(): _freeze(shared)
+		items[id] = shared
+
+static func _freeze(value: Variant) -> void:
+	if value is Dictionary:
+		for key: Variant in value: _freeze(value[key])
+		(value as Dictionary).make_read_only()
+	elif value is Array:
+		for item: Variant in value: _freeze(item)
+		(value as Array).make_read_only()
+
+## One original BonusType row by ID string ({} when absent).
+func bonus_type(id: String) -> Dictionary:
+	if _cold == null or not _cold_parts.has("bonus_types"): return data.bonus_types.get(id,{})
+	var value: Variant = _cold_read("bonus_type:"+id)
+	return value if value is Dictionary else {}
+
+## The InvokeOption row of one ID when that table is on storage ({} when the
+## ID has none); null while the table is resident in data.enchantment.
+func offloaded_invoke_option(id: String) -> Variant:
+	if _cold == null or not _cold_parts.has("enchantment:InvokeOption"): return null
+	var value: Variant = _cold_read("invoke:"+id)
+	return value if value is Dictionary else {}
+
+## `data` with every cold part read back: the whole compiled model exactly as
+## it was accepted (diagnostics and verification only; reads ~9 MB).
+func materialized_data() -> Dictionary:
+	var result: Dictionary = data.duplicate(true)
+	if _cold == null: return result
+	for name: String in _cold_parts:
+		var value: Variant = _cold.read(name)
+		if name.begins_with("enchantment:"): result.enchantment[name.trim_prefix("enchantment:")] = value
+		elif name == "bonus_ids": result.bonuses.ids = value
+		else: result[name] = value
+	return result
+
+## Catalog record file index as sorted packed integers (~0.4 MB) instead of a
+## Dictionary of ~27,000 ID strings (~3.9 MB); used only when every ID is a
+## canonical integer string, so has()/read() answer exactly as before.
+class CompactRecords extends RefCounted:
+	var file: FileAccess
+	var keys := PackedInt64Array()
+	var offsets := PackedInt64Array()
+	func _position(id: String) -> int:
+		if not id.is_valid_int() or str(id.to_int()) != id: return -1
+		var value: int = id.to_int()
+		var position: int = keys.bsearch(value)
+		return position if position < keys.size() and keys[position] == value else -1
+	func has(id: String) -> bool: return _position(id) >= 0
+	func read(id: String) -> Variant:
+		var position: int = _position(id)
+		if position < 0: return null
+		file.seek(offsets[position])
+		return file.get_var()
+
+static func _compact_records(records: Object) -> Object:
+	if records == null or not records.get("offsets") is Dictionary: return records
+	var compact := CompactRecords.new()
+	for id: Variant in records.offsets:
+		var text: String = str(id)
+		if not id is String or not text.is_valid_int() or str(text.to_int()) != text: return records
+		compact.keys.append(text.to_int())
+	compact.keys.sort()
+	compact.offsets.resize(compact.keys.size())
+	for id: Variant in records.offsets:
+		var position: int = compact.keys.bsearch(str(id).to_int())
+		# Two spellings can never share a canonical value; guard anyway.
+		if position >= compact.keys.size() or compact.keys[position] != str(id).to_int(): return records
+		compact.offsets[position] = int(records.offsets[id])
+	for position: int in range(1, compact.keys.size()):
+		if compact.keys[position] == compact.keys[position - 1]: return records
+	compact.file = records.file
+	return compact
 
 ## One compiled item entry with its original rows. Entries compiled from the
 ## installed original keep only a lazy marker; their item_class/item_bonuses/
@@ -957,7 +1166,7 @@ func effect_evidence(item_id: int, level: int, raw_bless_code: int) -> Array:
 		if int(row.EnchantLevel) == level and int(row.BlessCode) == raw_bless_code:
 			var bonus: Dictionary = bonus_row(str(int(row.BonusID)))
 			result.append({"row": row.duplicate(true), "bonus": bonus.duplicate(true),
-				"bonus_type": data.bonus_types.get(str(int(bonus.get("BonusTypeID", -1))), {}).duplicate(true)})
+				"bonus_type": bonus_type(str(int(bonus.get("BonusTypeID", -1)))).duplicate(true)})
 	return result
 
 func enhancement_evidence(item_id: int, scroll_id: int, level: int, target_bless: int, scroll_bless: int) -> Dictionary:
