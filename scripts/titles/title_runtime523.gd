@@ -60,7 +60,8 @@ func now() -> int:
 	return int(clock.call()) if clock.is_valid() else int(Time.get_unix_time_from_system())
 
 func day(at: int) -> int:
-	return int(floor(float(at-int(policy.get("reset_hour_utc",5))*3600)/86400.0))
+	# 20:00 UTC = 05:00 Korea time, the same daily boundary as the rest of the game.
+	return int(floor(float(at-int(policy.get("reset_hour_utc",20))*3600)/86400.0))
 
 static func integer(value: Variant, low: int, high: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and value == floor(float(value)) and value >= low and value <= high

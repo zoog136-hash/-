@@ -144,7 +144,9 @@ func _run() -> void:
 	check(runtime.buy(1001,1).ok and not nested.ok, "reentrant transaction rejected")
 	host.during_save = Callable()
 	check(runtime.buy(1002,2).ok and not runtime.buy(1002,1).ok, "bundle purchase counts attempts rather than delivered item quantity")
-	check(not runtime.quote(1003).ok, "calendar reset unknown remains locked")
+	check(runtime.quote(1003).ok and int(runtime.calendar_offset_minutes)==540 and int(runtime.period_reset_hour["81"])==5, "limited offers open with the default KST 05:00 calendar")
+	runtime.calendar_offset_minutes = null
+	check(not runtime.quote(1003).ok, "an explicit null calendar keeps limits locked")
 	runtime.calendar_offset_minutes = 0
 	runtime.period_reset_hour = {"81":0,"61":0,"71":0,"11311":0}
 	check(runtime.buy(1003).ok and not runtime.buy(1003).ok, "monthly account cap enforced")
@@ -263,7 +265,7 @@ func _run() -> void:
 	check(not runtime.quote_merchant(1001).ok,"NPC daily allowance stays closed before 05")
 	context.clock.now=timestamp("2026-11-03T05:00:00")
 	check(runtime.buy_merchant(1001).ok,"NPC daily allowance reopens at configured boundary")
-	check(runtime.calendar_offset_minutes==null,"NPC reset calendar does not alter ordinary market time")
+	check(int(runtime.calendar_offset_minutes)==540,"NPC reset calendar does not alter ordinary market time")
 	context.clock.now=timestamp("2026-11-03T04:59:59")
 	check(not runtime.buy_merchant(1001).ok,"clock rollback cannot replay an old NPC allowance")
 	context.clock.now=timestamp("2026-11-03T05:00:01")

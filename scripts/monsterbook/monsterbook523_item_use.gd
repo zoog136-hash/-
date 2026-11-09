@@ -187,7 +187,7 @@ func _use(name: String, choice: int = 0) -> Dictionary:
 	var record: Dictionary = proposed.get("source_items",{}).get(name,{})
 	if not runtime.items.valid_record(name,record) or int(world.inventory.get(name,0)) <= 0: return {"ok":false,"message":"보유 아이템이 없습니다"}
 	var clock: String = runtime.local.source_clock()
-	if record.has("source_delete_clock") and clock >= str(record.source_delete_clock): return {"ok":false,"message":"원본 삭제 시각이 지났습니다"}
+	if record.has("source_delete_clock") and clock >= preload("res://scripts/monsterbook/monsterbook523_items.gd").delete_clock(record): return {"ok":false,"message":"원본 삭제 시각이 지났습니다"}
 	var action := spec(record)
 	if action.has("error"): return {"ok":false,"message":str(action.error)}
 	var inventory: Dictionary = world.inventory.duplicate(true)

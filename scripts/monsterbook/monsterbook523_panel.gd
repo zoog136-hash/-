@@ -239,7 +239,8 @@ func _owned_items(live: RefCounted) -> void:
 		var expired: int = int(saved.get("expired_items",{}).get(name,{}).get("quantity",0))
 		if quantity <= 0 and expired <= 0: continue
 		_text("보상 보유: %s × %d" % [name,quantity],UI.GOLD)
-		if record.has("source_delete_clock"): _text("원본 아이템 삭제: " + str(record.source_delete_clock),UI.MUTED)
+		if record.has("local_delete_clock"): _text("아이템 삭제: " + str(record.local_delete_clock) + " (로컬 순환)",UI.MUTED)
+		elif record.has("source_delete_clock"): _text("원본 아이템 삭제: " + str(record.source_delete_clock),UI.MUTED)
 		if expired > 0: _text("삭제 처리된 수량 %d · 수령·사용·소유 이력 보존" % expired,UI.MUTED)
 		if quantity <= 0: continue
 		var action: Dictionary = live.item_use.spec(record)

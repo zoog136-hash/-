@@ -27,6 +27,8 @@ func run() -> void:
 	check(QA.enter_game(world),"actual Main source-map entry")
 	world.field_population.set_process(false);world.player.set_physics_process(false);world._clear_monsters();world._clear_drops()
 	var document: Dictionary = D.data()
+	# Representative weapons are chosen among items open by source dates.
+	D.rotate_ended_dates = false
 	var section: String = OS.get_environment("TWILIGHT_ITEM_EFFECT_SECTION")
 	var enchant_cases: int = 0
 	var passive_definitions: int = 0

@@ -141,6 +141,9 @@ func _date_row(definition: RefCounted, table: String, id: int) -> Dictionary:
 		_date_indexes[table]=index
 	return (_date_indexes[table].get(id,{}) as Dictionary).duplicate(true)
 
+## false = source dates only (ended event regions stay closed).
+const ROTATE_ENDED_EVENT_LANDS: bool = true
+
 func _date_window(definition: RefCounted, group: Dictionary, actor_state: Dictionary) -> Dictionary:
 	var result: Dictionary={"status":"context_missing","native_calendar_boundary_verified":false,"boundary":"start_inclusive_end_exclusive","group":group.duplicate(true)}
 	if not OWNER._integer(group.get("StartDateTimeID")) or not OWNER._integer(group.get("EndDateTimeID")):
@@ -170,6 +173,14 @@ func _date_window(definition: RefCounted, group: Dictionary, actor_state: Dictio
 	if not WINDOWS.valid_window(window):result.status="source_window_invalid";return result
 	result["window"]=window
 	result.status="open" if actor_state.now_unix>=window.start_unix and actor_state.now_unix<window.end_unix else "closed"
+	# TWILIGHT is offline: an event region whose source window has ended repeats
+	# the same window back to back (local rotation), so it is open again.
+	var length: int=int(window.end_unix)-int(window.start_unix)
+	if ROTATE_ENDED_EVENT_LANDS and length>0 and int(actor_state.now_unix)>=int(window.end_unix):
+		var turn: int=floori(float(int(actor_state.now_unix)-int(window.start_unix))/float(length))
+		result["local_rotation"]=turn
+		result["rotated_window"]={"start_unix":int(window.start_unix)+turn*length,"end_unix":int(window.start_unix)+(turn+1)*length}
+		result.status="open"
 	return result
 
 static func _open_policy(actor_state: Dictionary) -> String:

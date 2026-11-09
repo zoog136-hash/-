@@ -117,7 +117,7 @@ func build(message: String="") -> void:
 	details=VBoxContainer.new(); column.add_child(details); details.hide()
 	var notes: Array[String]=[
 		"원본: 순차 승급 ·85레벨 ·선택 목표24시간 ·일반10회/일 ·기부 횟수 제한 없음. 가루의 창고 보관·거래 불가와 최대 스택을 유지합니다.",
-		"TWILIGHT 정책: 캐릭터별 저장 ·모든 후보 중1개 선택 ·직접 막타만 집계 ·UTC%02d시 초기화. 원본 기부 Probability의 자체 분모%d, 일반 심사 자체 성공률%.1f%%. 실행 정책은 원본 확정값이 아닙니다."%[int(runtime.policy.reset_hour_utc),int(runtime.policy.donation_denominator),float(runtime.policy.quest_success_percent)],
+		"TWILIGHT 정책: 캐릭터별 저장 ·모든 후보 중1개 선택 ·직접 막타만 집계 ·한국 %02d시 초기화. 원본 기부 Probability의 자체 분모%d, 일반 심사 자체 성공률%.1f%%. 실행 정책은 원본 확정값이 아닙니다."%[(int(runtime.policy.reset_hour_utc)+9)%24,int(runtime.policy.donation_denominator),float(runtime.policy.quest_success_percent)],
 		"전투 자체 정책: PvP 혜택의 NPC 적용 %s ·무기 막기 물리 피해 잔여%.0f%% ·결정타 기본%.2f배+원본 추가 배율. 원본 무기 성분·결정타 기본 공식은 미확정입니다."%[str(runtime.policy.pvp_bonus_in_pve),float(runtime.policy.weapon_block_remaining_damage_scale)*100.0,float(runtime.policy.final_blow_base_multiplier)],
 		"가루 원본 드롭%d행: 정확한 NPC·일반 축복·퀘스트0만 연결 ·자체%.1f%%/1개 ·바닥 습득을 거칩니다."%[runtime.source.powder_drop_rows.size(),float(runtime.policy.powder_drop_percent)],
 		"원본 일정·서버 제한도 검사합니다. 오프라인 자체 신원 %s/%d, 일정 자체 시간대 UTC%+.1f시간 ·마지막 분 포함."%[runtime.policy.offline_source_service_region,int(runtime.policy.offline_source_world_no),float(runtime.policy.source_calendar_utc_offset_seconds)/3600.0],
