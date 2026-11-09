@@ -509,6 +509,38 @@ def omit_missing_layers(actor, members, proof, identities):
     return actor, kept, proof, omitted
 
 
+FRAME_POLICY = "client_clamp_frame_null_missing_direction_or_empty_body"
+
+
+def apply_client_frame_rules(actor, raw, parsed):
+    """Follow the client where the strict SP2 contract would reject a frame.
+
+    LineageM 1.10.22.0 auxiliary-layer analysis: every asset clamps the picture
+    index to its own SP2 frame count; a missing direction yields null (no
+    retry/mirror); a null or empty main frame draws nothing while the other
+    layers continue. Clamped layers keep `clamped_from_frame_index`; null layers
+    are kept in place with `client_null` so layer positions stay stable.
+    """
+    actor = copy.deepcopy(actor)
+    for track in actor["roles"].values():
+        for frames in track["directions"]:
+            for frame in frames:
+                for layer in frame["layers"]:
+                    member = layer["member"]
+                    if member not in parsed:
+                        parsed[member] = identity.parse_sp2(raw[member]["body"])
+                    group = parsed[member]["groups"].get(layer["group_bit"])
+                    if group is None or not group["frames"]:
+                        layer["client_null"] = "direction_absent"
+                        continue
+                    if layer["frame_index"] >= len(group["frames"]):
+                        layer["clamped_from_frame_index"] = layer["frame_index"]
+                        layer["frame_index"] = len(group["frames"]) - 1
+                    if layer["kind"] == "body" and group["frames"][layer["frame_index"]]["samples"] <= 0:
+                        layer["client_null"] = "empty_body_frame"
+    return actor
+
+
 def plan_action(request, declarations, metadata, prepared=None, allow_host_timing=False, omit_missing=False):
     dummy = metadata.get("dummy_declarations", {})
     require(source_dummy_alias_path(request["actor_id"], declarations, dummy) is None,
@@ -821,6 +853,7 @@ def build(args):
     allow_host_timing = getattr(args, "allow_host_timing", False)
     client_default_fps = getattr(args, "client_section_default_fps", False)
     omit_missing = getattr(args, "client_omit_missing_layers", False)
+    client_frames = getattr(args, "client_frame_rules", False)
     require(not (allow_host_timing and client_default_fps), "choose host timing or the client section default, not both")
     timing_policy = "client_section_default_fps_24" if client_default_fps else "source_explicit_only"
     if client_default_fps or metadata["proof"].get("generator"):
@@ -830,6 +863,8 @@ def build(args):
     contract = consumer_contract(allow_host_timing, client_default_fps)
     if omit_missing:
         contract["missing_layer_policy"] = MISSING_LAYER_POLICY
+    if client_frames:
+        contract["frame_policy"] = FRAME_POLICY
     original, source_problem, source_inputs = None, None, {}
     if not args.plan_only:
         try:
@@ -870,7 +905,10 @@ def build(args):
                 result["status"] = "blocked_original_sp2_unavailable_or_unverified"
                 raw = verified_raw(args.original_root, members, metadata["identities"])
                 result["status"] = "blocked_actual_sp2_frame_contract"
-                identity.validate_actor(actor, raw, parsed)
+                if client_frames:
+                    actor = apply_client_frame_rules(actor, raw, parsed)
+                else:
+                    identity.validate_actor(actor, raw, parsed)
                 compact = identity.compact_roles(actor, proof)
                 record = {"schema": 1, "source_snapshot": "patch523", "consumer_contract": contract,
                           "actor": actor, "compact_roles": compact, "source_proof": proof,
@@ -986,6 +1024,9 @@ def main(argv=None):
     parser.add_argument("--dependency-index", type=Path)
     parser.add_argument("--allow-host-timing", action="store_true",
                         help="Keep absent source FPS null and permit the existing explicitly labelled host timing policy.")
+    parser.add_argument("--client-frame-rules", action="store_true",
+                        help="Follow the client's frame handling: clamp each layer's picture to its own SP2 frame count, "
+                             "and keep a missing direction or empty body frame as a non-drawn (client_null) layer.")
     parser.add_argument("--client-omit-missing-layers", action="store_true",
                         help="Follow the client: drop shadow/clothes layers whose SP2 files the client does not ship "
                              "(the body is never dropped); recorded per action and in the bank contract.")

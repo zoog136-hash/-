@@ -78,6 +78,24 @@ members (88.9%). Remaining: 4,546 members no declared action uses, 2,717 that fa
 the existing SP2 frame contract, 1,009 behind the user's literal-dummy exclusion
 or other source-contract failures.
 
+### Client frame rules and static pictures
+
+`--client-frame-rules` (bank builder, opt-in, used by the one-command install)
+follows the client where the strict SP2 frame contract would reject an action:
+each layer's picture is clamped to its own SP2 frame count
+(`clamped_from_frame_index` kept), and a missing direction or an empty body frame
+stays in place as a non-drawn `client_null` layer while the other layers continue.
+The bank contract records `frame_policy`; the runtime accepts these layers only
+under that policy, and the preview hides `client_null` layers.
+
+`add_static_pictures.py` adds the client's no-action static branch to a built
+bank: a sprite whose resolved declaration has no action is drawn as
+`Sprite/<id after one header remap>-0.sp2`, direction 0, picture 0, plus its 101
+shadow; clothes are not collected. `ReferenceSp2Bank.load_static()` returns those
+layers, and the ground item view (`ItemClass.SpriteID`) now draws them.
+On the complete 523 client this adds 7,859 static pictures (of 14,718 no-action
+declarations: 5,469 have no `-0` file in the client, 1,390 have an empty frame 0).
+
 ### One-command private install (PC)
 
 `build_client523_private_install.py` runs the source adapter, the metadata generator, the bank builder and `configure_current523_source_bank.py` into one new private directory and prints the Main loader config path:

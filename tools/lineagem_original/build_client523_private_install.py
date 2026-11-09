@@ -5,7 +5,8 @@ Runs, in order and into one new private directory outside the repository:
 
 1. client523_source.py      -> <out>/source   (verified by the 523 files_info SHA-1)
 2. client523_bank_metadata  -> <out>/meta     (repository SPR reader, client 24fps default)
-3. build_reference_sp2_bank -> <out>/bank     (--link-raw; client rules for 24fps and absent layers)
+3. build_reference_sp2_bank -> <out>/bank     (--link-raw; client 24fps, absent-layer and frame rules)
+   add_static_pictures        -> <out>/bank     (client no-action static branch)
 4. configure_current523_source_bank -> <out>/current523_source_bank.json
 
 The runtime still pins the original tables ZIP (d5192c3c...). Pass that ZIP with
@@ -92,8 +93,10 @@ def main(argv=None):
     bank = out / "bank"
     result = run("build_reference_sp2_bank.py", "--metadata", meta, "--requests", meta / "seed-requests.jsonl",
                  "--output", bank, "--original-root", source / "sp2", "--spr-root", source / "spr",
-                 "--client-section-default-fps", "--client-omit-missing-layers", "--link-raw")
+                 "--client-section-default-fps", "--client-omit-missing-layers", "--client-frame-rules", "--link-raw")
     summary = json.loads(result.stdout)
+    run("add_static_pictures.py", "--bank", bank, "--metadata", meta, "--spr-root", source / "spr",
+        "--original-root", source / "sp2", "--link-raw")
     manifest = bank / "manifest.json"
     config = out / "current523_source_bank.json"
     run("configure_current523_source_bank.py", "--tables-zip", tables_zip, "--manifest", manifest,
