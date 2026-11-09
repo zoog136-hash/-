@@ -177,5 +177,6 @@ func _init() -> void:
 	t7.clear(); p7=null
 	CACHE.reset()
 	print("PROBE_RESULT passes=%d failures=%d"%[passes,failures.size()])
+	print("ORIGINAL_UI_PAGE_CACHE_RESULT "+JSON.stringify({"checks":passes,"failures":failures}))
 	for f: String in failures: print("  failed: ",f)
 	quit(0 if failures.is_empty() else 1)

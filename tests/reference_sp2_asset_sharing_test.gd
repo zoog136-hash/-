@@ -250,5 +250,5 @@ func run() -> void:
 	preview_b.free()
 	check(int(ASSETS.stats().texture.stale_live_count) == 0, "stale entries drop when their last lease is released")
 	var summary: Dictionary = ASSETS.stats()
-	print("REFERENCE_SP2_ASSET_SHARING_PROBE " + JSON.stringify({"checks":checks,"failures":failures,"stats":summary}))
+	print("REFERENCE_SP2_ASSET_SHARING_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"stats":summary}))
 	quit(0 if failures.is_empty() else 1)
