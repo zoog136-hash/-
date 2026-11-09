@@ -7,9 +7,10 @@ optionally the original UI pack). This tool puts those finished private
 directories, unchanged, into stored ZIP parts that the APK installs from the
 phone's storage (scripts/boot/source523_pack.gd):
 
-* every part holds `source523_part.json` (pack ID, part number, members with
-  their byte sizes); part 1 also holds `source523_pack.json`, the descriptor
-  with the relative roots and the SHA-256 pins of every pack manifest;
+* every entry sits under `source523/`; every part starts with
+  `source523_part.json` (pack ID, part number, members with their byte sizes);
+  part 1 also holds `source523_pack.json`, the descriptor with the relative
+  roots and the SHA-256 pins of every pack manifest;
 * parts stay below 4 GiB and 65,535 entries, so no ZIP64 reader is needed;
 * nothing is recompressed, renamed or regenerated; each runtime reader still
   checks its own pins when it loads.
@@ -33,6 +34,10 @@ TABLES_SHA256 = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f483
 TABLES_BYTES = 25031173
 DESCRIPTOR = "source523_pack.json"
 PART_INDEX = "source523_part.json"
+# Every entry sits under this folder: the APK mounts a part as a resource pack
+# and reads res://source523/<member>. The part index is the first entry and the
+# descriptor the second, so a ZIP reader finds them without scanning.
+PREFIX = "source523/"
 DATE = (2026, 1, 1, 0, 0, 0)
 MAX_PART_BYTES = 3_500_000_000
 MAX_PART_ENTRIES = 60_000
@@ -139,13 +144,13 @@ def stored(name: str) -> zipfile.ZipInfo:
 
 def write_part(path: Path, index: dict, members, descriptor_bytes=None):
     with zipfile.ZipFile(path, "x", zipfile.ZIP_STORED, allowZip64=False) as archive:
-        archive.writestr(stored(PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True,
+        archive.writestr(stored(PREFIX + PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True,
                                                         separators=(",", ":")).encode())
         if descriptor_bytes is not None:
-            archive.writestr(stored(DESCRIPTOR), descriptor_bytes)
+            archive.writestr(stored(PREFIX + DESCRIPTOR), descriptor_bytes)
         for name, source, size in members:
             require(source.stat().st_size == size, f"changed while packing: {source}")
-            with source.open("rb") as handle, archive.open(stored(name), "w") as target:
+            with source.open("rb") as handle, archive.open(stored(PREFIX + name), "w") as target:
                 for block in iter(lambda: handle.read(1 << 20), b""):
                     target.write(block)
 

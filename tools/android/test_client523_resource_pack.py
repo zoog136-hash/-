@@ -54,19 +54,20 @@ class ResourcePackTest(unittest.TestCase):
         seen = {}
         for number, path in enumerate(parts, 1):
             with zipfile.ZipFile(path) as archive:
-                index = json.loads(archive.read(pack.PART_INDEX))
+                index = json.loads(archive.read(pack.PREFIX + pack.PART_INDEX))
+                self.assertEqual(archive.namelist()[0], pack.PREFIX + pack.PART_INDEX)
                 self.assertEqual((index["part"], index["parts"], index["pack_id"]), (number, len(parts), report["pack_id"]))
-                self.assertEqual(pack.DESCRIPTOR in archive.namelist(), number == 1)
+                self.assertEqual(pack.PREFIX + pack.DESCRIPTOR in archive.namelist(), number == 1)
                 self.assertTrue(all(i.compress_type == zipfile.ZIP_STORED for i in archive.infolist()))
                 self.assertLessEqual(len(archive.namelist()), 6)
                 for name, size in index["members"]:
-                    seen[name] = archive.read(name)
+                    seen[name] = archive.read(pack.PREFIX + name)
                     self.assertEqual(len(seen[name]), size)
         self.assertEqual(seen["tables/source.zip"], b"tables")
         self.assertEqual(seen["maps/raw/2.bin"], (self.roots["maps"] / "raw/2.bin").read_bytes())
         self.assertEqual(len(seen), report["members"])
         with zipfile.ZipFile(parts[0]) as archive:
-            descriptor = json.loads(archive.read(pack.DESCRIPTOR))
+            descriptor = json.loads(archive.read(pack.PREFIX + pack.DESCRIPTOR))
         self.assertEqual(descriptor["schema"], pack.SCHEMA)
         self.assertEqual(descriptor["bank"], {"root": "bank", "manifest": "bank/manifest.json",
                                               "manifest_sha256": hashlib.sha256((self.roots["bank"] / "manifest.json").read_bytes()).hexdigest()})

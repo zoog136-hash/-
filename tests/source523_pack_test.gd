@@ -29,11 +29,11 @@ func remove_tree(path: String) -> void:
 func write_part(path: String, index: Dictionary, files: Dictionary) -> void:
 	var packer := ZIPPacker.new()
 	packer.open(path)
-	packer.start_file("source523_part.json")
+	packer.start_file("source523/source523_part.json")
 	packer.write_file(JSON.stringify(index).to_utf8_buffer())
 	packer.close_file()
 	for name: String in files:
-		packer.start_file(name)
+		packer.start_file("source523/" + name)
 		packer.write_file(files[name])
 		packer.close_file()
 	packer.close()
@@ -47,7 +47,7 @@ func members(files: Dictionary) -> Array:
 func install(node: Node, paths: Array) -> void:
 	node._queue_parts(PackedStringArray(paths))
 	for frame: int in 600:
-		if not node.is_processing() and node._zip == null and node._verify.is_empty(): return
+		if not node.is_processing() and not node._mounted and node._verify.is_empty(): return
 		await process_frame
 
 func run() -> void:

@@ -18,6 +18,13 @@ const SCHEMA := "twilight-client523-resource-pack-v1"
 const PART_SCHEMA := "twilight-client523-resource-pack-part-v1"
 const PART_INDEX := "source523_part.json"
 const DESCRIPTOR_MEMBER := "source523_pack.json"
+## Inside a part every entry sits under this folder; the part index is the
+## first entry and the descriptor (part 1) the second, so ZIPReader finds them
+## at once. Members are read after mounting the part as a resource pack (one
+## indexing pass): a ZIPReader lookup per member is a linear scan, far too slow
+## for 60,000 entries.
+const PREFIX := "source523/"
+const MOUNT := "res://source523/"
 const TABLES_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const TABLES_BYTES: int = 25031173
 ## Older fixed-path table readers (same list as the Termux bootstrap).
@@ -42,7 +49,8 @@ var _choose: Button
 var _later: Button
 var _picker: FileDialog
 var _queue: Array[String] = []
-var _zip: ZIPReader
+var _mounted: bool = false
+var _descriptor_bytes := PackedByteArray()
 var _index: Dictionary = {}
 var _cursor: int = 0
 var _verify: Array = []
@@ -228,27 +236,34 @@ func _queue_parts(paths: PackedStringArray) -> void:
 	_next_part()
 
 func _fail_part(message: String) -> void:
-	if _zip != null: _zip.close()
-	_zip = null
+	_release_part()
 	_queue.clear()
 	set_process(false)
 	_status.text = message + "\n\n" + _waiting_text()
 	_choose.disabled = false
 	_later.disabled = false
 
+## A mounted pack stays mapped until restart; later parts replace its names.
+func _release_part() -> void:
+	_mounted = false
+	set_process(false)
+
 func _next_part() -> void:
 	if _queue.is_empty():
 		_finish_or_wait()
 		return
 	var path: String = _queue.pop_front()
-	_zip = ZIPReader.new()
-	if _zip.open(path) != OK:
+	var reader := ZIPReader.new()
+	if reader.open(path) != OK:
 		_fail_part("ZIP을 열 수 없습니다: " + path.get_file())
 		return
-	if not _zip.file_exists(PART_INDEX):
+	if not reader.file_exists(PREFIX + PART_INDEX):
+		reader.close()
 		_fail_part("TWILIGHT 리소스 팩 조각이 아닙니다: " + path.get_file())
 		return
-	var index: Variant = JSON.parse_string(_zip.read_file(PART_INDEX).get_string_from_utf8())
+	var index: Variant = JSON.parse_string(reader.read_file(PREFIX + PART_INDEX).get_string_from_utf8())
+	_descriptor_bytes = reader.read_file(PREFIX + DESCRIPTOR_MEMBER) if reader.file_exists(PREFIX + DESCRIPTOR_MEMBER) else PackedByteArray()
+	reader.close()
 	if not index is Dictionary or index.get("schema") != PART_SCHEMA or not _sha(index.get("pack_id")) or not index.get("members") is Array \
 			or not (index.get("part") is float or index.get("part") is int) or not (index.get("parts") is float or index.get("parts") is int) \
 			or int(index.part) < 1 or int(index.part) > int(index.parts):
@@ -261,9 +276,14 @@ func _next_part() -> void:
 		state = {"pack_id":index.pack_id,"parts":int(index.parts),"done":[]}
 		_save_state(state)
 	if state.done.has(int(index.part)):
-		_zip.close()
+		_release_part()
 		_next_part()
 		return
+	# Names are unique across one pack's parts; the folder exists only in parts.
+	if not ProjectSettings.load_resource_pack(path, true):
+		_fail_part("조각을 읽을 수 없습니다: " + path.get_file())
+		return
+	_mounted = true
 	_index = index
 	_cursor = 0
 	set_process(true)
@@ -272,7 +292,7 @@ func _process(_delta: float) -> void:
 	if not _verify.is_empty():
 		_verify_step()
 		return
-	if _zip == null: return
+	if not _mounted: return
 	var started: int = Time.get_ticks_msec()
 	var members: Array = _index.members
 	while _cursor < members.size() and Time.get_ticks_msec() - started < FRAME_BUDGET_MSEC:
@@ -280,7 +300,7 @@ func _process(_delta: float) -> void:
 		if not entry is Array or entry.size() != 2 or not _safe_relative(entry[0]):
 			_fail_part("리소스 팩 조각의 파일 목록이 잘못되었습니다.")
 			return
-		var bytes: PackedByteArray = _zip.read_file(entry[0])
+		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(MOUNT + str(entry[0]))
 		if bytes.size() != int(entry[1]):
 			_fail_part("조각의 파일이 손상되었습니다: " + str(entry[0]))
 			return
@@ -296,18 +316,16 @@ func _process(_delta: float) -> void:
 	_status.text = "%d / %d 조각 설치 중: %d / %d 파일" % [int(_index.part), int(_index.parts), _cursor, members.size()]
 	if _cursor < members.size(): return
 	if int(_index.part) == 1:
-		if not _zip.file_exists(DESCRIPTOR_MEMBER):
+		if _descriptor_bytes.is_empty():
 			_fail_part("1번 조각에 팩 설명 파일이 없습니다.")
 			return
 		var pending := FileAccess.open(root.path_join("source523_pack.pending.json"), FileAccess.WRITE)
 		if pending == null:
 			_fail_part("앱 저장소에 쓸 수 없습니다.")
 			return
-		pending.store_buffer(_zip.read_file(DESCRIPTOR_MEMBER))
+		pending.store_buffer(_descriptor_bytes)
 		pending.close()
-	_zip.close()
-	_zip = null
-	set_process(false)
+	_release_part()
 	var state: Dictionary = _state()
 	state.done.append(int(_index.part))
 	_save_state(state)
