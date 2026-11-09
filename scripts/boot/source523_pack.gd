@@ -233,8 +233,11 @@ func _show_installer() -> void:
 	_choose = STYLE.button("리소스 팩(.zip) 선택")
 	_choose.pressed.connect(func() -> void: _picker.popup_centered_ratio(0.8))
 	box.add_child(_choose)
-	_later = STYLE.button("나중에 (523 맵 이동 없이 시작)" if addon_needed and not needed else "나중에 (원본 그림 없이 시작)", false, 52)
+	_later = STYLE.button("나중에 (523 맵 이동 없이 시작)", false, 52)
 	_later.pressed.connect(_close_installer)
+	# The game has no older pictures to start with: only a missing add-on can
+	# be postponed, never the pack itself.
+	_later.visible = addon_needed and not needed
 	box.add_child(_later)
 	_picker = FileDialog.new()
 	_picker.title = "TWILIGHT 원본 리소스 팩"
@@ -274,7 +277,7 @@ func _waiting_text() -> String:
 	var state: Dictionary = _state()
 	if int(state.get("parts", 0)) > 0:
 		return "원본 리소스 팩 설치 중: %d / %d 조각 완료.\n남은 조각(twilight523-resources-*.zip)을 선택하세요." % [state.get("done", []).size(), int(state.parts)]
-	return "원본 리소스 팩이 없습니다.\nPC 없이 만든 twilight523-resources-*.zip 조각을 모두 선택하세요.\n(한 번에 여러 개, 또는 하나씩 선택할 수 있습니다)"
+	return "게임을 시작하려면 원본 리소스 팩이 필요합니다.\ntwilight523-resources-*.zip 조각을 모두 선택하세요.\n(한 번에 여러 개, 또는 하나씩 선택할 수 있습니다)"
 
 func _queue_parts(paths: PackedStringArray) -> void:
 	for path: String in paths: _queue.append(path)

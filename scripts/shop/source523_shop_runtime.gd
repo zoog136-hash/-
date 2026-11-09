@@ -7,6 +7,7 @@ const Economy = preload("res://scripts/shop/source523_shop_economy.gd")
 const NpcDefinitions = preload("res://scripts/shop/source523_npc_definitions.gd")
 const NpcConsumables = preload("res://scripts/shop/source523_npc_consumables.gd")
 const InventoryTickets = preload("res://scripts/shop/source523_inventory_tickets.gd")
+const SERVER_PROFILE = preload("res://scripts/loot/current523_server_profile.gd")
 const SkillBooks = preload("res://scripts/shop/source523_skill_books.gd")
 const NpcResets = preload("res://scripts/shop/source523_npc_resets.gd")
 const Exact=preload("res://scripts/equipment523/native_catalog.gd")
@@ -326,14 +327,18 @@ func _window(start: Dictionary, end: Dictionary) -> Dictionary:
 	if now < first + 172800 or now >= last - 172800: return fail("원본 시간대 미확정 · 기간 경계 구매 대기")
 	return {"ok":true}
 
+## An explicit policy server context wins; otherwise the shared item server
+## profile (declared card-collection context, else offline Korean world 1).
+func effective_server_context() -> Dictionary:
+	if server_context.has("world_no") and server_context.has("region"): return server_context
+	var current: Dictionary = SERVER_PROFILE.profile(world)
+	return {"region":str(current.ServiceRegionCode),"world_no":int(current.WorldNo),"origin":"twilight_offline_server_profile"}
+
 func _server(sets: Array) -> Dictionary:
 	if sets.is_empty(): return {"ok":true}
-	if not server_context.has("world_no") or not server_context.has("region"): return fail("원본 서버 조건을 확인할 수 없습니다")
+	var context: Dictionary = effective_server_context()
 	for set: Variant in sets:
-		var matched: bool = false
-		for row: Dictionary in catalog._related("ServerLimit", int(set)):
-			if int(row.WorldNo) == int(server_context.world_no) and str(row.ServiceRegionCode) == str(server_context.region): matched = true
-		if not matched: return fail("서버 조건 미충족 또는 미해석 서버세트")
+		if not SERVER_PROFILE.rows_allow(catalog._related("ServerLimit", int(set)), str(context.region), int(context.world_no)): return fail("서버 조건 미충족 또는 미해석 서버세트")
 	return {"ok":true}
 
 func _period(unit: int, at: int, reset: int, offset: Variant = null) -> String:
