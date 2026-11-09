@@ -5,6 +5,8 @@ extends RefCounted
 ## the existing game owners: cards -> card collection, known items -> inventory
 ## (physical instances for equipment), and nested boxes -> openable boxes.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const TAG: String = "twilight-cash-package"
 const ITEM_TAG: String = "twilight-cash-package-item"
@@ -15,6 +17,8 @@ const ITEM_REWARD_TYPE: int = 2
 const MAX_DEPTH: int = 8
 const GOTCHA_UNIT: int = 35
 const BUFF_CARD_UNIT: int = 33
+const SPELL_DECK: int = 41
+static var _skill_books: Dictionary = {}
 const LIMIT: int = 9007199254740991
 static var _definitions: Dictionary = {}
 static var _names: Dictionary = {}
@@ -106,8 +110,16 @@ static func _gotcha(item_id: int, purchase_id: int) -> Dictionary:
 		for row: Dictionary in SOURCE.related("GotChaEntityView", "GotChaClassID", int(product.ClassID)):
 			if int(row.get("UnitID", 0)) != BUFF_CARD_UNIT or int(row.get("Probability", 0)) <= 0: return {}
 			var card: Dictionary = SOURCE.row("BuffCard", int(row.ClassID))
-			if not CARD_CATEGORIES.has(int(card.get("BuffCardDeckID", 0))): return {}
-			entries.append({"entity_id":int(row.ID), "card_id":int(row.ClassID), "probability":int(row.Probability), "amount":1, "item_class_id":0})
+			var deck: int = int(card.get("BuffCardDeckID", 0))
+			if deck == SPELL_DECK:
+				# Original skill card: delivered as its original skill book item,
+				# learned through the existing native skill-book path.
+				var book: int = skill_book_for(int(row.ClassID))
+				if book <= 0: return {}
+				entries.append({"entity_id":int(row.ID), "spell_card_id":int(row.ClassID), "probability":int(row.Probability), "amount":1, "item_class_id":book})
+			elif CARD_CATEGORIES.has(deck):
+				entries.append({"entity_id":int(row.ID), "card_id":int(row.ClassID), "probability":int(row.Probability), "amount":1, "item_class_id":0})
+			else: return {}
 			total += int(row.Probability)
 		if entries.is_empty() or total <= 0: return {}
 		draws.append({"gotcha_class_id":int(product.ClassID), "count":int(product.Amount), "total":total, "entries":entries})
@@ -115,6 +127,33 @@ static func _gotcha(item_id: int, purchase_id: int) -> Dictionary:
 	var flat: Array = []
 	for draw: Dictionary in draws: flat.append_array(draw.entries)
 	return {"kind":"gotcha", "item_class_id":item_id, "market_purchase_id":purchase_id, "draws":draws, "entries":flat}
+
+## The original skill book item carrying one Spell BuffCard. Prefers the plain
+## account-bound "(각인)" variant over event/clan-merchant/unused copies.
+static func skill_book_for(card_id: int) -> int:
+	if _skill_books.has(card_id): return int(_skill_books[card_id])
+	var type_id: int = 0
+	for row: Dictionary in SOURCE.rows("BonusType"):
+		if row.get("Name") == "BuffCardID": type_id = int(row.ID)
+	var best: int = 0
+	var best_rank: int = 1 << 30
+	if type_id > 0:
+		for bonus: Dictionary in SOURCE.related("Bonus", "BonusTypeID", type_id):
+			if not integer(bonus.get("Value")) or int(bonus.Value) != card_id: continue
+			for link: Dictionary in SOURCE.related("ItemBonus", "BonusID", int(bonus.ID)):
+				var id: int = int(link.ItemClassID)
+				var item: Dictionary = SOURCE.row("ItemClass", id)
+				if item.is_empty() or item.get("TestItem", false): continue
+				var raw: String = str(item.get("Name", ""))
+				var rank: int = 0
+				for tag: String in ["이벤트", "혈맹상인", "미사용", "테스트", "삭제", "판매", "현상범"]:
+					if raw.contains(tag): rank += 10
+				if not raw.contains("(각인)"): rank += 1
+				if rank < best_rank or (rank == best_rank and id < best):
+					best = id
+					best_rank = rank
+	_skill_books[card_id] = best
+	return best
 
 static func roll_gotcha(spec: Dictionary, random: RandomNumberGenerator) -> Array:
 	var rewards: Array = []
@@ -212,7 +251,16 @@ static func box_record(world, item_id: int) -> Dictionary:
 		"sourceId":"cash523:%d" % item_id, "cash_package":true, "desc":_summary(item_id)})
 
 ## Where one original reward item goes in TWILIGHT.
-static func resolve(world, item_id: int) -> Dictionary:
+static func native_record(world, item_id: int) -> Dictionary:
+	var definition: Dictionary = DROPS.definition_id(str(item_id))
+	var base: Dictionary = definition.get("native_record", {})
+	if base.is_empty() or definition.get("excluded") == true: return {}
+	var record: Dictionary = DROPS.variant_item(base, 1)
+	if record.is_empty() or DROPS.equipment(record) or NATIVE_STACK.supply_profile(record).is_empty(): return {}
+	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
+	return record
+
+static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionary:
 	if is_package(item_id): return {"kind":"box", "name":box_record(world, item_id).name, "record":world._find_catalog_item_record(_box_name(world, item_id))}
 	var card: Dictionary = card_reference(item_id)
 	if not card.is_empty():
@@ -222,16 +270,21 @@ static func resolve(world, item_id: int) -> Dictionary:
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = {}
 	for row: Dictionary in world.catalog_db.get("아이템", []):
-		if row.get("source") in [TAG, ITEM_TAG] or bool(row.get("source_m_native_item", false)): continue
+		if row.get("source") in [TAG, ITEM_TAG] or bool(row.get("source_m_native_item", false)) or str(row.get("name", "")).contains(" · 원본#"): continue
 		var sid: String = str(row.get("sourceId", ""))
 		if int(row.get("source_item_class_id", -1)) == item_id or int(row.get("source523_shop_item_id", -1)) == item_id or (row.get("source") == "inven" and sid == str(item_id)):
 			exact = row
 			break
 	if exact.is_empty():
 		var named: Dictionary = world._find_catalog_item_record(label(item_id))
-		if not named.is_empty() and not named.get("source") in [TAG, ITEM_TAG] and not bool(named.get("source_m_native_item", false)): exact = named
+		if not named.is_empty() and not named.get("source") in [TAG, ITEM_TAG] and not bool(named.get("source_m_native_item", false)) and not str(named.get("name", "")).contains(" · 원본#"): exact = named
 	if not exact.is_empty():
 		return {"kind":"item", "name":str(exact.name), "record":exact}
+	# Original item with a supported native physical stack (e.g. skill books):
+	# delivered as a receipted native instance so its existing use path works.
+	if allow_native and mastery_spec(item_id).is_empty():
+		var native: Dictionary = native_record(world, item_id)
+		if not native.is_empty(): return {"kind":"native", "name":str(native.name), "record":native}
 	# Original item without a TWILIGHT owner yet: kept as a plain inventory item.
 	var name: String = _box_name(world, item_id)
 	var usable: bool = not mastery_spec(item_id).is_empty()
@@ -266,7 +319,7 @@ static func install(world, catalog) -> Dictionary:
 			if int(product.get("UnitID", 0)) != 4: continue
 			var item_id: int = int(product.ClassID)
 			_walk(world, item_id, seen, 0)
-			var target: Dictionary = resolve(world, item_id)
+			var target: Dictionary = resolve(world, item_id, false)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
 	world._index_item_weights()
 	return bindings
@@ -417,6 +470,17 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 					break
 				card_results.append_array(outcome.get("results", []))
 			received.append("%s (%s)" % [str(target.record.name), target.category])
+		elif target.kind == "native":
+			var native_name: String = str(target.name)
+			if int(inventory.get(native_name, 0)) > LIMIT - amount:
+				failure = "아이템 보유 범위 초과"
+			else:
+				var staged: Dictionary = NATIVE_STACK.stage_grant(target.record, amount, instances, {"kind":"twilight_cash_package", "box_item_class_id":definition_id_of(world, item_name), "item_class_id":item_id})
+				if not staged.get("ok", false): failure = str(staged.get("error", "원본 물리 지급 실패"))
+				else:
+					instances = staged.item_instances
+					inventory[native_name] = int(inventory.get(native_name, 0)) + amount
+					received.append("%s ×%d" % [native_name, amount])
 		else:
 			var name: String = str(target.name)
 			if int(inventory.get(name, 0)) > LIMIT - amount:
