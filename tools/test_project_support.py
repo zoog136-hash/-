@@ -19,6 +19,8 @@ ERROR = re.compile(
     re.MULTILINE,
 )
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
+SCALAR_FAILURE_COUNT = re.compile(r'\b(?:failures|errors|failed)=(\d+)\b')
+SCALAR_TOTAL_COUNT = re.compile(r'\b(?:checks|cases|entries|tests)=(\d+)\b')
 # Explicit final summaries that state their own failure/error count. Accepted
 # only when every such line in the output reports zero; any nonzero count, or a
 # JSON summary without a "failures" list, never passes.
@@ -28,6 +30,12 @@ COUNT_SUMMARY = re.compile(
     r'|^(?P<label3>[A-Z][A-Z0-9_]*)\s+(?P<json>\{.*\})\s*$'
     r'|^(?P<label4>[A-Z][A-Z0-9_]*_PASS)\s*$',
     re.MULTILINE)
+
+
+def reserved_receipt_prefixes() -> tuple[str, ...]:
+    """Receipts registered to one suite; no other suite may pass with them."""
+    return tuple(prefix for prefix, _ in SCALAR_RESULT_CONTRACTS.values()) + \
+        tuple(prefix for prefix, _ in SCALAR_ONLY_CONTRACTS.values())
 
 
 def zero_failure_summary(output: str) -> bool:
@@ -223,6 +231,7 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
     if returncode != 0 or ERROR.search(output):
         return False, False
     reports = []
+    scalar_summaries = 0
     scalar_receipts = []
     scalar_contract = SCALAR_RESULT_CONTRACTS.get(name)
     for line in output.splitlines():
@@ -234,8 +243,20 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
                     return False, False
                 scalar_receipts.append(parsed)
                 continue
+            payload = match.group(1).strip()
+            if not payload.startswith(('{', '[')):
+                # Scalar receipt such as "X_RESULT checks=207 errors=0": it
+                # passes only when it states failure/error counts and all are
+                # zero. A nonzero or count-less scalar receipt fails closed.
+                counts = SCALAR_FAILURE_COUNT.findall(payload)
+                totals = SCALAR_TOTAL_COUNT.findall(payload)
+                if (line.startswith(reserved_receipt_prefixes()) or not counts
+                        or any(value != '0' for value in counts) or any(value == '0' for value in totals)):
+                    return False, False
+                scalar_summaries += 1
+                continue
             try:
-                report = json.loads(match.group(1))
+                report = json.loads(payload)
             except json.JSONDecodeError:
                 return False, False
             if not isinstance(report, dict) or report.get('failures') != []:
@@ -275,8 +296,8 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
         receipts = [line for line in output.splitlines() if line.startswith(prefix)]
         return (len(receipts) == 1 and (parsed := pattern.fullmatch(receipts[0])) is not None
                 and parsed.group('bad') == '0'), False
-    return (name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output))
-            or zero_failure_summary(output)), False
+    return (name in ('import', 'boot') or bool(reports) or scalar_summaries > 0
+            or bool(SUCCESS.search(output)) or zero_failure_summary(output)), False
 
 
 def _stop_tree(process: subprocess.Popen) -> None:
