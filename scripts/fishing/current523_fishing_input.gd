@@ -160,7 +160,11 @@ func _project() -> Dictionary:
 	tables.LuckyBagEntityType = _table("LuckyBagEntityType")
 	tables.CurrencyUnitClass = _select("CurrencyUnitClass","CurrencyID",{2561:true})
 	tables.Currency = _select("Currency","ID",{2561:true})
-	return {"version":523,"tables":tables,"rods":rods,"item_effects":effects,"source_effect_rows":effect_rows}
+	# `tables.Name = ...` stores StringName keys; the rules contract (and any
+	# JSON pack) has String table names, so keys are normalized (same order).
+	var named: Dictionary = {}
+	for table: Variant in tables: named[str(table)] = tables[table]
+	return {"version":523,"tables":named,"rods":rods,"item_effects":effects,"source_effect_rows":effect_rows}
 
 ## Verified row count of a table streamed by position (0 on failure), so a
 ## large table is never materialized whole (same checks as _table()).
