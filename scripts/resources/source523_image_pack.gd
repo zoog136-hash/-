@@ -2,6 +2,7 @@ class_name Source523ImagePack
 extends RefCounted
 ## Explicit private pack. Exact original bytes only; no install/save/activation.
 
+const ORIGINAL_ASSETS = preload("res://scripts/original_client/asset_resolver.gd")
 const IMAGE_TYPES: Array[int] = [1, 3, 5, 6, 7, 9, 10, 11, 82, 143, 161]
 const CONSUMER_FIELDS: Dictionary = {"ItemClass":["IconID"], "SpellClass":["IconID","ActivateIconID"], "BuffClass":["OnIconID","OffIconID"]}
 const TABLE_KEYS: Dictionary = {"AssetView":"AssetId", "AssetType":"ID", "Icon":"ID", "ItemClass":"ID", "SpellClass":"ID", "BuffClass":"ID"}
@@ -186,7 +187,7 @@ func _open_verified() -> Dictionary:
 		var row: Dictionary = _source_tables.AssetView[index]
 		if not asset is Dictionary or not types.has(int(row.get("AssetTypeId",-1))): return _failure("asset_contract","Missing exact AssetType.")
 		var typed: Dictionary = types[int(row.AssetTypeId)]
-		var path: String = str(typed.Path) + str(row.FilePath)
+		var path: String = ORIGINAL_ASSETS.join_path(str(typed.Path), str(row.FilePath))
 		if asset.get("asset_id") != row.AssetId or asset.get("asset_type_id") != row.AssetTypeId or asset.get("path") != path or int(asset.get("asset_view_row_index_zero",-1)) != index or asset.get("asset_type_row_index_zero") != type_indexes[int(row.AssetTypeId)]:
 			return _failure("asset_contract","Literal AssetType.Path + AssetView.FilePath identity differs.")
 		if int(row.AssetId) != 0 and not str(row.FilePath).is_empty() and not _safe_relative(path): return _failure("asset_contract","Unsafe literal asset path.")

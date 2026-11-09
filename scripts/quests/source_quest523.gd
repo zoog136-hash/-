@@ -9,6 +9,7 @@ const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projection.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "quest523_payload"
+const SHARED = preload("res://scripts/resources/shared_values.gd")
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
@@ -62,6 +63,13 @@ func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	if not value is Dictionary or not valid_document(value):
 		problem = "퀘스트 팩 구조 오류"
 		return false
+	# Rewards repeat the same full ItemClass row in every quest that grants it
+	# (765 distinct rows across 3,621 quests); share each distinct read-only
+	# value once instead of one parsed copy per quest.
+	var shared: Dictionary = {}
+	for quest: Variant in value.quests:
+		if quest is Dictionary: SHARED.intern(quest, shared, 6)
+	shared = {}
 	document = value
 	loaded_path = path
 	for link: Dictionary in document.currency_links:

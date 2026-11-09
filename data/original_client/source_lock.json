@@ -1,0 +1,458 @@
+{
+ "format_version": 1,
+ "design_status": "DESIGN_NOT_RECOVERED_API",
+ "purpose_ko": "원본 클라이언트 계약 인계(승인 01–46) P0 출처 고정. 원본 EXE/DLL은 실행·로드하지 않으며 해시는 식별용이다.",
+ "source_identity": {
+  "code_origin": 524,
+  "data_snapshot": 525,
+  "exe": {
+   "name": "LineageM_1.10.22.0.exe",
+   "image_base": "0x140000000",
+   "sha256": "9f9c3b9c9a49fb598899b3da308b4776cbbc47cbb98dbe4b4aa368cce519019d"
+  },
+  "dll": {
+   "name": "libcocos2d.dll",
+   "image_base": "0x180000000",
+   "sha256": "36857a2a13f46c4f24ebe8bce6626edfdd0c39b582a947ab03a6d43c551d185a"
+  }
+ },
+ "handoff_package": {
+  "name": "TWILIGHT 원본 클라이언트 계약 적용 인계 (01-46_20261109)",
+  "member_sha256": {
+   "00_START_HERE_KO.txt": "ea7e3a70968ea4790ee464041f4c2b073bdbec4686dc8569511b011d35f16f0c",
+   "01_CONTRACT_MAP_KO.txt": "4ba8acb333ff91b787df582d4cf1bc50f24578db95397e4c54e7533d08e00873",
+   "02_IMPLEMENTATION_SPEC.json": "5ce97b27d06af1f276582f1add5e1142e4362cfa37af93bf673bf62a8cf9ccfc",
+   "03_ACCEPTANCE_CHECKLIST.json": "0e1bd36729b5132e76db794bfaa600c3a552c501ac8d0576a56902d6d541f00e",
+   "04_CODING_WORKER_BRIEF_KO.txt": "8c2f82093a79b597a34bbe98cc571ae6de685691ffd71f343ae0498fb5f24803",
+   "05_SOURCE_REFERENCES.json": "594cacc4f1874e4c1c5960e37c3fc13a35234105204e04d573f19029de6bad5c",
+   "06_APPROVED_SCOPE_NAVIGATION.json": "18bb7ba881520267b3fdf155557b655b29618e4fc79b2f23307992ed4de126c7",
+   "07_P12_READONLY_QUERIES.sql": "f11a18b6fe5d5959944e3c963dd8e32764aa506885a3df91a3d922a2caa286da",
+   "08_NATIVE_SCHEMA_READONLY_QUERIES.sql": "7a603466b090ed9fef43ae7bb585e24af27e9e05704dcbbd92e0554813917b7e",
+   "09_DB_ACCESS_MAP.json": "27d70afcb50ac34621fe6b9128dbcce96bb29f779362687267e83e29eb5a44db",
+   "10_HANDOFF_SELF_CHECK.json": "2f2121e9f7a2978cd29de7b86d9ebde5b0654d63f5d68081c819dde56498cb5f",
+   "11_FUNCTION_EVIDENCE_LOCATOR.json": "bd1de8beea633ffc6aabbca4de8162297410572aa3eaa878af872bae455a7d6b",
+   "12_NUMERIC_TEST_VECTORS.json": "a259d46ccecbbae49117fd1c7aabb59a3b97c44dc10b0454349e94e1d5f40e24"
+  }
+ },
+ "approved_corrections_ko": {
+  "19": "PARTY1–4, ICON_NODE_PARTY는 그대로.",
+  "33": "capture gate 이름을 화면캡처 옵션으로 해석하지 않는다. 주소·조건만 적용하고 게임상 의미는 미검증.",
+  "35": "EventReceiver=root+10. event3은 root70/78 raw helpers를 삭제한다. DynamicSceneLoader root60/68이 아니다.",
+  "40": "delivery_v2만 사용한다.",
+  "43": "delivery_v2와 ERRATUM_REQUIRED_FIRST를 함께 쓴다. payload offset을 flat-row ABI로 자동변환하지 않는다. reference/CFG chain은 모든 consumer 의미가 아니다.",
+  "44": "v2의 integer→float32 직접변환과 divide→multiply 순서를 유지한다. tag100 cast실패는 기존action을stop하지 않는다.",
+  "46": "call/jmp 경계 자료를 call수/실행수로 쓰지 않는다."
+ },
+ "excluded_unapproved_ko": [
+  "47 Item 상세/storage 후속",
+  "48 current actual resource corpus 검증",
+  "49 world state/admission producer 후속"
+ ],
+ "external_reference_only": [
+  {
+   "library_file_id": "libfile_ed250f78b1dc8191b61c66b836b99515",
+   "role": "P12 SPR_SP2_REFERENCE.sqlite, 참조 DB이며 전체 SP2 payload DB 아님"
+  },
+  {
+   "library_file_id": "libfile_38d5094588408191a3b8889ed39b84d7",
+   "role": "복원 EXE, 실행 가능성 보증 아님"
+  },
+  {
+   "library_file_id": "libfile_86dae71782dc81919abf491d5734f665",
+   "role": "첫 정적 탐색 index, 후속정정 우선"
+  },
+  {
+   "library_file_id": "libfile_758da3e348c08191890454403d7843a5",
+   "role": "공개 game key 자료 참조ID만. 키값은 이 패키지에 없음"
+  }
+ ],
+ "packages": [
+  {
+   "id": "01_30",
+   "library_file_id": "libfile_31d517205c8c8191b83f35b82fda9676",
+   "space_path": "/중요보안/LineageM_클라이언트_통합분석_01-30_20261108.zip"
+  },
+  {
+   "id": "31_34",
+   "library_file_id": "libfile_f27ee8cc6b648191b36a5d96cb6b22ca",
+   "space_path": "/중요보안/LineageM_클라이언트_확장분석_31-34_20261109.zip"
+  },
+  {
+   "id": "35_38",
+   "library_file_id": "libfile_52ab43e297748191a2737c10282c3245",
+   "space_path": "/중요보안/LineageM_클라이언트_확장분석_35-38_정정포함_20261109.zip"
+  },
+  {
+   "id": "39_42",
+   "library_file_id": "libfile_af384d07810c8191ae4af4d310bd3977",
+   "space_path": "/중요보안/LineageM_클라이언트_확장분석_39-42_20261109.zip"
+  },
+  {
+   "id": "43_46",
+   "library_file_id": "libfile_7f83f779bab081918bda97a866802945",
+   "space_path": "/중요보안/LineageM_클라이언트_확장분석_43-46_정정포함_20261109.zip"
+  }
+ ],
+ "sources": [
+  {
+   "source_id": "S001",
+   "package_id": "43_46",
+   "member": "lineagem_native_resource_schema_20261109/delivery_v2/NATIVE_RESOURCE_SCHEMA_CENSUS_KO.md",
+   "sha256": "dfeb0f86a86e12c85851ded4f232df5802f125abcfe28eb76a9d26af6cb7092e",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S002",
+   "package_id": "43_46",
+   "member": "qa_client_native_schema_43_v2_20261109/ERRATUM_REQUIRED_FIRST_KO.md",
+   "sha256": "8d0c859b4391c19a0119a47005e77e6ebd76b36025a38d4ac07564a6e128c51d",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S003",
+   "package_id": "01_30",
+   "member": "packages/P28/lineagem_resource_bootstrap_20261108/RESOURCE_BOOTSTRAP_KO.md",
+   "sha256": "c044fe94b340fad96274399ae7ad0823d007f16f2c9e10bbfac54815a1de53da",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S004",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_resource_resolution_20261108/user_delivery/RESOURCE_RESOLUTION_REPORT_KO.md",
+   "sha256": "0b7ae4f46e1474bcdedc93a14ff604bce0e23b75fc2a23905eae1d92cd2fc014",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S005",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_brotli_identity_20261108/BROTLI_RESOURCE_DECODER_REPORT_KO.md",
+   "sha256": "b8bfb7f46fda7243475b2bf149ae3933143566125775ad5c3b9f0d986ae4ea5c",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S006",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_ui_content_static_525_20261108/STAGE1_UI_CONTENT_REPORT_KO.md",
+   "sha256": "896361ba3e4c4296c5a5a2b5e1080ebfbec1b7b2360be2063c2c47fa61352880",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S007",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_ui_content_static_525_20261108/STAGE3_ITEM_UI_REPORT_KO.md",
+   "sha256": "58efd0568b457da722589e469980e91eb15961ab748dd855e09d91a068fccc21",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S008",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_ui_content_static_525_20261108/STAGE5_SPELL_ICON_SELECTION_KO.md",
+   "sha256": "5d4d72b74a43acbd89e050f7c3be79c4b2965447b1c30f23a50fce48a576642e",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S009",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_game_sprite_static_525_20261108/stage1/SP2_STAGE1_KO.txt",
+   "sha256": "2877ae10a04b2e2e29deaacf352e468e2ed406cd71ba240e5cc86a90d22ded46",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S010",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_spr_loader_static_20261108/STAGE2_SPR_RUNTIME_REPORT_KO.md",
+   "sha256": "51f23fddc943c09894aa4e6689f4cc88aa74807cfd828f821619d4aa2c90fb6c",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S011",
+   "package_id": "01_30",
+   "member": "packages/P11/lineagem_sprite_remap_source_20261108/delivery/SPRITE_REMAP_SOURCE_REPORT_KO.md",
+   "sha256": "b8a79716f753acaa67a74df777a6a4d13e2aab2b75f4c4688f22349bf77edcf4",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S012",
+   "package_id": "01_30",
+   "member": "packages/P12/lineagem_sprite_reference_matrix_20261108/delivery/REPORT_KO.md",
+   "sha256": "ab075445f99b54f92b459d326920f13bf2f34b12a41b8f42a4bad6c62c281abb",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S013",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_spr_loader_static_20261108/stage4_checkpoint/STAGE4_SPR_CLOCK_REPORT_KO.md",
+   "sha256": "6c9dc8a5b11f748b8c0ebda187b5c9ef56a1b1072132cb81a5983910a5f6772c",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S014",
+   "package_id": "01_30",
+   "member": "packages/P05/lineagem_action_speed_producers_20261108/ACTION_SPEED_REPORT_KO.md",
+   "sha256": "aeb7fa44f9cd262b2ff7a0489cf0ae9c840ede3b242b4d1dea421b89f11d1320",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S015",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_game_sprite_static_525_20261108/stage2/SP2_STAGE2_KO.txt",
+   "sha256": "49b86c089c2e452d90e0a0d251b9f9088ce0738ec6a1702404d739d684aac569",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S016",
+   "package_id": "01_30",
+   "member": "packages/P13/lineagem_auxiliary_sprite_layers_20261108/delivery/REPORT_KO.md",
+   "sha256": "b6b0dbb66413966c8b2fab1c59a1a61595ef4bffe36167d0673dc776a603332e",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S017",
+   "package_id": "01_30",
+   "member": "packages/P03/LineageM_client_additional_analysis_03/lineagem_client_motion_20261108/MOTION_RENDER_REPORT_KO.md",
+   "sha256": "19e5592ace7d4262d3eba30d39a5ffba8999358a0a9ed2ffc8e348a8cf7bfc70",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S018",
+   "package_id": "01_30",
+   "member": "packages/P10/lineagem_sprite_cache_lifetime_20261108/delivery/SPRITE_CACHE_LIFETIME_REPORT_KO.md",
+   "sha256": "7c8ce9f68f7018e80b332ad09e176096b23ab1f6e65585372fae3ec33286fff6",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S019",
+   "package_id": "31_34",
+   "member": "lineagem_resource_recovery_20261109/RESOURCE_RECOVERY_REPORT_KO.md",
+   "sha256": "9e8029f1c40f076589d31bf2184adfd03ddf6437f0ccd9d61655ff8c28e6c8ce",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S020",
+   "package_id": "01_30",
+   "member": "packages/P15/lineagem_land_asset_path_20261108/LAND_ASSET_PATH_CONTRACT_KO.md",
+   "sha256": "32e68acdc50f11bc6eb5075d703719dd9046ce79a6e14b1dc2d2e89430bd0443",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S021",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_map_static_525_20261108/PHASE1_S32_TI2_COORDINATES_REVISED_KO.md",
+   "sha256": "9b519b46f4dd181de6946b66440bd841df7754286c45bdc1d92ea51b48c49354",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S022",
+   "package_id": "31_34",
+   "member": "lineagem_s32_world_sections_20261109/REPORT_KO.md",
+   "sha256": "49d06e00efd8ba2898c6558b2e0f94e908148101149de28d7857272a75ff3f4c",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S023",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_map_static_525_20261108/PHASE2_MOVEMENT_PORTAL_CONSUMERS_KO.md",
+   "sha256": "24560124a6cf74cab9a7d041cdfeaa1d627265f6e5322dc8c6f376355d683b1d",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S024",
+   "package_id": "01_30",
+   "member": "packages/P01/LineageM_client_analysis_code/lineagem_map_static_525_20261108/PHASE4_INPUT_TO_MOVE_REQUEST_REVISED_KO.md",
+   "sha256": "f6490c344bcb2792bab5d217da37447e69858d41df0c7b2caaab0692a4b7e530",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S025",
+   "package_id": "35_38",
+   "member": "client_expansion_checkpoint_35_38_20261109/lineagem_path_generation_20261109/delivery/REPORT_KO.md",
+   "sha256": "cbc4289acd47629c259d3cfb3cf78e024899500e0c89c1696d288135bd4917f9",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S026",
+   "package_id": "43_46",
+   "member": "lineagem_target_autoplay_selection_20261109/delivery/REPORT_KO.md",
+   "sha256": "82fafe4f3ef0023a30170cca298bb0faa2e459faaca05a60c122dc46d8e5d170",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S027",
+   "package_id": "31_34",
+   "member": "lineagem_spell_visual_branches_20261109/delivery/REPORT_KO.md",
+   "sha256": "bba5086c2713d397acab959c257b1f5f3df25ea505d7efee73a7e5e6f18e50f9",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S028",
+   "package_id": "39_42",
+   "member": "lineagem_spell_visual_callbacks_20261109/delivery/REPORT_KO.md",
+   "sha256": "04a7e281e51f6193c584a35312dba7c7670d747a92c8aa8cbe2431a7860eddc2",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S029",
+   "package_id": "01_30",
+   "member": "packages/P11/lineagem_scene_csb_loading_20261108/SCENE_CSB_LOADING_KO.md",
+   "sha256": "a4aa5d2b6419a5c12c3eae5705aa37244062b3ef2f38458bbd11e77b7d4a01e4",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S030",
+   "package_id": "01_30",
+   "member": "packages/P02/LineageM_client_additional_analysis_02/ui_input_capture_REVISED/UI_INPUT_CAPTURE_CONTRACT_KO.md",
+   "sha256": "731d0f518022ed6003925efd1a4337ffa4d67bf3a5fb2a57dbd7088c545833c9",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S031",
+   "package_id": "01_30",
+   "member": "packages/P22/lineagem_map_party_markers_20261108/MAP_PARTY_MARKERS_KO.md",
+   "sha256": "fb4afd970f4eedc9708163ed84bb22043ce4dbcc5459264372ace78db13ef36a",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S032",
+   "package_id": "01_30",
+   "member": "packages/P23/lineagem_dungeon_party_display_20261108/DUNGEON_PARTY_DISPLAY_KO.md",
+   "sha256": "a7da25273ada72202cb1fd02bb0c68943873ba8a0e27395a61972a316213fdcd",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S033",
+   "package_id": "01_30",
+   "member": "packages/P25/lineagem_party_ui_event_20261108/PARTY_UI_EVENT_KO.md",
+   "sha256": "bdfeab5f386e243d00fcd197820c72108aeebe51049816376dcea44f61d885b2",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S034",
+   "package_id": "39_42",
+   "member": "lineagem_item_inventory_presentation_20261109/REPORT_KO.md",
+   "sha256": "20714d120df4c9300ff5d5fa89b8a2a1b9a22cee47cff299f6bdac27a94b60c7",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S035",
+   "package_id": "43_46",
+   "member": "qa_client_spell_ui_44_v2_20261109/QA_REPORT_KO.md",
+   "sha256": "285a005686a43378395d44810b117e5009f1df589e2b704558db094b44ddf997",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S036",
+   "package_id": "43_46",
+   "member": "lineagem_spell_ui_state_20261109_delivery_v2/SPELL_UI_STATE_REPORT_KO.md",
+   "sha256": "aac2251448812bfc8778d552628751dc56cbfb6c80f89cf138a9a643983280a3",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S037",
+   "package_id": "43_46",
+   "member": "lineagem_spell_ui_state_20261109_delivery_v2/CORRECTIONS_KO.md",
+   "sha256": "3bb05512120e9a197322011b8838b3eabbf65f3472ac943738ac491a4daea9b9",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S038",
+   "package_id": "43_46",
+   "member": "qa_client_actor_status_45_20261109/QA_REPORT_KO.md",
+   "sha256": "a843e91aebcee5f7f8e7d1588aad82cd0172a9dd45e296f0ad9df390ac522798",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S039",
+   "package_id": "43_46",
+   "member": "lineagem_actor_status_overheads_20261109/ACTOR_STATUS_OVERHEADS_KO.md",
+   "sha256": "d99684742a377fd18ede4aaab88df419799ac352da77ff03c1a15bfc01dbd403",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S040",
+   "package_id": "43_46",
+   "member": "qa_client_target_autoplay_46_20261109/REQUIRED_INTEGRATION_NOTE_KO.txt",
+   "sha256": "670549c2f22e7232a93276ec1a12d22f4517853e435d6bebe71fef23d9c02a0f",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S041",
+   "package_id": "35_38",
+   "member": "client_expansion_checkpoint_35_38_20261109/qa_client_expansion_35_38_20261109/ERRATUM_35_MAINSTATE_EVENT3_KO.md",
+   "sha256": "571405d47328a5d6c0497543d690a411712c59cb12e14d8997b21e5b646826dd",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S042",
+   "package_id": "39_42",
+   "member": "lineagem_world_scene_attachment_20261109/delivery_v2/WORLD_SCENE_ATTACHMENT_KO.md",
+   "sha256": "3f285ff447b66acc542a84f1e2aa6f9df9f603f7c2b7b04cbedf1aefcc2f5de1",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S043",
+   "package_id": "31_34",
+   "member": "lineagem_render_pipeline_gaps_20261109/RENDER_PIPELINE_GAPS_KO.md",
+   "sha256": "64369900398d62a51407bf9e5eee3965f0969eafc1e1f4df9905f296273b8a7d",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S044",
+   "package_id": "39_42",
+   "member": "lineagem_world_visual_modifiers_20261109/REPORT_KO.md",
+   "sha256": "1e42c940033ddb41a530214fede975e2eeec62b7d20b85709a8cd3d021c68c99",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  },
+  {
+   "source_id": "S045",
+   "package_id": "35_38",
+   "member": "client_expansion_checkpoint_35_38_20261109/lineagem_audio_selection_lifetime_20261109/deliverable/AUDIO_SELECTION_LIFETIME_REPORT_KO.md",
+   "sha256": "81f0efa15c0c4606e30f281e77d166cb83d7b577259d01e43bd4492ca3f0bcee",
+   "reference_kind": "approved_report_or_artifact",
+   "basis": "read_only_local_bytes_match_approved_member"
+  }
+ ]
+}

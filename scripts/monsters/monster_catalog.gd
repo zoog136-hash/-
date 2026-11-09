@@ -30,6 +30,17 @@ static func reviewed_record_allowed(record: Dictionary) -> bool:
 	var reviewed_gap:bool=status=="USER_REVIEWED_SQL_AND_EXISTING_BYTES_20261030" and str(record.get("source_npc_id","")) in VERIFIED_GAP_IDS
 	return approved or local_named or reviewed_gap
 
+## The reviewed record's source_animation (left out of the live catalog), read
+## from the reviewed files on demand; {} when absent.
+static func source_animation(source_npc_id: String) -> Dictionary:
+	for path: String in [REVIEWED_PATH, ADDITIONS_PATH]:
+		var payload: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if not payload is Dictionary: continue
+		for raw: Variant in payload.get("records", []):
+			if raw is Dictionary and str(raw.get("source_npc_id", "")) == source_npc_id and raw.get("source_animation") is Dictionary:
+				return (raw.source_animation as Dictionary).duplicate(true)
+	return {}
+
 static func spawnable_records(records: Array) -> Array:
 	# Catalog registration alone never opts a source identity into random maps.
 	return records.filter(func(record: Variant) -> bool:
@@ -71,7 +82,14 @@ static func expand(original: Array) -> Array:
 		for field: String in ["sourceId", "source_id", "source_npc_id"]:
 			duplicate = duplicate or source_ids.has(str(raw.get(field, "")))
 		if duplicate: continue
-		var record: Dictionary = raw.duplicate(true)
+		var record: Dictionary = {}
+		for key: Variant in raw: record[key] = raw[key]
+		# The reviewed source frame lists (~17 MB of JSON, ~0.15 GB parsed) stay
+		# in the reviewed files: no runtime consumer reads them from the live
+		# record (frames come from the animation profile). source_animation()
+		# reads one on demand.
+		record.erase("source_animation")
+		record = record.duplicate(true)
 		result.append(record)
 		by_name[str(record.name)] = record
 		for field: String in ["sourceId", "source_id", "source_npc_id"]:

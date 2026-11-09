@@ -1,0 +1,35 @@
+{
+  "fixture_id": "OC_P0_P2_FIRST_FIXTURE_V1",
+  "design_status": "DESIGN_NOT_RECOVERED_API",
+  "basis_ko": "인계 12_NUMERIC_TEST_VECTORS(V01~V06) 및 01_CONTRACT_MAP의 C05/C06 문장에서 옮긴 값. 승인된 참조 DB(sqlite.xz)는 이 환경에 없어 DB 행 값은 사용하지 않았다.",
+  "synthetic_notice_ko": "tables 안에서 ID 체인(ItemClass26→Icon2932→Asset30962)과 최종 경로 icon/Item/adena_3.png만 계약 문장 값이다. AssetTypeId, Path 분할(icon/ + Item/adena_3.png) 외의 행 값은 이 fixture용 합성이다. 실제 current 테이블 행을 읽은 결과가 아니다.",
+  "item26_icon_chain": {
+    "tables": {
+      "ItemClass": {"26": {"IconID": 2932}},
+      "Icon": {"2932": {"AssetId": 30962}},
+      "AssetView": {"30962": {"AssetId": 30962, "AssetTypeId": 7, "FilePath": "Item/adena_3.png"}},
+      "AssetType": {"7": {"ID": 7, "Path": "icon/"}}
+    },
+    "item_class_id": 26,
+    "expected_path": "icon/Item/adena_3.png"
+  },
+  "actor_selection": {
+    "actor_sprite": 27255,
+    "action": 0,
+    "ordinal": 0,
+    "direction": 1,
+    "body_request": 27255,
+    "word0": 7,
+    "directional": true,
+    "remap": {"27255": 23095, "23095": 19678},
+    "expected": {"mapped_file_u16": 23095, "file_b_u16": 8, "asset_direction": 0, "primary_name": "Sprite/23095-8.sp2"}
+  },
+  "vectors": [
+    {"id": "V01", "operation": "one_step_remap", "input": {"request_id": 27255, "map": {"27255": 23095, "23095": 19678}}, "expected": {"mapped_id": 23095}},
+    {"id": "V02", "operation": "sp2_group", "input": {"word0": 7, "directional": true, "direction": 1}, "expected": {"low16": 8, "file_b": 8, "direction": 0}},
+    {"id": "V03", "operation": "stored_delay", "input": {"raw": 4, "fps": 36}, "expected": {"delay_u16_ms": 111}},
+    {"id": "V04", "operation": "effective_delay_normal_domain", "input": {"stored_delay_ms": 100, "rate": 2000000, "bucket": 1}, "expected": {"delay_ms": 50}},
+    {"id": "V05", "operation": "picture_selection", "input": {"dot_after_word": 256, "frame_count": 8}, "expected": {"picture_u8": 0, "picture_i8": 0, "chosen_frame": 0}},
+    {"id": "V06", "operation": "picture_selection", "input": {"dot_after_word": 128, "frame_count": 8}, "expected": {"picture_u8": 128, "picture_i8": -128, "chosen_frame": 7}}
+  ]
+}
