@@ -4,6 +4,7 @@ signal progress(done: int,total: int)
 const BASE = preload("res://scripts/lineagem_base508.gd")
 const SOURCE = preload("res://scripts/resources/current523_pack.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selection.gd")
 const STORE = "user://current523_identity_versions"
 const SETTINGS = "user://current523_identity_settings.json"
 const MANIFEST = "manifest.json"
@@ -137,10 +138,11 @@ static func load_actor(profile_key: String,context: Dictionary) -> Dictionary:
 			for direction: int in range(8):
 				var frames: Array = []
 				for token: Array in compact.tokens:
-					var address: int = int(token[0]) + (direction if int(compact.declared_flag) == 1 else 0)
+					# C06: u16(word0 + direction) -> file group and in-file direction (original-client contract adapter).
+					var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
 					var layers: Array = []
 					for layer: Dictionary in compact.layers:
-						layers.append({"member":"Sprite/%d-%d.sp2" % [int(layer.source_sprite_id),address & ~7],"group_bit":address & 7,"frame_index":int(token[1]),"kind":str(layer.kind),"source_sprite_id":int(layer.source_sprite_id)})
+						layers.append({"member":ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id),group.file_b),"group_bit":group.direction,"frame_index":int(token[1]),"kind":str(layer.kind),"source_sprite_id":int(layer.source_sprite_id)})
 					frames.append({"duration_ticks":int(token[2]),"layers":layers})
 				directions.append(frames)
 			expanded["directions"] = directions
