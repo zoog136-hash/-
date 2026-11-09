@@ -7,6 +7,7 @@ const STATIC_SPR=preload("res://scripts/maps/current523_static_spr.gd")
 const TRAVEL_PAYMENT=preload("res://scripts/maps/current523_map_travel_payment.gd")
 const SOURCE_SPAWNS=preload("res://scripts/maps/current523_source_spawns.gd")
 const SOURCE_POPULATION=preload("res://scripts/maps/current523_source_population.gd")
+const HOST=preload("res://scripts/maps/current523_host.gd")
 var active: bool = false
 ## Source-field actors live in their own root/population. The host Aden root
 ## and population stay paused for return and keep their saved boss state.
@@ -372,7 +373,8 @@ func _build_notice(world: Node) -> void:
 	elif source_owned and _map_time!=null and _map_time.active():label.text+="\nM 원문 한도 차감 · 자체 시간정책: 자동 초기화/충전 없음"
 	if source_owned: label.text+="\n"+_spawn_notice_line()
 	row.add_child(label)
-	var button: Button = UI.button("기존 지도로 복귀", _return_pressed, Vector2(150, 42))
+	var over_host: bool = source_owned and HOST.is_host(_prior_world.get("field"))
+	var button: Button = UI.button("아덴 마을로" if over_host else "기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
 	row.add_child(button)
 
@@ -386,7 +388,13 @@ func _spawn_notice_line() -> String:
 
 func _return_pressed() -> void:
 	var world: Node = _world()
-	if is_instance_valid(world): world.call("close_current523_aden_play")
+	if not is_instance_valid(world): return
+	if source_owned and HOST.is_host(_prior_world.get("field")):
+		# Over the 523 host there is no older map to return to: go to Aden town.
+		var result: Dictionary = world.call("return_current523_source_to_aden")
+		if not result.get("ok", false) and is_instance_valid(world.get("hud")): world.hud.show_message(str(result.get("reason", "아덴 귀환 보류")))
+		return
+	world.call("close_current523_aden_play")
 
 func _open_source(value: Dictionary) -> bool:
 	var world: Node = _world()
@@ -409,6 +417,10 @@ func _open_source(value: Dictionary) -> bool:
 	if not configured:
 		problem = str(proposed.get("problem")); proposed.close(); return false
 	var source_position: Array = options.source_position
+	if generic and source_position.is_empty() and HOST.is_host(prior_field) and int(options.native_land_id)==HOST.ADEN_LAND:
+		# A fresh install over the 523 host Aden: the host is the same Land and
+		# coordinate system, so its current point is the entry point.
+		source_position = prior_field.coordinates.source_components(world.player.global_position)
 	if generic and source_position.is_empty():
 		problem="선택한 논리 Land의 원문 입장 좌표를 지정해 주세요. 다른 지도의 좌표를 재사용하지 않습니다."; proposed.close(); return false
 	if source_position.is_empty(): source_position = prior_field.coordinates.source_components(world.player.global_position)
@@ -591,7 +603,7 @@ func _close_source(remember_disabled: bool) -> bool:
 			if row.node is CanvasItem or row.node is CanvasLayer: row.node.set("visible",row.visible)
 		world.ground_loot.activate(str(world.active_map_id))
 		if world.is_inside_tree() and not world.is_queued_for_deletion():
-			if world.field_population.get("field")==null: world.field_population.configure(world,world.field_map)
+			if world.field_population.get("field")==null and not HOST.is_host(world.field_map): world.field_population.configure(world,world.field_map)
 			world.field_minimap.configure(world,world.field_map)
 			world.region_id=""
 			world.hud.set_map_name(str(world.field_map.region_at(world.player.global_position).get("name",world.active_map.get("name",""))))
