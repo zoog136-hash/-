@@ -29,7 +29,7 @@ static func target(runtime: RefCounted,world: Node,reward: Dictionary) -> Dictio
 		elif not action.get("heal_spec",{}).is_empty():kind="source_hp_potion"
 	if kind.is_empty():return {}
 	var wallet: String=D.currency_identity_name(record)
-	if wallet!="아데나" and (not runtime.catalog._integer(original.get("MaxStackAmount")) or int(original.MaxStackAmount)<1 or record.get("source_is_stackable")!=true):return {}
+	if wallet!="아데나" and (not runtime.catalog._integer(original.get("MaxStackAmount")) or int(original.MaxStackAmount)<1 or NATIVE_FIELDS.field(record,"source_is_stackable")!=true):return {}
 	return {"record":record,"inventory_key":wallet if not wallet.is_empty() else str(record.name),"consumer_kind":kind,"max_stack":int(original.get("MaxStackAmount",0))}
 
 static func stage(runtime: RefCounted,world: Node,proposed: Dictionary,quote: Dictionary,rewards: Array) -> Dictionary:

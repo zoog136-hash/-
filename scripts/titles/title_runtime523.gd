@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const Source = preload("res://scripts/titles/title_source523.gd")
 const Personal = preload("res://scripts/titles/title_personal523.gd")
 const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
@@ -217,7 +218,7 @@ func powder_keys() -> Array[String]:
 		# A same-name unknown stack is not evidence of native material ownership.
 		if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true: continue
 		if int(record.get("source_item_class_id",-1))!=117544 or str(record.get("sourceId",""))!="m523:item:117544": continue
-		if record.get("source_category_name")!="StackableItem" or record.get("source_display_name")!="상급 축복의 가루" or record.get("name")!="상급 축복의 가루 · 원본#117544": continue
+		if NATIVE_FIELDS.field(record,"source_category_name")!="StackableItem" or NATIVE_FIELDS.field(record,"source_display_name")!="상급 축복의 가루" or record.get("name")!="상급 축복의 가루 · 원본#117544": continue
 		if int(record.get("source_bless_raw",1))!=1 or record.get("source_test_item",false): continue
 		result.append(key)
 	result.sort()

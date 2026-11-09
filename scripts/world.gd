@@ -914,7 +914,7 @@ func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
 	if BASE508.native(saved): return BASE508.canonical(saved)
 	if category == "아이템" and saved.get("source_m_native_item",false):
 		var current: Dictionary = _catalog_item_from_source_id(str(saved.get("sourceId","")))
-		if current.get("source_m_native_item",false) and int(current.get("source_item_class_id",-1)) == int(saved.get("source_item_class_id",-2)) and str(current.get("source_display_name","")) == str(saved.get("source_display_name","")) and current.get("source_snapshot") == saved.get("source_snapshot"):
+		if current.get("source_m_native_item",false) and int(current.get("source_item_class_id",-1)) == int(saved.get("source_item_class_id",-2)) and str(NATIVE_FIELDS.field(current,"source_display_name","")) == str(NATIVE_FIELDS.field(saved,"source_display_name","")) and current.get("source_snapshot") == saved.get("source_snapshot"):
 			var updated: Dictionary = current.duplicate(true)
 			for key: String in ["instance_id","enhance_level","is_engraved","bless_state","source_m_drop_proof","source_m_reward_proof","source_m_item_id"]:
 				if saved.has(key): updated[key] = saved[key]
@@ -9251,7 +9251,7 @@ func _weapon_ammo_family() -> String:
 
 func _skill_arrow_ammo_name() -> String:
 	var current: String = _current_ammo_name()
-	return current if load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,current).get("source_category_name") == "Arrow" else "화살"
+	return current if NATIVE_FIELDS.field(load("res://scripts/loot/current523_native_stack.gd").call("ammo_record",self,current),"source_category_name") == "Arrow" else "화살"
 
 func _current_ammo_name() -> String:
 	var family: String=_weapon_ammo_family()

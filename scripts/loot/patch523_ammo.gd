@@ -22,7 +22,7 @@ static func weapon_type(record: Dictionary) -> Dictionary:
 	return result
 
 static func profile(record: Dictionary) -> Dictionary:
-	if not record.get("source_m_native_item",false) or record.get("source_category_name") not in ["Arrow","Bullet","Sting"]: return {}
+	if not record.get("source_m_native_item",false) or NATIVE_FIELDS.field(record,"source_category_name") not in ["Arrow","Bullet","Sting"]: return {}
 	record = NATIVE_FIELDS.full(record)
 	var id: String = str(int(record.get("source_item_class_id",-1)))
 	var definition: Dictionary = D.item_definition(record)
@@ -56,7 +56,7 @@ static func weapon_category(record: Dictionary) -> int:
 # The gameplay consumer receives exact current item identity, not visual enums.
 static func current_profile(record: Dictionary) -> Dictionary:
 	if D.equipment(record):return {} # Physical equipment is not also a quantity-ammunition grant.
-	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or D.current_original_definition(record).is_empty() or record.get("source_test_item")!=false or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or D.current_original_definition(record).is_empty() or record.get("source_test_item")!=false or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var fields: Dictionary={"WeaponSmallDamage":"Value","WeaponLargeDamage":"Value","AmmoEffectSpriteID":"SpriteID","AmmoExplosionSpriteID":"SpriteID"}
 	var seen: Dictionary={}
 	for row: Dictionary in D.item_definition(record).get("item_bonus",[]):

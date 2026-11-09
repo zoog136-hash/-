@@ -142,7 +142,7 @@ static func registered_material_target(host:Node,item:Dictionary,bless:int,encha
 	var id:String=str(int(item.ID))
 	if rules==null or rules.item_entry(id).get("item_class",{})!=item:return {}
 	var record:Dictionary=rules.record(id)
-	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not NATIVE_FIELDS.full(record).get("source_use_spec",{}).is_empty() or not record.get("source_equip_slot_ids",[]).is_empty():return {}
+	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or not NATIVE_FIELDS.full(record).get("source_use_spec",{}).is_empty() or not NATIVE_FIELDS.field(record,"source_equip_slot_ids",[]).is_empty():return {}
 	var registered:Dictionary=host._find_catalog_item_record(str(record.get("name","")))
 	if not rules.catalog_identity_matches(registered,id):return {}
 	var registered_full:Dictionary=NATIVE_FIELDS.full(registered)

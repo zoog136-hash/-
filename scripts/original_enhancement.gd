@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightOriginalEnhancement
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 # Base equipment stats are stored on the item record. These are ENCHANTMENT
 # INCREMENTS relative to the unequipped +0 item's original base options.
@@ -40,7 +41,7 @@ static func stats(kind: String, level: int, record: Dictionary = {}) -> Dictiona
 		var source: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").native_enchant_stats(record,rank)
 		var fallback: Dictionary = record.duplicate(true)
 		fallback.erase("source_m_native_item")
-		fallback["name"] = str(record.get("source_display_name",record.get("name","")))
+		fallback["name"] = str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name","")))
 		var result: Dictionary = stats(kind,rank,fallback)
 		result.merge(source,true)
 		return result

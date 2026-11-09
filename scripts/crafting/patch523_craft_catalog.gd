@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Register the supplied shared item definitions for crafting. No loot/use engine.
 const ZIP_SHA="91de04c0f3ed613b76a69fea992347d82bdab79b6ef316049d3f77e90a3484d7"
 const BIN_SHA="bec901d26a7766f2c77e9781ce636f17c14e7ba1b33617840eb5a5d5123bafd3"
@@ -79,7 +80,7 @@ static func register(catalog: Dictionary, document: Dictionary) -> Dictionary:
 		if current.has(str(item.sourceId)):
 			var previous: Dictionary=current[str(item.sourceId)]
 			for field: String in ["name","source","source_snapshot","source_item_class_id","source_m_native_item","source_test_item","source_display_name","slot","source_is_stackable","source_class_ids","source_equip_slot_ids","source_level_limit_min","source_level_limit_max"]:
-				if previous.get(field)!=item.get(field): return {"ok":false,"reason":"기존 공통 아이템 정체 충돌 · 교체하지 않았습니다"}
+				if NATIVE_FIELDS.field(previous,field)!=NATIVE_FIELDS.field(item,field): return {"ok":false,"reason":"기존 공통 아이템 정체 충돌 · 교체하지 않았습니다"}
 			continue
 		records.append(item); current[str(item.sourceId)]=item; added+=1
 	# Publish only after all identities have passed. Ownership/save data untouched.

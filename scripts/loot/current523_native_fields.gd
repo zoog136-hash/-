@@ -17,7 +17,16 @@ const HEAVY: Array[String] = ["source_use_spec","source_original_item","source_u
 	"source_sprite_animation_id","source_unhandled_bonus_ids","source_weapon_type_name","source_effect_scope",
 	"source_is_deletable","source_is_droppable","source_is_trash","source_label_status","source_max_level_limit_max",
 	"source_max_level_limit_min","source_weight_unit","source_is_storable","source_effect_status","source_equipment_status",
-	"source_unresolved_class_ids","source_is_tradable","source_is_consumable","source_category_id","source_class_names"]
+	"source_unresolved_class_ids","source_is_tradable","source_is_consumable","source_category_id","source_class_names",
+	# Third group: identity/condition fields read only on use, equip, craft
+	# checks, detail views and messages, never per frame. Readers use field()/
+	# has_field() (one key) or full(). Identity keys (source_item_class_id,
+	# source_m_native_item, source_snapshot, source_definition_archive,
+	# source_bless_raw), per-frame UI keys (source_sprite_id, source_grade_id)
+	# and generic inventory keys (droppable, storable) stay resident.
+	"source_image_status","source_condition_pending","source_weight","source_class_ids","source_equip_slot_ids",
+	"source_level_limit_min","source_level_limit_max","source_delete_time_raw","source_is_stackable","tradable",
+	"deletable","source_display_name","source_category_name"]
 const MARK := "twilight_lazy_native_fields"
 const CACHE_LIMIT := 128
 
@@ -55,6 +64,26 @@ static func full(record: Variant) -> Variant:
 	for key: Variant in record:
 		if key != MARK and not result.has(key): result[key] = record[key]
 	return result
+
+## One key of full(record), without building the whole record: the record's
+## own value when it holds the key, the template's value for a heavy key it
+## left out, otherwise `default`. Same value (and copy semantics) as
+## full(record).get(key, default).
+static func field(record: Variant, key: String, default: Variant = null) -> Variant:
+	if not record is Dictionary: return default
+	var own: Dictionary = record
+	if own.has(key): return own[key] if key != MARK or own.get(MARK) != true else default
+	if own.get(MARK) != true or not key in HEAVY: return default
+	var template: Dictionary = _template(str(int(own.get("source_item_class_id", 0))))
+	return _copy(template[key]) if template.has(key) else default
+
+## full(record).has(key) without building the whole record.
+static func has_field(record: Variant, key: String) -> bool:
+	if not record is Dictionary: return false
+	var own: Dictionary = record
+	if own.has(key): return key != MARK or own.get(MARK) != true
+	if own.get(MARK) != true or not key in HEAVY: return false
+	return _template(str(int(own.get("source_item_class_id", 0)))).has(key)
 
 ## full() for every record in an array (other values unchanged).
 static func full_all(records: Array) -> Array:

@@ -22,7 +22,7 @@ static func stack_identity(item_name: String, record: Dictionary = {}) -> Dictio
 		var canonical: String = str(DATA.data.items[str(id)].name)
 		# PR238's exact Normal stack, not a name suffix parser or a merged alias.
 		if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("sourceId") != "m523:item:"+str(id): return {}
-		if record.get("source_display_name") != canonical or item_name != canonical+" · 원본#"+str(id) or record.get("name") != item_name: return {}
+		if NATIVE_FIELDS.field(record,"source_display_name") != canonical or item_name != canonical+" · 원본#"+str(id) or record.get("name") != item_name: return {}
 		if record.get("source_bless_raw") != 1 or record.get("slot") != "consumable" or NATIVE_FIELDS.full(record).get("source_is_consumable") != true or record.get("source_test_item") != false or record.get("grade") != DATA.data.items[str(id)].grade: return {}
 		origin = "patch523_native_normal"
 	else:

@@ -112,7 +112,9 @@ static func current_source_weight_input(record: Dictionary, estimate: Dictionary
 		return ignored
 	if record.get("source_projection") != "current523_original_typed_game_dto_v1": return ignored
 	var item_id: Variant = record.get("source_item_class_id")
-	if not _weight_integer(item_id) or int(item_id) <= 0 or NATIVE_FIELDS.full(record).get("source_weight_unit") != "unverified_source_units":
+	# One full() per record (this runs for every catalog record at start).
+	var full: Dictionary = NATIVE_FIELDS.full(record)
+	if not _weight_integer(item_id) or int(item_id) <= 0 or full.get("source_weight_unit") != "unverified_source_units":
 		return ignored
 	if record.get("source_legacy_stack_variant",false) or record.get("source_legacy_catalog_alias",false): return ignored
 	var blessing: Variant = record.get("source_bless_raw")
@@ -129,10 +131,10 @@ static func current_source_weight_input(record: Dictionary, estimate: Dictionary
 	if record.get("sourceId") != expected_id:
 		return ignored
 	var identity: Dictionary = CURRENT_DEFINITIONS.identity()
-	if identity.is_empty() or record.get("source_definition_archive") != identity or not NATIVE_FIELDS.full(record).get("source_original_item") is Dictionary:
+	if identity.is_empty() or record.get("source_definition_archive") != identity or not full.get("source_original_item") is Dictionary:
 		return ignored
-	var raw: Dictionary = NATIVE_FIELDS.full(record).source_original_item
-	if raw.is_empty() or raw.get("ID") != int(item_id) or typeof(raw.get("TestItem")) != TYPE_BOOL or bool(raw.TestItem) or raw != CURRENT_DEFINITIONS.row("ItemClass",int(item_id)) or not _weight_integer(record.get("source_weight")) or record.get("source_weight") != raw.get("Weight"):
+	var raw: Dictionary = full.source_original_item
+	if raw.is_empty() or raw.get("ID") != int(item_id) or typeof(raw.get("TestItem")) != TYPE_BOOL or bool(raw.TestItem) or raw != CURRENT_DEFINITIONS.row("ItemClass",int(item_id)) or not _weight_integer(full.get("source_weight")) or full.get("source_weight") != raw.get("Weight"):
 		return ignored
 	if not CURRENT_DEFINITIONS.declared_exclusion("ItemClass",raw).is_empty():
 		return {"applicable":true,"ok":false,"problem":"명시적으로 제외된 원문 아이템의 무게 입력입니다."}
