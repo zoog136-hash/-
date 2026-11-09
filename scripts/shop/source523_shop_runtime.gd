@@ -481,7 +481,7 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	var error: String = validate(next)
 	if not error.is_empty(): _busy = false; return fail(error)
 	for key: String in extra:
-		if key!="card_draw_fusion":_busy=false;return fail("미지원 티켓 원자 저장 필드")
+		if key not in ["card_draw_fusion","consumable_state"]:_busy=false;return fail("미지원 티켓 원자 저장 필드")
 	var overrides: Dictionary={SAVE_KEY:next,"inventory":inventory,"gold":gold,"item_instances":instances,"next_item_instance_id":next_instance}
 	overrides.merge(extra,false)
 	var result: Error = world._save_game(true, overrides)
@@ -496,6 +496,8 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	world.gold = gold
 	world.item_instances = instances
 	world.next_item_instance_id = next_instance
+	# A physical original ticket's use ledger was saved with the same commit.
+	if extra.has("consumable_state"): world.consumable_service.import_state(extra.consumable_state)
 	_busy = false
 	return {"ok":true}
 

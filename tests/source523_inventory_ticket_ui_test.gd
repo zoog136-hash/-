@@ -8,7 +8,7 @@ func run() -> void:
 	var consumer=world.source_shop.inventory_tickets;var random_before:int=consumer.random.state
 	consumer.configure(world.source_shop)
 	check(consumer.random.state==random_before,"reopening/rebinding a source catalogue never reseeds pending native ticket RNG")
-	var name:String=str(consumer.document.tickets["254088"].original_item.Name)+" (탐험 254088:1:0)"
+	var name:String=str(consumer.runtime.catalog.record("ItemClass",254088).Name)+" (탐험 254088:1:0)"
 	var before:PackedByteArray=FileAccess.get_file_as_bytes(world.save_path());var state:Dictionary=world.source_shop.export_state()
 	world.hud.show_companion_bag();await frames();var bag=world.hud.lineage_inventory_ui
 	bag._select_item(name);bag.open_detail();await frames()
