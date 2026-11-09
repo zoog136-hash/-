@@ -1,14 +1,24 @@
 name: TWILIGHT Android ARM64 APK Playtest
 
-# Manual playtest build only (automatic APK builds were removed on 10-31).
-# Runs when dispatched, or on a PR that changes this workflow file.
+# Playtest build: on main pushes (publishes the update), when dispatched, or
+# on a PR that changes the build itself.
 on:
+  # Every main build publishes the over-the-air update pack (and the APK when
+  # it fits a release asset) to the public "playtest-latest" release.
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/twilight-android-playtest-apk.yml'
       - 'scripts/boot/actor_pack.gd'
+      - 'scripts/boot/updater.gd'
+      - 'tools/android/update_pack.py'
       - 'export_presets.cfg'
   workflow_dispatch:
 
@@ -145,6 +155,8 @@ jobs:
           g.write_text(text.replace('[application]\n', f'[application]\nconfig/version="{name}"\n', 1))
           print("ANDROID_VERSION", run, name)
           PY
+          # Build identity for scripts/boot/updater.gd (shipped in APK and pack).
+          python3 tools/android/update_pack.py build-info --version-code "$GITHUB_RUN_NUMBER" --version-name "523.$GITHUB_RUN_NUMBER" --commit "$GITHUB_SHA" --godot-version "$(/tmp/Godot_v4.7.2-stable_linux.x86_64 --version)"
           timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
           grep -F "SOURCE84_RAW_EXPORT files=" /tmp/export-android.txt || { echo "::error::Raw Source84 pack was not added to APK"; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
@@ -164,6 +176,35 @@ jobs:
           test -s build/twilight_actor_pack.pck
           ls -lh build/twilight_actor_pack.pck
           if unzip -l build/TWILIGHT_ANDROID_PLAYTEST.apk | grep -q 'assets/actors/'; then echo "::error::APK still contains assets/actors"; exit 1; fi
+      - name: Export over-the-air update pack
+        # Code, scenes, data and small art; mounted over this APK's build line
+        # by scripts/boot/updater.gd. Large art changes only with a new APK.
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-pack "AndroidUpdatePack" build/twilight-update.pck > /tmp/export-update-pack.txt 2>&1 || { echo "UPDATE_PACK_EXPORT_FAILED"; tail -n 80 /tmp/export-update-pack.txt; exit 1; }
+          if grep -F "SOURCE84_RAW_EXPORT files=" /tmp/export-update-pack.txt; then echo "::error::raw map bytes leaked into the update pack"; exit 1; fi
+          base="https://github.com/${GITHUB_REPOSITORY}/releases/download/playtest-latest"
+          apk_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/playtest-latest"
+          if [ "$(stat -c %s build/TWILIGHT_ANDROID_PLAYTEST.apk)" -lt 2000000000 ]; then
+            # Fits a release asset: players get a direct .apk link.
+            cp build/TWILIGHT_ANDROID_PLAYTEST.apk build/TWILIGHT.apk
+            apk_url="$base/TWILIGHT.apk"
+          else
+            echo "::notice::APK is over the 2 GB release asset limit; it stays a workflow artifact"
+          fi
+          python3 tools/android/update_pack.py feed --pack build/twilight-update.pck --base-url "$base" --apk-url "$apk_url" --output build/update.json
+          ls -lh build/twilight-update.pck build/TWILIGHT.apk 2>/dev/null || true
+      - name: Upload update pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT_UPDATE_${{ github.sha }}
+          path: |
+            build/twilight-update.pck
+            build/update.json
+            build/TWILIGHT.apk
+          if-no-files-found: error
+          compression-level: 0
       - name: Upload signed Android debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -195,7 +236,46 @@ jobs:
             /tmp/import-android.txt
             /tmp/export-android.txt
             /tmp/export-actor-pack.txt
+            /tmp/export-update-pack.txt
+            build/update.json
             /tmp/android-settings.txt
             /tmp/alignment-android.txt
             build/android-validation/
           if-no-files-found: ignore
+
+  publish-update:
+    # Only main builds reach players. The pack and APK hold public repository
+    # content only; the private 523 resource pack is never uploaded.
+    needs: build-android-apk
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-playtest-latest
+      cancel-in-progress: false
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: TWILIGHT_UPDATE_${{ github.sha }}
+          path: build
+      - name: Publish to playtest-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=$(python3 -c 'import json;print(json.load(open("build/update.json"))["file"])')
+          mv build/twilight-update.pck "build/$file"
+          gh release view playtest-latest >/dev/null 2>&1 || gh release create playtest-latest --prerelease --title "TWILIGHT playtest (latest main)" --notes "Automatic main build. The game downloads update packs from here; the 523 resource pack is not included." --target "$GITHUB_SHA"
+          assets=("build/$file")
+          if [ -f build/TWILIGHT.apk ]; then assets+=("build/TWILIGHT.apk"); fi
+          # Pack first, feed last: a player never sees a feed whose pack is missing.
+          gh release upload playtest-latest "${assets[@]}" --clobber
+          gh release upload playtest-latest build/update.json --clobber
+          for old in $(gh release view playtest-latest --json assets --jq '.assets[].name' | grep -E '^twilight-update-[0-9]+\.pck$' | grep -vx "$file" || true); do gh release delete-asset playtest-latest "$old" --yes; done
+          gh release edit playtest-latest --target "$GITHUB_SHA" --notes "Automatic main build $(python3 -c 'import json;print(json.load(open("build/update.json"))["version_name"])') ($GITHUB_SHA). The 523 resource pack is not included."
+          echo "PUBLISHED $file"

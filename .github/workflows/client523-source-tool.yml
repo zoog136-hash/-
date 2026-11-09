@@ -13,6 +13,8 @@ on:
       - 'tools/android/test_client523_resource_pack.py'
       - 'tools/android/build_client523_addon.py'
       - 'tools/android/test_client523_addon.py'
+      - 'tools/android/update_pack.py'
+      - 'tools/android/test_update_pack.py'
       - '.github/workflows/client523-source-tool.yml'
   workflow_dispatch:
 
@@ -48,4 +50,4 @@ jobs:
           python-version: '3.12'
       - name: Run tests
         working-directory: tools/android
-        run: python -m unittest test_client523_resource_pack test_client523_addon -v
+        run: python -m unittest test_client523_resource_pack test_client523_addon test_update_pack -v

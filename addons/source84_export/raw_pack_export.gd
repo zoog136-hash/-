@@ -10,7 +10,9 @@ func _export_begin(_features: PackedStringArray, _debug: bool, _path: String, _f
 	# The separate actor art pack carries assets/actors only; raw map and
 	# effect bytes ship once, in the APK.
 	var preset: EditorExportPreset = get_export_preset()
-	if preset != null and preset.get_preset_name() == "AndroidActorPack": return
+	# The over-the-air update pack carries code and data only; it is mounted
+	# over the APK, which keeps these raw bytes.
+	if preset != null and preset.get_preset_name() in ["AndroidActorPack", "AndroidUpdatePack"]: return
 	_export_supplied_effects()
 	if not FileAccess.file_exists(ROOT + "index.json"):
 		push_warning("SOURCE84_NOT_BUNDLED: restore tracked source84_v3 files and use tools/source84_delivery.py export for a complete-map build")
