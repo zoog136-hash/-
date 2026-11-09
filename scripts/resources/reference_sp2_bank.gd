@@ -277,6 +277,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	if not opened.ok: return opened
 	_index = opened.index
 	_manifest = _index.top
+	var loaded: Dictionary
 	if _manifest.get("schema") != 1 or _manifest.get("kind") != "current523_reference_sp2_action_bank" or _manifest.get("source_snapshot") != "patch523": return fail("Not an exact current523 reference source bank.")
 	if not consumer_scope.is_empty() and (_manifest.get("source_dummy_exclusion_policy") != SOURCE_DUMMY_EXCLUSION_POLICY or not _manifest.has("excluded_source_actors")): return fail("Production source consumers require the explicit source-declared dummy exclusion contract.")
 	var contract: Variant = _manifest.get("consumer_contract")
