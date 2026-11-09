@@ -206,6 +206,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=selection
 		if selection.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var fixed_card: Dictionary=source_fixed_card(definition)
+	if not fixed_card.is_empty():
+		out["source_use_spec"]=fixed_card
+		if fixed_card.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	for index: int in range(rows.size()):
 		if handled.has(index):continue
 		var row: Dictionary=rows[index]
@@ -652,6 +657,46 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
 	if initial_rule:spec["local_rule_required"]="select_reward_initial_enchant";spec["source_initial_enchant"]=null;spec["initial_enchant_configuration_key"]="patch523_select_reward_initial_enchant"
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
+	return spec
+
+
+## Card items (ItemCategory BuffCardDrawer) whose single BuffCardID is a
+## Polymorph, MagicDoll or HolyStuff (relic) collection card: using one grants
+## exactly that original card to the existing card owner. The card itself is
+## bound by the use owner (source ID, deck, grade, merge/swap flags) at use.
+const CARD_DECKS={1:["PolymorphCardDeck","변신"],2:["MagicDollCardDeck","마법인형"],98:["HolyStuffCardDeck","성물"]}
+static func source_fixed_card(definition: Dictionary) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffCardID":refs.append(row)
+	if refs.size()!=1 or not integer(refs[0].get("bonus",{}).get("Value")):return {}
+	var id: int=int(refs[0].bonus.Value);var joins: Array=[]
+	for ref: Dictionary in definition.get("source_typed_references",[]):
+		if ref.get("item_bonus_id")==refs[0].ID and ref.get("unit")=="BuffCardID" and ref.get("id")==id:joins.append(ref)
+	if joins.size()!=1:return {}
+	var card: Dictionary=joins[0].get("card",{});var deck: Dictionary=joins[0].get("deck",{})
+	var deck_id: Variant=whole(deck.get("ID"))
+	if card.get("ID")!=id or not CARD_DECKS.has(deck_id) or deck.get("Name")!=CARD_DECKS[deck_id][0] or whole(card.get("BuffCardDeckID"))!=deck_id:return {}
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"BuffCardID":"BuffCardID","ItemConsumeEffectSpriteID":"SpriteID","BuffCardCannotSwap":"TrueFalse"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons
+	if definition.category.get("Name")!="BuffCardDrawer" or deck.get("CharacterBased")!=false:reasons.append("unsupported_card_item_category_or_deck")
+	if not SOURCE.declared_exclusion("BuffCard",card).is_empty() or not SOURCE.declared_exclusion("BuffCardDeck",deck).is_empty():reasons.append("source_excluded_card")
+	var server: Variant=card.get("ServerLimitSetID",0)
+	if not integer(server):reasons.append("invalid_card_server_limit")
+	elif int(server)!=0:reasons.append("server_context_required" if not SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty() else "server_definition_missing")
+	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_card_date_context_required")
+	var swap: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="BuffCardCannotSwap":swap.append(whole(row.get("bonus",{}).get("Value")))
+	if swap.size()>1:reasons.append("ambiguous_card_flag:BuffCardCannotSwap")
+	for value: Variant in swap:
+		if value not in [0,1]:reasons.append("invalid_card_flag:BuffCardCannotSwap")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec.merge({"kind":"fixed_card","source_snapshot":"patch523","source_item_class_id":definition.original_item.ID,"card_kind":CARD_DECKS[deck_id][1],"card_id":id,"deck_id":deck_id,"original_card":card.duplicate(true),"original_deck":deck.duplicate(true),"buff_card_cannot_swap":swap==[1],"server_limit_set_id":server,"source_item_bonus_ids":[],"item_requirements":{"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique})
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec
 
 
