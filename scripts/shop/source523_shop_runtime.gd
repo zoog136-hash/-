@@ -23,8 +23,13 @@ var _transaction_time: int = -1
 var _bindings: Dictionary = {}
 ## Explicit adapters only. Missing server/calendar/price knowledge never grants access.
 var server_context: Dictionary = {}
-var calendar_offset_minutes: Variant = null
-var period_reset_hour: Dictionary = {}
+## Default calendar: Korea time with the 05:00 reset used everywhere else in
+## TWILIGHT, so daily/weekly(Mon, Wed)/monthly purchase limits work without a
+## policy file. A policy file can still override (null keeps limits locked).
+const DEFAULT_CALENDAR_OFFSET_MINUTES: int = 540
+const DEFAULT_PERIOD_RESET_HOUR: Dictionary = {"61":5,"71":5,"81":5,"11311":5}
+var calendar_offset_minutes: Variant = DEFAULT_CALENDAR_OFFSET_MINUTES
+var period_reset_hour: Dictionary = DEFAULT_PERIOD_RESET_HOUR.duplicate()
 var daily_purchase_ids: Array[int] = []
 var merchant_prices: Dictionary = {}
 var merchant_economy: Dictionary = Economy.defaults()
@@ -197,7 +202,7 @@ func load_policy(path: String, expected_sha: String) -> Dictionary:
 	if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary: return fail("상점 정책 JSON 오류")
 	var policy: Dictionary=parser.data
 	if policy.get("schema")!="twilight.source523.shop-policy.v1" or policy.get("pack_sha256")!=catalog.loaded_sha256: return fail("상점 정책의 원본 팩 불일치")
-	var offset: Variant=policy.get("calendar_offset_minutes")
+	var offset: Variant=policy.get("calendar_offset_minutes",DEFAULT_CALENDAR_OFFSET_MINUTES)
 	if offset!=null and (not Catalog._integer(offset) or int(offset)<-840 or int(offset)>840): return fail("상점 정책의 시간 기준 오류")
 	for key: String in ["server_context","period_reset_hour","merchant_prices"]:
 		if not policy.get(key,{}) is Dictionary:return fail("상점 정책 항목 오류: "+key)
@@ -227,7 +232,8 @@ func load_policy(path: String, expected_sha: String) -> Dictionary:
 		if not key is String or key not in ["61","71","81","11311"] or not integer(policy.period_reset_hour[key]) or int(policy.period_reset_hour[key])>23:return fail("구매 한도 초기화 정책 오류")
 	server_context=policy.get("server_context",{}).duplicate(true)
 	calendar_offset_minutes=offset
-	period_reset_hour=policy.get("period_reset_hour",{}).duplicate(true)
+	period_reset_hour=DEFAULT_PERIOD_RESET_HOUR.duplicate()
+	period_reset_hour.merge(policy.get("period_reset_hour",{}),true)
 	daily_purchase_ids.clear()
 	for id: Variant in policy.get("daily_purchase_ids",[]):daily_purchase_ids.append(int(id))
 	merchant_prices=policy.get("merchant_prices",{}).duplicate(true)

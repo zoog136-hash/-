@@ -23,9 +23,28 @@ func reward_problem(reward: Dictionary) -> String:
 	if category.get("IsStackable") != true or int(item.get("Weight",-1)) != 0: return "원본 장비·무게 조건 연결 필요"
 	var expiry := expiry_definition(int(item.ID))
 	if expiry.has("error"): return str(expiry.error)
-	if expiry.has("source_delete_clock") and runtime.local.source_clock() >= str(expiry.source_delete_clock): return "원본 아이템 삭제 시각이 지났습니다"
+	if expiry.has("source_delete_clock") and runtime.local.source_clock() >= delete_clock(expiry): return "원본 아이템 삭제 시각이 지났습니다"
 	if category.get("Name") not in ["Currency","StackableItem","ScrollBless","LinMarketProduct","IntangibleItemRecharger","ScrollBuffCardRetry","SelectReward"]: return "원본 아이템 분류 연결 필요"
 	return ""
+
+## Deletion clock that applies now: the source clock, or for a reward of a
+## locally rotated monster book season, the source clock moved by the same
+## number of season lengths (local_delete_clock).
+static func delete_clock(item: Dictionary) -> String:
+	return str(item.get("local_delete_clock", item.get("source_delete_clock", "")))
+
+func _rotation_shift_seconds(item_id: int) -> int:
+	var clock: String = runtime.local.source_clock()
+	for book: Dictionary in runtime.catalog.books(false):
+		var book_id := int(book.ID)
+		var turn: int = runtime.catalog.rotation(book_id, clock)
+		if turn <= 0: continue
+		for stage: Dictionary in runtime.catalog.levels(book_id):
+			for reward: Dictionary in stage.get("rewards", []):
+				if int(reward.get("RewardTypeID", 0)) == 2 and int(reward.get("RewardClassID", 0)) == item_id:
+					var period: Dictionary = runtime.catalog.raw_period(book_id)
+					return turn * (runtime.catalog._clock_unix(runtime.catalog._clock(period.EndDateTimeID)) - runtime.catalog._clock_unix(runtime.catalog._clock(period.StartDateTimeID)))
+	return 0
 
 func expiry_definition(item_id: int) -> Dictionary:
 	var result: Dictionary = {}
@@ -40,6 +59,9 @@ func expiry_definition(item_id: int) -> Dictionary:
 		var clock: String = runtime.catalog._clock(date)
 		if not runtime.catalog.valid_clock(clock): return {"error":"원본 삭제 시각 형식 확인 필요"}
 		result = {"source_delete_clock":clock,"source_expiry_bonus":bonus,"source_expiry_type":type,"source_expiry_application":application,"source_expiry_datetime":date}
+	if result.has("source_delete_clock"):
+		var shift := _rotation_shift_seconds(item_id)
+		if shift > 0: result["local_delete_clock"] = runtime.catalog._unix_clock(runtime.catalog._clock_unix(str(result.source_delete_clock)) + shift)
 	return result
 
 func definition(reward: Dictionary) -> Dictionary:
@@ -51,7 +73,8 @@ func definition(reward: Dictionary) -> Dictionary:
 	var record: Dictionary = {"name":name,"source":"lineagem_patch523","source_snapshot":"cumulative523","sourceId":"m523:item:"+str(int(item.ID))+":normal","source_item_class_id":int(item.ID),"monsterbook_source_item":true,"source_original":item.duplicate(true),"source_reward":reward.duplicate(true),"slot":"currency" if category.get("Name") == "Currency" else "material","type":str(category.get("Name","")),"grade":str(desc.get("Description","원본")),"desc":"몬스터 도감 보상 · 원본 아이템 ID와 소유 상태 보존","weight":0,"tradeable":bool(item.IsTradable),"storable":bool(item.IsStorable),"droppable":bool(item.IsDroppable),"price":0,"source_use_pending":true}
 	var expiry := expiry_definition(int(item.ID))
 	if not expiry.has("error"): record.merge(expiry)
-	if record.has("source_delete_clock"): record.desc += " · 원본 삭제 " + str(record.source_delete_clock)
+	if record.has("local_delete_clock"): record.desc += " · 삭제 " + str(record.local_delete_clock) + " (로컬 순환)"
+	elif record.has("source_delete_clock"): record.desc += " · 원본 삭제 " + str(record.source_delete_clock)
 	return record
 
 func native_target(reward: Dictionary) -> Dictionary:
@@ -136,7 +159,7 @@ func _expire_owned() -> bool:
 	var tracked: Dictionary = runtime.catalog.source_items()
 	var due: Dictionary = {}
 	for name: String in tracked:
-		if tracked[name].has("source_delete_clock") and clock >= str(tracked[name].source_delete_clock): due[name] = true
+		if tracked[name].has("source_delete_clock") and clock >= delete_clock(tracked[name]): due[name] = true
 	if due.is_empty(): return true
 	var present: bool = false
 	for name: String in due:
@@ -195,6 +218,7 @@ static func valid_record(name: String, item: Variant) -> bool:
 			if not item.get(field) is Dictionary: return false
 		if item.source_expiry_type.get("Name") != "DeleteTime" or item.source_expiry_application.get("Name") != "DateTime": return false
 		if int(item.source_expiry_bonus.get("BonusTypeID",-1)) != int(item.source_expiry_type.get("ID",-2)) or int(item.source_expiry_bonus.get("BonusApplicationTypeID",-1)) != int(item.source_expiry_application.get("ID",-2)) or int(item.source_expiry_bonus.get("BonusApplicationTargetID",-1)) != int(item.source_expiry_datetime.get("ID",-2)) or item.source_expiry_bonus.get("Value") != 0: return false
+		if item.has("local_delete_clock") and (not item.local_delete_clock is String or not preload("res://scripts/monsterbook/monsterbook523_clock.gd").valid(item.local_delete_clock) or item.local_delete_clock <= item.source_delete_clock): return false
 		var date: Dictionary = item.source_expiry_datetime
 		if item.source_delete_clock != "%04d%02d%02d%02d%02d" % [date.get("Year",0),date.get("Month",0),date.get("Day",0),date.get("Hour",0),date.get("Minute",0)]: return false
 	return item.get("tradeable") == item.source_original.get("IsTradable") and item.get("storable") == item.source_original.get("IsStorable") and item.get("droppable") == item.source_original.get("IsDroppable")

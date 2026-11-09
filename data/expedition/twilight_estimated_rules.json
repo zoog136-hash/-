@@ -21,7 +21,7 @@
   "daily_reset_hour_utc": 5,
   "offline_progress": true,
   "resurrection_cost_multiplier_permyriad": 10000,
-  "daily_reset_utc_offset_minutes": 0,
+  "daily_reset_utc_offset_minutes": 540,
   "field_sources": {
     "event_interval_seconds": "custom: adopt 9min cadence mentioned in official dispatch update; exact doll/relic formula unavailable",
     "normal_event_weights": "custom: equal weights among eligible source event types",
@@ -34,7 +34,7 @@
     "abort_recovery_permyriad": "custom: floor50% of discovered items and experience",
     "completion_box_draws": "custom: one weighted source row per consumed box; AbleMultiple alone does not prove count",
     "daily_reset_hour_utc": "source: CHANGE_EXPLOREVIEW ND_EXPLORE TEXT_NOTICE_2 says05:00; timezone is separate custom field",
-    "daily_reset_utc_offset_minutes": "custom: local standalone UTC default; configurable offset",
+    "daily_reset_utc_offset_minutes": "custom: Korea time (UTC+9) so the source 05:00 reset matches quests, attendance and dungeons; configurable offset",
     "offline_progress": "custom: deterministic wall-time replay with persisted per-job RNG",
     "potion_tie_order": "custom: same-timestamp potion before event, configurable before_event/after_event",
     "buff_hp_and_heal": "source: DescData_Korean484472/484482/1712072/1712082 confirms flat HP+200 and50HP per15min",
