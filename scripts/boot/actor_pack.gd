@@ -15,6 +15,7 @@ const PACK_PATH := "user://twilight_actor_pack.pck"
 ## Any shipped actor file proves the actors are reachable.
 const SENTINEL := "res://assets/actors/eight_direction"
 const COPY_CHUNK := 16 * 1024 * 1024
+const STYLE = preload("res://scripts/boot/boot_style.gd")
 
 var mounted: bool = false
 var needed: bool = false
@@ -45,20 +46,12 @@ func _show_installer() -> void:
 	_layer.layer = 128
 	_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().root.add_child(_layer)
-	var panel := PanelContainer.new()
-	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_layer.add_child(panel)
-	var box := VBoxContainer.new()
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	panel.add_child(box)
-	_status = Label.new()
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var box: VBoxContainer = STYLE.installer_frame(_layer)
+	box.add_child(STYLE.label("그림 팩 설치", 26, STYLE.GOLD))
+	_status = STYLE.label("", 20)
 	_status.text = "캐릭터·몬스터 그림 팩이 없습니다.\n같은 빌드에서 받은 twilight_actor_pack.pck 를 선택하세요." if not mounted else "그림 팩이 이 APK와 맞지 않습니다.\n같은 빌드에서 받은 twilight_actor_pack.pck 를 다시 선택하세요."
 	box.add_child(_status)
-	_choose = Button.new()
-	_choose.text = "그림 팩(.pck) 선택"
-	_choose.custom_minimum_size = Vector2(320, 72)
+	_choose = STYLE.button("그림 팩(.pck) 선택")
 	_choose.pressed.connect(func() -> void: _picker.popup_centered_ratio(0.8))
 	box.add_child(_choose)
 	_picker = FileDialog.new()
