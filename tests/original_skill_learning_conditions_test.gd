@@ -6,6 +6,7 @@ var world: TwilightWorld
 var checks: int = 0
 var failures: Array[String] = []
 var audited: int = 0
+var held: int = 0
 var upgrades: int = 0
 var weapons: int = 0
 
@@ -23,6 +24,14 @@ func learn_book(record: Dictionary) -> void:
 func audit_records() -> void:
 	var catalog := world.original_skills.catalog
 	for record: Dictionary in catalog.records:
+		if bool(record.get("runtime_blocked", false)):
+			# Reference-only rows (unpublished book/price/coefficients) are held
+			# back; they must never be sold or learned, and are not audited here.
+			held += 1
+			world.job_class = str(record.classes[0]); world.level = 90; world.gold = 100000000
+			var held_gold: int = world.gold
+			check(not catalog.buy_book(str(record.id)) and world.gold == held_gold and not catalog.learn(str(record.id)) and not catalog.owned(record), str(record.name) + " held-back record cannot be bought or learned")
+			continue
 		audited += 1
 		catalog.learned.clear()
 		world.active_skill_buffs.clear()
@@ -40,6 +49,14 @@ func audit_records() -> void:
 		check(not catalog.buy_book(str(record.id)), str(record.name) + " rejects insufficient gold")
 		check(world.gold == gold_before and int(world.inventory[str(record.book_name)]) == 0, "failed purchase is atomic")
 		world.gold = int(record.book_cost)
+		# Original prerequisites (e.g. 아쿠아 프리즌 before its 스피릿 form) gate the
+		# shop too; check the refusal, then satisfy them to audit the rest.
+		var rel: Dictionary = catalog.relations.get(str(record.id), {})
+		var prerequisites: Array = rel.get("requires_skill", [])
+		if not prerequisites.is_empty():
+			check(not catalog.buy_book(str(record.id)) and world.gold == int(record.book_cost), str(record.name) + " needs its original prerequisite before purchase")
+			for required: String in prerequisites:
+				catalog.learned[required] = int(rel.get("requires_skill_level", {}).get(required, 1))
 		check(catalog.buy_book(str(record.id)), str(record.name) + " real shop purchase")
 		check(world.gold == 0 and int(world.inventory[str(record.book_name)]) == 1, "purchase spends exact cost for one book")
 		check(catalog.learn(str(record.id)), str(record.name) + " can learn at valid level")
@@ -47,7 +64,7 @@ func audit_records() -> void:
 		world.inventory[str(record.book_name)] = 1
 		check(not catalog.learn(str(record.id)) and int(world.inventory[str(record.book_name)]) == 1 and catalog.revision == revision + 1, "duplicate learning is atomic")
 		if str(record.activation) == "passive":
-			world.mp = 999
+			world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 			check(not world._cast_job_skill(str(record.id)) and world.mp == 999, str(record.name) + " passive cannot be cast")
 		for other: String in world.JOB_CLASS_ORDER:
 			if record.classes.has(other): continue
@@ -89,7 +106,7 @@ func audit_upgrades() -> void:
 		check(catalog.resolve(base) == resolved, "ancestry order survives reversed catalog order")
 		catalog.records = previous
 		check(base == catalog.record_for(str(base.id)) and not base.has("resolved_grade"), "resolution does not mutate the base record")
-		world.mp = 999
+		world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 		check(not world._cast_job_skill(str(augment.id)) and world.mp == 999, "upgrade cannot be cast separately")
 
 func audit_weapon_and_school() -> void:
@@ -103,7 +120,7 @@ func audit_weapon_and_school() -> void:
 		world.equipped_items.clear()
 		learn_book(record)
 		check(catalog.owned(record) and not catalog.enabled(record), "weapon restriction does not prevent book ownership")
-		world.mp = 999
+		world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 		world.skill_cooldowns.clear()
 		world.skill_global_cooldown = 0
 		var state_before := world.rng.state
@@ -133,7 +150,7 @@ func audit_live_upgrade() -> void:
 	var base := catalog.record_for("썬더 아머")
 	var augment := catalog.record_for("썬더 아머(미스틱)")
 	learn_book(base)
-	world.mp = 999
+	world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
 	check(world._cast_job_skill(str(base.id)), "actual base armor cast before learning its upgrade")
@@ -172,8 +189,9 @@ func run() -> void:
 	audit_upgrades()
 	audit_weapon_and_school()
 	audit_live_upgrade()
-	check(audited == 125 and upgrades == 10 and weapons == 4, "audit covers every current record, upgrade and weapon restriction")
-	print("LEARNING_AUDIT_COUNTS records=", audited, " upgrades=", upgrades, " weapons=", weapons)
+	# Playable (not held-back) records of the complete 523 catalog (2026-11-09).
+	check(audited == 147 and upgrades == 11 and weapons == 8 and held == 332, "audit covers every current record, upgrade and weapon restriction")
+	print("LEARNING_AUDIT_COUNTS records=", audited, " held=", held, " upgrades=", upgrades, " weapons=", weapons)
 	world.queue_free()
 	await process_frame
 	if failures.is_empty(): print("ORIGINAL_SKILL_LEARNING_CONDITIONS_OK checks=", checks, " records=", audited, " upgrades=", upgrades, " weapons=", weapons)

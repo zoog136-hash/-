@@ -38,6 +38,7 @@ func _initialize() -> void:
 	_pass_rotation()
 	_dungeon_defaults()
 	print("TIME_CONTENT_TEST failures=%d" % failures)
+	if failures == 0: print("TIME_CONTENT_ROTATION_OK")
 	quit(0 if failures == 0 else 1)
 
 func _calendar() -> void:
