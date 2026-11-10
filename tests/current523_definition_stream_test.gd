@@ -97,7 +97,18 @@ func run() -> void:
 	same_result("{\"rows\":[{\"A\":1}],\"x\":nul}", "invalid other member", false)
 	var bom := PackedByteArray([0xEF, 0xBB, 0xBF])
 	bom.append_array("{\"rows\":[{\"A\":1}]}".to_utf8_buffer())
-	same_bytes(bom, "UTF-8 BOM", false)
+	# The installed original's members all start with one UTF-8 BOM: streamed,
+	# with exactly the whole parse's result.
+	same_bytes(bom, "UTF-8 BOM", true)
+	var bom_pretty := PackedByteArray([0xEF, 0xBB, 0xBF])
+	bom_pretty.append_array("{\r\n  \"rows\": [\r\n    {\r\n      \"ID\": 1,\r\n      \"Name\": \"가\"\r\n    },\r\n    {\r\n      \"ID\": 2,\r\n      \"Name\": \"나\"\r\n    }\r\n  ]\r\n}\r\n".to_utf8_buffer())
+	same_bytes(bom_pretty, "UTF-8 BOM, pretty printed CRLF (original layout)", true)
+	var bom_many := PackedByteArray([0xEF, 0xBB, 0xBF])
+	bom_many.append_array(many_rows(1500, -1).to_utf8_buffer())
+	same_bytes(bom_many, "UTF-8 BOM, 1500 rows across batches", true)
+	var double_bom := PackedByteArray([0xEF, 0xBB, 0xBF, 0xEF, 0xBB, 0xBF])
+	double_bom.append_array("{\"rows\":[{\"A\":1}]}".to_utf8_buffer())
+	same_bytes(double_bom, "two BOMs", false)
 	# (4) storage bake of a large table: verified publish, or a safe stop.
 	var packed: Dictionary = whole.store
 	var table := "ZzStreamProbe"
