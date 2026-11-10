@@ -650,6 +650,10 @@ func _ready() -> void:
 	world_interactions.configure(self)
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
+	elif _source_gender_needed() and DisplayServer.get_name() != "headless":
+		# An existing character has no gender yet; the 523 picture needs one.
+		hud.call("open_class_selection",false)
+		hud.show_message("523 캐릭터 그림을 쓰려면 성별을 선택하세요.")
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
 	_release_idle_original_models.call_deferred()
@@ -1786,6 +1790,8 @@ func _connect_signals() -> void:
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
+	if hud.has_signal("source_gender_selected"):
+		hud.connect("source_gender_selected", func(gender_id: int) -> void: set_source_character_gender(gender_id))
 	hud.job_skill_pressed.connect(_cast_job_skill)
 	hud.quickslot_pressed.connect(_on_quickslot_pressed)
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
@@ -5890,6 +5896,7 @@ func _update_hud() -> void:
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
+	character_state["source_gender_id"] = source_gender_id
 	var job_profile: Dictionary = _job_profile(job_class)
 	character_state["job_image_path"] = str(job_profile.get("image_path", ""))
 	character_state["job_transform_name"] = str(job_profile.get("transform_name", ""))
@@ -10639,6 +10646,28 @@ func _source_visual_context() -> Dictionary:
 		if BASE508.native(record) and record.has("source_active_custom_option_id") and not options.has(str(record.sourceId)):
 			options[str(record.sourceId)] = int(record.source_active_custom_option_id)
 	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options,"local_weapon_type":_current_weapon_type(),"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())}
+
+## Genders the original Class table gives a picture for this class (1 Male,
+## 2 Female). Without the installed 523 tables both stay selectable.
+func source_class_genders(job_name: String) -> Array:
+	var bank: GDScript = preload("res://scripts/resources/current523_source_bank.gd")
+	if not bool(bank.options(_source_visual_context()).get("enabled", false)): return [1, 2]
+	var tables: Array[String] = ["Class", "Gender"]
+	if not bool(bank.source_tables(_source_visual_context(), tables).get("ok", false)): return [1, 2]
+	var row: Dictionary = bank.table_row("Class", BASE508.source_class_id(job_name))
+	if row.is_empty(): return [1, 2]
+	var genders: Array = []
+	if int(row.get("MaleSpriteID", 0)) > 0: genders.append(1)
+	if int(row.get("FemaleSpriteID", 0)) > 0: genders.append(2)
+	return genders if not genders.is_empty() else [1, 2]
+
+## True when the installed 523 bank draws the character (by class and gender).
+func source_gender_required() -> bool:
+	return bool(preload("res://scripts/resources/current523_source_bank.gd").options(_source_visual_context()).get("enabled", false))
+
+## True when the installed 523 bank draws the character but no gender is known.
+func _source_gender_needed() -> bool:
+	return source_gender_id not in [1, 2] and source_gender_required()
 
 func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false
