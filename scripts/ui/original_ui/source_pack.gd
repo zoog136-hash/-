@@ -6,6 +6,14 @@ const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 ## leases and the idle byte budget. This instance holds a lease on every page
 ## in _pages until release_cache_leases(), a successful open() or deletion.
 const PAGE_CACHE=preload("res://scripts/ui/original_ui/source_pack_page_cache.gd")
+## After the first verified open, the scene and layout trees (about 250 MB
+## parsed for the main HUD pack) live in a device-local record bake keyed by
+## the manifest pin and this script; `manifest.scenes`/`layout_sources` keep
+## their member names with empty values and scene()/layout_source() read one
+## tree at a time. The manifest bytes are still hash-checked on every open.
+const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
+static var bake_enabled: bool=true
+var _records: RefCounted
 var manifest: Dictionary={}
 var root: String=""
 var manifest_sha256: String=""
@@ -50,23 +58,24 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	if file==null or file.get_length()>128*1024*1024: return _fail("manifest_size_or_access")
 	var raw: PackedByteArray=file.get_buffer(file.get_length())
 	if expected_sha256.length()!=64 or _sha256(raw)!=expected_sha256: return _fail("manifest_hash_mismatch")
+	var bake_name: String="original_ui_pack_"+expected_sha256.left(16)
+	var bake_key: String=BAKE.key(["original_ui_pack.v1",expected_sha256,BAKE.code_key(["res://scripts/ui/original_ui/source_pack.gd"])]) if bake_enabled else ""
+	var baked: RefCounted=BAKE.open_records(bake_name,bake_key) if not bake_key.is_empty() else null
+	if baked!=null:
+		var slim: Variant=baked.read("meta")
+		if slim is Dictionary and slim.get("schema")=="twilight-original-ui-v1" and slim.get("scenes") is Dictionary and slim.get("files") is Dictionary and _files_intact(pack_root,slim.files).is_empty():
+			raw=PackedByteArray()
+			_adopt(slim,pack_root,expected_sha256)
+			_records=baked
+			return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
 	var value: Variant=JSON.parse_string(raw.get_string_from_utf8())
+	raw=PackedByteArray()
 	if not value is Dictionary or value.get("schema")!="twilight-original-ui-v1": return _fail("manifest_schema")
 	if not value.get("scenes") is Dictionary or not value.get("files") is Dictionary or not value.get("atlases") is Dictionary or not value.get("blockers") is Array:
 		return _fail("manifest_fields")
 	if not value.blockers.is_empty(): return _fail("unresolved_source_dependencies")
-	for member: String in value.files:
-		if not _safe_member(member): return _fail("unsafe_source_path")
-		var entry: Variant=value.files[member]
-		if not entry is Dictionary or not entry.get("sha256") is String or not entry.get("bytes") is float and not entry.get("bytes") is int:
-			return _fail("invalid_source_entry")
-		var path: String=pack_root.path_join("originals").path_join(member)
-		if not FileAccess.file_exists(path): return _fail("source_missing:"+member)
-		var source:=FileAccess.open(path,FileAccess.READ)
-		if source==null or source.get_length()!=int(entry.bytes) or FileAccess.get_sha256(path)!=entry.sha256:
-			return _fail("source_hash_or_size:"+member)
-		if member.ends_with(".fnt") and not _font_pages_present(path,member,value.files):
-			return _fail("bitmap_font_page_dependencies:"+member)
+	var files_problem: String=_files_intact(pack_root,value.files)
+	if not files_problem.is_empty(): return _fail(files_problem)
 	for member: String in value.scenes:
 		var tree: Variant=value.scenes[member]
 		if not tree is Dictionary or not value.files.has(member) or tree.get("_source_sha256")!=value.files[member].sha256:
@@ -99,6 +108,30 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 		for member: String in value.externally_bound_texture_nodes:value.externally_bound_texture_nodes[member]=_offsets(value.externally_bound_texture_nodes[member])
 	for member: String in value.scenes:
 		if bool(value.scenes[member].get("_partial_source_scene",false)):value.scenes[member]._selected_source_offsets=_offsets(value.scenes[member]._selected_source_offsets)
+	_adopt(value,pack_root,expected_sha256)
+	_records=null
+	if not bake_key.is_empty():
+		var writer: RefCounted=BAKE.record_writer(bake_name,bake_key)
+		if writer!=null:
+			var slim: Dictionary=value.duplicate()
+			slim["scenes"]={}
+			for member: String in value.scenes:
+				slim.scenes[member]={}
+				writer.add("s:"+member,value.scenes[member])
+			if value.get("layout_sources") is Dictionary:
+				slim["layout_sources"]={}
+				for member: String in value.layout_sources:
+					slim.layout_sources[member]={}
+					writer.add("l:"+member,value.layout_sources[member])
+			writer.add("meta",slim)
+			if BAKE.finish_records(writer):
+				var records: RefCounted=BAKE.open_records(bake_name,bake_key)
+				if records!=null:
+					manifest=slim
+					_records=records
+	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256
@@ -108,7 +141,23 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_fonts.clear()
 	_bitmap_fonts.clear()
 	last_error=""
-	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+## "" when every original file of the pack is present with its declared size
+## and SHA-256 (and bitmap fonts have their pages); else the failure code.
+static func _files_intact(pack_root: String, files: Dictionary) -> String:
+	for member: String in files:
+		if not _safe_member(member): return "unsafe_source_path"
+		var entry: Variant=files[member]
+		if not entry is Dictionary or not entry.get("sha256") is String or not entry.get("bytes") is float and not entry.get("bytes") is int:
+			return "invalid_source_entry"
+		var path: String=pack_root.path_join("originals").path_join(member)
+		if not FileAccess.file_exists(path): return "source_missing:"+member
+		var source:=FileAccess.open(path,FileAccess.READ)
+		if source==null or source.get_length()!=int(entry.bytes) or FileAccess.get_sha256(path)!=entry.sha256:
+			return "source_hash_or_size:"+member
+		if member.ends_with(".fnt") and not _font_pages_present(path,member,files):
+			return "bitmap_font_page_dependencies:"+member
+	return ""
 
 static func _offsets(values: Variant) -> Array:
 	var result: Array=[]
@@ -138,11 +187,17 @@ static func _font_pages_present(path: String, member: String, files: Dictionary)
 	return true
 
 func scene(member: String) -> Dictionary:
+	if _records!=null:
+		var tree: Variant=_records.read("s:"+member)
+		return tree if tree is Dictionary else {}
 	return manifest.get("scenes",{}).get(member,{}).duplicate(true)
 
 func layout_source(member: String) -> Dictionary:
 	# Parent reference geometry is not an entry scene or gameplay use. Its
 	# optional siblings are neither loaded nor marked dependency-complete.
+	if _records!=null:
+		var layout: Variant=_records.read("l:"+member)
+		return layout if layout is Dictionary else {}
 	return manifest.get("layout_sources",{}).get(member,{}).duplicate(true)
 
 func nodes_named(member: String, source_name: String) -> Array[Dictionary]:

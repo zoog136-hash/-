@@ -531,6 +531,7 @@ func _ready() -> void:
 		return
 	BOOT_LOG.step("world_source_dungeon_pack")
 	_load_source_dungeon_pack()
+	_weight_index_deferred = true
 	BOOT_LOG.step("world_services")
 	rng.randomize()
 	ain_service.import_state({})
@@ -616,6 +617,7 @@ func _ready() -> void:
 	player.attack_strike.connect(func(cycle: int) -> void:
 		if int(pending_attack.get("id", -1)) == cycle and bool(pending_attack.get("normal", false)):
 			presentation_audio.play_world("attack", player.global_position))
+	_flush_item_weight_index()
 	_connect_signals()
 	if hud.has_signal("consumable_auto_settings_changed"):
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
@@ -678,6 +680,10 @@ func _ready() -> void:
 	world_interactions.configure(self)
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
+	elif _source_gender_needed() and DisplayServer.get_name() != "headless":
+		# An existing character has no gender yet; the 523 picture needs one.
+		hud.call("open_class_selection",false)
+		hud.show_message("523 캐릭터 그림을 쓰려면 성별을 선택하세요.")
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
 	_release_idle_original_models.call_deferred()
@@ -1348,7 +1354,25 @@ func _effective_max_mp(item_buff_override: Variant = null) -> int:
 	var skill_percent: float=original_skills.stat("mpPct") if original_skills!=null else 0.0
 	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct") + skill_percent))))
 
+## While the world starts, a dozen services register items and each asks for
+## the weight index to be rebuilt (about 30,000 original records per pass).
+## Nothing reads the index in between, so those requests are remembered and
+## the index is built once, before the map and the save are loaded.
+var _weight_index_deferred: bool = false
+var _weight_index_pending: bool = false
+func _flush_item_weight_index() -> void:
+	_weight_index_deferred = false
+	if _weight_index_pending:
+		_weight_index_pending = false
+		_index_item_weights()
+
+## Full index passes so far (tests check the start builds it once).
+var item_weight_index_builds: int = 0
 func _index_item_weights() -> void:
+	if _weight_index_deferred:
+		_weight_index_pending = true
+		return
+	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
 	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
@@ -1799,6 +1823,8 @@ func _connect_signals() -> void:
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
+	if hud.has_signal("source_gender_selected"):
+		hud.connect("source_gender_selected", func(gender_id: int) -> void: set_source_character_gender(gender_id))
 	hud.job_skill_pressed.connect(_cast_job_skill)
 	hud.quickslot_pressed.connect(_on_quickslot_pressed)
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
@@ -5903,6 +5929,7 @@ func _update_hud() -> void:
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
+	character_state["source_gender_id"] = source_gender_id
 	var job_profile: Dictionary = _job_profile(job_class)
 	character_state["job_image_path"] = str(job_profile.get("image_path", ""))
 	character_state["job_transform_name"] = str(job_profile.get("transform_name", ""))
@@ -10652,6 +10679,28 @@ func _source_visual_context() -> Dictionary:
 		if BASE508.native(record) and record.has("source_active_custom_option_id") and not options.has(str(record.sourceId)):
 			options[str(record.sourceId)] = int(record.source_active_custom_option_id)
 	return {"class_id":BASE508.source_class_id(job_class),"gender_id":source_gender_id,"active_card_options":options,"local_weapon_type":_current_weapon_type(),"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())}
+
+## Genders the original Class table gives a picture for this class (1 Male,
+## 2 Female). Without the installed 523 tables both stay selectable.
+func source_class_genders(job_name: String) -> Array:
+	var bank: GDScript = preload("res://scripts/resources/current523_source_bank.gd")
+	if not bool(bank.options(_source_visual_context()).get("enabled", false)): return [1, 2]
+	var tables: Array[String] = ["Class", "Gender"]
+	if not bool(bank.source_tables(_source_visual_context(), tables).get("ok", false)): return [1, 2]
+	var row: Dictionary = bank.table_row("Class", BASE508.source_class_id(job_name))
+	if row.is_empty(): return [1, 2]
+	var genders: Array = []
+	if int(row.get("MaleSpriteID", 0)) > 0: genders.append(1)
+	if int(row.get("FemaleSpriteID", 0)) > 0: genders.append(2)
+	return genders if not genders.is_empty() else [1, 2]
+
+## True when the installed 523 bank draws the character (by class and gender).
+func source_gender_required() -> bool:
+	return bool(preload("res://scripts/resources/current523_source_bank.gd").options(_source_visual_context()).get("enabled", false))
+
+## True when the installed 523 bank draws the character but no gender is known.
+func _source_gender_needed() -> bool:
+	return source_gender_id not in [1, 2] and source_gender_required()
 
 func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false
