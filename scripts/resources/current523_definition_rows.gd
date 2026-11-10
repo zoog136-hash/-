@@ -243,7 +243,7 @@ const CONVERT_BATCH_BYTES: int = 1048576
 ## member bytes, or {ok:false, reason:"structure"|"row"} exactly when the
 ## former whole parse failed in the same way. Only one batch of parsed rows
 ## and the packed columns are alive at a time; the input bytes stay with the
-## caller. Anything the byte scanner does not positively recognise (a BOM,
+## caller. Anything the byte scanner does not positively recognise (a second BOM,
 ## trailing bytes, a second "rows" member, a row that is not an object, rows
 ## with different key sets, a batch that does not parse) falls back to the
 ## former whole parse, so every result is the former result by construction.
@@ -267,7 +267,12 @@ static func _convert_whole(bytes: PackedByteArray) -> Dictionary:
 ## The streaming form of _convert_whole(), or {} when it must fall back.
 static func _convert_streaming(bytes: PackedByteArray) -> Dictionary:
 	var size: int = bytes.size()
-	var at: int = SCAN._space(bytes, 0)
+	# Every member of the installed original starts with a UTF-8 BOM; the
+	# whole parse ignores it (get_string_from_utf8() drops it), so one leading
+	# BOM is skipped here too. Without this every real table fell back to the
+	# whole parse. A second BOM still falls back.
+	var start: int = 3 if size >= 3 and bytes[0] == 0xEF and bytes[1] == 0xBB and bytes[2] == 0xBF else 0
+	var at: int = SCAN._space(bytes, start)
 	if at >= size or bytes[at] != 123: return {}
 	var index: int = SCAN._space(bytes, at + 1)
 	var packer := RowPacker.new()
