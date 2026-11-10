@@ -2133,9 +2133,9 @@ func _reject_map_pack(message: String) -> void:
 	if field_map==null and field_renderer==null and map_background.texture==null:
 		if not map_bootstrap_blocked:map_prior_process_mode=process_mode
 		map_bootstrap_blocked=true
-		# Protect an existing save made on a map; a new character with no save
-		# yet has nothing to protect (no map pack installed: nothing to walk).
-		source_save_blocked=FileAccess.file_exists(save_path())
+		# Protect saves while an installed 523 pack cannot open its map. With no
+		# pack configured at all there is no map state to protect.
+		source_save_blocked=FileAccess.file_exists(CURRENT523_HOST.OPTIONS.PATH)
 		process_mode=Node.PROCESS_MODE_DISABLED
 
 func _set_visual_mode(mode: String) -> void:

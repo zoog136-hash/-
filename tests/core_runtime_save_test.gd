@@ -92,17 +92,12 @@ func run() -> void:
 	# maps (user decision 2026-11-10). The current save reloads unchanged.
 	world.gold = 1
 	world._load_game(true)
-	check(world.gold == 7654321, "current save reloads through actual Main")
+	check(not world.source_save_blocked and world.gold == 7654321, "current save reloads through actual Main")
 	for key: String in ["inventory","item_instances","equipped_items","equipped_catalog","enhancement_levels"]:
 		check(normalized(world.get(key)) == normalized(baseline[key]), "preserve " + key)
 	check(normalized(world.equipment_collections.export_state()) == normalized(baseline.equipment_collections), "collection progress survives reload")
 	check(normalized(world.option_awakening.export_state()) == normalized(baseline.card_option_awakening), "option awakening state survives reload")
-	if world.field_map == null:
-		# No 523 map pack: the existing save is protected, never overwritten.
-		var kept: String = FileAccess.get_sha256(world.save_path())
-		check(world.source_save_blocked and world._save_game(true) != OK and FileAccess.get_sha256(world.save_path()) == kept, "without a map pack the existing save is protected")
-	else:
-		check(world._save_game(true) == OK, "reloaded save commits again")
+	check(world._save_game(true) == OK, "reloaded save commits again")
 	print("CORE_RUNTIME_SAVE_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"scope":"ACTUAL_MAIN_SAVE_RELOAD; MAP_FROM_523_PACK_ONLY"}))
 	world.queue_free()
 	await process_frame
