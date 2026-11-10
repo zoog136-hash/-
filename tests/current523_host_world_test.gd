@@ -41,7 +41,8 @@ func _run() -> void:
 	if not _pack_requested():
 		HOST.refresh()
 		check(not HOST.requested(), "no 523 map selection without the pack")
-		check(SOURCE_MAP84.supports("aden_world"), "the old Aden pack still owns aden_world without the pack")
+		# Pre-November maps were removed: no old Aden takes over without the pack.
+		check(not SOURCE_MAP84.supports("aden_world"), "no old Aden pack owns aden_world without the pack")
 		_finish({"real_input_checked":false})
 		return
 	# Script runs may start without autoloads: apply the installed pack the
