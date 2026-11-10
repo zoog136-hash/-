@@ -2130,12 +2130,13 @@ func _mount_field_renderer(renderer: FieldRenderer, field: PlayableField) -> voi
 
 func _reject_map_pack(message: String) -> void:
 	hud.show_message(message)
-	if field_map==null and field_renderer==null and map_background.texture==null:
+	# Hold the world and its saves only while an installed 523 pack cannot open
+	# its map. With no pack configured at all there is no map state to protect:
+	# the menus stay usable and nothing is drawn.
+	if field_map==null and field_renderer==null and map_background.texture==null and FileAccess.file_exists(CURRENT523_HOST.OPTIONS.PATH):
 		if not map_bootstrap_blocked:map_prior_process_mode=process_mode
 		map_bootstrap_blocked=true
-		# Protect saves while an installed 523 pack cannot open its map. With no
-		# pack configured at all there is no map state to protect.
-		source_save_blocked=FileAccess.file_exists(CURRENT523_HOST.OPTIONS.PATH)
+		source_save_blocked=true
 		process_mode=Node.PROCESS_MODE_DISABLED
 
 func _set_visual_mode(mode: String) -> void:
