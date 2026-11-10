@@ -4,6 +4,7 @@ extends RefCounted
 const BINDINGS = "res://data/skills/relic_spell_bindings523.json"
 const POLICY_PATH = "res://data/skills/relic_spell_effect_policy.json"
 const INVOKE = preload("res://scripts/cards/relic_spell_invoke.gd")
+const ROWS = preload("res://scripts/resources/zip_table_rows.gd")
 const ESTIMATES = preload("res://scripts/cards/relic_spell_estimates.gd")
 const STAT_FIELDS = {"HPPlus":"hp", "MPPlus":"mp", "MeleeDamage":"meleeDamage", "MeleeHit":"meleeHit", "MeleeCritical":"meleeCrit", "RangeEvasion":"er", "Constitution":"con", "ArmorClass":"def", "ArmorClassBonus":"def", "MagicResist":"mr", "AttackSpeedBonus":"attackSpeed", "MoveSpeedBonus":"speed", "CarryPlus":"weight", "PVEDamageReduction":"pveDamageReduction", "PVPDamageReduction":"pvpDamageReduction"}
 const STAT_UNITS = {"HPPlus":"Value", "MPPlus":"Value", "MeleeDamage":"Value", "MeleeHit":"Value", "MeleeCritical":"ValuePercent", "RangeEvasion":"Value", "Constitution":"Value", "ArmorClass":"Value", "ArmorClassBonus":"Value", "MagicResist":"Value", "AttackSpeedBonus":"Percentage", "MoveSpeedBonus":"Percentage", "CarryPlus":"Weight", "PVEDamageReduction":"Value", "PVPDamageReduction":"Value"}
@@ -54,15 +55,21 @@ static func _canonical(value: Variant) -> String:
 static func build(archive: ZIPReader, cards: Dictionary, bonuses: Dictionary, types: Dictionary, units: Dictionary) -> Dictionary:
 	var binding: Dictionary = bindings()
 	if binding.get("schema_version") != 1 or binding.get("skills", {}).size() != 119: return {}
+	# SpellClass (21 MB) is read window by window; only the bound spells and
+	# the child-heal spell (69163) are ever looked up.
+	var wanted_spells: Dictionary = {69163: true}
+	for entry: Dictionary in binding.skills.values(): wanted_spells[int(entry.spell_id)] = true
 	var spells: Dictionary = {}
-	for row: Dictionary in _table(archive, "SpellClass"): spells[int(row.ID)] = row
+	for row: Dictionary in ROWS.scan(archive, "SpellClass", "ID", wanted_spells).rows: spells[int(row.ID)] = row
 	var decks: Array = _table(archive, "BuffCardDeck")
 	if not decks.any(func(row: Dictionary) -> bool: return int(row.ID) == 41 and row.Name == "Spell"): return {}
 	var ui_units: Dictionary = {}
 	for row: Dictionary in _table(archive, "UIUnit"): ui_units[int(row.UnitID)] = row
 	var needed_spells: Dictionary = {}
 	for entry: Dictionary in binding.skills.values(): needed_spells[int(entry.spell_id)] = true
-	var spell_rows: Array = _table(archive, "SpellBonus")
+	# SpellBonus/BuffBonus rows of other owners are never used (_links() and the
+	# child scan below skip them), so only the needed owners' rows are kept.
+	var spell_rows: Array = ROWS.scan(archive, "SpellBonus", "SpellClassID", needed_spells).rows
 	var children: Dictionary = {}
 	var needed_buffs: Dictionary = {}
 	for row: Dictionary in spell_rows:
@@ -72,9 +79,10 @@ static func build(archive: ZIPReader, cards: Dictionary, bonuses: Dictionary, ty
 		if name_value == "SpellClassID": children[int(bonus.Value)] = true
 		if name_value == "BuffClassID": needed_buffs[int(bonus.Value)] = true
 	needed_spells.merge(children)
+	spell_rows = ROWS.scan(archive, "SpellBonus", "SpellClassID", needed_spells).rows
 	var spell_links: Dictionary = _links(spell_rows, "SpellClassID", bonuses, types, units, ui_units, needed_spells)
 	spell_rows.clear()
-	var buff_links: Dictionary = _links(_table(archive, "BuffBonus"), "BuffClassID", bonuses, types, units, ui_units, needed_buffs)
+	var buff_links: Dictionary = _links(ROWS.scan(archive, "BuffBonus", "BuffClassID", needed_buffs).rows, "BuffClassID", bonuses, types, units, ui_units, needed_buffs)
 	var invoke_definitions: Dictionary = INVOKE.decode(archive)
 	var profiles: Dictionary = {}
 	for id: String in binding.skills:
