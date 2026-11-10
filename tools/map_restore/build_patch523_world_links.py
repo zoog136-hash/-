@@ -23,7 +23,7 @@ CONTEXT = (
     "NpcCategory", "ServerLimit", "WeeklyOpenTimeGroup", "WeeklyOpenTimeGroupSet",
     "WeeklyOpenTime", "WeeklyOpenTimeEntity", "LandAttribute", "LandAttributeType",
     "LandTimeLimit", "LandTimeLimitGroup", "LandWeeklyOpenTime", "DateTimes",
-    "DateTimes_Korean", "DateTimes_Taiwanese", "DateTimes_Japanese", "DateTimes_Chinese",
+    "DateTimes_Korean",
     "CompetitionDungeon", "CompetitionDungeonLand", "CompetitionDungeonView",
     "LandTeleport", "LandTeleportTerritories", "LandTeleportPrerequisite",
     "Prerequisite", "PrerequisiteType", "WorldBossRaidPrerequisite",

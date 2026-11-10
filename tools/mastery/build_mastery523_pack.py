@@ -15,7 +15,7 @@ SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 CORE = ("MasteryWeaponType", "MasteryWeaponStep", "MasteryWeaponLevelView",
         "MasteryBonusView", "MasteryGradeView", "MasteryGradeMatchingBonus",
         "MasteryPointPayment", "MasteryPointPurchaseView", "MasteryResetCost",
-        "ClassChangeMasteryLevelCost", "ClassChangeMasteryWeaponType", "MasteryChangeLevelCost")
+        "MasteryChangeLevelCost")
 
 def compile_pack(source):
     raw = Path(source).read_bytes()
@@ -132,9 +132,6 @@ def compile_pack(source):
             matching_keys.add(key)
         if len(matching_keys) != len(steps)*len(grades):
             raise ValueError("missing matching bonus scope")
-        classes = {r["ID"] for r in tables["Class"]}
-        if len(tables["ClassChangeMasteryWeaponType"]) != 29 or any(r["ToCharacterClass"] not in classes or r["ToWeaponType"] not in weapons for r in tables["ClassChangeMasteryWeaponType"]):
-            raise ValueError("unresolved class destination")
         return {"schema": "twilight.mastery523.v1", "source_sha256": SOURCE_SHA,
                 "private_original_data": True, "tables": tables, "operations": operations, "evidence": evidence}
 

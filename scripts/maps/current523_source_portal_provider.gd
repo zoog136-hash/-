@@ -153,7 +153,7 @@ func _date_window(definition: RefCounted, group: Dictionary, actor_state: Dictio
 	if start<1 or end<1:result.status="date_reference_incomplete";return result
 	var profile: Variant=actor_state.get("server_profile")
 	if not profile is Dictionary or not SERVER.valid_context(profile):return result
-	var table: String={"KR":"DateTimes_Korean","TW":"DateTimes_Taiwanese","JP":"DateTimes_Japanese","CN":"DateTimes_Chinese"}.get(str(profile.ServiceRegionCode),"")
+	var table: String={"KR":"DateTimes_Korean"}.get(str(profile.ServiceRegionCode),"")
 	if table.is_empty():result.status="service_date_table_unresolved";return result
 	result["date_table"]=table;result["server_profile"]=profile.duplicate(true)
 	var first: Dictionary=_date_row(definition,table,start)

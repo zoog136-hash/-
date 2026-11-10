@@ -56,7 +56,6 @@ class Host extends Node:
 	var ui_preferences: Dictionary = {"item_locks":{}}
 	var ain_service = Ain.new()
 	var quest_service = preload("res://scripts/quests/quest_service.gd").new()
-	var fishing523 = preload("res://scripts/fishing/fishing_runtime.gd").new()
 	var quest_auto = preload("res://scripts/quests/quest_auto_runner.gd").new()
 	var item_db: Array = []
 	var catalog_db: Dictionary = {}
@@ -109,7 +108,6 @@ class Source extends RefCounted:
 		if table == "ItemBonus": return [{"ItemClassID":400,"BonusID":4000},{"ItemClassID":401,"BonusID":4001}]
 		return []
 	func row(table: String,id: int) -> Dictionary:
-		if table == "Fish" and id in [111,211]: return {"ID":id,"ItemClassID":303451 if id == 111 else 304021,"NoMemory":id == 211}
 		if table == "ItemClass" and id in [100,101,200,300]: return {"ID":id,"Name":"fixture " + str(id),"CategoryID":78 if id == 100 else 10291 if id == 300 else 10,"MaxStackAmount":1 if id == 200 else 999999,"GradeID":3}
 		if table == "ItemClass" and id in [400,401]: return {"ID":id,"Name":"Life fixture","MaxStackAmount":1 if id == 400 else 3,"GradeID":3}
 		if table == "Bonus" and id in [4000,4001]: return {"ID":id,"BonusTypeID":422,"Value":86400 if id == 4000 else 259200}
@@ -643,37 +641,8 @@ func _staged_owner_events() -> void:
 	var f: Dictionary = fixture()
 	var runtime = f.runtime
 	var world: Host = f.world
-	var pending: Dictionary = {"id":"native-cast-id","fish":211,"rod":1,"territory":1}
-	world.fishing523.state.pending = pending.duplicate(true)
-	world.fishing523.state.items = {"304021":2}
-	var proposed: Dictionary = world.fishing523.state.duplicate(true)
-	proposed.pending = {}; proposed.items["304021"] = 3
-	var overrides: Dictionary = {"fishing523":proposed}
-	runtime.snapshot()
-	var before: Dictionary = runtime.state.duplicate(true)
-	var owner_before: Dictionary = world.fishing523.state.duplicate(true)
-	var inputs_before: Dictionary = overrides.duplicate(true)
-	var observed: Dictionary = runtime.observe_staged_owner(overrides)
-	check(observed.ok and observed.has("state") and int(observed.state.event_counters.fishing_success) == 1 and int(observed.state.event_counters["fishing_success:211"]) == 1,"native NoMemory catch stages exactly one fishing occurrence using source item delta")
-	check(runtime.state == before and world.fishing523.state == owner_before and overrides == inputs_before and world.save_calls == 0 and world.disk.is_empty(),"staged fishing observer leaves live namespace owner inputs and disk untouched")
-	check(runtime.observe_staged_owner(overrides).state == observed.state,"same uncommitted pending cast produces the same isolated candidate")
-	var payload: Dictionary = {"fishing523":proposed,"unconfirmed523":observed.state}
-	world.save_result = ERR_CANT_CREATE
-	check(world._save_game(true,payload) != OK and runtime.state == before and world.fishing523.state == owner_before and world.disk.is_empty(),"failed native owner save applies no fishing or pass progress")
-	world.save_result = OK
-	check(world._save_game(true,payload) == OK,"owner can save native catch and pass occurrence in one payload")
-	runtime.restore(world.disk)
-	check(not runtime.observe_staged_owner(overrides).has("state") and int(runtime.state.event_counters.fishing_success) == 1,"persisted pending identity deduplicates a repeated owner observation")
-	world.fishing523.state.pending.id = "failed-cast-id"
-	var failed: Dictionary = world.fishing523.state.duplicate(true); failed.pending = {}
-	check(not runtime.observe_staged_owner({"fishing523":failed}).has("state"),"failed finish removing pending without a caught source item earns no fishing credit")
-	failed.items["304021"] = 4
-	check(not runtime.observe_staged_owner({"fishing523":failed}).has("state"),"larger inventory change cannot masquerade as a single native fishing finish")
-	runtime.source.available = false
-	check(not runtime.observe_staged_owner(overrides).has("state"),"missing common source pack leaves native fishing owner available without synthesized pass progress")
-	runtime.source.available = true
-	world.fishing523 = null
-	check(not runtime.observe_staged_owner(overrides).has("state"),"missing native fishing owner never infers success from caller inventory")
+	# Fishing was removed from the game: a fishing override earns nothing.
+	check(runtime.observe_staged_owner({"fishing523":{"pending":{},"items":{}}}) == {"ok":true},"removed fishing never earns pass progress")
 	world.free()
 	var directory: String = OS.get_environment("TWILIGHT_523_SOURCE_DIR")
 	if directory.is_empty(): print("HOST_SOURCE_EVENT_JOINS_NOT_RUN: set TWILIGHT_523_SOURCE_DIR and TWILIGHT_523_ALLOW_TEST_SOURCE=1")
@@ -704,13 +673,6 @@ func _actual_source_event_joins(directory: String) -> void:
 	var result: Dictionary = runtime.execute("challenge",{"op":"challenge_start","challenge_id":challenge_id,"local_policy":true})
 	check(result.ok and world.ain_service.saved.blessing == 80 and world.disk.ainhasad_state.blessing == 80 and int(world.disk.unconfirmed523.event_counters.blessing_use) == 20 and _goal_progress(runtime,world.disk.unconfirmed523,10) > 0,"actual source Challenge blessing debit and goal10 progress commit in the same writer")
 	check(int(runtime.state.revision) == 1 and world.save_calls == 1 and runtime.state.event_receipts.has("source_grant:unconfirmed523:blessing_use:1"),"blessing join neither saves twice nor synthesizes a World kill occurrence")
-	var fish: Dictionary = original.row("Fish",211)
-	check(fish.get("NoMemory") == true and int(fish.ItemClassID) == 304021,"actual Fish211 is a source NoMemory caught item")
-	world.fishing523.state.pending = {"id":"source-NoMemory-cast","fish":211,"rod":1,"territory":1}
-	var next: Dictionary = world.fishing523.state.duplicate(true); next.pending = {}; next.items["304021"] = 1
-	var unchanged: Dictionary = runtime.state.duplicate(true)
-	var observed: Dictionary = runtime.observe_staged_owner({"fishing523":next})
-	check(observed.ok and observed.has("state") and _goal_progress(runtime,observed.state,851) > 0 and runtime.state == unchanged and next.journal.is_empty(),"actual source NoMemory item delta stages goal851 progress without journal inference or live mutation")
 	world.free()
 	var quest_pack: String = OS.get_environment("TWILIGHT_QUEST523_PACK")
 	if quest_pack.is_empty(): print("HOST_GENUINE_QUEST_CONSUMPTION_NOT_RUN: set TWILIGHT_QUEST523_PACK to the verified existing projection ZIP")
