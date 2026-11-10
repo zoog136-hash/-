@@ -36,6 +36,7 @@ static func reset() -> void:
 	_verified_sha = ""
 	_verified_bytes = -1
 	_tables.clear()
+	_store_failures.clear()
 	_relations.clear()
 	_integer_fields.clear()
 	_metadata.clear()
@@ -175,51 +176,264 @@ static func _store(table: String) -> Dictionary:
 	var bake_key: String = _bake_key(table)
 	# Large tables stay on the device's storage: only their row offsets and
 	# the columns actually queried are held in memory (DiskTable below).
-	var meta_rows: int = int(table_metadata(table).get("row_count", 0))
-	var on_disk: bool = meta_rows >= DISK_ROWS
-	# Boot progress: one line per table start/end (+ parse/pack/write), not per row.
-	var started: int = LOG.begin("def_table", {"table": table, "rows": meta_rows, "disk": on_disk})
+	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
 	if on_disk:
 		var opened: Dictionary = _open_disk(table, bake_key)
 		if not opened.is_empty():
 			_tables[table] = opened
-			LOG.end("def_table", started, {"table": table, "path": "disk_hit"})
 			return opened
 	var baked: Variant = null if on_disk else BAKE.read("definitions_"+table, bake_key)
 	if _valid_store(baked):
 		_tables[table] = baked
-		LOG.end("def_table", started, {"table": table, "path": "bake_hit"})
 		return baked
-	if baked != null: LOG.io("definitions_"+table, "validate", "corrupt")
-	var parse_started: int = LOG.begin("def_parse", {"table": table})
-	var parsed: Variant = JSON.parse_string(_archive.read_file(member).get_string_from_utf8())
-	LOG.end("def_parse", parse_started, {"table": table})
-	if not parsed is Dictionary or not parsed.get("rows") is Array:
-		_problem = "원본 표 구조를 읽을 수 없습니다: "+table
-		LOG.end("def_table", started, {"table": table, "path": "parse_fail"})
+	# A large table whose storage bake failed earlier in this process is not
+	# converted again on every query (each attempt is a full conversion); the
+	# same problem is reported until reset() or the next start retries it.
+	if _store_failures.has(table):
+		_problem = str(_store_failures[table])
 		return {}
+	# Bounded first conversion: the member's bytes are scanned and the rows
+	# array is parsed and packed in small batches (see _convert()), so the
+	# whole UTF-8 string and every row dictionary never exist at once. The
+	# packed result is identical to the former JSON.parse_string() + _pack().
+	# Boot progress: one line per cold table conversion (not per row).
+	var log_started: int = LOG.begin("def_table", {"table": table, "disk": on_disk})
+	var converted: Dictionary = _convert(_archive.read_file(member))
+	LOG.end("def_table", log_started, {"table": table, "ok": bool(converted.ok)})
+	if not converted.ok:
+		_problem = ("원본 행 구조가 다릅니다: " if converted.reason == "row" else "원본 표 구조를 읽을 수 없습니다: ")+table
+		return {}
+	var packed: Dictionary = converted.store
+	converted = {}
+	if on_disk and not packed.has("rows"):
+		var published: Dictionary = _publish_disk(table, bake_key, packed)
+		packed = {}
+		if published.is_empty():
+			_problem = str(_store_failures[table])
+			return {}
+		_tables[table] = published
+		return published
+	_tables[table] = packed
+	if not on_disk:
+		BAKE.write("definitions_"+table, bake_key, packed)
+	return packed
+
+## Writes a packed large table to storage and returns the verified, reopened
+## disk table. A failed write/commit/reopen is a safe stop for this table
+## ({} + a recorded problem, the same contract as an unreadable member)
+## instead of keeping the whole packed table resident; originals and saves are
+## untouched, and the next start (or reset()) retries the bake.
+static func _publish_disk(table: String, bake_key: String, packed: Dictionary) -> Dictionary:
+	var reopened: Dictionary = _open_disk(table, bake_key) if _write_disk(table, bake_key, packed) else {}
+	if reopened.is_empty() or int(reopened.get("count", -1)) != int(packed.get("count", -2)) or reopened.get("columns") != packed.get("columns"):
+		_store_failures[table] = "원본 표 저장소 변환에 실패했습니다(저장 공간·쓰기 권한 확인 후 다시 시작하세요): "+table+". 원본과 저장 데이터는 변경하지 않았습니다."
+		return {}
+	return reopened
+
+## Large tables whose storage bake failed in this process (table -> problem).
+static var _store_failures: Dictionary = {}
+
+const SCAN = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
+## Rows parsed per batch of the bounded conversion (and a byte cap per batch),
+## so the transient row dictionaries are bounded by the batch, not the table.
+const CONVERT_BATCH_ROWS: int = 512
+const CONVERT_BATCH_BYTES: int = 1048576
+
+## {ok:true, store} with exactly _pack(JSON.parse_string(text).rows) of the
+## member bytes, or {ok:false, reason:"structure"|"row"} exactly when the
+## former whole parse failed in the same way. Only one batch of parsed rows
+## and the packed columns are alive at a time; the input bytes stay with the
+## caller. Anything the byte scanner does not positively recognise (a BOM,
+## trailing bytes, a second "rows" member, a row that is not an object, rows
+## with different key sets, a batch that does not parse) falls back to the
+## former whole parse, so every result is the former result by construction.
+static func _convert(bytes: PackedByteArray) -> Dictionary:
+	var streamed: Dictionary = _convert_streaming(bytes)
+	return streamed if not streamed.is_empty() else _convert_whole(bytes)
+
+## The former conversion (reference and fallback): the same parser and values
+## as JSON.parse_string(), which is this parse plus an engine error print.
+static func _convert_whole(bytes: PackedByteArray) -> Dictionary:
+	var parser := JSON.new()
+	var parsed: Variant = parser.data if parser.parse(bytes.get_string_from_utf8()) == OK else null
+	parser = null
+	if not parsed is Dictionary or not parsed.get("rows") is Array: return {"ok":false,"reason":"structure"}
 	var source: Array = parsed.rows
 	for value: Variant in source:
-		if not value is Dictionary:
-			_problem = "원본 행 구조가 다릅니다: "+table
-			LOG.end("def_table", started, {"table": table, "path": "row_fail"})
-			return {}
-	var pack_started: int = LOG.begin("def_pack", {"table": table, "rows": source.size()})
-	_tables[table] = _pack(source)
-	LOG.end("def_pack", pack_started, {"table": table})
-	parsed = null
-	source = []
-	if on_disk and not _tables[table].has("rows"):
-		var write_started: int = LOG.begin("def_disk_write", {"table": table})
-		var written: bool = _write_disk(table, bake_key, _tables[table])
-		LOG.end("def_disk_write", write_started, {"table": table, "ok": written})
-		if written:
-			var reopened: Dictionary = _open_disk(table, bake_key)
-			if not reopened.is_empty(): _tables[table] = reopened
-	elif not on_disk:
-		BAKE.write("definitions_"+table, bake_key, _tables[table])
-	LOG.end("def_table", started, {"table": table, "path": "cold"})
-	return _tables[table]
+		if not value is Dictionary: return {"ok":false,"reason":"row"}
+	var store: Dictionary = _pack(source)
+	return {"ok":true,"store":store}
+
+## The streaming form of _convert_whole(), or {} when it must fall back.
+static func _convert_streaming(bytes: PackedByteArray) -> Dictionary:
+	var size: int = bytes.size()
+	var at: int = SCAN._space(bytes, 0)
+	if at >= size or bytes[at] != 123: return {}
+	var index: int = SCAN._space(bytes, at + 1)
+	var packer := RowPacker.new()
+	var seen_rows: bool = false
+	if index < size and bytes[index] == 125:
+		return {} # {} has no rows: the whole parse reports it
+	while index < size:
+		if bytes[index] != 34: return {}
+		var key_end: int = SCAN._string_end(bytes, index)
+		if key_end < 0: return {}
+		var key: Variant = SCAN._parse(bytes, index, key_end)
+		if not key is String: return {}
+		var colon: int = SCAN._space(bytes, key_end)
+		if colon >= size or bytes[colon] != 58: return {}
+		var value_start: int = SCAN._space(bytes, colon + 1)
+		if value_start >= size: return {}
+		var value_end: int = -1
+		if key == "rows":
+			if seen_rows or bytes[value_start] != 91: return {}
+			seen_rows = true
+			value_end = _stream_rows(bytes, value_start, packer)
+		else:
+			value_end = SCAN._value_end(bytes, value_start)
+			# Other top-level members are validated as the whole parse did.
+			if value_end < 0 or _parse_value(bytes, value_start, value_end).is_empty(): return {}
+		if value_end < 0: return {}
+		index = SCAN._space(bytes, value_end)
+		if index >= size: return {}
+		if bytes[index] == 125:
+			if SCAN._space(bytes, index + 1) != size or not seen_rows: return {}
+			return {"ok":true,"store":packer.finish()}
+		if bytes[index] != 44: return {}
+		index = SCAN._space(bytes, index + 1)
+	return {}
+
+## [value] parsed from bytes[start, end) at the same nesting depth it has in
+## the member ({"r":[value]} like {"rows":[row]}), or [] when it does not parse.
+static func _parse_value(bytes: PackedByteArray, start: int, end: int) -> Array:
+	var parser := JSON.new()
+	if parser.parse("{\"r\":" + bytes.slice(start, end).get_string_from_utf8() + "}") != OK or not parser.data is Dictionary: return []
+	return [parser.data.r]
+
+## Streams the rows array at `at` ('[') into `packer` in batches; returns the
+## index after ']' or -1 when the streaming form must fall back.
+static func _stream_rows(bytes: PackedByteArray, at: int, packer: RowPacker) -> int:
+	var size: int = bytes.size()
+	var index: int = SCAN._space(bytes, at + 1)
+	if index < size and bytes[index] == 93: return index + 1
+	var batch_start: int = -1
+	var batch_end: int = -1
+	var batch_count: int = 0
+	while index < size:
+		# Only objects are rows; anything else is the whole parse's "row" error.
+		if bytes[index] != 123: return -1
+		var end: int = _object_end(bytes, index)
+		if end < 0: return -1
+		if batch_start < 0: batch_start = index
+		batch_end = end
+		batch_count += 1
+		index = SCAN._space(bytes, end)
+		if index >= size: return -1
+		var last: bool = bytes[index] == 93
+		if not last and bytes[index] != 44: return -1
+		if last or batch_count >= CONVERT_BATCH_ROWS or batch_end - batch_start >= CONVERT_BATCH_BYTES:
+			var parser := JSON.new()
+			# Same depth as in the member: {"rows":[ ... ]}.
+			if parser.parse("{\"rows\":[" + bytes.slice(batch_start, batch_end).get_string_from_utf8() + "]}") != OK: return -1
+			var data: Variant = parser.data
+			parser = null
+			if not data is Dictionary or not data.get("rows") is Array or (data.rows as Array).size() != batch_count: return -1
+			if not packer.add_batch(data.rows): return -1
+			data = null
+			batch_start = -1
+			batch_count = 0
+		if last: return index + 1
+		index = SCAN._space(bytes, index + 1)
+	return -1
+
+## End (exclusive) of the JSON object or array at `at`, skipping strings; -1
+## when unterminated. Bracket kinds are not matched here: a mismatch makes the
+## batch parse fail and the conversion falls back to the whole parse.
+static func _object_end(bytes: PackedByteArray, at: int) -> int:
+	var size: int = bytes.size()
+	var depth: int = 0
+	var index: int = at
+	while index < size:
+		var current: int = bytes[index]
+		if current == 34:
+			index = SCAN._string_end(bytes, index)
+			if index < 0: return -1
+			continue
+		if current == 123 or current == 91: depth += 1
+		elif current == 125 or current == 93:
+			depth -= 1
+			if depth == 0: return index + 1
+		index += 1
+	return -1
+
+## Incremental _pack(): the same columns (first row's key order), the same
+## column kinds (PackedFloat64Array / PackedStringArray only when every row
+## has that type, otherwise a plain Array of the original values) and the same
+## values. add_batch() is false when a row's keys differ from the first row's,
+## where _pack() returns the rows themselves; the caller then falls back.
+## Packed columns are taken out of `data` while they grow, so appending never
+## copies them (packed arrays are copy-on-write values).
+class RowPacker extends RefCounted:
+	var count: int = 0
+	var columns := PackedStringArray()
+	var data: Array = []
+	var kinds := PackedInt32Array() # TYPE_FLOAT / TYPE_STRING / TYPE_NIL (plain Array)
+	func add_batch(rows: Array) -> bool:
+		if rows.is_empty(): return true
+		for row: Variant in rows:
+			if not row is Dictionary: return false
+		if count == 0:
+			columns = PackedStringArray((rows[0] as Dictionary).keys())
+			for column: String in columns:
+				var first: int = typeof(rows[0][column])
+				if first == TYPE_FLOAT: data.append(PackedFloat64Array())
+				elif first == TYPE_STRING: data.append(PackedStringArray())
+				else:
+					first = TYPE_NIL
+					data.append([])
+				kinds.append(first)
+		for row: Dictionary in rows:
+			if row.size() != columns.size(): return false
+			for column: String in columns:
+				if not row.has(column): return false
+		var added: int = rows.size()
+		for position: int in columns.size():
+			var column: String = columns[position]
+			var kind: int = kinds[position]
+			if kind != TYPE_NIL:
+				for row: Dictionary in rows:
+					if typeof(row[column]) != kind:
+						kind = TYPE_NIL
+						break
+				if kind == TYPE_NIL:
+					# Not uniform: the column becomes a plain Array of the values.
+					data[position] = Array(data[position])
+					kinds[position] = TYPE_NIL
+			var current: Variant = data[position]
+			data[position] = null
+			if kind == TYPE_FLOAT:
+				var numbers: PackedFloat64Array = current
+				current = null
+				var base: int = numbers.size()
+				numbers.resize(base + added)
+				for offset: int in added: numbers[base + offset] = rows[offset][column]
+				data[position] = numbers
+			elif kind == TYPE_STRING:
+				var texts: PackedStringArray = current
+				current = null
+				var base: int = texts.size()
+				texts.resize(base + added)
+				for offset: int in added: texts[base + offset] = rows[offset][column]
+				data[position] = texts
+			else:
+				var values: Array = current
+				for row: Dictionary in rows: values.append(row[column])
+				data[position] = values
+		count += added
+		return true
+	func finish() -> Dictionary:
+		if count == 0: return {"count": 0, "columns": PackedStringArray(), "data": []}
+		return {"count": count, "columns": columns, "data": data}
 
 ## Tables with at least this many rows are kept on storage once baked.
 const DISK_ROWS: int = 5000
@@ -260,7 +474,6 @@ static func _write_disk(table: String, bake_key: String, store: Dictionary) -> b
 	var row_offsets := PackedInt64Array()
 	var names: PackedStringArray = store.columns
 	for index: int in int(store.count):
-		if index % LOG.ROW_STEP == 0: LOG.progress("def_disk_write", index, {"table": table})
 		row_offsets.append(file.get_position())
 		var row: Dictionary = _row_at(store, index)
 		var values: Array = []
@@ -301,8 +514,8 @@ static func _column_data(store: Dictionary, position: int) -> Variant:
 	if store.has("disk"): return (store.disk as DiskTable).column(position)
 	return store.data[position]
 
-const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const LOG = preload("res://scripts/boot/boot_progress_log.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_definition_rows.gd","res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 
