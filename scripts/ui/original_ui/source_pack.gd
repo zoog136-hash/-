@@ -58,8 +58,8 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	if file==null or file.get_length()>128*1024*1024: return _fail("manifest_size_or_access")
 	var raw: PackedByteArray=file.get_buffer(file.get_length())
 	if expected_sha256.length()!=64 or _sha256(raw)!=expected_sha256: return _fail("manifest_hash_mismatch")
-	var bake_name: String="original_ui_pack_"+expected_sha256.left(16)
-	var bake_key: String=BAKE.key(["original_ui_pack.v1",expected_sha256,BAKE.code_key(["res://scripts/ui/original_ui/source_pack.gd"])]) if bake_enabled else ""
+	var bake_name: String=bake_name_for(expected_sha256)
+	var bake_key: String=bake_key_for(expected_sha256) if bake_enabled else ""
 	var baked: RefCounted=BAKE.open_records(bake_name,bake_key) if not bake_key.is_empty() else null
 	if baked!=null:
 		var slim: Variant=baked.read("meta")
@@ -130,6 +130,16 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 					manifest=slim
 					_records=records
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+static func bake_name_for(manifest_sha: String) -> String:
+	return "original_ui_pack_"+manifest_sha.left(16)
+
+static func bake_key_for(manifest_sha: String) -> String:
+	return BAKE.key(["original_ui_pack.v1",manifest_sha,BAKE.code_key(["res://scripts/ui/original_ui/source_pack.gd"])])
+
+## True when this device already holds the scene trees for this pin.
+static func baked(manifest_sha: String) -> bool:
+	return BAKE.present(bake_name_for(manifest_sha),bake_key_for(manifest_sha))
 
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:
 	manifest=value

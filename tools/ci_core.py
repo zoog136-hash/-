@@ -107,6 +107,7 @@ CHECKS = [
     ('source_gender_selection_test', []),
     ('current523_sp2_bounds_rule_test', []),
     ('zip_table_rows_test', []),
+    ('source523_prebake_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -445,7 +446,8 @@ def main():
                       'source523_image_pack_bake_test':'SOURCE523_IMAGE_PACK_BAKE_RESULT',
                       'source_gender_selection_test':'SOURCE_GENDER_SELECTION_RESULT',
                       'current523_sp2_bounds_rule_test':'CURRENT523_SP2_BOUNDS_RULE_RESULT',
-                      'zip_table_rows_test':'ZIP_TABLE_ROWS_RESULT'}[name]
+                      'zip_table_rows_test':'ZIP_TABLE_ROWS_RESULT',
+                      'source523_prebake_test':'SOURCE523_PREBAKE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

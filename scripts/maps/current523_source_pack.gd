@@ -115,8 +115,8 @@ func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 	if file == null or file.get_length() <= 0 or file.get_length() > MAX_METADATA_BYTES: return _fail("Missing or oversized generic source manifest")
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	if _hash(bytes) != expected_manifest_sha256: return _fail("Generic source manifest SHA256 differs from caller pin")
-	var bake_name: String = "current523_source_pack_" + expected_manifest_sha256.left(16)
-	var bake_key: String = BAKE.key(["current523_source_pack.v1", expected_manifest_sha256, BAKE.code_key(["res://scripts/maps/current523_source_pack.gd"])]) if bake_enabled else ""
+	var bake_name: String = bake_name_for(expected_manifest_sha256)
+	var bake_key: String = bake_key_for(expected_manifest_sha256) if bake_enabled else ""
 	var baked: RefCounted = BAKE.open_records(bake_name, bake_key) if not bake_key.is_empty() else null
 	if baked != null:
 		var meta: Variant = baked.read("meta")
@@ -232,6 +232,16 @@ func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 					_records = records
 					_catalog_members = {}
 	return true
+
+static func bake_name_for(manifest_sha: String) -> String:
+	return "current523_source_pack_" + manifest_sha.left(16)
+
+static func bake_key_for(manifest_sha: String) -> String:
+	return BAKE.key(["current523_source_pack.v1", manifest_sha, BAKE.code_key(["res://scripts/maps/current523_source_pack.gd"])])
+
+## True when this device already holds the member inventory for this pin.
+static func baked(manifest_sha: String) -> bool:
+	return BAKE.present(bake_name_for(manifest_sha), bake_key_for(manifest_sha))
 
 ## The verified member rows of one AssetPath.
 func _asset_members(asset_path: String) -> Dictionary:
