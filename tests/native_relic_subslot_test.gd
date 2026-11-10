@@ -35,8 +35,8 @@ func run() -> void:
 	timer.slot_index=12
 	check(not Slot.validate({"native_relic_summon_time":timer}).is_empty(),"corrupt timer cannot declare a different source summon slot")
 	var runtime=Runtime.new();var chosen: String="source:m508:98:20548";var main: String=""
-	for key: String in DATA.relic.cards:
-		var row: Dictionary=DATA.relic.cards[key]
+	for key: String in DATA.relic_card_keys():
+		var row: Dictionary=DATA.relic_card(key)
 		if row.has("subslot_buff") and int(row.card.GradeID)!=1 and int(row.card.ServerLimitSetID)==0 and int(row.card.StartDateTimeID)==0 and int(row.card.EndDateTimeID)==0:main="source:m523:"+key;break
 	check(not main.is_empty(),"actual source different-grade main exists")
 	runtime.core.catalog["성물"][chosen]=card(chosen);runtime.core.catalog["성물"][main]=card(main)
@@ -66,8 +66,8 @@ func run() -> void:
 	check(plain.stats.meleeHit==1 and plain.stats.hpPct==1 and plain.summon_binding.npc_class_id==83758,"exact secondary buff rows and typed slot11 NPC binding")
 	check(not plain.stats.has("xp") and not plain.stats.has("skill_cooldown_reduction_pct"),"no main-only economics or cooldown copied")
 	var hero: String=""
-	for key: String in DATA.relic.option_groups:
-		var group: Dictionary=DATA.relic.option_groups[key]
+	for key: String in DATA.relic_option_group_keys():
+		var group: Dictionary=DATA.relic_option_group(key)
 		if int(group.card.ServerLimitSetID)==0 and int(group.card.StartDateTimeID)==0 and int(group.card.EndDateTimeID)==0 and int(group.group.ServerLimitsetID)==0:hero="source:m523:98:"+str(int(group.card.ID));break
 	check(not hero.is_empty(),"actual unrestricted option group exists")
 	var before: Dictionary=Slot.effects(runtime,hero)
@@ -79,11 +79,12 @@ func run() -> void:
 	check(Slot.effects(runtime,hero)==after,"repeated effect reads are deterministic and do not stack")
 	check(Slot.eligibility(runtime,"",0,{}).ok,"release remains possible without unlock")
 	var limited: Dictionary={}
-	for row: Dictionary in DATA.relic.cards.values():
+	for key: String in DATA.relic_card_keys():
+		var row: Dictionary=DATA.relic_card(key)
 		if int(row.card.ServerLimitSetID)==274:limited=row;break
 	check(not Slot.source_available(limited.card,{"source_snapshot":"patch523","ServiceRegionCode":"KR","WorldNo":1}),"missing source server definition and time conditions remain unavailable")
 	check(not Slot.scope_available(772,{}),"server scope requires explicit source region/world")
-	for row: Dictionary in DATA.relic.source_server_limits:
+	for row: Dictionary in DATA.relic_server_limits_for(772):
 		if int(row.ServerLimitSetID)==772:
 			check(Slot.scope_available(772,{"source_snapshot":"patch523","ServiceRegionCode":str(row.ServiceRegionCode),"WorldNo":int(row.WorldNo)}),"exact523 server tuple recognized");break
 	print("NATIVE_RELIC_SUBSLOT ",JSON.stringify({"checks":checks,"errors":errors}));quit(0 if errors.is_empty() else 1)

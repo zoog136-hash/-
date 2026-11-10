@@ -54,7 +54,7 @@ static func effects(runtime: RefCounted,identity: String) -> Dictionary:
 		if name_value in ["ExperienceAdditionPercent","EinasadSavingPercent"] and int(effect.bonus.Value)==0 and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0:
 			out.source_zero_effects.append(effect.duplicate(true));continue
 		if name_value=="BuffCardSummonNPCClassID":
-			var binding: Dictionary=INPUT.session().subslot_npc_bindings.get(identity,{})
+			var binding: Dictionary=INPUT.subslot_npc_binding(identity)
 			if int(effect.bonus.BonusApplicationTypeID)==461 and int(effect.bonus.BonusApplicationTargetID)==11 and int(binding.get("npc_class_id",0))==int(effect.bonus.Value) and bool(binding.get("display_sprite_verified",false)):
 				out.summon_binding=binding.duplicate(true);continue
 		if name_value=="InvokeOption" and int(effect.bonus.BonusApplicationTypeID)==10 and int(effect.bonus.BonusApplicationTargetID) in [10661,3323]:
@@ -75,7 +75,7 @@ static func secondary_groups(identity: String) -> Array:
 	var group: Dictionary=Slots.group_for(identity,11)
 	return [group] if not group.is_empty() and int(group.card.BuffCardDeckID)==2 else []
 static func subslot_row(identity: String) -> Dictionary:
-	return INPUT.session().subslot_buffs.get(identity,{})
+	return INPUT.subslot_buff(identity)
 static func status_available(runtime: RefCounted,identity: String,status_id: int) -> bool:
 	for group: Dictionary in secondary_groups(identity):
 		var evaluator: RefCounted=runtime.core.patch523_conditions if identity.begins_with("source:m523:") else runtime.core.native_conditions

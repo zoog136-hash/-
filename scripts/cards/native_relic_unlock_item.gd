@@ -22,7 +22,7 @@ static func unlocked(state: Dictionary) -> bool:
 	return state.has(FIELD) and validate(state).is_empty()
 
 static func record() -> Dictionary:
-	var source: Dictionary=DATA.relic.unlock_item
+	var source: Dictionary=DATA.relic_unlock_item()
 	if source.is_empty():return {}
 	return {"name":str(source.name),"source":"lineagem_patch523","source_snapshot":"patch523","source_item_class_id":ITEM,"sourceId":"m523:item:"+str(ITEM),"type":"소모품","slot":"consumable","grade":str(source.grade.Name),"source_grade_id":int(source.item.GradeID),"weight":1,"stackable":true,"droppable":bool(source.item.IsDroppable),"storable":bool(source.item.IsStorable),"sellable":false,"source_item":source.item.duplicate(true),"desc":"추가 성물 소환 해금 · 원본 에바의 계시 사용","source_image_status":"original_icon_not_installed"}
 
@@ -41,7 +41,7 @@ static func install(catalog: Dictionary) -> Dictionary:
 	return {"ok":true}
 
 static func source_rules_valid() -> bool:
-	var source: Dictionary=DATA.relic.unlock_item
+	var source: Dictionary=DATA.relic_unlock_item()
 	if source.is_empty():return false
 	if int(source.item.ID)!=ITEM or int(source.buff.ID)!=BUFF or not bool(source.category.IsConsumable) or int(source.item.MaxStackAmount)!=1:return false
 	var link: bool=false;var unlock: bool=false;var permanent: bool=false;var infinite: bool=false

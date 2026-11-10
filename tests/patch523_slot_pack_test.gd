@@ -28,6 +28,6 @@ func run() -> void:
 		var before: int=hash(saved)
 		check(service.validate_state(saved).contains(Data.problem) and hash(saved)==before,"missing optional source protects an existing selected-slot save without rewriting it")
 	else:
-		check(Data.new_cards.skill_cards.size()==16 and Data.relic.cards.size()==147,"only reviewed support profiles and147 exact relic keys")
+		check(Data.new_cards.skill_cards.size()==16 and Data.relic_card_keys().size()==147,"only reviewed support profiles and147 exact relic keys")
 		check(Unlock.source_rules_valid(),"verified typed unlock contract loaded")
 	print("PATCH523_SLOT_PACK ",JSON.stringify({"checks":checks,"errors":errors,"missing_fixture":expected_missing}));quit(0 if errors.is_empty() else 1)

@@ -687,6 +687,9 @@ func _ready() -> void:
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
 	_release_idle_original_models.call_deferred()
+	# Card slot / option record bakes (only when they failed on this start).
+	_note_store_result("card_slots", preload("res://scripts/cards/patch523_slot_data.gd").store_result())
+	_note_store_result("card_options", preload("res://scripts/cards/current523_option_combat_input.gd").store_result())
 	_show_store_failures()
 	BOOT_LOG.step("")
 	BOOT_LOG.end("world_ready", boot_started)
