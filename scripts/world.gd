@@ -41,8 +41,6 @@ var totems = TOTEM_RUNTIME.new()
 var totem_actions = preload("res://scripts/progression/totem_actions.gd").new()
 var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
-const FISHING523 = preload("res://scripts/fishing/fishing_runtime.gd")
-var fishing523 = FISHING523.new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
@@ -924,7 +922,6 @@ func _load_data() -> void:
 	totems.configure_input()
 	totem_actions.configure(self)
 	totem_combat.configure(self)
-	fishing523.configure(self)
 	growth.configure(self)
 	weapon_mastery.configure(self)
 	growth96.configure(self)
@@ -6118,7 +6115,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
 	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
 	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA
-	if fishing523.blocked or not fishing523.check_state(collection_override.get("fishing523", fishing523.state)): return ERR_INVALID_DATA
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if titles.blocked or not titles.validate(collection_override.get("title523",titles.state)).is_empty(): return ERR_INVALID_DATA
@@ -6200,7 +6196,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","fishing523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -6259,7 +6255,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"quest_state": quest_service.export_state(),
 		"monsterbook523": monsterbook523.export_state(),
 		"tj_coupons523": tj_coupons.core.export_state(),
-		"fishing523": fishing523.state.duplicate(true),
 		"protection523": protection523.snapshot(),
 		"equipment_collections": equipment_collections.export_state(),
 		"totem_state": totems.export_state(),
@@ -6421,10 +6416,6 @@ func _load_game(quiet: bool) -> void:
 	var extra_error: String=unconfirmed523.check_load(data)
 	if not extra_error.is_empty():
 		unconfirmed523.save_blocked=true;unconfirmed523.problem=extra_error;hud.show_message(extra_error);return
-	if not fishing523.check_state(data.get("fishing523", FISHING523.fresh_state())):
-		fishing523.blocked = true
-		hud.show_message("낚시 저장 상태가 손상되었습니다. 기존 저장을 보존합니다.")
-		return
 	var quest_owner_error: String = equipment523.check_quest_load(self,data.get("quest_state",{}))
 	if not quest_owner_error.is_empty():
 		source_save_blocked = true
@@ -6755,7 +6746,6 @@ func _load_game(quiet: bool) -> void:
 	quest_service.import_state(data.get("quest_state", {}))
 	tj_coupons.core.import_state(data.get("tj_coupons523",tj_coupons.core.empty_state()))
 	tj_coupons.restore_context()
-	fishing523.restore(data.get("fishing523", FISHING523.fresh_state()))
 	if protection523!=null and protection523.has_method("load_state") and not protection523.call("load_state",data):
 		patch523_owner_state_problem="가호 소유자 저장 복원 실패 · 기존 상태 보존"
 		return

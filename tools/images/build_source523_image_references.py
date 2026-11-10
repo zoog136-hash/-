@@ -17,7 +17,6 @@ IMAGE_TYPES = {3, 5, 6, 7, 9, 10, 11, 82, 143, 161}
 # or source table cannot opt itself into this registry by matching a heuristic.
 # The source spelling DisplayBaseAsserID is intentional.
 IMAGE_FIELD_CONTRACTS = {
-    'ArenaSeason': ['AssetID'],
     'BuffCard': ['DisplayBaseAssetID','DisplayScreenAssetID','DisplayDecoAssetID','IllustrationAssetID','HidedIllustrationAssetID'],
     'BuffCardByClass': ['DisplayBaseAssetID','DisplayScreenAssetID','DisplayDecoAssetID','IllustrationAssetID','HidedIllustrationAssetID'],
     'BuffCardSpriteCustomizingOption': ['DisplayBaseAssetID','DisplayScreenAssetID'],
@@ -28,19 +27,13 @@ IMAGE_FIELD_CONTRACTS = {
     'Companion': ['DisplayAssetID'],
     'CompetitionDungeonAsset': ['EntranceAssetId','HelpBoxAssetId','HudAlarmAssetId','HotTimeHudAlarmAssetId','WarZoneTimeHudAlarmAssetId'],
     'CompetitionDungeonView': ['CurrencyAssetId'],
-    'ConquestWarInfluence': ['ArmyNameTagAssetID'],
-    'ConquestWarNpcHero': ['TeamAssetID','EnemyAssetID'],
     'Currency': ['AssetID','LockedAssetID'],
     'DominationStoneFloor': ['AssetID'],
     'ElfForestDefenseGrade': ['AssetID'],
-    'Fish': ['AssetID','MessageAssetID'],
-    'FishContest': ['DiaryAssetID'],
-    'FishStage': ['AssetID'],
     'GoalType': ['SymbolAssetId'],
     'GradeTier': ['AssetID'],
     'MapBackgroundView': ['CloudAssetId','SkyAssetId'],
     'MarketPurchase_Korean': ['AssetID'],
-    'MarketPurchase_Taiwanese': ['AssetID'],
     'MasteryWeaponType': ['AssetID'],
     'MiniGame': ['BgAssetID'],
     'MiniGameSupporter': ['IconAssetID','NameTitleAssetID','BgAssetID'],
@@ -55,7 +48,6 @@ IMAGE_FIELD_CONTRACTS = {
     'PassSystem': ['PassBackgroundAssetID','PassNameAssetID','PassRewardAssetID'],
     'Portal': ['AssetID'],
     'Promotion': ['BackgroundAssetID','TitleDescAssetID','BaseRewardAssetID','LeftImageAssetID','RightImageAssetID'],
-    'QteMusicNote': ['AssetID'],
     'RankAsset': ['SymbolAssetId'],
     'ScreenEffect': ['EffectAssetId'],
     'SeasonDungeon': ['AssetID'],
@@ -103,11 +95,6 @@ JOIN_SPECS = [
     ('AttendanceVersion', 'AttendanceTypeID', 'AttendanceType', 'ID'),
     ('AttendanceReward', 'AttendanceVersionID', 'AttendanceVersion', 'ID'),
     ('AttendanceWeeklyBonus', 'MarketPurchaseID', 'MarketPurchase_Korean', 'ID'),
-    ('EmoticonTypeClassLink', 'EmoticonID', 'Emoticon', 'ID'),
-    ('EmoticonTypeClassLink', 'ClassID', 'Class', 'ID'),
-    ('EmoticonTypeClassLink', 'GenderId', 'Gender', 'ID'),
-    ('EmoticonTypeClassLink', 'EmoticonTypeID', 'EmoticonType', 'ID'),
-    ('Emoticon', 'SpriteAnimationID', 'SpriteAnimation', 'ID'),
     ('UIMapWorld', 'MapImageInfoID', 'UIMapImageInfo', 'ID'),
     ('UIMapWorld', 'LandID', 'Land', 'ID'),
     ('UIMapArea', 'MapImageInfoID', 'UIMapImageInfo', 'ID'),
@@ -170,7 +157,7 @@ def lane(table):
                  'WorldBossRaidView','UIChallengeExtraRewardList'}: return 'mission'
     if table in {'BuffCard','BuffCardByClass','BuffCardSpriteCustomizingOption',
                  'NpcClassBuffCardMapping','UIBuffCardDummyImagePath','Companion'}: return 'card_portrait'
-    if table in {'NpcClass','UINpcClassAssetMapping','NpcNavigationView','ConquestWarNpcHero'}: return 'NPC'
+    if table in {'NpcClass','UINpcClassAssetMapping','NpcNavigationView'}: return 'NPC'
     if table == 'PassSystem': return 'pass'
     if table == 'Promotion': return 'attendance_promotion'
     if table == 'MapBackgroundView': return 'MapBG'
@@ -246,7 +233,8 @@ def main():
             # a missing AssetView key could silently remove its own contract.
             field_specs.append((table,field,None))
 
-    emoticons = rows('Emoticon') if (args.source/'Emoticon.json').exists() else []
+    # Emoticon tables are cut from the game (user decision 2026-11-10): never read.
+    emoticons = []
     emoticon_animation_ids = {r['SpriteAnimationID'] for r in emoticons}
     frames = [(i,r) for i,r in enumerate(rows('SpriteAnimationAsset')) if r['SpriteAnimationID'] in emoticon_animation_ids] if emoticons else []
     require(all(r['AssetID'] in assets and assets[r['AssetID']]['AssetTypeId']==9 for _,r in frames),

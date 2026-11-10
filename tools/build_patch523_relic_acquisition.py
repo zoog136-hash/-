@@ -24,8 +24,7 @@ def build(source, output):
              'ItemBonus', 'Bonus', 'BonusType', 'Unit', 'UIUnit', 'UseDesc',
              'BuffClass', 'BuffBonus', 'LuckyBagClass', 'LuckyBagEntityView',
              'LuckyBagEntityType', 'DescData_Korean', 'ServerLimit',
-             'DateTimes', 'DateTimes_Korean', 'DateTimes_Chinese',
-             'DateTimes_Japanese', 'DateTimes_Taiwanese', 'Grade', 'ItemBlessCode',
+             'DateTimes', 'DateTimes_Korean', 'Grade', 'ItemBlessCode',
              'ItemClassLimit', 'LuckyBagEntityClassLimit', 'LuckyBagClassView')
     tables, hashes = {}, {}
     with zipfile.ZipFile(source) as archive:

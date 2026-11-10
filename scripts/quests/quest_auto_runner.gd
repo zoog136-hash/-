@@ -10,6 +10,7 @@ var held_index: Dictionary = {}
 var indexed_instances: Dictionary = {}
 var indexed_size: int = -1
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
+const FAILED_SCAN_SECONDS: float = 5.0
 
 func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 	# These names deliberately have no legacy catalog row. Index the physical
@@ -67,9 +68,13 @@ func tick(world: Node) -> void:
 		# Staging rechecks each prerequisite in the same ordered transaction.
 		if ids.size() == 32: break
 	if ids.is_empty(): return
-	complete(world,ids)
-	# Continue prerequisite chains on the next frame, without a large UI stall.
-	if retry_at <= now: next_scan = 0.0
+	# Continue prerequisite chains on the next frame only after a completed
+	# write. A completion that stages nothing or is refused (save pending,
+	# reward check, already claimed) used to rescan all quests and copy the
+	# whole bag on every frame; it now waits like an ordinary scan.
+	if complete(world,ids):
+		if retry_at <= now: next_scan = 0.0
+	else: next_scan = maxf(next_scan, now + FAILED_SCAN_SECONDS)
 
 func complete(world: Node, ids: Array[String]) -> bool:
 	if busy or world.quest_service.save_blocked: return false

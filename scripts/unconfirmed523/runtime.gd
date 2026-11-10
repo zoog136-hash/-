@@ -296,31 +296,7 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 func observe_staged_owner(overrides: Dictionary) -> Dictionary:
 	if overrides.has("ground_drops") and world!=null and world.get("source_ground_acquisitions")!=null and world.source_ground_acquisitions.authorizes(overrides):
 		return _observe_source_ground_acquisition(overrides)
-	# Read only: a native fishing finish removes its persisted pending cast and
-	# adds exactly one source Fish item. NoMemory catches need no journal entry.
-	if not overrides.has("fishing523") or busy or save_blocked or not problem.is_empty(): return {"ok":true}
-	if world == null or not source.ready() or not _source_configured or not domains.has("events") or not domains.events.has_method("event"): return {"ok":true}
-	var owner: Variant = world.get("fishing523")
-	if owner == null: return {"ok":true}
-	var before: Variant = owner.get("state")
-	var after: Variant = overrides.fishing523
-	if not before is Dictionary or not after is Dictionary or not before.get("pending") is Dictionary or not after.get("pending") is Dictionary: return {"ok":true}
-	var pending: Dictionary = before.pending
-	if pending.is_empty() or not after.pending.is_empty() or not pending.get("id") is String or str(pending.id).is_empty() or not _integer(pending.get("fish"),1): return {"ok":true}
-	if not before.get("items") is Dictionary or not after.get("items") is Dictionary: return {"ok":true}
-	var fish: Dictionary = source.row("Fish",int(pending.fish))
-	if not _integer(fish.get("ItemClassID"),1): return {"ok":true}
-	var item_id: String = str(int(fish.ItemClassID))
-	if not _integer(before.items.get(item_id,0),0) or not _integer(after.items.get(item_id,0),0) or int(before.items.get(item_id,0)) >= 9007199254740991: return {"ok":true}
-	if int(after.items.get(item_id,0)) != int(before.items.get(item_id,0))+1: return {"ok":true}
-	var next: Dictionary = state.duplicate(true)
-	var response: Dictionary = _stage_pass_event(next,"fishing_success",{"amount":1,"source_id":int(pending.fish),"event_id":"source_grant:fishing523:catch:"+str(pending.id).sha256_text()},_fresh_context(next))
-	if not response.get("ok",false): return response
-	if not response.get("changed",false): return {"ok":true}
-	next.revision = int(next.revision)+1
-	var error: String = validate(next)
-	if not error.is_empty(): return _fail(error)
-	return {"ok":true,"state":next}
+	return {"ok":true}
 
 func _observe_source_ground_acquisition(overrides: Dictionary) -> Dictionary:
 	# The item owner has sealed exact original drop membership, physical IDs,

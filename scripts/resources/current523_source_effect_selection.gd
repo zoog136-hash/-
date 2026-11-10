@@ -8,6 +8,9 @@ const GLOBALS = {"polymorph":"PolymorphEffectSpriteID"}
 static var _manifest_path: String = ""
 static var _manifest_sha: String = ""
 static var _manifest: Dictionary = {}
+## Size and modified time of the verified manifest: an unchanged file is not
+## hashed again on every effect request (a full SHA256 of the bank manifest).
+static var _manifest_stamp: String = ""
 
 static func fail(reason: String, detail: Dictionary = {}) -> Dictionary:
 	return {"ok":false,"enabled":true,"status":"selection_pending","reason":reason,"source_snapshot":"patch523","source_reference":detail}
@@ -17,16 +20,21 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var expected: String = str(options.get("manifest_sha256",""))
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null or file.get_length() <= 0 or file.get_length() > BANK.MAX_MANIFEST_JSON or not BANK.valid_sha(expected): return fail("current523_effect_bank_missing_or_oversized")
+	var stamp: String = "%d:%d" % [file.get_length(), FileAccess.get_modified_time(path)]
 	file.close()
+	if path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
 	# Ordinary production pin admission; no separate resource audit is launched.
 	if FileAccess.get_sha256(path) != expected: return fail("current523_effect_bank_pin_changed")
-	if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
+	if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty():
+		_manifest_stamp = stamp
+		return {"ok":true,"manifest":_manifest}
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return fail("current523_effect_original_action_domain_required")
 	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return fail("current523_effect_source_dummy_policy_required")
 	_manifest_path = path
 	_manifest_sha = expected
 	_manifest = value
+	_manifest_stamp = stamp
 	return {"ok":true,"manifest":value}
 
 static func _source_integer(value: Variant) -> int:

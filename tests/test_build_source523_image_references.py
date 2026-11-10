@@ -70,13 +70,11 @@ class ImageReferenceStructuralFixtures(unittest.TestCase):
             {'ID':5,'MiniAssetID':11,'FullAssetID':0,'CutSceneAssetID':0,'ArbitraryInteger':11},
         ]})
         dump(self.tables/'UnknownFixtureTable.json',{'rows':[{'ID':1,'AssetID':11,'ImageID':11,'Name':'fixture_exact.png'}]})
-        dump(self.tables/'Emoticon.json',{'rows':[{'ID':41,'SpriteAnimationID':71,'SoundMaterialID':0}]})
         dump(self.tables/'SpriteAnimation.json',{'rows':[{'ID':71,'Delay':17}]})
         dump(self.tables/'SpriteAnimationAsset.json',{'rows':[
             {'ID':201,'SpriteAnimationID':71,'AssetID':21,'Order':2},
             {'ID':202,'SpriteAnimationID':71,'AssetID':22,'Order':1},
         ]})
-        dump(self.tables/'EmoticonTypeClassLink.json',{'rows':[{'EmoticonTypeID':1,'ClassID':1,'GenderId':1,'EmoticonID':41}]})
         self.bindings_path=self.inventory/'source-bindings/all42968_asset_bindings523.jsonl.gz'
         dump_lines(self.bindings_path,self.bindings)
         dump_lines(self.inventory/'audit/current523_retained_images_lineage_diff.jsonl.gz',self.retained)
@@ -93,9 +91,9 @@ class ImageReferenceStructuralFixtures(unittest.TestCase):
     def test_curated_typed_keys_and_deduplicated_metadata_only(self):
         self.run_compiler()
         refs=read_lines(self.output/'image_source_references.jsonl.gz')
-        self.assertEqual(len(refs),6)
-        self.assertEqual({r['table'] for r in refs},{'Challenge','SpriteAnimationAsset'})
-        self.assertEqual({r['field'] for r in refs},{'MiniAssetID','AssetID'})
+        # Emoticon frame references are gone with the cut Emoticon tables.
+        self.assertEqual(len(refs),4)
+        self.assertEqual({r['table'] for r in refs},{'Challenge'})
         self.assertTrue(all(r['current_pixels_verified_by_this_audit'] is False for r in refs))
         self.assertEqual({r['pixel_evidence'] for r in refs if r['asset_id'] in {12,13}}, {'unresolved_current_member'})
         report=json.loads((self.output/'image_source_join_audit.json').read_text())
@@ -117,14 +115,10 @@ class ImageReferenceStructuralFixtures(unittest.TestCase):
         self.assertEqual(refs[0]['AssetType']['row_index_zero'],2)
         self.assertEqual(refs[0]['source_table_sha256'],hashlib.sha256((self.tables/'Challenge.json').read_bytes()).hexdigest())
 
-    def test_raw_order_and_delay_are_not_filename_or_timing_inferences(self):
+    def test_cut_emoticon_tables_are_not_read(self):
         self.run_compiler()
         chains=json.loads((self.output/'emoticon_ordered_image_chains.json').read_text())
-        self.assertEqual([r['raw']['ID'] for r in chains[0]['ordered_frames']],[202,201])
-        self.assertEqual([r['row_index_zero'] for r in chains[0]['ordered_frames']],[1,0])
-        self.assertEqual(chains[0]['animation_raw']['Delay'],17)
-        self.assertIn('unresolved',chains[0]['delay_unit_and_runtime_playback_formula'])
-        self.assertNotIn('duration_ms',json.dumps(chains))
+        self.assertEqual(chains,[])
 
     def test_byte_reproducible_private_outputs(self):
         self.run_compiler()

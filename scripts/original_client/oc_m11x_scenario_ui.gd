@@ -7,7 +7,6 @@ extends RefCounted
 ## wall-clock playback / callback timing / pixels are not modelled.
 const C = preload("res://scripts/original_client/oc_m11x_common.gd")
 
-const EVENT_CONQUEST := 0x612
 const EVENT_ALBINO := 423
 const EVENT_ESCAROS := 0x727
 const ESCAROS_INITIAL_PRIORITY := 99
@@ -31,76 +30,6 @@ static func set_text(node: Dictionary, text: String, hooks: Dictionary) -> void:
 static func set_texture(node: Dictionary, path: String) -> void:
 	node["texture"] = path
 	node["set_calls"] = int(node.get("set_calls", 0)) + 1
-
-## ---------------- M117 Conquest ----------------
-
-## layout: {"root", "visible": bool, "helper": {"target": timeline|null, "name": "Fx_Start", "loop": false},
-##          "aliases": {...}, "trace": []}
-static func make_conquest_layout(root: Variant, aliases: Dictionary, timeline: Variant) -> Dictionary:
-	return {"record": "ConquestWarScreenEffectLayout", "design_status": C.DESIGN, "root": root, "visible": false, "aliases": aliases,
-		"helper": {"target": timeline, "name": C.resolve_alias(aliases, "CONQUEST_WAR_SCREEN_EFFECT_START_ANIM"), "loop": false}, "trace": []}
-
-## event: {"kind": "SingleValueEvent<DynamicMap<string>>", "map": {...}}. The typed message object
-## carries npc_hero_id; the exact map key name is a DESIGN label.
-const CONQUEST_MESSAGE_KEY := "CONQUESTWAR_HERO_SPAWN_NOTI_MESSAGE"
-
-static func conquest_receive(capture: Dictionary, event: Variant, env: Dictionary) -> Dictionary:
-	var hooks: Dictionary = env.get("hooks", {})
-	if event == null or event.get("kind") != "SingleValueEvent<DynamicMap<string>>":
-		return {"stage": "wrong-event"}
-	var message: Variant = (event.map as Dictionary).get(CONQUEST_MESSAGE_KEY)
-	if not (message is Dictionary):
-		return {"stage": "message-cast-failed"}
-	var key: int = C.i32(int(message.npc_hero_id))
-	var table: Variant = env.get("hero_rows")
-	if table == null:
-		return {"stage": "table-missing"}
-	var idx: int = C.lower_bound_exact(table, func(r: Dictionary) -> Array: return [int(r.ID)], [key])
-	if idx < 0:
-		return {"stage": "row-missing"}
-	var payload: Dictionary = table[idx]
-	var layout: Dictionary = capture.layout
-	var text1: Variant = C.typed_child(capture.layout.root, layout.aliases, "CONQUEST_WAR_SCREEN_EFFECT_SKILL_TEXT", "Text")
-	if text1 == null:
-		return {"stage": "skill-text-missing"}
-	set_text(text1, localize(env.descs, int(payload.HeroSkillDescID)), hooks)
-	var text2: Variant = C.typed_child(capture.layout.root, capture.layout.aliases, "CONQUEST_WAR_SCREEN_EFFECT_SPEECH_TEXT", "Text")  # root re-read
-	if text2 == null:
-		return {"stage": "speech-text-missing"}  # text1 mutation remains
-	set_text(text2, localize(env.descs, int(payload.HeroSpawnSpeechDescID)), hooks)
-	var image: Variant = C.typed_child(capture.layout.root, capture.layout.aliases, "CONQUEST_WAR_SCREEN_EFFECT_HERO_IMG", "Sprite")
-	if image == null:
-		return {"stage": "hero-image-missing"}  # both texts remain
-	set_texture(image, asset_path(env.assets, int(payload.TeamAssetID)))
-	request_animation(capture.layout)
-	show(capture.layout, true)
-	return {"stage": "shown"}
-
-static func request_animation(layout: Dictionary) -> void:
-	var helper: Dictionary = layout.helper
-	var target: Variant = helper.target
-	if target == null:
-		(layout.trace as Array).append("animation-target-null")  # caller still requests show(true)
-		return
-	if str(helper.name).is_empty():
-		(layout.trace as Array).append(["play-frame0", helper.loop])
-	else:
-		(layout.trace as Array).append(["play-named", helper.name, helper.loop])
-		var range_: Variant = (target.get("ranges", {}) as Dictionary).get(helper.name)
-		if range_ != null:
-			target["start"] = int(range_[0])
-			target["end"] = int(range_[1])  # authored end, NOT the action duration
-			target["current"] = int(range_[0])
-			target["loop"] = helper.loop
-			target["playing"] = true
-
-static func show(layout: Dictionary, visible: bool) -> void:
-	layout["visible"] = visible
-	(layout.trace as Array).append(["show", visible])
-
-## 02809A70: completion only hides; text and image are not reset.
-static func conquest_completion(layout: Dictionary) -> void:
-	show(layout, false)
 
 ## ---------------- M118 Albino ----------------
 

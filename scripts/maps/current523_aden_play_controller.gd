@@ -370,18 +370,12 @@ func _build_notice(world: Node) -> void:
 	_notice.name = "Current523AdenPlayNotice"
 	_notice.layer = 18
 	world.add_child(_notice)
-	var panel := PanelContainer.new()
-	panel.position = Vector2(16, 106)
-	_notice.add_child(panel)
 	var row := HBoxContainer.new()
+	row.position = Vector2(16, 106)
 	row.add_theme_constant_override("separation", 12)
-	panel.add_child(row)
-	var label: Label = UI.label("아덴 M 타일 실험 플레이\n통행: 기존 TWILIGHT 자체 설정 · M 좌표/발/충돌 미확정", 14, UI.TEXT)
-	if source_owned: label.text = str(_source_field.data.map_name)+"\nS32 속성 기반 자체 통행 · M 원작 판정 미확정"
-	if source_owned and _always_open(settings):label.text+="\n상시 오픈 자체정책 · 기간·요일·대기·시간 한도 미적용"
-	elif source_owned and _map_time!=null and _map_time.active():label.text+="\nM 원문 한도 차감 · 자체 시간정책: 자동 초기화/충전 없음"
-	if source_owned: label.text+="\n"+_spawn_notice_line()
-	row.add_child(label)
+	_notice.add_child(row)
+	# Development status text (map name, rule notes, spawn counts) is not shown
+	# over the game screen; only the return control remains.
 	var over_host: bool = source_owned and HOST.is_host(_prior_world.get("field"))
 	var button: Button = UI.button("아덴 마을로" if over_host else "기존 지도로 복귀", _return_pressed, Vector2(150, 42))
 	button.name = "ReturnFromAdenPlayButton"
