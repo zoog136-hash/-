@@ -336,11 +336,13 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 				_message("에바의 계시 습득 · 추가 성물 소환 해금")
 			else:_message(str(result.get("error","성물 해금 아이템 사용 실패")))
 			return true
+	# Original return scrolls have their own owner (their generic 523 use spec
+	# is "effect pending", so the generic path would only refuse them).
+	if try_use_regional_return(item_name): return true
 	var source_record: Dictionary = world.call("_find_catalog_item_record", item_name)
 	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
 	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
 	if preload("res://scripts/shop/source523_restoration.gd").try_use(world,item_name):return true
-	if try_use_regional_return(item_name): return true
 	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").record().get("name","")):
 		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name,selected_instance)

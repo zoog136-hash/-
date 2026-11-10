@@ -14,6 +14,10 @@ const GRANTS: Array[Dictionary] = [
 	{"item_class_id":702, "amount":1},   # 장검
 	{"item_class_id":65291, "amount":5}, # 축복 부여 주문서 (각인)
 ]
+## Original 523 items the game keeps as plain name-keyed stacks (no physical
+## receipt), the way the 523 shop sells them: 귀환 주문서 (각인) uses the
+## regional return owner (regional_return.gd / consumable_service).
+const PLAIN_STACKS: Dictionary = {239: 5}
 ## Default item quickslots (after the class skills).
 const QUICKSLOT_ITEMS: Array[int] = [233]
 
@@ -26,7 +30,14 @@ static func grants() -> Array:
 ## Stages the kit on `world` (no save): {"ok", "overrides"|"error"}.
 ## Without the installed 523 pack nothing is granted.
 static func stage(world: Node) -> Dictionary:
-	return PATCH523_ITEMS.stage(world, grants(), ORIGIN)
+	var staged: Dictionary = PATCH523_ITEMS.stage(world, grants(), ORIGIN)
+	if not staged.get("ok", false): return staged
+	for id: int in PLAIN_STACKS:
+		var record: Dictionary = world._catalog_item_from_source_id("m523:item:%d" % id)
+		var name: String = str(record.get("name", ""))
+		if name.is_empty() or not preload("res://scripts/quickslots/regional_return.gd").supported(name, record): continue
+		staged.overrides.inventory[name] = int(staged.overrides.inventory.get(name, 0)) + int(PLAIN_STACKS[id])
+	return staged
 
 ## Inventory names of the default quickslot items that `world` holds.
 static func quickslot_names(world: Node) -> Array[String]:
