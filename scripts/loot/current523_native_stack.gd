@@ -767,7 +767,11 @@ static func restoration_metadata(record: Dictionary) -> Dictionary:
 			result.auto_use_registrable=bonus.Value==1
 		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
 		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
-	return result if seen.size()==6 and result.get("source_consume_delay_ms")==1000 else {"ok":false}
+	# AutoUseRegistrable is optional: the 523 rows of #236/#237 carry only the
+	# five restoration/consume rows (no AutoUseRegistrable => not auto-use).
+	for required: String in ["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount","ItemConsumeDelay","ItemConsumeEffectSpriteID"]:
+		if not seen.has(required):return {"ok":false}
+	return result if result.get("source_consume_delay_ms")==1000 else {"ok":false}
 
 static func presentation_only(record: Dictionary,spec: Dictionary) -> bool:
 	if spec.get("activation_status")!="blocked" or spec.get("blocked_reasons",[]).is_empty():return false
