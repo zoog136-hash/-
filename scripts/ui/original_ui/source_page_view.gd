@@ -37,7 +37,7 @@ func register_original_page(source_renderer: Node2D, panel_offset: int, index: i
 	if not live.get("ok",false):return live
 	if source_renderer.get_parent()!=null and source_renderer.get_parent()!=self:return _fail("source_page_view_renderer_has_another_parent")
 	var panel: Node2D=inspected.panel
-	var record: Dictionary={"renderer":source_renderer,"panel":panel,"panel_offset":panel_offset,"index":index,"source_member":inspected.source_member,"original_source_position":inspected.original_source_position,"original_native_position":panel.position,"had_metadata":panel.has_meta("source_page_view_layout"),"previous_metadata":panel.get_meta("source_page_view_layout",null)}
+	var record: Dictionary={"renderer":source_renderer,"panel":panel,"panel_offset":panel_offset,"index":index,"anchor":inspected.anchor,"source_member":inspected.source_member,"original_source_position":inspected.original_source_position,"original_native_position":panel.position,"had_metadata":panel.has_meta("source_page_view_layout"),"previous_metadata":panel.get_meta("source_page_view_layout",null)}
 	# All failure paths above leave registered pages and this original intact.
 	if source_renderer.get_parent()==null:add_child(source_renderer)
 	_pages[index]=record
@@ -118,7 +118,7 @@ func _original_page(renderer: Node2D, panel_offset: int) -> Dictionary:
 	var panel_origin: Node=panel.get_node_or_null("SourceContentOrigin")
 	var authored_origin:=Vector2(-float(anchor[0])*_extent.x,float(anchor[1])*_extent.y)
 	if not panel_origin is Node2D or not panel_origin.transform.is_equal_approx(Transform2D(0.0,authored_origin)):return _fail("source_page_view_original_panel_anchor_changed")
-	return {"ok":true,"panel":panel,"source_member":member,"original_source_position":Vector2(float(source_position[0]),float(source_position[1]))}
+	return {"ok":true,"panel":panel,"source_member":member,"original_source_position":Vector2(float(source_position[0]),float(source_position[1])),"anchor":Vector2(float(anchor[0]),float(anchor[1]))}
 
 func _live_pages() -> Dictionary:
 	for page: Dictionary in _pages.values():
@@ -129,7 +129,11 @@ func _live_pages() -> Dictionary:
 func _apply_layout() -> void:
 	for page: Dictionary in _pages.values():
 		var source_position:=Vector2((int(page.index)-_current_page_index)*_extent.x,0)
-		var native_position:=Vector2(source_position.x,-source_position.y)
+		# The page is laid out by its lower-left corner inside the view; an
+		# authored centre anchor (the equipment pages use 0.5,0.5) puts the
+		# anchor point half a page in, so the whole page fills the view.
+		var anchor: Vector2=page.get("anchor",Vector2.ZERO)
+		var native_position:=Vector2(source_position.x+anchor.x*_extent.x,-source_position.y-anchor.y*_extent.y)
 		page.panel.position=native_position
 		page.panel.set_meta("source_page_view_layout",{"source_member":page.source_member,"panel_offset":page.panel_offset,"index":page.index,"current_page_index":_current_page_index,"original_source_position":page.original_source_position,"original_native_position":page.original_native_position,"engine_source_position":source_position,"engine_native_position":native_position,"viewport_size":_extent,"source_size_unchanged":true,"layout_basis":"Cocos2d-x3.6 UIPageView.updateAllPagesPosition/updateAllPagesSize(equal size)"})
 
