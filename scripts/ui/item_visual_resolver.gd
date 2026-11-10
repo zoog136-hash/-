@@ -30,13 +30,36 @@ static func _ensure() -> void:
 	for record: Dictionary in catalog.get("아이템", []):
 		var id: String = str(record.get("sourceId", ""))
 		var name_value: String = str(record.get("name", ""))
-		_ids[id] = record
+		_ids[id] = source_fields(record)
 		if not _names.has(name_value): _names[name_value] = []
 		_names[name_value].append(id)
 	var proof_path: String = "res://data/item_visual_provenance.json"
 	if FileAccess.file_exists(proof_path):
 		var proof: Variant = JSON.parse_string(FileAccess.get_file_as_string(proof_path))
-		if proof is Dictionary: _evidence = proof.get("records", {})
+		if proof is Dictionary: _evidence = verified_paths(proof.get("records", {}))
+
+## A canonical record only feeds identity checks and image/category routing
+## here (this file, ground_item_icons, optional_item_icon_pack, the L1J/A2
+## bridges and the visual manifest read exactly these fields). Stats, options
+## and descriptions are owned by the game catalog, not by this resolver.
+const SOURCE_FIELDS: Array[String] = ["sourceId", "name", "image_path", "type", "slot", "crafting_scroll", "crafting_material"]
+static func source_fields(record: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	for field: String in SOURCE_FIELDS:
+		if record.has(field): result[field] = record[field]
+	return result
+
+## Provenance reduced to what the resolver asks: the image path proven for an
+## ID by source_id_name_image_bytes_verified. Other identities never verify.
+const VERIFIED_IDENTITY: String = "source_id_name_image_bytes_verified"
+static func verified_paths(records: Variant) -> Dictionary:
+	var result: Dictionary = {}
+	if not records is Dictionary: return result
+	for id: Variant in records:
+		var proof: Variant = records[id]
+		if proof is Dictionary and str(proof.get("identity", "")) == VERIFIED_IDENTITY and proof.get("path") is String:
+			result[id] = proof.path
+	return result
 
 static func _valid(path: String) -> bool:
 	if not path.begins_with("res://assets/") or path.contains("..") or path.contains("\\"):
@@ -133,8 +156,7 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 	if not ambiguous and _valid(pinned):
 		result.path = pinned
 		result.route = "source_id_catalog" if not id.is_empty() else "record_path"
-		var proof: Dictionary = _evidence.get(id, {})
-		if proof.get("path", "") == pinned and proof.get("identity", "") == "source_id_name_image_bytes_verified":
+		if str(_evidence.get(id, "")) == pinned:
 			result.status = "original_linked"
 		return result
 	# Canonicalization used to discard a physical record's working old link

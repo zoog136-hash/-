@@ -6,8 +6,22 @@ const PROFILE_PATH = "res://data/combat_animation_profiles.json"
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const PRESENTATION = preload("res://scripts/animation/presentation_catalog.gd")
 const SOURCE_TRANSFORMS = preload("res://scripts/animation/source_transform_catalog.gd")
+const SHARED = preload("res://scripts/resources/shared_values.gd")
 const MAX_FRAME_CACHE = 96
-const MAX_FRAME_CACHE_BYTES = 48 * 1024 * 1024
+## Strong reserve only: actors that are alive (or pooled) keep their own
+## SpriteFrames, and frame_weak finds them again. Was 48 MB (2026-11 boot
+## measurement: 19.3 MB of strong-only frames on a phone that ran out of RAM).
+const MAX_FRAME_CACHE_BYTES = 24 * 1024 * 1024
+## Map change keeps at most this much of the previous map's strong reserve.
+const MAP_CHANGE_RESERVE_BYTES = 8 * 1024 * 1024
+## Profile fields any reader uses (for_record, monster.gd anchors, tests).
+## Authoring provenance (prior profiles, references, donors) stays in the JSON.
+const PROFILE_FIELDS: Array[String] = ["frames_path", "layout", "motion_style", "movement_fps",
+	"movement_cadence_width_ratio", "reference_speed", "attack_hit_ratio", "attack_hit_frame",
+	"action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names",
+	"sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size",
+	"pixel_scale", "native_width_ratio", "embedded_shadow", "authored_motion_weight", "hit_recoil",
+	"death_duration", "body_kind", "color_tint"]
 static var records: Dictionary = {}
 static var frame_cache: Dictionary = {}
 static var frame_weak: Dictionary = {}
@@ -19,9 +33,7 @@ static var failed_frames: Dictionary = {}
 static var report_missing_frames: bool = true
 
 static func for_record(kind: String, record: Dictionary, resource: String = "") -> TwilightAnimationProfile:
-	if records.is_empty():
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PROFILE_PATH))
-		if parsed is Dictionary: records = parsed.get("profiles", {})
+	if records.is_empty(): records = load_profiles(PROFILE_PATH)
 	var key: String = kind + ":" + str(record.get("sourceId", record.get("name", "base")))
 	var result: TwilightAnimationProfile = PROFILE.new()
 	result.profile_id = key
@@ -39,7 +51,9 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
 	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "movement_cadence_width_ratio", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
-		if settings.has(property): result.set(property, settings[property])
+		# Profiles may edit their Dictionary fields (presentation roles); the
+		# catalog's values are shared between profiles and stay read-only.
+		if settings.has(property): result.set(property, settings[property].duplicate(true) if settings[property] is Dictionary or settings[property] is Array else settings[property])
 	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:
 		var value: Variant = settings.get(property)
@@ -180,10 +194,44 @@ static func release_region_frames() -> void:
 	# Weak lookup handles still find an actor-owned source during map turnover.
 	for key: String in frame_cache.keys():
 		if not key.contains("/monster_boss_repair/") and not key.contains("/boss_draft_first/"):continue
-		frame_cache.erase(key)
-		frame_order.erase(key)
-		frame_cache_bytes-=int(frame_costs.get(key,0))
-		frame_costs.erase(key)
+		_drop_frames(key)
+	# Then trim the rest of the previous map's strong reserve, oldest first.
+	trim_frames(MAP_CHANGE_RESERVE_BYTES)
+
+static func _drop_frames(key: String) -> void:
+	frame_cache.erase(key)
+	frame_order.erase(key)
+	frame_cache_bytes-=int(frame_costs.get(key,0))
+	frame_costs.erase(key)
+
+## Drops this cache's oldest strong references until at most `target_bytes`
+## remain. Never frees a resource: live owners keep theirs (weak reuse).
+static func trim_frames(target_bytes: int) -> void:
+	while not frame_order.is_empty() and frame_cache_bytes > maxi(0, target_bytes):
+		_drop_frames(frame_order[0])
+	for stale: String in frame_weak.keys():
+		if (frame_weak[stale] as WeakRef).get_ref()==null:frame_weak.erase(stale)
+
+## Profiles keep only reader fields; equal sub-values (offsets, hit-frame
+## lists, tints) share one instance. Values compare equal to the JSON's.
+static func load_profiles(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary or not parsed.get("profiles") is Dictionary: return {}
+	return compact_profiles(parsed.profiles)
+
+static func compact_profiles(source: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var pool: Dictionary = {}
+	for key: Variant in source:
+		var raw: Variant = source[key]
+		if not raw is Dictionary:
+			result[key] = raw
+			continue
+		var kept: Dictionary = {}
+		for field: String in PROFILE_FIELDS:
+			if (raw as Dictionary).has(field): kept[field] = raw[field]
+		result[key] = SHARED.intern(kept, pool)
+	return result
 
 static func first_texture(source: SpriteFrames) -> Texture2D:
 	if source == null: return null

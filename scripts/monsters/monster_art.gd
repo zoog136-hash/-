@@ -3,10 +3,17 @@ class_name TwilightMonsterArt
 
 ## Original family silhouettes, cached cropped atlas views, and species-specific
 ## proportions/gear. This is procedural directional art, not eight authored views.
-static var atlases: Array = []
-static var textures: Dictionary = {}
-static var plates: Dictionary = {}
 const SHADER = preload("res://scripts/monsters/monster_body.gdshader")
+const LRU = preload("res://scripts/resources/bounded_weak_lru.gd")
+## Strong reserve of atlas plates (a 1254x1254 RGBA plate is ~6 MB). Plates a
+## live monster still shows stay reachable through the weak side, so the same
+## instance is returned; only this cache's own references are dropped.
+const PLATE_RESERVE: int = 2
+static var atlases: Array = []
+## Cropped AtlasTexture views: weak only (cheap to rebuild, and a strong view
+## would pin its whole plate). A rebuilt view has the same atlas and region.
+static var textures: RefCounted = LRU.new(0)
+static var plates: RefCounted = LRU.new(PLATE_RESERVE)
 
 static func texture_for(record: Dictionary) -> Texture2D:
 	# Explicit reviewed source portrait; animation setup replaces it with the
@@ -30,17 +37,31 @@ static func texture_for(record: Dictionary) -> Texture2D:
 	var atlas: int = int(visual.atlas)
 	var cell: int = int(visual.cell)
 	var key: String = "%d:%d" % [atlas,cell]
-	if textures.has(key): return textures[key] as Texture2D
+	var known: Texture2D = textures.lookup(key) as Texture2D
+	if known != null: return known
 	if atlas < 0 or atlas >= atlases.size() or cell < 0 or cell >= 16: return null
 	var plate: Dictionary = atlases[atlas]
-	if not plates.has(atlas): plates[atlas] = load(str(plate.path))
+	var pixels: Texture2D = plates.lookup(atlas) as Texture2D
+	if pixels == null:
+		# load() also returns Godot's cached instance while any owner holds it.
+		pixels = load(str(plate.path)) as Texture2D
+		if pixels != null: plates.store(atlas, pixels, pixels.get_width() * pixels.get_height() * 4)
 	var result := AtlasTexture.new()
-	result.atlas = plates[atlas] as Texture2D
+	result.atlas = pixels
 	var a: Array = plate.rects[cell]
 	result.region = Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
 	result.filter_clip = true
-	textures[key] = result
+	textures.store(key, result)
 	return result
+
+## Map change: drop this cache's strong plate reserve. Plates still shown by a
+## live or pooled monster stay alive through their owners and are reused.
+static func release_unused() -> void:
+	plates.trim(0)
+	textures.prune()
+
+static func cache_metrics() -> Dictionary:
+	return {"plates":plates.metrics(), "textures":textures.metrics()}
 
 static func material_for(visual: Dictionary, texture: Texture2D) -> ShaderMaterial:
 	# The imported portrait was alpha-cleaned offline; avoid the atlas recoloring shader.

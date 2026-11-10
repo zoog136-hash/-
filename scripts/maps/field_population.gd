@@ -56,6 +56,9 @@ func configure(controller: Node, value: PlayableField) -> void:
 	if previous_map!=next_map:
 		_trim_pool(MAP_CHANGE_POOL_TARGET,true)
 		preload("res://scripts/animation/animation_catalog.gd").release_region_frames()
+		# Like the original client's scene change: the previous map's actors are
+		# gone, so caches drop their own strong reserves (live owners keep theirs).
+		preload("res://scripts/monsters/monster_art.gd").release_unused()
 	generation += 1
 	world = controller
 	field = value

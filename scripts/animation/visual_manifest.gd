@@ -5,6 +5,7 @@ class_name TwilightVisualManifest
 # atlases and reviewed original monster families. No gameplay data is mutated.
 const PATH := "res://data/visuals/runtime_manifest.json"
 const LIMIT := 12 # atlas textures are larger than portrait icons
+const SHARED = preload("res://scripts/resources/shared_values.gd")
 static var _loaded: bool = false
 static var _data: Dictionary = {}
 static var _frames: Dictionary = {}
@@ -28,7 +29,20 @@ static func _ensure() -> void:
 	if not FileAccess.file_exists(PATH): return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 	if parsed is Dictionary and int(parsed.get("schema", 0)) == 1:
-		_data = parsed
+		_data = compact(parsed)
+
+## The manifest repeats the same track lists, cells, offsets and bindings for
+## hundreds of entries. Share each equal sub-value once (shared_values.gd);
+## every lookup still returns a value equal to the JSON's. Read-only data.
+static func compact(parsed: Dictionary) -> Dictionary:
+	var pool: Dictionary = {}
+	for section: String in ["catalog", "monsters", "items"]:
+		var entries: Variant = parsed.get(section)
+		if not entries is Dictionary: continue
+		for key: Variant in (entries as Dictionary).keys():
+			var entry: Variant = entries[key]
+			if entry is Dictionary or entry is Array: entries[key] = SHARED.intern(entry, pool)
+	return parsed
 
 static func record(key: String) -> Dictionary:
 	_ensure()
