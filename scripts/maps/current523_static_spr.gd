@@ -1,5 +1,6 @@
 extends Node2D
 ## M S32 raw tail -> exact held SP2 bytes. Presentation policy, not client semantics.
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const PACK = preload("res://scripts/resources/current523_pack.gd")
 const GLOBAL_DECLARATIONS=preload("res://scripts/maps/current523_spr_declarations.gd")
@@ -569,6 +570,12 @@ func _draw() -> void:
 	if observe:USAGE.flush()
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("map_objects", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	_clock+=maxf(delta,0)
 	_update_draws()
 

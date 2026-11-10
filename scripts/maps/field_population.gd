@@ -1,5 +1,6 @@
 extends Node
 class_name FieldPopulation
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DIRECTOR = preload("res://scripts/monsters/boss_director.gd")
@@ -493,6 +494,12 @@ func import_state(value: Variant) -> void:
 	boss_director.import_state(value)
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("field_population", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	if field==null: return
 	boss_director.tick(delta)
 	_drain_initial_spawns()

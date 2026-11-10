@@ -1,6 +1,7 @@
 extends "res://scripts/maps/source_map_runtime_renderer.gd"
 ## Stored-pixel display for source fields and the retained legacy overlay.
 ## The selected field owns movement; rendering never infers native collision.
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 signal safe_return_requested(reason: String)
 
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
@@ -479,6 +480,12 @@ func _refresh_collision() -> void:
 
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("map_renderer", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	if not _configured: return
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): _fail(scope); return

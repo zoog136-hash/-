@@ -75,6 +75,7 @@ const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CURRENT523_ADEN_PLAY_OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const CURRENT523_DEFINITION_PREFERENCES=preload("res://scripts/maps/current523_source_definition_preferences.gd")
 const NATIVE_PNG = preload("res://scripts/maps/native_png_registry.gd")
@@ -485,6 +486,7 @@ var inventory: Dictionary = {}
 
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
+	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
 	BOOT_LOG.step("world_npc_spells")
 	if patch523_npc_spells.configure(self):
 		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
@@ -698,6 +700,12 @@ func _show_store_failures() -> void:
 	hud.show_message("기기 저장 공간이 부족해 원본 데이터를 정리하지 못했습니다. 공간을 확보한 뒤 다시 시작하면 다시 시도합니다.")
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_frame(delta)
+	FRAME_HITCH.add_self("world", hitch_started, hitch_nested)
+
+func _process_frame(delta: float) -> void:
 	option_awakening.refresh_timed_relic()
 	EQUIPMENT523_INVOKE_DEBUFF.tick(self,delta)
 	equipment523.tick(self,delta)
@@ -709,10 +717,16 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	var hitch_0: int = FRAME_HITCH.now()
 	monsterbook523_runtime.tick()
+	FRAME_HITCH.add("monsterbook", hitch_0)
+	var hitch_1: int = FRAME_HITCH.now()
 	quest_auto.tick(self)
+	FRAME_HITCH.add("quests", hitch_1)
 	if stat_hud_refresh_pending:
+		var hitch_2: int = FRAME_HITCH.now()
 		_update_hud()
+		FRAME_HITCH.add("hud", hitch_2)
 	_advance_native_route_preparation()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
@@ -721,14 +735,24 @@ func _process(delta: float) -> void:
 	else:
 		auto_stuck_time = 0.0
 	auto_last_position = player.global_position
+	var hitch_3: int = FRAME_HITCH.now()
 	_update_field_triggers()
+	FRAME_HITCH.add("field_triggers", hitch_3)
+	var hitch_4: int = FRAME_HITCH.now()
 	ground_loot.tick(delta)
+	FRAME_HITCH.add("loot", hitch_4)
+	var hitch_5: int = FRAME_HITCH.now()
 	dungeon_play.tick(delta)
+	FRAME_HITCH.add("dungeon", hitch_5)
+	var hitch_6: int = FRAME_HITCH.now()
 	loot_pickup.tick(delta)
+	FRAME_HITCH.add("loot", hitch_6)
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
+	var hitch_7: int = FRAME_HITCH.now()
 	if original_skills != null: original_skills.tick(delta)
+	FRAME_HITCH.add("skills", hitch_7)
 	option_awakening.combat.tick(delta)
 	halphas_star.combat.tick(delta)
 	totem_combat.tick(delta)
@@ -745,14 +769,20 @@ func _process(delta: float) -> void:
 		_update_ain_hud()
 	_tick_catalog_recovery(delta)
 	combinations.tick(delta)
+	var hitch_8: int = FRAME_HITCH.now()
 	_run_auto_buff_quickslots(delta)
+	FRAME_HITCH.add("items", hitch_8)
+	var hitch_9: int = FRAME_HITCH.now()
 	_run_auto_item_quickslots(delta)
+	FRAME_HITCH.add("items", hitch_9)
 	save_timer += delta
 	if save_timer >= AUTOSAVE_SECONDS:
 		save_timer = 0.0
 		_request_general_save()
 	if deferred_save.tick(delta):
+		var hitch_10: int = FRAME_HITCH.now()
 		_save_game(true)
+		FRAME_HITCH.add("save", hitch_10)
 	# M81: the timer advances every frame; a fire runs the manager callback (enable gate, then
 	# the heal spell pass). Auto hunt itself keeps its per-frame cadence.
 	var heal_tick: Dictionary = ORIGINAL_AUTOSLOT.timer_step(auto_heal_sweep_elapsed, delta)
@@ -761,8 +791,12 @@ func _process(delta: float) -> void:
 	if bool(heal_tick.fired):
 		ORIGINAL_AUTOSLOT.manager_callback(auto_active, true, _auto_quickslot_queued_pass, _auto_quickslot_spell_pass, _auto_quickslot_aux_pass)
 	if auto_active:
+		var hitch_11: int = FRAME_HITCH.now()
 		_run_auto_hunt()
+		FRAME_HITCH.add("auto_hunt", hitch_11)
+	var hitch_12: int = FRAME_HITCH.now()
 	_update_companion(delta)
+	FRAME_HITCH.add("companion", hitch_12)
 	if hud.blocks_keyboard_input():
 		_update_target_hud()
 		return
