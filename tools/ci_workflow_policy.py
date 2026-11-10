@@ -14,8 +14,6 @@ ACTIVE = frozenset({
     "resource-integrity.yml",
     "godot-validate.yml",
     "twilight-integration-validate.yml",
-    "animation-presentation-validate.yml",
-    "l1j-runtime-validate.yml",
     "godot-import-cache-contract.yml",
     "main-debug-audit.yml",
     "ci-consolidated-preflight.yml",

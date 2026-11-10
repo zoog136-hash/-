@@ -29,6 +29,7 @@ var _scanned_state: String = ""
 var _lookup: RefCounted = null
 var _lookup_key: Array = []
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
+const FAILED_SCAN_SECONDS: float = 5.0
 
 func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 	# These names deliberately have no legacy catalog row. Index the physical
@@ -203,16 +204,18 @@ func tick(world: Node) -> void:
 		# Staging rechecks each prerequisite in the same ordered transaction.
 		if ids.size() == 32: break
 	if ids.is_empty(): return
+	# Continue prerequisite chains on the next frame only after a completed
+	# write. A refused batch waits like an ordinary scan, and its quests are
+	# skipped until the world state changes (same state, same result).
 	var done: bool = complete(world,ids)
 	if not done:
-		# Same state, same result: wait for a state change instead of restaging
-		# the same batch on every frame. A save failure keeps its own 30 s retry.
+		next_scan = maxf(next_scan, now + FAILED_SCAN_SECONDS)
+		# A save failure keeps its own 30 s retry and is not blocked.
 		if retry_at <= Time.get_unix_time_from_system():
 			for id: String in ids:
 				if failures.has(id): blocked[id] = state
 		return
 	for id: String in ids: blocked.erase(id)
-	# Continue prerequisite chains on the next frame, without a large UI stall.
 	if retry_at <= now: next_scan = 0.0
 
 func complete(world: Node, ids: Array[String]) -> bool:

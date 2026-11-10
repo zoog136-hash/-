@@ -14,6 +14,13 @@ def main():
     args = parser.parse_args()
     root, output = args.root.resolve(), args.output.resolve()
     prefix = 'external_map_packs/source84_v3/'
+    # The pre-November source84 map pack was removed (user decision
+    # 2026-11-10): only the installed original 523 pack is shown. Without it
+    # the gate stages an empty folder and map tests report its absence.
+    if not git(root, 'ls-tree', '-r', '--name-only', 'HEAD', '--', prefix).strip():
+        output.mkdir(parents=True, exist_ok=True)
+        print('CORE_CURRENT_MAP_INPUTS 0 0 old_map_pack_removed')
+        return
     record = json.loads(git(root, 'show', 'HEAD:'+prefix+'maps/aden_world.json'))
     names = {'index.json','runtime_safety.json','local-interpretation-v1/index.json',
              'equal-collision-v1/index.json','maps/aden_world.json',record['collision']['file']}

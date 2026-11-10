@@ -1610,54 +1610,6 @@
    "implementation_commit": "9527f50f67b734790009efcb6a12451713b2b01a",
    "fixture_hash": "n/a",
    "evidence_log": "tests/original_client_p6_p7_scene_test.gd :: all checks passed"
-  },
-  {
-   "test_id": "C28-T01",
-   "input_ko": "SPR soundID34",
-   "expected_ko": "Sound/34.ogg.",
-   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
-   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
-   "contract_id": "C28",
-   "phase": "P7",
-   "source_refs": [
-    "S045"
-   ],
-   "result": "PASS",
-   "implementation_commit": "9527f50f67b734790009efcb6a12451713b2b01a",
-   "fixture_hash": "n/a",
-   "evidence_log": "tests/original_client_p6_p7_scene_test.gd :: all checks passed"
-  },
-  {
-   "test_id": "C28-T02",
-   "input_ko": "material효과호출",
-   "expected_ko": "category72×caller gain; 이진입점에서material ratio추가곱금지.",
-   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
-   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
-   "contract_id": "C28",
-   "phase": "P7",
-   "source_refs": [
-    "S045"
-   ],
-   "result": "PASS",
-   "implementation_commit": "9527f50f67b734790009efcb6a12451713b2b01a",
-   "fixture_hash": "n/a",
-   "evidence_log": "tests/original_client_p6_p7_scene_test.gd :: all checks passed"
-  },
-  {
-   "test_id": "C28-T03",
-   "input_ko": "BGM과VOICE동일asset",
-   "expected_ko": "owner/category정책을별도관리한다.",
-   "basis": "PROPOSED_ACCEPTANCE_FROM_STATIC_CONTRACT",
-   "execution_status": "RUN_ON_DESIGN_MODULE_FIXTURE",
-   "contract_id": "C28",
-   "phase": "P7",
-   "source_refs": [
-    "S045"
-   ],
-   "result": "PASS",
-   "implementation_commit": "9527f50f67b734790009efcb6a12451713b2b01a",
-   "fixture_hash": "n/a",
-   "evidence_log": "tests/original_client_p6_p7_scene_test.gd :: all checks passed"
   }
  ],
  "note_result_scope_ko": "result가 PASS인 항목은 DESIGN 모듈이 문서화된 계약을 fixture에서 따랐다는 뜻이다. 원본 바이너리 실행·native 동등성·실제 화면 결과를 뜻하지 않는다. NOT_RUN_ON_IMPLEMENTATION 항목은 미실행이다.",

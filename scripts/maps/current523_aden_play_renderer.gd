@@ -19,6 +19,9 @@ const VISIBLE_CHUNK_LIMIT: int = 48
 const VISIBLE_ATLAS_LIMIT: int = 256
 const DRAW_COMMAND_LIMIT: int = 65536
 const DELTA_LIMIT: float = 48.0
+## The built frame covers this much beyond the screen, so standing still or
+## small moves reuse it instead of re-walking every visible chunk record.
+const BUILD_MARGIN: float = 192.0
 
 class TileGround extends Node2D:
 	var renderer: Node
@@ -44,6 +47,7 @@ var _chunk_rects: Dictionary = {}
 var _raw_chunks: Dictionary = {}
 var _raw_recent: Array[String] = []
 var _frame_commands: Dictionary = {}
+var _built_view := Rect2() # World rect the current frame commands cover.
 var _frame_atlases: Dictionary = {}
 var _metrics: Dictionary = {}
 var _last_actor_cell := Vector2i(-2147483648, -2147483648)
@@ -206,6 +210,7 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	if not _configured or value != field or actor != player:
 		_fail("M 표시 실험은 명시적인 팩과 통행 프로필 설정이 필요합니다.")
 		return
+	_built_view = Rect2()
 	refresh_visible()
 
 
@@ -226,6 +231,7 @@ func set_visual_delta(value: Vector2) -> bool:
 	_visual_delta = value
 	if is_instance_valid(_tile_ground): _tile_ground.position = value
 	if is_instance_valid(_static_spr): _static_spr.position = value
+	_built_view = Rect2()
 	if _configured: refresh_visible()
 	return _configured
 
@@ -386,7 +392,7 @@ func _append(layers: Dictionary, origin: Vector2i, half_x: int, row_y: int, raw_
 
 
 func _build_frame() -> bool:
-	var view: Rect2 = _view_rect()
+	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
 	var visible: Array[String] = []
 	for member: String in _chunk_rects:
 		if (_chunk_rects[member] as Rect2).intersects(view): visible.append(member)
@@ -427,6 +433,7 @@ func _build_frame() -> bool:
 	_draw_generation+=1
 	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
 	_frame_atlases = atlases
+	_built_view = view
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
 		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
@@ -449,11 +456,19 @@ func _build_frame() -> bool:
 	return true
 
 
+## Callers outside the periodic refresh change what is shown: always rebuild.
 func refresh_visible() -> void:
+	_built_view = Rect2()
+	_refresh_view()
+
+
+func _refresh_view() -> void:
 	if not _configured: return
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): _fail(scope); return
-	if not _build_frame(): return
+	# Rebuild only when the screen leaves the area the frame was built for.
+	if not (_built_view.has_area() and _built_view.encloses(_view_rect())):
+		if not _build_frame(): return
 	_refresh_markers()
 	_refresh_collision()
 
@@ -474,7 +489,7 @@ func _process(delta: float) -> void:
 	_refresh_clock -= delta
 	if _refresh_clock <= 0.0:
 		_refresh_clock = 0.25
-		refresh_visible()
+		_refresh_view()
 
 
 func _draw_tiles(canvas: Node2D) -> void:

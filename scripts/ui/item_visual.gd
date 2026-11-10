@@ -156,7 +156,8 @@ func _configure_presentation(view: TextureRect, record: Dictionary, item_name: S
 	substitute_mark.text="효과 미연결" if missing_original and source_scene_requested else SOURCE523.missing_label(info) if missing_original and source_presentation else "원본 미설치" if missing_original else "◇"
 	substitute_mark.tooltip_text=str(info.get("reason","원본 아이콘 미설치")) if missing_original and source_presentation else "원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
 	substitute_mark.offset_left=-62 if missing_original else -12
-	substitute_mark.visible = missing_original or info.status == "self_authored_substitute"
+	# An empty slot carries no substitute or "not installed" badge.
+	substitute_mark.visible = false
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
 	if is_inside_tree(): _register()
 	refresh_visibility()

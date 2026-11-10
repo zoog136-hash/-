@@ -65,7 +65,7 @@ jobs:
           set -euo pipefail
           mkdir -p debug-results
           git rev-parse HEAD | tee debug-results/commit.txt
-          python3 tools/check_resource_integrity.py --root . 2>&1 | tee debug-results/resource-integrity.log
+          python3 tools/check_no_legacy_resources.py --root . 2>&1 | tee debug-results/resource-integrity.log
           python3 -m compileall -q tools
           python3 tools/test_ci_godot_png_cache.py
           python3 tools/test_project_runner_test.py 2>&1 | tee debug-results/runner-unit.log

@@ -79,5 +79,11 @@ func _initialize() -> void:
 	check(not ROWS.scan(archive, "Absent").ok, "an absent table is not ok")
 	archive.close()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PATH))
+	# Tables the user cut from the game are never read; kept ones still are.
+	var CUT = load("res://scripts/resources/current523_cut_tables.gd")
+	check(CUT.cut("Fish") and CUT.cut("ArenaType") and CUT.cut("BannedWord") and CUT.cut("DateTimes_Japanese") and CUT.cut("ZigguratConstant"), "cut tables are listed")
+	check(not CUT.cut("DescData_Korean") and not CUT.cut("DialogData_Korean") and not CUT.cut("NpcAttack") and not CUT.cut("DateTimes_Korean") and not CUT.cut("ServerLimit") and not CUT.cut("Bonus"), "kept tables are not cut")
+	var DEFS = load("res://scripts/resources/current523_definition_rows.gd")
+	check(DEFS.rows("FishConstant").is_empty() and DEFS.table_metadata("FishConstant").is_empty(), "the definition reader never loads a cut table")
 	print("ZIP_TABLE_ROWS_RESULT " + JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

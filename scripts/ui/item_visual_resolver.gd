@@ -221,9 +221,15 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 	result["reason"] = "ambiguous_name" if ambiguous else "no_verified_source_path"
 	return result
 
+## No substitute or older-pack item art (user decision 2026-11-10).
+const ORIGINAL_ONLY: bool = true
+
 static func texture(record: Dictionary, name_value: String = "", images: Dictionary = {}, ground: bool = false) -> Texture2D:
 	var info: Dictionary = describe(record, name_value, images, ground)
 	if info.route == "source523_images": return info.get("texture") as Texture2D
+	# Only the original 523 image is shown. Older pack art (L1J/A2/repo PNGs)
+	# and generated substitute icons are never shown: the slot stays empty.
+	if ORIGINAL_ONLY: return null
 	var path: String = str(info.path)
 	if info.route=="source_original_unavailable":return null
 	# Keep the original loader's hash gate and returned ImageTexture. Reloading

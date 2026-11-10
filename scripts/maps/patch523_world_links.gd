@@ -2,6 +2,7 @@ extends RefCounted
 ## Cumulative523 definitions in the original Land namespace. No inferred instances.
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_FILE_BYTES: int = 32 * 1024 * 1024
+const CUT_CONDITION_TABLES: Array[String] = ["DateTimes_Taiwanese", "DateTimes_Japanese", "DateTimes_Chinese"]
 var problem: String = ""
 var loaded: bool = false
 var root: String = ""
@@ -133,11 +134,13 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	if not manifest.get("conditions") is Dictionary or manifest.conditions.get("file") != "conditions.json": return _fail("Invalid cumulative523 conditions path")
 	var condition_data: Dictionary = _conditions(root.path_join("conditions.json"), manifest.conditions)
 	if condition_data.get("schema") != 1 or condition_data.get("source_snapshot") != "patch523" or not condition_data.get("tables") is Dictionary: return _fail("Cumulative523 condition table is missing or corrupt")
-	for key: String in ["NpcCategory", "ServerLimit", "WeeklyOpenTimeGroup", "WeeklyOpenTimeGroupSet", "WeeklyOpenTime", "WeeklyOpenTimeEntity", "LandAttribute", "LandAttributeType", "LandTimeLimit", "LandTimeLimitGroup", "LandWeeklyOpenTime", "DateTimes", "DateTimes_Korean", "DateTimes_Taiwanese", "DateTimes_Japanese", "DateTimes_Chinese", "CompetitionDungeon", "CompetitionDungeonLand", "CompetitionDungeonView", "LandTeleport", "LandTeleportTerritories", "LandTeleportPrerequisite", "Prerequisite", "PrerequisiteType", "WorldBossRaidPrerequisite", "WorldBossRaidPrerequisiteView"]:
+	for key: String in ["NpcCategory", "ServerLimit", "WeeklyOpenTimeGroup", "WeeklyOpenTimeGroupSet", "WeeklyOpenTime", "WeeklyOpenTimeEntity", "LandAttribute", "LandAttributeType", "LandTimeLimit", "LandTimeLimitGroup", "LandWeeklyOpenTime", "DateTimes", "DateTimes_Korean", "CompetitionDungeon", "CompetitionDungeonLand", "CompetitionDungeonView", "LandTeleport", "LandTeleportTerritories", "LandTeleportPrerequisite", "Prerequisite", "PrerequisiteType", "WorldBossRaidPrerequisite", "WorldBossRaidPrerequisiteView"]:
 		if not _rows(condition_data.tables.get(key)): return _fail("Invalid condition table: " + key)
 	shard = candidate
 	land = candidate.land
 	contexts = condition_data.tables
+	# Tables cut from the game (user decision 2026-11-10) are not kept.
+	for cut_table: String in CUT_CONDITION_TABLES: contexts.erase(cut_table)
 	territories = selected_territories
 	npcs = selected_npcs
 	views_by_pack = selected_views

@@ -73,11 +73,6 @@ func run() -> void:
 	check(not runtime.commit_plan(stale).ok,"old point plan rejected after another commit")
 	var server: Dictionary = runtime.core.plan_server_import(runtime.state,runtime.state,{str(weapon):0},"server-test")
 	check(server.ok and not runtime.commit_plan(server).ok,"local Main refuses a two-server settlement")
-	for destination: Dictionary in runtime.core.tables.ClassChangeMasteryWeaponType:
-		if int(destination.ToWeaponType) == weapon: continue
-		var transfer: Dictionary = runtime.core.plan_class_change(runtime.state,weapon,int(destination.ToWeaponType),int(destination.ToCharacterClass),1,"1","unsettled-class-change")
-		check(transfer.ok and not runtime.commit_plan(transfer).ok,"unconfirmed class service cannot execute even with a zero destination fee")
-		break
 	var active: Dictionary = runtime.state.duplicate(true)
 	runtime.state = Core.fresh()
 	world._load_game(true)

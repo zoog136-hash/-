@@ -30,6 +30,12 @@ func run() -> void:
 	root.size=Vector2i(1280,720)
 	world=load("res://Main.tscn").instantiate();root.add_child(world)
 	check(QA.enter_game(world,"마법사"),"actual wizard class confirmation")
+	if world.field_map == null:
+		# Remembered locations need a walkable map: only the installed 523 pack
+		# provides one (pre-November maps were removed).
+		print("SYMBOL_TRAVEL_NOT_RUN: no map without the installed 523 pack")
+		print("SYMBOL_TRAVEL_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"map":"not_installed"}))
+		world.queue_free();await process_frame;quit(0 if failures.is_empty() else 1);return
 	world.set_process(false);world.field_population.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false)
 	for mob: TwilightMonster in world.monsters_root.get_children():mob.set_physics_process(false)
 	rt=world.growth;travel=rt.travel

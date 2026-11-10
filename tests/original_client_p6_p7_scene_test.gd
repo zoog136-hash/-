@@ -1,11 +1,10 @@
 extends "res://tests/original_client_test_base.gd"
-## C23 - C28 acceptance tests (design-level; the original binary is never executed).
+## C23 - C27 acceptance tests (C28 sound removed with the cut Sound tables) (design-level; the original binary is never executed).
 const SEL = preload("res://scripts/original_client/target_selection.gd")
 const INTENT = preload("res://scripts/original_client/client_intents.gd")
 const LIFE = preload("res://scripts/original_client/world_session_lifecycle.gd")
 const TRACE = preload("res://scripts/original_client/render_trace.gd")
 const VISUAL = preload("res://scripts/original_client/world_visual.gd")
-const AUDIO = preload("res://scripts/original_client/audio_request.gd")
 
 func run() -> void:
 	# C23
@@ -83,10 +82,4 @@ func run() -> void:
 	check("C27-T01", VISUAL.light_consumed(5) and not VISUAL.light_consumed(0) and not VISUAL.light_consumed(0x90), "light radius+EC is a signed byte; positive only")
 	check("C27-T01", absf(VISUAL.light_step(VISUAL.light_step(0.0, 1.0, 0.5), 1.0, 0.5) - 0.75) < 1e-9, "light step lerps current alpha toward the target each step")
 
-	# C28
-	check("C28-T01", AUDIO.spr_sound_path(34) == "Sound/34.ogg" and AUDIO.spr_sound_path(-5) == "Sound/-5.ogg", "SPR sound path uses the signed decimal id")
-	check("C28-T02", AUDIO.material_effect_gain(72.0, 0.5, 0.25) == 36.0, "category x caller gain; no extra material ratio")
-	var pair: Array = AUDIO.requests_for_asset("Sound/1.ogg", "bgm_owner", "voice_owner")
-	check("C28-T03", pair[0].owner != pair[1].owner and pair[0].family != pair[1].family and pair[0].logical_path == pair[1].logical_path, "same asset keeps separate owner/category records")
-	check("C28-T03", AUDIO.ORIGINAL_CHAIN == ["SoundSystem", "SoundPlayer", "SoundStreamingSource", "Miles"], "original audio chain recorded, not CocosAudioEngine")
 	finish("ORIGINAL_CLIENT_P6_P7_RESULT")

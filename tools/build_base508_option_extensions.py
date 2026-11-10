@@ -89,7 +89,7 @@ def build(args):
         assert sprite_id == display or sprite_id in primary_sprites, 'Unverified source doll sprite relation'
         npc_bindings[identity] = {'npc_class_id': npc_id, 'sprite_id': sprite_id, 'display_sprite_id': display, 'primary_sprite_ids': sorted(primary_sprites), 'same_source_sprite_verified': sprite_id in primary_sprites, 'display_sprite_verified': sprite_id == display}
     expiry_ids = {e['bonus']['BonusApplicationTargetID'] for r in subslot_refs.values() for e in r['effects'] if e['type']['Name'] == 'DeleteTime' and e['bonus']['BonusApplicationTypeID'] == 298}
-    expiry_dates = {name: [r for r in table(name) if r['ID'] in expiry_ids] for name in ['DateTimes', 'DateTimes_Korean', 'DateTimes_Chinese', 'DateTimes_Japanese', 'DateTimes_Taiwanese']}
+    expiry_dates = {name: [r for r in table(name) if r['ID'] in expiry_ids] for name in ['DateTimes', 'DateTimes_Korean']}
     item = next(r for r in table('ItemClass') if r['ID'] == 346901)
     category = next(r for r in table('ItemCategory') if r['ID'] == item['CategoryID'])
     description = next(r['Description'] for r in table('DescData_Korean') if r['ID'] == item['DescID'])
