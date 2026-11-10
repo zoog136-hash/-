@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Private 523 rules. Existing TWILIGHT recipes and economic tables stay separate.
 const BLESS = preload("res://scripts/equipment_blessing.gd")
 const OPTIONS = preload("res://scripts/inven_option_adapter.gd")
@@ -727,13 +728,13 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
-		if item.get(key)!=canonical.get(key): return false
+		if NATIVE_FIELDS.field(item,key)!=NATIVE_FIELDS.field(canonical,key): return false
 	for key: String in ["source_class_ids","source_equip_slot_ids"]:
 		var entry: Dictionary=item_entry(source_id)
 		var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
-		var allow_zero: bool=key=="source_class_ids" and canonical.get("slot")=="material" and allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==canonical.get(key) and entry.get("item_bonuses",[]).is_empty()
-		if not _source_ids_match(item.get(key),canonical.get(key),allow_zero): return false
-	if stack_bless!=1:return canonical.get("source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
+		var allow_zero: bool=key=="source_class_ids" and canonical.get("slot")=="material" and allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field(canonical,key) and entry.get("item_bonuses",[]).is_empty()
+		if not _source_ids_match(NATIVE_FIELDS.field(item,key),NATIVE_FIELDS.field(canonical,key),allow_zero): return false
+	if stack_bless!=1:return NATIVE_FIELDS.field(canonical,"source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id
 
 static func bless_code(physical: Dictionary) -> int:

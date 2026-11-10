@@ -250,7 +250,7 @@ static func _archive_identity() -> Dictionary:
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const TEMPLATE_BAKE:="native_item_templates"
-const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v2"
+const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v3"
 
 static func _template_key() -> String:
 	return BAKE.key([SOURCE.verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
@@ -386,6 +386,9 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
 	var placed: Array[int]=[]
 	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start()
+	# Light baked records below are read through FIELDS.field(), so their
+	# templates are reachable while registering (bound again after the loop).
+	if templates!=null and lazy:FIELDS.bind(templates)
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in SOURCE.row_count("ItemClass"):
 		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
@@ -411,7 +414,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 			var saved: Dictionary=records[int(previous[0])]
 			var typed_supply: bool=saved.get("source_current523_awakening_supply")==true and saved.get("source_item")==raw and saved.get("source_definition_archive")==SOURCE.identity()
 			if typed_supply:admitted.append(id);continue
-			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or saved.get("source_display_name")!=current.source_display_name:
+			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or FIELDS.field(saved,"source_display_name")!=FIELDS.field(current,"source_display_name"):
 				pending[id]="unverified_registered_source_identity_preserved";continue
 			records[int(previous[0])]=current.duplicate(true) if cached else current
 			placed.append(int(previous[0]))

@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## PR238's verified source HP dice/metadata, using the current host potion
 ## modifiers and NPC healing hooks. No flat/name-derived potion substitution.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -62,7 +63,7 @@ static func use(world: Node, saved: Dictionary) -> bool:
 	world.inventory=inventory;world.item_use_cooldowns=cooldowns;world.hp=hp
 	world._source_hp_potion_committed(healed)
 	world.hud.refresh_inventory(world.inventory);world._update_hud()
-	world.hud.show_message("%s 사용 · HP %d 회복" % [str(record.source_display_name),hp-old_hp])
+	world.hud.show_message("%s 사용 · HP %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),hp-old_hp])
 	var sprite: int=int(details.get("consume_effect_sprite_id",0))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player,D.item_definition(record).get("original_item",{}))
 	return true

@@ -275,7 +275,7 @@ func install_zip(path: String) -> Dictionary:
 static func _canonical_identity(record: Dictionary) -> Array:
 	var out: Array = []
 	for key: String in FIELDS: out.append(str(record.get(key,"")))
-	for key: String in ["source_snapshot","source_m_native_item","source_item_class_id","source_display_name","source_bless_raw"]: out.append(str(record.get(key,"")))
+	for key: String in ["source_snapshot","source_m_native_item","source_item_class_id","source_display_name","source_bless_raw"]: out.append(str(NATIVE_FIELDS.field(record,key,"")))
 	return out
 
 func registered_status(records: Array) -> Dictionary:
@@ -319,7 +319,7 @@ func resolve(record: Dictionary, physical: Dictionary = {}) -> Dictionary:
 	if not _integer(raw_id) or int(raw_id) <= 0: return {}
 	id = str(int(raw_id))
 	var row: Dictionary = definition(id)
-	if row.is_empty() or record.get("source_display_name") != row.label: return {}
+	if row.is_empty() or NATIVE_FIELDS.field(record,"source_display_name") != row.label: return {}
 	if record.get("grade") != row.grade: return {}
 	var raw_bless: Variant = physical.get("source_bless_raw",record.get("source_bless_raw",0))
 	if not _integer(raw_bless) or int(raw_bless) not in [1,2,3]: return {}

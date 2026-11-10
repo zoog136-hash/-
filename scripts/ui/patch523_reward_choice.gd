@@ -34,7 +34,7 @@ func _ready() -> void:
 	var content := VBoxContainer.new()
 	margin.add_child(content)
 	var title := Label.new()
-	title.text = str(record.get("source_display_name",record.get("name","")))+" · 1개 선택"
+	title.text = str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name","")))+" · 1개 선택"
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(title)
 	var note := Label.new()
@@ -52,11 +52,11 @@ func _ready() -> void:
 		if not use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): continue
 		var item: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
 		var blessing: String = str({1:"일반",2:"축복",3:"저주"}.get(int(reward.bless_raw),"미확인 상태"))
-		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(item.get("source_display_name","?")),int(reward.amount),int(reward.item_class_id),blessing," · 자체 초기 +0" if DROPS.equipment(item) and reward.get("enchant") == null else ""])
+		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(NATIVE_FIELDS.field(item,"source_display_name","?")),int(reward.amount),int(reward.item_class_id),blessing," · 자체 초기 +0" if DROPS.equipment(item) and reward.get("enchant") == null else ""])
 		if use_source_images:
 			# This existing provider field is ItemClass.ID. Claim identity stays
 			# the separate source_entity_id stored below, never a numeric alias.
-			var original: Dictionary = IMAGES.describe_item_class(int(reward.item_class_id),str(item.get("source_display_name","")))
+			var original: Dictionary = IMAGES.describe_item_class(int(reward.item_class_id),str(NATIVE_FIELDS.field(item,"source_display_name","")))
 			choices.set_item_icon(index,original.get("texture") as Texture2D)
 			var presentation: Dictionary = original.duplicate(true)
 			presentation.erase("texture")

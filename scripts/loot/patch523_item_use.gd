@@ -39,7 +39,7 @@ static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	if reasons.is_empty(): return record
 	for reason: String in reasons:
 		if presentation.has(reason): continue
-		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and record.has("source_delete_time_raw") and not record.get("source_delete_time_unresolved",false): continue
+		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and NATIVE_FIELDS.has_field(record,"source_delete_time_raw") and not record.get("source_delete_time_unresolved",false): continue
 		return record
 	# Source definitions remain blocked in the private pack. This reducer is an
 	# explicit, reversible host interpretation, never new source probability.
@@ -53,7 +53,7 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	if record.is_empty(): return "원본 아이템 자료를 확인할 수 없습니다"
 	var dummy: String=preload("res://scripts/quests/source_dummy523.gd").reason(record)
 	if not dummy.is_empty():return dummy
-	if not record.get("source_condition_pending",[]).is_empty():return "원본 서비스·서버·기간 조건 연결 필요 · 아이템 보존"
+	if not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty():return "원본 서비스·서버·기간 조건 연결 필요 · 아이템 보존"
 	if record.get("source_test_item", false): return "원본 테스트 아이템은 사용할 수 없습니다"
 	var deadline: String = DROPS.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty(): return deadline
@@ -64,8 +64,8 @@ static func eligibility(world: Node, record: Dictionary) -> String:
 	if not classes.is_empty() and not classes.has(world.job_class): return "원본 사용 직업 조건에 맞지 않습니다"
 	var level: int = world.level
 	for prefix: String in ["source_level_limit_", "source_max_level_limit_"]:
-		var minimum: int = int(record.get(prefix+"min", 0))
-		var maximum: int = int(record.get(prefix+"max", 0))
+		var minimum: int = int(NATIVE_FIELDS.field(record, prefix+"min", 0))
+		var maximum: int = int(NATIVE_FIELDS.field(record, prefix+"max", 0))
 		# TWILIGHT's level only increases, so its current level is also its peak.
 		if level < minimum or (maximum > 0 and level > maximum): return "원본 사용 레벨 조건에 맞지 않습니다"
 	return ""
@@ -194,7 +194,7 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	world._refresh_speed_modifiers()
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
-	var message: String = "%s · 원본 버프 %s" % [str(record.source_display_name),world._format_seconds_short(duration)]
+	var message: String = "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(duration)]
 	world.hud.show_message(message)
 	world.hud.append_log(message)
 	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
@@ -230,7 +230,7 @@ static func _mp_potion(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	world.item_use_cooldowns = cooldowns
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
-	world.hud.show_message("%s · MP %d 회복" % [str(record.source_display_name),amount])
+	world.hud.show_message("%s · MP %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),amount])
 	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
 
 static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -> void:
@@ -294,7 +294,7 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 				var identity: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(identity): identity = Crypto.new().generate_random_bytes(16).hex_encode()
 				instances[identity] = {"name":str(item.name),"level":enchant,"element":"","element_level":0,"record":NATIVE_FIELDS.full(item).duplicate(true),"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(record.source_item_class_id),"source_item_class_id":int(reward.item_class_id),"lucky_bag_class_id":int(spec.get("lucky_bag_class_id",0)),"select_reward_id":int(spec.get("select_reward_id",0)),"entity_id":int(reward.source_entity_id),"bless":int(reward.bless_raw),"enchant":enchant,"initial_enchant_origin":"twilight_configured_default_zero" if local_initial else str(reward.get("enchant_origin","source_bag_initial_enchant")),"original_initial_enchant":reward.get("enchant")}}
-		rewards.append("%s ×%d" % [str(base.source_display_name),int(reward.amount)])
+		rewards.append("%s ×%d" % [str(NATIVE_FIELDS.field(base,"source_display_name")),int(reward.amount)])
 	if rewards.is_empty():
 		world.rng.state = rng_before
 		world.hud.show_message("현재 직업에 해당하는 원본 보상이 없습니다 · 상자 보존")
