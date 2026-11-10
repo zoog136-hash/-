@@ -52,7 +52,30 @@ func _run() -> void:
 	check(bool(summary.get("ok", false)), "523 Aden reads its spawn definitions: " + str(summary.get("reason", "")))
 	check(int(summary.get("regions", 0)) > 0, "523 Aden has original spawn regions")
 	check(int(summary.get("registered", 0)) > 0, "some regions have monsters the game can draw")
-	_finish({"real_input_checked":true,"regions":summary.get("regions"),"registered":summary.get("registered"),"bosses":summary.get("bosses"),"slots":summary.get("slots"),"skipped":summary.get("skipped")})
+	# Walk into the nearest ordinary spawn region: monsters must actually appear.
+	var field: Object = world.get("field_map")
+	var player: Node2D = world.get("player")
+	var target := Vector2.INF
+	var best: float = INF
+	for region: Dictionary in field.data.get("monster_spawn", []):
+		if region.get("mode") == "boss": continue
+		var box: Rect2i = region.source_rect
+		var point: Vector2 = field.coordinates.to_world(Vector2(box.position) + Vector2(box.size) / 2.0)
+		if not field.call("walkable", point): continue
+		var distance: float = point.distance_to(player.global_position)
+		if distance < best: best = distance; target = point
+	check(target != Vector2.INF, "a walkable spawn region exists")
+	var alive: int = 0
+	var held: Dictionary = {}
+	if target != Vector2.INF:
+		player.global_position = target
+		for _frame: int in 600:
+			await process_frame
+			var metrics: Dictionary = controller.call("source_spawn_metrics")
+			alive = int(metrics.get("alive", 0)); held = metrics.get("held", {})
+			if alive > 0: break
+	check(alive > 0, "monsters spawn in the region the player stands in: held=" + str(held))
+	_finish({"real_input_checked":true,"alive":alive,"regions":summary.get("regions"),"registered":summary.get("registered"),"bosses":summary.get("bosses"),"slots":summary.get("slots"),"skipped":summary.get("skipped")})
 
 func _rules() -> void:
 	var path: String = PREFERENCES.PATH

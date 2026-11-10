@@ -241,6 +241,19 @@ func retire_for_pool() -> void:
 	element_resistance.clear()
 	drop_items.clear()
 
+## The map a spawned actor's record must be bound to: the same identity the
+## population bound it with (its field's map_id). On a 523 source field that is
+## the source field ("m523_land_N"), not the starting world underneath it;
+## using the world id there held every 523 monster at this last check.
+static func spawn_host_map_id(world_ref: Node) -> String:
+	if world_ref == null: return ""
+	if bool(world_ref.get("current523_aden_play_active")):
+		var field: Variant = world_ref.get("field_map")
+		if field is OriginalPlayableField:
+			var field_map: String = str((field as OriginalPlayableField).data.get("map_id", ""))
+			if not field_map.is_empty(): return field_map
+	return str(world_ref.get("active_map_id"))
+
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
@@ -250,10 +263,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	_clear_source_m_view()
 	_source_only_native_visuals = false
 	if has_meta("current523_source_only_visual"): remove_meta("current523_source_only_visual")
-	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	var host_map_id: String = spawn_host_map_id(world_ref)
+	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, host_map_id)
 	if not incoming.ok: return _reject_patch523_spawn(str(incoming.reason))
-	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, str(world_ref.get("active_map_id")) if world_ref != null else "")
-	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(source_record, str(world_ref.get("active_map_id")) if world_ref != null else "")
+	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, host_map_id)
+	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(source_record, host_map_id)
 	if not admission.ok:
 		return _reject_patch523_spawn(str(admission.reason))
 	source_record = admission.record
