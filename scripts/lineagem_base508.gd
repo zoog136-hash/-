@@ -26,6 +26,7 @@ static func cards() -> Dictionary:
 		value["current_source_table_sha256"] = value.get("source_table_sha256",{}).duplicate(true)
 		_cards = value
 		_index_cards(value)
+		_share_values(value)
 	current_card_problem = str(_cards.get("problem",""))
 	return _cards
 static func _index_cards(value: Dictionary) -> void:
@@ -45,6 +46,27 @@ static func _index_cards(value: Dictionary) -> void:
 			else:positions[identity]=rows.size();rows.append(record)
 			_by_id[identity]=record
 		value.catalog[category]=rows
+
+## Each card record carries fresh copies of the same original rows (archive
+## identity twice, deck, grade, BonusType/Unit rows, AssetType rows, class
+## variants). Share every equal sub-value once (shared_values.gd): records,
+## _by_id and every lookup still return values equal to the built ones, and
+## record identity (_by_id[id] is the catalog row) is unchanged. Card records
+## are read-only to callers; apply_catalog hands the world deep copies.
+const SHARED = preload("res://scripts/resources/shared_values.gd")
+static func _share_values(value: Dictionary) -> void:
+	var pool: Dictionary = {}
+	for category: String in value.get("catalog", {}):
+		for record: Variant in value.catalog[category]:
+			if record is Dictionary:
+				for key: Variant in (record as Dictionary).keys():
+					var child: Variant = record[key]
+					if child is Dictionary or child is Array: record[key] = SHARED.intern(child, pool)
+	for key: String in ["classes", "source_definition_archive"]:
+		if value.get(key) is Dictionary or value.get(key) is Array: value[key] = SHARED.intern(value[key], pool)
+
+static func shared_record_count() -> int:
+	return _by_id.size()
 
 static func merge_metadata(base: Dictionary, supplement: Dictionary) -> Dictionary:
 	var merged: Dictionary=base.duplicate(true)
