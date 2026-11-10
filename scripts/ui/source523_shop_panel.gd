@@ -42,6 +42,8 @@ func configure(source_catalog: RefCounted, controller: Node = null) -> void:
 	add_child(heading)
 	var back: Button = UI.button("← 기존 상점", func() -> void: back_requested.emit(), Vector2(112, 38))
 	back.name = "SourceShopBack"
+	# The pre-November shop is gone; the original shop is the whole shop.
+	back.visible = false
 	heading.add_child(back)
 	var title: Label = UI.label("원본 상점 · 523", 17, UI.GOLD)
 	heading.add_child(title)

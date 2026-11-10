@@ -6061,13 +6061,14 @@ func _request_deferred_save() -> void:
 		return
 	deferred_save.request()
 
-## Debug builds (the Android test APK included) log any step slower than 30 ms to
-## the combat log so hitches can be read on-device without a profiler.
+## Debug builds log any step slower than 30 ms to the engine log (logcat on
+## Android). It is no longer written into the in-game chat (user: the game
+## screen should show the game, not performance notes).
 func _perf_log(label: String, started_usec: int) -> void:
-	if not OS.is_debug_build() or not is_instance_valid(hud): return
+	if not OS.is_debug_build(): return
 	var elapsed_usec: int = Time.get_ticks_usec() - started_usec
 	if elapsed_usec >= PERF_LOG_THRESHOLD_USEC:
-		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
+		print("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _prepare_patch523_item_save_backup() -> Error:
 	if LOOT_DROP.PATCH523_DROPS.pack_identity().is_empty(): return OK
