@@ -851,9 +851,10 @@ func _load_data() -> void:
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:
 		game_db = db_value as Dictionary
-	monster_db = game_db.get("몬스터", []) as Array
-	monster_db = MONSTER_CATALOG.expand(monster_db)
-	_load_monster_sizes()
+	# Pre-November monster records (game_db_v17, the old world catalog and the
+	# reviewed L1J monsters) are not used (user decision 2026-11-10): monsters
+	# come from the installed 523 pack (SP2 bank and 523 spawn regions).
+	monster_db = []
 	item_db = game_db.get("아이템", []) as Array
 	for item_index: int in range(item_db.size() - 1, -1, -1):
 		var item_value: Variant = item_db[item_index]
