@@ -96,9 +96,9 @@ func qualified_name(bonus: Dictionary, name: String, resistance_types: Dictionar
 	if name=="IncreaseNpcItemDropAmount" and application==5 and target==26: return "_adena_drop"
 	return null
 
-func _bonus(row: Dictionary, bonuses: Dictionary, types: Dictionary) -> Dictionary:
+func _bonus(row: Dictionary, bonuses: Variant, types: Dictionary) -> Dictionary:
 	if not _required(row,["BonusID"],"enchant effect") or not _integer(row.get("BonusID")): return _fail("enchant effect BonusID")
-	var bonus: Variant = bonuses.get(str(int(row.BonusID)))
+	var bonus: Variant = _bonus_of(bonuses,str(int(row.BonusID)))
 	if not bonus is Dictionary: return _fail("missing enchant Bonus: "+str(int(row.BonusID)))
 	if not _required(bonus,["BonusTypeID","Value","BonusApplicationTypeID","BonusApplicationTargetID"],"Bonus"): return {}
 	if not _integer(bonus.BonusTypeID) or not _integer(bonus.BonusApplicationTypeID) or not _integer(bonus.BonusApplicationTargetID) or not _number(bonus.Value): return _fail("invalid numeric enchant Bonus")
@@ -118,7 +118,34 @@ func _live_invoke(option: Dictionary, type: Dictionary, bonus: Dictionary) -> bo
 		if not _zero(option.get(key,0)): return false
 	return option.get("AttackTypeID") in [0,1,2,3] and param>=0
 
-func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> Dictionary:
+## The compiled runtime of every bound item (items without one are left out).
+## Same result as before the per-item split: prepare() + item_runtime() per item.
+func build(tables: Dictionary, bound_items: Dictionary, bonuses: Variant) -> Dictionary:
+	if not prepare(tables): return {}
+	var result: Dictionary = {}
+	for iid: Variant in bound_items:
+		var value: Variant = item_runtime(bound_items[iid],bonuses)
+		if not problem.is_empty(): return {}
+		if value != null: result[iid] = value
+	return result
+
+var _types: Dictionary = {}
+var _invoke_options: Dictionary = {}
+var _resistance_types: Dictionary = {}
+var _elemental_targets: Variant = {}
+var _extra_fields: Dictionary = {}
+var _bless_bonus: Variant = []
+
+## One Bonus row by ID string: `bonuses` is the ID -> row Dictionary or a
+## reader with bonus(id) (null when the ID has no row).
+static func _bonus_of(bonuses: Variant, id: String) -> Variant:
+	return (bonuses as Dictionary).get(id) if bonuses is Dictionary else bonuses.call("bonus",id)
+
+## Reads the shared tables once; false (and `problem`) when they are unusable.
+func prepare(tables: Dictionary) -> bool:
+	return not _prepare(tables).is_empty()
+
+func _prepare(tables: Dictionary) -> Dictionary:
 	problem = ""
 	if not tables.get("BonusType") is Array: return _fail("missing BonusType table")
 	var types: Dictionary = {}
@@ -155,119 +182,127 @@ func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> 
 		extra_fields["_hit_"+status] = [status+"_accuracy",10000]
 		if status!="stun": extra_fields["_resist_"+status] = [status+"_resistance",10000]
 	if not tables.get("ItemBlessBonus",[]) is Array: return _fail("ItemBlessBonus table")
-	var result: Dictionary = {}
-	for iid: Variant in bound_items:
-		var item: Variant = bound_items[iid]
-		if not item is Dictionary or not item.get("item_class") is Dictionary or not item.get("catalog_record") is Dictionary: return _fail("bound equipment item")
-		var raw: Dictionary = item.item_class
-		var canonical: Dictionary = item.catalog_record
-		if bool(raw.get("TestItem",false)) or canonical.get("slot") in ["consumable","material","currency",""]: continue
-		if not item.get("enchant_effects") is Array: return _fail("enchant_effects")
-		var options: Dictionary = {}
-		var extras: Dictionary = {}
-		var invokes: Dictionary = {}
-		var skipped: Dictionary = {}
-		for bless: int in [1,2]:
-			var by_rank: Dictionary = {}
-			var extra_rank: Dictionary = {}
-			var invoke_rank: Dictionary = {}
-			var groups: Dictionary = {}
-			for row: Variant in item.enchant_effects:
-				if not row is Dictionary or not _required(row,["ItemEnchantBonusGroupID","BlessCode","EnchantLevel"],"enchant effect"): return _fail("enchant effect row")
-				if not _integer(row.ItemEnchantBonusGroupID) or not _integer(row.BlessCode) or not _integer(row.EnchantLevel): return _fail("enchant effect condition")
-				var group: int = int(row.ItemEnchantBonusGroupID)
-				if not groups.has(group): groups[group] = []
-				groups[group].append(row)
-			var selected: Array = []
-			for rows: Array in groups.values():
-				var codes: Dictionary = {}
-				for row: Dictionary in rows: codes[int(row.BlessCode)] = true
-				var code: int = bless if codes.has(bless) else 0
-				for row: Dictionary in rows:
-					if row.BlessCode==code: selected.append(row)
-			for level: int in range(22):
-				var totals: Dictionary = {}
-				var extra: Dictionary = {}
-				var live_invokes: Array = []
-				for row: Dictionary in selected:
-					if row.EnchantLevel!=level: continue
-					if not row.has("ID") or not _integer(row.ID): return _fail("enchant effect ID")
-					var detail: Dictionary = _bonus(row,bonuses,types)
-					if detail.is_empty(): return {}
-					var b: Dictionary = detail.bonus
-					var type: Dictionary = detail.type
-					var name: Variant = type.Name
-					if name=="InvokeOption" and b.BonusApplicationTypeID==10:
-						var option: Dictionary = invoke_options.get(int(b.BonusApplicationTargetID),{})
-						if _live_invoke(option,type,b):
-							live_invokes.append({"row_id":row.ID,"probability":b.Value,"option":option,
-								"kind":{3:"attack_fixed_damage",5:"defence_flat_reduction",6:"attack_weapon_scale"}[int(option.InvokeOptionTypeID)]})
-							continue
-						if not problem.is_empty(): return {}
-					if name in ["PierceMeleeDamageReduction","PierceRangeDamageReduction","PierceMagicDamageReduction","PiercePVPDamageReduction","PVPSpellByLevelAdditionLevel","PierceDamageReduction"] and type.UnitID!=1:
-						skipped[int(row.ID)] = true; continue
-					if name in ["FinalBlowProbability","FinalBlowAdditionalScale"] and type.UnitID!=3:
-						skipped[int(row.ID)] = true; continue
-					if name=="MagicDamage" and b.BonusApplicationTypeID==2 and type.UnitID!=1: name = null
-					else: name = qualified_name(b,str(name),resistance_types,elemental_targets)
+	_types = types; _invoke_options = invoke_options; _resistance_types = resistance_types
+	_elemental_targets = elemental_targets; _extra_fields = extra_fields; _bless_bonus = tables.get("ItemBlessBonus",[])
+	return {"ok":true}
+
+## The runtime of one bound item {catalog_record,item_class,enchant_effects}:
+## its Dictionary, null when the item has none (test item or non-equipment
+## slot), or {} with `problem` set when its rows are unusable.
+func item_runtime(item: Variant, bonuses: Variant) -> Variant:
+	var types: Dictionary = _types
+	var invoke_options: Dictionary = _invoke_options
+	var resistance_types: Dictionary = _resistance_types
+	var elemental_targets: Variant = _elemental_targets
+	var extra_fields: Dictionary = _extra_fields
+	if not item is Dictionary or not item.get("item_class") is Dictionary or not item.get("catalog_record") is Dictionary: return _fail("bound equipment item")
+	var raw: Dictionary = item.item_class
+	var canonical: Dictionary = item.catalog_record
+	if bool(raw.get("TestItem",false)) or canonical.get("slot") in ["consumable","material","currency",""]: return null
+	if not item.get("enchant_effects") is Array: return _fail("enchant_effects")
+	var options: Dictionary = {}
+	var extras: Dictionary = {}
+	var invokes: Dictionary = {}
+	var skipped: Dictionary = {}
+	for bless: int in [1,2]:
+		var by_rank: Dictionary = {}
+		var extra_rank: Dictionary = {}
+		var invoke_rank: Dictionary = {}
+		var groups: Dictionary = {}
+		for row: Variant in item.enchant_effects:
+			if not row is Dictionary or not _required(row,["ItemEnchantBonusGroupID","BlessCode","EnchantLevel"],"enchant effect"): return _fail("enchant effect row")
+			if not _integer(row.ItemEnchantBonusGroupID) or not _integer(row.BlessCode) or not _integer(row.EnchantLevel): return _fail("enchant effect condition")
+			var group: int = int(row.ItemEnchantBonusGroupID)
+			if not groups.has(group): groups[group] = []
+			groups[group].append(row)
+		var selected: Array = []
+		for rows: Array in groups.values():
+			var codes: Dictionary = {}
+			for row: Dictionary in rows: codes[int(row.BlessCode)] = true
+			var code: int = bless if codes.has(bless) else 0
+			for row: Dictionary in rows:
+				if row.BlessCode==code: selected.append(row)
+		for level: int in range(22):
+			var totals: Dictionary = {}
+			var extra: Dictionary = {}
+			var live_invokes: Array = []
+			for row: Dictionary in selected:
+				if row.EnchantLevel!=level: continue
+				if not row.has("ID") or not _integer(row.ID): return _fail("enchant effect ID")
+				var detail: Dictionary = _bonus(row,bonuses,types)
+				if detail.is_empty(): return {}
+				var b: Dictionary = detail.bonus
+				var type: Dictionary = detail.type
+				var name: Variant = type.Name
+				if name=="InvokeOption" and b.BonusApplicationTypeID==10:
+					var option: Dictionary = invoke_options.get(int(b.BonusApplicationTargetID),{})
+					if _live_invoke(option,type,b):
+						live_invokes.append({"row_id":row.ID,"probability":b.Value,"option":option,
+							"kind":{3:"attack_fixed_damage",5:"defence_flat_reduction",6:"attack_weapon_scale"}[int(option.InvokeOptionTypeID)]})
+						continue
 					if not problem.is_empty(): return {}
-					if name==null: skipped[int(row.ID)] = true; continue
-					if FIELDS.has(name):
-						var spec: Array = FIELDS[name]
-						var key: String = spec[0]
-						totals[key] = totals.get(key,0)+float(b.Value)/float(spec[2])
-					elif extra_fields.has(name):
-						var spec: Array = extra_fields[name]
-						var key: String = spec[0]
-						extra[key] = extra.get(key,0)+float(b.Value)/float(spec[1])
-					else: skipped[int(row.ID)] = true
-				var zero_keys: Dictionary = {}
-				for row: Dictionary in selected:
-					if row.EnchantLevel!=0: continue
-					var detail: Dictionary = _bonus(row,bonuses,types)
-					if detail.is_empty(): return {}
-					var name: Variant = qualified_name(detail.bonus,str(detail.type.Name),resistance_types,elemental_targets)
-					if not problem.is_empty(): return {}
-					if name!=null and FIELDS.has(name): zero_keys[name] = true
-				for name: String in zero_keys:
+				if name in ["PierceMeleeDamageReduction","PierceRangeDamageReduction","PierceMagicDamageReduction","PiercePVPDamageReduction","PVPSpellByLevelAdditionLevel","PierceDamageReduction"] and type.UnitID!=1:
+					skipped[int(row.ID)] = true; continue
+				if name in ["FinalBlowProbability","FinalBlowAdditionalScale"] and type.UnitID!=3:
+					skipped[int(row.ID)] = true; continue
+				if name=="MagicDamage" and b.BonusApplicationTypeID==2 and type.UnitID!=1: name = null
+				else: name = qualified_name(b,str(name),resistance_types,elemental_targets)
+				if not problem.is_empty(): return {}
+				if name==null: skipped[int(row.ID)] = true; continue
+				if FIELDS.has(name):
 					var spec: Array = FIELDS[name]
 					var key: String = spec[0]
-					var host: Variant = spec[1]
-					if totals.has(key) and host!=null and not str(host).is_empty():
-						totals[key] = {"total":totals[key],"base_key":host,"scale":100 if host=="xp" else 1}
-				for row: Dictionary in selected:
-					if row.EnchantLevel!=0: continue
-					var detail: Dictionary = _bonus(row,bonuses,types)
-					if detail.is_empty(): return {}
-					var name: Variant = qualified_name(detail.bonus,str(detail.type.Name),resistance_types,elemental_targets)
-					if not problem.is_empty(): return {}
-					if name!=null and extra_fields.has(name):
-						var key: String = extra_fields[name][0]
-						var base_key: String = {"AttackDrainHP":"hpAbsorption","AttackDrainMP":"mpAbsorption"}.get(name,key)
-						if extra.has(key) and not extra[key] is Dictionary: extra[key] = {"total":extra[key],"base_key":base_key,"scale":1}
-				by_rank[str(level)] = totals
-				extra_rank[str(level)] = extra
-				invoke_rank[str(level)] = live_invokes
-			options[str(bless)] = by_rank
-			extras[str(bless)] = extra_rank
-			invokes[str(bless)] = invoke_rank
-		var blessing: Dictionary = {}
-		for value: Variant in tables.get("ItemBlessBonus",[]):
-			if not value is Dictionary: return _fail("ItemBlessBonus row")
-			var b: Dictionary = value
-			if not _required(b,["ItemCategoryID","GradeID","IsTest","IsPossession","BonusApplicationTypeID","BonusApplicationTargetID"],"ItemBlessBonus") or not _required(raw,["CategoryID","GradeID"],"item_class"): return {}
-			if b.ItemCategoryID!=raw.CategoryID or b.GradeID!=raw.GradeID or bool(b.IsTest) or bool(b.IsPossession) or b.BonusApplicationTypeID!=0 or b.BonusApplicationTargetID!=0: continue
-			if not _required(b,["BonusTypeID","Value"],"ItemBlessBonus") or not _integer(b.BonusTypeID) or not _number(b.Value): return _fail("ItemBlessBonus value")
-			var type: Variant = types.get(int(b.BonusTypeID))
-			if not type is Dictionary or not type.get("Name") is String: return _fail("ItemBlessBonus type")
-			var name: String = "ArmorClass" if type.Name=="ArmorClassBonus" else str(type.Name)
-			if FIELDS.has(name):
+					totals[key] = totals.get(key,0)+float(b.Value)/float(spec[2])
+				elif extra_fields.has(name):
+					var spec: Array = extra_fields[name]
+					var key: String = spec[0]
+					extra[key] = extra.get(key,0)+float(b.Value)/float(spec[1])
+				else: skipped[int(row.ID)] = true
+			var zero_keys: Dictionary = {}
+			for row: Dictionary in selected:
+				if row.EnchantLevel!=0: continue
+				var detail: Dictionary = _bonus(row,bonuses,types)
+				if detail.is_empty(): return {}
+				var name: Variant = qualified_name(detail.bonus,str(detail.type.Name),resistance_types,elemental_targets)
+				if not problem.is_empty(): return {}
+				if name!=null and FIELDS.has(name): zero_keys[name] = true
+			for name: String in zero_keys:
 				var spec: Array = FIELDS[name]
-				blessing[str(spec[0])] = float(b.Value)/float(spec[2])
-		var skipped_ids: Array = skipped.keys()
-		skipped_ids.sort()
-		result[iid] = {"options":options,"extra_options":extras,"invokes":invokes,"blessing":blessing,
-			"category_id":raw.get("CategoryID",0),"grade_id":raw.get("GradeID",0),
-			"material_id":raw.get("MaterialID",0),"unconnected_effect_row_ids":skipped_ids}
-	return result
-
+				var key: String = spec[0]
+				var host: Variant = spec[1]
+				if totals.has(key) and host!=null and not str(host).is_empty():
+					totals[key] = {"total":totals[key],"base_key":host,"scale":100 if host=="xp" else 1}
+			for row: Dictionary in selected:
+				if row.EnchantLevel!=0: continue
+				var detail: Dictionary = _bonus(row,bonuses,types)
+				if detail.is_empty(): return {}
+				var name: Variant = qualified_name(detail.bonus,str(detail.type.Name),resistance_types,elemental_targets)
+				if not problem.is_empty(): return {}
+				if name!=null and extra_fields.has(name):
+					var key: String = extra_fields[name][0]
+					var base_key: String = {"AttackDrainHP":"hpAbsorption","AttackDrainMP":"mpAbsorption"}.get(name,key)
+					if extra.has(key) and not extra[key] is Dictionary: extra[key] = {"total":extra[key],"base_key":base_key,"scale":1}
+			by_rank[str(level)] = totals
+			extra_rank[str(level)] = extra
+			invoke_rank[str(level)] = live_invokes
+		options[str(bless)] = by_rank
+		extras[str(bless)] = extra_rank
+		invokes[str(bless)] = invoke_rank
+	var blessing: Dictionary = {}
+	for value: Variant in _bless_bonus:
+		if not value is Dictionary: return _fail("ItemBlessBonus row")
+		var b: Dictionary = value
+		if not _required(b,["ItemCategoryID","GradeID","IsTest","IsPossession","BonusApplicationTypeID","BonusApplicationTargetID"],"ItemBlessBonus") or not _required(raw,["CategoryID","GradeID"],"item_class"): return {}
+		if b.ItemCategoryID!=raw.CategoryID or b.GradeID!=raw.GradeID or bool(b.IsTest) or bool(b.IsPossession) or b.BonusApplicationTypeID!=0 or b.BonusApplicationTargetID!=0: continue
+		if not _required(b,["BonusTypeID","Value"],"ItemBlessBonus") or not _integer(b.BonusTypeID) or not _number(b.Value): return _fail("ItemBlessBonus value")
+		var type: Variant = types.get(int(b.BonusTypeID))
+		if not type is Dictionary or not type.get("Name") is String: return _fail("ItemBlessBonus type")
+		var name: String = "ArmorClass" if type.Name=="ArmorClassBonus" else str(type.Name)
+		if FIELDS.has(name):
+			var spec: Array = FIELDS[name]
+			blessing[str(spec[0])] = float(b.Value)/float(spec[2])
+	var skipped_ids: Array = skipped.keys()
+	skipped_ids.sort()
+	return {"options":options,"extra_options":extras,"invokes":invokes,"blessing":blessing,
+		"category_id":raw.get("CategoryID",0),"grade_id":raw.get("GradeID",0),
+		"material_id":raw.get("MaterialID",0),"unconnected_effect_row_ids":skipped_ids}
