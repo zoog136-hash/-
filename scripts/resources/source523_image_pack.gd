@@ -18,7 +18,9 @@ var _assets: Dictionary = {}
 var _icons: Dictionary = {}
 var _consumers: Dictionary = {}
 var _source_tables: Dictionary = {}
-var _textures: Dictionary = {}
+# NEW PROPOSED CODE: bounded per-pack texture residency; not Android recovery.
+const TEXTURE_CACHE = preload("res://scripts/resources/source523_texture_cache.gd")
+var _texture_cache = TEXTURE_CACHE.new()
 var _dummy_assets: Dictionary = {}
 var _dummy_paths: Dictionary = {}
 var _dummy_source: Dictionary = {}
@@ -514,6 +516,19 @@ func resolve_path(declared_path: String, expected_type: int = -1) -> Dictionary:
 	if matches.size() != 1: return _failure("ambiguous_or_missing_asset_path","Literal path must have one exact typed AssetView identity.",{"path":declared_path})
 	return resolve_asset(matches[0],expected_type,declared_path)
 
+## Proposed budget is configurable; no process-wide cache or forced UI clears.
+func configure_texture_cache(budget_bytes: int, max_entries: int = 4096) -> void:
+	_texture_cache.configure(budget_bytes, max_entries)
+
+func clear_texture_cache(forget_weak: bool = false) -> void:
+	_texture_cache.clear(forget_weak)
+
+func trim_texture_cache(target_bytes: int) -> void:
+	_texture_cache.trim_to(target_bytes)
+
+func texture_cache_metrics() -> Dictionary:
+	return _texture_cache.metrics()
+
 func _texture(path: String, provenance: Dictionary) -> Dictionary:
 	if not _has_member(path): return _failure("missing_current_member","Verified current member is absent.",provenance)
 	var member: Dictionary = _member(path)
@@ -522,7 +537,9 @@ func _texture(path: String, provenance: Dictionary) -> Dictionary:
 	if not checked.ok:
 		checked.provenance = provenance
 		return checked
-	if not _textures.has(path):
+	# Verification above intentionally runs even on a resident or weak hit.
+	var texture: Texture2D = _texture_cache.lookup(path)
+	if texture == null:
 		var image := Image.new()
 		var error: Error = ERR_FILE_UNRECOGNIZED
 		var data: PackedByteArray = checked.bytes
@@ -531,7 +548,8 @@ func _texture(path: String, provenance: Dictionary) -> Dictionary:
 			"JPEG": error = image.load_jpg_from_buffer(data)
 			"BMP": error = image.load_bmp_from_buffer(data)
 		if error != OK or image.is_empty() or image.get_width() != int(member.width) or image.get_height() != int(member.height): return _failure("original_image_decode_failed","Original image format/dimensions failed.",provenance)
-		_textures[path] = ImageTexture.create_from_image(image)
+		texture = ImageTexture.create_from_image(image)
+		_texture_cache.remember(path, texture, image.get_data_size())
 	return {"ok":true,"status":"verified_original_texture","status_type":"verified_original_texture",
-		"texture":_textures[path],"provenance":provenance,"original_bytes_unchanged":true,
+		"texture":texture,"provenance":provenance,"original_bytes_unchanged":true,
 		"actual_game_consumption_observed":false}

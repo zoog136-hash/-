@@ -119,6 +119,16 @@ const REJECTED: int = 0
 ## The record files could not be written or read back: nothing was accepted
 ## and the same inputs are compiled again with every part resident.
 const RESIDENT_RETRY: int = -1
+## Disk-required policy (current523_bake_cache.gd disk_required(), the default
+## on Android/iOS): a record writer create / append / commit / reopen / index
+## failure is an explicit failure instead of a resident recompile. Nothing is
+## accepted, the state before the compile is restored, and the next start
+## retries. Only the producer's own unfinished .part files are removed.
+const STORE_FAILED: int = -2
+## Test-visible: how often a resident recompile ran (never under disk-required).
+var resident_retries: int = 0
+## Last store failure of this owner ({} when none): stage and message.
+var store_failure: Dictionary = {}
 
 ## Test seam: the definition reader the compile uses (null: the installed
 ## original through current523_definition_rows.gd).
@@ -138,10 +148,32 @@ func _new_projection() -> Variant:
 ## documented fallback is kept: the model is compiled again fully resident and
 ## no bake is written, so the next start retries.
 func compile_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary, key: String) -> bool:
+	# The accepted state before this compile, restored unchanged if the
+	# candidate cannot be stored (disk-required): a failed candidate never
+	# replaces or clears what was accepted.
+	var before: Dictionary = {"data":data,"recipes":recipes,"digest":digest,"records":_records,
+		"runtime":_runtime,"model_key":_model_key,"bake_key":_bake_key,"cold_key":_cold_key}
+	store_failure = {}
 	_bake_key = ""
 	_model_key = ""
 	var outcome: int = _compile_bound(catalog_bytes,items,contract,key)
+	if outcome == RESIDENT_RETRY and BAKE.disk_required():
+		outcome = STORE_FAILED
+		if store_failure.is_empty(): store_failure = {"stage":"verify","message":"원본523 장비 규칙 기록 파일을 다시 읽어 확인하지 못했습니다"}
+	if outcome == STORE_FAILED:
+		data = before.data
+		recipes = before.recipes
+		digest = before.digest
+		_records = before.records
+		_runtime = before.runtime
+		_model_key = before.model_key
+		_bake_key = before.bake_key
+		_cold_key = before.cold_key
+		problem = str(store_failure.get("message","")) + " · 기기 저장 공간을 확인한 뒤 다시 시작하면 다시 시도합니다"
+		BOOT_LOG.mark("rules_store_failed", {"stage": str(store_failure.get("stage",""))})
+		return false
 	if outcome == RESIDENT_RETRY:
+		resident_retries += 1
 		BOOT_LOG.mark("rules_resident_retry")
 		data = {}
 		_records = null
@@ -192,9 +224,14 @@ func _load_candidate(projection: Variant, candidate: Dictionary, key: String) ->
 		record_writer = BAKE.record_writer(RECORDS_NAME,key)
 		runtime_writer = BAKE.record_writer(RUNTIME_NAME,key) if record_writer != null else null
 		if runtime_writer == null:
-			# Storage unusable: documented fallback, everything stays resident.
 			if record_writer != null: record_writer.abort()
 			record_writer = null
+			if BAKE.disk_required():
+				# Disk-required: no whole-model resident compile on this device.
+				store_failure = {"stage":"create","message":"원본523 장비 규칙 기록 파일을 만들 수 없습니다"}
+				projection.call("release")
+				return STORE_FAILED
+			# Storage unusable: documented fallback, everything stays resident.
 			offload = false
 	var items_part: Variant = candidate.get("items")
 	var runtime_part: Variant = candidate.get("equipment_runtime")
@@ -255,7 +292,9 @@ func _load_candidate(projection: Variant, candidate: Dictionary, key: String) ->
 			stored = BAKE.open_records(RUNTIME_NAME,key) if committed and runtime_count > 0 else null
 			if committed and runtime_count > 0: committed = stored != null and stored.offsets.size() == runtime_count
 		BOOT_LOG.end("rules_records_commit",started,{"ok":committed})
-		if not committed: return RESIDENT_RETRY
+		if not committed:
+			store_failure = {"stage":"commit","message":"원본523 장비 규칙 기록 파일을 저장하지 못했습니다"}
+			return RESIDENT_RETRY
 		_model_key = key
 	started = BOOT_LOG.begin("rules_accept")
 	var accepted: bool = _accept(parsed,sha)
@@ -274,6 +313,7 @@ func _load_candidate(projection: Variant, candidate: Dictionary, key: String) ->
 			data = {}
 			recipes = {}
 			digest = ""
+			store_failure = {"stage":"index","message":"원본523 장비 규칙 기록 파일의 색인이 맞지 않습니다"}
 			return RESIDENT_RETRY
 		# Baked after acceptance in its offloaded form (catalog identities and
 		# runtime live in their record files), so a later start decodes only the

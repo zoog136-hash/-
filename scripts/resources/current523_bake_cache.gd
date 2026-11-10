@@ -16,6 +16,52 @@ const ROOT := "user://current523_bake"
 const LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const SCHEMA := "twilight.current523.bake.v1"
 
+## Storage-failure policy of the first-run device bakes.
+##
+## Some producers are only bounded in memory because their result lives on
+## storage (equipment rules catalog identities/runtime, item templates, big
+## definition tables). When storage fails there are two possible policies:
+##   resident fallback  the producer keeps the whole result in memory (the
+##                      former behaviour; fine on desktop and CI).
+##   disk-required      any writer create / append / commit / reopen / index
+##                      failure is an explicit failure of that producer: no
+##                      whole-result resident recompile, the previously
+##                      accepted state stays as it was, the consumer is not
+##                      activated, the cause and "retry on the next start" are
+##                      reported, and only the producer's own unfinished .part
+##                      file is removed (never an original, a save or another
+##                      producer's file).
+## Default: disk-required on Android and iOS (the low-memory targets, where
+## the resident fallback is exactly the unbounded path that gets the process
+## killed), resident fallback elsewhere, so desktop and CI behave as before.
+## Physical memory is deliberately not part of the default: it would make the
+## same build behave differently between CI machines.
+## TWILIGHT_BAKE_DISK_REQUIRED=1 / =0 forces the policy (tests, diagnosis).
+const DISK_REQUIRED_ENV := "TWILIGHT_BAKE_DISK_REQUIRED"
+static func disk_required() -> bool:
+	var forced: String = OS.get_environment(DISK_REQUIRED_ENV)
+	if forced == "1": return true
+	if forced == "0": return false
+	return OS.get_name() in ["Android", "iOS"]
+
+## Bakes whose last write on this run failed: name -> {op, reason}. A later
+## successful write of the same name removes it. Only real storage failures
+## (never "no_key": no original installed). Read by the boot notice.
+static var store_failures: Dictionary = {}
+
+## Test-only fault injection (never set in production): "<bake name>|<stage>"
+## with stage "create" (record_writer), "append:<n>" (the n-th record write),
+## "write" (write()), "commit" (publishing the finished file), "reopen"
+## (open_records returns nothing) or "index" (the reopened index lacks its
+## last record). It fails the same step the storage would fail.
+static var fault: String = ""
+static func _fault(name: String, stage: String) -> bool:
+	return not fault.is_empty() and fault == name + "|" + stage
+
+static func _failed(name: String, op: String, reason: String, fields: Dictionary = {}) -> void:
+	store_failures[name] = {"op": op, "reason": reason}
+	LOG.io(name, op, reason, fields)
+
 ## SHA256 over the scripts' file hashes; "" when any script cannot be hashed
 ## (then nothing is baked or read).
 static func code_key(paths: Array) -> String:
@@ -175,26 +221,26 @@ static func write(name: String, value_key: String, value: Variant) -> bool:
 	var bytes: PackedByteArray = var_to_bytes(value)
 	var file := FileAccess.open(_data(name) + ".part", FileAccess.WRITE)
 	if file == null:
-		LOG.io(name, "write", "open_fail")
+		_failed(name, "write", "open_fail")
 		return false
-	file.store_buffer(bytes)
-	var stored: bool = file.get_error() == OK
+	var stored: bool = file.store_buffer(bytes) and file.get_error() == OK and not _fault(name, "write")
 	file.close()
 	if not stored:
 		DirAccess.remove_absolute(_data(name) + ".part")
-		LOG.io(name, "write", "write_fail", {"bytes": bytes.size()})
+		_failed(name, "write", "write_fail", {"bytes": bytes.size()})
 		return false
 	DirAccess.remove_absolute(_meta(name))
 	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
 	if DirAccess.rename_absolute(_data(name) + ".part", _data(name)) != OK:
-		LOG.io(name, "write", "rename_fail", {"bytes": bytes.size()})
+		_failed(name, "write", "rename_fail", {"bytes": bytes.size()})
 		return false
 	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
 	if meta == null:
-		LOG.io(name, "write", "meta_fail", {"bytes": bytes.size()})
+		_failed(name, "write", "meta_fail", {"bytes": bytes.size()})
 		return false
 	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": _sha(bytes), "bytes": bytes.size()}))
 	meta.close()
+	store_failures.erase(name)
 	LOG.io(name, "write", "ok", {"bytes": bytes.size()})
 	return true
 
@@ -208,16 +254,17 @@ static func commit_file(name: String, value_key: String, part: String) -> bool:
 		return false
 	DirAccess.remove_absolute(_meta(name))
 	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
-	if DirAccess.rename_absolute(part, _data(name)) != OK:
-		LOG.io(name, "commit", "rename_fail")
+	if _fault(name, "commit") or DirAccess.rename_absolute(part, _data(name)) != OK:
+		_failed(name, "commit", "rename_fail")
 		return false
 	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
 	if meta == null:
-		LOG.io(name, "commit", "meta_fail")
+		_failed(name, "commit", "meta_fail")
 		return false
 	var size: int = _size(_data(name))
 	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": FileAccess.get_sha256(_data(name)), "bytes": size}))
 	meta.close()
+	store_failures.erase(name)
 	LOG.io(name, "commit", "ok", {"bytes": size})
 	return true
 
@@ -262,10 +309,15 @@ class RecordWriter extends RefCounted:
 	var value_key: String
 	var ids := PackedStringArray()
 	var positions := PackedInt64Array()
+	## False once a record could not be written; finish_records() then fails
+	## (a short write is never committed as a complete file).
+	var ok: bool = true
+	## Injected fault (tests only), see `fault`.
+	var fault_at: int = -1
 	func add(id: String, value: Variant) -> void:
 		positions.append(file.get_position())
 		ids.append(id)
-		file.store_var(value)
+		if not file.store_var(value) or file.get_error() != OK or ids.size() == fault_at: ok = false
 	func abort() -> void:
 		file.close()
 		DirAccess.remove_absolute(part)
@@ -273,11 +325,11 @@ class RecordWriter extends RefCounted:
 static func finish_records(writer: RecordWriter) -> bool:
 	var file: FileAccess = writer.file
 	var index_position: int = file.get_position()
-	file.store_var({"schema": SCHEMA, "ids": writer.ids, "offsets": writer.positions})
-	file.store_64(index_position)
-	var stored: bool = file.get_error() == OK
+	var stored: bool = file.store_var({"schema": SCHEMA, "ids": writer.ids, "offsets": writer.positions})
+	stored = file.store_64(index_position) and stored
+	stored = stored and writer.ok and file.get_error() == OK
 	file.close()
-	if not stored: LOG.io(writer.name, "finish", "write_fail", {"records": writer.ids.size()})
+	if not stored: _failed(writer.name, "finish", "write_fail", {"records": writer.ids.size()})
 	if not stored or not commit_file(writer.name, writer.value_key, writer.part):
 		DirAccess.remove_absolute(writer.part)
 		return false
@@ -290,15 +342,19 @@ static func record_writer(name: String, value_key: String) -> RecordWriter:
 	DirAccess.make_dir_recursive_absolute(ROOT)
 	var writer := RecordWriter.new()
 	writer.part = _data(name) + ".part"
-	writer.file = FileAccess.open(writer.part, FileAccess.WRITE)
+	writer.file = null if _fault(name, "create") else FileAccess.open(writer.part, FileAccess.WRITE)
 	if writer.file == null:
-		LOG.io(name, "open_writer", "open_fail")
+		_failed(name, "open_writer", "open_fail")
 		return null
 	writer.name = name
 	writer.value_key = value_key
+	if fault.begins_with(name + "|append:"): writer.fault_at = int(fault.trim_prefix(name + "|append:"))
 	return writer
 
 static func open_records(name: String, value_key: String) -> RecordFile:
+	if _fault(name, "reopen"):
+		LOG.io(name, "index", "open_fail")
+		return null
 	var path: String = verified_file(name, value_key)
 	if path.is_empty(): return null
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -321,6 +377,7 @@ static func open_records(name: String, value_key: String) -> RecordFile:
 	var records := RecordFile.new()
 	records.file = file
 	for position: int in (index.ids as PackedStringArray).size(): records.offsets[index.ids[position]] = index.offsets[position]
+	if _fault(name, "index") and not records.offsets.is_empty(): records.offsets.erase(index.ids[(index.ids as PackedStringArray).size() - 1])
 	return records
 
 static func clear(name: String) -> void:
