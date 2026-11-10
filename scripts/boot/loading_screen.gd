@@ -5,6 +5,8 @@ extends Control
 ## paused, so the game is not loaded until the installer finishes.
 const MAIN := "res://Main.tscn"
 const STYLE := preload("res://scripts/boot/boot_style.gd")
+## Boot progress record: stage lines go to user://boot_progress.log (see there).
+const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const TIPS := [
 	"처음 실행할 때는 원본 데이터를 기기에 맞게 정리하느라 몇 분 걸릴 수 있습니다.",
 	"다음 실행부터는 정리해 둔 데이터를 바로 읽어 훨씬 빨리 시작합니다.",
@@ -13,15 +15,18 @@ const TIPS := [
 var _status: Label
 var _tip: Label
 var _bar: ProgressBar
+var _stage: Label
 var _frames: int = 0
 var _shown: float = 0.0
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var previous: String = BOOT_LOG.previous_unfinished()
+	BOOT_LOG.mark("loading_screen", {"previous_unfinished": previous})
 	if DisplayServer.get_name() == "headless":
 		# Automated boots keep loading Main directly and synchronously.
 		set_process(false)
-		_enter.call_deferred(load(MAIN) as PackedScene)
+		_enter.call_deferred(_load_main())
 		return
 	add_child(STYLE.backdrop())
 	var column := VBoxContainer.new()
@@ -42,6 +47,12 @@ func _ready() -> void:
 	column.add_child(_bar)
 	_tip = STYLE.label(TIPS[0], 18, STYLE.MUTED)
 	column.add_child(_tip)
+	# Small boot-stage line; the previous run's unfinished stage helps report
+	# where a killed first start stopped (full record: boot_progress logs).
+	_stage = STYLE.label("", 14, Color(STYLE.MUTED, 0.8))
+	if not previous.is_empty():
+		_stage.text = "지난 실행이 끝나지 않은 단계: %s · 기록 %s" % [previous, ProjectSettings.globalize_path(BOOT_LOG.previous_path())]
+	column.add_child(_stage)
 	var version := STYLE.label(_version_text(), 15, Color(STYLE.MUTED, 0.75))
 	version.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	version.offset_left = -320
@@ -64,12 +75,19 @@ func _process(delta: float) -> void:
 	_bar.value = minf(30.0, _frames * 6.0)
 	if _frames == 4:
 		_status.text = "세계를 준비하는 중… (처음 실행은 몇 분 걸릴 수 있습니다)"
+		if _stage.text.is_empty(): _stage.text = "단계: 게임 장면 불러오기 · 기록 " + ProjectSettings.globalize_path(BOOT_LOG.log_path())
 	if _frames < 6: return
 	# Loaded on the main thread: a worker-thread load of Main failed to
 	# preload shaders under the mobile (GL compatibility) renderer. The
 	# screen keeps its last drawn frame during the long start.
 	set_process(false)
-	_enter(load(MAIN) as PackedScene)
+	_enter(_load_main())
+
+func _load_main() -> PackedScene:
+	var started: int = BOOT_LOG.begin("main_scene_load")
+	var scene: PackedScene = load(MAIN) as PackedScene
+	BOOT_LOG.end("main_scene_load", started, {"ok": scene != null})
+	return scene
 
 func _enter(scene: PackedScene) -> void:
 	if scene == null:
@@ -78,4 +96,7 @@ func _enter(scene: PackedScene) -> void:
 		return
 	set_process(false)
 	if _bar != null: _bar.value = 100.0
+	# Instantiation runs here; Main's _ready follows (world_ready stages).
+	var started: int = BOOT_LOG.begin("main_scene_change")
 	get_tree().change_scene_to_packed(scene)
+	BOOT_LOG.end("main_scene_change", started)
