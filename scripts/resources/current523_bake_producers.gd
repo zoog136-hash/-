@@ -58,6 +58,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_bake_cache.gd",
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/zip_table_rows.gd",
 		],
 	},
 	"dungeon523": {

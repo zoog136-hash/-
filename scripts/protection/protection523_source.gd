@@ -17,7 +17,24 @@ const SUPPLY_RECIPE_IDS := [37044,47273]
 static func denied(message: String) -> Dictionary:
 	return {"ok":false,"error":message}
 
+const ZIP_ROWS = preload("res://scripts/resources/zip_table_rows.gd")
+
+## The rows of `table` whose int(key) is in `ids`, in table order, and the
+## member's SHA256 in `hashes`. The table is read a few MB at a time
+## (zip_table_rows.gd) instead of parsed whole: the same rows as select_rows_whole().
 static func select_rows(zip: ZIPReader, table: String, key: String, ids: Array, hashes: Dictionary) -> Array:
+	# A row without `key` counts as -1 in the whole parse; that rare request
+	# keeps the whole parse.
+	if ids.has(-1): return select_rows_whole(zip, table, key, ids, hashes)
+	var wanted: Dictionary = {}
+	for value: Variant in ids: wanted[int(value)] = true
+	var scanned: Dictionary = ZIP_ROWS.scan(zip, table, key, wanted, "", false, true)
+	if not scanned.ok: return []
+	hashes[table] = scanned.sha256
+	return scanned.rows
+
+## The former whole-document form (reference and fallback).
+static func select_rows_whole(zip: ZIPReader, table: String, key: String, ids: Array, hashes: Dictionary) -> Array:
 	var member := "content/%s.json" % table
 	if not zip.file_exists(member): return []
 	var bytes := zip.read_file(member)

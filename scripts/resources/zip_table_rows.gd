@@ -16,10 +16,17 @@ const WINDOW_BYTES := 1024 * 1024
 ## row lacks `key_field`, "values": the `collect_field` value of every row that
 ## has it (PackedInt64Array, only when asked)}.
 ## Kept rows: every row when `keep_all`, else rows whose int(key) is in `wanted`.
-static func scan(archive: ZIPReader, table: String, key_field: String = "ID", wanted: Dictionary = {}, collect_field: String = "", keep_all: bool = false) -> Dictionary:
+## With `digest`, the result also has "sha256": the member bytes' SHA256 hex.
+static func scan(archive: ZIPReader, table: String, key_field: String = "ID", wanted: Dictionary = {}, collect_field: String = "", keep_all: bool = false, digest: bool = false) -> Dictionary:
 	var path: String = "content/" + table + ".json"
 	if not archive.file_exists(path): return {"ok":false, "rows":[], "count":0, "duplicate":false, "missing":false, "values":PackedInt64Array()}
 	var bytes: PackedByteArray = archive.read_file(path)
+	var sha256: String = ""
+	if digest:
+		var hashing := HashingContext.new()
+		hashing.start(HashingContext.HASH_SHA256)
+		hashing.update(bytes)
+		sha256 = hashing.finish().hex_encode()
 	var state: Dictionary = {"rows":[], "count":0, "duplicate":false, "missing":false, "ids":PackedInt64Array(), "values":PackedInt64Array()}
 	var walked: bool = _walk(bytes, state, key_field, wanted, collect_field, keep_all)
 	if not walked:
@@ -37,7 +44,9 @@ static func scan(archive: ZIPReader, table: String, key_field: String = "ID", wa
 			state.duplicate = true
 			break
 	state.ids = PackedInt64Array()
-	return {"ok":true, "rows":state.rows, "count":state.count, "duplicate":state.duplicate, "missing":state.missing, "values":state.values}
+	var result: Dictionary = {"ok":true, "rows":state.rows, "count":state.count, "duplicate":state.duplicate, "missing":state.missing, "values":state.values}
+	if digest: result["sha256"] = sha256
+	return result
 
 static func _take(rows: Array, state: Dictionary, key_field: String, wanted: Dictionary, collect_field: String, keep_all: bool) -> void:
 	for row: Variant in rows:
