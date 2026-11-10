@@ -46,14 +46,6 @@ jobs:
       - name: Restore tracked import settings
         # The PNG cache restores every *.import from an older main; put tracked ones back.
         run: git -c core.quotePath=false ls-files -t -- '*.import' | sed -n 's/^H //p' | tr '\n' '\0' | xargs -0 -r git checkout --
-      - name: Prove archived drafts are detached from exported gameplay
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          python3 tests/android_animation_export_scope_test.py
-          python3 tests/android_runtime_reachability_test.py
-          python3 tools/android_animation_export_scope.py --output build/android-validation/export-scope.json
-          python3 tools/android_runtime_reachability.py --check --output build/android-validation/unreachable-revisions.json
       - name: Install Godot 4.7.2 and export templates
         shell: bash
         run: |
@@ -212,11 +204,6 @@ jobs:
           path: build/TWILIGHT_ANDROID_PLAYTEST.apk
           if-no-files-found: error
           compression-level: 0
-      - name: Verify exported animation scope
-        # Reported separately; a stale expectation must not hide the playtest APK.
-        continue-on-error: true
-        shell: bash
-        run: python3 tools/verify_android_animation_export.py --apk build/TWILIGHT_ANDROID_PLAYTEST.apk --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --android-sdk "$ANDROID_HOME" --output build/android-validation
       - name: Annotate failure cause
         if: failure()
         run: python3 tools/ci_annotate_failure.py --title "Android APK" /tmp/import-android.txt /tmp/export-android.txt build/android-validation/*.txt build/android-validation/*.log

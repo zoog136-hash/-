@@ -19,27 +19,11 @@ from test_project_support import failure_annotation  # noqa: E402
 CHECKS = (
     ("CI workflow contract", ["tools/ci_workflow_policy.py"]),
     ("Godot cache contract", ["tools/test_ci_godot_png_cache.py"]),
-    ("Resource integrity", ["tools/check_resource_integrity.py", "--root", "."]),
     ("Godot test-result parser contract", ["tools/test_project_runner_test.py"]),
     ("Godot test selection and sharding", ["tools/test_project_plan_test.py"]),
-    ("L1J PR-targeted check selection", ["tools/l1j/test_select_pr_checks.py"]),
-    ("Regional map shard coverage", ["tools/test_world_region_shards.py"]),
-    ("Animation expansion planning", ["tests/animation_expansion_plan_test.py"]),
-    ("Eight-direction real-art audit contract", ["tests/eight_direction_coverage_audit_test.py"]),
-    ("Ground icon catalog", ["tools/ground_icons/build.py"]),
-    ("Ground alpha masks and identity", ["tools/ground_alpha/test_alpha.py"]),
-    ("Ground alpha subprocess/timeout behavior", ["tools/ground_alpha/test_verify_runner.py"]),
-    ("Ground alpha prepared source", ["tools/ground_alpha/bake.py"]),
-    ("Native PNG map source contracts", ["tools/map_restore/test_native_png_maps.py"]),
-    ("Native map source bounds", ["tools/map_restore/test_map_source_pngs.py"]),
-    ("Verified tracked PNG source decoding", ["tools/map_restore/verify_map_source_pngs.py", "--require-tracked", "--decode"]),
-    ("Aden/Faith source pack contract", ["tools/map_restore/verify_native_png_pack.py",
-         "--pack", "external_map_packs/aden_faith_png_v1",
-         "--plan", "data/maps/aden_faith_png_plan.json",
-         "--receipt", "data/maps/aden_faith_png_pack.json"]),
-    ("Inventory icon source/grade contracts", ["tools/inven_inventory/build.py"]),
-    ("Android animation export scope", ["tests/android_animation_export_scope_test.py"]),
-    ("Android unreachable revision exclusions", ["tests/android_runtime_reachability_test.py"]),
+    # Pre-November resource checks (L1J, region maps, eight-direction art,
+    # ground icons/alpha, PNG maps, inventory icons, animation scopes) were
+    # removed with those resources (user decision 2026-11-10).
 )
 
 

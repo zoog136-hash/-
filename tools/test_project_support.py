@@ -134,12 +134,8 @@ SCALAR_ONLY_CONTRACTS = {
 }
 
 
-PR122_PASS_SUMMARIES = {
-    'pr122_monster_run_only_scope_test':
-        r'PR122_MONSTER_RUN_ONLY_SCOPE_PASS monsters=318 run_cases=[1-9][0-9]* existing_walk=preserved transform_unknown=7 approvals_added=0',
-    'pr122_transform_run_only_scope_test':
-        r'PR122_TRANSFORM_RUN_ONLY_SCOPE_PASS cases=7 slow,fast,stationary unique,boss,class,unknown_preserved approvals_added=0',
-}
+# The PR122 pipeline and its tests were removed (2026-11-07, 2026-11-10).
+PR122_PASS_SUMMARIES: dict = {}
 
 
 
