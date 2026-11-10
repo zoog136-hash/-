@@ -4,7 +4,6 @@ class_name TwilightQuestService
 ## Quest goals are displayed and tracked, but TWILIGHT's requested playtest
 ## mode allows immediate one-tap completion upon obtaining a quest.
 ## This is NOT a claim that NC's official quest rewards/progress are identical.
-const LOCAL_CATALOG: String = "res://data/quests/twilight_quest_catalog.json"
 const VERIFIED_SOURCE_CATALOG: String = "res://data/quests/verified_source_quests.json"
 const CATEGORIES = ["main", "daily", "common", "achievement", "other"]
 const SOURCE = preload("res://scripts/quests/source_quest523.gd")
@@ -51,8 +50,8 @@ func configure(items: Array, monsters: Array) -> bool:
 	for raw: Variant in monsters:
 		if raw is Dictionary:
 			monster_names[str((raw as Dictionary).get("name", ""))] = true
-	if not _append_catalog(LOCAL_CATALOG, false, item_names, monster_names):
-		return false
+	# The pre-November local quest catalog is not used (user decision
+	# 2026-11-10): quests come from the original 523 quest pack below.
 	# Original third-party quest rows MUST first be examined outside the public
 	# repo and projected to this explicit schema with proven source identities.
 	# Never promote a desktop L1J quest or guessed NPC name to Lineage M truth.
