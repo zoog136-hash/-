@@ -87,9 +87,9 @@ static func admit(record: Dictionary, host_map_id: String, explicit_catalog: Ref
 		var cache_key: String = "%s|%s|%d|%s" % [options.root, options.sha, int(prior.land.ID), prior.land.AssetPath]
 		if catalog_errors.has(cache_key): return hold(str(catalog_errors[cache_key]))
 		if not catalogs.has(cache_key):
-			var candidate = LINKS.new()
-			if not candidate.load_land(str(options.root), int(prior.land.ID), str(prior.land.AssetPath), str(options.sha)):
-				catalog_errors[cache_key] = "patch523_pack_rejected: " + candidate.problem
+			var candidate: RefCounted = LINKS.shared_land(str(options.root), int(prior.land.ID), str(prior.land.AssetPath), str(options.sha))
+			if candidate == null:
+				catalog_errors[cache_key] = "patch523_pack_rejected: " + LINKS.shared_problem
 				return hold(str(catalog_errors[cache_key]))
 			catalogs[cache_key] = candidate
 		catalog = catalogs[cache_key]

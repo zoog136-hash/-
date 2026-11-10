@@ -40,6 +40,52 @@ func _index(rows: Array) -> Dictionary:
 		result[int(id)] = row
 	return result
 
+## conditions.json is the same file for every Land: parsed once per verified
+## file (path, size and SHA256 are still checked on every load) and shared
+## read-only. Readers only hand out duplicates of its rows.
+static var _shared_conditions: Dictionary = {}
+
+func _conditions(path: String, spec: Dictionary) -> Dictionary:
+	var key: String = path + "|" + str(spec.get("sha256", ""))
+	if _shared_conditions.has(key):
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file != null and file.get_length() == int(spec.get("bytes", -1)) and FileAccess.get_sha256(path) == str(spec.get("sha256", "")): return _shared_conditions[key]
+		_shared_conditions.erase(key)
+		return {}
+	var value: Dictionary = _object(path, spec)
+	_shared_conditions.clear()
+	if not value.is_empty(): _shared_conditions[key] = value
+	return value
+
+## One loaded Land per (root, manifest SHA, Land, AssetPath), shared read-only by
+## the portal provider, the spawn regions and the spawn policy instead of each
+## parsing the same shard. The manifest SHA is rechecked on every hit.
+const SHARED_LANDS: int = 4
+static var _shared_lands: Dictionary = {}
+static var _shared_recent: Array[String] = []
+static var shared_problem: String = ""
+
+static func shared_land(path: String, land_id: int, asset_path: String, expected_manifest_sha256: String) -> RefCounted:
+	shared_problem = ""
+	var key: String = "%s|%s|%d|%s" % [path, expected_manifest_sha256, land_id, asset_path]
+	if _shared_lands.has(key):
+		var manifest_path: String = path.path_join("manifest.json")
+		if FileAccess.file_exists(manifest_path) and FileAccess.get_sha256(manifest_path) == expected_manifest_sha256:
+			_shared_recent.erase(key); _shared_recent.append(key)
+			return _shared_lands[key]
+		_shared_lands.erase(key); _shared_recent.erase(key)
+	var candidate = (load("res://scripts/maps/patch523_world_links.gd") as GDScript).new()
+	if not candidate.load_land(path, land_id, asset_path, expected_manifest_sha256):
+		shared_problem = str(candidate.problem)
+		return null
+	_shared_lands[key] = candidate; _shared_recent.append(key)
+	while _shared_recent.size() > SHARED_LANDS: _shared_lands.erase(_shared_recent.pop_front())
+	return candidate
+
+## Forget shared data (tests that rewrite fixture files in place).
+static func reset_shared() -> void:
+	_shared_conditions.clear(); _shared_lands.clear(); _shared_recent.clear()
+
 static func _integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floorf(float(value))
 
@@ -85,7 +131,7 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	for key: String in ["NpcSpawnPackSchedulePeriod", "DaynightSpawnPack", "WorldBossRaidView", "NpcRepresentativeSpawnView"]:
 		if not _rows(candidate.pack_context.get(key)): return _fail("Invalid pack condition rows")
 	if not manifest.get("conditions") is Dictionary or manifest.conditions.get("file") != "conditions.json": return _fail("Invalid cumulative523 conditions path")
-	var condition_data: Dictionary = _object(root.path_join("conditions.json"), manifest.conditions)
+	var condition_data: Dictionary = _conditions(root.path_join("conditions.json"), manifest.conditions)
 	if condition_data.get("schema") != 1 or condition_data.get("source_snapshot") != "patch523" or not condition_data.get("tables") is Dictionary: return _fail("Cumulative523 condition table is missing or corrupt")
 	for key: String in ["NpcCategory", "ServerLimit", "WeeklyOpenTimeGroup", "WeeklyOpenTimeGroupSet", "WeeklyOpenTime", "WeeklyOpenTimeEntity", "LandAttribute", "LandAttributeType", "LandTimeLimit", "LandTimeLimitGroup", "LandWeeklyOpenTime", "DateTimes", "DateTimes_Korean", "DateTimes_Taiwanese", "DateTimes_Japanese", "DateTimes_Chinese", "CompetitionDungeon", "CompetitionDungeonLand", "CompetitionDungeonView", "LandTeleport", "LandTeleportTerritories", "LandTeleportPrerequisite", "Prerequisite", "PrerequisiteType", "WorldBossRaidPrerequisite", "WorldBossRaidPrerequisiteView"]:
 		if not _rows(condition_data.tables.get(key)): return _fail("Invalid condition table: " + key)

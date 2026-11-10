@@ -29,7 +29,6 @@ const EXCLUDED_TERRITORY_TAGS: Array[String] = ["[QUEST]", "[퀘스트]", "[메�
 const NON_HUNT_CATEGORIES: Array[String] = ["Citizen", "Guard", "Slime", "SiegeNpc", "PartyNpc", "PartyImportantNpc", "LastavardGateKeeper", "Companion"]
 const CONDITION_TABLES: Array[String] = ["NpcSpawnPackSchedulePeriod", "DaynightSpawnPack", "WorldBossRaidView"]
 
-static var _catalogs: Dictionary = {}
 
 ## Existing boss timer rule: "aden_world" for Aden, "other_maps" elsewhere.
 static func boss_respawn_seconds(land_id: int) -> float:
@@ -52,13 +51,10 @@ static func catalog_for(field: Object) -> RefCounted:
 	var identity: Dictionary = land_identity(field)
 	var options: Dictionary = POLICY.settings()
 	if identity.is_empty() or str(options.get("root", "")).is_empty(): return null
-	var key: String = "%s|%s|%d|%s" % [options.root, options.sha, identity.land_id, identity.asset_path]
-	if _catalogs.has(key): return _catalogs[key]
-	var candidate = LINKS.new()
-	if not candidate.load_land(str(options.root), int(identity.land_id), str(identity.asset_path), str(options.sha)):
-		push_warning("current523 출현 정의를 읽지 못했습니다: " + candidate.problem)
+	var candidate: RefCounted = LINKS.shared_land(str(options.root), int(identity.land_id), str(identity.asset_path), str(options.sha))
+	if candidate == null:
+		push_warning("current523 출현 정의를 읽지 못했습니다: " + LINKS.shared_problem)
 		return null
-	_catalogs[key] = candidate
 	return candidate
 
 static func _excluded_territory(territory: Dictionary) -> String:

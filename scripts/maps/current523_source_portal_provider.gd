@@ -37,8 +37,8 @@ func _definition(land_id: int, exact_asset: String) -> RefCounted:
 	if not matches_manifest(root,MANIFEST_SHA256): problem="원문 정의 manifest가 변경되었거나 없습니다."; return null
 	var key: String=str(land_id)+":"+exact_asset
 	if _lands.has(key): _recent.erase(key); _recent.append(key); problem=""; return _lands[key]
-	var candidate:=OWNER.new()
-	if not candidate.load_land(root,land_id,exact_asset,MANIFEST_SHA256): problem=candidate.problem; return null
+	var candidate: RefCounted=OWNER.shared_land(root,land_id,exact_asset,MANIFEST_SHA256)
+	if candidate==null: problem=OWNER.shared_problem; return null
 	_lands[key]=candidate; _recent.append(key)
 	while _recent.size()>MAX_CACHED_LANDS: _lands.erase(_recent.pop_front())
 	problem=""
