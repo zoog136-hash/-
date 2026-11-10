@@ -11,6 +11,9 @@ extends RefCounted
 ## Files live only in user:// and are never part of the repository.
 
 const ROOT := "user://current523_bake"
+## Boot progress record: every lookup below logs hit/miss with its reason and
+## every write logs its result (one short line each; never changes outcomes).
+const LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const SCHEMA := "twilight.current523.bake.v1"
 
 ## SHA256 over the scripts' file hashes; "" when any script cannot be hashed
@@ -52,11 +55,16 @@ static func projection_key(name: String, source_sha256: String) -> String:
 ## A baked projection payload {bytes, sha256, identity}; {} when absent/stale.
 static func read_payload(name: String, value_key: String) -> Dictionary:
 	var value: Variant = read(name, value_key)
-	if not value is Dictionary or not value.get("bytes") is PackedByteArray or not value.get("sha256") is String or not value.get("identity") is Dictionary: return {}
+	if value == null: return {}
+	if not value is Dictionary or not value.get("bytes") is PackedByteArray or not value.get("sha256") is String or not value.get("identity") is Dictionary:
+		LOG.io(name, "payload", "corrupt")
+		return {}
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	hash.update(value.bytes)
-	if hash.finish().hex_encode() != value.sha256: return {}
+	if hash.finish().hex_encode() != value.sha256:
+		LOG.io(name, "payload", "verify_fail")
+		return {}
 	return value
 
 static func key(parts: Array) -> String:
@@ -66,33 +74,68 @@ static func key(parts: Array) -> String:
 
 ## The baked value for `name` when its key matches and its bytes verify; null otherwise.
 static func read(name: String, expected_key: String) -> Variant:
-	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return null
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
-	if not meta is Dictionary or meta.get("schema") != SCHEMA or meta.get("key") != expected_key: return null
-	if FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")): return null
+	var meta: Variant = _meta_checked(name, expected_key)
+	if meta == null: return null
+	if FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")):
+		LOG.cache(name, "verify_fail")
+		return null
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(_data(name))
-	if bytes.size() != int(meta.get("bytes", -1)): return null
+	if bytes.size() != int(meta.get("bytes", -1)):
+		LOG.cache(name, "verify_fail")
+		return null
+	LOG.cache(name, "hit", {"bytes": bytes.size()})
 	return bytes_to_var(bytes)
 
+## The bake's metadata when its schema and key match; null (logged with the
+## miss reason) otherwise. Same conditions as before, only told apart.
+static func _meta_checked(name: String, expected_key: String) -> Variant:
+	if expected_key.is_empty():
+		LOG.cache(name, "no_key")
+		return null
+	if not FileAccess.file_exists(_meta(name)):
+		LOG.cache(name, "missing")
+		return null
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
+	if not meta is Dictionary:
+		LOG.cache(name, "corrupt")
+		return null
+	if meta.get("schema") != SCHEMA:
+		LOG.cache(name, "schema_changed")
+		return null
+	if meta.get("key") != expected_key:
+		LOG.cache(name, "key_changed")
+		return null
+	return meta
+
 static func write(name: String, value_key: String, value: Variant) -> bool:
-	if value_key.is_empty(): return false
+	if value_key.is_empty():
+		LOG.io(name, "write", "no_key")
+		return false
 	DirAccess.make_dir_recursive_absolute(ROOT)
 	var bytes: PackedByteArray = var_to_bytes(value)
 	var file := FileAccess.open(_data(name) + ".part", FileAccess.WRITE)
-	if file == null: return false
+	if file == null:
+		LOG.io(name, "write", "open_fail")
+		return false
 	file.store_buffer(bytes)
 	var stored: bool = file.get_error() == OK
 	file.close()
 	if not stored:
 		DirAccess.remove_absolute(_data(name) + ".part")
+		LOG.io(name, "write", "write_fail", {"bytes": bytes.size()})
 		return false
 	DirAccess.remove_absolute(_meta(name))
 	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
-	if DirAccess.rename_absolute(_data(name) + ".part", _data(name)) != OK: return false
+	if DirAccess.rename_absolute(_data(name) + ".part", _data(name)) != OK:
+		LOG.io(name, "write", "rename_fail", {"bytes": bytes.size()})
+		return false
 	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
-	if meta == null: return false
+	if meta == null:
+		LOG.io(name, "write", "meta_fail", {"bytes": bytes.size()})
+		return false
 	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": _sha(bytes), "bytes": bytes.size()}))
 	meta.close()
+	LOG.io(name, "write", "ok", {"bytes": bytes.size()})
 	return true
 
 ## Where a file-format bake (written by its owner) lives.
@@ -100,22 +143,33 @@ static func data_path(name: String) -> String: return _data(name)
 
 ## Moves a finished `part` file into place and records its key and SHA256.
 static func commit_file(name: String, value_key: String, part: String) -> bool:
-	if value_key.is_empty(): return false
+	if value_key.is_empty():
+		LOG.io(name, "commit", "no_key")
+		return false
 	DirAccess.remove_absolute(_meta(name))
 	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
-	if DirAccess.rename_absolute(part, _data(name)) != OK: return false
+	if DirAccess.rename_absolute(part, _data(name)) != OK:
+		LOG.io(name, "commit", "rename_fail")
+		return false
 	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
-	if meta == null: return false
-	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": FileAccess.get_sha256(_data(name)), "bytes": _size(_data(name))}))
+	if meta == null:
+		LOG.io(name, "commit", "meta_fail")
+		return false
+	var size: int = _size(_data(name))
+	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": FileAccess.get_sha256(_data(name)), "bytes": size}))
 	meta.close()
+	LOG.io(name, "commit", "ok", {"bytes": size})
 	return true
 
 ## The file of a file-format bake when its key matches and its bytes verify; "" otherwise.
 static func verified_file(name: String, expected_key: String) -> String:
-	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return ""
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
-	if not meta is Dictionary or meta.get("schema") != SCHEMA or meta.get("key") != expected_key: return ""
-	if _size(_data(name)) != int(meta.get("bytes", -1)) or FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")): return ""
+	var meta: Variant = _meta_checked(name, expected_key)
+	if meta == null: return ""
+	var size: int = _size(_data(name))
+	if size != int(meta.get("bytes", -1)) or FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")):
+		LOG.cache(name, "missing" if size < 0 else "verify_fail")
+		return ""
+	LOG.cache(name, "hit", {"bytes": size})
 	return _data(name)
 
 static func _size(path: String) -> int:
@@ -163,18 +217,23 @@ static func finish_records(writer: RecordWriter) -> bool:
 	file.store_64(index_position)
 	var stored: bool = file.get_error() == OK
 	file.close()
+	if not stored: LOG.io(writer.name, "finish", "write_fail", {"records": writer.ids.size()})
 	if not stored or not commit_file(writer.name, writer.value_key, writer.part):
 		DirAccess.remove_absolute(writer.part)
 		return false
 	return true
 
 static func record_writer(name: String, value_key: String) -> RecordWriter:
-	if value_key.is_empty(): return null
+	if value_key.is_empty():
+		LOG.io(name, "open_writer", "no_key")
+		return null
 	DirAccess.make_dir_recursive_absolute(ROOT)
 	var writer := RecordWriter.new()
 	writer.part = _data(name) + ".part"
 	writer.file = FileAccess.open(writer.part, FileAccess.WRITE)
-	if writer.file == null: return null
+	if writer.file == null:
+		LOG.io(name, "open_writer", "open_fail")
+		return null
 	writer.name = name
 	writer.value_key = value_key
 	return writer
@@ -183,14 +242,22 @@ static func open_records(name: String, value_key: String) -> RecordFile:
 	var path: String = verified_file(name, value_key)
 	if path.is_empty(): return null
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() < 8: return null
+	if file == null or file.get_length() < 8:
+		LOG.io(name, "index", "corrupt")
+		return null
 	file.seek(file.get_length() - 8)
 	var index_position: int = file.get_64()
-	if index_position < 0 or index_position >= file.get_length() - 8: return null
+	if index_position < 0 or index_position >= file.get_length() - 8:
+		LOG.io(name, "index", "corrupt")
+		return null
 	file.seek(index_position)
 	var index: Variant = file.get_var()
-	if not index is Dictionary or index.get("schema") != SCHEMA or not index.get("ids") is PackedStringArray or not index.get("offsets") is PackedInt64Array: return null
-	if (index.ids as PackedStringArray).size() != (index.offsets as PackedInt64Array).size(): return null
+	if not index is Dictionary or index.get("schema") != SCHEMA or not index.get("ids") is PackedStringArray or not index.get("offsets") is PackedInt64Array:
+		LOG.io(name, "index", "schema_changed" if index is Dictionary and index.get("schema") != SCHEMA else "corrupt")
+		return null
+	if (index.ids as PackedStringArray).size() != (index.offsets as PackedInt64Array).size():
+		LOG.io(name, "index", "corrupt")
+		return null
 	var records := RecordFile.new()
 	records.file = file
 	for position: int in (index.ids as PackedStringArray).size(): records.offsets[index.ids[position]] = index.offsets[position]

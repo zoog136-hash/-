@@ -219,6 +219,7 @@ static func install(path: String) -> Dictionary:
 	return result
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "protection523_original"
 
 static func restore() -> Dictionary:
@@ -238,6 +239,7 @@ static func restore() -> Dictionary:
 		var bake_key: String = BAKE.projection_key(BAKE_NAME, CommonSource.verified_key()) if verified else ""
 		var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 		if baked is Dictionary and bool((baked as Dictionary).get("ok", false)): return baked
+		BOOT_LOG.mark("protection_cold_build")
 		var original := extract(source_path)
 		original.erase("capsule")
 		if verified and bool(original.get("ok", false)): BAKE.write(BAKE_NAME, bake_key, original)

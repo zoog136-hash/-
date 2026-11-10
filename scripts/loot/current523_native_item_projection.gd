@@ -249,6 +249,7 @@ static func _archive_identity() -> Dictionary:
 
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
+const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 const TEMPLATE_BAKE:="native_item_templates"
 const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v3"
 
@@ -310,6 +311,7 @@ class TemplateWriter extends RefCounted:
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 		var writer:=TemplateWriter.new()
 		writer.file=FileAccess.open(path+".part",FileAccess.WRITE)
+		if writer.file==null:BOOT_LOG.io(TEMPLATE_BAKE,"open_writer","open_fail")
 		return writer if writer.file!=null else null
 	func add(id: String,record: Dictionary) -> void:
 		var light: Dictionary={};var fields: Dictionary={}
@@ -325,6 +327,7 @@ class TemplateWriter extends RefCounted:
 		var stored: bool=file.get_error()==OK
 		file.close()
 		var part: String=BAKE.data_path(TEMPLATE_BAKE)+".part"
+		if not stored:BOOT_LOG.io(TEMPLATE_BAKE,"finish","write_fail",{"records":ids.size()})
 		if not stored or not BAKE.commit_file(TEMPLATE_BAKE,value_key,part):DirAccess.remove_absolute(part)
 
 static func _open_templates() -> TemplateStore:
@@ -356,6 +359,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 		for record: Variant in catalog.get("아이템",[]):
 			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==SOURCE.identity():registered+=1
 		if registered>=int(document.get("current_native_registered_count",-1)):
+			BOOT_LOG.mark("item_register_reused",{"registered":int(document.current_native_registered_count)})
 			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
 	# Records are replaced, never edited in place, so a shallow copy keeps the
 	# input catalog untouched without a second deep copy of every record.
@@ -381,6 +385,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	# of the verified original and this code, so it is baked once on the
 	# device and read back by ID on later starts instead of describing every
 	# item again. Any code/data change or damaged file rebuilds the bake.
+	var boot_started: int=BOOT_LOG.begin("item_register",{"rows":SOURCE.row_count("ItemClass"),"catalog":records.size()})
 	var templates: TemplateStore=_open_templates()
 	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
 	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
@@ -391,6 +396,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	if templates!=null and lazy:FIELDS.bind(templates)
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in SOURCE.row_count("ItemClass"):
+		if row_index%BOOT_LOG.ROW_STEP==0:BOOT_LOG.progress("item_register",row_index,{"admitted":admitted.size()})
 		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
 		var id: String=str(int(raw.ID));var cached: bool=bool(owner.call("has_definition",id)) if indexed else (references.has(id) or definitions.has(id))
@@ -422,6 +428,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 			records.append(current.duplicate(true) if cached else current);positions[key]=[records.size()-1]
 			placed.append(records.size()-1)
 		admitted.append(id)
+	BOOT_LOG.mark("item_register_loop_done",{"admitted":admitted.size(),"template_hit":templates!=null,"writing":writer!=null})
 	if writer!=null:writer.finish(_template_key())
 	# The catalog keeps the light identity of each record just registered; its
 	# heavy fields are read from the baked template when used (FIELDS.full()).
@@ -436,6 +443,7 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
+	BOOT_LOG.end("item_register",boot_started,{"admitted":admitted.size(),"pending":pending.size(),"template_hit":templates!=null,"slim":store!=null and lazy})
 	return {"ok":true,"registered_count":admitted.size(),"pending":pending,"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false}
 
 # Existing equipment stat consumer, evaluated from the same current original

@@ -175,33 +175,50 @@ static func _store(table: String) -> Dictionary:
 	var bake_key: String = _bake_key(table)
 	# Large tables stay on the device's storage: only their row offsets and
 	# the columns actually queried are held in memory (DiskTable below).
-	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
+	var meta_rows: int = int(table_metadata(table).get("row_count", 0))
+	var on_disk: bool = meta_rows >= DISK_ROWS
+	# Boot progress: one line per table start/end (+ parse/pack/write), not per row.
+	var started: int = LOG.begin("def_table", {"table": table, "rows": meta_rows, "disk": on_disk})
 	if on_disk:
 		var opened: Dictionary = _open_disk(table, bake_key)
 		if not opened.is_empty():
 			_tables[table] = opened
+			LOG.end("def_table", started, {"table": table, "path": "disk_hit"})
 			return opened
 	var baked: Variant = null if on_disk else BAKE.read("definitions_"+table, bake_key)
 	if _valid_store(baked):
 		_tables[table] = baked
+		LOG.end("def_table", started, {"table": table, "path": "bake_hit"})
 		return baked
+	if baked != null: LOG.io("definitions_"+table, "validate", "corrupt")
+	var parse_started: int = LOG.begin("def_parse", {"table": table})
 	var parsed: Variant = JSON.parse_string(_archive.read_file(member).get_string_from_utf8())
+	LOG.end("def_parse", parse_started, {"table": table})
 	if not parsed is Dictionary or not parsed.get("rows") is Array:
 		_problem = "원본 표 구조를 읽을 수 없습니다: "+table
+		LOG.end("def_table", started, {"table": table, "path": "parse_fail"})
 		return {}
 	var source: Array = parsed.rows
 	for value: Variant in source:
 		if not value is Dictionary:
 			_problem = "원본 행 구조가 다릅니다: "+table
+			LOG.end("def_table", started, {"table": table, "path": "row_fail"})
 			return {}
+	var pack_started: int = LOG.begin("def_pack", {"table": table, "rows": source.size()})
 	_tables[table] = _pack(source)
+	LOG.end("def_pack", pack_started, {"table": table})
 	parsed = null
 	source = []
-	if on_disk and not _tables[table].has("rows") and _write_disk(table, bake_key, _tables[table]):
-		var reopened: Dictionary = _open_disk(table, bake_key)
-		if not reopened.is_empty(): _tables[table] = reopened
+	if on_disk and not _tables[table].has("rows"):
+		var write_started: int = LOG.begin("def_disk_write", {"table": table})
+		var written: bool = _write_disk(table, bake_key, _tables[table])
+		LOG.end("def_disk_write", write_started, {"table": table, "ok": written})
+		if written:
+			var reopened: Dictionary = _open_disk(table, bake_key)
+			if not reopened.is_empty(): _tables[table] = reopened
 	elif not on_disk:
 		BAKE.write("definitions_"+table, bake_key, _tables[table])
+	LOG.end("def_table", started, {"table": table, "path": "cold"})
 	return _tables[table]
 
 ## Tables with at least this many rows are kept on storage once baked.
@@ -243,6 +260,7 @@ static func _write_disk(table: String, bake_key: String, store: Dictionary) -> b
 	var row_offsets := PackedInt64Array()
 	var names: PackedStringArray = store.columns
 	for index: int in int(store.count):
+		if index % LOG.ROW_STEP == 0: LOG.progress("def_disk_write", index, {"table": table})
 		row_offsets.append(file.get_position())
 		var row: Dictionary = _row_at(store, index)
 		var values: Array = []
@@ -284,6 +302,7 @@ static func _column_data(store: Dictionary, position: int) -> Variant:
 	return store.data[position]
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_definition_rows.gd","res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 

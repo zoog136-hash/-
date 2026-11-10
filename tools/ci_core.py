@@ -22,6 +22,7 @@ TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
     ('reference_sp2_asset_sharing_test', []),
+    ('boot_progress_log_test', []),
     ('original_ui_page_cache_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
@@ -346,6 +347,7 @@ def main():
             if user_args:
                 command += ['--', *user_args]
             marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+                      'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
                       'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
                       'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',

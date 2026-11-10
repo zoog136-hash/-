@@ -7,6 +7,7 @@ const P = "MagicDollExpedition"
 const MAX_BYTES = 8 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "expedition523_tables"
 ## Lineage M style: the validated tables live in a device record bake and are
 ## read on demand (whole table by "T|name", first row per ID by
@@ -138,7 +139,9 @@ func load_original() -> bool:
 	var bake_key: String = BAKE.projection_key(BAKE_NAME, SOURCE_ROWS.verified_key())
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	var from_bake: bool = baked is Dictionary and not (baked as Dictionary).is_empty()
+	var projection_started: int = BOOT_LOG.begin("expedition_projection", {"from_bake": from_bake})
 	var candidate: Dictionary = baked if from_bake else _original_projection()
+	BOOT_LOG.end("expedition_projection", projection_started, {"tables": candidate.size()})
 	if candidate.is_empty():
 		source_status = {"state":"rejected","reason":error}
 		return false
@@ -157,7 +160,10 @@ func load_original() -> bool:
 	pack_sha256 = payload.sha256_text()
 	payload = ""
 	_release_stored()
-	if _store_records(records_key, candidate):
+	var records_started: int = BOOT_LOG.begin("expedition_records_write")
+	var records_stored: bool = _store_records(records_key, candidate)
+	BOOT_LOG.end("expedition_records_write", records_started, {"ok": records_stored})
+	if records_stored:
 		# The record bake now holds the same tables; the whole-table bake is
 		# no longer read (a missing record bake rebuilds both).
 		BAKE.clear(BAKE_NAME)

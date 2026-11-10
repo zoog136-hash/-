@@ -58,6 +58,7 @@ func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: Packed
 ## load_original() with the registered catalog given as items + contract; the
 ## same bytes are identified without building the whole binding text.
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const NATIVE_PROJECTION = preload("res://scripts/loot/current523_native_item_projection.gd")
 const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
@@ -107,6 +108,7 @@ func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract:
 			_release_cold()
 			return true
 		data = {}
+	BOOT_LOG.mark("rules_cold_build", {"bake_usable": usable})
 	var projection = ORIGINAL_PROJECTION.new()
 	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract)
 	return _load_candidate(projection,projection.build_bound(catalog_bytes,document.binding,document.sha256))

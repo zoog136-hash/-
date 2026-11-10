@@ -7,6 +7,7 @@ const SCHEMA := "twilight.monsterbook523.v1"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "monsterbook523_payload"
 const MAX_PACK_BYTES := 16 * 1024 * 1024
 const TABLES := ["MonsterBook", "MonsterBookLevel", "MonsterBookLevelBonus", "MonsterBookLevelReward", "NpcClassForNpcGroup", "Bonus", "BonusType", "Reward", "RewardType", "Currency", "DateTimes_Korean", "Unit", "ItemClass", "DescData_Korean"]
@@ -124,6 +125,7 @@ func load_original() -> bool:
 		if not _load_payload(baked.bytes, baked.sha256, baked.identity): return false
 		_store_cold_tables()
 		return true
+	BOOT_LOG.mark("monsterbook_cold_build")
 	# Exact full projection from tools/monsterbook523/build_pack.py. This builds
 	# the existing model in memory; it does not reinterpret source authority.
 	var cache: Dictionary = {}

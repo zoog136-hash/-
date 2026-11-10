@@ -239,6 +239,8 @@ const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var patch523_crafting_usage: Dictionary = {}
 const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_catalog.gd")
+## Boot progress record (user://boot_progress.log); one line per startup step.
+const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 var patch523_craft_catalog_status: Dictionary={}
 var patch523_craft_item_cache: Dictionary={}
 # Installed/configured only by the protection feature owner (PR256).
@@ -503,6 +505,8 @@ var inventory: Dictionary = {
 }
 
 func _ready() -> void:
+	var boot_started: int = BOOT_LOG.begin("world_ready")
+	BOOT_LOG.step("world_npc_spells")
 	if patch523_npc_spells.configure(self):
 		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
 		source_panel.service = patch523_npc_spells
@@ -514,15 +518,25 @@ func _ready() -> void:
 	korean_font.variation_opentype = {"wght":500.0}
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
-	if _boot_current523_aden_review(): return
+	BOOT_LOG.step("world_aden_review_check")
+	if _boot_current523_aden_review():
+		BOOT_LOG.step("")
+		BOOT_LOG.end("world_ready", boot_started, {"path": "aden_review"})
+		BOOT_LOG.mark("boot_done", {"path": "aden_review"})
+		return
+	BOOT_LOG.step("world_source_dungeon_pack")
 	_load_source_dungeon_pack()
+	BOOT_LOG.step("world_services")
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	inventory_automation.configure(self)
+	BOOT_LOG.step("world_load_data")
 	_load_data()
+	BOOT_LOG.step("world_equipment523")
 	equipment523.startup(self)
+	BOOT_LOG.step("world_dungeons")
 	source_dungeon_runs.configure(self,source_dungeons)
 	source_dungeon_runs.changed.connect(_refresh_source_dungeon_panel)
 	DUNGEON_ECONOMY.install_definitions(self,source_dungeons)
@@ -530,6 +544,7 @@ func _ready() -> void:
 	dungeon_play.configure(self,source_dungeons)
 	dungeon_play.install_items()
 	dungeon_play.changed.connect(_refresh_source_dungeon_panel)
+	BOOT_LOG.step("world_catalog_titles")
 	inventory_automation.refresh_catalog()
 	titles.configure(self)
 	title_badge=Label.new()
@@ -542,11 +557,17 @@ func _ready() -> void:
 	title_badge.add_theme_color_override("font_outline_color",Color.BLACK)
 	title_badge.add_theme_constant_override("outline_size",5)
 	player.add_child(title_badge)
+	BOOT_LOG.step("world_monsterbook")
 	monsterbook523_runtime.configure(self)
+	BOOT_LOG.step("world_coupons")
 	tj_coupons.configure(self)
+	BOOT_LOG.step("world_protection")
 	protection523.setup(self)
+	BOOT_LOG.step("world_shop")
 	source_shop.configure(self)
+	BOOT_LOG.step("world_patch523_equipment")
 	_load_patch523_equipment()
+	BOOT_LOG.step("world_quests")
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
 	if BASE508_TEST.enabled():
@@ -554,9 +575,13 @@ func _ready() -> void:
 		if test_map.is_empty():
 			push_error("base508 test pack rejected: "+BASE508_TEST.problem)
 			process_mode=Node.PROCESS_MODE_DISABLED
+			BOOT_LOG.step("")
+			BOOT_LOG.end("world_ready", boot_started, {"path": "base508_rejected"})
 			return
 		active_map_id=test_map
+	BOOT_LOG.step("world_expedition")
 	preload("res://scripts/expedition/reward_cards.gd").supplement(catalog_db,get_expedition_catalog())
+	BOOT_LOG.step("world_cards")
 	card_draw_fusion.configure(catalog_db)
 	combinations.configure(self)
 	# An absent owned original-definition ZIP is an expected install state, not
@@ -564,12 +589,14 @@ func _ready() -> void:
 	if not card_collections.configure(self):
 		if CURRENT523_DEFINITION_ROWS.not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED card_collections: "+card_collections.problem)
 		else:push_error(card_collections.problem)
+	BOOT_LOG.step("world_awakening")
 	option_awakening.configure(self)
 	halphas_star.configure(self)
 	if not skill_awakening.configure(self):
 		if skill_awakening.definitions_not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED skill_awakening: "+skill_awakening.problem)
 		else:push_error(skill_awakening.problem)
 	preload("res://scripts/expedition/reward_cards.gd").register_profiles(self,get_expedition_catalog())
+	BOOT_LOG.step("world_field_services")
 	expedition_local.world = self
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -600,9 +627,12 @@ func _ready() -> void:
 			if argument.begins_with("--png-map="):
 				var candidate_png_map: String = argument.trim_prefix("--png-map=")
 				if maps_by_id.has(candidate_png_map) and REMAKE_REGISTRY.installed(candidate_png_map): requested_png_map = candidate_png_map;active_map_id = candidate_png_map
+	BOOT_LOG.step("world_set_map")
 	_set_map(active_map_id, false)
+	BOOT_LOG.step("world_load_game")
 	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	BOOT_LOG.step("world_finish")
 	if _full_cards_playtest_active():
 		var playtest_totals: Dictionary = card_draw_fusion.grant_full_collection_for_playtest(10)
 		card_collections.restore_from_owned()
@@ -646,6 +676,9 @@ func _ready() -> void:
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
 	_release_idle_original_models.call_deferred()
+	BOOT_LOG.step("")
+	BOOT_LOG.end("world_ready", boot_started)
+	BOOT_LOG.mark("boot_done")
 
 func _process(delta: float) -> void:
 	option_awakening.refresh_timed_relic()

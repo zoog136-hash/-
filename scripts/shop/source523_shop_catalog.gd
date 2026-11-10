@@ -38,6 +38,7 @@ const FIELDS: Dictionary = {
 const BOOLEAN_FIELDS: Array[String] = ["OnSale", "ClassChangeDiscount", "LimitCountPerAccount", "AvailableSiegeTime", "LimitNotInSiegeTime", "ForGive"]
 const STRING_FIELDS: Array[String] = ["Name", "Description", "ServiceRegionCode"]
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "source523_shop_input"
 static var _session: RefCounted
 var _tables: Dictionary = {}
@@ -108,6 +109,7 @@ func load_original() -> bool:
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	if baked is Dictionary and baked.get("tables") is Dictionary and baked.get("provenance") is Dictionary and baked.get("actual") is String and baked.get("identity") is Dictionary and baked.get("shared") is Dictionary:
 		return _stage(baked.tables, baked.provenance, baked.actual, baked.identity, baked.shared, true)
+	BOOT_LOG.mark("shop_cold_build")
 	var tables: Dictionary = {}
 	var provenance: Dictionary = {}
 	var shared: Dictionary = {}

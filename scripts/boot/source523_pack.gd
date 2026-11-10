@@ -26,6 +26,8 @@ const DESCRIPTOR_MEMBER := "source523_pack.json"
 ## for 60,000 entries.
 const PREFIX := "source523/"
 const MOUNT := "res://source523/"
+## Boot progress record (see boot_progress_log.gd).
+const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const TABLES_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const TABLES_BYTES: int = 25031173
 ## Older fixed-path table readers (same list as the Termux bootstrap).
@@ -248,6 +250,11 @@ static func _requested_root() -> String:
 	return ""
 
 func _init() -> void:
+	var boot_started: int = BOOT_LOG.begin("autoload_source523_pack")
+	_configure_pack()
+	BOOT_LOG.end("autoload_source523_pack", boot_started, {"configured": configured, "needed": needed, "addon_needed": addon_needed})
+
+func _configure_pack() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var requested: String = _requested_root()
 	var exported: bool = OS.has_feature("template")

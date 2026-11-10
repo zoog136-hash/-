@@ -8,6 +8,7 @@ const MAX_BYTES = 16 * 1024 * 1024
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projection.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "quest523_payload"
 const SHARED = preload("res://scripts/resources/shared_values.gd")
 const DUMMY = preload("res://scripts/quests/source_dummy523.gd")
@@ -53,6 +54,7 @@ func _load_original() -> bool:
 	var bake_key: String = BAKE.projection_key(BAKE_NAME, ORIGINAL_PROJECTION.SOURCE.verified_key())
 	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
 	if not baked.is_empty() and _load_payload(baked.bytes,""): return true
+	BOOT_LOG.mark("quest_cold_build")
 	var projection = ORIGINAL_PROJECTION.new()
 	var value: Dictionary = projection.build()
 	if value.is_empty():
