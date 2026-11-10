@@ -274,7 +274,9 @@ def stage(root: Path, destination: Path) -> dict:
             if path in live or not path.startswith(ACTOR_PREFIXES) or not PurePosixPath(path).suffix or '%' in path:
                 continue
             if not exists(path):
-                raise FileNotFoundError('current actor resource '+path)
+                # Pre-November actor art was removed (user decision 2026-11-10):
+                # an actor without original art stays empty instead of failing.
+                continue
             live.add(path)
             if PurePosixPath(path).suffix in {'.tres','.res'}:
                 text = read(path).decode()

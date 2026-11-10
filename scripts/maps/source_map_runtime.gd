@@ -10,6 +10,8 @@ const MIGRATION=preload("res://scripts/maps/source_map_save_migration.gd")
 const LEGACY_SOURCE=preload("res://scripts/maps/remake_registry.gd")
 const LEGACY_LAYOUT=preload("res://scripts/maps/legacy_layout_policy.gd")
 const POLICY_PATH="res://data/maps/source_map_runtime.json"
+## The pre-November source84 map pack was removed (user decision 2026-11-10).
+const REMOVED: bool = true
 static var seen: Dictionary={}
 static var door_states: Dictionary={}
 static var gameplay_cache: Dictionary={}
@@ -40,6 +42,7 @@ static func policy() -> Dictionary:
 	return policy_cache
 
 static func supports(mid: String) -> bool:
+	if REMOVED: return false
 	# With the 523 pack installed, aden_world is the original 523 Aden
 	# (current523_host.gd) and this old picture pack is not consulted for it.
 	if mid=="aden_world" and preload("res://scripts/maps/current523_host.gd").requested(): return false
