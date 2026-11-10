@@ -52,8 +52,8 @@ func load_file(path: String, expected_sha256: String) -> bool:
 
 func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> bool:
 	if not data.is_empty(): return true # Preserve an already accepted live model.
-	var projection = ORIGINAL_PROJECTION.new()
-	return _load_candidate(projection,projection.build(catalog_bytes,binding_catalog_bytes))
+	var projection = _new_projection()
+	return _load_candidate(projection,projection.build(catalog_bytes,binding_catalog_bytes),"") == COMPILED
 
 ## load_original() with the registered catalog given as items + contract; the
 ## same bytes are identified without building the whole binding text.
@@ -63,7 +63,8 @@ const NATIVE_PROJECTION = preload("res://scripts/loot/current523_native_item_pro
 const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
 const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
-	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/resources/current523_definition_rows.gd",
+	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/crafting/patch523_packed_records.gd",
+	"res://scripts/resources/current523_definition_rows.gd",
 	"res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
 	"res://data/crafting/patch523_enhancement_policy.json"]
 ## True when the model was read from this device's bake instead of compiled.
@@ -108,42 +109,187 @@ func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract:
 			_release_cold()
 			return true
 		data = {}
+	baked = null
 	BOOT_LOG.mark("rules_cold_build", {"bake_usable": usable})
-	var projection = ORIGINAL_PROJECTION.new()
-	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract)
-	return _load_candidate(projection,projection.build_bound(catalog_bytes,document.binding,document.sha256))
+	return compile_original_bound(catalog_bytes,items,contract,_bake_key)
 
-func _load_candidate(projection: Variant, candidate: Dictionary) -> bool:
+## Compile outcomes of _load_candidate().
+const COMPILED: int = 1
+const REJECTED: int = 0
+## The record files could not be written or read back: nothing was accepted
+## and the same inputs are compiled again with every part resident.
+const RESIDENT_RETRY: int = -1
+
+## Test seam: the definition reader the compile uses (null: the installed
+## original through current523_definition_rows.gd).
+var _projection_source: Variant = null
+
+func _new_projection() -> Variant:
+	var projection = ORIGINAL_PROJECTION.new()
+	if _projection_source != null: projection.source = _projection_source
+	return projection
+
+## The cold compile behind load_original_bound(): `key` is the bake key of
+## these inputs ("" = no device bake: everything stays resident). Bounded:
+## the registered catalog identities are held packed, the big original tables
+## are read by position, and the two per-item parts (catalog identities,
+## equipment runtime) go from the compiler to their record files one item at
+## a time (see _load_candidate). If a record file cannot be written, the
+## documented fallback is kept: the model is compiled again fully resident and
+## no bake is written, so the next start retries.
+func compile_original_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary, key: String) -> bool:
+	_bake_key = ""
+	_model_key = ""
+	var outcome: int = _compile_bound(catalog_bytes,items,contract,key)
+	if outcome == RESIDENT_RETRY:
+		BOOT_LOG.mark("rules_resident_retry")
+		data = {}
+		_records = null
+		_runtime = null
+		outcome = _compile_bound(catalog_bytes,items,contract,"")
+		if outcome == COMPILED:
+			# As before a failed record write: cold parts may still be offloaded.
+			_cold_key = key
+			_release_cold()
+	return outcome == COMPILED
+
+func _compile_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary, key: String) -> int:
+	var projection = _new_projection()
+	var started: int = BOOT_LOG.begin("rules_binding",{"items":items.size()})
+	# The registered identities as a packed store instead of ~30,000 parsed
+	# Dictionaries (the same records; see patch523_packed_records.gd).
+	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract,true,true)
+	BOOT_LOG.end("rules_binding",started)
+	var binding: Dictionary = document.binding
+	var binding_sha: String = document.sha256
+	document = {}
+	started = BOOT_LOG.begin("rules_build")
+	var candidate: Dictionary = projection.build_bound(catalog_bytes,binding,binding_sha)
+	binding = {}
+	BOOT_LOG.end("rules_build",started,{"ok":not candidate.is_empty()})
+	return _load_candidate(projection,candidate,key)
+
+## Serializes, identifies and accepts a compiled candidate. With `key` (and
+## record storage usable) the per-item parts are written to their record
+## files while they are serialized, so the accepted model is already in its
+## offloaded form and no item's catalog identity or runtime is held twice.
+func _load_candidate(projection: Variant, candidate: Dictionary, key: String) -> int:
 	# UNVERIFIED: the original ZIP identifies inputs; the actual normalized
 	# payload bytes identify this rules model. No private file is generated.
 	problem = ""
 	if candidate.is_empty():
 		problem = projection.problem
-		return false
-	projection.call("release")
+		projection.call("release")
+		return REJECTED
+	var offload: bool = not key.is_empty() and OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") != "1"
+	var wanted: bool = offload
+	var record_writer: Object = null
+	var runtime_writer: Object = null
+	if offload:
+		# Earlier handles on these files are dropped before they are replaced.
+		_records = null
+		_runtime = null
+		record_writer = BAKE.record_writer(RECORDS_NAME,key)
+		runtime_writer = BAKE.record_writer(RUNTIME_NAME,key) if record_writer != null else null
+		if runtime_writer == null:
+			# Storage unusable: documented fallback, everything stays resident.
+			if record_writer != null: record_writer.abort()
+			record_writer = null
+			offload = false
+	var items_part: Variant = candidate.get("items")
+	var runtime_part: Variant = candidate.get("equipment_runtime")
+	if offload and not (items_part is ORIGINAL_PROJECTION.Part and runtime_part is ORIGINAL_PROJECTION.Part):
+		record_writer.abort(); runtime_writer.abort()
+		record_writer = null; runtime_writer = null
+		offload = false
+	if offload:
+		# Same records, IDs and order as writing them from the accepted model.
+		items_part.take = func(id: String, entry: Variant) -> Variant:
+			if entry is Dictionary and (entry as Dictionary).has("catalog_record"):
+				record_writer.add(id,entry.catalog_record)
+				entry.erase("catalog_record")
+				entry[RECORDS_MARK] = true
+			return entry
+		runtime_part.take = func(id: String, value: Variant) -> Variant:
+			runtime_writer.add(id,value)
+			return ORIGINAL_PROJECTION.SKIP
+		runtime_part.finish = func(_kept: Dictionary) -> Variant:
+			return {RUNTIME_MARK: true} if runtime_part.count > 0 else {}
 	# The model is identified by, and loaded as, the parse of its JSON bytes;
 	# both come from one streamed pass instead of a whole-model text.
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	var size: Array = [0]
+	var started: int = BOOT_LOG.begin("rules_round_trip",{"offload":offload})
 	var parsed: Variant = ORIGINAL_PROJECTION.stream_round_trip(candidate,hash,3,size)
+	var record_count: int = int(items_part.count) if offload else 0
+	var runtime_count: int = int(runtime_part.count) if offload else 0
+	# The parts' callables hold the compiler and the writers: dropped here.
+	for part: Variant in [items_part,runtime_part]:
+		if part is ORIGINAL_PROJECTION.Part:
+			part.make = Callable(); part.take = Callable(); part.finish = Callable()
+	items_part = null
+	runtime_part = null
 	candidate.clear()
-	if int(size[0]) > MAX_BYTES:
-		problem = "원본523 제작 규칙 파일 크기를 확인하세요"
-		return false
+	var stream_problem: String = str(projection.problem)
+	projection.call("release")
+	BOOT_LOG.end("rules_round_trip",started,{"bytes":int(size[0])})
+	if int(size[0]) < 0 or int(size[0]) > MAX_BYTES or (offload and not _valid_model(parsed)):
+		if offload: record_writer.abort(); runtime_writer.abort()
+		if int(size[0]) < 0: problem = stream_problem
+		elif int(size[0]) > MAX_BYTES: problem = "원본523 제작 규칙 파일 크기를 확인하세요"
+		return REJECTED
 	var sha: String = hash.finish().hex_encode()
-	# Baked before _accept() so a later start receives the identical input.
-	var bake_key: String = _bake_key
-	_bake_key = ""
-	if not _accept(parsed,sha): return false
-	# Baked after acceptance in its offloaded form (catalog identities and
-	# runtime live in their record files), so a later start decodes only the
-	# light model. Without both record files the bake is never used.
-	if not bake_key.is_empty() and _records != null and (_runtime != null or not has_any_equipment_runtime()):
-		BAKE.write(BAKE_NAME,bake_key,{"model":data,"sha256":sha,"offloaded":true})
+	if offload:
+		started = BOOT_LOG.begin("rules_records_commit",{"records":record_count,"runtime":runtime_count})
+		var committed: bool = BAKE.finish_records(record_writer)
+		if runtime_count == 0: runtime_writer.abort()
+		elif committed: committed = BAKE.finish_records(runtime_writer)
+		else: runtime_writer.abort()
+		record_writer = null
+		runtime_writer = null
+		# Read back before anything depends on them.
+		if committed:
+			var stored: Object = BAKE.open_records(RECORDS_NAME,key)
+			committed = stored != null and stored.offsets.size() == record_count
+			stored = BAKE.open_records(RUNTIME_NAME,key) if committed and runtime_count > 0 else null
+			if committed and runtime_count > 0: committed = stored != null and stored.offsets.size() == runtime_count
+		BOOT_LOG.end("rules_records_commit",started,{"ok":committed})
+		if not committed: return RESIDENT_RETRY
+		_model_key = key
+	started = BOOT_LOG.begin("rules_accept")
+	var accepted: bool = _accept(parsed,sha)
+	BOOT_LOG.end("rules_accept",started,{"ok":accepted})
+	if not accepted: return REJECTED
+	if offload:
+		# Every offloaded entry must be readable from the opened files.
+		var complete: bool = _records != null and (runtime_count == 0 or (_runtime != null and _runtime_ids.size() == runtime_count))
+		if complete:
+			for id: Variant in data.items:
+				var entry: Variant = data.items[id]
+				if entry is Dictionary and (entry as Dictionary).get(RECORDS_MARK) == true and not _records.has(str(id)):
+					complete = false
+					break
+		if not complete:
+			data = {}
+			recipes = {}
+			digest = ""
+			return RESIDENT_RETRY
+		# Baked after acceptance in its offloaded form (catalog identities and
+		# runtime live in their record files), so a later start decodes only the
+		# light model. Without both record files the bake is never used.
+		started = BOOT_LOG.begin("rules_bake_write")
+		BAKE.write(BAKE_NAME,key,{"model":data,"sha256":sha,"offloaded":true})
+		BOOT_LOG.end("rules_bake_write",started)
+	elif wanted:
+		# Record storage was unusable from the start: as before, the cold parts
+		# may still be offloaded under the same key.
+		_cold_key = key
 	# The bake keeps the whole model; only then are cold parts released.
+	started = BOOT_LOG.begin("rules_cold_release")
 	_release_cold()
-	return true
+	BOOT_LOG.end("rules_cold_release",started)
+	return COMPILED
 
 func _load_payload(text: String, expected_sha256: String) -> bool:
 	if text.to_utf8_buffer().size() > MAX_BYTES:
@@ -156,6 +302,24 @@ func _load_payload(text: String, expected_sha256: String) -> bool:
 	return _accept(parser.data,expected_sha256)
 
 func _accept(parsed: Variant, expected_sha256: String) -> bool:
+	if not _valid_model(parsed): return false
+	# Rejected replacements never erase the last valid registry.
+	data = parsed
+	_bonus_ids.clear()
+	_bonus_ready = false
+	_bonus_packed = false
+	_bonus_sorted = PackedInt64Array()
+	_cold = null
+	_cold_key = ""
+	_cold_parts = PackedStringArray()
+	_cold_cache.clear()
+	_offload_catalog_records()
+	recipes = data.recipes.duplicate(true)
+	digest = expected_sha256
+	return true
+
+## The structure checks of _accept() (sets `problem`); nothing is changed.
+func _valid_model(parsed: Variant) -> bool:
 	if not parsed is Dictionary or parsed.get("schema", "") != SCHEMA or parsed.get("snapshot", "") != "patch523" or parsed.get("catalog_sha256", "") != FileAccess.get_sha256("res://data/catalog_v19.json"):
 		problem = "원본523 제작 규칙·현재 아이템 DB 불일치"
 		return false
@@ -196,19 +360,6 @@ func _accept(parsed: Variant, expected_sha256: String) -> bool:
 					if not valid_material(material) or typeof(material.get("row_id")) not in [TYPE_INT,TYPE_FLOAT] or int(material.row_id)<1:
 						problem = "원본523 후보 재료 구조 오류"
 						return false
-	# Rejected replacements never erase the last valid registry.
-	data = parsed
-	_bonus_ids.clear()
-	_bonus_ready = false
-	_bonus_packed = false
-	_bonus_sorted = PackedInt64Array()
-	_cold = null
-	_cold_key = ""
-	_cold_parts = PackedStringArray()
-	_cold_cache.clear()
-	_offload_catalog_records()
-	recipes = data.recipes.duplicate(true)
-	digest = expected_sha256
 	return true
 
 func recipe_evidence(craft_id: int) -> Dictionary:
