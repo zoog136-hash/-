@@ -7,6 +7,7 @@ const MAIN := "res://Main.tscn"
 const STYLE := preload("res://scripts/boot/boot_style.gd")
 ## Boot progress record: stage lines go to user://boot_progress.log (see there).
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
+const PREBAKE := preload("res://scripts/boot/source523_prebake.gd")
 const TIPS := [
 	"처음 실행할 때는 원본 데이터를 기기에 맞게 정리하느라 몇 분 걸릴 수 있습니다.",
 	"다음 실행부터는 정리해 둔 데이터를 바로 읽어 훨씬 빨리 시작합니다.",
@@ -18,6 +19,9 @@ var _bar: ProgressBar
 var _stage: Label
 var _frames: int = 0
 var _shown: float = 0.0
+var _prebake: Array[Dictionary] = []
+var _prebake_total: int = 0
+var _announced: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -26,6 +30,7 @@ func _ready() -> void:
 	if DisplayServer.get_name() == "headless":
 		# Automated boots keep loading Main directly and synchronously.
 		set_process(false)
+		for step: Dictionary in PREBAKE.pending(): PREBAKE.run(step)
 		_enter.call_deferred(_load_main())
 		return
 	add_child(STYLE.backdrop())
@@ -77,6 +82,20 @@ func _process(delta: float) -> void:
 		_status.text = "세계를 준비하는 중… (처음 실행은 몇 분 걸릴 수 있습니다)"
 		if _stage.text.is_empty(): _stage.text = "단계: 게임 장면 불러오기 · 기록 " + ProjectSettings.globalize_path(BOOT_LOG.log_path())
 	if _frames < 6: return
+	if _frames == 6:
+		_prebake = PREBAKE.pending()
+		_prebake_total = _prebake.size()
+	# One first-run verification per frame: announced on one frame (so the
+	# label is drawn), run on the next.
+	if not _announced.is_empty():
+		PREBAKE.run(_announced)
+		_announced = {}
+	if not _prebake.is_empty():
+		_announced = _prebake.pop_front()
+		var position: int = _prebake_total - _prebake.size()
+		_status.text = "원본 %s 정리 중… (%d/%d · 처음 한 번만)" % [str(_announced.label), position, _prebake_total]
+		_bar.value = 30.0 + 20.0 * float(position - 1) / float(maxi(1, _prebake_total))
+		return
 	# Loaded on the main thread: a worker-thread load of Main failed to
 	# preload shaders under the mobile (GL compatibility) renderer. The
 	# screen keeps its last drawn frame during the long start.

@@ -136,7 +136,14 @@ func _manifest_intact() -> bool:
 	return true
 
 func _bake_key() -> String:
-	return BAKE.key(["source523_image_pack.v1", _manifest_sha, BAKE.code_key(["res://scripts/resources/source523_image_pack.gd"])])
+	return bake_key_for(_manifest_sha)
+
+static func bake_key_for(manifest_sha: String) -> String:
+	return BAKE.key(["source523_image_pack.v1", manifest_sha, BAKE.code_key(["res://scripts/resources/source523_image_pack.gd"])])
+
+## True when this device already holds the verified metadata for this pin.
+static func baked(manifest_sha: String) -> bool:
+	return BAKE.present(BAKE_NAME, bake_key_for(manifest_sha))
 
 func _open_baked() -> bool:
 	var key: String = _bake_key()
