@@ -43,7 +43,8 @@ func _run() -> void:
 	var initial_gear: Dictionary = world.get("equipped_items") as Dictionary
 	initial_gear["weapon"] = {"type":"한손검","name":"테스트 검","slot":"weapon"}
 	world.set("equipped_items", initial_gear)
-	world.set("mp", 999)
+	# MP above max_mp is clamped by the game; start full so only the cost shows.
+	world.set("mp", int(world.get("max_mp")))
 	world.set("skill_cooldowns", {})
 	world.set("skill_global_cooldown", 0.0)
 	var before_mp: int = int(world.get("mp"))
@@ -157,7 +158,7 @@ func _run() -> void:
 	# Turn Undead must be restricted to the monster race and instantly defeat
 	# an undead on a successful magic hit, not just deal high fixed damage.
 	world.call("_on_job_class_selected", "마법사")
-	world.set("mp", 999)
+	world.set("max_mp", maxi(int(world.get("max_mp")), 999)); world.set("mp", 999)
 	world.call("_tick_skill_cooldowns", 60.0)
 	world.set("selected_monster", dummy)
 	before_mp = int(world.get("mp"))
@@ -179,7 +180,7 @@ func _run() -> void:
 
 	# Counter Barrier must reflect damage only on a successful melee hit.
 	world.call("_on_job_class_selected", "기사")
-	world.set("mp", 999)
+	world.set("max_mp", maxi(int(world.get("max_mp")), 999)); world.set("mp", 999)
 	world.set("hp", int(world.call("_effective_max_hp")))
 	world.call("_tick_skill_cooldowns", 60.0)
 	_expect(bool(world.call("_cast_job_skill", "카운터 배리어")), "counter buff could not be cast")
@@ -205,7 +206,7 @@ func _run() -> void:
 	bow_gear["weapon"] = {"type":"활","name":"테스트 활","slot":"weapon"}
 	world.set("equipped_items", bow_gear)
 	var arrows_before: int = int((world.get("inventory") as Dictionary).get("화살", 0))
-	world.set("mp", 999)
+	world.set("max_mp", maxi(int(world.get("max_mp")), 999)); world.set("mp", 999)
 	var triple: Dictionary = world.call("_skill_record", "트리플 애로우") as Dictionary
 	var triple_spirit: Dictionary = world.call("_skill_record", "트리플 애로우(스피릿)") as Dictionary
 	_expect(int(triple.get("hits", 0)) == 3, "basic Triple Arrow is not 3-hit")
@@ -226,7 +227,7 @@ func _run() -> void:
 	# Find a clear, walkable target position so charge is tested against real
 	# world coordinates instead of teleporting through impassable map tiles.
 	world.call("_on_job_class_selected", "기사")
-	world.set("mp", 999)
+	world.set("max_mp", maxi(int(world.get("max_mp")), 999)); world.set("mp", 999)
 	world.call("_tick_skill_cooldowns", 60.0)
 	if world.get("field_map") is NativePngField:
 		# Keep the full charge distance and real path/LOS assertions, using a
@@ -278,7 +279,7 @@ func _run() -> void:
 
 		# A ranged AUTO skill must cast outside the equipped melee weapon range.
 		world.call("_on_job_class_selected", "요정")
-		world.set("mp", 999)
+		world.set("max_mp", maxi(int(world.get("max_mp")), 999)); world.set("mp", 999)
 		world.call("_tick_skill_cooldowns", 60.0)
 		world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")
 		world.set("auto_target", dummy)

@@ -26,7 +26,7 @@ func _box(world: Node) -> String:
 
 func _run() -> void:
 	if not Catalog.session().available():
-		print("source523_cash_market_main_test: shop pack absent; skipped")
+		print("CASH_MARKET_SKIP: original 523 shop pack absent; source523_cash_market_main_test not exercised")
 		quit(0)
 		return
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -165,5 +165,6 @@ func _run() -> void:
 		print("source523_cash_market_main_test: mastery pack unavailable; book use not exercised")
 	check(world._save_game(true) == OK, "final save")
 	print("source523_cash_market_main_test: %d checks, %d failures" % [checks, failures])
+	if failures == 0: print("SOURCE523_CASH_MARKET_OK checks=%d" % checks)
 	world.queue_free()
 	quit(1 if failures > 0 else 0)

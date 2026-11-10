@@ -59,4 +59,5 @@ func _initialize() -> void:
 	check(catalog._unix_clock(catalog._clock_unix("202601150500") + 28 * 86400) == "202602120500", "deletion clock moves by whole season lengths")
 
 	print("TIME_CONTENT2_TEST failures=%d" % failures)
+	if failures == 0: print("TIME_CONTENT_PART2_OK")
 	quit(0 if failures == 0 else 1)

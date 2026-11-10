@@ -56,8 +56,29 @@ func blocked() -> bool:
 
 func export_state() -> Dictionary:
 	var out: Dictionary = state.duplicate(true)
-	out.last_time = now()
+	out.last_time = persisted_clock_floor(now())
 	return out
+
+# The saved high-water clock only has to stop a clock rollback across restarts
+# from changing a recovery rule. Rules change only at fixed ages of an open
+# record: 24 h (adena -> gem), every following hour (gem cost) and 72 h
+# (expiry). Persist the latest such boundary already crossed, so a rolled-back
+# clock yields exactly the same quotes, while an unchanged game no longer
+# rewrites its save every second (that defeated identical-save skipping).
+# In-session time is still the exact monotonic now().
+const RULE_START_AGE: int = 86400
+const RULE_STEP: int = 3600
+const RULE_EXPIRY_AGE: int = 259200
+
+func persisted_clock_floor(current: int) -> int:
+	var floor_time: int = int(state.last_time)
+	for entry: Dictionary in state.records:
+		if bool(entry.get("exp_claimed",true)) and bool(entry.get("item_claimed",true)): continue
+		var age: int = current - int(entry.at)
+		if age < RULE_START_AGE: continue
+		var crossed: int = mini(RULE_EXPIRY_AGE, RULE_START_AGE + floori(float(age - RULE_START_AGE) / RULE_STEP) * RULE_STEP)
+		floor_time = maxi(floor_time, int(entry.at) + crossed)
+	return floor_time
 
 static func integer(value: Variant, minimum: int = 0) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and float(value) >= minimum and float(value) < 9007199254740991.0

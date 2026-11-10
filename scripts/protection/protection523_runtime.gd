@@ -78,8 +78,28 @@ func now() -> int:
 
 func snapshot() -> Dictionary:
 	var out := state.duplicate(true)
-	out.last_seen = maxi(int(out.last_seen),now())
+	out.last_seen = persisted_last_seen(now())
 	return out
+
+# Saved high-water clock. Stamping the exact second made every save differ
+# once per second, so unchanged games rewrote their save on every autosave.
+# With elapsed_while_closed (current policy) a rollback across a restart can
+# only matter by re-opening an expired buff or stretching an active one, so
+# keep every crossed buff/cooldown end and, only while a buff is running, the
+# current minute (rollback gain bounded to < 60 s). A paused clock
+# (elapsed_while_closed = false) still needs the exact play time.
+const SEEN_STEP_SECONDS := 60
+
+func persisted_last_seen(current: int) -> int:
+	var seen := int(state.last_seen)
+	if not bool(policy.get("elapsed_while_closed",true)): return maxi(seen,current)
+	if not state.active.is_empty():
+		var until := int(state.active.until)
+		seen = maxi(seen, current - posmod(current, SEEN_STEP_SECONDS) if until > current else until)
+	for key: Variant in state.cooldowns:
+		var ends := int(state.cooldowns[key])
+		if ends <= current: seen = maxi(seen, ends)
+	return seen
 
 func load_state(data: Dictionary) -> bool:
 	var quests: Variant = data.get("quest_state",{})

@@ -37,7 +37,7 @@ func cast_and_land(success: bool) -> void:
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
 	world.selected_monster = dummy
-	world.mp = 999
+	world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 	check(world._cast_job_skill(str(base.id)), "real paid cast")
 	check(world.mp == 999 - int(base.mp), "exact cast cost")
 	world._release_player_attack(int(world.pending_attack.id))
