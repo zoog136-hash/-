@@ -92,6 +92,7 @@ CHECKS = [
     ('current523_buff_effect_test', []),
     ('current523_mastery_points_test', []),
     ('current523_installed_spawn_definitions_test', []),
+    ('current523_einhasad_charge_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -415,7 +416,8 @@ def main():
                       'current523_buff_effect_test':'CURRENT523_BUFF_EFFECT_RESULT',
                       'current523_main_ui_test':'CURRENT523_MAIN_UI_RESULT',
                       'current523_mastery_points_test':'CURRENT523_MASTERY_POINTS_RESULT',
-                      'current523_installed_spawn_definitions_test':'CURRENT523_INSTALLED_SPAWN_DEFINITIONS_RESULT'}[name]
+                      'current523_installed_spawn_definitions_test':'CURRENT523_INSTALLED_SPAWN_DEFINITIONS_RESULT',
+                      'current523_einhasad_charge_test':'CURRENT523_EINHASAD_CHARGE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

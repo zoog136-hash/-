@@ -216,6 +216,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var einhasad: Dictionary=source_einhasad_charge(definition)
+	if not einhasad.is_empty():
+		out["source_use_spec"]=einhasad
+		if einhasad.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	var mastery: Dictionary=source_mastery_points(definition)
 	if not mastery.is_empty():
 		out["source_use_spec"]=mastery
@@ -728,6 +733,55 @@ static func source_fixed_card(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec
 
+
+## Einhasad blessing items (ItemCategory EinasadRecharager): the player's
+## blessing (PlayerEinasadBless 1) gains EinasadBlessAbsolute original units,
+## scaled by the ItemConsumeEinasadRate group's level row, up to the item's
+## EinasadBlessMaxNeturalRechargeValue; Experience is scaled by the
+## ItemConsumeExpRate group. Items charged from the LevelEinasadBlessRecharge
+## table instead stay blocked until that rule has an owner.
+static func source_einhasad_charge(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="EinasadRecharager" or raw.is_empty():return {}
+	var reasons: Array=[];var values: Dictionary={};var rates: Dictionary={};var ids: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value in ["EinasadBlessAbsolute","EinasadBlessMaxNeturalRechargeValue","PlayerEinasadBless","Experience"]:
+			if not direct(row) or row.get("unit",{}).get("Name")!="Value" or not integer(bonus.get("Value")) or int(bonus.Value)<0 or values.has(name_value):reasons.append("unsupported_einhasad_row:"+name_value)
+			else:values[name_value]=int(bonus.Value)
+			continue
+		if name_value=="ItemConsumeRate":
+			var application: String=str(SOURCE.row("BonusApplicationType",int(whole(bonus.get("BonusApplicationTypeID")) if integer(bonus.get("BonusApplicationTypeID")) else -1)).get("Name",""))
+			if row.get("IsPossession")!=false or row.get("unit",{}).get("Name")!="ItemConsumeRateGourpID" or application not in ["ItemConsumeEinasadRate","ItemConsumeExpRate"] or not integer(bonus.get("Value")) or rates.has(application):reasons.append("unsupported_item_consume_rate")
+			else:rates[application]=int(bonus.Value)
+			continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	if values.get("PlayerEinasadBless",0)!=1:reasons.append("einhasad_target_not_player_blessing")
+	if int(values.get("EinasadBlessAbsolute",0))<=0:reasons.append("missing_einhasad_absolute_amount")
+	if int(values.get("EinasadBlessMaxNeturalRechargeValue",0))<=0:reasons.append("missing_einhasad_recharge_cap")
+	if not rates.has("ItemConsumeEinasadRate"):reasons.append("missing_einhasad_consume_rate")
+	if int(values.get("Experience",0))>0 and not rates.has("ItemConsumeExpRate"):reasons.append("missing_experience_consume_rate")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"einhasad_charge","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"bless_absolute":int(values.get("EinasadBlessAbsolute",0)),"recharge_cap":int(values.get("EinasadBlessMaxNeturalRechargeValue",0)),"experience":int(values.get("Experience",0)),"einhasad_rate_group":int(rates.get("ItemConsumeEinasadRate",0)),"experience_rate_group":int(rates.get("ItemConsumeExpRate",0)),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## The ItemConsumeRate value of a group for a level: the row with the highest
+## Level not above it (group 2 lists 1 and 99; group 12 starts at 85). None ->
+## no level rate (0).
+static func consume_rate(group: int,level: int) -> int:
+	var best_level: int=-1;var value: int=0
+	for row: Dictionary in SOURCE.related("ItemConsumeRate","ItemConsumeRateGroupID",group):
+		if integer(row.get("Level")) and integer(row.get("Value")) and int(row.Level)<=level and int(row.Level)>best_level:best_level=int(row.Level);value=int(row.Value)
+	return value
 
 ## Weapon mastery point items (ItemCategory MasteryPointRecharger): one
 ## MasteryWeaponPointAmount row whose BonusApplicationType is WeaponType (22)
