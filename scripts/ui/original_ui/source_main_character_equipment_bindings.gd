@@ -36,7 +36,7 @@ func build(member: String) -> Dictionary:
 	var state: Variant=side.get("character_state")
 	var buttons: Variant=side.get("equipment_buttons")
 	if not state is Dictionary or not state.get("equipped_items") is Dictionary or not buttons is Dictionary:return _fail("source_equipment_current_owner_model_required")
-	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else _pack.scene(member)
+	var tree: Dictionary=_layout_or_scene(member)
 	if tree.is_empty():tree=_pack.scene(member)
 	var panel: Dictionary=_node_at(tree.get("nodeTree",{}),int(spec.panel))
 	if panel.get("classname")!="Panel":return _fail("source_equipment_original_page_panel_missing")
@@ -99,3 +99,10 @@ static func _widget(node: Dictionary) -> Dictionary:
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+## A member listed in layout_sources (parent reference geometry) is read from
+## there; every other member is an ordinary pack scene. layout_source() returns
+## {} for scenes, which used to fail every original window as "layout missing".
+func _layout_or_scene(member: String) -> Dictionary:
+	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
+	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)
