@@ -28,10 +28,28 @@ static func fail(message: String) -> Dictionary:
 static func _safe_root(path: String) -> bool:
 	return path.begins_with(STORE + "/pack-") and not path.trim_prefix(STORE + "/").contains("/") and path.get_file().is_valid_filename()
 
+## Files whose SHA-256 was verified, by path -> "mtime:size:sha". The actor
+## re-checks its files every 0.5 s and every drawn layer re-checked its file;
+## hashing whole SP2 files that often stalled slow devices. A changed file
+## changes its modification time or size, which forces a full re-hash.
+static var _verified: Dictionary = {}
+
+static func _file_matches(path: String, sha256: String) -> bool:
+	if not FileAccess.file_exists(path):
+		_verified.erase(path)
+		return false
+	var stamp: String = "%d:%d:%s" % [FileAccess.get_modified_time(path), FileAccess.get_size(path), sha256]
+	if _verified.get(path, "") == stamp: return true
+	if FileAccess.get_sha256(path) != sha256:
+		_verified.erase(path)
+		return false
+	_verified[path] = stamp
+	return true
+
 static func manifest_at(path: String) -> Dictionary:
 	if not _safe_root(path): return {}
 	var target: String = path.path_join(MANIFEST)
-	if not FileAccess.file_exists(target) or FileAccess.get_sha256(target) != MANIFEST_SHA: return {}
+	if not _file_matches(target, MANIFEST_SHA): return {}
 	if path == _manifest_root and not _manifest.is_empty(): return _manifest
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(target))
 	if not value is Dictionary or value.get("schema") != 1 or value.get("snapshot") != "patch523" or value.get("mode") != "exact_identity_estimated_pixels": return {}
@@ -159,7 +177,7 @@ static func _validate_members(path: String,members: Array) -> Dictionary:
 		var spec: Dictionary = manifest.members.get(member,{})
 		if spec.is_empty(): return fail("정체 원문 명세가 없습니다.")
 		var target: String = path.path_join(str(spec.path))
-		if not FileAccess.file_exists(target) or FileAccess.get_sha256(target) != spec.sha256: return fail("정체 원문 누락·해시 변경 · 기본 표시 복구")
+		if not _file_matches(target, str(spec.sha256)): return fail("정체 원문 누락·해시 변경 · 기본 표시 복구")
 	return {"ok":true}
 
 static func validate_actor_files(actor: Dictionary) -> Dictionary:
@@ -178,7 +196,7 @@ static func render_layer(layer: Dictionary,display_options: Dictionary) -> Dicti
 	if spec.is_empty(): return fail("정체 프레임의 원문이 없습니다.")
 	var path: String = str(selected_options.root).path_join(str(spec.path))
 	# Check actual bytes even when the parsed object is cached: corruption restores the baseline.
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != spec.sha256: return fail("정체 프레임 해시 변경 · 기본 표시 복구")
+	if not _file_matches(path, str(spec.sha256)): return fail("정체 프레임 해시 변경 · 기본 표시 복구")
 	if not _parsed.has(member):
 		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 		if bytes.size() != int(spec.bytes): return fail("정체 프레임 크기가 다릅니다.")

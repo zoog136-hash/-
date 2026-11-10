@@ -7,11 +7,13 @@ extends SceneTree
 ## 3. quest_auto_runner.tick (automatic claim): a batch whose staging fails is
 ##    not restaged on every frame while the world state is unchanged, and is
 ##    retried after a state change; a successful batch still chains next frame.
+## 5. current523_identity_pack verified-file checks (see the last section).
 ## 4. Ready mode (the game default): conditions met -> marked ready only, no
 ##    reward transaction; [보상 받기]/[모두 받기] run complete(); the scan is
 ##    time-sliced and does not rerun while the state is unchanged.
 const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const RUNNER = preload("res://scripts/quests/quest_auto_runner.gd")
+const IDENTITY = preload("res://scripts/resources/current523_identity_pack.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -78,6 +80,7 @@ func _run() -> void:
 	_held_record_index()
 	_tick_backoff()
 	_ready_mode()
+	_identity_file_checks()
 	print("FRAME_HOT_PATHS_RESULT " + JSON.stringify({"checks":checks, "failures":failures}))
 	quit(0 if failures.is_empty() else 1)
 
@@ -253,3 +256,31 @@ class MixedRunner extends "res://scripts/quests/quest_auto_runner.gd":
 			return false
 		for id: String in ids: world.quest_service.claimed[id] = true
 		return true
+
+## 5. current523_identity_pack: a verified file is not re-hashed until its
+##    modification time or size changes; a changed or missing file still fails.
+func _identity_file_checks() -> void:
+	var path: String = "user://frame_hot_paths_identity.bin"
+	var bytes := PackedByteArray()
+	bytes.resize(4 * 1024 * 1024)
+	for index: int in range(0, bytes.size(), 4096): bytes[index] = index % 251
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(bytes)
+	file.close()
+	var sha: String = FileAccess.get_sha256(path)
+	check(IDENTITY._file_matches(path, sha), "an intact file matches")
+	check(not IDENTITY._file_matches(path, "0".repeat(64)), "a different expected hash fails")
+	var started: int = Time.get_ticks_usec()
+	for repeat: int in 2000: IDENTITY._file_matches(path, sha)
+	var elapsed_ms: float = (Time.get_ticks_usec() - started) / 1000.0
+	check(elapsed_ms < 200.0, "2000 checks of a verified 4 MiB file do not re-hash it (%.1f ms)" % elapsed_ms)
+	file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(PackedByteArray([0, 1, 2]))
+	file.close()
+	check(not IDENTITY._file_matches(path, sha), "a rewritten (corrupted) file fails at once")
+	file = FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(bytes)
+	file.close()
+	check(IDENTITY._file_matches(path, sha), "the restored file matches again")
+	DirAccess.remove_absolute(path)
+	check(not IDENTITY._file_matches(path, sha), "a missing file fails")
