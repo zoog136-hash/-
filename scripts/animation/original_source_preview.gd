@@ -571,9 +571,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)):
 				_layers[index].hide()
 			else:
-				var material := CanvasItemMaterial.new()
-				material.blend_mode = int(style.blend_mode)
-				_layers[index].material = material
+				_layers[index].material = _blend_material(int(style.blend_mode))
 				_layers[index].modulate.a = float(style.alpha)
 		_layers[index].set_meta("source_layer_id", int(layer.get("layer_id", -1)))
 		var texture: Texture2D = _source_texture(layer)
@@ -756,6 +754,24 @@ func attachment_status() -> Dictionary:
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
 	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
+## One read-only CanvasItemMaterial per blend mode, shared by every reference
+## layer (a new material per layer per frame used to be allocated here).
+static var _blend_materials: Dictionary = {}
+static func _blend_material(blend_mode: int) -> CanvasItemMaterial:
+	var material: CanvasItemMaterial = _blend_materials.get(blend_mode) as CanvasItemMaterial
+	if material == null:
+		material = CanvasItemMaterial.new()
+		material.blend_mode = blend_mode
+		_blend_materials[blend_mode] = material
+	return material
+
+static var _target_pattern: RegEx = null
+static func _overlay_target_pattern() -> RegEx:
+	if _target_pattern == null:
+		_target_pattern = RegEx.new()
+		_target_pattern.compile("\\](\\d+)")
+	return _target_pattern
+
 func _init() -> void:
 	native_annotations.connect(_on_source_annotation)
 
@@ -792,8 +808,7 @@ func _dispatch_reference_overlays(frames: Array, track: Dictionary, total: float
 	if end < _reference_overlay_clock: _reference_overlay_clock = -0.000000001
 	var first_cycle: int = maxi(0,int(floor(maxf(0.0,_reference_overlay_clock)/total))) if bool(track.loop) else 0
 	var last_cycle: int = int(floor(end/total)) if bool(track.loop) else 0
-	var target_pattern := RegEx.new()
-	target_pattern.compile("\\](\\d+)")
+	var target_pattern: RegEx = _overlay_target_pattern()
 	for cycle: int in range(first_cycle,last_cycle+1):
 		var boundary: float = float(cycle)*total
 		for token_index: int in range(frames.size()):
