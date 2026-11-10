@@ -209,10 +209,6 @@ func quote(action: String, weapon: int, target: int = 0, prefix: int = 0, paymen
 		plan = core.plan_partial_repair(state,weapon,_receipt("quote"),{"CurrencyID":1,"Cost":int(balance_config.partial_repair_cost),"provenance":"CUSTOM_BEHAVIOR"})
 	elif action == "acquire":
 		plan = core.acquire_availability(state,weapon,prefix,acquisition_charge())
-	elif action == "change":
-		if world.field_map != null and bool(world.field_map.data.get("world_dungeon",false)): return Core.fail("world_dungeon")
-		if bool(state.get("pending_server_selection",false)): return Core.fail("pending_server_selection")
-		plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,_receipt("quote"),int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
 	else: return Core.fail("unknown_action")
 	if not plan.ok: return plan
 	if action == "reset":
@@ -237,7 +233,7 @@ func execute(action: String, weapon: int, target: int, prefix: int, expected: Di
 		var staged_rng := RandomNumberGenerator.new()
 		staged_rng.state = reset_rng.state
 		plan = core.plan_reroll(state,weapon,staged_rng,receipt,str(balance_config.color_draw_mode),str(balance_config.partial_reroll)) if action == "reset" else core.plan_acquire(state,weapon,prefix,staged_rng,receipt,acquisition_charge(),str(balance_config.color_draw_mode))
-	else: plan = core.plan_local_change(state,weapon,target,world.BASE508.source_class_id(world.job_class),prefix,receipt,int(Time.get_datetime_dict_from_system(true).year),str(balance_config.point_only_target_options))
+	else: return Core.fail("unknown_action")
 	if not plan.ok: return plan
 	if action == "reset": plan.charge = quoted.charge.duplicate(true)
 	var wallet: Dictionary = _wallet(plan.charge)

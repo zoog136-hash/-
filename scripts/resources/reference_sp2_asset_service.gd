@@ -183,6 +183,8 @@ static func trim_idle(kind: String, budget: int = -1) -> int:
 		if (entries[key].owners as Dictionary).is_empty():
 			idle.append(key)
 			idle_bytes += int(entries[key].bytes)
+	# Within budget nothing is evicted: skip the sort (it ran on every release).
+	if idle_bytes <= limit: return 0
 	idle.sort_custom(func(a: String, b: String) -> bool: return int(entries[a].used) < int(entries[b].used))
 	var evicted: int = 0
 	for key: String in idle:

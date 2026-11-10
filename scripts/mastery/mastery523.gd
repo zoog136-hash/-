@@ -7,8 +7,7 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const RESET_TICKET = preload("res://scripts/mastery/mastery_reset_ticket.gd")
 const ORIGINAL_CORE_TABLES := ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView",
 	"MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment",
-	"MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost",
-	"ClassChangeMasteryWeaponType","MasteryChangeLevelCost"]
+	"MasteryPointPurchaseView","MasteryResetCost","MasteryChangeLevelCost"]
 const RESET_COLOR_TEXT_KEYS := [
 	"MASTERY_POPUP_HELP\\ND_MASTERY_HELP01\\ND_STEP_3\\ND_TEXT\\TEXT_HELP",
 	"MASTERY_POPUP_HELP\\ND_MASTERY_HELP02\\ND_STEP_7\\ND_TEXT\\TEXT_HELP"]
@@ -199,7 +198,7 @@ func _configure(pack: Dictionary) -> bool:
 	tables = pack.tables.duplicate(true)
 	if not pack.get("operations",{}) is Dictionary: problem = "숙련 실행 자료 형식 오류"; return false
 	operations = pack.get("operations",{}).duplicate(true)
-	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost","ClassChangeMasteryWeaponType","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]:
+	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]:
 		if not tables.get(name) is Array:
 			problem = "숙련 원본 표 누락: " + name
 			return false
@@ -401,17 +400,6 @@ func reset_quote(state: Dictionary, weapon: int, level_scope: Array = []) -> Dic
 		if int(row.Step) == 1 and int(row.LockSlotCount) == locks: return row.duplicate(true)
 	return {}
 
-func transfer_cost(level: int, route: String) -> Dictionary:
-	if route not in ["class_change","mastery_change"]: return {}
-	var table: String = "ClassChangeMasteryLevelCost" if route == "class_change" else "MasteryChangeLevelCost"
-	var field: String = "MasteryWeaponLevel" if route == "class_change" else "MasteryLevel"
-	for row: Dictionary in tables.get(table,[]):
-		if int(row[field]) == level:
-			var out: Dictionary = row.duplicate(true)
-			out["currency_resolved"] = false
-			return out
-	return {}
-
 func _plan(before: Dictionary, after: Dictionary, receipt: String, kind: String, charge: Dictionary = {}) -> Dictionary:
 	if receipt.is_empty() or receipt.length() > 160 or before.receipts.has(receipt): return fail("duplicate_or_missing_receipt")
 	after.receipts[receipt] = {"kind":kind}
@@ -453,42 +441,6 @@ func plan_lock(state: Dictionary, weapon: int, level: int, slot: int, locked: bo
 	var after: Dictionary = state.duplicate(true)
 	after.weapons[str(weapon)] = entry
 	return _plan(state,after,receipt,"color_lock")
-
-func plan_class_change(state: Dictionary, from_weapon: int, to_weapon: int, to_class: int, prefix_level: int, confirmed_points: String, receipt: String, target_policy: String = "block_unverified") -> Dictionary:
-	if not validate_state(state).is_empty() or from_weapon == to_weapon or not levels.has(from_weapon) or not levels.has(to_weapon): return fail("invalid_transfer")
-	var allowed: bool = false
-	for target: Dictionary in tables.ClassChangeMasteryWeaponType:
-		if int(target.ToCharacterClass) == to_class and int(target.ToWeaponType) == to_weapon: allowed = true
-	if not allowed: return fail("class_destination_not_allowed")
-	if not point_text(confirmed_points): return fail("point_conversion_unconfirmed")
-	var source: Dictionary = record(state,from_weapon)
-	var target: Dictionary = record(state,to_weapon)
-	if prefix_level < 0 or prefix_level > achieved_level(from_weapon,source.points) or source.points == "0": return fail("option_prefix_not_acquired")
-	if target_policy not in ["block_unverified","preserve_existing","clear_existing"]: return fail("unknown_target_option_policy")
-	if prefix_level == 0 and (not target.options.is_empty() or not target.colors.is_empty() or not target.locks.is_empty()):
-		if target_policy == "block_unverified": return fail("target_option_policy_unconfirmed")
-		if target_policy == "clear_existing": target.options = []; target.colors = {}; target.locks = {}
-	if prefix_level > 0:
-		target.options = []
-		for option: Dictionary in source.options:
-			var group: int = int(option.group_id)
-			if int(options[group][from_weapon].level) <= prefix_level:
-				# Keep group/value, resolve a different BonusID/BonusType at use time.
-				target.options.append(option.duplicate(true))
-		target.colors = {}
-		for level_key: String in source.colors:
-			if int(level_key) <= prefix_level: target.colors[level_key] = source.colors[level_key].duplicate()
-	target.points = confirmed_points
-	if prefix_level > 0 or target_policy != "preserve_existing": target.locks = {}
-	var after: Dictionary = state.duplicate(true)
-	after.weapons[str(to_weapon)] = target
-	# Retire known source progress without dropping opaque future/user fields.
-	source.points = "0"
-	source.options = []; source.colors = {}; source.locks = {}
-	after.weapons[str(from_weapon)] = source
-	var plan: Dictionary = _plan(state,after,receipt,"class_change",transfer_cost(prefix_level,"class_change") if prefix_level > 0 else {})
-	if plan.ok: plan["service_confirmation_required"] = true
-	return plan
 
 func server_choice(source: Dictionary, destination: Dictionary, confirmed_comparison: int) -> Dictionary:
 	# Comparison is supplied by the service adapter: the native comparison key
@@ -587,41 +539,6 @@ func plan_fixed_reset(state: Dictionary, weapon: int, rng: RandomNumberGenerator
 	# Every existing value in this path has exactly one 100% source outcome.
 	# Values remain the same without guessing four-color/Slot1/2 coupling.
 	return _plan(state,after,receipt,"fixed_value_color_reset",availability.charge)
-
-func plan_local_change(state: Dictionary, source: int, target: int, class_id: int, prefix: int, receipt: String, year: int, target_policy: String = "block_unverified") -> Dictionary:
-	if not validate_state(state).is_empty(): return fail("invalid_state")
-	var service: Dictionary = operations.get("mastery_change",{})
-	if service.is_empty(): return fail("operation_source_missing")
-	if int(service.purchase.get("ID",0)) != 95441: return fail("unsupported_mastery_service")
-	if not bool(service.purchase.OnSale) or year <= int(service.from.Year) or year >= int(service.to.Year): return fail("service_sale_boundary_unverified")
-	# Official 2024-12-04 product notice explicitly permits unlimited purchases.
-	# Generic restriction12 remains raw evidence, not a decoded daily cap.
-	if not point_text(record(state,source).points) or not point_text(record(state,target).points): return fail("invalid_points")
-	var source_points: int = int(record(state,source).points)
-	var target_points: int = int(record(state,target).points)
-	if source_points > int(MAX_POINT_TEXT)-target_points: return fail("point_overflow")
-	if prefix > 0:
-		var owned: Dictionary = record(state,source)
-		for level: int in range(1,prefix+1):
-			if _owned_slots(owned,source,level).size() != 2 or not owned.colors.has(str(level)): return fail("option_prefix_not_acquired")
-	# TWILIGHT stores the source raw cumulative integer, so the documented sum
-	# is exact. No level copy, scaling, rounding or invented cap is applied.
-	var plan: Dictionary = plan_class_change(state,source,target,class_id,prefix,str(source_points+target_points),receipt,target_policy)
-	if not plan.ok: return plan
-	var additional: int = 0
-	if prefix > 0:
-		var fee: Dictionary = transfer_cost(prefix,"mastery_change")
-		if fee.is_empty(): return fail("additional_cost_missing")
-		additional = int(fee.CurrencyCost)
-	var currency: int = int(service.payment.ClassID)
-	if int(service.payment.UnitID) != 201 or currency != int(service.purchase.AdditionalCurrencyID): return fail("additional_currency_unresolved")
-	plan.kind = "local_mastery_change"
-	plan.after.receipts[receipt] = {"kind":"local_mastery_change","purchase_id":int(service.purchase.ID),"point_policy":"raw_cumulative_integer_sum"}
-	if prefix == 0:
-		plan.after.receipts[receipt]["custom_point_only_target_policy"] = target_policy
-	plan.service_confirmation_required = false
-	plan.charge = {"CurrencyID":currency,"Cost":int(service.payment.Amount)+additional,"BaseCost":int(service.payment.Amount),"AdditionalCost":additional,"MarketPurchaseID":int(service.purchase.ID)}
-	return plan
 
 func _owned_slots(entry: Dictionary, weapon: int, level: int) -> Dictionary:
 	var slots: Dictionary = {}

@@ -13,13 +13,12 @@ func check(value: bool, message: String) -> void:
 static func fixture() -> Dictionary:
 	# Synthetic schema fixture, never presented as original 523 content.
 	var tables: Dictionary = {}
-	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","ClassChangeMasteryLevelCost","ClassChangeMasteryWeaponType","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]: tables[name] = []
+	for name: String in ["MasteryWeaponType","MasteryWeaponStep","MasteryWeaponLevelView","MasteryBonusView","MasteryGradeView","MasteryGradeMatchingBonus","MasteryPointPayment","MasteryPointPurchaseView","MasteryResetCost","MasteryChangeLevelCost","Bonus","BonusType","UIUnit","Class","WeaponType","Currency","CurrencyUnitClass"]: tables[name] = []
 	tables.BonusType = [{"ID":1,"Name":"MeleeDamage","UnitID":1},{"ID":2,"Name":"RangeDamage","UnitID":1},{"ID":3,"Name":"HPPlus","UnitID":1}]
 	tables.Class = [{"ID":123}]
 	tables.MasteryGradeView = [{"ID":1,"GradeID":2,"Probability":1000000}]
 	tables.MasteryResetCost = [{"ID":1,"Step":1,"LockSlotCount":0,"CurrencyID":1,"Cost":7,"TicketAmount":0}]
 	for locks: int in range(1,33): tables.MasteryResetCost.append({"ID":locks+1,"Step":1,"LockSlotCount":locks,"CurrencyID":4,"Cost":locks*9,"TicketAmount":locks})
-	tables.ClassChangeMasteryLevelCost = [{"ID":1,"MasteryWeaponLevel":2,"CurrencyCost":3}]
 	tables.MasteryPointPurchaseView = [{"ID":1,"PointAmount":7}]
 	for count: int in range(1,6): tables.MasteryPointPayment.append({"ID":count,"Count":count,"CurrencyID":1682,"Cost":3})
 	for level: int in range(1,9): tables.MasteryChangeLevelCost.append({"ID":level,"MasteryLevel":level,"CurrencyCost":level*2})
@@ -29,7 +28,6 @@ static func fixture() -> Dictionary:
 		tables.MasteryWeaponStep.append({"ID":weapon,"WeaponTypeID":weapon,"Step":1})
 		tables.MasteryGradeMatchingBonus.append({"ID":weapon,"WeaponStepID":weapon,"GradeID":2,"BonusID":100000+weapon})
 		tables.Bonus.append({"ID":100000+weapon,"BonusTypeID":3,"Value":20})
-		tables.ClassChangeMasteryWeaponType.append({"ID":weapon,"ToCharacterClass":123,"ToWeaponType":weapon})
 		var group: int = 0
 		for level: int in range(1,9):
 			var level_id: int = weapon*100+level
@@ -76,9 +74,6 @@ func run() -> void:
 	var state: Dictionary = Core.fresh()
 	var weapon: int = int(core.levels.keys()[0])
 	var target: int = int(core.levels.keys()[2])
-	var target_class: int = 0
-	for row: Dictionary in core.tables.ClassChangeMasteryWeaponType:
-		if int(row.ToWeaponType) == target: target_class = int(row.ToCharacterClass); break
 	var source_group: int = 0
 	for group: int in core.options:
 		if int(core.options[group][weapon].level) == 2: source_group = group; break
@@ -92,17 +87,6 @@ func run() -> void:
 	check(int(core.reset_quote(state,weapon).LockSlotCount) == 1,"reset quote uses original color locks")
 	var incoming: Dictionary = core.record(state,weapon)
 	check(not core.plan_reset(state,weapon,incoming,"locked-reset").ok,"unverified locked reset coupling blocked")
-	check(not core.plan_class_change(state,weapon,target,target_class,2,"","unknown-points").ok,"unknown server point conversion blocked")
-	var changed: Dictionary = core.plan_class_change(state,weapon,target,target_class,2,"1","transfer-a")
-	check(changed.ok,"confirmed point outcome permits transfer")
-	check(changed.get("service_confirmation_required",false),"zero destination-row fee never makes the whole service free")
-	if changed.ok:
-		var result: Dictionary = core.record(changed.after,target)
-		check(result.points == "1" and result.colors == incoming.colors and result.locks.is_empty(),"transfer preserves colors and confirmed points; clears locks")
-		check(result.options == incoming.options and core.active_options(changed.after,target).is_empty(),"transferred high-level option retained without premature effect")
-		check(core.record(changed.after,weapon).points == "0" and core.record(changed.after,weapon).options.is_empty(),"source mastery and options cleared")
-		check(not core.plan_class_change(changed.after,weapon,target,target_class,2,"1","transfer-a").ok,"transfer replay rejected")
-	check(not core.plan_class_change(state,weapon,target,999999,2,"1","bad-class").ok,"invalid class destination rejected")
 	var credit: Dictionary = core.plan_points(state,weapon,"2500000000","credit-a")
 	check(credit.ok and int(credit.after.weapons[str(weapon)].points) == threshold+2500000000,"point growth exceeds signed32 without truncation")
 	check(not core.plan_points(credit.after,weapon,"1","credit-a").ok,"point receipt cannot replay")
@@ -159,15 +143,5 @@ func run() -> void:
 		check(reset.after.rng_state == str(rng.state),"reset persists the actual post-draw RNG")
 		fixed.weapons[str(weapon)].locks["1"] = [true,false,false,false]
 		check(not core.fixed_reset_availability(fixed,weapon).ok,"unresolved locked value mapping remains blocked")
-		var complete: Dictionary = fixed.duplicate(true)
-		complete.weapons[str(weapon)].points = str(threshold)
-		complete = core.plan_acquire(complete,weapon,2,rng,"claim-for-local-transfer",{"CurrencyID":1,"Cost":0}).after
-		check(not core.plan_local_change(state,weapon,target,target_class,2,"partial-prefix",2026).ok,"paid prefix refuses unacquired levels without charging")
-		var local: Dictionary = core.plan_local_change(complete,weapon,target,target_class,2,"local-transfer",2026)
-		check(local.ok,"paid independent service has an executable source-backed plan")
-		check(int(local.charge.Cost) == int(core.operations.mastery_change.payment.Amount)+int(core.transfer_cost(2,"mastery_change").CurrencyCost),"independent base plus own level cost; class-change cost never substituted")
-		check(int(local.charge.CurrencyID) == int(core.operations.mastery_change.purchase.AdditionalCurrencyID),"additional currency comes from the linked market purchase")
-		check(core.record(local.after,target).points == str(threshold),"local raw cumulative sum does not copy a weapon level")
-		check(core.plan_local_change(local.after,target,weapon,target_class,0,"repeat-local",2026).ok,"official product allows repeated independent service use")
 	print("MASTERY523_%s checks=%d failures=%d source=%s" % ["PASS" if failures == 0 else "FAIL",checks,failures,"synthetic" if source_path.is_empty() else "actual523"])
 	quit(1 if failures else 0)

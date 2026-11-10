@@ -115,23 +115,6 @@ func run() -> void:
 			var with_matching: int = runtime.catalog_bonus(consumer,weapon)
 			runtime.state.weapons[str(weapon)].colors = {}
 			check(not consumer.is_empty() and with_matching-runtime.catalog_bonus(consumer,weapon) == int(matching_bonus.Value)*8,"purple matching resolves destination-specific flat damage once per level for weapon"+str(weapon))
-	var policy_state: Dictionary = matched.duplicate(true)
-	policy_state.weapons["3"] = {"points":"1","options":[],"colors":{},"locks":{},"user_note":"source preserved"}
-	policy_state.weapons["1"].locks["1"] = [true,false,false,false]
-	policy_state.weapons["1"]["user_note"] = "retained"
-	var destination_class: int = 0
-	for row: Dictionary in core.tables.ClassChangeMasteryWeaponType:
-		if int(row.ToWeaponType) == 1: destination_class = int(row.ToCharacterClass); break
-	check(not core.plan_local_change(policy_state,3,1,destination_class,0,"strict-policy",2026).ok,"strict default adapter keeps native unknown-target guard")
-	var preserved: Dictionary = core.plan_local_change(policy_state,3,1,destination_class,0,"preserve-policy",2026,"preserve_existing")
-	var expected_target: Dictionary = policy_state.weapons["1"].duplicate(true)
-	expected_target.points = str(int(expected_target.points)+1)
-	check(preserved.ok and preserved.after.weapons["1"] == expected_target and int(preserved.charge.AdditionalCost) == 0,"configured point-only plan preserves target metadata groups colors locks and native no-extra-fee rule")
-	check(preserved.after.weapons["3"].user_note == "source preserved","retired source retains opaque user metadata")
-	check(preserved.after.receipts["preserve-policy"].custom_point_only_target_policy == "preserve_existing" and not core.plan_local_change(preserved.after,3,1,destination_class,0,"preserve-policy",2026,"preserve_existing").ok,"policy receipt and emptied source prevent duplicate point transfer")
-	var cleared: Dictionary = core.plan_local_change(policy_state,3,1,destination_class,0,"clear-policy",2026,"clear_existing")
-	check(cleared.ok and cleared.after.weapons["1"].options.is_empty() and cleared.after.weapons["1"].colors.is_empty() and cleared.after.weapons["1"].locks.is_empty() and cleared.after.weapons["1"].user_note == "retained","alternative explicit clear policy resets only known destination option fields")
-	check(not core.plan_local_change(policy_state,3,1,destination_class,0,"unknown-policy",2026,"unknown").ok,"unknown destination policy cannot silently consume existing target options")
 	var bad: Dictionary = {"schema":"twilight.mastery523.v1","tables":core.tables.duplicate(true),"operations":core.operations.duplicate(true)}
 	bad.tables.MasteryGradeView[0].Probability += 1
 	check(not core.configure(bad),"malformed replacement color probabilities cannot damage live registry")

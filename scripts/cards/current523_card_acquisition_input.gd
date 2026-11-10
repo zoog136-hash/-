@@ -8,7 +8,8 @@ const CURRENCY: int = 1102
 const TICKET: int = 370562
 const CARD: int = 25152
 const BONUS: int = 2392192
-const CALENDARS = ["DateTimes","DateTimes_Korean","DateTimes_Chinese","DateTimes_Japanese","DateTimes_Taiwanese"]
+## Foreign-language calendars are cut from the game (user decision 2026-11-10).
+const CALENDARS = ["DateTimes","DateTimes_Korean"]
 var problem: String = ""
 var source_identity: Dictionary = {}
 var exclusions: Array = []

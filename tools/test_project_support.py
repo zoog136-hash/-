@@ -405,8 +405,6 @@ PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
     "dungeon_execution_main_test": ("TWILIGHT_DUNGEON523_PACK",),
     "dungeon_installed_play_pack_test": ("TWILIGHT_DUNGEON523_PACK",),
     "dungeon_remaining_play_test": ("TWILIGHT_DUNGEON523_PACK", "TWILIGHT_DUNGEON523_PREVIOUS_PACK"),
-    "fishing523_main_test": ("TWILIGHT_FISHING523_PACK",),
-    "fishing523_source_test": ("TWILIGHT_FISHING523_PACK",),
     "guardian_media_test": ("GUARDIAN_ORIGINAL_MEDIA_PACK",),
     "half_elixir_main_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),
     "half_elixir_source_test": ("TWILIGHT_HALF_ELIXIR_SOURCE",),

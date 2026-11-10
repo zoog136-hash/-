@@ -20,7 +20,9 @@ const EXISTING_ARCHIVES := [
 	# rebound, and no other saved-SHA archive or derived pack is searched.
 	"user://half_elixir523/packs/"+SOURCE_SHA+".zip",
 ]
-const EXCLUDED_TABLES := ["BannedWord","BannedWordType","BannedWordData_Korean","PersonalAppellationBannedWordTypeList"]
+const CUT = preload("res://scripts/resources/current523_cut_tables.gd")
+## Tables the user cut from the game: never loaded through this reader.
+const EXCLUDED_TABLES: Dictionary = CUT.TABLES
 static var _archive: ZIPReader
 static var _archive_path := ""
 static var _tables: Dictionary = {}

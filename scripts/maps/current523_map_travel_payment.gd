@@ -15,7 +15,6 @@ const _SAVE_GUARDS: Dictionary = {
 	"quest_service": "save_blocked",
 	"equipment_collections": "save_blocked",
 	"death_recovery": "save_blocked",
-	"fishing523": "blocked",
 	"dungeon_play": "save_blocked",
 	"source_dungeon_runs": "save_blocked",
 	"titles": "blocked",

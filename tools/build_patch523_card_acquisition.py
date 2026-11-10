@@ -25,8 +25,7 @@ def build(source, output):
              'ItemBlessCode', 'ItemClassLimit', 'ItemBonus', 'Bonus', 'BonusType',
              'Unit', 'UIUnit', 'Currency', 'CurrencyUnitClass', 'BuffCard',
              'BuffCardDeck', 'BuffCardSourceView', 'DescData_Korean', 'ServerLimit',
-             'DateTimes', 'DateTimes_Korean', 'DateTimes_Chinese',
-             'DateTimes_Japanese', 'DateTimes_Taiwanese', 'GotChaEntityView',
+             'DateTimes', 'DateTimes_Korean', 'GotChaEntityView',
              'BuffCardSourceCraftView', 'BuffCardRuleMergeView', 'BuffCardRuleSwap',
              'BuffCardRuleSwapCost', 'SelectReward', 'SelectRewardEntity', 'Reward',
              'RewardType', 'MarketProduct', 'MarketPurchaseProduct')

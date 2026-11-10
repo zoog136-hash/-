@@ -1,4 +1,5 @@
 extends RefCounted
+const CUT = preload("res://scripts/resources/current523_cut_tables.gd")
 ## Reads one original table ("content/<Table>.json" in the pinned 523 ZIP) a
 ## few MB at a time instead of as one string and one parsed document. A 50 MB
 ## table parsed whole takes about ten times its size in memory (UTF-32 text
@@ -19,7 +20,8 @@ const WINDOW_BYTES := 1024 * 1024
 ## With `digest`, the result also has "sha256": the member bytes' SHA256 hex.
 static func scan(archive: ZIPReader, table: String, key_field: String = "ID", wanted: Dictionary = {}, collect_field: String = "", keep_all: bool = false, digest: bool = false) -> Dictionary:
 	var path: String = "content/" + table + ".json"
-	if not archive.file_exists(path): return {"ok":false, "rows":[], "count":0, "duplicate":false, "missing":false, "values":PackedInt64Array()}
+	# Tables the user cut from the game are never read.
+	if CUT.cut(table) or not archive.file_exists(path): return {"ok":false, "rows":[], "count":0, "duplicate":false, "missing":false, "values":PackedInt64Array()}
 	var bytes: PackedByteArray = archive.read_file(path)
 	var sha256: String = ""
 	if digest:
