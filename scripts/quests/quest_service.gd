@@ -185,7 +185,7 @@ func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictiona
 				context["received_native_rewards"]=received
 			var gate: String = source.gate(quest,context,claimed,now if now>=0 else int(Time.get_unix_time_from_system()))
 			var plan: Dictionary = source.reward_plan(quest,context)
-			row["status_reason"] = gate if not gate.is_empty() else str(plan.get("error","획득 즉시 자동 완료 대기"))
+			row["status_reason"] = gate if not gate.is_empty() else str(plan.get("error","완료 · 보상 받기 대기"))
 			row["available"] = gate.is_empty() and bool(plan.ok)
 			row["rewards"] = plan if plan.ok else {}
 		row["progress"] = mini(int((quest["objective"] as Dictionary).get("count", 1)), _progress_value(quest, level, inventory))

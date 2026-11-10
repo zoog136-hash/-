@@ -22,7 +22,7 @@ func run()->void:
 	if mode=="fresh":
 		w.level=86;check(w._save_game(true)==OK,"controlled starting eligibility fixture, not natural XP")
 		for step: int in range(100):
-			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.tick(w)
+			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
 			if w.quest_service.save_blocked or w.quest_auto.retry_at>Time.get_unix_time_from_system():break
 	var record: Dictionary=D.variant_item(D.definition_id("310").native_record,1);var id: String="";var key: String=str(record.name);var largest: int=0
 	if mode!="fresh":

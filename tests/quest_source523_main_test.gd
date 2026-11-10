@@ -71,7 +71,7 @@ func run() -> void:
 		var before: int = world.quest_service.claimed.size()
 		world.quest_auto.next_scan = 0.0
 		world.quest_auto.retry_at = 0.0
-		world.quest_auto.tick(world)
+		world.quest_auto.auto_claim=true;world.quest_auto.tick(world)
 		if world.quest_service.claimed.size()==before: break
 		batches += 1
 	world.quest_auto.refresh_context(world)

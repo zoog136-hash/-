@@ -1768,6 +1768,7 @@ func _merge_local_consumables_into_catalog() -> void:
 		if not present:
 			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
+	ITEM_CATALOG_LOOKUP.forget_misses()
 
 func _connect_signals() -> void:
 	hud.connect("equipment523_open_requested", _equipment523_open)
@@ -3597,10 +3598,15 @@ func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
 
+## Quest window [모두 받기].
+func claim_all_quests() -> Dictionary:
+	if death_recovery.blocked(): return {"claimed":0,"failed":0}
+	return quest_auto.claim_all(self)
+
 func _claim_quest(quest_id: String) -> void:
 	if death_recovery.blocked(): return
 	if quest_id.begins_with("m523:quest:"):
-		quest_auto.complete(self,[quest_id])
+		quest_auto.claim(self,quest_id)
 		return
 	hud.show_message("임시 퀘스트는 종료되었습니다 · 최신523 원본 팩을 설치하세요")
 	return

@@ -9,6 +9,25 @@ var next_scan: float = 0.0
 var held_index: Dictionary = {}
 var indexed_instances: Dictionary = {}
 var indexed_size: int = -1
+## Quests whose staging failed in complete() for this world state. They are
+## retried as soon as level, class, inventory, instances or quest claims change,
+## so a reward that can never be supplied cannot rescan every frame.
+var blocked: Dictionary = {}
+## false (the game): a quest whose conditions are met is only marked ready;
+## the player receives its rewards with the quest window's [보상 받기] /
+## [모두 받기] buttons, which run the same atomic complete() transaction.
+## true: the previous automatic acquisition (tests of that transaction).
+var auto_claim: bool = false
+## Ready quests (conditions met, rewards not received yet) -> true.
+var ready: Dictionary = {}
+## Ready-mode scan, time-sliced across frames so it never stalls a frame.
+const SCAN_BUDGET_USEC: int = 2000
+var _scan_cursor: int = -1
+var _scan_state: String = ""
+var _scan_found: Dictionary = {}
+var _scanned_state: String = ""
+var _lookup: RefCounted = null
+var _lookup_key: Array = []
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 
 func held_record(name_value: String, instances: Dictionary) -> Dictionary:
@@ -23,6 +42,10 @@ func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 			var physical: Dictionary = instances[id]
 			var name: String = str(physical.get("name",""))
 			if name.begins_with("[원본 보상] ") and not held_index.has(name): held_index[name]=id
+	# Only "[원본 보상] " names are ever indexed. Any other name (every ordinary
+	# catalog lookup passes through here first) is a plain miss and must not
+	# invalidate the index, or each lookup rescans every item instance.
+	if not name_value.begins_with("[원본 보상] "): return {}
 	var id: String = str(held_index.get(name_value,""))
 	var candidate: Dictionary = instances.get(id,{})
 	if candidate.get("name")!=name_value: indexed_size=-1;return {}
@@ -32,7 +55,7 @@ func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 func refresh_context(world: Node) -> void:
 	var service: Variant = world.quest_service
 	# Packed lookup with index()'s candidates (no per-item Dictionary/Array).
-	var source_items: RefCounted = ITEM_BINDINGS.lookup([world.item_db,world.catalog_db.get("아이템",[])])
+	var source_items: RefCounted = _source_lookup([world.item_db,world.catalog_db.get("아이템",[])])
 	# Bind the existing production consumer directly: no speculative foreign
 	# provider and no Callable(self) cycle retaining this runner after restart.
 	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"source_item_consumer":Callable(world.growth.source523,"material"),"currency_items":world.loot_catalog.get("by_name",{})}
@@ -40,8 +63,119 @@ func refresh_context(world: Node) -> void:
 	context["held_native_rewards"]=world.quest_item_provider.supported_held(world)
 	service.source_context = context
 
+func _ready_state(world: Node) -> String:
+	return "%s:%d" % [state_key(world),int(world.quest_service.get("day_key") if world.quest_service.get("day_key") != null else 0)]
+
+## Marks unclaimed quests whose gate and reward plan pass, a slice per frame.
+## A new pass starts only when the world state changed since the last one.
+func _scan_ready(world: Node) -> void:
+	if world.source_save_blocked or world.equipment_collections.save_blocked or not world.pending_map_save_record.is_empty(): return
+	var service: Variant = world.quest_service
+	var quests: Array = service.source.quests
+	if _scan_cursor < 0:
+		var state: String = _ready_state(world)
+		if state == _scanned_state: return
+		# At most one pass start per second, except right after a claim.
+		var now_start: float = Time.get_unix_time_from_system()
+		if not _scanned_state.is_empty() and now_start < next_scan: return
+		next_scan = now_start+1.0
+		refresh_context(world)
+		_scan_cursor = 0
+		_scan_state = state
+		_scan_found = {}
+	var started: int = Time.get_ticks_usec()
+	var now: int = int(Time.get_unix_time_from_system())
+	while _scan_cursor < quests.size():
+		var quest: Dictionary = quests[_scan_cursor]
+		_scan_cursor += 1
+		var id: String = str(quest.id)
+		if not service.claimed.has(id) and service.source.gate(quest,context,service.claimed,now).is_empty():
+			var plan: Dictionary = service.source.reward_plan(quest,context)
+			if plan.ok: _scan_found[id] = true
+			else: failures[id] = str(plan.error)
+		if Time.get_ticks_usec()-started >= SCAN_BUDGET_USEC: return
+	_scan_cursor = -1
+	_scanned_state = _scan_state
+	var added: int = 0
+	for id: String in _scan_found:
+		if not ready.has(id): added += 1
+	ready = _scan_found
+	_scan_found = {}
+	if added > 0 and is_instance_valid(world.get("hud")):
+		world.hud.append_log("퀘스트 완료 %d개 · 퀘스트 창에서 [보상 받기]로 보상을 받으세요" % added)
+		if world.hud.has_method("refresh_quests"): world.hud.refresh_quests()
+
+## The player's [보상 받기]: the same atomic transaction as before.
+func claim(world: Node, id: String) -> bool:
+	if busy: return false
+	var ok: bool = complete(world,[id])
+	if ok:
+		ready.erase(id)
+		_scanned_state = ""
+	elif is_instance_valid(world.get("hud")):
+		world.hud.show_message(str(failures.get(id,"보상을 받을 수 없습니다 · 저장/보유 상태를 확인하세요")))
+	return ok
+
+## [모두 받기]: every ready quest in quest order, 32 per atomic write.
+## Children unlocked by these rewards become ready on the next scan.
+func claim_all(world: Node) -> Dictionary:
+	var order: Array[String] = []
+	for quest: Dictionary in world.quest_service.source.quests:
+		var id: String = str(quest.id)
+		if ready.has(id) and not world.quest_service.claimed.has(id): order.append(id)
+	var claimed_count: int = 0
+	var failed: int = 0
+	var at: int = 0
+	while at < order.size():
+		var batch: Array[String] = []
+		for id: String in order.slice(at,at+32): batch.append(id)
+		at += 32
+		var before: int = world.quest_service.claimed.size()
+		if complete(world,batch):
+			claimed_count += world.quest_service.claimed.size()-before
+			for id: String in batch:
+				if world.quest_service.claimed.has(id): ready.erase(id)
+				else: failed += 1
+		else:
+			if busy or world.quest_service.save_blocked or retry_at > Time.get_unix_time_from_system():
+				failed += batch.size()
+				break
+			# One quest whose reward cannot be supplied rejects its whole atomic
+			# batch; receive the others one by one.
+			for id: String in batch:
+				if complete(world,[id]):
+					claimed_count += 1
+					ready.erase(id)
+				else:
+					failed += 1
+					if busy or world.quest_service.save_blocked or retry_at > Time.get_unix_time_from_system(): break
+	_scanned_state = ""
+	if is_instance_valid(world.get("hud")):
+		if claimed_count == 0 and failed > 0: world.hud.show_message("받을 수 있는 보상이 없습니다 · 각 퀘스트의 사유를 확인하세요")
+		elif failed > 0: world.hud.show_message("보상 %d개 수령 · %d개는 사유 확인 필요" % [claimed_count,failed])
+	return {"claimed":claimed_count,"failed":failed}
+
+## The packed lookup is rebuilt only when a catalog array is replaced or resized.
+func _source_lookup(catalogs: Array) -> RefCounted:
+	var key: Array = []
+	for rows: Array in catalogs: key.append_array([rows,rows.size()])
+	var same: bool = _lookup != null and _lookup_key.size() == key.size()
+	if same:
+		for i: int in range(0,key.size(),2):
+			if not is_same(_lookup_key[i],key[i]) or _lookup_key[i+1] != key[i+1]: same=false;break
+	if not same:
+		_lookup = ITEM_BINDINGS.lookup(catalogs)
+		_lookup_key = key
+	return _lookup
+
+func state_key(world: Node) -> String:
+	return "%s:%s:%d:%d:%d:%d:%d" % [str(world.level),str(world.job_class),world.inventory.size(),world.item_instances.size(),int(world.next_item_instance_id),world.quest_service.claimed.size(),hash(world.inventory)]
+
 func tick(world: Node) -> void:
 	if busy or world.quest_service.source.quests.is_empty(): return
+	if not auto_claim:
+		_scan_ready(world)
+		return
 	var now: float = Time.get_unix_time_from_system()
 	var signature: String = "%s:%s" % [str(world.level),str(world.job_class)]
 	if now < retry_at or (signature == last_signature and now < next_scan): return
@@ -52,9 +186,11 @@ func tick(world: Node) -> void:
 	if world.source_save_blocked or world.equipment_collections.save_blocked or not world.pending_map_save_record.is_empty(): return
 	var ids: Array[String] = []
 	var offered: Dictionary = world.quest_service.claimed.duplicate()
+	var state: String = state_key(world)
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
 		if world.quest_service.claimed.has(id): continue
+		if blocked.get(id,"") == state: continue
 		var gate: String = world.quest_service.source.gate(quest,context,offered,int(now))
 		if not gate.is_empty(): continue
 		var plan: Dictionary = world.quest_service.source.reward_plan(quest,context)
@@ -67,7 +203,15 @@ func tick(world: Node) -> void:
 		# Staging rechecks each prerequisite in the same ordered transaction.
 		if ids.size() == 32: break
 	if ids.is_empty(): return
-	complete(world,ids)
+	var done: bool = complete(world,ids)
+	if not done:
+		# Same state, same result: wait for a state change instead of restaging
+		# the same batch on every frame. A save failure keeps its own 30 s retry.
+		if retry_at <= Time.get_unix_time_from_system():
+			for id: String in ids:
+				if failures.has(id): blocked[id] = state
+		return
+	for id: String in ids: blocked.erase(id)
 	# Continue prerequisite chains on the next frame, without a large UI stall.
 	if retry_at <= now: next_scan = 0.0
 

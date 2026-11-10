@@ -16,7 +16,7 @@ func drain(world: TwilightWorld) -> void:
  for step: int in range(160):
   var count: int=world.quest_service.claimed.size()
   world.quest_auto.next_scan=0;world.quest_auto.retry_at=0
-  world.quest_auto.tick(world)
+  world.quest_auto.auto_claim=true;world.quest_auto.tick(world)
   if world.quest_service.save_blocked or not world.patch523_owner_state_problem.is_empty():break
   if count==world.quest_service.claimed.size():break
 func report(world: TwilightWorld,label: String) -> void:

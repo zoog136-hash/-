@@ -37,7 +37,7 @@ func run()->void:
 	if fresh:
 		for batch: int in range(100):
 			world.quest_auto.retry_at=0;world.quest_auto.next_scan=0
-			var prior: int=world.quest_service.claimed.size();world.quest_auto.tick(world)
+			var prior: int=world.quest_service.claimed.size();world.quest_auto.auto_claim=true;world.quest_auto.tick(world)
 			if prior==world.quest_service.claimed.size():break
 		for i: int in range(50):world.quickslots[i]={"kind":"item","id":"HP 물약"} if i%3==0 else {}
 		world.ui_preferences.edited_quickslots[world.job_class]=true

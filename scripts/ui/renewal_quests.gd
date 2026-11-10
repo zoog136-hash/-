@@ -18,6 +18,7 @@ var previous: Button
 var next: Button
 var picker: FileDialog
 var state_filter: OptionButton
+var claim_all: Button
 
 func configure(owner_world: Node) -> void:
 	world = owner_world
@@ -25,7 +26,7 @@ func configure(owner_world: Node) -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_theme_constant_override("separation",6)
-	var hint := UI.label("레벨·직업·선행 조건 충족 시 자동 완료 · 목표 수행/NPC 복귀 생략",12,UI.MUTED)
+	var hint := UI.label("레벨·직업·선행 조건 충족 시 완료 · 보상은 [보상 받기]로 수령 · 목표 수행/NPC 복귀 생략",12,UI.MUTED)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(hint)
 	var pack_row := HBoxContainer.new()
@@ -63,12 +64,21 @@ func configure(owner_world: Node) -> void:
 	search.text_changed.connect(func(_value: String) -> void: page=0;refresh())
 	filters.add_child(search)
 	state_filter = OptionButton.new()
-	for label: String in ["전체 상태","완료","자동 처리 대기","잠김·보류·제외","기존 완료 이력"]: state_filter.add_item(label)
+	for label: String in ["전체 상태","완료·수령","보상 받기 대기","잠김·보류·제외","기존 완료 이력"]: state_filter.add_item(label)
 	state_filter.item_selected.connect(func(_value: int) -> void: page=0;refresh())
 	filters.add_child(state_filter)
+	var summary_row := HBoxContainer.new()
+	add_child(summary_row)
 	summary = UI.label("",12,UI.GOLD)
 	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(summary)
+	summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	summary_row.add_child(summary)
+	claim_all = Button.new()
+	claim_all.text = "모두 받기"
+	claim_all.pressed.connect(func() -> void:
+		if is_instance_valid(world) and world.has_method("claim_all_quests"): world.claim_all_quests()
+		refresh())
+	summary_row.add_child(claim_all)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -183,10 +193,24 @@ func refresh() -> void:
 		if quest.completed and not quest.get("rewards",{}).get("pending_use",[]).is_empty(): status_text = "완료 · 원본 보상 보관 / 일부 사용 기능 연결 대기"
 		elif quest.completed and not quest.get("rewards",{}).get("ui_requests",[]).is_empty(): status_text = "완료 · 현재 퀵슬롯 유지 / 원본 기본 등록값 보관"
 		if not quest.completed and world.get("quest_auto") != null and world.quest_auto.failures.has(str(quest.id)) and quest.available: status_text = str(world.quest_auto.failures[str(quest.id)])
-		var status := UI.label(status_text,12,UI.GOLD if quest.completed else UI.MUTED)
+		var claimable: bool = quest.has("source_id") and not quest.completed and quest.available
+		var status := UI.label(status_text,12,UI.GOLD if quest.completed or claimable else UI.MUTED)
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		body.add_child(status)
-	summary.text = "%s %d개 · 완료 %d · 자동 대기 %d · 잠김/보류 %d" % [CATEGORIES[selected],total,finished,available,total-finished-available]
+		if claimable:
+			var claim_row := HBoxContainer.new()
+			body.add_child(claim_row)
+			status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			claim_row.add_child(status)
+			var claim := Button.new()
+			claim.text = "보상 받기"
+			claim.custom_minimum_size = Vector2(110,34)
+			var quest_id: String = str(quest.id)
+			claim.pressed.connect(func() -> void: claim_requested.emit(quest_id))
+			claim_row.add_child(claim)
+		else:
+			body.add_child(status)
+	summary.text = "%s %d개 · 완료·수령 %d · 보상 받기 대기 %d · 잠김/보류 %d" % [CATEGORIES[selected],total,finished,available,total-finished-available]
+	claim_all.disabled = available == 0
 	if state_filter.selected==4: summary.text="기존 완료 이력 · 원본 퀘스트 수와 구분하여 보존"
 	page_label.text = "%d / %d 페이지 · 검색 결과 %d개" % [page+1,pages,rows.size()]
 	previous.disabled = page==0

@@ -49,7 +49,7 @@ func run()->void:
  if fresh:
   for batch: int in range(100):
    w.quest_auto.retry_at=0;w.quest_auto.next_scan=0
-   var before: int=w.quest_service.claimed.size();w.quest_auto.tick(w)
+   var before: int=w.quest_service.claimed.size();w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
    if before==w.quest_service.claimed.size():break
  var reader: RefCounted=w.quest_item_provider.skill_books
  var inputs: Dictionary={}

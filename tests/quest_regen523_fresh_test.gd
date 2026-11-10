@@ -15,7 +15,7 @@ func run()->void:
  # Explicit eligibility fixture, not naturally earned XP/progression probability.
  w.level=86;check(w._save_game(true)==OK,"controlled level86 eligibility saved only in this empty QA profile")
  for step: int in range(100):
-  w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.tick(w)
+  w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
   if w.quest_service.save_blocked or w.quest_auto.retry_at>Time.get_unix_time_from_system():break
  var native: Dictionary={}
  for iid: int in [376,385]:

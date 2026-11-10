@@ -30,7 +30,7 @@ func run()->void:
 	if mode=="fresh":
 		w.level=86;check(w._save_game(true)==OK,"explicit controlled starting eligibility level, not natural XP")
 		for step: int in range(100):
-			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.tick(w)
+			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
 			if w.quest_service.save_blocked or w.quest_auto.retry_at>Time.get_unix_time_from_system():break
 	var issued: Dictionary={};var consumed_uid: String="";var current_food: String="";var xp_key: String="";var claims: Dictionary=w.quest_service.claimed.duplicate(true);var slots: Array=w.quickslots.duplicate(true);var gold: int=w.gold;var rng: int=w.rng.state
 	for iid: int in B.IDS:

@@ -21,7 +21,7 @@ func run()->void:
 	if mode=="fresh":
 		w.level=86;check(w._save_game(true)==OK,"controlled QA eligibility, not natural XP")
 		for step: int in range(100):
-			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.tick(w)
+			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
 			if w.quest_service.save_blocked or w.quest_auto.retry_at>Time.get_unix_time_from_system():break
 	w.quest_auto.refresh_context(w);var source_completed: int=0;var pending: int=0
 	for row: Dictionary in w.quest_service.entries(w.level,w.inventory):
