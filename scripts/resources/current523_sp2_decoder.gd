@@ -178,6 +178,12 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 			if rule == "end_inclusive":
 				var stored: Rect2i = frame.bounds
 				frame["bounds"] = Rect2i(stored.position,stored.size + Vector2i.ONE)
+			elif rule == "half_open_overflow" or rule == "end_inclusive_overflow":
+				# The samples start before the stored origin: the canvas grows to
+				# cover every sample the frame references (nothing is clipped).
+				var anchored: Rect2i = frame.bounds
+				if rule == "end_inclusive_overflow": anchored = Rect2i(anchored.position,anchored.size + Vector2i.ONE)
+				frame["bounds"] = anchored.merge(frame.sample_extent)
 			var bounds: Rect2i = frame.bounds
 			if bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x > MAX_DIMENSION or bounds.size.y > MAX_DIMENSION or bounds.size.x * bounds.size.y > MAX_CANVAS_PIXELS:
 				return _fail("SP2 native frame bounds exceed the canvas limit.")
@@ -186,12 +192,18 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 ## "half_open": the samples fill the stored bounds exactly (the long-standing
 ## rule). "half_open_margin": they end exactly on the stored half-open end with
 ## blank rows/columns before them. "end_inclusive": they end exactly on the
-## stored x2/y2 pixel. "" when none holds.
+## stored x2/y2 pixel. "*_overflow": the same end, but the samples start
+## before the stored origin. "" when none holds.
 static func frame_bounds_rule(stored: Rect2i,extent: Rect2i) -> String:
 	if extent == stored: return "half_open"
 	if extent.end == stored.end and stored.encloses(extent): return "half_open_margin"
 	var inclusive := Rect2i(stored.position,stored.size + Vector2i.ONE)
 	if extent.end == inclusive.end and inclusive.encloses(extent): return "end_inclusive"
+	# A few frames (e.g. two death frames of the ogre 1020) end exactly on the
+	# stored end but start above/left of the stored origin. The end anchor still
+	# identifies the reading; a frame whose end matches neither stays rejected.
+	if extent.end == stored.end and extent.position.x <= stored.position.x and extent.position.y <= stored.position.y: return "half_open_overflow"
+	if extent.end == inclusive.end and extent.position.x <= stored.position.x and extent.position.y <= stored.position.y: return "end_inclusive_overflow"
 	return ""
 
 static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> Dictionary:
