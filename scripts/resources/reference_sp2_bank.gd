@@ -29,6 +29,14 @@ var _parse_order: Array[String] = []
 var _parsed_keys: Dictionary = {}
 var _asset_owner: int = ASSETS.new_owner()
 static var _crc_table: Array[int] = []
+## Member files whose bytes were verified, by path -> [identity, size, mtime].
+## Like MANIFEST_INDEX.pinned(): every use still checks that the file exists
+## with its declared size and unchanged modification time; the full read and
+## SHA-256/CRC32 runs again only when either changed (or nothing is verified
+## yet). Every drawn layer of every 523 actor used to read and hash its whole
+## SP2 file on every frame. (User decision 2026-11-11: re-verify changed files
+## only.)
+static var _verified_members: Dictionary = {}
 
 ## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
 ## contract adapter). Values outside the plain domain keep the previous exact division.
@@ -202,14 +210,20 @@ func _member(member: String) -> Dictionary:
 			if not sha1_supplied or not provenance is String or provenance.is_empty(): return fail("Missing supplied current523 container SHA1/proof pointer: " + member)
 		elif whole_manifest != true and version_basis != "retained508_outer_manifest": return fail("Missing exact retained source version basis: " + member)
 	var file_path: String = _root.path_join(spec.path)
-	var file := FileAccess.open(file_path, FileAccess.READ)
-	if file == null or file.get_length() != int(spec.bytes): return fail("Original SP2 missing or changed size: " + member)
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	file.close()
-	# Recheck the actual bytes before every cache use, including texture cache
-	# hits and shared-parse hits. Sharing never skips this read and hash.
-	if supplied_sha and digest(bytes) != spec.sha256: return fail("Original SP2 SHA256 mismatch: " + member)
-	if received and crc32(bytes) != spec.crc32: return fail("Received original SP2 CRC32 mismatch: " + member)
+	if not FileAccess.file_exists(file_path) or int(FileAccess.get_size(file_path)) != int(spec.bytes):
+		_verified_members.erase(file_path)
+		return fail("Original SP2 missing or changed size: " + member)
+	# Every cache use (texture hits, shared parses) rechecks the file's size and
+	# modification time; a change re-reads and re-hashes the whole member.
+	var identity_key: String = ("sha256:" + str(spec.sha256)) if supplied_sha else ("crc32:" + str(spec.crc32))
+	var modified: int = int(FileAccess.get_modified_time(file_path))
+	var known: Variant = _verified_members.get(file_path)
+	var verified: bool = known is Array and known[0] == identity_key and known[1] == int(spec.bytes) and known[2] == modified
+	var bytes := PackedByteArray()
+	if not verified:
+		bytes = _read_verified(file_path, spec, supplied_sha, received, member)
+		if bytes.is_empty(): return fail(str(_last_member_problem))
+		_verified_members[file_path] = [identity_key, int(spec.bytes), modified]
 	# Shared parse identity: verified manifest SHA + this member's checked
 	# identity + decoder version (received members stay CRC/receipt scoped).
 	var asset_key: String = ASSETS.parsed_key(_manifest_sha, member, spec, file_path)
@@ -217,6 +231,11 @@ func _member(member: String) -> Dictionary:
 	if not _parsed.has(member):
 		var parsed: Variant = ASSETS.acquire("parsed", asset_key, _asset_owner) if not asset_key.is_empty() else null
 		if parsed == null:
+			if bytes.is_empty():
+				bytes = _read_verified(file_path, spec, supplied_sha, received, member)
+				if bytes.is_empty():
+					_verified_members.erase(file_path)
+					return fail(str(_last_member_problem))
 			var reservation: int = ASSETS.reserve("parsed", asset_key, bytes.size())
 			var fresh: Dictionary = DECODER.parse(bytes)
 			if not fresh.ok:
@@ -233,6 +252,30 @@ func _member(member: String) -> Dictionary:
 		_parsed_keys[member] = asset_key
 		_parse_order.append(member)
 	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
+
+var _last_member_problem: String = ""
+
+## The member's bytes after a full size + SHA-256 (or received CRC32) check,
+## or empty with _last_member_problem set.
+func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, received: bool, member: String) -> PackedByteArray:
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null or file.get_length() != int(spec.bytes):
+		_last_member_problem = "Original SP2 missing or changed size: " + member
+		return PackedByteArray()
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	if supplied_sha and digest(bytes) != spec.sha256:
+		_last_member_problem = "Original SP2 SHA256 mismatch: " + member
+		return PackedByteArray()
+	if received and crc32(bytes) != spec.crc32:
+		_last_member_problem = "Received original SP2 CRC32 mismatch: " + member
+		return PackedByteArray()
+	return bytes
+
+## Forget verified member stamps (tests; or after replacing files in place
+## within the same second at the same size).
+static func forget_verified_members() -> void:
+	_verified_members.clear()
 
 ## Payload estimate for the shared store: parse body plus a separate raw input
 ## buffer (an FE body is the raw buffer itself and is not counted twice).
