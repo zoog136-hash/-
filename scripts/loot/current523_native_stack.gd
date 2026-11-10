@@ -63,6 +63,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if spec.get("kind")=="fixed_card" and spec.get("activation_status")=="unrestricted":return {"kind":"card","spec":spec}
 	if spec.get("kind")=="equipment_bless" and spec.get("activation_status")=="unrestricted":return {"kind":"bless","spec":spec}
 	if spec.get("kind")=="weapon_mastery_points" and spec.get("activation_status")=="unrestricted":return {"kind":"mastery","spec":spec}
+	if spec.get("kind")=="einhasad_charge" and spec.get("activation_status")=="unrestricted":return {"kind":"einhasad","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_selectable_reward" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"selection","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -190,6 +191,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
+	if effect.kind=="einhasad":return use_einhasad_charge(world,uid,owned,record,spec)
 	# A bless scroll needs a target: the existing blessing chooser opens and its
 	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
 	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
@@ -972,6 +974,67 @@ static func bless_scroll_owned(world: Node,scroll_name: String) -> Dictionary:
 		if spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
 		return {"uid":id,"owned":owned,"record":owned.record,"spec":spec,"request":{"physical_id":id,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}}
 	return {"error":"선택 물리 개체·잠금·소지 수량 확인 필요"}
+
+## Original Einhasad units per point of the existing blessing owner: the
+## original natural recharge cap (EinasadLevel 1 CumulativeValue, 1,200,000)
+## over the owner's natural cap (200) = 6000, the same as EinasadVariable
+## type 42. 0 when the original does not give an exact integral scale.
+static func einhasad_scale() -> int:
+	var cap: int=0
+	for row: Dictionary in SOURCE.rows("EinasadLevel"):
+		if integer(row.get("Level")) and int(row.Level)==1 and integer(row.get("CumulativeValue")):cap=int(row.CumulativeValue)
+	var points: int=int(preload("res://scripts/ainhasad_service.gd").NATURAL_REGEN_CAP)
+	return cap/points if points>0 and cap>0 and cap%points==0 else 0
+
+## An Einhasad blessing item: the existing blessing owner gains the original
+## amount for the player's level (capped by the item's original recharge cap)
+## and the item's original Experience, saved with the one-unit debit.
+static func use_einhasad_charge(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="einhasad_charge" or spec.get("activation_status")!="unrestricted":return _failure("원본 아인하사드 아이템 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 아인하사드 아이템 사용 대상·서비스 조건 미지원")
+	var ain: Variant=world.get("ain_service")
+	var scale: int=einhasad_scale()
+	if ain==null or scale<=0:return _failure("아인하사드 축복 원본 단위 확인 필요 · 아이템 보존")
+	var projection: Script=preload("res://scripts/loot/current523_native_item_projection.gd")
+	var level: int=int(world.level)
+	var rate: int=projection.consume_rate(int(spec.einhasad_rate_group),level)
+	var units: int=int(spec.bless_absolute)*(100+rate)
+	if units%(100*scale)!=0:return _failure("원본 아인하사드 충전량이 축복 단위로 나누어지지 않습니다 · 아이템 보존")
+	var points: int=units/(100*scale)
+	var bonus: float=float(world.growth.bonus("blessing_charge:percent"))+float(world.card_collections.bonus("blessing_charge:percent"))
+	points=int(round(float(points)*(1.0+bonus/100.0)))
+	var cap: int=int(spec.recharge_cap)/scale
+	var charged: int=mini(points,maxi(0,cap-int(ain.blessing)))
+	if charged<=0:return _failure("아인하사드 축복이 원본 충전 한도입니다 · 아이템 보존")
+	var gained_experience: int=0
+	if int(spec.experience)>0:gained_experience=int(spec.experience)*projection.consume_rate(int(spec.experience_rate_group),level)/10000
+	var state: Dictionary=ain.export_state();state["blessing"]=int(ain.blessing)+charged
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 아인하사드 아이템 차감 소유자 연결 필요"))))
+	var payload: Dictionary=paid.overrides.duplicate(true)
+	payload["ainhasad_state"]=state
+	payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var saved: Error=world._save_game(true,payload)
+	busy=false
+	if saved!=OK:
+		world.patch523_owner_state_problem="원본 아인하사드 아이템 저장 결과 미확정 (%s) · 정상 불러오기 전 재사용 중지" % error_string(saved);return _failure(world.patch523_owner_state_problem)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(payload.consumable_state)
+	ain.blessing=int(state.blessing);world.deferred_save.cancel()
+	# Staged growth fields belong to the quest/dungeon/death owners only, so the
+	# original Experience is added after the debit commit, as the existing
+	# TWILIGHT holy water does, and saved by the next save.
+	if gained_experience>0:
+		world.experience=int(world.experience)+gained_experience;world._check_level_up()
+		if world.has_method("_request_deferred_save"):world._request_deferred_save()
+	if world.has_method("_update_ain_hud"):world._update_ain_hud()
+	var message: String="%s 사용 · 축복 +%d" % [str(record.get("source_display_name",record.get("name",""))),charged]
+	if gained_experience>0:message+=" · 경험치 +%d" % gained_experience
+	world.hud.append_log(message)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"blessing_charged":charged,"experience_gained":gained_experience,"message":message}
+	return committed_use_context(result,record,0,false,"current523_native_stack.use_einhasad_charge")
 
 ## A weapon mastery point item: the existing mastery owner plans the original
 ## points for the normalized weapon type and saves them together with the
