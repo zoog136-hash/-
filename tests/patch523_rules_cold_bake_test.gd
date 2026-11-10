@@ -754,6 +754,11 @@ func _run() -> void:
 	(broken.reader as FakeRows).tables.LuckyBagEntityView[1].Probability = 5.0
 	same("box contract: same problem", compile_new(broken, "rules-cold-broken"), compile_old(broken, "rules-cold-broken"))
 	clear_bakes()
+	# 9b. Disk-required policy (default on Android/iOS, forced here): a record
+	# store failure is an explicit failure, never a resident recompile, and
+	# the state accepted before the compile is kept unchanged.
+	_disk_required(small, reference_digest, reference_reads)
+	clear_bakes()
 	# 10. A big table in the reader's row-store form (rows with differing keys).
 	var rowstore: Dictionary = fixture(20)
 	for table: String in ["ItemBonus","Bonus","ItemClass","ItemCraftInput","LuckyBagEntityView","DateTimes_Korean"]: (rowstore.reader as FakeRows).row_store[table] = true
@@ -850,3 +855,72 @@ func _stream_and_runtime_units() -> void:
 	check(not old_runtime.is_empty() and var_to_bytes(new_runtime) == var_to_bytes(old_runtime) and new_builder.problem == old_builder.problem, "runtime: build() equals the former build ("+str(old_runtime.size())+" items)")
 	bonuses.erase(bonuses.keys()[3])
 	check(var_to_bytes(new_builder.build(tables, bound, bonuses)) == var_to_bytes(old_builder.build(tables, bound, bonuses)) and new_builder.problem == old_builder.problem and not str(old_builder.problem).is_empty(), "runtime: same rejection ("+str(old_builder.problem)+")")
+
+func _disk_required(small: Dictionary, reference_digest: String, reference_reads: Dictionary) -> void:
+	OS.set_environment(BAKE.DISK_REQUIRED_ENV, "1")
+	check(BAKE.disk_required(), "disk-required: forced on")
+	var faults: Array = [
+		["equipment_rules_catalog_records|create", "create"],
+		["equipment_rules_runtime|create", "create"],
+		["equipment_rules_catalog_records|append:3", "commit"],
+		["equipment_rules_catalog_records|commit", "commit"],
+		["equipment_rules_runtime|commit", "commit"],
+		["equipment_rules_catalog_records|reopen", "commit"],
+		["equipment_rules_catalog_records|index", "commit"],
+	]
+	for entry: Array in faults:
+		clear_bakes()
+		BAKE.store_failures.clear()
+		# A first start: nothing accepted yet.
+		var fresh = RULES.new()
+		fresh._projection_source = small.reader
+		BAKE.fault = entry[0]
+		var ok: bool = fresh.compile_original_bound(small.catalog_bytes, small.items, small.contract, "rules-disk-" + str(entry[1]))
+		BAKE.fault = ""
+		var label: String = "disk-required %s: " % entry[0]
+		check(not ok, label + "explicit failure")
+		check(fresh.resident_retries == 0, label + "no resident recompile")
+		check(str(fresh.store_failure.get("stage", "")) == entry[1], label + "failure stage " + str(entry[1]))
+		check(fresh.data.is_empty() and fresh.digest.is_empty(), label + "nothing accepted (no empty model presented as success)")
+		check(fresh.problem.contains("다시 시작"), label + "problem tells to retry on the next start")
+		check(bake_bytes()["equipment_rules"].is_empty(), label + "no whole-model bake written")
+		check(not FileAccess.file_exists(BAKE.ROOT + "/equipment_rules_runtime.bin.part") and not FileAccess.file_exists(BAKE.ROOT + "/equipment_rules_catalog_records.bin.part"), label + "no partial file is left")
+		# Write-side faults are recorded per bake; read-back faults (reopen,
+		# index) are a verification failure of an otherwise written file.
+		var bake_name: String = str(entry[0]).get_slice("|", 0)
+		var read_back: bool = str(entry[0]).ends_with("|reopen") or str(entry[0]).ends_with("|index")
+		if not read_back: check(BAKE.store_failures.has(bake_name), label + "store failure recorded for " + bake_name)
+	# A later start after an accepted model: the failed compile restores it.
+	clear_bakes()
+	var accepted = RULES.new()
+	accepted._projection_source = small.reader
+	check(accepted.compile_original_bound(small.catalog_bytes, small.items, small.contract, "rules-disk-accepted"), "disk-required: a normal compile succeeds")
+	var kept_data: Dictionary = accepted.data
+	var kept_digest: String = accepted.digest
+	var kept_reads: Dictionary = accessors(accepted)
+	BAKE.fault = "equipment_rules_runtime|commit"
+	check(not accepted.compile_original_bound(small.catalog_bytes, small.items, small.contract, "rules-disk-replace"), "disk-required: a failing replacement is rejected")
+	BAKE.fault = ""
+	check(is_same(accepted.data, kept_data) and accepted.digest == kept_digest, "disk-required: the previously accepted model object and digest are kept")
+	same("disk-required: previous accessors unchanged after the failed replacement", accessors(accepted), kept_reads)
+	check(accepted.resident_retries == 0, "disk-required: still no resident recompile")
+	# Next start, storage usable again: the same inputs compile and bake.
+	clear_bakes()
+	var retried = RULES.new()
+	retried._projection_source = small.reader
+	check(retried.compile_original_bound(small.catalog_bytes, small.items, small.contract, "rules-disk-retry"), "disk-required: retry after the failure succeeds")
+	check(retried.digest == reference_digest and retried.store_failure.is_empty(), "disk-required: retry gives the same model")
+	same("disk-required: retry accessors", accessors(retried), reference_reads)
+	check(not bake_bytes()["equipment_rules"].is_empty(), "disk-required: retry writes the bake")
+	# Default policy off (desktop/CI): the documented resident fallback stays.
+	clear_bakes()
+	OS.set_environment(BAKE.DISK_REQUIRED_ENV, "0")
+	check(not BAKE.disk_required(), "disk-required: forced off")
+	var fallback = RULES.new()
+	fallback._projection_source = small.reader
+	BAKE.fault = "equipment_rules_catalog_records|commit"
+	var fell_back: bool = fallback.compile_original_bound(small.catalog_bytes, small.items, small.contract, "rules-disk-off")
+	BAKE.fault = ""
+	check(fell_back and fallback.resident_retries == 1 and fallback.digest == reference_digest, "policy off: commit failure recompiles resident as before")
+	OS.set_environment(BAKE.DISK_REQUIRED_ENV, "")
+	check(BAKE.disk_required() == (OS.get_name() in ["Android", "iOS"]), "default policy follows the platform")

@@ -687,9 +687,32 @@ func _ready() -> void:
 	_restore_current523_aden_play.call_deferred()
 	_bind_current523_world_map_from_settings.call_deferred()
 	_release_idle_original_models.call_deferred()
+	_show_store_failures()
 	BOOT_LOG.step("")
 	BOOT_LOG.end("world_ready", boot_started)
 	BOOT_LOG.mark("boot_done")
+
+## Device-bake store failures of this start (owner -> {stage, message}).
+## A failed owner keeps its previous state and is not activated from a
+## partial result; the player is told the cause and that the next start
+## retries. Owned items, quantities and enhancement are never changed here.
+var store_failures: Dictionary = {}
+
+func _note_store_result(owner: String, result: Variant) -> void:
+	if not result is Dictionary or (result as Dictionary).get("ok", true) != false: return
+	var reason: String = str(result.get("reason", ""))
+	if not reason.ends_with("_store_failed"): return
+	store_failures[owner] = {"stage": str(result.get("stage", "")), "message": str(result.get("message", ""))}
+	BOOT_LOG.mark("store_failed", {"owner": owner, "stage": str(result.get("stage", ""))})
+
+func _show_store_failures() -> void:
+	if store_failures.is_empty() or not is_instance_valid(hud): return
+	var lines: PackedStringArray = []
+	for owner: String in store_failures:
+		var message: String = str(store_failures[owner].get("message", ""))
+		lines.append(message if not message.is_empty() else owner)
+	hud.append_log("원본 데이터 정리 실패 · " + " / ".join(lines))
+	hud.show_message("기기 저장 공간이 부족해 원본 데이터를 정리하지 못했습니다. 공간을 확보한 뒤 다시 시작하면 다시 시도합니다.")
 
 func _process(delta: float) -> void:
 	option_awakening.refresh_timed_relic()
@@ -859,7 +882,7 @@ func _load_data() -> void:
 	preload("res://scripts/cards/source_awakening_items.gd").install_drop_definitions(catalog_db,loot_catalog)
 	growth.source523.install(catalog_db,loot_catalog)
 	_merge_local_consumables_into_catalog()
-	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
+	_note_store_result("native_items", LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db))
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	patch523_craft_catalog_status=PATCH523_CRAFT_CATALOG.register(catalog_db,PATCH523_CRAFT_CATALOG.available())
 	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(catalog_db)
@@ -905,7 +928,7 @@ func _load_data() -> void:
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
-	LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db)
+	_note_store_result("native_items", LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db))
 	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(catalog_db)
 	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
 	_index_catalog_item_sources()
@@ -5317,6 +5340,9 @@ func _load_patch523_equipment() -> void:
 	patch523_equipment.live_record = _catalog_item_from_source_id
 	if not patch523_equipment.load_original_bound(catalog_bytes,catalog_db.get("아이템",[]),catalog_db.get("patch523_crafting_catalog_contract",{})):
 		push_warning(patch523_equipment.problem)
+		var rules_failure: Dictionary = patch523_equipment.get("store_failure") if patch523_equipment.get("store_failure") is Dictionary else {}
+		if not rules_failure.is_empty():
+			_note_store_result("equipment_rules", {"ok":false,"reason":"equipment_rules_store_failed","stage":str(rules_failure.get("stage","")),"message":patch523_equipment.problem})
 		return
 	_apply_loaded_patch523_equipment()
 
@@ -10771,6 +10797,9 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 ## Original models needed only while their window is open are released once
 ## boot is done (Lineage M style); each reloads on its next use.
 func _release_idle_original_models() -> void:
+	# Original definition reader caches kept from start-up (rows stay on
+	# storage; a later query reads them again with the same values).
+	BOOT_LOG.mark("definition_caches_released", preload("res://scripts/resources/current523_definition_rows.gd").release_caches())
 	source_shop.release_catalog()
 	# A dungeon in progress keeps its model.
 	for service: Variant in [source_dungeon_runs, dungeon_play]:
