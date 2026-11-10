@@ -282,22 +282,149 @@ static func _invoke(result: Dictionary, id: int) -> void:
 			continue
 		result.invoke_buffs[str(int(buff.ID))] = buffs
 
+## The session model is a pure function of the verified original and the
+## scripts that build it. Lineage M style it is compiled once on this device:
+## only a small head (economy, spell material types, invoke options, the doll
+## unlock item, identity and problem) stays resident; the per-identity doll
+## rows, invoke spells/buffs and the build-only diagnostics stay in a record
+## bake read on demand through a small LRU (accessors below). Every value a
+## reader gets is the value the former resident dictionary held.
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const RECORDS = preload("res://scripts/resources/current523_keyed_records.gd")
+const RECORDS_NAME := "option_combat523_records"
+const RECORDS_PRODUCER := "option_combat523"
+const RECORDS_SCHEMA := "option_combat_input.v1|records.v1"
+## Per-key sections kept on storage.
+const KEYED: Array[String] = ["primary_doll_buffs","subslot_buffs","subslot_npc_bindings","invoke_spells","invoke_buffs"]
+## Parts only the build uses (no reader); kept on storage as one diagnostics record.
+const DIAGNOSTIC: Array[String] = ["option_groups","invoke_references","unavailable_source_definitions","source_exclusion_evidence"]
+const DIAGNOSTICS := "diagnostics"
+static var bake_enabled: bool = true
+static var _store: RefCounted = null
+## Last storage failure of this producer ({} when none): stage and message.
+static var store_failure: Dictionary = {}
+
+## Tests only (never set in production): the source identity a synthetic
+## session stands for, in place of the installed original's.
+static var _identity_for_test: Dictionary = {}
+
 static func session() -> Dictionary:
-	var identity: Dictionary = SOURCE.identity()
+	var identity: Dictionary = _identity_for_test if not _identity_for_test.is_empty() else SOURCE.identity()
 	if identity.is_empty():
+		_store = null
 		_data = _empty()
 		problem = "current523_original_unavailable:"+SOURCE.problem()
 		_data.problem = problem
 		return _data
 	if not _data.is_empty() and _data.get("ready",false) and _data.get("source_input_identity") == identity: return _data
+	_store = null; store_failure = {}
+	var verified: String = SOURCE.verified_key() if bake_enabled else ""
+	var key: String = BAKE.producer_key(RECORDS_NAME,RECORDS_PRODUCER,RECORDS_SCHEMA,verified) if not verified.is_empty() else ""
+	var opened: RECORDS.Store = RECORDS.open(RECORDS_NAME,key) if not key.is_empty() else null
+	if opened != null and opened.head is Dictionary and opened.head.get("ready") == true and opened.head.get("source_input_identity") == identity and opened.head.get("problem") is String:
+		_store = opened
+		_data = opened.head
+		problem = _data.problem
+		return _data
+	_data = _build(identity)
+	if _data.ready and not key.is_empty(): _data = _adopt(_data,key,identity)
+	return _data
+
+## Stores a built session as records and returns its resident head. Storage
+## failure: disk-required (Android/iOS) is an explicit failure (an empty,
+## ready session with the cause; nothing activated; the next start retries);
+## elsewhere the whole session stays resident as before.
+static func _adopt(result: Dictionary, key: String, identity: Dictionary) -> Dictionary:
+	var split: Dictionary = split_session(result)
+	# A definition table that failed to reach storage this run may have
+	# degraded the build: such a result is used now but never persisted.
+	var degraded: bool = not SOURCE._store_failures.is_empty()
+	var stored: RECORDS.Store = null if degraded else RECORDS.write(RECORDS_NAME,key,split.head,split.sections)
+	if stored != null:
+		_store = stored
+		return split.head
+	if BAKE.disk_required():
+		store_failure = {"stage":"degraded_source" if degraded else "records","message":"원본523 카드 옵션 기록 파일을 저장하지 못했습니다"}
+		problem = str(store_failure.message)+" · 기기 저장 공간을 확인한 뒤 다시 시작하면 다시 시도합니다"
+		var failed: Dictionary = _empty(identity)
+		failed.ready = true
+		failed.problem = problem
+		return failed
+	return result
+
+## {head, sections}: the session without its keyed and build-only parts, and
+## those parts as sections. Pure (the session is not modified).
+static func split_session(result: Dictionary) -> Dictionary:
+	var head: Dictionary = result.duplicate(false)
+	var sections: Dictionary = {}
+	for field: String in KEYED:
+		sections[field] = result.get(field,{})
+		head.erase(field)
+	var diagnostics: Dictionary = {}
+	for field: String in DIAGNOSTIC:
+		if result.has(field): diagnostics[field] = result[field]
+		head.erase(field)
+	sections[DIAGNOSTICS] = {"value":diagnostics}
+	return {"head":head,"sections":sections}
+
+static func store_result() -> Dictionary:
+	if store_failure.is_empty(): return {}
+	return {"ok":false,"reason":"option_combat_store_failed","stage":str(store_failure.get("stage","")),"message":problem}
+
+## --- Accessors: the same values the former resident session held. ---
+static func _keyed(section: String, key: String, fallback: Variant) -> Variant:
+	session()
+	if _store != null: return _store.value(section,key,fallback)
+	return (_data.get(section,{}) as Dictionary).get(key,fallback)
+
+static func primary_doll_buff(identity: String) -> Dictionary: return _keyed("primary_doll_buffs",identity,{})
+static func subslot_buff(identity: String) -> Dictionary: return _keyed("subslot_buffs",identity,{})
+static func subslot_npc_binding(identity: String) -> Dictionary: return _keyed("subslot_npc_bindings",identity,{})
+## The invoke spell of an InvokeOption Param1, or null when this input has none.
+static func invoke_spell(id: String) -> Variant: return _keyed("invoke_spells",id,null)
+static func invoke_buff(id: String) -> Array: return _keyed("invoke_buffs",id,[])
+
+static func section_keys(section: String) -> PackedStringArray:
+	session()
+	if _store != null: return _store.section_keys(section)
+	return PackedStringArray((_data.get(section,{}) as Dictionary).keys())
+
+## Build-only parts (option groups, invoke references, unavailable source
+## definitions, exclusion evidence), read from storage when asked.
+static func diagnostics() -> Dictionary:
+	session()
+	if _store != null: return _store.value(DIAGNOSTICS,"value",{})
+	var out: Dictionary = {}
+	for field: String in DIAGNOSTIC:
+		if _data.has(field): out[field] = _data[field]
+	return out
+
+## Test seams: adopt a synthetic built session exactly as session() does
+## after a build (key "" = no device bake); reset() forgets it.
+static func adopt_for_test(result: Dictionary, key: String) -> void:
+	_store = null; store_failure = {}
+	_identity_for_test = result.get("source_input_identity",{})
+	problem = str(result.get("problem",""))
+	_data = result if key.is_empty() or not result.get("ready",false) else _adopt(result,key,_identity_for_test)
+
+static func reopen_for_test(key: String) -> bool:
+	_store = null
+	var opened: RECORDS.Store = RECORDS.open(RECORDS_NAME,key)
+	if opened == null or not opened.head is Dictionary: return false
+	_store = opened; _data = opened.head; problem = str(_data.get("problem",""))
+	return true
+
+static func reset_for_test() -> void:
+	_data = {}; _store = null; store_failure = {}; problem = ""; _identity_for_test = {}
+
+static func _build(identity: Dictionary) -> Dictionary:
 	_exclusions = []; _issue = ""; problem = ""
 	var result: Dictionary = _empty(identity)
 	var originals: Array[Dictionary] = SOURCE.rows("BuffCard")
 	if originals.is_empty():
 		problem = "current523_BuffCard_unavailable:"+SOURCE.problem()
 		result.problem = problem
-		_data = result
-		return _data
+		return result
 	_economy(result)
 	var material_types: Array = []
 	for raw: Dictionary in SOURCE.rows("SpellMaterialType"):
@@ -337,11 +464,12 @@ static func session() -> Dictionary:
 		if int(card.BuffCardDeckID) == 2: _doll(result,card,identity_key,targets)
 	for id: int in targets: _invoke(result,id)
 	result.source_exclusion_evidence = _exclusions.duplicate(true)
+	# Build scratch only: the evidence now lives in the result.
+	_exclusions = []
 	result.ready = true
 	if not result.unavailable_source_definitions.is_empty(): problem = "current523_option_input_partial:see_unavailable_source_definitions"
 	result.problem = problem
-	_data = result
-	return _data
+	return result
 
 static func union_options(candidates: Array) -> Array:
 	# Input union only: one pinned row per exact ID, preserving first position.

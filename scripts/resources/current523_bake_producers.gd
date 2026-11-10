@@ -88,4 +88,41 @@ const PRODUCERS := {
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
 		],
 	},
+	"card_slots523": {
+		# Per-key relic records of patch523_slot_data.gd (current523_keyed_records.gd).
+		"roots": ["res://scripts/cards/patch523_slot_data.gd"],
+		"ignore": [],
+		"files": [
+			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/cards/current523_card_acquisition_input.gd",
+			"res://scripts/cards/current523_card_identity.gd",
+			"res://scripts/cards/current523_relic_acquisition_input.gd",
+			"res://scripts/cards/current523_relic_input.gd",
+			"res://scripts/cards/option_slot_definitions.gd",
+			"res://scripts/cards/patch523_slot_data.gd",
+			"res://scripts/loot/current523_native_fields.gd",
+			"res://scripts/quests/source_dummy523.gd",
+			"res://scripts/resources/current523_bake_cache.gd",
+			"res://scripts/resources/current523_definition_rows.gd",
+			"res://scripts/resources/current523_keyed_records.gd",
+			"res://scripts/resources/reference_sp2_manifest_index.gd",
+		],
+	},
+	"option_combat523": {
+		# Per-key option combat input records (current523_keyed_records.gd).
+		"roots": ["res://scripts/cards/current523_option_combat_input.gd"],
+		"ignore": [],
+		"files": [
+			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/cards/current523_card_identity.gd",
+			"res://scripts/cards/current523_option_combat_input.gd",
+			"res://scripts/cards/option_slot_definitions.gd",
+			"res://scripts/loot/current523_native_fields.gd",
+			"res://scripts/quests/source_dummy523.gd",
+			"res://scripts/resources/current523_bake_cache.gd",
+			"res://scripts/resources/current523_definition_rows.gd",
+			"res://scripts/resources/current523_keyed_records.gd",
+			"res://scripts/resources/reference_sp2_manifest_index.gd",
+		],
+	},
 }

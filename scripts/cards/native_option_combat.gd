@@ -30,11 +30,11 @@ func active() -> Dictionary:
 	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
 	var relic: Dictionary=runtime.relic_subslot_view(false)
 	if relic.active:
-		var row: Dictionary=RELIC.relic_combat.relic_subslot_buffs.get(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)),{})
+		var row: Dictionary=RELIC.relic_subslot_buff(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)))
 		if not row.is_empty():out["relic_subslot11:"+str(relic.identity)]={"native_source":{"card":row.card,"effects":row.effects}}
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
-	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else INPUT.session().primary_doll_buffs.get(identity,{})
+	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else INPUT.primary_doll_buff(identity)
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
@@ -122,7 +122,7 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			match str(bonus.type.Name):
 				"SpellDebuffMinDuration":low=int(bonus.bonus.Value)
 				"SpellDebuffMaxDuration":high=int(bonus.bonus.Value)
-				"BuffClassID":buffs=INPUT.session().invoke_buffs.get(str(int(bonus.bonus.Value)),[])
+				"BuffClassID":buffs=INPUT.invoke_buff(str(int(bonus.bonus.Value)))
 		if low<=0 or high!=low or buffs.is_empty():continue
 		if not roll(int(effect.weight)):continue
 		if target.apply_source_option_debuff(str(effect.origin),low,buffs):
@@ -198,7 +198,9 @@ func emit_sprite(sprite: int,target: Node2D,current_item: Dictionary={}) -> void
 			visual_results[str(sprite)]="played_current_item_source"
 
 func _invoke_spell(identity: int) -> Dictionary:
-	return INPUT.session().invoke_spells.get(str(identity),RELIC.relic_combat.invoke_spells.get(str(identity),{}))
+	# Same precedence as before: the option input's own spell when it has one.
+	var own: Variant=INPUT.invoke_spell(str(identity))
+	return own if own!=null else RELIC.relic_combat.invoke_spells.get(str(identity),{})
 
 func _free_spell(spell: Dictionary,target: int) -> bool:
 	if spell.is_empty():return false

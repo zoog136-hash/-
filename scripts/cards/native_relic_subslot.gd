@@ -14,7 +14,7 @@ static func identity_key(identity: String) -> String:
 	return "98:"+parts[3]
 
 static func definition(identity: String) -> Dictionary:
-	return DATA.relic.cards.get(identity_key(identity),{})
+	return DATA.relic_card(identity_key(identity))
 
 static func validate(value: Dictionary) -> String:
 	var unlock_error: String=Unlock.validate(value)
@@ -46,14 +46,14 @@ static func scope_available(limit: int,context: Dictionary) -> bool:
 	if context.get("source_snapshot","") not in ["base508","patch523"] or not context.get("ServiceRegionCode") is String:return false
 	var number: Variant=context.get("WorldNo")
 	if not (number is int or number is float) or not is_finite(float(number)) or float(number)!=floorf(float(number)) or int(number)<=0:return false
-	for row: Dictionary in DATA.relic.source_server_limits:
+	for row: Dictionary in DATA.relic_server_limits_for(limit):
 		if int(row.ServerLimitSetID)==limit and row.ServiceRegionCode==context.ServiceRegionCode and int(row.WorldNo)==int(number):return true
 	return false
 
 static func exact_record(record: Dictionary,identity: String) -> bool:
 	var key: String=identity_key(identity)
-	if key.is_empty() or not DATA.relic.cards.has(key) or Cards.card_id(record)!=identity:return false
-	var raw: Dictionary=DATA.relic.cards[key].card
+	if key.is_empty() or not DATA.has_relic_card(key) or Cards.card_id(record)!=identity:return false
+	var raw: Dictionary=DATA.relic_card(key).card
 	var expected: String="lineagem_base508" if identity.begins_with("source:m508:") else "lineagem_patch523"
 	return record.get("source","")==expected and int(record.get("source_deck_id",0))==98 and int(record.get("source_card_id",0))==int(raw.ID) and int(record.get("source_grade_id",-1))==int(raw.GradeID)
 
@@ -83,7 +83,7 @@ static func eligibility(runtime: RefCounted,identity: String,level: int,buffs: D
 
 static func secondary_groups(identity: String) -> Array:
 	var key: String=identity_key(identity)
-	var group: Dictionary=DATA.relic.option_groups.get(key+":11",{})
+	var group: Dictionary=DATA.relic_option_group(key+":11")
 	return [] if group.is_empty() else [group]
 
 static func effects(runtime: RefCounted,identity: String) -> Dictionary:
