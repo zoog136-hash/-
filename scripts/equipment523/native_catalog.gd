@@ -59,7 +59,7 @@ static func validate_identity(pack: Dictionary, record: Dictionary, definition: 
 	for key: Variant in raw:
 		if not original.has(key) or not same(original[key],raw[key]): return {}
 	for field: String in IDENTITY_FIELDS:
-		if record.has(field) != expected.has(field) or not same(record.get(field),expected.get(field)): return {}
+		if NATIVE_FIELDS.has_field(record,field) != NATIVE_FIELDS.has_field(expected,field) or not same(NATIVE_FIELDS.field(record,field),NATIVE_FIELDS.field(expected,field)): return {}
 	if record.get("source_snapshot") != "patch523" or not record.get("name") is String or str(record.name).is_empty(): return {}
 	if not bool(record.get("source_legacy_catalog_alias",false)):
 		var host_id: String = "m523:item:"+str(id)

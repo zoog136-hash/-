@@ -439,6 +439,16 @@ class ZeroFailureSummaryContracts(unittest.TestCase):
         'X: 0 checks, 0 failures': (False, False),
         'SKILL_EFFECT_EXPORT_INVENTORY checks=12 resources=3 errors=0': (True, False),
         'nothing here': (False, False),
+        # Scalar *_RESULT receipts (main_scene_preload_test and 8 others were
+        # reported FAIL on main although they stated zero errors).
+        'MAIN_SCENE_PRELOAD_RESULT errors=0': (True, False),
+        'MAIN_SCENE_PRELOAD_RESULT errors=1': (False, False),
+        'SOURCE_TRANSFORM_RESULT entries=73 failures=0 headings=[3,4,5]': (True, False),
+        'SOURCE201_RESULT actors=14 views=672 checks=2031 errors=0': (True, False),
+        'SOURCE201_RESULT checks=0 errors=0': (False, False),
+        'COUNTLESS_RESULT checks=40 passives=3': (False, False),
+        'MIXED_RESULT failures=0 errors=2': (False, False),
+        'A_RESULT errors=0\nB_RESULT {"failures":["x"]}': (False, False),
     }
 
     def test_explicit_zero_counts_pass_and_any_nonzero_fails(self):

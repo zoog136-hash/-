@@ -33,7 +33,7 @@ func run()->void:
 		check(seed.length()==64 and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"unmodified actual811 grant save copy")
 		if not failures.is_empty():quit(1);return
 	var world: TwilightWorld=make_world()
-	check(world.quest_item_provider.definitions.has(369002),"existing original choice consumer available")
+	check(world.quest_item_provider.has_definition(369002),"existing original choice consumer available")
 	if fresh:
 		for batch: int in range(100):
 			world.quest_auto.retry_at=0;world.quest_auto.next_scan=0

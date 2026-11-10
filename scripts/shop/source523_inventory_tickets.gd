@@ -1,4 +1,5 @@
 extends RefCounted
+const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Owned-ticket redemption; no market purchase, new card pool, or free issuance.
 ## Every original LinMarketProduct draw ticket whose products are whole
 ## GotChaClassID pools is redeemable (current523_ticket_input.gd); others are
@@ -133,7 +134,7 @@ func _reject(message:String) -> bool:
 ## unsupported one is explained and kept rather than falling to another owner.
 static func claims(record:Dictionary) -> bool:
 	if int(record.get("source_item_class_id",0)) in IDS:return true
-	return record.get("source_m_native_item")==true and record.get("source_snapshot")=="patch523" and record.get("source_category_name")==CATEGORY
+	return record.get("source_m_native_item")==true and record.get("source_snapshot")=="patch523" and NATIVE_FIELDS.field(record,"source_category_name")==CATEGORY
 
 func install() -> Dictionary:
 	var bindings:Dictionary={}

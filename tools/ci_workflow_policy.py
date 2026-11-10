@@ -25,7 +25,9 @@ ARCHIVED_COUNT = 79
 # Workflows added after the 84 -> 10 consolidation. Each must be listed here
 # explicitly (never silently) and must stay path-filtered so it does not run on
 # every pull request.
-POST_CONSOLIDATION = frozenset({"auto-hunting523-validate.yml", "twilight-android-playtest-apk.yml"})
+POST_CONSOLIDATION = frozenset({"auto-hunting523-validate.yml", "twilight-android-playtest-apk.yml",
+                                # complete-523 client tool unit tests (#315, #318)
+                                "client523-source-tool.yml", "client523-ui-tool.yml"})
 # User-approved required merge gates (2026-11-02 transition policy, AGENTS.md,
 # docs/CI_TRANSITION_POLICY.md). They must run on every pull request to main,
 # so they are listed explicitly and exempt from the path-filter rule only.

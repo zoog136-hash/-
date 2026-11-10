@@ -25,7 +25,7 @@ func run()->void:
     if int(r.get("item_class_id",0))==iid and not r.has("origin"):receipts.append({"quest_id":qid,"receipt":r.duplicate(true)})
   check(not receipts.is_empty() and int(w.inventory.get(key,0))>0,"actual original quest auto-completion issues exact native identity with saved source receipt")
   native[str(iid)]={"key":key,"record":rec,"receipts":receipts,"issued":int(w.inventory.get(key,0))}
- if not failures.is_empty():print("FRESH_BLOCK "+JSON.stringify({"provider_ids":w.quest_item_provider.definitions.keys(),"auto_failures":w.quest_auto.failures,"native":native}));w.queue_free();await process_frame;quit(1);return
+ if not failures.is_empty():print("FRESH_BLOCK "+JSON.stringify({"provider_ids":w.quest_item_provider.definition_ids(),"auto_failures":w.quest_auto.failures,"native":native}));w.queue_free();await process_frame;quit(1);return
  var claims: Dictionary=w.quest_service.claimed.duplicate(true);var ledger: Dictionary=w.quest_service.item_grants.duplicate(true);var slots: Array=w.quickslots.duplicate(true);var rng: int=w.rng.state;var gold: int=w.gold
  for iid: int in [385,376]:
   var row: Dictionary=native[str(iid)];var key: String=row.key;var before: int=int(w.inventory[key]);var hash: String=FileAccess.get_sha256(w.save_path())

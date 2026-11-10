@@ -114,10 +114,15 @@ elif '--script' in sys.argv:
         self.assertEqual(d['checks'],[*PREPARATION,'case_1_test','case_5_test'])
         self.assertEqual(len(d['plan']['discovered_tests']),8)
         self.assertEqual(d['selection'],'SHARDED_FULL_SUITE')
-    def test_legacy_flag_preserved(self):
+    def test_retired_legacy_layout_is_reported_never_passed(self):
+        # field_world_test asserted the pre-remake Aden layout, which the game
+        # no longer serves (RETIRED_LEGACY_MAP_TESTS); it must not run or pass.
         self.add('field_world_test');p,d=self.run_checks()
         self.assertEqual(p.returncode,0,p.stderr)
-        self.assertIn('--legacy-map-layouts',self.log('field_world_test'))
+        self.assertIn('LEGACY_MAP_RETIRED',self.log('field_world_test'))
+        self.assertNotIn('--legacy-map-layouts',self.log('field_world_test'))
+        self.assertIn('field_world_test',d['skipped'])
+        self.assertEqual(d['passed'],len(PREPARATION))
         self.assertEqual(d['validation_scopes']['field_world_test'],'EXISTING_TWILIGHT_GEOMETRY')
     def test_active_map_does_not_get_legacy_flag(self):
         self.add('aden_faith_png_monster_spawns_test');p,_=self.run_checks()

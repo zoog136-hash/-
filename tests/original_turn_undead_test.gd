@@ -24,7 +24,7 @@ func fresh() -> void:
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
 	world.hp = world._effective_max_hp()
-	world.mp = 999
+	world.max_mp = maxi(world.max_mp, 999); world.mp = 999
 	world.player.clear_status_effects()
 	dummy.dead = false
 	dummy.hp = dummy.max_hp

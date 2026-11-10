@@ -41,7 +41,7 @@ func run()->void:
 		check(seed.length()==64 and FileAccess.get_sha256("user://twilight_v20_save.json")==seed,"unmodified copy of actual811 source-grant save")
 		if not failures.is_empty():quit(1);return
 	var world: TwilightWorld=make_world()
-	check(world.quest_item_provider.definitions.has(239) and world.consumable_service.has_method("use_owned_native_return"),"narrow published result consumer and authenticated native definition installed")
+	check(world.quest_item_provider.has_definition(239) and world.consumable_service.has_method("use_owned_native_return"),"narrow published result consumer and authenticated native definition installed")
 	if fresh:
 		for batch: int in range(100):
 			world.quest_auto.retry_at=0;world.quest_auto.next_scan=0

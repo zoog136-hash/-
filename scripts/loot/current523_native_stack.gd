@@ -45,7 +45,7 @@ static func whole(value: Variant) -> Variant:
 static func profile(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity():return {}
 	var definition: Dictionary=D.item_definition(record)
-	if definition.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if definition.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var ammo: Dictionary=load("res://scripts/loot/patch523_ammo.gd").call("current_profile",record)
 	if not ammo.is_empty():return {"kind":"ammo","spec":ammo}
 	if record.get("slot")!="consumable":return {}
@@ -81,7 +81,7 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not material.is_empty():return material
 	var ticket: Dictionary=draw_ticket_profile(record)
 	if not ticket.is_empty():return ticket
-	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	# This is a material-owner admission, not individual use/effect activation.
@@ -94,7 +94,7 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 ## (source523_inventory_tickets.gd), which checks the ticket's products and
 ## pools; an unsupported ticket is explained there and stays owned.
 static func draw_ticket_profile(record: Dictionary) -> Dictionary:
-	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_category_name")!="LinMarketProduct" or record.get("slot")!="consumable" or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or NATIVE_FIELDS.field(record,"source_category_name")!="LinMarketProduct" or record.get("slot")!="consumable" or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
@@ -256,7 +256,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	world.deferred_save.cancel();busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
-	var message: String="%s · 원본 버프 %s" % [str(record.source_display_name),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(record.source_display_name),"HP" if effect.kind=="hp" else "MP",after-before]
+	var message: String="%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 
@@ -780,7 +780,7 @@ static func presentation_only(record: Dictionary,spec: Dictionary) -> bool:
 	if recognized.is_empty():return false
 	for reason: String in spec.blocked_reasons:
 		if recognized.has(reason):continue
-		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and record.has("source_delete_time_raw") and not record.get("source_delete_time_unresolved",false):continue
+		if reason in ["source_item_lifetime_unresolved","conditional_or_possession_item_bonus:DeleteTime"] and NATIVE_FIELDS.has_field(record,"source_delete_time_raw") and not record.get("source_delete_time_unresolved",false):continue
 		return false
 	return true
 
@@ -810,7 +810,7 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 		if reward.get("entity_type_id")==0 and int(reward.get("probability_raw",0))<=0:continue
 		var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
 		var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
-		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not item.get("source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
+		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
 		var deadline: String=D.deadline_problem(item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 		if not deadline.is_empty():view.free();return _failure(deadline)
 		var ready: Dictionary=supplier.call("stage",view,[{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)}],{"kind":"source_native_bag_candidate_quote","input_physical_id":uid,"entity_id":reward.source_entity_id})
@@ -871,7 +871,7 @@ static func claim_original_selection(world: Node,original_item: Dictionary,reque
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	var output: Dictionary=D.definition_id(str(int(selected.get("item_class_id",0))))
 	var item: Dictionary=D.variant_item(output.get("native_record",{}),int(selected.get("bless_raw",0)))
-	if item.is_empty() or output.get("original_item",{}).get("TestItem")!=false or output.get("excluded",false) or not item.get("source_condition_pending",[]).is_empty():return _failure("선택한 원문 보상 공급 정체·조건 연결 대기")
+	if item.is_empty() or output.get("original_item",{}).get("TestItem")!=false or output.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():return _failure("선택한 원문 보상 공급 정체·조건 연결 대기")
 	var deadline: String=D.deadline_problem(item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty():return _failure(deadline)
 	var local_initial: bool=selected.get("enchant")==null and D.equipment(item)
@@ -998,7 +998,7 @@ static func use_mastery_points(world: Node,uid: String,owned: Dictionary,record:
 		if committed.get("committed",false):world.patch523_owner_state_problem="원본 숙련 아이템 저장 후 적용 미확정 · 정상 불러오기 전 재사용 중지"
 		return _failure(str(runtime.reason_text(str(committed.get("reason",""))))+" · 아이템 보존")
 	world.consumable_service.import_state(resources.consumable_state);world.item_use_cooldowns=resources.item_use_cooldowns;world.deferred_save.cancel()
-	var message: String="%s 사용 · 무기 숙련치 +%d" % [str(record.get("source_display_name",record.get("name",""))),int(spec.points)]
+	var message: String="%s 사용 · 무기 숙련치 +%d" % [str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),int(spec.points)]
 	world.hud.append_log(message)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"weapon_type":weapon,"points":int(spec.points),"message":message}
 	return committed_use_context(result,record,0,false,"current523_native_stack.use_mastery_points")
@@ -1132,7 +1132,7 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	if not native_ammo(ammo_record(world,name_value)):
 		var claimed: Variant=world.consumable_service.export_state().get(AMMO_EQUIPPED,{})
 		var raw: Dictionary=world._find_catalog_item_record(name_value)
-		if (claimed is Dictionary and not claimed.is_empty() and claimed.get("name")==name_value) or (raw.get("source_projection")=="current523_original_typed_game_dto_v1" and raw.get("source_category_name") in ["Arrow","Bullet","Sting"]):return _failure("선택한 원본 탄약의 현재 소유·정체가 미확인입니다 · 이름 기반 차감으로 대체하지 않습니다")
+		if (claimed is Dictionary and not claimed.is_empty() and claimed.get("name")==name_value) or (raw.get("source_projection")=="current523_original_typed_game_dto_v1" and NATIVE_FIELDS.field(raw,"source_category_name") in ["Arrow","Bullet","Sting"]):return _failure("선택한 원본 탄약의 현재 소유·정체가 미확인입니다 · 이름 기반 차감으로 대체하지 않습니다")
 		return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty() or world.hp<=0 or not world._patch523_item_allowed():return _failure("원본 탄약 사용·저장 보호 중")
 	var hp_cost: int=0;var legacy_spent: Dictionary={}
@@ -1299,7 +1299,7 @@ static func original_skill_ammo(world: Node,cost_key: String,quantity: int) -> D
 	if not selected is Dictionary or quantity<1:return _failure("선택한 원문 스킬 탄약 증명 형식 불일치")
 	var key: String=str(selected.get("name",""));var owned: Dictionary=ammo_owned(world,str(selected.get("physical_id","")))
 	var category: String="Arrow" if cost_key=="화살" else "Bullet"
-	if owned.is_empty() or owned.inventory_key!=key or owned.receipt!=selected.get("receipt") or owned.record.get("source_category_name")!=category or not ammo_worn(world,key) or world._current_ammo_name()!=key or quantity>int(owned.remaining):return _failure("선택 원문 탄약의 실제 개체·종류·잔량·착용 조건 미충족")
+	if owned.is_empty() or owned.inventory_key!=key or owned.receipt!=selected.get("receipt") or NATIVE_FIELDS.field(owned.record,"source_category_name")!=category or not ammo_worn(world,key) or world._current_ammo_name()!=key or quantity>int(owned.remaining):return _failure("선택 원문 탄약의 실제 개체·종류·잔량·착용 조건 미충족")
 	return {"handled":true,"ok":true,"inventory_key":key,"physical_id":selected.physical_id,"quantity":quantity,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-quantity,"receipt":owned.receipt.duplicate(true),"ownership_kind":owned.ownership_kind,"cost_role":cost_key}
 
 

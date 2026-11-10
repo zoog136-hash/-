@@ -78,8 +78,28 @@ func now() -> int:
 
 func snapshot() -> Dictionary:
 	var out := state.duplicate(true)
-	out.last_seen = maxi(int(out.last_seen),now())
+	out.last_seen = persisted_last_seen(now())
 	return out
+
+# Saved high-water clock. Stamping the exact second made every save differ
+# once per second, so unchanged games rewrote their save on every autosave.
+# With elapsed_while_closed (current policy) a rollback across a restart can
+# only matter by re-opening an expired buff or stretching an active one, so
+# keep every crossed buff/cooldown end and, only while a buff is running, the
+# current minute (rollback gain bounded to < 60 s). A paused clock
+# (elapsed_while_closed = false) still needs the exact play time.
+const SEEN_STEP_SECONDS := 60
+
+func persisted_last_seen(current: int) -> int:
+	var seen := int(state.last_seen)
+	if not bool(policy.get("elapsed_while_closed",true)): return maxi(seen,current)
+	if not state.active.is_empty():
+		var until := int(state.active.until)
+		seen = maxi(seen, current - posmod(current, SEEN_STEP_SECONDS) if until > current else until)
+	for key: Variant in state.cooldowns:
+		var ends := int(state.cooldowns[key])
+		if ends <= current: seen = maxi(seen, ends)
+	return seen
 
 func load_state(data: Dictionary) -> bool:
 	var quests: Variant = data.get("quest_state",{})
@@ -200,7 +220,7 @@ func pending_material_id(record: Dictionary) -> int:
 	if id not in Source.QUEST_MATERIAL_IDS or not source.items.has(str(id)): return 0
 	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("sourceId") != "m523:item:%d" % id: return 0
 	var original: Dictionary = source.items[str(id)]
-	if NATIVE_FIELDS.full(record).get("source_original_item") != original or record.get("name") != "[원본 보상] "+str(original.Name) or record.get("source_display_name") != original.Name: return 0
+	if NATIVE_FIELDS.full(record).get("source_original_item") != original or record.get("name") != "[원본 보상] "+str(original.Name) or NATIVE_FIELDS.field(record,"source_display_name") != original.Name: return 0
 	if record.get("slot") != "quest_reward" or not record.get("quest_item") is bool or not bool(record.quest_item) or not integer(record.get("source_bless_code_id"),1,1) or not record.get("source_use_immediately") is bool or bool(record.source_use_immediately): return 0
 	if not integer(record.get("source_reward_id"),1): return 0
 	var rid := str(int(record.source_reward_id))

@@ -55,7 +55,7 @@ func run()->void:
  var inputs: Dictionary={}
  var inventory: Dictionary=w.inventory.duplicate(true);var hash: String=FileAccess.get_sha256(w.save_path())
  for item: int in REF.MAP:
-  check(w.quest_item_provider.definitions.has(item),"exact reference book learning supplier registered "+str(item))
+  check(w.quest_item_provider.has_definition(item),"exact reference book learning supplier registered "+str(item))
   inputs[item]=input_for(w,item,fresh);check(not inputs[item].is_empty(),"genuine source quest reward input "+str(item))
   if not fresh:check(OWN.proof(w,inputs[item].id).ok,"actual physical quest receipt proof")
   activate(w,inputs[item])

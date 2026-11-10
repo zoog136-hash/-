@@ -49,6 +49,9 @@ func run() -> void:
 		check(BINDINGS.resolve(variant,indexed,consumer).record.is_empty(),"original bless state retained without an exact consumer: "+str(code))
 	var immediate: Dictionary=reward.duplicate(true);immediate.UseImmediately=true
 	check(BINDINGS.resolve(immediate,indexed,consumer).record.is_empty(),"immediate-use reward cannot become an ordinary usable item")
+	var packed: RefCounted = BINDINGS.lookup([[record],[record.duplicate(true)]])
+	check(packed.candidates("117304")==indexed["117304"] and BINDINGS.resolve(reward,packed,consumer)==bound,"packed lookup returns the index candidates and binding")
+	check(BINDINGS.resolve(reward,BINDINGS.lookup([[record,changed]]),consumer).record.is_empty() and packed.candidates("1").is_empty(),"packed lookup keeps the index admission rules")
 	check(record==symbol.item_record(117304),"binding leaves producer definitions unchanged")
 	print("QUEST_BINDING_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"real_source_item_id":117304,"consumer":"symbol_source523.material/recharge","external_pr_consumers_installed":false}))
 	quit(0 if failures.is_empty() else 1)

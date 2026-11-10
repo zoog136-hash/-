@@ -625,8 +625,8 @@ static func _current_native_bindings(document: Dictionary,catalog: Dictionary,co
 		var item: Dictionary=choices[0]
 		var typed: bool=supply!=null and supply.call("exact",item,int(id))
 		if not typed and not matches(item,current):continue
-		if not current.get("source_condition_pending",[]).is_empty() or current.get("source_delete_time_unresolved",false):document.unresolved_item_ids[id]="current_native_lifecycle_or_context_pending";continue
-		var dated: bool=current.has("source_start_time_raw") or current.has("source_end_time_raw") or current.has("source_delete_time_raw")
+		if not NATIVE_FIELDS.field(current,"source_condition_pending",[]).is_empty() or current.get("source_delete_time_unresolved",false):document.unresolved_item_ids[id]="current_native_lifecycle_or_context_pending";continue
+		var dated: bool=current.has("source_start_time_raw") or current.has("source_end_time_raw") or NATIVE_FIELDS.has_field(current,"source_delete_time_raw")
 		if dated:
 			var clock: Variant=context.get("source_clock_offset_minutes")
 			if not _source_integer(clock) or clock < -720 or clock > 840:document.unresolved_item_ids[id]="current_source_drop_clock_context_required";continue
@@ -751,7 +751,7 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 			var identity_key: String = str(item.sourceId)
 			if by_source.has(identity_key):
 				var old: Dictionary = by_source[identity_key]
-				if old.get("source") == "lineagem_patch523" and old.get("source_snapshot") == "patch523" and old.get("source_m_native_item",false) and int(old.get("source_item_class_id",-1)) == int(item.get("source_item_class_id",-2)) and old.get("name") == item.get("name") and old.get("source_display_name") == item.get("source_display_name"):
+				if old.get("source") == "lineagem_patch523" and old.get("source_snapshot") == "patch523" and old.get("source_m_native_item",false) and int(old.get("source_item_class_id",-1)) == int(item.get("source_item_class_id",-2)) and old.get("name") == item.get("name") and NATIVE_FIELDS.field(old,"source_display_name") == NATIVE_FIELDS.field(item,"source_display_name"):
 					records[int(positions[identity_key])] = item
 					by_source[identity_key] = item
 					updated += 1
@@ -785,8 +785,8 @@ static var rotate_ended_dates: bool = true
 static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> String:
 	if item.get("source_delete_time_unresolved",false): return "원본 아이템 수명 조건 미지원 · 아이템 보존"
 	for key: String in ["source_start_time_raw","source_end_time_raw","source_delete_time_raw"]:
-		if not item.has(key): continue
-		var encoded: String = str(int(item[key]))
+		if not NATIVE_FIELDS.has_field(item,key): continue
+		var encoded: String = str(int(NATIVE_FIELDS.field(item,key)))
 		if encoded.length() not in [10,12]: return "원본 기간 형식 확인 실패 · 아이템 보존"
 		var minute: String = encoded.substr(10,2) if encoded.length() == 12 else "00"
 		var local_time: String = "%s-%s-%sT%s:%s:00" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),minute]
@@ -799,15 +799,15 @@ static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> S
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
 	if not item.get("source_m_native_item", false): return ""
 	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
-	if not item.get("source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
+	if not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
 	var deadline: String = deadline_problem(item,timezone_minutes)
 	if not deadline.is_empty(): return deadline
 	var full: Dictionary = NATIVE_FIELDS.full(item)
 	var classes: Array = full.get("source_class_names", [])
 	if not full.get("source_unresolved_class_ids", []).is_empty(): return "원본 착용 직업 조건 미확인"
 	if not classes.is_empty() and not classes.has(job): return "원본 직업 조건에 맞지 않는 장비입니다"
-	var minimum: int = int(item.get("source_level_limit_min", 0))
-	var maximum: int = int(item.get("source_level_limit_max", 0))
+	var minimum: int = int(NATIVE_FIELDS.field(item,"source_level_limit_min",0))
+	var maximum: int = int(NATIVE_FIELDS.field(item,"source_level_limit_max",0))
 	if level < minimum or (maximum > 0 and level > maximum): return "원본 장비 레벨 조건에 맞지 않습니다"
 	if level < int(full.get("source_max_level_limit_min",0)) or (int(full.get("source_max_level_limit_max",0)) > 0 and level > int(full.source_max_level_limit_max)): return "원본 최고 레벨 조건에 맞지 않습니다"
 	return ""
@@ -944,11 +944,11 @@ static func wallet_name(item: Dictionary) -> String:
 	return name_value
 
 static func currency_identity_name(item: Dictionary) -> String:
-	if not item.get("source_m_native_item", false) or item.get("source_category_name") != "Currency": return ""
+	if not item.get("source_m_native_item", false) or NATIVE_FIELDS.field(item,"source_category_name") != "Currency": return ""
 	if int(item.get("source_bless_raw", 1)) != 1: return ""
 	var id: int = int(item.get("source_item_class_id", -1))
 	var labels: Dictionary = {26:"아데나", 3242:"변신 코인", 3252:"마법인형 코인", 3631:"명예 코인", 246058:"성물 제작 코인"}
-	if not labels.has(id) or item.get("source_display_name") != labels[id]: return ""
+	if not labels.has(id) or NATIVE_FIELDS.field(item,"source_display_name") != labels[id]: return ""
 	return preload("res://scripts/loot/currency_drops.gd").canonical_name(str(labels[id]))
 
 static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary) -> Dictionary:
@@ -1079,8 +1079,8 @@ static func item_details(item: Dictionary) -> String:
 		var original: Dictionary = item_definition(item).get("native_record", {})
 		if NATIVE_FIELDS.full(original).get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return invoke_details(item)
 		item = original
-	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(item.get("source_display_name", ""))]]
-	if item.get("source_category_name") in ["Arrow","Bullet","Sting"]:
+	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(NATIVE_FIELDS.field(item,"source_display_name",""))]]
+	if NATIVE_FIELDS.field(item,"source_category_name") in ["Arrow","Bullet","Sting"]:
 		lines.append("원본 탄약 분류 · 특수 주문 투사체는 주문 연결 필요")
 		for row: Dictionary in full_definition.get("item_bonus",[]):
 			if row.bonus_type.Name in ["WeaponSmallDamage","WeaponLargeDamage"]:
@@ -1111,8 +1111,8 @@ static func item_details(item: Dictionary) -> String:
 	for row: Dictionary in full_definition.get("item_bonus",[]):
 		if row.bonus_type.Name in ["UIShowFilter","NoAnnounce"]: presentation_flags.append(str(row.bonus_type.Name)+"="+str(int(row.bonus.Value)))
 	if not presentation_flags.is_empty(): lines.append("원본 표시 플래그 %s · TWILIGHT 추정 설정을 켜면 이 무조건 표시·공지 플래그만으로 사용을 차단하지 않음" % ", ".join(presentation_flags))
-	if item.has("source_delete_time_raw"):
-		var expiry: String = "원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9)" % str(int(item.source_delete_time_raw))
+	if NATIVE_FIELDS.has_field(item,"source_delete_time_raw"):
+		var expiry: String = "원본 사용 기한 %s · 시각대는 TWILIGHT 설정(기본 UTC+9)" % str(int(NATIVE_FIELDS.field(item,"source_delete_time_raw")))
 		expiry += " · 지난 기한은 오프라인 순환으로 사용 가능" if rotate_ended_dates else " · 만료 시 소유 보존"
 		if item.get("source_cannot_extend_delete_time",false): expiry += " · 원본 기간 연장 불가"
 		lines.append(expiry)
@@ -1150,7 +1150,7 @@ static func item_details(item: Dictionary) -> String:
 	var full_item: Dictionary = NATIVE_FIELDS.full(item)
 	var classes: Array = full_item.get("source_class_names", [])
 	if not classes.is_empty(): lines.append("원본 착용 직업: " + ", ".join(classes))
-	if int(item.get("source_level_limit_min", 0)) > 0: lines.append("착용 최소 레벨 %d" % int(item.source_level_limit_min))
+	if int(NATIVE_FIELDS.field(item,"source_level_limit_min",0)) > 0: lines.append("착용 최소 레벨 %d" % int(NATIVE_FIELDS.field(item,"source_level_limit_min")))
 	if full_item.get("source_effect_status", "") == "partial": lines.append("일부 발동·특수 효과 미적용 · 확인된 기본 옵션만 적용")
 	if full_item.get("source_equipment_status", "") == "unsupported_source_slot": lines.append("원본 전용 장착 부위 미지원 · 보관 가능")
 	if item.get("source_test_item", false): lines.append("원본 테스트 아이템 · 드랍 제외")
