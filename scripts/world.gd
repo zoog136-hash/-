@@ -6399,6 +6399,7 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
+	preload("res://scripts/resources/current523_definition_rows.gd").normalize_loaded_save(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)
 	if not extra_error.is_empty():

@@ -135,6 +135,57 @@ static func identity() -> Dictionary:
 	if not _open(): return {}
 	return {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":_verified_sha,"source_bytes":_verified_bytes}
 
+## JSON turns identity()["source_bytes"] into a float, and a Dictionary with
+## 25031173.0 is not == one with 25031173, so every 523 item receipt read
+## back from a save failed its archive check (owner state "증명 불일치").
+## Restores the integer in place for every identity dictionary in `value`.
+static func normalize_loaded_identities(value: Variant) -> void:
+	var pending: Array = [value]
+	while not pending.is_empty():
+		var item: Variant = pending.pop_back()
+		if item is Dictionary:
+			var dict: Dictionary = item
+			if dict.get("kind") == "twilight.current523.original-definitions.v1":
+				var bytes: Variant = dict.get("source_bytes")
+				if bytes is float and is_equal_approx(bytes, roundf(bytes)): dict["source_bytes"] = int(bytes)
+			for child: Variant in dict.values():
+				if child is Dictionary or child is Array: pending.append(child)
+		elif item is Array:
+			for child: Variant in item:
+				if child is Dictionary or child is Array: pending.append(child)
+
+## JSON also turns every integer of a 523 ownership proof (receipts, the use
+## ledger, partitions) into a float, and a Dictionary of floats is never ==
+## the integer row rebuilt in memory ("잔량·소비 장부 불일치" after reload).
+## Restores whole floats to int inside `value` (only call it on proof data).
+## Copies of original definition rows (source_original_item and the other
+## heavy native fields) stay as parsed: the original rows are float-typed too.
+static func normalize_loaded_integers(value: Variant) -> Variant:
+	if value is float and is_equal_approx(value, roundf(value)) and absf(value) <= 9007199254740991.0: return int(value)
+	if value is Dictionary:
+		for key: Variant in (value as Dictionary).keys():
+			if str(key) in preload("res://scripts/loot/current523_native_fields.gd").HEAVY: continue
+			value[key] = normalize_loaded_integers(value[key])
+	elif value is Array:
+		for index: int in (value as Array).size(): value[index] = normalize_loaded_integers(value[index])
+	return value
+
+## Restores the integer types of the 523 ownership proof data in a parsed save.
+static func normalize_loaded_save(data: Dictionary) -> void:
+	normalize_loaded_identities(data)
+	const RECEIPT := "source_native_stack_receipt"
+	if data.get("consumable_state") is Dictionary: normalize_loaded_integers(data.consumable_state)
+	var holders: Array = []
+	if data.get("item_instances") is Dictionary: holders.append(data.item_instances)
+	if data.get("warehouse") is Dictionary and data.warehouse.get("instances") is Dictionary: holders.append(data.warehouse.instances)
+	for holder: Dictionary in holders:
+		for entry: Variant in holder.values():
+			if entry is Dictionary and entry.has(RECEIPT): normalize_loaded_integers(entry[RECEIPT])
+	if data.get("ground_drops") is Array:
+		for drop: Variant in data.ground_drops:
+			if drop is Dictionary and drop.get("physical_item") is Dictionary and drop.physical_item.get("data") is Dictionary and drop.physical_item.data.has(RECEIPT):
+				normalize_loaded_integers(drop.physical_item.data[RECEIPT])
+
 ## Bake key part for the archive verified in _open(); "" when none is open.
 static var _verified_sha: String = ""
 static var _verified_bytes: int = -1
