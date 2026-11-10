@@ -141,6 +141,11 @@ func run() -> void:
 		if member.contains("14121"):
 			DirAccess.remove_absolute(raw_path)
 		else:
+			# Members are re-verified when their size or modification time
+			# changes (user decision 2026-11-11, see reference_sp2_bank.gd).
+			# A real rewrite changes the time; wait past the 1 s resolution so
+			# this same-size one-byte corruption is a real change.
+			await create_timer(1.1).timeout
 			var corrupt: PackedByteArray = raw.duplicate()
 			corrupt[0] ^= 1
 			write_bytes(raw_path, corrupt)

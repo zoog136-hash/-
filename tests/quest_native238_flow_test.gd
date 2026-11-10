@@ -42,7 +42,7 @@ func run()->void:
 			return ERR_FILE_CANT_WRITE
 		return WRITER.write(path,data)
 	for batch: int in range(100):
-		world.quest_auto.tick(world)
+		world.quest_auto.auto_claim=true;world.quest_auto.tick(world)
 		if capture.has("candidate"):break
 	check(capture.has("candidate"),"real automatic acquisition reaches a native/held mixed reward transaction")
 	if not capture.has("candidate"):world.queue_free();quit(1);return
@@ -67,7 +67,7 @@ func run()->void:
 	for batch: int in range(100):
 		world.quest_auto.retry_at=0;world.quest_auto.next_scan=0
 		var before: int=world.quest_service.claimed.size()
-		world.quest_auto.tick(world)
+		world.quest_auto.auto_claim=true;world.quest_auto.tick(world)
 		if world.quest_service.claimed.size()==before:break
 	var completed: int=0;var pending: int=0
 	world.quest_auto.refresh_context(world)

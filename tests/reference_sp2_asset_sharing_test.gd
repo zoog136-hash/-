@@ -227,15 +227,27 @@ func run() -> void:
 	check(received.parsed_asset_key(member) != ASSETS.parsed_key(sha_c, member, members[member], raw_a), "received key differs from a pinned key for the same bytes")
 	check(image_sha(received_picture.image) == unshared_hash(raw_a, 0), "received render pixels equal the unshared path")
 
-	# 7. Shared parse never skips byte verification.
+	# 7. Shared parse never skips byte verification of a changed file. Members
+	# are re-verified when size or modification time changes (user decision
+	# 2026-11-11); wait past the 1 s time resolution so this same-size rewrite
+	# is a real change, as any rewrite on a device is.
 	var original: PackedByteArray = FileAccess.get_file_as_bytes(raw_a)
 	var changed: PackedByteArray = original.duplicate()
 	changed[changed.size() - 1] = (changed[changed.size() - 1] + 1) % 4
+	await create_timer(1.1).timeout
 	write_bytes(raw_a, changed)
 	var tampered: Dictionary = reopened.render_layer({"kind":"body","source_sprite_id":9001,"group_bit":0,"frame_index":0,"member":member}, false)
 	check(not tampered.get("ok", true) and str(tampered.get("error", "")).contains("SHA256 mismatch"), "changed member bytes fail even with a shared parse cached")
 	write_bytes(raw_a, original)
 	check(reopened.render_layer({"kind":"body","source_sprite_id":9001,"group_bit":0,"frame_index":0,"member":member}, false).get("ok", false), "restored bytes verify again")
+	# Removal and size changes are caught on the very next use, and
+	# forget_verified_members() forces a full re-hash of unchanged stamps.
+	write_bytes(raw_a, original + PackedByteArray([0]))
+	check(not reopened.render_layer({"kind":"body","source_sprite_id":9001,"group_bit":0,"frame_index":0,"member":member}, false).get("ok", true), "a size change fails at once")
+	write_bytes(raw_a, original)
+	check(reopened.render_layer({"kind":"body","source_sprite_id":9001,"group_bit":0,"frame_index":0,"member":member}, false).get("ok", false), "the restored size verifies again")
+	BANK.forget_verified_members()
+	check(reopened.render_layer({"kind":"body","source_sprite_id":9001,"group_bit":0,"frame_index":0,"member":member}, false).get("ok", false), "a forced full re-check of intact bytes passes")
 
 	# 8. Reservation/lease contract edges.
 	var owner: int = ASSETS.new_owner()

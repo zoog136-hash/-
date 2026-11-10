@@ -39,8 +39,14 @@ static func find_many(sources: Array, instances: Dictionary, names: Array) -> Di
 # - every hit is re-validated against the live array, so in-place replacement
 #   (catalog merges, fixtures) rebuilds the index instead of returning stale data;
 # - a replaced or resized array is detected by identity and size;
-# - every miss falls back to the original linear scan, so a name added in place
-#   is still found (misses keep their previous cost; hits become O(1)).
+# - a miss falls back to the original linear scan once; the miss is then
+#   remembered on that source's index entry until the array is replaced,
+#   resized, re-indexed, or forget_misses() is called. Production only ever
+#   replaces a slot in place with a record of the SAME name (catalog merges),
+#   which never turns a remembered miss into a hit. Code that renames a slot
+#   in place to a name that was already looked up must call forget_misses().
+#   (Every attack resolved the selected ammo name several times; each miss was
+#   a full scan of the boot catalogs, ~28 ms per call on a desktop CPU.)
 #
 # Memory: the index is a sorted PackedInt64Array of (String.hash() << 32 |
 # first position), 8 bytes per distinct name, instead of a name -> position
@@ -49,9 +55,11 @@ static func find_many(sources: Array, instances: Dictionary, names: Array) -> Di
 # result is still exactly the linear first match. Appended names go to a small
 # per-source tail Dictionary until the next rebuild.
 const MAX_INDEXED_SOURCES: int = 6
+const MAX_REMEMBERED_MISSES: int = 4096
 const LOW32: int = 0xFFFFFFFF
 static var _indexed_sources: Array = []
 static var index_builds: int = 0
+static var miss_scans: int = 0
 
 static func _name_of(value: Variant) -> String:
 	return str((value as Dictionary).get("name", "")) if value is Dictionary else ""
@@ -70,6 +78,7 @@ static func _index_entry(source: Array, force: bool = false) -> Dictionary:
 					var appended: Variant = source[added]
 					if not appended is Dictionary: continue
 					var appended_name: String = _name_of(appended)
+					(entry.misses as Dictionary).erase(appended_name)
 					if not tail.has(appended_name) and _candidates(source, entry, appended_name).is_empty(): tail[appended_name] = added
 				entry.size = source.size()
 				return entry
@@ -85,7 +94,7 @@ static func _index_entry(source: Array, force: bool = false) -> Dictionary:
 		seen[item_name] = true
 		keys.append(((item_name.hash() & LOW32) << 32) | position)
 	keys.sort()
-	var built: Dictionary = {"source":source, "size":source.size(), "keys":keys, "tail":{}}
+	var built: Dictionary = {"source":source, "size":source.size(), "keys":keys, "tail":{}, "misses":{}}
 	_indexed_sources.append(built)
 	while _indexed_sources.size() > MAX_INDEXED_SOURCES: _indexed_sources.pop_front()
 	index_builds += 1
@@ -124,11 +133,20 @@ static func first_by_name(source: Array, item_name: String) -> Dictionary:
 		# The indexed slot changed in place. Rebuild once and trust the new index.
 		hit = _validated(source, _index_entry(source, true), item_name)
 	if hit != null: return hit as Dictionary
+	var misses: Dictionary = _index_entry(source).misses
+	if misses.has(item_name): return {}
+	miss_scans += 1
 	for value: Variant in source:
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
 			_index_entry(source, true)
 			return value as Dictionary
+	if misses.size() >= MAX_REMEMBERED_MISSES: misses.clear()
+	misses[item_name] = true
 	return {}
+
+## Drop every remembered miss (after renaming a slot in place).
+static func forget_misses() -> void:
+	for entry: Dictionary in _indexed_sources: (entry.misses as Dictionary).clear()
 
 ## Index bytes held across sources (probe/diagnostics).
 static func index_metrics() -> Dictionary:
@@ -137,7 +155,9 @@ static func index_metrics() -> Dictionary:
 	for entry: Dictionary in _indexed_sources:
 		keys += (entry.keys as PackedInt64Array).size()
 		tail += (entry.tail as Dictionary).size()
-	return {"sources":_indexed_sources.size(), "keys":keys, "tail":tail, "key_bytes":keys * 8}
+	var misses: int = 0
+	for entry: Dictionary in _indexed_sources: misses += (entry.misses as Dictionary).size()
+	return {"sources":_indexed_sources.size(), "keys":keys, "tail":tail, "key_bytes":keys * 8, "misses":misses}
 
 ## Equivalent to find_many(sources, instances, [item_name]).get(item_name, {}).
 static func find_one(sources: Array, instances: Dictionary, item_name: String) -> Dictionary:

@@ -7,6 +7,7 @@ const MAIN := "res://Main.tscn"
 const STYLE := preload("res://scripts/boot/boot_style.gd")
 ## Boot progress record: stage lines go to user://boot_progress.log (see there).
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
+const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 const PREBAKE := preload("res://scripts/boot/source523_prebake.gd")
 const TIPS := [
 	"처음 실행할 때는 원본 데이터를 기기에 맞게 정리하느라 몇 분 걸릴 수 있습니다.",
@@ -27,6 +28,10 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var previous: String = BOOT_LOG.previous_unfinished()
 	BOOT_LOG.mark("loading_screen", {"previous_unfinished": previous})
+	# Keep last run's frame hitch record (frame_hitch.prev.json) before play starts.
+	FRAME_HITCH.start()
+	var hitch_line: String = FRAME_HITCH.previous_line()
+	if not hitch_line.is_empty(): BOOT_LOG.mark("previous_frame_hitch", {"line": hitch_line})
 	if DisplayServer.get_name() == "headless":
 		# Automated boots keep loading Main directly and synchronously.
 		set_process(false)
@@ -47,6 +52,12 @@ func _ready() -> void:
 	_status = STYLE.label("게임을 불러오는 중…", 24, STYLE.TEXT)
 	column.add_child(_status)
 	_bar = STYLE.progress_bar()
+	# The previous run's slowest frame and what took the time (the phone's
+	# own measurement; full record: frame_hitch.prev.json next to the boot log).
+	if not hitch_line.is_empty():
+		var hitch := STYLE.label(hitch_line + " · 기록 " + FRAME_HITCH.PREV_NAME, 15, STYLE.GOLD)
+		hitch.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		column.add_child(hitch)
 	_bar.custom_minimum_size = Vector2(720, 16)
 	_bar.max_value = 100.0
 	column.add_child(_bar)

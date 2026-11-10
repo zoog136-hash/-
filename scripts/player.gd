@@ -1,5 +1,6 @@
 extends CharacterBody2D
 class_name TwilightPlayer
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 signal attack_requested
 signal attack_strike(sequence: int)
@@ -143,6 +144,12 @@ func _ready() -> void:
 		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
 
 func _physics_process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_physics_step(delta)
+	FRAME_HITCH.add_self("player", hitch_started, hitch_nested)
+
+func _physics_step(delta: float) -> void:
 	physics_delta = delta
 	transform_bob_clock += delta
 	_tick_stun(delta)

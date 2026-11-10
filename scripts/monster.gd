@@ -1,5 +1,6 @@
 extends CharacterBody2D
 class_name TwilightMonster
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
@@ -555,6 +556,12 @@ func custom_frozen() -> bool:
 	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
 
 func _physics_process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_physics_step(delta)
+	FRAME_HITCH.add_self("monsters", hitch_started, hitch_nested)
+
+func _physics_step(delta: float) -> void:
 	var source523 = _patch523_service()
 	if source523 != null and not dead: source523.extensions.remaining.sync_actor(self)
 	if not dead:

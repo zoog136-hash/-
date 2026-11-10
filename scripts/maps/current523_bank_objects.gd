@@ -10,6 +10,7 @@ extends Node2D
 ## playback policy (hidden in strict mode, as for actors).
 ##
 ## Drop-in for current523_static_spr.gd: configure / refresh / metrics.
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
@@ -178,6 +179,12 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 		order += 1
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("map_objects", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
 	for node: Node2D in _nodes:
 		var sprite: Dictionary = _sprites.get(int(node.get_meta("sprite_id")), {})

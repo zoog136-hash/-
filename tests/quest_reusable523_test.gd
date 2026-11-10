@@ -23,7 +23,7 @@ func run()->void:
 	if mode=="fresh":
 		w.level=86;check(w._save_game(true)==OK,"explicit QA eligibility level, not naturally earned XP")
 		for step: int in range(100):
-			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.tick(w)
+			w.quest_auto.last_signature="";w.quest_auto.next_scan=0;w.quest_auto.auto_claim=true;w.quest_auto.tick(w)
 			if w.quest_service.save_blocked or w.quest_auto.retry_at>Time.get_unix_time_from_system():break
 	var inventory: Dictionary=w.inventory.duplicate(true);var objects: Dictionary=w.item_instances.duplicate(true);var quest: Dictionary=w.quest_service.export_state();var slots: Array=w.quickslots.duplicate(true);var rng: int=w.rng.state;var gold: int=w.gold
 	var issued: Dictionary={}
