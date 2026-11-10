@@ -4284,12 +4284,14 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
-	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
-		return
+	# Enchant scrolls open the enhancement window; the generic 523 use path
+	# would refuse them first (their generic use spec is "effect pending").
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
 		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name),item_name)
 		hud.call("open_enhancement", item_name, candidates)
+		return
+	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	var requested_id: String = str(selected.get("id", ""))
