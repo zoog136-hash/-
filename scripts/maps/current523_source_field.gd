@@ -63,9 +63,9 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	bounds=coordinates.canvas_bounds()
 	astar=AStarGrid2D.new(); astar.region=Rect2i(0,0,1,1); astar.update()
 	definition={"map_id":"m523_land_"+str(land_id),"source_map_id":land_id,"source_land_id":land_id,"source_asset_path":source_asset,"geographic_contract":GEOGRAPHIC_CONTRACT,"source_sha256":str(availability.source_inventory_sha256),"source_manifest_sha256":catalog_sha256,"origin":[minimum.x,minimum.y],"dimensions":[width,height],"layout_revision":5230001,"navigation":{"profile":OWN_PROFILE},"native_m_rules_verified":false}
-	var title: String = "M523 Land%d · %s" % [land_id,str(native_land.Name)]
-	if not inferred_placements.is_empty(): title+=" · TWILIGHT 추정 배치1"
-	data={"map_id":definition.map_id,"source_land_id":land_id,"map_name":title,"short_name":"원문 지형 · 자체 통행","layout_revision":5230001,"navigation_profile":str(policy.get("profile",OWN_PROFILE)),"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],"collision":[],"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],"navigation":{"profile":OWN_PROFILE},"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600},"native_m_rules_verified":false}
+	# The original Land name only; development tags are not shown in the game.
+	var title: String = str(native_land.Name)
+	data={"map_id":definition.map_id,"source_land_id":land_id,"map_name":title,"short_name":str(native_land.Name),"layout_revision":5230001,"navigation_profile":str(policy.get("profile",OWN_PROFILE)),"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],"collision":[],"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],"navigation":{"profile":OWN_PROFILE},"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600},"native_m_rules_verified":false}
 	loaded=true
 	if interpretation.has("spawn_source"):
 		var entry: Variant=interpretation.spawn_source
