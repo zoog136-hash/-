@@ -5,6 +5,7 @@ const BASE = preload("res://scripts/lineagem_base508.gd")
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
 const CONDITIONS = preload("res://scripts/cards/source_collection_conditions.gd")
 const EFFECTS = preload("res://scripts/cards/relic_spell_effects.gd")
+const ROWS = preload("res://scripts/resources/zip_table_rows.gd")
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SOURCE_BYTES: int = 25031173
 const INSTALLED: String = "user://source_rules/relic-patch523.zip"
@@ -17,7 +18,7 @@ static var last_error: String = "source_missing"
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "relic_spell_levels"
-const BAKE_CODE: Array[String] = ["res://scripts/cards/relic_spell_levels.gd", "res://scripts/cards/relic_spell_effects.gd"]
+const BAKE_CODE: Array[String] = ["res://scripts/cards/relic_spell_levels.gd", "res://scripts/cards/relic_spell_effects.gd", "res://scripts/resources/zip_table_rows.gd"]
 static var bake_enabled: bool = true
 
 static func _table(archive: ZIPReader, name_value: String) -> Array:
@@ -25,6 +26,14 @@ static func _table(archive: ZIPReader, name_value: String) -> Array:
 	if not archive.file_exists(path): return []
 	var value: Variant = JSON.parse_string(archive.read_file(path).get_string_from_utf8().trim_prefix("\ufeff"))
 	return value.get("rows", []) if value is Dictionary and value.get("rows") is Array else []
+
+## _indexed() of a windowed scan: {} when the whole table is empty or any row
+## lacks or repeats its ID, else the kept rows by ID.
+static func _indexed_scan(scanned: Dictionary) -> Dictionary:
+	if not scanned.get("ok", false) or int(scanned.count) == 0 or scanned.duplicate or scanned.missing: return {}
+	var out: Dictionary = {}
+	for raw: Dictionary in scanned.rows: out[int(raw.ID)] = raw
+	return out
 
 static func _indexed(rows: Array) -> Dictionary:
 	var out: Dictionary = {}
@@ -55,14 +64,27 @@ static func _build(path: String) -> Dictionary:
 	var archive := ZIPReader.new()
 	if archive.open(path) != OK: return {"ok":false, "error":"source_zip_invalid"}
 	var cards: Dictionary = _indexed(_table(archive, "BuffCard"))
-	var bonuses: Dictionary = _indexed(_table(archive, "Bonus"))
 	var types: Dictionary = _indexed(_table(archive, "BonusType"))
 	var units: Dictionary = _indexed(_table(archive, "Unit"))
 	var applications: Dictionary = _indexed(_table(archive, "BonusApplicationType"))
 	var grades: Dictionary = _indexed(_table(archive, "Grade"))
-	var descriptions: Dictionary = _indexed(_table(archive, "DescData_Korean"))
 	var mappings: Array = _table(archive, "BuffCardTranscendence")
 	var links: Array = _table(archive, "BuffCardTranscendenceBonus")
+	# Bonus (33 MB) and DescData_Korean (53 MB) are read window by window and
+	# only the rows this rule and its spell effects look up are kept: Bonus
+	# rows referenced by these links, SpellBonus and BuffBonus; descriptions of
+	# these grades. Whole-table checks (empty, duplicate or missing IDs) are
+	# kept as before.
+	var bonus_ids: Dictionary = {}
+	for link: Variant in links:
+		if link is Dictionary and link.get("BonusID") != null: bonus_ids[int(link.BonusID)] = true
+	for owner: String in ["SpellBonus", "BuffBonus"]:
+		for id: int in ROWS.scan(archive, owner, "ID", {}, "BonusID").values: bonus_ids[id] = true
+	var bonuses: Dictionary = _indexed_scan(ROWS.scan(archive, "Bonus", "ID", bonus_ids))
+	var desc_ids: Dictionary = {}
+	for grade: Variant in grades.values():
+		if grade is Dictionary and grade.get("DescID") != null: desc_ids[int(grade.DescID)] = true
+	var descriptions: Dictionary = _indexed_scan(ROWS.scan(archive, "DescData_Korean", "ID", desc_ids))
 	var server_rows: Array = _table(archive, "ServerLimit")
 	var spell_profiles: Dictionary = EFFECTS.build(archive, cards, bonuses, types, units)
 	archive.close()
