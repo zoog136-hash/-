@@ -1899,6 +1899,12 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		return
 	if field_map!=null and not loading_source_door_state:SOURCE_MAP84.saved_doors(field_map)
 	var requested_native: PlayableField = BASE508_TEST.field_for(map_id)
+	# Pre-November maps (source84, PNG maps, remakes, the old map list) are
+	# not used (user decision 2026-11-10): the world is the installed original
+	# 523 pack's Aden; other Lands open through 523 travel.
+	if requested_native == null and (map_id != CURRENT523_HOST.MAP_ID or not CURRENT523_HOST.requested()):
+		_reject_map_pack("원본 523 리소스 팩의 지도만 사용합니다. 예전 지도는 열지 않습니다")
+		return
 	if requested_native == null and NATIVE_PNG.supports(map_id) and not SOURCE_MAP84.supports(map_id):
 		requested_native = NATIVE_PNG.load_field(map_id)
 		if requested_native == null:
@@ -1924,7 +1930,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		requested_original = CURRENT523_HOST.load_field(_aden_play_controller())
 		if requested_original == null:
 			CURRENT523_HOST.fail_session()
-			hud.show_message("523 아덴 지도를 열 수 없습니다: " + CURRENT523_HOST.problem)
+			# No older map is substituted.
+			_reject_map_pack("523 아덴 지도를 열 수 없습니다: " + CURRENT523_HOST.problem)
+			return
 	if requested_native != null or requested_original != null:
 		pass
 	elif SOURCE_MAP84.supports(map_id):
@@ -2125,7 +2133,9 @@ func _reject_map_pack(message: String) -> void:
 	if field_map==null and field_renderer==null and map_background.texture==null:
 		if not map_bootstrap_blocked:map_prior_process_mode=process_mode
 		map_bootstrap_blocked=true
-		source_save_blocked=true
+		# Protect an existing save made on a map; a new character with no save
+		# yet has nothing to protect (no map pack installed: nothing to walk).
+		source_save_blocked=FileAccess.file_exists(save_path())
 		process_mode=Node.PROCESS_MODE_DISABLED
 
 func _set_visual_mode(mode: String) -> void:
