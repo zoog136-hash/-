@@ -16,6 +16,14 @@ var _root: String = ""
 var _manifest_sha256: String = ""
 var _atlas_storage: String = "png"
 var _tiles: Dictionary = {}
+## After the first verified load the tile rows live in a device-local record
+## bake (keyed by the manifest pin and this script) and are read when an atlas
+## is decoded; only each tile's block count stays in memory. The manifest
+## bytes are still hash-checked on every load.
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+static var bake_enabled: bool = true
+var _records: RefCounted
+var _blocks: Dictionary = {}
 var _cache: Dictionary = {}
 var _recent: Array[int] = []
 
@@ -29,6 +37,8 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_manifest_sha256 = ""
 	_atlas_storage = "png"
 	_tiles.clear()
+	_blocks.clear()
+	_records = null
 	_cache.clear()
 	_recent.clear()
 	problem = ""
@@ -39,7 +49,21 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 		return _fail("Missing or oversized generic TI2 manifest")
 	var encoded: PackedByteArray = file.get_buffer(file.get_length())
 	if _hash(encoded) != expected_manifest_sha256: return _fail("Generic TI2 manifest differs from caller SHA256 pin")
+	var bake_name: String = "current523_tile_pack_" + expected_manifest_sha256.left(16)
+	var bake_key: String = BAKE.key(["current523_tile_pack.v1", expected_manifest_sha256, BAKE.code_key(["res://scripts/maps/current523_tile_pack.gd"])]) if bake_enabled else ""
+	var baked: RefCounted = BAKE.open_records(bake_name, bake_key) if not bake_key.is_empty() else null
+	if baked != null:
+		var meta: Variant = baked.read("meta")
+		if meta is Dictionary and meta.get("blocks") is Dictionary and meta.get("atlas_storage") in ["png", "runtime_ti2"] and not meta.blocks.is_empty():
+			_root = directory
+			_atlas_storage = meta.atlas_storage
+			_blocks = meta.blocks
+			_records = baked
+			_manifest_sha256 = expected_manifest_sha256
+			loaded = true
+			return true
 	var parsed: Variant = JSON.parse_string(encoded.get_string_from_utf8())
+	encoded = PackedByteArray()
 	if not parsed is Dictionary: return _fail("Invalid generic TI2 manifest")
 	if not _uint(parsed.get("schema"), 1) or int(parsed.schema) != 1 or parsed.get("kind") != "current523_ti2_subset_pack" or parsed.get("edition") != "LineageM" or not _uint(parsed.get("cumulative_version"), 523) or int(parsed.cumulative_version) != 523 or parsed.get("source_root") != "Tile/":
 		return _fail("Generic TI2 pack must be current M cumulative523")
@@ -81,9 +105,23 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_root = directory
 	_atlas_storage = storage
 	_tiles = candidate
+	for id: int in candidate: _blocks[id] = int(candidate[id].blocks)
 	_manifest_sha256 = expected_manifest_sha256
 	loaded = true
+	if not bake_key.is_empty():
+		var writer: RefCounted = BAKE.record_writer(bake_name, bake_key)
+		if writer != null:
+			for id: int in candidate: writer.add("t:%d" % id, candidate[id])
+			writer.add("meta", {"atlas_storage":storage, "blocks":_blocks})
+			if BAKE.finish_records(writer):
+				var records: RefCounted = BAKE.open_records(bake_name, bake_key)
+				if records != null:
+					_records = records
+					_tiles = {}
 	return true
+
+func _row(tile_id: int) -> Dictionary:
+	return _records.read("t:%d" % tile_id) if _records != null else _tiles[tile_id]
 
 func verified_identity() -> Dictionary:
 	return {"root":_root,"manifest_sha256":_manifest_sha256} if loaded else {}
@@ -95,15 +133,15 @@ func matches_manifest(directory: String, expected_sha256: String) -> bool:
 	return _hash(file.get_buffer(file.get_length()))==expected_sha256
 
 func has_tile(tile_id: int) -> bool:
-	return loaded and _tiles.has(tile_id)
+	return loaded and _blocks.has(tile_id)
 
 func source_usage_identity(tile_id: int) -> Dictionary:
 	if not has_tile(tile_id):return {}
-	var row: Dictionary=_tiles[tile_id]
+	var row: Dictionary=_row(tile_id)
 	return {"member":row.member,"bytes":int(row.source_bytes),"sha256":row.source_sha256}
 
 func has_subimage(tile_id: int, frame8bit: int) -> bool:
-	return has_tile(tile_id) and frame8bit>=0 and frame8bit<int(_tiles[tile_id].blocks)
+	return has_tile(tile_id) and frame8bit>=0 and frame8bit<int(_blocks[tile_id])
 
 func texture_for(tile_id: int) -> Texture2D:
 	problem = ""
@@ -114,7 +152,7 @@ func texture_for(tile_id: int) -> Texture2D:
 		_recent.erase(tile_id)
 		_recent.append(tile_id)
 		return _cache[tile_id]
-	var row: Dictionary = _tiles[tile_id]
+	var row: Dictionary = _row(tile_id)
 	var source := FileAccess.open(_root.path_join(str(row.original_path)), FileAccess.READ)
 	if source == null or source.get_length() != int(row.source_bytes):
 		_fail("Missing or wrong-sized original TI2")

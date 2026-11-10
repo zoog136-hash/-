@@ -11,6 +11,9 @@ const MAX_PACK_BYTES: int=8*1024*1024
 static var problem: String=""
 static var loaded_path: String=""
 static var loaded_schema: String=""
+# Declared before `pack`: static variables initialize in file order.
+static var bake_enabled: bool=true
+static var loaded_from_bake: bool=false
 static var pack: Dictionary=_load_pack()
 static var new_cards: Dictionary=pack.get("new_cards",{"catalog":{},"option_definitions":[],"skill_cards":{},"source_server_limits":[],"primary_doll_buffs":{},"subslot_buffs":{},"subslot_npc_bindings":{}})
 static var options: Dictionary=pack.get("options",{"groups":{},"reviewed_primary_keys":[],"changed_primary_keys":[],"bonuses":{},"types":{},"units":{},"ui_units":{},"type_labels":{}})
@@ -29,10 +32,28 @@ static func default_path() -> String:
 	# reviewed primary correction by falling back to the older v1 projection.
 	return PATH_V2 if FileAccess.file_exists(PATH_V2) else PATH_V1
 
+## The projection is a pure function of the installed original tables and
+## the scripts that build it (about 10 s and 550 MB of temporary memory with
+## the real tables), so this device keeps the result of the same inputs.
+const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME:="card_slot_relic_input"
+const BAKE_CODE: Array[String]=["res://scripts/cards/patch523_slot_data.gd","res://scripts/cards/current523_relic_input.gd",
+	"res://scripts/cards/current523_card_identity.gd","res://scripts/cards/option_slot_definitions.gd",
+	"res://scripts/cards/current523_card_acquisition_input.gd","res://scripts/cards/current523_relic_acquisition_input.gd",
+	"res://scripts/resources/current523_definition_rows.gd"]
 static func _load_pack() -> Dictionary:
+	var source_sha: String=str(preload("res://scripts/resources/current523_definition_rows.gd").identity().get("source_sha256",""))
+	var key: String=BAKE.key(["card_slot_relic_input.v1",source_sha,BAKE.code_key(BAKE_CODE)]) if bake_enabled and not source_sha.is_empty() else ""
+	var baked: Variant=BAKE.read(BAKE_NAME,key) if not key.is_empty() else null
+	if baked is Dictionary and baked.get("candidate") is Dictionary and not baked.candidate.is_empty() and baked.get("problem") is String:
+		problem=baked.problem
+		loaded_schema=str(baked.candidate.get("schema",""));loaded_path="current523_original_memory"
+		loaded_from_bake=true
+		return baked.candidate
 	var input=preload("res://scripts/cards/current523_relic_input.gd").new()
 	var candidate: Dictionary=input.build()
 	problem=input.problem
+	if not key.is_empty() and not candidate.is_empty(): BAKE.write(BAKE_NAME,key,{"candidate":candidate,"problem":problem})
 	loaded_schema=str(candidate.get("schema",""));loaded_path="current523_original_memory"
 	return candidate
 

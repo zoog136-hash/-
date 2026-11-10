@@ -15,6 +15,11 @@ static var _conditions = CONDITIONS.new()
 static var revision: int = 0
 static var last_error: String = "source_missing"
 
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "relic_spell_levels"
+const BAKE_CODE: Array[String] = ["res://scripts/cards/relic_spell_levels.gd", "res://scripts/cards/relic_spell_effects.gd"]
+static var bake_enabled: bool = true
+
 static func _table(archive: ZIPReader, name_value: String) -> Array:
 	var path: String = "content/" + name_value + ".json"
 	if not archive.file_exists(path): return []
@@ -36,6 +41,17 @@ static func _checked(path: String) -> Dictionary:
 	input.close()
 	if bytes != SOURCE_BYTES or FileAccess.get_sha256(path) != SOURCE_SHA256:
 		return {"ok":false, "error":"source_hash_mismatch"}
+	# The result is a pure function of the pinned archive and these scripts.
+	# Building it parses whole original tables (about 800 MB of temporary
+	# memory), so this device keeps the result of the same inputs.
+	var key: String = BAKE.key(["relic_spell_levels.v1", SOURCE_SHA256, BAKE.code_key(BAKE_CODE)]) if bake_enabled else ""
+	var baked: Variant = BAKE.read(BAKE_NAME, key) if not key.is_empty() else null
+	if baked is Dictionary and baked.get("ok") == true and baked.get("rows") is Dictionary and baked.get("source_sha256") == SOURCE_SHA256: return baked
+	var built: Dictionary = _build(path)
+	if built.get("ok", false) and not key.is_empty(): BAKE.write(BAKE_NAME, key, built)
+	return built
+
+static func _build(path: String) -> Dictionary:
 	var archive := ZIPReader.new()
 	if archive.open(path) != OK: return {"ok":false, "error":"source_zip_invalid"}
 	var cards: Dictionary = _indexed(_table(archive, "BuffCard"))
