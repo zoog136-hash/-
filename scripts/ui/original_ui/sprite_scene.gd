@@ -808,12 +808,14 @@ func _sync_source_display(node: Node, inherited: Color) -> void:
 	for child: Node in node.get_children():_sync_source_display(child,display)
 
 
-func project_player(project_offsets: Array[int]) -> Dictionary:
+func project_player(project_offsets: Array) -> Dictionary:
+	# Untyped: callers pass literals of untyped consts (typed Array[int] rejected them).
 	# Exact offsets keep repeated child CSBs distinct. Callers can update
 	# their declared live fields/popups without searching by display labels
 	# or creating an alternate node tree. An empty path denotes this root.
 	var player: Variant=self
-	for offset: int in project_offsets:
+	for raw_offset: Variant in project_offsets:
+		var offset: int = int(raw_offset)
 		if player._bindings.get(offset,{}).get("role")!="project":return {"ok":false,"error":"source_project_binding_missing","offset":offset}
 		var node: Node2D=player.source_nodes.get(offset)
 		if not is_instance_valid(node) or not node.has_meta("source_project_player"):return {"ok":false,"error":"source_project_player_missing","offset":offset}
