@@ -72,7 +72,6 @@ func configure_current523(raw_root: String, interpretation: Dictionary = {}) -> 
 		"collision":[], "regions":[], "water":[], "roads":[], "surfaces":[], "npc_spawn":[], "monster_spawn":[], "portal":[],
 		"navigation":{"profile":str(policy.get("profile",OWN_PROFILE))}, "camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},
 		"streaming":{"monster_sleep_distance":1600}, "native_m_rules_verified":false}
-	if not inferred_placements.is_empty(): data.map_name+=" · TWILIGHT 추정 배치1"
 	loaded = true
 	if interpretation.has("spawn_source"):
 		var spawn: Variant = interpretation.spawn_source

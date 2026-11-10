@@ -95,7 +95,10 @@ func check() -> void:
 	if state != "idle": return
 	state = "checking"
 	_http = HTTPRequest.new()
-	_http.timeout = 20.0
+	# On its own thread: a main thread blocked by loading or a map change must
+	# not count against the request (it used to time out behind long stalls).
+	_http.use_threads = true
+	_http.timeout = 60.0
 	_http.body_size_limit = MAX_FEED_BYTES
 	add_child(_http)
 	_http.request_completed.connect(_on_feed, CONNECT_ONE_SHOT)
@@ -103,7 +106,10 @@ func check() -> void:
 
 func _on_feed(result: int, status: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or status != 200:
-		_finish("idle", "업데이트 서버에 연결하지 못했습니다")
+		# Nothing to act on: no popup over the game; the next start checks again.
+		problem = "업데이트 서버에 연결하지 못했습니다 (%d/%d)" % [result, status]
+		push_warning(problem)
+		state = "idle"
 		return
 	var value: Variant = JSON.parse_string(body.get_string_from_utf8())
 	_feed = value if value is Dictionary else {}
@@ -118,6 +124,7 @@ func _download() -> void:
 	state = "downloading"
 	DirAccess.make_dir_recursive_absolute(DIR)
 	DirAccess.remove_absolute(INCOMING)
+	_http.use_threads = true
 	_http.body_size_limit = int(_feed.size) + 1024
 	_http.timeout = 0.0
 	_http.download_file = INCOMING
