@@ -269,6 +269,13 @@ static func commit_file(name: String, value_key: String, part: String) -> bool:
 	return true
 
 ## The file of a file-format bake when its key matches and its bytes verify; "" otherwise.
+## True when a bake with this key and its declared size is present (no hash:
+## a cheap "already compiled" test; readers still verify the bytes).
+static func present(name: String, expected_key: String) -> bool:
+	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return false
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
+	return meta is Dictionary and meta.get("schema") == SCHEMA and meta.get("key") == expected_key and _size(_data(name)) == int(meta.get("bytes", -2))
+
 static func verified_file(name: String, expected_key: String) -> String:
 	var meta: Variant = _meta_checked(name, expected_key)
 	if meta == null: return ""

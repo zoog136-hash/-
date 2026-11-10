@@ -10797,6 +10797,9 @@ func set_source_card_visual_option(source_id: String, active_option_id: int) -> 
 ## Original models needed only while their window is open are released once
 ## boot is done (Lineage M style); each reloads on its next use.
 func _release_idle_original_models() -> void:
+	# Original definition reader caches kept from start-up (rows stay on
+	# storage; a later query reads them again with the same values).
+	BOOT_LOG.mark("definition_caches_released", preload("res://scripts/resources/current523_definition_rows.gd").release_caches())
 	source_shop.release_catalog()
 	# A dungeon in progress keeps its model.
 	for service: Variant in [source_dungeon_runs, dungeon_play]:

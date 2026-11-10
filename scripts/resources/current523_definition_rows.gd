@@ -43,6 +43,29 @@ static func reset() -> void:
 	_problem = ""
 	_not_installed = false
 
+## Drops what the reader keeps only to answer later queries faster, after
+## start-up has read what it needs (Lineage M style: rows stay on storage):
+## the columns read from disk tables, the small packed tables (read again from
+## their verified device bake on the next query), the relation indexes and the
+## parsed archive index. The verified archive, its identity, disk table handles
+## (row offsets; reopening one would hash the whole file again), the problem
+## and store-failure records stay. Every later query returns the same values.
+## Returns {tables, disk_columns, relations} counts that were released.
+static func release_caches() -> Dictionary:
+	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size()}
+	for table: String in _tables.keys():
+		var store: Variant = _tables[table]
+		if store is Dictionary and (store as Dictionary).has("disk"):
+			var disk: Variant = store.disk
+			released.disk_columns += (disk.loaded as Dictionary).size()
+			(disk.loaded as Dictionary).clear()
+		else:
+			_tables.erase(table)
+			released.tables += 1
+	_relations.clear()
+	_metadata.clear()
+	return released
+
 static func problem() -> String:
 	return _problem
 
