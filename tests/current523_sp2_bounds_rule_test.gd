@@ -69,5 +69,16 @@ func _initialize() -> void:
 	check(not DECODER.parse(_fixture([[0, 0, 3, 3]], square, white)).ok, "bounds larger than the samples are rejected")
 	check(not DECODER.parse(_fixture([[0, 0, 1, 2]], square, white)).ok, "bounds ending past the samples are rejected")
 	check(not DECODER.parse(_fixture([[1, 0, 2, 1]], square, white)).ok, "samples left of the bounds are rejected")
+	# Samples that end exactly on the stored end but start before the stored
+	# origin (two death frames of the ogre 1020): the canvas grows to cover them.
+	var overflow: Dictionary = DECODER.parse(_fixture([[1, 1, 2, 2]], square, white))
+	check(overflow.ok and overflow.groups[0].frames[0].bounds_rule == "half_open_overflow", "end-anchored samples before the origin are read: " + str(overflow.get("error", "")))
+	if overflow.ok:
+		var grown: Dictionary = DECODER.render(overflow, 0, 0)
+		check(grown.ok and grown.image.get_size() == Vector2i(2, 2) and grown.offset == Vector2i.ZERO and grown.image.get_pixel(0, 0).a == 1.0, "the grown canvas holds every sample at its own position")
+		check(overflow.groups[0].frames[0].raw_bounds == PackedInt32Array([1, 1, 2, 2]), "the stored bounds are retained for overflow frames")
+	check(DECODER.frame_bounds_rule(Rect2i(48, -51, 103, 81), Rect2i(22, -96, 130, 127)) == "end_inclusive_overflow", "the ogre 1020 death frame reading")
+	check(DECODER.frame_bounds_rule(Rect2i(48, -51, 103, 81), Rect2i(22, -96, 131, 128)).is_empty(), "an end that matches neither reading stays rejected")
+	check(DECODER.frame_bounds_rule(Rect2i(48, -51, 103, 81), Rect2i(60, -96, 92, 127)).is_empty(), "overflow on one axis with a start inside on the other stays rejected")
 	print("CURRENT523_SP2_BOUNDS_RULE_RESULT " + JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
