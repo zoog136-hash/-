@@ -88,7 +88,8 @@ static func menu_tile(active: bool = false) -> StyleBoxFlat:
 	return style
 static func icon(kind: String) -> Texture2D:
 	if kind == "attack":
-		if not source_icon_cache.has(kind):source_icon_cache[kind]=load("res://assets/ui/attack_sword_painted.png")
+		# The old painted icon was removed with the pre-November resources.
+		if not source_icon_cache.has(kind):source_icon_cache[kind]=load("res://assets/ui/attack_sword_painted.png") if ResourceLoader.exists("res://assets/ui/attack_sword_painted.png") else null
 		return source_icon_cache[kind]
 	# Service navigation shares one embossed symbol family. Item/skill art
 	# continues through its existing record-based resolvers below.

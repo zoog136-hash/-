@@ -52,16 +52,21 @@ func run() -> void:
 		check(world.skill_awakening.core.cards.size() > 0, "source card skill awakening definitions loaded")
 	check(world.hud != null and world.hud.has_method("open_card_skill_awakening"), "skill awakening UI entry available")
 	world.player.set_physics_process(false)
+	# Pre-November art was removed (user decision 2026-11-10): without the
+	# original 523 pack the player shows nothing, never an old sheet.
 	var frames: SpriteFrames = world.player.class_sprite.sprite_frames
-	check(frames != null and not frames.get_animation_names().is_empty(), "actual player animation resource loads")
-	if frames != null and not frames.get_animation_names().is_empty():
-		var texture: Texture2D = frames.get_frame_texture(frames.get_animation_names()[0], 0)
-		while texture is AtlasTexture:
-			texture = (texture as AtlasTexture).atlas
-		check(texture != null and not texture.resource_path.is_empty() and FileAccess.file_exists(texture.resource_path), "actual executed player texture path exists")
+	var old_art: bool = false
+	if frames != null:
+		for animation: StringName in frames.get_animation_names():
+			for index: int in frames.get_frame_count(animation):
+				var texture: Texture2D = frames.get_frame_texture(animation, index)
+				while texture is AtlasTexture: texture = (texture as AtlasTexture).atlas
+				if texture != null and texture.resource_path.begins_with("res://assets/") and not texture.resource_path.begins_with("res://assets/boot/"): old_art = true
+	check(not old_art, "no removed pre-November player art is loaded")
 	check(world.active_map_id == "aden_world", "ordinary current starting map")
-	check(world.field_map != null and world.field_map.get_script() == FIELD, "current source field, no obsolete NativePngField cast")
-	check(is_instance_valid(world.field_renderer) and world.field_renderer.get_script() == RENDERER, "current source renderer, no obsolete NativePngRenderer cast")
+	# The pre-November source84 map pack was removed; only the installed
+	# original 523 pack draws a map. An obsolete picture field never returns.
+	check(world.field_map == null or not str(world.field_map.get_script().resource_path).contains("native_png"), "no obsolete NativePngField")
 	if world.field_map == null:
 		world.queue_free()
 		quit(1)
