@@ -243,7 +243,7 @@ static func record(definition: Dictionary) -> Dictionary:
 
 static var _identity_cache: Dictionary={}
 static func _archive_identity() -> Dictionary:
-	var current: Dictionary=SOURCE.identity()
+	var current: Dictionary=_inputs().identity()
 	if _identity_cache!=current:_identity_cache=current
 	return _identity_cache
 
@@ -252,8 +252,29 @@ const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const TEMPLATE_BAKE:="native_item_templates"
 const TEMPLATE_SCHEMA:="twilight.current523.native-item-templates.v3"
 
+## The verified original as register() reads it. Production always uses this
+## default (SOURCE); standalone tests substitute synthetic rows here.
+class RegisterInputs extends RefCounted:
+	func identity() -> Dictionary: return SOURCE.identity()
+	func verified_key() -> String: return SOURCE.verified_key()
+	func row_count(table: String) -> int: return SOURCE.row_count(table)
+	func row_at(table: String,index: int) -> Dictionary: return SOURCE.row_at(table,index)
+	func declared_exclusion(table: String,row: Dictionary) -> Dictionary: return SOURCE.declared_exclusion(table,row)
+static var register_inputs: RegisterInputs=null
+static var _default_inputs: RegisterInputs=null
+static func _inputs() -> RegisterInputs:
+	if register_inputs!=null:return register_inputs
+	if _default_inputs==null:_default_inputs=RegisterInputs.new()
+	return _default_inputs
+
+## Test-only fault injection for the template writer (never set in
+## production): "create", "write:<n>" (the n-th record write fails),
+## "finish" (index/close fails), "commit" (publish fails), "reopen" (the
+## committed file does not reopen).
+static var template_fault: String=""
+
 static func _template_key() -> String:
-	return BAKE.key([SOURCE.verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
+	return BAKE.key([_inputs().verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
 
 ## Baked native records by ItemClass ID (one var per record, offsets indexed).
 class TemplateStore extends RefCounted:
@@ -300,32 +321,62 @@ class TemplateStore extends RefCounted:
 			for index: int in (value as Array).size():value[index]=_shared(value[index])
 		return value
 
+## Streams native records into the template bake one at a time. Every step
+## reports its result: add() is false once a write failed (the writer then
+## stays failed), finish() is {ok, stage} and removes its part file on any
+## failure; abort() discards it.
 class TemplateWriter extends RefCounted:
 	var file: FileAccess
+	var part: String=""
 	var ids: PackedStringArray=[]
 	var positions: PackedInt64Array=[]
 	var ok: bool=true
-	static func start() -> TemplateWriter:
+	## Injected fault (tests only; "" in production), see template_fault.
+	var fault: String=""
+	var fault_at: int=-1
+	static func start(injected: String="") -> TemplateWriter:
 		var path: String=BAKE.data_path(TEMPLATE_BAKE)
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+		if injected=="create":return null
 		var writer:=TemplateWriter.new()
-		writer.file=FileAccess.open(path+".part",FileAccess.WRITE)
+		writer.fault=injected
+		writer.part=path+".part"
+		writer.file=FileAccess.open(writer.part,FileAccess.WRITE)
+		if injected.begins_with("write:"):writer.fault_at=int(injected.trim_prefix("write:"))
 		return writer if writer.file!=null else null
-	func add(id: String,record: Dictionary) -> void:
+	func add(id: String,record: Dictionary) -> bool:
+		if not ok or file==null:return false
 		var light: Dictionary={};var fields: Dictionary={}
 		for key: Variant in record:
 			if key in FIELDS.HEAVY:fields[key]=record[key]
 			else:light[key]=record[key]
 		ids.append(id);positions.append(file.get_position())
-		file.store_var(light);file.store_var({"keys":record.keys(),"fields":fields})
-	func finish(value_key: String) -> void:
+		var stored: bool=file.store_var(light)
+		stored=file.store_var({"keys":record.keys(),"fields":fields}) and stored
+		ok=stored and file.get_error()==OK and ids.size()!=fault_at
+		return ok
+	func abort() -> void:
+		if file!=null:file.close()
+		file=null
+		if not part.is_empty():DirAccess.remove_absolute(part)
+		ok=false
+	func finish(value_key: String) -> Dictionary:
+		if not ok or file==null:
+			abort()
+			return {"ok":false,"stage":"write"}
 		var index_position: int=file.get_position()
-		file.store_var({"schema":TEMPLATE_SCHEMA,"ids":ids,"offsets":positions})
-		file.store_64(index_position)
-		var stored: bool=file.get_error()==OK
+		var stored: bool=file.store_var({"schema":TEMPLATE_SCHEMA,"ids":ids,"offsets":positions})
+		stored=file.store_64(index_position) and stored
+		stored=stored and file.get_error()==OK and fault!="finish"
 		file.close()
-		var part: String=BAKE.data_path(TEMPLATE_BAKE)+".part"
-		if not stored or not BAKE.commit_file(TEMPLATE_BAKE,value_key,part):DirAccess.remove_absolute(part)
+		file=null
+		if not stored:
+			DirAccess.remove_absolute(part)
+			return {"ok":false,"stage":"finish"}
+		if fault=="commit" or not BAKE.commit_file(TEMPLATE_BAKE,value_key,part):
+			DirAccess.remove_absolute(part)
+			return {"ok":false,"stage":"commit"}
+		return {"ok":true}
 
 static func _open_templates() -> TemplateStore:
 	var path: String=BAKE.verified_file(TEMPLATE_BAKE,_template_key())
@@ -343,20 +394,56 @@ static func _open_templates() -> TemplateStore:
 	for position: int in (index.ids as PackedStringArray).size():store.offsets[index.ids[position]]=index.offsets[position]
 	return store
 
+## Template store failure of this process, keyed by the template key: the
+## same failed cold pass is not repeated by the second registration of this
+## start (it is retried on the next start, or after clear_template_failure()).
+static var _template_failure: Dictionary={}
+static func template_problem() -> String:
+	return str(_template_failure.get("message",""))
+static func clear_template_failure() -> void:
+	_template_failure={}
+
+## Safe stop of a cold registration whose template bake could not be created,
+## written, committed or reopened. The catalog and document are left exactly
+## as they were (no native record is published without a readable template,
+## and no full record is kept as a resident fallback); saved items, their
+## quantity and enhancement are not touched. The partial file is removed.
+static func _template_stop(stage: String,writer: TemplateWriter,identity: Dictionary,value_key: String) -> Dictionary:
+	if writer!=null:writer.abort()
+	# A commit that failed half way may have left an unpublished data file.
+	if stage=="commit":BAKE.clear(TEMPLATE_BAKE)
+	var message: String="원본 아이템 템플릿을 기기 저장소에 만들지 못했습니다(단계: "+stage+"). 저장 공간과 쓰기 권한을 확인한 뒤 게임을 다시 시작하면 다시 시도합니다. 보유 아이템·수량·강화 상태는 변경하지 않았습니다."
+	_template_failure={"key":value_key,"stage":stage,"message":message}
+	print("CURRENT523_NATIVE_TEMPLATE_STORE_STOPPED "+JSON.stringify({"stage":stage}))
+	return {"ok":false,"reason":"native_item_template_store_failed","stage":stage,"message":message,"retry":"next_start","source_definition_archive":identity,"ownership_changed":false,"executed_gameplay":false}
+
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
-	if SOURCE.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
+	var src: RegisterInputs=_inputs()
+	if src.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
 	# World._load_data registers through the drop owner and again through the
 	# craft catalog with the same inputs. The pass is deterministic and only
 	# replaces native records with themselves, so an identical second pass on
 	# the same catalog reuses the first result instead of describing ~34,700
 	# items again (about 80 s on desktop, far longer on a phone).
 	var contract: Variant=catalog.get("patch523_crafting_catalog_contract",{})
-	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==SOURCE.identity() and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
+	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==src.identity() and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
 		var registered: int=0
 		for record: Variant in catalog.get("아이템",[]):
-			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==SOURCE.identity():registered+=1
+			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==src.identity():registered+=1
 		if registered>=int(document.get("current_native_registered_count",-1)):
-			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
+			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":src.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
+	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
+	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
+	# Item templates (Lineage M style): every native record is a pure function
+	# of the verified original and this code, so it is baked once on the
+	# device and read back by ID on later starts instead of describing every
+	# item again. Any code/data change or damaged file rebuilds the bake.
+	var templates: TemplateStore=_open_templates()
+	var value_key: String=_template_key()
+	if templates==null and lazy and not _template_failure.is_empty() and _template_failure.get("key")==value_key:
+		return _template_stop(str(_template_failure.stage),null,src.identity(),value_key)
+	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start(template_fault)
+	if templates==null and writer==null and lazy:return _template_stop("create",null,src.identity(),value_key)
 	# Records are replaced, never edited in place, so a shallow copy keeps the
 	# input catalog untouched without a second deep copy of every record.
 	var records: Array=catalog.get("아이템",[]).duplicate(false);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
@@ -377,24 +464,26 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	var cache: Dictionary=owner.call("data") if not indexed else {}
 	var references: Dictionary=cache.get("source_item_references",{})
 	var definitions: Dictionary=cache.get("item_definitions",{})
-	# Item templates (Lineage M style): every native record is a pure function
-	# of the verified original and this code, so it is baked once on the
-	# device and read back by ID on later starts instead of describing every
-	# item again. Any code/data change or damaged file rebuilds the bake.
-	var templates: TemplateStore=_open_templates()
-	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
-	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
 	var placed: Array[int]=[]
-	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start()
+	# Cold pass (no readable template): each record is built, written to the
+	# template part file and immediately reduced to its light form, so at most
+	# one full record is alive at a time (the batch is one record); the full
+	# record is never kept until the end of the loop. The light records stay
+	# local (`records`) and are published only after the template file is
+	# committed, reopened and checked to hold every written ID. Their display
+	# names (a template field) are kept beside them for identity comparisons
+	# against later rows of this same pass, until the pass ends.
+	var staged_display: Dictionary={}
 	# Light baked records below are read through FIELDS.field(), so their
 	# templates are reachable while registering (bound again after the loop).
 	if templates!=null and lazy:FIELDS.bind(templates)
 	# Rows are streamed from the packed reader, not materialized all at once.
-	for row_index: int in SOURCE.row_count("ItemClass"):
-		var raw: Dictionary=SOURCE.row_at("ItemClass",row_index)
-		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",raw).is_empty():continue
+	for row_index: int in src.row_count("ItemClass"):
+		var raw: Dictionary=src.row_at("ItemClass",row_index)
+		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not src.declared_exclusion("ItemClass",raw).is_empty():continue
 		var id: String=str(int(raw.ID));var cached: bool=bool(owner.call("has_definition",id)) if indexed else (references.has(id) or definitions.has(id))
 		var current: Dictionary={}
+		var built: bool=false
 		var baked: Variant=(templates.light(id) if lazy else templates.record(id)) if templates!=null else null
 		if baked is Dictionary:
 			current=baked
@@ -404,28 +493,56 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 			# former read-then-erase), so the bounded cache keeps its entries.
 			var definition: Dictionary=owner.call("definition_id",id) if cached or not indexed else owner.call("transient_definition",id)
 			current=definition.get("native_record",{})
+			definition={}
 			if not cached and not indexed:
 				references.erase(id);definitions.erase(id)
-			if writer!=null:writer.add(id,current)
+			if writer!=null and not writer.add(id,current):
+				if lazy:return _template_stop("write",writer,src.identity(),value_key)
+				# Eager comparison mode keeps full records anyway; it only
+				# loses the bake, as before.
+				writer.abort();writer=null
+			built=writer!=null and lazy
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
 		var key: String=str(current.sourceId);var previous: Array=positions.get(key,[])
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue
 		if previous.size()==1:
 			var saved: Dictionary=records[int(previous[0])]
-			var typed_supply: bool=saved.get("source_current523_awakening_supply")==true and saved.get("source_item")==raw and saved.get("source_definition_archive")==SOURCE.identity()
+			var typed_supply: bool=saved.get("source_current523_awakening_supply")==true and saved.get("source_item")==raw and saved.get("source_definition_archive")==src.identity()
 			if typed_supply:admitted.append(id);continue
-			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or FIELDS.field(saved,"source_display_name")!=FIELDS.field(current,"source_display_name"):
+			var saved_display: Variant=staged_display[int(previous[0])] if staged_display.has(int(previous[0])) else FIELDS.field(saved,"source_display_name")
+			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or saved_display!=FIELDS.field(current,"source_display_name"):
 				pending[id]="unverified_registered_source_identity_preserved";continue
-			records[int(previous[0])]=current.duplicate(true) if cached else current
+			records[int(previous[0])]=_placed(current,cached,built)
+			if built:staged_display[int(previous[0])]=FIELDS.field(current,"source_display_name")
+			else:staged_display.erase(int(previous[0]))
 			placed.append(int(previous[0]))
 		else:
-			records.append(current.duplicate(true) if cached else current);positions[key]=[records.size()-1]
+			records.append(_placed(current,cached,built));positions[key]=[records.size()-1]
+			if built:staged_display[records.size()-1]=FIELDS.field(current,"source_display_name")
 			placed.append(records.size()-1)
 		admitted.append(id)
-	if writer!=null:writer.finish(_template_key())
+		current={}
+	staged_display={}
+	var store: TemplateStore=templates
+	if writer!=null:
+		var finished: Dictionary=writer.finish(value_key)
+		if not finished.ok and lazy:return _template_stop(str(finished.stage),writer,src.identity(),value_key)
+		store=_open_templates() if finished.ok and template_fault!="reopen" else null
+		# Two-phase publish: the light records built above are exposed only
+		# when the committed template file reopens and holds every written ID.
+		if lazy:
+			var readable: bool=store!=null
+			if readable:
+				for written: String in writer.ids:
+					if not store.offsets.has(written):readable=false;break
+			if not readable:
+				store=null
+				BAKE.clear(TEMPLATE_BAKE)
+				return _template_stop("reopen",null,src.identity(),value_key)
+	elif templates==null:store=_open_templates()
+	_template_failure={}
 	# The catalog keeps the light identity of each record just registered; its
 	# heavy fields are read from the baked template when used (FIELDS.full()).
-	var store: TemplateStore=templates if templates!=null else _open_templates()
 	if store!=null:
 		store.interning=false
 		store.strings.clear()
@@ -434,9 +551,18 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 		for index: int in placed:
 			if not FIELDS.lazy(records[index]):records[index]=FIELDS.slim(records[index])
 	catalog["아이템"]=records
-	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":SOURCE.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
+	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":src.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
-	return {"ok":true,"registered_count":admitted.size(),"pending":pending,"source_definition_archive":SOURCE.identity(),"ownership_changed":false,"executed_gameplay":false}
+	return {"ok":true,"registered_count":admitted.size(),"pending":pending,"source_definition_archive":src.identity(),"ownership_changed":false,"executed_gameplay":false}
+
+## The record registration places in the catalog: a cold-built record is
+## reduced to its light form at once (FIELDS.slim(), as the former end-of-loop
+## pass did); a cached owner definition is never shared with the catalog.
+static func _placed(current: Dictionary,cached: bool,built: bool) -> Dictionary:
+	if built:
+		var light: Dictionary=FIELDS.slim(current)
+		return light.duplicate(true) if cached else light
+	return current.duplicate(true) if cached else current
 
 # Existing equipment stat consumer, evaluated from the same current original
 # ItemEnchantBonus/Bonus/BonusType/Unit rows as the public compiler. Saved item
