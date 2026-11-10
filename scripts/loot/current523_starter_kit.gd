@@ -9,8 +9,8 @@ const ORIGIN := {"kind":"twilight_starter_kit","schema":1}
 const GRANTS: Array[Dictionary] = [
 	{"item_class_id":233, "amount":100}, # 체력 회복제 (각인)
 	{"item_class_id":385, "amount":10},  # 마나 회복 물약 (각인)
-	{"item_class_id":389, "amount":500}, # 화살 (각인)
-	{"item_class_id":75174, "amount":300}, # 은 탄환 (각인)
+	# 523 arrows/bullets are physical per-unit pieces (one bag slot each), so
+	# 500 arrows filled 500 slots; ammo is bought from the 523 shop instead.
 	{"item_class_id":702, "amount":1},   # 장검
 	{"item_class_id":65291, "amount":5}, # 축복 부여 주문서 (각인)
 ]
