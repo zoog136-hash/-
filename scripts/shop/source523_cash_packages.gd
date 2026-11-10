@@ -273,6 +273,51 @@ static func native_equipment(world, item_id: int) -> Dictionary:
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
+## The first catalog record that owns original item `item_id` (not a cash box
+## or native record), as the former per-call scan of the whole catalog found
+## it. Only while install() walks the offers (hundreds of lookups in one
+## loop, during which only cash records are appended) the positions are
+## indexed and extended on append; any other call scans as before.
+static var _owner_trusted: bool = false
+static var _owner_rows: Array = []
+static var _owner_size: int = 0
+static var _owner_ids: Dictionary = {}
+static var _owner_inven: Dictionary = {}
+
+static func _owner_candidate(row: Variant) -> bool:
+	return row is Dictionary and not (row.get("source") in [TAG, ITEM_TAG] or bool(row.get("source_m_native_item", false)) or str(row.get("name", "")).contains(" · 원본#"))
+
+static func _owns(row: Dictionary, item_id: int) -> bool:
+	return int(row.get("source_item_class_id", -1)) == item_id or int(row.get("source523_shop_item_id", -1)) == item_id or (row.get("source") == "inven" and str(row.get("sourceId", "")) == str(item_id))
+
+static func _exact_owner(rows: Array, item_id: int) -> Dictionary:
+	if not _owner_trusted:
+		for row: Variant in rows:
+			if _owner_candidate(row) and _owns(row, item_id): return row
+		return {}
+	if not is_same(_owner_rows, rows) or rows.size() < _owner_size:
+		_owner_rows = rows
+		_owner_size = 0
+		_owner_ids = {}
+		_owner_inven = {}
+	for position: int in range(_owner_size, rows.size()):
+		var row: Variant = rows[position]
+		if not _owner_candidate(row): continue
+		for field: String in ["source_item_class_id", "source523_shop_item_id"]:
+			var id: int = int(row.get(field, -1))
+			if not _owner_ids.has(id): _owner_ids[id] = position
+		if row.get("source") == "inven":
+			var sid: String = str(row.get("sourceId", ""))
+			if not _owner_inven.has(sid): _owner_inven[sid] = position
+	_owner_size = rows.size()
+	var best: int = mini(int(_owner_ids.get(item_id, rows.size())), int(_owner_inven.get(str(item_id), rows.size())))
+	if best < rows.size() and _owner_candidate(rows[best]) and _owns(rows[best], item_id): return rows[best]
+	if best < rows.size():
+		# The indexed record changed in place: scan as before.
+		for row: Variant in rows:
+			if _owner_candidate(row) and _owns(row, item_id): return row
+	return {}
+
 static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionary:
 	if is_package(item_id): return {"kind":"box", "name":box_record(world, item_id).name, "record":world._find_catalog_item_record(_box_name(world, item_id))}
 	var card: Dictionary = card_reference(item_id)
@@ -281,13 +326,7 @@ static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionar
 		if not found.is_empty(): return found
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
-	var exact: Dictionary = {}
-	for row: Dictionary in world.catalog_db.get("아이템", []):
-		if row.get("source") in [TAG, ITEM_TAG] or bool(row.get("source_m_native_item", false)) or str(row.get("name", "")).contains(" · 원본#"): continue
-		var sid: String = str(row.get("sourceId", ""))
-		if int(row.get("source_item_class_id", -1)) == item_id or int(row.get("source523_shop_item_id", -1)) == item_id or (row.get("source") == "inven" and sid == str(item_id)):
-			exact = row
-			break
+	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
 	if exact.is_empty():
 		var named: Dictionary = world._find_catalog_item_record(label(item_id))
 		if not named.is_empty() and not named.get("source") in [TAG, ITEM_TAG] and not bool(named.get("source_m_native_item", false)) and not str(named.get("name", "")).contains(" · 원본#"): exact = named
@@ -333,6 +372,8 @@ static func install(world, catalog) -> Dictionary:
 	var bindings: Dictionary = {}
 	if not available() or catalog == null: return bindings
 	var seen: Dictionary = {}
+	_owner_rows = []
+	_owner_trusted = true
 	for key: String in CashMarket.data().entries:
 		var offer: Dictionary = catalog.market_offer(int(key))
 		for link: Dictionary in offer.get("products", []):
@@ -342,6 +383,8 @@ static func install(world, catalog) -> Dictionary:
 			_walk(world, item_id, seen, 0)
 			var target: Dictionary = resolve(world, item_id, false)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
+	_owner_trusted = false
+	_owner_rows = []
 	world._index_item_weights()
 	return bindings
 

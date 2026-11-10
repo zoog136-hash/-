@@ -521,6 +521,7 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	if _boot_current523_aden_review(): return
 	_load_source_dungeon_pack()
+	_weight_index_deferred = true
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
@@ -589,6 +590,7 @@ func _ready() -> void:
 	player.attack_strike.connect(func(cycle: int) -> void:
 		if int(pending_attack.get("id", -1)) == cycle and bool(pending_attack.get("normal", false)):
 			presentation_audio.play_world("attack", player.global_position))
+	_flush_item_weight_index()
 	_connect_signals()
 	if hud.has_signal("consumable_auto_settings_changed"):
 		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
@@ -1315,7 +1317,25 @@ func _effective_max_mp(item_buff_override: Variant = null) -> int:
 	var skill_percent: float=original_skills.stat("mpPct") if original_skills!=null else 0.0
 	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct") + skill_percent))))
 
+## While the world starts, a dozen services register items and each asks for
+## the weight index to be rebuilt (about 30,000 original records per pass).
+## Nothing reads the index in between, so those requests are remembered and
+## the index is built once, before the map and the save are loaded.
+var _weight_index_deferred: bool = false
+var _weight_index_pending: bool = false
+func _flush_item_weight_index() -> void:
+	_weight_index_deferred = false
+	if _weight_index_pending:
+		_weight_index_pending = false
+		_index_item_weights()
+
+## Full index passes so far (tests check the start builds it once).
+var item_weight_index_builds: int = 0
 func _index_item_weights() -> void:
+	if _weight_index_deferred:
+		_weight_index_pending = true
+		return
+	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
 	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}

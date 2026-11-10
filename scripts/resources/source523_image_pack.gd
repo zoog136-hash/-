@@ -22,6 +22,22 @@ var _textures: Dictionary = {}
 var _dummy_assets: Dictionary = {}
 var _dummy_paths: Dictionary = {}
 var _dummy_source: Dictionary = {}
+## After the first verified open the checked metadata lives in a device-local
+## record bake (user://, keyed by the manifest pin and this script) and is read
+## one record at a time; the parsed manifest and source tables (about 800 MB)
+## are not kept. The bake is never a substitute for the pack: the manifest pin
+## is checked before it is used and every image file is still hash-checked.
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME := "source523_image_pack"
+var _records: RefCounted
+## Open while the first verification runs: the big consumer tables are read
+## one at a time and their rows go straight to storage instead of staying in
+## memory together.
+var _writer: RefCounted
+## Tests compare the record bake with the in-memory metadata.
+static var bake_enabled: bool = true
+var _member_count: int = 0
+var _manifest_stamp: String = ""
 
 static func _failure(status: String, message: String, provenance: Dictionary = {}) -> Dictionary:
 	return {"ok":false, "status":status, "status_type":status, "error":message, "texture":null, "provenance":provenance}
@@ -65,8 +81,16 @@ static func open(root: String, expected_manifest_sha256: String) -> Dictionary:
 	var reader: Variant = (load("res://scripts/resources/source523_image_pack.gd") as Script).new()
 	reader._root = absolute.simplify_path()
 	reader._manifest_sha = expected_manifest_sha256
-	var result: Dictionary = reader._open_verified()
-	if not result.ok: return result
+	if not (bake_enabled and reader._open_baked()):
+		var key: String = reader._bake_key() if bake_enabled else ""
+		reader._writer = BAKE.record_writer(BAKE_NAME, key) if not key.is_empty() else null
+		var result: Dictionary = reader._open_verified()
+		if not result.ok:
+			if reader._writer != null: reader._writer.abort()
+			reader._writer = null
+			return result
+		reader._member_count = reader._members.size()
+		if reader._writer != null: reader._bake()
 	return {"ok":true, "status":"verified_pack_open", "pack":reader,
 		"metadata":reader.metadata(), "metrics":reader._manifest.metrics.duplicate(true),
 		"actual_game_consumption_observed":false}
@@ -99,8 +123,83 @@ func _json(spec: Dictionary) -> Dictionary:
 	if parsed == null: return _failure("invalid_json","Private metadata JSON cannot be parsed.")
 	return {"ok":true,"value":parsed}
 
+## The pinned manifest is hashed once; afterwards it is hashed again only
+## when its size or modification time changes.
 func _manifest_intact() -> bool:
-	return FileAccess.file_exists(_root.path_join("manifest.json")) and FileAccess.get_sha256(_root.path_join("manifest.json")) == _manifest_sha
+	var path: String = _root.path_join("manifest.json")
+	if not FileAccess.file_exists(path): return false
+	var stamp: String = "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
+	if not _manifest_stamp.is_empty() and stamp == _manifest_stamp: return true
+	_manifest_stamp = ""
+	if FileAccess.get_sha256(path) != _manifest_sha: return false
+	_manifest_stamp = stamp
+	return true
+
+func _bake_key() -> String:
+	return BAKE.key(["source523_image_pack.v1", _manifest_sha, BAKE.code_key(["res://scripts/resources/source523_image_pack.gd"])])
+
+func _open_baked() -> bool:
+	var key: String = _bake_key()
+	if key.is_empty() or not _manifest_intact(): return false
+	var records: RefCounted = BAKE.open_records(BAKE_NAME, key)
+	if records == null: return false
+	var meta: Variant = records.read("meta")
+	if not meta is Dictionary or meta.get("manifest_sha256") != _manifest_sha or not meta.get("manifest") is Dictionary or not meta.manifest.get("metrics") is Dictionary or not meta.manifest.get("source_tables") is Dictionary: return false
+	_manifest = meta.manifest
+	_dummy_assets = meta.get("dummy_assets", {})
+	_dummy_paths = meta.get("dummy_paths", {})
+	_dummy_source = meta.get("dummy_source", {})
+	_member_count = int(meta.get("member_count", 0))
+	_records = records
+	return true
+
+## Writes the verified metadata as records and drops the in-memory copies.
+## When the device cannot store it, the in-memory copies stay in use.
+func _bake() -> void:
+	var key: String = _bake_key()
+	var writer: RefCounted = _writer
+	_writer = null
+	var slim: Dictionary = _manifest.duplicate()
+	for field: String in ["members","assets","icons","consumers"]: slim.erase(field)
+	writer.add("meta", {"manifest_sha256":_manifest_sha,"manifest":slim,"dummy_assets":_dummy_assets,"dummy_paths":_dummy_paths,"dummy_source":_dummy_source,"member_count":_members.size()})
+	var by_path: Dictionary = {}
+	for id: int in _assets:
+		writer.add("a:%d" % id, _assets[id])
+		var path: String = str(_assets[id].get("path",""))
+		if not by_path.has(path): by_path[path] = PackedInt64Array()
+		by_path[path].append(id)
+	for path: String in by_path: writer.add("p:" + path, by_path[path])
+	for id: int in _icons: writer.add("i:%d" % id, _icons[id])
+	for table: String in _consumers:
+		for id: int in _consumers[table]:
+			var item: Dictionary = _consumers[table][id]
+			writer.add("c:%s:%d" % [table, id], item)
+	for path: String in _members: writer.add("m:" + path, _members[path])
+	if not BAKE.finish_records(writer): return
+	var records: RefCounted = BAKE.open_records(BAKE_NAME, key)
+	if records == null: return
+	_records = records
+	_manifest = slim
+	_members = {}; _assets = {}; _icons = {}; _consumers = {}; _source_tables = {}
+
+func _has_asset(id: int) -> bool:
+	return _records.has("a:%d" % id) if _records != null else _assets.has(id)
+func _asset(id: int) -> Dictionary:
+	return _records.read("a:%d" % id) if _records != null else _assets[id]
+func _has_icon(id: int) -> bool:
+	return _records.has("i:%d" % id) if _records != null else _icons.has(id)
+func _icon(id: int) -> Dictionary:
+	return _records.read("i:%d" % id) if _records != null else _icons[id]
+func _has_consumer(table: String, id: int) -> bool:
+	return _records.has("c:%s:%d" % [table, id]) if _records != null else _consumers.get(table,{}).has(id)
+func _consumer(table: String, id: int) -> Dictionary:
+	return _records.read("c:%s:%d" % [table, id]) if _records != null else _consumers[table][id]
+func _has_member(path: String) -> bool:
+	return _records.has("m:" + path) if _records != null else _members.has(path)
+func _member(path: String) -> Dictionary:
+	return _records.read("m:" + path) if _records != null else _members[path]
+func _source_row(table: String, index: int) -> Dictionary:
+	return _records.read("r:%s:%d" % [table, index]) if _records != null else _source_tables[table][index]
 
 func _open_verified() -> Dictionary:
 	if not _manifest_intact(): return _failure("manifest_sha_mismatch","Manifest missing or SHA-256 differs from the explicit pin.")
@@ -126,16 +225,9 @@ func _open_verified() -> Dictionary:
 		var entry: Dictionary = matches[0]
 		if entry.get("version") != 523 or entry.get("status") != "strict_json_pass" or entry.get("member_crc_verified") != true or entry.get("sha256") != spec.sha256 or entry.get("bytes") != spec.bytes or entry.get("row_count") != spec.get("row_count"):
 			return _failure("source_table_contract","Source index fingerprint differs: " + table)
-		var loaded: Dictionary = _json(spec)
+		if CONSUMER_FIELDS.has(table): continue
+		var loaded: Dictionary = _load_table(table)
 		if not loaded.ok: return loaded
-		if not loaded.value is Dictionary or not loaded.value.get("rows") is Array or loaded.value.rows.size() != int(spec.row_count): return _failure("source_table_contract","Invalid source rows: " + table)
-		_source_tables[table] = loaded.value.rows
-		var ids: Dictionary = {}
-		for row: Variant in loaded.value.rows:
-			if not row is Dictionary or not _integer(row.get(TABLE_KEYS[table])): return _failure("source_table_contract","Invalid source row key.")
-			var key: int = int(row[TABLE_KEYS[table]])
-			if ids.has(key): return _failure("duplicate_source_key","Duplicate current source row key.")
-			ids[key] = true
 	var decoder_summary: Dictionary = _json(_manifest.decoder_summary)
 	if not decoder_summary.ok: return decoder_summary
 	var catalog: Dictionary = _bytes(_manifest.decoder_catalog)
@@ -174,6 +266,8 @@ func _open_verified() -> Dictionary:
 		if record.get("original_bytes_preserved") != true or record.get("pillow_verify_and_load") != true or not record.get("format") in ["PNG","JPEG","BMP"] or not record.get("current523_component") in ["retained_noncard_lineage14964","changed4_current523","client523_files_info_verified"]:
 			return _failure("invalid_member_proof","Original member verification proof missing.")
 		_members[path] = record
+	catalog_members = {}
+	folded = {}
 	if _manifest.metrics.get("pack_members") != _members.size(): return _failure("member_catalog_mismatch","Pack member count differs.")
 	var types: Dictionary = {}
 	var type_indexes: Dictionary = {}
@@ -202,17 +296,93 @@ func _open_verified() -> Dictionary:
 		_icons[int(row.ID)] = icon
 	for table: String in CONSUMER_FIELDS:
 		var records: Variant = _manifest.consumers.get(table)
-		if not records is Array or records.size() != _source_tables[table].size(): return _failure("consumer_contract","Consumer row count differs.")
+		if not records is Array or records.size() != int(_manifest.source_tables[table].row_count): return _failure("consumer_contract","Consumer row count differs.")
 		_consumers[table] = {}
+		if _writer != null:
+			var streamed: Dictionary = _stream_consumer_table(table, records)
+			if streamed.ok: continue
+			if not streamed.get("unstreamable", false): return streamed
+		var table_loaded: Dictionary = _load_table(table)
+		if not table_loaded.ok: return table_loaded
 		for index: int in records.size():
-			var item: Dictionary = records[index]
-			var row: Dictionary = _source_tables[table][index]
-			if item.get("id") != row.ID or item.get("row_index_zero") != index or not _sha_valid(str(item.get("source_row_canonical_sha256",""))) or not item.get("roles") is Dictionary or item.roles.size() != CONSUMER_FIELDS[table].size(): return _failure("consumer_contract","Consumer source row differs.")
-			if _canonical_row_sha(row) != item.source_row_canonical_sha256: return _failure("consumer_contract","Consumer source row SHA differs.")
-			for field: String in CONSUMER_FIELDS[table]:
-				if item.roles.get(field) != row.get(field) or not _integer(item.roles.get(field)): return _failure("consumer_contract","Consumer role differs from exact source.")
-			_consumers[table][int(row.ID)] = item
+			var problem: Dictionary = _consumer_row(table, index, _source_tables[table][index], records[index])
+			if not problem.ok: return problem
+		if _writer != null:
+			for index: int in records.size(): _writer.add("r:%s:%d" % [table, index], _source_tables[table][index])
+			_source_tables.erase(table)
 	return _load_dummy_declarations(source.value)
+
+## Checks one consumer record against its exact source row and registers it.
+func _consumer_row(table: String, index: int, row: Dictionary, item: Variant) -> Dictionary:
+	if not item is Dictionary or item.get("id") != row.get("ID") or item.get("row_index_zero") != index or not _sha_valid(str(item.get("source_row_canonical_sha256",""))) or not item.get("roles") is Dictionary or item.roles.size() != CONSUMER_FIELDS[table].size(): return _failure("consumer_contract","Consumer source row differs.")
+	if _canonical_row_sha(row) != item.source_row_canonical_sha256: return _failure("consumer_contract","Consumer source row SHA differs.")
+	for field: String in CONSUMER_FIELDS[table]:
+		if item.roles.get(field) != row.get(field) or not _integer(item.roles.get(field)): return _failure("consumer_contract","Consumer role differs from exact source.")
+	_consumers[table][int(row.ID)] = item
+	return {"ok":true}
+
+## The same checks as _load_table + _consumer_row for a big consumer table,
+## parsing its pinned bytes a few MB at a time and writing each row to the
+## bake, so the whole parsed table (hundreds of MB) never sits in memory.
+## Only the pack builder's one-row-object-per-indented-block layout is
+## streamed; any other layout reports "unstreamable" before anything is
+## written and the table is loaded whole instead.
+func _stream_consumer_table(table: String, records: Array) -> Dictionary:
+	var checked: Dictionary = _bytes(_manifest.source_tables[table])
+	if not checked.ok: return checked
+	var bytes: PackedByteArray = checked.bytes
+	checked = {}
+	var head: String = bytes.slice(0, mini(bytes.size(), 64)).get_string_from_utf8().trim_prefix(String.chr(0xfeff))
+	var nl: String = "\r\n" if head.begins_with("{\r\n") else "\n"
+	if not head.begins_with("{" + nl + "  \"rows\": [" + nl + "    {" + nl): return {"ok":false,"unstreamable":true}
+	var row_end: String = nl + "    }," + nl
+	var position: int = bytes.find(0x5b) + 1
+	var ids: Dictionary = {}
+	var index: int = 0
+	var first: bool = true
+	while position < bytes.size():
+		var last: bool = position + 4 * 1024 * 1024 >= bytes.size()
+		# End the window on a line break so no UTF-8 character is split.
+		var window_end: int = bytes.size() if last else bytes.rfind(10, position + 4 * 1024 * 1024) + 1
+		if window_end <= position: return _failure("source_table_contract","Invalid source rows: " + table)
+		var text: String = bytes.slice(position, window_end).get_string_from_utf8()
+		var cut: int = text.rfind(nl + "  ]") if last else text.rfind(row_end)
+		if cut < 0:
+			if first: return {"ok":false,"unstreamable":true}
+			return _failure("source_table_contract","Invalid source rows: " + table)
+		first = false
+		var body: String = text.substr(0, cut + (0 if last else nl.length() + 5))
+		position += (text.substr(0, cut + (0 if last else row_end.length()))).to_utf8_buffer().size()
+		var rows: Variant = JSON.parse_string("[" + body + "]")
+		if not rows is Array: return _failure("source_table_contract","Invalid source rows: " + table)
+		for row: Variant in rows:
+			if not row is Dictionary or not _integer(row.get(TABLE_KEYS[table])): return _failure("source_table_contract","Invalid source row key.")
+			var key: int = int(row[TABLE_KEYS[table]])
+			if ids.has(key): return _failure("duplicate_source_key","Duplicate current source row key.")
+			ids[key] = true
+			if index >= records.size(): return _failure("source_table_contract","Invalid source rows: " + table)
+			var problem: Dictionary = _consumer_row(table, index, row, records[index])
+			if not problem.ok: return problem
+			_writer.add("r:%s:%d" % [table, index], row)
+			index += 1
+		if last: break
+	if index != records.size(): return _failure("source_table_contract","Invalid source rows: " + table)
+	return {"ok":true}
+
+## Reads one pinned source table into _source_tables and checks its row keys.
+func _load_table(table: String) -> Dictionary:
+	var spec: Dictionary = _manifest.source_tables[table]
+	var loaded: Dictionary = _json(spec)
+	if not loaded.ok: return loaded
+	if not loaded.value is Dictionary or not loaded.value.get("rows") is Array or loaded.value.rows.size() != int(spec.row_count): return _failure("source_table_contract","Invalid source rows: " + table)
+	_source_tables[table] = loaded.value.rows
+	var ids: Dictionary = {}
+	for row: Variant in loaded.value.rows:
+		if not row is Dictionary or not _integer(row.get(TABLE_KEYS[table])): return _failure("source_table_contract","Invalid source row key.")
+		var key: int = int(row[TABLE_KEYS[table]])
+		if ids.has(key): return _failure("duplicate_source_key","Duplicate current source row key.")
+		ids[key] = true
+	return {"ok":true}
 
 func _load_dummy_declarations(source_index: Array) -> Dictionary:
 	# The manifest-pinned full source index already declares this original
@@ -268,7 +438,7 @@ func _load_dummy_declarations(source_index: Array) -> Dictionary:
 
 func metadata() -> Dictionary:
 	return {"schema":1,"source_snapshot":"patch523","source_version":523,"manifest_sha256":_manifest_sha,
-		"source_tables":_manifest.get("source_tables",{}).duplicate(true),"pack_members":_members.size(),
+		"source_tables":_manifest.get("source_tables",{}).duplicate(true),"pack_members":_member_count,
 		"actual_game_consumption_observed":false,
 		"source_dummy_exclusions":_dummy_source.duplicate(true),
 		"source_current_catalog_complete":_manifest.get("metrics",{}).get("source_current_catalog_complete",false),
@@ -278,16 +448,16 @@ func resolve_consumer(table: String, id: int, field: String) -> Dictionary:
 	var provenance: Dictionary = {"source_table":table,"source_id":id,"source_field":field,"source_version":523}
 	if not CONSUMER_FIELDS.has(table) or not field in CONSUMER_FIELDS[table]: return _failure("unsupported_consumer_role","Exact consumer role is not registered.",provenance)
 	if id == 0: return _failure("zero_sentinel","Source class ID is zero.",provenance)
-	if not _consumers.get(table,{}).has(id): return _failure("missing_consumer_key","Exact source class ID is absent.",provenance)
-	var item: Dictionary = _consumers[table][id]
+	if not _has_consumer(table,id): return _failure("missing_consumer_key","Exact source class ID is absent.",provenance)
+	var item: Dictionary = _consumer(table,id)
 	provenance["source_row_index_zero"] = item.row_index_zero
 	provenance["source_table_sha256"] = _manifest.source_tables[table].sha256
 	provenance["source_row_canonical_sha256"] = item.source_row_canonical_sha256
 	var icon_id: int = int(item.roles[field])
 	provenance["icon_id"] = icon_id
 	if icon_id == 0: return _failure("zero_sentinel","Source icon role is zero.",provenance)
-	if not _icons.has(icon_id): return _failure("missing_icon_key","Exact Icon.ID is absent.",provenance)
-	var icon: Dictionary = _icons[icon_id]
+	if not _has_icon(icon_id): return _failure("missing_icon_key","Exact Icon.ID is absent.",provenance)
+	var icon: Dictionary = _icon(icon_id)
 	provenance["icon_row_index_zero"] = icon.row_index_zero
 	provenance["icon_table_sha256"] = _manifest.source_tables.Icon.sha256
 	provenance["asset_id"] = int(icon.asset_id)
@@ -297,9 +467,9 @@ func resolve_consumer(table: String, id: int, field: String) -> Dictionary:
 
 func source_consumer_row(table: String, id: int) -> Dictionary:
 	if not _manifest_intact(): return _failure("manifest_sha_mismatch","Pinned manifest changed after open.")
-	if not _consumers.get(table,{}).has(id): return _failure("missing_consumer_key","Exact source class ID is absent.")
-	var item: Dictionary = _consumers[table][id]
-	return {"ok":true,"row":_source_tables[table][int(item.row_index_zero)].duplicate(true),
+	if not _has_consumer(table,id): return _failure("missing_consumer_key","Exact source class ID is absent.")
+	var item: Dictionary = _consumer(table,id)
+	return {"ok":true,"row":_source_row(table,int(item.row_index_zero)).duplicate(true),
 		"provenance":{"source_table":table,"source_id":id,"source_row_index_zero":item.row_index_zero,
 			"source_table_sha256":_manifest.source_tables[table].sha256,
 			"source_row_canonical_sha256":item.source_row_canonical_sha256}}
@@ -308,8 +478,8 @@ func resolve_asset(asset_id: int, expected_type: int = -1, declared_path: String
 	var provenance: Dictionary = {"asset_id":asset_id,"source_version":523,"manifest_sha256":_manifest_sha}
 	if not _manifest_intact(): return _failure("manifest_sha_mismatch","Pinned manifest changed after open.",provenance)
 	if asset_id == 0: return _failure("zero_sentinel","AssetID is zero.",provenance)
-	if not _assets.has(asset_id): return _failure("missing_asset_key","Exact AssetView.AssetId is absent.",provenance)
-	var asset: Dictionary = _assets[asset_id]
+	if not _has_asset(asset_id): return _failure("missing_asset_key","Exact AssetView.AssetId is absent.",provenance)
+	var asset: Dictionary = _asset(asset_id)
 	provenance.merge(asset,true)
 	provenance["asset_view_table_sha256"] = _manifest.source_tables.AssetView.sha256
 	provenance["asset_type_table_sha256"] = _manifest.source_tables.AssetType.sha256
@@ -332,15 +502,21 @@ func resolve_asset(asset_id: int, expected_type: int = -1, declared_path: String
 func resolve_path(declared_path: String, expected_type: int = -1) -> Dictionary:
 	if not _safe_relative(declared_path): return _failure("unsafe_declared_path","Unsafe declared literal path.")
 	var matches: Array[int] = []
-	for id: int in _assets:
-		var asset: Dictionary = _assets[id]
-		if asset.path == declared_path and (expected_type == -1 or int(asset.asset_type_id) == expected_type): matches.append(id)
+	if _records != null:
+		var listed: Variant = _records.read("p:" + declared_path)
+		if listed is PackedInt64Array:
+			for id: int in listed:
+				if expected_type == -1 or int(_asset(id).asset_type_id) == expected_type: matches.append(id)
+	else:
+		for id: int in _assets:
+			var asset: Dictionary = _assets[id]
+			if asset.path == declared_path and (expected_type == -1 or int(asset.asset_type_id) == expected_type): matches.append(id)
 	if matches.size() != 1: return _failure("ambiguous_or_missing_asset_path","Literal path must have one exact typed AssetView identity.",{"path":declared_path})
 	return resolve_asset(matches[0],expected_type,declared_path)
 
 func _texture(path: String, provenance: Dictionary) -> Dictionary:
-	if not _members.has(path): return _failure("missing_current_member","Verified current member is absent.",provenance)
-	var member: Dictionary = _members[path]
+	if not _has_member(path): return _failure("missing_current_member","Verified current member is absent.",provenance)
+	var member: Dictionary = _member(path)
 	provenance["member"] = member.duplicate(true)
 	var checked: Dictionary = _bytes({"path":member.file,"bytes":member.plain_bytes,"sha256":member.sha256})
 	if not checked.ok:

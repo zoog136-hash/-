@@ -21,6 +21,14 @@ var _logical_lands: Array = []
 var _catalog_members: Dictionary = {}
 var _assets: Dictionary = {}
 var _lands: Dictionary = {}
+## After the first verified load the member inventory (the bulk of the parsed
+## manifest) lives in a device-local record bake keyed by the manifest pin and
+## this script, one record per AssetPath, read when an asset is selected. The
+## Land and AssetPath registries stay in memory. The manifest bytes are still
+## hash-checked on every load.
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+static var bake_enabled: bool = true
+var _records: RefCounted
 
 func _fail(message: String) -> bool:
 	problem = message
@@ -96,6 +104,7 @@ func _clear() -> void:
 	_catalog_members.clear()
 	_assets.clear()
 	_lands.clear()
+	_records = null
 
 func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 	_clear()
@@ -106,7 +115,21 @@ func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 	if file == null or file.get_length() <= 0 or file.get_length() > MAX_METADATA_BYTES: return _fail("Missing or oversized generic source manifest")
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	if _hash(bytes) != expected_manifest_sha256: return _fail("Generic source manifest SHA256 differs from caller pin")
+	var bake_name: String = "current523_source_pack_" + expected_manifest_sha256.left(16)
+	var bake_key: String = BAKE.key(["current523_source_pack.v1", expected_manifest_sha256, BAKE.code_key(["res://scripts/maps/current523_source_pack.gd"])]) if bake_enabled else ""
+	var baked: RefCounted = BAKE.open_records(bake_name, bake_key) if not bake_key.is_empty() else null
+	if baked != null:
+		var meta: Variant = baked.read("meta")
+		if meta is Dictionary and meta.get("assets") is Dictionary and meta.get("lands") is Dictionary and meta.lands.size() == 1065:
+			_assets = meta.assets
+			_lands = meta.lands
+			_records = baked
+			_root = directory
+			_manifest_sha256 = expected_manifest_sha256
+			catalog_loaded = true
+			return true
 	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	bytes = PackedByteArray()
 	if not value is Dictionary: return _fail("Invalid generic source manifest")
 	if value.get("schema") != 1 or value.get("kind") != "current523_s32_source_pack" or value.get("edition") != "LineageM" or value.get("cumulative_version") != 523 or value.get("delivery_status") != "PRIVATE_LOCAL_ONLY": return _fail("Generic source identity mismatch")
 	var native: Variant = value.get("native_land_table")
@@ -193,7 +216,28 @@ func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 	_root = directory
 	_manifest_sha256 = expected_manifest_sha256
 	catalog_loaded = true
+	if not bake_key.is_empty():
+		var writer: RefCounted = BAKE.record_writer(bake_name, bake_key)
+		if writer != null:
+			var grouped: Dictionary = {}
+			for member: String in members:
+				var owner: String = members[member].asset_path
+				if not grouped.has(owner): grouped[owner] = {}
+				grouped[owner][member] = members[member]
+			for owner: String in grouped: writer.add("ms:" + owner, grouped[owner])
+			writer.add("meta", {"assets":assets, "lands":lands})
+			if BAKE.finish_records(writer):
+				var records: RefCounted = BAKE.open_records(bake_name, bake_key)
+				if records != null:
+					_records = records
+					_catalog_members = {}
 	return true
+
+## The verified member rows of one AssetPath.
+func _asset_members(asset_path: String) -> Dictionary:
+	if _records == null: return _catalog_members
+	var listed: Variant = _records.read("ms:" + asset_path)
+	return listed if listed is Dictionary else {}
 
 func land_record(id: int) -> Dictionary:
 	return _lands[id].duplicate(true) if catalog_loaded and _lands.has(id) else {}
@@ -220,8 +264,9 @@ func select_asset(asset_path: String) -> bool:
 		_logical_lands.append(land.duplicate(true))
 		if land.policy_status == "classified" and land.excluded_content.is_empty(): ordinary += 1
 	if ordinary == 0: return _fail("Selected AssetPath has no classified ordinary logical Land")
-	for member: String in _catalog_members:
-		var metadata: Dictionary = _catalog_members[member]
+	var listed: Dictionary = _asset_members(asset_path)
+	for member: String in listed:
+		var metadata: Dictionary = listed[member]
 		if metadata.asset_path != asset_path: continue
 		_members[member] = metadata.duplicate(true)
 		if metadata.status != "ready": continue
@@ -274,6 +319,7 @@ func fork_catalog() -> RefCounted:
 	var result: RefCounted=get_script().new()
 	result._root=_root; result._manifest_sha256=_manifest_sha256
 	result._catalog_members=_catalog_members.duplicate()
+	result._records=_records
 	result._assets=_assets.duplicate(); result._lands=_lands.duplicate()
 	result.catalog_loaded=true
 	return result

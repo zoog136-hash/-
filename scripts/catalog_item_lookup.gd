@@ -50,6 +50,18 @@ static func _index_entry(source: Array, force: bool = false) -> Dictionary:
 		var entry: Dictionary = _indexed_sources[position]
 		if is_same(entry.source, source):
 			if not force and int(entry.size) == source.size(): return entry
+			if not force and source.size() > int(entry.size):
+				# Records were appended (services registering items one by one):
+				# index only the new tail instead of every record again. A slot
+				# that changed in place is still caught by _validated().
+				var known: Dictionary = entry.index
+				for added: int in range(int(entry.size), source.size()):
+					var appended: Variant = source[added]
+					if not appended is Dictionary: continue
+					var appended_name: String = str((appended as Dictionary).get("name", ""))
+					if not known.has(appended_name): known[appended_name] = added
+				entry.size = source.size()
+				return entry
 			_indexed_sources.remove_at(position)
 			break
 	var index: Dictionary = {}
