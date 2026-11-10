@@ -127,10 +127,8 @@ func _bind_catalog(catalog: Array, wallet_records: Array) -> bool:
 		var name: String = str(record.name)
 		if not _by_name.has(name): _by_name[name] = []
 		_by_name[name].append(record)
-		if record.get("source") == "inven":
-			var key: String = str(record.get("sourceId",""))
-			if not _by_id.has(key): _by_id[key] = []
-			_by_id[key].append(record)
+		# Same as the current projection: pre-November inven rows are not
+		# bound to original IDs (user decision 2026-11-10).
 	for record: Dictionary in catalog:
 		var value: Variant = record.get("source_item_class_id")
 		if not _integer(value) or int(value) <= 0: continue

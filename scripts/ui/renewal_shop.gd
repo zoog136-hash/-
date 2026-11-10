@@ -54,7 +54,8 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	heading.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	wallet_row.add_child(heading)
 	add_child(wallet_row)
-	vendor_profiles = REVIEWED.profiles(hud.catalog_data.get("아이템", []))
+	# Old reviewed L1J vendors are not used; only the original 523 shops.
+	vendor_profiles = []
 	vendor_filter = OptionButton.new()
 	vendor_filter.name = "ShopVendor"
 	vendor_filter.add_item("잡화 상점")
@@ -162,6 +163,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	selection_sheet.bind_shop(self,side)
 	row.configure(listing,side,315)
 	_refresh()
+	if source_catalog.available(): _open_source523.call_deferred()
 
 func _open_source523() -> void:
 	if is_instance_valid(source523_panel) or not SOURCE523.session().available(): return
@@ -198,7 +200,7 @@ func _refresh() -> void:
 		filtered.append(entry)
 		listing.add_item(_caption(entry),UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
 	if filtered.is_empty():
-		detail.text = "검색 조건에 맞는 상품이 없습니다."
+		detail.text = "원본 523 상점 상품만 판매합니다." if _goods().is_empty() else "검색 조건에 맞는 상품이 없습니다."
 		purchase.disabled = true
 		purchase.text = "상품 선택"
 		purchase_state.text = "검색 조건을 바꾸어 상품을 선택하세요."

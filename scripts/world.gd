@@ -479,33 +479,9 @@ var cha_stat: int = 9
 var stat_points: int = 0
 
 var gold: int = 100000000 # Playtest-only starting funds; existing saved funds still load unchanged.
-var inventory: Dictionary = {
-	"HP 물약":100,
-	"마나 회복 물약":10,
-	"힘센 한우 스테이크":3,
-	"귀환 주문서":10,
-	"순간이동 주문서":10,
-	"속성 강화 주문서":3,
-	"강력 HP 물약":14,
-	"축복받은 HP 물약":10,
-	"화살":500,
-	"총알":300,
-	"낡은 장검":1,
-	"초록 잎":200,
-	"드래곤의 루비":5,
-	"드래곤의 다이아몬드":3,
-	"드래곤의 용옥":1,
-	"무기 마법 주문서 (각인)":5,
-	"갑옷 마법 주문서 (각인)":5,
-	"장신구 마법 주문서 (각인)":3,
-	"축복 부여 주문서 (각인)":5,
-	"축복받은 무기 마법 주문서 (각인)":2,
-	"축복받은 갑옷 마법 주문서 (각인)":2,
-	"장인의 무기 마법 주문서 (각인)":1,
-	"장인의 갑옷 마법 주문서 (각인)":1,
-	"오림의 장신구 마법 주문서 (각인)":2,
-	"축복받은 오림의 장신구 마법 주문서 (각인)":1
-}
+## A new character starts with original 523 items (current523_starter_kit.gd);
+## pre-November item names are not used.
+var inventory: Dictionary = {}
 
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
@@ -534,7 +510,8 @@ func _ready() -> void:
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
-	crafting.load_recipes()
+	# Own TWILIGHT recipes (data/crafting/twilight_recipes.json) are not used in
+	# the game; crafting is the original 523 ItemCraft tables only.
 	inventory_automation.configure(self)
 	BOOT_LOG.step("world_load_data")
 	_load_data()
@@ -637,6 +614,11 @@ func _ready() -> void:
 	BOOT_LOG.step("world_load_game")
 	var creating_character: bool = not FileAccess.file_exists(save_path())
 	_load_game(true)
+	if creating_character:
+		var starter: Dictionary = preload("res://scripts/loot/current523_starter_kit.gd").stage(self)
+		if starter.get("ok", false):
+			inventory = starter.overrides.inventory
+			item_instances = starter.overrides.item_instances
 	BOOT_LOG.step("world_finish")
 	if _full_cards_playtest_active():
 		var playtest_totals: Dictionary = card_draw_fusion.grant_full_collection_for_playtest(10)
@@ -4308,12 +4290,14 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if CARD_PACK_ITEMS.is_pack(item_name):
 		_use_card_pack_item(item_name)
 		return
-	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
-		return
+	# Enchant scrolls open the enhancement window; the generic 523 use path
+	# would refuse them first (their generic use spec is "effect pending").
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
 		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name),item_name)
 		hud.call("open_enhancement", item_name, candidates)
+		return
+	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	var requested_id: String = str(selected.get("id", ""))
@@ -5821,7 +5805,12 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 
 func _use_potion() -> void:
 	if death_recovery.blocked(): return
-	_use_healing_item("HP 물약", 320)
+	# The original 523 HP potion; the pre-November "HP 물약" is not used.
+	var names: Array[String] = preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self)
+	if names.is_empty():
+		hud.show_message("원본 체력 회복제가 없습니다")
+		return
+	_use_quick_item(names[0])
 
 func _use_quick_item(item_name: String) -> void:
 	if death_recovery.blocked(): return
@@ -6078,13 +6067,14 @@ func _request_deferred_save() -> void:
 		return
 	deferred_save.request()
 
-## Debug builds (the Android test APK included) log any step slower than 30 ms to
-## the combat log so hitches can be read on-device without a profiler.
+## Debug builds log any step slower than 30 ms to the engine log (logcat on
+## Android). It is no longer written into the in-game chat (user: the game
+## screen should show the game, not performance notes).
 func _perf_log(label: String, started_usec: int) -> void:
-	if not OS.is_debug_build() or not is_instance_valid(hud): return
+	if not OS.is_debug_build(): return
 	var elapsed_usec: int = Time.get_ticks_usec() - started_usec
 	if elapsed_usec >= PERF_LOG_THRESHOLD_USEC:
-		hud.append_log("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
+		print("[성능] %s %d ms" % [label, int(elapsed_usec / 1000.0)])
 
 func _prepare_patch523_item_save_backup() -> Error:
 	if LOOT_DROP.PATCH523_DROPS.pack_identity().is_empty(): return OK
@@ -6418,6 +6408,7 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
+	preload("res://scripts/resources/current523_definition_rows.gd").normalize_loaded_save(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)
 	if not extra_error.is_empty():
@@ -7240,7 +7231,7 @@ func _ensure_quickslots_seeded() -> void:
 				var skill: Dictionary = value as Dictionary
 				quickslots[slot_index] = {"kind":"skill", "id":str(skill.get("name", ""))}
 				slot_index += 1
-		for item_name: String in ["HP 물약", "강력 HP 물약", "축복받은 HP 물약"]:
+		for item_name: String in preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self):
 			if slot_index >= 8:
 				break
 			quickslots[slot_index] = {"kind":"item", "id":item_name}
@@ -9415,10 +9406,9 @@ func _weapon_intrinsic_attack_speed_percent(record: Dictionary) -> float:
 	return maxf(0.0, float(WEAPON_BASE_ATTACK_SPEED.get(weapon_type, 15.0)))
 
 func _ensure_inventory_ammo_defaults() -> void:
-	if not inventory.has("화살"):
-		inventory["화살"] = 500
-	if not inventory.has("총알"):
-		inventory["총알"] = 300
+	# The pre-November free "화살"/"총알" stacks are no longer added; a new
+	# character gets the original 523 arrows/bullets from current523_starter_kit.
+	pass
 
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()

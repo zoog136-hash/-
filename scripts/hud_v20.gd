@@ -93,7 +93,7 @@ func _build_v20_gameplay_hud() -> void:
 	_build_lineage_inventory_ui()
 
 	_update_v20_portrait(0)
-	set_quick_items({"HP 물약": 100, "강력 HP 물약": 14, "축복받은 HP 물약": 10, "초록 잎": 200})
+	set_quick_items({})
 
 func _build_lineage_side_ui() -> void:
 	lineage_side_ui = LineageSideUI.new() as TwilightSideUI
@@ -978,7 +978,11 @@ func _update_source_class_portrait() -> void:
 
 func set_quick_items(inventory: Dictionary) -> void:
 	if v20_potion_count != null:
-		v20_potion_count.text = str(int(inventory.get("HP 물약", 0)))
+		# The original 523 HP potion (체력 회복제 (각인) · 원본#233); no legacy names.
+		var potions: int = 0
+		for key: Variant in inventory:
+			if str(key).ends_with("· 원본#233"): potions += int(inventory[key])
+		v20_potion_count.text = str(potions)
 	for item_name: String in v20_quick_item_buttons:
 		var button: Button = v20_quick_item_buttons[item_name] as Button
 		if button != null:

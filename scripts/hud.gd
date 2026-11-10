@@ -1100,22 +1100,8 @@ func _emit_enhancement_requested(target_name: String) -> void:
 func open_shop() -> void:
 	_open_utility_panel("상점")
 	_utility_add_text("[font_size=20][b]잡화 상점[/b][/font_size]\n보유 아데나: [color=#f2c66d]%d[/color]\n필요한 소모품을 구매할 수 있습니다." % int(character_state.get("gold", 0)))
-	for shop_data: Array in [
-		["HP 물약", 50],
-		["강력 HP 물약", 180],
-		["축복받은 HP 물약", 450],
-		["초록 잎", 100],
-		["무기 마법 주문서 (각인)", 25000],
-		["갑옷 마법 주문서 (각인)", 18000],
-		["장신구 마법 주문서 (각인)", 35000],
-		["축복 부여 주문서 (각인)", 250000],
-		["축복받은 무기 마법 주문서 (각인)", 120000],
-		["축복받은 갑옷 마법 주문서 (각인)", 90000],
-		["장인의 무기 마법 주문서 (각인)", 350000],
-		["장인의 갑옷 마법 주문서 (각인)", 300000],
-		["오림의 장신구 마법 주문서 (각인)", 150000],
-		["축복받은 오림의 장신구 마법 주문서 (각인)", 450000]
-	]:
+	# Pre-November local goods are not sold; renewal_hud opens the original 523 shop.
+	for shop_data: Array in []:
 		var item_name: String = str(shop_data[0])
 		var price: int = int(shop_data[1])
 		_utility_add_action("%s  ·  %d 아데나  [구매]" % [item_name, price], _emit_shop_buy.bind(item_name, price))

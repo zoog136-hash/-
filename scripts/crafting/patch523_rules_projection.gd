@@ -266,10 +266,9 @@ func _bind_catalog(catalog: PackedInt32Array, wallet_records: PackedInt32Array) 
 		var record: Dictionary = _rec(handle)
 		var name: String = str(record.name)
 		_by_name[name] = int(_by_name.get(name,0))+1
-		if record.get("source") == "inven":
-			var key: String = str(record.get("sourceId",""))
-			if not _by_id.has(key): _by_id[key] = []
-			_by_id[key].append(handle)
+		# Pre-November inven catalog rows are not bound to original IDs (user
+		# decision 2026-11-10): an inven "장검" #702 took the original 523 장검
+		# #702's place, so 523 enchant scrolls refused the real 523 sword.
 	for handle: int in catalog:
 		var record: Dictionary = _rec(handle)
 		var value: Variant = record.get("source_item_class_id")

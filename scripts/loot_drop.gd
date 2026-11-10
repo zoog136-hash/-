@@ -365,6 +365,10 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 			var selected: Dictionary=BASE508_DROPS.pick(source,"material","",rng)
 			if not selected.is_empty(): earned.append(selected)
 		return earned
+	# Pre-November drop tables are not used in the game (user decision
+	# 2026-11-10): a monster without original 523/508 drop rows drops nothing.
+	if not bool(catalog.get("legacy_drops_allowed", false)):
+		return earned
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
 		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng, monster_name)

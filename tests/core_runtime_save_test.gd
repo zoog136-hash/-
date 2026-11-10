@@ -87,7 +87,14 @@ func run() -> void:
 	var invalid_skill_save: Dictionary = baseline.duplicate(true)
 	invalid_skill_save["card_skill_awakening"] = {"version": -1}
 	check(not world.skill_awakening.check_load(invalid_skill_save).is_empty(), "corrupt skill awakening state rejected before mutation")
-	check(not baseline.is_empty() and not baseline.item_instances.is_empty(), "nonempty real equipment save")
+	# A new character's items are original 523 items staged from the installed
+	# pack (current523_starter_kit.gd); without the pack it starts empty and
+	# no pre-November item is given.
+	check(not baseline.is_empty() and baseline.get("inventory") is Dictionary and baseline.get("item_instances") is Dictionary, "real save with inventory and instances")
+	var legacy_names: Array = []
+	for name: Variant in baseline.inventory:
+		if not str(name).contains("· 원본#"): legacy_names.append(name)
+	check(legacy_names.is_empty(), "no pre-November item in a new character: " + str(legacy_names))
 	# Historical native-PNG/source84 save migration was removed with those
 	# maps (user decision 2026-11-10). The current save reloads unchanged.
 	world.gold = 1
