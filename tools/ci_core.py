@@ -23,6 +23,8 @@ REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|do
 CHECKS = [
     ('reference_sp2_asset_sharing_test', []),
     ('boot_progress_log_test', []),
+    ('source523_texture_cache_test', []),
+    ('source523_image_pack_texture_cache_test', []),
     ('current523_definition_stream_test', []),
     ('current523_native_register_bounded_test', []),
     ('original_ui_page_cache_test', []),
@@ -358,6 +360,8 @@ def main():
                 command += ['--', *user_args]
             marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
+                      'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',
+                      'source523_image_pack_texture_cache_test':'SOURCE523_IMAGE_PACK_TEXTURE_CACHE_RESULT',
                       'current523_definition_stream_test':'CURRENT523_DEFINITION_STREAM_RESULT',
                       'current523_native_register_bounded_test':'CURRENT523_NATIVE_REGISTER_BOUNDED_RESULT',
                       'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
