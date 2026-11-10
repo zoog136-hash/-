@@ -3,6 +3,7 @@ class_name TwilightVirtualJoystick
 
 signal vector_changed(value: Vector2)
 
+const ORIGINAL_INPUT = preload("res://scripts/original_client/oc_m84_m87_world_input.gd")
 const DEAD_ZONE: float = 0.16
 const DIRECTION_STEP: float = PI / 4.0
 
@@ -16,7 +17,9 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
 	match what:
-		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_EXIT_TREE:
+		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+			release_on_focus_loss()
+		NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_EXIT_TREE:
 			_release_pointer()
 		NOTIFICATION_VISIBILITY_CHANGED:
 			if not is_visible_in_tree():
@@ -24,6 +27,21 @@ func _notification(what: int) -> void:
 		NOTIFICATION_RESIZED:
 			_release_pointer()
 			queue_redraw()
+
+## M87: the stick is the original mouse button 0 of the focus-loss scan. It is released only
+## when its live state is exactly 1 (a finger/mouse holds it or the knob is off centre);
+## an idle stick is left untouched. Godot has no sticky mode, so the released state is 0.
+func release_on_focus_loss() -> Dictionary:
+	var window: Dictionary = ORIGINAL_INPUT.make_window()
+	(window.mouse as Array)[0] = 1 if is_held() else 0
+	return ORIGINAL_INPUT.focus_changed(window, 0, Callable(), Callable(), _on_focus_mouse_release)
+
+func _on_focus_mouse_release(_window: Dictionary, button: int, action: int, _mods: int) -> void:
+	if button == 0 and action == 0:
+		_release_pointer()
+
+func is_held() -> bool:
+	return active_touch != -1 or mouse_active or value != Vector2.ZERO
 
 func _release_pointer() -> void:
 	active_touch = -1

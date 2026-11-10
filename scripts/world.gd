@@ -315,6 +315,9 @@ var consumable_service: Node = null
 var quickslots: Array = []
 var ui_preferences: Dictionary = {"quickslot_pages":{}, "edited_quickslots":{}, "item_locks":{}}
 var auto_item_clock: float = 0.0
+## M81: the auto heal sweep runs on the original 0.5 s main timer (strict >, single subtraction).
+var auto_heal_sweep_elapsed: float = 0.0
+var auto_quickslot_order_cache: Array[int] = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
 var catalog_db: Dictionary = {}
@@ -345,6 +348,8 @@ var astar: AStarGrid2D = null
 var world_size: Vector2 = Vector2(8192, 4224)
 var tile_size: int = 32
 const WORLD_INTERACTIONS = preload("res://scripts/input/world_interactions.gd")
+const FOCUS_INPUT_RELEASE = preload("res://scripts/input/focus_input_release.gd")
+const ORIGINAL_AUTOSLOT = preload("res://scripts/original_client/oc_m81_autoslot.gd")
 const INVENTORY_GROUND_TRANSFER = preload("res://scripts/loot/inventory_ground_transfer.gd")
 var world_interactions: Node
 var ammo_notice_at: int = -10000
@@ -703,8 +708,14 @@ func _process(delta: float) -> void:
 		_request_general_save()
 	if deferred_save.tick(delta):
 		_save_game(true)
-	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
-		_run_auto_heal_quickslots()
+	# M81: the timer advances every frame; a fire runs the manager callback (enable gate, then
+	# the heal spell pass). Auto hunt itself keeps its per-frame cadence.
+	var heal_tick: Dictionary = ORIGINAL_AUTOSLOT.timer_step(auto_heal_sweep_elapsed, delta)
+	auto_heal_sweep_elapsed = float(heal_tick.elapsed)
+	var auto_active: bool = player.auto_enabled and not player.is_stunned() and charge_skill.is_empty()
+	if bool(heal_tick.fired):
+		ORIGINAL_AUTOSLOT.manager_callback(auto_active, true, _auto_quickslot_queued_pass, _auto_quickslot_spell_pass, _auto_quickslot_aux_pass)
+	if auto_active:
 		_run_auto_hunt()
 	_update_companion(delta)
 	if hud.blocks_keyboard_input():
@@ -7577,8 +7588,35 @@ func _start_skill_cooldown(skill: Dictionary) -> void:
 		skill_cooldowns[name_value] = cooldown
 	skill_global_cooldown = maxf(skill_global_cooldown, SKILL_RULES.global_cooldown_seconds(skill))
 
+## M81 priority order: absolute quickslot index i is the original pair (page i/5, button i%5),
+## sorted by page*5+button. Built once per slot count; equal to the plain index order.
+func _auto_quickslot_order() -> Array[int]:
+	if auto_quickslot_order_cache.size() != quickslots.size():
+		var pairs: Array = []
+		for index: int in range(quickslots.size()):
+			pairs.append({"page": index / 5, "button": index % 5})
+		var order: Array = ORIGINAL_AUTOSLOT.build_local_order(pairs, true, [], Callable()).order
+		auto_quickslot_order_cache.clear()
+		for pair: Dictionary in order:
+			auto_quickslot_order_cache.append(ORIGINAL_AUTOSLOT.priority_key(pair))
+	return auto_quickslot_order_cache
+
+## Manager passes. No queued single pair exists in this game (manual use is immediate) and
+## items/buffs keep their own 0.2 s / 0.8 s polls, so queued and auxiliary passes are empty.
+func _auto_quickslot_queued_pass() -> void:
+	pass
+
+func _auto_quickslot_spell_pass() -> bool:
+	_run_auto_heal_quickslots()
+	return false
+
+func _auto_quickslot_aux_pass() -> bool:
+	return false
+
 func _run_auto_heal_quickslots() -> void:
-	for value: Variant in quickslots:
+	for index: int in _auto_quickslot_order():
+		if index >= quickslots.size(): break
+		var value: Variant = quickslots[index]
 		if not (value is Dictionary):
 			continue
 		var entry: Dictionary = value as Dictionary
@@ -7599,7 +7637,9 @@ func _run_auto_heal_quickslots() -> void:
 func _run_auto_combat_quickslots() -> bool:
 	if not is_instance_valid(selected_monster) or selected_monster.dead:
 		return false
-	for value: Variant in quickslots:
+	for index: int in _auto_quickslot_order():
+		if index >= quickslots.size(): break
+		var value: Variant = quickslots[index]
 		if not (value is Dictionary):
 			continue
 		var entry: Dictionary = value as Dictionary
@@ -7834,6 +7874,14 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 			hud.show_message("스킬 탄약 저장 실패 · MP·탄약 보존")
 			return false
 	return true
+
+## M100 data for the original quickslot count: only a skill that consumes ammo has the
+## equivalent of the original BulletID mapping. The count is the ammo the skill would spend.
+func _quickslot_ammo_source(entry: Dictionary) -> Dictionary:
+	if str(entry.get("kind", "")) != "skill": return {}
+	var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
+	if skill.is_empty() or int(skill.get("ammo_per_hit", 0)) <= 0: return {}
+	return {"ammo_count": int(inventory.get(_skill_ammo_name(), 0)), "can_use_without_ammo": false}
 
 func _skill_ammo_name() -> String:
 	return _current_ammo_name() if _weapon_ammo_family()=="화살" else _skill_arrow_ammo_name()
@@ -10439,6 +10487,11 @@ func _refresh_presentation_settings() -> void:
 				if bool(presentation_settings.reduced_motion): monster.motion.visual_hold = 0.0
 
 func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
+		# M87: after focus loss release held keys whose live state is exactly pressed, so
+		# movement/attack does not stay stuck (Android background, alt-tab). Keys the
+		# engine already released, or a second focus notification, release nothing.
+		FOCUS_INPUT_RELEASE.release_game_input()
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
 		# Leaving the app flushes anything still waiting out its quiet window.
 		_save_game(true)

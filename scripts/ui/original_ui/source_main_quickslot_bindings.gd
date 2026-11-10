@@ -15,6 +15,7 @@ const AMOUNT=18112
 const COOLDOWN=16968
 const AUTO_ICON=13684
 const SLOT_SOURCE_OFFSETS: Array[int]=[20348,19808,18816,18488,18112,16968,13684]
+const ORIGINAL_COUNT=preload("res://scripts/original_client/oc_m100_m102_quickslot.gd")
 var _pack: RefCounted
 var _hud: WeakRef
 var _image_provider: Callable
@@ -52,7 +53,11 @@ func snapshot() -> Dictionary:
 		# presents. No 50-slot count, page modulus or game filter is reproduced.
 		var entry: Dictionary=entries[absolute].duplicate(true) if absolute<entries.size() and entries[absolute] is Dictionary else {}
 		var group: int=visible/5
-		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":caption.text,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
+		# M100: an ammo-using skill shows the ammo count by the original setter; every
+		# other row keeps the existing HUD caption (the game has no spell counter store).
+		var ammo: Dictionary=world.call("_quickslot_ammo_source",entry) if world.has_method("_quickslot_ammo_source") and not entry.is_empty() else {}
+		var amount: Dictionary=amount_presentation(not entry.is_empty(),caption.text,ammo)
+		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
 	return {"ok":true,"rows":rows,"pages":pages.duplicate(true),"model_basis":"existing HUD quickslot_index/entries/captions/cooldown_labels and World._quickslot_pages","partial_source_scene":true,"complete_screen_contract":false}
 
 func build_group(group: int) -> Dictionary:
@@ -79,7 +84,7 @@ func build_group(group: int) -> Dictionary:
 			# Empty clicks remain the existing HUD action, never disabled here.
 			BUTTON:{"role":"button","activate":Callable(self,"activate_presented").bind(visible,_presented_identity(row))},
 			ICON:{"role":"source_asset_slot","visible":false},
-			AMOUNT:{"role":"source_text","text":row.amount_text,"visible":row.filled and not str(row.amount_text).is_empty()},
+			AMOUNT:{"role":"source_text","text":row.amount_text,"visible":bool(row.amount_visible)},
 			COOLDOWN:{"role":"source_text","text":row.cooldown_text,"visible":row.filled and not str(row.cooldown_text).is_empty()},
 			AUTO_ICON:{"visible":row.filled and bool(row.auto)}
 		}
@@ -127,7 +132,8 @@ func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 		var value: String=current[pair[1]]
 		var result: Dictionary=scene.set_bound_text(int(pair[0]),value)
 		if not result.get("ok",false):return result
-		result=scene.set_bound_visible(int(pair[0]),current.filled and not value.is_empty())
+		var shown_now: bool=bool(current.amount_visible) if int(pair[0])==AMOUNT else current.filled and not value.is_empty()
+		result=scene.set_bound_visible(int(pair[0]),shown_now)
 		if not result.get("ok",false):return result
 	var shown: Dictionary=scene.set_bound_visible(AUTO_ICON,current.filled and bool(current.auto))
 	if not shown.get("ok",false):return shown
@@ -138,6 +144,32 @@ func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 	# and a real entry/page change are handled by the caller's staged rebuild.
 	scene.set_meta("source_quickslot_identity",current_identity)
 	return {"ok":true,"row":current,"image_lookup_performed":false,"game_state_written":false}
+
+## Amount node text/visibility. `ammo` is empty unless the slot is a skill that consumes ammo:
+## {"ammo_count": int, "can_use_without_ammo": bool}. Then the game data is projected onto the
+## original refresh: one spell slot whose raw key hits a BulletID mapping row, a loaded row
+## whose CanUseSpellWithoutAmmo byte is the game rule, and the ammo store holding the count.
+## Everything else (items, skills without ammo) is the existing caption, unchanged.
+static func amount_presentation(filled: bool,existing_text: String,ammo: Dictionary) -> Dictionary:
+	if not filled or ammo.is_empty():
+		return {"text":existing_text,"visible":filled and not existing_text.is_empty(),"basis":"existing_caption"}
+	var mapping:=PackedByteArray()
+	mapping.resize(0x30)
+	mapping.encode_s32(ORIGINAL_COUNT.MAPPING_ROW_BULLET_ID,1)
+	var loaded:=PackedByteArray()
+	loaded.resize(0x30)
+	loaded[ORIGINAL_COUNT.LOADED_ROW_WITHOUT_AMMO]=1 if bool(ammo.get("can_use_without_ammo",false)) else 0
+	# Game skills carry no stack counter (the original SpellManager+188 store is absent).
+	var never_stackable:=func(_id: int) -> bool: return false
+	var no_stack:=func(_id: int) -> int: return 0
+	var model: Dictionary={"slots":{0:{"metadata_id":1,"dword10":1,"is_spell":true}},
+		"stackable":never_stackable,"stack_count":no_stack,
+		"mapping_rows":{1:mapping},"loaded_rows":{1:loaded},"service_c0":{1:int(ammo.get("ammo_count",0))},"reload_90":{},"reads":[]}
+	var result: Dictionary=ORIGINAL_COUNT.refresh(model,{"bucket":0,"index":0})
+	var visible: bool=filled
+	for op: Array in result.get("ops",[]):
+		if op[0]=="Nd_Count.visible":visible=bool(op[1])
+	return {"text":str(int(result.count)),"visible":visible,"basis":"original_ammo_count","flag34":int(result.flag34),"flag35":int(result.flag35)}
 
 static func _entry_identity(entry: Dictionary) -> Dictionary:
 	var identity: Dictionary=entry.duplicate(true)
