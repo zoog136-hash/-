@@ -220,6 +220,7 @@ static func install(path: String) -> Dictionary:
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "protection523_original"
+const BAKE_SCHEMA := "twilight.protection523.original-bake.v1"
 
 static func restore() -> Dictionary:
 	var selected := FileAccess.open(POINTER,FileAccess.READ)
@@ -235,7 +236,7 @@ static func restore() -> Dictionary:
 		# The extraction is a pure function of the verified original and this
 		# code; a later start reuses this device's baked result.
 		var verified: bool = CommonSource.identity().get("source_sha256") == SOURCE_SHA
-		var bake_key: String = BAKE.projection_key(BAKE_NAME, CommonSource.verified_key()) if verified else ""
+		var bake_key: String = BAKE.producer_key(BAKE_NAME, "protection523", BAKE_SCHEMA, CommonSource.verified_key()) if verified else ""
 		var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 		if baked is Dictionary and bool((baked as Dictionary).get("ok", false)): return baked
 		var original := extract(source_path)

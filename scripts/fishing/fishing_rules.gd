@@ -55,12 +55,13 @@ func load_pack(path: String) -> bool:
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BAKE_NAME := "fishing523_input"
+const BAKE_SCHEMA := "twilight.fishing523.input-bake.v1"
 
 func load_original() -> bool:
 	# The built input is a pure function of the verified original and this
 	# code; a later start reuses this device's baked build.
 	var archive_sha: String = str(ORIGINAL.SOURCE.identity().get("source_sha256",""))
-	var bake_key: String = BAKE.projection_key(BAKE_NAME, archive_sha) if not archive_sha.is_empty() else ""
+	var bake_key: String = BAKE.producer_key(BAKE_NAME, "fishing523", BAKE_SCHEMA, archive_sha) if not archive_sha.is_empty() else ""
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	var data: Dictionary = baked if baked is Dictionary and not (baked as Dictionary).is_empty() else {}
 	if not data.is_empty(): _share_admitted_rows(data)

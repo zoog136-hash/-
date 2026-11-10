@@ -49,15 +49,66 @@ static func _source_selection(rows: Array, field: String, ids: Dictionary) -> Ar
 		if ids.has(int(row.get(field,-1))): selected.append(row)
 	return selected
 
-func _original_projection() -> Dictionary:
+## Rows of `table` whose `field` (as int()) is a key of `ids`, in original
+## table order: exactly _source_selection(source.rows(table), field, ids),
+## without building every row of the table as a Dictionary first.
+## Bounded cost: one cached packed column of `field` (8 bytes per row for a
+## numeric column; current523_definition_rows keeps it while the table is
+## open) plus the selected rows. No relation index is built (no related()).
+static func _select(source: Variant, table: String, field: String, ids: Dictionary) -> Array:
+	var selected: Array = []
+	if source.integer_field(table, field):
+		# Every value is an integer, so the reader's _integer()+int() match is
+		# the same predicate as int(row.get(field,-1)) over the same rows.
+		selected.append_array(source.rows_matching(table, field, ids))
+		return selected
+	var count: int = source.row_count(table)
+	var values: Variant = source.column(table, field)
+	if values.size() == count:
+		# Every row has the field; same int() of the same value per row.
+		for index: int in count:
+			if ids.has(int(values[index])): selected.append(source.row_at(table, index))
+		return selected
+	# Some row lacks the field (-1 like before): one row at a time.
+	for index: int in count:
+		var row: Dictionary = source.row_at(table, index)
+		if ids.has(int(row.get(field,-1))): selected.append(row)
+	return selected
+
+## int(row.ID) of every row of `table` sorted, from the ID column only.
+static func _sorted_ids(source: Variant, table: String) -> PackedInt64Array:
+	var count: int = source.row_count(table)
+	var values: Variant = source.column(table, "ID")
+	var ids := PackedInt64Array()
+	if values.size() == count:
+		ids.resize(count)
+		for index: int in count: ids[index] = int(values[index])
+	else:
+		for index: int in count: ids.append(int(source.row_at(table, index).ID))
+	ids.sort()
+	return ids
+
+func _original_projection(source: Variant = SOURCE_ROWS) -> Dictionary:
 	# Same source-order projection as build_expedition523_pack.py. This reads
 	# MagicDoll expedition data; it introduces no pet aliases or new eligibility.
+	# Cold path (no record bake): the large shared tables (ItemBonus, Bonus,
+	# BonusType, ItemClass, LuckyBag*, Reward, Currency*) are never built as
+	# whole Dictionary arrays; only the rows reachable from Spot/Reward are
+	# read, by ID column (_select). Results, order and every rejection are
+	# the same as the former whole-table filter (tests/expedition523_cold_
+	# selection_test.gd compares both on synthetic tables).
 	var t: Dictionary = {}
-	for suffix: String in ORIGINAL_CORE_SUFFIXES: t[P+suffix] = SOURCE_ROWS.rows(P+suffix)
-	for name: String in ORIGINAL_SYNERGY + ["Grade","BuffCard"]: t[name] = SOURCE_ROWS.rows(name)
+	for suffix: String in ORIGINAL_CORE_SUFFIXES: t[P+suffix] = source.rows(P+suffix)
+	for name: String in ORIGINAL_SYNERGY + ["Grade","BuffCard"]: t[name] = source.rows(name)
 	var constants: Array = []
-	for row: Dictionary in SOURCE_ROWS.rows("ConstantData"):
-		if str(row.Name).contains("Expedition") or row.Name=="PolymorphDispatchLevel": constants.append(row)
+	var constant_names: Variant = source.column("ConstantData", "Name")
+	if constant_names.size() == source.row_count("ConstantData"):
+		for index: int in constant_names.size():
+			var constant_name: Variant = constant_names[index]
+			if str(constant_name).contains("Expedition") or constant_name=="PolymorphDispatchLevel": constants.append(source.row_at("ConstantData", index))
+	else:
+		for row: Dictionary in source.rows("ConstantData"):
+			if str(row.Name).contains("Expedition") or row.Name=="PolymorphDispatchLevel": constants.append(row)
 	t["ConstantData"] = constants
 	var reward_ids: Dictionary = {}
 	var completion_reward_ids: Dictionary = {}
@@ -65,25 +116,37 @@ func _original_projection() -> Dictionary:
 	for row: Dictionary in t[P+"CompleteRewardView"]:
 		reward_ids[int(row.RewardID)] = true
 		completion_reward_ids[int(row.RewardID)] = true
-	t["Reward"] = _source_selection(SOURCE_ROWS.rows("Reward"),"ID",reward_ids)
+	t["Reward"] = _select(source,"Reward","ID",reward_ids)
 	var item_ids: Dictionary = {}
 	var completion_items: Dictionary = {}
 	for row: Dictionary in t.Reward:
 		if row.RewardTypeID==2: item_ids[int(row.RewardClassID)] = true
 		if completion_reward_ids.has(int(row.ID)): completion_items[int(row.RewardClassID)] = true
-	var all_item_bonus: Array = SOURCE_ROWS.rows("ItemBonus")
-	var all_bonus: Array = SOURCE_ROWS.rows("Bonus")
-	var all_types: Array = SOURCE_ROWS.rows("BonusType")
-	var bonus_index: Dictionary = {}
-	for row: Dictionary in all_bonus:
-		if bonus_index.has(int(row.ID)):
+	# Whole-table rule kept: any duplicate Bonus ID rejects the original. It
+	# is checked over the ID column only (sorted int64), not over row objects.
+	var all_bonus_ids: PackedInt64Array = _sorted_ids(source, "Bonus")
+	for index: int in range(1, all_bonus_ids.size()):
+		if all_bonus_ids[index] == all_bonus_ids[index - 1]:
 			error = "원본 탐험 보너스 ID가 중복됩니다."
 			return {}
-		bonus_index[int(row.ID)] = row
+	all_bonus_ids = PackedInt64Array()
+	# Completion box links: ItemBonus rows of reward items that are also
+	# completion items (the former loop skipped every other link), their
+	# Bonus rows by ID (unique, checked above) and those bonuses' types.
+	var completion_link_ids: Dictionary = {}
+	for id: int in completion_items:
+		if item_ids.has(id): completion_link_ids[id] = true
+	var item_bonus: Array = _select(source,"ItemBonus","ItemClassID",completion_link_ids)
+	var linked_bonus_ids: Dictionary = {}
+	for link: Dictionary in item_bonus: linked_bonus_ids[int(link.BonusID)] = true
+	var bonus_index: Dictionary = {}
+	for row: Dictionary in _select(source,"Bonus","ID",linked_bonus_ids): bonus_index[int(row.ID)] = row
+	var linked_type_ids: Dictionary = {}
+	for row: Dictionary in bonus_index.values():
+		if row.get("BonusTypeID") != null: linked_type_ids[int(row.BonusTypeID)] = true
 	var bag_types: Dictionary = {}
-	for row: Dictionary in all_types:
+	for row: Dictionary in _select(source,"BonusType","ID",linked_type_ids):
 		if row.Name=="LuckyBagClassID" and row.UnitID==29: bag_types[int(row.ID)] = true
-	var item_bonus: Array = _source_selection(all_item_bonus,"ItemClassID",item_ids)
 	var bag_ids: Dictionary = {}
 	for link: Dictionary in item_bonus:
 		if not completion_items.has(int(link.ItemClassID)): continue
@@ -97,22 +160,24 @@ func _original_projection() -> Dictionary:
 			error = "원본 탐험 상자 참조가 정수가 아닙니다."
 			return {}
 		bag_ids[int(value)] = true
-	t["LuckyBagClass"] = _source_selection(SOURCE_ROWS.rows("LuckyBagClass"),"ID",bag_ids)
-	t["LuckyBagEntityView"] = _source_selection(SOURCE_ROWS.rows("LuckyBagEntityView"),"LuckyBagClassID",bag_ids)
+	item_bonus = []
+	bonus_index = {}
+	t["LuckyBagClass"] = _select(source,"LuckyBagClass","ID",bag_ids)
+	t["LuckyBagEntityView"] = _select(source,"LuckyBagEntityView","LuckyBagClassID",bag_ids)
 	for row: Dictionary in t.LuckyBagEntityView: item_ids[int(row.ItemClassID)] = true
-	t["ItemClass"] = _source_selection(SOURCE_ROWS.rows("ItemClass"),"ID",item_ids)
-	t["ItemBonus"] = _source_selection(all_item_bonus,"ItemClassID",item_ids)
+	t["ItemClass"] = _select(source,"ItemClass","ID",item_ids)
+	t["ItemBonus"] = _select(source,"ItemBonus","ItemClassID",item_ids)
 	var bonus_ids: Dictionary = {}
 	for row: Dictionary in t.ItemBonus + t.BuffCardExpeditionSynergyBonus: bonus_ids[int(row.BonusID)] = true
-	t["Bonus"] = _source_selection(all_bonus,"ID",bonus_ids)
+	t["Bonus"] = _select(source,"Bonus","ID",bonus_ids)
 	var type_ids: Dictionary = {}
 	for row: Dictionary in t.Bonus: type_ids[int(row.BonusTypeID)] = true
-	t["BonusType"] = _source_selection(all_types,"ID",type_ids)
+	t["BonusType"] = _select(source,"BonusType","ID",type_ids)
 	var currency_ids: Dictionary = {}
 	for row: Dictionary in t[P+"Spot"]: currency_ids[int(row.ExpeditionCostCurrencyID)] = true
 	for row: Dictionary in t[P+"Buff"]: currency_ids[int(row.CostCurrencyID)] = true
-	t["Currency"] = _source_selection(SOURCE_ROWS.rows("Currency"),"ID",currency_ids)
-	t["CurrencyUnitClass"] = _source_selection(SOURCE_ROWS.rows("CurrencyUnitClass"),"CurrencyID",currency_ids)
+	t["Currency"] = _select(source,"Currency","ID",currency_ids)
+	t["CurrencyUnitClass"] = _select(source,"CurrencyUnitClass","CurrencyID",currency_ids)
 	return t
 
 func load_original() -> bool:
@@ -128,14 +193,14 @@ func load_original() -> bool:
 	# code; a later start reads this device's baked tables (still validated
 	# and fingerprinted below) instead of reading whole Bonus/ItemBonus/
 	# ItemClass/LuckyBagEntityView tables again (~0.6 GB transient).
-	var records_key: String = BAKE.projection_key(RECORDS_BAKE_NAME, SOURCE_ROWS.verified_key())
+	var records_key: String = BAKE.producer_key(RECORDS_BAKE_NAME, "expedition523", SCHEMA + "|" + RECORDS_SCHEMA, SOURCE_ROWS.verified_key())
 	if _open_stored(records_key):
 		source_mode = "original_rows"
 		source_identity = identity.duplicate(true)
 		source_status = {"state":"loaded","model_identity":"actual_in_memory_catalogue_payload"}
 		error = ""
 		return true
-	var bake_key: String = BAKE.projection_key(BAKE_NAME, SOURCE_ROWS.verified_key())
+	var bake_key: String = BAKE.producer_key(BAKE_NAME, "expedition523", SCHEMA, SOURCE_ROWS.verified_key())
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 	var from_bake: bool = baked is Dictionary and not (baked as Dictionary).is_empty()
 	var candidate: Dictionary = baked if from_bake else _original_projection()
@@ -162,8 +227,13 @@ func load_original() -> bool:
 		# no longer read (a missing record bake rebuilds both).
 		BAKE.clear(BAKE_NAME)
 	else:
+		# Storage fallback, bounded: the one validated candidate (fixed table
+		# sizes checked by _valid_tables, JSON payload <= MAX_BYTES checked
+		# above) stays resident as is. It is a private fresh value (bake read
+		# or projection rows), so the former deep copy only doubled the peak;
+		# rows()/record() still hand out copies.
 		if not from_bake: BAKE.write(BAKE_NAME, bake_key, candidate)
-		_tables = candidate.duplicate(true)
+		_tables = candidate
 	source_mode = "original_rows"
 	source_identity = identity.duplicate(true)
 	source_status = {"state":"loaded","model_identity":"actual_in_memory_catalogue_payload"}

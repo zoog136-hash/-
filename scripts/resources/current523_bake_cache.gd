@@ -46,8 +46,68 @@ static func _collect(directory: String, files: PackedStringArray) -> void:
 
 ## Key for a projection derived only from the verified original and this
 ## game's code/data (every file under res://scripts and res://data).
+## Producers whose inputs are declared use producer_key() instead.
 static func projection_key(name: String, source_sha256: String) -> String:
 	return key([name, source_sha256, global_code_key()])
+
+## Narrow key of a declared producer (current523_bake_producers.gd): the
+## original identity (`source_key`), the producer's own `schema`, the bytes of
+## exactly its transitive script/data inputs, this bake format and the engine
+## version. An unrelated code change keeps it; any change of those inputs
+## changes it. When the inputs cannot be established (unknown producer, file
+## list out of date with the sources, a file that cannot be hashed) it is the
+## global projection_key(), never a key without code. "" without an original.
+const PRODUCERS = preload("res://scripts/resources/current523_bake_producers.gd")
+const DEPENDENCIES = preload("res://scripts/resources/current523_bake_dependencies.gd")
+const PRODUCER_KEY_FORMAT := "twilight.current523.producer-key.v1"
+static var _producer_code: Dictionary = {}
+## producer -> how its key was formed this run ("narrow:verified",
+## "narrow:manifest" (sources not readable, e.g. exported as binary tokens),
+## or "global:<reason>"), for start-up miss diagnostics.
+static var producer_key_reasons: Dictionary = {}
+
+static func producer_key(name: String, producer: String, schema: String, source_key: String) -> String:
+	var code: String = producer_code_key(producer)
+	if code.is_empty(): return projection_key(name, source_key)
+	return producer_key_from(name, producer, schema, source_key, code)
+
+## The key composition, separated so tests can feed synthetic inputs.
+static func producer_key_from(name: String, producer: String, schema: String, source_key: String, code: String) -> String:
+	return key([PRODUCER_KEY_FORMAT, name, producer, schema, source_key, engine_key(), SCHEMA, code])
+
+static func engine_key() -> String:
+	var version: Dictionary = Engine.get_version_info()
+	return str(version.get("string","")) + "|" + str(version.get("hash",""))
+
+## code_key() over the producer's declared inputs; "" (global key) when they
+## cannot be established. Computed once per producer per run.
+static func producer_code_key(producer: String) -> String:
+	if _producer_code.has(producer): return _producer_code[producer]
+	var result: Dictionary = producer_code(PRODUCERS.PRODUCERS.get(producer, {}))
+	_producer_code[producer] = result.code
+	producer_key_reasons[producer] = result.reason
+	return result.code
+
+## {code, reason} for one manifest entry {roots, ignore, files}. Where the
+## sources are readable (editor, tests, text export) the scan must reproduce
+## the declared list exactly; a stale list is refused, not trusted.
+static func producer_code(entry: Dictionary, scheme: String = "res://", names: Variant = null) -> Dictionary:
+	if entry.is_empty() or not entry.get("roots") is Array or not entry.get("files") is Array or (entry.files as Array).is_empty():
+		return {"code": "", "reason": "global:unknown_producer"}
+	var files := PackedStringArray(entry.files)
+	var scan: Dictionary = DEPENDENCIES.closure(entry.roots, entry.get("ignore", []), scheme, names)
+	var reason: String = "narrow:verified"
+	if not (scan.unreadable as PackedStringArray).is_empty():
+		# Exported scripts (binary tokens) cannot be scanned; only then is the
+		# CI-verified list used as is (every root must be one of them).
+		for root: Variant in entry.roots:
+			if not (scan.unreadable as PackedStringArray).has(str(root)): return {"code": "", "reason": "global:partly_unreadable"}
+		reason = "narrow:manifest"
+	elif scan.files != files:
+		return {"code": "", "reason": "global:manifest_stale"}
+	var code: String = code_key(Array(files))
+	if code.is_empty(): return {"code": "", "reason": "global:unhashable"}
+	return {"code": code, "reason": reason}
 
 ## A baked projection payload {bytes, sha256, identity}; {} when absent/stale.
 static func read_payload(name: String, value_key: String) -> Dictionary:

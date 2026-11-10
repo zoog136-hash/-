@@ -50,7 +50,7 @@ func _load_original() -> bool:
 	# The payload is a pure function of the verified original and this code;
 	# a later start reads this device's baked bytes (still checked against
 	# PAYLOAD_SHA by _load_payload) instead of projecting the tables again.
-	var bake_key: String = BAKE.projection_key(BAKE_NAME, ORIGINAL_PROJECTION.SOURCE.verified_key())
+	var bake_key: String = BAKE.producer_key(BAKE_NAME, "quest523", "payload:" + PAYLOAD_SHA, ORIGINAL_PROJECTION.SOURCE.verified_key())
 	var baked: Dictionary = BAKE.read_payload(BAKE_NAME, bake_key)
 	if not baked.is_empty() and _load_payload(baked.bytes,""): return true
 	var projection = ORIGINAL_PROJECTION.new()
@@ -128,7 +128,7 @@ func _adopt(value: Dictionary, path: String, payload_sha: String) -> bool:
 ## compact form of each row resident. Any write/open failure keeps the
 ## complete rows resident (the previous behavior).
 func _bake_records(payload_sha: String, start: int) -> void:
-	var key: String = BAKE.projection_key(RECORDS_NAME, payload_sha)
+	var key: String = BAKE.producer_key(RECORDS_NAME, "quest523", "records:" + str(RECORDS_SCHEMA), payload_sha)
 	if key.is_empty(): return
 	var compact: Array[Dictionary] = []
 	var hot: Array = []
@@ -151,7 +151,7 @@ func _bake_records(payload_sha: String, start: int) -> void:
 
 ## Adopts the compact rows of a record bake made from these verified bytes.
 func _open_records(payload_sha: String, path: String) -> bool:
-	var records = BAKE.open_records(RECORDS_NAME, BAKE.projection_key(RECORDS_NAME, payload_sha))
+	var records = BAKE.open_records(RECORDS_NAME, BAKE.producer_key(RECORDS_NAME, "quest523", "records:" + str(RECORDS_SCHEMA), payload_sha))
 	if records == null or not records.has(HOT_RECORD): return false
 	var hot: Variant = records.read(HOT_RECORD)
 	if not hot is Dictionary or hot.get("schema") != RECORDS_SCHEMA or hot.get("payload_sha256") != payload_sha: return false
