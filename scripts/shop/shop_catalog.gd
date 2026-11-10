@@ -4,30 +4,11 @@ extends RefCounted
 const MAX_QUANTITY: int = 1000
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const STOCK = preload("res://scripts/shop/consumable_stock.gd")
-const LEGACY_GOODS = [
-	["HP 물약", 50, "물약"],
-	["강력 HP 물약", 180, "물약"],
-	["축복받은 HP 물약", 450, "물약"],
-	["초록 잎", 100, "소모품"],
-	["드래곤의 루비", 15000, "소모품"],
-	["드래곤의 사파이어", 25000, "소모품"],
-	["드래곤의 다이아몬드", 50000, "소모품"],
-	["드래곤의 고급 다이아몬드", 250000, "소모품"],
-	["드래곤의 성수", 600000, "소모품"],
-	["드래곤의 용옥", 1000000, "소모품"],
-	["무기 마법 주문서 (각인)", 25000, "강화 주문서"],
-	["갑옷 마법 주문서 (각인)", 18000, "강화 주문서"],
-	["장신구 마법 주문서 (각인)", 35000, "강화 주문서"],
-	["축복 부여 주문서 (각인)", 250000, "강화 주문서"],
-	["축복받은 무기 마법 주문서 (각인)", 120000, "강화 주문서"],
-	["축복받은 갑옷 마법 주문서 (각인)", 90000, "강화 주문서"],
-	["장인의 무기 마법 주문서 (각인)", 350000, "강화 주문서"],
-	["장인의 갑옷 마법 주문서 (각인)", 300000, "강화 주문서"],
-	["오림의 장신구 마법 주문서 (각인)", 150000, "강화 주문서"],
-	["축복받은 오림의 장신구 마법 주문서 (각인)", 450000, "강화 주문서"]
-]
-# Build once; UI and transaction validation share the exact same registry.
-static var GOODS: Array = STOCK.build(LEGACY_GOODS)
+# Pre-November local goods are not sold (user decision 2026-11-10); the shop
+# sells only the original 523 shop tables (source523_shop_catalog.gd).
+const LEGACY_GOODS: Array = []
+# UI and transaction validation share the exact same (empty) registry.
+static var GOODS: Array = []
 
 static func price_for(item_name: String) -> int:
 	for entry: Array in GOODS:

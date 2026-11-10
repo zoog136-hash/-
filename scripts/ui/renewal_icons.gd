@@ -1,6 +1,6 @@
 extends RefCounted
 
-# Original gold SVG silhouettes. These geometric icons contain no game artwork.
+# Service icon kinds. The former self-drawn SVG silhouettes are no longer drawn.
 const PATHS = {
 	"inventory":"M18 22h28v34H18z M24 22v-8h16v8 M20 31h24 M26 41h12",
 	"character":"M32 8a7 7 0 1 0 0 14a7 7 0 1 0 0-14 M18 29l14-5 14 5-4 15H22z M24 44l-5 12 M40 44l5 12",
@@ -33,15 +33,8 @@ const PATHS = {
 const ALIASES={"아이템":"catalog","변신":"transform","마법인형":"doll","성물":"relic"}
 static var cache: Dictionary={}
 
-static func texture(kind: String) -> Texture2D:
-	var key: String=str(ALIASES.get(kind,kind))
-	if not PATHS.has(key): key = "unknown"
-	if cache.has(key): return cache[key]
-	var shape: String=str(PATHS[key])
-	var svg: String='<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#f4e2b2"/><stop offset="1" stop-color="#ae8550"/></linearGradient></defs><path fill="none" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" d="'+shape+'"/></svg>'
-	svg=svg.replace('<path fill="none" stroke="url(#gold)"','<path fill="none" stroke="#000" stroke-opacity=".8" stroke-width="4" transform="translate(0 1)" d="'+shape+'"/><path fill="#b59a64" fill-opacity=".12" stroke="url(#gold)"')
-	var source:=Image.new()
-	if source.load_svg_from_string(svg) != OK: return null
-	var icon: ImageTexture=ImageTexture.create_from_image(source)
-	cache[key]=icon
-	return icon
+## Self-drawn icons are not shown (user decision 2026-11-10: no self-made
+## images; leave a slot empty until it is connected to the original 523 UI).
+## PATHS stays only as the list of known service kinds.
+static func texture(_kind: String) -> Texture2D:
+	return null
