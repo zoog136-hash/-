@@ -912,6 +912,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("shop_window_is_open") and original_main_ui_controller.shop_window_is_open():
+			original_main_ui_controller.close_shop_window()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+			original_main_ui_controller.close_quest_window()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():
 			original_main_ui_controller.close_world_map()
 			get_viewport().set_input_as_handled()
@@ -950,6 +960,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -1183,11 +1195,24 @@ func open_quests() -> void:
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
+		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
+		original_main_ui_status["quest_window"]=native
+		if native.get("handled",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
 	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
 	# Cheap on kills/pickups. Rebuild only the currently open quest page,
 	# at most once per frame regardless of the number of events.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+		if not quest_refresh_pending:
+			quest_refresh_pending=true
+			call_deferred("_refresh_quests_deferred")
+		return
 	if active_section != "quests" or not is_instance_valid(quest_view) or quest_view.is_queued_for_deletion():
 		return
 	if quest_refresh_pending:
@@ -1197,6 +1222,9 @@ func refresh_quests() -> void:
 
 func _refresh_quests_deferred() -> void:
 	quest_refresh_pending = false
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+		original_main_ui_status["quest_window"]=original_main_ui_controller.refresh_quest_window()
+		return
 	if active_section == "quests" and is_instance_valid(quest_view) and not quest_view.is_queued_for_deletion():
 		quest_view.call("refresh")
 
@@ -1207,6 +1235,18 @@ func open_shop() -> void:
 	workspace.mount(shop)
 	shop.configure(self)
 	shop_view = shop
+	# The original 523 shop window shows the market; the existing panel keeps
+	# quotes, confirmation, payment and the order box.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("can_open_shop_window") and original_main_ui_controller.can_open_shop_window() and shop.has_method("_open_source523"):
+		shop.call("_open_source523")
+		var panel: Variant=shop.get("source523_panel")
+		if panel is Control and is_instance_valid(panel):
+			var native: Dictionary=original_main_ui_controller.try_open_shop_window(panel)
+			original_main_ui_status["shop_window"]=native
+			if native.get("handled",false):
+				if pointer_transfer!=null:pointer_transfer.cancel()
+				workspace.hide()
+				_sync_screen_focus()
 
 func open_npc_shop() -> void:
 	_open_window("npc_shop","잡화 상인","")
