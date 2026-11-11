@@ -18,6 +18,7 @@ const AMMO_USES="source_native_ammo_uses"
 const AMMO_RNG="source_native_ammo_rng"
 const SKILL_MATERIAL_USES="source_native_skill_material_uses"
 const TRANSFERRED="source_native_stack_transferred_quantity"
+const EFFECTS=preload("res://scripts/loot/source523_item_effects.gd")
 static var busy: bool=false
 static var _candidate: Dictionary={}
 static var _candidate_kind: String=""
@@ -72,6 +73,10 @@ static func profile(record: Dictionary) -> Dictionary:
 	var original_buff: Script=load("res://scripts/quests/quest_source_buffs523.gd")
 	var expanded: Dictionary=original_buff.call("profile",record)
 	if NATIVE_FIELDS.full(expanded).get("source_use_spec",{}).get("activation_status")=="unrestricted":return {"kind":"buff","spec":NATIVE_FIELDS.full(expanded).source_use_spec}
+	# Original teleport scroll / Ainhasad charge / RegenHP-RegenMP food.
+	var source_effect: String=str(EFFECTS.claims(record))
+	if source_effect=="food":return {"kind":"buff","runtime_food":true}
+	if source_effect in ["teleport","ain"]:return {"kind":source_effect}
 	return {}
 
 static func supply_profile(record: Dictionary) -> Dictionary:
@@ -147,6 +152,9 @@ static func _failure(reason: String) -> Dictionary:
 	return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":reason}
 
 static func try_use(world: Node,item_name: String,selected: String="") -> Dictionary:
+	# A plain name-keyed stack (as the 523 shop sells it) of an original
+	# teleport/Ainhasad/food item has its own owner; it shows its own message.
+	if selected.is_empty() and EFFECTS.try_use_plain(world,item_name):return {"handled":true,"ok":false,"silent":true}
 	var named: Dictionary=world._find_catalog_item_record(item_name)
 	var selected_entry: Variant=world.item_instances.get(selected,{})
 	var claims: bool=not profile(named).is_empty() or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
@@ -183,6 +191,10 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		var active: Dictionary=use_owner.call("action_record",world,record)
 		spec=NATIVE_FIELDS.full(active).get("source_use_spec",{})
 		if spec.get("activation_status")!="unrestricted":return _failure("기존 표시 메타데이터·기간 정책에서 사용을 보류합니다 · 아이템 보존")
+	if effect.get("runtime_food",false):
+		var active: Dictionary=use_owner.call("action_record",world,record)
+		spec=NATIVE_FIELDS.full(active).get("source_use_spec",{})
+		if spec.get("activation_status")!="unrestricted":return _failure("기존 음식 회복 주기 설정·원본 조건 확인 필요 · 아이템 보존")
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
@@ -195,6 +207,11 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
 	if effect.kind=="selection":return selection_pending(world,uid,owned,record,spec)
 	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
+	var prepared: Dictionary={}
+	if effect.kind in ["teleport","ain"]:
+		prepared=EFFECTS.prepare(world,record,str(effect.kind))
+		if not prepared.get("ok",false):return _failure(str(prepared.get("reason","원본 사용 조건 확인 필요 · 아이템 보존")))
+		spec={"consume_delay_ms":int(prepared.get("consume_delay_ms",0))}
 	var maximum: int=world._effective_max_hp() if effect.kind=="hp" else (world._effective_max_mp() if effect.kind=="mp" else 0)
 	var before: int=int(world.hp if effect.kind=="hp" else (world.mp if effect.kind=="mp" else 0))
 	if effect.kind in ["hp","mp"] and before>=maximum:return _failure("HP가 가득 찼습니다" if effect.kind=="hp" else "MP가 가득 찼습니다")
@@ -239,24 +256,30 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		value.merge({"remaining":float(spec.duration_seconds),"duration":float(spec.duration_seconds),"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
 		buffs[item_name]=value;payload["active_item_buffs"]=buffs
 		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
+	elif effect.kind in ["teleport","ain"]:
+		if prepared.has("ainhasad_state"):payload["ainhasad_state"]=prepared.ainhasad_state
 	else:payload["hp" if effect.kind=="hp" else "mp"]=after
+	var previous_position: Vector2=world.player.global_position
+	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
 	var saved: Error=world._save_game(true,payload)
 	_candidate.clear()
 	if saved!=OK:
+		if prepared.has("destination"):world.consumable_service._teleport_player(previous_position)
 		world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 		busy=false;return _failure(world.patch523_owner_state_problem)
 	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns;world.consumable_service.import_state(state)
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	if effect.kind=="hp":world.hp=after;world._source_hp_potion_committed(amount)
 	elif effect.kind=="mp":world.mp=after
+	elif effect.kind in ["teleport","ain"]:EFFECTS.commit(world,prepared)
 	else:
 		world.active_item_buffs=payload.active_item_buffs;world.hp=int(payload.hp);world.mp=int(payload.mp)
 		world._invalidate_equipment_static();world._refresh_speed_modifiers()
 	world.deferred_save.cancel();busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
-	var message: String="%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
+	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 

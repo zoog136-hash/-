@@ -3,7 +3,7 @@ extends RefCounted
 ## (user decision 2026-11-10: no pre-November items). Each entry goes through
 ## the ordinary 523 grant path (patch523_item_inventory.stage), so every stack
 ## is a physical, receipted original item. Items whose use is not connected
-## yet (return/teleport scrolls, enchant scrolls, food) are not granted.
+## yet are not granted.
 const PATCH523_ITEMS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const ORIGIN := {"kind":"twilight_starter_kit","schema":1}
 const GRANTS: Array[Dictionary] = [
@@ -13,6 +13,7 @@ const GRANTS: Array[Dictionary] = [
 	# 500 arrows filled 500 slots; ammo is bought from the 523 shop instead.
 	{"item_class_id":702, "amount":1},   # 장검
 	{"item_class_id":65291, "amount":5}, # 축복 부여 주문서 (각인)
+	{"item_class_id":313, "amount":5},   # 순간이동 주문서 (각인) (source523_item_effects.gd)
 ]
 ## Original 523 items the game keeps as plain name-keyed stacks (no physical
 ## receipt), the way the 523 shop sells them: 귀환 주문서 (각인) uses the
