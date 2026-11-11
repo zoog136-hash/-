@@ -135,8 +135,12 @@ func _card(entry: Dictionary, panel: Object) -> Dictionary:
 	var row: Dictionary=entry.get("source_row",{})
 	var title: String=str(panel.get("catalog").label(int(row.get("DescID",0)))) if panel.get("catalog")!=null else str(entry.get("title",""))
 	if title.is_empty():title=str(entry.get("title",""))
-	var cash: Script=load("res://scripts/shop/source523_cash_market.gd")
-	var price: String=("다이아 %d"%int(cash.entry(id).diamonds)) if cash.listed(id) else ""
+	var price: String=""
+	var catalog: Object=panel.get("catalog")
+	if catalog!=null:
+		var quote: Dictionary=catalog.payment_quote(id,1)
+		if quote.get("ok",false) and int(quote.get("total",0))>0:
+			price="%s %d"%[str(panel.call("_value_name",int(quote.unit_id),int(quote.class_id))),int(quote.total)]
 	var scope: Array[int]=_subtree(CARD,CARD_SCOPE)
 	var bindings: Dictionary={BUY:{"role":"button","activate":Callable(self,"_buy").bind(id)},PRICE:{"role":"source_text","text":price,"visible":not price.is_empty()},TITLE:{"role":"source_text","text":title}}
 	for offset: int in HIDDEN_TEXTS:bindings[offset]={"role":"static_source_text","visible":false}
