@@ -57,6 +57,9 @@ var returning_home: bool = false
 var enraged: bool = false
 var social_alert_cooldown: float = 0.0
 var decision_elapsed: float = 0.0
+## Time an off-screen actor's source view did not advance (see _physics_step).
+var source_view_skipped: float = 0.0
+const SOURCE_VIEW_SKIP_CAP: float = 30.0
 var sight_clock: float = 0.0
 var sight_cached: bool = false
 var motion: TwilightActorMotion = MOTION.new()
@@ -614,13 +617,23 @@ func _physics_step(delta: float) -> void:
 	# frame can persist across a live telegraph (notably NW). Ordinary remote
 	# mobs retain their previous offscreen animation budget.
 	var boss_telegraph: bool = is_boss and is_instance_valid(species_visual) and species_visual.warning_active
-	if boss_telegraph or on_screen or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+	var drawn: bool = boss_telegraph or on_screen or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin)
+	if drawn:
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
 	animation_state = motion.state
 	if not motion.active and velocity.length_squared() > 1.0:
 		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"
-	_advance_source_m_view(delta)
+	# Like motion.apply above, the 523 source view only draws on/near screen:
+	# every layer re-textures and re-checks its SP2 member each frame. Its
+	# events only spawn visual overlays. Skipped time is handed over when the
+	# actor comes back into view, so its clock is where it would have been.
+	if drawn or not is_instance_valid(source_m_view):
+		_advance_source_m_view(delta + source_view_skipped)
+		source_view_skipped = 0.0
+	else:
+		source_view_skipped = minf(source_view_skipped + delta, SOURCE_VIEW_SKIP_CAP)
+		_hide_source_only_native_media()
 
 func _tick_ai(delta: float) -> void:
 	if dead or not is_instance_valid(target_player):

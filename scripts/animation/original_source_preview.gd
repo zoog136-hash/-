@@ -891,8 +891,7 @@ func _dispatch_annotations(frames: Array, track: Dictionary, total: float, direc
 
 func _on_source_annotation(event: Dictionary) -> void:
 	if _playback_mode != "compatible" or _is_overlay: return
-	var regex: RegEx = RegEx.new()
-	regex.compile("\\](\\d+)")
+	var regex: RegEx = _overlay_target_pattern()
 	for match_value: RegExMatch in regex.search_all(str(event.annotation.get("raw", ""))):
 		var target_id: int = int(match_value.get_string(1))
 		if REFERENCE_EXCLUSIONS.event_excluded(reference_exclusion_status, event, target_id): continue
