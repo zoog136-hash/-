@@ -490,9 +490,11 @@ func _process_step(delta: float) -> void:
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
+	# The tile ground only draws _frame_commands, which change only in
+	# _build_frame() (that queues its own redraw). Re-issuing every visible tile
+	# draw on each 24 px step of the player was wasted work.
 	if cell != _last_actor_cell:
 		_last_actor_cell = cell
-		if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	_refresh_clock -= delta
 	if _refresh_clock <= 0.0:
 		_refresh_clock = 0.25
