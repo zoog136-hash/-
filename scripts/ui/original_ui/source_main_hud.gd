@@ -739,6 +739,40 @@ func _inventory_model_signature() -> int:
 	var state: Variant=bag.get("character_state")
 	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
 
+## --- Original 523 domination stone window (source_main_domination_stone_window)
+const DominationWindow=preload("res://scripts/ui/original_ui/source_main_domination_stone_window.gd")
+var _domination_window: RefCounted
+
+func _domination() -> RefCounted:
+	if _domination_window!=null:return _domination_window
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _pack==null or hud==null:return null
+	var window=DominationWindow.new()
+	if not window.configure(_pack,hud).get("ok",false):return null
+	window.closed.connect(func() -> void:
+		if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+	_domination_window=window
+	return window
+
+func try_open_domination_window(world: Node) -> Dictionary:
+	var window: RefCounted=_domination()
+	if window==null or not is_instance_valid(_coordinates):return _fail("source_domination_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return window.open(_coordinates,world)
+
+func domination_window_is_open() -> bool:
+	return _domination_window!=null and _domination_window.is_open()
+
+func close_domination_window() -> void:
+	if _domination_window!=null and _domination_window.is_open():
+		_cancel_native_buttons()
+		_domination_window.close()
+
+## The original MainMenu_DominationStone tile, or {} without the pack scene.
+func domination_menu_tile(activate: Callable) -> Dictionary:
+	var window: RefCounted=_domination()
+	return window.menu_tile(activate) if window!=null else _fail("source_domination_window_pack_scope_unavailable")
+
 func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return _fail("source_main_not_configured")

@@ -314,6 +314,8 @@ class Builder:
         """One scene's own dependency closure, sharing verified read caches."""
         probe = Builder(self.index, self.link_originals)
         probe.files, probe.atlases, probe._trees = self.files, self.atlases, self._trees
+        # Explicit node scopes already built here stand for their members.
+        probe.scenes = {m: self.scenes[m] for m in self.node_scopes}
         probe.scene(member)
         return probe
 

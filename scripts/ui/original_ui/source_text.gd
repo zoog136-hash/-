@@ -40,7 +40,9 @@ func _draw() -> void:
 	if original_font==null:return
 	var font_size: int=int(original_options.fontSize)
 	var line_height: float=original_font.get_height(font_size)
-	var height: float=line_height*source_lines.size()
+	# Korean-client line spacing (customProperty "linespacing"), 0 otherwise.
+	var spacing: float=float(original_options.get("_line_spacing",0.0))
+	var height: float=line_height*source_lines.size()+spacing*maxf(0.0,float(source_lines.size()-1))
 	var y: float=-original_size.y+original_font.get_ascent(font_size)
 	var constrained: bool=str(original_options.get("_type",""))=="TextOptions" and not bool(original_options.widgetOptions.get("ignoreSize",false)) and original_size.y>0.0
 	if constrained and height>original_size.y:
@@ -62,8 +64,8 @@ func _draw() -> void:
 		if bool(original_options.outlineEnabled):
 			draw_string_outline(original_font,pos,text_value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,int(original_options.outlineSize),source_color(original_options.outlineColor))
 		draw_string(original_font,pos,text_value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size,Color.WHITE)
-		y+=line_height
-		next_source_y-=line_height
+		y+=line_height+spacing
+		next_source_y-=line_height+spacing
 		# The original formatter stops at a newline when the following line
 		# would start below one common line height. It does not draw a new
 		# substitute string or create a generic rectangular clipping rule.

@@ -283,6 +283,7 @@ static func _percent_size_baked(field: String, layout: Dictionary, widget: Dicti
 	return percent>0.0 and absf(float(size[axis])-parent_size[axis]*percent)<=0.5
 
 func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dictionary) -> bool:
+	if _text_line_spacing_metadata(node,widget):return true
 	# Cocos3.6 NodeReader stores this exact UserData in ObjectExtensionData;
 	# it does not select/render these alternate colors. Preserve raw metadata
 	# and the actual serialized green color; allow no general custom shader.
@@ -440,6 +441,8 @@ func _build(source: Dictionary) -> Node2D:
 		var text_options: Dictionary=options.duplicate(true)
 		text_options.text=text_value
 		text_options["_cocos_wrap"]=text_binding.get("cocos_wrap",false)
+		var text_custom: Variant=_optional_dictionary(str(widget.get("customProperty","")))
+		if text_custom is Dictionary and text_custom.get("linespacing") is Dictionary:text_options["_line_spacing"]=float(text_custom.linespacing.get("kr",0))
 		var text_result: Dictionary=label.configure(font_value,text_options,Vector2(widget.size[0],widget.size[1]))
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
@@ -779,6 +782,17 @@ static func _blend(options: Dictionary) -> String:
 	var value: Variant=options.get("blendFunc")
 	if not value is Array or value.size()!=2: return ""
 	return str(int(value[0]))+":"+str(int(value[1]))
+
+## Korean-client Text line spacing ({"linespacing":{"kr":n,...}}, optionally
+## with sound ids): source_text applies the "kr" value between lines.
+static func _text_line_spacing_metadata(node: Dictionary, widget: Dictionary) -> bool:
+	if node.get("classname")!="Text":return false
+	var custom: Variant=_optional_dictionary(str(widget.get("customProperty","")))
+	if not custom is Dictionary or not custom.get("linespacing") is Dictionary:return false
+	if typeof(custom.linespacing.get("kr",0)) not in [TYPE_INT,TYPE_FLOAT]:return false
+	for key: Variant in custom:
+		if key!="linespacing" and (key not in ["soundid","touchsoundid"] or not custom[key] is String):return false
+	return true
 
 static func _optional_dictionary(text: String) -> Variant:
 	var parser:=JSON.new()
