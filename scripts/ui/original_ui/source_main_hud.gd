@@ -2,6 +2,7 @@ extends Node
 ## Existing game's update_player -> original main HUD components. This node
 ## adds no gameplay logic or artwork. Component positions are read from the
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.gd")
 const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
@@ -322,6 +323,12 @@ func _source_input_captured(hud: Node) -> bool:
 	return (_native_buttons!=null and _native_buttons.is_capturing()) or (is_instance_valid(pointer) and pointer.get("pointer")!=-2)
 
 func _process(_delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(_delta)
+	FRAME_HITCH.add_self("hud_main", hitch_started, hitch_nested)
+
+func _process_step(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return

@@ -1,4 +1,5 @@
 extends "res://scripts/hud_v20.gd"
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 signal equipment523_open_requested
 signal equipment523_preview_requested(action: Dictionary)
@@ -653,6 +654,12 @@ func _fit_hud() -> void:
 	if workspace != null: workspace.fit_viewport()
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("hud", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	super._process(delta)
 	if not minimap_mounted:
 		var minimap: Control = $Root.get_node_or_null("FieldMinimap")

@@ -1,5 +1,6 @@
 extends Node2D
 ## Native decoded pixels. Preview uses raster origin; live placement requires reviewed feet.
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CATALOG = preload("res://scripts/npc/source_npc_catalog.gd")
 var sprite: Sprite2D
 var visual: Dictionary = {}
@@ -57,6 +58,12 @@ func set_heading(slot: int) -> void:
 	_update_frame()
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("npcs", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	if visual.is_empty() or not is_instance_valid(sprite): return
 	clock += delta
 	var duration: float = float(visual.seconds_per_frame)
