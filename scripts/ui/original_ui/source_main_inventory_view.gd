@@ -1,7 +1,10 @@
 extends RefCounted
-## Bounded native inventory presentation: one original normal four-slot or
-## extension eight-slot row containing the entire current filtered owner model.
-## Unsupported states request the existing complete bag; no grid is synthesized.
+## Native inventory presentation: the original Inventory_All window with one
+## original Inventory_Slot_Set row (4 slots, or 8 extended) per line of the
+## current filtered owner model. The first row is the authored instance inside
+## ScrollView_Item; every further line is another instance of the same
+## original Inventory_Slot_Set.csb placed one slot pitch lower, the way the
+## client fills that ScrollView. Dragging scrolls the rows inside its clip.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Chrome=preload("res://scripts/ui/original_ui/source_main_inventory_bindings.gd")
 const Slots=preload("res://scripts/ui/original_ui/source_main_inventory_slots.gd")
@@ -29,6 +32,17 @@ var _bounds: Control
 var _refreshing: bool=false
 var _search: RefCounted
 var search_result: Dictionary={}
+## Vertical pitch between original slot rows (the authored horizontal slot
+## pitch of Inventory_Slot_Set: -117, -41, 35, 111).
+const ROW_PITCH: float=76.0
+## Half an original slot, kept below the last row when scrolled to the end.
+const ROW_TAIL: float=40.0
+var _scroll_content: Node2D
+var _scroll_top: float=0.0
+var _scroll_bottom: float=0.0
+var _scroll_dragging: bool=false
+var _scroll_moved: float=0.0
+var _row_scenes: Array[Node2D]=[]
 
 func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(hud):return _unsupported("source_inventory_view_hud_unavailable")
@@ -99,8 +113,16 @@ func hit_at(viewport_point: Vector2) -> Dictionary:
 		if is_instance_valid(_bounds):
 			var bounds_point: Vector2=_bounds.get_global_transform_with_canvas().affine_inverse()*viewport_point
 			if not Rect2(Vector2.ZERO,_bounds.size).has_point(bounds_point):continue
+		if not _inside_scroll_view(viewport_point):continue
 		return hit.duplicate(true)
 	return {}
+
+func _inside_scroll_view(viewport_point: Vector2) -> bool:
+	if not is_instance_valid(_scroll_content):return true
+	var scroll: Variant=_scroll_content.get_parent()
+	var area: Variant=scroll.call("input_control") if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+	if not area is Control or not is_instance_valid(area):return true
+	return Rect2(Vector2.ZERO,area.size).has_point(area.get_global_transform_with_canvas().affine_inverse()*viewport_point)
 
 func blocks_point(viewport_point: Vector2) -> bool:
 	var bounds: Control=gesture_bounds()
@@ -152,11 +174,6 @@ func _eligible_model() -> Dictionary:
 	if not branch.get("ok",false):return branch
 	var model: Dictionary=_slots.entries()
 	if not model.get("ok",false):return _unsupported_result(model)
-	if model.current_display_rows.size()>int(branch.capacity):
-		var reason: Dictionary=_unsupported("source_inventory_view_more_than_authored_capacity")
-		reason["native_capacity"]=branch.capacity
-		reason["filtered_row_count"]=model.current_display_rows.size()
-		return reason
 	model["native_capacity"]=branch.capacity
 	model["expanded"]=branch.expanded
 	model["slot_project_offset"]=44156 if branch.expanded else SLOT_SET
@@ -190,7 +207,9 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	var slot_offsets: Array[int]=[]
 	slot_offsets.assign(model.authored_slot_offsets)
 	var slot_set: int=model.slot_project_offset
+	var columns: int=slot_offsets.size()
 	var assignments: Dictionary={}
+	var extra_rows: Array[Dictionary]=[]
 	var entries_by_reference: Dictionary={}
 	for index: int in range(model.current_display_rows.size()):
 		var row: Dictionary=model.current_display_rows[index]
@@ -198,7 +217,11 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if not reference is String or reference.is_empty():
 			_refreshing=false
 			return _stage_failed(_unsupported("source_inventory_view_owner_reference_missing"))
-		assignments[slot_offsets[index]]=reference
+		var line: int=index/columns
+		if line==0:assignments[slot_offsets[index]]=reference
+		else:
+			while extra_rows.size()<line:extra_rows.append({})
+			extra_rows[line-1][slot_offsets[index%columns]]=reference
 		entries_by_reference[reference]=row.duplicate(true)
 	var slot_contract: Dictionary=_slots.build(slot_set,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant)
 	if not slot_contract.get("ok",false):
@@ -239,6 +262,44 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		var reference: String=assignments[offset]
 		var raw: Dictionary=entries_by_reference[reference]
 		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false}
+	var extra_scenes: Array[Node2D]=[]
+	if not extra_rows.is_empty():
+		var authored_row: Variant=inventory_scene.get("source_nodes").get(slot_set)
+		if not authored_row is Node2D or authored_row.get_parent()==null:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_row_missing"})
+		for line: int in range(extra_rows.size()):
+			var row_contract: Dictionary=_slots.build(slot_set,extra_rows[line],{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant)
+			if not row_contract.get("ok",false):return _reject_staged(next,_unsupported_result(row_contract))
+			var row_binding: Dictionary=row_contract.bindings[slot_set]
+			var row_scope: Array[int]=[]
+			row_scope.assign(row_binding.source_node_offsets)
+			var row_scene:=Scene.new()
+			var row_result: Dictionary=row_scene.configure_nodes(_pack,Slots.SET_MEMBER,row_scope,row_binding.bindings)
+			if not row_result.get("ok",false):
+				row_scene.free()
+				return _reject_staged(next,row_result)
+			row_scene.position=authored_row.position+Vector2(0.0,ROW_PITCH*float(line+1))
+			authored_row.get_parent().add_child(row_scene)
+			extra_scenes.append(row_scene)
+			for offset: int in slot_offsets:
+				if not extra_rows[line].has(offset):continue
+				var row_slot: Dictionary=row_scene.project_player([offset])
+				if not row_slot.get("ok",false):return _reject_staged(next,row_slot)
+				var row_native: Node2D=row_slot.player
+				var row_owner: Dictionary=row_contract.owner_results[offset]
+				var row_accepted: Dictionary=row_native.set_bound_source_visual_result(Slots.ICON,row_owner)
+				if not row_accepted.get("ok",false) or (not row_accepted.get("texture_assigned",false) and not row_accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":extra_rows[line][offset],"owner_result":row_owner,"source_asset_result":row_accepted})
+				result=row_native.set_bound_visible(Slots.ICON,true)
+				if not result.get("ok",false):return _reject_staged(next,result)
+				var row_button_node: Variant=row_native.get("source_nodes").get(Slots.BUTTON)
+				var row_button: Variant=row_button_node.get_meta("source_button",null) if is_instance_valid(row_button_node) else null
+				var row_control: Variant=row_button.get("_input_area") if is_instance_valid(row_button) else null
+				if not row_control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
+				var row_reference: String=extra_rows[line][offset]
+				var row_raw: Dictionary=entries_by_reference[row_reference]
+				hits[row_reference]={"from":"inventory","id":row_reference,"reference":row_reference,"entry":{"kind":"item","id":row_raw.get("name")},"owned_row":row_raw,"texture":row_accepted.get("texture"),"native_icon_scene":row_accepted.get("player"),"control":row_control,"button":row_control,"native_slot_scene":row_native,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"row":line+1,"source_asset_evidence":row_accepted.get("evidence",{}),"use_on_single_click":false}
+	for reference: String in hits:
+		var hit_control: Variant=hits[reference].get("control")
+		if hit_control is Control and not hit_control.gui_input.is_connected(_forward_scroll_input):hit_control.gui_input.connect(_forward_scroll_input)
 	var bounds: Control=_source_consume_control(inventory_scene,int(chrome.background_offset))
 	if bounds==null:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_gesture_bounds_missing"})
 	var previous: Node2D=_scene
@@ -254,6 +315,13 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		inventory_scene.seek_frame(70.0)
 		var refreshed: Dictionary=_chrome.refresh(inventory_scene)
 		if not refreshed.get("ok",false):return _reject_staged(next,refreshed)
+	else:
+		# The normal (4-column) bag is the end state of the source
+		# Fx_Extension_Off clip (75-86): Nd_BG is authored at alpha 0 and only
+		# that clip brings it to 255, so without it the frame stayed invisible.
+		inventory_scene.seek_frame(86.0)
+		var refreshed_normal: Dictionary=_chrome.refresh(inventory_scene)
+		if not refreshed_normal.get("ok",false):return _reject_staged(next,refreshed_normal)
 	# Commit only after every owned row has its original slot, hit control and
 	# existing owner texture. The complete current bag remains caller-owned.
 	for reference: String in hits:
@@ -261,12 +329,21 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		if old.is_empty() or not is_instance_valid(old.get("native_slot_scene")):continue
 		var reused: Dictionary=hits[reference].native_slot_scene.reuse_bound_source_scene_from(Slots.ICON,old.native_slot_scene,Slots.ICON)
 		if reused.get("reused",false):hits[reference]["native_icon_scene"]=reused.player
+	var kept_scroll: Variant=null
+	if is_instance_valid(previous):
+		# A refresh (selection, count change) rebuilds the scene: keep the
+		# HUD's drawing order and the rows the player had scrolled to.
+		next.z_index=previous.z_index
+		if is_instance_valid(_scroll_content):kept_scroll=_scroll_content.position.y
 	parent.add_child(next)
 	_scene=next
 	_inventory_scene=inventory_scene
 	_hits=hits
 	_bounds=bounds
 	_native_capacity=int(model.native_capacity)
+	_row_scenes=extra_scenes
+	_bind_scroll(inventory_scene,slot_set,extra_rows.size())
+	if kept_scroll!=null and is_instance_valid(_scroll_content):_scroll_content.position.y=clampf(float(kept_scroll),_scroll_bottom,_scroll_top)
 	_chrome.bind_presented(inventory_scene)
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
@@ -312,8 +389,46 @@ func _on_native_closed() -> void:
 	closed.emit()
 
 func _forward_scroll_input(event: InputEvent) -> void:
-	# No native drag/page algorithm is invented. Existing host input owns it.
 	source_scroll_input.emit(event)
+	if not is_instance_valid(_scroll_content):return
+	var pressed: Variant=null
+	if event is InputEventScreenTouch:pressed=event.pressed
+	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT:pressed=event.pressed
+	if pressed!=null:
+		_scroll_dragging=bool(pressed)
+		if _scroll_dragging:_scroll_moved=0.0
+		return
+	var delta: float=0.0
+	if event is InputEventScreenDrag:delta=event.relative.y
+	elif event is InputEventMouseMotion and _scroll_dragging:delta=event.relative.y
+	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		delta=ROW_PITCH*(1.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -1.0)
+	if delta==0.0:return
+	# Screen pixels to scroll-content units (the window is scaled).
+	var scale_y: float=absf(_scroll_content.get_global_transform_with_canvas().get_scale().y)
+	if scale_y>0.0 and not (event is InputEventMouseButton):delta/=scale_y
+	_scroll_moved+=absf(delta)
+	_scroll_content.position.y=clampf(_scroll_content.position.y+delta,_scroll_bottom,_scroll_top)
+
+## Rows below the authored one extend the original inner container; the
+## content may move from its authored top position down to the last row.
+func _bind_scroll(inventory_scene: Node2D, slot_set: int, extra_lines: int) -> void:
+	_scroll_content=null
+	var row: Variant=inventory_scene.get("source_nodes").get(slot_set)
+	if not row is Node2D:return
+	var content: Node=row.get_parent()
+	var row_offset: float=row.position.y
+	while content!=null and content.name!="SourceOriginalScrollContent":
+		if content is Node2D:row_offset+=(content as Node2D).position.y
+		content=content.get_parent()
+	if not content is Node2D:return
+	_scroll_content=content
+	_scroll_top=content.position.y
+	# The scroll node's origin is the view's bottom edge (Cocos bottom-left):
+	# a content-local y is visible while y+content.position.y <= 0. The
+	# authored row is at row_offset (negative: above the inner bottom).
+	var last_row_bottom: float=row_offset+ROW_PITCH*float(extra_lines)+ROW_TAIL
+	_scroll_bottom=minf(_scroll_top,-last_row_bottom)
 
 static func _source_consume_control(scene: Node2D, offset: int) -> Control:
 	var node: Variant=scene.get("source_nodes").get(offset)

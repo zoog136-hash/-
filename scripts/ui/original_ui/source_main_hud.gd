@@ -191,7 +191,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			if _inventory_lock_result.get("ok",false):_inventory_lock_view=lock_view
 	if pack.manifest.get("scenes",{}).has(CharacterView.ALL):
 		var candidate=CharacterView.new()
-		_character_result=candidate.configure(pack,hud)
+		_character_result=candidate.configure(pack,hud,Callable(self,"_equipment_original_image"))
 		if _character_result.get("ok",false):
 			_character_view=candidate
 			candidate.closed.connect(func() -> void:
@@ -376,6 +376,17 @@ func source_map_label_availability() -> bool:
 func _inventory_original_image(entry: Dictionary, native_context: Dictionary) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	return InventoryImages.resolve_owned(hud,entry,_native_icon_context(native_context))
+
+func _equipment_original_image(record: Dictionary, native_context: Dictionary) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var name: String=str(record.get("name",""))
+	return InventoryImages.resolve_owned(hud,{"name":name,"reference":name,"record":record},_native_icon_context(native_context))
+
+func try_open_character_equipment() -> Dictionary:
+	if _character_view==null or not is_instance_valid(_coordinates):return _fail("source_character_original_view_not_available")
+	_cancel_native_buttons()
+	_character_result=_character_view.open_equipment(_coordinates)
+	return _character_result.duplicate(true)
 
 func _quickslot_original_image(row: Dictionary, native_context: Dictionary) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null

@@ -1422,6 +1422,13 @@ func open_character() -> void:
 	lineage_side_ui.show_character(character_state)
 	lineage_side_ui.mount_window_header(workspace)
 	if lineage_side_ui.stats_page.visible:_on_original_character_page_requested("stats")
+	elif is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_character_equipment"):
+		var native: Dictionary=original_main_ui_controller.try_open_character_equipment()
+		original_main_ui_status["character_equipment"]=native
+		if native.get("handled",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
 
 func _on_original_character_page_requested(page: String) -> void:
 	if not is_instance_valid(original_main_ui_controller):return
