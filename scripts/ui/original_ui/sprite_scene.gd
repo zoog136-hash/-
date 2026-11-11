@@ -160,7 +160,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
-func _validate(node: Dictionary, problems: Array[String]) -> void:
+func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 = Vector2(-1,-1)) -> void:
 	if node.get("classname") not in ["Node","SingleNode","Sprite","Panel","ListView","ProjectNode","ImageView","Text","TextBMFont","Button","LoadingBar","Particle","CheckBox","ScrollView","PageView","TextField"]:
 		problems.append("unsupported_node:"+str(node.get("classname"))); return
 	if not str(node.get("customClassName","")).is_empty(): problems.append("custom_class")
@@ -185,10 +185,16 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
+		# "transfer" ("true"/"false") is a client flag on Text nodes (e.g.
+		# MessBoxHUD Text_Line); CSLoader keeps it as user data only, so it
+		# selects no pixels, font or layout. Retain it as metadata.
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
 		else:
 			for key: Variant in custom:
-				if key not in ["soundid","touchsoundid"] or not custom[key] is String:problems.append("custom_property")
+				if not custom[key] is String:problems.append("custom_property")
+				elif key=="transfer":
+					if custom[key] not in ["true","false"] or node.get("classname") not in ["Text","TextBMFont"]:problems.append("custom_property")
+				elif key not in ["soundid","touchsoundid"]:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
 			# CSLoader locates a handler by callbackName; a serialized default
@@ -259,9 +265,22 @@ func _validate(node: Dictionary, problems: Array[String]) -> void:
 		if not inspection_only and not connected:problems.append("unconnected_project_scene")
 	var layout: Dictionary=widget.get("layoutComponent",{}) if widget.get("layoutComponent") is Dictionary else {}
 	for field: String in ["positionXPercentEnabled","positionYPercentEnabled","sizeXPercentEnable","sizeYPercentEnable","stretchHorizontalEnabled","stretchVerticalEnabled"]:
-		if int(layout.get(field,0))!=0: problems.append("layout_constraint:"+field)
+		if int(layout.get(field,0))!=0 and not _percent_size_baked(field,layout,widget,parent_size): problems.append("layout_constraint:"+field)
 	if node.classname=="Sprite" and _blend(options) not in BLEND.PAIRS: problems.append("unsupported_blend")
-	for child: Dictionary in node.get("children",[]): _validate(child,problems)
+	var own_size: Variant=widget.get("size")
+	var child_parent: Vector2=Vector2(float(own_size[0]),float(own_size[1])) if own_size is Array and own_size.size()==2 else Vector2(-1,-1)
+	for child: Dictionary in node.get("children",[]): _validate(child,problems,child_parent)
+
+## A percent size whose authored size already equals parent size x percent (the
+## editor's own result, e.g. NpcDialogue_All Text_TalkEnd) draws unchanged in a
+## fixed-size parent; any other percent/stretch constraint stays unsupported.
+static func _percent_size_baked(field: String, layout: Dictionary, widget: Dictionary, parent_size: Vector2) -> bool:
+	if field not in ["sizeXPercentEnable","sizeYPercentEnable"] or parent_size.x<=0 or parent_size.y<=0: return false
+	var size: Variant=widget.get("size")
+	if not size is Array or size.size()!=2: return false
+	var axis: int=0 if field=="sizeXPercentEnable" else 1
+	var percent: float=float(layout.get("sizeXPercent" if axis==0 else "sizeYPercent",-1.0))
+	return percent>0.0 and absf(float(size[axis])-parent_size[axis]*percent)<=0.5
 
 func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dictionary) -> bool:
 	# Cocos3.6 NodeReader stores this exact UserData in ObjectExtensionData;

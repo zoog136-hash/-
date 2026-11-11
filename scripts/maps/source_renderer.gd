@@ -118,11 +118,10 @@ func _refresh_markers() -> void:
 			ring.default_color=Color("87d1c8") if bool(entry[1]) else Color("dec68e")
 			for i: int in range(17): ring.add_point(Vector2(cos(TAU*i/16)*15,sin(TAU*i/16)*7))
 			node.add_child(ring)
-			if not bool(entry[1]) and record.has("source_catalog_id"):
-				var actor = preload("res://scripts/npc/source_npc_actor.gd").new()
-				node.add_child(actor)
-				if not actor.configure(record):
-					actor.queue_free()
+			if not bool(entry[1]) and record.has("source523_earth_object_class_id"):
+				# Original 523 town NPC: its original sprite is not connected yet,
+				# so only the placement ring and original name are shown (no own art).
+				pass
 			elif not bool(entry[1]):
 				var npc:=Sprite2D.new()
 				var part:=AtlasTexture.new()

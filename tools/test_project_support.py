@@ -103,9 +103,6 @@ RENEWED_SPAWN_SUMMARY = re.compile(
 # Exact contracts for existing, non-JSON Godot test receipts. These are not
 # generic success markers: empty, malformed, truncated, or failed results fail.
 SCALAR_RESULT_CONTRACTS = {
-    'source_npc_live_placement_test': (
-        'SOURCE_NPC_LIVE_RESULT ',
-        re.compile(r'^SOURCE_NPC_LIVE_RESULT checks=(?P<checks>[1-9][0-9]*) failures=(?P<bad>[0-9]+) actual_placement=6/6$')),
     'reviewed_existing_monster_visuals_test': (
         'EXISTING_MONSTER_SOURCE_RESULT ',
         re.compile(r'^EXISTING_MONSTER_SOURCE_RESULT checks=(?P<checks>[1-9][0-9]*) errors=(?P<bad>[0-9]+) replaced=2$')),
@@ -123,10 +120,6 @@ SCALAR_RESULT_CONTRACTS = {
         re.compile(r'^SOURCE3_DROP_MAIN_RESULT phase=(?:write|read|empty) checks=(?P<checks>[1-9][0-9]*) failures=(?P<bad>[0-9]+)$')),
 }
 SCALAR_ONLY_CONTRACTS = {
-    'source_npc_six_test': ('SOURCE_NPC_SIX ',
-        re.compile(r'^SOURCE_NPC_SIX checks=[1-9][0-9]* failures=(?P<bad>[0-9]+) placement=checked_by_live_test$')),
-    'source_npc_six_render_test': ('SOURCE_NPC_RENDER ',
-        re.compile(r'^SOURCE_NPC_RENDER slots=8 actors=6 failures=(?P<bad>[0-9]+) placement=diagnostic_only$')),
     'reviewed_source_monsters_test': ('REVIEWED_SOURCE_MONSTERS ',
         re.compile(r'^REVIEWED_SOURCE_MONSTERS checks=[1-9][0-9]* failures=(?P<bad>[0-9]+)$')),
     'source3_reviewed_drop_test': ('SOURCE3_DROP_TEST ',
@@ -282,11 +275,7 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
             return False, False
         return True, True
     if scalar_contract is not None:
-        # A restart child emits only three checks; require the full live-game
-        # receipt as well, rather than counting that child as a complete test.
-        full_live = (name != 'source_npc_live_placement_test'
-                     or any(int(m.group('checks')) >= 100 for m in scalar_receipts))
-        return bool(scalar_receipts) and full_live, False
+        return bool(scalar_receipts), False
     if name in SCALAR_ONLY_CONTRACTS:
         prefix, pattern = SCALAR_ONLY_CONTRACTS[name]
         receipts = [line for line in output.splitlines() if line.startswith(prefix)]

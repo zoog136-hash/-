@@ -7,6 +7,7 @@ const PARENT_SHA256 = "6626721d95d1ca4c2b097730b44d97ce8aa8afb371b5e7806158db788
 const PARENT_PROJECT = 132
 const BASE_OFFSETS: Array[int] = [6800,6172,3512,3940,272,780,324]
 const NEXT_BUTTON = 1872
+const NEXT_CUE: Array[int] = [2624,3016,2680]
 const PORTRAIT = 4912
 
 static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next: Callable = Callable(), portrait_requested: bool=false) -> Dictionary:
@@ -18,7 +19,8 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 	if pack.manifest.get("files",{}).get(PARENT_MEMBER,{}).get("sha256","") != PARENT_SHA256:
 		return _fail("source_npc_dialogue_original_parent_identity_mismatch")
 	var offsets: Array[int] = BASE_OFFSETS.duplicate()
-	if next.is_valid(): offsets.append(NEXT_BUTTON)
+	# With a connected Btn_Next the original next cue (Fx_NextBtn arrow + light) shows too.
+	if next.is_valid(): offsets.append_array([NEXT_BUTTON] + NEXT_CUE)
 	var portrait_declared: bool=portrait_requested and PORTRAIT in pack.manifest.get("externally_bound_texture_nodes",{}).get(MEMBER,[])
 	if portrait_declared:offsets.append(PORTRAIT)
 	var tree: Dictionary = pack.scene(MEMBER)
@@ -36,7 +38,8 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 	}
 	if next.is_valid(): bindings[NEXT_BUTTON] = {"role":"button","activate":next}
 	if portrait_declared:bindings[PORTRAIT]={"role":"source_asset_slot","visible":false}
-	var excluded: Array[int]=[4604,5744,5416,2624]
+	var excluded: Array[int]=[4604,5744,5416]
+	if not next.is_valid():excluded.append(2624)
 	if not portrait_declared:excluded.append(PORTRAIT)
 	return {
 		"ok":true,"member":MEMBER,"sha256":SHA256,
@@ -47,7 +50,7 @@ static func build(pack: RefCounted, resolved: Dictionary, close: Callable, next:
 		"clips":[{"name":"Npc_On","startIndex":5,"endIndex":45},{"name":"Npc_Loop","startIndex":50,"endIndex":80}],
 		"playback_policy_inferred":false,"next_connected":next.is_valid(),
 		"portrait_target_declared":portrait_declared,"portrait_initially_hidden":true,
-		"value_basis":"existing dialogue_service.resolve successful npc_name/text",
+		"value_basis":"original 523 town NPC name (DescData_Korean) and talk (DialogData_Korean)",
 		"partial_source_scene":true,"complete_screen_contract":false,
 		"unresolved_fields":["NPC_record_to_original_portrait_asset_role","original_clip_playback_policy","choice_to_original_next_contract_owned_by_caller"],
 		"excluded_source_offsets":excluded

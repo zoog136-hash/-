@@ -220,9 +220,8 @@ var auto_hunting_schedule: RefCounted = AUTO_HUNTING_SCHEDULE.new()
 var auto_hunting_schedule_checked: bool = false
 var auto_hunting_local: RefCounted = AUTO_HUNTING_LOCAL.new()
 var auto_hunting_move_in_progress: bool = false
-const SOURCE_NPCS = preload("res://scripts/npc/source_npc_catalog.gd")
-const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
-var dialogue_service = NPC_DIALOGUE_SERVICE.new()
+## Original 523 town NPCs and their original talk (no TWILIGHT dialogue data).
+const TOWN_NPCS = preload("res://scripts/npc/source523_town_npcs.gd")
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
 const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 var crafting = EXPANDED_CRAFTING.new()
@@ -513,7 +512,6 @@ func _ready() -> void:
 	BOOT_LOG.step("world_services")
 	rng.randomize()
 	ain_service.import_state({})
-	dialogue_service.load_dialogues()
 	# Own TWILIGHT recipes (data/crafting/twilight_recipes.json) are not used in
 	# the game; crafting is the original 523 ItemCraft tables only.
 	inventory_automation.configure(self)
@@ -2343,22 +2341,12 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 					return cell
 	return origin
 
-func _npc_dialogue_state() -> Dictionary:
-	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true),"source_npc_nearby":SOURCE_NPCS.nearby_ids(self)}
-
 func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
 	# The UI cannot authorize an NPC service. Revalidate player proximity and
-	# the conditional dialogue choice against CURRENT world state.
+	# the NPC's original function on that page against CURRENT world state.
 	if field_map == null:
 		return
-	var valid_npc: bool = false
-	for npc: Dictionary in field_map.data.get("npc_spawn",[]):
-		if str(npc.get("id","")) != npc_id:
-			continue
-		if player.global_position.distance_to(COORD.array_vector(npc["position"])) <= 190.0:
-			valid_npc = true
-		break
-	if not valid_npc or not dialogue_service.allowed_action(npc_id,node_id,action,_npc_dialogue_state()):
+	if not TOWN_NPCS.allowed_action(self,npc_id,node_id,action):
 		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
 		return
 	match action:
@@ -2372,21 +2360,13 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
 	manual_route_pending_target=Vector2.INF
-	var source_click:Dictionary=SOURCE_NPCS.nearest_click_record(self,target)
-	if not source_click.is_empty():
-		var source_id:String=str(source_click.source_catalog_id)
-		if dialogue_service.source_registry.has(source_id):hud.call("open_npc_dialogue",source_id)
-		else:hud.show_message(str(source_click.name)+" · 대화가 등록되지 않았습니다")
-		return
 	if field_map != null:
 		for npc: Dictionary in field_map.data["npc_spawn"]:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
-				if SOURCE_NPCS.records().has(str(npc.get("source_catalog_id",""))):
-					var source_id: String = str(npc.source_catalog_id)
-					if SOURCE_NPCS.nearby(self,source_id):
-						if dialogue_service.source_registry.has(source_id): hud.call("open_npc_dialogue",source_id)
-						else: hud.show_message(str(npc.name)+" · 대화가 등록되지 않았습니다")
+				if TOWN_NPCS.is_town_npc_id(str(npc.get("id",""))):
+					# Original 523 town NPC: the original NpcDialogue_All talk window.
+					hud.call("open_npc_dialogue",str(npc.id))
 					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
@@ -2400,8 +2380,6 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_item_sell")
 				elif field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules():
 					hud.show_message(str(npc.name)+" · 원본 대화 기능 미매핑")
-				elif str(npc["role"]) == "guide":
-					hud.call("open_npc_dialogue",str(npc.get("id","")))
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -6340,7 +6318,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		data["native_png_review_sha256"] = NATIVE_PNG.review_hash(active_map_id)
 	if field_map is RemakePlayableField and field_map.png_game_pack!=null and not bool(field_map.get_meta("source_map84",false)):
 		data["oman_png_index_sha256"]=FileAccess.get_sha256(SOURCE_PNG_GAME.root_path()+"/index.json")
-	data["source_npc_state"]=SOURCE_NPCS.export_state()
 	if expedition_local.namespace_present:
 		data[EXPEDITION_LOCAL.KEY] = expedition_local.export_state()
 	if peer_shop!=null:
@@ -6350,7 +6327,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
 			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
 		data["source_shop"]=peer_state.duplicate(true)
-	if not SOURCE_NPCS.validate_state(data.source_npc_state).is_empty():return ERR_UNAVAILABLE
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
 	if not movement_override.is_empty(): data.merge(AUTO_HUNTING_LOCAL.save_fields(self, movement_override), true)
@@ -6577,8 +6553,6 @@ func _load_game(quiet: bool) -> void:
 		quest_service.save_blocked = true
 		hud.show_message(quest_error+" · 기존 저장 보존")
 		return
-	var npc_state_error:String=SOURCE_NPCS.validate_state(data.get("source_npc_state",{}))
-	if not npc_state_error.is_empty():source_save_blocked=true;hud.show_message(npc_state_error);return
 	var map_migration: Dictionary=SOURCE_MAP84.prepare_migrations(data,loaded_save_sha)
 	if not map_migration.ok:
 		source_save_blocked=true;hud.show_message(str(map_migration.error));return
@@ -6765,7 +6739,6 @@ func _load_game(quiet: bool) -> void:
 	if peer_shop!=null:peer_shop.accept_load(data)
 	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
-	SOURCE_NPCS.import_state(data.get("source_npc_state",{}))
 	totems.accept_state(data.get("totem_state"))
 	totem_combat.settings_blocked = false
 	totem_combat.clear()

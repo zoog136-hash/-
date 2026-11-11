@@ -5,31 +5,30 @@ adds no dialogue content, choice, reward, portrait, service or save behavior.
 Attendance/pass remain deferred. No new tests, execution, rendering or CI were
 run; this code and its actual game consumption are unverified.
 
-## Existing service and real input
+## Original 523 input (2026-11-11)
 
-`renewal_dialogue._show_node` still calls the existing
-`dialogue_service.resolve(npc_id,node_id,world._npc_dialogue_state())` once.
-After rebuilding the existing owner choices, it emits
-`source_dialogue_resolved(resolved)` and retains that current model. The HUD's
-existing `open_npc_dialogue(npc_id)` connects the signal before configuration.
+TWILIGHT's own dialogue data (`dialogue_service`, `twilight_dialogues.json`,
+the old six L1J NPCs) is removed. Talk comes only from the original 523 town
+NPCs placed by `scripts/npc/source523_town_npcs.gd` (EarthObjectSpawn →
+one-cell Territories row of the field's Land; name from DescData_Korean;
+functions from EarthObjectDialogActions/DialogActionType). Page text is the
+original DialogData_Korean row named in `data/npc/source523_npc_dialog_links.json`
+(row ID + Name only; built by `tools/npc/build_source523_npc_dialog_links.py`
+because the client tables have no NPC→dialog column). Unlinked NPCs show
+their original name and an empty text.
 
-`source_main_npc_dialogue_view.open(parent,owner,resolved)` uses that same
-current NPC/node identity and already resolved `npc_name`/`text`. A terminal
-model with no choices gets original text and close controls. An exact single
-choice with a nonempty `next` and empty `action` gets original Btn_Next. This
-is an explicit application caller mapping of Next→the one next-only transition;
-it is not a claim that the old client uses this service or that a general
-choice-to-original-UI mapping was found. Clicking dispatches the current
-owner's `_choice_picked(next_id,"")`; stale owner models cannot be dispatched.
-There is no automatic first-option selection, gameplay action or second resolve
-implementation in this presenter.
+`renewal_dialogue._show_node` (a non-drawing owner) resolves one page and
+emits `source_dialogue_resolved(resolved)`. Page *i* has one choice `next=p(i+1)`;
+the last page has one choice `action=<function>` when the NPC has a connected
+original function (shop, buyback, craft, teleport, warehouse).
 
-Multiple choices or action-bearing choices retain the complete existing owner
-selection UI. Unsuccessful resolve, missing original input or unsupported text
-also leave that path available. The native original close button calls existing
-workspace close. Escape, section changes, replacement and owner model changes
-close/rebuild the native presentation; a source-pack replacement reuses the
-current owner's model rather than reconstructing the conversation.
+`source_main_npc_dialogue_view.open(parent,owner,resolved)` shows name/text and
+the close button. The window's only advance control, full-screen Btn_Next,
+dispatches the single choice through the owner's `_choice_picked`: the next
+page, or on the last page the function request, which World checks again
+(distance, page, function) before opening the existing screen. There is no
+TWILIGHT dialogue screen: when this window cannot open, the talk closes with
+its reason.
 
 ## Exact originals
 
@@ -43,7 +42,7 @@ current owner's model rather than reconstructing the conversation.
 | Text3512 `Text_Char_Name` | current successful `npc_name` |
 | Text3940 `Text_NpcTalk` | current successful `text` |
 | Button272 `Btn_TalkEnd` / literal324 | existing workspace close / `대화 끝내기` |
-| Button1872 `Btn_Next` | explicitly eligible single next-only owner transition |
+| Button1872 `Btn_Next` | next original page, or the NPC's function on the last page |
 | Image6800 `Black_BG` | original touch-enabled full-screen backdrop |
 | Image6172 `Talk_BG`, Image780 | original dialogue/close backdrops |
 

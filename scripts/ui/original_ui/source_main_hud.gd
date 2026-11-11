@@ -29,6 +29,8 @@ const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_cont
 const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
 const ShopWindow=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
+const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
+const LOG_BASE_META="source_joystick_log_base"
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -130,6 +132,11 @@ var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
 var _inventory_lock_result: Dictionary={}
+var _joystick_view: RefCounted
+var _joystick_result: Dictionary={}
+# Existing TWILIGHT chrome that an accepted original component replaces:
+# {"control":WeakRef,"owner":String,"property":"visible"|"self_alpha","value":Variant}
+var _legacy_chrome: Array[Dictionary]=[]
 
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
@@ -164,6 +171,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
 	_native_buttons=ButtonRouter.new()
+	_open_joystick(hud)
 	for spec: Dictionary in WorkspaceControls.SPECS.values():
 		if pack.manifest.get("scenes",{}).has(spec.member):
 			_workspace_controls=WorkspaceControls.new()
@@ -223,7 +231,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
-	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER))
+	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER) or _joystick_view!=null)
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -341,6 +349,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	if _joystick_view!=null:_joystick_view.refresh()
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
@@ -810,7 +819,8 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 	if not _core_attempted:_mount_core_controls()
 	refresh_primary_stats()
 	_refresh_wallet(gold_changed)
-	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"blessing":_blessing_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
+	_sync_chrome()
+	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"blessing":_blessing_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true),"joystick":_joystick_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
 
 func refresh_primary_stats() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -848,6 +858,7 @@ func update_currency_balances(balances: Dictionary) -> Dictionary:
 	var changed: bool=_balances!=balances
 	_balances=balances.duplicate(true)
 	_refresh_wallet(changed)
+	_sync_chrome()
 	return _wallet_result.duplicate(true)
 
 func _refresh_wallet(changed: bool) -> void:
@@ -942,6 +953,7 @@ func _capture_existing_controls(hud: Node) -> void:
 	for kind: String in ["inventory","skills","shop","menu"]:
 		var control: Node=hud.get_node("Root").find_child("Shortcut_"+kind,true,false)
 		if control is CanvasItem:_legacy_shortcuts[kind]=weakref(control)
+	_capture_legacy_chrome(hud,previous)
 
 func source_control_availability() -> Dictionary:
 	return _combat_availability.duplicate(true)
@@ -1115,6 +1127,10 @@ func sync_legacy_visibility() -> void:
 	for kind: String in _legacy_shortcuts:
 		var control: Object=_legacy_shortcuts[kind].get_ref()
 		if control!=null:control.visible=not is_instance_valid(_menu_scene)
+	_sync_chrome()
+
+func _sync_chrome() -> void:
+	for record: Dictionary in _legacy_chrome:_apply_legacy_chrome(record,_chrome_owned(str(record.owner)))
 
 func _remember(result: Dictionary) -> Dictionary:
 	last_result=result.duplicate(true)
@@ -1138,6 +1154,9 @@ func release(restore_legacy: bool=true) -> void:
 	if _inventory_lock_view!=null:_inventory_lock_view.close()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()
+	if _joystick_view!=null:
+		_joystick_view.close(restore_legacy)
+		if restore_legacy:_restore_log_position(_hud.get_ref() if _hud!=null else null)
 	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
 	if canvas!=null and canvas.resized.is_connected(_fit_source_coordinates):canvas.resized.disconnect(_fit_source_coordinates)
 	if is_instance_valid(_coordinates):
@@ -1164,6 +1183,85 @@ func release(restore_legacy: bool=true) -> void:
 		for kind: String in _legacy_shortcuts:
 			var control: Object=_legacy_shortcuts[kind].get_ref()
 			if control!=null:control.visible=true
+		for record: Dictionary in _legacy_chrome:_apply_legacy_chrome(record,false)
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+func _open_joystick(hud: Node) -> void:
+	if not JoystickView.available(_pack):return
+	var joystick: Variant=hud.get("joystick")
+	if not joystick is Control or not is_instance_valid(joystick):
+		_joystick_result=_fail("source_joystick_existing_control_required")
+		return
+	var candidate=JoystickView.new()
+	_joystick_result=candidate.open(_pack,_coordinates,joystick)
+	if not _joystick_result.get("handled",false):return
+	_joystick_view=candidate
+	# The original pad is wider than the TWILIGHT stick: start the existing
+	# combat log right of it (its own layout keeps every other field).
+	var combat_log: Variant=hud.get("log_label")
+	var layer: Variant=hud.get("v20_layer")
+	if not combat_log is Control or not layer is CanvasItem or not combat_log.has_meta("renewal_base_position") or not hud.has_method("_fit_hud"):return
+	if not combat_log.has_meta(LOG_BASE_META):combat_log.set_meta(LOG_BASE_META,combat_log.get_meta("renewal_base_position"))
+	var base: Vector2=combat_log.get_meta(LOG_BASE_META)
+	var pad_right: float=(layer.get_global_transform().affine_inverse()*joystick.get_global_rect().end).x
+	combat_log.set_meta("renewal_base_position",Vector2(maxf(base.x,ceilf(pad_right)+6.0),base.y))
+	hud.call("_fit_hud")
+
+func _restore_log_position(hud: Object) -> void:
+	if not is_instance_valid(hud):return
+	var combat_log: Variant=hud.get("log_label")
+	if not combat_log is Control or not combat_log.has_meta(LOG_BASE_META):return
+	combat_log.set_meta("renewal_base_position",combat_log.get_meta(LOG_BASE_META))
+	combat_log.remove_meta(LOG_BASE_META)
+	if hud.has_method("_fit_hud"):hud.call("_fit_hud")
+
+func joystick_status() -> Dictionary:
+	return _joystick_result.duplicate(true)
+
+func source_chrome_availability() -> Dictionary:
+	var values: Dictionary={}
+	for record: Dictionary in _legacy_chrome:values[record.key]=record.value
+	return values
+
+func _capture_legacy_chrome(hud: Node, previous: Variant) -> void:
+	# A replaced controller already hid these; take its recorded values.
+	var prior: Dictionary=previous.source_chrome_availability() if is_instance_valid(previous) and previous.has_method("source_chrome_availability") else {}
+	var layer: Variant=hud.get("v20_layer")
+	var status: Node=layer.get_node_or_null("StatusPanel") if layer is Node else null
+	var specs: Array=[
+		# Hud_CharInfo shows the level in its class badge and opens the character
+		# window from Btn_Status; the original HUD has no name or panel backdrop.
+		["status_panel",status,"char","self_alpha"],
+		["level_badge",hud.get("v20_level_badge"),"char","visible"],
+		["status_name",hud.get("v20_status_name"),"char","visible"],
+		["character_shortcut",status.find_child("CharacterShortcut",true,false) if status!=null else null,"char","visible"],
+		# Hud_CharInfo Btn_Attack/Btn_Defense icons and values (primary stats).
+		["stat_text",hud.get("v20_stat_text"),"stats","visible"],
+		# Hud_PayLayout diamond/adena.
+		["currency",hud.get("currency_readout"),"wallet","visible"],
+		# Hud_TopMenu store/bag/skill/quest/all. The world map stays reachable
+		# from the original Btn_All menu (its 월드맵 tile).
+		["main_shortcuts",layer.get_node_or_null("MainShortcuts") if layer is Node else null,"menu","visible"]
+	]
+	for spec: Array in specs:
+		var control: Variant=spec[1]
+		if not control is CanvasItem or not is_instance_valid(control):continue
+		var property: String=spec[3]
+		var value: Variant=prior.get(spec[0],control.visible if property=="visible" else control.self_modulate.a)
+		_legacy_chrome.append({"key":spec[0],"control":weakref(control),"owner":spec[2],"property":property,"value":value})
+
+func _chrome_owned(owner: String) -> bool:
+	match owner:
+		"char":return is_instance_valid(_char_scene)
+		"stats":return is_instance_valid(_primary_stats_scene) and _primary_stats_scene.visible
+		"wallet":return is_instance_valid(_wallet_scene)
+		"menu":return is_instance_valid(_menu_scene)
+	return false
+
+static func _apply_legacy_chrome(record: Dictionary, owned: bool) -> void:
+	var control: Object=record.control.get_ref()
+	if control==null:return
+	if record.property=="visible":control.visible=false if owned else bool(record.value)
+	else:control.self_modulate.a=0.0 if owned else float(record.value)

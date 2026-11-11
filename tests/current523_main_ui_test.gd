@@ -12,7 +12,7 @@ const SOURCE_PACK = preload("res://scripts/ui/original_ui/source_pack.gd")
 const BLESSING = preload("res://scripts/ui/original_ui/source_main_blessing_bindings.gd")
 const VITALS = preload("res://scripts/ui/original_ui/source_main_vitals_bindings.gd")
 ## Components whose mount result update_player reports, and their fields.
-const COMPONENTS := {"exp":"last_result","hp_mp":"_char_result","combat":"_combat_result","menu":"_menu_result","wallet":"_wallet_result","blessing":"_blessing_result","map_name":"_map_name_result","target":"_target_result","primary_stats":"_primary_stats_result","quickslot":"_quickslot_result","inventory":"_inventory_result","inventory_name":"_inventory_name_result","inventory_lock":"_inventory_lock_result","character":"_character_result","auto_message":"_auto_message_result","system_message":"_system_message_result"}
+const COMPONENTS := {"exp":"last_result","hp_mp":"_char_result","combat":"_combat_result","menu":"_menu_result","wallet":"_wallet_result","blessing":"_blessing_result","map_name":"_map_name_result","target":"_target_result","primary_stats":"_primary_stats_result","quickslot":"_quickslot_result","inventory":"_inventory_result","inventory_name":"_inventory_name_result","inventory_lock":"_inventory_lock_result","character":"_character_result","auto_message":"_auto_message_result","system_message":"_system_message_result","joystick":"_joystick_result"}
 ## The core HUD must mount; the rest is reported.
 const REQUIRED := ["exp","hp_mp","combat","menu"]
 var checks: int = 0
