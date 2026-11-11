@@ -185,10 +185,16 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
+		# "transfer" ("true"/"false") is a client flag on Text nodes (e.g.
+		# MessBoxHUD Text_Line); CSLoader keeps it as user data only, so it
+		# selects no pixels, font or layout. Retain it as metadata.
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
 		else:
 			for key: Variant in custom:
-				if key not in ["soundid","touchsoundid"] or not custom[key] is String:problems.append("custom_property")
+				if not custom[key] is String:problems.append("custom_property")
+				elif key=="transfer":
+					if custom[key] not in ["true","false"] or node.get("classname") not in ["Text","TextBMFont"]:problems.append("custom_property")
+				elif key not in ["soundid","touchsoundid"]:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
 			# CSLoader locates a handler by callbackName; a serialized default

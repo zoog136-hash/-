@@ -23,6 +23,7 @@ static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 		var reusable: Dictionary=load("res://scripts/quests/quest_reusable523.gd").profile(record)
 		if not reusable.is_empty():record=reusable
 	record=preload("res://scripts/quests/quest_source_buffs523.gd").action(world,record)
+	record=load("res://scripts/loot/source523_item_effects.gd").food_action(world,record)
 	if int(record.get("source_item_class_id",0))==310:
 		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").profile(record)
 		if not cure.is_empty():record=cure

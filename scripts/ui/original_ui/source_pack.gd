@@ -152,6 +152,7 @@ const CODE_EXTERNAL_TEXTURE_NODES := {
 	"UI/MainFloating/Slot_Skill.csb":[18488],
 	"UI/NpcDialogue/NpcDialogue_All.csb":[4912],
 	"UI/Map/Map_Tab_Area.csb":[44440],
+	"UI/Shop/Shop_List_Slot.csb":[10376],
 }
 
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:

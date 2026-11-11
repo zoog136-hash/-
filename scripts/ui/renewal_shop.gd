@@ -163,7 +163,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 	selection_sheet.bind_shop(self,side)
 	row.configure(listing,side,315)
 	_refresh()
-	if source_catalog.available(): _open_source523.call_deferred()
+	if source_catalog.available() and not is_instance_valid(source523_panel): _open_source523.call_deferred()
 
 func _open_source523() -> void:
 	if is_instance_valid(source523_panel) or not SOURCE523.session().available(): return
