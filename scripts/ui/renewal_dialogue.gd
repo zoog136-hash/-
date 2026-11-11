@@ -1,62 +1,38 @@
-extends VBoxContainer
+extends Control
+## Owner of one original 523 NPC talk. It draws nothing itself: the page model
+## (original DialogData_Korean text, see scripts/npc/source523_town_npcs.gd) is
+## handed to the original UI/NpcDialogue/NpcDialogue_All.csb presenter. When
+## that window is unavailable the talk is closed with its reason; there is no
+## TWILIGHT-made dialogue screen.
 signal source_dialogue_resolved(resolved: Dictionary)
-const UI = preload("res://scripts/ui/renewal_theme.gd")
+const TOWN_NPCS = preload("res://scripts/npc/source523_town_npcs.gd")
 var hud: Node
 var world: Node
 var npc_id: String = ""
 var current_node: String = ""
-var message_label: RichTextLabel
-var options: VBoxContainer
-var source_dialogue_model: Dictionary={}
+var source_dialogue_model: Dictionary = {}
 
 func configure(controller: Node, requested_npc_id: String) -> void:
 	hud = controller
 	world = hud.get_parent()
 	npc_id = requested_npc_id
 	current_node = ""
-	size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.label("TWILIGHT NPC 대화",20,UI.GOLD))
-	message_label = UI.rich("")
-	message_label.fit_content = true
-	message_label.scroll_active = false
-	message_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(message_label)
-	options = VBoxContainer.new()
-	options.name = "DialogueOptions"
-	add_child(options)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_show_node("")
 
 func _show_node(id: String) -> void:
-	var service: Object = world.get("dialogue_service")
-	var state: Dictionary = world.call("_npc_dialogue_state")
-	var dialogue: Dictionary = service.call("resolve",npc_id,id,state)
-	source_dialogue_model=dialogue.duplicate(true)
-	for child: Node in options.get_children():
-		options.remove_child(child)
-		child.queue_free()
-	if not bool(dialogue.get("ok",false)):
-		message_label.text = UI.safe(dialogue.get("reason","대화를 시작할 수 없습니다"))
-		source_dialogue_resolved.emit(dialogue.duplicate(true))
-		return
-	current_node = str(dialogue.get("node_id",""))
-	message_label.text = "[color=#d8b878][font_size=22]%s[/font_size][/color]\n\n%s" % [
-		UI.safe(dialogue.get("npc_name",npc_id)), UI.safe(dialogue.get("text",""))
-	]
-	var choices: Array = dialogue.get("choices",[])
-	for raw: Variant in choices:
-		if not (raw is Dictionary):
-			continue
-		var choice: Dictionary = raw as Dictionary
-		var next_id: String = str(choice.get("next",""))
-		var action: String = str(choice.get("action",""))
-		var button: Button = UI.button(str(choice.get("label","계속")),
-			_choice_picked.bind(next_id,action),Vector2(0,40))
-		options.add_child(button)
+	var dialogue: Dictionary = TOWN_NPCS.resolve(world, npc_id, id)
+	source_dialogue_model = dialogue.duplicate(true)
+	if bool(dialogue.get("ok", false)): current_node = str(dialogue.get("node_id", ""))
 	source_dialogue_resolved.emit(dialogue.duplicate(true))
 
-func _choice_picked(next_id: String,action: String) -> void:
+func _choice_picked(next_id: String, action: String) -> void:
 	if not next_id.is_empty():
 		_show_node(next_id)
-	elif not action.is_empty() and hud.has_signal("npc_dialogue_action_requested"):
-		hud.emit_signal("npc_dialogue_action_requested",npc_id,current_node,action)
+		return
+	if action.is_empty() or not hud.has_signal("npc_dialogue_action_requested"): return
+	var section: Variant = hud.get("active_section")
+	hud.emit_signal("npc_dialogue_action_requested", npc_id, current_node, action)
+	# A refused or unconnected function leaves this talk's empty workspace behind.
+	if is_instance_valid(hud) and hud.get("active_section") == section and is_inside_tree() and not is_queued_for_deletion() and hud.has_method("_close_workspace"):
+		hud.call("_close_workspace")
