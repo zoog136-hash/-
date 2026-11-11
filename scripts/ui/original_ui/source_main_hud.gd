@@ -26,6 +26,7 @@ const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_mes
 const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
 const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
 const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
+const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
@@ -122,6 +123,7 @@ var _enhance_action_result: Dictionary={}
 var _enhance_owner: WeakRef
 var _enhance_listing: WeakRef
 var _quest_controls: RefCounted
+var _quest_window: RefCounted
 var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
@@ -200,6 +202,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 				var side: Variant=hud.get("lineage_side_ui")
 				if is_instance_valid(side):side.call("_show_equipment_page")
 				hud.call("open_character"))
+	if pack.manifest.get("scenes",{}).has(QuestWindow.ROOT):
+		var quest_window=QuestWindow.new()
+		if quest_window.configure(pack,hud).get("ok",false):
+			_quest_window=quest_window
+			quest_window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
 		_npc_dialogue_view=NpcDialogueView.new()
 		_npc_dialogue_view.configure(pack)
@@ -470,6 +478,21 @@ func bind_quest_controls(owner: Control) -> Dictionary:
 
 func _quest_category_changed(_category: String) -> void:
 	if _quest_controls!=null:_quest_controls_result=_quest_controls.refresh()
+
+func try_open_quest_window(world: Node, claim: Callable) -> Dictionary:
+	if _quest_window==null or not is_instance_valid(_coordinates):return _fail("source_quest_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _quest_window.open(_coordinates,world,claim)
+
+func quest_window_is_open() -> bool:
+	return _quest_window!=null and _quest_window.is_open()
+
+func refresh_quest_window() -> Dictionary:
+	return _quest_window.refresh() if quest_window_is_open() else {"ok":true,"handled":false}
+
+func close_quest_window() -> void:
+	_cancel_native_buttons()
+	if _quest_window!=null:_quest_window.close()
 
 func close_quest_controls() -> void:
 	_cancel_native_buttons()
