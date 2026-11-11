@@ -47,6 +47,9 @@ func configure(controller: Node) -> void:
 	var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
 	source_info.name = "Patch523EquipmentInfoButton"
 	filters.add_child(source_info)
+	var npc_production: Button = UI.button("NPC 생산", func() -> void: preload("res://scripts/npc_production523/npc_production523_panel.gd").open(hud))
+	npc_production.name = "NpcProduction523Button"
+	filters.add_child(npc_production)
 	category_filter = OptionButton.new()
 	category_filter.name = "CraftCategoryFilter"
 	category_filter.custom_minimum_size.y=40

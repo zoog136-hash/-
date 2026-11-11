@@ -122,6 +122,8 @@ const GROWTH96 = preload("res://scripts/progression/growth96_runtime.gd")
 var growth96 = GROWTH96.new()
 const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
 var half_elixir = HALF_ELIXIR.new()
+const NPC_PRODUCTION523 = preload("res://scripts/npc_production523/npc_production523_state.gd")
+var npc_production523 = NPC_PRODUCTION523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -6168,6 +6170,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if combinations.save_blocked:return ERR_UNAVAILABLE
 	if collection_override.has("combination523") and not combinations.check_load(collection_override).is_empty():return ERR_INVALID_DATA
 	if half_elixir.save_blocked or not half_elixir.validate(collection_override.get("half_elixir523", half_elixir.state)).is_empty(): return ERR_INVALID_DATA
+	if npc_production523.save_blocked or not NPC_PRODUCTION523.validate(collection_override.get(NPC_PRODUCTION523.KEY, npc_production523.state)).is_empty(): return ERR_INVALID_DATA
 	if spell_group_conversion.save_blocked:
 		if not quiet:hud.show_message("계열 전환 저장 손상 · 기존 파일을 보존합니다. 정상 백업을 불러오세요.")
 		return ERR_FILE_CORRUPT
@@ -6204,7 +6207,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523",NPC_PRODUCTION523.KEY,"spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -6269,6 +6272,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"growth": growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
 		"half_elixir523": half_elixir.state.duplicate(true),
+		NPC_PRODUCTION523.KEY: npc_production523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -6463,6 +6467,11 @@ func _load_game(quiet: bool) -> void:
 	if not half_error.is_empty():
 		half_elixir.save_blocked = true
 		hud.show_message(half_error)
+		return
+	var npc_production_error: String = NPC_PRODUCTION523.validate(data.get(NPC_PRODUCTION523.KEY, NPC_PRODUCTION523.fresh()))
+	if not npc_production_error.is_empty():
+		npc_production523.save_blocked = true
+		hud.show_message(npc_production_error)
 		return
 	var group_error:String=spell_group_conversion.validate(data.get("spell_group_conversion", {"schema":1,"source_snapshot":"patch523","classes":{}}))
 	if not group_error.is_empty():
@@ -6746,6 +6755,7 @@ func _load_game(quiet: bool) -> void:
 	weapon_mastery.accept_load(data)
 	growth96.restore(data.get("growth96",GROWTH96.fresh()))
 	half_elixir.accept(data.get("half_elixir523", HALF_ELIXIR.fresh()))
+	npc_production523.accept(data.get(NPC_PRODUCTION523.KEY, NPC_PRODUCTION523.fresh()))
 	titles.restore(data)
 	quest_service.import_state(data.get("quest_state", {}))
 	tj_coupons.core.import_state(data.get("tj_coupons523",tj_coupons.core.empty_state()))

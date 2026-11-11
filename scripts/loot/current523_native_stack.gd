@@ -86,6 +86,8 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not material.is_empty():return material
 	var ticket: Dictionary=draw_ticket_profile(record)
 	if not ticket.is_empty():return ticket
+	var production: Dictionary=npc_production_currency_profile(record)
+	if not production.is_empty():return production
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
@@ -103,6 +105,16 @@ static func draw_ticket_profile(record: Dictionary) -> Dictionary:
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
+
+## The bag item that pays an original NPC production summon (LuckyDefenceUnitSummon
+## CurrencyID -> CurrencyUnitClass ClassID) is owned as a physical stack; the
+## summon service (scripts/npc_production523/) spends it.
+static func npc_production_currency_profile(record: Dictionary) -> Dictionary:
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_bless_raw")!=1 or D.equipment(record) or not D.currency_identity_name(record).is_empty() or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	var definition: Dictionary=D.item_definition(record)
+	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
+	if not load("res://scripts/npc_production523/npc_production523_rules.gd").call("payment_item",int(record.get("source_item_class_id",0))):return {}
+	return {"kind":"npc_production_currency","standalone_effect_complete":false,"use_owner":"npc_production523"}
 
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
