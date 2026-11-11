@@ -819,6 +819,12 @@ func bind_world_map(image_adapter: RefCounted, context_provider: Callable, input
 func has_world_map_binding() -> bool:
 	return is_instance_valid(_world_map)
 
+## True while an original window covers the field; overlays drawn above
+## the HUD (developer tools) hide meanwhile.
+func any_window_open() -> bool:
+	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open()
+
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()
 

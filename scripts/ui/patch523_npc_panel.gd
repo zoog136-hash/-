@@ -24,6 +24,21 @@ var extension_status: Label
 var remaining_buff_ids: Array[int] = []
 var remaining_buff_choice: OptionButton
 var remaining_status: Label
+var _open_button: Button
+
+## The button sits on layer 120 above the HUD; hide it (and its status line)
+## while an original 523 window is open so it does not cover that window.
+func _hide_under_original_window() -> void:
+	if not is_instance_valid(_open_button): return
+	var covered: bool = false
+	var hud: Node = get_parent().get_node_or_null("HUD") if get_parent() != null else null
+	if hud != null:
+		var controller = hud.get("original_main_ui_controller")
+		if is_instance_valid(controller) and controller.has_method("any_window_open"):
+			covered = bool(controller.any_window_open())
+	if _open_button.visible == covered:
+		_open_button.visible = not covered
+		status.visible = not covered
 
 func _ready() -> void:
 	layer = 120
@@ -35,6 +50,7 @@ func _ready() -> void:
 		panel.visible = not panel.visible
 		if panel.visible: refresh_npc())
 	add_child(open)
+	_open_button = open
 	status = Label.new()
 	status.position = Vector2(18,190)
 	status.add_theme_color_override("font_color",Color("f5d49c"))
@@ -188,6 +204,7 @@ func _ready() -> void:
 	fill_selector()
 
 func _process(_delta: float) -> void:
+	_hide_under_original_window()
 	var size: Vector2 = get_viewport().get_visible_rect().size
 	panel.size = Vector2(minf(900,size.x-24),minf(650,size.y-24))
 	panel.position = (size-panel.size)*.5
