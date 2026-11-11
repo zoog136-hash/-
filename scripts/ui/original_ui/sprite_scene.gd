@@ -194,6 +194,11 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 				if not custom[key] is String:problems.append("custom_property")
 				elif key=="transfer":
 					if custom[key] not in ["true","false"] or node.get("classname") not in ["Text","TextBMFont"]:problems.append("custom_property")
+				# "tone" ("#rrggbb") is the client's grade colour note on a card
+				# root Panel (Change_Card_A_<grade> Panel_Root); CSLoader keeps
+				# it as user data only, so it selects no pixels. Retain it.
+				elif key=="tone":
+					if node.get("classname")!="Panel" or not RegEx.create_from_string("^#[0-9A-Fa-f]{6}$").search(custom[key]):problems.append("custom_property")
 				elif key not in ["soundid","touchsoundid"]:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
