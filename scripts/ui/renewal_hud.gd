@@ -1347,7 +1347,7 @@ func show_companion_equipment() -> void:
 	lineage_side_ui.mount_window_header(window)
 
 func open_npc_dialogue(npc_id: String) -> void:
-	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
+	_open_window("dialogue","","")
 	var screen := DialogueUI.new()
 	workspace.mount(screen)
 	screen.source_dialogue_resolved.connect(_on_source_npc_dialogue_resolved.bind(screen))
@@ -1356,14 +1356,17 @@ func open_npc_dialogue(npc_id: String) -> void:
 func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> void:
 	if active_section!="dialogue" or not is_instance_valid(owner) or owner.is_queued_for_deletion() or not workspace.content.is_ancestor_of(owner):return
 	_original_npc_dialogue_owner=weakref(owner)
-	if not is_instance_valid(original_main_ui_controller):return
-	var native: Dictionary=original_main_ui_controller.try_open_npc_dialogue(owner,resolved)
+	# Only the original NpcDialogue_All window presents NPC talk.
+	var native: Dictionary={"ok":false,"handled":false,"code":"source_npc_dialogue_original_view_not_available"}
+	if not resolved.get("ok",false):native={"ok":false,"handled":false,"code":"source_npc_dialogue_not_resolved","reason":str(resolved.get("reason",""))}
+	elif is_instance_valid(original_main_ui_controller):native=original_main_ui_controller.try_open_npc_dialogue(owner,resolved)
 	original_main_ui_status["npc_dialogue"]=native
 	if native.get("handled",false):
 		if pointer_transfer!=null:pointer_transfer.cancel()
 		workspace.hide()
 	else:
-		workspace.show()
+		show_message(str(resolved.get("reason","")) if not resolved.get("ok",false) else "원본 NPC 대화창을 열 수 없습니다 · "+str(native.get("code","")))
+		_close_workspace()
 	_sync_screen_focus()
 
 func open_settings_info() -> void:

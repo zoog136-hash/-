@@ -10,6 +10,8 @@ const DIRECTION_STEP: float = PI / 4.0
 var active_touch: int = -1
 var value: Vector2 = Vector2.ZERO
 var mouse_active: bool = false
+## False while an original pad scene presents this control; input is unchanged.
+var draw_visual: bool = true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -111,6 +113,8 @@ func _set_value(next_value: Vector2) -> void:
 		queue_redraw()
 
 func _draw() -> void:
+	if not draw_visual:
+		return
 	var center: Vector2 = size * 0.5
 	var radius: float = minf(size.x, size.y) * 0.38
 	draw_circle(center, radius, Color(0.04, 0.04, 0.05, 0.48))
