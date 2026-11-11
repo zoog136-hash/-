@@ -360,7 +360,11 @@ func _inventory_entries() -> Array[Dictionary]:
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			for id: String in instance_ids:
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(instances[id].get("source_reward_quantity",instances[id].get("source_awakening_quantity",instances[id].get("source_card_currency_quantity",1)))))})
+				# A 523 native stack instance carries its remaining count in
+				# source_native_stack_quantity (a 100 potion stack showed "1").
+				var physical: Dictionary=instances[id]
+				var amount: Variant=physical.get("source_native_stack_quantity",physical.get("source_reward_quantity",physical.get("source_awakening_quantity",physical.get("source_card_currency_quantity",1))))
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(amount))})
 	return entries
 
 func _refresh_inventory_grid() -> void:

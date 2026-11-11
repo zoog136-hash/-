@@ -71,7 +71,7 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
 	var model: Dictionary=snapshot()
 	if not model.get("ok",false):return model
-	var tree: Dictionary=_pack.call("layout_source",MEMBER) if _pack.has_method("layout_source") else _pack.scene(MEMBER)
+	var tree: Dictionary=_layout_or_scene(MEMBER)
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_inventory_original_layout_missing")
 	# Received tab/close subtrees contain only their original Sprite icons
 	# and title textures; they serialize no Text/TextBMFont literal children.
@@ -194,3 +194,10 @@ static func _collect_offsets(node: Dictionary, roots: Array[int], matches: Dicti
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+## A member listed in layout_sources (parent reference geometry) is read from
+## there; every other member is an ordinary pack scene. layout_source() returns
+## {} for scenes, which used to fail every original window as "layout missing".
+func _layout_or_scene(member: String) -> Dictionary:
+	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
+	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)

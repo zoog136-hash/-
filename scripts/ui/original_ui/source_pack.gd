@@ -141,7 +141,29 @@ static func bake_key_for(manifest_sha: String) -> String:
 static func baked(manifest_sha: String) -> bool:
 	return BAKE.present(bake_name_for(manifest_sha),bake_key_for(manifest_sha))
 
+## Original nodes whose texture the game supplies at run time (item, skill
+## and NPC portrait pictures from the 523 image pack). Installed packs built
+## before these windows were connected declare only the map area image, so
+## the inventory, character equipment, quickslot and NPC portrait slots were
+## refused ("source_asset_slot_declaration_required"). Declared here by the
+## code that binds them; the pack's own declarations are kept.
+const CODE_EXTERNAL_TEXTURE_NODES := {
+	"UI/CommonUi/Common_Slot.csb":[15012],
+	"UI/MainFloating/Slot_Skill.csb":[18488],
+	"UI/NpcDialogue/NpcDialogue_All.csb":[4912],
+	"UI/Map/Map_Tab_Area.csb":[44440],
+	"UI/Shop/Shop_List_Slot.csb":[10376],
+}
+
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:
+	var external: Dictionary=value.get("externally_bound_texture_nodes",{}).duplicate(true) if value.get("externally_bound_texture_nodes") is Dictionary else {}
+	for member: String in CODE_EXTERNAL_TEXTURE_NODES:
+		if not value.get("files",{}).has(member):continue
+		var offsets: Array=external.get(member,[])
+		for offset: int in CODE_EXTERNAL_TEXTURE_NODES[member]:
+			if offset not in offsets:offsets.append(offset)
+		external[member]=offsets
+	if not external.is_empty():value["externally_bound_texture_nodes"]=external
 	manifest=value
 	root=pack_root
 	manifest_sha256=expected_sha256

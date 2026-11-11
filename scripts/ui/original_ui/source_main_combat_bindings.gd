@@ -70,7 +70,7 @@ func build(member: String, remaining: Dictionary={}) -> Dictionary:
 
 func core_source_offsets() -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(PAD,{}).get("sha256","")!=ROOTS[PAD].sha256:return _fail("source_main_combat_identity_mismatch")
-	var tree: Dictionary=_pack.call("layout_source",PAD) if _pack.has_method("layout_source") else _pack.scene(PAD)
+	var tree: Dictionary=_layout_or_scene(PAD)
 	if tree.is_empty():tree=_pack.scene(PAD)
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_combat_original_layout_missing")
 	var roots: Array[int]=[31780,29032,24560,22536,12660,23168]
@@ -221,3 +221,10 @@ static func _set_visible_binding(bindings: Dictionary, offset: int, value: bool)
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+## A member listed in layout_sources (parent reference geometry) is read from
+## there; every other member is an ordinary pack scene. layout_source() returns
+## {} for scenes, which used to fail every original window as "layout missing".
+func _layout_or_scene(member: String) -> Dictionary:
+	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
+	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)

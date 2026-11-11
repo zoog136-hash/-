@@ -919,6 +919,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("shop_window_is_open") and original_main_ui_controller.shop_window_is_open():
+			original_main_ui_controller.close_shop_window()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+			original_main_ui_controller.close_quest_window()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():
 			original_main_ui_controller.close_world_map()
 			get_viewport().set_input_as_handled()
@@ -957,6 +967,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -1141,6 +1153,7 @@ func _navigate(section: String) -> void:
 		"warehouse": open_warehouse()
 		"crafting": open_crafting()
 		"equipment523": equipment523_open_requested.emit()
+		"bless_refine523": open_bless_refine523()
 		"sell": open_item_sell()
 		_: open_catalog(section)
 
@@ -1190,11 +1203,24 @@ func open_quests() -> void:
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
+		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
+		original_main_ui_status["quest_window"]=native
+		if native.get("handled",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
 	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
 	# Cheap on kills/pickups. Rebuild only the currently open quest page,
 	# at most once per frame regardless of the number of events.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+		if not quest_refresh_pending:
+			quest_refresh_pending=true
+			call_deferred("_refresh_quests_deferred")
+		return
 	if active_section != "quests" or not is_instance_valid(quest_view) or quest_view.is_queued_for_deletion():
 		return
 	if quest_refresh_pending:
@@ -1204,6 +1230,9 @@ func refresh_quests() -> void:
 
 func _refresh_quests_deferred() -> void:
 	quest_refresh_pending = false
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+		original_main_ui_status["quest_window"]=original_main_ui_controller.refresh_quest_window()
+		return
 	if active_section == "quests" and is_instance_valid(quest_view) and not quest_view.is_queued_for_deletion():
 		quest_view.call("refresh")
 
@@ -1214,6 +1243,18 @@ func open_shop() -> void:
 	workspace.mount(shop)
 	shop.configure(self)
 	shop_view = shop
+	# The original 523 shop window shows the market; the existing panel keeps
+	# quotes, confirmation, payment and the order box.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("can_open_shop_window") and original_main_ui_controller.can_open_shop_window() and shop.has_method("_open_source523"):
+		shop.call("_open_source523")
+		var panel: Variant=shop.get("source523_panel")
+		if panel is Control and is_instance_valid(panel):
+			var native: Dictionary=original_main_ui_controller.try_open_shop_window(panel)
+			original_main_ui_status["shop_window"]=native
+			if native.get("handled",false):
+				if pointer_transfer!=null:pointer_transfer.cancel()
+				workspace.hide()
+				_sync_screen_focus()
 
 func open_npc_shop() -> void:
 	_open_window("npc_shop","잡화 상인","")
@@ -1429,6 +1470,13 @@ func open_character() -> void:
 	lineage_side_ui.show_character(character_state)
 	lineage_side_ui.mount_window_header(workspace)
 	if lineage_side_ui.stats_page.visible:_on_original_character_page_requested("stats")
+	elif is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_character_equipment"):
+		var native: Dictionary=original_main_ui_controller.try_open_character_equipment()
+		original_main_ui_status["character_equipment"]=native
+		if native.get("handled",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
 
 func _on_original_character_page_requested(page: String) -> void:
 	if not is_instance_valid(original_main_ui_controller):return
@@ -1506,7 +1554,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2905,6 +2953,16 @@ func open_protection523() -> void:
 	scroll.add_child(view)
 	view.configure(self)
 
+
+func open_bless_refine523() -> void:
+	_open_window("bless_refine523","용해 · 질서의 연금","원본523 축복의 가루 용해 · 상급 축복의 가루 질서의 연금")
+	var scroll := ScrollContainer.new()
+	scroll.name = "BlessRefine523Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/refine523/bless_refine523_panel.gd").new()
+	scroll.add_child(view)
+	view.configure(self)
 
 func open_equipment523(_snapshot: Dictionary) -> void:
 	show_message("원본 장비 가공 UI 연결 대기 · 거래 데이터와 소유 상태 보존")

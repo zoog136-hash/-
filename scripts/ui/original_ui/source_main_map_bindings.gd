@@ -373,7 +373,7 @@ func _map_identities() -> Dictionary:
 	return {"ok":true}
 
 func _original_tree(member: String) -> Dictionary:
-	return _pack.call("layout_source",member) if _pack.has_method("layout_source") else _pack.scene(member)
+	return _layout_or_scene(member)
 
 static func _valid_area_role(role: Dictionary) -> bool:
 	return role.get("world_image_display")==true and role.get("member")==AREA and role.get("sha256")==AREA_SHA and role.get("node_offset")==AREA_IMAGE
@@ -395,3 +395,10 @@ static func requirements() -> Array:
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
+
+## A member listed in layout_sources (parent reference geometry) is read from
+## there; every other member is an ordinary pack scene. layout_source() returns
+## {} for scenes, which used to fail every original window as "layout missing".
+func _layout_or_scene(member: String) -> Dictionary:
+	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
+	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)
