@@ -221,6 +221,11 @@ static func _consume_subtree(node: Dictionary, bindings: Dictionary) -> void:
 		if not binding.has("role") and not binding.has("input"):
 			binding["role"]="consume"
 			bindings[offset]=binding
+	# Labels the window does not drive keep the client's authored text.
+	if node.get("classname") in ["Text","TextBMFont"] and not bindings.get(offset,{}).has("role"):
+		var label: Dictionary=bindings.get(offset,{})
+		label["role"]="static_source_text"
+		bindings[offset]=label
 	if node.get("classname")=="ProjectNode":return
 	for child: Dictionary in node.get("children",[]):_consume_subtree(child,bindings)
 
