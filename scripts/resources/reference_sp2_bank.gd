@@ -1,6 +1,7 @@
 extends RefCounted
 ## Pinned, opt-in source-action metadata. No installation, role inference or events.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const PARSE_CACHE = preload("res://scripts/resources/sp2_parse_cache.gd")
 const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selection.gd")
 const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
@@ -237,7 +238,8 @@ func _member(member: String) -> Dictionary:
 					_verified_members.erase(file_path)
 					return fail(str(_last_member_problem))
 			var reservation: int = ASSETS.reserve("parsed", asset_key, bytes.size())
-			var fresh: Dictionary = DECODER.parse(bytes)
+			# Parsed once per device for these verified bytes (sp2_parse_cache.gd).
+			var fresh: Dictionary = PARSE_CACHE.parse(bytes, str(spec.sha256) if supplied_sha else "")
 			if not fresh.ok:
 				ASSETS.cancel(reservation)
 				return fresh
