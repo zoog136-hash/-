@@ -29,6 +29,7 @@ const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_ac
 const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
 const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
 const ShopWindow=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
+const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
@@ -129,6 +130,7 @@ var _enhance_listing: WeakRef
 var _quest_controls: RefCounted
 var _quest_window: RefCounted
 var _shop_window: RefCounted
+var _change_window: RefCounted
 var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
@@ -224,6 +226,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 		if shop_window.configure(pack,hud).get("ok",false):
 			_shop_window=shop_window
 			shop_window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+	if pack.manifest.get("scenes",{}).has(ChangeWindow.ROOT):
+		var change_window=ChangeWindow.new()
+		if change_window.configure(pack,hud).get("ok",false):
+			_change_window=change_window
+			change_window.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
 		_npc_dialogue_view=NpcDialogueView.new()
@@ -522,6 +530,18 @@ func shop_window_is_open() -> bool:
 func close_shop_window() -> void:
 	_cancel_native_buttons()
 	if _shop_window!=null:_shop_window.close()
+
+func try_open_change_window(category: String) -> Dictionary:
+	if _change_window==null or not is_instance_valid(_coordinates):return _fail("source_change_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _change_window.open(_coordinates,category)
+
+func change_window_is_open() -> bool:
+	return _change_window!=null and _change_window.is_open()
+
+func close_change_window() -> void:
+	_cancel_native_buttons()
+	if _change_window!=null:_change_window.close()
 
 func quest_window_is_open() -> bool:
 	return _quest_window!=null and _quest_window.is_open()

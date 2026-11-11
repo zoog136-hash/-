@@ -928,6 +928,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("change_window_is_open") and original_main_ui_controller.change_window_is_open():
+			original_main_ui_controller.close_change_window()
+			_close_workspace()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
 			original_main_ui_controller.close_quest_window()
 			_close_workspace()
@@ -973,6 +978,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_change_window"):original_main_ui_controller.close_change_window()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
@@ -1733,6 +1739,21 @@ func open_catalog(category: String) -> void:
 		catalog_card_chrome.activate()
 	if not catalog_results.is_empty() and SourceCardPresentation.native(catalog_results[0]):
 		_restore_native_catalog_scroll(category, float(saved.get("scroll", 0)), catalog_icon_generation)
+	if category in ["변신","마법인형"]:_open_original_change_window(category)
+
+## The original 523 Change_WinTotal shows the owned cards; applying a card
+## still goes through catalog_equip_requested (World._equip_catalog).
+func _open_original_change_window(category: String) -> void:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_change_window"):return
+	var native: Dictionary=original_main_ui_controller.try_open_change_window(category)
+	original_main_ui_status["change_window"]=native
+	if not native.get("handled",false):return
+	_reset_catalog_drag()
+	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
+	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
+	if pointer_transfer!=null:pointer_transfer.cancel()
+	workspace.hide()
+	_sync_screen_focus()
 
 func _restore_native_catalog_scroll(category: String, scroll: float, generation: int) -> void:
 	# Container reparenting and icon-size changes settle after the first frame.
