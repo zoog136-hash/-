@@ -124,6 +124,8 @@ const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
 var half_elixir = HALF_ELIXIR.new()
 const DOMINATION_STONES = preload("res://scripts/domination/domination_stone_runtime.gd")
 var domination_stones = DOMINATION_STONES.new()
+const ROUTINE523 = preload("res://scripts/routine523/routine523_runtime.gd")
+var routines = ROUTINE523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -946,6 +948,7 @@ func _load_data() -> void:
 	growth96.configure(self)
 	half_elixir.configure(self)
 	domination_stones.configure(self)
+	routines.configure(self)
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
@@ -3514,6 +3517,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		_refresh_combat_hud()
 		_update_ain_hud()
 	unconfirmed523.record_event("kill",{"source_id":int(monster.source_m_npc_id),"npc_id":int(monster.source_m_npc_id),"event_id":"%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id],"player_credit":true,"amount":1})
+	routines.record("kill",{"npc_id":int(monster.source_m_npc_id),"amount":1})
 	if blessing_spent>0:unconfirmed523.record_event("blessing_use",{"amount":blessing_spent,"event_id":"blessing:%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id]})
 	if totem_changed:
 		if hud.has_method("refresh_totems"): hud.call("refresh_totems")
@@ -4259,6 +4263,7 @@ func _use_card_pack_item(item_name: String) -> void:
 		hud.refresh_inventory(inventory)
 		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
 		return
+	routines.record("card_buy",{"deck":int(ROUTINE523.CARD_DECKS.get(category,0)),"amount":1})
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	hud.call("set_card_draw_fusion_result", category, message)
@@ -5093,6 +5098,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		_update_hud()
 		hud.show_message("강화 저장 실패 · 주문서·장비·난수 상태를 보존했습니다")
 		return
+	if result_type == "success": routines.record("enchant_success",{"amount":1})
 	hud.append_log(result_log)
 	var phase_usec: int = Time.get_ticks_usec()
 	# _update_hud already redraws an open bag; a second full redraw is wasted.
@@ -5584,6 +5590,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	next_item_instance_id = int(staged.next_item_instance_id)
 	crafting_log = staged_log
 	patch523_crafting_usage=staged.patch523_crafting_usage
+	routines.record("craft_try",{"amount":batches})
 	patch523_owned_material_choices.erase(recipe_id)
 	hud.refresh_inventory(inventory)
 	_update_hud()
@@ -6282,13 +6289,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	if collection_override.has("equipped_ammo") and not collection_override.equipped_ammo is String: return ERR_INVALID_PARAMETER
+	if collection_override.has(ROUTINE523.SAVE_KEY) and (routines.save_blocked or not ROUTINE523.validate(collection_override[ROUTINE523.SAVE_KEY]).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has("ammo_unequipped") and not collection_override.ammo_unequipped is bool: return ERR_INVALID_PARAMETER
 	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
 	for key: String in collection_override:
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog"]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -6354,6 +6362,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"growth96": growth96.state.duplicate(true),
 		"half_elixir523": half_elixir.state.duplicate(true),
 		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),
+		ROUTINE523.SAVE_KEY: routines.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -6951,6 +6960,7 @@ func _load_game(quiet: bool) -> void:
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
 	# Before the instance sync below: slots 2/3 hold physical stones.
 	domination_stones.import_state(data.get(DOMINATION_STONES.SAVE_KEY, {}))
+	routines.import_state(data.get(ROUTINE523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -8642,6 +8652,7 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 		_invalidate_equipment_static()
 		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
 		return
+	if source_deck > 0 and attempts > 0: routines.record("card_compose",{"deck":source_deck,"amount":attempts})
 	_update_hud()
 	hud.show_message(message)
 	hud.append_log(message)
