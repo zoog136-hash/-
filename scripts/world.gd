@@ -122,6 +122,8 @@ const GROWTH96 = preload("res://scripts/progression/growth96_runtime.gd")
 var growth96 = GROWTH96.new()
 const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
 var half_elixir = HALF_ELIXIR.new()
+const DOMINATION_STONES = preload("res://scripts/domination/domination_stone_runtime.gd")
+var domination_stones = DOMINATION_STONES.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -943,6 +945,7 @@ func _load_data() -> void:
 	weapon_mastery.configure(self)
 	growth96.configure(self)
 	half_elixir.configure(self)
+	domination_stones.configure(self)
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
@@ -4593,6 +4596,7 @@ func _combined_active_buffs() -> Dictionary:
 	return result
 
 func _is_instance_equipped(id: String) -> bool:
+	if domination_stones.is_extra_equipped(id): return true
 	for entry: Variant in equipped_items.values():
 		if entry is Dictionary and str((entry as Dictionary).get("instance_id", "")) == id:
 			return true
@@ -6349,6 +6353,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"growth": growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
 		"half_elixir523": half_elixir.state.duplicate(true),
+		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -6944,6 +6949,8 @@ func _load_game(quiet: bool) -> void:
 	var stored_instances: Variant = data.get("item_instances", {})
 	source_shop.accept_load(data)
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
+	# Before the instance sync below: slots 2/3 hold physical stones.
+	domination_stones.import_state(data.get(DOMINATION_STONES.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -7474,6 +7481,9 @@ func _unequip_item_reference(reference: String) -> void:
 		_toggle_ammo_equipped(equipped_ammo)
 		return
 	if id.is_empty(): return
+	if domination_stones.is_extra_equipped(id):
+		domination_stones.unequip(domination_stones.state.slots.find(id)+1)
+		return
 	for slot: String in equipped_items.keys():
 		if str(equipped_items[slot].get("instance_id","")) != id: continue
 		equipped_items.erase(slot)
@@ -9069,6 +9079,8 @@ func _all_equipped_records() -> Array[Dictionary]:
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in card_deck_bonus.bonus_records(): records.append(record)
 	for record: Dictionary in halphas_star.bonus_records(): records.append(record)
+	# Domination stone slots 2 and 3 (slot 1 is equipped_items.domination_stone).
+	for record: Dictionary in domination_stones.bonus_records(): records.append(record)
 
 	equipment523_records_cache = equipment523.records(self)
 	records.append_array(equipment523_records_cache)
