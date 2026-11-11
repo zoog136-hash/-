@@ -11,7 +11,7 @@ const BOOK_DECKS := {
 const GROUP_UNIT := "BuffCardSkillAwakenSkillEnchantProbGroupID"
 const POOL_TABLE := "BuffCardSkillAwakenSkillEnchantProb"
 const GROUP_TABLE := "BuffCardSkillAwakenSkillEnchantProbGroup"
-const LEVEL_TABLES := ["BuffCardSkillAwakenStatPerLevel","BuffCardSkillAwakenSkillInvokeProb","BuffCardSkillAwakenExp"]
+const LEVEL_TABLES := ["BuffCardSkillAwakenStat","BuffCardSkillAwakenStatPerLevel","BuffCardSkillAwakenSkillInvokeProb","BuffCardSkillAwakenExp"]
 
 static func build(catalog: Dictionary) -> Dictionary:
 	var data: Dictionary={"schema":1,"source_snapshot":"patch523","source_definition_archive":{},"cards":{},"tables":{},"books":[],"spells":{},"source_server_limits":[],"unknown_rules":["경험치 재료별 획득량·소모·강화 처리 규칙은 미확정입니다.","각성서 수량·비용·재각성 초기화는 기존 명시적 사용자 정책입니다.","새 원문 각성서의 물리 개체·거래·저장은 통합 소유자의 current523 출처 계약 채택이 필요합니다."],"problem":"","input_problems":[]}

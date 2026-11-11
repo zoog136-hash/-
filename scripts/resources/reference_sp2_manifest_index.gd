@@ -45,10 +45,12 @@ func registry_is_dictionary(registry: String) -> bool:
 ## this process is not hashed again while its size and modification time are
 ## unchanged (any rewrite changes them and is hashed again).
 static func pinned(path: String, sha: String) -> bool:
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null: return false
-	var size: int = int(file.get_length())
-	file.close()
+	# Called for every drawn layer of every on-screen 523 actor: a stat, not an
+	# open/close, decides whether the full SHA-256 is needed.
+	if not FileAccess.file_exists(path):
+		_pins.erase(path)
+		return false
+	var size: int = int(FileAccess.get_size(path))
 	var modified: int = int(FileAccess.get_modified_time(path))
 	var known: Variant = _pins.get(path)
 	if known is Array and known[0] == sha and known[1] == size and known[2] == modified: return true

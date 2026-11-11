@@ -100,6 +100,7 @@ CHECKS = [
     ('current523_bless_rate_test', []),
     ('bless_refine523_test', []),
     ('npc_production523_test', []),
+    ('card_deck_bonus523_test', []),
     ('current523_host_world_test', []),
     ('current523_main_ui_test', []),
     ('updater_test', []),
@@ -115,6 +116,7 @@ CHECKS = [
     ('current523_sp2_bounds_rule_test', []),
     ('zip_table_rows_test', []),
     ('source523_prebake_test', []),
+    ('domination_stone_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -449,6 +451,7 @@ def main():
                       'current523_bless_rate_test':'CURRENT523_BLESS_RATE_RESULT',
                       'bless_refine523_test':'BLESS_REFINE523_RESULT',
                       'npc_production523_test':'NPC_PRODUCTION523_RESULT',
+                      'card_deck_bonus523_test':'CARD_DECK_BONUS523_RESULT',
                       'current523_host_world_test':'CURRENT523_HOST_WORLD_RESULT',
                       'updater_test':'UPDATER_RESULT',
                       'current523_server_profile_test':'CURRENT523_SERVER_PROFILE_RESULT',
@@ -463,7 +466,8 @@ def main():
                       'source_gender_selection_test':'SOURCE_GENDER_SELECTION_RESULT',
                       'current523_sp2_bounds_rule_test':'CURRENT523_SP2_BOUNDS_RULE_RESULT',
                       'zip_table_rows_test':'ZIP_TABLE_ROWS_RESULT',
-                      'source523_prebake_test':'SOURCE523_PREBAKE_RESULT'}[name]
+                      'source523_prebake_test':'SOURCE523_PREBAKE_RESULT',
+                      'domination_stone_test':'DOMINATION_STONE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
