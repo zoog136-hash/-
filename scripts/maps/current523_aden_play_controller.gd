@@ -7,6 +7,7 @@ const STATIC_SPR=preload("res://scripts/maps/current523_static_spr.gd")
 const TRAVEL_PAYMENT=preload("res://scripts/maps/current523_map_travel_payment.gd")
 const SOURCE_SPAWNS=preload("res://scripts/maps/current523_source_spawns.gd")
 const SOURCE_POPULATION=preload("res://scripts/maps/current523_source_population.gd")
+const TOWN_NPCS=preload("res://scripts/npc/source523_town_npcs.gd")
 const HOST=preload("res://scripts/maps/current523_host.gd")
 var active: bool = false
 ## Source-field actors live in their own root/population. The host Aden root
@@ -598,6 +599,8 @@ func _attach_source_population(world: Node, field: OriginalPlayableField) -> voi
 	else:
 		_clear_source_actors(world)
 	spawn_summary = SOURCE_SPAWNS.apply(field)
+	# Original 523 town NPCs of this Land (talk: original NpcDialogue_All).
+	spawn_summary["town_npcs"] = TOWN_NPCS.apply(field)
 	_source_population.configure(world,field)
 	spawn_summary.merge(_source_population.source_metrics(),true)
 	# Drops on a source field stay on that field's own map identity.
