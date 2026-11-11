@@ -220,8 +220,6 @@ static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> D
 		var step: int = word >> 10
 		var samples: PackedByteArray = reader.take(count)
 		if not reader.error.is_empty(): return _fail(reader.error)
-		for sample: int in samples:
-			if sample >= palette_size: return _fail("Palette index %d exceeds %d entries." % [sample,palette_size])
 		if count > 0:
 			runs.append_array(PackedInt32Array([xx,yy,indices.size(),count]))
 			indices.append_array(samples)
@@ -233,6 +231,14 @@ static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> D
 			xx = 0
 		else:
 			xx += count
+	# Palette range for the whole block at once (native scans) instead of a
+	# GDScript loop over every sample; the first offending sample in stream
+	# order is reported exactly as before.
+	if palette_size < 256 and not indices.is_empty():
+		for value: int in range(palette_size, 256):
+			if indices.has(value):
+				for sample: int in indices:
+					if sample >= palette_size: return _fail("Palette index %d exceeds %d entries." % [sample,palette_size])
 	block["indices"] = indices
 	block["runs"] = runs
 	block["sample_count"] = indices.size()
