@@ -481,7 +481,9 @@ func _toggle_ain_window() -> void:
 func set_ain_state(value: Dictionary, inventory: Dictionary) -> void:
 	v20_ain_state = value.duplicate(true)
 	var remaining: int = maxi(0, int(value.get("blessing", 200)))
-	var stage_color: Color = Color("d9ad45") if remaining > 200 else (Color("68d77b") if remaining > 0 else Color("a1a6a8"))
+	# Benefit stage from the owner (original EinasadLevel when installed).
+	var stage: int = int(value.get("stage", 2 if remaining > 200 else (1 if remaining > 0 else 0)))
+	var stage_color: Color = Color("d9ad45") if stage >= 2 else (Color("68d77b") if stage == 1 else Color("a1a6a8"))
 	if v20_leaf_count != null:
 		v20_leaf_count.text = str(remaining)
 		v20_leaf_count.add_theme_color_override("font_color", stage_color)
@@ -491,7 +493,7 @@ func set_ain_state(value: Dictionary, inventory: Dictionary) -> void:
 			remaining, int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0)]
 	if v20_ain_status == null:
 		return
-	var phase: String = "황금 축복" if remaining > 200 else ("녹색 축복" if remaining > 0 else "축복 없음")
+	var phase: String = "황금 축복" if stage >= 2 else ("녹색 축복" if stage == 1 else "축복 없음")
 	v20_ain_status.text = "%s · %d" % [phase, remaining]
 	v20_ain_status.add_theme_color_override("font_color", stage_color)
 	var remaining_orb: int = maxi(0, int(value.get("dragon_orb_remaining", 0)))
