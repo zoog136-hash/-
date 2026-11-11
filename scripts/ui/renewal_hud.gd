@@ -1146,6 +1146,7 @@ func _navigate(section: String) -> void:
 		"warehouse": open_warehouse()
 		"crafting": open_crafting()
 		"equipment523": equipment523_open_requested.emit()
+		"bless_refine523": open_bless_refine523()
 		"sell": open_item_sell()
 		_: open_catalog(section)
 
@@ -1546,7 +1547,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2945,6 +2946,16 @@ func open_protection523() -> void:
 	scroll.add_child(view)
 	view.configure(self)
 
+
+func open_bless_refine523() -> void:
+	_open_window("bless_refine523","용해 · 질서의 연금","원본523 축복의 가루 용해 · 상급 축복의 가루 질서의 연금")
+	var scroll := ScrollContainer.new()
+	scroll.name = "BlessRefine523Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/refine523/bless_refine523_panel.gd").new()
+	scroll.add_child(view)
+	view.configure(self)
 
 func open_equipment523(_snapshot: Dictionary) -> void:
 	show_message("원본 장비 가공 UI 연결 대기 · 거래 데이터와 소유 상태 보존")
