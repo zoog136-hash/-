@@ -24,6 +24,10 @@ var _reference_child_role: String = ""
 var _reference_overlay_clock: float = -0.000000001
 var _reference_overlay_key: String = ""
 var _reference_frame_status: Dictionary = {}
+## The frame status is read only by diagnostics/tests, so each frame keeps
+## references to its inputs and reference_source_frame_status() builds the
+## same dictionary on demand (it was deep-copied for every actor every frame).
+var _reference_frame_inputs: Dictionary = {}
 var _reference_texture_budget: Dictionary = {}
 var _reference_texture_charges: Dictionary = {}
 var _reference_child_problem: Dictionary = {}
@@ -315,7 +319,19 @@ func restart_reference_source(explicit_role: String, sequence: int) -> bool:
 	return true
 
 func reference_source_frame_status() -> Dictionary:
+	if not _reference_frame_inputs.is_empty():
+		_reference_frame_status = _build_reference_frame_status(_reference_frame_inputs)
+		_reference_frame_inputs = {}
 	return _reference_frame_status.duplicate(true)
+
+func _build_reference_frame_status(inputs: Dictionary) -> Dictionary:
+	var shown: Array = []
+	for layer: Dictionary in inputs.layers: shown.append(_shown_source_provenance(layer, inputs.attachment))
+	var track: Dictionary = inputs.track
+	var card: Dictionary = inputs.card
+	var overlay: Dictionary = inputs.overlay
+	var attachment: Dictionary = inputs.attachment
+	return {"purpose":inputs.purpose,"consumer":inputs.consumer,"request_key":card.get("request_key",overlay.get("request_key",attachment.get("request_key",""))),"overlay_parent":overlay.duplicate(true),"attachment_parent":attachment.duplicate(true),"role":inputs.role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",inputs.record_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":inputs.record_sprite_id,"stored_direction":inputs.direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":bool(inputs.in_main) and not shown.is_empty(),"M_visual_equivalence_verified":false}
 
 func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_count: int, manifest_path: String) -> bool:
 	# Exact attachment nodes stay linked even while their source blend is unresolved.
@@ -408,6 +424,7 @@ func clear() -> void:
 	_reference_overlay_key = ""
 	reference_bank_status.clear()
 	_reference_frame_status.clear()
+	_reference_frame_inputs = {}
 	reference_exclusion_status.clear()
 	source_weapon_status.clear()
 	_record = {}
@@ -584,12 +601,12 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			var problem: Dictionary = _reference_child_problem.duplicate(true)
 			_abort_reference_source(problem)
 			return
-		var shown: Array = []
+		var shown_layers: Array = []
 		for index: int in range(selected.layers.size()):
-			if _layers[index].visible: shown.append(_shown_source_provenance(selected.layers[index]))
+			if _layers[index].visible: shown_layers.append(selected.layers[index])
 		for layer: Dictionary in selected.get("effect_layers", []):
 			var node: Sprite2D = _effect_nodes.get(int(layer.layer_id)) as Sprite2D
-			if node != null and node.visible: shown.append(_shown_source_provenance(layer))
+			if node != null and node.visible: shown_layers.append(layer)
 		var card_consumer: bool = not _reference_card_context.is_empty() or not _reference_overlay_parent.is_empty() or not _reference_attachment_parent.is_empty()
 		var consumer: String = str(_reference_card_context.get("consumer",_reference_overlay_parent.get("consumer",_reference_attachment_parent.get("consumer",""))))
 		var purpose: String = "existing_npc_consumer" if consumer == "npc" else "existing_card_consumer"
@@ -600,14 +617,14 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
 		var scene: Node = get_tree().current_scene if is_inside_tree() else null
 		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
-		_reference_frame_status = {"purpose":purpose,"consumer":consumer,"request_key":_reference_card_context.get("request_key",_reference_overlay_parent.get("request_key",_reference_attachment_parent.get("request_key",""))),"overlay_parent":_reference_overlay_parent.duplicate(true),"attachment_parent":_reference_attachment_parent.duplicate(true),"role":_role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",_record.source_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":_record.source_sprite_id,"stored_direction":source_direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":in_main and not shown.is_empty(),"M_visual_equivalence_verified":false}
+		_reference_frame_inputs = {"purpose":purpose,"consumer":consumer,"card":_reference_card_context,"overlay":_reference_overlay_parent,"attachment":_reference_attachment_parent,"role":_role,"track":track,"record_sprite_id":_record.source_sprite_id,"direction":source_direction,"layers":shown_layers,"in_main":in_main}
 
-func _shown_source_provenance(layer: Dictionary) -> Dictionary:
+func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dictionary:
 	var provenance: Dictionary = layer.frame_provenance.duplicate(true)
-	if _reference_attachment_parent.has("source_binding_id"):
-		provenance["parent_source_binding_id"] = _reference_attachment_parent.source_binding_id
-		provenance["parent_reference_instance_ids"] = _reference_attachment_parent.get("reference_instance_ids",[]).duplicate()
-		provenance["parent_source_reference_instances"] = _reference_attachment_parent.get("source_reference_instances",[]).duplicate(true)
+	if attachment.has("source_binding_id"):
+		provenance["parent_source_binding_id"] = attachment.source_binding_id
+		provenance["parent_reference_instance_ids"] = attachment.get("reference_instance_ids",[]).duplicate()
+		provenance["parent_source_reference_instances"] = attachment.get("source_reference_instances",[]).duplicate(true)
 		provenance["native_reference_multiplicity_verified"] = false
 	return provenance
 
