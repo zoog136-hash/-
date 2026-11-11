@@ -132,6 +132,8 @@ var option_awakening = OPTION_AWAKENING.new()
 const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
 const CURRENT523_DEFINITION_ROWS=preload("res://scripts/resources/current523_definition_rows.gd")
 var skill_awakening=SKILL_AWAKENING.new()
+const CARD_DECK_BONUS=preload("res://scripts/cards/card_deck_bonus523.gd")
+var card_deck_bonus=CARD_DECK_BONUS.new()
 const HALPHAS_STAR = preload("res://scripts/cards/halphas_star_enchant_runtime.gd")
 var halphas_star = HALPHAS_STAR.new()
 const EXPEDITION_CATALOG = preload("res://scripts/expedition/source_catalog.gd")
@@ -576,6 +578,7 @@ func _ready() -> void:
 	if not skill_awakening.configure(self):
 		if skill_awakening.definitions_not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED skill_awakening: "+skill_awakening.problem)
 		else:push_error(skill_awakening.problem)
+	if not card_deck_bonus.configure(self):print("CARD_DECK_BONUS523_HELD "+card_deck_bonus.problem)
 	preload("res://scripts/expedition/reward_cards.gd").register_profiles(self,get_expedition_catalog())
 	BOOT_LOG.step("world_field_services")
 	expedition_local.world = self
@@ -1359,7 +1362,7 @@ func _catalog_stat_sum(key: String) -> int:
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0)) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0) + monsterbook523_runtime.catalog_bonus(key) + unconfirmed523.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0)) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0) + monsterbook523_runtime.catalog_bonus(key) + unconfirmed523.catalog_bonus(key) + card_deck_bonus.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1371,7 +1374,7 @@ func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 func _skill_cooldown_factor() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -8975,6 +8978,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not half_record.is_empty(): records.append(half_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
+	for record: Dictionary in card_deck_bonus.bonus_records(): records.append(record)
 	for record: Dictionary in halphas_star.bonus_records(): records.append(record)
 
 	equipment523_records_cache = equipment523.records(self)

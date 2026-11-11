@@ -17,6 +17,8 @@ var source_server_context: Dictionary={}
 var cards: Dictionary={}
 var pools: Dictionary={}
 var stats: Dictionary={}
+## BuffCardSkillAwakenStat ID -> row (the named stat set a card points to).
+var stat_sets: Dictionary={}
 var invokes: Dictionary={}
 var experiences: Dictionary={}
 var data: Dictionary={}
@@ -28,6 +30,8 @@ func _init() -> void:
 	cards=data.cards.duplicate(true)
 	conditions.configure(data.source_server_limits)
 	patch523_conditions.configure(data.source_server_limits)
+	for row: Dictionary in data.tables.get("BuffCardSkillAwakenStat",[]):
+		stat_sets[str(int(row.ID))]=row
 	for row: Dictionary in data.tables.get("BuffCardSkillAwakenStatPerLevel",[]):
 		stats[str(int(row.MagicDollAwakenStatID))+":"+str(int(row.Level))]=row
 	for row: Dictionary in data.tables.get("BuffCardSkillAwakenSkillInvokeProb",[]):
@@ -55,11 +59,14 @@ func profile(identity: String,level: int) -> Dictionary:
 	var card: Dictionary=cards.get(identity,{})
 	if card.is_empty() or level<1 or level>20:return {}
 	var raw: Dictionary=card.source_card
-	var hp_row: Dictionary=stats.get(str(int(raw.MagicDollAwakenStatID))+":"+str(level),{})
+	# BuffCard.MagicDollAwakenStatID names a BuffCardSkillAwakenStat set; its
+	# per-level rows hold the only stat the tables give (HP).
+	var stat_set: Dictionary=stat_sets.get(str(int(raw.MagicDollAwakenStatID)),{})
+	var hp_row: Dictionary=stats.get(str(int(raw.MagicDollAwakenStatID))+":"+str(level),{}) if not stat_set.is_empty() else {}
 	var invoke: Dictionary=invokes.get(_invoke_key(int(raw.BuffCardDeckID),int(raw.GradeID),level),{})
 	var exp: Dictionary=experiences.get(str(int(raw.BuffCardDeckID))+":"+str(level),{})
 	if hp_row.is_empty() or invoke.is_empty() or exp.is_empty() or book_for(identity).is_empty():return {}
-	return {"hp":int(hp_row.HP),"invoke":invoke.duplicate(true),"experience_row":exp.duplicate(true),"hp_row":hp_row.duplicate(true),"level":level}
+	return {"hp":int(hp_row.HP),"invoke":invoke.duplicate(true),"experience_row":exp.duplicate(true),"hp_row":hp_row.duplicate(true),"stat_set":stat_set.duplicate(true),"level":level}
 
 func eligibility(identity: String) -> Dictionary:
 	var card: Dictionary=cards.get(identity,{})
