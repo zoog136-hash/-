@@ -153,6 +153,15 @@ const CODE_EXTERNAL_TEXTURE_NODES := {
 	"UI/NpcDialogue/NpcDialogue_All.csb":[4912],
 	"UI/Map/Map_Tab_Area.csb":[44440],
 	"UI/Shop/Shop_List_Slot.csb":[10376],
+	# Original card pictures (source_main_change_window): CardSample sprites.
+	"UI/Change/Change_DetailView.csb":[38328],
+	"UI/Change/Change_Card_A_Common.csb":[2256],
+	"UI/Change/Change_Card_A_Rare.csb":[2260],
+	"UI/Change/Change_Card_A_Unique.csb":[2304],
+	"UI/Change/Change_Card_A_Epic.csb":[2304],
+	"UI/Change/Change_Card_A_Legend.csb":[2304],
+	"UI/Change/Change_Card_A_Myth.csb":[2300],
+	"UI/Change/Change_Card_A_Sole.csb":[2332],
 }
 
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:
