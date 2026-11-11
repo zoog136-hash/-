@@ -122,6 +122,8 @@ const GROWTH96 = preload("res://scripts/progression/growth96_runtime.gd")
 var growth96 = GROWTH96.new()
 const HALF_ELIXIR = preload("res://scripts/growth/half_elixir_runtime.gd")
 var half_elixir = HALF_ELIXIR.new()
+const DOMINATION_STONES = preload("res://scripts/domination/domination_stone_runtime.gd")
+var domination_stones = DOMINATION_STONES.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -132,6 +134,8 @@ var option_awakening = OPTION_AWAKENING.new()
 const SKILL_AWAKENING=preload("res://scripts/cards/skill_awakening_runtime.gd")
 const CURRENT523_DEFINITION_ROWS=preload("res://scripts/resources/current523_definition_rows.gd")
 var skill_awakening=SKILL_AWAKENING.new()
+const CARD_DECK_BONUS=preload("res://scripts/cards/card_deck_bonus523.gd")
+var card_deck_bonus=CARD_DECK_BONUS.new()
 const HALPHAS_STAR = preload("res://scripts/cards/halphas_star_enchant_runtime.gd")
 var halphas_star = HALPHAS_STAR.new()
 const EXPEDITION_CATALOG = preload("res://scripts/expedition/source_catalog.gd")
@@ -576,6 +580,7 @@ func _ready() -> void:
 	if not skill_awakening.configure(self):
 		if skill_awakening.definitions_not_installed():print("CURRENT523_DEFINITIONS_NOT_INSTALLED skill_awakening: "+skill_awakening.problem)
 		else:push_error(skill_awakening.problem)
+	if not card_deck_bonus.configure(self):print("CARD_DECK_BONUS523_HELD "+card_deck_bonus.problem)
 	preload("res://scripts/expedition/reward_cards.gd").register_profiles(self,get_expedition_catalog())
 	BOOT_LOG.step("world_field_services")
 	expedition_local.world = self
@@ -940,6 +945,7 @@ func _load_data() -> void:
 	weapon_mastery.configure(self)
 	growth96.configure(self)
 	half_elixir.configure(self)
+	domination_stones.configure(self)
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
@@ -1042,6 +1048,12 @@ func _source_enhancement_extra_record(base: Dictionary,saved: Dictionary) -> Dic
 	return output
 
 func _equipment_inven_sum(key: String) -> float:
+	if _stat_memo_depth == 0: return _equipment_inven_sum_uncached(key)
+	var memo_key: String = "inven_sum:"+key
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _equipment_inven_sum_uncached(key)
+	return _stat_memo[memo_key]
+
+func _equipment_inven_sum_uncached(key: String) -> float:
 	var total: float = 0.0
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var raw: Variant = equipped_items.get(slot, {})
@@ -1353,13 +1365,19 @@ func _tick_catalog_recovery(delta: float) -> void:
 		_refresh_combat_hud()
 
 func _catalog_stat_sum(key: String) -> int:
+	if _stat_memo_depth == 0: return _catalog_stat_sum_uncached(key)
+	var memo_key: String = "catalog_sum:"+key
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _catalog_stat_sum_uncached(key)
+	return _stat_memo[memo_key]
+
+func _catalog_stat_sum_uncached(key: String) -> int:
 	var result: int = 0
 	for category: String in ["변신", "마법인형", "성물"]:
 		var record_value: Variant = equipped_catalog.get(category, {})
 		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
-	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0)) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0) + monsterbook523_runtime.catalog_bonus(key) + unconfirmed523.catalog_bonus(key)
+	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0)) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0) + monsterbook523_runtime.catalog_bonus(key) + unconfirmed523.catalog_bonus(key) + card_deck_bonus.catalog_bonus(key)
 
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
@@ -1369,15 +1387,27 @@ func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	return TRANSFORM_SKILL.amount(record, job_class, skill_name, kind)
 
 func _skill_cooldown_factor() -> float:
+	if _stat_memo_depth == 0: return _skill_cooldown_factor_uncached()
+	var memo_key: String = "cooldown_factor"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _skill_cooldown_factor_uncached()
+	return _stat_memo[memo_key]
+
+func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
 	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp(item_buff_override: Variant = null) -> int:
+	if _stat_memo_depth == 0 or not (item_buff_override == null): return _effective_max_mp_uncached(item_buff_override)
+	var memo_key: String = "max_mp"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_max_mp_uncached(item_buff_override)
+	return _stat_memo[memo_key]
+
+func _effective_max_mp_uncached(item_buff_override: Variant = null) -> int:
 	var added: int = _catalog_stat_sum("mpFlat") + _active_item_buff_total("mp_flat",item_buff_override)
 	for record: Dictionary in _all_equipped_records():
 		if str(record.get("slot", "")) != "" or bool(record.get("equipment523_synthetic", false)):
@@ -1465,6 +1495,12 @@ func _index_item_weights() -> void:
 	item_weight_index.merge(next_weight_index)
 
 func _inventory_total_weight() -> int:
+	if _stat_memo_depth == 0: return _inventory_total_weight_uncached()
+	var memo_key: String = "weight"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _inventory_total_weight_uncached()
+	return _stat_memo[memo_key]
+
+func _inventory_total_weight_uncached() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
 		# Held source rewards are provenance stacks until their item adapter is
@@ -1474,16 +1510,34 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
+	if _stat_memo_depth == 0: return _carrying_capacity_uncached()
+	var memo_key: String = "carrying"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _carrying_capacity_uncached()
+	return _stat_memo[memo_key]
+
+func _carrying_capacity_uncached() -> int:
 	var skill_capacity := int(original_skills.stat("weight")) if original_skills != null else 0
 	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
+	if _stat_memo_depth == 0: return _inventory_encumbrance_multiplier_uncached()
+	var memo_key: String = "encumbrance"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _inventory_encumbrance_multiplier_uncached()
+	return _stat_memo[memo_key]
+
+func _inventory_encumbrance_multiplier_uncached() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
 
 # Blessing is attached to one item_instances ID, not to a shared item name.
 # Only the exact equipped physical item contributes its blessing; never patch
 # a source catalog record or stack of identically named equipment.
 func _equipped_bless_bonus(stat: String) -> int:
+	if _stat_memo_depth == 0: return _equipped_bless_bonus_uncached(stat)
+	var memo_key: String = "bless:"+stat
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _equipped_bless_bonus_uncached(stat)
+	return _stat_memo[memo_key]
+
+func _equipped_bless_bonus_uncached(stat: String) -> int:
 	var total: int = 0
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var worn: Variant = equipped_items.get(slot, {})
@@ -1508,6 +1562,12 @@ func _equipped_bless_bonus(stat: String) -> int:
 	return total
 
 func _equipment_attribute_bonus(stat: String) -> int:
+	if _stat_memo_depth == 0: return _equipment_attribute_bonus_uncached(stat)
+	var memo_key: String = "equip_attr:"+stat
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _equipment_attribute_bonus_uncached(stat)
+	return _stat_memo[memo_key]
+
+func _equipment_attribute_bonus_uncached(stat: String) -> int:
 	var result: int = 0
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
@@ -1518,6 +1578,12 @@ func _equipment_attribute_bonus(stat: String) -> int:
 	return result + _source_enchantment_extra([],stat.to_lower()) + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
 
 func _effective_attribute(stat: String) -> int:
+	if _stat_memo_depth == 0: return _effective_attribute_uncached(stat)
+	var memo_key: String = "attr:"+stat
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_attribute_uncached(stat)
+	return _stat_memo[memo_key]
+
+func _effective_attribute_uncached(stat: String) -> int:
 	var base: int = 0
 	match stat:
 		"STR": base = str_stat
@@ -4530,6 +4596,7 @@ func _combined_active_buffs() -> Dictionary:
 	return result
 
 func _is_instance_equipped(id: String) -> bool:
+	if domination_stones.is_extra_equipped(id): return true
 	for entry: Variant in equipped_items.values():
 		if entry is Dictionary and str((entry as Dictionary).get("instance_id", "")) == id:
 			return true
@@ -5952,6 +6019,21 @@ func _on_map_selected(map_id: String) -> void:
 	hud.toggle_map()
 	_set_map(map_id, false)
 
+## Read-only stat memo for one HUD publish. The character snapshot asks for
+## the same derived values many times (one _update_hud: 825 helper calls, the
+## same attribute 37 times); nothing changes them while it is built, so inside
+## _stat_memo_begin()/_stat_memo_end() each is computed once. Outside, every
+## call computes as before.
+var _stat_memo: Dictionary = {}
+var _stat_memo_depth: int = 0
+
+func _stat_memo_begin() -> void:
+	_stat_memo_depth += 1
+
+func _stat_memo_end() -> void:
+	_stat_memo_depth = maxi(0, _stat_memo_depth - 1)
+	if _stat_memo_depth == 0: _stat_memo.clear()
+
 func _update_hud() -> void:
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -5964,6 +6046,7 @@ func _update_hud() -> void:
 	# passive-learning and load transaction publishes through this entry point.
 	_invalidate_equipment_static()
 	_sync_item_instances()
+	_stat_memo_begin()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
 	var display_max_mp: int = _effective_max_mp()
@@ -5995,6 +6078,7 @@ func _update_hud() -> void:
 	character_state["equipment_collection_bonuses"] = equipment_collections.totals.duplicate(true)
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
+	_stat_memo_end()
 	hud.set_character_state(character_state)
 	if hud.has_method("set_card_collection_state"):
 		hud.call("set_card_collection_state", card_draw_fusion.export_state())
@@ -6269,6 +6353,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"growth": growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
 		"half_elixir523": half_elixir.state.duplicate(true),
+		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -6864,6 +6949,8 @@ func _load_game(quiet: bool) -> void:
 	var stored_instances: Variant = data.get("item_instances", {})
 	source_shop.accept_load(data)
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
+	# Before the instance sync below: slots 2/3 hold physical stones.
+	domination_stones.import_state(data.get(DOMINATION_STONES.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -7394,6 +7481,9 @@ func _unequip_item_reference(reference: String) -> void:
 		_toggle_ammo_equipped(equipped_ammo)
 		return
 	if id.is_empty(): return
+	if domination_stones.is_extra_equipped(id):
+		domination_stones.unequip(domination_stones.state.slots.find(id)+1)
+		return
 	for slot: String in equipped_items.keys():
 		if str(equipped_items[slot].get("instance_id","")) != id: continue
 		equipped_items.erase(slot)
@@ -7562,6 +7652,12 @@ func _passive_skill_total(key: String) -> int:
 	return total
 
 func _passive_skill_speed_multiplier() -> float:
+	if _stat_memo_depth == 0: return _passive_skill_speed_multiplier_uncached()
+	var memo_key: String = "passive_speed"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _passive_skill_speed_multiplier_uncached()
+	return _stat_memo[memo_key]
+
+func _passive_skill_speed_multiplier_uncached() -> float:
 	var multiplier: float = original_skills.catalog.speed() if original_skills != null else 1.0
 	for value: Variant in skills_db:
 		if not (value is Dictionary):
@@ -7573,6 +7669,12 @@ func _passive_skill_speed_multiplier() -> float:
 	return multiplier
 
 func _passive_skill_names() -> PackedStringArray:
+	if _stat_memo_depth == 0: return _passive_skill_names_uncached()
+	var memo_key: String = "passive_names"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _passive_skill_names_uncached()
+	return _stat_memo[memo_key]
+
+func _passive_skill_names_uncached() -> PackedStringArray:
 	var names: PackedStringArray = PackedStringArray()
 	for value: Variant in skills_db:
 		if value is Dictionary:
@@ -8975,7 +9077,10 @@ func _all_equipped_records() -> Array[Dictionary]:
 	if not half_record.is_empty(): records.append(half_record)
 	for record: Dictionary in option_awakening.bonus_records(): records.append(record)
 	for record: Dictionary in skill_awakening.bonus_records(): records.append(record)
+	for record: Dictionary in card_deck_bonus.bonus_records(): records.append(record)
 	for record: Dictionary in halphas_star.bonus_records(): records.append(record)
+	# Domination stone slots 2 and 3 (slot 1 is equipped_items.domination_stone).
+	for record: Dictionary in domination_stones.bonus_records(): records.append(record)
 
 	equipment523_records_cache = equipment523.records(self)
 	records.append_array(equipment523_records_cache)
@@ -9326,6 +9431,12 @@ func _enforce_weapon_class_compatibility(quiet: bool = false) -> void:
 	hud.append_log("%s 착용 불가 · %s 장착 해제" % [job_class, item_name])
 
 func _current_weapon_type() -> String:
+	if _stat_memo_depth == 0: return _current_weapon_type_uncached()
+	var memo_key: String = "weapon_type"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _current_weapon_type_uncached()
+	return _stat_memo[memo_key]
+
+func _current_weapon_type_uncached() -> String:
 	return _normalized_weapon_type(str(_equipped_weapon_record().get("type", "")))
 
 func _current_attack_kind() -> String:
@@ -9593,6 +9704,12 @@ func _record_attack_speed_percent(record: Dictionary) -> float:
 	return maxf(0.0, value)
 
 func _effective_move_speed_multiplier() -> float:
+	if _stat_memo_depth == 0: return _effective_move_speed_multiplier_uncached()
+	var memo_key: String = "move_speed"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_move_speed_multiplier_uncached()
+	return _stat_memo[memo_key]
+
+func _effective_move_speed_multiplier_uncached() -> float:
 	var multiplier: float = 1.0
 	var awakening_percent: float = 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -9616,6 +9733,12 @@ func _effective_attack_speed_bonus_percent() -> float:
 	return maxf(0.0, total)
 
 func _effective_attack_speed_multiplier() -> float:
+	if _stat_memo_depth == 0: return _effective_attack_speed_multiplier_uncached()
+	var memo_key: String = "attack_speed_mul"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_attack_speed_multiplier_uncached()
+	return _stat_memo[memo_key]
+
+func _effective_attack_speed_multiplier_uncached() -> float:
 	return clampf(1.0 + _effective_attack_speed_bonus_percent() / 100.0, 0.5, 4.0)
 
 func _normal_attack_interval() -> float:
@@ -10105,6 +10228,12 @@ func _character_stats_snapshot() -> Dictionary:
 	}
 
 func _effective_attack() -> int:
+	if _stat_memo_depth == 0: return _effective_attack_uncached()
+	var memo_key: String = "attack"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_attack_uncached()
+	return _stat_memo[memo_key]
+
+func _effective_attack_uncached() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
@@ -10116,6 +10245,12 @@ func _effective_attack() -> int:
 	return attack_power + int(round(bonus)) + _enhancement_weapon_stat("damage") + _active_skill_buff_total("atk") + _passive_skill_total("atk")
 
 func _effective_defense() -> int:
+	if _stat_memo_depth == 0: return _effective_defense_uncached()
+	var memo_key: String = "defense"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_defense_uncached()
+	return _stat_memo[memo_key]
+
+func _effective_defense_uncached() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("def", 0.0))
@@ -10124,6 +10259,12 @@ func _effective_defense() -> int:
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _active_item_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp(base_override: int = -1, item_buff_override: Variant = null) -> int:
+	if _stat_memo_depth == 0 or not (base_override < 0 and item_buff_override == null): return _effective_max_hp_uncached(base_override, item_buff_override)
+	var memo_key: String = "max_hp"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _effective_max_hp_uncached(base_override, item_buff_override)
+	return _stat_memo[memo_key]
+
+func _effective_max_hp_uncached(base_override: int = -1, item_buff_override: Variant = null) -> int:
 	var flat_bonus: float = float(weapon_mastery.catalog_bonus("hpFlat", _mastery_actual_weapon_type()))
 	var percent_bonus: float = original_skills.stat("hpPct") if original_skills!=null else 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -11022,6 +11163,12 @@ func _resume_death523() -> void:
 	death_recovery.resume()
 
 func _mastery_actual_weapon_type() -> int:
+	if _stat_memo_depth == 0: return _mastery_actual_weapon_type_uncached()
+	var memo_key: String = "mastery_weapon_type"
+	if not _stat_memo.has(memo_key): _stat_memo[memo_key] = _mastery_actual_weapon_type_uncached()
+	return _stat_memo[memo_key]
+
+func _mastery_actual_weapon_type_uncached() -> int:
 	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())
 
 

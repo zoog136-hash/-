@@ -61,6 +61,42 @@ NODE_SCOPES = [
     ("UI/MapScene.csb", [132]),
 ]
 EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440]}
+# Whole original scenes minus the subtrees whose closure names a member the
+# 523 client lacks (or that the code does not mount), nested members first:
+# DominationStone_Inventory references QuickSlotEdit_SlotSet.csb, absent from
+# the client, so the domination window (source_main_domination_stone_window)
+# leaves its inventory ProjectNodes (and the dismantle tab and probability
+# popup it does not connect) out. Every other node is kept.
+WHOLE_SCOPES = [
+    ("UI/DominationStone/DominationStone_Power_Effect.csb", [176]),
+    ("UI/DominationStone/DominationStone_Tab_Power.csb", []),
+    ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),
+    ("UI/DominationStone/DominationStone_All.csb", [15692, 332]),
+    ("UI/DominationStoneScene.csb", []),
+]
+
+
+def whole_scope_offsets(builder: Builder, member: str, excluded: list[int]) -> list[int]:
+    """Every node offset of the original scene except the excluded subtrees."""
+    builder.layout_source(member)
+    tree = builder.layout_sources.get(member)
+    if tree is None:
+        raise ValueError('Whole scope source missing: ' + member)
+    found, offsets = set(), []
+
+    def walk(node):
+        if node['_offset'] in excluded:
+            found.add(node['_offset'])
+            return
+        offsets.append(node['_offset'])
+        if node.get('classname') == 'ProjectNode':
+            return
+        for child in node.get('children', []):
+            walk(child)
+    walk(tree['nodeTree'])
+    if found != set(excluded):
+        raise ValueError('Excluded offset not present: ' + member)
+    return offsets
 
 
 def code_members(repo: Path) -> list[str]:
@@ -77,7 +113,10 @@ def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
     # Completeness probes share read caches with each other, not with the
     # pack: an incomplete scene's files never reach the output.
     prober = Builder(files, link_originals=True)
-    scoped = {member for member, _ in NODE_SCOPES}
+    # Parents of a whole scope resolve their scoped children in the probe too.
+    for member, excluded in WHOLE_SCOPES:
+        prober.node_scene(member, whole_scope_offsets(prober, member, excluded))
+    scoped = {member for member, _ in NODE_SCOPES} | {member for member, _ in WHOLE_SCOPES}
     entries, skipped = [], {}
     for member in code_members(repo):
         if member in scoped or member in LAYOUT_ONLY:
@@ -97,6 +136,8 @@ def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
         builder.layout_source(member)
     for member, offsets in NODE_SCOPES:
         builder.node_scene(member, offsets)
+    for member, excluded in WHOLE_SCOPES:
+        builder.node_scene(member, whole_scope_offsets(builder, member, excluded))
     receipt = builder.build(entries, output)
     receipt["entries"] = len(entries)
     receipt["skipped_code_scenes"] = skipped

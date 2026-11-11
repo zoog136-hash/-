@@ -1,5 +1,6 @@
 extends Node2D
 class_name TwilightDropVisual
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const FLOOR_ALPHA = preload("res://scripts/ui/ground_alpha.gd")
 
 # Original, procedural canvas art. No externally copied beam assets.
@@ -50,6 +51,12 @@ func configure(grade: String, icon: Texture2D, kind: String) -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_process_step(delta)
+	FRAME_HITCH.add_self("loot", hitch_started, hitch_nested)
+
+func _process_step(delta: float) -> void:
 	clock += delta
 	redraw_time += delta
 	if rank >= 2 and redraw_time >= 0.05:
