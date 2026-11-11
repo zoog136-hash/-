@@ -93,11 +93,13 @@ func _stage() -> Dictionary:
 	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"_close_requested")},SHOP_TAB_NORMAL:{"role":"button","visible":false,"activate":Callable(self,"_ignore")},SHOP_TAB_PRESSED:{"role":"button","visible":true,"activate":Callable(self,"_ignore")},STORAGE_TAB_NORMAL:{"role":"button","visible":true,"activate":Callable(self,"_storage_requested")},STORAGE_TAB_PRESSED:{"role":"button","visible":false,"activate":Callable(self,"_storage_requested")},STORAGE_NEW:{"visible":false}}
 	bindings[MILEAGE_TEXT]={"role":"source_text","text":str(int(world.get("inventory").get("마일리지",0))) if world!=null else "0"}
 	var page_bindings: Dictionary={LIST:{"role":"source_list","row_offsets":[],"input":Callable(self,"_list_input")}}
+	var page_scope: Array[int]=_subtree(TAB_LIST,PAGE_SCOPE)
 	_consume_touch(TAB_LIST,PAGE_SCOPE,page_bindings)
-	bindings[TAB_PROJECT]={"role":"project","visible":true,"source_node_offsets":PAGE_SCOPE,"bindings":page_bindings}
+	bindings[TAB_PROJECT]={"role":"project","visible":true,"source_node_offsets":page_scope,"bindings":page_bindings}
 	_consume_touch(ROOT,ROOT_SCOPE,bindings)
+	var root_scope: Array[int]=_subtree(ROOT,ROOT_SCOPE)
 	var next:=Scene.new()
-	var result: Dictionary=next.configure_nodes(_pack,ROOT,ROOT_SCOPE,bindings)
+	var result: Dictionary=next.configure_nodes(_pack,ROOT,root_scope,bindings)
 	if not result.get("ok",false):next.free();return result
 	var page: Dictionary=next.project_player([TAB_PROJECT])
 	if not page.get("ok",false):next.free();return page
@@ -135,7 +137,7 @@ func _card(entry: Dictionary, panel: Object) -> Dictionary:
 	if title.is_empty():title=str(entry.get("title",""))
 	var cash: Script=load("res://scripts/shop/source523_cash_market.gd")
 	var price: String=("다이아 %d"%int(cash.entry(id).diamonds)) if cash.listed(id) else ""
-	var scope: Array[int]=CARD_SCOPE.duplicate()
+	var scope: Array[int]=_subtree(CARD,CARD_SCOPE)
 	var bindings: Dictionary={BUY:{"role":"button","activate":Callable(self,"_buy").bind(id)},PRICE:{"role":"source_text","text":price,"visible":not price.is_empty()},TITLE:{"role":"source_text","text":title}}
 	for offset: int in HIDDEN_TEXTS:bindings[offset]={"role":"static_source_text","visible":false}
 	var picture: Dictionary=panel.call("_entry_image",entry)
@@ -221,6 +223,21 @@ static func _consume_subtree(node: Dictionary, bindings: Dictionary) -> void:
 			bindings[offset]=binding
 	if node.get("classname")=="ProjectNode":return
 	for child: Dictionary in node.get("children",[]):_consume_subtree(child,bindings)
+
+## A node scope keeps only the listed nodes and their ancestors: list every
+## descendant of each mounted node (a nested ProjectNode keeps its own scope).
+func _subtree(member: String, roots: Array[int]) -> Array[int]:
+	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	var result: Array[int]=[]
+	for offset: int in roots:_collect(Scene._node_at_offset(tree,offset),result)
+	return result
+
+static func _collect(node: Dictionary, result: Array[int]) -> void:
+	if node.is_empty():return
+	var offset: int=int(node.get("_offset",-1))
+	if offset not in result:result.append(offset)
+	if node.get("classname")=="ProjectNode":return
+	for child: Dictionary in node.get("children",[]):_collect(child,result)
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"handled":false,"code":code}
