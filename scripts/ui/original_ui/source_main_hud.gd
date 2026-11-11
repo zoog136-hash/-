@@ -27,6 +27,7 @@ const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_invent
 const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
 const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
 const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
+const ShopWindow=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
@@ -124,6 +125,7 @@ var _enhance_owner: WeakRef
 var _enhance_listing: WeakRef
 var _quest_controls: RefCounted
 var _quest_window: RefCounted
+var _shop_window: RefCounted
 var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
@@ -207,6 +209,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 		if quest_window.configure(pack,hud).get("ok",false):
 			_quest_window=quest_window
 			quest_window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+	if pack.manifest.get("scenes",{}).has(ShopWindow.ROOT):
+		var shop_window=ShopWindow.new()
+		if shop_window.configure(pack,hud).get("ok",false):
+			_shop_window=shop_window
+			shop_window.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
 		_npc_dialogue_view=NpcDialogueView.new()
@@ -483,6 +491,21 @@ func try_open_quest_window(world: Node, claim: Callable) -> Dictionary:
 	if _quest_window==null or not is_instance_valid(_coordinates):return _fail("source_quest_window_pack_scope_unavailable")
 	_cancel_native_buttons()
 	return _quest_window.open(_coordinates,world,claim)
+
+func can_open_shop_window() -> bool:
+	return _shop_window!=null and is_instance_valid(_coordinates)
+
+func try_open_shop_window(panel: Control) -> Dictionary:
+	if not can_open_shop_window():return _fail("source_shop_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _shop_window.open(_coordinates,panel)
+
+func shop_window_is_open() -> bool:
+	return _shop_window!=null and _shop_window.is_open()
+
+func close_shop_window() -> void:
+	_cancel_native_buttons()
+	if _shop_window!=null:_shop_window.close()
 
 func quest_window_is_open() -> bool:
 	return _quest_window!=null and _quest_window.is_open()
