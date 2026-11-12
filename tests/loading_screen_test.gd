@@ -143,6 +143,29 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	check(not paused and not is_instance_valid(initial), "initial scene releases its overlay after readiness")
+	# Title stage: after loading, only the title picture stays until a touch.
+	_reset_observations()
+	var titled: Control = (load("res://scenes/boot/Loading.tscn") as PackedScene).instantiate()
+	titled.destination = DESTINATION
+	titled.title_in_headless = true
+	var previous_scene: Node = current_scene
+	current_scene = null
+	if is_instance_valid(previous_scene): previous_scene.queue_free()
+	root.add_child(titled)
+	current_scene = titled
+	_watch(titled)
+	await _wait_outcome(titled, 1)
+	for _frame: int in 6: await process_frame
+	check(is_instance_valid(titled) and titled.is_awaiting_title(), "the title stays after loading until a touch")
+	check(paused, "the ready scene stays paused behind the title")
+	var touch := InputEventMouseButton.new()
+	touch.button_index = MOUSE_BUTTON_LEFT
+	touch.pressed = true
+	touch.position = Vector2(100, 100)
+	root.push_input(touch)
+	await process_frame
+	await process_frame
+	check(not paused and not is_instance_valid(titled), "a touch closes the title and resumes the scene")
 	OS.set_environment("TWILIGHT_LOADING_TEST_NEVER_READY", "")
 	print("LOADING_SCREEN_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"fixture":"synthetic_delayed_scene_only"}))
 	quit(0 if failures.is_empty() else 1)

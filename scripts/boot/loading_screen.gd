@@ -11,6 +11,13 @@ const PREBAKE := preload("res://scripts/boot/source523_prebake.gd")
 const HANDOFF := preload("res://scripts/boot/source523_prebake_handoff.gd")
 const JOB := preload("res://scripts/boot/source523_prebake_job.gd")
 const PROGRESS := preload("res://scripts/boot/loading_progress.gd")
+## Show the title picture after loading until a touch (off in headless runs).
+var title_after_loading: bool = true
+## Test hook: also show the title stage under the headless display server.
+var title_in_headless: bool = false
+var _awaiting_title: bool = false
+var _title_prompt: Label
+var _column: VBoxContainer
 var destination: String = ""
 ## A missing readiness response is an error state, never invented progress.
 var readiness_timeout_msec: int = 60000
@@ -103,6 +110,7 @@ func _ready() -> void:
 	column.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	column.add_theme_constant_override("separation", 7)
 	add_child(column)
+	_column = column
 	_status = STYLE.label("원본 데이터 확인을 준비하는 중…", 22, STYLE.TEXT)
 	column.add_child(_status)
 	_bar = STYLE.progress_bar()
@@ -262,6 +270,41 @@ func _boot() -> void:
 	finished.emit(true)
 	# One render opportunity for the measured 100%, then reveal the ready scene.
 	await get_tree().process_frame
+	if title_after_loading and (title_in_headless or DisplayServer.get_name() != "headless"):
+		_show_title()
+		return
+	_close()
+
+## After loading, the title picture alone (no progress text) until the player
+## touches the screen; the ready scene stays paused behind it. The engine boot
+## splash shows only the background color, so the title appears once, here.
+func _show_title() -> void:
+	if is_instance_valid(_column): _column.hide()
+	_title_prompt = STYLE.label("화면을 터치하세요", 24, STYLE.TEXT)
+	_title_prompt.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_title_prompt.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_title_prompt.offset_top = -96
+	_title_prompt.offset_bottom = -48
+	_title_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title_prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	add_child(_title_prompt)
+	_awaiting_title = true
+	BOOT_LOG.mark("title_shown", {"scene": destination})
+
+func is_awaiting_title() -> bool:
+	return _awaiting_title
+
+func _process(_delta: float) -> void:
+	if _awaiting_title and is_instance_valid(_title_prompt):
+		_title_prompt.modulate.a = 0.55 + 0.45 * absf(sin(Time.get_ticks_msec() / 600.0))
+
+func _input(event: InputEvent) -> void:
+	if not _awaiting_title: return
+	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed) or (event is InputEventKey and event.pressed and not event.echo)
+	if not pressed: return
+	get_viewport().set_input_as_handled()
+	_awaiting_title = false
+	BOOT_LOG.mark("title_closed", {"scene": destination})
 	_close()
 
 func _fail(message: String) -> void:
