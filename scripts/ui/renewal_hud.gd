@@ -914,7 +914,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -984,6 +984,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_domination_window"):original_main_ui_controller.close_domination_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_status_board"):original_main_ui_controller.close_status_board()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
 		return
@@ -1140,6 +1142,7 @@ func _navigate(section: String) -> void:
 		"half_elixir": open_half_elixir()
 		"domination_stone": open_domination_stone()
 		"status_board": open_status_board()
+		"clan_emblem523": open_clan_emblem523()
 		"titles": open_titles523()
 		"expedition": open_expedition()
 		"class_select": open_class_selection()
@@ -1571,7 +1574,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1581,7 +1584,7 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -1637,6 +1640,30 @@ func open_status_board() -> void:
 	var note := UI.label("현황판은 원본 523 UI 팩(StatusBoard_All)이 필요합니다.\n"+str(native.get("code",native.get("error",""))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
+
+## The original 523 혈맹 문장 선택 popup (Clan_Popup_Symbol, world.emblem523).
+func open_clan_emblem523() -> void:
+	_open_window("clan_emblem523","혈맹 문장","")
+	var native: Dictionary = {"ok":false,"code":"source_emblem_window_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_emblem_window"):
+		native = original_main_ui_controller.try_open_emblem_window(get_parent())
+	original_main_ui_status["emblem_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return
+	var note := UI.label("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code",""))),14,UI.TEXT)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	workspace.mount(note)
+
+## The original 523 재료 아이템 출처 popup over the current screen.
+func open_item_acquisition523(item_class_id: int, item_name: String = "") -> Dictionary:
+	var native: Dictionary = {"ok":false,"code":"source_acquisition_popup_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_acquisition"):
+		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name)
+	original_main_ui_status["acquisition_popup"] = native
+	return native
 
 ## The original 523 domination stone window (source_main_domination_stone_window).
 func open_domination_stone() -> void:

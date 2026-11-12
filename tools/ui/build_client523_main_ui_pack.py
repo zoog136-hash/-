@@ -61,6 +61,10 @@ NODE_SCOPES = [
     ("UI/MapScene.csb", [132]),
 ]
 EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440]}
+# Plain original pictures the code loads by path from the pack (not named by a
+# scene): the clan emblem PNGs of AssetType 111 "Emblem" (Path UI/Emblem/),
+# shown by source_main_emblem_window through Emblem.EmblemLargeID/AssetView.
+PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # Whole original scenes minus the subtrees whose closure names a member the
 # 523 client lacks (or that the code does not mount), nested members first:
 # DominationStone_Inventory references QuickSlotEdit_SlotSet.csb, absent from
@@ -138,7 +142,12 @@ def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
         builder.node_scene(member, offsets)
     for member, excluded in WHOLE_SCOPES:
         builder.node_scene(member, whole_scope_offsets(builder, member, excluded))
+    pictures = sorted(m for m in files for prefix, suffix in PICTURE_PREFIXES
+                      if m.startswith(prefix) and m.endswith(suffix))
+    for member in pictures:
+        builder.read(member)
     receipt = builder.build(entries, output)
+    receipt["pictures"] = len(pictures)
     receipt["entries"] = len(entries)
     receipt["skipped_code_scenes"] = skipped
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
