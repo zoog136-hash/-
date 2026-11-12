@@ -236,3 +236,58 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 참고: 이미 "사용 가능"이던 LuckyBag 9,316종 중 2,327종, SelectReward 3,149종 중 471종은(이번 연결 전에는 2,350·801종) 보상(또는 선택지) 일부가
   지급 소유자 없는 소모품(다른 상자 1,609행·특수 주문서 762·물약 714·강화 주문서 695·재료 604·축복 포인트 515·시간 충전석 407 등)이다.
   확률 상자는 열면 보존, 선택 상자는 그 선택지만 거부된다. 이 소모품들이 연결될수록 함께 풀린다.
+
+## 12. 소모품 2~5단계 — 시간 충전석·강화 주문서·카드 재뽑기·축복 포인트 (2026-11-12, 같은 PR)
+
+### 12.1 축복 포인트 충전 — **가방 사용 연결 91종** (IntangibleItemRecharger 102종 중)
+
+- 근거: ItemBonus IntangibleItemClassID(Unit IntangibleItemClassID) → IntangibleItemClass 14 "BlessPoint",
+  IntangibleItemAmount(Unit Value) N. 아이템 자신의 원본 설명 "사용 시 축복 포인트 N 획득"과 같은 값일 때만 연결
+  (101종 모두 일치). 그 밖의 행은 DeleteTime(기존 기간 규칙)·CannotExtendDeleteTime만 허용.
+- 연결: 물리 개체 1개 차감 + 기존 문양(growth) 축복 포인트 `points` +N(장부 `economy.recharged`)을 한 번에 저장
+  (`current523_native_stack.use_bless_points`). 포인트 상한은 원본 표에 없고 기존 문양 상태에도 없다.
+- 문양 소유자와의 경계: 기간(DeleteTime) 행이 없는 10종(#117304 등)은 기존 문양 소유자(`symbol_source523`)가 자기 재료 기록으로
+  카탈로그에 올리고 문양 화면에서 충전한다(이미 사용 가능, 퀘스트 보상 연결도 이 기록). 그 기록을 그대로 두므로 이 10종은 계속 문양 화면 경로다.
+  기간 행이 있는 91종은 문양 소유자가 "기간 조건을 버릴 수 없음"으로 받지 않던 것이라, 이번에 원본 물리 수량 경로(기존 기간 규칙 적용)로 연결했다.
+- 남은 1종: IntangibleItemClass 2 "Gem"(다이아) 충전 — 사용자 결정(패키지 내 다이아 미지급)과 같은 이유로 연결하지 않음.
+- 실제 Main·원본 팩(`tests/items523_bless_points_test.gd`): #168024 [이벤트] 축복의 성수(대) 3개 → 1개 사용 시 포인트 +1000,
+  2개째 +2000 → 저장→다시 불러오기 후 포인트·남은 1개 유지 → 다시 사용 가능. #117304는 문양 재료 기록 그대로.
+
+### 12.2 시간 충전석 (LandTimeRecharger 327종) — 미연결
+
+- 행: RechargeLandTimeLimitGroupID → LandTimeLimitGroup(TimeLimit·MaxRechargeTime·ContentsResetScheduleTypeID), RechargeTime(초, 대부분 3600).
+- 표에 없는 것: MaxRechargeTime이 "초기화 주기당 충전 가능한 총량"인지 "남은 시간의 상한"인지(설명 문구·다른 표 모두 없음).
+  충전 시점이 초기화(Daily/WeeklyWed 등) 전후로 걸칠 때의 처리도 없다.
+- 게임 쪽: 기존 시간 풀(`current523_map_time_pool`, 정책 `OWN_BOUNDED_SOURCE_LIMIT_NO_AUTO_RESET_V1`)은 초기화가 없고,
+  기본 개방 정책에서는 시간 제한 자체가 꺼져 있다. 충전 대상 시간이 소비되지 않으므로 사용해도 결과가 없다 → 아이템 보존.
+
+### 12.3 강화 주문서 (ScrollEnchant 181종: EnchantScrollGroupID 157 + ByBlessCode 23 + 행 없음 1) — 미연결
+
+- 있는 표: ItemEnchantScrollGroup(→ 확률 종류), ItemEnchantScrollGroupMapping(→ ItemEnchantProbabilityGroup),
+  ItemEnchantProbabilityView(단계별 `IsUnbrokenEnchant`·ServerLimitSetID만), ItemEnchantCostView(Cost·ConsumeAmount),
+  ItemBlessEnchantProbability(축복 주문서 도약 1/2/3단계 확률).
+- 표에 없는 것: **단계별 성공 확률**(ProbabilityView에 확률 열이 없음 — 서버 값), 실패 시 결과(증발/유지/하락)의 단계별 규칙
+  (`IsUnbrokenEnchant` 0인 단계의 실패 처리), Cost의 화폐 종류. 성공률 없이 강화를 실행할 수 없어 전부 보존.
+  (기존 TWILIGHT 강화 규칙의 자체 확률을 원본 주문서에 붙이면 표 규칙이 아니므로 하지 않음.)
+
+### 12.4 카드 재뽑기 (ScrollBuffCardRetry 222 + ScrollBuffCardAwakenRetry 34 = 256종) — 미연결
+
+| 묶음 | 수 | 표에 있는 것 / 없는 것 |
+| --- | ---: | --- |
+| 미스터리 카드 (ScrollBuffCardRetry, BuffDeckID + GradeID, "희귀 합성을 통해 영웅 … 실패 시 희귀 1종") | 107 | BuffCardRuleMergeView에 덱·등급별 `MysterySuccessProbability`(희귀 10000 등)와 SuccessGradeID는 있다. **결과 등급 안에서 어떤 카드가 나오는지의 카드별 가중치가 없다**(BuffCard에 확률 열 없음, GotChaEntityView는 상점 뽑기 상품용). 기존 몬스터 도감 미스터리 경로는 TWILIGHT 자체 확률 설정을 쓰므로 원본 규칙이 아님 |
+| 옵션 각성 티켓 (ScrollBuffCardAwakenRetry, BuffDeckID + GradeID) | 12 | "보유 중인 영웅 변신 1종을 선택해 옵션 각성 확정" — 확정 각성 결과(어떤 옵션 값)가 표에 없음 |
+| TJ 쿠폰 (PlayerValueReturn: 합성 115 + 각성 22) | 137 | 별도 소유자 `scripts/tj`(TJ 쿠폰 화면)가 합성 실패 이력·시즌·서버 조건으로 처리한다. 가방 사용 경로가 아니라 그 화면에서 쓰는 아이템이며, 원본(523) 물리 수량 개체와 TJ 화면의 연결은 이번 범위 밖 |
+
+### 12.5 집계 (실제 원본 팩, 대상 카테고리 비테스트 14,887종 `profile` 기준)
+
+| 묶음 | 이전 사용 가능 | 이후 사용 가능 | 남은 거부 |
+| --- | ---: | ---: | ---: |
+| 상자(LuckyBag·SelectReward·ComplexReward) | 12,465 | 12,736 | 1,285 |
+| 시간 충전석 | 0 | 0 | 327 |
+| 강화 주문서 | 0 | 0 | 181 |
+| 카드 재뽑기 | 0 | 0 | 256 |
+| 축복 포인트 | 10 (문양 화면) | 101 (가방 91 + 문양 화면 10) | 1 (Gem) |
+
+- 연쇄 효과: 축복 포인트 91종이 지급 가능해지면서, 보상 일부가 지급 불가라 열면 보존되던 기존 상자 2,327 → 약 2,148종,
+  선택지 일부가 막힌 SelectReward 471 → 약 397종으로 줄었다(문양 재료 기록을 쓰는 10종 #117304 등을 담은 상자는
+  카탈로그 기록이 문양 쪽이라 여전히 보존될 수 있어 "약"으로 적음).

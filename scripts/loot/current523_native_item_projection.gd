@@ -254,6 +254,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
+	if not bless_points.is_empty():
+		out["source_use_spec"]=bless_points
+		if bless_points.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	var mastery: Dictionary=source_mastery_points(definition)
 	if not mastery.is_empty():
 		out["source_use_spec"]=mastery
@@ -1033,6 +1038,48 @@ static func source_mastery_points(definition: Dictionary) -> Dictionary:
 		if reason not in unique:unique.append(reason)
 	var grant: Dictionary=grants[0] if grants.size()==1 else {}
 	return {"kind":"weapon_mastery_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":grant.get("points",0),"weapon_type":grant.get("weapon_type",0),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## 축복 포인트 충전 (ItemCategory IntangibleItemRecharger): IntangibleItemClassID
+## naming IntangibleItemClass "BlessPoint" and IntangibleItemAmount N. Using one
+## adds N to the existing symbol (문양) blessing points. The item's own original
+## description must state the same "축복 포인트 N"; other intangible classes
+## (Gem etc.) and any other row stay unsupported.
+## `intangible(id)` reads IntangibleItemClass (synthetic rows in tests).
+static func source_bless_points(definition: Dictionary,description: String,intangible_row: Callable=Callable()) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="IntangibleItemRecharger" or raw.is_empty():return {}
+	var reasons: Array=[];var ids: Array=[];var classes: Array=[];var amounts: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value=="IntangibleItemClassID" and direct(row) and row.get("unit",{}).get("Name")=="IntangibleItemClassID" and integer(bonus.get("Value")):classes.append(int(bonus.Value));continue
+		if name_value=="IntangibleItemAmount" and direct(row) and row.get("unit",{}).get("Name")=="Value" and integer(bonus.get("Value")) and int(bonus.Value)>0:amounts.append(int(bonus.Value));continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	var intangible: Dictionary={}
+	if classes.size()==1:intangible=intangible_row.call(int(classes[0])) if intangible_row.is_valid() else SOURCE.row("IntangibleItemClass",int(classes[0]))
+	if classes.size()!=1 or amounts.size()!=1:reasons.append("missing_or_ambiguous_intangible_item_rows")
+	elif intangible.get("Name")!="BlessPoint":reasons.append("unsupported_intangible_item_class:"+str(classes[0]))
+	var amount: int=int(amounts[0]) if amounts.size()==1 else 0
+	if amount>0 and amount not in described_bless_points(description):reasons.append("description_bless_point_amount_mismatch")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"source_bless_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":amount,"intangible_item_class":intangible.duplicate(true),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## Every "축복 포인트 N" amount an original description states ("1,000" -> 1000).
+static func described_bless_points(text: String) -> Array:
+	var found: Array=[]
+	for match_value: RegExMatch in RegEx.create_from_string("축복\\s*포인트\\s*([0-9][0-9,]*)").search_all(text):
+		var value: int=int(match_value.get_string(1).replace(",",""))
+		if value not in found:found.append(value)
+	return found
 
 ## Equipment bless scrolls (ItemCategory ScrollBless, item target). The
 ## blessing itself is the existing equipment blessing owner; its success rate

@@ -73,6 +73,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if spec.get("kind")=="fixed_card" and spec.get("activation_status")=="unrestricted":return {"kind":"card","spec":spec}
 	if spec.get("kind")=="equipment_bless" and spec.get("activation_status")=="unrestricted":return {"kind":"bless","spec":spec}
 	if spec.get("kind")=="weapon_mastery_points" and spec.get("activation_status")=="unrestricted":return {"kind":"mastery","spec":spec}
+	if spec.get("kind")=="source_bless_points" and spec.get("activation_status")=="unrestricted":return {"kind":"bless_points","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind") in ["source_selectable_reward","source_selectable_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"selection","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -211,6 +212,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
+	if effect.kind=="bless_points":return use_bless_points(world,uid,owned,record,spec)
 	# A bless scroll needs a target: the existing blessing chooser opens and its
 	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
 	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
@@ -1052,6 +1054,39 @@ static func use_mastery_points(world: Node,uid: String,owned: Dictionary,record:
 	world.hud.append_log(message)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"weapon_type":weapon,"points":int(spec.points),"message":message}
 	return committed_use_context(result,record,0,false,"current523_native_stack.use_mastery_points")
+
+## 축복 포인트 충전: one physical unit is debited through its grant receipt and
+## the original IntangibleItemAmount is added to the existing symbol (문양)
+## blessing points (growth state "points", ledger "recharged") in one save.
+static func use_bless_points(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="source_bless_points" or spec.get("activation_status")!="unrestricted" or not integer(spec.get("points")) or int(spec.points)<=0:return _failure("원본 축복 포인트 아이템 정의 연결 필요")
+	var requirements: Dictionary=spec.get("item_requirements",{})
+	if whole(requirements.get("targetting_type_id"))!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 축복 포인트 아이템 사용 대상·서비스 조건 미지원")
+	var growth: Variant=world.get("growth")
+	if growth==null or bool(growth.busy):return _failure("문양 축복 포인트 처리 중 · 아이템 보존")
+	var next: Dictionary=growth.state.duplicate(true)
+	if not integer(next.get("points")) or int(next.points)>9007199254740991-int(spec.points):return _failure("문양 축복 포인트 형식·범위 확인 필요 · 아이템 보존")
+	next.points=int(next.points)+int(spec.points)
+	if not next.has("economy"):next["economy"]={}
+	next.economy["recharged"]=int(next.economy.get("recharged",0))+int(spec.points)
+	next.revision=int(next.get("revision",0))+1
+	if not str(growth.validate(next)).is_empty():return _failure("문양 축복 포인트 상태 검증 실패 · 아이템 보존")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 축복 포인트 아이템 차감 소유자 연결 필요"))))
+	var payload: Dictionary=paid.overrides.duplicate(true)
+	payload["growth"]=next
+	payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var saved: Error=world._save_game(true,payload)
+	busy=false
+	if saved!=OK:return _failure("원본 축복 포인트 아이템 저장 실패 · 아이템과 포인트 보존 (%d)" % saved)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(payload.consumable_state)
+	growth.state=next;world.deferred_save.cancel()
+	var message: String="%s 사용 · 축복 포인트 +%d (보유 %d)" % [str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),int(spec.points),int(next.points)]
+	world.hud.append_log(message)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"points":int(spec.points),"message":message}
+	return committed_use_context(result,record,0,false,"current523_native_stack.use_bless_points")
 
 ## A card item: one physical unit is debited through its grant receipt and the
 ## exact original card is credited to the existing card owner in one save.
