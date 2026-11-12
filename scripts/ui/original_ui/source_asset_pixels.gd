@@ -3,7 +3,9 @@ extends RefCounted
 ## Asset joins, exclusions and file identity remain with that owner. This
 ## adapter only carries its original pixels into the source renderer.
 const OWNER_API="res://scripts/ui/source523_source_ui_images.gd"
-const Pack=preload("res://scripts/ui/original_ui/source_pack.gd")
+const PMA_PIXELS=preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
+const PMA_CACHE=preload("res://scripts/ui/original_ui/source_asset_pma_cache.gd")
+static var _pma_cache=PMA_CACHE.new()
 
 static func resolve(reference: Dictionary) -> Dictionary:
 	if not ResourceLoader.exists(OWNER_API):return {"ok":false,"error":"source_image_owner_api_unavailable"}
@@ -36,11 +38,20 @@ static func consume_owner_result(owner_result: Dictionary) -> Dictionary:
 	var format_value: String=str(result.get("provenance",{}).get("member",{}).get("format",""))
 	if format_value not in ["PNG","JPEG","BMP"]:return {"ok":false,"error":"source_image_pixel_format_missing"}
 	if format_value=="PNG" and not bool(original.get_meta("cocos_premultiplied",false)):
+		var request: Dictionary=_pma_cache.request(original,evidence)
+		if request.get("texture") is Texture2D:return {"ok":true,"texture":request.texture,"evidence":evidence}
+		var source: Texture2D=original
 		var image: Image=original.get_image()
 		if image==null or image.is_empty():return {"ok":false,"error":"source_image_original_pixels_unavailable"}
+		# Some renderers return their stored Image. Own the temporary pixels
+		# before decompressing/converting an RGB/LA source to the upload format.
+		image=image.duplicate() as Image
 		if image.is_compressed() and image.decompress()!=OK:return {"ok":false,"error":"source_image_original_pixels_unavailable"}
 		image.convert(Image.FORMAT_RGBA8)
-		original=ImageTexture.create_from_image(Pack.cocos_premultiply(image))
+		original=ImageTexture.create_from_image(PMA_PIXELS.convert(image))
 		original.set_meta("cocos_premultiplied",true)
+		original.set_meta("source523_original_asset",evidence)
+		_pma_cache.remember(request,source,original,original.get_width()*original.get_height()*4)
+		return {"ok":true,"texture":original,"evidence":evidence}
 	original.set_meta("source523_original_asset",evidence)
 	return {"ok":true,"texture":original,"evidence":evidence}

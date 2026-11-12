@@ -7,6 +7,7 @@ const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd"
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
+const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
@@ -364,7 +365,7 @@ func _render_verified_layer(layer: Dictionary, source: Dictionary, pixels: bool)
 	var frame_index: int = int(layer.frame_index)
 	if frame_index >= group.frames.size(): return fail("Stored SP2 frame is out of range.")
 	var frame: Dictionary = group.frames[frame_index]
-	var result: Dictionary = DECODER.render(parsed, group_index, frame_index) if pixels else {"ok":true,"offset":frame.bounds.position,"empty":frame.empty}
+	var result: Dictionary = PIXEL_RENDERER.render(parsed, group_index, frame_index) if pixels else {"ok":true,"offset":frame.bounds.position,"empty":frame.empty}
 	if result.ok:
 		result["provenance"] = {"member":layer.member,"raw_sha256":source.sha256,"raw_crc32":source.crc32,"source_stage":source.stage,"source_receipt_id":source.source_receipt_id,"source_identity":source.source_identity,"stored_bit":int(layer.group_bit),"frame_index":frame_index,"layer_id":int(layer.source_sprite_id),"kind":layer.kind,"empty":bool(frame.empty)}
 		if layer.has("source_binding_id"):
@@ -447,6 +448,19 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	if path.size() > 1 and not attributes.is_empty(): unresolved = true
 	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
 
+## The action JSON and its declaration proof are fixed during this load.
+## Frames still validate their own layer identities, addresses and bindings;
+## their identical kind/sprite attribute proof only needs checking once per
+## action. Return independent arrays/dictionaries to every converted layer.
+func _load_action_attributes(record: Dictionary, kind: String, sprite: int, memo: Dictionary) -> Dictionary:
+	var key: String = kind + ":" + str(sprite)
+	if not memo.has(key):
+		FRAME_HITCH.count("sp2.attribute_validate")
+		var checked: Dictionary = _attributes(record, kind, sprite)
+		if not checked.ok: return checked
+		memo[key] = checked
+	return (memo[key] as Dictionary).duplicate(true)
+
 func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "", role_actor_ids: Dictionary = {}) -> Dictionary:
 	var started: int = FRAME_HITCH.now()
 	var result: Dictionary = _load_bank(manifest_path, expected_sha, source_actor_id, bindings, loop_policy, consumer_scope, role_actor_ids)
@@ -504,6 +518,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 		if not loaded.ok: return loaded
 		_actor_pins[actor_path] = entry.sha256
 		var source: Dictionary = loaded.value
+		var action_attributes: Dictionary = {}
 		if source.get("schema") != 1 or source.get("source_snapshot") != "patch523" or source.get("consumer_contract") != contract: return fail("Source action snapshot/contract mismatch.")
 		var reference_instances: Dictionary = _source_reference_instances(source)
 		if not reference_instances.ok: return reference_instances
@@ -580,7 +595,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 						if layer.kind == "clothes": shown.effect_layers.append(null_layer)
 						else: shown.layers.append(null_layer)
 						continue
-					var attributes: Dictionary = _attributes(source, layer.kind, int(layer.source_sprite_id))
+					var attributes: Dictionary = _load_action_attributes(source, layer.kind, int(layer.source_sprite_id), action_attributes)
 					if not attributes.ok: return attributes
 					var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
 					if not picture.ok: return picture

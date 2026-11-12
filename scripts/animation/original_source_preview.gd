@@ -10,6 +10,7 @@ const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_e
 var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const REFERENCE_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CURRENT523_BANK = preload("res://scripts/resources/current523_source_bank.gd")
 const CURRENT523_EFFECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
 var source_effect_status: Dictionary = {}
@@ -742,11 +743,15 @@ func _source_texture(layer: Dictionary) -> Texture2D:
 					return null
 			if texture == null:
 				var reservation: int = SHARED_ASSETS.reserve("texture",verified_key,charge)
+				var upload_started: int = FRAME_HITCH.now()
 				texture = ImageTexture.create_from_image(result.image)
+				# API elapsed time, not a GPU-completion fence.
+				FRAME_HITCH.detail("sp2.texture_create", upload_started)
 				if texture == null:
 					SHARED_ASSETS.cancel(reservation)
 					_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
 					return null
+				FRAME_HITCH.count("sp2.texture_created")
 				texture = SHARED_ASSETS.complete(reservation,texture,charge,_asset_owner) as Texture2D
 			if SHARED_ASSETS.holds("texture",verified_key,_asset_owner): _texture_leases[key] = verified_key
 			_textures[key] = texture
