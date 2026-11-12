@@ -170,7 +170,10 @@ func entries_for_category(level: int, inventory: Dictionary, category: String, n
 func _entries(level: int, inventory: Dictionary, now: int, category: Variant=null) -> Array[Dictionary]:
 	_advance_day(now if now >= 0 else int(Time.get_unix_time_from_system()))
 	var result: Array[Dictionary] = []
-	var bulk: bool = source != null and source.has_method("begin_bulk")
+	# Full scans retain the existing bulk path. A category uses the existing
+	# per-record reader without allocating the whole bake; any caller-owned
+	# outer bulk buffer remains untouched, including its begin/end lifecycle.
+	var bulk: bool = category == null and source != null and source.has_method("begin_bulk")
 	if bulk: source.begin_bulk()
 	for resident: Dictionary in quests:
 		if category!=null and str(resident.get("category",""))!=category:continue

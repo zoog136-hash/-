@@ -7,6 +7,7 @@ const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd"
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
+const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MAX_JSON = 16 * 1024 * 1024
@@ -25,11 +26,12 @@ var _index: RefCounted = null
 var _excluded_source_actors: Dictionary = {}
 var _actor_pins: Dictionary = {}
 # This bank's working set: member -> shared read-only parse. Each entry holds
-# one lease in ASSETS under _parsed_keys[member]; the same 3-member/32 MiB
-# body rule as before decides when this bank lets go of a member.
+# one lease in ASSETS under _parsed_keys[member]. At most three members are
+# retained, bounded by their allocated packed buffers (not total heap/RSS).
 var _parsed: Dictionary = {}
 var _parse_order: Array[String] = []
 var _parsed_keys: Dictionary = {}
+var _parsed_costs: Dictionary = {} # member -> the shared entry's measured cost
 var _asset_owner: int = ASSETS.new_owner()
 static var _crc_table: Array[int] = []
 ## Member files whose bytes were verified, by path -> [identity, size, mtime].
@@ -233,6 +235,7 @@ func _member(member: String) -> Dictionary:
 	if _parsed.has(member) and _parsed_keys.get(member, "") != asset_key: _drop_parsed(member)
 	if not _parsed.has(member):
 		var parsed: Variant = ASSETS.acquire("parsed", asset_key, _asset_owner) if not asset_key.is_empty() else null
+		var parsed_cost: int = ASSETS.entry_bytes("parsed", asset_key) if parsed != null else -1
 		if parsed == null:
 			if bytes.is_empty():
 				bytes = _read_verified(file_path, spec, supplied_sha, received, member)
@@ -245,15 +248,21 @@ func _member(member: String) -> Dictionary:
 			if not fresh.ok:
 				ASSETS.cancel(reservation)
 				return fresh
-			parsed = ASSETS.complete(reservation, fresh, _parsed_payload_bytes(fresh), _asset_owner)
-		var budget: int = parsed.body.size()
-		for cached: Dictionary in _parsed.values(): budget += cached.body.size()
+			parsed_cost = _parsed_payload_bytes(fresh)
+			parsed = ASSETS.complete(reservation, fresh, parsed_cost, _asset_owner)
+			# A completed reservation can reuse an already published payload.
+			# Its stored cost is canonical; stale/uncached completions keep ours.
+			var published_cost: int = ASSETS.entry_bytes("parsed", asset_key)
+			if published_cost >= 0: parsed_cost = published_cost
+		var budget: int = parsed_cost
+		for cost: int in _parsed_costs.values(): budget += cost
 		while not _parse_order.is_empty() and (_parsed.size() >= 3 or budget > 32 * 1024 * 1024):
 			var oldest: String = _parse_order[0]
-			budget -= _parsed[oldest].body.size()
+			budget -= int(_parsed_costs[oldest])
 			_drop_parsed(oldest)
 		_parsed[member] = parsed
 		_parsed_keys[member] = asset_key
+		_parsed_costs[member] = parsed_cost
 		_parse_order.append(member)
 	return {"ok":true,"parsed":_parsed[member],"sha256":spec.sha256,"crc32":spec.get("crc32"),"stage":spec.get("stage","sha256_pinned_raw_member"),"source_receipt_id":spec.get("source_receipt_id"),"source_identity":spec.get("source_identity")}
 
@@ -281,17 +290,17 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 static func forget_verified_members() -> void:
 	_verified_members.clear()
 
-## Payload estimate for the shared store: parse body plus a separate raw input
-## buffer (an FE body is the raw buffer itself and is not counted twice).
+## Measured once when publishing a parse, then reused from the shared entry
+## and this bank's sidecar. Does not change the parsed Dictionary or its keys.
 static func _parsed_payload_bytes(parsed: Dictionary) -> int:
-	var raw: PackedByteArray = parsed.get("raw", PackedByteArray())
-	var body: PackedByteArray = parsed.get("body", PackedByteArray())
-	return body.size() + (raw.size() if not raw.is_empty() and raw[0] != 254 else 0)
+	FRAME_HITCH.count("sp2.parsed_payload_measured")
+	return PARSED_PAYLOAD.bytes_of(parsed)
 
 func _drop_parsed(member: String) -> void:
 	ASSETS.release("parsed", str(_parsed_keys.get(member, "")), _asset_owner)
 	_parsed.erase(member)
 	_parsed_keys.erase(member)
+	_parsed_costs.erase(member)
 	_parse_order.erase(member)
 
 func _release_parsed() -> void:
@@ -299,6 +308,7 @@ func _release_parsed() -> void:
 		ASSETS.release("parsed", str(_parsed_keys[member]), _asset_owner)
 	_parsed.clear()
 	_parsed_keys.clear()
+	_parsed_costs.clear()
 	_parse_order.clear()
 
 func _notification(what: int) -> void:
@@ -307,6 +317,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		for member: String in _parsed_keys: ASSETS.release("parsed", str(_parsed_keys[member]), _asset_owner)
 		_parsed_keys.clear()
+		_parsed_costs.clear()
 
 ## Shared parsed-asset key of `member` as last verified by this bank, or "".
 func parsed_asset_key(member: String) -> String:
