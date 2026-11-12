@@ -103,6 +103,19 @@ static func _build() -> Dictionary:
 	if fee.is_empty(): return _fail("ClanPolicies EmblemChangeCommission 확인 실패")
 	return {"ok":true,"options":options,"by_id":by_id,"local_grade":local_grade,"fee":fee}
 
+## The OpenGrade the player has: the local clan's level (scripts/clan523)
+## when a clan exists, else the first ClanExperience level (no clan).
+static func grade_for(world: Variant) -> int:
+	var data: Dictionary = definition()
+	var base: int = int(data.get("local_grade",1))
+	var clan: Variant = world.get("clan523") if world is Object and is_instance_valid(world) else null
+	if clan is Object and clan.has_method("emblem_grade"): return maxi(base,int(clan.call("emblem_grade")))
+	return base
+
+## Predefined emblems open at their OpenGrade; other types are clan data.
+static func option_selectable(world: Variant, option: Dictionary) -> bool:
+	return str(option.get("type",""))=="Predefined" and int(option.get("open_grade",0))<=grade_for(world)
+
 static func validate(value: Variant) -> String:
 	if not value is Dictionary: return "문장 저장 구조 오류"
 	if int(value.get("schema",0))!=1 or not _integer(value.get("emblem_id",0)) or int(value.get("emblem_id",0))<0: return "문장 저장 값 오류"
@@ -133,7 +146,7 @@ func choose(world: Node, id: int) -> Dictionary:
 	if id!=0:
 		var option: Dictionary = data.by_id.get(id,{})
 		if option.is_empty(): return {"ok":false,"error":"한국 선택 목록에 없는 문장입니다"}
-		if not option.selectable: return {"ok":false,"error":"혈맹 레벨 %d 문장 · 혈맹 전용(온라인)" % int(option.open_grade) if option.type=="Predefined" else "혈맹 전용 문장(%s) · 로컬 선택 불가" % option.type}
+		if not option_selectable(world,option): return {"ok":false,"error":"혈맹 레벨 %d 문장 · 현재 %d" % [int(option.open_grade),grade_for(world)] if option.type=="Predefined" else "혈맹 전용 문장(%s) · 로컬 선택 불가" % option.type}
 	if int(data.fee.value)!=0: return {"ok":false,"error":"문장 변경 수수료 %d · 지불 경로 미연결" % int(data.fee.value)}
 	if id==emblem_id: return {"ok":true,"unchanged":true,"emblem_id":id}
 	var previous: int = emblem_id

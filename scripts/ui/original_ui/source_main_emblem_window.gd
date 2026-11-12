@@ -105,8 +105,9 @@ func _stage() -> Dictionary:
 		return _fail("source_emblem_window_list_content_missing")
 	var list_size: Vector2=NamedTree.list_size(out,_pack,TAB,"ListView_List")
 	var selectable: int=0
+	var host: Object=_world.get_ref() if _world!=null else null
 	for option: Dictionary in options:
-		if option.selectable:selectable+=1
+		if Emblems.option_selectable(host,option):selectable+=1
 	_list_size=list_size
 	_row_height=float(_tree.row_panel(SET).size[1])
 	_total_rows=ceili(float(options.size())/float(PER_ROW))
@@ -150,12 +151,13 @@ func _build_visible_rows() -> Dictionary:
 				continue
 			var option: Dictionary=options[index+side]
 			var id: int=int(option.id)
+			var open: bool=Emblems.option_selectable(_world.get_ref() if _world!=null else null,option)
 			row_spec["Clan_Mark_FlagSlot_%d/Panel" % (side+1)]={"input":Callable(self,"_list_input")}
 			row_spec[key+"Icn_Mark_Dummy"]={"role":"source_asset_slot","visible":false}
 			row_spec[key+"Label_Name"]={"role":"source_text","text":str(option.name)}
-			row_spec[key+"Btn_Normal"]={"visible":option.selectable and id!=_selected,"activate":Callable(self,"_slot_pressed").bind(id)}
+			row_spec[key+"Btn_Normal"]={"visible":open and id!=_selected,"activate":Callable(self,"_slot_pressed").bind(id)}
 			row_spec[key+"Btn_Pressed"]={"visible":id==_selected,"activate":Callable(self,"_slot_pressed").bind(id)}
-			row_spec[key+"Btn_Disabled"]={"visible":not option.selectable,"activate":Callable(self,"_slot_pressed").bind(id)}
+			row_spec[key+"Btn_Disabled"]={"visible":not open,"activate":Callable(self,"_slot_pressed").bind(id)}
 			row_spec[key+"Btn_Disabled/Label_Help"]={"role":"source_text","text":str(int(option.open_grade))}
 			row_spec[key+"Btn_Disabled/Label_Lock_Alliance"]={"visible":false}
 		var row_out: Dictionary={}
@@ -184,8 +186,8 @@ func _slot_pressed(id: int) -> Dictionary:
 	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
 	var option: Dictionary=Emblems.definition().get("by_id",{}).get(id,{})
 	if option.is_empty():return _fail("source_emblem_unknown")
-	if not option.selectable:
-		var reason: String="혈맹 레벨 %d에 열리는 문장입니다 · 혈맹은 온라인 전용" % int(option.open_grade) if option.type=="Predefined" else "혈맹 전용 문장(%s)입니다 · 로컬 선택 불가" % str(option.type)
+	if not Emblems.option_selectable(_world.get_ref() if _world!=null else null,option):
+		var reason: String="혈맹 레벨 %d에 열리는 문장입니다 · 현재 %d" % [int(option.open_grade),Emblems.grade_for(_world.get_ref() if _world!=null else null)] if option.type=="Predefined" else "혈맹 전용 문장(%s)입니다 · 로컬 선택 불가" % str(option.type)
 		_message(reason)
 		return {"ok":false,"locked":true,"reason":reason}
 	_selected=id

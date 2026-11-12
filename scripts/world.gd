@@ -134,6 +134,8 @@ const ROUTINE523 = preload("res://scripts/routine523/routine523_runtime.gd")
 var routines = ROUTINE523.new()
 const EMBLEM523 = preload("res://scripts/emblem523/emblem523.gd")
 var emblem523 = EMBLEM523.new()
+const CLAN523 = preload("res://scripts/clan523/clan523.gd")
+var clan523 = CLAN523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -4532,7 +4534,9 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	for value: Variant in selected.values():
 		if value is Dictionary:
 			total += int((value as Dictionary).get(key, 0))
-	return total
+	# The local clan's level buff (ClanReward -> BuffClass) is held while the
+	# clan exists, like an always-on buff, and is not part of the timed set.
+	return total + clan523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6077,6 +6081,12 @@ func _stat_memo_end() -> void:
 	_stat_memo_depth = maxi(0, _stat_memo_depth - 1)
 	if _stat_memo_depth == 0: _stat_memo.clear()
 
+## After a local clan change (creation, donation, level): the clan buff is
+## read on demand, so only the shown values and the bag are refreshed.
+func _refresh_after_clan_change() -> void:
+	if hud != null and hud.has_method("refresh_inventory"): hud.refresh_inventory(inventory)
+	_update_hud()
+
 func _update_hud() -> void:
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -6395,6 +6405,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),
 		ROUTINE523.SAVE_KEY: routines.export_state(),
 		EMBLEM523.SAVE_KEY: emblem523.export_state(),
+		CLAN523.SAVE_KEY: clan523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -7027,6 +7038,7 @@ func _load_game(quiet: bool) -> void:
 	domination_stones.import_state(data.get(DOMINATION_STONES.SAVE_KEY, {}))
 	routines.import_state(data.get(ROUTINE523.SAVE_KEY, {}))
 	emblem523.import_state(data.get(EMBLEM523.SAVE_KEY, {}))
+	clan523.import_state(data.get(CLAN523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -9732,7 +9744,7 @@ func _catalog_damage_bonus(kind: String) -> int:
 	# Native secondary doll effects are counted once, separately from general attack.
 	var source_damage: int=monsterbook523_runtime.flat_bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,"")) + option_awakening.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""))+halphas_star.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,"")) + weapon_mastery.catalog_bonus({"melee":"meleeDamage","ranged":"rangedDamage","magic":"magicDamage"}.get(kind,""), _mastery_actual_weapon_type())+int(combinations.amount({"melee":"MeleeDamage","ranged":"RangeDamage"}.get(kind,"")))
 	var half_kind: String = {"melee":"Melee", "ranged":"Range", "magic":"Magic"}.get(kind, "")
-	var total: int = totems.bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,"")) + source_damage + int(half_elixir.value(half_kind + "Damage")) + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
+	var total: int = totems.bonus({"melee":"MeleeDamage","ranged":"RangeDamage","magic":"MagicDamage"}.get(kind,"")) + source_damage + int(half_elixir.value(half_kind + "Damage")) + (clan523.buff_value("magic_damage") if kind == "magic" else 0) + _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
