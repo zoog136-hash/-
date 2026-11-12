@@ -143,9 +143,12 @@ static func _ids(rows: Array, field: String, distinct: bool = false) -> Array:
 	result.sort()
 	return result
 
+## Record ID lists come from table JSON (1.0); _ids() yields ints and Array
+## equality is type-strict, so integral numbers are compared as ints (#411):
+## otherwise no native equipment (slot/class IDs) binds to the rules model.
 static func _sorted_ids(values: Array) -> Array:
 	var result: Array = []
-	for value: Variant in values: result.append(value)
+	for value: Variant in values: result.append(int(value) if typeof(value) == TYPE_FLOAT and _integer(value) else value)
 	result.sort(); return result
 
 static func _identity(record: Dictionary) -> String:
