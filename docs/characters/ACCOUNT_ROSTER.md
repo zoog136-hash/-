@@ -1,6 +1,6 @@
 # 로컬 캐릭터 계정과 13슬롯
 
-기존 작업 브랜치 `feature/character-roster-account-sharing-20261112`에서 이어서 구현했다. 초기 기준은 `main` `8634f931b6b749865c52dd6437b2d18d5f91c174`이며, 후속 작업 전 최신 main `b488fb3`을 병합한 체크포인트는 `29e2e06`이다. 후속 로비 통합에서는 최신 main `8d030bb5ab68d78b7f45d2fef82a34cf0beb24a1`의 원본 UI·메모리 최적화도 기존 브랜치로 병합해 보존했다. main으로의 PR 병합·APK 전달·실기기 실행 여부는 각각 별도 확인한다.
+기존 작업 브랜치 `feature/character-roster-account-sharing-20261112`에서 이어서 구현했다. 초기 기준은 `main` `8634f931b6b749865c52dd6437b2d18d5f91c174`이며, 후속 작업 전 최신 main `b488fb3`을 병합한 체크포인트는 `29e2e06`이다. 후속 로비 통합에서는 main `8d030bb5ab68d78b7f45d2fef82a34cf0beb24a1`의 원본 UI·메모리 최적화와 최신 main `1c1bd94033b29b0642c79bf8c2473d73ba2953b3`의 스킬 변경도 기존 브랜치로 병합해 보존했다. main으로의 PR 병합·APK 전달·실기기 실행 여부는 각각 별도 확인한다.
 
 ## 실행 경로와 저장 선택
 

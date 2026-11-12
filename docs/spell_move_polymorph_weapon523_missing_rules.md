@@ -38,6 +38,7 @@
 1. 재사용 대기시간: `CastDelay`(예: 플래시 9000)의 단위·의미(시전 지연/재사용/그룹)가 확정되지 않음(기존 문서 정책과 동일). 공식 참고 자료에도 재사용 시간 없음.
 2. 습득 경로: 원본 스킬북(예: 플래시 아이템 223031)은 상점 91·833·1164에서만 팔리고, 기존 스킬북 연결은 상점 10만 읽는다. 상점 91·833·1164의 정체(NPC) 표가 없음.
 3. 후속 주문: 돌진 뒤 피해·스턴은 `NextSpellClassID`(ApplicationType 5)·`SuccessChangeSpellClassID`·`ActiveComboSpell` 등 별도 주문이며 실행 순서·조건 규칙이 표에 없음. 이동만 단독 실행된다.
+(2026-11-12 재조사, `docs/skill523_source_hold_report.md` "실행 쪽 막힘 조사"): 1은 툴팁 대조 48행 중 44행 불일치라 확정 못 함, 2의 상점 91·833·1164는 `EarthObjectUnit`→`EarthObjectClass`로 보면 서버별 **혈맹 상인**이고 거의 모든 판매 행에 혈맹 레벨 조건이 있어 연결하지 않음, 3은 적용 유형 5 조건과 `SpellWeaponBasedDamage` 결합식이 없어 연결하지 않음.
 4. (해결됨, `docs/skill523_source_hold_report.md`) 예전에는 재료 6 흑마석의 원본 아이템 713이 `TestItem=true`라서 스킬 프로필 전체가 `native_material_binding_unconfirmed`로 보류됐다. 이제 그 재료만 보류하고 441개 프로필이 모두 연결되어 이동 계획 8개가 기록에 붙는다. 위 1~3 때문에 시전 보류는 그대로다.
 
 ### 표에 없는 세부 규칙(구현하지 않음)
