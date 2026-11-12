@@ -34,6 +34,15 @@ static func status_field(row: Dictionary) -> Dictionary:
 	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return {}
 	return {"field":STATUS_PREFIX[type]+STATUS_BONUS[str(row.bonus_type.Name)],"value":int(bonus.Value)/int(display[0].Denominator),"type":type,"denominator":int(display[0].Denominator)}
 
+## Equipment CarryPlus in host weight points: Value / UIUnit Denominator of
+## its unit (Weight = 100); 0 when the row is not a whole, positive, direct one.
+static func carry_bonus(row: Dictionary) -> int:
+	var bonus: Dictionary=row.get("bonus",{})
+	if not direct(row) or not integer(bonus.get("Value")) or int(bonus.Value)<=0:return 0
+	var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return 0
+	return int(bonus.Value)/int(display[0].Denominator)
+
 static func direct(row: Dictionary) -> bool:
 	return row.get("IsPossession")==false and row.get("bonus",{}).get("BonusApplicationTypeID")==0 and row.get("bonus",{}).get("BonusApplicationTargetID")==0
 static func values(rows: Array,names: Array) -> Dictionary:
@@ -182,6 +191,13 @@ static func record(definition: Dictionary) -> Dictionary:
 				if ui.size()!=1 or ui[0].get("Denominator")!=10000:continue
 			var denominator: int=1000000 if name_value in ["MoveSpeedBonus","ExperienceAdditionPercent"] else 10000
 			out[field]=float(out.get(field,1.0 if field=="speed" else 0.0))+float(amount)/denominator;handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":float(amount)/denominator,"source_denominator":denominator})
+		elif equipment and name_value=="CarryPlus" and unit=="Weight":
+			# BonusType CarryPlus (unit Weight) shown over its UIUnit Denominator
+			# (100): 50000 -> "무게 보너스+500" in the original item text. Same
+			# weightBonus field and rule as cards/collections/enchantment.
+			var weight: int=carry_bonus(row)
+			if weight<=0:continue
+			out["weightBonus"]=int(out.get("weightBonus",0))+weight;handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":"weightBonus","value":weight,"source_denominator":int(amount)/weight})
 		elif equipment and name_value in ["IsTwoHanded","CanEquipWithTwoHanded"] and unit=="TrueFalse" and int(amount) in [0,1]:
 			var field: String="source_is_two_handed" if name_value=="IsTwoHanded" else "source_can_equip_with_two_handed"
 			if out.has(field) and out[field]!=bool(amount):return {}
