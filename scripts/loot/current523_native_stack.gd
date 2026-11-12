@@ -1362,7 +1362,7 @@ static func plan_spell_material(world: Node,skill: Dictionary,cost_key: String,q
 	var adapter: Object=world.original_skills.catalog.source523
 	var text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
 	var public: Variant=JSON.parse_string(text)
-	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346" or not public is Dictionary or adapter.bindings!=public or not adapter._source_materials(public):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
+	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346" or not public is Dictionary or adapter.bindings!=public or not adapter.material_ready(public,cost_key):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
 	var ids: Array=[]
 	for bridge: Variant in public.get("material_inventory_keys",{}).values():
 		if bridge is Dictionary and bridge.get("inventory_key")==cost_key and bridge.get("native_item_id") not in ids:ids.append(bridge.get("native_item_id"))
