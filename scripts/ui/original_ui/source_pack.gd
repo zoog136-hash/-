@@ -6,6 +6,10 @@ const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 ## leases and the idle byte budget. This instance holds a lease on every page
 ## in _pages until release_cache_leases(), a successful open() or deletion.
 const PAGE_CACHE=preload("res://scripts/ui/original_ui/source_pack_page_cache.gd")
+## Cache ownership is bounded even when a HUD keeps this pack for the whole
+## session. Active controls/fonts keep their own textures; weak hits reuse
+## those exact objects after the cache drops its strong reserve.
+const TEXTURE_CACHE=preload("res://scripts/resources/source523_texture_cache.gd")
 ## After the first verified open, the scene and layout trees (about 250 MB
 ## parsed for the main HUD pack) live in a device-local record bake keyed by
 ## the manifest pin and this script; `manifest.scenes`/`layout_sources` keep
@@ -19,7 +23,7 @@ var root: String=""
 var manifest_sha256: String=""
 var last_error: String=""
 var _pages: Dictionary={}
-var _textures: Dictionary={}
+var _texture_cache=TEXTURE_CACHE.new()
 var _fonts: Dictionary={}
 var _bitmap_fonts: Dictionary={}
 var _page_leases: Dictionary={}
@@ -44,11 +48,20 @@ func release_cache_leases() -> void:
 	_pages.clear()
 	if not keys.is_empty():PAGE_CACHE.release(_lease_owner,keys)
 
+## Decoded RGBA payload reserve only, not a cap on externally held textures,
+## FontFile allocations, GPU memory or RSS. Does not change any source pixels.
+func configure_texture_cache(budget_bytes: int, max_entries: int=TEXTURE_CACHE.DEFAULT_MAX_ENTRIES) -> void:
+	_texture_cache.configure(budget_bytes,max_entries)
+
 func cache_stats() -> Dictionary:
 	var result: Dictionary=PAGE_CACHE.stats()
+	var textures: Dictionary=_texture_cache.metrics()
 	result["instance_pages"]=_pages.size()
 	result["instance_page_leases"]=_page_leases.size()
-	result["instance_textures"]=_textures.size()
+	result["instance_textures"]=textures.resident_entries
+	result["instance_texture_cache"]=textures
+	result["instance_fonts"]=_fonts.size()
+	result["instance_bitmap_font_metadata"]=_bitmap_fonts.size()
 	return result
 
 func open(pack_root: String, expected_sha256: String) -> Dictionary:
@@ -181,7 +194,7 @@ func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> vo
 	manifest_sha256=expected_sha256
 	release_cache_leases()
 	_pages.clear()
-	_textures.clear()
+	_texture_cache.clear(true)
 	_fonts.clear()
 	_bitmap_fonts.clear()
 	last_error=""
@@ -260,7 +273,8 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if manifest.is_empty() or str(reference.get("path","")).is_empty(): return null
 	var plist: String=str(reference.get("plistFile",""))
 	var key: String=plist+":"+str(reference.path)+":"+str(cocos_pixels)
-	if _textures.has(key): return _textures[key]
+	var cached: Texture2D=_texture_cache.lookup(key)
+	if cached!=null:return cached
 	var shared_key: String=""
 	# Same early rejection as the decode path below, before any shared lookup.
 	if plist.is_empty() and int(reference.get("resourceType",0))!=0: return null
@@ -268,7 +282,7 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 		shared_key=PAGE_CACHE.frame_key(manifest_sha256,root,"page" if plist.is_empty() else "atlas",plist,str(reference.path),cocos_pixels)
 		var shared: Texture2D=PAGE_CACHE.shared_frame(shared_key)
 		if shared!=null:
-			_textures[key]=shared
+			_texture_cache.remember(key,shared,shared.get_width()*shared.get_height()*4)
 			return shared
 	var original: Image
 	var premultiplied: bool=false
@@ -292,7 +306,7 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 		original=cocos_premultiply(original)
 	var result:=ImageTexture.create_from_image(original)
 	result.set_meta("cocos_premultiplied",cocos_pixels and premultiplied)
-	_textures[key]=result
+	_texture_cache.remember(key,result,original.get_data_size())
 	if not shared_key.is_empty():PAGE_CACHE.register_frame(shared_key,result)
 	return result
 
@@ -386,12 +400,14 @@ func bitmap_font(reference: Dictionary) -> Dictionary:
 	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"source_bitmap_resource_type"}
 	var member: String=_member(str(reference.get("path","")))
 	if not _safe_member(member) or not member.ends_with(".fnt") or not manifest.get("files",{}).has(member):return {"ok":false,"error":"source_bitmap_descriptor_missing"}
-	if _bitmap_fonts.has(member):return {"ok":true,"font_data":_bitmap_fonts[member].duplicate(true)}
-	var path: String=root.path_join("originals").path_join(member)
-	if FileAccess.get_sha256(path)!=manifest.files[member].sha256:return {"ok":false,"error":"source_bitmap_descriptor_hash"}
-	var parsed: Dictionary=preload("res://scripts/ui/original_ui/source_bitmap_font_data.gd").parse(FileAccess.get_file_as_bytes(path))
-	if not parsed.get("ok",false):return parsed
-	var data: Dictionary=parsed.font_data
+	var data: Dictionary
+	if _bitmap_fonts.has(member):data=_bitmap_fonts[member].duplicate(true)
+	else:
+		var path: String=root.path_join("originals").path_join(member)
+		if FileAccess.get_sha256(path)!=manifest.files[member].sha256:return {"ok":false,"error":"source_bitmap_descriptor_hash"}
+		var parsed: Dictionary=preload("res://scripts/ui/original_ui/source_bitmap_font_data.gd").parse(FileAccess.get_file_as_bytes(path))
+		if not parsed.get("ok",false):return parsed
+		data=parsed.font_data
 	var pages: Dictionary={}
 	for page_id: int in data.pages:
 		var page_member: String=member.get_base_dir().path_join(str(data.pages[page_id].file))
@@ -400,9 +416,12 @@ func bitmap_font(reference: Dictionary) -> Dictionary:
 		if original==null:return {"ok":false,"error":"source_bitmap_page_unavailable"}
 		if original.get_width()!=int(data.common.scaleW) or original.get_height()!=int(data.common.scaleH):return {"ok":false,"error":"source_bitmap_page_dimensions"}
 		pages[page_id]=original
-	data["page_textures"]=pages
 	data["member"]=member
-	_bitmap_fonts[member]=data
+	# Only parsed descriptors/glyphs belong to this lifetime cache. Returned
+	# font data owns its page textures while a screen uses them; keeping pages
+	# here would bypass the bounded frame reserve after that screen closes.
+	_bitmap_fonts[member]=data.duplicate(true)
+	data["page_textures"]=pages
 	return {"ok":true,"font_data":data.duplicate(true)}
 
 func particle(reference: Dictionary) -> Dictionary:
@@ -425,13 +444,14 @@ func particle(reference: Dictionary) -> Dictionary:
 
 func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
 	var key: String="embedded_particle:"+member
-	if _textures.has(key):return _textures[key]
+	var cached: Texture2D=_texture_cache.lookup(key)
+	if cached!=null:return cached
 	var shared_key: String=""
 	if PAGE_CACHE.enabled:
 		shared_key=PAGE_CACHE.frame_key(manifest_sha256,root,"embedded_particle","",member,true)
 		var shared: Texture2D=PAGE_CACHE.shared_frame(shared_key)
 		if shared!=null:
-			_textures[key]=shared
+			_texture_cache.remember(key,shared,shared.get_width()*shared.get_height()*4)
 			return shared
 	var compressed: PackedByteArray=Marshalls.base64_to_raw(encoded)
 	if compressed.size()<2:return null
@@ -449,7 +469,7 @@ func _embedded_particle_texture(member: String, encoded: String) -> Texture2D:
 	var result:=ImageTexture.create_from_image(cocos_premultiply(original))
 	result.set_meta("cocos_premultiplied",true)
 	result.set_meta("original_embedded_png_sha256",_sha256(png))
-	_textures[key]=result
+	_texture_cache.remember(key,result,original.get_data_size())
 	if not shared_key.is_empty():PAGE_CACHE.register_frame(shared_key,result)
 	return result
 
