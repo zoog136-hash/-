@@ -266,3 +266,145 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
   HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
 
+
+## 11. 소모품 1단계 — 상자 (2026-11-12, PR `feature/consumables523`)
+
+집계: main `b488fb36` 기준, 실제 원본 팩으로 LuckyBag·SelectReward·ComplexReward 등 대상 카테고리 비테스트 14,887종의
+사용 소유자(`current523_native_stack.profile`)를 다시 셌다. "사용 가능" = 사용 소유자가 있는 것. 그중 상자 안 보상이
+하나라도 지급 소유자(공급 프로필) 없이 남아 있으면 실제 개봉 때 "후보 제거 없이 상자 보존"으로 거부되므로 따로 표시했다.
+
+### 11.1 연결한 것
+
+요약: LuckyBag 사용 거부 1,370 → 1,099 (+271), SelectReward 180 → 180, 대상 카테고리 전체 사용 가능 12,465 → 12,736.
+
+| 묶음 | 수 | 근거 |
+| --- | ---: | --- |
+| **LuckyBag 선택 상자** (LuckyBagEntityView 행이 전부 LuckyBagEntityType 3 "Selectable") | 이전 0 → **99** (그중 모든 선택지 지급 가능 96) | 선택 개수는 LuckyBagClass에 열이 없고, 아이템 자신의 원본 설명(StoryDescID)이 "다음 아이템 중 1종 선택 획득"으로 적는다. 설명에 적힌 개수가 하나(1)일 때만 연결. 받는 것은 고른 행의 ItemClassID·ItemAmount·ItemBlessCodeID·ItemEnchant 그대로(+6 등, 자체 초기 강화 규칙 없음) |
+| **ResetAutoSlotByEmpty 상자** (TrueFalse 1) | 이전 0 → **172** (그중 열 수 있는 것 29) | "다 쓰면 자동 사용 슬롯 해제" 표시. 상자는 AutoUseRegistrable 행이 있어야 자동 슬롯에 들어가는데 그런 상자는 여전히 거부되므로, 해제할 슬롯이 없어 값 그대로 만족. 단 이 중 143종은 내용물(강화 주문서 140행 등)에 지급 소유자가 없어 열면 보존됨 |
+| 선택 보상 창 연결 (SelectReward + 위 선택 상자) | 3,149 + 99 | 가방에서 사용하면 기존에는 "원본 UI에서 보상을 선택하세요"만 뜨고 고를 창이 없었다(`requires_original_selection`을 받는 곳이 없음). 이제 기존 선택 창(`patch523_reward_choice`)이 열리고, 확인 시 `consumable_service.claim_owned_original_selection`이 물리 개체·영수증·선택 행을 다시 증명한 뒤 1개 차감·지급·저장한다. 열기·취소는 차감하지 않음. 퀘스트 보상으로 받은 선택 상자도 같은 창 |
+
+실제 Main·원본 팩 확인(`tests/items523_selection_boxes_test.gd`, 검사 41개 통과):
+- #187362 "+6 스냅퍼의 반지 선택 상자": 창에 원본 3행(+6) → 2번째 선택 → 상자 2→1, 고른 반지 +6 지급 → 저장→다시 불러오기 후 상자 1·반지 유지, 다시 창 열림.
+- #193581 "+4 지휘관의 휘장 상자"(ResetAutoSlotByEmpty): 열면 상자 소비, +4 휘장 지급.
+- 기존 SelectReward 상자(#147012)도 같은 창으로 수령.
+
+### 11.2 남은 상자 (표에 규칙이 없어 보존) — 1,285종
+
+| 묶음 | 수 | 표에 없는 것 |
+| --- | ---: | --- |
+| 보상에 테스트(TestItem=true)·더미 아이템 포함 — LuckyBag | 630 | 대부분 예전 "[변신 카드]/[마법인형 카드]" 아이템(TestItem=true)이 확률·확정 행에 있다. 빼면 확률이 바뀌고(확률 상자), 확정 상자는 내용이 달라진다 → 상자 보존 |
+| 같은 이유 — SelectReward | 172 | 42종은 선택지 전부가 테스트 아이템, 130종은 일부. 선택지를 빼는 규칙 없음 |
+| LuckyBagClassID 행 없음 | 200 (+ SelectReward 2, ComplexReward 6) | 내용물 표 연결 자체가 없음 |
+| 확률 합이 직업별 10,000,000이 아님 | 129 | 합 2,000,000 등(나머지가 "꽝"인지, 재정규화인지, 행별 독립 추첨인지 표에 없음). 5종은 일부 직업만 0 |
+| ClassUsageInterval (초) | 77 (45 + 조건부 32) | 직업별 재사용 간격의 시계(실시간/접속 시간)·저장 범위가 표에 없음. 32종은 적용 대상 314 행 |
+| UsageInterval (초) + InfiniteAmount | 17 (12 + 5) | 무한 수량 상자의 재사용 간격(86400초 등) 시계 기준 없음 |
+| LuckyBagLimitedItemPossession | 33 (27 + 6) | 대상 ItemClass(적용 5) 보유 수 제한의 판정 범위(가방·창고·장착) 없음 |
+| IsGiven + FinalReward(2) 상자 / Probability + FinalReward | 6 / 1 | FinalReward의 누적 횟수·주기 규칙 없음 |
+| Life / ItemPossessionAppellationID / ConsumeTerritoryClassID 등 | 3 / 1 / 1 | 획득 후 수명 기준·호칭 보유 조건·영역 소비 규칙 없음 |
+| SelectReward RewardGetTimeTypeID 3 | 3 | 수령 시점 종류 3의 의미 없음 |
+| 선택 상자 중 테스트 선택지 포함 | 4 | #373971·#373981·#374468·#374678 |
+
+- 참고: 이미 "사용 가능"이던 LuckyBag 9,316종 중 2,327종, SelectReward 3,149종 중 471종은(이번 연결 전에는 2,350·801종) 보상(또는 선택지) 일부가
+  지급 소유자 없는 소모품(다른 상자 1,609행·특수 주문서 762·물약 714·강화 주문서 695·재료 604·축복 포인트 515·시간 충전석 407 등)이다.
+  확률 상자는 열면 보존, 선택 상자는 그 선택지만 거부된다. 이 소모품들이 연결될수록 함께 풀린다.
+
+## 12. 소모품 2~5단계 — 시간 충전석·강화 주문서·카드 재뽑기·축복 포인트 (2026-11-12, 같은 PR)
+
+### 12.1 축복 포인트 충전 — **가방 사용 연결 91종** (IntangibleItemRecharger 102종 중)
+
+- 근거: ItemBonus IntangibleItemClassID(Unit IntangibleItemClassID) → IntangibleItemClass 14 "BlessPoint",
+  IntangibleItemAmount(Unit Value) N. 아이템 자신의 원본 설명 "사용 시 축복 포인트 N 획득"과 같은 값일 때만 연결
+  (101종 모두 일치). 그 밖의 행은 DeleteTime(기존 기간 규칙)·CannotExtendDeleteTime만 허용.
+- 연결: 물리 개체 1개 차감 + 기존 문양(growth) 축복 포인트 `points` +N(장부 `economy.recharged`)을 한 번에 저장
+  (`current523_native_stack.use_bless_points`). 포인트 상한은 원본 표에 없고 기존 문양 상태에도 없다.
+- 문양 소유자와의 경계: 기간(DeleteTime) 행이 없는 10종(#117304 등)은 기존 문양 소유자(`symbol_source523`)가 자기 재료 기록으로
+  카탈로그에 올리고 문양 화면에서 충전한다(이미 사용 가능, 퀘스트 보상 연결도 이 기록). 그 기록을 그대로 두므로 이 10종은 계속 문양 화면 경로다.
+  기간 행이 있는 91종은 문양 소유자가 "기간 조건을 버릴 수 없음"으로 받지 않던 것이라, 이번에 원본 물리 수량 경로(기존 기간 규칙 적용)로 연결했다.
+- 남은 1종: IntangibleItemClass 2 "Gem"(다이아) 충전 — 사용자 결정(패키지 내 다이아 미지급)과 같은 이유로 연결하지 않음.
+- 실제 Main·원본 팩(`tests/items523_bless_points_test.gd`): #168024 [이벤트] 축복의 성수(대) 3개 → 1개 사용 시 포인트 +1000,
+  2개째 +2000 → 저장→다시 불러오기 후 포인트·남은 1개 유지 → 다시 사용 가능. #117304는 문양 재료 기록 그대로.
+
+### 12.2 시간 충전석 (LandTimeRecharger 327종) — 미연결
+
+- 행: RechargeLandTimeLimitGroupID → LandTimeLimitGroup(TimeLimit·MaxRechargeTime·ContentsResetScheduleTypeID), RechargeTime(초, 대부분 3600).
+- 표에 없는 것: MaxRechargeTime이 "초기화 주기당 충전 가능한 총량"인지 "남은 시간의 상한"인지(설명 문구·다른 표 모두 없음).
+  충전 시점이 초기화(Daily/WeeklyWed 등) 전후로 걸칠 때의 처리도 없다.
+- 게임 쪽: 기존 시간 풀(`current523_map_time_pool`, 정책 `OWN_BOUNDED_SOURCE_LIMIT_NO_AUTO_RESET_V1`)은 초기화가 없고,
+  기본 개방 정책에서는 시간 제한 자체가 꺼져 있다. 충전 대상 시간이 소비되지 않으므로 사용해도 결과가 없다 → 아이템 보존.
+
+### 12.3 강화 주문서 (ScrollEnchant 181종: EnchantScrollGroupID 157 + ByBlessCode 23 + 행 없음 1) — 미연결
+
+- 있는 표: ItemEnchantScrollGroup(→ 확률 종류), ItemEnchantScrollGroupMapping(→ ItemEnchantProbabilityGroup),
+  ItemEnchantProbabilityView(단계별 `IsUnbrokenEnchant`·ServerLimitSetID만), ItemEnchantCostView(Cost·ConsumeAmount),
+  ItemBlessEnchantProbability(축복 주문서 도약 1/2/3단계 확률).
+- 표에 없는 것: **단계별 성공 확률**(ProbabilityView에 확률 열이 없음 — 서버 값), 실패 시 결과(증발/유지/하락)의 단계별 규칙
+  (`IsUnbrokenEnchant` 0인 단계의 실패 처리), Cost의 화폐 종류. 성공률 없이 강화를 실행할 수 없어 전부 보존.
+  (기존 TWILIGHT 강화 규칙의 자체 확률을 원본 주문서에 붙이면 표 규칙이 아니므로 하지 않음.)
+
+### 12.4 카드 재뽑기 (ScrollBuffCardRetry 222 + ScrollBuffCardAwakenRetry 34 = 256종) — 미연결
+
+| 묶음 | 수 | 표에 있는 것 / 없는 것 |
+| --- | ---: | --- |
+| 미스터리 카드 (ScrollBuffCardRetry, BuffDeckID + GradeID, "희귀 합성을 통해 영웅 … 실패 시 희귀 1종") | 107 | BuffCardRuleMergeView에 덱·등급별 `MysterySuccessProbability`(희귀 10000 등)와 SuccessGradeID는 있다. **결과 등급 안에서 어떤 카드가 나오는지의 카드별 가중치가 없다**(BuffCard에 확률 열 없음, GotChaEntityView는 상점 뽑기 상품용). 기존 몬스터 도감 미스터리 경로는 TWILIGHT 자체 확률 설정을 쓰므로 원본 규칙이 아님 |
+| 옵션 각성 티켓 (ScrollBuffCardAwakenRetry, BuffDeckID + GradeID) | 12 | "보유 중인 영웅 변신 1종을 선택해 옵션 각성 확정" — 확정 각성 결과(어떤 옵션 값)가 표에 없음 |
+| TJ 쿠폰 (PlayerValueReturn: 합성 115 + 각성 22) | 137 | 별도 소유자 `scripts/tj`(TJ 쿠폰 화면)가 합성 실패 이력·시즌·서버 조건으로 처리한다. 가방 사용 경로가 아니라 그 화면에서 쓰는 아이템이며, 원본(523) 물리 수량 개체와 TJ 화면의 연결은 이번 범위 밖 |
+
+### 12.5 집계 (실제 원본 팩, 대상 카테고리 비테스트 14,887종 `profile` 기준)
+
+| 묶음 | 이전 사용 가능 | 이후 사용 가능 | 남은 거부 |
+| --- | ---: | ---: | ---: |
+| 상자(LuckyBag·SelectReward·ComplexReward) | 12,465 | 12,736 | 1,285 |
+| 시간 충전석 | 0 | 0 | 327 |
+| 강화 주문서 | 0 | 0 | 181 |
+| 카드 재뽑기 | 0 | 0 | 256 |
+| 축복 포인트 | 10 (문양 화면) | 101 (가방 91 + 문양 화면 10) | 1 (Gem) |
+
+- 연쇄 효과: 축복 포인트 91종이 지급 가능해지면서, 보상 일부가 지급 불가라 열면 보존되던 기존 상자 2,327 → 약 2,148종,
+  선택지 일부가 막힌 SelectReward 471 → 약 397종으로 줄었다(문양 재료 기록을 쓰는 10종 #117304 등을 담은 상자는
+  카탈로그 기록이 문양 쪽이라 여전히 보존될 수 있어 "약"으로 적음).
+
+## 13. 장비 강화 원본 연결 — 강화 표가 원본 장비를 하나도 못 잡던 문제 (2026-11-12, PR `feature/equipment523-enchant-bonus`)
+
+### 13.1 원인 (실제 Main 측정)
+
+- 개별 ID 측정(장비 2,954종, 원본 팩)에서 강화 규칙 모델(`world.patch523_equipment`)에 **원본 장비가 0종** 들어 있었다
+  (모델 아이템 25,716종은 전부 비장비, `equipment_runtime` 비어 있음). 그래서
+  - 강화 단계 효과(ItemEnchantBonus, 2,681종·79,794행)는 투영의 좁은 목록(`current523_native_item_projection.enchant_stats`,
+    Value 단위 20여 종)만 적용되고, 강화 발동·추가 옵션(관통·치명·리덕션 비율·내성 등)은 0;
+  - 강화 주문서 규칙(EnchantEquipGroupID 1,893종)은 원본 확률·비용 대신 기존 TWILIGHT 기본 규칙.
+- 원인: `patch523_rules_projection._bind_catalog`가 기록의 `source_class_ids`/`source_equip_slot_ids`(표 JSON에서 온 실수 `8.0`)를
+  표에서 만든 정수 배열(`8`)과 `!=`로 비교 — Godot 배열 비교는 형이 엄격해 장비(슬롯·직업 ID가 있는 아이템)만 전부 탈락
+  (#411과 같은 '실수 vs 정수' 유형). 비장비는 둘 다 빈 배열이라 통과했다.
+- 수정: `_sorted_ids()`가 정수인 실수를 int로 바꿔 비교. 같은 원인으로 막혀 있던 장비 제작법도 함께 들어온다(모델 제작법
+  288 → 1,006).
+
+### 13.2 강화 발동 주문(Attack_Spell)·고정 반격(61)
+
+- 강화 단계 InvokeOption 중 type 1 Attack_Spell(703종·10,651행)은 현재 523 경로가 항상 버렸다(예전 공개 컴파일러
+  `tools/equipment/patch523_native_spells.py`는 만들던 `equipment_spell_profiles`를 현재 경로가 만들지 않음). 기존 실행기
+  (`skill_service.execute_equipment_source_spell`, `patch523_equipment_spells`)는 그대로 있다.
+- 새 `scripts/crafting/current523_equipment_spell_profiles.gd`가 같은 조건으로 SpellClass/SpellBonus/BuffClass/BuffBonus에서
+  프로필을 만든다: 순수 피해 주사위(26 주문) 또는 순수 능력치·홀드 디버프(75 주문)만. 101/166 주문, **615종** 연결.
+  type 61 Defence_FixedDamageCounterBarrier(2종)도 예전 조건 그대로.
+- 남은 주문 65개(88종): 중첩 디버프(악마왕·나이트발드 등 시리즈, BuffClass가 중첩/버프 그룹), 버프 제거(이레이즈 이뮨·이지스
+  브레이크: SpellBuffGroup), HP 비례 피해(루인 크래시: SpellDamagePercentByHP), 무기 기반 피해(확률 추타: SpellWeaponBasedDamage),
+  후속 주문(어비스 웨이브: NextSpellClassID), 턴 언데드 부작용(SideEffect*), 흡혈(SpellDrainHP), 침묵(SpecialResistanceTypeID) —
+  기존 실행기에 그 효과의 계산 단계가 없고 표에도 순서가 없어 미연결.
+- 남은 강화 발동 종류: Defence_Spell(2, 32종), Aura_Spell(38, 26종), Defence_DebuffTimeDecrease(26, 1종), Gain_Experience(68, 1종) —
+  방어 측·오라 주문 실행 규칙 없음.
+
+### 13.3 측정 (실제 Main, 원본 팩, 장비 2,954종 개별 ID)
+
+| 열 | 수정 전 (main) | 수정 후 |
+| --- | ---: | ---: |
+| 강화 규칙 모델에 들어간 장비 | 0 | 2,954 |
+| 강화 단계 효과 행 연결 (ItemEnchantBonus) | 0 / 79,794 | 72,701 / 79,794 |
+| 원본 강화 주문서 규칙(EnchantEquipGroupID, +0 성공 확률 > 0) | 0 / 1,893 | 1,848 / 1,893 |
+| 강화 발동 주문 / 고정 반격 | 0 / 0 | 615 / 2 |
+| 모든 효과 행이 소비되는 장비 | 135 | 2,104 |
+
+- 강화 규칙이 남은 45종: 주문서 그룹이 없는 장비 24종(장비 강화 그룹 ↔ 주문서 그룹 매핑 없음), 원본 단계·확률·비용 행이 없는
+  19종, 인장 전용 보호 주문서 2종.
+- 남은 강화 행 7,093행: 위 13.2 발동 주문, 원소 피해(ElementalDamage, 속성 대상 해석이 TWILIGHT 설정 의존), 치명 저항·유형별
+  피해 감소 비율(소비자 없음), 상태 효과(StatusEffectID), 원소 치명 저항, 무시 비율(Ignore*DamageReductionPercent), 마법 방어 관통
+  (PierceMagicShieldPercent) — 계산 위치가 표에 없음.

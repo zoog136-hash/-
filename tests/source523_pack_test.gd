@@ -146,6 +146,11 @@ func run() -> void:
 	ui_section.ui.manifest = "ui/other.json"
 	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
 	check(PACK.missing_addons(read.descriptor, addons) == ["ui","world_map"], "after the travel definitions the main UI add-on (UI and world map) is asked for")
+	# Settings status: one line for the pack and one per add-on section.
+	var lines: PackedStringArray = node.status_lines()
+	check(lines.size() == 1 + PACK.ADDON_SECTIONS.size(), "status lists the pack and every add-on section")
+	check(lines.size() == 4 and lines[1].contains("설치됨") and lines[2].contains("twilight523-addon-ui.zip") and lines[3].contains("twilight523-addon-ui.zip"), "status shows the installed travel definitions and which ZIP the missing UI needs")
+	check(not node._failed_on_device(), "no failure screen outside the exported app")
 	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false
 	node.queue_free()

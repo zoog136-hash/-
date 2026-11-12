@@ -6,6 +6,11 @@ const SHADER = preload("res://shaders/source_sp2_rgb565.gdshader")
 const COPY_NAME = "SourceSP2Background"
 const ORIGIN = "restored525_RGB565_static_to523_compatibility_Android_unverified"
 static var _materials: Dictionary = {}
+## The kernels read the copied background through hint_screen_texture. On the
+## Android devices tried that copy samples black, so multiply layers (the body)
+## turn into a black silhouette and only screen layers (glow) remain. Android
+## keeps the previous per-layer blend policy until the copy is verified there.
+static var screen_copy_available: bool = not OS.has_feature("android")
 
 class BackgroundCopy:
 	extends BackBufferCopy
@@ -20,7 +25,12 @@ class BackgroundCopy:
 		var sprite: Sprite2D = get_parent() as Sprite2D
 		copy_mode = BackBufferCopy.COPY_MODE_DISABLED
 		if not active or sprite == null or not sprite.is_visible_in_tree(): return
-		var screen: Transform2D = sprite.get_viewport_transform() * sprite.get_global_transform()
+		# Window.get_final_transform() includes the letterbox/blit transform.
+		# BackBufferCopy.rect and SCREEN_UV address the render target before
+		# that blit. Compose the viewport stretch and canvas transforms directly
+		# so root Windows and SubViewports both stay in framebuffer coordinates.
+		var viewport: Viewport = sprite.get_viewport()
+		var screen: Transform2D = viewport.get_stretch_transform() * viewport.global_canvas_transform * sprite.get_canvas_transform() * sprite.get_global_transform()
 		if is_zero_approx(screen.determinant()): return
 		var region: Rect2 = screen * sprite.get_rect()
 		var start: Vector2 = region.position.floor()
@@ -59,7 +69,7 @@ static func attribute_input(layer: Dictionary) -> Dictionary:
 ## Three simple recovered cases plus narrowly verified shadow9/129. Other
 ## combinations may use unverified early returns, coefficients or effect maps.
 static func style(layer: Dictionary, body_attributes: Array, body_unresolved: bool, mode: String, body_projection_verified: bool = false) -> Dictionary:
-	if mode != "compatible": return {}
+	if mode != "compatible" or not screen_copy_available: return {}
 	var flags: int = -1
 	if layer.get("kind", "") == "shadow":
 		if body_unresolved: return {}

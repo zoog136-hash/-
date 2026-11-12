@@ -63,7 +63,7 @@ const NATIVE_PROJECTION = preload("res://scripts/loot/current523_native_item_pro
 const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
 const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
-	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/crafting/patch523_packed_records.gd",
+	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/crafting/current523_equipment_spell_profiles.gd","res://scripts/crafting/patch523_packed_records.gd",
 	"res://scripts/resources/current523_definition_rows.gd",
 	"res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
 	"res://data/crafting/patch523_enhancement_policy.json"]
