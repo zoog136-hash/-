@@ -1,0 +1,143 @@
+{
+  "base_sha": "8634f931b6b749865c52dd6437b2d18d5f91c174",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "platform": "Linux x86_64",
+  "android_measured": false,
+  "original_pack_installed": false,
+  "resource_changes": false,
+  "synthetic_inventory_cpu_comparison": {
+    "layouts": [
+      4,
+      8
+    ],
+    "samples": [
+      {
+        "mode": "before",
+        "owned": 64,
+        "owner_reads": 129,
+        "staged_slots": 128,
+        "usec": 105358
+      },
+      {
+        "mode": "after",
+        "owned": 64,
+        "owner_reads": 1,
+        "staged_slots": 128,
+        "usec": 2807
+      },
+      {
+        "mode": "before",
+        "owned": 256,
+        "owner_reads": 513,
+        "staged_slots": 512,
+        "usec": 5592537
+      },
+      {
+        "mode": "after",
+        "owned": 256,
+        "owner_reads": 1,
+        "staged_slots": 512,
+        "usec": 14175
+      }
+    ],
+    "scope": "synthetic_slot_binding_cpu_only",
+    "staged_slots_basis": "sum_of_both_layouts"
+  },
+  "synthetic_bank_comparison": {
+    "checks": 31,
+    "failures": [],
+    "legacy_member_calls": 160,
+    "legacy_pin_checks": 161,
+    "optimized_member_calls": 3,
+    "optimized_pin_checks": 1,
+    "synthetic_only": true
+  },
+  "inventory_snapshot": {
+    "checks": 983,
+    "failures": [],
+    "samples": [
+      {
+        "owned": 64,
+        "owner_reads": 1,
+        "staged_slots": 128,
+        "usec": 4083
+      },
+      {
+        "owned": 256,
+        "owner_reads": 1,
+        "staged_slots": 512,
+        "usec": 12938
+      }
+    ]
+  },
+  "ui_routing": {
+    "checks": 53,
+    "failures": [],
+    "real_input_checked": false
+  },
+  "hitch_log": {
+    "checks": 25,
+    "failures": []
+  },
+  "actual_main_save": {
+    "checks": 33,
+    "failures": [],
+    "scope": "ACTUAL_MAIN_SAVE_RELOAD; MAP_FROM_523_PACK_ONLY"
+  },
+  "focused_suite": {
+    "total": 12,
+    "passed": 9,
+    "failed": [
+      "monster_pool_retirement_test",
+      "monster_spawn_physics_sync_test",
+      "monster_visual_parking_test"
+    ],
+    "skipped": [],
+    "not_run": [],
+    "checks": [
+      "frame_hitch_log_test",
+      "frame_hot_paths_test",
+      "inventory_hidden_refresh_test",
+      "inventory_virtual_window_test",
+      "lineage_inventory_state_cache_test",
+      "monster_pool_retirement_test",
+      "monster_spawn_physics_sync_test",
+      "monster_visual_parking_test",
+      "reference_sp2_asset_sharing_test",
+      "source523_image_pack_texture_cache_test",
+      "source523_texture_cache_test",
+      "sp2_parse_cache_test"
+    ]
+  },
+  "unchanged_main_failure_comparison": {
+    "total": 3,
+    "passed": 0,
+    "failed": [
+      "monster_pool_retirement_test",
+      "monster_spawn_physics_sync_test",
+      "monster_visual_parking_test"
+    ],
+    "skipped": [],
+    "not_run": [],
+    "checks": [
+      "monster_pool_retirement_test",
+      "monster_spawn_physics_sync_test",
+      "monster_visual_parking_test"
+    ]
+  },
+  "opengl_boot": {
+    "exit_code": 0,
+    "driver": "Mesa llvmpipe/OpenGL 4.5 Compatibility",
+    "frames_argument": 60,
+    "original_map_pixels_verified": false,
+    "errors": []
+  },
+  "integrity": {
+    "obsolete_required_command": "tools/check_resource_integrity.py missing on baseline; exit 2",
+    "current_ci_check": "python3 tools/check_no_legacy_resources.py --root .",
+    "current_ci_result": "NO_LEGACY_RESOURCES ok tracked=20",
+    "legacy_check_tests": 2,
+    "ci_core_python_tests": 10
+  },
+  "runtime_source_commit": "c5c8ea9f83a6512385fc3c46a746f5232039b7bc"
+}

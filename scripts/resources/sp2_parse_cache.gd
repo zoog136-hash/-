@@ -16,6 +16,7 @@ extends RefCounted
 const DECODER_PATH := "res://scripts/resources/current523_sp2_decoder.gd"
 const DECODER = preload(DECODER_PATH)
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const FORMAT := "twilight.sp2-parse.v1"
 const MAGIC := "TWSP2C1"
 ## Entries above this total are removed oldest first (checked every PRUNE_EVERY writes).
@@ -48,6 +49,12 @@ static func path_for(key: String) -> String:
 ## DECODER.parse(raw), from the device cache when an entry for these exact
 ## bytes exists. `raw_sha256` may be the already verified SHA-256 of `raw`.
 static func parse(raw: PackedByteArray, raw_sha256: String = "") -> Dictionary:
+	var started: int = FRAME_HITCH.now()
+	var result: Dictionary = _parse(raw, raw_sha256)
+	FRAME_HITCH.detail("sp2.parse", started)
+	return result
+
+static func _parse(raw: PackedByteArray, raw_sha256: String) -> Dictionary:
 	if not enabled or raw.is_empty() or raw.size() > DECODER.MAX_INPUT_BYTES: return DECODER.parse(raw)
 	var digest: String = raw_sha256
 	if digest.length() != 64:
@@ -60,8 +67,10 @@ static func parse(raw: PackedByteArray, raw_sha256: String = "") -> Dictionary:
 	var cached: Dictionary = _read(key, raw)
 	if not cached.is_empty():
 		hits += 1
+		FRAME_HITCH.count("sp2.disk_hit")
 		return cached
 	misses += 1
+	FRAME_HITCH.count("sp2.disk_miss")
 	var fresh: Dictionary = DECODER.parse(raw)
 	if fresh.get("ok", false): _write(key, fresh)
 	return fresh
@@ -111,6 +120,7 @@ static func _read(key: String, raw: PackedByteArray) -> Dictionary:
 
 static func _reject(path: String) -> void:
 	rejects += 1
+	FRAME_HITCH.count("sp2.disk_reject")
 	DirAccess.remove_absolute(path)
 
 static func _write(key: String, parsed: Dictionary) -> void:

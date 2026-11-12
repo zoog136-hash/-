@@ -22,6 +22,7 @@ TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
     ('reference_sp2_asset_sharing_test', []),
+    ('reference_sp2_load_memo_test', []),
     ('boot_progress_log_test', []),
     ('source523_texture_cache_test', []),
     ('frame_hot_paths_test', []),
@@ -35,6 +36,7 @@ CHECKS = [
     ('original_ui_page_cache_test', []),
     ('original_ui_hud_field_test', []),
     ('original_ui_change_window_test', []),
+    ('original_ui_inventory_snapshot_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
@@ -384,6 +386,7 @@ def main():
             if user_args:
                 command += ['--', *user_args]
             marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+                      'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
                       'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',
                       'sp2_parse_cache_test':'SP2_PARSE_CACHE_RESULT',
@@ -397,6 +400,7 @@ def main():
                       'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
                       'original_ui_hud_field_test':'ORIGINAL_UI_HUD_FIELD_RESULT',
                       'original_ui_change_window_test':'ORIGINAL_UI_CHANGE_WINDOW_RESULT',
+                      'original_ui_inventory_snapshot_test':'ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT',
                       'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
