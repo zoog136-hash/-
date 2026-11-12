@@ -9,7 +9,9 @@ const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_proje
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "source_dungeon_candidate"
-const ORIM = preload("res://scripts/orim523/orim523.gd")
+## Loaded on first Orim use (not a preload): the Orim model is not part of
+## this projection's bake inputs.
+const ORIM_PATH := "res://scripts/orim523/orim523.gd"
 var _data: Dictionary = {}
 var data: Dictionary:
 	get:
@@ -213,7 +215,7 @@ func _load_original_projection() -> Dictionary:
 ## NpcClass, NpcAttack, NpcClassForNpcGroup, ItemBonus of reward items).
 func ensure_orim() -> bool:
 	if not orim_actor_defs.is_empty(): return true
-	return load_orim_tables(ORIM.installed())>0
+	return load_orim_tables(load(ORIM_PATH).installed())>0
 
 func load_orim_tables(model: Dictionary) -> int:
 	if not bool(model.get("ok",false)): return 0
