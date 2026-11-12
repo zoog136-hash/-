@@ -36,6 +36,7 @@ var portrait: TextureRect
 var source_presentation: Control
 var source_animation_controls: VBoxContainer
 var source_selection_revision: int = 0
+var _pack_dialog: Window
 var gender_row: HBoxContainer
 var create_button: Button
 var class_buttons: Dictionary = {}
@@ -64,6 +65,7 @@ func _ready() -> void:
 	panel.add_child(column)
 	column.add_child(STYLE.label("TWILIGHT · 캐릭터 선택",26,STYLE.GOLD))
 	column.add_child(STYLE.label("최대 13명 · 창고 / 변신·인형·성물 보유 / 아이템 컬렉션 / 문양·수호성은 계정 공유",14,STYLE.MUTED))
+	column.add_child(_button("원본 로비 리소스 팩 설치", _open_pack_installer, "InstallLobbyPack"))
 	scroll = ScrollContainer.new()
 	scroll.name = "RosterScroll"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -381,3 +383,16 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventScreenDrag and event.index == _touch_index:
 		scroll.scroll_vertical -= int(event.position.y - _touch_last.y)
 		_touch_last = event.position
+
+func _open_pack_installer() -> void:
+	if busy: return
+	if is_instance_valid(_pack_dialog):
+		_pack_dialog.grab_focus()
+		return
+	_pack_dialog = load("res://scripts/characters/lobby_pack_install_dialog.gd").new()
+	add_child(_pack_dialog)
+	_pack_dialog.installed.connect(func(_result: Dictionary) -> void:
+		if selected_class > 0 and selected_gender > 0 and is_instance_valid(name_input):
+			_choose_gender(selected_gender)
+	)
+	_pack_dialog.popup_centered()

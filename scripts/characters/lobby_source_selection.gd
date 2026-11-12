@@ -25,7 +25,10 @@ static func options(args: PackedStringArray, environment_root: String = "", envi
 	return {"ok":true,"selected":true,"path":root,"sha256":pin}
 
 static func selected_pack() -> Dictionary:
-	return open_options(options(OS.get_cmdline_user_args(),OS.get_environment("TWILIGHT_SOURCE_LOBBY"),OS.get_environment("TWILIGHT_SOURCE_LOBBY_SHA256")))
+	var selection: Dictionary = options(OS.get_cmdline_user_args(),OS.get_environment("TWILIGHT_SOURCE_LOBBY"),OS.get_environment("TWILIGHT_SOURCE_LOBBY_SHA256"))
+	if selection.get("ok",false) and not selection.get("selected",false):
+		selection = preload("res://scripts/characters/lobby_pack_installer.gd").saved_options()
+	return open_options(selection)
 
 static func open_options(selection: Dictionary) -> Dictionary:
 	if not selection.get("ok",false) or not selection.get("selected",false): return selection.duplicate(true)
