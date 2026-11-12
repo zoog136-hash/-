@@ -39,9 +39,6 @@ var _parse_order: Array[String] = []
 var _parsed_keys: Dictionary = {}
 var _parsed_costs: Dictionary = {} # member -> the shared entry's measured cost
 var _asset_owner: int = ASSETS.new_owner()
-var _prepared_snapshot: RefCounted
-var _prepared_members: Dictionary = {}
-var _building_shared: bool = false
 static var _crc_table: Array[int] = []
 ## Member files whose bytes were verified, by path -> [identity, size, mtime].
 ## Like MANIFEST_INDEX.pinned(): every use still checks that the file exists
@@ -51,6 +48,10 @@ static var _crc_table: Array[int] = []
 ## SP2 file on every frame. (User decision 2026-11-11: re-verify changed files
 ## only.)
 static var _verified_members: Dictionary = {}
+
+var _prepared_snapshot: RefCounted
+var _prepared_members: Dictionary = {}
+var _building_shared: bool = false
 
 ## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
 ## contract adapter). Values outside the plain domain keep the previous exact division.
