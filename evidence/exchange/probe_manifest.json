@@ -1,0 +1,50 @@
+{
+  "scope": "Bounded public unauthenticated API probes, NOT a complete listing snapshot",
+  "files": [
+    {
+      "file": "official_servers.json",
+      "url": "https://api-goats.plaync.com/lms/v2.0/game/server",
+      "http_status": 200,
+      "source_file_written_at_utc": "2026-11-12T04:26:06.937684+00:00",
+      "timestamp_caveat": "File-write completion timestamp only; source snapshot timestamp and response Date were not recorded for this initial probe.",
+      "sha256": "2f8eaf7f50250aab7e7fd4a6b854d836ae6e5b3b113b7d15e08152b21efde153"
+    },
+    {
+      "file": "catalog_all_page1.json",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true",
+      "http_status": 200,
+      "source_file_written_at_utc": "2026-11-12T04:26:10.443301+00:00",
+      "timestamp_caveat": "File-write completion timestamp only; source snapshot timestamp and response Date were not recorded for this initial probe.",
+      "sha256": "77c42ea7fbdc82eb1603402dc951bf72ee6cf9c5ab445f482fe7689fd9fecb1d"
+    },
+    {
+      "file": "stock_111852_world10014_enchant0_page1.json",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/111852/stock?serverId=10014&enchantLevel=0&blessedType=0&page=1&size=5",
+      "http_status": 200,
+      "source_file_written_at_utc": "2026-11-12T04:26:19.816679+00:00",
+      "timestamp_caveat": "File-write completion timestamp only; source snapshot timestamp and response Date were not recorded for this initial probe.",
+      "sha256": "d017b5e06e5d025ba5a0f53cba00b9b1021e5f27dec995511922c1067ec24bde"
+    },
+    {
+      "file": "catalog_server1_page1.json",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=100&page=1&sale=true&serverId=1",
+      "http_status": 200,
+      "source_file_written_at_utc": "2026-11-12T04:26:45.248027+00:00",
+      "timestamp_caveat": "File-write completion timestamp only; source snapshot timestamp and response Date were not recorded for this initial probe.",
+      "sha256": "fcd8b6ce785a3fe45f38cc24dd8dbdfff3edadabe956866f14cfda8c8319011a"
+    },
+    {
+      "file": "catalog_world10014_page1.json",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=100&page=1&sale=true&serverId=10014",
+      "http_status": 200,
+      "source_file_written_at_utc": "2026-11-12T04:26:53.195478+00:00",
+      "timestamp_caveat": "File-write completion timestamp only; source snapshot timestamp and response Date were not recorded for this initial probe.",
+      "sha256": "a9b5bb246c4241f7f0434ef78986a9ab1881820d828da4328975c23f0dd0aceb"
+    }
+  ],
+  "failed_probe": {
+    "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/111852/stock?enchantLevel=0&blessedType=0&page=1&size=100",
+    "http_status": 400,
+    "body_saved": false
+  }
+}

@@ -72,7 +72,7 @@ class ReferenceSP2BankTests(unittest.TestCase):
 
     def test_literal_layer_attributes_keep_alias_path_without_inferred_inheritance(self):
         metadata, request, text, _ = fixture()
-        text += "104.attr(8)\n#101 1=100 synthetic_alias\n104.attr(128)\n"
+        text += "104.attr(8)\n#101 1=100 synthetic_alias\n104.attr(128)\n3.Breath(0 1,0.0:2)\n"
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "list_fixture.spr"
             source.write_bytes(text.encode("cp949"))
@@ -106,6 +106,11 @@ class ReferenceSP2BankTests(unittest.TestCase):
         alias = dict(metadata["declarations"][0], sprite_id=101, alias_target=100, animation_action_keys=[])
         metadata["declarations"].append(alias)
         request["actor_id"] = 101
+        with self.assertRaisesRegex(ValueError, "absent native source action 101/3"):
+            bank.plan_action(request, bank.metadata_declarations(metadata), metadata)
+        # A file-remap header cannot inherit actions. An explicit own literal
+        # can use that physical file while retaining its requested owner.
+        alias["animation_action_keys"] = [request["action_key"]]
         actor, _, _ = bank.plan_action(request, bank.metadata_declarations(metadata), metadata)
         self.assertEqual(actor["source_sprite_id"], 101)
         self.assertEqual(actor["roles"]["source_action:3"]["directions"][0][0]["layers"][0]["source_sprite_id"], 100)
@@ -128,15 +133,18 @@ class ReferenceSP2BankTests(unittest.TestCase):
         self.assertEqual(len(actor["roles"]["source_action:3"]["directions"][0][0]["layers"]), 2)
         self.assertIn("Sprite/102-0.sp2", members)
 
-    def test_independent_child_timing_is_rejected(self):
+    def test_auxiliary_child_own_timing_is_not_selected(self):
         metadata, request, _, _ = fixture()
         parent = metadata["declarations"][0]
         parent["explicit_layer_references"] = [{"kind": "clothes", "targets": [102], "raw": "105.clothes(1 102)"}]
         child = dict(metadata["actions"][request["action_key"]], action_key="child:A3", explicit_fps=36)
         metadata["actions"][child["action_key"]] = child
         metadata["declarations"].append(dict(parent, sprite_id=102, animation_action_keys=[child["action_key"]], explicit_layer_references=[]))
-        with self.assertRaisesRegex(ValueError, "independent layer timing unsupported"):
-            bank.plan_action(request, bank.metadata_declarations(metadata), metadata)
+        metadata["identities"]["Sprite/102-0.sp2"] = dict(metadata["inventory"]["Sprite/100-0.sp2"], member="Sprite/102-0.sp2")
+        actor, _, proof = bank.plan_action(request, bank.metadata_declarations(metadata), metadata)
+        self.assertEqual(actor["roles"]["source_action:3"]["fps"], 24)
+        self.assertEqual(proof["layer_policy"], bank.identity.LAYER_POLICY)
+        self.assertEqual(len(actor["roles"]["source_action:3"]["directions"][0][0]["layers"]), 2)
 
     def test_saved_missing_direction_and_out_of_range_are_not_padded(self):
         metadata, request, _, _ = fixture()
@@ -242,14 +250,14 @@ class ReferenceSP2BankTests(unittest.TestCase):
         metadata["declarations"][0]["reference_issues"] = [{"raw": "105.clothes(2 102)", "source_line": 4}]
         declarations = bank.metadata_declarations(metadata)
         self.assertFalse(declarations[100][0].references[0]["count_valid"])
-        with self.assertRaisesRegex(ValueError, "invalid layer target count 100"):
+        with self.assertRaisesRegex(ValueError, "invalid active clothes target count 100"):
             bank.plan_action(request, declarations, metadata)
 
     def test_invalid_metadata_header_does_not_become_a_declaration(self):
         metadata, request, _, _ = fixture()
         metadata["declarations"][0]["header_valid"] = False
         self.assertEqual(bank.metadata_declarations(metadata), {})
-        with self.assertRaisesRegex(ValueError, "expected one declaration, found 0"):
+        with self.assertRaisesRegex(ValueError, "expected one.*declaration, found 0"):
             bank.plan_action(request, bank.metadata_declarations(metadata), metadata)
 
     def _family_fixture(self):

@@ -1,0 +1,32 @@
+test_429_saved_not_retried_or_reused (test_exchange_probe.ProbeTests.test_429_saved_not_retried_or_reused) ... ok
+test_capture_reuse_and_tamper (test_exchange_probe.ProbeTests.test_capture_reuse_and_tamper) ... ok
+test_cli_bounds_and_filters_do_not_request (test_exchange_probe.ProbeTests.test_cli_bounds_and_filters_do_not_request) ... STOPPED: pages must not exceed max-requests
+STOPPED: delay must be between 1 and 3600 seconds
+STOPPED: delay must be between 1 and 3600 seconds
+STOPPED: catalog does not accept item-id or enchant-level
+ok
+test_redirect_denied (test_exchange_probe.ProbeTests.test_redirect_denied) ... ok
+test_stock_urls_and_delay (test_exchange_probe.ProbeTests.test_stock_urls_and_delay) ... captured https://api-goats.plaync.com/lms/v2.0/price/search/item/2/stock?serverId=1&enchantLevel=0&blessedType=0&size=10&page=1
+captured https://api-goats.plaync.com/lms/v2.0/price/search/item/2/stock?serverId=1&enchantLevel=0&blessedType=0&size=10&page=2
+ok
+test_captured_empty_market_allowed_only_with_complete_coverage (test_frozen_exchange_import.FrozenExchangeImportTest.test_captured_empty_market_allowed_only_with_complete_coverage) ... ok
+test_checked_product_and_exact_integer_boundary (test_frozen_exchange_import.FrozenExchangeImportTest.test_checked_product_and_exact_integer_boundary) ... ok
+test_cli_validate_only (test_frozen_exchange_import.FrozenExchangeImportTest.test_cli_validate_only) ... ok
+test_competing_publisher_is_not_overwritten (test_frozen_exchange_import.FrozenExchangeImportTest.test_competing_publisher_is_not_overwritten) ... ok
+test_import_and_reimport_preserve_frozen_file (test_frozen_exchange_import.FrozenExchangeImportTest.test_import_and_reimport_preserve_frozen_file) ... ok
+test_invalid_input_never_changes_existing_file (test_frozen_exchange_import.FrozenExchangeImportTest.test_invalid_input_never_changes_existing_file) ... ok
+test_invalid_listing_shapes_and_currency (test_frozen_exchange_import.FrozenExchangeImportTest.test_invalid_listing_shapes_and_currency) ... ok
+test_invalid_timestamp_and_policy (test_frozen_exchange_import.FrozenExchangeImportTest.test_invalid_timestamp_and_policy) ... ok
+test_listing_identity_scoped_by_server (test_frozen_exchange_import.FrozenExchangeImportTest.test_listing_identity_scoped_by_server) ... ok
+test_nonfinite_attributes_rejected (test_frozen_exchange_import.FrozenExchangeImportTest.test_nonfinite_attributes_rejected) ... ok
+test_not_captured_has_no_invented_data (test_frozen_exchange_import.FrozenExchangeImportTest.test_not_captured_has_no_invented_data) ... ok
+test_preserves_bundle_price_quantity_and_unknown_evidence (test_frozen_exchange_import.FrozenExchangeImportTest.test_preserves_bundle_price_quantity_and_unknown_evidence) ... ok
+test_publish_failure_leaves_no_partial_output (test_frozen_exchange_import.FrozenExchangeImportTest.test_publish_failure_leaves_no_partial_output) ... ok
+test_rejects_invalid_numeric_fields (test_frozen_exchange_import.FrozenExchangeImportTest.test_rejects_invalid_numeric_fields) ... ok
+test_rejects_partial_duplicate_or_unknown_servers (test_frozen_exchange_import.FrozenExchangeImportTest.test_rejects_partial_duplicate_or_unknown_servers) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.041s
+
+OK
+partial_probe_only_not_a_production_snapshot: no coverage or atomic snapshot claim; no production import performed

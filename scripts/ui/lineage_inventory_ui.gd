@@ -518,6 +518,11 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 func _display_item_name(record: Dictionary, item_reference: String) -> String:
 	if record.has("growth96_item_id"): return str(record.get("display_name",record.get("name",item_reference)))
 	var base: String = _base_item_name(item_reference)
+	# A current 523 item shows its original per-ID name (IdentifiedDescID/DescID),
+	# not the internal " · 원본#ID" identity suffix of its inventory key.
+	if record.get("source_m_native_item") == true:
+		var original: String = str(preload("res://scripts/loot/current523_native_fields.gd").field(record,"source_display_name",""))
+		if not original.is_empty(): base = original
 	if _bless_state(record, item_reference) == "blessed" and not base.begins_with("축복받은 "):
 		return "축복받은 " + base
 	return base
@@ -533,7 +538,8 @@ func _status_tooltip(record: Dictionary, item_reference: String) -> String:
 	return " · 각인" if _is_engraved(record, item_reference) else ""
 
 func _grade_color(grade: String) -> Color:
-	return GRADE_COLORS.get(grade, GRADE_COLORS["일반"]) as Color
+	# Original 523 Grade.ColorID -> ColorTable first; TWILIGHT palette only without the tables.
+	return preload("res://scripts/loot/current523_item_grade.gd").color(grade, GRADE_COLORS.get(grade, GRADE_COLORS["일반"]) as Color)
 
 func _grade_background(grade: String, selected: bool = false) -> Color:
 	var color := _grade_color(grade)

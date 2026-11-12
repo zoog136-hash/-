@@ -1105,6 +1105,11 @@ func _go_back() -> void:
 		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
+	var account = preload("res://scripts/characters/account_store.gd")
+	if not account.session.is_empty():
+		var world: Node = get_parent()
+		if world.has_method("return_to_character_lobby"): world.call("return_to_character_lobby")
+		return
 	# In the first session there is no class decision until the user confirms.
 	if class_picker_initial:
 		return
@@ -1164,6 +1169,7 @@ func _navigate(section: String) -> void:
 		"promo_code": open_promo_code()
 		"quests": open_quests()
 		"shop": open_shop()
+		"exchange": open_frozen_exchange()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
@@ -1289,6 +1295,12 @@ func open_shop() -> void:
 				if pointer_transfer!=null:pointer_transfer.cancel()
 				workspace.hide()
 				_sync_screen_focus()
+
+func open_frozen_exchange() -> void:
+	_open_window("exchange","거래소 · 초기 실측 고정","")
+	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
+	workspace.mount(panel)
+	panel.configure(self)
 
 func open_npc_shop() -> void:
 	_open_window("npc_shop","잡화 상인","")
@@ -1591,7 +1603,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):

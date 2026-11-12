@@ -6,6 +6,9 @@ const POTION_LIGHT = preload("res://scripts/animation/potion_feedback.gd")
 var potion_feedback: TwilightPotionFeedback = null
 
 func _show_potion_feedback(item_name: String, kind: String) -> void:
+	if not POTION_LIGHT.allowed_for_actor(player):
+		if is_instance_valid(potion_feedback): potion_feedback.clear()
+		return
 	var channel: String = POTION_LIGHT.channel_for(item_name, kind)
 	if channel.is_empty() or not is_instance_valid(player): return
 	if not is_instance_valid(potion_feedback):

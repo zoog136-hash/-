@@ -11,6 +11,9 @@ var texture: Texture2D
 var slot: String = ""
 var selected: bool = false
 var source_missing: bool=false
+## Off for a current 523 item: its floor beam is the original drop effect
+## sprite (current523_ground_drop_effect.gd) or nothing, never this drawing.
+var procedural_beam: bool = true
 var clock: float = 0.0
 var redraw_time: float = 0.0
 var source_icon: Sprite2D
@@ -21,13 +24,13 @@ func _ready() -> void:
 	# stops. A large farming field can otherwise redraw every rare drop at 20Hz.
 	screen_notifier = VisibleOnScreenNotifier2D.new()
 	screen_notifier.rect = Rect2(-40, -220, 80, 260)
-	screen_notifier.screen_entered.connect(func() -> void: set_process(rank >= 2); queue_redraw())
+	screen_notifier.screen_entered.connect(func() -> void: set_process(rank >= 2 and procedural_beam); queue_redraw())
 	screen_notifier.screen_exited.connect(func() -> void: set_process(false))
 	add_child(screen_notifier)
 	set_process(false)
 
 static func grade_color(grade: String) -> Color:
-	return COLORS[maxi(0, GRADES.find(grade))]
+	return preload("res://scripts/loot/current523_item_grade.gd").color(grade, COLORS[maxi(0, GRADES.find(grade))])
 
 func configure(grade: String, icon: Texture2D, kind: String) -> void:
 	rank = maxi(0, GRADES.find(grade))
@@ -47,7 +50,7 @@ func configure(grade: String, icon: Texture2D, kind: String) -> void:
 		key_material.set_shader_parameter("background_key", Vector3.ONE)
 		source_icon.material = key_material
 		add_child(source_icon)
-	set_process(rank >= 2)
+	set_process(rank >= 2 and procedural_beam)
 	queue_redraw()
 
 func _process(delta: float) -> void:
@@ -66,15 +69,15 @@ func _process_step(delta: float) -> void:
 func _draw() -> void:
 	var color: Color = COLORS[rank]
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1, 0.38))
-	draw_circle(Vector2.ZERO, 18, Color(0, 0, 0, 0.5))
-	if rank >= 2:
+	if procedural_beam: draw_circle(Vector2.ZERO, 18, Color(0, 0, 0, 0.5))
+	if rank >= 2 and procedural_beam:
 		var pulse: float = 0.8 + 0.2 * sin(clock * 3.0)
 		for radius: int in range(32, 5, -4):
 			draw_circle(Vector2.ZERO, radius, Color(color, 0.030 * pulse))
 	if selected:
 		draw_arc(Vector2.ZERO, 27, 0, TAU, 48, Color("ffe6a1"), 2.5, true)
 	draw_set_transform(Vector2.ZERO)
-	if rank >= 2:
+	if rank >= 2 and procedural_beam:
 		var height: float = 104.0 + float(rank) * 13.0
 		var width: float = 15.0 + float(rank) * 1.15
 		for layer: int in range(5):

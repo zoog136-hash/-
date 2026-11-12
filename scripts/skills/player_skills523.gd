@@ -1,7 +1,8 @@
 extends RefCounted
 ## Optional exact-ID 523 evidence adapter. Original bytes live in a private pack.
 ## An optional labelled numeric distance policy preserves the existing engine.
-## CastDelay, proc timing, AC and hit/damage formulae are not inferred here.
+## CastDelay = own reuse delay in ms (user decision 2026-11-12). Proc timing,
+## AC and hit/damage formulae are not inferred here.
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input_policy.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -95,7 +96,7 @@ func source_direct_passive(id: String, job: String) -> Dictionary:
 	var profile: Dictionary = profiles.get(id, {})
 	if profile.is_empty(): return {"reason":"원본 프로필 없음"}
 	var row: Dictionary = profile.row
-	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문(SpellType %d)은 재사용·후속 주문 규칙이 표에 없어 직접 실행 계약 없음" % int(row.SpellTypeID)}
+	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문(SpellType %d)의 효과 실행 계약 없음(아래 보류 이유 참고)" % int(row.SpellTypeID)}
 	if int(row.SpellCompositionNode) != 0: return {"reason":"조건 노드 %d 정의 없음" % int(row.SpellCompositionNode)}
 	if not profile.costs.is_empty() or int(row.SpellMaterialItemAmount) != 0 or int(row.MPCost) != 0 or int(row.HPCost) != 0: return {"reason":"패시브에 비용 행이 있음"}
 	var buff_ids: Array[int] = []
@@ -147,6 +148,8 @@ func prepare_source_direct(record: Dictionary) -> void:
 	var row: Dictionary = profiles[id].row
 	record["source523_cast_delay_ms"] = int(row.CastDelay)
 	if not bool(record.get("runtime_blocked", false)): return
+	if str(record.get("activation", "")) != "passive" and record.get("cooldown") == null and _source_integer(row.CastDelay):
+		record["cooldown"] = float(row.CastDelay) / 1000.0 # shown on the hold screen
 	var spec := source_direct_passive(id, str(record.get("class", "")))
 	if spec.has("reason") or not spec.has("rows"):
 		record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패"))]
@@ -688,6 +691,15 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
 	if not recovery.is_empty():record.source523.applied.append("self_recovery")
 	if not progression.is_empty():record.source523.applied.append("reviewed_execution")
+	# User decision 2026-11-12: SpellClass.CastDelay is the skill's own reuse
+	# delay in milliseconds. The existing cooldown factor (skillCooldownPct from
+	# SpellCastDelayDecreasePercent, cast speed) still multiplies it at cast time.
+	var delay: Variant = row.get("CastDelay")
+	if _source_integer(delay) and float(delay) >= 0.0:
+		record.source523["host_cooldown_before"] = record.get("cooldown")
+		record["cooldown"] = float(delay) / 1000.0
+		record.source523["time_policy"] = "SOURCE523_CASTDELAY_MS"
+		record.source523.applied.append("cooldown")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:

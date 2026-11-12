@@ -30,8 +30,16 @@ static var _relations: Dictionary = {}
 static var _metadata: Dictionary = {}
 static var _problem := ""
 static var _not_installed := false
+## Process-local invalidation epoch for short-lived derived read caches. Even
+## reopening the same pinned archive after reset is a new read lifetime.
+## This is not persisted, part of identity(), or a substitute for the source pin.
+static var _cache_generation: int = 0
+
+static func cache_generation() -> int:
+	return _cache_generation
 
 static func reset() -> void:
+	_cache_generation += 1
 	if _archive != null: _archive.close()
 	_archive = null
 	_archive_path = ""
@@ -53,6 +61,9 @@ static func reset() -> void:
 ## (row offsets; reopening one would hash the whole file again), the problem
 ## and store-failure records stay. Every later query returns the same values.
 ## Returns {tables, disk_columns, relations} counts that were released.
+## This only frees acceleration data for the same verified archive; logical
+## source values and cache_generation() remain unchanged. reset() invalidates
+## source-dependent read lifetimes instead.
 static func release_caches() -> Dictionary:
 	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size()}
 	for table: String in _tables.keys():
@@ -173,6 +184,19 @@ static func normalize_loaded_integers(value: Variant) -> Variant:
 ## Restores the integer types of the 523 ownership proof data in a parsed save.
 static func normalize_loaded_save(data: Dictionary) -> void:
 	normalize_loaded_identities(data)
+	_normalize_native_ownership(data)
+	# All characters share quantity journals. Inactive receipts must have the
+	# same integer proof representation as the active bag and shared journal.
+	var account: Variant = data.get("character_account",{})
+	if not account is Dictionary: return
+	if account.get("shared") is Dictionary: _normalize_native_ownership(account.shared)
+	var characters: Variant = account.get("characters",[])
+	if not characters is Array: return
+	for record: Variant in characters:
+		if record is Dictionary and record.get("state") is Dictionary:
+			_normalize_native_ownership(record.state)
+
+static func _normalize_native_ownership(data: Dictionary) -> void:
 	const RECEIPT := "source_native_stack_receipt"
 	if data.get("consumable_state") is Dictionary: normalize_loaded_integers(data.consumable_state)
 	var holders: Array = []
@@ -793,7 +817,34 @@ static func _relation_rows(relation: Dictionary, id: int) -> PackedInt32Array:
 	if position >= keys.size() or keys[position] != id: return PackedInt32Array()
 	return (relation.rows as PackedInt32Array).slice(int(relation.starts[position]), int(relation.starts[position + 1]))
 
+## Index of the only matching row (-1 missing, -2 duplicated). This reads the
+## same relation built by related(), without allocating its slice/result array.
+## Rejected duplicate groups still take row()'s former path below, preserving
+## its row decoding and diagnostics; accepted rows are reconstructed fresh.
+static func _unique_relation_row(relation: Dictionary, id: int) -> int:
+	if relation.has("groups"):
+		var groups: Dictionary = relation.groups
+		if not groups.has(id): return -1
+		var indices: PackedInt32Array = groups[id]
+		return int(indices[0]) if indices.size() == 1 else (-1 if indices.is_empty() else -2)
+	var keys: PackedInt64Array = relation.keys
+	var position: int = keys.bsearch(id, true)
+	if position >= keys.size() or keys[position] != id: return -1
+	var start: int = int(relation.starts[position])
+	var count: int = int(relation.starts[position + 1]) - start
+	return int(relation.rows[start]) if count == 1 else (-1 if count == 0 else -2)
+
 static func row(table: String, id: int) -> Dictionary:
+	# _store keeps the original archive/pin/bake/schema checks. The first ID
+	# lookup uses related() unchanged to build its validated relation index.
+	var store: Dictionary = _store(table)
+	var key: String = table + ":ID"
+	if _tables.has(table) and _relations.has(key):
+		var index: int = _unique_relation_row(_relations[key], id)
+		if index >= 0: return _row_at(store, index)
+		if index == -1:
+			_problem = "원본 ID가 없습니다: " + table + "#" + str(id)
+			return {}
 	var matches: Array[Dictionary] = related(table,"ID",id)
 	if matches.size()!=1:
 		if matches.size()>1: _problem = "원본 ID가 중복됩니다: "+table+"#"+str(id)
