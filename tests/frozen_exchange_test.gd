@@ -199,6 +199,23 @@ func _run() -> void:
 		install_fixture(unknown,"user://frozen-exchange-unproved-blessing.json")
 		var locked_exchange = Exchange.new();locked_exchange.configure(host,"user://frozen-exchange-unproved-blessing.json")
 		check(not locked_exchange.quote(id).ok,"wildcard missing blessed cursed and unknown blessing attributes stay locked")
+	# Arbitrary JSON attribute values must fail closed without a Variant
+	# comparison error, a native grant, or any wallet/stock/disk mutation.
+	var invalid_type_wallet: Dictionary = host.inventory.duplicate(true)
+	var invalid_type_stock: Dictionary = shop.export_state()
+	var invalid_type_instances: Dictionary = host.item_instances.duplicate(true)
+	var invalid_type_save: Error = host._save_game(true)
+	var invalid_type_bytes: PackedByteArray = FileAccess.get_file_as_bytes(host.path) if invalid_type_save == OK else PackedByteArray()
+	var invalid_type_grants: int = host.native_supplier_calls
+	for bad_type: Variant in [true,false,"1",{},null]:
+		var invalid: Dictionary = fixture.duplicate(true)
+		invalid.listings[0].attributes = {"blessed_type":bad_type}
+		var invalid_path: String = "user://frozen-exchange-invalid-blessing-type.json"
+		install_fixture(invalid,invalid_path)
+		var invalid_exchange = Exchange.new();invalid_exchange.configure(host,invalid_path)
+		var refused_quote: bool = not invalid_exchange.quote(id).ok
+		var refused_buy: bool = not invalid_exchange.buy(id).ok
+		check(invalid_type_save == OK and refused_quote and refused_buy and host.inventory == invalid_type_wallet and shop.export_state() == invalid_type_stock and host.item_instances == invalid_type_instances and host.native_supplier_calls == invalid_type_grants and FileAccess.get_file_as_bytes(host.path) == invalid_type_bytes,"invalid blessing JSON type stays locked and preserves wallet stock native instances and save: " + JSON.stringify(bad_type))
 	host.native_supplier_available = false
 	check(not exchange.quote(id).ok and not host.inventory.has("드래곤의 다이아몬드"),"missing native supplier cannot fall back to legacy shop binding")
 	host.native_supplier_available = true

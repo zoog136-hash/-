@@ -60,7 +60,7 @@ func _plan(id: String, bundles: int, internal: bool = false) -> Dictionary:
 	# blessedType=0 is an all-types API filter, never evidence of normal blessing.
 	# Only an explicitly observed normal type is supported; preserve and lock
 	# every other or unrecognised attribute until its native mapping is proved.
-	if int(row.enchant) != 0 or not row.element.is_empty() or int(row.element_level) != 0 or row.attributes.size() != 1 or row.attributes.get("blessed_type") != 1: return _fail("축복 종류·강화·속성의 실제 개체 연결 미검증 · 구매 잠금")
+	if int(row.enchant) != 0 or not row.element.is_empty() or int(row.element_level) != 0 or row.attributes.size() != 1 or not Catalog.integer(row.attributes.get("blessed_type"),1,1): return _fail("축복 종류·강화·속성의 실제 개체 연결 미검증 · 구매 잠금")
 	if bundles > Catalog.LIMIT / int(row.bundle_price) or bundles > Catalog.LIMIT / int(row.bundle_size): return _fail("묶음 합계 범위 초과")
 	var original: Dictionary = shop.catalog.record("ItemClass",int(row.item_class_id))
 	if original.is_empty() or shop.catalog.label(int(original.get("DescID",0))) != str(row.item_name): return _fail("실측 상품과 원본 ItemClass 이름·ID 불일치")

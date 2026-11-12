@@ -2,7 +2,7 @@
   "base_main": "11df08720afdb988884ad1c2b316d937fb7dc64d",
   "status": "DRAFT_ACTUAL_CAPTURE_STOPPED_INCOMPLETE",
   "focused_runner": "3/3 PASS",
-  "synthetic_exchange_contracts": 44,
+  "synthetic_exchange_contracts": 49,
   "actual_main_absent_capture_checks": 11,
   "actual_main_save_checks": 33,
   "python_exchange_tests": 32,
@@ -17,23 +17,24 @@
     "bundle_price": 14000,
     "bundle_size": 1,
     "old_inven_fallback_grants": 0,
-    "production_bytes_preserved": true
+    "production_bytes_preserved": true,
+    "tested_publication_revision": "66f44d0e7eb0477eddca048faff25233a753ed22"
   },
   "capture_status": "stopped_incomplete",
   "capture_new_http_requests": 21,
   "capture_reason": "server1 page1 total1566 -> page18 total1567",
   "production_status": "not_captured",
   "production_listings": 0,
-  "remote_ci": "NOT_STARTED_BEFORE_PUBLICATION",
+  "remote_ci": "PR #416; prior publication exchange/resource checks passed; final revision runs reported by GitHub Actions",
   "scope": "Actual native Main test has observed row and synthetic coverage/test wallet; focused contracts do not establish all-server capture.",
   "source_files": [
     {
       "path": "scripts/exchange/frozen_exchange.gd",
-      "sha256": "29063b26c99888c2ce94209398412fb7fc7c9cdd7b84847f8b7a6976ba673e5a"
+      "sha256": "f690475fb52f401877ee8ca0280f1576040d5507fe2308789ece6e1287714d3d"
     },
     {
       "path": "tests/frozen_exchange_test.gd",
-      "sha256": "0ac5115c53ed8617d4d86204d88fbda894b715b24bfb85b1e0316941db4534b7"
+      "sha256": "9aed0494d48d727e39af349abddda5ca0255229a290b1f7bf6d768df290a1f78"
     },
     {
       "path": "tests/frozen_exchange_native_main_test.gd",
@@ -51,5 +52,13 @@
       "path": "tools/ci_core.py",
       "sha256": "6ea8b3cfd3df2154474342ca22dd0cb48ec16321839c83512d8d05f97d1077ea"
     }
-  ]
+  ],
+  "invalid_blessing_json_types_rejected": [
+    "true",
+    "false",
+    "string1",
+    "object",
+    "null"
+  ],
+  "pull_request": "https://github.com/zoog136-hash/-/pull/416"
 }
