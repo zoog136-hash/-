@@ -30,6 +30,7 @@ jobs:
       - name: Python syntax
         run: |
           python3 -m compileall -q tools tests
+          python3 -m unittest discover -s tests -p 'test_*exchange*.py' -v
           python3 tests/test_ci_core.py
           python3 -m unittest discover -s tests -p test_patch523_world_links.py -v
           python3 tools/map_restore/test_current523_s32.py

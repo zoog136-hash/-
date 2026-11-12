@@ -1,0 +1,44 @@
+{
+  "current_scope": "world:10001",
+  "current_catalog_filters": {
+    "category1": 41
+  },
+  "stock_queue_size": 22,
+  "stock_queue_position": 22,
+  "current_stock": [
+    1,
+    65181,
+    0
+  ],
+  "last_saved_url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?serverId=10001&sale=true&size=30&category1=41&page=1",
+  "observation_mode": "live_non_atomic",
+  "blessed_type_filter": 1,
+  "current_stock_observation": {
+    "query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/65181/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+    "observed_rows": 30,
+    "pages": [
+      {
+        "body_file": "2e8a59f5ca90b461380aaceb418b4dfc8201ff985916e36b776496d950f1e307.json",
+        "sha256": "6c99ac27721c24697cbd9d58c0c5b9271f8b783b5f39a9eaf80c38ca50d60894",
+        "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/65181/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+      },
+      {
+        "body_file": "0c7cad911ab24ed3d4d80b5522ee6f2be070095e5e6fc41ce76673af518ab883.json",
+        "sha256": "bac92f0b6875f98d4c506b3fa94b236c464fc4a1337f12425e0450124fdddfbf",
+        "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/65181/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+      },
+      {
+        "body_file": "0fd8cc72f71d4174ca7cd828530b3997deff9c1d3d4c82fe9cece9fd597d678b.json",
+        "sha256": "5ea0417fe150bc4adf78759a07f9ddfc6d193f0f74bb881849638fc200686682",
+        "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/65181/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=3"
+      }
+    ],
+    "distinct_listings_verified": false,
+    "blessed_type_filter": 1,
+    "page_highwater": 3
+  },
+  "schema": "twilight.exchange-observations.v1",
+  "coverage_complete": false,
+  "requests_this_run": 84,
+  "updated_at_utc": "2026-11-12T05:59:40.093963+00:00"
+}
