@@ -366,9 +366,10 @@
   "track_sha256": "0aa56bbc484e207eb36bd2a71146aef4cdd0a30cff876efd770eb2023b393596",
   "base_commit": "3ea41de9dee65cf3cbe2c65c9f68e6d3cbaa5b45",
   "source_sha256": {
-    "scripts/resources/reference_sp2_bank.gd": "36e093562f26e6cd568c4d999dda3704c96113d701823947aef3e71aecacbbcb",
+    "scripts/resources/reference_sp2_bank.gd": "e0fdf3151f0cd4111f494163780363478028f12d2895bcfc89c5d83cde976034",
     "scripts/resources/reference_sp2_prepared_bank.gd": "bde7fd709d3c7b05bbabb1a587174e7c7343431cf649a5848a9c9b090be51a94",
     "scripts/animation/source_playback_policy.gd": "6e5215839b71cfb0bb6db069fe7bbc72920530058933378790b48d581d14a8b2",
     "scripts/animation/original_source_preview.gd": "22c642aa164eec0ba394c7ca2091463038b699cd055b90afe4ae215b3e24c8f7"
-  }
+  },
+  "layout_note": "After measurement, declarations and CI registration moved to avoid textual conflicts with PR #442. No behavior changed."
 }
