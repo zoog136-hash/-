@@ -162,6 +162,9 @@ const CODE_EXTERNAL_TEXTURE_NODES := {
 	"UI/Change/Change_Card_A_Legend.csb":[2304],
 	"UI/Change/Change_Card_A_Myth.csb":[2300],
 	"UI/Change/Change_Card_A_Sole.csb":[2332],
+	# Original 혈맹 문장 pictures (source_main_emblem_window): Icn_Mark_Dummy.
+	"UI/Clan/Clan_Mark_FlagSlot.csb":[6308],
+	"UI/Clan/Clan_Popup_Symbol.csb":[1208],
 }
 
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:

@@ -819,6 +819,51 @@ func close_status_board() -> void:
 		_cancel_native_buttons()
 		_status_board.close()
 
+## --- Original 523 재료 아이템 출처 popup (source_main_acquisition_popup)
+const AcquisitionPopup=preload("res://scripts/ui/original_ui/source_main_acquisition_popup.gd")
+var _acquisition_popup: RefCounted
+
+func try_open_acquisition(world: Node, item_class_id: int, item_name: String="") -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _acquisition_popup==null and _pack!=null and hud!=null:
+		var popup=AcquisitionPopup.new()
+		if popup.configure(_pack,hud).get("ok",false):_acquisition_popup=popup
+	if _acquisition_popup==null or not is_instance_valid(_coordinates):return _fail("source_acquisition_popup_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name)
+
+func acquisition_is_open() -> bool:
+	return _acquisition_popup!=null and _acquisition_popup.is_open()
+
+func close_acquisition() -> void:
+	if acquisition_is_open():
+		_cancel_native_buttons()
+		_acquisition_popup.close()
+
+## --- Original 523 혈맹 문장 선택 popup (source_main_emblem_window, world.emblem523)
+const EmblemWindow=preload("res://scripts/ui/original_ui/source_main_emblem_window.gd")
+var _emblem_window: RefCounted
+
+func try_open_emblem_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _emblem_window==null and _pack!=null and hud!=null:
+		var window=EmblemWindow.new()
+		if window.configure(_pack,hud).get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_emblem_window=window
+	if _emblem_window==null or not is_instance_valid(_coordinates):return _fail("source_emblem_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _emblem_window.open(_coordinates,world)
+
+func emblem_window_is_open() -> bool:
+	return _emblem_window!=null and _emblem_window.is_open()
+
+func close_emblem_window() -> void:
+	if emblem_window_is_open():
+		_cancel_native_buttons()
+		_emblem_window.close()
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
