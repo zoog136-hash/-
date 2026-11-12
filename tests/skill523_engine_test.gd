@@ -1,7 +1,7 @@
 extends SceneTree
 ## 523 reference-skill execution holds (docs/skill523_source_hold_report.md).
 ## Unit part (always): the table-direct passive contract opens only fully
-## declared passives and the blocked text shows raw CastDelay unconverted.
+## declared passives; CastDelay(ms) is the reuse delay (user decision 2026-11-12).
 ## Real part (only with the private original archive, absent in CI): measured
 ## CastDelay/tooltip cross-check, clan-merchant acquisition, follow-up spells,
 ## opened reference skills, and an actual book learn + save/load in Main.
@@ -66,9 +66,17 @@ func unit() -> void:
 	var held: Dictionary = {"id":"lmref_h","class":"요정","runtime_blocked":true,"activation":"active","cooldown":null,"name":"x"}
 	adapter.prepare_source_direct(held)
 	check(held.runtime_blocked and held.source523_cast_delay_ms == 0 and not held.get("source_direct523_hold",[]).is_empty(), "held reference keeps its hold reason")
-	held["source523_cast_delay_ms"] = 9000
+	check(held.cooldown == 0.0, "held active reference shows its original reuse delay")
 	var text: String = CURRENT.blocked_reason(held)
-	check(text.contains("CastDelay 9000ms") and text.contains("원본 표 직접 실행 불가"), "blocked text shows raw CastDelay, unconverted: "+text)
+	check(not text.contains("재사용 시간") and text.contains("원본 표 직접 실행 불가"), "reuse delay is no longer a hold reason: "+text)
+	# Castable source-bound actives take CastDelay(ms) as their cooldown.
+	var cast_adapter = ADAPTER.new()
+	cast_adapter.bindings = {"class_ids":{"기사":1},"material_inventory_keys":{},"retained_host_items":[],"skills":{}}
+	cast_adapter.profiles = {"c":{"row":{"ID":5.0,"SpellTypeID":1.0,"SpellCompositionNode":0.0,"SpellCategoryID":2.0,"MPCostUnit":1.0,"VPCost":0.0,"HPCost":0.0,"MPCost":10.0,
+		"SpellMaterialTypeID":0.0,"SpellMaterialItemAmount":0.0,"TargettingTypeID":1.0,"TargetKindID":2.0,"TargetAreaRadius":0.0,"CastRange":0.0,"MinCastRange":0.0,"CastDelay":3000.0,"CastGroupID":1.0,"TargetLimitCount":0.0},
+		"learn_limits":[{"ClassID":1.0,"IsTutorialSpell":false}],"bonuses":[],"buffs":[],"costs":[],"cast_groups":[],"target_kind":{"Name":"All"},"targeting_type":{"Name":"Self"}}}
+	var casted: Dictionary = cast_adapter.apply_to({"id":"c","activation":"active","mode":"buff","cooldown":2.0,"class":"기사"},"기사",false)
+	check(is_equal_approx(float(casted.get("cooldown",-1)), 3.0) and casted.source523.applied.has("cooldown") and casted.source523.time_policy == "SOURCE523_CASTDELAY_MS" and casted.source523.host_cooldown_before == 2.0, "CastDelay 3000ms -> cooldown 3s: "+str(casted.get("cooldown")))
 
 func seconds_in(text: String, pattern: RegEx) -> Array:
 	var result: Array = []
@@ -161,7 +169,7 @@ func run() -> void:
 		real["cast_delay"] = evidence
 		check(evidence.declared["8738"].name == "SpellCastDelayDecreasePercent" and evidence.declared["8738"].desc == "스킬 쿨타임 감소", "BonusType declares CastDelay as skill cooldown")
 		check(evidence.declared["9412"].unit == "MilliSeconds", "absolute CastDelay adjustment declared in MilliSeconds")
-		check(int(evidence.text_rows_mismatch) > 0, "tooltip cross-check is not exception-free (so CastDelay is not converted)")
+		check(int(evidence.text_rows_mismatch) > 0, "tooltip mismatches recorded (no longer a hold, user decision)")
 		check(int(evidence.bound_player_spells_with_time_text) == 0, "no bound player spell states a cooldown in its tooltip")
 		real["merchants"] = clan_merchants(bound)
 		for merchant: String in ["91","833","1164"]:
@@ -225,6 +233,64 @@ func run() -> void:
 		var cast: bool = world.original_skills.cast(flash)
 		var reason: String = CURRENT.blocked_reason(flash)
 		real["flash_hold"] = {"cast":cast,"mp_before":mp_before,"mp_after":world.mp,"reason":reason}
-		check(not cast and world.mp == mp_before and reason.contains("CastDelay 9000ms"), "held reference refuses cast, no MP spent, raw CastDelay shown")
+		check(not cast and world.mp == mp_before and not reason.contains("재사용 시간") and is_equal_approx(float(flash.get("cooldown",-1)), 9.0), "held reference refuses cast, no MP spent, reuse delay 9s shown")
+		# Opened-by-CastDelay re-judgement: every bound reference active still
+		# has another hold (sub-spells, follow-up conditions, PC-only, ...).
+		var reopened: Array = []
+		for key: String in adapter.profiles:
+			var ref: Dictionary = catalog.record_for(key)
+			if key.begins_with("lmref_") and str(ref.get("activation","")) != "passive" and not ref.get("runtime_blocked",true) and not ref.has("estimated523") and not bool(ref.get("local_design",false)): reopened.append(str(ref.name))
+		real["opened_active_references"] = reopened
+		# Castable source-bound actives: cooldown now CastDelay(ms)/1000.
+		var applied: Array = []
+		for record: Dictionary in catalog.records:
+			if record.get("runtime_blocked",false) or not adapter.profiles.has(str(record.id)) or str(record.get("activation","")) != "active": continue
+			var job: String = str(record.get("class",""))
+			world.job_class = "기사" if job == "공용" else job
+			var resolved: Dictionary = catalog.resolve(record)
+			if resolved.get("source523",{}).get("applied",[]).has("cooldown"): applied.append([str(record.name), resolved.source523.get("host_cooldown_before"), resolved.cooldown])
+		real["cooldown_applied"] = applied
+		check(applied.size() > 0, "castable source-bound actives take CastDelay cooldown")
+		# Actual cast: the first self-buff whose own class can cast it now
+		# (no weapon/target needed) and whose CastDelay is at least 1s.
+		world.level = 90
+		var barrier: Dictionary = {}
+		var tried: Array = []
+		for record: Dictionary in catalog.records:
+			if record.get("runtime_blocked",false) or not adapter.profiles.has(str(record.id)) or str(record.get("mode","")) not in ["buff","counter","stealth"]: continue
+			world.job_class = "마법사" if str(record.get("class","")) == "공용" else str(record.get("class",""))
+			catalog.learned[str(record.id)] = 1; catalog.revision += 1
+			var probe: Dictionary = catalog.resolve(record)
+			world.mp = world._effective_max_mp(); world.skill_cooldowns.clear(); world.skill_global_cooldown = 0.0
+			var why: String = "" if world.original_skills.ready(record) else ("not_enabled" if not catalog.enabled(record) else world.original_skills.cost_reason(probe))
+			tried.append([str(record.name), probe.get("cooldown"), why])
+			if why.is_empty() and probe.get("source523",{}).get("applied",[]).has("cooldown") and float(probe.cooldown) >= 1.0:
+				barrier = record; break
+			catalog.learned.erase(str(record.id)); catalog.revision += 1
+		real["cast_candidates"] = tried
+		check(not barrier.is_empty(), "a castable CastDelay self-buff exists")
+		if barrier.is_empty(): barrier = catalog.record_for("lm_11ab17290e72e63f")
+		var resolved_barrier: Dictionary = catalog.resolve(barrier)
+		var mp0: int = world.mp
+		var first: bool = world.original_skills.cast(barrier)
+		var mp1: int = world.mp
+		var remaining: float = float(world.skill_cooldowns.get(str(barrier.name), 0.0))
+		world.skill_global_cooldown = 0.0
+		var again: bool = world.original_skills.ready(barrier)
+		check(world._save_game(true) == OK, "save during cooldown")
+		world.skill_cooldowns.clear()
+		world._load_game(true)
+		var loaded_remaining: float = float(world.skill_cooldowns.get(str(barrier.name), 0.0))
+		world.skill_global_cooldown = 0.0
+		var after_load: bool = world.original_skills.ready(barrier)
+		world._tick_skill_cooldowns(remaining + 0.05)
+		world.mp = world._effective_max_mp()
+		var mp2: int = world.mp
+		var third: bool = world.original_skills.cast(barrier)
+		real["barrier"] = {"name":str(barrier.get("name","")),"class":world.job_class,"cooldown":resolved_barrier.get("cooldown"),"host_before":resolved_barrier.get("source523",{}).get("host_cooldown_before"),"mp_cost":resolved_barrier.get("mp"),"first":first,"mp":[mp0,mp1],"remaining":remaining,"ready_during":again,"loaded_remaining":loaded_remaining,"ready_after_load":after_load,"third":third,"mp_third":[mp2,world.mp],"factor":world._skill_cooldown_factor()}
+		check(first and mp0 - mp1 == int(resolved_barrier.mp) and is_equal_approx(float(resolved_barrier.cooldown), float(resolved_barrier.source523_cast_delay_ms if resolved_barrier.has("source523_cast_delay_ms") else resolved_barrier.source523.cast_delay_raw) / 1000.0), "cast spends original MP, cooldown = CastDelay/1000")
+		check(is_equal_approx(remaining, float(resolved_barrier.cooldown) * world._skill_cooldown_factor()) and not again, "recast refused during CastDelay cooldown")
+		check(is_equal_approx(loaded_remaining, remaining) and not after_load, "cooldown survives save/load")
+		check(third and mp2 - world.mp == int(resolved_barrier.mp), "recast succeeds after the cooldown")
 	print("SKILL523_ENGINE_RESULT ", JSON.stringify({"checks":checks, "failures":failures, "real":real}))
 	quit(0 if failures.is_empty() else 1)

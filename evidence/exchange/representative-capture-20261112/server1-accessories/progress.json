@@ -1,0 +1,1944 @@
+{
+  "schema": "twilight.exchange-observations.v1",
+  "status": "bounded_partial",
+  "coverage": {
+    "complete": false
+  },
+  "atomic_snapshot_verified": false,
+  "traversal_complete": false,
+  "production_import_performed": false,
+  "expected_scopes": [
+    "server:1",
+    "world:10001"
+  ],
+  "completed_scopes": [],
+  "catalog_groups": 67,
+  "stock_groups": 51,
+  "observed_bundle_rows": 315,
+  "stock_receipts": [
+    {
+      "server_id": 1,
+      "item_id": 203438,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "ca300782166b7bccf0bb42fda131f4f32f814481537bbe3b359ea66d0bab5353.json",
+          "sha256": "b24424f82f9090510de6ea767038b78de8297475739b66504bbce85512b91204",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/203438/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 292552,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "e8d3a962fc9e33ebd60ed375fcfe7786348265aad03b8199470289b3c3694e66.json",
+          "sha256": "87ddb7e8293cb434049ceff6b74040f60d114f1fa15b93412cd78fecc7a0c61e",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/292552/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 112242,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 5,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 5,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "870b19fdf9e8802dd64bb8fc0e9ff5afd0aeae31cf75916055e8fad288cdc382.json",
+          "sha256": "46a8b2b42f980fb12e9b2fd58ef0e923c53d9351c7af8ad85fba0e72e7a166a3",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/112242/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 112252,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 11,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 11,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "acda3827f72963a9c83cdeb733ab923ba484c6342db49d5dd1f555a417044db6.json",
+          "sha256": "3657e52006c7b0de27fff09900053c5441f4c0b7af80c4029a0fa9b81d723f93",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/112252/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "3c279434160dc0898977eddd5f19973a79e7a28b3a59032955251c7906066af8.json",
+          "sha256": "07e0660ffc7904005a1605c1d83ea299e6b032098e7c47e21a1d774df2112a00",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/112252/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 163113,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 4,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 4,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "e7e12f2891339e69b7958c173907daf00e66024487fb7443c6e9fd449720484f.json",
+          "sha256": "ee044bb33b9d9f1620fd13372e10dc3b5a7f2818bc695bc5b39a2afc52d7a1a9",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/163113/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 163113,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "092953b1b1134db18682a601e8e6b4a11df3a078922db6ac7a4915e0f3378ae5.json",
+          "sha256": "acb39ceeec2fb9ba54d32acbcc907b78a859b57c5cf85d02aadb75821066e711",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/163113/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 163123,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 3,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 3,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "b31339f23e3585dd43ec4c0a53281e4412fa7cf9a429ebd1a6998e126309a5e0.json",
+          "sha256": "7f40f8989b0a53d10bdecc3c4b97b18310e147772d6be90e13f8e822911bdd58",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/163123/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 163123,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "6f1af576ab9f484c31bcd322195fa1b7cc35db60c4c3bc353363649052614a5b.json",
+          "sha256": "d5d525ed1b60a297bcf1d751d2807161702bb4a1495e5b704c0696e4b0747048",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/163123/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 188224,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 8,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 8,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "bfc6b0f1beab25bc923e98f788fe29e3c031ba2844c3dcda6a5fdc6480022c54.json",
+          "sha256": "9dbe7250cb9137cbdbe3d18b3337533fa107e9d68a6e099100d391b6f4457c0c",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/188224/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 188234,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 8,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 8,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "96e0ad84a28e445d3e01a2206f1e424c021a68663026286ac0b11c3eb3e4b7f7.json",
+          "sha256": "ab9bc94013b3801e95aa86f88123ff4cc0686451d22d7092f95f43364dec79a7",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/188234/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 292562,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 6,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 6,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "78b2e80f0494055c2c60d27cc7853e736f84265ca07f1a65446421f7adfb49dd.json",
+          "sha256": "84e760471b16edc301d624ee1e048e319ff22a0b813f6627ef79850beca3ebea",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/292562/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 292562,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "de6d11004bd14064ce5323b493b0091c5dc50f553ca67684c4075544d9be1b7d.json",
+          "sha256": "a4a9d9ba179f00f0e8e4119442000608012570658fcc3dd3cd237a06d295d288",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/292562/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 30522,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 9,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 9,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "dae898a458937fcbf7786df76a8e8f045ada8d17007fdf07a1e8f1f838b2fdf8.json",
+          "sha256": "aacc8812871423c6918999e91120f06d2eb2f3f7b46512215551f38186a45248",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/30522/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 30522,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "507404619c8a0a667ff0e56c6db551c7aa68bdebd13022b48727d267329f3d65.json",
+          "sha256": "c0ec8618c7aa6c9684ddc23ef30f6afa4dcdea36e9d7e37c347407a2e05331bb",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/30522/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 30532,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 15,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 15,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "931e1565cf0d10ddd3e745627591a1f407b5138e7b799b7d8dcd761a72a0b9c1.json",
+          "sha256": "3a76705d6a68452ff5ab65097f093ea81f2fa6a1aaaac6bb928287e30f1ad44a",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/30532/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "818f0163cb0cd23553cc669380e21dd7f02924563db01e9c25489fb489382d1c.json",
+          "sha256": "6600e5b9cf3b95d3b1defe95c6bb715fd34648f509ea301e1f200e1a957e0aec",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/30532/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33081,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 29,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "b8a6ba7a182781e905d09cc93386b74ec6851c96abcd36665e9ebd9d5d17b0e6.json",
+          "sha256": "5ac80363a943033dceaf763f69ff603e15361e2306c30d84886debbfceed637a",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "31b74b27d2816e33bb73e03ca2a3248e682c8c4711fcbb18cd5fd7978dc437d1.json",
+          "sha256": "dd61f17a82b1e93b2a8b06c530346f75ba3448d41490327d772356bb1dcaa1d5",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33081,
+      "enchant": 4,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "f0661c5672bfabc2b0241167219597f824980606bb156629584e608c976cc12b.json",
+          "sha256": "849f9cdbafc0a1cca26db78950255316c6e7c63d34bd238481d9a3eed3c4491d",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=4&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33081,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "484802b52922b7702ecc750d26742939f72df641d39ebc5a6035a1d9ed5667ca.json",
+          "sha256": "c8877ca7368feb16551ce27a3326aed8d5182fe941d4355d821d62af16853bb8",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33091,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 24,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "67f0a608565cf9afa4b432a07c3a5be42c0be6fc7394efaeec12b33321cff065.json",
+          "sha256": "73184a658bae4747eb0afe0cb3c0c01c6c78c26d4e0cdb0501876f2cd264c3a2",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "3e6f70a94da6eb316406b4ad0181fb4ace5cb1e5ba74f5e75741171ad6d43411.json",
+          "sha256": "32891b6a969cdb8fe0ec98530d581f6882339e02938f95dcecb660fa821fd70e",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33101,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 9,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 9,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "581128a60b76d09879e30481a1f396c42a917a7872b0fc549429a1fb636f7d28.json",
+          "sha256": "cdcc8ec2ad1b1cce0ef22d5ac471275a55b7eb21c8bfbaf2fc70e66f1cbcf973",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33101/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33111,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 52,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "15b405f0a072ded90b91ffc1b19f95056804b0d6bda27b2eb4eece9e7cea845c.json",
+          "sha256": "3a4f8e94e65c415c5dce964a6904161e02d016d7b54df8d9ce7a9a6d1f790306",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "47f4b5d1df7bfe39e892eb137c5ab8d241bcb25a59e5cfddc648618a56a13522.json",
+          "sha256": "88323223370df41b00a89b8f84785d4a8abf4ea8f87a674bcedfc6ab37eb8014",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33121,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 28,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "f569ff7c3bd3d514d67cd540fb64a431e38afd81c5dac5cd414bb76d94943e47.json",
+          "sha256": "42e624725cd8a65b4e268eadb7c9a03b1bf4790e36b668cae62976f94e815167",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "da231d8e32427e176574bf6c95ed19e9c64a42fb53b8118d5b3f0f29bb6067c5.json",
+          "sha256": "c045c0a9d711a40f0ea8d2fc557b5d8440efdcfa0a76ebcb71e8475a3ce33bd3",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 33121,
+      "enchant": 1,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "3e3c77d0cddd3a0d75d1908131efb9e579c8ae16127d9ed03103df12f4b02bd0.json",
+          "sha256": "7cc2cc211b89900763f9c3c9f816d6b9e5492e8d32e6ee83c0c8337c5264f1b4",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=1&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 660,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "0184166f8334d347e54a84bbab9b71d682209c50e0acbfb04aaee82d82f9002b.json",
+          "sha256": "6f2ca983f5f48d7a01bfd8818da3116dc50e5bdf68c65b9d96893958b52ba187",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/660/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 660,
+      "enchant": 2,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "424d03a22dacaab3799ce90ed527dc149133deb4b110590cd1592913caf81ffb.json",
+          "sha256": "1627264a3c291af01a06dd24e8d8dc727c6804598843d6a3304d32b35c7c72e2",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/660/stock?serverId=1&enchantLevel=2&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 660,
+      "enchant": 3,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "b17ce5633b936a39d5d6f132bea982987f4f055d5b1afda19a5860b949b13e9f.json",
+          "sha256": "decac71930f2e34e827d16f387c9038b3f7362ee53c30b008688cac3584f284c",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/660/stock?serverId=1&enchantLevel=3&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 660,
+      "enchant": 4,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "428a44dfeb2bcb4319a55c6bd4c54324257af6f0c171591706f3afd73458287a.json",
+          "sha256": "295078d2c1096e52635313b486088e1461541f97189e8c23ccf6d9129ed631e5",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/660/stock?serverId=1&enchantLevel=4&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 660,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 5,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 5,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "060938caf84451d7a5414367622bcad34a0ec597836c0b76d848fed727c814c5.json",
+          "sha256": "dd585225be7a6d411dbb845655752bcec9d2ed29d7e48ca1fcb695dfc61e19f9",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/660/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 661,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 3,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 3,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "405572451d2b43fad81ac83772b55b249b79c7efce00feeebf692b89d474cd04.json",
+          "sha256": "3616e5004584a4cd4528b4582cb8bdf2d27010275d24d93beede84f2b6ef2e71",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/661/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 662,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "71c1f19fbef1692590ed69bab3421c5d2cc857fdf5993c70013fbae96e0eba8e.json",
+          "sha256": "66f5fd86cc99811c4ec1e5c1965ec060cb232bd251de9e8e4d2548716027d5da",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/662/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 662,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "08425c4a43eb315782287912cfc60a7d6027e988f451525d25fed5d405627c7e.json",
+          "sha256": "6a770b7e52bfa7c5986b7cd5deed755ed1698750078f610fbe36b42861e5144d",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/662/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 915,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 16,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 16,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "7a3f6b8e6265baad33cc7acb47ba058ba9b9ceefb7d963b115e00eeb2f057562.json",
+          "sha256": "c06954abe9eb8be8d87dcb832a4338f94d20f077c833e66f57d81e558bebc855",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/915/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "76f4f1d59f1fcf5f70e4f2f1a30121b2721608695786e4662bcfda2248a471ef.json",
+          "sha256": "87468ee7302b04075bc7d83ac3e507da29fbe225d3b4345e747ad59d58e7cefb",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/915/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 915,
+      "enchant": 2,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "125576ee7c2d60bafdb13ae0c47ef1f9531f811565298c628abfbf7525411484.json",
+          "sha256": "be97682406ed31390e49e9f17dec1d944446e35e3c6e5e4bb29f08126dfa654d",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/915/stock?serverId=1&enchantLevel=2&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 915,
+      "enchant": 3,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "bf6a353a7d7e79affc87086d93a402ae5190c8daf0b7d7042115137a4d62b044.json",
+          "sha256": "b0b2254f6673390b9725fcf459cf4d0a731006b7f8cad660ee2efc182dffe095",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/915/stock?serverId=1&enchantLevel=3&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 290,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 8,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 8,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "3d81a84172862bbd07baf76fde7b608bde4f7fbeae165cd9fef55dae95b8c31f.json",
+          "sha256": "ddd747e9a5a5cb5888dfe99fa59b4b6bc8e24bedcf172d94511ac61f2cba9ae3",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/290/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 290,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "89b17fdf2562b6b75d9f22168a58eec2e5c79811b90f9aa2d9ab2c693dd5a9cb.json",
+          "sha256": "30a62ecc6047614f5d5d5fd3944c945e397353a97d858f4ba4f0b3f284830a51",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/290/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 323,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 4,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 4,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "2257327ad65331b211d81488ee8e4efb0ca37c79ff32b3b663bb05b29e4b63cb.json",
+          "sha256": "0cdfc9a34457cb5d777402b38ea5d6d5cf2f9f4a6b5000fdcc110351e9ad5903",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/323/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 374,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 44,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "18579c12117272cf49cad77515924f42a3c90c345a0f76df1f460cadbb6efce0.json",
+          "sha256": "cc24cb78080066a22ed7153305db408a6db20c89e36680e6750ae4af7db65b84",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "010f9a4075dfb602b505f54eeace3eb071d35f811442f5413850572406a8d90f.json",
+          "sha256": "d1cb4d6c43fb5bcfa11542e6666c35c26b748544de443edbbf07d1cca228496b",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 374,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 3,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 3,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "1cd19f93c551a502e6d4ce13151b86ae3eacfbbbac9c822c00925fd9cf627b62.json",
+          "sha256": "6f934ad0097a5877822fcf4be3e0772b9dd31b09585a9f0be14d82faf9e9456c",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 375,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 3,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 3,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "2e35648d7d186436e4c5ffc15f3c3dc0731f0878b9fdbf5ad40998e650c9e39b.json",
+          "sha256": "4d923647a86c6bac999faa44d177fe4f63f05500c2dc5dd3ce5f71330a9cf5e1",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/375/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 394,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 11,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 11,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "0c3e7ef03c7352c703a2855fe2d85d5e1a898ab7a1a53082a2306498ebb86ac2.json",
+          "sha256": "464af9e7d1c204288363a933935cdc0eb22d0ae64cb43f307558361855153c13",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/394/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "df2efd23a87309ea499f922cdf8f9aa63803b0f40640023146e9c38f0096e7e2.json",
+          "sha256": "00af305189a7a8d023a733f029d605a442036176e112b5048b65d04d0957fd32",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/394/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 394,
+      "enchant": 3,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "270aebd1306c0e2bccfe162941f5e63b4c7216e8e309c71432acf322f99e2521.json",
+          "sha256": "c297046490913f29068b5b9acfd7a870feab22473c8b0c6ffca68f5492141424",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/394/stock?serverId=1&enchantLevel=3&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 628,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 4,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 4,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "59132704f4a8929537a6af5343b3c207f97c77255b431fb12479276b1cdabe15.json",
+          "sha256": "a68f9097df1501baa58fb122dcc0067cde0ed124b518094f493d012057fd5ecb",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/628/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 656,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "a8ec7442d373fbfcbb5a2a7a146114707ff360e719fc24a7f9b2e96546238785.json",
+          "sha256": "0045ad199e3f274ee37930df272ff6e13aa016352cf5b8639b88021742d02c20",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/656/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 659,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 65,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "e89f5182303ffe991948f13b8c7b00a0bb0b9483c20d300f4412278f1f921d0a.json",
+          "sha256": "1c2725f34d0190022eb6e88a5d14e9827028cb97664ef4141117dedf3436eb6a",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "d30af1ae02b42234df86b1acaaa5fd5f221d6b76ae3c5e138d8823dc6d16f60e.json",
+          "sha256": "395bcdfc5cab559479e288fd3c730f061bf1cc907a6a5e70310a09a7208238f5",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 659,
+      "enchant": 2,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 3,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 3,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "66db71613934afbe6e19a7a473a20e270083728bf1278176db159ba7d91bcdbb.json",
+          "sha256": "af6ee592c5c695651bb601861ee26523cef5e6daffb0bc260321c808bfad4702",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=2&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 659,
+      "enchant": 4,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 2,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 2,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "635053148bb0170a643fa5c81609b7898e714125eda2a8fc32ed466d85576382.json",
+          "sha256": "399f3b1c43fc8399dc40a6a2f85abc5376d92c8628a6b12e57cc1cc30f43c2dd",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=4&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 659,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 7,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 7,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "62c31630f5ae3d597bab0cacd0c25764819666c16295560c8b8dbbafec5b4642.json",
+          "sha256": "5df7aed11523bfbcf67147296d34fd5d6701f3755ec3dc22f7f40136517f446c",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 675,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 20,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 48,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": true,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "3eefdd59c12b9957cb67d38f3f88b665280d4f67aed938e094e880242b5a5642.json",
+          "sha256": "29176442cd479ce48dc1af0d807aa46e77971a0b8d21a9fbe4e9299629efdaad",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        },
+        {
+          "body_file": "20a96829d6f5329f9b7886a62daeb7a03c07cfb731957b2a8c8750b17b943f66.json",
+          "sha256": "6c5cda9883a71be0828ce6eb3f91af6961b1acd1bccb90217c51490e523bb39b",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 675,
+      "enchant": 5,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "ce366707c3fd463d88657c7fe7044327daabda2dabea9dfb45046b86ffa318ab.json",
+          "sha256": "dd4c8b43663ffc9d008ec2622269830c3f9cd3154ca8760193e406a7bce1c77d",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1"
+        }
+      ]
+    },
+    {
+      "server_id": 1,
+      "item_id": 676,
+      "enchant": 0,
+      "world": false,
+      "blessed_type_filter": 1,
+      "bundle_rows": 1,
+      "category1_ids": [
+        21
+      ],
+      "category_provenance": "official_catalog_query_filters_not_guessed",
+      "first_reported_total": 1,
+      "observation_status": "observed",
+      "timeout_omission_observed": false,
+      "distinct_listings_verified": false,
+      "pagination_drift_observed": false,
+      "page_sampling_applied": false,
+      "max_stock_pages": 2,
+      "pages": [
+        {
+          "body_file": "f566517a58b3caf9097907ae1cefe4bc0ff6f436374ec5cdd49df6915947249b.json",
+          "sha256": "b2968b3bdcca494eee3b31919cf0c9b2f9a04adf84da05c5d1d40c9b8f6b9b2e",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/676/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+        }
+      ]
+    }
+  ],
+  "observation_mode": "live_non_atomic",
+  "blessed_type_filter": 1,
+  "run_started_at_utc": "2026-11-12T06:24:12.765935+00:00",
+  "drift_events": [],
+  "possible_overlap_events": [],
+  "cap_events": [],
+  "max_stock_pages_per_group": 2,
+  "stock_page_sampling_events": [
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "31b74b27d2816e33bb73e03ca2a3248e682c8c4711fcbb18cd5fd7978dc437d1.json",
+      "sha256": "dd61f17a82b1e93b2a8b06c530346f75ba3448d41490327d772356bb1dcaa1d5",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "3e6f70a94da6eb316406b4ad0181fb4ace5cb1e5ba74f5e75741171ad6d43411.json",
+      "sha256": "32891b6a969cdb8fe0ec98530d581f6882339e02938f95dcecb660fa821fd70e",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "47f4b5d1df7bfe39e892eb137c5ab8d241bcb25a59e5cfddc648618a56a13522.json",
+      "sha256": "88323223370df41b00a89b8f84785d4a8abf4ea8f87a674bcedfc6ab37eb8014",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 6,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        6
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "da231d8e32427e176574bf6c95ed19e9c64a42fb53b8118d5b3f0f29bb6067c5.json",
+      "sha256": "c045c0a9d711a40f0ea8d2fc557b5d8440efdcfa0a76ebcb71e8475a3ce33bd3",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "010f9a4075dfb602b505f54eeace3eb071d35f811442f5413850572406a8d90f.json",
+      "sha256": "d1cb4d6c43fb5bcfa11542e6666c35c26b748544de443edbbf07d1cca228496b",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 5,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        5
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "d30af1ae02b42234df86b1acaaa5fd5f221d6b76ae3c5e138d8823dc6d16f60e.json",
+      "sha256": "395bcdfc5cab559479e288fd3c730f061bf1cc907a6a5e70310a09a7208238f5",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 7,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        7
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "20a96829d6f5329f9b7886a62daeb7a03c07cfb731957b2a8c8750b17b943f66.json",
+      "sha256": "6c5cda9883a71be0828ce6eb3f91af6961b1acd1bccb90217c51490e523bb39b",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 5,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        5
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    }
+  ],
+  "transport_timeout_events": [],
+  "possible_omission_events": [],
+  "stock_groups_without_successful_response": 0,
+  "visited_scopes": [],
+  "incomplete_scopes": [],
+  "observed_stock_rows": 315,
+  "observed_stock_pages": 62,
+  "observed_stock_rows_distinct_listings_verified": false,
+  "catalog_duplicate_observations": 0,
+  "limits": [
+    "Live pages have no atomic snapshot token or stable listing ID.",
+    "Raw stock rows are observations; identical rows remain distinct.",
+    "Client ItemClass mapping and production promotion require separate review."
+  ],
+  "last_saved_url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/676/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1",
+  "observation_window": {
+    "first_request_started_at_utc": "2026-11-12T06:24:13.767471+00:00",
+    "last_request_completed_at_utc": "2026-11-12T06:30:46.636877+00:00"
+  },
+  "all_official_scopes": [
+    "server:1",
+    "server:2",
+    "server:3",
+    "server:4",
+    "server:5",
+    "server:6",
+    "server:7",
+    "server:8",
+    "server:9",
+    "server:10",
+    "server:11",
+    "server:12",
+    "server:13",
+    "server:14",
+    "server:15",
+    "server:16",
+    "server:17",
+    "server:18",
+    "server:19",
+    "server:20",
+    "server:21",
+    "server:22",
+    "server:23",
+    "server:24",
+    "server:25",
+    "server:26",
+    "server:27",
+    "server:28",
+    "server:29",
+    "server:30",
+    "server:31",
+    "server:32",
+    "server:33",
+    "server:34",
+    "server:35",
+    "server:36",
+    "server:37",
+    "server:38",
+    "server:39",
+    "server:40",
+    "server:41",
+    "server:42",
+    "server:43",
+    "server:44",
+    "server:45",
+    "server:46",
+    "server:47",
+    "server:48",
+    "server:49",
+    "server:50",
+    "server:51",
+    "server:52",
+    "server:53",
+    "server:54",
+    "server:55",
+    "server:56",
+    "server:57",
+    "server:58",
+    "server:59",
+    "server:60",
+    "server:61",
+    "server:62",
+    "server:63",
+    "server:64",
+    "server:65",
+    "server:66",
+    "server:67",
+    "server:68",
+    "server:69",
+    "server:70",
+    "server:71",
+    "server:72",
+    "server:73",
+    "server:74",
+    "server:75",
+    "server:76",
+    "server:77",
+    "server:78",
+    "server:79",
+    "server:80",
+    "server:81",
+    "server:82",
+    "server:83",
+    "server:84",
+    "server:85",
+    "server:86",
+    "server:87",
+    "server:88",
+    "server:89",
+    "server:90",
+    "server:91",
+    "server:92",
+    "server:93",
+    "server:94",
+    "server:95",
+    "server:96",
+    "server:97",
+    "server:98",
+    "server:99",
+    "server:100",
+    "server:101",
+    "server:102",
+    "server:103",
+    "server:104",
+    "server:105",
+    "server:106",
+    "server:107",
+    "server:108",
+    "server:109",
+    "server:110",
+    "server:111",
+    "server:112",
+    "server:113",
+    "server:114",
+    "server:115",
+    "server:116",
+    "server:117",
+    "server:118",
+    "server:119",
+    "server:120",
+    "server:121",
+    "server:122",
+    "server:123",
+    "server:124",
+    "server:125",
+    "server:126",
+    "server:127",
+    "server:128",
+    "server:129",
+    "server:130",
+    "server:131",
+    "server:132",
+    "server:133",
+    "server:134",
+    "server:135",
+    "server:136",
+    "server:137",
+    "server:138",
+    "server:139",
+    "server:140",
+    "server:141",
+    "server:142",
+    "server:143",
+    "server:144",
+    "server:145",
+    "server:146",
+    "server:147",
+    "server:148",
+    "server:149",
+    "server:150",
+    "server:151",
+    "server:152",
+    "server:153",
+    "server:154",
+    "server:155",
+    "server:156",
+    "server:157",
+    "server:158",
+    "server:159",
+    "server:160",
+    "server:161",
+    "server:162",
+    "server:163",
+    "server:164",
+    "server:165",
+    "server:166",
+    "server:167",
+    "server:168",
+    "server:169",
+    "server:170",
+    "server:171",
+    "server:172",
+    "server:173",
+    "server:174",
+    "server:175",
+    "server:176",
+    "server:177",
+    "server:178",
+    "server:179",
+    "server:180",
+    "server:181",
+    "server:182",
+    "server:183",
+    "server:184",
+    "server:185",
+    "server:186",
+    "server:187",
+    "server:188",
+    "server:189",
+    "server:190",
+    "server:191",
+    "server:192",
+    "server:193",
+    "server:194",
+    "server:195",
+    "server:196",
+    "server:197",
+    "server:198",
+    "server:199",
+    "server:200",
+    "server:201",
+    "server:202",
+    "server:203",
+    "server:204",
+    "server:205",
+    "server:206",
+    "server:207",
+    "server:208",
+    "server:209",
+    "server:210",
+    "server:211",
+    "server:212",
+    "server:213",
+    "server:214",
+    "server:215",
+    "server:216",
+    "server:217",
+    "server:218",
+    "server:219",
+    "server:220",
+    "server:221",
+    "server:222",
+    "server:223",
+    "server:224",
+    "server:225",
+    "server:226",
+    "server:227",
+    "server:228",
+    "server:229",
+    "server:230",
+    "server:231",
+    "server:232",
+    "server:233",
+    "server:234",
+    "server:235",
+    "server:236",
+    "server:237",
+    "server:238",
+    "server:239",
+    "server:240",
+    "server:241",
+    "server:242",
+    "server:243",
+    "server:244",
+    "server:245",
+    "server:246",
+    "server:247",
+    "server:248",
+    "server:249",
+    "server:250",
+    "server:251",
+    "server:252",
+    "server:253",
+    "server:254",
+    "server:255",
+    "server:256",
+    "server:257",
+    "server:258",
+    "server:259",
+    "server:260",
+    "server:261",
+    "server:262",
+    "server:263",
+    "server:264",
+    "server:265",
+    "server:266",
+    "server:267",
+    "server:268",
+    "server:269",
+    "server:270",
+    "server:271",
+    "server:272",
+    "server:273",
+    "server:274",
+    "server:275",
+    "server:276",
+    "server:277",
+    "server:278",
+    "server:279",
+    "server:280",
+    "server:281",
+    "server:282",
+    "server:283",
+    "server:284",
+    "server:285",
+    "server:286",
+    "server:287",
+    "server:288",
+    "server:289",
+    "server:290",
+    "server:291",
+    "server:292",
+    "server:293",
+    "server:294",
+    "server:295",
+    "server:296",
+    "server:297",
+    "server:298",
+    "server:299",
+    "server:300",
+    "world:10001",
+    "world:10002",
+    "world:10003",
+    "world:10004",
+    "world:10005",
+    "world:10006",
+    "world:10007",
+    "world:10008",
+    "world:10009",
+    "world:10010",
+    "world:10011",
+    "world:10012",
+    "world:10013",
+    "world:10014",
+    "world:10015",
+    "world:10016",
+    "world:10017",
+    "world:10018",
+    "world:10019",
+    "world:10020",
+    "world:10021",
+    "world:10022",
+    "world:10023",
+    "world:10024",
+    "world:10025",
+    "world:10026",
+    "world:10027",
+    "world:10028",
+    "world:10029",
+    "world:10030"
+  ],
+  "market_scope_selection_is_all": false,
+  "category_selection_is_all": false,
+  "scope_selection_is_all": false,
+  "selection_label": "representative_or_category_partial",
+  "selection": {
+    "selected_market_scope_count": 2,
+    "available_market_scope_count": 330,
+    "selected_category1_ids": [
+      21
+    ],
+    "available_category1_ids": [
+      1,
+      11,
+      21,
+      31,
+      41,
+      51
+    ],
+    "blessed_type_filter": 1
+  },
+  "current_scope": "server:1",
+  "current_catalog_filters": {
+    "category1": 21
+  },
+  "stock_queue_size": 67,
+  "stock_queue_position": 51,
+  "current_stock": [
+    1,
+    677,
+    0
+  ],
+  "current_stock_observation": {
+    "query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/676/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+    "observed_rows": 1,
+    "pages": [
+      {
+        "body_file": "f566517a58b3caf9097907ae1cefe4bc0ff6f436374ec5cdd49df6915947249b.json",
+        "sha256": "b2968b3bdcca494eee3b31919cf0c9b2f9a04adf84da05c5d1d40c9b8f6b9b2e",
+        "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/676/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1"
+      }
+    ],
+    "distinct_listings_verified": false,
+    "blessed_type_filter": 1,
+    "page_highwater": 1
+  },
+  "next_url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/677/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1",
+  "reason": "Request budget reached; resume the same output directory",
+  "requests_this_run": 70,
+  "reused_receipts_this_run": 0,
+  "updated_at_utc": "2026-11-12T06:30:46.637656+00:00"
+}

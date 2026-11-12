@@ -65,6 +65,17 @@ static func full(record: Variant) -> Variant:
 		if key != MARK and not result.has(key): result[key] = record[key]
 	return result
 
+## Internal compiler-only expansion. An already cached template, a generic
+## store or an unavailable fast path retains full() and its snapshot/cache
+## behavior. Public full()/field()/has_field() and their copy contracts stay
+## unchanged. A successful real-store expansion holds at most one full item.
+static func _full_for_binding(record: Variant) -> Variant:
+	if not lazy(record) or _store == null: return full(record)
+	var id: String = str(int((record as Dictionary).get("source_item_class_id",0)))
+	if _cache.has(id) or not _store.has_method("_expanded_for_binding"): return full(record)
+	var expanded: Variant = _store.call("_expanded_for_binding",id,record)
+	return expanded if expanded is Dictionary else full(record)
+
 ## One key of full(record), without building the whole record: the record's
 ## own value when it holds the key, the template's value for a heavy key it
 ## left out, otherwise `default`. Same value (and copy semantics) as

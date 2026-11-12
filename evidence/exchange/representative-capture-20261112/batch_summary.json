@@ -1,0 +1,95 @@
+{
+  "schema": "twilight.exchange-capture-batches.v1",
+  "status": "bounded_partial",
+  "worker_count": 2,
+  "global_minimum_http_start_interval_seconds": 1.0,
+  "audit": "/workspace/scratch/b20f9af62341/representative-capture-20261112/http_start_times.jsonl",
+  "actual_http_starts": 135,
+  "http_start_permits": 135,
+  "unstarted_permits": 0,
+  "planned_new_request_budget": 135,
+  "shared_abort": false,
+  "abort_reason": "",
+  "coverage_complete": false,
+  "atomic_snapshot_verified": false,
+  "production_import_performed": false,
+  "batches": [
+    {
+      "label": "server1-armor",
+      "category1": 11,
+      "new_request_budget": 14,
+      "result_code": 2,
+      "output": "/workspace/scratch/b20f9af62341/representative-capture-20261112/server1-armor",
+      "status": "bounded_partial",
+      "reason": "Request budget reached; resume the same output directory",
+      "requests_this_run": 14,
+      "reused_receipts_this_run": 85,
+      "observed_stock_rows": 224,
+      "observed_stock_pages": 77,
+      "stock_groups": 72,
+      "observation_window": {
+        "first_request_started_at_utc": "2026-11-12T05:59:41.155669+00:00",
+        "last_request_completed_at_utc": "2026-11-12T06:24:12.760232+00:00"
+      },
+      "transport_timeout_events": [
+        {
+          "schema": "twilight.exchange-transport-timeout.v1",
+          "kind": "transport_timeout",
+          "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/112232/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1",
+          "occurred_at_utc": "2026-11-12T06:03:40.801030+00:00",
+          "error_type": null,
+          "reason_type": null,
+          "error": "<urlopen error timed out>",
+          "raw_response_saved": false,
+          "failed_page_reported_total": null,
+          "retry_policy": "skip_without_retry",
+          "classification_basis": "Historical stopped-run progress explicitly records urlopen timed out; original Python exception types were not retained. No exception type is reconstructed.",
+          "historical_progress_file": "historical-timeout-progress-20261112.json",
+          "historical_progress_sha256": "fce53b45ec5c1f12fc833b3d2a0710d2fe1318fec23efe9e9e62c37f684de4e6",
+          "skipped_saved_failure": true
+        }
+      ],
+      "actual_http_starts": 14
+    },
+    {
+      "label": "server1-weapons",
+      "category1": 1,
+      "new_request_budget": 51,
+      "result_code": 2,
+      "output": "/workspace/scratch/b20f9af62341/representative-capture-20261112/server1-weapons",
+      "status": "bounded_partial",
+      "reason": "Request budget reached; resume the same output directory",
+      "requests_this_run": 51,
+      "reused_receipts_this_run": 48,
+      "observed_stock_rows": 268,
+      "observed_stock_pages": 81,
+      "stock_groups": 76,
+      "observation_window": {
+        "first_request_started_at_utc": "2026-11-12T06:16:57.734084+00:00",
+        "last_request_completed_at_utc": "2026-11-12T06:27:30.626271+00:00"
+      },
+      "transport_timeout_events": [],
+      "actual_http_starts": 51
+    },
+    {
+      "label": "server1-accessories",
+      "category1": 21,
+      "new_request_budget": 70,
+      "result_code": 2,
+      "output": "/workspace/scratch/b20f9af62341/representative-capture-20261112/server1-accessories",
+      "status": "bounded_partial",
+      "reason": "Request budget reached; resume the same output directory",
+      "requests_this_run": 70,
+      "reused_receipts_this_run": 0,
+      "observed_stock_rows": 315,
+      "observed_stock_pages": 62,
+      "stock_groups": 51,
+      "observation_window": {
+        "first_request_started_at_utc": "2026-11-12T06:24:13.767471+00:00",
+        "last_request_completed_at_utc": "2026-11-12T06:30:46.636877+00:00"
+      },
+      "transport_timeout_events": [],
+      "actual_http_starts": 70
+    }
+  ]
+}

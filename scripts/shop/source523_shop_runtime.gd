@@ -80,6 +80,9 @@ static func npc_input_identity_problem(value: Variant,npc_sha256: String,shop_sh
 
 static func validate(value: Variant) -> String:
 	if not value is Dictionary or value.get("version") != 1: return "상점 저장 버전 오류"
+	if value.has("frozen_exchange"):
+		var exchange_error: String = preload("res://scripts/exchange/frozen_exchange.gd").validate_state(value.frozen_exchange)
+		if not exchange_error.is_empty(): return exchange_error
 	if value.has("ticket_redemption"):
 		var ticket_error: String=InventoryTickets.validate_state(value.ticket_redemption)
 		if not ticket_error.is_empty():return ticket_error

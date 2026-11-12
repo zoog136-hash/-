@@ -382,6 +382,9 @@ def run_isolated(command: Sequence[str], *, env: Mapping[str, str], timeout: flo
 # missing variables, instead of letting each fail or hang until its timeout.
 # Evidence: Integration run 41986133718 on main 4d18a44 (2026-11-05).
 PRIVATE_INPUT_REQUIREMENTS: dict[str, tuple[str, ...]] = {
+    "frozen_exchange_native_main_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "frozen_exchange_enhanced_main_test": ("TWILIGHT_PATCH523_CONTENT",),
+    "frozen_exchange_representative_main_test": ("TWILIGHT_PATCH523_CONTENT",),
     "base508_pack_test": ("TWILIGHT_BASE508_PACK",),
     "base508_game_api_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),
     "base508_registered_navigation_test": ("TWILIGHT_BASE508_PACK", "TWILIGHT_BASE508_REGISTRATION", "TWILIGHT_LEGACY_ART_ROOT"),

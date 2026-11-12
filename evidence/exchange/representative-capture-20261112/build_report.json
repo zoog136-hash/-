@@ -1,0 +1,361 @@
+{
+  "scope": "representative_observed_frozen_snapshot",
+  "atomic_snapshot_verified": false,
+  "distinct_listings_verified": false,
+  "coverage_complete": false,
+  "selected_server_id": "server:1",
+  "selected_world_id": "world:10001",
+  "input_receipts": 354,
+  "excluded_response_receipts": [],
+  "observed_stock_rows": 1521,
+  "included_rows": 1506,
+  "omitted_rows": [
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/322/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "d1610c2241ae2a6de7ad249ab50938fb4d2cfc059eccbc86a491a3e3d983ce9e",
+      "row_index": 0,
+      "item_id": 322,
+      "observed_item_name": "화령 3단+7 오리하루콘 단검",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114082/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1",
+      "sha256": "fdb0cd34b3b6f0da21ef33705642627e4a0232b819f6c6c43c09260337984608",
+      "row_index": 0,
+      "item_id": 114082,
+      "observed_item_name": "지령 3단+5 환영의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1",
+      "sha256": "f7de693f8dd6f4cb7c24cef4b872ee4db046f48a48596e8233e4958d889e8c71",
+      "row_index": 1,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+5 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 0,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 1,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 2,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 4,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 5,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "607ffa2f1d21c4d61a8875037529cf2d448a4550a9d71753bd8c311cc23259d0",
+      "row_index": 6,
+      "item_id": 114092,
+      "observed_item_name": "지령 3단+7 소멸자의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/222881/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "eedd1e98aa194150dd961ec750b22200f4076a4e1c96e78d2a4d919010ca2167",
+      "row_index": 0,
+      "item_id": 222881,
+      "observed_item_name": "지령 3단+7 테베 오시리스의 창",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/263708/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "3b1c4e047259fb0423bb7bb88755fca9da429b2d3ef6cf7cdee10932e03247ec",
+      "row_index": 0,
+      "item_id": 263708,
+      "observed_item_name": "지령 3단+7 테베 오시리스의 체인소드",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1",
+      "sha256": "9bf3665c19325b1f828c2642c167c605cbdc939bc71fd8837f911e762fa865cd",
+      "row_index": 1,
+      "item_id": 3182,
+      "observed_item_name": "지령 2단+5 광풍의 도끼",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "1f5917a19305bfc13603098ea163f00fe374bbe455480581d4e4581852aca9a1",
+      "row_index": 5,
+      "item_id": 3182,
+      "observed_item_name": "지령 1단+7 광풍의 도끼",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "1f5917a19305bfc13603098ea163f00fe374bbe455480581d4e4581852aca9a1",
+      "row_index": 6,
+      "item_id": 3182,
+      "observed_item_name": "지령 2단+7 광풍의 도끼",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=7&blessedType=1&size=10&page=1",
+      "sha256": "1f5917a19305bfc13603098ea163f00fe374bbe455480581d4e4581852aca9a1",
+      "row_index": 7,
+      "item_id": 3182,
+      "observed_item_name": "지령 3단+7 광풍의 도끼",
+      "reason": "original_id_label_or_exact_enchant_prefix_unmatched"
+    }
+  ],
+  "duplicate_response_references": 0,
+  "later_response_versions_ignored": [],
+  "equal_value_rows_preserved": 547,
+  "limits": [
+    "The selected server maximizes a sampled catalog-group proxy, not a proved all-server listing census.",
+    "Live page positions may overlap or omit registrations; observation IDs are not verified listing IDs.",
+    "Identical stock rows are preserved; no value-based listing deduplication is performed."
+  ],
+  "observed_pagination_drift_events": [],
+  "stock_page_sampling_events": [
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/1171/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "8f60fdc444f3dec4dd16e442a18ede91b8393dcc392052f4a38d99aad5ab965a.json",
+      "sha256": "be64202d12acd16d8a6536fa1d91b141eae45425feabc274f6691732066b6026",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/1171/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 4,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        4
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "3ba4a7a58dafc36e4ad83e8958a9080456e48343bf3bc911a3ad96c4530fec41.json",
+      "sha256": "82218e81c420a11a75361e7cd95d9dfbdfcd1ff0f83588aebeeca23617d5baa2",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/114092/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "30b5207e3dcdf92839cc7264675ff48191526c5787b50291654f20fb099f16f7.json",
+      "sha256": "ee1650230a3caab970eb8326add4f5f25dd1ac8eef5d10d82c9d10b229e9f2cf",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3182/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3232/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "b0639938f9102347221b8821df90e3b3b0063098385146f63cf016af83fd89af.json",
+      "sha256": "d9538884829f1d68fdf7031c1e1fd7ac18cb75d8281ab47de08352192f0c37ee",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/3232/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "31b74b27d2816e33bb73e03ca2a3248e682c8c4711fcbb18cd5fd7978dc437d1.json",
+      "sha256": "dd61f17a82b1e93b2a8b06c530346f75ba3448d41490327d772356bb1dcaa1d5",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33081/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "3e6f70a94da6eb316406b4ad0181fb4ace5cb1e5ba74f5e75741171ad6d43411.json",
+      "sha256": "32891b6a969cdb8fe0ec98530d581f6882339e02938f95dcecb660fa821fd70e",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33091/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "47f4b5d1df7bfe39e892eb137c5ab8d241bcb25a59e5cfddc648618a56a13522.json",
+      "sha256": "88323223370df41b00a89b8f84785d4a8abf4ea8f87a674bcedfc6ab37eb8014",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33111/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 6,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        6
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "da231d8e32427e176574bf6c95ed19e9c64a42fb53b8118d5b3f0f29bb6067c5.json",
+      "sha256": "c045c0a9d711a40f0ea8d2fc557b5d8440efdcfa0a76ebcb71e8475a3ce33bd3",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/33121/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 3,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        3
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "010f9a4075dfb602b505f54eeace3eb071d35f811442f5413850572406a8d90f.json",
+      "sha256": "d1cb4d6c43fb5bcfa11542e6666c35c26b748544de443edbbf07d1cca228496b",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/374/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 5,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        5
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "d30af1ae02b42234df86b1acaaa5fd5f221d6b76ae3c5e138d8823dc6d16f60e.json",
+      "sha256": "395bcdfc5cab559479e288fd3c730f061bf1cc907a6a5e70310a09a7208238f5",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/659/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 7,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        7
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=2",
+      "body_file": "20a96829d6f5329f9b7886a62daeb7a03c07cfb731957b2a8c8750b17b943f66.json",
+      "sha256": "6c5cda9883a71be0828ce6eb3f91af6961b1acd1bccb90217c51490e523bb39b",
+      "kind": "stock_page_sample_stopped",
+      "stock_query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/675/stock?serverId=1&enchantLevel=0&blessedType=1&size=10",
+      "included_pages": 2,
+      "observed_rows": 20,
+      "max_stock_pages": 2,
+      "observed_page_highwater": 5,
+      "unrequested_page_range_at_last_observation": [
+        3,
+        5
+      ],
+      "omitted_pages": null,
+      "omitted_listing_count": null,
+      "exact_omission_count_verified": false,
+      "stock_population_complete": false
+    }
+  ],
+  "category_observed_rows": {
+    "1": 253,
+    "11": 224,
+    "21": 315,
+    "41": 704,
+    "51": 10
+  }
+}

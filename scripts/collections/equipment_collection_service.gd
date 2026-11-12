@@ -21,6 +21,11 @@ static func normalize_name(value: String) -> String:
 	spaces.compile("\\s+")
 	return spaces.sub(marker.sub(value, "", true), " ", true).strip_edges()
 
+## Only the verified catalog adapter may supply this name; saved gear and
+## receipts never choose a different source identity or rename an item.
+static func _collection_name(row: Dictionary) -> String:
+	return str(row.collection_name) if row.has("collection_name") else normalize_name(str(row.get("name", "")))
+
 static func effect_code(effect: Dictionary) -> String:
 	return str(effect.get("key", "")) + ":" + str(effect.get("unit", ""))
 
@@ -73,9 +78,11 @@ func configure(definitions: Dictionary, catalog_rows: Array, supported_effects: 
 		var source_id: String = str(row.get("source_id", ""))
 		if source_id.is_empty() or _catalog.has(source_id) or not row.get("name") is String:
 			return _configuration_error("아이템 원본 ID 누락/중복")
+		if row.has("collection_name") and (not row.collection_name is String or str(row.collection_name).is_empty() or normalize_name(str(row.collection_name)) != str(row.collection_name)):
+			return _configuration_error("검증된 컬렉션 장비명 오류")
 		_catalog[source_id] = row
 		if str(row.get("kind", "")) == "equipment":
-			_by_name[normalize_name(str(row.name))] = true
+			_by_name[_collection_name(row)] = true
 	for key: Variant in supported_effects:
 		_supported[str(key)] = true
 	return true
@@ -180,7 +187,7 @@ func candidate_reason(item: Dictionary, req: Dictionary) -> String:
 		return "검증된 장비 원본 ID 없음"
 	if normalize_name(str(item.get("name", ""))) != normalize_name(str(source.name)):
 		return "장비명과 원본 ID 불일치"
-	if normalize_name(str(item.name)) != str(req.get("name", "")):
+	if _collection_name(source) != str(req.get("name", "")):
 		return "다른 장비"
 	if item.get("enchant") != req.get("enchant"):
 		return "요구 강화 수치 불일치"
@@ -220,7 +227,7 @@ func complete(snapshot: Dictionary, cid: String) -> bool:
 				return false
 			if str(receipt.get("collection_id", "")) != str(c.id) or str(receipt.get("slot_id", "")) != str(req.slot_id):
 				return false
-			if normalize_name(str(source.name)) != str(req.name) or str(receipt.get("canonical_name", "")) != str(req.name) or receipt.get("enchant") != req.enchant:
+			if _collection_name(source) != str(req.name) or str(receipt.get("canonical_name", "")) != str(req.name) or receipt.get("enchant") != req.enchant:
 				return false
 	return true
 
