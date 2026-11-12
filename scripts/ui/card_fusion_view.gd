@@ -118,7 +118,8 @@ func _build() -> void:
  var space:=Control.new();space.size_flags_horizontal=Control.SIZE_EXPAND_FILL;header.add_child(space)
  var shop:=_touch("상점 바로가기",_open_shop,true)
  shop.custom_minimum_size=Vector2(158,38);shop.size_flags_horizontal=Control.SIZE_SHRINK_END
- shop.icon=load("res://assets/ui/shop.png");header.add_child(shop)
+ if ResourceLoader.exists("res://assets/ui/shop.png"): shop.icon=load("res://assets/ui/shop.png")
+ header.add_child(shop)
  # Legacy grade signal remains available; visible filters/portraits own input.
  _grade_select=OptionButton.new()
  for current: String in MATERIAL_GRADES:_grade_select.add_item(current+" → "+str(Cards.FUSION_NEXT[current]))
