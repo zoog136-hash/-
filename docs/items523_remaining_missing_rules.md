@@ -40,7 +40,7 @@
 
 | 묶음 | 수 | 상태 |
 | --- | ---: | --- |
-| 스킬북(source_skill_book) 투영 동작 | 1,327 | 투영은 사용 가능. 실제 습득은 다른 작업(`fix/skill523-source-hold`)의 "523 스킬 원본 연결 보류" 해결 후 main 기준으로 다시 확인 |
+| 스킬북(source_skill_book) 투영 동작 | 1,327 | #410 병합 후 main(`8634f931`) 실제 Main에서 다시 확인: 원본 스킬 프로필과 정확히 연결 1,256, 그중 **습득 가능 381**(일반 377 + 학습 전용 4), **875는 연결된 스킬이 참고 전용(runtime_blocked) → "현재 주문 실행 소유자 미지원 · 스킬서 보존"**(스킬 실행 엔진 범위, 아이템 표 규칙으로 풀 수 없음), 71은 SpellClass ID·행 SHA가 441개 원본 프로필과 맞지 않아 보존 |
 | 고정 카드(fixed_card) | 714 | 동작 |
 | 스킬북, 직업 미지원(unsupported_skill_learn_class) | 47 | 거부 — 학습 직업이 TWILIGHT 직업에 없음 |
 | 스킬북, 제한 카드 요구(source_skill_limit_card_requirement_unresolved) | 22 | 거부 — 카드 보유 요구의 판정 표 없음 |
@@ -117,3 +117,10 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 
 - Ice·Lapidification(석화)·Sleep·Dark(암흑) 내성 15종: TWILIGHT에 해당 상태가 없어 미연결.
 - 같은 효과의 조건부 행(IsPossession, 적용 대상이 SpecialResistanceType이 아닌 행)은 연결하지 않는다.
+
+## 9. '실수 in 정수배열' 점검 (#411 유형)
+
+아이템 판정 코드(loot·equipment523·shop·einasad·routine523·강화)의 `X in [정수…]` 비교를 모두 확인했다.
+대부분 `int()`/`whole()`로 감싸거나 `int` 형 변수다. 예외 1건: `equipment523/native_catalog.gd`의
+`identity.get("schema") not in [3,4]` — 저장 JSON에서 온 4.0을 거부(연금술 대기분 이전 경로). `whole()`로 수정.
+수정 전후 전체 30,398종 사용·지급 판정 집계는 변화 없음(막힘 원인 아님).
