@@ -21,6 +21,14 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('character_account_store_test', []),
+    ('character_lobby_test', []),
+    ('character_save_profile_test', []),
+    ('character_lobby_source_catalog_test', []),
+    ('character_lobby_source_selection_test', []),
+    ('character_lobby_presentation_test', []),
+    ('equipment_collection_native_identity_test', []),
+    ('character_account_route_main_test', []),
     ('reference_sp2_asset_sharing_test', []),
     ('reference_sp2_load_memo_test', []),
     ('reference_sp2_attribute_memo_test', []),
@@ -229,6 +237,19 @@ def ensure_objects(root: Path, objects: list[str]):
                        input='\n'.join(missing)+'\n', text=True, check=True,
                        stdout=subprocess.DEVNULL)
 
+def is_preload_reference(text: str, end: int) -> bool:
+    r"""Match the former preload\s*\(\s*$ suffix without scanning its prefix."""
+    while end and text[end - 1].isspace():
+        end -= 1
+    if not end or text[end - 1] != '(':
+        return False
+    end -= 1
+    while end and text[end - 1].isspace():
+        end -= 1
+    # The previous expression did not require a token boundary before preload.
+    return end >= 7 and text[end - 7:end] == 'preload'
+
+
 def stage(root: Path, destination: Path) -> dict:
     if destination.exists() and {p.name for p in destination.iterdir()} != {'.godot'}:
         raise ValueError('stage must be new; refusing to overwrite an existing project')
@@ -279,7 +300,7 @@ def stage(root: Path, destination: Path) -> dict:
             if not PurePosixPath(child).suffix or '%' in child:
                 continue  # dynamic directory/template; exercised by Main
             if not exists(child):
-                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or re.search(r'preload\s*\(\s*$', text[:match.start()])
+                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or is_preload_reference(text, match.start())
                 if required:
                     raise FileNotFoundError('required resource '+child+' referenced by '+path)
                 unresolved.add(child)  # optional guarded paths are not art proof
@@ -399,7 +420,15 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+            marker = {'character_account_store_test':'CHARACTER_ACCOUNT_STORE_RESULT',
+                      'character_lobby_test':'CHARACTER_LOBBY_RESULT',
+                      'character_save_profile_test':'CHARACTER_SAVE_PROFILE_RESULT',
+                      'character_lobby_source_catalog_test':'CHARACTER_LOBBY_SOURCE_CATALOG_RESULT',
+                      'character_lobby_source_selection_test':'CHARACTER_LOBBY_SOURCE_SELECTION_RESULT',
+                      'character_lobby_presentation_test':'CHARACTER_LOBBY_PRESENTATION_RESULT',
+                      'equipment_collection_native_identity_test':'EQUIPMENT_COLLECTION_NATIVE_IDENTITY_RESULT',
+                      'character_account_route_main_test':'CHARACTER_ACCOUNT_ROUTE_MAIN_RESULT',
+                      'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'reference_sp2_attribute_memo_test':'REFERENCE_SP2_ATTRIBUTE_MEMO_RESULT',
                       'reference_sp2_parsed_payload_test':'REFERENCE_SP2_PARSED_PAYLOAD_RESULT',

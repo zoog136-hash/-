@@ -1105,6 +1105,11 @@ func _go_back() -> void:
 		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
+	var account = preload("res://scripts/characters/account_store.gd")
+	if not account.session.is_empty():
+		var world: Node = get_parent()
+		if world.has_method("return_to_character_lobby"): world.call("return_to_character_lobby")
+		return
 	# In the first session there is no class decision until the user confirms.
 	if class_picker_initial:
 		return

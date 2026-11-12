@@ -173,6 +173,19 @@ static func normalize_loaded_integers(value: Variant) -> Variant:
 ## Restores the integer types of the 523 ownership proof data in a parsed save.
 static func normalize_loaded_save(data: Dictionary) -> void:
 	normalize_loaded_identities(data)
+	_normalize_native_ownership(data)
+	# All characters share quantity journals. Inactive receipts must have the
+	# same integer proof representation as the active bag and shared journal.
+	var account: Variant = data.get("character_account",{})
+	if not account is Dictionary: return
+	if account.get("shared") is Dictionary: _normalize_native_ownership(account.shared)
+	var characters: Variant = account.get("characters",[])
+	if not characters is Array: return
+	for record: Variant in characters:
+		if record is Dictionary and record.get("state") is Dictionary:
+			_normalize_native_ownership(record.state)
+
+static func _normalize_native_ownership(data: Dictionary) -> void:
 	const RECEIPT := "source_native_stack_receipt"
 	if data.get("consumable_state") is Dictionary: normalize_loaded_integers(data.consumable_state)
 	var holders: Array = []
