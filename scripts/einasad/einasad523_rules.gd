@@ -141,6 +141,22 @@ static func first_rate_level(group: int) -> int:
 	for level: int in values: lowest = mini(lowest,level)
 	return lowest
 
+## Charge bonus percent of an ItemConsumeRate group (#12) at `level`, read as
+## an added percent (user decision 2026-11-12: multiplier = 1 + Value/100,
+## 85 -> x2 ... 89+ -> x5). Below the first row: 0. Above the last row: the
+## last (highest-level) row's Value (user decision). -1 without the rows or
+## for a level inside the group's range without its own row.
+static func charge_bonus_percent(group: int, level: int) -> int:
+	var values: Dictionary = consume_rate_group(group)
+	if values.is_empty(): return -1
+	if values.has(level): return int(values[level])
+	var lowest: int = 1<<30; var highest: int = -1
+	for row_level: int in values:
+		lowest = mini(lowest,row_level); highest = maxi(highest,row_level)
+	if level<lowest: return 0
+	if level>highest: return int(values[highest])
+	return -1
+
 ## Snapshot used by the HUD/tests: what the rows say for this balance.
 static func describe(points: int, fixed_level: int = 0) -> Dictionary:
 	var data: Dictionary = definition()

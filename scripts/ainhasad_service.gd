@@ -21,7 +21,22 @@ var last_orb_purchase_month: String = ""
 # expiry is the only timer. -1 retains the established monthly-shop behavior.
 var source_jade_level_override: int = -1
 
+## Item charge-bonus group of the original charge items (ItemConsumeRate #12).
+const CHARGE_BONUS_GROUP := 12
+
+## Charge multiplier in percent at a level: 100 + the group-12 Value (user
+## decision: added percent; above the last row its last Value). Without the
+## original rows the same table as TWILIGHT constants (85 x2 ... 89+ x5).
+static func charge_multiplier_percent(player_level: int) -> int:
+	var source: int = RULES.charge_bonus_percent(CHARGE_BONUS_GROUP, player_level)
+	if source >= 0:
+		return 100 + source
+	return 100 * charge_multiplier_fallback(player_level)
+
 static func charge_multiplier(player_level: int) -> int:
+	return charge_multiplier_percent(player_level) / 100
+
+static func charge_multiplier_fallback(player_level: int) -> int:
 	if player_level >= 89:
 		return 5
 	if player_level >= 88:
@@ -47,7 +62,7 @@ static func charge_amount(item_name: String, player_level: int) -> int:
 			return 1500
 		_:
 			return 0
-	return base * charge_multiplier(player_level)
+	return base * charge_multiplier_percent(player_level) / 100
 
 func orb_active(now: int = 0) -> bool:
 	if now <= 0:
