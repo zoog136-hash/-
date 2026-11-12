@@ -12,6 +12,7 @@ const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
 const SOURCE_ELEMENT_CHANNELS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
 const RELIC_SOURCE_INPUT = preload("res://scripts/resources/current523_relic_spell_input.gd")
+const SPELL_MOVE = preload("res://scripts/skills/spell_move523.gd")
 # Exact ordered node lists from build_player_skills523.py. No composition-node
 # traversal or unreviewed recursive expansion is performed by the reader.
 const REVIEWED_EXECUTION_GRAPHS := {
@@ -465,6 +466,12 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	# Passive/effect/upgrade execution and learning/ownership stay with the host.
 	# Current-reference/local-design rows gain evidence only. A client row never
 	# grants a book or activates a previously blocked/new spell implementation.
+	# Original SpellMove rows: the plan is attached as evidence for every bound
+	# spell. It only executes for a record that is otherwise castable.
+	var spell_move: Dictionary = SPELL_MOVE.plan(int(row.ID))
+	if not spell_move.is_empty():
+		record.source523["spell_move"] = spell_move.duplicate(true)
+		record["spell_move523"] = spell_move
 	for prefix: String in bindings.get("reference_only_prefixes", []):
 		if id.begins_with(prefix) and estimate.is_empty(): return record
 	if not progression.is_empty() and str(record.activation)=="passive":

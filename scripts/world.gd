@@ -232,6 +232,7 @@ var crafting = EXPANDED_CRAFTING.new()
 const PATCH523_EQUIPMENT = preload("res://scripts/crafting/patch523_rules.gd")
 var patch523_equipment = PATCH523_EQUIPMENT.new()
 const PATCH523_ITEM_USE = preload("res://scripts/crafting/patch523_item_use.gd")
+const POLYMORPH_WEAPON_LIMIT = preload("res://scripts/cards/polymorph_weapon_limit523.gd")
 const PATCH523_SEAL_ACTIONS = preload("res://scripts/crafting/patch523_seal_actions.gd")
 const PATCH523_STORE = preload("res://scripts/crafting/patch523_pack_store.gd")
 var patch523_material_choices: Dictionary = {}
@@ -3060,6 +3061,11 @@ func _attack(automatic_acquisition: bool = false) -> void:
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
 	if auto_attack_timer > 0.0 or not pending_attack.is_empty():
+		return
+	var polymorph_weapon_reason: String = POLYMORPH_WEAPON_LIMIT.attack_reason(self)
+	if not polymorph_weapon_reason.is_empty():
+		hud.show_message(polymorph_weapon_reason)
+		auto_attack_timer = 1.0
 		return
 	var attack_kind: String = _current_attack_kind()
 	var target: TwilightMonster = selected_monster
@@ -8755,6 +8761,8 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		var transform_usec: int = Time.get_ticks_usec()
 		_apply_transform_visual(record)
 		_perf_log("변신 교체", transform_usec)
+		var held_weapon_reason: String = POLYMORPH_WEAPON_LIMIT.attack_reason(self)
+		if not held_weapon_reason.is_empty(): hud.append_log(held_weapon_reason + " · 공격하려면 무기를 교체하세요")
 	elif category == "마법인형":
 		_apply_doll_visual(record)
 	elif category == "성물":
@@ -8828,6 +8836,13 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
 		hud.show_message("%s 클래스는 %s 무기를 착용할 수 없습니다" % [job_class, weapon_type])
 		hud.append_log("착용 제한 · %s / %s · 아이템은 인벤토리에 보관" % [job_class, item_name])
+		hud.refresh_inventory(inventory)
+		_update_hud()
+		return
+	var polymorph_weapon_reason: String = POLYMORPH_WEAPON_LIMIT.equip_reason(self, record)
+	if not polymorph_weapon_reason.is_empty():
+		hud.show_message(polymorph_weapon_reason)
+		hud.append_log("착용 제한 · %s · 아이템은 인벤토리에 보관" % polymorph_weapon_reason)
 		hud.refresh_inventory(inventory)
 		_update_hud()
 		return

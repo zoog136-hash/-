@@ -73,6 +73,11 @@ static func blocked_reason(row: Dictionary) -> String:
 		"디그니티": missing.append("더블 스탭 확률·피해 계수")
 		"블러디 크로우": missing.append("발동 확률·범위 피해·흡수량")
 		"버서커스": missing.append("명중·피해·AC·INT 비례 계수")
+	var move: Dictionary = row.get("spell_move523", {})
+	if not move.is_empty():
+		if bool(move.get("ok", false)): missing.append("원본 이동 효과는 연결됨(%s)" % str(move.get("kind", "")))
+		else:
+			for field: Variant in move.get("missing", []): missing.append("원본 이동: " + str(field))
 	return "실행 보류: " + " / ".join(missing)
 
 static func detail_text(row: Dictionary) -> String:
