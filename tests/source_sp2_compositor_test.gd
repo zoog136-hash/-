@@ -83,6 +83,11 @@ func policies() -> void:
 	check(COMPOSITOR.style({"kind":"shadow"}, ["8"], false, "compatible", true).get("operation",-1) == 1,"verified own8 shadow uses screen")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["8"], false, "compatible", true).get("flags",-1) == 9,"own8 shadow retains effective9")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["128"], false, "compatible", true).get("operation",-1) == 0,"verified own128 shadow chooses average before multiply")
+	var copy_was: bool = COMPOSITOR.screen_copy_available
+	COMPOSITOR.screen_copy_available = false
+	check(COMPOSITOR.style({"kind":"shadow","source_attributes":["128"]}, ["32768"], false, "compatible").is_empty(), "without a verified screen copy (Android) the previous blend policy is kept")
+	COMPOSITOR.screen_copy_available = copy_was
+	check(COMPOSITOR.screen_copy_available == not OS.has_feature("android"), "screen copy is only assumed off Android")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["128"], false, "compatible", true).get("flags",-1) == 129,"own128 shadow retains effective129")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["128"], false, "compatible").is_empty(),"unverified raw128 does not unlock129")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["8"], true, "compatible", true).is_empty(),"unresolved parent cannot unlock9")
