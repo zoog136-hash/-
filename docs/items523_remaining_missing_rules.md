@@ -37,6 +37,77 @@
 | IgnoreFarBarrior / StorableOnEnchant / FixedDesc | 46 / 45 / 45 | 소비자 없음(설명·창고 규칙) |
 | 그 밖의 소수 효과(치명타·관통·리덕션 비율 등 40여 종) | 각 1~35 | 효과별 계산 순서가 표에 없어 미연결 |
 
+## 2-1. 아이템 등급 연출 — 아이콘·바닥 빛기둥·이름 색 (2026-11-12, PR `feature/equipment523-grade-presentation`)
+
+사용자 우선순위(2026-11-12): 신화 이상 장비 아이콘 연출 → 바닥 아이템(빛기둥 포함, 전 등급) → 이름·등급 색 → 착용 외형.
+모두 원본 표·원본 리소스에서만 가져오고, 없으면 비워 둔다(이미지 생성·대체 없음).
+
+### 근거 (원본 523 표·리소스)
+
+| 등급(Grade) | 이름(DescID) | 이름 색 Grade.ColorID → ColorTable | 바닥 이펙트 Grade.DropItemEffectSpriteID | SPR 선언 |
+| --- | --- | --- | --- | --- |
+| Grade1 | 일반 | 4 GradeCommon `ffffff` | 0 (없음) | — |
+| Grade2 | 고급 | 5 GradeRare `00dc15` | 0 (없음) | — |
+| Grade3 | 희귀 | 6 GradeUnique `00a2ff` | 23195 | `Effect_Drop_Item_Rare_upper_sc` + under 23196 |
+| Grade4 | 영웅 | 7 GradeLegend `ff0000` | 23197 | `Effect_Drop_Item_Hero_upper_sc` + 23198·23199 |
+| Grade5 | 전설 | 8 GradeEpic `d44fff` | 23200 | `Effect_Drop_Item_Legend_upper_sc` + 23201·23202 |
+| Grade6 (ID 32) | 신화 | 412 Grade6 `ffde00` | 23203 | `Effect_Drop_Item_Myth_upper_sc` + 23204·23205 |
+| Grade7 (ID 52) | 유일 | 21212 Grade7 `18f4b0` | 23206 | `Effect_Drop_Item_Sole_upper_sc` + 23207·23208 |
+| BM (ID 42) | 특수 | 422 Bm `ff7522` | 0 (없음) | — |
+| Event (ID 71) | 이벤트 | 422 Bm `ff7522` | 0 (없음) | — |
+
+- ColorID는 Color 표가 아니라 ColorTable 표의 ID다(ColorTable 이름이 GradeCommon…Grade7로 등급과 일치, Color 표의 같은 번호는
+  귓속말 색). 기존 칭호 색(`title_source523.gd`)도 ColorTable을 쓴다. "일반"은 None(ID 0)과 Grade1 두 행이 같은 이름이라
+  아이템 정보에 보이는 행(IsItemInfoVisible=true, Grade1)을 쓴다.
+- 아이템별 예외: UIItemDropEffect 6행(#162121 → 23206, #255878·255888·255898·255908·315962 → 23203)이 등급 이펙트보다 우선.
+  ItemDropEffectInvisible은 ItemClassID 0 한 행뿐(해당 아이템 없음).
+- 바닥 이펙트는 각 스프라이트의 SPR 선언 action 3 `breath`(12프레임, body + clothes 레이어). 은행(bank) 계약은 반복을 호출자
+  정책으로 남기므로, 바닥에 놓여 있는 동안 idle 동작 `breath`를 반복 재생한다(TWILIGHT 해석으로 표기).
+- 신화 이상 아이콘 연출 = IconID가 가리키는 AssetType 101 CSB(`UI/CsbFile/icon/Fx_Item_*_Myth_*.csb` 등). 클라이언트 공통 아이콘
+  설정 루틴(0x00C381A0)이 슬롯 Sprite에 CSB를 붙이고 `timeline.play("normal", true)`(0x00C386B1) — 아이콘 선택 문서의
+  policy_source에 이미 기록된 근거.
+
+### 등급별 아이템 수 (TestItem=false)
+
+| 등급 | 장비 | 전체 | CSB 애니메이션 아이콘(장비 / 전체) | 바닥 이펙트 |
+| --- | ---: | ---: | ---: | --- |
+| 일반 | 406 | 6,291 | 0 / 1 | 원본 없음 |
+| 고급 | 338 | 1,060 | 0 / 0 | 원본 없음 |
+| 희귀 | 714 | 2,344 | 0 / 0 | 23195 |
+| 영웅 | 407 | 2,241 | 0 / 0 | 23197 |
+| 전설 | 411 | 1,781 | 0 / 0 | 23200 |
+| 신화 | 107 | 325 | 104 / 206 | 23203 |
+| 유일 | 24 | 60 | 24 / 50 | 23206 |
+| 특수(BM) | 547 | 16,295 | 0 / 205 | 원본 없음 |
+| 이벤트 | 0 | 1 | 0 / 0 | 원본 없음 |
+
+CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3종은 원본이 정지 PNG 아이콘).
+
+### 연결 (실제 Main 확인, 로컬 스크린샷 — 커밋 안 함)
+
+- **신화·유일 CSB 아이콘이 원본 인벤토리에서 안 돌던 원인**: 원본 인벤토리 슬롯(`Common_Slot.csb` Sp_IconSample)이 CSB를 받으려면
+  선택 문서에 슬롯별 `native_registrations`가 있어야 했는데, 문서는 공통 아이콘 설정 근거만 담고 있어 "registration pending"으로
+  거부됐다. 그 결과 신화 아이템 하나만 있어도 **원본 인벤토리 전체가 TWILIGHT 가방으로 되돌아갔다**(수정 전 스크린샷).
+  수정: 슬롯 Sprite가 원본 UI 장면에 선언되어 있고(기존 PNG 아이콘이 들어가는 그 노드) 선택 문서의 policy_source가 공통 아이콘
+  설정 근거를 담은 경우, 그 근거로 등록을 만든다(맞춤·크기·오프셋 추가 없음, clip `normal` 반복은 문서 값 그대로).
+- **바닥 빛기둥**: 원본 523 아이템의 TWILIGHT 자체 그림(원기둥·입자·바닥 원) 대신 위 표의 원본 스프라이트를 재생. 일반·고급·특수·
+  이벤트는 원본에 이펙트가 없어 아무것도 그리지 않는다.
+- **바닥 이름 라벨**: 원본 아이템 이름(IdentifiedDescID/DescID, 내부 식별 접미사 "· 원본#ID" 없이)을 원본 등급 색으로 표시.
+- **이름 색**: 가방 상세·이름 힌트·줍기 안내·RenewalTheme.grade(상점·보상 등 32곳)가 위 ColorTable 색을 쓴다. 원본 표가
+  설치되지 않은 경우에만 기존 TWILIGHT 팔레트.
+- **바닥 몸체(ItemClass.SpriteID)**: 장비 2,907종 중 정적 그림 2,839종(기존 연결). 이번에 정적 그림이 없고 SPR이 action 3을
+  선언한 몸체(가이아의 격노 14440, 블레이드 78xx 등 24종)를 그 action 3으로 재생.
+
+### 표·리소스에 없어 남긴 것
+
+- 바닥 몸체 44종: action 0 `fly`만 있는 화살·스팅(66·2989, 14종)은 비행 동작이라 바닥 역할이 아님; 원본 클라이언트에 파일이 없는
+  멤버 22종(2910 dark claw·17 gem 등); 원본 선언이 dummy인 8종. 비워 두고 "원본 지면 표시 대기".
+- 등급 슬롯 테두리: `Common_Slot_Grade.csb`(Item_Common·Rare·Unique·Legend·Epic·Myth·BM 노드, 같은 Com_Img_SlotGrade 그림에 노드
+  색만 다름)가 있지만 인벤토리 슬롯 `Common_Slot.csb`는 이 장면을 포함하지 않고, 어떤 화면이 어떤 노드를 켜는지 표에 없다.
+  또 유일(Grade7)용 노드가 없다. 연결하지 않음.
+- 바닥 이름 라벨의 글꼴 크기·외곽선·위치, 강화 수치 "+N " 접두 규칙은 원본 표에 없어 TWILIGHT 값.
+- 빛기둥 반복: 은행 계약상 loop는 호출자 정책 — 위의 해석(바닥에 있는 동안 breath 반복).
+
 ## 3. 스킬북 (BuffCardDrawer 2,244종)
 
 | 묶음 | 수 | 상태 |
