@@ -68,6 +68,10 @@ var _drag: bool=false
 var _parent: WeakRef
 ## The 미션 tab page, or null when its original members are not in the pack.
 var _routine_page: RefCounted
+var _refresh_pending: bool=false
+var _refresh_generation: int=0
+var _refresh_tree: WeakRef
+var _refresh_callback: Callable
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in [ROOT,TAB_MAIN,ROW_REWARD,ROW_PROGRESS,ROW_COMPLETE,SLOT_SET]:
@@ -83,15 +87,19 @@ func is_open() -> bool:
 
 func open(parent: Node, world: Node, claim: Callable) -> Dictionary:
 	if not is_instance_valid(parent) or not is_instance_valid(world):return _fail("source_quest_window_host_unavailable")
+	_cancel_pending_refresh()
 	_parent=weakref(parent)
 	_world=weakref(world)
 	_claim=claim
 	return _stage()
 
 func refresh() -> Dictionary:
-	return _stage() if is_open() else {"ok":true,"handled":false}
+	if not is_open():return {"ok":true,"handled":false}
+	if _refresh_pending:return {"ok":true,"handled":true,"member":ROOT,"category":_category,"rows":_row_scenes.size(),"selected_id":_selected_id}
+	return _stage()
 
 func close() -> void:
+	_cancel_pending_refresh()
 	var previous: Node2D=_scene
 	_scene=null
 	_page=null
@@ -115,7 +123,8 @@ func _rows() -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
 	var waiting: Array[Dictionary]=[]
 	var done: Array[Dictionary]=[]
-	for quest: Dictionary in service.entries(int(world.get("level")),world.get("inventory")):
+	var offered: Array=service.entries_for_category(int(world.get("level")),world.get("inventory"),_category) if service.has_method("entries_for_category") else service.entries(int(world.get("level")),world.get("inventory"))
+	for quest: Dictionary in offered:
 		if not quest.has("source_id") or str(quest.get("category",""))!=_category:continue
 		if bool(quest.get("completed",false)):done.append(quest)
 		elif _receivable(quest):ready.append(quest)
@@ -322,11 +331,13 @@ static func _receivable(quest: Dictionary) -> bool:
 	return int(quest.get("progress",0))>=count
 
 func _select_quest(id: String) -> Dictionary:
+	if id==_selected_id:return {"ok":true,"selected_id":id,"already_selected":true}
 	_selected_id=id
-	_stage()
+	_request_refresh()
 	return {"ok":true,"selected_id":id}
 
 func _select_category(category: String) -> Dictionary:
+	_cancel_pending_refresh()
 	_category=category
 	_selected_id=""
 	_scroll=0.0
@@ -336,8 +347,35 @@ func _select_category(category: String) -> Dictionary:
 func _receive(id: String) -> Dictionary:
 	_selected_id=id
 	if _claim.is_valid():_claim.call(id)
-	_stage()
+	_request_refresh()
 	return {"ok":true,"emitted":true,"quest_id":id}
+
+func _request_refresh() -> void:
+	# Input bursts and the world's deferred claim refresh need only one full
+	# scene replacement before drawing. Claims themselves still run at once.
+	if not is_open() or not _scene.is_inside_tree() or _refresh_pending:return
+	_refresh_pending=true
+	# A deferred HUD refresh may be queued after this selection callback.
+	# Wait until the next process frame so both queue orders share one rebuild.
+	var tree: SceneTree=_scene.get_tree()
+	_refresh_tree=weakref(tree)
+	_refresh_callback=Callable(self,"_flush_refresh").bind(_refresh_generation)
+	tree.process_frame.connect(_refresh_callback,CONNECT_ONE_SHOT)
+
+func _flush_refresh(generation: int) -> void:
+	if generation!=_refresh_generation:return
+	_refresh_pending=false
+	_refresh_tree=null
+	_refresh_callback=Callable()
+	if is_open():_stage()
+
+func _cancel_pending_refresh() -> void:
+	var tree: SceneTree=_refresh_tree.get_ref() as SceneTree if _refresh_tree!=null else null
+	if tree!=null and _refresh_callback.is_valid() and tree.process_frame.is_connected(_refresh_callback):tree.process_frame.disconnect(_refresh_callback)
+	_refresh_tree=null
+	_refresh_callback=Callable()
+	_refresh_generation+=1
+	_refresh_pending=false
 
 func _close_requested() -> Dictionary:
 	close()

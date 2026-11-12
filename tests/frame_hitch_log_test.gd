@@ -37,6 +37,10 @@ func _run() -> void:
 	_section("monsters", 40000)
 	_section("monsters", 10000)
 	_section("hud", 500)
+	HITCH.detail("spawn.setup", HITCH.now() - 120000)
+	HITCH.detail("spawn.setup", HITCH.now() - 30000)
+	HITCH.count("sp2.disk_miss")
+	HITCH.count("sp2.layer_validate", 8)
 	HITCH.backdate_frame_for_test(300000)
 	HITCH.frame("aden_world")
 	var summary: Dictionary = HITCH.summary()
@@ -44,6 +48,9 @@ func _run() -> void:
 	var worst: Dictionary = summary.worst[0]
 	check(int(worst.ms) >= 300 and worst.map == "aden_world", "the frame time and map are kept")
 	check(worst.sections[0] == ["quests", 180] and worst.sections.has(["monsters", 50]), "sections are summed and sorted")
+	var detail: Array = worst.get("details", [])[0]
+	check(detail[0] == "spawn.setup" and int(detail[1]) >= 150 and int(detail[1]) <= 155 and detail[2] == 2 and int(detail[3]) >= 120 and int(detail[3]) <= 125, "inclusive detail keeps total, calls and longest single call")
+	check(worst.get("counters", {}) == {"sp2.disk_miss":1, "sp2.layer_validate":8}, "operation counts belong to the recorded frame")
 	var ordered: bool = true
 	for index: int in range(1, worst.sections.size()):
 		if int(worst.sections[index - 1][1]) < int(worst.sections[index][1]): ordered = false
@@ -57,6 +64,7 @@ func _run() -> void:
 	HITCH.backdate_frame_for_test(150000)
 	HITCH.frame("aden_world")
 	check(HITCH.summary().worst[1].sections[0][0] == "other", "a new frame starts with no sections")
+	check(not HITCH.summary().worst[1].has("details") and not HITCH.summary().worst[1].has("counters"), "details and counts reset with sections every frame")
 	# add_self excludes nested sections.
 	var started: int = HITCH.now() - 100000
 	var nested: int = HITCH.nested()
@@ -100,9 +108,15 @@ func _run() -> void:
 	# Disabled: nothing is measured.
 	HITCH.enabled = false
 	_section("quests", 500000)
+	HITCH.detail("disabled", HITCH.now() - 500000)
+	HITCH.count("disabled")
 	HITCH.frame("off")
 	check(HITCH.summary().hitches == 0, "disabled records nothing")
 	HITCH.enabled = true
+	HITCH.frame("enabled")
+	HITCH.backdate_frame_for_test(200000)
+	HITCH.frame("enabled")
+	check(not HITCH.summary().worst[0].has("details") and not HITCH.summary().worst[0].has("counters"), "disabled detail/count calls leave no pending data")
 	_clean()
 	print("FRAME_HITCH_LOG_RESULT " + JSON.stringify({"checks":checks, "failures":failures}))
 	quit(0 if failures.is_empty() else 1)
