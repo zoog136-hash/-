@@ -17,6 +17,23 @@ static func whole(value: Variant) -> Variant:
 static func label(id: Variant) -> String:
 	if not integer(id) or int(id)<=0:return ""
 	return str(SOURCE.row("DescData_Korean",int(id)).get("Description","")).strip_edges()
+## SpecialResistance / HitSpecialResistance on equipment: application type
+## SpecialResistanceType with the status as target, unit Percentage shown
+## through its UIUnit Denominator (50000 -> 5). The statuses TWILIGHT has
+## (stun/hold/fear/poison/silence) feed the existing *_resistance/_accuracy
+## record fields; Ice/Lapidification/Sleep/Dark etc. stay unhandled.
+const STATUS_BONUS={"SpecialResistance":"_resistance","HitSpecialResistance":"_accuracy"}
+const STATUS_PREFIX={"Stun":"stun","Hold":"hold","Fear":"fear","Poison":"poison","Silence":"silence"}
+static func status_field(row: Dictionary) -> Dictionary:
+	var bonus: Dictionary=row.get("bonus",{})
+	if row.get("IsPossession")!=false or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or not integer(bonus.get("BonusApplicationTypeID")) or not integer(bonus.get("BonusApplicationTargetID")):return {}
+	if str(SOURCE.row("BonusApplicationType",int(bonus.BonusApplicationTypeID)).get("Name",""))!="SpecialResistanceType":return {}
+	var type: String=str(SOURCE.row("SpecialResistanceType",int(bonus.BonusApplicationTargetID)).get("Name",""))
+	if not STATUS_PREFIX.has(type):return {}
+	var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return {}
+	return {"field":STATUS_PREFIX[type]+STATUS_BONUS[str(row.bonus_type.Name)],"value":int(bonus.Value)/int(display[0].Denominator),"type":type,"denominator":int(display[0].Denominator)}
+
 static func direct(row: Dictionary) -> bool:
 	return row.get("IsPossession")==false and row.get("bonus",{}).get("BonusApplicationTypeID")==0 and row.get("bonus",{}).get("BonusApplicationTargetID")==0
 static func values(rows: Array,names: Array) -> Dictionary:
@@ -150,6 +167,11 @@ static func record(definition: Dictionary) -> Dictionary:
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
 	for index: int in range(rows.size()):
 		var row: Dictionary=rows[index];var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var unit: String=str(row.get("unit",{}).get("Name",""));var amount: Variant=row.get("bonus",{}).get("Value")
+		if equipment and name_value in STATUS_BONUS and unit=="Percentage":
+			var status: Dictionary=status_field(row)
+			if not status.is_empty():
+				out[status.field]=int(out.get(status.field,0))+int(status.value);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":status.field,"value":status.value,"source_special_resistance_type":status.type,"source_denominator":status.denominator})
+			continue
 		if not direct(row) or not integer(amount):continue
 		if equipment and unit=="Value" and FLAT.has(name_value):
 			var field: String=FLAT[name_value];out[field]=int(out.get(field,0))+int(amount);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":amount})
