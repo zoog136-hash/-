@@ -87,7 +87,7 @@ func policies() -> void:
 	COMPOSITOR.screen_copy_available = false
 	check(COMPOSITOR.style({"kind":"shadow","source_attributes":["128"]}, ["32768"], false, "compatible").is_empty(), "without a verified screen copy (Android) the previous blend policy is kept")
 	COMPOSITOR.screen_copy_available = copy_was
-	check(COMPOSITOR.screen_copy_available == not OS.has_feature("android"), "screen copy is only assumed off Android")
+	check(COMPOSITOR.screen_copy_available, "kernel tests explicitly enable the capability independently of platform")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["128"], false, "compatible", true).get("flags",-1) == 129,"own128 shadow retains effective129")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["128"], false, "compatible").is_empty(),"unverified raw128 does not unlock129")
 	check(COMPOSITOR.style({"kind":"shadow"}, ["8"], true, "compatible", true).is_empty(),"unresolved parent cannot unlock9")
@@ -402,6 +402,9 @@ func render_root_stretch() -> void:
 	root.content_scale_aspect = previous_aspect
 
 func run() -> void:
+	var default_copy: bool = COMPOSITOR.screen_copy_available
+	check(default_copy == not OS.has_feature("android"),"platform bootstrap default is retained")
+	COMPOSITOR.screen_copy_available = true
 	arithmetic()
 	policies()
 	await texture_and_reset()
@@ -409,5 +412,6 @@ func run() -> void:
 		await render_fixture()
 		await render_actor_stack()
 		await render_root_stretch()
+	COMPOSITOR.screen_copy_available = default_copy
 	print("SOURCE_SP2_COMPOSITOR " + JSON.stringify({"checks":checks,"render_checks":render_checks,"errors":errors,"failures":errors,"scope":"P02 integer kernels and narrow P13 flags; synthetic regression inputs; not native523 or Android equivalence"}))
 	quit(0 if errors.is_empty() else 1)

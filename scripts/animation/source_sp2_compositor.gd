@@ -69,7 +69,11 @@ static func attribute_input(layer: Dictionary) -> Dictionary:
 ## Three simple recovered cases plus narrowly verified shadow9/129. Other
 ## combinations may use unverified early returns, coefficients or effect maps.
 static func style(layer: Dictionary, body_attributes: Array, body_unresolved: bool, mode: String, body_projection_verified: bool = false) -> Dictionary:
-	if mode != "compatible" or not screen_copy_available: return {}
+	if not screen_copy_available: return {}
+	return _native_style(layer,body_attributes,body_unresolved,mode,body_projection_verified)
+
+static func _native_style(layer: Dictionary, body_attributes: Array, body_unresolved: bool, mode: String, body_projection_verified: bool) -> Dictionary:
+	if mode != "compatible": return {}
 	var flags: int = -1
 	if layer.get("kind", "") == "shadow":
 		if body_unresolved: return {}
@@ -92,6 +96,18 @@ static func style(layer: Dictionary, body_attributes: Array, body_unresolved: bo
 	var selected: Dictionary = {"operation":operation,"flags":flags,"origin":ORIGIN}
 	if flags in [9,129]: selected["modifier_context"] = "shadow_null_color_empty_effect_map;dynamic_state_unverified"
 	return selected
+
+## Copy-free compatibility for the cases the old attr-only fallback loses.
+## Average is alpha0.5 MIX (without RGB565 truncation); screen9 uses the existing
+## host ADD approximation. Other attributes retain their existing POLICY values.
+## Shadow draw flags come from the parent, never the shadow file's own104.
+static func fallback_style(layer: Dictionary, body_attributes: Array, body_unresolved: bool, mode: String, body_projection_verified: bool = false) -> Dictionary:
+	if screen_copy_available: return {}
+	var selected: Dictionary = _native_style(layer,body_attributes,body_unresolved,mode,body_projection_verified)
+	if selected.is_empty() or int(selected.flags) not in [1,9,129]: return {}
+	return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_ADD if selected.flags == 9 else CanvasItemMaterial.BLEND_MODE_MIX,
+		"alpha":1.0 if selected.flags == 9 else 0.5,"flags":selected.flags,
+		"origin":"copy_free_parent_flags_host_approximation_RGB565_and_Android_pixels_unverified"}
 
 ## Independent integer oracle for diagnostics; no source texture is rewritten.
 static func blend565(destination: int, source: int, operation: int) -> int:
