@@ -132,7 +132,10 @@ func currency_for(merchant_id: int) -> int:
 		ids[int(obj.currency_ids[0])]=true
 	return int(ids.keys()[0]) if ids.size()==1 else 0
 
-func context(merchant_id: int, goods_id: int) -> Dictionary:
+## world (optional): a spawn limited to an original ServerLimitSet opens only
+## when that set names the game's server profile (current523_server_profile:
+## offline KR world 1), e.g. 기란 혈맹 상인 린 (merchant 91, set 762).
+func context(merchant_id: int, goods_id: int, world: Variant = null) -> Dictionary:
 	if not problem.is_empty():return {"ok":false,"reason":problem}
 	if loaded_sha256.is_empty():return {"ok":false,"reason":"검증된 NPC 원본 팩이 필요합니다"}
 	var rule: Dictionary=rule_for(merchant_id)
@@ -144,10 +147,16 @@ func context(merchant_id: int, goods_id: int) -> Dictionary:
 		if not obj.get("object_defined",false) or obj.sell_action_row_ids.is_empty() or not _attributes_supported(obj.attributes,rule):return {"ok":false,"reason":"NPC 객체의 동작·별도 권한 조건 확인 필요"}
 		for spawn: Dictionary in obj.spawns:
 			if int(spawn.ID)!=int(rule.spawn_id):continue
-			if spawn.SpawnManually or int(spawn.ServerLimitSetID)!=0:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
+			if spawn.SpawnManually:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
+			var server_note: String=""
+			if int(spawn.ServerLimitSetID)!=0:
+				if world==null:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
+				var allowed: Dictionary=preload("res://scripts/loot/current523_server_profile.gd").allows(world,spawn.ServerLimitSetID)
+				if not allowed.get("ok",false):return {"ok":false,"reason":str(allowed.get("reason","NPC 서버 스폰 조건 미충족"))}
+				server_note=" · 원본 서버 세트 %d (%s %d서버)" % [int(spawn.ServerLimitSetID),str(allowed.profile.ServiceRegionCode),int(allowed.profile.WorldNo)]
 			var currency: int=currency_for(merchant_id)
 			if currency<1:return {"ok":false,"reason":"NPC 원본 재화 연결이 유일하지 않습니다"}
-			return {"ok":true,"currency_id":currency,"label":str(rule.label),"origin":"TWILIGHT 오프라인 가정 · 0시간/0날짜 상시 · 원격 목록 거래"+(" · "+str(rule.access_note) if rule.has("access_note") else ""),"minimum_level":int(rule.get("minimum_level",0)),"rules_sha256":rule_hash(merchant_id),"npc_pack_sha256":loaded_sha256}
+			return {"ok":true,"currency_id":currency,"label":str(rule.label),"origin":"TWILIGHT 오프라인 가정 · 0시간/0날짜 상시 · 원격 목록 거래"+server_note+(" · "+str(rule.access_note) if rule.has("access_note") else ""),"minimum_level":int(rule.get("minimum_level",0)),"rules_sha256":rule_hash(merchant_id),"npc_pack_sha256":loaded_sha256}
 	return {"ok":false,"reason":"설정된 NPC 객체·스폰을 원본에서 확인할 수 없습니다"}
 
 func _attributes_supported(attributes: Array, rule: Dictionary) -> bool:
