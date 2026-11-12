@@ -312,6 +312,17 @@ func _show_installer() -> void:
 	_layer.add_child(_picker)
 	_status.text = _waiting_text()
 
+## Opens the installer from the settings screen so a newer add-on ZIP
+## (for example a rebuilt twilight523-addon-ui.zip) can replace the installed
+## one. Only possible once the pack itself is installed.
+func open_addon_installer() -> bool:
+	if not configured or _layer != null: return false
+	_show_installer()
+	_later.text = "닫기"
+	_later.visible = true
+	_status.text = "새 추가 리소스(twilight523-addon-ui.zip 등)를 선택하세요.\n설치한 뒤 앱을 다시 실행하면 적용됩니다."
+	return true
+
 func _close_installer() -> void:
 	if _layer != null: _layer.queue_free()
 	_layer = null

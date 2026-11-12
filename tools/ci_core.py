@@ -26,6 +26,7 @@ CHECKS = [
     ('source523_texture_cache_test', []),
     ('frame_hot_paths_test', []),
     ('frame_hitch_log_test', []),
+    ('sp2_parse_cache_test', []),
     ('bounded_weak_lru_test', []),
     ('static_cache_compaction_test', []),
     ('source523_image_pack_texture_cache_test', []),
@@ -118,6 +119,7 @@ CHECKS = [
     ('zip_table_rows_test', []),
     ('source523_prebake_test', []),
     ('domination_stone_test', []),
+    ('routine523_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -376,6 +378,7 @@ def main():
             marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
                       'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',
+                      'sp2_parse_cache_test':'SP2_PARSE_CACHE_RESULT',
                       'frame_hitch_log_test':'FRAME_HITCH_LOG_RESULT',
                       'frame_hot_paths_test':'FRAME_HOT_PATHS_RESULT',
                       'bounded_weak_lru_test':'BOUNDED_WEAK_LRU_RESULT',
@@ -469,7 +472,8 @@ def main():
                       'current523_sp2_bounds_rule_test':'CURRENT523_SP2_BOUNDS_RULE_RESULT',
                       'zip_table_rows_test':'ZIP_TABLE_ROWS_RESULT',
                       'source523_prebake_test':'SOURCE523_PREBAKE_RESULT',
-                      'domination_stone_test':'DOMINATION_STONE_RESULT'}[name]
+                      'domination_stone_test':'DOMINATION_STONE_RESULT',
+                      'routine523_test':'ROUTINE523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

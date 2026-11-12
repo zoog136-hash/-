@@ -4,6 +4,7 @@ signal progress(done: int,total: int)
 const BASE = preload("res://scripts/lineagem_base508.gd")
 const SOURCE = preload("res://scripts/resources/current523_pack.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const PARSE_CACHE = preload("res://scripts/resources/sp2_parse_cache.gd")
 const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selection.gd")
 const STORE = "user://current523_identity_versions"
 const SETTINGS = "user://current523_identity_settings.json"
@@ -200,7 +201,7 @@ static func render_layer(layer: Dictionary,display_options: Dictionary) -> Dicti
 	if not _parsed.has(member):
 		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 		if bytes.size() != int(spec.bytes): return fail("정체 프레임 크기가 다릅니다.")
-		var parsed: Dictionary = DECODER.parse(bytes)
+		var parsed: Dictionary = PARSE_CACHE.parse(bytes)
 		if not parsed.ok: return parsed
 		# At most three parsed source files, also bounded by 32MiB decompressed bytes.
 		var budget: int = parsed.body.size()

@@ -2,6 +2,7 @@ extends RefCounted
 ## Explicit user estimates. Raw source bytes and base508 consumers stay separate.
 const PACK = preload("res://scripts/resources/current523_pack.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
+const PARSE_CACHE = preload("res://scripts/resources/sp2_parse_cache.gd")
 const SETTINGS = "user://current523_estimated_playback.json"
 const DEFAULTS = {"enabled":false,"member":"Sprite/85-0.sp2","group_bit":0,"fps":12.0,"alpha_policy":"opaque_samples","rgb_policy":"bit_replication","blend":"mix","opacity":1.0,"zoom":1.0,"loop":true,"world_enabled":false,"world_target":"sample","world_x":96.0,"world_y":0.0}
 static var revision: int = 0
@@ -55,7 +56,7 @@ static func load_member(member: String) -> Dictionary:
 	var bytes: PackedByteArray = file.get_buffer(length)
 	file.close()
 	if PACK.digest(bytes) != row.sha256: return _error("523 원문 해시가 다릅니다. 추정 재생을 중단합니다.")
-	var parsed: Dictionary = DECODER.parse(bytes)
+	var parsed: Dictionary = PARSE_CACHE.parse(bytes)
 	if not bool(parsed.get("ok", false)): return _error(str(parsed.get("error", "SP2 구조를 읽지 못했습니다.")))
 	_cached_member = member
 	_parsed = parsed

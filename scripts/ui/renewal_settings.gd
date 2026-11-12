@@ -56,6 +56,14 @@ func configure(controller: Node) -> void:
 	stack.add_child(UI.section("스킬 아이콘: Lorc · Delapouite / Game-icons.net (CC BY 3.0)", 10))
 	stack.add_child(UI.section("게임 화면 · 오디오 · 저장",12))
 	stack.add_child(preload("res://scripts/ui/lineagem_pack_settings.gd").new())
+	var source_pack: Node = (Engine.get_main_loop() as SceneTree).root.get_node_or_null("Source523Pack")
+	if source_pack != null and bool(source_pack.get("configured")):
+		var addon_button := Button.new()
+		addon_button.name = "InstallSourceAddon"
+		addon_button.text = "추가 리소스(.zip) 설치·업데이트"
+		addon_button.custom_minimum_size = Vector2(0,48)
+		addon_button.pressed.connect(func() -> void: source_pack.call("open_addon_installer"))
+		stack.add_child(addon_button)
 	var aden_review := preload("res://scripts/ui/current523_aden_review_settings.gd").new()
 	stack.add_child(aden_review)
 	aden_review.configure(hud.get_parent())
