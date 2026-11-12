@@ -221,7 +221,7 @@ func on_normal_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 			if str(entry.type.Name)=="InvokeOption" and int(entry.link.MinSpellLevel)==0 and int(entry.bonus.BonusApplicationTypeID)==10 and int(entry.bonus.BonusApplicationTargetID)==19153:chances.append(float(entry.bonus.Value)/(source().recovery_rules.percent_denominator*100))
 	if chances.size()!=1:return
 	var bridge: Dictionary=source().bindings.material_inventory_keys.get(str(int(option.MaterialTypeID)),{})
-	if bridge.is_empty():return
+	if bridge.is_empty() or source().material_holds.has(str(int(option.MaterialTypeID))):return
 	var skill: Dictionary=service.catalog.resolve(record)
 	skill.merge({"mode":"attack","shape":"self_circle","attack_type":"melee","element":"physical","items":{str(bridge.inventory_key):int(option.MaterialAmount)},"targets":6,"stats":{}},true)
 	skill.source523.target_kind="Enemy";skill.source523.applied=["materials","reviewed_execution"]
