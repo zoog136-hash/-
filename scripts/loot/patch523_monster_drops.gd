@@ -242,8 +242,18 @@ static func transient_definition(item_id: String) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
 	if data().is_empty(): return {}
 	if _definition_ids.has(item_id): return definition_id(item_id)
+	var scope: CURRENT_DTO.RegistrationScope = CURRENT_DTO.registration_profile_scope()
+	var started: int = Time.get_ticks_usec() if scope != null else 0
 	var detail: Dictionary = _describe_item(int(item_id))
-	return _current_raw_definition(detail) if not detail.is_empty() else {}
+	if scope != null:
+		scope.describe_us += Time.get_ticks_usec() - started
+		scope.describe_calls += 1
+	started = Time.get_ticks_usec() if scope != null else 0
+	var definition: Dictionary = _current_raw_definition(detail) if not detail.is_empty() else {}
+	if scope != null:
+		scope.dto_us += Time.get_ticks_usec() - started
+		scope.dto_calls += int(not detail.is_empty())
+	return definition
 
 ## Resident-memory diagnostics for the bounded cache.
 static func definition_cache_state() -> Dictionary:
@@ -260,16 +270,18 @@ static func _document_definition(document: Dictionary, item_id: String) -> Dicti
 static func _describe_item(item_id: int) -> Dictionary:
 	# ItemData retains a legacy helper preload of this module. Defer loading
 	# until this actual read path; a static preload here would form a cycle.
-	var path: String = "res://scripts/resources/current523_item_data.gd"
-	if not ResourceLoader.exists(path): return {}
-	var reader: Script = load(path) as Script
-	if reader == null: return {}
-	# ItemData.describe is the published static reader API. Match the script's
-	# own methods before calling it; Resource instance methods are not that ABI.
-	var has_describe: bool = false
-	for method: Dictionary in reader.get_script_method_list():
-		if method.get("name") == "describe": has_describe = true; break
-	if not has_describe: return {}
+	var reader: Script = CURRENT_DTO.registration_item_reader()
+	if reader == null:
+		var path: String = "res://scripts/resources/current523_item_data.gd"
+		if not ResourceLoader.exists(path): return {}
+		reader = load(path) as Script
+		if reader == null: return {}
+		# ItemData.describe is the published static reader API. Match the script's
+		# own methods before calling it; Resource instance methods are not that ABI.
+		var has_describe: bool = false
+		for method: Dictionary in reader.get_script_method_list():
+			if method.get("name") == "describe": has_describe = true; break
+		if not has_describe: return {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
 	return detail

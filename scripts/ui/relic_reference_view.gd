@@ -71,7 +71,7 @@ func configure(controller: Node) -> void:
 	header.add_child(spacer)
 	var shop: Button=UI.button("상점 바로가기",func() -> void:hud.open_shop(),Vector2(128,32))
 	shop.name="RelicShopShortcut"
-	shop.icon=load("res://assets/ui/shop.png")
+	if ResourceLoader.exists("res://assets/ui/shop.png"): shop.icon=load("res://assets/ui/shop.png")
 	header.add_child(shop)
 	compact_tabs=HBoxContainer.new()
 	compact_tabs.name="RelicCompactTabs"

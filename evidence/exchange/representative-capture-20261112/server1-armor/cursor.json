@@ -1,0 +1,34 @@
+{
+  "current_scope": "server:1",
+  "current_catalog_filters": {
+    "category1": 11
+  },
+  "stock_queue_size": 462,
+  "stock_queue_position": 73,
+  "current_stock": [
+    1,
+    513,
+    0
+  ],
+  "last_saved_url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/513/stock?serverId=1&enchantLevel=0&blessedType=1&size=10&page=1",
+  "observation_mode": "live_non_atomic",
+  "blessed_type_filter": 1,
+  "current_stock_observation": {
+    "query": "https://api-goats.plaync.com/lms/v2.0/price/search/item/386/stock?serverId=1&enchantLevel=6&blessedType=1&size=10",
+    "observed_rows": 1,
+    "pages": [
+      {
+        "body_file": "6a450f3319f0cc21ee85c107dcaf5d1702b120581fbc7c9a794684041203ee33.json",
+        "sha256": "c13ee439952e5e945becf34e3ca9d05f8e122aceee6e3d80690ea0f19786ee4e",
+        "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/386/stock?serverId=1&enchantLevel=6&blessedType=1&size=10&page=1"
+      }
+    ],
+    "distinct_listings_verified": false,
+    "blessed_type_filter": 1,
+    "page_highwater": 1
+  },
+  "schema": "twilight.exchange-observations.v1",
+  "coverage_complete": false,
+  "requests_this_run": 14,
+  "updated_at_utc": "2026-11-12T06:24:12.761301+00:00"
+}

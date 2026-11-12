@@ -1,0 +1,102 @@
+{
+  "status": "DRAFT_PARTIAL_IMPLEMENTATION_NOT_ALL_SERVER_CAPTURE",
+  "base_main": "8634f931b6b749865c52dd6437b2d18d5f91c174",
+  "branch": "feature/frozen-exchange-snapshot-20261112",
+  "production_data": {
+    "status": "not_captured",
+    "listings": 0,
+    "synthetic_production_listings": 0
+  },
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "checks": {
+    "focused_aggregate": "3/3 PASS, no skipped or unrun selected checks",
+    "synthetic_exchange_and_ui_contract_checks": 38,
+    "actual_main_absent_capture_checks": 11,
+    "existing_actual_main_save_checks": 33,
+    "python_importer_probe_tests": 20,
+    "ci_stage_tool_tests": 10,
+    "no_legacy_resource_unit_tests": 2,
+    "no_legacy_resource_actual_check": "PASS tracked assets=20",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "limits": [
+    "All-server current listing collection not performed; official raw responses are partial probes only.",
+    "Original current523 definition/visual pack not installed: actual Main tests use supported absent-pack path; no original-resource or map-visual equivalence claim.",
+    "No enhanced/refined/blessed/attribute listing purchase bridge. Such listings stay purchase-locked.",
+    "Full historical feature suite and full remote required CI not claimed passed by these focused checks.",
+    "No actual OpenGL capture: xvfb-run/DISPLAY unavailable; Android device testing not run.",
+    "Focused Godot tests are provided with reproducible commands, not newly registered in automatic core CI; the existing core test list is unchanged."
+  ],
+  "resolved_diagnostics": [
+    "First direct test attempt lacked imported Godot class metadata and sparse asset preloads; imported actual committed resources before rechecking.",
+    "Godot JSON numbers are floats; structural reset dictionary equality replaced by field validation.",
+    "Read-only review found raw/hash reread race and excluded/period-item guards; corrected and final focused suite rerun.",
+    "A first aggregate treated optional frame_post_draw capture code as requiring Xvfb; optional capture code removed, then final selected checks passed."
+  ],
+  "source_files": [
+    {
+      "path": "data/exchange/frozen_snapshot.json",
+      "bytes": 380,
+      "sha256": "fd29a6a8ac79a8b7da1c755ba9b07f80c02b5e22dab47007bbd2cf386481f44e"
+    },
+    {
+      "path": "scripts/exchange/frozen_catalog.gd",
+      "bytes": 5816,
+      "sha256": "b207a74fff1749b952c9b35f08e7c87105cb36dea6af5c3f33f1bf0ec2cd49f0"
+    },
+    {
+      "path": "scripts/exchange/frozen_exchange.gd",
+      "bytes": 7500,
+      "sha256": "2d29629bd510bd170f9f2d747389c8e5dec82073e25b5877c40ff5973a795045"
+    },
+    {
+      "path": "scripts/shop/source523_shop_runtime.gd",
+      "bytes": 56015,
+      "sha256": "1d5659cb55738983e9a4b47bcbb75fd832491fbfb63e955912bcb29baa1cdb5d"
+    },
+    {
+      "path": "scripts/ui/frozen_exchange_panel.gd",
+      "bytes": 7455,
+      "sha256": "bba972b447fd9079cd9acb835448899e06536c45ec2858cbf1d05d230cea4d87"
+    },
+    {
+      "path": "scripts/ui/renewal_hud.gd",
+      "bytes": 174960,
+      "sha256": "b10e7c612e6b7a9b0668b4c57e16c0d873eb960dba1dcb4b60ea8213bdf61cfc"
+    },
+    {
+      "path": "tests/frozen_exchange_main_test.gd",
+      "bytes": 2417,
+      "sha256": "a77e3134b140bbddc826d3dd80b632c7b8282dc060a2620ac97399a441e55af4"
+    },
+    {
+      "path": "tests/frozen_exchange_test.gd",
+      "bytes": 16764,
+      "sha256": "5c1569610ab9b0c4efc0e7b9841b98d28d6571533f905aa71f84d1c58146badd"
+    },
+    {
+      "path": "tests/test_exchange_probe.py",
+      "bytes": 3361,
+      "sha256": "9494821a64517a635ed6022d6e410d3bd4a9a6d745828ef8a289316f6dff2ee2"
+    },
+    {
+      "path": "tests/test_frozen_exchange_import.py",
+      "bytes": 10548,
+      "sha256": "14b74b74ea2bc26d74ab963325e6ff6a6e4fb0e8992c4fc378faa603021d1ed4"
+    },
+    {
+      "path": "tools/exchange/import_snapshot.py",
+      "bytes": 8622,
+      "sha256": "5513cd6a9d17db8fe7a4d4c56285f7017cb9d367a0e5fbdad233e97734de83a5"
+    },
+    {
+      "path": "tools/exchange/probe_official.py",
+      "bytes": 6644,
+      "sha256": "37c25c8fd1d780a5628a1b4a87ec16edd46c41ad2603754990822efc86c7a370"
+    }
+  ],
+  "historical_validation_revision": "0da7d2314f29a8f5b14d45b9bd48a524d12b5978",
+  "source_file_hash_scope": "Historical implementation at the recorded revision; resumed source and checks are recorded separately.",
+  "resumed_validation": "docs/exchange/CONTINUATION_20261112.md"
+}

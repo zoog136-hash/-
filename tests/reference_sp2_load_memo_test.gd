@@ -257,12 +257,19 @@ func run() -> void:
 	check(not open(optimized, data).get("ok", true), "changed member size between loads is rejected despite a prior successful memo")
 	write_bytes(data.raw, original)
 	check(open(optimized, data).get("ok", false), "restored member can load after a size-change rejection")
-	# Filesystem mtimes have one-second resolution; this is an actual observed
-	# stamp change, matching the approved size/mtime re-verification policy.
-	await create_timer(1.1).timeout
+	# A SceneTreeTimer advances by frame delta, which can include time before
+	# its creation in this long first frame. Wait for an observed filesystem
+	# stamp change instead, matching the approved size/mtime verification policy.
+	var previous_stamp: int = int(FileAccess.get_modified_time(data.raw))
+	var rewrite_deadline: int = Time.get_ticks_msec() + 5000
 	var changed: PackedByteArray = original.duplicate()
 	changed[changed.size() - 1] = (changed[changed.size() - 1] + 1) % 4
 	write_bytes(data.raw, changed)
+	while int(FileAccess.get_modified_time(data.raw)) == previous_stamp and Time.get_ticks_msec() < rewrite_deadline:
+		await process_frame
+		write_bytes(data.raw, changed)
+	check(int(FileAccess.get_modified_time(data.raw)) != previous_stamp, "same-size rewrite has an observed filesystem stamp change within five wall-clock seconds")
+	check(FileAccess.get_size(data.raw) == original.size(), "stamp-change probe preserves the member size")
 	check(not open(optimized, data).get("ok", true), "same-size member rewrite between loads is re-hashed and rejected")
 	write_bytes(data.raw, original)
 	BANK.forget_verified_members()
