@@ -30,6 +30,8 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	var original_copy: bool = preload("res://scripts/animation/source_sp2_compositor.gd").screen_copy_available
+	preload("res://scripts/animation/source_sp2_compositor.gd").screen_copy_available = true
 	var preview := Preview.new()
 	root.add_child(preview)
 	preview._playback_mode = "compatible"
@@ -97,5 +99,6 @@ func run() -> void:
 	frame.layers[0].source_attribute_projection = {"ok":false}
 	check(inline.advance_reference_source(0,"idle",0) and shadow.material == null,"invalid parent projection does not unlock shadow9")
 	inline.free()
+	preload("res://scripts/animation/source_sp2_compositor.gd").screen_copy_available = original_copy
 	print("SOURCE_ATTACHMENT_RENDER_PROJECTION "+JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

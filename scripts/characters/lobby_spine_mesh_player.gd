@@ -16,17 +16,18 @@ const MAX_COORDINATE := 10000000.0
 const TIME_EPSILON := 0.0001
 const BLENDS := ["normal", "additive", "multiply", "screen"]
 const VERIFIED_GL_HASH := "ed1daf0bf001b61586d9930840f2f1394092c079"
+const SOURCE_BLEND = preload("res://scripts/ui/original_ui/source_blend.gd")
 
 class MeshBackBuffer extends BackBufferCopy:
 	var target: MeshInstance2D
 	var local_bounds := Rect2()
 	func _enter_tree() -> void:
-		copy_mode = COPY_MODE_VIEWPORT
+		copy_mode = COPY_MODE_VIEWPORT if SOURCE_BLEND.screen_copy_available else COPY_MODE_DISABLED
 		if not RenderingServer.frame_pre_draw.is_connected(_sync): RenderingServer.frame_pre_draw.connect(_sync)
 	func _exit_tree() -> void:
 		if RenderingServer.frame_pre_draw.is_connected(_sync): RenderingServer.frame_pre_draw.disconnect(_sync)
 	func _sync() -> void:
-		if not is_instance_valid(target) or not target.is_inside_tree() or not target.is_visible_in_tree() or not local_bounds.has_area():
+		if not SOURCE_BLEND.screen_copy_available or not is_instance_valid(target) or not target.is_inside_tree() or not target.is_visible_in_tree() or not local_bounds.has_area():
 			copy_mode = COPY_MODE_DISABLED
 			return
 		var version: Dictionary = Engine.get_version_info()
@@ -70,6 +71,7 @@ var _clips: Dictionary = {}
 var _setup: Dictionary = {}
 var _pool: Array[Dictionary] = []
 var _shaders: Dictionary = {}
+var _blend_policy_state: int = -1
 var _bounds := Rect2()
 var _has_bounds := false
 var _pma := false
@@ -81,7 +83,11 @@ var _draw_updates := 0
 func _ready() -> void:
 	set_process(_playing)
 
+func _enter_tree() -> void:
+	if not RenderingServer.frame_pre_draw.is_connected(_refresh_blend_policy): RenderingServer.frame_pre_draw.connect(_refresh_blend_policy)
+
 func _exit_tree() -> void:
+	if RenderingServer.frame_pre_draw.is_connected(_refresh_blend_policy): RenderingServer.frame_pre_draw.disconnect(_refresh_blend_policy)
 	stop()
 
 func stop() -> void:
@@ -96,6 +102,7 @@ func clear() -> void:
 		group.queue_free()
 	_pool.clear()
 	_shaders.clear()
+	_blend_policy_state = -1
 	_pages.clear()
 	_clips.clear()
 	_setup.clear()
@@ -316,18 +323,34 @@ func _color(value: Variant) -> Color:
 	return Color(float(value[0]),float(value[1]),float(value[2]),float(value[3]))
 
 func _shader(blend: String) -> Shader:
-	if _shaders.has(blend): return _shaders[blend]
+	var key: String = blend + ":" + str(_pma) + ":" + str(SOURCE_BLEND.screen_copy_available)
+	if _shaders.has(key): return _shaders[key]
 	var source_factor: String = "vec4(1.0)" if _pma else "vec4(source.a)"
 	var destination_factor := "vec4(1.0-source.a)"
 	if blend == "additive": destination_factor = "vec4(1.0)"
 	elif blend == "multiply": source_factor = "destination"
 	elif blend == "screen": source_factor = "vec4(1.0)";destination_factor = "vec4(1.0)-source"
 	var shader := Shader.new()
+	var render_mode := "blend_disabled"
+	var destination_uniform := "uniform sampler2D mesh_destination : hint_screen_texture, repeat_disable, filter_nearest;"
+	var output: String = "vec4 destination = textureLod(mesh_destination, SCREEN_UV, 0.0);\n    COLOR = clamp(source * %s + destination * %s, vec4(0.0), vec4(1.0));" % [source_factor,destination_factor]
+	if not SOURCE_BLEND.screen_copy_available:
+		destination_uniform = ""
+		render_mode = "blend_premul_alpha" if _pma else "blend_mix"
+		output = "COLOR = clamp(source, vec4(0.0), vec4(1.0));"
+		if blend == "additive" or blend == "screen":
+			# Screen has no exact canvas fixed blend: additive is a host approximation.
+			render_mode = "blend_add"
+			# PMA/additive and screen's ONE source factor must not gain another alpha weight.
+			if _pma or blend == "screen": output = "COLOR = vec4(clamp(source.rgb, vec3(0.0), vec3(1.0)), 1.0);"
+		elif blend == "multiply":
+			render_mode = "blend_mul"
+			output = "COLOR = vec4(clamp(source.rgb + vec3(1.0-source.a), vec3(0.0), vec3(1.0)), 1.0);"
 	# Light/dark equation follows the Spine 3.6 two-colour reference. D.a is
 	# the preview's PMA flag, not the source slot's otherwise unused dark alpha.
 	shader.code = """shader_type canvas_item;
-render_mode unshaded, blend_disabled;
-uniform sampler2D mesh_destination : hint_screen_texture, repeat_disable, filter_nearest;
+render_mode unshaded, %s;
+%s
 uniform vec4 mesh_light = vec4(1.0);
 uniform vec4 mesh_dark = vec4(0.0);
 uniform bool mesh_pma = false;
@@ -342,12 +365,23 @@ void fragment() {
     vec4 source;
     source.a = texel.a * light.a;
     source.rgb = ((texel.a - 1.0) * dark_alpha + 1.0 - texel.rgb) * dark + texel.rgb * light.rgb;
-    vec4 destination = textureLod(mesh_destination, SCREEN_UV, 0.0);
-    COLOR = clamp(source * %s + destination * %s, vec4(0.0), vec4(1.0));
+    %s
 }
-""" % [source_factor,destination_factor]
-	_shaders[blend] = shader
+""" % [render_mode,destination_uniform,output]
+	_shaders[key] = shader
 	return shader
+
+func _refresh_blend_policy() -> void:
+	# Also refresh stopped/setup poses when a host changes copy policy.
+	var state: int = int(SOURCE_BLEND.screen_copy_available)
+	if state == _blend_policy_state: return
+	_blend_policy_state = state
+	for entry: Dictionary in _pool:
+		if str(entry.blend).is_empty(): continue
+		var item: MeshInstance2D = entry.item
+		var shader: Shader = _shader(entry.blend)
+		if item.material.shader != shader: item.material.shader = shader
+		entry.copy._sync()
 
 func _new_entry() -> Dictionary:
 	var group := Node2D.new()
@@ -395,6 +429,7 @@ func _apply_pose(pose: Dictionary) -> void:
 		entry.points=batch.points;entry.uvs=batch.uvs;entry.indices=batch.indices;entry.geometry_key=batch.geometry_key
 	_bounds = pose.bounds
 	_has_bounds = pose.has_bounds
+	_refresh_blend_policy()
 	_draw_updates += 1
 
 func play_source_animation(name: String, repeat: bool = false) -> Dictionary:
