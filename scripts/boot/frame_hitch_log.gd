@@ -163,7 +163,15 @@ static func previous_line() -> String:
 	for part: Variant in top.get("sections", []):
 		if part is Array and part.size() == 2 and int(part[1]) > 0 and names.size() < 3:
 			names.append("%s %dms" % [str(LABELS.get(str(part[0]), str(part[0]))), int(part[1])])
-	return "지난 실행 끊김 %d회 · 최대 %dms (%s)" % [int(value.get("hitches", worst.size())), int(top.get("ms", 0)), ", ".join(names)]
+	var line: String = "지난 실행 끊김 %d회 · 최대 %dms (%s)" % [int(value.get("hitches", worst.size())), int(top.get("ms", 0)), ", ".join(names)]
+	# The slowest frame's operation details ([name, total ms, count, max ms]),
+	# so a photo of the loading screen names what inside a section stalled.
+	var details: PackedStringArray = PackedStringArray()
+	for part: Variant in top.get("details", []):
+		if part is Array and part.size() >= 3 and int(part[1]) > 0 and details.size() < 3:
+			details.append("%s %dms×%d" % [str(part[0]), int(part[1]), int(part[2])])
+	if not details.is_empty(): line += " · 세부 " + ", ".join(details)
+	return line
 
 static func reset_for_test(directory: String) -> void:
 	_dir = directory
