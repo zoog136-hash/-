@@ -4,11 +4,13 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 import contextlib
 import io
 import os
 import sys
 import json
+import re
 
 SPEC = importlib.util.spec_from_file_location('ci_core', Path(__file__).parents[1]/'tools/ci_core.py')
 CORE = importlib.util.module_from_spec(SPEC)
@@ -171,10 +173,45 @@ class CoreStageTest(unittest.TestCase):
     def test_missing_shader_preload_fails_before_engine_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
-            (root/'scripts/main.gd').write_text('const SHADER = preload("res://shaders/missing.gdshader")')
-            with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
-                CORE.stage(root,Path(temporary)/'stage')
-            self.assertFalse((Path(temporary)/'stage').exists())
+            for source in [
+                    'const SHADER = preload("res://shaders/missing.gdshader")',
+                    "const SHADER = preload('res://shaders/missing.gdshader')",
+                    'const SHADER = preload(\n  "res://shaders/missing.gdshader"\n)',
+                    "const SHADER = preload (\n  'res://shaders/missing.gdshader'\n)"]:
+                with self.subTest(source=source):
+                    (root/'scripts/main.gd').write_text(source)
+                    with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
+                        CORE.stage(root,Path(temporary)/'stage')
+                    self.assertFalse((Path(temporary)/'stage').exists())
+
+            for call in ['preload(', 'preload \n(\t', 'preload\u2003(\u0085', 'mypreload (']:
+                with self.subTest(call=call):
+                    (root/'scripts/main.gd').write_text('const SHADER = '+call+'"res://shaders/missing.gdshader")')
+                    with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
+                        CORE.stage(root,Path(temporary)/'stage')
+                    self.assertFalse((Path(temporary)/'stage').exists())
+
+    def test_preload_suffix_keeps_existing_unicode_and_boundary_semantics(self):
+        prefixes = ['', 'x', 'preload(', 'preload () ', '\nprior = preload(\"ignored\")\n']
+        suffixes = ['preload(', 'preload ( ', 'preload\n(\t', 'preload\u2003(\u0085',
+                    'preload\x1c(\x1f', 'preload\u200b(', 'preloadx(', 'preload( x',
+                    'preload(( ', 'preload( )', 'pre load(', 'PRELOAD(', 'load(', '']
+        for prefix in prefixes:
+            for suffix in suffixes:
+                source = prefix + suffix + '"res://assets/missing.png"'
+                end = source.index('"res://assets/missing.png"')
+                expected = bool(re.search(r'preload\s*\(\s*$', source[:end]))
+                with self.subTest(prefix=prefix, suffix=suffix):
+                    self.assertEqual(CORE.is_preload_reference(source,end), expected)
+
+    def test_optional_catalog_literals_stay_optional_after_prior_preload(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            catalog='{"note":"preload (", "missing":"res://assets/optional.png"}'
+            (root/'data/live.json').write_text(catalog)
+            result=CORE.stage(root,Path(temporary)/'stage')
+            self.assertIn('assets/optional.png',result['guarded_or_dynamic_literals'])
+            self.assertEqual((Path(temporary)/'stage/data/live.json').read_text(),catalog)
 
     def test_escape_and_existing_project_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -184,6 +221,63 @@ class CoreStageTest(unittest.TestCase):
             existing=Path(temporary)/'existing';existing.mkdir();(existing/'save.json').write_text('keep')
             with self.assertRaises(ValueError):CORE.stage(root,existing)
             self.assertEqual((existing/'save.json').read_text(),'keep')
+
+    def test_spine_mesh_suites_are_staged_and_run_with_exact_completion_markers(self):
+        expected = {
+            'character_spine_mesh_player_test': 'CHARACTER_SPINE_MESH_PLAYER_RESULT',
+            'character_spine_mesh_factory_test': 'CHARACTER_SPINE_MESH_FACTORY_RESULT',
+        }
+        names = [name for name, _ in CORE.CHECKS]
+        for name, marker in expected.items():
+            with self.subTest(name=name):
+                self.assertEqual(names.count(name), 1)
+                self.assertEqual(dict(CORE.CHECKS)[name], [])
+                source = (Path(__file__).parent / (name + '.gd')).read_text()
+                self.assertIn('print("' + marker + ' "', source)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'repo'
+            root.mkdir()
+            self.fixture(root)
+            with contextlib.redirect_stdout(io.StringIO()):
+                staged = CORE.stage(root, Path(temporary) / 'stage')
+            paths = {row['path'] for row in staged['files']}
+            for name in expected:
+                self.assertIn('tests/' + name + '.gd', paths)
+            arguments = ['ci_core.py', '--root', str(root), '--stage', str(Path(temporary) / 'mock-stage'),
+                         '--godot', 'unused-mocked-godot', '--logs', str(Path(temporary) / 'logs')]
+            # Exercise the real launcher's marker map and command construction;
+            # no engine or complete core gate runs in this Python regression.
+            with mock.patch.object(sys, 'argv', arguments), \
+                 mock.patch.object(CORE, 'stage', return_value={'files': []}), \
+                 mock.patch.object(CORE, 'run') as launch, \
+                 mock.patch.dict(os.environ, {'TWILIGHT_SOURCE_MAP_PACK': str(Path(temporary) / 'unused-pack')}), \
+                 contextlib.redirect_stdout(io.StringIO()):
+                CORE.main()
+            calls = {call.args[0][-1]: call for call in launch.call_args_list if '--script' in call.args[0]}
+            for name, marker in expected.items():
+                with self.subTest(name=name):
+                    call = calls['res://tests/' + name + '.gd']
+                    self.assertEqual(call.args[0][:2], ['unused-mocked-godot', '--headless'])
+                    self.assertEqual(call.args[5], marker)
+                    self.assertEqual(call.args[4], 180)
+
+    def test_spine_mesh_completion_markers_reject_silent_or_failed_runs(self):
+        for marker in ['CHARACTER_SPINE_MESH_PLAYER_RESULT', 'CHARACTER_SPINE_MESH_FACTORY_RESULT']:
+            with tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                good = marker + ' ' + json.dumps({'checks': 1, 'failures': []})
+                CORE.run([sys.executable, '-c', 'print(' + repr(good) + ')'],
+                         root, root / 'positive.txt', os.environ.copy(), 5, marker)
+                for output in [
+                    'exited without running the suite',
+                    marker + '_OTHER ' + json.dumps({'checks': 1, 'failures': []}),
+                    marker + ' ' + json.dumps({'checks': 1, 'failures': ['controlled failed assertion']}),
+                    good + '\nERROR: controlled engine failure after completion',
+                ]:
+                    with self.subTest(marker=marker, output=output), contextlib.redirect_stdout(io.StringIO()):
+                        with self.assertRaises(RuntimeError):
+                            CORE.run([sys.executable, '-c', 'print(' + repr(output) + ')'],
+                                     root, root / 'negative.txt', os.environ.copy(), 5, marker)
 
     def test_zero_exit_without_completion_or_with_engine_error_fails(self):
         with tempfile.TemporaryDirectory() as temporary:

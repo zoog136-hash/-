@@ -1,7 +1,8 @@
 extends RefCounted
 ## Optional exact-ID 523 evidence adapter. Original bytes live in a private pack.
 ## An optional labelled numeric distance policy preserves the existing engine.
-## CastDelay, proc timing, AC and hit/damage formulae are not inferred here.
+## CastDelay = own reuse delay in ms (user decision 2026-11-12). Proc timing,
+## AC and hit/damage formulae are not inferred here.
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input_policy.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -37,6 +38,8 @@ var active_sha256: String = ""
 var source_mode: String = ""
 var source_identity: Dictionary = {}
 var source_fallback_status: Dictionary = {}
+## Materials whose original item is held (e.g. TestItem=true); never spent.
+var material_holds: Dictionary = {}
 var relic_source_input_status: Dictionary = {}
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
@@ -75,6 +78,90 @@ func prepare_estimate(record: Dictionary) -> void:
 		for key: String in rule.runtime: record.design_provenance[key] = {"value":record[key],"status":"local_design","basis":"사용자 승인 · 누적523 8종 추정 구현"}
 	# Feed known native costs into the existing book/material UI as well as cast.
 	record.merge(apply_to(record.duplicate(true), str(record["class"]), false), true)
+
+## Table-direct passive contract (docs/skill523_source_hold_report.md).
+## Original BuffBonus type -> [existing skill stat() key, required Unit.Name].
+## Every key is a flat value already read through original_skills.stat().
+const SOURCE_DIRECT_PASSIVE_STATS := {
+	"DamageReduction":["damageReduction","Value"], "ArmorClassBonus":["def","Value"], "ArmorClass":["def","Value"],
+	"MeleeHit":["meleeHit","Value"], "RangeHit":["rangedHit","Value"], "MeleeDamage":["meleeDamage","Value"],
+	"RangeDamage":["rangedDamage","Value"], "MagicResist":["mr","Value"], "HPPlus":["hp","Value"], "MPPlus":["mp","Value"],
+	"Strength":["str","Value"], "Dexterity":["dex","Value"], "Intelligence":["int","Value"]}
+
+## A reference passive opens only when the original tables state every part:
+## one unconditional BuffClass, freely overlapping buff group, no erase rule,
+## and only flat stat rows with a known unit and an existing consumer. PvP-only
+## rows have no PvE recipient and are kept as data. Returns {"reason":...} otherwise.
+func source_direct_passive(id: String, job: String) -> Dictionary:
+	var profile: Dictionary = profiles.get(id, {})
+	if profile.is_empty(): return {"reason":"원본 프로필 없음"}
+	var row: Dictionary = profile.row
+	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문(SpellType %d)의 효과 실행 계약 없음(아래 보류 이유 참고)" % int(row.SpellTypeID)}
+	if int(row.SpellCompositionNode) != 0: return {"reason":"조건 노드 %d 정의 없음" % int(row.SpellCompositionNode)}
+	if not profile.costs.is_empty() or int(row.SpellMaterialItemAmount) != 0 or int(row.MPCost) != 0 or int(row.HPCost) != 0: return {"reason":"패시브에 비용 행이 있음"}
+	var buff_ids: Array[int] = []
+	for entry: Dictionary in profile.bonuses:
+		if int(entry.link.MinSpellLevel) != 0: continue # base level only (existing policy)
+		var name: String = str(entry.type.Name)
+		if name != "BuffClassID" or str(entry.unit.Name) != "BuffClassID" or int(entry.bonus.BonusApplicationTypeID) != 0 or int(entry.bonus.BonusApplicationTargetID) != 0:
+			return {"reason":"주문 보너스 %s의 실행 규칙이 표에 없음" % name}
+		buff_ids.append(int(entry.bonus.Value))
+	if buff_ids.size() != 1 or profile.buffs.size() != 1 or int(profile.buffs[0].row.ID) != buff_ids[0]: return {"reason":"버프 연결이 하나가 아님"}
+	var buff: Dictionary = profile.buffs[0]
+	if bool(buff.row.get("IsBuffGroup", true)):
+		var group: Dictionary = SOURCE_ROWS.row("BuffGroup", int(buff.row.get("BuffGroupID", -1)))
+		if group.is_empty() or group.get("IsAllowOverlap") != true: return {"reason":"버프 그룹 %d 중첩 규칙 미지원" % int(buff.row.get("BuffGroupID", -1))}
+	for key: String in buff.row:
+		if not key.begins_with("IsEraseOn"): continue
+		var flag: Variant = buff.row[key]
+		# Bools and numeric counters alike: any set erase condition is a rule.
+		if (typeof(flag) == TYPE_BOOL and flag) or (typeof(flag) in [TYPE_INT,TYPE_FLOAT] and float(flag) != 0.0): return {"reason":"버프 해제 조건 %s 미지원" % key}
+	var stats: Dictionary = {}
+	var ignored: Array[String] = []
+	var rows: Array = []
+	for entry: Dictionary in buff.bonuses:
+		if int(entry.link.get("MinSpellLevel", 0)) != 0: continue
+		var name: String = str(entry.type.Name)
+		if int(entry.link.get("CharacterLevel", 0)) != 0 or int(entry.link.get("CharacterClass", 0)) != 0: return {"reason":"%s의 캐릭터 레벨/직업 조건 해석이 표에 없음" % name}
+		if int(entry.bonus.BonusApplicationTypeID) != 0 or int(entry.bonus.BonusApplicationTargetID) != 0: return {"reason":"%s의 적용 대상 조건 미지원" % name}
+		if not _source_integer(entry.bonus.Value): return {"reason":"%s 값이 정수가 아님" % name}
+		if name.begins_with("PVP"):
+			ignored.append(name); continue
+		var mapped: Array = SOURCE_DIRECT_PASSIVE_STATS.get(name, [])
+		if mapped.is_empty() or str(entry.unit.Name) != str(mapped[1]): return {"reason":"%s(%s) 수신부 없음" % [name, str(entry.unit.Name)]}
+		stats[str(mapped[0])] = int(stats.get(str(mapped[0]), 0)) + int(entry.bonus.Value)
+		rows.append({"type":name,"value":int(entry.bonus.Value),"unit":str(entry.unit.Name),"stat":str(mapped[0])})
+	if stats.is_empty(): return {"reason":"PvE에서 적용할 수치가 없음"}
+	var native_class := int(bindings.class_ids.get(job, -1))
+	var minimum := -1
+	for limit: Dictionary in profile.learn_limits:
+		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
+		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건 미지원"}
+		minimum = int(limit.CharacterMinLevel)
+	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
+	return {"stats":stats,"minimum_level":minimum,"buff_id":int(buff.row.ID),"rows":rows,"ignored_pvp":ignored}
+
+## Load-time projection on the shared catalog record (as prepare_estimate does).
+func prepare_source_direct(record: Dictionary) -> void:
+	var id := str(record.get("id", ""))
+	if not id.begins_with("lmref_") or not profiles.has(id) or record.has("estimated523") or bool(record.get("local_design", false)): return
+	var row: Dictionary = profiles[id].row
+	record["source523_cast_delay_ms"] = int(row.CastDelay)
+	if not bool(record.get("runtime_blocked", false)): return
+	if str(record.get("activation", "")) != "passive" and record.get("cooldown") == null and _source_integer(row.CastDelay):
+		record["cooldown"] = float(row.CastDelay) / 1000.0 # shown on the hold screen
+	var spec := source_direct_passive(id, str(record.get("class", "")))
+	if spec.has("reason") or not spec.has("rows"):
+		record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패"))]
+		return
+	var parts := PackedStringArray()
+	for entry: Dictionary in spec.rows: parts.append("%s %+d" % [str(entry.type), int(entry.value)])
+	var summary := "패시브 · 원본 523 기본 단계 %s (BuffClass %d)" % [" · ".join(parts), int(spec.buff_id)]
+	if not spec.ignored_pvp.is_empty(): summary += " · PvP 전용 %s는 PvE 대상 없음" % ", ".join(PackedStringArray(spec.ignored_pvp))
+	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":spec.stats,"mp":0,"hp":0,"items":{},
+		"minimum_level":int(spec.minimum_level),"local_kind":"source_direct523","desc":summary},true)
+	record["source_direct523"] = {"kind":"passive_stats","spell_id":int(row.ID),"buff_id":int(spec.buff_id),"rows":spec.rows,"ignored_pvp":spec.ignored_pvp,"basis":"원본 523 SpellBonus/BuffBonus 기본 단계 · BuffGroup 중첩 허용"}
+	record.erase("source_direct523_hold")
 
 func configure_arguments() -> void:
 	var path := ""
@@ -190,20 +277,67 @@ func _source_execution_graph(profile: Dictionary) -> Dictionary:
 		invokes.append({"row":option,"type":type})
 	return {"graph":{"root_id":root_id,"spells":nodes,"invokes":invokes}}
 
-func _source_materials(local: Dictionary) -> bool:
+## Per-material proof. A malformed public bridge invalidates the whole binding
+## file; an original item that is missing, marked TestItem=true or lacks the
+## ItemBonus type-89 identity holds only that material (and the skills that
+## spend it). Nothing is substituted for a held material.
+func source_material_holds(local: Dictionary) -> Dictionary:
+	var holds: Dictionary = {}
+	if not local.get("material_inventory_keys") is Dictionary: return {"invalid":true,"holds":holds}
 	for material: String in local.material_inventory_keys:
 		var bridge: Variant = local.material_inventory_keys[material]
-		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return false
+		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return {"invalid":true,"holds":{}}
+		var held: Dictionary = {"native_item_id":int(bridge.native_item_id),"inventory_key":str(bridge.inventory_key)}
 		var item: Dictionary = SOURCE_ROWS.row("ItemClass",int(bridge.native_item_id))
-		if item.is_empty() or item.get("TestItem")==true: return false
+		if item.is_empty(): held["reason"] = "source_item_unavailable"; holds[material] = held; continue
+		if item.get("TestItem") is not bool or item.TestItem:
+			held["reason"] = "source_TestItem_true" if item.get("TestItem")==true else "source_TestItem_not_bool"
+			holds[material] = held; continue
 		var found := false
 		for link: Dictionary in SOURCE_ROWS.related("ItemBonus","ItemClassID",int(item.ID)):
 			var detail: Dictionary = SOURCE_BONUSES.describe(int(link.get("BonusID",-1)))
 			var bonus: Dictionary = detail.get("bonus",{})
 			# Same native material identity proof as build_player_skills523.py.
 			if bonus.get("BonusTypeID")==89 and _source_integer(bonus.get("Value")) and str(int(bonus.Value))==material: found = true
-		if not found: return false
-	return true
+		if not found: held["reason"] = "source_material_identity_unproven"; holds[material] = held
+	return {"invalid":false,"holds":holds}
+
+## Strict all-materials proof (kept for callers that require every bridge).
+func _source_materials(local: Dictionary) -> bool:
+	var checked: Dictionary = source_material_holds(local)
+	return not checked.invalid and checked.holds.is_empty()
+
+## True when the bridge(s) for this inventory key are proven in the original.
+func material_ready(local: Dictionary, inventory_key: String) -> bool:
+	var checked: Dictionary = source_material_holds(local)
+	if checked.invalid: return false
+	var matched := false
+	for material: String in local.material_inventory_keys:
+		if str(local.material_inventory_keys[material].inventory_key)!=inventory_key: continue
+		matched = true
+		if checked.holds.has(material): return false
+	return matched
+
+## Material type IDs a profile can spend: SpellClass, SpellCost rows, recovery
+## components, reviewed execution-graph spells and their InvokeOption rows.
+static func profile_material_types(profile: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	var nodes: Array = [profile]
+	nodes.append_array(profile.get("components",[]))
+	nodes.append_array(profile.get("execution_graph",{}).get("spells",[]))
+	var pairs: Array = []
+	for node: Dictionary in nodes:
+		var row: Dictionary = node.get("row",{})
+		pairs.append([row.get("SpellMaterialTypeID",0),row.get("SpellMaterialItemAmount",0)])
+		for cost: Dictionary in node.get("costs",[]):
+			for index: int in range(1,4): pairs.append([cost.get("SpellMaterialTypeID"+str(index),0),cost.get("SpellMaterialItemAmount"+str(index),0)])
+	for invoke: Dictionary in profile.get("execution_graph",{}).get("invokes",[]):
+		pairs.append([invoke.get("row",{}).get("MaterialTypeID",0),invoke.get("row",{}).get("MaterialAmount",0)])
+	for pair: Array in pairs:
+		if not _source_integer(pair[0]) or not _source_integer(pair[1]) or int(pair[0])<=0 or int(pair[1])<=0: continue
+		var key := str(int(pair[0]))
+		if key not in result: result.append(key)
+	return result
 
 func _load_source_profiles() -> void:
 	# Re-entry never replaces a supported compiled or already installed snapshot.
@@ -216,9 +350,11 @@ func _load_source_profiles() -> void:
 	if not local is Dictionary or local.get("schema_version")!=1 or local.get("patch")!=523 or local.get("source_zip_sha256")!=SOURCE_SHA or not local.get("skills") is Dictionary or not local.get("material_inventory_keys") is Dictionary:
 		source_fallback_status = {"state":"deferred","reason":"unsupported_public_bindings"}
 		return
-	if not _source_materials(local):
+	var material_check: Dictionary = source_material_holds(local)
+	if material_check.invalid:
 		source_fallback_status = {"state":"deferred","reason":"native_material_binding_unconfirmed"}
 		return
+	var held_materials: Dictionary = material_check.holds
 	var candidate: Dictionary = {}
 	var deferred: Dictionary = {}
 	for id: String in local.skills:
@@ -251,9 +387,14 @@ func _load_source_profiles() -> void:
 			profile["execution_graph"] = graph.graph
 		var issue: String = _profile_problem(id,profile,binding)
 		if not issue.is_empty(): deferred[id] = issue; continue
+		var spends_held: Array[String] = []
+		for material: String in profile_material_types(profile):
+			if held_materials.has(material): spends_held.append(material)
+		if not spends_held.is_empty(): deferred[id] = "held_source_material:"+",".join(spends_held); continue
 		candidate[id] = profile
-	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred}
+	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred,"material_holds":held_materials.duplicate(true)}
 	if candidate.is_empty(): return
+	material_holds = held_materials.duplicate(true)
 	var metadata: Dictionary = {"classes":SOURCE_ROWS.rows("Class"),"ui_units":SOURCE_ROWS.rows("UIUnit"),
 		"buff_groups":SOURCE_ROWS.rows("BuffGroup"),"bonus_application_types":SOURCE_ROWS.rows("BonusApplicationType"),
 		"special_resistance_types":SOURCE_ROWS.rows("SpecialResistanceType")}
@@ -310,6 +451,7 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	source_mode = "compiled_pack"
 	source_identity = {"source_snapshot":"patch523","source_sha256":SOURCE_SHA}
 	source_fallback_status = {}
+	material_holds = {}
 	revision += 1
 	last_error = ""
 	return true
@@ -540,12 +682,24 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		if bridge.is_empty():
 			record["source523_block_reason"] = "523 재료 인벤토리 연결 확인 필요"
 			return record
+		if material_holds.has(material):
+			record["source523_block_reason"] = "523 원본 재료 보류: %s(원본#%d)" % [str(bridge.inventory_key),int(bridge.native_item_id)]
+			return record
 		items[str(bridge.inventory_key)] = int(items.get(str(bridge.inventory_key), 0)) + int(cost.amount)
 	record["items"] = items
 	record.source523.applied = ["hp", "mp", "materials", "target_filter"]
 	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
 	if not recovery.is_empty():record.source523.applied.append("self_recovery")
 	if not progression.is_empty():record.source523.applied.append("reviewed_execution")
+	# User decision 2026-11-12: SpellClass.CastDelay is the skill's own reuse
+	# delay in milliseconds. The existing cooldown factor (skillCooldownPct from
+	# SpellCastDelayDecreasePercent, cast speed) still multiplies it at cast time.
+	var delay: Variant = row.get("CastDelay")
+	if _source_integer(delay) and float(delay) >= 0.0:
+		record.source523["host_cooldown_before"] = record.get("cooldown")
+		record["cooldown"] = float(delay) / 1000.0
+		record.source523["time_policy"] = "SOURCE523_CASTDELAY_MS"
+		record.source523.applied.append("cooldown")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:

@@ -554,3 +554,13 @@ func _reward_text(id: int) -> String:
 	if type.get("Name") == "Item":
 		return "%s ×%d" % [_item_name(int(reward.get("RewardClassID", 0))), int(reward.get("Amount", 0))]
 	return "%s #%d ×%d" % [str(type.get("Name", "보상")), int(reward.get("RewardClassID", 0)), int(reward.get("Amount", 0))]
+
+## Opens the NPC 판매 list filtered to one seller label (the clan window's
+## 혈맹 상인 button).
+func focus_npc(text: String) -> void:
+	mode.select(1)
+	search.set_block_signals(true)
+	search.text = text
+	search.set_block_signals(false)
+	result_label.text = ""
+	_build_entries()

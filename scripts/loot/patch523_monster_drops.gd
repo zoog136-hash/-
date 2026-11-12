@@ -242,8 +242,18 @@ static func transient_definition(item_id: String) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
 	if data().is_empty(): return {}
 	if _definition_ids.has(item_id): return definition_id(item_id)
+	var scope: CURRENT_DTO.RegistrationScope = CURRENT_DTO.registration_profile_scope()
+	var started: int = Time.get_ticks_usec() if scope != null else 0
 	var detail: Dictionary = _describe_item(int(item_id))
-	return _current_raw_definition(detail) if not detail.is_empty() else {}
+	if scope != null:
+		scope.describe_us += Time.get_ticks_usec() - started
+		scope.describe_calls += 1
+	started = Time.get_ticks_usec() if scope != null else 0
+	var definition: Dictionary = _current_raw_definition(detail) if not detail.is_empty() else {}
+	if scope != null:
+		scope.dto_us += Time.get_ticks_usec() - started
+		scope.dto_calls += int(not detail.is_empty())
+	return definition
 
 ## Resident-memory diagnostics for the bounded cache.
 static func definition_cache_state() -> Dictionary:
@@ -260,16 +270,18 @@ static func _document_definition(document: Dictionary, item_id: String) -> Dicti
 static func _describe_item(item_id: int) -> Dictionary:
 	# ItemData retains a legacy helper preload of this module. Defer loading
 	# until this actual read path; a static preload here would form a cycle.
-	var path: String = "res://scripts/resources/current523_item_data.gd"
-	if not ResourceLoader.exists(path): return {}
-	var reader: Script = load(path) as Script
-	if reader == null: return {}
-	# ItemData.describe is the published static reader API. Match the script's
-	# own methods before calling it; Resource instance methods are not that ABI.
-	var has_describe: bool = false
-	for method: Dictionary in reader.get_script_method_list():
-		if method.get("name") == "describe": has_describe = true; break
-	if not has_describe: return {}
+	var reader: Script = CURRENT_DTO.registration_item_reader()
+	if reader == null:
+		var path: String = "res://scripts/resources/current523_item_data.gd"
+		if not ResourceLoader.exists(path): return {}
+		reader = load(path) as Script
+		if reader == null: return {}
+		# ItemData.describe is the published static reader API. Match the script's
+		# own methods before calling it; Resource instance methods are not that ABI.
+		var has_describe: bool = false
+		for method: Dictionary in reader.get_script_method_list():
+			if method.get("name") == "describe": has_describe = true; break
+		if not has_describe: return {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
 	return detail
@@ -305,6 +317,9 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 	var projected: Dictionary=CURRENT_DTO.record(definition)
 	if not projected.is_empty():
 		definition.native_record=projected
+		# Base-item weapon invokes (claw / dual blade / rifle bleed) for the
+		# existing weapon_invoke_roll and patch523_weapon_bleed consumers.
+		definition.source_invoke_options=preload("res://scripts/loot/current523_weapon_invokes.gd").compile(bonuses,projected)
 		definition.native_record_status="current_original_typed_game_dto"
 		definition.unresolved_source_reference=""
 	return definition
@@ -728,7 +743,7 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 			needed_states[key][int(row.Bless)] = true
 	for definition: Dictionary in document.get("item_definitions", {}).values():
 		var spec: Dictionary = NATIVE_FIELDS.full(definition.get("native_record", {})).get("source_use_spec", {})
-		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward"] or spec.get("activation_status") != "unrestricted": continue
+		if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"] or spec.get("activation_status") != "unrestricted": continue
 		for reward: Dictionary in spec.get("rewards", []):
 			var key: String = str(int(reward.item_class_id))
 			if not needed_states.has(key): needed_states[key] = {}
@@ -1077,7 +1092,7 @@ static func item_details(item: Dictionary) -> String:
 		if not full.is_empty(): item = full
 	if not item.get("source_m_native_item", false):
 		var original: Dictionary = item_definition(item).get("native_record", {})
-		if NATIVE_FIELDS.full(original).get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]: return invoke_details(item)
+		if NATIVE_FIELDS.full(original).get("source_use_spec", {}).get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book"]: return invoke_details(item)
 		item = original
 	var lines: PackedStringArray = ["원본 아이템 #%d · %s" % [int(item.get("source_item_class_id", 0)), str(NATIVE_FIELDS.field(item,"source_display_name",""))]]
 	if NATIVE_FIELDS.field(item,"source_category_name") in ["Arrow","Bullet","Sting"]:
@@ -1125,6 +1140,8 @@ static func item_details(item: Dictionary) -> String:
 				"source_selectable_reward":
 					lines.append("사용: 원본 선택 보상 %d개 중 1개 · 확인 후 인벤토리 수령" % spec.get("rewards",[]).size())
 					if spec.has("local_rule_required"): lines.append("장비 초기 강화값: 원본 없음 · TWILIGHT +0 자체 설정 · 설정에서 해제 가능")
+				"source_selectable_bag":
+					lines.append("사용: 원본 선택 상자 %d개 중 1종 선택(원본 설명) · 확인 후 인벤토리 수령" % spec.get("rewards",[]).size())
 				"source_skill_book":
 					lines.append("스킬서: 원본 카드 #%d → 주문 #%d · PR245의 동일 ID·정의 SHA 연결 필요" % [int(spec.get("card_id",0)),int(spec.get("spell_class_id",0))])
 					lines.append("원본 직업·레벨·선행 조건 검증 · 연결 전 스킬서 보존")

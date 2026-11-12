@@ -76,7 +76,7 @@ static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictiona
 					var option: Dictionary=book.call("offloaded_invoke_option",str(int(effect.option_id))) if offloaded else _invoke_tables[book.digest].get(str(int(effect.option_id)),{})
 					if not option.is_empty():effect["option"]=option.duplicate(true)
 				if effect.get("kind")=="attack_source_spell" and effect.get("option") is Dictionary:
-					effect["spell_name"]=str(book.data.get("equipment_spell_profiles",{}).get(str(int(effect.option.Param1)),{}).get("source_spell",{}).get("Name",""))
+					effect["spell_name"]=str(load("res://scripts/crafting/current523_equipment_spell_profiles.gd").of(book,int(effect.option.Param1)).get("source_spell",{}).get("Name",""))
 		var has_invokes: bool=false
 		for rows: Array in invokes.values():
 			if not rows.is_empty():has_invokes=true;break

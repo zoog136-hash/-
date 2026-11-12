@@ -109,6 +109,22 @@ func _bonus(row: Dictionary, bonuses: Dictionary, types: Dictionary) -> Dictiona
 	if not type.Name is String or not _integer(type.UnitID): return _fail("invalid enchant BonusType")
 	return {"bonus":bonus,"type":type}
 
+## Mirrors patch523_enchantment_projection._native_invoke.
+func _native_invoke(option: Dictionary, type: Dictionary, bonus: Dictionary) -> String:
+	var kind: Variant = option.get("InvokeOptionTypeID")
+	if not _integer(kind) or int(kind) not in [1,61] or type.UnitID!=3 or not _number(bonus.Value) or bonus.Value<0 or bonus.Value>1000000: return ""
+	if not _integer(option.get("AttackTypeID")) or int(option.AttackTypeID) not in [0,1,2,3]: return ""
+	for key: String in ["MaterialTypeID","MaterialAmount","IsAmmoAttack","WeaponGroupID","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind","Param5","Param6"]:
+		if not _zero(option.get(key,0)): return ""
+	if int(kind)==1:
+		for key: String in ["Param2","Param3","Param4"]:
+			if not _zero(option.get(key,0)): return ""
+		if not _integer(option.get("Param1")) or preload("res://scripts/crafting/current523_equipment_spell_profiles.gd").profile(int(option.Param1)).is_empty(): return ""
+		return "attack_source_spell"
+	for key: String in ["Param1","Param2","Param3"]:
+		if not _number(option.get(key)) or option[key]<0 or option[key]>1000000: return ""
+	return "defence_fixed_counter" if typeof(option.get("Param4"))==TYPE_BOOL else ""
+
 func _live_invoke(option: Dictionary, type: Dictionary, bonus: Dictionary) -> bool:
 	var kind: Variant = option.get("InvokeOptionTypeID")
 	if kind not in [3,5,6] or type.UnitID!=3 or bonus.Value<0 or bonus.Value>1000000: return false
@@ -200,6 +216,10 @@ func build(tables: Dictionary, bound_items: Dictionary, bonuses: Dictionary) -> 
 					var name: Variant = type.Name
 					if name=="InvokeOption" and b.BonusApplicationTypeID==10:
 						var option: Dictionary = invoke_options.get(int(b.BonusApplicationTargetID),{})
+						var native_kind: String = _native_invoke(option,type,b)
+						if not native_kind.is_empty():
+							live_invokes.append({"row_id":row.ID,"probability":b.Value,"option":option,"kind":native_kind})
+							continue
 						if _live_invoke(option,type,b):
 							live_invokes.append({"row_id":row.ID,"probability":b.Value,"option":option,
 								"kind":{3:"attack_fixed_damage",5:"defence_flat_reduction",6:"attack_weapon_scale"}[int(option.InvokeOptionTypeID)]})

@@ -9,6 +9,9 @@ const ORIGINAL_PROJECTION = preload("res://scripts/dungeons/source_dungeon_proje
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "source_dungeon_candidate"
+## Loaded on first Orim use (not a preload): the Orim model is not part of
+## this projection's bake inputs.
+const ORIM_PATH := "res://scripts/orim523/orim523.gd"
 var _data: Dictionary = {}
 var data: Dictionary:
 	get:
@@ -203,7 +206,38 @@ func _load_original_projection() -> Dictionary:
 	# No execution sidecar is manufactured. This existing optional reader only
 	# clears unavailable sidecar definitions for the absent default installation.
 	_load_execution(DEFAULT_MANIFEST.get_base_dir())
+	# Orim NPC definitions without a sidecar come from the tables on first use
+	# (ensure_orim), not at boot.
 	return {"ok":true,"tower":200,"orim":20,"special":22,"source":"existing_original_in_memory","payload_sha256":PAYLOAD_SHA256,"unverified":true}
+
+## The same Orim NPC definitions the private execution sidecar carried, read
+## straight from the installed original tables (OrimsTrailNpc/NpcType,
+## NpcClass, NpcAttack, NpcClassForNpcGroup, ItemBonus of reward items).
+func ensure_orim() -> bool:
+	if not orim_actor_defs.is_empty(): return true
+	return load_orim_tables(load(ORIM_PATH).installed())>0
+
+func load_orim_tables(model: Dictionary) -> int:
+	if not bool(model.get("ok",false)): return 0
+	orim_actor_types.clear(); orim_groups.clear(); orim_item_effects.clear(); orim_actor_defs.clear()
+	for npc_id: int in model.npc:
+		var npc: Dictionary = model.npc[npc_id]
+		orim_actor_types[npc_id] = str(npc.type)
+		if not (npc.row as Dictionary).is_empty():
+			orim_actor_defs[npc_id] = {"row":npc.row.duplicate(true),"name":str(npc.name),"attacks":npc.attacks.duplicate(true)}
+	for group_id: int in model.npc_groups: orim_groups[group_id] = (model.npc_groups[group_id] as Array).duplicate()
+	var reward_items: Dictionary = {}
+	for stage: Dictionary in _data.get("orim",[]):
+		for reward: Dictionary in stage.normal_rewards+stage.lucky_rewards:
+			reward_items[int(reward.row.RewardClassID)] = true
+	for item_id: int in reward_items:
+		for link: Dictionary in ORIGINAL_PROJECTION.SOURCE.related("ItemBonus","ItemClassID",item_id):
+			var bonus: Dictionary = ORIGINAL_PROJECTION.SOURCE.row("Bonus",int(link.BonusID))
+			var type: Dictionary = ORIGINAL_PROJECTION.SOURCE.row("BonusType",int(bonus.get("BonusTypeID",0))) if not bonus.is_empty() else {}
+			if type.is_empty(): continue
+			if not orim_item_effects.has(item_id): orim_item_effects[item_id] = []
+			orim_item_effects[item_id].append({"type":str(type.Name),"row":bonus.duplicate(true)})
+	return orim_actor_defs.size()
 
 func load_pack(path: String = DEFAULT_MANIFEST) -> Dictionary:
 	var checked := _read_manifest(path)

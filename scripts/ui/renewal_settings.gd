@@ -57,7 +57,14 @@ func configure(controller: Node) -> void:
 	stack.add_child(UI.section("게임 화면 · 오디오 · 저장",12))
 	stack.add_child(preload("res://scripts/ui/lineagem_pack_settings.gd").new())
 	var source_pack: Node = (Engine.get_main_loop() as SceneTree).root.get_node_or_null("Source523Pack")
-	if source_pack != null and bool(source_pack.get("configured")):
+	if source_pack != null:
+		# Always shown: the player sees whether the pack and each add-on are
+		# connected, and can (re)install from here even when connection failed.
+		if source_pack.has_method("status_lines"):
+			var pack_state := UI.label("\n".join(source_pack.call("status_lines")), 15)
+			pack_state.name = "SourcePackStatus"
+			pack_state.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			stack.add_child(pack_state)
 		var addon_button := Button.new()
 		addon_button.name = "InstallSourceAddon"
 		addon_button.text = "추가 리소스(.zip) 설치·업데이트"

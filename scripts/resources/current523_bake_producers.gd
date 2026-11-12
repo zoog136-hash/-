@@ -72,6 +72,7 @@ const PRODUCERS := {
 			"res://scripts/dungeons/source_dungeon_projection.gd",
 			"res://scripts/dungeons/source_dungeon_runtime.gd",
 			"res://scripts/loot/current523_native_fields.gd",
+			"res://scripts/orim523/orim523.gd",
 			"res://scripts/quests/source_dummy523.gd",
 			"res://scripts/resources/current523_bake_cache.gd",
 			"res://scripts/resources/current523_cut_tables.gd",

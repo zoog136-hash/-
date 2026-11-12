@@ -12,7 +12,11 @@ extends RefCounted
 ##    x5, above its last row the last Value; docs/einasad523_missing_rules.md). A LevelEinasadBlessRecharge
 ##    bonus (드래곤의 비약) names a level-indexed ItemConsumeRate group whose
 ##    Value at the character level is the charge in points (its description
-##    "({0} 레벨 충전량 : {1})"), with the same group-12 bonus;
+##    "({0} 레벨 충전량 : {1})"), with the same group-12 bonus. An Experience
+##    row with an ItemConsumeRate group of application type 42 (드래곤의 성수:
+##    group 2, 10500 per 10000) also gives that EXP, checked against the
+##    item's own description "EXP 31,920,000을 획득" and converted to the
+##    TWILIGHT curve like the existing 드래곤의 성수 (HOLY_WATER_EXP);
 ##  - food whose buff also has RegenHP/RegenMP: those original amounts are added
 ##    per tick of the existing food regeneration cadence
 ##    (quest523_food_regen_interval_seconds, a TWILIGHT setting; the original
@@ -27,6 +31,12 @@ const FOOD_REASONS: Array[String] = ["unsupported_buff_effect:RegenHP","unsuppor
 const EINASAD_POINT_VARIABLE_TYPE := 42
 const RULES = preload("res://scripts/einasad/einasad523_rules.gd")
 const RECEIPT := "source_native_stack_receipt"
+const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
+## Bonus application types of ItemConsumeRate rows on Einasad items.
+const CHARGE_RATE_APPLICATION := 52
+const EXPERIENCE_RATE_APPLICATION := 42
+## Lineage M EXP of 드래곤의 성수 (its description "EXP 31,920,000을 획득").
+const HOLY_WATER_SOURCE_EXP := 31920000
 ## Item lifetime rows: the projection resolves them and use eligibility
 ## refuses an expired item (patch523_item_use.eligibility).
 const LIFETIME: Array[String] = ["DeleteTime","CannotExtendDeleteTime"]
@@ -115,15 +125,28 @@ static func ain(record: Dictionary) -> Dictionary:
 	var definition: Dictionary = _definition(record)
 	if definition.is_empty(): return {}
 	var absolute: int = -1; var cap: int = -1; var player: int = -1; var group: int = 0; var level_group: int = 0
+	var experience: int = -1; var experience_group: int = 0
 	for row: Dictionary in definition.get("item_bonus",[]):
 		var name: String = str(row.get("bonus_type",{}).get("Name",""))
 		var bonus: Dictionary = row.get("bonus",{})
 		if name in LIFETIME: continue
 		if name=="ItemConsumeRate":
-			# A level-indexed ItemConsumeRate group reference (application type 52).
-			if group!=0 or row.get("IsPossession")!=false or not _integer(bonus.get("Value")) or int(bonus.Value)<=0 or not _integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID)!=52 or not _integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID)!=0: return {}
-			group = int(bonus.Value); continue
+			# A level-indexed ItemConsumeRate group reference: application type
+			# 52 = the charge bonus group, 42 = the Experience rate group.
+			if row.get("IsPossession")!=false or not _integer(bonus.get("Value")) or int(bonus.Value)<=0 or not _integer(bonus.get("BonusApplicationTypeID")) or not _integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID)!=0: return {}
+			match int(bonus.BonusApplicationTypeID):
+				CHARGE_RATE_APPLICATION:
+					if group!=0: return {}
+					group = int(bonus.Value)
+				EXPERIENCE_RATE_APPLICATION:
+					if experience_group!=0: return {}
+					experience_group = int(bonus.Value)
+				_: return {}
+			continue
 		if not _direct(row): return {}
+		if name=="Experience":
+			if experience!=-1 or int(bonus.Value)<=0: return {}
+			experience = int(bonus.Value); continue
 		if name=="LevelEinasadBlessRecharge":
 			# Unit ItemConsumeRateGourpID: the Value is a group, not an amount.
 			if level_group!=0 or int(bonus.Value)<=0: return {}
@@ -148,6 +171,18 @@ static func ain(record: Dictionary) -> Dictionary:
 	# The item's own description states the charge in points.
 	var raw: Dictionary = definition.get("original_item",{})
 	var story: String = str(SOURCE.row("DescData_Korean",int(raw.StoryDescID)).get("Description","")) if _integer(raw.get("StoryDescID")) and int(raw.StoryDescID)>0 else ""
+	if (experience>0)!=(experience_group>0): return {}
+	if experience>0:
+		# 드래곤의 성수 family: "아인하사드의 축복 N을 충전하고 EXP M을 획득".
+		# M is the Experience row times its group-42 rate per 10000 (group 2:
+		# 10500 at levels 1 and 99 -> 30,400,000 x 1.05 = 31,920,000).
+		if level_group>0: return {}
+		var rate: int = uniform_rate(experience_group)
+		if rate<=0 or experience*rate%10000!=0: return {}
+		var charged: RegExMatch = RegEx.create_from_string("축복\\s*([0-9,]+)\\s*[을를]\\s*충전").search(story)
+		var gained: RegExMatch = RegEx.create_from_string("EXP\\s*([0-9,]+)\\s*을\\s*획득").search(story)
+		if charged==null or int(charged.get_string(1).replace(",",""))!=points or gained==null or int(gained.get_string(1).replace(",",""))!=experience*rate/10000: return {}
+		return {"kind":"ain","points":points,"cap":cap/unit,"unit":unit,"consume_rate_group":group,"level_recharge_group":0,"experience":experience,"experience_rate_group":experience_group}
 	if level_group>0:
 		# The level amount is filled into the description template at use time.
 		if not story.contains("레벨 충전량"): return {}
@@ -155,6 +190,40 @@ static func ain(record: Dictionary) -> Dictionary:
 	var match_result: RegExMatch = RegEx.create_from_string("충전량\\s*:\\s*([0-9,]+)").search(story)
 	if match_result==null or int(match_result.get_string(1).replace(",",""))!=points: return {}
 	return {"kind":"ain","points":points,"cap":cap/unit,"unit":unit,"consume_rate_group":group,"level_recharge_group":0}
+
+## The one Value of an ItemConsumeRate group whose rows all agree, or -1. The
+## rows are level keyed (group 2: levels 1 and 99); between two rows that
+## differ the table does not say which applies, so only an all-equal group
+## is read (inside its first..last level).
+static func uniform_rate(group: int) -> int:
+	var values: Dictionary = RULES.consume_rate_group(group)
+	if values.is_empty(): return -1
+	var rate: int = -1
+	for level: int in values:
+		if rate!=-1 and int(values[level])!=rate: return -1
+		rate = int(values[level])
+	return rate
+
+## Lineage M EXP of one use at `level` (Experience x rate / 10000), or -1
+## outside the rate group's level rows. 0 for an item without Experience.
+static func source_experience(contract: Dictionary, level: int) -> int:
+	if int(contract.get("experience",0))<=0: return 0
+	var group: int = int(contract.experience_rate_group)
+	var values: Dictionary = RULES.consume_rate_group(group)
+	var rate: int = uniform_rate(group)
+	if rate<=0: return -1
+	var lowest: int = 1<<30; var highest: int = -1
+	for row_level: int in values:
+		lowest = mini(lowest,row_level); highest = maxi(highest,row_level)
+	if level<lowest or level>highest: return -1
+	return int(contract.experience)*rate/10000
+
+## TWILIGHT EXP for a Lineage M amount: the existing curve conversion
+## (experience_progression.gd: 31,920,000 Lineage M EXP of 드래곤의 성수 =
+## HOLY_WATER_EXP on the x3 TWILIGHT curve), applied proportionally.
+static func twilight_experience(source_amount: int) -> int:
+	if source_amount<=0: return 0
+	return int(round(float(source_amount)*float(EXP_PROGRESSION.HOLY_WATER_EXP)/float(HOLY_WATER_SOURCE_EXP)))
 
 ## Food reducer: the record with an unrestricted timed-buff spec whose
 ## RegenHP/RegenMP are per-tick amounts, or {} when this is not such food.
@@ -257,7 +326,17 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var before: Dictionary = service.export_state()
 		var after: Dictionary = before.duplicate(true)
 		after["blessing"] = int(before.blessing)+amount
-		return {"ok":true,"ainhasad_state":after,"charged":amount,"message":"%s · 아인하사드 축복 +%d" % [display, amount]}
+		var result: Dictionary = {"ok":true,"ainhasad_state":after,"charged":amount,"message":"%s · 아인하사드 축복 +%d" % [display, amount]}
+		var source_exp: int = source_experience(contract, int(world.level))
+		if source_exp<0: return {"ok":false,"reason":"원본 %d레벨 경험치 배율(ItemConsumeRate %d) 행 범위 밖 · 아이템 보존" % [int(world.level), int(contract.experience_rate_group)]}
+		if source_exp>0:
+			var gained: int = twilight_experience(source_exp)
+			if int(world.experience)>9007199254740991-gained: return {"ok":false,"reason":"경험치 정수 범위 초과 · 아이템 보존"}
+			result["experience"] = int(world.experience)+gained
+			result["experience_gained"] = gained
+			result["source_experience"] = source_exp
+			result.message = "%s · 아인하사드 축복 +%d · EXP +%d" % [display, amount, gained]
+		return result
 	return {"ok":false,"reason":"원본 사용 효과 미지원 · 아이템 보존"}
 
 ## A plain name-keyed stack of a claimed item (no receipted physical stack of
@@ -294,9 +373,11 @@ static func try_use_plain(world: Node, item_name: String) -> bool:
 		cooldowns[cooldown_key] = delay; cooldowns[item_name] = delay
 		payload["item_use_cooldowns"] = cooldowns
 	if prepared.has("ainhasad_state"): payload["ainhasad_state"] = prepared.ainhasad_state
+	if prepared.has("experience"): payload["experience"] = int(prepared.experience)
 	var previous: Vector2 = world.player.global_position
 	if prepared.has("destination"): world.consumable_service._teleport_player(prepared.destination)
-	if world._save_game(true, payload)!=OK:
+	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") else world._save_game(true, payload)
+	if saved!=OK:
 		if prepared.has("destination"): world.consumable_service._teleport_player(previous)
 		world.hud.show_message("저장 실패 · 아이템과 기존 상태 보존")
 		return true
@@ -316,3 +397,11 @@ static func commit(world: Node, prepared: Dictionary) -> void:
 	if prepared.has("ainhasad_state"):
 		world.ain_service.import_state(prepared.ainhasad_state)
 		world._update_ain_hud()
+	if prepared.has("experience"):
+		# Saved with the item debit; a level-up it reaches is applied after
+		# that save and saved again once the current use has finished.
+		world.experience = int(prepared.experience)
+		var level_before: int = int(world.level)
+		world._check_level_up()
+		if int(world.level)!=level_before: world.call_deferred("_save_game", true)
+		world._update_hud()

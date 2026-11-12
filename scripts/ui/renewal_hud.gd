@@ -1,5 +1,6 @@
 extends "res://scripts/hud_v20.gd"
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const MENU_MEMORY_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 
 signal equipment523_open_requested
 signal equipment523_preview_requested(action: Dictionary)
@@ -114,6 +115,7 @@ const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var quest_view: Control
 var quest_refresh_pending: bool = false
+var quest_refresh_generation: int = 0
 var card_skill_awakening_view: Control
 var workspace: PanelContainer
 var menu_page: VBoxContainer
@@ -155,6 +157,7 @@ var catalog_view_tabs: HBoxContainer
 var catalog_list_tab: Button
 var catalog_details_tab: Button
 var catalog_details_active: bool = false
+var catalog_browser_active: bool = false
 var catalog_icon_generation: int = 0
 var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
@@ -914,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -971,6 +974,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	quest_refresh_generation += 1
+	quest_refresh_pending = false
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
@@ -984,6 +989,9 @@ func _close_workspace() -> void:
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_domination_window"):original_main_ui_controller.close_domination_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_status_board"):original_main_ui_controller.close_status_board()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
+	_retire_original_menu_status()
 	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
 		return
@@ -995,7 +1003,7 @@ func _close_workspace() -> void:
 		navigation_memory.clear_history()
 	combat_log_view = null
 	pending_quickslot_binding.clear()
-	if active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
+	if catalog_browser_active and active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
 		catalog_view_state[active_section] = {"query":catalog_search.text,"grade":catalog_grade_filter,"page":catalog_page,"id":str(selected_catalog_record.get("sourceId",selected_catalog_record.get("name",""))),"scroll":catalog_list.get_v_scroll_bar().value}
 	if pointer_transfer != null: pointer_transfer.cancel()
 	for dialog: Node in $Root.get_children():
@@ -1005,6 +1013,7 @@ func _close_workspace() -> void:
 	if workspace != null:
 		workspace.hide()
 	active_section = ""
+	catalog_browser_active = false
 	if lineage_inventory_ui != null:
 		lineage_inventory_ui.hide_inventory()
 	if lineage_side_ui != null:
@@ -1096,6 +1105,11 @@ func _go_back() -> void:
 		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
+	var account = preload("res://scripts/characters/account_store.gd")
+	if not account.session.is_empty():
+		var world: Node = get_parent()
+		if world.has_method("return_to_character_lobby"): world.call("return_to_character_lobby")
+		return
 	# In the first session there is no class decision until the user confirms.
 	if class_picker_initial:
 		return
@@ -1140,6 +1154,8 @@ func _navigate(section: String) -> void:
 		"half_elixir": open_half_elixir()
 		"domination_stone": open_domination_stone()
 		"status_board": open_status_board()
+		"clan_emblem523": open_clan_emblem523()
+		"clan523": open_clan523()
 		"titles": open_titles523()
 		"expedition": open_expedition()
 		"class_select": open_class_selection()
@@ -1154,6 +1170,7 @@ func _navigate(section: String) -> void:
 		"promo_code": open_promo_code()
 		"quests": open_quests()
 		"shop": open_shop()
+		"exchange": open_frozen_exchange()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
 		"source_dungeons": open_source_dungeons()
@@ -1210,21 +1227,30 @@ func open_promo_code() -> void:
 	view.configure(get_parent())
 
 func open_quests() -> void:
+	var trace_token: int=MENU_MEMORY_TRACE.begin("quests")
 	_open_window("quests", "퀘스트", "메인 · 일반 · 업적 · 기타")
+	quest_view = null
+	# The original window owns its list/detail state. Construct the current
+	# browser only when that window cannot handle the selected source pack.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
+		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
+		original_main_ui_status["quest_window"]=native
+		if native.get("handled",false) and native.get("ok",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			MENU_MEMORY_TRACE.end(trace_token,bool(native.get("ok",false)))
+			return
+	_open_quest_browser()
+	MENU_MEMORY_TRACE.end(trace_token)
+
+func _open_quest_browser() -> void:
 	var view := QuestUI.new()
 	workspace.mount(view)
 	view.configure(get_parent())
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
-	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
-		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
-		original_main_ui_status["quest_window"]=native
-		if native.get("handled",false):
-			if pointer_transfer!=null:pointer_transfer.cancel()
-			workspace.hide()
-			_sync_screen_focus()
-			return
 	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
@@ -1233,16 +1259,17 @@ func refresh_quests() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
 		if not quest_refresh_pending:
 			quest_refresh_pending=true
-			call_deferred("_refresh_quests_deferred")
+			call_deferred("_refresh_quests_deferred",quest_refresh_generation)
 		return
 	if active_section != "quests" or not is_instance_valid(quest_view) or quest_view.is_queued_for_deletion():
 		return
 	if quest_refresh_pending:
 		return
 	quest_refresh_pending = true
-	call_deferred("_refresh_quests_deferred")
+	call_deferred("_refresh_quests_deferred",quest_refresh_generation)
 
-func _refresh_quests_deferred() -> void:
+func _refresh_quests_deferred(generation: int = -1) -> void:
+	if generation >= 0 and generation != quest_refresh_generation:return
 	quest_refresh_pending = false
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
 		original_main_ui_status["quest_window"]=original_main_ui_controller.refresh_quest_window()
@@ -1269,6 +1296,12 @@ func open_shop() -> void:
 				if pointer_transfer!=null:pointer_transfer.cancel()
 				workspace.hide()
 				_sync_screen_focus()
+
+func open_frozen_exchange() -> void:
+	_open_window("exchange","거래소 · 초기 실측 고정","")
+	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
+	workspace.mount(panel)
+	panel.configure(self)
 
 func open_npc_shop() -> void:
 	_open_window("npc_shop","잡화 상인","")
@@ -1571,7 +1604,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1581,7 +1614,7 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -1638,6 +1671,43 @@ func open_status_board() -> void:
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
+## The local 523 혈맹 (world.clan523): creation, level, donation, weekly
+## reward, level buffs. The original Clan_All window CSBs are not in the 523
+## UI add-on (only the emblem popup is), so this panel uses plain controls.
+func open_clan523() -> void:
+	_open_window("clan523","혈맹","원본 523 혈맹 표 · 로컬 1인 혈맹")
+	var scroll := ScrollContainer.new()
+	scroll.name = "Clan523Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/clan523/clan523_panel.gd").new()
+	scroll.add_child(view)
+	view.configure(self, scroll)
+
+## The original 523 혈맹 문장 선택 popup (Clan_Popup_Symbol, world.emblem523).
+func open_clan_emblem523() -> void:
+	_open_window("clan_emblem523","혈맹 문장","")
+	var native: Dictionary = {"ok":false,"code":"source_emblem_window_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_emblem_window"):
+		native = original_main_ui_controller.try_open_emblem_window(get_parent())
+	original_main_ui_status["emblem_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return
+	var note := UI.label("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code",""))),14,UI.TEXT)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	workspace.mount(note)
+
+## The original 523 재료 아이템 출처 popup over the current screen.
+func open_item_acquisition523(item_class_id: int, item_name: String = "") -> Dictionary:
+	var native: Dictionary = {"ok":false,"code":"source_acquisition_popup_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_acquisition"):
+		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name)
+	original_main_ui_status["acquisition_popup"] = native
+	return native
+
 ## The original 523 domination stone window (source_main_domination_stone_window).
 func open_domination_stone() -> void:
 	_open_window("domination_stone","지배석","")
@@ -1682,8 +1752,22 @@ func open_card_fusion(category: String) -> void:
 	view.fuse_requested.connect(_confirm_card_fusion_request)
 
 func open_catalog(category: String) -> void:
+	var started: int = FRAME_HITCH.now()
+	_open_catalog_impl(category)
+	FRAME_HITCH.detail("ui.catalog_open", started)
+
+func _open_catalog_impl(category: String) -> void:
 	_reset_catalog_drag()
 	_open_window(category,category,"")
+	catalog_category = category
+	# The native window owns its selected card and scroll position. Preparing
+	# the other browser first loads the same card pictures before hiding it.
+	if category in ["변신","마법인형"] and _open_original_change_window(category):
+		return
+	_open_catalog_browser(category)
+
+func _open_catalog_browser(category: String) -> void:
+	catalog_browser_active = true
 	workspace.mount(catalog_panel)
 	catalog_panel.show()
 	catalog_category = category
@@ -1757,21 +1841,21 @@ func open_catalog(category: String) -> void:
 		catalog_card_chrome.activate()
 	if not catalog_results.is_empty() and SourceCardPresentation.native(catalog_results[0]):
 		_restore_native_catalog_scroll(category, float(saved.get("scroll", 0)), catalog_icon_generation)
-	if category in ["변신","마법인형"]:_open_original_change_window(category)
 
 ## The original 523 Change_WinTotal shows the owned cards; applying a card
 ## still goes through catalog_equip_requested (World._equip_catalog).
-func _open_original_change_window(category: String) -> void:
-	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_change_window"):return
+func _open_original_change_window(category: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_change_window"):return false
 	var native: Dictionary=original_main_ui_controller.try_open_change_window(category)
 	original_main_ui_status["change_window"]=native
-	if not native.get("handled",false):return
+	if not native.get("handled",false):return false
 	_reset_catalog_drag()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if pointer_transfer!=null:pointer_transfer.cancel()
 	workspace.hide()
 	_sync_screen_focus()
+	return true
 
 func _restore_native_catalog_scroll(category: String, scroll: float, generation: int) -> void:
 	# Container reparenting and icon-size changes settle after the first frame.
@@ -2017,13 +2101,15 @@ func set_card_collection_state(value: Dictionary) -> void:
 	var next_owned: Dictionary=value.get("owned",{}).get(catalog_category,{})
 	var reorder: bool=previous_owned!=next_owned
 	card_collection_state = value.duplicate(true)
-	if reorder and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
+	var browser_visible: bool=is_instance_valid(catalog_panel) and catalog_panel.is_visible_in_tree()
+	if reorder and browser_visible and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
 		_refresh_catalog_owned_order()
-	_refresh_card_controls()
-	_refresh_option_awakening_markers()
+	if browser_visible:
+		_refresh_card_controls()
+		_refresh_option_awakening_markers()
 	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
 		card_fusion_view.set_collection_state(card_collection_state)
-	elif active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
+	elif browser_visible and active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
 		var selected_indices: PackedInt32Array = catalog_list.get_selected_items()
 		if not selected_indices.is_empty() and selected_indices[0] < catalog_results.size():
 			_on_catalog_item_selected(selected_indices[0])
@@ -2114,6 +2200,7 @@ func _option_awakening_card_state(category: String, record: Dictionary) -> Dicti
 	return cards.get(CARD_RULES.card_id(record), {}) as Dictionary
 
 func _refresh_option_awakening_markers() -> void:
+	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return
 	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
 	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
 	var spare: Dictionary = (card_collection_state.get("spare", {}) as Dictionary).get(catalog_category, {}) as Dictionary
@@ -2258,6 +2345,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
 func _refresh_card_controls() -> void:
+	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	ReferenceSurfaces.refresh_grade_counts(self)
@@ -3130,7 +3218,8 @@ func original_inventory_activate_selected(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_activate_selected(reference)
 
 func _restore_current_inventory_view(reason: Dictionary) -> void:
-	original_main_ui_status["inventory"]=reason.duplicate(true)
+	# Diagnostics must not keep a retired native scene's textures/controls.
+	original_main_ui_status["inventory"]=_inventory_status_summary(reason)
 	if active_section!="inventory":return
 	# Restore the same current bag after an unsupported native state. This
 	# adds no alternate form, asset lookup, selection, ownership or save logic.
@@ -3140,8 +3229,24 @@ func _restore_current_inventory_view(reason: Dictionary) -> void:
 	lineage_inventory_ui.show_inventory()
 
 func _original_inventory_closed() -> void:
+	original_main_ui_status["inventory"]={"ok":true,"closed":true,"handled":false}
 	if pointer_transfer!=null:pointer_transfer.cancel()
 	if active_section=="inventory" and workspace!=null and not workspace.visible:active_section=""
+
+func _inventory_status_summary(reason: Dictionary) -> Dictionary:
+	var summary: Dictionary={}
+	for key: String in ["ok","handled","closed","code","error","status","member","reference"]:
+		var value: Variant=reason.get(key)
+		if value is String or value is bool or value is int or value is float:summary[key]=value
+	return summary
+
+func _retire_original_menu_status() -> void:
+	for section: String in ["inventory","character_equipment","character_stats","quest_window","shop_window","change_window","npc_dialogue","enhance_action","quest_controls","emblem_window","domination_window","status_board","acquisition_popup"]:
+		if not original_main_ui_status.has(section):continue
+		var previous: Variant=original_main_ui_status[section]
+		var summary: Dictionary=_inventory_status_summary(previous) if previous is Dictionary else {}
+		summary.merge({"closed":true,"handled":false},true)
+		original_main_ui_status[section]=summary
 
 func bind_original_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	if image_adapter==null or not context_provider.is_valid() or not input_handler.is_valid():return {"ok":false,"code":"source_world_map_existing_owner_inputs_required"}

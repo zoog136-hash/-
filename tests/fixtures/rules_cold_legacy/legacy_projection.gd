@@ -34,6 +34,13 @@ static func _sha(bytes: PackedByteArray) -> String:
 	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256); hash.update(bytes)
 	return hash.finish().hex_encode()
 
+## Mirrors patch523_rules_projection._in_ints (float table numbers).
+static func _in_ints(value: Variant, allowed: Array) -> bool:
+	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value) != floorf(float(value)): return false
+	for candidate: Variant in allowed:
+		if typeof(candidate) in [TYPE_INT,TYPE_FLOAT] and float(candidate) == float(value): return true
+	return false
+
 static func _integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value))
 
@@ -70,9 +77,10 @@ static func _ids(rows: Array, field: String, distinct: bool = false) -> Array:
 	result.sort()
 	return result
 
+## Mirrors patch523_rules_projection._sorted_ids (float table IDs as ints).
 static func _sorted_ids(values: Array) -> Array:
 	var result: Array = []
-	for value: Variant in values: result.append(value)
+	for value: Variant in values: result.append(int(value) if typeof(value) == TYPE_FLOAT and _integer(value) else value)
 	result.sort(); return result
 
 static func _identity(record: Dictionary) -> String:
@@ -146,7 +154,7 @@ func _bind_catalog(catalog: Array, wallet_records: Array) -> bool:
 		if not _integer(raw_id): continue
 		var key: String = str(int(raw_id))
 		var state: Variant = entry.get("source_bless_raw",1)
-		if state not in [2,3] or _by_id.get(key,[]).size() != 1: continue
+		if not _in_ints(state,[2,3]) or _by_id.get(key,[]).size() != 1: continue
 		var base: Dictionary = _by_id[key][0]
 		if not base.get("source_m_native_item",false) or not base.get("source_is_stackable",false) or entry.get("source") != "lineagem_patch523" or entry.get("sourceId") != str(base.sourceId)+":bless:"+str(int(state)) or entry.get("name") != str(base.name)+(" · 축복" if state == 2 else " · 저주"): continue
 		var same: bool = true
@@ -234,7 +242,7 @@ func _item_reason(ins: Array, outs: Array) -> Dictionary:
 	for row: Dictionary in ins+outs:
 		if _empty_output(row): continue
 		var key: String = str(int(row.ItemClassID))
-		if row.Amount < 1 or row.Amount > (1000000000 if key == "26" else 100000000) or row.Enchant < 0 or row.Enchant > 21 or row.ItemBlessCodeID not in [1,2] or int(row.get("ItemHoningEpithetID",0)) != 0: return {"reason":"unresolved_item_state","item_id":row.ItemClassID}
+		if row.Amount < 1 or row.Amount > (1000000000 if key == "26" else 100000000) or row.Enchant < 0 or row.Enchant > 21 or not _in_ints(row.ItemBlessCodeID,[1,2]) or int(row.get("ItemHoningEpithetID",0)) != 0: return {"reason":"unresolved_item_state","item_id":row.ItemClassID}
 		var item: Dictionary = _items.get(key,{})
 		if item.is_empty(): return {"reason":"unresolved_item_condition","item_id":row.ItemClassID}
 		var exclusion: Dictionary = _declared_exclusion("ItemClass",item)
@@ -310,7 +318,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	var calendar: Variant = _calendar_window(view)
 	var total: int = 0; var valid_outs: bool = true
 	for row: Dictionary in outs:
-		if row.ItemCraftOutputTypeID not in [0,1,2] or row.Probability <= 0 or row.Probability > 1000000: valid_outs = false
+		if not _in_ints(row.ItemCraftOutputTypeID,[0,1,2]) or row.Probability <= 0 or row.Probability > 1000000: valid_outs = false
 		total += int(row.Probability)
 	var complete: bool = bool(_policy.get("allow_complete_source_outcome_contracts",false)) and outs.size() > 1 and valid_outs and total == 1000000
 	var missing: Dictionary = _policy.get("missing_failure_contracts",{}).get(craft_id,{})
@@ -334,7 +342,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
 	elif (not restrictions.is_empty() and not known_restriction) or view.ServerLimitSetID != 0 or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
 	elif view.CraftTimeTypeID != 1 or calendar == null: reason = "limited_calendar_or_time_type"
-	elif int(craft_id) in _policy.get("delegated_protection_recipe_ids",[]): reason = "delegated_protection_owner"
+	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
 	elif not probabilistic and not _same_result(view,outs[0]): reason = "view_output_disagreement"
 	else:
@@ -395,7 +403,7 @@ func _bound_items(bonuses: Dictionary, used_bonuses: Dictionary) -> Dictionary:
 	for key: String in _item_bonuses:
 		if inspectable.has(key) or not _items.has(key): continue
 		for link: Dictionary in _item_bonuses[key]:
-			if bonuses[str(int(link.BonusID))].BonusTypeID in [2022,8352]:
+			if _in_ints(bonuses[str(int(link.BonusID))].BonusTypeID,[2022,8352]):
 				inspectable[key] = [{"name":_description(int(_items[key].DescID),_items[key].Name),"source":"lineagem_patch523","sourceId":key,"slot":"consumable"}]
 				break
 	var enchant: Dictionary = _group(_tables.ItemEnchantBonus,"ItemEnchantBonusGroupID")

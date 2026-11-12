@@ -111,18 +111,74 @@ def link_or_copy(source, destination):
     destination.chmod(0o600)
 
 
+def native_source_actions(declarations, actor_id):
+    """This requested actor's registered domain, never header-file inheritance."""
+    matches = declarations.get(actor_id, [])
+    bank.require(len(matches) == 1, f"{actor_id}: expected one current SPR declaration, found {len(matches)}")
+    actions = getattr(matches[0], "native_action_descriptors", None)
+    bank.require(isinstance(actions, dict), "Native source registration is unavailable; regenerate native metadata and source plan.")
+    return {code: action for code, action in actions.items() if 0 <= code < 173}
+
+
+def metadata_action_index(rows):
+    index = defaultdict(list)
+    for row in rows:
+        index[row["action_key"]].append(row)
+    return dict(index)
+
+
+def requested_action_key(declarations, action_rows, sources, actor_id, action_id):
+    """Bind the requested header key to its distinct literal descriptor proof.
+
+    An older origin-only alias row cannot stand in for a requested action row.
+    Exact legacy literal rows remain usable; alias rows require the explicit
+    native selector ledger. This is a source join, not a new pixel validation.
+    """
+    action = bank.identity.native_action(declarations, actor_id, action_id)
+    declaration = declarations[actor_id][0]
+    expected = f"{declaration.source_file}:B{declaration.source_line}:A{action_id}"
+    matches = action_rows.get(expected, [])
+    bank.require(len(matches) == 1,
+                 f"Exact requested source action row is absent or ambiguous: {expected}; regenerate native metadata and saved plan.")
+    row = matches[0]
+    bank.require(bank._matching_action(action, row)
+                 and row.get("source_file_sha256") == sources[action["source_file"]]["sha256"],
+                 f"Requested source action differs from its literal descriptor: {expected}; regenerate native metadata and saved plan.")
+    native = row.get("native_selector_policy")
+    if native is not None or action["native_registration_kind"] == "explicit_action_alias":
+        bank.require(native == bank.identity.NATIVE_SELECTOR_POLICY,
+                     f"Requested action alias has no matching native selector ledger: {expected}; regenerate native metadata and saved plan.")
+        for field in ("native_requested_sprite_id", "native_body_request_sprite_id", "native_descriptor_origin_sprite_id", "native_registration_kind", "native_action_alias_chain"):
+            bank.require(row.get(field) == action[field],
+                         f"Requested action {field} differs: {expected}; regenerate native metadata and saved plan.")
+        request = {"sprite_id": actor_id, "source_file": declaration.source_file,
+                   "source_line": declaration.source_line,
+                   "source_file_sha256": sources[declaration.source_file]["sha256"]}
+        bank.require(row.get("native_request_declaration") == request,
+                     f"Requested action declaration pin differs: {expected}; regenerate native metadata and saved plan.")
+    return expected
+
+
+def require_resume_contract(previous, contract):
+    bank.require(previous.get("consumer_contract") == contract,
+                 "Resume bank contract differs; regenerate a native-selector bank with matching explicit timing. Existing bank files are preserved; no implicit migration is performed.")
+
+
 def connect(args):
     os.umask(0o077)
     started, last_report = time.monotonic(), time.monotonic()
     output = args.output.resolve()
     bank.require(not output.is_relative_to(Path(__file__).resolve().parents[2]), "original connection output must be private, outside the repository")
+    client_default_fps = getattr(args, "client_section_default_fps", False)
+    bank.require(not (args.allow_host_timing and client_default_fps),
+                 "choose host timing or the client section default, not both")
     output.mkdir(mode=0o700, parents=True)
     writer = Writer(output)
     plan = args.saved_plan
     summary = json.loads((plan / "summary.json").read_text(encoding="utf-8"))
     sources = (summary.get("source_spr_hashes") or summary.get("source_spr_hashes_from_existing_proof")
                or summary["source_spr_hashes_from_existing_receipt"])
-    contract = bank.consumer_contract(args.allow_host_timing)
+    contract = bank.consumer_contract(args.allow_host_timing, client_default_fps)
     inventory = {row["member"]: row for row in bank.records(args.metadata / bank.INVENTORY)}
     targets = {name for name, row in inventory.items() if row.get("source_family_categories")}
     receipts, followup = {}, {}
@@ -136,7 +192,8 @@ def connect(args):
     for member, row in receipts.items():
         if member not in identities and (row.get("current523_relation") or row.get("supplied_source_current523_manifest_match")):
             identities[member] = row
-    declarations = bank.original_spr.read([args.spr_root / name for name in sources])
+    declarations = bank.identity.read_native_sprs([args.spr_root / name for name in sources],
+        bank.original_spr.CLIENT_SECTION_DEFAULT_FPS if client_default_fps else None)
     dummy = bank.source_dummy_declarations([args.spr_root / name for name in sources], sources)
     actor_contexts = {row["source_owner_key"]:row for row in bank.records(args.metadata / "current523_sp2_actor_dependency_context.jsonl.gz")}
     followup_scope = ({row["member"]:row for row in bank.records(args.followup_scope)}
@@ -166,21 +223,26 @@ def connect(args):
     def file_dummy_path(member):
         owner = actor_contexts.get(inventory.get(member,{}).get("source_owner_context_key"),{}).get("source_declaration_sprite_id")
         return dummy_path(owner) if isinstance(owner,int) else None
-    action_keys = {}
-    for row in bank.records(args.metadata / bank.ACTIONS):
-        action_keys[(bank.source_name(row["source_file"]), row["source_line"], row["action_id"])] = row["action_key"]
+    action_keys = metadata_action_index(bank.records(args.metadata / bank.ACTIONS))
+    action_key_cache, checked_action_domains = {}, set()
 
     def key_for(actor_id, action_id):
-        _, actions = bank.original_spr.resolve(declarations, actor_id)
-        action = actions[action_id]
-        return action_keys[(action["source_file"], action["source_line"], action_id)]
+        pair = (actor_id, action_id)
+        if pair not in action_key_cache:
+            action_key_cache[pair] = requested_action_key(declarations, action_keys, sources, actor_id, action_id)
+        return action_key_cache[pair]
+
+    def require_complete_action_domain(actor_id):
+        if actor_id not in checked_action_domains:
+            for action_id in native_source_actions(declarations, actor_id):
+                key_for(actor_id, action_id)
+            checked_action_domains.add(actor_id)
 
     registry, raw, resume_root = {}, {}, args.resume_bank
     preserved_records, projection_required = {}, set()
     if resume_root is not None:
         previous = json.loads((resume_root / "manifest.json").read_text(encoding="utf-8"))
-        bank.require(previous.get("consumer_contract") == contract,
-                     "Resume bank timing contract differs; select its explicit host-timing mode or a matching strict bank.")
+        require_resume_contract(previous, contract)
         registry = previous["actors"]
         raw = previous["members"]
         for actor_key,info in previous.get("preserved_actor_records",{}).items():
@@ -249,8 +311,18 @@ def connect(args):
 
     def construct(request, scope):
         actor_id, action_id = request["actor_id"], request["action_id"]
+        bank.require(request.get("action_key") == key_for(actor_id, action_id),
+                     "Saved request key differs from its requested native action; regenerate native metadata and saved plan.")
+        # This complete domain is serialized below, including uncompiled
+        # actions. Reject a missing alias row before writing any new raw link.
+        require_complete_action_domain(actor_id)
         graph = bank.construct_source_graph(actor_id, action_id, declarations, sources, key_for,
                                              args.allow_host_timing, excluded_dummy=dummy)
+        # The connection reader already applied the caller's explicit section
+        # default above. Newly constructed records and their manifest must use
+        # that same timing contract; no resumed record is rewritten here.
+        for record in graph["records"].values():
+            record["consumer_contract"] = dict(contract)
         members = graph["members"]
         missing_identity = sorted(members - identities.keys())
         if missing_identity:
@@ -383,7 +455,7 @@ def connect(args):
     followup_emitted = defaultdict(list)
     for actor_id,members in sorted(followup_roots.items()):
         try:
-            _, source_actions = bank.original_spr.resolve(declarations,actor_id)
+            source_actions = native_source_actions(declarations, actor_id)
             if not source_actions:
                 followup_results.append({"actor_id":actor_id,"status":"blocked_no_literal_source_action_requires_supported_parent_binding",
                     "compiled":False,"related_followup_members":sorted(members)})
@@ -517,15 +589,33 @@ def connect(args):
     domains, domain_proofs = {}, []
     for actor_key in registry:
         sprite_id = int(actor_key.removeprefix("sprite:"))
-        body_id,source_actions = bank.original_spr.resolve(declarations,sprite_id)
+        source_actions = native_source_actions(declarations, sprite_id)
+        body_requests = {str(code): action["native_body_request_sprite_id"] for code, action in source_actions.items()}
+        body_ids = {}
+        for code, requested in body_requests.items():
+            matches = declarations.get(requested, [])
+            body_ids[code] = (matches[0].alias_target if matches[0].alias_target is not None else requested) if len(matches) == 1 else None
+        resolved = set(body_ids.values())
+        body_id = next(iter(resolved)) if len(resolved) == 1 and None not in resolved else None
         domains[actor_key] = {"source_snapshot":"patch523","source_actor_id":sprite_id,
             "resolved_body_sprite_id":body_id,"action_ids":sorted(source_actions),
+            "native_selector_policy":bank.identity.NATIVE_SELECTOR_POLICY,
+            "native_body_request_sprite_ids_by_action":body_requests,
+            "native_physical_body_sprite_ids_by_action":body_ids,
+            "native_body_file_policy":bank.identity.FILE_REMAP_POLICY,
             "action_domain_basis":"all_effective_original_SPR_actions_not_only_compiled_entries","source_proof_key":actor_key}
+        own = declarations[sprite_id][0]
         domain_proofs.append({"source_proof_key":actor_key,"source_actor_id":sprite_id,
-            "declaration_path":bank.identity.declaration_path(declarations,sprite_id,sources),
+            "native_selector_policy":bank.identity.NATIVE_SELECTOR_POLICY,
+            "declaration_path":[{"sprite_id":sprite_id,"alias_target":own.alias_target,
+                "source_file":own.source_file,"source_line":own.source_line,"source_sha256":sources[own.source_file]["sha256"]}],
             "source_actions":[{"action_id":action_id,"source_action_key":key_for(sprite_id,action_id),
                 "source_file":action["source_file"],"source_line":action["source_line"],
                 "source_sha256":sources[action["source_file"]]["sha256"],"literal_fps":action["fps"],
+                "native_body_request_sprite_id":action["native_body_request_sprite_id"],
+                "native_descriptor_origin_sprite_id":action["native_descriptor_origin_sprite_id"],
+                "native_registration_kind":action["native_registration_kind"],
+                "native_action_alias_chain":action["native_action_alias_chain"],
                 "literal_source_errors":action["errors"]} for action_id,action in sorted(source_actions.items())]})
     writer.records("source-action-domain-proofs.jsonl.gz",domain_proofs)
     manifest = {"schema":1,"kind":"current523_reference_sp2_action_bank","source_snapshot":"patch523",
@@ -538,7 +628,9 @@ def connect(args):
         "preserved_actor_records":preserved_records,"preserved_raw_members":preserved_raw,
         "map_placement_exclusions":{"sprite_ids":sorted(set(args.map_placement_exclusion_sprite)),
             "scope":"map_placement_only","placement_owner":"map_lane","originals_preserved":True},
-        "independent_source_layers_opt_in":True,"independent_layer_policy":"explicit_source_relation_same_action_id_child_own_clock_host_dispatch_unverified",
+        "native_selector_policy":bank.identity.NATIVE_SELECTOR_POLICY,
+        "native_activation_policy":bank.identity.NATIVE_ACTIVATION_POLICY,
+        "independent_source_layers_opt_in":False,"independent_layer_policy":bank.identity.LAYER_POLICY,
         "compilation_validation":"not_repeated_per_user_instruction","installed_this_run":False,"played_this_run":False}
     pin = writer.json("manifest.json",manifest)
     result = {"stage":"actual_source_graph_connections_written_without_additional_validation","counts":{**counts,

@@ -145,3 +145,24 @@ static func try_use(world, name: String) -> bool:
 	if not reason.is_empty():world.hud.show_message(reason);return true
 	world.original_skills.catalog.learn(id,name)
 	return true
+
+## MerchantGoods.LimitRepeatedBuyCardID for an original 523 skill book that
+## has no merchant-10 contract (e.g. 기란 혈맹 상인 린, merchant 91): the sold
+## item must be a native skill book whose own BuffCard is that card; it is
+## refused once the spell is learned (the existing "습득 후 재구매 차단"
+## reading), and while its original learn limits (class, level) or the local
+## skill identity do not hold - the same checks the book's use runs.
+static func native_repeat_qualification(world, sale: Dictionary, record: Dictionary) -> Dictionary:
+	var card_id: int = int(sale.get("LimitRepeatedBuyCardID",0))
+	var profile: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(record)
+	var spec: Dictionary = profile.get("spec",{})
+	if profile.get("kind")!="skill_book" or int(spec.get("card_id",-1))!=card_id:return {"ok":false,"reason":"반복 구매 카드와 원본 스킬서의 카드가 다릅니다"}
+	if world.get("original_skills")==null:return {"ok":false,"reason":"스킬 소유자 없음"}
+	var BOOK: Script = preload("res://scripts/loot/patch523_skill_book.gd")
+	var limit: String = BOOK.source_limit_problem(world,spec)
+	if not limit.is_empty():return {"ok":false,"reason":limit}
+	var catalog = world.original_skills.catalog
+	var identity: Dictionary = BOOK.resolve(BOOK._adapter(catalog),spec)
+	if identity.is_empty():return {"ok":false,"reason":"원본 주문의 기존 스킬 연결 없음"}
+	var reason: String = catalog.reason(catalog.record_for(str(identity.local_skill_id)),true)
+	return {"ok":reason.is_empty(),"reason":reason,"origin":ORIGIN}

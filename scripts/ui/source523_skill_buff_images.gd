@@ -139,14 +139,35 @@ static func describe_guardian_skill(record: Dictionary, runtime: Object, role: S
 	result.provenance["caller_identity_basis"] = "existing_guardian_skill_record_and_single_current_level_spell"
 	return result
 
+## Which loaded skill evidence the buff relation is read from. A compiled skill
+## pack carries its 64-hex fingerprint in active_sha256. With the original 523
+## definition ZIP installed (the phone's normal case) the skill owner instead
+## adopts profiles built from the verified archive ("original_bound_profiles")
+## and leaves active_sha256 empty by design; its source_identity names that
+## archive. Requiring active_sha256 alone left every skill buff (e.g. 실드) in
+## the HUD buff row without its original BuffClass icon on such installs.
+## Only skills the owner actually applied (not deferred) qualify.
+static func source_evidence(source: RefCounted, host_id: String) -> Dictionary:
+	if source == null or not source.has_method("evidence_for"): return {"reason":"native_buff_relation_unavailable"}
+	var compiled: String = str(source.get("active_sha256"))
+	if compiled.length() == 64: return {"sha256":compiled,"mode":"compiled_pack"}
+	if source.get("source_mode") != "original_bound_profiles": return {"reason":"native_buff_relation_unavailable"}
+	var identity: Variant = source.get("source_identity")
+	if not identity is Dictionary or identity.get("kind") != "twilight.current523.original-definitions.v1" or identity.get("source_snapshot") != "patch523" or identity.get("source_sha256") != SOURCE.SOURCE_SHA:
+		return {"reason":"native_buff_relation_unavailable"}
+	var status: Variant = source.get("source_fallback_status")
+	if not status is Dictionary or status.get("state") != "loaded" or not status.get("applied") is Array or not status.applied.has(host_id) or not status.get("deferred") is Dictionary or status.deferred.has(host_id):
+		return {"reason":"native_buff_relation_unavailable"}
+	return {"sha256":str(identity.source_sha256),"mode":"original_bound_profiles"}
+
 static func _skill_buff_identity(effect: Dictionary, source: RefCounted, record: Dictionary) -> Dictionary:
 	var host_id: String = str(effect.get("skill_id",""))
 	var binding: Dictionary = _binding(host_id)
 	if binding.is_empty(): return {"reason":"host_skill_binding_missing"}
 	if not str(effect.get("summon_stage","")).is_empty() or record.get("local_design",false) == true or record.has("estimated523"):
 		return {"reason":"native_buff_state_unconfirmed"}
-	if source == null or not source.has_method("evidence_for") or str(source.get("active_sha256")).length() != 64:
-		return {"reason":"native_buff_relation_unavailable"}
+	var loaded: Dictionary = source_evidence(source,host_id)
+	if loaded.has("reason"): return loaded
 	var profile: Dictionary = source.evidence_for(host_id)
 	if not profile.get("row") is Dictionary or not profile.get("row_json") is String or profile.row_json.sha256_text() != binding.row_sha256 or JSON.parse_string(profile.row_json) != profile.row or _positive_id(profile.row.get("ID")) != int(binding.spell_id):
 		return {"reason":"host_skill_binding_row_mismatch"}
@@ -170,7 +191,7 @@ static func _skill_buff_identity(effect: Dictionary, source: RefCounted, record:
 		if buff is Dictionary and buff.get("row") is Dictionary and _positive_id(buff.row.get("ID")) == id: matches.append(buff.row)
 	if matches.size() != 1: return {"reason":"native_buff_relation_ambiguous"}
 	return {"id":id,"identity_basis":"verified_unconditional_main_buff_relation","host_binding_sha256":_bindings_sha256,
-		"host_binding_row_sha256":binding.row_sha256,"source_skill_evidence_sha256":str(source.get("active_sha256")),"source_spell_class_id":int(binding.spell_id)}
+		"host_binding_row_sha256":binding.row_sha256,"source_skill_evidence_sha256":loaded.sha256,"source_skill_evidence_mode":loaded.mode,"source_spell_class_id":int(binding.spell_id)}
 
 static func describe_buff(effect: Dictionary, role: String, source: RefCounted = null, record: Dictionary = {}) -> Dictionary:
 	var info: Dictionary = _info("buff",role,str(effect.get("skill_id","")))

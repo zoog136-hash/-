@@ -14,7 +14,7 @@ const Exact=preload("res://scripts/equipment523/native_catalog.gd")
 const Dummy=preload("res://scripts/quests/source_dummy523.gd")
 const SAVE_KEY: String = "source_shop"
 const LIMIT: int = 9007199254740991
-const ITEM_BINDINGS: Dictionary = {549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
+const ITEM_BINDINGS: Dictionary = {3631:"명예 코인",549:"드래곤의 다이아몬드",859:"전투 강화의 주문서 (각인)",2501:"마녀의 마력 회복제",6411:"갑옷 마법 주문서 (각인)",65291:"축복 부여 주문서 (각인)",3581:"축복 부여 주문서"}
 const INTANGIBLE_BINDINGS: Dictionary = {2:"다이아",1:"마일리지"}
 var world
 ## The original shop model is needed to install bindings at boot and while
@@ -80,6 +80,9 @@ static func npc_input_identity_problem(value: Variant,npc_sha256: String,shop_sh
 
 static func validate(value: Variant) -> String:
 	if not value is Dictionary or value.get("version") != 1: return "상점 저장 버전 오류"
+	if value.has("frozen_exchange"):
+		var exchange_error: String = preload("res://scripts/exchange/frozen_exchange.gd").validate_state(value.frozen_exchange)
+		if not exchange_error.is_empty(): return exchange_error
 	if value.has("ticket_redemption"):
 		var ticket_error: String=InventoryTickets.validate_state(value.ticket_redemption)
 		if not ticket_error.is_empty():return ticket_error
@@ -598,7 +601,29 @@ func merchant_price(id: int) -> Dictionary:
 		price.unit_id=201
 		price.class_id=source_currency
 		price.origin=str(price.origin)+" · 원본 NPC 재화"
+		# User decision 2026-11-12: the price in a non-adena NPC currency is
+		# the adena-based amount over that Currency's original ExchangeRate
+		# (ClanCoin 100: 16,000,000 -> 160,000), rounded up. Rate 1 (아데나)
+		# leaves every existing merchant unchanged.
+		var rate: int=exchange_rate(source_currency)
+		if rate>1:
+			price.amount=rated_amount(int(price.amount),rate)
+			price.origin=str(price.origin)+" · 원본 환율 %d로 나눔(올림, 사용자 결정 2026-11-12)" % rate
 	return price
+
+## amount / rate rounded up, at least 1.
+static func rated_amount(amount: int, rate: int) -> int:
+	if rate<=1:return amount
+	@warning_ignore("integer_division")
+	var divided: int=amount/rate
+	if amount%rate!=0:divided+=1
+	return maxi(1,divided)
+
+## Original Currency.ExchangeRate (1 when the row or field is missing).
+static func exchange_rate(currency_id: int) -> int:
+	var row: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("Currency",currency_id)
+	var value: Variant=row.get("ExchangeRate",1)
+	return int(value) if integer(value) and int(value)>0 else 1
 
 func npc_label(merchant_id: int) -> String:
 	if npc_definitions.loaded_sha256.is_empty():return ""
@@ -613,16 +638,25 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["ClanLevelMin","LimitMinClanLevel","DaysAfterClanJoin","LimitDaysAfterClanJoin","LimitServerCount","LimitBuffCardID","Enchant","ElementalEnchant"]:
-		if int(row.get(key,0))!=0:return fail("NPC의 혈맹·서버·카드·장비 조건 미해석")
+	for key: String in ["LimitServerCount","LimitBuffCardID","Enchant","ElementalEnchant"]:
+		if int(row.get(key,0))!=0:return fail("NPC의 서버·카드·장비 조건 미해석")
+	# Clan columns read against the local clan (scripts/clan523/clan523.gd).
+	if int(row.get("ClanLevelMin",0))!=0 or int(row.get("LimitMinClanLevel",0))!=0 or int(row.get("DaysAfterClanJoin",0))!=0 or int(row.get("LimitDaysAfterClanJoin",0))!=0 or row.get("LimitClanMemberRank",false):
+		var clan: Variant=world.get("clan523")
+		if clan==null:return fail("NPC의 혈맹 조건 미해석")
+		var gate: Dictionary=clan.merchant_gate(row)
+		if not gate.ok:return fail(str(gate.reason))
+	var native_repeat: bool=false
 	if int(row.get("LimitRepeatedBuyCardID",0))>0:
-		var qualification: Dictionary=SkillBooks.qualification(world,row)
-		if not qualification.ok:return fail(str(qualification.reason))
-	if row.get("LimitClanMemberRank",false) or row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
+		if SkillBooks.contract(int(row.get("ItemClassID",0))).is_empty():native_repeat=true
+		else:
+			var qualification: Dictionary=SkillBooks.qualification(world,row)
+			if not qualification.ok:return fail(str(qualification.reason))
+	if row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
 	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
 	var local_context: Dictionary={}
 	if profile.get("time_unrestricted")!=true:
-		local_context=npc_definitions.context(int(row.MerchantsID),id)
+		local_context=npc_definitions.context(int(row.MerchantsID),id,world)
 		if not local_context.ok:return fail(str(local_context.reason))
 		if int(world.level)<int(local_context.get("minimum_level",0)):return fail("NPC 원격 목록 접근은 %d레벨 이상 · %s" % [int(local_context.minimum_level),str(local_context.origin)])
 		if not npc_definitions.rules.zero_hours_are_open or not npc_definitions.rules.zero_dates_are_open:return fail("NPC 0시간·0날짜 자체 동작이 비활성입니다")
@@ -653,7 +687,17 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if not binding.get("gold",false) and (world._item_locked(str(binding.name),"") or not world._enhancement_kind_for_record(binding.get("record",{})).is_empty()):return fail("잠긴 재료·장비를 결제에 사용할 수 없습니다")
 	var token: Dictionary=_token(4,int(row.ItemClassID),int(count.value))
 	var target: Dictionary=_resolve(token,true,world.inventory,int(world.gold))
-	if not target.ok:return target
+	if not target.ok:
+		# An original 523 item the game owns as a physical stack (e.g. the
+		# native skill books of 기란 혈맹 상인) is issued by the shared 523
+		# supplier at claim time, with its receipt.
+		var native: Dictionary=_native_supply_binding(int(row.ItemClassID),int(row.get("ItemBlessCodeID",1)))
+		if native.is_empty():return target
+		token["native_supply"]=true;token["bless_raw"]=int(row.get("ItemBlessCodeID",1))
+		target={"ok":true,"binding":native}
+	if native_repeat:
+		var repeat: Dictionary=SkillBooks.native_repeat_qualification(world,row,target.binding.get("record",{}))
+		if not repeat.ok:return fail(str(repeat.reason))
 	var stack_limit: int=int(target.binding.get("record",{}).get("source_max_stack",0))
 	if stack_limit>0 and int(world.inventory.get(str(target.binding.get("name","")),0))>stack_limit-int(count.value):return fail("원본 단일 스택 수량 한도 초과")
 	if target.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
@@ -694,9 +738,23 @@ func orders() -> Array:
 		result.append(row)
 	return result
 
+func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
+	var D: Script=preload("res://scripts/loot/patch523_monster_drops.gd")
+	var summary: Dictionary=D.definition_id(str(item_class_id))
+	if summary.is_empty() or summary.get("original_item",{}).get("TestItem",true):return {}
+	var record: Dictionary=D.variant_item(summary.get("native_record",{}),bless)
+	if record.is_empty() or D.equipment(record) or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
+	if preload("res://scripts/loot/current523_native_stack.gd").supply_profile(record).is_empty():return {}
+	return {"name":str(record.name),"record":record,"native_supply":true}
+
 func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionary, next_id: int) -> Dictionary:
 	for token: Dictionary in goods:
 		if not integer(token.get("amount")) or int(token.amount) < 1: return fail("지급 수량 오류")
+		if token.get("native_supply")==true:
+			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,int(token.class_id),int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":int(token.class_id)})
+			if not issued.get("ok",false):return fail(str(issued.get("error","원본 지급 실패")))
+			inventory=issued.overrides.inventory;instances=issued.overrides.item_instances;gold=int(issued.overrides.gold)
+			continue
 		var resolved: Dictionary = _resolve(token, true, inventory, gold)
 		if not resolved.ok: return resolved
 		var binding: Dictionary = resolved.binding

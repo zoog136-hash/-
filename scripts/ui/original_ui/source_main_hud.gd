@@ -3,6 +3,7 @@ extends Node
 ## adds no gameplay logic or artwork. Component positions are read from the
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const MENU_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Vitals=preload("res://scripts/ui/original_ui/source_main_vitals_bindings.gd")
 const Combat=preload("res://scripts/ui/original_ui/source_main_combat_bindings.gd")
@@ -193,8 +194,8 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 		_inventory_result=candidate.configure(pack,hud,Callable(self,"_inventory_original_image"))
 		if _inventory_result.get("ok",false):
 			_inventory_view=candidate
-			candidate.return_to_current_requested.connect(func(reason: Dictionary) -> void: inventory_return_to_current_requested.emit(reason))
-			candidate.closed.connect(func() -> void: inventory_closed.emit())
+			candidate.return_to_current_requested.connect(_inventory_view_fallback)
+			candidate.closed.connect(_inventory_view_closed)
 	if pack.manifest.get("scenes",{}).has("UI/ToolTip/ToolTip_HudType_Right.csb"):
 		var bag: Variant=hud.get("lineage_inventory_ui")
 		if bag is Control and is_instance_valid(bag):
@@ -424,8 +425,10 @@ func _equipment_original_image(record: Dictionary, native_context: Dictionary) -
 
 func try_open_character_equipment() -> Dictionary:
 	if _character_view==null or not is_instance_valid(_coordinates):return _fail("source_character_original_view_not_available")
+	var trace: int=MENU_TRACE.begin("character")
 	_cancel_native_buttons()
 	_character_result=_character_view.open_equipment(_coordinates)
+	MENU_TRACE.end(trace,_character_result.get("ok",false))
 	return _character_result.duplicate(true)
 
 func _quickslot_original_image(row: Dictionary, native_context: Dictionary) -> Dictionary:
@@ -443,8 +446,10 @@ func refresh_source_icons() -> Dictionary:
 
 func try_open_character_stats() -> Dictionary:
 	if _character_view==null or not is_instance_valid(_coordinates):return _fail("source_character_original_view_not_available")
+	var trace: int=MENU_TRACE.begin("character")
 	_cancel_native_buttons()
 	_character_result=_character_view.open_stats(_coordinates)
+	MENU_TRACE.end(trace,_character_result.get("ok",false))
 	return _character_result.duplicate(true)
 
 func character_is_open() -> bool:
@@ -456,6 +461,8 @@ func character_blocks_point(point: Vector2) -> bool:
 func close_character() -> void:
 	_cancel_native_buttons()
 	if _character_view!=null:_character_view.close()
+	_character_result.clear()
+	_release_menu_page_leases()
 
 func refresh_character_stats() -> Dictionary:
 	if not character_is_open():return {"ok":true,"handled":false}
@@ -521,8 +528,11 @@ func can_open_shop_window() -> bool:
 
 func try_open_shop_window(panel: Control) -> Dictionary:
 	if not can_open_shop_window():return _fail("source_shop_window_pack_scope_unavailable")
+	var trace: int=MENU_TRACE.begin("shop")
 	_cancel_native_buttons()
-	return _shop_window.open(_coordinates,panel)
+	var result: Dictionary=_shop_window.open(_coordinates,panel)
+	MENU_TRACE.end(trace,result.get("ok",false))
+	return result
 
 func shop_window_is_open() -> bool:
 	return _shop_window!=null and _shop_window.is_open()
@@ -530,11 +540,15 @@ func shop_window_is_open() -> bool:
 func close_shop_window() -> void:
 	_cancel_native_buttons()
 	if _shop_window!=null:_shop_window.close()
+	_release_menu_page_leases()
 
 func try_open_change_window(category: String) -> Dictionary:
 	if _change_window==null or not is_instance_valid(_coordinates):return _fail("source_change_window_pack_scope_unavailable")
+	var trace: int=MENU_TRACE.begin("change")
 	_cancel_native_buttons()
-	return _change_window.open(_coordinates,category)
+	var result: Dictionary=_change_window.open(_coordinates,category)
+	MENU_TRACE.end(trace,result.get("ok",false))
+	return result
 
 func change_window_is_open() -> bool:
 	return _change_window!=null and _change_window.is_open()
@@ -542,6 +556,7 @@ func change_window_is_open() -> bool:
 func close_change_window() -> void:
 	_cancel_native_buttons()
 	if _change_window!=null:_change_window.close()
+	_release_menu_page_leases()
 
 func quest_window_is_open() -> bool:
 	return _quest_window!=null and _quest_window.is_open()
@@ -552,6 +567,7 @@ func refresh_quest_window() -> Dictionary:
 func close_quest_window() -> void:
 	_cancel_native_buttons()
 	if _quest_window!=null:_quest_window.close()
+	_release_menu_page_leases()
 
 func close_quest_controls() -> void:
 	_cancel_native_buttons()
@@ -560,6 +576,8 @@ func close_quest_controls() -> void:
 	_quest_owner=null
 	if _quest_controls!=null:_quest_controls.close()
 	_quest_controls=null
+	_quest_controls_result.clear()
+	_release_menu_page_leases()
 
 func _mount_enhance_action(forge: Control) -> Dictionary:
 	if _enhance_action!=null:_enhance_action.close()
@@ -595,6 +613,7 @@ func close_enhance_action() -> void:
 func close_npc_dialogue() -> void:
 	_cancel_native_buttons()
 	if _npc_dialogue_view!=null:_npc_dialogue_view.close()
+	_release_menu_page_leases()
 
 func source_message_label_availability() -> bool:
 	return _legacy_message_visible
@@ -705,12 +724,14 @@ func close_crafting_search() -> void:
 func try_open_inventory() -> Dictionary:
 	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
 	if not is_instance_valid(_coordinates):return {"ok":false,"handled":false,"code":"source_main_not_configured"}
+	var trace: int=MENU_TRACE.begin("inventory")
 	_inventory_result=_inventory_view.open(_coordinates)
 	if _inventory_result.get("handled",false):
 		var presented: Dictionary=_inventory_view.presentation()
 		var native_scene: Node2D=presented.get("scene")
 		if is_instance_valid(native_scene):native_scene.z_index=150
 		_inventory_signature=_inventory_model_signature()
+	MENU_TRACE.end(trace,_inventory_result.get("ok",false))
 	return _inventory_result.duplicate(true)
 
 func inventory_is_open() -> bool:
@@ -728,9 +749,34 @@ func close_inventory() -> void:
 	_cancel_native_buttons()
 	if _inventory_name_view!=null:_inventory_name_view.close()
 	if _inventory_view!=null:_inventory_view.close()
+	_clear_inventory_presentation()
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
 	if owned_open and is_instance_valid(bag) and bag.has_method("_hide_item_name"):bag.call("_hide_item_name")
+
+func _inventory_view_closed() -> void:
+	_clear_inventory_presentation()
+	inventory_closed.emit()
+
+func _inventory_view_fallback(reason: Dictionary) -> void:
+	# Unsupported selection/filter states retire the native view without its
+	# closed signal. Release the old successful snapshot on this path too.
+	_clear_inventory_presentation()
+	inventory_return_to_current_requested.emit(reason)
+
+func _clear_inventory_presentation() -> void:
+	# These are diagnostic snapshots, not inventory or save ownership. Their
+	# nested owner results can keep every closed slot texture alive.
+	_inventory_result.clear()
+	_inventory_name_result.clear()
+	_release_menu_page_leases()
+
+func _release_menu_page_leases() -> void:
+	# Active sprites/fonts own their textures. Decoded atlas pages are only
+	# needed to construct new textures and can return to the bounded idle pool.
+	# Another active view remains valid and a later decode re-acquires a page.
+	if _pack!=null and _pack.has_method("release_cache_leases"):
+		_pack.release_cache_leases()
 
 func inventory_name_hint_context(reference: String) -> Dictionary:
 	return _inventory_view.name_hint_context(reference) if inventory_is_open() and _inventory_name_view!=null else {}
@@ -819,6 +865,51 @@ func close_status_board() -> void:
 		_cancel_native_buttons()
 		_status_board.close()
 
+## --- Original 523 재료 아이템 출처 popup (source_main_acquisition_popup)
+const AcquisitionPopup=preload("res://scripts/ui/original_ui/source_main_acquisition_popup.gd")
+var _acquisition_popup: RefCounted
+
+func try_open_acquisition(world: Node, item_class_id: int, item_name: String="") -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _acquisition_popup==null and _pack!=null and hud!=null:
+		var popup=AcquisitionPopup.new()
+		if popup.configure(_pack,hud).get("ok",false):_acquisition_popup=popup
+	if _acquisition_popup==null or not is_instance_valid(_coordinates):return _fail("source_acquisition_popup_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name)
+
+func acquisition_is_open() -> bool:
+	return _acquisition_popup!=null and _acquisition_popup.is_open()
+
+func close_acquisition() -> void:
+	if acquisition_is_open():
+		_cancel_native_buttons()
+		_acquisition_popup.close()
+
+## --- Original 523 혈맹 문장 선택 popup (source_main_emblem_window, world.emblem523)
+const EmblemWindow=preload("res://scripts/ui/original_ui/source_main_emblem_window.gd")
+var _emblem_window: RefCounted
+
+func try_open_emblem_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _emblem_window==null and _pack!=null and hud!=null:
+		var window=EmblemWindow.new()
+		if window.configure(_pack,hud).get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_emblem_window=window
+	if _emblem_window==null or not is_instance_valid(_coordinates):return _fail("source_emblem_window_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _emblem_window.open(_coordinates,world)
+
+func emblem_window_is_open() -> bool:
+	return _emblem_window!=null and _emblem_window.is_open()
+
+func close_emblem_window() -> void:
+	if emblem_window_is_open():
+		_cancel_native_buttons()
+		_emblem_window.close()
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
@@ -859,7 +950,9 @@ func toggle_world_map() -> Dictionary:
 
 func close_world_map() -> Dictionary:
 	if not is_instance_valid(_world_map):return {"ok":true,"closed":true}
-	return _world_map.close()
+	var result: Dictionary=_world_map.close()
+	_release_menu_page_leases()
+	return result
 
 func update_map_name(map_name: String) -> Dictionary:
 	if not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
@@ -1230,6 +1323,15 @@ func _remember(result: Dictionary) -> Dictionary:
 func _exit_tree() -> void:
 	release(_restore_legacy)
 
+func _notification(what: int) -> void:
+	if not is_inside_tree() or _pack==null:return
+	match what:
+		NOTIFICATION_APPLICATION_PAUSED:MENU_TRACE.lifecycle("paused")
+		NOTIFICATION_APPLICATION_RESUMED:MENU_TRACE.lifecycle("resumed")
+		NOTIFICATION_APPLICATION_FOCUS_IN:MENU_TRACE.lifecycle("focus_in")
+		NOTIFICATION_APPLICATION_FOCUS_OUT:MENU_TRACE.lifecycle("focus_out")
+		NOTIFICATION_WM_CLOSE_REQUEST:MENU_TRACE.lifecycle("close_request")
+
 func release(restore_legacy: bool=true) -> void:
 	_restore_legacy=restore_legacy
 	set_process(false)
@@ -1242,6 +1344,9 @@ func release(restore_legacy: bool=true) -> void:
 	if _workspace_controls!=null:_workspace_controls.close()
 	close_enhance_action()
 	close_quest_controls()
+	close_quest_window()
+	close_shop_window()
+	close_change_window()
 	if _inventory_lock_view!=null:_inventory_lock_view.close()
 	close_inventory()
 	if _quickslot_view!=null:_quickslot_view.close()

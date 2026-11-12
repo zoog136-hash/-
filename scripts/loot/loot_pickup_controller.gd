@@ -92,8 +92,12 @@ func select(view: Button) -> void:
 	selected_id = id
 	(view as TwilightGroundLoot).set_selected(true)
 	var record: Dictionary = manager.records[id]
-	info.text = "%s · %s ×%d" % [record["item_name"], record["grade"], record["quantity"]]
-	info.add_theme_color_override("font_color", TwilightDropVisual.grade_color(str(record["grade"])))
+	var title: String = str(record["item_name"])
+	var item: Variant = record.get("item_record")
+	if item is Dictionary and item.get("source_m_native_item") == true:
+		title = str(preload("res://scripts/loot/current523_native_fields.gd").field(item,"source_display_name",title))
+	info.text = "%s · %s ×%d" % [title, record["grade"], record["quantity"]]
+	info.add_theme_color_override("font_color", preload("res://scripts/loot/current523_item_grade.gd").color(item if item is Dictionary else str(record["grade"]), TwilightDropVisual.grade_color(str(record["grade"]))))
 	_show_selected_item_image(record)
 	overlay.show()
 

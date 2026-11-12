@@ -6,10 +6,12 @@ signal native_effect_frame(event: Dictionary)
 const WEAPON_BANKS=preload("res://scripts/animation/source_weapon_banks.gd")
 var source_weapon_status:Dictionary={}
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+const SP2_COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
 var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const REFERENCE_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CURRENT523_BANK = preload("res://scripts/resources/current523_source_bank.gd")
 const CURRENT523_EFFECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
 var source_effect_status: Dictionary = {}
@@ -333,6 +335,13 @@ func _build_reference_frame_status(inputs: Dictionary) -> Dictionary:
 	var attachment: Dictionary = inputs.attachment
 	return {"purpose":inputs.purpose,"consumer":inputs.consumer,"request_key":card.get("request_key",overlay.get("request_key",attachment.get("request_key",""))),"overlay_parent":overlay.duplicate(true),"attachment_parent":attachment.duplicate(true),"role":inputs.role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",inputs.record_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":inputs.record_sprite_id,"stored_direction":inputs.direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":bool(inputs.in_main) and not shown.is_empty(),"M_visual_equivalence_verified":false}
 
+static func _effect_node_key(layer: Dictionary) -> Variant:
+	# Only new, explicitly verified DTOs separate ordered source instances.
+	# A legacy binding trace alone is not an upgrade to native multiplicity.
+	var instance: Variant = layer.get("source_layer_instance_key")
+	if instance is String and not instance.is_empty(): return "source_instance:" + instance
+	return int(layer.layer_id)
+
 func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_count: int, manifest_path: String) -> bool:
 	# Exact attachment nodes stay linked even while their source blend is unresolved.
 	for track: Dictionary in tracks.values():
@@ -340,9 +349,13 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 			for frame: Dictionary in frames:
 				for effect: Dictionary in frame.get("effect_layers", []):
 					var id: int = int(effect.layer_id)
-					if _effect_nodes.has(id): continue
+					var node_key: Variant = _effect_node_key(effect)
+					if _effect_nodes.has(node_key): continue
 					var effect_node: Sprite2D = Sprite2D.new()
 					effect_node.name = "SourceAttachment" + str(id)
+					if node_key is String:
+						effect_node.name += "_Instance" + str(_effect_nodes.size())
+						effect_node.set_meta("source_layer_instance_key",effect.source_layer_instance_key)
 					effect_node.centered = false
 					effect_node.z_index = 1
 					var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
@@ -375,7 +388,7 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 					effect_node.set_meta("blend_status", effect.get("blend_status", "unverified"))
 					effect_node.hide()
 					add_child(effect_node)
-					_effect_nodes[id] = effect_node
+					_effect_nodes[node_key] = effect_node
 	_record = candidate
 	var root_attributes: Array = candidate.get("source_attributes", []).duplicate()
 	if root_attributes.is_empty():
@@ -532,6 +545,23 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
+	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
+	var body_attributes: Array = []
+	var body_attributes_unresolved: bool = true
+	var body_projection_verified: bool = false
+	if is_reference:
+		for source_layer: Dictionary in selected.layers:
+			if source_layer.get("kind", "") == "body":
+				var body_input: Dictionary = SP2_COMPOSITOR.attribute_input(source_layer)
+				body_attributes = body_input.attributes
+				body_attributes_unresolved = body_input.unresolved or (not source_layer.has("source_attributes") and not source_layer.has("source_attribute_projection"))
+				var body_projection: Variant = source_layer.get("source_attribute_projection")
+				body_projection_verified = body_projection is Dictionary and bool(body_projection.get("ok",false)) and not body_attributes_unresolved
+				break
+		if _reference_attachment_parent.get("kind", "") == "shadow":
+			body_attributes = _reference_attachment_parent.get("parent_draw_attributes", [])
+			body_attributes_unresolved = bool(_reference_attachment_parent.get("parent_draw_attributes_unresolved", true))
+			body_projection_verified = bool(_reference_attachment_parent.get("parent_draw_projection_verified", false)) and not body_attributes_unresolved
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
 	for effect: Dictionary in selected.get("effect_layers", []):
 		if effect.has("client_null"): continue
@@ -540,27 +570,30 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			if not verified.ok:
 				_abort_reference_source(verified)
 				return
-		var node: Sprite2D = _effect_nodes.get(int(effect.layer_id)) as Sprite2D
+		var node: Sprite2D = _effect_nodes.get(_effect_node_key(effect)) as Sprite2D
 		if node == null: continue
+		node.set_meta("source_layer_id",int(effect.layer_id))
 		node.position = Vector2(float(effect.offset[0]), float(effect.offset[1]))
 		node.set_meta("source_pixel_path", INSTALL.resolve_file(_root, str(effect.path)))
 		node.set_meta("source_frame", selected.source_frame)
 		# Explicit host compatibility, with original attr and strict-mode behavior retained.
 		var style: Dictionary = node.get_meta("compatibility_style", {})
 		if is_reference:
-			style = POLICY.effect(effect.get("source_attributes",[]),_playback_mode)
-			if bool(effect.get("source_attributes_unresolved",false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
-		if bool(style.get("enabled", false)):
+			var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(effect)
+			style = POLICY.effect(own_input.attributes,_playback_mode)
+			if own_input.unresolved: style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
+		var recovered: Dictionary = SP2_COMPOSITOR.style(effect, body_attributes, body_attributes_unresolved, _playback_mode, body_projection_verified) if is_reference else {}
+		if bool(style.get("enabled", false)) or not recovered.is_empty():
 			if is_reference:
-				var material: CanvasItemMaterial = node.material as CanvasItemMaterial
-				if material == null: material = CanvasItemMaterial.new()
-				material.blend_mode = int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX))
-				node.material = material
-				node.modulate.a = float(style.get("alpha",1.0))
+				SP2_COMPOSITOR.reset(node)
+				if recovered.is_empty():
+					node.material = _blend_material(int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX)))
+					node.modulate.a = float(style.get("alpha",1.0))
 			var texture: Texture2D = _source_texture(effect)
 			if texture == null and is_reference: return
 			if texture != null:
 				node.texture = texture
+				if not recovered.is_empty(): SP2_COMPOSITOR.apply(node, recovered)
 				node.show()
 	if token != _last_token:
 		_last_token = token
@@ -578,14 +611,21 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if layer.has("client_null"):
 			_layers[index].hide()
 			continue
+		if is_reference: SP2_COMPOSITOR.reset(_layers[index])
 		var is_body: bool = layer.get("kind") == "body" if is_reference else int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
 		_layers[index].material = _source_body_material if is_body and not is_reference else null
 		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and not is_reference and _source_body_material != null else 1.0
 		_layers[index].set_meta("source_layer_kind",layer.get("kind","body" if is_body else ""))
 		_layers[index].set_meta("source_role_actor_id",track.get("source_sprite_id",_record.get("source_sprite_id",-1)))
-		if is_reference and (not layer.get("source_attributes", []).is_empty() or bool(layer.get("source_attributes_unresolved", false))):
-			var style: Dictionary = POLICY.effect(layer.get("source_attributes", []), _playback_mode)
-			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)):
+		var draw_layer: Dictionary = layer
+		if is_reference and is_body and _reference_attachment_parent.get("kind", "") == "shadow":
+			draw_layer = layer.duplicate()
+			draw_layer["kind"] = "shadow"
+		var recovered: Dictionary = SP2_COMPOSITOR.style(draw_layer, body_attributes, body_attributes_unresolved, _playback_mode, body_projection_verified) if is_reference else {}
+		var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(layer) if is_reference else {}
+		if recovered.is_empty() and is_reference and (not own_input.attributes.is_empty() or own_input.unresolved):
+			var style: Dictionary = POLICY.effect(own_input.attributes, _playback_mode)
+			if own_input.unresolved or not bool(style.get("enabled", false)):
 				_layers[index].hide()
 			else:
 				_layers[index].material = _blend_material(int(style.blend_mode))
@@ -595,8 +635,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if texture == null: return
 		_layers[index].texture = texture
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
+		if not recovered.is_empty(): SP2_COMPOSITOR.apply(_layers[index], recovered)
 	if _reference_bank != null:
-		var source_children_ready: bool = _advance_reference_children(delta,source_direction)
+		var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
 		if not source_children_ready and not _reference_texture_budget.is_empty():
 			var problem: Dictionary = _reference_child_problem.duplicate(true)
 			_abort_reference_source(problem)
@@ -605,7 +646,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		for index: int in range(selected.layers.size()):
 			if _layers[index].visible: shown_layers.append(selected.layers[index])
 		for layer: Dictionary in selected.get("effect_layers", []):
-			var node: Sprite2D = _effect_nodes.get(int(layer.layer_id)) as Sprite2D
+			var node: Sprite2D = _effect_nodes.get(_effect_node_key(layer)) as Sprite2D
 			if node != null and node.visible: shown_layers.append(layer)
 		var card_consumer: bool = not _reference_card_context.is_empty() or not _reference_overlay_parent.is_empty() or not _reference_attachment_parent.is_empty()
 		var consumer: String = str(_reference_card_context.get("consumer",_reference_overlay_parent.get("consumer",_reference_attachment_parent.get("consumer",""))))
@@ -621,6 +662,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 
 func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dictionary:
 	var provenance: Dictionary = layer.frame_provenance.duplicate(true)
+	var instance: Variant = layer.get("source_layer_instance_key")
+	if instance is String and not instance.is_empty():
+		provenance["source_layer_instance_key"] = instance
 	if attachment.has("source_binding_id"):
 		provenance["parent_source_binding_id"] = attachment.source_binding_id
 		provenance["parent_reference_instance_ids"] = attachment.get("reference_instance_ids",[]).duplicate()
@@ -628,7 +672,7 @@ func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dict
 		provenance["native_reference_multiplicity_verified"] = false
 	return provenance
 
-func _advance_reference_children(delta: float, stored_direction: int) -> bool:
+func _advance_reference_children(delta: float, stored_direction: int, parent_attributes: Array = [], parent_unresolved: bool = true, parent_projection_verified: bool = false) -> bool:
 	var lineage: Dictionary = _reference_card_context if not _reference_card_context.is_empty() else (_reference_attachment_parent if not _reference_attachment_parent.is_empty() else _reference_overlay_parent)
 	if lineage.is_empty(): return true
 	_reference_child_problem.clear()
@@ -672,6 +716,9 @@ func _advance_reference_children(delta: float, stored_direction: int) -> bool:
 				child._reference_attachment_parent["native_reference_multiplicity_verified"] = false
 			child.z_index = -1 if attachment.kind == "shadow" else 1
 			_reference_source_children[key] = child
+		child._reference_attachment_parent["parent_draw_attributes"] = parent_attributes.duplicate()
+		child._reference_attachment_parent["parent_draw_attributes_unresolved"] = parent_unresolved
+		child._reference_attachment_parent["parent_draw_projection_verified"] = parent_projection_verified
 		# This advances the child's own source tokens/FPS, independently of the
 		# parent's selected token index. Only the explicit host role starts it.
 		if not child.advance_reference_source(delta,"source_layer",stored_direction):
@@ -742,11 +789,15 @@ func _source_texture(layer: Dictionary) -> Texture2D:
 					return null
 			if texture == null:
 				var reservation: int = SHARED_ASSETS.reserve("texture",verified_key,charge)
+				var upload_started: int = FRAME_HITCH.now()
 				texture = ImageTexture.create_from_image(result.image)
+				# API elapsed time, not a GPU-completion fence.
+				FRAME_HITCH.detail("sp2.texture_create", upload_started)
 				if texture == null:
 					SHARED_ASSETS.cancel(reservation)
 					_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
 					return null
+				FRAME_HITCH.count("sp2.texture_created")
 				texture = SHARED_ASSETS.complete(reservation,texture,charge,_asset_owner) as Texture2D
 			if SHARED_ASSETS.holds("texture",verified_key,_asset_owner): _texture_leases[key] = verified_key
 			_textures[key] = texture
@@ -765,11 +816,19 @@ func attachment_status() -> Dictionary:
 	var pending: int = 0
 	var origins: Dictionary = {}
 	var presentation_observations: Array = []
+	var compositors: Array = []
+	var source_nodes: Array = _layers.duplicate()
+	source_nodes.append_array(_effect_nodes.values())
+	for node: Sprite2D in source_nodes:
+		if node.visible and node.has_meta("source_compositor"):
+			var entry: Dictionary = {"layer_id":node.get_meta("source_layer_id",-1),"style":node.get_meta("source_compositor").duplicate()}
+			if node.has_meta("source_layer_instance_key"):entry["source_layer_instance_key"] = node.get_meta("source_layer_instance_key")
+			compositors.append(entry)
 	for track: Dictionary in _playback_tracks.values():
 		if bool(track.static_pending_timing): pending += 1
 		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
-	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
+	return {"recovered_source_compositors":compositors,"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
 ## One read-only CanvasItemMaterial per blend mode, shared by every reference
 ## layer (a new material per layer per frame used to be allocated here).
@@ -844,12 +903,14 @@ func _dispatch_reference_overlays(frames: Array, track: Dictionary, total: float
 	_reference_overlay_clock = end
 
 func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, token_index: int, stored_direction: int) -> bool:
-	# Existing ]SpriteID host compatibility: one supplied action, same anchor and
-	# stored facing, one shot. No native signal, sound, damage or nested dispatch.
+	# Existing ]SpriteID host compatibility: one supplied action, snapshotted anchor
+	# and stored facing, one shot. No native signal, sound, damage or nested dispatch.
 	var overlay = get_script().new()
 	overlay.playback_mode_override = _playback_mode
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
+	# The source event copies position/direction; the scene parent owns lifetime.
+	overlay.set_as_top_level(true)
 	if not overlay._configure_reference_bank(_manifest_path,str(_reference_card_context.manifest_sha256),int(binding.target_sprite_id),{"idle":int(binding.child_action_id)},{"idle":false},"idle","overlay"):
 		overlay.free()
 		return false
@@ -1096,8 +1157,13 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
 	parent.add_child(overlay)
-	if fixed_world_point: overlay.set_as_top_level(true)
+	# Existing spell/item/invoke callers supply a world-space event snapshot.
+	# Only apply events without a point remain attached to their moving owner.
+	var world_anchored: bool = fixed_world_point or world_point.is_finite()
+	if world_anchored: overlay.set_as_top_level(true)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
+	var placement: String = "existing_caller_world_point" if world_anchored else "existing_owner_relative_apply_event"
+	overlay._reference_overlay_parent["placement_policy"] = placement
 	if not overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing):
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
@@ -1107,6 +1173,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"
+	source_effect_status["placement_policy"] = placement
 	return true
 
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:

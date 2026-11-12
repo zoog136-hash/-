@@ -1,0 +1,77 @@
+{
+  "scope": "bounded_official_public_route_research_not_production_data",
+  "recorded_at_utc": "2026-11-12T05:23:57.727575+00:00",
+  "public_gets_performed": 3,
+  "additional_market_api_queries": 0,
+  "current_price_ui_script": {
+    "url": "https://assets.playnccdn.com/plaync/gameinfo/2.2.1/js/itemprice.js",
+    "http_status": 200,
+    "response_date": "Thu, 12 Nov 2026 04:25:47 GMT",
+    "bytes": 1149944,
+    "sha256": "c576711c0d33225609764920a1a1a22ee3bc7c5b7cee95522a89805a3a95e1cf",
+    "price_related_api_paths": [
+      "/{service}/v2.0/price/search/item",
+      "/{service}/v2.0/price/search/item/{itemId}/stock",
+      "/v2.0/price/search/item/suggest",
+      "/{service}/v2.0/game/market/world",
+      "/{service}/v2.0/game/market/category"
+    ],
+    "absent_terms": [
+      "snapshotToken",
+      "bulk",
+      "search_after",
+      "searchAfter",
+      "scrollId",
+      "continuation",
+      "nextToken"
+    ],
+    "unrelated_term_contexts": {
+      "snapshot": "React component/store state",
+      "cursor": "CSS pointer/text cursor",
+      "export": "JavaScript module exports",
+      "download": "PURPLE client download links/images"
+    }
+  },
+  "official_developers_portal": {
+    "url": "https://developers.plaync.com/",
+    "http_status": 200,
+    "response_date": "Thu, 12 Nov 2026 05:23:02 GMT",
+    "bytes": 3160,
+    "sha256": "239bb6157f55ffbe24303460d0ba21ab1b142dc5235f95a688d9d50e7d85ec37",
+    "public_html_is_spa_shell": true,
+    "referenced_app_script_not_fetched_due_to_get_budget": "/assets/index.8cd7483d.js"
+  },
+  "official_web_search_result": "No published LineageM listing bulk-export or fixed-snapshot/cursor documentation identified. Lineage2M API documentation search results are not treated as LineageM support.",
+  "verified_cache_receipt_count": 21,
+  "pagination_change_proof": [
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?serverId=1&sale=true&size=30&page=1",
+      "http_date": "Thu, 12 Nov 2026 05:11:40 GMT",
+      "sha256": "ab177c997d506e9696e684cfef7572aaad1097ec4e7405673f7c2995ae0679ad",
+      "body_file": "a095bc50c2d9a56f97d3b30de4b2c84881256703fa372cbb1a7b713d4fef580d.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 53,
+        "total": 1566,
+        "limit": 10000
+      }
+    },
+    {
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?serverId=1&sale=true&size=30&page=18",
+      "http_date": "Thu, 12 Nov 2026 05:13:27 GMT",
+      "sha256": "e56b00dacb05b4250731f3f207027d84fb014d355a2c8321d3c3dfe15fb00a4a",
+      "body_file": "b8523390403d6e6e1adf9f8173f7a8c8b7199e1862fafde523d73fa6e38508b2.json",
+      "pagination": {
+        "page": 18,
+        "size": 30,
+        "lastPage": 53,
+        "total": 1567,
+        "limit": 10000
+      }
+    }
+  ],
+  "conclusion": "No alternative capture route was established within this bounded research. This does not prove no such route exists. The preserved run changed total during traversal, so it remains stopped_incomplete and cannot be promoted as a complete or atomic snapshot.",
+  "strict_collection_rules_changed": false,
+  "production_import_performed": false
+}

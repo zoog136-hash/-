@@ -49,8 +49,15 @@ func setup(world_node: Node, actor_node: Node2D) -> void:
 	generation = int(world.get("combat_generation"))
 	last_position = actor.global_position
 
+static func allowed_for_actor(actor_node: Node) -> bool:
+	if not is_instance_valid(actor_node): return false
+	var preview: Variant = actor_node.get("original_source_preview")
+	return not (is_instance_valid(preview) and preview.has_method("current523_source_only_presentation") and bool(preview.call("current523_source_only_presentation")))
+
 func _context_valid() -> bool:
-	return is_instance_valid(world) and is_instance_valid(actor) and int(world.get("hp")) > 0
+	# This authored light is never an original-SPR fallback, even while the
+	# selected original body/effect is pending. Original effect owners are separate.
+	return is_instance_valid(world) and allowed_for_actor(actor) and int(world.get("hp")) > 0
 
 func _context_changed() -> bool:
 	return generation != int(world.get("combat_generation")) or actor.global_position.distance_squared_to(last_position) > 65536.0

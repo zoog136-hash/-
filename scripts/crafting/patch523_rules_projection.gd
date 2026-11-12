@@ -99,6 +99,14 @@ static func _sha(bytes: PackedByteArray) -> String:
 	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256); hash.update(bytes)
 	return hash.finish().hex_encode()
 
+## Table numbers arrive as floats (1.0); `1.0 in [1,2]` is false in Godot,
+## so membership is compared on whole-number values.
+static func _in_ints(value: Variant, allowed: Array) -> bool:
+	if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value) != floorf(float(value)): return false
+	for candidate: Variant in allowed:
+		if typeof(candidate) in [TYPE_INT,TYPE_FLOAT] and float(candidate) == float(value): return true
+	return false
+
 static func _integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value))
 
@@ -135,9 +143,12 @@ static func _ids(rows: Array, field: String, distinct: bool = false) -> Array:
 	result.sort()
 	return result
 
+## Record ID lists come from table JSON (1.0); _ids() yields ints and Array
+## equality is type-strict, so integral numbers are compared as ints (#411):
+## otherwise no native equipment (slot/class IDs) binds to the rules model.
 static func _sorted_ids(values: Array) -> Array:
 	var result: Array = []
-	for value: Variant in values: result.append(value)
+	for value: Variant in values: result.append(int(value) if typeof(value) == TYPE_FLOAT and _integer(value) else value)
 	result.sort(); return result
 
 static func _identity(record: Dictionary) -> String:
@@ -288,7 +299,7 @@ func _bind_catalog(catalog: PackedInt32Array, wallet_records: PackedInt32Array) 
 		if not _integer(raw_id): continue
 		var key: String = str(int(raw_id))
 		var state: Variant = entry.get("source_bless_raw",1)
-		if state not in [2,3] or _by_id.get(key,[]).size() != 1: continue
+		if not _in_ints(state,[2,3]) or _by_id.get(key,[]).size() != 1: continue
 		var base: Dictionary = _rec(_by_id[key][0])
 		if not base.get("source_m_native_item",false) or not base.get("source_is_stackable",false) or entry.get("source") != "lineagem_patch523" or entry.get("sourceId") != str(base.sourceId)+":bless:"+str(int(state)) or entry.get("name") != str(base.name)+(" · 축복" if state == 2 else " · 저주"): continue
 		var same: bool = true
@@ -381,7 +392,7 @@ func _item_reason(ins: Array, outs: Array) -> Dictionary:
 	for row: Dictionary in ins+outs:
 		if _empty_output(row): continue
 		var key: String = str(int(row.ItemClassID))
-		if row.Amount < 1 or row.Amount > (1000000000 if key == "26" else 100000000) or row.Enchant < 0 or row.Enchant > 21 or row.ItemBlessCodeID not in [1,2] or int(row.get("ItemHoningEpithetID",0)) != 0: return {"reason":"unresolved_item_state","item_id":row.ItemClassID}
+		if row.Amount < 1 or row.Amount > (1000000000 if key == "26" else 100000000) or row.Enchant < 0 or row.Enchant > 21 or not _in_ints(row.ItemBlessCodeID,[1,2]) or int(row.get("ItemHoningEpithetID",0)) != 0: return {"reason":"unresolved_item_state","item_id":row.ItemClassID}
 		var item: Dictionary = _items.row(key)
 		if item.is_empty(): return {"reason":"unresolved_item_condition","item_id":row.ItemClassID}
 		var exclusion: Dictionary = _declared_exclusion("ItemClass",item)
@@ -457,7 +468,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	var calendar: Variant = _calendar_window(view)
 	var total: int = 0; var valid_outs: bool = true
 	for row: Dictionary in outs:
-		if row.ItemCraftOutputTypeID not in [0,1,2] or row.Probability <= 0 or row.Probability > 1000000: valid_outs = false
+		if not _in_ints(row.ItemCraftOutputTypeID,[0,1,2]) or row.Probability <= 0 or row.Probability > 1000000: valid_outs = false
 		total += int(row.Probability)
 	var complete: bool = bool(_policy.get("allow_complete_source_outcome_contracts",false)) and outs.size() > 1 and valid_outs and total == 1000000
 	var missing: Dictionary = _policy.get("missing_failure_contracts",{}).get(craft_id,{})
@@ -481,7 +492,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
 	elif (not restrictions.is_empty() and not known_restriction) or view.ServerLimitSetID != 0 or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
 	elif view.CraftTimeTypeID != 1 or calendar == null: reason = "limited_calendar_or_time_type"
-	elif int(craft_id) in _policy.get("delegated_protection_recipe_ids",[]): reason = "delegated_protection_owner"
+	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
 	elif not probabilistic and not _same_result(view,outs[0]): reason = "view_output_disagreement"
 	else:
@@ -603,7 +614,7 @@ func _plan_items() -> void:
 		for bonus_id: int in _link_bonus_ids(key):
 			var linked: Variant = bonus(str(bonus_id))
 			if not linked is Dictionary: problem = "제작 원본 Bonus 참조가 없습니다: "+str(bonus_id); return
-			if linked.BonusTypeID in [2022,8352]:
+			if _in_ints(linked.BonusTypeID,[2022,8352]):
 				var item: Dictionary = _items.row(key)
 				inspectable[key] = [_records.add({"name":_description(int(item.DescID),item.Name),"source":"lineagem_patch523","sourceId":key,"slot":"consumable"},false)]
 				break
@@ -759,7 +770,10 @@ static func binding_document(items: Array, contract: Dictionary, parse: bool = t
 		for index: int in items.size():
 			# Registered records are identified by their full form (template
 			# fields included), exactly as registration produced them.
-			var item: Variant = NATIVE_FIELDS.full(items[index])
+			# The real template store can construct the same full record in a
+			# single merge; generic/cached/unusable inputs keep full(). The
+			# complete JSON hash and parsed slim binding are unchanged.
+			var item: Variant = NATIVE_FIELDS._full_for_binding(items[index])
 			var text: String = JSON.stringify(item,"",true,true)
 			size += _hash_text(hash,("" if index == 0 else ",")+text)
 			# Same values a whole-document parse gives for these fields.

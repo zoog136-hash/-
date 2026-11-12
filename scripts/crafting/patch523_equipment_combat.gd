@@ -101,7 +101,7 @@ static func try_source_spell(world: Node,effect: Dictionary,target: Node,attack_
 	if not valid(effect) or effect.get("kind")!="attack_source_spell" or world.original_skills==null or world.original_skills.equipment_source_depth>0:return {}
 	var option: Dictionary=effect.option
 	if not attack_matches(option,attack_kind) or bool(option.BySpellAttack)!=by_spell or not is_instance_valid(target) or bool(target.get("dead")):return {}
-	var profile: Dictionary=world.patch523_equipment.data.get("equipment_spell_profiles",{}).get(str(int(option.Param1)),{})
+	var profile: Dictionary=preload("res://scripts/crafting/current523_equipment_spell_profiles.gd").of(world.patch523_equipment,int(option.Param1))
 	var context: Dictionary={"source":"patch523_equipment","source_sha256":world.patch523_equipment.digest,"instance_id":effect.instance_id,"source_item_id":effect.source_item_id,"row_id":int(effect.row_id),"option_id":int(option.ID)}
 	var life: int=int(target.get("life_id"))
 	if not preload("res://scripts/crafting/patch523_equipment_spells.gd").eligible(world,profile,target,life,context) or not roll(world,int(effect.probability)):return {}

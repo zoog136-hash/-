@@ -33,6 +33,10 @@ var filters: HBoxContainer
 var product_title: Label
 var price: HBoxContainer
 var compact_short: bool=false
+## A recipe the next crafting window opens on (the original 523 재료 아이템
+## 출처 popup's craft list); consumed by configure().
+static var pending_focus: String=""
+static var last_focus: Dictionary={}
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -184,6 +188,24 @@ func configure(controller: Node) -> void:
 		var recipe: Dictionary = registry[id]
 		all_recipe_ids.append(id)
 	_rebuild_listing()
+	if not pending_focus.is_empty():
+		var target: String=pending_focus
+		pending_focus=""
+		last_focus={"recipe_id":target,"focused":focus_recipe(target)}
+
+## Shows every recipe and selects `recipe_id` when the game has it.
+func focus_recipe(recipe_id: String) -> bool:
+	if not all_recipe_ids.has(recipe_id):return false
+	category_filter.select(0)
+	grade_filter.select(0)
+	name_filter.text=""
+	_rebuild_listing()
+	var index: int=recipe_ids.find(recipe_id)
+	if index<0:return false
+	listing.select(index)
+	listing.ensure_current_is_visible()
+	_select(index)
+	return current_id==recipe_id
 
 func _reflow() -> void:
 	# Reuse the existing compact list/detail navigation in the filter row so

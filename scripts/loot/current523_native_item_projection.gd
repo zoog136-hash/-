@@ -17,6 +17,32 @@ static func whole(value: Variant) -> Variant:
 static func label(id: Variant) -> String:
 	if not integer(id) or int(id)<=0:return ""
 	return str(SOURCE.row("DescData_Korean",int(id)).get("Description","")).strip_edges()
+## SpecialResistance / HitSpecialResistance on equipment: application type
+## SpecialResistanceType with the status as target, unit Percentage shown
+## through its UIUnit Denominator (50000 -> 5). The statuses TWILIGHT has
+## (stun/hold/fear/poison/silence) feed the existing *_resistance/_accuracy
+## record fields; Ice/Lapidification/Sleep/Dark etc. stay unhandled.
+const STATUS_BONUS={"SpecialResistance":"_resistance","HitSpecialResistance":"_accuracy"}
+const STATUS_PREFIX={"Stun":"stun","Hold":"hold","Fear":"fear","Poison":"poison","Silence":"silence"}
+static func status_field(row: Dictionary) -> Dictionary:
+	var bonus: Dictionary=row.get("bonus",{})
+	if row.get("IsPossession")!=false or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or not integer(bonus.get("BonusApplicationTypeID")) or not integer(bonus.get("BonusApplicationTargetID")):return {}
+	if str(SOURCE.row("BonusApplicationType",int(bonus.BonusApplicationTypeID)).get("Name",""))!="SpecialResistanceType":return {}
+	var type: String=str(SOURCE.row("SpecialResistanceType",int(bonus.BonusApplicationTargetID)).get("Name",""))
+	if not STATUS_PREFIX.has(type):return {}
+	var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return {}
+	return {"field":STATUS_PREFIX[type]+STATUS_BONUS[str(row.bonus_type.Name)],"value":int(bonus.Value)/int(display[0].Denominator),"type":type,"denominator":int(display[0].Denominator)}
+
+## Equipment CarryPlus in host weight points: Value / UIUnit Denominator of
+## its unit (Weight = 100); 0 when the row is not a whole, positive, direct one.
+static func carry_bonus(row: Dictionary) -> int:
+	var bonus: Dictionary=row.get("bonus",{})
+	if not direct(row) or not integer(bonus.get("Value")) or int(bonus.Value)<=0:return 0
+	var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return 0
+	return int(bonus.Value)/int(display[0].Denominator)
+
 static func direct(row: Dictionary) -> bool:
 	return row.get("IsPossession")==false and row.get("bonus",{}).get("BonusApplicationTypeID")==0 and row.get("bonus",{}).get("BonusApplicationTargetID")==0
 static func values(rows: Array,names: Array) -> Dictionary:
@@ -150,6 +176,11 @@ static func record(definition: Dictionary) -> Dictionary:
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
 	for index: int in range(rows.size()):
 		var row: Dictionary=rows[index];var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var unit: String=str(row.get("unit",{}).get("Name",""));var amount: Variant=row.get("bonus",{}).get("Value")
+		if equipment and name_value in STATUS_BONUS and unit=="Percentage":
+			var status: Dictionary=status_field(row)
+			if not status.is_empty():
+				out[status.field]=int(out.get(status.field,0))+int(status.value);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":status.field,"value":status.value,"source_special_resistance_type":status.type,"source_denominator":status.denominator})
+			continue
 		if not direct(row) or not integer(amount):continue
 		if equipment and unit=="Value" and FLAT.has(name_value):
 			var field: String=FLAT[name_value];out[field]=int(out.get(field,0))+int(amount);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":amount})
@@ -160,6 +191,13 @@ static func record(definition: Dictionary) -> Dictionary:
 				if ui.size()!=1 or ui[0].get("Denominator")!=10000:continue
 			var denominator: int=1000000 if name_value in ["MoveSpeedBonus","ExperienceAdditionPercent"] else 10000
 			out[field]=float(out.get(field,1.0 if field=="speed" else 0.0))+float(amount)/denominator;handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":float(amount)/denominator,"source_denominator":denominator})
+		elif equipment and name_value=="CarryPlus" and unit=="Weight":
+			# BonusType CarryPlus (unit Weight) shown over its UIUnit Denominator
+			# (100): 50000 -> "무게 보너스+500" in the original item text. Same
+			# weightBonus field and rule as cards/collections/enchantment.
+			var weight: int=carry_bonus(row)
+			if weight<=0:continue
+			out["weightBonus"]=int(out.get("weightBonus",0))+weight;handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":"weightBonus","value":weight,"source_denominator":int(amount)/weight})
 		elif equipment and name_value in ["IsTwoHanded","CanEquipWithTwoHanded"] and unit=="TrueFalse" and int(amount) in [0,1]:
 			var field: String="source_is_two_handed" if name_value=="IsTwoHanded" else "source_can_equip_with_two_handed"
 			if out.has(field) and out[field]!=bool(amount):return {}
@@ -191,7 +229,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=timed
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bag: Dictionary=reward_bag(definition)
+	var bag: Dictionary=reward_bag(definition,false)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
@@ -215,6 +253,11 @@ static func record(definition: Dictionary) -> Dictionary:
 	if not bless_scroll.is_empty():
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
+	var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
+	if not bless_points.is_empty():
+		out["source_use_spec"]=bless_points
+		if bless_points.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
 	var mastery: Dictionary=source_mastery_points(definition)
 	if not mastery.is_empty():
@@ -298,6 +341,31 @@ class TemplateStore extends RefCounted:
 			if (light as Dictionary).has(key):result[key]=light[key]
 			elif (heavy.fields as Dictionary).has(key):result[key]=heavy.fields[key]
 		return _shared(result) if interning else result
+	## Internal equipment serialization path. The normal record() then
+	## FIELDS.full() build two full Dictionaries; these immutable rows can be
+	## merged in one pass with the same key order and override/copy semantics.
+	## A null result requests the unchanged generic full() fallback. This path
+	## is used only after registration disables string interning.
+	func _expanded_for_binding(id: String, own: Dictionary) -> Variant:
+		# A subclass may override record(); never bypass its provider contract.
+		if get_script().get_base_script() != null: return null
+		if interning or not FIELDS.lazy(own) or not offsets.has(id): return null
+		file.seek(int(offsets[id]))
+		var light: Variant = file.get_var()
+		var heavy: Variant = file.get_var()
+		if not light is Dictionary or not heavy is Dictionary or not heavy.get("keys") is Array or not heavy.get("fields") is Dictionary: return null
+		var result: Dictionary = {}
+		for key: Variant in heavy.keys:
+			# Malformed typed-Array keys retain the old path and diagnostics.
+			if not (key is String or key is StringName): return null
+			if not light.has(key) and not heavy.fields.has(key): continue
+			if own.has(key): result[key] = own[key]
+			elif key in FIELDS.HEAVY: result[key] = FIELDS._copy(light[key] if light.has(key) else heavy.fields[key])
+		# Preserve empty/missing-template caching through the generic path.
+		if result.is_empty(): return null
+		for key: Variant in own:
+			if key != FIELDS.MARK and not result.has(key): result[key] = own[key]
+		return result
 	## The light catalog form (FIELDS.slim() of the record) without decoding
 	## the heavy fields.
 	func light(id: String) -> Variant:
@@ -417,12 +485,116 @@ static func _template_stop(stage: String,writer: TemplateWriter,identity: Dictio
 	print("CURRENT523_NATIVE_TEMPLATE_STORE_STOPPED "+JSON.stringify({"stage":stage}))
 	return {"ok":false,"reason":"native_item_template_store_failed","stage":stage,"message":message,"retry":"next_start","source_definition_archive":identity,"ownership_changed":false,"executed_gameplay":false}
 
+## A Class domain is immutable for one verified original during registration.
+## Bag/selection DTOs only ask its IDs; rebuilding all Class rows for each
+## item repeats the same verified join thousands of times. The scope owns no
+## game state and is released on every returned result, including failures.
+class RegistrationScope extends RefCounted:
+	var source_key: String = ""
+	var source_generation: int = -1
+	var classes: Dictionary = {}
+	var ready: bool = false
+	var builds: int = 0
+	var hits: int = 0
+	var describe_reader: Script = null
+	var profile: bool = false
+	var describe_us: int = 0
+	var dto_us: int = 0
+	var describe_calls: int = 0
+	var dto_calls: int = 0
+	func active_classes(reader: Variant, collect: Callable) -> Dictionary:
+		var current_key: String = reader.verified_key()
+		var generation: int = _generation(reader)
+		if not current_key.is_empty() and ready and current_key == source_key and generation == source_generation:
+			hits += 1
+			return classes
+		ready = false; classes = {}; source_key = current_key; source_generation = generation
+		var rows: Array = reader.rows("Class")
+		builds += 1
+		var result: Dictionary = collect.call(rows)
+		# Missing inputs are not memoized: the normal reader can retry them.
+		if current_key.is_empty() or rows.is_empty(): return result
+		# Re-resolve first: opening a different archive can itself call reset().
+		if reader.verified_key() != current_key or _generation(reader) != generation: return result
+		result.make_read_only()
+		classes = result; ready = true
+		return classes
+	func _generation(reader: Variant) -> int:
+		if reader == SOURCE: return SOURCE.cache_generation()
+		return int(reader.call("cache_generation")) if reader.has_method("cache_generation") else 0
+
+static func _collect_active_classes(rows: Array) -> Dictionary:
+	var active: Dictionary = {}
+	for row: Dictionary in rows:
+		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true: active[int(row.ID)] = row
+	return active
+
+static var _scope_mutex: Mutex = Mutex.new()
+static var _registration_scopes: Dictionary = {}
+
+static func _swap_registration_scope(scope: RegistrationScope) -> RegistrationScope:
+	var thread_id: int = OS.get_thread_caller_id()
+	_scope_mutex.lock()
+	var previous: RegistrationScope = _registration_scopes.get(thread_id)
+	if scope == null: _registration_scopes.erase(thread_id)
+	else: _registration_scopes[thread_id] = scope
+	_scope_mutex.unlock()
+	return previous
+
+static func _start_registration_reader() -> void:
+	# Start only on a cold, valid real-original registration. Synthetic owners,
+	# rejected inputs and warm template reads retain their old dependency path.
+	var identity: Dictionary = SOURCE.identity()
+	if identity.is_empty() or identity != _inputs().identity(): return
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	if scope == null or scope.describe_reader != null: return
+	var path: String = "res://scripts/resources/current523_item_data.gd"
+	if not ResourceLoader.exists(path): return
+	var reader: Script = load(path) as Script
+	if reader == null: return
+	# This is positive API validation only. No definition, graph or mutable
+	# source state is memoized; every item still executes describe().
+	for method: Dictionary in reader.get_script_method_list():
+		if method.get("name") == "describe":
+			scope.describe_reader = reader
+			return
+
+## No source data or definition result is cached here: only the already
+## loaded script whose static describe API was checked above. Default reads
+## outside registration keep their original optional-module checks.
+## Optional diagnostics are owned by the current registration, never by
+## item definitions or persistent data. Default play performs no clocks.
+static func registration_profile_scope() -> RegistrationScope:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	return scope if scope != null and scope.profile else null
+
+static func registration_item_reader() -> Script:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	var reader: Script = scope.describe_reader if scope != null else null
+	_scope_mutex.unlock()
+	return reader
+
+static func _active_classes() -> Dictionary:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	return scope.active_classes(SOURCE, _collect_active_classes) if scope != null else _collect_active_classes(SOURCE.rows("Class"))
+
 const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 ## Boot progress wrapper: one begin/end line around the whole registration.
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	var boot_started: int=BOOT_LOG.begin("item_register",{})
+	var scope := RegistrationScope.new()
+	scope.profile = OS.get_environment("TWILIGHT_NATIVE_REGISTER_PROFILE") == "1"
+	var previous_scope: RegistrationScope = _swap_registration_scope(scope)
 	var result: Dictionary=_register_logged(owner,catalog,document)
-	BOOT_LOG.end("item_register",boot_started,{"ok":bool(result.get("ok",false)),"reason":str(result.get("reason",""))})
+	_swap_registration_scope(previous_scope)
+	BOOT_LOG.end("item_register",boot_started,{"ok":bool(result.get("ok",false)),"reason":str(result.get("reason","")),"class_domain_builds":scope.builds,"class_domain_hits":scope.hits,"describe_us":scope.describe_us,"dto_us":scope.dto_us,"describe_calls":scope.describe_calls,"dto_calls":scope.dto_calls})
 	return result
 static func _register_logged(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	var src: RegisterInputs=_inputs()
@@ -445,8 +617,10 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	# of the verified original and this code, so it is baked once on the
 	# device and read back by ID on later starts instead of describing every
 	# item again. Any code/data change or damaged file rebuilds the bake.
+	var template_started: int = BOOT_LOG.begin("item_templates_open")
 	var templates: TemplateStore=_open_templates()
 	var value_key: String=_template_key()
+	BOOT_LOG.end("item_templates_open",template_started,{"hit":templates!=null})
 	if templates==null and lazy and not _template_failure.is_empty() and _template_failure.get("key")==value_key:
 		return _template_stop(str(_template_failure.stage),null,src.identity(),value_key)
 	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start(template_fault)
@@ -484,6 +658,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	# Light baked records below are read through FIELDS.field(), so their
 	# templates are reachable while registering (bound again after the loop).
 	if templates!=null and lazy:FIELDS.bind(templates)
+	if templates == null: _start_registration_reader()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in src.row_count("ItemClass"):
 		var raw: Dictionary=src.row_at("ItemClass",row_index)
@@ -659,9 +834,22 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
+## Item rows a lucky bag may carry. ResetAutoSlotByEmpty (TrueFalse) clears the
+## auto-use slot when the stack runs out; a bag can only sit in one with an
+## AutoUseRegistrable row, which is not admitted here (it still blocks), so
+## the flag has nothing to clear and is satisfied as it stands.
+const BAG_UNITS={"LuckyBagClassID":"LuckyBagClassID","ResetAutoSlotByEmpty":"TrueFalse"}
+static func bag_flags_valid(rows: Array) -> bool:
+	for row: Dictionary in rows:
+		if str(row.get("bonus_type",{}).get("Name",""))=="ResetAutoSlotByEmpty" and whole(row.get("bonus",{}).get("Value")) not in [0,1]:return false
+	return true
+
 # Same public compiler _source_reward_bag_spec contract, supplied by the
 # existing ItemData -> RewardData graph. This does not grant any reward.
-static func reward_bag(definition: Dictionary) -> Dictionary:
+## The public helper retains its original evidence by default. record() drops
+## these entity copies before returning, so its private false path avoids only
+## those disposable copies; every source join and validation below still runs.
+static func reward_bag(definition: Dictionary, retain_source_entities: bool = true) -> Dictionary:
 	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
 	for row: Dictionary in rows:
 		if row.get("bonus_type",{}).get("Name")=="LuckyBagClassID":refs.append(row)
@@ -672,11 +860,17 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	if graphs.size()!=1:return {}
 	var graph: Dictionary=graphs[0];var bag: Dictionary=graph.get("lucky_bag_class",{})
 	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true or bag.get("ID")!=id or graph.get("entities",[]).is_empty() or not SOURCE.declared_exclusion("LuckyBagClass",bag).is_empty():return {}
-	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"LuckyBagClassID":"LuckyBagClassID"},false)
+	var selectable: int=0
+	for entity: Dictionary in graph.entities:
+		if whole(entity.get("row",{}).get("LuckyBagEntityTypeID"))==3:selectable+=1
+	if selectable>0:
+		if selectable!=graph.entities.size():return {}
+		return selectable_bag(definition,graph,label(definition.original_item.get("StoryDescID")),_active_classes(),func(item_id: int) -> Array:return SOURCE.related("ItemEquipSlot","ItemClassID",item_id),func(table: String,row: Dictionary) -> Dictionary:return SOURCE.declared_exclusion(table,row))
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,BAG_UNITS,false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var distribution: Array=[];var active: Dictionary={};var domain: Array=[]
-	for row: Dictionary in SOURCE.rows("Class"):
-		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	if not bag_flags_valid(rows):reasons.append("unsupported_item_bonus_unit_or_value:ResetAutoSlotByEmpty")
+	active = _active_classes()
 	for row: Dictionary in definition.get("class_rows",[]):
 		if not integer(row.get("ClassID")):distribution.append("unsupported_lucky_bag_root_class");continue
 		if int(row.ClassID) not in domain:domain.append(int(row.ClassID))
@@ -695,7 +889,9 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 		for limit: Dictionary in entity.get("class_limits",[]):
 			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
 			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):distribution.append("unsupported_lucky_bag_entity_class");continue
-			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
+			classes.append(int(raw.ClassID))
+			if retain_source_entities:
+				var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
 		if (row.get("LimitClass")==10000 and not classes.is_empty()) or (row.get("LimitClass")!=10000 and whole(row.get("LimitClass")) not in classes):distribution.append("unresolved_lucky_bag_class_limit")
 		for class_id: int in classes:
 			if not active.has(class_id):distribution.append("unsupported_lucky_bag_entity_class")
@@ -713,7 +909,8 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and equip.get("EquipSlotID")!=293):level_ok=false
 			if slots.size()!=1:level_ok=false
 		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
-		var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
+		if retain_source_entities:
+			var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
 		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
 		rewards.append(reward)
 		if kind==0:weighted.append(reward)
@@ -739,6 +936,89 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	if not weighted.is_empty():
 		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
 		if distribution.is_empty():spec["source_probability_denominator"]=10000000
+	return spec
+
+## How many entries the item's own original description says are chosen
+## ("다음 아이템 중 1종 선택 획득"): the one count it states, or 0 when it states
+## none or more than one different count. Line breaks/spaces inside the
+## phrase are ignored ("1종\n선택").
+static func described_selection_count(text: String) -> int:
+	var compact: String=""
+	for index: int in range(text.length()):
+		var character: String=text[index]
+		if character not in [" ","\n","\r","\t"]:compact+=character
+	var pattern:=RegEx.create_from_string("(?<![0-9])([0-9]+)종(?:을|를)?선택")
+	var counts: Dictionary={}
+	for found: RegExMatch in pattern.search_all(compact):counts[int(found.get_string(1))]=true
+	return int(counts.keys()[0]) if counts.size()==1 else 0
+
+## A lucky bag whose LuckyBagEntityView rows are all LuckyBagEntityType 3
+## "Selectable": the player picks entries instead of a draw. The count comes
+## from the item's original description (LuckyBagClass has no count column);
+## each choice is the row's own item, amount, ItemBlessCodeID and ItemEnchant.
+## Nothing is removed from the original list: one ineligible entry blocks it.
+## `equip_slots(item_id)` and `exclusion(table,row)` read the original rows
+## (synthetic in tests).
+static func selectable_bag(definition: Dictionary,graph: Dictionary,description: String,active: Dictionary,equip_slots: Callable,exclusion: Callable) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var bag: Dictionary=graph.get("lucky_bag_class",{})
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,BAG_UNITS,false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons;var domain: Array=[]
+	if not bag_flags_valid(rows):reasons.append("unsupported_item_bonus_unit_or_value:ResetAutoSlotByEmpty")
+	for row: Dictionary in definition.get("class_rows",[]):
+		if not integer(row.get("ClassID")):reasons.append("unsupported_lucky_bag_root_class");continue
+		if int(row.ClassID) not in domain:domain.append(int(row.ClassID))
+	if domain.is_empty():domain=active.keys()
+	domain.sort()
+	for class_id: int in domain:
+		if not active.has(class_id):reasons.append("unsupported_lucky_bag_root_class")
+	var count: int=described_selection_count(description)
+	if count!=1:reasons.append("unresolved_lucky_bag_selection_count")
+	var rewards: Array=[];var linked: Array=[]
+	for entity: Dictionary in graph.get("entities",[]):
+		var row: Dictionary=entity.get("row",{});var type: Dictionary=entity.get("entity_type",{});var item: Dictionary=entity.get("item_class",{})
+		if whole(type.get("ID"))!=3 or type.get("Name")!="Selectable":reasons.append("unsupported_lucky_bag_entity_type")
+		if not exclusion.call("LuckyBagEntityView",row).is_empty() or not exclusion.call("LuckyBagEntityType",type).is_empty():reasons.append("source_declared_bag_entity_exclusion")
+		var classes: Array=[];var limits: Array=[]
+		for limit: Dictionary in entity.get("class_limits",[]):
+			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
+			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):reasons.append("unsupported_lucky_bag_entity_class");continue
+			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
+		if (whole(row.get("LimitClass"))==10000 and not classes.is_empty()) or (whole(row.get("LimitClass"))!=10000 and whole(row.get("LimitClass")) not in classes):reasons.append("unresolved_lucky_bag_class_limit")
+		for class_id: int in classes:
+			if not active.has(class_id):reasons.append("unsupported_lucky_bag_entity_class")
+		var eligible: bool=classes.is_empty()
+		for class_id: int in classes:
+			if class_id in domain:eligible=true
+		if eligible and (item.get("TestItem")!=false or not exclusion.call("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
+		if level_ok and int(enchant)>0:
+			var slots: Dictionary={};var equip_rows: Array=equip_slots.call(int(item.get("ID",0)))
+			if equip_rows.is_empty():level_ok=false
+			for equip: Dictionary in equip_rows:
+				var slot: Dictionary=SOURCE.row("EquipSlot",int(equip.get("EquipSlotID",-1))) if not equip.has("slot") else equip.slot
+				var name_value: String=str(slot.get("Name",""));slots[whole(equip.get("EquipSlotID"))]=true
+				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and whole(equip.get("EquipSlotID"))!=293):level_ok=false
+			if slots.size()!=1:level_ok=false
+		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
+		var original_row: Dictionary=row.duplicate(true);original_row["entity_type"]=type.duplicate(true);original_row["class_limits"]=limits;linked.append(original_row)
+		rewards.append({"source_entity_id":whole(row.get("ID")),"item_class_id":whole(row.get("ItemClassID")),"amount":whole(row.get("ItemAmount")),"bless_raw":whole(row.get("ItemBlessCodeID")),"enchant":whole(enchant),"class_ids":classes,"entity_type_id":3,"entity_type":"Selectable"})
+	var counts: Dictionary={}
+	for class_id: int in domain:
+		var options: int=0
+		for reward: Dictionary in rewards:
+			if reward.class_ids.is_empty() or class_id in reward.class_ids:options+=1
+		counts[str(class_id)]=options
+		if options==0:reasons.append("no_eligible_lucky_bag_selection_for_source_class")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec["kind"]="source_selectable_bag";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["lucky_bag_class_id"]=bag.get("ID");spec["original_lucky_bag_class"]=bag.duplicate(true)
+	spec["select_max_count"]=count;spec["select_count_origin"]="ItemClass.StoryDescID";spec["select_count_description"]=description
+	spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
+	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
 static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array) -> void:
@@ -768,8 +1048,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID"},false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var active: Dictionary={};var domain: Array=[]
-	for row: Dictionary in SOURCE.rows("Class"):
-		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	active = _active_classes()
 	for row: Dictionary in definition.get("class_rows",[]):
 		if integer(row.get("ClassID")) and int(row.ClassID) not in domain:domain.append(int(row.ClassID))
 	if domain.is_empty():domain=active.keys()
@@ -892,6 +1171,48 @@ static func source_mastery_points(definition: Dictionary) -> Dictionary:
 		if reason not in unique:unique.append(reason)
 	var grant: Dictionary=grants[0] if grants.size()==1 else {}
 	return {"kind":"weapon_mastery_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":grant.get("points",0),"weapon_type":grant.get("weapon_type",0),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## 축복 포인트 충전 (ItemCategory IntangibleItemRecharger): IntangibleItemClassID
+## naming IntangibleItemClass "BlessPoint" and IntangibleItemAmount N. Using one
+## adds N to the existing symbol (문양) blessing points. The item's own original
+## description must state the same "축복 포인트 N"; other intangible classes
+## (Gem etc.) and any other row stay unsupported.
+## `intangible(id)` reads IntangibleItemClass (synthetic rows in tests).
+static func source_bless_points(definition: Dictionary,description: String,intangible_row: Callable=Callable()) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="IntangibleItemRecharger" or raw.is_empty():return {}
+	var reasons: Array=[];var ids: Array=[];var classes: Array=[];var amounts: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value=="IntangibleItemClassID" and direct(row) and row.get("unit",{}).get("Name")=="IntangibleItemClassID" and integer(bonus.get("Value")):classes.append(int(bonus.Value));continue
+		if name_value=="IntangibleItemAmount" and direct(row) and row.get("unit",{}).get("Name")=="Value" and integer(bonus.get("Value")) and int(bonus.Value)>0:amounts.append(int(bonus.Value));continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	var intangible: Dictionary={}
+	if classes.size()==1:intangible=intangible_row.call(int(classes[0])) if intangible_row.is_valid() else SOURCE.row("IntangibleItemClass",int(classes[0]))
+	if classes.size()!=1 or amounts.size()!=1:reasons.append("missing_or_ambiguous_intangible_item_rows")
+	elif intangible.get("Name")!="BlessPoint":reasons.append("unsupported_intangible_item_class:"+str(classes[0]))
+	var amount: int=int(amounts[0]) if amounts.size()==1 else 0
+	if amount>0 and amount not in described_bless_points(description):reasons.append("description_bless_point_amount_mismatch")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"source_bless_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":amount,"intangible_item_class":intangible.duplicate(true),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## Every "축복 포인트 N" amount an original description states ("1,000" -> 1000).
+static func described_bless_points(text: String) -> Array:
+	var found: Array=[]
+	for match_value: RegExMatch in RegEx.create_from_string("축복\\s*포인트\\s*([0-9][0-9,]*)").search_all(text):
+		var value: int=int(match_value.get_string(1).replace(",",""))
+		if value not in found:found.append(value)
+	return found
 
 ## Equipment bless scrolls (ItemCategory ScrollBless, item target). The
 ## blessing itself is the existing equipment blessing owner; its success rate
