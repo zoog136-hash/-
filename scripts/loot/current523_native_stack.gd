@@ -295,7 +295,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
-static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[]) -> String:
+static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[],dormant: Dictionary={}) -> String:
 	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
 	var stored: Variant=warehouse.get("instances",{});var stored_counts: Variant=warehouse.get("stacks",{})
 	if not stored is Dictionary or not stored_counts is Dictionary:return "원본 창고 물리 저장 형식 확인 필요"
@@ -313,6 +313,11 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		var owned: Dictionary=proof_entry(physical.data,uid)
 		if uid.is_empty() or all.has(uid) or owned.is_empty() or entry.get("player_dropped")!=true or entry.get("quantity")!=1 or int(owned.remaining)!=1 or entry.get("item_name")!=physical.data.get("name") or entry.get("item_record")!=physical.data.get("record"):return "바닥 원본 개체·잔량·출처 중복 또는 불일치"
 		all[uid]=physical.data;floor_ids[uid]=true
+	# Offline character ownership proves shared quantity journals without
+	# granting their items or counting their bag weight in this session.
+	for uid: String in dormant:
+		if all.has(uid):return "다른 캐릭터와 원본 물리 개체 ID 중복 · 저장 보존"
+		all[uid]=dormant[uid]
 	if not state.get(USES,{}) is Dictionary:return "원본 소비 장부 형식 보존 필요"
 	var selected_ammo: Variant=state.get(AMMO_EQUIPPED,{})
 	if not selected_ammo is Dictionary:return "원본 탄약 선택 소유 형식 확인 필요"
@@ -345,7 +350,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if owned.is_empty():return "원본 물리 개체·최초량·잔량 증명 불일치"
 		if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return "원본 최초 소유와 소비 장부 불일치"
 		if int(owned.used)+int(owned.transferred)>0 and ledger.get(uid)!=ledger_row(owned,int(owned.used),int(owned.remaining)):return "원본 물리 잔량·소비 장부 불일치"
-		if floor_ids.has(uid):continue
+		if floor_ids.has(uid) or dormant.has(uid):continue
 		var name_value: String=str(entry.name)
 		var amounts: Dictionary=stored_totals if stored.has(uid) else totals
 		var previous: int=int(amounts.get(name_value,0))
@@ -373,7 +378,8 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var state: Variant=overrides.get("consumable_state",world.consumable_service.export_state())
 	var warehouse: Variant=overrides.get("warehouse",world.warehouse.snapshot())
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
-	var issue: String=state_error(inventory,instances,state,warehouse,floor)
+	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
+	var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
 	if not issue.is_empty():return issue
 	var ledger: Dictionary=state.get(USES,{})
 	for uid: String in world.item_instances:
