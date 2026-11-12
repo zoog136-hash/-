@@ -37,6 +37,15 @@ jobs:
           python3 tests/test_equipment523_alchemy.py
           python3 tests/test_five_set_invoke.py
           python3 tests/test_equipment523_effects_builder.py
+          python3 -m unittest discover -s tests -p test_audit_character_attachments523.py -v
+          python3 -m unittest discover -s tests -p test_source_auxiliary_selector.py -v
+          python3 -m unittest discover -s tests -p test_reference_sp2_bank.py -v
+          python3 -m unittest discover -s tests -p test_native_attachment_activation.py -v
+          python3 -m unittest discover -s tests -p test_native_action_alias_metadata.py -v
+          python3 -m unittest discover -s tests -p test_source_clothes_prefix.py -v
+          python3 -m unittest discover -s tests -p test_source_missing_layer_occurrences.py -v
+          python3 -m unittest discover -s tests -p test_connect_received_native_selector.py -v
+          python3 -m unittest discover -s tools/lineagem_original -p test_client523_bank_metadata.py -v
       - name: Install pinned Godot
         shell: bash
         run: |
