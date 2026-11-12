@@ -14,6 +14,16 @@ func _initialize() -> void:
 	check(not Installer.install_paths(PackedStringArray(["a.001","b.001","c.003"])).get("ok",true),"duplicate parts refused")
 	check(not Selection.options(PackedStringArray(["--source-lobby=/explicit"])).get("ok",true),"invalid explicit override never hidden")
 	check(Selection.options(PackedStringArray(["--source-lobby=/explicit","--source-lobby-sha256="+Installer.MANIFEST_SHA])).path == "/explicit","explicit override retained")
+	var opaque: Array[Dictionary] = []
+	for index: int in [2, 0, 1]:
+		opaque.append({"path":"content://com.android.providers.downloads.documents/document/%d" % (index + 900), "bytes":Installer.PART_BYTES[index], "sha256":Installer.PART_HASHES[index]})
+	var sorted: Dictionary = Installer.order_part_fingerprints(opaque)
+	check(sorted.get("ok",false), "opaque Android URI names accepted by exact byte identity")
+	check(sorted.paths[0].ends_with("900") and sorted.paths[2].ends_with("902"), "shuffled SAF selection ordered by SHA")
+	opaque[0] = opaque[1].duplicate()
+	check(not Installer.order_part_fingerprints(opaque).get("ok",true), "duplicate bytes rejected despite distinct names")
+	opaque[0].sha256 = "untrusted"
+	check(not Installer.order_part_fingerprints(opaque).get("ok",true), "foreign bytes rejected")
 	if not Installer.saved_options().get("selected",false):
 		var fixture: String = "user://invalid_lobby_fixture.zip"
 		var output: FileAccess = FileAccess.open(fixture,FileAccess.WRITE)
