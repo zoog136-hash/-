@@ -77,9 +77,10 @@ static func _ids(rows: Array, field: String, distinct: bool = false) -> Array:
 	result.sort()
 	return result
 
+## Mirrors patch523_rules_projection._sorted_ids (float table IDs as ints).
 static func _sorted_ids(values: Array) -> Array:
 	var result: Array = []
-	for value: Variant in values: result.append(value)
+	for value: Variant in values: result.append(int(value) if typeof(value) == TYPE_FLOAT and _integer(value) else value)
 	result.sort(); return result
 
 static func _identity(record: Dictionary) -> String:

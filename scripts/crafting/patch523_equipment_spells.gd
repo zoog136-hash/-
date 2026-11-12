@@ -38,7 +38,7 @@ static func values(profile: Dictionary) -> Dictionary:
 static func item_reason(world: Node,record: Dictionary,id: String) -> String:
  var raw: Dictionary=world.patch523_equipment.item_entry(id).get("item_class",{})
  if raw.is_empty() or raw.get("TestItem")!=false or not str(raw.get("ServiceRegionCode","")).is_empty():return "원본 테스트/서비스 지역 조건"
- var source: Dictionary=world.patch523_equipment.data.get("equipment_spell_item_constraints",{}).get(id,{})
+ var source: Dictionary=load("res://scripts/crafting/current523_equipment_spell_profiles.gd").item_constraint(world.patch523_equipment,record,id)
  if source.get("schema")!="patch523-equipment-spell-item-v1":return "원본 장비 발동 자격 입력 필요"
  if not str(source.get("blocked_reason","")).is_empty():return str(source.blocked_reason)
  var offset: Variant=ENHANCE.policy().get("source_item_datetime_offset_minutes")
@@ -60,7 +60,7 @@ static func eligible(world: Node,profile: Dictionary,target: Node,life: int,cont
  var record: Dictionary=physical.get("record",{});var id: String=world.patch523_equipment.identity(physical)
  if id!=str(context.get("source_item_id","")) or not world.patch523_equipment.catalog_identity_matches(record,id) or not item_reason(world,record,id).is_empty():return false
  var raw: Dictionary=profile.source_spell
- if profile!=world.patch523_equipment.data.get("equipment_spell_profiles",{}).get(str(int(raw.ID)),{}):return false
+ if profile!=load("res://scripts/crafting/current523_equipment_spell_profiles.gd").of(world.patch523_equipment,int(raw.ID)):return false
  var linked: bool=false
  for effect: Dictionary in world.PATCH523_EQUIPMENT_COMBAT.active(world,"attack_source_spell"):
   if str(effect.instance_id)==physical_id and int(effect.row_id)==int(context.get("row_id",-1)) and int(effect.option.ID)==int(context.get("option_id",-1)) and int(effect.option.Param1)==int(raw.ID):linked=true;break
