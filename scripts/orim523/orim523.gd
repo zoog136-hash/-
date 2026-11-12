@@ -177,7 +177,12 @@ static func build(src: Variant) -> Dictionary:
 		var id: int = _i(row.ID)
 		var needs: Array = requires.get(id,[])
 		needs.sort_custom(func(a: Dictionary,b: Dictionary)->bool: return int(a.priority)<int(b.priority))
-		data.synergies.append({"id":id,"result":_i(row.get("ResultSpellGroupID")),"requires":needs,"rewards":rewards.get(id,[])})
+		var reward_rows: Array = []
+		for reward_id: int in rewards.get(id,[]):
+			var reward: Dictionary = _one(src,"Reward",reward_id)
+			if reward.is_empty(): continue
+			reward_rows.append({"row":reward.duplicate(true),"name":str(_one(src,"ItemClass",_i(reward.get("RewardClassID"))).get("Name",""))})
+		data.synergies.append({"id":id,"result":_i(row.get("ResultSpellGroupID")),"requires":needs,"rewards":rewards.get(id,[]),"reward_rows":reward_rows})
 	for row: Dictionary in src.rows("OrimsTrailRerollCurrencyCost"): data.reroll[_i(row.get("RerollCount"))] = _i(row.get("Cost"))
 	# Preparation buffs: cost + the BuffClass bonuses.
 	for row: Dictionary in src.rows("OrimsTrailBuff"):
