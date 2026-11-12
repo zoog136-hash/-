@@ -9,8 +9,9 @@ extends RefCounted
 const MODEL = preload("res://scripts/orim523/orim523.gd")
 ## Own: how many skill cards one level-up shows (no original row names it).
 const OFFER_COUNT := 3
-## Own: hidden heroes have no unlock rule in the tables, so they stay locked.
-const HIDDEN_SELECTABLE := false
+## User decision 2026-11-13: the hidden heroes (Nd_Hidden_*, 제온·메이브) are
+## open from the start; the tables hold no unlock rule.
+const HIDDEN_SELECTABLE := true
 const PASSIVE := ["move_speed","attack_speed","max_hp","exp","cooldown","boss_damage"]
 
 static func _i(value: Variant) -> int:
@@ -148,6 +149,16 @@ static func casters(model: Dictionary, orim: Dictionary) -> Array:
 				out.append({"key":str(gid)+":"+str(index),"group":gid,"spell":spell,"cooldown_ms":int(round(float(spell.delay_ms)*(1.0-cooldown/100.0)))})
 			index += 1
 	return out
+
+## The synergy combination whose ResultSpellGroupID is `gid` ({} if none).
+static func synergy_for(model: Dictionary, gid: int) -> Dictionary:
+	for synergy: Dictionary in model.get("synergies",[]):
+		if int(synergy.result)==gid: return synergy
+	return {}
+
+## Ledger key of a synergy's one-time reward (user decision 2026-11-13).
+static func synergy_receipt(synergy: Dictionary) -> String:
+	return "orim_synergy:%d" % int(synergy.id)
 
 static func npc_exp(model: Dictionary, npc_id: int) -> int:
 	return int(model.npc.get(npc_id,{}).get("exp",0))

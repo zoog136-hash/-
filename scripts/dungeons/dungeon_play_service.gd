@@ -882,11 +882,17 @@ func _orim_offer() -> void:
 func choose_skill(group_id: int) -> Dictionary:
 	var orim: Dictionary=orim_state()
 	if orim.is_empty() or state.active.status!="active":return {"ok":false,"reason":"오림 도전 중이 아닙니다"}
+	var was_owned: bool=orim.spells.has(str(group_id))
 	var result:=ORIM_RUN.choose(orim_model(),orim,group_id)
 	if not result.get("ok",false):return result
 	if int(orim.pending)>0:_orim_offer()
 	orim_casters_key=""
-	var saved:=_orim_flush()
+	var synergy: Dictionary=ORIM_RUN.synergy_for(orim_model(),group_id) if not was_owned else {}
+	var saved: Dictionary
+	if not synergy.is_empty():
+		saved=_grant_synergy(synergy)
+		result.merge({"synergy":int(synergy.id),"synergy_reward":saved.get("reward",{})},true)
+	else:saved=_orim_flush()
 	changed.emit()
 	if saved.get("ok",false):world._update_hud()
 	return result
@@ -965,3 +971,33 @@ func orim_status() -> Dictionary:
 	var curve:=ORIM_RUN.curve(model,bool(model.stages.get(int(state.active.stage_id),{}).get("hard",false)))
 	var need: int=int(curve[mini(int(orim.level),curve.size()-1)]) if not curve.is_empty() else 0
 	return {"hero":str(hero.get("name","")),"hp":int(orim.hero_hp),"max":int(orim.hero_max),"level":int(orim.level),"exp":int(orim.exp),"next":need,"skills":owned,"cards":cards,"pending":int(orim.pending),"rerolls":int(state.active.get("rerolls",0)),"reroll_cost":ORIM_RUN.reroll_cost(model,int(state.active.get("rerolls",0))+1),"land":orim_travel_note}
+
+## User decision 2026-11-13: a synergy's OrimsTrailSynergySpellCombinationReward
+## rows are granted the first time that synergy skill is learned, once per
+## save (receipt "orim_synergy:<CombinationID>"); never again on a later run.
+## The box is the original Reward row's item through the 523 item supplier.
+func _grant_synergy(synergy: Dictionary) -> Dictionary:
+	var key: String=ORIM_RUN.synergy_receipt(synergy)
+	if state.receipts.has(key):
+		var kept:=_orim_flush();kept["reward"]={"granted":[],"already":true};return kept
+	var overrides: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold)}
+	var granted: Array=[];var withheld: Array=[];var rows: Array=[]
+	for reward: Dictionary in synergy.get("reward_rows",[]):
+		var row: Dictionary=reward.row
+		var label: String="%s %d" % [str(reward.name),int(row.Amount)]
+		var staged:=stage_original_item(world,overrides,int(row.RewardClassID),int(row.Amount),int(row.get("ItemBlessCodeID",1)),{"kind":"orim523_synergy_reward","reward_id":int(row.ID),"combination_id":int(synergy.id)})
+		if staged.get("ok",false):overrides=staged.overrides;granted.append(label);rows.append(row.duplicate(true))
+		else:withheld.append(label+" ("+str(staged.get("error",""))+")")
+	if rows.is_empty():
+		# Nothing could be issued: no receipt, so a later supplier can still grant it.
+		var flushed:=_orim_flush();flushed["reward"]={"granted":[],"withheld":withheld};return flushed
+	var next:=state.duplicate(true)
+	next.receipts[key]={"rows":rows,"kind":"orim_synergy","combination_id":int(synergy.id),"run":str(state.active.get("id",""))}
+	orim_last_save_ms=Time.get_ticks_msec()
+	var result:=commit(next,{"inventory":overrides.inventory,"item_instances":overrides.item_instances,"gold":overrides.gold})
+	if result.get("ok",false):
+		orim_dirty=false
+		world.hud.show_message("시너지 보상: "+", ".join(granted))
+	else:defer_candidate(next,{"inventory":overrides.inventory,"item_instances":overrides.item_instances,"gold":overrides.gold})
+	result["reward"]={"granted":granted,"withheld":withheld}
+	return result
