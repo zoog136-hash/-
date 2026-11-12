@@ -44,7 +44,7 @@ static func resolve(pack: Dictionary, record: Dictionary) -> Dictionary:
 
 static func validate_identity(pack: Dictionary, record: Dictionary, definition: Dictionary, expected: Dictionary, identity: Dictionary, equipment: bool) -> Dictionary:
 	# Pure contract reducer, also used by explicitly synthetic kernel tests.
-	if pack.get("source_sha256") != C.SOURCE_SHA or identity.get("schema") not in [3,4] or identity.get("source_snapshot") != "patch523": return {}
+	if pack.get("source_sha256") != C.SOURCE_SHA or whole(identity.get("schema")) not in [3,4] or identity.get("source_snapshot") != "patch523": return {}
 	if identity.get("schema")==4:
 		if identity.get("kind")!="current523_original_definition_projection" or identity.get("source_definition_archive",{}).get("source_sha256")!=C.SOURCE_SHA or expected.get("source_projection")!="current523_original_typed_game_dto_v1" or NATIVE_FIELDS.full(expected).get("source_original_item")!=definition.get("original_item"):return {}
 	var digest: Variant = identity.get("sha256")
