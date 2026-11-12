@@ -21,6 +21,7 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('source_sp2_compositor_test', []),
     ('reference_sp2_asset_sharing_test', []),
     ('reference_sp2_load_memo_test', []),
     ('boot_progress_log_test', []),
@@ -384,7 +385,8 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+            marker = {'source_sp2_compositor_test':'SOURCE_SP2_COMPOSITOR',
+                      'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
                       'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',

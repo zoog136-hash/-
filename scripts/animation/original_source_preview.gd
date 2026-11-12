@@ -6,6 +6,7 @@ signal native_effect_frame(event: Dictionary)
 const WEAPON_BANKS=preload("res://scripts/animation/source_weapon_banks.gd")
 var source_weapon_status:Dictionary={}
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+const SP2_COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
 var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
@@ -532,6 +533,15 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
+	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
+	var body_attributes: Array = []
+	var body_attributes_unresolved: bool = true
+	if is_reference:
+		for source_layer: Dictionary in selected.layers:
+			if source_layer.get("kind", "") == "body":
+				body_attributes = source_layer.get("source_attributes", [])
+				body_attributes_unresolved = not source_layer.has("source_attributes") or bool(source_layer.get("source_attributes_unresolved", false))
+				break
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
 	for effect: Dictionary in selected.get("effect_layers", []):
 		if effect.has("client_null"): continue
@@ -550,17 +560,18 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if is_reference:
 			style = POLICY.effect(effect.get("source_attributes",[]),_playback_mode)
 			if bool(effect.get("source_attributes_unresolved",false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
-		if bool(style.get("enabled", false)):
+		var recovered: Dictionary = SP2_COMPOSITOR.style(effect, body_attributes, body_attributes_unresolved, _playback_mode) if is_reference else {}
+		if bool(style.get("enabled", false)) or not recovered.is_empty():
 			if is_reference:
-				var material: CanvasItemMaterial = node.material as CanvasItemMaterial
-				if material == null: material = CanvasItemMaterial.new()
-				material.blend_mode = int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX))
-				node.material = material
-				node.modulate.a = float(style.get("alpha",1.0))
+				SP2_COMPOSITOR.reset(node)
+				if recovered.is_empty():
+					node.material = _blend_material(int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX)))
+					node.modulate.a = float(style.get("alpha",1.0))
 			var texture: Texture2D = _source_texture(effect)
 			if texture == null and is_reference: return
 			if texture != null:
 				node.texture = texture
+				if not recovered.is_empty(): SP2_COMPOSITOR.apply(node, recovered)
 				node.show()
 	if token != _last_token:
 		_last_token = token
@@ -578,12 +589,14 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if layer.has("client_null"):
 			_layers[index].hide()
 			continue
+		if is_reference: SP2_COMPOSITOR.reset(_layers[index])
 		var is_body: bool = layer.get("kind") == "body" if is_reference else int(layer.get("layer_id", -1)) == int(_record.get("body_id", _record.get("source_sprite_id", -2)))
 		_layers[index].material = _source_body_material if is_body and not is_reference else null
 		_layers[index].modulate.a = float(_source_body_style.get("alpha", 1.0)) if is_body and not is_reference and _source_body_material != null else 1.0
 		_layers[index].set_meta("source_layer_kind",layer.get("kind","body" if is_body else ""))
 		_layers[index].set_meta("source_role_actor_id",track.get("source_sprite_id",_record.get("source_sprite_id",-1)))
-		if is_reference and (not layer.get("source_attributes", []).is_empty() or bool(layer.get("source_attributes_unresolved", false))):
+		var recovered: Dictionary = SP2_COMPOSITOR.style(layer, body_attributes, body_attributes_unresolved, _playback_mode) if is_reference else {}
+		if recovered.is_empty() and is_reference and (not layer.get("source_attributes", []).is_empty() or bool(layer.get("source_attributes_unresolved", false))):
 			var style: Dictionary = POLICY.effect(layer.get("source_attributes", []), _playback_mode)
 			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)):
 				_layers[index].hide()
@@ -595,6 +608,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if texture == null: return
 		_layers[index].texture = texture
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
+		if not recovered.is_empty(): SP2_COMPOSITOR.apply(_layers[index], recovered)
 	if _reference_bank != null:
 		var source_children_ready: bool = _advance_reference_children(delta,source_direction)
 		if not source_children_ready and not _reference_texture_budget.is_empty():
@@ -765,11 +779,17 @@ func attachment_status() -> Dictionary:
 	var pending: int = 0
 	var origins: Dictionary = {}
 	var presentation_observations: Array = []
+	var compositors: Array = []
+	var source_nodes: Array = _layers.duplicate()
+	source_nodes.append_array(_effect_nodes.values())
+	for node: Sprite2D in source_nodes:
+		if node.visible and node.has_meta("source_compositor"):
+			compositors.append({"layer_id":node.get_meta("source_layer_id",-1),"style":node.get_meta("source_compositor").duplicate()})
 	for track: Dictionary in _playback_tracks.values():
 		if bool(track.static_pending_timing): pending += 1
 		origins[str(track.timing_origin)] = int(origins.get(str(track.timing_origin), 0)) + 1
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
-	return {"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
+	return {"recovered_source_compositors":compositors,"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
 ## One read-only CanvasItemMaterial per blend mode, shared by every reference
 ## layer (a new material per layer per frame used to be allocated here).
