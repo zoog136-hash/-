@@ -697,6 +697,16 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
+## Item rows a lucky bag may carry. ResetAutoSlotByEmpty (TrueFalse) clears the
+## auto-use slot when the stack runs out; a bag can only sit in one with an
+## AutoUseRegistrable row, which is not admitted here (it still blocks), so
+## the flag has nothing to clear and is satisfied as it stands.
+const BAG_UNITS={"LuckyBagClassID":"LuckyBagClassID","ResetAutoSlotByEmpty":"TrueFalse"}
+static func bag_flags_valid(rows: Array) -> bool:
+	for row: Dictionary in rows:
+		if str(row.get("bonus_type",{}).get("Name",""))=="ResetAutoSlotByEmpty" and whole(row.get("bonus",{}).get("Value")) not in [0,1]:return false
+	return true
+
 # Same public compiler _source_reward_bag_spec contract, supplied by the
 # existing ItemData -> RewardData graph. This does not grant any reward.
 static func reward_bag(definition: Dictionary) -> Dictionary:
@@ -710,9 +720,19 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	if graphs.size()!=1:return {}
 	var graph: Dictionary=graphs[0];var bag: Dictionary=graph.get("lucky_bag_class",{})
 	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true or bag.get("ID")!=id or graph.get("entities",[]).is_empty() or not SOURCE.declared_exclusion("LuckyBagClass",bag).is_empty():return {}
-	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"LuckyBagClassID":"LuckyBagClassID"},false)
+	var selectable: int=0
+	for entity: Dictionary in graph.entities:
+		if whole(entity.get("row",{}).get("LuckyBagEntityTypeID"))==3:selectable+=1
+	if selectable>0:
+		if selectable!=graph.entities.size():return {}
+		var active_classes: Dictionary={}
+		for row: Dictionary in SOURCE.rows("Class"):
+			if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active_classes[int(row.ID)]=row
+		return selectable_bag(definition,graph,label(definition.original_item.get("StoryDescID")),active_classes,func(item_id: int) -> Array:return SOURCE.related("ItemEquipSlot","ItemClassID",item_id),func(table: String,row: Dictionary) -> Dictionary:return SOURCE.declared_exclusion(table,row))
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,BAG_UNITS,false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var distribution: Array=[];var active: Dictionary={};var domain: Array=[]
+	if not bag_flags_valid(rows):reasons.append("unsupported_item_bonus_unit_or_value:ResetAutoSlotByEmpty")
 	for row: Dictionary in SOURCE.rows("Class"):
 		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
 	for row: Dictionary in definition.get("class_rows",[]):
@@ -777,6 +797,89 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	if not weighted.is_empty():
 		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
 		if distribution.is_empty():spec["source_probability_denominator"]=10000000
+	return spec
+
+## How many entries the item's own original description says are chosen
+## ("다음 아이템 중 1종 선택 획득"): the one count it states, or 0 when it states
+## none or more than one different count. Line breaks/spaces inside the
+## phrase are ignored ("1종\n선택").
+static func described_selection_count(text: String) -> int:
+	var compact: String=""
+	for index: int in range(text.length()):
+		var character: String=text[index]
+		if character not in [" ","\n","\r","\t"]:compact+=character
+	var pattern:=RegEx.create_from_string("(?<![0-9])([0-9]+)종(?:을|를)?선택")
+	var counts: Dictionary={}
+	for found: RegExMatch in pattern.search_all(compact):counts[int(found.get_string(1))]=true
+	return int(counts.keys()[0]) if counts.size()==1 else 0
+
+## A lucky bag whose LuckyBagEntityView rows are all LuckyBagEntityType 3
+## "Selectable": the player picks entries instead of a draw. The count comes
+## from the item's original description (LuckyBagClass has no count column);
+## each choice is the row's own item, amount, ItemBlessCodeID and ItemEnchant.
+## Nothing is removed from the original list: one ineligible entry blocks it.
+## `equip_slots(item_id)` and `exclusion(table,row)` read the original rows
+## (synthetic in tests).
+static func selectable_bag(definition: Dictionary,graph: Dictionary,description: String,active: Dictionary,equip_slots: Callable,exclusion: Callable) -> Dictionary:
+	var rows: Array=definition.get("item_bonus",[]);var bag: Dictionary=graph.get("lucky_bag_class",{})
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,BAG_UNITS,false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons;var domain: Array=[]
+	if not bag_flags_valid(rows):reasons.append("unsupported_item_bonus_unit_or_value:ResetAutoSlotByEmpty")
+	for row: Dictionary in definition.get("class_rows",[]):
+		if not integer(row.get("ClassID")):reasons.append("unsupported_lucky_bag_root_class");continue
+		if int(row.ClassID) not in domain:domain.append(int(row.ClassID))
+	if domain.is_empty():domain=active.keys()
+	domain.sort()
+	for class_id: int in domain:
+		if not active.has(class_id):reasons.append("unsupported_lucky_bag_root_class")
+	var count: int=described_selection_count(description)
+	if count!=1:reasons.append("unresolved_lucky_bag_selection_count")
+	var rewards: Array=[];var linked: Array=[]
+	for entity: Dictionary in graph.get("entities",[]):
+		var row: Dictionary=entity.get("row",{});var type: Dictionary=entity.get("entity_type",{});var item: Dictionary=entity.get("item_class",{})
+		if whole(type.get("ID"))!=3 or type.get("Name")!="Selectable":reasons.append("unsupported_lucky_bag_entity_type")
+		if not exclusion.call("LuckyBagEntityView",row).is_empty() or not exclusion.call("LuckyBagEntityType",type).is_empty():reasons.append("source_declared_bag_entity_exclusion")
+		var classes: Array=[];var limits: Array=[]
+		for limit: Dictionary in entity.get("class_limits",[]):
+			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
+			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):reasons.append("unsupported_lucky_bag_entity_class");continue
+			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
+		if (whole(row.get("LimitClass"))==10000 and not classes.is_empty()) or (whole(row.get("LimitClass"))!=10000 and whole(row.get("LimitClass")) not in classes):reasons.append("unresolved_lucky_bag_class_limit")
+		for class_id: int in classes:
+			if not active.has(class_id):reasons.append("unsupported_lucky_bag_entity_class")
+		var eligible: bool=classes.is_empty()
+		for class_id: int in classes:
+			if class_id in domain:eligible=true
+		if eligible and (item.get("TestItem")!=false or not exclusion.call("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
+		if level_ok and int(enchant)>0:
+			var slots: Dictionary={};var equip_rows: Array=equip_slots.call(int(item.get("ID",0)))
+			if equip_rows.is_empty():level_ok=false
+			for equip: Dictionary in equip_rows:
+				var slot: Dictionary=SOURCE.row("EquipSlot",int(equip.get("EquipSlotID",-1))) if not equip.has("slot") else equip.slot
+				var name_value: String=str(slot.get("Name",""));slots[whole(equip.get("EquipSlotID"))]=true
+				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and whole(equip.get("EquipSlotID"))!=293):level_ok=false
+			if slots.size()!=1:level_ok=false
+		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
+		var original_row: Dictionary=row.duplicate(true);original_row["entity_type"]=type.duplicate(true);original_row["class_limits"]=limits;linked.append(original_row)
+		rewards.append({"source_entity_id":whole(row.get("ID")),"item_class_id":whole(row.get("ItemClassID")),"amount":whole(row.get("ItemAmount")),"bless_raw":whole(row.get("ItemBlessCodeID")),"enchant":whole(enchant),"class_ids":classes,"entity_type_id":3,"entity_type":"Selectable"})
+	var counts: Dictionary={}
+	for class_id: int in domain:
+		var options: int=0
+		for reward: Dictionary in rewards:
+			if reward.class_ids.is_empty() or class_id in reward.class_ids:options+=1
+		counts[str(class_id)]=options
+		if options==0:reasons.append("no_eligible_lucky_bag_selection_for_source_class")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	spec["kind"]="source_selectable_bag";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["lucky_bag_class_id"]=bag.get("ID");spec["original_lucky_bag_class"]=bag.duplicate(true)
+	spec["select_max_count"]=count;spec["select_count_origin"]="ItemClass.StoryDescID";spec["select_count_description"]=description
+	spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
+	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
 static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array) -> void:

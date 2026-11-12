@@ -9,11 +9,29 @@ var record: Dictionary
 var choices: ItemList
 var confirm: Button
 var committing: bool = false
+## Owned current-523 physical stack: the native stack's read-only selection
+## proposal (choices already filtered to the current class, ownership request).
+var pending: Dictionary = {}
+var last_claim: Dictionary = {}
 
 func configure(owner: Node, item: Dictionary) -> void:
 	world = owner
 	record = item.duplicate(true)
 	use_service = load("res://scripts/loot/patch523_item_use.gd")
+
+func configure_owned(owner: Node, item_name: String, proposal: Dictionary) -> void:
+	world = owner
+	pending = proposal.duplicate(true)
+	var named: Variant = owner.call("_find_catalog_item_record", item_name) if owner.has_method("_find_catalog_item_record") else {}
+	record = (named as Dictionary).duplicate(true) if named is Dictionary and not (named as Dictionary).is_empty() else {"name":item_name}
+	use_service = load("res://scripts/loot/patch523_item_use.gd")
+
+func _choice_rows() -> Array:
+	if not pending.is_empty(): return pending.get("choices", [])
+	var rows: Array = []
+	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
+		if use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): rows.append(reward)
+	return rows
 
 func _ready() -> void:
 	name = "Patch523RewardChoice"
@@ -38,7 +56,8 @@ func _ready() -> void:
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(title)
 	var note := Label.new()
-	note.text = "목록·수량·축복·직업 조건: 원본 523\n장비 초기 강화 +0: 원본 수치 없음 · TWILIGHT 설정에서 사용/해제"
+	var bag: bool = pending.get("selection_kind", "") == "source_selectable_bag"
+	note.text = "목록·수량·축복·강화·직업 조건: 원본 523 상자 행 · 1종 선택: 원본 아이템 설명" if bag else "목록·수량·축복·직업 조건: 원본 523\n장비 초기 강화 +0: 원본 수치 없음 · TWILIGHT 설정에서 사용/해제"
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(note)
 	choices = ItemList.new()
@@ -48,11 +67,14 @@ func _ready() -> void:
 	content.add_child(choices)
 	var use_source_images: bool = IMAGES.selected()
 	var source_images: Dictionary = {}
-	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
-		if not use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): continue
+	for reward: Dictionary in _choice_rows():
 		var item: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
+		if item.is_empty(): item = DROPS.definition_id(str(int(reward.item_class_id))).get("native_record",{})
 		var blessing: String = str({1:"일반",2:"축복",3:"저주"}.get(int(reward.bless_raw),"미확인 상태"))
-		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(NATIVE_FIELDS.field(item,"source_display_name","?")),int(reward.amount),int(reward.item_class_id),blessing," · 자체 초기 +0" if DROPS.equipment(item) and reward.get("enchant") == null else ""])
+		var level: String = ""
+		if DROPS.equipment(item) and reward.get("enchant") == null: level = " · 자체 초기 +0"
+		elif reward.get("enchant") != null and int(reward.enchant) > 0: level = " · +%d" % int(reward.enchant)
+		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name","?"))),int(reward.amount),int(reward.item_class_id),blessing,level])
 		if use_source_images:
 			# This existing provider field is ItemClass.ID. Claim identity stays
 			# the separate source_entity_id stored below, never a numeric alias.
@@ -98,6 +120,15 @@ func _claim() -> void:
 	committing = true
 	confirm.disabled = true
 	var entity_id: int = int(choices.get_item_metadata(choices.get_selected_items()[0]))
+	if not pending.is_empty():
+		last_claim = world.consumable_service.claim_owned_original_selection(pending.get("original_item",{}),pending.get("ownership_request",{}),entity_id)
+		world.hud.show_message(str(last_claim.get("message",last_claim.get("reason","원본 선택 보상 연결 대기"))))
+		if last_claim.get("ok",false) and last_claim.get("saved",false) and last_claim.get("consumed")==1:
+			queue_free()
+			return
+		committing = false
+		confirm.disabled = false
+		return
 	if use_service.claim_selection(world,record,entity_id): queue_free()
 	else:
 		committing = false

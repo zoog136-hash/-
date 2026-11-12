@@ -303,6 +303,7 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
 		if stack.get("silent",false):return true # The owner shows its own chooser or message.
+		if stack.get("requires_original_selection",false) and open_owned_original_selection(item_name,stack):return true
 		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
 		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 		return true
@@ -1050,6 +1051,22 @@ func try_use_regional_return(item_name: String) -> bool:
 # Backend proposals are read-only; no replacement window is constructed here.
 func quote_owned_original_selection(original_item: Dictionary,ownership: Dictionary) -> Dictionary:
 	return preload("res://scripts/loot/current523_native_stack.gd").quote_original_selection(world,original_item,ownership)
+
+## Shows the read-only selection proposal of an owned original selection box
+## (SelectReward or a LuckyBag of Selectable rows). Opening or cancelling never
+## debits; the confirmation goes through claim_owned_original_selection, which
+## re-proves the physical stack and the chosen original row.
+func open_owned_original_selection(item_name: String,pending: Dictionary) -> bool:
+	if not is_instance_valid(world) or not is_instance_valid(world.hud) or not pending.get("choices") is Array or (pending.choices as Array).is_empty():return false
+	var existing: Variant=world.hud.get_meta("patch523_reward_choice") if world.hud.has_meta("patch523_reward_choice") else null
+	if is_instance_valid(existing):
+		_message("열려 있는 원본 선택 보상을 먼저 확인하세요")
+		return true
+	var dialog: Control=preload("res://scripts/ui/patch523_reward_choice.gd").new()
+	dialog.configure_owned(world,item_name,pending)
+	world.hud.set_meta("patch523_reward_choice",dialog)
+	world.hud.add_child(dialog)
+	return true
 
 func claim_owned_original_selection(original_item: Dictionary,ownership: Dictionary,entity_id: int) -> Dictionary:
 	var result: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").claim_original_selection(world,original_item,ownership,entity_id)

@@ -284,9 +284,10 @@ func try_use_held(world: Node, id: String) -> bool:
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 			return true
-		if NATIVE_FIELDS.full(original_definition.get("native_record",{})).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_skill_book"]:
+		if NATIVE_FIELDS.full(original_definition.get("native_record",{})).get("source_use_spec",{}).get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book"]:
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
+			if used.get("requires_original_selection",false) and world.consumable_service.open_owned_original_selection(str(original_owned.get("inventory_key","")),used):return true
 			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
 			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
 				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)

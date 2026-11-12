@@ -195,3 +195,44 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
   HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
 
+
+## 11. 소모품 1단계 — 상자 (2026-11-12, PR `feature/consumables523`)
+
+집계: main `b488fb36` 기준, 실제 원본 팩으로 LuckyBag·SelectReward·ComplexReward 등 대상 카테고리 비테스트 14,887종의
+사용 소유자(`current523_native_stack.profile`)를 다시 셌다. "사용 가능" = 사용 소유자가 있는 것. 그중 상자 안 보상이
+하나라도 지급 소유자(공급 프로필) 없이 남아 있으면 실제 개봉 때 "후보 제거 없이 상자 보존"으로 거부되므로 따로 표시했다.
+
+### 11.1 연결한 것
+
+요약: LuckyBag 사용 거부 1,370 → 1,099 (+271), SelectReward 180 → 180, 대상 카테고리 전체 사용 가능 12,465 → 12,736.
+
+| 묶음 | 수 | 근거 |
+| --- | ---: | --- |
+| **LuckyBag 선택 상자** (LuckyBagEntityView 행이 전부 LuckyBagEntityType 3 "Selectable") | 이전 0 → **99** (그중 모든 선택지 지급 가능 96) | 선택 개수는 LuckyBagClass에 열이 없고, 아이템 자신의 원본 설명(StoryDescID)이 "다음 아이템 중 1종 선택 획득"으로 적는다. 설명에 적힌 개수가 하나(1)일 때만 연결. 받는 것은 고른 행의 ItemClassID·ItemAmount·ItemBlessCodeID·ItemEnchant 그대로(+6 등, 자체 초기 강화 규칙 없음) |
+| **ResetAutoSlotByEmpty 상자** (TrueFalse 1) | 이전 0 → **172** (그중 열 수 있는 것 29) | "다 쓰면 자동 사용 슬롯 해제" 표시. 상자는 AutoUseRegistrable 행이 있어야 자동 슬롯에 들어가는데 그런 상자는 여전히 거부되므로, 해제할 슬롯이 없어 값 그대로 만족. 단 이 중 143종은 내용물(강화 주문서 140행 등)에 지급 소유자가 없어 열면 보존됨 |
+| 선택 보상 창 연결 (SelectReward + 위 선택 상자) | 3,149 + 99 | 가방에서 사용하면 기존에는 "원본 UI에서 보상을 선택하세요"만 뜨고 고를 창이 없었다(`requires_original_selection`을 받는 곳이 없음). 이제 기존 선택 창(`patch523_reward_choice`)이 열리고, 확인 시 `consumable_service.claim_owned_original_selection`이 물리 개체·영수증·선택 행을 다시 증명한 뒤 1개 차감·지급·저장한다. 열기·취소는 차감하지 않음. 퀘스트 보상으로 받은 선택 상자도 같은 창 |
+
+실제 Main·원본 팩 확인(`tests/items523_selection_boxes_test.gd`, 검사 41개 통과):
+- #187362 "+6 스냅퍼의 반지 선택 상자": 창에 원본 3행(+6) → 2번째 선택 → 상자 2→1, 고른 반지 +6 지급 → 저장→다시 불러오기 후 상자 1·반지 유지, 다시 창 열림.
+- #193581 "+4 지휘관의 휘장 상자"(ResetAutoSlotByEmpty): 열면 상자 소비, +4 휘장 지급.
+- 기존 SelectReward 상자(#147012)도 같은 창으로 수령.
+
+### 11.2 남은 상자 (표에 규칙이 없어 보존) — 1,285종
+
+| 묶음 | 수 | 표에 없는 것 |
+| --- | ---: | --- |
+| 보상에 테스트(TestItem=true)·더미 아이템 포함 — LuckyBag | 630 | 대부분 예전 "[변신 카드]/[마법인형 카드]" 아이템(TestItem=true)이 확률·확정 행에 있다. 빼면 확률이 바뀌고(확률 상자), 확정 상자는 내용이 달라진다 → 상자 보존 |
+| 같은 이유 — SelectReward | 172 | 42종은 선택지 전부가 테스트 아이템, 130종은 일부. 선택지를 빼는 규칙 없음 |
+| LuckyBagClassID 행 없음 | 200 (+ SelectReward 2, ComplexReward 6) | 내용물 표 연결 자체가 없음 |
+| 확률 합이 직업별 10,000,000이 아님 | 129 | 합 2,000,000 등(나머지가 "꽝"인지, 재정규화인지, 행별 독립 추첨인지 표에 없음). 5종은 일부 직업만 0 |
+| ClassUsageInterval (초) | 77 (45 + 조건부 32) | 직업별 재사용 간격의 시계(실시간/접속 시간)·저장 범위가 표에 없음. 32종은 적용 대상 314 행 |
+| UsageInterval (초) + InfiniteAmount | 17 (12 + 5) | 무한 수량 상자의 재사용 간격(86400초 등) 시계 기준 없음 |
+| LuckyBagLimitedItemPossession | 33 (27 + 6) | 대상 ItemClass(적용 5) 보유 수 제한의 판정 범위(가방·창고·장착) 없음 |
+| IsGiven + FinalReward(2) 상자 / Probability + FinalReward | 6 / 1 | FinalReward의 누적 횟수·주기 규칙 없음 |
+| Life / ItemPossessionAppellationID / ConsumeTerritoryClassID 등 | 3 / 1 / 1 | 획득 후 수명 기준·호칭 보유 조건·영역 소비 규칙 없음 |
+| SelectReward RewardGetTimeTypeID 3 | 3 | 수령 시점 종류 3의 의미 없음 |
+| 선택 상자 중 테스트 선택지 포함 | 4 | #373971·#373981·#374468·#374678 |
+
+- 참고: 이미 "사용 가능"이던 LuckyBag 9,316종 중 2,327종, SelectReward 3,149종 중 471종은(이번 연결 전에는 2,350·801종) 보상(또는 선택지) 일부가
+  지급 소유자 없는 소모품(다른 상자 1,609행·특수 주문서 762·물약 714·강화 주문서 695·재료 604·축복 포인트 515·시간 충전석 407 등)이다.
+  확률 상자는 열면 보존, 선택 상자는 그 선택지만 거부된다. 이 소모품들이 연결될수록 함께 풀린다.
