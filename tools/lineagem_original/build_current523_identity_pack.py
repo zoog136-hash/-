@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+import copy
 import hashlib
 import io
 import json
@@ -53,7 +54,7 @@ CHECKPOINTS = (
 PROOF_MEMBER = "source_origin_checks/all117_fresh_resource_origin_source_proofs.json"
 ROLES = (("idle", 3), ("walk", 0), ("attack", 1))
 MAX_DECODED_BYTES = 32 * 1024 * 1024
-LAYER_POLICY = "declared_action_if_parent_tokens_equal;otherwise_absent_action_uses_exact_parent_token_index"
+LAYER_POLICY = "auxiliary_101_105_share_parent_selector_picture_and_timing"
 WEAPON_POLICY = "twilight_existing_primary_weapon_bank"
 # Explicitly preserve the existing build_source_weapon_banks.py primary-family
 # choice. These IDs are a TWILIGHT playback policy, not proof of native alternate
@@ -181,7 +182,7 @@ def read_sprs(args):
     require(paths, "no verified current SPR plaintext available")
     missing = {name: {"bytes": row["bytes"], "sha256": row["sha256"]}
                for name, row in sorted(expected.items()) if name not in observed}
-    return original_spr.read(paths), observed, {"archive": proof_pin, "member": PROOF_MEMBER,
+    return read_native_sprs(paths), observed, {"archive": proof_pin, "member": PROOF_MEMBER,
                                              "member_sha256": sha(blob), "missing_current_plaintext": missing}
 
 
@@ -440,62 +441,329 @@ def declaration_path(declarations, sprite_id, spr_proofs, seen=()):
                       if declaration.alias_target is not None else [])
 
 
+NATIVE_SELECTOR_POLICY = "native_explicit_actions_and_immediate_alias_owner_v1"
+NATIVE_ACTIVATION_POLICY = "restored525_101_immediate_action_owner_105_original_actor_bounded_projection"
+NATIVE_CLOTHES_COLLECTION_POLICY = "ordered_first_null_successful_prefix"
+FILE_REMAP_POLICY = "requested_high16_single_whole_sprite_remap"
+NATIVE_ACTIVATION_EVIDENCE = {
+    "source": "restored525 LineageM_1.10.22.0.exe",
+    "exe_sha256": "9f9c3b9c9a49fb598899b3da308b4776cbbc47cbb98dbe4b4aa368cce519019d",
+    "report_sha256": "b6b0dbb66413966c8b2fab1c59a1a61595ef4bffe36167d0673dc776a603332e",
+    "rvas": ["035FBF10", "035FC110", "01C8F425", "01C8F495", "01C96150", "035FB915", "035FA3E0"],
+    "current523_native_execution_verified": False,
+}
+ACTION_ALIAS = re.compile(r"(?<![\w.])(-?\d+)=(-?\d+)")
+
+
+def _spr_order(path):
+    match = re.fullmatch(r"list_(\d+)\.spr", path.name)
+    return (0, int(match[1])) if match else (1, path.name)
+
+
+def read_native_sprs(paths, section_default_fps=None):
+    """Add bounded explicit-action registration to the literal SPR reader.
+
+    P01 restored525 proves numeric list order, A=S same-action copy, source
+    descriptor availability at that point and first destination insertion.
+    This deliberately is not an engine-identical permissive numeric scanner:
+    malformed headers/unbalanced statements remain the literal reader's limits.
+    Header =S only changes the later file request, never action/metadata owners.
+    Existing declaration.actions/directives/references remain the raw ledger.
+    """
+    paths = sorted(map(Path, paths), key=_spr_order)
+    declarations = original_spr.read(paths, section_default_fps)
+    by_location = {}
+    for matches in declarations.values():
+        for declaration in matches:
+            declaration.native_action_aliases = []
+            declaration.native_literal_action_declarations = []
+            by_location[(declaration.source_file, declaration.source_line)] = declaration
+    for path in paths:
+        current, fps, rate_source = None, section_default_fps, None
+        for line_number, line in enumerate(path.read_bytes().decode("cp949").splitlines(), 1):
+            scan = line.lstrip()
+            offset = len(line) - len(scan)
+            if scan.startswith("#"):
+                match = original_spr.HEADER.match(scan)
+                current = by_location.get((path.name, line_number)) if match else None
+                if current is None:
+                    continue
+                fps = section_default_fps
+                rate_source = ({"kind": "client_section_default", "fps": fps,
+                                "evidence": original_spr.CLIENT_DEFAULT_EVIDENCE}
+                               if fps is not None else None)
+                offset += match.end()
+                scan = scan[match.end():]
+            if current is None:
+                continue
+            statements = list(original_spr.ACTION.finditer(scan))
+            masked = list(scan)
+            events = [(match.start(), "statement", match) for match in statements]
+            for match in statements:
+                masked[match.start():match.end()] = " " * (match.end() - match.start())
+            events.extend((match.start(), "alias", match)
+                          for match in ACTION_ALIAS.finditer("".join(masked)))
+            for _, kind, match in sorted(events, key=lambda item: item[0]):
+                code = int(match[1])
+                if kind == "statement" and code == 110:
+                    # A code110 with a nonstandard name still selects native FPS.
+                    require(re.fullmatch(r"\s*\d+\s*", match[3]) is not None,
+                            f"unsupported native FPS statement {path.name}:{line_number}")
+                    fps = int(match[3])
+                    require(fps > 0, "nonpositive native FPS is unsupported")
+                    rate_source = {"source_file": path.name, "source_line": line_number,
+                                   "raw_name": match[2].strip(), "raw_body": match[3]}
+                    continue
+                origin = {"action_id": code, "raw": match[0], "source_file": path.name,
+                          "source_line": line_number, "source_column": offset + match.start()}
+                if kind == "alias":
+                    current.native_action_aliases.append({**origin, "target_sprite_id": int(match[2])})
+                    continue
+                body = match[3]
+                tokens = [tuple(map(int, token.groups())) for token in original_spr.TOKEN.finditer(body)]
+                if not tokens:
+                    continue
+                count = re.match(r"^\s*(-?\d+)\s+(\d+)\s*,", body)
+                errors = []
+                if count is None or int(count[2]) != len(tokens): errors.append("frame count mismatch")
+                if any(token[2] < 0 for token in tokens): errors.append("negative frame duration")
+                if sum(token[2] for token in tokens) <= 0: errors.append("no positive playback duration")
+                action = {"code": code, "name": match[2].strip(), "fps": fps, "tokens": tokens,
+                          "raw_body": body, "source_file": path.name, "source_line": line_number,
+                          "fps_provenance": copy.deepcopy(rate_source),
+                          "declared_flag": int(count[1]) if count else None, "errors": errors,
+                          "source_annotations": original_spr.source_annotations(body)}
+                current.native_literal_action_declarations.append({**origin, "descriptor": action})
+    return register_native_actions(declarations)
+
+
+def register_native_actions(declarations):
+    """Rebuild effective descriptors only from ordered raw literal/alias events.
+
+    Metadata handoffs can call this after reconstructing these source-pinned
+    event fields; precomputed effective descriptor rows are never trusted here.
+    """
+    events = []
+    for matches in declarations.values():
+        for declaration in matches:
+            declaration.native_action_descriptors = {}
+            literals = getattr(declaration, "native_literal_action_declarations", None)
+            if literals is None:
+                literals = [{"action_id": code, "source_file": action["source_file"],
+                             "source_line": action["source_line"], "source_column": 0,
+                             "descriptor": copy.deepcopy(action)}
+                            for code, action in declaration.actions.items()]
+            for literal in literals:
+                events.append((literal, "literal", declaration))
+            for alias in getattr(declaration, "native_action_aliases", []):
+                events.append((alias, "alias", declaration))
+    events.sort(key=lambda item: (_spr_order(Path(item[0]["source_file"])),
+                                 item[0]["source_line"], item[0].get("source_column", 0)))
+    registered = {}
+    for event, kind, declaration in events:
+        code = event["action_id"]
+        key = (declaration.sprite_id, code)
+        if key in registered:
+            event["registration_status"] = "duplicate_destination"
+            continue
+        if kind == "alias":
+            source = registered.get((event["target_sprite_id"], code))
+            if source is None:
+                event["registration_status"] = "source_descriptor_unavailable"
+                continue
+            event["registration_status"] = "registered"
+            event["source_descriptor_origin_sprite_id"] = source["native_descriptor_origin_sprite_id"]
+            action = copy.deepcopy(source)
+            action.update(native_body_request_sprite_id=event["target_sprite_id"],
+                          native_registration_kind="explicit_action_alias",
+                          native_action_alias_chain=[dict(event)] + copy.deepcopy(source["native_action_alias_chain"]))
+        else:
+            event["registration_status"] = "registered"
+            action = copy.deepcopy(event["descriptor"])
+            action["tokens"] = [tuple(token) for token in action["tokens"]]
+            action.update(native_body_request_sprite_id=declaration.sprite_id,
+                          native_descriptor_origin_sprite_id=declaration.sprite_id,
+                          native_registration_kind="literal", native_action_alias_chain=[])
+        action["native_requested_sprite_id"] = declaration.sprite_id
+        registered[key] = action
+        declaration.native_action_descriptors[code] = action
+    for matches in declarations.values():
+        for declaration in matches:
+            declaration.native_action_registration = [
+                {key: value for key, value in event.items() if key != "descriptor"}
+                for event in getattr(declaration, "native_literal_action_declarations", [])]
+    return declarations
+
+
+def _own_declaration(declarations, sprite_id):
+    matches = declarations.get(sprite_id, [])
+    require(len(matches) == 1, f"{sprite_id}: expected one current SPR declaration, found {len(matches)}")
+    return matches[0]
+
+
+def native_action(declarations, sprite_id, action_id):
+    """Return this actor's registered action; never inherit via whole-file alias."""
+    require(0 <= action_id < 173, f"unsupported native action key range: {action_id}")
+    declaration = _own_declaration(declarations, sprite_id)
+    actions = getattr(declaration, "native_action_descriptors", declaration.actions)
+    require(action_id in actions, f"absent native source action {sprite_id}/{action_id}")
+    action = copy.deepcopy(actions[action_id])
+    action.setdefault("native_requested_sprite_id", sprite_id)
+    action.setdefault("native_body_request_sprite_id", sprite_id)
+    action.setdefault("native_descriptor_origin_sprite_id", sprite_id)
+    action.setdefault("native_registration_kind", "literal")
+    action.setdefault("native_action_alias_chain", [])
+    return action
+
+
+def _own_proof(declarations, sprite_id, spr_proofs):
+    declaration = _own_declaration(declarations, sprite_id)
+    return {"sprite_id": sprite_id, "alias_target": declaration.alias_target,
+            "source_file": declaration.source_file, "source_line": declaration.source_line,
+            "source_sha256": spr_proofs[declaration.source_file]["sha256"]}
+
+
+def _file_request(declarations, sprite_id, spr_proofs):
+    declaration = _own_declaration(declarations, sprite_id)
+    mapped = declaration.alias_target if declaration.alias_target is not None else sprite_id
+    path = [_own_proof(declarations, sprite_id, spr_proofs)]
+    if mapped != sprite_id:
+        path.append(_own_proof(declarations, mapped, spr_proofs))
+    return mapped, path
+
+
+def raw_candidate_declarations(root_id, declarations, spr_proofs):
+    """Preserve reachable literal declarations; these are not active layers."""
+    result, pending, visited = [], [root_id], set()
+    while pending:
+        sprite_id = pending.pop(0)
+        if sprite_id in visited:
+            continue
+        visited.add(sprite_id)
+        matches = declarations.get(sprite_id, [])
+        if len(matches) != 1:
+            result.append({"sprite_id": sprite_id, "projection_status": "unavailable_or_ambiguous_declaration",
+                           "declaration_count": len(matches), "activation_inferred": False})
+            continue
+        declaration = matches[0]
+        aliases = copy.deepcopy(getattr(declaration, "native_action_aliases", []))
+        result.append({**_own_proof(declarations, sprite_id, spr_proofs),
+                       "literal_directives": copy.deepcopy(declaration.directives),
+                       "literal_references": copy.deepcopy(declaration.references),
+                       "literal_actions": copy.deepcopy(declaration.actions), "native_action_aliases": aliases,
+                       "native_action_registration": copy.deepcopy(getattr(declaration, "native_action_registration", [])),
+                       "native_literal_action_declarations": copy.deepcopy(getattr(declaration, "native_literal_action_declarations", [])),
+                       "activation_inferred": False})
+        targets = [target for ref in declaration.references for target in ref["targets"]]
+        targets.extend(alias["target_sprite_id"] for alias in aliases)
+        if declaration.alias_target is not None:
+            targets.append(declaration.alias_target)
+        pending.extend(target for target in targets if target not in visited)
+    return result
+
+
+def native_layers_for_role(root_id, action_id, declarations, spr_proofs, role=None):
+    """Bounded animated refresh_aux=true projection, not live actor activation.
+
+    Original-actor 105 first insertion and immediate-action-owner 101 last low15
+    are separate. No auxiliary-of-auxiliary traversal is evidenced here. The
+    caller must separately apply lookup/null-prefix, flags and include_aux gates.
+    """
+    role = role or "source_action:" + str(action_id)
+    action = native_action(declarations, root_id, action_id)
+    require(not action["errors"], f"invalid native source action {root_id}/{action_id}")
+    require(action["declared_flag"] in (0, 1), f"unknown direction flag {root_id}/{action_id}")
+    body_request = action["native_body_request_sprite_id"]
+    require(body_request != 0, "native body request high16 zero is null; not an actor artwork request")
+    root = _own_declaration(declarations, root_id)
+    body = _own_declaration(declarations, body_request)
+    shadow_refs = [(index, ref) for index, ref in enumerate(body.references) if ref["kind"] == "shadow"]
+    clothes_refs = [(index, ref) for index, ref in enumerate(root.references) if ref["kind"] == "clothes"]
+    layers, paths = [], []
+    zero_stop = None
+
+    def add(kind, requested, metadata_owner, reference_index=None, target_index=None, ref=None):
+        physical, path = _file_request(declarations, requested, spr_proofs)
+        edge_path = [] if ref is None else [{"from_sprite_id": body_request if kind == "shadow" else root_id,
+            "target_sprite_id": requested, "kind": kind, "source_reference": ref["raw"],
+            "source_reference_index": reference_index, "target_index": target_index}]
+        binding = f"native:{root_id}:A{action_id}:{kind}:R{requested}:D{reference_index}:T{target_index}"
+        common = {"kind": kind, "source_sprite_id": physical, "requested_sprite_id": requested,
+                  "metadata_owner_sprite_id": metadata_owner, "source_reference_index": reference_index,
+                  "target_index": target_index, "native_binding_id": binding, "file_remap_policy": FILE_REMAP_POLICY}
+        layers.append({**common, "edge_path": edge_path})
+        source_declaration = None
+        if ref is not None:
+            owner_id = body_request if kind == "shadow" else root_id
+            owner = _own_declaration(declarations, owner_id)
+            reference_directives = [(index, item) for index, item in enumerate(owner.directives)
+                                    if item["code"] in (101, 105) and item["name"].lower() in ("shadow", "clothes", "clothe")]
+            require(reference_index < len(reference_directives), "active source reference directive unavailable")
+            directive_index, directive = reference_directives[reference_index]
+            require(directive["body"] == ref["raw"], "active source reference order differs from literal declaration")
+            source_declaration = {**_own_proof(declarations, owner_id, spr_proofs),
+                "source_line": directive["line"], "source_directive_index": directive_index,
+                "source_reference_index": reference_index, "code": directive["code"],
+                "name": directive["name"], "body": directive["body"]}
+        paths.append({**common, "edge_path": edge_path, "roles": [role], "declaration_path": path,
+                      "attribute_owner_declaration_path": [_own_proof(declarations, metadata_owner, spr_proofs)],
+                      "source_declaration": source_declaration,
+                      "role_policy": {role: "exact_parent_selector_picture_and_timing"}})
+
+    if shadow_refs:
+        index, ref = shadow_refs[-1]
+        require(ref["count_valid"] and len(ref["targets"]) == 1,
+                f"unsupported active shadow declaration {body_request}")
+        shadow = ref["targets"][0] & 0x7fff
+        if shadow:
+            add("shadow", shadow, root_id, index, 0, ref)
+    add("body", body_request, root_id)
+    if clothes_refs:
+        index, ref = clothes_refs[0]
+        require(ref["count_valid"], f"invalid active clothes target count {root_id}")
+        for target_index, target in enumerate(ref["targets"]):
+            if target == 0:
+                zero_stop = {"reason": "requested_high16_zero_always_null", "target_index": target_index,
+                             "source_reference_index": index, "source_reference": ref["raw"]}
+                break
+            add("clothes", target, target, index, target_index, ref)
+    return {"action": action, "layers": layers, "declarations": paths,
+            "raw_candidate_declarations": raw_candidate_declarations(root_id, declarations, spr_proofs),
+            "activation": {"policy": NATIVE_ACTIVATION_POLICY, "original_actor_sprite_id": root_id,
+                "body_request_sprite_id": body_request, "shadow_metadata_owner_sprite_id": body_request,
+                "clothes_metadata_owner_sprite_id": root_id, "shadow_selection": "own_last_low15",
+                "clothes_selection": "own_first_map_insertion_order_and_multiplicity",
+                "file_remap_policy": FILE_REMAP_POLICY, "auxiliary_recursion": False,
+                "assumed_branch": "animated_descriptor_valid_refresh_aux_true",
+                "clothes_collection_policy": NATIVE_CLOTHES_COLLECTION_POLICY,
+                "clothes_zero_target_stop": zero_stop,
+                "clothes_zero_target_prefix_applied": zero_stop is not None,
+                "native_lookup_null_prefix_applied": False, "runtime_activation_verified": False,
+                "evidence": NATIVE_ACTIVATION_EVIDENCE}}
+
+
 def build_actor(root_id, declarations, spr_proofs, source_roles=ROLES):
-    body_id, actions = original_spr.resolve(declarations, root_id)
-    paths = [{"kind": "body", "declaration_path": declaration_path(declarations, root_id, spr_proofs)}]
-    layers = [{"kind": "body", "source_sprite_id": body_id, "actions": actions, "edge_path": []}]
-    visited = set()
-
-    def attach(sprite_id, parent_actions, edges, seen=()):
-        require(sprite_id not in seen, f"SPR layer cycle {seen + (sprite_id,)}")
-        references = original_spr.resolve_references(declarations, sprite_id)
-        for kind, refs in references.items():
-            require(kind in ("shadow", "clothes"), f"unknown SPR layer kind {kind}")
-            for reference in refs:
-                require(reference["count_valid"], f"invalid layer target count {sprite_id}")
-                for target in reference["targets"]:
-                    edge = {"from_sprite_id": sprite_id, "target_sprite_id": target,
-                            "kind": kind, "source_reference": reference["raw"]}
-                    require((sprite_id, kind, target) not in visited, f"duplicate SPR layer edge {edge}")
-                    visited.add((sprite_id, kind, target))
-                    target_body, target_actions = original_spr.resolve(declarations, target)
-                    inherited_actions, policies = {}, {}
-                    for role, action_id in source_roles:
-                        parent = parent_actions[action_id]
-                        own = target_actions.get(action_id)
-                        if own is not None:
-                            require(not own["errors"] and own["tokens"] == parent["tokens"]
-                                    and own["declared_flag"] == parent["declared_flag"]
-                                    and own["fps"] in (None, parent["fps"]), f"independent layer timing unsupported: {target}/{role}")
-                        inherited_actions[action_id] = own if own is not None else parent
-                        policies[role] = "declared_matching_action" if own is not None else "absent_action_exact_parent_token_index"
-                    layers.append({"kind": kind, "source_sprite_id": target_body,
-                                   "actions": inherited_actions, "edge_path": edges + [edge]})
-                    paths.append({"kind": kind, "edge_path": edges + [edge], "role_policy": policies,
-                                  "declaration_path": declaration_path(declarations, target, spr_proofs)})
-                    attach(target, inherited_actions, edges + [edge], seen + (sprite_id,))
-
+    roles, required, action_proofs, paths = {}, set(), {}, []
+    activations, body_ids = {}, {}
+    candidates = None
     for role, action_id in source_roles:
-        require(action_id in actions and not actions[action_id]["errors"], f"absent/invalid source action {root_id}/{role}")
-        require(actions[action_id]["declared_flag"] in (0, 1), f"unknown direction flag {root_id}/{role}")
-    attach(root_id, actions, [])
-    layers.sort(key=lambda layer: {"shadow": 0, "body": 1, "clothes": 2}[layer["kind"]])
-    roles, required, action_proofs = {}, set(), {}
-    for role, action_id in source_roles:
-        action = actions[action_id]
+        projection = native_layers_for_role(root_id, action_id, declarations, spr_proofs, role)
+        action, layers = projection["action"], projection["layers"]
+        candidates = projection["raw_candidate_declarations"]
+        paths.extend(projection["declarations"])
+        activations[role] = projection["activation"]
+        body_ids[role] = next(layer["source_sprite_id"] for layer in layers if layer["kind"] == "body")
         directions = []
         for direction in range(8):
             frames = []
-            for token_index, (_, _, ticks) in enumerate(action["tokens"]):
+            for group, picture, ticks in action["tokens"]:
+                physical, bit = original_spr.frame_address(group, direction, action["declared_flag"])
                 frame_layers = []
                 for layer in layers:
-                    source = layer["actions"][action_id]
-                    group, frame_index, _ = source["tokens"][token_index]
-                    physical, bit = original_spr.frame_address(group, direction, source["declared_flag"])
                     member = f"Sprite/{layer['source_sprite_id']}-{physical}.sp2"
                     required.add(member)
-                    frame_layers.append({"member": member, "group_bit": bit, "frame_index": frame_index,
-                                         "kind": layer["kind"], "source_sprite_id": layer["source_sprite_id"]})
+                    frame_layers.append({key: value for key, value in layer.items() if key != "edge_path"} |
+                                        {"member": member, "group_bit": bit, "frame_index": picture})
                 frames.append({"duration_ticks": ticks, "layers": frame_layers})
             directions.append(frames)
         roles[role] = {"source_action_id": action_id, "source_file": action["source_file"],
@@ -504,8 +772,12 @@ def build_actor(root_id, declarations, spr_proofs, source_roles=ROLES):
         action_proofs[role] = {"source_action_id": action_id, **action,
                                "source_sha256": spr_proofs[action["source_file"]]["sha256"]}
     return {"source_sprite_id": root_id, "roles": roles}, required, {
-        "root_sprite_id": root_id, "body_sprite_id": body_id, "declarations": paths,
-        "roles": action_proofs, "layer_policy": LAYER_POLICY}
+        "root_sprite_id": root_id, "body_sprite_id": next(iter(body_ids.values())),
+        "body_sprite_ids_by_role": body_ids, "declarations": paths,
+        "roles": action_proofs, "layer_policy": LAYER_POLICY,
+        "native_activation_policy": NATIVE_ACTIVATION_POLICY,
+        "native_activation_by_role": activations, "raw_candidate_declarations": candidates,
+        "existing_private_banks_require_regeneration": True}
 
 
 def validate_actor(actor, raw, parsed):
@@ -527,14 +799,18 @@ def validate_actor(actor, raw, parsed):
 def compact_roles(actor, proof):
     """Retain exact SPR tokens; runtime expands addresses with frame_address()."""
     result = {}
+    identity_fields = ("source_sprite_id", "kind", "requested_sprite_id", "metadata_owner_sprite_id",
+                       "source_reference_index", "target_index", "native_binding_id", "file_remap_policy")
+    def layer_identity(layer):
+        return {key: layer[key] for key in identity_fields if key in layer}
     for role, track in actor["roles"].items():
         action = proof["roles"][role]
         first = track["directions"][0][0]["layers"]
-        layers = [{"source_sprite_id": layer["source_sprite_id"], "kind": layer["kind"]} for layer in first]
+        layers = [layer_identity(layer) for layer in first]
         for frames in track["directions"]:
             for frame in frames:
-                require(layers == [{"source_sprite_id": layer["source_sprite_id"], "kind": layer["kind"]}
-                                   for layer in frame["layers"]], "compact track changes layer identities")
+                require(layers == [layer_identity(layer) for layer in frame["layers"]],
+                        "compact track changes layer identities")
         result[role] = {"fps": track["fps"], "loop": track["loop"],
                         "source_action_id": track["source_action_id"], "source_file": track["source_file"],
                         "source_line": track["source_line"], "source_sprite_id": actor["source_sprite_id"],

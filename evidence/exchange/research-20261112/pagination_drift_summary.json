@@ -1,0 +1,42 @@
+{
+  "scope": "actual_bounded_all_scope_attempt_not_production",
+  "status": "stopped_incomplete",
+  "reason": "Live pagination changed during traversal",
+  "new_http_requests": 21,
+  "metadata_responses": 3,
+  "catalog_pages": 18,
+  "selected_scopes": "all official 300 local servers and 30 world markets",
+  "reused_successful_receipts_in_second_batch": 20,
+  "coverage_complete": false,
+  "production_import_performed": false,
+  "compared_pages": [
+    {
+      "page": 1,
+      "body_file": "pagination_server1_page1.json",
+      "receipt_file": "pagination_server1_page1.receipt.json",
+      "sha256": "ab177c997d506e9696e684cfef7572aaad1097ec4e7405673f7c2995ae0679ad",
+      "http_date": "Thu, 12 Nov 2026 05:11:40 GMT",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 53,
+        "total": 1566,
+        "limit": 10000
+      }
+    },
+    {
+      "page": 18,
+      "body_file": "pagination_server1_page18.json",
+      "receipt_file": "pagination_server1_page18.receipt.json",
+      "sha256": "e56b00dacb05b4250731f3f207027d84fb014d355a2c8321d3c3dfe15fb00a4a",
+      "http_date": "Thu, 12 Nov 2026 05:13:27 GMT",
+      "pagination": {
+        "page": 18,
+        "size": 30,
+        "lastPage": 53,
+        "total": 1567,
+        "limit": 10000
+      }
+    }
+  ]
+}

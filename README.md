@@ -5,7 +5,7 @@
 이 저장소는 서버 없이 PC에서 실행하는 Godot 4.7.2 로컬 RPG 프로젝트입니다. Android는 테스트 APK 및 Godot 편집기용 프로젝트를 지원하며, **Android 실기기 플레이 확인은 아직 완료되지 않았습니다.**
 
 ## 프로젝트 실행
-- Godot 4.7.2에서 `project.godot`을 열고 `Main.tscn`을 실행합니다.
+- Godot 4.7.2에서 `project.godot`을 열고 **프로젝트 실행(F5)**을 선택합니다. 기본 `Loading.tscn`에서 원본 팩 검증과 실제 완료 작업의 진행률을 확인한 뒤 게임으로 진입합니다.
 - Windows 휴대용 실행 ZIP은 별도의 GitHub Actions 검증 산출물에 있으며, 저장소 소스와 별개입니다.
 - Android ARM64 디버그 테스트 APK는 `export_presets.cfg`와 `.github/workflows/twilight-android-playtest-apk.yml`을 사용하여 생성합니다. 직접 APK를 실행하면 모바일 편집기 경고 화면을 거치지 않습니다.
 - 주요 키: WASD/방향키 이동, Space 공격, T 자동사냥, I 인벤토리, M 메뉴, Tab 지도, F5 저장, F9 불러오기.

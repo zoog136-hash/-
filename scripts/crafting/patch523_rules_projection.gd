@@ -767,7 +767,10 @@ static func binding_document(items: Array, contract: Dictionary, parse: bool = t
 		for index: int in items.size():
 			# Registered records are identified by their full form (template
 			# fields included), exactly as registration produced them.
-			var item: Variant = NATIVE_FIELDS.full(items[index])
+			# The real template store can construct the same full record in a
+			# single merge; generic/cached/unusable inputs keep full(). The
+			# complete JSON hash and parsed slim binding are unchanged.
+			var item: Variant = NATIVE_FIELDS._full_for_binding(items[index])
 			var text: String = JSON.stringify(item,"",true,true)
 			size += _hash_text(hash,("" if index == 0 else ",")+text)
 			# Same values a whole-document parse gives for these fields.
