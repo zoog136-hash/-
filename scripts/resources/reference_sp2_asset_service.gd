@@ -24,7 +24,8 @@ extends RefCounted
 ## keeps today's visible behavior). Evicting drops the cache's owner only: an
 ## external Sprite2D/Image that still references a payload keeps it alive, so
 ## an eviction is not proof that memory was returned. Byte figures are payload
-## estimates (parse body + raw input; texture width*height*4), not driver/PSS.
+## lower bounds (a parse's allocated packed buffers; texture width*height*4),
+## not Dictionary/Array/Variant overhead, allocator memory or driver/PSS.
 ##
 ## Pending decodes reserve their expected bytes first. A reservation is bound
 ## to the store generation; invalidate_all() bumps it so a late completion of
@@ -47,8 +48,9 @@ const DECODER_SCHEMA = "current523_sp2_decoder.parse:v1"
 const PIXEL_POLICY = "alpha=opaque_samples;rgb=bit_replication;alpha_mode=straight;format=RGBA8;mipmaps=none;compression=none;trim=none"
 const PALETTE_POLICY = "member_embedded_rgb565_palette"
 const COMPOSITOR_VERSION = "reference_sp2_bank.packed_rgba_le+ImageTexture.create_from_image:v2"
-## Idle (lease 0) budgets. The parsed budget equals the existing per-bank
-## 32 MiB parse budget; textures get 64 MiB of RGBA8 payload.
+## Idle (lease 0) budgets. Banks publish the format-aware packed-buffer cost
+## once and reuse entry_bytes() for their local 32 MiB working sets. This is
+## not a cap on the full parsed heap or on externally/live-owned payloads.
 const IDLE_PARSED_BYTES = 32 * 1024 * 1024
 const IDLE_TEXTURE_BYTES = 64 * 1024 * 1024
 const KINDS: Array[String] = ["parsed", "texture"]
@@ -223,6 +225,7 @@ static func invalidate_all() -> void:
 
 static func stats() -> Dictionary:
 	var result: Dictionary = {"schema":SCHEMA,"generation":_generation,"budgets":{"idle_parsed_bytes":IDLE_PARSED_BYTES,"idle_texture_bytes":IDLE_TEXTURE_BYTES},"pixel_policy":PIXEL_POLICY,"compositor_version":COMPOSITOR_VERSION,"bytes_are_payload_estimates":true,"external_owners_counted":false}
+	result["parsed_payload_accounting"] = "allocated_packed_buffers_excludes_containers_allocator_GPU_RSS"
 	for kind: String in KINDS:
 		var live_count: int = 0
 		var live_bytes: int = 0

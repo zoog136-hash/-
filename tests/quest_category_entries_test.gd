@@ -120,7 +120,7 @@ func _run() -> void:
 		var offered: Array=service.entries_for_category(50,inventory,category,now_value)
 		check(offered==expected,"category rows/order/content equal filtering unchanged entries: "+category)
 		check(source.detached_count==expected.size() and source.read_count==compact_count and source.gate_count==native_count and source.plan_count==native_count,"only selected category is detached/gated/planned: "+category)
-		check(source.bulk_begin==1 and source.bulk_end==1 and source._bulk.is_empty(),"category call preserves bulk lifecycle: "+category)
+		check(source.bulk_begin==0 and source.bulk_end==0 and source._bulk.is_empty(),"category call avoids allocating the whole source bake: "+category)
 	check(service.entries_for_category(50,inventory,"main")==service.entries_for_category(50,inventory,"main",now_value),"new API retains optional time argument")
 	check(service.entries(50,inventory)==all_rows,"old two-argument entries remains compatible")
 	var selected: Array=service.entries_for_category(50,inventory,"main",now_value)

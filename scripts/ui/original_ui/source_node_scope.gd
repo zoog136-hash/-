@@ -19,7 +19,11 @@ static func select(tree: Dictionary, offsets: Array[int]) -> Dictionary:
 	var action_tags: Dictionary={}
 	var node: Dictionary=_prune(tree.nodeTree,requested,retained,action_tags)
 	if node.is_empty():return _fail("source_node_scope_no_retained_root")
-	var scoped: Dictionary=tree.duplicate(true)
+	# The pruned node already owns detached children. Do not first deep-copy
+	# the complete node tree only to replace it with that projection.
+	var scoped: Dictionary=tree.duplicate(false)
+	scoped.nodeTree={}
+	scoped=scoped.duplicate(true)
 	scoped.nodeTree=node
 	scoped["_selected_source_offsets"]=offsets.duplicate()
 	scoped["_partial_source_scene"]=true
@@ -45,7 +49,12 @@ static func _prune(node: Dictionary, requested: Dictionary, retained: Array[int]
 		var kept: Dictionary=_prune(child,requested,retained,action_tags)
 		if not kept.is_empty():children.append(kept)
 	if not requested.has(int(node.get("_offset",-1))) and children.is_empty():return {}
-	var result: Dictionary=node.duplicate(true)
+	# Detach this node's metadata without copying descendants that were either
+	# discarded or independently copied above. Keep the children key in place
+	# so the projected Dictionary retains the original field order as well.
+	var result: Dictionary=node.duplicate(false)
+	result.children=[]
+	result=result.duplicate(true)
 	result.children=children
 	var offset: int=int(node._offset)
 	retained.append(offset)
