@@ -21,6 +21,8 @@ var v20_mp_text: Label
 var v20_stat_text: Label
 var v20_map_name: Label
 var v20_potion_count: Label
+var v20_potion_button: Button
+var _v20_potion_icon_revision: int = -1
 var v20_leaf_count: Label
 var v20_leaf_button: Button
 var v20_ain_panel: PanelContainer
@@ -388,6 +390,7 @@ func _build_v20_status() -> void:
 	# Two immediate-use item slots next to the status block.
 	var red: Button = _make_icon_button(v20_layer, "res://assets/ui/potionRed.png", "", Rect2(380.0, 15.0, 58.0, 66.0), 12)
 	red.pressed.connect(func() -> void: potion_pressed.emit())
+	v20_potion_button = red
 	v20_potion_count = Label.new()
 	v20_potion_count.text = "100"
 	v20_potion_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -978,6 +981,29 @@ func _update_source_class_portrait() -> void:
 	_source_class_portrait_key = key
 	_source_class_portrait_ready = image.get("status") == "original_linked"
 
+## The top-bar HP potion button uses the item world._use_potion uses
+## (current523_starter_kit.QUICKSLOT_ITEMS, ItemClass #233). Its pre-November
+## art was removed, so with the original pack it showed only a black square and
+## the count. Draw that item's own original ItemClass.IconID image through the
+## existing image owner; without it (or for a CSB icon) the icon stays empty.
+func _bind_v20_potion_icon() -> void:
+	if v20_potion_button == null: return
+	var images: Script = preload("res://scripts/ui/source523_image_assets.gd")
+	if not images.selected():
+		_v20_potion_icon_revision = -1
+		return
+	var pack: RefCounted = images.active()
+	var revision: int = pack.get_instance_id() if pack != null else 0
+	if revision == _v20_potion_icon_revision: return
+	_v20_potion_icon_revision = revision
+	var ids: Array[int] = preload("res://scripts/loot/current523_starter_kit.gd").QUICKSLOT_ITEMS
+	var info: Dictionary = images.describe_item_class(ids[0]) if not ids.is_empty() else {}
+	var linked: bool = info.get("status") == "original_linked" and info.get("texture") is Texture2D
+	v20_potion_button.icon = info.texture if linked else null
+	var evidence: Dictionary = info.duplicate(true)
+	evidence.erase("texture")
+	v20_potion_button.set_meta("source523_item_image", evidence)
+
 func set_quick_items(inventory: Dictionary) -> void:
 	if v20_potion_count != null:
 		# The original 523 HP potion (체력 회복제 (각인) · 원본#233); no legacy names.
@@ -985,6 +1011,7 @@ func set_quick_items(inventory: Dictionary) -> void:
 		for key: Variant in inventory:
 			if str(key).ends_with("· 원본#233"): potions += int(inventory[key])
 		v20_potion_count.text = str(potions)
+	_bind_v20_potion_icon()
 	for item_name: String in v20_quick_item_buttons:
 		var button: Button = v20_quick_item_buttons[item_name] as Button
 		if button != null:

@@ -36,6 +36,22 @@ Sprite의 화면 AABB로 제한한다. 그림·해상도·표본·노드 개수�
 추가 검사에서 드러난 optional `source_asset_scene` 메타데이터 접근 두 곳은
 `has_meta()`로 보호했다. 누락을 정상 null로 처리하며 오류를 숨기지 않는다.
 
+## 2026-11-12 수정: 화면 레터박스 여백 제외
+
+휴대폰처럼 화면 비율이 기본 1280×720과 다르면(stretch aspect `keep`) 루트 Window의
+`get_final_transform()`에 배율과 함께 **레터박스 여백이 origin으로** 들어간다
+(예: 2000×900 화면에서 ×1.25, (200, 0)). 이 여백은 완성된 render target을 화면에
+붙일 때만 쓰이고 render target 안에는 없다. 그런데 복사 영역을 여백까지 포함해
+계산해서 모든 Sprite의 복사본이 200px 옆에서 읽혔고, 투명 픽셀이 검은(복사되지
+않은) 배경이나 엉뚱한 배경과 합성됐다. 그래서 휴대폰에서 퀵슬롯·인벤토리의 아이템
+아이콘, AUTO/SELF, 화폐 아이콘이 검은 사각형으로 보였고 불투명한 스킬 아이콘만
+정상처럼 보였다. SubViewport만 쓰는 위 GL 동등성 검사에는 origin이 없어 드러나지 않았다.
+
+`render_target_bounds()`가 final transform의 origin을 뺀다. 실제 원본팩 Main을
+2000×900 창에서 실행해 전체 복사(기존 동작)와 비교하면 수정 전 화면 차이 픽셀
+10,396개(표본)·퀵슬롯 10칸 모두 불일치 → 수정 후 83개(반픽셀 경계)·퀵슬롯 0칸.
+합성 검사는 `tests/original_ui_sprite_copy_letterbox_test.gd`(CI, headless).
+
 ## GL 동등성 검사
 
 [original_ui_sprite_copy_region_test.gd](../tests/original_ui_sprite_copy_region_test.gd)는

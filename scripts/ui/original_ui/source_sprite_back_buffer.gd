@@ -14,6 +14,23 @@ var _runtime_supported: bool = false
 static func supports_runtime(version: Dictionary, renderer: String) -> bool:
 	return renderer == "gl_compatibility" and int(version.get("major", 0)) == 4 and int(version.get("minor", 0)) == 7 and int(version.get("patch", 0)) == 2 and str(version.get("hash", "")) == VERIFIED_ENGINE_HASH
 
+## Sprite AABB in the viewport's render-target pixels, the space that both
+## CopyBackBuffer.rect and the blend shader's SCREEN_UV address.
+## get_viewport_transform includes viewport stretch and CanvasLayer/camera
+## transforms (get_global_transform_with_canvas alone omits stretch). On the
+## root Window with stretch aspect keep/expand the final transform also carries
+## the letterbox margin as its origin, e.g. (200, 0) for a 1280x720 base on a
+## 2000x900 phone screen. That margin only places the finished render target on
+## the screen; it is not inside it. Copying with it moved every copy that far
+## off its Sprite, so transparent pixels blended with an uncopied (black) or
+## unrelated destination: item icons, buff icons and AUTO/SELF on phones showed
+## as black boxes while opaque skill icons looked right. SubViewports have no
+## such origin, so their result is unchanged.
+static func render_target_bounds(viewport_transform: Transform2D, final_transform: Transform2D, global_transform: Transform2D, local_rect: Rect2) -> Rect2:
+	var bounds: Rect2 = (viewport_transform * global_transform) * local_rect
+	bounds.position -= final_transform.origin
+	return bounds
+
 func _init() -> void:
 	copy_mode = COPY_MODE_VIEWPORT
 	_runtime_supported = supports_runtime(Engine.get_version_info(), RenderingServer.get_current_rendering_method())
@@ -56,12 +73,11 @@ func _sync_copy() -> void:
 		ancestor = ancestor.get_parent()
 	var viewport_transform: Transform2D = sprite.get_viewport_transform()
 	var global_transform: Transform2D = sprite.get_global_transform()
-	if not viewport_transform.is_finite() or not global_transform.is_finite():
+	var final_transform: Transform2D = sprite.get_viewport().get_final_transform()
+	if not viewport_transform.is_finite() or not global_transform.is_finite() or not final_transform.is_finite():
 		_set_mode(COPY_MODE_VIEWPORT)
 		return
-	# get_viewport_transform includes viewport stretch and CanvasLayer/camera
-	# transforms; get_global_transform_with_canvas alone omits stretch.
-	var bounds: Rect2 = (viewport_transform * global_transform) * sprite.get_rect()
+	var bounds: Rect2 = render_target_bounds(viewport_transform, final_transform, global_transform, sprite.get_rect())
 	if not bounds.is_finite() or not bounds.has_area():
 		_set_mode(COPY_MODE_VIEWPORT)
 		return
