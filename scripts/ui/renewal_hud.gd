@@ -155,6 +155,7 @@ var catalog_view_tabs: HBoxContainer
 var catalog_list_tab: Button
 var catalog_details_tab: Button
 var catalog_details_active: bool = false
+var catalog_browser_active: bool = false
 var catalog_icon_generation: int = 0
 var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
@@ -997,7 +998,7 @@ func _close_workspace() -> void:
 		navigation_memory.clear_history()
 	combat_log_view = null
 	pending_quickslot_binding.clear()
-	if active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
+	if catalog_browser_active and active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
 		catalog_view_state[active_section] = {"query":catalog_search.text,"grade":catalog_grade_filter,"page":catalog_page,"id":str(selected_catalog_record.get("sourceId",selected_catalog_record.get("name",""))),"scroll":catalog_list.get_v_scroll_bar().value}
 	if pointer_transfer != null: pointer_transfer.cancel()
 	for dialog: Node in $Root.get_children():
@@ -1007,6 +1008,7 @@ func _close_workspace() -> void:
 	if workspace != null:
 		workspace.hide()
 	active_section = ""
+	catalog_browser_active = false
 	if lineage_inventory_ui != null:
 		lineage_inventory_ui.hide_inventory()
 	if lineage_side_ui != null:
@@ -1709,8 +1711,22 @@ func open_card_fusion(category: String) -> void:
 	view.fuse_requested.connect(_confirm_card_fusion_request)
 
 func open_catalog(category: String) -> void:
+	var started: int = FRAME_HITCH.now()
+	_open_catalog_impl(category)
+	FRAME_HITCH.detail("ui.catalog_open", started)
+
+func _open_catalog_impl(category: String) -> void:
 	_reset_catalog_drag()
 	_open_window(category,category,"")
+	catalog_category = category
+	# The native window owns its selected card and scroll position. Preparing
+	# the other browser first loads the same card pictures before hiding it.
+	if category in ["변신","마법인형"] and _open_original_change_window(category):
+		return
+	_open_catalog_browser(category)
+
+func _open_catalog_browser(category: String) -> void:
+	catalog_browser_active = true
 	workspace.mount(catalog_panel)
 	catalog_panel.show()
 	catalog_category = category
@@ -1784,21 +1800,21 @@ func open_catalog(category: String) -> void:
 		catalog_card_chrome.activate()
 	if not catalog_results.is_empty() and SourceCardPresentation.native(catalog_results[0]):
 		_restore_native_catalog_scroll(category, float(saved.get("scroll", 0)), catalog_icon_generation)
-	if category in ["변신","마법인형"]:_open_original_change_window(category)
 
 ## The original 523 Change_WinTotal shows the owned cards; applying a card
 ## still goes through catalog_equip_requested (World._equip_catalog).
-func _open_original_change_window(category: String) -> void:
-	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_change_window"):return
+func _open_original_change_window(category: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_change_window"):return false
 	var native: Dictionary=original_main_ui_controller.try_open_change_window(category)
 	original_main_ui_status["change_window"]=native
-	if not native.get("handled",false):return
+	if not native.get("handled",false):return false
 	_reset_catalog_drag()
 	if is_instance_valid(companion_detail_view):companion_detail_view.deactivate()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.deactivate()
 	if pointer_transfer!=null:pointer_transfer.cancel()
 	workspace.hide()
 	_sync_screen_focus()
+	return true
 
 func _restore_native_catalog_scroll(category: String, scroll: float, generation: int) -> void:
 	# Container reparenting and icon-size changes settle after the first frame.
@@ -2044,13 +2060,15 @@ func set_card_collection_state(value: Dictionary) -> void:
 	var next_owned: Dictionary=value.get("owned",{}).get(catalog_category,{})
 	var reorder: bool=previous_owned!=next_owned
 	card_collection_state = value.duplicate(true)
-	if reorder and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
+	var browser_visible: bool=is_instance_valid(catalog_panel) and catalog_panel.is_visible_in_tree()
+	if reorder and browser_visible and active_section==catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list!=null:
 		_refresh_catalog_owned_order()
-	_refresh_card_controls()
-	_refresh_option_awakening_markers()
+	if browser_visible:
+		_refresh_card_controls()
+		_refresh_option_awakening_markers()
 	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
 		card_fusion_view.set_collection_state(card_collection_state)
-	elif active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
+	elif browser_visible and active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
 		var selected_indices: PackedInt32Array = catalog_list.get_selected_items()
 		if not selected_indices.is_empty() and selected_indices[0] < catalog_results.size():
 			_on_catalog_item_selected(selected_indices[0])
@@ -2141,6 +2159,7 @@ func _option_awakening_card_state(category: String, record: Dictionary) -> Dicti
 	return cards.get(CARD_RULES.card_id(record), {}) as Dictionary
 
 func _refresh_option_awakening_markers() -> void:
+	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return
 	if catalog_list == null or not CARD_RULES.CATEGORIES.has(catalog_category): return
 	var owned: Dictionary = (card_collection_state.get("owned", {}) as Dictionary).get(catalog_category, {}) as Dictionary
 	var spare: Dictionary = (card_collection_state.get("spare", {}) as Dictionary).get(catalog_category, {}) as Dictionary
@@ -2285,6 +2304,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
 func _refresh_card_controls() -> void:
+	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	ReferenceSurfaces.refresh_grade_counts(self)

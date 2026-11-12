@@ -7,6 +7,7 @@ const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd"
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -351,6 +352,9 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not admitted.ok: return admitted
 	var source: Dictionary = _member(str(layer.get("member", "")))
 	if not source.ok: return source
+	return _render_verified_layer(layer, source, pixels)
+
+func _render_verified_layer(layer: Dictionary, source: Dictionary, pixels: bool) -> Dictionary:
 	var parsed: Dictionary = source.parsed
 	var group_index: int = -1
 	for index: int in range(parsed.groups.size()):
@@ -369,6 +373,43 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 			result.provenance["source_reference_instances"] = layer.get("source_reference_instances",[]).duplicate(true)
 			result.provenance["native_reference_multiplicity_verified"] = false
 	return result
+
+## A load is synchronous: every role/direction may address the same member
+## hundreds of times. Verify it once for this load, then retain only geometry
+## and provenance, not its raw/body/blocks or a lease outside the usual 3-member
+## working set. Draw-time render_layer() still checks pins and members each use.
+func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
+	if not integer(layer.get("source_sprite_id")): return fail("Missing declared source layer actor identity.")
+	var admitted: Dictionary = source_actor_admission(int(layer.source_sprite_id))
+	if not admitted.ok: return admitted
+	var member: String = str(layer.get("member", ""))
+	if not memo.has(member):
+		FRAME_HITCH.count("sp2.member_verify")
+		var source: Dictionary = _member(member)
+		if not source.ok: return source
+		var groups: Array = []
+		for group: Dictionary in source.parsed.groups:
+			var frames: Array = []
+			for frame: Dictionary in group.frames:
+				frames.append({"bounds":frame.bounds,"empty":frame.empty})
+			groups.append({"bit":group.bit,"frames":frames})
+		var compact: Dictionary = source.duplicate()
+		compact.parsed = {"groups":groups}
+		var file_path: String = _root.path_join("raw/" + member)
+		memo[member] = {"source":compact,"path":file_path,"stamp":_verified_members.get(file_path, []).duplicate()}
+	return _render_verified_layer(layer, memo[member].source, false)
+
+## Do not accept a file changed during the synchronous build. An unchanged
+## stamp costs only stats; a rewrite must pass the normal full verification.
+## The memo never survives load_bank(), and metadata pins are checked too.
+func _load_members_unchanged(memo: Dictionary) -> Dictionary:
+	for member: String in memo:
+		var entry: Dictionary = memo[member]
+		var stamp: Array = entry.stamp
+		if stamp.size() == 3 and FileAccess.file_exists(entry.path) and int(FileAccess.get_size(entry.path)) == int(stamp[1]) and int(FileAccess.get_modified_time(entry.path)) == int(stamp[2]): continue
+		var checked: Dictionary = _member(member)
+		if not checked.ok: return checked
+	return {"ok":true}
 
 func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	var evidence: Variant = record.get("source_layer_declarations")
@@ -407,6 +448,12 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
 
 func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "", role_actor_ids: Dictionary = {}) -> Dictionary:
+	var started: int = FRAME_HITCH.now()
+	var result: Dictionary = _load_bank(manifest_path, expected_sha, source_actor_id, bindings, loop_policy, consumer_scope, role_actor_ids)
+	FRAME_HITCH.detail("sp2.bank_load", started)
+	return result
+
+func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String, role_actor_ids: Dictionary) -> Dictionary:
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
@@ -434,6 +481,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	var entries: Variant = _actor_registry("sprite:" + str(source_actor_id))
 	if not entries is Dictionary: return fail("Exact source actor ID is absent.")
 	var tracks: Dictionary = {}
+	var member_metadata: Dictionary = {}
 	var record: Dictionary = {"source_sprite_id":source_actor_id,"tracks":tracks,"source_snapshot":"patch523"}
 	record["source_dummy_exclusion_policy"] = _manifest.get("source_dummy_exclusion_policy")
 	record["map_consumer_contract_dependency"] = "Map placement requires its separate source consumer contract; actor admission does not grant map placement."
@@ -513,6 +561,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 				for layer_index: int in range(frame.layers.size()):
 					var layer: Variant = frame.layers[layer_index]
 					var spec: Variant = layer_specs[layer_index]
+					FRAME_HITCH.count("sp2.layer_validate")
 					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
 					var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
 					if not reference_binding.ok: return reference_binding
@@ -533,7 +582,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 						continue
 					var attributes: Dictionary = _attributes(source, layer.kind, int(layer.source_sprite_id))
 					if not attributes.ok: return attributes
-					var picture: Dictionary = render_layer(layer, false)
+					var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
 					if not picture.ok: return picture
 					if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
 					var converted_layer: Dictionary = layer.duplicate(true)
@@ -604,5 +653,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 					ordered_instances.append(instance.duplicate(true))
 				attachment_record["source_reference_instances"] = ordered_instances
 			independent_by_role[role].append(attachment_record)
+	var checked_members: Dictionary = _load_members_unchanged(member_metadata)
+	if not checked_members.ok: return checked_members
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
 	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"consumer_scope":consumer_scope,"source_dummy_exclusion_policy":record.source_dummy_exclusion_policy,"map_consumer_contract_dependency":record.map_consumer_contract_dependency,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}
