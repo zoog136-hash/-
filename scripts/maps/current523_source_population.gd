@@ -5,8 +5,12 @@ class_name Current523SourcePopulation
 ## pool. New actors are spread over frames so entering a dense area on a phone
 ## does not resolve dozens of source records in one frame.
 const SPAWNS_PER_FRAME: int = 2
+## Check elapsed setup work before starting another actor. A single cold setup
+## is still synchronous and may exceed this budget; this is not preemption.
+const SPAWN_BUDGET_USEC: int = 4000
 var _budget_frame: int = -1
 var _budget_used: int = 0
+var _budget_elapsed_usec: int = 0
 
 ## Only records resolved from the current523 original may live on a source
 ## field. A record still resolved through the old base508 actor pack
@@ -27,14 +31,17 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if frame != _budget_frame:
 		_budget_frame = frame
 		_budget_used = 0
-	if _budget_used >= SPAWNS_PER_FRAME:
+		_budget_elapsed_usec = 0
+	if _budget_used >= SPAWNS_PER_FRAME or _budget_elapsed_usec >= SPAWN_BUDGET_USEC:
 		# A frame-budget deferral is not a failed floor search: no backoff.
 		slot.budget_deferred = true
 		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.05)
 		return
 	_budget_used += 1
 	slot.erase("budget_deferred")
+	var started: int = Time.get_ticks_usec()
 	super._spawn_slot(slot)
+	_budget_elapsed_usec += Time.get_ticks_usec() - started
 
 func _spawn_retry_delay(slot: Dictionary) -> float:
 	if slot.has("budget_deferred"):

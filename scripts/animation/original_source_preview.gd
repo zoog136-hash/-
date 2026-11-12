@@ -146,12 +146,60 @@ func source_bank_request_context() -> Dictionary:
 	return _reference_request_context.duplicate(true)
 
 func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
-	# Selection/admission belongs to the existing card/NPC caller. Each optional
-	# action is admitted independently, so missing HIT cannot remove valid RUN.
+	var started: int = FRAME_HITCH.now()
+	var configured: bool = _configure_selected_roles_measured(selected,initial_role)
+	FRAME_HITCH.detail("source.role_selection",started)
+	return configured
+
+func _indexed_optional_roles(selected: Dictionary) -> Dictionary:
+	if selected.get("optional_role_actions",{}).is_empty(): return {}
 	var actions: Dictionary = selected.role_actions.duplicate()
 	var loops: Dictionary = selected.loop_policy.duplicate()
 	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
-	var run_status: Dictionary = selected.get("run_status",{}).duplicate(true)
+	var statuses: Dictionary = {}
+	for role: String in selected.optional_role_actions:
+		if actions.has(role): continue
+		var loop: Variant = selected.get("optional_role_loop_policy",{}).get(role,true if role == "run" else null)
+		var actor: Variant = selected.get("optional_role_actor_ids",{}).get(role)
+		if not loop is bool or not REFERENCE_BANK.integer(actor,1):
+			statuses[role] = {"state":"optional_source_role_contract_missing"}
+			continue
+		var action: int = int(selected.optional_role_actions[role])
+		actions[role] = action
+		loops[role] = loop
+		role_actors[role] = int(actor)
+		statuses[role] = {"state":"selected_source_declared_optional_action","action_id":action,"source_actor_id":int(actor)}
+	if actions.size() == selected.role_actions.size() or actions.size() > 16: return {}
+	# This is only a preparation strategy check. The same pinned bank loader
+	# still admits every actor/action/member and validates the complete result.
+	# Missing optional entries use the independent path immediately, avoiding
+	# an expensive failed combined read of all otherwise valid core actions.
+	var opened: Dictionary = REFERENCE_BANK.MANIFEST_INDEX.open(str(selected.manifest_path),str(selected.manifest_sha256),REFERENCE_BANK.MAX_MANIFEST_JSON,REFERENCE_BANK.valid_sha(selected.manifest_sha256))
+	if not opened.get("ok",false): return {}
+	var index: RefCounted = opened.index
+	if not index.registry_is_dictionary("actors"): return {}
+	for role: String in selected.optional_role_actions:
+		if selected.role_actions.has(role) or not actions.has(role): continue
+		var actor: int = int(role_actors[role])
+		var entries: Variant = index.lookup("actors","sprite:"+str(actor))
+		if not entries is Dictionary: return {}
+		var action: int = int(actions[role])
+		var entry: Variant = entries.get(str(action))
+		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [actor,action] or not REFERENCE_BANK.valid_sha(entry.get("sha256")): return {}
+	return {"actions":actions,"loops":loops,"role_actors":role_actors,"statuses":statuses}
+
+func _configure_selected_roles_measured(selected: Dictionary, initial_role: String) -> bool:
+	var candidate: Dictionary = _indexed_optional_roles(selected)
+	if not candidate.is_empty():
+		FRAME_HITCH.count("source.optional_combined_attempt")
+		if _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),candidate.actions,candidate.loops,initial_role,str(selected.consumer),candidate.role_actors):
+			return _finish_selected_roles(selected,true,candidate.actions,candidate.loops,candidate.role_actors,candidate.statuses)
+	# Selection/admission belongs to the existing card/NPC caller. Each optional
+	# action remains independently admitted after a failed combined attempt,
+	# so an unavailable HIT cannot remove a valid RUN.
+	var actions: Dictionary = selected.role_actions.duplicate()
+	var loops: Dictionary = selected.loop_policy.duplicate()
+	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
 	var optional_status: Dictionary = {}
 	for role: String in selected.get("optional_role_actions",{}):
 		if actions.has(role): continue
@@ -162,7 +210,9 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 			continue
 		var action: int = int(selected.optional_role_actions[role])
 		var probe := REFERENCE_BANK.new()
+		var probe_started: int = FRAME_HITCH.now()
 		var loaded: Dictionary = probe.load_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),{role:action},{role:loop},str(selected.consumer),{role:int(actor)})
+		FRAME_HITCH.detail("source.optional_probe",probe_started)
 		if not loaded.ok:
 			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":loaded.get("error","")}
 			continue
@@ -179,6 +229,10 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 		loops = selected.loop_policy.duplicate()
 		role_actors = selected.get("role_actor_ids",{}).duplicate()
 		configured = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
+	return _finish_selected_roles(selected,configured,actions,loops,role_actors,optional_status)
+
+func _finish_selected_roles(selected: Dictionary, configured: bool, actions: Dictionary, loops: Dictionary, role_actors: Dictionary, optional_status: Dictionary) -> bool:
+	var run_status: Dictionary = selected.get("run_status",{}).duplicate(true)
 	if selected.get("optional_role_actions",{}).has("run"):
 		run_status["state"] = "selected_source_declared_run" if configured and actions.has("run") else "source_declared_run_unavailable_existing_walk"
 		if optional_status.get("run",{}).has("bank_problem"): run_status["bank_problem"] = optional_status.run.bank_problem
@@ -265,6 +319,12 @@ func configure_reference_bank(manifest_path: String, expected_manifest_sha: Stri
 	return _configure_reference_bank(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,"")
 
 func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
+	var started: int = FRAME_HITCH.now()
+	var configured: bool = _configure_reference_bank_measured(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,card_consumer,role_actor_ids)
+	FRAME_HITCH.detail("source.bank_configure",started)
+	return configured
+
+func _configure_reference_bank_measured(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
 	clear()
 	_current523_source_only = not card_consumer.is_empty()
 	if not explicit_role_action_bindings.has(initial_role):

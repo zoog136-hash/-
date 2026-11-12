@@ -57,11 +57,11 @@ func refresh() -> Dictionary:
 	if parent==null:return _fail("source_quickslot_canvas_unavailable")
 	var model: Dictionary=_bindings.snapshot()
 	if not model.get("ok",false):return _decline(model)
-	if not is_open() or _model_identity(model)!=_identity:return _stage(parent)
+	if not is_open() or _model_identity(model)!=_identity:return _stage(parent,model)
 	for row: Dictionary in model.rows:
 		var hit: Dictionary=_hits.get(int(row.visible_index),{})
 		if hit.is_empty():return _decline(_fail("source_quickslot_registered_slot_unavailable"))
-		var result: Dictionary=_bindings.refresh_slot(hit.native_slot_scene,row)
+		var result: Dictionary=_bindings.refresh_slot(hit.native_slot_scene,row,model)
 		if not result.get("ok",false):return _decline(result)
 	_rows=model.rows.duplicate(true)
 	return {"ok":true,"handled":true,"partial_source_scene":true,"complete_screen_contract":false}
@@ -92,13 +92,13 @@ func blocks_point(viewport_point: Vector2) -> bool:
 		if _contains(control,viewport_point):return true
 	return false
 
-func _stage(parent: Node) -> Dictionary:
+func _stage(parent: Node, current_model: Dictionary={}) -> Dictionary:
 	_busy=true
-	var model: Dictionary=_bindings.snapshot()
+	var model: Dictionary=current_model if not current_model.is_empty() else _bindings.snapshot()
 	if not model.get("ok",false):return _decline(model)
 	var contracts: Array[Dictionary]=[]
 	for group: int in range(PAGE_VIEWS.size()):
-		var contract: Dictionary=_bindings.build_group(group)
+		var contract: Dictionary=_bindings.build_group(group,model)
 		if not contract.get("ok",false):return _decline(contract)
 		contracts.append(contract)
 	var root_bindings: Dictionary={PROJECT:{"role":"project","source_node_offsets":PAGE_VIEWS,"bindings":{}}}

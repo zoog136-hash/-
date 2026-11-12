@@ -10,6 +10,7 @@ const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const SOURCE_CRC32 = preload("res://scripts/resources/source_crc32.gd")
 const ATTACHMENT_ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
@@ -38,7 +39,6 @@ var _parse_order: Array[String] = []
 var _parsed_keys: Dictionary = {}
 var _parsed_costs: Dictionary = {} # member -> the shared entry's measured cost
 var _asset_owner: int = ASSETS.new_owner()
-static var _crc_table: Array[int] = []
 ## Member files whose bytes were verified, by path -> [identity, size, mtime].
 ## Like MANIFEST_INDEX.pinned(): every use still checks that the file exists
 ## with its declared size and unchanged modification time; the full read and
@@ -81,14 +81,7 @@ static func valid_crc(value: Variant) -> bool:
 	return true
 
 static func crc32(bytes: PackedByteArray) -> String:
-	if _crc_table.is_empty():
-		for index: int in range(256):
-			var entry: int = index
-			for bit: int in range(8): entry = (entry >> 1) ^ (0xedb88320 if (entry & 1) != 0 else 0)
-			_crc_table.append(entry)
-	var value: int = 0xffffffff
-	for byte: int in bytes: value = _crc_table[(value ^ byte) & 255] ^ (value >> 8)
-	return "%08x" % ((value ^ 0xffffffff) & 0xffffffff)
+	return SOURCE_CRC32.hex_digest(bytes)
 
 func _json(path: String, expected: String, manifest_json: bool = false) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -250,6 +243,7 @@ func _member(member: String) -> Dictionary:
 	if _parsed.has(member) and _parsed_keys.get(member, "") != asset_key: _drop_parsed(member)
 	if not _parsed.has(member):
 		var parsed: Variant = ASSETS.acquire("parsed", asset_key, _asset_owner) if not asset_key.is_empty() else null
+		FRAME_HITCH.count("sp2.shared_parse_miss" if parsed == null else "sp2.shared_parse_hit")
 		var parsed_cost: int = ASSETS.entry_bytes("parsed", asset_key) if parsed != null else -1
 		if parsed == null:
 			if bytes.is_empty():
@@ -286,18 +280,35 @@ var _last_member_problem: String = ""
 ## The member's bytes after a full size + SHA-256 (or received CRC32) check,
 ## or empty with _last_member_problem set.
 func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, received: bool, member: String) -> PackedByteArray:
+	var started: int = FRAME_HITCH.now()
+	var bytes: PackedByteArray = _read_verified_measured(file_path, spec, supplied_sha, received, member)
+	FRAME_HITCH.detail("sp2.member_read_verify", started)
+	return bytes
+
+func _read_verified_measured(file_path: String, spec: Dictionary, supplied_sha: bool, received: bool, member: String) -> PackedByteArray:
+	FRAME_HITCH.count("sp2.member_file_read")
+	var started: int = FRAME_HITCH.now()
 	var file := FileAccess.open(file_path, FileAccess.READ)
 	if file == null or file.get_length() != int(spec.bytes):
 		_last_member_problem = "Original SP2 missing or changed size: " + member
 		return PackedByteArray()
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
-	if supplied_sha and digest(bytes) != spec.sha256:
-		_last_member_problem = "Original SP2 SHA256 mismatch: " + member
-		return PackedByteArray()
-	if received and crc32(bytes) != spec.crc32:
-		_last_member_problem = "Received original SP2 CRC32 mismatch: " + member
-		return PackedByteArray()
+	FRAME_HITCH.detail("sp2.member_read", started)
+	if supplied_sha:
+		started = FRAME_HITCH.now()
+		var actual_sha: String = digest(bytes)
+		FRAME_HITCH.detail("sp2.member_sha256", started)
+		if actual_sha != spec.sha256:
+			_last_member_problem = "Original SP2 SHA256 mismatch: " + member
+			return PackedByteArray()
+	if received:
+		started = FRAME_HITCH.now()
+		var actual_crc: String = crc32(bytes)
+		FRAME_HITCH.detail("sp2.member_crc32", started)
+		if actual_crc != spec.crc32:
+			_last_member_problem = "Received original SP2 CRC32 mismatch: " + member
+			return PackedByteArray()
 	return bytes
 
 ## Forget verified member stamps (tests; or after replacing files in place
@@ -391,7 +402,9 @@ func _render_verified_layer(layer: Dictionary, source: Dictionary, pixels: bool)
 	var frame_index: int = int(layer.frame_index)
 	if frame_index >= group.frames.size(): return fail("Stored SP2 frame is out of range.")
 	var frame: Dictionary = group.frames[frame_index]
+	var started: int = FRAME_HITCH.now() if pixels else 0
 	var result: Dictionary = PIXEL_RENDERER.render(parsed, group_index, frame_index) if pixels else {"ok":true,"offset":frame.bounds.position,"empty":frame.empty}
+	if pixels: FRAME_HITCH.detail("sp2.pixel_decode", started)
 	if result.ok:
 		result["provenance"] = {"member":layer.member,"raw_sha256":source.sha256,"raw_crc32":source.crc32,"source_stage":source.stage,"source_receipt_id":source.source_receipt_id,"source_identity":source.source_identity,"stored_bit":int(layer.group_bit),"frame_index":frame_index,"layer_id":int(layer.source_sprite_id),"kind":layer.kind,"empty":bool(frame.empty)}
 		if layer.has("source_binding_id"):
