@@ -37,7 +37,14 @@ const PERCENT_FIELDS := {"ExperienceAdditionPercent":"xp"}
 const LABELS := {"def":"AC","hp_flat":"최대 HP","mp_flat":"최대 MP","damage_reduction":"대미지 리덕션","melee_damage":"근거리 대미지",
 	"ranged_damage":"원거리 대미지","magic_damage":"마법 대미지","melee_accuracy":"근거리 명중","ranged_accuracy":"원거리 명중",
 	"magic_accuracy":"마법 명중","xp":"획득 경험치 %"}
-const POLICIES := ["CreateLevelCondition","CreateCommission","MaxDonateCount","WeeklyMaxDonatePoint","DonateExpRatio","AdenaDonateID"]
+const POLICIES := ["CreateLevelCondition","CreateCommission","MaxDonateCount","WeeklyMaxDonatePoint","DonateExpRatio","AdenaDonateID","HuntingExpRatio"]
+## User decision 2026-11-12: hunting gives clan experience in proportion to
+## the character experience of each monster kill. TWILIGHT share 9 % times the
+## original ClanPolicies HuntingExpRatio (1). Basis (docs/clan523_missing_rules.md
+## "사용자 결정 2026-11-12"): the TWILIGHT Lv.65 reference hunt is 581 kills/h x
+## 1,200 exp x blessing 4 = 2,788,800 exp/h; 9 % = 250,992 clan exp/h, so clan
+## level 13 (10,010,000) takes about 40 hours of hunting alone.
+const HUNT_SHARE_PERCENT := 9
 
 static var _definition: Dictionary = {}
 static var _attempted_at: int = -RETRY_MSEC
@@ -226,6 +233,7 @@ static func validate(value: Variant) -> String:
 		if not value.get(key) is Dictionary: return "혈맹 저장 값 오류: "+key
 		for id: Variant in value[key]:
 			if not str(id).is_valid_int() or not _integer(value[key][id]) or int(value[key][id])<0: return "혈맹 저장 값 오류: "+key
+	if value.has("hunt_carry") and (not _integer(value.hunt_carry) or int(value.hunt_carry)<0 or int(value.hunt_carry)>=100): return "혈맹 저장 값 오류: hunt_carry"
 	if not value.get("weekly_claimed") is Array: return "혈맹 저장 값 오류: weekly_claimed"
 	for id: Variant in value.weekly_claimed:
 		if not _integer(id): return "혈맹 저장 값 오류: weekly_claimed"
@@ -241,7 +249,7 @@ func import_state(value: Variant) -> void:
 	var invalid: String = validate(value)
 	if not invalid.is_empty(): problem = invalid; return
 	state = (value as Dictionary).duplicate(true)
-	for key: String in ["created_at","experience","day","week","week_points"]:
+	for key: String in ["created_at","experience","day","week","week_points","hunt_carry"]:
 		if state.has(key): state[key] = int(state[key])
 	if state.has("weekly_claimed"):
 		var claimed: Array = []
@@ -430,6 +438,30 @@ static func _stage_item(world: Object, overrides: Dictionary, item_class_id: int
 	var staged: Dictionary = preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,overrides.inventory,overrides.item_instances,int(overrides.gold),item_class_id,amount,bless,origin)
 	if not staged.get("ok",false): return {"ok":false,"error":str(staged.get("error",""))}
 	return {"ok":true,"overrides":staged.overrides}
+
+## --- Hunting clan experience (user decision 2026-11-12) ----------------------
+
+## Clan experience of one kill's character experience (pure; carry = the
+## hundredths left from earlier kills, 0..99).
+static func hunt_share(gained: int, ratio: int, carry: int) -> Dictionary:
+	if gained<=0 or ratio<=0: return {"experience":0,"carry":carry}
+	var total: int = gained*HUNT_SHARE_PERCENT*ratio+carry
+	@warning_ignore("integer_division")
+	return {"experience":total/100,"carry":total%100}
+
+## Adds the clan experience of one monster kill in memory (the normal
+## autosave stores it). Experience stops at the last level's cumulative
+## value, the ClanExperience cap. Returns the clan experience added.
+func on_hunt_experience(gained: int) -> int:
+	if not has_clan() or not problem.is_empty() or gained<=0: return 0
+	var data: Dictionary = definition()
+	if not data.get("ok",false): return 0
+	var share: Dictionary = hunt_share(gained,int(data.policies.HuntingExpRatio.value),int(state.get("hunt_carry",0)))
+	var cap: int = int(data.levels[-1].cumulative)
+	var before: int = int(state.experience)
+	state.experience = mini(cap,before+int(share.experience))
+	state.hunt_carry = int(share.carry)
+	return int(state.experience)-before
 
 ## --- Weekly donation reward -------------------------------------------------
 

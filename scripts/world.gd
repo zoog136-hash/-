@@ -3527,6 +3527,11 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
 	gold += gained_adena
+	var clan_level_before: int = clan523.level()
+	var clan_leveled: bool = clan523.on_hunt_experience(gained_experience) > 0 and clan523.level() != clan_level_before
+	if clan_leveled:
+		hud.show_message("혈맹 레벨 %d" % clan523.level())
+		_request_deferred_save()
 	var card_growth: Dictionary=skill_awakening.on_hunt_experience(gained_experience)
 	var card_leveled: bool=card_growth.get("grants",[]).any(func(grant: Dictionary) -> bool:return int(grant.get("levels_gained",0))>0)
 	if bool(card_growth.get("changed",false)):
@@ -3549,7 +3554,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
-	if level != level_before or card_leveled:
+	if level != level_before or card_leveled or clan_leveled:
 		_update_hud()
 	else:
 		_refresh_combat_hud()

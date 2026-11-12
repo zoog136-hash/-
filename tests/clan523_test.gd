@@ -54,7 +54,7 @@ func synthetic() -> Rows:
 		"ClanExperience":[{"Level":2.0,"CumulativeExperience":200.0},{"Level":1.0,"CumulativeExperience":100.0},{"Level":3.0,"CumulativeExperience":999999.0}],
 		"ClanPolicies":[{"Name":"CreateLevelCondition","Value":30.0,"UnitId":0.0,"ClassId":0.0},{"Name":"CreateCommission","Value":100000.0,"UnitId":4.0,"ClassId":26.0},
 			{"Name":"MaxDonateCount","Value":3.0,"UnitId":1.0,"ClassId":0.0},{"Name":"WeeklyMaxDonatePoint","Value":250.0,"UnitId":0.0,"ClassId":0.0},
-			{"Name":"DonateExpRatio","Value":1.0,"UnitId":0.0,"ClassId":0.0},{"Name":"AdenaDonateID","Value":2.0,"UnitId":0.0,"ClassId":0.0}],
+			{"Name":"DonateExpRatio","Value":1.0,"UnitId":0.0,"ClassId":0.0},{"Name":"AdenaDonateID","Value":2.0,"UnitId":0.0,"ClassId":0.0},{"Name":"HuntingExpRatio","Value":1.0,"UnitId":0.0,"ClassId":0.0}],
 		"Unit":[{"ID":4.0,"Name":"ItemClassID"},{"ID":34.0,"Name":"IntangibleItemClassID"},{"ID":222.0,"Name":"ClanExperience"},{"ID":11422.0,"Name":"ClanDonatePoint"},{"ID":242.0,"Name":"Einasad"},{"ID":1.0,"Name":"Value"},{"ID":3.0,"Name":"Percentage"}],
 		"ClanCreateGameClass":[{"GameClassID":8.0}],
 		"Class":[{"ID":8.0,"DescID":57.0}],
@@ -148,13 +148,30 @@ func flow(data: Dictionary) -> void:
 	check(not clan.merchant_gate({"ClanLevelMin":1.0,"LimitClanMemberRank":true}).ok,"LimitClanMemberRank is refused")
 	check(not CLAN.new().merchant_gate({"ClanLevelMin":2.0}).ok and CLAN.new().merchant_gate({"ClanLevelMin":0.0}).ok,"no clan: only rows without a clan level")
 	check(clan.level()==3 and clan.emblem_grade()==3,"emblem OpenGrade follows the clan level")
+	# Hunting share (user decision 2026-11-12): 9 % x HuntingExpRatio, carry kept.
+	check(CLAN.hunt_share(1200,1,0)=={"experience":108,"carry":0},"1,200 kill exp -> 108 clan exp (9 %)")
+	check(CLAN.hunt_share(11,1,0)=={"experience":0,"carry":99} and CLAN.hunt_share(11,1,99)=={"experience":1,"carry":98},"hundredths carry to the next kill")
+	check(CLAN.hunt_share(100,2,0).experience==18 and CLAN.hunt_share(0,1,5).experience==0,"the original ratio multiplies; no kill exp gives nothing")
+	var exp_before: int = int(clan.state.experience)
+	check(clan.on_hunt_experience(1111)==99 and int(clan.state.hunt_carry)==99 and int(clan.state.experience)==exp_before+99,"a kill adds clan exp in memory with its carry")
+	check(CLAN.new().on_hunt_experience(5000)==0,"no clan: hunting gives no clan exp")
+	clan.on_hunt_experience(999999999)
+	check(int(clan.state.experience)==999999 and clan.level()==3,"hunting stops at the last ClanExperience value (table cap first)")
+	clan.state.experience = 330; clan.state.hunt_carry = 99
+	# Shop price over the original exchange rate (user decision 2026-11-12).
+	var Shop: Script = load("res://scripts/shop/source523_shop_runtime.gd")
+	check(Shop.rated_amount(16000000,100)==160000 and Shop.rated_amount(10001,100)==101 and Shop.rated_amount(50,100)==1 and Shop.rated_amount(850,1)==850,"price / ExchangeRate rounded up; rate 1 unchanged")
 	# Save
 	var saved: Dictionary = clan.export_state()
 	check(CLAN.validate(saved).is_empty(),"exported state validates")
 	var parsed: Variant = JSON.parse_string(JSON.stringify(saved))
 	var reloaded := CLAN.new()
 	reloaded.import_state(parsed)
-	check(reloaded.has_clan() and reloaded.level()==3 and reloaded.state.name=="황혼" and reloaded.state.experience is int,"JSON floats reload as the same clan")
+	check(reloaded.has_clan() and reloaded.level()==3 and reloaded.state.name=="황혼" and reloaded.state.experience is int and reloaded.state.hunt_carry==99,"JSON floats reload as the same clan with its hunting carry")
+	var legacy: Dictionary = saved.duplicate(true); legacy.erase("hunt_carry")
+	check(CLAN.validate(legacy).is_empty(),"a #435 save without hunt_carry still loads")
+	var bad_carry: Dictionary = saved.duplicate(true); bad_carry.hunt_carry = 100
+	check(not CLAN.validate(bad_carry).is_empty(),"hunt_carry outside 0..99 is refused")
 	for broken: Variant in [{"schema":2},{"schema":1,"name":""},{"schema":1.0,"name":"a","created_at":-1}]:
 		var target := CLAN.new()
 		target.import_state(broken)
@@ -181,6 +198,29 @@ func runtime(data: Dictionary) -> void:
 	world.clan523.import_state(parsed.get("clan523",{}) if parsed is Dictionary else {})
 	check(world.clan523.has_clan() and world.clan523.level()==2,"reload keeps the clan")
 	check(EMB.grade_for(world)>=2,"emblem grade from the world clan")
+	# A controlled actor (as einasad523_test); the kill runs the actual
+	# _on_monster_died reward path.
+	world.field_population.set_process(false); world.player.set_physics_process(false); world.player.auto_enabled = false
+	var actor: TwilightMonster = world.MONSTER_SCENE.instantiate(); world.monsters_root.add_child(actor)
+	actor.setup({"name":"혈맹 사냥 검증","hp":999999,"lv":1,"ac":0,"crit":0},world.player,world,null)
+	actor.global_position = world.player.global_position+Vector2(1024,1024)
+	if check(is_instance_valid(actor),"a controlled monster in actual Main"):
+		actor.set_physics_process(false)
+		actor.exp_reward = 1000; actor.gold_reward = 0; actor.drop_items = []
+		world.clan523.state.hunt_carry = 0
+		var char_before: int = world.experience
+		var clan_exp_before: int = int(world.clan523.state.experience)
+		actor.dead = true; world._on_monster_died(actor)
+		var gained: int = world.experience-char_before
+		evidence["kill"] = {"character":gained,"clan":int(world.clan523.state.experience)-clan_exp_before,"carry":world.clan523.state.hunt_carry}
+		check(gained>0 and int(world.clan523.state.experience)-clan_exp_before==(gained*9)/100 and int(world.clan523.state.hunt_carry)==(gained*9)%100,"a real kill adds 9 % of its character exp to the clan")
+	var hunted_before: int = int(world.clan523.state.experience)
+	world.clan523.state.hunt_carry = 0
+	world.clan523.on_hunt_experience(1000)
+	check(int(world.clan523.state.experience)==hunted_before+90,"world clan takes the hunting share")
+	check(world._save_game(true)==OK,"save after hunting")
+	var hunted: Variant = JSON.parse_string(FileAccess.get_file_as_string("user://twilight_v20_save.json"))
+	check(hunted is Dictionary and int(hunted.get("clan523",{}).get("experience",0))==hunted_before+90,"the save holds the hunted clan exp")
 	world.hud.call("open_clan523")
 	await process_frame
 	var panel: Node = world.hud.find_child("Clan523Panel",true,false)

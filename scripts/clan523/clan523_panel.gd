@@ -88,6 +88,7 @@ func refresh() -> void:
 		status.text = "%s · 혈맹 레벨 %d · %s" % [str(snap.name),int(snap.level),str(data.owner_rank)]
 		_label("혈맹 경험치 %d%s" % [int(snap.experience),next_text],body)
 		_label("현재 혈맹 버프: %s · %s" % [str(snap.buff.get("name","")),_effects_text(snap.buff)],body,13,UI.MUTED)
+		_label("사냥: 몬스터 처치 경험치의 %d%% × 원본 사냥 배율 %d → 혈맹 경험치 (사용자 결정 2026-11-12)" % [Clan.HUNT_SHARE_PERCENT,int(data.policies.HuntingExpRatio.value)],body,13,UI.MUTED)
 		_label("혈맹 기부 (오늘 %d/%d회)" % [_count(snap.state),int(data.policies.MaxDonateCount.value)],body,15,UI.GOLD)
 		for entry: Dictionary in data.donates:
 			var rewards: Array[String] = []
