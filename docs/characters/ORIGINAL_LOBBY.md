@@ -67,4 +67,4 @@ Spine 공식 문서는 export와 runtime의 major/minor 일치를 요구한다. 
 
 재사용 원문 검사는 `tests/character_lobby_all_original_profiles_test.gd`다. fresh XDG와 `TWILIGHT_CHARACTER_REGRESSION_ISOLATED=1`, 정의 ZIP 및 위의 전체 25조합 로비 팩을 명시해야 한다. 입력이 없으면 명시적으로 skip하며 격리 flag 누락·기존 저장 발견은 거부한다. 실제 원문 입력은 962/962 통과했고, skip·두 거부 경로와 원본/저장 불변도 확인했다. 이 opt-in은 기본 core에 포함하지 않는다.
 
-기본 core gate는 최신 main `1c1bd940`의 UI·메모리 및 스킬 변경 검사를 보존하여 130개 스크립트다. 원본은 공개 CI에 넣지 않으며 원문 opt-in 결과와 CI fixture 결과를 구분한다. 남은 작업은 (1) 실제 Spine 3.6 호환 evaluator/mesh renderer 설치·연결, (2) 원문에서 없는 6개 효과 ID의 검증 가능한 연결 증거, (3) 원작 배치/자동 연출 증거와 Android 실측이다.
+기본 core gate는 최신 main `1c1bd940`의 UI·메모리 및 스킬 변경 검사를 보존하여 원본 장비 컬렉션 신원 회귀까지 포함해 131개 스크립트다. 원본은 공개 CI에 넣지 않으며 원문 opt-in 결과와 CI fixture 결과를 구분한다. 남은 작업은 (1) 실제 Spine 3.6 호환 evaluator/mesh renderer 설치·연결, (2) 원문에서 없는 6개 효과 ID의 검증 가능한 연결 증거, (3) 원작 배치/자동 연출 증거와 Android 실측이다.
