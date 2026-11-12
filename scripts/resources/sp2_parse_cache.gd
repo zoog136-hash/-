@@ -58,21 +58,30 @@ static func _parse(raw: PackedByteArray, raw_sha256: String) -> Dictionary:
 	if not enabled or raw.is_empty() or raw.size() > DECODER.MAX_INPUT_BYTES: return DECODER.parse(raw)
 	var digest: String = raw_sha256
 	if digest.length() != 64:
+		var hashing_started: int = FRAME_HITCH.now()
 		var hashing := HashingContext.new()
 		hashing.start(HashingContext.HASH_SHA256)
 		hashing.update(raw)
 		digest = hashing.finish().hex_encode()
+		FRAME_HITCH.detail("sp2.parse_identity_sha256", hashing_started)
 	var key: String = key_for("sha256:" + digest, raw.size())
 	if key.is_empty(): return DECODER.parse(raw)
+	var started: int = FRAME_HITCH.now()
 	var cached: Dictionary = _read(key, raw)
+	FRAME_HITCH.detail("sp2.parse_cache_read", started)
 	if not cached.is_empty():
 		hits += 1
 		FRAME_HITCH.count("sp2.disk_hit")
 		return cached
 	misses += 1
 	FRAME_HITCH.count("sp2.disk_miss")
+	started = FRAME_HITCH.now()
 	var fresh: Dictionary = DECODER.parse(raw)
-	if fresh.get("ok", false): _write(key, fresh)
+	FRAME_HITCH.detail("sp2.structure_parse", started)
+	if fresh.get("ok", false):
+		started = FRAME_HITCH.now()
+		_write(key, fresh)
+		FRAME_HITCH.detail("sp2.parse_cache_write", started)
 	return fresh
 
 static func _body_of(raw: PackedByteArray) -> PackedByteArray:

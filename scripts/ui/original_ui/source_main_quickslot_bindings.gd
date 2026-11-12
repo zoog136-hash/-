@@ -60,11 +60,13 @@ func snapshot() -> Dictionary:
 		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
 	return {"ok":true,"rows":rows,"pages":pages.duplicate(true),"model_basis":"existing HUD quickslot_index/entries/captions/cooldown_labels and World._quickslot_pages","partial_source_scene":true,"complete_screen_contract":false}
 
-func build_group(group: int) -> Dictionary:
+func build_group(group: int, current_model: Dictionary={}) -> Dictionary:
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
 	if group not in [0,1]:return _fail("source_quickslot_visible_group_unknown")
-	var model: Dictionary=snapshot()
+	# A view stages both groups synchronously from one detached snapshot.
+	# Standalone calls still read the current host model themselves.
+	var model: Dictionary=current_model if not current_model.is_empty() else snapshot()
 	if not model.get("ok",false):return model
 	var bindings: Dictionary={PANEL:{"role":"consume"}}
 	var rows: Array=[]
@@ -115,13 +117,15 @@ func activate_presented(visible: int, presented: Dictionary) -> Dictionary:
 	if presented!=_presented_identity(current.rows[visible]):return {"ok":false,"code":"source_quickslot_presented_entry_changed","rebuild_required":true,"dispatched":false}
 	return activate(visible)
 
-func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
+func refresh_slot(scene: Node2D, row: Dictionary, current_model: Dictionary={}) -> Dictionary:
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
 	if not is_instance_valid(scene) or scene.get("source_member")!=SLOT_MEMBER:return _fail("source_quickslot_original_slot_scene_required")
 	var visible: Variant=row.get("visible_index")
 	if typeof(visible)!=TYPE_INT or int(visible)<0 or int(visible)>=10:return _fail("source_quickslot_row_visible_index_missing")
-	var model: Dictionary=snapshot()
+	# Reuse only the model of the enclosing synchronous view refresh. Action
+	# dispatch and standalone slot refreshes retain their fresh snapshot reads.
+	var model: Dictionary=current_model if not current_model.is_empty() else snapshot()
 	if not model.get("ok",false):return model
 	var current: Dictionary=model.rows[visible]
 	if not row.get("entry") is Dictionary or row.get("absolute_index")!=current.absolute_index or _entry_identity(row.entry)!=_entry_identity(current.entry) or row.get("page_index")!=current.page_index:return {"ok":false,"code":"source_quickslot_row_identity_changed","rebuild_required":true}

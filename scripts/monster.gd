@@ -280,6 +280,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	# Canonical definition/projection precedes the visual request. Keep this as
 	# the single project_actor_record call when adopting the data-owner checkpoint.
 	# world_controller is not assigned for this pooled life yet.
+	var project_started: int = FRAME_HITCH.now()
 	var current_service: Variant = world_ref.get("patch523_npc_spells") if world_ref != null else null
 	var current_catalog: Variant = current_service.get("catalog") if current_service != null else null
 	var candidate_npc_id: int = int(source_record.get("source_m_npc_id",-1))
@@ -288,6 +289,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 		if current_catalog != null and current_catalog.has_method("project_actor_record"):
 			var projected: Variant = current_catalog.project_actor_record(source_record)
 			if projected is Dictionary: source_record = projected
+	FRAME_HITCH.detail("spawn.source_project",project_started)
 	# A saved native NPC identity never authorizes an old final media input.
 	_source_only_native_visuals = candidate_npc_id >= 0
 	admission.erase("current523_npc_source_identity")
@@ -316,7 +318,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	# encounter. It cannot create a binding, placement, stat update or spawn context.
 	if not is_instance_valid(source_m_view) and (admission.applied or _source_only_native_visuals):
 		var current_view := CURRENT523_SOURCE_M_VIEW.new()
-		if current_view.configure_admitted(source_record,admission):
+		var visual_started: int = FRAME_HITCH.now()
+		var visual_ready: bool = current_view.configure_admitted(source_record,admission)
+		FRAME_HITCH.detail("spawn.source_visual",visual_started)
+		if visual_ready:
 			record = source_record
 			source_m_view = current_view
 			add_child(source_m_view)

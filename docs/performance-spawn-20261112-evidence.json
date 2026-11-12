@@ -1,0 +1,723 @@
+{
+  "baseline": "28f3084a903d1cff4dbbd45c3a1ca5a0ed0a52a2",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "Linux synthetic CPU/Variant checks; Android, GPU completion and whole-game RSS/FPS not measured",
+  "optional_roles": {
+    "android_measured": false,
+    "cases": [
+      {
+        "after": [
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 28247
+          },
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 38775
+          },
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 41511
+          }
+        ],
+        "after_median_us": 38775,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 768,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 56542
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 768,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 50994
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 768,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 43563
+          }
+        ],
+        "before_median_us": 50994,
+        "complete_result_sha256": "b251f94a73c33bbdea97565832f56a741cd386560eca3236c09eaa3f952f0346",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "valid",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 4
+      },
+      {
+        "after": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 28219
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 28913
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 31558
+          }
+        ],
+        "after_median_us": 28913,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 32343
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 34232
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 576,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 41336
+          }
+        ],
+        "before_median_us": 34232,
+        "complete_result_sha256": "ad713a95da54db7474eafe945920b64f9c8a013c5e582838dc863641641da0e0",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "missing_one",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 4
+      },
+      {
+        "after": [
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 1062,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 46043
+          },
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 1062,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 53430
+          },
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 1062,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 51124
+          }
+        ],
+        "after_median_us": 51124,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 579,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 33968
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 579,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 29848
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 579,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 30274
+          }
+        ],
+        "before_median_us": 30274,
+        "complete_result_sha256": "d3614f272b161df2ea564d7f736dc08118bc8335abb1701cade9cf37684ce748",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "malformed_optional",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 4
+      },
+      {
+        "after": [
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 224958
+          },
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 221766
+          },
+          {
+            "bank_calls": 1,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 6,
+              "sp2.shared_parse_hit": 6
+            },
+            "us": 225897
+          }
+        ],
+        "after_median_us": 224958,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 6144,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 280801
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 6144,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 306057
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 24,
+              "sp2.layer_validate": 6144,
+              "sp2.member_verify": 12,
+              "sp2.shared_parse_hit": 12
+            },
+            "us": 305291
+          }
+        ],
+        "before_median_us": 305291,
+        "complete_result_sha256": "d4c3f027bad527f22c9bac00cbea7dd871dff6e0f670dbbeda95842afc007441",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "valid",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 32
+      },
+      {
+        "after": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 239827
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 259458
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 212573
+          }
+        ],
+        "after_median_us": 239827,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 214611
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 262845
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 18,
+              "sp2.layer_validate": 4608,
+              "sp2.member_verify": 9,
+              "sp2.shared_parse_hit": 9
+            },
+            "us": 223659
+          }
+        ],
+        "before_median_us": 223659,
+        "complete_result_sha256": "eef1f309bd8b7da2657e9a17d1683b14b69040405026764c70cc57b588d3963f",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "missing_one",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 32
+      },
+      {
+        "after": [
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 8454,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 480422
+          },
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 8454,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 425261
+          },
+          {
+            "bank_calls": 4,
+            "counters": {
+              "source.optional_combined_attempt": 1,
+              "sp2.attribute_validate": 39,
+              "sp2.layer_validate": 8454,
+              "sp2.member_verify": 17,
+              "sp2.shared_parse_hit": 17
+            },
+            "us": 371435
+          }
+        ],
+        "after_median_us": 425261,
+        "before": [
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 4611,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 319648
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 4611,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 253992
+          },
+          {
+            "bank_calls": 3,
+            "counters": {
+              "sp2.attribute_validate": 21,
+              "sp2.layer_validate": 4611,
+              "sp2.member_verify": 11,
+              "sp2.shared_parse_hit": 11
+            },
+            "us": 235656
+          }
+        ],
+        "before_median_us": 253992,
+        "complete_result_sha256": "70d27b54ae9d909363d9388c7feb60f583dbde51b0cdfb5dbdea109f36161577",
+        "core_roles": 4,
+        "directions": 8,
+        "kind": "malformed_optional",
+        "layers": 3,
+        "optional_roles": 2,
+        "tokens_per_action": 32
+      }
+    ],
+    "checks": 25,
+    "engine": "4.7.2-stable (official)",
+    "failures": [],
+    "malformed_optional_tradeoff": "Existing but invalid optional records can cause one extra failed combined load before independent fallback; missing index entries take the original path immediately.",
+    "scope": "same-process warm synchronous preview role preparation; complete baseline result comparison outside timing; no OS/GPU memory or speed threshold",
+    "single_spawn_limit": "This removes duplicate successful loads; a single cold SP2 read/decompress/parse remains synchronous and can exceed an inter-spawn budget.",
+    "source_sha256": {
+      "bank": "0341b5354708cde808bae4180ca7c99390aa814f70fa9dfeca96097a3b8340f6",
+      "preview": "73fd0c905618fa6b9772153284a39d8819766c39149d63edaac9aa366afc8691"
+    },
+    "synthetic_only": true
+  },
+  "quickslots": {
+    "baseline_bindings_sha256": "9f27462e91cacbceadbf9fbe1c10a654f53f6c72d64792e9ef808ce66074dad8",
+    "baseline_view_sha256": "46292570a4d99a2557e0d8c330ca65caee7a532a7b30dbf3b504dccc9032cde6",
+    "engine": "4.7.2-stable (official)",
+    "failures": [],
+    "reports": [
+      {
+        "font_backed_setters": false,
+        "measurements": [
+          {
+            "ammo_reads": 22000,
+            "case": "baseline",
+            "display_digest": "5fefd70fa71e62586f5a76de2b3f7d0104ba4fccb85c406c09921b050248f89e",
+            "mean_usec": 2028.77,
+            "page_reads": 2200,
+            "refreshes": 200,
+            "snapshot_calls": 2200,
+            "text_setters": 4000,
+            "visible_index_reads": 22000
+          },
+          {
+            "ammo_reads": 2000,
+            "case": "one_snapshot",
+            "display_digest": "5fefd70fa71e62586f5a76de2b3f7d0104ba4fccb85c406c09921b050248f89e",
+            "mean_usec": 316.42,
+            "page_reads": 200,
+            "refreshes": 200,
+            "snapshot_calls": 200,
+            "text_setters": 4000,
+            "visible_index_reads": 2000
+          }
+        ]
+      },
+      {
+        "font_backed_setters": true,
+        "measurements": [
+          {
+            "ammo_reads": 22000,
+            "case": "baseline",
+            "display_digest": "5fefd70fa71e62586f5a76de2b3f7d0104ba4fccb85c406c09921b050248f89e",
+            "mean_usec": 2123.05,
+            "page_reads": 2200,
+            "refreshes": 200,
+            "snapshot_calls": 2200,
+            "text_setters": 4000,
+            "visible_index_reads": 22000
+          },
+          {
+            "ammo_reads": 2000,
+            "case": "one_snapshot",
+            "display_digest": "5fefd70fa71e62586f5a76de2b3f7d0104ba4fccb85c406c09921b050248f89e",
+            "mean_usec": 398.51,
+            "page_reads": 200,
+            "refreshes": 200,
+            "snapshot_calls": 200,
+            "text_setters": 4000,
+            "visible_index_reads": 2000
+          }
+        ]
+      }
+    ],
+    "scope": "actual QuickslotView.refresh + count adapter, synthetic 10 ammo-skill HUD; setter sink or actual SourceText/public Noto font; no original CSB/image/upload/World ammo lookup cost/draw/GPU/Android timing; engine static is not RSS/GPU",
+    "static_growth_guard_bytes": 67108864
+  },
+  "crc": {
+    "results": [
+      {
+        "bytes": 833000,
+        "crc32": "4c182cb4",
+        "legacy_median_us": 33585,
+        "legacy_samples_us": [
+          31519,
+          32616,
+          32935,
+          33049,
+          33585,
+          34198,
+          36314,
+          36364,
+          36641
+        ],
+        "slicing_median_us": 27333,
+        "slicing_samples_us": [
+          26438,
+          26610,
+          26902,
+          27109,
+          27333,
+          27397,
+          27707,
+          28181,
+          29044
+        ]
+      },
+      {
+        "bytes": 2097152,
+        "crc32": "b618bda5",
+        "legacy_median_us": 87136,
+        "legacy_samples_us": [
+          83092,
+          84014,
+          86444,
+          86496,
+          87136,
+          87263,
+          89391,
+          90542,
+          90856
+        ],
+        "slicing_median_us": 72904,
+        "slicing_samples_us": [
+          68580,
+          68787,
+          70397,
+          71625,
+          72904,
+          73092,
+          73164,
+          73650,
+          74697
+        ]
+      }
+    ],
+    "scope": "Linux Godot CPU synthetic CRC only; not Android spawn/frame/RAM"
+  },
+  "reference_apk": {
+    "filename": "xp-hero-mod_27.0.0-apkvision.apk",
+    "library_id": "libfile_ff73f47437608191bdb9770cd20fb9b4",
+    "bytes": 193056556,
+    "sha256": "0a6e034f04821218f20b156020d9635ce46fc07d2a97ad1e9761aaab614f443d",
+    "zip_entries": 11299,
+    "zip_crc_error": null,
+    "installed_or_executed": false,
+    "interpretation": "IL2CPP declarations; not native bodies or runtime timings"
+  },
+  "focused_checks": {
+    "source_crc32": 149,
+    "current523_population_budget": 8,
+    "quickslot_snapshot": 35,
+    "optional_roles": 106,
+    "asset_sharing": 62,
+    "sp2_parse_cache": 17,
+    "frame_hitch": 25,
+    "bank_memo": 33,
+    "ci_stage_python": 14
+  },
+  "full_core": {
+    "checks": 170,
+    "status": "running; final result and remote run recorded in PR"
+  },
+  "runtime_sha256": {
+    "scripts/resources/source_crc32.gd": "7ede14c69f53c1e99217eea33b376768293826ab33f9633fe9750c93f5eb9a33",
+    "scripts/resources/reference_sp2_bank.gd": "0341b5354708cde808bae4180ca7c99390aa814f70fa9dfeca96097a3b8340f6",
+    "scripts/resources/sp2_parse_cache.gd": "048d664c581cbb1361d54ed5a6145d3adee41611a32e55db4d100ede88035123",
+    "scripts/animation/original_source_preview.gd": "73fd0c905618fa6b9772153284a39d8819766c39149d63edaac9aa366afc8691",
+    "scripts/maps/current523_source_population.gd": "3d8648e26e8a3509ce75e058f08457d6806b992267f0f917ed2777bc0bfb48a0",
+    "scripts/monster.gd": "0dce3e73643f62f47c2862a96dbd370a8319ddfa822d7fe38d79237c4886c949",
+    "scripts/ui/original_ui/source_main_quickslot_bindings.gd": "892fc40613268abde3f60da431f88d094499849a4962b49c6566d82df48ad4d8",
+    "scripts/ui/original_ui/source_main_quickslot_view.gd": "2f887a9689eb5209d497141b54c93dcae89f56294d7e0498e0283812689bf838"
+  },
+  "npc_shape": {
+    "after_median_us": 235806,
+    "android_measured": false,
+    "before_median_us": 255267,
+    "checks": 3,
+    "failures": [],
+    "samples": [
+      {
+        "after": {
+          "bank_calls": 1,
+          "counters": {
+            "source.optional_combined_attempt": 1,
+            "sp2.attribute_validate": 18,
+            "sp2.layer_validate": 4608,
+            "sp2.member_verify": 6,
+            "sp2.shared_parse_hit": 6
+          },
+          "us": 302541
+        },
+        "before": {
+          "bank_calls": 2,
+          "counters": {
+            "sp2.attribute_validate": 21,
+            "sp2.layer_validate": 5376,
+            "sp2.member_verify": 9,
+            "sp2.shared_parse_hit": 9
+          },
+          "us": 303530
+        }
+      },
+      {
+        "after": {
+          "bank_calls": 1,
+          "counters": {
+            "source.optional_combined_attempt": 1,
+            "sp2.attribute_validate": 18,
+            "sp2.layer_validate": 4608,
+            "sp2.member_verify": 6,
+            "sp2.shared_parse_hit": 6
+          },
+          "us": 235806
+        },
+        "before": {
+          "bank_calls": 2,
+          "counters": {
+            "sp2.attribute_validate": 21,
+            "sp2.layer_validate": 5376,
+            "sp2.member_verify": 9,
+            "sp2.shared_parse_hit": 9
+          },
+          "us": 255267
+        }
+      },
+      {
+        "after": {
+          "bank_calls": 1,
+          "counters": {
+            "source.optional_combined_attempt": 1,
+            "sp2.attribute_validate": 18,
+            "sp2.layer_validate": 4608,
+            "sp2.member_verify": 6,
+            "sp2.shared_parse_hit": 6
+          },
+          "us": 215755
+        },
+        "before": {
+          "bank_calls": 2,
+          "counters": {
+            "sp2.attribute_validate": 21,
+            "sp2.layer_validate": 5376,
+            "sp2.member_verify": 9,
+            "sp2.shared_parse_hit": 9
+          },
+          "us": 246425
+        }
+      }
+    ],
+    "shape": "exact NPC CORE_ACTIONS5 + optional RUN1; alternate actor;32tokens;8directions;3layers",
+    "synthetic_only": true
+  }
+}
