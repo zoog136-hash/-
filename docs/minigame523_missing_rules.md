@@ -94,7 +94,19 @@
 연출은 결과(등급)를 바꾸지 않으므로, 의미가 확정되기 전에는 기존 카드 뽑기·합성 결과 흐름을
 그대로 두고 원문 행 열람(`events_domain.gd` "룰렛 연출" 항목)만 유지합니다.
 
-## 5. 다시 볼 조건
+## 5. 판정 검증 (`tests/minigame523_scope_test.gd`, `tools/ci_core.py` 등록)
+
+- 원본 ZIP이 없으면 이 문서의 판정표·제외 기록만 확인합니다.
+- 원본 ZIP이 있으면 판정 근거를 표에서 다시 읽습니다: `MiniGame` 1행(`LuckyDefence`),
+  `ContentsControl` Enable false, `MiniGame*` 9개 표의 모든 행이 그 미니게임 소속,
+  `MiniGameTreasure` 118행·`MiniGameWaveTime` 26행, `NpcItemDropView`에 수량 열 없음,
+  디펜스 출현 팩에는 웨이브 0 재화 지급 NPC만 있음, 룰렛 표시 56+95행, 순간이동·던전 표
+  (`LandTeleportTerritories`, `LandTimeLimit`, `SpecialDungeonType`, `SeasonDungeon`)에서 디펜스
+  Land로 가는 행 없음.
+- 실제 Main에 들어가 던전 projection에 디펜스 Land·미니게임 항목이 없는 것, 세이브에 미니게임
+  상태가 없는 것, 저장 → 불러오기 후 아데나·레벨이 그대로인 것을 확인합니다.
+
+## 6. 다시 볼 조건
 
 - LuckyDefence: 웨이브별 출현 표(몬스터·수·간격)와 판 안 재화 지급량, 구성요소·종료 조건·보상
   종류 열거형 이름이 확보되고, 원본에서 꺼진 콘텐츠를 1인 로컬 판으로 켜는 사용자 결정이 있을 때.
