@@ -42,7 +42,7 @@ detail 행은 `[이름, 프레임 합계 ms, 호출 수, 한 호출 최대 ms]`�
 | 10탄약 스킬 퀵슬롯 refresh | 평균 2.123 → 0.399ms | 200회, 실제 SourceText/Noto setter, draw 제외 |
 | 같은 퀵슬롯 작업량 | snapshot 2200 → 200회; ammo/index 22000 → 2000회 | 표시 digest·4000 setter 동일 |
 
-액션 시간은 번갈아 3회 warm sample의 중앙값이며 전체 core 검사가 병행 중이었다. NPC와 2 optional 스트레스 사례를 구분한다. 위 숫자를 기기 지연 감소의 보장으로 사용하지 않는다. 원시 카운터·samples·source SHA는 [기계 판독 증거](performance-spawn-20261112-evidence.json)에 보존했다.
+CRC 시간은 table 준비 후 값이며 별도 새 프로세스의 첫 table 준비는 0.447ms/16384 packed bytes였다. 액션 시간은 번갈아 3회 warm sample의 중앙값이며 전체 core 검사가 병행 중이었다. NPC와 2 optional 스트레스 사례를 구분한다. 위 숫자를 기기 지연 감소의 보장으로 사용하지 않는다. 원시 카운터·samples·source SHA는 [기계 판독 증거](performance-spawn-20261112-evidence.json)에 보존했다.
 
 회귀: CRC 독립 Python zlib oracle 149검사, 배치 예산 8검사, 퀵슬롯 35검사, optional 선택·상태·tracks·모든 역할/방향 픽셀·손상 거부·같은 owner 재설정 106검사. 기존 공유 lease·parse cache·frame hitch·bank memo 검사도 통과했다. Astra 독립 설계 검토에서 고우선 필수 수정은 발견되지 않았으며, 추가 무작위 CRC 139건도 일치했다(이 보조 실행은 Godot 4.6.3이므로 공식 4.7.2 검사를 대체하지 않는다).
 

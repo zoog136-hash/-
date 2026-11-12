@@ -44,6 +44,21 @@ Android 보고서의 SP2 경로 `0x326e144` → 읽기/Brotli `0x2813d78` → wr
 
 인수 증거에는 CRC oracle·손상 거부, 필수 검증 유지, snapshot/클릭 상태 변경 회귀, 세이브 보존, cold/warm cache와 첫 spawn/재사용 spawn을 구분한 결과가 필요하다. Linux 합성 벤치는 Android 기기 성능과 구분한다. 기기·APK·원본 팩·세이브 복사본을 고정한 실기기 로그가 없으면 첫 로딩·긴 프레임·메모리 개선 수치를 확정하지 않는다. 거래소·캐릭터 생성·종료 문제는 이번 비교의 검증 범위에 포함하지 않는다.
 
-출처: `LineageM_Android_클라이언트_기능과_TWILIGHT_개선검토_20261110.docx` (Library `libfile_c83fde99d69c8191a370aef6129b0025`, file `file_000000009ff881f6b31e562ddf80e489`, 144–161행 및 473–495행); `TWILIGHT_Android_시작메모리_구현인계서_20261110.docx` (Library `libfile_45fe8ab423f08191a6f1013f1bedcdee`, file `file_00000000d7b481f7a2d20f84d03006b9`, 129–136행 및 194–200행). 두 보고서의 당시 TWILIGHT 코드 진단은 현재 main에 그대로 적용하지 않았다. 리니지M raw 분석 ZIP은 Library 전송 helper의 HTTP 401로 이번 조사에서 새로 읽지 못했으므로 원문 재검증으로 표시하지 않는다. 비공개 바이너리·원본 아트·복호 키는 이 문서나 공개 저장소에 포함하지 않는다.
+출처: `LineageM_Android_클라이언트_기능과_TWILIGHT_개선검토_20261110.docx` (Library `libfile_c83fde99d69c8191a370aef6129b0025`, file `file_000000009ff881f6b31e562ddf80e489`, 144–161행 및 473–495행); `TWILIGHT_Android_시작메모리_구현인계서_20261110.docx` (Library `libfile_45fe8ab423f08191a6f1013f1bedcdee`, file `file_00000000d7b481f7a2d20f84d03006b9`, 129–136행 및 194–200행). 두 보고서의 당시 TWILIGHT 코드 진단은 현재 main에 그대로 적용하지 않았다. 이전 raw 분석 ZIP 전송 시도는 HTTP 401로 끝났지만, 이번에 명시된 별도 분석 ZIP은 아래와 같이 이 환경에서 직접 읽었다. 이를 모든 원본 바이너리의 접근·재추출 성공으로 확장하지 않는다. 비공개 바이너리·원본 아트·복호 키는 이 문서나 공개 저장소에 포함하지 않는다.
 
-추가 전달 근거: 기존 원본 ZIP `TWILIGHT_Faithful_Implementation_Analysis_KO_20261110.zip`(Library `libfile_d4bf4a4e1ec881919bdba0a043ca45e8`, 17,524,852 bytes)을 부모 작업자가 재확보해 읽었다. P10 `SPRITE_CACHE_LIFETIME_REPORT_KO.md`는 복원 Windows EXE의 RawSpriteFile hit가 LRU 이동·strong 반환으로 끝나 reader/parser를 호출하지 않으며, SpriteAsset은 Graphics가 있으면 raw 만료와 무관하게 반환함을 정적 추적한다. `lineagem_s32_world_sections_20261109/consumers/CONSUMERS_KO.md`의 `01CC2220`/`01CC1F10`은 분할 queue, `01CBCF50`은 shared ref 해제 뒤 placement pool 반환과 `+4A` 중복 recycle guard의 근거다. 이 전달된 보고서 근거를 Android gameplay spawn 예산이나 이번 코드의 성능 실측으로 해석하지 않는다. 이후 11/11 사용자의 changed-file 재검증 결정과 현재 main 계약이 이전 보고서의 무결성 정책 제안보다 우선한다. 이 후속 작업에서는 이 ZIP을 중복 다운로드하지 않았다.
+추가 직접 확인: `TWILIGHT_Faithful_Implementation_Analysis_KO_20261110.zip`(Library `libfile_d4bf4a4e1ec881919bdba0a043ca45e8`)을 지원 materialize 경로로 현재 환경에 확보했다. 실제 파일은 17,524,852 bytes, SHA256 `ee7fe088f39fd3d317631c66bddf4d436d55d08046081e267f934c4e3802716c`, ZIP 5,603 entries, CRC 오류 없음이다. 다른 환경의 경로를 공유한다고 가정하지 않았다.
+
+Astra가 P10 `SPRITE_CACHE_LIFETIME_REPORT_KO.md`, `FUNCTION_INDEX.json`, 선택 asm을 직접 읽었다. 보고서가 고정한 복원 Windows EXE는 97,366,016 bytes, SHA256 `9f9c3b9c9a49fb598899b3da308b4776cbbc47cbb98dbe4b4aa368cce519019d`이며 EXE/DLL 기원은 524다. 이번 확인은 ZIP 안의 정적 추적 자료 대조이며 그 EXE를 다시 추출·실행한 것이 아니다.
+
+- Raw hit `01C74B9E–01C74C06`은 LRU 연결 이동·strong 참조 증가 뒤 반환으로 가며 reader/parser를 우회한다.
+- lazy `01C71706–01C7171D`는 graphics 존재·음수 방향 인덱스·failed 상태면 반환한다. graphics가 있으면 raw 재획득도 없다.
+- `lineagem_s32_world_sections_20261109/consumers/CONSUMERS_KO.md` 13행은 `01CC2220`/`01CC1F10` 분할 queue, 56–59행은 `01CBCF50` shared ref 해제·placement pool 반환·`+4A` 중복 recycle guard의 보고서 근거다. 이 S32 부분은 이번에 asm까지 별도 대조하지 않았다. placement는 pooled draw entry이며 gameplay monster spawn과 동일한 객체가 아니다.
+
+| 직접 읽은 P10 증거 | SHA256 |
+|---|---|
+| `SPRITE_CACHE_LIFETIME_REPORT_KO.md` | `7c8ce9f68f7018e80b332ad09e176096b23ab1f6e65585372fae3ec33286fff6` |
+| `FUNCTION_INDEX.json` | `03fc94fb5c85503eec05db8b3b3cc24e2f35c1ed3c67da68ad99d17f94f0fc65` |
+| `EXE_01C74AB0.asm.txt` | `b1c2c735f5a6891f052bec72dcbf1a67ac47d852ccc4b59a06a9b3793cea2189` |
+| `EXE_01C716E0.asm.txt` | `e260e00bcf7c99a966c99acc869da4d1b783183c33242ac25b82b78ecefc4a1f` |
+
+Astra는 선택 asm의 명령 바이트와 인덱스 해시도 대조했다. 이것은 ZIP 내부 증거의 정합성 확인이며 원본 EXE에서 재추출한 검증이 아니다. 이 근거를 Android gameplay spawn 예산, 전체 캐시의 thread safety 또는 이번 코드의 성능·메모리 실측으로 해석하지 않는다. 이후 11/11 사용자의 changed-file 재검증 결정과 현재 main 계약이 이전 보고서의 무결성 정책 제안보다 우선한다. ZIP과 보고서·asm 원문은 공개 저장소에 복사하지 않는다.

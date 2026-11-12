@@ -628,7 +628,7 @@
   },
   "full_core": {
     "checks": 170,
-    "status": "running; final result and remote run recorded in PR"
+    "status": "running at initial evidence capture; final local and remote results recorded in PR #442"
   },
   "runtime_sha256": {
     "scripts/resources/source_crc32.gd": "7ede14c69f53c1e99217eea33b376768293826ab33f9633fe9750c93f5eb9a33",
@@ -719,5 +719,19 @@
     ],
     "shape": "exact NPC CORE_ACTIONS5 + optional RUN1; alternate actor;32tokens;8directions;3layers",
     "synthetic_only": true
+  },
+  "original_analysis_zip": {
+    "library_id": "libfile_d4bf4a4e1ec881919bdba0a043ca45e8",
+    "bytes": 17524852,
+    "sha256": "ee7fe088f39fd3d317631c66bddf4d436d55d08046081e267f934c4e3802716c",
+    "zip_entries": 5603,
+    "zip_crc_error": null,
+    "scope": "Astra read P10 report/index/two selected asm; internal byte/index checks, not original EXE re-extraction or execution",
+    "artifact_published": false
+  },
+  "crc_first_table": {
+    "usec": 447,
+    "packed_table_bytes": 16384,
+    "scope": "one separate Linux 4.7.2 process, first empty CRC call; warm microbench excludes preparation"
   }
 }
