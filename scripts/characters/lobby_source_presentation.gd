@@ -1,7 +1,7 @@
 extends Control
 ## A TWILIGHT preview host for separately verified original layers. Definitions,
 ## available bytes, mounted nodes and visual acceptance are distinct states.
-## There is no built-in Spine evaluator and no substitute art in this view.
+## Optional verified mesh samples use the installed player; no substitute art.
 signal presentation_changed(state: Dictionary)
 const CATALOG = preload("res://scripts/characters/lobby_source_catalog.gd")
 const SELECTION = preload("res://scripts/characters/lobby_source_selection.gd")
@@ -13,6 +13,7 @@ const SCOPE := "HOST_PREVIEW_NOT_ORIGINAL_LAYOUT_OR_RENDER_ACCEPTANCE"
 const MAX_SOURCE_BYTES: int = 32 * 1024 * 1024
 const MAX_ATLAS_BYTES: int = 4 * 1024 * 1024
 const FIT_FRAME_BUDGET: int = 4
+const MESH_FACTORY_PATH := "res://scripts/characters/lobby_spine_mesh_factory.gd"
 var catalog: Object
 ## Explicit test seam; production reads only the separately selected private lobby pack.
 var pack_provider: Callable
@@ -274,18 +275,27 @@ func _prepare_spine(layer: Dictionary, ticket: int) -> Dictionary:
 	result["atlas_path"] = atlas_path
 	result["page_paths"] = pages.paths.duplicate()
 	result["clips"] = animations.keys()
-	if not spine_factory.is_valid(): return _layer_error(result,"missing_runtime","original_spine_runtime_not_installed")
+	var use_baked_mesh: bool = not spine_factory.is_valid() and explicit.get("mesh_bake") is Dictionary
+	if not spine_factory.is_valid() and not use_baked_mesh: return _layer_error(result,"missing_runtime","original_spine_runtime_not_installed")
 	var major_minor: String = version_parts[0] + "." + version_parts[1]
 	var bundle: Dictionary = {"json_path":path, "json_bytes":checked.bytes, "source_sha256":checked.sha256,
 		"spine_version":version, "major_minor":major_minor, "atlas_path":atlas_path, "atlas_bytes":atlas.bytes,
 		"pages":verified_pages, "animations":animations.keys(), "autoplay":false}
-	var created: Variant = spine_factory.call(bundle)
+	var created: Variant
+	if use_baked_mesh:
+		var pack_root: String = _pack.root
+		var entry: Dictionary = explicit.mesh_bake.duplicate(true)
+		var factory_script: Script = load(MESH_FACTORY_PATH) as Script if ResourceLoader.exists(MESH_FACTORY_PATH) else null
+		if factory_script == null: return _layer_error(result,"missing_runtime","source_mesh_player_not_installed")
+		created = factory_script.create(bundle,pack_root,entry)
+	else:
+		created = spine_factory.call(bundle)
 	if ticket != _generation:
 		if created is Dictionary: _discard_unparented(created.get("node"))
 		return _superseded()
 	if not created is Dictionary or not _true(created.get("ok")):
 		if created is Dictionary: _discard_unparented(created.get("node"))
-		return _layer_error(result,"renderer_error","spine_factory_failed")
+		return _layer_error(result,"renderer_error",str(created.get("error","spine_factory_failed")) if use_baked_mesh and created is Dictionary else "spine_factory_failed")
 	var node: Variant = created.get("node")
 	if not node is Node2D or not is_instance_valid(node) or node.get_parent() != null:
 		_discard_unparented(node)
@@ -342,6 +352,7 @@ func fit_preview(allow_upscale: bool = false) -> Dictionary:
 	if not _finite_transform(inverse): return {"ok":false,"status":"invalid_transform","scope":SCOPE}
 	var source_bounds := Rect2()
 	var quads: int = 0
+	var mesh_extents: int = 0
 	var excluded_boundaries: int = 0
 	var pending: Array[Node] = [_stage]
 	while not pending.is_empty():
@@ -352,19 +363,29 @@ func fit_preview(allow_upscale: bool = false) -> Dictionary:
 			excluded_boundaries += 1
 			continue
 		for child: Node in current.get_children(): pending.append(child)
-		if not current is Sprite2D: continue
-		var sprite: Sprite2D = current
-		if not sprite.is_visible_in_tree() or sprite.texture == null: continue
-		if sprite.texture.get_width() <= 0 or sprite.texture.get_height() <= 0: continue
-		if sprite.region_enabled:
-			if not _finite_rect(sprite.region_rect): return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
-			# get_rect() uses a 1px editor fallback for an empty region, even
-			# though Sprite2D draws no quad for that source region.
-			if sprite.region_rect.size.x <= 0.0 or sprite.region_rect.size.y <= 0.0: continue
-		var rect: Rect2 = sprite.get_rect()
+		var rect := Rect2()
+		var item: CanvasItem
+		var is_mesh_extent: bool = current == _nodes.get("spine") and current is Node2D and current.has_method("get_preview_bounds")
+		if is_mesh_extent:
+			item = current
+			if not item.is_visible_in_tree(): continue
+			var supplied: Variant = current.call("get_preview_bounds")
+			if not supplied is Rect2: return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
+			rect = supplied
+		else:
+			if not current is Sprite2D: continue
+			var sprite: Sprite2D = current
+			item = sprite
+			if not sprite.is_visible_in_tree() or sprite.texture == null: continue
+			if sprite.texture.get_width() <= 0 or sprite.texture.get_height() <= 0: continue
+			if sprite.region_enabled:
+				if not _finite_rect(sprite.region_rect): return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
+				# Empty sprite regions draw no source quad.
+				if sprite.region_rect.size.x <= 0.0 or sprite.region_rect.size.y <= 0.0: continue
+			rect = sprite.get_rect()
 		if not _finite_rect(rect): return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
 		if rect.size.x <= 0.0 or rect.size.y <= 0.0: continue
-		var relative: Transform2D = inverse * sprite.get_global_transform()
+		var relative: Transform2D = inverse * item.get_global_transform()
 		if not _finite_transform(relative): return {"ok":false,"status":"invalid_transform","scope":SCOPE}
 		if relative.determinant() == 0.0: continue
 		var corners: Array[Vector2] = [rect.position, Vector2(rect.end.x,rect.position.y), rect.end, Vector2(rect.position.x,rect.end.y)]
@@ -375,9 +396,10 @@ func fit_preview(allow_upscale: bool = false) -> Dictionary:
 			quad = Rect2(point,Vector2.ZERO) if index == 0 else quad.expand(point)
 		if not _finite_rect(quad): return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
 		if quad.size.x <= 0.0 or quad.size.y <= 0.0: continue
-		source_bounds = quad if quads == 0 else source_bounds.merge(quad)
-		quads += 1
-	if quads == 0: return {"ok":false,"status":"no_visible_quads","excluded_transform_boundaries":excluded_boundaries,"scope":SCOPE}
+		source_bounds = quad if quads + mesh_extents == 0 else source_bounds.merge(quad)
+		if is_mesh_extent: mesh_extents += 1
+		else: quads += 1
+	if quads + mesh_extents == 0: return {"ok":false,"status":"no_visible_quads","excluded_transform_boundaries":excluded_boundaries,"scope":SCOPE}
 	if not _finite_rect(source_bounds) or source_bounds.size.x <= 0.0 or source_bounds.size.y <= 0.0: return {"ok":false,"status":"invalid_bounds","scope":SCOPE}
 	var zoom: float = minf(size.x / source_bounds.size.x,size.y / source_bounds.size.y)
 	if not allow_upscale: zoom = minf(1.0,zoom)
@@ -393,6 +415,9 @@ func fit_preview(allow_upscale: bool = false) -> Dictionary:
 		"scale":zoom,"position":host_position,"quads":quads,"excluded_transform_boundaries":excluded_boundaries,
 		"bounds_scope":"visible_sprites_inheriting_host_transform","original_source_geometry_changed":false,
 		"original_lobby_layout_verified":false,"rendered":false,"scope":SCOPE}
+	if mesh_extents > 0:
+		result["mesh_extents"] = mesh_extents
+		result["bounds_scope"] = "visible_sprites_and_verified_spine_sampled_clip_extent"
 	_state["preview_fit"] = result.duplicate(true)
 	# A host-only fit does not change layer availability. Do not emit the
 	# presentation signal here: rebuilding its UI can cause resize-fit cycles.
