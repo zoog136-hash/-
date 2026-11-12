@@ -3,6 +3,12 @@ extends RefCounted
 signal changed
 const ECONOMY = preload("res://scripts/dungeons/dungeon_economy.gd")
 const CLOCK = preload("res://scripts/quests/quest_service.gd")
+const ORIM = preload("res://scripts/orim523/orim523.gd")
+const ORIM_RUN = preload("res://scripts/orim523/orim523_run.gd")
+const ORIM_VIEW = preload("res://scripts/orim523/orim523_actor_view.gd")
+## Own: kill records of an Orim run are saved at most this often (the user's
+## 10-second batching of non-critical saves); boss/finish/claim save at once.
+const ORIM_SAVE_MSEC := 10000
 var world: Node
 var rules: RefCounted
 var state: Dictionary = empty_state()
@@ -13,6 +19,22 @@ var actors: Dictionary = {}
 var template: Dictionary = {}
 var tick_clock := 0.0
 var placement_blocked := false
+var orim_clock_ms := 0.0
+var orim_ready: Dictionary = {}
+var orim_casters: Array = []
+var orim_casters_key := ""
+var orim_dirty := false
+var orim_last_save_ms := 0
+var orim_travel_note := ""
+var orim_visual_misses: Dictionary = {}
+var orim_return_note := ""
+
+func orim_model() -> Dictionary:
+	return ORIM.installed()
+
+func orim_state() -> Dictionary:
+	var run: Dictionary=state.active
+	return run.orim if not run.is_empty() and run.get("kind","")=="orim" and run.get("orim") is Dictionary else {}
 
 static func defaults() -> Dictionary:
 	return {"enabled":true,"entry_currency":174,"entry_cost":10,"attempts":1,"duration":420,"live_limit":16,"group_size":1,"care":"timeout","replacement":true,"preserve_items":true,"carry_bonus":true,"zero_cap":86400,"ungrouped_time":3600,"speed_percent":25,"pearl_percent":10,"token_chance":10,"reroll_currency":4,"reroll_percent":10,"specific_daily":true,"holy_ain":900,"heal_percent":20,"boss_hp_multiplier":1,"hard_multiplier":1,"group_time_scale":1,"recharger_price":100000}
@@ -83,6 +105,8 @@ func valid(value: Variant) -> String:
 					if issued.has(vital) and not world.DUNGEON_RUNS.whole(issued[vital],0,9000000000000000):return "오림 개체 생명력 기록 오류"
 			for token: Variant in run.events:
 				if not token is String or not run.get("issued",{}).has(token) or run.events[token]!=true:return "오림 처치 기록 불일치"
+			if run.has("orim") and not ORIM_RUN.valid(orim_model(),run.orim):return "오림 영웅·스킬 기록 오류"
+			if run.has("home") and (not run.home is Dictionary or not world.DUNGEON_RUNS.whole(run.home.get("land_id",-1),0) or not run.home.get("cell") is Array):return "오림 귀환 위치 기록 오류"
 			if run.status!="active" and (not run.get("success") is bool or not world.DUNGEON_RUNS.whole(run.get("completed_at"),0,9000000000000000)):return "오림 완료 기록 오류"
 			for r: Dictionary in stage.normal_rewards+stage.lucky_rewards:known[str(int(r.row.ID))]=r
 			for section: Dictionary in stage.sections:
@@ -204,7 +228,7 @@ func payment(currency: int, amount: int) -> Dictionary:
 	if currency==1:return {"ok":world.gold>=amount,"gold":world.gold-amount,"reason":"아데나 부족"}
 	return ECONOMY.payment(world,currency,amount)
 
-func begin(kind: String, identifier: int, now: int = -1) -> Dictionary:
+func begin(kind: String, identifier: int, now: int = -1, character_id: int = 0) -> Dictionary:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	var error:=check_idle()
 	if not error.is_empty():return {"ok":false,"reason":error}
@@ -217,8 +241,11 @@ func begin(kind: String, identifier: int, now: int = -1) -> Dictionary:
 	if world.level<minimum or (maximum>0 and world.level>maximum):return {"ok":false,"reason":"원본 입장 레벨 조건 불충족"}
 	var next:=state.duplicate(true);var cost: Dictionary;var groups: Array=[]
 	if kind=="orim":
-		if rules.orim_actor_types.is_empty() or rules.orim_actor_defs.is_empty():return {"ok":false,"reason":"NPC 수치가 포함된 최신 오림 실행 부속 자료가 필요합니다."}
-		if not choose_template():return {"ok":false,"reason":"현재 지역의 몬스터 대체형이 필요합니다."}
+		if not rules.ensure_orim() or rules.orim_actor_types.is_empty():return {"ok":false,"reason":"원본 523 오림 NPC 정의(OrimsTrailNpc/NpcClass)를 읽지 못했습니다."}
+		if not bool(orim_model().get("ok",false)):return {"ok":false,"reason":"오림의 흔적 원본 표: "+str(orim_model().get("problem",""))}
+		if character_id<=0 and not ORIM_RUN.selectable(orim_model()).is_empty():character_id=int(ORIM_RUN.selectable(orim_model())[0].id)
+		if ORIM_RUN.start(orim_model(),character_id).is_empty():return {"ok":false,"reason":"선택할 수 없는 오림 영웅입니다."}
+		choose_template() # Visual fallback only; Orim NPCs use their original sprites.
 		if not placement_point().is_finite():return {"ok":false,"reason":"현재 지역의 검증된 배치 공간이 필요합니다. 입장 비용을 보존했습니다."}
 		var budget: String=("hard:" if bool(entry.stage.IsHard) else "normal:")+str(day(now))
 		if int(next.attempts.get(budget,0))>=int(state.settings.attempts):return {"ok":false,"reason":"오늘 이 모드 도전 횟수 소진"}
@@ -236,8 +263,42 @@ func begin(kind: String, identifier: int, now: int = -1) -> Dictionary:
 	cost.erase("ok");cost.erase("reason")
 	var rng:=RandomNumberGenerator.new();rng.randomize()
 	next.active={"kind":kind,"id":kind+":"+str(int(next.next)),"stage_id":identifier,"map_id":world.active_map_id,"status":"active","started":now,"last":now,"duration":int(state.settings.duration) if kind=="orim" else 0,"seed":rng.randi_range(1,2000000000),"cursor":0,"remaining_count":0,"groups":groups,"buffs":{},"events":{},"rewards":[],"issued":{},"rerolls":0,"reroll_stat":""}
+	if kind=="orim":next.active.orim=ORIM_RUN.start(orim_model(),character_id)
 	next.next=int(next.next)+1;next.day=day(now)
-	return commit(next,cost)
+	var result:=commit(next,cost)
+	if result.get("ok",false) and kind=="orim":
+		_reset_orim_clock()
+		result.merge(_orim_travel(int(identifier)),true)
+	return result
+
+## Move to the stage's original Land (Stage.TeleportTerritoryID box). Without
+## a 523 source field the run stays on the current field (stated in status).
+func _orim_travel(stage_id: int) -> Dictionary:
+	var model_stage: Dictionary=orim_model().stages.get(stage_id,{})
+	orim_travel_note=""
+	if model_stage.is_empty() or not world.has_method("orim_enter_land"):orim_travel_note="원본 지도 없음 · 현재 지역";return {"travel":false}
+	var home: Dictionary=world.orim_current_land()
+	if home.is_empty():orim_travel_note="523 원문 필드가 아님 · 현재 지역";return {"travel":false}
+	var t: Dictionary=model_stage.territory
+	var moved: Dictionary=world.orim_enter_land(int(model_stage.land_id),[int(t.get("StartX",0)),int(t.get("StartY",0)),int(t.get("EndX",0)),int(t.get("EndY",0))])
+	if not moved.get("ok",false):orim_travel_note="원본 지도 이동 실패("+str(moved.reason)+") · 현재 지역";return {"travel":false,"travel_reason":str(moved.reason)}
+	var next:=state.duplicate(true);next.active.home=home;next.active.land=int(model_stage.land_id)
+	commit(next)
+	orim_travel_note=str(model_stage.land_name)
+	return {"travel":true,"land_id":int(model_stage.land_id)}
+
+func _orim_return() -> void:
+	var home: Dictionary=state.active.get("home",{}) if not state.active.is_empty() else {}
+	if home.is_empty() or not world.has_method("orim_enter_land"):return
+	var here: Dictionary=world.orim_current_land()
+	if here.is_empty() or int(here.land_id)==int(home.land_id):return
+	var c: Array=home.cell
+	var moved: Dictionary=world.orim_enter_land(int(home.land_id),[maxi(0,int(c[0])-3),maxi(0,int(c[1])-3),int(c[0])+3,int(c[1])+3])
+	orim_return_note="귀환 완료" if moved.get("ok",false) else "귀환 실패: "+str(moved.get("reason",""))
+	if not moved.get("ok",false):world.hud.show_message("오림 출발 지점 귀환 실패 · 아덴 귀환을 사용하세요 ("+str(moved.get("reason",""))+")")
+
+func _reset_orim_clock() -> void:
+	orim_clock_ms=0.0;orim_ready.clear();orim_casters.clear();orim_casters_key="";orim_dirty=false;orim_last_save_ms=Time.get_ticks_msec()
 
 func consume_source(item_id: int, amount: int) -> Dictionary:
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true);var selected: Array[String]=[];var name: String=""
@@ -284,9 +345,16 @@ func choose_template() -> bool:
 		if child is TwilightMonster and not child.dead:
 			var records: Dictionary=world.field_population.records
 			if records.has(child.monster_name):template=records[child.monster_name].duplicate(true);return true
+	# An original Orim Land has no resident monsters: borrow the first known
+	# field record's visual (visual only; stats come from the Orim NpcClass).
+	for record: Variant in world.field_population.records.values():
+		if record is Dictionary and record.has("name"):template=record.duplicate(true);return true
+	for record: Dictionary in world.monster_db:
+		if not bool(record.get("catalog_only",false)) and record.has("name"):template=record.duplicate(true);return true
 	return false
 
 func tick(delta: float, now: int = -1) -> void:
+	if not orim_state().is_empty() and state.active.status=="active" and pending.is_empty():_orim_cast(delta)
 	tick_clock+=delta
 	if tick_clock<0.5:return
 	tick_clock=0
@@ -305,6 +373,10 @@ func tick(delta: float, now: int = -1) -> void:
 	if run.kind=="special":
 		account_special(now,str(run.map_id)!=world.active_map_id);changed.emit();return
 	if str(run.map_id)!=world.active_map_id:stop(now);return
+	if run.has("land") and world.has_method("orim_current_land"):
+		var here: Dictionary=world.orim_current_land()
+		if not here.is_empty() and int(here.land_id)!=int(run.land):stop(now,false);return
+	if orim_dirty and Time.get_ticks_msec()-orim_last_save_ms>=ORIM_SAVE_MSEC:_orim_flush()
 	if now>=int(run.started)+int(run.duration):
 		finish_orim(false,now);return
 	spawn_due(now)
@@ -329,8 +401,10 @@ func timeline(stage_id: int) -> Array:
 	return rows
 
 func spawn_due(now: int) -> void:
-	if rules.orim_actor_defs.is_empty():return
-	if not choose_template():return
+	if not rules.ensure_orim():return
+	if not choose_template() and state.active.get("orim",{}).is_empty():return
+	for token: String in actors.keys():
+		if not is_instance_valid(actors[token]) or actors[token].is_queued_for_deletion():actors.erase(token)
 	var run: Dictionary=state.active;var rows:=timeline(int(run.stage_id));var elapsed:=maxi(0,now-int(run.started))
 	var source_elapsed:=float(elapsed)*420.0/maxf(1,float(run.duration))
 	var spawned:=0
@@ -361,9 +435,18 @@ func spawn_due(now: int) -> void:
 			var token:=str(int(row.ID))+":boss"
 			if not run.events.has(token) and not actors.has(token):spawn_actor(row,int(row.NpcClassID),token)
 
-func placement_point() -> Vector2:
+func placement_point(row: Dictionary = {}) -> Vector2:
 	var origin: Vector2=world.player.global_position
 	if not origin.is_finite():return Vector2.INF
+	# On the original Orim Land a spawn row's TerritoriesID box is used.
+	if not state.active.is_empty() and state.active.has("land") and int(row.get("TerritoriesID",0))!=0:
+		var box: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("Territories",int(row.TerritoriesID))
+		var coords: Variant=world.field_map.get("coordinates") if world.field_map!=null else null
+		if not box.is_empty() and coords!=null and int(box.get("LandID",-1))==int(state.active.land):
+			for attempt: int in range(32):
+				var cell:=Vector2(world.rng.randi_range(int(box.StartX),int(box.EndX)),world.rng.randi_range(int(box.StartY),int(box.EndY)))
+				var point: Vector2=coords.to_world(cell)
+				if world._is_walkable_world(point):return point
 	# Own arena sampling uses the current verified field's existing geometry.
 	# No M523 coordinate, landing or collision data is inferred or modified.
 	for attempt: int in range(64):
@@ -379,7 +462,7 @@ func placement_point() -> Vector2:
 
 func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 	if actors.has(token):return true
-	var point:=placement_point()
+	var point:=placement_point(row)
 	if not point.is_finite():placement_blocked=true;return false
 	placement_blocked=false
 	var saved_actor: Dictionary=state.active.issued.get(token,{})
@@ -387,12 +470,23 @@ func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 	monster.position=world.monsters_root.to_local(point)
 	world.monsters_root.add_child(monster)
 	var role: String=rules.orim_actor_types.get(source_id,"Monster")
-	# Borrow visual identity only, never unrelated poison/skills/combat stats.
-	var record: Dictionary={"name":str(template.name),"source":"twilight_dungeon_visual_adapter","lv":maxi(1,int(row.Level)),"hp":1,"atk":8,"def":0,"ac":-1,"mr":0,"drop":[],"exp":0,"gold":0,"attack_type":"melee"}
-	for visual_key: String in ["sourceId","visual","visual_height","animation_profile"]:
-		if template.has(visual_key):record[visual_key]=template[visual_key]
+	# Original pixels: the Orim NpcClass.Sprite from the 523 source bank. Only
+	# without it the older adaptation borrows a current-field visual.
+	var view: Node=null
+	if not state.active.get("orim",{}).is_empty():
+		view=ORIM_VIEW.new()
+		if not view.configure_orim(source_id):
+			orim_visual_misses[source_id]=str(view.selection_status.get("reason",""));view.free();view=null
+	var record: Dictionary={"name":str(rules.orim_actor_defs.get(source_id,{}).get("name","오림")) if view!=null else str(template.get("name","오림")),"source":"orim523_spawn" if view!=null else "twilight_dungeon_visual_adapter","lv":maxi(1,int(row.Level)),"hp":1,"atk":8,"def":0,"ac":-1,"mr":0,"drop":[],"exp":0,"gold":0,"attack_type":"melee","visual_height":64}
+	if view==null:
+		for visual_key: String in ["sourceId","visual","visual_height","animation_profile"]:
+			if template.has(visual_key):record[visual_key]=template[visual_key]
 	record["ai"]={"aggressive":role in ["Monster","MiddleBoss","Boss"]}
-	monster.setup(record,world.player,world,world._monster_texture(record));monster.set_meta("summoned",true)
+	monster.setup(record,world.player,world,null if view!=null else world._monster_texture(record));monster.set_meta("summoned",true)
+	if view!=null:
+		monster.source_m_view=view;monster.add_child(view);monster.sprite.hide()
+		monster.motion.profile.death_duration=maxf(monster.motion.profile.death_duration,view.duration("death"))
+		if monster.has_node("GroundShadow"):monster.get_node("GroundShadow").hide()
 	var factor: int=int(state.settings.hard_multiplier) if bool(rules.stage("orim",int(state.active.stage_id)).stage.IsHard) else 1
 	var definition: Dictionary=rules.orim_actor_defs.get(source_id,{})
 	if not definition.is_empty():
@@ -409,7 +503,7 @@ func spawn_actor(row: Dictionary, source_id: int, token: String) -> bool:
 	monster.set_meta("dungeon_play_run",str(state.active.id));monster.set_meta("dungeon_play_token",token)
 	state.active.issued[token]={"row":row.duplicate(true),"source_id":source_id,"hp":monster.hp,"mp":monster.mp}
 	monster.set_meta("dungeon_play_role",role);monster.set_meta("declared_npc",source_id)
-	monster.name_label.text=str(definition.get("name","오림"))+" · 자체 외형"
+	monster.name_label.text=str(definition.get("name","오림"))+("" if view!=null else " · 자체 외형")
 	monster.died.connect(world._on_monster_died);monster.player_hit.connect(actor_hit)
 	actors[token]=monster
 	return true
@@ -419,6 +513,13 @@ func actor_hit(actor: TwilightMonster, _display_damage: int, kind: String) -> vo
 	if actor.get_meta("dungeon_play_role","") not in ["Monster","MiddleBoss","Boss"] or not actor.has_meta("dungeon_play_attack"):return
 	var attack: Dictionary=actor.get_meta("dungeon_play_attack");var damage:=roll_attack(attack,world.rng)
 	if bool(rules.stage("orim",int(state.active.stage_id)).stage.IsHard):damage*=int(state.settings.hard_multiplier)
+	var orim: Dictionary=orim_state()
+	if not orim.is_empty():
+		# The hero (OrimsTrailCharacter.Hp) takes the NpcAttack dice, not the player.
+		orim.hero_hp=maxi(0,int(orim.hero_hp)-maxi(0,damage));orim_dirty=true
+		if world.has_method("show_combat_number"):world.show_combat_number(world.player.global_position+Vector2(0,-70),str(maxi(0,damage)),Color(1.0,0.45,0.4))
+		if int(orim.hero_hp)<=0:finish_orim(false,int(Time.get_unix_time_from_system()))
+		changed.emit();return
 	world._on_player_hit(actor,maxi(0,damage),kind)
 
 static func roll_attack(attack: Dictionary, rng: RandomNumberGenerator) -> int:
@@ -439,12 +540,23 @@ func monster_died(monster: TwilightMonster, now: int = -1) -> void:
 	if monster.get_meta("dungeon_play_role","")=="Boss":
 		finish_orim(now<int(run.started)+int(run.duration),now,token)
 		return
-	var next:=state.duplicate(true);next.active.events[token]=true
-	var saved:=commit(next)
-	if not saved.get("ok",false):defer_candidate(next,{});return
+	var orim: Dictionary=orim_state()
+	if not orim.is_empty():
+		# Kill records are kept in memory and saved with the next batch.
+		run.events[token]=true
+		var gained:=ORIM_RUN.gain(orim_model(),orim,ORIM_RUN.npc_exp(orim_model(),int(monster.get_meta("declared_npc",0))),bool(rules.stage("orim",int(run.stage_id)).stage.IsHard))
+		if int(orim.pending)>0 and (orim.offer as Array).is_empty():_orim_offer()
+		if gained>0:world.hud.show_message("오림 레벨 %d · 스킬 선택" % int(orim.level))
+		orim_dirty=true;changed.emit()
+	else:
+		var next:=state.duplicate(true);next.active.events[token]=true
+		var saved:=commit(next)
+		if not saved.get("ok",false):defer_candidate(next,{});return
 	if now>=int(run.started)+int(run.duration):finish_orim(false,now);return
 	var role: String=monster.get_meta("dungeon_play_role","")
-	if role in ["HealingSphere","LastHealingSphere"]:
+	if role in ["HealingSphere","LastHealingSphere"] and not orim.is_empty():
+		orim.hero_hp=mini(int(orim.hero_max),int(orim.hero_hp)+int(round(float(orim.hero_max)*float(state.settings.heal_percent)/100.0)))
+	elif role in ["HealingSphere","LastHealingSphere"]:
 		var heal: Dictionary={"hp":mini(world._effective_max_hp(),world.hp+int(round(world._effective_max_hp()*float(state.settings.heal_percent)/100.0)))}
 		var healed:=commit(state.duplicate(true),heal)
 		if not healed.get("ok",false):defer_candidate(state.duplicate(true),heal)
@@ -484,20 +596,67 @@ func finish_orim(success: bool, now: int, event_token: String = "") -> Dictionar
 						break
 	run.status="cleared" if not rows.is_empty() else "failed";run.rewards=rows;run.success=success;run.completed_at=now
 	var result:=commit(next)
-	if result.get("ok",false):cleanup()
+	if result.get("ok",false):cleanup();orim_dirty=false;orim_last_save_ms=Time.get_ticks_msec()
 	else:defer_candidate(next,{})
+	if run.has("home"):call_deferred("_orim_return")
 	return result
 
 func claim() -> Dictionary:
 	if state.active.is_empty() or state.active.status!="cleared":return {"ok":false,"reason":"수령할 보상 없음"}
 	var next:=state.duplicate(true);var run: Dictionary=next.active
 	if next.receipts.has(run.id):return {"ok":false,"reason":"이미 지급된 보상"}
-	var changes:=reward_plan(run.rewards)
+	var changes:=reward_plan_original(run.rewards) if run.has("orim") else reward_plan(run.rewards)
 	if not changes.get("ok",false):return changes
 	changes.erase("ok");var rows: Array=[]
+	var granted: Array=changes.get("granted",[]);var withheld: Array=changes.get("withheld",[])
+	changes.erase("granted");changes.erase("withheld")
 	for r: Dictionary in run.rewards:rows.append(r.row.duplicate(true))
-	next.receipts[run.id]={"rows":rows,"mode":"twilight_orim"};next.active={}
-	return commit(next,changes)
+	next.receipts[run.id]={"rows":rows,"mode":"orim523_original" if run.has("orim") else "twilight_orim"};next.active={}
+	_orim_return()
+	var result:=commit(next,changes)
+	if result.get("ok",false) and run.has("orim"):
+		result.reason="획득 "+(", ".join(granted) if not granted.is_empty() else "없음")+(" · 미지급 "+", ".join(withheld) if not withheld.is_empty() else "")
+		result.granted=granted;result.withheld=withheld
+	return result
+
+## Original reward rows (Reward.RewardClassID/Amount/ItemBlessCodeID) as the
+## original 523 items through the shared 523 item supplier; an item the game
+## has no owner for is withheld and named, never replaced.
+func reward_plan_original(rows: Array) -> Dictionary:
+	var overrides: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold)}
+	var granted: Array=[];var withheld: Array=[]
+	for reward: Dictionary in rows:
+		var row: Dictionary=reward.row;var id:=int(row.RewardClassID);var amount:=int(row.Amount);var bless:=int(row.get("ItemBlessCodeID",1))
+		var name: String=str(reward.get("item",{}).get("name",str(id)))
+		if str(reward.get("type",""))!="Item" or amount<1:withheld.append("%s (%s 보상)" % [name,str(reward.get("type",""))]);continue
+		var staged:=stage_original_item(world,overrides,id,amount,bless,{"kind":"orim523_reward","reward_id":int(row.ID)})
+		if staged.get("ok",false):overrides=staged.overrides;granted.append("%s %d" % [name,amount]);continue
+		# No 523 owner for this item yet: the existing TWILIGHT dungeon item for
+		# the same reward row (named "TWILIGHT · …"), never a new image/item.
+		var local:=reward_plan([reward]) if reward.has("item") else {"ok":false}
+		if local.get("ok",false):
+			for key: String in ["inventory","item_instances"]:
+				var before: Dictionary=world.get(key)
+				for k: String in local[key]:
+					if not before.has(k) or before[k]!=local[key][k]:
+						if key=="inventory":overrides.inventory[k]=int(overrides.inventory.get(k,0))+int(local.inventory[k])-int(before.get(k,0))
+						else:overrides.item_instances[k]=local.item_instances[k]
+			granted.append("%s %d (523 소유자 없음 → 기존 TWILIGHT 대응 아이템)" % [name,amount])
+		else:withheld.append("%s %d (%s)" % [name,amount,str(staged.get("error",""))])
+	return {"ok":true,"inventory":overrides.inventory,"item_instances":overrides.item_instances,"gold":overrides.gold,"granted":granted,"withheld":withheld}
+
+static func stage_original_item(owner: Object, overrides: Dictionary, item_class_id: int, amount: int, bless: int, origin: Dictionary) -> Dictionary:
+	var D: Script=preload("res://scripts/loot/patch523_monster_drops.gd")
+	var summary: Dictionary=D.definition_id(str(item_class_id))
+	if bless==1 and not summary.is_empty():
+		var wallet: String=D.currency_identity_name(summary.get("native_record",{}))
+		if not wallet.is_empty() and wallet!="아데나" and wallet in preload("res://scripts/loot/currency_drops.gd").CURRENCY_NAMES:
+			var next: Dictionary=overrides.duplicate(true)
+			next.inventory[wallet]=int(next.inventory.get(wallet,0))+amount
+			return {"ok":true,"overrides":next}
+	var staged: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(owner,overrides.inventory,overrides.item_instances,int(overrides.gold),item_class_id,amount,bless,origin)
+	if not staged.get("ok",false):return {"ok":false,"error":str(staged.get("error",""))}
+	return {"ok":true,"overrides":staged.overrides}
 
 func buy_buff(buff_id: int) -> Dictionary:
 	if state.active.is_empty() or state.active.kind!="orim" or state.active.status!="active":return {"ok":false,"reason":"오림 자체 실행 중에만 준비 강화 가능"}
@@ -517,16 +676,26 @@ func reroll() -> Dictionary:
 	for row: Dictionary in rules.data.declarations.OrimsTrailRerollCurrencyCost:
 		if int(row.RerollCount)==count:amount=int(row.Cost)
 	if amount<0:return {"ok":false,"reason":"원본 재선택 횟수 상한"}
+	if not orim_state().is_empty() and (orim_state().offer as Array).is_empty():return {"ok":false,"reason":"다시 고를 스킬 카드가 없습니다"}
 	var cost:=payment(int(state.settings.reroll_currency),amount)
 	if not cost.get("ok",false):return cost
 	cost.erase("ok");cost.erase("reason")
 	var next:=state.duplicate(true);var rng:=RandomNumberGenerator.new();rng.seed=int(next.active.seed)+count
+	if next.active.has("orim"):
+		# OrimsTrailRerollCurrencyCost: the Nth reroll of the shown skill cards.
+		next.active.rerolls=count;ORIM_RUN.offer(orim_model(),next.active.orim,rng)
+		return commit(next,cost)
 	next.active.rerolls=count;next.active.reroll_stat=["move_speed","attack_speed","boss_damage"][rng.randi_range(0,2)]
 	return commit(next,cost)
 
 func modifier(stat: String) -> float:
 	if state.active.is_empty() or state.active.kind!="orim" or state.active.status!="active":return 0.0
 	var result:=0.0
+	if state.active.has("orim"):
+		# Original BuffClass bonuses: bought preparation buffs + owned skills.
+		var own: Dictionary=ORIM_RUN.effects(orim_model(),state.active.orim)
+		var bought: Dictionary=ORIM_RUN.buff_effects(orim_model(),state.active.buffs)
+		return float(own.get(stat,0.0))+float(bought.get(stat,0.0))
 	if stat in ["move_speed","attack_speed"]:
 		for key: String in state.active.buffs:
 			if key in ["71672","71682"]:result+=float(state.settings.speed_percent)
@@ -669,10 +838,11 @@ func try_enhancement(scroll_name: String, target_reference: String) -> bool:
 	else:world.hud.show_enhancement_result(outcome,str(target.name),level,after)
 	return true
 
-func stop(now: int = -1) -> Dictionary:
+func stop(now: int = -1, return_home: bool = true) -> Dictionary:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	if state.active.is_empty():return {"ok":true}
 	if state.active.kind=="special":return account_special(now,true)
+	if return_home:_orim_return()
 	var next:=state.duplicate(true);next.active={}
 	var result:=commit(next)
 	if result.get("ok",false):cleanup()
@@ -687,6 +857,10 @@ func status_text(now: int = -1) -> String:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	if state.active.is_empty():return "실행 없음"
 	var run: Dictionary=state.active
+	if run.kind=="orim" and run.has("orim"):
+		var o: Dictionary=orim_status()
+		var at2: int=int(run.get("completed_at",now)) if run.status!="active" else now
+		return "오림의 흔적 · %s · %s HP %d/%d · 오림 Lv %d (%d/%d) · 스킬 %d · 남은 %d초 · 웨이브 %d · %s" % [str(run.status),str(o.hero),int(o.hp),int(o.max),int(o.level),int(o.exp),int(o.next),(o.skills as Array).size(),maxi(0,int(run.started)+int(run.duration)-at2),int(run.cursor),str(o.land) if not str(o.land).is_empty() else "현재 지역"]
 	if run.kind=="orim":
 		var at: int=int(run.get("completed_at",now)) if run.status!="active" else now
 		var ability: String={"move_speed":"이동속도","attack_speed":"공격속도","boss_damage":"기본공격 보스피해"}.get(str(run.get("reroll_stat","")),"없음")
@@ -695,3 +869,99 @@ func status_text(now: int = -1) -> String:
 	for id: int in run.groups:
 		var p: Dictionary=state.pools[str(id)];left=mini(left,maxi(0,int(p.base)+int(p.bonus)-maxi(0,now-int(run.last))))
 	return "특수던전 자체 시간 세션 · 남은 %d초 · 현재 지역 유지" % left
+
+# --- 오림의 흔적: hero, skill cards, auto-cast -------------------------------
+
+func _orim_offer() -> void:
+	var orim: Dictionary=orim_state()
+	if orim.is_empty():return
+	var rng:=RandomNumberGenerator.new();rng.seed=int(state.active.seed)+int(orim.level)*7919+int(state.active.get("rerolls",0))
+	ORIM_RUN.offer(orim_model(),orim,rng)
+	if (orim.offer as Array).is_empty():orim.pending=0
+
+func choose_skill(group_id: int) -> Dictionary:
+	var orim: Dictionary=orim_state()
+	if orim.is_empty() or state.active.status!="active":return {"ok":false,"reason":"오림 도전 중이 아닙니다"}
+	var result:=ORIM_RUN.choose(orim_model(),orim,group_id)
+	if not result.get("ok",false):return result
+	if int(orim.pending)>0:_orim_offer()
+	orim_casters_key=""
+	var saved:=_orim_flush()
+	changed.emit()
+	if saved.get("ok",false):world._update_hud()
+	return result
+
+func _orim_flush() -> Dictionary:
+	orim_last_save_ms=Time.get_ticks_msec()
+	var next:=state.duplicate(true)
+	var result:=commit(next)
+	if result.get("ok",false):orim_dirty=false
+	else:defer_candidate(next,{})
+	return result
+
+func cell_px() -> float:
+	var field: Variant=world.field_map
+	var coords: Variant=field.get("coordinates") if field!=null else null
+	if coords!=null and coords.has_method("to_world"):
+		var d: float=(coords.to_world(Vector2(1,0)) as Vector2).distance_to(coords.to_world(Vector2.ZERO))
+		if d>1.0 and is_finite(d):return d
+	return 32.0
+
+## Each owned skill entry casts on its own CastDelay (minus the owned
+## OrimsTrailSpellCastDelayDecreasePercent): SpellDamageBase to the actors in
+## TargetAreaRadius around the nearest actor inside CastRange (around the
+## hero for Self spells), plus ChainReactionCount more nearest actors.
+func _orim_cast(delta: float) -> void:
+	var orim: Dictionary=orim_state()
+	var key:=JSON.stringify(orim.spells)
+	if key!=orim_casters_key:orim_casters=ORIM_RUN.casters(orim_model(),orim);orim_casters_key=key
+	orim_clock_ms+=delta*1000.0
+	if orim_casters.is_empty() or actors.is_empty():return
+	var cell:=cell_px();var origin: Vector2=world.player.global_position
+	var boss_bonus: float=float(ORIM_RUN.effects(orim_model(),orim).boss_damage)
+	for caster: Dictionary in orim_casters:
+		if orim_clock_ms<float(orim_ready.get(caster.key,0.0)):continue
+		var spell: Dictionary=caster.spell
+		var reach: float=maxf(1.0,float(spell.range))*cell
+		var area: float=float(spell.radius)*cell
+		var targets: Array=[]
+		for actor: Variant in actors.values():
+			if is_instance_valid(actor) and not actor.dead and actor.get_meta("dungeon_play_role","") not in ["HealingSphere","LastHealingSphere"]:targets.append(actor)
+		if targets.is_empty():return
+		targets.sort_custom(func(a: Node2D,b: Node2D)->bool:return a.global_position.distance_squared_to(origin)<b.global_position.distance_squared_to(origin))
+		var hit: Array=[]
+		if str(spell.targeting)=="Self":
+			for actor: Node2D in targets:
+				if actor.global_position.distance_to(origin)<=maxf(area,reach):hit.append(actor)
+		elif targets[0].global_position.distance_to(origin)<=reach:
+			var center: Vector2=targets[0].global_position
+			for actor: Node2D in targets:
+				if actor==targets[0] or (area>0.0 and actor.global_position.distance_to(center)<=area):hit.append(actor)
+			var chain: int=int(spell.effects.get("chain",0))
+			for actor: Node2D in targets:
+				if chain<=0:break
+				if not actor in hit and actor.global_position.distance_to(origin)<=reach:hit.append(actor);chain-=1
+		if hit.is_empty():continue
+		orim_ready[caster.key]=orim_clock_ms+float(maxi(100,int(caster.cooldown_ms)))
+		for actor: Variant in hit:
+			if not is_instance_valid(actor) or actor.dead:continue
+			var amount: float=float(spell.effects.damage)
+			if actor.get_meta("dungeon_play_role","") in ["Boss","MiddleBoss"]:amount*=1.0+boss_bonus/100.0
+			actor.take_damage(maxi(1,int(round(amount))),false,"magic")
+
+func orim_status() -> Dictionary:
+	var orim: Dictionary=orim_state()
+	if orim.is_empty():return {}
+	var model:=orim_model();var hero:=ORIM_RUN.character(model,int(orim.character))
+	var owned: Array=[]
+	for key: Variant in orim.spells:
+		var group: Dictionary=model.groups.get(int(str(key)),{})
+		owned.append({"group":int(str(key)),"level":int(orim.spells[key]),"name":str(group.get("name","")),"type":str(group.get("type",""))})
+	var cards: Array=[]
+	for gid: Variant in orim.offer:
+		var group: Dictionary=model.groups.get(int(gid),{})
+		var next_level: int=int(orim.spells[str(int(gid))])+1 if orim.spells.has(str(int(gid))) else 0
+		cards.append({"group":int(gid),"name":str(group.get("levels",{}).get(next_level,{}).get("name",group.get("name",""))),"type":str(group.get("type","")),"desc":str(group.get("desc",""))})
+	var curve:=ORIM_RUN.curve(model,bool(model.stages.get(int(state.active.stage_id),{}).get("hard",false)))
+	var need: int=int(curve[mini(int(orim.level),curve.size()-1)]) if not curve.is_empty() else 0
+	return {"hero":str(hero.get("name","")),"hp":int(orim.hero_hp),"max":int(orim.hero_max),"level":int(orim.level),"exp":int(orim.exp),"next":need,"skills":owned,"cards":cards,"pending":int(orim.pending),"rerolls":int(state.active.get("rerolls",0)),"reroll_cost":ORIM_RUN.reroll_cost(model,int(state.active.get("rerolls",0))+1),"land":orim_travel_note}

@@ -562,6 +562,9 @@ func _ready() -> void:
 	dungeon_play.configure(self,source_dungeons)
 	dungeon_play.install_items()
 	dungeon_play.changed.connect(_refresh_source_dungeon_panel)
+	var orim_hud: PanelContainer = preload("res://scripts/orim523/orim523_hud.gd").new()
+	hud.add_child(orim_hud)
+	orim_hud.configure(self)
 	BOOT_LOG.step("world_catalog_titles")
 	inventory_automation.refresh_catalog()
 	titles.configure(self)
@@ -11371,6 +11374,15 @@ func bind_current523_world_map(image_adapter: RefCounted,offered_worlds: Diction
 
 func _bind_current523_world_map_from_settings() -> void:
 	current523_world_map_status=_world_map_input().call("configure_from_settings",self)
+
+## 오림의 흔적: move to a stage's original Land / back to the starting point.
+func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", land_id, bounds)
+	return {"ok": moved, "reason": str(controller.get("problem"))}
+
+func orim_current_land() -> Dictionary:
+	return _aden_play_controller().call("current_source_land")
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

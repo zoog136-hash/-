@@ -168,6 +168,18 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 		return {"source_travel_hold":"map_entry_definition_identity_invalid"}
 	var result: Dictionary=_with_map_time_quote(raw,actor_state,time_policy)
 	result["runtime_condition_identity"]=_condition_identity(actor_state)
+	var waive: Array=_content_entry_waive if land_id==_content_entry_land else []
+	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/orim523/orim523.gd").stage_land_ids().has(land_id):
+		waive=CONTENT_ENTRY_WAIVE # A saved position inside an Orim stage Land.
+	if not waive.is_empty():
+		# A content teleport (enter_source_land) names the in-Land rules that
+		# do not gate its own entry; every other hold is kept.
+		var kept: Array=[];var waived: Array=[]
+		for hold: Variant in result.get("source_travel_holds",[]):
+			if hold is Dictionary and hold.get("reason")=="native_attribute_requires_policy" and str(hold.get("type",{}).get("Name","")) in waive:waived.append(hold)
+			else:kept.append(hold)
+		result.source_travel_holds=kept;result["content_entry_waived"]=waived
+		result.source_travel_hold="native_definition_conditions_require_policy" if not kept.is_empty() else ""
 	return result
 
 func _prepare_map_session(context: Dictionary, actor_state: Dictionary) -> bool:
@@ -955,6 +967,50 @@ func _prepare_generic_source_travel(id: int,world: Node,save_changes: Dictionary
 	if not plan.get("ok",false):
 		problem="자체 수동 이동 보류: "+str(plan.get("reason","unknown")); proposed.close(); return false
 	return _commit_source_destination(world,proposed,options,plan.target_position,catalog,context,id,save_changes)
+
+## Content teleport (e.g. 오림의 흔적 Stage.TeleportTerritoryID): the original
+## Land and its declared Territory box, first clear walkable cell inside it.
+## Same verified catalog/field/renderer path as a portal hop; no fee here.
+var _content_entry_land: int=-1
+var _content_entry_waive: Array=[]
+## In-Land restrictions that do not gate a content teleport into that Land.
+const CONTENT_ENTRY_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePushOnDie","NpcBuff","NoTeleportCome"]
+
+func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE) -> bool:
+	_content_entry_land=land_id;_content_entry_waive=waive.duplicate()
+	var moved: bool=_enter_source_land(land_id,bounds)
+	_content_entry_land=-1;_content_entry_waive=[]
+	return moved
+
+func _enter_source_land(land_id: int, bounds: Array) -> bool:
+	problem=""
+	var world: Node=_world()
+	if _source_travel_busy or not active or not source_owned or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC:
+		problem="원문 지도 이동을 사용할 수 없습니다(523 원문 필드 아님)."; return false
+	_source_travel_busy=true
+	var completed: bool=false
+	var catalog: RefCounted=_catalog_for(settings)
+	if catalog!=null:
+		var script: Script=load("res://scripts/maps/current523_source_field.gd")
+		var proposed: OriginalPlayableField=script.new()
+		if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,land_id,{"attribute_rule":str(settings.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
+			var landing: Dictionary=proposed.choose_source_landing(bounds,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1" if bounds[0]!=bounds[2] or bounds[1]!=bounds[3] else "EXACT_POINT_ONLY")
+			if landing.get("ok",false):
+				completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog)
+				if not completed and problem.contains("native_definition_conditions_require_policy"):
+					var holds: Array=[]
+					for hold: Variant in _entry_context(land_id,str(proposed.get("source_asset")),landing.source_cell,_actor_state(world)).get("source_travel_holds",[]):
+						holds.append(str(hold.get("reason",""))+":"+str(hold.get("type",{}).get("Name","")) if hold is Dictionary else str(hold))
+					problem+=" "+", ".join(holds)
+			else:problem="도착 셀 없음: "+str(landing.get("reason",""));proposed.close()
+		else:problem="원문 필드 보류: "+str(proposed.get("problem"));proposed.close()
+	_source_travel_busy=false
+	return completed
+
+func current_source_land() -> Dictionary:
+	if not active or not source_owned or _source_field==null: return {}
+	var cell: Vector2i=_source_field.world_to_cell(_world().player.global_position)+_source_field.coordinates.origin
+	return {"land_id":int(settings.get("native_land_id",-1)),"cell":[cell.x,cell.y]}
 
 func _aden_return_point(field: OriginalPlayableField, radius: int) -> Dictionary:
 	var center:=Vector2i(ADEN_RETURN_LOCATION.X,ADEN_RETURN_LOCATION.Y)
