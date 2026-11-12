@@ -31,6 +31,37 @@ def synthetic_snapshot():
     }
 
 
+def synthetic_representative():
+    """Synthetic data exercising the explicit production-mode declaration."""
+    snapshot = synthetic_snapshot()
+    snapshot["test_fixture"] = False
+    snapshot["coverage"] = {
+        "scope": "representative_server", "expected_server_ids": ["server:1"],
+        "completed_server_ids": ["server:1"], "complete": False, "approximate": True,
+        "selected_categories": [{"id": 1, "name": "SYNTHETIC equipment"}, {"id": 51, "name": "SYNTHETIC consumables"}],
+        "omitted_categories": [{"id": 371, "name": "SYNTHETIC optional material"}],
+        "live_drift_recorded": True,
+        "scope_proof": {"server_id": "server:1", "world_id": "world:10001",
+                        "evidence_url": "https://example.invalid/synthetic-servers", "sha256": "a" * 64},
+        "survey": {"scope": "surveyed_candidates_only", "metric": "reported_local_catalog_group_count",
+                   "selected_server_id": "server:1", "candidates": [
+                       {"server_id": "server:1", "world_id": "world:10001", "reported_total": 200,
+                        "world_reported_total": 100, "local_group_count": 100,
+                        "evidence_url": "https://example.invalid/synthetic-server1", "sha256": "b" * 64,
+                        "world_evidence_url": "https://example.invalid/synthetic-world1", "world_sha256": "c" * 64},
+                       {"server_id": "server:2", "world_id": "world:10002", "reported_total": 90,
+                        "world_reported_total": 10, "local_group_count": 80,
+                        "evidence_url": "https://example.invalid/synthetic-server2", "sha256": "d" * 64,
+                        "world_evidence_url": "https://example.invalid/synthetic-world2", "world_sha256": "e" * 64},
+                   ]},
+    }
+    snapshot["listings"][0]["server_id"] = "server:1"
+    world_row = copy.deepcopy(snapshot["listings"][0])
+    world_row.update(server_id="world:10001", attributes={"unknown_variant": {"raw": "preserved"}})
+    snapshot["listings"].append(world_row)
+    return snapshot
+
+
 class FrozenExchangeImportTest(unittest.TestCase):
     def test_preserves_bundle_price_quantity_and_unknown_evidence(self):
         snapshot = synthetic_snapshot()
@@ -185,6 +216,125 @@ class FrozenExchangeImportTest(unittest.TestCase):
                 with self.assertRaises(FileExistsError):
                     exchange.import_snapshot(source, destination)
             self.assertEqual(destination.read_bytes(), b"other frozen snapshot")
+
+
+    def test_representative_partial_preserves_prices_bundles_unknown_variants_and_evidence(self):
+        snapshot = synthetic_representative()
+        snapshot["source_collection_window"] = {"note": "synthetic retained evidence"}
+        before = copy.deepcopy(snapshot)
+        self.assertIs(exchange.validate(snapshot), snapshot)
+        self.assertEqual(snapshot, before)
+        self.assertFalse(snapshot["coverage"]["complete"])
+        self.assertEqual([(r["bundle_size"], r["bundle_price"]) for r in snapshot["listings"]], [(7, 13), (7, 13)])
+        snapshot["coverage"]["live_drift_recorded"] = False
+        snapshot["coverage"]["omitted_categories"] = []
+        exchange.validate(snapshot)
+
+    def test_representative_requires_explicit_partial_policy(self):
+        for field, value in (("complete", True), ("complete", 0), ("approximate", False),
+                             ("approximate", 1), ("approximate", None)):
+            with self.subTest(field=field, value=value):
+                snapshot = synthetic_representative()
+                snapshot["coverage"][field] = value
+                with self.assertRaises(ValueError): exchange.validate(snapshot)
+        for value in (None, True, 0, {}, "false"):
+            snapshot = synthetic_representative()
+            snapshot["test_fixture"] = value
+            with self.assertRaises(ValueError): exchange.validate(snapshot)
+        snapshot = synthetic_representative()
+        snapshot.update(status="not_captured", captured_at=None, listings=[])
+        snapshot["coverage"].update(expected_server_ids=[], completed_server_ids=[])
+        with self.assertRaises(ValueError): exchange.validate(snapshot)
+        snapshot = synthetic_snapshot()
+        snapshot["coverage"].update(complete=False, approximate=True)
+        with self.assertRaises(ValueError): exchange.validate(snapshot)
+
+    def test_representative_requires_one_canonical_local_server(self):
+        for value in ([], ["server:01"], ["server:0"], ["server:-1"], ["world:1"],
+                      ["server:1.0"], ["server:١"], ["server:9007199254740992"],
+                      ["server:1", "server:2"], [True], [{}], None):
+            with self.subTest(value=value):
+                snapshot = synthetic_representative()
+                snapshot["coverage"]["expected_server_ids"] = value
+                snapshot["coverage"]["completed_server_ids"] = copy.deepcopy(value)
+                with self.assertRaises(ValueError): exchange.validate(snapshot)
+        snapshot = synthetic_representative()
+        snapshot["coverage"]["completed_server_ids"] = ["server:2"]
+        with self.assertRaises(ValueError): exchange.validate(snapshot)
+
+    def test_representative_category_scope_is_explicit_and_disjoint(self):
+        for field, value in (("selected_categories", []), ("selected_categories", None),
+                             ("selected_categories", [{"id": True, "name": "synthetic"}]),
+                             ("selected_categories", [{"id": "1", "name": "synthetic"}]),
+                             ("selected_categories", [{"id": 1, "name": {}}]),
+                             ("selected_categories", [{"id": 1, "name": " "}]),
+                             ("selected_categories", [{"id": 1, "name": "one"}, {"id": 1, "name": "again"}]),
+                             ("omitted_categories", None), ("omitted_categories", [True]),
+                             ("omitted_categories", [{"id": 1, "name": "already selected"}])):
+            with self.subTest(field=field, value=value):
+                snapshot = synthetic_representative()
+                snapshot["coverage"][field] = value
+                with self.assertRaises(ValueError): exchange.validate(snapshot)
+        for value in (1, None, "true", {}):
+            snapshot = synthetic_representative()
+            snapshot["coverage"]["live_drift_recorded"] = value
+            with self.assertRaises(ValueError): exchange.validate(snapshot)
+
+    def test_representative_scope_proof_rejects_missing_malformed_and_other_worlds(self):
+        for field, value in (("server_id", "server:2"), ("world_id", "server:1"), ("world_id", "world:01"),
+                             ("world_id", {}), ("evidence_url", "http://example.invalid"),
+                             ("evidence_url", True), ("sha256", "g" * 64), ("sha256", "a" * 63),
+                             ("sha256", {})):
+            with self.subTest(field=field, value=value):
+                snapshot = synthetic_representative()
+                snapshot["coverage"]["scope_proof"][field] = value
+                with self.assertRaises(ValueError): exchange.validate(snapshot)
+        for value in (None, True, []):
+            snapshot = synthetic_representative()
+            snapshot["coverage"]["scope_proof"] = value
+            with self.assertRaises(ValueError): exchange.validate(snapshot)
+        for value in ("server:2", "world:10002", "1"):
+            snapshot = synthetic_representative()
+            snapshot["listings"][0]["server_id"] = value
+            with self.assertRaisesRegex(ValueError, "not in captured coverage"): exchange.validate(snapshot)
+
+    def test_representative_survey_declares_its_proxy_and_selected_maximum(self):
+        for field, value in (("scope", "all_servers"), ("metric", "reported_catalog_total"),
+                             ("metric", {}), ("selected_server_id", "server:2"),
+                             ("candidates", []), ("candidates", [None]), ("candidates", {})):
+            snapshot = synthetic_representative()
+            snapshot["coverage"]["survey"][field] = value
+            with self.assertRaises(ValueError): exchange.validate(snapshot)
+        for field, value in (("server_id", "server:02"), ("world_id", "world:10002"),
+                             ("reported_total", True), ("reported_total", 200.0), ("reported_total", {}),
+                             ("world_reported_total", -1), ("world_reported_total", 201),
+                             ("local_group_count", "100"), ("local_group_count", 99),
+                             ("evidence_url", None), ("world_evidence_url", "http://example.invalid"),
+                             ("sha256", "x" * 64), ("world_sha256", False)):
+            with self.subTest(field=field, value=value):
+                snapshot = synthetic_representative()
+                snapshot["coverage"]["survey"]["candidates"][0][field] = value
+                with self.assertRaises(ValueError): exchange.validate(snapshot)
+        snapshot = synthetic_representative()
+        snapshot["coverage"]["survey"]["candidates"].append(copy.deepcopy(snapshot["coverage"]["survey"]["candidates"][0]))
+        with self.assertRaises(ValueError): exchange.validate(snapshot)
+        snapshot = synthetic_representative()
+        snapshot["coverage"]["survey"]["candidates"][1].update(reported_total=111, local_group_count=101)
+        with self.assertRaisesRegex(ValueError, "maximum surveyed"): exchange.validate(snapshot)
+        snapshot["coverage"]["survey"]["candidates"][1].update(reported_total=110, local_group_count=100)
+        exchange.validate(snapshot)  # Explicit ties are valid.
+
+    def test_representative_import_roundtrip_and_no_clobber(self):
+        snapshot = synthetic_representative()
+        with tempfile.TemporaryDirectory() as directory:
+            source, destination = Path(directory) / "partial.json", Path(directory) / "frozen.json"
+            source.write_text(json.dumps(snapshot), encoding="utf-8")
+            exchange.import_snapshot(source, destination)
+            before = destination.read_bytes()
+            self.assertEqual(json.loads(before), snapshot)
+            with self.assertRaises(FileExistsError): exchange.import_snapshot(source, destination)
+            self.assertEqual(destination.read_bytes(), before)
+
 
     def test_cli_validate_only(self):
         with tempfile.TemporaryDirectory() as directory:

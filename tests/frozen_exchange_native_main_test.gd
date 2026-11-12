@@ -25,7 +25,7 @@ func run() -> void:
 	if failures: quit(1); return
 	var production_bytes: PackedByteArray = FileAccess.get_file_as_bytes(FrozenCatalog.PATH)
 	var production: Dictionary = JSON.parse_string(production_bytes.get_string_from_utf8())
-	check(production.status == "not_captured" and production.listings.is_empty(),"production all-server capture remains absent")
+	check(FrozenCatalog.validate(production).is_empty(),"production declared scope validates and observed-row test fixture remains separate")
 	var receipt: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ReceiptPath))
 	check(receipt.get("explicit_blessed_type") == 1 and receipt.get("sha256") == SampleSHA and str(receipt.get("url","")).contains("&blessedType=1&"),"normal blessing proved by explicit official type1 request, not wildcard0 or blessingLevel")
 	var sample: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SamplePath)).contents[0]

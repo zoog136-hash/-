@@ -3,6 +3,7 @@ extends RefCounted
 ## Uses the existing shop's lock, clock, native bindings and atomic owner-save.
 const Catalog = preload("res://scripts/exchange/frozen_catalog.gd")
 const NativeFields = preload("res://scripts/loot/current523_native_fields.gd")
+const NativeItems = preload("res://scripts/loot/patch523_monster_drops.gd")
 const STATE_KEY: String = "frozen_exchange"
 var catalog = Catalog.new()
 var world
@@ -55,12 +56,12 @@ func _plan(id: String, bundles: int, internal: bool = false) -> Dictionary:
 		if stored.is_empty() or int(state.consumed[consumed_id]) > int(stored.initial_bundles): return _fail("거래소 저장 재고·상품 불일치")
 	var row: Dictionary = catalog.listing(id)
 	if row.is_empty() or bundles < 1 or bundles > 1000 or bundles > available(row): return _fail("구매할 묶음 수량·잔량 오류")
-	# Until an exact variant-to-native-instance bridge is proved, do not turn
-	# enhanced/blessed/attribute listings into different, plain inventory items.
+	# The native supplier preserves observed enhancement on verified equipment.
+	# Unproved blessing/element/special variants must never become plain items.
 	# blessedType=0 is an all-types API filter, never evidence of normal blessing.
 	# Only an explicitly observed normal type is supported; preserve and lock
 	# every other or unrecognised attribute until its native mapping is proved.
-	if int(row.enchant) != 0 or not row.element.is_empty() or int(row.element_level) != 0 or row.attributes.size() != 1 or not Catalog.integer(row.attributes.get("blessed_type"),1,1): return _fail("축복 종류·강화·속성의 실제 개체 연결 미검증 · 구매 잠금")
+	if not row.element.is_empty() or int(row.element_level) != 0 or row.attributes.size() != 1 or not Catalog.integer(row.attributes.get("blessed_type"),1,1): return _fail("축복 종류·속성·특수 변형의 실제 개체 연결 미검증 · 구매 잠금")
 	if bundles > Catalog.LIMIT / int(row.bundle_price) or bundles > Catalog.LIMIT / int(row.bundle_size): return _fail("묶음 합계 범위 초과")
 	var original: Dictionary = shop.catalog.record("ItemClass",int(row.item_class_id))
 	if original.is_empty() or shop.catalog.label(int(original.get("DescID",0))) != str(row.item_name): return _fail("실측 상품과 원본 ItemClass 이름·ID 불일치")
@@ -76,6 +77,7 @@ func _plan(id: String, bundles: int, internal: bool = false) -> Dictionary:
 	var native_definition: Dictionary = world.source_item_definition(int(row.item_class_id))
 	var record: Dictionary = native_definition.get("native_record",{})
 	if not record.get("source_m_native_item",false) or record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or int(record.get("source_item_class_id",0)) != int(row.item_class_id) or record.get("sourceId") != "m523:item:" + str(int(row.item_class_id)) or NativeFields.field(record,"source_display_name","") != row.item_name: return _fail("원본 아이템의 실제 공급 개체 미확인 · 구 아이템으로 대체하지 않습니다")
+	if int(row.enchant) > 0 and (not NativeItems.equipment(record) or NativeFields.field(record,"source_equipment_status","") != "mapped" or int(record.get("source_bless_raw",0)) != 1 or row.get("observed_item_name","") != "+%d %s" % [int(row.enchant),row.item_name]): return _fail("강화 매물의 일반 원본 장비 연결 미확인 · 구매 잠금")
 	if row.item_name == "드래곤의 용옥": return _fail("드래곤의 용옥은 기존 전용 상점의 월 1회 규칙을 이용하세요")
 	if not NativeFields.field(record,"source_condition_pending",[]).is_empty() or NativeFields.has_field(record,"source_delete_time_raw") or NativeFields.has_field(record,"source_delete_time_unresolved"): return _fail("원본 아이템 기간·서버 조건 미확인 · 구매 잠금")
 	if record.get("blessed",false) or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"] or str(record.get("name","")).begins_with("축복받은 "): return _fail("축복·저주 실제 개체 연결 미검증")
@@ -86,7 +88,7 @@ func _plan(id: String, bundles: int, internal: bool = false) -> Dictionary:
 	if world._item_locked(str(binding.name),""): return _fail("잠긴 결제 재화입니다")
 	# The native supplier owns exact ItemClass DTOs and physical ownership proofs.
 	# Never pass exchange goods through the older name-keyed shop bindings.
-	var supplied: Dictionary = world.stage_source_item_grants([{"item_class_id":int(row.item_class_id),"amount":quantity,"bless_raw":1,"enchant":0}],{"kind":"frozen_exchange","snapshot_sha256":catalog.sha256,"listing_key":id,"bundle_size":int(row.bundle_size),"bundle_price":int(row.bundle_price),"bundles":bundles,"observed_blessed_type":1,"evidence_url":row.evidence_url})
+	var supplied: Dictionary = world.stage_source_item_grants([{"item_class_id":int(row.item_class_id),"amount":quantity,"bless_raw":1,"enchant":int(row.enchant)}],{"kind":"frozen_exchange","snapshot_sha256":catalog.sha256,"listing_key":id,"bundle_size":int(row.bundle_size),"bundle_price":int(row.bundle_price),"bundles":bundles,"observed_blessed_type":1,"observed_enchant":int(row.enchant),"evidence_url":row.evidence_url})
 	if not supplied.get("ok",false): return _fail(str(supplied.get("error","원본 아이템 공급 실패")))
 	var staged: Dictionary = supplied.overrides
 	var inventory: Dictionary = staged.inventory

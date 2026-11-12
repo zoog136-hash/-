@@ -1,0 +1,152 @@
+{
+  "scope": "single_item_live_observation_round_not_atomic_snapshot",
+  "recorded_at_utc": "2026-11-12T05:48:43.711166+00:00",
+  "server_id": 1,
+  "item_id": 366,
+  "enchant_level": 0,
+  "saved_http200_responses": 7,
+  "verified_receipt_hashes": 7,
+  "planned_maximum_gets": 8,
+  "interruption": "Parent changed task scope; stop signal sent. Seventh response was saved; last planned cursed-type request has no saved response and its remote outcome is unknown. No retry was made.",
+  "interrupted_manifest_artifact": {
+    "path": "round_manifest.json",
+    "bytes": 0,
+    "valid_json": false,
+    "preserved_without_overwrite": true
+  },
+  "wildcard_stock_metrics": {
+    "pages_observed": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "reported_total_by_page": [
+      35,
+      35,
+      35,
+      35
+    ],
+    "reported_last_page_by_page": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "observed_row_occurrences": 35,
+    "observed_unit_quantity_sum": 203569,
+    "observed_value_fingerprint_count": 24,
+    "same_value_extra_occurrences": 11,
+    "cross_page_equal_value_groups": 1,
+    "page_traversal_observed_complete": true,
+    "distinct_market_listings_verified": false,
+    "deduplication_performed": false,
+    "atomic_snapshot_verified": false
+  },
+  "catalog_comparison": {
+    "catalog_pagination_total": 1,
+    "catalog_row_quantity": 35,
+    "stock_reported_total": 35,
+    "stock_rows_observed": 35,
+    "interpretation": "Catalog pagination.total=1 counts the item/enchant/scope group; row.quantity=35 matches 35 stock row occurrences. It is not the sum of units in those bundles.",
+    "observation_is_atomic": false
+  },
+  "blessing_partition_comparison": {
+    "normal_type1_first_page_equals_wildcard_type0_first_page_bytes": true,
+    "normal_type1_reported_total": 35,
+    "blessed_type2_reported_total": 0,
+    "cursed_type3_response_observed": false,
+    "partition_full_coverage_verified": false
+  },
+  "same_value_groups": [
+    {
+      "quantity": 10000,
+      "bundle_sale_price": 50.0,
+      "occurrences": [
+        {
+          "page": 1,
+          "row_index": 0
+        },
+        {
+          "page": 1,
+          "row_index": 1
+        },
+        {
+          "page": 1,
+          "row_index": 2
+        },
+        {
+          "page": 1,
+          "row_index": 3
+        },
+        {
+          "page": 1,
+          "row_index": 4
+        }
+      ],
+      "classification": "same_values_distinct_market_identity_unknown"
+    },
+    {
+      "quantity": 10000,
+      "bundle_sale_price": 80.0,
+      "occurrences": [
+        {
+          "page": 1,
+          "row_index": 9
+        },
+        {
+          "page": 2,
+          "row_index": 0
+        },
+        {
+          "page": 2,
+          "row_index": 1
+        }
+      ],
+      "classification": "same_values_distinct_market_identity_unknown"
+    },
+    {
+      "quantity": 10000,
+      "bundle_sale_price": 99.0,
+      "occurrences": [
+        {
+          "page": 2,
+          "row_index": 5
+        },
+        {
+          "page": 2,
+          "row_index": 6
+        },
+        {
+          "page": 2,
+          "row_index": 7
+        },
+        {
+          "page": 2,
+          "row_index": 8
+        }
+      ],
+      "classification": "same_values_distinct_market_identity_unknown"
+    },
+    {
+      "quantity": 10000,
+      "bundle_sale_price": 123.0,
+      "occurrences": [
+        {
+          "page": 3,
+          "row_index": 0
+        },
+        {
+          "page": 3,
+          "row_index": 1
+        },
+        {
+          "page": 3,
+          "row_index": 2
+        }
+      ],
+      "classification": "same_values_distinct_market_identity_unknown"
+    }
+  ],
+  "production_import_performed": false
+}

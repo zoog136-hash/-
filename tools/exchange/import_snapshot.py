@@ -49,6 +49,85 @@ def _servers(value: object, name: str) -> list[str]:
     return value
 
 
+
+def _scope_id(value: object, prefix: str) -> bool:
+    if not isinstance(value, str) or not value.startswith(prefix + ":"):
+        return False
+    suffix = value[len(prefix) + 1:]
+    return (bool(suffix) and len(suffix) <= 16 and suffix.isascii()
+            and suffix.isdigit() and suffix[0] != "0"
+            and int(suffix) <= MAX_INTEGER)
+
+
+def _sha256(value: object) -> bool:
+    return (isinstance(value, str) and len(value) == 64
+            and all(character in "0123456789abcdefABCDEF" for character in value))
+
+
+def _categories(value: object, name: str, *, required: bool = False) -> set[int]:
+    _require(isinstance(value, list) and (bool(value) or not required),
+             f"{name} must be {'a nonempty' if required else 'an'} array")
+    seen = set()
+    for category in value:
+        _require(isinstance(category, dict) and _integer(category.get("id"))
+                 and _text(category.get("name")), f"{name} requires positive category IDs and names")
+        _require(category["id"] not in seen, f"{name} contains duplicate category IDs")
+        seen.add(category["id"])
+    return seen
+
+
+def _representative_markets(snapshot: dict, coverage: dict,
+                            expected: list[str], completed: list[str]) -> set[str]:
+    """Validate explicit approximate coverage declarations, not evidence truth."""
+    _require(len(expected) == 1 and expected == completed and _scope_id(expected[0], "server"),
+             "representative coverage requires exactly one canonical local server")
+    _require(coverage["complete"] is False and coverage.get("approximate") is True,
+             "representative coverage must explicitly declare incomplete approximate collection")
+    _require(snapshot.get("test_fixture") is False,
+             "representative capture requires explicit test_fixture=false")
+    selected_categories = _categories(coverage.get("selected_categories"), "selected_categories", required=True)
+    omitted_categories = _categories(coverage.get("omitted_categories"), "omitted_categories")
+    _require(not selected_categories.intersection(omitted_categories),
+             "selected and omitted categories must not overlap")
+    _require(type(coverage.get("live_drift_recorded")) is bool,
+             "live_drift_recorded must be boolean")
+    proof = coverage.get("scope_proof")
+    _require(isinstance(proof, dict) and proof.get("server_id") == expected[0]
+             and _scope_id(proof.get("world_id"), "world")
+             and _https(proof.get("evidence_url")) and _sha256(proof.get("sha256")),
+             "scope_proof requires selected server, world, and HTTPS evidence identity")
+    survey = coverage.get("survey")
+    _require(isinstance(survey, dict) and survey.get("scope") == "surveyed_candidates_only"
+             and survey.get("metric") == "reported_local_catalog_group_count"
+             and survey.get("selected_server_id") == expected[0],
+             "survey must explicitly identify its local-group proxy and selected candidate")
+    candidates = survey.get("candidates")
+    _require(isinstance(candidates, list) and bool(candidates), "survey candidates must be nonempty")
+    seen = set()
+    selected = None
+    largest = 0
+    for candidate in candidates:
+        _require(isinstance(candidate, dict) and _scope_id(candidate.get("server_id"), "server")
+                 and _scope_id(candidate.get("world_id"), "world"),
+                 "survey candidates require canonical local and world IDs")
+        _require(candidate["server_id"] not in seen, "survey contains duplicate candidate servers")
+        seen.add(candidate["server_id"])
+        for field in ("reported_total", "world_reported_total", "local_group_count"):
+            _require(_integer(candidate.get(field), 0), f"survey {field} must be a nonnegative exact integer")
+        _require(candidate["local_group_count"] == candidate["reported_total"] - candidate["world_reported_total"],
+                 "survey local_group_count must equal local-inclusive minus world totals")
+        _require(_https(candidate.get("evidence_url")) and _sha256(candidate.get("sha256"))
+                 and _https(candidate.get("world_evidence_url")) and _sha256(candidate.get("world_sha256")),
+                 "survey candidate requires local-inclusive and world HTTPS evidence identities")
+        largest = max(largest, candidate["local_group_count"])
+        if candidate["server_id"] == expected[0]:
+            selected = candidate
+    _require(selected is not None and selected["local_group_count"] == largest
+             and selected["world_id"] == proof["world_id"],
+             "selected server must have maximum surveyed local-group count and proven world")
+    return {expected[0], proof["world_id"]}
+
+
 def validate(snapshot: object) -> dict:
     """Return the unmodified validated snapshot or raise ValueError.
 
@@ -70,8 +149,8 @@ def validate(snapshot: object) -> dict:
              "reset must be 05:00 Asia/Seoul")
     _require(_https(snapshot.get("source_url")), "source_url must be HTTPS")
     coverage = snapshot.get("coverage")
-    _require(isinstance(coverage, dict) and coverage.get("scope") == "all_servers",
-             "coverage scope must be all_servers")
+    _require(isinstance(coverage, dict) and coverage.get("scope") in ("all_servers", "representative_server"),
+             "coverage scope must be all_servers or explicit representative_server")
     expected = _servers(coverage.get("expected_server_ids"), "expected_server_ids")
     completed = _servers(coverage.get("completed_server_ids"), "completed_server_ids")
     _require(type(coverage.get("complete")) is bool, "coverage complete must be boolean")
@@ -80,11 +159,15 @@ def validate(snapshot: object) -> dict:
     _require("captured_at" in snapshot, "captured_at is required")
     if snapshot["status"] == "not_captured":
         _require(snapshot["captured_at"] is None and not expected and not completed
-                 and coverage["complete"] is False and not listings,
+                 and coverage["scope"] == "all_servers" and coverage["complete"] is False and not listings,
                  "not_captured must have no timestamp, coverage, or listings")
         return snapshot
-    _require(bool(expected) and set(expected) == set(completed) and coverage["complete"],
-             "captured requires complete all-server coverage")
+    if coverage["scope"] == "representative_server":
+        known = _representative_markets(snapshot, coverage, expected, completed)
+    else:
+        _require(bool(expected) and set(expected) == set(completed) and coverage["complete"],
+                 "captured requires complete all-server coverage")
+        known = set(expected)
     timestamp = snapshot["captured_at"]
     _require(isinstance(timestamp, str), "captured_at must be canonical UTC YYYY-MM-DDTHH:MM:SSZ")
     try:
@@ -93,7 +176,6 @@ def validate(snapshot: object) -> dict:
                  "captured_at must be canonical UTC YYYY-MM-DDTHH:MM:SSZ")
     except ValueError as exc:
         raise ValueError("captured_at must be canonical UTC YYYY-MM-DDTHH:MM:SSZ") from exc
-    known = set(expected)
     seen = set()
     for index, row in enumerate(listings):
         prefix = f"listings[{index}]"

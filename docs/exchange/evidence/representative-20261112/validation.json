@@ -1,0 +1,76 @@
+{
+  "schema": "twilight.representative-validation.v1",
+  "recorded_at_utc": "2026-11-12T06:39:07.010485+00:00",
+  "base_main": "b488fb367ac5dcf359861294581e32abeeb26c82",
+  "production": {
+    "path": "data/exchange/frozen_snapshot.json",
+    "sha256": "afe301f1e9363b533edd96eea95d365694cebd38df39de5f995cab206fb54a42",
+    "test_fixture": false,
+    "observed_rows": 1506,
+    "original_source_published": false
+  },
+  "tests": {
+    "python_exchange": {
+      "checks": 85,
+      "failures": 0
+    },
+    "core_staging": {
+      "checks": 10,
+      "failures": 0
+    },
+    "resource_guard": {
+      "tracked_files": 20,
+      "passed": true
+    },
+    "godot_focused": {
+      "suites": 3,
+      "synthetic_contract_checks": 94,
+      "production_browse_checks": 12,
+      "save_checks": 33,
+      "failures": 0
+    },
+    "native_enhanced": {
+      "checks": 29,
+      "failures": 0,
+      "scope": "observed_enhanced_row_synthetic_coverage_test_wallet"
+    },
+    "native_production": {
+      "receipt": "FROZEN_EXCHANGE_REPRESENTATIVE_MAIN_RESULT checks=23 failures=0 installed_observations_test_wallet",
+      "selected_observation": {
+        "bundle_price": 910,
+        "bundle_size": 1,
+        "enchant": 0.0,
+        "item_class_id": 1165.0,
+        "native_quantity": 1,
+        "production_sha256": "afe301f1e9363b533edd96eea95d365694cebd38df39de5f995cab206fb54a42",
+        "quoted_rows": 1,
+        "server_id": "server:1"
+      },
+      "scope": "installed_observations_test_wallet",
+      "synthetic_listing_or_coverage": false,
+      "private_original_source_sha256": "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832",
+      "private_profile": "workspace_disk_not_tmpfs"
+    },
+    "optional_runner_self_tests": {
+      "checks": 47,
+      "failures": 3,
+      "scope": "runner self-tests, not gameplay",
+      "baseline_main": "b488fb367ac5dcf359861294581e32abeeb26c82",
+      "baseline_same_failures": 3,
+      "failures_related_to_exchange": false,
+      "failure_names": [
+        "PR122ResultContracts.test_existing_pr122_pass_producers:transform",
+        "PR122ResultContracts.test_existing_pr122_pass_producers:monster",
+        "RunnerTests.test_pr122_terminal_pass_through_real_runner"
+      ]
+    }
+  },
+  "remaining_limits": [
+    "39-server sampled catalog-group proxy; not proved maximum across 300 servers",
+    "partial category traversal; 11 two-page stock sampling events; 1 skipped transport timeout; exact omissions unknown",
+    "observed page rows are preserved; distinct listing identities and atomic snapshot unverified",
+    "private source ZIP, extracted definitions, caches and test saves excluded",
+    "GPU/Android device checks not performed"
+  ],
+  "remote_ci": "pending_final_publication"
+}

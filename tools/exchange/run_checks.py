@@ -2,7 +2,7 @@
 """Run focused exchange contracts with real committed resources and isolated saves.
 
 This adds exchange validation without changing the required core gate's test
-list. Synthetic listing contracts and the actual Main's absent-capture path
+list. Synthetic listing contracts and the actual Main's production snapshot browse path
 remain distinct; this runner does not prove all-server capture or original art.
 """
 from __future__ import annotations
@@ -102,7 +102,7 @@ def main() -> None:
         raise ValueError("TWILIGHT_SOURCE_MAP_PACK must name the prepared current map input path")
     logs.mkdir(parents=True, exist_ok=True)
     summary = {
-        "scope": "synthetic exchange contracts; actual Main absent-capture path; save preservation",
+        "scope": "synthetic exchange contracts; actual Main production snapshot browse path; save preservation",
         "checks": [name for name, _, _ in CHECKS],
         "passed": [], "failed": [], "not_run": [name for name, _, _ in CHECKS],
         "status": "running",

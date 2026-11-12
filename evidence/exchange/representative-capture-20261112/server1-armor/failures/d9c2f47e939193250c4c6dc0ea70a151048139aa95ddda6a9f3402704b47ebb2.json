@@ -1,0 +1,15 @@
+{
+  "schema": "twilight.exchange-transport-timeout.v1",
+  "kind": "transport_timeout",
+  "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/112232/stock?serverId=1&enchantLevel=5&blessedType=1&size=10&page=1",
+  "occurred_at_utc": "2026-11-12T06:03:40.801030+00:00",
+  "error_type": null,
+  "reason_type": null,
+  "error": "<urlopen error timed out>",
+  "raw_response_saved": false,
+  "failed_page_reported_total": null,
+  "retry_policy": "skip_without_retry",
+  "classification_basis": "Historical stopped-run progress explicitly records urlopen timed out; original Python exception types were not retained. No exception type is reconstructed.",
+  "historical_progress_file": "historical-timeout-progress-20261112.json",
+  "historical_progress_sha256": "fce53b45ec5c1f12fc833b3d2a0710d2fe1318fec23efe9e9e62c37f684de4e6"
+}

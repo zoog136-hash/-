@@ -138,6 +138,61 @@ func snapshot_fixture() -> Dictionary:
 	# Entirely synthetic contract input, never installed as observed market data.
 	return {"schema":"twilight.frozen-exchange.v1","status":"captured","captured_at":"2026-11-12T00:00:00Z","source_url":"https://example.test/fixture","coverage":{"scope":"all_servers","expected_server_ids":["fixture-server"],"completed_server_ids":["fixture-server"],"complete":true},"reset":{"timezone":"Asia/Seoul","hour":5},"price_policy":"frozen_once","listings":[{"listing_id":"synthetic-1","server_id":"fixture-server","item_class_id":549,"item_name":"드래곤의 다이아몬드","bundle_size":3,"bundle_price":7,"initial_bundles":2,"currency_unit_id":34,"currency_class_id":2,"enchant":0,"element":"","element_level":0,"attributes":{"blessed_type":1},"evidence_url":"https://example.test/synthetic-not-observed"}]}
 
+
+func representative_fixture() -> Dictionary:
+	# Synthetic schema exercise only; never installed as production observations.
+	var value: Dictionary = snapshot_fixture()
+	value["test_fixture"] = false
+	value["coverage"] = {"scope":"representative_server","expected_server_ids":["server:1"],"completed_server_ids":["server:1"],"complete":false,"approximate":true,"selected_categories":[{"id":1,"name":"합성 장비"},{"id":3,"name":"합성 소모품"}],"omitted_categories":[{"id":5,"name":"합성 재료"}],"live_drift_recorded":true,"scope_proof":{"server_id":"server:1","world_id":"world:10001","evidence_url":"https://example.test/synthetic-servers","sha256":"a".repeat(64)},"survey":{"scope":"surveyed_candidates_only","metric":"reported_local_catalog_group_count","selected_server_id":"server:1","candidates":[{"server_id":"server:1","world_id":"world:10001","reported_total":100,"world_reported_total":60,"local_group_count":40,"evidence_url":"https://example.test/synthetic-server-1","sha256":"b".repeat(64),"world_evidence_url":"https://example.test/synthetic-world-1","world_sha256":"c".repeat(64)},{"server_id":"server:2","world_id":"world:10002","reported_total":50,"world_reported_total":20,"local_group_count":30,"evidence_url":"https://example.test/synthetic-server-2","sha256":"d".repeat(64),"world_evidence_url":"https://example.test/synthetic-world-2","world_sha256":"e".repeat(64)}]}}
+	value.listings[0].server_id = "server:1"
+	var world_row: Dictionary = value.listings[0].duplicate(true)
+	world_row.server_id = "world:10001"
+	world_row.attributes = {"blessed_type":2,"unmapped_variant":"synthetic-only"}
+	value.listings.append(world_row)
+	return value
+
+func representative_contracts(source_catalog) -> void:
+	var value: Dictionary = representative_fixture()
+	var before: Dictionary = value.duplicate(true)
+	check(FrozenCatalog.validate(value).is_empty() and value == before,"explicit approximate representative coverage validates without changing observed fields")
+	var legacy_partial: Dictionary = snapshot_fixture();legacy_partial.coverage.complete = false
+	check(not FrozenCatalog.validate(legacy_partial).is_empty(),"legacy all-server capture still requires complete coverage")
+	for field: String in ["approximate","complete","live_drift_recorded"]:
+		for invalid: Variant in [0,1,"true",{},null]:
+			var broken: Dictionary = value.duplicate(true);broken.coverage[field] = invalid
+			check(not FrozenCatalog.validate(broken).is_empty(),"representative boolean metadata rejects arbitrary JSON types: " + field)
+	var malformed: Array[Dictionary] = []
+	var broken: Dictionary = value.duplicate(true);broken.coverage.approximate = false;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.complete = true;malformed.append(broken)
+	broken = value.duplicate(true);broken.erase("test_fixture");malformed.append(broken)
+	broken = value.duplicate(true);broken.test_fixture = true;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.expected_server_ids = ["server:01"];broken.coverage.completed_server_ids = ["server:01"];malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.completed_server_ids = ["server:2"];malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.selected_categories = [];malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.omitted_categories = [{"id":1,"name":"선택과 중복"}];malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.selected_categories[0].id = true;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.scope_proof.world_id = "world:10002";malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.scope_proof.sha256 = "x".repeat(64);malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.survey.metric = "actual_total_stock_bundles";malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.survey.candidates[0].reported_total = true;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.survey.candidates[0].local_group_count = 41;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.survey.candidates[1].reported_total = 70;broken.coverage.survey.candidates[1].local_group_count = 50;malformed.append(broken)
+	broken = value.duplicate(true);broken.coverage.survey.candidates[0].world_evidence_url = "http://example.test";malformed.append(broken)
+	broken = value.duplicate(true);broken.listings[0].server_id = "server:2";malformed.append(broken)
+	broken = value.duplicate(true);broken.listings[1].server_id = "world:10002";malformed.append(broken)
+	for rejected: Dictionary in malformed:
+		check(not FrozenCatalog.validate(rejected).is_empty(),"representative scope evidence policy ranking and market mismatch rejected")
+	var path: String = "user://representative-exchange-synthetic.json"
+	install_fixture(value,path)
+	var context: Dictionary = setup(source_catalog)
+	var runtime = Exchange.new();runtime.configure(context.host,path)
+	var id: String = FrozenCatalog.key(value.listings[0])
+	var quote: Dictionary = runtime.quote(id)
+	check(runtime.catalog.captured() and quote.ok and quote.total == 7 and quote.quantity == 3,"explicit representative partial snapshot opens exact full-bundle native purchase contract")
+	check(not runtime.quote(FrozenCatalog.key(value.listings[1])).ok and runtime.catalog.rows()[1].attributes.has("unmapped_variant"),"representative shared-world unknown variant remains visible and purchase locked")
+	check(runtime.buy(id).ok and context.host.inventory.get("다이아") == 993 and runtime.available(value.listings[0]) == 1,"representative purchase preserves frozen price bundle quantity and stock")
+	context.host.free()
+
 func install_fixture(value: Dictionary, path: String) -> void:
 	var file := FileAccess.open(path,FileAccess.WRITE)
 	file.store_string(JSON.stringify(value));file.close()
@@ -163,6 +218,7 @@ func ui_contracts(catalog) -> void:
 	root.add_child(panel); panel.configure(hud,path)
 
 	check(panel.listing.item_count == panel.PAGE_SIZE and panel.filtered.size() == 82,"all-server UI bounds visible rows without dropping source listings")
+	check(panel.categories.item_count == 1 and panel.categories.disabled,"legacy snapshots offer only the all-category view")
 	panel._select(0);panel._review();panel.next_page.pressed.emit()
 	check(panel.listing.item_count == 2 and not panel.confirm.visible and panel.selected_id.is_empty(),"pagination invalidates stale confirmation and shows final rows")
 	panel.previous_page.pressed.emit()
@@ -178,7 +234,32 @@ func ui_contracts(catalog) -> void:
 	check(host.inventory["다이아"] == before - 7 and host.inventory["드래곤의 다이아몬드 · 원본#549"] == 3,"duplicate confirm UI signals buy only once")
 	panel.search.text = "missing";panel._filter()
 	check(panel.filtered.is_empty() and panel.review.disabled,"search invalidates selection and payment")
-	panel.free();host.free()
+	panel.free()
+	var category_fixture: Dictionary = representative_fixture()
+	category_fixture.listings[0]["category1_ids"] = [1.0]
+	category_fixture.listings[1]["category1_ids"] = [3.0]
+	var shared_equipment: Dictionary = category_fixture.listings[0].duplicate(true)
+	shared_equipment.server_id = "world:10001"; shared_equipment.listing_id = "synthetic-shared-equipment"
+	category_fixture.listings.append(shared_equipment)
+	for number: int in range(2,83):
+		var extra: Dictionary = category_fixture.listings[1].duplicate(true)
+		extra.listing_id = "synthetic-consumable-%d" % number
+		category_fixture.listings.append(extra)
+	var category_path: String = "user://frozen-exchange-category-ui-synthetic.json"
+	install_fixture(category_fixture,category_path)
+	var category_panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
+	root.add_child(category_panel); category_panel.configure(hud,category_path)
+	check(category_panel.categories.item_count == 3 and category_panel.categories.get_item_text(1) == "합성 장비" and category_panel.categories.get_item_text(2) == "합성 소모품","category selector uses selected source names and excludes omitted categories")
+	category_panel.next_page.pressed.emit()
+	category_panel.categories.select(1); category_panel.categories.item_selected.emit(1)
+	check(category_panel.filtered.size() == 2 and category_panel.page == 0 and category_panel.selected_id.is_empty() and not category_panel.confirm.visible,"category filter finds equipment behind consumables using JSON numeric IDs and resets page and review")
+	category_panel.servers.select(1); category_panel.servers.item_selected.emit(1)
+	check(category_panel.filtered.size() == 1 and category_panel.filtered[0].server_id == "server:1","category and server selections intersect")
+	category_panel.search.text = "missing"; category_panel._filter()
+	check(category_panel.filtered.is_empty() and category_panel.review.disabled,"category server and search selections intersect without enabling payment")
+	category_panel.search.text = ""; category_panel.categories.select(0); category_panel.servers.select(0); category_panel._filter()
+	check(category_panel.filtered.size() == 84 and category_panel.listing.item_count == category_panel.PAGE_SIZE,"clearing all filters restores every source listing with bounded visible rows")
+	category_panel.free();host.free()
 
 func _run() -> void:
 	var context: Dictionary = setup(create_catalog())
@@ -271,12 +352,17 @@ func _run() -> void:
 	var missing_timestamp: Dictionary = snapshot_fixture();missing_timestamp.erase("captured_at")
 	check(not FrozenCatalog.validate(missing_timestamp).is_empty(),"missing timestamp rejected")
 	check(not FrozenCatalog.validate({}).is_empty(),"malformed catalog rejected")
-	check(FrozenCatalog.validate(JSON.parse_string(FileAccess.get_file_as_string(FrozenCatalog.PATH))).is_empty(),"production placeholder has no invented data")
+	var production: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FrozenCatalog.PATH))
+	check(FrozenCatalog.validate(production).is_empty(),"production snapshot validates its explicit capture scope")
 	var blank = Exchange.new();blank.configure(host)
-	check(not blank.buy(id).ok and blank.catalog.rows().is_empty(),"production not-captured state exposes no fake listing")
+	if production.status == "not_captured":
+		check(not blank.buy(id).ok and blank.catalog.rows().is_empty(),"production not-captured state exposes no fake listing")
+	else:
+		check(blank.catalog.captured() and blank.catalog.rows().size() == production.listings.size() and (production.coverage.scope != "representative_server" or production.get("test_fixture") == false),"production representative observations stay separate from synthetic fixtures")
 	var malformed: Dictionary = Exchange.fresh_state();malformed.consumed[id] = 1
 	check(not Exchange.validate_state(malformed).is_empty(),"stock without snapshot identity rejected")
 	host.free()
 	ui_contracts(create_catalog())
+	representative_contracts(create_catalog())
 	print("FROZEN_EXCHANGE_RESULT checks=%d failures=%d synthetic_contract_only" % [checks,failures])
 	quit(1 if failures else 0)
