@@ -8,13 +8,16 @@ extends RefCounted
 ## hundred MB of temporary memory. Left to the game, it happened whenever a
 ## screen first asked, on top of everything already loaded (the UI pack at
 ## about 1.4 GB in use). Here it runs on a nearly empty heap and the freed
-## memory is reused by the game afterwards. Later starts skip baked steps.
+## memory is reused by the game afterwards. Maps/tiles retain only the opened
+## compact metadata reader for one verified handoff to the game, so startup
+## does not reopen the freshly baked index. Later starts skip baked steps.
 const IMAGE_PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const UI_PACK = preload("res://scripts/ui/original_ui/source_pack.gd")
 const SOURCE_PACK = preload("res://scripts/maps/current523_source_pack.gd")
 const TILE_PACK = preload("res://scripts/maps/current523_tile_pack.gd")
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
+const HANDOFF = preload("res://scripts/boot/source523_prebake_handoff.gd")
 
 ## [{"id", "label"}] for the selected packs that are not baked yet.
 static func pending() -> Array[Dictionary]:
@@ -30,18 +33,54 @@ static func pending() -> Array[Dictionary]:
 		steps.append({"id":"tiles","label":"타일 목록","root":str(maps.tile_root),"sha":str(maps.tile_manifest_sha256)})
 	return steps
 
-## Verifies and bakes one step; the loader instance is discarded. A failure is
-## only recorded: the game reports it where the pack is used, as before.
+## True only for a complete declared metadata verification step. The worker
+## accepts no callable or engine-resource operation from its caller.
+static func valid_step(step: Dictionary) -> bool:
+	return step.get("id") in ["images", "ui", "maps", "tiles"] and _usable(step.get("root"), step.get("sha")) and str(step.sha).is_valid_hex_number(false)
+
+## Compatibility entry point for existing synchronous callers.
 static func run(step: Dictionary) -> bool:
-	var started: int = BOOT_LOG.begin("prebake_" + str(step.id))
+	return bool(run_result(step).ok)
+
+## Metadata only: no scene tree, image decoding, textures or renderer calls.
+## The scripts above are preloaded on the main thread before a job starts.
+## A verifier can succeed even if device-cache storage fails; report those
+## separately so a failure cannot be mistaken for a completed persistent bake.
+static func run_result(step: Dictionary) -> Dictionary:
+	if not valid_step(step): return {"id":str(step.get("id", "")), "ok":false, "baked":false, "ms":0, "reason":"invalid_step"}
+	var id: String = str(step.id)
+	var started: int = BOOT_LOG.begin("prebake_" + id)
 	var ok: bool = false
-	match str(step.id):
-		"images": ok = bool(IMAGE_PACK.open(str(step.root), str(step.sha)).get("ok", false))
-		"ui": ok = bool(UI_PACK.new().open(str(step.root), str(step.sha)).get("ok", false))
-		"maps": ok = SOURCE_PACK.new().load_catalog(str(step.root), str(step.sha))
-		"tiles": ok = TILE_PACK.new().load_pack(str(step.root), str(step.sha))
-	BOOT_LOG.end("prebake_" + str(step.id), started, {"ok": ok})
-	return ok
+	var reason: String = ""
+	match id:
+		"images":
+			var opened: Dictionary = IMAGE_PACK.open(str(step.root), str(step.sha))
+			ok = bool(opened.get("ok", false))
+			reason = str(opened.get("error", ""))
+		"ui":
+			var opened: Dictionary = UI_PACK.new().open(str(step.root), str(step.sha))
+			ok = bool(opened.get("ok", false))
+			reason = str(opened.get("error", ""))
+		"maps":
+			var reader: RefCounted = SOURCE_PACK.new()
+			ok = reader.load_catalog(str(step.root), str(step.sha))
+			reason = reader.problem
+			if ok: HANDOFF.put(id, str(step.root), str(step.sha), reader)
+		"tiles":
+			var reader: RefCounted = TILE_PACK.new()
+			ok = reader.load_pack(str(step.root), str(step.sha))
+			reason = reader.problem
+			if ok: HANDOFF.put(id, str(step.root), str(step.sha), reader)
+	var persisted: bool = false
+	if ok:
+		match id:
+			"images": persisted = IMAGE_PACK.baked(str(step.sha))
+			"ui": persisted = UI_PACK.baked(str(step.sha))
+			"maps": persisted = SOURCE_PACK.baked(str(step.sha))
+			"tiles": persisted = TILE_PACK.baked(str(step.sha))
+	var result: Dictionary = {"id":id, "ok":ok, "baked":persisted, "ms":Time.get_ticks_msec() - started, "reason":reason if not ok else ("" if persisted else "cache_unavailable")}
+	BOOT_LOG.end("prebake_" + id, started, {"ok":ok, "baked":persisted})
+	return result
 
 static func _pin(variable: String) -> Dictionary:
 	var root: String = OS.get_environment(variable)
