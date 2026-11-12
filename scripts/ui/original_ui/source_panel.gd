@@ -82,6 +82,15 @@ void fragment() {
     COLOR = source * source.a + destination * (1.0-source.a);
 }
 """
+	# Android: the destination copy samples black (see SourceBlend); the same
+	# source-over result comes from the fixed mix blend.
+	if not preload("res://scripts/ui/original_ui/source_blend.gd").screen_copy_available:
+		shader.code="""shader_type canvas_item;
+render_mode unshaded, blend_mix;
+void fragment() {
+    COLOR = clamp(COLOR, vec4(0.0), vec4(1.0));
+}
+"""
 	_layer_material=ShaderMaterial.new()
 	_layer_material.shader=shader
 	return _layer_material
