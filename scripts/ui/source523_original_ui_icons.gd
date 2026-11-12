@@ -309,6 +309,24 @@ static func _resolve_scene(info: Dictionary) -> Dictionary:
 	return {"ok":true,"canonical":canonical,"consumer":consumer.identity,"spec":spec,
 		"pack":selected_pack,"manifest_sha256":manifest_sha256,"source":source}
 
+## The client's common icon setter (LineageM 1.10.22.0, 0x00C381A0) is the one
+## routine that puts an item/skill icon on a slot Sprite: a PNG icon becomes the
+## Sprite's texture, an AssetType 101 CSB icon is attached to that same Sprite and
+## played with timeline.play("normal", true) (0x00C386B1). Every icon binding of
+## the selection records exactly this evidence in policy_source. A native slot
+## whose icon Sprite is declared by the original UI scene (the node the existing
+## owner already fills with the PNG icon) is therefore that setter's target; the
+## CSB root is attached at the Sprite anchor with no fit, scale or offset of ours.
+## Anything else keeps the explicit native_registrations requirement.
+const COMMON_ICON_SETTER_EVIDENCE := "common icon setter 0x00C381A0 attaches the AssetType101 CSB to the slot Sprite"
+static func common_icon_setter_registration(spec: Dictionary, slot: Dictionary, target: Dictionary) -> Variant:
+	if not str(spec.get("policy_source","")).contains(COMMON_ICON_SETTER_EVIDENCE): return null
+	if slot.get("ui_target_declared_by_original") != true or slot.get("registration_space") != "authored_sprite_anchor" or slot.get("fit_or_offset_inferred") != false: return null
+	if not spec.get("clip") is String or str(spec.clip).is_empty() or not spec.get("repeat") is bool or spec.get("original_repeat_declared") != true or spec.get("original_policy_confirmed") != true: return null
+	return [{"registration":{"space":"authored_sprite_anchor","original_registration_confirmed":true,"target":target.duplicate(true),
+		"source_basis":str(spec.policy_source)+" · target: the original slot scene's icon Sprite that the same setter fills with a PNG icon"},
+		"bindings":{},"playback":{"clip":str(spec.clip),"repeat":bool(spec.repeat),"original_repeat_declared":true,"original_policy_confirmed":true}}]
+
 static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Dictionary:
 	var resolved: Dictionary = _resolve_scene(info)
 	if not resolved.get("ok",false): return resolved
@@ -321,6 +339,7 @@ static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Di
 		"manifest_sha256":slot.manifest_sha256,"node_offset":int(slot.node_offset)}
 	var spec: Dictionary = resolved.spec
 	var declarations: Variant = spec.get("native_registrations")
+	if not declarations is Array: declarations = common_icon_setter_registration(spec,slot,target)
 	if not declarations is Array:
 		return _unavailable("source_scene_original_native_registration_pending",{"target":target,
 			"pending_fields":["native_registrations[].registration: exact target and actual original source_basis"],
