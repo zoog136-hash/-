@@ -61,27 +61,38 @@ var _source_travel_busy: bool=false
 var _portal_definition_generation: int=0
 const GENERIC_CATALOG=preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES=preload("res://scripts/maps/current523_tile_pack.gd")
+const PREBAKE_HANDOFF=preload("res://scripts/boot/source523_prebake_handoff.gd")
 var _cached_catalog: RefCounted
 var _cached_tiles: RefCounted
 var _catalog_loads: int=0
 var _tile_metadata_loads: int=0
+var _catalog_handoffs: int=0
+var _tile_metadata_handoffs: int=0
 
 func _catalog_for(options: Dictionary) -> RefCounted:
 	if _cached_catalog!=null and _cached_catalog.matches_manifest(options.raw_root,options.source_manifest_sha256): return _cached_catalog
-	var candidate:=GENERIC_CATALOG.new()
+	var candidate: RefCounted=PREBAKE_HANDOFF.take("maps",options.raw_root,options.source_manifest_sha256)
+	if candidate!=null:
+		_cached_catalog=candidate; _catalog_handoffs+=1
+		return candidate
+	candidate=GENERIC_CATALOG.new()
 	if not candidate.load_catalog(options.raw_root,options.source_manifest_sha256): problem=candidate.problem; return null
 	_cached_catalog=candidate; _catalog_loads+=1
 	return candidate
 
 func _tiles_for(options: Dictionary) -> RefCounted:
 	if _cached_tiles!=null and _cached_tiles.matches_manifest(options.tile_root,options.tile_manifest_sha256): return _cached_tiles
-	var candidate:=GENERIC_TILES.new()
+	var candidate: RefCounted=PREBAKE_HANDOFF.take("tiles",options.tile_root,options.tile_manifest_sha256)
+	if candidate!=null:
+		_cached_tiles=candidate; _tile_metadata_handoffs+=1
+		return candidate
+	candidate=GENERIC_TILES.new()
 	if not candidate.load_pack(options.tile_root,options.tile_manifest_sha256): problem=candidate.problem; return null
 	_cached_tiles=candidate; _tile_metadata_loads+=1
 	return candidate
 
 func input_cache_metrics() -> Dictionary:
-	return {"source_catalog_loads":_catalog_loads,"tile_catalog_loads":_tile_metadata_loads,"tile_cache_size":_cached_tiles.cache_size() if _cached_tiles!=null else 0}
+	return {"source_catalog_loads":_catalog_loads,"tile_catalog_loads":_tile_metadata_loads,"tile_cache_size":_cached_tiles.cache_size() if _cached_tiles!=null else 0,"source_catalog_handoffs":_catalog_handoffs,"tile_catalog_handoffs":_tile_metadata_handoffs}
 
 func configure(world: Node) -> void:
 	_world_ref = weakref(world)
