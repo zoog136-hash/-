@@ -1,5 +1,6 @@
 extends "res://scripts/hud_v20.gd"
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const MENU_MEMORY_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 
 signal equipment523_open_requested
 signal equipment523_preview_requested(action: Dictionary)
@@ -114,6 +115,7 @@ const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var quest_view: Control
 var quest_refresh_pending: bool = false
+var quest_refresh_generation: int = 0
 var card_skill_awakening_view: Control
 var workspace: PanelContainer
 var menu_page: VBoxContainer
@@ -972,6 +974,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	quest_refresh_generation += 1
+	quest_refresh_pending = false
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
@@ -987,6 +991,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_status_board"):original_main_ui_controller.close_status_board()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
+	_retire_original_menu_status()
 	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
 		return
@@ -1100,6 +1105,11 @@ func _go_back() -> void:
 		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
+	var account = preload("res://scripts/characters/account_store.gd")
+	if not account.session.is_empty():
+		var world: Node = get_parent()
+		if world.has_method("return_to_character_lobby"): world.call("return_to_character_lobby")
+		return
 	# In the first session there is no class decision until the user confirms.
 	if class_picker_initial:
 		return
@@ -1216,21 +1226,30 @@ func open_promo_code() -> void:
 	view.configure(get_parent())
 
 func open_quests() -> void:
+	var trace_token: int=MENU_MEMORY_TRACE.begin("quests")
 	_open_window("quests", "퀘스트", "메인 · 일반 · 업적 · 기타")
+	quest_view = null
+	# The original window owns its list/detail state. Construct the current
+	# browser only when that window cannot handle the selected source pack.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
+		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
+		original_main_ui_status["quest_window"]=native
+		if native.get("handled",false) and native.get("ok",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			MENU_MEMORY_TRACE.end(trace_token,bool(native.get("ok",false)))
+			return
+	_open_quest_browser()
+	MENU_MEMORY_TRACE.end(trace_token)
+
+func _open_quest_browser() -> void:
 	var view := QuestUI.new()
 	workspace.mount(view)
 	view.configure(get_parent())
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
-	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
-		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
-		original_main_ui_status["quest_window"]=native
-		if native.get("handled",false):
-			if pointer_transfer!=null:pointer_transfer.cancel()
-			workspace.hide()
-			_sync_screen_focus()
-			return
 	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
@@ -1239,16 +1258,17 @@ func refresh_quests() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
 		if not quest_refresh_pending:
 			quest_refresh_pending=true
-			call_deferred("_refresh_quests_deferred")
+			call_deferred("_refresh_quests_deferred",quest_refresh_generation)
 		return
 	if active_section != "quests" or not is_instance_valid(quest_view) or quest_view.is_queued_for_deletion():
 		return
 	if quest_refresh_pending:
 		return
 	quest_refresh_pending = true
-	call_deferred("_refresh_quests_deferred")
+	call_deferred("_refresh_quests_deferred",quest_refresh_generation)
 
-func _refresh_quests_deferred() -> void:
+func _refresh_quests_deferred(generation: int = -1) -> void:
+	if generation >= 0 and generation != quest_refresh_generation:return
 	quest_refresh_pending = false
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
 		original_main_ui_status["quest_window"]=original_main_ui_controller.refresh_quest_window()
@@ -3184,7 +3204,8 @@ func original_inventory_activate_selected(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_activate_selected(reference)
 
 func _restore_current_inventory_view(reason: Dictionary) -> void:
-	original_main_ui_status["inventory"]=reason.duplicate(true)
+	# Diagnostics must not keep a retired native scene's textures/controls.
+	original_main_ui_status["inventory"]=_inventory_status_summary(reason)
 	if active_section!="inventory":return
 	# Restore the same current bag after an unsupported native state. This
 	# adds no alternate form, asset lookup, selection, ownership or save logic.
@@ -3194,8 +3215,24 @@ func _restore_current_inventory_view(reason: Dictionary) -> void:
 	lineage_inventory_ui.show_inventory()
 
 func _original_inventory_closed() -> void:
+	original_main_ui_status["inventory"]={"ok":true,"closed":true,"handled":false}
 	if pointer_transfer!=null:pointer_transfer.cancel()
 	if active_section=="inventory" and workspace!=null and not workspace.visible:active_section=""
+
+func _inventory_status_summary(reason: Dictionary) -> Dictionary:
+	var summary: Dictionary={}
+	for key: String in ["ok","handled","closed","code","error","status","member","reference"]:
+		var value: Variant=reason.get(key)
+		if value is String or value is bool or value is int or value is float:summary[key]=value
+	return summary
+
+func _retire_original_menu_status() -> void:
+	for section: String in ["inventory","character_equipment","character_stats","quest_window","shop_window","change_window","npc_dialogue","enhance_action","quest_controls","emblem_window","domination_window","status_board","acquisition_popup"]:
+		if not original_main_ui_status.has(section):continue
+		var previous: Variant=original_main_ui_status[section]
+		var summary: Dictionary=_inventory_status_summary(previous) if previous is Dictionary else {}
+		summary.merge({"closed":true,"handled":false},true)
+		original_main_ui_status[section]=summary
 
 func bind_original_world_map(image_adapter: RefCounted, context_provider: Callable, input_handler: Callable) -> Dictionary:
 	if image_adapter==null or not context_provider.is_valid() or not input_handler.is_valid():return {"ok":false,"code":"source_world_map_existing_owner_inputs_required"}

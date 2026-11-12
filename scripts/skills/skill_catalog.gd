@@ -79,6 +79,7 @@ func configure(owner: Node) -> void:
 	source523.configure_arguments()
 	for record: Dictionary in records:
 		source523.prepare_estimate(record)
+		source523.prepare_source_direct(record)
 		record["effect"] = effect_for(record)
 	seed_starters()
 

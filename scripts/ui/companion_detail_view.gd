@@ -69,7 +69,7 @@ func configure(controller: Node) -> void:
 	header.add_child(space)
 	var shop: Button=UI.button("상점 바로가기",func() -> void:hud.open_shop(),Vector2(128,32))
 	shop.name="CompanionShopShortcut"
-	shop.icon=load("res://assets/ui/shop.png")
+	if ResourceLoader.exists("res://assets/ui/shop.png"): shop.icon=load("res://assets/ui/shop.png")
 	header.add_child(shop)
 	sheet=ScrollContainer.new()
 	sheet.name="CompanionOptionsScroll"

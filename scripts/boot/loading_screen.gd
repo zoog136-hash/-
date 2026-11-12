@@ -4,6 +4,8 @@ extends Control
 ## loads and enters Main.tscn. While a pack installer is open the tree is
 ## paused, so the game is not loaded until the installer finishes.
 const MAIN := "res://Main.tscn"
+const CHARACTERS := "res://scenes/boot/Characters.tscn"
+const CHARACTER_PROFILE = preload("res://scripts/characters/save_profile.gd")
 const STYLE := preload("res://scripts/boot/boot_style.gd")
 ## Boot progress record: stage lines go to user://boot_progress.log (see there).
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
@@ -115,7 +117,8 @@ func _process(delta: float) -> void:
 
 func _load_main() -> PackedScene:
 	var started: int = BOOT_LOG.begin("main_scene_load")
-	var scene: PackedScene = load(MAIN) as PackedScene
+	var target: String = MAIN if DisplayServer.get_name()=="headless" or not CHARACTER_PROFILE.allows_roster() else CHARACTERS
+	var scene: PackedScene = load(target) as PackedScene
 	BOOT_LOG.end("main_scene_load", started, {"ok": scene != null})
 	return scene
 

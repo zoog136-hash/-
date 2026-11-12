@@ -698,12 +698,17 @@ func save_source_progress(quiet: bool, collection_override: Dictionary) -> Error
 			time_failed=not _last_map_time.get("ok",false)
 		else:time_failed=not _map_time.pulse()
 	var checkpoint: Dictionary = _source_checkpoint()
+	var has_character_cursor: bool=world.has_method("character_cursor_snapshot") and world.has_method("set_character_cursor_snapshot")
+	var prior_cursor: Dictionary = world.call("character_cursor_snapshot") if has_character_cursor else {}
+	if source_owned and has_character_cursor:
+		world.call("set_character_cursor_snapshot",{"native_land_id":int(checkpoint.get("native_land_id",4)),"source_position":checkpoint.get("source_position",[]).duplicate()})
 	var position: Vector2 = world.player.global_position
 	world.field_map = _prior_world.field; world.field_physics = _prior_world.physics; world.field_renderer = _prior
 	world.player.global_position = _prior_world.position
 	saving_prior_snapshot = true
 	var result: Error = world.call("_save_game",quiet,collection_override)
 	saving_prior_snapshot = false
+	if result!=OK and has_character_cursor: world.call("set_character_cursor_snapshot",prior_cursor)
 	world.field_map = _source_field; world.field_physics = _source_physics; world.field_renderer = _renderer
 	world.player.global_position = position
 	if result == OK:
