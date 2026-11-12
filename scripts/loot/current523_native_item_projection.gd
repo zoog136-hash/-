@@ -229,7 +229,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=timed
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bag: Dictionary=reward_bag(definition)
+	var bag: Dictionary=reward_bag(definition,false)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
@@ -336,6 +336,31 @@ class TemplateStore extends RefCounted:
 			if (light as Dictionary).has(key):result[key]=light[key]
 			elif (heavy.fields as Dictionary).has(key):result[key]=heavy.fields[key]
 		return _shared(result) if interning else result
+	## Internal equipment serialization path. The normal record() then
+	## FIELDS.full() build two full Dictionaries; these immutable rows can be
+	## merged in one pass with the same key order and override/copy semantics.
+	## A null result requests the unchanged generic full() fallback. This path
+	## is used only after registration disables string interning.
+	func _expanded_for_binding(id: String, own: Dictionary) -> Variant:
+		# A subclass may override record(); never bypass its provider contract.
+		if get_script().get_base_script() != null: return null
+		if interning or not FIELDS.lazy(own) or not offsets.has(id): return null
+		file.seek(int(offsets[id]))
+		var light: Variant = file.get_var()
+		var heavy: Variant = file.get_var()
+		if not light is Dictionary or not heavy is Dictionary or not heavy.get("keys") is Array or not heavy.get("fields") is Dictionary: return null
+		var result: Dictionary = {}
+		for key: Variant in heavy.keys:
+			# Malformed typed-Array keys retain the old path and diagnostics.
+			if not (key is String or key is StringName): return null
+			if not light.has(key) and not heavy.fields.has(key): continue
+			if own.has(key): result[key] = own[key]
+			elif key in FIELDS.HEAVY: result[key] = FIELDS._copy(light[key] if light.has(key) else heavy.fields[key])
+		# Preserve empty/missing-template caching through the generic path.
+		if result.is_empty(): return null
+		for key: Variant in own:
+			if key != FIELDS.MARK and not result.has(key): result[key] = own[key]
+		return result
 	## The light catalog form (FIELDS.slim() of the record) without decoding
 	## the heavy fields.
 	func light(id: String) -> Variant:
@@ -455,12 +480,116 @@ static func _template_stop(stage: String,writer: TemplateWriter,identity: Dictio
 	print("CURRENT523_NATIVE_TEMPLATE_STORE_STOPPED "+JSON.stringify({"stage":stage}))
 	return {"ok":false,"reason":"native_item_template_store_failed","stage":stage,"message":message,"retry":"next_start","source_definition_archive":identity,"ownership_changed":false,"executed_gameplay":false}
 
+## A Class domain is immutable for one verified original during registration.
+## Bag/selection DTOs only ask its IDs; rebuilding all Class rows for each
+## item repeats the same verified join thousands of times. The scope owns no
+## game state and is released on every returned result, including failures.
+class RegistrationScope extends RefCounted:
+	var source_key: String = ""
+	var source_generation: int = -1
+	var classes: Dictionary = {}
+	var ready: bool = false
+	var builds: int = 0
+	var hits: int = 0
+	var describe_reader: Script = null
+	var profile: bool = false
+	var describe_us: int = 0
+	var dto_us: int = 0
+	var describe_calls: int = 0
+	var dto_calls: int = 0
+	func active_classes(reader: Variant, collect: Callable) -> Dictionary:
+		var current_key: String = reader.verified_key()
+		var generation: int = _generation(reader)
+		if not current_key.is_empty() and ready and current_key == source_key and generation == source_generation:
+			hits += 1
+			return classes
+		ready = false; classes = {}; source_key = current_key; source_generation = generation
+		var rows: Array = reader.rows("Class")
+		builds += 1
+		var result: Dictionary = collect.call(rows)
+		# Missing inputs are not memoized: the normal reader can retry them.
+		if current_key.is_empty() or rows.is_empty(): return result
+		# Re-resolve first: opening a different archive can itself call reset().
+		if reader.verified_key() != current_key or _generation(reader) != generation: return result
+		result.make_read_only()
+		classes = result; ready = true
+		return classes
+	func _generation(reader: Variant) -> int:
+		if reader == SOURCE: return SOURCE.cache_generation()
+		return int(reader.call("cache_generation")) if reader.has_method("cache_generation") else 0
+
+static func _collect_active_classes(rows: Array) -> Dictionary:
+	var active: Dictionary = {}
+	for row: Dictionary in rows:
+		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true: active[int(row.ID)] = row
+	return active
+
+static var _scope_mutex: Mutex = Mutex.new()
+static var _registration_scopes: Dictionary = {}
+
+static func _swap_registration_scope(scope: RegistrationScope) -> RegistrationScope:
+	var thread_id: int = OS.get_thread_caller_id()
+	_scope_mutex.lock()
+	var previous: RegistrationScope = _registration_scopes.get(thread_id)
+	if scope == null: _registration_scopes.erase(thread_id)
+	else: _registration_scopes[thread_id] = scope
+	_scope_mutex.unlock()
+	return previous
+
+static func _start_registration_reader() -> void:
+	# Start only on a cold, valid real-original registration. Synthetic owners,
+	# rejected inputs and warm template reads retain their old dependency path.
+	var identity: Dictionary = SOURCE.identity()
+	if identity.is_empty() or identity != _inputs().identity(): return
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	if scope == null or scope.describe_reader != null: return
+	var path: String = "res://scripts/resources/current523_item_data.gd"
+	if not ResourceLoader.exists(path): return
+	var reader: Script = load(path) as Script
+	if reader == null: return
+	# This is positive API validation only. No definition, graph or mutable
+	# source state is memoized; every item still executes describe().
+	for method: Dictionary in reader.get_script_method_list():
+		if method.get("name") == "describe":
+			scope.describe_reader = reader
+			return
+
+## No source data or definition result is cached here: only the already
+## loaded script whose static describe API was checked above. Default reads
+## outside registration keep their original optional-module checks.
+## Optional diagnostics are owned by the current registration, never by
+## item definitions or persistent data. Default play performs no clocks.
+static func registration_profile_scope() -> RegistrationScope:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	return scope if scope != null and scope.profile else null
+
+static func registration_item_reader() -> Script:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	var reader: Script = scope.describe_reader if scope != null else null
+	_scope_mutex.unlock()
+	return reader
+
+static func _active_classes() -> Dictionary:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	return scope.active_classes(SOURCE, _collect_active_classes) if scope != null else _collect_active_classes(SOURCE.rows("Class"))
+
 const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 ## Boot progress wrapper: one begin/end line around the whole registration.
 static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	var boot_started: int=BOOT_LOG.begin("item_register",{})
+	var scope := RegistrationScope.new()
+	scope.profile = OS.get_environment("TWILIGHT_NATIVE_REGISTER_PROFILE") == "1"
+	var previous_scope: RegistrationScope = _swap_registration_scope(scope)
 	var result: Dictionary=_register_logged(owner,catalog,document)
-	BOOT_LOG.end("item_register",boot_started,{"ok":bool(result.get("ok",false)),"reason":str(result.get("reason",""))})
+	_swap_registration_scope(previous_scope)
+	BOOT_LOG.end("item_register",boot_started,{"ok":bool(result.get("ok",false)),"reason":str(result.get("reason","")),"class_domain_builds":scope.builds,"class_domain_hits":scope.hits,"describe_us":scope.describe_us,"dto_us":scope.dto_us,"describe_calls":scope.describe_calls,"dto_calls":scope.dto_calls})
 	return result
 static func _register_logged(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	var src: RegisterInputs=_inputs()
@@ -483,8 +612,10 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	# of the verified original and this code, so it is baked once on the
 	# device and read back by ID on later starts instead of describing every
 	# item again. Any code/data change or damaged file rebuilds the bake.
+	var template_started: int = BOOT_LOG.begin("item_templates_open")
 	var templates: TemplateStore=_open_templates()
 	var value_key: String=_template_key()
+	BOOT_LOG.end("item_templates_open",template_started,{"hit":templates!=null})
 	if templates==null and lazy and not _template_failure.is_empty() and _template_failure.get("key")==value_key:
 		return _template_stop(str(_template_failure.stage),null,src.identity(),value_key)
 	var writer: TemplateWriter=null if templates!=null else TemplateWriter.start(template_fault)
@@ -522,6 +653,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	# Light baked records below are read through FIELDS.field(), so their
 	# templates are reachable while registering (bound again after the loop).
 	if templates!=null and lazy:FIELDS.bind(templates)
+	if templates == null: _start_registration_reader()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in src.row_count("ItemClass"):
 		var raw: Dictionary=src.row_at("ItemClass",row_index)
@@ -699,7 +831,10 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 
 # Same public compiler _source_reward_bag_spec contract, supplied by the
 # existing ItemData -> RewardData graph. This does not grant any reward.
-static func reward_bag(definition: Dictionary) -> Dictionary:
+## The public helper retains its original evidence by default. record() drops
+## these entity copies before returning, so its private false path avoids only
+## those disposable copies; every source join and validation below still runs.
+static func reward_bag(definition: Dictionary, retain_source_entities: bool = true) -> Dictionary:
 	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
 	for row: Dictionary in rows:
 		if row.get("bonus_type",{}).get("Name")=="LuckyBagClassID":refs.append(row)
@@ -713,8 +848,7 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"LuckyBagClassID":"LuckyBagClassID"},false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var distribution: Array=[];var active: Dictionary={};var domain: Array=[]
-	for row: Dictionary in SOURCE.rows("Class"):
-		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	active = _active_classes()
 	for row: Dictionary in definition.get("class_rows",[]):
 		if not integer(row.get("ClassID")):distribution.append("unsupported_lucky_bag_root_class");continue
 		if int(row.ClassID) not in domain:domain.append(int(row.ClassID))
@@ -733,7 +867,9 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 		for limit: Dictionary in entity.get("class_limits",[]):
 			var raw: Dictionary=limit.get("row",{});var character: Dictionary=limit.get("character_class",{})
 			if not integer(raw.get("ClassID")) or character.get("ID")!=raw.get("ClassID"):distribution.append("unsupported_lucky_bag_entity_class");continue
-			classes.append(int(raw.ClassID));var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
+			classes.append(int(raw.ClassID))
+			if retain_source_entities:
+				var original: Dictionary=raw.duplicate(true);original["class"]=character;limits.append(original)
 		if (row.get("LimitClass")==10000 and not classes.is_empty()) or (row.get("LimitClass")!=10000 and whole(row.get("LimitClass")) not in classes):distribution.append("unresolved_lucky_bag_class_limit")
 		for class_id: int in classes:
 			if not active.has(class_id):distribution.append("unsupported_lucky_bag_entity_class")
@@ -751,7 +887,8 @@ static func reward_bag(definition: Dictionary) -> Dictionary:
 				if not SLOT_MAP.has(name_value) or (name_value=="DominationStone" and equip.get("EquipSlotID")!=293):level_ok=false
 			if slots.size()!=1:level_ok=false
 		if not integer(row.get("ItemAmount")) or int(row.ItemAmount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3] or not level_ok:reasons.append("unsupported_lucky_bag_reward_amount_or_variant")
-		var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
+		if retain_source_entities:
+			var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
 		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
 		rewards.append(reward)
 		if kind==0:weighted.append(reward)
@@ -806,8 +943,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID"},false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var active: Dictionary={};var domain: Array=[]
-	for row: Dictionary in SOURCE.rows("Class"):
-		if integer(row.get("ID")) and int(row.ID)>0 and row.get("CanCreateClient")==true:active[int(row.ID)]=row
+	active = _active_classes()
 	for row: Dictionary in definition.get("class_rows",[]):
 		if integer(row.get("ClassID")) and int(row.ClassID) not in domain:domain.append(int(row.ClassID))
 	if domain.is_empty():domain=active.keys()

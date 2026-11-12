@@ -21,6 +21,16 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('equipment_binding_fusion_test', []),
+    ('current523_reward_bag_retention_test', []),
+    ('current523_definition_row_lookup_test', []),
+    ('current523_native_registration_scope_test', []),
+    ('loading_profile_route_test', []),
+    ('loading_progress_test', []),
+    ('loading_screen_test', []),
+    ('loading_world_readiness_test', []),
+    ('source523_prebake_job_test', []),
+    ('source523_prebake_handoff_test', []),
     ('source_native_attachment_bank_test', []),
     ('source_clothes_prefix_bank_test', []),
     ('source_attachment_instance_identity_test', []),
@@ -432,7 +442,17 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'source_native_attachment_bank_test':'SOURCE_NATIVE_ATTACHMENT_BANK',
+            marker = {'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
+                      'current523_reward_bag_retention_test':'CURRENT523_REWARD_BAG_RETENTION_RESULT',
+                      'current523_definition_row_lookup_test':'CURRENT523_DEFINITION_ROW_LOOKUP_RESULT',
+                      'current523_native_registration_scope_test':'CURRENT523_NATIVE_REGISTRATION_SCOPE_RESULT',
+                      'loading_profile_route_test':'LOADING_PROFILE_ROUTE_RESULT',
+                      'loading_progress_test':'LOADING_PROGRESS_RESULT',
+                      'loading_screen_test':'LOADING_SCREEN_RESULT',
+                      'loading_world_readiness_test':'LOADING_WORLD_READINESS_RESULT',
+                      'source523_prebake_job_test':'SOURCE523_PREBAKE_JOB_RESULT',
+                      'source523_prebake_handoff_test':'SOURCE523_PREBAKE_HANDOFF_RESULT',
+                      'source_native_attachment_bank_test':'SOURCE_NATIVE_ATTACHMENT_BANK',
                       'source_clothes_prefix_bank_test':'SOURCE_CLOTHES_PREFIX_BANK',
                       'source_attachment_instance_identity_test':'SOURCE_ATTACHMENT_INSTANCE_IDENTITY_RESULT',
                       'source_subslot_attachment_retry_test':'SOURCE_SUBSLOT_ATTACHMENT_RETRY_RESULT',
