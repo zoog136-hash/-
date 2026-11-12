@@ -305,6 +305,9 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 	var projected: Dictionary=CURRENT_DTO.record(definition)
 	if not projected.is_empty():
 		definition.native_record=projected
+		# Base-item weapon invokes (claw / dual blade / rifle bleed) for the
+		# existing weapon_invoke_roll and patch523_weapon_bleed consumers.
+		definition.source_invoke_options=preload("res://scripts/loot/current523_weapon_invokes.gd").compile(bonuses,projected)
 		definition.native_record_status="current_original_typed_game_dto"
 		definition.unresolved_source_reference=""
 	return definition

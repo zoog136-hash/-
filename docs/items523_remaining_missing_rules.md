@@ -26,9 +26,10 @@
 | RegenHP / RegenMP / AbsoluteRegenMP / AttackDrainHP / AttackDrainMP | 225 / 381 / 24 / 71 / 51 | `patch523_passive_items`가 읽음 — 동작 |
 | **SpecialResistance / HitSpecialResistance** | 203 / 195 | **이번 연결(아래 4.1)**: 스턴·홀드·공포·독 360종 |
 | WeaponErodeProof | 939 | 미연결 — TWILIGHT에 무기 손상(부식)이 없어 효과 대상이 없음 |
-| InvokeOption / ItemInvokeReplacementID / EquipSpellClassID | 192 / 48 / 16 | 장비 발동은 `patch523_equipment_spells`의 지정 아이템만. 나머지는 발동 주문·확률 연결 표 해석 미확정 |
-| BuffClassID (장비 상시 버프) | 104 | 미연결 — 착용 중 버프 유지·해제 시점 규칙이 표에 없음 |
-| CarryPlus | 100 | 미연결 — 원본 무게 단위(`source_weight_unit=unverified_source_units`) 미확정 |
+| **InvokeOption (아이템 기본 행)** | 192 | **이번 연결(아래 4.3) 187종**: 크로우 치명 42 · 이도류 배율 80 · 총 출혈 65. 남은 5종은 주문 실행·없는 상태라 미연결(아래 10.2) |
+| ItemInvokeReplacementID / EquipSpellClassID | 48 / 16 | 미연결 — 아래 10.2 |
+| BuffClassID (장비 상시 버프) | 104 | 재검토 결과 미연결 — 18개 버프 모두 기존 소비자가 없는 효과를 포함(아래 10.1) |
+| **CarryPlus** | 100 | **이번 연결(아래 4.3)** — Weight 단위 UIUnit 분모 100, 원본 설명문으로 확인 |
 | ElementalResistance / ElementalDamage | 90 / 46 | 세트 효과·강화 효과에서만 읽음. 장비 기본 행은 속성 대상(Target) 해석이 TWILIGHT 설정에 의존 |
 | EquipGroupID | 78 | 제련·세공(`smith_smelt`)에서 읽음 |
 | KarmaDeath / KarmaLife | 48 / 58 | KarmaDeath는 사망 소유자가 읽음, KarmaLife는 소비자 없음 |
@@ -73,6 +74,45 @@
   3,864,874)과 같은 비율. 표 규칙이 아니라 기존 TWILIGHT 환산이다.
 - 수치: 50레벨 축복 150→1650, EXP 0→3,864,874, 1개 소비 / 85레벨 축복 +3000(그룹 12 ×2), EXP 동일 /
   44레벨·100레벨·축복 최대치는 거부·보존 / 이름 스택(상점) 경로 동일 / 저장→불러오기 수량·축복·EXP·레벨 유지.
+
+### 4.3 장비 무게 보너스(CarryPlus)와 무기 기본 발동(InvokeOption) (PR `feature/items523-equip-effects`)
+
+**무게 보너스 CarryPlus 100종**
+
+- 근거: BonusType CarryPlus(ID 68)의 UnitID 44 = Unit "Weight", UIUnit(UnitID 44) Denominator **100**.
+  표 안의 설명문으로 확인: 판도라의 유물(#8661) CarryPlus 50000 ↔ 같은 표 설명(DescID 211891)
+  "무게 보너스+500", 같은 아이템 HPPotionIncreasePercent 50000 ↔ "물약 회복률+5%"(Percentage 분모 10000).
+  카드 덱 보너스(#397)·컬렉션·강화 투영이 이미 쓰는 규칙(`CarryPlus / 100 → weightBonus`)과 같다.
+- 연결: 투영이 장비 기록에 `weightBonus`(정수, 나머지 0일 때만)를 채우고, 기존 소지 한도
+  `_carrying_capacity()`의 `_equipment_inven_sum("weightBonus")`가 착용 장비에서 읽는다.
+- 값 분포(종 수): +1000 32 · +1500 9 · +2000 9 · +500 7 · +3000 7 · +200 7 · +250 5 · +300 4 · +100 4 · 그 밖 16.
+- 표에 없는 것: 원본 아이템 자체 무게(ItemClass.Weight)는 여전히 TWILIGHT 추정(ceil(raw×3/351),
+  `data/item_weight_rules.json`)이고 소지 한도 기본값(2500+CON×100)도 TWILIGHT 값이다. 즉 보너스는 원본
+  표시 단위(÷100) 그대로 더하지만, 아이템 무게와 한도 기본값은 원본 단위가 아니다(기존 카드·컬렉션 보너스와 같은 상태).
+
+**무기 기본 발동 187종** — 아이템 ItemBonus의 InvokeOption 행(적용 BonusApplicationType 10 "InvokeOption",
+대상 = InvokeOption ID, 확률 = Value: Percentage 분모 10000 → 180000 = 18%)
+
+| InvokeOptionType | 종 수 | 원본 값 | 연결한 기존 소비자 |
+| --- | ---: | --- | --- |
+| 9 Attack_AddCriticalProbability (크로우) | 42 | 확률 22~32% | `world._roll_weapon_damage` → 무기 기본 대미지를 최대값으로(기존 규칙: 공식 무기 안내) |
+| 6 Attack_WeaponDamageScale (이도류, 설명 "더블 확률") | 80 | 확률 16~30%, Param1 2000000 = ×2.0 | 같은 경로. 배율 적용 범위(기본+추가·강화 / 기본만)는 기존 TWILIGHT 설정 `patch523_weapon_double_scope` |
+| 1 Attack_Spell, 옵션 611 → SpellClass 17564 "[총사] 출혈" (라이플·캐넌) | 65 | 확률 0.5%, 3초, BuffClass 51984 10D1, MaxHPPercent 50 | `patch523_weapon_bleed` (틱 0.75초·누적 HP 50% 상한은 기존 TWILIGHT 설정) |
+
+- 이 세 종류의 해석·소비자는 예전 공개 컴파일러(`tools/monsters/patch523_item_definitions.py`)가 만들던
+  `source_invoke_options`와 같다. 현재 원본(523) 정의 경로는 이 목록을 항상 비워 두어 소비자가 동작하지 않았다.
+  새 `scripts/loot/current523_weapon_invokes.gd`가 같은 조건(무기 슬롯·IsPossession false·조건 열 0·
+  공격 측·BySpellAttack false, 출혈은 17564/51984 사슬 값 전부 일치)으로 현재 표에서 다시 만든다.
+- 강화 단계 발동(ItemEnchantBonus의 InvokeOption, `patch523_invoke_options`)과는 다른 행이라 중복 적용되지 않는다.
+
+**실제 Main·원본 팩 확인**(`tests/items523_equipment_carry_invoke_test.gd`): 검사 34개 통과.
+
+- 투영 집계: CarryPlus 100종·100행, 발동 크로우 42 · 이도류 80 · 출혈 65. 막힌 발동 행은 무기 아님 12 · 미구현 종류 12 등으로 보존.
+- #323 오우거의 벨트(CarryPlus 100000 → +1000): 지급→장착 소지 한도 4100→5100, 저장→다시 불러오기 5100·장착 유지, 해제 시 4100.
+- #500 강철 크로우(22%): 20,000회 굴림 중 21.8% 발동, 발동 시 무기 기본 대미지 = 최대값(17).
+- #489 강철 이도류(16%, ×2.0): 15.7% 발동, 발동 시 (기본 4 + 추가 5)×(2.0−1) 더해 13.
+- #96364 사냥꾼의 라이플(0.5%): 실제 일반 공격 판정으로 506번째에 출혈 걸림, 지속 3초·10D1·HP 50% 상한.
+- 세 무기 모두 저장→다시 불러오기 후 장착·발동 유지.
 
 ## 5. 남은 소모품 묶음 (가방 사용 거부 4,276종)
 
@@ -124,3 +164,34 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 대부분 `int()`/`whole()`로 감싸거나 `int` 형 변수다. 예외 1건: `equipment523/native_catalog.gd`의
 `identity.get("schema") not in [3,4]` — 저장 JSON에서 온 4.0을 거부(연금술 대기분 이전 경로). `whole()`로 수정.
 수정 전후 전체 30,398종 사용·지급 판정 집계는 변화 없음(막힘 원인 아님).
+
+## 10. 장비 묶음 재검토 (2026-11-12)
+
+### 10.1 장비 상시 버프 BuffClassID 104종 — 미연결 (버프 18개 전부 확인)
+
+착용 중 상시 적용 자체는 기존 장비 보너스와 같은 규칙(장비 ItemBonus 행 = 착용 중 적용)으로 볼 수 있다.
+막히는 것은 버프 안의 효과(BuffBonus)이며, 순수 능력치만 가진 버프는 하나도 없다.
+
+| BuffClass | 종 수 | BuffBonus 내용 | 판정 |
+| --- | ---: | --- | --- |
+| 82511·82371·82521·82531 "[낚싯대] … 폴 변신" | 55 | PolymorphSetID + 이동 속도 + 생성 이펙트 | 제외 — 낚싯대(끊은 낚시 콘텐츠) |
+| 95478 "타겟팅 고정 #무기 데스 락" (기르타스 무기 등) | 24 | CannotReleaseTarget · IgnoreRestrainInvokeUniversalGroup(발동 억제 무시, 8행) · ImmuneBuffType 71 · AmmoClassID | 불가 — 대상 고정·발동 억제 무시·면역 버프 종류·탄환 교체 소비자 없음 |
+| 53952·51683·55014·55024·78962·84644 (변신 무기·영웅 변신 반지·기자 모자·만우절) | 14 | PolymorphSetID + 공격/이동/시전 속도·대미지 등, 모자는 CannotAttack·CannotCastSpell | 불가 — 변신 외형 소유자는 변신 카드 등록부뿐. 장비발 변신과 카드 변신의 BuffGroup 경합·변신 무기 제한(#407) 연결 규칙이 없고, 속도만 넣으면 변신 효과 일부만 적용됨 |
+| 23 "투명 망토" | 3 | Invisible · CannotAttack · CannotLoot · StopActionByTargetting · StatusEffectID | 불가 — 착용만으로 상시 투명+공격 불가가 되는지, 해제 조건(IsEraseOn* 전부 false)이 표에 없음. 기존 은신(`is_player_concealed`)은 스킬 버프 전용 |
+| 11351 "수중 부츠" | 2 | 행 없음 | 효과 없음 |
+| 67231~67261 "[쟁탈전껍데기용] 영예의 전투" | 4 | 행 없음 | 효과 없음(쟁탈전 = 온라인) |
+| 79021 "안티 블라인드" (발록의 핏빛 투구) | 2 | SpecialResistance 대상 5 Dark | 불가 — TWILIGHT에 암흑 상태 없음 |
+
+### 10.2 장비 발동 중 남은 것
+
+- 발록의 핏빛 망토 2종: Attack_Spell "핏빛 계약: 수혈"(근접·원거리·암흑기사·근접마법, AttackTypeID 1/2/42/72) —
+  주문 실행이 필요(스킬 실행 엔진 범위). AttackTypeID 42·72는 기존 공격 종류(0~3)에 없음.
+- 만우절 휘장 1종: Defence_Spell "피격 시 생명력 300 회복" — 방어 측 주문 실행 필요.
+- 발록의 핏빛 투구 2종: Defence_DebuffTimeDecreasePercent "암흑" — 암흑 상태 없음.
+- ItemInvokeReplacementID 48종(신화 무기 18 등): ItemInvokeReplacementEntityView가 슬롯별 교체 후보와
+  확률(Prob)만 준다. 교체를 언제·무엇을 소비해 굴리는지(획득 시/아이템 사용 시)가 표에 없음.
+- EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): 값이 SpellClass 1 "에너지 볼트" — 착용 시
+  주문 습득/실행 규칙은 스킬 실행 엔진 범위. 이번 PR에서 다루지 않음.
+- 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
+  HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
+
