@@ -10,6 +10,7 @@ const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const ATTACHMENT_ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -17,6 +18,10 @@ const MAX_JSON = 16 * 1024 * 1024
 # stays 16MiB.
 const MAX_MANIFEST_JSON = 64 * 1024 * 1024
 const SOURCE_DUMMY_EXCLUSION_POLICY = "source_literal_dummy_declarations_only;project_inactive_dummy_edges;preserve_originals_and_normal_shared_members"
+const NATIVE_SELECTOR_POLICY = "native_explicit_actions_and_immediate_alias_owner_v1"
+const NATIVE_ACTIVATION_POLICY = "restored525_101_immediate_action_owner_105_original_actor_bounded_projection"
+const NATIVE_FILE_REMAP_POLICY = "requested_high16_single_whole_sprite_remap"
+const NATIVE_IDENTITY_FIELDS: Array[String] = ["kind","source_sprite_id","requested_sprite_id","metadata_owner_sprite_id","file_remap_policy","native_binding_id","source_reference_index","target_index"]
 const SOURCE_REFERENCE_INSTANCE_POLICY = "ordered_literal_edges_shared_frame_bindings_native_draw_multiplicity_unverified"
 var _root: String = ""
 var _manifest_path: String = ""
@@ -172,15 +177,25 @@ func _reference_binding(source: Dictionary, instances: Dictionary, layer: Dictio
 	var binding: Variant = layer.get("source_binding_id")
 	var ids: Variant = layer.get("reference_instance_ids")
 	if not binding is String or binding.is_empty() or binding != compact.get("source_binding_id") or not ids is Array or ids.is_empty() or ids != compact.get("reference_instance_ids"): return fail("Literal source reference binding differs from its compact declaration.")
+	var native: bool = source.get("native_selector_policy") is String and source.native_selector_policy == NATIVE_SELECTOR_POLICY
+	if native and (layer.get("kind") == "body" or binding != layer.get("native_binding_id") or ids.size() != 1): return fail("Native source reference differs from its exact occurrence binding.")
 	var targets: Dictionary = {}
-	for evidence: Dictionary in source.get("source_layer_declarations",[]):
-		if evidence.get("kind") == layer.get("kind") and evidence.get("source_sprite_id") == layer.get("source_sprite_id"):
-			for declaration: Dictionary in evidence.get("declaration_path",[]): targets[int(declaration.get("sprite_id",-1))] = true
+	if native:
+		targets[int(layer.requested_sprite_id)] = true
+	else:
+		for evidence: Dictionary in source.get("source_layer_declarations",[]):
+			if evidence.get("kind") == layer.get("kind") and evidence.get("source_sprite_id") == layer.get("source_sprite_id"):
+				for declaration: Dictionary in evidence.get("declaration_path",[]): targets[int(declaration.get("sprite_id",-1))] = true
 	var ordered: Array = []
 	for id: Variant in ids:
 		if not id is String or not instances.has(id): return fail("Literal source reference instance ID is absent.")
 		var instance: Dictionary = instances[id]
 		if instance.binding_id != binding or instance.kind != layer.get("kind") or not targets.has(int(instance.target_sprite_id)): return fail("Literal reference instance does not bind this exact source layer.")
+		if native:
+			var matches: Array = []
+			for proof: Variant in source.source_proof.declarations:
+				if proof is Dictionary and proof.get("native_binding_id") is String and proof.native_binding_id == binding: matches.append(proof)
+			if matches.size() != 1 or not matches[0].get("edge_path") is Array or matches[0].edge_path.size() != 1 or instance.source_edge_path != matches[0].edge_path or instance.get("source_declaration") != matches[0].get("source_declaration") or instance.from_sprite_id != matches[0].edge_path[0].get("from_sprite_id") or instance.target_index != layer.target_index: return fail("Native literal instance differs from its exact active declaration.")
 		ordered.append(instance.duplicate(true))
 	return {"ok":true,"instances":ordered}
 
@@ -423,9 +438,63 @@ func _load_members_unchanged(memo: Dictionary) -> Dictionary:
 		if not checked.ok: return checked
 	return {"ok":true}
 
+## This path has already matched its pinned declaration proof. Normalize only
+## a private copy of integral JSON numbers for the pure projection helper; the
+## raw all-path attributes/declarations below remain byte-for-value evidence.
+func _attribute_projection(record: Dictionary, kind: String, sprite: int, path: Array, proof: Dictionary) -> Dictionary:
+	var normalized: Array = path.duplicate(true)
+	for index: int in range(normalized.size()):
+		var declaration: Dictionary = normalized[index]
+		if not integer(declaration.get("sprite_id")): return fail("Invalid metadata owner identity.")
+		declaration.sprite_id = int(declaration.sprite_id)
+		if not declaration.has("alias_target"):
+			# Older direct-path DTOs omitted this redundant terminal field. An
+			# alias chain still requires every explicit source link as evidence.
+			if normalized.size() != 1: return fail("Metadata alias link was not supplied.")
+			declaration["alias_target"] = null
+		var target: Variant = declaration.alias_target
+		if target != null:
+			if not integer(target): return fail("Invalid metadata alias target.")
+			declaration.alias_target = int(target)
+		if index + 1 < normalized.size():
+			if target == null or target != normalized[index+1].get("sprite_id"): return fail("Metadata alias link differs from its declaration path.")
+		elif target != null: return fail("Metadata alias declaration path is incomplete.")
+		for directive: Dictionary in declaration.literal_attribute_directives:
+			directive.code = int(directive.code)
+			directive.line = int(directive.line)
+	var owner: int = int(normalized[0].sprite_id)
+	var basis: String
+	if kind == "body":
+		var actor: Variant = record.get("actor")
+		var root: Variant = record.source_proof.get("root_sprite_id")
+		if not actor is Dictionary or not integer(root) or actor.get("source_sprite_id") != root or owner != root: return fail("Body metadata owner differs from its exact role actor.")
+		basis = "exact_role_actor_original_sprite"
+	elif kind == "clothes":
+		basis = "verified_clothes_request_path_first"
+		if proof.has("edge_path"):
+			var edges: Variant = proof.edge_path
+			if not edges is Array or edges.is_empty() or not edges[-1] is Dictionary or edges[-1].get("kind") != "clothes" or edges[-1].get("target_sprite_id") != owner: return fail("Clothes metadata owner differs from its requested105 target.")
+		else:
+			# Direct-path legacy DTOs identify the request in their pinned path.
+			# New compiler DTOs additionally bind that ID to the explicit105 edge.
+			basis = "verified_legacy_clothes_request_path_first"
+	else:
+		# Native101 ignores shadow own104. Parent actor flags and their dynamic
+		# modifiers are a separate submission context, resolved by the caller.
+		return {"ok":true,"projection":{"ok":false,"flags":0,"present":false,"origin":"shadow_requires_parent_actor_flags","owner_proof":{"kind":"shadow","physical_sprite_id":sprite,"basis":"native101_parent_actor_flags","context":"requires_parent_submission_context"}}}
+	var projected: Dictionary = ATTACHMENT_ATTRIBUTES.resolve_own_path(normalized,owner)
+	projected["owner_sprite_id"] = owner
+	projected["owner_path_index"] = 0
+	var own_declaration: Dictionary = path[0].duplicate(true)
+	own_declaration.erase("literal_attribute_directives")
+	projected["owner_proof"] = {"kind":kind,"requested_sprite_id":owner,"physical_sprite_id":sprite,"owner_path_index":0,"basis":basis,"declaration":own_declaration,"context":"initial_or_reset_static_metadata_only"}
+	return {"ok":true,"projection":projected}
+
 func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	var evidence: Variant = record.get("source_layer_declarations")
+	var source_proof: Variant = record.get("source_proof")
 	if not evidence is Array: return fail("Literal source layer attributes were not supplied.")
+	if not source_proof is Dictionary or not source_proof.get("declarations") is Array: return fail("Missing source attribute declaration proof.")
 	var matches: Array = []
 	for item: Variant in evidence:
 		if item is Dictionary and item.get("kind") == kind and integer(item.get("source_sprite_id")) and int(item.source_sprite_id) == sprite: matches.append(item)
@@ -433,12 +502,15 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	var item: Dictionary = matches[0]
 	var path: Variant = item.get("declaration_path")
 	if not path is Array or path.is_empty(): return fail("Invalid literal layer declaration path.")
-	var expected: Array = []
-	for proof: Variant in record.source_proof.declarations:
+	var matching_proofs: Array = []
+	for proof: Variant in source_proof.declarations:
 		if not proof is Dictionary or not proof.get("declaration_path") is Array: return fail("Invalid source layer proof.")
 		var candidate: Array = proof.declaration_path
 		if candidate.is_empty() or not candidate[-1] is Dictionary or not integer(candidate[-1].get("sprite_id")): return fail("Invalid source layer declaration identity.")
-		if proof.get("kind") == kind and int(candidate[-1].sprite_id) == sprite: expected = candidate
+		if proof.get("kind") == kind and int(candidate[-1].sprite_id) == sprite: matching_proofs.append(proof)
+	if matching_proofs.size() != 1: return fail("Missing or ambiguous source attribute declaration proof.")
+	var selected_proof: Dictionary = matching_proofs[0]
+	var expected: Array = selected_proof.declaration_path
 	if expected.size() != path.size(): return fail("Layer declaration evidence differs from source proof.")
 	var attributes: Array = []
 	var unresolved: bool = false
@@ -457,7 +529,184 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 			attributes.append(directive.body)
 			if not str(directive.body).is_valid_int(): unresolved = true
 	if path.size() > 1 and not attributes.is_empty(): unresolved = true
-	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path}
+	var projection: Dictionary = _attribute_projection(record,kind,sprite,path,selected_proof)
+	if not projection.ok: return projection
+	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path,"projection":projection.projection}
+
+## New native DTOs separate requested files, metadata owners and occurrences.
+## These checks prove a pinned metadata connection, never native execution.
+func _native_markers(source: Dictionary, contract: Dictionary) -> Dictionary:
+	var proof: Variant = source.get("source_proof")
+	if not proof is Dictionary: return fail("Missing native source proof.")
+	var present: bool = false
+	for holder: Dictionary in [source,proof,contract]:
+		present = present or holder.has("native_selector_policy") or holder.has("native_activation_policy")
+	if not present: return {"ok":true,"native":false}
+	for holder: Dictionary in [source,proof,contract]:
+		if not holder.get("native_selector_policy") is String or not holder.get("native_activation_policy") is String: return fail("Incomplete native selector/activation markers.")
+		if holder.native_selector_policy != NATIVE_SELECTOR_POLICY or holder.native_activation_policy != NATIVE_ACTIVATION_POLICY: return fail("Unsupported native selector/activation policy.")
+	return {"ok":true,"native":true}
+
+func _native_declaration_valid(value: Variant) -> bool:
+	if not value is Dictionary or not integer(value.get("sprite_id"),1) or not value.has("alias_target") or not value.get("source_file") is String or not integer(value.get("source_line"),1) or not valid_sha(value.get("source_sha256")): return false
+	var target: Variant = value.alias_target
+	if target != null and not integer(target): return false
+	var pattern := RegEx.new()
+	pattern.compile("^list_[0-9]+\\.spr$")
+	return pattern.search(value.source_file) != null
+
+func _native_identity_matches(left: Dictionary, right: Dictionary) -> bool:
+	for key: String in NATIVE_IDENTITY_FIELDS:
+		if not left.has(key) or not right.has(key): return false
+	for value: Dictionary in [left,right]:
+		if not value.get("kind") is String or value.kind not in ["body","shadow","clothes"] or not integer(value.get("source_sprite_id"),1) or not integer(value.get("requested_sprite_id"),1) or not integer(value.get("metadata_owner_sprite_id"),1) or not value.get("file_remap_policy") is String or value.file_remap_policy != NATIVE_FILE_REMAP_POLICY or not value.get("native_binding_id") is String or str(value.native_binding_id).is_empty(): return false
+		if value.kind == "body":
+			if value.source_reference_index != null or value.target_index != null: return false
+		elif not integer(value.source_reference_index) or not integer(value.target_index): return false
+	for key: String in NATIVE_IDENTITY_FIELDS:
+		if left[key] != right[key]: return false
+	return true
+
+func _native_literal_path(path: Variant, expected: Variant) -> Dictionary:
+	if not path is Array or path.is_empty() or not expected is Array or expected.size() != path.size(): return fail("Native declaration path differs from its source proof.")
+	var attributes: Array = []
+	var unresolved: bool = false
+	for index: int in range(path.size()):
+		if not path[index] is Dictionary or not _native_declaration_valid(expected[index]): return fail("Invalid native declaration proof.")
+		var literal: Dictionary = path[index]
+		var base: Dictionary = literal.duplicate(true)
+		base.erase("literal_attribute_directives")
+		if base != expected[index]: return fail("Native declaration source identity differs.")
+		var admitted: Dictionary = source_actor_admission(int(base.sprite_id))
+		if not admitted.ok: return admitted
+		var directives: Variant = literal.get("literal_attribute_directives")
+		if not directives is Array: return fail("Missing native literal attribute directives.")
+		for directive: Variant in directives:
+			if not directive is Dictionary or not integer(directive.get("code")) or int(directive.code) != 104 or not directive.get("body") is String or not integer(directive.get("line"),1): return fail("Invalid native literal attribute directive.")
+			attributes.append(directive.body)
+			if not str(directive.body).is_valid_int(): unresolved = true
+	return {"ok":true,"attributes":attributes,"unresolved":unresolved}
+
+func _native_action_identity(source: Dictionary, action: Dictionary, action_id: int, actor_id: int) -> Dictionary:
+	var proof: Dictionary = source.source_proof
+	var request: Variant = proof.get("native_request_declaration")
+	if not _native_declaration_valid(request) or request.sprite_id != actor_id: return fail("Invalid exact native request declaration.")
+	var expected_key: String = "%s:B%d:A%d" % [request.source_file,int(request.source_line),action_id]
+	if not source.get("action_key") is String or source.action_key != expected_key: return fail("Native action key differs from requested header provenance.")
+	if not integer(action.get("native_requested_sprite_id"),1) or action.native_requested_sprite_id != actor_id or not integer(action.get("native_body_request_sprite_id"),1) or not integer(action.get("native_descriptor_origin_sprite_id"),1): return fail("Native descriptor/request owners differ.")
+	var candidates: Variant = proof.get("raw_candidate_declarations")
+	if not candidates is Array: return fail("Native descriptor origin declaration evidence is absent.")
+	var origins: Array = []
+	for candidate: Variant in candidates:
+		if candidate is Dictionary and integer(candidate.get("sprite_id"),1) and candidate.sprite_id == action.native_descriptor_origin_sprite_id: origins.append(candidate)
+	if origins.size() != 1 or not _native_declaration_valid(origins[0]) or origins[0].source_file != action.get("source_file") or origins[0].source_sha256 != action.get("source_sha256"): return fail("Native descriptor origin file pin differs.")
+	var chain: Variant = action.get("native_action_alias_chain")
+	if not chain is Array or not action.get("native_registration_kind") is String: return fail("Missing native action registration proof.")
+	if action.native_registration_kind == "literal":
+		if not chain.is_empty() or action.native_body_request_sprite_id != actor_id or action.native_descriptor_origin_sprite_id != actor_id: return fail("Literal native action borrowed another owner.")
+	elif action.native_registration_kind == "explicit_action_alias":
+		if chain.is_empty(): return fail("Missing explicit native action alias.")
+		var owner: int = actor_id
+		var alias_pattern := RegEx.new()
+		alias_pattern.compile("^([0-9]+)\\s*=\\s*(-?[0-9]+)$")
+		for index: int in range(chain.size()):
+			var alias: Variant = chain[index]
+			if not alias is Dictionary or not alias.get("source_file") is String or not alias.get("registration_status") is String or not alias.get("raw") is String or not integer(alias.get("action_id")) or int(alias.action_id) != action_id or not integer(alias.get("target_sprite_id"),1) or not integer(alias.get("source_line"),1) or not integer(alias.get("source_column")) or alias.registration_status != "registered": return fail("Invalid native action alias source event.")
+			var owner_candidates: Array = []
+			for candidate: Variant in candidates:
+				if candidate is Dictionary and integer(candidate.get("sprite_id"),1) and int(candidate.sprite_id) == owner: owner_candidates.append(candidate)
+			if owner_candidates.size() != 1 or not _native_declaration_valid(owner_candidates[0]) or alias.source_file != owner_candidates[0].source_file or int(alias.source_line) < int(owner_candidates[0].source_line): return fail("Native action alias event belongs to another source declaration.")
+			var matched: RegExMatch = alias_pattern.search(alias.raw)
+			if matched == null or int(matched.get_string(1)) != action_id or int(matched.get_string(2)) != int(alias.target_sprite_id): return fail("Native action alias raw target differs from its event.")
+			if index == 0 and int(alias.target_sprite_id) != int(action.native_body_request_sprite_id): return fail("Immediate native action alias differs from its requested owner.")
+			owner = int(alias.target_sprite_id)
+		if owner != int(action.native_descriptor_origin_sprite_id): return fail("Native action alias chain differs from descriptor origin.")
+	else: return fail("Unsupported native action registration.")
+	return {"ok":true}
+
+func _native_attributes(source: Dictionary, layer: Dictionary) -> Dictionary:
+	var proof: Dictionary = source.source_proof
+	var evidence: Variant = source.get("source_layer_declarations")
+	if not evidence is Array or not proof.get("declarations") is Array: return fail("Missing native layer declaration evidence.")
+	var matching_evidence: Array = []
+	var matching_proofs: Array = []
+	for item: Variant in evidence:
+		if item is Dictionary and item.get("native_binding_id") is String and item.native_binding_id == layer.native_binding_id: matching_evidence.append(item)
+	for item: Variant in proof.declarations:
+		if item is Dictionary and item.get("native_binding_id") is String and item.native_binding_id == layer.native_binding_id: matching_proofs.append(item)
+	if matching_evidence.size() != 1 or matching_proofs.size() != 1: return fail("Missing or ambiguous native occurrence binding proof.")
+	var item: Dictionary = matching_evidence[0]
+	var selected: Dictionary = matching_proofs[0]
+	if not _native_identity_matches(layer,item) or not _native_identity_matches(layer,selected): return fail("Native layer identity differs across compact/proof/evidence.")
+	var checked: Dictionary = _native_literal_path(item.get("declaration_path"),selected.get("declaration_path"))
+	if not checked.ok: return checked
+	var path: Array = item.declaration_path
+	if path.size() > 2 or path[0].sprite_id != layer.requested_sprite_id or path[-1].sprite_id != layer.source_sprite_id: return fail("Native request/file owner differs from its one-hop path.")
+	var first_target: Variant = path[0].alias_target
+	if path.size() == 1:
+		if first_target != null and first_target != layer.requested_sprite_id: return fail("Native single-hop file remap is incomplete.")
+	elif first_target != layer.source_sprite_id: return fail("Native file remap differs from the requested header.")
+	# The mapped file header's own alias is intentionally not followed again.
+	var owner_checked: Dictionary = _native_literal_path(item.get("attribute_owner_declaration_path"),selected.get("attribute_owner_declaration_path"))
+	if not owner_checked.ok: return owner_checked
+	var owner_path: Array = item.attribute_owner_declaration_path
+	if owner_path.size() != 1 or owner_path[0].sprite_id != layer.metadata_owner_sprite_id: return fail("Native metadata owner is not its own declaration.")
+	var root: int = int(proof.root_sprite_id)
+	var owner_base: Dictionary = owner_path[0].duplicate(true)
+	owner_base.erase("literal_attribute_directives")
+	var edges: Variant = selected.get("edge_path")
+	if not edges is Array: return fail("Native active source edge proof is absent.")
+	if layer.kind == "body":
+		if layer.metadata_owner_sprite_id != root or owner_base != proof.native_request_declaration or not edges.is_empty(): return fail("Native body attributes do not belong to its original actor.")
+	else:
+		if edges.size() != 1 or not edges[0] is Dictionary or not edges[0].get("kind") is String or edges[0].kind != layer.kind or edges[0].get("target_sprite_id") != layer.requested_sprite_id or edges[0].get("source_reference_index") != layer.source_reference_index or edges[0].get("target_index") != layer.target_index: return fail("Native auxiliary requested target differs from its active edge.")
+		if layer.kind == "clothes":
+			if layer.metadata_owner_sprite_id != layer.requested_sprite_id or owner_base != selected.declaration_path[0] or edges[0].get("from_sprite_id") != root: return fail("Native clothes attributes do not belong to its original105 request.")
+		elif layer.metadata_owner_sprite_id != root or owner_base != proof.native_request_declaration: return fail("Native shadow must retain its parent attribute owner.")
+	var projection: Dictionary
+	if layer.kind == "shadow":
+		projection = {"ok":false,"flags":0,"present":false,"origin":"shadow_requires_parent_actor_flags","owner_proof":{"kind":"shadow","physical_sprite_id":int(layer.source_sprite_id),"requested_sprite_id":int(layer.requested_sprite_id),"parent_actor_sprite_id":root,"basis":"native101_parent_actor_flags","context":"requires_parent_submission_context"}}
+	else:
+		projection = ATTACHMENT_ATTRIBUTES.resolve(owner_checked.attributes)
+		projection["owner_sprite_id"] = int(layer.metadata_owner_sprite_id)
+		projection["owner_path_index"] = 0
+		projection["owner_proof"] = {"kind":layer.kind,"requested_sprite_id":int(layer.requested_sprite_id),"physical_sprite_id":int(layer.source_sprite_id),"metadata_owner_sprite_id":int(layer.metadata_owner_sprite_id),"owner_path_index":0,"basis":"native_original_actor_own104" if layer.kind == "body" else "native_requested105_own104","declaration":owner_base,"context":"initial_or_reset_static_metadata_only"}
+	return {"ok":true,"attributes":checked.attributes,"unresolved":checked.unresolved or (path.size() > 1 and not checked.attributes.is_empty()),"declarations":path,"projection":projection,"owner_declarations":owner_path,"owner_attributes":owner_checked.attributes,"instance_key":layer.native_binding_id}
+
+func _load_native_action_attributes(source: Dictionary, layer: Dictionary, memo: Dictionary) -> Dictionary:
+	var key: String = "native:" + str(layer.get("native_binding_id",""))
+	if not memo.has(key):
+		FRAME_HITCH.count("sp2.attribute_validate")
+		var checked: Dictionary = _native_attributes(source,layer)
+		if not checked.ok: return checked
+		memo[key] = checked
+	return (memo[key] as Dictionary).duplicate(true)
+
+func _native_binding_set(source: Dictionary, layer_specs: Array, memo: Dictionary, action: Dictionary, source_role: String) -> Dictionary:
+	var proof: Dictionary = source.source_proof
+	if not source.get("source_layer_declarations") is Array or not proof.get("declarations") is Array or source.source_layer_declarations.size() != layer_specs.size() or proof.declarations.size() != layer_specs.size(): return fail("Native occurrence declaration count differs from compact layers.")
+	var activation_by_role: Variant = proof.get("native_activation_by_role")
+	if not activation_by_role is Dictionary or not activation_by_role.get(source_role) is Dictionary: return fail("Missing native per-action activation proof.")
+	var activation: Dictionary = activation_by_role[source_role]
+	if not activation.get("policy") is String or activation.policy != NATIVE_ACTIVATION_POLICY or activation.get("original_actor_sprite_id") != proof.root_sprite_id or activation.get("body_request_sprite_id") != action.native_body_request_sprite_id or activation.get("shadow_metadata_owner_sprite_id") != action.native_body_request_sprite_id or activation.get("clothes_metadata_owner_sprite_id") != proof.root_sprite_id or activation.get("auxiliary_recursion") != false or activation.get("runtime_activation_verified") != false: return fail("Native activation owner proof differs.")
+	var seen: Dictionary = {}
+	for spec: Variant in layer_specs:
+		if not spec is Dictionary or not _native_identity_matches(spec,spec) or seen.has(spec.native_binding_id): return fail("Duplicate or invalid native occurrence identity.")
+		seen[spec.native_binding_id] = true
+		var expected_binding: String = "native:%d:A%d:%s:R%d:D%s:T%s" % [int(proof.root_sprite_id),int(action.code),spec.kind,int(spec.requested_sprite_id),"None" if spec.source_reference_index == null else str(int(spec.source_reference_index)),"None" if spec.target_index == null else str(int(spec.target_index))]
+		if spec.native_binding_id != expected_binding: return fail("Native occurrence key differs from its verified request and operand identity.")
+		if spec.kind == "body" and (spec.has("source_binding_id") or spec.has("reference_instance_ids")): return fail("Native body cannot impersonate an auxiliary occurrence.")
+		if spec.kind != "body":
+			if not spec.get("source_binding_id") is String or spec.source_binding_id != spec.native_binding_id or not spec.get("reference_instance_ids") is Array or spec.reference_instance_ids != ["native-ref:"+str(spec.native_binding_id)]: return fail("Native auxiliary requires its exact ordered literal occurrence.")
+		if spec.kind == "body" and spec.requested_sprite_id != action.native_body_request_sprite_id: return fail("Native body request differs from selected action alias.")
+		if spec.kind == "shadow":
+			var selected: Array = []
+			for item: Variant in proof.declarations:
+				if item is Dictionary and item.get("native_binding_id") is String and item.native_binding_id == spec.native_binding_id: selected.append(item)
+			if selected.size() != 1 or not selected[0].get("edge_path") is Array or selected[0].edge_path.size() != 1 or not selected[0].edge_path[0] is Dictionary or selected[0].edge_path[0].get("from_sprite_id") != action.native_body_request_sprite_id: return fail("Native shadow metadata owner differs from immediate body request.")
+		var checked: Dictionary = _load_native_action_attributes(source,spec,memo)
+		if not checked.ok: return checked
+	return {"ok":true}
 
 ## The action JSON and its declaration proof are fixed during this load.
 ## Frames still validate their own layer identities, addresses and bindings;
@@ -495,6 +744,11 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	if not contract is Dictionary or contract.get("format") != "current523_identity_roles_v1" or contract.get("native_dispatch_verified") != false or contract.get("selection") != "explicit_source_actor_id_and_source_action_id" or contract.get("loop") != "unknown_requires_explicit_caller_policy" or contract.get("timing") not in ["source_explicit_fps_and_duration_ticks_only","source_explicit_or_existing_host_policy","source_explicit_or_client_section_default"]: return fail("Unsupported source bank consumer contract.")
 	if contract.get("timing") == "source_explicit_or_client_section_default" and (contract.get("client_section_default_fps") != 24 or not contract.get("client_default_evidence") is String or str(contract.get("client_default_evidence")).is_empty()): return fail("Client section default timing requires the evidenced 24fps contract.")
 	if contract.get("timing") == "source_explicit_or_existing_host_policy" and (contract.get("host_timing_opt_in") != true or contract.get("source_fps_policy") != "preserve_literal_value_including_null"): return fail("Host timing requires the explicit literal-FPS preservation contract.")
+	var clothes_policy: Variant = contract.get("clothes_collection_policy", "")
+	if not clothes_policy is String: return fail("Unsupported clothes collection policy type.")
+	var clothes_prefix_policy: bool = clothes_policy == "first_null_asset_retains_successful_clothes_prefix"
+	if contract.has("clothes_collection_policy") and not clothes_prefix_policy: return fail("Unsupported clothes collection policy.")
+	if clothes_prefix_policy and contract.get("frame_policy") != "client_clamp_frame_null_missing_direction_or_empty_body": return fail("Clothes prefix policy requires the explicit client frame contract.")
 	if source_actor_id < 0 or bindings.is_empty() or bindings.size() > 16 or bindings.size() != loop_policy.size(): return fail("Explicit source action bindings and loop policy are required for each role.")
 	for role: Variant in role_actor_ids:
 		if not bindings.has(role) or not integer(role_actor_ids[role],1): return fail("Each alternate role actor requires an exact existing caller role.")
@@ -537,6 +791,8 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 		var proof: Variant = source.get("source_proof")
 		var source_role: String = "source_action:" + str(action_id)
 		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != role_actor_id or proof.get("root_sprite_id") != role_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
+		var native_policy: Dictionary = _native_markers(source,contract)
+		if not native_policy.ok: return native_policy
 		admitted = _source_graph_admission(proof)
 		if not admitted.ok: return admitted
 		var track: Variant = actor.roles.get(source_role)
@@ -552,8 +808,13 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 		var source_name_pattern := RegEx.new()
 		source_name_pattern.compile("^list_[0-9]+\\.spr$")
 		if not action.get("source_file") is String or source_name_pattern.search(action.source_file) == null: return fail("Invalid exact SPR source filename.")
-		key_pattern.compile("^" + str(action.get("source_file", "")).replace(".", "\\.") + ":B[0-9]+:A" + str(action_id) + "$")
-		if not source.get("action_key") is String or key_pattern.search(source.action_key) == null or track.get("source_file") != action.get("source_file") or track.get("source_line") != action.get("source_line"): return fail("Exact source action key/provenance mismatch.")
+		if track.get("source_file") != action.get("source_file") or track.get("source_line") != action.get("source_line"): return fail("Exact source descriptor provenance mismatch.")
+		if native_policy.native:
+			var native_action: Dictionary = _native_action_identity(source,action,action_id,role_actor_id)
+			if not native_action.ok: return native_action
+		else:
+			key_pattern.compile("^" + str(action.get("source_file", "")).replace(".", "\\.") + ":B[0-9]+:A" + str(action_id) + "$")
+			if not source.get("action_key") is String or key_pattern.search(source.action_key) == null: return fail("Exact source action key/provenance mismatch.")
 		var tokens: Variant = compact.get("tokens")
 		var layer_specs: Variant = compact.get("layers")
 		var directions: Variant = track.get("directions")
@@ -562,6 +823,11 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 		if not annotations is Array: return fail("Invalid literal source annotations.")
 		for annotation: Variant in annotations:
 			if not annotation is Dictionary or not integer(annotation.get("token_index"),0,tokens.size()-1) or not annotation.get("raw") is String: return fail("Invalid literal source annotation token.")
+		if native_policy.native:
+			var native_bindings: Dictionary = _native_binding_set(source,layer_specs,action_attributes,action,source_role)
+			if not native_bindings.ok: return native_bindings
+			record["native_selector_policy"] = NATIVE_SELECTOR_POLICY
+			record["native_activation_policy"] = NATIVE_ACTIVATION_POLICY
 		var body_layers: int = 0
 		for layer: Variant in layer_specs:
 			if not layer is Dictionary: return fail("Invalid compact layer specification.")
@@ -584,13 +850,21 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 				var token: Array = tokens[index]
 				if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
 				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":_frame_seconds(int(token[2]),source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
+				var clothes_stop_index: int = -1
 				for layer_index: int in range(frame.layers.size()):
 					var layer: Variant = frame.layers[layer_index]
 					var spec: Variant = layer_specs[layer_index]
 					FRAME_HITCH.count("sp2.layer_validate")
 					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
+					if native_policy.native and not _native_identity_matches(layer,spec): return fail("Native frame occurrence differs from its compact identity.")
 					var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
 					if not reference_binding.ok: return reference_binding
+					var native_attributes: Dictionary = {}
+					if native_policy.native:
+						native_attributes = _load_native_action_attributes(source,layer,action_attributes)
+						if not native_attributes.ok: return native_attributes
+						layer = layer.duplicate(true)
+						layer.merge({"source_layer_instance_key":native_attributes.instance_key,"source_attributes":native_attributes.attributes,"source_attribute_declarations":native_attributes.declarations,"source_attributes_unresolved":native_attributes.unresolved,"source_attribute_projection":native_attributes.projection,"source_attribute_owner_declarations":native_attributes.owner_declarations,"source_attribute_owner_attributes":native_attributes.owner_attributes})
 					# C06: u16(word0 + direction) -> file group and in-file direction (original-client contract adapter).
 					var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
 					var member: String = ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id), group.file_b)
@@ -598,21 +872,30 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 					var frame_matches: bool = layer.get("frame_index") == token[1]
 					if client_frames and not frame_matches and layer.get("clamped_from_frame_index") == token[1] and integer(layer.get("frame_index"),0,255) and int(layer.frame_index) < int(token[1]): frame_matches = true
 					if layer.get("member") != member or layer.get("group_bit") != group.direction or not frame_matches: return fail("Literal source address differs from identity contract.")
+					if clothes_prefix_policy and layer.kind == "clothes" and clothes_stop_index >= 0:
+						if layer.get("client_null", "") == "clothes_prefix_stopped" and (not integer(layer.get("clothes_prefix_stop_layer_index")) or int(layer.clothes_prefix_stop_layer_index) != clothes_stop_index): return fail("Clothes prefix stop provenance differs from the first null.")
+						var stopped: Dictionary = layer.duplicate(true)
+						if layer.has("client_null"): stopped["source_client_null"] = layer.client_null
+						stopped.merge({"client_null":"clothes_prefix_stopped","clothes_prefix_stop_layer_index":clothes_stop_index,"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
+						shown.effect_layers.append(stopped)
+						continue
 					if layer.has("client_null"):
-						# Client: a missing direction or empty main frame draws nothing; other layers continue.
-						if not client_frames or layer.client_null not in ["direction_absent","empty_body_frame"] or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
+						# A present empty Graphics/frame vector is not a null asset.
+						var allowed_null: bool = layer.client_null in ["direction_absent","empty_body_frame"] or (clothes_prefix_policy and layer.client_null == "empty_frame_set")
+						if not client_frames or not allowed_null or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
+						if clothes_prefix_policy and layer.kind == "clothes" and layer.client_null == "direction_absent": clothes_stop_index = layer_index
 						var null_layer: Dictionary = layer.duplicate(true)
 						null_layer.merge({"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
 						if layer.kind == "clothes": shown.effect_layers.append(null_layer)
 						else: shown.layers.append(null_layer)
 						continue
-					var attributes: Dictionary = _load_action_attributes(source, layer.kind, int(layer.source_sprite_id), action_attributes)
+					var attributes: Dictionary = native_attributes if native_policy.native else _load_action_attributes(source, layer.kind, int(layer.source_sprite_id), action_attributes)
 					if not attributes.ok: return attributes
 					var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
 					if not picture.ok: return picture
 					if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
 					var converted_layer: Dictionary = layer.duplicate(true)
-					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
+					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"source_attribute_projection":attributes.projection,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
 					if not reference_binding.instances.is_empty():
 						converted_layer["source_reference_instances"] = reference_binding.instances
 						converted_layer.frame_provenance["source_reference_instances"] = reference_binding.instances.duplicate(true)

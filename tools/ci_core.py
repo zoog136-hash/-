@@ -21,6 +21,18 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('source_native_attachment_bank_test', []),
+    ('source_clothes_prefix_bank_test', []),
+    ('source_attachment_instance_identity_test', []),
+    ('source_subslot_attachment_retry_test', []),
+    ('source_sp2_cell_plan_test', []),
+    ('source_attachment_attributes_test', []),
+    ('source_attachment_attribute_binding_test', []),
+    ('source_attachment_render_projection_test', []),
+    ('source_effect_attachment_anchor_test', []),
+    ('source_npc_effect_anchor_test', []),
+    ('source_presentation_attachment_guard_test', []),
+    ('source_sp2_compositor_test', []),
     ('reference_sp2_asset_sharing_test', []),
     ('reference_sp2_load_memo_test', []),
     ('reference_sp2_attribute_memo_test', []),
@@ -399,7 +411,19 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+            marker = {'source_native_attachment_bank_test':'SOURCE_NATIVE_ATTACHMENT_BANK',
+                      'source_clothes_prefix_bank_test':'SOURCE_CLOTHES_PREFIX_BANK',
+                      'source_attachment_instance_identity_test':'SOURCE_ATTACHMENT_INSTANCE_IDENTITY_RESULT',
+                      'source_subslot_attachment_retry_test':'SOURCE_SUBSLOT_ATTACHMENT_RETRY_RESULT',
+                      'source_sp2_cell_plan_test':'SOURCE_SP2_CELL_PLAN_RESULT',
+                      'source_attachment_attributes_test':'SOURCE_ATTACHMENT_ATTRIBUTES',
+                      'source_attachment_attribute_binding_test':'SOURCE_ATTACHMENT_ATTRIBUTE_BINDING',
+                      'source_attachment_render_projection_test':'SOURCE_ATTACHMENT_RENDER_PROJECTION',
+                      'source_effect_attachment_anchor_test':'SOURCE_EFFECT_ATTACHMENT_ANCHOR',
+                      'source_npc_effect_anchor_test':'SOURCE_NPC_EFFECT_ANCHOR_RESULT',
+                      'source_presentation_attachment_guard_test':'SOURCE_PRESENTATION_ATTACHMENT_GUARD',
+                      'source_sp2_compositor_test':'SOURCE_SP2_COMPOSITOR',
+                      'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'reference_sp2_attribute_memo_test':'REFERENCE_SP2_ATTRIBUTE_MEMO_RESULT',
                       'reference_sp2_parsed_payload_test':'REFERENCE_SP2_PARSED_PAYLOAD_RESULT',
