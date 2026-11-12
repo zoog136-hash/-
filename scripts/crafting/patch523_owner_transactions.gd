@@ -64,7 +64,7 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 		if not staged.has(key):continue
 		if not staged.has("quest_state") and not death_growth_owned:
 			var owner: String=nonquest_vital_owner(world,staged)
-			if owner!="sealed_monsterbook_reward" and (key not in ["hp","mp","experience"] or owner.is_empty() or (key=="experience" and owner not in ["source_dungeon523","source_dungeon_play","death_recovery523"])):return "퀘스트 성장 거래와 완료 장부가 함께 필요합니다"
+			if owner!="sealed_monsterbook_reward" and (key not in ["hp","mp","experience"] or owner.is_empty() or (key=="experience" and owner not in ["source_dungeon523","source_dungeon_play","death_recovery523","sealed_current_native_stack_consumer"])):return "퀘스트 성장 거래와 완료 장부가 함께 필요합니다"
 		var value: Variant=staged[key]
 		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=float(int(value)) or float(value)<0 or float(value)>9007199254740991:return "퀘스트 성장 수치 형식 확인 필요"
 		if key in ["level","exp_need","max_hp"] and int(value)<1:return "퀘스트 성장 기본값 확인 필요"

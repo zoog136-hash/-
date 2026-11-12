@@ -36,6 +36,15 @@ class SupplierView extends Node:
 static func authorizes(payload: Dictionary) -> bool:
 	return busy and not _candidate.is_empty() and _candidate==payload
 
+## Saves a name-keyed (plain) consumer payload under this owner's seal, so
+## the shared writer accepts its growth field (source523_item_effects EXP).
+static func sealed_save(world: Node,payload: Dictionary) -> Error:
+	if busy:return ERR_BUSY
+	busy=true;_candidate=payload.duplicate(true)
+	var saved: Error=world._save_game(true,payload)
+	_candidate.clear();busy=false
+	return saved
+
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and value>=0 and value<=9007199254740991.0
 ## Table and save JSON numbers are floats; `in` is type-strict, so an integral
@@ -258,6 +267,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
 	elif effect.kind in ["teleport","ain"]:
 		if prepared.has("ainhasad_state"):payload["ainhasad_state"]=prepared.ainhasad_state
+		if prepared.has("experience"):payload["experience"]=int(prepared.experience)
 	else:payload["hp" if effect.kind=="hp" else "mp"]=after
 	var previous_position: Vector2=world.player.global_position
 	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
