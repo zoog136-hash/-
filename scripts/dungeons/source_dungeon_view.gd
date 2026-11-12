@@ -19,6 +19,7 @@ var play_status: Label
 var play_buttons: Dictionary = {}
 var play_settings_dialog: AcceptDialog
 var play_settings_text: TextEdit
+var orim_hero: OptionButton
 const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false]]
 
 func configure(controller: Node) -> void:
@@ -111,8 +112,12 @@ func _build_play_panel() -> void:
 	for pair: Array in [["settings","자체 실행 설정"],["begin","현재 지역에서 시작"],["claim","보상 받기"],["stop","종료 / 정산 폐기"],["recharge","충전석 사용"],["buy_charge","자체 충전석 구입"],["retry","저장 재시도"],["cancel","미실행 저장 취소"]]:
 		var action:=str(pair[0]);var button:=Button.new();button.text=str(pair[1]);button.name="DungeonPlay_"+action;button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.pressed.connect(_play_action.bind(action));row.add_child(button);play_buttons[action]=button
+	# OrimsTrailCharacter heroes (hidden heroes stay locked: no unlock rule in the tables).
+	orim_hero=OptionButton.new();orim_hero.name="OrimHero";play_panel.add_child(orim_hero)
+	for hero: Dictionary in preload("res://scripts/orim523/orim523_run.gd").selectable(world.dungeon_play.orim_model()):
+		orim_hero.add_item("%s · HP %d · %s" % [str(hero.title) if not str(hero.title).is_empty() else str(hero.name),int(hero.hp),str(hero.subtitle)],int(hero.id))
 	var buffs:=HBoxContainer.new();buffs.name="OrimPreparation";play_panel.add_child(buffs)
-	for pair: Array in [[71672,"가속 20만"],[71682,"용기 30만"],[71692,"진주 50만"],[72362,"증표 강화 20다이아"],[0,"자체 능력 재선택"]]:
+	for pair: Array in [[71672,"가속 20만"],[71682,"용기 30만"],[71692,"진주 50만"],[72362,"증표 강화 20다이아"],[0,"스킬 다시 고르기"]]:
 		var button:=Button.new();button.text=str(pair[1]);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.set_meta("source_orim_buff_id",int(pair[0]));button.expand_icon=true
 		button.pressed.connect(func()->void:
@@ -124,8 +129,9 @@ func _update_play() -> void:
 	play_panel.visible=_kind() in ["orim","special","rechargers"]
 	if not play_panel.visible:return
 	var service: RefCounted=world.dungeon_play
-	play_status.text="TWILIGHT 자체 규칙 · 원본 시즌/지도 미복원 · "+service.status_text()
+	play_status.text=("오림의 흔적 · 원본 표 · " if _kind()=="orim" else "TWILIGHT 자체 규칙 · 원본 시즌/지도 미복원 · ")+service.status_text()
 	play_buttons.begin.visible=_kind() in ["orim","special"]
+	play_buttons.begin.text="오림 지도로 입장" if _kind()=="orim" else "현재 지역에서 시작"
 	play_buttons.recharge.visible=_kind()=="rechargers"
 	play_buttons.buy_charge.visible=_kind()=="rechargers"
 	play_buttons.buy_charge.text="자체 충전석 %d아데나" % int(service.state.settings.recharger_price)
@@ -137,6 +143,7 @@ func _update_play() -> void:
 	play_buttons.retry.disabled=service.pending.is_empty() or service.save_blocked
 	play_buttons.cancel.visible=not service.pending.is_empty();play_buttons.cancel.disabled=service.save_blocked
 	play_panel.get_node("OrimPreparation").visible=_kind()=="orim"
+	orim_hero.visible=_kind()=="orim";orim_hero.disabled=not service.state.active.is_empty()
 	for button: Button in play_panel.get_node("OrimPreparation").get_children():
 		button.disabled=service.state.active.is_empty() or service.state.active.get("kind","")!="orim" or service.state.active.get("status","")!="active"
 		_set_orim_buff_icon(button,service)
@@ -192,7 +199,7 @@ func _play_action(action: String) -> void:
 	if selected<0 or selected>=rows.size():return
 	var service: RefCounted=world.dungeon_play;var result: Dictionary
 	match action:
-		"begin":result=service.begin(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID))
+		"begin":result=service.begin(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID),-1,orim_hero.get_selected_id() if _kind()=="orim" and orim_hero.item_count>0 else 0)
 		"claim":result=service.claim()
 		"stop":result=service.stop()
 		"recharge":result=service.recharge(int(rows[selected].item.row.ID))
