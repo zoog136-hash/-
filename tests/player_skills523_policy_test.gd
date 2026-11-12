@@ -93,7 +93,7 @@ func run() -> void:
 	check(projected.items=={"화살":3,"합성 재료":2},"preserve ammunition while replacing old material")
 	check(projected.shape=="single" and projected.targets==1,"zero-radius SingleObject cannot keep host splash")
 	check(projected.duration_bounds==[2.0,5.0],"only confirmed main stun gets seconds bounds")
-	check(projected.range==base.range and projected.cast_time==base.cast_time and projected.cooldown==base.cooldown,"raw range/delay cannot invent pixel/timing conversion")
+	check(projected.range==base.range and projected.cast_time==base.cast_time and is_equal_approx(projected.cooldown,1.234),"raw range cannot invent pixel conversion; CastDelay 1234ms is the cooldown (user decision 2026-11-12)")
 	check(projected.power==base.power and projected.status_chance==base.status_chance and projected.debuff==base.debuff,"no new damage/probability/AC formula")
 	check(not base.has("source523"),"input catalog record remains untouched")
 	check(not adapter.apply_to(base.duplicate(true),"마법사",false).get("source523_block_reason","").is_empty(),"native class restriction")
