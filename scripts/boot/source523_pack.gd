@@ -63,6 +63,8 @@ var root: String = ROOT
 var tables_sha: String = TABLES_SHA
 var configured: bool = false
 var problem: String = ""
+## The pack directory this run connected (requested root or the install root).
+var _base: String = ""
 var needed: bool = false
 ## The base pack is installed but an add-on it needs is missing.
 var addon_needed: bool = false
@@ -260,6 +262,7 @@ func _configure_pack() -> void:
 	var exported: bool = OS.has_feature("template")
 	if requested.is_empty() and not exported: return
 	var base: String = requested if not requested.is_empty() else ProjectSettings.globalize_path(ROOT)
+	_base = base
 	var read: Dictionary = read_descriptor(base.path_join("source523_pack.json"))
 	if not read.ok:
 		needed = exported and requested.is_empty()
@@ -277,6 +280,35 @@ func _configure_pack() -> void:
 func _ready() -> void:
 	set_process(false)
 	if needed or addon_needed: _show_installer.call_deferred()
+	elif _failed_on_device(): _show_failure.call_deferred()
+
+## The pack is installed on the device but could not be connected. Before this
+## the game started silently without it (no pictures, no original UI).
+func _failed_on_device() -> bool:
+	return OS.has_feature("template") and _requested_root().is_empty() and not configured and not problem.is_empty()
+
+func _show_failure() -> void:
+	_show_installer()
+	_later.text = "닫기"
+	_later.visible = true
+	_status.text = "원본 리소스 팩을 연결하지 못했습니다.\n이유: %s\n\n리소스 팩 조각을 다시 선택하면 다시 설치합니다." % problem
+
+## One line per state the player can check in settings: pack connection and
+## each add-on section with its manifest SHA prefix.
+func status_lines() -> PackedStringArray:
+	var lines := PackedStringArray()
+	if configured: lines.append("원본 리소스 팩: 연결됨")
+	elif not problem.is_empty(): lines.append("원본 리소스 팩: 연결 실패 (%s)" % problem)
+	elif needed: lines.append("원본 리소스 팩: 설치 안 됨")
+	else: lines.append("원본 리소스 팩: 사용 안 함")
+	var base: String = _base if not _base.is_empty() else ProjectSettings.globalize_path(root)
+	var read: Dictionary = read_descriptor(base.path_join("source523_pack.json"))
+	var addons: Dictionary = read_addons(base)
+	for section: String in ADDON_SECTIONS:
+		var entry: Variant = read.descriptor.get(section, addons.get(section)) if read.ok else addons.get(section)
+		if entry is Dictionary: lines.append("%s: 설치됨 (%s)" % [ADDON_NAMES[section], str(entry.manifest_sha256).left(8)])
+		else: lines.append("%s: 없음 → %s 설치 필요" % [ADDON_NAMES[section], ADDON_FILES[section]])
+	return lines
 
 func _actor_pack_needed() -> bool:
 	var actor: Node = get_node_or_null("/root/ActorPack")
@@ -316,7 +348,14 @@ func _show_installer() -> void:
 ## (for example a rebuilt twilight523-addon-ui.zip) can replace the installed
 ## one. Only possible once the pack itself is installed.
 func open_addon_installer() -> bool:
-	if not configured or _layer != null: return false
+	if _layer != null: return false
+	if not configured:
+		# Not connected: the same screen installs (or reinstalls) the pack parts.
+		_show_installer()
+		_later.text = "닫기"
+		_later.visible = true
+		if not problem.is_empty(): _status.text = "원본 리소스 팩 연결 실패: %s\n\n%s" % [problem, _waiting_text()]
+		return true
 	_show_installer()
 	_later.text = "닫기"
 	_later.visible = true
