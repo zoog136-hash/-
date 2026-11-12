@@ -25,7 +25,12 @@ class BackgroundCopy:
 		var sprite: Sprite2D = get_parent() as Sprite2D
 		copy_mode = BackBufferCopy.COPY_MODE_DISABLED
 		if not active or sprite == null or not sprite.is_visible_in_tree(): return
-		var screen: Transform2D = sprite.get_viewport_transform() * sprite.get_global_transform()
+		# Window.get_final_transform() includes the letterbox/blit transform.
+		# BackBufferCopy.rect and SCREEN_UV address the render target before
+		# that blit. Compose the viewport stretch and canvas transforms directly
+		# so root Windows and SubViewports both stay in framebuffer coordinates.
+		var viewport: Viewport = sprite.get_viewport()
+		var screen: Transform2D = viewport.get_stretch_transform() * viewport.global_canvas_transform * sprite.get_canvas_transform() * sprite.get_global_transform()
 		if is_zero_approx(screen.determinant()): return
 		var region: Rect2 = screen * sprite.get_rect()
 		var start: Vector2 = region.position.floor()
