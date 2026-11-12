@@ -20,8 +20,10 @@ const RAISED = Color("24201a")
 const FONT = preload("res://assets/fonts/NotoSansKR.ttf")
 const GRADES = {"일반":Color("ddd6c5"),"고급":Color("79bf83"),"희귀":Color("73b4ee"),"영웅":Color("e97772"),"전설":Color("bc89e3"),"신화":Color("e5be60"),"유일":Color("66dfc2")}
 
+## Original 523 grade color (Grade.ColorID -> ColorTable) when the 523 tables
+## are installed; the TWILIGHT palette only without them.
 static func grade(value: String) -> Color:
-	return GRADES.get(value, TEXT)
+	return preload("res://scripts/loot/current523_item_grade.gd").color(value, GRADES.get(value, TEXT))
 
 static func box(bg: Color = Color(0.035,0.035,0.044,0.97), border: Color = BRONZE, margin: int = 10) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
