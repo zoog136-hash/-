@@ -7,8 +7,12 @@ extends RefCounted
 ##  - Ainhasad bless charge: EinasadBlessAbsolute in the original bless unit,
 ##    shown as points by EinasadVariable #42 (6000 per point, the item's own
 ##    description "(충전량 : N)" must agree), capped by
-##    EinasadBlessMaxNeturalRechargeValue. A level with an ItemConsumeRate row
-##    for the item (85+) keeps the item: that rate's meaning is not resolved;
+##    EinasadBlessMaxNeturalRechargeValue. The item's ItemConsumeRate group
+##    (#12) Value is an added charge percent by user decision (85 x2 ... 89+
+##    x5, above its last row the last Value; docs/einasad523_missing_rules.md). A LevelEinasadBlessRecharge
+##    bonus (드래곤의 비약) names a level-indexed ItemConsumeRate group whose
+##    Value at the character level is the charge in points (its description
+##    "({0} 레벨 충전량 : {1})"), with the same group-12 bonus;
 ##  - food whose buff also has RegenHP/RegenMP: those original amounts are added
 ##    per tick of the existing food regeneration cadence
 ##    (quest523_food_regen_interval_seconds, a TWILIGHT setting; the original
@@ -21,6 +25,7 @@ const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const FOOD_REASONS: Array[String] = ["unsupported_buff_effect:RegenHP","unsupported_buff_effect:RegenMP"]
 const EINASAD_POINT_VARIABLE_TYPE := 42
+const RULES = preload("res://scripts/einasad/einasad523_rules.gd")
 const RECEIPT := "source_native_stack_receipt"
 ## Item lifetime rows: the projection resolves them and use eligibility
 ## refuses an expired item (patch523_item_use.eligibility).
@@ -109,7 +114,7 @@ static func _forbidden(world: Node, areas: Array, point: Vector2) -> bool:
 static func ain(record: Dictionary) -> Dictionary:
 	var definition: Dictionary = _definition(record)
 	if definition.is_empty(): return {}
-	var absolute: int = -1; var cap: int = -1; var player: int = -1; var group: int = 0
+	var absolute: int = -1; var cap: int = -1; var player: int = -1; var group: int = 0; var level_group: int = 0
 	for row: Dictionary in definition.get("item_bonus",[]):
 		var name: String = str(row.get("bonus_type",{}).get("Name",""))
 		var bonus: Dictionary = row.get("bonus",{})
@@ -119,6 +124,10 @@ static func ain(record: Dictionary) -> Dictionary:
 			if group!=0 or row.get("IsPossession")!=false or not _integer(bonus.get("Value")) or int(bonus.Value)<=0 or not _integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID)!=52 or not _integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID)!=0: return {}
 			group = int(bonus.Value); continue
 		if not _direct(row): return {}
+		if name=="LevelEinasadBlessRecharge":
+			# Unit ItemConsumeRateGourpID: the Value is a group, not an amount.
+			if level_group!=0 or int(bonus.Value)<=0: return {}
+			level_group = int(bonus.Value); continue
 		match name:
 			"EinasadBlessAbsolute":
 				if absolute!=-1: return {}
@@ -130,7 +139,7 @@ static func ain(record: Dictionary) -> Dictionary:
 				if player!=-1: return {}
 				player = int(bonus.Value)
 			_: return {}
-	if absolute<=0 or cap<=0 or player!=1: return {}
+	if absolute<0 or (absolute==0 and level_group==0) or cap<=0 or player!=1: return {}
 	var variables: Array[Dictionary] = SOURCE.rows_matching("EinasadVariable","EinasadVariableTypeID",{EINASAD_POINT_VARIABLE_TYPE:true})
 	if variables.size()!=1 or not _integer(variables[0].get("Value")) or int(variables[0].Value)<=0: return {}
 	var unit: int = int(variables[0].Value)
@@ -139,9 +148,13 @@ static func ain(record: Dictionary) -> Dictionary:
 	# The item's own description states the charge in points.
 	var raw: Dictionary = definition.get("original_item",{})
 	var story: String = str(SOURCE.row("DescData_Korean",int(raw.StoryDescID)).get("Description","")) if _integer(raw.get("StoryDescID")) and int(raw.StoryDescID)>0 else ""
+	if level_group>0:
+		# The level amount is filled into the description template at use time.
+		if not story.contains("레벨 충전량"): return {}
+		return {"kind":"ain","points":points,"cap":cap/unit,"unit":unit,"consume_rate_group":group,"level_recharge_group":level_group}
 	var match_result: RegExMatch = RegEx.create_from_string("충전량\\s*:\\s*([0-9,]+)").search(story)
 	if match_result==null or int(match_result.get_string(1).replace(",",""))!=points: return {}
-	return {"kind":"ain","points":points,"cap":cap/unit,"unit":unit,"consume_rate_group":group}
+	return {"kind":"ain","points":points,"cap":cap/unit,"unit":unit,"consume_rate_group":group,"level_recharge_group":0}
 
 ## Food reducer: the record with an unrestricted timed-buff spec whose
 ## RegenHP/RegenMP are per-tick amounts, or {} when this is not such food.
@@ -189,6 +202,31 @@ static func claims(record: Dictionary) -> String:
 	if not food_contract(record).is_empty(): return "food"
 	return ""
 
+## Points one use charges at `level` before the existing charge-bonus
+## percents, or -1 when the original rows do not decide it (charge_refusal).
+static func charge_points(contract: Dictionary, level: int) -> int:
+	var group: int = int(contract.get("consume_rate_group",0))
+	var bonus: int = 0
+	if group>0:
+		# User decision: the group Value is an added percent (85 x2 ... 89+ x5).
+		bonus = RULES.charge_bonus_percent(group, level)
+		if bonus<0: return -1
+	var level_group: int = int(contract.get("level_recharge_group",0))
+	var base: int = int(contract.points)
+	if level_group>0:
+		# An absolute amount next to a level amount: how they combine is not stated.
+		if int(contract.points)>0: return -1
+		var values: Dictionary = RULES.consume_rate_group(level_group)
+		if not values.has(level) or int(values[level])<=0: return -1
+		base = int(values[level])
+	return base*(100+bonus)/100
+
+static func charge_refusal(contract: Dictionary, level: int) -> String:
+	var group: int = int(contract.get("consume_rate_group",0))
+	if group>0 and RULES.charge_bonus_percent(group, level)<0: return "원본 충전 보너스 표(ItemConsumeRate %d) %d레벨 확인 실패 · 아이템 보존" % [group, level]
+	if int(contract.get("level_recharge_group",0))>0 and int(contract.points)>0: return "원본 고정·레벨 충전량 합산 규칙 미확정 · 아이템 보존"
+	return "원본 %d레벨 충전량 행 없음 · 아이템 보존" % level
+
 ## Checks a teleport/Ainhasad use and computes its effect without changing
 ## anything: {"ok", "reason"} plus "destination" or "ainhasad_state".
 static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary:
@@ -209,13 +247,12 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 	if kind=="ain":
 		var contract: Dictionary = ain(record)
 		if contract.is_empty(): return {"ok":false,"reason":"원본 아인하사드 충전 정의 확인 실패 · 아이템 보존"}
-		if int(contract.consume_rate_group)>0:
-			for row: Dictionary in SOURCE.rows_matching("ItemConsumeRate","ItemConsumeRateGroupID",{int(contract.consume_rate_group):true}):
-				if _integer(row.get("Level")) and int(row.Level)==int(world.level): return {"ok":false,"reason":"원본 %d레벨 충전 소비율 해석 미확정 · 아이템 보존" % int(world.level)}
+		var points: int = charge_points(contract, int(world.level))
+		if points<0: return {"ok":false,"reason":charge_refusal(contract, int(world.level))}
 		var service: TwilightAinhasadService = world.ain_service
-		var cap: int = mini(int(contract.cap), service.MAX_BLESSING)
+		var cap: int = mini(int(contract.cap), service.charge_cap())
 		if service.blessing>=cap: return {"ok":false,"reason":"아인하사드 축복이 최대치입니다 · 아이템 보존"}
-		var amount: int = int(round(float(contract.points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
+		var amount: int = int(round(float(points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
 		amount = mini(amount, cap-service.blessing)
 		var before: Dictionary = service.export_state()
 		var after: Dictionary = before.duplicate(true)

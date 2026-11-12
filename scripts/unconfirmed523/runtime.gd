@@ -291,7 +291,11 @@ func execute(key: String, request: Dictionary, revision: int = -1, expected: Str
 	if failure.is_empty(): failure = validate(next)
 	if not failure.is_empty(): busy = false; return _fail(failure)
 	staged[SAVE_KEY] = next
-	return _publish(staged,proposal.get("rewards",[]),proposal.get("assumptions",[]))
+	var claimed_challenge: int = int(state.domains.challenge.get("active",{}).get("challenge_id",request.get("challenge_id",0))) if key == "challenge" and str(request.get("op","")) == "challenge_claim" else 0
+	var published: Dictionary = _publish(staged,proposal.get("rewards",[]),proposal.get("assumptions",[]))
+	# The 523 루틴 ChallengeCompleteCount goal counts each saved challenge claim.
+	if claimed_challenge > 0 and bool(published.get("ok",false)) and world.get("routines") != null: world.routines.record("challenge_complete",{"challenge_id":claimed_challenge,"amount":1})
+	return published
 
 func observe_staged_owner(overrides: Dictionary) -> Dictionary:
 	if overrides.has("ground_drops") and world!=null and world.get("source_ground_acquisitions")!=null and world.source_ground_acquisitions.authorizes(overrides):
