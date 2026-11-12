@@ -795,6 +795,30 @@ func close_domination_window() -> void:
 		_cancel_native_buttons()
 		_domination_window.close()
 
+## --- Original 523 콘텐츠 현황판 (source_main_status_board, world.routines)
+const StatusBoard=preload("res://scripts/ui/original_ui/source_main_status_board.gd")
+var _status_board: RefCounted
+
+func try_open_status_board(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _status_board==null and _pack!=null and hud!=null:
+		var board=StatusBoard.new()
+		if board.configure(_pack,hud).get("ok",false):
+			board.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_status_board=board
+	if _status_board==null or not is_instance_valid(_coordinates):return _fail("source_status_board_pack_scope_unavailable")
+	_cancel_native_buttons()
+	return _status_board.open(_coordinates,world)
+
+func status_board_is_open() -> bool:
+	return _status_board!=null and _status_board.is_open()
+
+func close_status_board() -> void:
+	if status_board_is_open():
+		_cancel_native_buttons()
+		_status_board.close()
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()

@@ -8,6 +8,7 @@ extends RefCounted
 ## quest_service and the World claim handler keep every rule, reward and save.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
+const RoutinePage=preload("res://scripts/ui/original_ui/source_main_routine_page.gd")
 const ROOT="UI/Quest/Quest_All.csb"
 const TAB_MAIN="UI/Quest/Quest_Tab_Main.csb"
 const ROW_REWARD="UI/Quest/Quest_List_Reward.csb"
@@ -19,9 +20,10 @@ const MAIN_PROJECT=1728
 const CLOSE=2412
 const TITLE=3176
 const ROOT_SCOPE: Array[int]=[32064,31608,28632,26500,25048,22696,21288,18928,17520,2412,3176,2092,MAIN_PROJECT]
-## Tab buttons: [on, off] per TWILIGHT quest category.
-const TABS={"main":[26500,25048],"common":[22696,21288],"achievement":[18928,17520]}
-const TAB_LABELS={26500:26952,25048:25100,22696:23148,21288:21340,18928:19380,17520:17572}
+## Tab buttons: [on, off] per TWILIGHT quest category; "mission" is the 523
+## routine tab (Btn_Mission_On/Off, ProjectNode 1000, world.routines).
+const TABS={"main":[26500,25048],"common":[22696,21288],"achievement":[18928,17520],"mission":[15168,13764]}
+const TAB_LABELS={26500:26952,25048:25100,22696:23148,21288:21340,18928:19380,17520:17572,15168:15620,13764:13816}
 ## Quest_Tab_Main nodes.
 const PAGE_SCOPE: Array[int]=[8084,7696,7308,6904,6444,5564,5124,4312,3984,3636,3380,2756,2332,1912,1284,172]
 const GOAL_TEXT=5616
@@ -64,13 +66,17 @@ var _scroll: float=0.0
 var _scroll_min: float=0.0
 var _drag: bool=false
 var _parent: WeakRef
+## The 미션 tab page, or null when its original members are not in the pack.
+var _routine_page: RefCounted
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in [ROOT,TAB_MAIN,ROW_REWARD,ROW_PROGRESS,ROW_COMPLETE,SLOT_SET]:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_quest_window_member_missing","member":member}
 	_pack=pack
 	_hud=weakref(hud)
-	return {"ok":true,"configured":true}
+	var page=RoutinePage.new()
+	_routine_page=page if page.configure(pack,hud,Callable(self,"refresh")).get("ok",false) else null
+	return {"ok":true,"configured":true,"mission_tab":_routine_page!=null}
 
 func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
@@ -121,9 +127,55 @@ func _rows() -> Array[Dictionary]:
 			shown.append(quest)
 	return shown
 
+func _tab_bindings(scope: Array[int], bindings: Dictionary) -> void:
+	for category: String in TABS:
+		var pair: Array=TABS[category]
+		var shown: bool=category!="mission" or _routine_page!=null
+		for index: int in range(2):
+			var offset: int=int(pair[index])
+			if category=="mission":scope.append(offset)
+			bindings[offset]={"role":"button","visible":shown and ((category==_category) if index==0 else (category!=_category)),"activate":Callable(self,"_select_category").bind(category)}
+	for offset: int in TAB_LABELS:
+		scope.append(int(TAB_LABELS[offset]))
+		bindings[int(TAB_LABELS[offset])]={"role":"static_source_text"}
+
+## The 미션 tab: Quest_All with ProjectNode 1000 (Quest_Tab_Mission) in place
+## of the main page.
+func _stage_mission(parent: Object) -> Dictionary:
+	var world: Object=_world.get_ref() if _world!=null else null
+	if world==null or world.get("routines")==null:return _fail("source_quest_window_routines_unavailable")
+	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"_close_requested")},TITLE:{"role":"static_source_text"}}
+	var scope: Array[int]=[]
+	for offset: int in ROOT_SCOPE:
+		if offset!=MAIN_PROJECT:scope.append(offset)
+	_tab_bindings(scope,bindings)
+	_consume_touch(ROOT,scope,bindings)
+	var out: Dictionary={}
+	var page: Dictionary=_routine_page.project_binding(world,out)
+	scope.append(RoutinePage.PROJECT)
+	bindings[RoutinePage.PROJECT]=page.binding
+	var next:=Scene.new()
+	var result: Dictionary=next.configure_nodes(_pack,ROOT,scope,bindings)
+	if not result.get("ok",false):next.free();return result
+	var filled: Dictionary=_routine_page.fill(next,out,page)
+	if not filled.get("ok",false):next.free();return filled
+	var previous: Node2D=_scene
+	next.position=Vector2(600.0,-337.5)
+	parent.add_child(next)
+	next.z_index=150
+	_scene=next
+	_page=null
+	_rows_content=null
+	_row_scenes.clear()
+	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
+		previous.hide()
+		previous.queue_free()
+	return {"ok":true,"handled":true,"member":ROOT,"category":_category,"mission":filled}
+
 func _stage() -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	if parent==null:return _fail("source_quest_window_host_unavailable")
+	if _category=="mission" and _routine_page!=null:return _stage_mission(parent)
 	var rows: Array[Dictionary]=_rows()
 	var selected: Dictionary={}
 	for quest: Dictionary in rows:
@@ -132,15 +184,8 @@ func _stage() -> Dictionary:
 		selected=rows[0]
 		_selected_id=str(selected.id)
 	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"_close_requested")},TITLE:{"role":"static_source_text"}}
-	for category: String in TABS:
-		var pair: Array=TABS[category]
-		for index: int in range(2):
-			var offset: int=int(pair[index])
-			bindings[offset]={"role":"button","visible":(category==_category) if index==0 else (category!=_category),"activate":Callable(self,"_select_category").bind(category)}
 	var scope: Array[int]=ROOT_SCOPE.duplicate()
-	for offset: int in TAB_LABELS:
-		scope.append(int(TAB_LABELS[offset]))
-		bindings[int(TAB_LABELS[offset])]={"role":"static_source_text"}
+	_tab_bindings(scope,bindings)
 	var page: Dictionary=_page_bindings(selected,rows.is_empty())
 	if not page.get("ok",false):return page
 	_consume_touch(ROOT,scope,bindings)
