@@ -125,6 +125,7 @@ CHECKS = [
     ('spell_move523_test', []),
     ('polymorph_weapon_limit523_test', []),
     ('spell_move_polymorph523_main_test', []),
+    ('skill523_source_hold_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -483,7 +484,8 @@ def main():
                       'acquisition_emblem523_test':'ACQEMB523_RESULT',
                       'spell_move523_test':'SPELL_MOVE523_RESULT',
                       'polymorph_weapon_limit523_test':'POLYMORPH_WEAPON_LIMIT523_RESULT',
-                      'spell_move_polymorph523_main_test':'SPELL_MOVE_POLYMORPH523_MAIN_RESULT'}[name]
+                      'spell_move_polymorph523_main_test':'SPELL_MOVE_POLYMORPH523_MAIN_RESULT',
+                      'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
