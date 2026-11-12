@@ -1,0 +1,42 @@
+======================================================================
+FAIL: test_existing_pr122_pass_producers (__main__.PR122ResultContracts.test_existing_pr122_pass_producers) (name='pr122_transform_run_only_scope_test')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b20f9af62341/exchange-runner-baseline-b488fb3-20261112/tools/test_project_runner_test.py", line 33, in test_existing_pr122_pass_producers
+    self.assertEqual(classify_result(name, 0, output + '\n'), (True, False))
+AssertionError: Tuples differ: (False, False) != (True, False)
+
+First differing element 0:
+False
+True
+
+- (False, False)
++ (True, False)
+
+======================================================================
+FAIL: test_existing_pr122_pass_producers (__main__.PR122ResultContracts.test_existing_pr122_pass_producers) (name='pr122_monster_run_only_scope_test')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b20f9af62341/exchange-runner-baseline-b488fb3-20261112/tools/test_project_runner_test.py", line 33, in test_existing_pr122_pass_producers
+    self.assertEqual(classify_result(name, 0, output + '\n'), (True, False))
+AssertionError: Tuples differ: (False, False) != (True, False)
+
+First differing element 0:
+False
+True
+
+- (False, False)
++ (True, False)
+
+======================================================================
+FAIL: test_pr122_terminal_pass_through_real_runner (__main__.RunnerTests.test_pr122_terminal_pass_through_real_runner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/b20f9af62341/exchange-runner-baseline-b488fb3-20261112/tools/test_project_runner_test.py", line 128, in test_pr122_terminal_pass_through_real_runner
+    self.assertEqual(process.returncode, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 47 tests in 28.844s
+
+FAILED (failures=3)

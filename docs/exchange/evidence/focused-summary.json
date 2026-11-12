@@ -1,0 +1,21 @@
+{
+  "total": 3,
+  "passed": 3,
+  "failed": [],
+  "skipped": [],
+  "private_input_unavailable": {},
+  "legacy_map_retired": [],
+  "not_run": [],
+  "checks": [
+    "core_runtime_save_test",
+    "frozen_exchange_main_test",
+    "frozen_exchange_test"
+  ],
+  "validation_scopes": {
+    "core_runtime_save_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "frozen_exchange_main_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "frozen_exchange_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "frozen_exchange_test,frozen_exchange_main_test,core_runtime_save_test",
+  "synthetic_fixture_policy": "EXISTING_CI_AUTO"
+}

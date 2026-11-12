@@ -59,7 +59,10 @@ static func value_text(value: Variant, suffix: String = "") -> String:
 static func blocked_reason(row: Dictionary) -> String:
 	var missing := PackedStringArray(["습득 스킬북·입수/가격"])
 	for field: String in row.get("missing_runtime_fields",[]): missing.append(field)
-	if row.cooldown == null and str(row.activation) != "passive": missing.append("재사용 시간")
+	# User decision 2026-11-12: original CastDelay(ms) is the reuse delay, so a
+	# bound reference no longer lists it as missing.
+	if row.cooldown == null and str(row.activation) != "passive" and not row.has("source523_cast_delay_ms"): missing.append("재사용 시간")
+	for hold: Variant in row.get("source_direct523_hold", []): missing.append("원본 표 직접 실행 불가: " + str(hold))
 	match str(row.name):
 		"슈팅 스타": missing.append("분열 피해·발동 확률·MP 차감 시점")
 		"아쿠아 애로우": missing.append("치유량·시전 방식·아군 PC 대상 연결")

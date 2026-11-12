@@ -21,9 +21,44 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('equipment_binding_fusion_test', []),
+    ('current523_reward_bag_retention_test', []),
+    ('current523_definition_row_lookup_test', []),
+    ('current523_native_registration_scope_test', []),
+    ('loading_profile_route_test', []),
+    ('loading_progress_test', []),
+    ('loading_screen_test', []),
+    ('loading_world_readiness_test', []),
+    ('source523_prebake_job_test', []),
+    ('source523_prebake_handoff_test', []),
+    ('source_native_attachment_bank_test', []),
+    ('source_clothes_prefix_bank_test', []),
+    ('source_attachment_instance_identity_test', []),
+    ('source_subslot_attachment_retry_test', []),
+    ('source_sp2_cell_plan_test', []),
+    ('source_attachment_attributes_test', []),
+    ('source_attachment_attribute_binding_test', []),
+    ('source_attachment_render_projection_test', []),
+    ('source_effect_attachment_anchor_test', []),
+    ('source_npc_effect_anchor_test', []),
+    ('source_presentation_attachment_guard_test', []),
+    ('source_sp2_compositor_test', []),
+    ('character_account_store_test', []),
+    ('character_lobby_test', []),
+    ('lobby_pack_installer_test', []),
+    ('lobby_pack_install_dialog_test', []),
+    ('character_save_profile_test', []),
+    ('character_lobby_source_catalog_test', []),
+    ('character_lobby_source_selection_test', []),
+    ('character_lobby_presentation_test', []),
+    ('character_spine_mesh_player_test', []),
+    ('character_spine_mesh_factory_test', []),
+    ('equipment_collection_native_identity_test', []),
+    ('character_account_route_main_test', []),
     ('reference_sp2_asset_sharing_test', []),
     ('reference_sp2_load_memo_test', []),
     ('reference_sp2_attribute_memo_test', []),
+    ('reference_sp2_parsed_payload_test', []),
     ('boot_progress_log_test', []),
     ('source523_texture_cache_test', []),
     ('frame_hot_paths_test', []),
@@ -36,11 +71,19 @@ CHECKS = [
     ('current523_definition_stream_test', []),
     ('current523_native_register_bounded_test', []),
     ('original_ui_page_cache_test', []),
+    ('original_ui_pack_memory_lifecycle_test', []),
+    ('original_ui_pack_particle_cache_test', []),
     ('original_ui_premultiply_exact_test', []),
     ('original_ui_pma_cache_test', []),
     ('original_ui_hud_field_test', []),
     ('original_ui_change_window_test', []),
     ('original_ui_inventory_snapshot_test', []),
+    ('original_ui_menu_retirement_test', []),
+    ('original_ui_quest_preparation_test', []),
+    ('original_ui_node_scope_test', []),
+    ('quest_category_entries_test', []),
+    ('quest_category_record_reads_test', []),
+    ('menu_memory_trace_test', []),
     ('player_skills523_policy_test', []),
     ('core_runtime_save_test', []),
     ('current523_aden_pack_test', []),
@@ -136,6 +179,7 @@ CHECKS = [
     ('polymorph_weapon_limit523_test', []),
     ('spell_move_polymorph523_main_test', []),
     ('skill523_source_hold_test', []),
+    ('skill523_engine_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -221,6 +265,19 @@ def ensure_objects(root: Path, objects: list[str]):
                        input='\n'.join(missing)+'\n', text=True, check=True,
                        stdout=subprocess.DEVNULL)
 
+def is_preload_reference(text: str, end: int) -> bool:
+    r"""Match the former preload\s*\(\s*$ suffix without scanning its prefix."""
+    while end and text[end - 1].isspace():
+        end -= 1
+    if not end or text[end - 1] != '(':
+        return False
+    end -= 1
+    while end and text[end - 1].isspace():
+        end -= 1
+    # The previous expression did not require a token boundary before preload.
+    return end >= 7 and text[end - 7:end] == 'preload'
+
+
 def stage(root: Path, destination: Path) -> dict:
     if destination.exists() and {p.name for p in destination.iterdir()} != {'.godot'}:
         raise ValueError('stage must be new; refusing to overwrite an existing project')
@@ -271,7 +328,7 @@ def stage(root: Path, destination: Path) -> dict:
             if not PurePosixPath(child).suffix or '%' in child:
                 continue  # dynamic directory/template; exercised by Main
             if not exists(child):
-                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or re.search(r'preload\s*\(\s*$', text[:match.start()])
+                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or is_preload_reference(text, match.start())
                 if required:
                     raise FileNotFoundError('required resource '+child+' referenced by '+path)
                 unresolved.add(child)  # optional guarded paths are not art proof
@@ -391,9 +448,44 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
+            marker = {'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
+                      'current523_reward_bag_retention_test':'CURRENT523_REWARD_BAG_RETENTION_RESULT',
+                      'current523_definition_row_lookup_test':'CURRENT523_DEFINITION_ROW_LOOKUP_RESULT',
+                      'current523_native_registration_scope_test':'CURRENT523_NATIVE_REGISTRATION_SCOPE_RESULT',
+                      'loading_profile_route_test':'LOADING_PROFILE_ROUTE_RESULT',
+                      'loading_progress_test':'LOADING_PROGRESS_RESULT',
+                      'loading_screen_test':'LOADING_SCREEN_RESULT',
+                      'loading_world_readiness_test':'LOADING_WORLD_READINESS_RESULT',
+                      'source523_prebake_job_test':'SOURCE523_PREBAKE_JOB_RESULT',
+                      'source523_prebake_handoff_test':'SOURCE523_PREBAKE_HANDOFF_RESULT',
+                      'source_native_attachment_bank_test':'SOURCE_NATIVE_ATTACHMENT_BANK',
+                      'source_clothes_prefix_bank_test':'SOURCE_CLOTHES_PREFIX_BANK',
+                      'source_attachment_instance_identity_test':'SOURCE_ATTACHMENT_INSTANCE_IDENTITY_RESULT',
+                      'source_subslot_attachment_retry_test':'SOURCE_SUBSLOT_ATTACHMENT_RETRY_RESULT',
+                      'source_sp2_cell_plan_test':'SOURCE_SP2_CELL_PLAN_RESULT',
+                      'source_attachment_attributes_test':'SOURCE_ATTACHMENT_ATTRIBUTES',
+                      'source_attachment_attribute_binding_test':'SOURCE_ATTACHMENT_ATTRIBUTE_BINDING',
+                      'source_attachment_render_projection_test':'SOURCE_ATTACHMENT_RENDER_PROJECTION',
+                      'source_effect_attachment_anchor_test':'SOURCE_EFFECT_ATTACHMENT_ANCHOR',
+                      'source_npc_effect_anchor_test':'SOURCE_NPC_EFFECT_ANCHOR_RESULT',
+                      'source_presentation_attachment_guard_test':'SOURCE_PRESENTATION_ATTACHMENT_GUARD',
+                      'source_sp2_compositor_test':'SOURCE_SP2_COMPOSITOR',
+                      'character_account_store_test':'CHARACTER_ACCOUNT_STORE_RESULT',
+                      'character_lobby_test':'CHARACTER_LOBBY_RESULT',
+                      'lobby_pack_installer_test':'LOBBY_PACK_INSTALLER_RESULT',
+                      'lobby_pack_install_dialog_test':'LOBBY_PACK_DIALOG_RESULT',
+                      'character_save_profile_test':'CHARACTER_SAVE_PROFILE_RESULT',
+                      'character_lobby_source_catalog_test':'CHARACTER_LOBBY_SOURCE_CATALOG_RESULT',
+                      'character_lobby_source_selection_test':'CHARACTER_LOBBY_SOURCE_SELECTION_RESULT',
+                      'character_lobby_presentation_test':'CHARACTER_LOBBY_PRESENTATION_RESULT',
+                      'character_spine_mesh_player_test':'CHARACTER_SPINE_MESH_PLAYER_RESULT',
+                      'character_spine_mesh_factory_test':'CHARACTER_SPINE_MESH_FACTORY_RESULT',
+                      'equipment_collection_native_identity_test':'EQUIPMENT_COLLECTION_NATIVE_IDENTITY_RESULT',
+                      'character_account_route_main_test':'CHARACTER_ACCOUNT_ROUTE_MAIN_RESULT',
+                      'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'reference_sp2_attribute_memo_test':'REFERENCE_SP2_ATTRIBUTE_MEMO_RESULT',
+                      'reference_sp2_parsed_payload_test':'REFERENCE_SP2_PARSED_PAYLOAD_RESULT',
                       'boot_progress_log_test':'BOOT_PROGRESS_LOG_RESULT',
                       'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',
                       'sp2_parse_cache_test':'SP2_PARSE_CACHE_RESULT',
@@ -406,11 +498,19 @@ def main():
                       'current523_definition_stream_test':'CURRENT523_DEFINITION_STREAM_RESULT',
                       'current523_native_register_bounded_test':'CURRENT523_NATIVE_REGISTER_BOUNDED_RESULT',
                       'original_ui_page_cache_test':'ORIGINAL_UI_PAGE_CACHE_RESULT',
+                      'original_ui_pack_memory_lifecycle_test':'ORIGINAL_UI_PACK_MEMORY_RESULT',
+                      'original_ui_pack_particle_cache_test':'ORIGINAL_UI_PARTICLE_RESERVE_RESULT',
                       'original_ui_premultiply_exact_test':'ORIGINAL_UI_PREMULTIPLY_EXACT_RESULT',
                       'original_ui_pma_cache_test':'ORIGINAL_UI_PMA_CACHE_RESULT',
                       'original_ui_hud_field_test':'ORIGINAL_UI_HUD_FIELD_RESULT',
                       'original_ui_change_window_test':'ORIGINAL_UI_CHANGE_WINDOW_RESULT',
                       'original_ui_inventory_snapshot_test':'ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT',
+                      'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
+                      'original_ui_quest_preparation_test':'ORIGINAL_UI_QUEST_PREPARATION_RESULT',
+                      'original_ui_node_scope_test':'ORIGINAL_UI_NODE_SCOPE_RESULT',
+                      'quest_category_entries_test':'QUEST_CATEGORY_ENTRIES_RESULT',
+                      'quest_category_record_reads_test':'QUEST_CATEGORY_RECORD_READS_RESULT',
+                      'menu_memory_trace_test':'MENU_MEMORY_TRACE_RESULT',
                       'player_skills523_policy_test':'SKILLS523_POLICY_RESULT',
                       'core_runtime_save_test':'CORE_RUNTIME_SAVE_RESULT',
                       'current523_aden_pack_test':'CURRENT523_ADEN_PACK_RESULT',
@@ -505,7 +605,8 @@ def main():
                       'spell_move523_test':'SPELL_MOVE523_RESULT',
                       'polymorph_weapon_limit523_test':'POLYMORPH_WEAPON_LIMIT523_RESULT',
                       'spell_move_polymorph523_main_test':'SPELL_MOVE_POLYMORPH523_MAIN_RESULT',
-                      'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT'}[name]
+                      'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT',
+                      'skill523_engine_test':'SKILL523_ENGINE_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

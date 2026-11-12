@@ -1,0 +1,232 @@
+{
+  "scope": "bounded_research_partial_not_production",
+  "complete": false,
+  "maximum_requests": 15,
+  "minimum_request_interval_seconds": 1.1,
+  "observations": [
+    {
+      "name": "categories",
+      "url": "https://api-goats.plaync.com/lms/v2.0/game/market/category",
+      "http_status": 200,
+      "sha256": "33a91b561a74c78f0ade1a257a6fa191f07ee7ae0f0a79b82016c86880546a85",
+      "body_file": "categories.json",
+      "receipt_file": "categories.receipt.json"
+    },
+    {
+      "name": "bundle_leather_server1_page1",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item/366/stock?serverId=1&enchantLevel=0&blessedType=0&page=1&size=10",
+      "http_status": 200,
+      "sha256": "ad97d09bac9bc67dc34c86a48465b7b4b53f51e88dd5e1da2ee69b0ec2a61fb2",
+      "body_file": "bundle_leather_server1_page1.json",
+      "receipt_file": "bundle_leather_server1_page1.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 10,
+        "lastPage": 4,
+        "total": 33,
+        "limit": 10000
+      },
+      "rows": 10
+    },
+    {
+      "name": "leather_catalog_scope_1",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&searchKeyword=%EA%B0%80%EC%A3%BD",
+      "http_status": 200,
+      "sha256": "986416d846bed63fa4cd3a7939db6a0a56d56f33b57571d5e6e94d3f6f4f6730",
+      "body_file": "leather_catalog_scope_1.json",
+      "receipt_file": "leather_catalog_scope_1.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 2,
+        "total": 31,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "leather_catalog_scope_2",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=2&searchKeyword=%EA%B0%80%EC%A3%BD",
+      "http_status": 200,
+      "sha256": "d2e2cfab1726c05ba25885011e6620e6e467095aaf545973333664e846047b72",
+      "body_file": "leather_catalog_scope_2.json",
+      "receipt_file": "leather_catalog_scope_2.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 1,
+        "total": 26,
+        "limit": 10000
+      },
+      "rows": 26
+    },
+    {
+      "name": "leather_catalog_scope_10001",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=10001&searchKeyword=%EA%B0%80%EC%A3%BD",
+      "http_status": 200,
+      "sha256": "b1fc32c8cee4f6918ff6b47f44e92fa87407e202f9767242c5c2ef154a95fb6d",
+      "body_file": "leather_catalog_scope_10001.json",
+      "receipt_file": "leather_catalog_scope_10001.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 1,
+        "total": 12,
+        "limit": 10000
+      },
+      "rows": 12
+    },
+    {
+      "name": "catalog_server1_all",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1",
+      "http_status": 200,
+      "sha256": "cdc242661366b7a1b450678d24a0da8a6ffbf4e2888b69e2a54c5ad3e5d362de",
+      "body_file": "catalog_server1_all.json",
+      "receipt_file": "catalog_server1_all.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 53,
+        "total": 1568,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_server1_category_1",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=1",
+      "http_status": 200,
+      "sha256": "362e64cac9c569941c7ad280ce31abcb9bd4cfb1f90b5b70548c393dd465fd4e",
+      "body_file": "catalog_server1_category_1.json",
+      "receipt_file": "catalog_server1_category_1.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 17,
+        "total": 506,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_server1_category_11",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=11",
+      "http_status": 200,
+      "sha256": "fc8eccd5f50992f464fdb5aac1330debdad56ad19d31496a188ea034d4d8d3b2",
+      "body_file": "catalog_server1_category_11.json",
+      "receipt_file": "catalog_server1_category_11.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 23,
+        "total": 668,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_server1_category_21",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=21",
+      "http_status": 200,
+      "sha256": "48c712090805807e681a0b1dcbab186f76c760855ed961e0bf73ba001987ad93",
+      "body_file": "catalog_server1_category_21.json",
+      "receipt_file": "catalog_server1_category_21.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 7,
+        "total": 207,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_server1_category_31",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=31",
+      "http_status": 200,
+      "sha256": "8851d698267fb2d79833655640fd360f387584472132707ebd52ee2585dbbd71",
+      "body_file": "catalog_server1_category_31.json",
+      "receipt_file": "catalog_server1_category_31.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 3,
+        "total": 85,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_server1_category_41",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=41",
+      "http_status": 200,
+      "sha256": "e43e99f796e79f70061ec37c33c5d87e89d8137edb429aac0056958a75415801",
+      "body_file": "catalog_server1_category_41.json",
+      "receipt_file": "catalog_server1_category_41.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 1,
+        "total": 22,
+        "limit": 10000
+      },
+      "rows": 22
+    },
+    {
+      "name": "catalog_server1_category_51",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=51",
+      "http_status": 200,
+      "sha256": "36b597c1ccde68456812bf940c2d15f097b0fe229b0f24413270f42a18558398",
+      "body_file": "catalog_server1_category_51.json",
+      "receipt_file": "catalog_server1_category_51.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 3,
+        "total": 80,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "bless_types",
+      "url": "https://api-goats.plaync.com/lms/v2.0/game/item/bless",
+      "http_status": 200,
+      "sha256": "e95eeef6482b97f9147724a3c501088095c0dd49138ce6471368d1f4183a8643",
+      "body_file": "bless_types.json",
+      "receipt_file": "bless_types.receipt.json"
+    },
+    {
+      "name": "catalog_server1_category_51_371",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true&serverId=1&category1=51&category2=371",
+      "http_status": 200,
+      "sha256": "1e0b606d26e7a7ec2b95e031e0f9096439841b2eb96c3b47ca279c62731db096",
+      "body_file": "catalog_server1_category_51_371.json",
+      "receipt_file": "catalog_server1_category_51_371.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 3,
+        "total": 75,
+        "limit": 10000
+      },
+      "rows": 30
+    },
+    {
+      "name": "catalog_global_scale_page1",
+      "url": "https://api-goats.plaync.com/lms/v2.0/price/search/item?size=30&page=1&sale=true",
+      "http_status": 200,
+      "sha256": "01040cf146fe1c1a4c2ff765e5e622c1eb27cc88f9160e6e4ba2e2cc3f047736",
+      "body_file": "catalog_global_scale_page1.json",
+      "receipt_file": "catalog_global_scale_page1.receipt.json",
+      "pagination": {
+        "page": 1,
+        "size": 30,
+        "lastPage": 334,
+        "total": 197115,
+        "limit": 10000
+      },
+      "rows": 30
+    }
+  ]
+}

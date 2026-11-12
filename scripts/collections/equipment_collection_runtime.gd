@@ -3,6 +3,9 @@ extends RefCounted
 ## fuzzy name matching, PvP conversion, or per-frame collection scans.
 const Core = preload("res://scripts/collections/equipment_collection_service.gd")
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
+const SourceRows = preload("res://scripts/resources/current523_definition_rows.gd")
+const NativeFields = preload("res://scripts/loot/current523_native_fields.gd")
+const NativeProjection = preload("res://scripts/loot/current523_native_item_projection.gd")
 const PATH: String = "res://data/collections/equipment_collections.json"
 const SAVE_KEY: String = "equipment_collections"
 var world
@@ -18,6 +21,9 @@ var _availability: Dictionary = {}
 var _sources: Dictionary = {}
 var _exact_names: Dictionary = {}
 var _normalized_names: Dictionary = {}
+var _native_collection_names: Dictionary = {}
+var _native_identity: Dictionary = {}
+var _native_identity_loaded: bool = false
 var _busy: bool = false
 var _disk_hash: String = ""
 var _disk_path: String = ""
@@ -43,6 +49,22 @@ func configure(host: Node) -> bool:
 	_sources.clear()
 	_exact_names.clear()
 	_normalized_names.clear()
+	_native_collection_names.clear()
+	_native_identity.clear()
+	_native_identity_loaded = false
+	var required_names: Dictionary = {}
+	for collection: Variant in parser.data.get("collections", []):
+		if not collection is Dictionary: continue
+		for requirement: Variant in collection.get("requirements", []):
+			if requirement is Dictionary and requirement.get("name") is String:
+				required_names[Core.normalize_name(str(requirement.name))] = true
+	# Preserve the existing first catalog entry for legacy IDs, but a duplicate
+	# native ID cannot establish a new verified collection-name binding.
+	var source_counts: Dictionary = {}
+	for raw: Variant in world.catalog_db.get("아이템", []):
+		if not raw is Dictionary: continue
+		var source: String = str(raw.get("sourceId", ""))
+		if not source.is_empty(): source_counts[source] = int(source_counts.get(source, 0)) + 1
 	for raw: Variant in world.catalog_db.get("아이템",[]):
 		if not raw is Dictionary: continue
 		var row: Dictionary = raw
@@ -59,7 +81,14 @@ func configure(host: Node) -> bool:
 		_exact_names[name_value].append(source)
 		if not _normalized_names.has(canonical): _normalized_names[canonical] = []
 		_normalized_names[canonical].append(source)
-		catalog.append({"source_id":source,"name":name_value,"kind":"equipment"})
+		var binding: Dictionary = {"source_id":source,"name":name_value,"kind":"equipment"}
+		var collection_name: String = _native_collection_name(row, required_names, source_counts)
+		if not collection_name.is_empty():
+			binding["collection_name"] = collection_name
+			if collection_name != canonical:
+				if not _normalized_names.has(collection_name): _normalized_names[collection_name] = []
+				_normalized_names[collection_name].append(source)
+		catalog.append(binding)
 	if not core.configure(parser.data,catalog,Stats.SUPPORTED):
 		problem = core.last_error
 		save_blocked = true
@@ -70,6 +99,47 @@ func configure(host: Node) -> bool:
 		_availability[str(row.id)] = core.availability(str(row.id))
 	_rebuild()
 	return true
+
+## Pure identity check: inputs must come from the current verified archive and
+## its descriptor row. A suffix alone never makes a saved or catalog item native.
+static func verified_native_collection_name(record: Dictionary, identity: Dictionary, raw: Dictionary, display_name: String) -> String:
+	var expected_identity: Dictionary = {"kind":"twilight.current523.original-definitions.v1", "source_snapshot":"patch523", "source_sha256":SourceRows.SOURCE_SHA, "source_bytes":SourceRows.SOURCE_BYTES}
+	if identity != expected_identity or display_name.is_empty(): return ""
+	if not record.get("source_m_native_item") is bool or record.source_m_native_item != true: return ""
+	if record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("source_projection") != "current523_original_typed_game_dto_v1": return ""
+	if not NativeProjection.integer(record.get("source_item_class_id")) or int(record.source_item_class_id) <= 0: return ""
+	var item_id: int = int(record.source_item_class_id)
+	if record.get("sourceId") != "m523:item:" + str(item_id) or record.get("source_definition_archive") != identity: return ""
+	if not NativeProjection.integer(raw.get("ID")) or int(raw.ID) != item_id or not raw.get("TestItem") is bool or raw.TestItem != false: return ""
+	if not record.get("source_original_item") is Dictionary or record.source_original_item != raw: return ""
+	if record.get("source_display_name") != display_name or record.get("name") != display_name + " · 원본#" + str(item_id): return ""
+	return Core.normalize_name(display_name)
+
+func _native_collection_name(record: Dictionary, required_names: Dictionary, source_counts: Dictionary) -> String:
+	var source: String = str(record.get("sourceId", ""))
+	if _native_collection_names.has(source): return str(_native_collection_names[source])
+	if int(source_counts.get(source, 0)) != 1 or record.get("source_m_native_item") != true: return ""
+	if not NativeProjection.integer(record.get("source_item_class_id")) or int(record.source_item_class_id) <= 0 or not record.get("name") is String: return ""
+	var item_id: int = int(record.source_item_class_id)
+	var suffix: String = " · 원본#" + str(item_id)
+	var name_value: String = str(record.name)
+	# This is only a cheap candidate filter, never proof. Expand heavy template
+	# fields and source rows only for names the existing guide actually requires.
+	if not name_value.ends_with(suffix) or not required_names.has(Core.normalize_name(name_value.trim_suffix(suffix))): return ""
+	_native_collection_names[source] = ""
+	if not _native_identity_loaded:
+		_native_identity = SourceRows.identity()
+		_native_identity_loaded = true
+	if _native_identity.is_empty(): return ""
+	var full: Variant = NativeFields.full(record)
+	if not full is Dictionary: return ""
+	var raw: Dictionary = SourceRows.row("ItemClass", item_id)
+	var display_name: String = NativeProjection.label(raw.get("IdentifiedDescID"))
+	if display_name.is_empty(): display_name = NativeProjection.label(raw.get("DescID"))
+	var canonical: String = verified_native_collection_name(full, _native_identity, raw, display_name)
+	if not required_names.has(canonical): return ""
+	_native_collection_names[source] = canonical
+	return canonical
 
 func definitions() -> Array:
 	return _rows.duplicate(true)

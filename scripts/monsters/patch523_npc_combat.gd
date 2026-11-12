@@ -434,6 +434,8 @@ func _emit_source_bank_visual(actor: Node, spell: Dictionary, field: String, poi
 	candidate.set_meta("patch523_frame_bytes",budget)
 	candidate.set_meta("patch523_owner_id",actor.get_instance_id())
 	actor.add_child(candidate)
+	# The existing event supplies a world snapshot; the NPC still owns lifetime.
+	candidate.set_as_top_level(true)
 	candidate.global_position = point
 	if not bool(candidate.call("advance_reference_source",0.0,"idle",int(candidate.get("_overlay_facing")))):
 		result["ok"] = false

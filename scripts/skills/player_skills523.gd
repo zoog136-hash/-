@@ -1,7 +1,8 @@
 extends RefCounted
 ## Optional exact-ID 523 evidence adapter. Original bytes live in a private pack.
 ## An optional labelled numeric distance policy preserves the existing engine.
-## CastDelay, proc timing, AC and hit/damage formulae are not inferred here.
+## CastDelay = own reuse delay in ms (user decision 2026-11-12). Proc timing,
+## AC and hit/damage formulae are not inferred here.
 const BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
 const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input_policy.json"
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -77,6 +78,90 @@ func prepare_estimate(record: Dictionary) -> void:
 		for key: String in rule.runtime: record.design_provenance[key] = {"value":record[key],"status":"local_design","basis":"사용자 승인 · 누적523 8종 추정 구현"}
 	# Feed known native costs into the existing book/material UI as well as cast.
 	record.merge(apply_to(record.duplicate(true), str(record["class"]), false), true)
+
+## Table-direct passive contract (docs/skill523_source_hold_report.md).
+## Original BuffBonus type -> [existing skill stat() key, required Unit.Name].
+## Every key is a flat value already read through original_skills.stat().
+const SOURCE_DIRECT_PASSIVE_STATS := {
+	"DamageReduction":["damageReduction","Value"], "ArmorClassBonus":["def","Value"], "ArmorClass":["def","Value"],
+	"MeleeHit":["meleeHit","Value"], "RangeHit":["rangedHit","Value"], "MeleeDamage":["meleeDamage","Value"],
+	"RangeDamage":["rangedDamage","Value"], "MagicResist":["mr","Value"], "HPPlus":["hp","Value"], "MPPlus":["mp","Value"],
+	"Strength":["str","Value"], "Dexterity":["dex","Value"], "Intelligence":["int","Value"]}
+
+## A reference passive opens only when the original tables state every part:
+## one unconditional BuffClass, freely overlapping buff group, no erase rule,
+## and only flat stat rows with a known unit and an existing consumer. PvP-only
+## rows have no PvE recipient and are kept as data. Returns {"reason":...} otherwise.
+func source_direct_passive(id: String, job: String) -> Dictionary:
+	var profile: Dictionary = profiles.get(id, {})
+	if profile.is_empty(): return {"reason":"원본 프로필 없음"}
+	var row: Dictionary = profile.row
+	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문(SpellType %d)의 효과 실행 계약 없음(아래 보류 이유 참고)" % int(row.SpellTypeID)}
+	if int(row.SpellCompositionNode) != 0: return {"reason":"조건 노드 %d 정의 없음" % int(row.SpellCompositionNode)}
+	if not profile.costs.is_empty() or int(row.SpellMaterialItemAmount) != 0 or int(row.MPCost) != 0 or int(row.HPCost) != 0: return {"reason":"패시브에 비용 행이 있음"}
+	var buff_ids: Array[int] = []
+	for entry: Dictionary in profile.bonuses:
+		if int(entry.link.MinSpellLevel) != 0: continue # base level only (existing policy)
+		var name: String = str(entry.type.Name)
+		if name != "BuffClassID" or str(entry.unit.Name) != "BuffClassID" or int(entry.bonus.BonusApplicationTypeID) != 0 or int(entry.bonus.BonusApplicationTargetID) != 0:
+			return {"reason":"주문 보너스 %s의 실행 규칙이 표에 없음" % name}
+		buff_ids.append(int(entry.bonus.Value))
+	if buff_ids.size() != 1 or profile.buffs.size() != 1 or int(profile.buffs[0].row.ID) != buff_ids[0]: return {"reason":"버프 연결이 하나가 아님"}
+	var buff: Dictionary = profile.buffs[0]
+	if bool(buff.row.get("IsBuffGroup", true)):
+		var group: Dictionary = SOURCE_ROWS.row("BuffGroup", int(buff.row.get("BuffGroupID", -1)))
+		if group.is_empty() or group.get("IsAllowOverlap") != true: return {"reason":"버프 그룹 %d 중첩 규칙 미지원" % int(buff.row.get("BuffGroupID", -1))}
+	for key: String in buff.row:
+		if not key.begins_with("IsEraseOn"): continue
+		var flag: Variant = buff.row[key]
+		# Bools and numeric counters alike: any set erase condition is a rule.
+		if (typeof(flag) == TYPE_BOOL and flag) or (typeof(flag) in [TYPE_INT,TYPE_FLOAT] and float(flag) != 0.0): return {"reason":"버프 해제 조건 %s 미지원" % key}
+	var stats: Dictionary = {}
+	var ignored: Array[String] = []
+	var rows: Array = []
+	for entry: Dictionary in buff.bonuses:
+		if int(entry.link.get("MinSpellLevel", 0)) != 0: continue
+		var name: String = str(entry.type.Name)
+		if int(entry.link.get("CharacterLevel", 0)) != 0 or int(entry.link.get("CharacterClass", 0)) != 0: return {"reason":"%s의 캐릭터 레벨/직업 조건 해석이 표에 없음" % name}
+		if int(entry.bonus.BonusApplicationTypeID) != 0 or int(entry.bonus.BonusApplicationTargetID) != 0: return {"reason":"%s의 적용 대상 조건 미지원" % name}
+		if not _source_integer(entry.bonus.Value): return {"reason":"%s 값이 정수가 아님" % name}
+		if name.begins_with("PVP"):
+			ignored.append(name); continue
+		var mapped: Array = SOURCE_DIRECT_PASSIVE_STATS.get(name, [])
+		if mapped.is_empty() or str(entry.unit.Name) != str(mapped[1]): return {"reason":"%s(%s) 수신부 없음" % [name, str(entry.unit.Name)]}
+		stats[str(mapped[0])] = int(stats.get(str(mapped[0]), 0)) + int(entry.bonus.Value)
+		rows.append({"type":name,"value":int(entry.bonus.Value),"unit":str(entry.unit.Name),"stat":str(mapped[0])})
+	if stats.is_empty(): return {"reason":"PvE에서 적용할 수치가 없음"}
+	var native_class := int(bindings.class_ids.get(job, -1))
+	var minimum := -1
+	for limit: Dictionary in profile.learn_limits:
+		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
+		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건 미지원"}
+		minimum = int(limit.CharacterMinLevel)
+	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
+	return {"stats":stats,"minimum_level":minimum,"buff_id":int(buff.row.ID),"rows":rows,"ignored_pvp":ignored}
+
+## Load-time projection on the shared catalog record (as prepare_estimate does).
+func prepare_source_direct(record: Dictionary) -> void:
+	var id := str(record.get("id", ""))
+	if not id.begins_with("lmref_") or not profiles.has(id) or record.has("estimated523") or bool(record.get("local_design", false)): return
+	var row: Dictionary = profiles[id].row
+	record["source523_cast_delay_ms"] = int(row.CastDelay)
+	if not bool(record.get("runtime_blocked", false)): return
+	if str(record.get("activation", "")) != "passive" and record.get("cooldown") == null and _source_integer(row.CastDelay):
+		record["cooldown"] = float(row.CastDelay) / 1000.0 # shown on the hold screen
+	var spec := source_direct_passive(id, str(record.get("class", "")))
+	if spec.has("reason") or not spec.has("rows"):
+		record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패"))]
+		return
+	var parts := PackedStringArray()
+	for entry: Dictionary in spec.rows: parts.append("%s %+d" % [str(entry.type), int(entry.value)])
+	var summary := "패시브 · 원본 523 기본 단계 %s (BuffClass %d)" % [" · ".join(parts), int(spec.buff_id)]
+	if not spec.ignored_pvp.is_empty(): summary += " · PvP 전용 %s는 PvE 대상 없음" % ", ".join(PackedStringArray(spec.ignored_pvp))
+	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":spec.stats,"mp":0,"hp":0,"items":{},
+		"minimum_level":int(spec.minimum_level),"local_kind":"source_direct523","desc":summary},true)
+	record["source_direct523"] = {"kind":"passive_stats","spell_id":int(row.ID),"buff_id":int(spec.buff_id),"rows":spec.rows,"ignored_pvp":spec.ignored_pvp,"basis":"원본 523 SpellBonus/BuffBonus 기본 단계 · BuffGroup 중첩 허용"}
+	record.erase("source_direct523_hold")
 
 func configure_arguments() -> void:
 	var path := ""
@@ -606,6 +691,15 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if not estimate.is_empty(): record.source523.applied.append("estimated_effect")
 	if not recovery.is_empty():record.source523.applied.append("self_recovery")
 	if not progression.is_empty():record.source523.applied.append("reviewed_execution")
+	# User decision 2026-11-12: SpellClass.CastDelay is the skill's own reuse
+	# delay in milliseconds. The existing cooldown factor (skillCooldownPct from
+	# SpellCastDelayDecreasePercent, cast speed) still multiplies it at cast time.
+	var delay: Variant = row.get("CastDelay")
+	if _source_integer(delay) and float(delay) >= 0.0:
+		record.source523["host_cooldown_before"] = record.get("cooldown")
+		record["cooldown"] = float(delay) / 1000.0
+		record.source523["time_policy"] = "SOURCE523_CASTDELAY_MS"
+		record.source523.applied.append("cooldown")
 	if int(row.TargetLimitCount) > 0: record["targets"] = int(row.TargetLimitCount)
 	var duration := scalar_values(profile, "SpellBuffDuration", "Seconds")
 	if mode in ["buff", "counter", "stealth"] and duration.size() == 1 and float(duration[0]) > 0:

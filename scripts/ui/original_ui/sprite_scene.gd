@@ -1,6 +1,7 @@
 extends Node2D
 const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
+const SPRITE_BACK_BUFFER=preload("res://scripts/ui/original_ui/source_sprite_back_buffer.gd")
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 const NODE_SCOPE=preload("res://scripts/ui/original_ui/source_node_scope.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
@@ -518,10 +519,10 @@ func _build(source: Dictionary) -> Node2D:
 		if texture!=null and sprite.material==null:
 			_build_error="original_material_unavailable";sprite.free();node.free();return null
 		node.set_meta("source_blend",_blend(options))
-		var destination:=BackBufferCopy.new()
-		destination.copy_mode=BackBufferCopy.COPY_MODE_VIEWPORT
+		var destination:=SPRITE_BACK_BUFFER.new()
 		origin.add_child(destination)
 		origin.add_child(sprite)
+		destination.track(sprite)
 		node.set_meta("source_sprite",sprite)
 		node.set_meta("source_anchor",widget.anchorPoint)
 		node.set_meta("source_origin",origin)
@@ -879,7 +880,7 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
 	if value and node.get_meta("source_asset_slot",false):
 		var sprite: Sprite2D=node.get_meta("source_sprite",null)
-		var scene: Variant=node.get_meta("source_asset_scene",null)
+		var scene: Variant=node.get_meta("source_asset_scene") if node.has_meta("source_asset_scene") else null
 		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
 		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
@@ -1035,7 +1036,7 @@ func reuse_bound_source_scene_from(source_offset: int, previous_renderer: Node2D
 	return {"ok":true,"reused":true,"player":player,"play_restarted":false,"same_player_instance":true,"runtime_preservation_verified":false}
 
 static func _detach_source_scene(node: Node2D) -> void:
-	var player: Variant=node.get_meta("source_asset_scene",null)
+	var player: Variant=node.get_meta("source_asset_scene") if node.has_meta("source_asset_scene") else null
 	if is_instance_valid(player):
 		player.stop()
 		player.process_mode=Node.PROCESS_MODE_DISABLED
