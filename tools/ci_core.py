@@ -80,6 +80,7 @@ CHECKS = [
     ('original_ui_inventory_snapshot_test', []),
     ('original_ui_menu_retirement_test', []),
     ('original_ui_sprite_copy_letterbox_test', []),
+    ('original_ui_android_blend_test', []),
     ('source523_buff_evidence_mode_test', []),
     ('original_ui_quest_preparation_test', []),
     ('original_ui_node_scope_test', []),
@@ -186,6 +187,7 @@ CHECKS = [
     ('skill523_source_hold_test', []),
     ('skill523_engine_test', []),
     ('orim523_test', []),
+    ('minigame523_scope_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -513,6 +515,7 @@ def main():
                       'original_ui_inventory_snapshot_test':'ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT',
                       'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
                       'original_ui_sprite_copy_letterbox_test':'ORIGINAL_UI_SPRITE_COPY_LETTERBOX_RESULT',
+                      'original_ui_android_blend_test':'ORIGINAL_UI_ANDROID_BLEND_RESULT',
                       'source523_buff_evidence_mode_test':'SOURCE523_BUFF_EVIDENCE_MODE_RESULT',
                       'original_ui_quest_preparation_test':'ORIGINAL_UI_QUEST_PREPARATION_RESULT',
                       'original_ui_node_scope_test':'ORIGINAL_UI_NODE_SCOPE_RESULT',
@@ -618,7 +621,8 @@ def main():
                       'spell_move_polymorph523_main_test':'SPELL_MOVE_POLYMORPH523_MAIN_RESULT',
                       'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT',
                       'skill523_engine_test':'SKILL523_ENGINE_RESULT',
-                      'orim523_test':'ORIM523_RESULT'}[name]
+                      'orim523_test':'ORIM523_RESULT',
+                      'minigame523_scope_test':'MINIGAME523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
