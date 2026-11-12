@@ -159,11 +159,21 @@ func _progress_value(quest: Dictionary, level: int, inventory: Dictionary) -> in
 	return int(progress.get(quest_id, 0))
 
 func entries(level: int, inventory: Dictionary, now: int = -1) -> Array[Dictionary]:
+	return _entries(level,inventory,now)
+
+## The same complete, independent rows as entries(), restricted to a resident
+## category before expensive source materialization and reward planning.
+## Categories are preserved verbatim, including retired legacy daily rows.
+func entries_for_category(level: int, inventory: Dictionary, category: String, now: int = -1) -> Array[Dictionary]:
+	return _entries(level,inventory,now,category)
+
+func _entries(level: int, inventory: Dictionary, now: int, category: Variant=null) -> Array[Dictionary]:
 	_advance_day(now if now >= 0 else int(Time.get_unix_time_from_system()))
 	var result: Array[Dictionary] = []
 	var bulk: bool = source != null and source.has_method("begin_bulk")
 	if bulk: source.begin_bulk()
 	for resident: Dictionary in quests:
+		if category!=null and str(resident.get("category",""))!=category:continue
 		# Original rows keep only their compact form resident; the complete
 		# row is read back from the device record bake (an independent copy,
 		# exactly what duplicating the old resident row returned).
