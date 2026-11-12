@@ -9,6 +9,7 @@ import io
 import os
 import sys
 import json
+import re
 
 SPEC = importlib.util.spec_from_file_location('ci_core', Path(__file__).parents[1]/'tools/ci_core.py')
 CORE = importlib.util.module_from_spec(SPEC)
@@ -171,10 +172,34 @@ class CoreStageTest(unittest.TestCase):
     def test_missing_shader_preload_fails_before_engine_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
-            (root/'scripts/main.gd').write_text('const SHADER = preload("res://shaders/missing.gdshader")')
-            with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
-                CORE.stage(root,Path(temporary)/'stage')
-            self.assertFalse((Path(temporary)/'stage').exists())
+            for call in ['preload(', 'preload \n(\t', 'preload\u2003(\u0085', 'mypreload (']:
+                with self.subTest(call=call):
+                    (root/'scripts/main.gd').write_text('const SHADER = '+call+'"res://shaders/missing.gdshader")')
+                    with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
+                        CORE.stage(root,Path(temporary)/'stage')
+                    self.assertFalse((Path(temporary)/'stage').exists())
+
+    def test_preload_suffix_keeps_existing_unicode_and_boundary_semantics(self):
+        prefixes = ['', 'x', 'preload(', 'preload () ', '\nprior = preload(\"ignored\")\n']
+        suffixes = ['preload(', 'preload ( ', 'preload\n(\t', 'preload\u2003(\u0085',
+                    'preload\x1c(\x1f', 'preload\u200b(', 'preloadx(', 'preload( x',
+                    'preload(( ', 'preload( )', 'pre load(', 'PRELOAD(', 'load(', '']
+        for prefix in prefixes:
+            for suffix in suffixes:
+                source = prefix + suffix + '"res://assets/missing.png"'
+                end = source.index('"res://assets/missing.png"')
+                expected = bool(re.search(r'preload\s*\(\s*$', source[:end]))
+                with self.subTest(prefix=prefix, suffix=suffix):
+                    self.assertEqual(CORE.is_preload_reference(source,end), expected)
+
+    def test_optional_catalog_literals_stay_optional_after_prior_preload(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
+            catalog='{"note":"preload (", "missing":"res://assets/optional.png"}'
+            (root/'data/live.json').write_text(catalog)
+            result=CORE.stage(root,Path(temporary)/'stage')
+            self.assertIn('assets/optional.png',result['guarded_or_dynamic_literals'])
+            self.assertEqual((Path(temporary)/'stage/data/live.json').read_text(),catalog)
 
     def test_escape_and_existing_project_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:

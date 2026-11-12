@@ -1,5 +1,11 @@
 extends Node2D
 class_name TwilightWorld
+const CHARACTER_ACCOUNT = preload("res://scripts/characters/account_store.gd")
+const CHARACTER_PROFILE = preload("res://scripts/characters/save_profile.gd")
+var character_source_cursor: Dictionary = {}
+var character_display_name: String = "황혼의 기사"
+var character_dormant_physical: Dictionary = {}
+var returning_to_character_lobby: bool = false
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
@@ -622,7 +628,7 @@ func _ready() -> void:
 	BOOT_LOG.step("world_set_map")
 	_set_map(active_map_id, false)
 	BOOT_LOG.step("world_load_game")
-	var creating_character: bool = not FileAccess.file_exists(save_path())
+	var creating_character: bool = not FileAccess.file_exists(save_path()) or (not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==save_path() and not bool(CHARACTER_ACCOUNT.session.get("initialized",true)))
 	_load_game(true)
 	if creating_character:
 		var starter: Dictionary = preload("res://scripts/loot/current523_starter_kit.gd").stage(self)
@@ -668,9 +674,9 @@ func _ready() -> void:
 	world_interactions.name = "WorldInteractions"
 	add_child(world_interactions)
 	world_interactions.configure(self)
-	if creating_character and DisplayServer.get_name() != "headless":
+	if creating_character and CHARACTER_ACCOUNT.session.is_empty() and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
-	elif _source_gender_needed() and DisplayServer.get_name() != "headless":
+	elif CHARACTER_ACCOUNT.session.is_empty() and _source_gender_needed() and DisplayServer.get_name() != "headless":
 		# An existing character has no gender yet; the 523 picture needs one.
 		hud.call("open_class_selection",false)
 		hud.show_message("523 캐릭터 그림을 쓰려면 성별을 선택하세요.")
@@ -6072,6 +6078,7 @@ func _update_hud() -> void:
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
+	character_state["character_name"] = character_display_name
 	character_state["source_gender_id"] = source_gender_id
 	var job_profile: Dictionary = _job_profile(job_class)
 	character_state["job_image_path"] = str(job_profile.get("image_path", ""))
@@ -6123,24 +6130,18 @@ func _refresh_combat_hud() -> void:
 # Android debug APKs receive the full catalog automatically. Desktop developers
 # can opt in using --playtest-full-cards; release builds never seed ownership.
 func _full_cards_playtest_active() -> bool:
-	if not OS.is_debug_build() or Engine.is_editor_hint(): return false
-	return OS.get_name() == "Android" or "--playtest-full-cards" in OS.get_cmdline_user_args()
+	return CHARACTER_PROFILE.full_cards_active()
 
 func base_save_path() -> String:
-	if BASE508_TEST.enabled():return "user://base508_source_test_never_written.json"
-	if growth.development: return "user://twilight_growth_lab_v1.json"
-	# Do not carry test grants or awakening/fusion consumption into normal saves.
-	if _full_cards_playtest_active():
-		return "user://twilight_native_png_full_cards_test_v1.json" if NATIVE_PNG.enabled() else "user://twilight_full_cards_test_v1.json"
-	return "user://twilight_native_png_save.json" if NATIVE_PNG.enabled() else SAVE_PATH
+	return CHARACTER_PROFILE.namespace_for(BASE508_TEST.enabled(), growth.development, _full_cards_playtest_active(), NATIVE_PNG.enabled())
 
 func save_path() -> String:
 	if not migration_path_checked:
 		migration_path_checked=true
-		var resolved: Dictionary=MAP_SAVE_MIGRATION.resolve(base_save_path())
+		var resolved: Dictionary=CHARACTER_PROFILE.resolve(base_save_path())
 		if resolved.ok:
 			migrated_save_path=str(resolved.path);migration_pointer_error=""
-		else:migration_pointer_error=str(resolved.error)
+		else:migration_pointer_error=str(resolved.problem)
 	return migrated_save_path if not migrated_save_path.is_empty() else base_save_path()
 
 func _request_general_save() -> void:
@@ -6380,6 +6381,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"monster_world": legacy_population.export_state(),
 		"original_monster_world": original_population.export_state(),
 		"original_position": SOURCE_TRAVEL.snapshot(self),
+		"character_source_cursor":character_source_cursor.duplicate(true),
 		"class_index": class_index,
 		"job_class": job_class,
 		"source_visual_context": {"snapshot":"base508","gender_id":source_gender_id,"active_card_options":source_card_visual_options.duplicate(true)},
@@ -6457,6 +6459,11 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		data["unconfirmed523"] = observed_content.state
 	var save_started_usec: int = Time.get_ticks_usec()
 	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
+	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
+	if not account_stage.ok:
+		if not quiet: hud.show_message(str(account_stage.problem))
+		return ERR_INVALID_DATA
+	data = account_stage.payload
 	var result: Error = equipment_collections.write_save(save_path(), data)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
@@ -6469,6 +6476,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
 		return result
+	if not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==save_path(): CHARACTER_ACCOUNT.session["initialized"]=true
 	for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
 		if data.has(key):equipment_collections.extra_save_fields[key]=data[key].duplicate(true)
 	if not pending_map_save_record.is_empty():
@@ -6521,7 +6529,21 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
+	var account_error: String = CHARACTER_ACCOUNT.validate(value)
+	if not account_error.is_empty():
+		source_save_blocked=true
+		hud.show_message(account_error)
+		return
+	if value.has(CHARACTER_ACCOUNT.KEY):
+		if value[CHARACTER_ACCOUNT.KEY].get("schema") == CHARACTER_ACCOUNT.LEGACY_SCHEMA:
+			source_save_blocked=true; hud.show_message("기존 계정을 캐릭터 선택에서 백업 후 이전해 주세요."); return
+		var selected: Dictionary=CHARACTER_ACCOUNT.selected_record(value)
+		character_display_name = str(selected.get("name","황혼의 기사"))
+		if CHARACTER_ACCOUNT.session.is_empty(): CHARACTER_ACCOUNT.session={"path":save_path(),"id":selected.id,"initialized":selected.initialized}
+		if CHARACTER_ACCOUNT.session.get("path")!=save_path() or CHARACTER_ACCOUNT.session.get("id")!=selected.id:
+			source_save_blocked=true; hud.show_message("선택 캐릭터가 변경되었습니다. 로비에서 다시 접속하세요."); return
 	preload("res://scripts/resources/current523_definition_rows.gd").normalize_loaded_save(value)
+	character_dormant_physical = CHARACTER_ACCOUNT.dormant_items(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)
 	if not extra_error.is_empty():
@@ -6641,7 +6663,7 @@ func _load_game(quiet: bool) -> void:
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	var owner_error: String=owner_boundary.quest_error(self,data.get("quest_state",{}))
 	if owner_error.is_empty() and data.has("patch523_transaction_rng"):owner_error=owner_boundary.rng_error(data.patch523_transaction_rng)
-	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}),data.get("warehouse",{}),data.get("ground_drops",[]))
+	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").state_error(data.get("inventory",{}),data.get("item_instances",{}),data.get("consumable_state",{}),data.get("warehouse",{}),data.get("ground_drops",[]),character_dormant_physical)
 	if owner_error.is_empty() and expedition_local!=null and data.has("expedition523_local"):owner_error=owner_boundary.expedition_error(self,data.expedition523_local)
 	if owner_error.is_empty() and protection523!=null and data.has("protection523"):owner_error=owner_boundary.protection_error(self,data.protection523)
 	if not owner_error.is_empty():
@@ -6657,6 +6679,14 @@ func _load_game(quiet: bool) -> void:
 	if not map_migration.ok:
 		source_save_blocked=true;hud.show_message(str(map_migration.error));return
 	data=map_migration.data
+	if data.has(CHARACTER_ACCOUNT.KEY):
+		# Spatial migrations transform the flat owner payload. Refresh its
+		# selected snapshot and account allocator before staging another file.
+		var sealed_account: Dictionary=CHARACTER_ACCOUNT.seal_payload(data)
+		if not sealed_account.get("ok",false):
+			source_save_blocked=true; hud.show_message(str(sealed_account.get("problem","계정 저장 이전 검증 실패"))); return
+		data=sealed_account.payload
+		character_dormant_physical=CHARACTER_ACCOUNT.dormant_items(data)
 	# Validate every new-map player/drop coordinate before inventory, bosses or
 	# outgoing actors are changed. Unknown layout revisions require migration.
 	var map84_error: String=SOURCE_MAP84.validate_save(data)
@@ -6837,7 +6867,6 @@ func _load_game(quiet: bool) -> void:
 	if current523_aden_play_active: close_current523_aden_play(false)
 	expedition_local.restore(data)
 	if peer_shop!=null:peer_shop.accept_load(data)
-	if not staged_map_save.is_empty():pending_map_save_record=staged_map_save
 	SOURCE_MAP84.accept_layouts(data)
 	totems.accept_state(data.get("totem_state"))
 	totem_combat.settings_blocked = false
@@ -6855,7 +6884,11 @@ func _load_game(quiet: bool) -> void:
 	tj_coupons.restore_context()
 	if protection523!=null and protection523.has_method("load_state") and not protection523.call("load_state",data):
 		patch523_owner_state_problem="가호 소유자 저장 복원 실패 · 기존 상태 보존"
+		migrated_save_path=prior_save_path
 		return
+	if not staged_map_save.is_empty():
+		pending_map_save_record=staged_map_save
+		if not CHARACTER_ACCOUNT.session.is_empty(): CHARACTER_ACCOUNT.session["path"]=save_path()
 	patch523_owner_state_problem=""
 	# Reject missing/corrupt saves and failed migration backups before retiring
 	# any live combat, summons or shields. Only an accepted load may reset them.
@@ -6904,6 +6937,7 @@ func _load_game(quiet: bool) -> void:
 		inventory = inventory_value as Dictionary
 	_ensure_inventory_ammo_defaults()
 	consumable_service.call("prune_removed")
+	character_source_cursor = data.get("character_source_cursor",{}).duplicate(true) if data.get("character_source_cursor",{}) is Dictionary else {}
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
@@ -7165,6 +7199,9 @@ func _ensure_job_class_visual() -> void:
 	_refresh_speed_modifiers()
 
 func _on_job_class_selected(job_name: String) -> void:
+	if not CHARACTER_ACCOUNT.session.is_empty():
+		hud.show_message("캐릭터 직업은 생성 시 고정됩니다. 다른 직업은 캐릭터 선택에서 생성하세요.")
+		return
 	if not JOB_CLASS_ORDER.has(job_name):
 		return
 	_clear_skill_charge()
@@ -10909,6 +10946,7 @@ func _source_gender_needed() -> bool:
 
 func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false
+	if not CHARACTER_ACCOUNT.session.is_empty() and source_gender_id!=gender_id: return false
 	source_gender_id = gender_id
 	_restore_equipped_visuals()
 	_update_hud()
@@ -11457,6 +11495,11 @@ func return_current523_source_to_aden(save_changes: Dictionary={}) -> Dictionary
 func _restore_current523_aden_play() -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or current523_aden_play_active or current523_aden_review_active or CURRENT523_ADEN_REVIEW.requested(): return
 	var options: Dictionary = CURRENT523_ADEN_PLAY_OPTIONS.read()
+	if not CHARACTER_ACCOUNT.session.is_empty():
+		# Device pack paths/preferences remain device-wide; spatial state is
+		# restored from the selected character, not the previous player.
+		var cursor: Dictionary=character_source_cursor if not character_source_cursor.is_empty() else {"native_land_id":4,"source_position":[]}
+		options.merge(cursor,true)
 	# Over the 523 host Aden, play mode is how the world is played: it always
 	# resumes (the old picture-pack world no longer exists to fall back to).
 	var host: bool = CURRENT523_HOST.is_host(field_map)
@@ -11653,3 +11696,33 @@ func _equipment523_install(path: String, sha: String) -> void:
 	if result.get("ok",false): _update_hud()
 	hud.call("equipment523_refresh",equipment523.snapshot(self))
 	hud.call("equipment523_action_result",result)
+
+
+## Save before discarding the entire World, so no timer, combat target, input,
+## deferred transaction or owner cache can leak into another character.
+func return_to_character_lobby() -> bool:
+	if returning_to_character_lobby: return false
+	if current523_aden_review_active or not CHARACTER_PROFILE.allows_roster():
+		hud.show_message("검수·개발 저장에서는 일반 캐릭터 목록으로 이동할 수 없습니다.")
+		return false
+	if _save_game(true)!=OK:
+		hud.show_message("저장에 실패해 현재 캐릭터를 유지합니다. 저장 문제를 해결한 뒤 다시 시도하세요.")
+		return false
+	returning_to_character_lobby=true
+	general_save_pending=false
+	deferred_save.cancel()
+	_clear_skill_charge()
+	_clear_combat_actions()
+	player.set_physics_process(false)
+	set_process(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/boot/Characters.tscn")
+	return true
+
+func dormant_character_items() -> Dictionary:
+	return character_dormant_physical
+
+func character_cursor_snapshot() -> Dictionary:
+	return character_source_cursor.duplicate(true)
+
+func set_character_cursor_snapshot(value: Dictionary) -> void:
+	character_source_cursor=value.duplicate(true)
