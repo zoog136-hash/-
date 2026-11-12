@@ -28,6 +28,10 @@ const LABELS: Dictionary = {
 
 static var _dir: String = "user://"
 static var _sections: Dictionary = {}
+## Inclusive sub-operation timings, separate from the exclusive section totals.
+## Each row keeps [total usec, calls, longest call usec] for this frame only.
+static var _details: Dictionary = {}
+static var _counters: Dictionary = {}
 static var _frames: int = 0
 static var _hitches: int = 0
 static var _worst: Array = []
@@ -41,6 +45,20 @@ static var _nested: int = 0
 
 static func now() -> int:
 	return Time.get_ticks_usec()
+
+## Diagnose a single long spawn/cache miss without double-counting its parent.
+static func detail(operation: String, started_usec: int) -> void:
+	if not enabled: return
+	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
+	if not _details.has(operation): _details[operation] = [0, 0, 0]
+	var row: Array = _details[operation]
+	row[0] += elapsed
+	row[1] += 1
+	row[2] = maxi(int(row[2]), elapsed)
+
+static func count(operation: String, amount: int = 1) -> void:
+	if not enabled: return
+	_counters[operation] = int(_counters.get(operation, 0)) + amount
 
 static func add(section: String, started_usec: int) -> void:
 	if not enabled: return
@@ -69,6 +87,8 @@ static func frame(map_id: String = "") -> void:
 		if total >= THRESHOLD_USEC: _record(total, map_id)
 	_last_frame = at
 	_sections.clear()
+	_details.clear()
+	_counters.clear()
 	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
 
 static func _record(total: int, map_id: String) -> void:
@@ -83,6 +103,14 @@ static func _record(total: int, map_id: String) -> void:
 	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var entry: Dictionary = {"ms":total / 1000, "sections":parts.slice(0, 6), "map":map_id,
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
+	var details: Array = []
+	for operation: String in _details:
+		var row: Array = _details[operation]
+		if int(row[0]) >= 1000:
+			details.append([operation, int(row[0]) / 1000, int(row[1]), int(row[2]) / 1000])
+	details.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+	if not details.is_empty(): entry["details"] = details
+	if not _counters.is_empty(): entry["counters"] = _counters.duplicate()
 	print(PREFIX + JSON.stringify(entry))
 	var index: int = _worst.size()
 	while index > 0 and int(_worst[index - 1].ms) < int(entry.ms): index -= 1
@@ -140,6 +168,8 @@ static func previous_line() -> String:
 static func reset_for_test(directory: String) -> void:
 	_dir = directory
 	_sections.clear()
+	_details.clear()
+	_counters.clear()
 	_frames = 0
 	_hitches = 0
 	_worst.clear()

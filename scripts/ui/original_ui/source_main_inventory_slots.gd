@@ -44,6 +44,17 @@ func entries() -> Dictionary:
 	var offered: Variant=bag.call("_inventory_entries")
 	var displayed: Variant=bag.get("legacy_rows")
 	if not offered is Array or not displayed is Array:return _fail("source_inventory_slots_existing_entries_unavailable")
+	# One owner snapshot serves every authored slot in this synchronous refresh.
+	# Preserve opaque physical references and duplicate detection; never join by
+	# name or ask the owner to regenerate/sort its complete bag for each slot.
+	var owned: Array=offered.duplicate(true)
+	var owned_by_reference: Dictionary={}
+	var owned_reference_counts: Dictionary={}
+	for entry: Dictionary in owned:
+		var reference: Variant=entry.get("reference")
+		if reference is String:
+			owned_by_reference[reference]=entry
+			owned_reference_counts[reference]=int(owned_reference_counts.get(reference,0))+1
 	# Renewal's existing owner keeps its filtered acquisition order in
 	# sorted_references instead of the base bag's legacy_rows. Reuse that
 	# exact order and resolve entries by their opaque reference, never re-sort.
@@ -52,14 +63,15 @@ func entries() -> Dictionary:
 		if bag.get("inventory_grid_dirty")==true:return _fail("source_inventory_slots_current_owner_model_dirty")
 		displayed=[]
 		for reference: String in ordered:
-			var matches: Array=[]
-			for entry: Dictionary in offered:
-				if entry.get("reference")==reference:matches.append(entry)
-			if matches.size()!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
-			displayed.append(matches[0])
-	return {"ok":true,"owned_entries":offered.duplicate(true),"current_display_rows":displayed.duplicate(true),"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
+			if int(owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
+			displayed.append(owned_by_reference[reference])
+	var displayed_reference_counts: Dictionary={}
+	for row: Dictionary in displayed:
+		var reference: Variant=row.get("reference")
+		if reference is String:displayed_reference_counts[reference]=int(displayed_reference_counts.get(reference,0))+1
+	return {"ok":true,"owned_entries":owned,"current_display_rows":displayed.duplicate(true),"owned_by_reference":owned_by_reference,"owned_reference_counts":owned_reference_counts,"displayed_reference_counts":displayed_reference_counts,"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
-func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot") -> Dictionary:
+func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot", current_model: Dictionary={}) -> Dictionary:
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
 	if not PARENTS.has(parent_project_offset):return _fail("source_inventory_slots_parent_project_unknown")
@@ -72,6 +84,9 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 		if not reference is String or reference.is_empty():return _fail("source_inventory_slots_exact_reference_required")
 		if used_references.has(reference):return _fail("source_inventory_slots_duplicate_owned_reference")
 		used_references[reference]=true
+	var model: Dictionary=current_model
+	if model.is_empty() and not used_references.is_empty():model=entries()
+	if not model.is_empty() and not model.get("ok",false):return model
 	var set_bindings: Dictionary={}
 	var set_scope: Array[int]=[]
 	var unresolved: Array=[]
@@ -79,7 +94,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	for offset: int in authored.slots:
 		set_scope.append(offset)
 		var reference: String=str(assignments.get(offset,""))
-		var slot: Dictionary=_slot_binding(offset,reference)
+		var slot: Dictionary=_slot_binding(offset,reference,model)
 		if not slot.get("ok",false):return slot
 		set_bindings[offset]=slot.binding
 		if slot.has("owner_result"):owner_results[offset]=slot.owner_result
@@ -95,13 +110,13 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	else:unresolved.append({"field":"existing_native_scroll_input_binding","offset":scroll_offset,"required":"caller source_scroll binding with existing input Callable"})
 	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
 
-func refresh_slot(slot_scene: Node2D, reference: String) -> Dictionary:
+func refresh_slot(slot_scene: Node2D, reference: String, current_model: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(slot_scene) or str(slot_scene.get("source_member"))!=SLOT_MEMBER:return _fail("source_inventory_slots_original_scene_required")
 	if not slot_scene.has_method("set_bound_visible") or not slot_scene.has_method("set_bound_text"):return _fail("source_inventory_slots_existing_scene_api_missing")
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
 	if reference.is_empty():return slot_scene.set_bound_visible(SELECTED,false)
-	var owned: Dictionary=_resolve_reference(reference)
+	var owned: Dictionary=_resolve_reference(reference,current_model)
 	if not owned.get("ok",false):
 		owned["scope_rebuild_required"]=true
 		return owned
@@ -139,12 +154,12 @@ func activate_existing_selection(reference: String) -> Dictionary:
 	bag.call("_activate_selected")
 	return {"ok":true,"emitted":true,"reference":reference,"action_result_known":false}
 
-func _slot_binding(offset: int, reference: String) -> Dictionary:
+func _slot_binding(offset: int, reference: String, current_model: Dictionary) -> Dictionary:
 	var scope: Array[int]=[BUTTON,BACKGROUND,SELECTED]
 	var bindings: Dictionary={BUTTON:{"role":"button","displaystate":false,"activate":Callable()},SELECTED:{"visible":false}}
 	var unresolved: Array=[]
 	if not reference.is_empty():
-		var owned: Dictionary=_resolve_reference(reference)
+		var owned: Dictionary=_resolve_reference(reference,current_model)
 		if not owned.get("ok",false):return owned
 		var entry: Dictionary=owned.entry
 		if typeof(entry.get("amount"))!=TYPE_INT:return _fail("source_inventory_slots_existing_amount_required")
@@ -175,18 +190,14 @@ func _slot_binding(offset: int, reference: String) -> Dictionary:
 		return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"owner_result":supplied,"unresolved_fields":unresolved}
 	return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"unresolved_fields":unresolved}
 
-func _resolve_reference(reference: String) -> Dictionary:
-	var current: Dictionary=entries()
+func _resolve_reference(reference: String, current_model: Dictionary={}) -> Dictionary:
+	# Actions use a fresh snapshot by default, so stale hits still recheck live
+	# ownership/filtering. Only a single synchronous presentation shares one.
+	var current: Dictionary=entries() if current_model.is_empty() else current_model
 	if not current.get("ok",false):return current
-	var matches: Array=[]
-	for entry: Dictionary in current.owned_entries:
-		if entry.get("reference")==reference:matches.append(entry)
-	if reference.is_empty() or matches.size()!=1:return _fail("source_inventory_slots_current_owned_reference_not_unique")
-	var shown: int=0
-	for row: Dictionary in current.current_display_rows:
-		if row.get("reference")==reference:shown+=1
-	if shown!=1:return _fail("source_inventory_slots_reference_not_in_current_bag_filter")
-	return {"ok":true,"entry":matches[0].duplicate(true)}
+	if reference.is_empty() or int(current.owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_owned_reference_not_unique")
+	if int(current.displayed_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_reference_not_in_current_bag_filter")
+	return {"ok":true,"entry":current.owned_by_reference[reference].duplicate(true)}
 
 func _identities() -> Dictionary:
 	if _pack==null:return _fail("source_inventory_slots_source_pack_required")

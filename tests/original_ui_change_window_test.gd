@@ -23,6 +23,42 @@ class FakeHud extends Node:
 	var card_collection_state: Dictionary={}
 	var character_state: Dictionary={}
 
+class NativeController extends Node:
+	var handles: bool=true
+	var categories: Array[String]=[]
+	func try_open_change_window(category: String) -> Dictionary:
+		categories.append(category)
+		return {"ok":handles,"handled":handles}
+
+# Exercise the production routing without loading a private original pack or
+# constructing a second browser. Existing UI suites cover that browser itself.
+class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
+	var browser_categories: Array[String]=[]
+	var reorders: int=0
+	var selections: int=0
+	var controls_refreshes: int=0
+	var marker_refreshes: int=0
+	func _ready() -> void:pass
+	func _process(_delta: float) -> void:pass
+	func _reset_catalog_drag() -> void:pass
+	func _sync_screen_focus() -> void:pass
+	func _open_window(section: String, _title: String, _description: String) -> void:
+		active_section=section
+		catalog_panel.hide()
+		workspace.show()
+	func _open_catalog_browser(category: String) -> void:
+		catalog_browser_active=true
+		browser_categories.append(category)
+		catalog_panel.show()
+	func _refresh_catalog_owned_order() -> void:reorders+=1
+	func _refresh_card_controls() -> void:
+		controls_refreshes+=1
+		super._refresh_card_controls()
+	func _refresh_option_awakening_markers() -> void:
+		marker_refreshes+=1
+		super._refresh_option_awakening_markers()
+	func _on_catalog_item_selected(_index: int) -> void:selections+=1
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label)
@@ -35,6 +71,8 @@ func _run() -> void:
 	_fails_closed()
 	_owned_order()
 	_option_split()
+	_catalog_routing()
+	_hidden_browser_state()
 	_hud_hooks()
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
@@ -98,6 +136,88 @@ static func _split(line: String) -> Array:
 	var cut: int=line.rfind(" ")
 	if cut>0 and line.substr(cut+1).left(1) in ["+","-"]:return [line.left(cut),line.substr(cut+1)]
 	return [line,""]
+
+func _routing_hud() -> RoutingHud:
+	# Retain the actual HUD scene's @onready targets while replacing only its
+	# browser construction/transition work with counters.
+	var instance: Node=preload("res://scenes/ui/HUD.tscn").instantiate()
+	instance.set_script(RoutingHud)
+	var hud: RoutingHud=instance as RoutingHud
+	var ui_root: Control=hud.get_node("Root")
+	hud.workspace=PanelContainer.new()
+	ui_root.add_child(hud.workspace)
+	hud.catalog_panel=PanelContainer.new()
+	ui_root.add_child(hud.catalog_panel)
+	hud.catalog_list=ItemList.new()
+	hud.catalog_panel.add_child(hud.catalog_list)
+	hud.catalog_search=LineEdit.new()
+	hud.catalog_panel.add_child(hud.catalog_search)
+	root.add_child(hud)
+	return hud
+
+func _catalog_routing() -> void:
+	var hud:=_routing_hud()
+	var native:=NativeController.new()
+	hud.add_child(native)
+	hud.original_main_ui_controller=native
+	for category: String in ["변신","마법인형"]:
+		hud.open_catalog(category)
+		check(hud.browser_categories.is_empty(),"handled "+category+" creates no hidden browser")
+		check(hud.active_section==category and hud.catalog_category==category and not hud.workspace.visible,"native category stays active while workspace is hidden")
+	check(native.categories==["변신","마법인형"],"each native window is attempted once")
+	native.handles=false
+	hud.open_catalog("변신")
+	check(hud.browser_categories==["변신"] and hud.workspace.visible,"unsupported original state opens the current browser once")
+	hud.original_main_ui_controller=null
+	hud.open_catalog("마법인형")
+	check(hud.browser_categories==["변신","마법인형"],"an unselected original pack retains the current browser")
+	hud.original_main_ui_controller=native
+	var native_attempts: int=native.categories.size()
+	for category: String in ["아이템","성물"]:hud.open_catalog(category)
+	check(native.categories.size()==native_attempts and hud.browser_categories==["변신","마법인형","아이템","성물"],"item and relic browsers do not attempt a polymorph window")
+	hud.free()
+
+func _hidden_browser_state() -> void:
+	var hud:=_routing_hud()
+	hud.active_section="성물"
+	hud.catalog_category="성물"
+	hud.catalog_panel.hide()
+	hud.workspace.hide()
+	var record: Dictionary={"name":"old relic","grade":"일반","sourceId":"m508:98:1"}
+	hud.catalog_results=[record]
+	hud.catalog_list.add_item("A")
+	hud.catalog_list.select(0)
+	hud.catalog_list.set_item_metadata(0,"old relic metadata")
+	var old_icon:=PlaceholderTexture2D.new()
+	hud.catalog_list.set_item_icon(0,old_icon)
+	var native:=NativeController.new()
+	hud.add_child(native)
+	hud.original_main_ui_controller=native
+	hud.open_catalog("변신")
+	hud.set_card_collection_state({"owned":{"변신":{CARDS.card_id(record):true}}})
+	check(hud.reorders==0 and hud.selections==0,"a hidden browser does not rebuild stale card rows")
+	check(hud.controls_refreshes==0 and hud.marker_refreshes==0,"native ownership updates skip both hidden browser refreshes")
+	check(hud.catalog_list.get_item_metadata(0)=="old relic metadata" and hud.catalog_list.get_item_icon(0)==old_icon,"native category ownership cannot decorate old relic rows")
+	hud._refresh_option_awakening_markers()
+	check(hud.catalog_list.get_item_metadata(0)=="old relic metadata" and hud.catalog_list.get_item_icon(0)==old_icon,"the marker's own hidden guard also protects other update callers")
+	hud.marker_refreshes=0
+	hud.original_main_ui_controller=null
+	var saved: Dictionary={"query":"saved query","grade":"희귀","page":2,"id":"saved card","scroll":73.0}
+	hud.catalog_view_state["변신"]=saved.duplicate(true)
+	hud._close_workspace()
+	check(hud.catalog_view_state["변신"]==saved,"closing a native window preserves the saved browser selection and scroll")
+	hud.active_section="변신"
+	hud.catalog_browser_active=true
+	hud.catalog_panel.show()
+	hud.set_card_collection_state({"owned":{"변신":{}}})
+	check(hud.reorders==1 and hud.selections==1,"the visible browser still refreshes ownership and selection")
+	check(hud.controls_refreshes==1 and hud.marker_refreshes==1 and hud.catalog_list.get_item_metadata(0)==CARDS.card_id(record),"the visible browser still executes its real controls and marker updates")
+	hud.catalog_search.text="current query"
+	hud.catalog_grade_filter="일반"
+	hud.selected_catalog_record=record
+	hud._hide_aux_panels()
+	check(hud.catalog_view_state["변신"].query=="current query" and hud.catalog_view_state["변신"].id==record.sourceId,"closing the current browser still records its own view")
+	hud.free()
 
 func _hud_hooks() -> void:
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")

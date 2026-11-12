@@ -140,6 +140,11 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	return Vector2.INF
 
 func _spawn_slot(slot: Dictionary) -> void:
+	var started: int = FRAME_HITCH.now()
+	_spawn_slot_measured(slot)
+	FRAME_HITCH.detail("spawn.total", started)
+
+func _spawn_slot_measured(slot: Dictionary) -> void:
 	# A repeated wake/spawn request must not orphan a live actor when the slot
 	# is reassigned. Dead or freed actors may still be replaced normally.
 	var occupant: Variant = slot.get("monster")
@@ -255,7 +260,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 	# A pooled actor may carry the last map's source override. Restore that
 	# before setup writes this life/record's normal animation collision shape.
 	preload("res://scripts/maps/source_body_profile.gd").apply(monster,false)
-	if not monster.setup(record,world.player,world,null if SOURCE_M_PORT.native(record) else world._monster_texture(record)):
+	var setup_started: int = FRAME_HITCH.now()
+	var setup_ok: bool = monster.setup(record,world.player,world,null if SOURCE_M_PORT.native(record) else world._monster_texture(record))
+	FRAME_HITCH.detail("spawn.setup", setup_started)
+	if not setup_ok:
 		if boss:
 			if had_boss: boss_director.states[boss_key] = prior_boss
 			else: boss_director.states.erase(boss_key)

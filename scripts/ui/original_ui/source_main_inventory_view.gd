@@ -6,6 +6,7 @@ extends RefCounted
 ## original Inventory_Slot_Set.csb placed one slot pitch lower, the way the
 ## client fills that ScrollView. Dragging scrolls the rows inside its clip.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const Chrome=preload("res://scripts/ui/original_ui/source_main_inventory_bindings.gd")
 const Slots=preload("res://scripts/ui/original_ui/source_main_inventory_slots.gd")
 const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
@@ -199,6 +200,12 @@ func _owner_branch(bag: Object) -> Dictionary:
 	return {"ok":true,"capacity":capacity,"expanded":capacity==8,"basis":"existing owner grid.columns/window expanded metadata"}
 
 func _stage(parent: Node, initial_open: bool) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_stage_impl(parent,initial_open)
+	FRAME_HITCH.detail("ui.inventory_stage",started)
+	return result
+
+func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	_refreshing=true
 	var model: Dictionary=_eligible_model()
 	if not model.get("ok",false):
@@ -223,7 +230,7 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 			while extra_rows.size()<line:extra_rows.append({})
 			extra_rows[line-1][slot_offsets[index%columns]]=reference
 		entries_by_reference[reference]=row.duplicate(true)
-	var slot_contract: Dictionary=_slots.build(slot_set,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant)
+	var slot_contract: Dictionary=_slots.build(slot_set,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant,model)
 	if not slot_contract.get("ok",false):
 		_refreshing=false
 		return _stage_failed(_unsupported_result(slot_contract))
@@ -267,7 +274,7 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 		var authored_row: Variant=inventory_scene.get("source_nodes").get(slot_set)
 		if not authored_row is Node2D or authored_row.get_parent()==null:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_row_missing"})
 		for line: int in range(extra_rows.size()):
-			var row_contract: Dictionary=_slots.build(slot_set,extra_rows[line],{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant)
+			var row_contract: Dictionary=_slots.build(slot_set,extra_rows[line],{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant,model)
 			if not row_contract.get("ok",false):return _reject_staged(next,_unsupported_result(row_contract))
 			var row_binding: Dictionary=row_contract.bindings[slot_set]
 			var row_scope: Array[int]=[]
@@ -378,8 +385,13 @@ func _on_category_changed(_model: Dictionary) -> void:
 	if is_open() and not _refreshing:refresh()
 
 func _on_selection_changed(_reference: String) -> void:
+	if _hits.is_empty():return
+	var model: Dictionary=_slots.entries()
+	if not model.get("ok",false):
+		_fallback(_unsupported_result(model))
+		return
 	for reference: String in _hits:
-		var result: Dictionary=_slots.refresh_slot(_hits[reference].native_slot_scene,reference)
+		var result: Dictionary=_slots.refresh_slot(_hits[reference].native_slot_scene,reference,model)
 		if not result.get("ok",false):
 			_fallback(_unsupported_result(result))
 			return
