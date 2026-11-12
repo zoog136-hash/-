@@ -19,6 +19,8 @@ TWILIGHT_SOURCE_LOBBY_SHA256=<original_ui.json의 SHA-256>
 - current523 `files_info.json.523`: 860,721 bytes, SHA-256 `fefb29fb8126f106e4d127b59a81459efc576d5a6eab8456b4c4988ae390f4dc`.
 - 원본 25조합 팩 manifest SHA-256: `c9dc3ff88e11ef6435b13c44790756e9e31c79dcec3d7517ccf5a0cff909a62d`.
 
+완성 입력과 검증 기록은 비공개 Library의 `TWILIGHT_current523_all25_lobby_original_input_and_validation_20261112.zip`에 보존했다. ZIP은 73,991,212 bytes, SHA-256 `d06972e04fd79f1881bf471ae945a36f1de1af1bad11718f83b6fe6f25aa0f70`이며 원본 175파일의 해시를 압축 안에서 전수 재검증했다. 이 비공개 입력은 본체 재생 SDK를 포함하지 않으며, 접근 식별자와 다운로드 주소는 공개 문서에 게시하지 않는다.
+
 공개 Git에는 코드·테스트·문서만 넣는다. 사용자가 제공한 원본과 그에 명시된 원본 아카이브에서 복원한 제3자 아트는 공개 저장소에 포함하지 않는다.
 
 ## 확인한 원본 범위
@@ -58,8 +60,9 @@ Spine 공식 문서는 export와 runtime의 major/minor 일치를 요구한다. 
 | presentation consumer | 538/538 | lease·재진입·교체·정확한 clip·fit 경계; factory fixture 포함 |
 | 계정 로비 UI | 42/42 | 연출 실패 시 생성 허용·선택 콜백 보호 등 |
 | 실제 기사 남성 팩 | 31/31 | 실제 CSB mount/명시 재생·2 atlas pages·body runtime 부재·원본 파일 불변 |
+| 실제 전체 25조합 팩 | 542/542 | 25 body/78page·16CSB 소비·6누락ID·다른 저장 namespace 불변; SDK 부재 |
 | Linux 실제 화면 | 기사 남성 원본 전후 효과 움직임 확인 | 1,050×820 OpenGL Mesa llvmpipe, Dummy audio |
 
 최종 실제 기사 검사에서 script/resource/Unicode 오류 0, 실행 중 source hash 변경 0이었다. Linux 화면에서는 이름 입력·캐릭터 생성 없이 실제 선택 로비의 원문 clip 버튼을 사용했다. 원작 본체 재생·원작 배치 일치·Android 기기 성능은 검증하지 않았다.
 
-기본 core gate는 신규 3개 suite를 포함해 120개 스크립트다. 원본은 공개 CI에 넣지 않으며 원문 opt-in 결과와 CI fixture 결과를 구분한다. 남은 작업은 (1) 실제 Spine 3.6 호환 evaluator/mesh renderer 설치·연결, (2) 원문에서 없는 6개 효과 ID의 검증 가능한 연결 증거, (3) 원작 배치/자동 연출 증거와 Android 실측이다.
+기본 core gate는 최신 main `8d030bb5`의 추가 9개 검사를 보존하여 129개 스크립트다. 원본은 공개 CI에 넣지 않으며 원문 opt-in 결과와 CI fixture 결과를 구분한다. 남은 작업은 (1) 실제 Spine 3.6 호환 evaluator/mesh renderer 설치·연결, (2) 원문에서 없는 6개 효과 ID의 검증 가능한 연결 증거, (3) 원작 배치/자동 연출 증거와 Android 실측이다.
