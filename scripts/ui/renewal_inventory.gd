@@ -12,6 +12,9 @@ var controller: Node
 var search_row: HBoxContainer
 var expand_button: Button
 var lock_button: Button
+var acquisition_button: Button
+## The last 획득처 request: {item_class_id, native (original popup result) or summary lines}.
+var last_acquisition: Dictionary = {}
 var sort_mode: int = 0
 var inventory_fingerprint: int = -1
 var inventory_list_rebuilds: int = 0
@@ -126,6 +129,10 @@ func _ready() -> void:
 	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,44))
 	lock_button.name = "InventoryLock"
 	detail_stack.add_child(lock_button)
+	acquisition_button = UI.button("획득처",_open_acquisition,Vector2(0,44))
+	acquisition_button.name = "InventoryAcquisition523"
+	acquisition_button.hide()
+	detail_stack.add_child(acquisition_button)
 	weight_readout = UI.label("",11,UI.MUTED)
 	layout.add_child(weight_readout)
 	weight_readout.hide()
@@ -698,6 +705,8 @@ func _refresh_detail(item_reference: String) -> void:
 			var delta: int = int(item.get(pair[0], 0)) - int((current as Dictionary).get(pair[0], 0))
 			if delta != 0:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
+	if acquisition_button != null:
+		acquisition_button.visible = _item_class_id(item) > 0 and ACQUISITION523.available()
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
 	if controller!=null and not _is_item_equipped(item_reference):
@@ -718,6 +727,31 @@ func _refresh_detail(item_reference: String) -> void:
 	var selection_locked: bool=bool(character_state.get("item_locks",{}).get(item_reference,false))
 	if lock_button!=null:lock_button.icon=UI.icon("lock") if selection_locked else null
 	if selection_locked and not detail_type.text.contains("잠금"):detail_type.text+=" · 잠금"
+
+const ACQUISITION523 = preload("res://scripts/acquisition523/item_acquisition523.gd")
+
+static func _item_class_id(item: Dictionary) -> int:
+	var value: Variant = item.get("source_item_class_id")
+	return int(value) if typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and float(value)>0 else -1
+
+## The original 523 재료 아이템 출처 popup for the selected item; without the
+## original UI pack the same rows are listed in the detail text.
+func _open_acquisition() -> void:
+	if selected_item.is_empty() or controller == null: return
+	var item: Dictionary = _find_item_record(selected_item)
+	var id: int = _item_class_id(item)
+	if id <= 0: return
+	var item_name: String = _base_item_name(selected_item)
+	last_acquisition = {"item_class_id":id}
+	if controller.has_method("open_item_acquisition523"):
+		var native: Dictionary = controller.open_item_acquisition523(id,item_name)
+		last_acquisition["native"] = native
+		if native.get("handled",false): return
+	var data: Dictionary = ACQUISITION523.sources(id)
+	var lines: PackedStringArray = ACQUISITION523.summary_lines(data)
+	if lines.is_empty(): lines.append(str(data.get("problem","원본 표에 획득처 행이 없습니다")))
+	last_acquisition["lines"] = lines
+	detail_text.text += "\n\n[color=#d8b878]획득처 (원본 523)[/color]\n" + UI.safe("\n".join(lines))
 
 func _activate_selected() -> void:
 	if selected_item.is_empty(): return

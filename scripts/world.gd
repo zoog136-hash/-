@@ -126,6 +126,8 @@ const DOMINATION_STONES = preload("res://scripts/domination/domination_stone_run
 var domination_stones = DOMINATION_STONES.new()
 const ROUTINE523 = preload("res://scripts/routine523/routine523_runtime.gd")
 var routines = ROUTINE523.new()
+const EMBLEM523 = preload("res://scripts/emblem523/emblem523.gd")
+var emblem523 = EMBLEM523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -6369,6 +6371,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"half_elixir523": half_elixir.state.duplicate(true),
 		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),
 		ROUTINE523.SAVE_KEY: routines.export_state(),
+		EMBLEM523.SAVE_KEY: emblem523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -6967,6 +6970,7 @@ func _load_game(quiet: bool) -> void:
 	# Before the instance sync below: slots 2/3 hold physical stones.
 	domination_stones.import_state(data.get(DOMINATION_STONES.SAVE_KEY, {}))
 	routines.import_state(data.get(ROUTINE523.SAVE_KEY, {}))
+	emblem523.import_state(data.get(EMBLEM523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
