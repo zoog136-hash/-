@@ -39,7 +39,7 @@ jobs:
         run: |
           printf 'config_version=5\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n' > project.godot
           set -o pipefail
-          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path . --rendering-method gl_compatibility --script tests/source_sp2_compositor_test.gd -- --render 2>&1 | tee source-sp2-render.txt
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path . --audio-driver Dummy --rendering-method gl_compatibility --script tests/source_sp2_compositor_test.gd -- --render 2>&1 | tee source-sp2-render.txt
           python3 - <<'PY'
           import json
           from pathlib import Path

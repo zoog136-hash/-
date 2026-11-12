@@ -92,9 +92,14 @@ func texture_and_reset() -> void:
 	var sprite := Sprite2D.new()
 	sprite.centered = false
 	sprite.texture = texture
-	sprite.position = Vector2(17, -9)
+	sprite.position = Vector2(17, 19)
 	sprite.scale = Vector2(1.5, 1.5)
-	root.add_child(sprite)
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(128, 128)
+	root.add_child(viewport)
+	var parent := Node2D.new()
+	viewport.add_child(parent)
+	parent.add_child(sprite)
 	for attributes: Array in [["8"], ["128"], ["8"]]:
 		COMPOSITOR.apply(sprite, COMPOSITOR.style({"kind":"clothes","source_attributes":attributes}, [], false, "compatible"))
 		check(sprite.material is ShaderMaterial, "source composition attaches a shader")
@@ -103,21 +108,51 @@ func texture_and_reset() -> void:
 		if copy_nodes.size() == 1:
 			check(copy_nodes[0].show_behind_parent, "copy precedes the sprite draw")
 			check(copy_nodes[0].copy_mode == BackBufferCopy.COPY_MODE_RECT, "copy is bounded to the sprite region")
+			check(copy_nodes[0].rect == Rect2(17, 19, 5, 3), "copy uses outward rounded viewport coordinates in Godot4.7.2")
+			check((sprite.get_global_transform_with_canvas() * copy_nodes[0].transform).is_equal_approx(Transform2D.IDENTITY), "copy transform cancels actor and canvas transforms")
 		check(sprite.texture == texture and sprite.texture.get_image().get_data() == before and image.get_data() == before, "source texture bytes remain unchanged")
-		check(sprite.position == Vector2(17, -9) and sprite.scale == Vector2(1.5, 1.5), "source origin and scale remain unchanged")
+		check(sprite.position == Vector2(17, 19) and sprite.scale == Vector2(1.5, 1.5), "source origin and scale remain unchanged")
 	# Reusing the same node with a different source frame must move the
 	# copy region with its exact source rectangle, without replacing pixels.
 	sprite.centered = true
 	sprite.offset = Vector2(-4, 7)
 	COMPOSITOR.apply(sprite, COMPOSITOR.style({"kind":"clothes","source_attributes":["8"]}, [], false, "compatible"))
-	check(copies(sprite).size() == 1 and copies(sprite)[0].rect == sprite.get_rect(), "copy bounds follow the current sprite origin and frame geometry")
+	check(copies(sprite).size() == 1 and copies(sprite)[0].rect == Rect2(8, 28, 6, 3), "copy bounds follow the centered source origin and frame geometry")
+	var copy: BackBufferCopy = copies(sprite)[0]
+	sprite.centered = false
+	sprite.offset = Vector2.ZERO
+	parent.position = Vector2(11, 13)
+	copy.call("_refresh_region") # Headless has no frame_pre_draw GPU callback.
+	check(copy.rect == Rect2(28, 32, 5, 3), "parent-only motion refreshes copy bounds without applying a new source frame")
+	viewport.canvas_transform = Transform2D(0, Vector2(-5, -7))
+	copy.call("_refresh_region")
+	check(copy.rect == Rect2(23, 25, 5, 3), "camera-only motion refreshes viewport bounds without source reapply")
+	check((sprite.get_global_transform_with_canvas() * copy.transform).is_equal_approx(Transform2D.IDENTITY), "copy keeps identity canvas transform after parent and camera motion")
+	check(sprite.position == Vector2(17, 19) and sprite.scale == Vector2(1.5, 1.5), "camera compensation never moves or scales source art")
+	viewport.size_2d_override = Vector2i(64, 64)
+	viewport.size_2d_override_stretch = true
+	copy.call("_refresh_region")
+	check(copy.rect == Rect2(46, 50, 9, 6), "copy bounds include the final SubViewport canvas stretch")
+	check((sprite.get_viewport_transform() * sprite.global_transform * copy.transform).is_equal_approx(Transform2D.IDENTITY), "copy transform cancels final viewport stretch as well as actor motion")
+	viewport.size_2d_override_stretch = false
+	viewport.size_2d_override = Vector2i.ZERO
+	parent.position = Vector2(-1000, -1000)
+	copy.call("_refresh_region")
+	check(copy.copy_mode == BackBufferCopy.COPY_MODE_DISABLED, "offscreen source never issues an empty full-viewport copy")
+	parent.position = Vector2.ZERO
+	sprite.hide()
+	copy.call("_refresh_region")
+	check(copy.copy_mode == BackBufferCopy.COPY_MODE_DISABLED, "hidden source disables its retained copy")
+	sprite.show()
+	copy.call("_refresh_region")
+	check(copy.copy_mode == BackBufferCopy.COPY_MODE_RECT and copy.rect.has_area(), "visible source resumes a bounded copy without a source frame change")
 	COMPOSITOR.apply(sprite, {})
 	await process_frame
 	check(sprite.material == null and copies(sprite).size() <= 1 and copies(sprite).all(func(copy: BackBufferCopy) -> bool: return copy.copy_mode == BackBufferCopy.COPY_MODE_DISABLED), "empty style removes stale shader and disables its reusable copy")
 	COMPOSITOR.reset(sprite)
 	await process_frame
 	check(sprite.material == null and copies(sprite).size() <= 1 and copies(sprite).all(func(copy: BackBufferCopy) -> bool: return copy.copy_mode == BackBufferCopy.COPY_MODE_DISABLED), "reset is repeatable without allocating live copies")
-	sprite.free()
+	viewport.free()
 
 func rgb565(value: int) -> Color:
 	var r: int = (value >> 11) & 31
@@ -197,6 +232,38 @@ func render_fixture() -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	check(viewport.get_texture().get_image().get_pixel(2, 2).to_rgba32() == rgb565(0xF800).to_rgba32(), "OpenGL reset removes stale source composition")
+	# Only the camera/parent moves: the installed material and frame do not
+	# change. frame_pre_draw must update the raw viewport copy rectangle.
+	background.texture = uniform_texture(0xFFFF)
+	first.position = Vector2(2, 2)
+	first.scale = Vector2(2, 2)
+	first.texture = uniform_texture(0)
+	COMPOSITOR.apply(first, {"operation":0,"flags":1,"origin":"regression_test_only"})
+	await process_frame
+	await RenderingServer.frame_post_draw
+	viewport.canvas_transform = Transform2D(0, Vector2(-1, 0))
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var moving_copy: BackBufferCopy = copies(first)[0]
+	check(moving_copy.rect == Rect2(1, 2, 4, 4), "OpenGL pre-draw tracks camera-only movement without reapply")
+	render_checks += 1
+	check(viewport.get_texture().get_image().get_pixel(1, 3).to_rgba32() == rgb565(0x7BEF).to_rgba32(), "OpenGL camera-only movement samples the new viewport region")
+	var moving_parent := Node2D.new()
+	viewport.add_child(moving_parent)
+	first.reparent(moving_parent)
+	moving_parent.position = Vector2(1, 1)
+	await process_frame
+	await RenderingServer.frame_post_draw
+	check(moving_copy.rect == Rect2(2, 3, 4, 4), "OpenGL pre-draw tracks parent-only movement without reapply")
+	render_checks += 1
+	check(viewport.get_texture().get_image().get_pixel(2, 3).to_rgba32() == rgb565(0x7BEF).to_rgba32(), "OpenGL parent-only movement samples the new viewport region")
+	viewport.size_2d_override = Vector2i(4, 4)
+	viewport.size_2d_override_stretch = true
+	await process_frame
+	await RenderingServer.frame_post_draw
+	check(moving_copy.rect == Rect2(4, 6, 4, 2), "OpenGL copy bounds include final stretch and clip to framebuffer size")
+	render_checks += 1
+	check(viewport.get_texture().get_image().get_pixel(4, 6).to_rgba32() == rgb565(0x7BEF).to_rgba32(), "OpenGL stretched viewport samples its correctly transformed source region")
 	viewport.free()
 
 func run() -> void:

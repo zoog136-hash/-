@@ -7,6 +7,32 @@ const COPY_NAME = "SourceSP2Background"
 const ORIGIN = "restored525_RGB565_static_to523_compatibility_Android_unverified"
 static var _materials: Dictionary = {}
 
+class BackgroundCopy:
+	extends BackBufferCopy
+	var active: bool = false
+	func _ready() -> void:
+		RenderingServer.frame_pre_draw.connect(_refresh_region)
+	func _exit_tree() -> void:
+		if RenderingServer.frame_pre_draw.is_connected(_refresh_region):
+			RenderingServer.frame_pre_draw.disconnect(_refresh_region)
+	func _refresh_region() -> void:
+		var sprite: Sprite2D = get_parent() as Sprite2D
+		copy_mode = BackBufferCopy.COPY_MODE_DISABLED
+		if not active or sprite == null or not sprite.is_visible_in_tree(): return
+		var screen: Transform2D = sprite.get_viewport_transform() * sprite.get_global_transform()
+		if is_zero_approx(screen.determinant()): return
+		var region: Rect2 = screen * sprite.get_rect()
+		var start: Vector2 = region.position.floor()
+		region = Rect2(start, region.end.ceil() - start).intersection(Rect2(Vector2.ZERO, Vector2(sprite.get_viewport().get_texture().get_size())))
+		# Empty rectangles mean a FULL viewport copy to the render server.
+		if not region.has_area(): return
+		# 4.7.2 GLES3/RD consume raw copy.rect, not cull's screen_rect.
+		# Use viewport coordinates and neutralize the child's inherited transform.
+		# Updating just before draw also follows camera-only moves and resizing.
+		transform = screen.affine_inverse()
+		rect = region
+		copy_mode = BackBufferCopy.COPY_MODE_RECT
+
 static func _bits(attributes: Array) -> int:
 	var bits: int = 0
 	for value: Variant in attributes:
@@ -52,8 +78,10 @@ static func reset(sprite: Sprite2D) -> void:
 	sprite.material = null
 	sprite.modulate.a = 1.0
 	if sprite.has_meta("source_compositor"): sprite.remove_meta("source_compositor")
-	var copy: BackBufferCopy = sprite.get_node_or_null(COPY_NAME) as BackBufferCopy
-	if copy != null: copy.copy_mode = BackBufferCopy.COPY_MODE_DISABLED
+	var copy: BackgroundCopy = sprite.get_node_or_null(COPY_NAME) as BackgroundCopy
+	if copy != null:
+		copy.active = false
+		copy.copy_mode = BackBufferCopy.COPY_MODE_DISABLED
 
 static func apply(sprite: Sprite2D, selected: Dictionary) -> void:
 	if selected.is_empty():
@@ -68,13 +96,13 @@ static func apply(sprite: Sprite2D, selected: Dictionary) -> void:
 	sprite.material = _materials[operation]
 	sprite.modulate.a = 1.0
 	sprite.set_meta("source_compositor", selected)
-	var copy: BackBufferCopy = sprite.get_node_or_null(COPY_NAME) as BackBufferCopy
+	var copy: BackgroundCopy = sprite.get_node_or_null(COPY_NAME) as BackgroundCopy
 	if copy == null:
-		copy = BackBufferCopy.new()
+		copy = BackgroundCopy.new()
 		copy.name = COPY_NAME
 		# Copy immediately before this sprite, in its existing draw position.
 		# No viewport-wide copies, new layer ordering or detached live copies.
 		copy.show_behind_parent = true
 		sprite.add_child(copy)
-	copy.rect = sprite.get_rect()
-	copy.copy_mode = BackBufferCopy.COPY_MODE_RECT
+	copy.active = true
+	copy._refresh_region()

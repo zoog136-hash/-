@@ -63,6 +63,9 @@ coverage가 없는 픽셀만 건너뛴다. P13 shadow flags는
 
 각 Sprite2D의 기존 그리기 위치 바로 앞에서 해당 sprite 사각형만 BackBufferCopy한다.
 후속 레이어는 직전 레이어의 결과를 읽으며 copy/material은 재사용한다.
+Godot 4.7.2 GLES3/RD가 raw copy.rect를 사용하므로 복사 영역은 화면 좌표로 계산하고
+자식 copy의 변환을 상쇄한다. frame_pre_draw에서 카메라 이동·viewport 크기까지
+반영하고 빈/화면 밖 영역은 비활성화한다(빈 Rect는 전체 화면 복사 의미라 전달하지 않는다).
 스타일이 바뀌면 이전 shader와 copy를 비활성화한다. 기존 attachment 진단에
 `recovered_source_compositors`를 추가해 적용 flags·수식 출처를 확인할 수 있다.
 
@@ -102,7 +105,7 @@ SP2 호출 사슬을 직접 복구한 것 또는 Android 원본 렌더 식을 �
 
 ## 검증과 한계
 
-- Godot 4.7.2: 정수·정책·coverage·copy 초기화 회귀 22,584 checks, 오류0.
+- Godot 4.7.2: 정수·정책·coverage·copy 초기화 회귀 22,599 checks, 오류0.
 - 동일 shader를 Godot 4.7.2 언어 파서로 검사해 operation int uniform을 확인했다.
   이는 GPU 컴파일·출력 검증과 구분한다.
 - 기존 reference SP2 공유 회귀 62 checks, 오류0. 원본 texture 공유 key/bytes 유지.
