@@ -291,10 +291,118 @@ func render_fixture() -> void:
 	check(viewport.get_texture().get_image().get_pixel(4, 6).to_rgba32() == rgb565(0x7BEF).to_rgba32(), "OpenGL stretched viewport samples its correctly transformed source region")
 	viewport.free()
 
+
+func render_actor_stack() -> void:
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(32,32)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	var floor_sprite := Sprite2D.new()
+	floor_sprite.texture = uniform_texture(0xFFFF)
+	floor_sprite.centered = false
+	floor_sprite.scale = Vector2(16,16)
+	floor_sprite.z_index = -10
+	viewport.add_child(floor_sprite)
+	var actor := Node2D.new()
+	actor.position = Vector2(12,12)
+	viewport.add_child(actor)
+	var body := Sprite2D.new()
+	body.texture = uniform_texture(0xF800)
+	body.centered = false
+	body.scale = Vector2(4,4)
+	actor.add_child(body)
+	var shadow := Sprite2D.new()
+	shadow.texture = uniform_texture(0)
+	shadow.centered = false
+	shadow.scale = Vector2(4,4)
+	shadow.position = Vector2(-2,2)
+	shadow.z_index = -1
+	actor.add_child(shadow)
+	COMPOSITOR.apply(shadow, {"operation":0,"flags":1,"origin":"regression_test_only"})
+	var clothes := Sprite2D.new()
+	clothes.texture = uniform_texture(0x001F)
+	clothes.centered = false
+	clothes.scale = Vector2(4,4)
+	clothes.z_index = 1
+	actor.add_child(clothes)
+	COMPOSITOR.apply(clothes, {"operation":1,"flags":8,"origin":"regression_test_only"})
+	for camera_offset: Vector2 in [Vector2.ZERO,Vector2(-3,-2)]:
+		viewport.canvas_transform = Transform2D(0,camera_offset)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var image: Image = viewport.get_texture().get_image()
+		render_checks += 2
+		var body_point := Vector2i(Vector2(14,14)+camera_offset)
+		var shadow_point := Vector2i(Vector2(10,16)+camera_offset)
+		check(image.get_pixelv(body_point).to_rgba32() == rgb565(reference(0xF800,0x001F,1)).to_rgba32(),"OpenGL actor z1 clothes samples the opaque body, not the previous shadow copy")
+		check(image.get_pixelv(shadow_point).to_rgba32() == rgb565(reference(0xFFFF,0,0)).to_rgba32(),"OpenGL actor z-1 shadow retains the floor")
+	viewport.free()
+
+
+func render_root_stretch() -> void:
+	# Render-target samples exclude the Window's final letterbox/blit transform.
+	var previous_size: Vector2i = root.size
+	var previous_scale_size: Vector2i = root.content_scale_size
+	var previous_mode: int = root.content_scale_mode
+	var previous_aspect: int = root.content_scale_aspect
+	var previous_canvas: Transform2D = root.canvas_transform
+	var previous_global_canvas: Transform2D = root.global_canvas_transform
+	var background := Sprite2D.new()
+	background.centered = false
+	background.texture = uniform_texture(0xFFFF)
+	background.scale = Vector2(320,180)
+	root.add_child(background)
+	var actor := Node2D.new()
+	actor.position = Vector2(320,180)
+	root.add_child(actor)
+	var source := Sprite2D.new()
+	source.centered = false
+	source.texture = uniform_texture(0)
+	source.scale = Vector2(8,8)
+	actor.add_child(source)
+	for configuration: Dictionary in [
+		{"size":Vector2i(1024,460),"mode":Window.CONTENT_SCALE_MODE_CANVAS_ITEMS},
+		{"size":Vector2i(640,480),"mode":Window.CONTENT_SCALE_MODE_CANVAS_ITEMS},
+		{"size":Vector2i(960,540),"mode":Window.CONTENT_SCALE_MODE_CANVAS_ITEMS},
+		{"size":Vector2i(1024,460),"mode":Window.CONTENT_SCALE_MODE_VIEWPORT}]:
+		root.size = configuration.size
+		root.content_scale_size = Vector2i(640,360)
+		root.content_scale_mode = configuration.mode
+		root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+		root.global_canvas_transform = Transform2D(0,Vector2(2,3))
+		for offset: Vector2 in [Vector2.ZERO,Vector2(-7,-11)]:
+			root.canvas_transform = Transform2D(0,offset)
+			for operation: int in 3:
+				var destination: int = 0xFFFF if operation == 0 else 0x8410
+				var input: int = [0,0x0421,0x8410][operation]
+				background.texture = uniform_texture(destination)
+				source.texture = uniform_texture(input)
+				COMPOSITOR.apply(source, {"operation":operation,"flags":[1,8,128][operation],"origin":"regression_test_only"})
+				await process_frame
+				await RenderingServer.frame_post_draw
+				# Point(1,1) is inside the original 2x2 source texture.
+				var point := Vector2i(root.get_stretch_transform()*root.global_canvas_transform*root.canvas_transform*source.global_transform*Vector2.ONE)
+				var image: Image = root.get_texture().get_image()
+				var expected: Color = rgb565(reference(destination,input,operation))
+				render_checks += 1
+				check(copies(source)[0].rect.has_point(point),"root copy includes its framebuffer sample for "+str(configuration))
+				check(image.get_pixelv(point).to_rgba32() == expected.to_rgba32(),"OpenGL root stretch %s op%d at %s: %s != %s" % [configuration,operation,point,image.get_pixelv(point),expected])
+	actor.free()
+	background.free()
+	root.canvas_transform = previous_canvas
+	root.global_canvas_transform = previous_global_canvas
+	root.size = previous_size
+	root.content_scale_size = previous_scale_size
+	root.content_scale_mode = previous_mode
+	root.content_scale_aspect = previous_aspect
+
 func run() -> void:
 	arithmetic()
 	policies()
 	await texture_and_reset()
-	if "--render" in OS.get_cmdline_user_args(): await render_fixture()
+	if "--render" in OS.get_cmdline_user_args():
+		await render_fixture()
+		await render_actor_stack()
+		await render_root_stretch()
 	print("SOURCE_SP2_COMPOSITOR " + JSON.stringify({"checks":checks,"render_checks":render_checks,"errors":errors,"failures":errors,"scope":"P02 integer kernels and narrow P13 flags; synthetic regression inputs; not native523 or Android equivalence"}))
 	quit(0 if errors.is_empty() else 1)
