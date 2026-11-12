@@ -119,6 +119,12 @@ func texture_and_reset() -> void:
 	COMPOSITOR.apply(sprite, COMPOSITOR.style({"kind":"clothes","source_attributes":["8"]}, [], false, "compatible"))
 	check(copies(sprite).size() == 1 and copies(sprite)[0].rect == Rect2(8, 28, 6, 3), "copy bounds follow the centered source origin and frame geometry")
 	var copy: BackBufferCopy = copies(sprite)[0]
+	var next_parent := Node2D.new()
+	viewport.add_child(next_parent)
+	sprite.reparent(next_parent)
+	check(RenderingServer.frame_pre_draw.is_connected(Callable(copy, "_refresh_region")), "copy reconnects pre-draw when the source is reparented")
+	sprite.reparent(parent)
+	check(RenderingServer.frame_pre_draw.is_connected(Callable(copy, "_refresh_region")), "copy reconnects on every tree entry, not only its first ready")
 	sprite.centered = false
 	sprite.offset = Vector2.ZERO
 	parent.position = Vector2(11, 13)

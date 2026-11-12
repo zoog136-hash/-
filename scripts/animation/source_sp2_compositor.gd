@@ -10,8 +10,9 @@ static var _materials: Dictionary = {}
 class BackgroundCopy:
 	extends BackBufferCopy
 	var active: bool = false
-	func _ready() -> void:
-		RenderingServer.frame_pre_draw.connect(_refresh_region)
+	func _enter_tree() -> void:
+		if not RenderingServer.frame_pre_draw.is_connected(_refresh_region):
+			RenderingServer.frame_pre_draw.connect(_refresh_region)
 	func _exit_tree() -> void:
 		if RenderingServer.frame_pre_draw.is_connected(_refresh_region):
 			RenderingServer.frame_pre_draw.disconnect(_refresh_region)

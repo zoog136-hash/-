@@ -66,6 +66,7 @@ coverage가 없는 픽셀만 건너뛴다. P13 shadow flags는
 Godot 4.7.2 GLES3/RD가 raw copy.rect를 사용하므로 복사 영역은 화면 좌표로 계산하고
 자식 copy의 변환을 상쇄한다. frame_pre_draw에서 카메라 이동·viewport 크기까지
 반영하고 빈/화면 밖 영역은 비활성화한다(빈 Rect는 전체 화면 복사 의미라 전달하지 않는다).
+pre_draw 연결은 첫 ready가 아닌 매 tree 진입에서 복구해 reparent도 따른다.
 스타일이 바뀌면 이전 shader와 copy를 비활성화한다. 기존 attachment 진단에
 `recovered_source_compositors`를 추가해 적용 flags·수식 출처를 확인할 수 있다.
 
@@ -105,9 +106,13 @@ SP2 호출 사슬을 직접 복구한 것 또는 Android 원본 렌더 식을 �
 
 ## 검증과 한계
 
-- Godot 4.7.2: 정수·정책·coverage·copy 초기화 회귀 22,599 checks, 오류0.
+- Godot 4.7.2: 정수·정책·coverage·copy 초기화 회귀 22,601 checks, 오류0.
 - 동일 shader를 Godot 4.7.2 언어 파서로 검사해 operation int uniform을 확인했다.
   이는 GPU 컴파일·출력 검증과 구분한다.
+- 기존 reference SP2 load memo 회귀의 시간 대기를 실제 monotonic/mtime 기준으로
+  보강했다. CI에서 SceneTreeTimer 1.1초가 실제834ms만 기다리는 경우를 재현했다.
+  관측된 mtime 변경·동일 크기를 확인한 뒤 원래 SHA 거부 검사를 그대로 수행한다.
+  보강된 회귀33 checks, 오류0. production 캐시 정책은 변경하지 않았다.
 - 기존 reference SP2 공유 회귀 62 checks, 오류0. 원본 texture 공유 key/bytes 유지.
 - 실제 선택 SP2 121개: 1,463프레임 / 1,706 checks, 오류0.
 - 실제 사신 body/shadow76개: 5,472프레임 / 5,612 checks, 오류0.
@@ -117,7 +122,9 @@ SP2 호출 사슬을 직접 복구한 것 또는 Android 원본 렌더 식을 �
   이 별도 효과를 사진의 활성 캐릭터라고 주장하지 않는다.
 - CPU PNG는 GPU 캡처가 아니다. 로컬 Xorg는 허용된 환경에서 Unix socket을
   만들 수 없어 시작하지 못했다. OpenGL 픽셀·연쇄 레이어·투명 coverage·reset
-  검증은 `Source SP2 RGB565 OpenGL pixels` CI에 연결했다.
+  검증은 `Source SP2 RGB565 OpenGL pixels` CI에 연결했다. 실제 CI의 초기 실패가
+  복사 좌표와 reparent 연결 문제를 잡았으며 수정 후 같은 검사를 재실행한다.
+  최종 SHA의 실행·성공 여부는 PR 체크와 실행 로그를 기준으로 확인한다.
 - Android 실기기, 사진과 동일한 활성 변신의 재현 및 원작 M 시각 동등성은 미검증이다.
   Android에서 배경 copy 비용과 최종 시각을 추가 확인해야 한다.
 
