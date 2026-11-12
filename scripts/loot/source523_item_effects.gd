@@ -7,13 +7,12 @@ extends RefCounted
 ##  - Ainhasad bless charge: EinasadBlessAbsolute in the original bless unit,
 ##    shown as points by EinasadVariable #42 (6000 per point, the item's own
 ##    description "(충전량 : N)" must agree), capped by
-##    EinasadBlessMaxNeturalRechargeValue. From the first level of the item's
-##    ItemConsumeRate group (#12: 85) the item is kept: whether that Value is
-##    an added percent, a multiplier percent or a per-10000 rate is not in the
-##    tables (docs/einasad523_missing_rules.md). A LevelEinasadBlessRecharge
+##    EinasadBlessMaxNeturalRechargeValue. The item's ItemConsumeRate group
+##    (#12) Value is an added charge percent by user decision (85 x2 ... 89+
+##    x5, above its last row the last Value; docs/einasad523_missing_rules.md). A LevelEinasadBlessRecharge
 ##    bonus (드래곤의 비약) names a level-indexed ItemConsumeRate group whose
 ##    Value at the character level is the charge in points (its description
-##    "({0} 레벨 충전량 : {1})"), under the same group-12 limit;
+##    "({0} 레벨 충전량 : {1})"), with the same group-12 bonus;
 ##  - food whose buff also has RegenHP/RegenMP: those original amounts are added
 ##    per tick of the existing food regeneration cadence
 ##    (quest523_food_regen_interval_seconds, a TWILIGHT setting; the original
@@ -207,23 +206,24 @@ static func claims(record: Dictionary) -> String:
 ## percents, or -1 when the original rows do not decide it (charge_refusal).
 static func charge_points(contract: Dictionary, level: int) -> int:
 	var group: int = int(contract.get("consume_rate_group",0))
+	var bonus: int = 0
 	if group>0:
-		var first: int = RULES.first_rate_level(group)
-		if first<0 or level>=first: return -1
+		# User decision: the group Value is an added percent (85 x2 ... 89+ x5).
+		bonus = RULES.charge_bonus_percent(group, level)
+		if bonus<0: return -1
 	var level_group: int = int(contract.get("level_recharge_group",0))
-	if level_group<=0: return int(contract.points)
-	# An absolute amount next to a level amount: how they combine is not stated.
-	if int(contract.points)>0: return -1
-	var values: Dictionary = RULES.consume_rate_group(level_group)
-	if not values.has(level) or int(values[level])<=0: return -1
-	return int(values[level])
+	var base: int = int(contract.points)
+	if level_group>0:
+		# An absolute amount next to a level amount: how they combine is not stated.
+		if int(contract.points)>0: return -1
+		var values: Dictionary = RULES.consume_rate_group(level_group)
+		if not values.has(level) or int(values[level])<=0: return -1
+		base = int(values[level])
+	return base*(100+bonus)/100
 
 static func charge_refusal(contract: Dictionary, level: int) -> String:
 	var group: int = int(contract.get("consume_rate_group",0))
-	if group>0:
-		var first: int = RULES.first_rate_level(group)
-		if first<0: return "원본 충전 보너스 표(ItemConsumeRate %d) 확인 실패 · 아이템 보존" % group
-		if level>=first: return "원본 %d레벨 충전 보너스(ItemConsumeRate %d) 해석 미확정 · 아이템 보존" % [level, group]
+	if group>0 and RULES.charge_bonus_percent(group, level)<0: return "원본 충전 보너스 표(ItemConsumeRate %d) %d레벨 확인 실패 · 아이템 보존" % [group, level]
 	if int(contract.get("level_recharge_group",0))>0 and int(contract.points)>0: return "원본 고정·레벨 충전량 합산 규칙 미확정 · 아이템 보존"
 	return "원본 %d레벨 충전량 행 없음 · 아이템 보존" % level
 

@@ -6,6 +6,7 @@ const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
 var progression = preload("res://scripts/skills/progression_runtime523.gd").new()
+var spell_move = preload("res://scripts/skills/spell_move523.gd").new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
@@ -47,10 +48,12 @@ func configure(owner: Node) -> void:
 	summons.configure(self)
 	local_runtime.configure(self)
 	estimated_nodes.configure(self)
+	spell_move.configure(owner)
 	progression.configure(self)
 
 func clear() -> void:
 	estimated_nodes.clear()
+	spell_move.clear()
 	if progression.owner_ref!=null:progression.suspend()
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
@@ -67,6 +70,7 @@ func tick(delta: float) -> void:
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")), bool(world.presentation_settings.get("limit_effect_count", false)))
 	local_runtime.tick(delta)
 	estimated_nodes.tick(delta)
+	spell_move.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
 	progression.tick(delta)
@@ -246,6 +250,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	skill = catalog.resolve(skill)
 	var reason := ""
 	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
+	elif spell_move.busy(): reason = "원본 이동 효과 진행 중"
 	elif not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
 	elif catalog.level_locked(skill): reason = "Lv.%d 필요" % catalog.minimum_level_for(skill)
@@ -268,6 +273,7 @@ func cast(record: Dictionary) -> bool:
 	# they must not also accelerate the contact/presentation timeline.
 	skill["cast_time"] = float(skill.get("cast_time", .42))
 	var mode := str(skill.mode)
+	if bool(skill.get("spell_move523", {}).get("ok", false)): return _cast_spell_move(skill)
 	if mode=="teleport" and world.get("growth")!=null and world.growth.travel.enabled():
 		world.growth.travel.open({"kind":"original","id":str(record.id)})
 		return false # Selection has not cast or spent anything yet.
@@ -971,6 +977,34 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 		var binding: Variant = skills.get(id)
 		if bindings.get("source_zip_sha256") != source_archive_sha or not binding is Dictionary or binding.get("spell_id") != row.get("ID"): return
 	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
+
+## Original SpellMove skill: validation first, then the same cost/cooldown
+## bookkeeping as other casts. Follow-up spells of the move are not run here.
+func _cast_spell_move(skill: Dictionary) -> bool:
+	var move: Dictionary = skill.spell_move523
+	var target: TwilightMonster = world._skill_target(float(move.cast_range_cells) * spell_move.cell_length())
+	if not is_instance_valid(target) or target.dead:
+		world.hud.show_message("이동 대상이 사거리 %d칸 안에 없습니다" % int(move.cast_range_cells))
+		return false
+	if world.player.has_method("is_held") and world.player.is_held() and str(move.kind) == "caster_dash":
+		world.hud.show_message("이동 불가 상태에서는 돌진할 수 없습니다")
+		return false
+	if not cost_reason(skill).is_empty() or not str(material_plan(skill).get("reason","")).is_empty():
+		world.hud.show_message("원본 이동 스킬 비용 부족")
+		return false
+	var weapon := preload("res://scripts/cards/polymorph_weapon_limit523.gd").weapon_type_id(world._equipped_weapon_record()) if world.has_method("_equipped_weapon_record") else -1
+	var prepared: Dictionary = spell_move.prepare(move, target, weapon)
+	if not bool(prepared.get("ok", false)):
+		world.hud.show_message(str(prepared.get("reason", "원본 이동 효과를 시작할 수 없습니다")))
+		return false
+	if not spend(skill): return false
+	spell_move.commit(prepared)
+	world.skill_cooldowns[str(skill.name)] = maxf(0, float(skill.get("cooldown", 0)) * world._skill_cooldown_factor())
+	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
+	world._break_invisibility()
+	world.selected_monster = target
+	world.hud.append_log("%s · 원본 이동 %s" % [str(skill.name), {"caster_dash":"돌진","target_pull":"끌어오기","target_knockback":"넉백"}.get(str(move.kind), str(move.kind))])
+	return true
 
 func _is_verified_source_skill(skill: Dictionary) -> bool:
 	return skill.has("source_m_spell_id") and str(skill.get("source_m_snapshot", "")) == "base508"

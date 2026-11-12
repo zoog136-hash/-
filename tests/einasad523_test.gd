@@ -147,25 +147,27 @@ func runtime() -> void:
 		world.equipped_catalog["마법인형"] = {}; world.card_deck_bonus._signature = 0; world._invalidate_equipment_static()
 	# Item charge: below the charge-bonus group's first level and from it.
 	var charges: Dictionary = {}
-	world.ain_service.blessing = 150
-	world.level = 84; charges["549_lv84"] = use_plain(world,549)
-	world.level = 85; charges["549_lv85"] = use_plain(world,549)
-	world.level = 100; charges["549_lv100"] = use_plain(world,549)
-	world.ain_service.blessing = 150
-	world.level = 60; charges["344191_lv60"] = use_plain(world,344191)
-	world.level = 84; charges["344191_lv84"] = use_plain(world,344191)
-	world.level = 89; charges["344191_lv89"] = use_plain(world,344191)
+	for level: int in [84,85,89,100]:
+		world.ain_service.blessing = 150; world.level = level
+		charges["549_lv%d" % level] = use_plain(world,549)
+	for level: int in [60,84,89]:
+		world.ain_service.blessing = 150; world.level = level
+		charges["344191_lv%d" % level] = use_plain(world,344191)
 	evidence["item_charges"] = charges
 	var bonus: float = 1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0
-	var d84: Dictionary = charges["549_lv84"]
-	check(not d84.has("missing") and d84.claims=="ain" and d84.after-d84.before==int(round(100*bonus)) and d84.count_after==2, "#549 at 84 charges 100 and uses one")
-	check(charges["549_lv85"].after==charges["549_lv85"].before and charges["549_lv85"].count_after==3, "#549 at 85 keeps the item (group 12 meaning unresolved)")
-	check(charges["549_lv100"].after==charges["549_lv100"].before and charges["549_lv100"].count_after==3, "#549 at 100 keeps the item (beyond the group's rows)")
+	# User decision: group 12 Value is an added percent; above its rows the last row.
+	var expected_549: Dictionary = {84:100,85:200,89:500,100:500}
+	for level: int in expected_549:
+		var used: Dictionary = charges["549_lv%d" % level]
+		check(not used.has("missing") and used.claims=="ain" and used.after-used.before==int(round(expected_549[level]*bonus)) and used.count_after==2, "#549 at %d charges %d and uses one" % [level,expected_549[level]])
+		check(TwilightAinhasadService.charge_amount("드래곤의 다이아몬드",level)==expected_549[level], "name path charge_amount equals the original path at %d" % level)
+	check(RULES.charge_bonus_percent(12,100)==RULES.charge_bonus_percent(12,99) and RULES.charge_bonus_percent(12,84)==0, "group 12: 0 below 85, last row above 99")
+	var expected_344191: Dictionary = {60:725,84:1950,89:2450*5}
 	var e60: Dictionary = charges["344191_lv60"]
 	if check(not e60.has("missing") and e60.claims=="ain", "드래곤의 비약 #344191 is claimed as a level charge"):
-		check(e60.after-e60.before==int(round(725*bonus)) and e60.count_after==2, "#344191 at 60 charges group 31 level 60 (725)")
-		check(charges["344191_lv84"].after-charges["344191_lv84"].before==int(round(1950*bonus)), "#344191 at 84 charges 1950")
-		check(charges["344191_lv89"].after==charges["344191_lv89"].before and charges["344191_lv89"].count_after==3, "#344191 at 89 keeps the item")
+		for level: int in expected_344191:
+			var used: Dictionary = charges["344191_lv%d" % level]
+			check(used.after-used.before==int(round(expected_344191[level]*bonus)) and used.count_after==2, "#344191 at %d charges %d" % [level,expected_344191[level]])
 	# Cap: EinasadLevel2 / unit.
 	world.level = 50; world.ain_service.blessing = 99950
 	var capped: Dictionary = use_plain(world,549)
