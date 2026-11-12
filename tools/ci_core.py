@@ -252,6 +252,9 @@ def stage(root: Path, destination: Path) -> dict:
             if isinstance(policy, dict) and policy.get('schema') == DATA_ONLY_POLICIES[path]:
                 continue
         sprite_frames = PurePosixPath(path).suffix == '.tres' and re.search(r'^\[gd_resource\b[^\n]*type="SpriteFrames"',text)
+        # Resolve required preload quote positions once, avoiding a whole-prefix
+        # search for every removed optional resource in large JSON catalogs.
+        preload_positions = {m.end() for m in re.finditer(r"preload\s*\(\s*(?=[\"'])", text)}
         for match in REFERENCE.finditer(text):
             # SpriteFrames' external resource declarations are engine inputs.
             # Metadata also records old review/provenance paths; those strings
@@ -264,7 +267,7 @@ def stage(root: Path, destination: Path) -> dict:
             if not PurePosixPath(child).suffix or '%' in child:
                 continue  # dynamic directory/template; exercised by Main
             if not exists(child):
-                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or re.search(r'preload\s*\(\s*$', text[:match.start()])
+                required = PurePosixPath(path).suffix in {'.tscn', '.tres'} or match.start() in preload_positions
                 if required:
                     raise FileNotFoundError('required resource '+child+' referenced by '+path)
                 unresolved.add(child)  # optional guarded paths are not art proof

@@ -1,0 +1,51 @@
+name: Frozen Exchange Validate
+
+'on':
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frozen-exchange-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exchange:
+    name: Focused exchange runtime checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/docs/
+            /docs/.gdignore
+            !/assets/
+            !/external_map_packs/
+      - name: Install pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 2 -o "$RUNNER_TEMP/godot.zip" https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP"
+          chmod +x "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Prepare exact current map inputs
+        run: python3 tools/ci_core_map_pack.py --output "$RUNNER_TEMP/exchange-source-pack"
+      - name: Exchange contracts and actual Main save preservation
+        env:
+          TWILIGHT_SOURCE_MAP_PACK: ${{ runner.temp }}/exchange-source-pack
+        run: python3 tools/exchange/run_checks.py --stage "$RUNNER_TEMP/exchange-project" --godot "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --logs exchange-results
+      - name: Preserve focused diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frozen-exchange-${{ github.sha }}
+          path: exchange-results
+          if-no-files-found: warn
+          retention-days: 7

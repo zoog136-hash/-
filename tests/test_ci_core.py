@@ -171,10 +171,16 @@ class CoreStageTest(unittest.TestCase):
     def test_missing_shader_preload_fails_before_engine_import(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)/'repo';root.mkdir();self.fixture(root)
-            (root/'scripts/main.gd').write_text('const SHADER = preload("res://shaders/missing.gdshader")')
-            with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
-                CORE.stage(root,Path(temporary)/'stage')
-            self.assertFalse((Path(temporary)/'stage').exists())
+            for source in [
+                    'const SHADER = preload("res://shaders/missing.gdshader")',
+                    "const SHADER = preload('res://shaders/missing.gdshader')",
+                    'const SHADER = preload(\n  "res://shaders/missing.gdshader"\n)',
+                    "const SHADER = preload (\n  'res://shaders/missing.gdshader'\n)"]:
+                with self.subTest(source=source):
+                    (root/'scripts/main.gd').write_text(source)
+                    with self.assertRaisesRegex(FileNotFoundError,'shaders/missing.gdshader'):
+                        CORE.stage(root,Path(temporary)/'stage')
+                    self.assertFalse((Path(temporary)/'stage').exists())
 
     def test_escape_and_existing_project_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
