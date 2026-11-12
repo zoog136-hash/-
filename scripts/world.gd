@@ -498,6 +498,25 @@ var gold: int = 100000000 # Playtest-only starting funds; existing saved funds s
 ## pre-November item names are not used.
 var inventory: Dictionary = {}
 
+## Explicit loading-overlay contract. Deferred source/character restoration
+## must finish before the overlay may report 100%.
+var _boot_loading_finished: bool = false
+var _boot_loading_problem: String = ""
+
+func loading_readiness() -> Dictionary:
+	var reason: String = ""
+	if not _boot_loading_problem.is_empty(): reason = _boot_loading_problem
+	elif map_bootstrap_blocked: reason = "원본 지도 팩을 확인해 주세요."
+	elif source_save_blocked: reason = "저장 파일을 보존했습니다. 오류 내용을 확인해 주세요."
+	elif _boot_loading_finished and field_map == null and not current523_aden_review_active: reason = "원본 지도 팩이 설치되지 않았습니다."
+	elif _boot_loading_finished and _current523_source_restore_requested() and not current523_aden_play_active:
+		reason = current523_aden_play_problem if not current523_aden_play_problem.is_empty() else "선택 캐릭터의 원본 지도 복원 실패"
+	return {"ready": _boot_loading_finished and reason.is_empty(), "failed": not reason.is_empty(), "reason": reason}
+
+func _finish_boot_loading() -> void:
+	_boot_loading_finished = true
+	BOOT_LOG.mark("world_deferred_ready", {"ok": not loading_readiness().failed})
+
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
@@ -518,6 +537,7 @@ func _ready() -> void:
 		BOOT_LOG.step("")
 		BOOT_LOG.end("world_ready", boot_started, {"path": "aden_review"})
 		BOOT_LOG.mark("boot_done", {"path": "aden_review"})
+		_finish_boot_loading.call_deferred()
 		return
 	BOOT_LOG.step("world_source_dungeon_pack")
 	_load_source_dungeon_pack()
@@ -569,6 +589,7 @@ func _ready() -> void:
 	if BASE508_TEST.enabled():
 		var test_map:String=BASE508_TEST.register_test_map(maps,maps_by_id)
 		if test_map.is_empty():
+			_boot_loading_problem = "검사용 지도 팩이 거부되었습니다: " + BASE508_TEST.problem
 			push_error("base508 test pack rejected: "+BASE508_TEST.problem)
 			process_mode=Node.PROCESS_MODE_DISABLED
 			BOOT_LOG.step("")
@@ -690,6 +711,7 @@ func _ready() -> void:
 	BOOT_LOG.step("")
 	BOOT_LOG.end("world_ready", boot_started)
 	BOOT_LOG.mark("boot_done")
+	_finish_boot_loading.call_deferred()
 
 ## Device-bake store failures of this start (owner -> {stage, message}).
 ## A failed owner keeps its previous state and is not activated from a
