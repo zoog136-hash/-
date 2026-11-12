@@ -37,6 +37,8 @@ var active_sha256: String = ""
 var source_mode: String = ""
 var source_identity: Dictionary = {}
 var source_fallback_status: Dictionary = {}
+## Materials whose original item is held (e.g. TestItem=true); never spent.
+var material_holds: Dictionary = {}
 var relic_source_input_status: Dictionary = {}
 var estimated_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/estimated_nodes523.json")).get("records", {})
 var recovery_rules = preload("res://scripts/skills/recovery_rules523.gd").new()
@@ -190,20 +192,67 @@ func _source_execution_graph(profile: Dictionary) -> Dictionary:
 		invokes.append({"row":option,"type":type})
 	return {"graph":{"root_id":root_id,"spells":nodes,"invokes":invokes}}
 
-func _source_materials(local: Dictionary) -> bool:
+## Per-material proof. A malformed public bridge invalidates the whole binding
+## file; an original item that is missing, marked TestItem=true or lacks the
+## ItemBonus type-89 identity holds only that material (and the skills that
+## spend it). Nothing is substituted for a held material.
+func source_material_holds(local: Dictionary) -> Dictionary:
+	var holds: Dictionary = {}
+	if not local.get("material_inventory_keys") is Dictionary: return {"invalid":true,"holds":holds}
 	for material: String in local.material_inventory_keys:
 		var bridge: Variant = local.material_inventory_keys[material]
-		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return false
+		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return {"invalid":true,"holds":{}}
+		var held: Dictionary = {"native_item_id":int(bridge.native_item_id),"inventory_key":str(bridge.inventory_key)}
 		var item: Dictionary = SOURCE_ROWS.row("ItemClass",int(bridge.native_item_id))
-		if item.is_empty() or item.get("TestItem")==true: return false
+		if item.is_empty(): held["reason"] = "source_item_unavailable"; holds[material] = held; continue
+		if item.get("TestItem") is not bool or item.TestItem:
+			held["reason"] = "source_TestItem_true" if item.get("TestItem")==true else "source_TestItem_not_bool"
+			holds[material] = held; continue
 		var found := false
 		for link: Dictionary in SOURCE_ROWS.related("ItemBonus","ItemClassID",int(item.ID)):
 			var detail: Dictionary = SOURCE_BONUSES.describe(int(link.get("BonusID",-1)))
 			var bonus: Dictionary = detail.get("bonus",{})
 			# Same native material identity proof as build_player_skills523.py.
 			if bonus.get("BonusTypeID")==89 and _source_integer(bonus.get("Value")) and str(int(bonus.Value))==material: found = true
-		if not found: return false
-	return true
+		if not found: held["reason"] = "source_material_identity_unproven"; holds[material] = held
+	return {"invalid":false,"holds":holds}
+
+## Strict all-materials proof (kept for callers that require every bridge).
+func _source_materials(local: Dictionary) -> bool:
+	var checked: Dictionary = source_material_holds(local)
+	return not checked.invalid and checked.holds.is_empty()
+
+## True when the bridge(s) for this inventory key are proven in the original.
+func material_ready(local: Dictionary, inventory_key: String) -> bool:
+	var checked: Dictionary = source_material_holds(local)
+	if checked.invalid: return false
+	var matched := false
+	for material: String in local.material_inventory_keys:
+		if str(local.material_inventory_keys[material].inventory_key)!=inventory_key: continue
+		matched = true
+		if checked.holds.has(material): return false
+	return matched
+
+## Material type IDs a profile can spend: SpellClass, SpellCost rows, recovery
+## components, reviewed execution-graph spells and their InvokeOption rows.
+static func profile_material_types(profile: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	var nodes: Array = [profile]
+	nodes.append_array(profile.get("components",[]))
+	nodes.append_array(profile.get("execution_graph",{}).get("spells",[]))
+	var pairs: Array = []
+	for node: Dictionary in nodes:
+		var row: Dictionary = node.get("row",{})
+		pairs.append([row.get("SpellMaterialTypeID",0),row.get("SpellMaterialItemAmount",0)])
+		for cost: Dictionary in node.get("costs",[]):
+			for index: int in range(1,4): pairs.append([cost.get("SpellMaterialTypeID"+str(index),0),cost.get("SpellMaterialItemAmount"+str(index),0)])
+	for invoke: Dictionary in profile.get("execution_graph",{}).get("invokes",[]):
+		pairs.append([invoke.get("row",{}).get("MaterialTypeID",0),invoke.get("row",{}).get("MaterialAmount",0)])
+	for pair: Array in pairs:
+		if not _source_integer(pair[0]) or not _source_integer(pair[1]) or int(pair[0])<=0 or int(pair[1])<=0: continue
+		var key := str(int(pair[0]))
+		if key not in result: result.append(key)
+	return result
 
 func _load_source_profiles() -> void:
 	# Re-entry never replaces a supported compiled or already installed snapshot.
@@ -216,9 +265,11 @@ func _load_source_profiles() -> void:
 	if not local is Dictionary or local.get("schema_version")!=1 or local.get("patch")!=523 or local.get("source_zip_sha256")!=SOURCE_SHA or not local.get("skills") is Dictionary or not local.get("material_inventory_keys") is Dictionary:
 		source_fallback_status = {"state":"deferred","reason":"unsupported_public_bindings"}
 		return
-	if not _source_materials(local):
+	var material_check: Dictionary = source_material_holds(local)
+	if material_check.invalid:
 		source_fallback_status = {"state":"deferred","reason":"native_material_binding_unconfirmed"}
 		return
+	var held_materials: Dictionary = material_check.holds
 	var candidate: Dictionary = {}
 	var deferred: Dictionary = {}
 	for id: String in local.skills:
@@ -251,9 +302,14 @@ func _load_source_profiles() -> void:
 			profile["execution_graph"] = graph.graph
 		var issue: String = _profile_problem(id,profile,binding)
 		if not issue.is_empty(): deferred[id] = issue; continue
+		var spends_held: Array[String] = []
+		for material: String in profile_material_types(profile):
+			if held_materials.has(material): spends_held.append(material)
+		if not spends_held.is_empty(): deferred[id] = "held_source_material:"+",".join(spends_held); continue
 		candidate[id] = profile
-	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred}
+	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred,"material_holds":held_materials.duplicate(true)}
 	if candidate.is_empty(): return
+	material_holds = held_materials.duplicate(true)
 	var metadata: Dictionary = {"classes":SOURCE_ROWS.rows("Class"),"ui_units":SOURCE_ROWS.rows("UIUnit"),
 		"buff_groups":SOURCE_ROWS.rows("BuffGroup"),"bonus_application_types":SOURCE_ROWS.rows("BonusApplicationType"),
 		"special_resistance_types":SOURCE_ROWS.rows("SpecialResistanceType")}
@@ -310,6 +366,7 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	source_mode = "compiled_pack"
 	source_identity = {"source_snapshot":"patch523","source_sha256":SOURCE_SHA}
 	source_fallback_status = {}
+	material_holds = {}
 	revision += 1
 	last_error = ""
 	return true
@@ -539,6 +596,9 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		var bridge: Dictionary = bindings.material_inventory_keys.get(material, {})
 		if bridge.is_empty():
 			record["source523_block_reason"] = "523 재료 인벤토리 연결 확인 필요"
+			return record
+		if material_holds.has(material):
+			record["source523_block_reason"] = "523 원본 재료 보류: %s(원본#%d)" % [str(bridge.inventory_key),int(bridge.native_item_id)]
 			return record
 		items[str(bridge.inventory_key)] = int(items.get(str(bridge.inventory_key), 0)) + int(cost.amount)
 	record["items"] = items
