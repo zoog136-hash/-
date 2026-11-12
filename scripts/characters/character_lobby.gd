@@ -1,9 +1,11 @@
 extends Control
 ## Local account roster. No network account, deletion or class-change shortcut.
 const CATALOG = preload("res://scripts/characters/class_catalog.gd")
-const PORTRAIT = preload("res://scripts/ui/source523_class_images.gd")
+const PORTRAIT_PATH := "res://scripts/ui/source523_class_images.gd"
+const IMAGE_OWNER_PATH := "res://scripts/ui/source523_image_assets.gd"
 const STYLE = preload("res://scripts/boot/boot_style.gd")
 const PROFILE = preload("res://scripts/characters/save_profile.gd")
+const PRESENTATION = preload("res://scripts/characters/lobby_source_presentation.gd")
 # Native buttons suppress taps after a drag. Forward that drag to the roster
 # scroll before the button marks it handled, so long lists work on touch too.
 class ScrollButton extends "res://scripts/ui/native_touch_button.gd":
@@ -31,6 +33,9 @@ var scroll: ScrollContainer
 var name_input: LineEdit
 var details: Label
 var portrait: TextureRect
+var source_presentation: Control
+var source_animation_controls: VBoxContainer
+var source_selection_revision: int = 0
 var gender_row: HBoxContainer
 var create_button: Button
 var class_buttons: Dictionary = {}
@@ -74,6 +79,13 @@ func _ready() -> void:
 	_show_roster()
 
 func _clear() -> void:
+	source_selection_revision += 1
+	if is_instance_valid(source_presentation): source_presentation.clear_selection()
+	source_presentation = null
+	source_animation_controls = null
+	portrait = null
+	details = null
+	gender_row = null
 	for child: Node in content.get_children():
 		content.remove_child(child)
 		child.queue_free()
@@ -221,6 +233,14 @@ func _show_creation() -> void:
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(portrait)
+	source_presentation = PRESENTATION.new()
+	source_presentation.name = "SourceLobbyPresentation"
+	source_presentation.custom_minimum_size.y = 240
+	source_presentation.hide()
+	content.add_child(source_presentation)
+	source_animation_controls = VBoxContainer.new()
+	source_animation_controls.name = "SourceAnimationControls"
+	content.add_child(source_animation_controls)
 	details = STYLE.label("원본 Class 초기 능력치와 ClassAssets 성별 연결을 사용합니다.",16)
 	content.add_child(details)
 	create_button = _button("캐릭터 생성",_create,"CreateCharacter")
@@ -230,6 +250,12 @@ func _show_creation() -> void:
 	_refresh_create()
 
 func _choose_class(id: int) -> void:
+	if busy or not is_instance_valid(portrait) or not is_instance_valid(name_input): return
+	source_selection_revision += 1
+	if is_instance_valid(source_presentation):
+		source_presentation.clear_selection()
+		source_presentation.hide()
+	_clear_source_controls()
 	portrait.texture = null
 	details.text = "성별을 선택하세요."
 	selected_class = id
@@ -248,15 +274,63 @@ func _choose_class(id: int) -> void:
 	_refresh_create()
 
 func _choose_gender(gender: int) -> void:
+	if busy or not is_instance_valid(portrait) or not is_instance_valid(name_input): return
+	source_selection_revision += 1
 	var profile: Dictionary = catalog.profile(selected_class,gender)
 	if profile.is_empty(): return
 	selected_gender = gender
 	for node: Node in gender_row.get_children(): node.button_pressed = node.name == "Gender_%d" % gender
-	var source: Dictionary = PORTRAIT.resolve({"class_id":selected_class,"gender_id":gender})
+	var source: Dictionary = _source_portrait({"class_id":selected_class,"gender_id":gender})
 	portrait.texture = source.get("texture") as Texture2D
 	var stats: Dictionary = profile.stats
-	details.text = "%s · STR %d / DEX %d / CON %d / INT %d / WIS %d / CHA %d\n원본 ClassAssets 로비 Spine·전후 효과 재생은 아직 연결되지 않았습니다.%s" % [profile.name,stats.str,stats.dex,stats.con,stats.int,stats.wis,stats.cha,"\n원본 초상화 팩 미설치 · 대체 이미지는 표시하지 않습니다." if portrait.texture == null else ""]
+	var presented: Dictionary = source_presentation.select_profile(selected_class,gender)
+	source_presentation.visible = presented.get("has_layers",false)
+	_source_controls(presented)
+	details.text = "%s · STR %d / DEX %d / CON %d / INT %d / WIS %d / CHA %d\n%s%s" % [profile.name,stats.str,stats.dex,stats.con,stats.int,stats.wis,stats.cha,_source_note(presented),"\n원본 초상화 팩 미설치 · 대체 이미지는 표시하지 않습니다." if portrait.texture == null else ""]
+	details.tooltip_text = _source_note(presented)
+	portrait.visible = portrait.texture != null
 	_refresh_create()
+
+func _source_portrait(context: Dictionary) -> Dictionary:
+	# An unselected optional image pack must not initialize its unrelated item,
+	# card and monster-book dependencies on the account lobby's first launch.
+	# Already loaded owners can retain an explicit programmatic selection.
+	var requested: bool = ResourceLoader.has_cached(IMAGE_OWNER_PATH) or not OS.get_environment("TWILIGHT_SOURCE523_IMAGES").is_empty() or not OS.get_environment("TWILIGHT_SOURCE523_IMAGES_SHA256").is_empty()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--source523-images=") or argument.begins_with("--source523-images-sha256="): requested = true
+	if not requested: return {"ok":false,"texture":null,"status":"original_icon_not_installed","reason":"source523_image_pack_not_selected"}
+	var resolver: Script = load(PORTRAIT_PATH)
+	return resolver.resolve(context)
+
+func _clear_source_controls() -> void:
+	if not is_instance_valid(source_animation_controls): return
+	for child: Node in source_animation_controls.get_children():
+		source_animation_controls.remove_child(child)
+		child.queue_free()
+
+func _source_note(state: Dictionary) -> String:
+	var body: Dictionary = state.get("layers",{}).get("spine",{})
+	if body.get("status") == "missing_runtime": return "원본 Spine 재생기 미설치 · 사용 가능한 전후 효과만 미리보기합니다."
+	if state.get("has_layers",false): return "원본 연출 미리보기 · 아래 클립을 선택해 재생할 수 있습니다."
+	if not state.get("ok",false): return "원본 로비 연결을 확인하지 못했습니다. 캐릭터 생성은 가능합니다."
+	return "원본 로비 연출 파일이 준비되지 않았습니다. 캐릭터 생성은 가능합니다."
+
+func _source_controls(state: Dictionary) -> void:
+	_clear_source_controls()
+	for role: String in ["back_effect","spine","front_effect"]:
+		var layer: Dictionary = state.get("layers",{}).get(role,{})
+		if not layer.get("mounted",false): continue
+		for source_clip: String in layer.get("clips",[]):
+			var clip: String = source_clip
+			var source_role: String = role
+			var ticket: int = source_selection_revision
+			var preview: Control = source_presentation
+			var label: String = {"back_effect":"뒤 효과","spine":"캐릭터","front_effect":"앞 효과"}[role]
+			var button: Button = _button("%s · %s · 1회 재생" % [label,clip],func() -> void:
+				if ticket != source_selection_revision or not is_instance_valid(preview) or source_presentation != preview: return
+				var played: Dictionary = source_presentation.play_layer(source_role,clip,false)
+				if not played.get("ok",false): status.text = "원본 연출을 재생하지 못했습니다.")
+			source_animation_controls.add_child(button)
 
 func _refresh_create() -> void:
 	if create_button == null: return
