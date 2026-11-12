@@ -31,20 +31,22 @@ extends RefCounted
 ## a stale reservation is returned to its caller but never inserted.
 ##
 ## Integrity: this store does not verify bytes. reference_sp2_bank._member()
-## still reads and hashes (SHA256 or CRC32) the member file on every call,
-## including cache hits, before a shared parse is used; the key it looks up is
-## derived from the identity those bytes were just checked against.
+## still checks member identity, size and mtime on use, including cache hits;
+## changed or not-yet-verified files are read and hashed (SHA256 or CRC32).
+## The shared key comes from that verified identity. Synchronous bank loads
+## also recheck the members and metadata after their local validation memos.
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const SCHEMA = "reference_sp2_asset_service_v1"
 const SOURCE_DOMAIN = "patch523_reference_sp2_bank"
 const DECODER_PATH = "res://scripts/resources/current523_sp2_decoder.gd"
+const RENDERER_PATH = "res://scripts/resources/current523_sp2_frame_renderer.gd"
 const DECODER_SCHEMA = "current523_sp2_decoder.parse:v1"
 ## DECODER.render(parsed, group, frame) with no options = these policies;
 ## straight (not premultiplied) RGBA8, no mipmaps, no compression, no trim.
 const PIXEL_POLICY = "alpha=opaque_samples;rgb=bit_replication;alpha_mode=straight;format=RGBA8;mipmaps=none;compression=none;trim=none"
 const PALETTE_POLICY = "member_embedded_rgb565_palette"
-const COMPOSITOR_VERSION = "reference_sp2_bank.render_layer+ImageTexture.create_from_image:v1"
+const COMPOSITOR_VERSION = "reference_sp2_bank.packed_rgba_le+ImageTexture.create_from_image:v2"
 ## Idle (lease 0) budgets. The parsed budget equals the existing per-bank
 ## 32 MiB parse budget; textures get 64 MiB of RGBA8 payload.
 const IDLE_PARSED_BYTES = 32 * 1024 * 1024
@@ -60,6 +62,7 @@ static var _next_reservation: int = 0
 static var _tick: int = 0
 static var _counters: Dictionary = {}
 static var _decoder_code: String = ""
+static var _renderer_code: String = ""
 
 ## A fresh owner token for one bank or preview (no reference to the owner kept).
 static func new_owner() -> int:
@@ -71,6 +74,12 @@ static func decoder_version() -> String:
 		var code: String = BAKE.code_key([DECODER_PATH])
 		_decoder_code = DECODER_SCHEMA + ":" + (code if not code.is_empty() else "code_unhashed")
 	return _decoder_code
+
+## Renderer changes affect rendered textures only, never verified parse keys.
+static func renderer_version() -> String:
+	if _renderer_code.is_empty():
+		_renderer_code = BAKE.code_key([RENDERER_PATH])
+	return _renderer_code
 
 static func _digest(parts: Array) -> String:
 	return ("\u001f".join(PackedStringArray(parts))).sha256_text()
@@ -96,7 +105,9 @@ static func parsed_key(manifest_sha256: String, member: String, spec: Dictionary
 ## with PIXEL_POLICY; another policy (PMA, other alpha/RGB rule) is a new key.
 static func rendered_key(parsed: String, group_bit: int, frame_index: int, pixel_policy: String = PIXEL_POLICY, compositor: String = COMPOSITOR_VERSION) -> String:
 	if parsed.is_empty() or pixel_policy.is_empty() or compositor.is_empty(): return ""
-	return _digest([SCHEMA, "texture", parsed, "group_bit:%d" % group_bit, "frame:%d" % frame_index, PALETTE_POLICY, pixel_policy, compositor])
+	var renderer: String = renderer_version()
+	if renderer.is_empty(): return "" # Render normally without shared insertion.
+	return _digest([SCHEMA, "texture", parsed, "group_bit:%d" % group_bit, "frame:%d" % frame_index, PALETTE_POLICY, pixel_policy, compositor, renderer])
 
 static func has_entry(kind: String, key: String) -> bool:
 	return not key.is_empty() and (_entries[kind] as Dictionary).has(key)
