@@ -195,3 +195,49 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
   HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
 
+
+## 12. 장비 강화 원본 연결 — 강화 표가 원본 장비를 하나도 못 잡던 문제 (2026-11-12, PR `feature/equipment523-enchant-bonus`)
+
+### 12.1 원인 (실제 Main 측정)
+
+- 개별 ID 측정(장비 2,954종, 원본 팩)에서 강화 규칙 모델(`world.patch523_equipment`)에 **원본 장비가 0종** 들어 있었다
+  (모델 아이템 25,716종은 전부 비장비, `equipment_runtime` 비어 있음). 그래서
+  - 강화 단계 효과(ItemEnchantBonus, 2,681종·79,794행)는 투영의 좁은 목록(`current523_native_item_projection.enchant_stats`,
+    Value 단위 20여 종)만 적용되고, 강화 발동·추가 옵션(관통·치명·리덕션 비율·내성 등)은 0;
+  - 강화 주문서 규칙(EnchantEquipGroupID 1,893종)은 원본 확률·비용 대신 기존 TWILIGHT 기본 규칙.
+- 원인: `patch523_rules_projection._bind_catalog`가 기록의 `source_class_ids`/`source_equip_slot_ids`(표 JSON에서 온 실수 `8.0`)를
+  표에서 만든 정수 배열(`8`)과 `!=`로 비교 — Godot 배열 비교는 형이 엄격해 장비(슬롯·직업 ID가 있는 아이템)만 전부 탈락
+  (#411과 같은 '실수 vs 정수' 유형). 비장비는 둘 다 빈 배열이라 통과했다.
+- 수정: `_sorted_ids()`가 정수인 실수를 int로 바꿔 비교. 같은 원인으로 막혀 있던 장비 제작법도 함께 들어온다(모델 제작법
+  288 → 1,006).
+
+### 12.2 강화 발동 주문(Attack_Spell)·고정 반격(61)
+
+- 강화 단계 InvokeOption 중 type 1 Attack_Spell(703종·10,651행)은 현재 523 경로가 항상 버렸다(예전 공개 컴파일러
+  `tools/equipment/patch523_native_spells.py`는 만들던 `equipment_spell_profiles`를 현재 경로가 만들지 않음). 기존 실행기
+  (`skill_service.execute_equipment_source_spell`, `patch523_equipment_spells`)는 그대로 있다.
+- 새 `scripts/crafting/current523_equipment_spell_profiles.gd`가 같은 조건으로 SpellClass/SpellBonus/BuffClass/BuffBonus에서
+  프로필을 만든다: 순수 피해 주사위(26 주문) 또는 순수 능력치·홀드 디버프(75 주문)만. 101/166 주문, **615종** 연결.
+  type 61 Defence_FixedDamageCounterBarrier(2종)도 예전 조건 그대로.
+- 남은 주문 65개(88종): 중첩 디버프(악마왕·나이트발드 등 시리즈, BuffClass가 중첩/버프 그룹), 버프 제거(이레이즈 이뮨·이지스
+  브레이크: SpellBuffGroup), HP 비례 피해(루인 크래시: SpellDamagePercentByHP), 무기 기반 피해(확률 추타: SpellWeaponBasedDamage),
+  후속 주문(어비스 웨이브: NextSpellClassID), 턴 언데드 부작용(SideEffect*), 흡혈(SpellDrainHP), 침묵(SpecialResistanceTypeID) —
+  기존 실행기에 그 효과의 계산 단계가 없고 표에도 순서가 없어 미연결.
+- 남은 강화 발동 종류: Defence_Spell(2, 32종), Aura_Spell(38, 26종), Defence_DebuffTimeDecrease(26, 1종), Gain_Experience(68, 1종) —
+  방어 측·오라 주문 실행 규칙 없음.
+
+### 12.3 측정 (실제 Main, 원본 팩, 장비 2,954종 개별 ID)
+
+| 열 | 수정 전 (main) | 수정 후 |
+| --- | ---: | ---: |
+| 강화 규칙 모델에 들어간 장비 | 0 | 2,954 |
+| 강화 단계 효과 행 연결 (ItemEnchantBonus) | 0 / 79,794 | 72,701 / 79,794 |
+| 원본 강화 주문서 규칙(EnchantEquipGroupID, +0 성공 확률 > 0) | 0 / 1,893 | 1,848 / 1,893 |
+| 강화 발동 주문 / 고정 반격 | 0 / 0 | 615 / 2 |
+| 모든 효과 행이 소비되는 장비 | 135 | 2,104 |
+
+- 강화 규칙이 남은 45종: 주문서 그룹이 없는 장비 24종(장비 강화 그룹 ↔ 주문서 그룹 매핑 없음), 원본 단계·확률·비용 행이 없는
+  19종, 인장 전용 보호 주문서 2종.
+- 남은 강화 행 7,093행: 위 12.2 발동 주문, 원소 피해(ElementalDamage, 속성 대상 해석이 TWILIGHT 설정 의존), 치명 저항·유형별
+  피해 감소 비율(소비자 없음), 상태 효과(StatusEffectID), 원소 치명 저항, 무시 비율(Ignore*DamageReductionPercent), 마법 방어 관통
+  (PierceMagicShieldPercent) — 계산 위치가 표에 없음.
