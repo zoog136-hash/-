@@ -601,7 +601,29 @@ func merchant_price(id: int) -> Dictionary:
 		price.unit_id=201
 		price.class_id=source_currency
 		price.origin=str(price.origin)+" · 원본 NPC 재화"
+		# User decision 2026-11-12: the price in a non-adena NPC currency is
+		# the adena-based amount over that Currency's original ExchangeRate
+		# (ClanCoin 100: 16,000,000 -> 160,000), rounded up. Rate 1 (아데나)
+		# leaves every existing merchant unchanged.
+		var rate: int=exchange_rate(source_currency)
+		if rate>1:
+			price.amount=rated_amount(int(price.amount),rate)
+			price.origin=str(price.origin)+" · 원본 환율 %d로 나눔(올림, 사용자 결정 2026-11-12)" % rate
 	return price
+
+## amount / rate rounded up, at least 1.
+static func rated_amount(amount: int, rate: int) -> int:
+	if rate<=1:return amount
+	@warning_ignore("integer_division")
+	var divided: int=amount/rate
+	if amount%rate!=0:divided+=1
+	return maxi(1,divided)
+
+## Original Currency.ExchangeRate (1 when the row or field is missing).
+static func exchange_rate(currency_id: int) -> int:
+	var row: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("Currency",currency_id)
+	var value: Variant=row.get("ExchangeRate",1)
+	return int(value) if integer(value) and int(value)>0 else 1
 
 func npc_label(merchant_id: int) -> String:
 	if npc_definitions.loaded_sha256.is_empty():return ""
