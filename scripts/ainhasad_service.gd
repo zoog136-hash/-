@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightAinhasadService
+const RULES = preload("res://scripts/einasad/einasad523_rules.gd")
 
 # Lineage M inspired single-player rules. The precise post-rebalance cost per
 # monster EXP is unpublished: keep this ONE tuning constant editable.
@@ -53,22 +54,36 @@ func orb_active(now: int = 0) -> bool:
 		now = int(Time.get_unix_time_from_system())
 	return dragon_orb_expires_at > now
 
+## Benefit stage: the original EinasadLevel stage of the balance, raised to
+## stage 1 by the existing 드래곤의 보호 timer (BuffClass 54252,
+## EinasadFixedLevel 1 = "축복이 없어도 1~200구간 혜택"). Without the original
+## rows the existing thresholds (0 / 1..200 / 201+) are used.
+func stage() -> int:
+	var ordinary: int = RULES.stage_for_points(blessing)
+	if ordinary < 0:
+		ordinary = 2 if blessing >= 201 else 1 if blessing > 0 else 0
+	if ordinary == 0 and orb_active() and source_jade_level_override != 0:
+		return 1
+	return ordinary
+
 func experience_rate() -> float:
-	if blessing >= 201:
-		return 7.0
-	if blessing > 0 or (orb_active() and source_jade_level_override != 0):
-		return 4.0
-	return 1.0
+	var level: int = stage()
+	var source: float = RULES.experience_multiplier(level)
+	if source > 0.0:
+		return source
+	return [1.0, 4.0, 7.0][clampi(level, 0, 2)]
 
 func adena_rate() -> float:
-	if blessing >= 201:
-		return 2.0
-	if blessing > 0 or (orb_active() and source_jade_level_override != 0):
-		return 1.5
-	return 1.0
+	var level: int = stage()
+	var source: float = RULES.adena_multiplier(level)
+	if source > 0.0:
+		return source
+	return [1.0, 1.5, 2.0][clampi(level, 0, 2)]
 
+## EinasadBenefit GetItem: stage 0 "거래 불가 장비 획득 가능", stage 1/2 "모든
+## 장비 및 아이템 획득 가능" (world._roll_drop keeps only 각인 equipment at 0).
 func protected_drops() -> bool:
-	return blessing > 0 or (orb_active() and source_jade_level_override != 0)
+	return stage() > 0
 
 func consume_for_kill(base_exp: int, reduction_percent: float = 0.0) -> int:
 	if blessing <= 0:
@@ -83,10 +98,18 @@ func consume_for_kill(base_exp: int, reduction_percent: float = 0.0) -> int:
 		spend_remainder = 0.0
 	return spent
 
+## Highest balance a charge reaches: the last original stage's CumulativeValue
+## (EinasadLevel2 599994000 / 6000 = 99999) when installed, else MAX_BLESSING.
+## A saved balance above it is kept as is; it only receives no further charge.
+static func charge_cap() -> int:
+	var source: int = RULES.max_points()
+	return mini(MAX_BLESSING, source) if source > 0 else MAX_BLESSING
+
 func charge(points: int) -> int:
-	if points <= 0 or blessing >= MAX_BLESSING:
+	var cap: int = charge_cap()
+	if points <= 0 or blessing >= cap:
 		return 0
-	var added: int = mini(points, MAX_BLESSING - blessing)
+	var added: int = mini(points, cap - blessing)
 	blessing += added
 	return added
 
@@ -152,8 +175,12 @@ func import_state(value: Variant) -> void:
 func snapshot() -> Dictionary:
 	var now: int = int(Time.get_unix_time_from_system())
 	var remaining: int = maxi(0, dragon_orb_expires_at - now)
+	var source: Dictionary = RULES.describe(blessing, stage())
 	return {
 		"blessing": blessing,
+		"stage": stage(),
+		"source_stage": source,
+		"charge_cap": charge_cap(),
 		"exp_rate": experience_rate(),
 		"adena_rate": adena_rate(),
 		"dragon_orb_active": remaining > 0,
