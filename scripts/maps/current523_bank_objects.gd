@@ -149,6 +149,7 @@ func _texture(layer: Dictionary) -> Texture2D:
 func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 	if int(node.get_meta("frame")) == index: return
 	node.set_meta("frame", index)
+	FRAME_HITCH.count("map.object_frames_shown")
 	for child: Node in node.get_children(): child.queue_free()
 	var frame: Dictionary = sprite.frames[index]
 	var order: int = 0
@@ -177,6 +178,7 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 		picture.modulate.a = float(style.alpha)
 		node.add_child(picture)
 		order += 1
+	FRAME_HITCH.count("map.object_layer_nodes_created", order)
 
 func _process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
@@ -186,6 +188,14 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
+	# All placements use this same clock and immutable per-ID sprite record.
+	# Share only this update's frame selection; never instance playback state.
+	var frames: Dictionary = {}
 	for node: Node2D in _nodes:
-		var sprite: Dictionary = _sprites.get(int(node.get_meta("sprite_id")), {})
-		if sprite.get("ok", false) and not sprite.static: _show(node, sprite, _frame_index(sprite))
+		var id: int = int(node.get_meta("sprite_id"))
+		var sprite: Dictionary = _sprites.get(id, {})
+		if sprite.get("ok", false) and not sprite.static:
+			if not frames.has(id): frames[id] = _frame_index(sprite)
+			_show(node, sprite, int(frames[id]))
+	FRAME_HITCH.count("map.object_timeline_samples", frames.size())
+	FRAME_HITCH.count("map.object_placements_visited", _nodes.size())
