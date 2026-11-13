@@ -97,6 +97,7 @@ var _world_map: Node
 var _inventory_view: RefCounted
 var _inventory_result: Dictionary={}
 var _inventory_signature: int=0
+var _inventory_structure_signature: int=0
 var _quickslot_view: RefCounted
 var _quickslot_result: Dictionary={}
 var _legacy_quickslots: Array[Dictionary]=[]
@@ -196,6 +197,7 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 			_inventory_view=candidate
 			candidate.return_to_current_requested.connect(_inventory_view_fallback)
 			candidate.closed.connect(_inventory_view_closed)
+			candidate.selection_refreshed.connect(_inventory_selection_refreshed)
 	if pack.manifest.get("scenes",{}).has("UI/ToolTip/ToolTip_HudType_Right.csb"):
 		var bag: Variant=hud.get("lineage_inventory_ui")
 		if bag is Control and is_instance_valid(bag):
@@ -379,6 +381,8 @@ func _process_step(_delta: float) -> void:
 			if signature!=_inventory_signature:
 				_inventory_result=_inventory_view.refresh()
 				_inventory_signature=_inventory_model_signature()
+				if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
+					_inventory_structure_signature=_inventory_model_signature(false)
 	if _inventory_name_view!=null and not _source_input_captured(hud):
 		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
 		else:_inventory_name_view.close()
@@ -677,7 +681,11 @@ func refresh_quickslots() -> Dictionary:
 	if _source_input_captured(hud):return {"ok":true,"handled":_quickslot_view!=null and _quickslot_view.is_open(),"refresh_pending":true}
 	if _icons_refresh_pending:
 		_icons_refresh_pending=false
-		if inventory_is_open():_inventory_result=_inventory_view.refresh()
+		if inventory_is_open():
+			_inventory_result=_inventory_view.refresh()
+			if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
+				_inventory_signature=_inventory_model_signature()
+				_inventory_structure_signature=_inventory_model_signature(false)
 		# Re-registration can replace an icon descriptor without changing its
 		# entry/page. It waits for the existing active gesture to finish.
 		if _quickslot_view!=null:_quickslot_view.close()
@@ -731,6 +739,7 @@ func try_open_inventory() -> Dictionary:
 		var native_scene: Node2D=presented.get("scene")
 		if is_instance_valid(native_scene):native_scene.z_index=150
 		_inventory_signature=_inventory_model_signature()
+		_inventory_structure_signature=_inventory_model_signature(false)
 	MENU_TRACE.end(trace,_inventory_result.get("ok",false))
 	return _inventory_result.duplicate(true)
 
@@ -803,14 +812,22 @@ func inventory_select(reference: String) -> Dictionary:
 func inventory_activate_selected(reference: String) -> Dictionary:
 	return _inventory_view.activate_selected(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
-func _inventory_model_signature() -> int:
+func _inventory_selection_refreshed() -> void:
+	# The native view already patched selection on every existing slot. Only
+	# acknowledge that work if the last full view still represents all other
+	# owner state; concurrent filter, equipment, amount/model or layout changes
+	# must retain the normal full refresh on the next uncaptured frame.
+	if inventory_is_open() and _inventory_model_signature(false)==_inventory_structure_signature:
+		_inventory_signature=_inventory_model_signature()
+
+func _inventory_model_signature(include_selection: bool=true) -> int:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
 	if not is_instance_valid(bag):return 0
 	var search: Variant=bag.get("search_line")
 	var grid: Variant=bag.get("item_grid")
 	var state: Variant=bag.get("character_state")
-	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item"),bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
+	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item") if include_selection else null,bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if state is Dictionary else null,state.get("current_weight") if state is Dictionary else null,state.get("max_weight") if state is Dictionary else null,state.get("carrying_capacity") if state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
 
 ## --- Original 523 domination stone window (source_main_domination_stone_window)
 const DominationWindow=preload("res://scripts/ui/original_ui/source_main_domination_stone_window.gd")

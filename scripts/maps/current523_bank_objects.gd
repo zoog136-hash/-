@@ -58,9 +58,11 @@ func configure(selection: Dictionary, mapping: RefCounted) -> bool:
 	return true
 
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
+	var started: int = FRAME_HITCH.now()
 	_records = records
-	for node: Node2D in _nodes: node.queue_free()
-	_nodes.clear()
+	var created: int = 0
+	var reused: int = 0
+	var trimmed: int = 0
 	var drawn: int = 0
 	var unresolved: Dictionary = {}
 	for row: Dictionary in records:
@@ -69,15 +71,34 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 		if not sprite.ok:
 			unresolved[str(row.sprite_id)] = sprite.get("error", "unresolved")
 			continue
-		var node := Node2D.new()
+		# These holders have no gameplay identity: keep the exact dense visible
+		# source order, including duplicates, while reusing private presentation.
+		var node: Node2D
+		if drawn < _nodes.size():
+			node = _nodes[drawn]
+			reused += 1
+		else:
+			node = Node2D.new()
+			add_child(node)
+			_nodes.append(node)
+			created += 1
 		node.position = coordinates.to_world(Vector2(row.raw_x, row.raw_y), false)
 		node.set_meta("sprite_id", int(row.sprite_id))
+		# Refresh has always displayed frame zero, even for an unchanged ID.
+		# Force the layer update so replacement records never keep old visuals.
 		node.set_meta("frame", -1)
-		add_child(node)
-		_nodes.append(node)
 		_show(node, sprite, 0)
 		drawn += 1
+	while _nodes.size() > drawn:
+		var unused: Node2D = _nodes.pop_back()
+		remove_child(unused)
+		unused.queue_free()
+		trimmed += 1
+	FRAME_HITCH.count("map.object_holders_created", created)
+	FRAME_HITCH.count("map.object_holders_reused", reused)
+	FRAME_HITCH.count("map.object_holders_trimmed", trimmed)
 	_stats = {"policy":"OWN_BANK_ACTION3_DIRECTION0_LOOP_V1","raw_records":records.size(),"malformed_tails":malformed,"drawn_records":drawn,"unresolved_records":records.size() - drawn,"unresolved_source_ids":unresolved,"cached_sprites":_sprites.size(),"texture_bytes":_texture_bytes,"playback_mode":_mode,"native_M_placement_action_timing_verified":false}
+	FRAME_HITCH.detail("map.object_refresh", started)
 
 func metrics() -> Dictionary:
 	return _stats.duplicate(true)
@@ -85,7 +106,10 @@ func metrics() -> Dictionary:
 func _sprite(id: int) -> Dictionary:
 	if _sprites.has(id): return _sprites[id]
 	if _sprites.size() >= MAX_SPRITES: return {"ok":false,"error":"map_object_sprite_cache_full"}
+	var started: int = FRAME_HITCH.now()
 	var result: Dictionary = _load_sprite(id)
+	FRAME_HITCH.detail("map.object_sprite_load", started)
+	FRAME_HITCH.count("map.object_sprite_loads")
 	_sprites[id] = result
 	return result
 
@@ -141,7 +165,9 @@ func _texture(layer: Dictionary) -> Texture2D:
 	var image: Image = rendered.image
 	var bytes: int = image.get_width() * image.get_height() * 4
 	if _texture_bytes + bytes > TEXTURE_BUDGET_BYTES: return null
+	var started: int = FRAME_HITCH.now()
 	var texture := ImageTexture.create_from_image(image)
+	FRAME_HITCH.detail("map.object_texture_create", started)
 	_textures[key] = texture
 	_texture_bytes += bytes
 	return texture
@@ -149,9 +175,10 @@ func _texture(layer: Dictionary) -> Texture2D:
 func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 	if int(node.get_meta("frame")) == index: return
 	node.set_meta("frame", index)
-	for child: Node in node.get_children(): child.queue_free()
+	FRAME_HITCH.count("map.object_frames_shown")
 	var frame: Dictionary = sprite.frames[index]
 	var order: int = 0
+	var created: int = 0
 	for layer: Dictionary in frame.get("layers", []):
 		if layer.has("client_null"): continue
 		var attributes: Array = layer.get("source_attributes", [])
@@ -161,9 +188,17 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)): continue
 		var texture: Texture2D = _texture(layer)
 		if texture == null: continue
-		var picture := Sprite2D.new()
+		# Placement-owned children keep source-visible order; no shared playback
+		# nodes or high-water pool retains unused textures after a smaller frame.
+		var picture: Sprite2D = node.get_child(order) as Sprite2D if order < node.get_child_count() else null
+		if picture == null:
+			picture = Sprite2D.new()
+			node.add_child(picture)
+			node.move_child(picture, order)
+			created += 1
 		picture.centered = false
 		picture.texture = texture
+		picture.position = Vector2.ZERO
 		var offset: Variant = layer.get("offset", [0, 0])
 		if offset is Array and offset.size() == 2: picture.position = Vector2(float(offset[0]), float(offset[1]))
 		elif layer.has("member"):
@@ -171,12 +206,22 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 			if rendered.get("ok", false): picture.position = Vector2(rendered.offset)
 		picture.z_index = -1 if layer.get("kind") == "shadow" else order
 		if int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
-			var material := CanvasItemMaterial.new()
+			var material: CanvasItemMaterial = picture.material as CanvasItemMaterial
+			if material == null:
+				material = CanvasItemMaterial.new()
+				picture.material = material
 			material.blend_mode = int(style.blend_mode)
-			picture.material = material
-		picture.modulate.a = float(style.alpha)
-		node.add_child(picture)
+		else:
+			picture.material = null
+		picture.modulate = Color(1.0, 1.0, 1.0, float(style.alpha))
 		order += 1
+	# Detach before deferred deletion, including multiple updates in one frame.
+	# Thus stale layers are neither reused nor drawn while deletion is queued.
+	while node.get_child_count() > order:
+		var unused: Node = node.get_child(node.get_child_count() - 1)
+		node.remove_child(unused)
+		unused.queue_free()
+	FRAME_HITCH.count("map.object_layer_nodes_created", created)
 
 func _process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
@@ -186,6 +231,14 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
+	# All placements use this same clock and immutable per-ID sprite record.
+	# Share only this update's frame selection; never instance playback state.
+	var frames: Dictionary = {}
 	for node: Node2D in _nodes:
-		var sprite: Dictionary = _sprites.get(int(node.get_meta("sprite_id")), {})
-		if sprite.get("ok", false) and not sprite.static: _show(node, sprite, _frame_index(sprite))
+		var id: int = int(node.get_meta("sprite_id"))
+		var sprite: Dictionary = _sprites.get(id, {})
+		if sprite.get("ok", false) and not sprite.static:
+			if not frames.has(id): frames[id] = _frame_index(sprite)
+			_show(node, sprite, int(frames[id]))
+	FRAME_HITCH.count("map.object_timeline_samples", frames.size())
+	FRAME_HITCH.count("map.object_placements_visited", _nodes.size())

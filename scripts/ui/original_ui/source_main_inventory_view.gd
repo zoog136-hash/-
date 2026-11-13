@@ -18,6 +18,7 @@ const EXTENSION_SLOT_OFFSETS: Array[int]=[3900,3660,3420,3180,2940,2700,2460,221
 var _native_capacity: int=4
 signal return_to_current_requested(reason: Dictionary)
 signal native_scene_changed(presentation: Dictionary)
+signal selection_refreshed
 signal closed
 signal source_scroll_input(event: InputEvent)
 var _pack: RefCounted
@@ -395,6 +396,7 @@ func _on_selection_changed(_reference: String) -> void:
 		if not result.get("ok",false):
 			_fallback(_unsupported_result(result))
 			return
+	selection_refreshed.emit()
 
 func _on_native_closed() -> void:
 	close()
