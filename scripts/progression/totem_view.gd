@@ -67,9 +67,17 @@ func _refresh() -> void:
 		content.remove_child(child)
 		child.queue_free()
 	var runtime = hud.get_parent().totems
-	var p: Dictionary = runtime.progress(selected_id)
 	var def: Dictionary = runtime.row("Totem",selected_id)
-	content.add_child(UI.label("%s · Lv.%d · 처치 %d / %d" % ["활성" if p.active else "미활성",int(p.level),int(p.kills),int(def.ActivationKillCount)],15))
+	# An id outside the installed Totem table (e.g. a stale tap) falls back to
+	# the first row instead of reading a column of an empty record.
+	if def.is_empty() and not runtime.rows("Totem").is_empty():
+		selected_id = int(runtime.rows("Totem")[0].get("ID",0))
+		def = runtime.row("Totem",selected_id)
+	if def.is_empty():
+		content.add_child(UI.label("토템 자료를 설치하면 진행도를 확인할 수 있습니다.",14))
+		return
+	var p: Dictionary = runtime.progress(selected_id)
+	content.add_child(UI.label("%s · Lv.%d · 처치 %d / %d" % ["활성" if p.get("active",false) else "미활성",int(p.get("level",0)),int(p.get("kills",0)),int(def.get("ActivationKillCount",0))],15))
 	content.add_child(UI.label("공명 · 총 Lv.%d · 대미지 리덕션 무시 %.1f%%" % [runtime.resonance().total_level,100.0*runtime.resonance().pierce_reduction_fraction],13))
 	content.add_child(UI.label("현재 지역 경험치 보너스 +%.1f%%" % (100.0*hud.get_parent().totem_map_experience()),12))
 	content.add_child(UI.label("적용 옵션 · AC -%d · MR +%d · 리덕션 +%d" % [runtime.bonus("ArmorClass"),runtime.bonus("MagicResist"),runtime.bonus("DamageReduction")],12))
