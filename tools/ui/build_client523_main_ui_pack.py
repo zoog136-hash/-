@@ -77,6 +77,11 @@ WHOLE_SCOPES = [
     ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),
     ("UI/DominationStone/DominationStone_All.csb", [15692, 332]),
     ("UI/DominationStoneScene.csb", []),
+    # Change_Awaken_Skill names the same absent QuickSlotEdit_SlotSet for its
+    # 각성서 inventory; the card awakening window
+    # (source_main_card_awakening_window) leaves that ProjectNode out.
+    ("UI/Change/Change_Awaken_Skill.csb", [23400]),
+    ("UI/Change/Change_Awaken_All.csb", []),
 ]
 
 

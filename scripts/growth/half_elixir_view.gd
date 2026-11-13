@@ -142,6 +142,10 @@ func submit() -> void:
 	result.text = str(outcome.message)
 	hud.show_message(result.text)
 	submitting = false
+	# Choosing the context is what the original 하프 엘릭서 window needs to
+	# open (it has no context picker of its own): hand back to it.
+	if outcome.get("ok", false) and str(command.get("action", "")) == "context" and hud.has_method("open_half_elixir"):
+		hud.call_deferred("open_half_elixir")
 
 func pick_source() -> void:
 	var dialog := FileDialog.new(); dialog.name = "HalfSourcePicker"; dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE; dialog.access = FileDialog.ACCESS_FILESYSTEM; dialog.filters = PackedStringArray(["*.zip ; 사용자 소유 523 Content ZIP"]); dialog.use_native_dialog = true

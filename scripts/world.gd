@@ -3,6 +3,8 @@ class_name TwilightWorld
 const CHARACTER_ACCOUNT = preload("res://scripts/characters/account_store.gd")
 const CHARACTER_PROFILE = preload("res://scripts/characters/save_profile.gd")
 var character_source_cursor: Dictionary = {}
+## Where an old-map save was moved from when it was brought to 523 Aden (kept in the save).
+var old_map_relocation523: Dictionary = {}
 var character_display_name: String = "황혼의 기사"
 var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
@@ -79,6 +81,7 @@ var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
+const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
@@ -6441,6 +6444,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_monster_world": original_population.export_state(),
 		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"character_source_cursor":character_source_cursor.duplicate(true),
+		OLD_MAP_RELOCATION523.KEY:old_map_relocation523.duplicate(true),
 		"class_index": class_index,
 		"job_class": job_class,
 		"source_visual_context": {"snapshot":"base508","gender_id":source_gender_id,"active_card_options":source_card_visual_options.duplicate(true)},
@@ -6805,6 +6809,19 @@ func _load_game(quiet: bool) -> void:
 		data.erase("native_png_review_sha256")
 		data.erase("original_position")
 		saved_map_id="albino_02"
+	if OLD_MAP_RELOCATION523.needed(data,CURRENT523_HOST.requested(),LEGACY_LAYOUT.active("--legacy-map-layouts")):
+		# A save from before the 523 pack on an old map (only old base508
+		# monsters there) is moved once to 523 Aden town; progression is kept
+		# and the original file is kept byte for byte.
+		var relocation_sha: String=FileAccess.get_sha256(save_path())
+		var relocation_backup: String=save_path()+".pre-old-map-523-"+relocation_sha
+		if (not FileAccess.file_exists(relocation_backup) and DirAccess.copy_absolute(save_path(),relocation_backup)!=OK) or FileAccess.get_sha256(relocation_backup)!=relocation_sha:
+			source_save_blocked=true
+			hud.show_message("523 아덴 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+		data=OLD_MAP_RELOCATION523.relocated(data)
+		saved_map_id=OLD_MAP_RELOCATION523.TARGET_MAP
+		hud.append_log("옛 지도 저장을 523 아덴 마을로 옮겼습니다 (원본 백업 보존)")
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id) and not SOURCE_MAP84.supports(saved_map_id)
 	var explicit_legacy: bool=LEGACY_LAYOUT.active("--legacy-map-layouts") or (NATIVE_PNG.extra_map(saved_map_id) and LEGACY_LAYOUT.active("--legacy-aden-faith-layouts"))
@@ -7000,6 +7017,7 @@ func _load_game(quiet: bool) -> void:
 	_ensure_inventory_ammo_defaults()
 	consumable_service.call("prune_removed")
 	character_source_cursor = data.get("character_source_cursor",{}).duplicate(true) if data.get("character_source_cursor",{}) is Dictionary else {}
+	old_map_relocation523 = data.get(OLD_MAP_RELOCATION523.KEY,{}).duplicate(true) if data.get(OLD_MAP_RELOCATION523.KEY,{}) is Dictionary else {}
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
@@ -11616,7 +11634,19 @@ func _restore_current523_aden_play() -> void:
 	if not options.enabled and not host: return
 	# Other maps keep their normal presentation; this never redirects travel.
 	if active_map_id != "aden_world": return
-	if not open_current523_aden_play(options.raw_root, options.tile_root, options) and field_population.get("field")==null and not host:
+	var controller: RefCounted = _aden_play_controller()
+	var saved_spot: bool = options.get("source_position",[]) is Array and not (options.get("source_position",[]) as Array).is_empty()
+	controller.call("resume_saved_spot", int(options.get("native_land_id",-1)) if saved_spot else -1)
+	var opened: bool = open_current523_aden_play(options.raw_root, options.tile_root, options)
+	controller.call("resume_saved_spot", -1)
+	if not opened and host and saved_spot and str(controller.get("problem")).contains("조건 보류"):
+		# The saved spot cannot reopen under its Land's rules: rather than a
+		# world with no 523 play mode (and no monsters), start at Aden town.
+		var held: String = str(controller.get("problem"))
+		options.merge({"native_land_id":4,"source_position":CURRENT523_ADEN_PLAY.aden_town_source_position()},true)
+		opened = open_current523_aden_play(options.raw_root, options.tile_root, options)
+		if opened: hud.append_log("저장 위치를 다시 열 수 없어 아덴 마을에서 시작합니다 (" + held + ")")
+	if not opened and field_population.get("field")==null and not host:
 		field_population.configure(self,field_map)
 
 func _current523_source_restore_requested() -> bool:
