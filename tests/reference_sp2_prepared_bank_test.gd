@@ -36,6 +36,8 @@ func run() -> void:
 	check(HITCH._counters.get("sp2.prepared_hit")==1 and not HITCH._counters.has("sp2.layer_validate"),"reuse skips repeated validation")
 	check(is_same(first,second) and a._prepared_snapshot==b._prepared_snapshot,"live banks share one snapshot")
 	check(frozen(first),"all shared nested arrays/dictionaries read-only")
+	check(is_same(first.tracks.idle.directions[0][0].layers[0].source_attribute_projection,first.tracks.idle.directions[1][0].layers[0].source_attribute_projection),"prepared occurrences share one immutable action proof")
+	check(not is_same(expected.tracks.idle.directions[0][0].layers[0].source_attribute_projection,expected.tracks.idle.directions[1][0].layers[0].source_attribute_projection),"mutable occurrences retain independent proofs")
 	check(not expected.is_read_only() and not expected.tracks.idle.directions[0][0].layers.is_read_only(),"ordinary API stays mutable")
 	var layer: Dictionary=second.tracks.idle.directions[0][0].layers[0]
 	check(b.render_layer(layer).ok,"hit bank restores pins/index and draws exact source")

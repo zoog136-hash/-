@@ -692,6 +692,11 @@ func _load_native_action_attributes(source: Dictionary, layer: Dictionary, memo:
 		var checked: Dictionary = _native_attributes(source,layer)
 		if not checked.ok: return checked
 		memo[key] = checked
+	# The prepared API publishes immutable metadata. Freeze the action-local
+	# proof once instead of copying it into every direction/frame occurrence.
+	if _building_shared:
+		PREPARED.freeze(memo[key])
+		return memo[key]
 	return (memo[key] as Dictionary).duplicate(true)
 
 func _native_binding_set(source: Dictionary, layer_specs: Array, memo: Dictionary, action: Dictionary, source_role: String) -> Dictionary:
@@ -723,7 +728,7 @@ func _native_binding_set(source: Dictionary, layer_specs: Array, memo: Dictionar
 ## The action JSON and its declaration proof are fixed during this load.
 ## Frames still validate their own layer identities, addresses and bindings;
 ## their identical kind/sprite attribute proof only needs checking once per
-## action. Return independent arrays/dictionaries to every converted layer.
+## action. Mutable callers still receive independent proof containers.
 func _load_action_attributes(record: Dictionary, kind: String, sprite: int, memo: Dictionary) -> Dictionary:
 	var key: String = kind + ":" + str(sprite)
 	if not memo.has(key):
@@ -731,6 +736,11 @@ func _load_action_attributes(record: Dictionary, kind: String, sprite: int, memo
 		var checked: Dictionary = _attributes(record, kind, sprite)
 		if not checked.ok: return checked
 		memo[key] = checked
+	# The prepared API publishes immutable metadata. Freeze the action-local
+	# proof once instead of copying it into every direction/frame occurrence.
+	if _building_shared:
+		PREPARED.freeze(memo[key])
+		return memo[key]
 	return (memo[key] as Dictionary).duplicate(true)
 
 ## Opt-in immutable result for NPC previews. The normal load_bank API still
