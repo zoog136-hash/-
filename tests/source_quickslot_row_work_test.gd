@@ -41,7 +41,7 @@ func _initialize() -> void:run.call_deferred()
 func check(ok: bool,label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label);printerr("QUICKSLOT_ROW_WORK_FAIL ",label)
-func fixture(old: bool,counted: bool=true) -> Dictionary:
+func fixture(old: bool,counted: bool=true,filled: int=10) -> Dictionary:
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_quickslot_bindings.gd")
 	# Exact former call scope: each refresh_slot projected the full live model.
 	# With default -1, _snapshot_model executes the unchanged full row path.
@@ -55,7 +55,7 @@ func fixture(old: bool,counted: bool=true) -> Dictionary:
 	var h:=Hud.new();w.add_child(h)
 	for i: int in 10:
 		h.indices.append(i)
-		h.quickslot_entries.append({"kind":"skill","id":str(i),"auto":i%2==0,"nested":{"value":i}})
+		h.quickslot_entries.append({"kind":"skill","id":str(i),"auto":i%2==0,"nested":{"value":i}} if i<filled else {})
 		var caption:=Label.new();caption.text=str(i+1);h.add_child(caption);h.quickslot_captions.append(caption)
 		var cooldown:=Label.new();cooldown.text="0.5" if i%2==0 else "";h.add_child(cooldown);h.quickslot_cooldown_labels.append(cooldown)
 	var pack:=Pack.new();var bindings: RefCounted=script.new()
@@ -83,6 +83,7 @@ func run() -> void:
 	var calls: int=0
 	for detail: Array in recorded.get("details",[]):
 		if detail[0]=="ui.quickslot_snapshot":calls=int(detail[2])
+	check(recorded.get("counters",{}).get("ui.quickslot_projected_rows")==130,"successful projected-row count distinguishes old/new work")
 	check(calls==22,"inclusive detail records all old/new snapshot calls")
 	for section: Array in recorded.sections:check(section[0]!="ui.quickslot_snapshot","snapshot detail adds no duplicate section")
 	compare(a,b,"whole view")
@@ -135,6 +136,13 @@ func run() -> void:
 	a.h.quickslot_entries[2].id="new"
 	check(not a.b.activate_presented(2,identity).ok and a.h.clicks==[2],"stale identity never dispatches")
 	a.w.free();b.w.free()
+	for filled: int in [0,4]:
+		var mixed: Dictionary=fixture(false,true,filled);var old_mixed: Dictionary=fixture(true,true,filled)
+		check(mixed.v.refresh()==old_mixed.v.refresh(),"mixed/empty actual-view result")
+		compare(mixed,old_mixed,"mixed/empty %d"%filled)
+		check(mixed.w.reads==filled*2 and old_mixed.w.reads==filled*11,"only filled rows request ammo projection")
+		check(mixed.b.test_rows==20 and old_mixed.b.test_rows==110,"empty rows also avoid unused projection")
+		mixed.w.free();old_mixed.w.free()
 	if "--benchmark" in OS.get_cmdline_user_args():benchmark()
 	print("QUICKSLOT_ROW_WORK_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence,"cpu_benchmark":cpu_benchmark,"synthetic_only":true,"android_verified":false}))
 	quit(0 if failures.is_empty() else 1)

@@ -36,6 +36,7 @@ func snapshot() -> Dictionary:
 func _snapshot(only_visible: int=-1) -> Dictionary:
 	var started: int=FRAME_HITCH.now()
 	var result: Dictionary=_snapshot_model(only_visible)
+	if result.get("ok",false):FRAME_HITCH.count("ui.quickslot_projected_rows",1 if only_visible>=0 else 10)
 	FRAME_HITCH.detail("ui.quickslot_snapshot",started)
 	return result
 
