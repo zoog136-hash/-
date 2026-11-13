@@ -647,14 +647,16 @@ func _seek_frame(frame_number: float) -> void:
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
 		var selected: Dictionary={}
-		for raw: Dictionary in timeline.frames:
-			var value: Dictionary=_frame_value(raw)
-			if float(value.frameIndex)<=frame_number and (selected.is_empty() or float(value.frameIndex)>=float(selected.frameIndex)): selected=value
-		if selected.is_empty(): continue
 		var following: Dictionary={}
+		# Read live frames once. Keep the last equal predecessor and first
+		# equal successor, including unordered serialized timelines.
 		for raw: Dictionary in timeline.frames:
 			var value: Dictionary=_frame_value(raw)
-			if float(value.frameIndex)>float(selected.frameIndex) and (following.is_empty() or float(value.frameIndex)<float(following.frameIndex)): following=value
+			var at: float=float(value.frameIndex)
+			if at<=frame_number:
+				if selected.is_empty() or at>=float(selected.frameIndex): selected=value
+			elif at>frame_number and (following.is_empty() or at<float(following.frameIndex)): following=value
+		if selected.is_empty(): continue
 		var ratio: float=0.0
 		if not following.is_empty() and bool(selected.get("tween",false)):
 			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)
