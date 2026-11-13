@@ -1,6 +1,6 @@
 # Remove repeated class-list preparation in inventory details
 
-This follow-up was developed independently on main `c68e6af` while the approved #476 merge waited for its required CI. The feature branch is brought onto the completed #476 merge before publication. Original assets, game/save ownership and the other worktrees remain untouched.
+Based on main `02504f9f02e6fc3257967b271c34c7989001440c`, including #474 loading changes and #476 bitmap-font lookup optimization. Original assets and game/save ownership remain unchanged.
 
 ## Observed code path
 
@@ -24,9 +24,9 @@ Each comparison checks return values, displayed strings/visibility/button state 
 
 These are verified operation counts on synthetic owners, not Android timing/RSS results or a measured size of the original tooltip scene. The production source lookup path is a static explanation of what each eliminated call would have done.
 
-Focused existing inventory header/selection/snapshot, bitmap update/reuse, pack-memory/menu-retirement, frame logging and actual Main save/reload tests run alongside the new regression. Main covers available absent-install handling, not full original private-pack gameplay. Python staging: 14 passed. Clean Godot import and `NO_LEGACY_RESOURCES ok tracked=20` passed. The historical `check_resource_integrity.py` and delivery ledger are still absent in current main; its attempted invocation reports file-not-found. No resource files were added or changed.
+Twelve final focused suites passed after integrating main `02504f9`: the new regression, inventory header/selection/snapshot, bitmap font lookup/update/reuse, pack-memory/menu-retirement, frame logging, equipment-binding fusion and actual Main save/reload. The first combination with #476 also passed eleven focused suites. Main covers available absent-install handling, not full original private-pack gameplay. Python staging: 14 passed. Clean Godot import and `NO_LEGACY_RESOURCES ok tracked=20` passed. The historical `check_resource_integrity.py` and delivery ledger are still absent in current main; its attempted invocation reports file-not-found. No resource files were added or changed.
 
-Private executor evidence: `/workspace/twilight-inventory-detail-fit-validation/`, including `class-fit.log`, `focused.log`, `headless-summary.json`, staged project and import log. The new suite is registered in `tools/ci_core.py`; the final PR head's checks establish integrated remote status.
+Private executor evidence: `/workspace/twilight-inventory-detail-fit-validation/`, including initial `class-fit.log` and the final `final/headless-summary.json`, `final/import.log`, per-suite logs and `final-stage/` project. The new suite is registered in `tools/ci_core.py`; the final PR head's checks establish integrated remote status.
 
 ## Reference and device limits
 
