@@ -171,12 +171,16 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 	var waive: Array=_content_entry_waive if land_id==_content_entry_land else []
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/orim523/orim523.gd").stage_land_ids().has(land_id):
 		waive=CONTENT_ENTRY_WAIVE # A saved position inside an Orim stage Land.
+	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/content523/content523.gd").content_land_ids().has(land_id):
+		waive=preload("res://scripts/content523/content523.gd").REOPEN_WAIVE # A saved position inside an Escaros/elf forest/territory quest Land.
 	if not waive.is_empty():
 		# A content teleport (enter_source_land) names the in-Land rules that
-		# do not gate its own entry; every other hold is kept.
+		# do not gate its own entry; every other hold is kept. A named table
+		# (CompetitionDungeonLand) waives that table's Land condition row.
 		var kept: Array=[];var waived: Array=[]
 		for hold: Variant in result.get("source_travel_holds",[]):
 			if hold is Dictionary and hold.get("reason")=="native_attribute_requires_policy" and str(hold.get("type",{}).get("Name","")) in waive:waived.append(hold)
+			elif hold is Dictionary and hold.get("reason")=="native_land_condition_requires_policy" and str(hold.get("table","")) in waive:waived.append(hold)
 			else:kept.append(hold)
 		result.source_travel_holds=kept;result["content_entry_waived"]=waived
 		result.source_travel_hold="native_definition_conditions_require_policy" if not kept.is_empty() else ""
@@ -1006,6 +1010,11 @@ func _enter_source_land(land_id: int, bounds: Array) -> bool:
 		else:problem="원문 필드 보류: "+str(proposed.get("problem"));proposed.close()
 	_source_travel_busy=false
 	return completed
+
+## World position of an absolute source cell on the active original Land.
+func source_cell_point(cell: Vector2i) -> Vector2:
+	if not active or not source_owned or _source_field==null: return Vector2.INF
+	return _source_field.coordinates.to_world(Vector2(cell))
 
 func current_source_land() -> Dictionary:
 	if not active or not source_owned or _source_field==null: return {}
