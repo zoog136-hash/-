@@ -3,6 +3,7 @@ const Service = preload("res://scripts/tj/coupon_service.gd")
 const Source = preload("res://scripts/tj/source523.gd")
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
+const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 var core = Service.new()
 var world
 var loading := false
@@ -103,9 +104,41 @@ func grant_for_test(item: String) -> Dictionary:
 	if world._save_game(true,{Service.KEY:next})!=OK:return {"ok":false,"error":"저장 실패로 지급하지 않았습니다"}
 	core.import_state(next)
 	return {"ok":true}
+## Physical original TJ coupons in the bag (user decision 2026-11-13): the
+## receipted stacks of this exact ItemClass. They count with this screen's own
+## coupon record and are spent through the bag's physical debit, never copied.
+func bag_stacks(item: String) -> Array:
+	var found: Array=[]
+	if world==null or not item.is_valid_int():return found
+	for uid: Variant in world.item_instances:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary or not entry.has(STACK.RECEIPT):continue
+		var owned: Dictionary=STACK.proof(world,str(uid))
+		if owned.is_empty() or STACK.whole(owned.record.get("source_item_class_id"))!=int(item) or int(owned.record.get("source_bless_raw",1))!=1:continue
+		if world._item_locked(str(entry.get("name","")),str(uid)) or world._item_locked(str(entry.get("name",""))):continue
+		found.append({"uid":str(uid),"owned":owned})
+	return found
+func bag_count(item: String) -> int:
+	var total: int=0
+	for stack: Dictionary in bag_stacks(item):total+=int(stack.owned.remaining)
+	return total
+func owned_count(item: String) -> int:
+	return int(core.state.coupons.get(item,0))+bag_count(item)
+func _bag_debit(item: String) -> Dictionary:
+	var stacks: Array=bag_stacks(item)
+	if stacks.is_empty():return {"ok":false,"error":"가방의 원본 TJ 쿠폰을 찾지 못했습니다 · 변경 없음"}
+	var owned: Dictionary=stacks[0].owned
+	var debit: Dictionary=STACK.stage_debit(world,[{"physical_id":str(stacks[0].uid),"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}])
+	if not debit.get("ok",false):return {"ok":false,"error":str(debit.get("reason","가방 쿠폰 차감 확인 실패"))+" · 변경 없음"}
+	return debit
+func _apply_bag_debit(debit: Dictionary) -> void:
+	if debit.is_empty():return
+	world.inventory=debit.overrides.inventory;world.item_instances=debit.overrides.item_instances
+	world.consumable_service.import_state(debit.overrides.consumable_state)
+	world.hud.refresh_inventory(world.inventory)
 func redeem(item: String, event_id: String, revision: int, success_ids: Array, fail_ids: Array) -> Dictionary:
 	if world._option_awakening_busy():return {"ok":false,"error":"다른 카드 거래가 진행 중입니다"}
-	var prepared: Dictionary=core.prepare(item,event_id,context(),core.clock(),revision,success_ids,fail_ids)
+	var prepared: Dictionary=core.prepare(item,event_id,context(),core.clock(),revision,success_ids,fail_ids,bag_count(item))
 	if not prepared.ok:return prepared
 	if int(world.gold)<int(core.settings.retry_gold_cost):return {"ok":false,"error":"TWILIGHT 추가 거래 비용 아데나가 부족합니다"}
 	core.busy=true
@@ -156,10 +189,16 @@ func redeem(item: String, event_id: String, revision: int, success_ids: Array, f
 	var next: Dictionary=prepared.state
 	next["rng_state"]=str(rng.state)
 	next.receipts.append({"revision":next.revision,"coupon":item,"event":event_id,"card":selected,"success":success,"time":next.last_time,"adapter":"TWILIGHT single-result source-chance retry"})
-	var saved: Error=world._save_game(true,{Service.KEY:next,"card_draw_fusion":cards.export_state(),"gold":int(world.gold)-int(core.settings.retry_gold_cost)})
+	var overrides: Dictionary={Service.KEY:next,"card_draw_fusion":cards.export_state(),"gold":int(world.gold)-int(core.settings.retry_gold_cost)}
+	var debit: Dictionary={}
+	if prepared.get("bag_debit",false):
+		debit=_bag_debit(item)
+		if not debit.get("ok",false):core.busy=false;return debit
+		overrides.merge(debit.overrides)
+	var saved: Error=world._save_game(true,overrides)
 	core.busy=false
 	if saved!=OK:return {"ok":false,"error":"저장 실패 · 쿠폰과 카드 및 실패 이력을 유지했습니다"}
-	core.import_state(next)
+	core.import_state(next);_apply_bag_debit(debit)
 	world.gold=int(world.gold)-int(core.settings.retry_gold_cost)
 	world.card_draw_fusion.import_state(cards.export_state())
 	world._invalidate_equipment_static()
@@ -189,10 +228,16 @@ func redeem_awakening(prepared: Dictionary) -> Dictionary:
 	result.state["rng_state"]=str(rng.state)
 	var next: Dictionary=prepared.state
 	next.receipts.append({"revision":next.revision,"coupon":prepared.item,"event":event.id,"success":result.success,"time":next.last_time,"adapter":"existing option awakening, ordinary costs preserved"})
-	var saved: Error=world._save_game(true,{Service.KEY:next,"card_option_awakening":result.state,"card_draw_fusion":result.card_state,"gold":result.gold})
+	var overrides: Dictionary={Service.KEY:next,"card_option_awakening":result.state,"card_draw_fusion":result.card_state,"gold":result.gold}
+	var debit: Dictionary={}
+	if prepared.get("bag_debit",false):
+		debit=_bag_debit(str(prepared.item))
+		if not debit.get("ok",false):core.busy=false;return debit
+		overrides.merge(debit.overrides)
+	var saved: Error=world._save_game(true,overrides)
 	core.busy=false
 	if saved!=OK:return {"ok":false,"error":"저장 실패 · 쿠폰·각성·재료·아데나를 유지했습니다"}
-	core.import_state(next);adapter.progress=result.state.duplicate(true);adapter.rng.state=rng.state;adapter._bonus_signature=""
+	core.import_state(next);_apply_bag_debit(debit);adapter.progress=result.state.duplicate(true);adapter.rng.state=rng.state;adapter._bonus_signature=""
 	world.card_draw_fusion.import_state(result.card_state);world.gold=int(result.gold)
 	world._invalidate_equipment_static();world._sync_option_awakening_auras();world._update_hud()
 	return {"ok":true,"success":result.success,"error":"각성 재도전과 기존 엔진 비용을 함께 저장했습니다"}

@@ -134,9 +134,14 @@ func candidates(item: String, context: Dictionary, now: int) -> Dictionary:
 	result["events"]=found
 	if found.is_empty():result["error"]="이 쿠폰에 해당하는 실제 실패 이력이 없습니다"
 	return result
-func prepare(item: String, event_id: String, context: Dictionary, now: int, revision: int, success_ids: Array, fail_ids: Array) -> Dictionary:
+## bag_units: physical original coupons of this ItemClass in the bag (user
+## decision 2026-11-13). This record's own coupons are spent first; when it has
+## none, the result says `bag_debit` and the caller debits one bag unit in the
+## same save. Exactly one unit of one source is spent per use.
+func prepare(item: String, event_id: String, context: Dictionary, now: int, revision: int, success_ids: Array, fail_ids: Array, bag_units: int = 0) -> Dictionary:
 	if busy or blocked or revision!=int(state.revision):return {"ok":false,"error":"이미 처리했거나 선택 후 상태가 바뀌었습니다"}
-	if int(state.coupons.get(item,0))<1:return {"ok":false,"error":"소유한 쿠폰이 부족합니다"}
+	var own: int=int(state.coupons.get(item,0))
+	if own<1 and bag_units<1:return {"ok":false,"error":"소유한 쿠폰이 부족합니다"}
 	var view: Dictionary=candidates(item,context,now)
 	if not view.ok:return view
 	var event: Dictionary={}
@@ -162,9 +167,9 @@ func prepare(item: String, event_id: String, context: Dictionary, now: int, revi
 			unique[str(id)]=true
 	var next: Dictionary=export_state()
 	next.revision=int(next.revision)+1;next.last_time=now
-	next.coupons[item]=int(next.coupons[item])-1
+	if own>=1:next.coupons[item]=own-1
 	next.used[event_id]=str(next.revision)
-	return {"ok":true,"state":next,"event":event,"success_ids":success_ids.duplicate(),"fail_ids":fail_ids.duplicate(),"item":item}
+	return {"ok":true,"state":next,"event":event,"success_ids":success_ids.duplicate(),"fail_ids":fail_ids.duplicate(),"item":item,"bag_debit":own<1}
 func record_failure(event: Dictionary) -> bool:
 	if blocked or state.history.size()>=10000:return false
 	var next: Dictionary=export_state()
