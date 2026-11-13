@@ -27,6 +27,8 @@ CHECKS = [
     ('source_girtas_screen_copy_guard_test', []),
     ('lobby_spine_android_blend_test', []),
     ('equipment_binding_fusion_test', []),
+    ('current523_weight_bulk_expansion_test', []),
+    ('cash_install_lookup_scope_test', []),
     ('current523_reward_bag_retention_test', []),
     ('current523_definition_row_lookup_test', []),
     ('current523_native_registration_scope_test', []),
@@ -194,6 +196,7 @@ CHECKS = [
     ('skill523_engine_test', []),
     ('orim523_test', []),
     ('minigame523_scope_test', []),
+    ('reference_sp2_prepared_bank_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -468,6 +471,8 @@ def main():
                       'source_girtas_screen_copy_guard_test':'SOURCE_GIRTAS_SCREEN_COPY_GUARD',
                       'lobby_spine_android_blend_test':'LOBBY_SPINE_ANDROID_BLEND',
                       'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
+                      'current523_weight_bulk_expansion_test':'WEIGHT_BULK_EXPANSION_RESULT',
+                      'cash_install_lookup_scope_test':'CASH_INSTALL_LOOKUP_SCOPE_RESULT',
                       'current523_reward_bag_retention_test':'CURRENT523_REWARD_BAG_RETENTION_RESULT',
                       'current523_definition_row_lookup_test':'CURRENT523_DEFINITION_ROW_LOOKUP_RESULT',
                       'current523_native_registration_scope_test':'CURRENT523_NATIVE_REGISTRATION_SCOPE_RESULT',
@@ -634,6 +639,7 @@ def main():
                       'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT',
                       'skill523_engine_test':'SKILL523_ENGINE_RESULT',
                       'orim523_test':'ORIM523_RESULT',
+                      'reference_sp2_prepared_bank_test':'REFERENCE_SP2_PREPARED_BANK_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)

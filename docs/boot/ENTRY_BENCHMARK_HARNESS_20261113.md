@@ -105,3 +105,10 @@ Final C3 uses a separate new first profile because its runtime fingerprint diffe
 from C2. The retained baseline/C2 results are historical observations, not C3
 measurements. The final report records all three and includes slower next/warm
 observations rather than treating every phase as an improvement.
+
+Further C4 validation preserves two phases: the independent patch runtime and
+the later fixed-main integration runtime. Never attribute an integrated timing
+that includes unrelated main changes solely to the patch. Instrumented cash
+preparation, warm install and post-readiness first-shop calls are separate from
+the uninstrumented first/next receipts. Profile-start manifests and mandatory
+positive scope activation are retained with the local diagnostic evidence.
