@@ -1,0 +1,78 @@
+{
+  "baseline_main": "c94f760181d4b7dcab62b04571c276741681dd18",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "platform": "Linux x86_64; headless and Mesa/Xvfb OpenGL; not Android",
+  "source_data": "synthetic; 3621 source-format records, no private quest JSON/art used",
+  "tests": {
+    "quest_text_window_opengl": {
+      "result": {
+        "checks": 32,
+        "evidence": {
+          "android_verified": false,
+          "data_static_growth": 25444,
+          "data_usec": 6398,
+          "record_bytes": 29837120,
+          "synthetic": true,
+          "ui_static_growth": 23602428,
+          "ui_usec": 548558
+        },
+        "failures": []
+      },
+      "log_sha256": "3843239bb5a48a16e01d97002a657cc12b68ef46e0629ada12b2dc83d927da8d"
+    },
+    "original_ui_quest_preparation_test": {
+      "result": {
+        "checks": 37,
+        "failures": [],
+        "private_pack_used": false
+      },
+      "log_sha256": "78987f8a836506675f9674cce4b9d70c7e294d3a3e68734a0bf0325a43bf2237"
+    },
+    "frame_hot_paths_test": {
+      "result": {
+        "checks": 62,
+        "failures": []
+      },
+      "log_sha256": "a9c75ca004a1b2f2a5dfa01b8d60a4766b46cc488eae4a568be3041951467150"
+    },
+    "quest_category_entries_test": {
+      "result": {
+        "checks": 64,
+        "failures": [],
+        "full_detached": 36,
+        "legacy_rows": 4,
+        "main_detached": 9,
+        "private_pack_used": false,
+        "source_rows": 32
+      },
+      "log_sha256": "41021a592c70e69ef925a9f2a9f9043c9a8a46efeef73d0c94ae05640544751a"
+    },
+    "quest_category_record_reads_test": {
+      "result": {
+        "category_rows": 4,
+        "checks": 32,
+        "failures": [],
+        "full_rows": 16,
+        "private_pack_used": false
+      },
+      "log_sha256": "a4cdab4ccf719f54624257a1867e2a885571be4ba9479f124b70ba6491ff311e"
+    }
+  },
+  "implementation_sha256": {
+    "scripts/quests/quest_service.gd": "273da5ae9265f1f2281eb2b2f909a1d88df1459338d8010c31f721ec3a1accff",
+    "scripts/quests/quest_auto_runner.gd": "0634c3d90df59d93fb0f5c27ed80bb1dd94bbbe77e389f2be434811fe9e63aa3",
+    "scripts/ui/renewal_quests.gd": "4b46126c1be657ce020d3574b4ff6f78b0a5d0cec79b23d7171beb1dbb6b336d",
+    "scripts/ui/renewal_hud.gd": "985d58a3376cab6a36bf6769ee5773624d13a48d6f15d8dff61896302d7c23db",
+    "tests/quest_text_window_test.gd": "d7bacb90c37be6ba851cbc053da87dd0b5a1b95182db6be1d73133f441c66cf8",
+    "tests/frame_hot_paths_test.gd": "950e8286d075dc888500a392be531e0c8a68b3577d385e6710638b867a6d82d5",
+    "tests/original_ui_quest_preparation_test.gd": "f0fd231a9b2c920f579b70c533ccd6cc25f2852c53ac52a55102128e193dcff3",
+    "tools/ci_core.py": "77790770b1064d74e90abc509ee1aa4194f29bcfcfaa5f62e9cada9a27e22572"
+  },
+  "limits": [
+    "Android termination cause and device fix not verified; no logcat/tombstone",
+    "Original quest JSON and private UI/images were not mounted in this environment",
+    "First-time fonts and common HUD/theme allocation remain; page scan remains synchronous",
+    "Acceptance retains existing eligibility and atomic reward/save transaction; failure does not display fake completion",
+    "Full core and remote workflow results are reported separately for the final commit"
+  ]
+}
