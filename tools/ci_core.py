@@ -21,6 +21,7 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('shop_skill_book_contract_cache_test', []),
     ('equipment_packed_scan_test', []),
     ('equipment_catalog_scan_test', []),
     ('source_preview_copy_free_test', []),
