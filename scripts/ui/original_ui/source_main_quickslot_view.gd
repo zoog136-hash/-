@@ -20,7 +20,6 @@ var _scene: Node2D
 var _hits: Dictionary={}
 var _pages: Array[Control]=[]
 var _identity: Array=[]
-var _rows: Array=[]
 var _busy: bool=false
 
 func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Dictionary:
@@ -45,7 +44,6 @@ func close() -> void:
 	_scene=null
 	_hits.clear()
 	_pages.clear()
-	_rows.clear()
 	_identity.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
@@ -57,13 +55,12 @@ func refresh() -> Dictionary:
 	if parent==null:return _fail("source_quickslot_canvas_unavailable")
 	var model: Dictionary=_bindings.snapshot()
 	if not model.get("ok",false):return _decline(model)
-	if not is_open() or _model_identity(model)!=_identity:return _stage(parent)
+	if not is_open() or not _matches_identity(model):return _stage(parent)
 	for row: Dictionary in model.rows:
 		var hit: Dictionary=_hits.get(int(row.visible_index),{})
 		if hit.is_empty():return _decline(_fail("source_quickslot_registered_slot_unavailable"))
 		var result: Dictionary=_bindings.refresh_slot(hit.native_slot_scene,row)
 		if not result.get("ok",false):return _decline(result)
-	_rows=model.rows.duplicate(true)
 	return {"ok":true,"handled":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func hit_at(viewport_point: Vector2) -> Dictionary:
@@ -159,7 +156,6 @@ func _stage(parent: Node) -> Dictionary:
 	_scene=next
 	_hits=hits
 	_pages=page_inputs
-	_rows=model.rows.duplicate(true)
 	_identity=_model_identity(model)
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():previous.hide();previous.queue_free()
 	_busy=false
@@ -184,6 +180,17 @@ static func _model_identity(model: Dictionary) -> Array:
 	var identity: Array=[model.pages.duplicate()]
 	for row: Dictionary in model.rows:identity.append([row.visible_index,row.absolute_index,row.entry.duplicate(true)])
 	return identity
+
+func _matches_identity(model: Dictionary) -> bool:
+	# _identity owns the deep snapshot taken when the scene was staged. Compare
+	# the fresh validated model directly; unchanged refreshes need no second
+	# deep copy of every entry or retained copy of the unused presentation rows.
+	if _identity.size()!=model.rows.size()+1 or _identity[0]!=model.pages:return false
+	for index: int in range(model.rows.size()):
+		var row: Dictionary=model.rows[index]
+		var previous: Array=_identity[index+1]
+		if previous[0]!=row.visible_index or previous[1]!=row.absolute_index or previous[2]!=row.entry:return false
+	return true
 
 static func _contains(control: Control, point: Vector2) -> bool:
 	return is_instance_valid(control) and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point)
