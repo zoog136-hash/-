@@ -19,7 +19,7 @@
 | --- | ---: | --- |
 | OrimsTrailStage | 20 | 일반 10 + 하드 10. TeleportTerritoryID → Territories → Land로 **원본 지도 입장**, TimeLimit 420초 |
 | UIOrimsTrailStage | 11 | StageIndex별 이름·이야기(0번 "테스트" 행은 Stage가 없어 미사용) |
-| OrimsTrailCharacter | 6 | 영웅 HP(250~450)·시작 스킬 적용. 일반 4명 선택, 히든 2명(제온·메이브) 잠금 |
+| OrimsTrailCharacter | 6 | 영웅 HP(250~450)·시작 스킬 적용. 6명 모두 선택(히든 2명 제온·메이브도 처음부터 열림 · 사용자 결정) |
 | UIOrimsTrailCharacter | 5 | 영웅 칭호·부제·이야기 표시 |
 | OrimsTrailExperience | 198 | 일반 99 + 하드 99 레벨 누적 경험치 |
 | OrimsTrailSpellGroup | 48 | 스킬 그룹 이름·설명 |
@@ -27,7 +27,7 @@
 | OrimsTrailSpellType / SpellMaxCount | 3 / 3 | 유형별 보유 한도 Attack 5 · Utility 3 · Synergy 1 |
 | OrimsTrailMultipleSpellCastGroupEntity | 729 | 스킬 레벨별 시전 묶음(Order) → 원본 SpellClass 373종 |
 | OrimsTrailSynergySpellCombination(+Requirement) | 7 (+28) | 4개 그룹 보유 시 시너지 스킬 카드 제시 |
-| OrimsTrailSynergySpellCombinationReward | 7 | **미지급**(아래 "없는 규칙") |
+| OrimsTrailSynergySpellCombinationReward | 7 | 시너지별 최초 1회 원본 보상 상자 지급(사용자 결정) |
 | OrimsTrailRerollCurrencyCost | 10 | 스킬 카드 다시 고르기 1~5회 10, 6~10회 20 |
 | OrimsTrailBuff | 4 | 준비 강화 비용(아데나 20만/30만/50만, 다이아 20) + BuffClass 원본 보너스(이동·공격속도 25/25/10%) |
 | OrimsTrailNpc / NpcType | 244 / 8 | 역할(Monster/MiddleBoss/Boss/HealingSphere/PointBox/OpalBox/Last*) + NpcClass HP·MP·AC·MR·Exp, NpcAttack 243종 |
@@ -76,7 +76,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 레벨업 카드 수 | 후보 조건 | 몇 장 보여 주는지 | **자체 3장**(`OFFER_COUNT`) |
 | 2 | 카드 선택 중 정지 | — | 시간 정지 여부 | 정지하지 않음 |
-| 3 | 히든 영웅 해금 | `PortraitNode = Nd_Hidden_*`, `Probability 150` | 해금 조건 | 2명(제온·메이브) **잠금** |
+| 3 | 히든 영웅 해금 | `PortraitNode = Nd_Hidden_*`, `Probability 150` | 해금 조건 | **사용자 결정: 처음부터 열림** |
 | 4 | 영웅 `Probability`(175/150) | 값 | 의미 | 미사용 |
 | 5 | 영웅 `Sp 20`, 스킬 `MPCost`/`SpellMaterialItemAmount` | 값 | SP 소모·회복 규칙 | 미사용(스킬 비용 없음) |
 | 6 | 영웅 외형 | `SpriteID`(6종 모두 팩에 있음) | — | **미연결**: 플레이어 외형을 영웅 스프라이트로 바꾸는 경로 없음(남은 작업) |
@@ -92,7 +92,7 @@
 | 17 | 회복 구슬 회복량 | NPC 역할만 | 회복량 | 자체 20%(기존 `heal_percent`) |
 | 18 | 증표/오팔 상자 내용 | `NpcItemDropView`: 오림 NPC 220종이 226862(오림의 증표) 드롭 | 확률·수량(View 표) | 기존 자체 증표 드롭 유지 |
 | 19 | 증표 드롭 강화 버프 72362 | `NpcItemDropProbabilityMultiple 10000`(적용 조건 112/462) | 조건 의미 | 원본 값 미적용(기존 자체 ×1.1) |
-| 20 | 시너지 보상 | 7행 → Reward 314131(299361 시너지 스킬 보상 상자) | 지급 시점(최초 1회/매회) | **미지급** |
+| 20 | 시너지 보상 | 7행 → Reward 314131(299361 시너지 스킬 보상 상자) | 지급 시점(최초 1회/매회) | **사용자 결정: 시너지별 최초 1회** |
 | 21 | 입장 재화·횟수 | Constant 22=174, 92=10 등 | Constant 유형 이름(19종 번호만) | 기존 자체 설정(아인 174 × 10, 하루 1회) |
 | 22 | 다시 고르기 재화 | 횟수별 비용 | 재화 종류 | 기존 자체 설정(다이아 4) |
 | 23 | 보스 처치 시간 구간 경계 | 60행(0~28/28~40/…) | 경계 포함 규칙, 420/480 | 기존 자체 규칙(높은 하한 우선) |
@@ -109,7 +109,7 @@
   그림을 만들거나 대체하지 않았다.
 - 오림의 증표 226862의 523 소유자(소비처) 연결.
 - 원본 오림 UI csb 창 바인딩: csb는 있으나 노드별 데이터 연결 규칙이 없다.
-- 위 표의 "없는 규칙"은 결정이 필요하다(특히 1·3·20·21).
+- 위 표의 "없는 규칙" 중 1·3·20·21·오림의 증표는 아래 사용자 결정으로 정했다.
 
 ## 실제 Main 확인(실제 팩 `--source523-pack`, 레벨 85 저장)
 
@@ -123,3 +123,13 @@
   드래곤의 성수(이벤트, 원본 #231162) 1 = 원본 523 아이템, 오림의 증표 350 = 대응 아이템.
 - 저장 → 불러오기: 영수증 유지, 인벤토리 변화 6종 유지.
 - 오림 Land 안에서 저장한 뒤 다시 시작해도 523 원문 필드로 복원(Land 속성 `NoTeleport` 등이 복원을 막지 않음).
+
+## 사용자 결정 2026-11-13
+
+| 항목 | 결정 | 구현 |
+| --- | --- | --- |
+| 레벨업 카드 수 | **유지: 3장** | `orim523_run.gd` `OFFER_COUNT = 3` |
+| 입장 재화·횟수 | **유지: 아인하사드 174 × 10, 하루 1회** | 기존 자체 설정(`entry_currency 174`, `entry_cost 10`, `attempts 1`) |
+| 오림의 증표 | **유지: 대응 아이템 지급** | 523 공급자에 없을 때 `TWILIGHT · 오림의 증표` |
+| 히든 영웅(제온·메이브) | **처음부터 열기** — 영웅 6명 모두 선택. HP·시작 스킬은 원본 그대로 | `HIDDEN_SELECTABLE = true`, 던전 메뉴 영웅 목록 6명 |
+| 시너지 보상 상자 | **시너지별 최초 1회** — 처음 그 시너지 스킬을 배울 때 지급, 저장에 지급 기록, 다시 도전해도 다시 주지 않음. 상자는 원본 표 그대로 | `OrimsTrailSynergySpellCombinationReward.RewardID → Reward`의 아이템(299361 시너지 스킬 보상 상자)·수량·축복을 523 아이템 공급자로 지급. 지급 기록은 `source_dungeon_play.receipts["orim_synergy:<CombinationID>"]`. 공급자가 거절해 아무것도 지급하지 못하면 기록을 남기지 않아 나중에 지급 가능 |

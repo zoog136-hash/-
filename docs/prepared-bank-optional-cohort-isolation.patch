@@ -1,0 +1,12 @@
+--- a/tests/reference_sp2_optional_roles_test.gd
++++ b/tests/reference_sp2_optional_roles_test.gd
+@@ -112,6 +112,9 @@
+ 	return selected
+ 
+ func observed(view: Node2D, selected: Dictionary) -> Dictionary:
++	# Compare cold prepared-metadata work in each cohort; retain raw caches.
++	# A live baseline view must not prime the next cohort's prepared snapshot.
++	preload("res://scripts/resources/reference_sp2_prepared_bank.gd").clear()
+ 	HITCH._details.clear()
+ 	HITCH._counters.clear()
+ 	var started: int = Time.get_ticks_usec()
