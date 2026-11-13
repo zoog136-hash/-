@@ -43,6 +43,13 @@ func _spec() -> Dictionary:
 	spec["Change_Awaken_SkillExp"]={"exclude":true}
 	spec["Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Nd_Awaken_Tab_1"]={"visible":false}
+	# Change_Awaken_All authors the skill/exp tab bar hidden (the client shows it).
+	spec["Nd_Awaken_Tab_2"]={"visible":true}
+	# Awaken result effects (white flash, exp take) belong to the reveal, not the page.
+	spec["Change_Awaken_Skill/Fx_Whitescreen"]={"exclude":true}
+	spec["Change_Awaken_Skill/Fx_Exp_Take"]={"exclude":true}
+	# The dimmed clipping panel and its server_bg are shown by the reveal timeline.
+	spec[P+"Panel_Bg_Clipping"]={"exclude":true}
 	spec["Nd_Awaken_Tab_2/Btn_Skill_On"]={"visible":true}
 	spec["Nd_Awaken_Tab_2/Btn_Skill_Off"]={"visible":false}
 	spec["Nd_Awaken_Tab_2/Btn_Exp_On"]={"visible":false}
@@ -59,6 +66,10 @@ func _spec() -> Dictionary:
 	spec[P+"Fx_Btn_Production"]={"visible":false}
 	spec[P+"Fx_Item_Active_Right"]={"visible":false}
 	spec["Btn_Back"]={"activate":Callable(self,"_back")}
+	# The page tip (two authored lines in a 508x36 box) is wider than its box
+	# in the pack font and the renderer does not re-wrap original text, so it
+	# is left out of the scope (the window stays registered-gate only).
+	spec["Change_Awaken_Skill/Nd_Skill/Label_Tip"]={"exclude":true}
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
