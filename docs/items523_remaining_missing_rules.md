@@ -599,3 +599,26 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
   할파스 램페이지(자기 버프 그룹 확률 감소), 바포메트 커스(행동 불가 11종 + StatusEffectID).
 - 남은 강화 발동 종류 Defence_Spell(2)·Aura_Spell(38)·Defence_DebuffTimeDecrease(26)·Gain_Experience(68)와 InvokeOption 3/5 중
   Param 조건이 0이 아닌 행(8+18종)은 13.2와 같다.
+
+## 15. 사용자 결정 2026-11-13 — 장비 남은 효과 (PR `feature/equipment523-rest-decisions`)
+
+1. **기본 효과 행의 PVP 수치에 강화 경로와 같은 "PVP → 싱글플레이 해석" 적용.**
+   - PiercePVPDamageReduction 4종(발록의 핏빛 망토·투구와 각인, Value 12) → `source_pvp_flat_reduction_ignore`, PVPSpellByLevelAdditionLevel
+     2종(빛나는 망자의 팔찌와 각인, Value 1) → `source_pvp_status_success_level`.
+   - 읽는 곳은 강화와 같은 `patch523_equipment_combat.pvp_flat_ignore`(추가 피해 해석)·`status_caster_level`(상태 성공 가상 레벨)이며
+     같은 정책 키(`source_pvp_flat_ignore_consumer`, `source_pvp_status_level_consumer`)로 켜고 끈다. 기본 행 값은 저장된 필드가 아니라
+     현재 투영이 만든 행(`source_mapped_bonuses`)에서만 읽는다(`base_integer`). 실제 레벨·XP는 바뀌지 않는다.
+   - 14.4 표의 PiercePVPDamageReduction / PVPSpellByLevelAdditionLevel은 이 결정으로 연결됨. IgnorePVPDamageReductionPercent·
+     PVPDamageReductionPercent(% 단위)는 강화 경로에도 같은 해석이 없어 그대로 남긴다.
+2. **불러올 때 같은 그룹(EquipGroupID)·같은 아이템 중복 착용 정리.**
+   - 귀걸이·반지·인장 두 칸 묶음마다 EquipSlotConfig 제한을 넘는 것을 해제해 가방으로 보낸다(아이템 개체는 그대로 가방에 남음).
+   - 남길 것: 앞 칸 우선(earring1 → earring2, ring1, seal1). 저장 파일에 장착 시각이 없어 "먼저 장착된 슬롯"을 칸 순서로 본다.
+   - 한 번만: 결과를 저장 키 `equip_group_limit523`(`{"schema":1,"applied":true,"released":[...]}`)로 남기고, 이 표시가 있으면 다시 정리하지 않는다.
+     원본 표가 설치되지 않은 상태에서는 판정하지 않고 표시도 남기지 않는다(나중에 팩 설치 후 첫 불러오기에서 정리).
+   - 저장 호환: 키가 없는 예전 저장은 그대로 읽고, 예전 버전은 새 키를 무시한다. 새로 착용할 때의 거부 규칙(14.2)은 그대로.
+3. **투사체 우선순위 유지(사용자 확인).** 무기 전용(AmmoEffectSpriteIDByWeapon) > 탄약(AmmoEffectSpriteID) > 무기 기본(WeaponType
+   .DefaultAmmoEffectSpriteID), 폭발은 탄약 > 무기 기본. 2-2절의 TWILIGHT 해석을 사용자 결정으로 확정.
+
+- 실제 Main 확인(`tests/items523_equipment_typed_effects_test.gd`): #286641 착용 시 PVP 리덕션 무시 추가 피해 0→12, 저장·불러오기 유지 /
+  #315922 상태 성공 가상 레벨 10→11 / 같은 그룹 귀걸이 두 개를 착용한 예전식 저장 → 불러오기 후 earring1 유지·earring2 해제(가방 보존)·
+  표시 1건 / 표시가 있는 저장은 다시 정리하지 않음.
