@@ -3,6 +3,7 @@ extends "res://scripts/monsters/base508_monster_view.gd"
 const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const SELECTION = preload("res://scripts/monsters/current523_source_bank_selection.gd")
 const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
+const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 var selection_status: Dictionary = {}
 var _preview: PREVIEW = null
 
@@ -10,7 +11,9 @@ static func source_only_request(record: Dictionary) -> bool:
 	return SELECTION.source_only_request(record)
 
 func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
+	var started: int = HITCH.now()
 	selection_status = SELECTION.select(record,admission)
+	HITCH.detail("view.selection",started)
 	if not selection_status.get("ok",false): return false
 	var selected: Dictionary = selection_status
 	if selected.get("runtime_actor_registry_required",false):
@@ -22,20 +25,28 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 			selection_status["selection_phase"] = "awaiting_active_actor_registry"
 			return false
 	var candidate := PREVIEW.new()
-	if not candidate._configure_selected_roles(selected,"idle"):
+	started = HITCH.now()
+	var configured: bool = candidate._configure_selected_roles(selected,"idle")
+	HITCH.detail("view.roles",started)
+	if not configured:
 		selection_status = selected.duplicate(true)
 		selection_status["ok"] = false
 		selection_status["status"] = "source_only_pending" if selected.get("source_only",false) else "selection_pending"
 		selection_status["reason"] = candidate.reference_bank_status.get("error","current523_npc_core_source_action_unavailable")
 		candidate.free()
 		return false
+	started = HITCH.now()
 	_preview = candidate
 	_preview._reference_request_context = selected.get("source_bank_context",{}).duplicate(true)
 	_preview._reference_card_context = selected.duplicate(true)
 	_preview.source_selection_status = selected.duplicate(true)
 	_preview.reference_bank_status["purpose"] = "existing_npc_consumer"
 	_preview.reference_bank_status["host_policy"] = selected.host_policy
+	HITCH.detail("view.context",started)
+	started = HITCH.now()
 	_preview._load_reference_overlay_bindings(selected)
+	HITCH.detail("view.overlay_bindings",started)
+	started = HITCH.now()
 	add_child(_preview)
 	_tracks = _preview._playback_tracks
 	_mode = _preview.source_playback_mode()
@@ -48,7 +59,11 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	_clock = 0.0
 	_sequence = -1
 	_source_attack = false
-	if not _preview.advance_reference_source(0.0,"idle",posmod(2 + 3,8)):
+	HITCH.detail("view.attach",started)
+	started = HITCH.now()
+	var initial_frame: bool = _preview.advance_reference_source(0.0,"idle",posmod(2 + 3,8))
+	HITCH.detail("view.first_frame",started)
+	if not initial_frame:
 		selection_status["ok"] = false
 		selection_status["status"] = "source_only_pending" if selected.get("source_only",false) else "selection_pending"
 		selection_status["reason"] = _preview.reference_bank_status.get("error","current523_npc_initial_source_frame_unavailable")

@@ -32,7 +32,7 @@ def compare(baseline, candidate):
     differences=[];phases={}
     differences.extend(_strict_receipts(baseline,candidate))
     if before.get('failures') or after.get('failures'):differences.append('a run reports failed assertions')
-    for field in ['source','source_problem','engine']:
+    for field in ['source','source_problem','engine','owner']:
         if before.get(field)!=after.get(field):differences.append(field+' differs')
     b=before['measurements'];a=after['measurements']
     if b['cache_condition']!=a['cache_condition']:differences.append('cache conditions differ')
@@ -52,6 +52,15 @@ def compare(baseline, candidate):
         phases[phase]={'baseline_ms':elapsed_before/1000,'candidate_ms':elapsed_after/1000,
                        'change_percent':100*(elapsed_after-elapsed_before)/elapsed_before if elapsed_before else None,
                        'payloads_identical':left['artifacts']==right['artifacts']}
+    left=b.get('market_public');right=a.get('market_public')
+    if (left is None)!=(right is None):differences.append('public Market probe condition differs')
+    elif left is not None:
+        for field in ['api','condition','item_ids_sha256','items','source_market_links','references','full_bytes','full_sha256','market_bytes','market_sha256','source_problem']:
+            if left.get(field)!=right.get(field):differences.append('market_public.'+field+' differs')
+        for field in ['item_id','references','full_bytes','full_sha256','market_bytes','market_sha256']:
+            if left.get('first',{}).get(field)!=right.get('first',{}).get(field):differences.append('market_public.first.'+field+' differs')
+        for label,old_us,new_us in [('market_first_public',left['first']['generation_usec'],right['first']['generation_usec']),('market_all_public',left['all_generation_usec'],right['all_generation_usec'])]:
+            phases[label]={'baseline_ms':old_us/1000,'candidate_ms':new_us/1000,'change_percent':100*(new_us-old_us)/old_us if old_us else None,'payloads_identical':left['market_sha256']==right['market_sha256']}
     return {'equivalent':not differences,'differences':differences,'phases':phases,
             'condition':b['cache_condition'],'scope':'real original definition producers; Linux headless, no Android claim',
             'timing_caveat':'one sequential observation per arm; OS cache and concurrent system load uncontrolled; replicate if result is marginal'}

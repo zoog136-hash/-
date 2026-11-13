@@ -435,7 +435,9 @@ class TemplateStore extends RefCounted:
 			if not (key is String or key is StringName): return null
 			if not light.has(key) and not heavy.fields.has(key): continue
 			if own.has(key): result[key] = own[key]
-			elif key in FIELDS.HEAVY: result[key] = FIELDS._copy(light[key] if light.has(key) else heavy.fields[key])
+			# get_var() owns fresh containers on every read; transfer these
+			# uncached fields instead of duplicating their entire nested values.
+			elif key in FIELDS.HEAVY: result[key] = light[key] if light.has(key) else heavy.fields[key]
 		# Preserve empty/missing-template caching through the generic path.
 		if result.is_empty(): return null
 		for key: Variant in own:
@@ -577,6 +579,31 @@ class RegistrationScope extends RefCounted:
 	var dto_us: int = 0
 	var describe_calls: int = 0
 	var dto_calls: int = 0
+	var binding_text: String = ""
+	var binding_ready: bool = false
+	var binding_document: Variant = null
+	var binding_builds: int = 0
+	var binding_hits: int = 0
+	var market_warmup_generation: int = -1
+	var market_warmup_taken: bool = false
+	func take_market_warmup(generation: int) -> bool:
+		# Preserve one real public graph's table/index warmup, without retaining
+		# its result. An explicit source reset requires a fresh warmup.
+		if generation != market_warmup_generation:
+			market_warmup_generation = generation
+			market_warmup_taken = false
+		if market_warmup_taken: return false
+		market_warmup_taken = true
+		return true
+	func skill_binding_document(text: String) -> Variant:
+		# Compare actual bytes each call: same-size edits and malformed/missing
+		# files keep the original live-file behavior, without per-book parsing.
+		if not binding_ready or binding_text != text:
+			binding_text = text; binding_ready = true
+			binding_builds += 1
+			binding_document = JSON.parse_string(text)
+		else: binding_hits += 1
+		return binding_document
 	func active_classes(reader: Variant, collect: Callable) -> Dictionary:
 		var current_key: String = reader.verified_key()
 		var generation: int = _generation(reader)
@@ -653,6 +680,12 @@ static func registration_item_reader() -> Script:
 	var reader: Script = scope.describe_reader if scope != null else null
 	_scope_mutex.unlock()
 	return reader
+
+static func registration_market_warmup() -> bool:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	return scope.take_market_warmup(SOURCE.cache_generation()) if scope != null else false
 
 static func _active_classes() -> Dictionary:
 	_scope_mutex.lock()
@@ -748,7 +781,10 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		else:
 			# An ID not read before is built without being remembered (the
 			# former read-then-erase), so the bounded cache keeps its entries.
-			var definition: Dictionary=owner.call("definition_id",id) if cached or not indexed else owner.call("transient_definition",id)
+			var definition: Dictionary
+			if cached or not indexed: definition=owner.call("definition_id",id)
+			elif owner.resource_path == "res://scripts/loot/patch523_monster_drops.gd" and owner.has_method("_native_registration_definition"): definition=owner.call("_native_registration_definition",id)
+			else: definition=owner.call("transient_definition",id)
 			current=definition.get("native_record",{})
 			definition={}
 			if not cached and not indexed:
@@ -1317,6 +1353,19 @@ static func source_bless_scroll(definition: Dictionary) -> Dictionary:
 	return {"kind":"equipment_bless","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"guaranteed":guarantee==[1],"rate_table":"BlessSuccessRate","source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
 
 
+## Only the active registration owns the parsed document. Public calls outside it
+## retain the original parse/scan behavior and no persistent binding cache.
+static func _skill_row_digest(text: String, spell_id: int) -> String:
+	_scope_mutex.lock()
+	var scope: RegistrationScope = _registration_scopes.get(OS.get_thread_caller_id())
+	_scope_mutex.unlock()
+	var document: Variant = scope.skill_binding_document(text) if scope != null else JSON.parse_string(text)
+	var digests: Array = []
+	if document is Dictionary and document.get("skills") is Dictionary:
+		for bound: Variant in document.skills.values():
+			if bound is Dictionary and bound.get("spell_id") == spell_id and bound.get("row_sha256") is String and bound.row_sha256 not in digests: digests.append(bound.row_sha256)
+	return str(digests[0]) if digests.size() == 1 else ""
+
 # Public _source_skill_book_spec semantics using the existing typed ItemData
 # card/deck/spell graph. No new source reader or spell runtime is introduced.
 static func source_skill_book(definition: Dictionary) -> Dictionary:
@@ -1371,12 +1420,8 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 	if limits.is_empty():reasons.append("missing_non_tutorial_source_skill_learn_limit")
 	# Reuse the exact existing source-profile serializer. Its SHA is confirmed
 	# against the actually loaded owner/binding again at learning, not assumed.
-	var binding_document: Variant=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json"))
-	var row_digests: Array=[]
-	if binding_document is Dictionary and binding_document.get("skills") is Dictionary:
-		for bound: Variant in binding_document.skills.values():
-			if bound is Dictionary and bound.get("spell_id")==spell_id and bound.get("row_sha256") is String and bound.row_sha256 not in row_digests:row_digests.append(bound.row_sha256)
-	var expected_row_sha: String=str(row_digests[0]) if row_digests.size()==1 else ""
+	var binding_text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
+	var expected_row_sha: String=_skill_row_digest(binding_text,int(spell_id))
 	var row_json: String=preload("res://scripts/skills/player_skills523.gd")._source_row_json(spell,expected_row_sha)
 	if row_json.is_empty():reasons.append("source_spell_row_serialization_unavailable")
 	var unique: Array=[]

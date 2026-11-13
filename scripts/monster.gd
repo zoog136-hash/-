@@ -258,7 +258,16 @@ static func spawn_host_map_id(world_ref: Node) -> String:
 			if not field_map.is_empty(): return field_map
 	return str(world_ref.get("active_map_id"))
 
+const SETUP_TRACE = preload("res://scripts/monsters/spawn_setup_trace.gd")
+
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> bool:
+	var trace := SETUP_TRACE.new()
+	trace.identify(record)
+	var accepted: bool = _setup_traced(record,player_ref,world_ref,texture,trace)
+	trace.finish(accepted)
+	return accepted
+
+func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D, trace: SETUP_TRACE) -> bool:
 	var source523 = _patch523_service()
 	if source523 != null: source523.forget(self)
 	source_targeting.clear()
@@ -267,10 +276,13 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	_clear_source_m_view()
 	_source_only_native_visuals = false
 	if has_meta("current523_source_only_visual"): remove_meta("current523_source_only_visual")
+	trace.phase("admission")
 	var host_map_id: String = spawn_host_map_id(world_ref)
 	var incoming: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(record, host_map_id)
 	if not incoming.ok: return _reject_patch523_spawn(str(incoming.reason))
+	trace.phase("binding")
 	var source_record: Dictionary = SOURCE_M_BINDINGS.apply(record, host_map_id)
+	trace.phase("bound_admission")
 	var admission: Dictionary = preload("res://scripts/monsters/patch523_spawn_policy.gd").admit(source_record, host_map_id)
 	if not admission.ok:
 		return _reject_patch523_spawn(str(admission.reason))
@@ -280,14 +292,18 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	# Canonical definition/projection precedes the visual request. Keep this as
 	# the single project_actor_record call when adopting the data-owner checkpoint.
 	# world_controller is not assigned for this pooled life yet.
+	trace.phase("definition")
 	var current_service: Variant = world_ref.get("patch523_npc_spells") if world_ref != null else null
 	var current_catalog: Variant = current_service.get("catalog") if current_service != null else null
 	var candidate_npc_id: int = int(source_record.get("source_m_npc_id",-1))
 	if candidate_npc_id >= 0:
 		source_record = BASE508.npc_record(candidate_npc_id,source_record)
+		trace.phase("projection")
 		if current_catalog != null and current_catalog.has_method("project_actor_record"):
 			var projected: Variant = current_catalog.project_actor_record(source_record)
 			if projected is Dictionary: source_record = projected
+	trace.identify(source_record)
+	trace.phase("identity")
 	# A saved native NPC identity never authorizes an old final media input.
 	_source_only_native_visuals = candidate_npc_id >= 0
 	admission.erase("current523_npc_source_identity")
@@ -304,6 +320,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	elif int(record.get("source_m_npc_id",-1)) >= 0:
 		record = source_record
 	admission.record = source_record
+	trace.phase("legacy_view")
 	if not _source_only_native_visuals and source_record.has("source_m_asset_manifest_path"):
 		var native_view := SOURCE_M_VIEW.new()
 		if native_view.configure(source_record, str(source_record.source_m_asset_manifest_path)):
@@ -314,6 +331,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			native_view.free() # Retain the prior actor/stats if any original pixel fails verification.
 	# The current bank supplies visuals only for the same already-admitted source
 	# encounter. It cannot create a binding, placement, stat update or spawn context.
+	trace.phase("current_view")
 	if not is_instance_valid(source_m_view) and (admission.applied or _source_only_native_visuals):
 		var current_view := CURRENT523_SOURCE_M_VIEW.new()
 		if current_view.configure_admitted(source_record,admission):
@@ -325,6 +343,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
 			current_view.free()
 			if not _source_only_native_visuals: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
+	trace.phase("actor_identity")
 	if _source_only_native_visuals:
 		var selected_visual: bool = is_instance_valid(source_m_view)
 		set_meta("current523_source_only_visual",{"required":true,"state":"current_source_view_selected" if selected_visual else "source_only_pending","legacy_media_fallback_allowed":false,"selection":get_meta("current523_source_bank_selection",{}).duplicate(true)})
@@ -347,9 +366,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	source_action_contract_required = not record.get("source_m_host_action_contract", {}).is_empty()
 	source_host_stationary = source_action_contract_required and bool(record.get("source_m_host_stationary",false)) and bool(record.get("source_m_host_action_contract",{}).get("host_stationary",false))
 	# Reset with every pooled life. Keep only the small reviewed identity tuple.
+	trace.phase("loot_identity")
 	loot_source_identity = LOOT_DROP.SOURCE3_REVIEWED.identity(record)
 	var patch523_identity: Dictionary = LOOT_DROP.PATCH523_DROPS.identity(record,definition_service.catalog if definition_service != null else null)
 	if not patch523_identity.is_empty(): loot_source_identity = patch523_identity
+	trace.phase("stats_reset")
 	# Full reset is required when a corpse is reused by the bounded field pool.
 	life_id += 1
 	reveal_lock523 = 0
@@ -466,7 +487,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	world_controller = world_ref
 	hp = max_hp # Initial life starts at its effective cap; boundary entry never heals.
 	set_meta("patch523_hp_was_enabled",max_hp != source_523_base_max_hp)
+	trace.phase("boss_combat")
 	source_boss_combat.configure(self,world_controller,record)
+	trace.phase("overhead_ui")
 	if world_controller is TwilightWorld:
 		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
 	if _source_only_native_visuals:
@@ -493,7 +516,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	_refresh_overhead_ui()
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
+	trace.phase("animation")
 	_setup_animation(record)
+	trace.phase("presentation")
 	if not _source_only_native_visuals and (record.has("visual") or is_boss):
 		if record.has("visual") and motion.frame_source == null:
 			sprite.material = MONSTER_ART.material_for(record.visual,sprite.texture)

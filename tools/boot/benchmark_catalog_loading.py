@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from benchmark_provenance import provenance
 import re
 import subprocess
 import time
@@ -29,11 +30,15 @@ def main():
     parser.add_argument('--label',required=True)
     parser.add_argument('--godot',required=True,type=Path)
     parser.add_argument('--source',required=True,type=Path)
+    parser.add_argument('--source-project',type=Path)
+    parser.add_argument('--owner',choices=['profiled','production'],default='profiled')
     parser.add_argument('--derived-cold',action='store_true')
+    parser.add_argument('--market-public',action='store_true',help='After producer timing, measure actual public Market graph generation')
     parser.add_argument('--phase',choices=['both','native'],default='both')
     parser.add_argument('--timeout',default=1800,type=int)
     args=parser.parse_args()
     root=args.project.resolve(); profile=args.profile.resolve(); output=args.output.resolve();source=args.source.resolve()
+    code=provenance(root,(args.source_project or args.project).resolve())
     source_hash=hashlib.sha256(source.read_bytes()).hexdigest()
     if source.stat().st_size!=SOURCE_BYTES or source_hash!=SOURCE_SHA:
         raise ValueError('explicit source ZIP identity differs; no other input selected')
@@ -53,11 +58,14 @@ def main():
     output.mkdir(parents=True,exist_ok=True)
     log=output/(args.label+'.log'); result=output/(args.label+'.json'); receipt=output/(args.label+'-receipt.json')
     if log.exists() or result.exists() or receipt.exists():raise ValueError('output label exists; preserve prior results')
-    env={**os.environ,'XDG_DATA_HOME':str(profile/'data'),'XDG_CONFIG_HOME':str(profile/'config'),'XDG_CACHE_HOME':str(profile/'cache'),
+    clean_env={key:value for key,value in os.environ.items() if not key.startswith('TWILIGHT_')}
+    env={**clean_env,'XDG_DATA_HOME':str(profile/'data'),'XDG_CONFIG_HOME':str(profile/'config'),'XDG_CACHE_HOME':str(profile/'cache'),
          'TWILIGHT_PATCH523_CONTENT':str(source),'TWILIGHT_BAKE_DISK_REQUIRED':'1','TWILIGHT_NATIVE_FIELDS_EAGER':'0','TWILIGHT_RULES_RECORDS_RESIDENT':'0','TWILIGHT_CATALOG_BENCHMARK_PROFILE':'1','TWILIGHT_CATALOG_BENCHMARK_PROFILE_ROOT':str(profile),'TWILIGHT_NATIVE_REGISTER_PROFILE':'1'}
     cmd=[str(args.godot.resolve()),'--headless','--path',str(root),'--script','res://tools/boot/benchmark_catalog_loading.gd','--','--catalog-benchmark-json='+str(result)]
     if args.derived_cold:cmd.append('--catalog-derived-cold')
     cmd.append('--catalog-benchmark-phase='+args.phase)
+    cmd.append('--catalog-benchmark-owner='+args.owner)
+    if args.market_public:cmd.append('--catalog-market-public')
     started=time.monotonic()
     with log.open('w') as stream:
         proc=subprocess.run(cmd,env=env,cwd=root,stdout=stream,stderr=subprocess.STDOUT,timeout=args.timeout)
@@ -73,10 +81,10 @@ def main():
         if line.startswith('BOOT_PROGRESS ') and ' ev=end ' in line:
             parts=dict(item.split('=',1) for item in line.split() if '=' in item)
             if 'stage' in parts and 'ms' in parts:stages.append(parts)
-    artifact={'passed':passed,'returncode':proc.returncode,'wall_seconds':elapsed,'strict_errors':errors,'project':str(root),'revision':git('rev-parse','HEAD'),'status':git('status','--short'),
+    artifact={'passed':passed,'returncode':proc.returncode,'wall_seconds':elapsed,'strict_errors':errors,'project':str(root),'revision':code['revision'],'status':code['status'],'code':code,'owner':args.owner,'market_public':args.market_public,
               'source':{'path':str(source),'bytes':SOURCE_BYTES,'sha256':source_hash,'members':member_count,'crc':'all pass'},
               'profile':str(profile),'condition':'raw bakes retained from own code; only derived producer bakes removed' if args.derived_cold else 'fresh raw and derived bakes',
-              'native_profile_diagnostics':True,'phase':args.phase,'command':cmd,'log':str(log),'result':str(result),'stages':stages,'scope':'Linux headless; original definition tables, no original maps/media/Android timing'}
+              'effective_twilight_env':{k:v for k,v in env.items() if k.startswith('TWILIGHT_')},'native_profile_diagnostics':True,'phase':args.phase,'command':cmd,'log':str(log),'result':str(result),'stages':stages,'scope':'Linux headless; original definition tables, no original maps/media/Android timing'}
     receipt.write_text(json.dumps(artifact,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({'label':args.label,'passed':passed,'seconds':elapsed,'result':str(result),'receipt':str(receipt)},ensure_ascii=False))
     if not passed:raise SystemExit(1)

@@ -9,6 +9,8 @@ const HOST_ADOPTIONS = preload("res://scripts/monsters/base508_boss_host_adoptio
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const SOURCE_PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const ELEMENTS = {"None":"physical","Fire":"fire","Water":"water","Air":"wind","Earth":"earth","Light":"holy","Dark":"dark"}
+const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const ORDINARY_CONTRACTS = ["base508_exact_context_ordinary_host_action_v1","base508_exact_context_single_spell_host_action_v1","base508_exact_context_core_ready_optional_gaps_v1"]
 static var _catalog: Dictionary = {}
 var owner_ref: WeakRef
 var world_ref: WeakRef
@@ -30,7 +32,10 @@ var playback_root: String = ""
 var effect_generation: int = -1
 
 static func data(pack_root: String = "") -> Dictionary:
-	if not _catalog.is_empty(): return _catalog
+	HITCH.count("boss.catalog_request")
+	if not _catalog.is_empty():
+		HITCH.count("boss.catalog_hit")
+		return _catalog
 	var candidates: Array[String] = []
 	if not pack_root.is_empty(): candidates.append(pack_root.path_join("boss_combat.bin"))
 	for argument: String in OS.get_cmdline_user_args():
@@ -46,9 +51,16 @@ static func data(pack_root: String = "") -> Dictionary:
 	return {}
 
 static func read_catalog_file(path: String) -> Dictionary:
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != CATALOG_SHA256: return {}
+	var started: int = HITCH.now()
+	var verified: bool = FileAccess.file_exists(path) and FileAccess.get_sha256(path) == CATALOG_SHA256
+	HITCH.detail("boss.catalog_verify",started)
+	if not verified: return {}
+	started = HITCH.now()
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path).decompress_dynamic(64 * 1024 * 1024, FileAccess.COMPRESSION_GZIP)
+	HITCH.detail("boss.catalog_inflate",started)
+	started = HITCH.now()
 	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	HITCH.detail("boss.catalog_json",started)
 	if value is Dictionary and value.get("kind") == "base508_npc_combat_catalog" and value.get("source_snapshot") == "base508": return value
 	return {}
 
@@ -56,13 +68,21 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	clear()
 	if not owner is Node2D or not actor_contract(owner) or not world_contract(world): return false
 	var nid: int = int(record.get("source_m_npc_id", -1))
-	var private_root: String = str(record.get("source_m_combat_pack_root",str(record.get("source_m_asset_manifest_path","")).get_base_dir()))
-	var source: Dictionary = data(private_root).get("source_npcs", {}).get(str(nid), {})
 	var original: Dictionary = record.get("source_m_original", {})
+	var private_root: String = str(record.get("source_m_combat_pack_root",str(record.get("source_m_asset_manifest_path","")).get_base_dir()))
+	# These actors were always rejected below. Reject before opening/inflating
+	# the default catalog. Explicit pack roots retain the former priming order:
+	# a later actor may rely on the first verified shared catalog from that root.
+	if private_root.is_empty():
+		if nid <= 0 or int(original.get("ID", -1)) != nid or bool(original.get("TestNPC",false)): return false
+		if not bool(owner.get("is_boss")) and record.get("source_m_host_action_contract",{}).get("contract","") not in ORDINARY_CONTRACTS:
+			HITCH.count("boss.catalog_ineligible_skipped")
+			return false
+	var source: Dictionary = data(private_root).get("source_npcs", {}).get(str(nid), {})
 	if nid <= 0 or source.is_empty() or int(original.get("ID", -1)) != nid or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
 	if bool(original.get("TestNPC",false)): return false
 	if not bool(owner.get("is_boss")):
-		if record.get("source_m_host_action_contract",{}).get("contract","") not in ["base508_exact_context_ordinary_host_action_v1","base508_exact_context_single_spell_host_action_v1","base508_exact_context_core_ready_optional_gaps_v1"] or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
+		if record.get("source_m_host_action_contract",{}).get("contract","") not in ORDINARY_CONTRACTS or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
 	owner_ref = weakref(owner); world_ref = weakref(world)
 	source_npc_id = nid; source_life = int(owner.get("life_id"))
 	effect_generation = int(world.get("combat_generation"))

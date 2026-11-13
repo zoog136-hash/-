@@ -60,7 +60,9 @@ func _run() -> void:
 	OS.set_environment("TWILIGHT_LOADING_TEST_REJECT_READY", "")
 	OS.set_environment("TWILIGHT_LOADING_TEST_NEVER_READY", "")
 	var planned: Array[Dictionary] = [{"id":"images"}, {"id":"ui"}, {"id":"maps"}, {"id":"tiles"}]
-	check(LOADER.plan_steps(planned, LOADER.CHARACTERS).map(func(step: Dictionary) -> String: return str(step.id)) == ["images", "ui"], "roster defers map and tile verification until selected character enters Main")
+	# User decision 2026-11-13: loading finishes completely before the touch
+	# that opens the character screen, so the roster also verifies maps/tiles.
+	check(LOADER.plan_steps(planned, LOADER.CHARACTERS) == planned, "roster loading verifies every selected item, maps and tiles included")
 	check(LOADER.plan_steps(planned, LOADER.MAIN) == planned, "Main keeps every selected verification item")
 	check(planned.size() == 4, "planning leaves the pending verification list intact")
 	check(not FileAccess.file_exists(LOADER.PREBAKE.OPTIONS.PATH), "test has isolated user data without map selection")
@@ -77,6 +79,7 @@ func _run() -> void:
 	check(hitch_labels.size() == 1 and (hitch_labels[0] as Label).visible, "previous measured hitch diagnostic remains visible")
 	check(hitch_labels.size() == 1 and (hitch_labels[0] as Label).autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "previous hitch diagnostic retains original word wrapping")
 	check(LOADER.open(self, DESTINATION) == loader, "repeated open reuses the one active overlay")
+	check(loader.title_after_loading, "the first loading shows the title after it finishes")
 	await _wait_outcome(loader, 1)
 	check(outcomes == [false], "missing destination emits explicit failure")
 	check(current_scene == origin and not paused, "load failure preserves the previous scene and its pause state")
@@ -143,6 +146,15 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	check(not paused and not is_instance_valid(initial), "initial scene releases its overlay after readiness")
+	# Entering the world from the character screen: progress only, no title.
+	_reset_observations()
+	var entering: Control = LOADER.open(self, DESTINATION, false)
+	_watch(entering)
+	check(not entering.title_after_loading, "the character screen's world loading skips the title")
+	await _wait_outcome(entering, 1)
+	await process_frame
+	await process_frame
+	check(not is_instance_valid(entering) and not paused, "world loading from the character screen closes by itself when ready")
 	# Title stage: after loading, only the title picture stays until a touch.
 	_reset_observations()
 	var titled: Control = (load("res://scenes/boot/Loading.tscn") as PackedScene).instantiate()
