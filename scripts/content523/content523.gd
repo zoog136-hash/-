@@ -22,14 +22,23 @@ const LANDMARK_DISTANCE := 190.0
 ## (party/clan/name masking, player item drop on death, pickup selector).
 ## In-Land spell/buff bans (NoSpell, NoBuffGroup, NoSpellToOther) are not
 ## entry gates either; like the Orim NoTeleport they are not enforced inside
-## (no owner). BlockLoginEnter is a login rule: waived for the teleport, kept
-## for a saved position (the original "no login inside" still holds).
+## (no owner). BlockLoginEnter is a login rule. The existing field re-checks
+## the entry conditions of the current Land while playing (e.g. after a level
+## up) with the saved-position waive, so it is waived there too: a level up or
+## a load inside the Land keeps the player there (own; noted in the doc).
 const LAND_RULES := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePushOnDie","NpcBuff","NoTeleportCome","CompetitionDungeonLand",
 	"LandPlayerSocketTimeoutSecond","IdleTime","ObjectLazyLoad","UsableCallClan","NoParty","NoBloodPledgeTarget","NameMasking",
 	"PlayerItemDrop","PlayerItemDropMinPercent","PlayerItemDropMaxPercent","PlayerItemDropHUDMinAmount","PlayerOwnItemDropOnDie",
 	"NoPickupSelector","NoHellVirtuePoint","NoSpell","NoBuffGroup","NoSpellToOther"]
 const ENTRY_WAIVE := LAND_RULES+["BlockLoginEnter"]
-const REOPEN_WAIVE := LAND_RULES
+const REOPEN_WAIVE := ENTRY_WAIVE
+
+## User decision 2026-11-13: EscarosArtifact.BuffDuration is minutes (15 = 15 min).
+const ARTIFACT_BUFF_MINUTES_PER_UNIT := 1
+const BUFF_SECONDS_MAX := 86400
+## Buff keys the existing consumers read (world._active_item_buff_total), the
+## same BonusType mapping as clan523 PERCENT_FIELDS.
+const BUFF_FIELDS := {"ExperienceAdditionPercent":"xp"}
 
 static var _cache: Dictionary = {}
 
@@ -44,7 +53,7 @@ var _tick_clock: float = 0.0
 var last_note: String = ""
 
 static func empty_state() -> Dictionary:
-	return {"schema":SCHEMA,"escaros":{"period":-1,"found":[],"touchdowns":{}},"elf":{"blessing":0,"entries":0},"tq":{"active":{},"done":{},"failed":{}}}
+	return {"schema":SCHEMA,"escaros":{"period":-1,"found":[],"touchdowns":{},"buffs":{}},"elf":{"blessing":0,"entries":0,"wins":0,"run":{},"claimed":[]},"tq":{"active":{},"done":{},"failed":{}}}
 
 ## --- Models -------------------------------------------------------------------
 
@@ -96,8 +105,20 @@ static func validate(value: Variant) -> String:
 		if not _whole(id,1): return "에스카로스 랜드마크 기록 오류"
 	for key: Variant in e.touchdowns:
 		if not key is String or not key.is_valid_int() or not _whole(e.touchdowns[key]): return "에스카로스 터치다운 기록 오류"
+	var buffs: Variant = e.get("buffs",{})
+	if not buffs is Dictionary or buffs.size()>16: return "에스카로스 버프 기록 오류"
+	for key: Variant in buffs:
+		if not key is String or not key.is_valid_int() or not typeof(buffs[key]) in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(buffs[key])) or float(buffs[key])<0.0 or float(buffs[key])>float(BUFF_SECONDS_MAX): return "에스카로스 버프 기록 오류"
 	var f: Dictionary = value.elf
 	if not _whole(f.get("blessing")) or not _whole(f.get("entries")): return "요정 숲 저장 값 오류"
+	if not _whole(f.get("wins",0)) or int(f.get("wins",0))>100000 or not f.get("run",{}) is Dictionary or not f.get("claimed",[]) is Array or f.get("claimed",[]).size()>64: return "요정 숲 승리 기록 오류"
+	for no: Variant in f.get("claimed",[]):
+		if not _whole(no,1): return "요정 숲 보상 기록 오류"
+	var run: Dictionary = f.get("run",{})
+	if not run.is_empty():
+		for key: String in ["grade","land","target","kills"]:
+			if not _whole(run.get(key)): return "요정 숲 진행 기록 오류"
+		if run.has("alive") and not _whole(run.alive): return "요정 숲 진행 기록 오류"
 	var q: Dictionary = value.tq
 	if not q.get("active") is Dictionary or not q.get("done") is Dictionary or not q.get("failed") is Dictionary or q.done.size()>256 or q.failed.size()>256: return "영지 퀘스트 저장 값 오류"
 	if not q.active.is_empty():
@@ -125,6 +146,14 @@ func import_state(value: Variant) -> void:
 	state.escaros.found = state.escaros.found.map(func(id: Variant)->int: return int(id))
 	for key: String in state.escaros.touchdowns: state.escaros.touchdowns[key] = int(state.escaros.touchdowns[key])
 	state.elf.blessing = int(state.elf.blessing); state.elf.entries = int(state.elf.entries)
+	# Saves from before the 2026-11-13 decisions have no buff/win fields.
+	if not state.escaros.has("buffs"): state.escaros.buffs = {}
+	for key: String in state.escaros.buffs: state.escaros.buffs[key] = float(state.escaros.buffs[key])
+	state.elf.wins = int(state.elf.get("wins",0))
+	state.elf.claimed = (state.elf.get("claimed",[]) as Array).map(func(no: Variant)->int: return int(no))
+	var run: Dictionary = state.elf.get("run",{})
+	for key: String in run: run[key] = int(run[key])
+	state.elf.run = run
 	for key: String in ["quest","started","deadline","count"]:
 		if state.tq.active.has(key): state.tq.active[key] = int(state.tq.active[key])
 	for table: String in ["done","failed"]:
@@ -297,8 +326,10 @@ func touchdowns() -> Dictionary:
 
 ## Touchdown (GoalType EscarosTouchDown): standing within ActivationRange
 ## cells of an artifact for TouchdownDelaySec, at most once per
-## ArtifactUseCoolTime (ms). Counted only: the round schedule, the ranking
-## and the BuffDuration unit are not in the tables (no buff, no rank reward).
+## ArtifactUseCoolTime (ms). The artifact's BuffClass is applied for
+## BuffDuration minutes (user decision 2026-11-13); a new touchdown of the same
+## artifact restarts it. The round schedule and the ranking are not in the
+## tables (all artifacts always usable, no rank reward).
 func _artifact_tick(at: Dictionary) -> void:
 	var model: Dictionary = models().escaros
 	var cooldown: int = int(model.constants.get("ArtifactUseCoolTime",0))
@@ -312,7 +343,10 @@ func _artifact_tick(at: Dictionary) -> void:
 		_artifact_ready_ms[key] = clock+maxi(1000,cooldown)
 		_artifact_since[key] = clock+maxi(1000,cooldown)
 		state.escaros.touchdowns[key] = int(state.escaros.touchdowns.get(key,0))+1
-		last_note = "터치다운 · %s (%d회)" % [str(artifact.name),int(state.escaros.touchdowns[key])]
+		var seconds: int = int(artifact.buff_duration_raw)*60*ARTIFACT_BUFF_MINUTES_PER_UNIT
+		if int(artifact.buff_id)>0 and seconds>0: state.escaros.buffs[str(int(artifact.buff_id))] = float(seconds)
+		last_note = "터치다운 · %s (%d회) · %s %d분" % [str(artifact.name),int(state.escaros.touchdowns[key]),str(artifact.buff_name),seconds/60]
+		if world!=null and world.has_method("_update_hud"): world.call("_update_hud")
 		_show(last_note)
 
 func _zone_tick(at: Dictionary) -> void:
@@ -331,15 +365,16 @@ func _show(text: String) -> void:
 func enter_elf(grade_id: int) -> Dictionary:
 	var model: Dictionary = models().elf
 	if not model.get("ok",false): return {"ok":false,"reason":str(model.get("problem",""))}
-	for grade: Dictionary in ELF.open_grades(model):
+	for grade: Dictionary in open_elf_grades():
 		if int(grade.id)!=grade_id: continue
 		var result: Dictionary = travel(grade.route)
 		if result.get("ok",false):
 			var next: Dictionary = state.duplicate(true); next.elf.entries = int(next.elf.entries)+1
+			next.elf.run = {"grade":int(grade.id),"land":int(grade.route.land_id),"target":0,"kills":0}
 			_commit(next)
 			last_note = "요정 숲 방어전 · %s" % str(grade.name)
 		return result
-	return {"ok":false,"reason":"승리 기록이 필요한 등급입니다 (승리 판정 규칙이 원본 표에 없음)"}
+	return {"ok":false,"reason":"승리가 더 필요한 단계입니다 (현재 %d승)" % int(state.elf.get("wins",0))}
 
 func choose_blessing(blessing_id: int) -> Dictionary:
 	for blessing: Dictionary in models().elf.get("blessings",[]):
@@ -349,6 +384,108 @@ func choose_blessing(blessing_id: int) -> Dictionary:
 			if result.get("ok",false): result["text"] = str(blessing.select_text)
 			return result
 	return {"ok":false,"reason":"원본 가호 없음"}
+
+## Active artifact buffs: [{buff_id, name, left (s), effects}].
+func artifact_buffs() -> Array:
+	var out: Array = []
+	for artifact: Dictionary in models().escaros.get("artifacts",[]):
+		var key: String = str(int(artifact.buff_id))
+		if float(state.escaros.get("buffs",{}).get(key,0.0))>0.0:
+			out.append({"buff_id":int(artifact.buff_id),"name":str(artifact.buff_name),"left":float(state.escaros.buffs[key]),"effects":artifact.effects})
+	return out
+
+## Value of one existing buff key from the active artifact buffs (percent
+## effects as whole percent points: Value / UIUnit Denominator).
+func buff_value(key: String) -> int:
+	if state.escaros.get("buffs",{}).is_empty(): return 0
+	var total: float = 0.0
+	for buff: Dictionary in artifact_buffs():
+		for effect: Dictionary in buff.effects:
+			if str(BUFF_FIELDS.get(str(effect.type),""))==key: total += float(effect.percent)
+	return int(round(total))
+
+## In-game time: the remaining seconds are saved and continue after a load.
+func _buff_tick(elapsed: float) -> void:
+	var buffs: Dictionary = state.escaros.get("buffs",{})
+	if buffs.is_empty(): return
+	for key: String in buffs.keys():
+		buffs[key] = maxf(0.0,float(buffs[key])-elapsed)
+		if float(buffs[key])<=0.0:
+			buffs.erase(key)
+			_show("아티팩트 버프 종료")
+			if world!=null and world.has_method("_update_hud"): world.call("_update_hud")
+
+## --- Elf forest wins (user decision 2026-11-13) ------------------------------
+## A grade is won by killing every monster that appeared on its Land: after
+## at least one kill there, the existing population reports no live monster
+## on that Land (a monster that appears before the last one falls must be
+## killed too). Wins open GradeNo <= wins and the original WinNo rewards
+## (ElfForestDefenseRewardGroup -> QuestReward), each once.
+
+func open_elf_grades() -> Array:
+	var wins: int = int(state.elf.get("wins",0))
+	return models().elf.get("grades",[]).filter(func(grade: Dictionary)->bool: return int(grade.grade_no)<=wins)
+
+func elf_run() -> Dictionary:
+	return state.elf.get("run",{}).duplicate()
+
+func record_kill() -> void:
+	var run: Dictionary = state.elf.get("run",{})
+	if run.is_empty() or int(run.target)<=0: return
+	var at: Dictionary = here()
+	if at.is_empty() or int(at.land_id)!=int(run.land): return
+	run.kills = int(run.kills)+1
+	last_note = "요정 숲 방어전 처치 %d" % int(run.kills)
+
+func _elf_win() -> void:
+	var next: Dictionary = state.duplicate(true)
+	next.elf.wins = int(next.elf.wins)+1; next.elf.run = {}
+	if _commit(next).get("ok",false):
+		last_note = "요정 숲 방어전 승리 · 누적 %d승" % int(state.elf.wins)
+		_show(last_note)
+
+func _elf_tick(at: Dictionary) -> void:
+	var run: Dictionary = state.elf.get("run",{})
+	if run.is_empty(): return
+	if int(at.land_id)!=int(run.land):
+		var next: Dictionary = state.duplicate(true); next.elf.run = {}
+		if _commit(next).get("ok",false): _show("요정 숲 방어전을 떠나 도전을 마칩니다")
+		return
+	if world==null or not world.has_method("content523_spawn_metrics"): return
+	var metrics: Dictionary = world.call("content523_spawn_metrics")
+	if not bool(metrics.get("ok",false)): return
+	var alive: int = int(metrics.get("alive",0))
+	run["alive"] = alive
+	if int(run.target)==0:
+		if alive>0:
+			run.target = alive
+			_show("요정 숲 방어전 · 나타난 몬스터 %d마리를 모두 처치하세요" % alive)
+		return
+	if int(run.kills)>0 and alive==0: _elf_win()
+
+func elf_rewards() -> Array:
+	var out: Array = []
+	for win: Dictionary in models().elf.get("wins",[]):
+		out.append({"win_no":int(win.win_no),"rewards":win.rewards,"goal":str(win.goals[0].text) if not win.goals.is_empty() else "",
+			"reached":int(state.elf.get("wins",0))>=int(win.win_no),"claimed":int(win.win_no) in state.elf.get("claimed",[])})
+	return out
+
+func claim_elf_reward(win_no: int) -> Dictionary:
+	for row: Dictionary in elf_rewards():
+		if int(row.win_no)!=win_no: continue
+		if bool(row.claimed): return {"ok":false,"reason":"이미 받은 승리 보상입니다"}
+		if not bool(row.reached): return {"ok":false,"reason":"승리 %d회가 필요합니다 (현재 %d회)" % [win_no,int(state.elf.get("wins",0))]}
+		# As the Orim rewards: every row the 523 item supplier owns is paid,
+		# rows it refuses are named (withheld); nothing payable keeps it open.
+		var staged: Dictionary = _stage_items(row.rewards,true)
+		if (staged.granted as Array).is_empty(): return {"ok":false,"reason":"지급할 수 있는 보상이 없습니다: "+", ".join(staged.withheld)+" · 보상 보존"}
+		var next: Dictionary = state.duplicate(true); next.elf.claimed.append(win_no)
+		var result: Dictionary = _commit(next,staged.overrides)
+		if result.get("ok",false):
+			result["granted"] = staged.granted
+			if not (staged.withheld as Array).is_empty(): result["reason"] = "미지급: "+", ".join(staged.withheld)
+		return result
+	return {"ok":false,"reason":"원본 승리 보상 없음"}
 
 ## --- Territory quests --------------------------------------------------------
 
@@ -405,17 +542,23 @@ func complete_quest() -> Dictionary:
 	if result.get("ok",false): result["granted"] = staged.granted; last_note = "영지 퀘스트 완료 · "+", ".join(staged.granted)
 	return result
 
-func _stage_items(rewards: Array) -> Dictionary:
+func _stage_items(rewards: Array, partial: bool = false) -> Dictionary:
 	var overrides: Dictionary = {"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"gold":int(world.gold)}
 	var granted: Array = []
+	var withheld: Array = []
 	for reward: Dictionary in rewards:
 		if str(reward.type)=="NoReward": continue # RewardType NoReward: an empty row.
-		if str(reward.type)!="Item" or int(reward.amount)<1: return {"ok":false,"reason":"보상 종류 %s 지급 규칙 없음 · 보상 보존" % str(reward.type)}
-		var staged: Dictionary = preload("res://scripts/dungeons/dungeon_play_service.gd").stage_original_item(world,overrides,int(reward.class_id),int(reward.amount),maxi(1,int(reward.bless)),{"kind":"content523_reward","reward_id":int(reward.id)})
-		if not staged.get("ok",false): return {"ok":false,"reason":"원본 아이템 %d 지급 준비 실패: %s · 보상 보존" % [int(reward.class_id),str(staged.get("error",""))]}
-		overrides = staged.overrides
-		granted.append("%s ×%d" % [_item_name(int(reward.class_id)),int(reward.amount)])
-	return {"ok":true,"overrides":overrides,"granted":granted}
+		var refusal: String = ""
+		if str(reward.type)!="Item" or int(reward.amount)<1: refusal = "보상 종류 %s 지급 규칙 없음" % str(reward.type)
+		else:
+			var staged: Dictionary = preload("res://scripts/dungeons/dungeon_play_service.gd").stage_original_item(world,overrides,int(reward.class_id),int(reward.amount),maxi(1,int(reward.bless)),{"kind":"content523_reward","reward_id":int(reward.id)})
+			if staged.get("ok",false):
+				overrides = staged.overrides
+				granted.append("%s ×%d" % [_item_name(int(reward.class_id)),int(reward.amount)]); continue
+			refusal = "%s ×%d (%s)" % [_item_name(int(reward.class_id)),int(reward.amount),str(staged.get("error",""))]
+		if not partial: return {"ok":false,"reason":refusal+" · 보상 보존","granted":[],"withheld":[refusal]}
+		withheld.append(refusal)
+	return {"ok":true,"overrides":overrides,"granted":granted,"withheld":withheld}
 
 static func _item_name(id: int) -> String:
 	var item: Dictionary = SOURCE.row("ItemClass",id)
@@ -427,10 +570,14 @@ static func _item_name(id: int) -> String:
 func tick(delta: float) -> void:
 	_tick_clock += delta
 	if _tick_clock<0.5: return
+	var elapsed: float = _tick_clock
 	_tick_clock = 0.0
-	if not problem.is_empty() or SOURCE.not_installed(): return
+	if not problem.is_empty(): return
+	_buff_tick(elapsed)
+	if SOURCE.not_installed(): return
 	var at: Dictionary = here()
 	if at.is_empty(): return
+	_elf_tick(at)
 	var lands: Dictionary = content_land_ids()
 	if not lands.has(int(at.land_id)) and state.tq.active.is_empty(): _zone_id = -1; return
 	var escaros: Dictionary = models().escaros

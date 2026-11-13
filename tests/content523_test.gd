@@ -133,7 +133,6 @@ func models() -> Dictionary:
 	var f: Dictionary = ELF.build(src)
 	check(f.ok,"elf model: "+str(f.problem))
 	check(int(f.grades[0].grade_no)==0 and int(f.grades[0].route.land_id)==51122 and int(f.grades[0].route.cost)==10000 and int(f.grades[0].route.min_level)==80 and int(f.grades[0].ideal_players)==30,"grade 0 -> SpecialDungeon 342 -> Land 51122, 10,000 adena, Lv80, 30 players")
-	check(ELF.open_grades(f).size()==1 and int(ELF.open_grades(f)[0].grade_no)==0,"only grade 0 open (no win rule)")
 	check(str(f.blessings[0].title)=="운디네" and str(f.blessings[0].advantage_title)=="이그니스" and f.blessings[0].status_attrs.size()==1,"blessing Water over Fire, StatusEffectAttr kept")
 	check(int(f.wins[0].win_no)==1 and str(f.wins[0].goals[0].type)=="ArenaWin" and int(f.wins[0].rewards[0].amount)==100,"WinNo 1 -> ArenaWin quest -> reward")
 	var q: Dictionary = TQ.build(src)
@@ -164,6 +163,8 @@ class FakeWorld extends Object:
 		if fail_save: return ERR_UNAVAILABLE
 		saves += 1; return OK
 	func orim_current_land() -> Dictionary: return land
+	var alive: int = 3
+	func content523_spawn_metrics() -> Dictionary: return {"ok":true,"alive":alive}
 	func content523_enter_land(land_id: int, bounds: Array, waive: Array) -> Dictionary:
 		moves.append([land_id,bounds,waive]); land = {"land_id":land_id,"cell":[int(bounds[0]),int(bounds[1])]}
 		return {"ok":true,"reason":""}
@@ -198,6 +199,15 @@ func runtime_rules(m: Dictionary) -> void:
 	service._artifact_since["4"] = Time.get_ticks_msec()-11000
 	service._artifact_tick(w.land)
 	check(int(service.touchdowns().get("4",0))==1,"touchdown after 10 s inside 15 cells")
+	check(int(service.state.escaros.buffs.get("65894",0))==900 and service.buff_value("xp")==5,"decision: BuffDuration 15 = 15 min, ExperienceAdditionPercent 5%")
+	service._buff_tick(600.0)
+	check(int(service.state.escaros.buffs.get("65894",0))==300 and service.buff_value("xp")==5,"buff counts down in game time")
+	var mid: Variant = JSON.parse_string(JSON.stringify(service.export_state()))
+	var reloaded = CONTENT.new(); reloaded.import_state(mid)
+	CONTENT._cache = {"sha":str(SOURCE.identity().get("source_sha256","")),"data":m}
+	check(reloaded.problem.is_empty() and is_equal_approx(float(reloaded.state.escaros.buffs.get("65894",0.0)),300.0) and reloaded.buff_value("xp")==5,"remaining buff time survives save/load")
+	service._buff_tick(301.0)
+	check(service.state.escaros.buffs.is_empty() and service.buff_value("xp")==0,"buff expires")
 	service._artifact_tick(w.land)
 	check(int(service.touchdowns().get("4",0))==1,"ArtifactUseCoolTime blocks a second touchdown at once")
 	w.land = {"land_id":47964,"cell":[32800,32864]}
@@ -206,7 +216,30 @@ func runtime_rules(m: Dictionary) -> void:
 	# Elf forest.
 	w.gold = 100000
 	check(service.enter_elf(2).ok and int(w.land.land_id)==51122 and w.gold==90000 and int(service.state.elf.entries)==1,"elf grade 0: Land 51122, 10,000 adena")
-	check(not service.enter_elf(12).ok,"grade 1 needs wins")
+	check(not service.enter_elf(12).ok,"grade 1 needs a win")
+	check(int(service.elf_run().land)==51122 and int(service.elf_run().target)==0,"elf run started on grade 0")
+	w.land = {"land_id":51122,"cell":[32867,32983]}
+	service._elf_tick(w.land)
+	check(int(service.elf_run().target)==3,"decision: the 3 monsters that appeared are the target")
+	service.record_kill(); service.record_kill(); w.alive = 1
+	service._elf_tick(w.land)
+	check(int(service.state.elf.wins)==0 and int(service.elf_run().kills)==2,"one still alive: no win yet")
+	check(not service.claim_elf_reward(1).ok,"WinNo 1 reward locked before a win")
+	w.alive = 2 # a new monster appeared before the last fell
+	service.record_kill(); w.alive = 1
+	service._elf_tick(w.land)
+	check(int(service.state.elf.wins)==0,"a monster that appeared later must be killed too")
+	service.record_kill(); w.alive = 0
+	service._elf_tick(w.land)
+	check(int(service.state.elf.wins)==1 and service.elf_run().is_empty(),"every appeared monster killed: win 1")
+	check(service.open_elf_grades().size()==2 and service.elf_rewards()[0].reached and not service.elf_rewards()[0].claimed,"win 1 opens grade 1 and the WinNo 1 reward")
+	var none: Dictionary = service.claim_elf_reward(1)
+	check(not none.ok and str(none.reason).contains("보상 보존") and not (1 in service.state.elf.claimed),"a reward the supplier cannot pay stays claimable")
+	check("BlockLoginEnter" in CONTENT.REOPEN_WAIVE and "CompetitionDungeonLand" in CONTENT.REOPEN_WAIVE,"in-Land re-check keeps the player in the content Land")
+	check(service.enter_elf(12).ok and int(w.land.land_id)==51132,"grade 1 enterable after a win")
+	w.land = {"land_id":4,"cell":[33923,33350]}
+	service._elf_tick(w.land)
+	check(service.elf_run().is_empty() and int(service.state.elf.wins)==1,"leaving the Land ends the run without a win")
 	check(service.choose_blessing(2).ok and int(service.state.elf.blessing)==2,"blessing saved")
 	# Territory quest: start on entering the box, ItemCollect pickups, complete.
 	w.land = {"land_id":44631,"cell":[32500,32900]}

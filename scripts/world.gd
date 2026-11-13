@@ -3499,6 +3499,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if int(monster.get_meta("rewarded_life_id", -1)) == monster.life_id: return
 	monster.set_meta("rewarded_life_id", monster.life_id)
 	dungeon_play.monster_died(monster)
+	if not bool(monster.get_meta("summoned",false)): content523.record_kill()
 	if bool(monster.get_meta("summoned",false)):
 		patch523_npc_spells.extensions.remaining.forget(monster)
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
@@ -4549,7 +4550,8 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 			total += int((value as Dictionary).get(key, 0))
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
-	return total + clan523.buff_value(key)
+	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
+	return total + clan523.buff_value(key) + content523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -11396,6 +11398,9 @@ func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
 
 func orim_current_land() -> Dictionary:
 	return _aden_play_controller().call("current_source_land")
+
+func content523_spawn_metrics() -> Dictionary:
+	return _aden_play_controller().call("source_spawn_metrics")
 
 func content523_cell_point(cell: Vector2i) -> Vector2:
 	return _aden_play_controller().call("source_cell_point", cell)

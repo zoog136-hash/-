@@ -5,7 +5,8 @@ extends RefCounted
 ## ElfForestDefenseBlessing(+Type) the four team blessings;
 ## ElfForestDefenseRewardGroup(+Set) WinNo -> QuestID -> QuestGoal/Goal
 ## (GoalType ArenaWin) + QuestReward/Reward. Win, team and grade-up rules are
-## not in the tables (docs/escaros_elfforest_territory523_missing_rules.md).
+## not in the tables; the user's own win rule (2026-11-13) lives in
+## content523.gd (docs/escaros_elfforest_territory523_missing_rules.md).
 const ESCAROS = preload("res://scripts/content523/escaros523.gd")
 
 static func _i(value: Variant) -> int:
@@ -59,8 +60,3 @@ static func build(src: Variant) -> Dictionary:
 		return data
 	data.ok = true
 	return data
-
-## Grades enterable offline: wins are never earned (no win rule in the
-## tables), so only GradeNo 0, the grade a player without wins holds.
-static func open_grades(data: Dictionary) -> Array:
-	return data.get("grades",[]).filter(func(grade: Dictionary)->bool: return int(grade.grade_no)==0)

@@ -86,20 +86,29 @@ func _escaros(service: RefCounted, model: Dictionary) -> void:
 	var parts: Array = []
 	for artifact: Dictionary in model.artifacts:
 		parts.append("%d라운드 %s(%d,%d) %d회" % [int(artifact.round),str(artifact.name),int(artifact.cell[0]),int(artifact.cell[1]),int(touch.get(str(int(artifact.id)),0))])
-	_label("터치다운(아티팩트 %d칸 안 대기): %s · 라운드 일정·순위 보상·버프 지속 단위는 원본 표에 없어 미적용" % [int(model.artifacts[0].range) if not model.artifacts.is_empty() else 0,", ".join(parts)])
+	_label("터치다운(아티팩트 %d칸 안 대기): %s · 라운드 일정·순위 보상은 원본 표에 없어 미적용" % [int(model.artifacts[0].range) if not model.artifacts.is_empty() else 0,", ".join(parts)])
+	for buff: Dictionary in service.artifact_buffs():
+		_label("버프 %s · 경험치 +%d%% · 남은 %d분 %d초" % [str(buff.name),service.buff_value("xp"),int(buff.left)/60,int(buff.left)%60])
 
 func _elf(service: RefCounted, model: Dictionary) -> void:
 	_label("요정 숲 방어전",17,UI.GOLD)
 	if not model.get("ok",false): _label(str(model.get("problem",""))); return
+	var wins: int = int(service.state.elf.get("wins",0))
+	var run: Dictionary = service.elf_run()
+	_label("누적 승리 %d회%s · 승리: 그 단계 지역의 몬스터를 모두 처치(사용자 결정 2026-11-13)" % [wins,(" · 진행 %d/%d" % [int(run.kills),int(run.target)]) if not run.is_empty() else ""])
 	for grade: Dictionary in model.grades:
 		var r: Dictionary = grade.route
-		var open: bool = int(grade.grade_no) == 0
-		_button("%d단계 %s · %s · %d레벨 · 아데나 %d%s" % [int(grade.grade_no),str(grade.name),str(r.land_name),int(r.min_level),int(r.cost),"" if open else " · 승리 판정 규칙 없음"],
+		var open: bool = int(grade.grade_no) <= wins
+		_button("%d단계 %s · %s · %d레벨 · 아데나 %d%s" % [int(grade.grade_no),str(grade.name),str(r.land_name),int(r.min_level),int(r.cost),"" if open else " · %d승 필요" % int(grade.grade_no)],
 			"ElfForest523Enter_%d" % int(grade.id),func() -> void: _act(service.enter_elf(int(grade.id))),open)
+	for row: Dictionary in service.elf_rewards():
+		var names: Array = (row.rewards as Array).map(func(rw: Dictionary) -> String: return "%s ×%d" % [Content._item_name(int(rw.class_id)),int(rw.amount)])
+		_button("%d승 보상 · %s%s" % [int(row.win_no),", ".join(names)," · 받음" if row.claimed else ""],"ElfForest523Reward_%d" % int(row.win_no),
+			func() -> void: _act(service.claim_elf_reward(int(row.win_no))),bool(row.reached) and not bool(row.claimed))
 	var chosen: int = int(service.state.elf.blessing)
 	for blessing: Dictionary in model.blessings:
 		_button("가호 %s%s (우위: %s)" % [str(blessing.title),(" · 선택됨" if int(blessing.id) == chosen else ""),str(blessing.advantage_title)],"ElfForest523Blessing_%d" % int(blessing.id),func() -> void: _act(service.choose_blessing(int(blessing.id))))
-	_label("가호 효과(StatusEffect)·팀·승리·등급 상승 규칙은 원본 표에 없어 기록만 합니다. 승리 보상 %d단계는 받을 수 없습니다." % model.wins.size())
+	_label("가호 효과(StatusEffect)·팀 규칙은 원본 표에 없어 기록만 합니다.")
 
 func _quests(service: RefCounted, model: Dictionary) -> void:
 	_label("영지 퀘스트",17,UI.GOLD)
