@@ -1018,6 +1018,55 @@ func close_emblem_window() -> void:
 		_cancel_native_buttons()
 		_emblem_window.close()
 
+## --- Original 523 feature windows (source_main_window_kit subclasses), by key.
+const FEATURE_WINDOWS={
+	"card_collection":preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd"),
+	"card_fusion":preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd"),
+	"card_awakening":preload("res://scripts/ui/original_ui/source_main_card_awakening_window.gd"),
+	"titles":preload("res://scripts/ui/original_ui/source_main_title_window.gd"),
+	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
+	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
+	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
+}
+var _feature_windows: Dictionary={}
+
+## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
+func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	if not _feature_windows.has(key) and _pack!=null and hud!=null:
+		var window: RefCounted=FEATURE_WINDOWS[key].new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		if not configured.get("ok",false):return configured
+		window.closed.connect(func() -> void:
+			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+		_feature_windows[key]=window
+	if not _feature_windows.has(key) or not is_instance_valid(_coordinates):return _fail("source_feature_window_pack_scope_unavailable")
+	close_feature_windows(key)
+	_cancel_native_buttons()
+	var trace: int=MENU_TRACE.begin(key)
+	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
+	MENU_TRACE.end(trace,result.get("ok",false))
+	return result
+
+func feature_window(key: String) -> RefCounted:
+	return _feature_windows.get(key)
+
+func feature_window_is_open(key: String="") -> bool:
+	for name: String in _feature_windows:
+		if (key.is_empty() or name==key) and _feature_windows[name].is_open():return true
+	return false
+
+## Refreshes an open feature window after its game state changed.
+func refresh_feature_window(key: String) -> Dictionary:
+	return _feature_windows[key].refresh() if feature_window_is_open(key) else {"ok":true,"handled":false}
+
+func close_feature_windows(except: String="") -> void:
+	for name: String in _feature_windows:
+		if name!=except and _feature_windows[name].is_open():
+			_cancel_native_buttons()
+			_feature_windows[name].close()
+
 ## --- Original 523 질서의 연금 window (source_main_refine_window, scripts/refine523)
 const RefineWindow=preload("res://scripts/ui/original_ui/source_main_refine_window.gd")
 var _refine_window: RefCounted
@@ -1118,7 +1167,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()
