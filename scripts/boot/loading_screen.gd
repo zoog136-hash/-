@@ -19,6 +19,9 @@ var _awaiting_title: bool = false
 var _title_prompt: Label
 var _column: VBoxContainer
 var destination: String = ""
+## Main.tscn loaded during the first loading so entering the world from the
+## character screen does not load the game scene again.
+static var _prepared_main: PackedScene
 ## A missing readiness response is an error state, never invented progress.
 var readiness_timeout_msec: int = 60000
 var _overlay: CanvasLayer
@@ -40,11 +43,12 @@ signal finished(ok: bool)
 
 ## Character lobby integration: call only after select_character() succeeds.
 ## Keeps the account session and selected scene intact; creates no save data.
-static func open(tree: SceneTree, target: String = MAIN) -> Control:
+static func open(tree: SceneTree, target: String = MAIN, show_title: bool = true) -> Control:
 	var existing: Node = tree.get_first_node_in_group("twilight_loading")
 	if existing != null: return existing as Control
 	var loader: Control = (load("res://scripts/boot/loading_screen.gd") as Script).new()
 	loader.destination = target
+	loader.title_after_loading = show_title
 	var layer := CanvasLayer.new()
 	layer.layer = 126 # Pack installers stay above this at 127.
 	layer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -77,14 +81,19 @@ static func _profile_allows(profile: Script) -> bool:
 		return allowed is bool and allowed
 	return false
 
-## The roster uses portraits/UI but never map readers. Defer maps until the
-## selected character enters Main, where the verified readers can be consumed.
-static func plan_steps(steps: Array[Dictionary], target: String) -> Array[Dictionary]:
-	var selected: Array[Dictionary] = []
-	for step: Dictionary in steps:
-		if target == CHARACTERS and step.get("id") in ["maps", "tiles"]: continue
-		selected.append(step)
-	return selected
+## Every verification item runs in the first loading, also before the
+## character screen (user decision 2026-11-13: loading finishes completely,
+## then one touch opens the character screen). Map/tile results persist as
+## device bakes; the in-memory readers are released before the roster opens.
+static func plan_steps(steps: Array[Dictionary], _target: String) -> Array[Dictionary]:
+	return steps.duplicate()
+
+func _prepares_main() -> bool:
+	return destination == CHARACTERS and _prepared_main == null and ResourceLoader.exists(MAIN)
+
+## The Main scene prepared by the first loading, if any.
+static func prepared_main() -> PackedScene:
+	return _prepared_main
 
 func _ready() -> void:
 	add_to_group("twilight_loading")
@@ -190,7 +199,9 @@ func _boot() -> void:
 		await get_tree().process_frame
 	HANDOFF.clear()
 	var steps: Array[Dictionary] = plan_steps(PREBAKE.pending(), destination)
-	_progress.configure(steps)
+	var counted: Array[Dictionary] = steps.duplicate()
+	if _prepares_main(): counted.append({"id": "main_prepare", "label": "게임 장면"})
+	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
 	for step: Dictionary in steps:
 		_progress.begin_task(str(step.id), "원본 %s 검증·정리 중…" % str(step.label))
@@ -218,13 +229,24 @@ func _boot() -> void:
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
 		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
+	if _prepares_main():
+		# The roster does not consume map readers; their bakes are on disk.
+		HANDOFF.clear()
+		_progress.begin_task("main_prepare", "게임 장면을 미리 불러오는 중…")
+		_render("캐릭터 선택 후 바로 접속할 수 있도록 준비합니다.")
+		await get_tree().process_frame
+		var prepare_started: int = BOOT_LOG.begin("main_scene_prepare", {"scene": MAIN})
+		_prepared_main = load(MAIN) as PackedScene
+		BOOT_LOG.end("main_scene_prepare", prepare_started, {"ok": _prepared_main != null})
+		_progress.complete_task("main_prepare")
 	_progress.begin_task("scene_load", "게임 장면을 불러오는 중…")
 	_render("게임 장면 준비 · 세부 진행률을 측정할 수 없어 완료 작업 수를 유지합니다.")
 	await get_tree().process_frame
 	# Main stays on the main thread: Android GL shader preloads failed with
 	# worker-thread ResourceLoader in the prior implementation.
 	var started: int = BOOT_LOG.begin("main_scene_load", {"scene": destination})
-	var scene: PackedScene = load(destination) as PackedScene if ResourceLoader.exists(destination) else null
+	var scene: PackedScene = _prepared_main if destination == MAIN and _prepared_main != null else (load(destination) as PackedScene if ResourceLoader.exists(destination) else null)
+	if destination == MAIN: _prepared_main = null
 	BOOT_LOG.end("main_scene_load", started, {"ok": scene != null})
 	if scene == null:
 		_fail("게임 파일을 불러오지 못했습니다. 파일을 확인한 뒤 다시 시도하세요.")
