@@ -488,7 +488,8 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'equipment_packed_scan_test':'EQUIPMENT_PACKED_SCAN_RESULT',
+            marker = {'shop_skill_book_contract_cache_test':'SHOP_BOOK_CACHE_RESULT',
+                      'equipment_packed_scan_test':'EQUIPMENT_PACKED_SCAN_RESULT',
                       'equipment_catalog_scan_test':'EQUIPMENT_CATALOG_SCAN_RESULT',
             'source_preview_copy_free_test':'SOURCE_PREVIEW_COPY_FREE_RESULT',
                       'source_girtas_screen_copy_guard_test':'SOURCE_GIRTAS_SCREEN_COPY_GUARD',
