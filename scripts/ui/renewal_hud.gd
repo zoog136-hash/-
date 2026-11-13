@@ -991,6 +991,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_status_board"):original_main_ui_controller.close_status_board()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
 	_retire_original_menu_status()
 	if active_section == "emblems": get_parent().growth.rerolls.clear()
 	if class_picker_initial:
@@ -1719,6 +1720,18 @@ func open_item_acquisition523(item_class_id: int, item_name: String = "") -> Dic
 	original_main_ui_status["acquisition_popup"] = native
 	return native
 
+## Opens the original 523 feature window `key` (source_main_hud
+## try_open_feature_window) over the workspace; false keeps the TWILIGHT view.
+func _open_original_feature(key: String, args: Array=[]) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_feature_window"):return false
+	var native: Dictionary=original_main_ui_controller.try_open_feature_window(key,args)
+	original_main_ui_status[key+"_window"]=native
+	if not native.get("handled",false):return false
+	if pointer_transfer != null: pointer_transfer.cancel()
+	workspace.hide()
+	_sync_screen_focus()
+	return true
+
 ## The original 523 domination stone window (source_main_domination_stone_window).
 func open_domination_stone() -> void:
 	_open_window("domination_stone","지배석","")
@@ -1756,6 +1769,7 @@ func open_card_fusion(category: String) -> void:
 	if not CARD_RULES.CATEGORIES.has(category): return
 	card_fusion_return_category = category
 	_open_window("card_fusion", category + " 카드 합성", "")
+	if _open_original_feature("card_fusion",[category]):return
 	var view: Control = CardFusionView.new()
 	card_fusion_view = view
 	workspace.mount(view)
@@ -2118,6 +2132,7 @@ func set_card_collection_state(value: Dictionary) -> void:
 	if browser_visible:
 		_refresh_card_controls()
 		_refresh_option_awakening_markers()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_feature_window"):original_main_ui_controller.refresh_feature_window("card_fusion")
 	if active_section == "card_fusion" and is_instance_valid(card_fusion_view) and not card_fusion_view.is_queued_for_deletion():
 		card_fusion_view.set_collection_state(card_collection_state)
 	elif browser_visible and active_section == catalog_category and CARD_RULES.CATEGORIES.has(catalog_category) and catalog_list != null:
@@ -2979,11 +2994,13 @@ func open_normal_card_collections(category: String,identity: String="") -> void:
 	if not CARD_RULES.CATEGORIES.has(category):return
 	normal_card_collection_category=category;normal_card_collection_focus=identity
 	_open_window("card_collections",category+" 컬렉션","")
+	if _open_original_feature("card_collection",[category,identity]):return
 	normal_card_collection_view=preload("res://scripts/cards/collection_view.gd").new()
 	workspace.mount(normal_card_collection_view)
 	normal_card_collection_view.configure(self,category,identity)
 
 func refresh_normal_card_collections() -> void:
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_feature_window"):original_main_ui_controller.refresh_feature_window("card_collection")
 	if active_section=="card_collections" and is_instance_valid(normal_card_collection_view) and not normal_card_collection_view.is_queued_for_deletion():
 		normal_card_collection_view.refresh()
 
@@ -3033,6 +3050,7 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	var runtime: Variant=get_parent().get("skill_awakening")
 	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
 	_open_window("card_skill_awakening",category+" 스킬 각성","")
+	if _open_original_feature("card_awakening",[category,identity]):return
 	var scroll:=ScrollContainer.new()
 	scroll.name="CardSkillAwakeningScroll"
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
@@ -3095,6 +3113,7 @@ func open_combinations() -> void:
 
 func open_half_elixir(item_name: String = "") -> void:
 	_open_window("half_elixir", "하프 엘릭서", "사용 포인트 충전과 능력치 투자·확장·초기화를 구분합니다.")
+	if item_name.is_empty() and _open_original_feature("half_elixir"):return
 	var view = preload("res://scripts/growth/half_elixir_view.gd").new()
 	workspace.mount(view)
 	view.configure(self)
@@ -3103,20 +3122,27 @@ func open_half_elixir(item_name: String = "") -> void:
 
 func open_titles523() -> void:
 	_open_window("titles","작위 심사","")
+	if _open_original_feature("titles"):return
 	var screen := preload("res://scripts/titles/title_view523.gd").new()
 	workspace.mount(screen)
 	screen.configure(self)
-func open_totems() -> void:
+## original=false (the original window's totem tap) opens the TWILIGHT
+## totem view for 성장/제작/설정 on `totem_id`.
+func open_totems(original: bool = true, totem_id: int = 0) -> void:
 	_open_window("totems","토템","활성화 진행도 · 성장 정보 · 공명")
+	if original and _open_original_feature("totems"):return
 	totem_view = preload("res://scripts/progression/totem_view.gd").new()
+	if totem_id > 0: totem_view.selected_id = totem_id
 	workspace.mount(totem_view)
 	totem_view.configure(self)
 
 func refresh_totems() -> void:
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_feature_window"):original_main_ui_controller.refresh_feature_window("totems")
 	if active_section == "totems" and is_instance_valid(totem_view) and not totem_view.is_queued_for_deletion() and totem_view.content != null:
 		totem_view._refresh()
 func open_monsterbook523() -> void:
 	_open_window("monsterbook523", "몬스터 도감", "처치 누적 · 단계 등록 · 옵션 · 보상 기록")
+	if _open_original_feature("monsterbook"):return
 	var screen := preload("res://scripts/monsterbook/monsterbook523_panel.gd").new()
 	workspace.mount(screen)
 	screen.configure(get_parent())

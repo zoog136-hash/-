@@ -774,18 +774,22 @@ func _advance_playback(delta: float) -> void:
 	_seek_frame(next)
 
 func _original_button_title_stays_invisible(widget: Dictionary) -> bool:
-	if typeof(widget.get("alpha"))!=TYPE_INT or widget.alpha!=0 or typeof(widget.get("actionTag"))!=TYPE_INT or widget.actionTag==0:return false
+	# Pack JSON numbers arrive as floats; the original fields are integers.
+	if not _whole(widget.get("alpha")) or int(widget.alpha)!=0 or not _whole(widget.get("actionTag")) or int(widget.actionTag)==0:return false
 	var action: Variant=source_tree.get("action",{})
 	if action==null:return true
 	if not action is Dictionary:return false
 	for timeline: Dictionary in action.get("timeLines",[]):
-		if timeline.get("actionTag")!=widget.actionTag or timeline.get("property")!="Alpha":continue
+		if int(timeline.get("actionTag",0))!=int(widget.actionTag) or timeline.get("property")!="Alpha":continue
 		var frames: Variant=timeline.get("frames")
 		if not frames is Array or frames.is_empty():return false
 		for frame: Dictionary in frames:
 			var value: Dictionary=_frame_value(frame)
-			if value.get("_type")!="IntFrame" or typeof(value.get("value"))!=TYPE_INT or value.value!=0:return false
+			if value.get("_type")!="IntFrame" or not _whole(value.get("value")) or int(value.value)!=0:return false
 	return true
+
+static func _whole(value: Variant) -> bool:
+	return typeof(value)==TYPE_INT or (typeof(value)==TYPE_FLOAT and value==floorf(value))
 
 static func _frame_value(raw: Dictionary) -> Dictionary:
 	var result: Dictionary={}

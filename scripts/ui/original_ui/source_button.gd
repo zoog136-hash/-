@@ -7,7 +7,7 @@ var _extent: Vector2
 var _title: Node2D
 func configure(pack: RefCounted, options: Dictionary, omit_invisible_title: bool=false) -> Dictionary:
 	var widget: Dictionary=options.widgetOptions
-	if omit_invisible_title and (typeof(widget.get("alpha"))!=TYPE_INT or widget.alpha!=0):return {"ok":false,"error":"source_title_omission_requires_original_zero_alpha"}
+	if omit_invisible_title and not _whole_zero(widget.get("alpha")):return {"ok":false,"error":"source_title_omission_requires_original_zero_alpha"}
 	var extent:=Vector2(widget.size[0],widget.size[1])
 	_extent=extent
 	_pressed_uses_normal=str(options.pressedData.path).is_empty()
@@ -240,3 +240,7 @@ func set_source_display(color: Color) -> void:
 	preload("res://scripts/ui/original_ui/source_material.gd").bind_tree_display(self,color)
 	for child: Node in get_children():
 		if child.has_meta("source_title_base_color"):child.modulate=color*child.get_meta("source_title_base_color")
+
+## Pack JSON numbers arrive as floats: an original integer field equals 0.
+static func _whole_zero(value: Variant) -> bool:
+	return (typeof(value)==TYPE_INT or (typeof(value)==TYPE_FLOAT and value==floorf(value))) and int(value)==0
