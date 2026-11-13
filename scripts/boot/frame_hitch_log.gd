@@ -32,6 +32,8 @@ static var _sections: Dictionary = {}
 ## Each row keeps [total usec, calls, longest call usec] for this frame only.
 static var _details: Dictionary = {}
 static var _counters: Dictionary = {}
+static var _slow_spawn: Dictionary = {}
+static var _build: Dictionary = {}
 static var _frames: int = 0
 static var _hitches: int = 0
 static var _worst: Array = []
@@ -59,6 +61,12 @@ static func detail(operation: String, started_usec: int) -> void:
 static func count(operation: String, amount: int = 1) -> void:
 	if not enabled: return
 	_counters[operation] = int(_counters.get(operation, 0)) + amount
+
+## One bounded, scalar-only setup sample, not a copy of an actor/source record.
+static func slow_spawn(sample: Dictionary) -> void:
+	if not enabled or int(sample.get("usec",0)) < THRESHOLD_USEC: return
+	if int(sample.usec) > int(_slow_spawn.get("usec",0)):
+		_slow_spawn = sample.duplicate(true)
 
 static func add(section: String, started_usec: int) -> void:
 	if not enabled: return
@@ -89,6 +97,7 @@ static func frame(map_id: String = "") -> void:
 	_sections.clear()
 	_details.clear()
 	_counters.clear()
+	_slow_spawn = {}
 	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
 
 static func _record(total: int, map_id: String) -> void:
@@ -103,6 +112,7 @@ static func _record(total: int, map_id: String) -> void:
 	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var entry: Dictionary = {"ms":total / 1000, "sections":parts.slice(0, 6), "map":map_id,
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
+	if not _build.is_empty(): entry["build"] = _build.duplicate()
 	var details: Array = []
 	for operation: String in _details:
 		var row: Array = _details[operation]
@@ -111,6 +121,7 @@ static func _record(total: int, map_id: String) -> void:
 	details.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	if not details.is_empty(): entry["details"] = details
 	if not _counters.is_empty(): entry["counters"] = _counters.duplicate()
+	if not _slow_spawn.is_empty(): entry["slow_spawn"] = _slow_spawn.duplicate(true)
 	print(PREFIX + JSON.stringify(entry))
 	var index: int = _worst.size()
 	while index > 0 and int(_worst[index - 1].ms) < int(entry.ms): index -= 1
@@ -120,7 +131,7 @@ static func _record(total: int, map_id: String) -> void:
 	_dirty = true
 
 static func summary() -> Dictionary:
-	return {"schema":1, "frames":_frames, "hitches":_hitches, "threshold_ms":THRESHOLD_USEC / 1000,
+	return {"schema":1, "build":_build.duplicate(), "frames":_frames, "hitches":_hitches, "threshold_ms":THRESHOLD_USEC / 1000,
 		"worst":_worst.duplicate(true)}
 
 static func flush() -> void:
@@ -138,6 +149,13 @@ static func flush() -> void:
 static func start() -> void:
 	if _started: return
 	_started = true
+	# Mounted update-pack identity at probe startup, not the next launch's label.
+	var info := FileAccess.open("res://build_info.json",FileAccess.READ)
+	if info != null and info.get_length() <= 4096:
+		var identity: Variant = JSON.parse_string(info.get_as_text())
+		if identity is Dictionary:
+			for key: String in ["version_name","commit"]:
+				if identity.get(key) is String: _build[key] = str(identity[key]).left(80)
 	var path: String = _dir.path_join(FILE_NAME)
 	if not FileAccess.file_exists(path): return
 	var previous: String = _dir.path_join(PREV_NAME)
@@ -168,9 +186,22 @@ static func previous_line() -> String:
 	# so a photo of the loading screen names what inside a section stalled.
 	var details: PackedStringArray = PackedStringArray()
 	for part: Variant in top.get("details", []):
+		# The single-setup phases below already show the parent. Use these
+		# three slots for its inner operations when the new sample is present.
+		if top.has("slow_spawn") and part is Array and not part.is_empty():
+			var operation: String = str(part[0])
+			if operation.begins_with("setup.") or operation in ["spawn.total","spawn.setup","view.roles"]: continue
 		if part is Array and part.size() >= 3 and int(part[1]) > 0 and details.size() < 3:
 			details.append("%s %dms×%d" % [str(part[0]), int(part[1]), int(part[2])])
 	if not details.is_empty(): line += " · 세부 " + ", ".join(details)
+	var spawn: Variant = top.get("slow_spawn",{})
+	if spawn is Dictionary and spawn.get("phases_usec") is Dictionary:
+		var phases: Array = []
+		for key: String in spawn.phases_usec: phases.append([key,int(spawn.phases_usec[key])])
+		phases.sort_custom(func(a: Array,b: Array) -> bool: return int(a[1]) > int(b[1]))
+		var labels: PackedStringArray = []
+		for part: Array in phases.slice(0,2): labels.append("%s %dms" % [part[0],int(part[1])/1000])
+		line += " · 단일 NPC %d setup %s" % [int(spawn.get("npc",-1)),", ".join(labels)]
 	return line
 
 static func reset_for_test(directory: String) -> void:
@@ -178,6 +209,8 @@ static func reset_for_test(directory: String) -> void:
 	_sections.clear()
 	_details.clear()
 	_counters.clear()
+	_slow_spawn = {}
+	_build = {}
 	_frames = 0
 	_hitches = 0
 	_worst.clear()
