@@ -54,7 +54,7 @@ func _configure(font_data: Dictionary, options: Dictionary, extent: Vector2, kee
 		var texture: Variant=font_data.page_textures.get(page_id)
 		if not texture is Texture2D:return _fail("source_bitmap_page_texture_missing")
 		if texture.get_width()!=common.get("scaleW") or texture.get_height()!=common.get("scaleH"):return _fail("source_bitmap_page_texture_dimensions_mismatch")
-	var staged: Dictionary=_stage(font_data,options.text,extent)
+	var staged: Dictionary=_stage(font_data,options.text,extent,keep_owned_font)
 	if not staged.get("ok",false):return staged
 	# Nothing displayed is replaced until all glyphs, pages and materials exist.
 	var previous: Node2D=_glyph_layer
@@ -66,8 +66,11 @@ func _configure(font_data: Dictionary, options: Dictionary, extent: Vector2, kee
 	_options=options.duplicate(true)
 	_extent=extent
 	native_size=staged.native_size
-	add_child(_glyph_layer)
-	if previous!=null:
+	if staged.has("draws"):
+		_apply_glyphs(_glyph_layer,staged.draws)
+	else:
+		add_child(_glyph_layer)
+	if is_instance_valid(previous) and previous!=_glyph_layer:
 		remove_child(previous)
 		previous.free()
 	return {"ok":true,"native_size":native_size}
@@ -89,7 +92,18 @@ func set_source_display(color: Color) -> void:
 		for glyph: Node in _glyph_layer.get_children():
 			SourceMaterial.bind_display(glyph,color)
 
-func _stage(font_data: Dictionary, value: String, extent: Vector2) -> Dictionary:
+func _stage(font_data: Dictionary, value: String, extent: Vector2, reuse_owned: bool=false) -> Dictionary:
+	# Validate every glyph/page/material before touching the visible layer.
+	var planned: Dictionary=_layout(font_data,value,extent)
+	if not planned.get("ok",false):return planned
+	if reuse_owned and _can_reuse_layer():
+		return {"ok":true,"layer":_glyph_layer,"draws":planned.draws,"native_size":planned.native_size}
+	var layer:=Node2D.new()
+	layer.name="OriginalBitmapGlyphs"
+	_apply_glyphs(layer,planned.draws)
+	return {"ok":true,"layer":layer,"native_size":planned.native_size}
+
+func _layout(font_data: Dictionary, value: String, extent: Vector2) -> Dictionary:
 	var glyphs: Dictionary=font_data.glyphs
 	var kernings: Dictionary=font_data.kernings
 	var records: Array=[]
@@ -114,31 +128,81 @@ func _stage(font_data: Dictionary, value: String, extent: Vector2) -> Dictionary
 	# Native final-glyph adjustment uses width versus xAdvance, not xoffset.
 	var width: float=longest-last_advance+last_width if last_advance<last_width else longest
 	var height: float=float(font_data.common.lineHeight)
-	var layer:=Node2D.new()
-	layer.name="OriginalBitmapGlyphs"
+	var draws: Array[Dictionary]=[]
 	var origin:=Vector2((extent.x-width)/2.0,-extent.y+(extent.y-height)/2.0)
 	for record: Dictionary in records:
 		var glyph: Dictionary=record.glyph
 		var texture: Variant=font_data.page_textures.get(glyph.page)
 		if not texture is Texture2D:
-			layer.free()
 			return _fail("source_bitmap_glyph_page_missing")
 		if int(glyph.width)==0 or int(glyph.height)==0:continue
 		var material: ShaderMaterial=SourceMaterial.original_default(texture)
 		if material==null:
-			layer.free()
 			return _fail("source_bitmap_material_unavailable")
-		var sprite:=Sprite2D.new()
-		sprite.texture=texture
+		draws.append({"texture":texture,"material":material,
+			"rect":Rect2(float(glyph.x),float(glyph.y),float(glyph.width),float(glyph.height)),
+			"position":origin+Vector2(float(record.x),float(glyph.yoffset))})
+	return {"ok":true,"draws":draws,"native_size":Vector2(width,height)}
+
+func _can_reuse_layer() -> bool:
+	if not is_instance_valid(_glyph_layer) or _glyph_layer.is_queued_for_deletion() or _glyph_layer.get_parent()!=self:return false
+	# These nodes are private. Unexpected structure/metadata or layer styling
+	# takes the original fresh-layer path instead of retaining foreign state.
+	if _glyph_layer.get_script()!=null or not _glyph_layer.get_meta_list().is_empty():return false
+	if _glyph_layer.transform!=Transform2D.IDENTITY or not _glyph_layer.visible or _glyph_layer.top_level:return false
+	if _glyph_layer.modulate!=Color.WHITE or _glyph_layer.self_modulate!=Color.WHITE or _glyph_layer.material!=null or _glyph_layer.use_parent_material:return false
+	if _glyph_layer.z_index!=0 or not _glyph_layer.z_as_relative or _glyph_layer.y_sort_enabled or _glyph_layer.show_behind_parent:return false
+	if _glyph_layer.texture_filter!=CanvasItem.TEXTURE_FILTER_PARENT_NODE or _glyph_layer.texture_repeat!=CanvasItem.TEXTURE_REPEAT_PARENT_NODE:return false
+	if _glyph_layer.light_mask!=1 or _glyph_layer.visibility_layer!=1 or _glyph_layer.clip_children!=CanvasItem.CLIP_CHILDREN_DISABLED:return false
+	for child: Node in _glyph_layer.get_children():
+		if not child is Sprite2D or child.is_queued_for_deletion() or child.get_script()!=null or child.get_child_count()!=0 or not child.get_meta_list().is_empty():return false
+	return true
+
+func _apply_glyphs(layer: Node2D, draws: Array) -> void:
+	var existing: Array[Node]=layer.get_children()
+	for index: int in draws.size():
+		var sprite: Sprite2D
+		if index<existing.size():sprite=existing[index] as Sprite2D
+		else:
+			sprite=Sprite2D.new()
+		var record: Dictionary=draws[index]
+		# Restore the fresh Sprite2D presentation while retaining node identity.
+		sprite.top_level=false
+		sprite.transform=Transform2D(0.0,record.position)
+		sprite.visible=true
+		sprite.modulate=Color.WHITE
+		sprite.self_modulate=Color.WHITE
+		sprite.z_index=0
+		sprite.z_as_relative=true
+		sprite.y_sort_enabled=false
+		sprite.show_behind_parent=false
+		sprite.light_mask=1
+		sprite.visibility_layer=1
+		sprite.clip_children=CanvasItem.CLIP_CHILDREN_DISABLED
+		sprite.texture_filter=CanvasItem.TEXTURE_FILTER_PARENT_NODE
+		sprite.texture_repeat=CanvasItem.TEXTURE_REPEAT_PARENT_NODE
+		sprite.use_parent_material=false
+		sprite.texture=record.texture
 		sprite.centered=false
+		sprite.hframes=1
+		sprite.vframes=1
+		sprite.frame=0
+		sprite.offset=Vector2.ZERO
+		sprite.flip_h=false
+		sprite.flip_v=false
 		sprite.region_enabled=true
 		sprite.region_filter_clip_enabled=true
-		sprite.region_rect=Rect2(float(glyph.x),float(glyph.y),float(glyph.width),float(glyph.height))
-		sprite.position=origin+Vector2(float(record.x),float(glyph.yoffset))
-		sprite.material=material
+		sprite.region_rect=record.rect
+		var prototype: ShaderMaterial=record.material
+		var current: ShaderMaterial=sprite.material as ShaderMaterial
+		if current==null or current==prototype or not bool(current.get_meta("source_private_display",false)) or bool(prototype.get_meta("source_private_display",false)) or current.shader!=prototype.shader or current.get_shader_parameter("source_pma")!=prototype.get_shader_parameter("source_pma") or current.get_shader_parameter("source_gray")!=prototype.get_shader_parameter("source_gray"):
+			sprite.material=prototype
 		SourceMaterial.bind_display(sprite,_display_color)
-		layer.add_child(sprite)
-	return {"ok":true,"layer":layer,"native_size":Vector2(width,height)}
+		if index>=existing.size():layer.add_child(sprite)
+	# Retain only currently visible glyph slots, never a high-water pool.
+	for index: int in range(existing.size()-1,draws.size()-1,-1):
+		layer.remove_child(existing[index])
+		existing[index].free()
 
 static func _fail(error: String) -> Dictionary:
 	return {"ok":false,"error":error}
