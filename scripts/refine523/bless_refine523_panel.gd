@@ -1,7 +1,9 @@
 extends VBoxContainer
-## 용해 (축복의 가루) and 질서의 연금 window in the existing workspace. The
-## original Refine/Enchant_All CSB windows are not bound yet (see
-## docs/bless_refine523_missing_rules.md); this panel only calls the service.
+## 용해 (축복의 가루) and 질서의 연금 window in the existing workspace; the
+## menu's 질서의 연금 opens the original RefineScene window
+## (source_main_refine_window) and 용해 asks through the original
+## Common_MessageBox_Dissolution popup when the UI pack has them. This panel
+## only calls the service.
 const SERVICE = preload("res://scripts/refine523/bless_refine523_service.gd")
 var hud: Node
 var status: Label
@@ -84,6 +86,17 @@ func _show(result: Dictionary) -> void:
 
 func _dissolve() -> void:
 	var ids: Array = selected.keys()
+	# With the original UI pack the original 용해 confirmation
+	# (Common_MessageBox_Dissolution) asks first; 확인 runs the same dissolve.
+	var controller: Variant = hud.get("original_main_ui_controller")
+	if not ids.is_empty() and is_instance_valid(controller) and controller.has_method("try_open_dissolve_confirm"):
+		var opened: Dictionary = controller.try_open_dissolve_confirm(world(),ids,func(result: Dictionary) -> void:
+			selected.clear()
+			_show(result))
+		if opened.get("handled",false): return
+		if opened.has("reason"):
+			_show({"ok":false,"reason":opened.reason})
+			return
 	selected.clear()
 	_show(SERVICE.dissolve(world(),ids))
 
