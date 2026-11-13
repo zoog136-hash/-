@@ -424,10 +424,11 @@ static func _stream_rows(bytes: PackedByteArray, at: int, packer: RowPacker) -> 
 	var batch_start: int = -1
 	var batch_end: int = -1
 	var batch_count: int = 0
+	var scanner := RowScanner.new(bytes)
 	while index < size:
 		# Only objects are rows; anything else is the whole parse's "row" error.
 		if bytes[index] != 123: return -1
-		var end: int = _object_end(bytes, index)
+		var end: int = scanner.object_end(index)
 		if end < 0: return -1
 		if batch_start < 0: batch_start = index
 		batch_end = end
@@ -470,6 +471,45 @@ static func _object_end(bytes: PackedByteArray, at: int) -> int:
 			if depth == 0: return index + 1
 		index += 1
 	return -1
+
+## Definition-private delimiter cursor. Each of the five native searches
+## advances monotonically across the entire member, including across rows.
+## A missing token remains exhausted (-1), never searched again per row.
+## Strings keep the established escape handling; JSON parsing still validates
+## bracket kinds and malformed input before any packed table is accepted.
+class RowScanner extends RefCounted:
+	const TOKENS = [34,123,125,91,93]
+	var bytes: PackedByteArray
+	var positions := PackedInt64Array()
+	var find_calls: int = 0
+	func _init(source: PackedByteArray) -> void:
+		bytes = source
+		for token: int in TOKENS:
+			positions.append(bytes.find(token,0)); find_calls += 1
+	func object_end(at: int) -> int:
+		var index: int = at
+		var depth: int = 0
+		while index < bytes.size():
+			var nearest: int = -1
+			var token: int = 0
+			for cursor: int in TOKENS.size():
+				var position: int = positions[cursor]
+				if position >= 0 and position < index:
+					position = bytes.find(TOKENS[cursor],index)
+					positions[cursor] = position; find_calls += 1
+				if position >= 0 and (nearest < 0 or position < nearest):
+					nearest = position; token = TOKENS[cursor]
+			if nearest < 0: return -1
+			if token == 34:
+				index = SCAN._string_end(bytes,nearest)
+				if index < 0: return -1
+				continue
+			if token == 123 or token == 91: depth += 1
+			else:
+				depth -= 1
+				if depth == 0: return nearest + 1
+			index = nearest + 1
+		return -1
 
 ## Incremental _pack(): the same columns (first row's key order), the same
 ## column kinds (PackedFloat64Array / PackedStringArray only when every row

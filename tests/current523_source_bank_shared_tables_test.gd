@@ -41,7 +41,7 @@ func _force(shared: bool) -> void:
 
 func _snapshot(context: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
-	var loaded: Dictionary = SOURCE.source_tables(context, ["ItemClass","ItemBonus","InvokeOption","Class","Gender"])
+	var loaded: Dictionary = SOURCE.source_tables(context, ["ItemClass","ItemBonus","InvokeOption","Class","Gender","WeaponType"])
 	result["loaded"] = loaded.get("ok", false)
 	result["shared"] = SOURCE._shared
 	var rows: Dictionary = {}
