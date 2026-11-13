@@ -223,7 +223,7 @@ static func _typed_invoke_target(detail: Dictionary, blockers: Array[String]) ->
 			"target":leaf,"spell":leaf.row,"excluded":leaf.excluded,"reference_only":true,"can_activate":false,"can_execute":false,"ownership_authorized":false})
 	return reference
 
-static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dictionary:
+static func _typed_reference(detail: Dictionary, blockers: Array[String], include_market: bool = true, market_warmup: Callable = Callable()) -> Dictionary:
 	var value: Variant = detail.get("bonus",{}).get("Value")
 	var unit: String = str(detail.get("unit",{}).get("Name",""))
 	var type: String = str(detail.get("type",{}).get("Name",""))
@@ -234,6 +234,7 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String]) -> Dic
 	var id: int = int(value)
 	var reference: Dictionary = {"unit":unit,"id":id,"item_bonus_id":detail.get("link",{}).get("ID"),"reference_only":true,"can_activate":false}
 	if type == "MarketPurchaseID":
+		if not include_market and (not market_warmup.is_valid() or not bool(market_warmup.call())): return {}
 		# Existing public ticket/monsterbook joins define this type namespace.
 		# This forward graph retains offers/odds/conditions without authorizing use.
 		reference["market_gotcha"] = MARKET_GOTCHA.describe(id,detail)
@@ -313,6 +314,16 @@ static func _quest_free_pass_input(item_id: int, blockers: Array[String]) -> Dic
 	return result
 
 static func describe(item_id: int, include_descriptions: bool = false) -> Dictionary:
+	return _describe(item_id,include_descriptions,true)
+
+## Internal native-template compiler input. Market graphs are reference-only
+## and never consumed by record(); ordinary describe() still builds them.
+## The registrar may build its first valid graph to warm the real public reader,
+## keeping first-shop initialization inside loading; no graph is cached here.
+static func _describe_native_registration(item_id: int, market_warmup: Callable = Callable()) -> Dictionary:
+	return _describe(item_id,false,false,market_warmup)
+
+static func _describe(item_id: int, include_descriptions: bool, include_market: bool, market_warmup: Callable = Callable()) -> Dictionary:
 	# UNVERIFIED: final definition input is the newly supplied original ZIP.
 	# Legacy sidecar code/files remain preserved; they are not a prerequisite
 	# or a fallback when the new original is unavailable.
@@ -347,7 +358,7 @@ static func describe(item_id: int, include_descriptions: bool = false) -> Dictio
 	result.quest_free_pass_input = _quest_free_pass_input(item_id,blockers)
 	result.bonuses = _effects("ItemBonus","ItemClassID",item_id,blockers)
 	for detail: Dictionary in result.bonuses:
-		var reference: Dictionary = _typed_reference(detail,blockers)
+		var reference: Dictionary = _typed_reference(detail,blockers,include_market,market_warmup)
 		if not reference.is_empty():
 			reference["source_item_class_id"] = item_id
 			result.typed_references.append(reference)

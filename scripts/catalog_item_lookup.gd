@@ -172,3 +172,59 @@ static func find_one(sources: Array, instances: Dictionary, item_name: String) -
 		if str(value.get("name", "")) == item_name and value.get("record", {}) is Dictionary:
 			return value.get("record", {}).duplicate(true)
 	return {}
+
+## A single synchronous cash install owns these sources and only appends through
+## note_append(). Never use for arbitrary live catalogs or callback providers.
+## Public find_one()/first_by_name() retain their self-validating behavior.
+class CashInstallScope extends RefCounted:
+	const REMOVED = preload("res://scripts/consumable_rules.gd")
+	var active: bool = true
+	var rows: Array = []
+	var sizes: Array[int] = []
+	var names: Array[Dictionary] = []
+	func _init(sources: Array) -> void:
+		for source: Variant in sources:
+			if not source is Array: active = false; return
+			rows.append(source); sizes.append(source.size())
+			var first: Dictionary = {}
+			for at: int in range(source.size()):
+				var value: Variant = source[at]
+				if value is Dictionary:
+					var name: String = str(value.get("name", ""))
+					if not first.has(name): first[name] = at
+			names.append(first)
+	func valid_sources(sources: Array) -> bool:
+		if not active or sources.size() != rows.size(): return false
+		for at: int in range(rows.size()):
+			if not is_same(sources[at],rows[at]) or rows[at].size() != sizes[at]:
+				active = false; return false
+		return true
+	func note_append(source: Array) -> void:
+		if not active: return
+		for at: int in range(rows.size()):
+			if not is_same(source,rows[at]): continue
+			if source.size() != sizes[at]+1: active = false; return
+			var value: Variant = source[-1]
+			if value is Dictionary:
+				var name: String = str(value.get("name", ""))
+				if not names[at].has(name): names[at][name] = sizes[at]
+			sizes[at] = source.size()
+			return
+		active = false
+	## null requests the original public lookup; {} is a proven scoped miss.
+	func find_one(sources: Array, instances: Dictionary, name: String) -> Variant:
+		if not valid_sources(sources): return null
+		if REMOVED.is_removed_item(name): return {}
+		for at: int in range(rows.size()):
+			if not names[at].has(name): continue
+			var value: Variant = rows[at][int(names[at][name])]
+			if not value is Dictionary or str(value.get("name", "")) != name:
+				active = false; return null
+			# Public find_one skips an empty first match for this whole source.
+			if not value.is_empty(): return value
+		for value: Variant in instances.values():
+			if value is Dictionary and str(value.get("name", "")) == name and value.get("record", {}) is Dictionary:
+				return value.get("record", {}).duplicate(true)
+		return {}
+	func close() -> void:
+		active = false; rows.clear(); sizes.clear(); names.clear()

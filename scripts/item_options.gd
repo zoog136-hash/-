@@ -105,6 +105,14 @@ static func _weight_integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value) == floorf(float(value)) and float(value) >= 0.0 and float(value) <= 9007199254740991.0
 
 static func current_source_weight_input(record: Dictionary, estimate: Dictionary) -> Dictionary:
+	return _current_source_weight_input(record,estimate,false)
+
+## Startup-only validation: real uncached template reads own their decoded data.
+## Cached, generic, subclass and interning providers retain full() semantics.
+static func _bulk_source_weight_input(record: Dictionary, estimate: Dictionary) -> Dictionary:
+	return _current_source_weight_input(record,estimate,true)
+
+static func _current_source_weight_input(record: Dictionary, estimate: Dictionary, transient: bool) -> Dictionary:
 	# UNVERIFIED: only the current original-backed native DTO may use this
 	# explicit TWILIGHT estimate. This does not establish a native weight unit.
 	var ignored: Dictionary = {"applicable":false}
@@ -112,8 +120,7 @@ static func current_source_weight_input(record: Dictionary, estimate: Dictionary
 		return ignored
 	if record.get("source_projection") != "current523_original_typed_game_dto_v1": return ignored
 	var item_id: Variant = record.get("source_item_class_id")
-	# One full() per record (this runs for every catalog record at start).
-	var full: Dictionary = NATIVE_FIELDS.full(record)
+	var full: Dictionary = NATIVE_FIELDS._full_for_binding(record) if transient else NATIVE_FIELDS.full(record)
 	if not _weight_integer(item_id) or int(item_id) <= 0 or full.get("source_weight_unit") != "unverified_source_units":
 		return ignored
 	if record.get("source_legacy_stack_variant",false) or record.get("source_legacy_catalog_alias",false): return ignored

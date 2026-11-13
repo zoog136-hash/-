@@ -4,6 +4,7 @@ extends RefCounted
 ## from notices: notices only supplied the KRW price. Rewards are delivered to
 ## the existing game owners: cards -> card collection, known items -> inventory
 ## (physical instances for equipment), and nested boxes -> openable boxes.
+const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
@@ -230,27 +231,33 @@ static func _summary(item_id: int) -> String:
 	return "\n".join(lines) + "\n원본523 상자 정의 · 원작 현금 상품을 TWILIGHT 다이아로 구매"
 
 ## Inventory name for an original item. Keeps an existing different item intact.
-static func _box_name(world, item_id: int) -> String:
+static func _box_name(world, item_id: int, lookup: LOOKUP.CashInstallScope = null) -> String:
 	if _names.has(item_id): return _names[item_id]
 	var name: String = label(item_id)
-	var existing: Dictionary = world._find_catalog_item_record(name)
+	var existing: Dictionary = _find_record(world,name,"",lookup)
 	if not existing.is_empty() and not (existing.get("source") in [TAG, ITEM_TAG] and int(existing.get("source_item_class_id", 0)) == item_id):
 		name = "%s · 상점#%d" % [name, item_id]
 	_names[item_id] = name
 	return name
 
-static func _register(world, record: Dictionary) -> Dictionary:
-	var existing: Dictionary = world._find_catalog_item_record(str(record.name))
+static func _register(world, record: Dictionary, lookup: LOOKUP.CashInstallScope = null) -> Dictionary:
+	var existing: Dictionary = _find_record(world,str(record.name),"",lookup)
 	if not existing.is_empty(): return existing
 	world.item_db.append(record.duplicate(true))
 	world.catalog_db["아이템"].append(record)
+	if lookup != null:
+		lookup.note_append(world.item_db)
+		lookup.note_append(world.catalog_db["아이템"])
 	return record
 
 static func box_record(world, item_id: int) -> Dictionary:
-	var name: String = _box_name(world, item_id)
+	return _box_record(world,item_id,null)
+
+static func _box_record(world, item_id: int, lookup: LOOKUP.CashInstallScope) -> Dictionary:
+	var name: String = _box_name(world, item_id,lookup)
 	return _register(world, {"name":name, "grade":_grade(item_id), "type":"상자", "slot":"consumable", "stackable":true,
 		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":TAG, "source_item_class_id":item_id,
-		"sourceId":"cash523:%d" % item_id, "cash_package":true, "desc":_summary(item_id)})
+		"sourceId":"cash523:%d" % item_id, "cash_package":true, "desc":_summary(item_id)},lookup)
 
 ## Where one original reward item goes in TWILIGHT.
 static func native_record(world, item_id: int) -> Dictionary:
@@ -321,7 +328,10 @@ static func _exact_owner(rows: Array, item_id: int) -> Dictionary:
 	return {}
 
 static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionary:
-	if is_package(item_id): return {"kind":"box", "name":box_record(world, item_id).name, "record":world._find_catalog_item_record(_box_name(world, item_id))}
+	return _resolve(world,item_id,allow_native,null)
+
+static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.CashInstallScope) -> Dictionary:
+	if is_package(item_id): return {"kind":"box", "name":_box_record(world, item_id,lookup).name, "record":_find_record(world,_box_name(world,item_id,lookup),"",lookup)}
 	var card: Dictionary = card_reference(item_id)
 	if not card.is_empty():
 		var found: Dictionary = _card_target(world, int(card.card_id))
@@ -330,7 +340,7 @@ static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionar
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
 	if exact.is_empty():
-		var named: Dictionary = world._find_catalog_item_record(label(item_id))
+		var named: Dictionary = _find_record(world,label(item_id),"",lookup)
 		if not named.is_empty() and not named.get("source") in [TAG, ITEM_TAG] and not bool(named.get("source_m_native_item", false)) and not str(named.get("name", "")).contains(" · 원본#"): exact = named
 	if not exact.is_empty():
 		return {"kind":"item", "name":str(exact.name), "record":exact}
@@ -339,7 +349,7 @@ static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionar
 	# Original mastery option change ticket: the mastery runtime's exact ticket.
 	if allow_native and item_id == MASTERY_TICKET_ID and world.get("weapon_mastery") != null:
 		var ticket: Dictionary = world.weapon_mastery.reset_ticket.record()
-		if not ticket.is_empty() and world.weapon_mastery.reset_ticket.exact(world._find_catalog_item_record(str(ticket.name), str(ticket.sourceId))):
+		if not ticket.is_empty() and world.weapon_mastery.reset_ticket.exact(_find_record(world,str(ticket.name),str(ticket.sourceId),lookup)):
 			return {"kind":"mastery_ticket", "name":str(ticket.name), "record":ticket}
 	if allow_native:
 		var equipment: Dictionary = native_equipment(world, item_id)
@@ -348,11 +358,11 @@ static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionar
 		var native: Dictionary = native_record(world, item_id)
 		if not native.is_empty(): return {"kind":"native", "name":str(native.name), "record":native}
 	# Original item without a TWILIGHT owner yet: kept as a plain inventory item.
-	var name: String = _box_name(world, item_id)
+	var name: String = _box_name(world,item_id,lookup)
 	var usable: bool = not mastery_spec(item_id).is_empty()
 	var record: Dictionary = _register(world, {"name":name, "grade":_grade(item_id), "type":"소모품" if usable else "재료", "slot":"consumable" if usable else "material", "stackable":true,
 		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":ITEM_TAG, "source_item_class_id":item_id,
-		"sourceId":"cash523:%d" % item_id, "desc":_leaf_desc(item_id)})
+		"sourceId":"cash523:%d" % item_id, "desc":_leaf_desc(item_id)},lookup)
 	return {"kind":"item", "name":name, "record":record}
 
 static func _leaf_desc(item_id: int) -> String:
@@ -360,19 +370,20 @@ static func _leaf_desc(item_id: int) -> String:
 	if not book.is_empty(): return "원본523 무기 수련의 서 · 사용 시 해당 무기 숙련치 +%d" % int(book.points)
 	return "원본523 아이템 · 현금 상점 상자 구성품 · TWILIGHT 사용 기능 연결 대기"
 
-static func _walk(world, item_id: int, seen: Dictionary, depth: int) -> void:
+static func _walk(world, item_id: int, seen: Dictionary, depth: int, lookup: LOOKUP.CashInstallScope) -> void:
 	if depth > MAX_DEPTH or seen.has(item_id): return
 	seen[item_id] = true
-	resolve(world, item_id)
+	_resolve(world,item_id,true,lookup)
 	var spec: Dictionary = definition(item_id)
 	if spec.get("kind") == "gotcha": return
-	for entry: Dictionary in spec.get("entries", []): _walk(world, int(entry.item_class_id), seen, depth + 1)
+	for entry: Dictionary in spec.get("entries", []): _walk(world,int(entry.item_class_id),seen,depth+1,lookup)
 
 ## Registers every box/reward item reachable from listed offers (also needed
 ## after a reload so saved stacks keep their record) and returns shop bindings.
 static func install(world, catalog) -> Dictionary:
 	var bindings: Dictionary = {}
 	if not available() or catalog == null: return bindings
+	var lookup: LOOKUP.CashInstallScope = _install_lookup(world,catalog)
 	var seen: Dictionary = {}
 	_owner_rows = []
 	_owner_trusted = true
@@ -382,11 +393,12 @@ static func install(world, catalog) -> Dictionary:
 			var product: Dictionary = link.product.definition
 			if int(product.get("UnitID", 0)) != 4: continue
 			var item_id: int = int(product.ClassID)
-			_walk(world, item_id, seen, 0)
-			var target: Dictionary = resolve(world, item_id, false)
+			_walk(world,item_id,seen,0,lookup)
+			var target: Dictionary = _resolve(world,item_id,false,lookup)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
 	_owner_trusted = false
 	_owner_rows = []
+	if lookup != null: lookup.close()
 	world._index_item_weights()
 	return bindings
 
@@ -617,3 +629,26 @@ static func _weight_of(world, inventory: Dictionary) -> int:
 	for name: String in inventory:
 		total += int(inventory[name]) * maxi(0, int(world.item_weight_index.get(name, 3)))
 	return total
+
+## The base World and Main.tscn presentation adapter have the same audited
+## lookup/install path. Only these exact synchronous owners use append-only
+## install path with their default quest/mastery/template owners. Custom owners
+## and fixtures keep public lookup; injected source data is still validated.
+static func _install_lookup(world, catalog) -> LOOKUP.CashInstallScope:
+	if not world is Node or world.get_script() == null or world.get_script().resource_path not in ["res://scripts/world.gd","res://scripts/potion_feedback_world.gd"]: return null
+	if not catalog is RefCounted or catalog.get_script() == null or catalog.get_script().resource_path != "res://scripts/shop/source523_shop_catalog.gd": return null
+	if world.quest_auto != null and (not world.quest_auto is Object or world.quest_auto.get_script() == null or world.quest_auto.get_script().resource_path != "res://scripts/quests/quest_auto_runner.gd"): return null
+	if world.weapon_mastery != null:
+		if not _default_owner(world.weapon_mastery,"res://scripts/mastery/mastery_runtime.gd"): return null
+		if not _default_owner(world.weapon_mastery.reset_ticket,"res://scripts/mastery/mastery_reset_ticket.gd"): return null
+	var store: Object = preload("res://scripts/loot/current523_native_fields.gd")._store
+	if store != null and store.get_script() != DROPS.CURRENT_DTO.TemplateStore: return null
+	if is_same(world.catalog_db.get("아이템",[]),world.item_db): return null
+	return LOOKUP.CashInstallScope.new([world.catalog_db.get("아이템",[]),world.item_db])
+
+static func _find_record(world, name: String, source_id: String, lookup: LOOKUP.CashInstallScope) -> Dictionary:
+	if lookup != null: return world._find_catalog_item_record_cash_install(name,source_id,lookup)
+	return world._find_catalog_item_record(name) if source_id.is_empty() else world._find_catalog_item_record(name,source_id)
+
+static func _default_owner(value: Variant, path: String) -> bool:
+	return value is Object and value.get_script() != null and value.get_script().resource_path == path
