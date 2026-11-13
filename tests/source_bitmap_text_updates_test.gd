@@ -63,6 +63,14 @@ func headless_checks() -> void:
 		check(answer==legacy_text(b,value) and not answer.ok,"unsupported text remains rejected")
 		check(a._glyph_layer==prior_a and b._glyph_layer==prior_b,"failure retains old visible layer")
 		check(is_same(a._font_data,old_a) and is_same(b._font_data,old_b),"failure retains owned descriptor")
+	# A missing glyph-specific page is found after staging an earlier glyph.
+	var before_a: Node2D=a._glyph_layer;var before_b: Node2D=b._glyph_layer
+	for p: Node2D in [a,b]:p._font_data.glyphs[66].page=2
+	var staged_failure: Dictionary=a.set_source_text("AB")
+	check(staged_failure==legacy_text(b,"AB") and not staged_failure.ok,"partially staged glyph failure remains rejected")
+	check(a._glyph_layer==before_a and b._glyph_layer==before_b,"partially staged failure keeps old layer")
+	for p: Node2D in [a,b]:p._font_data.glyphs[66].page=1
+	check(state(a)==state(b),"partial staging cannot replace old presentation")
 	# Revalidation cannot be skipped even when the text is unchanged.
 	for p: Node2D in [a,b]:p._font_data.glyphs[65].chnl=0
 	check(a.set_source_text("AB가")==legacy_text(b,"AB가") and not a.set_source_text("AB가").ok,"same text revalidates live owned glyph data")
@@ -90,7 +98,7 @@ func render_checks() -> void:
 	for pma: bool in [false,true]:
 		for transparent: bool in [false,true]:
 			var f: Dictionary=font(pma);var a: Dictionary=view(f,transparent);var b: Dictionary=view(f,transparent)
-			var values: Array[String]=["AB가","AB가","BA","AB AB","","가A","가A","AB"]
+			var values: Array[String]=["AB가","AB가","BA","AB AB","","가A","BA","AB"]
 			for i: int in values.size():
 				if i==2:
 					for v: Dictionary in [a,b]:v.p.set_source_display(Color(0.8,0.5,0.9,0.6))
