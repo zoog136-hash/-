@@ -8946,6 +8946,13 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 			hud.refresh_inventory(inventory)
 			_update_hud()
 			return
+	var group_limit: String = preload("res://scripts/loot/current523_equip_group_limit.gd").reason(record, equip_slot, equipped_items)
+	if not group_limit.is_empty():
+		hud.show_message(group_limit)
+		hud.append_log("착용 제한 · %s · 아이템은 인벤토리에 보관" % group_limit)
+		hud.refresh_inventory(inventory)
+		_update_hud()
+		return
 	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
 		var selected_id: String = requested_id if requested_id != "" else _chosen_instance(item_name, true)
