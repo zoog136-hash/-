@@ -42,6 +42,9 @@ func _run() -> void:
 	_class_domains()
 	_scopes()
 	_script_readers()
+	_binding_digests()
+	_native_market_scope()
+	_market_warmup_scopes()
 	print("CURRENT523_NATIVE_REGISTRATION_SCOPE_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"fixture":"synthetic_class_and_script_scope_only","original_zip_read":false}))
 	quit(0 if failures.is_empty() else 1)
 
@@ -114,6 +117,7 @@ func _thread_scopes() -> bool:
 	var outside: bool=P.registration_item_reader()==null and P.registration_profile_scope()==null
 	var installed: bool=P._swap_registration_scope(worker)==null
 	var isolated: bool=P.registration_item_reader()==DATA and P.registration_profile_scope()==worker
+	isolated = isolated and P._skill_row_digest('{"skills":{"worker":{"spell_id":7,"row_sha256":"worker"}}}',7)=="worker" and worker.binding_builds==1
 	return before==null and outside and installed and isolated and P._swap_registration_scope(null)==worker
 
 class DescribeReader extends RefCounted:
@@ -140,3 +144,94 @@ func _script_readers() -> void:
 	if had_env:OS.set_environment("TWILIGHT_PATCH523_CONTENT",saved_env)
 	else:OS.unset_environment("TWILIGHT_PATCH523_CONTENT")
 	P._swap_registration_scope(previous)
+
+func _binding_digests() -> void:
+	var text: String = JSON.stringify({"skills":{"a":{"spell_id":17.0,"row_sha256":"one"},"b":{"spell_id":17,"row_sha256":"one"},"c":{"spell_id":18,"row_sha256":"two"}}})
+	var prior: P.RegistrationScope = P._swap_registration_scope(null)
+	var baseline: String = P._skill_row_digest(text,17)
+	var outer := P.RegistrationScope.new()
+	P._swap_registration_scope(outer)
+	check(baseline=="one" and P._skill_row_digest(text,17)==baseline and P._skill_row_digest(text,18)=="two", "scoped binding scan matches public scan and numeric IDs")
+	check(outer.binding_builds==1 and outer.binding_hits==1, "binding JSON parses once across different books")
+	for id: int in [0,17,18,19,9007199254740991]:
+		var mixed: String=JSON.stringify({"skills":{"a":{"spell_id":float(id),"row_sha256":"x"},"b":{"spell_id":null,"row_sha256":"z"},"c":false,"d":{"spell_id":9007199254740992.0,"row_sha256":"big"},"e":{"spell_id":-0.0,"row_sha256":"zero"}}})
+		check(P._skill_row_digest(mixed,id)==_frozen_binding_digest(mixed,id), "parsed memo retains frozen scan numeric/null/precision behavior")
+	# Resume the original byte-change counter sequence in a fresh scope.
+	outer = P.RegistrationScope.new(); P._swap_registration_scope(outer)
+	P._skill_row_digest(text,17)
+	var changed: String = text.replace("one","new")
+	check(P._skill_row_digest(changed,17)=="new" and outer.binding_builds==2, "same-length binding byte edits reparse document")
+	var ambiguous: String = JSON.stringify({"skills":{"a":{"spell_id":17,"row_sha256":"a"},"b":{"spell_id":17,"row_sha256":"b"}}})
+	check(P._skill_row_digest(ambiguous,17)=="", "ambiguous binding hashes remain unavailable")
+	check(P._skill_row_digest("{}",17)=="" and P._skill_row_digest("[]",17)=="", "missing binding structure and non-object input clear prior hashes")
+	var inner := P.RegistrationScope.new()
+	P._swap_registration_scope(inner)
+	check(P._skill_row_digest(text,17)==baseline and inner.binding_builds==1 and outer.binding_text=="[]", "nested binding scopes own separate documents")
+	P._swap_registration_scope(outer)
+	check(P._skill_row_digest(text,17)==baseline and outer.binding_builds==6, "outer scope restores and rebuilds after bytes change")
+	P.SOURCE.reset()
+	check(P._skill_row_digest(changed,17)=="new", "source reset never retains stale changed binding bytes")
+	P._swap_registration_scope(null)
+	check(P._skill_row_digest(text,17)==baseline and outer.binding_text==changed, "scope exit restores public uncached behavior")
+	P._swap_registration_scope(prior)
+
+func _native_market_scope() -> void:
+	var detail: Dictionary={"bonus":{"Value":17.0},"type":{"Name":"MarketPurchaseID"},"unit":{"Name":"MarketPurchaseID"},"link":{"ID":1.0}}
+	var blockers: Array[String]=[]
+	var public_ref: Dictionary=DATA._typed_reference(detail,blockers)
+	check(public_ref.has("market_gotcha") and public_ref.market_gotcha.get("kind")=="twilight.current523.market-gotcha-data.v1", "default typed Market reference still builds complete public graph")
+	check(DATA._typed_reference(detail,blockers,false).is_empty(), "internal projection omits only unused Market graph")
+	var nonmarket: Dictionary={"bonus":{"Value":17.0},"type":{"Name":"Unknown"},"unit":{"Name":"Unknown"},"link":{"ID":1.0}}
+	check(same(DATA._typed_reference(nonmarket,blockers),DATA._typed_reference(nonmarket,blockers,false)), "projection leaves non-Market reference behavior unchanged")
+	check(same(DATA.describe(-1),DATA._describe_native_registration(-1)), "missing-source native projection preserves describe rejection")
+	var prior: P.RegistrationScope=P._swap_registration_scope(null)
+	check(same(DROP._describe_item(-1,true),DROP._describe_item(-1)), "projection request outside verified registration keeps public reader path")
+	P._swap_registration_scope(prior)
+
+func _frozen_binding_digest(text: String, spell_id: int) -> String:
+	var binding_document: Variant=JSON.parse_string(text)
+	var row_digests: Array=[]
+	if binding_document is Dictionary and binding_document.get("skills") is Dictionary:
+		for bound: Variant in binding_document.skills.values():
+			if bound is Dictionary and bound.get("spell_id")==spell_id and bound.get("row_sha256") is String and bound.row_sha256 not in row_digests:row_digests.append(bound.row_sha256)
+	return str(row_digests[0]) if row_digests.size()==1 else ""
+
+func _market_warmup_scopes() -> void:
+	var prior: P.RegistrationScope = P._swap_registration_scope(null)
+	check(not P.registration_market_warmup(), "outside registration no Market warmup token exists")
+	var outer := P.RegistrationScope.new()
+	P._swap_registration_scope(outer)
+	var detail: Dictionary = {"bonus":{"Value":17.0},"type":{"Name":"MarketPurchaseID"},"unit":{"Name":"MarketPurchaseID"},"link":{"ID":1.0}}
+	var blockers: Array[String] = []
+	var expected: Dictionary = DATA._typed_reference(detail,blockers,true,P.registration_market_warmup)
+	check(expected.has("market_gotcha") and not outer.market_warmup_taken, "ordinary public Market graph never consumes registration warmup")
+	check(DATA._typed_reference(detail,blockers,false).is_empty() and not outer.market_warmup_taken, "private call without callback retains skip behavior")
+	for value: Variant in [null,"17",0,-1,1.5,INF]:
+		var invalid: Dictionary = detail.duplicate(true); invalid.bonus.Value = value
+		check(DATA._typed_reference(invalid,blockers,false,P.registration_market_warmup).is_empty() and not outer.market_warmup_taken, "invalid Market target never consumes first valid graph warmup")
+	var unrelated: Dictionary = detail.duplicate(true); unrelated.type.Name = "Unknown"; unrelated.unit.Name = "Unknown"
+	check(DATA._typed_reference(unrelated,blockers,false,P.registration_market_warmup).is_empty() and not outer.market_warmup_taken, "non-Market target never consumes Market warmup")
+	check(same(DATA._typed_reference(detail,blockers,false,P.registration_market_warmup),expected) and outer.market_warmup_taken, "first valid Market target builds the exact existing public graph")
+	check(DATA._typed_reference(detail,blockers,false,P.registration_market_warmup).is_empty(), "second valid Market target skips unused graph")
+	var inner := P.RegistrationScope.new()
+	P._swap_registration_scope(inner)
+	check(P.registration_market_warmup() and not P.registration_market_warmup(), "nested registration receives exactly one independent Market warmup")
+	P._swap_registration_scope(outer)
+	check(not P.registration_market_warmup(), "restoring outer registration preserves its consumed Market warmup")
+	var thread := Thread.new()
+	var launched: Error = thread.start(_thread_market_warmup)
+	check(launched == OK, "Market warmup isolation worker starts")
+	if launched == OK: check(bool(thread.wait_to_finish()), "worker Market warmup is independent and released on exit")
+	check(not P.registration_market_warmup(), "worker leaves outer Market warmup consumed")
+	P.SOURCE.reset()
+	check(P.registration_market_warmup() and not P.registration_market_warmup(), "explicit source reset permits exactly one new graph warmup")
+	P._swap_registration_scope(null)
+	check(not P.registration_market_warmup() and same(DATA._typed_reference(detail,blockers),expected), "scope exit keeps full public graph behavior and no persistent token")
+	P._swap_registration_scope(prior)
+
+func _thread_market_warmup() -> bool:
+	var outside: bool = not P.registration_market_warmup()
+	var scope := P.RegistrationScope.new()
+	var prior: P.RegistrationScope = P._swap_registration_scope(scope)
+	var once: bool = P.registration_market_warmup() and not P.registration_market_warmup()
+	return outside and prior == null and once and P._swap_registration_scope(null) == scope and not P.registration_market_warmup()

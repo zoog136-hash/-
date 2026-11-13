@@ -274,16 +274,15 @@ func _catalog(catalog: Array, binding: Dictionary) -> PackedInt32Array:
 
 func _bind_catalog(catalog: PackedInt32Array, wallet_records: PackedInt32Array) -> bool:
 	for handle: int in catalog:
-		var record: Dictionary = _rec(handle)
-		var name: String = str(record.name)
+		var name: String = str(_records.field(handle,"name")) if _records.has_field(handle,"name") else str(_rec(handle).name)
 		_by_name[name] = int(_by_name.get(name,0))+1
 		# Pre-November inven catalog rows are not bound to original IDs (user
 		# decision 2026-11-10): an inven "장검" #702 took the original 523 장검
 		# #702's place, so 523 enchant scrolls refused the real 523 sword.
 	for handle: int in catalog:
-		var record: Dictionary = _rec(handle)
-		var value: Variant = record.get("source_item_class_id")
+		var value: Variant = _records.field(handle,"source_item_class_id")
 		if not _integer(value) or int(value) <= 0: continue
+		var record: Dictionary = _rec(handle)
 		var key: String = str(int(value))
 		var native: Dictionary = _items.row(key)
 		if native.is_empty() or record.get("source") != "lineagem_patch523" or record.get("source_snapshot") != "patch523" or record.get("source_m_native_item") != true or record.get("sourceId") != "m523:item:"+key or record.get("source_bless_raw",1) != 1: continue
@@ -294,12 +293,12 @@ func _bind_catalog(catalog: PackedInt32Array, wallet_records: PackedInt32Array) 
 		if not _full_native and previous.size() == 1 and _by_name[_rec(previous[0]).name] == 1 and not (record.get("source_projection")=="current523_original_typed_game_dto_v1" and record.get("source_definition_archive")==source.identity() and _same_original(record,native)): continue
 		if _by_name[record.name] == 1: _by_id[key] = [handle]
 	for handle: int in catalog:
-		var entry: Dictionary = _rec(handle)
-		var raw_id: Variant = entry.get("source_item_class_id",0)
+		var raw_id: Variant = _records.field(handle,"source_item_class_id",0)
 		if not _integer(raw_id): continue
 		var key: String = str(int(raw_id))
-		var state: Variant = entry.get("source_bless_raw",1)
+		var state: Variant = _records.field(handle,"source_bless_raw",1)
 		if not _in_ints(state,[2,3]) or _by_id.get(key,[]).size() != 1: continue
+		var entry: Dictionary = _rec(handle)
 		var base: Dictionary = _rec(_by_id[key][0])
 		if not base.get("source_m_native_item",false) or not base.get("source_is_stackable",false) or entry.get("source") != "lineagem_patch523" or entry.get("sourceId") != str(base.sourceId)+":bless:"+str(int(state)) or entry.get("name") != str(base.name)+(" · 축복" if state == 2 else " · 저주"): continue
 		var same: bool = true

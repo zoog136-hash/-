@@ -21,6 +21,8 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('equipment_packed_scan_test', []),
+    ('equipment_catalog_scan_test', []),
     ('source_preview_copy_free_test', []),
     ('source_girtas_screen_copy_guard_test', []),
     ('lobby_spine_android_blend_test', []),
@@ -460,7 +462,9 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'source_preview_copy_free_test':'SOURCE_PREVIEW_COPY_FREE_RESULT',
+            marker = {'equipment_packed_scan_test':'EQUIPMENT_PACKED_SCAN_RESULT',
+                      'equipment_catalog_scan_test':'EQUIPMENT_CATALOG_SCAN_RESULT',
+            'source_preview_copy_free_test':'SOURCE_PREVIEW_COPY_FREE_RESULT',
                       'source_girtas_screen_copy_guard_test':'SOURCE_GIRTAS_SCREEN_COPY_GUARD',
                       'lobby_spine_android_blend_test':'LOBBY_SPINE_ANDROID_BLEND',
                       'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
