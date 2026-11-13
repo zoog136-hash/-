@@ -1158,6 +1158,37 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 장비 강화 window (source_main_enchant_window; the forge
+## rules, confirmation and the world's roll stay the owners)
+const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+var _enchant_window: RefCounted
+
+func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _enchant_window==null and _pack!=null and hud!=null:
+		var window=EnchantWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["enchant_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_enchant_window=window
+	if _enchant_window==null or not is_instance_valid(_coordinates):return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
+	return _enchant_window.open(_coordinates,scroll,candidates)
+
+func enchant_window() -> RefCounted:
+	return _enchant_window
+
+func enchant_window_is_open() -> bool:
+	return _enchant_window!=null and _enchant_window.is_open()
+
+func close_enchant_window() -> void:
+	if enchant_window_is_open():
+		_cancel_native_buttons()
+		_enchant_window.close()
+
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
@@ -1229,7 +1260,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

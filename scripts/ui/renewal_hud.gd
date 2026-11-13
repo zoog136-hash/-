@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -993,6 +993,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_skill_window"):original_main_ui_controller.close_skill_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_enchant_window"):original_main_ui_controller.close_enchant_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
@@ -2918,6 +2919,7 @@ func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: Str
 
 func _open_enhance_chooser() -> void:
 	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
+	if _open_original_enchant("",[]): return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_scrolls(self)
@@ -2954,7 +2956,25 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 
 var enhancement_forge: Control
 
+## The original 523 EnchantScene (source_main_enchant_window) over the same
+## candidates; false -> the caller opens the TWILIGHT forge (reported).
+func _open_original_enchant(scroll_name: String, candidates: Array) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_enchant_window"): return false
+	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates)
+	original_main_ui_status["enchant_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return true
+	_report_original_fallback("장비 강화",native)
+	return false
+
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	if active_section == "enhance" and is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open():
+		enhancement_scroll_name = scroll_name
+		enhancement_candidates = candidates.duplicate(true)
+		if _open_original_enchant(scroll_name,candidates): return
 	# Same scroll, window still open (the usual "강화 → 결과 → 다시 강화"
 	# loop): update the rows in place instead of rebuilding the whole window.
 	if active_section == "enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_inside_tree() \
@@ -2966,6 +2986,7 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	enhancement_scroll_name = scroll_name
 	enhancement_candidates = candidates.duplicate(true)
 	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
+	if _open_original_enchant(scroll_name,candidates): return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)

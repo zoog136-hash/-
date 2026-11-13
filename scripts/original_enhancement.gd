@@ -75,8 +75,20 @@ static func stats(kind: String, level: int, record: Dictionary = {}) -> Dictiona
 			return {}
 	return {}
 
-static func summary(kind: String, level: int, record: Dictionary = {}) -> String:
+## Stat values at `level` with the item's per-level extra options (the
+## numbers summary() writes as text).
+static func stat_values(kind: String, level: int, record: Dictionary = {}) -> Dictionary:
 	var bonus: Dictionary = stats(kind, level, record)
+	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
+	for key: String in extras:
+		bonus[key]=extras[key]
+	return bonus
+
+## Display name of one stat key (as summary() labels it).
+static func stat_label(key: String) -> String:
+	return str(_labels().get(key,key))
+
+static func _labels() -> Dictionary:
 	var labels: Dictionary = {"damage":"추가 대미지", "accuracy":"명중", "defense":"AC -",
 		"hp":"Max HP", "mp":"Max MP", "capacity":"무게 보너스", "sp":"SP",
 		"mr":"MR", "reduction":"대미지 리덕션", "melee_damage":"근거리 대미지",
@@ -85,9 +97,6 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"potion_heal_flat":"물약 회복량", "potion_heal_pct":"물약 회복률",
 		"mp_recovery":"MP 회복 옵션", "xp_pct":"경험치 획득량", "ain_saving_pct":"아인하사드 축복 소모량 감소",
 		"potion_cooldown_pct":"물약 재사용 대기 감소", "stun_resistance":"스턴 내성"}
-	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
-	for key: String in extras:
-		bonus[key]=extras[key]
 	labels.merge({"strFlat":"STR","dexFlat":"DEX","intFlat":"INT","er":"ER","dg":"DG",
 		"strPercent":"STR(%)","dexPercent":"DEX(%)","intPercent":"INT(%)",
 		"source_elemental_flat_fire":"불 속성 추가 피해","source_elemental_flat_water":"물 속성 추가 피해","source_elemental_flat_wind":"바람 속성 추가 피해","source_elemental_flat_earth":"땅 속성 추가 피해",
@@ -105,6 +114,14 @@ static func summary(kind: String, level: int, record: Dictionary = {}) -> String
 		"source_melee_flat_reduction_ignore":"근거리 리덕션 무시(게임 추가 피해 해석)","source_ranged_flat_reduction_ignore":"원거리 리덕션 무시(게임 추가 피해 해석)","source_magic_flat_reduction_ignore":"마법 리덕션 무시(게임 추가 피해 해석)",
 		"damage_reduction_ignore":"리덕션 무시","pve_melee_damage":"PVE 근거리 대미지","pve_ranged_damage":"PVE 원거리 대미지",
 		"pve_magic_damage":"PVE 마법 대미지","melee_crit":"근거리 치명타(%)","ranged_crit":"원거리 치명타(%)","magic_crit":"마법 치명타(%)"})
+	return labels
+
+static func summary(kind: String, level: int, record: Dictionary = {}) -> String:
+	var bonus: Dictionary = stats(kind, level, record)
+	var labels: Dictionary = _labels()
+	var extras: Dictionary=record.get("enhancement_extra_options",{}).get(str(clampi(level,0,21)),{})
+	for key: String in extras:
+		bonus[key]=extras[key]
 	var result: PackedStringArray = []
 	for key: Variant in bonus.keys():
 		if is_zero_approx(float(bonus[key])):
