@@ -453,6 +453,18 @@ static func fail(message: String) -> Dictionary:
 
 func open_ui() -> void:
 	world.hud.call("_open_window","death523","사망 복구","무료 경험치 복구 기본 2회 · 아이템은 물리 ID 그대로 복원")
+	# The original DeathPenalty_All window when the UI pack has it and the
+	# rule ZIP is installed; otherwise the panel (with the ZIP install button).
+	var controller: Variant = world.hud.get("original_main_ui_controller")
+	if is_instance_valid(controller) and controller.has_method("try_open_death_window"):
+		var native: Dictionary = controller.try_open_death_window(self)
+		world.hud.original_main_ui_status["death_window"] = native
+		if native.get("handled",false):
+			if world.hud.get("pointer_transfer") != null: world.hud.pointer_transfer.cancel()
+			world.hud.workspace.hide()
+			if world.hud.has_method("_sync_screen_focus"): world.hud.call("_sync_screen_focus")
+			return
+		if world.hud.has_method("_report_original_fallback") and str(native.get("code","")) != "source_death_window_rules_not_installed": world.hud.call("_report_original_fallback","사망 복구",native)
 	view = preload("res://scripts/death/recovery_ui.gd").new()
 	world.hud.workspace.mount(view)
 	view.configure(self)

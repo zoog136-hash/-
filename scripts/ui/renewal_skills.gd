@@ -339,6 +339,14 @@ func _unlearned_icon(source: Texture2D) -> Texture2D:
 	unlearned_icons[key] = gray
 	return gray
 
+## Selects the skill `id` (from the original skill window's 상세 보기).
+func focus_skill(id: String) -> void:
+	for index: int in range(filtered.size()):
+		if str(filtered[index].get("id",filtered[index].get("name","")))==id:
+			cards.select(index)
+			select(index)
+			return
+
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
 	if str(selected.get("id",selected.get("name","")))!=str(filtered[index].get("id",filtered[index].get("name",""))):
