@@ -11,6 +11,10 @@ const COLORS: Array[Color] = [Color("ddd6c5"),Color("79bf83"),Color("73b4ee"),Co
 static var materials: Dictionary = {}
 static var scheduler_ref: WeakRef
 static var reduced_motion: bool = false
+## Original animated (CSB) icon scenes that could not be attached, by reason:
+## the slot would otherwise stay silently empty (no static original exists for
+## these icons). Reported once per reason to the log for the player's report.
+static var scene_failures: Dictionary = {}
 var target: TextureRect
 var rank: int = 0
 var phase_group: int = 0
@@ -126,6 +130,7 @@ func _configure_presentation(view: TextureRect, record: Dictionary, item_name: S
 			_detach_source_scene(view)
 			info["status"] = "original_icon_not_installed"
 			info["reason"] = str(attached.get("error","source_scene_unavailable"))
+			_report_scene_failure(info)
 	rank = 0 if reference_presentation else animation_rank(record, item_name)
 	phase_group = 0 if reference_presentation else posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
@@ -156,11 +161,24 @@ func _configure_presentation(view: TextureRect, record: Dictionary, item_name: S
 	substitute_mark.text="효과 미연결" if missing_original and source_scene_requested else SOURCE523.missing_label(info) if missing_original and source_presentation else "원본 미설치" if missing_original else "◇"
 	substitute_mark.tooltip_text=str(info.get("reason","원본 아이콘 미설치")) if missing_original and source_presentation else "원본 아이콘 미설치" if missing_original else "TWILIGHT 자체 대체 아이콘"
 	substitute_mark.offset_left=-62 if missing_original else -12
-	# An empty slot carries no substitute or "not installed" badge.
-	substitute_mark.visible = false
+	# An empty slot carries no substitute or "not installed" badge. An item whose
+	# original animated icon scene failed shows "효과 미연결" (reason in the
+	# tooltip) instead of an unexplained blank slot; no image is substituted.
+	substitute_mark.visible = missing_original and source_scene_requested and item_name.strip_edges() != ""
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
 	if is_inside_tree(): _register()
 	refresh_visibility()
+
+static func _report_scene_failure(info: Dictionary) -> void:
+	var reason: String = str(info.get("reason",""))
+	var provenance: Variant = info.get("provenance",{})
+	var icon: String = str(provenance.get("icon_id","")) if provenance is Dictionary else ""
+	if not scene_failures.has(reason):
+		scene_failures[reason] = {"count":0,"icons":[]}
+		push_warning("ITEM_ICON_SCENE_UNAVAILABLE reason=%s icon=%s" % [reason,icon])
+		print("ITEM_ICON_SCENE_UNAVAILABLE reason=%s icon=%s" % [reason,icon])
+	scene_failures[reason].count = int(scene_failures[reason].count)+1
+	if icon != "" and not scene_failures[reason].icons.has(icon) and scene_failures[reason].icons.size() < 16: scene_failures[reason].icons.append(icon)
 
 func _ready() -> void:
 	set_process(false)
