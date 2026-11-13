@@ -53,8 +53,15 @@ static func bind_display(item: CanvasItem, color: Color) -> void:
 		current=current.duplicate()
 		current.set_meta("source_private_display",true)
 		item.material=current
-	current.set_shader_parameter("source_display_bound",true)
-	current.set_shader_parameter("source_display_color",color)
+	# Read this material's actual parameters, not an identity/color memo: a
+	# replacement material or an external write must be corrected immediately.
+	# Godot 4.7.2 GLES3 marks uniforms dirty even for equal setter values.
+	var bound: Variant=current.get_shader_parameter("source_display_bound")
+	if typeof(bound)!=TYPE_BOOL or bound!=true:
+		current.set_shader_parameter("source_display_bound",true)
+	var displayed: Variant=current.get_shader_parameter("source_display_color")
+	if typeof(displayed)!=TYPE_COLOR or displayed!=color:
+		current.set_shader_parameter("source_display_color",color)
 static func bind_tree_display(node: Node, color: Color) -> void:
 	if node is CanvasItem:bind_display(node,color)
 	for child: Node in node.get_children():bind_tree_display(child,color)

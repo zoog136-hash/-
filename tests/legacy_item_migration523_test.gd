@@ -17,6 +17,7 @@ class FakeAutomation extends RefCounted:
 class FakeWorld extends Node:
 	var catalog_item_by_source_id: Dictionary = {}
 	var legacy_records: Dictionary = {}
+	var item_db: Array = []
 	var inventory: Dictionary = {}
 	var item_instances: Dictionary = {}
 	var equipped_items: Dictionary = {}
@@ -31,6 +32,8 @@ class FakeWorld extends Node:
 		return catalog_item_by_source_id.get(source_id, {})
 	func _find_catalog_item_record(name_value: String) -> Dictionary:
 		for record: Dictionary in catalog_item_by_source_id.values():
+			if record.name == name_value: return record
+		for record: Dictionary in item_db:
 			if record.name == name_value: return record
 		return legacy_records.get(name_value, {})
 
@@ -67,21 +70,66 @@ func _world() -> FakeWorld:
 	_native(world, 7777, "봉인된 상자", "material")
 	_native(world, 8888, "테스트 반지", "ring", true)
 	_native(world, 1000, "마나 회복 물약 (각인)", "material")
-	world.legacy_records = {"고대의 판금 갑옷":{"name":"고대의 판금 갑옷", "source":"inven", "sourceId":"127534", "slot":"body"},
-		"강철 면갑":{"name":"강철 면갑", "source":"inven", "sourceId":"551", "slot":"helmet"}}
+	world.legacy_records = {"고대의 판금 갑옷":{"name":"고대의 판금 갑옷", "source":"inven", "sourceId":"247108", "slot":"body"},
+		"강철 면갑":{"name":"강철 면갑", "source":"inven", "sourceId":"551", "slot":"helmet"},
+		"고대 반지":{"name":"고대 반지", "source_snapshot":"base508", "slot":"ring"}}
+	world.item_db = [{"name":"HP 물약", "slot":"consumable"}, {"name":"마나 회복 물약", "slot":"consumable"}, {"name":"낡은 장검", "slot":"weapon"}, {"name":"명예 코인", "slot":"currency"}]
 	world.inventory = {"HP 물약":100, "축복 부여 주문서 (각인) · 원본#65291":5, "강철 면갑":2, "축복 부여 주문서 (각인)":3,
-		"드래곤의 다이아몬드":4, "고대의 판금 갑옷":1, "마나 회복 물약":10, "봉인된 상자":1, "테스트 반지":1, "다이아":50, "무기 마법  주문서 (각인)":6}
+		"드래곤의 다이아몬드":4, "고대의 판금 갑옷":1, "마나 회복 물약":10, "봉인된 상자":1, "테스트 반지":1, "다이아":50, "무기 마법  주문서 (각인)":6, "낡은 장검":1, "명예 코인":30, "수호석":7, "최상급 변신 뽑기권":1, "고대 반지":1}
 	world.item_instances = {"11":{"name":"강철 면갑", "level":3, "element":"water", "element_level":2, "bless_state":"blessed"},
 		"12":{"name":"고대의 판금 갑옷", "level":7, "element":"", "element_level":0, "bless_state":"cursed"},
-		"13":{"name":"테스트 반지", "level":0}}
-	world.equipped_items = {"helmet":{"name":"강철 면갑", "instance_id":"11", "slot":"helmet"}, "body":{"name":"고대의 판금 갑옷", "instance_id":"12"}, "weapon":{}}
+		"13":{"name":"테스트 반지", "level":0}, "14":{"name":"낡은 장검", "level":2}}
+	world.equipped_items = {"helmet":{"name":"강철 면갑", "instance_id":"11", "slot":"helmet"}, "body":{"name":"고대의 판금 갑옷", "instance_id":"12"}, "weapon":{"name":"낡은 장검", "instance_id":"14"}}
 	world.enhancement_levels = {"강철 면갑":4}
 	world.warehouse.stacks = {"축복 부여 주문서 (각인)":2, "강철 면갑 (각인)":1}
 	world.warehouse.instances = {"21":{"name":"강철 면갑 (각인)", "level":1, "element":"earth", "element_level":1}}
-	world.quickslots = [{"kind":"skill", "id":"축복 부여 주문서 (각인)"}, {"kind":"item", "id":"축복 부여 주문서 (각인)"}, {"kind":"item", "id":"HP 물약"}, {}]
+	world.quickslots = [{"kind":"skill", "id":"축복 부여 주문서 (각인)"}, {"kind":"item", "id":"축복 부여 주문서 (각인)"}, {"kind":"item", "id":"HP 물약"}, {"kind":"item", "id":"낡은 장검"}]
 	world.ui_preferences = {"item_locks":{"강철 면갑@@@11":true, "HP 물약":true}, "quickslot_pages":{"기사":[0, 0]}}
 	world.inventory_automation.state = {"store":["축복 부여 주문서 (각인)"]}
 	return world
+
+func _check_migrated(world: FakeWorld, marker: Dictionary, result: Dictionary, failures: Array[String], tag: String) -> void:
+	if not result.get("ok", false) or not result.get("changed", false): failures.append(tag + " run result %s" % str(result.keys()))
+	var keys: Array = world.inventory.keys()
+	var expected_keys: Array = ["축복 부여 주문서 (각인) · 원본#65291", "강철 면갑 · 원본#551", "드래곤의 다이아몬드 · 원본#549", "고대의 판금 갑옷 · 원본#127534", "봉인된 상자", "다이아", "무기 마법 주문서 (각인) · 원본#6401", "명예 코인", "수호석", "최상급 변신 뽑기권", "고대 반지"]
+	if keys != expected_keys: failures.append(tag + " bag order/keys %s" % str(keys))
+	if int(world.inventory.get("축복 부여 주문서 (각인) · 원본#65291", 0)) != 8: failures.append(tag + " merged stack amount")
+	if int(world.inventory.get("강철 면갑 · 원본#551", 0)) != 2 or int(world.inventory.get("드래곤의 다이아몬드 · 원본#549", 0)) != 4 or int(world.inventory.get("무기 마법 주문서 (각인) · 원본#6401", 0)) != 6 or int(world.inventory.get("다이아", 0)) != 50 or int(world.inventory.get("명예 코인", 0)) != 30: failures.append(tag + " amounts / wallets")
+	var helmet: Dictionary = world.item_instances.get("11", {})
+	if helmet.get("name") != "강철 면갑 · 원본#551" or int(helmet.get("level", -1)) != 3 or helmet.get("element") != "water" or int(helmet.get("element_level", 0)) != 2 or helmet.get("bless_state") != "blessed": failures.append(tag + " equipment instance kept in place %s" % str(helmet))
+	var body: Dictionary = world.item_instances.get("12", {})
+	if body.get("name") != "고대의 판금 갑옷 · 원본#127534" or int(body.get("level", -1)) != 7 or body.get("bless_state") != "cursed": failures.append(tag + " smallest-ID cursed body %s" % str(body))
+	var extra_helmets: int = 0
+	for uid: String in world.item_instances:
+		var entry: Dictionary = world.item_instances[uid]
+		if uid != "11" and entry.get("name") == "강철 면갑 · 원본#551":
+			extra_helmets += 1
+			if int(entry.get("level", -1)) != 0: failures.append(tag + " second helmet must not borrow the legacy name-level")
+	if extra_helmets != 1: failures.append(tag + " missing second helmet piece %d" % extra_helmets)
+	if world.equipped_items.helmet.get("name") != "강철 면갑 · 원본#551" or world.equipped_items.helmet.get("instance_id") != "11": failures.append(tag + " equipped helmet")
+	if world.equipped_items.body.get("instance_id") != "12" or world.equipped_items.body.get("name") != "고대의 판금 갑옷 · 원본#127534": failures.append(tag + " equipped body")
+	if not world.equipped_items.weapon.is_empty() or world.item_instances.has("14"): failures.append(tag + " deleted equipped weapon still worn/owned")
+	if world.item_instances.has("13"): failures.append(tag + " deleted item's physical copy must go")
+	if int(world.inventory.get("수호석", 0)) != 7 or int(world.inventory.get("최상급 변신 뽑기권", 0)) != 1 or int(world.inventory.get("고대 반지", 0)) != 1: failures.append(tag + " protected keys changed")
+	if world.enhancement_levels.has("강철 면갑"): failures.append(tag + " legacy name-level not retired")
+	if world.warehouse.stacks != {"축복 부여 주문서 (각인) · 원본#65291":2, "강철 면갑 (각인) · 원본#4901":1}: failures.append(tag + " warehouse stacks %s" % str(world.warehouse.stacks))
+	var depot: Dictionary = world.warehouse.instances.get("21", {})
+	if depot.get("name") != "강철 면갑 (각인) · 원본#4901" or int(depot.get("level", -1)) != 1 or depot.get("element") != "earth": failures.append(tag + " warehouse equipment")
+	if world.quickslots[0].get("id") != "축복 부여 주문서 (각인)" or world.quickslots[0].get("kind") != "skill" or world.quickslots[1].get("id") != "축복 부여 주문서 (각인) · 원본#65291" or not world.quickslots[2].is_empty() or not world.quickslots[3].is_empty(): failures.append(tag + " quickslots %s" % str(world.quickslots))
+	if world.ui_preferences.item_locks != {"강철 면갑 · 원본#551@@@11":true}: failures.append(tag + " item locks %s" % str(world.ui_preferences.item_locks))
+	if world.inventory_automation.state != {"store":["축복 부여 주문서 (각인) · 원본#65291"]}: failures.append(tag + " automation refs")
+	var deleted: Dictionary = {}
+	for row: Dictionary in marker.get("deleted", []): deleted[row.name] = row
+	if deleted.keys() != ["HP 물약", "마나 회복 물약", "테스트 반지", "낡은 장검"] or int(deleted["HP 물약"].amount) != 100: failures.append(tag + " deleted list %s" % str(deleted.keys()))
+	var unmatched: Dictionary = {}
+	for row: Dictionary in marker.get("unmatched", []): unmatched[row.name] = row
+	if unmatched.keys() != ["봉인된 상자", "고대 반지"]: failures.append(tag + " kept list %s" % str(unmatched.keys()))
+	if not str(unmatched.get("봉인된 상자", {}).get("reason", "")).begins_with("523_grant_refused"): failures.append(tag + " refused grant must stay")
+	var shared: bool = false
+	for row: Dictionary in marker.get("migrated", []):
+		if row.get("from") == "드래곤의 다이아몬드" and row.get("rule") == "exact_name_smallest_id" and int(row.get("item_class_id", 0)) == 549: shared = true
+	if not shared: failures.append(tag + " smallest ID rule not recorded")
+	if int(marker.get("schema", 0)) != 2 or int(marker.get("migrated_count", 0)) != 7 or int(marker.get("deleted_count", 0)) != 4: failures.append(tag + " marker %s/%s/%s" % [str(marker.get("schema")), str(marker.get("migrated_count")), str(marker.get("deleted_count"))])
 
 func run() -> void:
 	var failures: Array[String] = []
@@ -97,55 +145,29 @@ func run() -> void:
 	var index: Dictionary = MIG.name_index(world)
 	if index.has("테스트 반지"): failures.append("test item indexed")
 	if index.get("드래곤의 다이아몬드", []) != [549, 139581]: failures.append("ambiguous candidates %s" % str(index.get("드래곤의 다이아몬드")))
-	if MIG.is_legacy(world, "다이아") or MIG.is_legacy(world, "축복 부여 주문서 (각인) · 원본#65291"): failures.append("system/523 key treated as legacy")
-	# Migration.
+	if MIG.is_legacy(world, "다이아") or MIG.is_legacy(world, "명예 코인") or MIG.is_legacy(world, "축복 부여 주문서 (각인) · 원본#65291"): failures.append("wallet/523 key treated as legacy")
+	if MIG.deletable(world, "고대 반지") or MIG.deletable(world, "수호석") or MIG.deletable(world, "최상급 변신 뽑기권") or not MIG.deletable(world, "HP 물약"): failures.append("deletion guard")
+	# Migration (schema 2: smallest ID for a shared name, unmatched legacy deleted).
 	var result: Dictionary = MIG.run(world, {}, path, bytes, _fake_grant)
 	var marker: Dictionary = result.get("marker", {})
-	if not result.get("ok", false) or not result.get("changed", false): failures.append("run result %s" % str(result.keys()))
-	var keys: Array = world.inventory.keys()
-	var expected_keys: Array = ["HP 물약", "축복 부여 주문서 (각인) · 원본#65291", "강철 면갑 · 원본#551", "드래곤의 다이아몬드", "고대의 판금 갑옷 · 원본#127534", "마나 회복 물약", "봉인된 상자", "테스트 반지", "다이아", "무기 마법 주문서 (각인) · 원본#6401"]
-	if keys != expected_keys: failures.append("bag order/keys %s" % str(keys))
-	if int(world.inventory.get("축복 부여 주문서 (각인) · 원본#65291", 0)) != 8: failures.append("merged stack amount")
-	if int(world.inventory.get("강철 면갑 · 원본#551", 0)) != 2 or int(world.inventory.get("무기 마법 주문서 (각인) · 원본#6401", 0)) != 6 or int(world.inventory.get("다이아", 0)) != 50: failures.append("amounts")
-	var helmet: Dictionary = world.item_instances.get("11", {})
-	if helmet.get("name") != "강철 면갑 · 원본#551" or int(helmet.get("level", -1)) != 3 or helmet.get("element") != "water" or int(helmet.get("element_level", 0)) != 2 or helmet.get("bless_state") != "blessed": failures.append("equipment instance kept in place %s" % str(helmet))
-	var body: Dictionary = world.item_instances.get("12", {})
-	if body.get("name") != "고대의 판금 갑옷 · 원본#127534" or int(body.get("level", -1)) != 7 or body.get("bless_state") != "cursed": failures.append("tie-break / cursed body %s" % str(body))
-	var extra_helmets: int = 0
-	for uid: String in world.item_instances:
-		var entry: Dictionary = world.item_instances[uid]
-		if uid != "11" and entry.get("name") == "강철 면갑 · 원본#551":
-			extra_helmets += 1
-			if int(entry.get("level", -1)) != 0: failures.append("second helmet must not borrow the legacy name-level")
-	if extra_helmets != 1: failures.append("missing second helmet piece %d" % extra_helmets)
-	if world.equipped_items.helmet.get("name") != "강철 면갑 · 원본#551" or world.equipped_items.helmet.get("instance_id") != "11": failures.append("equipped helmet %s" % str(world.equipped_items.helmet))
-	if world.equipped_items.body.get("instance_id") != "12" or world.equipped_items.body.get("name") != "고대의 판금 갑옷 · 원본#127534": failures.append("equipped body")
-	if world.item_instances.has("13") == false or world.item_instances["13"].name != "테스트 반지": failures.append("unmatched physical item must stay")
-	if world.enhancement_levels.has("강철 면갑"): failures.append("legacy name-level not retired")
-	if world.warehouse.stacks != {"축복 부여 주문서 (각인) · 원본#65291":2, "강철 면갑 (각인) · 원본#4901":1}: failures.append("warehouse stacks %s" % str(world.warehouse.stacks))
-	var depot: Dictionary = world.warehouse.instances.get("21", {})
-	if depot.get("name") != "강철 면갑 (각인) · 원본#4901" or int(depot.get("level", -1)) != 1 or depot.get("element") != "earth": failures.append("warehouse equipment %s" % str(depot))
-	if world.quickslots[0].id != "축복 부여 주문서 (각인)" or world.quickslots[1].id != "축복 부여 주문서 (각인) · 원본#65291" or world.quickslots[2].id != "HP 물약": failures.append("quickslots %s" % str(world.quickslots))
-	if world.quickslots[0].kind != "skill": failures.append("skill slot changed")
-	if world.ui_preferences.item_locks != {"강철 면갑 · 원본#551@@@11":true, "HP 물약":true}: failures.append("item locks %s" % str(world.ui_preferences.item_locks))
-	if world.inventory_automation.state != {"store":["축복 부여 주문서 (각인) · 원본#65291"]}: failures.append("automation refs")
-	var unmatched: Dictionary = {}
-	for row: Dictionary in marker.get("unmatched", []): unmatched[row.name] = row
-	for name_value: String in ["HP 물약", "드래곤의 다이아몬드", "마나 회복 물약", "봉인된 상자", "테스트 반지"]:
-		if not unmatched.has(name_value): failures.append("unmatched not listed: " + name_value)
-	if unmatched.get("드래곤의 다이아몬드", {}).get("reason") != "ambiguous_exact_523_name": failures.append("ambiguous reason")
-	if unmatched.get("마나 회복 물약", {}).get("reason") != "no_exact_523_name": failures.append("(각인) must not be normalised")
-	if not str(unmatched.get("봉인된 상자", {}).get("reason", "")).begins_with("523_grant_refused"): failures.append("refused grant must stay")
-	if int(marker.get("schema", 0)) != MIG.SCHEMA or int(marker.get("migrated_count", 0)) != 6: failures.append("marker %s/%s" % [str(marker.get("schema")), str(marker.get("migrated_count"))])
+	_check_migrated(world, marker, result, failures, "fresh")
 	if not FileAccess.file_exists(backup) or FileAccess.get_sha256(backup) != sha or marker.get("backup") != backup.get_file(): failures.append("byte-for-byte backup")
-	# Idempotent: a saved marker skips; a second pass over migrated data changes nothing.
-	var snapshot: String = JSON.stringify([world.inventory, world.item_instances, world.warehouse.snapshot(), world.quickslots])
+	# Idempotent: a saved schema-2 marker skips; a second pass changes nothing.
+	var snapshot: String = JSON.stringify([world.inventory, world.item_instances, world.warehouse.snapshot(), world.quickslots, world.equipped_items])
 	var again: Dictionary = MIG.run(world, marker, path, bytes, _fake_grant)
 	if again.get("skipped") != "already_migrated" or again.get("marker") != marker: failures.append("marker did not stop a second migration")
 	var count_before: int = grants.size()
 	var rerun: Dictionary = MIG.run(world, {}, path, bytes, _fake_grant)
-	if rerun.get("changed", true) or JSON.stringify([world.inventory, world.item_instances, world.warehouse.snapshot(), world.quickslots]) != snapshot: failures.append("second pass changed migrated data")
+	if rerun.get("changed", true) or JSON.stringify([world.inventory, world.item_instances, world.warehouse.snapshot(), world.quickslots, world.equipped_items]) != snapshot: failures.append("second pass changed migrated data")
 	if grants.size() - count_before != 1: failures.append("second pass re-granted (only the refused stack may be retried): %d" % (grants.size() - count_before))
+	# A save already migrated by schema 1 gets exactly one schema-2 pass.
+	var old := _world()
+	var v1: Dictionary = {"schema":1, "migrated_count":4, "unmatched_count":6, "backup":"x", "migrated":[]}
+	var upgraded: Dictionary = MIG.run(old, v1, path, bytes, _fake_grant)
+	_check_migrated(old, upgraded.get("marker", {}), upgraded, failures, "schema1")
+	if upgraded.get("marker", {}).get("upgraded_from", {}).get("schema") != 1: failures.append("schema-1 record not kept")
+	if MIG.run(old, upgraded.marker, path, bytes, _fake_grant).get("skipped") != "already_migrated": failures.append("schema-2 marker must stop the upgrade")
+	old.free()
 	# Without the installed 523 items nothing is decided and no marker is written.
 	var bare := FakeWorld.new()
 	bare.inventory = {"HP 물약":1}

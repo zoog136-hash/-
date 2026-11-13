@@ -7070,11 +7070,12 @@ func _load_game(quiet: bool) -> void:
 	for death_entry: Dictionary in death_recovery.state.records:
 		if not death_entry.item.is_empty() and str(death_entry.item.id).is_valid_int(): next_item_instance_id = maxi(next_item_instance_id,int(death_entry.item.id)+1)
 	# Pre-November items -> the original 523 item of exactly the same name
-	# (user decision 2026-11-13), before the physical-record sync below.
+	# (smallest ID for a shared name); unmatched ones are deleted (user
+	# decisions 2026-11-13), before the physical-record sync below.
 	var legacy_items: Dictionary=preload("res://scripts/loot/legacy_item_migration523.gd").run(self,data.get("legacy_item_migration523",{}),loaded_save_file,original_save_bytes)
 	legacy_item_marker=(legacy_items.get("marker",{}) as Dictionary).duplicate(true)
 	if not legacy_items.get("ok",false):hud.append_log("이전 아이템 523 교체 보류 · %s · 기존 아이템 보존" % str(legacy_items.get("error","")))
-	elif legacy_items.get("changed",false):hud.append_log("이전 아이템 %d종을 같은 이름의 523 원본으로 교체 · 이름이 같은 원본이 없는 %d종은 그대로 보존" % [int(legacy_item_marker.migrated_count),int(legacy_item_marker.unmatched_count)])
+	elif legacy_items.get("changed",false):hud.append_log("이전 아이템 %d종을 같은 이름의 523 원본으로 교체 · 같은 이름의 원본이 없는 %d종 삭제(백업 보존) · %d종 보류" % [int(legacy_item_marker.migrated_count),int(legacy_item_marker.get("deleted_count",0)),int(legacy_item_marker.unmatched_count)])
 	_migrate_patch523_physical_records()
 	_sync_item_instances()
 	_normalize_equipment_slots()

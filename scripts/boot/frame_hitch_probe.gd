@@ -2,6 +2,14 @@ extends Node
 ## First node processed every frame: closes the previous frame's hitch record.
 ## See frame_hitch_log.gd. Runs while paused so a stalled menu is measured too.
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
+var _tail: Node
+
+class ProcessTail extends Node:
+	func _init() -> void:
+		process_priority = 2147483647
+		process_mode = Node.PROCESS_MODE_ALWAYS
+	func _process(_delta: float) -> void:
+		FRAME_HITCH.process_tail()
 
 func _enter_tree() -> void:
 	process_priority = -2147483647
@@ -16,6 +24,11 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	FRAME_HITCH.start()
+	# Priority orders this process group only; deferred work, physics and
+	# other groups are not bounded by this marker. Keep the child on re-entry.
+	if _tail == null:
+		_tail = ProcessTail.new()
+		add_child(_tail)
 
 func _exit_tree() -> void:
 	if RenderingServer.frame_pre_draw.is_connected(_on_pre_draw):
@@ -34,5 +47,10 @@ func _process(_delta: float) -> void:
 	FRAME_HITCH.frame(str(host.get("active_map_id")) if host != null else "")
 
 func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_APPLICATION_PAUSED: FRAME_HITCH.lifecycle(0)
+		NOTIFICATION_APPLICATION_RESUMED: FRAME_HITCH.lifecycle(1)
+		NOTIFICATION_APPLICATION_FOCUS_OUT: FRAME_HITCH.lifecycle(2)
+		NOTIFICATION_APPLICATION_FOCUS_IN: FRAME_HITCH.lifecycle(3)
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_PREDELETE]:
 		FRAME_HITCH.flush()

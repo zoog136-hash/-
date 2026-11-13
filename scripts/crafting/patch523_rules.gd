@@ -199,6 +199,7 @@ func _compile_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dict
 	var candidate: Dictionary = projection.build_bound(catalog_bytes,binding,binding_sha)
 	binding = {}
 	BOOT_LOG.end("rules_build",started,{"ok":not candidate.is_empty()})
+	projection._enable_runtime_reuse(self)
 	return _load_candidate(projection,candidate,key)
 
 ## Serializes, identifies and accepts a compiled candidate. With `key` (and
