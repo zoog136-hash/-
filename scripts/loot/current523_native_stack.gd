@@ -96,13 +96,44 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if not material.is_empty():return material
 	var ticket: Dictionary=draw_ticket_profile(record)
 	if not ticket.is_empty():return ticket
-	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("slot")!="material" or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return storage_profile(record)
 	var definition: Dictionary=D.item_definition(record)
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	# This is a material-owner admission, not individual use/effect activation.
 	# Actual recipe rows/choices/limits are still checked by the craft executor.
-	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return {}
+	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return storage_profile(record)
 	return {"kind":"craft_material","standalone_effect_complete":false}
+
+## Storage stacks (2026-11-13): an original non-equipment item the table fully
+## defines (exact typed projection, TestItem false, not a dummy/test row, no
+## pending condition or unresolved lifetime) is owned as a receipted physical
+## stack even when its use has no table rule or no TWILIGHT owner yet. Using it
+## refuses and keeps it; no use effect is invented. Existing wallets (아데나,
+## 변신·마법인형·성물 제작 코인, 명예 코인) keep their own owner.
+const STORAGE_SLOTS: Array[String]=["consumable","material","currency"]
+const STORAGE_TEST_MARKERS: Array[String]=["테스트","test"]
+static func storage_profile(record: Dictionary) -> Dictionary:
+	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity():return {}
+	if D.equipment(record) or str(record.get("slot","")) not in STORAGE_SLOTS or not D.currency_identity_name(record).is_empty():return {}
+	if not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
+	var definition: Dictionary=D.item_definition(record)
+	var original: Variant=definition.get("original_item",{})
+	if definition.is_empty() or not original is Dictionary or original.get("TestItem")!=false or definition.get("excluded",false):return {}
+	if not storage_exclusion(original).is_empty():return {}
+	var id: Variant=whole(record.get("source_item_class_id",0))
+	if not id is int or id<=0 or whole(original.get("ID",0))!=id:return {}
+	if id in preload("res://scripts/cards/native_awakening_supply.gd").IDS:return {}
+	return {"kind":"storage","standalone_effect_complete":false,"use_owner":"","source_use_rule":"none"}
+
+## Why a non-test original row is still kept out of storage stacks: an
+## original dummy declaration or a test marker in its own Name ("[테스트]",
+## "테스트용", "test용"). Empty when none applies.
+static func storage_exclusion(original: Dictionary) -> String:
+	if not preload("res://scripts/quests/source_dummy523.gd").item_evidence(original).is_empty():return "source_dummy_declaration"
+	var name_value: String=str(original.get("Name","")).to_lower()
+	for marker: String in STORAGE_TEST_MARKERS:
+		if name_value.contains(marker):return "source_test_name_marker"
+	return ""
 
 ## Original draw tickets (ItemCategory LinMarketProduct) are owned as physical
 ## stacks like materials. Redemption belongs to the owned-ticket service
@@ -186,6 +217,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
+	if effect.is_empty() and supply_profile(record).get("kind")=="storage":return _failure("원본 표에 이 아이템의 사용 규칙이 없거나 아직 연결되지 않았습니다 · 보관용 · 아이템 보존")
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
 	var use_owner: Resource=load("res://scripts/loot/patch523_item_use.gd")

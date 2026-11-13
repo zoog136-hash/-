@@ -205,6 +205,47 @@ func _entries(level: int, inventory: Dictionary, now: int, category: Variant=nul
 	if bulk: source.end_bulk()
 	return result
 
+## Text-only browser. Page through resident identities, never decode full source
+## records or plan rewards merely to display a list. Opening is read-only: no
+## daily reset, claim, inventory mutation or save. Acceptance uses the existing
+## world transaction, which rechecks eligibility and plans that one quest.
+func text_page(level: int, category: String, requested_page: int, page_size: int, query: String = "", state: String = "all", now: int = -1, class_id: int = -1) -> Dictionary:
+	var matches: PackedInt32Array = []
+	var needle: String = query.strip_edges().to_lower()
+	for at: int in quests.size():
+		var quest: Dictionary = quests[at]
+		var native: bool = quest.has("source_id")
+		var completed: bool = bool(claimed.get(str(quest.id),false))
+		if not native and (not completed or state!="history"): continue
+		if native and state=="history": continue
+		var group: String = "common" if not native and quest.get("category")=="daily" else str(quest.get("category",""))
+		if group!=category: continue
+		if state=="done" and not completed: continue
+		if state=="waiting" and completed: continue
+		if not needle.is_empty():
+			if needle.is_valid_int():
+				if int(quest.get("source_id",-1))!=int(needle): continue
+			elif not str(quest.get("title","")).to_lower().contains(needle): continue
+		matches.append(at)
+	var size: int = clampi(page_size,1,60)
+	var pages: int = maxi(1,ceili(float(matches.size())/size))
+	var page: int = clampi(requested_page,0,pages-1)
+	var rows: Array[Dictionary] = []
+	var context: Dictionary = source_context.duplicate()
+	context["level"] = level
+	context["max_level"] = level
+	context["class_id"] = class_id
+	var at_time: int = now if now>=0 else int(Time.get_unix_time_from_system())
+	for index_in_page: int in range(page*size,mini(matches.size(),(page+1)*size)):
+		var quest: Dictionary = quests[matches[index_in_page]]
+		var completed: bool = bool(claimed.get(str(quest.id),false))
+		var reason: String = ""
+		if not completed:
+			if save_blocked: reason="저장 보호 중"
+			elif quest.has("source_id"): reason=source.gate(quest,context,claimed,at_time)
+		rows.append({"id":str(quest.id),"source_id":int(quest.get("source_id",0)),"title":str(quest.get("title","")),"completed":completed,"can_accept":not completed and quest.has("source_id") and reason.is_empty(),"status":"완료" if completed else ("수락 가능" if reason.is_empty() else reason)})
+	return {"rows":rows,"matches":matches.size(),"page":page,"pages":pages}
+
 ## The complete row of an index/quests row (original rows are compact in
 ## memory; local and injected rows are returned unchanged).
 func full(row: Dictionary, cache: bool = true) -> Dictionary:
