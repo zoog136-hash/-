@@ -49,6 +49,7 @@ class CoreStageTest(unittest.TestCase):
             'docs/runtime.txt':'runtime-linked document fixture',
             'addons/production/plugin.gd':'extends EditorPlugin\n',
             'tests/qa_class_selection.gd':'extends RefCounted\n',
+            'tests/source_ui_copy_policy_gl_test.gd':'extends SceneTree\n',
         }
         files.update({'tests/'+name+'.gd':'extends SceneTree\n' for name,_ in CORE.CHECKS})
         for path,data in files.items():
@@ -66,6 +67,7 @@ class CoreStageTest(unittest.TestCase):
             self.assertIn('docs/runtime.txt',selected)
             self.assertIn('addons/production/plugin.gd',selected)
             self.assertIn('shaders/live.gdshader',selected)
+            self.assertIn('tests/source_ui_copy_policy_gl_test.gd',selected)
             self.assertNotIn('assets/review.png',selected)
             self.assertEqual((root/'data/pr122_transform_motion_scope.json').read_bytes(),(Path(temporary)/'stage/data/pr122_transform_motion_scope.json').read_bytes())
             self.assertEqual((root/'assets/pose.png').read_bytes(),(Path(temporary)/'stage/assets/pose.png').read_bytes())
