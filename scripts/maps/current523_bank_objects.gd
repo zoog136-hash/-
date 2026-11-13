@@ -58,9 +58,11 @@ func configure(selection: Dictionary, mapping: RefCounted) -> bool:
 	return true
 
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
+	var started: int = FRAME_HITCH.now()
 	_records = records
-	for node: Node2D in _nodes: node.queue_free()
-	_nodes.clear()
+	var created: int = 0
+	var reused: int = 0
+	var trimmed: int = 0
 	var drawn: int = 0
 	var unresolved: Dictionary = {}
 	for row: Dictionary in records:
@@ -69,15 +71,34 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 		if not sprite.ok:
 			unresolved[str(row.sprite_id)] = sprite.get("error", "unresolved")
 			continue
-		var node := Node2D.new()
+		# These holders have no gameplay identity: keep the exact dense visible
+		# source order, including duplicates, while reusing private presentation.
+		var node: Node2D
+		if drawn < _nodes.size():
+			node = _nodes[drawn]
+			reused += 1
+		else:
+			node = Node2D.new()
+			add_child(node)
+			_nodes.append(node)
+			created += 1
 		node.position = coordinates.to_world(Vector2(row.raw_x, row.raw_y), false)
 		node.set_meta("sprite_id", int(row.sprite_id))
+		# Refresh has always displayed frame zero, even for an unchanged ID.
+		# Force the layer update so replacement records never keep old visuals.
 		node.set_meta("frame", -1)
-		add_child(node)
-		_nodes.append(node)
 		_show(node, sprite, 0)
 		drawn += 1
+	while _nodes.size() > drawn:
+		var unused: Node2D = _nodes.pop_back()
+		remove_child(unused)
+		unused.queue_free()
+		trimmed += 1
+	FRAME_HITCH.count("map.object_holders_created", created)
+	FRAME_HITCH.count("map.object_holders_reused", reused)
+	FRAME_HITCH.count("map.object_holders_trimmed", trimmed)
 	_stats = {"policy":"OWN_BANK_ACTION3_DIRECTION0_LOOP_V1","raw_records":records.size(),"malformed_tails":malformed,"drawn_records":drawn,"unresolved_records":records.size() - drawn,"unresolved_source_ids":unresolved,"cached_sprites":_sprites.size(),"texture_bytes":_texture_bytes,"playback_mode":_mode,"native_M_placement_action_timing_verified":false}
+	FRAME_HITCH.detail("map.object_refresh", started)
 
 func metrics() -> Dictionary:
 	return _stats.duplicate(true)
@@ -85,7 +106,10 @@ func metrics() -> Dictionary:
 func _sprite(id: int) -> Dictionary:
 	if _sprites.has(id): return _sprites[id]
 	if _sprites.size() >= MAX_SPRITES: return {"ok":false,"error":"map_object_sprite_cache_full"}
+	var started: int = FRAME_HITCH.now()
 	var result: Dictionary = _load_sprite(id)
+	FRAME_HITCH.detail("map.object_sprite_load", started)
+	FRAME_HITCH.count("map.object_sprite_loads")
 	_sprites[id] = result
 	return result
 
@@ -141,7 +165,9 @@ func _texture(layer: Dictionary) -> Texture2D:
 	var image: Image = rendered.image
 	var bytes: int = image.get_width() * image.get_height() * 4
 	if _texture_bytes + bytes > TEXTURE_BUDGET_BYTES: return null
+	var started: int = FRAME_HITCH.now()
 	var texture := ImageTexture.create_from_image(image)
+	FRAME_HITCH.detail("map.object_texture_create", started)
 	_textures[key] = texture
 	_texture_bytes += bytes
 	return texture

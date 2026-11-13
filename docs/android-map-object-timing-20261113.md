@@ -1,6 +1,6 @@
 # 지도 오브젝트의 같은 시각 반복 계산 감소
 
-기준 main은 `9958eca199d70d41f1a1757ccc422bdd3e7b7fc5`다. #458의 tile 출처 memo와 독립된 변경이다.
+최신 통합 기준 main은 `e81010218f3fb902275324e3cff81dd7528e1318`다. 초기 타임라인 측정은 이전 기준 `9958eca199d70d41f1a1757ccc422bdd3e7b7fc5`에서 수행했다. #458의 tile 출처 memo와 독립된 변경이다.
 
 `current523_bank_objects._process_step`은 모든 배치가 같은 `_clock`과 sprite ID별 record를 쓰면서도 배치마다 `_frame_index`에서 duration 배열을 처음부터 순회했다. 한 갱신 안에서 ID별 결과를 공유해 같은 시각/트랙을 반복 순회하지 않도록 했다. `_show`는 이전 순서대로 모든 해당 배치에 호출한다. 메모는 매 갱신 새로 만들어지며 이전 프레임이나 교체된 record를 보유하지 않는다. static/unresolved/missing 제외, 음수 delta clamp, looping, zero-duration 및 presentation-duration 선택은 기존 함수를 그대로 사용한다.
 
@@ -39,3 +39,15 @@ Probe와 같은 process group에서 가장 늦은 priority의 자식 callback �
 `sprite_scene._seek_frame`는 같은 live frame 목록을 두 번 union decode하여 이전/다음 키프레임을 찾았다. 한 번 순회하면서 두 후보를 고른다. 이전 후보의 동점은 마지막 항목, 다음 후보의 동점은 첫 항목이라는 기존 규칙과 unordered index를 보존한다. 영구 캐시·정렬·리소스 변경 없이 매 호출의 live 데이터를 읽으므로 런타임 데이터 교체도 그대로 반영된다. tween/easing/이벤트/중첩 clip/색 전파는 변경하지 않는다.
 
 실제 seek_frame과 옛 두-pass 블록을 복원한 test-only script를 196개 사례에서 비교했고 1,773개 검사가 통과했다. unordered/duplicate/fractional/negative 경계, 입력 변경, 누락 tag/action 및 거부 계약을 포함한다. 두 트랙×64프레임 fixture에서 선택 가능한 이전 키가 있으면 union decoder 호출이 256→128이며, 첫 키 이전에는 두 경로 모두 128회다. 원본 파일/기기 프레임 시간이 아닌 합성 호출 수다. 기록 순간 메모리 값은 빌드의 모니터 제공 여부에도 영향을 받으므로 미지원 값을 RAM 0 또는 peak로 해석하지 않는다.
+
+## 이동 시 배치 갱신과 가방 선택의 중복 재구성
+
+지도 `refresh`도 모든 placement holder를 매번 해제했다. 이제 해석에 성공한 source 순서대로 기존 private holder를 재사용하고 좌표·sprite ID를 갱신한다. duplicate 기록도 서로 다른 slot을 유지하며, skip/cap/metrics/현재 좌표계와 refresh 시 frame-zero 표시를 보존한다. 남는 holder는 즉시 부모에서 제거하고 해제한다. 콜드 sprite metadata 로드와 ImageTexture 생성 호출의 wall 비용, 전체 refresh의 inclusive detail을 각각 기록한다. 이 detail들을 합산하거나 GPU 시간으로 읽으면 안 된다.
+
+신규 refresh 검사 169개와 GL 193개 검사(24개 전체 RGBA 비교)가 통과했다. 10개 실제 엔진 refresh 경계를 거친 합성 입력에서 holder 생성 30→3개, layer 30→3개, material 10→1개였다. 첫 cold load를 없애거나 Android FPS/메모리 개선량을 측정한 것이 아니다.
+
+원본 가방의 슬롯 선택은 기존 슬롯 상태를 이미 갱신했지만 HUD가 다음 프레임에 selected_item signature 변경을 보고 전체 원본 가방을 다시 구성했다. 성공한 기존 선택 갱신 신호에 한해, 마지막 full stage와 현재의 nonselection signature가 같으면 그 갱신을 인정한다. full signature에서 selected_item을 삭제하지 않는다. 검색·카테고리·dirty/rebuild·detail/layout·금액/무게·장비/탄약/잠금 변경과 외부 선택은 기존 full refresh 경로를 따른다. 실패/소유권/manifest 불일치 시 acknowledgment를 내지 않는다. 아이콘 provider 재등록은 기존 `refresh_source_icons` 경로로 gesture 종료 후 full refresh를 유지한다.
+
+각 native 선택은 여전히 실제 소유자 snapshot/unique reference와 모든 슬롯의 source SHA identity·amount·marker 검증을 거친다. 이미 표시 중인 scene/icon을 유지할 뿐 새 asset을 읽거나 변경 파일 검증을 생략하는 캐시는 아니다. `Pack.open` byte/size/SHA 및 load-side 검증 코드는 그대로다. 기존 detail/name 별도 갱신, 사용/거래 동작과 게임 저장은 변경하지 않는다.
+
+신규 가방 통합 검사 907개와 기존 snapshot 983개가 통과했다. 실제 HUD polling/open, view select/eligibility/fallback, Slots ownership/patch 경로를 실행했고 무거운 scene/art staging만 합성 fixture로 치환했다. 64슬롯에서 여섯 번 다른 native 선택과 동일 선택 반복을 수행할 때 full stage는 open 포함 7→1회, owner reads는 21→15회였다. 실제 원본 이미지 생성 시간 또는 Android 실측이 아니다. 최신 main의 아이템 마이그레이션 변경은 그대로 통합하고 수정하지 않았다.
