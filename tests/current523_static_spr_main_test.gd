@@ -55,7 +55,7 @@ func run() -> void:
 	var original_save: String=FileAccess.get_sha256(world.save_path())
 	var host_field=world.field_map;var host_position: Vector2=world.player.global_position
 	var host_identity: Dictionary=host_field.definition.duplicate(true)
-	world.hud.open_settings_info();await frames()
+	world.hud.open_settings_info(true);await frames()
 	var panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null and panel.spr_enabled!=null,"source map settings exposes functional SPR controls")
 	if panel==null:await finish("static-spr-entry");return

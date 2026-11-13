@@ -52,7 +52,7 @@ func run() -> void:
 	var prior_position: Vector2 = world.player.global_position
 	var prior_mode: int = world.process_mode
 	var prior_map: String = world.active_map_id
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	await frame()
 	var panel = world.hud.workspace.find_child("Current523AdenReviewSettings", true, false)
 	check(panel != null and panel.is_visible_in_tree(), "existing settings window contains the Aden review panel")

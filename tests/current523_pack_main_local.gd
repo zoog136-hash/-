@@ -31,7 +31,7 @@ func run() -> void:
 	check(world._save_game(true) == OK,"baseline through real atomic save writer")
 	var save_path: String = world.save_path()
 	var before_save: String = FileAccess.get_sha256(save_path)
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	var panel = world.hud.workspace.find_child("Current523PackSettings",true,false)
 	check(panel != null,"523 installer is reachable in production settings")
@@ -45,7 +45,7 @@ func run() -> void:
 	check(not PACK.latest_root().is_empty(),"verified version is committed on disk")
 	check(FileAccess.get_sha256(save_path) == before_save,"UI installation preserves original save bytes")
 	check(FileAccess.get_sha256(archive) == before_archive,"UI installation preserves original source ZIP")
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	panel = world.hud.workspace.find_child("Current523PackSettings",true,false)
 	check(panel != null and panel.previews.get_child_count() == 2,"reopening retains pending-restart image preview")

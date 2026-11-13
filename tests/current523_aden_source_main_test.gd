@@ -90,7 +90,7 @@ func run() -> void:
 	var old_physics = world.field_physics
 	var old_position: Vector2 = world.player.global_position
 	var save_sha: String = FileAccess.get_sha256(world.save_path())
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	await frames()
 	var panel = world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel != null,"source settings are available in actual game")

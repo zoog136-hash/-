@@ -4,6 +4,10 @@ extends VBoxContainer
 const PLAYBACK = preload("res://scripts/resources/current523_playback.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const TEXTURE_CACHE_LIMIT: int = 8
+## The picker shows at most this many file names; the search narrows the rest.
+## 989 PopupMenu rows (plus a full re-list on every typed letter) is not a
+## phone-sized list.
+const PICKER_LIMIT: int = 120
 
 signal playback_frame_changed(frame_index: int)
 
@@ -283,13 +287,21 @@ func _refresh_member_picker() -> void:
 	member_picker.clear()
 	var selected_index: int = -1
 	var query: String = member_search.text.strip_edges().to_lower()
+	var hidden: int = 0
 	for row: Dictionary in _member_rows:
 		var member: String = str(row.get("member",""))
 		if not query.is_empty() and not member.to_lower().contains(query): continue
+		if member_picker.item_count >= PICKER_LIMIT and member != str(_options.get("member","")):
+			hidden += 1
+			continue
 		var index: int = member_picker.item_count
 		member_picker.add_item(member)
 		member_picker.set_item_metadata(index,member)
 		if member == str(_options.get("member","")): selected_index = index
+	if hidden > 0:
+		member_picker.add_item("… %d개 더 · 파일명 검색으로 좁히세요" % hidden)
+		member_picker.set_item_disabled(member_picker.item_count - 1,true)
+		member_picker.set_item_metadata(member_picker.item_count - 1,"")
 	member_picker.disabled = member_picker.item_count == 0
 	if member_picker.item_count == 0:
 		member_picker.add_item("설치된 SP2 없음" if _member_rows.is_empty() else "검색 결과 없음")

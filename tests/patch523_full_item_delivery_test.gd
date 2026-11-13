@@ -196,7 +196,7 @@ func run() -> void:
 	if not same_saved_value(world.inventory,final_inventory) or not same_saved_value(equipped_ownership(world),final_equipment) or world.mp != final_mp:
 		print("FULL_REENTRY_DIAGNOSTIC ",JSON.stringify({"inventory_equal":same_saved_value(world.inventory,final_inventory),"equipment_before":final_equipment,"equipment_after":equipped_ownership(world),"mp_before":final_mp,"mp_after":world.mp}))
 	check(same_saved_value(world.inventory,final_inventory) and same_saved_value(equipped_ownership(world),final_equipment) and world.mp == final_mp,"actual fresh source ownership/equipment/MP survive reentry")
-	world.hud.open_settings_info();await process_frame
+	world.hud.open_settings_info(true);await process_frame
 	var settings: Node = world.hud.find_child("Patch523DropSettings",true,false)
 	check(settings != null and settings.source_regen_interval != null and settings.ammo_rule != null,"actual full item settings controls present")
 	world.hud.lineage_side_ui.equipment_page_index = 2

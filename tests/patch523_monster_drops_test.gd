@@ -199,7 +199,7 @@ func world_checks() -> void:
 		check(DROPS.candidates({"kind":DROPS.KIND,"source_npc_id":382}, world.loot_catalog).is_empty(), "missing pack fails closed")
 		check(DROPS.source_text({}).contains("미설치"), "missing data shown in catalog")
 		check(not FileAccess.file_exists(world.save_path()) or FileAccess.get_sha256(world.save_path()) == saved_sha, "missing optional pack never changes save bytes")
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	check(world.hud.find_child("InstallPatch523DropPack", true, false) != null, "actual settings installer is reachable")
 	var ui_zip: String = OS.get_environment("TWILIGHT_PATCH523_DROP_UI_ZIP")

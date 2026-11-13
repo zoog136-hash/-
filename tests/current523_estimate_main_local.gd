@@ -56,7 +56,7 @@ func run() -> void:
 	var original_class_visible: bool = world.player.class_sprite.visible
 	var source_file: String = PLAYBACK.source_root().path_join("selected_originals/Sprite/10557-0.sp2")
 	var raw_sha: String = FileAccess.get_sha256(source_file)
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	var viewer = world.hud.workspace.find_child("Current523SP2Viewer",true,false)
 	check(viewer != null,"estimated viewer reachable through real settings")
@@ -101,7 +101,7 @@ func run() -> void:
 		check(FileAccess.get_sha256(preserved) == config_sha,"failed write preserves prior settings bytes")
 		DirAccess.remove_absolute(PLAYBACK.SETTINGS) # Only the empty test obstruction.
 		check(DirAccess.rename_absolute(preserved,PLAYBACK.SETTINGS) == OK,"test restores original settings file")
-		world.hud.open_settings_info()
+		world.hud.open_settings_info(true)
 		await process_frame
 		viewer = world.hud.workspace.find_child("Current523SP2Viewer",true,false)
 		check(viewer != null and is_equal_approx(viewer.fps_input.value,12.0),"reentry restores saved options after failed edits")

@@ -51,7 +51,7 @@ func run() -> void:
 	var row_before: String=source.evidence_for("lm_62bee07ed64c92aa").row_json
 	var sentinel:=ConfigFile.new();sentinel.set_value("unrelated","sentinel","keep");sentinel.save(RECOVERY.PATH)
 	source.recovery_rules.reload_settings()
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	for _frame: int in range(3):await process_frame
 	var panel: Control=world.hud.workspace.find_child("SkillRecovery523Settings",true,false)
 	check(panel!=null,"actual settings window contains recovery controls")

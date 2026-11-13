@@ -131,7 +131,7 @@ func run() -> void:
 	for actor: Node in world.monsters_root.get_children():actor.set_physics_process(false)
 	check(world._save_game(true)==OK,"isolated baseline save")
 	host_field=world.field_map;host_position=world.player.global_position;initial_progress=state()
-	world.hud.call("open_settings_info");await frames()
+	world.hud.call("open_settings_info",true);await frames()
 	panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"actual Settings for logical selection")
 	if panel==null:finish_logical();return

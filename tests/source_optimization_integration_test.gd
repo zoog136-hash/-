@@ -44,7 +44,7 @@ func run() -> void:
 	var global_before: Dictionary = world.presentation_global_settings.duplicate(true)
 	for extent: Vector2i in [Vector2i(1280,720),Vector2i(960,540)]:
 		root.size = extent
-		world.hud.open_settings_info()
+		world.hud.open_settings_info(true)
 		await process_frame
 		await process_frame
 		var host: Node = world.hud.find_child("RenewalSettings",true,false)
@@ -87,7 +87,7 @@ func run() -> void:
 			check(world.presentation_settings==global_before,"failed writes do not appear after restart")
 			check(world.source_optimization.territories.size()==195,"previous source selection survives rejected write and restart")
 			check(FileAccess.get_sha256(save_path)==save_hash,"failed preference writes and reentry preserve game save bytes")
-			world.hud.open_settings_info()
+			world.hud.open_settings_info(true)
 			await process_frame
 			host = world.hud.find_child("RenewalSettings",true,false)
 			source = host.find_child("SourceOptimizationSettings",true,false)
@@ -121,7 +121,7 @@ func run() -> void:
 	check(QA.enter_game(reopened),"actual Main restarts")
 	check(reopened.source_optimization.territories.size()==195 and reopened.presentation_settings.hide_doll,"source folder and selected preferences survive restart")
 	check(reopened.local_presentation_regions.has(reopened.active_map_id) and reopened.local_presentation_result.status=="TWILIGHT_local_estimate" and reopened.local_presentation_result.branch=="condition","own region and explicit condition choice survive actual Main restart")
-	reopened.hud.open_settings_info()
+	reopened.hud.open_settings_info(true)
 	await process_frame
 	var local_view: Node = reopened.hud.find_child("LocalPresentationRegionSettings",true,false)
 	check(local_view!=null and local_view.enabled.button_pressed and local_view.branch.selected==1,"reentered UI shows saved own mode and branch")

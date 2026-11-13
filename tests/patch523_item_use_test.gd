@@ -219,7 +219,7 @@ func run() -> void:
 	world.hud._refresh_catalog_list(str(mp_record.name))
 	if not world.hud.catalog_results.is_empty(): world.hud._select_catalog_index(0)
 	check(DROPS.item_details(display).contains("1D10"),"native MP formula visible in item detail")
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	var settings: Node = world.hud.find_child("Patch523DropSettings",true,false)
 	check(settings != null,"actual settings widget connected")
 	if settings != null:

@@ -53,6 +53,11 @@ var _built: bool = false
 var _native_catalog: RefCounted
 var _native_catalog_loads: int = 0
 var _folder_target: String = ""
+## Listing the active map's original portals evaluates every declaration
+## (6 s on desktop for 93 portals, far longer on a phone), so building this
+## panel never does it; the player asks for it or starts/changes play.
+var _portals_listed: bool = false
+var source_portal_list_button: Button
 var spr_enabled: CheckBox
 var spr_root: LineEdit
 var spr_declaration: LineEdit
@@ -73,7 +78,7 @@ func configure(world: Node) -> void:
 	if not _built:
 		_build()
 		_load_paths()
-		_load_play_options()
+		_load_play_options(false)
 	var current: Node = _world()
 	if current != null and current.has_signal("current523_aden_review_closed"):
 		current.connect("current523_aden_review_closed", _on_review_closed)
@@ -216,6 +221,9 @@ func _build_play_options() -> void:
 	definition_clear_button=UI.button("정의 연결 해제 · 지형 이동만",_clear_definitions,Vector2(0,40));add_child(definition_clear_button)
 	definition_status=UI.label("원문 포탈 정의 미연결 · 지형 이동만 가능",12,UI.MUTED)
 	definition_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(definition_status)
+	source_portal_list_button = UI.button("원문 포탈 목록 읽기 · 시간이 걸릴 수 있음",_list_source_portals,Vector2(0,40))
+	source_portal_list_button.name = "ListAdenSourcePortalsButton"
+	add_child(source_portal_list_button)
 	source_portal_choice = OptionButton.new(); source_portal_choice.name = "AdenSourcePortalChoice"
 	add_child(source_portal_choice)
 	source_portal_walk_button=UI.button("원문 출발점까지 걷기 · 자동 포탈 활성 없음",_walk_to_source_portal,Vector2(0,40))
@@ -328,7 +336,7 @@ func _offset_control(node_name: String) -> SpinBox:
 	return control
 
 
-func _load_play_options() -> void:
+func _load_play_options(list_portals: bool = true) -> void:
 	var options: Dictionary = PLAY_OPTIONS.read()
 	play_profile.select(3 if options.navigation_profile==PLAY_OPTIONS.GENERIC else 2 if options.navigation_profile == PLAY_OPTIONS.SOURCE else (1 if options.navigation_profile == PLAY_OPTIONS.LEGACY else 0))
 	if options.navigation_profile in [PLAY_OPTIONS.SOURCE,PLAY_OPTIONS.GENERIC]:
@@ -354,7 +362,7 @@ func _load_play_options() -> void:
 		var spr_metrics: Dictionary=map_metrics.get("static_spr",{})
 		if not spr_metrics.is_empty():
 			spr_status.text="원문 배치 %d · 연결 대상 %d · 사용자 제외 %d · 표시 노드 %d(부모%d/자식%d) · 미대응 노드%d. 제외·설정은 실제 사용 완료로 세지 않습니다."%[int(spr_metrics.get("raw_records",0)),int(spr_metrics.get("connection_candidate_records",spr_metrics.get("raw_records",0))),int(spr_metrics.get("user_excluded_records",0)),int(spr_metrics.get("drawn_records",0)),int(spr_metrics.get("drawn_parent_records",0)),int(spr_metrics.get("drawn_child_records",0)),int(spr_metrics.get("unresolved_records",0))]
-	_refresh_source_portals()
+	if list_portals or _portals_listed: _refresh_source_portals()
 	_refresh_definition_status()
 
 
@@ -396,16 +404,26 @@ func _connect_definitions() -> void:
 	var current: Node=_world()
 	if current==null or not current.has_method("bind_current523_source_definition_pack"):return
 	if current.bind_current523_source_definition_pack(definition_path_edit.text.strip_edges(),DEFINITIONS.PIN,true):
-		_refresh_definition_status();_refresh_source_portals()
+		_refresh_definition_status();_refresh_listed_source_portals()
 	else:definition_status.text="원문 정의를 연결하지 못했습니다: "+str(current.current523_aden_play_problem)
 func _clear_definitions() -> void:
 	var current: Node=_world()
 	if current!=null and current.has_method("clear_current523_source_definition_selection"):
-		if current.clear_current523_source_definition_selection():definition_path_edit.text="";_refresh_definition_status();_refresh_source_portals()
+		if current.clear_current523_source_definition_selection():definition_path_edit.text="";_refresh_definition_status();_refresh_listed_source_portals()
 		else:definition_status.text=str(current.current523_aden_play_problem)
+
+func _list_source_portals() -> void:
+	_refresh_source_portals()
+	_update_open_button()
+
+func _refresh_listed_source_portals() -> void:
+	if _portals_listed: _refresh_source_portals(); return
+	if is_instance_valid(source_portal_button):
+		source_portal_button.text="TWILIGHT 자체 수동 이동 · 원작 활성 조건 미확정" if play_profile.selected==3 else "현재 출발 셀의 원문 포탈 사용"
 
 func _refresh_source_portals() -> void:
 	if not is_instance_valid(source_portal_choice): return
+	_portals_listed = true
 	source_portal_button.text="TWILIGHT 자체 수동 이동 · 원작 활성 조건 미확정" if play_profile.selected==3 else "현재 출발 셀의 원문 포탈 사용"
 	var selected: int = source_portal_choice.get_selected_id() if source_portal_choice.item_count>0 else -1
 	source_portal_choice.clear()
@@ -440,7 +458,7 @@ func _use_source_portal() -> void:
 
 
 func _play_choice_changed(_index: int) -> void:
-	_refresh_source_portals()
+	_refresh_listed_source_portals()
 	_update_open_button()
 
 

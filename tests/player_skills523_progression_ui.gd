@@ -21,7 +21,7 @@ func run() -> void:
 	view=await select_skill(IDS.triple)
 	check(view.use_button.text.begins_with("OFF"),"actual state button remains usable during firing cooldown")
 	await capture("triple-per-shot-cost",Vector2i(960,540))
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	for _frame: int in range(3):await process_frame
 	var panel: Control=world.hud.workspace.find_child("SkillProgression523Settings",true,false)
 	panel.selector.select(8);panel.selector.item_selected.emit(8)

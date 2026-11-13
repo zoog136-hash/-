@@ -1411,11 +1411,14 @@ func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> v
 		_close_workspace()
 	_sync_screen_focus()
 
-func open_settings_info() -> void:
+## Heavy settings sections are foldouts built on first open; tests and tools
+## that inspect them pass expand_all = true.
+func open_settings_info(expand_all: bool = false) -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
 	var options := SettingsUI.new()
 	workspace.mount(options)
 	options.configure(self)
+	if expand_all: options.expand_all()
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")

@@ -186,7 +186,7 @@ func run() -> void:
 	preserved(before,"arrival render denial")
 	await frames(); preserved(before,"render denial after deferred frames")
 	if not await deny_checkpoint_write(): await finish_portal(); return
-	world.hud.call("open_settings_info"); await frames()
+	world.hud.call("open_settings_info",true); await frames()
 	var panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"actual Settings portal controls are present")
 	if panel==null: await finish_portal(); return
