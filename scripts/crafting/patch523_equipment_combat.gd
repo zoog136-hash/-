@@ -133,6 +133,28 @@ static func source_integer(world: Node,key: String) -> int:
 		var actual: Variant=record.get("enhancement_extra_options",{}).get(rank,{}).get(key)
 		if typeof(expected) not in [TYPE_INT,TYPE_FLOAT] or typeof(actual) not in [TYPE_INT,TYPE_FLOAT] or actual!=expected or not is_finite(float(expected)) or float(expected)!=float(int(expected)) or int(expected)<0:continue
 		total+=int(expected)
+	return total+base_integer(world,key)
+
+## User decision 2026-11-13: direct base ItemBonus PVP rows of worn original
+## equipment (PiercePVPDamageReduction / PVPSpellByLevelAdditionLevel) use the
+## same single-player interpretation as the enchant rows above. Read only from
+## the current projection's own mapped rows (source_mapped_bonuses of the
+## catalog record for the worn item), never from an opaque saved field.
+const BASE_KEYS: Array[String] = ["source_pvp_flat_reduction_ignore","source_pvp_status_success_level"]
+static func base_integer(world: Node,key: String) -> int:
+	if key not in BASE_KEYS:return 0
+	var total: int=0;var visited: Dictionary={}
+	for slot: String in world.EQUIPMENT_SLOT_ORDER:
+		var worn: Dictionary=world.equipped_items.get(slot,{})
+		var physical_id: String=str(worn.get("instance_id",""))
+		if physical_id.is_empty() or visited.has(physical_id) or not worn.get("source_m_native_item",false):continue
+		visited[physical_id]=true
+		var physical: Dictionary=world.item_instances.get(physical_id,{})
+		if physical.is_empty() or physical.get("name")!=worn.get("name"):continue
+		var catalog: Dictionary=world._catalog_item_from_source_id(str(worn.get("sourceId","")))
+		if catalog.is_empty() or int(catalog.get("source_item_class_id",-1))!=int(worn.get("source_item_class_id",-2)):continue
+		for applied: Variant in preload("res://scripts/loot/current523_native_fields.gd").full(catalog).get("source_mapped_bonuses",[]):
+			if applied is Dictionary and applied.get("field")==key and typeof(applied.get("value")) in [TYPE_INT,TYPE_FLOAT] and float(applied.value)==floorf(float(applied.value)) and int(applied.value)>0:total+=int(applied.value)
 	return total
 
 static func typed_flat_ignore(world: Node,attack_kind: String) -> int:
