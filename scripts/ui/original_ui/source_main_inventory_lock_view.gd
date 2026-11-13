@@ -1,5 +1,6 @@
 extends RefCounted
 ## Original lock controls only; the bag owns physical selection and lock writes.
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const Scene = preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const MEMBER = "UI/ToolTip/ToolTip_HudType_Right.csb"
 const SHA256 = "7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce"
@@ -43,7 +44,6 @@ func configure(pack: RefCounted, bag: Control) -> Dictionary:
 func refresh(parent: Node) -> Dictionary:
 	var bag: Object = _bag.get_ref() if _bag != null else null
 	var model: Dictionary = _model(bag)
-	if _class_in_scope and model.get("ok",false):model.class_text=_fitting_class_text(model.class_text)
 	if not model.get("ok",false):
 		_close_scene()
 		return model
@@ -55,6 +55,10 @@ func refresh(parent: Node) -> Dictionary:
 			_close_scene()
 		else:
 			return _apply(model)
+	# Existing views fit inside _apply; only a newly staged view needs this
+	# earlier fit for its initial binding. The post-mount fresh model is still
+	# fitted separately so owner changes during mounting are never hidden.
+	if _class_in_scope:model.class_text=_fitting_class_text(model.class_text)
 	var bindings: Dictionary = {
 		37228:{"visible":not model.locked},36120:{"visible":model.locked},
 		37284:{"role":"button","activate":Callable(self,"_activate"),"displaystate":not model.disabled},
@@ -232,6 +236,15 @@ func _consume_class_list_input(_event: InputEvent) -> void:
 	if is_instance_valid(_scene) and _scene.is_inside_tree():_scene.get_viewport().set_input_as_handled()
 
 func _fitting_class_text(value: String) -> String:
+	var started: int=FRAME_HITCH.now()
+	var result: String=_fit_class_text(value)
+	FRAME_HITCH.detail("ui.inventory_class_fit",started)
+	return result
+
+func _fit_class_text(value: String) -> String:
+	# Every previous outcome for an empty owner string was already empty.
+	# No scene read, font lookup or shaping can add a visible class here.
+	if value.is_empty():return ""
 	var original: Dictionary=_find(_pack.scene(MEMBER).get("nodeTree",{}),40580)
 	var options: Dictionary=original.get("options",{})
 	if options.is_empty():return ""

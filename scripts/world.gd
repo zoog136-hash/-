@@ -333,6 +333,8 @@ var quickslots: Array = []
 var ui_preferences: Dictionary = {"quickslot_pages":{}, "edited_quickslots":{}, "item_locks":{}}
 ## Save marker of the legacy -> original 523 item migration (legacy_item_migration523.gd).
 var legacy_item_marker: Dictionary = {}
+## Save marker of the one-time load correction of EquipGroupID duplicates.
+var equip_group_marker: Dictionary = {}
 var auto_item_clock: float = 0.0
 ## M81: the auto heal sweep runs on the original 0.5 s main timer (strict >, single subtraction).
 var auto_heal_sweep_elapsed: float = 0.0
@@ -6463,7 +6465,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
 		"next_item_instance_id":next_item_instance_id,
-		"legacy_item_migration523": legacy_item_marker
+		"legacy_item_migration523": legacy_item_marker,
+		"equip_group_limit523": equip_group_marker
 	}
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
@@ -7083,6 +7086,13 @@ func _load_game(quiet: bool) -> void:
 	_enforce_weapon_class_compatibility(true)
 	_enforce_patch523_equipment_requirements()
 	_enforce_shield_weapon_compatibility(true)
+	# Worn duplicates over the source EquipSlotConfig limit (user decision
+	# 2026-11-13): unequip the later slot once; the item stays in the bag.
+	var saved_group_marker: Variant=data.get("equip_group_limit523",{})
+	equip_group_marker=preload("res://scripts/loot/current523_equip_group_limit.gd").enforce_loaded(self,saved_group_marker)
+	if equip_group_marker!=saved_group_marker:
+		for released: Variant in equip_group_marker.get("released",[]):
+			hud.append_log("불러오기 장착 정리 · %s · 가방으로 해제" % str(released.get("reason","")))
 	# Source possession/pass bonuses must use the restored ownership and
 	# character before the saved HP is clamped to its effective maximum.
 	unconfirmed523.rebuild()
