@@ -1645,6 +1645,7 @@ func _build_menu_page() -> void:
 			caption.offset_top=50;caption.offset_bottom=86
 		button.add_child(caption)
 		if section_id == "domination_stone": _mount_domination_menu_tile(button,artwork,caption)
+		else: _mount_original_menu_tile(section_id,button,artwork,caption)
 		grid.add_child(button)
 		tiles.append(button)
 		workspace.register_scroll_drag(menu_scroll,button)
@@ -1660,6 +1661,22 @@ func _mount_domination_menu_tile(button: Button, artwork: TextureRect, caption: 
 	# MainMenu_DominationStone's 70x67 panel is anchored at its centre.
 	scene.position = Vector2(46,40)
 	button.add_child(scene)
+	caption.hide()
+
+## The client's MainMenu_* tile (picture and caption) of a menu section that
+## has one; the TWILIGHT button keeps the tap and the scroll drag. Without the
+## pack (or for sections the client has no tile for) the tile is unchanged.
+func _mount_original_menu_tile(section_id: String, button: Button, artwork: TextureRect, caption: Label) -> void:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("menu_tile"): return
+	var tile: Dictionary = original_main_ui_controller.menu_tile(section_id)
+	original_main_ui_status["menu_tile_"+section_id] = {"ok":tile.get("ok",false),"code":str(tile.get("code","")),"member":str(tile.get("member",""))}
+	if not tile.get("ok",false): return
+	var scene: Node2D = tile.scene
+	# MainMenu_*'s 70x67 panel is anchored at its centre.
+	scene.position = Vector2(46,40)
+	button.add_child(scene)
+	preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")._ignore_input(scene)
+	artwork.texture = null
 	caption.hide()
 
 ## The original 523 콘텐츠 현황판 (StatusBoard_All, world.routines).
