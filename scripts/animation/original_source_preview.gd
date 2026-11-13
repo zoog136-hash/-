@@ -281,7 +281,9 @@ func configure_reference_bank(manifest_path: String, expected_manifest_sha: Stri
 	return _configure_reference_bank(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,"")
 
 func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
+	var phase_started: int = FRAME_HITCH.now()
 	clear()
+	FRAME_HITCH.detail("view.clear",phase_started)
 	_current523_source_only = not card_consumer.is_empty()
 	if not explicit_role_action_bindings.has(initial_role):
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
@@ -298,15 +300,19 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	if not loaded.ok: return false
 	_reference_bank = bank
 	_root = manifest_path.get_base_dir()
+	phase_started = FRAME_HITCH.now()
 	_playback_mode = POLICY.mode(_root,playback_mode_override) if not card_consumer.is_empty() else (playback_mode_override if playback_mode_override in ["strict", "compatible"] else "strict")
 	# Source FPS remains null when absent. Existing production policy owns only
 	# the effective compatibility rate; strict mode holds unresolved actions.
 	var tracks: Dictionary = POLICY.tracks_from_prepared(loaded.record,card_consumer,_playback_mode) if shared_npc else (POLICY.tracks(loaded.record,card_consumer,_playback_mode) if not card_consumer.is_empty() else loaded.tracks)
+	FRAME_HITCH.detail("view.playback_tracks",phase_started)
+	phase_started = FRAME_HITCH.now()
 	var layer_count: int = 0
 	for track: Dictionary in tracks.values():
 		for frames: Array in track.directions:
 			for frame: Dictionary in frames: layer_count = maxi(layer_count, frame.layers.size())
 	_configure_source_nodes(loaded.record, tracks, layer_count, manifest_path)
+	FRAME_HITCH.detail("view.source_nodes",phase_started)
 	_role = initial_role
 	return true
 
