@@ -14,7 +14,7 @@ var evidence: Dictionary = {}
 
 func check(condition: bool, label: String) -> bool:
 	checks += 1
-	if not condition: failures.append(label); printerr("ITEM_ICON_SCENE_FAILURE_FAIL: ",label)
+	if not condition: failures.append(label); printerr("ITEM_ICON_SCENE_STATUS_FAIL: ",label)
 	return condition
 
 func _initialize() -> void: call_deferred("run")
@@ -61,5 +61,5 @@ func pack_case() -> void:
 func run() -> void:
 	failure_case()
 	if not SOURCE.not_installed(): await pack_case()
-	print("ITEM_ICON_SCENE_FAILURE_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
+	print("ITEM_ICON_SCENE_STATUS_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)

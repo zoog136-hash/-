@@ -648,7 +648,7 @@ def main():
                       'items523_equipment_enchant_spell_test':'ITEMS523_EQUIP_ENCHANT_SPELL_RESULT',
                       'items523_grade_presentation_test':'ITEMS523_GRADE_PRESENTATION_RESULT',
                       'items523_ammo_projectile_sprite_test':'ITEMS523_AMMO_SPRITE_RESULT',
-                      'item_icon_scene_failure_test':'ITEM_ICON_SCENE_FAILURE_RESULT',
+                      'item_icon_scene_failure_test':'ITEM_ICON_SCENE_STATUS_RESULT',
                       'items523_equipment_typed_effects_test':'ITEMS523_EQUIP_TYPED_RESULT',
                       'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
                       'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT',
