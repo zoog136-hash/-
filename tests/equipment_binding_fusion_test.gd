@@ -51,6 +51,7 @@ func _run() -> void:
 	put(output,offsets,"15",{"source_use_spec":{"nested":[{"values":[3]}]}},
 		{"keys":["source_use_spec","source_class_ids","source_equip_slot_ids","source_original_item","source_unhandled_bonuses","source_mapped_bonuses"],
 		"fields":{"source_class_ids":typed,"source_equip_slot_ids":readonly,"source_original_item":shared,"source_unhandled_bonuses":shared,"source_mapped_bonuses":PackedInt32Array([7,8])}})
+	put(output,offsets,"16",{"name":"weight","source_weight_unit":"unverified_source_units","source_weight":5}, {"keys":["name","source_weight_unit","source_original_item","source_weight"],"fields":{"source_original_item":{"ID":16,"Weight":5,"nested":[1]}}})
 	for id: int in range(100,240):
 		put(output,offsets,str(id),{"name":"item"+str(id),"source_item_class_id":id}, {"keys":["name","source_class_ids","source_item_class_id"],"fields":{"source_class_ids":[id]}})
 	output.close()
@@ -177,6 +178,46 @@ func _run() -> void:
 			for i: int in items.size(): check(same(before.binding["아이템"][i],packed.binding["아이템"].fetch(i)), "packed values isolate and match "+str(i))
 			(packed.binding["아이템"].fetch(0).source_class_ids as Array).append(88)
 			check(FIELDS.field(own,"source_class_ids") == [1,2], "parsed binding cannot mutate template")
+	FIELDS.bind(store)
+	check(not FIELDS._weight_store_exact, "default public binding does not opt in")
+	# Weight-only projection must preserve every selected value and provider path.
+	var weight_cases: Array[Dictionary] = cases.duplicate()
+	weight_cases.append({FIELDS.MARK:true,"source_item_class_id":16})
+	weight_cases.append({FIELDS.MARK:true,"source_item_class_id":16,"source_weight":null,"source_original_item":{"own":[3]}})
+	weight_cases.append({"source_weight":0,"source_original_item":{},"source_weight_unit":"own"})
+	for record: Dictionary in weight_cases:
+		FIELDS.bind(store,NATIVE.TemplateStore)
+		var old_weight: Dictionary = FIELDS._full_for_binding(record)
+		var expected: Dictionary = {}
+		for key: String in ["source_weight_unit","source_original_item","source_weight"]:
+			if old_weight.has(key): expected[key] = old_weight[key]
+		FIELDS.bind(store,NATIVE.TemplateStore)
+		check(same(FIELDS._weight_fields_for_binding(record),expected), "weight fields equal full projection "+str(record.get("source_item_class_id",0)))
+	var weight_own: Dictionary = {FIELDS.MARK:true,"source_item_class_id":16}
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	check(FIELDS._weight_store_exact, "exact real TemplateStore enables weight projection")
+	var weight_fresh: Dictionary = FIELDS._weight_fields_for_binding(weight_own)
+	weight_fresh.source_original_item.nested.append(9)
+	check(FIELDS._weight_fields_for_binding(weight_own).source_original_item.nested == [1], "fresh weight nested data independent")
+	check(not FIELDS._cache.has("16"), "weight projection adds no retained template cache")
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	var weight_cached: Dictionary = FIELDS.full(weight_own)
+	store.file = null
+	check(FIELDS._weight_fields_for_binding(weight_own).source_weight == weight_cached.source_weight, "weight projection respects existing cached snapshot")
+	store.file = saved_file
+	FIELDS.bind(generic); generic.calls = 0
+	FIELDS._weight_fields_for_binding(own)
+	check(generic.calls == 1, "weight generic provider read count unchanged")
+	FIELDS.bind(store,NATIVE.TemplateStore); FIELDS._store = generic; generic.calls = 0
+	FIELDS._weight_fields_for_binding(own)
+	check(generic.calls == 1, "replaced provider cannot inherit an old fast-path token")
+	FIELDS.bind(subclass); subclass.record_calls = 0
+	FIELDS._weight_fields_for_binding(own)
+	check(subclass.record_calls == 1 and not FIELDS._weight_store_exact, "weight subclass override cannot be bypassed")
+	store.interning = true; store.strings.clear(); FIELDS.bind(store,NATIVE.TemplateStore)
+	FIELDS._weight_fields_for_binding(weight_own)
+	check(not store.strings.is_empty() and FIELDS._cache.has("16"), "weight interning retains pool and cache semantics")
+	store.interning = false
 	FIELDS.bind(null)
 	store.file.close()
 	DirAccess.remove_absolute(path)
