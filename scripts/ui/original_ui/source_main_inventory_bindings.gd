@@ -125,11 +125,28 @@ func _search_requested() -> Dictionary:
 	search_requested.emit()
 	return {"ok":true,"existing_search_requested":true,"game_state_written":false}
 
+func refresh_existing(scene: Node2D) -> Dictionary:
+	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
+	# Header-only updates must not silently retain a field that disappeared,
+	# or introduce text outside the originally constructed source scope.
+	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
+	var model: Dictionary=snapshot()
+	if not model.get("ok",false):return model
+	var nodes: Variant=scene.get("source_nodes")
+	if not nodes is Dictionary:return _fail("source_main_inventory_existing_scope_unavailable")
+	for entry: Array in [[GOLD_TEXT,"gold_text"],[CAPACITY_TEXT,"capacity_text"]]:
+		if nodes.has(entry[0])!=model.has(entry[1]):return _fail("source_main_inventory_header_scope_changed")
+	return _refresh_model(scene,model)
+
 func refresh(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
 	if not scene.has_method("set_bound_visible") or not scene.has_method("set_bound_text"):return _fail("source_main_inventory_scene_binding_api_missing")
 	var model: Dictionary=snapshot()
 	if not model.get("ok",false):return model
+	return _refresh_model(scene,model)
+
+func _refresh_model(scene: Node2D, model: Dictionary) -> Dictionary:
+	if not scene.has_method("set_bound_visible") or not scene.has_method("set_bound_text"):return _fail("source_main_inventory_scene_binding_api_missing")
 	for category: String in TABS:
 		for index: int in range(2):
 			var result: Dictionary=scene.set_bound_visible(int(TABS[category][index]),(model.category==category) if index==0 else (model.category!=category))
