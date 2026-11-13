@@ -61,7 +61,32 @@ static func ids(rows: Array, key: String) -> Array:
 		if not result.has(value): result.append(value)
 	return result
 
+# Private held-original restore only. Public extract/install retain ZIP reads.
+# The archive pin and final fixed capsule digest remain mandatory; mismatches
+# retry the original extractor instead of trusting cached/mutable table views.
+static func _select_rows_shared(zip: ZIPReader, table: String, key: String, wanted_ids: Array, hashes: Dictionary, shared: bool) -> Array:
+	var started: int=Time.get_ticks_msec()
+	if shared and not wanted_ids.has(-1):
+		var meta: Dictionary=CommonSource.table_metadata(table)
+		var count: int=CommonSource.row_count(table)
+		var values: Variant=CommonSource.column(table,key)
+		if not meta.is_empty() and int(meta.get("row_count",-1))==count and str(meta.get("sha256","")).length()==64 and (values is Array or values is PackedFloat64Array or values is PackedStringArray) and values.size()==count:
+			var wanted: Dictionary={}
+			for id: Variant in wanted_ids:wanted[int(id)]=true
+			var rows: Array=[]
+			for position: int in count:
+				if values[position]!=null and wanted.has(int(values[position])):rows.append(CommonSource.row_at(table,position))
+			hashes[table]=meta.sha256
+			BOOT_LOG.mark("protection_select",{"table":table,"shared":true,"ms":Time.get_ticks_msec()-started,"rows":rows.size()})
+			return rows
+	var rows: Array=select_rows(zip,table,key,wanted_ids,hashes)
+	BOOT_LOG.mark("protection_select",{"table":table,"shared":false,"ms":Time.get_ticks_msec()-started,"rows":rows.size()})
+	return rows
+
 static func extract(path: String) -> Dictionary:
+	return _extract(path,false)
+
+static func _extract(path: String, shared: bool) -> Dictionary:
 	if not FileAccess.file_exists(path): return denied("원본523 ZIP을 찾을 수 없습니다")
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null: return denied("원본 ZIP 읽기 실패")
@@ -75,49 +100,52 @@ static func extract(path: String) -> Dictionary:
 	var all_ids: Array = IDS.duplicate()
 	all_ids.append_array([DISABLED_ID,123373,200698,3631,96004,96014])
 	raw.MaterialReward = []
-	for row: Dictionary in select_rows(zip,"Reward","RewardClassID",QUEST_MATERIAL_IDS,hashes):
+	for row: Dictionary in _select_rows_shared(zip,"Reward","RewardClassID",QUEST_MATERIAL_IDS,hashes,shared):
 		if int(row.RewardTypeID) == 2: raw.MaterialReward.append(row)
-	raw.MaterialQuestReward = select_rows(zip,"QuestReward","RewardID",ids(raw.MaterialReward,"ID"),hashes)
-	raw.SupplyRecipeView = select_rows(zip,"ItemCraftView","ItemCraftID",SUPPLY_RECIPE_IDS,hashes)
+	raw.MaterialQuestReward = _select_rows_shared(zip,"QuestReward","RewardID",ids(raw.MaterialReward,"ID"),hashes,shared)
+	raw.SupplyRecipeView = _select_rows_shared(zip,"ItemCraftView","ItemCraftID",SUPPLY_RECIPE_IDS,hashes,shared)
 	for table: String in ["ItemCraftInput","ItemCraftOutputView","ItemCraftRestriction"]:
-		raw["Supply"+table] = select_rows(zip,table,"ItemCraftID",SUPPLY_RECIPE_IDS,hashes)
-	raw.Group604BuffClass = select_rows(zip,"BuffClass","BuffGroupID",[604],hashes)
+		raw["Supply"+table] = _select_rows_shared(zip,table,"ItemCraftID",SUPPLY_RECIPE_IDS,hashes,shared)
+	raw.Group604BuffClass = _select_rows_shared(zip,"BuffClass","BuffGroupID",[604],hashes,shared)
 	var shared_buffs: Array = ids(raw.Group604BuffClass,"ID")
-	var shared_bonus: Array = select_rows(zip,"Bonus","BonusTypeID",[78],hashes)
+	var shared_bonus: Array = _select_rows_shared(zip,"Bonus","BonusTypeID",[78],hashes,shared)
 	raw.Group604BuffBonuses = []
 	for row: Dictionary in shared_bonus:
 		if shared_buffs.has(int(row.Value)): raw.Group604BuffBonuses.append(row)
-	raw.Group604ItemBonus = select_rows(zip,"ItemBonus","BonusID",ids(raw.Group604BuffBonuses,"ID"),hashes)
+	raw.Group604ItemBonus = _select_rows_shared(zip,"ItemBonus","BonusID",ids(raw.Group604BuffBonuses,"ID"),hashes,shared)
 	all_ids.append_array(ids(raw.Group604ItemBonus,"ItemClassID"))
-	raw.ItemClass = select_rows(zip,"ItemClass","ID",all_ids,hashes)
-	raw.ItemCategory = select_rows(zip,"ItemCategory","ID",[10204],hashes)
-	raw.ItemBonus = select_rows(zip,"ItemBonus","ItemClassID",IDS + [DISABLED_ID],hashes)
+	raw.ItemClass = _select_rows_shared(zip,"ItemClass","ID",all_ids,hashes,shared)
+	raw.ItemCategory = _select_rows_shared(zip,"ItemCategory","ID",[10204],hashes,shared)
+	raw.ItemBonus = _select_rows_shared(zip,"ItemBonus","ItemClassID",IDS + [DISABLED_ID],hashes,shared)
 	# Resolve item bonus -> Appellation -> BuffClass. Appellation.RewardID is
 	# explicitly a BuffClass ID here, never a general Reward table join.
-	raw.Bonus = select_rows(zip,"Bonus","ID",ids(raw.ItemBonus,"BonusID"),hashes)
+	raw.Bonus = _select_rows_shared(zip,"Bonus","ID",ids(raw.ItemBonus,"BonusID"),hashes,shared)
 	var title_ids: Array = []
 	var buff_ids: Array = []
 	for bonus: Dictionary in raw.Bonus:
 		if int(bonus.BonusTypeID) == 7243: title_ids.append(int(bonus.Value))
 		if int(bonus.BonusTypeID) == 78: buff_ids.append(int(bonus.Value))
-	raw.Appellation = select_rows(zip,"Appellation","ID",title_ids,hashes)
+	raw.Appellation = _select_rows_shared(zip,"Appellation","ID",title_ids,hashes,shared)
 	buff_ids.append_array(ids(raw.Appellation,"RewardID"))
-	raw.BuffClass = select_rows(zip,"BuffClass","ID",buff_ids,hashes)
-	raw.BuffBonus = select_rows(zip,"BuffBonus","BuffClassID",buff_ids,hashes)
+	raw.BuffClass = _select_rows_shared(zip,"BuffClass","ID",buff_ids,hashes,shared)
+	raw.BuffBonus = _select_rows_shared(zip,"BuffBonus","BuffClassID",buff_ids,hashes,shared)
 	var bonus_ids: Array = ids(raw.ItemBonus,"BonusID")
 	bonus_ids.append_array(ids(raw.BuffBonus,"BonusID"))
-	raw.Bonus = select_rows(zip,"Bonus","ID",bonus_ids,hashes)
-	raw.BonusType = select_rows(zip,"BonusType","ID",ids(raw.Bonus,"BonusTypeID"),hashes)
-	raw.BuffGroup = select_rows(zip,"BuffGroup","ID",[604,841],hashes)
-	raw.ItemCraftView = select_rows(zip,"ItemCraftView","ItemClassID",IDS + [DISABLED_ID],hashes)
+	raw.Bonus = _select_rows_shared(zip,"Bonus","ID",bonus_ids,hashes,shared)
+	raw.BonusType = _select_rows_shared(zip,"BonusType","ID",ids(raw.Bonus,"BonusTypeID"),hashes,shared)
+	raw.BuffGroup = _select_rows_shared(zip,"BuffGroup","ID",[604,841],hashes,shared)
+	raw.ItemCraftView = _select_rows_shared(zip,"ItemCraftView","ItemClassID",IDS + [DISABLED_ID],hashes,shared)
 	var crafts: Array = ids(raw.ItemCraftView,"ItemCraftID")
 	for table: String in ["ItemCraftInput","ItemCraftOutputView","ItemCraftRestriction"]:
-		raw[table] = select_rows(zip,table,"ItemCraftID",crafts,hashes)
+		raw[table] = _select_rows_shared(zip,table,"ItemCraftID",crafts,hashes,shared)
 	var desc_ids: Array = ids(raw.ItemClass,"IdentifiedDescID")
 	desc_ids.append_array(ids(raw.Appellation,"DescID"))
-	raw.DescData_Korean = select_rows(zip,"DescData_Korean","ID",desc_ids,hashes)
+	raw.DescData_Korean = _select_rows_shared(zip,"DescData_Korean","ID",desc_ids,hashes,shared)
 	zip.close()
 	var capsule := {"schema":1,"source_sha256":SOURCE_SHA,"source_bytes":SOURCE_BYTES,"member_sha256":hashes,"tables":raw}
+	if shared and JSON.stringify(capsule,"",true).sha256_text()!=CAPSULE_SHA:
+		BOOT_LOG.mark("protection_shared_fallback",{"reason":"capsule_digest_mismatch"})
+		return _extract(path,false)
 	var result := compile(capsule)
 	if not bool(result.get("ok",false)): return result
 	result["capsule"] = capsule
@@ -258,7 +286,7 @@ static func restore() -> Dictionary:
 		var baked: Variant = BAKE.read(BAKE_NAME, bake_key)
 		if baked is Dictionary and bool((baked as Dictionary).get("ok", false)): return baked
 		BOOT_LOG.mark("protection_cold_build")
-		var original := extract(source_path)
+		var original := _extract(source_path,verified)
 		original.erase("capsule")
 		if verified and bool(original.get("ok", false)): BAKE.write(BAKE_NAME, bake_key, original)
 		return original
