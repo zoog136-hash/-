@@ -1228,20 +1228,16 @@ func open_promo_code() -> void:
 	view.configure(get_parent())
 
 func open_quests() -> void:
+	# The requested quest UI is a text list. Repeated opens reuse it instead
+	# of building original CSB trees, reward pictures or hidden fallback views.
+	if active_section=="quests" and is_instance_valid(quest_view) and not quest_view.is_queued_for_deletion() and workspace.visible:
+		quest_view.refresh()
+		return
 	var trace_token: int=MENU_MEMORY_TRACE.begin("quests")
-	_open_window("quests", "퀘스트", "메인 · 일반 · 업적 · 기타")
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):
+		original_main_ui_controller.close_quest_window()
+	_open_window("quests", "퀘스트", "목록 · 수락 · 완료")
 	quest_view = null
-	# The original window owns its list/detail state. Construct the current
-	# browser only when that window cannot handle the selected source pack.
-	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
-		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
-		original_main_ui_status["quest_window"]=native
-		if native.get("handled",false) and native.get("ok",false):
-			if pointer_transfer!=null:pointer_transfer.cancel()
-			workspace.hide()
-			_sync_screen_focus()
-			MENU_MEMORY_TRACE.end(trace_token,bool(native.get("ok",false)))
-			return
 	_open_quest_browser()
 	MENU_MEMORY_TRACE.end(trace_token)
 
@@ -1252,7 +1248,6 @@ func _open_quest_browser() -> void:
 	view.claim_requested.connect(func(quest_id: String) -> void:
 		quest_complete_requested.emit(quest_id))
 	quest_view = view
-	if is_instance_valid(original_main_ui_controller):original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(view)
 
 func refresh_quests() -> void:
 	# Cheap on kills/pickups. Rebuild only the currently open quest page,

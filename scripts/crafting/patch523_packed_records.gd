@@ -132,6 +132,14 @@ func field(handle: int, key: String, default: Variant = null) -> Variant:
 	if not shape.index.has(key): return default
 	return _value(shape, int(shape.index[key]), row)
 
+## Presence is distinct from a present null value, as in Dictionary.has().
+func has_field(handle: int, key: String) -> bool:
+	var shape_index: int = _shape_of[handle]
+	if shape_index < 0:
+		var loose: Variant = _loose[_row_of[handle]]
+		return loose is Dictionary and loose.has(key)
+	return (_shapes[shape_index] as Shape).index.has(key)
+
 static func _value(shape: Shape, position: int, row: int) -> Variant:
 	var value: Variant = shape.data[position][row]
 	var kind: int = shape.kinds[position]

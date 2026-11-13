@@ -8,7 +8,7 @@ extends SceneTree
 ##    not restaged on every frame while the world state is unchanged, and is
 ##    retried after a state change; a successful batch still chains next frame.
 ## 5. current523_identity_pack verified-file checks (see the last section).
-## 4. Ready mode (the game default): conditions met -> marked ready only, no
+## 4. Explicit legacy ready-mode audit (disabled in normal gameplay): conditions met -> marked ready only, no
 ##    reward transaction; [보상 받기]/[모두 받기] run complete(); the scan is
 ##    time-sliced and does not rerun while the state is unchanged.
 const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
@@ -195,6 +195,7 @@ func _ready_mode() -> void:
 	world.hud = hud
 	for index: int in 40: world.quest_service.source.quests.append({"id":"r%02d" % index})
 	var runner := CountingRunner.new()
+	runner.scan_ready_enabled = true
 	runner.succeed = true
 	_scan_all(runner, world)
 	check(runner.completes == 0, "ready mode never grants rewards by itself")
@@ -212,6 +213,7 @@ func _ready_mode() -> void:
 	check(runner.batches[1][0] == "r00" and runner.ready.is_empty(), "claim order follows the quest list")
 	# Failure: the reason is shown and the quest stays ready.
 	var failing := CountingRunner.new()
+	failing.scan_ready_enabled = true
 	world.quest_service.claimed.clear()
 	_scan_all(failing, world)
 	check(not failing.claim(world, "r01") and failing.ready.has("r01"), "a failed claim keeps the quest ready")
@@ -220,6 +222,7 @@ func _ready_mode() -> void:
 	check(int(none.claimed) == 0 and int(none.failed) == 40, "모두 받기 reports what could not be received")
 	# One unsuppliable quest must not block the rest of its batch.
 	var mixed := MixedRunner.new()
+	mixed.scan_ready_enabled = true
 	world.quest_service.claimed.clear()
 	_scan_all(mixed, world)
 	var mixed_result: Dictionary = mixed.claim_all(world)
@@ -229,6 +232,7 @@ func _ready_mode() -> void:
 	slow_world.quest_service.source = SlowSource.new()
 	for index: int in 30: slow_world.quest_service.source.quests.append({"id":"s%d" % index})
 	var slow := CountingRunner.new()
+	slow.scan_ready_enabled = true
 	slow.tick(slow_world)
 	check(slow._scan_cursor > 0 and slow._scan_cursor < 30, "a pass is split across frames within its budget")
 	_scan_all(slow, slow_world)
