@@ -71,28 +71,30 @@ func _spec() -> Dictionary:
 	spec["Elixir_Tab_StatInfo_Group_Stat"]={"visible":false}
 	var used: int=runtime.points_used()
 	var points: int=int(state.points)
-	spec[G+"Nd_Etc/Text_Point_Value"]={"role":"source_text","text":str(points-used)}
-	spec[G+"Nd_Etc/Text_Elixir_Value"]={"role":"source_text","text":"%d / %d" % [used,points]}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Text_Point_Value"]={"role":"source_text","text":str(points-used)}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Text_Elixir_Value"]={"role":"source_text","text":"%d / %d" % [used,points]}
 	var extended: bool=int(state.extension)>0
-	spec[G+"Nd_PointExtand/Nd_Extand_On"]={"visible":extended}
-	spec[G+"Nd_PointExtand/Nd_Extand_Off"]={"visible":not extended}
-	spec[G+"Nd_Extand_On/Text_Bonus_Value_0_0"]={"role":"source_text","text":str(int(state.extension))}
-	spec[G+"Nd_ElixirExtand/Nd_Extand_On"]={"visible":extended}
-	spec[G+"Nd_ElixirExtand/Nd_Extand_Off"]={"visible":not extended}
-	spec[G+"Nd_Extand_On/Text_Elixir_Value_0"]={"role":"source_text","text":"%d / %d" % [int(state.extension),source.costs.size()]}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_PointExtand/Nd_Extand_On"]={"visible":extended}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_PointExtand/Nd_Extand_Off"]={"visible":not extended}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_PointExtand/Nd_Extand_On/Text_Bonus_Value_0_0"]={"role":"source_text","text":str(int(state.extension))}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_PointExtand/Nd_Extand_Off/Text_Bonus_Value_0"]={"role":"source_text","text":str(int(state.extension))}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_ElixirExtand/Nd_Extand_On"]={"visible":extended}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_ElixirExtand/Nd_Extand_Off"]={"visible":not extended}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_ElixirExtand/Nd_Extand_On/Text_Elixir_Value_0"]={"role":"source_text","text":"%d / %d" % [int(state.extension),source.costs.size()]}
+	spec[G+"Nd_ElixirInfo/Nd_Etc/Nd_ElixirExtand/Nd_Extand_Off/Text_Elixir_Value_0_0"]={"role":"source_text","text":"%d / %d" % [int(state.extension),source.costs.size()]}
 	var next: Dictionary=source.costs.get(int(state.extension),{})
 	spec[G+"Nd_ElixirInfo/Btn_Elixir_Extand"]={"activate":Callable(self,"_extend"),"displaystate":not next.is_empty()}
-	spec[G+"Btn_Elixir_Extand/Normal"]={"visible":not next.is_empty()}
-	spec[G+"Btn_Elixir_Extand/Disabled"]={"visible":next.is_empty()}
+	spec[G+"Nd_ElixirInfo/Btn_Elixir_Extand/Normal"]={"visible":not next.is_empty()}
+	spec[G+"Nd_ElixirInfo/Btn_Elixir_Extand/Disabled"]={"visible":next.is_empty()}
 	var can_reset: bool=not source.resets.is_empty() and used>0
 	spec[G+"Nd_ElixirInfo/Btn_Elixir_Reset"]={"activate":Callable(self,"_reset"),"displaystate":can_reset}
-	spec[G+"Btn_Elixir_Reset/Normal"]={"visible":can_reset}
-	spec[G+"Btn_Elixir_Reset/Disabled"]={"visible":not can_reset}
+	spec[G+"Nd_ElixirInfo/Btn_Elixir_Reset/Normal"]={"visible":can_reset}
+	spec[G+"Nd_ElixirInfo/Btn_Elixir_Reset/Disabled"]={"visible":not can_reset}
 	spec[G+"Nd_ElixirInfo/Btn_Elixir_Decision"]={"visible":false}
 	var charge: String=_charge_id()
-	spec[G+"Nd_Item_1/BTN_Plus"]={"activate":Callable(self,"_charge"),"displaystate":not charge.is_empty()}
-	spec[G+"BTN_Plus/Normal"]={"visible":not charge.is_empty()}
-	spec[G+"BTN_Plus/Disable"]={"visible":charge.is_empty()}
+	spec[G+"Nd_Amount_Elixir/Nd_Item_1/BTN_Plus"]={"activate":Callable(self,"_charge"),"displaystate":not charge.is_empty()}
+	spec[G+"Nd_Amount_Elixir/Nd_Item_1/BTN_Plus/Normal"]={"visible":not charge.is_empty()}
+	spec[G+"Nd_Amount_Elixir/Nd_Item_1/BTN_Plus/Disable"]={"visible":charge.is_empty()}
 	return spec
 
 ## The first charge item the player owns (the existing view lists them all).
@@ -107,7 +109,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var runtime: Object=_runtime()
 	var source: Object=runtime.source
 	var state: Dictionary=runtime.state
-	var tabs: Dictionary=_fill_list(root,out,"Nd_Tab/ListView_Elixir",[{"member":TAB,"spec":{"Panel/Btn_Normal":{"visible":false},"Panel/Btn_Pressed":{"activate":Callable(self,"_ignore")},
+	var tabs: Dictionary=_fill_list(root,out,"Elixir_Tab_StatInfo/Nd_Tab/ListView_Elixir",[{"member":TAB,"spec":{"Panel/Btn_Normal":{"visible":false},"Panel/Btn_Pressed":{"activate":Callable(self,"_ignore")},
 		"Btn_Pressed/Label_Pressed":{"role":"source_text","text":"하프 엘릭서"}}}])
 	if not tabs.get("ok",false):return tabs
 	var selected: Dictionary=source.profile(state.context)
