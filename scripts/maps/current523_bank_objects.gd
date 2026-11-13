@@ -31,6 +31,11 @@ var _textures: Dictionary = {}
 var _texture_bytes: int = 0
 var _records: Array[Dictionary] = []
 var _nodes: Array[Node2D] = []
+# Source-order holders stay authoritative. This bounded index only avoids
+# visiting static placements on every tick; clocks and redraw order are kept.
+var _placement_sprite_ids: Dictionary = {}
+var _animation_ids: Array = []
+var _animated_nodes: Array[Node2D] = []
 var _clock: float = 0.0
 var _stats: Dictionary = {}
 
@@ -60,6 +65,9 @@ func configure(selection: Dictionary, mapping: RefCounted) -> bool:
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	var started: int = FRAME_HITCH.now()
 	_records = records
+	_placement_sprite_ids.clear()
+	_animation_ids.clear()
+	_animated_nodes.clear()
 	var created: int = 0
 	var reused: int = 0
 	var trimmed: int = 0
@@ -84,6 +92,7 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 			created += 1
 		node.position = coordinates.to_world(Vector2(row.raw_x, row.raw_y), false)
 		node.set_meta("sprite_id", int(row.sprite_id))
+		_placement_sprite_ids[int(row.sprite_id)] = true
 		# Refresh has always displayed frame zero, even for an unchanged ID.
 		# Force the layer update so replacement records never keep old visuals.
 		node.set_meta("frame", -1)
@@ -231,14 +240,25 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
-	# All placements use this same clock and immutable per-ID sprite record.
-	# Share only this update's frame selection; never instance playback state.
+	# Check the live cached record per visible source ID, including static IDs:
+	# a replacement or static/animated transition must take effect this tick.
 	var frames: Dictionary = {}
-	for node: Node2D in _nodes:
-		var id: int = int(node.get_meta("sprite_id"))
+	for id: int in _placement_sprite_ids:
 		var sprite: Dictionary = _sprites.get(id, {})
 		if sprite.get("ok", false) and not sprite.static:
-			if not frames.has(id): frames[id] = _frame_index(sprite)
-			_show(node, sprite, int(frames[id]))
+			frames[id] = _frame_index(sprite)
+	var active_ids: Array = frames.keys()
+	if active_ids != _animation_ids:
+		_animation_ids = active_ids
+		_animated_nodes.clear()
+		# Preserve dense source order, even for interleaved duplicate IDs.
+		if not frames.is_empty():
+			FRAME_HITCH.count("map.object_index_holders_scanned", _nodes.size())
+			for node: Node2D in _nodes:
+				if frames.has(int(node.get_meta("sprite_id"))): _animated_nodes.append(node)
+	for node: Node2D in _animated_nodes:
+		var id: int = int(node.get_meta("sprite_id"))
+		_show(node, _sprites[id], int(frames[id]))
 	FRAME_HITCH.count("map.object_timeline_samples", frames.size())
-	FRAME_HITCH.count("map.object_placements_visited", _nodes.size())
+	FRAME_HITCH.count("map.object_placements_visited", _animated_nodes.size())
+	FRAME_HITCH.count("map.object_sprite_states_checked", _placement_sprite_ids.size())

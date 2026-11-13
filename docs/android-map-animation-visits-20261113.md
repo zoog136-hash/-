@@ -1,0 +1,30 @@
+# Visit only animated SP2 map placements during ticks
+
+Base main: `6733f32c04048cd7fe7f7d24dd17fddba93d4138` (merged #469). This changes the selected SP2-bank map-object renderer. It does not duplicate open #458's tile identity memo or change the separate static-SPR renderer.
+
+## Runtime change and preserved behavior
+
+`current523_bank_objects._process_step` previously visited all displayed holders every tick, reading each sprite ID and cached record just to reject static sprites. The source-ID frame sampling was already shared; it still required a per-placement scan, up to 1,024 holders per tick.
+
+Refresh now records the distinct displayed source IDs and clears the animation membership index before reusing/trimming holders. Each tick rechecks those IDs' current cached records and samples the same animated timelines. When the active-ID set changes, it builds an ordered animated-holder list from the authoritative dense source list. Subsequent ticks visit that list. The common clock continues advancing even with no animations; negative/zero delta handling is unchanged. Cached records becoming static, animated, invalid or replaced are noticed on the next tick, without requiring an external refresh. Refresh still forces frame zero and preserves source order, placement coordinates, layer order/blending and the exact display limits.
+
+Only private presentation indexing is shared. No gameplay actor, animation node, texture, image quality, movement/collision rule, content or save is removed or changed. Original SP2/member validation and load/render calls stay in their existing paths. The renderer's `native_M_placement_action_timing_verified:false` remains unchanged: this preserves TWILIGHT's existing policy and does not newly prove original-client timing. Prior Android/Windows/XP Hero static ownership/cache analysis is architectural context, not a native performance measurement or evidence that those clients use this exact index.
+
+There is a bounded memory tradeoff: an ID set/active-ID list (at most the existing 512 cached sprite IDs) and references to at most the existing 1,024 holders. No extra presentation nodes or textures are created by the index, and refresh/empty replacement clears old membership before deferred deletion. Whole-process RAM or GPU memory reduction is not claimed.
+
+`map.object_placements_visited` now records actual per-tick animated-holder visits. `map.object_sprite_states_checked` records live per-ID classification. `map.object_index_holders_scanned` separately accounts for rebuilding ordered membership. `map.object_timeline_samples` retains its previous meaning and cadence. None is a duration or GPU measurement.
+
+## Validation
+
+A differential test uses the actual old scheduler from main 6733f32 against the new implementation with synthetic source records/textures. It compares ordered `_show` calls, exact holder/layer/frame state, clock, metrics, source requests and texture-call counts. It covers interleaved duplicate IDs, frame boundaries, zero/negative/large deltas, holder reorder/reuse, shrink before deletion, a static interval followed by animation, cached-record state changes/replacement and empty refresh. No assertion in the existing refresh regression is removed: its historical refresh baseline is paired with its historical scheduler, because that override bypasses production refresh's new index maintenance.
+
+- New differential: **75 headless assertions**; **92 GL assertions / 17 full RGBA comparisons**.
+- Existing layer reuse: **158 GL assertions / 36 RGBA comparisons**. Existing holder refresh: **193 GL assertions / 24 RGBA comparisons**.
+- Synthetic 1,024 static holders × 60 ticks: placement visits **61,440 to 0**, with 60 live source-ID checks. Half animated: visits **61,440 to 30,720**, 120 source-ID checks and one separately counted 1,024-holder membership build; timeline sampling and final state match. The test backdates its logger frame only to collect counters: those forced hitch durations are not performance results.
+- Optional CPU-only benchmark uses 1,024 holders, empty synthetic layers and 120 updates/sample, four alternating-order samples. No per-call trace arrays, disk I/O or GPU rendering are timed. Static: old microseconds `[43166,42276,41307,41966]`, new `[205,183,206,182]`; mixed: old `[81212,79524,77771,84625]`, new `[34081,33950,34708,36778]`; all animated across 512 IDs: old `[198487,200450,196855,201218]`, new `[163356,158850,161209,160513]`. These Linux synthetic CPU samples are not Android FPS or total-frame measurements; CI has no timing threshold.
+- Existing renderer/options/controller/source field/portal checks pass: 106/74/25/47/42. Hitch logging/draw phases: 26/205. Actual Main save/reload: 33, using absent-install handling; installed-original-map traversal is unavailable.
+- Python staging: 14 tests pass. Available resource check passes 20 tracked resources. Historic `tools/check_resource_integrity.py` required by AGENTS is absent. No original resources are delivered or removed by this change.
+
+Reproduce with Godot 4.7.2 and the production stage from `tools/ci_core.py --prepare-only`, `--script res://tests/current523_bank_animation_visits_test.gd`; append `-- --render` under Compatibility OpenGL or `-- --benchmark` for optional CPU samples. The headless test and strict pixel differential are added to the existing CI without dropping prior suites.
+
+Android hardware and the full installed original packs are unavailable here. Actual static/animated ratios on the user's map, rendering cost and the earlier multi-second unmeasured frame remainder still require device logs. This optimization does not establish that it caused or resolves those long gaps.
