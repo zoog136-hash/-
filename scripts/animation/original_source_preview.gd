@@ -27,6 +27,7 @@ class ObservedGirtasCopy:
 var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const REFERENCE_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const PREPARED_LAYOUT = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CURRENT523_BANK = preload("res://scripts/resources/current523_source_bank.gd")
 const CURRENT523_EFFECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
@@ -308,10 +309,16 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	FRAME_HITCH.detail("view.playback_tracks",phase_started)
 	phase_started = FRAME_HITCH.now()
 	var layer_count: int = 0
-	for track: Dictionary in tracks.values():
-		for frames: Array in track.directions:
-			for frame: Dictionary in frames: layer_count = maxi(layer_count, frame.layers.size())
-	_configure_source_nodes(loaded.record, tracks, layer_count, manifest_path)
+	var layout: Dictionary = {}
+	if shared_npc and bank._prepared_snapshot != null:
+		# Timing policy changes durations/observations, never source layer topology.
+		layout = bank._prepared_snapshot.layout()
+		layer_count = int(layout.layer_count)
+	else:
+		for track: Dictionary in tracks.values():
+			for frames: Array in track.directions:
+				for frame: Dictionary in frames: layer_count = maxi(layer_count, frame.layers.size())
+	_configure_source_nodes(loaded.record, tracks, layer_count, manifest_path, layout)
 	FRAME_HITCH.detail("view.source_nodes",phase_started)
 	_role = initial_role
 	return true
@@ -361,59 +368,63 @@ func _build_reference_frame_status(inputs: Dictionary) -> Dictionary:
 static func _effect_node_key(layer: Dictionary) -> Variant:
 	# Only new, explicitly verified DTOs separate ordered source instances.
 	# A legacy binding trace alone is not an upgrade to native multiplicity.
-	var instance: Variant = layer.get("source_layer_instance_key")
-	if instance is String and not instance.is_empty(): return "source_instance:" + instance
-	return int(layer.layer_id)
+	return PREPARED_LAYOUT.effect_node_key(layer)
 
-func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_count: int, manifest_path: String) -> bool:
+func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) -> void:
+	var id: int = int(effect.layer_id)
+	var node_key: Variant = _effect_node_key(effect)
+	if _effect_nodes.has(node_key): return
+	var effect_node: Sprite2D = Sprite2D.new()
+	effect_node.name = "SourceAttachment" + str(id)
+	if node_key is String:
+		effect_node.name += "_Instance" + str(_effect_nodes.size())
+		effect_node.set_meta("source_layer_instance_key",effect.source_layer_instance_key)
+	effect_node.centered = false
+	effect_node.z_index = 1
+	var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
+	if bool(effect.get("source_attributes_unresolved", false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
+	# Identity-scoped observation candidate; never generalizes attr8/128.
+	var observed_girtas: bool = SP2_COMPOSITOR.screen_copy_available and _playback_mode == "compatible" and int(candidate.get("body_id", 0)) == 22258 and id in [22260, 22261] and not "--lineagem-girtas-legacy-blend" in OS.get_cmdline_user_args()
+	if observed_girtas:
+		style = {"enabled":true,"alpha":1.0,"origin":"Girtas_only_five_M_GIF_pose_observations_exact_equation_unverified"}
+
+	effect_node.set_meta("compatibility_style", style)
+	if observed_girtas:
+		var copy: ObservedGirtasCopy = ObservedGirtasCopy.new()
+		effect_node.hide()
+		copy.effect = effect_node
+		copy.copy_mode = BackBufferCopy.COPY_MODE_DISABLED
+		copy.z_index = 1 if id == 22261 else 2
+		add_child(copy)
+		effect_node.z_index = copy.z_index
+		effect_node.set_meta("observed_backbuffer", copy)
+		var shader_material: ShaderMaterial = ShaderMaterial.new()
+		shader_material.shader = preload("res://shaders/source_girtas_observed_blend.gdshader")
+		shader_material.set_shader_parameter("screen_operation", id == 22260)
+		effect_node.material = shader_material
+	elif bool(style.get("enabled", false)):
+		var material: CanvasItemMaterial = CanvasItemMaterial.new()
+		material.blend_mode = int(style.blend_mode)
+		effect_node.material = material
+		effect_node.modulate.a = float(style.alpha)
+	effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	effect_node.set_meta("source_layer_id", id)
+	effect_node.set_meta("source_attributes", effect.get("source_attributes", []))
+	effect_node.set_meta("blend_status", effect.get("blend_status", "unverified"))
+	effect_node.hide()
+	add_child(effect_node)
+	_effect_nodes[node_key] = effect_node
+
+func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_count: int, manifest_path: String, layout: Dictionary = {}) -> bool:
 	# Exact attachment nodes stay linked even while their source blend is unresolved.
-	for track: Dictionary in tracks.values():
-		for frames: Array in track.directions:
-			for frame: Dictionary in frames:
-				for effect: Dictionary in frame.get("effect_layers", []):
-					var id: int = int(effect.layer_id)
-					var node_key: Variant = _effect_node_key(effect)
-					if _effect_nodes.has(node_key): continue
-					var effect_node: Sprite2D = Sprite2D.new()
-					effect_node.name = "SourceAttachment" + str(id)
-					if node_key is String:
-						effect_node.name += "_Instance" + str(_effect_nodes.size())
-						effect_node.set_meta("source_layer_instance_key",effect.source_layer_instance_key)
-					effect_node.centered = false
-					effect_node.z_index = 1
-					var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
-					if bool(effect.get("source_attributes_unresolved", false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
-					# Identity-scoped observation candidate; never generalizes attr8/128.
-					var observed_girtas: bool = SP2_COMPOSITOR.screen_copy_available and _playback_mode == "compatible" and int(candidate.get("body_id", 0)) == 22258 and id in [22260, 22261] and not "--lineagem-girtas-legacy-blend" in OS.get_cmdline_user_args()
-					if observed_girtas:
-						style = {"enabled":true,"alpha":1.0,"origin":"Girtas_only_five_M_GIF_pose_observations_exact_equation_unverified"}
-
-					effect_node.set_meta("compatibility_style", style)
-					if observed_girtas:
-						var copy: ObservedGirtasCopy = ObservedGirtasCopy.new()
-						effect_node.hide()
-						copy.effect = effect_node
-						copy.copy_mode = BackBufferCopy.COPY_MODE_DISABLED
-						copy.z_index = 1 if id == 22261 else 2
-						add_child(copy)
-						effect_node.z_index = copy.z_index
-						effect_node.set_meta("observed_backbuffer", copy)
-						var shader_material: ShaderMaterial = ShaderMaterial.new()
-						shader_material.shader = preload("res://shaders/source_girtas_observed_blend.gdshader")
-						shader_material.set_shader_parameter("screen_operation", id == 22260)
-						effect_node.material = shader_material
-					elif bool(style.get("enabled", false)):
-						var material: CanvasItemMaterial = CanvasItemMaterial.new()
-						material.blend_mode = int(style.blend_mode)
-						effect_node.material = material
-						effect_node.modulate.a = float(style.alpha)
-					effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-					effect_node.set_meta("source_layer_id", id)
-					effect_node.set_meta("source_attributes", effect.get("source_attributes", []))
-					effect_node.set_meta("blend_status", effect.get("blend_status", "unverified"))
-					effect_node.hide()
-					add_child(effect_node)
-					_effect_nodes[node_key] = effect_node
+	if not layout.is_empty():
+		for effect: Dictionary in layout.effects: _configure_source_effect_node(effect,candidate)
+	else:
+		# Preserve the mutable/nonprepared traversal and first-occurrence behavior.
+		for track: Dictionary in tracks.values():
+			for frames: Array in track.directions:
+				for frame: Dictionary in frames:
+					for effect: Dictionary in frame.get("effect_layers", []): _configure_source_effect_node(effect,candidate)
 	_record = candidate
 	var root_attributes: Array = candidate.get("source_attributes", []).duplicate()
 	if root_attributes.is_empty():
@@ -590,13 +601,23 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
 	for effect: Dictionary in selected.get("effect_layers", []):
 		if effect.has("client_null"): continue
-		if is_reference:
+		# First use must prime the verified member key before the shared texture
+		# lookup. Once this view owns the texture, _source_texture alone rechecks
+		# the member on every draw; no duplicate warm validation is needed.
+		var preverified: bool = is_reference and not _textures.has(str(effect.get("texture_key",effect.get("path",""))))
+		if preverified:
 			var verified: Dictionary = _reference_bank.render_layer(effect, false)
 			if not verified.ok:
 				_abort_reference_source(verified)
 				return
 		var node: Sprite2D = _effect_nodes.get(_effect_node_key(effect)) as Sprite2D
-		if node == null: continue
+		if node == null:
+			if is_reference and not preverified:
+				var verified: Dictionary = _reference_bank.render_layer(effect, false)
+				if not verified.ok:
+					_abort_reference_source(verified)
+					return
+			continue
 		node.set_meta("source_layer_id",int(effect.layer_id))
 		node.position = Vector2(float(effect.offset[0]), float(effect.offset[1]))
 		node.set_meta("source_pixel_path", INSTALL.resolve_file(_root, str(effect.path)))
@@ -621,6 +642,13 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 				node.texture = texture
 				if not recovered.is_empty(): SP2_COMPOSITOR.apply(node, recovered)
 				node.show()
+		elif is_reference and not preverified:
+			# Hidden/unresolved effects still reject changed source bytes. Drawn
+			# effects are already verified by _source_texture, including cache hits.
+			var verified: Dictionary = _reference_bank.render_layer(effect, false)
+			if not verified.ok:
+				_abort_reference_source(verified)
+				return
 	if token != _last_token:
 		_last_token = token
 		var event: Dictionary = {"role":_role,"source_frame":selected.source_frame,"source_group":selected.source_group,"direction":source_direction,"effect_layers":selected.get("effect_layers", [])}

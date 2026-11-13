@@ -926,6 +926,8 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 				if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
 				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":_frame_seconds(int(token[2]),source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
 				var clothes_stop_index: int = -1
+				# C06 selection depends on this token/direction, never the layer actor.
+				var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
 				for layer_index: int in range(frame.layers.size()):
 					var layer: Variant = frame.layers[layer_index]
 					var spec: Variant = layer_specs[layer_index]
@@ -940,8 +942,6 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 						if not native_attributes.ok: return native_attributes
 						layer = layer.duplicate(true)
 						layer.merge({"source_layer_instance_key":native_attributes.instance_key,"source_attributes":native_attributes.attributes,"source_attribute_declarations":native_attributes.declarations,"source_attributes_unresolved":native_attributes.unresolved,"source_attribute_projection":native_attributes.projection,"source_attribute_owner_declarations":native_attributes.owner_declarations,"source_attribute_owner_attributes":native_attributes.owner_attributes})
-					# C06: u16(word0 + direction) -> file group and in-file direction (original-client contract adapter).
-					var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
 					var member: String = ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id), group.file_b)
 					var client_frames: bool = contract.get("frame_policy") == "client_clamp_frame_null_missing_direction_or_empty_body"
 					var frame_matches: bool = layer.get("frame_index") == token[1]
@@ -949,7 +949,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 					if layer.get("member") != member or layer.get("group_bit") != group.direction or not frame_matches: return fail("Literal source address differs from identity contract.")
 					if clothes_prefix_policy and layer.kind == "clothes" and clothes_stop_index >= 0:
 						if layer.get("client_null", "") == "clothes_prefix_stopped" and (not integer(layer.get("clothes_prefix_stop_layer_index")) or int(layer.clothes_prefix_stop_layer_index) != clothes_stop_index): return fail("Clothes prefix stop provenance differs from the first null.")
-						var stopped: Dictionary = layer.duplicate(true)
+						var stopped: Dictionary = layer if native_policy.native else layer.duplicate(true)
 						if layer.has("client_null"): stopped["source_client_null"] = layer.client_null
 						stopped.merge({"client_null":"clothes_prefix_stopped","clothes_prefix_stop_layer_index":clothes_stop_index,"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
 						shown.effect_layers.append(stopped)
@@ -959,7 +959,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 						var allowed_null: bool = layer.client_null in ["direction_absent","empty_body_frame"] or (clothes_prefix_policy and layer.client_null == "empty_frame_set")
 						if not client_frames or not allowed_null or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
 						if clothes_prefix_policy and layer.kind == "clothes" and layer.client_null == "direction_absent": clothes_stop_index = layer_index
-						var null_layer: Dictionary = layer.duplicate(true)
+						var null_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
 						null_layer.merge({"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
 						if layer.kind == "clothes": shown.effect_layers.append(null_layer)
 						else: shown.layers.append(null_layer)
@@ -969,7 +969,9 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 					var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
 					if not picture.ok: return picture
 					if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
-					var converted_layer: Dictionary = layer.duplicate(true)
+					# Native input was privately copied before its attribute merge. Reuse
+					# that copy so immutable shared proofs retain their ownership too.
+					var converted_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
 					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"source_attribute_projection":attributes.projection,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
 					if not reference_binding.instances.is_empty():
 						converted_layer["source_reference_instances"] = reference_binding.instances
