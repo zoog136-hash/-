@@ -5,7 +5,7 @@ const RESULT_PATH="user://current523-inferred-placement-expected.json"
 var panel: Node
 var definitions: String
 func controls() -> void:
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"existing normal Settings panel")
 func setup_ui(enabled: bool,point: Vector2i) -> void:

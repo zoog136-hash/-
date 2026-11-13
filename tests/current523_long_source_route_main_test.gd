@@ -6,7 +6,7 @@ var proof: Dictionary
 var panel: Node
 
 func controls() -> Node:
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	var result=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(result!=null,"existing Settings controls")
 	return result

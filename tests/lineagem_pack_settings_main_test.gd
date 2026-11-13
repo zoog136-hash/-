@@ -36,7 +36,7 @@ func run() -> void:
 	var save_path: String = world.save_path()
 	var before: String = FileAccess.get_sha256(save_path)
 	var selected: String = INSTALL.active_manifest()
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	await process_frame
 	var button: Button = world.hud.workspace.find_child("InstallLineageMOfflinePack", true, false) as Button
@@ -56,7 +56,7 @@ func run() -> void:
 		check(INSTALL.active_manifest() == selected, "settings action preserves active native selection")
 	check(FileAccess.get_sha256(save_path) == before, "settings interaction preserves save bytes")
 	# Reopening uses the same gameplay UI route and restores pack status.
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	await process_frame
 	await process_frame
 	check(world.hud.workspace.find_child("InstallLineageMOfflinePack", true, false) != null, "settings can be reopened after failure")

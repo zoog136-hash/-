@@ -1173,7 +1173,7 @@ func open_combat_log() -> void:
 	_open_utility_panel("전투 기록")
 	_utility_add_text("최근 PvE 전투 및 게임 시스템 메시지는 화면의 전투 로그에서 확인할 수 있습니다.")
 
-func open_settings_info() -> void:
+func open_settings_info(_expand_all: bool = false) -> void:
 	_open_utility_panel("설정 / 관리")
 	_utility_add_text("게임 데이터 관리와 주요 화면을 바로 열 수 있습니다.")
 	_utility_add_action("게임 저장", func() -> void: save_pressed.emit())

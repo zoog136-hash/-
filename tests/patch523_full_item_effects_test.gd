@@ -136,7 +136,7 @@ func run() -> void:
 		before_hp = world.hp;before_mp = world.mp
 		check(P.drain(world,target) == 0 and world.hp == before_hp and world.mp == before_mp,"native drain can be disabled")
 		target.free();drain_cases += 1
-	world.hud.open_settings_info();await process_frame
+	world.hud.open_settings_info(true);await process_frame
 	var settings: Node = world.hud.find_child("Patch523DropSettings",true,false)
 	check(settings != null,"actual source item settings UI reachable")
 	if settings != null:

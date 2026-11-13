@@ -7,7 +7,7 @@ var defs: String
 var alternate: String
 var panel: Node
 func controls() -> void:
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"actual existing Settings panel")
 func connect_ui(path: String) -> void:
