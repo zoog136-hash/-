@@ -1509,7 +1509,7 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
-			var source_weight: Dictionary = ITEM_OPTIONS.current_source_weight_input(record,source_weight_policy)
+			var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,source_weight_policy)
 			if source_weight.get("applicable",false):
 				if not source_weight.get("ok",false):
 					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
@@ -4909,6 +4909,9 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dictionary:
+	return _find_catalog_item_record_cash_install(item_name,source_id,null)
+
+func _find_catalog_item_record_cash_install(item_name: String, source_id: String, scope: ITEM_CATALOG_LOOKUP.CashInstallScope) -> Dictionary:
 	if source_id.is_empty() and quest_auto!=null and quest_auto.has_method("held_record"):
 		var held: Variant=quest_auto.call("held_record",item_name,item_instances)
 		if held is Dictionary and not held.is_empty():return held
@@ -4918,6 +4921,9 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	# Indexed, self-validating equivalent of the previous one-name find_many scan.
 	if item_name.begins_with("[원본 보상] "):
 		return quest_auto.held_record(item_name,item_instances)
+	if scope != null:
+		var scoped: Variant = scope.find_one([catalog_db.get("아이템", []),item_db],item_instances,item_name)
+		if scoped is Dictionary: return scoped
 	return ITEM_CATALOG_LOOKUP.find_one([catalog_db.get("아이템", []), item_db], item_instances, item_name)
 
 func _safe_enhancement_level(kind: String, record: Dictionary = {}) -> int:

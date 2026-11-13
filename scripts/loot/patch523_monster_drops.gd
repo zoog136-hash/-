@@ -239,12 +239,19 @@ static func forget_definition(item_id: String) -> void:
 ## former read-then-erase in the catalog registrar). Known IDs behave as
 ## definition_id().
 static func transient_definition(item_id: String) -> Dictionary:
+	return _transient_definition(item_id,false)
+
+## Registrar-only projection input; public definitions remain complete.
+static func _native_registration_definition(item_id: String) -> Dictionary:
+	return _transient_definition(item_id,true)
+
+static func _transient_definition(item_id: String, native_only: bool) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
 	if data().is_empty(): return {}
 	if _definition_ids.has(item_id): return definition_id(item_id)
 	var scope: CURRENT_DTO.RegistrationScope = CURRENT_DTO.registration_profile_scope()
 	var started: int = Time.get_ticks_usec() if scope != null else 0
-	var detail: Dictionary = _describe_item(int(item_id))
+	var detail: Dictionary = _describe_item(int(item_id),native_only)
 	if scope != null:
 		scope.describe_us += Time.get_ticks_usec() - started
 		scope.describe_calls += 1
@@ -267,7 +274,7 @@ static func _document_definition(document: Dictionary, item_id: String) -> Dicti
 		return cached_definition(item_id)
 	return document.get("item_definitions",{}).get(item_id,{})
 
-static func _describe_item(item_id: int) -> Dictionary:
+static func _describe_item(item_id: int, native_only: bool = false) -> Dictionary:
 	# ItemData retains a legacy helper preload of this module. Defer loading
 	# until this actual read path; a static preload here would form a cycle.
 	var reader: Script = CURRENT_DTO.registration_item_reader()
@@ -282,6 +289,11 @@ static func _describe_item(item_id: int) -> Dictionary:
 		for method: Dictionary in reader.get_script_method_list():
 			if method.get("name") == "describe": has_describe = true; break
 		if not has_describe: return {}
+	# Only the positively validated real reader in an active registration can
+	# omit the unused Market forward graph. Other readers retain their ABI.
+	if native_only and reader == CURRENT_DTO.registration_item_reader() and reader.resource_path == "res://scripts/resources/current523_item_data.gd" and reader.has_method("_describe_native_registration"):
+		var projected: Variant = reader.call("_describe_native_registration",item_id,CURRENT_DTO.registration_market_warmup)
+		return projected if projected is Dictionary else {}
 	var detail: Variant = reader.call("describe",item_id,false)
 	if not detail is Dictionary: return {}
 	return detail

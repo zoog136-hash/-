@@ -43,6 +43,14 @@ func _run() -> void:
 	put(output,offsets,"12","malformed light", {"keys":[],"fields":{}})
 	put(output,offsets,"13",{}, {"keys":"malformed keys","fields":{}})
 	put(output,offsets,"14",{}, {"keys":[],"fields":"malformed fields"})
+	var typed: Array[Dictionary] = [{"nested":[4]}]
+	var readonly: Array = [{"nested":[5]}]
+	readonly.make_read_only()
+	var shared: Dictionary = {"nested":[{"values":[6]}]}
+	shared.make_read_only()
+	put(output,offsets,"15",{"source_use_spec":{"nested":[{"values":[3]}]}},
+		{"keys":["source_use_spec","source_class_ids","source_equip_slot_ids","source_original_item","source_unhandled_bonuses","source_mapped_bonuses"],
+		"fields":{"source_class_ids":typed,"source_equip_slot_ids":readonly,"source_original_item":shared,"source_unhandled_bonuses":shared,"source_mapped_bonuses":PackedInt32Array([7,8])}})
 	for id: int in range(100,240):
 		put(output,offsets,str(id),{"name":"item"+str(id),"source_item_class_id":id}, {"keys":["name","source_class_ids","source_item_class_id"],"fields":{"source_class_ids":[id]}})
 	output.close()
@@ -76,6 +84,35 @@ func _run() -> void:
 	(full.own_extra.v as Array).append(8)
 	check(own.own_extra.v == [3,8], "own override references remain shared as historical full")
 	own.own_extra.v.pop_back()
+	# FileAccess var decoding owns each container; mutations of one expansion
+	# cannot reach another expansion, a cached public read, or the input fixture.
+	var nested_own: Dictionary = {FIELDS.MARK:true,"source_item_class_id":15}
+	FIELDS.bind(store)
+	var nested_before: Dictionary = FIELDS.full(nested_own)
+	FIELDS.bind(store)
+	var nested_after: Dictionary = FIELDS._full_for_binding(nested_own)
+	var decoded_before: Dictionary = store.record("15")
+	check(same(nested_before,nested_after), "fresh nested/typed/readonly values preserve exact legacy bytes")
+	check(nested_after.source_class_ids.is_typed() and nested_after.source_class_ids.get_typed_builtin() == TYPE_DICTIONARY, "decoded typed arrays retain their element type")
+	check(nested_before.source_equip_slot_ids.is_read_only() == nested_after.source_equip_slot_ids.is_read_only(), "read-only array flags match legacy decoded copy")
+	check(nested_before.source_original_item.is_read_only() == nested_after.source_original_item.is_read_only(), "read-only dictionary flags match legacy decoded copy")
+	check(not is_same(nested_after.source_original_item,nested_after.source_unhandled_bonuses), "FileAccess decodes repeated serialized containers independently")
+	check(not is_same(nested_before.source_original_item,nested_after.source_original_item), "fresh FileAccess read does not alias the public template cache")
+	nested_after.source_use_spec.nested[0].values.append(30)
+	nested_after.source_class_ids[0].nested.append(40)
+	nested_after.source_equip_slot_ids[0].nested.append(50)
+	nested_after.source_original_item.nested[0].values.append(60)
+	nested_after.source_mapped_bonuses.append(70)
+	check(nested_after.source_unhandled_bonuses.nested[0].values == [6], "decoded sibling fields remain independent")
+	check(same(FIELDS._full_for_binding(nested_own),nested_before), "second uncached expansion owns independent nested containers")
+	check(same(store.record("15"),decoded_before), "fresh record read is unchanged after expansion mutation")
+	check(typed[0].nested == [4] and readonly[0].nested == [5] and shared.nested[0].values == [6], "source typed/readonly/nested fixture containers remain unchanged")
+	check(not FIELDS._cache.has("15"), "fresh expansion never installs decoded fields into public cache")
+	var nested_override: Dictionary = {FIELDS.MARK:true,"source_item_class_id":15,"source_use_spec":{"values":[9]}}
+	var override_result: Dictionary = FIELDS._full_for_binding(nested_override)
+	override_result.source_use_spec.values.append(10)
+	check(nested_override.source_use_spec.values == [9,10], "own heavy-field override retains historical nested alias")
+	check(readonly.is_read_only() and shared.is_read_only(), "input read-only containers retain their protection")
 	# Existing cache entries, including an empty miss, are authoritative.
 	FIELDS.bind(store)
 	var cached: Dictionary = FIELDS.full(own)
