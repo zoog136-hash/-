@@ -15,6 +15,7 @@ class ScrollButton extends "res://scripts/ui/native_touch_button.gd":
 			scroll_host.scroll_vertical -= int(event.relative.y)
 		super._input(event)
 const MAIN := "res://Main.tscn"
+const LOADING_SCREEN := "res://scripts/boot/loading_screen.gd"
 var store: RefCounted
 # Explicitly injected stores keep their caller-selected path. Only the normal
 # boot route resolves the namespace and authoritative map-migration pointer.
@@ -369,6 +370,10 @@ func _enter() -> void:
 	_enter_main.call_deferred()
 
 func _enter_main() -> void:
+	# The world loads behind the progress overlay (no title a second time); the
+	# Main scene itself was already loaded by the first loading.
+	var loader: Script = load(LOADING_SCREEN) as Script if ResourceLoader.exists(LOADING_SCREEN) else null
+	if loader != null and loader.call("open", get_tree(), MAIN, false) != null: return
 	var result: Error = get_tree().change_scene_to_file(MAIN)
 	if result != OK:
 		busy = false
