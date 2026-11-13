@@ -10669,7 +10669,10 @@ func _release_player_attack(id: int) -> void:
 			combat_flights.launch(player.combat_projectile_origin(), target, flight_kind, _impact_player_attack.bind(shot_action), 1300.0, float(shot) * spacing)
 		return
 	if action.kind in ["ranged", "magic"]:
-		combat_flights.launch(player.combat_projectile_origin(), target, action.kind, _impact_player_attack.bind(action), 900.0 if action.kind == "magic" else 1300.0)
+		# Normal bow/sting/gun shots follow the original 523 ammo sprite when the
+		# pack has it; the flight itself (speed, hit, cancel) is unchanged.
+		var flight_options: Dictionary = preload("res://scripts/animation/current523_ammo_flight.gd").options(self, player.combat_projectile_origin(), target) if action.kind == "ranged" and bool(action.get("normal", false)) else {}
+		combat_flights.launch(player.combat_projectile_origin(), target, action.kind, _impact_player_attack.bind(action), 900.0 if action.kind == "magic" else 1300.0, 0.0, flight_options)
 	else:
 		_impact_player_attack(action)
 

@@ -6,7 +6,7 @@ const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const TABLES_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const SETTINGS = "user://current523_source_bank.json"
 const TABLES = ["BuffCard", "BuffCardDeck", "BuffClass", "BuffBonus", "Bonus", "BonusType", "Unit", "PolymorphSet", "PolymorphEntityForSet", "PolymorphEntity", "BuffCardSpriteCustomizingOption", "ListSprAction", "NpcClass", "BonusApplicationType", "SpriteRun", "SpriteSeparatedWalk", "SpellClass", "ConstantData", "BuffCardAwakenEffect", "StatusEffectAttr"]
-const OPTIONAL_TABLES = ["ItemClass", "ItemBonus", "InvokeOption", "Class", "Gender"]
+const OPTIONAL_TABLES = ["ItemClass", "ItemBonus", "InvokeOption", "Class", "Gender", "WeaponType"]
 # Exact current BuffCardDeck rows. Relics use native deck98 (HolyStuffCardDeck).
 const DECKS = {"transform":1, "doll":2, "relic":98}
 const DECK_NAMES = {"transform":"PolymorphCardDeck", "doll":"MagicDollCardDeck", "relic":"HolyStuffCardDeck"}
