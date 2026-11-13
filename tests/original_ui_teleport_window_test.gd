@@ -63,7 +63,5 @@ func _sources() -> void:
 	check(not text.contains("Image.create") and not text.contains("draw_rect"),"no picture is drawn")
 	var scene_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
 	check(scene_text.contains("button_options.text=title_binding"),"an authored button title can carry a live text")
-	var tool_text: String=FileAccess.get_file_as_string("res://tools/ui/build_client523_main_ui_pack.py")
-	check(tool_text.contains("(\"UI/Map/Map_All.csb\", [31940, 31372, 30868, 512, 7648])"),"Map_All is packed whole minus the tabs no window mounts")
-	check(tool_text.contains("(\"UI/Map/Map_List_Button.csb\", [1784])"),"Map_List_Button is packed whole minus the bookmark star")
-	check(tool_text.contains("\"UI/Map/Map_Tab_Teleport.csb\": [7356]"),"the fee icon is a declared external texture node")
+	# The pack tool's scopes (tools/ui, outside the exported project) are
+	# checked against a built pack by the Android world-map contract.
