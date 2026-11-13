@@ -3,6 +3,7 @@ extends SceneTree
 ## the old full() bytes/order/copies and retain every generic/cache fallback.
 const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const NATIVE = preload("res://scripts/loot/current523_native_item_projection.gd")
+const RULES = preload("res://scripts/crafting/patch523_rules.gd")
 const CURRENT = preload("res://scripts/crafting/patch523_rules_projection.gd")
 const OLD = preload("res://tests/fixtures/rules_cold_legacy/legacy_projection.gd")
 var checks: int = 0
@@ -162,6 +163,12 @@ func _run() -> void:
 	store.file = saved_file
 	check(FIELDS._full_for_binding({FIELDS.MARK:true,"source_item_class_id":100,"name":"item100"}).source_class_ids == [100] and not FIELDS._cache.has("100"), "evicted valid ID can use bounded fusion")
 	check(FIELDS._cache.size() <= FIELDS.CACHE_LIMIT, "fusion introduces no unbounded field cache")
+	check(RULES._binding_thread_values_safe({"values":[null,true,1,1.5,"한글",PackedInt32Array([1,2])]}),"immutable JSON-like worker inputs")
+	check(not RULES._binding_thread_values_safe([RefCounted.new()]),"foreign object stays sequential")
+	check(not RULES._binding_thread_values_safe({1:"foreign key"}),"foreign key stays sequential")
+	var cycle: Array=[];cycle.append(cycle)
+	check(not RULES._binding_thread_values_safe(cycle),"cyclic input stays sequential")
+	cycle.clear()
 	# Exact whole binding JSON identity and parsed/packed results.
 	var items: Array = [own,edited,{FIELDS.MARK:true,"source_item_class_id":10,"name":"mark"},ordinary,{},null,[1,2]]
 	var contract: Dictionary = {"fixture_only":true,"values":[1,2]}
@@ -218,6 +225,32 @@ func _run() -> void:
 	FIELDS._weight_fields_for_binding(weight_own)
 	check(not store.strings.is_empty() and FIELDS._cache.has("16"), "weight interning retains pool and cache semantics")
 	store.interning = false
+	var projection_items: Array=items+[nested_own,weight_own]
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	var expected_projection: Dictionary=CURRENT.binding_document(projection_items,contract,true,true)
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	var selected_projection: Dictionary=CURRENT.binding_projection(projection_items,contract)
+	check(same(expected_projection.binding.patch523_crafting_catalog_contract,selected_projection.patch523_crafting_catalog_contract),"selected contract JSON types/order")
+	for i: int in projection_items.size():check(same(expected_projection.binding["아이템"].fetch(i),selected_projection["아이템"].fetch(i)),"selected complete binding values "+str(i))
+	var fork:=NATIVE.TemplateStore.new();fork.file=FileAccess.open(path,FileAccess.READ);fork.offsets=offsets.duplicate(false);fork.interning=false
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	var expected_hash: Dictionary=CURRENT.binding_document(projection_items,contract,false)
+	FIELDS.bind(store,NATIVE.TemplateStore)
+	var reader: Object=FIELDS._binding_reader(fork)
+	check(reader!=null,"private independent reader")
+	var cursor: int=store.file.get_position()
+	var worker:=Thread.new();check(worker.start(CURRENT.binding_document.bind(projection_items,contract,false,false,reader))==OK,"worker starts")
+	var actual_hash: Variant=worker.wait_to_finish()
+	check(actual_hash is Dictionary and actual_hash.sha256==expected_hash.sha256 and actual_hash.bytes==expected_hash.bytes,"unchanged complete binding hash/bytes on worker")
+	check(store.file.get_position()==cursor,"worker never seeks live handle")
+	check(FIELDS._cache.is_empty(),"worker leaves live cache untouched")
+	check(reader.read_error==OK,"worker completed every template read")
+	var failed_job:=RULES.BindingHash.new();failed_job.reader=reader;failed_job.items=[{"plain":true}];failed_job.contract={}
+	reader.read_error=ERR_FILE_CORRUPT
+	check(failed_job.run().is_empty(),"read failure cannot supply accepted binding hash")
+	failed_job=null;reader=null;fork.file.close()
+	FIELDS.bind(generic);check(FIELDS._binding_reader(fork)==null,"generic reader cannot opt in")
+	FIELDS.bind(subclass,NATIVE.TemplateStore);check(FIELDS._binding_reader(fork)==null,"subclass reader cannot opt in")
 	FIELDS.bind(null)
 	store.file.close()
 	DirAccess.remove_absolute(path)

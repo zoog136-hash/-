@@ -61,6 +61,9 @@ static func slim(record: Dictionary) -> Dictionary:
 static func full(record: Variant) -> Variant:
 	if not lazy(record): return record
 	var template: Dictionary = _template(str(int((record as Dictionary).get("source_item_class_id", 0))))
+	return _merge_full(record,template)
+
+static func _merge_full(record: Dictionary, template: Dictionary) -> Dictionary:
 	if template.is_empty():
 		var bare: Dictionary = (record as Dictionary).duplicate(false)
 		bare.erase(MARK)
@@ -83,6 +86,49 @@ static func _full_for_binding(record: Variant) -> Variant:
 	if _cache.has(id) or not _store.has_method("_expanded_for_binding"): return full(record)
 	var expanded: Variant = _store.call("_expanded_for_binding",id,record)
 	return expanded if expanded is Dictionary else full(record)
+
+## Private cold compiler: a separate read handle and cache/order snapshot.
+## Its worker never touches this adapter's live provider/cache or Source state.
+class BindingReader extends RefCounted:
+	var provider: Object
+	var merge: Callable
+	var read_error: int=OK
+	var cache: Dictionary={}
+	var order: Array[String]=[]
+	func full_for_binding(record: Variant) -> Variant:
+		if not record is Dictionary or record.get(MARK)!=true:return record
+		var id: String=str(int(record.get("source_item_class_id",0)))
+		if not cache.has(id):
+			var expanded: Variant=provider.call("_expanded_for_binding",id,record)
+			var error: int=provider.file.get_error()
+			if error!=OK:read_error=error
+			if expanded is Dictionary:return expanded
+			var value: Variant=provider.call("record",id)
+			error=provider.file.get_error()
+			if error!=OK:read_error=error
+			cache[id]=value if value is Dictionary else {}
+			order.append(id)
+			if order.size()>CACHE_LIMIT:cache.erase(order.pop_front())
+		return merge.call(record,cache[id])
+
+static func _binding_reader(provider: Object) -> BindingReader:
+	if not _weight_store_exact or _store==null or _store.get_script()!=_weight_script or provider==null or provider.get_script()!=_weight_script:return null
+	var reader:=BindingReader.new();reader.provider=provider;reader.merge=_merge_full;reader.cache=_cache.duplicate(false);reader.order=_order.duplicate()
+	return reader
+
+static func _selected_for_binding(record: Variant, fields: Array[String]) -> Variant:
+	if not record is Dictionary:return _full_for_binding(record)
+	if _weight_store_exact and _store!=null and _store.get_script()==_weight_script and lazy(record):
+		var id: String=str(int(record.get("source_item_class_id",0)))
+		if not _cache.has(id):
+			var selected: Variant=_store.call("_selected_for_binding",id,record,fields)
+			if selected is Dictionary:return selected
+	var full_record: Variant=_full_for_binding(record)
+	if not full_record is Dictionary:return full_record
+	var selected: Dictionary={}
+	for key: String in fields:
+		if full_record.has(key):selected[key]=full_record[key]
+	return selected
 
 ## Weight validation reads exactly these three fields. Only the exact real,
 ## uncached, non-interning store may avoid assembling unrelated detail fields.

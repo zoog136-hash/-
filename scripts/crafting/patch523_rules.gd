@@ -185,20 +185,83 @@ func compile_original_bound(catalog_bytes: PackedByteArray, items: Array, contra
 			_release_cold()
 	return outcome == COMPILED
 
+class BindingHash extends RefCounted:
+	var reader: Object
+	var items: Array
+	var contract: Dictionary
+	func run() -> Dictionary:
+		var result: Dictionary=ORIGINAL_PROJECTION.binding_document(items,contract,false,false,reader)
+		return result if reader.get("read_error")==OK else {}
+
+## The private compiler borrows these inputs while its caller is blocked.
+## Foreign objects/cycles keep the sequential path (no worker callbacks).
+static func _binding_thread_values_safe(value: Variant, depth: int=0) -> bool:
+	if depth>32:return false
+	match typeof(value):
+		TYPE_NIL,TYPE_BOOL,TYPE_INT,TYPE_FLOAT,TYPE_STRING,TYPE_STRING_NAME:return true
+		TYPE_ARRAY:
+			for child: Variant in value:
+				if not _binding_thread_values_safe(child,depth+1):return false
+			return true
+		TYPE_DICTIONARY:
+			for key: Variant in value:
+				if not key is String or not _binding_thread_values_safe(value[key],depth+1):return false
+			return true
+		TYPE_PACKED_BYTE_ARRAY,TYPE_PACKED_INT32_ARRAY,TYPE_PACKED_INT64_ARRAY,TYPE_PACKED_FLOAT32_ARRAY,TYPE_PACKED_FLOAT64_ARRAY,TYPE_PACKED_STRING_ARRAY:return true
+	return false
+
+func _parallel_binding_reader(items: Array, contract: Dictionary) -> Object:
+	# Real private synchronous owner only. Public/injected/subclass/provider
+	# paths preserve the old sequential API, calls and cache observations.
+	if _projection_source!=null or get_script().resource_path!="res://scripts/crafting/patch523_rules.gd" or items.size()<1024 or OS.get_processor_count()<2 or OS.get_thread_caller_id()!=OS.get_main_thread_id() or OS.get_environment("TWILIGHT_BINDING_SEQUENTIAL")=="1":return null
+	if not NATIVE_FIELDS._weight_store_exact or NATIVE_FIELDS._store==null or NATIVE_FIELDS._store.get_script()!=NATIVE_FIELDS._weight_script:return null
+	if not _binding_thread_values_safe(items) or not _binding_thread_values_safe(contract) or not _binding_thread_values_safe(NATIVE_FIELDS._cache):return null
+	var current: Object=NATIVE_FIELDS._store
+	if current.get("interning")!=false or current.get("file")==null:return null
+	# Reopen through the normal original/code key, complete file SHA and index
+	# checks. The worker owns this handle; it never seeks the live template.
+	var fork: Object=NATIVE_PROJECTION._open_templates()
+	if fork==null or fork.get_script()!=current.get_script() or fork.offsets!=current.offsets or fork.file.get_path_absolute()!=current.file.get_path_absolute():return null
+	fork.interning=false
+	return NATIVE_FIELDS._binding_reader(fork)
+
 func _compile_bound(catalog_bytes: PackedByteArray, items: Array, contract: Dictionary, key: String) -> int:
 	var projection = _new_projection()
 	var started: int = BOOT_LOG.begin("rules_binding",{"items":items.size()})
-	# The registered identities as a packed store instead of ~30,000 parsed
-	# Dictionaries (the same records; see patch523_packed_records.gd).
-	var document: Dictionary = ORIGINAL_PROJECTION.binding_document(items,contract,true,true)
-	BOOT_LOG.end("rules_binding",started)
-	var binding: Dictionary = document.binding
-	var binding_sha: String = document.sha256
-	document = {}
+	var reader: Object=_parallel_binding_reader(items,contract)
+	var binding: Dictionary
+	var binding_sha: String=""
+	var hash_job: BindingHash=null
+	var hash_thread: Thread=null
+	if reader==null:
+		var document: Dictionary=ORIGINAL_PROJECTION.binding_document(items,contract,true,true)
+		binding=document.binding;binding_sha=document.sha256
+	else:
+		binding=ORIGINAL_PROJECTION.binding_projection(items,contract)
+		hash_job=BindingHash.new();hash_job.reader=reader;hash_job.items=items;hash_job.contract=contract
+		hash_thread=Thread.new()
+		if hash_thread.start(hash_job.run)!=OK:
+			binding_sha=str(hash_job.run().get("sha256",""));hash_thread=null
+			if binding_sha.length()!=64:
+				projection.problem="원본 장비 입력 전체 해시를 완료하지 못했습니다."
+				hash_job=null;reader=null
+				BOOT_LOG.end("rules_binding",started,{"ok":false,"reason":"binding_hash_read_error"})
+				return _load_candidate(projection,{},key)
+	BOOT_LOG.end("rules_binding",started,{"overlapped":reader!=null})
 	started = BOOT_LOG.begin("rules_build")
-	var candidate: Dictionary = projection.build_bound(catalog_bytes,binding,binding_sha)
-	binding = {}
+	var candidate: Dictionary=projection.build_bound(catalog_bytes,binding,binding_sha)
+	binding={}
 	BOOT_LOG.end("rules_build",started,{"ok":not candidate.is_empty()})
+	if hash_thread!=null:
+		started=BOOT_LOG.begin("rules_binding_hash_join")
+		var result: Variant=hash_thread.wait_to_finish()
+		BOOT_LOG.end("rules_binding_hash_join",started)
+		if result is Dictionary and str(result.get("sha256","")).length()==64 and int(result.get("bytes",-1))>=0:binding_sha=result.sha256
+		else:
+			projection.problem="원본 장비 입력 전체 해시를 완료하지 못했습니다."
+			candidate={}
+		if not candidate.is_empty():candidate.binding_catalog_sha256=binding_sha
+	hash_job=null;hash_thread=null;reader=null
 	projection._enable_runtime_reuse(self)
 	return _load_candidate(projection,candidate,key)
 

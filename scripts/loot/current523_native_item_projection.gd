@@ -446,6 +446,8 @@ class TemplateStore extends RefCounted:
 	## Same selected values as _expanded_for_binding(), retaining fresh decoded
 	## ownership, but no full detail Dictionary for the weight-only consumer.
 	func _weight_fields_for_binding(id: String, own: Dictionary) -> Variant:
+		return _selected_for_binding(id,own,FIELDS.WEIGHT_FIELDS)
+	func _selected_for_binding(id: String, own: Dictionary, fields: Array[String]) -> Variant:
 		if get_script().get_base_script() != null: return null
 		if interning or not FIELDS.lazy(own) or not offsets.has(id): return null
 		file.seek(int(offsets[id]))
@@ -459,9 +461,9 @@ class TemplateStore extends RefCounted:
 				expandable = own.has(key) or key in FIELDS.HEAVY
 		if not expandable: return null
 		var result: Dictionary = {}
-		for key: String in FIELDS.WEIGHT_FIELDS:
+		for key: String in fields:
 			if own.has(key): result[key] = own[key]
-			elif key in heavy.keys:
+			elif key in FIELDS.HEAVY and key in heavy.keys:
 				if light.has(key): result[key] = light[key]
 				elif heavy.fields.has(key): result[key] = heavy.fields[key]
 		return result
