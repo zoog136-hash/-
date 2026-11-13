@@ -1,5 +1,7 @@
 extends VBoxContainer
 const INSTALLER = preload("res://scripts/lineagem_pack_install.gd")
+const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
+const SPAWN_POLICY = preload("res://scripts/monsters/patch523_spawn_policy.gd")
 var installer: Node
 var picker: FileDialog
 var choose: Button
@@ -16,7 +18,7 @@ func _ready() -> void:
 	status = Label.new()
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var cards_problem: String = INSTALLER.active_manifest_problem()
-	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["연결됨" if cards_problem.is_empty() else cards_problem, "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"]
+	status.text = "변신·인형·성물: %s · 몬스터: %s" % ["연결됨" if cards_problem.is_empty() else cards_problem, monster_status()]
 	add_child(status)
 	choose = Button.new()
 	choose.name = "InstallLineageMOfflinePack"
@@ -53,3 +55,10 @@ func _selected(path: String) -> void:
 		status.text = "설치 완료 · 새 팩을 쓰려면 실행 시 지정한 원본 팩 옵션을 해제하고 게임을 다시 실행하세요."
 	else:
 		status.text = "설치 완료 · 게임을 완전히 종료한 뒤 다시 실행하세요."
+
+## With the 523 pack installed, monsters come from its world-links spawn
+## definitions; the old base508 monster pack is not used there.
+static func monster_status() -> String:
+	if CURRENT523_HOST.requested():
+		return "523 출현 정의 연결됨" if bool(SPAWN_POLICY.settings().get("enabled", false)) else "523 출현 정의 없음 (patch523-world-links 설치 필요)"
+	return "설치됨" if FileAccess.file_exists(INSTALLER.monster_root().path_join("manifest.json")) else "미설치"
