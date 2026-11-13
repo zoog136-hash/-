@@ -15,7 +15,7 @@
 - `Monster.setup`을 감싸 성공·거절 모두 마지막 단계까지 기록한다. reset, admission, binding, bound_admission, definition, projection, identity, legacy_view, current_view, actor_identity, loot_identity, stats_reset, boss_combat, overhead_ui, animation, presentation의 **한 setup 내 겹치지 않는 경계**를 기록한다.
 - 100ms 이상 setup 중 프레임당 가장 느린 한 개만 `slow_spawn`에 보존한다. NPC/Sprite 숫자 ID, 성공 여부, 전체 usec와 단계별 usec만 갖고 전체 NPC 원문/이력/텍스처는 복제하지 않는다. 기존 최악 12프레임 제한을 유지한다. 로딩 안내에는 그 단일 NPC의 가장 느린 두 단계를 추가한다.
 - view 선택, role 구성, 재생 트랙 구성, 노드 생성, context 복사, overlay binding, 자식 연결, 첫 프레임을 기존 inclusive `details`로 구분한다. 기존 SP2 파싱·픽셀 렌더·텍스처 생성 계측과 연결한다. `view.roles` 안의 bank/트랙/노드 시간과 부모 setup을 더하지 않는다. 텍스처 생성 API 시간은 GPU 완료 시간이 아니다.
-- 보스 전투 설정에서 NPC ID 불일치, TestNPC 및 허용된 세 가지 일반 몬스터 전투 계약에 속하지 않는 비보스는 **catalog 접근 전에** 기존과 동일하게 거절한다. 이전에는 거절할 몬스터도 catalog 파일 해시·압축 해제·JSON 읽기를 먼저 할 수 있었다. 보스 및 세 가지 계약은 기존 원문/스프라이트/host adoption 검증을 계속 통과해야 한다. 풀 재사용 시 clear 순서도 유지한다.
+- 명시적인 combat/visual 팩 경로가 없는 보스 전투 설정에서 NPC ID 불일치, TestNPC 및 허용된 세 가지 일반 몬스터 전투 계약에 속하지 않는 비보스는 **catalog 접근 전에** 기존과 동일하게 거절한다. 이전에는 거절할 몬스터도 catalog 파일 해시·압축 해제·JSON 읽기를 먼저 할 수 있었다. 명시적인 팩 경로가 있으면 다른 actor의 공유 catalog 선택에 영향을 주던 초기화 순서를 보존하기 위해 기존 로딩 경로를 유지한다. 보스 및 세 가지 계약은 기존 원문/스프라이트/host adoption 검증을 계속 통과해야 한다. 풀 재사용 시 clear 순서도 유지한다.
 - catalog 요청/hit/불필요 접근 생략 횟수와 검증·압축 해제·JSON 시간을 기록한다. 해당 catalog를 실제 필요로 하는 첫 보스의 비용은 남아 있다. 이것은 자료 접근을 피하는 자체 개선이며 사진의 13.9초 원인이라고 확정하지 않는다.
 
 ## 검증
@@ -23,7 +23,7 @@
 공식 Godot 4.7.2, 분리된 XDG/스테이징에서 다음 검사를 실행했다.
 
 - 새 단계 기록 12검사: 거절 경로, 단일 setup 시간과 단계 합 일치, 최장 하나만 유지, 프레임 초기화, 사진 문구, 내부 비용을 가리는 부모 항목 제외, 실행 버전, 파일 왕복 보존, 비활성 계측.
-- 새 보스 catalog admission 13검사: 부적격 일반 몬스터 catalog 요청 0회, 세 가지 계약은 catalog/adoption 검증까지 도달, 보스 성공, Sprite 변경 거절, 재사용 상태 정리, 잘못된 ID/TestNPC 선거절. 합성 계약이며 원본 catalog 실행 증거가 아니다.
+- 새 보스 catalog admission 17검사: 부적격 일반 몬스터 catalog 요청 0회, 세 가지 계약은 catalog/adoption 검증까지 도달, 보스 성공, Sprite 변경 거절, 재사용 상태 정리, 잘못된 ID/TestNPC 선거절, 명시적인 combat/visual 팩 경로의 기존 catalog 초기화 순서 보존. 합성 계약이며 원본 catalog 실행 증거가 아니다.
 - 기존 hitch 26, prepared bank 161, SP2 렌더 2,775, NPC effect anchor 24검사 통과. 기존 보스 숫자 계약 errors=[]; 모든 실행에서 script/runtime 오류 없음.
 - `check_no_legacy_resources.py --root .`: 추적 리소스 20개 통과. 규칙에 적힌 `tools/check_resource_integrity.py`는 기준 main에 없어 실행 불가이며, 현재 실제 resource CI를 별도로 확인한다.
 - 새 두 검사를 필수 core gate에 추가했다. 실제 Main·저장 보존·원본 경로 및 resource CI의 최종 결과는 PR 검사에서 확인한다.

@@ -69,17 +69,20 @@ func configure(owner: Node, world: Node, record: Dictionary) -> bool:
 	if not owner is Node2D or not actor_contract(owner) or not world_contract(world): return false
 	var nid: int = int(record.get("source_m_npc_id", -1))
 	var original: Dictionary = record.get("source_m_original", {})
-	# These actors were always rejected below. Reject before opening/inflating
-	# the catalog; keep bosses and all three reviewed ordinary contracts intact.
-	if nid <= 0 or int(original.get("ID", -1)) != nid or bool(original.get("TestNPC",false)): return false
-	if not bool(owner.get("is_boss")) and record.get("source_m_host_action_contract",{}).get("contract","") not in ORDINARY_CONTRACTS:
-		HITCH.count("boss.catalog_ineligible_skipped")
-		return false
 	var private_root: String = str(record.get("source_m_combat_pack_root",str(record.get("source_m_asset_manifest_path","")).get_base_dir()))
+	# These actors were always rejected below. Reject before opening/inflating
+	# the default catalog. Explicit pack roots retain the former priming order:
+	# a later actor may rely on the first verified shared catalog from that root.
+	if private_root.is_empty():
+		if nid <= 0 or int(original.get("ID", -1)) != nid or bool(original.get("TestNPC",false)): return false
+		if not bool(owner.get("is_boss")) and record.get("source_m_host_action_contract",{}).get("contract","") not in ORDINARY_CONTRACTS:
+			HITCH.count("boss.catalog_ineligible_skipped")
+			return false
 	var source: Dictionary = data(private_root).get("source_npcs", {}).get(str(nid), {})
-	if source.is_empty() or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
+	if nid <= 0 or source.is_empty() or int(original.get("ID", -1)) != nid or int(original.get("Sprite", -1)) != int(source.sprite_id): return false
+	if bool(original.get("TestNPC",false)): return false
 	if not bool(owner.get("is_boss")):
-		if HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
+		if record.get("source_m_host_action_contract",{}).get("contract","") not in ORDINARY_CONTRACTS or HOST_ADOPTIONS.for_record(record,"",data()).is_empty(): return false
 	owner_ref = weakref(owner); world_ref = weakref(world)
 	source_npc_id = nid; source_life = int(owner.get("life_id"))
 	effect_generation = int(world.get("combat_generation"))

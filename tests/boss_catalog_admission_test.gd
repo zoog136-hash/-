@@ -47,6 +47,12 @@ func _initialize() -> void:
 	HITCH._counters.clear()
 	check(not combat.configure(actor,world,record),"ordinary actor without reviewed action contract remains rejected")
 	check(not HITCH._counters.has("boss.catalog_request"),"ineligible ordinary actor never requests catalog")
+	for path_field: String in ["source_m_combat_pack_root","source_m_asset_manifest_path"]:
+		var rooted: Dictionary = record.duplicate(true)
+		rooted[path_field] = "user://explicit_combat_pack" if path_field.ends_with("root") else "user://explicit_visual_pack/manifest.json"
+		HITCH._counters.clear()
+		check(not combat.configure(actor,world,rooted),"rooted ordinary actor remains rejected")
+		check(int(HITCH._counters.get("boss.catalog_request",0)) == 1,"explicit root retains existing shared catalog priming order")
 	for contract: String in COMBAT.ORDINARY_CONTRACTS:
 		var adopted: Dictionary = record.duplicate(true)
 		adopted["source_m_host_action_contract"] = {"contract":contract}
