@@ -4,6 +4,7 @@ const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 const SPRITE_BACK_BUFFER=preload("res://scripts/ui/original_ui/source_sprite_back_buffer.gd")
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 const NODE_SCOPE=preload("res://scripts/ui/original_ui/source_node_scope.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
@@ -13,7 +14,10 @@ var source_nodes: Dictionary={}
 var _tags: Dictionary={}
 var _clip: Dictionary={}
 var _frame: float=0.0
-var _playing: bool=false
+var _playing: bool=false:
+	set(value):
+		_playing=value
+		set_process(value)
 var _loop: bool=false
 var _texture_refs: Dictionary={}
 var inspection_only: bool=false
@@ -29,6 +33,12 @@ var _resolved_assets: Dictionary={}
 var _requested_source_nodes: Array[int]=[]
 var _external_texture_nodes: Array[int]=[]
 var _external_texture_tags: Dictionary={}
+
+func _ready() -> void:
+	# Godot enables scripts with _process before ready. Static/stopped source
+	# scenes retain their nodes and pixels without an idle callback. All play,
+	# inner-action and failure assignments share the setter above.
+	set_process(_playing)
 
 func configure_project(pack: RefCounted, parent_member: String, project_offset: int, bindings: Dictionary, source_nodes_scope: Array[int]=[]) -> Dictionary:
 	# Mount an independently supplied original component using its actual
@@ -647,14 +657,16 @@ func _seek_frame(frame_number: float) -> void:
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
 	for timeline: Dictionary in action.get("timeLines",[]):
 		var selected: Dictionary={}
-		for raw: Dictionary in timeline.frames:
-			var value: Dictionary=_frame_value(raw)
-			if float(value.frameIndex)<=frame_number and (selected.is_empty() or float(value.frameIndex)>=float(selected.frameIndex)): selected=value
-		if selected.is_empty(): continue
 		var following: Dictionary={}
+		# Read live frames once. Keep the last equal predecessor and first
+		# equal successor, including unordered serialized timelines.
 		for raw: Dictionary in timeline.frames:
 			var value: Dictionary=_frame_value(raw)
-			if float(value.frameIndex)>float(selected.frameIndex) and (following.is_empty() or float(value.frameIndex)<float(following.frameIndex)): following=value
+			var at: float=float(value.frameIndex)
+			if at<=frame_number:
+				if selected.is_empty() or at>=float(selected.frameIndex): selected=value
+			elif at>frame_number and (following.is_empty() or at<float(following.frameIndex)): following=value
+		if selected.is_empty(): continue
 		var ratio: float=0.0
 		if not following.is_empty() and bool(selected.get("tween",false)):
 			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)
@@ -743,6 +755,12 @@ func _seek_frame(frame_number: float) -> void:
 
 func _process(delta: float) -> void:
 	if not _playing or _clip.is_empty(): return
+	var started: int=FRAME_HITCH.now()
+	var nested: int=FRAME_HITCH.nested()
+	_advance_playback(delta)
+	FRAME_HITCH.add_self("ui_animation",started,nested)
+
+func _advance_playback(delta: float) -> void:
 	# Cocos ActionTimeline uses a 60-frame clock; source speed is preserved.
 	var speed_value: float=float(get_meta("source_inner_action_speed",source_tree.get("action",{}).get("speed",1.0)))
 	var next: float=_frame+delta*60.0*speed_value

@@ -34,6 +34,64 @@ static func status_field(row: Dictionary) -> Dictionary:
 	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0 or int(bonus.Value)%int(display[0].Denominator)!=0:return {}
 	return {"field":STATUS_PREFIX[type]+STATUS_BONUS[str(row.bonus_type.Name)],"value":int(bonus.Value)/int(display[0].Denominator),"type":type,"denominator":int(display[0].Denominator)}
 
+## Direct (Character, target 0) equipment rows of effects the enchantment
+## projection (patch523_enchantment_projection EXTRA) already writes, into the
+## same record fields and display scale, read by the existing combat owners
+## (_player_critical_rate, _record_er, _equipment_additional_damage,
+## _pve_reduction_percent, _critical_resistance_stat, _player_critical_damage,
+## equipment523 elemental reduction, cooldown factor, DOT reduction, STR/DEX/INT
+## percent, undead bonus). [record field, unit name]; the value is divided by the
+## unit's UIUnit Denominator (Percentage 10000 -> 50000 = 5, ValuePercent 1).
+## FinalBlow*, AttackDrain*, Regen* and PVP/conditional rows have their own
+## owners (patch523_final_blow.base, patch523_passive_items) or no PvE reader.
+const TYPED={"RangeEvasion":["er","Value"],"MeleeEvasion":["dg","Value"],
+	"PierceDamageReduction":["damage_reduction_ignore","Value"],
+	"ElementalDamageReduction":["equipment523_element_reduction","Value"],
+	"CriticalMeleeDamage":["melee_critical_damage","Value"],"CriticalRangeDamage":["ranged_critical_damage","Value"],"CriticalMagicDamage":["magic_critical_damage","Value"],
+	"UndeadAdditionalMaxDamage":["source_undead_damage_max","Value"],
+	"MeleeCritical":["melee_crit","ValuePercent"],"RangeCritical":["ranged_crit","ValuePercent"],"MagicCritical":["magic_crit","ValuePercent"],
+	"PierceDamageReductionPercent":["damage_amp_pct","Percentage"],
+	"DamageReductionPercent":["pve_damage_reduction_pct","Percentage"],"PVEDamageReductionPercent":["pve_damage_reduction_pct","Percentage"],
+	"MeleeDamageReductionPercent":["melee_damage_reduction_pct","Percentage"],"RangeDamageReductionPercent":["ranged_damage_reduction_pct","Percentage"],"MagicDamageReductionPercent":["magic_damage_reduction_pct","Percentage"],
+	"MeleeCriticalResist":["melee_critical_resistance","Percentage"],"RangeCriticalResist":["ranged_critical_resistance","Percentage"],
+	"CastSpeedBonus":["castSpeed","Percentage"],"PoisonDamageReductionPercent":["dot_damage_reduction_pct","Percentage"],
+	"StrengthScale":["strPercent","Percentage"],"DexterityScale":["dexPercent","Percentage"],"IntelligenceScale":["intPercent","Percentage"]}
+static func typed_value(row: Dictionary) -> Variant:
+	var spec: Array=TYPED.get(str(row.get("bonus_type",{}).get("Name","")),[])
+	var bonus: Dictionary=row.get("bonus",{})
+	if spec.is_empty() or not direct(row) or str(row.get("unit",{}).get("Name",""))!=spec[1] or not integer(bonus.get("Value")) or int(bonus.Value)<=0:return null
+	if spec[1]=="Value":return int(bonus.Value)
+	var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+	if display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0:return null
+	var denominator: int=int(display[0].Denominator)
+	return int(bonus.Value)/denominator if int(bonus.Value)%denominator==0 else float(bonus.Value)/float(denominator)
+
+## ElementalResistance / ElementalDamage on equipment: BonusApplicationType 3
+## "ElementalResistanceType" with an ElementalType ID as target. Channel names
+## are the ones the NPC spell path already uses for ElementalType.Name
+## (Fire/Water/Air/Earth -> fire/water/wind/earth); target 5 "All" = those four.
+## Resistance is Percentage over its UIUnit Denominator (500000 -> 50, the
+## existing element_resist_<channel> percent read by _player_element_resistance,
+## the same scale as the set-effect owner); damage is a Value read as the
+## enchantment's source_elemental_flat_<channel> by _source_elemental_flat_damage.
+const ELEMENT_CHANNELS={"Fire":"fire","Water":"water","Air":"wind","Earth":"earth"}
+static func elemental_fields(row: Dictionary) -> Dictionary:
+	var bonus: Dictionary=row.get("bonus",{});var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+	if name_value not in ["ElementalResistance","ElementalDamage"] or row.get("IsPossession")!=false or not integer(bonus.get("Value")) or int(bonus.Value)<=0 or not integer(bonus.get("BonusApplicationTypeID")) or not integer(bonus.get("BonusApplicationTargetID")):return {}
+	if str(SOURCE.row("BonusApplicationType",int(bonus.BonusApplicationTypeID)).get("Name",""))!="ElementalResistanceType":return {}
+	var element: String=str(SOURCE.row("ElementalType",int(bonus.BonusApplicationTargetID)).get("Name",""))
+	var channels: Array=ELEMENT_CHANNELS.values() if element=="All" and name_value=="ElementalResistance" else ([ELEMENT_CHANNELS[element]] if ELEMENT_CHANNELS.has(element) else [])
+	if channels.is_empty():return {}
+	var amount: Variant=int(bonus.Value)
+	if name_value=="ElementalResistance":
+		var display: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(row.get("unit",{}).get("ID",-1)))
+		if str(row.get("unit",{}).get("Name",""))!="Percentage" or display.size()!=1 or not integer(display[0].get("Denominator")) or int(display[0].Denominator)<=0:return {}
+		amount=int(bonus.Value)/int(display[0].Denominator) if int(bonus.Value)%int(display[0].Denominator)==0 else float(bonus.Value)/float(display[0].Denominator)
+	elif str(row.get("unit",{}).get("Name",""))!="Value":return {}
+	var out: Dictionary={}
+	for channel: String in channels:out[("element_resist_" if name_value=="ElementalResistance" else "source_elemental_flat_")+channel]=amount
+	return {"fields":out,"element":element}
+
 ## Equipment CarryPlus in host weight points: Value / UIUnit Denominator of
 ## its unit (Weight = 100); 0 when the row is not a whole, positive, direct one.
 static func carry_bonus(row: Dictionary) -> int:
@@ -181,8 +239,21 @@ static func record(definition: Dictionary) -> Dictionary:
 			if not status.is_empty():
 				out[status.field]=int(out.get(status.field,0))+int(status.value);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":status.field,"value":status.value,"source_special_resistance_type":status.type,"source_denominator":status.denominator})
 			continue
+		if equipment and name_value in ["ElementalResistance","ElementalDamage"]:
+			var elemental: Dictionary=elemental_fields(row)
+			if elemental.is_empty():continue
+			for field: String in elemental.fields:
+				out[field]=out.get(field,0)+elemental.fields[field]
+				applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":elemental.fields[field],"source_elemental_type":elemental.element})
+			handled[index]=true
+			continue
 		if not direct(row) or not integer(amount):continue
-		if equipment and unit=="Value" and FLAT.has(name_value):
+		if equipment and TYPED.has(name_value) and not FLAT.has(name_value):
+			var typed: Variant=typed_value(row)
+			if typed==null:continue
+			var typed_field: String=TYPED[name_value][0]
+			out[typed_field]=out.get(typed_field,0)+typed;handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":typed_field,"value":typed})
+		elif equipment and unit=="Value" and FLAT.has(name_value):
 			var field: String=FLAT[name_value];out[field]=int(out.get(field,0))+int(amount);handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":field,"value":amount})
 		elif equipment and unit=="Percentage" and name_value in ["MoveSpeedBonus","AttackSpeedBonus","HPPotionIncreasePercent","ExperienceAdditionPercent"]:
 			var field: String={"MoveSpeedBonus":"speed","AttackSpeedBonus":"attackSpeed","HPPotionIncreasePercent":"potionHealPct","ExperienceAdditionPercent":"xp"}[name_value]
@@ -207,6 +278,10 @@ static func record(definition: Dictionary) -> Dictionary:
 			if weapon.is_empty() or weapon_label.is_empty():continue
 			if out.has("source_weapon_type_id") and out.source_weapon_type_id!=weapon.ID:return {}
 			out.type=weapon_label;out["source_weapon_type_id"]=weapon.ID;out["source_weapon_type_name"]=weapon.Name;handled[index]=true
+		elif equipment and name_value=="EquipGroupID" and unit=="EquipGroupID" and int(amount)>0:
+			# Duplication group read with EquipSlotConfig on equip (current523_equip_group_limit).
+			if not out.has("source_equip_group_ids"):out["source_equip_group_ids"]=[]
+			out.source_equip_group_ids.append(int(amount));handled[index]=true;applied.append({"item_bonus_id":row.ID,"bonus_id":row.bonus.ID,"field":"source_equip_group_ids","value":int(amount)})
 		elif name_value=="EnchantBonusGroupID" and unit=="EnchantBonusGroupID":
 			if not out.has("source_enchant_group_ids"):out["source_enchant_group_ids"]=[]
 			out.source_enchant_group_ids.append(int(amount))
@@ -367,6 +442,30 @@ class TemplateStore extends RefCounted:
 		if result.is_empty(): return null
 		for key: Variant in own:
 			if key != FIELDS.MARK and not result.has(key): result[key] = own[key]
+		return result
+	## Same selected values as _expanded_for_binding(), retaining fresh decoded
+	## ownership, but no full detail Dictionary for the weight-only consumer.
+	func _weight_fields_for_binding(id: String, own: Dictionary) -> Variant:
+		return _selected_for_binding(id,own,FIELDS.WEIGHT_FIELDS)
+	func _selected_for_binding(id: String, own: Dictionary, fields: Array[String]) -> Variant:
+		if get_script().get_base_script() != null: return null
+		if interning or not FIELDS.lazy(own) or not offsets.has(id): return null
+		file.seek(int(offsets[id]))
+		var light: Variant = file.get_var()
+		var heavy: Variant = file.get_var()
+		if not light is Dictionary or not heavy is Dictionary or not heavy.get("keys") is Array or not heavy.get("fields") is Dictionary: return null
+		var expandable: bool = false
+		for key: Variant in heavy.keys:
+			if not (key is String or key is StringName): return null
+			if not expandable and (light.has(key) or heavy.fields.has(key)):
+				expandable = own.has(key) or key in FIELDS.HEAVY
+		if not expandable: return null
+		var result: Dictionary = {}
+		for key: String in fields:
+			if own.has(key): result[key] = own[key]
+			elif key in FIELDS.HEAVY and key in heavy.keys:
+				if light.has(key): result[key] = light[key]
+				elif heavy.fields.has(key): result[key] = heavy.fields[key]
 		return result
 	## The light catalog form (FIELDS.slim() of the record) without decoding
 	## the heavy fields.
@@ -690,7 +789,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	var staged_display: Dictionary={}
 	# Light baked records below are read through FIELDS.field(), so their
 	# templates are reachable while registering (bound again after the loop).
-	if templates!=null and lazy:FIELDS.bind(templates)
+	if templates!=null and lazy:FIELDS.bind(templates,TemplateStore)
 	if templates == null: _start_registration_reader()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in src.row_count("ItemClass"):
@@ -765,7 +864,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		store.interning=false
 		store.strings.clear()
 	if store!=null and lazy:
-		FIELDS.bind(store)
+		FIELDS.bind(store,TemplateStore)
 		for index: int in placed:
 			if not FIELDS.lazy(records[index]):records[index]=FIELDS.slim(records[index])
 	catalog["아이템"]=records

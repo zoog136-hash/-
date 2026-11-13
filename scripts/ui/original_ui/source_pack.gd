@@ -1,5 +1,6 @@
 extends RefCounted
 ## Explicit private source pack. Failed replacement preserves the prior pack.
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 ## Decoded CPU pages and reconstructed frames are shared across instances that
 ## opened the same verified pack; see source_pack_page_cache.gd for identity,
@@ -319,11 +320,17 @@ func font(reference: Dictionary) -> FontFile:
 	return original
 
 func bitmap_font(reference: Dictionary) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_bitmap_font(reference)
+	FRAME_HITCH.detail("ui.bitmap_font",started)
+	return result
+
+func _bitmap_font(reference: Dictionary) -> Dictionary:
 	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"source_bitmap_resource_type"}
 	var member: String=_member(str(reference.get("path","")))
 	if not _safe_member(member) or not member.ends_with(".fnt") or not manifest.get("files",{}).has(member):return {"ok":false,"error":"source_bitmap_descriptor_missing"}
 	var data: Dictionary
-	if _bitmap_fonts.has(member):data=_bitmap_fonts[member].duplicate(true)
+	if _bitmap_fonts.has(member):data=_bitmap_fonts[member]
 	else:
 		var path: String=root.path_join("originals").path_join(member)
 		if FileAccess.get_sha256(path)!=manifest.files[member].sha256:return {"ok":false,"error":"source_bitmap_descriptor_hash"}
@@ -338,13 +345,17 @@ func bitmap_font(reference: Dictionary) -> Dictionary:
 		if original==null:return {"ok":false,"error":"source_bitmap_page_unavailable"}
 		if original.get_width()!=int(data.common.scaleW) or original.get_height()!=int(data.common.scaleH):return {"ok":false,"error":"source_bitmap_page_dimensions"}
 		pages[page_id]=original
-	data["member"]=member
-	# Only parsed descriptors/glyphs belong to this lifetime cache. Returned
-	# font data owns its page textures while a screen uses them; keeping pages
-	# here would bypass the bounded frame reserve after that screen closes.
-	_bitmap_fonts[member]=data.duplicate(true)
-	data["page_textures"]=pages
-	return {"ok":true,"font_data":data.duplicate(true)}
+	# Newly parsed dictionaries have no external owner. Commit them only after
+	# every page passed validation. A hit is read-only until the one detached
+	# caller snapshot below; do not recopy/reinstall unchanged glyph metadata.
+	if not _bitmap_fonts.has(member):
+		data["member"]=member
+		_bitmap_fonts[member]=data
+	# The metadata cache never owns textures. Only the caller snapshot gets
+	# page owners; public configure still takes its own independent snapshot.
+	var supplied: Dictionary=data.duplicate(true)
+	supplied["page_textures"]=pages
+	return {"ok":true,"font_data":supplied}
 
 func particle(reference: Dictionary) -> Dictionary:
 	if int(reference.get("resourceType",0))!=0 or not str(reference.get("plistFile","")).is_empty():return {"ok":false,"error":"particle_resource_type"}
