@@ -218,7 +218,7 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 			if int(spell.get("BuffCardDeckID",0))==SPELL_DECK:
 				var book:int=CASH_PACKAGES.skill_book_for(card_id)
 				var book_record:Dictionary=DROPS.variant_item(DROPS.definition_id(str(book)).get("native_record",{}),1) if book>0 else {}
-				if int(spell.GradeID)!=int(entry.grade_id) or book_record.is_empty() or STACK.supply_profile(book_record).is_empty():missing.append(card_id);continue
+				if int(spell.GradeID)!=int(entry.grade_id) or book_record.is_empty() or STACK.supply_profile(book_record).get("kind","") in ["","storage"]:missing.append(card_id);continue
 				var spell_server:Dictionary=runtime._server([] if int(spell.ServerLimitSetID)==0 else [int(spell.ServerLimitSetID)])
 				if not spell_server.ok:return spell_server
 				if int(spell.StartDateTimeID)!=0 or int(spell.EndDateTimeID)!=0:
