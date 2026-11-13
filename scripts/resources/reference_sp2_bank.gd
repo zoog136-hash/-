@@ -11,6 +11,7 @@ const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const ATTACHMENT_ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
+const PREPARED = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -47,6 +48,10 @@ static var _crc_table: Array[int] = []
 ## SP2 file on every frame. (User decision 2026-11-11: re-verify changed files
 ## only.)
 static var _verified_members: Dictionary = {}
+
+var _prepared_snapshot: RefCounted
+var _prepared_members: Dictionary = {}
+var _building_shared: bool = false
 
 ## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
 ## contract adapter). Values outside the plain domain keep the previous exact division.
@@ -304,6 +309,7 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 ## within the same second at the same size).
 static func forget_verified_members() -> void:
 	_verified_members.clear()
+	PREPARED.clear()
 
 ## Measured once when publishing a parse, then reused from the shared entry
 ## and this bank's sidecar. Does not change the parsed Dictionary or its keys.
@@ -342,6 +348,8 @@ func parsed_asset_key(member: String) -> String:
 ## direction 0 picture 0, plus its 101 shadow drawn the same way; clothes are
 ## not collected. Returns layers for render_layer(); nothing is played here.
 func load_static(manifest_path: String, expected_sha: String, source_sprite_id: int) -> Dictionary:
+	_prepared_snapshot = null
+	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
@@ -422,6 +430,10 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 			groups.append({"bit":group.bit,"frames":frames})
 		var compact: Dictionary = source.duplicate()
 		compact.parsed = {"groups":groups}
+		# A prepared result may freeze its provenance. Do not freeze the shared
+		# manifest index's mutable received-member identity as a side effect.
+		if _building_shared and (compact.source_identity is Dictionary or compact.source_identity is Array):
+			compact.source_identity = compact.source_identity.duplicate(true)
 		var file_path: String = _root.path_join("raw/" + member)
 		memo[member] = {"source":compact,"path":file_path,"stamp":_verified_members.get(file_path, []).duplicate()}
 	return _render_verified_layer(layer, memo[member].source, false)
@@ -680,6 +692,11 @@ func _load_native_action_attributes(source: Dictionary, layer: Dictionary, memo:
 		var checked: Dictionary = _native_attributes(source,layer)
 		if not checked.ok: return checked
 		memo[key] = checked
+	# The prepared API publishes immutable metadata. Freeze the action-local
+	# proof once instead of copying it into every direction/frame occurrence.
+	if _building_shared:
+		PREPARED.freeze(memo[key])
+		return memo[key]
 	return (memo[key] as Dictionary).duplicate(true)
 
 func _native_binding_set(source: Dictionary, layer_specs: Array, memo: Dictionary, action: Dictionary, source_role: String) -> Dictionary:
@@ -711,7 +728,7 @@ func _native_binding_set(source: Dictionary, layer_specs: Array, memo: Dictionar
 ## The action JSON and its declaration proof are fixed during this load.
 ## Frames still validate their own layer identities, addresses and bindings;
 ## their identical kind/sprite attribute proof only needs checking once per
-## action. Return independent arrays/dictionaries to every converted layer.
+## action. Mutable callers still receive independent proof containers.
 func _load_action_attributes(record: Dictionary, kind: String, sprite: int, memo: Dictionary) -> Dictionary:
 	var key: String = kind + ":" + str(sprite)
 	if not memo.has(key):
@@ -719,7 +736,63 @@ func _load_action_attributes(record: Dictionary, kind: String, sprite: int, memo
 		var checked: Dictionary = _attributes(record, kind, sprite)
 		if not checked.ok: return checked
 		memo[key] = checked
+	# The prepared API publishes immutable metadata. Freeze the action-local
+	# proof once instead of copying it into every direction/frame occurrence.
+	if _building_shared:
+		PREPARED.freeze(memo[key])
+		return memo[key]
 	return (memo[key] as Dictionary).duplicate(true)
+
+## Opt-in immutable result for NPC previews. The normal load_bank API still
+## returns independent mutable data and remains the full validation oracle.
+## Admission/selection is performed by the caller on every spawn, not here.
+func load_shared_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String, role_actor_ids: Dictionary = {}) -> Dictionary:
+	var started: int = FRAME_HITCH.now()
+	var key: String = digest(var_to_bytes([get_script().get_instance_id(),manifest_path,expected_sha,source_actor_id,bindings,loop_policy,consumer_scope,role_actor_ids]))
+	var snapshot: RefCounted = PREPARED.lookup(key)
+	if snapshot != null and _prepared_valid(snapshot,manifest_path,expected_sha):
+		_release_parsed()
+		_root = manifest_path.get_base_dir()
+		_manifest_path = manifest_path
+		_manifest_sha = expected_sha
+		_manifest = snapshot.manifest
+		_index = snapshot.index
+		_excluded_source_actors = snapshot.exclusions.duplicate(true)
+		_actor_pins = snapshot.actor_pins.duplicate()
+		_prepared_members = snapshot.members.duplicate(true)
+		_prepared_snapshot = snapshot
+		FRAME_HITCH.count("sp2.prepared_hit")
+		FRAME_HITCH.detail("sp2.prepared_lookup",started)
+		return snapshot.result
+	PREPARED.erase(key)
+	FRAME_HITCH.count("sp2.prepared_miss")
+	FRAME_HITCH.detail("sp2.prepared_lookup",started)
+	_building_shared = true
+	var loaded: Dictionary = load_bank(manifest_path,expected_sha,source_actor_id,bindings,loop_policy,consumer_scope,role_actor_ids)
+	_building_shared = false
+	if not loaded.ok: return loaded
+	var frozen_started: int = FRAME_HITCH.now()
+	snapshot = PREPARED.new()
+	snapshot.result = loaded
+	snapshot.manifest = _manifest
+	snapshot.index = _index
+	snapshot.exclusions = _excluded_source_actors.duplicate(true)
+	snapshot.actor_pins = _actor_pins.duplicate()
+	snapshot.members = _prepared_members.duplicate(true)
+	PREPARED.freeze(snapshot.result)
+	_prepared_snapshot = snapshot
+	PREPARED.remember(key,snapshot)
+	FRAME_HITCH.detail("sp2.prepared_freeze",frozen_started)
+	return loaded
+
+func _prepared_valid(snapshot: RefCounted, manifest_path: String, expected_sha: String) -> bool:
+	if not MANIFEST_INDEX.pinned(manifest_path,expected_sha): return false
+	for path: String in snapshot.actor_pins:
+		if not MANIFEST_INDEX.pinned(path,snapshot.actor_pins[path]): return false
+	for path: String in snapshot.members:
+		var stamp: Array = snapshot.members[path]
+		if _verified_members.get(path) != stamp or not FileAccess.file_exists(path) or int(FileAccess.get_size(path)) != int(stamp[1]) or int(FileAccess.get_modified_time(path)) != int(stamp[2]): return false
+	return true
 
 func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "", role_actor_ids: Dictionary = {}) -> Dictionary:
 	var started: int = FRAME_HITCH.now()
@@ -728,6 +801,8 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	return result
 
 func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String, role_actor_ids: Dictionary) -> Dictionary:
+	_prepared_snapshot = null
+	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
@@ -965,4 +1040,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	var checked_members: Dictionary = _load_members_unchanged(member_metadata)
 	if not checked_members.ok: return checked_members
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
+	if _building_shared:
+		for entry: Dictionary in member_metadata.values():
+			_prepared_members[entry.path] = (_verified_members[entry.path] as Array).duplicate()
 	return {"ok":true,"record":record,"tracks":tracks,"manifest_sha256":expected_sha,"source_actor_id":source_actor_id,"consumer_scope":consumer_scope,"source_dummy_exclusion_policy":record.source_dummy_exclusion_policy,"map_consumer_contract_dependency":record.map_consumer_contract_dependency,"purpose":"diagnostic_reference_preview","installed_in_main_this_run":false}

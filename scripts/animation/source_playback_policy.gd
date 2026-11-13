@@ -27,6 +27,26 @@ static func clock_corrections() -> Dictionary:
 	return _clock_corrections
 static func tracks(record: Dictionary, consumer_kind: String, selected_mode: String) -> Dictionary:
 	var result: Dictionary = record.get("tracks", {}).duplicate(true)
+	return _configure_tracks(record,result,consumer_kind,selected_mode)
+
+## Prepared NPC layers/provenance are recursively read-only. Copy only the
+## track/frame containers this policy edits; clocks/events/nodes stay private.
+static func tracks_from_prepared(record: Dictionary, consumer_kind: String, selected_mode: String) -> Dictionary:
+	if not record.is_read_only(): return tracks(record,consumer_kind,selected_mode)
+	var result: Dictionary = {}
+	for role: String in record.tracks:
+		var source: Dictionary = record.tracks[role]
+		var track: Dictionary = source.duplicate()
+		var directions: Array = []
+		for frames: Array in source.directions:
+			var copied: Array = []
+			for frame: Dictionary in frames: copied.append(frame.duplicate())
+			directions.append(copied)
+		track.directions = directions
+		result[role] = track
+	return _configure_tracks(record,result,consumer_kind,selected_mode)
+
+static func _configure_tracks(record: Dictionary, result: Dictionary, consumer_kind: String, selected_mode: String) -> Dictionary:
 	for role: String in result:
 		var track: Dictionary = result[role]
 		var fps: float = float(track.get("fps", 0.0)) if track.get("fps") != null else 0.0

@@ -1,0 +1,375 @@
+{
+  "action_bytes": 464185,
+  "actors": 10,
+  "android_measured": false,
+  "baseline": "main 3ea41de9 NPC preview function; unchanged full bank validation",
+  "directions": 8,
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "memory_scope": "Godot static allocator live delta, includes diagnostic rows; excludes RSS, driver/GPU and Android. No timing threshold.",
+  "roles": 5,
+  "rows": [
+    {
+      "actors_sharing_first_record": 1,
+      "engine_live_allocation_delta": 464687360,
+      "first_us": 162529,
+      "kind": "before",
+      "round": 0,
+      "subsequent_median_us": 332456,
+      "times_us": [
+        162529,
+        335206,
+        360278,
+        368536,
+        350112,
+        315808,
+        307973,
+        332456,
+        320267,
+        265923
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            128200,
+            1,
+            128200
+          ]
+        },
+        "us": 162529
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            216257,
+            1,
+            216257
+          ]
+        },
+        "us": 335206
+      },
+      "prepared_hits": 0,
+      "prepared_misses": 0,
+      "layer_validations": 38400
+    },
+    {
+      "actors_sharing_first_record": 10,
+      "engine_live_allocation_delta": 36538920,
+      "first_us": 150063,
+      "kind": "after",
+      "round": 0,
+      "subsequent_median_us": 3215,
+      "times_us": [
+        150063,
+        4042,
+        3545,
+        3215,
+        3273,
+        2935,
+        3513,
+        2935,
+        3011,
+        2969
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3,
+          "sp2.prepared_miss": 1
+        },
+        "details": {
+          "sp2.bank_load": [
+            101158,
+            1,
+            101158
+          ],
+          "sp2.prepared_freeze": [
+            43131,
+            1,
+            43131
+          ],
+          "sp2.prepared_lookup": [
+            88,
+            1,
+            88
+          ]
+        },
+        "us": 150063
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.prepared_hit": 1
+        },
+        "details": {
+          "sp2.prepared_lookup": [
+            390,
+            1,
+            390
+          ]
+        },
+        "us": 4042
+      },
+      "prepared_hits": 9,
+      "prepared_misses": 1,
+      "layer_validations": 3840
+    },
+    {
+      "actors_sharing_first_record": 10,
+      "engine_live_allocation_delta": 36538772,
+      "first_us": 145231,
+      "kind": "after",
+      "round": 1,
+      "subsequent_median_us": 2894,
+      "times_us": [
+        145231,
+        3451,
+        2968,
+        2824,
+        2980,
+        2720,
+        4215,
+        2817,
+        2804,
+        2894
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3,
+          "sp2.prepared_miss": 1
+        },
+        "details": {
+          "sp2.bank_load": [
+            98826,
+            1,
+            98826
+          ],
+          "sp2.prepared_freeze": [
+            41303,
+            1,
+            41303
+          ],
+          "sp2.prepared_lookup": [
+            49,
+            1,
+            49
+          ]
+        },
+        "us": 145231
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.prepared_hit": 1
+        },
+        "details": {
+          "sp2.prepared_lookup": [
+            300,
+            1,
+            300
+          ]
+        },
+        "us": 3451
+      },
+      "prepared_hits": 9,
+      "prepared_misses": 1,
+      "layer_validations": 3840
+    },
+    {
+      "actors_sharing_first_record": 1,
+      "engine_live_allocation_delta": 464687424,
+      "first_us": 145176,
+      "kind": "before",
+      "round": 1,
+      "subsequent_median_us": 133403,
+      "times_us": [
+        145176,
+        132426,
+        133403,
+        129071,
+        136434,
+        129590,
+        135887,
+        136869,
+        130658,
+        135711
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            114014,
+            1,
+            114014
+          ]
+        },
+        "us": 145176
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            101641,
+            1,
+            101641
+          ]
+        },
+        "us": 132426
+      },
+      "prepared_hits": 0,
+      "prepared_misses": 0,
+      "layer_validations": 38400
+    },
+    {
+      "actors_sharing_first_record": 1,
+      "engine_live_allocation_delta": 464687312,
+      "first_us": 181353,
+      "kind": "before",
+      "round": 2,
+      "subsequent_median_us": 132525,
+      "times_us": [
+        181353,
+        137680,
+        126301,
+        134992,
+        129202,
+        132131,
+        133371,
+        133604,
+        129056,
+        132525
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            152677,
+            1,
+            152677
+          ]
+        },
+        "us": 181353
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3
+        },
+        "details": {
+          "sp2.bank_load": [
+            109548,
+            1,
+            109548
+          ]
+        },
+        "us": 137680
+      },
+      "prepared_hits": 0,
+      "prepared_misses": 0,
+      "layer_validations": 38400
+    },
+    {
+      "actors_sharing_first_record": 10,
+      "engine_live_allocation_delta": 36538724,
+      "first_us": 145537,
+      "kind": "after",
+      "round": 2,
+      "subsequent_median_us": 3654,
+      "times_us": [
+        145537,
+        3723,
+        3678,
+        3486,
+        3654,
+        3621,
+        3462,
+        3882,
+        3731,
+        3488
+      ],
+      "weak_keys_after_free": 0,
+      "first_operations": {
+        "counters": {
+          "sp2.attribute_validate": 15,
+          "sp2.layer_validate": 3840,
+          "sp2.member_verify": 3,
+          "sp2.prepared_miss": 1
+        },
+        "details": {
+          "sp2.bank_load": [
+            98878,
+            1,
+            98878
+          ],
+          "sp2.prepared_freeze": [
+            42103,
+            1,
+            42103
+          ],
+          "sp2.prepared_lookup": [
+            142,
+            1,
+            142
+          ]
+        },
+        "us": 145537
+      },
+      "first_reuse_operations": {
+        "counters": {
+          "sp2.prepared_hit": 1
+        },
+        "details": {
+          "sp2.prepared_lookup": [
+            280,
+            1,
+            280
+          ]
+        },
+        "us": 3723
+      },
+      "prepared_hits": 9,
+      "prepared_misses": 1,
+      "layer_validations": 3840
+    }
+  ],
+  "synthetic_only": true,
+  "tokens_per_role": 32,
+  "track_sha256": "0aa56bbc484e207eb36bd2a71146aef4cdd0a30cff876efd770eb2023b393596",
+  "base_commit": "3ea41de9dee65cf3cbe2c65c9f68e6d3cbaa5b45",
+  "source_sha256": {
+    "scripts/resources/reference_sp2_bank.gd": "e0fdf3151f0cd4111f494163780363478028f12d2895bcfc89c5d83cde976034",
+    "scripts/resources/reference_sp2_prepared_bank.gd": "bde7fd709d3c7b05bbabb1a587174e7c7343431cf649a5848a9c9b090be51a94",
+    "scripts/animation/source_playback_policy.gd": "6e5215839b71cfb0bb6db069fe7bbc72920530058933378790b48d581d14a8b2",
+    "scripts/animation/original_source_preview.gd": "22c642aa164eec0ba394c7ca2091463038b699cd055b90afe4ae215b3e24c8f7"
+  },
+  "layout_note": "After measurement, declarations and CI registration moved to avoid textual conflicts with PR #442. No behavior changed."
+}
