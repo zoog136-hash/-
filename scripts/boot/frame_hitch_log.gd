@@ -22,7 +22,7 @@ const LABELS: Dictionary = {
 	"monsters":"몬스터", "player":"캐릭터", "field_population":"몬스터 배치",
 	"map_renderer":"지도 그리기", "map_objects":"맵 오브젝트", "monsterbook":"몬스터북",
 	"companion":"동료", "buffs":"버프", "dungeon":"던전", "items":"아이템 자동 사용",
-	"hud_main":"원작 HUD", "npcs":"NPC",
+	"hud_main":"원작 HUD", "ui_animation":"UI 애니메이션", "npcs":"NPC",
 	"other":"미계측 잔여",
 }
 
