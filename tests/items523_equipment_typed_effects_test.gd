@@ -15,6 +15,7 @@ const LIMIT = preload("res://scripts/loot/current523_equip_group_limit.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const COMBAT = preload("res://scripts/crafting/patch523_equipment_combat.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -28,7 +29,10 @@ func _initialize() -> void: call_deferred("run")
 
 func rules() -> void:
 	check(P.TYPED.get("RangeCritical")==["ranged_crit","ValuePercent"] and P.TYPED.get("MeleeCriticalResist")==["melee_critical_resistance","Percentage"] and P.TYPED.get("PVEDamageReductionPercent")==["pve_damage_reduction_pct","Percentage"], "typed rows reuse the enchantment record fields")
-	check(not P.TYPED.has("FinalBlowProbability") and not P.TYPED.has("AttackDrainHP") and not P.TYPED.has("RegenHP") and not P.TYPED.has("PiercePVPDamageReduction"), "rows with their own owner or no PvE reader are not duplicated")
+	check(not P.TYPED.has("FinalBlowProbability") and not P.TYPED.has("AttackDrainHP") and not P.TYPED.has("RegenHP"), "rows with their own owner are not duplicated")
+	check(P.TYPED.get("PiercePVPDamageReduction")==["source_pvp_flat_reduction_ignore","Value"] and P.TYPED.get("PVPSpellByLevelAdditionLevel")==["source_pvp_status_success_level","Value"], "user decision 2026-11-13: base PVP rows use the enchant single-player fields")
+	check(COMBAT.BASE_KEYS==["source_pvp_flat_reduction_ignore","source_pvp_status_success_level"], "only the two PVP keys are read from base rows")
+	check(LIMIT.enforce_loaded(null,{"schema":1,"applied":true,"released":[]})=={"schema":1,"applied":true,"released":[]}, "a saved marker is returned unchanged (applied once)")
 	for key: String in P.TYPED: check(not P.FLAT.has(key), "typed key %s is not also a flat Value row" % key)
 	check(P.ELEMENT_CHANNELS=={"Fire":"fire","Water":"water","Air":"wind","Earth":"earth"}, "ElementalType names -> existing NPC spell channels")
 	# Synthetic duplication check (no table needed beyond the group logic).
@@ -198,6 +202,44 @@ func flat_against_fresh_target(world: Node) -> float:
 	monster.free()
 	return float(amount)
 
+## User decision 2026-11-13: base PVP rows through the enchant single-player policy.
+func pvp_case(world: Node, id: int, name: String, reader: Callable, expected: int) -> void:
+	level_ok(world,F.full(world._catalog_item_from_source_id("m523:item:"+str(id))))
+	var physical: Array[String] = fresh_grant(world,[id])
+	if physical.is_empty(): return
+	var before: int = int(reader.call())
+	var equipped: bool = equip(world,physical[0])
+	var after: int = int(reader.call())
+	check(equipped and after-before==expected, "%s #%d: %d -> %d (source +%d)" % [name,id,before,after,expected])
+	check(world._save_game(true)==OK, "save with #%d" % id)
+	await reload(world)
+	check(int(reader.call())==after, "%s #%d after reload %d" % [name,id,int(reader.call())])
+	evidence[name] = {"id":id,"before":before,"after":after}
+
+## User decision 2026-11-13: a save already wearing two earrings of one group
+## keeps earring1 and returns earring2 to the bag once; the marker stops reruns.
+func load_correction_case(world: Node, pick: Dictionary) -> void:
+	for id: int in [pick.a,pick.b]: level_ok(world,F.full(world._catalog_item_from_source_id("m523:item:"+str(id))))
+	var physical: Array[String] = fresh_grant(world,[pick.a,pick.b])
+	if physical.size()!=2: check(false,"two earrings granted"); return
+	check(equip(world,physical[0],"earring1"), "#%d in earring1" % int(pick.a))
+	# An older save: both worn (written directly, as before the limit existed).
+	var forced: Dictionary = world.item_instances[physical[1]].record.duplicate(true)
+	forced["instance_id"] = physical[1]
+	world.equipped_items["earring2"] = forced
+	world.equip_group_marker = {}
+	check(world._save_game(true)==OK, "older-style save with both earrings")
+	await reload(world)
+	check(world._is_instance_equipped(physical[0]) and not world._is_instance_equipped(physical[1]) and world.item_instances.has(physical[1]), "load keeps earring1 #%d, unequips earring2 #%d to the bag" % [int(pick.a),int(pick.b)])
+	var marker: Dictionary = world.equip_group_marker
+	check(marker.get("applied")==true and marker.get("released",[]).size()==1 and str(marker.released[0].slot)=="earring2", "marker records the one release (%s)" % JSON.stringify(marker))
+	# Applied once: the same state written again is not re-judged on the next load.
+	world.equipped_items["earring2"] = forced
+	check(world._save_game(true)==OK, "save with marker and both earrings again")
+	await reload(world)
+	check(world._is_instance_equipped(physical[1]), "with the saved marker the correction does not run again")
+	evidence["load_correction"] = {"kept":pick.a,"released":pick.b,"marker":marker}
+
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
@@ -218,7 +260,11 @@ func runtime() -> void:
 		await stat_case(world,"pve_damage_reduction_pct",picks.pve_pct,func() -> float: return world._pve_reduction_percent(""),float(picks.pve_pct.value))
 	if check(picks.has("regen"), "an equipable RegenHP item"): await regen_case(world,picks.regen)
 	if check(picks.has("drain"), "an equipable AttackDrainHP item"): await drain_case(world,picks.drain)
-	if check(picks.has("group"), "two earrings sharing an EquipGroupID and one outside it"): await group_case(world,picks.group)
+	if check(picks.has("group"), "two earrings sharing an EquipGroupID and one outside it"):
+		await group_case(world,picks.group)
+		await load_correction_case(world,picks.group)
+	await pvp_case(world,286641,"pvp_flat_ignore",func() -> int: return COMBAT.pvp_flat_ignore(world,"melee"),12)
+	await pvp_case(world,315922,"pvp_status_level",func() -> int: return COMBAT.status_caster_level(world,10),1)
 	world.queue_free()
 	await process_frame
 

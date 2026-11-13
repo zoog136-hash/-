@@ -42,7 +42,7 @@ static func status_field(row: Dictionary) -> Dictionary:
 ## equipment523 elemental reduction, cooldown factor, DOT reduction, STR/DEX/INT
 ## percent, undead bonus). [record field, unit name]; the value is divided by the
 ## unit's UIUnit Denominator (Percentage 10000 -> 50000 = 5, ValuePercent 1).
-## FinalBlow*, AttackDrain*, Regen* and PVP/conditional rows have their own
+## FinalBlow*, AttackDrain*, Regen* and conditional rows have their own
 ## owners (patch523_final_blow.base, patch523_passive_items) or no PvE reader.
 const TYPED={"RangeEvasion":["er","Value"],"MeleeEvasion":["dg","Value"],
 	"PierceDamageReduction":["damage_reduction_ignore","Value"],
@@ -55,7 +55,11 @@ const TYPED={"RangeEvasion":["er","Value"],"MeleeEvasion":["dg","Value"],
 	"MeleeDamageReductionPercent":["melee_damage_reduction_pct","Percentage"],"RangeDamageReductionPercent":["ranged_damage_reduction_pct","Percentage"],"MagicDamageReductionPercent":["magic_damage_reduction_pct","Percentage"],
 	"MeleeCriticalResist":["melee_critical_resistance","Percentage"],"RangeCriticalResist":["ranged_critical_resistance","Percentage"],
 	"CastSpeedBonus":["castSpeed","Percentage"],"PoisonDamageReductionPercent":["dot_damage_reduction_pct","Percentage"],
-	"StrengthScale":["strPercent","Percentage"],"DexterityScale":["dexPercent","Percentage"],"IntelligenceScale":["intPercent","Percentage"]}
+	"StrengthScale":["strPercent","Percentage"],"DexterityScale":["dexPercent","Percentage"],"IntelligenceScale":["intPercent","Percentage"],
+	# User decision 2026-11-13: the same PVP -> single-player interpretation as
+	# the enchantment path (patch523_equipment_combat.pvp_flat_ignore /
+	# status_caster_level, policy-gated), read there through base_integer().
+	"PiercePVPDamageReduction":["source_pvp_flat_reduction_ignore","Value"],"PVPSpellByLevelAdditionLevel":["source_pvp_status_success_level","Value"]}
 static func typed_value(row: Dictionary) -> Variant:
 	var spec: Array=TYPED.get(str(row.get("bonus_type",{}).get("Name","")),[])
 	var bonus: Dictionary=row.get("bonus",{})
