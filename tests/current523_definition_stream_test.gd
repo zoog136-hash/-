@@ -134,5 +134,34 @@ func run() -> void:
 	check(not FileAccess.file_exists(BAKE.data_path("disk_" + table) + ".part") and not FileAccess.file_exists(BAKE.data_path("disk_" + table)), "failed bake leaves no part or data file")
 	ROWS._store_failures.erase(table)
 	BAKE.clear("disk_" + table)
+	_row_scanner_units()
 	print("CURRENT523_DEFINITION_STREAM_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"stats":stats}))
 	quit(0 if failures.is_empty() else 1)
+
+func _row_scanner_units() -> void:
+	same_result("{\"rows\":[{\"a\":[1}]}]}", "scanner nested bracket mismatch falls back exactly", false)
+	var invalid_escape: String = "{\"rows\":[{\"s\":\"bad" + String.chr(92) + "q\"}]}"
+	same_result(invalid_escape, "scanner invalid escape falls back exactly", false)
+	var truncated_batch: String = many_rows(700,-1)
+	truncated_batch = truncated_batch.left(truncated_batch.length()-30)
+	same_result(truncated_batch, "scanner truncated second batch discards earlier packed batch", false)
+	for text: String in ["{}", "{\"s\":\"}][{\",\"a\":[{\"b\":1}]}", "{\"s\":\"\\\"escaped\\\"\"}", "{\"bad\":[1}", "{\"unterminated\":\"x", "{\"open\":[1]"]:
+		var bytes: PackedByteArray = text.to_utf8_buffer()
+		var scanner := ROWS.RowScanner.new(bytes)
+		check(scanner.object_end(0) == ROWS._object_end(bytes,0), "row scanner: original endpoint " + text)
+	var rows := PackedStringArray()
+	for index: int in 200: rows.append("{\"N\":%d,\"S\":\"plain text without bracket tokens\"}" % index)
+	var source: PackedByteArray = ("[" + ",".join(rows) + "]").to_utf8_buffer()
+	var scanner := ROWS.RowScanner.new(source)
+	var at: int = 1
+	var equal: bool = true
+	for _index: int in 200:
+		var expected: int = ROWS._object_end(source,at)
+		var actual: int = scanner.object_end(at)
+		if actual != expected: equal = false; break
+		at = actual + 1
+	check(equal, "row scanner: one scanner preserves endpoints across all rows")
+	check(scanner.positions[3] == -1 and scanner.find_calls < source.size(), "row scanner: absent opening array cursor remains exhausted across rows")
+	check(source.find(123,source.size()) == -1, "row scanner: native find at EOF returns exhausted sentinel")
+	var after: int = scanner.find_calls
+	check(scanner.object_end(source.size()) == -1 and scanner.find_calls == after, "row scanner: exhausted end does not search again")

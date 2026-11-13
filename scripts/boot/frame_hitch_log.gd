@@ -17,12 +17,13 @@ const KEEP: int = 12
 const FLUSH_USEC: int = 5000000
 ## Korean labels for the loading screen; unknown sections show their key.
 const LABELS: Dictionary = {
+	"ui_text_draw":"UI 글자 그리기",
 	"world":"월드 기타", "quests":"퀘스트", "hud":"HUD 갱신", "auto_hunt":"자동 사냥",
 	"skills":"스킬", "loot":"드랍·줍기", "save":"저장", "field_triggers":"맵 이벤트",
 	"monsters":"몬스터", "player":"캐릭터", "field_population":"몬스터 배치",
 	"map_renderer":"지도 그리기", "map_objects":"맵 오브젝트", "monsterbook":"몬스터북",
 	"companion":"동료", "buffs":"버프", "dungeon":"던전", "items":"아이템 자동 사용",
-	"hud_main":"원작 HUD", "npcs":"NPC",
+	"hud_main":"원작 HUD", "ui_animation":"UI 애니메이션", "npcs":"NPC",
 	"other":"미계측 잔여",
 }
 
@@ -48,6 +49,8 @@ static var enabled: bool = true:
 		enabled = value
 		# Disabled time/callbacks must not leak into the next measured interval.
 		_last_frame = 0
+		_application_paused = -1
+		_application_focused = -1
 		_clear_pending()
 static var _nested: int = 0
 ## Callback-delivery boundaries, not GPU timestamps. One fixed-size sample per
@@ -61,6 +64,19 @@ static var _post_draw_count: int = 0
 ## It never enters exclusive sections or creates another diagnostic event.
 static var _logger_usec: int = 0
 static var _inside_probe: bool = false
+## A late-priority callback in the probe's process group, not completion of
+## all nodes, physics, deferred work, other thread groups or rendering.
+static var _process_tail_usec: int = 0
+static var _process_tail_count: int = 0
+## Notification observations only: -1 means unknown. Preserve state between
+## windows, but retain only four counts and first/last timestamps per window.
+static var _application_paused: int = -1
+static var _application_focused: int = -1
+static var _pause_at_start: int = -1
+static var _focus_at_start: int = -1
+static var _lifecycle_counts: PackedInt64Array = PackedInt64Array([0,0,0,0])
+static var _lifecycle_first_usec: int = 0
+static var _lifecycle_last_usec: int = 0
 
 static func now() -> int:
 	return Time.get_ticks_usec()
@@ -127,6 +143,56 @@ static func _clear_pending() -> void:
 	_slow_spawn = {}
 	_logger_usec = 0
 	_clear_draw_callbacks()
+	_process_tail_usec = 0
+	_process_tail_count = 0
+	_pause_at_start = _application_paused
+	_focus_at_start = _application_focused
+	_lifecycle_counts.fill(0)
+	_lifecycle_first_usec = 0
+	_lifecycle_last_usec = 0
+
+static func process_tail() -> void:
+	_mark_process_tail(Time.get_ticks_usec())
+
+static func _mark_process_tail(at: int) -> void:
+	if not enabled or _last_frame <= 0: return
+	_process_tail_count += 1
+	if _process_tail_count == 1: _process_tail_usec = at
+
+static func _process_tail_sample(at: int, draw: Dictionary) -> Dictionary:
+	var result: Dictionary = {"usec":_process_tail_usec, "count":_process_tail_count}
+	if _process_tail_count == 0: result["status"] = "missing"
+	elif _process_tail_count != 1: result["status"] = "multiple"
+	elif not (_last_frame <= _process_tail_usec and _process_tail_usec <= at): result["status"] = "out_of_order"
+	else:
+		result["status"] = "ordered_marker"
+		result["wall_usec"] = {"probe_to_tail":_process_tail_usec - _last_frame, "tail_to_probe":at - _process_tail_usec}
+		# Only split the pre-draw wall span when both independently validated
+		# markers have the required order. These overlap the draw diagnostics.
+		if draw.get("status") == "ordered_synchronous_pair" and _process_tail_usec <= _pre_draw_usec:
+			result["tail_to_pre_usec"] = _pre_draw_usec - _process_tail_usec
+	return result
+
+## Event indices: application pause, resume, focus out, focus in. No elapsed
+## time is removed, and no duration is inferred from platform notifications.
+static func lifecycle(event: int) -> void:
+	_mark_lifecycle(event, Time.get_ticks_usec())
+
+static func _mark_lifecycle(event: int, at: int) -> void:
+	if not enabled or event < 0 or event >= 4: return
+	if event < 2: _application_paused = 1 if event == 0 else 0
+	else: _application_focused = 0 if event == 2 else 1
+	if _last_frame <= 0: return
+	if _lifecycle_counts[0] + _lifecycle_counts[1] + _lifecycle_counts[2] + _lifecycle_counts[3] == 0:
+		_lifecycle_first_usec = at
+	_lifecycle_counts[event] += 1
+	_lifecycle_last_usec = at
+
+static func _lifecycle_sample() -> Dictionary:
+	return {"counts_pause_resume_out_in":_lifecycle_counts.duplicate(),
+		"first_usec":_lifecycle_first_usec, "last_usec":_lifecycle_last_usec,
+		"paused_start":_pause_at_start, "paused_end":_application_paused,
+		"focused_start":_focus_at_start, "focused_end":_application_focused}
 
 static func _clear_draw_callbacks() -> void:
 	_pre_draw_usec = 0
@@ -195,7 +261,12 @@ static func _record(total: int, map_id: String, at: int) -> void:
 	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var entry: Dictionary = {"ms":total / 1000, "sections":parts.slice(0, 6), "map":map_id,
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
-	entry["diagnostics"] = {"logger_usec":_logger_usec, "draw_callbacks":_draw_sample(at)}
+	var draw: Dictionary = _draw_sample(at)
+	entry["diagnostics"] = {"logger_usec":_logger_usec, "draw_callbacks":draw,
+		"process_tail":_process_tail_sample(at, draw), "lifecycle":_lifecycle_sample(),
+		# Instantaneous record-time counters, not interval peaks or GC evidence.
+		"record_snapshot":{"sampled_usec":Time.get_ticks_usec(), "static_memory_bytes":OS.get_static_memory_usage(),
+			"objects":int(Performance.get_monitor(Performance.OBJECT_COUNT)), "nodes":int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))}}
 	if not _build.is_empty(): entry["build"] = _build.duplicate()
 	var details: Array = []
 	for operation: String in _details:
@@ -274,6 +345,15 @@ static func previous_line() -> String:
 		if part is Array and part.size() == 2 and int(part[1]) > 0 and names.size() < 3:
 			names.append("%s %dms" % [str(LABELS.get(str(part[0]), str(part[0]))), int(part[1])])
 	var line: String = "지난 실행 끊김 %d회 · 최대 %dms (%s)" % [int(value.get("hitches", worst.size())), int(top.get("ms", 0)), ", ".join(names)]
+	# The current loading header can be a newer APK than this saved hitch.
+	var recorded_build: Variant = top.get("build", {})
+	if not recorded_build is Dictionary or recorded_build.is_empty(): recorded_build = value.get("build", {})
+	var build_label: String = "미상"
+	if recorded_build is Dictionary:
+		var version: String = str(recorded_build.get("version_name", "")).strip_edges().left(32)
+		var commit: String = str(recorded_build.get("commit", "")).strip_edges().left(8)
+		if not version.is_empty() or not commit.is_empty(): build_label = version + ("@" + commit if not commit.is_empty() else "")
+	line += " · 기록빌드 " + build_label
 	# The slowest frame's operation details ([name, total ms, count, max ms]),
 	# so a photo of the loading screen names what inside a section stalled.
 	var details: PackedStringArray = PackedStringArray()
@@ -295,11 +375,33 @@ static func previous_line() -> String:
 		for part: Array in phases.slice(0,2): labels.append("%s %dms" % [part[0],int(part[1])/1000])
 		line += " · 단일 NPC %d setup %s" % [int(spawn.get("npc",-1)),", ".join(labels)]
 	var diagnostics: Variant = top.get("diagnostics", {})
-	if diagnostics is Dictionary:
-		var callbacks: Variant = diagnostics.get("draw_callbacks", {})
-		if callbacks is Dictionary and callbacks.get("status") == "ordered_synchronous_pair" and callbacks.get("wall_usec") is Dictionary:
-			var wall: Dictionary = callbacks.wall_usec
-			line += " · 콜백 구간 %d/%d/%dms(전/사이/후)" % [int(wall.get("probe_to_pre",0))/1000,int(wall.get("pre_to_post",0))/1000,int(wall.get("post_to_probe",0))/1000]
+	if not diagnostics is Dictionary: diagnostics = {}
+	var callbacks: Variant = diagnostics.get("draw_callbacks", {})
+	if callbacks is Dictionary and callbacks.get("status") == "ordered_synchronous_pair" and callbacks.get("wall_usec") is Dictionary:
+		var wall: Dictionary = callbacks.wall_usec
+		line += " · 콜백 구간 %d/%d/%dms(전/사이/후)" % [int(wall.get("probe_to_pre",0))/1000,int(wall.get("pre_to_post",0))/1000,int(wall.get("post_to_probe",0))/1000]
+	elif callbacks is Dictionary and not callbacks.is_empty():
+		var status: String = str({"no_draw_callbacks":"없음", "multiple_callbacks":"중복", "incomplete_callbacks":"누락", "out_of_order":"역순", "threaded_delivery":"별도스레드", "unknown_delivery":"스레드미상"}.get(callbacks.get("status", ""), "미확인"))
+		var delivery: String = str({"main_thread":"동기", "separate_thread":"별도", "unknown":"미상"}.get(callbacks.get("delivery", ""), "미상"))
+		line += " · 콜백 %s %d/%d(%s)" % [status, clampi(int(callbacks.get("pre_count",0)),0,9999), clampi(int(callbacks.get("post_count",0)),0,9999), delivery]
+	else: line += " · 콜백 미기록"
+	var tail: Variant = diagnostics.get("process_tail", {})
+	if tail is Dictionary and tail.get("status") == "ordered_marker" and tail.get("wall_usec") is Dictionary:
+		line += " · 후순위표식 %d/%dms(전/후)" % [int(tail.wall_usec.get("probe_to_tail",0))/1000,int(tail.wall_usec.get("tail_to_probe",0))/1000]
+	elif tail is Dictionary and not tail.is_empty():
+		var status: String = str({"missing":"없음", "multiple":"중복", "out_of_order":"역순"}.get(tail.get("status", ""), "미확인"))
+		line += " · 후순위표식 %s(%d)" % [status, clampi(int(tail.get("count",0)),0,9999)]
+	var lifecycle_sample: Variant = diagnostics.get("lifecycle", {})
+	if lifecycle_sample is Dictionary and not lifecycle_sample.is_empty():
+		var events: Variant = lifecycle_sample.get("counts_pause_resume_out_in", [])
+		if (events is Array or events is PackedInt64Array) and events.size() == 4:
+			if int(events[0]) > 0 or int(events[1]) > 0 or int(events[2]) > 0 or int(events[3]) > 0:
+				line += " · 앱알림 %d/%d/%d/%d(정지/재개/이탈/복귀)" % [clampi(int(events[0]),0,9999),clampi(int(events[1]),0,9999),clampi(int(events[2]),0,9999),clampi(int(events[3]),0,9999)]
+			else:
+				var states: PackedStringArray = []
+				if int(lifecycle_sample.get("paused_start",-1)) == 1 or int(lifecycle_sample.get("paused_end",-1)) == 1: states.append("정지")
+				if int(lifecycle_sample.get("focused_start",-1)) == 0 or int(lifecycle_sample.get("focused_end",-1)) == 0: states.append("이탈")
+				if not states.is_empty(): line += " · 앱상태 " + "/".join(states)
 	return line
 
 static func reset_for_test(directory: String) -> void:
@@ -322,7 +424,9 @@ static func reset_for_test(directory: String) -> void:
 	_draw_delivery = "unknown"
 	_logger_usec = 0
 	_inside_probe = false
-	_clear_draw_callbacks()
+	_application_paused = -1
+	_application_focused = -1
+	_clear_pending()
 
 ## Test hook: pretend the previous frame started `usec_ago` microseconds ago.
 static func backdate_frame_for_test(usec_ago: int) -> void:
@@ -337,3 +441,9 @@ static func frame_at_for_test(at: int, map_id: String = "", logger_usec: int = 0
 
 static func draw_at_for_test(is_pre: bool, at: int) -> void:
 	_mark_draw(is_pre, at)
+
+static func process_tail_at_for_test(at: int) -> void:
+	_mark_process_tail(at)
+
+static func lifecycle_at_for_test(event: int, at: int) -> void:
+	_mark_lifecycle(event, at)

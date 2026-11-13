@@ -204,3 +204,72 @@ static func select_global(event_name: String, legacy_definition: Dictionary = {}
 	return _selected(supplied,sprite,action,"global_effect","current523:global:" + event_name,
 		{"table":"ConstantData","row":row.duplicate(true),"field":"Value","event":event_name,
 		"gameplay_admission":"existing_apply_event_only; no_new_game_event"},"patch523" if current_card else "base508")
+
+## One direct (IsPossession false, Character/0) ItemBonus row of `bonus_name`
+## with unit SpriteID on the complete ItemClass row: {sprite, chain}; sprite 0
+## when the item has no such row, -1 when the row is conditional/ambiguous.
+static func _item_sprite(native: Dictionary, bonus_name: String) -> Dictionary:
+	var found: Array[Dictionary] = []
+	for link: Dictionary in SOURCE.table_where("ItemBonus","ItemClassID",int(native.ID)):
+		var bonus: Dictionary = SOURCE.table_row("Bonus",int(link.get("BonusID",-1)))
+		var kind: Dictionary = SOURCE.table_row("BonusType",int(bonus.get("BonusTypeID",-1)))
+		if kind.get("Name") != bonus_name: continue
+		var unit: Dictionary = SOURCE.table_row("Unit",int(kind.get("UnitID",-1)))
+		if link.get("IsPossession") != false or not BANK.integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID) != 0 or not BANK.integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID) != 0 or unit.get("Name") != "SpriteID": return {"sprite":-1}
+		found.append({"ItemBonus":link.duplicate(true),"Bonus":bonus.duplicate(true),"BonusType":kind.duplicate(true)})
+	if found.is_empty(): return {"sprite":0}
+	var sprites: Dictionary = {}
+	for chain: Dictionary in found: sprites[_source_integer(chain.Bonus.get("Value"))] = true
+	if sprites.size() != 1 or int(sprites.keys()[0]) <= 0: return {"sprite":-1}
+	return {"sprite":int(sprites.keys()[0]),"chains":found}
+
+const AMMO_STAGES = {"flight":["AmmoEffectSpriteIDByWeapon","AmmoEffectSpriteID","DefaultAmmoEffectSpriteID"],"explosion":["","AmmoExplosionSpriteID","DefaultAmmoExplosionSpriteID"]}
+## Original sprite of a normal ranged attack's projectile, from tables only:
+## flight = weapon AmmoEffectSpriteIDByWeapon, else the ammo's
+## AmmoEffectSpriteID, else the weapon's WeaponType.DefaultAmmoEffectSpriteID;
+## explosion = ammo AmmoExplosionSpriteID, else WeaponType
+## .DefaultAmmoExplosionSpriteID. `ammo_items` are complete ItemClass rows in
+## the existing owner's order (worn quiver item, then the fired stack). The
+## bank lookup of that sprite is the caller's (current523_ammo_flight).
+static func ammo_sprite(weapon_item: Dictionary, ammo_items: Array, stage: String, context: Dictionary = {}) -> Dictionary:
+	if not AMMO_STAGES.has(stage) or not BANK.integer(weapon_item.get("ID"),1): return fail("current523_ammo_effect_complete_weapon_and_stage_required")
+	var supplied: Dictionary = SOURCE.source_tables(context,["ItemClass","ItemBonus","WeaponType"])
+	if not supplied.ok: return supplied
+	var weapon: Dictionary = SOURCE.table_row("ItemClass",int(weapon_item.ID))
+	if weapon.is_empty() or weapon != weapon_item or weapon.get("TestItem") != false: return fail("current523_ammo_effect_complete_weapon_definition_differs")
+	var fields: Array = AMMO_STAGES[stage]
+	var reference: Dictionary = {"stage":stage,"weapon_item_class_id":int(weapon.ID),"gameplay_admission":"existing_normal_ranged_attack_flight_only; no_damage_ammo_or_bonus_change_by_visual_loader"}
+	var sprite: int = 0
+	if not str(fields[0]).is_empty():
+		var own: Dictionary = _item_sprite(weapon,str(fields[0]))
+		if int(own.sprite) < 0: return fail("current523_ammo_effect_weapon_row_unresolved",reference)
+		if int(own.sprite) > 0: sprite = int(own.sprite); reference["field"] = fields[0]
+	if sprite == 0:
+		for value: Variant in ammo_items:
+			if not value is Dictionary or not BANK.integer(value.get("ID"),1): continue
+			var native: Dictionary = SOURCE.table_row("ItemClass",int(value.ID))
+			if native.is_empty() or native != value or native.get("TestItem") != false: return fail("current523_ammo_effect_complete_ammo_definition_differs",reference)
+			var row: Dictionary = _item_sprite(native,str(fields[1]))
+			if int(row.sprite) < 0: return fail("current523_ammo_effect_ammo_row_unresolved",reference)
+			if int(row.sprite) > 0:
+				sprite = int(row.sprite); reference["field"] = fields[1]; reference["ammo_item_class_id"] = int(native.ID)
+				break
+	if sprite == 0:
+		var weapon_type: Dictionary = _item_sprite_type(weapon)
+		if weapon_type.is_empty(): return fail("current523_ammo_effect_weapon_type_unresolved",reference)
+		sprite = _source_integer(weapon_type.get(fields[2]))
+		reference["field"] = "WeaponType."+str(fields[2]); reference["weapon_type_id"] = int(weapon_type.ID)
+	if sprite <= 0: return fail("current523_ammo_effect_source_sprite_absent",reference)
+	return {"ok":true,"sprite_id":sprite,"stage":stage,"source_reference":reference,"options":supplied.options}
+
+## The weapon's sole direct WeaponType row (unit WeaponTypeID) -> WeaponType row.
+static func _item_sprite_type(native: Dictionary) -> Dictionary:
+	var types: Dictionary = {}
+	for link: Dictionary in SOURCE.table_where("ItemBonus","ItemClassID",int(native.ID)):
+		var bonus: Dictionary = SOURCE.table_row("Bonus",int(link.get("BonusID",-1)))
+		var kind: Dictionary = SOURCE.table_row("BonusType",int(bonus.get("BonusTypeID",-1)))
+		if kind.get("Name") != "WeaponType": continue
+		if link.get("IsPossession") != false or not BANK.integer(bonus.get("BonusApplicationTypeID")) or int(bonus.BonusApplicationTypeID) != 0 or not BANK.integer(bonus.get("BonusApplicationTargetID")) or int(bonus.BonusApplicationTargetID) != 0: return {}
+		types[_source_integer(bonus.get("Value"))] = true
+	if types.size() != 1 or int(types.keys()[0]) <= 0: return {}
+	return SOURCE.table_row("WeaponType",int(types.keys()[0]))

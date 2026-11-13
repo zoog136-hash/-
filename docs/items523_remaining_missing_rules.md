@@ -108,6 +108,22 @@ CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3
 - 바닥 이름 라벨의 글꼴 크기·외곽선·위치, 강화 수치 "+N " 접두 규칙은 원본 표에 없어 TWILIGHT 값.
 - 빛기둥 반복: 은행 계약상 loop는 호출자 정책 — 위의 해석(바닥에 있는 동안 breath 반복).
 
+## 2-2. 탄약 투사체 원본 스프라이트 (2026-11-13, PR `feature/equipment523-rest-ammo`)
+
+- 근거(표만): 일반 원거리 공격의 비행 스프라이트 = 무기 ItemBonus `AmmoEffectSpriteIDByWeapon`(기르타스의 활 2종 29554) → 화살·스팅·탄환
+  ItemBonus `AmmoEffectSpriteID`(각인 화살 7종 66, 각인 스팅 3종 2989) → 무기 WeaponType `DefaultAmmoEffectSpriteID`(Bow 66, Gauntlet 2989,
+  총류 0). 명중 폭발 = 탄약 `AmmoExplosionSpriteID`(각인 탄환 4종 16430) → WeaponType `DefaultAmmoExplosionSpriteID`(Rifle·HandCannon·Bazooka 16430).
+  탄약 순서는 착용한 화살통 칸(Quiver) 아이템 → 발사에 쓰는 탄약 묶음(기존 소유자 순서).
+- 연결: `current523_source_effect_selection.ammo_sprite`(표 해석) + `current523_ammo_flight`(원본 SP2 은행 action 0 재생). 기존
+  `TwilightCombatFlights` 비행이 속도·장애물·취소·한 번의 명중을 그대로 갖고, 원본 노드는 그 위치·방향(facing8+3)을 따라간다. 원본 스프라이트가
+  있으면 기존 선 그림을 대신하고, 없으면(총류 비행) 기존 선이 남는다. 폭발은 실제 명중 지점에서만 1회 재생(취소 시 없음).
+- 실제 Main 확인(`tests/items523_ammo_projectile_sprite_test.gd`): 활 #331 → 66(WeaponType 기본), 각인 화살 #337 → 66(AmmoEffectSpriteID),
+  기르타스의 활 #362411 → 29554, 건틀릿 #30593 → 2989, 라이플 #96364 → 비행 원본 없음(기존 선) + 명중 폭발 16430, 실제 비행에서 명중 1회 유지.
+- 원본 팩 은행에 `source_action_domains`가 없어 기존 효과 선택(`_action`)은 이 팩에서 모든 효과를 거부한다. 탄약은 바닥 빛기둥
+  (`current523_ground_drop_effect`)과 같이 은행 행동을 직접 지정(action 0 = 화살·스팅 `fly`, 폭발의 유일한 행동)해 재생한다.
+- 표에 없어 TWILIGHT 값으로 둔 것: 무기 전용 > 탄약 > 무기 기본 우선순위(이름이 "ByWeapon"/"Default"인 것에 따른 해석), 비행 중 반복
+  재생(은행 계약상 반복은 호출자 정책), 비행 속도 1300(기존 값), 마법 투사체·스킬 화살은 대상 아님(스킬 쪽 원본 경로).
+
 ## 3. 스킬북 (BuffCardDrawer 2,244종)
 
 | 묶음 | 수 | 상태 |

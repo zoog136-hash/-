@@ -1,4 +1,5 @@
 extends Node2D
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## Draw only the supplied font and serialized text. Explicit caller opt-in connects
 ## constrained source word wrapping; source placeholder strings are not game rules.
 var original_font: FontFile
@@ -38,6 +39,8 @@ func set_source_text(value: String) -> Dictionary:
 
 func _draw() -> void:
 	if original_font==null:return
+	var hitch_started: int=FRAME_HITCH.now()
+	var hitch_nested: int=FRAME_HITCH.nested()
 	var font_size: int=int(original_options.fontSize)
 	var line_height: float=original_font.get_height(font_size)
 	# Korean-client line spacing (customProperty "linespacing"), 0 otherwise.
@@ -70,5 +73,7 @@ func _draw() -> void:
 		# would start below one common line height. It does not draw a new
 		# substitute string or create a generic rectangular clipping rule.
 		if constrained and next_source_y<line_height:break
+	FRAME_HITCH.detail("ui.text_draw",hitch_started)
+	FRAME_HITCH.add_self("ui_text_draw",hitch_started,hitch_nested)
 static func source_color(value: Array) -> Color:
 	return Color(float(value[1])/255.0,float(value[2])/255.0,float(value[3])/255.0,float(value[0])/255.0)

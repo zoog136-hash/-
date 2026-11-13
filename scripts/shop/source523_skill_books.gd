@@ -4,6 +4,9 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const PROFILES = preload("res://scripts/skills/player_skills523.gd")
 const BINDINGS_PATH: String = "res://data/skills/player_skills523_bindings.json"
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BOOK_BAKE: String = "shop_skill_book_contracts523"
+const BOOK_SCHEMA: String = "twilight.shop523.skill-book-contracts.v1"
 const ORIGIN: String = "TWILIGHT 기존 스킬 습득 연결 · 원본 각인 스택 보존 · 습득 후 재구매 차단"
 static var source_problem: String = ""
 static var source_identity: Dictionary = {}
@@ -30,6 +33,16 @@ static func _contracts() -> Dictionary:
 	if not reviewed is Dictionary or reviewed.get("schema_version")!=1 or reviewed.get("patch")!=523 or reviewed.get("source_zip_sha256")!=SOURCE.SOURCE_SHA or not reviewed.get("skills") is Dictionary or not reviewed.get("class_ids") is Dictionary:
 		source_problem = "원본 스킬북의 공개 기존 스킬·직업 ID 계약을 읽을 수 없습니다."
 		return {}
+	var code_key: String = BAKE.global_code_key()
+	var original_key: String = SOURCE.verified_key()
+	var bake_key: String = BAKE.key([BOOK_SCHEMA,original_key,binding_text.sha256_text(),code_key,JSON.stringify(Engine.get_version_info())]) if not code_key.is_empty() and not original_key.is_empty() else ""
+	var cached: Variant = BAKE.read(BOOK_BAKE,bake_key) if not bake_key.is_empty() else null
+	if _valid_contract_bake(cached,identity,signature,reviewed.skills):
+		_source_books = cached.books
+		_source_book_signature = signature
+		source_identity = identity.duplicate(true)
+		source_problem = ""
+		return _source_books
 	var reviewed_spells: Dictionary = {}
 	for skill_id: String in reviewed.skills:
 		var binding: Variant = reviewed.skills[skill_id]
@@ -83,7 +96,30 @@ static func _contracts() -> Dictionary:
 	_source_book_signature = signature
 	source_identity = identity.duplicate(true)
 	source_problem = ""
+	if not bake_key.is_empty(): BAKE.write(BOOK_BAKE,bake_key,{"schema":BOOK_SCHEMA,"identity":identity,"signature":signature,"books":books})
 	return _source_books
+
+## Only successfully constructed contracts are persisted. The bake key checks
+## the original, binding bytes, every code/data input and engine; BAKE.read()
+## checks stored bytes/SHA before this bounded structure/identity validation.
+## A missing, stale, corrupt or unusable bake uses the original joins below.
+static func _valid_contract_bake(value: Variant, identity: Dictionary, signature: String, reviewed_skills: Dictionary) -> bool:
+	if not value is Dictionary or value.get("schema") != BOOK_SCHEMA or value.get("identity") != identity or value.get("signature") != signature or not value.get("books") is Dictionary: return false
+	for id: Variant in value.books:
+		if not id is String or not id.is_valid_int() or int(id) <= 0 or str(int(id)) != id: return false
+		var spec: Variant = value.books[id]
+		if not spec is Dictionary or not spec.get("name") is String or spec.name.is_empty() or not spec.get("skill_id") is String or spec.skill_id.is_empty() or spec.get("source_definition_archive") != identity or not spec.get("classes") is Dictionary: return false
+		for field: String in ["card_id","spell_id"]:
+			if not PROFILES._source_integer(spec.get(field)) or int(spec[field]) <= 0: return false
+		var binding: Variant = reviewed_skills.get(spec.skill_id)
+		if not binding is Dictionary or not PROFILES._source_integer(binding.get("spell_id")) or int(binding.spell_id) != int(spec.get("spell_id",0)): return false
+		for job: Variant in spec.classes:
+			if not job is String or not spec.classes[job] is Array: return false
+			for limit: Variant in spec.classes[job]:
+				if not limit is Dictionary: return false
+				for field: String in ["minimum_level","required_card","polymorph_grade"]:
+					if not PROFILES._source_integer(limit.get(field)): return false
+	return true
 
 static func install(world, source) -> Dictionary:
 	var bindings: Dictionary = {}
