@@ -608,6 +608,8 @@ func _initialize() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _run() -> void:
+	_runtime_reuse_units()
+	_runtime_public_provider_units()
 	_packed_records()
 	_stream_and_runtime_units()
 	# 1. Peak memory on the same input, new first (the peak counter only grows).
@@ -924,3 +926,127 @@ func _disk_required(small: Dictionary, reference_digest: String, reference_reads
 	check(fell_back and fallback.resident_retries == 1 and fallback.digest == reference_digest, "policy off: commit failure recompiles resident as before")
 	OS.set_environment(BAKE.DISK_REQUIRED_ENV, "")
 	check(BAKE.disk_required() == (OS.get_name() in ["Android", "iOS"]), "default policy follows the platform")
+
+class MutableRuntimeProvider extends RefCounted:
+	var problem: String = ""
+	var calls: int = 0
+	var result: Variant = {"nested":{"value":1},"list":[{"x":2}]}
+	func item_runtime(_item: Dictionary, _bonuses: Variant) -> Variant:
+		calls += 1
+		return result.duplicate(true) if result is Dictionary else result
+
+func _runtime_reuse_units() -> void:
+	var memo := PROJECTION.RuntimeReuse.new()
+	var key: PackedByteArray = var_to_bytes(["key"])
+	var original: Dictionary = {"nested":{"value":1},"list":[{"x":2}],"float":1.0}
+	check(memo.remember(key,original), "runtime memo: successful value stored")
+	original.nested.value = 99; original.list[0].x = 99
+	var first: Dictionary = memo.fetch(key)
+	check(first.nested.value == 1 and first.list[0].x == 2 and typeof(first.float) == TYPE_FLOAT, "runtime memo: miss value is owned and value types retained")
+	first.nested.value = 77; first.list[0].x = 77
+	var second: Dictionary = memo.fetch(key)
+	check(second.nested.value == 1 and second.list[0].x == 2 and not is_same(first,second) and not is_same(first.nested,second.nested), "runtime memo: hit nested containers never alias")
+	var equivalent_key: PackedByteArray = key.duplicate()
+	check(memo.fetch(equivalent_key) != null, "runtime memo: exact byte keys match")
+	key[0] = 99; equivalent_key[0] = 98
+	check(memo.fetch(var_to_bytes(["key"])) != null, "runtime memo: caller key mutation cannot mutate cache or LRU")
+	check(not memo.remember(var_to_bytes(["null"]),null) and not memo.remember(var_to_bytes(["fail"]),{}) and memo.entries.size() == 1, "runtime memo: null and failed empty results never stored")
+	var oversized := PackedByteArray(); oversized.resize(PROJECTION.RuntimeReuse.MAX_BYTES + 1)
+	check(not memo.remember(oversized,{"v":1}) and memo.entries.size() == 1, "runtime memo: oversized input bypasses without evicting useful entry")
+	for index: int in 150: memo.remember(var_to_bytes(index),{"nested":[index]})
+	check(memo.entries.size() == PROJECTION.RuntimeReuse.LIMIT and memo.order.size() == PROJECTION.RuntimeReuse.LIMIT and memo.bytes <= PROJECTION.RuntimeReuse.MAX_BYTES, "runtime memo: entry and byte caps enforced")
+	check(memo.fetch(var_to_bytes(0)) == null and memo.fetch(var_to_bytes(149)).nested[0] == 149, "runtime memo: least recent entry evicted")
+	var byte_memo := PROJECTION.RuntimeReuse.new()
+	var blob := PackedByteArray(); blob.resize(1024 * 1024)
+	for index: int in 6: byte_memo.remember(var_to_bytes(index),{"blob":blob})
+	check(byte_memo.bytes <= PROJECTION.RuntimeReuse.MAX_BYTES and byte_memo.entries.size() < 6 and byte_memo.fetch(var_to_bytes(0)) == null, "runtime memo: byte budget evicts before entry cap")
+	var item: Dictionary = {"catalog_record":{"slot":"weapon"},"item_class":{"TestItem":false,"CategoryID":1,"GradeID":2,"MaterialID":3},"enchant_effects":[{"ID":1},{"ID":2},{"ID":1}]}
+	var signature: PackedByteArray = PROJECTION._runtime_signature(item)
+	for field: String in ["TestItem","CategoryID","GradeID","MaterialID"]:
+		var changed: Dictionary = item.duplicate(true); changed.item_class.erase(field)
+		check(PROJECTION._runtime_signature(changed) != signature, "runtime memo key: raw presence " + field)
+		changed = item.duplicate(true); changed.item_class[field] = 999
+		check(PROJECTION._runtime_signature(changed) != signature, "runtime memo key: raw value " + field)
+	var changed: Dictionary = item.duplicate(true); changed.catalog_record.slot = "armor"
+	check(PROJECTION._runtime_signature(changed) != signature, "runtime memo key: slot value")
+	changed = item.duplicate(true); changed.enchant_effects.reverse()
+	# Use a non-palindrome to expose order, then remove a duplicate separately.
+	changed.enchant_effects = [{"ID":2},{"ID":1},{"ID":1}]
+	check(PROJECTION._runtime_signature(changed) != signature, "runtime memo key: effect row order")
+	changed = item.duplicate(true); changed.enchant_effects.pop_back()
+	check(PROJECTION._runtime_signature(changed) != signature, "runtime memo key: effect row duplicates")
+	var projection := PROJECTION.new()
+	check(not projection._enable_runtime_reuse(RefCounted.new()), "runtime memo: bare native owner safely declines")
+	var bare_node := Node.new()
+	check(not projection._enable_runtime_reuse(bare_node), "runtime memo: bare Node owner safely declines")
+	bare_node.free()
+	projection._runtime_candidate_ready = true; projection._equipment = RefCounted.new()
+	check(not projection._enable_runtime_reuse(RULES.new()), "runtime memo: bare native equipment safely declines")
+	projection._runtime_candidate_ready = false
+	var provider := MutableRuntimeProvider.new()
+	projection._equipment = provider
+	check(not projection._enable_runtime_reuse(RULES.new()) and projection._runtime_reuse == null, "runtime memo: generic equipment provider cannot opt in")
+	var before: Dictionary = projection._runtime_value(item)
+	provider.result.nested.value = 20
+	var after: Dictionary = projection._runtime_value(item)
+	check(provider.calls == 2 and before.nested.value == 1 and after.nested.value == 20, "runtime memo: generic mutable provider still called and observed each time")
+	provider.problem = "failure"; provider.result = {}
+	check(projection._runtime_value(item).is_empty() and provider.calls == 3 and provider.problem == "failure", "runtime memo: generic failure remains observable")
+	provider.problem = ""; provider.result = null
+	check(projection._runtime_value(item) == null and provider.calls == 4, "runtime memo: generic null is not cached")
+	projection.source = FakeRows.new()
+	check(not projection._enable_runtime_reuse(RULES.new()), "runtime memo: injected reader cannot opt in")
+	projection._runtime_reuse = memo; projection._runtime_reuse_equipment = provider
+	projection.release()
+	check(projection._runtime_reuse == null and projection._runtime_reuse_equipment == null and projection._runtime_reuse_generation == -1, "runtime memo: release clears all compile scope state")
+
+class MutableBonusProvider extends RefCounted:
+	var calls: int = 0
+	var row: Dictionary = {"BonusTypeID":1,"Value":1,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0}
+	func bonus(_id: String) -> Variant:
+		calls += 1
+		return row
+
+func _runtime_public_provider_units() -> void:
+	var tables: Dictionary = {"BonusType":[{"ID":1,"Name":"HPPlus","UnitID":1}],"InvokeOption":[],"SpecialResistanceType":[],"ItemBlessBonus":[]}
+	var equipment := ENCHANTMENT.new()
+	check(equipment.prepare(tables), "runtime reuse: public provider fixture prepared")
+	var item: Dictionary = {"catalog_record":{"slot":"weapon"},"item_class":{"TestItem":false,"CategoryID":1,"GradeID":2,"MaterialID":3},"enchant_effects":[{"ID":1,"ItemEnchantBonusGroupID":1,"BlessCode":0,"EnchantLevel":1,"BonusID":1}]}
+	var bonuses: Dictionary = {"1":{"BonusTypeID":1,"Value":1,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0}}
+	var before: Dictionary = equipment.item_runtime(item,bonuses)
+	bonuses["1"].Value = 7
+	var after: Dictionary = equipment.item_runtime(item,bonuses)
+	check(before.options["1"]["1"].hp == 1.0 and after.options["1"]["1"].hp == 7.0, "runtime reuse: public Dictionary bonus mutations observed")
+	var callback := MutableBonusProvider.new()
+	before = equipment.item_runtime(item,callback)
+	var calls: int = callback.calls
+	callback.row.Value = 8
+	after = equipment.item_runtime(item,callback)
+	check(before.options["1"]["1"].hp == 1.0 and after.options["1"]["1"].hp == 8.0 and callback.calls > calls, "runtime reuse: public bonus callbacks still evaluated on repeated input")
+	var projection := PROJECTION.new()
+	projection._equipment = equipment
+	projection._runtime_candidate_ready = true # Model the private post-prepare point.
+	var owner := RULES.new()
+	check(projection._enable_runtime_reuse(owner), "runtime reuse: exact prepared compiler and production owner enable memo")
+	var simple: Dictionary = item.duplicate(true); simple.enchant_effects = []
+	before = projection._runtime_value(simple)
+	before.options["1"]["0"]["changed"] = [1]
+	after = projection._runtime_value(simple)
+	check(projection._runtime_reuse_stats.hits == 1 and not after.options["1"]["0"].has("changed"), "runtime reuse: production hit returns independent nested runtime")
+	for field: String in ["TestItem","CategoryID","GradeID","MaterialID"]:
+		var changed: Dictionary = simple.duplicate(true); changed.item_class[field] = 99
+		var hits: int = projection._runtime_reuse_stats.hits
+		projection._runtime_value(changed)
+		check(projection._runtime_reuse_stats.hits == hits, "runtime reuse: changed raw field misses " + field)
+	var changed_slot: Dictionary = simple.duplicate(true); changed_slot.catalog_record.slot = "armor"
+	var hits: int = projection._runtime_reuse_stats.hits
+	projection._runtime_value(changed_slot)
+	check(projection._runtime_reuse_stats.hits == hits, "runtime reuse: changed slot misses")
+	SOURCE.reset()
+	projection._runtime_value(simple)
+	check(projection._runtime_reuse == null, "runtime reuse: source reset invalidates active memo")
+	projection.release()
+	projection._equipment = equipment; projection._runtime_candidate_ready = true
+	owner._projection_source = FakeRows.new()
+	check(not projection._enable_runtime_reuse(owner), "runtime reuse: exact owner with injected source never enables memo")
+	projection.release()
