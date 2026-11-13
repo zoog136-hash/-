@@ -109,9 +109,13 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 ## pending condition or unresolved lifetime) is owned as a receipted physical
 ## stack even when its use has no table rule or no TWILIGHT owner yet. Using it
 ## refuses and keeps it; no use effect is invented. Existing wallets (아데나,
-## 변신·마법인형·성물 제작 코인, 명예 코인) keep their own owner.
+## 변신·마법인형·성물 제작 코인, 명예 코인) keep their own owner; their original
+## reward rows add to those wallets (patch523_item_inventory.coin_wallet).
 const STORAGE_SLOTS: Array[String]=["consumable","material","currency"]
 const STORAGE_TEST_MARKERS: Array[String]=["테스트","test"]
+## User decision 2026-11-13: rows the original marks unused are excluded like
+## test rows ("[혈맹" rows stay storage stacks).
+const STORAGE_UNUSED_MARKERS: Array[String]=["미사용","사용안함","사용 안함"]
 static func storage_profile(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity():return {}
 	if D.equipment(record) or str(record.get("slot","")) not in STORAGE_SLOTS or not D.currency_identity_name(record).is_empty():return {}
@@ -126,13 +130,16 @@ static func storage_profile(record: Dictionary) -> Dictionary:
 	return {"kind":"storage","standalone_effect_complete":false,"use_owner":"","source_use_rule":"none"}
 
 ## Why a non-test original row is still kept out of storage stacks: an
-## original dummy declaration or a test marker in its own Name ("[테스트]",
-## "테스트용", "test용"). Empty when none applies.
+## original dummy declaration, a test marker in its own Name ("[테스트]",
+## "테스트용", "test용") or an unused marker ("미사용", "사용안함"). Empty when
+## none applies.
 static func storage_exclusion(original: Dictionary) -> String:
 	if not preload("res://scripts/quests/source_dummy523.gd").item_evidence(original).is_empty():return "source_dummy_declaration"
 	var name_value: String=str(original.get("Name","")).to_lower()
 	for marker: String in STORAGE_TEST_MARKERS:
 		if name_value.contains(marker):return "source_test_name_marker"
+	for marker: String in STORAGE_UNUSED_MARKERS:
+		if name_value.contains(marker):return "source_unused_name_marker"
 	return ""
 
 ## Original draw tickets (ItemCategory LinMarketProduct) are owned as physical

@@ -80,7 +80,7 @@ func configure(owner_hud: Node) -> void:
 	add_theme_constant_override("separation",8)
 	label_text("원본523 · 보유 효과 / 명예 코인 사용 버프 / 제작 영구 호칭",self)
 	label_text("TWILIGHT 시간 정책: 게임 종료 중에도 버프·재사용 시간이 흐릅니다." if bool(runtime.policy.get("elapsed_while_closed",true)) else "TWILIGHT 시간 정책: 실행 중에만 버프·재사용 시간이 흐릅니다.",self)
-	if bool(runtime.policy.get("legacy_honor_wallet",true)): label_text("명예 코인: 검증한 기존 TWILIGHT 지갑 호환을 사용합니다. 원본3631과 수량을 합치지 않습니다.",self)
+	if bool(runtime.policy.get("legacy_honor_wallet",true)): label_text("명예 코인: 검증한 기존 TWILIGHT 지갑 호환을 사용합니다. 원본 #3631 보상은 사용자 결정(2026-11-13)에 따라 이 지갑에 더합니다.",self)
 	status = label_text("",self)
 	status.name = "ProtectionStatus"
 	button("원본523 ZIP 설치·교체","ProtectionInstall",self,open_file)
