@@ -443,6 +443,28 @@ class TemplateStore extends RefCounted:
 		for key: Variant in own:
 			if key != FIELDS.MARK and not result.has(key): result[key] = own[key]
 		return result
+	## Same selected values as _expanded_for_binding(), retaining fresh decoded
+	## ownership, but no full detail Dictionary for the weight-only consumer.
+	func _weight_fields_for_binding(id: String, own: Dictionary) -> Variant:
+		if get_script().get_base_script() != null: return null
+		if interning or not FIELDS.lazy(own) or not offsets.has(id): return null
+		file.seek(int(offsets[id]))
+		var light: Variant = file.get_var()
+		var heavy: Variant = file.get_var()
+		if not light is Dictionary or not heavy is Dictionary or not heavy.get("keys") is Array or not heavy.get("fields") is Dictionary: return null
+		var expandable: bool = false
+		for key: Variant in heavy.keys:
+			if not (key is String or key is StringName): return null
+			if not expandable and (light.has(key) or heavy.fields.has(key)):
+				expandable = own.has(key) or key in FIELDS.HEAVY
+		if not expandable: return null
+		var result: Dictionary = {}
+		for key: String in FIELDS.WEIGHT_FIELDS:
+			if own.has(key): result[key] = own[key]
+			elif key in heavy.keys:
+				if light.has(key): result[key] = light[key]
+				elif heavy.fields.has(key): result[key] = heavy.fields[key]
+		return result
 	## The light catalog form (FIELDS.slim() of the record) without decoding
 	## the heavy fields.
 	func light(id: String) -> Variant:
@@ -765,7 +787,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	var staged_display: Dictionary={}
 	# Light baked records below are read through FIELDS.field(), so their
 	# templates are reachable while registering (bound again after the loop).
-	if templates!=null and lazy:FIELDS.bind(templates)
+	if templates!=null and lazy:FIELDS.bind(templates,TemplateStore)
 	if templates == null: _start_registration_reader()
 	# Rows are streamed from the packed reader, not materialized all at once.
 	for row_index: int in src.row_count("ItemClass"):
@@ -840,7 +862,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		store.interning=false
 		store.strings.clear()
 	if store!=null and lazy:
-		FIELDS.bind(store)
+		FIELDS.bind(store,TemplateStore)
 		for index: int in placed:
 			if not FIELDS.lazy(records[index]):records[index]=FIELDS.slim(records[index])
 	catalog["아이템"]=records

@@ -120,7 +120,7 @@ static func _current_source_weight_input(record: Dictionary, estimate: Dictionar
 		return ignored
 	if record.get("source_projection") != "current523_original_typed_game_dto_v1": return ignored
 	var item_id: Variant = record.get("source_item_class_id")
-	var full: Dictionary = NATIVE_FIELDS._full_for_binding(record) if transient else NATIVE_FIELDS.full(record)
+	var full: Dictionary = NATIVE_FIELDS._weight_fields_for_binding(record) if transient else NATIVE_FIELDS.full(record)
 	if not _weight_integer(item_id) or int(item_id) <= 0 or full.get("source_weight_unit") != "unverified_source_units":
 		return ignored
 	if record.get("source_legacy_stack_variant",false) or record.get("source_legacy_catalog_alias",false): return ignored
