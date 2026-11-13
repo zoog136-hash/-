@@ -8,6 +8,22 @@ var source_weapon_status:Dictionary={}
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 const SP2_COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
+
+# Observed Girtas copies are siblings for draw ordering, so explicitly follow
+# their effect's inherited visibility rather than copying absent/hidden frames.
+class ObservedGirtasCopy:
+	extends BackBufferCopy
+	var effect: Sprite2D
+	func _enter_tree() -> void:
+		if effect != null:
+			effect.visibility_changed.connect(_sync_visibility)
+		_sync_visibility()
+	func _exit_tree() -> void:
+		if is_instance_valid(effect) and effect.visibility_changed.is_connected(_sync_visibility):
+			effect.visibility_changed.disconnect(_sync_visibility)
+	func _sync_visibility() -> void:
+		copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT if is_instance_valid(effect) and effect.is_visible_in_tree() else BackBufferCopy.COPY_MODE_DISABLED
+
 var reference_exclusion_status: Dictionary = {}
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const REFERENCE_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
@@ -271,7 +287,8 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
 		return false
 	var bank := REFERENCE_BANK.new()
-	var loaded: Dictionary = bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids)
+	var shared_npc: bool = card_consumer == "npc"
+	var loaded: Dictionary = bank.load_shared_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids) if shared_npc else bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids)
 	reference_bank_status = {"ok":loaded.ok,"error":loaded.get("error", ""),"purpose":"diagnostic_reference_preview","source_actor_id":source_actor_id,"manifest_sha256":expected_manifest_sha}
 	reference_bank_status["source_dummy_exclusion_policy"] = loaded.get("source_dummy_exclusion_policy")
 	reference_bank_status["map_consumer_contract_dependency"] = loaded.get("map_consumer_contract_dependency")
@@ -284,7 +301,7 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	_playback_mode = POLICY.mode(_root,playback_mode_override) if not card_consumer.is_empty() else (playback_mode_override if playback_mode_override in ["strict", "compatible"] else "strict")
 	# Source FPS remains null when absent. Existing production policy owns only
 	# the effective compatibility rate; strict mode holds unresolved actions.
-	var tracks: Dictionary = POLICY.tracks(loaded.record,card_consumer,_playback_mode) if not card_consumer.is_empty() else loaded.tracks
+	var tracks: Dictionary = POLICY.tracks_from_prepared(loaded.record,card_consumer,_playback_mode) if shared_npc else (POLICY.tracks(loaded.record,card_consumer,_playback_mode) if not card_consumer.is_empty() else loaded.tracks)
 	var layer_count: int = 0
 	for track: Dictionary in tracks.values():
 		for frames: Array in track.directions:
@@ -361,14 +378,16 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 					var style: Dictionary = POLICY.effect(effect.get("source_attributes", []), _playback_mode)
 					if bool(effect.get("source_attributes_unresolved", false)): style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
 					# Identity-scoped observation candidate; never generalizes attr8/128.
-					var observed_girtas: bool = _playback_mode == "compatible" and int(candidate.get("body_id", 0)) == 22258 and id in [22260, 22261] and not "--lineagem-girtas-legacy-blend" in OS.get_cmdline_user_args()
+					var observed_girtas: bool = SP2_COMPOSITOR.screen_copy_available and _playback_mode == "compatible" and int(candidate.get("body_id", 0)) == 22258 and id in [22260, 22261] and not "--lineagem-girtas-legacy-blend" in OS.get_cmdline_user_args()
 					if observed_girtas:
 						style = {"enabled":true,"alpha":1.0,"origin":"Girtas_only_five_M_GIF_pose_observations_exact_equation_unverified"}
 
 					effect_node.set_meta("compatibility_style", style)
 					if observed_girtas:
-						var copy: BackBufferCopy = BackBufferCopy.new()
-						copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+						var copy: ObservedGirtasCopy = ObservedGirtasCopy.new()
+						effect_node.hide()
+						copy.effect = effect_node
+						copy.copy_mode = BackBufferCopy.COPY_MODE_DISABLED
 						copy.z_index = 1 if id == 22261 else 2
 						add_child(copy)
 						effect_node.z_index = copy.z_index
@@ -580,8 +599,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		var style: Dictionary = node.get_meta("compatibility_style", {})
 		if is_reference:
 			var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(effect)
-			style = POLICY.effect(own_input.attributes,_playback_mode)
-			if own_input.unresolved: style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
+			var fallback: Dictionary = SP2_COMPOSITOR.fallback_style(effect,body_attributes,body_attributes_unresolved,_playback_mode,body_projection_verified)
+			style = fallback if not fallback.is_empty() else POLICY.effect(own_input.attributes,_playback_mode)
+			if fallback.is_empty() and own_input.unresolved: style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
 		var recovered: Dictionary = SP2_COMPOSITOR.style(effect, body_attributes, body_attributes_unresolved, _playback_mode, body_projection_verified) if is_reference else {}
 		if bool(style.get("enabled", false)) or not recovered.is_empty():
 			if is_reference:
@@ -623,9 +643,10 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			draw_layer["kind"] = "shadow"
 		var recovered: Dictionary = SP2_COMPOSITOR.style(draw_layer, body_attributes, body_attributes_unresolved, _playback_mode, body_projection_verified) if is_reference else {}
 		var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(layer) if is_reference else {}
-		if recovered.is_empty() and is_reference and (not own_input.attributes.is_empty() or own_input.unresolved):
-			var style: Dictionary = POLICY.effect(own_input.attributes, _playback_mode)
-			if own_input.unresolved or not bool(style.get("enabled", false)):
+		var fallback: Dictionary = SP2_COMPOSITOR.fallback_style(draw_layer,body_attributes,body_attributes_unresolved,_playback_mode,body_projection_verified) if is_reference else {}
+		if recovered.is_empty() and is_reference and (not fallback.is_empty() or not own_input.attributes.is_empty() or own_input.unresolved):
+			var style: Dictionary = fallback if not fallback.is_empty() else POLICY.effect(own_input.attributes, _playback_mode)
+			if (fallback.is_empty() and own_input.unresolved) or not bool(style.get("enabled", false)):
 				_layers[index].hide()
 			else:
 				_layers[index].material = _blend_material(int(style.blend_mode))

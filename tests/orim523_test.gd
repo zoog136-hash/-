@@ -1,7 +1,7 @@
 extends SceneTree
 ## 오림의 흔적 (scripts/orim523). Synthetic OrimsTrail* rows always run (floats,
 ## as the archive delivers numbers): stage -> Territory -> Land, heroes and the
-## hidden lock, start skill, level curve, ExperienceAdditionPercent, skill
+## hidden heroes open (user decision 2026-11-13), start skill, level curve, ExperienceAdditionPercent, skill
 ## cards (OrimsTrailSpellMaxCount, IsHidden level 0, synergy requirements),
 ## HPPlus raising hero HP, CastDelay minus the cooldown bonus, preparation
 ## BuffClass bonuses through the UIUnit denominator, reroll cost, Orim NPC
@@ -94,6 +94,8 @@ func synthetic() -> Rows:
 		"OrimsTrailSynergySpellCombination":[{"ID":1.0,"ResultSpellGroupID":511.0}],
 		"OrimsTrailSynergySpellCombinationRequirement":[{"ID":1.0,"CombinationID":1.0,"SpellGroupID":2.0,"MinSpellLevel":0.0,"DisplayPriority":2.0},{"ID":2.0,"CombinationID":1.0,"SpellGroupID":52.0,"MinSpellLevel":0.0,"DisplayPriority":1.0}],
 		"OrimsTrailSynergySpellCombinationReward":[{"ID":1.0,"CombinationID":1.0,"RewardID":314131.0}],
+		"Reward":[{"ID":314131.0,"RewardTypeID":2.0,"RewardClassID":299361.0,"Amount":1.0,"ItemBlessCodeID":1.0}],
+		"ItemClass":[{"ID":299361.0,"Name":"[오림의 흔적][n차] 시너지 스킬 보상 상자 (이벤트) - 기간삭제"}],
 		"OrimsTrailRerollCurrencyCost":[{"ID":1.0,"RerollCount":1.0,"Cost":10.0},{"ID":51.0,"RerollCount":6.0,"Cost":20.0}],
 		"OrimsTrailBuff":[{"ID":2.0,"BuffClassID":71672.0,"CurrencyID":1.0,"CurrencyCost":200000.0}],
 		"OrimsTrailNpcType":[{"ID":1.0,"Name":"Monster"},{"ID":21.0,"Name":"Boss"}],
@@ -113,7 +115,10 @@ func rules() -> Dictionary:
 	check(int(stage.land_id)==48752 and str(stage.asset_path)=="13459/" and int(stage.territory.StartX)==10 and int(stage.time_limit)==420 and not bool(stage.hard),"stage -> Territory -> Land 48752 (13459/)")
 	check(bool(data.stages[111].hard) and str(stage.name)=="1. 대마법사 저지 작전" and str(stage.story)=="이야기","hard stage separate; UI stage name/story by StageIndex")
 	check(data.characters.size()==3 and bool(data.characters[2].hidden) and not bool(data.characters[0].hidden),"Nd_Hidden_* hero is marked hidden")
-	check(RUN.selectable(data).size()==2,"hidden hero is not selectable (no unlock rule)")
+	check(RUN.selectable(data).size()==3,"hidden hero selectable from the start (user decision 2026-11-13)")
+	var synergy: Dictionary = RUN.synergy_for(data,511)
+	check(int(synergy.get("id",0))==1 and synergy.reward_rows.size()==1 and int(synergy.reward_rows[0].row.RewardClassID)==299361 and int(synergy.reward_rows[0].row.Amount)==1 and str(synergy.reward_rows[0].name).contains("시너지 스킬 보상 상자"),"synergy reward row -> original box item 299361 x1")
+	check(RUN.synergy_receipt(synergy)=="orim_synergy:1" and RUN.synergy_for(data,2).is_empty(),"one ledger key per combination; ordinary skills have none")
 	check(data.curves.normal==[0,100,300] and data.curves.hard==[0,50],"curves sorted by Level, normal/hard apart")
 	check(MODEL.level_for(data.curves.normal,99)==1 and MODEL.level_for(data.curves.normal,100)==2 and MODEL.level_for(data.curves.normal,5000)==3,"cumulative level reading")
 	check(data.max_count=={"Attack":2,"Utility":2,"Synergy":1},"OrimsTrailSpellMaxCount by type")
@@ -131,7 +136,8 @@ func rules() -> Dictionary:
 	return data
 
 func flow(data: Dictionary) -> void:
-	check(RUN.start(data,43).is_empty(),"hidden hero cannot start")
+	var xeon: Dictionary = RUN.start(data,43)
+	check(int(xeon.get("hero_hp",0))==450 and xeon.get("spells",{})=={"2":0},"hidden hero starts with its original HP 450 and start skill")
 	var orim: Dictionary = RUN.start(data,2)
 	check(int(orim.hero_hp)==350 and int(orim.hero_max)==350 and orim.spells=={"2":0},"Kaspa: HP 350, start skill 파이어 볼 Lv0")
 	var b: Dictionary = RUN.start(data,12)
@@ -188,7 +194,10 @@ func installed() -> void:
 	evidence["original"] = data.counts
 	check(int(data.counts.stages)==20 and int(data.counts.characters)==6 and int(data.counts.groups)==48 and int(data.counts.spell_levels)==288,"20 stages, 6 heroes, 48 skill groups, 288 skill levels")
 	check(int(data.counts.npc)==244 and int(data.counts.curve_normal)==99 and int(data.counts.curve_hard)==99 and int(data.counts.reroll)==10 and int(data.counts.buffs)==4,"244 NPCs, 99+99 levels, 10 rerolls, 4 buffs")
-	check(RUN.selectable(data).size()==4,"4 normal heroes selectable, 2 hidden locked")
+	check(RUN.selectable(data).size()==6,"all 6 heroes selectable (2 hidden open)")
+	var boxes: int = 0
+	for synergy: Dictionary in data.synergies: boxes += synergy.reward_rows.size()
+	check(boxes==7,"7 synergy reward rows resolved")
 	check(int(data.stages[2].land_id)==48752,"stage 2 -> Land 48752")
 	MODEL.release()
 

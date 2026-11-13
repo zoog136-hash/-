@@ -98,6 +98,7 @@ func _run() -> void:
 	var line: String = HITCH.previous_line()
 	check(line.begins_with("지난 실행 끊김 23회 · 최대 "), "the loading line names count and worst frame: " + line)
 	check(line.contains("퀘스트 180ms") and line.contains("몬스터 50ms"), "the loading line names the slowest sections in Korean")
+	check(line.contains(" · 세부 spawn.setup 150ms×2"), "the loading line names the slowest frame's operation details: " + line)
 	HITCH.start()
 	check(FileAccess.file_exists(DIR.path_join(HITCH.PREV_NAME)), "a second start in the same run keeps .prev")
 	# No previous record: no line.

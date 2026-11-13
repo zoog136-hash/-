@@ -3,6 +3,12 @@ extends RefCounted
 const ARCHIVE_SHA := "2a3dee048bbca5f85450d3e0cf514f270ef8704affed7d46e290dcbd155baba0"
 const ARCHIVE_BYTES := 548837574
 const MANIFEST_SHA := "5a252befd85166b587e067fbd0839a90a774c162fab598da500959d9682a6700"
+const PART_HASHES := [
+	"acca1c864e7dec133a274d85e63bc3ece2c0837e30b26b4bb6d5da4fa09f1496",
+	"1e2bcff4121d0b3af1e68fc406edee3455b0e5412a4e2fdf8456f9271587c6ee",
+	"dd8b60723662b7cd3665ccc8829f571326619e1eebf59b9c46f87e383876941f",
+]
+const PART_BYTES := [209715200, 209715200, 129407174]
 const BASE := "user://lobby_packs"
 const ACTIVE := BASE + "/active.json"
 const MAX_MEMBER := 128 * 1024 * 1024
@@ -19,15 +25,13 @@ static func saved_options() -> Dictionary:
 
 static func install_paths(paths: PackedStringArray, progress: Callable = Callable()) -> Dictionary:
 	if paths.size() == 1: return install_archive(paths[0], progress)
-	if paths.size() != 3: return _fail("select_zip_or_three_split_parts")
+	if paths.size() != 3: return _fail("split_selection_count_%d_expected_1_or_3" % paths.size())
 	if busy: return _fail("installation_already_running")
-	var ordered: PackedStringArray = PackedStringArray()
-	for suffix: String in [".001", ".002", ".003"]:
-		var matching: PackedStringArray = PackedStringArray()
-		for path: String in paths:
-			if path.ends_with(suffix): matching.append(path)
-		if matching.size() != 1: return _fail("three_matching_split_parts_required")
-		ordered.append(matching[0])
+	# Android SAF paths may be opaque content:// URIs, not display names.
+	# Identify the exact delivered bytes instead of trusting .001/.002 suffixes.
+	var identified: Dictionary = identify_parts(paths, progress)
+	if not identified.get("ok", false): return identified
+	var ordered: PackedStringArray = identified.paths
 	var target: String = BASE.path_join(MANIFEST_SHA)
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(target)) and _verify(target).get("ok",false):
 		return _activate(target,true)
@@ -40,6 +44,34 @@ static func install_paths(paths: PackedStringArray, progress: Callable = Callabl
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(joined))
 	busy = false
 	return result
+
+static func identify_parts(paths: PackedStringArray, progress: Callable = Callable()) -> Dictionary:
+	if paths.size() != 3: return _fail("split_selection_count_%d_expected_3" % paths.size())
+	var fingerprints: Array[Dictionary] = []
+	for index: int in paths.size():
+		if progress.is_valid(): progress.call(0.0, "분할 파일 내용 확인 %d/3" % (index + 1))
+		var input: FileAccess = FileAccess.open(paths[index], FileAccess.READ)
+		if input == null: return _fail("split_read_permission_failed_selection_%d" % (index + 1))
+		var length: int = input.get_length()
+		input.close()
+		if not length in PART_BYTES: return _fail("split_size_mismatch_selection_%d_bytes_%d" % [index + 1, length])
+		var digest: String = FileAccess.get_sha256(paths[index])
+		if digest.is_empty(): return _fail("split_hash_read_failed_selection_%d" % (index + 1))
+		fingerprints.append({"path":paths[index], "bytes":length, "sha256":digest})
+	return order_part_fingerprints(fingerprints)
+
+static func order_part_fingerprints(fingerprints: Array[Dictionary]) -> Dictionary:
+	if fingerprints.size() != 3: return _fail("split_fingerprint_count_invalid")
+	var ordered := PackedStringArray(["", "", ""])
+	for row: Dictionary in fingerprints:
+		var index: int = PART_HASHES.find(row.get("sha256", ""))
+		if index < 0: return _fail("split_content_not_expected_pack")
+		if row.get("bytes", -1) != PART_BYTES[index]: return _fail("split_fingerprint_size_mismatch")
+		if not ordered[index].is_empty(): return _fail("split_duplicate_part_%d" % (index + 1))
+		var path: String = row.get("path", "")
+		if path.is_empty(): return _fail("split_path_empty")
+		ordered[index] = path
+	return {"ok":true, "paths":ordered}
 
 static func install_archive(path: String, progress: Callable = Callable()) -> Dictionary:
 	if busy: return _fail("installation_already_running")
@@ -166,9 +198,18 @@ static func _join_parts(first: String, destination: String, selected: PackedStri
 		if input == null or input.get_length() != expected:
 			output.close()
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(destination))
-			return _fail("three_matching_split_parts_required")
+			return _fail("split_part_%d_unreadable_or_size_changed" % index)
 		while input.get_position() < input.get_length():
-			output.store_buffer(input.get_buffer(1024*1024))
+			var chunk: PackedByteArray = input.get_buffer(1024*1024)
+			if chunk.is_empty():
+				input.close()
+				output.close()
+				return _fail("split_read_interrupted_part_%d" % index)
+			output.store_buffer(chunk)
+			if output.get_error() != OK:
+				input.close()
+				output.close()
+				return _fail("split_join_storage_failure")
 		input.close()
 	output.flush()
 	var error: Error = output.get_error()
