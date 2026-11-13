@@ -405,7 +405,13 @@ func _build(source: Dictionary) -> Node2D:
 		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
-		var configured: Dictionary=button.configure(source_pack,options,_original_button_title_stays_invisible(widget))
+		# A caller may supply the live title of an authored button title.
+		var button_options: Dictionary=options
+		var title_binding: Variant=_bindings.get(int(source._offset),{}).get("title")
+		if title_binding is String and not str(options.get("text","")).is_empty():
+			button_options=options.duplicate()
+			button_options.text=title_binding
+		var configured: Dictionary=button.configure(source_pack,button_options,_original_button_title_stays_invisible(widget))
 		if not configured.ok:
 			_build_error=str(configured.error)+":"+str(widget.name)
 			button.free();node.free();return null
