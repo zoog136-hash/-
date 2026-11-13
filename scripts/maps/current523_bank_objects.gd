@@ -150,9 +150,9 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 	if int(node.get_meta("frame")) == index: return
 	node.set_meta("frame", index)
 	FRAME_HITCH.count("map.object_frames_shown")
-	for child: Node in node.get_children(): child.queue_free()
 	var frame: Dictionary = sprite.frames[index]
 	var order: int = 0
+	var created: int = 0
 	for layer: Dictionary in frame.get("layers", []):
 		if layer.has("client_null"): continue
 		var attributes: Array = layer.get("source_attributes", [])
@@ -162,9 +162,17 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 			if bool(layer.get("source_attributes_unresolved", false)) or not bool(style.get("enabled", false)): continue
 		var texture: Texture2D = _texture(layer)
 		if texture == null: continue
-		var picture := Sprite2D.new()
+		# Placement-owned children keep source-visible order; no shared playback
+		# nodes or high-water pool retains unused textures after a smaller frame.
+		var picture: Sprite2D = node.get_child(order) as Sprite2D if order < node.get_child_count() else null
+		if picture == null:
+			picture = Sprite2D.new()
+			node.add_child(picture)
+			node.move_child(picture, order)
+			created += 1
 		picture.centered = false
 		picture.texture = texture
+		picture.position = Vector2.ZERO
 		var offset: Variant = layer.get("offset", [0, 0])
 		if offset is Array and offset.size() == 2: picture.position = Vector2(float(offset[0]), float(offset[1]))
 		elif layer.has("member"):
@@ -172,13 +180,22 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 			if rendered.get("ok", false): picture.position = Vector2(rendered.offset)
 		picture.z_index = -1 if layer.get("kind") == "shadow" else order
 		if int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
-			var material := CanvasItemMaterial.new()
+			var material: CanvasItemMaterial = picture.material as CanvasItemMaterial
+			if material == null:
+				material = CanvasItemMaterial.new()
+				picture.material = material
 			material.blend_mode = int(style.blend_mode)
-			picture.material = material
-		picture.modulate.a = float(style.alpha)
-		node.add_child(picture)
+		else:
+			picture.material = null
+		picture.modulate = Color(1.0, 1.0, 1.0, float(style.alpha))
 		order += 1
-	FRAME_HITCH.count("map.object_layer_nodes_created", order)
+	# Detach before deferred deletion, including multiple updates in one frame.
+	# Thus stale layers are neither reused nor drawn while deletion is queued.
+	while node.get_child_count() > order:
+		var unused: Node = node.get_child(node.get_child_count() - 1)
+		node.remove_child(unused)
+		unused.queue_free()
+	FRAME_HITCH.count("map.object_layer_nodes_created", created)
 
 func _process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
