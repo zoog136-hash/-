@@ -58,6 +58,89 @@ var _enchant: Dictionary = {}
 var _category_keys: Dictionary = {}
 var _physical_cache: Dictionary = {}
 var _equipment: Variant = null
+## Only the private synchronous production compiler enables this bounded memo.
+## Packed values retain no borrowed runtime containers; every hit decodes a
+## fresh result, just as an uncached item_runtime() call creates a fresh result.
+class RuntimeReuse extends RefCounted:
+	const LIMIT: int = 128
+	const MAX_BYTES: int = 4 * 1024 * 1024
+	var entries: Dictionary = {}
+	var order: Array = []
+	var bytes: int = 0
+	func fetch(key: PackedByteArray) -> Variant:
+		if not entries.has(key): return null
+		var position: int = order.find(key)
+		var owned: PackedByteArray = order[position]
+		order.remove_at(position); order.append(owned)
+		return bytes_to_var(entries[key])
+	func remember(key: PackedByteArray, value: Variant) -> bool:
+		if not value is Dictionary or value.is_empty(): return false
+		var packed: PackedByteArray = var_to_bytes(value)
+		var size: int = key.size() + packed.size()
+		if size > MAX_BYTES: return false
+		if entries.has(key):
+			bytes -= key.size() + (entries[key] as PackedByteArray).size()
+			entries.erase(key); order.erase(key)
+		while not order.is_empty() and (order.size() >= LIMIT or bytes + size > MAX_BYTES):
+			var oldest: PackedByteArray = order.pop_front()
+			bytes -= oldest.size() + (entries[oldest] as PackedByteArray).size()
+			entries.erase(oldest)
+		var owned: PackedByteArray = key.duplicate()
+		entries[owned] = packed; order.append(owned); bytes += size
+		return true
+
+var _runtime_reuse: RuntimeReuse = null
+var _runtime_reuse_equipment: Object = null
+var _runtime_reuse_generation: int = -1
+var _runtime_candidate_ready: bool = false
+var _runtime_reuse_stats: Dictionary = {}
+
+## Called only by the exact private rules owner after it built the candidate.
+## Public build/build_bound/Part callbacks and injected readers keep every
+## original call, validation and mutation observation. This is an internal
+## shipped-caller guarantee, not an API for adversarial mutation of compiler
+## internals. No failure is memoized.
+func _enable_runtime_reuse(owner: Object) -> bool:
+	var owner_script: Variant = owner.get_script() if owner != null else null
+	if owner_script == null or owner_script.resource_path != "res://scripts/crafting/patch523_rules.gd" or owner.get("_projection_source") != null: return false
+	if get_script().resource_path != "res://scripts/crafting/patch523_rules_projection.gd" or source != SOURCE: return false
+	var equipment_script: Variant = _equipment.get_script() if _equipment != null else null
+	if not _runtime_candidate_ready or equipment_script == null or equipment_script.resource_path != EQUIPMENT_PATH or not str(_equipment.problem).is_empty(): return false
+	_runtime_reuse = RuntimeReuse.new()
+	_runtime_reuse_equipment = _equipment
+	_runtime_reuse_generation = SOURCE.cache_generation()
+	_runtime_reuse_stats = {"keys":0,"hits":0,"key_usec":0,"hit_decode_usec":0,"miss_compute_usec":0}
+	return true
+
+static func _runtime_signature(item: Dictionary) -> PackedByteArray:
+	var raw: Dictionary = item.item_class
+	var record: Dictionary = item.catalog_record
+	var values: Array = [[record.has("slot"),record.get("slot")]]
+	for field: String in ["TestItem","CategoryID","GradeID","MaterialID"]: values.append([raw.has(field),raw.get(field)])
+	values.append(item.enchant_effects) # Preserve all rows, their order and duplicates.
+	return var_to_bytes(values)
+
+func _runtime_value(item: Dictionary) -> Variant:
+	if _runtime_reuse != null and (source != SOURCE or _equipment != _runtime_reuse_equipment or SOURCE.cache_generation() != _runtime_reuse_generation or not str(_equipment.problem).is_empty()):
+		_runtime_reuse = null; _runtime_reuse_equipment = null
+	var key := PackedByteArray()
+	if _runtime_reuse != null and item.catalog_record.get("slot") not in ["consumable","material","currency",""]:
+		var begun: int = Time.get_ticks_usec()
+		key = _runtime_signature(item)
+		_runtime_reuse_stats.keys += 1
+		_runtime_reuse_stats.key_usec += Time.get_ticks_usec() - begun
+		begun = Time.get_ticks_usec()
+		var cached: Variant = _runtime_reuse.fetch(key)
+		_runtime_reuse_stats.hit_decode_usec += Time.get_ticks_usec() - begun
+		if cached != null:
+			_runtime_reuse_stats.hits += 1
+			return cached
+	var begun: int = Time.get_ticks_usec() if _runtime_reuse != null else 0
+	var value: Variant = _equipment.item_runtime(item,self)
+	if _runtime_reuse != null: _runtime_reuse_stats.miss_compute_usec += Time.get_ticks_usec() - begun
+	if _runtime_reuse != null and not key.is_empty() and str(_equipment.problem).is_empty(): _runtime_reuse.remember(key,value)
+	return value
+
 var _stage_name: String = ""
 var _stage_started: int = 0
 
@@ -664,7 +747,7 @@ func _item_runtime(key: String) -> Variant:
 	if _excluded.has(key): return SKIP
 	var item: Dictionary = _items.row(key)
 	if item.get("TestItem") == true: return SKIP
-	var value: Variant = _equipment.item_runtime({"catalog_record":_rec(_plan[key]),"item_class":item,"enchant_effects":_effects(key)},self)
+	var value: Variant = _runtime_value({"catalog_record":_rec(_plan[key]),"item_class":item,"enchant_effects":_effects(key)})
 	if not str(_equipment.problem).is_empty():
 		problem = str(_equipment.problem)
 		return FAIL
@@ -852,11 +935,17 @@ static func _stream_part(part: Part, hash: HashingContext, depth: int, size: Arr
 
 ## Drops the source tables and indexes once the model is built.
 func release() -> void:
+	if _runtime_reuse != null:
+		_runtime_reuse_stats.entries = _runtime_reuse.entries.size()
+		_runtime_reuse_stats.bytes = _runtime_reuse.bytes
+		BOOT_LOG.mark("rules_runtime_reuse",_runtime_reuse_stats)
 	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
 	_items = Keyed.new(); _categories = {}; _classes = {}; _dates = Keyed.new(); _limits = {}; _equip_links = {}; _item_bonuses = {}; _link_bonus = []
 	_records = PACKED.new(); _record_cache.clear(); _supplement = 0
 	_bonus_ids = PackedInt64Array(); _bonus_rows = PACKED.new(); _bonus_cache.clear()
 	_plan = {}; _used = {}; _excluded = {}; _enchant = {}; _category_keys.clear(); _physical_cache.clear(); _equipment = null
+	_runtime_reuse = null; _runtime_reuse_equipment = null; _runtime_reuse_generation = -1
+	_runtime_candidate_ready = false; _runtime_reuse_stats = {}
 
 static func _hash_text(hash: HashingContext, text: String) -> int:
 	var bytes: PackedByteArray = text.to_utf8_buffer()
@@ -965,6 +1054,7 @@ func _build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_s
 	_equipment = equipment_script.new()
 	if not _equipment.prepare(_tables):
 		problem = str(_equipment.problem); return {}
+	_runtime_candidate_ready = true
 	for table: String in ["ItemBlessBonus","Material","Unit","UIUnit","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","SpecialResistanceType"]: result.enchantment[table] = _tables[table]
 	return result
 
