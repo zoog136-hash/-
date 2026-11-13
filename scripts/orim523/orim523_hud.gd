@@ -1,8 +1,10 @@
 extends PanelContainer
 ## In-field 오림의 흔적 panel while a run is active: hero HP, Orim level/exp,
-## owned skills and the level-up skill cards (+ reroll). Plain controls: the
-## original Mission_Dungeon_TracesOrim*.csb windows are not bound yet
-## (docs/orim523_missing_rules.md). No image is drawn or substituted.
+## owned skills and the level-up skill cards (+ reroll). With the original UI
+## pack the card choice is the original Hud_TracesOrim_Skill window
+## (source_main_orim_skill_window) and this panel keeps only the status line;
+## the field status CSB (Set_T_Top_TracesOrim) does not resolve in the 523
+## client (docs/orim523_missing_rules.md). No image is drawn or substituted.
 var world: Node
 var status: Label
 var cards: HBoxContainer
@@ -38,10 +40,18 @@ func refresh() -> void:
 	if not is_instance_valid(world): return
 	var info: Dictionary = world.dungeon_play.orim_status()
 	visible = not info.is_empty() and str(world.dungeon_play.state.active.get("status",""))=="active"
+	var controller: Variant = world.hud.get("original_main_ui_controller") if world.get("hud") != null else null
+	var native: bool = false
+	if is_instance_valid(controller) and controller.has_method("show_orim_skill_choice"):
+		native = bool(controller.show_orim_skill_choice(world).get("handled",false))
 	if not visible: return
 	var skills: Array[String] = []
 	for skill: Dictionary in info.skills: skills.append("%s Lv%d" % [str(skill.name),int(skill.level)])
 	status.text = "오림의 흔적 · %s HP %d/%d · 오림 Lv %d (%d/%d) · %s\n스킬: %s" % [str(info.hero),int(info.hp),int(info.max),int(info.level),int(info.exp),int(info.next),str(info.land),", ".join(skills)]
+	if native:
+		cards.visible = false
+		reroll_button.visible = false
+		return
 	var signature: String = JSON.stringify(info.cards)
 	if cards.get_meta("signature","")!=signature:
 		cards.set_meta("signature",signature)

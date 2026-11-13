@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -989,7 +989,11 @@ func _close_workspace() -> void:
 	if is_instance_valid(relic_reference_view):relic_reference_view.deactivate()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_domination_window"):original_main_ui_controller.close_domination_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_status_board"):original_main_ui_controller.close_status_board()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_death_window"):original_main_ui_controller.close_death_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_skill_window"):original_main_ui_controller.close_skill_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
 	_retire_original_menu_status()
@@ -1187,6 +1191,7 @@ func _navigate(section: String) -> void:
 		"crafting": open_crafting()
 		"equipment523": equipment523_open_requested.emit()
 		"bless_refine523": open_bless_refine523()
+		"refine523": open_refine523()
 		"sell": open_item_sell()
 		_: open_catalog(section)
 
@@ -1509,6 +1514,8 @@ func toggle_inventory() -> void:
 		if native.get("handled",false):
 			if pointer_transfer!=null:pointer_transfer.cancel()
 			workspace.hide()
+		else:_report_original_fallback("가방",native)
+	else:_report_original_fallback("가방",original_main_ui_bind_problem)
 
 func open_character() -> void:
 	_open_window("character","캐릭터 정보","")
@@ -1604,7 +1611,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -2858,11 +2865,28 @@ func refresh_maps(value: Array) -> void:
 	map_records=value.duplicate(true)
 	super.refresh_maps(value)
 
+## The original 523 skill window (Skill_All, source_main_skill_window) first;
+## the existing skills window otherwise and for a skill's details.
 func open_skills() -> void:
+	_open_window("skills","스킬","")
+	var native: Dictionary={"ok":false,"code":"source_skill_window_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_skill_window"):
+		native=original_main_ui_controller.try_open_skill_window()
+	original_main_ui_status["skill_window"]=native
+	if native.get("handled",false):
+		if pointer_transfer!=null:pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return
+	if is_instance_valid(original_main_ui_controller):_report_original_fallback("스킬",native)
+	open_skills_workspace()
+
+func open_skills_workspace(focus: String="") -> void:
 	_open_window("skills","스킬","")
 	skills_view=SkillsUI.new()
 	workspace.mount(skills_view)
 	skills_view.configure(self)
+	if not focus.is_empty() and skills_view.has_method("focus_skill"):skills_view.call("focus_skill",focus)
 
 func _open_quickslot_picker(entry_kind: String,entry_id: String,display_name: String) -> void:
 	var reason: String = get_parent()._quickslot_registration_error(entry_kind,entry_id)
@@ -3157,6 +3181,22 @@ func open_protection523() -> void:
 	view.configure(self)
 
 
+## The original 523 질서의 연금 window (RefineScene, source_main_refine_window).
+## Without the UI pack (or the definition ZIP) the 용해·질서의 연금 panel opens.
+func open_refine523() -> void:
+	_open_window("refine523","질서의 연금","")
+	var native: Dictionary = {"ok":false,"code":"source_refine_window_controller_unavailable"}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_refine_window"):
+		native = original_main_ui_controller.try_open_refine_window(get_parent())
+	original_main_ui_status["refine_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return
+	if is_instance_valid(original_main_ui_controller): _report_original_fallback("질서의 연금",native)
+	open_bless_refine523()
+
 func open_bless_refine523() -> void:
 	_open_window("bless_refine523","용해 · 질서의 연금","원본523 축복의 가루 용해 · 상급 축복의 가루 질서의 연금")
 	var scroll := ScrollContainer.new()
@@ -3258,6 +3298,7 @@ func _restore_current_inventory_view(reason: Dictionary) -> void:
 	# Diagnostics must not keep a retired native scene's textures/controls.
 	original_main_ui_status["inventory"]=_inventory_status_summary(reason)
 	if active_section!="inventory":return
+	_report_original_fallback("가방",reason)
 	# Restore the same current bag after an unsupported native state. This
 	# adds no alternate form, asset lookup, selection, ownership or save logic.
 	if pointer_transfer!=null:pointer_transfer.cancel()
@@ -3296,11 +3337,43 @@ func bind_original_world_map(image_adapter: RefCounted, context_provider: Callab
 
 func _bind_selected_original_main_ui() -> void:
 	var selected: Dictionary=preload("res://scripts/ui/original_ui/source_main_selection.gd").selected_pack()
-	if not selected.get("selected",false):return
+	if not selected.get("selected",false):
+		original_main_ui_bind_problem={"ok":false,"code":"source_ui_addon_not_selected"}
+		print("ORIGINAL_UI_BIND ",JSON.stringify(original_main_ui_bind_problem))
+		return
 	if not selected.get("ok",false):
 		original_main_ui_status=selected
+		original_main_ui_bind_problem=_inventory_status_summary(selected)
+		print("ORIGINAL_UI_BIND ",JSON.stringify(original_main_ui_bind_problem))
 		return
 	original_main_ui_status=bind_original_main_ui(selected.pack)
+	original_main_ui_bind_problem={} if original_main_ui_status.get("ok",false) else _inventory_status_summary(original_main_ui_status)
+	print("ORIGINAL_UI_BIND ",JSON.stringify(original_main_ui_bind_problem if not original_main_ui_bind_problem.is_empty() else {"ok":true}))
+
+## Why the original UI did not bind at all (empty once it did).
+var original_main_ui_bind_problem: Dictionary={"ok":false,"code":"source_ui_not_bound_yet"}
+
+## A window that opened as the TWILIGHT window instead of its original one:
+## the reason goes to the log (logcat) and a short line to the player.
+func _report_original_fallback(window: String, reason: Dictionary) -> void:
+	var code: String=str(reason.get("code",reason.get("error","")))
+	print("ORIGINAL_UI_FALLBACK ",JSON.stringify({"window":window,"reason":_inventory_status_summary(reason),"ui_addon_sha256":OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")}))
+	show_message("%s: 원본 창 대신 TWILIGHT 창 · %s" % [window,_original_fallback_text(code)])
+
+## An older UI add-on lacks the window's CSB members (or carries a different
+## Inventory_All): the player is told to update it.
+const OUTDATED_UI_ADDON_TEXT: String="UI 추가 리소스가 오래되었습니다 → 설정에서 UI 추가 리소스를 업데이트하세요"
+
+static func _original_fallback_text(code: String) -> String:
+	if code.ends_with("_member_missing") or code.ends_with("_identity_mismatch") or code=="source_inventory_original_pack_scope_unavailable":return OUTDATED_UI_ADDON_TEXT
+	var known: Dictionary={
+		"source_ui_addon_not_selected":"원작 메인 화면(UI) 추가 리소스가 설치·선택되지 않음",
+		"source_ui_selection_pair_required":"UI 추가 리소스 경로·SHA가 함께 지정되지 않음",
+		"source_ui_not_bound_yet":"원본 UI가 아직 연결되지 않음",
+		"source_main_not_configured":"원본 메인 화면이 준비되지 않음",
+		"source_inventory_view_detail_not_supported":"아이템 상세 화면이 열린 상태",
+	}
+	return str(known.get(code,code if not code.is_empty() else "사유 미상"))
 
 func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	var reopen_character: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.character_is_open()

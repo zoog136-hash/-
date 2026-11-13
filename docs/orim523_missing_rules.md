@@ -99,7 +99,7 @@
 | 24 | 케어 보상 발동 | 60행 | 발동 조건 | 기존 자체 설정(시간 초과 시) |
 | 25 | 행운 보상 추첨 | 가중치 | 복원 여부·분포 | 기존 자체 설정(복원 추첨) |
 | 26 | 대사·안내 | Message 872, StageMessage 886, MessageType 54 | `RemainTime`(92~405, 16종)의 의미(초가 아님) | 미표시 |
-| 27 | 원본 UI 창 | UI 추가 팩 `main_pack5`에 `Mission_Dungeon_TracesOrim{,_Chapter,_Achievement}.csb`, `Mission_Dungeon_PanelOrim.csb`, `Hud_Minimap_Orim{Boss,Box,HealingSphere}.csb`, `Atlas_Orim_Traces1` | 창 노드 바인딩 | **미연결**: 던전 메뉴 + 필드 패널(일반 컨트롤). 그림은 만들지 않음 |
+| 27 | 원본 UI 창 | UI 추가 팩 `main_pack5`에 `Mission_Dungeon_TracesOrim{,_Chapter,_Achievement}.csb`, `Mission_Dungeon_PanelOrim.csb`, `Hud_Minimap_Orim{Boss,Box,HealingSphere}.csb`, `Atlas_Orim_Traces1` | 창 노드 바인딩 | 레벨업 스킬 카드 선택은 원본 `Hud_TracesOrim_Skill`로 연결(이름·설명·유형·NEW·새로고침 가격). 카드 스킬 그림(표에 아이콘 열 없음), 보유 스킬 칸(Hud_Orim_SkillSlotGroup), 확률 버튼은 비움. 필드 상태 `Set_T_Top_TracesOrim`은 523 클라이언트에 프레임 1개가 없어 불가 → 필드 패널(일반 컨트롤) 유지. 던전 메뉴 미연결. 그림은 만들지 않음 |
 | 28 | Land `NpcBuff 73001` 등 | 값 | NPC 버프 적용 규칙 | 미적용 |
 | 29 | 영웅 부활 | — | 규칙 없음 | HP 0 = 실패 |
 

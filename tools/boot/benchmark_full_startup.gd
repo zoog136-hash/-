@@ -4,6 +4,7 @@ const PROFILE = preload("res://scripts/characters/save_profile.gd")
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 var failures: Array[String] = []
 var phases: Dictionary = {}
+var bag_probe: Dictionary = {}
 var samples: Array = []
 var started: int
 var done: bool = false
@@ -94,11 +95,44 @@ func _run() -> void:
 		var save_started: int=Time.get_ticks_usec()
 		_check(world._save_game(true)==OK,"official_initial_character_save")
 		phases.first_character_save_setup_us=Time.get_ticks_usec()-save_started
+	if OS.get_environment("TWILIGHT_FULLSTARTUP_BAG_PROBE")=="1":await _probe_bag(world)
 	_write()
+func _probe_bag(world: Node) -> void:
+	var before: PackedByteArray=var_to_bytes([world.inventory,world.item_instances,world.equipped_items])
+	var save_path: String=world.save_path()
+	var save_sha: String=FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else ""
+	var was_processing: bool=world.is_processing()
+	var was_physics: bool=world.player.is_physics_processing()
+	world.set_process(false);world.player.set_physics_process(false)
+	var begin: int=Time.get_ticks_usec()
+	world.hud.toggle_inventory()
+	phases.bag_open_call_us=Time.get_ticks_usec()-begin
+	await process_frame
+	await process_frame
+	phases.bag_two_frames_us=Time.get_ticks_usec()-begin
+	var original: bool=world.hud.original_inventory_is_open()
+	var fallback: bool=world.hud.lineage_inventory_ui.is_visible_in_tree()
+	_check(original or fallback,"actual_bag_visible_after_two_frames")
+	bag_probe={"original_inventory_route":original,"fallback_inventory_visible":fallback,"owned_inventory_entries":world.inventory.size(),"gpu_presented_frame_measured":false,"native_record_hydration_only":true,"native_record_hydration_measured":false}
+	var fields: Script=load("res://scripts/loot/current523_native_fields.gd")
+	for item: Variant in world.catalog_db.get("아이템",[]):
+		if not item is Dictionary or item.get("source_m_native_item")!=true:continue
+		begin=Time.get_ticks_usec()
+		var hydrated: Variant=fields.call("full",item)
+		phases.first_native_record_hydration_us=Time.get_ticks_usec()-begin
+		_check(hydrated is Dictionary and hydrated.get("source_item_class_id")==item.source_item_class_id,"native_record_hydration_identity")
+		bag_probe.native_record_hydration_measured=true
+		bag_probe.native_item_class_id=item.source_item_class_id
+		break
+	_check(bag_probe.native_record_hydration_measured,"native_catalog_record_found")
+	_check(before==var_to_bytes([world.inventory,world.item_instances,world.equipped_items]),"bag_and_detail_read_preserve_ownership")
+	_check(save_sha==(FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else ""),"bag_and_detail_read_preserve_save_bytes")
+	world.set_process(was_processing);world.player.set_physics_process(was_physics)
+
 func _write() -> void:
 	if done:return
 	done=true
-	var record: Dictionary={"ok":failures.is_empty(),"failures":failures,"phases_us":phases,"samples":samples,"total_us":Time.get_ticks_usec()-started,"scope":"Actual Loading.tscn, zero-wait title input, production Characters store/buttons and Loading.open(Main) readiness. Existing locally selected source inputs; no download/install/GPU/Android claim."}
+	var record: Dictionary={"ok":failures.is_empty(),"failures":failures,"phases_us":phases,"bag_probe":bag_probe,"samples":samples,"total_us":Time.get_ticks_usec()-started,"scope":"Actual Loading.tscn, zero-wait title input, production Characters store/buttons and Loading.open(Main) readiness. Existing locally selected source inputs; no download/install/GPU/Android claim."}
 	var file:=FileAccess.open(OS.get_environment("TWILIGHT_ENTRY_RESULT"),FileAccess.WRITE)
 	if file==null:printerr("FULLSTARTUP_FAIL result_write");quit(2);return
 	file.store_string(JSON.stringify(record,"  "));file.close()

@@ -126,6 +126,11 @@ func runtime() -> void:
 			if box!=null: box.button_pressed = true
 		check(panel.find_child("RefineMin_"+str(physical_of(world,target_id)[0]),true,false)!=null, "the window lists the refine target with its min/max buttons")
 		(panel.find_child("DissolveSelected",true,false) as Button).pressed.emit()
+		# With the original UI pack 용해 asks through Common_MessageBox_Dissolution first.
+		var controller: Variant = world.hud.get("original_main_ui_controller")
+		if is_instance_valid(controller) and controller.has_method("dissolve_confirm_is_open") and controller.dissolve_confirm_is_open():
+			evidence["original_dissolve_confirm"] = controller.get("_dissolve_popup").last_result
+			controller.get("_dissolve_popup")._confirm()
 		var line: String = str((panel.find_child("BlessRefineStatus",true,false) as Label).text)
 		evidence["panel_status"] = line
 		dissolved = {"ok":physical_of(world,weapon).is_empty(),"amount":int(world.inventory.get(powder_name,0))-before_powder}

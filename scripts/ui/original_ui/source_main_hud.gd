@@ -175,6 +175,10 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	_coordinates=Node2D.new()
 	_coordinates.name="OriginalMainSourceCoordinates"
 	_coordinates.z_index=35
+	# Original windows play their opening clips (Inventory_All_On) even while
+	# the world is held (map pack rejected, field disabled): a window left on
+	# its clip's first frame (alpha 0) looked like the bag never opened.
+	_coordinates.process_mode=Node.PROCESS_MODE_ALWAYS
 	canvas.add_child(_coordinates)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
@@ -193,10 +197,15 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 		var candidate=QuickslotView.new()
 		_quickslot_result=candidate.configure(pack,hud,Callable(self,"_quickslot_original_image"))
 		if _quickslot_result.get("ok",false):_quickslot_view=candidate
+	_inventory_configure_problem={"ok":false,"code":"source_inventory_original_pack_scope_unavailable","member":InventoryView.PARENT}
 	if pack.manifest.get("scenes",{}).has(InventoryView.PARENT):
 		var candidate=InventoryView.new()
 		_inventory_result=candidate.configure(pack,hud,Callable(self,"_inventory_original_image"))
+		if not _inventory_result.get("ok",false):
+			_inventory_configure_problem={"ok":false,"code":str(_inventory_result.get("code",_inventory_result.get("error","source_inventory_view_configure_failed")))}
+			print("ORIGINAL_UI_INVENTORY_CONFIGURE ",JSON.stringify(_inventory_configure_problem))
 		if _inventory_result.get("ok",false):
+			_inventory_configure_problem={}
 			_inventory_view=candidate
 			candidate.return_to_current_requested.connect(_inventory_view_fallback)
 			candidate.closed.connect(_inventory_view_closed)
@@ -734,8 +743,14 @@ func close_crafting_search() -> void:
 	_cancel_native_buttons()
 	if _workspace_controls!=null:_workspace_controls.close_search()
 
+## Why the original inventory view was not configured ({} once it was).
+var _inventory_configure_problem: Dictionary={"ok":false,"code":"source_inventory_original_pack_scope_unavailable"}
+
 func try_open_inventory() -> Dictionary:
-	if _inventory_view==null:return {"ok":false,"handled":false,"code":"source_inventory_original_pack_scope_unavailable"}
+	if _inventory_view==null:
+		var problem: Dictionary=_inventory_configure_problem.duplicate() if not _inventory_configure_problem.is_empty() else {"code":"source_inventory_original_pack_scope_unavailable"}
+		problem.merge({"ok":false,"handled":false},true)
+		return problem
 	if not is_instance_valid(_coordinates):return {"ok":false,"handled":false,"code":"source_main_not_configured"}
 	var trace: int=MENU_TRACE.begin("inventory")
 	_inventory_result=_inventory_view.open(_coordinates)
@@ -889,6 +904,75 @@ func close_status_board() -> void:
 		_cancel_native_buttons()
 		_status_board.close()
 
+## Why a lazily made original window is unavailable: its configure result
+## (e.g. a CSB member an older UI add-on lacks), else the pack scope.
+var _window_problems: Dictionary={}
+
+func _window_problem(window: String) -> Dictionary:
+	var problem: Dictionary=_window_problems.get(window,{})
+	if problem.is_empty() or problem.get("ok",false) or not is_instance_valid(_coordinates):return _fail("source_%s_pack_scope_unavailable" % window)
+	var result: Dictionary={"ok":false,"handled":false,"code":str(problem.get("code","source_%s_pack_scope_unavailable" % window))}
+	if problem.has("member"):result["member"]=str(problem.member)
+	return result
+
+## --- Original 523 skill window (source_main_skill_window)
+const SkillWindow=preload("res://scripts/ui/original_ui/source_main_skill_window.gd")
+var _skill_window: RefCounted
+
+func try_open_skill_window() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _skill_window==null and _pack!=null and hud!=null:
+		var window=SkillWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["skill_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_skill_window=window
+	if _skill_window==null or not is_instance_valid(_coordinates):return _window_problem("skill_window")
+	_cancel_native_buttons()
+	return _skill_window.open(_coordinates)
+
+func skill_window() -> RefCounted:
+	return _skill_window
+
+func skill_window_is_open() -> bool:
+	return _skill_window!=null and _skill_window.is_open()
+
+func close_skill_window() -> void:
+	if skill_window_is_open():
+		_cancel_native_buttons()
+		_skill_window.close()
+
+## --- Original 523 사망 복구 window (source_main_death_window, scripts/death)
+const DeathWindow=preload("res://scripts/ui/original_ui/source_main_death_window.gd")
+var _death_window: RefCounted
+
+func try_open_death_window(service: Object) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _death_window==null and _pack!=null and hud!=null:
+		var window=DeathWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["death_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_death_window=window
+	if _death_window==null or not is_instance_valid(_coordinates):return _window_problem("death_window")
+	_cancel_native_buttons()
+	return _death_window.open(_coordinates,service)
+
+func death_window() -> RefCounted:
+	return _death_window
+
+func death_window_is_open() -> bool:
+	return _death_window!=null and _death_window.is_open()
+
+func close_death_window() -> void:
+	if death_window_is_open():
+		_cancel_native_buttons()
+		_death_window.close()
+
 ## --- Original 523 재료 아이템 출처 popup (source_main_acquisition_popup)
 const AcquisitionPopup=preload("res://scripts/ui/original_ui/source_main_acquisition_popup.gd")
 var _acquisition_popup: RefCounted
@@ -983,6 +1067,78 @@ func close_feature_windows(except: String="") -> void:
 			_cancel_native_buttons()
 			_feature_windows[name].close()
 
+## --- Original 523 질서의 연금 window (source_main_refine_window, scripts/refine523)
+const RefineWindow=preload("res://scripts/ui/original_ui/source_main_refine_window.gd")
+var _refine_window: RefCounted
+
+func try_open_refine_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _refine_window==null and _pack!=null and hud!=null:
+		var window=RefineWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["refine_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_refine_window=window
+	if _refine_window==null or not is_instance_valid(_coordinates):return _window_problem("refine_window")
+	_cancel_native_buttons()
+	return _refine_window.open(_coordinates,world)
+
+func refine_window() -> RefCounted:
+	return _refine_window
+
+func refine_window_is_open() -> bool:
+	return _refine_window!=null and _refine_window.is_open()
+
+func close_refine_window() -> void:
+	if refine_window_is_open():
+		_cancel_native_buttons()
+		_refine_window.close()
+
+## --- Original 523 용해 confirmation (source_main_dissolve_popup)
+const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
+var _dissolve_popup: RefCounted
+
+## Opens the original confirmation for `uids`; `on_finished` receives the
+## existing dissolve transaction's result after 확인.
+func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
+	if _dissolve_popup==null and _pack!=null:
+		var popup=DissolvePopup.new()
+		_window_problems["dissolve_popup"]=popup.configure(_pack)
+		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
+	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
+	for connection: Dictionary in _dissolve_popup.finished.get_connections():_dissolve_popup.finished.disconnect(connection.callable)
+	if on_finished.is_valid():_dissolve_popup.finished.connect(on_finished,CONNECT_ONE_SHOT)
+	_cancel_native_buttons()
+	return _dissolve_popup.open(_coordinates,world,uids)
+
+func dissolve_confirm_is_open() -> bool:
+	return _dissolve_popup!=null and _dissolve_popup.is_open()
+
+func close_dissolve_confirm() -> void:
+	if dissolve_confirm_is_open():_dissolve_popup.close()
+
+## --- Original 523 오림의 흔적 skill choice (source_main_orim_skill_window)
+const OrimSkillWindow=preload("res://scripts/ui/original_ui/source_main_orim_skill_window.gd")
+var _orim_skill_window: RefCounted
+
+## Shows the original level-up card choice for the current Orim offer (closes
+## it without one). Not handled -> the caller keeps its own controls.
+func show_orim_skill_choice(world: Node) -> Dictionary:
+	if _orim_skill_window==null and _pack!=null:
+		var window=OrimSkillWindow.new()
+		_window_problems["orim_skill_window"]=window.configure(_pack)
+		if _window_problems["orim_skill_window"].get("ok",false):_orim_skill_window=window
+	if _orim_skill_window==null or not is_instance_valid(_coordinates):return _window_problem("orim_skill_window")
+	return _orim_skill_window.show(_coordinates,world)
+
+func orim_skill_choice_is_open() -> bool:
+	return _orim_skill_window!=null and _orim_skill_window.is_open()
+
+func close_orim_skill_choice() -> void:
+	if _orim_skill_window!=null:_orim_skill_window.close()
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
@@ -1011,7 +1167,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

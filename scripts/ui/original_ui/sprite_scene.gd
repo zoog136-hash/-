@@ -459,6 +459,8 @@ func _build(source: Dictionary) -> Node2D:
 		text_options["_cocos_wrap"]=text_binding.get("cocos_wrap",false)
 		var text_custom: Variant=_optional_dictionary(str(widget.get("customProperty","")))
 		if text_custom is Dictionary and text_custom.get("linespacing") is Dictionary:text_options["_line_spacing"]=float(text_custom.linespacing.get("kr",0))
+		# A plain number (Hud_TracesOrim_Skill card text) is one spacing for every language.
+		elif text_custom is Dictionary and typeof(text_custom.get("linespacing")) in [TYPE_INT,TYPE_FLOAT]:text_options["_line_spacing"]=float(text_custom.linespacing)
 		var text_result: Dictionary=label.configure(font_value,text_options,Vector2(widget.size[0],widget.size[1]))
 		if not text_result.ok:
 			_build_error=str(text_result.error)+":"+str(widget.name);label.free();node.free();return null
@@ -811,13 +813,15 @@ static func _blend(options: Dictionary) -> String:
 	if not value is Array or value.size()!=2: return ""
 	return str(int(value[0]))+":"+str(int(value[1]))
 
-## Korean-client Text line spacing ({"linespacing":{"kr":n,...}}, optionally
-## with sound ids): source_text applies the "kr" value between lines.
+## Korean-client Text line spacing ({"linespacing":{"kr":n,...}} or a plain
+## {"linespacing":n}, optionally with sound ids): source_text applies the
+## "kr" value (or the number) between lines.
 static func _text_line_spacing_metadata(node: Dictionary, widget: Dictionary) -> bool:
 	if node.get("classname")!="Text":return false
 	var custom: Variant=_optional_dictionary(str(widget.get("customProperty","")))
-	if not custom is Dictionary or not custom.get("linespacing") is Dictionary:return false
-	if typeof(custom.linespacing.get("kr",0)) not in [TYPE_INT,TYPE_FLOAT]:return false
+	if not custom is Dictionary or not custom.has("linespacing"):return false
+	if typeof(custom.linespacing) in [TYPE_INT,TYPE_FLOAT]:pass
+	elif not custom.linespacing is Dictionary or typeof(custom.linespacing.get("kr",0)) not in [TYPE_INT,TYPE_FLOAT]:return false
 	for key: Variant in custom:
 		if key!="linespacing" and (key not in ["soundid","touchsoundid"] or not custom[key] is String):return false
 	return true

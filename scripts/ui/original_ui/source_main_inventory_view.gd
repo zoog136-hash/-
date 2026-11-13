@@ -275,11 +275,13 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		var slot_player: Dictionary=next.project_player([PROJECT,slot_set,offset])
 		if not slot_player.get("ok",false):return _reject_staged(next,slot_player)
 		var native_slot: Node2D=slot_player.player
-		var owner_result: Dictionary=slot_contract.owner_results[offset]
-		var accepted: Dictionary=native_slot.set_bound_source_visual_result(Slots.ICON,owner_result)
-		if not accepted.get("ok",false) or (not accepted.get("texture_assigned",false) and not accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":assignments[offset],"owner_result":owner_result,"source_asset_result":accepted})
-		result=native_slot.set_bound_visible(Slots.ICON,true)
-		if not result.get("ok",false):return _reject_staged(next,result)
+		var accepted: Dictionary={}
+		if slot_contract.owner_results.has(offset):
+			var owner_result: Dictionary=slot_contract.owner_results[offset]
+			accepted=native_slot.set_bound_source_visual_result(Slots.ICON,owner_result)
+			if not accepted.get("ok",false) or (not accepted.get("texture_assigned",false) and not accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":assignments[offset],"owner_result":owner_result,"source_asset_result":accepted})
+			result=native_slot.set_bound_visible(Slots.ICON,true)
+			if not result.get("ok",false):return _reject_staged(next,result)
 		var button_node: Variant=native_slot.get("source_nodes").get(Slots.BUTTON)
 		var button: Variant=button_node.get_meta("source_button",null) if is_instance_valid(button_node) else null
 		var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
@@ -310,11 +312,13 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 				var row_slot: Dictionary=row_scene.project_player([offset])
 				if not row_slot.get("ok",false):return _reject_staged(next,row_slot)
 				var row_native: Node2D=row_slot.player
-				var row_owner: Dictionary=row_contract.owner_results[offset]
-				var row_accepted: Dictionary=row_native.set_bound_source_visual_result(Slots.ICON,row_owner)
-				if not row_accepted.get("ok",false) or (not row_accepted.get("texture_assigned",false) and not row_accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":extra_rows[line][offset],"owner_result":row_owner,"source_asset_result":row_accepted})
-				result=row_native.set_bound_visible(Slots.ICON,true)
-				if not result.get("ok",false):return _reject_staged(next,result)
+				var row_accepted: Dictionary={}
+				if row_contract.owner_results.has(offset):
+					var row_owner: Dictionary=row_contract.owner_results[offset]
+					row_accepted=row_native.set_bound_source_visual_result(Slots.ICON,row_owner)
+					if not row_accepted.get("ok",false) or (not row_accepted.get("texture_assigned",false) and not row_accepted.get("source_scene_assigned",false)):return _reject_staged(next,{"ok":false,"code":"source_inventory_view_owned_icon_not_consumed","reference":extra_rows[line][offset],"owner_result":row_owner,"source_asset_result":row_accepted})
+					result=row_native.set_bound_visible(Slots.ICON,true)
+					if not result.get("ok",false):return _reject_staged(next,result)
 				var row_button_node: Variant=row_native.get("source_nodes").get(Slots.BUTTON)
 				var row_button: Variant=row_button_node.get_meta("source_button",null) if is_instance_valid(row_button_node) else null
 				var row_control: Variant=row_button.get("_input_area") if is_instance_valid(row_button) else null

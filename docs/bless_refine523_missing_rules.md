@@ -46,6 +46,12 @@
 - 원본 창 `UI/RefineScene.csb`, `UI/Refine/Refine_All.csb`(제목 "질서의 연금", +100·+1000·Min·Max·직접입력,
   연금 시작, 시스템 메시지), `Refine_Inventory`, `Refine_Slot`, `Refine_Roulette` 등과 용해 팝업
   `UI/CommonUi/Common_Dissolution_Popup.csb`, `Common_MessageBox_Dissolution.csb`가 있습니다.
-- 이번에는 원본 CSB 창을 연결하지 않았습니다. 메인 HUD 원본 창 컨트롤러를 다른 작업이 수정 중이고,
-  11번 규칙이 없어서 +100/+1000/직접입력 버튼이 동작할 근거가 없습니다. 기능은 메뉴의
-  "용해·질서의 연금" 작업창으로 씁니다. 이미지는 만들지 않았습니다.
+- (2026-11-13 연결) 메뉴 "질서의 연금"은 원본 `RefineScene`(`source_main_refine_window.gd`)로 열립니다.
+  연금 재료(대상 장비 + 상급 축복의 가루)는 원본 `Inventory_Slot_Set`/`Common_Slot`, 대상·기본재료 칸,
+  최소·최대 수량, 성공 확률, 아데나 비용, 연금 시작, 시스템 메시지를 서비스 값으로 채웁니다.
+  +100/+1000/직접입력은 11번 규칙이 없어 비활성 상태로 표시, 특수재료 칸은 잠금, 연금 결과물 목록·도움말·
+  룰렛 연출·마법 구슬(프레임 이벤트)·레시피 문구는 연결하지 않았습니다.
+- 용해는 "용해·질서의 연금" 작업창에서 장비를 고르고, 원본 `Common_MessageBox_Dissolution`
+  ("N개의 아이템을 용해하시겠습니까?", 예상 결과물 축복의 가루 그림·수량)으로 확인합니다. 원본 가방의
+  용해 모드(Inventory_All Btn_Dissolve)와 촉매 선택 팝업(Common_Dissolution_Popup)은 연결 규칙(어느 버튼이
+  모드를 여는지, 촉매)이 없어 연결하지 않았습니다. 이미지는 만들지 않았습니다.
