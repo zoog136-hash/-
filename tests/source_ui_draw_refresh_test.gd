@@ -81,7 +81,8 @@ func render_checks() -> void:
 					v.panel.set_source_display(color)
 				await frame_compare(a,b,"changed %d"%phase)
 			a.vp.free();b.vp.free()
-	# Draw actual source-font text. Record CPU submission without replacing font,
+	# Draw the actual source text component with the repository Noto fixture.
+	# Record CPU submission without replacing font,
 	# layout or clipping, then compare against the exact previous _draw body.
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_text.gd")
 	source=source.replace("\tvar hitch_started: int=FRAME_HITCH.now()\n\tvar hitch_nested: int=FRAME_HITCH.nested()\n","").replace("\tFRAME_HITCH.add_self(\"ui_text_draw\",hitch_started,hitch_nested)\n","").replace("\tFRAME_HITCH.detail(\"ui.text_draw\",hitch_started)\n","")

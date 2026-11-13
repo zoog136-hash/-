@@ -1,6 +1,6 @@
 # Avoid unchanged panel redraws and measure source-text drawing
 
-Base: `main` at `c8d9cc0212e6b86d3965d4d7aecba867063ce39f`. This follow-up is independent of the inactive-clock change in PR #463. Neither change establishes the cause of the photographed 10,626 ms unmeasured remainder.
+Initial validation base: `main` at `c8d9cc0212e6b86d3965d4d7aecba867063ce39f`; latest main `b50923f072d867e0aaeb6761ab612cc0bd3dc602` is also integrated. This follow-up is independent of the inactive-clock change in PR #463. Neither change establishes the cause of the photographed 10,626 ms unmeasured remainder.
 
 ## Runtime change
 
@@ -12,11 +12,11 @@ Compare the actual four vertex colors before constructing/reassigning the array.
 
 ## Executable evidence
 
-`tests/source_ui_draw_refresh_test.gd` compiles the previous unconditional setter in memory and runs both actual renderers. Four combinations of transparent/opaque viewports and the existing screen-copy/fixed-blend policies each perform 12 stable updates. Actual geometry draw signals total **48 before versus 0 after**, with identical full RGBA images. Further phases change alpha, source options and externally corrupt the vertex array. The three actual source-font text comparisons cover horizontal/vertical alignment, multiple lines, outline and shadow with the exact previous draw body as oracle.
+`tests/source_ui_draw_refresh_test.gd` compiles the previous unconditional setter in memory and runs both actual renderers. Four combinations of transparent/opaque viewports and the existing screen-copy/fixed-blend policies each perform 12 stable updates. Actual geometry draw signals total **48 before versus 0 after**, with identical full RGBA images. Further phases change alpha, source options and externally corrupt the vertex array. The three text-renderer comparisons use the repository NotoSansKR fixture, not an original client font. They cover horizontal/vertical alignment, multiple lines, outline and shadow with the exact previous draw body as oracle.
 
 The GL test passes **115 assertions and 75 full-pixel comparisons**; its 11 headless state assertions also pass. The real text draw callback creates the bounded section and total/calls/max detail. No production instrumentation is added to count panel setter/draw operations.
 
-Existing focused regressions pass: UI pack memory lifecycle (210), HUD fields (6), inventory snapshot (983), quest text (30), copy policy (88), hitch draw diagnostics (205) and hitch logging (26). Python stage graph: 14 tests. All existing pixel groups remain registered unchanged, with this regression added as an eighth group in the pixel workflow. The historical `check_resource_integrity.py` referenced by AGENTS is absent; the available `check_no_legacy_resources.py --root .` passes with 20 tracked resources. No original assets are newly supplied or claimed integrated.
+Existing focused regressions pass: UI pack memory lifecycle (210), HUD fields (6), inventory snapshot (983), quest text (30), copy policy (88), hitch draw diagnostics (205) and hitch logging (26). Python stage graph: 14 tests. All eight local GL groups pass. Existing groups remain registered unchanged, with this regression added as an eighth group in the pixel workflow. A scratch combination with exact #463 head `9bed3708` and current main merges without conflict and passes 279 clock lifecycle assertions plus the 75-pixel redraw differential. Latest-main legacy migration regression also passes (19 grants, no failures). The historical `check_resource_integrity.py` referenced by AGENTS is absent; the available `check_no_legacy_resources.py --root .` passes with 20 tracked resources. No original assets are newly supplied or claimed integrated.
 
 A first local single-test GL launcher inherited an expected group count of seven and therefore returned failure despite its sole test passing; the launcher count was corrected to one. No assertion or runtime error was waived.
 
