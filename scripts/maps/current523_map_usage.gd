@@ -1,5 +1,6 @@
 extends RefCounted
 ## Partial, source-backed Main draw observations. Never a whole-file95% counter.
+const HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const WRITER=preload("res://scripts/skills/save_writer.gd")
 const PATH="user://current523_map_consumption_v1.json"
 const INVENTORY_SHA="c395f35afa067dfad04db3d615c7f39acbdea7134ae8f2023bbbf75c5639f1b7"
@@ -32,6 +33,11 @@ static func _origin() -> String:
 
 static func _load() -> void:
 	if _loaded:return
+	var started: int=HITCH.now()
+	_load_step()
+	HITCH.detail("map.usage_load",started)
+
+static func _load_step() -> void:
 	_loaded=true
 	var file:=FileAccess.open(PATH,FileAccess.READ)
 	if file==null:
@@ -72,7 +78,9 @@ static func observe(renderer: Node, member: String, original_bytes: int, sha256:
 static func flush(force: bool=false) -> void:
 	if _disabled or not _dirty or (not force and Time.get_ticks_msec()-_last_flush<1000):return
 	var snapshot: Dictionary={"schema":1,"scope_owner":"MAPS","dataset":"current523","inventory_JSONL_SHA256":INVENTORY_SHA,"fixed_Map_Tile_denominator":DENOMINATOR,"members":_members,"claim":"Partial observations only. Compressed Sprite/TI2 frame units do not prove original byte coverage. QA Main is separate from USER_MAIN; no fixture/inspection observations.","global_non_sound_denominator_known":false,"usage95_verified":false}
+	var started: int=HITCH.now()
 	var result: Error=WRITER.write(PATH,snapshot)
+	HITCH.detail("map.usage_write",started)
 	if result!=OK:problem="소비 장부 저장 실패: "+error_string(result);_disabled=true;return
 	problem="";_dirty=false;_last_flush=Time.get_ticks_msec()
 

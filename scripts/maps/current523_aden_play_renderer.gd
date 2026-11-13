@@ -11,6 +11,7 @@ const TILES = preload("res://scripts/maps/current523_tile_review_pack.gd")
 const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 const BANK_OBJECTS = preload("res://scripts/maps/current523_bank_objects.gd")
+const USAGE_BATCH=preload("res://scripts/maps/current523_tile_usage_batch.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
@@ -502,6 +503,12 @@ func _process_step(delta: float) -> void:
 
 
 func _draw_tiles(canvas: Node2D) -> void:
+	var started: int=FRAME_HITCH.now()
+	var nested: int=FRAME_HITCH.nested()
+	_draw_tiles_step(canvas)
+	FRAME_HITCH.add_self("map_floor_draw",started,nested)
+
+func _draw_tiles_step(canvas: Node2D) -> void:
 	if not _configured: return
 	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
@@ -516,11 +523,16 @@ func _draw_tiles(canvas: Node2D) -> void:
 			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8],rect,TILES.source_rect(ref & 255))
 			if observe and not observed_refs.has(ref) and rect.intersects(view):observed_refs[ref]=true
 	if observe:
+		var usage_started: int=FRAME_HITCH.now()
+		var identities: Dictionary=USAGE_BATCH.identities(_tile_pack,observed_refs)
+		FRAME_HITCH.count("map.tile_identity_reads",identities.size())
+		FRAME_HITCH.count("map.tile_observed_refs",observed_refs.size())
 		for ref: int in observed_refs:
-			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
+			var source: Dictionary=identities[ref>>8]
 			if not source.is_empty():USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
 		_usage_generation=_draw_generation
 		USAGE.flush()
+		FRAME_HITCH.detail("map.floor_usage",usage_started)
 
 
 func _draw() -> void:
