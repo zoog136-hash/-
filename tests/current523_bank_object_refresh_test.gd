@@ -33,6 +33,20 @@ class Baseline extends Fixture:
 			add_child(node);_nodes.append(node)
 			_show(node,sprite,0);drawn+=1
 		_stats={"policy":"OWN_BANK_ACTION3_DIRECTION0_LOOP_V1","raw_records":records.size(),"malformed_tails":malformed,"drawn_records":drawn,"unresolved_records":records.size()-drawn,"unresolved_source_ids":unresolved,"cached_sprites":_sprites.size(),"texture_bytes":_texture_bytes,"playback_mode":_mode,"native_M_placement_action_timing_verified":false}
+	func _process_step(delta: float) -> void:
+		_clock += maxf(delta, 0.0)
+		# All placements use this same clock and immutable per-ID sprite record.
+		# Share only this update's frame selection; never instance playback state.
+		var frames: Dictionary = {}
+		for node: Node2D in _nodes:
+			var id: int = int(node.get_meta("sprite_id"))
+			var sprite: Dictionary = _sprites.get(id, {})
+			if sprite.get("ok", false) and not sprite.static:
+				if not frames.has(id): frames[id] = _frame_index(sprite)
+				_show(node, sprite, int(frames[id]))
+		FRAME_HITCH.count("map.object_timeline_samples", frames.size())
+		FRAME_HITCH.count("map.object_placements_visited", _nodes.size())
+
 class ImageBank extends BANK:
 	var calls: int=0
 	func render_layer(_layer: Dictionary, _pixels: bool=true) -> Dictionary:

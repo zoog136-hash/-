@@ -24,6 +24,7 @@ on:
       - 'scripts/ui/original_ui/source_material.gd'
       - 'tests/current523_bank_object_layers_test.gd'
       - 'tests/current523_bank_object_refresh_test.gd'
+      - 'tests/current523_bank_animation_visits_test.gd'
       - 'tests/source_material_display_updates_test.gd'
       - 'tools/ci_core.py'
       - '.github/workflows/source-sp2-compositor.yml'
@@ -115,6 +116,20 @@ jobs:
           results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('BITMAP_GLYPH_REUSE_RESULT ')]
           assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 40, results
           assert results[0]['allocations'] == {'old_layers': 13, 'new_layers': 1, 'old_sprites': 39, 'new_sprites': 3, 'old_materials': 39, 'new_materials': 3}, results
+          PY_CHECK
+      - name: Render indexed map animation visits
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/current523_bank_animation_visits_test.gd -- --render 2>&1 | tee pixel-results/current523_bank_animation_visits_test.txt
+          python3 - <<'PY_CHECK'
+          import json
+          from pathlib import Path
+          lines = Path('pixel-results/current523_bank_animation_visits_test.txt').read_text().splitlines()
+          assert not any('ERROR:' in line for line in lines), 'Godot/shader error'
+          results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('MAP_ANIMATION_VISITS_RESULT ')]
+          assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 17, results
           PY_CHECK
       - uses: actions/upload-artifact@v4
         if: always()
