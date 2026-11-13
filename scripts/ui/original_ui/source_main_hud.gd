@@ -1158,6 +1158,32 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 상세 능력치 (source_main_stat_detail_window; the status
+## sheet's groups and values over hud.character_state)
+const StatDetailWindow=preload("res://scripts/ui/original_ui/source_main_stat_detail_window.gd")
+var _stat_detail_window: RefCounted
+
+func try_open_stat_detail_window() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _stat_detail_window==null and _pack!=null and hud!=null:
+		var window=StatDetailWindow.new()
+		_window_problems["stat_detail_window"]=window.configure(_pack,hud)
+		if _window_problems["stat_detail_window"].get("ok",false):_stat_detail_window=window
+	if _stat_detail_window==null or not is_instance_valid(_coordinates):return _window_problem("stat_detail_window")
+	_cancel_native_buttons()
+	return _stat_detail_window.open(_coordinates)
+
+func stat_detail_window() -> RefCounted:
+	return _stat_detail_window
+
+func stat_detail_window_is_open() -> bool:
+	return _stat_detail_window!=null and _stat_detail_window.is_open()
+
+func close_stat_detail_window() -> void:
+	if stat_detail_window_is_open():
+		_cancel_native_buttons()
+		_stat_detail_window.close()
+
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
@@ -1229,7 +1255,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

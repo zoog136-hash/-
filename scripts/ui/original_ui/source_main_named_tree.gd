@@ -56,7 +56,10 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 		"ListView":
 			var rows: Array=[]
 			for row: Dictionary in node.get("children",[]):rows.append(int(row.get("_offset",-1)))
-			binding={"role":"source_list","row_offsets":rows,"input":Callable(self,"_ignore_input")}
+			binding={"role":"source_list","row_offsets":rows}
+			# Only a touch-enabled list takes input (a list inside a
+			# ScrollView leaves the touch to the ScrollView).
+			if bool(widget.get("touchEnabled",false)):binding["input"]=Callable(self,"_ignore_input")
 		"ScrollView":
 			if bool(widget.get("touchEnabled",false)):binding={"role":"source_scroll","input":Callable(self,"_ignore_input")}
 		"LoadingBar":binding={"role":"source_percent","percent":0.0}
