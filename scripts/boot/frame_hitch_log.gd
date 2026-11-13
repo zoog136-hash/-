@@ -112,6 +112,7 @@ static func _record(total: int, map_id: String) -> void:
 	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var entry: Dictionary = {"ms":total / 1000, "sections":parts.slice(0, 6), "map":map_id,
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
+	if not _build.is_empty(): entry["build"] = _build.duplicate()
 	var details: Array = []
 	for operation: String in _details:
 		var row: Array = _details[operation]
@@ -185,6 +186,11 @@ static func previous_line() -> String:
 	# so a photo of the loading screen names what inside a section stalled.
 	var details: PackedStringArray = PackedStringArray()
 	for part: Variant in top.get("details", []):
+		# The single-setup phases below already show the parent. Use these
+		# three slots for its inner operations when the new sample is present.
+		if top.has("slow_spawn") and part is Array and not part.is_empty():
+			var operation: String = str(part[0])
+			if operation.begins_with("setup.") or operation in ["spawn.total","spawn.setup","view.roles"]: continue
 		if part is Array and part.size() >= 3 and int(part[1]) > 0 and details.size() < 3:
 			details.append("%s %dms×%d" % [str(part[0]), int(part[1]), int(part[2])])
 	if not details.is_empty(): line += " · 세부 " + ", ".join(details)

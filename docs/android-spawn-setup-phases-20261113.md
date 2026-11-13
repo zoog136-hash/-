@@ -22,7 +22,7 @@
 
 공식 Godot 4.7.2, 분리된 XDG/스테이징에서 다음 검사를 실행했다.
 
-- 새 단계 기록 9검사: 거절 경로, 단일 setup 시간과 단계 합 일치, 최장 하나만 유지, 프레임 초기화, 사진 문구, 비활성 계측.
+- 새 단계 기록 12검사: 거절 경로, 단일 setup 시간과 단계 합 일치, 최장 하나만 유지, 프레임 초기화, 사진 문구, 내부 비용을 가리는 부모 항목 제외, 실행 버전, 파일 왕복 보존, 비활성 계측.
 - 새 보스 catalog admission 13검사: 부적격 일반 몬스터 catalog 요청 0회, 세 가지 계약은 catalog/adoption 검증까지 도달, 보스 성공, Sprite 변경 거절, 재사용 상태 정리, 잘못된 ID/TestNPC 선거절. 합성 계약이며 원본 catalog 실행 증거가 아니다.
 - 기존 hitch 26, prepared bank 161, SP2 렌더 2,775, NPC effect anchor 24검사 통과. 기존 보스 숫자 계약 errors=[]; 모든 실행에서 script/runtime 오류 없음.
 - `check_no_legacy_resources.py --root .`: 추적 리소스 20개 통과. 규칙에 적힌 `tools/check_resource_integrity.py`는 기준 main에 없어 실행 불가이며, 현재 실제 resource CI를 별도로 확인한다.
