@@ -145,34 +145,14 @@ func refresh() -> void:
 	if service == null: return
 	if world.get("quest_auto") != null: world.quest_auto.refresh_context(world)
 	pack_status.text = "최신523 · 원본 %d개 · 기존 이력 보존" % service.source.quests.size() if not service.source.quests.is_empty() else service.source.problem
-	var rows: Array[Dictionary] = []
-	var total: int = 0
-	var finished: int = 0
-	var available: int = 0
-	var query: String = search.text.strip_edges().to_lower()
-	for quest: Dictionary in service.entries(int(world.level),world.inventory):
-		if not quest.has("source_id"):
-			if not quest.completed or state_filter.selected!=4: continue
-			quest["status_reason"] = "기존 임시 퀘스트 완료 이력"
-		var row_category: String = "common" if not quest.has("source_id") and str(quest.category)=="daily" else str(quest.category)
-		if row_category != selected: continue
-		if quest.has("source_id"):
-			total += 1
-			if quest.completed: finished += 1
-			elif quest.available: available += 1
-			if state_filter.selected==4: continue
-		if state_filter.selected==1 and not quest.completed: continue
-		if state_filter.selected==2 and (quest.completed or not quest.available): continue
-		if state_filter.selected==3 and (quest.completed or quest.available): continue
-		if not query.is_empty():
-			if query.is_valid_int():
-				if int(quest.get("source_id",-1))!=int(query): continue
-			elif not str(quest.title).to_lower().contains(query): continue
-		rows.append(quest)
-	var pages: int = maxi(1,ceili(float(rows.size())/PAGE_SIZE))
-	page = clampi(page,0,pages-1)
-	for index: int in range(page*PAGE_SIZE,mini(rows.size(),(page+1)*PAGE_SIZE)):
-		var quest: Dictionary = rows[index]
+	var model: Dictionary = _page_model(service)
+	var rows: Array[Dictionary] = model.rows
+	var total: int = model.total
+	var finished: int = model.finished
+	var available: int = model.available
+	var pages: int = model.pages
+	page = model.page
+	for quest: Dictionary in rows:
 		var panel := PanelContainer.new()
 		panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color("14130f"),UI.BRONZE,10))
 		listing.add_child(panel)
@@ -212,7 +192,50 @@ func refresh() -> void:
 	summary.text = "%s %d개 · 완료·수령 %d · 보상 받기 대기 %d · 잠김/보류 %d" % [CATEGORIES[selected],total,finished,available,total-finished-available]
 	claim_all.disabled = available == 0
 	if state_filter.selected==4: summary.text="기존 완료 이력 · 원본 퀘스트 수와 구분하여 보존"
-	page_label.text = "%d / %d 페이지 · 검색 결과 %d개" % [page+1,pages,rows.size()]
+	page_label.text = "%d / %d 페이지 · 검색 결과 %d개" % [page+1,pages,model.matches]
 	previous.disabled = page==0
 	next.disabled = page==pages-1
 	for category: String in tab_buttons: tab_buttons[category].add_theme_stylebox_override("normal",UI.tab_frame(category==selected))
+
+## Keep only the requested page while counting/filtering the streamed rows.
+## If claims shrink the last page, repeat at its clamped index, never retain
+## all matching source joins simply to select 30 cards afterward.
+func _page_model(service: Variant) -> Dictionary:
+	var result: Dictionary = {"rows":[],"total":0,"finished":0,"available":0,"matches":0,"page":maxi(0,page),"pages":1}
+	var query: String = search.text.strip_edges().to_lower()
+	var collect: Callable = func(quest: Dictionary) -> void:
+		if not quest.has("source_id"):
+			if not quest.completed or state_filter.selected!=4: return
+			quest["status_reason"] = "기존 임시 퀘스트 완료 이력"
+		var row_category: String = "common" if not quest.has("source_id") and str(quest.category)=="daily" else str(quest.category)
+		if row_category != selected: return
+		if quest.has("source_id"):
+			result.total += 1
+			if quest.completed: result.finished += 1
+			elif quest.available: result.available += 1
+			if state_filter.selected==4: return
+		if state_filter.selected==1 and not quest.completed: return
+		if state_filter.selected==2 and (quest.completed or not quest.available): return
+		if state_filter.selected==3 and (quest.completed or quest.available): return
+		if not query.is_empty():
+			if query.is_valid_int():
+				if int(quest.get("source_id",-1))!=int(query): return
+			elif not str(quest.title).to_lower().contains(query): return
+		if result.matches >= result.page*PAGE_SIZE and result.matches < (result.page+1)*PAGE_SIZE:
+			result.rows.append(quest)
+		result.matches += 1
+	if service.has_method("visit_category_entries"):
+		var categories: Array[String] = [selected]
+		if selected=="common": categories.append("daily")
+		service.visit_category_entries(int(world.level),world.inventory,categories,collect)
+	else:
+		for quest: Dictionary in service.entries(int(world.level),world.inventory): collect.call(quest)
+	result.pages = maxi(1,ceili(float(result.matches)/PAGE_SIZE))
+	if result.page >= result.pages:
+		page = result.pages-1
+		return _page_model(service)
+	# Typed return array matches the existing browser's row contract.
+	var rows: Array[Dictionary] = []
+	rows.assign(result.rows)
+	result.rows = rows
+	return result

@@ -214,7 +214,8 @@ func _selection_batches() -> void:
 	window._select_category("achievement")
 	var category_stages: int=window.stages.size()
 	await _frames()
-	check(window.stages.size()==category_stages and window.stages[-1]==["achievement","",0.0],"category switches remain immediate and cancel prior selection work")
+	check(window.stages.size()==category_stages+1 and window.stages[-1]==["achievement","",0.0],"category switch shares the pending selection rebuild")
+	category_stages=window.stages.size()
 	var window_ref: WeakRef=weakref(window)
 	window._claim=func(_id: String) -> void:
 		var current: RefCounted=window_ref.get_ref()

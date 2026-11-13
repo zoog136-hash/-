@@ -177,33 +177,79 @@ func _entries(level: int, inventory: Dictionary, now: int, category: Variant=nul
 	if bulk: source.begin_bulk()
 	for resident: Dictionary in quests:
 		if category!=null and str(resident.get("category",""))!=category:continue
-		# Original rows keep only their compact form resident; the complete
-		# row is read back from the device record bake (an independent copy,
-		# exactly what duplicating the old resident row returned).
-		var row: Dictionary = source.detached(resident) if source != null and source.has_method("detached") else resident.duplicate(true)
-		var quest: Dictionary = row.duplicate(false) if row.has("source_id") else resident
-		var quest_id: String = str(quest["id"])
-		row["completed"] = bool(claimed.get(quest_id, false))
-		row["available"] = level >= int(quest.get("min_level", 1))
-		if quest.has("source_id"):
-			var context: Dictionary = source_context.duplicate()
-			context["level"] = level
-			if row.completed:
-				var received: Dictionary = {}
-				for receipt: Dictionary in item_grants.get(quest_id,[]): received[str(int(receipt.reward_id))]=true
-				for reward_id: String in context.get("held_native_rewards",{}).get(quest_id,{}):received[reward_id]=true
-				# Installing a consumer must not relabel old held rewards as
-				# received native stacks or silently migrate an old save.
-				context["received_native_rewards"]=received
-			var gate: String = source.gate(quest,context,claimed,now if now>=0 else int(Time.get_unix_time_from_system()))
-			var plan: Dictionary = source.reward_plan(quest,context)
-			row["status_reason"] = gate if not gate.is_empty() else str(plan.get("error","완료 · 보상 받기 대기"))
-			row["available"] = gate.is_empty() and bool(plan.ok)
-			row["rewards"] = plan if plan.ok else {}
-		row["progress"] = mini(int((quest["objective"] as Dictionary).get("count", 1)), _progress_value(quest, level, inventory))
-		result.append(row)
+		result.append(_entry(resident,level,inventory,now))
 	if bulk: source.end_bulk()
 	return result
+
+## Shared row projection: callers choose how many complete rows to retain.
+func _entry(resident: Dictionary, level: int, inventory: Dictionary, now: int) -> Dictionary:
+	# Original rows keep only their compact form resident; the complete
+	# row is read back from the device record bake (an independent copy,
+	# exactly what duplicating the old resident row returned).
+	var row: Dictionary = source.detached(resident) if source != null and source.has_method("detached") else resident.duplicate(true)
+	var quest: Dictionary = row.duplicate(false) if row.has("source_id") else resident
+	var quest_id: String = str(quest["id"])
+	row["completed"] = bool(claimed.get(quest_id, false))
+	row["available"] = level >= int(quest.get("min_level", 1))
+	if quest.has("source_id"):
+		var context: Dictionary = source_context.duplicate()
+		context["level"] = level
+		if row.completed:
+			var received: Dictionary = {}
+			for receipt: Dictionary in item_grants.get(quest_id,[]): received[str(int(receipt.reward_id))]=true
+			for reward_id: String in context.get("held_native_rewards",{}).get(quest_id,{}):received[reward_id]=true
+			# Installing a consumer must not relabel old held rewards as
+			# received native stacks or silently migrate an old save.
+			context["received_native_rewards"]=received
+		var gate: String = source.gate(quest,context,claimed,now if now>=0 else int(Time.get_unix_time_from_system()))
+		var plan: Dictionary = source.reward_plan(quest,context)
+		row["status_reason"] = gate if not gate.is_empty() else str(plan.get("error","완료 · 보상 받기 대기"))
+		row["available"] = gate.is_empty() and bool(plan.ok)
+		row["rewards"] = plan if plan.ok else {}
+	row["progress"] = mini(int((quest["objective"] as Dictionary).get("count", 1)), _progress_value(quest, level, inventory))
+	return row
+
+## Native window order, with bounded complete rows. Waiting/finished candidates
+## retain only references to existing residents, never all decoded records.
+## A blocked compact gate or unmet progress cannot be receivable. Reward plans
+## are still checked for every otherwise receivable candidate, in source order.
+func entries_for_window(level: int, inventory: Dictionary, category: String, limit: int, now: int = -1) -> Array[Dictionary]:
+	var ready: Array[Dictionary] = []
+	if limit <= 0: return ready
+	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
+	_advance_day(at)
+	var waiting: Array[Dictionary] = []
+	var done: Array[Dictionary] = []
+	var context: Dictionary = source_context.duplicate()
+	context["level"] = level
+	for resident: Dictionary in quests:
+		if not resident.has("source_id") or str(resident.get("category","")) != category: continue
+		if bool(claimed.get(str(resident.id),false)):
+			if done.size() < limit: done.append(resident)
+			continue
+		var count: int = int(resident.get("objective",{}).get("count",1))
+		if _progress_value(resident,level,inventory) >= count and source.gate(resident,context,claimed,at).is_empty():
+			var row: Dictionary = _entry(resident,level,inventory,at)
+			if bool(row.available):
+				ready.append(row)
+				if ready.size() == limit: return ready
+				continue
+		if waiting.size() < limit: waiting.append(resident)
+	for group: Array[Dictionary] in [waiting,done]:
+		for resident: Dictionary in group:
+			if ready.size() == limit: return ready
+			ready.append(_entry(resident,level,inventory,at))
+	return ready
+
+## Streaming browser scan: category filtering precedes record decoding; no
+## begin_bulk(), full-catalog result array or retained reward plans. The visitor
+## may retain a page, but this service retains no row beyond its callback.
+func visit_category_entries(level: int, inventory: Dictionary, categories: Array[String], visitor: Callable, now: int = -1) -> void:
+	var at: int = now if now >= 0 else int(Time.get_unix_time_from_system())
+	_advance_day(at)
+	for resident: Dictionary in quests:
+		if str(resident.get("category","")) in categories:
+			visitor.call(_entry(resident,level,inventory,at))
 
 ## The complete row of an index/quests row (original rows are compact in
 ## memory; local and injected rows are returned unchanged).
