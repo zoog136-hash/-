@@ -30,12 +30,12 @@
 | ItemInvokeReplacementID / EquipSpellClassID | 48 / 16 | 미연결 — 아래 10.2 |
 | BuffClassID (장비 상시 버프) | 104 | 재검토 결과 미연결 — 18개 버프 모두 기존 소비자가 없는 효과를 포함(아래 10.1) |
 | **CarryPlus** | 100 | **이번 연결(아래 4.3)** — Weight 단위 UIUnit 분모 100, 원본 설명문으로 확인 |
-| ElementalResistance / ElementalDamage | 90 / 46 | 세트 효과·강화 효과에서만 읽음. 장비 기본 행은 속성 대상(Target) 해석이 TWILIGHT 설정에 의존 |
-| EquipGroupID | 78 | 제련·세공(`smith_smelt`)에서 읽음 |
+| **ElementalResistance / ElementalDamage** | 90 / 46 | **연결(아래 14)** — 적용 3 ElementalResistanceType 대상 = ElementalType 행(Fire/Water/Air/Earth/All) |
+| **EquipGroupID** | 78 | **연결(아래 14)** — 세트 효과가 아니라 EquipSlotConfig의 같은 그룹 중복 착용 제한(MaxDuplicationPerEquipGroup) |
 | KarmaDeath / KarmaLife | 48 / 58 | KarmaDeath는 사망 소유자가 읽음, KarmaLife는 소비자 없음 |
 | Fishing* (Power·ExpAmplifier 등 5종) | 55 | 미연결 — 낚시 소유자가 낚싯대 장비 행을 읽지 않음 |
 | IgnoreFarBarrior / StorableOnEnchant / FixedDesc | 46 / 45 / 45 | 소비자 없음(설명·창고 규칙) |
-| 그 밖의 소수 효과(치명타·관통·리덕션 비율 등 40여 종) | 각 1~35 | 효과별 계산 순서가 표에 없어 미연결 |
+| 그 밖의 소수 효과(치명타·관통·리덕션 비율 등 40여 종) | 각 1~35 | 강화 투영과 같은 필드가 있는 21종 **연결(아래 14)**, 나머지는 14.4 |
 
 ## 2-1. 아이템 등급 연출 — 아이콘·바닥 빛기둥·이름 색 (2026-11-12, PR `feature/equipment523-grade-presentation`)
 
@@ -501,3 +501,88 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 6절에서 "ForGive false = 보상 지급 불가가 표 값"으로 적었으나, 같은 값이 #3581 축복 부여 주문서, #147672 수호석,
 #150303 금빛 훈장, 럭키백 상자 등 원본에서 보상으로 받는 아이템 141행에도 있다. 그래서 `ForGive`를 지급 차단 근거로
 쓰지 않았다(의미는 표에 없음). 변신·마법인형·성물 제작 코인 지급 여부는 지갑 소유자 결정으로 남긴다.
+
+## 14. 장비 남은 효과 — 기본 행 유형 효과·속성·장착 그룹 (2026-11-13, PR `feature/equipment523-rest`)
+
+### 14.1 다시 잰 출발점 (origin/main `735b771f`, 원본 팩, 장비 2,954종 개별 ID)
+
+- 수치는 #429 측정과 같다: 기본 효과 행 17,536 / 18,710, 모든 효과가 소비되는 장비 2,104 / 2,954, 강화 행 72,701 / 79,794.
+- **집계 방식 보정 2건**(코드 변경 없이 판정만): (1) 강화 추가 옵션 중 "읽는 곳 없음"으로 센 키(치명 저항 `melee/ranged_critical_resistance`,
+  유형별 감소 `*_damage_reduction_pct`, `source_elemental_flat_*`, 유형별·PVP·공포 리덕션 무시, PVP 스킬 성공 레벨)는 모두 이미 읽는 곳이
+  있다(`_critical_resistance_stat`, `_pve_reduction_percent`, `_source_elemental_flat_damage`, `patch523_equipment_combat.source_integer`);
+  (2) 기본 행 FinalBlowProbability/FinalBlowAdditionalScale은 `patch523_final_blow.base`가 표에서 직접 읽는다. 보정하면 출발점은
+  기본 행 17,538 · 모든 효과 2,137종.
+- **RegenHP 225 / RegenMP 381 / AttackDrainHP 71 / AttackDrainMP 51은 이미 동작 중**(`patch523_passive_items`, 측정의 passives 열 537종).
+  이번 테스트에서 실제 Main으로 다시 확인: #513 RegenHP 4 → 30초 틱 HP 842→846, #425 AttackDrainHP 1 → 일반 명중 1 흡수.
+
+### 14.2 연결한 것
+
+| 원본 효과(BonusType) | 종 / 행 | 근거 | 기록 필드 → 읽는 곳 |
+| --- | ---: | --- | --- |
+| ElementalResistance | 90 / 90 | 적용 3 `ElementalResistanceType`, 대상 = ElementalType ID(Fire·Water·Air·Earth, 5 All = 네 속성), Percentage ÷ UIUnit 10000 (500000 → 50) | `element_resist_fire/water/wind/earth` → `_player_element_resistance` (NPC 주문 경로가 쓰는 같은 이름 대응 Air→wind) |
+| ElementalDamage | 46 / 46 | 같은 적용·대상, Value | 강화와 같은 `source_elemental_flat_<속성>` → `_source_elemental_flat_damage` (일반 명중, 대상 속성 저항 적용) |
+| 치명·치명 저항·치명 대미지 | 13+17+2 / 2+4 / 4+2+2 | MeleeCritical 등 ValuePercent(분모 1), *CriticalResist Percentage ÷10000, Critical*Damage Value | `melee/ranged/magic_crit`, `*_critical_resistance`, `*_critical_damage` |
+| 리덕션 %·관통 | PVE/DamageReductionPercent 12, MagicDamageReductionPercent 6, PierceDamageReductionPercent 10, PierceDamageReduction 23 | Percentage ÷10000 / Value | 강화 투영(EXTRA)과 같은 `pve_damage_reduction_pct`, `magic_damage_reduction_pct`, `damage_amp_pct`, `damage_reduction_ignore` |
+| 그 밖 | RangeEvasion 8, ElementalDamageReduction 6, CastSpeedBonus 6, PoisonDamageReductionPercent 2, Strength/Dexterity/IntelligenceScale 2씩, UndeadAdditionalMaxDamage 3 | 같은 단위 규칙 | `er`, `equipment523_element_reduction`, `castSpeed`, `dot_damage_reduction_pct`, `str/dex/intPercent`, `source_undead_damage_max` |
+| **EquipGroupID** | 78 / 94 | EquipSlotConfig(EquipSlotID, ServerLimitSetID 0)의 MaxDuplicationPerItemClassID / MaxDuplicationPerEquipGroup — Ear 1/1, Finger 2/2, Badge 1/2 | `source_equip_group_ids` → 착용 시 `current523_equip_group_limit` (귀걸이·반지·인장 두 칸). 그룹 ID가 하나라도 같으면 같은 계열(수령의 귀걸이 [128,148] ↔ 에바의 귀걸이 [128,138]) |
+
+- 같은 의미의 행만 옮겼다: 강화 투영(`patch523_enchantment_projection` EXTRA)이 같은 BonusType에 이미 쓰는 필드와 단위를 그대로 쓴다.
+  행의 해석(적용 순서·상한·반올림)은 각 소비자의 기존 규칙이다(속성 저항 = 피해 % 감소 −80~85 범위, 치명 저항 상한 50, 리덕션 % 상한 90).
+- 장착 그룹: 새로 착용할 때만 검사한다. 같은 칸을 갈아 끼우는 것은 허용, 다른 칸에 같은 그룹/같은 아이템이 있으면 "같은 계열 장비는
+  N개까지만 착용" 안내 후 가방에 보관. 이미 저장된 조합을 풀지는 않는다. 팔찌(원본 2칸)·룬(원본 1칸)은 TWILIGHT가 1칸이라 제한이 생기지 않는다.
+- 실제 Main 테스트 `tests/items523_equipment_typed_effects_test.gd` 80검사 통과: #531 안타라스의 완력 땅 저항 0→50 / 저장·불러오기 50 / 해제 0,
+  #179094 앨리스(양손검) 불 추가 피해 0→10, #96574 원거리 치명 2→3, #188054 근거리 치명 저항 0→5, #517 PVE 리덕션 0→1%, 귀걸이 #621
+  착용 후 같은 그룹 78의 #622 거부·#621 두 번째 개체 거부·#622로 같은 칸 교체 허용·그룹 밖 #226892 허용·불러오기 후 둘 다 장착 유지.
+
+### 14.3 측정 (실제 Main, 원본 팩, 장비 2,954종 개별 ID)
+
+| 열 | 수정 전 (main, #429 집계 방식) | 수정 전 (보정 집계) | 수정 후 (보정 집계) |
+| --- | ---: | ---: | ---: |
+| 기본 효과 행 소비 (ItemBonus, 제외: 무기 부식·낚시) | 17,536 / 18,710 | 17,538 / 18,710 | **17,896 / 18,710** (+358) |
+| 모든 효과 행이 소비되는 장비 | 2,104 / 2,954 | 2,137 / 2,954 | **2,273 / 2,954** (+136) |
+| 강화 단계 효과 행 (ItemEnchantBonus) | 72,701 / 79,794 | 72,701 / 79,794 | 72,701 / 79,794 (변화 없음) |
+| 강화 발동 주문 | 615 | 615 | 615 (14.5) |
+
+- 같은 #429 집계 방식으로 수정 후를 세면 17,894 행 · 2,232종이다.
+- 투영된 종 수(테스트 집계와 같음): 속성 저항 90 · 속성 피해 46 · 장착 그룹 78(94행) · 원거리 치명 17 · 근거리 치명 13 · 리덕션 무시 23 ·
+  PVE/일반 리덕션 % 12 · 관통 % 10 · 원거리 회피 8 · 시전 속도 6 · 속성 리덕션 6 · 마법 리덕션 % 6 · 치명 대미지 8 · 치명 저항 6 ·
+  언데드 추가 피해 3 · STR/DEX/INT % 2씩 · DOT 감소 2.
+
+### 14.4 표에 없어 남긴 것 (기본 행)
+
+| 효과 | 종 | 남긴 이유 |
+| --- | ---: | --- |
+| BuffClassID (장비 상시 버프) | 104 | 10.1 그대로 — 버프 안 효과의 소비자 없음 |
+| KarmaLife / KarmaDeath | 58 / 48 | 카르마 수치를 생명력·사망 손실로 바꾸는 공식 없음(`death/runtime.gd`도 원본 공식 없음으로 보존) |
+| ItemInvokeReplacementID | 48 | 10.2 그대로 — 교체 굴림 시점·소비 규칙 없음 |
+| IgnoreFarBarrior | 46 | "원거리 장벽 무시" 대상이 될 장벽(몬스터/스킬 상태)이 TWILIGHT에 없음 |
+| EnchantEquipGroupID(주문서 그룹 없음) / StorableOnEnchant / FixedDesc | 45 / 45 / 45 | 13.3 강화 규칙 미대응 45종, 창고 보관 강화 조건(온라인 창고 규칙), 설명 전용 |
+| Life | 35 | Seconds 10800·36000 등 — 시계가 획득·착용·사용 중 언제 흐르는지 표에 없음(BM 유물·배지) |
+| PierceMagicShieldPercent | 31 | 대상 마법 방패(`magic_shield_reduction_percent`)를 가진 몬스터가 없음; 반엘릭서만 같은 값을 씀 |
+| ElementalCriticalProbability | 16 | 대상이 속성별(1~4)인데 기존 속성 치명 소비자(`equipment523_element_crit_pct`)는 속성 구분 없는 합 — 네 행을 합칠지 표에 없음 |
+| Ignore*DamageReductionPercent / IgnorePVP* / PVPDamageReductionPercent / PiercePVPDamageReduction / PVPSpellByLevelAdditionLevel | 15+8+4+4+16+10+4+2 | 몬스터 쪽 % 리덕션 모델 없음, PVP 값은 강화 경로에서만 싱글 해석 정책으로 읽음(기본 행에 같은 정책을 넓히는 것은 사용자 결정 필요) |
+| ReinforceSpellHitProbabilityBaseIncludingTransformSpell / DecreaseCasterSpellProb / IgnorePercentOfMoveSpeedDecrease | 20 / 8 / 16 | 주문 성공 확률·이동 감속 공식 단계가 표에 없음 |
+| SpecialResistance (Ice·석화·Sleep·Dark) | 15 | 8절 그대로 — 해당 상태 없음 |
+| EquipSpellClassID | 16 | 10.2 그대로 — 착용 시 주문 실행 |
+| AlignmentWeaponDamageBonus / TargetDamageBonus | 11 / 2 | 성향 조건(값 −6000)·NpcGroup 11063 대상 추가 피해의 적용 소유자 없음 |
+| Constitution/Wisdom/CharismaScale, HitSpecialResistanceScale | 2씩 | 기존 % 능력치 소비자는 STR/DEX/INT만 |
+| 그 밖 1~7종(IncreaseNpcItemDropAmount, Einasad*, PolymorphSetID, InfiniteBuff, Vanish*, Teleport*, MaxEquipCount, ValidLand 등) | — | 소비자 없음 또는 온라인 기능 |
+
+### 14.5 강화 발동 주문 65개 — 실행기 확장 안 함 (재확인)
+
+실제 Main에서 `current523_equipment_spell_profiles.profile()`로 강화 Attack_Spell 166개를 다시 굴려 101 연결 / 65 미연결을 확인했다.
+65개 모두 표만으로는 실행 단계가 정해지지 않는다:
+
+- 중첩 디버프 9개(악마왕·나이트발드·오시리스·에보 시리즈 58942·58962·58972·58982, 사신 63074·63094·63114 등): BuffClass에 BuffBonus가
+  없고 BuffStack/BuffStackBonus가 1~5중첩 값(PVP 리덕션 −1~−5, 스턴 내성 −1~−5%)을 준다. 발동 1회 = 1중첩인지, 중첩 시 지속 갱신인지 표에 없음.
+- 버프 제거 16개(이레이즈 이뮨 투 함 SpellBuffGroup 192, 이지스 브레이크 SpellBuffGroup 5731 + CannotHaveBuffs 221): 몬스터 버프 그룹 모델이 없음.
+- 무기 기반 피해 22개(확률 추타 200, 미티어 스트라이크(에이션트) 범위 4, 포세이돈의 분노 등: SpellWeaponBasedDamage + SpellAttackType):
+  무기 피해를 어떻게 더하는지(무기 주사위·강화·추가 피해 포함 여부) 표에 없음. 미티어는 TargetAreaRadius 3~4 범위 주문.
+- HP 비례 피해 3개(루인 크래시·루인 스피어: SpellDamagePercentByHP 2000, Min/MaxByHP, Type 14): 현재/최대 HP 기준·Type 14 의미 없음.
+- 후속 주문 4개(어비스 웨이브 NextSpellClassID, 청사의 맹독): 후속 주문 연쇄 실행 규칙.
+- 흡혈 2개(아이스 이럽션·데모닉 터치 SpellDrainHP 100000·80000): 피해 대비 흡수 단위·범위(데모닉 터치 반경 2) 처리 없음.
+- 턴 언데드(2142): SideEffect* 부작용 버프 확률 규칙. 침묵 2개(1202·34483): CannotCastSpell 외 CannotChat·StatusEffectID 혼재 버프.
+- 그 밖: 이자벨의 질투/시기(SuccessedBuffClassID 자기 버프 + 대상 DamageReduction 8행 중복), 복종의 맹세·붉은 오크 변신(PolymorphSetID 강제 변신),
+  할파스 램페이지(자기 버프 그룹 확률 감소), 바포메트 커스(행동 불가 11종 + StatusEffectID).
+- 남은 강화 발동 종류 Defence_Spell(2)·Aura_Spell(38)·Defence_DebuffTimeDecrease(26)·Gain_Experience(68)와 InvokeOption 3/5 중
+  Param 조건이 0이 아닌 행(8+18종)은 13.2와 같다.
