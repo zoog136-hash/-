@@ -1,10 +1,16 @@
 # 등록·무게·상점 설치 로딩 최적화
 
-## 최종 C4 및 최신 main 통합 결과
+## 최종 empty-record 경계 수정
 
-C4 독립 측정은 clean `fa42b02f64d278c56f88c0ace051c57de0bc04fd`(main `dd30440b` 포함), 최종 통합 측정은 clean `4963326161a566527911ab623a3f5f6c6b279050`(고정 main `c898afcee9f277bb63db86397372014ceb243b1c` 포함)이다. 최신 main의 loader·character·prepared-SP2 변경과 모든 검사를 보존했다. 이후 원격 게시 커밋은 같은 runtime과 최종 문서의 tree로 만들며 정확한 CI SHA는 PR에 기록한다.
+최종 runtime 경계 수정은 `22ae7efa86e61f8c3188ddbc982f4de3183bf34f`이다. Cash scope의 빈 Dictionary first-match는 기존 public find_one과 같이 그 source의 후속 동명 row를 다시 찾지 않고 다음 source, 그다음 copied instance로 진행한다. 회귀 검사 37개가 통과했다. 실제 원본 553 lookup의 빈 이름 추적과 경계 수정 후의 독립 fresh first/next, 6개 payload 동등성 및 정확한 게시 head의 Core176/resource 결과는 PR 본문과 외부 publication receipt에 최종 기록한다. source는 이 단계에서 고정하며 측정 결과를 쓰기 위해 runtime을 바꾸지 않는다.
 
-**최종 통합 artifact의 첫 진입 추가 개선은 확인하지 못했다.** 통합 first 229.903초는 역사 C3 228.405초보다 느리다. 첫 로딩 목표의 이 한계와 남은 cold 작업을 유지한다.
+아래 496/0166525의 수치는 경계 수정 전의 보존된 관측이다. 당시 원격 Core176(실제 seeded Main save 포함)과 resource/exchange/SP2는 모두 통과했지만 새 수정 artifact의 결과로 대신 사용하지 않는다. 최종 첫 로딩 추가 개선 여부는 새 artifact 관측과 구분한다.
+
+## 경계 수정 전 C4 및 최신 main 통합496 결과
+
+C4 독립 측정은 clean `fa42b02f64d278c56f88c0ace051c57de0bc04fd`(main `dd30440b` 포함), 최종 통합 측정은 clean `4963326161a566527911ab623a3f5f6c6b279050`(고정 main `c898afcee9f277bb63db86397372014ceb243b1c` 포함)이다. 최신 main의 loader·character·prepared-SP2 변경과 모든 검사를 보존했다. 이 측정은 public `016652519a808a6d41080fbaa1ca3fa7537ebbca`의 runtime이며, 이후 empty-record parity runtime 수정과 명확히 구분한다.
+
+**통합496 단계의 첫 진입 추가 개선은 확인하지 못했다.** 통합 first 229.903초는 역사 C3 228.405초보다 느리다. 첫 로딩 목표의 이 한계와 남은 cold 작업을 유지한다.
 
 Godot 4.7.2 official Linux headless, 동일 원본 정의·Land4 위치/manifest pin·조건 provider로 실제 `Loading.open(Main.tscn)`→readiness/finished를 측정했다. first는 빈 앱 프로필, next는 해당 arm의 성공한 first 프로필을 쓴 새 프로세스다. OS page cache·시스템 부하는 통제하지 않았다. 타이틀/캐릭터 화면을 포함하는 전체 사용자 실행 시간이나 Android/GPU 수치가 아니다.
 

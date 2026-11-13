@@ -41,6 +41,15 @@ func _run() -> void:
 	check(scope.find_one([a,b],{},"untracked")==null,"untracked append requests fallback")
 	scope=LOOKUP.CashInstallScope.new([a,b]);check(scope.find_one([a.duplicate(),b],{},"dup")==null,"array replacement requests fallback")
 	scope=LOOKUP.CashInstallScope.new([a,b]);scope.close();check(scope.find_one([a,b],{},"dup")==null and scope.rows.is_empty(),"closed scope releases all references")
+	var empty_first: Array=[{}, {"name":"","v":90}]
+	var empty_second: Array=[{"name":"","v":91}]
+	var empty_instances: Dictionary={"e":{"name":"","record":{"name":"","v":92}}}
+	var empty_scope:=LOOKUP.CashInstallScope.new([empty_first,empty_second])
+	check(is_same(empty_scope.find_one([empty_first,empty_second],empty_instances,""),LOOKUP.find_one([empty_first,empty_second],empty_instances,"")) and empty_scope.find_one([empty_first,empty_second],empty_instances,"").v==91,"empty first match skips later same-source duplicate and uses next source")
+	empty_scope.close();empty_second.clear();empty_scope=LOOKUP.CashInstallScope.new([empty_first,empty_second])
+	var empty_result: Dictionary=empty_scope.find_one([empty_first,empty_second],empty_instances,"")
+	check(var_to_bytes(empty_result)==var_to_bytes(LOOKUP.find_one([empty_first,empty_second],empty_instances,"")) and empty_result.v==92 and not is_same(empty_result,empty_instances.e.record),"empty first match falls through to copied instance")
+	empty_scope.close()
 	var world := WORLD.new();world.catalog_db={"아이템":[{"name":"plain","sourceId":"fixture:1"}]};world.item_db=[{"name":"item-only"}];world.item_instances={"q":{"name":"[원본 보상] test","record":{"name":"[원본 보상] test","source_pending_use":true,"nested":[1]}}}
 	var catalog := CATALOG.new();var live := CASH._install_lookup(world,catalog)
 	check(live!=null,"exact production owners admitted")

@@ -220,7 +220,8 @@ class CashInstallScope extends RefCounted:
 			var value: Variant = rows[at][int(names[at][name])]
 			if not value is Dictionary or str(value.get("name", "")) != name:
 				active = false; return null
-			return value
+			# Public find_one skips an empty first match for this whole source.
+			if not value.is_empty(): return value
 		for value: Variant in instances.values():
 			if value is Dictionary and str(value.get("name", "")) == name and value.get("record", {}) is Dictionary:
 				return value.get("record", {}).duplicate(true)

@@ -112,3 +112,10 @@ that includes unrelated main changes solely to the patch. Instrumented cash
 preparation, warm install and post-readiness first-shop calls are separate from
 the uninstrumented first/next receipts. Profile-start manifests and mandatory
 positive scope activation are retained with the local diagnostic evidence.
+
+The final empty-record parity fix is a runtime change after the 496 integration
+measurement. Preserve the old receipts as history and use a new independent
+first/next profile for the corrected source. Freeze source before launching
+remote CI and local measurements; place the new numerical results and exact
+head CI evidence in the PR body and external receipt without restarting CI for
+a documentation-only result update.
