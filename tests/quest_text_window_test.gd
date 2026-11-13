@@ -168,9 +168,10 @@ func _run() -> void:
 		var capture: Image=root.get_texture().get_image()
 		check(not capture.is_empty() and capture.save_png("user://quest-text-window.png")==OK,"real OpenGL text list renders and captures")
 		root.size=Vector2i(854,480)
+		root.content_scale_size=Vector2i(854,480)
 		await frames()
 		await RenderingServer.frame_post_draw
-		check(view.size.x<=854 and view.listing.get_parent().size.y>=100,"text list stays within an Android-sized 854x480 viewport")
+		check(view.size.x<=854 and view.listing.get_parent().size.y>=100,"text list stays within an Android-sized 854x480 viewport: "+str([view.size,view.listing.get_parent().size]))
 	view.listing.get_child(1).get_child(2).pressed.emit()
 	for i: int in 49:view._accept("m523:quest:2")
 	check(service.claimed.get("m523:quest:2",false) and world.experience==7 and world.writes==1,"accept immediately completes exactly one quest and grants once")

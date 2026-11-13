@@ -10,17 +10,15 @@
         "evidence": {
           "android_verified": false,
           "data_static_growth": 25444,
-          "data_usec": 6123,
+          "data_usec": 6398,
           "record_bytes": 29837120,
           "synthetic": true,
           "ui_static_growth": 23602428,
-          "ui_usec": 554495
+          "ui_usec": 548558
         },
-        "failures": [
-          "text list stays within an Android-sized 854x480 viewport"
-        ]
+        "failures": []
       },
-      "log_sha256": "c927b2b533370abc862bd50f1fdad2bf88bee752e2f5aa20ca7c28b5c7c51648"
+      "log_sha256": "3843239bb5a48a16e01d97002a657cc12b68ef46e0629ada12b2dc83d927da8d"
     },
     "original_ui_quest_preparation_test": {
       "result": {
@@ -65,7 +63,7 @@
     "scripts/quests/quest_auto_runner.gd": "0634c3d90df59d93fb0f5c27ed80bb1dd94bbbe77e389f2be434811fe9e63aa3",
     "scripts/ui/renewal_quests.gd": "4b46126c1be657ce020d3574b4ff6f78b0a5d0cec79b23d7171beb1dbb6b336d",
     "scripts/ui/renewal_hud.gd": "985d58a3376cab6a36bf6769ee5773624d13a48d6f15d8dff61896302d7c23db",
-    "tests/quest_text_window_test.gd": "c1331ab61a937c078c91b33cd717be24c86a25f6c5d87371aa96f70a4628f084",
+    "tests/quest_text_window_test.gd": "d7bacb90c37be6ba851cbc053da87dd0b5a1b95182db6be1d73133f441c66cf8",
     "tests/frame_hot_paths_test.gd": "950e8286d075dc888500a392be531e0c8a68b3577d385e6710638b867a6d82d5",
     "tests/original_ui_quest_preparation_test.gd": "f0fd231a9b2c920f579b70c533ccd6cc25f2852c53ac52a55102128e193dcff3",
     "tools/ci_core.py": "fd2d8625fc0d58ebe364a3d99d7ad57c038136144d01d0daa87b432824af2049"
