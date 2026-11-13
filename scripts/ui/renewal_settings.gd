@@ -21,6 +21,8 @@ var limit_effect_count: CheckButton
 var region_override: CheckButton
 var presentation_map_id: String = ""
 var presentation_status: Label
+## Foldouts built on first open: id -> {toggle, body, builder, built, title}.
+var lazy_sections: Dictionary = {}
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -70,11 +72,6 @@ func configure(controller: Node) -> void:
 		addon_button.custom_minimum_size = Vector2(0,48)
 		addon_button.pressed.connect(func() -> void: source_pack.call("open_addon_installer"))
 		stack.add_child(addon_button)
-	stack.add_child(preload("res://scripts/ui/lineagem_pack_settings.gd").new())
-	var aden_review := preload("res://scripts/ui/current523_aden_review_settings.gd").new()
-	stack.add_child(aden_review)
-	aden_review.configure(hud.get_parent())
-	stack.add_child(preload("res://scripts/ui/patch523_drop_settings.gd").new())
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("오디오",18,UI.GOLD))
 	var audio := HBoxContainer.new()
@@ -103,14 +100,6 @@ func configure(controller: Node) -> void:
 	var consumable_settings := preload("res://scripts/ui/consumable_auto_settings.gd").new()
 	consumable_settings.configure(hud)
 	stack.add_child(consumable_settings)
-	stack.add_child(HSeparator.new())
-	var recovery_settings:=preload("res://scripts/ui/skill_recovery523_settings.gd").new()
-	recovery_settings.configure(hud)
-	stack.add_child(recovery_settings)
-	stack.add_child(HSeparator.new())
-	var progression_settings:=preload("res://scripts/ui/skill_progression523_settings.gd").new()
-	progression_settings.configure(hud)
-	stack.add_child(progression_settings)
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("HUD 표시",18,UI.GOLD))
 	var log_toggle := CheckButton.new()
@@ -196,10 +185,6 @@ func configure(controller: Node) -> void:
 	stack.add_child(presentation_status)
 	_sync_presentation_controls()
 	stack.add_child(HSeparator.new())
-	var source_settings = preload("res://scripts/ui/source_optimization_settings.gd").new()
-	source_settings.configure(self)
-	stack.add_child(source_settings)
-	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("월드 외형",18,UI.GOLD))
 	stack.add_child(UI.section("지도 좌표·충돌·몬스터 배치를 변경하지 않는 시각 설정입니다.",12))
 	map_visual_mode = OptionButton.new()
@@ -210,34 +195,33 @@ func configure(controller: Node) -> void:
 	map_visual_mode.item_selected.connect(_map_visual_mode_changed)
 	stack.add_child(map_visual_mode)
 	stack.add_child(HSeparator.new())
-	stack.add_child(UI.label("캐릭터 8방향 애니메이션",18,UI.GOLD))
-	stack.add_child(UI.section("외부 SPX 리소스 팩이 있을 때만 선택할 수 있습니다. 변신 중에는 기존 변신 외형이 우선합니다.",12))
-	spx_actor_mode = OptionButton.new()
-	spx_actor_mode.name = "ExternalSPXActorMode"
-	spx_actor_mode.add_item("기본 TWILIGHT 캐릭터",0)
-	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21624",1)
-	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21653",2)
-	for actor_index: int in range(2):
-		var id: String = "21624" if actor_index == 0 else "21653"
-		spx_actor_mode.set_item_disabled(actor_index+1,not SPX.available(id))
-	var selected_id: String = str(config.get_value("visual","spx_actor",""))
-	spx_actor_mode.select(1 if selected_id == "21624" and SPX.available(selected_id) else (2 if selected_id == "21653" and SPX.available(selected_id) else 0))
-	spx_actor_mode.item_selected.connect(_spx_actor_changed)
-	stack.add_child(spx_actor_mode)
-	if not SPX.available("21624") and not SPX.available("21653"):
-		stack.add_child(UI.section("팩 미설치: twilight_external_spx_actor_pack.zip 의 assets/를 프로젝트에 복사한 후 다시 실행하세요.",12))
-	stack.add_child(HSeparator.new())
-	stack.add_child(UI.label("PR122 투사 변신 SPX 비교 · 미승인",18,UI.GOLD))
-	stack.add_child(UI.section("비공개 원본 팩 설치 시에만 사용합니다. 원작 외형·재배포 권한은 미확정이며 기본값은 꺼짐입니다.",12))
-	for transform_id: String in ["142", "411"]:
-		var spx_id: String = "21624" if transform_id == "142" else "21653"
-		var preview_toggle := CheckButton.new()
-		preview_toggle.name = "SPXTransformPreview" + transform_id
-		preview_toggle.text = ("신화-투사(남) · 21624" if transform_id == "142" else "신화-투사(여) · 21653") + " (비공개 비교)"
-		preview_toggle.disabled = not SPX.chain_review_available(spx_id)
-		preview_toggle.button_pressed = not preview_toggle.disabled and bool(config.get_value("visual","spx_transform_preview_" + transform_id,false))
-		preview_toggle.toggled.connect(_spx_transform_preview_changed.bind(transform_id))
-		stack.add_child(preview_toggle)
+	# Everything below is built only when its foldout is opened. Opening
+	# settings must not decode original images, list installed SP2 files,
+	# create file pickers/installers or read large original tables (Android
+	# closed the app while settings was being built, 2026-11-13).
+	stack.add_child(UI.label("세부 설정 · 누르면 열림",18,UI.GOLD))
+	_lazy_section(stack,"drops","원본 아이템·몬스터 드랍 · 523","",func(body: VBoxContainer) -> void:
+		body.add_child(preload("res://scripts/ui/patch523_drop_settings.gd").new()))
+	_lazy_section(stack,"skills523","복합 회복·기존 스킬 전환 · 523","",func(body: VBoxContainer) -> void:
+		var recovery_settings:=preload("res://scripts/ui/skill_recovery523_settings.gd").new()
+		recovery_settings.configure(hud)
+		body.add_child(recovery_settings)
+		body.add_child(HSeparator.new())
+		var progression_settings:=preload("res://scripts/ui/skill_progression523_settings.gd").new()
+		progression_settings.configure(hud)
+		body.add_child(progression_settings))
+	_lazy_section(stack,"source_optimization","원본 지역 권장 설정 · 간소화 효과","",func(body: VBoxContainer) -> void:
+		var source_settings = preload("res://scripts/ui/source_optimization_settings.gd").new()
+		source_settings.configure(self)
+		body.add_child(source_settings))
+	_lazy_section(stack,"advanced","고급/개발","구 리니지M 팩·SP2 검토·맵 원문 검토 등 개발 확인용입니다. 일반 플레이에는 필요하지 않습니다.",func(body: VBoxContainer) -> void:
+		_lazy_section(body,"legacy_lineagem","구 리니지M 원본 팩 · 523 SP2 검토","변신·인형·성물 구팩, 현행523 표준 이미지·SP2 추정 재생, 정체 확인 변신",func(inner: VBoxContainer) -> void:
+			inner.add_child(preload("res://scripts/ui/lineagem_pack_settings.gd").new()))
+		_lazy_section(body,"aden_review","맵 원문 검토 · 523 원문 맵 실험 플레이","",func(inner: VBoxContainer) -> void:
+			var aden_review := preload("res://scripts/ui/current523_aden_review_settings.gd").new()
+			inner.add_child(aden_review)
+			aden_review.configure(hud.get_parent()))
+		_lazy_section(body,"spx","외부 SPX 캐릭터 외형 · 비교","",_build_spx_section))
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("게임 데이터",18,UI.GOLD))
 	var actions := HBoxContainer.new()
@@ -249,6 +233,91 @@ func configure(controller: Node) -> void:
 	stack.add_child(nav)
 	nav.add_child(UI.button("월드맵",func() -> void: hud._navigate("map")))
 	nav.add_child(UI.button("캐릭터 · 장비",func() -> void: hud._navigate("character")))
+
+## Foldout whose body is built by `builder` the first time it is opened.
+func _lazy_section(parent: Container, id: String, title: String, note: String, builder: Callable) -> void:
+	var toggle := Button.new()
+	toggle.name = "SettingsSection_" + id
+	toggle.toggle_mode = true
+	toggle.text = "▶ " + title
+	toggle.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	toggle.custom_minimum_size = Vector2(0,44)
+	parent.add_child(toggle)
+	if not note.is_empty():
+		var hint: Label = UI.section(note,11)
+		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		parent.add_child(hint)
+	var body := VBoxContainer.new()
+	body.name = "SettingsSectionBody_" + id
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.visible = false
+	parent.add_child(body)
+	lazy_sections[id] = {"toggle":toggle,"body":body,"builder":builder,"built":false,"title":title}
+	toggle.toggled.connect(func(enabled: bool) -> void:
+		if enabled: expand_section(id)
+		else: collapse_section(id))
+
+func is_section_built(id: String) -> bool:
+	return lazy_sections.has(id) and bool(lazy_sections[id].built)
+
+func expand_section(id: String) -> bool:
+	if not lazy_sections.has(id): return false
+	var entry: Dictionary = lazy_sections[id]
+	if not entry.built:
+		entry.built = true
+		var builder: Callable = entry.builder
+		builder.call(entry.body)
+	entry.body.visible = true
+	entry.toggle.set_pressed_no_signal(true)
+	entry.toggle.text = "▼ " + str(entry.title)
+	return true
+
+func collapse_section(id: String) -> void:
+	if not lazy_sections.has(id): return
+	var entry: Dictionary = lazy_sections[id]
+	entry.body.visible = false
+	entry.toggle.set_pressed_no_signal(false)
+	entry.toggle.text = "▶ " + str(entry.title)
+
+## Opens every foldout, including those inside opened foldouts (tests, tools).
+func expand_all() -> void:
+	var pending: bool = true
+	while pending:
+		pending = false
+		for id: String in lazy_sections.keys():
+			if not is_section_built(id) or not lazy_sections[id].body.visible:
+				expand_section(id)
+				pending = true
+
+func _build_spx_section(body: VBoxContainer) -> void:
+	body.add_child(UI.label("캐릭터 8방향 애니메이션",18,UI.GOLD))
+	body.add_child(UI.section("외부 SPX 리소스 팩이 있을 때만 선택할 수 있습니다. 변신 중에는 기존 변신 외형이 우선합니다.",12))
+	spx_actor_mode = OptionButton.new()
+	spx_actor_mode.name = "ExternalSPXActorMode"
+	spx_actor_mode.add_item("기본 TWILIGHT 캐릭터",0)
+	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21624",1)
+	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21653",2)
+	for actor_index: int in range(2):
+		var id: String = "21624" if actor_index == 0 else "21653"
+		spx_actor_mode.set_item_disabled(actor_index+1,not SPX.available(id))
+	var selected_id: String = str(config.get_value("visual","spx_actor",""))
+	spx_actor_mode.select(1 if selected_id == "21624" and SPX.available(selected_id) else (2 if selected_id == "21653" and SPX.available(selected_id) else 0))
+	spx_actor_mode.item_selected.connect(_spx_actor_changed)
+	body.add_child(spx_actor_mode)
+	if not SPX.available("21624") and not SPX.available("21653"):
+		body.add_child(UI.section("팩 미설치: twilight_external_spx_actor_pack.zip 의 assets/를 프로젝트에 복사한 후 다시 실행하세요.",12))
+	body.add_child(HSeparator.new())
+	body.add_child(UI.label("PR122 투사 변신 SPX 비교 · 미승인",18,UI.GOLD))
+	body.add_child(UI.section("비공개 원본 팩 설치 시에만 사용합니다. 원작 외형·재배포 권한은 미확정이며 기본값은 꺼짐입니다.",12))
+	for transform_id: String in ["142", "411"]:
+		var spx_id: String = "21624" if transform_id == "142" else "21653"
+		var preview_toggle := CheckButton.new()
+		preview_toggle.name = "SPXTransformPreview" + transform_id
+		preview_toggle.text = ("신화-투사(남) · 21624" if transform_id == "142" else "신화-투사(여) · 21653") + " (비공개 비교)"
+		preview_toggle.disabled = not SPX.chain_review_available(spx_id)
+		preview_toggle.button_pressed = not preview_toggle.disabled and bool(config.get_value("visual","spx_transform_preview_" + transform_id,false))
+		preview_toggle.toggled.connect(_spx_transform_preview_changed.bind(transform_id))
+		body.add_child(preview_toggle)
 
 func _spx_actor_changed(index: int) -> void:
 	var id: String = "" if index == 0 else ("21624" if index == 1 else "21653")

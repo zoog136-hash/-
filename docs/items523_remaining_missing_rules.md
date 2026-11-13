@@ -108,6 +108,19 @@ CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3
 - 바닥 이름 라벨의 글꼴 크기·외곽선·위치, 강화 수치 "+N " 접두 규칙은 원본 표에 없어 TWILIGHT 값.
 - 빛기둥 반복: 은행 계약상 loop는 호출자 정책 — 위의 해석(바닥에 있는 동안 breath 반복).
 
+### 휴대폰 가방에서 신화·유일 아이콘이 빈 칸으로 보인 문제 (2026-11-13, PR `fix/item-icon-csb-empty-slot`)
+
+- 대상: 기르타스의 단검 #362391·#357591(유일, IconID 107221 → CSB `UI/CsbFile/icon/Fx_Item_Weapon_Dagger_Sole_Giltas.csb`, 기본 팩
+  `ui_icons` 안 아틀라스 프레임) 등 CSB 애니메이션 아이콘. 이 아이콘들은 원본에 정지 PNG가 따로 없다(아틀라스 연속 프레임뿐).
+- 확인(원본 팩, 실제 Main, OpenGL3 = 휴대폰과 같은 gl_compatibility 렌더러, xvfb 렌더링): TWILIGHT 가방 ItemVisual이 CSB 장면을 붙이고,
+  안드로이드 고정 혼합(`SourceBlend.screen_copy_available=false`)에서도 #362391·#357591·신화 #425·#450·#461 모두 64×64 칸에 원본 그림이 그려진다
+  (복사 켬/끔 각각 그려진 화소 약 4,060~4,096/칸, 배경 복사 노드는 고정 혼합에서 꺼짐). 즉 혼합 방식 자체는 빈 칸의 원인이 아니다.
+- 이 환경에서 재현되지 않으므로 휴대폰 쪽 원인은 장면 연결 실패(설치된 팩의 `ui_icons` 선택 문서·아이콘 팩 검증 실패, 장면 구성 실패 등)로 좁혀진다.
+  지금까지는 실패해도 칸이 아무 표시 없이 비었다. 이번 수정: 실패하면 기존 "효과 미연결" 표시(이유는 툴팁)를 띄우고, 이유별로 한 번
+  `ITEM_ICON_SCENE_UNAVAILABLE reason=… icon=…`을 기록한다(`ItemVisual.scene_failures`). 대체 그림은 그리지 않는다.
+- 사용자 확인 필요: 휴대폰에서 해당 칸의 "효과 미연결" 툴팁(또는 로그 한 줄)의 reason 값을 알려 주면 그 원인을 고친다.
+
+
 ## 2-2. 탄약 투사체 원본 스프라이트 (2026-11-13, PR `feature/equipment523-rest-ammo`)
 
 - 근거(표만): 일반 원거리 공격의 비행 스프라이트 = 무기 ItemBonus `AmmoEffectSpriteIDByWeapon`(기르타스의 활 2종 29554) → 화살·스팅·탄환

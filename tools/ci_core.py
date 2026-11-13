@@ -129,6 +129,7 @@ CHECKS = [
     ('lineagem_pack_resolution_test', []),
     ('lineagem_pack_settings_main_test', ['--settings-test-snapshot523', '--lineagem-original-preview=user://settings-test-523.json']),
     ('presentation_settings_test', []),
+    ('settings_lazy_sections_test', []),
     ('symbol_source523_test', []),
     ('symbol_source523_main_ui_test', []),
     ('symbol_absolute_followup_test', []),
@@ -171,6 +172,7 @@ CHECKS = [
     ('items523_equipment_enchant_spell_test', []),
     ('items523_grade_presentation_test', []),
     ('items523_ammo_projectile_sprite_test', []),
+    ('item_icon_scene_failure_test', []),
     ('items523_equipment_typed_effects_test', []),
     ('equipment523_alchemy_pending_migration_test', []),
     ('source_spawn_admission_cache_test', []),
@@ -226,6 +228,7 @@ CHECKS = [
     ('orim523_test', []),
     ('minigame523_scope_test', []),
     ('reference_sp2_prepared_bank_test', []),
+    ('content523_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
     ('reference_sp2_native_build_test', []),
@@ -606,6 +609,7 @@ def main():
                       'lineagem_pack_resolution_test':'LINEAGEM_PACK_RESOLUTION_RESULT',
                       'lineagem_pack_settings_main_test':'LINEAGEM_PACK_SETTINGS_RESULT',
                       'presentation_settings_test':'PRESENTATION_SETTINGS_RESULT',
+                      'settings_lazy_sections_test':'SETTINGS_LAZY_SECTIONS_RESULT',
                       'symbol_source523_test':'SYMBOL523_TEST',
                       'symbol_source523_main_ui_test':'SYMBOL523_MAIN_RESULT',
                       'symbol_absolute_followup_test':'SYMBOL_ABSOLUTE_RESULT',
@@ -648,6 +652,7 @@ def main():
                       'items523_equipment_enchant_spell_test':'ITEMS523_EQUIP_ENCHANT_SPELL_RESULT',
                       'items523_grade_presentation_test':'ITEMS523_GRADE_PRESENTATION_RESULT',
                       'items523_ammo_projectile_sprite_test':'ITEMS523_AMMO_SPRITE_RESULT',
+                      'item_icon_scene_failure_test':'ITEM_ICON_SCENE_STATUS_RESULT',
                       'items523_equipment_typed_effects_test':'ITEMS523_EQUIP_TYPED_RESULT',
                       'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
                       'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT',
@@ -705,7 +710,8 @@ def main():
                       'source_effect_validation_once_test':'SOURCE_EFFECT_VALIDATION_ONCE_RESULT',
                       'reference_sp2_native_build_test':'REFERENCE_SP2_NATIVE_BUILD_RESULT',
                       'reference_sp2_prepared_bank_test':'REFERENCE_SP2_PREPARED_BANK_RESULT',
-                      'minigame523_scope_test':'MINIGAME523_RESULT'}[name]
+                      'minigame523_scope_test':'MINIGAME523_RESULT',
+                      'content523_test':'CONTENT523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

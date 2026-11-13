@@ -1156,6 +1156,7 @@ func _navigate(section: String) -> void:
 		"status_board": open_status_board()
 		"clan_emblem523": open_clan_emblem523()
 		"clan523": open_clan523()
+		"content523": open_content523()
 		"titles": open_titles523()
 		"expedition": open_expedition()
 		"class_select": open_class_selection()
@@ -1411,11 +1412,14 @@ func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> v
 		_close_workspace()
 	_sync_screen_focus()
 
-func open_settings_info() -> void:
+## Heavy settings sections are foldouts built on first open; tests and tools
+## that inspect them pass expand_all = true.
+func open_settings_info(expand_all: bool = false) -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
 	var options := SettingsUI.new()
 	workspace.mount(options)
 	options.configure(self)
+	if expand_all: options.expand_all()
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")
@@ -1599,7 +1603,7 @@ func _build_menu_page() -> void:
 		var category: String = category_names[index]
 		for tile: Control in tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
 		menu_scroll.scroll_vertical = 0)
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["sell","판매"],["death523","사망 복구"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -1609,7 +1613,7 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","content523","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -1676,6 +1680,18 @@ func open_clan523() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	workspace.mount(scroll)
 	var view := preload("res://scripts/clan523/clan523_panel.gd").new()
+	scroll.add_child(view)
+	view.configure(self, scroll)
+
+## 에스카로스 · 요정 숲 방어전 · 영지 퀘스트 (world.content523). No original
+## window CSB for these contents is in the 523 UI add-on: plain controls.
+func open_content523() -> void:
+	_open_window("content523","에스카로스·요정 숲·영지 퀘스트","원본 523 표 · 오프라인 1인")
+	var scroll := ScrollContainer.new()
+	scroll.name = "Content523Scroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var view := preload("res://scripts/content523/content523_panel.gd").new()
 	scroll.add_child(view)
 	view.configure(self, scroll)
 

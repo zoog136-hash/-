@@ -23,7 +23,7 @@ func run() -> void:
 	world.inventory[normal]=1;world.inventory[blessed]=2
 	check(world._save_game(true)==OK,"previous source stack save durable")
 	var old_hash: String=FileAccess.get_sha256(world.save_path())
-	world.hud.open_settings_info();await process_frame
+	world.hud.open_settings_info(true);await process_frame
 	var settings: Node=world.hud.find_child("Patch523DropSettings",true,false)
 	check(settings!=null,"live source installer UI")
 	settings._selected(new_zip)

@@ -136,6 +136,8 @@ const EMBLEM523 = preload("res://scripts/emblem523/emblem523.gd")
 var emblem523 = EMBLEM523.new()
 const CLAN523 = preload("res://scripts/clan523/clan523.gd")
 var clan523 = CLAN523.new()
+const CONTENT523 = preload("res://scripts/content523/content523.gd")
+var content523 = CONTENT523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -788,6 +790,7 @@ func _process_frame(delta: float) -> void:
 	FRAME_HITCH.add("loot", hitch_4)
 	var hitch_5: int = FRAME_HITCH.now()
 	dungeon_play.tick(delta)
+	content523.tick(delta)
 	FRAME_HITCH.add("dungeon", hitch_5)
 	var hitch_6: int = FRAME_HITCH.now()
 	loot_pickup.tick(delta)
@@ -989,6 +992,7 @@ func _load_data() -> void:
 	half_elixir.configure(self)
 	domination_stones.configure(self)
 	routines.configure(self)
+	content523.configure(self)
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
@@ -3499,6 +3503,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if int(monster.get_meta("rewarded_life_id", -1)) == monster.life_id: return
 	monster.set_meta("rewarded_life_id", monster.life_id)
 	dungeon_play.monster_died(monster)
+	if not bool(monster.get_meta("summoned",false)): content523.record_kill()
 	if bool(monster.get_meta("summoned",false)):
 		patch523_npc_spells.extensions.remaining.forget(monster)
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
@@ -3657,6 +3662,7 @@ func _collect_ground_drop(drop: Button) -> bool:
 	var quantity: int=int(record.quantity)
 	_source_dungeon_pickup(record)
 	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
+	content523.record_pickup(UNCONFIRMED523.native_id(record.get("item_record",{})),quantity)
 	quest_service.record_pickup(item_name, quantity)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
@@ -4548,7 +4554,8 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 			total += int((value as Dictionary).get(key, 0))
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
-	return total + clan523.buff_value(key)
+	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
+	return total + clan523.buff_value(key) + content523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6424,6 +6431,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		ROUTINE523.SAVE_KEY: routines.export_state(),
 		EMBLEM523.SAVE_KEY: emblem523.export_state(),
 		CLAN523.SAVE_KEY: clan523.export_state(),
+		CONTENT523.SAVE_KEY: content523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -7060,6 +7068,7 @@ func _load_game(quiet: bool) -> void:
 	routines.import_state(data.get(ROUTINE523.SAVE_KEY, {}))
 	emblem523.import_state(data.get(EMBLEM523.SAVE_KEY, {}))
 	clan523.import_state(data.get(CLAN523.SAVE_KEY, {}))
+	content523.import_state(data.get(CONTENT523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -11420,6 +11429,19 @@ func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
 
 func orim_current_land() -> Dictionary:
 	return _aden_play_controller().call("current_source_land")
+
+func content523_spawn_metrics() -> Dictionary:
+	return _aden_play_controller().call("source_spawn_metrics")
+
+func content523_cell_point(cell: Vector2i) -> Vector2:
+	return _aden_play_controller().call("source_cell_point", cell)
+
+## Content teleport (에스카로스 · 요정 숲 · 영지 퀘스트) into an original Land
+## with the in-Land rules `waive` names (scripts/content523/content523.gd).
+func content523_enter_land(land_id: int, bounds: Array, waive: Array) -> Dictionary:
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", land_id, bounds, waive)
+	return {"ok": moved, "reason": str(controller.get("problem"))}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

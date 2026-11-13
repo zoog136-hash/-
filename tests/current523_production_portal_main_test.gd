@@ -37,7 +37,7 @@ func run() -> void:
 	check(target.configure_verified_catalog(world.get("_current523_aden_play_controller").get("_cached_catalog"),source_sha,int(held.target_land_id)),"held target's actual source field is available")
 	check(world.field_map.source_cell_info(Vector2i(held.source_cell[0],held.source_cell[1])).walkable and target.source_cell_info(Vector2i(held.target_cell[0],held.target_cell[1])).walkable,"both held-route endpoints are actually clear; definition hold is independent of own collision")
 	target.close()
-	world.hud.call("open_settings_info");await frames()
+	world.hud.call("open_settings_info",true);await frames()
 	var panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"actual source portal Settings UI")
 	if panel==null:await finish_production();return
@@ -60,7 +60,7 @@ func run() -> void:
 	check(not world.bind_current523_source_definition_pack("/missing/replacement-definitions",DEFINITION_PIN) and not world.current523_aden_source_portal_context(1101).is_empty(),"failed production binding update retains valid definitions")
 	context=world.current523_aden_source_portal_context(1101)
 	check(context.source_travel_hold.is_empty() and not context.native_definition_contract.activation_known,"native data has no applicable held conditions; activation remains unknown")
-	world.hud.call("open_settings_info");await frames();panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
+	world.hud.call("open_settings_info",true);await frames();panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"actual manual source action UI reopens")
 	if panel==null:await finish_production();return
 	panel._refresh_source_portals();selected=false

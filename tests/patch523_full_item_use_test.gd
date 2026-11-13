@@ -72,7 +72,7 @@ func run() -> void:
 	for row: Dictionary in world.BASE508.cards().get("classes",[]): classes[int(row.source_original.ID)] = str(row.name)
 	print("ALL_USE_STAGE main_entered")
 	if not selected.is_empty():
-		world.hud.open_settings_info();await process_frame
+		world.hud.open_settings_info(true);await process_frame
 		var settings: Node = world.hud.find_child("Patch523DropSettings",true,false)
 		check(settings != null and settings.presentation_flags != null,"actual presentation flag policy UI reachable")
 		if settings != null:

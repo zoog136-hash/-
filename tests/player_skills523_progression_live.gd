@@ -138,7 +138,7 @@ func run() -> void:
 	service.progression.clocks[IDS.static]=0;inventory_before=world.inventory.duplicate(true);rng_before=world.rng.state
 	service.progression.on_normal_hit(dummy,{"id":"other-skill"})
 	check(world.inventory==inventory_before and world.rng.state==rng_before,"BySpellAttack false prevents spell/proc recursion without RNG")
-	world.hud.open_settings_info()
+	world.hud.open_settings_info(true)
 	for _frame: int in range(3):await process_frame
 	var panel: Control=world.hud.workspace.find_child("SkillProgression523Settings",true,false)
 	check(panel!=null,"actual settings window includes existing-skill policy controls")

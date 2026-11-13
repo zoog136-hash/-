@@ -41,7 +41,7 @@ func run() -> void:
 	if extent == "960x540": viewports = [Vector2i(960,540)]
 	for viewport: Vector2i in viewports:
 		root.size = viewport
-		world.hud.open_settings_info()
+		world.hud.open_settings_info(true)
 		await process_frame
 		await process_frame
 		var ui: Node = world.hud.find_child("RenewalSettings",true,false)

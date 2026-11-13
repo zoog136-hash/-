@@ -12,7 +12,7 @@ func reject_ticket(id: int,ticket: Dictionary,label: String) -> void:
 	check(movement()==moving,label+" retains queued movement")
 
 func panel_for(id: int) -> Node:
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	var panel=world.hud.workspace.find_child("Current523AdenReviewSettings",true,false)
 	check(panel!=null,"existing Settings source controls")
 	if panel==null:return null

@@ -113,7 +113,7 @@ func run() -> void:
 	var position: Vector2 = world.player.global_position
 	var raw_sha: String = FileAccess.get_sha256(raw_root.path_join("originals/Map/Aden/800a8000.s32"))
 	check(not world.open_current523_aden_play(raw_root, tile_root, {"navigation_profile":"M_RAW_U16_IS_PC_MASK"}), "unknown/native-looking passability profile rejects")
-	world.hud.call("open_settings_info")
+	world.hud.call("open_settings_info",true)
 	await frames()
 	var panel = world.hud.workspace.find_child("Current523AdenReviewSettings", true, false)
 	check(panel != null and panel.play_button.disabled, "existing Settings requires explicit local navigation selection")
