@@ -331,6 +331,8 @@ var item_use_cooldowns: Dictionary = {}
 var consumable_service: Node = null
 var quickslots: Array = []
 var ui_preferences: Dictionary = {"quickslot_pages":{}, "edited_quickslots":{}, "item_locks":{}}
+## Save marker of the legacy -> original 523 item migration (legacy_item_migration523.gd).
+var legacy_item_marker: Dictionary = {}
 var auto_item_clock: float = 0.0
 ## M81: the auto heal sweep runs on the original 0.5 s main timer (strict >, single subtraction).
 var auto_heal_sweep_elapsed: float = 0.0
@@ -6460,7 +6462,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"ammo_unequipped": ammo_unequipped,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
-		"next_item_instance_id":next_item_instance_id
+		"next_item_instance_id":next_item_instance_id,
+		"legacy_item_migration523": legacy_item_marker
 	}
 	if field_map is NativePngField:
 		data["native_png_plan_sha256"] = NATIVE_PNG.plan_hash(active_map_id)
@@ -6559,6 +6562,7 @@ func _load_game(quiet: bool) -> void:
 	# rejected without corrupting the current session or failing a smoke test.
 	var save_parser: JSON = JSON.new()
 	var original_save_bytes: PackedByteArray=FileAccess.get_file_as_bytes(save_path())
+	var loaded_save_file: String=save_path()
 	var save_hash_context:=HashingContext.new()
 	save_hash_context.start(HashingContext.HASH_SHA256);save_hash_context.update(original_save_bytes)
 	var loaded_save_sha: String=save_hash_context.finish().hex_encode()
@@ -7062,6 +7066,12 @@ func _load_game(quiet: bool) -> void:
 	next_item_instance_id = maxi(next_item_instance_id, equipment_collections.next_safe_id())
 	for death_entry: Dictionary in death_recovery.state.records:
 		if not death_entry.item.is_empty() and str(death_entry.item.id).is_valid_int(): next_item_instance_id = maxi(next_item_instance_id,int(death_entry.item.id)+1)
+	# Pre-November items -> the original 523 item of exactly the same name
+	# (user decision 2026-11-13), before the physical-record sync below.
+	var legacy_items: Dictionary=preload("res://scripts/loot/legacy_item_migration523.gd").run(self,data.get("legacy_item_migration523",{}),loaded_save_file,original_save_bytes)
+	legacy_item_marker=(legacy_items.get("marker",{}) as Dictionary).duplicate(true)
+	if not legacy_items.get("ok",false):hud.append_log("이전 아이템 523 교체 보류 · %s · 기존 아이템 보존" % str(legacy_items.get("error","")))
+	elif legacy_items.get("changed",false):hud.append_log("이전 아이템 %d종을 같은 이름의 523 원본으로 교체 · 이름이 같은 원본이 없는 %d종은 그대로 보존" % [int(legacy_item_marker.migrated_count),int(legacy_item_marker.unmatched_count)])
 	_migrate_patch523_physical_records()
 	_sync_item_instances()
 	_normalize_equipment_slots()
