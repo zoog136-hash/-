@@ -17,6 +17,7 @@
 extends Node2D
 ## LayoutReader's supplied background fields; no replacement artwork.
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
+const DESTINATION_COPY=preload("res://scripts/ui/original_ui/source_destination_copy.gd")
 var _options: Dictionary={}
 var _color: Polygon2D
 var _color_copy: BackBufferCopy
@@ -28,8 +29,7 @@ func configure(pack: RefCounted, options: Dictionary, extent: Vector2) -> Dictio
 	var kind: int=int(options.colorType)
 	if kind not in [0,1]:return {"ok":false,"error":"unknown_original_panel_color_type"}
 	if kind!=0:
-		var copy:=BackBufferCopy.new()
-		copy.copy_mode=BackBufferCopy.COPY_MODE_VIEWPORT
+		var copy:=DESTINATION_COPY.new()
 		copy.z_index=-2
 		_color_copy=copy
 		add_child(copy)
@@ -38,6 +38,7 @@ func configure(pack: RefCounted, options: Dictionary, extent: Vector2) -> Dictio
 		_color.z_index=-2
 		_color.material=layer_material()
 		add_child(_color)
+		copy.track(_color)
 	var reference: Dictionary=options.backGroundImageData
 	if not str(reference.get("path","")).is_empty():
 		var texture: Texture2D=pack.texture(reference,true)
@@ -91,6 +92,7 @@ void fragment() {
     COLOR = clamp(COLOR, vec4(0.0), vec4(1.0));
 }
 """
+		DESTINATION_COPY.mark_copy_free(shader)
 	_layer_material=ShaderMaterial.new()
 	_layer_material.shader=shader
 	return _layer_material

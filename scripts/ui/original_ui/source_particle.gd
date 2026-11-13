@@ -3,6 +3,7 @@ extends Node2D
 const STATE=preload("res://scripts/ui/original_ui/source_particle_state.gd")
 const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
+const DESTINATION_COPY=preload("res://scripts/ui/original_ui/source_destination_copy.gd")
 var state=STATE.new()
 var original_texture: Texture2D
 var original_member: String=""
@@ -33,6 +34,18 @@ func configure(pack: RefCounted, options: Dictionary, source_random: Callable=Ca
 func _process(delta: float) -> void:
 	advance(delta)
 
+func _enter_tree() -> void:
+	# One draw hook per emitter, not one signal subscription per particle.
+	if not RenderingServer.frame_pre_draw.is_connected(_sync_destination_copies):
+		RenderingServer.frame_pre_draw.connect(_sync_destination_copies)
+
+func _exit_tree() -> void:
+	if RenderingServer.frame_pre_draw.is_connected(_sync_destination_copies):
+		RenderingServer.frame_pre_draw.disconnect(_sync_destination_copies)
+
+func _sync_destination_copies() -> void:
+	for copy: BackBufferCopy in _copies: copy.call("_sync_copy")
+
 func advance(delta: float) -> void:
 	if not _configured:return
 	state.step(delta)
@@ -41,14 +54,14 @@ func advance(delta: float) -> void:
 func _sync_quads() -> void:
 	if not is_visible_in_tree():return
 	while _quads.size()<state.particles.size():
-		var copy:=BackBufferCopy.new()
-		copy.copy_mode=BackBufferCopy.COPY_MODE_VIEWPORT
+		var copy:=DESTINATION_COPY.new(false)
 		add_child(copy);_copies.append(copy)
 		var quad:=Sprite2D.new()
 		quad.texture=original_texture
 		quad.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 		quad.material=BLEND.material(original_texture,blend_pair,true)
 		add_child(quad);_quads.append(quad)
+		copy.track(quad)
 	for index: int in range(_quads.size()):
 		var shown: bool=index<state.particles.size()
 		_quads[index].visible=shown;_copies[index].visible=shown

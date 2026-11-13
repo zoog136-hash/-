@@ -23,7 +23,7 @@ const LABELS: Dictionary = {
 	"map_renderer":"지도 그리기", "map_objects":"맵 오브젝트", "monsterbook":"몬스터북",
 	"companion":"동료", "buffs":"버프", "dungeon":"던전", "items":"아이템 자동 사용",
 	"hud_main":"원작 HUD", "npcs":"NPC",
-	"other":"그리기·엔진",
+	"other":"미계측 잔여",
 }
 
 static var _dir: String = "user://"
@@ -42,8 +42,25 @@ static var _dirty: bool = false
 static var _last_flush: int = 0
 static var _started: bool = false
 static var _previous: Dictionary = {}
-static var enabled: bool = true
+static var enabled: bool = true:
+	set(value):
+		if enabled == value: return
+		enabled = value
+		# Disabled time/callbacks must not leak into the next measured interval.
+		_last_frame = 0
+		_clear_pending()
 static var _nested: int = 0
+## Callback-delivery boundaries, not GPU timestamps. One fixed-size sample per
+## probe interval; separate-thread post callbacks can belong to an earlier draw.
+static var _draw_delivery: String = "unknown"
+static var _pre_draw_usec: int = 0
+static var _post_draw_usec: int = 0
+static var _pre_draw_count: int = 0
+static var _post_draw_count: int = 0
+## Work done by the previous probe/flush belongs to the next raw wall interval.
+## It never enters exclusive sections or creates another diagnostic event.
+static var _logger_usec: int = 0
+static var _inside_probe: bool = false
 
 static func now() -> int:
 	return Time.get_ticks_usec()
@@ -89,18 +106,84 @@ static func add_self(section: String, started_usec: int, nested_before: int) -> 
 static func frame(map_id: String = "") -> void:
 	if not enabled: return
 	var at: int = Time.get_ticks_usec()
+	_close_frame(at, map_id)
+	_logger_usec += maxi(0, Time.get_ticks_usec() - at)
+
+static func _close_frame(at: int, map_id: String) -> void:
+	_inside_probe = true
 	if _last_frame > 0:
 		_frames += 1
 		var total: int = at - _last_frame
-		if total >= THRESHOLD_USEC: _record(total, map_id)
+		if total >= THRESHOLD_USEC: _record(total, map_id, at)
 	_last_frame = at
+	_clear_pending()
+	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
+	_inside_probe = false
+
+static func _clear_pending() -> void:
 	_sections.clear()
 	_details.clear()
 	_counters.clear()
 	_slow_spawn = {}
-	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
+	_logger_usec = 0
+	_clear_draw_callbacks()
 
-static func _record(total: int, map_id: String) -> void:
+static func _clear_draw_callbacks() -> void:
+	_pre_draw_usec = 0
+	_post_draw_usec = 0
+	_pre_draw_count = 0
+	_post_draw_count = 0
+
+## Called from the main-thread probe, using the actual RenderingServer thread
+## identity instead of a project setting which a command-line flag can override.
+static func configure_draw_delivery(synchronous: bool) -> void:
+	_draw_delivery = "main_thread" if synchronous else "separate_thread"
+	_clear_draw_callbacks()
+
+static func draw_pre() -> void:
+	_mark_draw(true, Time.get_ticks_usec())
+
+static func draw_post() -> void:
+	_mark_draw(false, Time.get_ticks_usec())
+
+static func _mark_draw(is_pre: bool, at: int) -> void:
+	if not enabled or _last_frame <= 0: return
+	if is_pre:
+		_pre_draw_count += 1
+		if _pre_draw_count == 1: _pre_draw_usec = at
+	else:
+		_post_draw_count += 1
+		if _post_draw_count == 1: _post_draw_usec = at
+
+static func _draw_sample(at: int) -> Dictionary:
+	var result: Dictionary = {
+		"delivery":_draw_delivery, "probe_usec":_last_frame, "next_probe_usec":at,
+		"pre_usec":_pre_draw_usec, "post_usec":_post_draw_usec,
+		"pre_count":_pre_draw_count, "post_count":_post_draw_count,
+	}
+	if _pre_draw_count == 0 and _post_draw_count == 0:
+		result["status"] = "no_draw_callbacks"
+	elif _pre_draw_count > 1 or _post_draw_count > 1:
+		result["status"] = "multiple_callbacks"
+	elif _pre_draw_count != 1 or _post_draw_count != 1:
+		result["status"] = "incomplete_callbacks"
+	elif not (_last_frame <= _pre_draw_usec and _pre_draw_usec <= _post_draw_usec and _post_draw_usec <= at):
+		result["status"] = "out_of_order"
+	elif _draw_delivery != "main_thread":
+		result["status"] = "threaded_delivery" if _draw_delivery == "separate_thread" else "unknown_delivery"
+	else:
+		result["status"] = "ordered_synchronous_pair"
+		# Inclusive wall intervals; never add these to the section totals. CPU
+		# _draw/deferred work may precede pre_draw. Swap/wait and other callback
+		# listeners may lie between the two signals, so this is not GPU time.
+		result["wall_usec"] = {
+			"probe_to_pre":_pre_draw_usec - _last_frame,
+			"pre_to_post":_post_draw_usec - _pre_draw_usec,
+			"post_to_probe":at - _post_draw_usec,
+		}
+	return result
+
+static func _record(total: int, map_id: String, at: int) -> void:
 	_hitches += 1
 	var parts: Array = []
 	var known: int = 0
@@ -112,6 +195,7 @@ static func _record(total: int, map_id: String) -> void:
 	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var entry: Dictionary = {"ms":total / 1000, "sections":parts.slice(0, 6), "map":map_id,
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
+	entry["diagnostics"] = {"logger_usec":_logger_usec, "draw_callbacks":_draw_sample(at)}
 	if not _build.is_empty(): entry["build"] = _build.duplicate()
 	var details: Array = []
 	for operation: String in _details:
@@ -135,7 +219,15 @@ static func summary() -> Dictionary:
 		"worst":_worst.duplicate(true)}
 
 static func flush() -> void:
-	_last_flush = Time.get_ticks_usec()
+	var at: int = Time.get_ticks_usec()
+	_flush_record(at)
+	# frame() already measures its whole bookkeeping, including automatic
+	# flush. A pause/focus flush outside that call is accounted for separately.
+	if enabled and not _inside_probe and _last_frame > 0:
+		_logger_usec += maxi(0, Time.get_ticks_usec() - at)
+
+static func _flush_record(at: int) -> void:
+	_last_flush = at
 	_dirty = false
 	var path: String = _dir.path_join(FILE_NAME)
 	var temporary: String = path + ".part"
@@ -202,6 +294,12 @@ static func previous_line() -> String:
 		var labels: PackedStringArray = []
 		for part: Array in phases.slice(0,2): labels.append("%s %dms" % [part[0],int(part[1])/1000])
 		line += " · 단일 NPC %d setup %s" % [int(spawn.get("npc",-1)),", ".join(labels)]
+	var diagnostics: Variant = top.get("diagnostics", {})
+	if diagnostics is Dictionary:
+		var callbacks: Variant = diagnostics.get("draw_callbacks", {})
+		if callbacks is Dictionary and callbacks.get("status") == "ordered_synchronous_pair" and callbacks.get("wall_usec") is Dictionary:
+			var wall: Dictionary = callbacks.wall_usec
+			line += " · 콜백 구간 %d/%d/%dms(전/사이/후)" % [int(wall.get("probe_to_pre",0))/1000,int(wall.get("pre_to_post",0))/1000,int(wall.get("post_to_probe",0))/1000]
 	return line
 
 static func reset_for_test(directory: String) -> void:
@@ -221,7 +319,21 @@ static func reset_for_test(directory: String) -> void:
 	_started = false
 	_previous = {}
 	enabled = true
+	_draw_delivery = "unknown"
+	_logger_usec = 0
+	_inside_probe = false
+	_clear_draw_callbacks()
 
 ## Test hook: pretend the previous frame started `usec_ago` microseconds ago.
 static func backdate_frame_for_test(usec_ago: int) -> void:
 	_last_frame = Time.get_ticks_usec() - usec_ago
+
+## Deterministic boundary/overhead fixtures, not benchmark timing. These use
+## the production close path without introducing an injected clock hot path.
+static func frame_at_for_test(at: int, map_id: String = "", logger_usec: int = 0) -> void:
+	if not enabled: return
+	_close_frame(at, map_id)
+	_logger_usec += maxi(0, logger_usec)
+
+static func draw_at_for_test(is_pre: bool, at: int) -> void:
+	_mark_draw(is_pre, at)

@@ -1,6 +1,7 @@
 extends RefCounted
+const DESTINATION_COPY = preload("res://scripts/ui/original_ui/source_destination_copy.gd")
 ## Original GL blend factors evaluated against a copied destination framebuffer.
-## Each Sprite must have its own preceding BackBufferCopy in canvas draw order.
+## Exact shaders need their own preceding copy; generated fixed shaders do not.
 const PAIRS=["770:1","1:771","1:1","770:771","1:769","1:772","774:1","772:771","772:1","770:772","1:770","0:769","774:772","774:771","772:769"]
 const FACTORS={"0":"vec4(0.0)","1":"vec4(1.0)","769":"(vec4(1.0)-source)","770":"vec4(source.a)","771":"vec4(1.0-source.a)","772":"vec4(destination.a)","774":"destination"}
 static var _cache: Dictionary={}
@@ -22,6 +23,7 @@ static func material(texture: Texture2D, pair: String, particle_vertex_color: bo
 	var shader:=Shader.new()
 	if not screen_copy_available:
 		shader.code=_fixed_code(pair)
+		DESTINATION_COPY.mark_copy_free(shader)
 	else: shader.code="""shader_type canvas_item;
 render_mode unshaded, blend_disabled;
 uniform sampler2D original_destination : hint_screen_texture, repeat_disable, filter_nearest;
