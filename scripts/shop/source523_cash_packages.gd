@@ -258,7 +258,9 @@ static func native_record(world, item_id: int) -> Dictionary:
 	var base: Dictionary = definition.get("native_record", {})
 	if base.is_empty() or definition.get("excluded") == true: return {}
 	var record: Dictionary = DROPS.variant_item(base, 1)
-	if record.is_empty() or DROPS.equipment(record) or NATIVE_STACK.supply_profile(record).is_empty(): return {}
+	# Storage-only stacks (no use rule) keep this box's existing plain leaf
+	# owner below, so saved box contents keep their records after a reload.
+	if record.is_empty() or DROPS.equipment(record) or NATIVE_STACK.supply_profile(record).get("kind", "") in ["", "storage"]: return {}
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
