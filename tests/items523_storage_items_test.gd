@@ -21,6 +21,10 @@ const MATERIAL := 722
 const TEST_MARKED := 122554
 ## [화폐] 변신 제작 코인: an existing wallet keeps its owner.
 const WALLET := 3242
+## [이벤트][2주년] 2주년 코인 (미사용): unused marker (user decision 2026-11-13).
+const UNUSED := 130531
+## User decision 2026-11-13: original coin rows add to the existing wallets.
+const COINS := {3242:"변신 제작 코인",3252:"마법인형 제작 코인",3631:"명예 코인",246058:"성물 제작 코인"}
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -38,7 +42,11 @@ func rules() -> void:
 	check(STACK.storage_exclusion({"ID":1.0,"Name":"[테스트] 버프 아이템 지급"})=="source_test_name_marker", "'[테스트]' is a test marker")
 	check(STACK.storage_exclusion({"ID":1.0,"Name":"[BM] 빛나는 드래곤의 용옥 - test용"})=="source_test_name_marker", "'test용' is a test marker")
 	check(STACK.storage_exclusion({"ID":1.0,"Name":"[더미] 아이템"})=="source_dummy_declaration", "'[더미]' is the original dummy declaration")
+	check(STACK.storage_exclusion({"ID":1.0,"Name":"[이벤트] 2주년 코인 (미사용)"})=="source_unused_name_marker", "'미사용' is excluded (user decision)")
+	check(STACK.storage_exclusion({"ID":1.0,"Name":"[주문서-이동] 혈맹 귀환 주문서 (사용안함)"})=="source_unused_name_marker", "'사용안함' is excluded (user decision)")
+	check(STACK.storage_exclusion({"ID":1.0,"Name":"[혈맹] 혈맹 귀환 주문서"}).is_empty(), "'[혈맹' rows stay storage stacks (user decision)")
 	check(STACK.storage_exclusion({"ID":1.0,"Name":"[재료] 금빛 훈장"}).is_empty(), "an ordinary name is not excluded")
+	check(INVENTORY.coin_wallet(26).is_empty() and INVENTORY.coin_wallet(122554).is_empty(), "only the four coin rows are coin wallets")
 
 func record(id: int) -> Dictionary:
 	return D.variant_item(D.definition_id(str(id)).get("native_record",{}),1)
@@ -50,6 +58,9 @@ func table() -> void:
 		check(STACK.profile(item).is_empty() and STACK.supply_profile(item).get("kind")=="storage", "#%d has no use owner and is a storage stack" % id)
 	check(STACK.supply_profile(record(TEST_MARKED)).is_empty(), "#%d (test marker) stays ungranted" % TEST_MARKED)
 	check(STACK.storage_profile(record(WALLET)).is_empty(), "#%d wallet is not turned into a storage stack" % WALLET)
+	check(STACK.supply_profile(record(UNUSED)).is_empty(), "#%d (미사용) stays ungranted" % UNUSED)
+	for id: int in COINS:
+		check(INVENTORY.coin_wallet(id)==COINS[id], "#%d is the %s wallet row" % [id,COINS[id]])
 
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -74,11 +85,29 @@ func runtime() -> void:
 	check(used.get("handled",false) and not used.get("ok",true) and str(used.get("reason","")).contains("보관용") and int(world.inventory.get(stone,0))==3, "using it refuses and keeps all 3 (no invented effect)")
 	var refused: Dictionary = INVENTORY.stage(world,[{"item_class_id":TEST_MARKED,"amount":1,"bless_raw":1,"enchant":0}],origin)
 	check(not refused.get("ok",true), "a test-marked row is still refused")
+	var coin_before: Dictionary = {}
+	var coin_grants: Array = []
+	for id: int in COINS:
+		coin_before[id] = int(world.inventory.get(COINS[id],0))
+		coin_grants.append({"item_class_id":id,"amount":id%7+1,"bless_raw":1,"enchant":0})
+	var coins: Dictionary = INVENTORY.stage(world,coin_grants,origin)
+	if check(coins.get("ok",false), "coin reward rows: %s" % str(coins.get("error",""))):
+		check(world._save_game(true,coins.overrides)==OK, "coin grant save")
+		world.inventory = coins.overrides.inventory; world.item_instances = coins.overrides.item_instances
+		for id: int in COINS: check(int(world.inventory.get(COINS[id],0))==int(coin_before[id])+id%7+1, "#%d adds %d to the %s wallet" % [id,id%7+1,COINS[id]])
+	check(not INVENTORY.stage(world,[{"item_class_id":3242,"amount":1,"bless_raw":2,"enchant":0}],origin).get("ok",true), "a blessed coin row is refused")
+	check(not INVENTORY.stage(world,[{"item_class_id":UNUSED,"amount":1,"bless_raw":1,"enchant":0}],origin).get("ok",true), "an unused-marked row is refused")
+	var expected_coins: Dictionary = {}
+	for id: int in COINS: expected_coins[COINS[id]] = int(world.inventory.get(COINS[id],0))
 	check(world._save_game(true)==OK, "save")
 	world.inventory.erase(stone); world.inventory.erase(material); world.item_instances = {}
+	for name_value: String in expected_coins: world.inventory.erase(name_value)
 	world._load_game(true)
-	evidence["reload"] = {"stone":int(world.inventory.get(stone,0)),"material":int(world.inventory.get(material,0))}
+	var reloaded_coins: Dictionary = {}
+	for name_value: String in expected_coins: reloaded_coins[name_value] = int(world.inventory.get(name_value,0))
+	evidence["reload"] = {"stone":int(world.inventory.get(stone,0)),"material":int(world.inventory.get(material,0)),"coins":reloaded_coins}
 	check(int(world.inventory.get(stone,0))==3 and int(world.inventory.get(material,0))==2, "both stacks survive reload")
+	check(reloaded_coins==expected_coins, "coin wallets survive reload %s" % str(reloaded_coins))
 	var owned: int = 0
 	for uid: String in world.item_instances:
 		if not STACK.proof(world,uid).is_empty(): owned += 1

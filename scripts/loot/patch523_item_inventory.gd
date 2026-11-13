@@ -5,6 +5,19 @@ const SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const MAX_EXACT_JSON_INTEGER: int = 9007199254740991
 
+## User decision 2026-11-13: original reward rows of the crafting coins and the
+## honor coin add to the existing coin wallets (inventory key = wallet name),
+## the same wallets the expedition bridge already credits. The original row
+## must still be this exact non-test Currency row of that wallet.
+const COIN_WALLETS={3242:"변신 제작 코인",3252:"마법인형 제작 코인",3631:"명예 코인",246058:"성물 제작 코인"}
+static func coin_wallet(id: int) -> String:
+	if not COIN_WALLETS.has(id):return ""
+	var raw: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("ItemClass",id)
+	if raw.get("TestItem")!=false or int(raw.get("CategoryID",0))!=122 or int(raw.get("GradeID",0))!=1:return ""
+	var bridge: Script=load("res://scripts/expedition/reward_bridge.gd")
+	var label: String=preload("res://scripts/loot/currency_drops.gd").canonical_name(str(bridge.call("untagged",str(raw.get("Name","")))))
+	return str(COIN_WALLETS[id]) if label==COIN_WALLETS[id] else ""
+
 static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 	if grants.is_empty() or origin.is_empty(): return {"ok":false,"error":"원본 지급 출처·명세 필요"}
 	var inventory: Dictionary = world.inventory.duplicate(true)
@@ -16,6 +29,13 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or absf(float(value)) > MAX_EXACT_JSON_INTEGER: return {"ok":false,"error":"원본 지급 수치 형식 확인 실패"}
 		var id: String = str(int(grant.get("item_class_id",-1)))
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(id)).is_empty():return {"ok":false,"error":"원본 더미 선언 아이템은 신규 지급에서 제외 · 기존 소유 보존"}
+		var coin: String=coin_wallet(int(id))
+		if not coin.is_empty():
+			if float(grant.get("item_class_id",-1))!=int(id) or float(grant.get("amount",0))!=floorf(float(grant.get("amount",0))) or int(grant.get("amount",0))<1 or float(grant.get("bless_raw",0))!=1 or float(grant.get("enchant",-1))!=0:return {"ok":false,"error":"원본 코인 지급 수량·일반 축복·강화 조건 불일치"}
+			var coin_amount: int=int(grant.amount);var coin_before: Variant=inventory.get(coin,0)
+			if not D._source_integer(coin_before) or int(coin_before)<0 or int(coin_before)>MAX_EXACT_JSON_INTEGER-coin_amount:return {"ok":false,"error":"원본 코인 지급 후 수량 정수 범위 초과 · 기존 보유 보존"}
+			inventory[coin]=int(coin_before)+coin_amount
+			continue
 		if int(id) in SUPPLY.IDS:
 			var amount_value: Variant=grant.get("amount",0)
 			if float(grant.get("item_class_id",-1))!=int(id) or float(amount_value)!=floorf(float(amount_value)) or int(amount_value)<1 or grant.get("bless_raw")!=1 or grant.get("enchant")!=0:return {"ok":false,"error":"새 원문 각성 공급 수량·일반 축복·강화 조건 불일치"}

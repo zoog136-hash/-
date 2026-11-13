@@ -108,7 +108,8 @@ func refresh() -> void:
 	var service=world.tj_coupons.core
 	for id: String in service.definitions.get("coupons",{}):
 		var row: Dictionary=service.definitions.coupons[id]
-		coupons.add_item("%s · 보유 %d" % [str(row.item.Name),int(service.state.coupons.get(id,0))])
+		var bag: int=world.tj_coupons.bag_count(id)
+		coupons.add_item("%s · 보유 %d%s" % [str(row.item.Name),int(service.state.coupons.get(id,0))+bag," (가방 %d)" % bag if bag>0 else ""])
 		coupons.set_item_metadata(coupons.item_count-1,id)
 		if SourceImages.selected():
 			_row_image(coupons, coupons.item_count - 1, SourceImages.describe_item_class_row(row.item), "ItemClass", row.item.get("ID"), "IconID")
