@@ -173,6 +173,8 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 		waive=CONTENT_ENTRY_WAIVE # A saved position inside an Orim stage Land.
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/content523/content523.gd").content_land_ids().has(land_id):
 		waive=preload("res://scripts/content523/content523.gd").REOPEN_WAIVE # A saved position inside an Escaros/elf forest/territory quest Land.
+	if waive.is_empty() and land_id==_resume_land and not result.get("source_travel_holds",[]).is_empty():
+		waive=RESUME_WAIVE # The character's own saved spot: resuming there is not a teleport arrival.
 	if not waive.is_empty():
 		# A content teleport (enter_source_land) names the in-Land rules that
 		# do not gate its own entry; every other hold is kept. A named table
@@ -977,6 +979,21 @@ func _prepare_generic_source_travel(id: int,world: Node,save_changes: Dictionary
 ## Same verified catalog/field/renderer path as a portal hop; no fee here.
 var _content_entry_land: int=-1
 var _content_entry_waive: Array=[]
+## Resuming at the character's saved spot in this Land (see resume_saved_spot).
+var _resume_land: int=-1
+## A saved spot inside a "no teleporting in" Territory (Aden hunting grounds
+## have them) must still reopen: the character is standing there, it does
+## not arrive by teleport. Every other hold is kept.
+const RESUME_WAIVE := ["NoTeleportCome"]
+## Source cell of Aden town (the return destination), for resuming a
+## character whose saved spot cannot reopen.
+static func aden_town_source_position() -> Array:
+	return [float(ADEN_RETURN_LOCATION.X)+0.5,float(ADEN_RETURN_LOCATION.Y)+0.5]
+
+## Set before opening play mode at a character's saved spot (land id, or -1).
+func resume_saved_spot(land_id: int) -> void:
+	_resume_land=land_id
+
 ## In-Land restrictions that do not gate a content teleport into that Land.
 const CONTENT_ENTRY_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePushOnDie","NpcBuff","NoTeleportCome"]
 
