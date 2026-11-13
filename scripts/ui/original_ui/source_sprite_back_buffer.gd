@@ -1,5 +1,7 @@
 extends BackBufferCopy
-## Keep the original framebuffer shader and draw order. Only limit its copy
+const DESTINATION_COPY = preload("res://scripts/ui/original_ui/source_destination_copy.gd")
+## Keep the active shader and draw order; known fixed shaders need no copy.
+## For exact/unknown shaders, only limit the copy
 ## to the Sprite's screen pixels on the exact Compatibility build checked by
 ## the GL differential test. This does not shrink the viewport backbuffer.
 ##
@@ -60,6 +62,9 @@ func _sync_copy() -> void:
 		_set_mode(COPY_MODE_VIEWPORT)
 		return
 	if sprite.texture == null or not sprite.is_visible_in_tree():
+		_set_mode(COPY_MODE_DISABLED)
+		return
+	if not DESTINATION_COPY.requires_copy(sprite):
 		_set_mode(COPY_MODE_DISABLED)
 		return
 	if not _runtime_supported or get_tree().is_physics_interpolation_enabled():

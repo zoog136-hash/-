@@ -70,6 +70,7 @@ CHECKS = [
     ('source523_texture_cache_test', []),
     ('frame_hot_paths_test', []),
     ('frame_hitch_log_test', []),
+    ('frame_hitch_draw_phases_test', []),
     ('spawn_setup_trace_test', []),
     ('boss_catalog_admission_test', []),
     ('original_ui_bake_key_test', []),
@@ -91,6 +92,7 @@ CHECKS = [
     ('original_ui_menu_retirement_test', []),
     ('original_ui_sprite_copy_letterbox_test', []),
     ('original_ui_android_blend_test', []),
+    ('source_ui_copy_policy_test', []),
     ('source523_buff_evidence_mode_test', []),
     ('original_ui_quest_preparation_test', []),
     ('original_ui_node_scope_test', []),
@@ -320,6 +322,7 @@ def stage(root: Path, destination: Path) -> dict:
                     for p in (root / folder).rglob('*') if p.is_file())
     selected.update('tests/' + name + '.gd' for name, _ in CHECKS)
     selected.add('tests/qa_class_selection.gd')
+    selected.add('tests/source_ui_copy_policy_gl_test.gd')
     # Code/scenes are graph roots. Data is copied to retain dynamic catalog
     # access, but only catalogs referenced by code seed additional art.
     queue = [p for p in selected if not p.startswith('data/')]
@@ -521,6 +524,7 @@ def main():
                       'spawn_setup_trace_test':'SPAWN_SETUP_TRACE_RESULT',
                       'boss_catalog_admission_test':'BOSS_CATALOG_ADMISSION_RESULT',
                       'frame_hitch_log_test':'FRAME_HITCH_LOG_RESULT',
+                      'frame_hitch_draw_phases_test':'FRAME_HITCH_DRAW_PHASES_RESULT',
                       'frame_hot_paths_test':'FRAME_HOT_PATHS_RESULT',
                       'bounded_weak_lru_test':'BOUNDED_WEAK_LRU_RESULT',
                       'static_cache_compaction_test':'STATIC_CACHE_COMPACTION_RESULT',
@@ -538,6 +542,7 @@ def main():
                       'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
                       'original_ui_sprite_copy_letterbox_test':'ORIGINAL_UI_SPRITE_COPY_LETTERBOX_RESULT',
                       'original_ui_android_blend_test':'ORIGINAL_UI_ANDROID_BLEND_RESULT',
+                      'source_ui_copy_policy_test':'SOURCE_UI_COPY_POLICY_RESULT',
                       'source523_buff_evidence_mode_test':'SOURCE523_BUFF_EVIDENCE_MODE_RESULT',
                       'original_ui_quest_preparation_test':'ORIGINAL_UI_QUEST_PREPARATION_RESULT',
                       'original_ui_node_scope_test':'ORIGINAL_UI_NODE_SCOPE_RESULT',
