@@ -195,6 +195,8 @@ CHECKS = [
     ('orim523_test', []),
     ('minigame523_scope_test', []),
     ('reference_sp2_prepared_bank_test', []),
+    ('reference_sp2_node_layout_test', []),
+    ('source_effect_validation_once_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -635,6 +637,8 @@ def main():
                       'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT',
                       'skill523_engine_test':'SKILL523_ENGINE_RESULT',
                       'orim523_test':'ORIM523_RESULT',
+                      'reference_sp2_node_layout_test':'REFERENCE_SP2_NODE_LAYOUT_RESULT',
+                      'source_effect_validation_once_test':'SOURCE_EFFECT_VALIDATION_ONCE_RESULT',
                       'reference_sp2_prepared_bank_test':'REFERENCE_SP2_PREPARED_BANK_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)

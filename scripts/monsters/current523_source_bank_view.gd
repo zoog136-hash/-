@@ -99,8 +99,9 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 		hide()
 		return
 	last_source_frame = _preview.last_source_frame
-	var total: float = duration(_role)
-	if _role == "attack" and (total <= 0.0 or _clock >= total): _source_attack = false
+	if _role == "attack":
+		var total: float = duration(_role)
+		if total <= 0.0 or _clock >= total: _source_attack = false
 
 func source_frame_status() -> Dictionary:
 	return _preview.reference_source_frame_status() if is_instance_valid(_preview) else {}
