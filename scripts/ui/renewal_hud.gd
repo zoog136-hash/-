@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -993,6 +993,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_skill_window"):original_main_ui_controller.close_skill_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_production_window"):original_main_ui_controller.close_production_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
@@ -1335,9 +1336,36 @@ func open_npc_teleport() -> void:
 func open_crafting() -> void:
 	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
 	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
+	if _open_original_production(): return
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+## The original 523 ProductionScene (source_main_production_window) over the
+## same recipes; false -> the TWILIGHT crafting screen opens (reported).
+func _open_original_production() -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_production_window"): return false
+	var native: Dictionary = original_main_ui_controller.try_open_production_window(get_parent())
+	original_main_ui_status["production_window"] = native
+	if not native.get("handled",false):
+		_report_original_fallback("제작",native)
+		return false
+	if pointer_transfer != null: pointer_transfer.cancel()
+	workspace.hide()
+	_sync_screen_focus()
+	# A pending recipe (획득처 → 제작) is selected in the original window.
+	if not CraftUI.pending_focus.is_empty():
+		var target: String = CraftUI.pending_focus
+		CraftUI.pending_focus = ""
+		var focused: Dictionary = original_main_ui_controller.production_window().select_recipe(target)
+		CraftUI.last_focus = {"recipe_id":target,"focused":focused.get("ok",false) and original_main_ui_controller.production_window().selected()==target}
+	return true
+
+## A craft (or any bag change) refreshes the open original 제작 window.
+func refresh_inventory(items: Dictionary) -> void:
+	super.refresh_inventory(items)
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open():
+		original_main_ui_status["production_window"] = original_main_ui_controller.refresh_production_window()
 
 func open_patch523_equipment_info() -> void:
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
