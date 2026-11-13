@@ -16,8 +16,9 @@ The layout equations, codepoint/channel validation, kerning, order, textures, PM
 
 - Initial three glyphs plus twelve same-length updates: layer constructions **13 to 1**, sprite constructions **39 to 3**, private material creations **39 to 3**. These are constructor counts, not process RAM or Android FPS.
 - Headless: 71 checks. Growth/shrink/empty text, weak-reference release of surplus nodes and materials, partial-plan failure atomicity, public replacement, property restoration and conservative fallback are covered.
-- Compatibility OpenGL: 40 complete RGBA comparisons over PMA/non-PMA, transparent/opaque viewports, changing lengths, color/material changes, invalid page/recovery and styled-layer fallback.
+- Compatibility OpenGL: 159 assertions and 40 complete RGBA comparisons over PMA/non-PMA, transparent/opaque viewports, changing lengths, color/material changes, invalid page/recovery and styled-layer fallback.
 - Optional synthetic CPU-only sample: four alternating-order batches of 200 updates, eight glyphs/update, 4,100-entry font descriptor. Old microseconds `[35472,31581,36536,33590]`; new `[14868,14401,14593,15938]`. Rendering delivery is outside the timed interval. No timing threshold is imposed in CI; these Linux samples are neither Android measurements nor a full frame benchmark.
+- The prior eight GL groups also pass, including bitmap ownership (32 RGBA comparisons), SP2 compositor, original UI copy/blend, map layers/refresh and material display. The merged panel refresh differential also passes 75 RGBA comparisons.
 - Existing font ownership 51; UI pack memory lifecycle 210; HUD fields 6; inventory snapshot 983; quest text 30; hitch logging 26 and draw phases 205 pass. Main save/reload 33 checks pass with installed-original-map traversal unavailable; no installed original pack is claimed.
 - Python staging graph: 14 tests. Available resource check `check_no_legacy_resources.py --root .`: 20 tracked resources pass. Historical `tools/check_resource_integrity.py` required by AGENTS is absent in current repository. No resource data is added or removed.
 
