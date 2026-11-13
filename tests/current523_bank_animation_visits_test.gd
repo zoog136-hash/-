@@ -53,12 +53,16 @@ func compare(a: Dictionary,b: Dictionary,label: String) -> void:
 		await process_frame;await RenderingServer.frame_post_draw
 		pixel_comparisons+=1;check(fixture.pixels(a.vp)==fixture.pixels(b.vp),label+" complete RGBA")
 func count_ticks(owner: Current,iterations: int) -> Dictionary:
-	HITCH.reset_for_test("user://map_animation_visits_test");HITCH.frame("synthetic_ticks")
+	# Operation counts do not depend on process uptime. Backdating by 500ms
+	# can produce a negative start on fast runners and record no frame.
+	HITCH.reset_for_test("user://map_animation_visits_test");HITCH.frame_at_for_test(1000000,"synthetic_ticks")
 	var trace: bool=owner.trace_calls;owner.trace_calls=false
 	for i: int in iterations:owner._process_step(1.0/60.0)
 	owner.trace_calls=trace
-	HITCH.backdate_frame_for_test(500000);HITCH.frame("synthetic_ticks")
-	return HITCH.summary().worst[0].get("counters",{})
+	HITCH.frame_at_for_test(1500000,"synthetic_ticks")
+	var summary: Dictionary=HITCH.summary()
+	check(summary.hitches==1 and summary.worst.size()==1 and summary.worst[0].ms==500,"deterministic count probe records one 500ms frame")
+	return summary.worst[0].get("counters",{})
 func run() -> void:
 	render="--render" in OS.get_cmdline_user_args()
 	if render and (DisplayServer.get_name()=="headless" or RenderingServer.get_current_rendering_method()!="gl_compatibility"):check(false,"requires Compatibility GL");quit(1);return
