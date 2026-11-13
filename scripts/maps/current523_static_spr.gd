@@ -547,6 +547,12 @@ func _update_draws() -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	var started: int=FRAME_HITCH.now()
+	var nested: int=FRAME_HITCH.nested()
+	_draw_step()
+	FRAME_HITCH.add_self("map_object_draw",started,nested)
+
+func _draw_step() -> void:
 	var renderer: Node=get_parent()
 	var observe: bool=USAGE.actual_main(renderer)
 	var view: Rect2=(renderer.call("_view_rect") as Rect2).grow(-64.0) if observe else Rect2()

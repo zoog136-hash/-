@@ -23,6 +23,7 @@ const LABELS: Dictionary = {
 	"map_renderer":"지도 그리기", "map_objects":"맵 오브젝트", "monsterbook":"몬스터북",
 	"companion":"동료", "buffs":"버프", "dungeon":"던전", "items":"아이템 자동 사용",
 	"hud_main":"원작 HUD", "npcs":"NPC",
+	"map_floor_draw":"지도 타일 제출", "map_object_draw":"지도 오브젝트 제출",
 	"other":"미계측 잔여",
 }
 
