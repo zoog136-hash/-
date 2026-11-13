@@ -29,6 +29,7 @@ extends Node2D
 ## This node uses the widget-local rectangle (0,-extent.y)..(extent.x,0).
 ## Widget origin, anchor and serialized scale remain the caller's responsibility.
 const SourceMaterial=preload("res://scripts/ui/original_ui/source_material.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 var _font_data: Dictionary={}
 var _options: Dictionary={}
 var _extent: Vector2
@@ -37,6 +38,12 @@ var _display_color: Color=Color.WHITE
 var native_size: Vector2
 
 func configure(font_data: Dictionary, options: Dictionary, extent: Vector2) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_configure(font_data,options,extent,false)
+	FRAME_HITCH.detail("ui.bitmap_configure",started)
+	return result
+
+func _configure(font_data: Dictionary, options: Dictionary, extent: Vector2, keep_owned_font: bool) -> Dictionary:
 	if not extent.is_finite() or extent.x<0 or extent.y<0:return _fail("source_bitmap_widget_extent_invalid")
 	if not options.get("text") is String:return _fail("source_bitmap_text_missing")
 	for key: String in ["common","pages","glyphs","kernings","page_textures"]:
@@ -52,7 +59,10 @@ func configure(font_data: Dictionary, options: Dictionary, extent: Vector2) -> D
 	# Nothing displayed is replaced until all glyphs, pages and materials exist.
 	var previous: Node2D=_glyph_layer
 	_glyph_layer=staged.layer
-	_font_data=font_data.duplicate(true)
+	# Public configure always isolates the caller's mutable descriptor. A text
+	# update already uses this instance's owned snapshot: keep validating it,
+	# but do not recopy every unused glyph/kerning entry on each number change.
+	if not keep_owned_font:_font_data=font_data.duplicate(true)
 	_options=options.duplicate(true)
 	_extent=extent
 	native_size=staged.native_size
@@ -64,9 +74,14 @@ func configure(font_data: Dictionary, options: Dictionary, extent: Vector2) -> D
 
 func set_source_text(value: String) -> Dictionary:
 	if _font_data.is_empty():return _fail("source_bitmap_not_configured")
+	var started: int=FRAME_HITCH.now()
 	var next: Dictionary=_options.duplicate(true)
 	next.text=value
-	return configure(_font_data,next,_extent)
+	var result: Dictionary=_configure(_font_data,next,_extent,true)
+	# Inclusive detail only: callers can already account for this work in HUD
+	# or menu sections. Do not introduce a second top-level elapsed section.
+	FRAME_HITCH.detail("ui.bitmap_update",started)
+	return result
 
 func set_source_display(color: Color) -> void:
 	_display_color=color

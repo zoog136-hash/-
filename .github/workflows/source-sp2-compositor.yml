@@ -2,6 +2,8 @@ name: Source SP2 compositor
 on:
   pull_request:
     paths:
+      - 'scripts/ui/original_ui/source_bitmap_text.gd'
+      - 'tests/source_bitmap_text_updates_test.gd'
       - 'scripts/animation/original_source_preview.gd'
       - 'scripts/animation/source_sp2_compositor.gd'
       - 'shaders/source_sp2_rgb565.gdshader'
@@ -80,6 +82,21 @@ jobs:
               results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith(marker + ' ')]
               assert len(results) == 1 and results[0]['failures'] == [] and results[0][field] >= count, (name, results)
           PY
+      - name: Render bitmap text update ownership
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/source_bitmap_text_updates_test.gd -- --render 2>&1 | tee pixel-results/source_bitmap_text_updates_test.txt
+          python3 - <<'PY_CHECK'
+          import json
+          from pathlib import Path
+          lines = Path('pixel-results/source_bitmap_text_updates_test.txt').read_text().splitlines()
+          assert not any('ERROR:' in line for line in lines), 'Godot/shader error'
+          results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('SOURCE_BITMAP_TEXT_UPDATES_RESULT ')]
+          assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 32, results
+          assert results[0]['font_snapshot_replacements_old_new'] == [12, 0], results
+          PY_CHECK
       - uses: actions/upload-artifact@v4
         if: always()
         with:
