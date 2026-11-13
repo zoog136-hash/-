@@ -180,6 +180,10 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	# its clip's first frame (alpha 0) looked like the bag never opened.
 	_coordinates.process_mode=Node.PROCESS_MODE_ALWAYS
 	canvas.add_child(_coordinates)
+	var input_sync:=ChromeInputSync.new()
+	input_sync.name="ChromeInputSync"
+	input_sync.controller=weakref(self)
+	_coordinates.add_child(input_sync)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
 	_native_buttons=ButtonRouter.new()
@@ -327,6 +331,64 @@ func _input(event: InputEvent) -> void:
 		_collect_native_buttons(_coordinates,candidates)
 	var routed: Dictionary=_native_buttons.route(event,point,candidates)
 	if routed.get("handled",false) or character_inside or npc_dialogue_is_open():get_viewport().set_input_as_handled()
+
+## The original HUD chrome (combat pad, AUTO, menu, quick slots, joystick:
+## children of the coordinates node drawn below the windows, z < 140, relative
+## z) sits later in the tree than the TWILIGHT workspace, so Godot's GUI
+## picking (which ignores z_index) gave a touch on an open workspace/menu to
+## the hidden chrome button beneath it (menu open + touch → AUTO pressed).
+## While a workspace/detail/companion window covers a chrome button, its
+## input rectangle ignores the pointer; it is restored once uncovered.
+## Original windows (z >= 140) and workspace-attached controls (absolute z)
+## keep their input.
+const CHROME_Z_LIMIT: int=140
+var chrome_blocked_buttons: int=0
+
+## Runs the block before the GUI delivers each press. It lives under the
+## coordinates node (always processing, like the original buttons), so it
+## also runs while the world itself is held.
+class ChromeInputSync extends Node:
+	var controller: WeakRef
+	func _input(event: InputEvent) -> void:
+		if not (event is InputEventScreenTouch or event is InputEventMouseButton) or not event.pressed:return
+		var owner: Object=controller.get_ref() if controller!=null else null
+		if owner==null:return
+		var hud: Variant=owner.get("_hud").get_ref() if owner.get("_hud")!=null else null
+		if hud is Node:owner.call("_sync_chrome_input_block",hud)
+
+func _sync_chrome_input_block(hud: Node) -> void:
+	var covers: Array[Rect2]=[]
+	for property: String in ["detail_window","companion_window","workspace"]:
+		var overlay: Variant=hud.get(property)
+		if overlay is Control and overlay.is_visible_in_tree():covers.append((overlay as Control).get_global_rect())
+	var blocked: int=0
+	for scene: Node in _coordinates.get_children():
+		if not scene is CanvasItem:continue
+		var chrome: bool=(scene as CanvasItem).z_as_relative and (scene as CanvasItem).z_index<CHROME_Z_LIMIT
+		var areas: Array=[]
+		_collect_button_areas(scene,areas)
+		for area: Control in areas:
+			var covered: bool=false
+			if chrome:
+				var rect: Rect2=area.get_global_rect()
+				for cover: Rect2 in covers:
+					if cover.intersects(rect):covered=true;break
+			if covered:
+				if not area.has_meta("chrome_block_filter"):
+					area.set_meta("chrome_block_filter",area.mouse_filter)
+					area.mouse_filter=Control.MOUSE_FILTER_IGNORE
+				blocked+=1
+			elif area.has_meta("chrome_block_filter"):
+				area.mouse_filter=int(area.get_meta("chrome_block_filter"))
+				area.remove_meta("chrome_block_filter")
+	chrome_blocked_buttons=blocked
+
+static func _collect_button_areas(node: Node, found: Array) -> void:
+	var button: Variant=node.get_meta("source_button") if node.has_meta("source_button") else null
+	if is_instance_valid(button):
+		var area: Variant=button.get("_input_area")
+		if area is Control and is_instance_valid(area):found.append(area)
+	for child: Node in node.get_children():_collect_button_areas(child,found)
 
 static func _collect_native_buttons(node: Node, found: Array) -> void:
 	if node is CanvasItem and not node.is_visible_in_tree():return
