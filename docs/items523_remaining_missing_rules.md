@@ -108,6 +108,19 @@ CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3
 - 바닥 이름 라벨의 글꼴 크기·외곽선·위치, 강화 수치 "+N " 접두 규칙은 원본 표에 없어 TWILIGHT 값.
 - 빛기둥 반복: 은행 계약상 loop는 호출자 정책 — 위의 해석(바닥에 있는 동안 breath 반복).
 
+### 휴대폰 가방에서 신화·유일 아이콘이 빈 칸으로 보인 문제 (2026-11-13, PR `fix/item-icon-csb-empty-slot`)
+
+- 대상: 기르타스의 단검 #362391·#357591(유일, IconID 107221 → CSB `UI/CsbFile/icon/Fx_Item_Weapon_Dagger_Sole_Giltas.csb`, 기본 팩
+  `ui_icons` 안 아틀라스 프레임) 등 CSB 애니메이션 아이콘. 이 아이콘들은 원본에 정지 PNG가 따로 없다(아틀라스 연속 프레임뿐).
+- 확인(원본 팩, 실제 Main, OpenGL3 = 휴대폰과 같은 gl_compatibility 렌더러, xvfb 렌더링): TWILIGHT 가방 ItemVisual이 CSB 장면을 붙이고,
+  안드로이드 고정 혼합(`SourceBlend.screen_copy_available=false`)에서도 #362391·#357591·신화 #425·#450·#461 모두 64×64 칸에 원본 그림이 그려진다
+  (복사 켬/끔 각각 그려진 화소 약 4,060~4,096/칸, 배경 복사 노드는 고정 혼합에서 꺼짐). 즉 혼합 방식 자체는 빈 칸의 원인이 아니다.
+- 이 환경에서 재현되지 않으므로 휴대폰 쪽 원인은 장면 연결 실패(설치된 팩의 `ui_icons` 선택 문서·아이콘 팩 검증 실패, 장면 구성 실패 등)로 좁혀진다.
+  지금까지는 실패해도 칸이 아무 표시 없이 비었다. 이번 수정: 실패하면 기존 "효과 미연결" 표시(이유는 툴팁)를 띄우고, 이유별로 한 번
+  `ITEM_ICON_SCENE_UNAVAILABLE reason=… icon=…`을 기록한다(`ItemVisual.scene_failures`). 대체 그림은 그리지 않는다.
+- 사용자 확인 필요: 휴대폰에서 해당 칸의 "효과 미연결" 툴팁(또는 로그 한 줄)의 reason 값을 알려 주면 그 원인을 고친다.
+
+
 ## 2-2. 탄약 투사체 원본 스프라이트 (2026-11-13, PR `feature/equipment523-rest-ammo`)
 
 - 근거(표만): 일반 원거리 공격의 비행 스프라이트 = 무기 ItemBonus `AmmoEffectSpriteIDByWeapon`(기르타스의 활 2종 29554) → 화살·스팅·탄환
@@ -586,3 +599,26 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
   할파스 램페이지(자기 버프 그룹 확률 감소), 바포메트 커스(행동 불가 11종 + StatusEffectID).
 - 남은 강화 발동 종류 Defence_Spell(2)·Aura_Spell(38)·Defence_DebuffTimeDecrease(26)·Gain_Experience(68)와 InvokeOption 3/5 중
   Param 조건이 0이 아닌 행(8+18종)은 13.2와 같다.
+
+## 15. 사용자 결정 2026-11-13 — 장비 남은 효과 (PR `feature/equipment523-rest-decisions`)
+
+1. **기본 효과 행의 PVP 수치에 강화 경로와 같은 "PVP → 싱글플레이 해석" 적용.**
+   - PiercePVPDamageReduction 4종(발록의 핏빛 망토·투구와 각인, Value 12) → `source_pvp_flat_reduction_ignore`, PVPSpellByLevelAdditionLevel
+     2종(빛나는 망자의 팔찌와 각인, Value 1) → `source_pvp_status_success_level`.
+   - 읽는 곳은 강화와 같은 `patch523_equipment_combat.pvp_flat_ignore`(추가 피해 해석)·`status_caster_level`(상태 성공 가상 레벨)이며
+     같은 정책 키(`source_pvp_flat_ignore_consumer`, `source_pvp_status_level_consumer`)로 켜고 끈다. 기본 행 값은 저장된 필드가 아니라
+     현재 투영이 만든 행(`source_mapped_bonuses`)에서만 읽는다(`base_integer`). 실제 레벨·XP는 바뀌지 않는다.
+   - 14.4 표의 PiercePVPDamageReduction / PVPSpellByLevelAdditionLevel은 이 결정으로 연결됨. IgnorePVPDamageReductionPercent·
+     PVPDamageReductionPercent(% 단위)는 강화 경로에도 같은 해석이 없어 그대로 남긴다.
+2. **불러올 때 같은 그룹(EquipGroupID)·같은 아이템 중복 착용 정리.**
+   - 귀걸이·반지·인장 두 칸 묶음마다 EquipSlotConfig 제한을 넘는 것을 해제해 가방으로 보낸다(아이템 개체는 그대로 가방에 남음).
+   - 남길 것: 앞 칸 우선(earring1 → earring2, ring1, seal1). 저장 파일에 장착 시각이 없어 "먼저 장착된 슬롯"을 칸 순서로 본다.
+   - 한 번만: 결과를 저장 키 `equip_group_limit523`(`{"schema":1,"applied":true,"released":[...]}`)로 남기고, 이 표시가 있으면 다시 정리하지 않는다.
+     원본 표가 설치되지 않은 상태에서는 판정하지 않고 표시도 남기지 않는다(나중에 팩 설치 후 첫 불러오기에서 정리).
+   - 저장 호환: 키가 없는 예전 저장은 그대로 읽고, 예전 버전은 새 키를 무시한다. 새로 착용할 때의 거부 규칙(14.2)은 그대로.
+3. **투사체 우선순위 유지(사용자 확인).** 무기 전용(AmmoEffectSpriteIDByWeapon) > 탄약(AmmoEffectSpriteID) > 무기 기본(WeaponType
+   .DefaultAmmoEffectSpriteID), 폭발은 탄약 > 무기 기본. 2-2절의 TWILIGHT 해석을 사용자 결정으로 확정.
+
+- 실제 Main 확인(`tests/items523_equipment_typed_effects_test.gd`): #286641 착용 시 PVP 리덕션 무시 추가 피해 0→12, 저장·불러오기 유지 /
+  #315922 상태 성공 가상 레벨 10→11 / 같은 그룹 귀걸이 두 개를 착용한 예전식 저장 → 불러오기 후 earring1 유지·earring2 해제(가방 보존)·
+  표시 1건 / 표시가 있는 저장은 다시 정리하지 않음.

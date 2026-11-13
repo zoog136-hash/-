@@ -5,7 +5,8 @@ extends RefCounted
 ## same TWILIGHT slot family. An item's groups are its EquipGroupID ItemBonus
 ## rows (projected as source_equip_group_ids); two items share a group when any
 ## of their group IDs is equal (e.g. Ear: one item per group, Finger: two).
-## Only new equips are checked; an already worn combination is not unequipped.
+## New equips are refused; a save that already wears more than the limit is
+## corrected once on load (enforce_loaded, user decision 2026-11-13).
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const FAMILIES: Dictionary = {"earring":["earring1","earring2"],"ring":["ring1","ring2"],"seal":["seal1","seal2"]}
@@ -59,3 +60,25 @@ static func reason(record: Dictionary, target_slot: String, worn: Dictionary) ->
 	if same_group>_whole(config.MaxDuplicationPerEquipGroup):
 		return "같은 계열 장비는 %d개까지만 착용할 수 있습니다 (원본 장착 그룹 제한 · %s)" % [_whole(config.MaxDuplicationPerEquipGroup),conflict]
 	return ""
+
+const MARKER_SCHEMA: int = 1
+## User decision 2026-11-13: on load, a worn combination over the source limit
+## is reduced by unequipping (the item stays in the bag). The earlier slot of
+## the family (earring1 before earring2, ring1, seal1) is kept — the save keeps
+## no equip time, so slot order stands for "equipped first". Applied once: the
+## returned marker is saved; with it present nothing is re-run. Without the
+## original tables nothing is judged and no marker is written.
+static func enforce_loaded(world: Node, marker: Variant) -> Dictionary:
+	if marker is Dictionary and int(marker.get("schema",0))==MARKER_SCHEMA and marker.get("applied")==true: return (marker as Dictionary).duplicate(true)
+	if SOURCE.not_installed(): return {}
+	var released: Array = []
+	for key: String in FAMILIES:
+		var kept: Dictionary = {}
+		for slot: String in FAMILIES[key]:
+			var worn: Variant = world.equipped_items.get(slot,{})
+			if not worn is Dictionary or (worn as Dictionary).is_empty(): continue
+			var problem: String = reason(worn,slot,kept)
+			if problem.is_empty(): kept[slot] = worn; continue
+			released.append({"slot":slot,"instance_id":str(worn.get("instance_id","")),"item_class_id":_whole(worn.get("source_item_class_id")),"reason":problem})
+			world.equipped_items.erase(slot)
+	return {"schema":MARKER_SCHEMA,"applied":true,"released":released}
