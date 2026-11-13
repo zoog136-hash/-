@@ -87,9 +87,6 @@ func is_open() -> bool:
 
 func open(parent: Node, world: Node, claim: Callable) -> Dictionary:
 	if not is_instance_valid(parent) or not is_instance_valid(world):return _fail("source_quest_window_host_unavailable")
-	if is_open() and _parent!=null and _parent.get_ref()==parent and _world!=null and _world.get_ref()==world:
-		_claim=claim
-		return {"ok":true,"handled":true,"member":ROOT,"category":_category,"rows":_row_scenes.size(),"selected_id":_selected_id}
 	_cancel_pending_refresh()
 	_parent=weakref(parent)
 	_world=weakref(world)
@@ -123,8 +120,6 @@ func _rows() -> Array[Dictionary]:
 	if service==null or not service.has_method("entries"):return shown
 	var auto: Variant=world.get("quest_auto")
 	if auto!=null and auto.has_method("refresh_context"):auto.refresh_context(world)
-	if service.has_method("entries_for_window"):
-		return service.entries_for_window(int(world.get("level")),world.get("inventory"),_category,MAX_ROWS)
 	var ready: Array[Dictionary]=[]
 	var waiting: Array[Dictionary]=[]
 	var done: Array[Dictionary]=[]
@@ -342,13 +337,11 @@ func _select_quest(id: String) -> Dictionary:
 	return {"ok":true,"selected_id":id}
 
 func _select_category(category: String) -> Dictionary:
-	if not is_open():return {"ok":true,"handled":false}
-	if category==_category:return {"ok":true,"category":category,"already_selected":true}
+	_cancel_pending_refresh()
 	_category=category
 	_selected_id=""
 	_scroll=0.0
-	# Like row selections, a burst of tab inputs replaces the scene once.
-	_request_refresh()
+	_stage()
 	return {"ok":true,"category":category}
 
 func _receive(id: String) -> Dictionary:

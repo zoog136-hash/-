@@ -13,11 +13,13 @@ var indexed_size: int = -1
 ## retried as soon as level, class, inventory, instances or quest claims change,
 ## so a reward that can never be supplied cannot rescan every frame.
 var blocked: Dictionary = {}
-## false (the game): a quest whose conditions are met is only marked ready;
-## the player receives its rewards with the quest window's [보상 받기] /
-## [모두 받기] buttons, which run the same atomic complete() transaction.
+## false (the game): no automatic completion. The text list's individual
+## [수락] runs the existing atomic complete() transaction immediately.
 ## true: the previous automatic acquisition (tests of that transaction).
 var auto_claim: bool = false
+## Opt-in legacy audit only. The text list checks visible resident rows; normal
+## gameplay must not prepare every quest reward in the background.
+var scan_ready_enabled: bool = false
 ## Ready quests (conditions met, rewards not received yet) -> true.
 var ready: Dictionary = {}
 ## Ready-mode scan, time-sliced across frames so it never stalls a frame.
@@ -175,7 +177,7 @@ func state_key(world: Node) -> String:
 func tick(world: Node) -> void:
 	if busy or world.quest_service.source.quests.is_empty(): return
 	if not auto_claim:
-		_scan_ready(world)
+		if scan_ready_enabled: _scan_ready(world)
 		return
 	var now: float = Time.get_unix_time_from_system()
 	var signature: String = "%s:%s" % [str(world.level),str(world.job_class)]

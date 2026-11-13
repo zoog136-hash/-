@@ -100,20 +100,17 @@ func _routing() -> void:
 	var claimed: Array=[]
 	hud.quest_complete_requested.connect(func(id: String) -> void:claimed.append(id))
 	hud.open_quests()
-	check(controller.attempts==1 and hud.browser_opens==0 and not hud.workspace.visible,"native quest entry creates no hidden legacy browser")
-	check(hud.active_section=="quests" and hud.quest_view==null,"native quest section remains active without a legacy view")
-	controller.claim.call("existing-quest")
-	check(claimed==["existing-quest"],"native claims retain the existing HUD signal")
+	check(controller.attempts==0 and hud.browser_opens==1 and hud.workspace.visible,"quest entry uses text browser without attempting native scenes")
+	check(hud.active_section=="quests","text quest section remains active")
 	controller.succeeded=false
 	hud.open_quests()
-	check(hud.browser_opens==1 and hud.workspace.visible,"a failed native result cannot hide the current browser")
-	controller.succeeded=true
+	check(hud.browser_opens==2,"text browser does not depend on source pack availability")
 	controller.handled=false
 	hud.open_quests()
-	check(hud.browser_opens==2 and hud.workspace.visible,"unsupported native input retains the current browser fallback")
+	check(hud.browser_opens==3,"unsupported native input still uses text browser")
 	hud.original_main_ui_controller=null
 	hud.open_quests()
-	check(hud.browser_opens==3,"a missing native controller retains the current browser")
+	check(hud.browser_opens==4,"missing native controller still uses text browser")
 	hud.free()
 
 func _row_models() -> void:
@@ -214,8 +211,7 @@ func _selection_batches() -> void:
 	window._select_category("achievement")
 	var category_stages: int=window.stages.size()
 	await _frames()
-	check(window.stages.size()==category_stages+1 and window.stages[-1]==["achievement","",0.0],"category switch shares the pending selection rebuild")
-	category_stages=window.stages.size()
+	check(window.stages.size()==category_stages and window.stages[-1]==["achievement","",0.0],"category switches remain immediate and cancel prior selection work")
 	var window_ref: WeakRef=weakref(window)
 	window._claim=func(_id: String) -> void:
 		var current: RefCounted=window_ref.get_ref()
