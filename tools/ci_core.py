@@ -21,6 +21,9 @@ import tempfile
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
 CHECKS = [
+    ('source_preview_copy_free_test', []),
+    ('source_girtas_screen_copy_guard_test', []),
+    ('lobby_spine_android_blend_test', []),
     ('equipment_binding_fusion_test', []),
     ('current523_reward_bag_retention_test', []),
     ('current523_definition_row_lookup_test', []),
@@ -63,6 +66,7 @@ CHECKS = [
     ('source523_texture_cache_test', []),
     ('frame_hot_paths_test', []),
     ('frame_hitch_log_test', []),
+    ('original_ui_bake_key_test', []),
     ('sp2_parse_cache_test', []),
     ('current523_sp2_frame_renderer_test', []),
     ('bounded_weak_lru_test', []),
@@ -80,6 +84,7 @@ CHECKS = [
     ('original_ui_inventory_snapshot_test', []),
     ('original_ui_menu_retirement_test', []),
     ('original_ui_sprite_copy_letterbox_test', []),
+    ('original_ui_android_blend_test', []),
     ('source523_buff_evidence_mode_test', []),
     ('original_ui_quest_preparation_test', []),
     ('original_ui_node_scope_test', []),
@@ -187,6 +192,7 @@ CHECKS = [
     ('skill523_source_hold_test', []),
     ('skill523_engine_test', []),
     ('orim523_test', []),
+    ('minigame523_scope_test', []),
 ]
 # transformation_movement_scope.gd consumes only flags, grades and actor IDs
 # from these versioned policy records. Their citations/staging ledgers are
@@ -455,7 +461,10 @@ def main():
             command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
-            marker = {'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
+            marker = {'source_preview_copy_free_test':'SOURCE_PREVIEW_COPY_FREE_RESULT',
+                      'source_girtas_screen_copy_guard_test':'SOURCE_GIRTAS_SCREEN_COPY_GUARD',
+                      'lobby_spine_android_blend_test':'LOBBY_SPINE_ANDROID_BLEND',
+                      'equipment_binding_fusion_test':'EQUIPMENT_BINDING_FUSION_RESULT',
                       'current523_reward_bag_retention_test':'CURRENT523_REWARD_BAG_RETENTION_RESULT',
                       'current523_definition_row_lookup_test':'CURRENT523_DEFINITION_ROW_LOOKUP_RESULT',
                       'current523_native_registration_scope_test':'CURRENT523_NATIVE_REGISTRATION_SCOPE_RESULT',
@@ -497,6 +506,7 @@ def main():
                       'source523_texture_cache_test':'SOURCE523_TEXTURE_CACHE_RESULT',
                       'sp2_parse_cache_test':'SP2_PARSE_CACHE_RESULT',
                       'current523_sp2_frame_renderer_test':'CURRENT523_SP2_FRAME_RENDERER_RESULT',
+                      'original_ui_bake_key_test':'ORIGINAL_UI_BAKE_KEY_RESULT',
                       'frame_hitch_log_test':'FRAME_HITCH_LOG_RESULT',
                       'frame_hot_paths_test':'FRAME_HOT_PATHS_RESULT',
                       'bounded_weak_lru_test':'BOUNDED_WEAK_LRU_RESULT',
@@ -514,6 +524,7 @@ def main():
                       'original_ui_inventory_snapshot_test':'ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT',
                       'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
                       'original_ui_sprite_copy_letterbox_test':'ORIGINAL_UI_SPRITE_COPY_LETTERBOX_RESULT',
+                      'original_ui_android_blend_test':'ORIGINAL_UI_ANDROID_BLEND_RESULT',
                       'source523_buff_evidence_mode_test':'SOURCE523_BUFF_EVIDENCE_MODE_RESULT',
                       'original_ui_quest_preparation_test':'ORIGINAL_UI_QUEST_PREPARATION_RESULT',
                       'original_ui_node_scope_test':'ORIGINAL_UI_NODE_SCOPE_RESULT',
@@ -620,7 +631,8 @@ def main():
                       'spell_move_polymorph523_main_test':'SPELL_MOVE_POLYMORPH523_MAIN_RESULT',
                       'skill523_source_hold_test':'SKILL523_SOURCE_HOLD_RESULT',
                       'skill523_engine_test':'SKILL523_ENGINE_RESULT',
-                      'orim523_test':'ORIM523_RESULT'}[name]
+                      'orim523_test':'ORIM523_RESULT',
+                      'minigame523_scope_test':'MINIGAME523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
