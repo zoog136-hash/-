@@ -15,6 +15,7 @@ const AMOUNT=18112
 const COOLDOWN=16968
 const AUTO_ICON=13684
 const SLOT_SOURCE_OFFSETS: Array[int]=[20348,19808,18816,18488,18112,16968,13684]
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const ORIGINAL_COUNT=preload("res://scripts/original_client/oc_m100_m102_quickslot.gd")
 var _pack: RefCounted
 var _hud: WeakRef
@@ -30,6 +31,16 @@ func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Diction
 	return {"ok":true,"configured":true,"image_provider_available":image_provider.is_valid(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func snapshot() -> Dictionary:
+	return _snapshot()
+
+func _snapshot(only_visible: int=-1) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_snapshot_model(only_visible)
+	if result.get("ok",false):FRAME_HITCH.count("ui.quickslot_projected_rows",1 if only_visible>=0 else 10)
+	FRAME_HITCH.detail("ui.quickslot_snapshot",started)
+	return result
+
+func _snapshot_model(only_visible: int) -> Dictionary:
 	var hud: Object=_live_hud()
 	if hud==null:return _fail("source_quickslot_hud_unavailable")
 	var world: Node=hud.get_parent()
@@ -49,6 +60,12 @@ func snapshot() -> Dictionary:
 		var caption: Variant=captions[visible]
 		var cooldown: Variant=cooldowns[visible]
 		if not is_instance_valid(caption) or not caption is Label or not is_instance_valid(cooldown) or not cooldown is Label:return _fail("source_quickslot_existing_text_label_missing")
+		# A single-slot refresh still validates every live index/label, but does
+		# not project/copy the nine rows that its caller will never consume.
+		# No cross-call cache: the requested row is read again for each refresh.
+		if only_visible>=0 and visible!=only_visible:
+			rows.append({})
+			continue
 		# This is the same out-of-range/non-dictionary empty case the HUD
 		# presents. No 50-slot count, page modulus or game filter is reproduced.
 		var entry: Dictionary=entries[absolute].duplicate(true) if absolute<entries.size() and entries[absolute] is Dictionary else {}
@@ -121,7 +138,7 @@ func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=SLOT_MEMBER:return _fail("source_quickslot_original_slot_scene_required")
 	var visible: Variant=row.get("visible_index")
 	if typeof(visible)!=TYPE_INT or int(visible)<0 or int(visible)>=10:return _fail("source_quickslot_row_visible_index_missing")
-	var model: Dictionary=snapshot()
+	var model: Dictionary=_snapshot(int(visible))
 	if not model.get("ok",false):return model
 	var current: Dictionary=model.rows[visible]
 	if not row.get("entry") is Dictionary or row.get("absolute_index")!=current.absolute_index or _entry_identity(row.entry)!=_entry_identity(current.entry) or row.get("page_index")!=current.page_index:return {"ok":false,"code":"source_quickslot_row_identity_changed","rebuild_required":true}

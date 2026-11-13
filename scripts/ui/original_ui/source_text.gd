@@ -1,4 +1,5 @@
 extends Node2D
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## Draw only the supplied font and serialized text. Explicit caller opt-in connects
 ## constrained source word wrapping; source placeholder strings are not game rules.
 var original_font: FontFile
@@ -32,12 +33,19 @@ func configure(font: FontFile, options: Dictionary, size_value: Vector2) -> Dict
 	return {"ok":true}
 
 func set_source_text(value: String) -> Dictionary:
-	var next: Dictionary=original_options.duplicate(true)
+	# Only the top-level text changes. configure reads nested options and
+	# commits its own deep snapshot after every font/layout guard succeeds.
+	var started: int=FRAME_HITCH.now()
+	var next: Dictionary=original_options.duplicate()
 	next.text=value
-	return configure(original_font,next,original_size)
+	var result: Dictionary=configure(original_font,next,original_size)
+	FRAME_HITCH.detail("ui.text_update",started)
+	return result
 
 func _draw() -> void:
 	if original_font==null:return
+	var hitch_started: int=FRAME_HITCH.now()
+	var hitch_nested: int=FRAME_HITCH.nested()
 	var font_size: int=int(original_options.fontSize)
 	var line_height: float=original_font.get_height(font_size)
 	# Korean-client line spacing (customProperty "linespacing"), 0 otherwise.
@@ -53,10 +61,12 @@ func _draw() -> void:
 	elif int(original_options.vAlignment)==2:y+=original_size.y-height
 	var next_source_y: float=original_font.get_ascent(font_size)-y
 	for text_value: String in source_lines:
-		var width: float=original_font.get_string_size(text_value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
 		var x: float=0.0
-		if int(original_options.hAlignment)==1:x=(original_size.x-width)/2.0
-		elif int(original_options.hAlignment)==2:x=original_size.x-width
+		var alignment: int=int(original_options.hAlignment)
+		# Left-aligned text starts at zero; its measured width is unused.
+		if alignment==1 or alignment==2:
+			var width: float=original_font.get_string_size(text_value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
+			x=(original_size.x-width)/2.0 if alignment==1 else original_size.x-width
 		var pos:=Vector2(x,y)
 		if bool(original_options.shadowEnabled):
 			var offset:=Vector2(original_options.shadowOffsetX,-float(original_options.shadowOffsetY))
@@ -70,5 +80,7 @@ func _draw() -> void:
 		# would start below one common line height. It does not draw a new
 		# substitute string or create a generic rectangular clipping rule.
 		if constrained and next_source_y<line_height:break
+	FRAME_HITCH.detail("ui.text_draw",hitch_started)
+	FRAME_HITCH.add_self("ui_text_draw",hitch_started,hitch_nested)
 static func source_color(value: Array) -> Color:
 	return Color(float(value[1])/255.0,float(value[2])/255.0,float(value[3])/255.0,float(value[0])/255.0)

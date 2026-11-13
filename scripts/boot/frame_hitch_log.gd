@@ -17,12 +17,13 @@ const KEEP: int = 12
 const FLUSH_USEC: int = 5000000
 ## Korean labels for the loading screen; unknown sections show their key.
 const LABELS: Dictionary = {
+	"ui_text_draw":"UI 글자 그리기",
 	"world":"월드 기타", "quests":"퀘스트", "hud":"HUD 갱신", "auto_hunt":"자동 사냥",
 	"skills":"스킬", "loot":"드랍·줍기", "save":"저장", "field_triggers":"맵 이벤트",
 	"monsters":"몬스터", "player":"캐릭터", "field_population":"몬스터 배치",
 	"map_renderer":"지도 그리기", "map_objects":"맵 오브젝트", "monsterbook":"몬스터북",
 	"companion":"동료", "buffs":"버프", "dungeon":"던전", "items":"아이템 자동 사용",
-	"hud_main":"원작 HUD", "npcs":"NPC",
+	"hud_main":"원작 HUD", "ui_animation":"UI 애니메이션", "npcs":"NPC",
 	"other":"미계측 잔여",
 }
 

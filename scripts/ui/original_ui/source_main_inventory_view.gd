@@ -95,6 +95,23 @@ func refresh() -> Dictionary:
 	if parent==null:return _fallback(_unsupported("source_inventory_view_canvas_unavailable"))
 	return _stage(parent,false)
 
+func refresh_chrome() -> Dictionary:
+	# The HUD has established that all row/selection/layout inputs are unchanged.
+	# Keep live slots, playback, scroll, hit controls and texture owners intact.
+	if _refreshing:return {"ok":true,"handled":is_open(),"refresh_pending":true}
+	if not is_open():return _unsupported("source_inventory_view_not_open")
+	if _chrome==null or _slots==null or not is_instance_valid(_inventory_scene):return refresh()
+	if not _slots._identities().get("ok",false):return refresh()
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_chrome.refresh_existing(_inventory_scene)
+	FRAME_HITCH.detail("ui.inventory_chrome",started)
+	if not result.get("ok",false):return refresh()
+	var shown: Dictionary=presentation()
+	shown["ok"]=true
+	shown["handled"]=true
+	shown["chrome_only"]=true
+	return shown
+
 func select(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
 	return _slots.select_reference(reference)

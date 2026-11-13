@@ -2,6 +2,9 @@ name: Source SP2 compositor
 on:
   pull_request:
     paths:
+      - 'scripts/ui/original_ui/source_bitmap_text.gd'
+      - 'tests/source_bitmap_text_updates_test.gd'
+      - 'tests/source_bitmap_glyph_reuse_test.gd'
       - 'scripts/animation/original_source_preview.gd'
       - 'scripts/animation/source_sp2_compositor.gd'
       - 'shaders/source_sp2_rgb565.gdshader'
@@ -14,11 +17,15 @@ on:
       - 'scripts/ui/original_ui/source_sprite_back_buffer.gd'
       - 'scripts/ui/original_ui/source_particle.gd'
       - 'scripts/ui/original_ui/source_panel.gd'
+      - 'scripts/ui/original_ui/source_text.gd'
+      - 'tests/source_ui_draw_refresh_test.gd'
+      - 'tests/source_text_costs_test.gd'
       - 'tests/source_ui_copy_policy_gl_test.gd'
       - 'scripts/maps/current523_bank_objects.gd'
       - 'scripts/ui/original_ui/source_material.gd'
       - 'tests/current523_bank_object_layers_test.gd'
       - 'tests/current523_bank_object_refresh_test.gd'
+      - 'tests/current523_bank_animation_visits_test.gd'
       - 'tests/source_material_display_updates_test.gd'
       - 'tools/ci_core.py'
       - '.github/workflows/source-sp2-compositor.yml'
@@ -59,7 +66,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          for test in source_sp2_compositor_test source_preview_copy_free_test lobby_spine_android_blend_test source_ui_copy_policy_gl_test current523_bank_object_layers_test source_material_display_updates_test current523_bank_object_refresh_test; do
+          for test in source_sp2_compositor_test source_preview_copy_free_test lobby_spine_android_blend_test source_ui_copy_policy_gl_test current523_bank_object_layers_test source_material_display_updates_test current523_bank_object_refresh_test source_ui_draw_refresh_test source_text_costs_test; do
             xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script "res://tests/$test.gd" -- --render 2>&1 | tee "pixel-results/$test.txt"
           done
           python3 - <<'PY'
@@ -72,6 +79,8 @@ jobs:
               'source_ui_copy_policy_gl_test': ('SOURCE_UI_COPY_POLICY_GL_RESULT', 120, 'pixel_comparisons'),
               'current523_bank_object_layers_test': ('CURRENT523_BANK_OBJECT_LAYERS_RESULT', 36, 'pixel_comparisons'),
               'current523_bank_object_refresh_test': ('CURRENT523_BANK_OBJECT_REFRESH_RESULT', 24, 'pixel_comparisons'),
+              'source_text_costs_test': ('SOURCE_TEXT_COSTS_RESULT', 56, 'pixel_comparisons'),
+              'source_ui_draw_refresh_test': ('SOURCE_UI_DRAW_REFRESH_RESULT', 75, 'pixel_comparisons'),
               'source_material_display_updates_test': ('SOURCE_MATERIAL_DISPLAY_UPDATES_RESULT', 24, 'render_checks'),
           }
           for name, (marker, count, field) in checks.items():
@@ -80,6 +89,50 @@ jobs:
               results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith(marker + ' ')]
               assert len(results) == 1 and results[0]['failures'] == [] and results[0][field] >= count, (name, results)
           PY
+      - name: Render bitmap text update ownership
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/source_bitmap_text_updates_test.gd -- --render 2>&1 | tee pixel-results/source_bitmap_text_updates_test.txt
+          python3 - <<'PY_CHECK'
+          import json
+          from pathlib import Path
+          lines = Path('pixel-results/source_bitmap_text_updates_test.txt').read_text().splitlines()
+          assert not any('ERROR:' in line for line in lines), 'Godot/shader error'
+          results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('SOURCE_BITMAP_TEXT_UPDATES_RESULT ')]
+          assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 32, results
+          assert results[0]['font_snapshot_replacements_old_new'] == [12, 0], results
+          PY_CHECK
+      - name: Render retained bitmap glyphs
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/source_bitmap_glyph_reuse_test.gd -- --render 2>&1 | tee pixel-results/source_bitmap_glyph_reuse_test.txt
+          python3 - <<'PY_CHECK'
+          import json
+          from pathlib import Path
+          lines = Path('pixel-results/source_bitmap_glyph_reuse_test.txt').read_text().splitlines()
+          assert not any('ERROR:' in line for line in lines), 'Godot/shader error'
+          results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('BITMAP_GLYPH_REUSE_RESULT ')]
+          assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 40, results
+          assert results[0]['allocations'] == {'old_layers': 13, 'new_layers': 1, 'old_sprites': 39, 'new_sprites': 3, 'old_materials': 39, 'new_materials': 3}, results
+          PY_CHECK
+      - name: Render indexed map animation visits
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script res://tests/current523_bank_animation_visits_test.gd -- --render 2>&1 | tee pixel-results/current523_bank_animation_visits_test.txt
+          python3 - <<'PY_CHECK'
+          import json
+          from pathlib import Path
+          lines = Path('pixel-results/current523_bank_animation_visits_test.txt').read_text().splitlines()
+          assert not any('ERROR:' in line for line in lines), 'Godot/shader error'
+          results = [json.loads(line.split(' ', 1)[1]) for line in lines if line.startswith('MAP_ANIMATION_VISITS_RESULT ')]
+          assert len(results) == 1 and results[0]['failures'] == [] and results[0]['pixel_comparisons'] >= 17, results
+          PY_CHECK
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -68,8 +68,11 @@ func set_source_display(display: Color) -> void:
 	_color_copy.visible=alpha>0.0
 	var source: Array=_options.bgColor
 	var start:=Color(float(int(int(source[1])*display.r8/255.0))/255.0,float(int(int(source[2])*display.g8/255.0))/255.0,float(int(int(source[3])*display.b8/255.0))/255.0,alpha)
-	var colors:=PackedColorArray([start,start,start,start])
-	_color.vertex_colors=colors
+	# Compare actual geometry state: same-color animation updates need no new
+	# array or Polygon2D redraw, but external edits must still be repaired.
+	var current: PackedColorArray=_color.vertex_colors
+	if current.size()!=4 or current[0]!=start or current[1]!=start or current[2]!=start or current[3]!=start:
+		_color.vertex_colors=PackedColorArray([start,start,start,start])
 
 static func layer_material() -> ShaderMaterial:
 	if _layer_material!=null:return _layer_material

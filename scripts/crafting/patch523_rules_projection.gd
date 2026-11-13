@@ -831,7 +831,7 @@ static func binding_sha256(items: Array, contract: Dictionary) -> String:
 
 ## With `packed`, the "아이템" copies are a PACKED store (handle = item index)
 ## instead of an Array of Dictionaries: the same records, ~1/7 of the memory.
-static func binding_document(items: Array, contract: Dictionary, parse: bool = true, packed: bool = false) -> Dictionary:
+static func binding_document(items: Array, contract: Dictionary, parse: bool = true, packed: bool = false, reader: Object = null) -> Dictionary:
 	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
 	var document: Dictionary = {"아이템":items,"patch523_crafting_catalog_contract":contract}
 	var keys: Array = document.keys()
@@ -855,7 +855,7 @@ static func binding_document(items: Array, contract: Dictionary, parse: bool = t
 			# The real template store can construct the same full record in a
 			# single merge; generic/cached/unusable inputs keep full(). The
 			# complete JSON hash and parsed slim binding are unchanged.
-			var item: Variant = NATIVE_FIELDS._full_for_binding(items[index])
+			var item: Variant = reader.call("full_for_binding",items[index]) if reader!=null else NATIVE_FIELDS._full_for_binding(items[index])
 			var text: String = JSON.stringify(item,"",true,true)
 			size += _hash_text(hash,("" if index == 0 else ",")+text)
 			# Same values a whole-document parse gives for these fields.
@@ -867,6 +867,16 @@ static func binding_document(items: Array, contract: Dictionary, parse: bool = t
 		parsed[key] = copies
 	size += _hash_text(hash,"}")
 	return {"binding":parsed,"sha256":hash.finish().hex_encode(),"bytes":size}
+
+## Same parsed/packed binding as binding_document(), without the full JSON
+## hash. The private owner computes that UNCHANGED hash with its own reader
+## while build_bound() consumes these already-normalized, independent copies.
+static func binding_projection(items: Array, contract: Dictionary) -> Dictionary:
+	var copies=PACKED.new()
+	for item: Variant in items:
+		var selected: Variant=NATIVE_FIELDS._selected_for_binding(item,BINDING_FIELDS)
+		copies.add(JSON.parse_string(JSON.stringify(slim_binding_record(selected),"",true,true)))
+	return {"patch523_crafting_catalog_contract":JSON.parse_string(JSON.stringify(contract,"",true,true)),"아이템":copies}
 
 ## JSON.parse_string(JSON.stringify(value,"",true,true)) and the SHA256 input
 ## of that text, produced container by container to `depth` levels so the

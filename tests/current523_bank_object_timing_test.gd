@@ -1,5 +1,7 @@
 extends SceneTree
 const OBJECTS=preload("res://scripts/maps/current523_bank_objects.gd")
+class Coordinates extends RefCounted:
+	func to_world(point: Vector2, _centered: bool) -> Vector2:return point
 class Probe extends OBJECTS:
 	var samples: int=0
 	var shown: Array[int]=[]
@@ -26,11 +28,17 @@ func make_probe() -> Probe:
 		var duration: float=0.0 if i%7==0 else 0.125
 		frames.append({"duration":duration,"presentation_duration":duration})
 		total+=duration
-	p._sprites={1:{"ok":true,"static":false,"total":total,"frames":frames},2:{"ok":true,"static":false,"total":0.25,"frames":[{"duration":0.125},{"duration":0.125}]},3:{"ok":true,"static":true},4:{"ok":false}}
+	p._sprites={1:{"ok":true,"static":false,"total":total,"frames":frames},2:{"ok":true,"static":false,"total":0.25,"frames":[{"duration":0.125},{"duration":0.125}]},3:{"ok":true,"static":true},4:{"ok":true,"static":true},5:{"ok":true,"static":true}}
+	# Populate holders through the runtime owner, including its animation index.
+	# Then invalidate/remove records to retain the original cache-state checks.
+	# Injecting _nodes directly bypassed refresh's newly required bookkeeping.
+	var records: Array[Dictionary]=[]
 	for i: int in 1024:
-		var node:=Node2D.new()
-		node.set_meta("sprite_id",1 if i<512 else (2 if i<768 else (3 if i<896 else (4 if i<1023 else 5))))
-		p.add_child(node);p._nodes.append(node)
+		records.append({"sprite_id":1 if i<512 else (2 if i<768 else (3 if i<896 else (4 if i<1023 else 5))),"raw_x":i,"raw_y":0})
+	p.coordinates=Coordinates.new()
+	p.refresh(records)
+	p._sprites[4]={"ok":false}
+	p._sprites.erase(5)
 	return p
 func _initialize() -> void:
 	var before:=make_probe()

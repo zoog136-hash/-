@@ -1,9 +1,16 @@
 extends RefCounted
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## Pure partial-source projection. Every retained node is an unchanged original
 ## record except its filtered children array. Ancestors are retained, never
 ## their unselected siblings/descendants. No resources or nodes are invented.
 
 static func select(tree: Dictionary, offsets: Array[int]) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_select(tree,offsets)
+	FRAME_HITCH.detail("ui.scene_scope",started)
+	return result
+
+static func _select(tree: Dictionary, offsets: Array[int]) -> Dictionary:
 	if offsets.is_empty():return _fail("source_node_scope_selection_empty")
 	var requested: Dictionary={}
 	for offset: int in offsets:
@@ -23,15 +30,20 @@ static func select(tree: Dictionary, offsets: Array[int]) -> Dictionary:
 	# the complete node tree only to replace it with that projection.
 	var scoped: Dictionary=tree.duplicate(false)
 	scoped.nodeTree={}
+	if scoped.get("action") is Dictionary and scoped.action.get("timeLines") is Array:
+		# Project before detaching: excluded timelines can contain thousands of
+		# frames that this instance never validates, animates or renders. Keep
+		# the action's field order and metadata, then deep-copy retained data.
+		var action: Dictionary=scoped.action.duplicate(false)
+		var tracks: Array=[]
+		for track: Dictionary in action.timeLines:
+			if action_tags.has(int(track.get("actionTag",0))):tracks.append(track)
+		action.timeLines=tracks
+		scoped.action=action
 	scoped=scoped.duplicate(true)
 	scoped.nodeTree=node
 	scoped["_selected_source_offsets"]=offsets.duplicate()
 	scoped["_partial_source_scene"]=true
-	if scoped.get("action") is Dictionary and scoped.action.get("timeLines") is Array:
-		var tracks: Array=[]
-		for track: Dictionary in scoped.action.timeLines:
-			if action_tags.has(int(track.get("actionTag",0))):tracks.append(track)
-		scoped.action.timeLines=tracks
 	# Durations, speed, animationList/clips, frames and retained track values
 	# remain exactly serialized; no synthesized state or animation timing.
 	return {"ok":true,"tree":scoped,"source_node_offsets":offsets.duplicate(),"selected_source_offsets":offsets.duplicate(),"retained_source_offsets":retained,"retained_action_tags":action_tags.keys(),"partial_source_scene":true,"complete_screen_contract":false}
