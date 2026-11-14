@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("teleport_window_is_open") and original_main_ui_controller.teleport_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("teleport_window_is_open") and original_main_ui_controller.teleport_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("storage_window_is_open") and original_main_ui_controller.storage_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -998,6 +998,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_clan_window"):original_main_ui_controller.close_clan_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_storage_window"):original_main_ui_controller.close_storage_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_teleport_window"):original_main_ui_controller.close_teleport_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_production_window"):original_main_ui_controller.close_production_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_enchant_window"):original_main_ui_controller.close_enchant_window()
@@ -1326,6 +1327,7 @@ func refresh_shop() -> void:
 
 func refresh_service() -> void:
 	if active_section in ["warehouse","sell"] and is_instance_valid(transaction_view): transaction_view._refresh()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_storage_window"): original_main_ui_controller.refresh_storage_window()
 
 func open_warehouse() -> void:
 	_open_window("warehouse","창고지기","아이템 보관/찾기 · 개별 강화 상태 보존")
@@ -1333,6 +1335,15 @@ func open_warehouse() -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 	transaction_view = screen
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_storage_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_storage_window(screen)
+		original_main_ui_status["storage_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
+		_report_original_fallback("창고",native)
 	show_companion_bag()
 
 func open_npc_teleport() -> void:

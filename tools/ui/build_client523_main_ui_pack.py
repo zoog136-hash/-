@@ -46,12 +46,11 @@ LAYOUT_ONLY = {"UI/MainScene.csb", "UI/HUDScene.csb", "UI/MissionScene.csb", "UI
 # ToolTip_HudType_Right: inventory lock view + item name (source_main_inventory_*).
 # ToolTipScene: their parent ProjectNode 1012.
 # Hud_CharInfo: vitals (CHAR_NODE_OFFSETS, POISON_BAR, CLASS_PROJECT) + primary stats.
-# Storage_All / Store_All: workspace close/title controls (source_main_workspace_controls).
+# Store_All: workspace close/title controls (source_main_workspace_controls).
 NODE_SCOPES = [
     ("UI/ToolTip/ToolTip_HudType_Right.csb", [37228, 37860, 37284, 36120, 36708, 36176, 44536, 44160, 956]),
     ("UI/ToolTipScene.csb", [1012]),
     ("UI/Main/Hud_CharInfo.csb", [46576, 40620, 37172, 35464, 35528, 20552, 20060, 39796, 34940, 18508, 18556, 15324, 15372]),
-    ("UI/Storage/Storage_All.csb", [47160, 48640, 47920]),
     ("UI/Store/Store_All.csb", [67396]),
     # World map (source_main_map_bindings.build_map_scene): row, area with the
     # World image slot 44440 (pixels come from the 523 image pack), Map_All, MapScene.
@@ -75,6 +74,14 @@ PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # leaves its inventory ProjectNodes (and the dismantle tab and probability
 # popup it does not connect) out. Every other node is kept.
 WHOLE_SCOPES = [
+    # The storage window (source_main_storage_window): Storage_All without the
+    # cart, 자동 보관, list mode, 모두 찾기/맡기기, batch count buttons, help,
+    # dungeon message, particle and spine it leaves out. Storage_Inventory's
+    # SlotSet names QuickSlotEdit_SlotSet, absent from the 523 client: the
+    # window shows Inventory_Slot_Set lines there instead (user decision A안).
+    ("UI/Storage/Storage_Inventory.csb", [13764, 396]),
+    ("UI/Storage/Storage_AccountInvGridMode.csb", [6672, 412]),
+    ("UI/Storage/Storage_All.csb", [46564, 46252, 45968, 45420, 43992, 42648, 34968, 16280, 2384, 900, 640, 51812, 50252]),
     # Clan_Slot_Join_Donate_Item whole; its Sp_IconSample is external (above).
     ("UI/Clan/Clan_Slot_Join_Donate_Item.csb", []),
     # The clan window (source_main_clan_window) mounts the 창설 / 혈맹 정보

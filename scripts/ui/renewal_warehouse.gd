@@ -80,11 +80,11 @@ func _add_entry(item_name: String, count: int, instance_id: String = "", descrip
 	entries[entries.size()-1]["record"] = record.duplicate(true)
 	listing.add_item(label,UI.item_icon(record,item_name,hud.lineage_inventory_ui.item_image_index.get("아이템",{})))
 
-func _refresh() -> void:
-	listing.clear()
-	entries.clear()
-	selected_index = -1
-	var is_deposit: bool = mode.selected == 0
+## The rows the transfer list shows: bag rows to deposit (deposit) or
+## warehouse rows to withdraw, one row per physical equipment instance.
+## The original storage window (source_main_storage_window) lists the same.
+func rows_for(is_deposit: bool) -> Array[Dictionary]:
+	var rows: Array[Dictionary]=[]
 	var storage: Object = world.get("warehouse")
 	var stacks: Dictionary = storage.get("stacks")
 	var physical: Dictionary = world.get("item_instances") if is_deposit else storage.get("instances")
@@ -100,7 +100,7 @@ func _refresh() -> void:
 		if is_deposit and source_record.has("growth96_item_id") and not bool(source_record.get("storable",false)): continue
 		if is_deposit and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,world._find_catalog_item_record(item_name),physical):continue
 		if not _is_equipment(item_name) and not preload("res://scripts/cards/source_awakening_items.gd").has_physical_item(item_name,physical):
-			_add_entry(item_name, count)
+			rows.append({"name":item_name,"count":count,"instance_id":"","description":""})
 			continue
 		var ids: Array[String] = []
 		for raw_id: Variant in physical.keys():
@@ -116,7 +116,15 @@ func _refresh() -> void:
 		ids.sort()
 		for id: String in ids:
 			var entry: Dictionary = physical[id]
-			_add_entry(item_name,1,id,"+%d" % int(entry.get("level",0)))
+			rows.append({"name":item_name,"count":1,"instance_id":id,"description":"+%d" % int(entry.get("level",0)),"level":int(entry.get("level",0))})
+	return rows
+
+func _refresh() -> void:
+	listing.clear()
+	entries.clear()
+	selected_index = -1
+	for row: Dictionary in rows_for(mode.selected == 0):
+		_add_entry(str(row.name),int(row.count),str(row.instance_id),str(row.description))
 	action.disabled = entries.is_empty()
 	summary.text = "보관하기: 장착 장비 제외 · 찾기: 무게 제한 적용 · 모든 변경은 자동 저장"
 	if not entries.is_empty():
