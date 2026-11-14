@@ -2463,7 +2463,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
 		return
 	match action:
-		"shop": hud.open_npc_shop()
+		"shop": hud.open_npc_shop(npc_id)
 		"warehouse": hud.call("open_warehouse")
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
