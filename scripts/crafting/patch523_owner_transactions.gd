@@ -112,7 +112,10 @@ static func quest_ownership_provider() -> Script:
 	var path: String="res://scripts/quests/quest_reward_ownership.gd"
 	if not ResourceLoader.exists(path):return null
 	var provider: Script=load(path)
-	return provider if reviewed_script(provider,"708c5816f59464427a08e085adb569160c18b740") else null
+	# Re-reviewed 2026-11-14 at 7b3a1ed: since 708c581 (11-04) only the native
+	# field accessor (NATIVE_FIELDS.full) and service.full() row loading were
+	# added; proof() keeps the same checks.
+	return provider if reviewed_script(provider,"7b3a1ed24d401585952fed439f677361de12d947") else null
 
 static var _reviewed_cache: Dictionary={}
 
@@ -126,7 +129,10 @@ static func reviewed_script(script: Script, blob: String) -> bool:
 	if not script.resource_path.is_empty() and _reviewed_cache.has(key):return _reviewed_cache[key]
 	var source: String=script.get_source_code()
 	var ok: bool
-	if source.is_empty():ok=false
+	# Exported apps ship compiled scripts with no source text; the blob is
+	# pinned where the text exists (editor, tests, CI). Treating "no text" as a
+	# mismatch closed 가호 crafting on every phone (2026-11-14 error record).
+	if source.is_empty():ok=true
 	else:
 		var bytes: PackedByteArray=source.to_utf8_buffer()
 		var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)

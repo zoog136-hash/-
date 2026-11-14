@@ -368,11 +368,11 @@ func _guardian() -> void:
 		if not selected_node.is_empty(): _node_detail(runtime.node(selected_node))
 		if not runtime.development:
 			_label("이 분류의 기록된 수호석 지출 %d · 게임 다이아 %d" % [runtime.guardian_spent(int(group.category_id)),int(runtime.world.inventory.get("다이아",0))])
-			if OS.is_debug_build():_label("개발 검증 전용 다이아 %d · 게임 재화와 별도" % int(runtime.state.get("guardian_wallet",{}).get("4",0)))
+			if preload("res://scripts/boot/build_flags.gd").playtest():_label("개발 검증 전용 다이아 %d · 게임 재화와 별도" % int(runtime.state.get("guardian_wallet",{}).get("4",0)))
 			_guardian_action("guardian_reset",str(group.id),"이 분류 초기화 · 기록된 수호석 환급")
 			_guardian_action("guardian_buy_coins","","명예 코인 재료 상점 · 10개")
 			_button("수호성 원본 UI551 자료 설치" if not preload("res://scripts/growth/guardian_media.gd").installed() else "원본 광원 설치됨 · 다시 선택",_open_guardian_media).name="GuardianInstallOriginalMedia"
-			if OS.is_debug_build():_guardian_action("guardian_debug_gems","","개발 검증용 다이아 +%d" % int(runtime.guardian_local_rules.development.gem_grant))
+			if preload("res://scripts/boot/build_flags.gd").playtest():_guardian_action("guardian_debug_gems","","개발 검증용 다이아 +%d" % int(runtime.guardian_local_rules.development.gem_grant))
 
 func _card_selection() -> void:
 	var pending: bool=not runtime.state.pending.is_empty()

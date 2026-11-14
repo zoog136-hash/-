@@ -90,7 +90,7 @@ func configure(host) -> void:
 	failure=ItemList.new();failure.select_mode=ItemList.SELECT_MULTI;failure.custom_minimum_size.y=100;add_child(failure)
 	use_button=Button.new();use_button.text="선택 확인";use_button.expand_icon=true;add_child(use_button);use_button.pressed.connect(confirm)
 	var reload_button := Button.new();reload_button.text="소유 쿠폰과 실패 기록 새로고침";add_child(reload_button);reload_button.pressed.connect(refresh)
-	if OS.is_debug_build():
+	if preload("res://scripts/boot/build_flags.gd").playtest():
 		var grant := Button.new();grant.text="개발 도구: 선택 쿠폰 한 장 지급 (실패 기록 지급 없음)";add_child(grant)
 		grant.pressed.connect(func():
 			if coupons.selected<0:return

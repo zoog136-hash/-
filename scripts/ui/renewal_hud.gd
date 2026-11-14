@@ -398,7 +398,7 @@ func _control_blocks_world_input(node: Node, point: Vector2) -> bool:
 	return false
 
 func playtest_tools_enabled() -> bool:
-	return OS.is_debug_build()
+	return preload("res://scripts/boot/build_flags.gd").playtest()
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)

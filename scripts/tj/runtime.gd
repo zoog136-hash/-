@@ -97,7 +97,7 @@ func capture_fusion(result: Dictionary) -> void:
 		event["context"]=context();event["time"]=core.clock()
 		core.record_failure(event)
 func grant_for_test(item: String) -> Dictionary:
-	if not OS.is_debug_build() or not core.definitions.get("coupons",{}).has(item) or core.blocked:return {"ok":false,"error":"검증된 테스트 쿠폰만 지급할 수 있습니다"}
+	if not preload("res://scripts/boot/build_flags.gd").playtest() or not core.definitions.get("coupons",{}).has(item) or core.blocked:return {"ok":false,"error":"검증된 테스트 쿠폰만 지급할 수 있습니다"}
 	var next: Dictionary=core.export_state()
 	next.coupons[item]=mini(10000,int(next.coupons.get(item,0))+1)
 	next.revision=int(next.revision)+1

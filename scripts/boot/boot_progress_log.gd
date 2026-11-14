@@ -141,7 +141,7 @@ static func previous_last_fields() -> Dictionary:
 		# The memory breakdown comes from the latest heartbeat at or before it.
 		if fields.ev == "alive":
 			for key: String in fields:
-				if key.begins_with("sp2_") or key.begins_with("r_") or key in ["nodes", "resources", "tables", "tex_kb", "objects", "actors", "field_chunks"]: last["alive_" + key] = fields[key]
+				if key.begins_with("sp2_") or key.begins_with("r_") or key in ["nodes", "resources", "tables", "tex_kb", "objects", "actors", "field_chunks", "fps", "frame_ms", "cpu_top", "max_fps"]: last["alive_" + key] = fields[key]
 			break
 	return last
 
@@ -171,6 +171,9 @@ static func previous_end_line() -> String:
 		# Android may refuse /proc/self/status; the engine's own count remains.
 		var engine: int = int(fields.get("static_kb", "-1"))
 		if engine > 0: line += " · 엔진 메모리 %dMB(최대 %dMB)" % [engine / 1024, int(fields.get("static_max_kb", "0")) / 1024]
+	if fields.has("alive_fps"):
+		line += " · %sfps(상한 %s, 프레임 %sms)" % [fields.alive_fps, fields.get("alive_max_fps", "-"), fields.get("alive_frame_ms", "-")]
+		if fields.has("alive_cpu_top"): line += " · CPU 초당 " + str(fields.alive_cpu_top).replace(":", " ").replace(",", "ms, ") + "ms"
 	if fields.has("alive_sp2_parsed_mb"):
 		line += " · 몬스터 그림 해석 %sMB(%s) · 그림 텍스처 %sMB(%s)" % [fields.alive_sp2_parsed_mb, fields.get("alive_sp2_parsed_n", "-"), fields.get("alive_sp2_texture_mb", "-"), fields.get("alive_sp2_texture_n", "-")]
 		var gpu: int = int(fields.get("alive_tex_kb", "-1"))
