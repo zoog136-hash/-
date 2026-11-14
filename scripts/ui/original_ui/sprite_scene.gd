@@ -946,7 +946,7 @@ func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
 	if value and node.get_meta("source_asset_slot",false):
-		var sprite: Sprite2D=node.get_meta("source_sprite",null)
+		var sprite: Sprite2D=(node.get_meta("source_sprite") if node.has_meta("source_sprite") else null)
 		var scene: Variant=node.get_meta("source_asset_scene") if node.has_meta("source_asset_scene") else null
 		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
 		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
@@ -1062,7 +1062,7 @@ func set_bound_source_scene_result(source_offset: int, descriptor: Dictionary) -
 
 func bound_source_scene(source_offset: int) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
-	var player: Variant=node.get_meta("source_asset_scene",null) if node!=null else null
+	var player: Variant=(node.get_meta("source_asset_scene") if node.has_meta("source_asset_scene") else null) if node!=null else null
 	if not is_instance_valid(player) or player.is_queued_for_deletion():return {"ok":false,"error":"source_asset_scene_not_attached"}
 	return {"ok":true,"player":player,"evidence":node.get_meta("source_asset_scene_evidence",{}).duplicate(true)}
 

@@ -157,7 +157,7 @@ func name_hint_context(reference: String) -> Dictionary:
 	var control: Variant=hit.get("control")
 	var scroll_offset: int=43832 if _native_capacity==8 else 55712
 	var scroll_node: Variant=_inventory_scene.get("source_nodes").get(scroll_offset)
-	var scroll: Variant=scroll_node.get_meta("source_scroll",null) if is_instance_valid(scroll_node) else null
+	var scroll: Variant=(scroll_node.get_meta("source_scroll") if scroll_node.has_meta("source_scroll") else null) if is_instance_valid(scroll_node) else null
 	var bounds: Variant=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
 	if not control is Control or not is_instance_valid(control) or not bounds is Control or not is_instance_valid(bounds):return {}
 	return {"ok":true,"reference":reference,"control":control,"scroll":bounds,"source_native":true}
@@ -283,7 +283,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 			result=native_slot.set_bound_visible(Slots.ICON,true)
 			if not result.get("ok",false):return _reject_staged(next,result)
 		var button_node: Variant=native_slot.get("source_nodes").get(Slots.BUTTON)
-		var button: Variant=button_node.get_meta("source_button",null) if is_instance_valid(button_node) else null
+		var button: Variant=(button_node.get_meta("source_button") if button_node.has_meta("source_button") else null) if is_instance_valid(button_node) else null
 		var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
@@ -320,7 +320,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 					result=row_native.set_bound_visible(Slots.ICON,true)
 					if not result.get("ok",false):return _reject_staged(next,result)
 				var row_button_node: Variant=row_native.get("source_nodes").get(Slots.BUTTON)
-				var row_button: Variant=row_button_node.get_meta("source_button",null) if is_instance_valid(row_button_node) else null
+				var row_button: Variant=(row_button_node.get_meta("source_button") if row_button_node.has_meta("source_button") else null) if is_instance_valid(row_button_node) else null
 				var row_control: Variant=row_button.get("_input_area") if is_instance_valid(row_button) else null
 				if not row_control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 				var row_reference: String=extra_rows[line][offset]

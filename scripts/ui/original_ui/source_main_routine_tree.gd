@@ -100,7 +100,7 @@ func list_content(root: Node2D, out: Dictionary, member: String, suffix: String)
 	var list: Dictionary=locate(root,out,suffix)
 	if not list.get("ok",false):return list
 	var node: Node2D=list.player.source_nodes.get(list.offset)
-	var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) else null
+	var content: Variant=(node.get_meta("source_list_content") if node.has_meta("source_list_content") else null) if is_instance_valid(node) else null
 	if not content is Node2D:return {"ok":false,"error":"source_routine_list_content_missing","suffix":suffix}
 	var size: Vector2=Vector2.ZERO
 	for key: String in out:

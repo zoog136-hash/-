@@ -111,7 +111,7 @@ func _stage(parent: Node) -> Dictionary:
 	for group: int in range(contracts.size()):
 		var contract: Dictionary=contracts[group]
 		var page_node: Variant=all.player.get("source_nodes").get(PAGE_VIEWS[group])
-		var pages: Variant=page_node.get_meta("source_pages",null) if is_instance_valid(page_node) else null
+		var pages: Variant=(page_node.get_meta("source_pages") if page_node.has_meta("source_pages") else null) if is_instance_valid(page_node) else null
 		if not is_instance_valid(pages):return _reject(next,_fail("source_quickslot_original_page_view_unavailable"))
 		var scope: Array[int]=[]
 		scope.assign(contract.source_node_offsets)
@@ -136,7 +136,7 @@ func _stage(parent: Node) -> Dictionary:
 				result=slot.player.set_bound_visible(ICON,true)
 				if not result.get("ok",false):return _reject(next,result)
 			var button_node: Variant=slot.player.get("source_nodes").get(BUTTON)
-			var button: Variant=button_node.get_meta("source_button",null) if is_instance_valid(button_node) else null
+			var button: Variant=(button_node.get_meta("source_button") if button_node.has_meta("source_button") else null) if is_instance_valid(button_node) else null
 			var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 			if not control is Control:return _reject(next,_fail("source_quickslot_original_slot_control_unavailable"))
 			hits[int(row.visible_index)]={"from":"quick","slot":row.absolute_index,"visible":row.visible_index,"entry":row.entry.duplicate(true),"texture":texture,"control":control,"source_native":true,"native_slot_scene":slot.player}

@@ -79,7 +79,7 @@ func blocks_point(point: Vector2) -> bool:
 	var current: Dictionary=_current()
 	if not current.get("ok",false) or _owner==null or _owner.get_ref()!=current.owner or _section!=current.section:return false
 	var node: Variant=_scene.source_nodes.get(int(SPECS[_section].close))
-	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 	var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 	return control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point)
 

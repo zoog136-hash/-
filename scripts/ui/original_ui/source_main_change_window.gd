@@ -204,9 +204,9 @@ func _stage() -> Dictionary:
 	var info: Dictionary=detail.player.project_player([INFO_PROJECT])
 	if not info.get("ok",false):next.free();last_result=info;return info
 	var list_node: Variant=detail.player.get("source_nodes").get(LIST)
-	var content: Variant=list_node.get_meta("source_list_content",null) if is_instance_valid(list_node) else null
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	var info_list: Variant=info.player.get("source_nodes").get(int((INFO_DOLL if doll else INFO_CARD).list))
-	var option_content: Variant=info_list.get_meta("source_list_content",null) if is_instance_valid(info_list) else null
+	var option_content: Variant=(info_list.get_meta("source_list_content") if info_list.has_meta("source_list_content") else null) if is_instance_valid(info_list) else null
 	if not content is Node2D or not option_content is Node2D:next.free();return _fail("source_change_window_list_content_missing")
 	var geometry: Dictionary=_set_geometry()
 	var card_scenes: Dictionary={}

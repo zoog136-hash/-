@@ -214,7 +214,7 @@ func _stage() -> Dictionary:
 		var uploaded: Dictionary=slot.player.set_bound_source_visual_result(SLOT_ICON,owner)
 		if uploaded.get("ok",false):slot.player.set_bound_visible(SLOT_ICON,true)
 	var list_node: Variant=page_player.get("source_nodes").get(LIST)
-	var content: Variant=list_node.get_meta("source_list_content",null) if is_instance_valid(list_node) else null
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:next.free();return _fail("source_quest_window_list_content_missing")
 	var row_scenes: Array[Node2D]=[]
 	for index: int in range(rows.size()):
