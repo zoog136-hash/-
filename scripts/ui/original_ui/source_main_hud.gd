@@ -1094,6 +1094,7 @@ const FEATURE_WINDOWS={
 	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
 	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
 	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
+	"card_dispatch":preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
