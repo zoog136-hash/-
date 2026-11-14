@@ -81,7 +81,7 @@ func _registry() -> void:
 		var result: Dictionary=window.configure(FakePack.new(),hud)
 		check(not result.get("ok",true) and result.get("code")=="source_window_member_missing" and not result.get("handled",true),key+" fails closed without its members")
 		check(not window.is_open(),key+" is closed before opening")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","item_book"],"the registered feature windows")
+	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","item_book"],"the registered feature windows")
 	hud.free()
 
 func _binding() -> void:
@@ -187,6 +187,8 @@ func _routing() -> void:
 	check(native.opened[-1]==["monsterbook",[]] and not hud.workspace.visible,"the monster book opens the original window")
 	hud.open_half_elixir()
 	check(native.opened[-1]==["half_elixir",[]] and not hud.workspace.visible,"half elixir opens the original window")
+	hud.open_card_dispatch()
+	check(native.opened[-1]==["card_dispatch",[]] and not hud.workspace.visible and hud.active_section=="card_dispatch","변신 파견 opens the original window")
 	check(hud.open_item_book() and native.opened[-1]==["item_book",[]] and not hud.workspace.visible and hud.active_section=="item_book","the item book opens the original window")
 	var attempts: int=native.opened.size()
 	native.handles=false
@@ -208,6 +210,8 @@ func _fail_soft() -> void:
 	check(COLLECTION.P=="Change_CollectionView/" and FUSION.P=="Change_DetailView_Mix/Nd_Card_Change/","page paths include the original Nd_Card_Change level")
 	check(BUTTON._whole_zero(0) and BUTTON._whole_zero(0.0) and not BUTTON._whole_zero(255.0) and not BUTTON._whole_zero(0.5) and not BUTTON._whole_zero(null),"zero alpha reads from int or float pack numbers")
 	check(SCENE._whole(-1396015326.0) and SCENE._whole(3) and not SCENE._whole(1.5) and not SCENE._whole("0"),"whole-number pack fields accept floats")
+	check(SCENE._loading_bar_colour_note({"classname":"LoadingBar"},{"customProperty":" Red:#D80900 Sky:#29D6FF gray:#7F7F7F"}),"a LoadingBar colour note is metadata")
+	check(not SCENE._loading_bar_colour_note({"classname":"Text"},{"customProperty":"Red:#D80900"}) and not SCENE._loading_bar_colour_note({"classname":"LoadingBar"},{"customProperty":"{\"soundid\":\"x\"}"}),"other custom properties keep their checks")
 	var elixir=ELIXIR.new()
 	check(not elixir._context_ready(),"no world means no 하프 엘릭서 context")
 	for action: String in ["_extend","_reset","_charge"]:
