@@ -43,6 +43,9 @@ func _keep(table: String, row: Dictionary, positions: Array) -> bool:
 		var key: String = str(int(row.ID)) if row.has("ID") else "@"+str(position)
 		var old: Dictionary = _selected[table].get(key,{})
 		if not old.is_empty() and old.row!=row: problem = "source_row_identity_conflict:"+table+":"+key; return false
+		# Reached again from a newly added type: the same row at the same
+		# position is already selected; keep that entry (no deep copy).
+		if not old.is_empty() and old.get("source_row_1based")==position: continue
 		_selected[table][key] = {"source_row_1based":position,"row":row.duplicate(true)}
 	return true
 

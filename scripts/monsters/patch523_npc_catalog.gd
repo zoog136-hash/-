@@ -19,11 +19,47 @@ var indexes: Dictionary = {}
 var source_mode: String = "current523_original"
 var source_available: bool = false
 var source_identity: Dictionary = {}
-var source_model_sha256: String = ""
+## SHA-256 of JSON.stringify(content, "", true, true). Serialising the whole
+## payload on every newly admitted monster kind grew with the admitted set
+## (desktop 60 ms -> 125 ms per kind by 200 kinds; ~0.4 s on the phone), so
+## it is computed only when read. Spawn provenance uses
+## admitted_registry_ids_sha256() instead.
+var _model_sha: String = ""
+var _model_dirty: bool = false
+var source_model_sha256: String = "":
+	get:
+		if _model_dirty:
+			_model_sha = JSON.stringify(content,"",true,true).sha256_text()
+			_model_dirty = false
+		return _model_sha
+	set(value):
+		_model_sha = value
+		_model_dirty = false
+## Owner index rows already appended, per table (incremental _publish_original).
+var _indexed_keys: Dictionary = {}
+var _indexes_built: Dictionary = {}
 var admitted_source_identities: Dictionary = {}
 var deferred_npc_inputs: Dictionary = {}
 var source_status: Dictionary = {}
 var _original_input = ORIGINAL_INPUT.new()
+## res:// input policies are fixed for the run. Every spawn projection read,
+## parsed and hashed the same small JSON files up to three times; keep each
+## parse and SHA-256 once (two entries, a few KB).
+static var _policy_files: Dictionary = {}
+
+static func _policy_file(path: String) -> Dictionary:
+	if _policy_files.has(path): return _policy_files[path]
+	var entry: Dictionary = {}
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file != null:
+		var bytes: PackedByteArray = file.get_buffer(file.get_length())
+		file.close()
+		var parser := JSON.new()
+		var hashing := HashingContext.new()
+		if parser.parse(bytes.get_string_from_utf8())==OK and parser.data is Dictionary and hashing.start(HashingContext.HASH_SHA256)==OK and hashing.update(bytes)==OK:
+			entry = {"policy":parser.data,"sha256":hashing.finish().hex_encode()}
+	_policy_files[path] = entry
+	return entry
 
 func configure_original() -> bool:
 	source_mode = "current523_original"
@@ -33,7 +69,9 @@ func configure_original() -> bool:
 			"input_kind":"twilight.current523.npc-input.v1","source_archive_sha256":SOURCE_SHA,
 			"tables":{},"boss_npc_ids":[],"host_extension_npc_ids":[]}
 		indexes = {}
+		_indexed_keys = {}
 		admitted_source_identities = {}
+		_ids_sha_count = -1
 		source_model_sha256 = ""
 	if identity.is_empty() or identity.get("source_sha256")!=SOURCE_SHA:
 		source_available = false
@@ -46,7 +84,7 @@ func configure_original() -> bool:
 		source_status = {"state":"unavailable","reason":error}
 		return false
 	source_identity = identity.duplicate(true)
-	if source_model_sha256.is_empty():
+	if _model_sha.is_empty() and not _model_dirty:
 		var initial: Dictionary = _original_input.build([])
 		if initial.is_empty():
 			source_available = false
@@ -59,20 +97,60 @@ func configure_original() -> bool:
 	source_status = {"state":"available","mode":source_mode,"visual":"independent_current_visual_pin_required"}
 	return true
 
+const INDEX_OWNERS: Array = [["NpcAttack","NpcClassID"],["NpcAttribute","NpcClassID"],["NpcSpecialResistance","NpcClassID"],["NpcRace","NpcClassID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"],["LandAttribute","LandID"]]
+
 func _publish_original(candidate: Dictionary) -> void:
 	content = candidate
-	indexes = {}
-	for pair: Array in [["NpcAttack","NpcClassID"],["NpcAttribute","NpcClassID"],["NpcSpecialResistance","NpcClassID"],["NpcRace","NpcClassID"],["SpellBonus","SpellClassID"],["BuffBonus","BuffClassID"],["StatusEffectAttr","StatusEffectID"],["LandAttribute","LandID"]]:
-		var index: Dictionary = {}
-		for entry: Dictionary in content.tables.get(pair[0],{}).values():
+	# A grown selection keeps every earlier entry (same insertion order) and
+	# appends new ones, so appending only the new rows gives the same owner
+	# lists as a full rebuild. Anything else (reset, foreign indexes, a
+	# missing earlier key) rebuilds in full.
+	var incremental: bool = is_same(indexes,_indexes_built) and not _indexed_keys.is_empty()
+	if incremental:
+		for pair: Array in INDEX_OWNERS:
+			var seen: Dictionary = _indexed_keys.get(pair[0],{})
+			var still: int = 0
+			for key: Variant in content.tables.get(pair[0],{}):
+				if seen.has(key): still += 1
+			if still != seen.size(): incremental = false; break
+	if not incremental:
+		indexes = {}
+		_indexed_keys = {}
+		_indexes_built = indexes
+	for pair: Array in INDEX_OWNERS:
+		if not indexes.has(pair[0]): indexes[pair[0]] = {}
+		if not _indexed_keys.has(pair[0]): _indexed_keys[pair[0]] = {}
+		var index: Dictionary = indexes[pair[0]]
+		var seen: Dictionary = _indexed_keys[pair[0]]
+		var table: Dictionary = content.tables.get(pair[0],{})
+		for key: Variant in table:
+			if seen.has(key): continue
+			seen[key] = true
+			var entry: Dictionary = table[key]
 			if not source_integer(entry.row.get(pair[1])): continue
 			var owner: String = str(int(entry.row[pair[1]]))
 			if not index.has(owner): index[owner] = []
 			index[owner].append(entry.row)
-		indexes[pair[0]] = index
 	# This is the actual in-memory registry payload, never a legacy manifest or
 	# source-archive fingerprint. No model/pack/receipt is written to disk.
-	source_model_sha256 = JSON.stringify(content,"",true,true).sha256_text()
+	_model_sha = ""
+	_model_dirty = true
+
+## The admitted registry payload is a pure function of the source archive,
+## the admitted NpcClass IDs and this projection code. Spawn provenance names
+## it by those IDs (O(kinds)); the full payload digest (source_model_sha256,
+## O(payload) ~1.6 MB JSON at 200 kinds) is computed only when read.
+var _ids_sha: String = ""
+var _ids_sha_count: int = -1
+
+func admitted_registry_ids_sha256() -> String:
+	if _ids_sha_count < 0:
+		var ids: Array = []
+		for id: String in admitted_source_identities: ids.append(int(id))
+		ids.sort()
+		_ids_sha = (SOURCE_SHA + "|" + JSON.stringify(ids)).sha256_text()
+		_ids_sha_count = admitted_source_identities.size()
+	return _ids_sha
 
 func _admit_original_actor(source: Dictionary) -> bool:
 	if not configure_original(): return false
@@ -87,6 +165,7 @@ func _admit_original_actor(source: Dictionary) -> bool:
 		deferred_npc_inputs[id] = error
 		return false
 	_publish_original(candidate)
+	_ids_sha_count = -1
 	admitted_source_identities[id] = {"npc_class_id":source.ID,"sprite":source.Sprite,"desc_id":source.DescId,
 		"source_snapshot":"patch523","source_archive_sha256":SOURCE_SHA}
 	deferred_npc_inputs.erase(id)
@@ -97,7 +176,7 @@ func load_pack(manifest_path: String, expected_sha: String) -> bool:
 	# Kept for historical compatibility; the final input mode cannot activate
 	# an old manifest or use its selection as an admission prerequisite.
 	if source_mode=="current523_original": error = "legacy_npc_pack_excluded_from_final_input"; return false
-	content = {}; indexes = {}; error = ""
+	content = {}; indexes = {}; _indexed_keys = {}; error = ""
 	if expected_sha.length() != 64 or not FileAccess.file_exists(manifest_path):
 		error = "manifest_sha_mismatch"; return false
 	var manifest_file: FileAccess = FileAccess.open(manifest_path,FileAccess.READ)
@@ -295,13 +374,9 @@ func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -
 	# Called only after the same exact actor/source admission above. This is an
 	# explicitly adjustable TWILIGHT input-scale estimate, not recovered native
 	# resistance units or a replacement for the existing damage formula.
-	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
-	if file==null: return record
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	file.close()
-	var parser := JSON.new()
-	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
-	var policy: Dictionary = parser.data
+	var policy_file: Dictionary = _policy_file(NUMERIC_INPUT_POLICY_PATH)
+	if policy_file.is_empty(): return record
+	var policy: Dictionary = policy_file.policy
 	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
 	if not policy.get("enabled") is bool or not policy.enabled: return record
 	if policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or policy.get("native_server_damage_formula_recovered")!=false or policy.get("host_formula")!="existing_host_formula_retained": return record
@@ -323,10 +398,7 @@ func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -
 	var prior: Variant = record.get("element_resistance",{})
 	var resistance: Dictionary = prior.duplicate(true) if prior is Dictionary else {}
 	resistance.merge(projected,true)
-	var hashing := HashingContext.new()
-	hashing.start(HashingContext.HASH_SHA256)
-	hashing.update(bytes)
-	var policy_sha: String = hashing.finish().hex_encode()
+	var policy_sha: String = str(policy_file.sha256)
 	record["element_resistance"] = resistance
 	record["source_m_numeric_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
 		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
@@ -350,13 +422,9 @@ func _project_named_special_resistance_input(record: Dictionary, source: Diction
 	if not original is Dictionary: return record
 	for field: String in source:
 		if not original.has(field) or original[field]!=source[field]: return record
-	var file := FileAccess.open(NUMERIC_INPUT_POLICY_PATH,FileAccess.READ)
-	if file==null: return record
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	file.close()
-	var parser := JSON.new()
-	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
-	var policy: Dictionary = parser.data
+	var policy_file: Dictionary = _policy_file(NUMERIC_INPUT_POLICY_PATH)
+	if policy_file.is_empty(): return record
+	var policy: Dictionary = policy_file.policy
 	if policy.get("schema")!="twilight.current523.numeric-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
 	if typeof(policy.get("enabled"))!=TYPE_BOOL or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate" or policy.get("source_raw_unit_scale")!="unconfirmed" or typeof(policy.get("native_server_damage_formula_recovered"))!=TYPE_BOOL or policy.native_server_damage_formula_recovered or policy.get("host_formula")!="existing_host_formula_retained": return record
 	var nested: Variant = policy.get("special_resistance")
@@ -414,9 +482,7 @@ func _project_named_special_resistance_input(record: Dictionary, source: Diction
 		detail["receiver_value"] = int(value)
 		detail["integer_receiver_policy"] = "existing_Monster_setup_int_conversion"
 		detail.applied = true
-	var hashing := HashingContext.new()
-	if hashing.start(HashingContext.HASH_SHA256)!=OK or hashing.update(bytes)!=OK: return record
-	var policy_sha: String = hashing.finish().hex_encode()
+	var policy_sha: String = str(policy_file.sha256)
 	for field: String in applied: record[field] = applied[field]
 	record["source_m_special_resistance_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
 		"policy_path":NUMERIC_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
@@ -440,13 +506,9 @@ func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary)
 		if not source_integer(admitted.get(pair[0])) or not source_integer(source.get(pair[1])) or admitted[pair[0]]!=source[pair[1]]: return record
 	var selected_npc: Dictionary = content.get("tables",{}).get("NpcClass",{}).get(str(npc_id),{}).get("row",{})
 	if selected_npc!=source or DEFINITIONS.row("NpcClass",npc_id)!=source or not DEFINITIONS.declared_exclusion("NpcClass",source).is_empty(): return record
-	var file := FileAccess.open(NPC_RANGE_INPUT_POLICY_PATH,FileAccess.READ)
-	if file==null: return record
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	file.close()
-	var parser := JSON.new()
-	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return record
-	var policy: Dictionary = parser.data
+	var policy_file: Dictionary = _policy_file(NPC_RANGE_INPUT_POLICY_PATH)
+	if policy_file.is_empty(): return record
+	var policy: Dictionary = policy_file.policy
 	if policy.get("schema")!="twilight.current523.npc-range-input-policy.v1" or policy.get("source_snapshot")!="patch523" or policy.get("source_sha256")!=SOURCE_SHA: return record
 	if not policy.get("enabled") is bool or not policy.enabled or policy.get("origin")!="twilight_adjustable_numeric_estimate": return record
 	if policy.get("source_raw_range_unit_scale")!="unconfirmed" or policy.get("native_grid_scale_recovered")!=false or policy.get("host_range_contract")!="existing_record_attack_range_and_current_attack_range_retained": return record
@@ -473,16 +535,13 @@ func _project_uniform_attack_range_input(record: Dictionary, source: Dictionary)
 	if attack_ids.is_empty(): return record
 	var length: float = float(uniform)*float(scale)
 	if not is_finite(length) or length<=0.0: return record
-	var hashing := HashingContext.new()
-	hashing.start(HashingContext.HASH_SHA256)
-	hashing.update(bytes)
-	var policy_sha: String = hashing.finish().hex_encode()
+	var policy_sha: String = str(policy_file.sha256)
 	var prior: Variant = record.get("attack_range")
 	record["attack_range"] = length
 	record["source_m_npc_range_input_policy"] = {"origin":"twilight_adjustable_numeric_estimate",
 		"policy_path":NPC_RANGE_INPUT_POLICY_PATH,"policy_schema":policy.schema,"policy_sha256":policy_sha,
 		"source":identity,"npc_class_id":npc_id,"admitted_actor_identity":admitted.duplicate(true),
-		"admitted_registry_payload_sha256":source_model_sha256,"admitted_attack_ids":attack_ids,
+		"admitted_registry_ids_sha256":admitted_registry_ids_sha256(),"admitted_attack_ids":attack_ids,
 		"source_field":"NpcAttack.Range","uniform_raw_range":uniform,"raw_attack_range_to_host_length":float(scale),
 		"prior_host_attack_range":prior,"host_length_input":length,"source_raw_range_unit_scale":"unconfirmed",
 		"native_grid_scale_recovered":false,"calibration_status":policy.get("calibration_status"),
