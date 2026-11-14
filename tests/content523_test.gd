@@ -298,6 +298,18 @@ func installed() -> void:
 	check(int(m.escaros.dungeon.teleport.land_id)==47954 and int(m.escaros.dungeon.teleport.cost)==100000,"Escaros entry -> village 47954 for 100,000")
 	check(int(m.elf.counts.grades)==6 and int(m.elf.counts.blessings)==4 and int(m.elf.counts.wins)==12,"6 grades, 4 blessings, 12 win rewards")
 	check(int(m.tq.counts.quests)==7 and int(m.tq.counts.playable)==2,"7 territory quests, 2 playable (coin collection)")
+	# The built models are stored on the device and read back unchanged, so
+	# the first in-game content tick does not rebuild them (phone: 6.1 s frame).
+	var sha: String = str(SOURCE.identity().get("source_sha256",""))
+	var bake = preload("res://scripts/resources/current523_bake_cache.gd")
+	var stored: Variant = bake.read(CONTENT.MODELS_BAKE, CONTENT.models_bake_key(sha))
+	check(stored is Dictionary and var_to_str(stored)==var_to_str(m),"content models are stored on the device unchanged")
+	check(CONTENT.models_bake_key(sha)!=CONTENT.models_bake_key("0".repeat(64)),"a different original never reuses stored content models")
+	CONTENT.release()
+	var started: int = Time.get_ticks_usec()
+	var again: Dictionary = CONTENT.models()
+	check(var_to_str(again)==var_to_str(m),"content models read back equal the built models")
+	evidence["stored_read_ms"] = (Time.get_ticks_usec()-started)/1000
 	CONTENT.release()
 
 func run() -> void:
