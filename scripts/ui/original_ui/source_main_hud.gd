@@ -1194,6 +1194,36 @@ func close_clan_window() -> void:
 		_cancel_native_buttons()
 		_clan_window.close()
 
+## --- Original 523 텔레포트 tab for 지역 이동 (source_main_teleport_window;
+## destinations, prices and the move stay with the existing owners)
+const TeleportWindow=preload("res://scripts/ui/original_ui/source_main_teleport_window.gd")
+var _teleport_window: RefCounted
+
+func try_open_teleport_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _teleport_window==null and _pack!=null and hud!=null:
+		var window=TeleportWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["teleport_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_teleport_window=window
+	if _teleport_window==null or not is_instance_valid(_coordinates):return _window_problem("teleport_window")
+	_cancel_native_buttons()
+	return _teleport_window.open(_coordinates,world)
+
+func teleport_window() -> RefCounted:
+	return _teleport_window
+
+func teleport_window_is_open() -> bool:
+	return _teleport_window!=null and _teleport_window.is_open()
+
+func close_teleport_window() -> void:
+	if teleport_window_is_open():
+		_cancel_native_buttons()
+		_teleport_window.close()
+
 ## --- Original 523 제작 window (source_main_production_window; recipes,
 ## quotes, the confirmation and the craft stay with the existing owners)
 const ProductionWindow=preload("res://scripts/ui/original_ui/source_main_production_window.gd")
@@ -1340,7 +1370,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or clan_window_is_open() or production_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or clan_window_is_open() or production_window_is_open() or clan_window_is_open() or teleport_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()
