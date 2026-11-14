@@ -1175,6 +1175,39 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 NPC 상점 window (source_main_store_window; the talking
+## NPC's original merchant goods, quotes and payment stay with world.source_shop)
+const StoreWindow=preload("res://scripts/ui/original_ui/source_main_store_window.gd")
+var _store_window: RefCounted
+
+func try_open_store_window(npc_id: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _store_window==null and _pack!=null and hud!=null:
+		var window=StoreWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["store_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_store_window=window
+	if _store_window==null or not is_instance_valid(_coordinates):return _window_problem("store_window")
+	_cancel_native_buttons()
+	return _store_window.open(_coordinates,npc_id)
+
+func store_window() -> RefCounted:
+	return _store_window
+
+func store_window_is_open() -> bool:
+	return _store_window!=null and _store_window.is_open()
+
+func refresh_store_window() -> Dictionary:
+	return _store_window.refresh() if store_window_is_open() else {"ok":true,"handled":false}
+
+func close_store_window() -> void:
+	if store_window_is_open():
+		_cancel_native_buttons()
+		_store_window.close()
+
 ## --- Original 523 창고 window (source_main_storage_window; the rows,
 ## confirmation and transfers stay with renewal_warehouse and the world)
 const StorageWindow=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
@@ -1440,7 +1473,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or storage_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or storage_window_is_open() or store_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()
