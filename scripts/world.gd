@@ -4250,7 +4250,7 @@ func stage_source_item_grants(grants: Array, supplier: Dictionary) -> Dictionary
 	return preload("res://scripts/loot/patch523_item_inventory.gd").stage(self,grants,supplier)
 
 func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
-	if not OS.is_debug_build(): return
+	if not preload("res://scripts/boot/build_flags.gd").playtest(): return
 	var source_record: Dictionary = _find_catalog_item_record(item_name)
 	if source_record.get("source_m_native_item",false) and LOOT_DROP.PATCH523_DROPS.data().get("full_item_catalog",false):
 		var grant: Dictionary = {"item_class_id":int(source_record.get("source_item_class_id",-1)),"amount":clampi(amount,1,10),"bless_raw":int(source_record.get("source_bless_raw",1)),"enchant":0}
@@ -4275,7 +4275,7 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	_save_game(true)
 
 func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
-	if not OS.is_debug_build(): return
+	if not preload("res://scripts/boot/build_flags.gd").playtest(): return
 	var record: Dictionary = _catalog_item_from_source_id(source_id)
 	if record.is_empty() or str(record.get("name", "")) == "":
 		hud.show_message("유효하지 않은 도감 원본 ID")
@@ -4307,7 +4307,7 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 		_save_game(true)
 
 func _grant_playtest_aden() -> void:
-	if not OS.is_debug_build(): return
+	if not preload("res://scripts/boot/build_flags.gd").playtest(): return
 	gold = maxi(gold,100000000)
 	_update_hud()
 	hud.show_message("테스트 아데나 · 현재 %d" % gold)
@@ -8755,7 +8755,7 @@ func _on_class_selected(value: int) -> void:
 # Card acquisition is the only debug-only action. Real pack ownership/cost is
 # not modelled yet; fusion is available whenever saved duplicate cards exist.
 func _on_card_pack_draw_requested(category: String) -> void:
-	if not OS.is_debug_build():
+	if not preload("res://scripts/boot/build_flags.gd").playtest():
 		return
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):

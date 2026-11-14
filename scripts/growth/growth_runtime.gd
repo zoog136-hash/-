@@ -18,7 +18,7 @@ var combat = Combat.new()
 var history = History.new()
 var world
 # Nullable published source-material capability; no substitute consumer.
-var development: bool = OS.is_debug_build() and "--growth-lab" in OS.get_cmdline_user_args()
+var development: bool = preload("res://scripts/boot/build_flags.gd").playtest() and "--growth-lab" in OS.get_cmdline_user_args()
 var lab: Dictionary = {}
 var config: Dictionary = {}
 var state: Dictionary = fresh()
@@ -458,7 +458,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if world.gold<gold_cost:return fail("아데나 부족 · 필요 %d" % gold_cost)
 			text="명예 코인 10개 · %d 아데나 (TWILIGHT 재료 상점 가격)" % gold_cost
 		"guardian_debug_gems":
-			if not OS.is_debug_build():return fail("개발 빌드 전용 검증 재화")
+			if not preload("res://scripts/boot/build_flags.gd").playtest():return fail("개발 빌드 전용 검증 재화")
 			text="검증용 다이아 %d 추가 · 개발 편의 기능" % int(guardian_local_rules.development.gem_grant)
 		"guardian_reset":
 			var group: Dictionary=guardian_group(id)
@@ -470,7 +470,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if price<=0:return fail("원본 초기화 비용 오류")
 			var earned: int=maxi(0,int(world.inventory.get("다이아",0)))
 			debug_gem_cost=maxi(0,price-earned)
-			var debug_balance: int=int(state.get("guardian_wallet",{}).get("4",0)) if OS.is_debug_build() else 0
+			var debug_balance: int=int(state.get("guardian_wallet",{}).get("4",0)) if preload("res://scripts/boot/build_flags.gd").playtest() else 0
 			if debug_gem_cost>debug_balance:return fail("다이아 부족 · 필요 %d / 게임 보유 %d" % [price,earned])
 			if price>debug_gem_cost:costs["다이아"]=price-debug_gem_cost
 			text="%s 분류 초기화 · 다이아 %d · 기록으로 확인되는 수호석 %d개 환급\n이 분류의 개방/강화를 초기화합니다. 재사용 대기시간 유지 · 분류/환급 범위는 TWILIGHT 자체 설정입니다." % [str(group.name),price,guardian_refund(int(group.category_id))]

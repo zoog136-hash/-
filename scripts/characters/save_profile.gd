@@ -18,16 +18,16 @@ static func base_for(args: PackedStringArray, platform: String, debug: bool, edi
 	return namespace_for("--base508-source-test" in args, debug and "--growth-lab" in args, full_cards_for(args, platform, debug, editor_hint), native)
 
 static func full_cards_active() -> bool:
-	return full_cards_for(OS.get_cmdline_user_args(), OS.get_name(), OS.is_debug_build(), Engine.is_editor_hint())
+	return full_cards_for(OS.get_cmdline_user_args(), OS.get_name(), preload("res://scripts/boot/build_flags.gd").playtest(), Engine.is_editor_hint())
 
 static func current_base_path() -> String:
-	return base_for(OS.get_cmdline_user_args(), OS.get_name(), OS.is_debug_build(), Engine.is_editor_hint(), LEGACY.validation_script())
+	return base_for(OS.get_cmdline_user_args(), OS.get_name(), preload("res://scripts/boot/build_flags.gd").playtest(), Engine.is_editor_hint(), LEGACY.validation_script())
 
 static func allows_for(args: PackedStringArray, debug: bool) -> bool:
 	return "--base508-source-test" not in args and "--aden523-review" not in args and "--png-review" not in args and not (debug and "--growth-lab" in args)
 
 static func allows_roster() -> bool:
-	return allows_for(OS.get_cmdline_user_args(), OS.is_debug_build())
+	return allows_for(OS.get_cmdline_user_args(), preload("res://scripts/boot/build_flags.gd").playtest())
 
 static func resolve(base: String) -> Dictionary:
 	# No heavy map classes are needed on ordinary launches without a pointer.
