@@ -64,7 +64,6 @@ const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
 const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
 	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/crafting/current523_equipment_spell_profiles.gd","res://scripts/crafting/patch523_packed_records.gd",
-	"res://scripts/resources/current523_definition_rows.gd",
 	"res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
 	"res://data/crafting/patch523_enhancement_policy.json"]
 ## True when the model was read from this device's bake instead of compiled.
@@ -96,7 +95,7 @@ func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract:
 	# compile of the same inputs (see current523_bake_cache.gd).
 	var catalog_hash := HashingContext.new(); catalog_hash.start(HashingContext.HASH_SHA256); catalog_hash.update(catalog_bytes)
 	_bake_key = BAKE.key([catalog_hash.finish().hex_encode(),_registered_catalog_key(items,contract),
-		str(SOURCE_DEFINITIONS.identity().get("source_sha256","")),BAKE.code_key(BAKE_CODE)])
+		str(SOURCE_DEFINITIONS.identity().get("source_sha256","")),SOURCE_DEFINITIONS.STORE_FORMAT,BAKE.code_key(BAKE_CODE)])
 	_model_key = _bake_key
 	var baked: Variant = BAKE.read(BAKE_NAME,_bake_key)
 	var usable: bool = baked is Dictionary and baked.get("model") is Dictionary and baked.get("sha256") is String and baked.get("offloaded") == true

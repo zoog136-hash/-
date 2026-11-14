@@ -11,6 +11,7 @@ const PREBAKE := preload("res://scripts/boot/source523_prebake.gd")
 const HANDOFF := preload("res://scripts/boot/source523_prebake_handoff.gd")
 const JOB := preload("res://scripts/boot/source523_prebake_job.gd")
 const PROGRESS := preload("res://scripts/boot/loading_progress.gd")
+const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
 ## Show the title picture after loading until a touch (off in headless runs).
 var title_after_loading: bool = true
 ## Test hook: also show the title stage under the headless display server.
@@ -205,6 +206,10 @@ func _boot() -> void:
 	HANDOFF.clear()
 	var steps: Array[Dictionary] = plan_steps(PREBAKE.pending(), destination)
 	var counted: Array[Dictionary] = steps.duplicate()
+	# Original tables used on earlier runs whose stored form an update made
+	# outdated are converted here, not one by one during play.
+	var tables: PackedStringArray = DEFINITIONS.tables_to_prepare()
+	if not tables.is_empty(): counted.append({"id": "definitions", "label": "원본 표"})
 	if _prepares_main(): counted.append({"id": "main_prepare", "label": "게임 장면"})
 	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
@@ -234,6 +239,16 @@ func _boot() -> void:
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
 		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
+	if not tables.is_empty():
+		_progress.begin_task("definitions", "원본 표를 준비하는 중…")
+		var definitions_started: int = BOOT_LOG.begin("definitions_prepare", {"tables": tables.size()})
+		for index: int in tables.size():
+			_render("업데이트 후 한 번만: 원본 표 %d/%d (%s)" % [index + 1, tables.size(), tables[index]])
+			await get_tree().process_frame
+			DEFINITIONS.prepare_table(tables[index])
+		DEFINITIONS.release_caches()
+		BOOT_LOG.end("definitions_prepare", definitions_started, {"tables": tables.size()})
+		_progress.complete_task("definitions")
 	if _prepares_main():
 		# The roster does not consume map readers; their bakes are on disk.
 		HANDOFF.clear()

@@ -83,11 +83,10 @@ const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const MODELS_BAKE := "content523_models"
 const MODELS_FORMAT := "twilight.content523.models.v1"
 const MODEL_CODE := ["res://scripts/content523/content523.gd","res://scripts/content523/escaros523.gd",
-	"res://scripts/content523/elfforest523.gd","res://scripts/content523/territory_quest523.gd",
-	"res://scripts/resources/current523_definition_rows.gd"]
+	"res://scripts/content523/elfforest523.gd","res://scripts/content523/territory_quest523.gd"]
 
 static func models_bake_key(sha: String) -> String:
-	return BAKE.key([MODELS_FORMAT, sha, BAKE.code_key(MODEL_CODE), BAKE.engine_key()])
+	return BAKE.key([MODELS_FORMAT, sha, SOURCE.STORE_FORMAT, BAKE.code_key(MODEL_CODE), BAKE.engine_key()])
 
 static func release() -> void:
 	_cache.clear(); _lands.clear()
