@@ -519,7 +519,10 @@ func _build(source: Dictionary) -> Node2D:
 		var picture: Control
 		if bool(options.scale9Enabled):
 			var nine=preload("res://scripts/ui/original_ui/source_scale9.gd").new()
-			var configured: Dictionary=nine.configure(texture,Vector2(widget.size[0],widget.size[1]),options.capInsets)
+			# A caller may stretch a scale-9 panel to its live content (the
+			# client sizes list cards to their rows); the anchor is kept.
+			var nine_size: Variant=_bindings.get(int(source._offset),{}).get("size")
+			var configured: Dictionary=nine.configure(texture,nine_size if nine_size is Vector2 else Vector2(widget.size[0],widget.size[1]),options.capInsets)
 			if not configured.ok:
 				_build_error=str(configured.error)+":"+str(widget.name)
 				nine.free(); node.free(); return null
@@ -537,6 +540,10 @@ func _build(source: Dictionary) -> Node2D:
 		picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		picture.size=Vector2(widget.size[0],widget.size[1])
 		picture.position=Vector2(0,-float(widget.size[1]))
+		# A stretched scale-9 panel keeps its authored top-left and grows
+		# right / down (list cards sized to their rows).
+		var stretched: Variant=_bindings.get(int(source._offset),{}).get("size")
+		if stretched is Vector2 and bool(options.scale9Enabled):picture.size=stretched
 		if bool(widget.flipX): picture.scale.x=-1; picture.position.x=float(widget.size[0])
 		if bool(widget.flipY): picture.scale.y=-1; picture.position.y=0
 		origin.add_child(picture)

@@ -945,6 +945,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_world_map()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("stat_detail_window_is_open") and original_main_ui_controller.stat_detail_window_is_open():
+			original_main_ui_controller.close_stat_detail_window()
+			get_viewport().set_input_as_handled()
+			return
 		if is_instance_valid(detail_window) and detail_window.visible:
 			detail_window.hide()
 			get_viewport().set_input_as_handled()
@@ -1019,6 +1023,7 @@ func _close_workspace() -> void:
 		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): dialog.dismiss()
 	if is_instance_valid(detail_window): detail_window.hide()
 	if is_instance_valid(companion_window): companion_window.hide()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_stat_detail_window"):original_main_ui_controller.close_stat_detail_window()
 	if workspace != null:
 		workspace.hide()
 	active_section = ""
@@ -1591,6 +1596,15 @@ func _on_original_character_page_requested(page: String) -> void:
 		_sync_screen_focus()
 
 func open_detailed_status() -> void:
+	# The original 523 CharacterInfo_StatInfo_Detail over the same values.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_stat_detail_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_stat_detail_window()
+		original_main_ui_status["stat_detail_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			if is_instance_valid(detail_window): detail_window.hide()
+			return
+		_report_original_fallback("상세 능력치",native)
 	if not is_instance_valid(detail_window):
 		detail_window = RenewalWindowScript.new()
 		$Root.add_child(detail_window)
