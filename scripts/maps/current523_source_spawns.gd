@@ -71,8 +71,14 @@ static func _conditioned(catalog: RefCounted, pack_id: int) -> bool:
 	return false
 
 static func _enemy(catalog: RefCounted, npc: Dictionary) -> bool:
-	# Exp 0 classes are ambient town creatures (for example slimes in villages).
-	if npc.is_empty() or npc.get("TestNPC") != false or int(npc.get("Exp", 0)) <= 0: return false
+	if npc.is_empty() or npc.get("TestNPC") != false: return false
+	# Most Aden field monsters ("rn bugbear", "rn orc", wild boar ...) carry
+	# Exp 0 in the original NpcClass, so Exp 0 alone does not mean ambient:
+	# excluding it left the Aden fields empty (2026-11-14 device report).
+	# Exp 0 classes stay out only when they are passive (Tendency below 2,
+	# e.g. orc village peasants) or carry a bracketed content label
+	# ([공성전], [전조현상], [드랍정보] ... staged or scripted actors).
+	if int(npc.get("Exp", 0)) <= 0 and (int(npc.get("Tendency", 0)) < 2 or str(npc.get("Name", "")).contains("[")): return false
 	var category: Dictionary = POLICY.row_with_id(catalog.context_rows("NpcCategory"), int(npc.get("Category", -1)))
 	return category.get("IsAttackable") == true and not NON_HUNT_CATEGORIES.has(str(category.get("Name", "")))
 
