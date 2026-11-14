@@ -257,6 +257,7 @@ CHECKS = [
     ('orim523_test', []),
     ('minigame523_scope_test', []),
     ('reference_sp2_prepared_bank_test', []),
+    ('reference_sp2_role_split_test', []),
     ('content523_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
@@ -768,6 +769,7 @@ def main():
                       'source_effect_validation_once_test':'SOURCE_EFFECT_VALIDATION_ONCE_RESULT',
                       'reference_sp2_native_build_test':'REFERENCE_SP2_NATIVE_BUILD_RESULT',
                       'reference_sp2_prepared_bank_test':'REFERENCE_SP2_PREPARED_BANK_RESULT',
+                      'reference_sp2_role_split_test':'REFERENCE_SP2_ROLE_SPLIT_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
                       'content523_test':'CONTENT523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)

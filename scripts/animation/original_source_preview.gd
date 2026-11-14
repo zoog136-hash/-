@@ -179,6 +179,10 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 			continue
 		var action: int = int(selected.optional_role_actions[role])
 		var loaded: Dictionary = _optional_role_probe(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),role,action,loop,str(selected.consumer),int(actor))
+		if loaded.get("error") == REFERENCE_BANK.ROLE_DEFERRED:
+			# The caller retries later; never record the optional role as missing.
+			reference_bank_status = {"ok":false,"error":REFERENCE_BANK.ROLE_DEFERRED}
+			return false
 		if not loaded.ok:
 			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":loaded.get("error","")}
 			continue
@@ -187,6 +191,7 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 		role_actors[role] = int(actor)
 		optional_status[role] = {"state":"selected_source_declared_optional_action","action_id":action,"source_actor_id":int(actor)}
 	var configured: bool = _configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,loops,initial_role,str(selected.consumer),role_actors)
+	if not configured and reference_bank_status.get("error") == REFERENCE_BANK.ROLE_DEFERRED: return false
 	if not configured and not optional_status.is_empty():
 		var problem: String = str(reference_bank_status.get("error","optional_source_actions_unavailable"))
 		for role: String in optional_status:
@@ -228,6 +233,7 @@ static func _optional_role_probe(manifest_path: String, manifest_sha: String, sp
 	var probe := REFERENCE_BANK.new()
 	var loaded: Dictionary = probe.load_bank(manifest_path,manifest_sha,sprite_id,{role:action},{role:loop},consumer,{role:actor})
 	var verdict: Dictionary = {"ok":bool(loaded.get("ok",false)),"error":str(loaded.get("error",""))}
+	if verdict.error == REFERENCE_BANK.ROLE_DEFERRED: return verdict
 	_optional_probe_memo.erase(key)
 	while _optional_probe_memo.size() >= OPTIONAL_PROBE_MEMO_MAX: _optional_probe_memo.erase(_optional_probe_memo.keys()[0])
 	_optional_probe_memo[key] = verdict

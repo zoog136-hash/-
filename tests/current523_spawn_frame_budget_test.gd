@@ -17,6 +17,7 @@ class FakePopulation extends POPULATION:
 	var cost_usec: int = 0
 	var spawned: Array[int] = []
 	var ever: Dictionary = {}
+	func _zone_active(_region: Dictionary) -> bool: return true
 	func _spawn_slot_measured(slot: Dictionary) -> void:
 		var until: int = Time.get_ticks_usec() + cost_usec
 		while Time.get_ticks_usec() < until: pass
@@ -48,12 +49,20 @@ func _run() -> void:
 	for slot: Dictionary in slots.slice(0, 3): population._spawn_slot(slot)
 	check(population.spawned == [0, 1], "two cheap spawns per frame: %s" % [population.spawned])
 	check(slots[2].has("budget_deferred") and float(slots[2].remaining) > 0.0, "the third waits for a later frame")
+	check(population._retry.size() == 1 and population._retry[0] == slots[2] and slots[2].get("retry_queued") == true, "the deferred slot is queued for the next frames")
+	population._queue_retry(slots[2])
+	check(population._retry.size() == 1, "a slot is queued once")
 	check(is_equal_approx(population._spawn_retry_delay(slots[2]), 0.2) and not slots[2].has("budget_deferred"), "a budget deferral retries in 0.2 s without failure backoff")
 	check(int(slots[2].get("spawn_failures", 0)) == 0, "a budget deferral is not a spawn failure")
+	await process_frame
+	population.field = PlayableField.new()
+	population._drain_retry()
+	check(population.spawned == [0, 1, 2] and population._retry.is_empty() and not slots[2].has("retry_queued"), "the queued slot spawns on the next frame: %s" % [population.spawned])
 	await process_frame
 	# A spawn over the frame budget ends this frame's spawning.
 	population.spawned.clear()
 	population.cost_usec = POPULATION.FRAME_BUDGET_USEC + 2000
+	slots[2].monster = null
 	population._spawn_slot(slots[2])
 	population._spawn_slot(slots[3])
 	check(population.spawned == [2], "no second spawn after the frame budget is spent: %s" % [population.spawned])
@@ -76,6 +85,8 @@ func _run() -> void:
 	var ids: Array = population.ever.keys()
 	ids.sort()
 	check(ids == [0, 1, 2, 3, 4, 5], "all six slots spawned: %s" % [ids])
+	population.field = null
+	population._retry.clear()
 	population.free()
 	world.monsters_root.free()
 	world.free()

@@ -342,7 +342,11 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
 		else:
 			set_meta("current523_source_bank_selection",current_view.selection_status.duplicate(true))
+			var deferred: bool = current_view.selection_status.get("reason") == CURRENT523_SOURCE_M_VIEW.PREVIEW.REFERENCE_BANK.ROLE_DEFERRED
 			current_view.free()
+			# A first bank build spread over frames: the population retries this
+			# slot shortly; never place an actor without its original pixels.
+			if deferred: return _reject_patch523_spawn("current523_view_deferred")
 			if not _source_only_native_visuals: return _reject_patch523_spawn("patch523_original_pixels_not_ready")
 	trace.phase("actor_identity")
 	if _source_only_native_visuals:
