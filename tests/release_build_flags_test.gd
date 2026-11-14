@@ -19,15 +19,26 @@ func _scripts(dir: String, out: Array) -> void:
 		if name.ends_with(".gd"): out.append(dir.path_join(name))
 	for sub: String in access.get_directories(): _scripts(dir.path_join(sub), out)
 
+## Repository files outside the staged CI project are read from the checkout.
+func _repo_file(relative: String) -> String:
+	for root: String in ["res://", OS.get_environment("GITHUB_WORKSPACE"), ProjectSettings.globalize_path("res://")]:
+		if root.is_empty(): continue
+		var path: String = root.path_join(relative)
+		if FileAccess.file_exists(path): return path
+	return ""
+
 func _initialize() -> void:
 	check(FLAGS.playtest() == (OS.is_debug_build() or OS.has_feature(FLAGS.PLAYTEST_FEATURE)), "playtest is the debug template or the export feature")
 	var presets := ConfigFile.new()
-	check(presets.load("res://export_presets.cfg") == OK, "export presets load")
+	var presets_path: String = _repo_file("export_presets.cfg")
+	check(not presets_path.is_empty() and presets.load(presets_path) == OK, "export presets load")
 	for section: String in presets.get_sections():
 		if not section.begins_with("preset.") or section.ends_with(".options"): continue
 		if str(presets.get_value(section, "platform", "")) != "Android": continue
 		check(str(presets.get_value(section, "custom_features", "")).split(",").has(FLAGS.PLAYTEST_FEATURE), "%s exports the playtest feature" % presets.get_value(section, "name", section))
-	var workflow: String = FileAccess.get_file_as_string("res://.github/workflows/twilight-android-playtest-apk.yml")
+	var workflow_path: String = _repo_file(".github/workflows/twilight-android-playtest-apk.yml")
+	check(not workflow_path.is_empty(), "the APK workflow is found")
+	var workflow: String = FileAccess.get_file_as_string(workflow_path) if not workflow_path.is_empty() else ""
 	check(workflow.contains('--export-release "Android"') and not workflow.contains('--export-debug "Android"'), "the playtest APK is a release export")
 	check(workflow.contains("GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$GITHUB_WORKSPACE/tools/android/twilight-playtest.keystore"), "the release export keeps the fixed playtest signature")
 	var files: Array = []
