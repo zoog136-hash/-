@@ -19,21 +19,22 @@ func _initialize() -> void:
 	_fail_twice.call_deferred()
 
 func _fail_twice() -> void:
-	for index: int in 2: _bad_access()
-	push_error("second distinct error")
+	# The CI log scanner rejects real engine errors, so the installed logger
+	# receives the same callbacks the engine would send.
+	var logger: Logger = RECORD._instance
+	var empty: Array[ScriptBacktrace] = []
+	for index: int in 2:
+		logger._log_error("_bad_access", "res://tests/error_record_test.gd", 27, "Invalid access to property or key 'missing_key' on a base object of type 'Dictionary'.", "", false, Logger.ERROR_TYPE_SCRIPT, empty)
+	logger._log_error("push_error", "core/variant/variant_utility.cpp", 1023, "second distinct error", "", false, Logger.ERROR_TYPE_ERROR, empty)
 	_finish.call_deferred()
-
-func _bad_access() -> void:
-	var value: Dictionary = {}
-	var _unused = value.missing_key.next
 
 func _finish() -> void:
 	RECORD.uninstall_for_test()
 	var text: String = FileAccess.get_file_as_string(DIR.path_join(RECORD.FILE_NAME))
 	var lines: PackedStringArray = text.split("\n", false)
 	check(lines.size() == 2, "each distinct error is written once (%d lines)" % lines.size())
-	check(text.contains("at=error_record_test.gd:") and text.contains("missing_key"), "the script error names file, line and message")
-	check(text.contains("second distinct error"), "push_error is recorded")
+	check(text.contains("at=error_record_test.gd:27") and text.contains("missing_key"), "the script error names file, line and message")
+	check(text.contains("second distinct error") and text.contains("at=variant_utility.cpp:1023"), "an engine error is recorded")
 	# Next start: the record becomes the previous one and is named.
 	RECORD.install(DIR)
 	RECORD.uninstall_for_test()
