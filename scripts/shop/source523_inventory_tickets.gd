@@ -24,7 +24,8 @@ const CASH_PACKAGES=preload("res://scripts/shop/source523_cash_packages.gd")
 ## skill card is granted as that book's physical stack.
 const SPELL_DECK:int=41
 const SKILL_BOOKS:String="스킬서"
-const MODEL_CODE:Array[String]=["res://scripts/shop/current523_ticket_input.gd","res://scripts/resources/current523_definition_rows.gd"]
+## Row reading is pinned by the definition store format, not the reader's code.
+const MODEL_CODE:Array[String]=["res://scripts/shop/current523_ticket_input.gd"]
 var owner_ref:WeakRef
 var runtime:
 	get:return owner_ref.get_ref() if owner_ref!=null else null
@@ -62,7 +63,7 @@ func load_original() -> bool:
 	# bytes are baked on the device per original and input code, and their
 	# SHA-256 stays the policy fingerprint.
 	var source_sha:String=str(OriginalInput.SOURCE.identity().get("source_sha256",""))
-	var bake_key:String=BAKE.key(["source523_ticket_model",source_sha,BAKE.code_key(MODEL_CODE)]) if not source_sha.is_empty() else ""
+	var bake_key:String=BAKE.key(["source523_ticket_model",source_sha,preload("res://scripts/resources/current523_definition_rows.gd").STORE_FORMAT,BAKE.code_key(MODEL_CODE)]) if not source_sha.is_empty() else ""
 	var baked:Dictionary=BAKE.read_payload("source523_ticket_model",bake_key) if not bake_key.is_empty() else {}
 	if not baked.is_empty():
 		var parsed:Variant=JSON.parse_string(baked.bytes.get_string_from_utf8())

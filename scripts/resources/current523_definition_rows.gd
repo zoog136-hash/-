@@ -64,6 +64,68 @@ static func reset() -> void:
 ## This only frees acceleration data for the same verified archive; logical
 ## source values and cache_generation() remain unchanged. reset() invalidates
 ## source-dependent read lifetimes instead.
+## Tables this device has opened, kept in a small list next to the stored
+## tables. After an update changes a stored table's key, the loading screen
+## converts these again (prepare_used_tables) instead of the game converting
+## each one in the middle of play (seconds per large table on a phone).
+const USED_LIST := "user://current523_bake/definition_tables_used.json"
+static var _used_saved: Dictionary = {}
+static var _used_loaded: bool = false
+
+static func used_tables() -> PackedStringArray:
+	_load_used()
+	var names := PackedStringArray(_used_saved.keys())
+	names.sort()
+	return names
+
+static func _load_used() -> void:
+	if _used_loaded: return
+	_used_loaded = true
+	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(USED_LIST)) if FileAccess.file_exists(USED_LIST) else null
+	if value is Array:
+		for name: Variant in value:
+			if name is String and (name as String).is_valid_identifier() and not name in EXCLUDED_TABLES: _used_saved[name] = true
+
+## Adds the tables opened in this process to the list (writes only when new).
+static func remember_used_tables() -> int:
+	_load_used()
+	var added: int = 0
+	for table: String in _tables.keys():
+		if not _used_saved.has(table) and table.is_valid_identifier():
+			_used_saved[table] = true
+			added += 1
+	if added > 0:
+		DirAccess.make_dir_recursive_absolute(USED_LIST.get_base_dir())
+		var file := FileAccess.open(USED_LIST + ".part", FileAccess.WRITE)
+		if file != null:
+			file.store_string(JSON.stringify(used_tables()))
+			file.close()
+			DirAccess.rename_absolute(USED_LIST + ".part", USED_LIST)
+	return added
+
+## True when this table's stored form for the current original and format is
+## on the device (its key matches; contents are verified when opened).
+static func stored_current(table: String) -> bool:
+	if not _open() or not _archive.file_exists("content/"+table+".json"): return true
+	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
+	var meta_path: String = BAKE.ROOT + "/" + ("disk_" if on_disk else "definitions_") + table + ".json"
+	if not FileAccess.file_exists(meta_path): return false
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(meta_path))
+	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and meta.get("key") == _bake_key(table)
+
+## Used tables whose stored form is missing or outdated.
+static func tables_to_prepare() -> PackedStringArray:
+	var missing := PackedStringArray()
+	if _not_installed or not _open(): return missing
+	for table: String in used_tables():
+		if not stored_current(table): missing.append(table)
+	return missing
+
+## Converts one table to its stored form now; the in-memory copy is released
+## by the caller with release_caches() once preparation ends.
+static func prepare_table(table: String) -> bool:
+	return not _store(table).is_empty()
+
 static func release_caches() -> Dictionary:
 	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size()}
 	for table: String in _tables.keys():
@@ -253,6 +315,9 @@ static func table_metadata(table: String) -> Dictionary:
 # (JSON numbers are floats, so callers see exactly the same values and types),
 # strings PackedStringArray, everything else a plain Array. Each call still
 # returns fresh dictionaries, as the previous duplicate(true) did.
+## [store-format-begin] Everything from here to [store-format-end] decides
+## what a stored (baked or on-disk) table holds. Changing it requires a new
+## STORE_FORMAT; tests/definition_store_format_test.gd enforces this.
 static func _store(table: String) -> Dictionary:
 	# User-excluded game word filters are never loaded through this reader.
 	# The original archive and fixed inventory/byte denominators stay intact.
@@ -661,12 +726,17 @@ static func _column_data(store: Dictionary, position: int) -> Variant:
 
 const LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
-const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_definition_rows.gd","res://scripts/resources/current523_bake_cache.gd"]
+## Stored tables are keyed by their format, not by this whole script: any
+## edit here (a new lookup helper, a log line) used to discard every stored
+## table on the phone, which then re-converted each one from JSON during
+## play (seconds per large table) after every update.
+const STORE_FORMAT := "twilight.current523.definition-store.v1"
+const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 
 static func _bake_key(table: String) -> String:
 	if _bake_code.is_empty(): _bake_code = BAKE.code_key(BAKE_CODE)
-	return BAKE.key([verified_key(), table, _bake_code])
+	return BAKE.key([verified_key(), table, STORE_FORMAT, _bake_code])
 
 static func _valid_store(value: Variant) -> bool:
 	if not value is Dictionary or not _integer(value.get("count")) or int(value.count) < 0: return false
@@ -718,6 +788,7 @@ static func _row_at(store: Dictionary, index: int) -> Dictionary:
 		var value: Variant = store.data[column_index][index]
 		result[columns[column_index]] = value.duplicate(true) if value is Array or value is Dictionary else value
 	return result
+## [store-format-end]
 
 ## Rows whose integer `field` is a key of `ids`, in original table order.
 ## Same rows as filtering rows(table), without building the whole table.
@@ -796,6 +867,9 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 	if not _tables.has(table): return result
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
+		var saved: Dictionary = _read_relation(table, foreign_key, store)
+		if not saved.is_empty(): _relations[key] = saved
+	if not _relations.has(key):
 		var column: Variant = null
 		if not store.has("rows"):
 			var position: int = (store.columns as PackedStringArray).find(foreign_key)
@@ -834,6 +908,7 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 				rows[position] = index
 			starts.append(count)
 			_relations[key] = {"keys": keys, "starts": starts, "rows": rows}
+			_write_relation(table, foreign_key, _relations[key])
 		else:
 			# Fallback for very large values or tables: per-ID arrays.
 			if groups.is_empty():
@@ -855,6 +930,43 @@ static func related_indices(table: String, foreign_key: String, id: int) -> Pack
 		related(table, foreign_key, id)
 		if not _relations.has(key): return PackedInt32Array()
 	return _relation_rows(_relations[key], id)
+
+## Small per-table lookup indexes (value -> row positions) are kept on the
+## device next to the stored table, so a later start finds a monster's or an
+## item's rows without scanning the whole column again (Bonus: 217,916 rows,
+## DescData_Korean: 298,319). Only large tables; same verified key + format.
+const RELATION_FORMAT := "twilight.current523.relation-index.v1"
+const RELATION_SAVE_ROWS: int = 4096
+static var relation_disk_reads: int = 0
+
+static func _relation_key(table: String, foreign_key: String) -> String:
+	var table_key: String = _bake_key(table)
+	return "" if table_key.is_empty() else BAKE.key([RELATION_FORMAT, table_key, foreign_key])
+
+static func _relation_name(table: String, foreign_key: String) -> String:
+	return "definitions_index_" + table + "_" + foreign_key
+
+static func _read_relation(table: String, foreign_key: String, store: Dictionary) -> Dictionary:
+	var count: int = int(store.get("count", 0))
+	if count < RELATION_SAVE_ROWS or not foreign_key.is_valid_identifier(): return {}
+	var key: String = _relation_key(table, foreign_key)
+	if key.is_empty(): return {}
+	var value: Variant = BAKE.read(_relation_name(table, foreign_key), key)
+	if not value is Dictionary: return {}
+	var keys: Variant = value.get("keys")
+	var starts: Variant = value.get("starts")
+	var rows: Variant = value.get("rows")
+	if not keys is PackedInt64Array or not starts is PackedInt32Array or not rows is PackedInt32Array: return {}
+	if (rows as PackedInt32Array).size() != count or (starts as PackedInt32Array).size() != (keys as PackedInt64Array).size() + 1: return {}
+	if int(starts[starts.size() - 1]) != count: return {}
+	relation_disk_reads += 1
+	return {"keys": keys, "starts": starts, "rows": rows}
+
+static func _write_relation(table: String, foreign_key: String, relation: Dictionary) -> void:
+	if (relation.rows as PackedInt32Array).size() < RELATION_SAVE_ROWS or not foreign_key.is_valid_identifier(): return
+	var key: String = _relation_key(table, foreign_key)
+	if key.is_empty(): return
+	BAKE.write(_relation_name(table, foreign_key), key, relation)
 
 const RELATION_ROW_LIMIT: int = 1048576
 const RELATION_VALUE_LIMIT: int = 4398046511104 # 2^42 keeps value * 2^20 + row in 63 bits

@@ -3,6 +3,7 @@ extends Node
 ## See frame_hitch_log.gd. Runs while paused so a stalled menu is measured too.
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
+const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
 ## Gameplay heartbeat in boot_progress.log (with memory), so the next loading
 ## screen can say what the app was doing when the system closed it.
 const ALIVE_MSEC: int = 5000
@@ -55,6 +56,7 @@ func _process(_delta: float) -> void:
 	if now - _alive_at >= ALIVE_MSEC:
 		_alive_at = now
 		BOOT_LOG.mark("alive", {"map": map_id})
+		DEFINITIONS.remember_used_tables()
 
 func _input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
