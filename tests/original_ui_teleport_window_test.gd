@@ -56,7 +56,7 @@ func _sources() -> void:
 	check(hud_text.contains("try_open_teleport_window(get_parent())") and hud_text.contains("_report_original_fallback(\"지역 이동\",native)"),"지역 이동 opens the original tab first and reports a fallback")
 	check(hud_text.contains("close_teleport_window()"),"closing the workspace closes the window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
-	for method: String in ["func try_open_teleport_window","func teleport_window_is_open","teleport_window_is_open() or death_window_is_open()"]:
+	for method: String in ["func try_open_teleport_window","func teleport_window_is_open"," or teleport_window_is_open() or "]:
 		check(main_text.contains(method),"the original UI controller exposes "+method)
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_teleport_window.gd")
 	check(text.contains("emit_signal(\"npc_teleport_requested\"") and text.contains("POLICY.quote("),"이동하기 uses the existing quote and move")

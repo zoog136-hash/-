@@ -86,7 +86,7 @@ func _sources() -> void:
 	check(hud_text.contains("refresh_production_window()") and hud_text.contains("close_production_window()"),"a craft refreshes and closing the workspace closes the window")
 	check(hud_text.contains("CraftUI.pending_focus") and hud_text.contains("select_recipe(target)"),"획득처 → 제작 selects the recipe in the original window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
-	for method: String in ["func try_open_production_window","func production_window_is_open","func close_production_window","production_window_is_open() or death_window_is_open()"]:
+	for method: String in ["func try_open_production_window","func production_window_is_open","func close_production_window"," or production_window_is_open() or "]:
 		check(main_text.contains(method),"the original UI controller exposes "+method)
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_production_window.gd")
 	check(not text.contains("Image.create") and not text.contains("draw_rect"),"no picture is drawn")

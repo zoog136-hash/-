@@ -47,7 +47,7 @@ func _sources() -> void:
 	check(hud_text.contains("try_open_stat_detail_window()") and hud_text.contains("_report_original_fallback(\"상세 능력치\",native)"),"상세 능력치 opens the original window first and reports a fallback")
 	check(hud_text.contains("close_stat_detail_window()"),"ESC and closing the workspace close the window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
-	for method: String in ["func try_open_stat_detail_window","func stat_detail_window_is_open","stat_detail_window_is_open() or death_window_is_open()"]:
+	for method: String in ["func try_open_stat_detail_window","func stat_detail_window_is_open"," or stat_detail_window_is_open() or "]:
 		check(main_text.contains(method),"the original UI controller exposes "+method)
 	var scene_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
 	check(scene_text.contains("var nine_size: Variant") and scene_text.contains("stretched is Vector2 and bool(options.scale9Enabled)"),"a scale-9 card can grow to its rows")
