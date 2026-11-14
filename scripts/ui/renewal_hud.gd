@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("teleport_window_is_open") and original_main_ui_controller.teleport_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("storage_window_is_open") and original_main_ui_controller.storage_window_is_open()) or (original_main_ui_controller.has_method("store_window_is_open") and original_main_ui_controller.store_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("teleport_window_is_open") and original_main_ui_controller.teleport_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("storage_window_is_open") and original_main_ui_controller.storage_window_is_open()) or (original_main_ui_controller.has_method("store_window_is_open") and original_main_ui_controller.store_window_is_open()) or (original_main_ui_controller.has_method("dungeon_window_is_open") and original_main_ui_controller.dungeon_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -1000,6 +1000,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_clan_window"):original_main_ui_controller.close_clan_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_storage_window"):original_main_ui_controller.close_storage_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_store_window"):original_main_ui_controller.close_store_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dungeon_window"):original_main_ui_controller.close_dungeon_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_teleport_window"):original_main_ui_controller.close_teleport_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_production_window"):original_main_ui_controller.close_production_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_enchant_window"):original_main_ui_controller.close_enchant_window()
@@ -3237,6 +3238,17 @@ func open_source_dungeons() -> void:
 	view.tree_exiting.connect(func() -> void:
 		var world: Node = get_parent()
 		if is_instance_valid(world) and world.has_method("_release_idle_original_models"): world._release_idle_original_models())
+	# The original 던전 list window over the same rows and actions (the view
+	# stays mounted in the hidden workspace); without it the view is shown.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_dungeon_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_dungeon_window(view)
+		original_main_ui_status["dungeon_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
+		_report_original_fallback("던전",native)
 
 
 func refresh_source_dungeon_progress() -> void:
@@ -3249,6 +3261,7 @@ func _refresh_source_dungeon_progress_deferred() -> void:
 	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_dungeon_window"): original_main_ui_controller.refresh_dungeon_window()
 
 func _request_halphas_star_enchant() -> void:
 	open_halphas_star_enchant(catalog_category, CARD_RULES.card_id(selected_catalog_record))

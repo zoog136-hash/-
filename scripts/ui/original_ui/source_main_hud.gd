@@ -1175,6 +1175,40 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 던전 list window (source_main_dungeon_window; the rows,
+## entry checks, confirmations and actions stay with the existing dungeon
+## screen, source_dungeon_view, mounted in the hidden workspace)
+const DungeonWindow=preload("res://scripts/ui/original_ui/source_main_dungeon_window.gd")
+var _dungeon_window: RefCounted
+
+func try_open_dungeon_window(view: Object) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _dungeon_window==null and _pack!=null and hud!=null:
+		var window=DungeonWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["dungeon_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_dungeon_window=window
+	if _dungeon_window==null or not is_instance_valid(_coordinates):return _window_problem("dungeon_window")
+	_cancel_native_buttons()
+	return _dungeon_window.open(_coordinates,view)
+
+func dungeon_window() -> RefCounted:
+	return _dungeon_window
+
+func dungeon_window_is_open() -> bool:
+	return _dungeon_window!=null and _dungeon_window.is_open()
+
+func refresh_dungeon_window() -> Dictionary:
+	return _dungeon_window.refresh() if dungeon_window_is_open() else {"ok":true,"handled":false}
+
+func close_dungeon_window() -> void:
+	if dungeon_window_is_open():
+		_cancel_native_buttons()
+		_dungeon_window.close()
+
 ## --- Original 523 NPC 상점 window (source_main_store_window; the talking
 ## NPC's original merchant goods, quotes and payment stay with world.source_shop)
 const StoreWindow=preload("res://scripts/ui/original_ui/source_main_store_window.gd")
@@ -1473,7 +1507,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or storage_window_is_open() or store_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or storage_window_is_open() or store_window_is_open() or dungeon_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

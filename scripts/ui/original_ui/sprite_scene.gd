@@ -128,6 +128,11 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 					if event is Dictionary and event.size()==1 and event.get("EventSound") is String:
 						excluded_audio_events.append({"frame":value.frameIndex,"value":value.value,"action_tag":timeline.actionTag})
 						_audio_frame_offsets[int(value._offset)]=true
+					# An event frame with an empty value names no event (the
+					# Mission_Dungeon_TracesOrim "Popup_On_Hard" key): nothing
+					# is dispatched for it, so it needs no owner callback.
+					elif str(value.value).is_empty():
+						_audio_frame_offsets[int(value._offset)]=true
 					else:
 						var event_callback: Variant=_bindings.get("frame_events",{}).get(int(value._offset))
 						if not event_callback is Callable or not event_callback.is_valid():
@@ -202,6 +207,12 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
 		else:
 			for key: Variant in custom:
+				# "HangulWordFind" (bool) / "LineBreakSymbols" are the client's
+				# line-break hints on a Text (Mission_List_Time Label_Item);
+				# this renderer already breaks Hangul at Cocos CJK word
+				# boundaries, so they are kept as metadata only.
+				if key=="HangulWordFind" and custom[key] is bool and node.get("classname")=="Text":continue
+				if key=="LineBreakSymbols" and custom[key] is String and node.get("classname")=="Text":continue
 				if not custom[key] is String:problems.append("custom_property")
 				elif key=="transfer":
 					if custom[key] not in ["true","false"] or node.get("classname") not in ["Text","TextBMFont"]:problems.append("custom_property")
