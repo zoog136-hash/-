@@ -60,7 +60,9 @@ NODE_SCOPES = [
     ("UI/Map/Map_All.csb", [35332, 34904, 30312, 29552, 29228, 31656]),
     ("UI/MapScene.csb", [132]),
 ]
-EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440]}
+# Clan_Slot_Join_Donate_Item Sp_IconSample 4788: the weekly donation reward's
+# item picture comes from the image owner (source_main_clan_window).
+EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788]}
 # Plain original pictures the code loads by path from the pack (not named by a
 # scene): the clan emblem PNGs of AssetType 111 "Emblem" (Path UI/Emblem/),
 # shown by source_main_emblem_window through Emblem.EmblemLargeID/AssetView.
@@ -72,6 +74,14 @@ PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # leaves its inventory ProjectNodes (and the dismantle tab and probability
 # popup it does not connect) out. Every other node is kept.
 WHOLE_SCOPES = [
+    # Clan_Slot_Join_Donate_Item whole; its Sp_IconSample is external (above).
+    ("UI/Clan/Clan_Slot_Join_Donate_Item.csb", []),
+    # The clan window (source_main_clan_window) mounts the 창설 / 혈맹 정보
+    # tabs and the 기부 popup only: the online-only relation lists, attendance,
+    # notice input, donation ranking and shop detail are left out.
+    ("UI/Clan/Clan_Tab_Join_Info.csb", [23488, 23204, 22940, 848, 588]),
+    ("UI/Clan/Clan_Popup_Join_Donate.csb", [840, 572]),
+    ("UI/Clan/Clan_All.csb", [6780, 6260, 6020, 5720, 5464, 5216, 4960, 4456, 4200, 3956, 3700, 3460, 3208, 2912, 2396, 2152, 1880, 1636, 1372, 1116, 868, 600, 336]),
     ("UI/DominationStone/DominationStone_Power_Effect.csb", [176]),
     ("UI/DominationStone/DominationStone_Tab_Power.csb", []),
     ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),

@@ -458,9 +458,10 @@ func _process_step(_delta: float) -> void:
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
 					_inventory_rows_signature=_inventory_model_signature(true,false)
-	if _inventory_name_view!=null and not _source_input_captured(hud):
-		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
-		else:_inventory_name_view.close()
+	# A single bag tap keeps TWILIGHT's own floating item name (the bag's
+	# item_name_hint over the tapped slot, see inventory_name_hint_context);
+	# the original ToolTip header is not mounted for it.
+	if _inventory_name_view!=null and _inventory_name_view.is_open():_inventory_name_view.close()
 	if _inventory_lock_view!=null and not _source_input_captured(hud):
 		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
 		var shown: Dictionary=_inventory_lock_view.presentation()
@@ -871,7 +872,11 @@ func _release_menu_page_leases() -> void:
 		_pack.release_cache_leases()
 
 func inventory_name_hint_context(reference: String) -> Dictionary:
-	return _inventory_view.name_hint_context(reference) if inventory_is_open() and _inventory_name_view!=null else {}
+	if not inventory_is_open():return {}
+	var context: Dictionary=_inventory_view.name_hint_context(reference)
+	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
+	if context.get("ok",false) and is_instance_valid(canvas):context["host"]=canvas
+	return context
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	return _inventory_view.hit_at(viewport_point) if inventory_is_open() and not inventory_search_is_open() else {}
@@ -1170,6 +1175,36 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 혈맹 window (source_main_clan_window; the local clan
+## rules, quotes and saves stay in scripts/clan523)
+const ClanWindow=preload("res://scripts/ui/original_ui/source_main_clan_window.gd")
+var _clan_window: RefCounted
+
+func try_open_clan_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _clan_window==null and _pack!=null and hud!=null:
+		var window=ClanWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["clan_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_clan_window=window
+	if _clan_window==null or not is_instance_valid(_coordinates):return _window_problem("clan_window")
+	_cancel_native_buttons()
+	return _clan_window.open(_coordinates,world)
+
+func clan_window() -> RefCounted:
+	return _clan_window
+
+func clan_window_is_open() -> bool:
+	return _clan_window!=null and _clan_window.is_open()
+
+func close_clan_window() -> void:
+	if clan_window_is_open():
+		_cancel_native_buttons()
+		_clan_window.close()
+
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
@@ -1241,7 +1276,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or clan_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()
