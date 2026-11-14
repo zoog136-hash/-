@@ -21,7 +21,9 @@ TWILIGHT 자체 정책(`TWILIGHT_CURRENT523_TERRITORY_DENSITY_V1`)에서, 리스
 1. Land 샤드의 `NpcSpawnPackTerritory` 행마다 Territory 사각형(원문 셀)을 구역으로 쓴다.
 2. 제외: 마을 Territory, 이름에 `[QUEST]`/`[퀘스트]`/`[메인]`/`[깃발전]`/`[스케줄]`/`[이벤트]`,
    스케줄·낮밤·월드보스 조건이 있는 팩, `IsSpawn≠1`, `ServerLimitSetID≠0`, TestNPC,
-   Exp 0, 공격 불가 분류와 Citizen/Guard/Slime/Siege/Party/GateKeeper/Companion 분류.
+   공격 불가 분류와 Citizen/Guard/Slime/Siege/Party/GateKeeper/Companion 분류.
+   Exp 0 클래스는 비선공(Tendency < 2)이거나 이름에 대괄호 콘텐츠 표기(`[공성전]` 등)가 있을 때만
+   제외한다(아덴 필드 몬스터 대부분이 원본 Exp 0이라 전부 빼면 필드가 비었다, #501).
 3. 마리 수: Territory 800셀당 1마리, 행당 1~6마리. 같은 팩의 여러 종류는 ID 순 라운드로빈으로
    나누며 시작 위치를 행 ID로 돌린다. 종류당 최대 4.
 4. 보스(카탈로그 UI 보스 또는 `[필드보스]` 구역): 1마리. 같은 보스의 여러 후보 구역은
@@ -78,3 +80,13 @@ python3 tools/map_restore/current523_spawn_preview.py --pack /private/patch523-w
   센다. 판정은 `current523_aden_source_field.gd`와 같은 허용 워드 {0,4,8,12,32}·바닥 센티넬·
   대각선 양쪽 직교 칸 조건이다. 합성 S32로 벽 분리·고립 소구역 검출을 확인했다.
   **원본 Aden S32로 실행한 결과는 아직 없다** (작업 환경에 원본 S32 없음).
+
+## 처치 경험치 (사용자 결정 2026-11-14)
+
+- 원본 NpcClass `Exp`가 0보다 크면 원본 값을 그대로 준다.
+- 원본 `Exp`가 0인 필드 몬스터(rn bugbear, rn orc, wild boar 등)는 **18 × NpcLevel + 30, 최소 10**을
+  준다. NpcLevel은 그 개체를 낸 원본 `NpcSpawnPackNpcClassView.NpcLevel`이다(예: Lv.3 → 84).
+  원본 표에는 NPC 레벨별 경험치 표가 없어서 사용자가 정한 TWILIGHT 규칙이다(원작 수치 아님).
+- 구현: `scripts/monsters/current523_kill_experience.gd`(`monster.gd`의 `exp_reward`). 지도별
+  경험치 배수·축복 소모 등 기존 처치 경험치 처리는 그대로 적용된다.
+
