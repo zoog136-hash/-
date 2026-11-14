@@ -29,7 +29,8 @@ var _manifest_path: String = ""
 var _manifest_sha: String = ""
 var _manifest: Dictionary = {} # top-level fields; actors/members via _index
 var _index: RefCounted = null
-var _excluded_source_actors: Dictionary = {}
+var _excluded_source_actors: Dictionary = {} # shared, read only (see _install_source_exclusions)
+static var _shared_exclusions: Dictionary = {} # manifest SHA -> [source registry, frozen copy]
 var _actor_pins: Dictionary = {}
 # This bank's working set: member -> shared read-only parse. Each entry holds
 # one lease in ASSETS under _parsed_keys[member]. At most three members are
@@ -145,7 +146,15 @@ func _install_source_exclusions() -> Dictionary:
 		if not paths is Array or paths.is_empty(): return fail("Missing exact source dummy declaration path.")
 		for path: Variant in paths:
 			if not path is Dictionary or path.get("kind") != "source_declared_root" or not path.get("sprite_ids") is Array or path.sprite_ids.size() != 1 or path.sprite_ids[0] != sprite_id: return fail("Source dummy registry must name only the actual literal declaration.")
-	_excluded_source_actors = registry.duplicate(true)
+	# Every bank of one pinned manifest validates the same registry. They share
+	# one frozen copy (read only; ~3 MB each when every monster kept its own).
+	var memo: Variant = _shared_exclusions.get(_manifest_sha)
+	if not memo is Array or not (is_same(memo[0], registry) or memo[1] == registry):
+		var copy: Dictionary = registry.duplicate(true)
+		PREPARED.freeze(copy)
+		memo = [registry, copy]
+		_shared_exclusions = {_manifest_sha: memo}
+	_excluded_source_actors = memo[1]
 	return {"ok":true}
 
 func _source_graph_admission(proof: Dictionary) -> Dictionary:
@@ -353,7 +362,7 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _release_parsed()
+	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
 	# Same shared, storage-backed manifest view as load_bank(); _member() reads it.
 	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened
@@ -757,7 +766,7 @@ func load_shared_bank(manifest_path: String, expected_sha: String, source_actor_
 		_manifest_sha = expected_sha
 		_manifest = snapshot.manifest
 		_index = snapshot.index
-		_excluded_source_actors = snapshot.exclusions.duplicate(true)
+		_excluded_source_actors = snapshot.exclusions
 		_actor_pins = snapshot.actor_pins.duplicate()
 		_prepared_members = snapshot.members.duplicate(true)
 		_prepared_snapshot = snapshot
@@ -776,7 +785,7 @@ func load_shared_bank(manifest_path: String, expected_sha: String, source_actor_
 	snapshot.result = loaded
 	snapshot.manifest = _manifest
 	snapshot.index = _index
-	snapshot.exclusions = _excluded_source_actors.duplicate(true)
+	snapshot.exclusions = _excluded_source_actors
 	snapshot.actor_pins = _actor_pins.duplicate()
 	snapshot.members = _prepared_members.duplicate(true)
 	PREPARED.freeze(snapshot.result)
@@ -806,7 +815,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	_root = manifest_path.get_base_dir()
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
-	_manifest = {}; _index = null; _excluded_source_actors.clear(); _actor_pins.clear(); _release_parsed()
+	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
 	# One shared, storage-backed view of the pinned manifest per process.
 	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened
