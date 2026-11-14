@@ -417,7 +417,9 @@ func _accept(parsed: Variant, expected_sha256: String) -> bool:
 	_cold_parts = PackedStringArray()
 	_cold_cache.clear()
 	_offload_catalog_records()
-	recipes = data.recipes.duplicate(true)
+	# Shared with data.recipes (read-only: material_selection() duplicates a
+	# recipe before choosing materials) instead of a second deep copy.
+	recipes = data.recipes
 	digest = expected_sha256
 	return true
 

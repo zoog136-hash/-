@@ -22,27 +22,12 @@ static func select(records: Array,inventory: Dictionary,item_id: int,original: D
 	if invalid_native:return {"ok":false,"error":"가호 원본 카탈로그 정체 불일치 · 기존 소유 보존"}
 	return {"ok":true,"records":canonical if not canonical.is_empty() else records}
 
-## The owner's reviewed contract is pinned by its git blob where the source
-## text exists (editor, tests, CI). Exported apps ship compiled scripts with no
-## source text (get_source_code() is empty); hashing that empty text made every
-## phone report a contract mismatch and closed 가호 crafting (2026-11-14 phone
-## error record: hashing_context "len == 0" from this function).
-static func owner_source_mismatch(script: Script) -> bool:
-	if script==null:return true
-	var source: String=script.get_source_code()
-	if source.is_empty():return false
-	var bytes: PackedByteArray=source.to_utf8_buffer()
-	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1)
-	var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
-	hash.update(header);hash.update(bytes)
-	return hash.finish().hex_encode()!=REVIEWED_OWNER_BLOB
-
 static func prepare(world: Node) -> Dictionary:
 	var owner: RefCounted=world.protection523
 	if owner==null:return {"ok":false,"error":"가호 제작 소유자 미설치"}
 	var input_error: String=preload("res://scripts/crafting/patch523_owner_transactions.gd").protected_inputs_error(world)
 	if not input_error.is_empty():return {"ok":false,"error":input_error}
-	if owner_source_mismatch(owner.get_script()):return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
+	if not preload("res://scripts/crafting/patch523_owner_transactions.gd").reviewed_script(owner.get_script(),REVIEWED_OWNER_BLOB):return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
 	var size: int=world.catalog_db.get("아이템",[]).size()
 	var key: int=owner.get_instance_id()
 	if not views.has(key) or owner.binding_catalog_size!=size:
