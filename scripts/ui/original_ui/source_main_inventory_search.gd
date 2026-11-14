@@ -62,7 +62,7 @@ func open(parent: Node) -> Dictionary:
 	if not nested.get("ok",false):next.free();return nested
 	var renderer: Node2D=nested.player
 	var field_node: Variant=renderer.get("source_nodes").get(FIELD)
-	var field: Variant=field_node.get_meta("source_text_field",null) if is_instance_valid(field_node) else null
+	var field: Variant=(field_node.get_meta("source_text_field") if field_node.has_meta("source_text_field") else null) if is_instance_valid(field_node) else null
 	var bounds: Control=_consume_control(renderer,8316)
 	if not is_instance_valid(field) or bounds==null:next.free();return _fail("source_inventory_search_original_input_mount_required")
 	# Same original inventory parent end state; popup visibility is an

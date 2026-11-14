@@ -99,7 +99,7 @@ func _stage() -> Dictionary:
 	var next: Node2D=built.scene
 	var list: Dictionary=NamedTree.locate(next,out,"Clan_Tab_Mark/ListView_List")
 	var list_node: Variant=list.player.source_nodes.get(list.offset) if list.get("ok",false) else null
-	var content: Variant=list_node.get_meta("source_list_content",null) if is_instance_valid(list_node) else null
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:
 		next.free()
 		return _fail("source_emblem_window_list_content_missing")

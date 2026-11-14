@@ -141,7 +141,7 @@ static func previous_last_fields() -> Dictionary:
 		# The memory breakdown comes from the latest heartbeat at or before it.
 		if fields.ev == "alive":
 			for key: String in fields:
-				if key.begins_with("sp2_") or key in ["nodes", "resources", "tables", "tex_kb"]: last["alive_" + key] = fields[key]
+				if key.begins_with("sp2_") or key.begins_with("r_") or key in ["nodes", "resources", "tables", "tex_kb", "objects", "actors", "field_chunks"]: last["alive_" + key] = fields[key]
 			break
 	return last
 
@@ -176,6 +176,9 @@ static func previous_end_line() -> String:
 		var gpu: int = int(fields.get("alive_tex_kb", "-1"))
 		if gpu >= 0: line += " · GPU 텍스처 %dMB" % (gpu / 1024)
 		line += " · 노드 %s · 리소스 %s · 원본 표 %s" % [fields.get("alive_nodes", "-"), fields.get("alive_resources", "-"), fields.get("alive_tables", "-")]
+		if fields.has("alive_objects"): line += " · 객체 %s · 몬스터 %s" % [fields.alive_objects, fields.get("alive_actors", "-")]
+		if fields.has("alive_r_raw_chunks"):
+			line += " · 지도 조각 %s/명령 %s/아틀라스 %s/정적 %s" % [fields.alive_r_raw_chunks, fields.get("alive_r_frame_commands", "-"), fields.get("alive_r_frame_atlases", "-"), fields.get("alive_r_static_tails", "-")]
 	var available: int = int(fields.get("available_kb", "-1"))
 	if available >= 0: line += " · 기기 여유 %dMB" % (available / 1024)
 	return line

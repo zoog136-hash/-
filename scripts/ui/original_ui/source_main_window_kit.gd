@@ -203,7 +203,7 @@ func _list(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
 	var located: Dictionary=_locate(root,out,suffix)
 	if not located.get("ok",false):return located
 	var node: Node2D=located.player.source_nodes.get(located.offset)
-	var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) else null
+	var content: Variant=(node.get_meta("source_list_content") if node.has_meta("source_list_content") else null) if is_instance_valid(node) else null
 	if not content is Node2D:return _fail("source_window_list_content_missing")
 	return {"ok":true,"content":content,"size":_node_size(out,suffix),"key":located.key}
 

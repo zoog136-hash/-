@@ -289,7 +289,7 @@ func _fill_power(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 		var stone: Dictionary=_locate(root,out,"DominationStone_Tab_Power/DominationStone_List_Stone0%d" % (index+1))
 		if not stone.get("ok",false):continue
 		var holder: Node2D=stone.player.source_nodes.get(stone.offset)
-		var player: Variant=holder.get_meta("source_project_player",null) if is_instance_valid(holder) else null
+		var player: Variant=(holder.get_meta("source_project_player") if holder.has_meta("source_project_player") else null) if is_instance_valid(holder) else null
 		if player==null:continue
 		var clip: String="Fx_Stone_On_Loop" if not runtime.slot(index).is_empty() else ("Fx_Stone_Loop" if runtime.slot_unlocked(index) else "")
 		if not clip.is_empty() and player.play(clip,true).get("ok",false):clips.append(clip)
@@ -328,7 +328,7 @@ func _fill_power(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 		var list: Dictionary=_locate(root,out,str(pair[0]))
 		if not list.get("ok",false):return list
 		var node: Node2D=list.player.source_nodes.get(list.offset)
-		var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) else null
+		var content: Variant=(node.get_meta("source_list_content") if node.has_meta("source_list_content") else null) if is_instance_valid(node) else null
 		if not content is Node2D:return _fail("source_domination_list_content_missing")
 		var size: Vector2=_list_size(out,_pack,POWER_EFFECT,str(pair[0]))
 		var lines: Array=pair[2]
@@ -460,7 +460,7 @@ func _fill_fusion(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 	if not _result.is_empty():
 		var tab: Dictionary=_locate(root,out,"DominationStone_All_Layout/DominationStone_Tab_Fusion")
 		var holder: Node2D=tab.player.source_nodes.get(tab.offset) if tab.get("ok",false) else null
-		var player: Variant=holder.get_meta("source_project_player",null) if is_instance_valid(holder) else null
+		var player: Variant=(holder.get_meta("source_project_player") if holder.has_meta("source_project_player") else null) if is_instance_valid(holder) else null
 		if player!=null and player.play("Ok_On",false).get("ok",false):clip="Ok_On"
 	return {"ok":true,"pictures":pictures,"registered":_fusion.size(),"result":not _result.is_empty(),"world":world!=null,"clip":clip}
 
@@ -602,7 +602,7 @@ func _fill_quest(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 		var list: Dictionary=_locate(root,out,"Nd_Quest/"+list_suffix)
 		if not list.get("ok",false):return list
 		var node: Node2D=list.player.source_nodes.get(list.offset)
-		var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) else null
+		var content: Variant=(node.get_meta("source_list_content") if node.has_meta("source_list_content") else null) if is_instance_valid(node) else null
 		if not content is Node2D:return _fail("source_domination_list_content_missing")
 		var size: Vector2=_list_size(out,_pack,TAB_QUEST,"Nd_Quest/"+list_suffix)
 		var rows: Array[Dictionary]=[]
