@@ -606,3 +606,22 @@ alpha/color/font. This dedicated auto message is not used as a generic
 show_message/text/2.6-second notification. Fx_Loop5..95 remains original metadata;
 its repeat/autoplay policy is undeclared and no play/seek/loop is inferred.
 This is unexecuted code; no render/game-consumption count advances.
+
+## Original 523 feature windows: decisions of 2026-11-14
+
+- 변신 파견 (`Change_DispatchView`, `source_main_card_dispatch_window.gd`):
+  connected to the existing expedition runtime (prepare / start / resurrect /
+  claim) for the 변신 deck. The spot coordinates
+  (`MagicDollExpeditionSpot.CoordinateX/Y`) have no conversion to the page,
+  so the original `Change_Dispatch_Btn` spots are laid out as a list grid
+  inside `Panel_Map` instead of being placed by coordinate. The card state
+  overlay and the set/info popups are the original scenes. Not connected:
+  보관함 사용, 일괄 재파견, daily count, reset, and the popups' reward, item,
+  exp and log lists (the TWILIGHT expedition view keeps them).
+- 조합 (`UI/Compose/Compose_All.csb`): not connected; the current window
+  stays. The original screen is 재료 선택 -> 제 작 -> 아데나로 결과 변경
+  (`Compose_Production`, `Compose_Inventory`, `Compose_Roulette`). The
+  TWILIGHT 조합 feature (`scripts/combinations`) applies and releases
+  변신·인형·장비 combination sets, a different rule, and no TWILIGHT runtime
+  performs that material crafting, so there is nothing for the original
+  screen to show or call.
