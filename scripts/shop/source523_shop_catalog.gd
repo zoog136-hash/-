@@ -47,6 +47,14 @@ var _links: Dictionary = {}
 ## Original-path tables served by the shared definitions reader.
 var _shared: Dictionary = {}
 const SHARED_ROW_THRESHOLD: int = 20000
+## Relation tables grouped into _links by these fields stay in memory; every
+## other table is served by the shared definitions reader (columnar, read on
+## demand) instead of thousands of resident Dictionaries (phone memory:
+## the shop catalog held ~140 MB, 2026-11-14 staging measurement).
+const JOINS: Dictionary = {"MarketPurchaseProduct":"MarketPurchaseID", "MarketBonusForPurchase":"MarketPurchaseID",
+	"MarketProductAdditional":"MarketProductID", "MarketPurchaseRestriction":"MarketPurchaseId",
+	"MarketPurchaseServerLimitGroup":"MarketPurchaseID", "MarketDisplay":"PurchaseID",
+	"CurrencyUnitClass":"CurrencyID", "ServerLimit":"ServerLimitSetID", "MarketPurchaseGroup":"PurchaseGroupID"}
 var loaded_sha256: String = ""
 var model_input_identity: Dictionary = {}
 var error: String = ""
@@ -142,7 +150,7 @@ func load_original() -> bool:
 			shared[table] = selected
 			provenance[table].packed_rows = selected.size()
 			continue
-		var stream: bool = count >= SHARED_ROW_THRESHOLD
+		var stream: bool = count >= SHARED_ROW_THRESHOLD or not JOINS.has(table)
 		var source_rows: Array[Dictionary] = []
 		if not stream: source_rows = Definitions.rows(table)
 		for index: int in count:
@@ -240,12 +248,16 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 			var key: String = str(int(row.ID))
 			if indexed.has(key): return _fail("상점 팩 중복 ID: " + table)
 			indexed[key] = true if shared.has(table) else row
-		indices[table] = indexed if not shared.has(table) or shared[table] is PackedInt32Array else {}
+		if shared.get(table) is PackedInt32Array:
+			# Selected rows of a shared table: a sorted ID array, not a
+			# Dictionary of one String key per row (145,895 label IDs).
+			var ids := PackedInt64Array()
+			for key: String in indexed: ids.append(int(key))
+			ids.sort()
+			indices[table] = ids
+		else: indices[table] = indexed if not shared.has(table) else {}
 	var links: Dictionary = {}
-	var joins: Dictionary = {"MarketPurchaseProduct":"MarketPurchaseID", "MarketBonusForPurchase":"MarketPurchaseID",
-		"MarketProductAdditional":"MarketProductID", "MarketPurchaseRestriction":"MarketPurchaseId",
-		"MarketPurchaseServerLimitGroup":"MarketPurchaseID", "MarketDisplay":"PurchaseID",
-		"CurrencyUnitClass":"CurrencyID", "ServerLimit":"ServerLimitSetID", "MarketPurchaseGroup":"PurchaseGroupID"}
+	var joins: Dictionary = JOINS
 	for table: String in joins:
 		var grouped: Dictionary = {}
 		for row: Dictionary in tables[table]:
@@ -290,10 +302,17 @@ func rows(table: String) -> Array:
 
 func record(table: String, id: int) -> Dictionary:
 	if _shared.has(table):
-		if _shared[table] is PackedInt32Array and not _indices.get(table,{}).has(str(id)): return {}
+		if _shared[table] is PackedInt32Array and not _selected_has(table, id): return {}
 		var matches: Array[Dictionary] = Definitions.related(table, "ID", id)
 		return matches[0] if matches.size() == 1 and id >= 0 else {}
 	return _indices.get(table, {}).get(str(id), {}).duplicate(true)
+
+func _selected_has(table: String, id: int) -> bool:
+	var ids: Variant = _indices.get(table)
+	if ids is PackedInt64Array:
+		var at: int = (ids as PackedInt64Array).bsearch(id)
+		return at < (ids as PackedInt64Array).size() and (ids as PackedInt64Array)[at] == id
+	return ids is Dictionary and (ids as Dictionary).has(str(id))
 
 func _related(table: String, id: int) -> Array:
 	return _links.get(table, {}).get(str(id), []).duplicate(true)
