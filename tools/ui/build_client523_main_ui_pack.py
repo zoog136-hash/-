@@ -55,14 +55,15 @@ NODE_SCOPES = [
     ("UI/Store/Store_All.csb", [67396]),
     # World map (source_main_map_bindings.build_map_scene): row, area with the
     # World image slot 44440 (pixels come from the 523 image pack), Map_All, MapScene.
-    ("UI/Map/Map_List_Button.csb", [7440, 4508, 7492, 4560]),
     ("UI/Map/Map_Tab_Area.csb", [44440, 37316]),
-    ("UI/Map/Map_All.csb", [35332, 34904, 30312, 29552, 29228, 31656]),
     ("UI/MapScene.csb", [132]),
 ]
 # Clan_Slot_Join_Donate_Item Sp_IconSample 4788: the weekly donation reward's
 # item picture comes from the image owner (source_main_clan_window).
-EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788]}
+# Map_Tab_Teleport Payment/Icon 7356: the 지역 이동 fee is Adena, so the
+# teleport window (source_main_teleport_window) shows Atlas_Common's
+# Com_Icn_Adena there instead of the authored diamond.
+EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Map/Map_Tab_Teleport.csb": [7356], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788]}
 # Plain original pictures the code loads by path from the pack (not named by a
 # scene): the clan emblem PNGs of AssetType 111 "Emblem" (Path UI/Emblem/),
 # shown by source_main_emblem_window through Emblem.EmblemLargeID/AssetView.
@@ -82,6 +83,20 @@ WHOLE_SCOPES = [
     ("UI/Clan/Clan_Tab_Join_Info.csb", [23488, 23204, 22940, 848, 588]),
     ("UI/Clan/Clan_Popup_Join_Donate.csb", [840, 572]),
     ("UI/Clan/Clan_All.csb", [6780, 6260, 6020, 5720, 5464, 5216, 4960, 4456, 4200, 3956, 3700, 3460, 3208, 2912, 2396, 2152, 1880, 1636, 1372, 1116, 868, 600, 336]),
+    # Map_Tab_Teleport (source_main_teleport_window) without the destination
+    # preview, open effect, particle, spine, list filters and tax it leaves out;
+    # Payment/Icon 7356 is an external texture node (see above).
+    ("UI/Map/Map_Tab_Teleport.csb", [14968, 14368, 17432, 11104, 1560, 664]),
+    # Map_List_Button rows (world map and teleport list) without the bookmark
+    # star (Btn_CheckBox) neither window connects; the world map's
+    # 7440/4508/7492/4560 scope stays covered (Android world-map contract).
+    ("UI/Map/Map_List_Button.csb", [1784]),
+    # Map_All: the world map (source_main_map_bindings, Map_Tab_Area) and the
+    # teleport tab (source_main_teleport_window, Map_Tab_Teleport) with the
+    # frame and tab bar; the world / dungeon / siege tabs and the skill slots
+    # are not mounted. It keeps the world map's 35332/34904/30312/29552/29228/
+    # 31656 scope (Android world-map contract).
+    ("UI/Map/Map_All.csb", [31940, 31372, 30868, 512, 7648]),
     ("UI/DominationStone/DominationStone_Power_Effect.csb", [176]),
     ("UI/DominationStone/DominationStone_Tab_Power.csb", []),
     ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),

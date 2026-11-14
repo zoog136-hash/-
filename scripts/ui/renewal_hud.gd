@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open()) or (original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open()) or (original_main_ui_controller.has_method("teleport_window_is_open") and original_main_ui_controller.teleport_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -943,6 +943,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():
 			original_main_ui_controller.close_world_map()
+			get_viewport().set_input_as_handled()
+			return
+		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("stat_detail_window_is_open") and original_main_ui_controller.stat_detail_window_is_open():
+			original_main_ui_controller.close_stat_detail_window()
 			get_viewport().set_input_as_handled()
 			return
 		if is_instance_valid(detail_window) and detail_window.visible:
@@ -994,6 +998,9 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_clan_window"):original_main_ui_controller.close_clan_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_teleport_window"):original_main_ui_controller.close_teleport_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_production_window"):original_main_ui_controller.close_production_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_enchant_window"):original_main_ui_controller.close_enchant_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
@@ -1016,6 +1023,7 @@ func _close_workspace() -> void:
 		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): dialog.dismiss()
 	if is_instance_valid(detail_window): detail_window.hide()
 	if is_instance_valid(companion_window): companion_window.hide()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_stat_detail_window"):original_main_ui_controller.close_stat_detail_window()
 	if workspace != null:
 		workspace.hide()
 	active_section = ""
@@ -1329,6 +1337,15 @@ func open_warehouse() -> void:
 
 func open_npc_teleport() -> void:
 	_open_window("teleport","텔레포트 안내인","기존 25개 맵으로 이동 · 기존 충돌/좌표 보존")
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_teleport_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_teleport_window(get_parent())
+		original_main_ui_status["teleport_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
+		_report_original_fallback("지역 이동",native)
 	var screen := TeleportUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
@@ -1336,9 +1353,36 @@ func open_npc_teleport() -> void:
 func open_crafting() -> void:
 	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
 	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
+	if _open_original_production(): return
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+## The original 523 ProductionScene (source_main_production_window) over the
+## same recipes; false -> the TWILIGHT crafting screen opens (reported).
+func _open_original_production() -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_production_window"): return false
+	var native: Dictionary = original_main_ui_controller.try_open_production_window(get_parent())
+	original_main_ui_status["production_window"] = native
+	if not native.get("handled",false):
+		_report_original_fallback("제작",native)
+		return false
+	if pointer_transfer != null: pointer_transfer.cancel()
+	workspace.hide()
+	_sync_screen_focus()
+	# A pending recipe (획득처 → 제작) is selected in the original window.
+	if not CraftUI.pending_focus.is_empty():
+		var target: String = CraftUI.pending_focus
+		CraftUI.pending_focus = ""
+		var focused: Dictionary = original_main_ui_controller.production_window().select_recipe(target)
+		CraftUI.last_focus = {"recipe_id":target,"focused":focused.get("ok",false) and original_main_ui_controller.production_window().selected()==target}
+	return true
+
+## A craft (or any bag change) refreshes the open original 제작 window.
+func refresh_inventory(items: Dictionary) -> void:
+	super.refresh_inventory(items)
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open():
+		original_main_ui_status["production_window"] = original_main_ui_controller.refresh_production_window()
 
 func open_patch523_equipment_info() -> void:
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
@@ -1552,6 +1596,15 @@ func _on_original_character_page_requested(page: String) -> void:
 		_sync_screen_focus()
 
 func open_detailed_status() -> void:
+	# The original 523 CharacterInfo_StatInfo_Detail over the same values.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_stat_detail_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_stat_detail_window()
+		original_main_ui_status["stat_detail_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			if is_instance_valid(detail_window): detail_window.hide()
+			return
+		_report_original_fallback("상세 능력치",native)
 	if not is_instance_valid(detail_window):
 		detail_window = RenewalWindowScript.new()
 		$Root.add_child(detail_window)
@@ -1646,6 +1699,7 @@ func _build_menu_page() -> void:
 			caption.offset_top=50;caption.offset_bottom=86
 		button.add_child(caption)
 		if section_id == "domination_stone": _mount_domination_menu_tile(button,artwork,caption)
+		else: _mount_original_menu_tile(section_id,button,artwork,caption)
 		grid.add_child(button)
 		tiles.append(button)
 		workspace.register_scroll_drag(menu_scroll,button)
@@ -1661,6 +1715,22 @@ func _mount_domination_menu_tile(button: Button, artwork: TextureRect, caption: 
 	# MainMenu_DominationStone's 70x67 panel is anchored at its centre.
 	scene.position = Vector2(46,40)
 	button.add_child(scene)
+	caption.hide()
+
+## The client's MainMenu_* tile (picture and caption) of a menu section that
+## has one; the TWILIGHT button keeps the tap and the scroll drag. Without the
+## pack (or for sections the client has no tile for) the tile is unchanged.
+func _mount_original_menu_tile(section_id: String, button: Button, artwork: TextureRect, caption: Label) -> void:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("menu_tile"): return
+	var tile: Dictionary = original_main_ui_controller.menu_tile(section_id)
+	original_main_ui_status["menu_tile_"+section_id] = {"ok":tile.get("ok",false),"code":str(tile.get("code","")),"member":str(tile.get("member",""))}
+	if not tile.get("ok",false): return
+	var scene: Node2D = tile.scene
+	# MainMenu_*'s 70x67 panel is anchored at its centre.
+	scene.position = Vector2(46,40)
+	button.add_child(scene)
+	preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")._ignore_input(scene)
+	artwork.texture = null
 	caption.hide()
 
 ## The original 523 콘텐츠 현황판 (StatusBoard_All, world.routines).
@@ -2928,6 +2998,7 @@ func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: Str
 
 func _open_enhance_chooser() -> void:
 	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
+	if _open_original_enchant("",[]): return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_scrolls(self)
@@ -2964,7 +3035,25 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 
 var enhancement_forge: Control
 
+## The original 523 EnchantScene (source_main_enchant_window) over the same
+## candidates; false -> the caller opens the TWILIGHT forge (reported).
+func _open_original_enchant(scroll_name: String, candidates: Array) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_enchant_window"): return false
+	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates)
+	original_main_ui_status["enchant_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return true
+	_report_original_fallback("장비 강화",native)
+	return false
+
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	if active_section == "enhance" and is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open():
+		enhancement_scroll_name = scroll_name
+		enhancement_candidates = candidates.duplicate(true)
+		if _open_original_enchant(scroll_name,candidates): return
 	# Same scroll, window still open (the usual "강화 → 결과 → 다시 강화"
 	# loop): update the rows in place instead of rebuilding the whole window.
 	if active_section == "enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_inside_tree() \
@@ -2976,6 +3065,7 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	enhancement_scroll_name = scroll_name
 	enhancement_candidates = candidates.duplicate(true)
 	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
+	if _open_original_enchant(scroll_name,candidates): return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)

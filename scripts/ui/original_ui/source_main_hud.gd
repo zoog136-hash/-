@@ -1205,6 +1205,126 @@ func close_clan_window() -> void:
 		_cancel_native_buttons()
 		_clan_window.close()
 
+## --- Original 523 상세 능력치 (source_main_stat_detail_window; the status
+## sheet's groups and values over hud.character_state)
+const StatDetailWindow=preload("res://scripts/ui/original_ui/source_main_stat_detail_window.gd")
+var _stat_detail_window: RefCounted
+
+func try_open_stat_detail_window() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _stat_detail_window==null and _pack!=null and hud!=null:
+		var window=StatDetailWindow.new()
+		_window_problems["stat_detail_window"]=window.configure(_pack,hud)
+		if _window_problems["stat_detail_window"].get("ok",false):_stat_detail_window=window
+	if _stat_detail_window==null or not is_instance_valid(_coordinates):return _window_problem("stat_detail_window")
+	_cancel_native_buttons()
+	return _stat_detail_window.open(_coordinates)
+
+func stat_detail_window() -> RefCounted:
+	return _stat_detail_window
+
+func stat_detail_window_is_open() -> bool:
+	return _stat_detail_window!=null and _stat_detail_window.is_open()
+
+func close_stat_detail_window() -> void:
+	if stat_detail_window_is_open():
+		_cancel_native_buttons()
+		_stat_detail_window.close()
+
+## --- Original 523 텔레포트 tab for 지역 이동 (source_main_teleport_window;
+## destinations, prices and the move stay with the existing owners)
+const TeleportWindow=preload("res://scripts/ui/original_ui/source_main_teleport_window.gd")
+var _teleport_window: RefCounted
+
+func try_open_teleport_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _teleport_window==null and _pack!=null and hud!=null:
+		var window=TeleportWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["teleport_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_teleport_window=window
+	if _teleport_window==null or not is_instance_valid(_coordinates):return _window_problem("teleport_window")
+	_cancel_native_buttons()
+	return _teleport_window.open(_coordinates,world)
+
+func teleport_window() -> RefCounted:
+	return _teleport_window
+
+func teleport_window_is_open() -> bool:
+	return _teleport_window!=null and _teleport_window.is_open()
+
+func close_teleport_window() -> void:
+	if teleport_window_is_open():
+		_cancel_native_buttons()
+		_teleport_window.close()
+
+## --- Original 523 제작 window (source_main_production_window; recipes,
+## quotes, the confirmation and the craft stay with the existing owners)
+const ProductionWindow=preload("res://scripts/ui/original_ui/source_main_production_window.gd")
+var _production_window: RefCounted
+
+func try_open_production_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _production_window==null and _pack!=null and hud!=null:
+		var window=ProductionWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["production_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_production_window=window
+	if _production_window==null or not is_instance_valid(_coordinates):return _window_problem("production_window")
+	_cancel_native_buttons()
+	return _production_window.open(_coordinates,world)
+
+func production_window() -> RefCounted:
+	return _production_window
+
+func production_window_is_open() -> bool:
+	return _production_window!=null and _production_window.is_open()
+
+func refresh_production_window() -> Dictionary:
+	return _production_window.refresh() if production_window_is_open() else {"ok":true,"handled":false}
+
+func close_production_window() -> void:
+	if production_window_is_open():
+		_cancel_native_buttons()
+		_production_window.close()
+
+## --- Original 523 장비 강화 window (source_main_enchant_window; the forge
+## rules, confirmation and the world's roll stay the owners)
+const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+var _enchant_window: RefCounted
+
+func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _enchant_window==null and _pack!=null and hud!=null:
+		var window=EnchantWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["enchant_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_enchant_window=window
+	if _enchant_window==null or not is_instance_valid(_coordinates):return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
+	return _enchant_window.open(_coordinates,scroll,candidates)
+
+func enchant_window() -> RefCounted:
+	return _enchant_window
+
+func enchant_window_is_open() -> bool:
+	return _enchant_window!=null and _enchant_window.is_open()
+
+func close_enchant_window() -> void:
+	if enchant_window_is_open():
+		_cancel_native_buttons()
+		_enchant_window.close()
+
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
@@ -1248,6 +1368,17 @@ func orim_skill_choice_is_open() -> bool:
 func close_orim_skill_choice() -> void:
 	if _orim_skill_window!=null:_orim_skill_window.close()
 
+## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
+const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
+var _menu_tiles: RefCounted
+
+func menu_tile(section: String) -> Dictionary:
+	if _menu_tiles==null and _pack!=null:
+		var tiles=MenuTiles.new()
+		if tiles.configure(_pack).get("ok",false):_menu_tiles=tiles
+	if _menu_tiles==null:return _fail("source_menu_tiles_pack_scope_unavailable")
+	return _menu_tiles.tile(section)
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
@@ -1276,7 +1407,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or clan_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

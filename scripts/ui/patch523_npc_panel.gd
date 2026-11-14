@@ -42,6 +42,9 @@ func _hide_under_original_window() -> void:
 
 func _ready() -> void:
 	layer = 120
+	# The world stops processing while an original window is open; this
+	# check must keep running to hide the button over that window.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	var open := Button.new()
 	open.name = "BossSkillsButton"
 	open.text = "보스 기술"
