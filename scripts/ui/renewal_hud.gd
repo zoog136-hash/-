@@ -917,7 +917,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
 			return
-		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
+		if is_instance_valid(original_main_ui_controller) and ((original_main_ui_controller.has_method("domination_window_is_open") and original_main_ui_controller.domination_window_is_open()) or (original_main_ui_controller.has_method("status_board_is_open") and original_main_ui_controller.status_board_is_open()) or (original_main_ui_controller.has_method("emblem_window_is_open") and original_main_ui_controller.emblem_window_is_open()) or (original_main_ui_controller.has_method("refine_window_is_open") and original_main_ui_controller.refine_window_is_open()) or (original_main_ui_controller.has_method("clan_window_is_open") and original_main_ui_controller.clan_window_is_open()) or (original_main_ui_controller.has_method("death_window_is_open") and original_main_ui_controller.death_window_is_open()) or (original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open())):
 			_close_workspace()
 			get_viewport().set_input_as_handled()
 			return
@@ -993,6 +993,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_skill_window"):original_main_ui_controller.close_skill_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_emblem_window"):original_main_ui_controller.close_emblem_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_refine_window"):original_main_ui_controller.close_refine_window()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_clan_window"):original_main_ui_controller.close_clan_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
@@ -1683,6 +1684,15 @@ func open_status_board() -> void:
 ## UI add-on (only the emblem popup is), so this panel uses plain controls.
 func open_clan523() -> void:
 	_open_window("clan523","혈맹","원본 523 혈맹 표 · 로컬 1인 혈맹")
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_clan_window"):
+		var native: Dictionary = original_main_ui_controller.try_open_clan_window(get_parent())
+		original_main_ui_status["clan_window"] = native
+		if native.get("handled",false):
+			if pointer_transfer != null: pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			return
+		_report_original_fallback("혈맹",native)
 	var scroll := ScrollContainer.new()
 	scroll.name = "Clan523Scroll"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
