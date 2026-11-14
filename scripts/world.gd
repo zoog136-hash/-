@@ -5538,7 +5538,8 @@ func _apply_loaded_patch523_equipment() -> void:
 	for key: Variant in crafting.recipes.keys():
 		if str(key).begins_with("patch523:"):
 			crafting.recipes.erase(key)
-	crafting.recipes.merge(patch523_equipment.recipes.duplicate(true))
+	# Same read-only recipe Dictionaries as patch523_equipment (no third copy).
+	crafting.recipes.merge(patch523_equipment.recipes)
 	_refresh_patch523_equipment_options()
 
 func _refresh_patch523_equipment_options() -> void:
