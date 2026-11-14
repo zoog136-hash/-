@@ -2,7 +2,12 @@ extends Node
 ## First node processed every frame: closes the previous frame's hitch record.
 ## See frame_hitch_log.gd. Runs while paused so a stalled menu is measured too.
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
+const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
+## Gameplay heartbeat in boot_progress.log (with memory), so the next loading
+## screen can say what the app was doing when the system closed it.
+const ALIVE_MSEC: int = 5000
 var _tail: Node
+var _alive_at: int = 0
 
 class ProcessTail extends Node:
 	func _init() -> void:
@@ -44,7 +49,18 @@ func _on_post_draw() -> void:
 
 func _process(_delta: float) -> void:
 	var host: Node = get_parent()
-	FRAME_HITCH.frame(str(host.get("active_map_id")) if host != null else "")
+	var map_id: String = str(host.get("active_map_id")) if host != null else ""
+	FRAME_HITCH.frame(map_id)
+	var now: int = Time.get_ticks_msec()
+	if now - _alive_at >= ALIVE_MSEC:
+		_alive_at = now
+		BOOT_LOG.mark("alive", {"map": map_id})
+
+func _input(event: InputEvent) -> void:
+	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
+	if not pressed: return
+	var control: Control = get_viewport().gui_get_hovered_control()
+	BOOT_LOG.mark("touch", {"at": str(control.name) if control != null else "world"})
 
 func _notification(what: int) -> void:
 	match what:
