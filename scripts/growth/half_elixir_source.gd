@@ -30,6 +30,13 @@ func parse(bytes: PackedByteArray) -> Variant:
 	return parser.data
 
 func load_zip(path: String) -> bool:
+	# The verified bundled 523 archive is read through the cold row reader:
+	# only the rows configure() reads, never every table parsed at once.
+	if FileAccess.get_sha256(path) == DEFINITIONS.SOURCE_SHA and not DEFINITIONS.archive_path().is_empty(): return load_definitions()
+	return load_zip_whole(path)
+
+## Every table of `path` parsed whole (any other owner-supplied 523 ZIP).
+func load_zip_whole(path: String) -> bool:
 	var zip := ZIPReader.new()
 	if zip.open(path) != OK: return fail("원본 ZIP을 열 수 없습니다.")
 	var listing := zip.get_files()
@@ -58,6 +65,62 @@ func load_zip(path: String) -> bool:
 	zip.close()
 	sha = FileAccess.get_sha256(path)
 	return configure(tables)
+
+## Tables configure() reads whole (all small in 523).
+const WHOLE_TABLES = ["HalfElixirBonus", "HalfElixirBonusExtend", "HalfElixirExtendCost", "BonusType", "BonusApplicationType", "SpecialResistanceType", "UIUnit", "ServerLimit", "ConstantData", "ConstantDataByServer", "ContentsControl", "ItemCategory", "Currency", "CurrencyUnitClass"]
+## Tables configure() only audits by row count (and ItemCraft* by ItemClassID).
+const COUNTED_TABLES = ["BuffClass", "BuffGroup", "ElixirCraft", "ElixirExtendCost", "ElixirStatExtend", "Grade", "ItemCraftInput", "ItemCraftOutputView", "ItemCraftView", "UIStaticTextData_Korean", "UITextData_Korean", "Unit", "UseDesc"]
+const SUPPLY_TABLES = ["ItemCraftInput", "ItemCraftOutputView", "ItemCraftView"]
+const CATEGORY_NAMES = ["HalfElixirRecharger", "HalfElixirInitializer"]
+
+## The same configure() input from the verified 523 definitions archive
+## (current523_definition_rows), like monsterbook523's cold projection: the
+## large tables (Bonus, ItemClass, ItemBonus, DescData_Korean) hold only the
+## rows configure() reads, and counted tables are not materialised. The
+## archive SHA is verified by the definitions reader as a whole.
+func load_definitions() -> bool:
+	var path: String = DEFINITIONS.archive_path()
+	if path.is_empty(): return fail(DEFINITIONS.problem())
+	var t: Dictionary = {}
+	var counts: Dictionary = {}
+	for table: String in WHOLE_TABLES:
+		t[table] = DEFINITIONS.rows(table)
+		if (t[table] as Array).is_empty(): return fail("필수 표가 없습니다: " + table)
+	for table: String in COUNTED_TABLES + ["Bonus", "ItemClass", "ItemBonus", "DescData_Korean"]:
+		counts[table] = DEFINITIONS.row_count(table)
+		if int(counts[table]) <= 0: return fail("필수 표가 없습니다: " + table)
+	# ItemClass: every 하프 엘릭서 charger/initializer and every item unit of a currency.
+	var categories: Dictionary = {}
+	for row: Dictionary in t.ItemCategory:
+		if str(row.get("Name", "")) in CATEGORY_NAMES: categories[int(row.ID)] = true
+	var item_ids: Dictionary = {}
+	for row: Dictionary in t.CurrencyUnitClass:
+		if int(row.UnitID) == 4: item_ids[int(row.ClassID)] = true
+	var items_rows: Array[Dictionary] = DEFINITIONS.rows_matching("ItemClass", "CategoryID", categories)
+	var seen: Dictionary = {}
+	for row: Dictionary in items_rows: seen[int(row.ID)] = true
+	for row: Dictionary in DEFINITIONS.rows_matching("ItemClass", "ID", item_ids):
+		if seen.has(int(row.ID)): continue
+		seen[int(row.ID)] = true
+		items_rows.append(row)
+	t.ItemClass = items_rows
+	# ItemBonus links of those items only (the charge amount and DeleteTime gate).
+	t.ItemBonus = DEFINITIONS.rows_matching("ItemBonus", "ItemClassID", seen)
+	var bonus_ids: Dictionary = {}
+	for row: Dictionary in t.HalfElixirBonus: bonus_ids[int(row.BonusID)] = true
+	for row: Dictionary in t.ItemBonus: bonus_ids[int(row.BonusID)] = true
+	t.Bonus = DEFINITIONS.rows_matching("Bonus", "ID", bonus_ids)
+	# Descriptions: the bonus types and items configure() can name.
+	var type_ids: Dictionary = {}
+	for row: Dictionary in t.Bonus: type_ids[int(row.BonusTypeID)] = true
+	var desc_ids: Dictionary = {}
+	for row: Dictionary in t.BonusType:
+		if type_ids.has(int(row.ID)): desc_ids[int(row.get("DescID", 0))] = true
+	for row: Dictionary in t.ItemClass: desc_ids[int(row.get("DescID", 0))] = true
+	t.DescData_Korean = DEFINITIONS.rows_matching("DescData_Korean", "ID", desc_ids)
+	t["_row_counts"] = counts
+	sha = FileAccess.get_sha256(path)
+	return configure(t)
 
 func by_id(rows: Array) -> Dictionary:
 	var result: Dictionary = {}
@@ -179,13 +242,19 @@ func configure(t: Dictionary) -> bool:
 		for entry: Dictionary in currency.members:
 			if int(entry.UnitID) == 4: supply_ids[str(int(entry.ClassID))] = true
 	var supply_audit: Dictionary = {}
-	for table: String in ["ItemCraftInput", "ItemCraftOutputView", "ItemCraftView"]:
+	var counts: Dictionary = t.get("_row_counts", {})
+	for table: String in SUPPLY_TABLES:
 		var matched: int = 0
-		for row: Dictionary in t[table]:
-			if supply_ids.has(str(int(row.ItemClassID))): matched += 1
-		supply_audit[table] = {"rows_read":t[table].size(), "exact_item_references":matched, "execution_owner":"crafting"}
+		if t.has(table):
+			for row: Dictionary in t[table]:
+				if supply_ids.has(str(int(row.ItemClassID))): matched += 1
+		else:
+			var wanted: Dictionary = {}
+			for id: String in supply_ids: wanted[int(id)] = true
+			matched = DEFINITIONS.rows_matching(table, "ItemClassID", wanted).size()
+		supply_audit[table] = {"rows_read":int(counts.get(table, t.get(table, []).size())), "exact_item_references":matched, "execution_owner":"crafting"}
 	var rows_read: Dictionary = {}
-	for table: String in TABLES: rows_read[table] = t[table].size()
+	for table: String in TABLES: rows_read[table] = int(counts.get(table, t.get(table, []).size()))
 	pairs.sort()
 	audits = {"rows_read":rows_read, "supply_references":supply_audit, "rules":rules.size(), "extension_coordinates":extensions.size(), "cost_steps":costs.size(), "world_pairs":pairs.size(), "profiles":profiles.size(), "charge_items":charges.size(), "source_rows_preserved_in_owner_zip":true}
 	return profiles.size() == 4 and pairs.size() == 451 or fail("서버별 네 프로필이 원문과 일치하지 않습니다.")

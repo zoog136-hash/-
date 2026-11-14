@@ -32,13 +32,19 @@ func configure_scrolls(controller: Node) -> void:
 	hud = controller
 	mode = "scroll"
 	scroll_name = ""
-	values.clear()
-	for name: String in hud.lineage_inventory_ui.inventory:
-		if int(hud.lineage_inventory_ui.inventory[name]) <= 0: continue
-		if str(hud.get_parent()._scroll_kind(name)).is_empty() and not name.contains("축복 부여"): continue
-		values.append({"name":name,"count":int(hud.lineage_inventory_ui.inventory[name])})
-	values.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
+	values=owned_scrolls(hud)
 	_build()
+
+## Owned enhancement / blessing scrolls, by name (shared with the original
+## Enchant window's 주문서 tab).
+static func owned_scrolls(controller: Node) -> Array:
+	var rows: Array=[]
+	for name: String in controller.lineage_inventory_ui.inventory:
+		if int(controller.lineage_inventory_ui.inventory[name]) <= 0: continue
+		if str(controller.get_parent()._scroll_kind(name)).is_empty() and not name.contains("축복 부여"): continue
+		rows.append({"name":name,"count":int(controller.lineage_inventory_ui.inventory[name])})
+	rows.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
+	return rows
 
 func configure_targets(controller: Node, scroll: String, candidates: Array) -> void:
 	hud = controller
@@ -265,19 +271,22 @@ func _select(index: int) -> void:
 		browser.reflow()
 
 func _image_record(entry: Dictionary) -> Dictionary:
+	return image_record_of(hud,entry)
+
+static func image_record_of(controller: Node, entry: Dictionary) -> Dictionary:
 	# Keep the exact selected physical source record for image presentation;
 	# enhancement admission and transactions retain their existing references.
 	var reference: String = str(entry.get("target_id",entry.get("name","")))
-	var fallback: Dictionary = hud.lineage_inventory_ui._find_item_record(reference)
+	var fallback: Dictionary = controller.lineage_inventory_ui._find_item_record(reference)
 	if not SOURCE_IMAGES.selected(): return fallback
 	var instance_id: String = str(entry.get("instance_id",""))
-	var instances: Variant = hud.get_parent().get("item_instances")
+	var instances: Variant = controller.get_parent().get("item_instances")
 	if not instance_id.is_empty() and instances is Dictionary:
 		var physical: Variant = instances.get(instance_id)
 		if physical is Dictionary:
 			var original: Variant = physical.get("record")
 			if original is Dictionary and SOURCE_IMAGES.handles_item(original): return original
-	return hud.lineage_inventory_ui._item_visual_record(reference,fallback)
+	return controller.lineage_inventory_ui._item_visual_record(reference,fallback)
 
 func _execute() -> void:
 	if selected_index < 0 or selected_index >= values.size(): return
@@ -294,11 +303,16 @@ func _execute() -> void:
 		if int(hud.lineage_inventory_ui.inventory.get(item,0)) > 0:
 			hud.inventory_item_activated.emit(item)
 	else:
-		var target := str(entry.get("target_id", entry.get("name","")))
-		if target != "":
-			var scroll: String = scroll_name
-			hud.confirm_action("강화 확인","%s +%d\n%s %d장 · %d 아데나\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%\n%s" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,int(entry.get("count",1)),int(entry.get("cost",0)),float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0)),str(entry.get("basis","TWILIGHT 기존 강화 규칙"))],"강화",func(_count: int) -> void:
-				hud.enhancement_requested.emit(scroll,target))
+		confirm_target(hud,scroll_name,entry)
+
+## The existing enhancement confirmation; 강화 there emits the request the
+## world rolls. Shared with the original Enchant window's 강화 시작.
+static func confirm_target(controller: Node, scroll: String, entry: Dictionary) -> bool:
+	var target := str(entry.get("target_id", entry.get("name","")))
+	if target == "": return false
+	controller.confirm_action("강화 확인","%s +%d\n%s %d장 · %d 아데나\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%\n%s" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,int(entry.get("count",1)),int(entry.get("cost",0)),float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0)),str(entry.get("basis","TWILIGHT 기존 강화 규칙"))],"강화",func(_count: int) -> void:
+		controller.enhancement_requested.emit(scroll,target))
+	return true
 func _slot(parent: VBoxContainer, title: String, extent: Vector2) -> TextureRect:
 	var caption: Label=UI.label(title,12,UI.MUTED)
 	caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER

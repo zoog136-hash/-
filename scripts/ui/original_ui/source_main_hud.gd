@@ -180,6 +180,10 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	# its clip's first frame (alpha 0) looked like the bag never opened.
 	_coordinates.process_mode=Node.PROCESS_MODE_ALWAYS
 	canvas.add_child(_coordinates)
+	var input_sync:=ChromeInputSync.new()
+	input_sync.name="ChromeInputSync"
+	input_sync.controller=weakref(self)
+	_coordinates.add_child(input_sync)
 	canvas.resized.connect(_fit_source_coordinates)
 	_fit_source_coordinates()
 	_native_buttons=ButtonRouter.new()
@@ -328,6 +332,64 @@ func _input(event: InputEvent) -> void:
 	var routed: Dictionary=_native_buttons.route(event,point,candidates)
 	if routed.get("handled",false) or character_inside or npc_dialogue_is_open():get_viewport().set_input_as_handled()
 
+## The original HUD chrome (combat pad, AUTO, menu, quick slots, joystick:
+## children of the coordinates node drawn below the windows, z < 140, relative
+## z) sits later in the tree than the TWILIGHT workspace, so Godot's GUI
+## picking (which ignores z_index) gave a touch on an open workspace/menu to
+## the hidden chrome button beneath it (menu open + touch → AUTO pressed).
+## While a workspace/detail/companion window covers a chrome button, its
+## input rectangle ignores the pointer; it is restored once uncovered.
+## Original windows (z >= 140) and workspace-attached controls (absolute z)
+## keep their input.
+const CHROME_Z_LIMIT: int=140
+var chrome_blocked_buttons: int=0
+
+## Runs the block before the GUI delivers each press. It lives under the
+## coordinates node (always processing, like the original buttons), so it
+## also runs while the world itself is held.
+class ChromeInputSync extends Node:
+	var controller: WeakRef
+	func _input(event: InputEvent) -> void:
+		if not (event is InputEventScreenTouch or event is InputEventMouseButton) or not event.pressed:return
+		var owner: Object=controller.get_ref() if controller!=null else null
+		if owner==null:return
+		var hud: Variant=owner.get("_hud").get_ref() if owner.get("_hud")!=null else null
+		if hud is Node:owner.call("_sync_chrome_input_block",hud)
+
+func _sync_chrome_input_block(hud: Node) -> void:
+	var covers: Array[Rect2]=[]
+	for property: String in ["detail_window","companion_window","workspace"]:
+		var overlay: Variant=hud.get(property)
+		if overlay is Control and overlay.is_visible_in_tree():covers.append((overlay as Control).get_global_rect())
+	var blocked: int=0
+	for scene: Node in _coordinates.get_children():
+		if not scene is CanvasItem:continue
+		var chrome: bool=(scene as CanvasItem).z_as_relative and (scene as CanvasItem).z_index<CHROME_Z_LIMIT
+		var areas: Array=[]
+		_collect_button_areas(scene,areas)
+		for area: Control in areas:
+			var covered: bool=false
+			if chrome:
+				var rect: Rect2=area.get_global_rect()
+				for cover: Rect2 in covers:
+					if cover.intersects(rect):covered=true;break
+			if covered:
+				if not area.has_meta("chrome_block_filter"):
+					area.set_meta("chrome_block_filter",area.mouse_filter)
+					area.mouse_filter=Control.MOUSE_FILTER_IGNORE
+				blocked+=1
+			elif area.has_meta("chrome_block_filter"):
+				area.mouse_filter=int(area.get_meta("chrome_block_filter"))
+				area.remove_meta("chrome_block_filter")
+	chrome_blocked_buttons=blocked
+
+static func _collect_button_areas(node: Node, found: Array) -> void:
+	var button: Variant=node.get_meta("source_button") if node.has_meta("source_button") else null
+	if is_instance_valid(button):
+		var area: Variant=button.get("_input_area")
+		if area is Control and is_instance_valid(area):found.append(area)
+	for child: Node in node.get_children():_collect_button_areas(child,found)
+
 static func _collect_native_buttons(node: Node, found: Array) -> void:
 	if node is CanvasItem and not node.is_visible_in_tree():return
 	if node.is_queued_for_deletion() or node.has_meta("source_asset_scene"):return
@@ -396,9 +458,10 @@ func _process_step(_delta: float) -> void:
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
 					_inventory_rows_signature=_inventory_model_signature(true,false)
-	if _inventory_name_view!=null and not _source_input_captured(hud):
-		if inventory_is_open():_inventory_name_result=_inventory_name_view.refresh(_coordinates)
-		else:_inventory_name_view.close()
+	# A single bag tap keeps TWILIGHT's own floating item name (the bag's
+	# item_name_hint over the tapped slot, see inventory_name_hint_context);
+	# the original ToolTip header is not mounted for it.
+	if _inventory_name_view!=null and _inventory_name_view.is_open():_inventory_name_view.close()
 	if _inventory_lock_view!=null and not _source_input_captured(hud):
 		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
 		var shown: Dictionary=_inventory_lock_view.presentation()
@@ -809,7 +872,11 @@ func _release_menu_page_leases() -> void:
 		_pack.release_cache_leases()
 
 func inventory_name_hint_context(reference: String) -> Dictionary:
-	return _inventory_view.name_hint_context(reference) if inventory_is_open() and _inventory_name_view!=null else {}
+	if not inventory_is_open():return {}
+	var context: Dictionary=_inventory_view.name_hint_context(reference)
+	var canvas: Control=_canvas.get_ref() if _canvas!=null else null
+	if context.get("ok",false) and is_instance_valid(canvas):context["host"]=canvas
+	return context
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	return _inventory_view.hit_at(viewport_point) if inventory_is_open() and not inventory_search_is_open() else {}
@@ -1027,13 +1094,26 @@ const FEATURE_WINDOWS={
 	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
 	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
 	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
+	"card_dispatch":preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd"),
+	"item_book":preload("res://scripts/ui/original_ui/source_main_item_book_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
 ## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
 func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
-	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	var configured: Dictionary=_configure_feature_window(key)
+	if not configured.get("ok",false):return configured
+	close_feature_windows(key)
+	_cancel_native_buttons()
+	var trace: int=MENU_TRACE.begin(key)
+	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
+	MENU_TRACE.end(trace,result.get("ok",false))
+	return result
+
+## Configures feature window `key` once (its pack members); opens nothing.
+func _configure_feature_window(key: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not _feature_windows.has(key) and _pack!=null and hud!=null:
 		var window: RefCounted=FEATURE_WINDOWS[key].new()
 		var configured: Dictionary=window.configure(_pack,hud)
@@ -1042,12 +1122,11 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 		_feature_windows[key]=window
 	if not _feature_windows.has(key) or not is_instance_valid(_coordinates):return _fail("source_feature_window_pack_scope_unavailable")
-	close_feature_windows(key)
-	_cancel_native_buttons()
-	var trace: int=MENU_TRACE.begin(key)
-	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
-	MENU_TRACE.end(trace,result.get("ok",false))
-	return result
+	return {"ok":true}
+
+## True when feature window `key` can mount (its members are in the pack).
+func feature_window_available(key: String) -> bool:
+	return FEATURE_WINDOWS.has(key) and _configure_feature_window(key).get("ok",false)
 
 func feature_window(key: String) -> RefCounted:
 	return _feature_windows.get(key)
@@ -1096,6 +1175,222 @@ func close_refine_window() -> void:
 		_cancel_native_buttons()
 		_refine_window.close()
 
+## --- Original 523 NPC 상점 window (source_main_store_window; the talking
+## NPC's original merchant goods, quotes and payment stay with world.source_shop)
+const StoreWindow=preload("res://scripts/ui/original_ui/source_main_store_window.gd")
+var _store_window: RefCounted
+
+func try_open_store_window(npc_id: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _store_window==null and _pack!=null and hud!=null:
+		var window=StoreWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["store_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_store_window=window
+	if _store_window==null or not is_instance_valid(_coordinates):return _window_problem("store_window")
+	_cancel_native_buttons()
+	return _store_window.open(_coordinates,npc_id)
+
+func store_window() -> RefCounted:
+	return _store_window
+
+func store_window_is_open() -> bool:
+	return _store_window!=null and _store_window.is_open()
+
+func refresh_store_window() -> Dictionary:
+	return _store_window.refresh() if store_window_is_open() else {"ok":true,"handled":false}
+
+func close_store_window() -> void:
+	if store_window_is_open():
+		_cancel_native_buttons()
+		_store_window.close()
+
+## --- Original 523 창고 window (source_main_storage_window; the rows,
+## confirmation and transfers stay with renewal_warehouse and the world)
+const StorageWindow=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
+var _storage_window: RefCounted
+
+func try_open_storage_window(screen: Object) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _storage_window==null and _pack!=null and hud!=null:
+		var window=StorageWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["storage_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_storage_window=window
+	if _storage_window==null or not is_instance_valid(_coordinates):return _window_problem("storage_window")
+	_cancel_native_buttons()
+	return _storage_window.open(_coordinates,screen)
+
+func storage_window() -> RefCounted:
+	return _storage_window
+
+func storage_window_is_open() -> bool:
+	return _storage_window!=null and _storage_window.is_open()
+
+func refresh_storage_window() -> Dictionary:
+	return _storage_window.refresh() if storage_window_is_open() else {"ok":true,"handled":false}
+
+func close_storage_window() -> void:
+	if storage_window_is_open():
+		_cancel_native_buttons()
+		_storage_window.close()
+
+## --- Original 523 혈맹 window (source_main_clan_window; the local clan
+## rules, quotes and saves stay in scripts/clan523)
+const ClanWindow=preload("res://scripts/ui/original_ui/source_main_clan_window.gd")
+var _clan_window: RefCounted
+
+func try_open_clan_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _clan_window==null and _pack!=null and hud!=null:
+		var window=ClanWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["clan_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_clan_window=window
+	if _clan_window==null or not is_instance_valid(_coordinates):return _window_problem("clan_window")
+	_cancel_native_buttons()
+	return _clan_window.open(_coordinates,world)
+
+func clan_window() -> RefCounted:
+	return _clan_window
+
+func clan_window_is_open() -> bool:
+	return _clan_window!=null and _clan_window.is_open()
+
+func close_clan_window() -> void:
+	if clan_window_is_open():
+		_cancel_native_buttons()
+		_clan_window.close()
+
+## --- Original 523 상세 능력치 (source_main_stat_detail_window; the status
+## sheet's groups and values over hud.character_state)
+const StatDetailWindow=preload("res://scripts/ui/original_ui/source_main_stat_detail_window.gd")
+var _stat_detail_window: RefCounted
+
+func try_open_stat_detail_window() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _stat_detail_window==null and _pack!=null and hud!=null:
+		var window=StatDetailWindow.new()
+		_window_problems["stat_detail_window"]=window.configure(_pack,hud)
+		if _window_problems["stat_detail_window"].get("ok",false):_stat_detail_window=window
+	if _stat_detail_window==null or not is_instance_valid(_coordinates):return _window_problem("stat_detail_window")
+	_cancel_native_buttons()
+	return _stat_detail_window.open(_coordinates)
+
+func stat_detail_window() -> RefCounted:
+	return _stat_detail_window
+
+func stat_detail_window_is_open() -> bool:
+	return _stat_detail_window!=null and _stat_detail_window.is_open()
+
+func close_stat_detail_window() -> void:
+	if stat_detail_window_is_open():
+		_cancel_native_buttons()
+		_stat_detail_window.close()
+
+## --- Original 523 텔레포트 tab for 지역 이동 (source_main_teleport_window;
+## destinations, prices and the move stay with the existing owners)
+const TeleportWindow=preload("res://scripts/ui/original_ui/source_main_teleport_window.gd")
+var _teleport_window: RefCounted
+
+func try_open_teleport_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _teleport_window==null and _pack!=null and hud!=null:
+		var window=TeleportWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["teleport_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_teleport_window=window
+	if _teleport_window==null or not is_instance_valid(_coordinates):return _window_problem("teleport_window")
+	_cancel_native_buttons()
+	return _teleport_window.open(_coordinates,world)
+
+func teleport_window() -> RefCounted:
+	return _teleport_window
+
+func teleport_window_is_open() -> bool:
+	return _teleport_window!=null and _teleport_window.is_open()
+
+func close_teleport_window() -> void:
+	if teleport_window_is_open():
+		_cancel_native_buttons()
+		_teleport_window.close()
+
+## --- Original 523 제작 window (source_main_production_window; recipes,
+## quotes, the confirmation and the craft stay with the existing owners)
+const ProductionWindow=preload("res://scripts/ui/original_ui/source_main_production_window.gd")
+var _production_window: RefCounted
+
+func try_open_production_window(world: Node) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _production_window==null and _pack!=null and hud!=null:
+		var window=ProductionWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["production_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_production_window=window
+	if _production_window==null or not is_instance_valid(_coordinates):return _window_problem("production_window")
+	_cancel_native_buttons()
+	return _production_window.open(_coordinates,world)
+
+func production_window() -> RefCounted:
+	return _production_window
+
+func production_window_is_open() -> bool:
+	return _production_window!=null and _production_window.is_open()
+
+func refresh_production_window() -> Dictionary:
+	return _production_window.refresh() if production_window_is_open() else {"ok":true,"handled":false}
+
+func close_production_window() -> void:
+	if production_window_is_open():
+		_cancel_native_buttons()
+		_production_window.close()
+
+## --- Original 523 장비 강화 window (source_main_enchant_window; the forge
+## rules, confirmation and the world's roll stay the owners)
+const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+var _enchant_window: RefCounted
+
+func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _enchant_window==null and _pack!=null and hud!=null:
+		var window=EnchantWindow.new()
+		var configured: Dictionary=window.configure(_pack,hud)
+		_window_problems["enchant_window"]=configured
+		if configured.get("ok",false):
+			window.closed.connect(func() -> void:
+				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
+			_enchant_window=window
+	if _enchant_window==null or not is_instance_valid(_coordinates):return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
+	return _enchant_window.open(_coordinates,scroll,candidates)
+
+func enchant_window() -> RefCounted:
+	return _enchant_window
+
+func enchant_window_is_open() -> bool:
+	return _enchant_window!=null and _enchant_window.is_open()
+
+func close_enchant_window() -> void:
+	if enchant_window_is_open():
+		_cancel_native_buttons()
+		_enchant_window.close()
+
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
@@ -1139,6 +1434,17 @@ func orim_skill_choice_is_open() -> bool:
 func close_orim_skill_choice() -> void:
 	if _orim_skill_window!=null:_orim_skill_window.close()
 
+## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
+const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
+var _menu_tiles: RefCounted
+
+func menu_tile(section: String) -> Dictionary:
+	if _menu_tiles==null and _pack!=null:
+		var tiles=MenuTiles.new()
+		if tiles.configure(_pack).get("ok",false):_menu_tiles=tiles
+	if _menu_tiles==null:return _fail("source_menu_tiles_pack_scope_unavailable")
+	return _menu_tiles.tile(section)
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
@@ -1167,7 +1473,7 @@ func has_world_map_binding() -> bool:
 ## the HUD (developer tools) hide meanwhile.
 func any_window_open() -> bool:
 	return character_is_open() or npc_dialogue_is_open() or shop_window_is_open() or change_window_is_open() \
-		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
+		or quest_window_is_open() or inventory_is_open() or domination_window_is_open() or world_map_is_open() or refine_window_is_open() or enchant_window_is_open() or clan_window_is_open() or storage_window_is_open() or store_window_is_open() or production_window_is_open() or teleport_window_is_open() or stat_detail_window_is_open() or death_window_is_open() or skill_window_is_open() or feature_window_is_open()
 
 func world_map_is_open() -> bool:
 	return is_instance_valid(_world_map) and _world_map.is_open()

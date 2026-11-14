@@ -18,6 +18,7 @@ const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd"
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const SERVICE=preload("res://scripts/refine523/bless_refine523_service.gd")
 const RULES=preload("res://scripts/refine523/bless_refine523_rules.gd")
+const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 const ROOT="UI/RefineScene.csb"
 const ALL="UI/Refine/Refine_All.csb"
 const ITEM="UI/Refine/Refine_Item.csb"
@@ -167,6 +168,8 @@ func _stage() -> Dictionary:
 	_scene=next
 	_last_out=out
 	_bind_scroll(next,out,int(filled.lines))
+	# Slot buttons above the ScrollView's drag area keep their taps.
+	EnchantWindow._input_below_content(next,out,P_INV+"ScrollView")
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()

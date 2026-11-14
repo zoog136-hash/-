@@ -81,7 +81,7 @@ func _admit_original_actor(source: Dictionary) -> bool:
 	var ids: Array = []
 	for admitted: String in admitted_source_identities: ids.append(int(admitted))
 	ids.append(int(source.ID))
-	var candidate: Dictionary = _original_input.build(ids)
+	var candidate: Dictionary = _original_input.extend(ids)
 	if candidate.is_empty():
 		error = _original_input.problem
 		deferred_npc_inputs[id] = error

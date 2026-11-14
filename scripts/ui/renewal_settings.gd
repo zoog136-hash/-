@@ -3,6 +3,7 @@ extends VBoxContainer
 # Presentation options and character-specific consumable safety controls.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
+const MONSTER_DIAGNOSTICS = preload("res://scripts/monsters/monster_diagnostics523.gd")
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
 const PREFS = preload("res://scripts/animation/presentation_preferences.gd")
 const SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
@@ -66,6 +67,18 @@ func configure(controller: Node) -> void:
 			pack_state.name = "SourcePackStatus"
 			pack_state.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			stack.add_child(pack_state)
+	# Monster spawning state of this running game, for a device screenshot.
+	var monster_state := UI.label("\n".join(MONSTER_DIAGNOSTICS.lines(hud.get_parent())), 13)
+	monster_state.name = "MonsterDiagnostics"
+	monster_state.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(monster_state)
+	var monster_refresh := Button.new()
+	monster_refresh.name = "RefreshMonsterDiagnostics"
+	monster_refresh.text = "몬스터 진단 새로 고침"
+	monster_refresh.custom_minimum_size = Vector2(0,40)
+	monster_refresh.pressed.connect(func() -> void: monster_state.text = "\n".join(MONSTER_DIAGNOSTICS.lines(hud.get_parent())))
+	stack.add_child(monster_refresh)
+	if source_pack != null:
 		var addon_button := Button.new()
 		addon_button.name = "InstallSourceAddon"
 		addon_button.text = "추가 리소스(.zip) 설치·업데이트"

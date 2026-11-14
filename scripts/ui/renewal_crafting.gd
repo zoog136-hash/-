@@ -511,35 +511,69 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 		material_rows.append({"item":item_name,"unit":int(material.get("quantity",0)),"count":counter,"panel":panel,"source_material":material.duplicate(true)})
 
 func _available_material(item_name: String,items: Dictionary) -> int:
-	var owned: int=int((world.inventory as Dictionary).get(item_name,0))
-	if not CraftRules._is_equipment(items.get(item_name,{})):return owned
 	# Use the transaction service's predicates, including blessing/custom records.
 	# The quote above has already synchronized the physical inventory.
-	var eligible: int=0
-	for id: Variant in world.item_instances:
-		var instance: Dictionary=world.item_instances[id]
-		if str(instance.get("name",""))==item_name and not CraftRules._equipped(world.equipped_items,str(id)) and CraftRules._pristine(instance):eligible+=1
-	return mini(owned,eligible)
+	return available_material_of(world,item_name,items)
 
 func _craft() -> void:
 	if current_id.is_empty():
 		return
-	if hud.has_signal("craft_requested"):
-		var id: String = current_id
-		var count: int = int(amount.value)
-		var report: Dictionary = world._craft_quote(id,count)
-		if not bool(report.get("ok",false)): return
-		var recipe: Dictionary = world.crafting.recipes.get(id, {})
-		var warning: String = "\n재료 장비의 속성 제련 효과는 계승되지 않습니다." if int(recipe.get("popup_text_id", 0)) != 0 else ""
-		if id.begins_with("patch523:"): warning += "\n아데나 소모: %s" % UI.number_text(int(report.cost))
-		if recipe.has("craft_conditions"): warning+="\n"+world.patch523_craft_condition_summary(recipe)
-		if recipe.get("result",{}).has("inventory_key"): warning+="\n원본 결과를 보유 재화 [%s]에 적립합니다." % str(recipe.result.inventory_key)
-		for outcome: Dictionary in recipe.get("outcomes",[]):
-			warning += ("\n%s %.4f%% → 지급 없음" % [str(outcome.label),float(outcome.probability)/10000.0]) if outcome.get("empty_result",false) else ("\n%s %.4f%% → %s +%d ×%d" % [str(outcome.label),float(outcome.probability)/10000.0,str(outcome.item),int(outcome.level),int(outcome.quantity)])
-		if not recipe.get("host_material_bindings",[]).is_empty(): warning += "\n게임 설정: 원본549 재료를 기존 드래곤 다이아몬드 스택에 연결합니다."
-		if recipe.has("outcomes"): warning += "\n결과는 저장 후 확정됩니다."
-		if recipe.has("missing_failure_policy"):
-			var failure: Dictionary=recipe.missing_failure_policy
-			warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
-		hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
-			hud.emit_signal("craft_requested",id,count))
+	confirm_craft(hud,world,current_id,int(amount.value))
+
+## The existing 제작 확인 (shared with the original Production window): the
+## world's quote must admit `count`, then 제작 emits craft_requested.
+static func confirm_craft(controller: Node, game: Node, id: String, count: int) -> bool:
+	if not controller.has_signal("craft_requested"): return false
+	var report: Dictionary = game._craft_quote(id,count)
+	if not bool(report.get("ok",false)): return false
+	var recipe: Dictionary = game.crafting.recipes.get(id, {})
+	var warning: String = "\n재료 장비의 속성 제련 효과는 계승되지 않습니다." if int(recipe.get("popup_text_id", 0)) != 0 else ""
+	if id.begins_with("patch523:"): warning += "\n아데나 소모: %s" % UI.number_text(int(report.cost))
+	if recipe.has("craft_conditions"): warning+="\n"+game.patch523_craft_condition_summary(recipe)
+	if recipe.get("result",{}).has("inventory_key"): warning+="\n원본 결과를 보유 재화 [%s]에 적립합니다." % str(recipe.result.inventory_key)
+	for outcome: Dictionary in recipe.get("outcomes",[]):
+		warning += ("\n%s %.4f%% → 지급 없음" % [str(outcome.label),float(outcome.probability)/10000.0]) if outcome.get("empty_result",false) else ("\n%s %.4f%% → %s +%d ×%d" % [str(outcome.label),float(outcome.probability)/10000.0,str(outcome.item),int(outcome.level),int(outcome.quantity)])
+	if not recipe.get("host_material_bindings",[]).is_empty(): warning += "\n게임 설정: 원본549 재료를 기존 드래곤 다이아몬드 스택에 연결합니다."
+	if recipe.has("outcomes"): warning += "\n결과는 저장 후 확정됩니다."
+	if recipe.has("missing_failure_policy"):
+		var failure: Dictionary=recipe.missing_failure_policy
+		warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
+	controller.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
+		controller.emit_signal("craft_requested",id,count))
+	return true
+
+## The recipe as the quote reads it (a patch523 recipe with its chosen
+## material candidates).
+static func recipe_of(game: Node, id: String) -> Dictionary:
+	var recipe: Dictionary = (game.crafting.recipes as Dictionary).get(id,{})
+	if id.begins_with("patch523:"):
+		var selection: Dictionary = game.patch523_equipment.material_selection(id, game.patch523_material_choices.get(id, {}))
+		if selection.get("recipe") is Dictionary: recipe = selection.recipe
+	return recipe
+
+## Owned / required of each material row, as the forge's material panel shows.
+static func material_status(game: Node, id: String, count: int) -> Array:
+	var recipe: Dictionary = recipe_of(game,id)
+	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
+	var items: Dictionary = game._patch523_craft_item_index() if id.begins_with("patch523:") else game._craft_item_index()
+	var rows: Array = []
+	for raw: Variant in recipe.get("materials",[]):
+		if not raw is Dictionary: continue
+		var material: Dictionary = raw
+		var item_name: String = str(material.get("item",""))
+		var available: int
+		if source_recipe:
+			available = game.patch523_equipment.available_material(material, game.inventory, items, game.item_instances, game.equipped_items, game.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(game.gold),game._patch523_craft_context())
+		else:
+			available = available_material_of(game,item_name,items)
+		rows.append({"item":item_name,"available":available,"required":int(material.get("quantity",0))*count,"record":items.get(item_name,{}),"source_id":str(material.get("source_id","")),"material":material.duplicate(true)})
+	return rows
+
+static func available_material_of(game: Node, item_name: String, items: Dictionary) -> int:
+	var owned: int=int((game.inventory as Dictionary).get(item_name,0))
+	if not CraftRules._is_equipment(items.get(item_name,{})):return owned
+	var eligible: int=0
+	for id: Variant in game.item_instances:
+		var instance: Dictionary=game.item_instances[id]
+		if str(instance.get("name",""))==item_name and not CraftRules._equipped(game.equipped_items,str(id)) and CraftRules._pristine(instance):eligible+=1
+	return mini(owned,eligible)

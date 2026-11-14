@@ -5,6 +5,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
 const ITEM_NAME_DURATION_MS: int = 5000
 const ITEM_NAME_GAP: float = 4.0
+const ITEM_NAME_NATIVE_Z: int = 400
 var item_name_hint: Label
 var item_name_reference: String = ""
 var item_name_until: int = 0
@@ -279,13 +280,11 @@ func _update_item_name() -> void:
 	if not scroll_rect.grow(1.0).encloses(slot_rect):
 		item_name_hint.hide()
 		return
-	if native_active:
-		# Preserve this same owner's reference, text and deadline while the
-		# source header supplies geometry. The hidden legacy bag's transforms
-		# and slot visibility must not erase a real native source selection.
-		item_name_hint.show()
-		return
-	var inverse: Transform2D = get_global_transform_with_canvas().affine_inverse()
+	# The original bag hides this bag's workspace, so the same label is drawn
+	# from the HUD canvas over the tapped original slot (TWILIGHT's single-tap
+	# name, not the original ToolTip header); it returns here otherwise.
+	_host_item_name(native.get("host") as Control if native_active else self)
+	var inverse: Transform2D = (item_name_hint.get_parent() as CanvasItem).get_global_transform_with_canvas().affine_inverse()
 	var local_slot: Rect2 = inverse*slot_rect
 	var viewport_bounds: Rect2 = inverse*get_viewport_rect()
 	var font: Font = item_name_hint.get_theme_font("font")
@@ -298,6 +297,18 @@ func _update_item_name() -> void:
 		clampf(local_slot.get_center().x-label_width*0.5,viewport_bounds.position.x+8.0,viewport_bounds.end.x-label_width-8.0),
 		local_slot.position.y-item_name_hint.size.y-ITEM_NAME_GAP)
 	item_name_hint.visible = item_name_hint.position.y >= viewport_bounds.position.y
+
+func _host_item_name(host: Control) -> void:
+	if not is_instance_valid(host):host=self
+	if item_name_hint.get_parent()!=host:item_name_hint.reparent(host,false)
+	var native_host: bool=host!=self
+	# Above every original window (their coordinates root draws at z 35 + 150).
+	item_name_hint.z_as_relative=not native_host
+	item_name_hint.z_index=ITEM_NAME_NATIVE_Z if native_host else 20
+
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_PREDELETE and item_name_hint!=null and is_instance_valid(item_name_hint) and item_name_hint.get_parent()!=self:
+		item_name_hint.queue_free()
 
 func _native_item_name_context(reference: String) -> Dictionary:
 	if not is_instance_valid(controller) or not controller.has_method("original_inventory_name_hint_context"):return {}

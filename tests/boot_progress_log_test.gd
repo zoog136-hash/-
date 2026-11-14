@@ -64,18 +64,30 @@ func _init() -> void:
 	check(field(ended, "ev") == "end" and field(ended, "ms").is_valid_int() and field(ended, "rows") == "12" and field(ended, "cur") == "stage_a", "end line has elapsed ms and fields")
 	check(int(field(run1[2] if run1.size() > 2 else "", "seq")) == 3, "sequence numbers increase")
 	LOG.begin("stage_c")
+	LOG.mark("alive", {"map": "aden_world"})
+	LOG.mark("touch", {"at": "SkillButton"})
 	# Run 1 "dies" inside stage_c (no end, no close by the game).
 
 	# --- run 2: rotation keeps the previous run and its unfinished stage ------
 	LOG.reset_for_test(DIR)
 	check(LOG.previous_unfinished() == "stage_c", "previous run's open stage is reported (%s)" % LOG.previous_unfinished())
-	check(lines(previous).size() == 4 and field(lines(previous)[3], "stage") == "stage_c", "previous run moved to prev file intact")
+	check(lines(previous).size() == 6 and field(lines(previous)[3], "stage") == "stage_c", "previous run moved to prev file intact")
+	var last: Dictionary = LOG.previous_last_fields()
+	check(last.get("ev") == "touch" and last.get("at") == "SkillButton", "the previous run's last record is the last touch")
+	var end_line: String = LOG.previous_end_line()
+	check(end_line.begins_with("지난 실행 마지막 기록 ") and end_line.contains("터치 SkillButton"), "the loading line names the last action: " + end_line)
+	if OS.get_name() in ["Linux", "Android"]: check(end_line.contains("앱 메모리 ") and end_line.contains("MB(최대 "), "the loading line names app memory: " + end_line)
+	check(end_line.contains("기기 여유 "), "the loading line names free device memory")
+	var engine_only: String = "run=x seq=1 t=9000 ev=alive stage=- map=m cur=- static_kb=204800 static_max_kb=307200 available_kb=-1"
+	FileAccess.open(previous, FileAccess.WRITE).store_line(engine_only)
+	check(LOG.previous_end_line() == "지난 실행 마지막 기록 9초: 게임 중(m) · 엔진 메모리 200MB(최대 300MB)", "without /proc values the engine memory is shown: " + LOG.previous_end_line())
 	LOG.mark("boot_done")
 	check(lines(current).size() == 1, "new run starts a new file")
 
 	# --- run 3: only one previous run is kept --------------------------------
 	LOG.reset_for_test(DIR)
 	check(LOG.previous_unfinished() == "", "finished previous run reports no open stage")
+	check(LOG.previous_end_line().contains("완료 ") or LOG.previous_end_line().contains("boot_done"), "a finished previous run still names its last record")
 	var kept: PackedStringArray = lines(previous)
 	check(kept.size() == 1 and field(kept[0], "ev") == "boot_done", "prev holds only the last run")
 

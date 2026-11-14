@@ -139,6 +139,8 @@ func _render() -> void:
 
 func _select_tab(value: String) -> void:
 	if not pending.is_empty(): return
+	# 증표 컬렉션 is the original 523 아이템 컬렉션 window when it is handled.
+	if value == "collections" and hud != null and hud.has_method("item_book_available") and hud.call("item_book_available") and hud.call("open_item_book"): return
 	tab = value
 	policy_choices = false
 	effects_choices = false

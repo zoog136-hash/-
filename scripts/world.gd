@@ -2463,7 +2463,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
 		return
 	match action:
-		"shop": hud.open_npc_shop()
+		"shop": hud.open_npc_shop(npc_id)
 		"warehouse": hud.call("open_warehouse")
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
@@ -4831,6 +4831,9 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 			"decrease_chance": float(chance.get("decrease", 0.0)),
 			"gain_text": str(chance.get("gain_text",_enhancement_gain_text(mode, level_value))),
 			"bonus_text": ENCHANT.summary(_enhancement_kind_for_record(record), level_value + max_gain, record),
+			# Numbers behind bonus_text for the original Enchant_Text_Set rows.
+			"stats_now": ENCHANT.stat_values(_enhancement_kind_for_record(record), level_value, record),
+			"stats_next": ENCHANT.stat_values(_enhancement_kind_for_record(record), level_value + max_gain, record),
 			"cost":int(chance.get("cost",0)),"count":int(chance.get("count",1)),"basis":str(chance.get("basis","TWILIGHT 기존 강화 규칙")),
 			"equipped": _is_instance_equipped(instance_id)
 		})

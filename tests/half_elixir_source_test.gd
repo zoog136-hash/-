@@ -31,5 +31,19 @@ func _initialize() -> void:
 		var effect: Dictionary = source.effect(id, 1)
 		if effect.type.is_empty() or effect.value <= 0: failures.append("missing typed effect")
 	if profiles.size() != 4 or visited.size() != 138 or unreachable != 10: failures.append("source coverage mismatch")
+	# The bundled 523 archive goes through the cold row reader; it must build
+	# the same source as parsing every table whole.
+	if source.sha == preload("res://scripts/resources/current523_definition_rows.gd").SOURCE_SHA:
+		var whole = Source.new()
+		if not whole.load_zip_whole(path): failures.append("whole parse failed: " + whole.problem)
+		else:
+			for field: String in ["sha", "pairs", "costs", "audits"]:
+				if JSON.stringify(source.get(field)) != JSON.stringify(whole.get(field)): failures.append("cold " + field + " differs from whole parse")
+			for group: String in ["rules", "charges", "resets", "currencies"]:
+				var a: Dictionary = source.get(group)
+				var b: Dictionary = whole.get(group)
+				if JSON.stringify(a.keys()) != JSON.stringify(b.keys()): failures.append("cold " + group + " keys differ")
+				for key: Variant in a:
+					if JSON.stringify(a[key]) != JSON.stringify(b.get(key)): failures.append("cold " + group + " " + str(key) + " differs")
 	print("HALF_ELIXIR_SOURCE_RESULT ", JSON.stringify({"audit":source.audits, "all_rules_checked":source.rules.size(), "reachable_rules":visited.size(), "unreachable_extra_coordinates":unreachable, "failures":failures}))
 	quit(0 if failures.is_empty() else 1)

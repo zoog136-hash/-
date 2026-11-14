@@ -46,21 +46,21 @@ LAYOUT_ONLY = {"UI/MainScene.csb", "UI/HUDScene.csb", "UI/MissionScene.csb", "UI
 # ToolTip_HudType_Right: inventory lock view + item name (source_main_inventory_*).
 # ToolTipScene: their parent ProjectNode 1012.
 # Hud_CharInfo: vitals (CHAR_NODE_OFFSETS, POISON_BAR, CLASS_PROJECT) + primary stats.
-# Storage_All / Store_All: workspace close/title controls (source_main_workspace_controls).
 NODE_SCOPES = [
     ("UI/ToolTip/ToolTip_HudType_Right.csb", [37228, 37860, 37284, 36120, 36708, 36176, 44536, 44160, 956]),
     ("UI/ToolTipScene.csb", [1012]),
     ("UI/Main/Hud_CharInfo.csb", [46576, 40620, 37172, 35464, 35528, 20552, 20060, 39796, 34940, 18508, 18556, 15324, 15372]),
-    ("UI/Storage/Storage_All.csb", [47160, 48640, 47920]),
-    ("UI/Store/Store_All.csb", [67396]),
     # World map (source_main_map_bindings.build_map_scene): row, area with the
     # World image slot 44440 (pixels come from the 523 image pack), Map_All, MapScene.
-    ("UI/Map/Map_List_Button.csb", [7440, 4508, 7492, 4560]),
     ("UI/Map/Map_Tab_Area.csb", [44440, 37316]),
-    ("UI/Map/Map_All.csb", [35332, 34904, 30312, 29552, 29228, 31656]),
     ("UI/MapScene.csb", [132]),
 ]
-EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440]}
+# Clan_Slot_Join_Donate_Item Sp_IconSample 4788: the weekly donation reward's
+# item picture comes from the image owner (source_main_clan_window).
+# Map_Tab_Teleport Payment/Icon 7356: the 지역 이동 fee is Adena, so the
+# teleport window (source_main_teleport_window) shows Atlas_Common's
+# Com_Icn_Adena there instead of the authored diamond.
+EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Map/Map_Tab_Teleport.csb": [7356], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788]}
 # Plain original pictures the code loads by path from the pack (not named by a
 # scene): the clan emblem PNGs of AssetType 111 "Emblem" (Path UI/Emblem/),
 # shown by source_main_emblem_window through Emblem.EmblemLargeID/AssetView.
@@ -72,6 +72,44 @@ PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # leaves its inventory ProjectNodes (and the dismantle tab and probability
 # popup it does not connect) out. Every other node is kept.
 WHOLE_SCOPES = [
+    # The NPC store window (source_main_store_window): Store_All without the
+    # cart, sale / auto modes, SET buttons, batch counts, clan coin, tax, help,
+    # message, particle and spine; Store_Inventory without its SlotSet
+    # (QuickSlotEdit_SlotSet, absent: Inventory_Slot_Set lines instead, A안).
+    ("UI/Store/Store_Inventory.csb", [13712, 1348]),
+    ("UI/Store/Store_PurchaseAuto.csb", [2520]),
+    ("UI/Store/Store_PurchaseAutoList.csb", [1608, 248]),
+    ("UI/Store/Store_All.csb", [66852, 66540, 66288, 66028, 65512, 55996, 48736, 43088, 37272, 30584, 21984, 7652, 6288, 5364, 3988, 2656, 1216, 1020, 760, 70792, 70108]),
+    # The storage window (source_main_storage_window): Storage_All without the
+    # cart, 자동 보관, list mode, 모두 찾기/맡기기, batch count buttons, help,
+    # dungeon message, particle and spine it leaves out. Storage_Inventory's
+    # SlotSet names QuickSlotEdit_SlotSet, absent from the 523 client: the
+    # window shows Inventory_Slot_Set lines there instead (user decision A안).
+    ("UI/Storage/Storage_Inventory.csb", [13764, 396]),
+    ("UI/Storage/Storage_AccountInvGridMode.csb", [6672, 412]),
+    ("UI/Storage/Storage_All.csb", [46564, 46252, 45968, 45420, 43992, 42648, 34968, 16280, 2384, 900, 640, 51812, 50252]),
+    # Clan_Slot_Join_Donate_Item whole; its Sp_IconSample is external (above).
+    ("UI/Clan/Clan_Slot_Join_Donate_Item.csb", []),
+    # The clan window (source_main_clan_window) mounts the 창설 / 혈맹 정보
+    # tabs and the 기부 popup only: the online-only relation lists, attendance,
+    # notice input, donation ranking and shop detail are left out.
+    ("UI/Clan/Clan_Tab_Join_Info.csb", [23488, 23204, 22940, 848, 588]),
+    ("UI/Clan/Clan_Popup_Join_Donate.csb", [840, 572]),
+    ("UI/Clan/Clan_All.csb", [6780, 6260, 6020, 5720, 5464, 5216, 4960, 4456, 4200, 3956, 3700, 3460, 3208, 2912, 2396, 2152, 1880, 1636, 1372, 1116, 868, 600, 336]),
+    # Map_Tab_Teleport (source_main_teleport_window) without the destination
+    # preview, open effect, particle, spine, list filters and tax it leaves out;
+    # Payment/Icon 7356 is an external texture node (see above).
+    ("UI/Map/Map_Tab_Teleport.csb", [14968, 14368, 17432, 11104, 1560, 664]),
+    # Map_List_Button rows (world map and teleport list) without the bookmark
+    # star (Btn_CheckBox) neither window connects; the world map's
+    # 7440/4508/7492/4560 scope stays covered (Android world-map contract).
+    ("UI/Map/Map_List_Button.csb", [1784]),
+    # Map_All: the world map (source_main_map_bindings, Map_Tab_Area) and the
+    # teleport tab (source_main_teleport_window, Map_Tab_Teleport) with the
+    # frame and tab bar; the world / dungeon / siege tabs and the skill slots
+    # are not mounted. It keeps the world map's 35332/34904/30312/29552/29228/
+    # 31656 scope (Android world-map contract).
+    ("UI/Map/Map_All.csb", [31940, 31372, 30868, 512, 7648]),
     ("UI/DominationStone/DominationStone_Power_Effect.csb", [176]),
     ("UI/DominationStone/DominationStone_Tab_Power.csb", []),
     ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),
@@ -82,6 +120,10 @@ WHOLE_SCOPES = [
     # (source_main_card_awakening_window) leaves that ProjectNode out.
     ("UI/Change/Change_Awaken_Skill.csb", [23400]),
     ("UI/Change/Change_Awaken_All.csb", []),
+    # ItemBook_All's trade purchase popup (Trade_Popup_Purchase_Batch) names
+    # an Atlas_Hud frame absent from the 523 client; the item book window
+    # (source_main_item_book_window) leaves that ProjectNode out.
+    ("UI/ItemBook/ItemBook_All.csb", [1784]),
 ]
 
 
