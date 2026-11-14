@@ -210,6 +210,10 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 				# it as user data only, so it selects no pixels. Retain it.
 				elif key=="tone":
 					if node.get("classname")!="Panel" or not RegEx.create_from_string("^#[0-9A-Fa-f]{6}$").search(custom[key]):problems.append("custom_property")
+				# "textid" is the client's localisation row of the authored
+				# Korean text (the Clan tabs carry it); kept as metadata only.
+				elif key=="textid":
+					if not str(custom[key]).is_valid_int():problems.append("custom_property")
 				elif key not in ["soundid","touchsoundid"]:problems.append("custom_property")
 	for field: String in ["frameEvent","callBackType","callBackName"]:
 		if widget.get(field)!=null and not str(widget[field]).is_empty():
@@ -218,6 +222,12 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 			# It must not block a passive original image/text node. Actual
 			# buttons, touches and named callbacks retain their own guards.
 			if field=="callBackType" and str(widget.get("callBackName","")).is_empty():continue
+			# A frame event naming only a sound (e.g. Clan_Tab_Join_Info
+			# Nd_Symbol {"EventSound":...}) plays no picture: sound is outside
+			# the current scope, so the node is kept as authored.
+			if field=="frameEvent":
+				var event: Variant=_optional_dictionary(str(widget[field]))
+				if event is Dictionary and not (event as Dictionary).is_empty() and (event as Dictionary).keys()==["EventSound"]:continue
 			if inspection_only or binding.get("role") not in ["button","checkbox"]:unresolved_bindings.append(str(widget.name)+":"+field+":"+str(widget[field]))
 			var connected_callback: bool=binding.get("role") in ["button","checkbox"] and ((binding.get("activate") is Callable and binding.activate.is_valid()) or binding.get("displaystate")==false)
 			var declared_type: bool=field=="callBackType" and (str(widget[field])=="Click" or (str(widget[field])=="Event" and binding.get("role")=="checkbox"))
@@ -926,7 +936,9 @@ func activate_authored_component_opacity() -> Dictionary:
 	var options: Dictionary=raw.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	var alpha: Variant=widget.get("alpha")
-	if typeof(alpha)!=TYPE_INT or alpha<0 or alpha>255:return {"ok":false,"error":"source_component_original_opacity_required"}
+	# A whole-number opacity read back as a float is the same original value.
+	if not _whole(alpha) or int(alpha)<0 or int(alpha)>255:return {"ok":false,"error":"source_component_original_opacity_required"}
+	alpha=int(alpha)
 	var root: Variant=source_nodes.get(int(raw._offset))
 	if not root is Node2D or root.get_meta("original_ui_source",{}).get("scene")!=source_member:return {"ok":false,"error":"source_component_loaded_root_required"}
 	var rgba: Array=root.get_meta("source_rgba",[])
