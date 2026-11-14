@@ -88,6 +88,10 @@ func _init() -> void:
 	var broken_down: String = LOG.previous_end_line()
 	check(broken_down.begins_with("지난 실행 마지막 기록 7초: 터치 world · 엔진 메모리 1024MB"), "the last line is still the last touch: " + broken_down)
 	check(broken_down.contains("몬스터 그림 해석 310MB(42) · 그림 텍스처 120MB(40) · GPU 텍스처 200MB · 노드 900 · 리소스 5000 · 원본 표 60"), "the latest heartbeat names what holds memory: " + broken_down)
+	var with_world := FileAccess.open(previous, FileAccess.WRITE)
+	with_world.store_line("run=x seq=1 t=5000 ev=alive stage=- map=m sp2_parsed_mb=1 sp2_parsed_n=2 sp2_texture_mb=3 sp2_texture_n=4 nodes=5 resources=6 tables=7 objects=8000 actors=40 r_raw_chunks=9 r_frame_commands=10 r_frame_atlases=11 r_static_tails=12 cur=- static_kb=1024 available_kb=-1")
+	with_world.close()
+	check(LOG.previous_end_line().ends_with("· 객체 8000 · 몬스터 40 · 지도 조각 9/명령 10/아틀라스 11/정적 12"), "the heartbeat names objects, actors and map renderer caches: " + LOG.previous_end_line())
 	LOG.mark("boot_done")
 	check(lines(current).size() == 1, "new run starts a new file")
 

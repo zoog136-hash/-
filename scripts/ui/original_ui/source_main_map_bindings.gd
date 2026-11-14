@@ -293,7 +293,7 @@ func viewport_to_world_image_pixel(viewport_point: Vector2) -> Dictionary:
 func _visible_scroll_point(area: Object, viewport_point: Vector2) -> Dictionary:
 	var nodes: Dictionary=area.get("source_nodes")
 	var node: Node2D=nodes.get(44388)
-	var scroll: Variant=node.get_meta("source_scroll",null) if node!=null else null
+	var scroll: Variant=(node.get_meta("source_scroll") if node.has_meta("source_scroll") else null) if node!=null else null
 	var control: Control=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
 	if control==null or not control.is_visible_in_tree():return _fail("source_main_map_original_scroll_viewport_missing")
 	var parent: Node=control
@@ -351,7 +351,7 @@ func _area_target(scene: Node2D) -> Dictionary:
 	if not nodes is Dictionary:return _fail("source_main_map_original_area_nodes_missing")
 	var owner: Variant=nodes.get(AREA_IMAGE)
 	if not is_instance_valid(owner):return _fail("source_main_map_original_area_image_node_missing")
-	var sprite: Variant=owner.get_meta("source_sprite",null)
+	var sprite: Variant=(owner.get_meta("source_sprite") if owner.has_meta("source_sprite") else null)
 	if not sprite is Sprite2D or not owner.is_ancestor_of(sprite):return _fail("source_main_map_original_area_sprite_missing")
 	return {"ok":true,"owner":owner,"sprite":sprite}
 

@@ -130,7 +130,7 @@ func _stage() -> Dictionary:
 	var picture: bool=_slot_picture(next,out,"Nd_SourceItem/Production_Slot/Sp_IconSample",int(_data.item_class_id),_item_name)
 	var list: Dictionary=NamedTree.locate(next,out,"ListView")
 	var list_node: Variant=list.player.source_nodes.get(list.offset) if list.get("ok",false) else null
-	var content: Variant=list_node.get_meta("source_list_content",null) if is_instance_valid(list_node) else null
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:
 		next.free()
 		return _fail("source_acquisition_popup_list_content_missing")

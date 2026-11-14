@@ -368,7 +368,7 @@ func _point_state(row: Node2D, out: Dictionary, reached: bool) -> bool:
 	var located: Dictionary=NamedTree.locate(row,out,"Panel/Clan_Slot_Point")
 	if not located.get("ok",false):return false
 	var node: Variant=located.player.source_nodes.get(located.offset)
-	var player: Variant=node.get_meta("source_project_player",null) if is_instance_valid(node) else null
+	var player: Variant=(node.get_meta("source_project_player") if node.has_meta("source_project_player") else null) if is_instance_valid(node) else null
 	if not is_instance_valid(player):return false
 	player.seek_frame(POINT_COMPLETE_FRAME if reached else POINT_OFF_FRAME)
 	return true

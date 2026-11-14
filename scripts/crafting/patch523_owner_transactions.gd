@@ -112,10 +112,28 @@ static func quest_ownership_provider() -> Script:
 	var path: String="res://scripts/quests/quest_reward_ownership.gd"
 	if not ResourceLoader.exists(path):return null
 	var provider: Script=load(path)
-	var bytes: PackedByteArray=provider.get_source_code().to_utf8_buffer()
-	var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
-	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1);hash.update(header);hash.update(bytes)
-	return provider if hash.finish().hex_encode()=="708c5816f59464427a08e085adb569160c18b740" else null
+	return provider if reviewed_script(provider,"708c5816f59464427a08e085adb569160c18b740") else null
+
+static var _reviewed_cache: Dictionary={}
+
+# Reviewed git-blob check for a public owner script. The result is cached per
+# script and blob because the HUD refresh calls this on every update. Exported
+# builds ship scripts as tokens, so get_source_code() is empty there: the check
+# fails closed exactly as before, without HashingContext.update(empty) errors.
+static func reviewed_script(script: Script, blob: String) -> bool:
+	if script==null:return false
+	var key: String=script.resource_path+"|"+blob
+	if not script.resource_path.is_empty() and _reviewed_cache.has(key):return _reviewed_cache[key]
+	var source: String=script.get_source_code()
+	var ok: bool
+	if source.is_empty():ok=false
+	else:
+		var bytes: PackedByteArray=source.to_utf8_buffer()
+		var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
+		var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1);hash.update(header);hash.update(bytes)
+		ok=hash.finish().hex_encode()==blob
+	if not script.resource_path.is_empty():_reviewed_cache[key]=ok
+	return ok
 
 static func protected_inputs_error(world: Node) -> String:
 	for id: String in world.item_instances:

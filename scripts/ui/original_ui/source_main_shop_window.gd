@@ -104,7 +104,7 @@ func _stage() -> Dictionary:
 	var page: Dictionary=next.project_player([TAB_PROJECT])
 	if not page.get("ok",false):next.free();return page
 	var list_node: Variant=page.player.get("source_nodes").get(LIST)
-	var content: Variant=list_node.get_meta("source_list_content",null) if is_instance_valid(list_node) else null
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:next.free();return _fail("source_shop_window_list_content_missing")
 	var products: Array[Dictionary]=_products()
 	for index: int in range(products.size()):

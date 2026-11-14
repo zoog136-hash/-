@@ -295,7 +295,7 @@ func _forward_scroll(root: Node2D, out: Dictionary, suffix: String) -> void:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return
 	var node: Variant=located.player.source_nodes.get(located.offset)
-	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 	var area: Variant=button.get("_input_area") if is_instance_valid(button) else null
 	if area is Control and not area.gui_input.is_connected(_scroll_input):area.gui_input.connect(_scroll_input)
 

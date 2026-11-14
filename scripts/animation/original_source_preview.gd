@@ -178,8 +178,7 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 			optional_status[role] = {"state":"optional_source_role_contract_missing"}
 			continue
 		var action: int = int(selected.optional_role_actions[role])
-		var probe := REFERENCE_BANK.new()
-		var loaded: Dictionary = probe.load_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),{role:action},{role:loop},str(selected.consumer),{role:int(actor)})
+		var loaded: Dictionary = _optional_role_probe(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),role,action,loop,str(selected.consumer),int(actor))
 		if not loaded.ok:
 			optional_status[role] = {"state":"optional_source_action_unavailable","bank_problem":loaded.get("error","")}
 			continue
@@ -207,6 +206,33 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 	reference_bank_status["run_status"] = run_status.duplicate(true)
 	reference_bank_status["optional_role_status"] = optional_status.duplicate(true)
 	return configured
+
+## Optional RUN/HIT admission: a full independent load_bank of that one action.
+## It ran on every spawn, also for kinds whose combined bank was already
+## prepared (a second uncached bank load per monster). The verdict depends only
+## on these pinned inputs, so keep {ok, error} per request while the manifest
+## stays pinned. The combined load that follows still verifies every member;
+## if it fails the existing fallback drops the optional roles as before.
+const OPTIONAL_PROBE_MEMO_MAX: int = 512
+static var _optional_probe_memo: Dictionary = {}
+
+static func _optional_role_probe(manifest_path: String, manifest_sha: String, sprite_id: int, role: String, action: int, loop: bool, consumer: String, actor: int) -> Dictionary:
+	var key: String = var_to_str([manifest_path,manifest_sha,sprite_id,role,action,loop,consumer,actor])
+	if _optional_probe_memo.has(key) and REFERENCE_BANK.MANIFEST_INDEX.pinned(manifest_path,manifest_sha):
+		var known: Dictionary = _optional_probe_memo[key]
+		# Most recently used last; the oldest is evicted first.
+		_optional_probe_memo.erase(key)
+		_optional_probe_memo[key] = known
+		FRAME_HITCH.count("view.optional_probe_hit")
+		return known
+	var probe := REFERENCE_BANK.new()
+	var loaded: Dictionary = probe.load_bank(manifest_path,manifest_sha,sprite_id,{role:action},{role:loop},consumer,{role:actor})
+	var verdict: Dictionary = {"ok":bool(loaded.get("ok",false)),"error":str(loaded.get("error",""))}
+	_optional_probe_memo.erase(key)
+	while _optional_probe_memo.size() >= OPTIONAL_PROBE_MEMO_MAX: _optional_probe_memo.erase(_optional_probe_memo.keys()[0])
+	_optional_probe_memo[key] = verdict
+	FRAME_HITCH.count("view.optional_probe_miss")
+	return verdict
 
 func _configure_existing_source(key: String, manifest_path: String, context: Dictionary = {}) -> bool:
 	var source_request_key: String = key

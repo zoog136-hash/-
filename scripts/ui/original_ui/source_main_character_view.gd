@@ -79,7 +79,7 @@ func open_equipment(parent: Node) -> Dictionary:
 	var info: Dictionary=next.project_player([PROJECT,EQUIP_PROJECT])
 	if not info.get("ok",false):next.free();return info
 	var page_node: Variant=info.player.get("source_nodes").get(EQUIP_PAGES)
-	var pages: Variant=page_node.get_meta("source_pages",null) if is_instance_valid(page_node) else null
+	var pages: Variant=(page_node.get_meta("source_pages") if page_node.has_meta("source_pages") else null) if is_instance_valid(page_node) else null
 	if not is_instance_valid(pages):next.free();return _fail("source_character_original_page_view_unavailable")
 	for index: int in range(contracts.size()):
 		var contract: Dictionary=contracts[index]
