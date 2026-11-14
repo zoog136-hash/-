@@ -1095,13 +1095,25 @@ const FEATURE_WINDOWS={
 	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
 	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
 	"card_dispatch":preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd"),
+	"item_book":preload("res://scripts/ui/original_ui/source_main_item_book_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
 ## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
 func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
-	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	var configured: Dictionary=_configure_feature_window(key)
+	if not configured.get("ok",false):return configured
+	close_feature_windows(key)
+	_cancel_native_buttons()
+	var trace: int=MENU_TRACE.begin(key)
+	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
+	MENU_TRACE.end(trace,result.get("ok",false))
+	return result
+
+## Configures feature window `key` once (its pack members); opens nothing.
+func _configure_feature_window(key: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not _feature_windows.has(key) and _pack!=null and hud!=null:
 		var window: RefCounted=FEATURE_WINDOWS[key].new()
 		var configured: Dictionary=window.configure(_pack,hud)
@@ -1110,12 +1122,11 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 			if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 		_feature_windows[key]=window
 	if not _feature_windows.has(key) or not is_instance_valid(_coordinates):return _fail("source_feature_window_pack_scope_unavailable")
-	close_feature_windows(key)
-	_cancel_native_buttons()
-	var trace: int=MENU_TRACE.begin(key)
-	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
-	MENU_TRACE.end(trace,result.get("ok",false))
-	return result
+	return {"ok":true}
+
+## True when feature window `key` can mount (its members are in the pack).
+func feature_window_available(key: String) -> bool:
+	return FEATURE_WINDOWS.has(key) and _configure_feature_window(key).get("ok",false)
 
 func feature_window(key: String) -> RefCounted:
 	return _feature_windows.get(key)

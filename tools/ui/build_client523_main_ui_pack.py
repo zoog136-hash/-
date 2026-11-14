@@ -92,6 +92,10 @@ WHOLE_SCOPES = [
     # (source_main_card_awakening_window) leaves that ProjectNode out.
     ("UI/Change/Change_Awaken_Skill.csb", [23400]),
     ("UI/Change/Change_Awaken_All.csb", []),
+    # ItemBook_All's trade purchase popup (Trade_Popup_Purchase_Batch) names
+    # an Atlas_Hud frame absent from the 523 client; the item book window
+    # (source_main_item_book_window) leaves that ProjectNode out.
+    ("UI/ItemBook/ItemBook_All.csb", [1784]),
 ]
 
 
