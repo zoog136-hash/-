@@ -81,6 +81,13 @@ func _init() -> void:
 	var engine_only: String = "run=x seq=1 t=9000 ev=alive stage=- map=m cur=- static_kb=204800 static_max_kb=307200 available_kb=-1"
 	FileAccess.open(previous, FileAccess.WRITE).store_line(engine_only)
 	check(LOG.previous_end_line() == "지난 실행 마지막 기록 9초: 게임 중(m) · 엔진 메모리 200MB(최대 300MB)", "without /proc values the engine memory is shown: " + LOG.previous_end_line())
+	var with_breakdown := FileAccess.open(previous, FileAccess.WRITE)
+	with_breakdown.store_line("run=x seq=1 t=5000 ev=alive stage=- map=m sp2_parsed_mb=310 sp2_parsed_n=42 sp2_texture_mb=120 sp2_texture_n=40 nodes=900 resources=5000 tables=60 cur=- static_kb=1024000 static_max_kb=1200000 tex_kb=204800 available_kb=-1")
+	with_breakdown.store_line("run=x seq=2 t=7000 ev=touch stage=- at=world cur=- static_kb=1048576 static_max_kb=1200000 available_kb=-1")
+	with_breakdown.close()
+	var broken_down: String = LOG.previous_end_line()
+	check(broken_down.begins_with("지난 실행 마지막 기록 7초: 터치 world · 엔진 메모리 1024MB"), "the last line is still the last touch: " + broken_down)
+	check(broken_down.contains("몬스터 그림 해석 310MB(42) · 그림 텍스처 120MB(40) · GPU 텍스처 200MB · 노드 900 · 리소스 5000 · 원본 표 60"), "the latest heartbeat names what holds memory: " + broken_down)
 	LOG.mark("boot_done")
 	check(lines(current).size() == 1, "new run starts a new file")
 

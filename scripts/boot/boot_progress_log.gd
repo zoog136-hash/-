@@ -133,10 +133,17 @@ static func previous_last_fields() -> Dictionary:
 	var tail: String = file.get_buffer(length - start).get_string_from_utf8()
 	file.close()
 	var lines: PackedStringArray = tail.split("\n", false)
+	var last: Dictionary = {}
 	for position: int in range(lines.size() - 1, -1, -1):
 		var fields: Dictionary = parse_line(lines[position])
-		if fields.has("ev") and fields.has("t"): return fields
-	return {}
+		if not fields.has("ev") or not fields.has("t"): continue
+		if last.is_empty(): last = fields
+		# The memory breakdown comes from the latest heartbeat at or before it.
+		if fields.ev == "alive":
+			for key: String in fields:
+				if key.begins_with("sp2_") or key in ["nodes", "resources", "tables", "tex_kb"]: last["alive_" + key] = fields[key]
+			break
+	return last
 
 static func parse_line(line: String) -> Dictionary:
 	var fields: Dictionary = {}
@@ -164,6 +171,11 @@ static func previous_end_line() -> String:
 		# Android may refuse /proc/self/status; the engine's own count remains.
 		var engine: int = int(fields.get("static_kb", "-1"))
 		if engine > 0: line += " · 엔진 메모리 %dMB(최대 %dMB)" % [engine / 1024, int(fields.get("static_max_kb", "0")) / 1024]
+	if fields.has("alive_sp2_parsed_mb"):
+		line += " · 몬스터 그림 해석 %sMB(%s) · 그림 텍스처 %sMB(%s)" % [fields.alive_sp2_parsed_mb, fields.get("alive_sp2_parsed_n", "-"), fields.get("alive_sp2_texture_mb", "-"), fields.get("alive_sp2_texture_n", "-")]
+		var gpu: int = int(fields.get("alive_tex_kb", "-1"))
+		if gpu >= 0: line += " · GPU 텍스처 %dMB" % (gpu / 1024)
+		line += " · 노드 %s · 리소스 %s · 원본 표 %s" % [fields.get("alive_nodes", "-"), fields.get("alive_resources", "-"), fields.get("alive_tables", "-")]
 	var available: int = int(fields.get("available_kb", "-1"))
 	if available >= 0: line += " · 기기 여유 %dMB" % (available / 1024)
 	return line

@@ -4,6 +4,7 @@ extends Node
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
+const SP2_ASSETS := preload("res://scripts/resources/reference_sp2_asset_service.gd")
 ## Gameplay heartbeat in boot_progress.log (with memory), so the next loading
 ## screen can say what the app was doing when the system closed it.
 const ALIVE_MSEC: int = 5000
@@ -55,8 +56,22 @@ func _process(_delta: float) -> void:
 	var now: int = Time.get_ticks_msec()
 	if now - _alive_at >= ALIVE_MSEC:
 		_alive_at = now
-		BOOT_LOG.mark("alive", {"map": map_id})
+		BOOT_LOG.mark("alive", alive_fields(map_id))
 		DEFINITIONS.remember_used_tables()
+
+## What holds memory, so the next loading screen can name it (MB, counts).
+static func alive_fields(map_id: String) -> Dictionary:
+	var fields: Dictionary = {"map": map_id}
+	var sp2: Dictionary = SP2_ASSETS.stats()
+	for kind: String in ["parsed", "texture"]:
+		var entry: Dictionary = sp2.get(kind, {})
+		var bytes: int = int(entry.get("live_bytes", 0)) + int(entry.get("idle_bytes", 0)) + int(entry.get("stale_live_bytes", 0)) + int(entry.get("pending_bytes", 0))
+		fields["sp2_" + kind + "_mb"] = bytes / 1048576
+		fields["sp2_" + kind + "_n"] = int(entry.get("live_count", 0)) + int(entry.get("idle_count", 0))
+	fields["nodes"] = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
+	fields["resources"] = int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT))
+	fields["tables"] = DEFINITIONS._tables.size()
+	return fields
 
 func _input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
