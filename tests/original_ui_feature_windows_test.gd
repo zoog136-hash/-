@@ -81,7 +81,7 @@ func _registry() -> void:
 		var result: Dictionary=window.configure(FakePack.new(),hud)
 		check(not result.get("ok",true) and result.get("code")=="source_window_member_missing" and not result.get("handled",true),key+" fails closed without its members")
 		check(not window.is_open(),key+" is closed before opening")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch"],"the registered feature windows")
+	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","item_book"],"the registered feature windows")
 	hud.free()
 
 func _binding() -> void:
@@ -189,6 +189,7 @@ func _routing() -> void:
 	check(native.opened[-1]==["half_elixir",[]] and not hud.workspace.visible,"half elixir opens the original window")
 	hud.open_card_dispatch()
 	check(native.opened[-1]==["card_dispatch",[]] and not hud.workspace.visible and hud.active_section=="card_dispatch","변신 파견 opens the original window")
+	check(hud.open_item_book() and native.opened[-1]==["item_book",[]] and not hud.workspace.visible and hud.active_section=="item_book","the item book opens the original window")
 	var attempts: int=native.opened.size()
 	native.handles=false
 	check(not hud._open_original_feature("titles") and native.opened.size()==attempts+1,"an unhandled window reports false (TWILIGHT view kept)")
