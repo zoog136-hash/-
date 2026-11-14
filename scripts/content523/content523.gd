@@ -65,9 +65,29 @@ static func models() -> Dictionary:
 		var none: Dictionary = {"ok":false,"problem":"원본 523 정의 ZIP 미설치"}
 		data = {"escaros":none,"elf":none,"tq":none}
 	else:
-		data = {"escaros":ESCAROS.build(SOURCE),"elf":ELF.build(SOURCE),"tq":TQUEST.build(SOURCE)}
+		# Building reads and indexes large original tables (DescData_Korean,
+		# Territories, StatusEffectAttr, ItemClass ...): the phone recorded a
+		# 6.1 s "던전" frame on the first content tick. The result is stored
+		# per original + builder code, so later starts read it back instead.
+		var key: String = models_bake_key(sha)
+		var baked: Variant = BAKE.read(MODELS_BAKE, key)
+		if baked is Dictionary and baked.has("escaros") and baked.has("elf") and baked.has("tq"):
+			data = baked
+		else:
+			data = {"escaros":ESCAROS.build(SOURCE),"elf":ELF.build(SOURCE),"tq":TQUEST.build(SOURCE)}
+			BAKE.write(MODELS_BAKE, key, data)
 	_cache = {"sha":sha,"data":data}
 	return data
+
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const MODELS_BAKE := "content523_models"
+const MODELS_FORMAT := "twilight.content523.models.v1"
+const MODEL_CODE := ["res://scripts/content523/content523.gd","res://scripts/content523/escaros523.gd",
+	"res://scripts/content523/elfforest523.gd","res://scripts/content523/territory_quest523.gd",
+	"res://scripts/resources/current523_definition_rows.gd"]
+
+static func models_bake_key(sha: String) -> String:
+	return BAKE.key([MODELS_FORMAT, sha, BAKE.code_key(MODEL_CODE), BAKE.engine_key()])
 
 static func release() -> void:
 	_cache.clear(); _lands.clear()
@@ -161,6 +181,9 @@ func import_state(value: Variant) -> void:
 
 func configure(owner: Object) -> void:
 	world = owner
+	# Prepare the content tables while the loading screen is up, not on the
+	# first in-game tick.
+	if owner != null: models()
 
 func now() -> int:
 	return now_override if now_override>=0 else int(Time.get_unix_time_from_system())
