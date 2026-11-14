@@ -97,7 +97,7 @@ func refresh(parent: Node) -> Dictionary:
 	var controls: Array = []
 	for offset: int in BUTTONS:
 		var raw: Variant = child.source_nodes.get(offset)
-		var button: Variant = raw.get_meta("source_button",null) if is_instance_valid(raw) else null
+		var button: Variant = (raw.get_meta("source_button") if raw.has_meta("source_button") else null) if is_instance_valid(raw) else null
 		var control: Variant = button.get("_input_area") if is_instance_valid(button) else null
 		if not control is Control:
 			staged.free()
@@ -195,7 +195,7 @@ func _apply(model: Dictionary) -> Dictionary:
 			return class_result
 	for offset: int in LOCK_BUTTONS:
 		# Do not reset a current pressed state on every ordinary refresh.
-		var button: Variant=_child.source_nodes[offset].get_meta("source_button",null)
+		var button: Variant=(_child.source_nodes[offset].get_meta("source_button") if _child.source_nodes[offset].has_meta("source_button") else null)
 		if is_instance_valid(button) and (button.current_state=="disabled")==model.disabled:continue
 		var result: Dictionary = _child.set_bound_displaystate(offset,not model.disabled)
 		if not result.get("ok",false):

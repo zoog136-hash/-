@@ -146,7 +146,7 @@ func _stage() -> Dictionary:
 	var tab: Dictionary=_tree.scene_of(TAB,{"Panel_Skill":{"visible":false},"Panel_MythSkill":{"visible":false},"Panel_EquipSkill":{"visible":false},"Panel_All/Btn_All_Off":{"visible":false},"Panel_All/Sp_New":{"visible":false}},tab_out)
 	var tabs: Dictionary=NamedTree.locate(next,out,"Tab/ListView")
 	var tab_node: Variant=tabs.player.source_nodes.get(tabs.offset) if tabs.get("ok",false) else null
-	var tab_content: Variant=tab_node.get_meta("source_list_content",null) if is_instance_valid(tab_node) else null
+	var tab_content: Variant=(tab_node.get_meta("source_list_content") if tab_node.has_meta("source_list_content") else null) if is_instance_valid(tab_node) else null
 	if tab.get("ok",false) and tab_content is Node2D:
 		tab.scene.position=Vector2(35.0,-23.0)
 		tab_content.add_child(tab.scene)
@@ -211,7 +211,7 @@ func _slot(hud: Node, record: Dictionary) -> Dictionary:
 	var button: Dictionary=NamedTree.locate(built.scene,out,"Btn_Skill_Slot_1")
 	if button.get("ok",false):
 		var node: Variant=button.player.source_nodes.get(button.offset)
-		var source_button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+		var source_button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 		var area: Variant=source_button.get("_input_area") if is_instance_valid(source_button) else null
 		if area is Control:area.gui_input.connect(_list_input)
 	return {"ok":true,"scene":built.scene,"picture":picture}

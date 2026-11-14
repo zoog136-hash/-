@@ -56,7 +56,7 @@ func blocks_point(point: Vector2) -> bool:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	if _owner==null or _owner.get_ref()!=_current_owner(hud):return false
 	var node: Variant=_scene.source_nodes.get(CLOSE)
-	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 	var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 	if not control is Control or not control.is_visible_in_tree():return false
 	return Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point)

@@ -73,7 +73,7 @@ static func refresh(scene: Node2D, state: Dictionary, info_in_scope: bool) -> Di
 	var result: Dictionary=slot.player.set_bound_text(AMOUNT,str(state.amount))
 	if not result.get("ok",false):return result
 	var node: Variant=parent.player.source_nodes.get(BUTTON)
-	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 	if not is_instance_valid(button):return {"ok":false,"code":"source_blessing_original_button_unavailable"}
 	if (button.get("current_state")=="disabled")!=state.disabled:
 		result=parent.player.set_bound_displaystate(BUTTON,not state.disabled)

@@ -44,7 +44,7 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 		return nested
 	var child: Node2D = nested.player
 	var native_node: Variant = child.get("source_nodes").get(BUTTON)
-	var native_button: Variant = native_node.get_meta("source_button",null) if is_instance_valid(native_node) else null
+	var native_button: Variant = (native_node.get_meta("source_button") if native_node.has_meta("source_button") else null) if is_instance_valid(native_node) else null
 	var native_control: Variant = native_button.get("_input_area") if is_instance_valid(native_button) else null
 	if not native_control is Control:
 		staged.free()
@@ -61,9 +61,9 @@ func configure(pack: RefCounted, forge: Control, parent: Node) -> Dictionary:
 	if not staged.is_inside_tree() or not forge.is_visible_in_tree():
 		close()
 		return _fail("source_enhance_action_mount_unavailable")
-	var source_display: Variant=native_node.get_meta("source_display_color",null)
+	var source_display: Variant=(native_node.get_meta("source_display_color") if native_node.has_meta("source_display_color") else null)
 	var caption: Variant=child.get("source_nodes").get(15760 if model.disabled else 16328)
-	var caption_display: Variant=caption.get_meta("source_display_color",null) if is_instance_valid(caption) else null
+	var caption_display: Variant=(caption.get_meta("source_display_color") if caption.has_meta("source_display_color") else null) if is_instance_valid(caption) else null
 	if not native_control.is_visible_in_tree() or not source_display is Color or source_display.a<=0 or not is_instance_valid(caption) or not caption.is_visible_in_tree() or not caption_display is Color or caption_display.a<=0:
 		close()
 		return _fail("source_enhance_action_original_default_visibility_unavailable")

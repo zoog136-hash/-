@@ -400,7 +400,7 @@ static func _collect_native_buttons(node: Node, found: Array) -> void:
 	var children: Array[Node]=node.get_children()
 	children.reverse()
 	for child: Node in children:_collect_native_buttons(child,found)
-	var button: Variant=node.get_meta("source_button",null)
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null)
 	if is_instance_valid(button):found.append(button)
 
 func _cancel_native_buttons() -> void:

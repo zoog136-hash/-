@@ -50,7 +50,7 @@ func configure(pack: RefCounted, hud: Node, owner: Control, parent: Node) -> Dic
 	var controls: Array = []
 	for offset: int in BUTTONS:
 		var raw: Variant = child.source_nodes.get(offset)
-		var button: Variant = raw.get_meta("source_button",null) if is_instance_valid(raw) else null
+		var button: Variant = (raw.get_meta("source_button") if raw.has_meta("source_button") else null) if is_instance_valid(raw) else null
 		var control: Variant = button.get("_input_area") if is_instance_valid(button) else null
 		if not control is Control:
 			staged.free()
