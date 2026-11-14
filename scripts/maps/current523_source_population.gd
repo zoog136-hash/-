@@ -5,8 +5,19 @@ class_name Current523SourcePopulation
 ## pool. New actors are spread over frames so entering a dense area on a phone
 ## does not resolve dozens of source records in one frame.
 const SPAWNS_PER_FRAME: int = 2
+## Spawn work per frame. A spawn whose setup is a first-time (cold) original
+## bank load can take hundreds of ms on a phone; once this frame has spent the
+## budget no further spawn starts in it, and after a heavy spawn the next
+## HEAVY_REST_FRAMES frames start none, so two cold setups never stack into one
+## long frame. Deferred slots retry shortly (no failure backoff): monsters can
+## appear later, never fewer.
+const FRAME_BUDGET_USEC: int = 8000
+const HEAVY_SPAWN_USEC: int = 50000
+const HEAVY_REST_FRAMES: int = 2
 var _budget_frame: int = -1
 var _budget_used: int = 0
+var _budget_usec: int = 0
+var _rest_until_frame: int = -1
 
 ## Only records resolved from the current523 original may live on a source
 ## field. A record still resolved through the old base508 actor pack
@@ -27,14 +38,19 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if frame != _budget_frame:
 		_budget_frame = frame
 		_budget_used = 0
-	if _budget_used >= SPAWNS_PER_FRAME:
+		_budget_usec = 0
+	if _budget_used >= SPAWNS_PER_FRAME or _budget_usec >= FRAME_BUDGET_USEC or frame <= _rest_until_frame:
 		# A frame-budget deferral is not a failed floor search: no backoff.
 		slot.budget_deferred = true
 		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.05)
 		return
 	_budget_used += 1
 	slot.erase("budget_deferred")
+	var started: int = Time.get_ticks_usec()
 	super._spawn_slot(slot)
+	var spent: int = Time.get_ticks_usec() - started
+	_budget_usec += spent
+	if spent >= HEAVY_SPAWN_USEC: _rest_until_frame = frame + HEAVY_REST_FRAMES
 
 func _spawn_retry_delay(slot: Dictionary) -> float:
 	if slot.has("budget_deferred"):
