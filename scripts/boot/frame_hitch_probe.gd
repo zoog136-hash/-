@@ -54,10 +54,22 @@ func _process(_delta: float) -> void:
 	var map_id: String = str(host.get("active_map_id")) if host != null else ""
 	FRAME_HITCH.frame(map_id)
 	var now: int = Time.get_ticks_msec()
+	if last_input_msec == 0: last_input_msec = now
+	var player: Variant = host.get("player") if host != null else null
+	var auto_enabled: bool = player is Object and is_instance_valid(player) and bool((player as Object).get("auto_enabled"))
+	# Headless runs (tests, CI) keep the project frame cap.
+	if not _headless:
+		var cap: int = frame_cap(now, auto_enabled, last_input_msec)
+		if Engine.max_fps != cap: Engine.max_fps = cap
 	if now - _alive_at >= ALIVE_MSEC:
 		_alive_at = now
 		var fields: Dictionary = alive_fields(map_id)
 		fields.merge(world_fields(host), true)
+		var window: Dictionary = FRAME_HITCH.take_window()
+		fields["fps"] = window.fps
+		fields["frame_ms"] = window.frame_ms
+		if not str(window.cpu_top).is_empty(): fields["cpu_top"] = window.cpu_top
+		fields["max_fps"] = Engine.max_fps
 		BOOT_LOG.mark("alive", fields)
 		DEFINITIONS.remember_used_tables()
 
@@ -93,7 +105,21 @@ static func world_fields(world: Node) -> Dictionary:
 		if chunks is Dictionary: fields["field_chunks"] = (chunks as Dictionary).size()
 	return fields
 
+## Frame cap while nobody touches the screen and auto hunting is off: the
+## world keeps running, it is just drawn less often (heat).
+const ACTIVE_FPS: int = 30
+const IDLE_FPS: int = 15
+const IDLE_AFTER_MSEC: int = 15000
+static var last_input_msec: int = 0
+var _headless: bool = DisplayServer.get_name() == "headless"
+
+static func frame_cap(now_msec: int, auto_enabled: bool, last_input: int) -> int:
+	return IDLE_FPS if not auto_enabled and now_msec - last_input >= IDLE_AFTER_MSEC else ACTIVE_FPS
+
 func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch or event is InputEventScreenDrag or event is InputEventMouseButton or event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		last_input_msec = Time.get_ticks_msec()
+		if Engine.max_fps != ACTIVE_FPS: Engine.max_fps = ACTIVE_FPS
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
 	if not pressed: return
 	var control: Control = get_viewport().gui_get_hovered_control()

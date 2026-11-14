@@ -80,7 +80,7 @@ func resolve(item: String, context: Dictionary, now: int) -> Dictionary:
 	if now<int(state.last_time):return {"ok":false,"error":"이전 거래보다 시간이 앞섭니다. 시계를 바꾸지 말고 확인하세요"}
 	var coupon: Dictionary=definitions.coupons.get(item,{})
 	if coupon.is_empty():return {"ok":false,"error":"카드 재도전 쿠폰이 아닙니다. 장비 복구는 별도 어댑터가 필요합니다"}
-	if bool(coupon.item.get("TestItem",false)) and not OS.is_debug_build():return {"ok":false,"error":"원본 테스트 아이템은 일반 실행에서 사용할 수 없습니다"}
+	if bool(coupon.item.get("TestItem",false)) and not preload("res://scripts/boot/build_flags.gd").playtest():return {"ok":false,"error":"원본 테스트 아이템은 일반 실행에서 사용할 수 없습니다"}
 	var policy: Dictionary=coupon.profile
 	var history: Dictionary={}
 	for row: Dictionary in definitions.histories:

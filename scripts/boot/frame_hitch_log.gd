@@ -53,6 +53,11 @@ static var enabled: bool = true:
 		_application_focused = -1
 		_clear_pending()
 static var _nested: int = 0
+## Sustained CPU (heat), not just hitches: every frame's section totals are
+## added here until take_window() reads and clears them.
+static var _window_sections: Dictionary = {}
+static var _window_frames: int = 0
+static var _window_usec: int = 0
 ## Callback-delivery boundaries, not GPU timestamps. One fixed-size sample per
 ## probe interval; separate-thread post callbacks can belong to an earlier draw.
 static var _draw_delivery: String = "unknown"
@@ -131,6 +136,9 @@ static func _close_frame(at: int, map_id: String) -> void:
 		_frames += 1
 		var total: int = at - _last_frame
 		if total >= THRESHOLD_USEC: _record(total, map_id, at)
+		_window_frames += 1
+		_window_usec += total
+		for key: String in _sections: _window_sections[key] = int(_window_sections.get(key, 0)) + int(_sections[key])
 	_last_frame = at
 	_clear_pending()
 	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
@@ -285,6 +293,21 @@ static func _record(total: int, map_id: String, at: int) -> void:
 		if _worst.size() > KEEP: _worst.resize(KEEP)
 	_dirty = true
 
+## Frames, fps, average frame ms and the busiest sections (ms per second of
+## play) since the previous call; clears the window.
+static func take_window(top: int = 4) -> Dictionary:
+	var seconds: float = maxf(0.001, float(_window_usec) / 1000000.0)
+	var parts: Array = []
+	for key: String in _window_sections: parts.append([key, int(_window_sections[key])])
+	parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+	var names: PackedStringArray = []
+	for part: Array in parts.slice(0, top): names.append("%s:%d" % [part[0], int(float(part[1]) / 1000.0 / seconds)])
+	var result: Dictionary = {"frames": _window_frames, "frame_ms": int(float(_window_usec) / 1000.0 / maxf(1.0, float(_window_frames))), "fps": int(round(float(_window_frames) / seconds)), "cpu_top": ",".join(names)}
+	_window_sections.clear()
+	_window_frames = 0
+	_window_usec = 0
+	return result
+
 static func summary() -> Dictionary:
 	return {"schema":1, "build":_build.duplicate(), "frames":_frames, "hitches":_hitches, "threshold_ms":THRESHOLD_USEC / 1000,
 		"worst":_worst.duplicate(true)}
@@ -427,6 +450,9 @@ static func reset_for_test(directory: String) -> void:
 	_application_paused = -1
 	_application_focused = -1
 	_clear_pending()
+	_window_sections.clear()
+	_window_frames = 0
+	_window_usec = 0
 
 ## Test hook: pretend the previous frame started `usec_ago` microseconds ago.
 static func backdate_frame_for_test(usec_ago: int) -> void:

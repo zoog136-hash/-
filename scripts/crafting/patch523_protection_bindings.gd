@@ -1,6 +1,9 @@
 extends RefCounted
 ## Consumer namespace binding only; the published owner retains every trade.
-const REVIEWED_OWNER_BLOB="650b69bab7fc505ffa47c8607a1337824205bb5a"
+## Re-reviewed 2026-11-14 at blob b6d088e: since 650b69b (11-05) only
+## persisted_last_seen()/play_use_visual() and template-field changes were
+## added; records_for(), binding_cache and binding_catalog_size are unchanged.
+const REVIEWED_OWNER_BLOB="b6d088e49c2a1c965f8d4eb3b41e931de7bb04c0"
 const IDS=[200723,245718,297828,328254,346911,371108,75764,123373]
 static var views: Dictionary={}
 
