@@ -100,6 +100,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_previous = BOOT_LOG.previous_unfinished()
+	var end_line: String = BOOT_LOG.previous_end_line()
 	BOOT_LOG.mark("loading_screen", {"previous_unfinished": _previous})
 	FRAME_HITCH.start()
 	var hitch_line: String = FRAME_HITCH.previous_line()
@@ -127,6 +128,10 @@ func _ready() -> void:
 		var hitch := STYLE.label(hitch_line + " · 기록 " + FRAME_HITCH.PREV_NAME, 15, STYLE.GOLD)
 		hitch.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		column.add_child(hitch)
+	if not end_line.is_empty():
+		var ending := STYLE.label(end_line, 15, STYLE.GOLD)
+		ending.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		column.add_child(ending)
 	_bar.custom_minimum_size = Vector2(0, 22)
 	_bar.max_value = 100
 	_bar.show_percentage = true
