@@ -56,7 +56,9 @@ func _process(_delta: float) -> void:
 	var now: int = Time.get_ticks_msec()
 	if now - _alive_at >= ALIVE_MSEC:
 		_alive_at = now
-		BOOT_LOG.mark("alive", alive_fields(map_id))
+		var fields: Dictionary = alive_fields(map_id)
+		fields.merge(world_fields(host), true)
+		BOOT_LOG.mark("alive", fields)
 		DEFINITIONS.remember_used_tables()
 
 ## What holds memory, so the next loading screen can name it (MB, counts).
@@ -71,6 +73,24 @@ static func alive_fields(map_id: String) -> Dictionary:
 	fields["nodes"] = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
 	fields["resources"] = int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT))
 	fields["tables"] = DEFINITIONS._tables.size()
+	fields["objects"] = int(Performance.get_monitor(Performance.OBJECT_COUNT))
+	return fields
+
+## 523 field/renderer/actor sizes from the world, for the same heartbeat.
+static func world_fields(world: Node) -> Dictionary:
+	var fields: Dictionary = {}
+	if world == null: return fields
+	var renderer: Variant = world.get("field_renderer")
+	if renderer is Object and is_instance_valid(renderer):
+		for key: String in ["_raw_chunks", "_frame_atlases", "_frame_commands", "_static_tails", "_chunk_rects"]:
+			var value: Variant = (renderer as Object).get(key)
+			if value is Dictionary: fields["r" + key] = (value as Dictionary).size()
+	var monsters: Variant = world.get("monsters_root")
+	if monsters is Node and is_instance_valid(monsters): fields["actors"] = (monsters as Node).get_child_count()
+	var field: Variant = world.get("field_map")
+	if field is Object and is_instance_valid(field):
+		var chunks: Variant = (field as Object).get("chunk_table")
+		if chunks is Dictionary: fields["field_chunks"] = (chunks as Dictionary).size()
 	return fields
 
 func _input(event: InputEvent) -> void:
