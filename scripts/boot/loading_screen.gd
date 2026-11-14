@@ -12,6 +12,7 @@ const HANDOFF := preload("res://scripts/boot/source523_prebake_handoff.gd")
 const JOB := preload("res://scripts/boot/source523_prebake_job.gd")
 const PROGRESS := preload("res://scripts/boot/loading_progress.gd")
 const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
+const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
 ## Show the title picture after loading until a touch (off in headless runs).
 var title_after_loading: bool = true
 ## Test hook: also show the title stage under the headless display server.
@@ -100,8 +101,10 @@ func _ready() -> void:
 	add_to_group("twilight_loading")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ERROR_RECORD.install()
 	_previous = BOOT_LOG.previous_unfinished()
 	var end_line: String = BOOT_LOG.previous_end_line()
+	var error_line: String = ERROR_RECORD.previous_line()
 	BOOT_LOG.mark("loading_screen", {"previous_unfinished": _previous})
 	FRAME_HITCH.start()
 	var hitch_line: String = FRAME_HITCH.previous_line()
@@ -133,6 +136,10 @@ func _ready() -> void:
 		var ending := STYLE.label(end_line, 15, STYLE.GOLD)
 		ending.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		column.add_child(ending)
+	if not error_line.is_empty():
+		var error_label := STYLE.label(error_line, 15, STYLE.GOLD)
+		error_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		column.add_child(error_label)
 	_bar.custom_minimum_size = Vector2(0, 22)
 	_bar.max_value = 100
 	_bar.show_percentage = true
