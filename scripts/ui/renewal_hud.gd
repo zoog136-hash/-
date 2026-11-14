@@ -3041,6 +3041,18 @@ func open_growth(section: String) -> void:
 	workspace.mount(screen)
 	screen.configure(self,section)
 
+## The original 523 아이템 컬렉션 window for the 96레벨 증표 컬렉션
+## (source_main_item_book_window); false keeps the growth96 view.
+func open_item_book() -> bool:
+	_open_window("item_book","아이템 컬렉션","")
+	if _open_original_feature("item_book"):return true
+	open_growth96()
+	return false
+
+## Whether the original 아이템 컬렉션 window can mount (opens nothing).
+func item_book_available() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("feature_window_available") and original_main_ui_controller.feature_window_available("item_book")
+
 func open_growth96() -> void:
 	_open_window("growth96","96레벨 보상·증표","")
 	growth96_view = Growth96UI.new()
