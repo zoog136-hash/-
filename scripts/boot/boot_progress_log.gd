@@ -160,6 +160,10 @@ static func previous_end_line() -> String:
 	var line: String = "지난 실행 마지막 기록 %d초: %s" % [int(fields.get("t", "0")) / 1000, what]
 	var rss: int = int(fields.get("vmrss_kb", "-1"))
 	if rss > 0: line += " · 앱 메모리 %dMB(최대 %dMB)" % [rss / 1024, int(fields.get("vmhwm_kb", "0")) / 1024]
+	else:
+		# Android may refuse /proc/self/status; the engine's own count remains.
+		var engine: int = int(fields.get("static_kb", "-1"))
+		if engine > 0: line += " · 엔진 메모리 %dMB(최대 %dMB)" % [engine / 1024, int(fields.get("static_max_kb", "0")) / 1024]
 	var available: int = int(fields.get("available_kb", "-1"))
 	if available >= 0: line += " · 기기 여유 %dMB" % (available / 1024)
 	return line

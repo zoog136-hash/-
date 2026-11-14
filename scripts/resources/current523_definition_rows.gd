@@ -847,6 +847,15 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 	for index: int in _relation_rows(_relations[key], id): result.append(_row_at(store, index))
 	return result
 
+## Table positions (0-based, table order) of the rows related() returns for
+## the same arguments, from the same relation index (no rows decoded here).
+static func related_indices(table: String, foreign_key: String, id: int) -> PackedInt32Array:
+	var key: String = table+":"+foreign_key
+	if not _relations.has(key):
+		related(table, foreign_key, id)
+		if not _relations.has(key): return PackedInt32Array()
+	return _relation_rows(_relations[key], id)
+
 const RELATION_ROW_LIMIT: int = 1048576
 const RELATION_VALUE_LIMIT: int = 4398046511104 # 2^42 keeps value * 2^20 + row in 63 bits
 

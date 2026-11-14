@@ -78,6 +78,9 @@ func _init() -> void:
 	check(end_line.begins_with("지난 실행 마지막 기록 ") and end_line.contains("터치 SkillButton"), "the loading line names the last action: " + end_line)
 	if OS.get_name() in ["Linux", "Android"]: check(end_line.contains("앱 메모리 ") and end_line.contains("MB(최대 "), "the loading line names app memory: " + end_line)
 	check(end_line.contains("기기 여유 "), "the loading line names free device memory")
+	var engine_only: String = "run=x seq=1 t=9000 ev=alive stage=- map=m cur=- static_kb=204800 static_max_kb=307200 available_kb=-1"
+	FileAccess.open(previous, FileAccess.WRITE).store_line(engine_only)
+	check(LOG.previous_end_line() == "지난 실행 마지막 기록 9초: 게임 중(m) · 엔진 메모리 200MB(최대 300MB)", "without /proc values the engine memory is shown: " + LOG.previous_end_line())
 	LOG.mark("boot_done")
 	check(lines(current).size() == 1, "new run starts a new file")
 
