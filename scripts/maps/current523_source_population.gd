@@ -12,12 +12,20 @@ const SPAWNS_PER_FRAME: int = 2
 ## long frame. Deferred slots retry shortly (no failure backoff): monsters can
 ## appear later, never fewer.
 const FRAME_BUDGET_USEC: int = 8000
+## A first-time monster kind builds its original SP2 bank one role (idle,
+## walk, attack, ...) per spawn attempt instead of all roles in one frame.
+const ROLE_BUILDS_PER_SPAWN: int = 1
+const SP2_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const HEAVY_SPAWN_USEC: int = 50000
 const HEAVY_REST_FRAMES: int = 2
 var _budget_frame: int = -1
 var _budget_used: int = 0
 var _budget_usec: int = 0
 var _rest_until_frame: int = -1
+## Slots deferred by the budget (or a bank build continued over attempts)
+## retry on following frames, not only on the next 0.4 s population wake.
+var _retry: Array[Dictionary] = []
+const RETRY_PER_FRAME: int = 4
 
 ## Only records resolved from the current523 original may live on a source
 ## field. A record still resolved through the old base508 actor pack
@@ -35,22 +43,70 @@ func _spawn_slot(slot: Dictionary) -> void:
 		slot.remaining = INF
 		return
 	var frame: int = Engine.get_process_frames()
-	if frame != _budget_frame:
-		_budget_frame = frame
-		_budget_used = 0
-		_budget_usec = 0
-	if _budget_used >= SPAWNS_PER_FRAME or _budget_usec >= FRAME_BUDGET_USEC or frame <= _rest_until_frame:
+	if not _budget_open(frame):
 		# A frame-budget deferral is not a failed floor search: no backoff.
 		slot.budget_deferred = true
 		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.05)
+		_queue_retry(slot)
 		return
 	_budget_used += 1
 	slot.erase("budget_deferred")
 	var started: int = Time.get_ticks_usec()
+	# One cold bank role per attempt (see reference_sp2_bank.role_build_budget).
+	SP2_BANK.role_build_budget = ROLE_BUILDS_PER_SPAWN
 	super._spawn_slot(slot)
+	SP2_BANK.role_build_budget = -1
+	if slot.get("patch523_spawn_hold") == "current523_view_deferred":
+		# Not a hold: the next attempt continues the same bank build.
+		slot.erase("patch523_spawn_hold")
+		slot.budget_deferred = true
+		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.05)
+		FRAME_HITCH.count("spawn.view_deferred")
+		_queue_retry(slot)
 	var spent: int = Time.get_ticks_usec() - started
 	_budget_usec += spent
 	if spent >= HEAVY_SPAWN_USEC: _rest_until_frame = frame + HEAVY_REST_FRAMES
+
+func _budget_open(frame: int) -> bool:
+	if frame != _budget_frame:
+		_budget_frame = frame
+		_budget_used = 0
+		_budget_usec = 0
+	return _budget_used < SPAWNS_PER_FRAME and _budget_usec < FRAME_BUDGET_USEC and frame > _rest_until_frame
+
+func _queue_retry(slot: Dictionary) -> void:
+	if slot.get("retry_queued") == true: return
+	slot.retry_queued = true
+	_retry.append(slot)
+
+func configure(controller: Node, value: PlayableField) -> void:
+	for slot: Dictionary in _retry: slot.erase("retry_queued")
+	_retry.clear()
+	super.configure(controller, value)
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	if _retry.is_empty(): return
+	var hitch_started: int = FRAME_HITCH.now()
+	var hitch_nested: int = FRAME_HITCH.nested()
+	_drain_retry()
+	FRAME_HITCH.add_self("field_population", hitch_started, hitch_nested)
+
+func _drain_retry() -> void:
+	if field == null:
+		_retry.clear()
+		return
+	var tried: int = 0
+	while not _retry.is_empty() and tried < RETRY_PER_FRAME and _budget_open(Engine.get_process_frames()):
+		var slot: Dictionary = _retry.pop_front()
+		slot.erase("retry_queued")
+		var occupant: Variant = slot.get("monster")
+		if (is_instance_valid(occupant) and not occupant.dead) or slot.has("patch523_spawn_hold") or not _zone_active(slot.region): continue
+		tried += 1
+		_spawn_slot(slot)
+		if is_instance_valid(slot.get("monster")):
+			slot.erase("budget_deferred")
+			slot.spawn_failures = 0
 
 func _spawn_retry_delay(slot: Dictionary) -> float:
 	if slot.has("budget_deferred"):

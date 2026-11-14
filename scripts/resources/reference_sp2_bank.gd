@@ -53,6 +53,21 @@ static var _verified_members: Dictionary = {}
 var _prepared_snapshot: RefCounted
 var _prepared_members: Dictionary = {}
 var _building_shared: bool = false
+## Spreading a first (cold) NPC bank build over frames. A caller that can
+## retry (the current523 field population) sets role_build_budget to the
+## number of roles this load may build from scratch; a load that would need
+## more returns ROLE_DEFERRED instead. Each finished role of a shared build is
+## kept in _role_memo (validated track + its member stamps and actor pin), so
+## the next attempt reuses it and builds the next role. The final combined
+## result still runs the member-stamp and pin checks below; entries are
+## dropped as soon as the combined bank is prepared (bounded, oldest first).
+## -1 (default) = no limit: every other caller is unchanged.
+const ROLE_DEFERRED := "current523_sp2_role_build_deferred"
+const ROLE_MEMO_MAX: int = 48
+static var role_build_budget: int = -1
+static var _role_memo: Dictionary = {}
+var _role_touched: Dictionary = {}
+var _role_keys_used: Array[String] = []
 
 ## C07: an explicit SPR FPS and raw delay become whole stored milliseconds (original-client
 ## contract adapter). Values outside the plain domain keep the previous exact division.
@@ -427,6 +442,7 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 	var admitted: Dictionary = source_actor_admission(int(layer.source_sprite_id))
 	if not admitted.ok: return admitted
 	var member: String = str(layer.get("member", ""))
+	_role_touched[member] = true
 	if not memo.has(member):
 		FRAME_HITCH.count("sp2.member_verify")
 		var source: Dictionary = _member(member)
@@ -779,6 +795,10 @@ func load_shared_bank(manifest_path: String, expected_sha: String, source_actor_
 	_building_shared = true
 	var loaded: Dictionary = load_bank(manifest_path,expected_sha,source_actor_id,bindings,loop_policy,consumer_scope,role_actor_ids)
 	_building_shared = false
+	# Finished (or failed for a real reason): role parts are not kept beyond
+	# the attempt that completes the combined bank.
+	if loaded.ok or loaded.get("error") != ROLE_DEFERRED:
+		for role_key: String in _role_keys_used: _role_memo.erase(role_key)
 	if not loaded.ok: return loaded
 	var frozen_started: int = FRAME_HITCH.now()
 	snapshot = PREPARED.new()
@@ -810,6 +830,7 @@ func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int
 	return result
 
 func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String, role_actor_ids: Dictionary) -> Dictionary:
+	_role_keys_used.clear()
 	_prepared_snapshot = null
 	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
@@ -856,6 +877,29 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 		if not role is String or role.is_empty() or not integer(bindings[role]) or not loop_policy.has(role) or not loop_policy[role] is bool: return fail("Each caller role needs an exact action ID and explicit boolean loop policy.")
 		var action_id: int = int(bindings[role])
 		var role_actor_id: int = int(role_actor_ids.get(role,source_actor_id))
+		var role_key: String = ""
+		if _building_shared:
+			role_key = var_to_str([manifest_path,expected_sha,source_actor_id,role,action_id,role_actor_id,loop_policy[role],consumer_scope])
+			var reused: Variant = _role_memo.get(role_key)
+			if reused is Dictionary:
+				tracks[role] = reused.track
+				record.role_actor_ids[role] = role_actor_id
+				record.role_body_ids[role] = reused.body_id
+				independent_by_role[role] = reused.independent
+				_actor_pins[reused.actor_path] = reused.actor_sha
+				for member: String in reused.members:
+					if not member_metadata.has(member): member_metadata[member] = reused.members[member]
+				if reused.native:
+					record["native_selector_policy"] = NATIVE_SELECTOR_POLICY
+					record["native_activation_policy"] = NATIVE_ACTIVATION_POLICY
+				_role_keys_used.append(role_key)
+				FRAME_HITCH.count("sp2.role_memo_hit")
+				continue
+		if role_build_budget == 0:
+			FRAME_HITCH.count("sp2.role_build_deferred")
+			return fail(ROLE_DEFERRED)
+		if role_build_budget > 0: role_build_budget -= 1
+		_role_touched = {}
 		admitted = source_actor_admission(role_actor_id)
 		if not admitted.ok: return admitted
 		var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
@@ -1048,6 +1092,15 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 					ordered_instances.append(instance.duplicate(true))
 				attachment_record["source_reference_instances"] = ordered_instances
 			independent_by_role[role].append(attachment_record)
+		if _building_shared:
+			var touched: Dictionary = {}
+			for member: String in _role_touched:
+				if member_metadata.has(member): touched[member] = member_metadata[member]
+			_role_memo.erase(role_key)
+			while _role_memo.size() >= ROLE_MEMO_MAX: _role_memo.erase(_role_memo.keys()[0])
+			_role_memo[role_key] = {"track":tracks[role],"body_id":int(proof.body_sprite_id),"independent":independent_by_role[role],
+				"actor_path":actor_path,"actor_sha":str(entry.sha256),"members":touched,"native":bool(native_policy.native)}
+			_role_keys_used.append(role_key)
 	var checked_members: Dictionary = _load_members_unchanged(member_metadata)
 	if not checked_members.ok: return checked_members
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
