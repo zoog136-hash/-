@@ -37,7 +37,7 @@ func register_original_page(source_renderer: Node2D, panel_offset: int, index: i
 	if not live.get("ok",false):return live
 	if source_renderer.get_parent()!=null and source_renderer.get_parent()!=self:return _fail("source_page_view_renderer_has_another_parent")
 	var panel: Node2D=inspected.panel
-	var record: Dictionary={"renderer":source_renderer,"panel":panel,"panel_offset":panel_offset,"index":index,"anchor":inspected.anchor,"source_member":inspected.source_member,"original_source_position":inspected.original_source_position,"original_native_position":panel.position,"had_metadata":panel.has_meta("source_page_view_layout"),"previous_metadata":panel.get_meta("source_page_view_layout",null)}
+	var record: Dictionary={"renderer":source_renderer,"panel":panel,"panel_offset":panel_offset,"index":index,"anchor":inspected.anchor,"source_member":inspected.source_member,"original_source_position":inspected.original_source_position,"original_native_position":panel.position,"had_metadata":panel.has_meta("source_page_view_layout"),"previous_metadata":panel.get_meta("source_page_view_layout") if panel.has_meta("source_page_view_layout") else null}
 	# All failure paths above leave registered pages and this original intact.
 	if source_renderer.get_parent()==null:add_child(source_renderer)
 	_pages[index]=record
@@ -106,7 +106,7 @@ func _original_page(renderer: Node2D, panel_offset: int) -> Dictionary:
 	if not anchor is Array or anchor.size()!=2 or not Vector2(float(anchor[0]),float(anchor[1])).is_finite():return _fail("source_page_view_original_panel_anchor_missing")
 	if not _vector(widget.get("size"),_extent):return _fail("source_page_view_original_page_size_differs")
 	var panel: Variant=nodes.get(panel_offset)
-	if not panel is Node2D or not _vector(panel.get_meta("source_size",null),_extent):return _fail("source_page_view_actual_panel_size_differs")
+	if not panel is Node2D or not _vector(panel.get_meta("source_size") if panel.has_meta("source_size") else null,_extent):return _fail("source_page_view_actual_panel_size_differs")
 	var identity: Variant=panel.get_meta("original_ui_source",{})
 	if not identity is Dictionary or identity.get("scene")!=member or identity.get("node_offset")!=panel_offset:return _fail("source_page_view_panel_identity_mismatch")
 	var origin: Node=actual_root.get_node_or_null("SourceContentOrigin")
