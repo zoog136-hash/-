@@ -3,6 +3,7 @@ class_name TwilightMonster
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 const BASE508 = preload("res://scripts/lineagem_base508.gd")
+const CURRENT523_KILL_EXPERIENCE = preload("res://scripts/monsters/current523_kill_experience.gd")
 const EQUIPMENT523_INVOKE_DEBUFF = preload("res://scripts/equipment523/invoke_debuff.gd")
 var source_m_original: Dictionary = {}
 var source_targeting: Dictionary = {}
@@ -468,7 +469,7 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
-	exp_reward = int(record.xp) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(source_523_base_max_hp) / 4.0))))))
+	exp_reward = CURRENT523_KILL_EXPERIENCE.reward(record) if not source_m_original.is_empty() else maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(source_523_base_max_hp) / 4.0))))))
 	gold_reward = int(record.get("gold", 0)) if not source_m_original.is_empty() else maxi(10, int(record.get("gold", record.get("아데나", int(float(source_523_base_max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
 	is_boss = LOOT_DROP.is_boss_record(record)
