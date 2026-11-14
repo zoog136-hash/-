@@ -1268,6 +1268,17 @@ func orim_skill_choice_is_open() -> bool:
 func close_orim_skill_choice() -> void:
 	if _orim_skill_window!=null:_orim_skill_window.close()
 
+## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
+const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
+var _menu_tiles: RefCounted
+
+func menu_tile(section: String) -> Dictionary:
+	if _menu_tiles==null and _pack!=null:
+		var tiles=MenuTiles.new()
+		if tiles.configure(_pack).get("ok",false):_menu_tiles=tiles
+	if _menu_tiles==null:return _fail("source_menu_tiles_pack_scope_unavailable")
+	return _menu_tiles.tile(section)
+
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:
 	var window: RefCounted=_domination()
