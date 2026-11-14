@@ -104,9 +104,13 @@ func tick(delta: float) -> void:
 	refresh_buff_visuals()
 	if recovery_elapsed >= 1:
 		recovery_elapsed -= 1
+		# Mode and delay are plain fields; catalog.enabled() (ownership, level,
+		# spell group, weapon) is checked only for recovery skills that are due.
+		# Checking it first walked every catalog record each second (the
+		# periodic "스킬" frame cost).
 		for record: Dictionary in catalog.records:
-			if not catalog.enabled(record): continue
-			if record.mode == "recovery" and combat_elapsed >= float(record.get("combat_delay", 5)): heal(record, int(record.get("heal", 5)))
+			if record.get("mode") != "recovery" or combat_elapsed < float(record.get("combat_delay", 5)): continue
+			if catalog.enabled(record): heal(record, int(record.get("heal", 5)))
 		var hp_regen := int(stat("hpRegen"))
 		var mp_regen := int(stat("mpRegen"))
 		if hp_regen > 0: world.hp = mini(world._effective_max_hp(), world.hp + hp_regen)
