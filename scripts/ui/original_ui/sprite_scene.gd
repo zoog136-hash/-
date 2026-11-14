@@ -193,7 +193,7 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 	if widget.is_empty(): problems.append("missing_node_options"); return
 	if external:_external_texture_tags[int(widget.get("actionTag",0))]=true
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
-	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget):
+	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget) and not _loading_bar_colour_note(node,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
 		# Sound is excluded by the current user scope; retain exact metadata.
 		# "transfer" ("true"/"false") is a client flag on Text nodes (e.g.
@@ -297,6 +297,13 @@ static func _percent_size_baked(field: String, layout: Dictionary, widget: Dicti
 	var axis: int=0 if field=="sizeXPercentEnable" else 1
 	var percent: float=float(layout.get("sizeXPercent" if axis==0 else "sizeYPercent",-1.0))
 	return percent>0.0 and absf(float(size[axis])-parent_size[axis]*percent)<=0.5
+
+## A LoadingBar's designer colour note (e.g. Change_Popup_Dispatch_Info
+## Bar_HP " Red:#D80900 Sky:#29D6FF gray:#7F7F7F") is plain user data for
+## CSLoader; it selects no pixels, texture or percent. Retain it as metadata.
+static func _loading_bar_colour_note(node: Dictionary, widget: Dictionary) -> bool:
+	if node.get("classname")!="LoadingBar":return false
+	return RegEx.create_from_string("^\\s*([A-Za-z]+:#[0-9A-Fa-f]{6}\\s*)+$").search(str(widget.get("customProperty","")))!=null
 
 func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dictionary) -> bool:
 	if _text_line_spacing_metadata(node,widget):return true

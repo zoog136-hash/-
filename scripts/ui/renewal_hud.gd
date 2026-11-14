@@ -3047,6 +3047,13 @@ func open_growth96() -> void:
 	workspace.mount(growth96_view)
 	growth96_view.configure(self,get_parent().growth96)
 
+## The original 523 변신 파견 window (source_main_card_dispatch_window);
+## the TWILIGHT expedition view when it is not handled.
+func open_card_dispatch() -> void:
+	_open_window("card_dispatch","변신 파견","")
+	if _open_original_feature("card_dispatch"):return
+	open_expedition()
+
 func open_expedition() -> void:
 	var world: Node = get_parent()
 	_open_window("expedition", "인형 탐험·변신 파견·성령 수집", "원본 조건·비용·시간 · 이벤트·정산 대기")
