@@ -1287,7 +1287,7 @@ func _invalidate_equipment_static() -> void:
 	equipment_records_dirty=true
 
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false, attack_kind: String="", main_target: bool=true, by_spell: bool=false, context: Dictionary={}, ordinary_attack: bool=false, relic_attack_context: Dictionary={}) -> void:
-	if current523_aden_source_active(): return
+	if _source_combat_targets_hidden(): return
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	if main_target and not equipment523_can_detect(target): return
@@ -3049,7 +3049,7 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
 func _skill_target(max_distance: float) -> TwilightMonster:
-	if current523_aden_source_active(): return null
+	if _source_combat_targets_hidden(): return null
 	var locked: TwilightMonster = _equipment523_locked_target()
 	if locked != null:
 		if player.global_position.distance_squared_to(locked.global_position) <= max_distance*max_distance and _has_line_of_sight_world(player.global_position,locked.global_position): return locked
@@ -3102,7 +3102,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 func _attack(automatic_acquisition: bool = false) -> void:
 	if death_recovery.blocked(): return
 	if patch523_npc_spells.blocks("CannotAttack"): return
-	if current523_aden_source_active(): return
+	if _source_combat_targets_hidden(): return
 	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
@@ -3374,7 +3374,7 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
-	if current523_aden_source_active(): return null
+	if _source_combat_targets_hidden(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = max_distance
 	for node: Node in monsters_root.get_children():
@@ -3412,7 +3412,7 @@ func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> b
 	return true
 
 func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
-	if current523_aden_source_active(): return null
+	if _source_combat_targets_hidden(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = max_distance
 	for node: Node in monsters_root.get_children():
@@ -3444,7 +3444,7 @@ func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
 	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
 func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false, automatic_acquisition: bool = false) -> TwilightMonster:
-	if current523_aden_source_active(): return null
+	if _source_combat_targets_hidden(): return null
 	# Distance-first preserves the previous nearest-reachable rule, while
 	# avoiding an expensive A*/source route for every closer actor seen so far.
 	var candidates: Array[Dictionary] = []
@@ -3869,7 +3869,7 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 		_refresh_combat_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String, by_spell: bool = false, guard_kind: String = "") -> void:
-	if current523_aden_source_active(): return
+	if _source_combat_targets_hidden(): return
 	if attacker == null or not is_instance_valid(attacker) or attacker.dead or hp <= 0:
 		return
 	if field_map != null and field_map.is_safe(player.global_position):
@@ -9640,7 +9640,7 @@ func _target_in_current_weapon_range(target: TwilightMonster) -> bool:
 	return target != null and _weapon_cell_distance(target) <= _current_attack_range_cells()
 
 func _nearest_visible_monster_in_weapon_range(automatic_acquisition: bool = false) -> TwilightMonster:
-	if current523_aden_source_active(): return null
+	if _source_combat_targets_hidden(): return null
 	var best: TwilightMonster = null
 	var best_distance: float = INF
 	var range_cells: int = _current_attack_range_cells()
@@ -11520,6 +11520,15 @@ func apply_current523_static_spr_options(value: Dictionary) -> bool:
 
 func current523_aden_play_metrics() -> Dictionary:
 	return _aden_play_controller().call("metrics")
+
+## Source play hides the legacy actor root. Combat stays closed only while
+## that hidden root is still the target set (no 523 source population
+## attached); with the source population, monsters_root is the visible 523
+## actor root and ordinary combat applies to it (user report 2026-11-14:
+## auto and the attack button did nothing after saves moved into 523 Aden).
+func _source_combat_targets_hidden() -> bool:
+	if not current523_aden_source_active(): return false
+	return not is_instance_valid(monsters_root) or not monsters_root.visible or monsters_root.process_mode == Node.PROCESS_MODE_DISABLED
 
 func current523_aden_source_active() -> bool:
 	return current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned"))
