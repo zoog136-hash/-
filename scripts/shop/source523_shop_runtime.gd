@@ -183,7 +183,10 @@ func bind_source(source) -> void:
 		if original.is_empty() or catalog.label(int(original.DescID)) != str(row.get("name", "")): continue
 		var key: String = "4:%d" % id
 		if _bindings.has(key): _bindings[key] = {}; continue
-		_bindings[key] = {"name":str(row.name),"record":row.duplicate(true)}
+		# The catalog row itself, not a deep copy: ~30,000 rows were copied
+		# whole on every bind (100+ MB). Bindings only read it; an item made
+		# from it still gets its own copy (_grant).
+		_bindings[key] = {"name":str(row.name),"record":row}
 	for id: int in ITEM_BINDINGS:
 		var name: String = ITEM_BINDINGS[id]
 		var original: Dictionary = catalog.record("ItemClass", id)
