@@ -24,12 +24,7 @@ static func prepare(world: Node) -> Dictionary:
 	if owner==null:return {"ok":false,"error":"가호 제작 소유자 미설치"}
 	var input_error: String=preload("res://scripts/crafting/patch523_owner_transactions.gd").protected_inputs_error(world)
 	if not input_error.is_empty():return {"ok":false,"error":input_error}
-	var script: Script=owner.get_script()
-	var bytes: PackedByteArray=script.get_source_code().to_utf8_buffer()
-	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1)
-	var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
-	hash.update(header);hash.update(bytes)
-	if hash.finish().hex_encode()!=REVIEWED_OWNER_BLOB:return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
+	if not preload("res://scripts/crafting/patch523_owner_transactions.gd").reviewed_script(owner.get_script(),REVIEWED_OWNER_BLOB):return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
 	var size: int=world.catalog_db.get("아이템",[]).size()
 	var key: int=owner.get_instance_id()
 	if not views.has(key) or owner.binding_catalog_size!=size:
