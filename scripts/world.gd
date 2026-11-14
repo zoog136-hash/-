@@ -755,25 +755,40 @@ func _process(delta: float) -> void:
 	_process_frame(delta)
 	FRAME_HITCH.add_self("world", hitch_started, hitch_nested)
 
+## Non-visual systems (quests, monster book, dungeons, content, timed items,
+## combinations, inventory upkeep, save timers) run once per SLOW_TICK_SECONDS
+## with the accumulated time; only what the player sees move or fight every
+## frame stays per frame (2026-11-14: phone heat after one minute).
+const SLOW_TICK_SECONDS: float = 1.0
+const HUD_REFRESH_SECONDS: float = 0.5
+const TARGET_HUD_SECONDS: float = 0.1
+const FIELD_TRIGGER_SECONDS: float = 0.2
+var _field_trigger_clock: float = 0.0
+var _slow_tick_clock: float = 0.0
+var _slow_tick_delta: float = 0.0
+var _hud_refresh_clock: float = 0.0
+var _target_hud_clock: float = 0.0
+
 func _process_frame(delta: float) -> void:
-	option_awakening.refresh_timed_relic()
 	EQUIPMENT523_INVOKE_DEBUFF.tick(self,delta)
 	equipment523.tick(self,delta)
 	if death_recovery.blocked(): return
 	patch523_npc_spells.tick(delta)
 	_update_source_optimization()
-	inventory_automation.maintenance.tick()
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
-	var hitch_0: int = FRAME_HITCH.now()
-	monsterbook523_runtime.tick()
-	FRAME_HITCH.add("monsterbook", hitch_0)
-	var hitch_1: int = FRAME_HITCH.now()
-	quest_auto.tick(self)
-	FRAME_HITCH.add("quests", hitch_1)
-	if stat_hud_refresh_pending:
+	_slow_tick_delta += delta
+	_slow_tick_clock -= delta
+	if _slow_tick_clock <= 0.0:
+		_slow_tick_clock = SLOW_TICK_SECONDS
+		var slow_delta: float = _slow_tick_delta
+		_slow_tick_delta = 0.0
+		_process_slow(slow_delta)
+	_hud_refresh_clock -= delta
+	if stat_hud_refresh_pending and _hud_refresh_clock <= 0.0:
+		_hud_refresh_clock = HUD_REFRESH_SECONDS
 		var hitch_2: int = FRAME_HITCH.now()
 		_update_hud()
 		FRAME_HITCH.add("hud", hitch_2)
@@ -785,16 +800,16 @@ func _process_frame(delta: float) -> void:
 	else:
 		auto_stuck_time = 0.0
 	auto_last_position = player.global_position
-	var hitch_3: int = FRAME_HITCH.now()
-	_update_field_triggers()
-	FRAME_HITCH.add("field_triggers", hitch_3)
+	# Portals are checked often enough that walking through one is not missed.
+	_field_trigger_clock -= delta
+	if _field_trigger_clock <= 0.0:
+		_field_trigger_clock = FIELD_TRIGGER_SECONDS
+		var hitch_3: int = FRAME_HITCH.now()
+		_update_field_triggers()
+		FRAME_HITCH.add("field_triggers", hitch_3)
 	var hitch_4: int = FRAME_HITCH.now()
 	ground_loot.tick(delta)
 	FRAME_HITCH.add("loot", hitch_4)
-	var hitch_5: int = FRAME_HITCH.now()
-	dungeon_play.tick(delta)
-	content523.tick(delta)
-	FRAME_HITCH.add("dungeon", hitch_5)
 	var hitch_6: int = FRAME_HITCH.now()
 	loot_pickup.tick(delta)
 	FRAME_HITCH.add("loot", hitch_6)
@@ -807,29 +822,7 @@ func _process_frame(delta: float) -> void:
 	option_awakening.combat.tick(delta)
 	halphas_star.combat.tick(delta)
 	totem_combat.tick(delta)
-	expedition_local.tick(delta)
 	_advance_skill_charge(delta)
-	_tick_item_buffs(delta)
-	ain_refresh_clock -= delta
-	if ain_refresh_clock <= 0.0:
-		ain_refresh_clock = 1.0
-		ain_service.advance_time()
-		unconfirmed523.advance_time()
-		LOCAL_TOWER.tick(self)
-		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
-		_update_ain_hud()
-	_tick_catalog_recovery(delta)
-	combinations.tick(delta)
-	var hitch_8: int = FRAME_HITCH.now()
-	_run_auto_buff_quickslots(delta)
-	FRAME_HITCH.add("items", hitch_8)
-	var hitch_9: int = FRAME_HITCH.now()
-	_run_auto_item_quickslots(delta)
-	FRAME_HITCH.add("items", hitch_9)
-	save_timer += delta
-	if save_timer >= AUTOSAVE_SECONDS:
-		save_timer = 0.0
-		_request_general_save()
 	if deferred_save.tick(delta):
 		var hitch_10: int = FRAME_HITCH.now()
 		_save_game(true)
@@ -848,8 +841,11 @@ func _process_frame(delta: float) -> void:
 	var hitch_12: int = FRAME_HITCH.now()
 	_update_companion(delta)
 	FRAME_HITCH.add("companion", hitch_12)
+	_target_hud_clock -= delta
 	if hud.blocks_keyboard_input():
-		_update_target_hud()
+		if _target_hud_clock <= 0.0:
+			_target_hud_clock = TARGET_HUD_SECONDS
+			_update_target_hud()
 		return
 	if Input.is_action_just_pressed("open_inventory"):
 		_open_inventory()
@@ -871,7 +867,46 @@ func _process_frame(delta: float) -> void:
 			_build_collision_debug_tiles()
 		collision_tiles.visible = collision_debug
 		hud.show_message("충돌 타일 표시 %s" % ("ON" if collision_debug else "OFF"))
-	_update_target_hud()
+	if _target_hud_clock <= 0.0:
+		_target_hud_clock = TARGET_HUD_SECONDS
+		_update_target_hud()
+
+## Once per SLOW_TICK_SECONDS; `delta` is the time since the previous call.
+func _process_slow(delta: float) -> void:
+	option_awakening.refresh_timed_relic()
+	inventory_automation.maintenance.tick()
+	var hitch_0: int = FRAME_HITCH.now()
+	monsterbook523_runtime.tick()
+	FRAME_HITCH.add("monsterbook", hitch_0)
+	var hitch_1: int = FRAME_HITCH.now()
+	quest_auto.tick(self)
+	FRAME_HITCH.add("quests", hitch_1)
+	var hitch_5: int = FRAME_HITCH.now()
+	dungeon_play.tick(delta)
+	content523.tick(delta)
+	FRAME_HITCH.add("dungeon", hitch_5)
+	expedition_local.tick(delta)
+	_tick_item_buffs(delta)
+	ain_refresh_clock -= delta
+	if ain_refresh_clock <= 0.0:
+		ain_refresh_clock = 1.0
+		ain_service.advance_time()
+		unconfirmed523.advance_time()
+		LOCAL_TOWER.tick(self)
+		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
+		_update_ain_hud()
+	_tick_catalog_recovery(delta)
+	combinations.tick(delta)
+	var hitch_8: int = FRAME_HITCH.now()
+	_run_auto_buff_quickslots(delta)
+	FRAME_HITCH.add("items", hitch_8)
+	var hitch_9: int = FRAME_HITCH.now()
+	_run_auto_item_quickslots(delta)
+	FRAME_HITCH.add("items", hitch_9)
+	save_timer += delta
+	if save_timer >= AUTOSAVE_SECONDS:
+		save_timer = 0.0
+		_request_general_save()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if death_recovery.blocked(): return

@@ -1,6 +1,9 @@
 extends RefCounted
 ## Consumer namespace binding only; the published owner retains every trade.
-const REVIEWED_OWNER_BLOB="650b69bab7fc505ffa47c8607a1337824205bb5a"
+## Re-reviewed 2026-11-14 at blob b6d088e: since 650b69b (11-05) only
+## persisted_last_seen()/play_use_visual() and template-field changes were
+## added; records_for(), binding_cache and binding_catalog_size are unchanged.
+const REVIEWED_OWNER_BLOB="b6d088e49c2a1c965f8d4eb3b41e931de7bb04c0"
 const IDS=[200723,245718,297828,328254,346911,371108,75764,123373]
 static var views: Dictionary={}
 
@@ -19,17 +22,27 @@ static func select(records: Array,inventory: Dictionary,item_id: int,original: D
 	if invalid_native:return {"ok":false,"error":"가호 원본 카탈로그 정체 불일치 · 기존 소유 보존"}
 	return {"ok":true,"records":canonical if not canonical.is_empty() else records}
 
+## The owner's reviewed contract is pinned by its git blob where the source
+## text exists (editor, tests, CI). Exported apps ship compiled scripts with no
+## source text (get_source_code() is empty); hashing that empty text made every
+## phone report a contract mismatch and closed 가호 crafting (2026-11-14 phone
+## error record: hashing_context "len == 0" from this function).
+static func owner_source_mismatch(script: Script) -> bool:
+	if script==null:return true
+	var source: String=script.get_source_code()
+	if source.is_empty():return false
+	var bytes: PackedByteArray=source.to_utf8_buffer()
+	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1)
+	var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
+	hash.update(header);hash.update(bytes)
+	return hash.finish().hex_encode()!=REVIEWED_OWNER_BLOB
+
 static func prepare(world: Node) -> Dictionary:
 	var owner: RefCounted=world.protection523
 	if owner==null:return {"ok":false,"error":"가호 제작 소유자 미설치"}
 	var input_error: String=preload("res://scripts/crafting/patch523_owner_transactions.gd").protected_inputs_error(world)
 	if not input_error.is_empty():return {"ok":false,"error":input_error}
-	var script: Script=owner.get_script()
-	var bytes: PackedByteArray=script.get_source_code().to_utf8_buffer()
-	var hash:=HashingContext.new();hash.start(HashingContext.HASH_SHA1)
-	var header: PackedByteArray=("blob "+str(bytes.size())).to_utf8_buffer();header.append(0)
-	hash.update(header);hash.update(bytes)
-	if hash.finish().hex_encode()!=REVIEWED_OWNER_BLOB:return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
+	if owner_source_mismatch(owner.get_script()):return {"ok":false,"error":"가호 소유자 공개 계약 버전 확인 필요 · 재료 보존"}
 	var size: int=world.catalog_db.get("아이템",[]).size()
 	var key: int=owner.get_instance_id()
 	if not views.has(key) or owner.binding_catalog_size!=size:
