@@ -171,10 +171,10 @@ func _build_play_options() -> void:
 	play_profile.add_item("전체 맵 카탈로그 · 논리 Land 선택")
 	play_profile.item_selected.connect(_play_choice_changed)
 	add_child(play_profile)
-	source_manifest=LineEdit.new(); source_manifest.name="Current523SourceManifestSHA256"
+	source_manifest=preload("res://scripts/ui/native_touch_line_edit.gd").new(); source_manifest.name="Current523SourceManifestSHA256"
 	source_manifest.placeholder_text="전체 원문 카탈로그 SHA256 · source523.json"
 	add_child(source_manifest)
-	tile_manifest=LineEdit.new(); tile_manifest.name="Current523TileManifestSHA256"
+	tile_manifest=preload("res://scripts/ui/native_touch_line_edit.gd").new(); tile_manifest.name="Current523TileManifestSHA256"
 	tile_manifest.placeholder_text="타일 팩 SHA256 · tilepack523.json"
 	add_child(tile_manifest)
 	add_child(UI.label("전체 맵 모드는 위 원문/타일 폴더와 각 검증값을 사용합니다. 목록에 있는 지역도 실제 원문과 타일이 없으면 입장할 수 없습니다.",12,UI.MUTED))
@@ -184,7 +184,7 @@ func _build_play_options() -> void:
 	native_land_choice.item_selected.connect(_native_land_changed); add_child(native_land_choice)
 	native_scope_status=UI.label("카탈로그를 확인하면 논리 Land와 원문 확보 범위를 표시합니다.",12,UI.MUTED)
 	native_scope_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; add_child(native_scope_status)
-	source_words = LineEdit.new()
+	source_words = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	source_words.name = "AdenSourceAllowedWords"
 	source_words.text = "0,4,8,12,32"
 	source_words.placeholder_text = "허용할 원문 값 · 쉼표로 구분"
@@ -208,12 +208,12 @@ func _build_play_options() -> void:
 		entry.add_child(control)
 	add_child(entry)
 	add_child(UI.label("전체 맵은 선택한 Land의 명시 좌표 또는 같은 Land의 저장 좌표가 필요합니다. 막힌 입장은 거부합니다.",12,UI.MUTED))
-	source_portal_path = LineEdit.new(); source_portal_path.name = "AdenSourcePortalContractPath"
+	source_portal_path = preload("res://scripts/ui/native_touch_line_edit.gd").new(); source_portal_path.name = "AdenSourcePortalContractPath"
 	source_portal_path.placeholder_text = "아덴 단일 모드 포탈 JSON · 전체 맵은 아래 정의 폴더 사용"
 	add_child(source_portal_path)
 	add_child(UI.label("전체 맵의 원문 포탈 정의 폴더 · 연결하면 다음 실행에도 확인해 사용합니다.",12,UI.MUTED))
 	var definition_row:=HBoxContainer.new();add_child(definition_row)
-	definition_path_edit=LineEdit.new();definition_path_edit.name="Current523SourceDefinitionPath"
+	definition_path_edit=preload("res://scripts/ui/native_touch_line_edit.gd").new();definition_path_edit.name="Current523SourceDefinitionPath"
 	definition_path_edit.placeholder_text="world-links 폴더 · manifest.json이 있는 위치"
 	definition_path_edit.size_flags_horizontal=Control.SIZE_EXPAND_FILL;definition_row.add_child(definition_path_edit)
 	definition_row.add_child(UI.button("폴더 선택",_browse.bind("definitions"),Vector2(100,40)))
@@ -495,7 +495,7 @@ func _on_play_changed(active: bool, detail: String) -> void:
 
 
 func _path_edit(node_name: String) -> LineEdit:
-	var edit := LineEdit.new()
+	var edit := preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	edit.name = node_name
 	edit.placeholder_text = "폴더를 선택하거나 경로를 입력하세요."
 	edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL

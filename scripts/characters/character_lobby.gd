@@ -209,7 +209,7 @@ func _show_creation() -> void:
 	selected_class = 0
 	selected_gender = 0
 	content.add_child(STYLE.label("새 캐릭터 · 직업과 성별을 선택하세요",20,STYLE.GOLD))
-	name_input = LineEdit.new()
+	name_input = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	name_input.name = "CharacterName"
 	name_input.placeholder_text = "이름 2~12자 · 계정 내 중복 불가"
 	name_input.max_length = 12

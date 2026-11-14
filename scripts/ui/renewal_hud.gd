@@ -3108,7 +3108,7 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 	selector.add_item("원본 통행 지역 · %d" % original.size())
 	regions.add_child(selector)
 	regions.move_child(selector,1)
-	var search := LineEdit.new()
+	var search := preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name = "OriginalMapSearch"
 	search.placeholder_text = "지역 이름 또는 원본 ID"
 	regions.add_child(search)

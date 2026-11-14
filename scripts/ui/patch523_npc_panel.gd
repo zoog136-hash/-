@@ -395,7 +395,7 @@ func build_remaining_controls(column: VBoxContainer) -> void:
 	cancel.item_selected.connect(func(index: int) -> void:
 		if not update_remaining("host_cancel_mode",index): cancel.select(service.extensions.remaining.host_cancel_mode))
 	for spec: Array in [["캔슬 지정 버프 이름(쉼표)","selected_host_buffs"],["자체 취소 면역 버프 이름(쉼표)","protected_host_buffs"]]:
-		var input := LineEdit.new(); input.name = "BossRemaining_"+str(spec[1]); input.placeholder_text = spec[0]; input.text = ",".join(service.extensions.remaining.get(spec[1])); box.add_child(input)
+		var input := preload("res://scripts/ui/native_touch_line_edit.gd").new(); input.name = "BossRemaining_"+str(spec[1]); input.placeholder_text = spec[0]; input.text = ",".join(service.extensions.remaining.get(spec[1])); box.add_child(input)
 		var key: String = spec[1]
 		input.text_submitted.connect(func(value: String) -> void:
 			var names: Array = []
@@ -414,7 +414,7 @@ func build_remaining_controls(column: VBoxContainer) -> void:
 					var source_row: Dictionary = service.catalog.row("ItemClass", item_class_id)
 					image = SourceImages.describe_item_class_row(source_row) if not source_row.is_empty() else SourceImages.describe_item_class(item_class_id)
 				_remaining_choice_image(target, target.item_count - 1, image)
-	var item := LineEdit.new(); item.name = "BossRemainingItemName"; item.placeholder_text = "명시 연결할 현재 게임 아이템의 정확한 이름"; box.add_child(item)
+	var item := preload("res://scripts/ui/native_touch_line_edit.gd").new(); item.name = "BossRemainingItemName"; item.placeholder_text = "명시 연결할 현재 게임 아이템의 정확한 이름"; box.add_child(item)
 	var map_item := Button.new(); map_item.name = "BossRemainingMapItem"; map_item.text = "선택 원문 아이템과 현재 카탈로그를 자체 연결"; box.add_child(map_item)
 	map_item.pressed.connect(func() -> void:
 		if target.selected < 0 or not service.world.loot_catalog.get("by_name",{}).has(item.text): remaining_status.text = "현재 카탈로그의 정확한 아이템 이름이 필요합니다"; return

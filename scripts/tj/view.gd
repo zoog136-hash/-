@@ -68,8 +68,8 @@ func configure(host) -> void:
 	notice.text="TWILIGHT 로컬 어댑터: 실제 실패 기록만 사용합니다. 성공 후보 1개와 실패 후보를 선택해 결과 1개를 받습니다. 추가 신비 보상은 지원하지 않습니다. 카드 카탈로그에서 실패 기록을 만들지 않습니다. 옵션 각성은 기존 엔진의 경험치와 비용 조건을 유지합니다. 장비·스킬 합성의 미연결 경로는 쿠폰을 소모하지 않습니다. 서버 정보는 기존 카드 컬렉션 설정을 사용합니다. 시간대는 로컬 정책 UTC+09:00입니다."
 	add_child(notice)
 	var server_form := HBoxContainer.new();add_child(server_form)
-	var region := LineEdit.new();region.placeholder_text="실제 서비스 지역 코드";server_form.add_child(region)
-	var world_no := LineEdit.new();world_no.placeholder_text="실제 월드 번호";server_form.add_child(world_no)
+	var region := preload("res://scripts/ui/native_touch_line_edit.gd").new();region.placeholder_text="실제 서비스 지역 코드";server_form.add_child(region)
+	var world_no := preload("res://scripts/ui/native_touch_line_edit.gd").new();world_no.placeholder_text="실제 월드 번호";server_form.add_child(world_no)
 	var apply := Button.new();apply.text="입력한 서버 문맥 저장";server_form.add_child(apply)
 	apply.pressed.connect(func():
 		var result: Dictionary=world.tj_coupons.set_context(region.text,world_no.text)

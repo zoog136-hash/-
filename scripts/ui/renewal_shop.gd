@@ -85,7 +85,7 @@ func configure(controller: Node, at_npc: bool = false) -> void:
 		wallet_row.add_child(source_button)
 	var filters := HBoxContainer.new()
 	add_child(filters)
-	search_field = LineEdit.new()
+	search_field = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search_field.name = "ShopSearch"
 	search_field.placeholder_text = "상품 이름 검색"
 	search_field.size_flags_horizontal = Control.SIZE_EXPAND_FILL

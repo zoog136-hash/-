@@ -406,7 +406,7 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, item_class_id: int,
 ## The existing editor of the 혈맹명 text field (kept across restages).
 func _editor() -> LineEdit:
 	if not is_instance_valid(_name_editor):
-		_name_editor=LineEdit.new()
+		_name_editor=preload("res://scripts/ui/native_touch_line_edit.gd").new()
 		_name_editor.name="Clan523OriginalName"
 		_name_editor.max_length=Clan.NAME_MAX
 		_name_editor.visible=false

@@ -556,7 +556,7 @@ func _build_catalog_panel() -> void:
 	catalog_title.add_theme_font_size_override("font_size", 24)
 	root.add_child(catalog_title)
 	var top: HBoxContainer = HBoxContainer.new()
-	catalog_search = LineEdit.new()
+	catalog_search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	catalog_search.placeholder_text = "이름 / 등급 검색"
 	catalog_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	catalog_search.text_changed.connect(_refresh_catalog_list)

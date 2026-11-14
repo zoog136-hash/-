@@ -28,7 +28,7 @@ func configure(host: Node) -> void:
 	add_theme_constant_override("separation", 8)
 	var filters := HBoxContainer.new()
 	add_child(filters)
-	search = LineEdit.new()
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name = "MonsterBookSearch"
 	search.placeholder_text = "몬스터 도감 검색"
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -26,7 +26,7 @@ func configure(controller: Node) -> void:
 	add_child(UI.label("아이템·주문서 그룹별 원본 강화 확률과 적용 효과를 확인합니다.", 12, UI.MUTED))
 	var installation := HBoxContainer.new()
 	add_child(installation)
-	pack_sha = LineEdit.new()
+	pack_sha = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	pack_sha.name = "Patch523PackSHA"
 	pack_sha.placeholder_text = "규칙 팩 SHA256"
 	pack_sha.text = str(world.patch523_equipment.digest) if not str(world.patch523_equipment.digest).is_empty() else DEFAULT_SHA
