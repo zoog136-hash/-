@@ -35,7 +35,8 @@ static func record_evidence(record: Dictionary) -> Dictionary:
 	var id: int=int(record.get("source_item_class_id",0))
 	# The one heavy field, not a whole expanded copy of a light (lazy) record:
 	# field() returns exactly full(record).get() for a HEAVY key.
-	var raw: Variant=NATIVE_FIELDS.field(record,"source_original_item")
+	# Read only here (Name/ID): no copy of the original row.
+	var raw: Variant=NATIVE_FIELDS.field_view(record,"source_original_item")
 	if raw is Dictionary and int(raw.get("ID",0))==id:
 		return item_evidence(raw)
 	# IDs below bind to reviewed declarations in this exact snapshot, never to
