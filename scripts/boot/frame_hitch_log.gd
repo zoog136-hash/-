@@ -100,6 +100,11 @@ static func now() -> int:
 	return Time.get_ticks_usec()
 
 ## Diagnose a single long spawn/cache miss without double-counting its parent.
+## Records `name` from `started` and returns now, for consecutive phases.
+static func detail_next(name: String, started: int) -> int:
+	detail(name, started)
+	return now()
+
 static func detail(operation: String, started_usec: int) -> void:
 	if not enabled: return
 	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
