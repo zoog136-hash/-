@@ -68,9 +68,11 @@ PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # Whole original scenes minus the subtrees whose closure names a member the
 # 523 client lacks (or that the code does not mount), nested members first:
 # DominationStone_Inventory references QuickSlotEdit_SlotSet.csb, absent from
-# the client, so the domination window (source_main_domination_stone_window)
-# leaves its inventory ProjectNodes (and the dismantle tab and probability
-# popup it does not connect) out. Every other node is kept.
+# the client: the domination window (source_main_domination_stone_window)
+# mounts the inventory without that SlotSet (Inventory_Slot_Set lines at its
+# position instead, A안) and without the sort popup, back button and tooltip
+# it does not connect; the dismantle tab and probability popup stay out.
+# Every other node is kept.
 WHOLE_SCOPES = [
     # The NPC store window (source_main_store_window): Store_All without the
     # cart, sale / auto modes, SET buttons, batch counts, clan coin, tax, help,
@@ -112,7 +114,10 @@ WHOLE_SCOPES = [
     ("UI/Map/Map_All.csb", [31940, 31372, 30868, 512, 7648]),
     ("UI/DominationStone/DominationStone_Power_Effect.csb", [176]),
     ("UI/DominationStone/DominationStone_Tab_Power.csb", []),
-    ("UI/DominationStone/DominationStone_Tab_Fusion.csb", [41780]),
+    # DominationStone_Inventory: SlotSet 26168, Btn_Back 12168, ToolTip 11868,
+    # Menu_Button 9712 and Nd_Option 428 left out.
+    ("UI/DominationStone/DominationStone_Inventory.csb", [26168, 12168, 11868, 9712, 428]),
+    ("UI/DominationStone/DominationStone_Tab_Fusion.csb", []),
     ("UI/DominationStone/DominationStone_All.csb", [15692, 332]),
     ("UI/DominationStoneScene.csb", []),
     # Change_Awaken_Skill names the same absent QuickSlotEdit_SlotSet for its
