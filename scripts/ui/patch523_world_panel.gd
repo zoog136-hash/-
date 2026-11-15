@@ -44,7 +44,7 @@ func configure(controller: Node) -> void:
 	mode.name = "LinkMode"
 	for title: String in ["현재 게임의 생성 상태", "아덴 본토 · 출현 정의", "아덴 본토 · 포탈 정의", "현재 게임 이동석"]: mode.add_item(title)
 	tools.add_child(mode)
-	search = LineEdit.new()
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name = "LinkSearch"
 	search.placeholder_text = "이름 또는 번호 검색"
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL

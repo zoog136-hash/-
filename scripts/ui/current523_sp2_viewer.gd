@@ -137,7 +137,7 @@ func _ready() -> void:
 	add_child(enabled_toggle)
 	var search_row := HBoxContainer.new()
 	add_child(search_row)
-	member_search = LineEdit.new()
+	member_search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	member_search.name = "Current523SP2Search"
 	member_search.placeholder_text = "SP2 파일명 검색"
 	member_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL

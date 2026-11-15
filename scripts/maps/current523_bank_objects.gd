@@ -19,6 +19,16 @@ const ACTION_PREFERENCE := [3, 0]
 const MAX_DRAWN := 1024
 const MAX_SPRITES := 512
 const TEXTURE_BUDGET_BYTES := 96 * 1024 * 1024
+## A teleport/map entry showed every new object sprite in one refresh: the
+## phone-class run recorded map.object_refresh 932-1357 ms (10 cold bank loads
+## of up to 424 ms) inside one "지도 그리기" frame. The field renderer sets this
+## per-refresh load budget: once it is spent, remaining new sprites wait for
+## the next frame's refresh (objects appear a few frames later, none is
+## dropped, and an already loaded sprite is never delayed). -1 = load all.
+const FRAME_SPRITE_LOAD_BUDGET_USEC := 12000
+var sprite_load_budget_usec: int = -1
+var _malformed: int = 0
+var _pending_refresh: bool = false
 
 var problem: String = ""
 var coordinates: RefCounted
@@ -65,6 +75,10 @@ func configure(selection: Dictionary, mapping: RefCounted) -> bool:
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	var started: int = FRAME_HITCH.now()
 	_records = records
+	_malformed = malformed
+	_pending_refresh = false
+	var load_spent: int = 0
+	var deferred: int = 0
 	_placement_sprite_ids.clear()
 	_animation_ids.clear()
 	_animated_nodes.clear()
@@ -75,6 +89,13 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	var unresolved: Dictionary = {}
 	for row: Dictionary in records:
 		if drawn >= MAX_DRAWN: break
+		if sprite_load_budget_usec >= 0 and not _sprites.has(int(row.sprite_id)):
+			if load_spent >= sprite_load_budget_usec:
+				deferred += 1
+				continue
+			var load_started: int = Time.get_ticks_usec()
+			_sprite(int(row.sprite_id))
+			load_spent += Time.get_ticks_usec() - load_started
 		var sprite: Dictionary = _sprite(int(row.sprite_id))
 		if not sprite.ok:
 			unresolved[str(row.sprite_id)] = sprite.get("error", "unresolved")
@@ -106,7 +127,11 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	FRAME_HITCH.count("map.object_holders_created", created)
 	FRAME_HITCH.count("map.object_holders_reused", reused)
 	FRAME_HITCH.count("map.object_holders_trimmed", trimmed)
-	_stats = {"policy":"OWN_BANK_ACTION3_DIRECTION0_LOOP_V1","raw_records":records.size(),"malformed_tails":malformed,"drawn_records":drawn,"unresolved_records":records.size() - drawn,"unresolved_source_ids":unresolved,"cached_sprites":_sprites.size(),"texture_bytes":_texture_bytes,"playback_mode":_mode,"native_M_placement_action_timing_verified":false}
+	if deferred > 0:
+		_pending_refresh = true
+		FRAME_HITCH.count("map.object_sprites_deferred", deferred)
+	_stats = {"policy":"OWN_BANK_ACTION3_DIRECTION0_LOOP_V1","raw_records":records.size(),"malformed_tails":malformed,"drawn_records":drawn,"unresolved_records":records.size() - drawn - deferred,"unresolved_source_ids":unresolved,"cached_sprites":_sprites.size(),"texture_bytes":_texture_bytes,"playback_mode":_mode,"native_M_placement_action_timing_verified":false}
+	if sprite_load_budget_usec >= 0: _stats["deferred_records"] = deferred
 	FRAME_HITCH.detail("map.object_refresh", started)
 
 func metrics() -> Dictionary:
@@ -240,6 +265,7 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
+	if _pending_refresh: refresh(_records, _malformed)
 	# Check the live cached record per visible source ID, including static IDs:
 	# a replacement or static/animated transition must take effect this tick.
 	var frames: Dictionary = {}

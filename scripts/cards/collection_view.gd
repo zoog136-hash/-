@@ -76,7 +76,7 @@ func configure(owner_hud: Node,value: String,identity: String="") -> void:
 	effects_filter.custom_minimum_size=Vector2(146,40);filters.add_child(effects_filter)
 	effects_filter.item_selected.connect(func(_index: int) -> void:_filter())
 	_bind(effects_filter,"BUFFCARD_COLLECTION_BONUS_FILTER_TARGET_BUTTON")
-	search=LineEdit.new();search.name="NormalCollectionSearch";search.placeholder_text="컬렉션 · 카드 · 효과 검색"
+	search=preload("res://scripts/ui/native_touch_line_edit.gd").new();search.name="NormalCollectionSearch";search.placeholder_text="컬렉션 · 카드 · 효과 검색"
 	search.custom_minimum_size.y=40;search.size_flags_horizontal=Control.SIZE_EXPAND_FILL;filters.add_child(search)
 	search.text_changed.connect(func(_text: String) -> void:_filter())
 	_bind(search,"BUFFCARD_COLLECTION_SEARCH_TEXT")

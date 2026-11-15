@@ -27,7 +27,7 @@ func configure(controller: Node) -> void:
 	add_child(title)
 	var filters := HBoxContainer.new()
 	add_child(filters)
-	search = LineEdit.new()
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name = "SellSearch"
 	search.placeholder_text = "매입 아이템 검색"
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
