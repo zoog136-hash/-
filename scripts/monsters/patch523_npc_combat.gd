@@ -1,4 +1,5 @@
 extends RefCounted
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 ## Optional host-clock adapter. Does not claim native AI/selection/geometry/formulas.
 const DEFAULT_MANIFEST_SHA = "ca260fc0481076fd9de0327cbb4b24df45d75d47d16b4fc6578713a44aff4a64"
 const CATALOG = preload("res://scripts/monsters/patch523_npc_catalog.gd")
@@ -249,6 +250,12 @@ func cancel(actor: Node, sequence: int) -> void:
 	if int(queued.get("sequence",-1)) == sequence: followups.erase(actor.get_instance_id())
 
 func release(actor: Node, sequence: int) -> bool:
+	var started: int = FRAME_HITCH.now()
+	var released: bool = _release_timed(actor, sequence)
+	FRAME_HITCH.detail("npc523.release", started)
+	return released
+
+func _release_timed(actor: Node, sequence: int) -> bool:
 	var key: int = actor.get_instance_id()
 	var action: Dictionary = pending.get(key,{})
 	if action.is_empty() or int(action.sequence) != sequence: return false
@@ -274,7 +281,9 @@ func release(actor: Node, sequence: int) -> bool:
 		if dice.is_empty(): return true
 		var raw: int = int(dice.base)
 		for i: int in range(int(dice.count)): raw += world.rng.randi_range(1,int(dice.spots))
+		var hit_started: int = FRAME_HITCH.now()
 		hit = bool(world.resolve_patch523_npc_hit(actor,raw,spell,str(action.kind)))
+		FRAME_HITCH.detail("npc523.hit", hit_started)
 	else:
 		var dice: Dictionary = damage_spec(attack,spell)
 		if not dice.is_empty():
