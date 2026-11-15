@@ -80,6 +80,94 @@ static func teleport(record: Dictionary) -> Dictionary:
 	if kind!=1 or delay<0: return {}
 	return {"kind":"teleport","teleport_type_id":kind,"territory_class_ids":territories,"consume_delay_ms":delay}
 
+## Fixed-destination teleport item (오만의 탑 n층 이동 주문서 등): exactly one
+## TeleportToLocation (Unit LocationsID -> Locations LandID/X/Y, one cell) or
+## TeleportToTerritory (Unit TerritoriesID -> Territories LandID + box) row,
+## optional ConsumeTerritoryClassID rows (type 1 = "사용 지역": use only inside
+## its ConsumeTerritories rectangles; type 2 = "사용 불가 지역"), lifetime,
+## ItemConsumeDelay and ItemConsumeEffectSpriteID. Any other row (Life,
+## ClassUsageInterval, TeleportTypeID, IgnoreNoTeleport, ...) has no rule
+## here and keeps the item (docs/items523_remaining_missing_rules.md 16).
+## {"kind":"teleport_location", "land_id", "bounds", "usable_classes",
+## "forbidden_classes", "consume_delay_ms", "consume_sprite_id", "source"} or {}.
+static func location_teleport(record: Dictionary) -> Dictionary:
+	var definition: Dictionary = _definition(record)
+	if definition.is_empty(): return {}
+	var targets: Array = []; var classes: Array[int] = []; var delay: int = 0; var delays: int = 0; var sprite: int = 0; var sprites: int = 0
+	for row: Dictionary in definition.get("item_bonus",[]):
+		var name: String = str(row.get("bonus_type",{}).get("Name",""))
+		if name in LIFETIME: continue
+		if not _direct(row): return {}
+		var value: int = int(row.bonus.Value)
+		var unit: String = str(row.get("unit",{}).get("Name",""))
+		match name:
+			"TeleportToLocation":
+				if unit!="LocationsID": return {}
+				targets.append(["Locations",value])
+			"TeleportToTerritory":
+				if unit!="TerritoriesID": return {}
+				targets.append(["Territories",value])
+			"ConsumeTerritoryClassID": classes.append(value)
+			"ItemConsumeDelay": delay = value; delays += 1
+			"ItemConsumeEffectSpriteID": sprite = value; sprites += 1
+			_: return {}
+	if targets.size()!=1 or delays>1 or sprites>1 or delay<0 or sprite<0: return {}
+	var table: String = str(targets[0][0]); var id: int = int(targets[0][1])
+	if id<=0: return {}
+	var rows: Array[Dictionary] = SOURCE.rows_matching(table,"ID",{id:true})
+	if rows.size()!=1: return {}
+	var target: Dictionary = rows[0]
+	var bounds: Array = []
+	if table=="Locations":
+		for field: String in ["LandID","X","Y"]:
+			if not _integer(target.get(field)): return {}
+		bounds = [int(target.X),int(target.Y),int(target.X),int(target.Y)]
+	else:
+		for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
+			if not _integer(target.get(field)): return {}
+		if int(target.EndX)<int(target.StartX) or int(target.EndY)<int(target.StartY): return {}
+		bounds = [int(target.StartX),int(target.StartY),int(target.EndX),int(target.EndY)]
+	if int(target.LandID)<=0 or SOURCE.rows_matching("Land","ID",{int(target.LandID):true}).size()!=1: return {}
+	var usable: Array[int] = []; var forbidden: Array[int] = []
+	for class_id: int in classes:
+		var found: Array[Dictionary] = SOURCE.rows_matching("ConsumeTerritoryClass","ID",{class_id:true})
+		if found.size()!=1 or not _integer(found[0].get("ConsumeTerritoryTypeId")): return {}
+		match int(found[0].ConsumeTerritoryTypeId):
+			1: usable.append(class_id)
+			2: forbidden.append(class_id)
+			_: return {}
+	return {"kind":"teleport_location","land_id":int(target.LandID),"bounds":bounds,"usable_classes":usable,"forbidden_classes":forbidden,"consume_delay_ms":delay,"consume_sprite_id":sprite,"source":{"table":table,"id":id}}
+
+## Rectangles [{land, rect}] of ConsumeTerritoryClass ids, or null when a
+## referenced row is missing.
+static func consume_areas(class_ids: Array) -> Variant:
+	var key: String = SOURCE.verified_key()+":areas:"+JSON.stringify(class_ids)
+	if _areas.has(key): return _areas[key]
+	var areas: Array = []
+	for id: int in class_ids:
+		var ids: Dictionary = {}
+		for link: Dictionary in SOURCE.rows_matching("ConsumeTerritories","ConsumeTerritoryId",{id:true}):
+			if not _integer(link.get("TerritoryId")): return null
+			ids[int(link.TerritoryId)] = true
+		if ids.is_empty(): return null
+		var found: Array[Dictionary] = SOURCE.rows_matching("Territories","ID",ids)
+		if found.size()!=ids.size(): return null
+		for territory: Dictionary in found:
+			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
+				if not _integer(territory.get(field)): return null
+			areas.append({"land":int(territory.LandID),"rect":Rect2i(int(territory.StartX),int(territory.StartY),int(territory.EndX)-int(territory.StartX)+1,int(territory.EndY)-int(territory.StartY)+1),"territory_id":int(territory.ID),"consume_territory_class_id":id})
+	_areas[key] = areas
+	return areas
+
+## Inside one of `areas` (on the current Land, with a known source cell).
+static func _inside(world: Node, areas: Array, point: Vector2) -> bool:
+	var land: int = _land(world)
+	var cell: Variant = _source_cell(world, point)
+	if cell==null: return false
+	for area: Dictionary in areas:
+		if int(area.land)==land and (area.rect as Rect2i).has_point(cell): return true
+	return false
+
 ## Forbidden rectangles [{land, rect}] of a teleport contract, or null when a
 ## referenced territory row is missing or is not a "cannot use" area.
 static func forbidden_areas(contract: Dictionary) -> Variant:
@@ -267,6 +355,7 @@ static func food_action(world: Node, record: Dictionary) -> Dictionary:
 
 static func claims(record: Dictionary) -> String:
 	if not teleport(record).is_empty(): return "teleport"
+	if not location_teleport(record).is_empty(): return "teleport_location"
 	if not ain(record).is_empty(): return "ain"
 	if not food_contract(record).is_empty(): return "food"
 	return ""
@@ -313,6 +402,22 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 			if destination==Vector2.INF: break
 			if not _forbidden(world, areas, destination): return {"ok":true,"destination":destination,"consume_delay_ms":int(contract.consume_delay_ms),"message":"%s · 현재 지도 임의 위치로 이동" % display}
 		return {"ok":false,"reason":"이동 가능한 위치가 없습니다 · 주문서 보존"}
+	if kind=="teleport_location":
+		var contract: Dictionary = location_teleport(record)
+		if contract.is_empty(): return {"ok":false,"reason":"원본 지정 위치 이동 정의 확인 실패 · 주문서 보존"}
+		if not world.has_method("current523_aden_source_active") or not world.current523_aden_source_active(): return {"ok":false,"reason":"원본 523 지도에서만 사용할 수 있습니다 · 주문서 보존"}
+		if world.patch523_npc_spells.blocks("CannotTeleport") or world.player.is_stunned() or world.player.is_feared() or world.player.is_held() or int(world.hp)<=0 or not world.charge_skill.is_empty() or float(world.portal_cooldown)>0: return {"ok":false,"reason":"현재 상태에서는 순간이동할 수 없습니다 · 주문서 보존"}
+		var usable: Variant = consume_areas(contract.usable_classes)
+		var forbidden: Variant = consume_areas(contract.forbidden_classes)
+		if usable==null or forbidden==null: return {"ok":false,"reason":"원본 사용 지역 자료 확인 실패 · 주문서 보존"}
+		var position: Vector2 = world.player.global_position
+		if not (contract.usable_classes as Array).is_empty():
+			# The item's own "사용 지역" rows say where it is used.
+			if not _inside(world, usable, position): return {"ok":false,"reason":"원본 사용 지역에서만 사용할 수 있습니다 · 주문서 보존"}
+		elif world.field_map is OriginalPlayableField and world.field_map.uses_original_gameplay_rules() and not bool(world.field_map.definition.rules.get("teleportable",0)): return {"ok":false,"reason":"원본 규칙상 순간이동 제한 지역입니다 · 주문서 보존"}
+		if _forbidden(world, forbidden, position): return {"ok":false,"reason":"원본 사용 불가 지역입니다 · 주문서 보존"}
+		var land_rows: Array[Dictionary] = SOURCE.rows_matching("Land","ID",{int(contract.land_id):true})
+		return {"ok":true,"travel":{"land_id":int(contract.land_id),"bounds":contract.bounds},"consume_delay_ms":int(contract.consume_delay_ms),"consume_sprite_id":int(contract.consume_sprite_id),"message":"%s · %s(으)로 이동" % [display, str(land_rows[0].get("Name","")) if land_rows.size()==1 else str(contract.land_id)]}
 	if kind=="ain":
 		var contract: Dictionary = ain(record)
 		if contract.is_empty(): return {"ok":false,"reason":"원본 아인하사드 충전 정의 확인 실패 · 아이템 보존"}
@@ -374,6 +479,21 @@ static func try_use_plain(world: Node, item_name: String) -> bool:
 		payload["item_use_cooldowns"] = cooldowns
 	if prepared.has("ainhasad_state"): payload["ainhasad_state"] = prepared.ainhasad_state
 	if prepared.has("experience"): payload["experience"] = int(prepared.experience)
+	if prepared.has("travel"):
+		# The debit is saved by the arrival's own checkpoint save.
+		var moved: Dictionary = world.item523_teleport_land(int(prepared.travel.land_id), prepared.travel.bounds, payload)
+		if not moved.get("ok",false):
+			world.hud.show_message(str(moved.get("reason","이동 실패")) + (" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
+			return true
+		world.inventory = inventory
+		if payload.has("item_use_cooldowns"): world.item_use_cooldowns = payload.item_use_cooldowns
+		world.deferred_save.cancel()
+		world.hud.refresh_inventory(world.inventory)
+		world._update_hud()
+		_emit_sprite(world, int(prepared.get("consume_sprite_id",0)))
+		world.hud.show_message(str(prepared.message))
+		world.hud.append_log(str(prepared.message))
+		return true
 	var previous: Vector2 = world.player.global_position
 	if prepared.has("destination"): world.consumable_service._teleport_player(prepared.destination)
 	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") else world._save_game(true, payload)
@@ -390,6 +510,9 @@ static func try_use_plain(world: Node, item_name: String) -> bool:
 	world.hud.show_message(str(prepared.message))
 	world.hud.append_log(str(prepared.message))
 	return true
+
+static func _emit_sprite(world: Node, sprite: int) -> void:
+	if sprite>0 and world.get("option_awakening")!=null: world.option_awakening.combat.emit_sprite(sprite,world.player)
 
 ## Applies a saved prepare() result to the running game (the position of a
 ## teleport is already applied before its save).
