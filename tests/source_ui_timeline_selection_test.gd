@@ -1,16 +1,25 @@
 extends SceneTree
-## Compile an in-memory old selector oracle; execute actual seek_frame paths.
+## Compile an in-memory selector oracle (Cocos: a frame before the first
+## keyframe enters that keyframe); execute actual seek_frame paths.
 ## No persistent production cache, private source files or Android claims.
 const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const OLD_SELECTION="""		var selected: Dictionary={}
 		for raw: Dictionary in timeline.frames:
 			var value: Dictionary=_frame_value(raw)
 			if float(value.frameIndex)<=frame_number and (selected.is_empty() or float(value.frameIndex)>=float(selected.frameIndex)): selected=value
-		if selected.is_empty(): continue
+		var first_entry: bool=false
+		if selected.is_empty():
+			# Cocos enters the first keyframe before it (events / inner actions excepted).
+			if timeline.property in ["FrameEvent","ActionValue"]: continue
+			for raw: Dictionary in timeline.frames:
+				var first_value: Dictionary=_frame_value(raw)
+				if selected.is_empty() or float(first_value.frameIndex)<float(selected.frameIndex): selected=first_value
+			if selected.is_empty(): continue
+			first_entry=true
 		var following: Dictionary={}
 		for raw: Dictionary in timeline.frames:
 			var value: Dictionary=_frame_value(raw)
-			if float(value.frameIndex)>float(selected.frameIndex) and (following.is_empty() or float(value.frameIndex)<float(following.frameIndex)): following=value
+			if not first_entry and float(value.frameIndex)>float(selected.frameIndex) and (following.is_empty() or float(value.frameIndex)<float(following.frameIndex)): following=value
 """
 class Pack extends RefCounted:
 	var manifest: Dictionary={}
@@ -68,7 +77,8 @@ func compare(players: Array[Node2D], tree: Dictionary, at: float) -> void:
 		for raw: Dictionary in timeline.frames:
 			if float(SCENE._frame_value(raw).frameIndex)<=at:selected=true
 		expected_new+=timeline.frames.size()
-		expected_old+=timeline.frames.size()*(2 if selected else 1)
+		var first_entry: bool=not selected and not timeline.frames.is_empty() and str(timeline.property) not in ["FrameEvent","ActionValue"]
+		expected_old+=timeline.frames.size()*(2 if selected or first_entry else 1)
 	check(int(oracle.get("_test_decodes"))==expected_old,"old actual decoder calls")
 	check(int(players[1].get("_test_decodes"))==expected_new,"one actual decoder call per live frame")
 	decode_proofs+=1
