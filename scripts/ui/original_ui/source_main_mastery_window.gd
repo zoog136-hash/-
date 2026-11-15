@@ -154,7 +154,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			"Nd_Contents/Label_Level_Num":{"role":"source_text","text":"%d/%d" % [runtime.core.achieved_level(weapon,str(entry.points)),_max_level(runtime,weapon)]},
 			"Panel/Btn_Disabled":{"exclude":true},"Panel/Fx_Start":{"exclude":true}}})
 		weapon_ids.append(weapon)
-	var listed: Dictionary=_fill_list(root,out,"Nd_Weapon_List/ListView_List",weapons)
+	var listed: Dictionary=_fill_list(root,out,"Nd_Weapon_List/ListView_List",weapons,NAN,true)
 	if not listed.get("ok",false):return listed
 	var icons: int=0
 	for index: int in range((listed.get("scenes",[]) as Array).size()):
