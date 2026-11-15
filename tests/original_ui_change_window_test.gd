@@ -19,6 +19,7 @@ class FakePack extends RefCounted:
 
 class FakeHud extends Node:
 	signal catalog_equip_requested(category: String, record: Dictionary)
+	signal option_awakening_open_requested(category: String, target_id: String)
 	var catalog_data: Dictionary={}
 	var card_collection_state: Dictionary={}
 	var character_state: Dictionary={}
@@ -70,6 +71,7 @@ func _run() -> void:
 	_grades_and_slots()
 	_fails_closed()
 	_owned_order()
+	_filters()
 	_option_split()
 	_catalog_routing()
 	_hidden_browser_state()
@@ -125,6 +127,46 @@ func _owned_order() -> void:
 	check(applied.get("existing_equip_requested",false) and emitted.size()==1 and emitted[0][0]=="변신" and emitted[0][1].name=="A","apply uses catalog_equip_requested: "+str(applied))
 	window._selected=CARDS.card_id(high)
 	check(window._apply_selected().get("already_applied",false) and emitted.size()==1,"the applied card is not re-applied")
+	hud.free()
+
+static func _card_record(name: String, grade: String, id: int, attack: int) -> Dictionary:
+	return {"name":name,"grade":grade,"sourceId":"m523:1:%d" % id,"source_original_card":{"ID":id,"AttackTypeID":attack}}
+
+func _filters() -> void:
+	var window=WINDOW.new()
+	var hud:=FakeHud.new()
+	var a: Dictionary=_card_record("데스나이트","전설",1,51)
+	var b: Dictionary=_card_record("다크엘프","영웅",2,31)
+	var c: Dictionary=_card_record("데몬","영웅",3,21)
+	var d: Dictionary=_card_record("미보유","영웅",4,51)
+	hud.catalog_data={"변신":[a,b,c,d]}
+	hud.card_collection_state={"owned":{"변신":{CARDS.card_id(a):true,CARDS.card_id(b):true,CARDS.card_id(c):true}}}
+	window._hud=weakref(hud)
+	window._category="변신"
+	var owned: Array[Dictionary]=window._owned_cards()
+	check(window._filtered(owned).size()==3 and not window._filtering(),"no filter lists every owned card")
+	window._grade="영웅"
+	check(window._filtered(owned).map(func(r: Dictionary) -> String: return r.name)==["다크엘프","데몬"],"grade filter keeps that grade")
+	window._grade="전체"
+	window._type=51
+	check(window._filtered(owned).size()==1 and window._filtered(owned)[0].name=="데스나이트","type filter uses BuffCard.AttackTypeID")
+	var counts: Dictionary=window._grade_counts(owned)
+	check(counts["전체"]==[1,2] and counts["영웅"]==[0,1] and counts["전설"]==[1,1],"grade counts follow the type filter (owned / catalog): "+str(counts))
+	window._type=0
+	window._query="데"
+	check(window._filtered(owned).size()==2 and window._filtering(),"search keeps names containing the query")
+	check(WINDOW.attack_type({"name":"x"})==0,"a record without the original row has no type")
+	# 각 성 asks the existing option awakening of the selected card.
+	var asked: Array=[]
+	hud.option_awakening_open_requested.connect(func(category: String, id: String) -> void: asked.append([category,id]))
+	window._cards=owned
+	window._selected=CARDS.card_id(b)
+	var awakened: Dictionary=window._awaken_requested()
+	check(awakened.get("existing_option_awakening_requested",false) and asked==[["변신",CARDS.card_id(b)]],"awaken emits option_awakening_open_requested: "+str(asked))
+	for category: String in WINDOW.TYPE_SETS:
+		var ids: Array=[]
+		for button: Array in WINDOW.TYPE_SETS[category].buttons:ids.append(int(button[3]))
+		check(ids.has(0) and ids.has(51) and ids.has(21) and ids.has(31) and ids.has(1),"type popup covers the deck's attack types: "+category)
 	hud.free()
 
 func _option_split() -> void:
@@ -246,6 +288,31 @@ func _real_pack(pack_dir: String) -> void:
 	root.add_child(parent)
 	var opened: Dictionary=window.open(parent,"변신")
 	check(opened.get("handled",false) and opened.get("cards")==0,"window mounts with no owned cards: "+str(opened))
+	check(opened.get("grade_rows")==WINDOW.SIDEBAR.size(),"the grade list has its original rows: "+str(opened.get("grade_rows")))
+	window.close()
+	var a: Dictionary=_card_record("데스나이트","전설",1,51)
+	var b: Dictionary=_card_record("다크엘프","영웅",2,31)
+	hud.catalog_data={"변신":[a,b],"마법인형":[_card_record("서큐버스","영웅",9,21)]}
+	hud.card_collection_state={"owned":{"변신":{CARDS.card_id(a):true,CARDS.card_id(b):true},"마법인형":{CARDS.card_id(hud.catalog_data["마법인형"][0]):true}}}
+	opened=window.open(parent,"변신")
+	check(opened.get("handled",false) and opened.get("cards")==2 and opened.get("owned")==2,"owned cards are listed: "+str(opened))
+	check(window._type_label(0)=="모든 유형" and window._type_label(51)=="근거리" and window._type_label(1)=="만능","type labels are the popup's own texts")
+	var popup: Dictionary=window._toggle_type_popup()
+	check(popup.get("type_popup",false) and window._detail.source_nodes.get(WINDOW.TYPE_PROJECT).visible,"모든 유형 shows the type popup")
+	var typed: Dictionary=window._select_type(31)
+	check(typed.get("cards")==1 and typed.get("type")==31 and not window._detail.source_nodes.get(WINDOW.TYPE_PROJECT).visible,"a type button filters and closes the popup: "+str(typed))
+	var graded: Dictionary=window._select_grade("전설")
+	check(graded.get("cards")==0 and graded.get("grade")=="전설","the grade list filters: "+str(graded))
+	var reset: Dictionary=window._reset_filters()
+	check(reset.get("cards")==2 and reset.get("grade")=="전체" and reset.get("type")==0,"초기화 clears the filters: "+str(reset))
+	var keypad: Dictionary=window._open_keypad()
+	check(keypad.get("keypad",false) and window._detail.source_nodes.get(WINDOW.KEYPAD_PROJECT).visible,"the search bar opens the original keypad: "+str(keypad))
+	window._editor.text="다크"
+	var searched: Dictionary=window._apply_query()
+	check(searched.get("cards")==1 and searched.get("query")=="다크" and is_instance_valid(window._editor) and not window._editor.visible,"검색 applies the query and hides the keypad: "+str(searched))
+	opened=window.open(parent,"마법인형")
+	check(opened.get("handled",false) and opened.get("cards")==1 and opened.get("query")=="","the doll list has its own filters: "+str(opened))
+	check(window._toggle_type_popup().get("type_popup",false),"the doll type popup opens")
 	window.close()
 	await process_frame
 	parent.queue_free()
