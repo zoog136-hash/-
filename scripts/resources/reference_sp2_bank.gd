@@ -66,6 +66,24 @@ const ROLE_DEFERRED := "current523_sp2_role_build_deferred"
 const ROLE_MEMO_MAX: int = 48
 static var role_build_budget: int = -1
 static var _role_memo: Dictionary = {}
+## The same, one level finer: a role whose layers address many members (body,
+## shadow, clothes per direction file) parsed all of them in one attempt; the
+## phone recorded sp2.parse 138 ms x10 in one frame. A retrying caller sets
+## member_verify_budget to the number of new members this attempt may verify;
+## past that the attempt returns ROLE_DEFERRED. Each verified member's compact
+## geometry/provenance (the same entry the role memo keeps) stays in
+## _member_meta, bounded and oldest first, and is reused only while its file
+## stamp is the verified one (size + mtime, as _load_members_unchanged). After
+## MEMBER_DEFERRALS_MAX deferrals of one role the budget no longer applies to
+## it, so eviction can delay a role but never hold it forever.
+## -1 (default) = no limit and no memo: every other caller is unchanged.
+const MEMBER_META_MAX: int = 64
+const MEMBER_DEFERRALS_MAX: int = 12
+static var member_verify_budget: int = -1
+static var _member_meta: Dictionary = {}
+static var _member_deferrals: Dictionary = {}
+var _member_budget_active: bool = false
+var _member_budget_key: String = ""
 var _role_touched: Dictionary = {}
 var _role_keys_used: Array[String] = []
 
@@ -333,6 +351,7 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 ## within the same second at the same size).
 static func forget_verified_members() -> void:
 	_verified_members.clear()
+	forget_member_meta()
 	PREPARED.clear()
 
 ## Measured once when publishing a parse, then reused from the shared entry
@@ -443,6 +462,18 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 	if not admitted.ok: return admitted
 	var member: String = str(layer.get("member", ""))
 	_role_touched[member] = true
+	if not memo.has(member) and member_verify_budget >= 0:
+		var known: Variant = _member_meta.get(_manifest_sha + "|" + member)
+		if known is Dictionary and _member_meta_current(known):
+			FRAME_HITCH.count("sp2.member_meta_hit")
+			memo[member] = known if _building_shared else (known as Dictionary).duplicate(true)
+		elif _member_budget_active:
+			if member_verify_budget == 0:
+				FRAME_HITCH.count("sp2.member_verify_deferred")
+				_member_deferrals[_member_budget_key] = int(_member_deferrals.get(_member_budget_key, 0)) + 1
+				while _member_deferrals.size() > MEMBER_META_MAX: _member_deferrals.erase(_member_deferrals.keys()[0])
+				return fail(ROLE_DEFERRED)
+			member_verify_budget -= 1
 	if not memo.has(member):
 		FRAME_HITCH.count("sp2.member_verify")
 		var source: Dictionary = _member(member)
@@ -461,7 +492,25 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 			compact.source_identity = compact.source_identity.duplicate(true)
 		var file_path: String = _root.path_join("raw/" + member)
 		memo[member] = {"source":compact,"path":file_path,"stamp":_verified_members.get(file_path, []).duplicate()}
+		if member_verify_budget >= 0:
+			var meta_key: String = _manifest_sha + "|" + member
+			_member_meta.erase(meta_key)
+			while _member_meta.size() >= MEMBER_META_MAX: _member_meta.erase(_member_meta.keys()[0])
+			# The non-shared API returns mutable data: keep a private copy there.
+			_member_meta[meta_key] = memo[member] if _building_shared else (memo[member] as Dictionary).duplicate(true)
 	return _render_verified_layer(layer, memo[member].source, false)
+
+## A retained member entry is the verified file only while its stamp is the
+## current verification and the file still has that size and mtime.
+func _member_meta_current(entry: Dictionary) -> bool:
+	var stamp: Variant = entry.get("stamp")
+	var path: String = str(entry.get("path", ""))
+	if not stamp is Array or (stamp as Array).size() != 3 or _verified_members.get(path) != stamp: return false
+	return FileAccess.file_exists(path) and int(FileAccess.get_size(path)) == int(stamp[1]) and int(FileAccess.get_modified_time(path)) == int(stamp[2])
+
+static func forget_member_meta() -> void:
+	_member_meta.clear()
+	_member_deferrals.clear()
 
 ## Do not accept a file changed during the synchronous build. An unchanged
 ## stamp costs only stats; a rewrite must pass the normal full verification.
@@ -899,6 +948,8 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 			FRAME_HITCH.count("sp2.role_build_deferred")
 			return fail(ROLE_DEFERRED)
 		if role_build_budget > 0: role_build_budget -= 1
+		_member_budget_key = var_to_str([manifest_path,expected_sha,source_actor_id,role,action_id,role_actor_id,consumer_scope,_building_shared])
+		_member_budget_active = member_verify_budget >= 0 and int(_member_deferrals.get(_member_budget_key, 0)) < MEMBER_DEFERRALS_MAX
 		_role_touched = {}
 		admitted = source_actor_admission(role_actor_id)
 		if not admitted.ok: return admitted
@@ -1092,6 +1143,8 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 					ordered_instances.append(instance.duplicate(true))
 				attachment_record["source_reference_instances"] = ordered_instances
 			independent_by_role[role].append(attachment_record)
+		_member_deferrals.erase(_member_budget_key)
+		_member_budget_active = false
 		if _building_shared:
 			var touched: Dictionary = {}
 			for member: String in _role_touched:
