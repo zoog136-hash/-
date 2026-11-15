@@ -160,6 +160,16 @@ static func field(record: Variant, key: String, default: Variant = null) -> Vari
 	var template: Dictionary = _template(str(int(own.get("source_item_class_id", 0))))
 	return _copy(template[key]) if template.has(key) else default
 
+## field() without its copy, for read-only comparisons over many records
+## (the craft item index). Never mutate or store the result.
+static func field_view(record: Variant, key: String, default: Variant = null) -> Variant:
+	if not record is Dictionary: return default
+	var own: Dictionary = record
+	if own.has(key): return own[key] if key != MARK or own.get(MARK) != true else default
+	if own.get(MARK) != true or not key in HEAVY: return default
+	var template: Dictionary = _template(str(int(own.get("source_item_class_id", 0))))
+	return template[key] if template.has(key) else default
+
 ## full(record).has(key) without building the whole record.
 static func has_field(record: Variant, key: String) -> bool:
 	if not record is Dictionary: return false
@@ -179,6 +189,7 @@ static func _copy(value: Variant) -> Variant:
 
 static func _template(id: String) -> Dictionary:
 	if _cache.has(id): return _cache[id]
+	if _prefetched.has(id): return _prefetched[id]
 	if _store == null: return {}
 	var value: Variant = _store.call("record", id)
 	var template: Dictionary = value if value is Dictionary else {}
@@ -186,3 +197,76 @@ static func _template(id: String) -> Dictionary:
 	_order.append(id)
 	if _order.size() > CACHE_LIMIT: _cache.erase(_order.pop_front())
 	return template
+
+## Bulk read-ahead for one pass over many records (the craft item index reads
+## one template per ~30,000 items, ~0.15-0.3 ms each). Worker threads decode
+## the next block of templates through their own read handles while the
+## caller works on the current one; _template() then serves those exact
+## store.record() values instead of reading them one by one. Only the real
+## template store (no subclass/provider substitution, string interning off)
+## is read ahead; otherwise every read stays the ordinary one.
+static var _prefetched: Dictionary = {}
+## Test switch: false reads every template the ordinary way.
+static var prefetch_enabled: bool = true
+## Read-ahead runs only with this many processors: on a 2-core device a
+## decoding worker competes with the main thread (measured slower), on a
+## phone's 8 cores up to PREFETCH_WORKERS decode beside it.
+static var prefetch_min_processors: int = 4
+const PREFETCH_MIN := 256
+const PREFETCH_WORKERS := 4
+
+class TemplatePrefetch extends RefCounted:
+	var fork: Object
+	var ids: PackedStringArray
+	var result: Dictionary = {}
+	func run() -> void:
+		for id: String in ids:
+			var value: Variant = fork.call("record", id)
+			if value is Dictionary: result[id] = value
+
+## A started read-ahead of one block: {"jobs","threads"}, or {} (not read ahead).
+static func prefetch_begin(ids: PackedStringArray) -> Dictionary:
+	if not prefetch_enabled or ids.size() < PREFETCH_MIN or OS.get_processor_count() < maxi(2, prefetch_min_processors) or OS.get_thread_caller_id() != OS.get_main_thread_id(): return {}
+	if _store == null or not _weight_store_exact or _store.get_script() != _weight_script or _weight_script.get_base_script() != null: return {}
+	if _store.get("interning") != false or not _store.get("file") is FileAccess or not _store.get("offsets") is Dictionary: return {}
+	var path: String = (_store.file as FileAccess).get_path_absolute()
+	var length: int = (_store.file as FileAccess).get_length()
+	var count: int = mini(PREFETCH_WORKERS, maxi(1, OS.get_processor_count() - 1))
+	var jobs: Array[TemplatePrefetch] = []
+	for index: int in count:
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file == null or file.get_length() != length: return {}
+		var fork: Object = _weight_script.new()
+		fork.set("file", file)
+		fork.set("offsets", (_store.offsets as Dictionary).duplicate(false))
+		fork.set("interning", false)
+		var job := TemplatePrefetch.new()
+		job.fork = fork
+		for position: int in range(index, ids.size(), count):
+			if not _cache.has(ids[position]): job.ids.append(ids[position])
+		jobs.append(job)
+	var threads: Array[Thread] = []
+	for job: TemplatePrefetch in jobs:
+		var thread := Thread.new()
+		if thread.start(job.run) != OK: job.run()
+		else: threads.append(thread)
+	return {"jobs":jobs,"threads":threads}
+
+## Waits for a started block and serves it (the previous block is dropped).
+static func prefetch_install(started: Dictionary) -> int:
+	_prefetched.clear()
+	if started.is_empty(): return 0
+	for thread: Thread in started.threads: thread.wait_to_finish()
+	for job: TemplatePrefetch in started.jobs:
+		_prefetched.merge(job.result)
+		job.fork = null
+	started.clear()
+	return _prefetched.size()
+
+## Reads one block ahead now; returns how many templates are held.
+static func prefetch_templates(ids: PackedStringArray) -> int:
+	_prefetched.clear()
+	return prefetch_install(prefetch_begin(ids))
+
+static func end_prefetch() -> void:
+	_prefetched.clear()
