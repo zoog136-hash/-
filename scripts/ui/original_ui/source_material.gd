@@ -11,8 +11,8 @@ static func for_blend(texture: Texture2D, blend: String, grayscale: bool=false) 
 	shader.code="""shader_type canvas_item;
 render_mode unshaded, %s;
 uniform bool source_pma;
-uniform bool source_display_bound = false;
-uniform vec4 source_display_color = vec4(1.0);
+instance uniform bool source_display_bound = false;
+instance uniform vec4 source_display_color = vec4(1.0);
 uniform bool source_gray;
 varying vec4 original_modulation;
 void vertex() {
@@ -46,22 +46,21 @@ void fragment() {
 static func original_default(texture: Texture2D, grayscale: bool=false) -> ShaderMaterial:
 	return for_blend(texture,"1:771" if bool(texture.get_meta("cocos_premultiplied",false)) else "770:771",grayscale)
 
+## Cocos display colour/opacity per node, as per-instance shader parameters
+## on the shared material. Each node used to get its own duplicated
+## ShaderMaterial, so an original window with thousands of nodes held
+## thousands of materials that could not be batched (2026-11-14 phone:
+## 11,133 nodes, 18.8 s frame while drawing the skill window).
 static func bind_display(item: CanvasItem, color: Color) -> void:
 	if not item.material is ShaderMaterial:return
-	var current: ShaderMaterial=item.material
-	if not bool(current.get_meta("source_private_display",false)):
-		current=current.duplicate()
-		current.set_meta("source_private_display",true)
-		item.material=current
-	# Read this material's actual parameters, not an identity/color memo: a
-	# replacement material or an external write must be corrected immediately.
-	# Godot 4.7.2 GLES3 marks uniforms dirty even for equal setter values.
-	var bound: Variant=current.get_shader_parameter("source_display_bound")
+	# Read the item's actual values, not a memo: an external write must be
+	# corrected immediately, and equal writes are skipped.
+	var bound: Variant=item.get_instance_shader_parameter("source_display_bound")
 	if typeof(bound)!=TYPE_BOOL or bound!=true:
-		current.set_shader_parameter("source_display_bound",true)
-	var displayed: Variant=current.get_shader_parameter("source_display_color")
+		item.set_instance_shader_parameter("source_display_bound",true)
+	var displayed: Variant=item.get_instance_shader_parameter("source_display_color")
 	if typeof(displayed)!=TYPE_COLOR or displayed!=color:
-		current.set_shader_parameter("source_display_color",color)
+		item.set_instance_shader_parameter("source_display_color",color)
 static func bind_tree_display(node: Node, color: Color) -> void:
 	if node is CanvasItem:bind_display(node,color)
 	for child: Node in node.get_children():bind_tree_display(child,color)

@@ -28,8 +28,8 @@ static func material(texture: Texture2D, pair: String, particle_vertex_color: bo
 render_mode unshaded, blend_disabled;
 uniform sampler2D original_destination : hint_screen_texture, repeat_disable, filter_nearest;
 uniform bool source_pma;
-uniform bool source_display_bound = false;
-uniform vec4 source_display_color = vec4(1.0);
+instance uniform bool source_display_bound = false;
+instance uniform vec4 source_display_color = vec4(1.0);
 varying vec4 original_modulation;
 void vertex() {
     original_modulation = COLOR;
@@ -67,8 +67,8 @@ static func _fixed_code(pair: String) -> String:
 	return """shader_type canvas_item;
 render_mode unshaded, %s;
 uniform bool source_pma;
-uniform bool source_display_bound = false;
-uniform vec4 source_display_color = vec4(1.0);
+instance uniform bool source_display_bound = false;
+instance uniform vec4 source_display_color = vec4(1.0);
 varying vec4 original_modulation;
 void vertex() {
     original_modulation = COLOR;
