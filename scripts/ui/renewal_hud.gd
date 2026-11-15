@@ -1196,7 +1196,7 @@ func _navigate(section: String) -> void:
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
-		"auto": open_macro_info()
+		"auto": open_schedule()
 		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
 		"warehouse": open_warehouse()
@@ -1494,6 +1494,13 @@ func open_settings_info(expand_all: bool = false) -> void:
 	workspace.mount(options)
 	options.configure(self)
 	if expand_all: options.expand_all()
+
+## The original 523 스케줄 window (source_main_schedule_window) over the
+## existing 자동사냥 지역 feature; the TWILIGHT 자동사냥 panel when not handled.
+func open_schedule() -> void:
+	_open_window("auto","자동사냥","")
+	if _open_original_feature("schedule"):return
+	open_macro_info()
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")
