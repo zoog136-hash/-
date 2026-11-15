@@ -16,6 +16,7 @@ const ELIXIR="UI/CsbFile/Help/HelpBox_Elixir.csb"
 const DISPATCH="UI/CsbFile/Help/HelpBox_Change_Dispatch.csb"
 const ORIM="UI/CsbFile/Help/HelpBox_Mission_TracesOrim.csb"
 const TITLE="UI/Title/Title_Popup_Help.csb"
+const SYMBOL="UI/Symbol/Symbol_Popup_Help.csb"
 ## The popup sits on the design centre, above the original windows (z 150).
 const POSITION=Vector2(600.0,-337.5)
 const Z_INDEX: int=160

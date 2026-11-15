@@ -11,8 +11,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## Every quote, cost, roll and save is the existing world.growth runtime
 ## (quote -> HUD confirmation -> execute), the same requests as the growth
 ## view. Left out: the result touch overlay (Bt_Compose_Touch), the
-## full-screen option effect, the registration / reset effects and the help
-## (Symbol_Popup_Help is connected with the shared help popup later).
+## full-screen option effect and the registration / reset effects. Btn_HelpBox
+## opens the original Symbol_Popup_Help (source_main_help_box).
 const ROOT="UI/Symbol/Symbol_All.csb"
 const ROW="UI/Symbol/Symbol_List_Buff.csb"
 const PERCENT="UI/Symbol/Symbol_Percent.csb"
@@ -83,6 +83,7 @@ func _spec() -> Dictionary:
 	spec["Nd_Button/Btn_Reset/Disabled/Label_Complete"]={"visible":done}
 	spec["Nd_Button/Btn_Probability"]={"activate":Callable(self,"_probability")}
 	spec["Nd_Button/Btn_Probability/Disabled"]={"visible":false}
+	spec["Btn_HelpBox"]={"activate":Callable(self,"_help")}
 	spec["Btn_Shop"]={"activate":Callable(self,"_ask").bind("buy_key","",1)}
 	return spec
 
@@ -183,3 +184,9 @@ func _probability() -> Dictionary:
 	for index: int in range(odds.size()):parts.append("+%d단계 %s%%" % [index+1,String.num(float(odds[index]),2)])
 	_message("문양 강화 확률 · "+(" · ".join(parts) if not parts.is_empty() else "완료"))
 	return {"ok":true,"odds":odds}
+
+## Btn_HelpBox: the original Symbol_Popup_Help over the window.
+func _help() -> Dictionary:
+	var shown: Dictionary=_open_help(HelpBox.SYMBOL)
+	if not shown.get("handled",false):_message("문양 도움말: 원본 도움말(Symbol_Popup_Help)이 UI 팩에 없습니다")
+	return {"ok":true,"original_help":shown.get("handled",false)}
