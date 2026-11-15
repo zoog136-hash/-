@@ -153,3 +153,32 @@ python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack \
   profile; the 523 field now uses the client attr-bit0 rule
   (`CURRENT523_S32_CLIENT_ATTR_BIT0_V1`). The walk goes through the field's own
   `point_clear`/`find_world_path`, so both profiles are accepted.
+
+## 지배석 합성 탭의 지배석 가방 (2026-11-15)
+
+`DominationStone_Inventory` is now packed as a whole scope without the nodes
+the 523 client cannot supply or the window does not connect: `SlotSet` 26168
+(names `QuickSlotEdit_SlotSet`, absent), `Btn_Back` 12168, `ToolTip` 11868,
+`Menu_Button` 9712 and `Nd_Option` 428. `DominationStone_Tab_Fusion` keeps it
+(no exclusions). The domination window fills its ScrollView with
+`Inventory_Slot_Set` lines at the absent SlotSet's original position
+(Cocos 165, 380), four bag stones per line (A안 as storage/store), with the
+전체 / 오만 / 신념 / 지배 tabs (the stone's `DominationStoneGroup.TowerID` ->
+`DominationStoneTower` name). A tap registers or removes the stone in the
+FusionBox under the 일괄 등록 rules. `Nd_Number` ("120/120") stays hidden.
+Measured: 465 scenes, 0 blockers, manifest `255e61ce43fb…`; add-on
+`7d081a8a7a39…` (121.6 MB). An older UI add-on simply has no inventory panel.
+## 원본 도움말 팝업 (2026-11-15)
+
+`source_main_help_box.gd` mounts `UI/CsbFile/Help/HelpBoxLayout.csb` (dimmed
+`Black_BG`, the invisible full-screen `Btn_Close` that closes on a tap outside)
+with a window's own help member on top, paging its `Panel_N` with the
+member's `Btn_Left` / `Btn_Right` (clamped at the ends). Connected:
+질서의 연금 `HelpBox_Refine`, 토템 `HelpBox_Totem`, 하프 엘릭서
+`HelpBox_Elixir`, 변신 파견 `HelpBox_Change_Dispatch`, 작위
+`Title_Popup_Help`, 오림의 흔적 `HelpBox_Mission_TracesOrim`. Not connected:
+시련의 탑 (`Mission_Tooltip_TrialTower` is the 2019 two-week event text),
+창고 / NPC 상점 help (자동 보관 / 자동 판매, not connected features).
+`source_text.gd` no longer applies the multi-line width guard to a Text with
+`isCustomSize` off (Cocos adapts its size to the text; the dispatch help's
+`Label_Message`).

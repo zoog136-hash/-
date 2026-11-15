@@ -3534,6 +3534,11 @@ func _update_target_hud() -> void:
 	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	var kill_started: int = FRAME_HITCH.now()
+	_on_monster_died_timed(monster)
+	FRAME_HITCH.detail("kill.total", kill_started)
+
+func _on_monster_died_timed(monster: TwilightMonster) -> void:
 	if not monster.loot_source_identity.is_empty():monster.loot_source_identity["source_clock_offset_minutes"]=int(ui_preferences.get("patch523_source_clock_offset_minutes",540))
 	# Pooled actors can signal the same death more than once, but each life owns
 	# one reward transaction. Claim before callbacks/passives can re-enter.
@@ -3549,16 +3554,21 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	var phase: int = FRAME_HITCH.now()
 	var source_reward: Dictionary = patch523_npc_spells.extensions.remaining.take_reward(monster)
 	_source_dungeon_kill(monster)
 	var totem_changed: bool = totems.record_kill(int(monster.source_m_original.get("ID",0)))
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	titles.record_last_hit(monster.source_m_npc_id,"%s:%d"%[str(monster.get_instance_id()),monster.life_id],int(monster.get_meta("title523_direct_life",-1))==monster.life_id,monster.source_m_original)
+	phase = FRAME_HITCH.detail_next("kill.records", phase)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
+	phase = FRAME_HITCH.detail_next("kill.quest_hud", phase)
 	_try_trigger_passives("on_kill", monster)
+	phase = FRAME_HITCH.detail_next("kill.passives", phase)
 	if field_map != null:
 		field_population.release(monster)
+	phase = FRAME_HITCH.detail_next("kill.population", phase)
 	# Apply the pre-consumption blessing stage, with original equipped
 	# Adena passive preserved; never replace one multiplier with the other.
 	var can_drop_equipment: bool = ain_service.protected_drops()
@@ -3587,11 +3597,15 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if bool(card_growth.get("changed",false)):
 		_request_deferred_save()
 		if hud.has_method("refresh_card_skill_awakening_growth"):hud.call_deferred("refresh_card_skill_awakening_growth")
+	phase = FRAME_HITCH.detail_next("kill.rewards", phase)
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
+	phase = FRAME_HITCH.detail_next("kill.log", phase)
 	_roll_drop(monster, can_drop_equipment,source_reward.get("weights",{}))
+	phase = FRAME_HITCH.detail_next("kill.drop", phase)
 	var blessing_spent: int=ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	var level_before: int = level
 	_check_level_up()
+	phase = FRAME_HITCH.detail_next("kill.level", phase)
 	if player.auto_enabled:
 		_auto_recharge_ain()
 	if monster == selected_monster:
@@ -3601,6 +3615,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
 	monsterbook523_runtime.on_death(monster)
+	phase = FRAME_HITCH.detail_next("kill.monsterbook", phase)
 	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
@@ -3609,12 +3624,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
+	phase = FRAME_HITCH.detail_next("kill.hud", phase)
 	unconfirmed523.record_event("kill",{"source_id":int(monster.source_m_npc_id),"npc_id":int(monster.source_m_npc_id),"event_id":"%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id],"player_credit":true,"amount":1})
 	routines.record("kill",{"npc_id":int(monster.source_m_npc_id),"amount":1})
 	if blessing_spent>0:unconfirmed523.record_event("blessing_use",{"amount":blessing_spent,"event_id":"blessing:%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id]})
 	if totem_changed:
 		if hud.has_method("refresh_totems"): hud.call("refresh_totems")
 		_request_deferred_save()
+	FRAME_HITCH.detail("kill.events", phase)
 	call_deferred("_ensure_monster_count")
 
 func _kill_map_id() -> String:
@@ -3662,6 +3679,12 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
+	var pickup_started: int = FRAME_HITCH.now()
+	var collected: bool = _collect_ground_drop_timed(drop)
+	FRAME_HITCH.detail("loot.pickup", pickup_started)
+	return collected
+
+func _collect_ground_drop_timed(drop: Button) -> bool:
 	if patch523_npc_spells.blocks("CannotLoot"): return false
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
 	if original_skills!=null and original_skills.stat("cannotLoot")>0:
@@ -5478,42 +5501,59 @@ func _patch523_craft_item_index() -> Dictionary:
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
-	for source_id: String in patch523_equipment.data.get("items", {}):
-		# Read-only identity for the branch checks (no deep copy of ~30,000
-		# records); the stored host binding below is still a full record().
-		var binding: Dictionary=patch523_equipment.record_view(source_id)
-		if binding.get("source","")=="twilight_host_binding":
-			binding=patch523_equipment.record(source_id)
-			var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
-			if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
-				binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
-				result[str(binding.name)]=binding
-			continue
-		if source_id=="26":
-			result["아데나"]=patch523_equipment.record("26")
-			continue
-		if binding.get("source_m_native_item",false):
-			for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
-				var variant: Dictionary=patch523_equipment.record(source_id,int(state))
-				var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
-				if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
-					var weighted_variant: Dictionary=current_variant.duplicate(true)
-					weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
-					result[str(variant.name)]=weighted_variant
-			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
-			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
-				var weighted: Dictionary=native_entry.duplicate(true)
-				weighted["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
-				result[str(binding.name)]=weighted
-			continue
-		var entry: Dictionary = _catalog_item_from_source_id(source_id)
-		var item_name: String = str(entry.get("name", ""))
-		if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: continue
-		var bound: Dictionary = entry.duplicate(true)
-		bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
-		result[item_name] = bound
+	# The same item order, read in blocks: worker threads decode the next
+	# block's item templates while this one is indexed (NATIVE_FIELDS prefetch).
+	var source_ids: Array=(patch523_equipment.data.get("items", {}) as Dictionary).keys()
+	var blocks: Array[PackedStringArray]=[]
+	for block_start: int in range(0,source_ids.size(),PATCH523_CRAFT_INDEX_BLOCK):
+		blocks.append(PackedStringArray(source_ids.slice(block_start,block_start+PATCH523_CRAFT_INDEX_BLOCK)))
+	var ahead: Dictionary=NATIVE_FIELDS.prefetch_begin(blocks[0]) if not blocks.is_empty() else {}
+	for index: int in blocks.size():
+		NATIVE_FIELDS.prefetch_install(ahead)
+		ahead=NATIVE_FIELDS.prefetch_begin(blocks[index+1]) if index+1<blocks.size() else {}
+		for source_id: String in blocks[index]:
+			_patch523_craft_index_item(result,source_id)
+	NATIVE_FIELDS.prefetch_install(ahead)
+	NATIVE_FIELDS.end_prefetch()
 	patch523_craft_item_cache=result
 	return result
+
+const PATCH523_CRAFT_INDEX_BLOCK := 1024
+
+func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
+	# Read-only identity for the branch checks (no deep copy of ~30,000
+	# records); the stored host binding below is still a full record().
+	var binding: Dictionary=patch523_equipment.record_view(source_id)
+	if binding.get("source","")=="twilight_host_binding":
+		binding=patch523_equipment.record(source_id)
+		var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
+		if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
+			binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=binding
+		return
+	if source_id=="26":
+		result["아데나"]=patch523_equipment.record("26")
+		return
+	if binding.get("source_m_native_item",false):
+		for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
+			var variant: Dictionary=patch523_equipment.record(source_id,int(state))
+			var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
+			if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
+				var weighted_variant: Dictionary=current_variant.duplicate(true)
+				weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
+				result[str(variant.name)]=weighted_variant
+		var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
+		if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
+			var weighted: Dictionary=native_entry.duplicate(true)
+			weighted["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=weighted
+		return
+	var entry: Dictionary = _catalog_item_from_source_id(source_id)
+	var item_name: String = str(entry.get("name", ""))
+	if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: return
+	var bound: Dictionary = entry.duplicate(true)
+	bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
+	result[item_name] = bound
 
 func _load_patch523_equipment() -> void:
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")
@@ -5842,7 +5882,7 @@ func patch523_clear_owned_materials(recipe_id: String) -> void:
 	patch523_owned_material_choices.erase(recipe_id)
 
 func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
-	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id}
+	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id,"server_profile":preload("res://scripts/loot/current523_server_profile.gd").profile(self)}
 	if recipe_id.is_empty():return context
 	var selected: Dictionary=patch523_owned_material_choices.get(recipe_id,{})
 	if not selected.is_empty() and int(selected.batch)!=batches:
@@ -10735,6 +10775,11 @@ func _cancel_player_attack(id: int) -> void:
 		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
+	var strike_started: int = FRAME_HITCH.now()
+	_release_player_attack_timed(id)
+	FRAME_HITCH.detail("player.strike", strike_started)
+
+func _release_player_attack_timed(id: int) -> void:
 	if patch523_npc_spells.blocks("CannotAttack" if bool(pending_attack.get("normal",false)) else "CannotCastSkill"):
 		_cancel_player_attack(id); return
 	if int(pending_attack.get("id", -1)) != id: return
@@ -10780,6 +10825,11 @@ func _release_player_attack(id: int) -> void:
 		_impact_player_attack(action)
 
 func _impact_player_attack(action: Dictionary) -> void:
+	var impact_started: int = FRAME_HITCH.now()
+	_impact_player_attack_timed(action)
+	FRAME_HITCH.detail("player.impact", impact_started)
+
+func _impact_player_attack_timed(action: Dictionary) -> void:
 	if bool(action.get("impact_resolved", false)): return
 	action["impact_resolved"] = true # one event, even if its callback re-enters
 	if int(action.generation) != combat_generation or hp <= 0: return
@@ -11502,6 +11552,34 @@ func content523_enter_land(land_id: int, bounds: Array, waive: Array) -> Diction
 	var controller: RefCounted = _aden_play_controller()
 	var moved: bool = controller.call("enter_source_land", land_id, bounds, waive)
 	return {"ok": moved, "reason": str(controller.get("problem"))}
+
+## In-Land rules a teleport item's arrival waives (user decisions 2026-11-15):
+## NoTeleport, and the declarations that do not gate an entry (server/socket/
+## loading/clan-call attributes, LandCondition, CompetitionDungeonLand) — they
+## are passed, no clan or server feature is added. TurnOffAutoForTeleport is
+## passed by turning auto hunting off on arrival. MinLevel is still judged
+## (actor_level_requirement_not_met is never waived); any other declaration
+## (NoTeleportCome, BlockLoginEnter, CloseTime, GivenSpellClassID, ...) still
+## holds. Only this item path uses the list; map travel is unchanged.
+const ITEM523_TELEPORT_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTeleport","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand"]
+
+## Original 523 fixed-destination teleport item (source523_item_effects
+## location_teleport): enters the destination Land under its own entry rules
+## except ITEM523_TELEPORT_WAIVE and saves `save_changes` (the item debit)
+## with the arrival checkpoint. Not moved = nothing saved, item kept.
+func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", land_id, bounds, ITEM523_TELEPORT_WAIVE.duplicate(), save_changes)
+	var transition: Dictionary = controller.call("last_source_transition")
+	current523_aden_play_active = bool(controller.get("active"))
+	var auto_off: bool = false
+	if moved:
+		var entry: Variant = controller.get("_active_entry_context")
+		for hold: Variant in (entry.get("content_entry_waived",[]) if entry is Dictionary else []):
+			if hold is Dictionary and str(hold.get("type",{}).get("Name",""))=="TurnOffAutoForTeleport": auto_off = true
+		if auto_off and player.auto_enabled: player.set_auto_enabled(false)
+	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

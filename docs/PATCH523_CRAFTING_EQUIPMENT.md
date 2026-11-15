@@ -546,3 +546,58 @@ Remaining exact execution contracts:
 Validation for this local delta is recorded in /workspace/equipment523-logs/local-status22-main-final.txt and local-status22-python.txt. Only an error-free final run qualifies. Earlier local-status22-main.txt used a nonexistent QA xp property and local-status22-main-corrected.txt mixed existing final-blow RNG plus an integer-vs-JSON-float dictionary comparison into assertions; neither failed harness is a passing result. The corrected harness isolates the existing independent10% final-blow roll with a controlled seed, retains the real skill owner, checks the actual persisted numeric opaque value and verifies the separate committed RNG/physical-ID conditions. Controlled equipment/actor setup is QA, not natural-supply completion. No full/manual CI, new environment, map write, pack download/upload or public publication was performed.
 
 Final local validation: error-free actual Main2274 checks, covering all22 source rows/all9 bindings across396 normal/blessed rank0..21 physical states, six real legacy status consumers, three actual target-HP channels, both Fear source alternatives and all subject/scope modes, three actual equip/info-screen/save/reconnect paths, disabled UI, UUID/source mismatch and opaque-value preservation. Source preview checks preserved physical state/RNG. The blocked-save cases preserved durable bytes. Three focused Python compiler guard tests passed, as did py_compile and git diff --check. An independent full-candidate comparison verified that only the nine runtime definitions, three new source keys, removed pending22 rows and local revision metadata changed; all other source/catalog/recipe fields and runtime options/invokes/blessings were equal to d9a. Final Main log has no SCRIPT ERROR/engine ERROR/assertion failure. Godot exited0; no operation remains running. Local/public HEAD432ee was rechecked read-only and unchanged. Exact changed-file byte sizes and SHA256 are in /workspace/equipment523-logs/PR239_local22_final_manifest_LOCAL_ONLY.json.
+
+## 제작 창 첫 열림 — 원본 제작 아이템 색인의 아이템 템플릿 읽기 (2026-11-15)
+
+#529 뒤에도 첫 열림의 `world._patch523_craft_item_index()`가 실제 팩에서 9~12초 걸렸다(30,818항목). 측정(실제 Main, 원본 팩):
+
+| 구간 | 시간 |
+| --- | ---: |
+| 아이템 템플릿 읽기(가벼운 기록의 무거운 필드, 아이템당 1회 `TemplateStore.record()` ≈ 0.15~0.3ms) | 4.6~8.4초 |
+| 템플릿을 뺀 색인 자체(분기·정체 비교·복사) | 3.1초 |
+
+- 읽기 전용 비교에서 복사 제거: `NATIVE_FIELDS.field_view()`(= `field()` 값, 복사 없음)를 더미 판정(`source_dummy523.record_evidence`의
+  `source_original_item`)과 `catalog_identity_matches()` 비교에 쓴다. 저장되는 결과는 지금처럼 `record()`/`duplicate(true)`.
+- 템플릿 미리 읽기: 색인을 같은 아이템 순서로 1,024개씩 나누고, 다음 묶음의 템플릿을 작업 스레드(각자 읽기 핸들, 최대 4개)가 디코딩하는 동안
+  주 스레드는 현재 묶음을 색인한다(`NATIVE_FIELDS.prefetch_begin/install`). `_template()`은 미리 읽은 같은 `record()` 값을 돌려준다.
+  진짜 템플릿 저장소(대체·하위 클래스 없음, 문자열 공유 꺼짐)일 때만, **프로세서 4개 이상**일 때만 켜진다. 2코어(이 작업 환경)에서는
+  디코딩 스레드가 주 스레드와 경쟁해 오히려 느렸으므로(9.0초 → 10.5초) 꺼진다. 휴대폰(8코어)에서는 템플릿 디코딩이 주 스레드에서 빠져
+  주 스레드 몫은 위 표의 3.1초 + 대기만 남는다(이 환경에서 측정한 하한, 휴대폰 실측은 아님).
+- 결과: 색인은 미리 읽기 켬/끔·묶음 단위 모두 바이트 단위로 같다(30,818항목, `var_to_bytes` 비교).
+- 테스트 `tests/craft_index_template_prefetch_test.gd`(ci_core 등록): 합성 템플릿 파일 600개를 미리 읽은 값 = `record()` 값, 짧은 묶음·문자열 공유
+  저장소·프로세서 하한 미만은 미리 읽지 않음, 원본 팩이 있으면 실제 Main 색인 동일성과 시간 기록.
+
+## 원본 서버 세트가 있는 제작식 연결 (2026-11-15, PR `feat/craft523-server-sets`)
+
+### 근거 (표)
+
+- ItemCraftView `ServerLimitSetID` ≠ 0인 제작식은 지금까지 전부 `unresolved_player_or_server_condition`으로 빠졌다.
+- 같은 열을 아이템·NPC 배치·상점은 이미 한 규칙으로 읽는다(`current523_server_profile`): 세트의 원본 ServerLimit 행 중 하나가 게임의 서버
+  프로필(`ServiceRegionCode`·`WorldNo`, 기본 = 오프라인 KR 1서버 `current523_map_runtime_context.OFFLINE_PROFILE`)을 가리키면 허용, 행이 없는 세트는 닫힘.
+- 제작에도 같은 규칙을 쓴다. 투영(`patch523_rules_projection._server_set_admitted`)은 세트가 KR 1서버를 가리킬 때만 제작식을 만든다(다른 서버 전용 사본은
+  목록에 넣지 않음). 제작식에는 `craft_conditions.server_limit_set_id`가 남고, 견적·제작 때마다(`patch523_craft_conditions.stage`) 현재 서버 프로필
+  (`world._patch523_craft_context().server_profile`)로 다시 판정한다. 제작 창의 조건 줄에 "원본 서버 세트 N · 현재 서버 대상"이 보인다.
+- 한 제작식의 모든 ItemCraftView 행이 같은 세트일 때만(결과별로 세트가 다르면 보류).
+
+### 수치 (실제 Main, 원본 팩)
+
+| | 이전 | 이후 |
+| --- | ---: | ---: |
+| 원본 제작식(모델) | 1,006 | **1,221** (+215) |
+| 그중 서버 세트 제작식 | 0 | 215 |
+| 제외(admission) | 644 | 429 |
+
+- `tests/craft523_server_sets_test.gd`(ci_core 등록): 215개 모두 KR 1서버 프로필로 실제 규칙 모델에서 실행 성공, 세트가 가리키지 않는 지역 프로필에서는
+  215개 모두 "서버 대상 아님"으로 거부. 실제 Main 제작 경로로 #110102(축복 부여 주문서 (각인)) 제작 → 저장 → 다시 불러오기 유지.
+
+### 표에 없어 남긴 제작식 (429)
+
+| 사유 | 수 | 표에 없는 것 |
+| --- | ---: | --- |
+| ItemCraftRestriction 행(횟수 제한) | 약 215 (KR 1서버 세트 84 · 다른 서버 세트 114 · 세트 없음 17, 오프라인 집계) | `ServiceTypeID`(52·62·33·23)·`RefreshUnitID`(111·71)를 이름 붙인 표가 없다(Unit 표에 열 이름만). 기존 정책(`verified_craft_constraints`)에 검증된 2종만 연결 |
+| 다른 서버 전용 세트(제한 행 없음) | 37 | KR 1서버가 아닌 세트(221~292서버 등) — 사본이라 넣지 않음 |
+| NoRepeat | 30 | 반복 불가의 단위(계정·캐릭터·기간) 없음 |
+| CraftTimeTypeID ≠ 1 / 기간 해석 불가 | 49 | 시간 종류 값의 의미 표 없음(서버 세트가 풀리면서 드러난 것) |
+| 품목 조건(테스트 아이템·레벨·직업 미해석) | 56 | #123563·#113892(TestItem=true 재료) 등 |
+| 카탈로그 정체 불일치 | 33 | 대부분 #3252 마법인형 제작 코인(지갑 소유자, 물리 아이템 아님) 24 |
+| 스택 상태 표현 불가 / 결과 여러 개 | 13 / 4 | 강화된 스택 재료, 확정 결과가 여러 행 |

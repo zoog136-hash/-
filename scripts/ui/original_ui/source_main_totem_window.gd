@@ -122,5 +122,6 @@ func _totem_pressed(id: int) -> Dictionary:
 	return _route("open_totems",[false,id])
 
 func _help() -> Dictionary:
-	_message("토템: 지정 몬스터를 처치해 활성화하고, 재료로 성장시켜 옵션을 얻습니다 · 활성 토템 레벨 합계로 공명 효과가 열립니다")
-	return {"ok":true}
+	var shown: Dictionary=_open_help(HelpBox.TOTEM)
+	if not shown.get("handled",false):_message("토템: 지정 몬스터를 처치해 활성화하고, 재료로 성장시켜 옵션을 얻습니다 · 활성 토템 레벨 합계로 공명 효과가 열립니다")
+	return {"ok":true,"original_help":shown.get("handled",false)}
