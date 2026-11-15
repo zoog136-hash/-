@@ -3534,6 +3534,11 @@ func _update_target_hud() -> void:
 	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	var kill_started: int = FRAME_HITCH.now()
+	_on_monster_died_timed(monster)
+	FRAME_HITCH.detail("kill.total", kill_started)
+
+func _on_monster_died_timed(monster: TwilightMonster) -> void:
 	if not monster.loot_source_identity.is_empty():monster.loot_source_identity["source_clock_offset_minutes"]=int(ui_preferences.get("patch523_source_clock_offset_minutes",540))
 	# Pooled actors can signal the same death more than once, but each life owns
 	# one reward transaction. Claim before callbacks/passives can re-enter.
@@ -3549,16 +3554,21 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		if monster==auto_target: auto_target = null
 		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
 		return
+	var phase: int = FRAME_HITCH.now()
 	var source_reward: Dictionary = patch523_npc_spells.extensions.remaining.take_reward(monster)
 	_source_dungeon_kill(monster)
 	var totem_changed: bool = totems.record_kill(int(monster.source_m_original.get("ID",0)))
 	quest_service.record_kill(monster.monster_name, monster.is_boss)
 	titles.record_last_hit(monster.source_m_npc_id,"%s:%d"%[str(monster.get_instance_id()),monster.life_id],int(monster.get_meta("title523_direct_life",-1))==monster.life_id,monster.source_m_original)
+	phase = FRAME_HITCH.detail_next("kill.records", phase)
 	if hud.has_method("refresh_quests"):
 		hud.call("refresh_quests")
+	phase = FRAME_HITCH.detail_next("kill.quest_hud", phase)
 	_try_trigger_passives("on_kill", monster)
+	phase = FRAME_HITCH.detail_next("kill.passives", phase)
 	if field_map != null:
 		field_population.release(monster)
+	phase = FRAME_HITCH.detail_next("kill.population", phase)
 	# Apply the pre-consumption blessing stage, with original equipped
 	# Adena passive preserved; never replace one multiplier with the other.
 	var can_drop_equipment: bool = ain_service.protected_drops()
@@ -3587,11 +3597,15 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if bool(card_growth.get("changed",false)):
 		_request_deferred_save()
 		if hud.has_method("refresh_card_skill_awakening_growth"):hud.call_deferred("refresh_card_skill_awakening_growth")
+	phase = FRAME_HITCH.detail_next("kill.rewards", phase)
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
+	phase = FRAME_HITCH.detail_next("kill.log", phase)
 	_roll_drop(monster, can_drop_equipment,source_reward.get("weights",{}))
+	phase = FRAME_HITCH.detail_next("kill.drop", phase)
 	var blessing_spent: int=ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	var level_before: int = level
 	_check_level_up()
+	phase = FRAME_HITCH.detail_next("kill.level", phase)
 	if player.auto_enabled:
 		_auto_recharge_ain()
 	if monster == selected_monster:
@@ -3601,6 +3615,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
 		monster.reparent(combat_corpses, true)
 	monsterbook523_runtime.on_death(monster)
+	phase = FRAME_HITCH.detail_next("kill.monsterbook", phase)
 	# Ordinary kills only change rewards/vitals/blessing. Rebuilding every
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
@@ -3609,12 +3624,14 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
+	phase = FRAME_HITCH.detail_next("kill.hud", phase)
 	unconfirmed523.record_event("kill",{"source_id":int(monster.source_m_npc_id),"npc_id":int(monster.source_m_npc_id),"event_id":"%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id],"player_credit":true,"amount":1})
 	routines.record("kill",{"npc_id":int(monster.source_m_npc_id),"amount":1})
 	if blessing_spent>0:unconfirmed523.record_event("blessing_use",{"amount":blessing_spent,"event_id":"blessing:%s:%d:%d"%[active_map_id,monster.get_instance_id(),monster.life_id]})
 	if totem_changed:
 		if hud.has_method("refresh_totems"): hud.call("refresh_totems")
 		_request_deferred_save()
+	FRAME_HITCH.detail("kill.events", phase)
 	call_deferred("_ensure_monster_count")
 
 func _kill_map_id() -> String:
@@ -3662,6 +3679,12 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 	return view
 
 func _collect_ground_drop(drop: Button) -> bool:
+	var pickup_started: int = FRAME_HITCH.now()
+	var collected: bool = _collect_ground_drop_timed(drop)
+	FRAME_HITCH.detail("loot.pickup", pickup_started)
+	return collected
+
+func _collect_ground_drop_timed(drop: Button) -> bool:
 	if patch523_npc_spells.blocks("CannotLoot"): return false
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
 	if original_skills!=null and original_skills.stat("cannotLoot")>0:
@@ -10735,6 +10758,11 @@ func _cancel_player_attack(id: int) -> void:
 		pending_attack.clear()
 
 func _release_player_attack(id: int) -> void:
+	var strike_started: int = FRAME_HITCH.now()
+	_release_player_attack_timed(id)
+	FRAME_HITCH.detail("player.strike", strike_started)
+
+func _release_player_attack_timed(id: int) -> void:
 	if patch523_npc_spells.blocks("CannotAttack" if bool(pending_attack.get("normal",false)) else "CannotCastSkill"):
 		_cancel_player_attack(id); return
 	if int(pending_attack.get("id", -1)) != id: return
@@ -10780,6 +10808,11 @@ func _release_player_attack(id: int) -> void:
 		_impact_player_attack(action)
 
 func _impact_player_attack(action: Dictionary) -> void:
+	var impact_started: int = FRAME_HITCH.now()
+	_impact_player_attack_timed(action)
+	FRAME_HITCH.detail("player.impact", impact_started)
+
+func _impact_player_attack_timed(action: Dictionary) -> void:
 	if bool(action.get("impact_resolved", false)): return
 	action["impact_resolved"] = true # one event, even if its callback re-enters
 	if int(action.generation) != combat_generation or hp <= 0: return
