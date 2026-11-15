@@ -77,6 +77,12 @@ func headless_checks() -> void:
 	item.material=custom
 	MATERIAL.bind_display(item,NEXT);check(item.material==custom,"a custom shader material is not cloned")
 	state(item,NEXT,"custom material")
+	var foreign:=ShaderMaterial.new();var foreign_shader:=Shader.new()
+	foreign_shader.code="shader_type canvas_item;\nvoid fragment(){ COLOR = texture(TEXTURE, UV); }\n"
+	foreign.shader=foreign_shader;item.material=foreign
+	item.set_instance_shader_parameter("source_display_bound",null)
+	MATERIAL.bind_display(item,NEXT)
+	check(not MATERIAL.takes_display(foreign) and item.get_instance_shader_parameter("source_display_bound")==null,"a shader without the display parameters is left alone (no engine error)")
 	var plain:=CanvasItemMaterial.new();item.material=plain
 	MATERIAL.bind_display(item,NEXT);check(item.material==plain,"nonshader material unchanged")
 	item.material=null;MATERIAL.bind_display(item,NEXT);check(item.material==null,"null material unchanged")
