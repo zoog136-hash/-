@@ -547,6 +547,26 @@ Validation for this local delta is recorded in /workspace/equipment523-logs/loca
 
 Final local validation: error-free actual Main2274 checks, covering all22 source rows/all9 bindings across396 normal/blessed rank0..21 physical states, six real legacy status consumers, three actual target-HP channels, both Fear source alternatives and all subject/scope modes, three actual equip/info-screen/save/reconnect paths, disabled UI, UUID/source mismatch and opaque-value preservation. Source preview checks preserved physical state/RNG. The blocked-save cases preserved durable bytes. Three focused Python compiler guard tests passed, as did py_compile and git diff --check. An independent full-candidate comparison verified that only the nine runtime definitions, three new source keys, removed pending22 rows and local revision metadata changed; all other source/catalog/recipe fields and runtime options/invokes/blessings were equal to d9a. Final Main log has no SCRIPT ERROR/engine ERROR/assertion failure. Godot exited0; no operation remains running. Local/public HEAD432ee was rechecked read-only and unchanged. Exact changed-file byte sizes and SHA256 are in /workspace/equipment523-logs/PR239_local22_final_manifest_LOCAL_ONLY.json.
 
+## 제작 창 첫 열림 — 원본 제작 아이템 색인의 아이템 템플릿 읽기 (2026-11-15)
+
+#529 뒤에도 첫 열림의 `world._patch523_craft_item_index()`가 실제 팩에서 9~12초 걸렸다(30,818항목). 측정(실제 Main, 원본 팩):
+
+| 구간 | 시간 |
+| --- | ---: |
+| 아이템 템플릿 읽기(가벼운 기록의 무거운 필드, 아이템당 1회 `TemplateStore.record()` ≈ 0.15~0.3ms) | 4.6~8.4초 |
+| 템플릿을 뺀 색인 자체(분기·정체 비교·복사) | 3.1초 |
+
+- 읽기 전용 비교에서 복사 제거: `NATIVE_FIELDS.field_view()`(= `field()` 값, 복사 없음)를 더미 판정(`source_dummy523.record_evidence`의
+  `source_original_item`)과 `catalog_identity_matches()` 비교에 쓴다. 저장되는 결과는 지금처럼 `record()`/`duplicate(true)`.
+- 템플릿 미리 읽기: 색인을 같은 아이템 순서로 1,024개씩 나누고, 다음 묶음의 템플릿을 작업 스레드(각자 읽기 핸들, 최대 4개)가 디코딩하는 동안
+  주 스레드는 현재 묶음을 색인한다(`NATIVE_FIELDS.prefetch_begin/install`). `_template()`은 미리 읽은 같은 `record()` 값을 돌려준다.
+  진짜 템플릿 저장소(대체·하위 클래스 없음, 문자열 공유 꺼짐)일 때만, **프로세서 4개 이상**일 때만 켜진다. 2코어(이 작업 환경)에서는
+  디코딩 스레드가 주 스레드와 경쟁해 오히려 느렸으므로(9.0초 → 10.5초) 꺼진다. 휴대폰(8코어)에서는 템플릿 디코딩이 주 스레드에서 빠져
+  주 스레드 몫은 위 표의 3.1초 + 대기만 남는다(이 환경에서 측정한 하한, 휴대폰 실측은 아님).
+- 결과: 색인은 미리 읽기 켬/끔·묶음 단위 모두 바이트 단위로 같다(30,818항목, `var_to_bytes` 비교).
+- 테스트 `tests/craft_index_template_prefetch_test.gd`(ci_core 등록): 합성 템플릿 파일 600개를 미리 읽은 값 = `record()` 값, 짧은 묶음·문자열 공유
+  저장소·프로세서 하한 미만은 미리 읽지 않음, 원본 팩이 있으면 실제 Main 색인 동일성과 시간 기록.
+
 ## 원본 서버 세트가 있는 제작식 연결 (2026-11-15, PR `feat/craft523-server-sets`)
 
 ### 근거 (표)

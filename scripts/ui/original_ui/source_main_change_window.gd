@@ -9,7 +9,17 @@ extends RefCounted
 ## the original 즉시 변신 button runs the existing catalog equip
 ## (World._equip_catalog), so every rule and save stays with the game.
 ## The same window serves 마법인형 (the client reuses Change_WinTotal).
-## Transcend (Change_Transcend_*) frames exist only in 508: out of scope.
+## The page's left grade list is Change_WinTotal_Class (전체 + each grade,
+## owned / catalog count), 모든 유형 opens Common_ButtonSet_Type (the card's
+## original BuffCard.AttackTypeID; the labels are the popup's own), the
+## search bar opens ItemBook_Popup_Keypad with a window-owned editor (card
+## name contains the query, applied on 검색), 초기화 clears the three filters
+## and 각 성 asks the existing option awakening (option_awakening_open_requested,
+## the same request as the catalog's 각성 tab).
+## Not connected (no TWILIGHT feature): 성급 강화 (BuffCardTranscendence has no
+## game rule here), 변신 등록 (quick registration), the 전체 sort button (its
+## options are not in the tables), the keypad's result list, 도펠겡어/이름 옵션,
+## 사용 가능 기간 and the 합성 시도 보상 gauges.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
@@ -18,6 +28,9 @@ const DETAIL="UI/Change/Change_DetailView.csb"
 const INFO="UI/Change/Change_Upgrade_Info_Swap.csb"
 const SET="UI/Change/Change_Card_Set.csb"
 const OPTION_ROW="UI/Change/Change_CardGradeOption_Text.csb"
+const GRADE_ROW="UI/Change/Change_WinTotal_Class.csb"
+const TYPE_SET="UI/CommonUi/Common_ButtonSet_Type.csb"
+const KEYPAD="UI/ItemBook/ItemBook_Popup_Keypad.csb"
 ## Change_WinTotal nodes.
 const FRAME=27316
 const CHANGE_ON=25140
@@ -50,6 +63,45 @@ const TAB_BG=14276
 const LIST=13180
 const NOTICE=12616
 const NOTICE_TEXT=12668
+## Change_DetailView: grade list, search bar, popups, 각성.
+const CLASS_LIST=13828
+const RESET=8664
+const RESET_STATES: Array[int]=[9280,8716]
+const SEARCH=5912
+const SEARCH_TEXT=7216
+const SEARCH_STATES: Array[int]=[6600,5972]
+const SORT=1868
+const SORT_STATES: Array[int]=[2828,1920]
+const SORT_LABELS: Array[int]=[3216,2308]
+const POPUP_CLOSE=760
+const TYPE_PROJECT=488
+const KEYPAD_PROJECT=1460
+const AWAKEN=23432
+const AWAKEN_STATES: Array[int]=[24088,23484]
+## Change_WinTotal_Class row nodes.
+const ROW_PANEL=176
+const ROW_NORMAL=5360
+const ROW_NORMAL_TEXT: Array[int]=[5776,5416]
+const ROW_PRESSED=676
+const ROW_PRESSED_TEXT: Array[int]=[1120,760]
+const ROW_EVENT=2672
+const ROW_NEW=232
+## TWILIGHT grade -> Btn_Pressed/Img_<grade> (the Change_Card_List pairs).
+const ROW_IMAGES={"일반":1472,"고급":1904,"희귀":2288,"영웅":3108,"전설":3492,"신화":3876,"유일":4260}
+const SIDEBAR: Array[String]=["전체","유일","신화","전설","영웅","희귀","고급","일반"]
+## Common_ButtonSet_Type: per category its set node, background and buttons
+## [Off, On, On label, BuffCardAttackType.ID] (0 = 모든 유형, no filter).
+const TYPE_SETS={
+	"변신":{"set":19308,"bg":45084,"buttons":[[42908,41052,41452,0],[39236,37420,37824,51],[35612,33804,34200,41],[31988,30176,30580,31],[28380,26584,26980,21],[24788,22996,23392,11],[21204,19416,19808,1]]},
+	"마법인형":{"set":616,"bg":18764,"buttons":[[16948,15140,15540,0],[13324,11508,11912,51],[9692,7880,8284,31],[6084,4288,4684,21],[2496,708,1100,1]]},
+}
+## ItemBook_Popup_Keypad input bar (the Inventory_Popup_Keypad nodes): its
+## result list is not mounted.
+const KEYPAD_NODES: Array[int]=[8316,7940,7556,5072,6444,6020,5524,5132,2808,3996,3604,3216,2868,2424,2040,1472,364,412]
+const KEYPAD_FIELD=1472
+const KEYPAD_SEARCH=5072
+const KEYPAD_CLOSE=2808
+const KEYPAD_CANCEL=364
 const LIST_SIZE:=Vector2(498,425)
 const ROW_MARGIN: float=-4.0
 const SET_PROJECTS: Array[int]=[724,444,176]
@@ -93,9 +145,20 @@ var _scroll: float=0.0
 var _scroll_min: float=0.0
 var _drag: bool=false
 var _moved: float=0.0
+var _grade: String="전체"
+var _type: int=0
+var _query: String=""
+var _class_content: Node2D
+var _class_scroll: float=0.0
+var _class_min: float=0.0
+var _class_drag: bool=false
+var _editor: LineEdit
+var _field: Variant
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
+	# The grade list, type popup and keypad are optional (an older UI add-on
+	# without their members still opens the card list).
 	var members: Array[String]=[ROOT,DETAIL,INFO,SET,OPTION_ROW]
 	for member: String in GRADE_MEMBERS.values():members.append(member)
 	for member: String in members:
@@ -117,6 +180,10 @@ func open(parent: Node, category_name: String) -> Dictionary:
 	if category_name!=_category:
 		_selected=""
 		_scroll=0.0
+		_class_scroll=0.0
+		_grade="전체"
+		_type=0
+		_query=""
 	_category=category_name
 	return _stage()
 
@@ -124,12 +191,14 @@ func refresh() -> Dictionary:
 	return _stage() if is_open() else {"ok":true,"handled":false}
 
 func close() -> void:
+	_release_field()
 	var previous: Node2D=_scene
 	_scene=null
 	_detail=null
 	_info=null
 	_content=null
 	_option_content=null
+	_class_content=null
 	_card_scenes.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
@@ -151,10 +220,50 @@ func _owned_cards() -> Array[Dictionary]:
 	var grades: Array[String]=Cards.GRADES.duplicate()
 	grades.reverse()
 	for grade: String in grades:
-		for record: Dictionary in by_grade.get(grade,[]):
-			if result.size()>=MAX_CARDS:return result
-			result.append(record)
+		for record: Dictionary in by_grade.get(grade,[]):result.append(record)
 	return result
+
+## The card's original BuffCard.AttackTypeID (0 when the record has none).
+static func attack_type(record: Dictionary) -> int:
+	var original: Variant=record.get("source_original_card")
+	return int(original.get("AttackTypeID",0)) if original is Dictionary else 0
+
+## True when `record` passes the type filter and the search query.
+func _matches(record: Dictionary) -> bool:
+	if _type!=0 and attack_type(record)!=_type:return false
+	return _query.is_empty() or str(record.get("name","")).containsn(_query)
+
+## Owned cards shown in the list: grade, type and query filters (at most MAX_CARDS).
+func _filtered(owned: Array[Dictionary]) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	for record: Dictionary in owned:
+		if _grade!="전체" and str(record.get("grade",""))!=_grade:continue
+		if not _matches(record):continue
+		result.append(record)
+		if result.size()>=MAX_CARDS:break
+	return result
+
+## Sidebar counts per grade: [owned shown, catalog total] under type/query.
+func _grade_counts(owned: Array[Dictionary]) -> Dictionary:
+	var counts: Dictionary={}
+	for grade: String in SIDEBAR:counts[grade]=[0,0]
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud!=null:
+		for raw: Variant in hud.get("catalog_data").get(_category,[]):
+			if not raw is Dictionary or not GRADE_MEMBERS.has(str(raw.get("grade",""))) or not _matches(raw):continue
+			counts["전체"][1]+=1
+			counts[str(raw.grade)][1]+=1
+	for record: Dictionary in owned:
+		if not _matches(record):continue
+		counts["전체"][0]+=1
+		counts[str(record.grade)][0]+=1
+	return counts
+
+func _filtering() -> bool:
+	return _grade!="전체" or _type!=0 or not _query.is_empty()
+
+func _available(member: String) -> bool:
+	return _pack!=null and _pack.manifest.get("scenes",{}).has(member)
 
 func _equipped_id() -> String:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
@@ -171,7 +280,9 @@ func _stage() -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	if parent==null or hud==null:return _fail("source_change_window_host_unavailable")
-	_cards=_owned_cards()
+	_release_field()
+	var owned: Array[Dictionary]=_owned_cards()
+	_cards=_filtered(owned)
 	var equipped: String=_equipped_id()
 	if _record(_selected).is_empty():
 		_selected=equipped if not _record(equipped).is_empty() else (Cards.card_id(_cards[0]) if not _cards.is_empty() else "")
@@ -192,7 +303,7 @@ func _stage() -> Dictionary:
 		bindings[TITLE]={"role":"source_text","text":"마법인형"}
 		for offset: int in CHANGE_LABELS:bindings[offset]={"role":"source_text","text":"마법인형"}
 		for offset: int in COLLECTION_LABELS:bindings[offset]={"role":"source_text","text":"마법인형 컬렉션"}
-	var page: Dictionary=_detail_bindings(equipped)
+	var page: Dictionary=_detail_bindings(equipped,parent)
 	bindings[DETAIL_PROJECT]={"role":"project","visible":true,"source_node_offsets":page.scope,"bindings":page.bindings}
 	var root_scope: Array[int]=_subtree(ROOT,roots)
 	_consume_touch(ROOT,root_scope,bindings)
@@ -223,6 +334,8 @@ func _stage() -> Dictionary:
 		card.scene.position=Vector2(geometry.row_x+slot.x,-(top-geometry.row_height+slot.y))
 		content.add_child(card.scene)
 		card_scenes[Cards.card_id(_cards[index])]=card.scene
+	var class_rows: Dictionary=_fill_classes(detail.player,owned)
+	if not class_rows.get("ok",false):next.free();last_result=class_rows;return class_rows
 	var previous: Node2D=_scene
 	# Change_WinTotal is laid out on the design centre (600, 337.5).
 	next.position=Vector2(600.0,-337.5)
@@ -234,6 +347,10 @@ func _stage() -> Dictionary:
 	_content=content
 	_option_content=option_content
 	_card_scenes=card_scenes
+	_class_content=class_rows.get("content")
+	_class_min=float(class_rows.get("min",0.0))
+	_class_scroll=clampf(_class_scroll,_class_min,0.0)
+	if is_instance_valid(_class_content):_class_content.position.y=_class_scroll
 	var rows: int=ceili(float(_cards.size())/3.0)
 	_scroll_min=minf(0.0,LIST_SIZE.y-(float(rows)*(geometry.row_height+ROW_MARGIN)-ROW_MARGIN))
 	_scroll=clampf(_scroll,_scroll_min,0.0)
@@ -242,7 +359,8 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"category":_category,"cards":_cards.size(),"card_pictures":pictures,"selected":_selected,"equipped":equipped,"detail":shown}
+	last_result={"ok":true,"handled":true,"member":ROOT,"category":_category,"cards":_cards.size(),"owned":owned.size(),"card_pictures":pictures,"selected":_selected,"equipped":equipped,"detail":shown,
+		"grade":_grade,"type":_type,"query":_query,"grade_rows":int(class_rows.get("rows",0))}
 	return last_result
 
 ## Row panel left edge and card positions from Change_Card_Set itself.
@@ -260,7 +378,7 @@ func _set_geometry() -> Dictionary:
 	# The ListView centres its items (Align_HorizontalCenter).
 	return {"row_x":(LIST_SIZE.x-float(size[0]))*0.5,"row_height":float(size[1]),"slots":slots}
 
-func _detail_bindings(equipped: String) -> Dictionary:
+func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 	var doll: bool=_category=="마법인형"
 	var info_nodes: Dictionary=INFO_DOLL if doll else INFO_CARD
 	var selected: Dictionary=_record(_selected)
@@ -273,6 +391,59 @@ func _detail_bindings(equipped: String) -> Dictionary:
 	var scope: Array[int]=[CARD_PANEL_BG,CARD_PANEL_DECO,DETAIL_BG,DETAIL_FX_BG,SAMPLE_PANEL,SAMPLE,APPLY,TAB_BG,LIST,NOTICE,NOTICE_TEXT]
 	scope.append_array(GROUP_LINES)
 	scope.append_array(_subtree(DETAIL,[COLLECTION_BUTTON]))
+	# 각 성: the existing option awakening of the selected card.
+	var can_awaken: bool=not selected.is_empty()
+	scope.append_array(_subtree(DETAIL,[AWAKEN]))
+	bindings[AWAKEN]={"role":"button","displaystate":can_awaken,"activate":Callable(self,"_awaken_requested")}
+	bindings[AWAKEN_STATES[0]]={"visible":can_awaken}
+	bindings[AWAKEN_STATES[1]]={"visible":not can_awaken}
+	# Grade list (Change_WinTotal_Class rows are added after the mount).
+	if _available(GRADE_ROW):
+		scope.append(CLASS_LIST)
+		bindings[CLASS_LIST]={"role":"source_list","row_offsets":[],"input":Callable(self,"_class_input")}
+	# 초기화 clears the grade, type and search filters.
+	var filtering: bool=_filtering()
+	scope.append_array(_subtree(DETAIL,[RESET]))
+	bindings[RESET]={"role":"button","displaystate":filtering,"activate":Callable(self,"_reset_filters")}
+	bindings[RESET_STATES[0]]={"visible":filtering}
+	bindings[RESET_STATES[1]]={"visible":not filtering}
+	# 모든 유형: Common_ButtonSet_Type over the full-page Btn_Close.
+	var type_set: Dictionary=TYPE_SETS[_category]
+	if _available(TYPE_SET):
+		scope.append_array(_subtree(DETAIL,[SORT]))
+		scope.append_array([POPUP_CLOSE,TYPE_PROJECT])
+		var label: String=_type_label(_type)
+		bindings[SORT]={"role":"button","activate":Callable(self,"_toggle_type_popup")}
+		bindings[SORT_STATES[0]]={"visible":true}
+		bindings[SORT_STATES[1]]={"visible":false}
+		for offset: int in SORT_LABELS:bindings[offset]={"role":"source_text","text":label}
+		bindings[POPUP_CLOSE]={"role":"button","visible":false,"activate":Callable(self,"_close_popups")}
+		var type_scope: Array[int]=_subtree(TYPE_SET,[int(type_set.set)])
+		var type_bindings: Dictionary={int(type_set.set):{"visible":true},int(type_set.bg):{"role":"consume"}}
+		for button: Array in type_set.buttons:
+			var on: bool=int(button[3])==_type
+			type_bindings[int(button[0])]={"role":"button","visible":not on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
+			type_bindings[int(button[1])]={"role":"button","visible":on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
+		_consume_touch(TYPE_SET,type_scope,type_bindings)
+		bindings[TYPE_PROJECT]={"role":"project","visible":false,"source_node_offsets":type_scope,"bindings":type_bindings}
+	# Search bar: ItemBook_Popup_Keypad with the window's own editor.
+	if _available(KEYPAD) and host!=null:
+		scope.append_array(_subtree(DETAIL,[SEARCH]))
+		if not scope.has(POPUP_CLOSE):
+			scope.append(POPUP_CLOSE)
+			bindings[POPUP_CLOSE]={"role":"button","visible":false,"activate":Callable(self,"_close_popups")}
+		scope.append(KEYPAD_PROJECT)
+		bindings[SEARCH]={"role":"button","activate":Callable(self,"_open_keypad")}
+		if not _query.is_empty():bindings[SEARCH_TEXT]={"role":"source_text","text":_query}
+		bindings[SEARCH_STATES[0]]={"visible":true}
+		bindings[SEARCH_STATES[1]]={"visible":false}
+		var keypad_bindings: Dictionary={8316:{"role":"consume"},7556:{"role":"consume"},
+			KEYPAD_FIELD:{"role":"source_text_field","editor":_search_editor(host)},
+			KEYPAD_SEARCH:{"role":"button","activate":Callable(self,"_apply_query")},
+			KEYPAD_CLOSE:{"role":"button","activate":Callable(self,"_close_popups")},
+			KEYPAD_CANCEL:{"role":"button","activate":Callable(self,"_clear_query")},
+			5132:{"role":"static_source_text"},2868:{"role":"static_source_text"}}
+		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
 	var info_scope: Array[int]=[int(info_nodes.name),int(info_nodes.grade),int(info_nodes.title),int(info_nodes.list)]
 	for offset: Variant in info_nodes.decor:info_scope.append(int(offset))
 	var info_bindings: Dictionary={int(info_nodes.name):{"role":"source_text","text":str(selected.get("name",""))},
@@ -343,6 +514,9 @@ func _show_selected() -> Dictionary:
 		options+=1
 	var applied: bool=not _selected.is_empty() and _selected==_equipped_id()
 	_detail.set_bound_displaystate(APPLY,not record.is_empty() and not applied)
+	_detail.set_bound_displaystate(AWAKEN,not record.is_empty())
+	_detail.set_bound_visible(AWAKEN_STATES[0],not record.is_empty())
+	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
 	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"applied":applied}
 
 func _option_row(line: String) -> Dictionary:
@@ -408,6 +582,193 @@ func _explore_requested() -> Dictionary:
 	close()
 	if hud!=null and hud.has_method("open_expedition"):hud.call("open_expedition")
 	return {"ok":true,"existing_expedition":true}
+
+## 각 성: the same request as the catalog's 각성 tab (World opens the
+## existing option awakening for the card, or reports why it cannot).
+func _awaken_requested() -> Dictionary:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud==null or _record(_selected).is_empty():return _fail("source_change_window_card_unselected")
+	if not hud.has_signal("option_awakening_open_requested"):return _fail("source_change_window_awakening_unavailable")
+	hud.emit_signal("option_awakening_open_requested",_category,_selected)
+	return {"ok":true,"existing_option_awakening_requested":true,"id":_selected}
+
+## --- Grade list (Change_WinTotal_Class) --------------------------------------
+
+func _fill_classes(detail: Node2D, owned: Array[Dictionary]) -> Dictionary:
+	if not _available(GRADE_ROW):return {"ok":true,"rows":0}
+	var list_node: Variant=detail.get("source_nodes").get(CLASS_LIST)
+	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
+	if not content is Node2D:return _fail("source_change_window_grade_list_missing")
+	var tree: Dictionary=_pack.scene(DETAIL).get("nodeTree",{})
+	var options: Dictionary=Scene._node_at_offset(tree,CLASS_LIST).get("options",{})
+	var raw_size: Array=options.get("widgetOptions",{}).get("size",[166,475])
+	var size:=Vector2(float(raw_size[0]),float(raw_size[1]))
+	var gap: float=float(options.get("itemMargin",0))
+	var panel: Dictionary=Scene._node_at_offset(_pack.scene(GRADE_ROW).get("nodeTree",{}),ROW_PANEL).get("options",{}).get("widgetOptions",{})
+	var row_size: Array=panel.get("size",[160,72])
+	var row_position: Array=panel.get("position",[0,0])
+	var anchor: Array=panel.get("anchorPoint",[0.5,0.5])
+	var extent:=Vector2(float(row_size[0]),float(row_size[1]))
+	var origin:=Vector2(float(row_position[0])-float(anchor[0])*extent.x,float(row_position[1])-float(anchor[1])*extent.y)
+	var counts: Dictionary=_grade_counts(owned)
+	var y: float=size.y
+	var rows: int=0
+	for grade: String in SIDEBAR:
+		var count: Array=counts.get(grade,[0,0])
+		var built: Dictionary=_grade_row(grade,"( %d / %d )" % [int(count[0]),int(count[1])],grade==_grade)
+		if not built.get("ok",false):return built
+		# Rows run top-down; a row's root panel lower-left sits on the line.
+		var at: Vector2=Vector2((size.x-extent.x)*0.5,y-extent.y)-origin
+		built.scene.position=Vector2(at.x,-at.y)
+		content.add_child(built.scene)
+		y-=extent.y+gap
+		rows+=1
+	return {"ok":true,"rows":rows,"content":content,"min":minf(0.0,size.y-(size.y-y-gap))}
+
+func _grade_row(grade: String, count_text: String, on: bool) -> Dictionary:
+	# The client spaces two-letter grade names ("등 급").
+	var label: String=grade.substr(0,1)+" "+grade.substr(1,1) if grade.length()==2 else grade
+	var scope: Array[int]=_subtree(GRADE_ROW,[ROW_PANEL])
+	var activate: Callable=Callable(self,"_select_grade").bind(grade)
+	var bindings: Dictionary={ROW_PANEL:{"input":Callable(self,"_class_input")},
+		ROW_NORMAL:{"role":"button","visible":not on,"activate":activate},
+		ROW_PRESSED:{"role":"button","visible":on,"activate":activate},
+		ROW_NORMAL_TEXT[0]:{"role":"source_text","text":label},ROW_NORMAL_TEXT[1]:{"role":"source_text","text":count_text},
+		ROW_PRESSED_TEXT[0]:{"role":"source_text","text":label},ROW_PRESSED_TEXT[1]:{"role":"source_text","text":count_text},
+		ROW_EVENT:{"visible":false},ROW_NEW:{"visible":false}}
+	for name: String in ROW_IMAGES:bindings[int(ROW_IMAGES[name])]={"visible":name==grade}
+	var scene:=Scene.new()
+	var result: Dictionary=scene.configure_nodes(_pack,GRADE_ROW,scope,bindings)
+	if not result.get("ok",false):scene.free();return result
+	return {"ok":true,"scene":scene}
+
+func _select_grade(grade: String) -> Dictionary:
+	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
+	if grade==_grade:return {"ok":true,"same_grade":true}
+	_grade=grade
+	_scroll=0.0
+	return _stage()
+
+func _class_input(event: InputEvent) -> void:
+	if not is_instance_valid(_class_content):return
+	if event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT):
+		_class_drag=event.pressed
+		if event.pressed:_moved=0.0
+		return
+	var delta: float=0.0
+	if event is InputEventScreenDrag:delta=event.relative.y
+	elif event is InputEventMouseMotion and _class_drag:delta=event.relative.y
+	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		delta=69.0*(1.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -1.0)
+	if delta==0.0:return
+	var scale_y: float=absf(_class_content.get_global_transform_with_canvas().get_scale().y)
+	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
+	_moved+=delta
+	_class_scroll=clampf(_class_scroll+delta,_class_min,0.0)
+	_class_content.position.y=_class_scroll
+
+## --- 유형 popup (Common_ButtonSet_Type) ---------------------------------------
+
+## The popup button's own label for BuffCardAttackType `id`.
+func _type_label(id: int) -> String:
+	if not _available(TYPE_SET):return ""
+	var tree: Dictionary=_pack.scene(TYPE_SET).get("nodeTree",{})
+	for button: Array in TYPE_SETS[_category].buttons:
+		if int(button[3])==id:return str(Scene._node_at_offset(tree,int(button[2])).get("options",{}).get("text",""))
+	return ""
+
+func _toggle_type_popup() -> Dictionary:
+	if not is_instance_valid(_detail):return _fail("source_change_window_not_open")
+	var player: Dictionary=_detail.project_player([TYPE_PROJECT])
+	var shown: bool=player.get("ok",false) and not bool(_detail.get("source_nodes").get(TYPE_PROJECT).visible)
+	_close_popups()
+	if shown:
+		_detail.set_bound_visible(TYPE_PROJECT,true)
+		_detail.set_bound_visible(POPUP_CLOSE,true)
+		_detail.set_bound_visible(SORT_STATES[0],false)
+		_detail.set_bound_visible(SORT_STATES[1],true)
+	return {"ok":true,"type_popup":shown}
+
+func _select_type(id: int) -> Dictionary:
+	_close_popups()
+	if id==_type:return {"ok":true,"same_type":true}
+	_type=id
+	_scroll=0.0
+	return _stage()
+
+## Hides the type popup and the keypad (the editor keeps its text).
+func _close_popups() -> Dictionary:
+	if not is_instance_valid(_detail):return {"ok":true}
+	for offset: int in [TYPE_PROJECT,POPUP_CLOSE,KEYPAD_PROJECT]:_detail.set_bound_visible(offset,false)
+	_detail.set_bound_visible(SORT_STATES[0],true)
+	_detail.set_bound_visible(SORT_STATES[1],false)
+	_release_field()
+	return {"ok":true}
+
+## --- Search (ItemBook_Popup_Keypad) ------------------------------------------
+
+## The window's own editor (hidden under the host while no keypad shows it).
+func _search_editor(host: Node) -> LineEdit:
+	if not is_instance_valid(_editor):
+		_editor=preload("res://scripts/ui/native_touch_line_edit.gd").new()
+		_editor.name="ChangeWindowCardSearch"
+		_editor.max_length=20
+		_editor.visible=false
+		host.add_child(_editor)
+		_editor.text_submitted.connect(func(_text: String) -> void:_apply_query())
+	_editor.text=_query
+	return _editor
+
+func _keypad_field() -> Variant:
+	if not is_instance_valid(_detail):return null
+	var player: Dictionary=_detail.project_player([KEYPAD_PROJECT])
+	if not player.get("ok",false):return null
+	var node: Variant=player.player.get("source_nodes").get(KEYPAD_FIELD)
+	return node.get_meta("source_text_field") if is_instance_valid(node) and node.has_meta("source_text_field") else null
+
+func _open_keypad() -> Dictionary:
+	var field: Variant=_keypad_field()
+	if field==null:return _fail("source_change_window_keypad_unavailable")
+	_close_popups()
+	_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	_detail.set_bound_visible(POPUP_CLOSE,true)
+	var attached: Dictionary=field.attach_editor()
+	if not attached.get("ok",false):
+		_close_popups()
+		return attached
+	_field=field
+	if is_instance_valid(_editor):
+		_editor.grab_focus()
+		if _editor.has_method("edit"):_editor.call("edit")
+	return {"ok":true,"keypad":true}
+
+func _apply_query() -> Dictionary:
+	if is_instance_valid(_editor) and _editor.has_method("apply_ime"):_editor.call("apply_ime")
+	var query: String=_editor.text.strip_edges() if is_instance_valid(_editor) else _query
+	_close_popups()
+	if query==_query:return {"ok":true,"same_query":true}
+	_query=query
+	_scroll=0.0
+	return _stage()
+
+func _clear_query() -> Dictionary:
+	if is_instance_valid(_editor):_editor.text=""
+	return {"ok":true}
+
+func _release_field() -> void:
+	if _field!=null and is_instance_valid(_field) and _field.has_method("release_editor"):_field.release_editor()
+	_field=null
+	if is_instance_valid(_editor):_editor.visible=false
+
+func _reset_filters() -> Dictionary:
+	if not _filtering():return {"ok":true,"already_clear":true}
+	_grade="전체"
+	_type=0
+	_query=""
+	_scroll=0.0
+	_class_scroll=0.0
+	if is_instance_valid(_editor):_editor.text=""
+	return _stage()
 
 func _ignore() -> Dictionary:
 	return {"ok":true}

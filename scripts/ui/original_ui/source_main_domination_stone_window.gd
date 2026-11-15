@@ -8,11 +8,18 @@ extends RefCounted
 ## MainMenu_DominationStone the menu tile. Every rule, roll, cost and save
 ## stays in world.domination_stones (scripts/domination); this file only
 ## mounts original nodes and routes their buttons.
-## Not connected (reported): the stone inventory panel (its CSB names
-## QuickSlotEdit_SlotSet, absent from the 523 client), the dismantle tab
-## (shard amounts are not in the tables) and the probability popup.
+## The 합성 tab's stone inventory (DominationStone_Inventory) lists the bag
+## stones four per Inventory_Slot_Set line (its own SlotSet names
+## QuickSlotEdit_SlotSet, absent from the 523 client: the storage/store A안
+## lines at that SlotSet's original position) with the 전체 / 오만 / 신념 /
+## 지배 tabs (DominationStoneGroup.TowerID -> DominationStoneTower name);
+## tapping a stone registers it in (or removes it from) the FusionBox.
+## Not connected (reported): its sort popup, back button, count and tooltip,
+## the dismantle tab (shard amounts are not in the tables) and the
+## probability popup.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
+const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
 const SRC=preload("res://scripts/domination/domination_stone_source.gd")
 const ROOT="UI/DominationStoneScene.csb"
 const ALL="UI/DominationStone/DominationStone_All.csb"
@@ -31,8 +38,18 @@ const SLOT="UI/CommonUi/Common_Slot.csb"
 const SLOT_BUTTON=15728
 const SLOT_BACKGROUND=15316
 const SLOT_ICON=15012
-## Common_Slot keeps its button, frame and item picture only.
-const MEMBER_SCOPES={SLOT:[SLOT_BUTTON,SLOT_BACKGROUND,SLOT_ICON]}
+const SLOT_SELECT=9004
+const SLOT_LOCK=7304
+## Common_Slot keeps its button, frame, item picture and the (authored
+## hidden) selection and lock marks.
+const MEMBER_SCOPES={SLOT:[SLOT_BUTTON,SLOT_BACKGROUND,SLOT_ICON,SLOT_SELECT,SLOT_LOCK]}
+const SET="UI/FloatingUi/Inventory_Slot_Set.csb"
+const SET_SLOTS: Array[String]=["Slot_1","Slot_2","Slot_3","Slot_4"]
+## DominationStone_Inventory ScrollView/SlotSet (offset 26168, left out of
+## the pack) sits at Cocos (165, 380) in the ScrollView's inner container.
+const INVENTORY_FIRST_LINE=Vector2(165.0,-380.0)
+## Inventory tabs -> DominationStoneTower name prefix ("" = 전체).
+const INVENTORY_TABS={"Btn_All":"","Btn_Oman":"오만","Btn_Faith":"신념","Btn_Control":"지배"}
 const REQUIRED: Array[String]=[ROOT,ROW_BASIC,ROW_OPTION,ROW_TOWER,ROW_FLOOR,ROW_QUEST]
 const HELP_PAGES: int=6
 ## Key prefixes of the mounted original tree (names of the original nodes).
@@ -40,6 +57,7 @@ const P_ALL="DominationStone_All_Layout/"
 const P_POWER="DominationStone_All_Layout/DominationStone_Tab_Power/"
 const P_FUSION="DominationStone_All_Layout/DominationStone_Tab_Fusion/Nd_Fusion/"
 const P_QUEST="DominationStone_All_Layout/DominationStone_Tab_Quest/Nd_Quest/"
+const P_INVENTORY="DominationStone_All_Layout/DominationStone_Tab_Fusion/Nd_Fusion/DominationStone_Inventory/Nd_Inventory/"
 const FUSION_SLOT="DominationStone_FusionBox/Nd_Fusion/Nd_Fusion_Slot/DominationStone_Fusion_Slot_0%d"
 ## Fusion grade checks (labels 희귀 / 영웅 / 전설) by original node name.
 const GRADE_CHECKS={"Nd_CheckBox_Unique":3,"Nd_CheckBox_Legend":4,"Nd_CheckBox_Epic":5}
@@ -58,6 +76,9 @@ var _result: Dictionary={}
 var _tower: int=-1
 var _floor: int=-1
 var _quest_slot: int=1
+var _inventory_tab: String="Btn_All"
+var _inventory_stones: Array[Dictionary]=[]
+var _inventory_scroller=Storage.Scroller.new()
 var last_result: Dictionary={}
 ## Original buttons shown in their disabled state this stage (suffix -> true).
 var _disabled: Dictionary={}
@@ -440,7 +461,105 @@ func _fusion_spec(runtime: Object) -> Dictionary:
 	_disabled[P_FUSION+"Btn_Cancelation"]=not can_clear
 	spec[P_FUSION+"Nd__Touch"]={"visible":false}
 	spec[P_FUSION+"Nd_Fx"]={"visible":false}
+	# Stone inventory (present when the UI pack carries DominationStone_Inventory).
+	_inventory_stones=_inventory_rows(runtime)
+	for tab: String in INVENTORY_TABS:
+		var on: bool=tab==_inventory_tab
+		spec[P_INVENTORY+"Tab/"+tab+"_On"]={"visible":on,"activate":Callable(self,"_select_inventory_tab").bind(tab)}
+		spec[P_INVENTORY+"Tab/"+tab+"_Off"]={"visible":not on,"activate":Callable(self,"_select_inventory_tab").bind(tab)}
+	spec[P_INVENTORY+"ScrollView"]={"role":"source_scroll","input":Callable(_inventory_scroller,"input")}
+	# Label_Count's authored "120/120" names no TWILIGHT limit.
+	spec[P_INVENTORY+"Nd_Number"]={"visible":false}
 	return spec
+
+## Bag stones of the inventory tab (전체, or the stones whose group's tower
+## name starts with the tab's prefix).
+func _inventory_rows(runtime: Object) -> Array[Dictionary]:
+	var prefix: String=str(INVENTORY_TABS.get(_inventory_tab,""))
+	var c: Dictionary=runtime.contract()
+	var tower_names: Dictionary={}
+	for tower: Dictionary in c.get("towers",{}).values():tower_names[int(tower.contents_id)]=str(tower.name)
+	var result: Array[Dictionary]=[]
+	for stone: Dictionary in runtime.bag_stones():
+		if not prefix.is_empty():
+			var group: Dictionary=c.get("groups",{}).get(int(stone.info.group),{})
+			if not str(tower_names.get(int(group.get("tower_contents_id",0)),"")).begins_with(prefix):continue
+		result.append(stone)
+	return result
+
+## Inventory_Slot_Set lines of the stone inventory (A안), four stones each.
+func _fill_inventory(root: Node2D, out: Dictionary) -> Dictionary:
+	var located: Dictionary=_locate(root,out,P_INVENTORY+"ScrollView")
+	if not located.get("ok",false) or not _pack.manifest.get("scenes",{}).has(SET):return {"ok":true,"lines":0,"stones":0,"mounted":false}
+	var scroll: Variant=located.player.source_nodes.get(located.offset)
+	var content: Variant=(scroll as Node).find_child("SourceOriginalScrollContent",true,false) if is_instance_valid(scroll) else null
+	if not content is Node2D:return _fail("source_domination_inventory_content_missing")
+	var lines: int=maxi(1,ceili(float(_inventory_stones.size())/float(SET_SLOTS.size())))
+	var pictures: int=0
+	for line: int in range(lines):
+		var spec: Dictionary={"Nd_Slot/Fx_Slot_UnLock":{"exclude":true},"Nd_Slot_Extension":{"exclude":true},"Nd_Slot_Extension_Lock":{"exclude":true}}
+		for index: int in range(SET_SLOTS.size()):
+			var at: int=line*SET_SLOTS.size()+index
+			var stone: Dictionary=_inventory_stones[at] if at<_inventory_stones.size() else {}
+			var key: String="Nd_Slot/"+SET_SLOTS[index]+"/"
+			spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
+			spec[key+"Sp_Select"]={"visible":not stone.is_empty() and str(stone.instance_id) in _fusion}
+			spec[key+"Sp_Left_Bottom"]={"visible":not stone.is_empty() and bool(stone.locked)}
+			spec[key+"Btn"]={"activate":Callable(self,"_inventory_pressed").bind(at)}
+		var row_out: Dictionary={}
+		var built: Dictionary=_scene_of(SET,spec,row_out)
+		if not built.get("ok",false):return built
+		built.scene.position=INVENTORY_FIRST_LINE+Vector2(0.0,Storage.ROW_PITCH*float(line))
+		(content as Node2D).add_child(built.scene)
+		for index: int in range(SET_SLOTS.size()):
+			var at: int=line*SET_SLOTS.size()+index
+			_forward_drag(built.scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Btn")
+			if at>=_inventory_stones.size():continue
+			var icon: Dictionary=_locate(built.scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample")
+			if icon.get("ok",false) and _picture(icon.player,icon.offset,_inventory_stones[at].record):pictures+=1
+	# The ScrollView's drag area sits under its content (slot taps first).
+	var area: Variant=scroll.get_meta("source_scroll").input_control() if scroll.has_meta("source_scroll") else null
+	if area is Control and area.get_parent()!=null:area.get_parent().move_child(area,0)
+	_inventory_scroller.bind(content,INVENTORY_FIRST_LINE.y,lines)
+	return {"ok":true,"lines":lines,"stones":_inventory_stones.size(),"pictures":pictures,"mounted":true,"tab":_inventory_tab}
+
+func _forward_drag(root: Node2D, out: Dictionary, suffix: String) -> void:
+	var located: Dictionary=_locate(root,out,suffix)
+	if not located.get("ok",false):return
+	var node: Variant=located.player.source_nodes.get(located.offset)
+	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) and node.has_meta("source_button") else null
+	var area: Variant=button.get("_input_area") if is_instance_valid(button) else null
+	if area is Control and not area.gui_input.is_connected(_inventory_scroller.input):area.gui_input.connect(_inventory_scroller.input)
+
+## A bag stone tapped in the inventory: registered stones leave the
+## FusionBox, others join it under the same rules as 일괄 등록 (not locked,
+## a merge price, room left).
+func _inventory_pressed(index: int) -> Dictionary:
+	if _inventory_scroller.moved>12.0:return {"ok":true,"ignored_after_drag":true}
+	if index<0 or index>=_inventory_stones.size() or not _result.is_empty():return {"ok":true,"empty_slot":true}
+	var stone: Dictionary=_inventory_stones[index]
+	var id: String=str(stone.instance_id)
+	var result: Dictionary
+	if id in _fusion:
+		_fusion.erase(id)
+		result={"ok":true,"removed":id}
+	elif bool(stone.locked):result={"ok":false,"error":"잠긴 지배석은 등록할 수 없습니다"}
+	elif int(stone.info.merge_price)<=0:result={"ok":false,"error":"합성할 수 없는 지배석입니다"}
+	elif _fusion.size()>=SRC.MERGE_MAX:result={"ok":false,"error":"합성 슬롯이 가득 찼습니다"}
+	else:
+		_fusion.append(id)
+		result={"ok":true,"registered":id}
+	if not result.ok:_notify(result,"")
+	_inventory_scroller.keep()
+	_stage()
+	result["fusion"]=_fusion.size()
+	return result
+
+func _select_inventory_tab(tab: String) -> Dictionary:
+	_inventory_tab=tab
+	_inventory_scroller.y=null
+	_stage()
+	return {"ok":true,"inventory_tab":tab}
 
 func _fill_fusion(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 	var pictures: int=0
@@ -462,7 +581,9 @@ func _fill_fusion(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
 		var holder: Node2D=tab.player.source_nodes.get(tab.offset) if tab.get("ok",false) else null
 		var player: Variant=(holder.get_meta("source_project_player") if holder.has_meta("source_project_player") else null) if is_instance_valid(holder) else null
 		if player!=null and player.play("Ok_On",false).get("ok",false):clip="Ok_On"
-	return {"ok":true,"pictures":pictures,"registered":_fusion.size(),"result":not _result.is_empty(),"world":world!=null,"clip":clip}
+	var inventory: Dictionary=_fill_inventory(root,out)
+	if not inventory.get("ok",false):return inventory
+	return {"ok":true,"pictures":pictures,"registered":_fusion.size(),"result":not _result.is_empty(),"world":world!=null,"clip":clip,"inventory":inventory}
 
 func _bulk_register() -> Dictionary:
 	var runtime: Object=_runtime()
