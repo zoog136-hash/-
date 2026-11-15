@@ -9,6 +9,8 @@ const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const CACHE = preload("res://scripts/resources/sp2_parse_cache.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
+const FAST = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const LIMIT: int = 32 * 1024 * 1024
 ## Offline BrotliEncoderCompress fixtures of BUILD.build(), all invented.
 ## CI only decodes these base64 constants; no Python/Brotli encoder needed.
@@ -63,11 +65,13 @@ func packed_oracle(value: Variant) -> int:
 func oracle(parsed: Dictionary) -> int:
 	var retained: Dictionary = parsed.duplicate()
 	# This is the decoder's explicit FE alias contract, not a second copy.
-	if not parsed.raw.is_empty() and parsed.raw[0] == 254: retained.erase("raw")
+	var raw: PackedByteArray = parsed.get("raw", PackedByteArray())
+	if not raw.is_empty() and raw[0] == 254: retained.erase("raw")
 	return packed_oracle(retained)
 
 func fingerprint(parsed: Dictionary, group: int = 0, frame: int = 0) -> Dictionary:
-	var result: Dictionary = DECODER.render(parsed, group, frame)
+	# Banks share the packed form; its renderer is byte-identical to the decoder.
+	var result: Dictionary = FAST.render(parsed, group, frame) if COMPACT.is_compact(parsed) else DECODER.render(parsed, group, frame)
 	return {"ok": result.get("ok", false), "offset": result.get("offset"), "empty": result.get("empty"),
 		"pixels": result.image.get_data() if result.get("ok", false) else PackedByteArray(),
 		"size": result.image.get_size() if result.get("ok", false) else Vector2i.ZERO}
@@ -148,9 +152,15 @@ func idle_and_live_cases() -> void:
 	bank = null
 	var idle: Dictionary = ASSETS.stats().parsed
 	check(measurement_count() - count_before == 9, "each fresh shared publication measures packed payload once")
-	check(idle.live_count == 0 and idle.leases == 0 and idle.idle_count == 7 and idle.idle_bytes == each_cost * 7 and idle.idle_bytes <= LIMIT and int(idle.counters.get("evicted", 0)) == 2, "nine actual idle banks evict two entries to respect the 32MiB packed-payload budget")
+	# Banks share the packed form (sp2_compact_parse), so fewer bytes per member:
+	# as many idle entries stay as fit the budget, the rest are evicted.
+	var fit: int = mini(9, LIMIT / maxi(1, each_cost))
+	check(each_cost > 0 and idle.live_count == 0 and idle.leases == 0 and idle.idle_count == fit and idle.idle_bytes == each_cost * fit and idle.idle_bytes <= LIMIT and int(idle.counters.get("evicted", 0)) == 9 - fit, "nine actual idle banks keep only what fits the 32MiB packed-payload budget")
+	ASSETS.trim_idle("parsed", each_cost * 7)
+	idle = ASSETS.stats().parsed
+	check(idle.idle_count == 7 and idle.idle_bytes == each_cost * 7 and int(idle.counters.get("evicted", 0)) == 2, "a smaller idle budget evicts the two oldest entries")
 	var pixels: Dictionary = fingerprint(external, 7, 199)
-	var held_texture: Texture2D = ImageTexture.create_from_image(DECODER.render(external, 7, 199).image)
+	var held_texture: Texture2D = ImageTexture.create_from_image(FAST.render(external, 7, 199).image)
 	var held_pixels: PackedByteArray = held_texture.get_image().get_data()
 	var before_warm: int = measurement_count()
 	var warm: RefCounted = BANK.new()
@@ -174,11 +184,15 @@ func local_budget_cases() -> void:
 		var total: int = 0
 		for value: int in bank._parsed_costs.values(): total += value
 		var parsed: Dictionary = bank._parsed[member_name(id)]
-		check(parsed.body.size() * 3 < LIMIT and oracle(parsed) * 2 > LIMIT, "fixture distinguishes old body-only admission from packed-payload admission")
-		check(bank._parsed.size() == 1 and bank._parsed_costs.size() == 1 and total == oracle(parsed) and total <= LIMIT, "local byte budget drops older parses although the three-member cap alone would permit them")
+		check(COMPACT.is_compact(parsed) and not parsed.has("body") and not parsed.has("raw"), "bank keeps the packed form without unread source bytes")
+		var kept: int = 0
+		for value: Dictionary in bank._parsed.values(): kept += oracle(value)
+		check(bank._parsed.size() <= 3 and bank._parsed_costs.size() == bank._parsed.size() and total == kept and (total <= LIMIT or bank._parsed.size() == 1), "local byte budget keeps at most three members within 32MiB of packed cost")
 	check(bank.render_layer(layer(9203), true).get("ok", false), "an oversized current member remains renderable")
 	var current: Dictionary = bank._parsed[member_name(9203)]
-	check(oracle(current) > LIMIT and bank._parsed.size() == 1 and bank._parsed_costs[member_name(9203)] == oracle(current), "oversized current record is kept alone with its full packed cost")
+	var current_total: int = 0
+	for value: int in bank._parsed_costs.values(): current_total += value
+	check(bank._parsed_costs[member_name(9203)] == oracle(current) and (current_total <= LIMIT or bank._parsed.size() == 1), "largest current record is kept with its full packed cost within the local budget")
 	var count_before: int = measurement_count()
 	check(bank.render_layer(layer(9203), false).get("ok", false) and measurement_count() == count_before, "reusing the local oversized member performs no extra accounting walk")
 	bank._release_parsed()

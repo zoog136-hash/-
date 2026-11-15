@@ -6,6 +6,8 @@ extends RefCounted
 ## limited render implementation is checked byte-for-byte against its oracle.
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+## The shared SP2 store keeps parses in this packed form (same pixels).
+const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
 
 static func render(parsed: Dictionary, group_index: int, frame_index: int, options: Dictionary = {}) -> Dictionary:
 	var started: int = FRAME_HITCH.now()
@@ -25,7 +27,8 @@ static func _render(parsed: Dictionary,group_index: int,frame_index: int,options
 	if frame_index < 0 or frame_index >= group.frames.size(): return DECODER._fail("SP2 frame index is out of range.")
 	var frame: Dictionary = group.frames[frame_index]
 	var bounds: Rect2i = frame.bounds
-	var geometry: Dictionary = DECODER._frame_geometry(frame,group.blocks)
+	var compact: bool = COMPACT.is_compact(parsed)
+	var geometry: Dictionary = COMPACT.frame_geometry(frame,group) if compact else DECODER._frame_geometry(frame,group.blocks)
 	if not geometry.ok: return geometry
 	# Every sample must land on the canvas (parse checked the bounds rule).
 	if not geometry.empty and (bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x * bounds.size.y > DECODER.MAX_CANVAS_PIXELS or not bounds.encloses(geometry.extent)):
@@ -52,6 +55,9 @@ static func _render(parsed: Dictionary,group_index: int,frame_index: int,options
 	pixels.resize(bounds.size.x * bounds.size.y * 4)
 	# Every stored covered sample overwrites in reference order, including index0.
 	# Type bytes are preserved but do not select invented opacity/blend equations.
+	if compact:
+		pixels = _draw_compact(frame, group, bounds, colors, pixels)
+		return {"ok":true,"error":"","image":Image.create_from_data(bounds.size.x,bounds.size.y,false,Image.FORMAT_RGBA8,pixels),"offset":bounds.position,"bounds":bounds,"empty":false,"estimated":true,"alpha_policy":alpha,"rgb_policy":rgb}
 	for ref: Dictionary in frame.refs:
 		var block: Dictionary = group.blocks[int(ref.index)]
 		var origin: Vector2i = DECODER._placement(ref,block) - bounds.position
@@ -63,3 +69,21 @@ static func _render(parsed: Dictionary,group_index: int,frame_index: int,options
 				pixels.encode_u32(destination, colors[int(indices[runs[run + 2] + sample])])
 				destination += 4
 	return {"ok":true,"error":"","image":Image.create_from_data(bounds.size.x,bounds.size.y,false,Image.FORMAT_RGBA8,pixels),"offset":bounds.position,"bounds":bounds,"empty":false,"estimated":true,"alpha_policy":alpha,"rgb_policy":rgb}
+
+static func _draw_compact(frame: Dictionary, group: Dictionary, bounds: Rect2i, colors: PackedInt64Array, pixels: PackedByteArray) -> PackedByteArray:
+	var refs: PackedInt32Array = frame.refs
+	var table: PackedInt32Array = group.block_table
+	var runs: PackedInt32Array = group.runs
+	var indices: PackedByteArray = group.indices
+	var stride: int = COMPACT.BLOCK_STRIDE
+	for r: int in range(0, refs.size(), COMPACT.REF_STRIDE):
+		var o: int = refs[r + 3] * stride
+		var origin: Vector2i = COMPACT.placement(refs[r], refs[r + 1], table[o], table[o + 1]) - bounds.position
+		var base: int = table[o + 4]
+		for run: int in range(table[o + 2], table[o + 3], 4):
+			var destination: int = ((origin.y + runs[run + 1]) * bounds.size.x + origin.x + runs[run]) * 4
+			var sample_at: int = base + runs[run + 2]
+			for sample: int in range(runs[run + 3]):
+				pixels.encode_u32(destination, colors[int(indices[sample_at + sample])])
+				destination += 4
+	return pixels
