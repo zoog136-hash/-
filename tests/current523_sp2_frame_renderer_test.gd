@@ -6,6 +6,7 @@ const FAST = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
 const PARSES = preload("res://scripts/resources/sp2_parse_cache.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
 const SPARSE = preload("res://tests/reference_sp2_load_memo_test.gd")
 const LARGE = preload("res://tests/sp2_parse_cache_test.gd")
 var checks: int = 0
@@ -64,6 +65,14 @@ func _same(parsed: Dictionary, group: int, frame: int, options: Dictionary, labe
 	check(left == right, label + " metadata/errors")
 	if expected.get("ok", false):
 		check(expected.image.get_size() == actual.image.get_size() and expected.image.get_format() == actual.image.get_format() and expected.image.has_mipmaps() == actual.image.has_mipmaps() and expected.image.get_data() == actual.image.get_data(), label + " full RGBA bytes/shape")
+	# The shared store's packed form renders the same bytes and errors.
+	var packed: Dictionary = COMPACT.from_parse(parsed)
+	var compact: Dictionary = FAST.render(packed, group, frame, options)
+	var third: Dictionary = compact.duplicate()
+	third.erase("image")
+	check(left == third, label + " packed metadata/errors")
+	if expected.get("ok", false):
+		check(expected.image.get_size() == compact.image.get_size() and expected.image.get_format() == compact.image.get_format() and expected.image.get_data() == compact.image.get_data(), label + " packed RGBA bytes/shape")
 
 func _compare(parsed: Dictionary, label: String) -> void:
 	check(parsed.get("ok", false), label + " parses")
@@ -75,6 +84,17 @@ func _compare(parsed: Dictionary, label: String) -> void:
 				for frame: int in parsed.groups[group].frames.size():
 					_same(parsed, group, frame, {"alpha_policy":alpha,"rgb_policy":rgb}, label + str([alpha,rgb,group,frame]))
 	check(before == var_to_bytes(parsed), label + " shared input unchanged")
+	var packed: Dictionary = COMPACT.from_parse(parsed)
+	check(COMPACT.is_compact(packed) and not packed.has("raw") and not packed.has("body") and packed.groups.size() == parsed.groups.size(), label + " packed form drops unread source bytes")
+	var same_meta: bool = packed.palette == parsed.palette and packed.mask == parsed.mask and packed.frame_count == parsed.frame_count and packed.sample_count == parsed.sample_count
+	for group: int in parsed.groups.size():
+		same_meta = same_meta and packed.groups[group].bit == parsed.groups[group].bit and packed.groups[group].frames.size() == parsed.groups[group].frames.size()
+		for frame: int in parsed.groups[group].frames.size():
+			var a: Dictionary = parsed.groups[group].frames[frame]
+			var b: Dictionary = packed.groups[group].frames[frame]
+			same_meta = same_meta and a.bounds == b.bounds and a.raw_bounds == b.raw_bounds and a.empty == b.empty and (b.refs as PackedInt32Array).size() == a.refs.size() * COMPACT.REF_STRIDE
+	check(same_meta, label + " packed frames keep bounds, order and counts")
+	check(COMPACT.from_parse(packed) == packed, label + " packing is idempotent")
 
 func _run() -> void:
 	# Every RGB565 word, both RGB policies and both alpha policies. High alpha
