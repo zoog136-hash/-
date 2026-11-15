@@ -572,7 +572,9 @@ func permits_auto_selection() -> bool:
 
 func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):
+		var view_started: int = FRAME_HITCH.now()
 		source_m_view.advance(delta, animation_state, motion.facing8, motion.sequence, motion.active, dead)
+		FRAME_HITCH.detail("monster.view", view_started)
 	_hide_source_only_native_media()
 
 func _hide_source_only_native_media() -> void:
@@ -632,7 +634,9 @@ func _physics_step(delta: float) -> void:
 			and not is_stunned() and not is_held() and not is_feared() and poison_remaining <= 0.0 and bleed_remaining <= 0.0:
 		decision_interval = .2
 	if ai.is_empty() or decision_elapsed>=decision_interval:
+		var ai_started: int = FRAME_HITCH.now()
 		_tick_ai(decision_elapsed)
+		FRAME_HITCH.detail("monster.ai", ai_started)
 		decision_elapsed = 0.
 	elif not motion.active and not is_stunned() and not is_held() and not custom_frozen():
 		# Decisions/status clocks run at 30 Hz. Movement, facing, animation and
@@ -827,6 +831,22 @@ func _refresh_overhead_ui(distance: float = -1.0) -> void:
 	if name_label.visible != near: name_label.visible = near
 	if hp_bar.visible != near: hp_bar.visible = near
 
+## A* searches of all monsters share a per-physics-step budget. On the 523
+## Aden field a search toward an unreachable target expands up to the field's
+## search limit in GDScript; a crowd repathing in the same step measured
+## 240-476 ms "몬스터" steps. Past the budget a monster keeps its path and
+## searches on the next step (the first search of a step always runs).
+const PATH_SEARCH_BUDGET_USEC: int = 4000
+static var _path_budget_frame: int = -1
+static var _path_budget_spent: int = 0
+
+static func _path_budget_open() -> bool:
+	var frame: int = Engine.get_physics_frames()
+	if frame != _path_budget_frame:
+		_path_budget_frame = frame
+		_path_budget_spent = 0
+	return _path_budget_spent < PATH_SEARCH_BUDGET_USEC
+
 func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 	if source_host_stationary:
 		velocity = Vector2.ZERO
@@ -834,14 +854,24 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 		return
 	if is_held(): velocity = Vector2.ZERO; return
 	if repath_cooldown<=0.:
-		repath_cooldown = .65+float(get_instance_id()%7)*.015
 		# Most crowded fights are in one open hunting room. Avoid one expensive
 		# AStar search per creature when its straight movement corridor is clear.
 		if world_controller.field_map!=null and world_controller.field_map.line_clear(global_position,goal):
+			repath_cooldown = .65+float(get_instance_id()%7)*.015
 			path = PackedVector2Array([goal])
-		else:
+			path_index = 0
+		elif _path_budget_open():
+			repath_cooldown = .65+float(get_instance_id()%7)*.015
+			var search_started: int = FRAME_HITCH.now()
 			path = world_controller.find_world_path(global_position,goal)
-		path_index = 0
+			_path_budget_spent += FRAME_HITCH.now() - search_started
+			FRAME_HITCH.detail("monster.path", search_started)
+			if path.is_empty(): FRAME_HITCH.count("monster.path_empty")
+			path_index = 0
+		else:
+			# This physics step's searches are spent: keep the current path and
+			# search again on the next step (no cooldown, no teleport).
+			FRAME_HITCH.count("monster.path_deferred")
 	while path_index<path.size() and global_position.distance_to(path[path_index])<8.: path_index += 1
 	if path_index>=path.size():
 		velocity = Vector2.ZERO
