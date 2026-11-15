@@ -1233,7 +1233,14 @@ func _on_lineage_side_action(action_id: String) -> void:
 	super._on_lineage_side_action(action_id)
 
 
+## The original 523 TJ의 쿠폰 retry window (source_main_tj_retry_window)
+## first; the TWILIGHT TJ page (source install, server context) otherwise.
 func open_tj_coupons() -> void:
+	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	if _open_original_feature("tj_coupons"):return
+	open_tj_coupons_native()
+
+func open_tj_coupons_native() -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
