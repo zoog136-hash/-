@@ -709,7 +709,14 @@ func _seek_frame(frame_number: float) -> void:
 			if at<=frame_number:
 				if selected.is_empty() or at>=float(selected.frameIndex): selected=value
 			elif at>frame_number and (following.is_empty() or at<float(following.frameIndex)): following=value
-		if selected.is_empty(): continue
+		# Before a track's first keyframe Cocos (Timeline::binarySearchKeyFrame)
+		# enters that first keyframe (from = to = frames[0]), so its value
+		# applies from the clip start. Events and inner actions keep firing
+		# only on their own frames.
+		if selected.is_empty():
+			if following.is_empty() or timeline.property in ["FrameEvent","ActionValue"]: continue
+			selected=following
+			following={}
 		var ratio: float=0.0
 		if not following.is_empty() and bool(selected.get("tween",false)):
 			ratio=clampf((frame_number-float(selected.frameIndex))/(float(following.frameIndex)-float(selected.frameIndex)),0.0,1.0)

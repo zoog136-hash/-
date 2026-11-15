@@ -56,11 +56,6 @@ func _spec() -> Dictionary:
 		spec["ListView_Tab/Btn_"+god]={"activate":Callable(self,"_select").bind(id)}
 		spec["ListView_Tab/Btn_"+god+"/On"]={"visible":on}
 		spec["ListView_Tab/Btn_"+god+"/Off"]={"visible":not on}
-	# A part above the stage shows its Off state: Cocos applies a clip's
-	# first keyframe before it (Sp_Enchant alpha 0 at frame 15); the strict
-	# player keeps the authored record there, so the window states it.
-	var page: String="Symbol_Tap_%s/Nd_Symbol/Nd_Parts/" % GODS[selected]
-	for index: int in range(stage+1,PARTS+1):spec[page+"Enchant_%d/Nd/Sp_Enchant" % index]={"visible":false}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Nd_TopMenu/Nd_Point/Label"]={"role":"source_text","text":_number(int(runtime.state.get("points",0)))}
 	spec["Nd_Clear"]={"visible":stage>=runtime.symbol_stage_limit()}
