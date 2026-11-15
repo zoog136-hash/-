@@ -33,7 +33,9 @@ static func item_evidence(row: Dictionary) -> Dictionary:
 static func record_evidence(record: Dictionary) -> Dictionary:
 	if record.get("source_snapshot") not in ["patch523","current523"] or record.get("source") not in ["lineagem_patch523","lineagem_current523"]:return {}
 	var id: int=int(record.get("source_item_class_id",0))
-	var raw: Variant=NATIVE_FIELDS.full(record).get("source_original_item")
+	# The one heavy field, not a whole expanded copy of a light (lazy) record:
+	# field() returns exactly full(record).get() for a HEAVY key.
+	var raw: Variant=NATIVE_FIELDS.field(record,"source_original_item")
 	if raw is Dictionary and int(raw.get("ID",0))==id:
 		return item_evidence(raw)
 	# IDs below bind to reviewed declarations in this exact snapshot, never to
