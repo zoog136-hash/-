@@ -15,6 +15,8 @@ const FRAME_BUDGET_USEC: int = 8000
 ## A first-time monster kind builds its original SP2 bank one role (idle,
 ## walk, attack, ...) per spawn attempt instead of all roles in one frame.
 const ROLE_BUILDS_PER_SPAWN: int = 1
+## ... and verifies (parses) at most this many new original members of it.
+const MEMBER_VERIFIES_PER_SPAWN: int = 2
 const SP2_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const HEAVY_SPAWN_USEC: int = 50000
 const HEAVY_REST_FRAMES: int = 2
@@ -54,8 +56,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 	var started: int = Time.get_ticks_usec()
 	# One cold bank role per attempt (see reference_sp2_bank.role_build_budget).
 	SP2_BANK.role_build_budget = ROLE_BUILDS_PER_SPAWN
+	SP2_BANK.member_verify_budget = MEMBER_VERIFIES_PER_SPAWN
 	super._spawn_slot(slot)
 	SP2_BANK.role_build_budget = -1
+	SP2_BANK.member_verify_budget = -1
 	if slot.get("patch523_spawn_hold") == "current523_view_deferred":
 		# Not a hold: the next attempt continues the same bank build.
 		slot.erase("patch523_spawn_hold")
