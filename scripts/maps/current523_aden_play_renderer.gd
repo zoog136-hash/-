@@ -488,6 +488,7 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	if not _configured: return
+	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
