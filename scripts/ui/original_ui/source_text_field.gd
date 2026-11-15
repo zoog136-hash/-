@@ -39,7 +39,7 @@ func attach_editor() -> Dictionary:
 	if not prepared.get("ok",false): return prepared
 	_parent = weakref(_editor.get_parent())
 	_index = _editor.get_index()
-	_saved = {"properties":{},"overrides":{},"focused":_editor.has_focus(),"caret":_editor.caret_column,"selection":_editor.has_selection(),"selection_from":_editor.get_selection_from_column(),"selection_to":_editor.get_selection_to_column()}
+	_saved = {"properties":{},"overrides":{},"focused":_editor.has_focus(),"caret":_editor.caret_column,"selection":_editor.has_selection(),"selection_from":_editor.get_selection_from_column() if _editor.has_selection() else 0,"selection_to":_editor.get_selection_to_column() if _editor.has_selection() else 0}
 	for property: String in PROPERTIES: _saved.properties[property] = _editor.get(property)
 	for property: Dictionary in _editor.get_property_list():
 		var key: String = property.name
