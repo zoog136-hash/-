@@ -162,6 +162,7 @@ func _real_pack(pack_dir: String) -> void:
 	check(window.configure(pack,host.hud).get("ok",false),"window configures")
 	var opened: Dictionary=window.open(parent)
 	check(opened.get("handled",false) and opened.member==WINDOW.COMPOSE and int(opened.filled.grades)==1,"Recovery_All_Compose mounts with the usable grade: "+str(opened).left(400))
+	check(opened.filled.states=={"Btn_Unique":"Disabled","Btn_Legend":"Active","Btn_Epic":"Disabled","Btn_Myth":"Disabled"},"grade cards play the original Active / Disabled clips: "+str(opened.filled.states))
 	var popup: Dictionary=window._grade(4)
 	check(popup.get("handled",false) and int(popup.filled.cards)==2,"Recovery_Popup_CardList mounts the 성공 후보: "+str(popup).left(400))
 	window._pick("101")

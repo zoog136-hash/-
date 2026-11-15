@@ -151,13 +151,10 @@ func _spec() -> Dictionary:
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Nd_Title/Text_Title"]={"role":"source_text","text":"%s %s 재도전" % [category,"각성" if kind=="awakening" else "합성"]}
 	spec["Nd_Title/Text_AllNew"]={"visible":false}
-	var available: Dictionary={}
-	for row: Dictionary in _usable_here():available[int(row.grade)]=true
 	var buttons: Dictionary=AWAKEN_BUTTONS if kind=="awakening" else COMPOSE_BUTTONS
 	for button: String in buttons:
 		var shown: String=buttons[button]
 		var id: int=int(GRADE_NODES[shown])
-		var on: bool=available.has(id)
 		var p: String="Nd_CardSelect/"+button+"/"
 		spec[p+"Btn_Card"]={"activate":Callable(self,"_grade").bind(id)}
 		spec[p+"Btn_Probability"]={"exclude":true}
@@ -166,8 +163,6 @@ func _spec() -> Dictionary:
 		spec[p+"Btn_Card/"+shown]={"visible":true}
 		spec[p+"Btn_Card/"+shown+"/Label_Grade"]={"role":"source_text","text":"%s %s" % [GRADE_NAMES[id],category]}
 		for name: String in CARD_IMAGES:spec[p+"Btn_Card/"+shown+"/"+str(CARD_IMAGES[name])]={"visible":name==category}
-		spec[p+"Btn_Card/Nd_Label/Label_Disabled"]={"visible":not on}
-		spec[p+"Btn_Card/Nd_Label/Label_Select"]={"visible":on}
 	if kind=="fusion":
 		spec["Nd_CardSelect/Nd_MagicDoll_AllNewTJ"]={"visible":category=="마법인형"}
 		spec["Nd_CardSelect"]={"visible":stage!="retry"}
@@ -230,8 +225,34 @@ func _awaken_popup_spec(spec: Dictionary) -> void:
 
 ## --- Fill -----------------------------------------------------------------
 
+## The window's own title loop (Fx_Loop) and each grade card's original
+## state clip: Active (활성화, usable record) or Disabled (선택 불가).
+func _play_states(root: Node2D, out: Dictionary) -> Dictionary:
+	root.play("Fx_Loop",true)
+	var available: Dictionary={}
+	for row: Dictionary in _usable_here():available[int(row.grade)]=true
+	var states: Dictionary={}
+	if stage=="retry":return states
+	var buttons: Dictionary=AWAKEN_BUTTONS if kind=="awakening" else COMPOSE_BUTTONS
+	for button: String in buttons:
+		var on: bool=available.has(int(GRADE_NODES[buttons[button]]))
+		var nested: Node2D=_project(root,out,"Nd_CardSelect/"+button)
+		if nested!=null and nested.play("Active" if on else "Disabled",on).get("ok",false):states[button]="Active" if on else "Disabled"
+	if stage=="popup":
+		var popup: Node2D=_project(root,out,"Recovery_Popup_CardList" if kind=="fusion" else "Recovery_Popup_Awaken_CardList")
+		if popup!=null:popup.play("Fx_Loading",true)
+	return states
+
+## The nested player of the ProjectNode at `suffix`.
+func _project(root: Node2D, out: Dictionary, suffix: String) -> Node2D:
+	var located: Dictionary=_locate(root,out,suffix)
+	if not located.get("ok",false):return null
+	var node: Node=located.player.source_nodes.get(located.offset)
+	var nested: Variant=node.get_meta("source_project_player") if node!=null and node.has_meta("source_project_player") else null
+	return nested if nested is Node2D else null
+
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
-	var filled: Dictionary={"ok":true,"kind":kind,"category":category,"stage":stage,"grades":_usable_here().size()}
+	var filled: Dictionary={"ok":true,"kind":kind,"category":category,"stage":stage,"grades":_usable_here().size(),"states":_play_states(root,out)}
 	if stage=="popup" and kind=="fusion":
 		var phase: Array=retry_event.get("success_candidates" if _phase()=="success" else "fail_candidates",[])
 		var cards: Array=[]
