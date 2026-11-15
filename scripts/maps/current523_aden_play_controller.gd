@@ -997,13 +997,19 @@ func resume_saved_spot(land_id: int) -> void:
 ## In-Land restrictions that do not gate a content teleport into that Land.
 const CONTENT_ENTRY_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePushOnDie","NpcBuff","NoTeleportCome"]
 
-func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE) -> bool:
+## `save_changes`: prepared save overrides (current523_map_travel_payment)
+## saved with the arrival, e.g. a teleport item's debit.
+func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE, save_changes: Dictionary={}) -> bool:
 	_content_entry_land=land_id;_content_entry_waive=waive.duplicate()
-	var moved: bool=_enter_source_land(land_id,bounds)
+	var moved: bool=_enter_source_land(land_id,bounds,save_changes)
 	_content_entry_land=-1;_content_entry_waive=[]
 	return moved
 
-func _enter_source_land(land_id: int, bounds: Array) -> bool:
+## Result of the last save-carrying transition: {"ok","saved","uncertain"}.
+func last_source_transition() -> Dictionary:
+	return _last_source_transition.duplicate(true)
+
+func _enter_source_land(land_id: int, bounds: Array, save_changes: Dictionary={}) -> bool:
 	problem=""
 	var world: Node=_world()
 	if _source_travel_busy or not active or not source_owned or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC:
@@ -1017,7 +1023,7 @@ func _enter_source_land(land_id: int, bounds: Array) -> bool:
 		if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,land_id,{"attribute_rule":str(settings.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
 			var landing: Dictionary=proposed.choose_source_landing(bounds,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1" if bounds[0]!=bounds[2] or bounds[1]!=bounds[3] else "EXACT_POINT_ONLY")
 			if landing.get("ok",false):
-				completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog)
+				completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
 				if not completed and problem.contains("native_definition_conditions_require_policy"):
 					var holds: Array=[]
 					for hold: Variant in _entry_context(land_id,str(proposed.get("source_asset")),landing.source_cell,_actor_state(world)).get("source_travel_holds",[]):

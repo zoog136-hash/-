@@ -209,5 +209,7 @@ func _review(route: String) -> Dictionary:
 	return {"ok":true,"review":route}
 
 func _help() -> Dictionary:
+	var shown: Dictionary=_open_help(HelpBox.TITLE)
+	# TWILIGHT's own rules beside the original help text.
 	_message("85레벨부터 순차 승급 · 선택 목표 24시간 · 일반 심사 하루 %d회 · 성공률은 TWILIGHT 자체 정책" % int(_runtime().source.daily_limit))
-	return {"ok":true}
+	return {"ok":true,"original_help":shown.get("handled",false)}

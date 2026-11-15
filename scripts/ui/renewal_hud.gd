@@ -3160,6 +3160,8 @@ func open_equipment_collections() -> void:
 
 func open_growth(section: String) -> void:
 	_open_window(section,"문양" if section == "emblems" else "수호성","")
+	# The original 523 문양 window (source_main_symbol_window) over world.growth.
+	if section=="emblems" and _open_original_feature("emblems"):return
 	# The original 523 수호성 window (source_main_guardian_window) over
 	# world.growth; a pending card choice stays in the existing view.
 	var growth: Variant=get_parent().get("growth") if get_parent()!=null else null

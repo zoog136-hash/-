@@ -17,12 +17,15 @@ extends RefCounted
 ## behind the HUD's confirmation. Nothing here decides a dungeon rule.
 ## Left empty (no picture or rule in the original data here): dungeon
 ## thumbnails (SpecialDungeon.EntranceAssetID / Orim chapter and hero
-## art are not in the packs), buffs, 스피드 모드, ranking, shop, help, the
-## floor tower art, story, achievements, bookmarks, share and notices.
+## art are not in the packs), buffs, 스피드 모드, ranking, shop, the 시련의 탑
+## help (Mission_Tooltip_TrialTower is the 2019 event text), the floor tower
+## art, story, achievements, bookmarks, share and notices. The 오림의 흔적
+## Btn_HelpBox opens the original HelpBox_Mission_TracesOrim.
 ## Party dungeons are excluded (user decision 2026-11-12).
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Rows=preload("res://scripts/resources/current523_definition_rows.gd")
+const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 const ROOT="UI/Mission/Mission_Dungeon_All.csb"
 const TAB="UI/Mission/Mission_List_Dungeon.csb"
 const TOWER="UI/Mission/Mission_Dungeon_TrialTower.csb"
@@ -54,6 +57,7 @@ var _pack: RefCounted
 var _tree: RefCounted
 var _hud: WeakRef
 var _parent: WeakRef
+var _help_box: RefCounted
 var _view: WeakRef
 var _scene: Node2D
 var _last_out: Dictionary={}
@@ -156,6 +160,7 @@ func refresh() -> Dictionary:
 	return _stage()
 
 func close() -> void:
+	if _help_box!=null:_help_box.close()
 	var previous: Node2D=_scene
 	_scene=null
 	_special.content=null
@@ -429,7 +434,8 @@ func _orim_spec(world: Node, view: Object) -> Dictionary:
 	var spec: Dictionary={}
 	var p: String=P_ORIM
 	var i: String=p+"Nd_OrimInfo_All/"
-	for name: String in ["Label_Notice","Btn_HelpBox","Nd_Achievement","Btn_Shop","Btn_Back","Nd_Chapter/Nd_ChapterStory","Nd_PanelOrim/Panel_OrimPage/Nd_Page_Move","Nd_OrimInfo_All/Nd_Info/Nd_Buff","Nd_OrimInfo_All/Nd_CardInfo/Nd_CardOn/Panel_Card/Nd_Character"]:spec[p+name]={"exclude":true}
+	spec[p+"Btn_HelpBox"]={"activate":Callable(self,"_orim_help")}
+	for name: String in ["Label_Notice","Nd_Achievement","Btn_Shop","Btn_Back","Nd_Chapter/Nd_ChapterStory","Nd_PanelOrim/Panel_OrimPage/Nd_Page_Move","Nd_OrimInfo_All/Nd_Info/Nd_Buff","Nd_OrimInfo_All/Nd_CardInfo/Nd_CardOn/Panel_Card/Nd_Character"]:spec[p+name]={"exclude":true}
 	spec[p+"Fx_HardLoop"]={"visible":hard}
 	spec[p+"Nd_Title_Orim/Sp_Normal"]={"visible":not hard}
 	spec[p+"Nd_Title_Orim/Sp_Hard"]={"visible":hard}
@@ -823,3 +829,12 @@ func _close_requested() -> Dictionary:
 func _fail(code: String) -> Dictionary:
 	last_result={"ok":false,"handled":false,"code":code}
 	return last_result
+
+## 오림의 흔적 Btn_HelpBox: the original HelpBox_Mission_TracesOrim popup.
+func _orim_help() -> Dictionary:
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if _help_box==null:
+		_help_box=HelpBox.new()
+		_help_box.configure(_pack)
+	if not parent is Node or not _help_box.available(HelpBox.ORIM):return _fail("source_help_box_member_missing")
+	return _help_box.open(parent,HelpBox.ORIM)
