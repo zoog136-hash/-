@@ -566,11 +566,27 @@ var _applied_token: String = ""
 var _applied_selected: Dictionary = {}
 var _applied_layers: Array = []
 var _applied_layer_count: int = -1
+var _applied_hash: int = 0
+var _applied_body_material: Material = null
 
 ## Forget the applied frame so the next advance re-applies every layer.
+## Verification-only pass for the body layers of an already applied reference
+## frame: the same _source_texture() call per drawn layer as the full path
+## (pins and member bytes are rechecked on every use), without recomputing
+## styles, metas or materials. Returns false after aborting the source.
+func _verify_unchanged_layers(selected: Dictionary) -> bool:
+	for index: int in range(mini(_layers.size(), selected.layers.size())):
+		var layer: Dictionary = selected.layers[index]
+		if layer.has("client_null"): continue
+		var texture: Texture2D = _source_texture(layer)
+		if texture == null: return false
+		if _layers[index].texture != texture: _layers[index].texture = texture
+	return true
+
 func invalidate_applied_frame() -> void:
 	_applied_token = ""
 	_applied_selected = {}
+	_applied_hash = 0
 
 func advance_source(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
 	# Diagnostic bank requests still require explicit source dispatch. A typed card
@@ -648,11 +664,19 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	# physics tick (30/s) while frames change far less often (2026-11-15 phone:
 	# player 136 ms of CPU per second).
 	# Reference banks keep their per-draw byte verification (a changed or
-	# deleted original is rejected on the very next advance).
-	var unchanged: bool = not is_reference and token == _applied_token and is_same(selected, _applied_selected) and is_same(_layers, _applied_layers) and _applied_layer_count == _layers.size()
-	if not unchanged:
+	# deleted original is rejected on the very next advance): see
+	# _verify_unchanged_reference().
+	# Contents too, not only identities: frame and parent data can be edited in
+	# place. Dictionary.hash() is one native call over the whole frame.
+	var applied_hash: int = hash([selected, _reference_attachment_parent, _source_body_style, _playback_mode])
+	var unchanged: bool = token == _applied_token and is_same(selected, _applied_selected) and applied_hash == _applied_hash and is_same(_layers, _applied_layers) and _applied_layer_count == _layers.size() and is_same(_applied_body_material, _source_body_material)
+	# Reference effects always take the full path (their style depends on
+	# per-effect attributes); reference body layers re-run only the per-draw
+	# byte checks when the frame is unchanged (_verify_unchanged_layers).
+	var skip_effects: bool = unchanged and not is_reference
+	if not skip_effects:
 		for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
-	for effect: Dictionary in ([] if unchanged else selected.get("effect_layers", [])):
+	for effect: Dictionary in ([] if skip_effects else selected.get("effect_layers", [])):
 		if effect.has("client_null"): continue
 		# First use must prime the verified member key before the shared texture
 		# lookup. Once this view owns the texture, _source_texture alone rechecks
@@ -711,6 +735,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	if not static_track and is_reference and not _reference_card_context.is_empty(): _dispatch_reference_overlays(frames,track,total,source_direction)
 	if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 		queue_free()
+	if unchanged and is_reference and not _verify_unchanged_layers(selected): return
 	for index: int in range(0 if unchanged else _layers.size()):
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
@@ -749,6 +774,8 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_applied_selected = selected
 		_applied_layers = _layers
 		_applied_layer_count = _layers.size()
+		_applied_hash = applied_hash
+		_applied_body_material = _source_body_material
 	if _reference_bank != null:
 		var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
 		if not source_children_ready and not _reference_texture_budget.is_empty():
