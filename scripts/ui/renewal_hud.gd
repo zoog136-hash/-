@@ -3160,6 +3160,8 @@ func open_equipment_collections() -> void:
 
 func open_growth(section: String) -> void:
 	_open_window(section,"문양" if section == "emblems" else "수호성","")
+	# The original 523 문양 window (source_main_symbol_window) over world.growth.
+	if section=="emblems" and _open_original_feature("emblems"):return
 	var screen := preload("res://scripts/growth/growth_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,section)
