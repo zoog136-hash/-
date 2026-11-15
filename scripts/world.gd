@@ -11553,6 +11553,34 @@ func content523_enter_land(land_id: int, bounds: Array, waive: Array) -> Diction
 	var moved: bool = controller.call("enter_source_land", land_id, bounds, waive)
 	return {"ok": moved, "reason": str(controller.get("problem"))}
 
+## In-Land rules a teleport item's arrival waives (user decisions 2026-11-15):
+## NoTeleport, and the declarations that do not gate an entry (server/socket/
+## loading/clan-call attributes, LandCondition, CompetitionDungeonLand) — they
+## are passed, no clan or server feature is added. TurnOffAutoForTeleport is
+## passed by turning auto hunting off on arrival. MinLevel is still judged
+## (actor_level_requirement_not_met is never waived); any other declaration
+## (NoTeleportCome, BlockLoginEnter, CloseTime, GivenSpellClassID, ...) still
+## holds. Only this item path uses the list; map travel is unchanged.
+const ITEM523_TELEPORT_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTeleport","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand"]
+
+## Original 523 fixed-destination teleport item (source523_item_effects
+## location_teleport): enters the destination Land under its own entry rules
+## except ITEM523_TELEPORT_WAIVE and saves `save_changes` (the item debit)
+## with the arrival checkpoint. Not moved = nothing saved, item kept.
+func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", land_id, bounds, ITEM523_TELEPORT_WAIVE.duplicate(), save_changes)
+	var transition: Dictionary = controller.call("last_source_transition")
+	current523_aden_play_active = bool(controller.get("active"))
+	var auto_off: bool = false
+	if moved:
+		var entry: Variant = controller.get("_active_entry_context")
+		for hold: Variant in (entry.get("content_entry_waived",[]) if entry is Dictionary else []):
+			if hold is Dictionary and str(hold.get("type",{}).get("Name",""))=="TurnOffAutoForTeleport": auto_off = true
+		if auto_off and player.auto_enabled: player.set_auto_enabled(false)
+	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
+
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:
 		_current523_aden_play_controller = CURRENT523_ADEN_PLAY.new()
