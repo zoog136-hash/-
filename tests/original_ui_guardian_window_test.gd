@@ -4,8 +4,11 @@ extends SceneTree
 ## six stars match the growth guardians, the estimated layout is declared as
 ## TWILIGHT 추정 in one data file, slot cells follow SkillTreeSlot UIPosX/Y,
 ## 초기화 goes quote -> confirmation -> execute and a slot opens the existing
-## 수호성 view on it. Real input: -- --pack=<private original main UI pack
-## directory>: the graph mounts with every slot and prerequisite line.
+## 수호성 view on it, 활성화 / 대표 지정 from the slot info popup go quote ->
+## confirmation -> execute and its lines come from the guardian source.
+## Real input: -- --pack=<private original main UI pack directory>: the graph
+## mounts with every slot and prerequisite line, the opened-slot effect list
+## and the slot info popup.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_guardian_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 var checks: int=0
@@ -14,6 +17,12 @@ var failures: Array[String]=[]
 class FakeSource extends RefCounted:
 	func constant(_name: String) -> float:
 		return 1200.0
+	func has_node(_id: String) -> bool:
+		return true
+	func effects(_id: String, level: int) -> Dictionary:
+		return {"max_hp:flat":10+level}
+	func detail(_id: String, level: int) -> String:
+		return "detail %d" % level
 
 class FakeGrowth extends RefCounted:
 	var config: Dictionary={}
@@ -24,6 +33,8 @@ class FakeGrowth extends RefCounted:
 	func _init() -> void:
 		var parsed: Variant=JSON.parse_string(FileAccess.get_file_as_string("res://data/growth/guardian_source523.json"))
 		config={"guardians":parsed.get("guardians",[])}
+	func guardian_level(_id: String) -> int:
+		return 1
 	func guardian_representative(category: int) -> String:
 		return str(state.guardian_representatives.get(str(category),""))
 	func node(id: String) -> Dictionary:
@@ -84,6 +95,22 @@ func _run() -> void:
 	check(reset.get("ok",false) and growth.executed==[["guardian_reset","joe",1,3,-1]],"초기화 confirms and executes the existing guardian_reset: "+str(growth.executed))
 	window._slot_pressed("source523_2022")
 	check(host.hud.routed==[["guardians","joe","source523_2022"]],"a slot opens the existing 수호성 view on it: "+str(host.hud.routed))
+	# The slot info popup's actions and lines (existing guardian runtime).
+	var slot: Dictionary=growth.config.guardians[0].nodes[1]
+	window.info=str(slot.id)
+	var activated: Dictionary=window._info_ok()
+	check(activated.get("ok",false) and growth.executed[-1]==["activate",str(slot.id),1,3,-1],"활성화 confirms and executes the existing activate: "+str(growth.executed))
+	window.info=str(slot.id)
+	var represented: Dictionary=window._represent()
+	check(represented.get("ok",false) and growth.executed[-1]==["representative",str(slot.id),1,3,-1],"ON executes the existing representative action")
+	var info_rows: Array=window._info_rows(growth,str(slot.id))
+	var titles: Array=info_rows.map(func(row: Dictionary) -> String: return str(row.spec["Nd_Skill/Text_Title"].text))
+	check(titles.has("비용") and titles.has("능력치") and info_rows.all(func(row: Dictionary) -> bool: return row.member==WINDOW.INFO_ROW),"popup lines come from the guardian source: "+str(titles))
+	growth.state.nodes=[str(slot.id)]
+	window.info=str(slot.id)
+	window._info_ok()
+	check(host.hud.routed[-1]==["guardians","joe",str(slot.id)],"an opened slot's 강화 / 시전 open the existing view on it")
+	growth.state.nodes=[]
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(renewal.contains("_open_original_feature(\"guardians\")") and renewal.contains("func open_growth_native"),"수호성 opens the original window first, a pending card choice stays native")
 	var pack_dir: String=""
@@ -116,6 +143,11 @@ func _real_pack(pack_dir: String) -> void:
 		var opened: Dictionary=window.open(parent,str(group.id)) if group==growth.config.guardians[0] else window._select(str(group.id))
 		var filled: Dictionary=opened.get("filled",{})
 		check(opened.get("handled",false) and int(filled.get("slots",0))==(group.nodes as Array).size() and int(filled.get("lines",-1))==lines,"star graph mounts: %s %s" % [str(group.id),str(opened).left(400)])
+	window._select(str(growth.config.guardians[0].id))
+	check(int(window.last_result.filled.get("effects",-1))==1,"the opened slot is listed in the effect list: "+str(window.last_result.filled))
+	var shown: Dictionary=window._slot_pressed(str(first.id))
+	check(shown.get("handled",false) and str(shown.filled.get("info",""))==str(first.id),"a slot opens the original info popup: "+str(shown).left(300))
+	check(window._close_info().get("handled",false) and window.info.is_empty(),"닫기 closes the popup")
 	window.close()
 	await process_frame
 	parent.queue_free()
