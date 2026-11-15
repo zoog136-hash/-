@@ -189,6 +189,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 		# draws the map's objects. A failure leaves the terrain shown as before.
 		var objects: Node2D=BANK_OBJECTS.new()
 		objects.name="Current523BankMapObjects"
+		objects.sprite_load_budget_usec=objects.FRAME_SPRITE_LOAD_BUDGET_USEC
 		if objects.configure(BANK_OBJECTS.bank_selection(),field.coordinates):
 			_static_spr=objects
 			add_child(_static_spr)

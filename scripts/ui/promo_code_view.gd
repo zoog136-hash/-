@@ -16,7 +16,7 @@ func configure(target_world) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
-	code_input = LineEdit.new()
+	code_input = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	code_input.name = "PromoCodeInput"
 	code_input.placeholder_text = "코드 입력"
 	code_input.max_length = 32

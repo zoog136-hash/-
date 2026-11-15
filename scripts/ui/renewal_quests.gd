@@ -40,7 +40,7 @@ func configure(owner_world: Node) -> void:
 		tab_buttons[category] = button
 	var filters := HBoxContainer.new()
 	add_child(filters)
-	search = LineEdit.new()
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	search.placeholder_text = "퀘스트 이름 · ID 검색"
 	search.text_changed.connect(func(_value: String) -> void: page=0;refresh())

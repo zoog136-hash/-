@@ -38,7 +38,7 @@ func legacy_text(p: Node2D,value: String) -> Dictionary:
 func state(p: Node2D) -> Dictionary:
 	var rows: Array=[]
 	for item: Sprite2D in p._glyph_layer.get_children():
-		rows.append([item.texture,item.centered,item.region_enabled,item.region_filter_clip_enabled,item.region_rect,item.position,item.material.shader.code,item.material.get_shader_parameter("source_display_bound"),item.material.get_shader_parameter("source_display_color")])
+		rows.append([item.texture,item.centered,item.region_enabled,item.region_filter_clip_enabled,item.region_rect,item.position,item.material.shader.code,item.get_instance_shader_parameter("source_display_bound"),item.get_instance_shader_parameter("source_display_color")])
 	return {"rows":rows,"size":p.native_size,"options":p._options,"extent":p._extent,"font":p._font_data}
 func headless_checks() -> void:
 	HITCH.reset_for_test("user://bitmap_update_test")

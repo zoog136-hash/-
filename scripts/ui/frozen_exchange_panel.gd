@@ -56,7 +56,7 @@ func configure(controller: Node, path: String = Catalog.PATH) -> void:
 			categories.add_item(str(category.name)); categories.set_item_metadata(categories.item_count-1,int(category.id))
 	categories.disabled = categories.item_count == 1
 	categories.item_selected.connect(func(_index: int) -> void: _filter())
-	search = LineEdit.new(); search.name = "ExchangeSearch"; search.placeholder_text = "실측 상품명 검색"; search.size_flags_horizontal = Control.SIZE_EXPAND_FILL; filters.add_child(search)
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new(); search.name = "ExchangeSearch"; search.placeholder_text = "실측 상품명 검색"; search.size_flags_horizontal = Control.SIZE_EXPAND_FILL; filters.add_child(search)
 	search.text_changed.connect(func(_value: String) -> void: _filter())
 	listing = ItemList.new(); listing.name = "ExchangeListings"; listing.size_flags_vertical = Control.SIZE_EXPAND_FILL; listing.custom_minimum_size.y = 120; add_child(listing)
 	listing.item_selected.connect(_select)

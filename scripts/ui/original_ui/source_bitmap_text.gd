@@ -195,7 +195,8 @@ func _apply_glyphs(layer: Node2D, draws: Array) -> void:
 		sprite.region_rect=record.rect
 		var prototype: ShaderMaterial=record.material
 		var current: ShaderMaterial=sprite.material as ShaderMaterial
-		if current==null or current==prototype or not bool(current.get_meta("source_private_display",false)) or bool(prototype.get_meta("source_private_display",false)) or current.shader!=prototype.shader or current.get_shader_parameter("source_pma")!=prototype.get_shader_parameter("source_pma") or current.get_shader_parameter("source_gray")!=prototype.get_shader_parameter("source_gray"):
+		# Display colour is a per-instance parameter; glyphs share the prototype.
+		if current!=prototype:
 			sprite.material=prototype
 		SourceMaterial.bind_display(sprite,_display_color)
 		if index>=existing.size():layer.add_child(sprite)

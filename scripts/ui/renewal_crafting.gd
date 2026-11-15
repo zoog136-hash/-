@@ -66,7 +66,7 @@ func configure(controller: Node) -> void:
 	grade_filter.select(0)
 	grade_filter.item_selected.connect(func(_selection: int) -> void: _rebuild_listing())
 	filters.add_child(grade_filter)
-	name_filter = LineEdit.new()
+	name_filter = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	name_filter.name = "CraftNameFilter"
 	name_filter.placeholder_text = "제작법 / 결과 아이템 검색"
 	name_filter.size_flags_horizontal = Control.SIZE_EXPAND_FILL

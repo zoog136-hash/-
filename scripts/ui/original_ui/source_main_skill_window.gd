@@ -37,6 +37,16 @@ var _scroll_min: float=0.0
 var _drag: bool=false
 var _moved: float=0.0
 var last_result: Dictionary={}
+## Only the rows near the visible part of the list exist as nodes: a class
+## lists up to MAX_SLOTS skills, each Slot_Skill is ~40 nodes, and building
+## all of them (again on every selection tap) froze phones for many seconds
+## (2026-11-14 phone record: 11,133 nodes, 18.8 s frame after "ui.scene_scope
+## ×243"). Rows are added/removed as the list scrolls.
+const ROW_MARGIN: int=1
+var _slots: Dictionary={}
+var _view: Vector2=Vector2.ZERO
+var _left: float=0.0
+var _pictures: int=0
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
@@ -128,19 +138,11 @@ func _stage() -> Dictionary:
 		next.free()
 		return _fail("source_skill_window_scroll_content_missing")
 	var view: Vector2=NamedTree.list_size(out,_pack,ROOT,"ScrollView_All")
-	var pictures: int=0
-	for index: int in range(_records.size()):
-		var slot: Dictionary=_slot(hud,_records[index])
-		if not slot.get("ok",false):continue
-		if slot.get("picture",false):pictures+=1
-		var column: int=index%COLUMNS
-		var row: int=index/COLUMNS
-		# Four 78-wide Slot_Skill buttons centred in the 326-wide view, rows top-down.
-		var left: float=(view.x-PITCH*float(COLUMNS))*0.5
-		# Content-local: the view's top edge is -view.y in the ScrollView and
-		# the content sits at its authored offset (_scroll_base) below it.
-		slot.scene.position=Vector2(left+PITCH*(float(column)+0.5),-view.y-_scroll_base+PITCH*(float(row)+0.5))
-		content.add_child(slot.scene)
+	_view=view
+	# Four 78-wide Slot_Skill buttons centred in the 326-wide view, rows top-down.
+	_left=(view.x-PITCH*float(COLUMNS))*0.5
+	_slots={}
+	_pictures=0
 	# The 전체 tab (Skill_Tab_Btn Panel_All) heads the tab strip.
 	var tab_out: Dictionary={}
 	var tab: Dictionary=_tree.scene_of(TAB,{"Panel_Skill":{"visible":false},"Panel_MythSkill":{"visible":false},"Panel_EquipSkill":{"visible":false},"Panel_All/Btn_All_Off":{"visible":false},"Panel_All/Sp_New":{"visible":false}},tab_out)
@@ -162,11 +164,42 @@ func _stage() -> Dictionary:
 	_scroll_min=minf(0.0,view.y-PITCH*float(rows))
 	_scroll=clampf(_scroll,_scroll_min,0.0)
 	_content.position.y=_scroll_base+_scroll
+	_ensure_visible_rows()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"skills":_records.size(),"pictures":pictures,"selected":_selected}
+	last_result={"ok":true,"handled":true,"member":ROOT,"skills":_records.size(),"pictures":_pictures,"selected":_selected,"built_slots":_slots.size()}
 	return last_result
+
+## Rows from the first partly visible one to the last, plus ROW_MARGIN.
+func visible_row_range() -> Vector2i:
+	var rows: int=ceili(float(_records.size())/float(COLUMNS))
+	var first: int=maxi(0,floori(-_scroll/PITCH)-ROW_MARGIN)
+	var last: int=mini(rows-1,ceili((-_scroll+_view.y)/PITCH)+ROW_MARGIN)
+	return Vector2i(first,last)
+
+func _ensure_visible_rows() -> void:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not is_instance_valid(_content):return
+	var rows: Vector2i=visible_row_range()
+	for index: int in _slots.keys():
+		var row: int=int(index)/COLUMNS
+		if row<rows.x or row>rows.y:
+			var old: Variant=_slots[index].get("scene")
+			if is_instance_valid(old):old.queue_free()
+			_slots.erase(index)
+	for row: int in range(rows.x,rows.y+1):
+		for column: int in COLUMNS:
+			var index: int=row*COLUMNS+column
+			if index>=_records.size() or _slots.has(index):continue
+			var slot: Dictionary=_slot(hud,_records[index])
+			if not slot.get("ok",false):continue
+			if slot.get("picture",false):_pictures+=1
+			# Content-local: the view's top edge is -view.y in the ScrollView and
+			# the content sits at its authored offset (_scroll_base) below it.
+			slot.scene.position=Vector2(_left+PITCH*(float(column)+0.5),-_view.y-_scroll_base+PITCH*(float(row)+0.5))
+			_content.add_child(slot.scene)
+			_slots[index]=slot
 
 var _scroll_base: float=0.0
 
@@ -214,13 +247,28 @@ func _slot(hud: Node, record: Dictionary) -> Dictionary:
 		var source_button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 		var area: Variant=source_button.get("_input_area") if is_instance_valid(source_button) else null
 		if area is Control:area.gui_input.connect(_list_input)
-	return {"ok":true,"scene":built.scene,"picture":picture}
+	return {"ok":true,"scene":built.scene,"picture":picture,"out":out,"id":id}
 
 func _slot_pressed(id: String) -> Dictionary:
 	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
 	if id==_selected:return _detail_requested()
+	var first_selection: bool=_selected.is_empty()
 	_selected=id
-	return _stage()
+	# The search button changes state only on the first selection; later taps
+	# move the highlight without rebuilding the window.
+	if first_selection or not _move_highlight():return _stage()
+	last_result["selected"]=_selected
+	return last_result
+
+func _move_highlight() -> bool:
+	for index: int in _slots:
+		var slot: Dictionary=_slots[index]
+		var located: Dictionary=NamedTree.locate(slot.scene,slot.out,"Sp_slot_select")
+		if not located.get("ok",false):return false
+		var node: Variant=located.player.source_nodes.get(located.offset)
+		if not is_instance_valid(node):return false
+		(node as CanvasItem).visible=str(slot.id)==_selected
+	return true
 
 ## The existing skills window on the selected skill (learn, use, quick slot).
 func _detail_requested() -> Dictionary:
@@ -254,6 +302,7 @@ func _list_input(event: InputEvent) -> void:
 	# Dragging up (negative) reveals lower rows.
 	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
 	_content.position.y=_scroll_base+_scroll
+	_ensure_visible_rows()
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"handled":false,"code":code}

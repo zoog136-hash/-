@@ -85,7 +85,7 @@ func configure(controller: Node) -> void:
 	scope.add_child(filters_button)
 	toolbar.hide()
 	add_child(toolbar)
-	search=LineEdit.new()
+	search=preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name="SkillSearch"
 	search.placeholder_text="스킬 이름 · 효과 검색"
 	search.custom_minimum_size.x = 150

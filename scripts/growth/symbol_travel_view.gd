@@ -17,7 +17,7 @@ func configure(owner, request: Dictionary) -> void:
 	name="SymbolTravelView";size_flags_vertical=Control.SIZE_EXPAND_FILL
 	result=Label.new();result.name="SymbolTravelResult";result.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;result.hide();add_child(result)
 	var remember_row:=HBoxContainer.new();add_child(remember_row)
-	label_input=LineEdit.new();label_input.name="SymbolBookmarkName";label_input.placeholder_text="기억 장소 이름";label_input.max_length=int(service.POLICY.name_limit);label_input.size_flags_horizontal=Control.SIZE_EXPAND_FILL;remember_row.add_child(label_input)
+	label_input=preload("res://scripts/ui/native_touch_line_edit.gd").new();label_input.name="SymbolBookmarkName";label_input.placeholder_text="기억 장소 이름";label_input.max_length=int(service.POLICY.name_limit);label_input.size_flags_horizontal=Control.SIZE_EXPAND_FILL;remember_row.add_child(label_input)
 	button("현재 위치 기억","SymbolRemember",func() -> void: show_result(service.remember(label_input.text,revision)),remember_row)
 	listing=preload("res://scripts/ui/native_touch_list.gd").new();listing.name="SymbolBookmarks";listing.size_flags_vertical=Control.SIZE_EXPAND_FILL;listing.custom_minimum_size.y=90;listing.item_selected.connect(select);add_child(listing)
 	detail=Label.new();detail.name="SymbolTravelDetail";detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(detail)

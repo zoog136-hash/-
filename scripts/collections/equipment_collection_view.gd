@@ -45,7 +45,7 @@ func configure(owner_hud: Node) -> void:
 	add_theme_constant_override("separation",6)
 	var top := HBoxContainer.new()
 	add_child(top)
-	query = LineEdit.new()
+	query = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	query.name = "CollectionSearch"
 	query.placeholder_text = "컬렉션 · 장비 · 효과 검색"
 	query.size_flags_horizontal = Control.SIZE_EXPAND_FILL
