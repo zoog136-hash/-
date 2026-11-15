@@ -55,8 +55,66 @@ func _conditions(path: String, spec: Dictionary) -> Dictionary:
 		return {}
 	var value: Dictionary = _object(path, spec)
 	_shared_conditions.clear()
-	if not value.is_empty(): _shared_conditions[key] = value
+	if not value.is_empty():
+		_pack_cold_tables(value)
+		_shared_conditions[key] = value
 	return value
+
+## Condition tables read only by id (calendar rows of time-limited Lands) are
+## kept as one serialized row each instead of ~35,000 resident Dictionaries
+## (DateTimes_Korean: 38 MB resident, ~5 MB packed). Rows, order and values
+## are unchanged; a read decodes fresh copies (readers always got copies).
+const COLD_CONDITION_TABLES: Array[String] = ["DateTimes_Korean"]
+
+class ColdRows extends RefCounted:
+	var bytes := PackedByteArray()
+	var offsets := PackedInt64Array() # row i = bytes[offsets[i], offsets[i+1])
+	var by_id: Dictionary = {} # integer ID -> row position, -1 when the ID repeats
+	var count: int = 0
+	func row(position: int) -> Dictionary:
+		return bytes_to_var(bytes.slice(offsets[position], offsets[position + 1]))
+	func rows() -> Array:
+		var result: Array = []
+		for position: int in count: result.append(row(position))
+		return result
+
+static func _pack_cold_tables(value: Dictionary) -> void:
+	var tables: Variant = value.get("tables")
+	if not tables is Dictionary: return
+	for table: String in COLD_CONDITION_TABLES:
+		var rows: Variant = (tables as Dictionary).get(table)
+		if not rows is Array: continue
+		var packed := ColdRows.new()
+		for position: int in (rows as Array).size():
+			var row: Variant = rows[position]
+			if not row is Dictionary: return # invalid rows stay as they are (load rejects them)
+			packed.offsets.append(packed.bytes.size())
+			packed.bytes.append_array(var_to_bytes(row))
+			var id: Variant = (row as Dictionary).get("ID")
+			if _integer(id): packed.by_id[int(id)] = -1 if packed.by_id.has(int(id)) else position
+		packed.offsets.append(packed.bytes.size())
+		packed.count = (rows as Array).size()
+		(tables as Dictionary)[table] = packed
+
+## Rows of a condition table (packed tables decode to fresh copies).
+func _table_rows(table: String) -> Array:
+	var value: Variant = contexts.get(table, [])
+	return (value as ColdRows).rows() if value is ColdRows else value
+
+## One condition row by its integer ID, as a copy; {} when absent or when the
+## ID repeats (same rule as the calendar index of the portal provider).
+func context_row(table: String, id: int) -> Dictionary:
+	if not loaded: return {}
+	var value: Variant = contexts.get(table, [])
+	if value is ColdRows:
+		var position: int = int((value as ColdRows).by_id.get(id, -1))
+		return (value as ColdRows).row(position) if position >= 0 else {}
+	var found: Dictionary = {}
+	for row: Dictionary in value:
+		if _integer(row.get("ID")) and int(row.ID) == id:
+			if not found.is_empty(): return {}
+			found = row
+	return found.duplicate(true)
 
 ## One loaded Land per (root, manifest SHA, Land, AssetPath), shared read-only by
 ## the portal provider, the spawn regions and the spawn policy instead of each
@@ -135,7 +193,8 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	var condition_data: Dictionary = _conditions(root.path_join("conditions.json"), manifest.conditions)
 	if condition_data.get("schema") != 1 or condition_data.get("source_snapshot") != "patch523" or not condition_data.get("tables") is Dictionary: return _fail("Cumulative523 condition table is missing or corrupt")
 	for key: String in ["NpcCategory", "ServerLimit", "WeeklyOpenTimeGroup", "WeeklyOpenTimeGroupSet", "WeeklyOpenTime", "WeeklyOpenTimeEntity", "LandAttribute", "LandAttributeType", "LandTimeLimit", "LandTimeLimitGroup", "LandWeeklyOpenTime", "DateTimes", "DateTimes_Korean", "CompetitionDungeon", "CompetitionDungeonLand", "CompetitionDungeonView", "LandTeleport", "LandTeleportTerritories", "LandTeleportPrerequisite", "Prerequisite", "PrerequisiteType", "WorldBossRaidPrerequisite", "WorldBossRaidPrerequisiteView"]:
-		if not _rows(condition_data.tables.get(key)): return _fail("Invalid condition table: " + key)
+		var table_value: Variant = condition_data.tables.get(key)
+		if not table_value is ColdRows and not _rows(table_value): return _fail("Invalid condition table: " + key)
 	shard = candidate
 	land = candidate.land
 	contexts = condition_data.tables
@@ -158,7 +217,7 @@ static func definition_state(view: Dictionary) -> String:
 
 func _matching(table: String, field: String, value: Variant) -> Array:
 	var result: Array = []
-	for row: Dictionary in contexts.get(table, []):
+	for row: Dictionary in _table_rows(table):
 		if row.get(field) == value: result.append(row.duplicate(true))
 	return result
 
@@ -199,7 +258,9 @@ func pack_conditions(pack_id: int) -> Dictionary:
 
 func context_rows(table: String) -> Array:
 	# Includes date/prerequisite/category definitions without assigning new semantics.
-	return contexts.get(table, []).duplicate(true) if loaded else []
+	if not loaded: return []
+	var value: Variant = contexts.get(table, [])
+	return (value as ColdRows).rows() if value is ColdRows else (value as Array).duplicate(true)
 
 func spawn_evidence(pack_id: int = -1) -> Array:
 	var result: Array = []

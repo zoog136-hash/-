@@ -1,6 +1,10 @@
 extends SceneTree
 const LINKS = preload("res://scripts/maps/patch523_world_links.gd")
 var checks: int = 0
+## Only the full-table reader, as older Land definitions had.
+class RowsOnly extends RefCounted:
+	var inner: RefCounted
+	func context_rows(table: String) -> Array: return inner.context_rows(table)
 var failures: Array[String] = []
 
 func check(ok: bool, label: String) -> void:
@@ -34,6 +38,7 @@ func fixture() -> Dictionary:
 	tables.LandTeleport = [{"ID": 31, "TeleportCost": 10000, "AllowMapTeleport": false}]
 	tables.LandTeleportPrerequisite = [{"LandTeleportID": 31, "PrerequisiteID": 32}]
 	tables.Prerequisite = [{"ID": 32, "PrerequisiteTypeID": 1, "Value": 91}]
+	tables.DateTimes_Korean = [{"ID": 5, "Year": 2024, "Month": 1, "Day": 2, "Hour": 5, "Minute": 0}, {"ID": 6, "Year": 2024, "Month": 2, "Day": 3, "Hour": 5, "Minute": 30}, {"ID": 6, "Year": 2025, "Month": 2, "Day": 3, "Hour": 5, "Minute": 30}, {"Name": "no id"}]
 	var context_spec: Dictionary = write_json(path.path_join("conditions.json"), {"schema": 1, "source_snapshot": "patch523", "tables": tables})
 	var manifest: Dictionary = {"schema": 1, "source_snapshot": "patch523", "source_zip_sha256": LINKS.SOURCE_SHA256, "lands": {"4": shard_spec}, "conditions": context_spec}
 	var manifest_spec: Dictionary = write_json(path.path_join("manifest.json"), manifest)
@@ -57,6 +62,23 @@ func _initialize() -> void:
 	check(conditions.DaynightSpawnPack.size() == 2, "duplicate daynight rows retained")
 	check(conditions.weekly.entities.size() == 2 and conditions.weekly.entities[0].ServiceRegionCode == "KR" and conditions.weekly.entities[1].ServiceRegionCode == "TW", "service region schedules remain separate")
 	check(274 in conditions.unresolved_server_limit_sets and conditions.server_limits.is_empty(), "missing server Set274 is unresolved")
+	# DateTimes_Korean is kept packed (one serialized row each): same rows, order and values.
+	var dates: Array = links.context_rows("DateTimes_Korean")
+	check(dates.size() == 4 and int(dates[0].ID) == 5 and int(dates[2].Year) == 2025 and dates[3] == {"Name": "no id"}, "packed calendar table returns every row in order")
+	dates[0].Year = 1999
+	check(int(links.context_rows("DateTimes_Korean")[0].Year) == 2024, "packed rows are copies")
+	var date_row: Dictionary = links.context_row("DateTimes_Korean", 5)
+	check(int(date_row.Month) == 1 and int(date_row.Hour) == 5, "a calendar row by ID")
+	date_row.Month = 9
+	check(int(links.context_row("DateTimes_Korean", 5).Month) == 1, "a row by ID is a copy")
+	check(links.context_row("DateTimes_Korean", 6).is_empty() and links.context_row("DateTimes_Korean", 77).is_empty(), "a repeated or missing ID answers nothing")
+	check(int(links.context_row("Prerequisite", 32).Value) == 91 and links.context_row("Prerequisite", 33).is_empty(), "a resident table answers a row by ID the same way")
+	var provider: RefCounted = load("res://scripts/maps/current523_source_portal_provider.gd").new()
+	var rows_only := RowsOnly.new()
+	rows_only.inner = links
+	var same_dates: bool = true
+	for id: int in [5, 6, 77]: same_dates = same_dates and provider._date_row(links, "DateTimes_Korean", id) == provider._date_row(rows_only, "DateTimes_Korean", id)
+	check(same_dates and int(provider._date_row(links, "DateTimes_Korean", 5).Day) == 2, "portal calendar rows by ID equal the old full-table index")
 	var portals: Array = links.portal_evidence()
 	check(portals.size() == 1 and not portals[0].runtime_enabled, "no inferred automatic activation")
 	check(portals[0].arrival_selection == "EXACT_POINT", "exact point preserved")
